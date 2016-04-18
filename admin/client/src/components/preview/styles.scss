@@ -1,0 +1,28 @@
+.preview__iframe {
+  width: 100%;
+  height: calc(100% - #{$toolbar-total-height});
+  border: none;
+}
+.preview__file-container {
+  height: calc(100% - #{$toolbar-total-height});
+  text-align: center;
+}
+.preview__file {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.preview__overlay {
+  text-align: center;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: calc(100% - #{$toolbar-total-height});
+  background-color: #FFF;
+}
+.preview__overlay-text {
+  font-size: $font-size-lg;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}

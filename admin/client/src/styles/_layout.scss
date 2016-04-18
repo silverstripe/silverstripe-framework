@@ -1,59 +1,56 @@
-.cms-middle {
-	padding-left: 0;
-	height: 100%;
-	position: relative;
-	transition: padding .2s;
-
-	&.with-preview {
-		@media (min-width: 992px) { /* lg */
-			padding-left: 316px;
-			.cms-campaigns {
-				width: 316px;
-			}
-		}
-		@media (min-width: 1200px) { /* xl */
-			padding-left: 448px;
-			.cms-campaigns {
-				width: 448px;
-			}
-		}
-	}
+.cms-content__inner {
+  height: 100%;
+}
+.cms-content__right,
+.cms-content__left {
+  height: 100%;
+  overflow: hidden;
+  background-color: $body-bg;
+  transition: width .2s;
+}
+.panel-scrollable {
+  height: calc(100% - #{$toolbar-total-height});
+  overflow-y: auto;
 }
 
-.cms-middle__scrollable {
-	overflow-y: auto;
-	display: block;
-	height: 100%;
+// .cms-content can be split into different left/right zones
+// Exampale modifier: --left-sm = small left side panel with right panel width set to auto.
+.cms-content__split {
+  height: 100%;
 }
+.cms-content__split--left-sm {
+  .cms-content__right {
+    position: relative;
+    border-left: 1px solid $border-color;
+  }
+  .cms-content__left {
+    width: 100%;
+    position: absolute;
+    left: 0;
+  }
+  @media (min-width: 992px) { /* lg */
+    padding-left: $cms-panel-sm;
 
-// Preview panel
-.pages-preview {
-	display: block;
-	position: relative;
-	background-color: #BBB;
-	border-left: 1px solid #dbdde0;
-	height: 100%;
+    .cms-content__left {
+      width: $cms-panel-sm;
+    }
+  }
+  @media (min-width: 1200px) { /* xl */
+    padding-left: $cms-panel-md;
 
-	iframe {
-		width: 100%;
-		height: calc(100% - #{$toolbar-total-height});
-		border: none;
-	}
+    .cms-content__left {
+      width: $cms-panel-md;
+    }
+  }
 }
-
-// Toolbars
-// Todo: Convert toolbar to a component with variations.
-.toolbar {
-	width: 100%;        // Todo: should use mixin @include make-container();
-	height: $toolbar-total-height;
-	padding: $spacer-y*.625 $spacer-x;
-	background-color: $body-bg;
-
-	.btn-toolbar {
-		// TODO Remove '.cms .btn-toolbar' override
-		margin-top: 0;
-		margin-bottom: 0;
-	}
+.south-actions {
+  height: $toolbar-total-height;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid $border-color;
+  background-color: $body-bg;
+  padding: $spacer-y*.625 $spacer-x;
 }
 
 .content-toolbar {

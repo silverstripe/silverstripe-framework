@@ -77,7 +77,6 @@ body.cms {
  */
 .cms-content-tools,
 .cms-content-fields,
-.cms-edit-form,
 .cms-preview,
 .cms-preview iframe,
 .cms-preview-controls
@@ -85,7 +84,10 @@ body.cms {
 	display: inline-block;
 }
 
-.cms-content-header {
+.cms-content-header { // Todo: should add .container-fluid to markup or extend .container-fluid
+	padding-left: $spacer-x;
+	padding-right: $spacer-x;
+	min-width: 100%;
 	z-index: 60;
 	min-height: 52px;
 	background: {
@@ -119,7 +121,6 @@ body.cms {
 	.cms-content-header-info {
 		float:left;
 		padding-top: $grid-y - 1;
-		padding-left: $grid-x * 2;
 
 		& * {
 			display: inline-block; // align back button and breadcrumbs
@@ -227,7 +228,6 @@ body.cms {
 	.breadcrumbs-wrapper {
 		float: left;
 		padding-top: $grid-y - 1;
-		padding-left: $grid-x*2;
 	}
 
 	.cms-content-header-tabs {
@@ -502,7 +502,7 @@ body.cms {
 	.ui-tabs-nav {
 		float: right;
 		margin: $grid-x*2 0 -1px 0;
-		padding: 0 $grid-x*2 0 0;
+		padding: 0;
 		border-bottom: 0;
 
 		~ .ui-tabs-panel {
@@ -686,10 +686,6 @@ body.cms {
 	&.icon-button-group-tabs {
 		margin-top: 12px;
 		margin-bottom: 13px;
-	}
-
-	.icon-button-group {
-		margin-right: $grid-x*2;
 	}
 }
 

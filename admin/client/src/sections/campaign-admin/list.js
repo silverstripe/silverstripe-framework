@@ -11,8 +11,9 @@ import NorthHeader from 'components/north-header/index';
 import FormAction from 'components/form-action/index';
 import CampaignItem from './item';
 import BreadcrumbComponent from 'components/breadcrumb/index';
-import CampaignPreview from './preview';
+import CampaignPreview from 'components/preview/index';
 import i18n from 'i18n';
+
 
 /**
  * Represents a campaign list view
@@ -44,7 +45,7 @@ class CampaignListContainer extends SilverStripeComponent {
     // Trigger different layout when preview is enabled
     const previewUrl = this.previewURLForItem(itemID);
     const itemGroups = this.groupItemsForSet();
-    const classNames = previewUrl ? 'cms-middle with-preview' : 'cms-middle no-preview';
+    const classNames = previewUrl ? 'cms-content__split cms-content__split--left-sm' : 'cms-content__split cms-content__split--none';
 
     // Get items in this set
     let accordionGroups = [];
@@ -83,11 +84,11 @@ class CampaignListContainer extends SilverStripeComponent {
 
     return (
       <div className={classNames}>
-        <div className="cms-campaigns collapse in" aria-expanded="true">
+        <div className="cms-content__left collapse in" aria-expanded="true">
           <NorthHeader>
             <BreadcrumbComponent crumbs={this.props.breadcrumbs} multiline />
           </NorthHeader>
-          <div className="col-md-12 campaign-items">
+          <div className="container-fluid campaign-items panel-scrollable">
             <Accordion>
               {accordionGroups}
             </Accordion>

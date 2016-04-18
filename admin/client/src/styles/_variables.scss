@@ -47,8 +47,6 @@ $border-color-light: darken($background-main, 6);
 $border-color: darken($background-main, 10);
 $border-color-dark: darken($background-main, 14);
 
-
-
 // Options
 //
 // Quickly modify global styling by enabling or disabling optional features.
@@ -67,9 +65,10 @@ $border-color-dark: darken($background-main, 14);
 // Control the default styling of most Bootstrap elements by modifying these
 // variables. Mostly focused on spacing.
 
-$spacer: 1.2308rem; // 16px
+$spacer: 1.2308rem; // $font-size-root (13px) * $spacer = 16px
 $spacer-x: $spacer;
 $spacer-y: $spacer;
+
 $spacers: (
   0: (
     x: 0,
@@ -237,8 +236,8 @@ $text-muted: #7f8b97;
 //
 // Customizes the `.table` component with basic values, each used across all table variations.
 
-$table-cell-padding: 16px;  // update to $spacer
-$table-sm-cell-padding: 12px;   // update to $spacer
+$table-cell-padding: $spacer;
+$table-sm-cell-padding: $spacer*.75;
 
 $table-bg: #FFF;
 $table-bg-accent: #f9f9f9;
@@ -340,6 +339,7 @@ $btn-danger-border: transparent;
 //
 // $cursor-disabled: not-allowed;
 
+
 // Form validation icons
 // $form-icon-success: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MTIgNzkyIj48cGF0aCBmaWxsPSIjNWNiODVjIiBkPSJNMjMzLjggNjEwYy0xMy4zIDAtMjYtNi0zNC0xNi44TDkwLjUgNDQ4LjhDNzYuMyA0MzAgODAgNDAzLjMgOTguOCAzODljMTguOC0xNC4yIDQ1LjUtMTAuNCA1OS44IDguNGw3MiA5NUw0NTEuMyAyNDJjMTIuNS0yMCAzOC44LTI2LjIgNTguOC0xMy43IDIwIDEyLjQgMjYgMzguNyAxMy43IDU4LjhMMjcwIDU5MGMtNy40IDEyLTIwLjIgMTkuNC0zNC4zIDIwaC0yeiIvPjwvc3ZnPg==";
 // $form-icon-warning: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MTIgNzkyIj48cGF0aCBmaWxsPSIjZjBhZDRlIiBkPSJNNjAzIDY0MC4ybC0yNzguNS01MDljLTMuOC02LjYtMTAuOC0xMC42LTE4LjUtMTAuNnMtMTQuNyA0LTE4LjUgMTAuNkw5IDY0MC4yYy0zLjcgNi41LTMuNiAxNC40LjIgMjAuOCAzLjggNi41IDEwLjggMTAuNCAxOC4zIDEwLjRoNTU3YzcuNiAwIDE0LjYtNCAxOC40LTEwLjQgMy41LTYuNCAzLjYtMTQuNCAwLTIwLjh6bS0yNjYuNC0zMGgtNjEuMlY1NDloNjEuMnY2MS4yem0wLTEwN2gtNjEuMlYzMDRoNjEuMnYxOTl6Ii8+PC9zdmc+";
@@ -385,20 +385,20 @@ $btn-danger-border: transparent;
 // SS toolbars
 // Used for ui layout which contains main actions, seconday page action, top breadcrumbs and navigation bars.
 
-$toolbar-height:                    52px;
-$toolbar-total-height:              $toolbar-height + 1px; // Add border
+$toolbar-height: 52px;
+$toolbar-total-height: $toolbar-height + 1px; // Add border
 
 
 // Navbar
 
-$navbar-border-radius:              0;
-$navbar-padding-horizontal:         $spacer;
-$navbar-padding-vertical:           ($spacer / 2);
+$navbar-border-radius:  0;
+$navbar-padding-horizontal: $spacer;
+$navbar-padding-vertical: ($spacer / 2);
 
-// $navbar-dark-color:                 rgba(255,255,255,.5);
-// $navbar-dark-hover-color:           rgba(255,255,255,.75);
-// $navbar-dark-active-color:          rgba(255,255,255,1);
-// $navbar-dark-disabled-color:        rgba(255,255,255,.25);
+// $navbar-dark-color: rgba(255,255,255,.5);
+// $navbar-dark-hover-color: rgba(255,255,255,.75);
+// $navbar-dark-active-color: rgba(255,255,255,1);
+// $navbar-dark-disabled-color: rgba(255,255,255,.25);
 //
 // $navbar-light-color: rgba(0,0,0,.3);
 // $navbar-light-hover-color: rgba(0,0,0,.6);
@@ -696,3 +696,9 @@ $breadcrumb-divider: "/";
 // $pre-color: $gray-dark;
 // $pre-border-color: #ccc;
 // $pre-scrollable-max-height: 340px;
+
+// Panel sizes
+$cms-panel-xs: 60px;
+$cms-panel-sm: 300px;
+$cms-panel-md: 448px;
+$cms-panel-lg: 638px;

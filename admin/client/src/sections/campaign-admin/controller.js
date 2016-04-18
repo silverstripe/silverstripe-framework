@@ -83,12 +83,12 @@ class CampaignAdminContainer extends SilverStripeComponent {
     const schemaUrl = this.props.sectionConfig.forms.editForm.schemaUrl;
 
     return (
-      <div className="cms-middle no-preview">
-        <div className="cms-campaigns collapse in" aria-expanded="true">
+      <div className="cms-content__inner no-preview">
+        <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
           <NorthHeader>
             <h2 className="text-truncate north-header__heading">Campaigns</h2>
           </NorthHeader>
-          <div className="cms-middle__scrollable">
+          <div className="container-fluid panel-scrollable">
             <div className="content-toolbar">
               <div className="btn-toolbar">
           <FormAction

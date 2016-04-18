@@ -20,7 +20,7 @@
     padding: $spacer-y $spacer-x/2;
     margin-top: -$spacer-y;
     margin-bottom: -$spacer-y;
-    height: #{$line-height-base + $table-cell-padding*2};
+    height: $line-height-base + #{$table-cell-padding*2};
     vertical-align: top;
 
     &:hover {
