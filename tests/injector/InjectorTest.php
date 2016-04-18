@@ -521,7 +521,36 @@ class InjectorTest extends SapphireTest {
 		$this->assertEquals($obj->one, 'the three');
 	}
 
-	public function testSameNamedSingeltonPrototype() {
+	public function testInheritedServiceDefinitions() {
+		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
+
+		$this->assertInstanceOf('InjectorTest_CoreService', $injector->get('InjectorTest_CoreService'));
+		$this->assertInstanceOf('InjectorTest_CoreServiceSubclass', $injector->get('InjectorTest_CoreServiceSubclass'));
+
+		// Swap out the core service for a custom implementation
+		Config::inst()->update(
+			'Injector',
+			'InjectorTest_CoreService',
+			array('class' => 'InjectorTest_CustomCoreServiceImplementation')
+		);
+
+		// Use new Injector instance to avoid cached copies of configuration data
+		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
+		// Attempting to create the core service should now find the custom implementation instead
+		$this->assertInstanceOf(
+			'InjectorTest_CustomCoreServiceImplementation',
+			$injector->get('InjectorTest_CoreService'),
+			'Custom implementation was not found'
+		);
+		// Subclass of core service should not be replaced with custom implementation specified for parent class
+		$this->assertInstanceOf(
+			'InjectorTest_CoreServiceSubclass',
+			$injector->get('InjectorTest_CoreServiceSubclass'),
+			'Subclass of service definition incorrectly inherited config from its parent class'
+		);
+	}
+
+	public function testSameNamedSingletonPrototype() {
 		$injector = new Injector();
 
 		// get a singleton object
@@ -801,6 +830,18 @@ class TestStaticInjections implements TestOnly {
 	private static $dependencies = array(
 		'backend' => '%$NewRequirementsBackend'
 	);
+
+}
+
+class InjectorTest_CoreService implements TestOnly {
+
+}
+
+class InjectorTest_CoreServiceSubclass extends InjectorTest_CoreService {
+
+}
+
+class InjectorTest_CustomCoreServiceImplementation extends InjectorTest_CoreService {
 
 }
 
