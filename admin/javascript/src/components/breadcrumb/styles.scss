@@ -1,26 +1,21 @@
 .breadcrumb {
 	font-size: $font-size-xs;
 	line-height: 16px;
-
-    > .active {
-    	float: none;
-    }
-
-    .breadcrumb__crumb--last {
-    	font-size: $font-size-xs;
-		margin: 0;
-		font-weight: normal;
-		display: inline;
-		line-height: 16px;
-    }
+	margin-bottom: 0;
 }
 
-.breadcrumb--multiline {
-	margin-bottom: 0;
+.breadcrumb__item {}
 
-	.breadcrumb__crumb--last {
-		font-size: $font-size-lg;
-		display: block;
-		line-height: 22px;
-	}
+.breadcrumb>li.breadcrumb__item--last, // TODO Fix Bootstrap clash
+.breadcrumb__item--last {
+	display: block;
+	float: none;
+}
+
+.cms h2.breadcrumb__item-title--last, // TODO Fix CMS clash
+.breadcrumb__item-title--last {
+	margin: 0;
+	font-size: $font-size-lg;
+	font-weight: normal;
+	line-height: 22px;
 }
