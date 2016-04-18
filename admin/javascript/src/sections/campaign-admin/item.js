@@ -40,7 +40,7 @@ class CampaignItem extends SilverStripeComponent {
 
     // Linked items
     let links = (
-      <span className="list-group-item--haslinks">
+      <span className="list-group-item--has-links">
         <i className="font-icon-link"></i>
         3 linked items
       </span>
@@ -56,7 +56,7 @@ class CampaignItem extends SilverStripeComponent {
       <div>
         {thumbnail}
         <h4 className="list-group-item__heading">{item.Title}</h4>
-        <span className="list-group-item--islinked"><i className="font-icon-link"></i></span>
+        <span className="list-group-item--is-linked"><i className="font-icon-link"></i></span>
         {links}
         {badge.className && badge.Title &&
           <span className={badge.className}>{badge.Title}</span>

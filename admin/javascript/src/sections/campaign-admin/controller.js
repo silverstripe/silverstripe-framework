@@ -138,6 +138,9 @@ class CampaignAdminContainer extends SilverStripeComponent {
     return <Component key={props.name} {...props} />;
   }
 
+  /**
+   * @todo Use dynamic breadcrumbs
+   */
   getBreadcrumbs() {
     return [
       {

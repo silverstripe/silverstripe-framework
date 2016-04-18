@@ -4,22 +4,24 @@
     width: 100%;
     height: $navbar-total-height;
     z-index: 60;
-    
-    .north-header__navigation {		// Typically to hold breadcrumbs and back button
-    	float: left;
-    	padding: 0 $spacer-y;
-        max-width: 70%;
-        max-height: $navbar-height;
-    }
+}
 
-    .north-header__heading {
-        font-size: $font-size-lg;
-        font-weight: normal;
-        line-height: 20px;
-        width: 100%;
-    }
+// Typically to hold breadcrumbs and back button
+.north-header__navigation {
+    float: left;
+    padding: 0 $spacer-y;
+    max-width: 70%;
+    max-height: $navbar-height;
+}
 
-    .north-header__actions {		// To hold things like search icon and view toggle
-    	
-    }
+.north-header__heading {
+    font-size: $font-size-lg;
+    font-weight: normal;
+    line-height: 20px;
+    width: 100%;
+}
+
+// To hold things like search icon and view toggle
+.north-header__actions {
+
 }

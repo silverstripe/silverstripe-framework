@@ -7,19 +7,19 @@
 
 		a {
 			/* Todo: extend table header */
-			font-size: $font-size-sm; 
-			line-height: $line-height-base; 
-			font-weight: 400; 
-			text-transform: uppercase; 
+			font-size: $font-size-sm;
+			line-height: $line-height-base;
+			font-weight: 400;
+			text-transform: uppercase;
 			padding: $spacer-x*.75 $spacer-y;
 			/* end table header */
-			
+
 			display: block;
 			margin-left: -$spacer-y;
 			margin-right: -$spacer-y;
 			text-decoration: none;
 			position: relative;
-			border-bottom: 1px solid #ddd;
+			border-bottom: 1px solid $gray-lighter;
 			color: $body-color;
 
 			&::before {

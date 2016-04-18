@@ -58,8 +58,8 @@
 		}
 
 		// Show linked items
-		&--haslinks,
-		&--islinked {
+		&--has-links,
+		&--is-linked {
 			color: $brand-primary;
 			float: right;
 			font-size: $font-size-sm;
@@ -80,7 +80,7 @@
 		&:hover {
 			text-decoration: none;
 
-			.list-group-item--haslinks {
+			.list-group-item--has-links {
 				display: block;
 				opacity: 1;
 			}
@@ -91,7 +91,7 @@
 			color: #FFF;
 			opacity: 1;
 
-			.list-group-item--haslinks,
+			.list-group-item--has-links,
 			.list-group-item__status {
 				color: #FFF;
 				opacity: 1;
