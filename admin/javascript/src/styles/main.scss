@@ -3,7 +3,10 @@
 @import "spritey";
 @import "sprites";
 @import "typography";
-@import "layout";
+
+// Thirdparty
+@import "chosen";
+@import "../../node_modules/bootstrap/scss/bootstrap";
 
 // Legacy
 @import "legacy/mixins";
@@ -22,9 +25,6 @@
 @import "legacy/CMSSecurity";
 @import "legacy/retina";
 
-// Thirdparty
-@import "chosen";
-
 // Components
 @import "../components/accordion/styles";
 @import "../components/breadcrumb/styles";
@@ -33,5 +33,6 @@
 @import "../components/hidden-field/styles";
 @import "../components/north-header/styles";
 
-// Sections
+// Layout and sections
+@import "layout";
 @import "../sections/campaign-admin/styles";
