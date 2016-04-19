@@ -2,7 +2,7 @@
     border-bottom: 1px solid $border-color-dark;
     background-color: $background-north;
     width: 100%;
-    height: $navbar-total-height;
+    height: $toolbar-total-height;
     z-index: 60;
 }
 
@@ -11,7 +11,7 @@
     float: left;
     padding: 0 $spacer-y;
     max-width: 70%;
-    max-height: $navbar-height;
+    max-height: $toolbar-height;
 }
 
 .north-header__heading {
