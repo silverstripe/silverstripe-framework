@@ -62,7 +62,7 @@ export function submitForm(submitApi, formId, fieldValues) {
       payload: {},
     });
 
-    submitApi({ id: formId, fieldValues })
+    submitApi(Object.assign({ ID: formId }, fieldValues))
       .then(() => {
         dispatch({
           type: ACTION_TYPES.SUBMIT_FORM_SUCCESS,
