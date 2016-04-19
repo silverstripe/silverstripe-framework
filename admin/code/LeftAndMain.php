@@ -400,7 +400,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
 		if(!$htmlEditorConfig->getOption('content_css')) {
 			$cssFiles = array();
-			$cssFiles[] = FRAMEWORK_ADMIN_DIR . '/css/editor.css';
+			$cssFiles[] = FRAMEWORK_ADMIN_DIR . '/client/dist/styles/editor.css';
 
 			// Use theme from the site config
 			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
@@ -427,7 +427,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			window.ss.config = " . $this->getCombinedClientConfig() . ";
 		");
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-lib.js', [
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js', [
 			'provides' => [
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
@@ -444,56 +444,56 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
-				FRAMEWORK_DIR . '/javascript/dist/TreeDropdownField.js',
-				FRAMEWORK_DIR . '/javascript/dist/DateField.js',
-				FRAMEWORK_DIR . '/javascript/dist/HtmlEditorField.js',
-				FRAMEWORK_DIR . '/javascript/dist/TabSet.js',
-				FRAMEWORK_DIR . '/javascript/dist/GridField.js',
-				FRAMEWORK_DIR . '/javascript/dist/i18n.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/sspath.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/ssui.core.js',
+				FRAMEWORK_DIR . '/client/dist/js/TreeDropdownField.js',
+				FRAMEWORK_DIR . '/client/dist/js/DateField.js',
+				FRAMEWORK_DIR . '/client/dist/js/HtmlEditorField.js',
+				FRAMEWORK_DIR . '/client/dist/js/TabSet.js',
+				FRAMEWORK_DIR . '/client/dist/js/GridField.js',
+				FRAMEWORK_DIR . '/client/dist/js/i18n.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/sspath.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/ssui.core.js',
 			]
 		]);
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-legacy.js', [
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-legacy.js', [
 			'provides' => [
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Layout.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.ActionTabSet.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Panel.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Tree.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Content.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.EditForm.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Menu.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Preview.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.BatchActions.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.FieldHelp.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.FieldDescriptionToggle.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.TreeDropdownField.js'
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Layout.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.ActionTabSet.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Panel.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Tree.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Content.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.EditForm.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Menu.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Preview.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.BatchActions.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.FieldHelp.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.FieldDescriptionToggle.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.TreeDropdownField.js'
 			]
 		]);
 
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', false, true);
-		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', false, true);
+		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/client/lang', false, true);
 
 		if ($this->config()->session_keepalive_ping) {
-			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/LeftAndMain.Ping.js');
+			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Ping.js');
 		}
 
 		if (Director::isDev()) {
 			// TODO Confuses jQuery.ondemand through document.write()
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
-			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/leaktools.js');
+			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/leaktools.js');
 		}
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/bundle-framework.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-framework.js');
 
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
-		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
-		Requirements::css(FRAMEWORK_DIR . '/css/GridField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/TreeDropdownField.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/GridField.css');
 
 		// Custom requirements
 		$extraJs = $this->stat('extra_requirements_javascript');
@@ -1570,7 +1570,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$form->setActions(null);
 
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/LeftAndMain_printable.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/dist/css/LeftAndMain_printable.css');
 		return array(
 			"PrintForm" => $form
 		);
@@ -1881,7 +1881,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
 	 * Register the given javascript file as required in the CMS.
-	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/javascript/dist/loader.js'
+	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/client/dist/js/loader.js'
 	 *
 	 * @deprecated since version 4.0
 	 */

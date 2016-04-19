@@ -72,7 +72,7 @@ abstract class Validator extends Object {
 	 * - 'message': Validation message (optionally localized)
 	 * - 'messageType': Arbitrary type of the message which is rendered as a CSS class in the FormField template,
 	 *   e.g. <span class="message (type)">. Usually "bad|message|validation|required", which renders differently
-	 *   if framework/css/Form.css is included.
+	 *   if framework/client/dist/styles/Form.css is included.
 	 *
 	 * @return array
 	 */

@@ -212,10 +212,10 @@ class TreeDropdownField extends FormField {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jstree/jquery.jstree.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/dist/TreeDropdownField.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/TreeDropdownField.js');
 
 		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/TreeDropdownField.css');
 
 		if($this->showSearch) {
 			$emptyTitle = _t('DropdownField.CHOOSESEARCH', '(choose folder)', 'start value of a dropdown');

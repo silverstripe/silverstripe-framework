@@ -1,38 +1,38 @@
 # Ignore dist files
-javascript/dist/
-admin/javascript/dist/
+client/dist/
+admin/client/dist/
 
 # Ignore legacy files
-javascript/src/AssetUploadField.js
-javascript/src/ConfirmedPasswordField.js
-javascript/src/DateField.js
-javascript/src/GridField.js
-javascript/src/HtmlEditorField.js
-javascript/src/InlineFormAction.js
-javascript/src/PermissionCheckboxSetField.js
-javascript/src/SelectionGroup.js
-javascript/src/TabSet.js
-javascript/src/TinyMCE_SSPlugin.js
-javascript/src/ToggleCompositeField.js
-javascript/src/ToggleField.js
-javascript/src/TreeDropdownField.js
-javascript/src/UploadField.js
-javascript/src/UploadField_downloadtemplate.js
-javascript/src/UploadField_select.js
-javascript/src/UploadField_uploadtemplate.js
-javascript/src/i18n.js
-javascript/src/i18nx.js
-javascript/src/jQuery.js
-admin/javascript/src/LeftAndMain.js
-admin/javascript/src/LeftAndMain.*.js
-admin/javascript/src/CMSSecurity.js
-admin/javascript/src/MemberDatetimeOptionsetField.js
-admin/javascript/src/MemberImportForm.js
-admin/javascript/src/ModelAdmin.js
-admin/javascript/src/SecurityAdmin.js
-admin/javascript/src/leaktools.js
-admin/javascript/src/sspath.js
-admin/javascript/src/ssui.core.js
+client/src/legacy/AssetUploadField.js
+client/src/legacy/ConfirmedPasswordField.js
+client/src/legacy/DateField.js
+client/src/legacy/GridField.js
+client/src/legacy/HtmlEditorField.js
+client/src/legacy/InlineFormAction.js
+client/src/legacy/PermissionCheckboxSetField.js
+client/src/legacy/SelectionGroup.js
+client/src/legacy/TabSet.js
+client/src/legacy/TinyMCE_SSPlugin.js
+client/src/legacy/ToggleCompositeField.js
+client/src/legacy/ToggleField.js
+client/src/legacy/TreeDropdownField.js
+client/src/legacy/UploadField.js
+client/src/legacy/UploadField_downloadtemplate.js
+client/src/legacy/UploadField_select.js
+client/src/legacy/UploadField_uploadtemplate.js
+client/src/i18n.js
+client/src/i18nx.js
+client/src/jQuery.js
+admin/client/src/legacy/LeftAndMain.js
+admin/client/src/legacy/LeftAndMain.*.js
+admin/client/src/legacy/CMSSecurity.js
+admin/client/src/legacy/MemberDatetimeOptionsetField.js
+admin/client/src/legacy/MemberImportForm.js
+admin/client/src/legacy/ModelAdmin.js
+admin/client/src/legacy/SecurityAdmin.js
+admin/client/src/legacy/leaktools.js
+admin/client/src/legacy/sspath.js
+admin/client/src/legacy/ssui.core.js
 
 # Ignore vendor
 node_modules/
@@ -40,5 +40,5 @@ thirdparty/
 admin/thirdparty/
 
 # Ignore language files (auto-generated)
-javascript/lang/
-admin/javascript/lang/
+client/lang/
+admin/client/lang/

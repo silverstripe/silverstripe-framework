@@ -417,7 +417,7 @@ class TinyMCEConfig extends HtmlEditorConfig {
         $editor = array();
 		$editor[] = Controller::join_links(
 			Director::absoluteBaseURL(),
-			FRAMEWORK_ADMIN_DIR . '/css/editor.css'
+			FRAMEWORK_ADMIN_DIR . '/client/dist/styles/editor.css'
 		);
 		if($theme = SSViewer::get_theme_folder()) {
 			$editorDir = $theme . '/css/editor.css';
@@ -462,11 +462,11 @@ class TinyMCEConfig extends HtmlEditorConfig {
 		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/jquery/jquery.js");
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/ssui.core.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/ssui.core.js');
 
 		// include TinyMCE Javascript
 		Requirements::javascript($this->getScriptURL());
-		Requirements::javascript(FRAMEWORK_DIR ."/javascript/dist/HtmlEditorField.js");
+		Requirements::javascript(FRAMEWORK_DIR ."/client/dist/js/HtmlEditorField.js");
 
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 	}

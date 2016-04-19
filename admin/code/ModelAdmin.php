@@ -46,7 +46,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 */
 	private static $menu_priority = -0.5;
 
-	private static $menu_icon = 'framework/admin/images/sprites/src/menu-icons/16x16/db.png';
+	private static $menu_icon = 'framework/admin/client/src/sprites/menu-icons/16x16/db.png';
 
 	private static $allowed_actions = array(
 		'ImportForm',
@@ -110,7 +110,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/ModelAdmin.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/ModelAdmin.js');
 	}
 
 	public function Link($action = null) {

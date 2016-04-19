@@ -16,7 +16,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	private static $preview_date = '25-12-2011 17:30:00';
 
 	public function Field($properties = array()) {
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/MemberDatetimeOptionsetField.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberDatetimeOptionsetField.js');
 		$options = array();
 		$odd = false;
 

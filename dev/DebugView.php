@@ -202,7 +202,7 @@ class DebugView extends Object
 		$debugCSS = Controller::join_links(
 			Director::absoluteBaseURL(),
 			FRAMEWORK_DIR,
-			'css/debug.css'
+			'client/dist/styles/debug.css'
 		);
 
 		$output = '<!DOCTYPE html><html><head><title>' . $url . '</title>';

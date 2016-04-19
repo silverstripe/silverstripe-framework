@@ -24,7 +24,7 @@ require_once 'i18nSSLegacyAdapter.php';
  * <%t MyNamespace.MYENTITY 'Counting {count} things' count=$ThingsCount %>
  * </code>
  *
- * Javascript (see framework/javascript/dist/i18n.js):
+ * Javascript (see framework/client/dist/js/i18n.js):
  * <code>
  * ss.i18n._t('MyEntity.MyNamespace','My default natural language value');
  * </code>
@@ -127,7 +127,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	/**
 	 * Use javascript i18n through the ss.i18n class (enabled by default).
 	 * If set to TRUE, includes javascript requirements for the base library
-	 * (framework/javascript/dist/i18n.js) and all necessary lang files (e.g. framework/lang/de_DE.js)
+	 * (framework/client/dist/js/i18n.js) and all necessary lang files (e.g. framework/lang/de_DE.js)
 	 * plus fallbacks to the default locale (e.g. framework/lang/en_US.js).
 	 * If set to FALSE, only includes a stub implementation
 	 * which is necessary. Mainly disabled to save bandwidth
