@@ -93,7 +93,7 @@ class CampaignListContainer extends SilverStripeComponent {
               {accordionGroups}
             </Accordion>
           </div>
-          <div className="cms-south-actions">
+          <div className="toolbar--south">
             {this.renderButtonToolbar()}
           </div>
         </div>

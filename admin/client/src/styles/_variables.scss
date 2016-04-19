@@ -145,8 +145,8 @@ $container-max-widths: (
 //
 // Set the number of columns and specify the width of the gutters.
 
-// $grid-columns: 12;
-$grid-gutter-width: 2.4615rem; // now 32px, was 1.875rem; ~ 30px
+// $grid-columns:               12;
+$grid-gutter-width: $spacer*2;
 
 
 // Typography
@@ -386,7 +386,7 @@ $btn-danger-border: transparent;
 // Used for ui layout which contains main actions, seconday page action, top breadcrumbs and navigation bars.
 
 $toolbar-height: 52px;
-$toolbar-total-height: $toolbar-height + 1px; // Add border
+$toolbar-total-height: $toolbar-height + 1px; // Include border
 
 
 // Navbar
@@ -648,14 +648,8 @@ $navbar-padding-vertical: ($spacer / 2);
 
 // Breadcrumbs
 
-// $breadcrumb-padding-vertical: .75rem;
-// $breadcrumb-padding-horizontal: 1rem;
-//
-// $breadcrumb-bg: $gray-lighter;
-// $breadcrumb-divider-color: $gray-light;
-// $breadcrumb-active-color: $gray-light;
-// $breadcrumb-divider: "/";
-
+$breadcrumb-padding-vertical: 7px;
+$breadcrumb-padding-horizontal: 0;
 $breadcrumb-bg: transparent;
 $breadcrumb-divider-color: $border-color-dark;
 $breadcrumb-active-color: $body-color;

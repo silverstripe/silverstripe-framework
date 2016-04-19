@@ -251,6 +251,9 @@ body.cms {
 			padding-top: 0;
 			overflow-x: hidden;
 		}
+		.cms-panel-toggle.south {
+			border-top: 1px solid $color-light-separator;
+		}
 	}
 }
 

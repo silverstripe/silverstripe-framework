@@ -5,10 +5,8 @@ class NorthHeaderComponent extends SilverStripeComponent {
 
   render() {
     return (
-      <div className="north-header container-fluid">
-        <div className="north-header__navigation">
-          {this.props.children}
-        </div>
+      <div className="toolbar--north container-fluid">
+        {this.props.children}
       </div>
     );
   }

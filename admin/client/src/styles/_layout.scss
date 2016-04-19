@@ -43,23 +43,47 @@
     }
   }
 }
-.south-actions {
-  height: $toolbar-total-height;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  border-top: 1px solid $border-color;
-  background-color: $body-bg;
-  padding: $spacer-y*.625 $spacer-x;
+
+
+// TOOLBARS
+.toolbar {
+	width: 100%;        						// Todo: replace with mixin @include make-container();
+	padding-left: $spacer-x;				// Todo: replace with mixin @include make-container();
+	padding-right: $spacer-x;				// Todo: replace with mixin @include make-container();
+	height: $toolbar-total-height;
+	background-color: $body-bg;
+
+ 	.btn-toolbar {
+		// TODO Remove '.cms .btn-toolbar' override
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
-.content-toolbar {
+// Northern bar containing breadcrum, tabs etc.
+.toolbar--north {
+	@extend .cms-content-header;    // Todo: Remove dependency on .cms-content-header and use breadcrumb component
 	@extend .toolbar;
+	display: block;
+	background-image: none;
+	background-color: $background-north;
+	border-bottom: 1px solid $border-color;
+	z-index: 60;
+}
+
+// Secondary content actions eg. Add page button
+.toolbar--content {
+	@extend .toolbar;
+	padding-top: $spacer-y*.625;
+	padding-bottom: $spacer-y*.625;
 	margin-bottom: $spacer-y/2;
 }
 
-.cms-south-actions {
+// Primary content actions
+.toolbar--south {
 	@extend .toolbar;
+	padding-top: $spacer-y*.625;
+	padding-bottom: $spacer-y*.625;
 	position: absolute;
 	bottom: 0;
 	border-top: 1px solid $border-color;

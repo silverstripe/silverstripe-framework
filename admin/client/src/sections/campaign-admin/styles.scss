@@ -8,8 +8,8 @@
 	}
 
 	.list-group-item {
-		padding-left: #{$spacer-y * 1.25};
-		padding-right: #{$spacer-y * 1.25};
+		padding-left: $spacer-y;
+		padding-right: $spacer-y;
 		min-height: 64px;
 		cursor: pointer;
 		text-decoration: none;

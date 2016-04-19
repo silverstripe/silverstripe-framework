@@ -16,7 +16,7 @@ class CampaignPreview extends SilverStripeComponent {
         <div className="preview__file-container panel-scrollable">
           <img className="preview__file" src="http://placehold.it/250x150" />
         </div>
-        <div className="south-actions">
+        <div className="toolbar--south">
           <div className="btn-toolbar">
             <button className="btn btn-secondary" type="button">Edit</button>
             <button type="button" data-container="body" className="btn btn-link" data-toggle="popover" title="Page actions" data-placement="top" data-content="<a href=''>Add to campaign</a><a href=''>Remove from campaign</a>">...</button>
