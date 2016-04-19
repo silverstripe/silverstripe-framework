@@ -118,10 +118,19 @@ export class FormBuilderComponent extends SilverStripeComponent {
         // this.setState({ isFetching: false });
 
         if (typeof formSchema.id !== 'undefined') {
+          const defaultData = {
+            ID: formSchema.schema.id,
+            SecurityID: this.props.config.SecurityID,
+          };
+
+          if (formSchema.schema.actions.length > 0) {
+            defaultData[formSchema.schema.actions[0].name] = 1;
+          }
+
           this.submitApi = backend.createEndpointFetcher({
             url: formSchema.schema.attributes.action,
             method: formSchema.schema.attributes.method,
-            defaultData: { SecurityID: this.props.config.SecurityID },
+            defaultData,
           });
 
           this.props.schemaActions.setSchema(formSchema);
@@ -215,10 +224,10 @@ export class FormBuilderComponent extends SilverStripeComponent {
    */
   handleSubmit(event) {
     const schemaFields = this.props.schemas[this.props.schemaUrl].schema.fields;
-    const fieldValues = this.props.forms[this.props.formId].fields.map((stateField) => ({
-      name: schemaFields.find(schemaField => schemaField.id === stateField.id).name,
-      value: stateField.value,
-    }));
+    const fieldValues = this.props.forms[this.props.formId].fields
+      .reduce((prev, curr) => Object.assign({}, prev, {
+        [schemaFields.find(schemaField => schemaField.id === curr.id).name]: curr.value,
+      }), {});
 
     const submitFn = () => {
       this.props.formsActions.submitForm(
