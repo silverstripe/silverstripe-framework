@@ -84,6 +84,9 @@ class Backend {
    * endpoint({one: 1, two: 2, three: 3});
    * // Calls http://example.org/1/2?three=3 with a HTTP body of '{"two": 2}'
    * ```
+   *
+   * Custom HTTP headers can be passed to the second parameter of the endpoint
+   *
    * **urlReplacement**
    *
    * Can be used to replace template placeholders in the 'url' endpoint spec.
@@ -274,11 +277,11 @@ class Backend {
       }
     );
 
-    return (data = {}) => {
-      const headers = {
+    return (data = {}, headers = {}) => {
+      const mergedHeaders = Object.assign({}, headers, {
         Accept: refinedSpec.responseFormat,
         'Content-Type': refinedSpec.payloadFormat,
-      };
+      });
 
       const mergedData = merge.recursive({}, refinedSpec.defaultData, data);
 
@@ -302,8 +305,8 @@ class Backend {
       );
 
       const args = refinedSpec.method.toLowerCase() === 'get'
-        ? [url, headers]
-        : [url, encodedData, headers];
+        ? [url, mergedHeaders]
+        : [url, encodedData, mergedHeaders];
 
       return this[refinedSpec.method.toLowerCase()](...args)
         .then(parseResponse);

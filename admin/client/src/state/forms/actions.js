@@ -62,7 +62,7 @@ export function submitForm(submitApi, formId, fieldValues) {
       payload: {},
     });
 
-    submitApi(Object.assign({ ID: formId }, fieldValues))
+    submitApi(Object.assign({ ID: formId }, fieldValues), { 'X-Formschema-Request': 'state' })
       .then(() => {
         dispatch({
           type: ACTION_TYPES.SUBMIT_FORM_SUCCESS,

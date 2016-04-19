@@ -119,7 +119,6 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
         if (typeof formSchema.id !== 'undefined') {
           const defaultData = {
-            ID: formSchema.schema.id,
             SecurityID: this.props.config.SecurityID,
           };
 
