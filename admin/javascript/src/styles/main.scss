@@ -1,14 +1,37 @@
 // Base
-@import "_typography.scss";
-@import "_layout.scss";
+@import "variables";
+@import "spritey";
+@import "sprites";
+@import "typography";
+@import "layout";
+
+// Legacy
+@import "legacy/mixins";
+@import "legacy/themes/default";
+@import "legacy/fonts";
+@import "legacy/typography";
+@import "legacy/uitheme";
+@import "legacy/forms";
+@import "legacy/style";
+@import "legacy/tree";
+@import "legacy/menu";
+@import "legacy/preview";
+@import "legacy/actionTabs";
+@import "legacy/ModelAdmin";
+@import "legacy/SecurityAdmin";
+@import "legacy/CMSSecurity";
+@import "legacy/retina";
+
+// Thirdparty
+@import "chosen";
 
 // Components
-@import "../components/grid-field/styles";
-@import "../components/north-header/styles";
+@import "../components/accordion/styles";
 @import "../components/breadcrumb/styles";
 @import "../components/form-action/styles";
+@import "../components/grid-field/styles";
 @import "../components/hidden-field/styles";
-@import "../components/accordion/styles";
+@import "../components/north-header/styles";
 
 // Sections
 @import "../sections/campaign-admin/styles";

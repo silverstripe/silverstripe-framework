@@ -6,8 +6,8 @@
  * @todo Add radial gradient to default delete button state
  * @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins?
  */
-@import "../admin/scss/themes/default";
-@import "../admin/scss/_mixins";
+@import "../admin/javascript/src/styles/legacy/themes/default.scss";
+@import "../admin/javascript/src/styles/legacy/_mixins.scss";
 @import "_elementMixins";
 
 $gf_colour_gradient_dark: darken($color-base, 8%);
@@ -452,7 +452,7 @@ $gf_grid_x:	16px;
 							$bgImage: url(../images/icons/filter-icons.png) no-repeat;
 							background-color:lighten($color-menu-button,10%);
 							@include gridFieldButtons;
-							background: 
+							background:
 								$bgImage -15px 4px,
 								linear-gradient(
 									$color-menu-button,
@@ -462,7 +462,7 @@ $gf_grid_x:	16px;
 							border-top: 1px solid lighten($color-menu-button, 5%);
 
 							&.hover-alike:active, &:active,	&.hover-alike, &:hover {
-								background: 
+								background:
 								$bgImage -15px 4px,
 								linear-gradient(
 									lighten($color-menu-button, 10%),
@@ -504,7 +504,7 @@ $gf_grid_x:	16px;
 							margin-right:-5px; //For IE
 							&.hover-alike:active, &:active, &.hover-alike, &:hover {
 								opacity:1;
-								background: 
+								background:
 									$bgImage 8px -17px,
 									linear-gradient(
 										rgba(#fff,0.1),

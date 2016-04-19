@@ -1,6 +1,6 @@
 // TODO we need a seperated file for styles that are used in both cms and front end (such as buttons)
-@import "../admin/scss/themes/default.scss";
-@import "../admin/scss/_mixins";
+@import "../admin/javascript/src/styles/legacy/themes/default.scss";
+@import "../admin/javascript/src/styles/legacy/_mixins.scss";
 
 .ss-uploadfield {
 
