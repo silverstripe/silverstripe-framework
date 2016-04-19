@@ -1,10 +1,18 @@
-// Tables
+/**
+ * File: typography.scss
+ *
+ * Contains the basic typography related styles for the admin interface.
+ */
+
+ // Tables
 // Used as a base for components: Grid-field.
 
 .table {
   margin-left: -$spacer-x;
   margin-right: -$spacer-x;
   min-width: calc(100% + #{$spacer-x*2});
+  margin-bottom: $spacer-y * 2;
+  border-top: 0;
 
   thead th {
     background-color: $body-bg;
@@ -12,6 +20,15 @@
     text-transform: uppercase;
     font-size: $font-size-sm;
   }
+
+  thead th {
+    // font-size: 12px;
+    // text-transform: uppercase;
+    font-weight: normal;
+    // border-bottom: 1px solid #bbb;
+    // border-top: 0;
+  }
+
   th,
   td {
     border-top: 0;
@@ -34,4 +51,23 @@
       background-color: $body-bg;
     }
   }
+}
+
+.cms {
+	code {
+		font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
+	}
+}
+
+// Used for long sentences where you would like to truncate them with an ellipsis (requires a set width)
+.truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+// Used for breaking text so it doesn't run horizontally, useful for breaking URLs
+.break-string {
+	overflow-wrap: break-word;
+	word-wrap: break-word;
 }

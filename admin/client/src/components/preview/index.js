@@ -18,8 +18,8 @@ class CampaignPreview extends SilverStripeComponent {
         </div>
         <div className="toolbar--south">
           <div className="btn-toolbar">
-            <button className="btn btn-secondary" type="button">Edit</button>
-            <button type="button" data-container="body" className="btn btn-link" data-toggle="popover" title="Page actions" data-placement="top" data-content="<a href=''>Add to campaign</a><a href=''>Remove from campaign</a>">...</button>
+            <button className="btn btn-secondary btn-secondary" type="button"><i className="font-icon-edit"></i> Edit</button>
+            <button type="button" data-container="body" className="btn btn-link btn--options" data-toggle="popover" title="Page actions" data-placement="top" data-content="<a href=''>Add to campaign</a><a href=''>Remove from campaign</a>"><i className="font-icon-dot-3"></i></button>
           </div>
         </div>
       </div>

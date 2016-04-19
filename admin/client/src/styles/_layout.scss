@@ -48,8 +48,6 @@
 // TOOLBARS
 .toolbar {
 	width: 100%;        						// Todo: replace with mixin @include make-container();
-	padding-left: $spacer-x;				// Todo: replace with mixin @include make-container();
-	padding-right: $spacer-x;				// Todo: replace with mixin @include make-container();
 	height: $toolbar-total-height;
 	background-color: $body-bg;
 
@@ -62,8 +60,9 @@
 
 // Northern bar containing breadcrum, tabs etc.
 .toolbar--north {
-	@extend .cms-content-header;    // Todo: Remove dependency on .cms-content-header and use breadcrumb component
 	@extend .toolbar;
+	padding-left: $spacer-x;				// Todo: replace with mixin @include make-container();
+	padding-right: $spacer-x;				// Todo: replace with mixin @include make-container();
 	display: block;
 	background-image: none;
 	background-color: $background-north;
@@ -74,16 +73,14 @@
 // Secondary content actions eg. Add page button
 .toolbar--content {
 	@extend .toolbar;
-	padding-top: $spacer-y*.625;
-	padding-bottom: $spacer-y*.625;
+	padding: $spacer-y*.625 $spacer-x*.75;
 	margin-bottom: $spacer-y/2;
 }
 
 // Primary content actions
 .toolbar--south {
 	@extend .toolbar;
-	padding-top: $spacer-y*.625;
-	padding-bottom: $spacer-y*.625;
+	padding: $spacer-y*.625 $spacer-x;
 	position: absolute;
 	bottom: 0;
 	border-top: 1px solid $border-color;

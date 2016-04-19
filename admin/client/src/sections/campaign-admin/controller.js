@@ -90,8 +90,8 @@ class CampaignAdminContainer extends SilverStripeComponent {
               <h2 className="text-truncate breadcrumb__item-title breadcrumb__item-title--last">Campaigns</h2>
             </div>
           </NorthHeader>
-          <div className="container-fluid panel-scrollable">
-            <div className="content-toolbar">
+          <div className="panel-scrollable">
+            <div className="toolbar--content">
               <div className="btn-toolbar">
           <FormAction
             label={i18n._t('Campaigns.ADDCAMPAIGN')}

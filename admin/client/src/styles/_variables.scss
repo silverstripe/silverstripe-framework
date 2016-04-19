@@ -51,7 +51,7 @@ $border-color-dark: darken($background-main, 14);
 //
 // Quickly modify global styling by enabling or disabling optional features.
 
-// $enable-flex: false;
+$enable-flex: true;
 // $enable-rounded: true;
 // $enable-shadows: false;
 // $enable-gradients: false;
@@ -252,7 +252,7 @@ $table-border-color: $gray-lighter;
 //
 // For each of Bootstrap's buttons, define text, background and border color.
 
-$btn-padding-x: .6154rem; // 8px
+$btn-padding-x: .7692rem; // 10px
 $btn-padding-y: .3846rem;
 $btn-font-weight: normal;
 
@@ -262,7 +262,7 @@ $btn-primary-color: #fff;
 
 $btn-secondary-color: $gray-dark;
 $btn-secondary-bg: transparent;
-$btn-secondary-border: transparent;
+$btn-secondary-border: $border-color;
 
 // $btn-info-color: #fff;
 // $btn-info-bg: $brand-info;
