@@ -3,6 +3,11 @@
     display: block;
     padding: 10px 0 10px 12px;
     margin-bottom: $spacer-y/2;
+
+		.btn-toolbar {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
 }
 
 .cms-middle {
