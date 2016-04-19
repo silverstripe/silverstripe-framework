@@ -1,20 +1,14 @@
-/** -----------------------------
- * Base styles
- * ------------------------------ */
+// Base
 @import "_typography.scss";
+@import "_layout.scss";
 
- /** -----------------------------
- * Sections
- * ------------------------------ */
-@import "../sections/campaign-admin/styles";
-
-/** -----------------------------
- * Components
- * ------------------------------ */
+// Components
 @import "../components/grid-field/styles";
 @import "../components/north-header/styles";
 @import "../components/breadcrumb/styles";
 @import "../components/form-action/styles";
 @import "../components/hidden-field/styles";
 @import "../components/accordion/styles";
-@import "_layout.scss";
+
+// Sections
+@import "../sections/campaign-admin/styles";
