@@ -2,6 +2,8 @@
 The core committers team is reviewed approximately annually, new members are added based on quality contributions to SilverStipe code and outstanding community participation. 
 
 ## Core committer team
+* [Aaron Carlino](https://github.com/unclecheese/)
+* [Steview Mayhew](https://github.com/stevie-mayhew/)
 * [Damian Mooyman](https://github.com/tractorcow/)
 * [Daniel Hensby](https://github.com/dhensby)
 * [Hamish Friedlander](https://github.com/hafriedlander)
