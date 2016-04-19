@@ -274,7 +274,8 @@ class Hierarchy extends DataExtension {
 			foreach($children as $child) {
 				$markingMatches = $this->markingFilterMatches($child);
 				if($markingMatches) {
-					if($child->$numChildrenMethod()) {
+					// Mark a child node as unexpanded if it has children and has not already been expanded
+					if($child->$numChildrenMethod() && !$child->isExpanded()) {
 						$child->markUnexpanded();
 					} else {
 						$child->markExpanded();

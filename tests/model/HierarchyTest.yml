@@ -20,6 +20,9 @@ HierarchyTest_Object:
    obj3c:
       Parent: =>HierarchyTest_Object.obj3
       Title: Obj 3c
+   obj3d:
+      Parent: =>HierarchyTest_Object.obj3
+      Title: Obj 3d
    obj2aa:
       Parent: =>HierarchyTest_Object.obj2a
       Title: Obj 2aa
@@ -32,3 +35,12 @@ HierarchyTest_Object:
    obj3ab:
       Parent: =>HierarchyTest_Object.obj3a
       Title: Obj 3ab
+   obj3ba:
+      Parent: =>HierarchyTest_Object.obj3b
+      Title: Obj 3ba
+   obj3bb:
+      Parent: =>HierarchyTest_Object.obj3b
+      Title: Obj 3bb
+   obj3ca:
+      Parent: =>HierarchyTest_Object.obj3c
+      Title: Obj 3c
