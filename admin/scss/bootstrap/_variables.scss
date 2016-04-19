@@ -382,18 +382,23 @@ $btn-danger-border: transparent;
 // $zindex-modal: 1050;
 
 
+// SS toolbars
+// Used for ui layout which contains main actions, seconday page action, top breadcrumbs and navigation bars.
+
+$toolbar-height:                    52px;
+$toolbar-total-height:              $toolbar-height + 1px; // Add border
+
+
 // Navbar
 
-$navbar-height: 52px;
-$navbar-total-height: 53px;
-// $navbar-border-radius: $border-radius;
-// $navbar-padding-horizontal: $spacer;
-// $navbar-padding-vertical: ($spacer / 2);
-//
-// $navbar-dark-color: rgba(255,255,255,.5);
-// $navbar-dark-hover-color: rgba(255,255,255,.75);
-// $navbar-dark-active-color: rgba(255,255,255,1);
-// $navbar-dark-disabled-color: rgba(255,255,255,.25);
+$navbar-border-radius:              0;
+$navbar-padding-horizontal:         $spacer;
+$navbar-padding-vertical:           ($spacer / 2);
+
+// $navbar-dark-color:                 rgba(255,255,255,.5);
+// $navbar-dark-hover-color:           rgba(255,255,255,.75);
+// $navbar-dark-active-color:          rgba(255,255,255,1);
+// $navbar-dark-disabled-color:        rgba(255,255,255,.25);
 //
 // $navbar-light-color: rgba(0,0,0,.3);
 // $navbar-light-hover-color: rgba(0,0,0,.6);

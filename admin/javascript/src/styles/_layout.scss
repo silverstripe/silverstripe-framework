@@ -1,15 +1,3 @@
-.content-toolbar {
-	max-height: $navbar-height;
-    display: block;
-    padding: 10px 0 10px 12px;
-    margin-bottom: $spacer-y/2;
-
-		.btn-toolbar {
-			margin-top: 0;
-			margin-bottom: 0;
-		}
-}
-
 .cms-middle {
 	padding-left: 0;
 	height: 100%;
@@ -48,23 +36,34 @@
 
 	iframe {
 		width: 100%;
-		height: calc(100% - #{$navbar-total-height});
+		height: calc(100% - #{$toolbar-total-height});
 		border: none;
 	}
 }
 
-.cms-south-actions {
-    height: $navbar-total-height;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    border-top: 1px solid $border-color;
-    background-color: $body-bg;
-    padding: $spacer-y*.625 $spacer-x;
+// Toolbars
+// Todo: Convert toolbar to a component with variations.
+.toolbar {
+	width: 100%;        // Todo: should use mixin @include make-container();
+	height: $toolbar-total-height;
+	padding: $spacer-y*.625 $spacer-x;
+	background-color: $body-bg;
 
 	.btn-toolbar {
 		// TODO Remove '.cms .btn-toolbar' override
 		margin-top: 0;
 		margin-bottom: 0;
 	}
+}
+
+.content-toolbar {
+	@extend .toolbar;
+	margin-bottom: $spacer-y/2;
+}
+
+.cms-south-actions {
+	@extend .toolbar;
+	position: absolute;
+	bottom: 0;
+	border-top: 1px solid $border-color;
 }
