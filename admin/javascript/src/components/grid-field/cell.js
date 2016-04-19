@@ -10,12 +10,12 @@ class GridFieldCellComponent extends SilverStripeComponent {
 
   render() {
     const props = {
-      className: `grid-field-cell-component ${this.props.className}`,
+      className: `grid-field__cell ${this.props.className}`,
       onClick: this.handleDrillDown,
     };
 
     return (
-      <div {...props}>{this.props.children}</div>
+      <td {...props}>{this.props.children}</td>
     );
   }
 

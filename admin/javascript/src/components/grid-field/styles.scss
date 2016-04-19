@@ -1,99 +1,98 @@
-.grid-field-action-component {
+// Grid-field
+// Extends basic table styles, requires .table .table-hover
+
+.grid-field__table {
+// Todo: Add extends
+// @extend .table;
+// @extend .table-hover;
+}
+.grid-field__row--drillable {
+    cursor: pointer;
+}
+.grid-field__cell[data-reactid$=-actions] {
+    white-space: nowrap;
+    width: 1px;
+}
+.grid-field__icon-action {
     background: none;
     border: 0;
-    color: $body-color;
-    padding: 0 $spacer-x/2;
-    height: 20px;
+    color: lighten($body-color, 10%);
+    padding: $spacer-y $spacer-x/2;
+    margin-top: -$spacer-y;
+    margin-bottom: -$spacer-y;
+    height: #{$line-height-base + $table-cell-padding*2};
     vertical-align: top;
 
     &:hover {
-        color: darken($body-color, 10%);
+        color: $body-color;
+        background: darken($body-bg,3%);
     }
-
     &::before {
         font-size: 20px;
     }
 }
 
-.grid-field-cell-component {
-    display: table-cell;
-    padding: $spacer-y $spacer-x;
-    line-height: 20px;
+// Responsive grid-field
+// Todo:
+// * replace with mixins - @include media-breakpoint-down(sm)
+// * add .text-truncate for overflowing cells
+@media (max-width: 47.9em) {
+  .grid-field__table td,
+  .grid-field__table th {
+    display: none;
 
     &:first-child {
-        padding-left: #{$spacer-x + $spacer-x*.25};
+      display: table-cell;
     }
-
-    &:last-child {
-        padding-right: #{$spacer-x + $spacer-x*.25};
-        width: 1px;
-
-        span { // TEMP, remove commas in js
-            display: none; 
-        }
+    &.grid-field__cell[data-reactid$=-actions],
+    &.grid-field__action-placeholder {
+        display: table-cell;
     }
-
-    &:nth-child(2) {
-        text-align: center;
-        width: 1px;
-    }
-
-    &[data-reactid$=actionPlaceholder] {
-        width: 1px;
-    }
-
-    &[data-reactid$=-actions] {
-        white-space: nowrap;
-    }
+  }
 }
 
-.grid-field-header-cell-component {
-    text-transform: uppercase;
-    font-size: $font-size-sm;
-    display: table-cell;
-    padding: $spacer-y $spacer-x;
-    line-height: 20px;
 
-    &:first-child {
-        padding-left: $grid-x*2.5;
-    }
+// OLD gridfield makeover - currently not in use.
+// Replace .ss-gridfield-table with .grid-field & .table
+// Has known scroll bugs
+.grid-field {
 
-    &:last-child {
-        padding-right: $grid-x*2.5;
-        width: 1px !important;
-    }
-}
+  .ss-gridfield-sort {  // Todo: rename to grid-filed__sort
+      background: transparent url(../images/arrows.png) no-repeat right -1px;
+      border: none;
+      width: 100%;
+      padding: 0;
+      text-shadow: none;
+      border-radius: 0;
+      text-transform: uppercase;
+      font-weight: normal;
+      text-align: left;
 
-.grid-field-table-component {
-    border-collapse: collapse;
-
-    li.grid-field-row-component {
-        display: table-row;
-        border: 0;
-        border-bottom: 1px solid $border-color;
-        margin: 0;
+      .ui-button-text {
         padding: 0;
+        line-height: 20px;
+        color: $body-color-light;
+      }
 
-        // Header row
-        &:first-child {
-            background: none;
-            border-bottom: 1px solid $border-color;
-        }
+      &:hover {
+        box-shadow: none;
+        background: transparent url(../images/arrows.png) no-repeat right -41px;
+      }
+      &.ss-gridfield-sorted-asc,
+      &.ss-gridfield-sorted-asc:hover {
+        background-position-y: -118px;
+      }
+      &.ss-gridfield-sorted-desc,
+      &.ss-gridfield-sorted-desc:hover {
+        background-position-y: -78px;
+      }
+  }
 
-		// Drillable rows highlight on hover
-		&--drillable:hover {
-			color: #555;
-			text-decoration: none;
-			background-color: #f5f5f5;
-
-			.grid-field-cell-component--drillable {
-				cursor: pointer;
-			}
-		}
-    }
-}
-
-.grid-field-table-component {
-    display: table;
-    width: 100%;
+  thead tr.title th {
+      font-size: 15px;
+      font-weight: bold;
+      text-transform: none;
+      border-bottom: 0;
+      padding-bottom: 0;
+  }
 }

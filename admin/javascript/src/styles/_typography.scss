@@ -1,0 +1,37 @@
+// Tables
+// Used as a base for components: Grid-field.
+
+.table {
+  margin-left: -$spacer-x;
+  margin-right: -$spacer-x;
+  min-width: calc(100% + #{$spacer-x*2});
+
+  thead th {
+    background-color: $body-bg;
+    border-bottom: $table-border-width solid $table-border-color;
+    text-transform: uppercase;
+    font-size: $font-size-sm;
+  }
+  th,
+  td {
+    border-top: 0;
+    border-bottom: $table-border-width solid $table-border-color;
+    line-height: 20px;
+
+    &:first-child {
+        padding-left: #{$spacer-x + $spacer-x*.25};
+    }
+    &:last-child {
+        padding-right: #{$spacer-x + $spacer-x*.25};
+    }
+  }
+  tfoot {
+    background-color: transparent;
+    font-size: $font-size-sm;
+
+    td {
+      border-bottom: 0;
+      background-color: $body-bg;
+    }
+  }
+}

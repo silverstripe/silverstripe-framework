@@ -5,7 +5,7 @@ class AccordionItem extends SilverStripeComponent {
   render() {
     let className = `list-group-item ${this.props.className}`;
     return (
-      <a className={className}>
+      <a tabIndex="0" className={className}>
         {this.props.children}
       </a>
     );
