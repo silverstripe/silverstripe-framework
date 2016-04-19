@@ -70,6 +70,10 @@ const babelifyOptions = {
   comments: false,
 };
 
+const uglifyOptions = {
+  mangle: false,
+};
+
 // Used for autoprefixing css properties (same as Bootstrap Aplha.2 defaults)
 const supportedBrowsers = [
   'Chrome >= 35',
@@ -327,7 +331,7 @@ gulp.task('bundle-lib', function bundleLib() {
     .pipe(order([`**/${bundleFileName}`, '**/chosen.js']))
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(concat(bundleFileName, { newLine: '\r\n;\r\n' }))
-    .pipe(uglify())
+    .pipe(uglify(uglifyOptions))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(PATHS.ADMIN_JS_DIST));
 });
@@ -353,7 +357,7 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .pipe(source(bundleFileName))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(uglify())
+    .pipe(uglify(uglifyOptions))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(PATHS.ADMIN_JS_DIST));
 });
@@ -394,7 +398,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .pipe(source(bundleFileName))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(uglify())
+    .pipe(uglify(uglifyOptions))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest(PATHS.ADMIN_JS_DIST));
 });
