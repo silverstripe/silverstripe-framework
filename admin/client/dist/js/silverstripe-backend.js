@@ -212,11 +212,12 @@
 
         return function () {
           var data = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+          var headers = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
-          var headers = {
+          var mergedHeaders = Object.assign({}, headers, {
             Accept: refinedSpec.responseFormat,
             'Content-Type': refinedSpec.payloadFormat
-          };
+          });
 
           var mergedData = _merge2.default.recursive({}, refinedSpec.defaultData, data);
 
@@ -224,7 +225,7 @@
 
           var encodedData = encode(refinedSpec.payloadFormat, applySchemaToData(refinedSpec.payloadSchema, mergedData));
 
-          var args = refinedSpec.method.toLowerCase() === 'get' ? [url, headers] : [url, encodedData, headers];
+          var args = refinedSpec.method.toLowerCase() === 'get' ? [url, mergedHeaders] : [url, encodedData, mergedHeaders];
 
           return _this[refinedSpec.method.toLowerCase()].apply(_this, args).then(parseResponse);
         };

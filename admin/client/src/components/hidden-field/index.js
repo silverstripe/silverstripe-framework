@@ -20,7 +20,7 @@ class HiddenFieldComponent extends SilverStripeComponent {
   getInputProps() {
     return {
       className: ['hidden', this.props.extraClass].join(' '),
-      id: this.props.name,
+      id: this.props.id,
       name: this.props.name,
       onChange: this.props.onChange,
       type: 'hidden',
@@ -42,7 +42,7 @@ HiddenFieldComponent.propTypes = {
   extraClass: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func,
-  value: React.PropTypes.string,
+  value: React.PropTypes.any,
 };
 
 export default HiddenFieldComponent;
