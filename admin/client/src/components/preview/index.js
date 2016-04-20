@@ -14,7 +14,7 @@ class CampaignPreview extends SilverStripeComponent {
           <h3 className="preview__overlay-text">There is no preview available for this item.</h3>
         </div>
         <div className="preview__file-container panel-scrollable">
-          <img className="preview__file" src="http://placehold.it/250x150" />
+          <img className="preview__file--fits-space" src="http://placehold.it/250x150" />
         </div>
         <div className="toolbar--south">
           <div className="btn-toolbar">

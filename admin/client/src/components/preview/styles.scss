@@ -6,11 +6,16 @@
 .preview__file-container {
   height: calc(100% - #{$toolbar-total-height});
   text-align: center;
-}
-.preview__file {
   position: relative;
+}
+.preview__file { // TODO files smaller than the given space need to be detected via js to give class --fits-space
+
+}
+.preview__file--fits-space { 
+  position: absolute;
   top: 50%;
-  transform: translateY(-50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .preview__overlay {
   text-align: center;
