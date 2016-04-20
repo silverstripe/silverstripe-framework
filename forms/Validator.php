@@ -1,12 +1,9 @@
 <?php
 
 /**
- * This validation class handles all form and custom form validation through
- * the use of Required fields.
- *
- * Relies on javascript for client-side validation, and marking fields after serverside validation.
- *
- * Acts as a visitor to individual form fields.
+ * This validation class handles all form and custom form validation through the use of Required
+ * fields. It relies on javascript for client-side validation, and marking fields after server-side
+ * validation. It acts as a visitor to individual form fields.
  *
  * @package forms
  * @subpackage validators
@@ -26,7 +23,7 @@ abstract class Validator extends Object {
 	/**
 	 * @param Form $form
 	 *
-	 * @return static
+	 * @return $this
 	 */
 	public function setForm($form) {
 		$this->form = $form;
@@ -48,33 +45,37 @@ abstract class Validator extends Object {
 	}
 
 	/**
-	 * Callback to register an error on a field (Called from implementations of {@link FormField::validate})
-	 *
-	 * @param string $fieldName name of the field
-	 * @param string $message error message to display
-	 * @param string $messageType optional parameter, gets loaded into the HTML class attribute in the rendered output.
+	 * Callback to register an error on a field (Called from implementations of
+	 * {@link FormField::validate}). The optional error message type parameter is loaded into the
+	 * HTML class attribute.
 	 *
 	 * See {@link getErrors()} for details.
+	 *
+	 * @param string $fieldName
+	 * @param string $errorMessage
+	 * @param string $errorMessageType
 	 */
-	public function validationError($fieldName, $message, $messageType = '') {
+	public function validationError($fieldName, $errorMessage, $errorMessageType = '') {
 		$this->errors[] = array(
 			'fieldName' => $fieldName,
-			'message' => $message,
-			'messageType' => $messageType,
+			'message' => $errorMessage,
+			'messageType' => $errorMessageType,
 		);
 	}
 
 	/**
-	 * Returns all errors found by a previous call to {@link validate()}.
+	 * Returns all errors found by a previous call to {@link validate()}. The returned array has a
+	 * structure resembling:
 	 *
-	 * The array contains the following keys for each error:
-	 * - 'fieldName': the name of the FormField instance
-	 * - 'message': Validation message (optionally localized)
-	 * - 'messageType': Arbitrary type of the message which is rendered as a CSS class in the FormField template,
-	 *   e.g. <span class="message (type)">. Usually "bad|message|validation|required", which renders differently
-	 *   if framework/css/Form.css is included.
+	 * <code>
+	 *     array(
+	 *         'fieldName' => '[form field name]',
+	 *         'message' => '[validation error message]',
+	 *         'messageType' => '[bad|message|validation|required]',
+	 *     )
+	 * </code>
 	 *
-	 * @return array
+	 * @return null|array
 	 */
 	public function getErrors() {
 		return $this->errors;
@@ -105,11 +106,12 @@ abstract class Validator extends Object {
 	}
 
 	/**
-	 * Returns true if the named field is "required".
+	 * Returns whether the field in question is required. This will usually display '*' next to the
+	 * field. The base implementation always returns false.
 	 *
-	 * Used by FormField to return a value for FormField::Required(), to do things like show *s on the form template.
+	 * @param string $fieldName
 	 *
-	 * By default, it always returns false.
+	 * @return bool
 	 */
 	public function fieldIsRequired($fieldName) {
 		return false;
