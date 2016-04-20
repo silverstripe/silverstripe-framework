@@ -486,7 +486,8 @@ JSON;
 			'CreateEditForm',
 			ChangeSet::singleton()->getCMSFields(),
 			FieldList::create(
-				FormAction::create('save', 'Save')
+				FormAction::create('save', 'Save'),
+				FormAction::create('cancel', 'Cancel')
 			)
 		);
 	}
