@@ -63,10 +63,10 @@ export function submitForm(submitApi, formId, fieldValues) {
     });
 
     submitApi(Object.assign({ ID: formId }, fieldValues), { 'X-Formschema-Request': 'state' })
-      .then(() => {
+      .then((response) => {
         dispatch({
           type: ACTION_TYPES.SUBMIT_FORM_SUCCESS,
-          payload: {},
+          payload: { response },
         });
       })
       .catch((error) => {
