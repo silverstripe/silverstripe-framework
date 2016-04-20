@@ -47,13 +47,11 @@ $border-color-light: darken($background-main, 6);
 $border-color: darken($background-main, 10);
 $border-color-dark: darken($background-main, 14);
 
-
-
 // Options
 //
 // Quickly modify global styling by enabling or disabling optional features.
 
-// $enable-flex: false;
+$enable-flex: true;
 // $enable-rounded: true;
 // $enable-shadows: false;
 // $enable-gradients: false;
@@ -67,9 +65,10 @@ $border-color-dark: darken($background-main, 14);
 // Control the default styling of most Bootstrap elements by modifying these
 // variables. Mostly focused on spacing.
 
-$spacer: 1.2308rem; // 16px
+$spacer: 1.2308rem; // $font-size-root (13px) * $spacer = 16px
 $spacer-x: $spacer;
 $spacer-y: $spacer;
+
 $spacers: (
   0: (
     x: 0,
@@ -146,8 +145,8 @@ $container-max-widths: (
 //
 // Set the number of columns and specify the width of the gutters.
 
-// $grid-columns: 12;
-$grid-gutter-width: 2.4615rem; // now 32px, was 1.875rem; ~ 30px
+// $grid-columns:               12;
+$grid-gutter-width: $spacer*2;
 
 
 // Typography
@@ -237,8 +236,8 @@ $text-muted: #7f8b97;
 //
 // Customizes the `.table` component with basic values, each used across all table variations.
 
-$table-cell-padding: 16px;  // update to $spacer
-$table-sm-cell-padding: 12px;   // update to $spacer
+$table-cell-padding: $spacer;
+$table-sm-cell-padding: $spacer*.75;
 
 $table-bg: #FFF;
 $table-bg-accent: #f9f9f9;
@@ -253,7 +252,7 @@ $table-border-color: $gray-lighter;
 //
 // For each of Bootstrap's buttons, define text, background and border color.
 
-$btn-padding-x: .6154rem; // 8px
+$btn-padding-x: .7692rem; // 10px
 $btn-padding-y: .3846rem;
 $btn-font-weight: normal;
 
@@ -263,7 +262,7 @@ $btn-primary-color: #fff;
 
 $btn-secondary-color: $gray-dark;
 $btn-secondary-bg: transparent;
-$btn-secondary-border: transparent;
+$btn-secondary-border: $border-color;
 
 // $btn-info-color: #fff;
 // $btn-info-bg: $brand-info;
@@ -340,6 +339,7 @@ $btn-danger-border: transparent;
 //
 // $cursor-disabled: not-allowed;
 
+
 // Form validation icons
 // $form-icon-success: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MTIgNzkyIj48cGF0aCBmaWxsPSIjNWNiODVjIiBkPSJNMjMzLjggNjEwYy0xMy4zIDAtMjYtNi0zNC0xNi44TDkwLjUgNDQ4LjhDNzYuMyA0MzAgODAgNDAzLjMgOTguOCAzODljMTguOC0xNC4yIDQ1LjUtMTAuNCA1OS44IDguNGw3MiA5NUw0NTEuMyAyNDJjMTIuNS0yMCAzOC44LTI2LjIgNTguOC0xMy43IDIwIDEyLjQgMjYgMzguNyAxMy43IDU4LjhMMjcwIDU5MGMtNy40IDEyLTIwLjIgMTkuNC0zNC4zIDIwaC0yeiIvPjwvc3ZnPg==";
 // $form-icon-warning: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2MTIgNzkyIj48cGF0aCBmaWxsPSIjZjBhZDRlIiBkPSJNNjAzIDY0MC4ybC0yNzguNS01MDljLTMuOC02LjYtMTAuOC0xMC42LTE4LjUtMTAuNnMtMTQuNyA0LTE4LjUgMTAuNkw5IDY0MC4yYy0zLjcgNi41LTMuNiAxNC40LjIgMjAuOCAzLjggNi41IDEwLjggMTAuNCAxOC4zIDEwLjRoNTU3YzcuNiAwIDE0LjYtNCAxOC40LTEwLjQgMy41LTYuNCAzLjYtMTQuNCAwLTIwLjh6bS0yNjYuNC0zMGgtNjEuMlY1NDloNjEuMnY2MS4yem0wLTEwN2gtNjEuMlYzMDRoNjEuMnYxOTl6Ii8+PC9zdmc+";
@@ -385,20 +385,20 @@ $btn-danger-border: transparent;
 // SS toolbars
 // Used for ui layout which contains main actions, seconday page action, top breadcrumbs and navigation bars.
 
-$toolbar-height:                    52px;
-$toolbar-total-height:              $toolbar-height + 1px; // Add border
+$toolbar-height: 52px;
+$toolbar-total-height: $toolbar-height + 1px; // Include border
 
 
 // Navbar
 
-$navbar-border-radius:              0;
-$navbar-padding-horizontal:         $spacer;
-$navbar-padding-vertical:           ($spacer / 2);
+$navbar-border-radius:  0;
+$navbar-padding-horizontal: $spacer;
+$navbar-padding-vertical: ($spacer / 2);
 
-// $navbar-dark-color:                 rgba(255,255,255,.5);
-// $navbar-dark-hover-color:           rgba(255,255,255,.75);
-// $navbar-dark-active-color:          rgba(255,255,255,1);
-// $navbar-dark-disabled-color:        rgba(255,255,255,.25);
+// $navbar-dark-color: rgba(255,255,255,.5);
+// $navbar-dark-hover-color: rgba(255,255,255,.75);
+// $navbar-dark-active-color: rgba(255,255,255,1);
+// $navbar-dark-disabled-color: rgba(255,255,255,.25);
 //
 // $navbar-light-color: rgba(0,0,0,.3);
 // $navbar-light-hover-color: rgba(0,0,0,.6);
@@ -648,14 +648,8 @@ $navbar-padding-vertical:           ($spacer / 2);
 
 // Breadcrumbs
 
-// $breadcrumb-padding-vertical: .75rem;
-// $breadcrumb-padding-horizontal: 1rem;
-//
-// $breadcrumb-bg: $gray-lighter;
-// $breadcrumb-divider-color: $gray-light;
-// $breadcrumb-active-color: $gray-light;
-// $breadcrumb-divider: "/";
-
+$breadcrumb-padding-vertical: 7px;
+$breadcrumb-padding-horizontal: 0;
 $breadcrumb-bg: transparent;
 $breadcrumb-divider-color: $border-color-dark;
 $breadcrumb-active-color: $body-color;
@@ -696,3 +690,9 @@ $breadcrumb-divider: "/";
 // $pre-color: $gray-dark;
 // $pre-border-color: #ccc;
 // $pre-scrollable-max-height: 340px;
+
+// Panel sizes
+$cms-panel-xs: 60px;
+$cms-panel-sm: 300px;
+$cms-panel-md: 448px;
+$cms-panel-lg: 638px;

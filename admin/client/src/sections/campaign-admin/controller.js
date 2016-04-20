@@ -83,13 +83,15 @@ class CampaignAdminContainer extends SilverStripeComponent {
     const schemaUrl = this.props.sectionConfig.forms.editForm.schemaUrl;
 
     return (
-      <div className="cms-middle no-preview">
-        <div className="cms-campaigns collapse in" aria-expanded="true">
+      <div className="cms-content__inner no-preview">
+        <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
           <NorthHeader>
-            <h2 className="text-truncate north-header__heading">Campaigns</h2>
+            <div className="breadcrumb breadcrumb--current-only">
+              <h2 className="breadcrumb__item-title breadcrumb__item-title--last">Campaigns</h2>
+            </div>
           </NorthHeader>
-          <div className="cms-middle__scrollable">
-            <div className="content-toolbar">
+          <div className="panel-scrollable--single-toolbar">
+            <div className="toolbar--content">
               <div className="btn-toolbar">
           <FormAction
             label={i18n._t('Campaigns.ADDCAMPAIGN')}

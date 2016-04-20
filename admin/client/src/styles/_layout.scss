@@ -1,68 +1,96 @@
-.cms-middle {
-	padding-left: 0;
-	height: 100%;
-	position: relative;
-	transition: padding .2s;
-
-	&.with-preview {
-		@media (min-width: 992px) { /* lg */
-			padding-left: 316px;
-			.cms-campaigns {
-				width: 316px;
-			}
-		}
-		@media (min-width: 1200px) { /* xl */
-			padding-left: 448px;
-			.cms-campaigns {
-				width: 448px;
-			}
-		}
-	}
+.cms-content__inner {
+  height: 100%;
 }
 
-.cms-middle__scrollable {
-	overflow-y: auto;
-	display: block;
-	height: 100%;
+.cms-content__right,
+.cms-content__left {
+  height: 100%;
+  overflow: hidden;
+  background-color: $body-bg;
+  transition: width .2s;
 }
 
-// Preview panel
-.pages-preview {
-	display: block;
-	position: relative;
-	background-color: #BBB;
-	border-left: 1px solid #dbdde0;
-	height: 100%;
-
-	iframe {
-		width: 100%;
-		height: calc(100% - #{$toolbar-total-height});
-		border: none;
-	}
+.panel-scrollable,
+.panel-scrollable--single-toolbar,
+.panel-scrollable--double-toolbar {
+  overflow-y: auto;
+  height: 100%;
+}
+.panel-scrollable--single-toolbar {
+  height: calc(100% - #{$toolbar-total-height});
+}
+.panel-scrollable--double-toolbar {
+  height: calc(100% - #{$toolbar-total-height * 2});
 }
 
-// Toolbars
-// Todo: Convert toolbar to a component with variations.
+// .cms-content can be split into different left/right zones
+// Exampale modifier: --left-sm = small left side panel with right panel width set to auto.
+.cms-content__split {
+  height: 100%;
+}
+.cms-content__split--left-sm {
+  .cms-content__right {
+    position: relative;
+    border-left: 1px solid $border-color;
+  }
+  .cms-content__left {
+    width: 100%;
+    position: absolute;
+    left: 0;
+  }
+  @media (min-width: 992px) { /* lg */
+    padding-left: $cms-panel-sm;
+
+    .cms-content__left {
+      width: $cms-panel-sm;
+    }
+  }
+  @media (min-width: 1200px) { /* xl */
+    padding-left: $cms-panel-md;
+
+    .cms-content__left {
+      width: $cms-panel-md;
+    }
+  }
+}
+
+
+// TOOLBARS
 .toolbar {
-	width: 100%;        // Todo: should use mixin @include make-container();
+	width: 100%;        						// Todo: replace with mixin @include make-container();
 	height: $toolbar-total-height;
-	padding: $spacer-y*.625 $spacer-x;
 	background-color: $body-bg;
 
-	.btn-toolbar {
+ 	.btn-toolbar {
 		// TODO Remove '.cms .btn-toolbar' override
 		margin-top: 0;
 		margin-bottom: 0;
 	}
 }
 
-.content-toolbar {
+// Northern bar containing breadcrum, tabs etc.
+.toolbar--north {
 	@extend .toolbar;
+	padding-left: $spacer-x;				// Todo: replace with mixin @include make-container();
+	padding-right: $spacer-x;				// Todo: replace with mixin @include make-container();
+	display: block;
+	background-image: none;
+	background-color: $background-north;
+	border-bottom: 1px solid $border-color;
+	z-index: 60;
+}
+
+// Secondary content actions eg. Add page button
+.toolbar--content {
+	@extend .toolbar;
+	padding: $spacer-y*.625 $spacer-x*.75;
 	margin-bottom: $spacer-y/2;
 }
 
-.cms-south-actions {
+// Primary content actions
+.toolbar--south {
 	@extend .toolbar;
+	padding: $spacer-y*.625 $spacer-x;
 	position: absolute;
 	bottom: 0;
 	border-top: 1px solid $border-color;

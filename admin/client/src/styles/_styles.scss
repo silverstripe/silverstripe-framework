@@ -1,0 +1,19 @@
+// Custom UI buttons
+.toolbar--content {
+  .btn-secondary {
+    border-color: transparent;
+  }
+}
+
+.btn--options {
+
+  .font-icon-dot-3 {
+    font-size: 20px;
+    line-height: 20px;
+    color: $body-color;
+  }
+
+  &:hover {
+    background-color: $gray-lighter;
+  }
+}

@@ -1,6 +1,6 @@
 // Accordion styles
 .accordion-group {
-	margin-top: $spacer-y;
+	margin-top: $spacer-y * 1.25;
 
 	&__title {
 		margin-bottom: 0;
@@ -19,7 +19,7 @@
 			margin-right: -$spacer-y;
 			text-decoration: none;
 			position: relative;
-			border-bottom: 1px solid $gray-lighter;
+			border-bottom: 1px solid $border-color;
 			color: $body-color;
 
 			&::before {
