@@ -22,7 +22,13 @@ function appBoot() {
 
   const initialState = {};
   const rootReducer = combineReducers(reducerRegister.getAll());
-  const createStoreWithMiddleware = applyMiddleware(thunkMiddleware, createLogger())(createStore);
+
+  // Combine middleware
+  const middleware = [thunkMiddleware];
+  if (window.ss.config.environment === 'dev') {
+    middleware.push(createLogger());
+  }
+  const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
 
   // TODO: The store needs to be passed into route callbacks on the route context.
   window.store = createStoreWithMiddleware(rootReducer, initialState);

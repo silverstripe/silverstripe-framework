@@ -104,7 +104,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'BatchActionsForm',
 		'schema',
 	];
-
+	
 	private static $dependencies = [
 		'schema' => '%$FormSchema'
 	];
@@ -197,6 +197,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Get "global" CSRF token for use in JavaScript
 		$token = SecurityToken::inst();
 		$combinedClientConfig[$token->getName()] = $token->getValue();
+
+		// Set env
+		$combinedClientConfig['environment'] = Director::get_environment_type();
 
 		return Convert::raw2json($combinedClientConfig);
 	}
