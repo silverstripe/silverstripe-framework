@@ -180,17 +180,12 @@
 				var self = this,
 				    basePath = getUrlPath($('base')[0].href);
 
-				if (basePath[basePath.length - 1] === '/') {
-					basePath += 'admin';
-				} else {
-					basePath = '/admin';
-				}
-
+				basePath = basePath.replace(/\/$/, '');
 				_router2.default.base(basePath);
 
 				_config2.default.getTopLevelRoutes().forEach(function (route) {
-					(0, _router2.default)('/' + route + '/*', function (ctx, next) {
-						if (document.readyState !== 'complete' || typeof ctx.state.__forceReferer === 'undefined') {
+					(0, _router2.default)('/' + route + '*', function (ctx, next) {
+						if (document.readyState !== 'complete') {
 							return next();
 						}
 

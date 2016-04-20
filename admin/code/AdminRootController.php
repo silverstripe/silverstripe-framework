@@ -71,7 +71,7 @@ class AdminRootController extends Controller {
 			$base = $this->config()->url_base;
 			$segment = Config::inst()->get($this->config()->default_panel, 'url_segment');
 
-			$this->redirect(Controller::join_links($base, $segment));
+			$this->redirect(Controller::join_links($base, $segment, '/'));
 			return $this->getResponse();
 		}
 
