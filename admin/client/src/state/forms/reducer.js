@@ -33,6 +33,14 @@ function formsReducer(state = initialState, action) {
         }),
       }));
 
+    case ACTION_TYPES.SUBMIT_FORM_SUCCESS:
+      return deepFreeze(Object.assign({}, state, {
+        [action.payload.response.id]: {
+          fields: action.payload.response.state.fields,
+          messages: action.payload.response.state.messages,
+        },
+      }));
+
     default:
       return state;
 
