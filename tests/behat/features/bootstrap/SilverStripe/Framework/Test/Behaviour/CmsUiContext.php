@@ -490,7 +490,7 @@ class CmsUiContext extends BehatContext {
 		assertNotNull($container, 'Chosen.js field container not found');
 
 		// Click on newly expanded list element, indirectly setting the dropdown value
-		$linkEl = $container->find('xpath', './/a[./@href]');
+		$linkEl = $container->find('xpath', './/a');
 		assertNotNull($linkEl, 'Chosen.js link element not found');
 		$this->getSession()->wait(100); // wait for dropdown overlay to appear
 		$linkEl->click();
