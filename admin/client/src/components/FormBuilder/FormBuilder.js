@@ -293,10 +293,19 @@ export class FormBuilderComponent extends SilverStripeComponent {
     const createFn = this.props.createFn;
 
     return actions.map((action, i) => {
-      const props = deepFreeze(action);
+      let props = deepFreeze(action);
 
       if (typeof createFn === 'function') {
         return createFn(FormActionComponent, props);
+      }
+
+      // Add sensible defaults for common actions.
+      if (props.name === 'action_save') {
+        props = deepFreeze(Object.assign({}, props, {
+          type: 'submit',
+          label: props.title,
+          icon: 'save',
+        }));
       }
 
       return <FormActionComponent key={i} {...props} />;

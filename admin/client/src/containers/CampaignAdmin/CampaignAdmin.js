@@ -25,8 +25,6 @@ class CampaignAdmin extends SilverStripeComponent {
       },
     });
     this.campaignListCreateFn = this.campaignListCreateFn.bind(this);
-    this.campaignEditCreateFn = this.campaignEditCreateFn.bind(this);
-    this.campaignCreationCreateFn = this.campaignCreationCreateFn.bind(this);
   }
 
   componentDidMount() {
@@ -142,7 +140,6 @@ class CampaignAdmin extends SilverStripeComponent {
   renderDetailEditView() {
     const baseSchemaUrl = this.props.sectionConfig.forms.DetailEditForm.schemaUrl;
     const formBuilderProps = {
-      createFn: this.campaignEditCreateFn,
       formId: 'DetailEditForm',
       schemaUrl: `${baseSchemaUrl}/ChangeSet/${this.props.campaignId}`,
     };
@@ -167,7 +164,6 @@ class CampaignAdmin extends SilverStripeComponent {
   renderCreateView() {
     const baseSchemaUrl = this.props.sectionConfig.forms.CreateEditForm.schemaUrl;
     const formBuilderProps = {
-      createFn: this.campaignCreationCreateFn,
       formId: 'CreateEditForm',
       schemaUrl: `${baseSchemaUrl}/ChangeSet`,
     };
@@ -184,28 +180,6 @@ class CampaignAdmin extends SilverStripeComponent {
         </div>
       </div>
     );
-  }
-
-  /**
-   * Hook to allow customisation of components being constructed
-   * by the Campaign creation FormBuilder.
-   *
-   * @param {Object} Component - Component constructor.
-   * @param {Object} props - Props passed from FormBuilder.
-   * @return {Object} - Instanciated React component
-   */
-  campaignCreationCreateFn(Component, props) {
-    if (props.name === 'action_save') {
-      const extendedProps = Object.assign({}, props, {
-        type: 'submit',
-        label: props.title,
-        icon: 'save',
-      });
-
-      return <Component key={props.name} {...extendedProps} />;
-    }
-
-    return <Component key={props.name} {...props} />;
   }
 
   /**
@@ -264,30 +238,6 @@ class CampaignAdmin extends SilverStripeComponent {
         href: 'admin/campaigns/show/1',
       },
     ];
-  }
-
-  /*
-   * Hook to allow customisation of components being constructed
-   * by the Campaign detail edit FormBuilder.
-   *
-   * @param object Component - Component constructor.
-   * @param object props - Props passed from FormBuilder.
-   *
-   * @return object - Instanciated React component
-   */
-  campaignEditCreateFn(Component, props) {
-    if (props.name === 'action_save') {
-      const extendedProps = Object.assign({}, props, {
-        bootstrapButtonStyle: 'success',
-        type: 'submit',
-        label: props.title,
-        icon: 'save',
-      });
-
-      return <Component key={props.name} {...extendedProps} />;
-    }
-
-    return <Component key={props.name} {...props} />;
   }
 
   /**
