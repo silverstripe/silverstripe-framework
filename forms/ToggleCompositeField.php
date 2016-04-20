@@ -105,7 +105,7 @@ class ToggleCompositeField extends CompositeField {
 	 * @return $this
 	 */
 	public function setHeadingLevel($headingLevel) {
-		$this->headingLevel = $headingLevel;
+		$this->headingLevel = (int) $headingLevel;
 
 		return $this;
 	}
