@@ -1,6 +1,7 @@
 .cms-content__inner {
   height: 100%;
 }
+
 .cms-content__right,
 .cms-content__left {
   height: 100%;
@@ -8,9 +9,18 @@
   background-color: $body-bg;
   transition: width .2s;
 }
-.panel-scrollable {
-  height: calc(100% - #{$toolbar-total-height});
+
+.panel-scrollable,
+.panel-scrollable--single-toolbar,
+.panel-scrollable--double-toolbar {
   overflow-y: auto;
+  height: 100%;
+}
+.panel-scrollable--single-toolbar {
+  height: calc(100% - #{$toolbar-total-height});
+}
+.panel-scrollable--double-toolbar {
+  height: calc(100% - #{$toolbar-total-height * 2});
 }
 
 // .cms-content can be split into different left/right zones

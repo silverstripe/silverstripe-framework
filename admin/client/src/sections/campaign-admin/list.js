@@ -88,7 +88,7 @@ class CampaignListContainer extends SilverStripeComponent {
           <NorthHeader>
             <BreadcrumbComponent crumbs={this.props.breadcrumbs} multiline />
           </NorthHeader>
-          <div className="container-fluid campaign-items panel-scrollable">
+          <div className="container-fluid campaign-items panel-scrollable--double-toolbar">
             <Accordion>
               {accordionGroups}
             </Accordion>

@@ -87,10 +87,10 @@ class CampaignAdminContainer extends SilverStripeComponent {
         <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
           <NorthHeader>
             <div className="breadcrumb breadcrumb--current-only">
-              <h2 className="text-truncate breadcrumb__item-title breadcrumb__item-title--last">Campaigns</h2>
+              <h2 className="breadcrumb__item-title breadcrumb__item-title--last">Campaigns</h2>
             </div>
           </NorthHeader>
-          <div className="panel-scrollable">
+          <div className="panel-scrollable--single-toolbar">
             <div className="toolbar--content">
               <div className="btn-toolbar">
           <FormAction
