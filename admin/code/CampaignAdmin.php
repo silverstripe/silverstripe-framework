@@ -12,6 +12,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		'set',
 		'sets',
 		'schema',
+		'CreateEditForm',
 		'DetailEditForm',
 		'readCampaigns',
 		'createCampaign',
@@ -30,7 +31,6 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	private static $url_handlers = [
 		'GET sets' => 'readCampaigns',
 		'POST set/$ID/publish' => 'publishCampaign',
-		'POST set/$ID' => 'createCampaign',
 		'GET set/$ID/$Name' => 'readCampaign',
 		'DELETE set/$ID' => 'deleteCampaign',
 	];
@@ -62,7 +62,10 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 				],
 				'DetailEditForm' => [
 					'schemaUrl' => $this->Link('schema/DetailEditForm')
-				]
+				],
+				'CreateEditForm' => [
+					'schemaUrl' => $this->Link('schema/CreateEditForm')
+				],
 			],
 			'campaignViewRoute' => $this->Link() . ':type?/:id?/:view?',
 			'itemListViewEndpoint' => $this->Link() . 'set/:id/show',
@@ -186,23 +189,6 @@ JSON;
 		} else {
 			return parent::schema($request);
 		}
-	}
-
-	/**
-	 * REST endpoint to create a campaign.
-	 *
-	 * @param SS_HTTPRequest $request
-	 *
-	 * @return SS_HTTPResponse
-	 */
-	public function createCampaign(SS_HTTPRequest $request) {
-		$response = new SS_HTTPResponse();
-		$response->addHeader('Content-Type', 'application/json');
-		$response->setBody(Convert::raw2json(['campaign' => 'create']));
-
-		// TODO Implement permission check and data creation
-
-		return $response;
 	}
 
 	/**
@@ -487,6 +473,22 @@ JSON;
 			return $this->getSchemaResponse($form);
 		});
 		return $form;
+	}
+
+	/**
+	 * @todo Use GridFieldDetailForm once it can handle structured data and form schemas
+	 *
+	 * @return Form
+	 */
+	public function getCreateEditForm() {
+		return Form::create(
+			$this,
+			'CreateEditForm',
+			ChangeSet::singleton()->getCMSFields(),
+			FieldList::create(
+				FormAction::create('save', 'Save')
+			)
+		);
 	}
 
 	/**

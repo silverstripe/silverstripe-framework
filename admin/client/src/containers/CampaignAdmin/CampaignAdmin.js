@@ -26,6 +26,7 @@ class CampaignAdmin extends SilverStripeComponent {
     });
     this.campaignListCreateFn = this.campaignListCreateFn.bind(this);
     this.campaignEditCreateFn = this.campaignEditCreateFn.bind(this);
+    this.campaignCreationCreateFn = this.campaignCreationCreateFn.bind(this);
   }
 
   componentDidMount() {
@@ -67,6 +68,9 @@ class CampaignAdmin extends SilverStripeComponent {
         break;
       case 'edit':
         view = this.renderDetailEditView();
+        break;
+      case 'create':
+        view = this.renderCreateView();
         break;
       default:
         view = this.renderIndexView();
@@ -155,6 +159,53 @@ class CampaignAdmin extends SilverStripeComponent {
         </div>
       </div>
     );
+  }
+
+  /**
+   * Render the view for creating a new Campaign.
+   */
+  renderCreateView() {
+    const baseSchemaUrl = this.props.sectionConfig.forms.CreateEditForm.schemaUrl;
+    const formBuilderProps = {
+      createFn: this.campaignCreationCreateFn,
+      formId: 'CreateEditForm',
+      schemaUrl: `${baseSchemaUrl}/ChangeSet`,
+    };
+
+    return (
+      <div className="cms-middle no-preview">
+        <div className="cms-campaigns collapse in" aria-expanded="true">
+          <NorthHeader>
+            <h2 className="text-truncate north-header__heading">Campaigns</h2>
+          </NorthHeader>
+          <div className="cms-middle__scrollable">
+            <FormBuilder {...formBuilderProps} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /**
+   * Hook to allow customisation of components being constructed
+   * by the Campaign creation FormBuilder.
+   *
+   * @param {Object} Component - Component constructor.
+   * @param {Object} props - Props passed from FormBuilder.
+   * @return {Object} - Instanciated React component
+   */
+  campaignCreationCreateFn(Component, props) {
+    if (props.name === 'action_save') {
+      const extendedProps = Object.assign({}, props, {
+        type: 'submit',
+        label: props.title,
+        icon: 'save',
+      });
+
+      return <Component key={props.name} {...extendedProps} />;
+    }
+
+    return <Component key={props.name} {...props} />;
   }
 
   /**
@@ -254,7 +305,12 @@ class CampaignAdmin extends SilverStripeComponent {
   }
 
   addCampaign() {
-    // Add campaign
+    const path = this.props.sectionConfig.campaignViewRoute
+      .replace(/:type\?/, 'set')
+      .replace(/:id\?/, 0)
+      .replace(/:view\?/, 'create');
+
+    window.ss.router.show(path);
   }
 
 }
