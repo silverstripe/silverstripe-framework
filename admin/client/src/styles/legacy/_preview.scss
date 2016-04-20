@@ -243,6 +243,7 @@
 /* Styling for the preview screen sizes */
 .cms-preview {
 	background-color: $tab-panel-texture-color;
+	border-left: 1px solid $border-color-dark;
 	height: 100%;
 	width: 100%;
 
@@ -276,7 +277,7 @@
 		}
 	}
 	.preview-scroll {
-		height: 100%;
+		height: calc(100% - #{$toolbar-total-height});
 		overflow: auto;
 		position: relative;
 		width: 100%;
@@ -293,6 +294,7 @@
 					height: 100%;
 					overflow-y: auto;
 					width: 100%;
+					border: 0;
 				}
 			}
 		}

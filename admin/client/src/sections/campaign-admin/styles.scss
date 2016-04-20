@@ -77,7 +77,8 @@
 			}
 		}
 
-		&:hover {
+		&:hover,
+		&:focus {
 			text-decoration: none;
 
 			.list-group-item--has-links {
