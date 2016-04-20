@@ -6,10 +6,10 @@ $.entwine('ss.preview', function($){
 	/**
 	 * Shows a previewable website state alongside its editable version in backend UI.
 	 *
-	 * Relies on the server responses to indicate if a preview is available for the 
+	 * Relies on the server responses to indicate if a preview is available for the
 	 * currently loaded admin interface - signified by class ".cms-previewable" being present.
 	 *
-	 * The preview options at the bottom are constructured by grabbing a SilverStripeNavigator 
+	 * The preview options at the bottom are constructured by grabbing a SilverStripeNavigator
 	 * structure also provided by the backend.
 	 */
 	$('.cms-preview').entwine({
@@ -49,8 +49,8 @@ $.entwine('ss.preview', function($){
 				height: '100%'
 			},
 			mobile: {
-				width: '335px', // add 15px for approx desktop scrollbar 
-				height: '568px' 
+				width: '335px', // add 15px for approx desktop scrollbar
+				height: '568px'
 			},
 			mobileLandscape: {
 				width: '583px', // add 15px for approx desktop scrollbar
@@ -78,7 +78,7 @@ $.entwine('ss.preview', function($){
 		 * @param {String}
 		 * @param {Boolean} Set to FALSE to avoid persisting the state
 		 */
-		changeState: function(stateName, save) {				
+		changeState: function(stateName, save) {
 			var self = this, states = this._getNavigatorStates();
 			if(save !== false) {
 				$.each(states, function(index, state) {
@@ -98,7 +98,7 @@ $.entwine('ss.preview', function($){
 		 * Change the preview mode.
 		 * modeName can be: split, content, preview.
 		 */
-		changeMode: function(modeName, save) {				
+		changeMode: function(modeName, save) {
 			var container = $('.cms-container');
 
 			if (modeName == 'split') {
@@ -151,7 +151,7 @@ $.entwine('ss.preview', function($){
 		 * API
 		 * Update the visual appearance to match the internal preview state.
 		 */
-		redraw: function() {			
+		redraw: function() {
 
 			if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
@@ -189,7 +189,7 @@ $.entwine('ss.preview', function($){
 		 */
 		loadState : function(name) {
 			if(this._supportsLocalStorage()) return window.localStorage.getItem('cms-preview-state-' + name);
-		}, 
+		},
 
 		/**
 		 * Disable the area - it will not appear in the GUI.
@@ -252,7 +252,7 @@ $.entwine('ss.preview', function($){
 				// Load edit view for new page, but only if the preview is activated at the moment.
 				// This avoids e.g. force-redirections of the edit view on RedirectorPage instances.
 				self._loadCurrentPage();
-				
+
 				$(this).removeClass('loading');
 			});
 
@@ -268,13 +268,13 @@ $.entwine('ss.preview', function($){
 
 			// Preview might not be available in all admin interfaces - block/disable when necessary
 			this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
-			this.find('.cms-preview-overlay').hide();			
+			this.find('.cms-preview-overlay').hide();
 
 			this.disablePreview();
 
 			this._super();
 		},
-		
+
 		/**
 		* Detect and use localStorage if available. In IE11 windows 8.1 call to window.localStorage was throwing out an access denied error in some cases which was causing the preview window not to display correctly in the CMS admin area.
 		*/
@@ -404,7 +404,7 @@ $.entwine('ss.preview', function($){
 				var stateLink = $('.cms-preview-states .state-name[data-name=' + name + ']');
 				if(stateLink.length) {
 					return {
-						name: name, 
+						name: name,
 						url: stateLink.attr('data-link'),
 						active: stateLink.is(':radio') ? stateLink.is(':checked') : stateLink.is(':selected')
 					};
@@ -514,12 +514,12 @@ $.entwine('ss.preview', function($){
       }
 
 			// Load this page in the admin interface if appropriate
-			var id = $(doc).find('meta[name=x-page-id]').attr('content'); 
+			var id = $(doc).find('meta[name=x-page-id]').attr('content');
 			var editLink = $(doc).find('meta[name=x-cms-edit-link]').attr('content');
 			var contentPanel = $('.cms-content');
-			
+
 			if(id && contentPanel.find(':input[name=ID]').val() != id) {
-				// Ignore behaviour without history support (as we need ajax loading 
+				// Ignore behaviour without history support (as we need ajax loading
 				// for the new form to load in the background)
 				$('.cms-container').entwine('.ss').loadPanel(editLink);
 			}
@@ -551,7 +551,7 @@ $.entwine('ss.preview', function($){
 			for (var i = 0; i < links.length; i++) {
 				var href = links[i].getAttribute('href');
 				if(!href) continue;
-				
+
 				if (href.match(/^http:\/\//)) links[i].setAttribute('target', '_blank');
 			}
 
@@ -572,7 +572,7 @@ $.entwine('ss.preview', function($){
 			$('.cms-preview')._initialiseFromContent();
 		}
 	});
-	
+
 	/**
 	 * "Preview state" functions.
 	 * -------------------------------------------------------------------
@@ -590,17 +590,17 @@ $.entwine('ss.preview', function($){
 		/**
 		 * Reacts to the user changing the state of the preview.
 		 */
-		onclick: function(e) {	
+		onclick: function(e) {
 			//Add and remove classes to make switch work ok in old IE
 			this.parent().find('.active').removeClass('active');
 			this.next('label').addClass('active');
 
 			var targetStateName = $(this).attr('data-name');
 			// Reload preview with the selected state.
-			$('.cms-preview').changeState(targetStateName);				
+			$('.cms-preview').changeState(targetStateName);
 		}
-	});	
-	
+	});
+
 	/**
 	 * "Preview mode" functions
 	 * -------------------------------------------------------------------
@@ -621,7 +621,7 @@ $.entwine('ss.preview', function($){
 		/**
 		 * Reacts to the user changing the preview mode.
 		 */
-		onchange: function(e) {				
+		onchange: function(e) {
 			this._super(e);
 			e.preventDefault();
 
@@ -629,7 +629,7 @@ $.entwine('ss.preview', function($){
 			$('.cms-preview').changeMode(targetStateName);
 		}
 	});
-	
+
 	/**
 	 * Adjust the visibility of the preview-mode selector in the CMS part (hidden if preview is visible).
 	 */
@@ -678,7 +678,7 @@ $.entwine('ss.preview', function($){
 		/**
 		 * Change the appearance of the size selector.
 		 */
-		changeVisibleSize: function(size) {				
+		changeVisibleSize: function(size) {
 			this.find('select')
 				.val(size)
 				.trigger('chosen:updated')
@@ -698,7 +698,7 @@ $.entwine('ss.preview', function($){
 		}
 	});
 
-	
+
 	/**
 	 * "Chosen" plumbing.
 	 * -------------------------------------------------------------------
@@ -719,16 +719,16 @@ $.entwine('ss.preview', function($){
 		},
 
 		_addIcon: function(){
-			var selected = this.find(':selected');				
-			var iconClass = selected.attr('data-icon');	
-							
+			var selected = this.find(':selected');
+			var iconClass = selected.attr('data-icon');
+
 			var target = this.parent().find('.chosen-container a.chosen-single');
 			var oldIcon = target.attr('data-icon');
 			if(typeof oldIcon !== 'undefined'){
 				target.removeClass(oldIcon);
 			}
 			target.addClass(iconClass);
-			target.attr('data-icon', iconClass);				
+			target.attr('data-icon', iconClass);
 
 			return this;
 		}
@@ -744,34 +744,7 @@ $.entwine('ss.preview', function($){
 		}
 	});
 
-	/**
-	 * Recalculate the preview space to allow for horizontal scrollbar and the preview actions panel
-	 */
-	$('.preview-scroll').entwine({
-		/**
-		 * Height of the preview actions panel
-		 */
-		ToolbarSize: 53,
-
-		_redraw: function() {
-			var toolbarSize = this.getToolbarSize();
-
-			if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
-			var previewHeight = (this.height() - toolbarSize);
-			this.height(previewHeight);
-		}, 
-
-		onmatch: function() {
-			this._redraw();
-			this._super();
-		},
-
-		onunmatch: function() {
-			this._super();
-		}
-		// TODO: Need to recalculate on resize of browser
-
-	});
+	
 
 	/**
 	 * Rotate preview to landscape

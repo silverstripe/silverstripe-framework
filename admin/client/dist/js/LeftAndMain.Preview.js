@@ -549,27 +549,6 @@
 			}
 		});
 
-		$('.preview-scroll').entwine({
-			ToolbarSize: 53,
-
-			_redraw: function _redraw() {
-				var toolbarSize = this.getToolbarSize();
-
-				if (window.debug) console.log('redraw', this.attr('class'), this.get(0));
-				var previewHeight = this.height() - toolbarSize;
-				this.height(previewHeight);
-			},
-
-			onmatch: function onmatch() {
-				this._redraw();
-				this._super();
-			},
-
-			onunmatch: function onunmatch() {
-				this._super();
-			}
-		});
-
 		$('.preview-device-outer').entwine({
 			onclick: function onclick() {
 				this.toggleClass('rotate');

@@ -34,7 +34,7 @@
 	position: relative;
 	vertical-align: middle;
 	transition: padding .2s;
-	min-height: 52px;
+	min-height: $toolbar-total-height;
 	transition: padding .2s;
 
 	.version {
@@ -64,8 +64,8 @@
 	padding: $grid-y*1.5 8px;
 	line-height: 16px;
 	font-size: $font-size-sm;
-	min-height: 28px;
 	transition: padding .2s;
+	min-height: $toolbar-total-height;
 
 	.logout-link {
 		float: left;
@@ -90,11 +90,13 @@
 	z-index: 80;
 	background: $color-theme-bg;
 	width: ($grid-x * 20);
-	
+
 	.cms-menu-list {
-		margin: $grid-y * 1.5 0 0 0;
+		margin: 0;
+		padding: $spacer-y/2 0;
 		list-style-type: none;
 		padding-left: 0;
+		box-shadow: inset $color-separator -1px 0 0;
 	}
 
 	a {
@@ -109,7 +111,7 @@
 		top:auto !important;
 		left:auto !important;
 		box-shadow: inset #C1C7CC -1px 0 0;
-		min-height: calc(100% - 104px);
+		height: calc(100% - #{$toolbar-total-height * 3}); // account for logo, logout and south bar
 	}
 
 	&.collapsed {
@@ -145,7 +147,6 @@
 
 		.cms-login-status,
 		.cms-logo {
-			height: 52px;
 			padding: 12px 18px 11px;
 
 			span {
@@ -174,6 +175,10 @@
 	.cms-panel-toggle {
 		height: 53px;
 
+		&.south {
+			background-color: $color-theme-bg;
+			box-shadow: inset $color-separator -1px 0 0;
+		}
 		a,
 		a.toggle-expand {
 			float: right;
@@ -366,7 +371,7 @@
 
 		// Has sub menu
 		&.children {
-			
+
 			.no-icon.text {
 				margin-left: 30px;
 			}

@@ -154,6 +154,10 @@ body.cms {
 .cms-container {
 	.column-hidden {
 		display: none;
+
+		&+ .cms-preview {
+			border-left: 0;
+		}
 	}
 }
 
@@ -788,13 +792,14 @@ body.cms {
 .cms-content-actions, .cms-preview-controls {
 	margin: 0;
 	z-index: 999;
-	border-top: 1px solid $color-light-separator;
-	height: 53px;
-	max-height: 53px;
+	border-top: 1px solid $border-color;
+	height: $toolbar-total-height;
+	min-height: $toolbar-total-height;
+	max-height: $toolbar-total-height;
 	background-color: $tab-panel-texture-color;
 
 	&.south .Actions {
-		height: 52px;
+		height: $toolbar-height;
 		padding: $grid-y+2 $grid-x*2;
 	}
 }
@@ -1085,7 +1090,7 @@ body.cms {
 	overflow-y: auto;
 	overflow-x: hidden;
 	z-index: 70;
-	box-shadow: 1px 0 0 0 $color-separator;
+	box-shadow: 1px 0 0 0 $border-color-dark;
 	z-index: 1000;
 	float: left;
 	position: relative;
@@ -1467,7 +1472,6 @@ form.member-profile-form {
 
 .cms {
 	.cms-content {
-		border-right: 1px solid #BBB;
 		border-radius: 0;
 		background: $tab-panel-texture-color;
 		width: 800px;
@@ -1564,7 +1568,7 @@ form.member-profile-form {
 
 	.cms-panel-toggle {
 		&.south {
-			box-shadow: inset $color-light-separator 0 1px 0; // #C1C7CC
+			border-top: 1px solid $color-light-separator;
 			position: absolute;
 			bottom: 0;
 			width: 100%;
