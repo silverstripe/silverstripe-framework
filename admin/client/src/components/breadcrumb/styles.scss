@@ -25,4 +25,5 @@
 	font-size: $font-size-lg;
 	font-weight: normal;
 	line-height: 24px;
+	@include text-truncate;
 }

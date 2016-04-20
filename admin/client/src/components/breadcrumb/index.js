@@ -24,7 +24,7 @@ class BreadcrumbComponent extends SilverStripeComponent {
      ]),
        this.props.crumbs.slice(-1).map((crumb, index) => [
          <li className="breadcrumb__item breadcrumb__item--last">
-           <h2 className="breadcrumb__item-title breadcrumb__item-title--last text-truncate" key={index}>
+           <h2 className="breadcrumb__item-title breadcrumb__item-title--last" key={index}>
              {crumb.text}
            </h2>
          </li>,

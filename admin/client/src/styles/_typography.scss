@@ -58,16 +58,3 @@
 		font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
 	}
 }
-
-// Used for long sentences where you would like to truncate them with an ellipsis (requires a set width)
-.truncate {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-// Used for breaking text so it doesn't run horizontally, useful for breaking URLs
-.break-string {
-	overflow-wrap: break-word;
-	word-wrap: break-word;
-}
