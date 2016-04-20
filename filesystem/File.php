@@ -831,16 +831,16 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		$extension = strtolower($extension);
 
 		// Check if exact extension has an icon
-		if(!file_exists(FRAMEWORK_PATH ."/images/app_icons/{$extension}_32.gif")) {
+		if(!file_exists(FRAMEWORK_PATH ."/client/dist/images/app_icons/{$extension}_32.gif")) {
 			$extension = static::get_app_category($extension);
 
 			// Fallback to category specific icon
-			if(!file_exists(FRAMEWORK_PATH ."/images/app_icons/{$extension}_32.gif")) {
+			if(!file_exists(FRAMEWORK_PATH ."/client/dist/images/app_icons/{$extension}_32.gif")) {
 				$extension ="generic";
 			}
 		}
 
-		return FRAMEWORK_DIR ."/images/app_icons/{$extension}_32.gif";
+		return FRAMEWORK_DIR ."/client/dist/images/app_icons/{$extension}_32.gif";
 	}
 
 	/**

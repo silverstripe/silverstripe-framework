@@ -1,9 +1,9 @@
-admin/javascript/src/ export-ignore
+admin/client/src/     export-ignore
 docs/                 export-ignore
-javascript/src/       export ignore
+client/src/           export ignore
 
 # Hide diffs
-admin/javascript/dist/ -diff
-javascript/dist/ -diff
-admin/javascript/css/* -diff
-javascript/css/* -diff
+admin/client/dist/js/ -diff
+admin/client/dist/css/ -diff
+client/dist/js/ -diff
+client/dist/css/ -diff

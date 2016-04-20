@@ -1235,7 +1235,7 @@ class Installer extends InstallRequirements {
 		<head>
 			<meta charset="utf-8"/>
 			<title>Installing SilverStripe...</title>
-			<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/dev/install/css/install.css"/>
+			<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/dev/install/client/dist/styles/install.css"/>
 			<script src="<?php echo FRAMEWORK_NAME; ?>/thirdparty/jquery/jquery.js"></script>
 		</head>
 		<body>

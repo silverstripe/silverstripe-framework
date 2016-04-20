@@ -24,6 +24,7 @@ const buffer = require('vinyl-buffer');
 const semver = require('semver');
 const sprity = require('sprity');
 const watchify = require('watchify');
+const flatten = require('gulp-flatten');
 
 const isDev = typeof process.env.npm_config_development !== 'undefined';
 
@@ -32,24 +33,34 @@ process.env.NODE_ENV = isDev ? 'development' : 'production';
 const PATHS = {
   MODULES: './node_modules',
   ADMIN: './admin',
-  ADMIN_IMAGES: './admin/images',
-  ADMIN_SCSS: './admin/scss',
+  ADMIN_IMAGES: './admin/client/dist/images',
+  ADMIN_CSS_SRC: './admin/client/src/styles',
+  ADMIN_CSS_DIST: './admin/client/dist/styles',
   ADMIN_THIRDPARTY: './admin/thirdparty',
-  ADMIN_JAVASCRIPT_SRC: './admin/javascript/src',
-  ADMIN_JAVASCRIPT_DIST: './admin/javascript/dist',
+  ADMIN_JS_SRC: './admin/client/src',
+  ADMIN_JS_DIST: './admin/client/dist/js',
+  ADMIN_SPRITES_SRC: './admin/client/src/sprites',
+  ADMIN_SPRITES_DIST: './admin/client/dist/images/sprites',
   FRAMEWORK: '.',
+  FRAMEWORK_CSS_SRC: './client/src/styles',
+  FRAMEWORK_CSS_DIST: './client/dist/styles',
   FRAMEWORK_THIRDPARTY: './thirdparty',
-  FRAMEWORK_DEV_INSTALL: './dev/install',
-  FRAMEWORK_JAVASCRIPT_SRC: './javascript/src',
-  FRAMEWORK_JAVASCRIPT_DIST: './javascript/dist',
+  INSTALL_CSS_SRC: './dev/install/client/src/styles',
+  INSTALL_CSS_DIST: './dev/install/client/dist/styles',
+  FRAMEWORK_JS_SRC: './client/src',
+  FRAMEWORK_JS_DIST: './client/dist/js',
 };
 
-// Folders which contain both scss and css folders to be compiled
-const rootCompileFolders = [PATHS.FRAMEWORK, PATHS.ADMIN, PATHS.FRAMEWORK_DEV_INSTALL];
+// Map of *.scss locations to their compile target folders
+const scssFolders = {
+  [PATHS.FRAMEWORK_CSS_SRC]: PATHS.FRAMEWORK_CSS_DIST,
+  [PATHS.ADMIN_CSS_SRC]: PATHS.ADMIN_CSS_DIST,
+  [PATHS.INSTALL_CSS_SRC]: PATHS.INSTALL_CSS_DIST,
+};
 
 const browserifyOptions = {
   debug: true,
-  paths: [PATHS.ADMIN_JAVASCRIPT_SRC, PATHS.FRAMEWORK_JAVASCRIPT_SRC],
+  paths: [PATHS.ADMIN_JS_SRC, PATHS.FRAMEWORK_JS_SRC],
 };
 
 const babelifyOptions = {
@@ -203,7 +214,7 @@ gulp.task('bundle-lib', function bundleLib() {
   const bundleFileName = 'bundle-lib.js';
 
   const es6 = browserify(Object.assign({}, browserifyOptions,
-    { entries: `${PATHS.ADMIN_JAVASCRIPT_SRC}/bundles/lib.js` }
+    { entries: `${PATHS.ADMIN_JS_SRC}/bundles/lib.js` }
   ))
     .on('update', bundleLib)
     .on('log', (msg) =>
@@ -237,64 +248,64 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
       { expose: 'bootstrap-collapse' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/form/index`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/form/index`,
       { expose: 'components/form/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/form-action/index`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/form-action/index`,
       { expose: 'components/form-action/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/form-builder/index`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/form-builder/index`,
       { expose: 'components/form-builder/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/index`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/index`,
       { expose: 'components/grid-field/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/cell`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/cell`,
       { expose: 'components/grid-field/cell/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/header`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/header`,
       { expose: 'components/grid-field/header' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/header-cell`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/header-cell`,
       { expose: 'components/grid-field/header-cell' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/row`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/row`,
       { expose: 'components/grid-field/row' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/grid-field/table`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/table`,
       { expose: 'components/grid-field/table' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/hidden-field/index`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/hidden-field/index`,
       { expose: 'components/hidden-field/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/text-field/index`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/text-field/index`,
       { expose: 'components/text-field/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/north-header/index`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/north-header/index`,
       { expose: 'components/north-header/index' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/components/breadcrumb/index`,
+    .require(`${PATHS.ADMIN_JS_SRC}/components/breadcrumb/index`,
       { expose: 'components/breadcrumb/index' }
     )
-    .require(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/i18n.js`,
+    .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/config.js`,
+    .require(`${PATHS.ADMIN_JS_SRC}/config.js`,
       { expose: 'config' }
     )
-    .require(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/jQuery.js`,
+    .require(`${PATHS.FRAMEWORK_JS_SRC}/jQuery.js`,
       { expose: 'jQuery' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/reducer-register.js`,
+    .require(`${PATHS.ADMIN_JS_SRC}/reducer-register.js`,
       { expose: 'reducer-register' }
     )
-    .require(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/router.js`,
+    .require(`${PATHS.FRAMEWORK_JS_SRC}/router.js`,
       { expose: 'router' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/silverstripe-component`,
+    .require(`${PATHS.ADMIN_JS_SRC}/silverstripe-component`,
       { expose: 'silverstripe-component' }
     )
-    .require(`${PATHS.ADMIN_JAVASCRIPT_SRC}/silverstripe-backend`,
+    .require(`${PATHS.ADMIN_JS_SRC}/silverstripe-backend`,
       { expose: 'silverstripe-backend' }
     )
     .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
@@ -318,14 +329,14 @@ gulp.task('bundle-lib', function bundleLib() {
     .pipe(concat(bundleFileName, { newLine: '\r\n;\r\n' }))
     .pipe(uglify())
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
+    .pipe(gulp.dest(PATHS.ADMIN_JS_DIST));
 });
 
 gulp.task('bundle-legacy', function bundleLeftAndMain() {
   const bundleFileName = 'bundle-legacy.js';
 
   return browserify(Object.assign({}, browserifyOptions,
-    { entries: `${PATHS.ADMIN_JAVASCRIPT_SRC}/bundles/legacy.js` }
+    { entries: `${PATHS.ADMIN_JS_SRC}/bundles/legacy.js` }
   ))
     .on('update', bundleLeftAndMain)
     .on('log', (msg) =>
@@ -344,14 +355,14 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(uglify())
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
+    .pipe(gulp.dest(PATHS.ADMIN_JS_DIST));
 });
 
 gulp.task('bundle-framework', function bundleBoot() {
   const bundleFileName = 'bundle-framework.js';
 
   return browserify(Object.assign({}, browserifyOptions,
-    { entries: `${PATHS.ADMIN_JAVASCRIPT_SRC}/boot/index.js` }
+    { entries: `${PATHS.ADMIN_JS_SRC}/boot/index.js` }
   ))
     .on('update', bundleBoot)
     .on('log', (msg) => {
@@ -385,7 +396,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(uglify())
     .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest(PATHS.ADMIN_JAVASCRIPT_DIST));
+    .pipe(gulp.dest(PATHS.ADMIN_JS_DIST));
 });
 
 gulp.task('sanity', () => {
@@ -406,24 +417,24 @@ gulp.task('thirdparty', () => {
 
 gulp.task('umd', ['umd-admin', 'umd-framework'], () => {
   if (isDev) {
-    gulp.watch(`${PATHS.ADMIN_JAVASCRIPT_SRC}/*.js`, ['umd-admin']);
-    gulp.watch(`${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/*.js`, ['umd-framework']);
+    gulp.watch(`${PATHS.ADMIN_JS_SRC}/legacy/*.js`, ['umd-admin']);
+    gulp.watch(`${PATHS.FRAMEWORK_JS_SRC}/*.js`, ['umd-framework']);
   }
 });
 
 gulp.task('umd-admin', () => {
   const files = glob.sync(
-    `${PATHS.ADMIN_JAVASCRIPT_SRC}/*.js`,
-    { ignore: `${PATHS.ADMIN_JAVASCRIPT_SRC}/LeftAndMain.!(Ping).js` }
+    `${PATHS.ADMIN_JS_SRC}/legacy/*.js`,
+    { ignore: `${PATHS.ADMIN_JS_SRC}/LeftAndMain.!(Ping).js` }
   );
 
-  return transformToUmd(files, PATHS.ADMIN_JAVASCRIPT_DIST);
+  return transformToUmd(files, PATHS.ADMIN_JS_DIST);
 });
 
 gulp.task('umd-framework', () => { // eslint-disable-line
   return transformToUmd(glob.sync(
-    `${PATHS.FRAMEWORK_JAVASCRIPT_SRC}/*.js`),
-    PATHS.FRAMEWORK_JAVASCRIPT_DIST
+    `${PATHS.FRAMEWORK_JS_SRC}/*.js`),
+    PATHS.FRAMEWORK_JS_DIST
   );
 });
 
@@ -432,9 +443,9 @@ gulp.task('umd-framework', () => { // eslint-disable-line
  */
 gulp.task('sprites', () => { // eslint-disable-line
   return sprity.src({
-    src: `${PATHS.ADMIN_IMAGES}/sprites/src/**/*.{png,jpg}`,
-    cssPath: '../images/sprites/dist',
-    style: './_spritey.scss',
+    src: `${PATHS.ADMIN_SPRITES_SRC}/**/*.{png,jpg}`,
+    cssPath: '../images/sprites',
+    style: './_sprity.scss',
     processor: 'sass',
     split: true,
     margin: 0,
@@ -442,20 +453,17 @@ gulp.task('sprites', () => { // eslint-disable-line
   .pipe(
     gulpif(
       '*.png',
-      gulp.dest(`${PATHS.ADMIN_IMAGES}/sprites/dist`),
-      gulp.dest(PATHS.ADMIN_SCSS)
+      gulp.dest(PATHS.ADMIN_SPRITES_DIST),
+      gulp.dest(`${PATHS.ADMIN_CSS_SRC}/legacy`)
     )
   );
 });
 
 gulp.task('css', ['compile:css'], () => {
   if (isDev) {
-    rootCompileFolders.forEach((folder) => {
-      gulp.watch(`${folder}/scss/**/*.scss`, ['compile:css']);
+    Object.keys(scssFolders).forEach((sourceFolder) => {
+      gulp.watch(`${sourceFolder}/**/*.scss`, ['compile:css']);
     });
-
-    // Watch the .scss files in react components
-    gulp.watch('./admin/javascript/src/**/*.scss', ['compile:css']);
   }
 });
 
@@ -464,15 +472,16 @@ gulp.task('css', ['compile:css'], () => {
  * Watches for changes if --development flag is given
  */
 gulp.task('compile:css', () => {
-  const tasks = rootCompileFolders.map((folder) => { // eslint-disable-line
-    return gulp.src(`${folder}/scss/**/*.scss`)
+  const tasks = Object.keys(scssFolders).map((sourceFolder) => { // eslint-disable-line
+    const targetFolder = scssFolders[sourceFolder];
+    return gulp.src(`${sourceFolder}/**/*.scss`)
       .pipe(sourcemaps.init())
       .pipe(
         sass({
           outputStyle: 'compressed',
           importer: (url, prev, done) => {
             if (url.match(/^compass\//)) {
-              done({ file: 'scss/_compasscompat.scss' });
+              done({ file: 'client/src/styles/_compasscompat.scss' });
             } else {
               done();
             }
@@ -484,7 +493,8 @@ gulp.task('compile:css', () => {
       )
       .pipe(postcss([autoprefixer({ browsers: supportedBrowsers })]))
       .pipe(sourcemaps.write())
-      .pipe(gulp.dest(`${folder}/css`));
+      .pipe(flatten()) // avoid legacy/ paths in CSS output
+      .pipe(gulp.dest(targetFolder));
   });
 
   return tasks;

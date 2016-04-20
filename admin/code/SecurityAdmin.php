@@ -31,7 +31,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function init() {
 		parent::init();
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/SecurityAdmin.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/SecurityAdmin.js');
 	}
 
 	/**
@@ -199,10 +199,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function memberimport() {
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/MemberImportForm.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
 		return $this->renderWith('BlankPage', array(
 			'Form' => $this->MemberImportForm()->forTemplate(),
 			'Content' => ' '
@@ -229,10 +229,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function groupimport() {
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/MemberImportForm.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
 		return $this->renderWith('BlankPage', array(
 			'Content' => ' ',
 			'Form' => $this->GroupImportForm()->forTemplate()

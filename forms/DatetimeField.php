@@ -113,7 +113,7 @@ class DatetimeField extends FormField {
 	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
-		Requirements::css(FRAMEWORK_DIR . '/css/DatetimeField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/DatetimeField.css');
 
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
 		return DBField::create_field('HTMLText', $this->dateField->FieldHolder() .

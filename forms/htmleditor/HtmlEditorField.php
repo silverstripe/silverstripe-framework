@@ -345,7 +345,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		$remoteURL->addExtraClass('remoteurl');
 		$fromWeb->addExtraClass('content ss-uploadfield htmleditorfield-from-web');
 
-		Requirements::css(FRAMEWORK_DIR . '/css/AssetUploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/AssetUploadField.css');
 		$computerUploadField = Object::create('UploadField', 'AssetUploadField', '');
 		$computerUploadField->setConfig('previewMaxWidth', 40);
 		$computerUploadField->setConfig('previewMaxHeight', 30);

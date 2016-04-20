@@ -927,7 +927,7 @@ class UploadField extends FileField {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/dist/ssui.core.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/ssui.core.js');
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
 
 		Requirements::combine_files('uploadfield.js', array(
@@ -938,12 +938,12 @@ class UploadField extends FileField {
 			THIRDPARTY_DIR . '/jquery-fileupload/cors/jquery.xdr-transport.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload-ui.js',
-			FRAMEWORK_DIR . '/javascript/dist/UploadField_uploadtemplate.js',
-			FRAMEWORK_DIR . '/javascript/dist/UploadField_downloadtemplate.js',
-			FRAMEWORK_DIR . '/javascript/dist/UploadField.js',
+			FRAMEWORK_DIR . '/client/dist/js/UploadField_uploadtemplate.js',
+			FRAMEWORK_DIR . '/client/dist/js/UploadField_downloadtemplate.js',
+			FRAMEWORK_DIR . '/client/dist/js/UploadField.js',
 		));
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css'); // TODO hmmm, remove it?
-		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/UploadField.css');
 
 		// Calculated config as per jquery.fileupload-ui.js
 		$allowedMaxFileNumber = $this->getAllowedMaxFileNumber();
@@ -1452,7 +1452,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		if($item instanceof Folder) return $this->httpError(403);
 		if(!$item->canEdit()) return $this->httpError(403);
 
-		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/UploadField.css');
 
 		return $this->customise(array(
 			'Form' => $this->EditForm()
@@ -1554,7 +1554,7 @@ class UploadField_SelectHandler extends RequestHandler {
 
 	public function index() {
 		// Requires a separate JS file, because we can't reach into the iframe with entwine.
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/dist/UploadField_select.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/UploadField_select.js');
 		return $this->renderWith('CMSDialog');
 	}
 
