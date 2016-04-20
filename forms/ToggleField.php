@@ -1,36 +1,45 @@
 <?php
+
 /**
- * ReadonlyField with added toggle-capabilities - will preview the first sentence of the contained text-value,
- * and show the full content by a javascript-switch.
+ * ReadonlyField with added toggle-capabilities - will preview the first sentence of the contained
+ * text-value, and show the full content by a javascript-switch.
+ *
+ * Caution: Strips HTML-encoding for the preview.
  *
  * @deprecated 3.1 Use custom javascript with a ReadonlyField.
  *
- * Caution: Strips HTML-encoding for the preview.
  * @package forms
  * @subpackage fields-dataless
  */
-
 class ToggleField extends ReadonlyField {
 
 	/**
-	 * @var $labelMore string Text shown as a link to see the full content of the field
+	 * Text shown as a link to see the full content of the field.
+	 *
+	 * @var string
 	 */
 	public $labelMore;
 
 	/**
-	 * @var $labelLess string Text shown as a link to see the partial view of the field content
+	 * Text shown as a link to see the partial view of the field content.
+	 *
+	 * @var string
 	 */
 	public $labelLess;
 
 	/**
+	 * Method to use when truncating this field's value (FirstSentence|FirstParagraph).
+	 *
 	 * @see Text
-	 * @var $truncateMethod string (FirstSentence|FirstParagraph)
+	 *
+	 * @var string
 	 */
 	public $truncateMethod = 'FirstSentence';
 
 	/**
-	 * @var $truncateChars int Number of chars to preview (optional).
-	 * 	Truncating will be applied with $truncateMethod by default.
+	 * Number of characters to truncate this field's value to.
+	 *
+	 * @var null|int
 	 */
 	public $truncateChars;
 
@@ -45,9 +54,11 @@ class ToggleField extends ReadonlyField {
 	public $startClosed;
 
 	/**
-	 * @param name The field name
-	 * @param title The field title
-	 * @param value The current value
+	 * @inheritdoc
+	 *
+	 * @param string $name
+	 * @param string $title
+	 * @param string $value
 	 */
 	public function __construct($name, $title = '', $value = '') {
 		Deprecation::notice('4.0', 'Use custom javascript with a ReadOnlyField');
@@ -60,6 +71,13 @@ class ToggleField extends ReadonlyField {
 		parent::__construct($name, $title, $value);
 	}
 
+	/**
+	 * @inheritdoc
+	 *
+	 * @param array $properties
+	 *
+	 * @return string|HTMLText
+     */
 	public function Field($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ToggleField.js');
@@ -107,7 +125,7 @@ HTML;
 	/**
 	 * Determines if the field should render open or closed by default.
 	 *
-	 * @param boolean
+	 * @param bool $bool
 	 */
 	public function startClosed($bool) {
 		if($bool) {
@@ -117,6 +135,11 @@ HTML;
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 *
+	 * @return string
+     */
 	public function Type() {
 		return "toggleField";
 	}
