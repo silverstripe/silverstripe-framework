@@ -1,32 +1,44 @@
-.north-header {
-    border-bottom: 1px solid $border-color-dark;
-    background-color: $background-north;
-    width: 100%;
-    height: $toolbar-total-height;
-    z-index: 60;
+.toolbar {
+  width: 100%; // Todo: replace with mixin @include make-container();
+  height: $toolbar-total-height;
+  background-color: $body-bg;
+
+  .btn-toolbar {
+    // TODO Remove '.cms .btn-toolbar' override
+    margin-top: 0;
+    margin-bottom: 0;
+  }
 }
 
-// Typically to hold breadcrumbs and back button
-.north-header__navigation {
-    float: left;
-    padding: 0 $spacer-y;
-    max-width: 70%;
-    max-height: $toolbar-height;
+// Northern bar containing breadcrum, tabs etc.
+.toolbar--north {
+  @extend .toolbar;
+  padding-left: $spacer-x; // Todo: replace with mixin @include make-container();
+  padding-right: $spacer-x; // Todo: replace with mixin @include make-container();
+  display: block;
+  background-image: none;
+  background-color: $background-north;
+  border-bottom: 1px solid $border-color;
+  z-index: 60;
 }
 
-.toolbar__navigation__back-button {
+// Secondary content actions eg. Add page button
+.toolbar--content {
+  @extend .toolbar;
+  padding: $spacer-y*.625 $spacer-x*.75;
+  margin-bottom: $spacer-y/2;
+}
+
+// Primary content actions
+.toolbar--south {
+  @extend .toolbar;
+  padding: $spacer-y*.625 $spacer-x;
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid $border-color;
+}
+
+.toolbar__back-button {
   float: left;
   margin: $spacer-y/2 $spacer-x $spacer-y/2 0;
-}
-
-.north-header__heading {
-    font-size: $font-size-lg;
-    font-weight: normal;
-    line-height: 20px;
-    margin: $spacer-y 0;
-}
-
-// To hold things like search icon and view toggle
-.north-header__actions {
-
 }
