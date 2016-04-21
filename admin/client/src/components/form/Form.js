@@ -18,14 +18,18 @@ class Form extends SilverStripeComponent {
   }
 
   render() {
-    const props = Object.assign({ onSubmit: this.handleSubmit }, this.props.attributes);
+    const defaultFormProps = {
+      className: 'container-fluid form-component',
+      onSubmit: this.handleSubmit,
+    };
+    const formProps = Object.assign({}, this.props.attributes, defaultFormProps);
     const fields = this.props.mapFieldsToComponents(this.props.fields);
     const actions = this.props.mapActionsToComponents(this.props.actions);
 
     return (
-      <form {...props}>
+      <form {...formProps}>
         {fields &&
-          <fieldset className="form-group">
+          <fieldset>
             {fields}
           </fieldset>
         }
