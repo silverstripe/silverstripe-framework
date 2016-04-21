@@ -2,16 +2,12 @@
 
 namespace SilverStripe\Framework\Test\Behaviour;
 
-use Behat\Behat\Context\ClosuredContextInterface,
-	Behat\Behat\Context\TranslatedContextInterface,
-	Behat\Behat\Context\BehatContext,
+use Behat\Behat\Context\BehatContext,
 	Behat\Behat\Context\Step,
 	Behat\Behat\Event\StepEvent,
-	Behat\Behat\Exception\PendingException,
-	Behat\Mink\Exception\ElementNotFoundException,
-	Behat\Gherkin\Node\PyStringNode,
-	Behat\Gherkin\Node\TableNode,
-	Behat\Mink\Element\NodeElement;
+	Behat\Mink\Element\NodeElement,
+	Behat\Mink\Session,
+	WebDriver\Exception\UnexpectedAlertOpen;
 
 
 // PHPUnit
@@ -39,6 +35,8 @@ class CmsUiContext extends BehatContext {
 
 	/**
 	 * Get Mink session from MinkContext
+	 *
+	 * @return Session
 	 */
 	public function getSession($name = null) {
 		return $this->getMainContext()->getSession($name);
@@ -54,7 +52,10 @@ class CmsUiContext extends BehatContext {
 	 * Every step could cause the CMS to be loaded, and we don't know if we're in the
 	 * CMS UI until we run a check.
 	 *
-	 * @AfterStep
+	 * Excluding scenarios with @modal tag is required,
+	 * because modal dialogs stop any JS interaction
+	 *
+	 * @AfterStep ~@modal
 	 */
 	public function handleCmsLoadingAfterStep(StepEvent $event) {
 		$timeoutMs = $this->getMainContext()->getAjaxTimeout();
