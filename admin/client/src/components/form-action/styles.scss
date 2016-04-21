@@ -95,6 +95,10 @@
 	&:focus {
 		background-color: $gray-lighter;
 	}
+
+	.toolbar--content & {
+		border-color: transparent;
+	}
 }
 
 .btn-success-outline {
@@ -120,4 +124,17 @@
 	svg circle {
 		fill: #fff;
 	}
+}
+
+.btn--options {
+
+  .font-icon-dot-3 {
+    font-size: 20px;
+    line-height: 20px;
+    color: $body-color;
+  }
+
+  &:hover {
+    background-color: $gray-lighter;
+  }
 }

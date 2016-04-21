@@ -7,15 +7,13 @@
 
 // Base
 @import "typography";
-@import "styles";
+@import "../../dist/font/icon-styles.css";
 
 // Legacy
 @import "legacy/sprity";
 @import "legacy/sprites";
 @import "legacy/mixins";
 @import "legacy/themes/default";
-@import "legacy/fonts";
-@import "legacy/typography";
 @import "legacy/uitheme";
 @import "legacy/forms";
 @import "legacy/style";
