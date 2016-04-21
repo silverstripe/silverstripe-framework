@@ -19,7 +19,8 @@
 	&.icon-campaignadmin {
 		background-position: 0 round(nth(sprite-position($sprite, "collection"), 2) / 2);
 	}
-	&.icon-assetadmin {
+	&.icon-assetadmin,
+	&.icon-silverstripe-assetadmin-controller-assetadmin {
 		background-position: 0 round(nth(sprite-position($sprite, "picture"), 2) / 2);
 	}
 	&.icon-cmsmain {
