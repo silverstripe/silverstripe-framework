@@ -14,11 +14,15 @@
     max-height: $toolbar-height;
 }
 
+.toolbar__navigation__back-button {
+  float: left;
+  margin: $spacer-y/2 $spacer-x $spacer-y/2 0;
+}
+
 .north-header__heading {
     font-size: $font-size-lg;
     font-weight: normal;
     line-height: 20px;
-    width: 100%;
     margin: $spacer-y 0;
 }
 
