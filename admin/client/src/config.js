@@ -28,14 +28,14 @@ class Config {
     Object.keys(window.ss.config.sections).forEach((key) => {
       let route = window.ss.config.sections[key].route;
 
-      // Check if this is a top level route, which ideally hasa trailing slash
+      // Check if this is a top level route
       const topLevelMatch = route.match(/^admin\/[^\/]+(\/?)$/);
       if (!topLevelMatch) {
         return;
       }
-      if (!topLevelMatch[1]) {
-        route += '/';
-      }
+
+      // Remove trailing slash
+      route = route.replace(/\/$/, '');
 
       // Check uniqueness and save
       const isUnique = topLevelRoutes.indexOf(route) === -1;

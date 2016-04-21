@@ -184,7 +184,7 @@
 				_router2.default.base(basePath);
 
 				_config2.default.getTopLevelRoutes().forEach(function (route) {
-					(0, _router2.default)('/' + route + '*', function (ctx, next) {
+					(0, _router2.default)('/' + route + '(/*?)?', function (ctx, next) {
 						if (document.readyState !== 'complete') {
 							return next();
 						}
