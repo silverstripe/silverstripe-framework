@@ -2,8 +2,8 @@
  * File: LeftAndMain.js
  */
 import $ from 'jQuery';
-import router from 'router';
-import Config from 'config';
+import router from 'lib/Router';
+import Config from 'lib/Config';
 
 var windowWidth, windowHeight;
 

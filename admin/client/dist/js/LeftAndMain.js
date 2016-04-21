@@ -1,23 +1,23 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define('ss.LeftAndMain', ['jQuery', 'router', 'config'], factory);
+		define('ss.LeftAndMain', ['jQuery', 'lib/Router', 'lib/Config'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(require('jQuery'), require('router'), require('config'));
+		factory(require('jQuery'), require('lib/Router'), require('lib/Config'));
 	} else {
 		var mod = {
 			exports: {}
 		};
-		factory(global.jQuery, global.router, global.config);
+		factory(global.jQuery, global.Router, global.Config);
 		global.ssLeftAndMain = mod.exports;
 	}
-})(this, function (_jQuery, _router, _config) {
+})(this, function (_jQuery, _Router, _Config) {
 	'use strict';
 
 	var _jQuery2 = _interopRequireDefault(_jQuery);
 
-	var _router2 = _interopRequireDefault(_router);
+	var _Router2 = _interopRequireDefault(_Router);
 
-	var _config2 = _interopRequireDefault(_config);
+	var _Config2 = _interopRequireDefault(_Config);
 
 	function _interopRequireDefault(obj) {
 		return obj && obj.__esModule ? obj : {
@@ -36,7 +36,7 @@
 	_jQuery2.default.noConflict();
 
 	window.ss = window.ss || {};
-	window.ss.router = _router2.default;
+	window.ss.router = _Router2.default;
 
 	window.ss.debounce = function (func, wait, immediate) {
 		var timeout, context, args;
@@ -145,7 +145,7 @@
 			}
 
 			if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
-				_router2.default.show(url, {
+				_Router2.default.show(url, {
 					id: new Date().getTime() + String(Math.random()).replace(/\D/g, ''),
 					pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']
 				});
@@ -181,10 +181,10 @@
 				    basePath = getUrlPath($('base')[0].href);
 
 				basePath = basePath.replace(/\/$/, '');
-				_router2.default.base(basePath);
+				_Router2.default.base(basePath);
 
-				_config2.default.getTopLevelRoutes().forEach(function (route) {
-					(0, _router2.default)('/' + route + '(/*?)?', function (ctx, next) {
+				_Config2.default.getTopLevelRoutes().forEach(function (route) {
+					(0, _Router2.default)('/' + route + '(/*?)?', function (ctx, next) {
 						if (document.readyState !== 'complete') {
 							return next();
 						}
@@ -193,7 +193,7 @@
 					});
 				});
 
-				_router2.default.start();
+				_Router2.default.start();
 
 				if ($.browser.msie && parseInt($.browser.version, 10) < 8) {
 					$('.ss-loading-screen').append('<p class="ss-loading-incompat-warning"><span class="notice">' + 'Your browser is not compatible with the CMS interface. Please use Internet Explorer 8+, Google Chrome or Mozilla Firefox.' + '</span></p>').css('z-index', $('.ss-loading-screen').css('z-index') + 1);
@@ -333,7 +333,7 @@
 					data.__forceReload = Math.random();
 				}
 
-				_router2.default.show(url, data);
+				_Router2.default.show(url, data);
 			},
 
 			reloadCurrentPanel: function reloadCurrentPanel() {
@@ -420,9 +420,9 @@
 					this.setPauseState(true);
 
 					if (lastState !== null) {
-						_router2.default.show(lastState.url);
+						_Router2.default.show(lastState.url);
 					} else {
-						_router2.default.back();
+						_Router2.default.back();
 					}
 
 					this.setPauseState(false);

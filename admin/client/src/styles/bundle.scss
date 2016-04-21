@@ -27,14 +27,14 @@
 @import "legacy/retina";
 
 // Components
-@import "../components/accordion/styles";
-@import "../components/breadcrumb/styles";
-@import "../components/form-action/styles";
-@import "../components/grid-field/styles";
-@import "../components/hidden-field/styles";
-@import "../components/label/styles";
-@import "../components/preview/styles";
+@import "../components/Accordion/Accordion";
+@import "../components/Breadcrumb/Breadcrumb";
+@import "../components/FormAction/FormAction";
+@import "../components/GridField/GridField";
+@import "../components/HiddenField/HiddenField";
+@import "../components/Label/Label";
+@import "../components/Preview/Preview";
 
 // Layout and sections
 @import "layout";
-@import "../sections/campaign-admin/styles";
+@import "../containers/CampaignAdmin/CampaignAdmin";
