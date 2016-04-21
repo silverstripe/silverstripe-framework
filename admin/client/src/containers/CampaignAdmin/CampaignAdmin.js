@@ -39,7 +39,7 @@ class CampaignAdmin extends SilverStripeComponent {
       if (captureRoute) {
         // If this component is mounted, then handle all page changes via
         // state / redux
-      this.props.actions.showCampaignView(ctx.params.id, ctx.params.view);
+        this.props.actions.showCampaignView(ctx.params.id, ctx.params.view);
       } else {
         // If component is not mounted, we need to allow root routes to load
         // this section in via ajax
@@ -53,7 +53,7 @@ class CampaignAdmin extends SilverStripeComponent {
       const applies = window.ss.router.routeAppliesToCurrentLocation(route);
       if (!applies) {
         captureRoute = false;
-  }
+      }
       next();
     });
   }
@@ -146,7 +146,7 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader>
+          <NorthHeader showBackButton>
             <h2 className="text-truncate north-header__heading">Campaigns</h2>
           </NorthHeader>
           <FormBuilder {...formBuilderProps} />
