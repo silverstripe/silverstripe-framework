@@ -15,7 +15,7 @@ class NorthHeader extends SilverStripeComponent {
       'btn-secondary',
       'action',
       'font-icon-left-open',
-      'toolbar__navigation__back-button',
+      'toolbar__back-button',
     ];
     const backButtonProps = {
       className: buttonClassNames.join(' '),
