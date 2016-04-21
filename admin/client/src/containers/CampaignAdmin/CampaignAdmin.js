@@ -92,7 +92,6 @@ class CampaignAdmin extends SilverStripeComponent {
     };
     const formBuilderProps = {
       createFn: this.campaignListCreateFn,
-      formId: 'EditForm',
       schemaUrl,
     };
 
@@ -140,10 +139,7 @@ class CampaignAdmin extends SilverStripeComponent {
    */
   renderDetailEditView() {
     const baseSchemaUrl = this.props.sectionConfig.forms.DetailEditForm.schemaUrl;
-    const formBuilderProps = {
-      formId: 'DetailEditForm',
-      schemaUrl: `${baseSchemaUrl}/ChangeSet/${this.props.campaignId}`,
-    };
+    const schemaUrl = `${baseSchemaUrl}/ChangeSet/${this.props.campaignId}`;
 
     return (
       <div className="cms-middle no-preview">
@@ -153,7 +149,7 @@ class CampaignAdmin extends SilverStripeComponent {
               <h2 className="text-truncate toolbar__heading">Campaigns</h2>
             </div>
           </NorthHeader>
-          <FormBuilder {...formBuilderProps} />
+          <FormBuilder schemaUrl={schemaUrl} />
         </div>
       </div>
     );
@@ -163,10 +159,9 @@ class CampaignAdmin extends SilverStripeComponent {
    * Render the view for creating a new Campaign.
    */
   renderCreateView() {
-    const baseSchemaUrl = this.props.sectionConfig.forms.CreateEditForm.schemaUrl;
+    const baseSchemaUrl = this.props.sectionConfig.forms.DetailEditForm.schemaUrl;
     const formBuilderProps = {
       createFn: this.campaignCreationView,
-      formId: 'CreateEditForm',
       schemaUrl: `${baseSchemaUrl}/ChangeSet`,
     };
 

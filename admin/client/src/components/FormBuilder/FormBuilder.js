@@ -75,6 +75,30 @@ export class FormBuilderComponent extends SilverStripeComponent {
     this.handleFieldUpdate = this.handleFieldUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.removeForm = this.removeForm.bind(this);
+    this.getFormId = this.getFormId.bind(this);
+    this.getFormSchema = this.getFormSchema.bind(this);
+  }
+
+  /**
+   * Get the schema for this form
+   *
+   * @returns {array}
+   */
+  getFormSchema() {
+    return this.props.schemas[this.props.schemaUrl];
+  }
+
+  /**
+   * Gets the ID for this form
+   *
+   * @returns {string}
+   */
+  getFormId() {
+    const schema = this.getFormSchema();
+    if (schema) {
+      return schema.id;
+    }
+    return null;
   }
 
   componentDidMount() {
@@ -184,9 +208,9 @@ export class FormBuilderComponent extends SilverStripeComponent {
    */
   handleFieldUpdate(event, updates, fn) {
     if (typeof fn !== 'undefined') {
-      fn(this.props.formId, this.props.formsActions.updateField);
+      fn(this.getFormId(), this.props.formsActions.updateField);
     } else {
-      this.props.formsActions.updateField(this.props.formId, updates);
+      this.props.formsActions.updateField(this.getFormId(), updates);
     }
   }
 
@@ -223,7 +247,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
    */
   handleSubmit(event) {
     const schemaFields = this.props.schemas[this.props.schemaUrl].schema.fields;
-    const fieldValues = this.props.forms[this.props.formId].fields
+    const fieldValues = this.props.forms[this.getFormId()].fields
       .reduce((prev, curr) => Object.assign({}, prev, {
         [schemaFields.find(schemaField => schemaField.id === curr.id).name]: curr.value,
       }), {});
@@ -231,7 +255,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
     const submitFn = () => {
       this.props.formsActions.submitForm(
         this.submitApi,
-        this.props.formId,
+        this.getFormId(),
         fieldValues
       );
     };
@@ -352,8 +376,12 @@ export class FormBuilderComponent extends SilverStripeComponent {
   }
 
   render() {
-    const formSchema = this.props.schemas[this.props.schemaUrl];
-    const formState = this.props.forms[this.props.formId];
+    const formId = this.getFormId();
+    if (!formId) {
+      return null;
+    }
+    const formSchema = this.getFormSchema();
+    const formState = this.props.forms[formId];
 
     // If the response from fetching the initial data
     // hasn't come back yet, don't render anything.
@@ -382,7 +410,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
       componentWillUnmount: this.removeForm,
       data: formSchema.schema.data,
       fields: fieldData,
-      formId: formSchema.id,
+      formId,
       handleSubmit: this.handleSubmit,
       mapActionsToComponents: this.mapActionsToComponents,
       mapFieldsToComponents: this.mapFieldsToComponents,
@@ -397,7 +425,6 @@ FormBuilderComponent.propTypes = {
   createFn: React.PropTypes.func,
   forms: React.PropTypes.object.isRequired,
   formsActions: React.PropTypes.object.isRequired,
-  formId: React.PropTypes.string.isRequired,
   handleSubmit: React.PropTypes.func,
   schemas: React.PropTypes.object.isRequired,
   schemaActions: React.PropTypes.object.isRequired,

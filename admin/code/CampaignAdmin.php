@@ -12,12 +12,9 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		'set',
 		'sets',
 		'schema',
-		'CreateEditForm',
 		'DetailEditForm',
 		'readCampaigns',
-		'createCampaign',
 		'readCampaign',
-		'updateCampaign',
 		'deleteCampaign',
 		'publishCampaign',
 	];
@@ -63,9 +60,6 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 				'DetailEditForm' => [
 					'schemaUrl' => $this->Link('schema/DetailEditForm')
 				],
-				'CreateEditForm' => [
-					'schemaUrl' => $this->Link('schema/CreateEditForm')
-				],
 			],
 			'campaignViewRoute' => $this->Link() . ':type?/:id?/:view?',
 			'itemListViewEndpoint' => $this->Link() . 'set/:id/show',
@@ -80,10 +74,10 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		// TODO Hardcoding schema until we can get GridField to generate a schema dynamically
 		$json = <<<JSON
 {
-	"id": "EditForm",
+	"id": "Form_EditForm",
 	"schema": {
 		"name": "EditForm",
-		"id": "EditForm",
+		"id": "Form_EditForm",
 		"action": "schema",
 		"method": "GET",
 		"schema_url": "admin\/campaigns\/schema\/EditForm",
@@ -464,7 +458,8 @@ JSON;
 			'DetailEditForm',
 			$fields,
 			FieldList::create(
-				FormAction::create('save', 'Save')
+				FormAction::create('save', 'Save'),
+				FormAction::create('cancel', 'Cancel')
 			)
 		);
 		// Configure form to respond to validation errors with form schema
@@ -473,23 +468,6 @@ JSON;
 			return $this->getSchemaResponse($form);
 		});
 		return $form;
-	}
-
-	/**
-	 * @todo Use GridFieldDetailForm once it can handle structured data and form schemas
-	 *
-	 * @return Form
-	 */
-	public function getCreateEditForm() {
-		return Form::create(
-			$this,
-			'CreateEditForm',
-			ChangeSet::singleton()->getCMSFields(),
-			FieldList::create(
-				FormAction::create('save', 'Save'),
-				FormAction::create('cancel', 'Cancel')
-			)
-		);
 	}
 
 	/**
@@ -516,13 +494,6 @@ JSON;
 			$this->Link('item'),
 			$itemID
 		);
-	}
-
-	/**
-	 *
-	 */
-	public function FindReferencedChanges() {
-
 	}
 
 }

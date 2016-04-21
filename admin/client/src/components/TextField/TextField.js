@@ -14,6 +14,13 @@ class TextField extends SilverStripeComponent {
       ? this.props.leftTitle
       : this.props.title;
 
+    let field = null;
+    if (this.props.readOnly) {
+      field = <div><i>{this.props.value}</i></div>;
+    } else {
+      field = <input {...this.getInputProps()} />;
+    }
+
     return (
       <div className="field text">
         {labelText &&
@@ -22,7 +29,7 @@ class TextField extends SilverStripeComponent {
           </label>
         }
         <div className="middleColumn">
-          <input {...this.getInputProps()} />
+          {field}
         </div>
       </div>
     );
@@ -59,6 +66,7 @@ TextField.propTypes = {
   name: React.PropTypes.string.isRequired,
   handleFieldUpdate: React.PropTypes.func,
   value: React.PropTypes.string,
+  readOnly: React.PropTypes.bool,
 };
 
 export default TextField;

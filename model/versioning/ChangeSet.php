@@ -346,10 +346,12 @@ class ChangeSet extends DataObject {
 
 	public function getCMSFields() {
 		$fields = new FieldList();
-		$fields->merge([
-			TextField::create('Name'),
-			ReadonlyField::create('State')
-		]);
+		$fields->push(TextField::create('Name'));
+		if($this->isInDB()) {
+			$state = ReadonlyField::create('State')
+				->setDontEscape(true);
+			$fields->push($state); // Escape is done in react
+		}
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}

@@ -233,7 +233,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$formName = $request->param('FormName');
 		$recordType = $request->param('RecordType');
 		$itemID = $request->param('ItemID');
-		
+
 		if (!$formName || !$recordType) {
 			throw new SS_HTTPResponse_Exception(
 				'Missing request params',
@@ -294,7 +294,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	protected function getSchemaForForm(Form $form) {
 		$request = $this->getRequest();
-		$schemaParts = [];
 		$return = null;
 
 		// Valid values for the "X-Formschema-Request" header are "schema" and "state".
@@ -309,7 +308,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$schemaParts = ['schema'];
 		}
 
-		$return = ['id' => $form->getName()];
+		$return = ['id' => $form->FormName()];
 
 		if (in_array('schema', $schemaParts)) {
 			$return['schema'] = $this->schema->getSchema($form);
@@ -1166,12 +1165,18 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// Existing or new record?
 		$id = $data['ID'];
-		if(substr($id,0,3) != 'new') {
+		if(is_numeric($id) && $id > 0) {
 			$record = DataObject::get_by_id($className, $id);
-			if($record && !$record->canEdit()) return Security::permissionFailure($this);
-			if(!$record || !$record->ID) $this->httpError(404, "Bad record ID #" . (int)$id);
+			if($record && !$record->canEdit()) {
+				return Security::permissionFailure($this);
+			}
+			if(!$record || !$record->ID) {
+				$this->httpError(404, "Bad record ID #" . (int)$id);
+			}
 		} else {
-			if(!singleton($this->stat('tree_class'))->canCreate()) return Security::permissionFailure($this);
+			if(!singleton($this->stat('tree_class'))->canCreate()) {
+				return Security::permissionFailure($this);
+			}
 			$record = $this->getNewItem($id, false);
 		}
 
@@ -1193,6 +1198,22 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		$response->addHeader('X-Status', rawurlencode($message));
 		return $response;
+	}
+
+	/**
+	 * Create new item.
+	 *
+	 * @param string|int $id
+	 * @param bool $setID
+	 * @return DataObject
+	 */
+	public function getNewItem($id, $setID = true) {
+		$class = $this->stat('tree_class');
+		$object = Injector::inst()->create($class);
+		if($setID) {
+			$object->ID = $id;
+		}
+		return $object;
 	}
 
 	public function delete($data, $form) {
