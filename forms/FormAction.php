@@ -40,6 +40,13 @@ class FormAction extends FormField {
 	protected $buttonContent = null;
 
 	/**
+	 * Should validation be skipped when performing this action?
+	 *
+	 * @var bool
+	 */
+	protected $validationExempt = false;
+
+	/**
 	 * Create a new action button.
 	 *
 	 * @param string $action The method to call when the button is clicked
@@ -171,6 +178,26 @@ class FormAction extends FormField {
 	 */
 	public function getUseButtonTag() {
 		return $this->useButtonTag;
+	}
+
+	/**
+	 * Set whether this action can be performed without validating the data
+	 *
+	 * @param bool $exempt
+	 * @return $this
+	 */
+	public function setValidationExempt($exempt = true) {
+		$this->validationExempt = $exempt;
+		return $this;
+	}
+
+	/**
+	 * Get whether this action can be performed without vaidating the data
+	 *
+	 * @return bool
+	 */
+	public function getValidationExempt() {
+		return $this->validationExempt;
 	}
 
 	/**

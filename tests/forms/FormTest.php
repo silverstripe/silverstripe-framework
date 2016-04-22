@@ -298,6 +298,28 @@ class FormTest extends FunctionalTest {
 			),
 			'Form->sessionMessage() shows up after reloading the form'
 		);
+
+		// Test this same behaviour, but with a form-action exempted via instance
+		$response = $this->submitForm(
+			'Form_Form',
+			'action_doSubmitActionExempt',
+			array(
+				'Email' => 'test@test.com'
+			)
+		);
+
+		// The required message should be empty if validation was skipped
+		$items = $this->cssParser()->getBySelector('#Form_Form_SomeRequiredField_Holder .required');
+		$this->assertEmpty($items);
+
+		// And the session message should show up is submitted successfully
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_error',
+			array(
+				'Validation bypassed!'
+			),
+			'Form->sessionMessage() shows up after reloading the form'
+		);
 	}
 
 	public function testSessionValidationMessage() {
@@ -773,8 +795,10 @@ class FormTest_Controller extends Controller implements TestOnly {
 				new NumericField('Number')
 			),
 			new FieldList(
-				new FormAction('doSubmit'),
-				new FormAction('doSubmitValidationExempt')
+				FormAction::create('doSubmit'),
+				FormAction::create('doSubmitValidationExempt'),
+				FormAction::create('doSubmitActionExempt')
+					->setValidationExempt(true)
 			),
 			new RequiredFields(
 				'Email',
@@ -794,6 +818,11 @@ class FormTest_Controller extends Controller implements TestOnly {
 
 	public function doSubmitValidationExempt($data, $form, $request) {
 		$form->sessionMessage('Validation skipped', 'good');
+		return $this->redirectBack();
+	}
+
+	public function doSubmitActionExempt($data, $form, $request) {
+		$form->sessionMessage('Validation bypassed!', 'good');
 		return $this->redirectBack();
 	}
 
