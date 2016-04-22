@@ -168,8 +168,10 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader>
-            <h2 className="text-truncate north-header__heading">Campaigns</h2>
+          <NorthHeader showBackButton>
+            <div className="breadcrumb breadcrumb--current-only">
+              <h2 className="text-truncate toolbar__heading">Campaigns</h2>
+            </div>
           </NorthHeader>
           <div className="cms-middle__scrollable">
             <FormBuilder {...formBuilderProps} />
