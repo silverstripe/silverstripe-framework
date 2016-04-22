@@ -233,7 +233,7 @@ $.entwine('ss', function($) {
 
 			// Register all top level routes.
 			Config.getTopLevelRoutes().forEach((route) => {
-				router(`/${route}*`, (ctx, next) => {
+				router(`/${route}(/*?)?`, (ctx, next) => {
 
 					// If the page isn't ready.
 					if (document.readyState !== 'complete') {
