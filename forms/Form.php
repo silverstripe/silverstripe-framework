@@ -713,6 +713,18 @@ class Form extends RequestHandler {
 	}
 
 	/**
+	 * Passed a FormAction, returns true if that action is exempt from Form validation
+	 *
+	 * @param FormAction $action
+	 * @return bool
+	 */
+	public function actionIsValidationExempt($action) {
+		if ($action->getValidationExempt()) return true;
+		if (in_array($action->actionName(), $this->getValidationExemptActions())) return true;
+		return false;
+	}
+
+	/**
 	 * Convert this form to another format.
 	 * @param FormTransformation $format
 	 */
@@ -1342,8 +1354,8 @@ class Form extends RequestHandler {
 	 * @return boolean
 	 */
 	public function validate(){
-		$buttonClicked = $this->buttonClicked();
-		if($buttonClicked && in_array($buttonClicked->actionName(), $this->getValidationExemptActions())) {
+		$action = $this->buttonClicked();
+		if($action && $this->actionIsValidationExempt($action)) {
 			return true;
 		}
 
