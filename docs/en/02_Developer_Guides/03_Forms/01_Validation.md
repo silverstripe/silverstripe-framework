@@ -158,6 +158,27 @@ reusable and would not be possible within the `CMS` or other automated `UI` but 
 			return $this->redirectBack();
 		}
 	}
+	
+## Exempt validation actions
+
+In some cases you might need to disable validation for specific actions. E.g. actions which discard submitted
+data may not need to check the validity of the posted content.
+
+You can disable validation on individual using one of two methods:
+
+
+	:::php
+	$actions = new FieldList(
+		$action = FormAction::create('doSubmitForm', 'Submit')
+	);
+	$form = new Form($controller, 'MyForm', $fields, $actions);
+	
+	// Disable actions on the form action themselves
+	$action->setValidationExempt(true);
+	
+	// Alternatively, you can whitelist individual actions on the form object by name
+	$form->setValidationExemptActions(['doSubmitForm']);
+
 
 ## Server-side validation messages
 

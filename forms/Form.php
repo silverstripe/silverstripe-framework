@@ -719,8 +719,12 @@ class Form extends RequestHandler {
 	 * @return bool
 	 */
 	public function actionIsValidationExempt($action) {
-		if ($action->getValidationExempt()) return true;
-		if (in_array($action->actionName(), $this->getValidationExemptActions())) return true;
+		if ($action->getValidationExempt()) {
+			return true;
+		}
+		if (in_array($action->actionName(), $this->getValidationExemptActions())) {
+			return true;
+		}
 		return false;
 	}
 
