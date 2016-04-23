@@ -787,10 +787,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						'</option>'
 					));
 
-					if (anchors) {
+					if (anchors.length) {
 						for (var j = 0; j < anchors.length; j++) {
 							selector.append($('<option value="'+anchors[j]+'">'+anchors[j]+'</option>'));
 						}
+						selector.show();
+					} else {
+						selector.hide();
 					}
 
 				}).fail(function(message) {
@@ -800,6 +803,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						message +
 						'</option>'
 					));
+					selector.show();
 				});
 
 				// Poke the selector for IE8, otherwise the changes won't be noticed.
