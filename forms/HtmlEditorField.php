@@ -159,6 +159,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		'LinkForm',
 		'MediaForm',
 		'viewfile',
+		'getactions',
 		'getanchors'
 	);
 
@@ -238,6 +239,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 						array(
 							'internal' => _t('HtmlEditorField.LINKINTERNAL', 'Page on the site'),
 							'external' => _t('HtmlEditorField.LINKEXTERNAL', 'Another website'),
+							'action' => _t('HtmlEditorField.LINKACTION', 'Action on this page'),
 							'anchor' => _t('HtmlEditorField.LINKANCHOR', 'Anchor on this page'),
 							'email' => _t('HtmlEditorField.LINKEMAIL', 'Email address'),
 							'file' => _t('HtmlEditorField.LINKFILE', 'Download a file'),
@@ -252,6 +254,7 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 					TextField::create('external', _t('HtmlEditorField.URL', 'URL'), 'http://'),
 					EmailField::create('email', _t('HtmlEditorField.EMAIL', 'Email address')),
 					$fileField = UploadField::create('file', _t('HtmlEditorField.FILE', 'File')),
+					TextField::create('Action', _t('HtmlEditorField.ACTIONVALUE', 'Action')),
 					TextField::create('Anchor', _t('HtmlEditorField.ANCHORVALUE', 'Anchor')),
 					TextField::create('Subject', _t('HtmlEditorField.SUBJECT', 'Email subject')),
 					TextField::create('Description', _t('HtmlEditorField.LINKDESCR', 'Link description')),
@@ -558,6 +561,48 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 		return $fileWrapper->customise(array(
 			'Fields' => $fields,
 		))->renderWith($this->templateViewFile);
+	}
+
+	/**
+	 * Find actions available on the given page. Attempt to exclude forms by getting lowercase actions only.
+	 *
+	 * @return array
+	 */
+	public function getactions() {
+		$id = (int)$this->getRequest()->getVar('PageID');
+		$actions = array();
+
+		if (($page = Page::get()->byID($id)) && !empty($page)) {
+			if (!$page->canView()) {
+				throw new SS_HTTPResponse_Exception(
+					_t(
+						'HtmlEditorField.ACTIONSCANNOTACCESSPAGE',
+						'You are not permitted to access the content of the target page.'
+					),
+					403
+				);
+			}
+
+			// Get lowercase actions
+			// ToDo: look up controller instead of assuming use of _Controller naming convention
+			$allActions = Config::inst()->get($page->ClassName . '_Controller', 'allowed_actions');
+			$baseActions = Config::inst()->get('ContentController', 'allowed_actions');
+			if (is_array($allActions)) {
+				// Subtract base actions
+				$allActions = array_diff($allActions, $baseActions);
+				foreach ($allActions as $a) {
+					if (ctype_lower($a)) $actions[] = $a;
+				}
+			}
+
+		} else {
+			throw new SS_HTTPResponse_Exception(
+				_t('HtmlEditorField.ACTIONSPAGENOTFOUND', 'Target page not found.'),
+				404
+			);
+		}
+
+		return json_encode($actions);
 	}
 
 	/**
