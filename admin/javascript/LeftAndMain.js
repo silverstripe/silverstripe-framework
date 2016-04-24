@@ -150,7 +150,7 @@ jQuery.noConflict();
 			}
 
 			// Show message (but ignore aborted requests)
-			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
+			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages) != -1) {
 				// Decode into UTF-8, HTTP headers don't allow multibyte
 				statusMessage(decodeURIComponent(msg), msgType);
 			}
