@@ -72,6 +72,8 @@ class HeaderField extends DatalessField {
 			array(
 				'id' => $this->ID(),
 				'class' => $this->extraClass(),
+				'type' => null,
+				'name' => null
 			)
 		);
 	}
