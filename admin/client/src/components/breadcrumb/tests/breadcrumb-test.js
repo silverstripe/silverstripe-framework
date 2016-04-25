@@ -1,11 +1,11 @@
 /* global jest, describe, beforeEach, it, expect */
 
-jest.dontMock('../index');
+jest.dontMock('../Breadcrumb');
 
 // FYI: Changing these to import statements broke jest's automocking
 const React = require('react');
 const ReactTestUtils = require('react-addons-test-utils');
-const BreadcrumbsComponent = require('../index').default;
+const BreadcrumbsComponent = require('../Breadcrumb').default;
 
 describe('BreadcrumbsComponent', () => {
   let props;

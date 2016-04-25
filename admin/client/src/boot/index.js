@@ -2,17 +2,17 @@ import $ from 'jQuery';
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
-import reducerRegister from 'reducer-register';
+import reducerRegister from 'lib/ReducerRegister';
 
-import * as configActions from 'state/config/actions';
-import ConfigReducer from 'state/config/reducer';
-import SchemaReducer from 'state/schema/reducer';
-import RecordsReducer from 'state/records/reducer';
-import CampaignReducer from 'state/campaign/reducer';
+import * as configActions from 'state/config/ConfigActions';
+import ConfigReducer from 'state/config/ConfigReducer';
+import SchemaReducer from 'state/schema/SchemaReducer';
+import RecordsReducer from 'state/records/RecordsReducer';
+import CampaignReducer from 'state/campaign/CampaignReducer';
 
 // Sections
 // eslint-disable-next-line no-unused-vars
-import CampaignAdmin from 'sections/campaign-admin/index';
+import CampaignAdmin from 'containers/CampaignAdmin/index';
 
 function appBoot() {
   reducerRegister.add('config', ConfigReducer);

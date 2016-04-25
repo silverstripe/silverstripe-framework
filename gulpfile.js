@@ -248,65 +248,65 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
       { expose: 'bootstrap-collapse' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/form/index`,
-      { expose: 'components/form/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/Form/Form`,
+      { expose: 'components/Form/Form' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/form-action/index`,
-      { expose: 'components/form-action/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/FormAction/FormAction`,
+      { expose: 'components/FormAction/FormAction' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/form-builder/index`,
-      { expose: 'components/form-builder/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/FormBuilder/FormBuilder`,
+      { expose: 'components/FormBuilder/FormBuilder' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/index`,
-      { expose: 'components/grid-field/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/GridField/GridField`,
+      { expose: 'components/GridField/GridField' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/cell`,
-      { expose: 'components/grid-field/cell/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/GridField/GridFieldCell`,
+      { expose: 'components/GridField/GridFieldCell' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/header`,
-      { expose: 'components/grid-field/header' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/GridField/GridFieldHeader`,
+      { expose: 'components/GridField/GridFieldHeader' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/header-cell`,
-      { expose: 'components/grid-field/header-cell' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/GridField/GridFieldHeaderCell`,
+      { expose: 'components/GridField/GridFieldHeaderCell' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/row`,
-      { expose: 'components/grid-field/row' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/GridField/GridFieldRow`,
+      { expose: 'components/GridField/GridFieldRow' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/grid-field/table`,
-      { expose: 'components/grid-field/table' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/GridField/GridFieldTable`,
+      { expose: 'components/GridField/GridFieldTable' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/hidden-field/index`,
-      { expose: 'components/hidden-field/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/HiddenField/HiddenField`,
+      { expose: 'components/HiddenField/HiddenField' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/text-field/index`,
-      { expose: 'components/text-field/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/TextField/TextField`,
+      { expose: 'components/TextField/TextField' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/north-header/index`,
-      { expose: 'components/north-header/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/NorthHeader/NorthHeader`,
+      { expose: 'components/NorthHeader/NorthHeader' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/breadcrumb/index`,
-      { expose: 'components/breadcrumb/index' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/Breadcrumb/Breadcrumb`,
+      { expose: 'components/Breadcrumb/Breadcrumb' }
     )
     .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/config.js`,
-      { expose: 'config' }
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/Config`,
+      { expose: 'lib/Config' }
     )
     .require(`${PATHS.FRAMEWORK_JS_SRC}/jQuery.js`,
       { expose: 'jQuery' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/reducer-register.js`,
-      { expose: 'reducer-register' }
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/ReducerRegister.js`,
+      { expose: 'lib/ReducerRegister' }
     )
-    .require(`${PATHS.FRAMEWORK_JS_SRC}/router.js`,
-      { expose: 'router' }
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/Router.js`,
+      { expose: 'lib/Router' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/silverstripe-component`,
-      { expose: 'silverstripe-component' }
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/SilverStripeComponent`,
+      { expose: 'lib/SilverStripeComponent' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/silverstripe-backend`,
-      { expose: 'silverstripe-backend' }
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/Backend`,
+      { expose: 'lib/Backend' }
     )
     .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
       { expose: 'bootstrap-collapse' }
@@ -346,7 +346,7 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .external('config')
     .external('jQuery')
     .external('i18n')
-    .external('router')
+    .external('lib/Router')
     .bundle()
     .on('update', bundleLeftAndMain)
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
@@ -369,12 +369,11 @@ gulp.task('bundle-framework', function bundleBoot() {
       gulpUtil.log('Finished', `bundled ${bundleFileName} ${msg}`);
     })
     .transform('babelify', babelifyOptions)
-    .external('components/action-button/index')
-    .external('components/north-header/index')
-    .external('components/form-builder/index')
-    .external('components/form-action/index')
+    .external('components/NorthHeader/NorthHeader')
+    .external('components/FormBuilder/FormBuilder')
+    .external('components/FormAction/FormAction')
     .external('deep-freeze')
-    .external('components/grid-field/index')
+    .external('components/GridField/GridField')
     .external('i18n')
     .external('jQuery')
     .external('page.js')
@@ -382,11 +381,11 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('react-dom')
     .external('react-redux')
     .external('react')
-    .external('reducer-register')
+    .external('lib/ReducerRegister')
     .external('redux-thunk')
     .external('redux')
-    .external('silverstripe-backend')
-    .external('silverstripe-component')
+    .external('lib/Backend')
+    .external('lib/SilverStripeComponent')
     .external('bootstrap-collapse')
     .bundle()
     .on('update', bundleBoot)
