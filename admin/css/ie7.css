@@ -198,7 +198,7 @@ table.ss-gridfield-table tr.ss-gridfield-item.even { background: #F0F4F7; }
 
 .ss-ui-button.ss-gridfield-button-filter { border: none !important; }
 
-/** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Fix for model admin filter styling  */
+/** DEPRECATED: .cms-content-tools will be removed in 4.0 Use .cms-content-filters instead.  Fix for model admin filter styling */
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form { overflow: hidden; }
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content .cms-search-form input { width: 160px; }
 

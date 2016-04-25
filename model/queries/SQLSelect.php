@@ -568,14 +568,12 @@ class SQLSelect extends SQLConditionalExpression {
 
 
 	/**
-	 * Return the number of rows in this query if the limit were removed.  Useful in paged data sets.
-	 *
-	 * @todo Respect HAVING and GROUPBY, which can affect the result-count
+	 * Return the number of rows in this query, respecting limit and offset.
 	 *
 	 * @param string $column Quoted, escaped column name
 	 * @return int
 	 */
-	public function count( $column = null) {
+	public function count($column = null) {
 		// we can't clear the select if we're relying on its output by a HAVING clause
 		if(!empty($this->having)) {
 			$records = $this->execute();

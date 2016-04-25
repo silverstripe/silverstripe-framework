@@ -41,7 +41,7 @@ of course this information can be version controlled and shared with other team 
 **Note: This doesn't apply for running tests through the "sake" wrapper**
 
 SilverStripe comes with a default `phpunit.xml.dist` that you can use as a starting point. Copy the file into a new
-`phpunit.xml` and customize to your needs - PHPUnit will auto-detect its existence, and prioritize it over the default
+`phpunit.xml` and customise to your needs - PHPUnit will auto-detect its existence, and prioritize it over the default
 file.
 
 There's nothing stopping you from creating multiple XML files (see the `--configuration` flag in
@@ -99,7 +99,7 @@ All command-line arguments are documented on
 
 ### Via the "sake" Wrapper on Command Line
 
-The [sake](/developer_guides/cli/) executable that comes with SilverStripe can trigger a customized
+The [sake](/developer_guides/cli/) executable that comes with SilverStripe can trigger a customised
 [api:TestRunner] class that handles the PHPUnit configuration and output formatting.
 While the custom test runner a handy tool, its also more limited than using `phpunit` directly,
 particularly around formatting test output.

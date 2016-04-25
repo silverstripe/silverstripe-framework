@@ -194,8 +194,8 @@ class ParameterConfirmationToken {
 			$_SERVER['HTTP_HOST'],
 			// SilverStripe base
 			self::$alternateBaseURL !== null ? self::$alternateBaseURL : BASE_URL,
-			// And URL
-			$url
+			// And URL including base script (eg: if it's index.php/page/url/)
+			(defined('BASE_SCRIPT_URL') ? '/' . BASE_SCRIPT_URL : '') . $url,
 		));
 
 		// Join together with protocol into our current absolute URL, avoiding duplicated "/" characters

@@ -236,7 +236,7 @@ body, html { font-size: 12px; line-height: 16px; font-family: Arial, sans-serif;
 .ui-accordion .ui-accordion-content { border: 1px solid #d0d3d5; border-top: none; }
 
 .ui-autocomplete { max-height: 240px; overflow-x: hidden; overflow-y: auto; /** sorry about the !important but the specificity of other selectors mandates it over writing out very specific selectors **/ }
-.ui-autocomplete .loading { background-image: url(../images/throbber.gif) !important; background-position: 97% center !important; background-repeat: no-repeat !important; background-size: auto !important; }
+.ui-autocomplete-loading { background-image: url(../images/throbber.gif) !important; background-position: 97% center !important; background-repeat: no-repeat !important; background-size: auto !important; }
 
 /** This file defines common styles for form elements used throughout the CMS interface. It is an addition to the base styles defined in framework/css/Form.css.  @package framework @subpackage admin */
 /** ---------------------------------------------------- Basic form fields ---------------------------------------------------- */
@@ -487,15 +487,15 @@ fieldset.switch-states.size_5 input:checked:nth-of-type(5) ~ .slide-button { lef
 .cms-panel .cms-content-filters .Actions { margin-bottom: 0; }
 
 /**
-* This file defines most styles of the CMS: Colors, fonts, backgrounds, 
+* This file defines most styles of the CMS: Colors, fonts, backgrounds,
 * alignments, dimensions.
-* 
-* Use SCSS variable definitions in screen.css to avoid repeating styles 
-* like background colours or padding dimensions. See themes/_default.scss 
+*
+* Use SCSS variable definitions in screen.css to avoid repeating styles
+* like background colours or padding dimensions. See themes/_default.scss
 * to get started.
-* 
-* To avoid this file getting too large and complicated, it is encouraged to 
-* create new SCSS files for larger components like the CMS menu or tree 
+*
+* To avoid this file getting too large and complicated, it is encouraged to
+* create new SCSS files for larger components like the CMS menu or tree
 * (see _tree.scss and _menu.scss).
 */
 /** ---------------------------------------------------- Core Styles. ---------------------------------------------------- */
@@ -604,11 +604,12 @@ body.cms { overflow: hidden; }
 .ui-tabs .ui-tabs-nav li:active { outline: none; }
 .ui-tabs .ui-tabs-nav li a { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; outline: none; float: none; font-weight: normal; color: #4f5861; line-height: 32px; padding: 0 12px 0; }
 .ui-tabs .ui-tabs-nav li:last-child { margin-right: 0; }
+.ui-tabs .ui-tabs-nav li.ui-tabs-active, .ui-tabs .ui-tabs-nav li.ui-state-default, .ui-tabs .ui-tabs-nav li.ui-state-active { margin-bottom: -1px; padding-bottom: 0; }
 .ui-tabs .ui-tabs-nav .ui-state-default { border: 0; background: transparent; }
-.ui-tabs .ui-tabs-nav .ui-state-default a { line-height: 28px; padding-top: 12px; padding-bottom: 8px; color: #66727d; }
+.ui-tabs .ui-tabs-nav .ui-state-default a { line-height: 28px; padding-top: 12px; padding-bottom: 5px; color: #66727d; border-bottom: 3px solid transparent; }
 .ui-tabs .ui-tabs-nav .ui-state-default a:hover { color: #4f5861; }
-.ui-tabs .ui-tabs-nav .ui-state-active { padding-bottom: 1px; background-color: transparent; cursor: text; }
-.ui-tabs .ui-tabs-nav .ui-state-active a { border-bottom: 3px solid #66727d; padding-left: 0; padding-right: 0; margin: 0 12px 0; color: #4f5861; }
+.ui-tabs .ui-tabs-nav .ui-state-active { background-color: transparent; cursor: text; }
+.ui-tabs .ui-tabs-nav .ui-state-active a { border-color: #66727d; padding-left: 0; padding-right: 0; margin: 0 12px 0; color: #4f5861; }
 .ui-tabs .ui-tabs-nav.ui-state-active { border-color: #808080; }
 .ui-tabs .ui-tabs-nav li.cms-tabset-icon.ui-corner-top { text-indent: -9999em; }
 .ui-tabs .ui-tabs-nav li.cms-tabset-icon.ui-corner-top a { display: block; padding-left: 40px; padding-right: 0; margin: 0; }
@@ -641,8 +642,7 @@ body.cms { overflow: hidden; }
 .cms-content-header-tabs .icon-button-group { margin-right: 16px; }
 
 .cms-content-fields .ui-tabs-nav { float: none; padding: 0; border-bottom: 1px solid #d0d3d5; margin: 0 16px 0; }
-.cms-content-fields .ui-tabs-nav li { margin-bottom: -1px; }
-.cms-content-fields .ui-tabs-nav li.first a { margin-left: 0; padding-left: 0; }
+.cms-content-fields .ui-tabs-nav li { margin: 0 12px -1px -12px; }
 
 /** ------------------------------------------------------- Loading Interface ------------------------------------------------------- */
 .cms-content-loading-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998; }
@@ -733,7 +733,7 @@ body.cms { overflow: hidden; }
 .cms-content-tools h3 { font-size: 13px; }
 .cms-content-tools h4 { font-size: 12px; margin: 5px 0; }
 .cms-content-tools .ui-widget-content { background: none; }
-.cms-content-tools .field { /*  Fields are more compressed in the sidebar compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ }
+.cms-content-tools .field { /* Fields are more compressed in the sidebar compared to the main content editing window so the below alters the internal spacing of the fields so we can move that spacing to between the form fields rather than padding */ }
 .cms-content-tools .field label { float: none; width: auto; font-size: 12px; padding: 0 8px 4px 0; }
 .cms-content-tools .field .middleColumn { margin: 0; }
 .cms-content-tools .field input.text, .cms-content-tools .field select, .cms-content-tools .field textarea { padding: 5px; font-size: 11px; }
@@ -758,7 +758,7 @@ body.cms { overflow: hidden; }
 .cms-tree-filtered { position: absolute; margin: 0; width: 100%; box-sizing: border-box; margin-left: -16px; padding: 16px 16px; background: #D4E2EC; text-shadow: none; border: 0; }
 .cms-tree-filtered > strong, .cms-tree-filtered > a { font-size: 14px; }
 
-/**  CMS Batch actions */
+/** CMS Batch actions */
 .cms-content-batchactions-button { display: inline-block; vertical-align: middle; *vertical-align: auto; *zoom: 1; *display: inline; padding: 4px 6px; vertical-align: middle; background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuNSIgeTE9IjAuMCIgeDI9IjAuNSIgeTI9IjEuMCI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q5ZDlkOSIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JhZCkiIC8+PC9zdmc+IA=='); background-size: 100%; background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #d9d9d9)); background-image: -moz-linear-gradient(top, #ffffff, #d9d9d9); background-image: -webkit-linear-gradient(top, #ffffff, #d9d9d9); background-image: linear-gradient(to bottom, #ffffff, #d9d9d9); border: 1px solid #aaa; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
 
 .cms-content-batchactions { float: left; position: relative; display: block; }
@@ -844,7 +844,7 @@ form.member-profile-form #Permissions .optionset li { float: none; width: auto; 
 
 /** ------------------------------------------------------------------
 * Dialog
-* 
+*
 * Contained in a jQuery UI dialog ('.ui-dialog'), with either inline
 * markup (for the "insert" dialogs), or an iframe (for member profile).
 * ----------------------------------------------------------------- */
@@ -960,7 +960,7 @@ form.import-form label.left { width: 250px; }
 .toggle-details-icon.opened { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -846px no-repeat; }
 .ss-uploadfield-item-edit-all .toggle-details-icon.opened { background: url('../images/sprites-32x32-s47450c5f5b.png') 0 -814px no-repeat; }
 
-/** -------------------------------------------- Hide preview toggle link by default. May be shown  in IE7 stylesheet and forced to show with js if needed -------------------------------------------- */
+/** -------------------------------------------- Hide preview toggle link by default. May be shown in IE7 stylesheet and forced to show with js if needed -------------------------------------------- */
 .cms .Actions > .cms-preview-toggle-link, .cms .cms-navigator > .cms-preview-toggle-link { display: none; }
 
 /** This file defines the jstree base styling (see http://jstree.com), as well as any customizations (see bottom of file).  The styles are usually added through jstree.js on DOM load, but we need it earlier in order to correctly display the uninitialized tree. */
