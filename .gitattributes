@@ -1,6 +1,4 @@
-admin/client/src/     export-ignore
 docs/                 export-ignore
-client/src/           export ignore
 
 # Hide diffs
 admin/client/dist/js/ -diff
