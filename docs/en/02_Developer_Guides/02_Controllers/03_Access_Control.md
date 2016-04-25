@@ -30,7 +30,7 @@ directly calling methods that they shouldn't.
 			'cmsrestrictedaction' => 'CMS_ACCESS_CMSMain',
 			
 			// complexaction can only be accessed if $this->canComplexAction() returns true.
-			'complexaction' '->canComplexAction' 
+			'complexaction' => '->canComplexAction',
 
 			// complexactioncheck can only be accessed if $this->canComplexAction("MyRestrictedAction", false, 42) is true.
 			'complexactioncheck' => '->canComplexAction("MyRestrictedAction", false, 42)',
