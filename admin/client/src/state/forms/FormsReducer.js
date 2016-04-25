@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze';
-import { ACTION_TYPES } from './action-types';
+import { ACTION_TYPES } from './FormsActionTypes';
 
 const initialState = deepFreeze({});
 
