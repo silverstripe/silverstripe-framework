@@ -14,7 +14,8 @@
 	line-height: 13px;
 }
 
-.no-text[class*="font-icon-"]::before {
+// Btn icons with no text require .btn--no-text
+.btn--no-text[class*="font-icon-"]::before {
 	margin-right: 0;
 }
 
