@@ -1,10 +1,10 @@
 jest.unmock('deep-freeze');
-jest.unmock('../reducer');
-jest.unmock('../action-types');
+jest.unmock('../FormsReducer');
+jest.unmock('../FormsActionTypes');
 
 import deepFreeze from 'deep-freeze';
-import { ACTION_TYPES } from '../action-types';
-import formsReducer from '../reducer';
+import { ACTION_TYPES } from '../FormsActionTypes';
+import formsReducer from '../FormsReducer';
 
 describe('formsReducer', () => {
 
