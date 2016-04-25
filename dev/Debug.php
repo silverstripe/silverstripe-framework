@@ -340,6 +340,7 @@ class Debug {
 		if(Director::is_ajax()) {
 			echo $friendlyErrorMessage;
 		} else {
+			if(!headers_sent()) header('Content-Type: text/html');
 			if(class_exists('ErrorPage')){
 				$errorFilePath = ErrorPage::get_filepath_for_errorcode(
 					$statusCode,
@@ -347,7 +348,6 @@ class Debug {
 				);
 				if(file_exists($errorFilePath)) {
 					$content = file_get_contents($errorFilePath);
-					if(!headers_sent()) header('Content-Type: text/html');
 					// $BaseURL is left dynamic in error-###.html, so that multi-domain sites don't get broken
 					echo str_replace('$BaseURL', Director::absoluteBaseURL(), $content);
 				}

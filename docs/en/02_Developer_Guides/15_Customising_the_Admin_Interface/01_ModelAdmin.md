@@ -169,7 +169,7 @@ model class, where you can add or remove columns. To change the title, use [api:
 
 The results list are retrieved from [api:SearchContext::getResults()], based on the parameters passed through the search
 form. If no search parameters are given, the results will show every record. Results are a [api:DataList] instance, so
-can be customized by additional SQL filters, joins.
+can be customised by additional SQL filters, joins.
 
 For example, we might want to exclude all products without prices in our sample `MyAdmin` implementation.
 
@@ -192,7 +192,7 @@ For example, we might want to exclude all products without prices in our sample 
 		}
 	}
 
-You can also customize the search behavior directly on your `ModelAdmin` instance. For example, we might want to have a
+You can also customise the search behavior directly on your `ModelAdmin` instance. For example, we might want to have a
 checkbox which limits search results to expensive products (over $100).
 
 **mysite/code/MyAdmin.php**
@@ -300,7 +300,7 @@ with a more specific importer implementation, use the [api:ModelAdmin::$model_im
 Export is available as a CSV format through a button at the end of a results list. You can also export search results.
 This is handled through the [api:GridFieldExportButton] component.
 
-To customize the exported columns, create a new method called `getExportFields` in your `ModelAdmin`:
+To customise the exported columns, create a new method called `getExportFields` in your `ModelAdmin`:
 
 	:::php
 	<?php

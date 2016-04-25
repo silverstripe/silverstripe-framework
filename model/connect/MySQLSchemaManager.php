@@ -84,7 +84,8 @@ class MySQLSchemaManager extends DBSchemaManager {
 			}
 		}
 
-		if ($alteredOptions && isset($alteredOptions[get_class($this)])) {
+		$dbID = self::ID;
+		if ($alteredOptions && isset($alteredOptions[$dbID])) {
 			$indexList = $this->indexList($tableName);
 			$skip = false;
 			foreach ($indexList as $index) {
@@ -98,14 +99,14 @@ class MySQLSchemaManager extends DBSchemaManager {
 					sprintf(
 						"Table %s options not changed to %s due to fulltextsearch index",
 						$tableName,
-						$alteredOptions[get_class($this)]
+						$alteredOptions[$dbID]
 					),
 					"changed"
 				);
 			} else {
-				$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[get_class($this)]));
+				$this->query(sprintf("ALTER TABLE \"%s\" %s", $tableName, $alteredOptions[$dbID]));
 				$this->alterationMessage(
-					sprintf("Table %s options changed: %s", $tableName, $alteredOptions[get_class($this)]),
+					sprintf("Table %s options changed: %s", $tableName, $alteredOptions[$dbID]),
 					"changed"
 				);
 			}

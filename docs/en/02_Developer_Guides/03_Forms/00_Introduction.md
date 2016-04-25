@@ -157,7 +157,7 @@ information on the CMS interface.
 
 ## Modifying FormFields
 
-Each [api:FormField] subclass has a number of methods you can call on it to customize its' behavior or HTML markup. The
+Each [api:FormField] subclass has a number of methods you can call on it to customise its' behavior or HTML markup. The
 default `FormField` object has several methods for doing common operations. 
 
 <div class="notice" markdown="1">

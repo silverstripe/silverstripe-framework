@@ -157,7 +157,11 @@ and whenever you upload or modify an Image through SilverStripe.
 If you encounter problems with images not appearing, or have mysteriously 
 disappeared, you can try manually flushing the image cache.
 
-	http://localhost/dev/tasks/FlushGeneratedImagesTask
+	http://localhost/dev/tasks/RegenerateCachedImagesTask
+
+<div class="notice" markdown="1">
+This task was renamed to `RegenerateCachedImagesTask` (originally `FlushGeneratedImagesTask`) circa SilverStripe 3.2.
+</div>
 
 ## API Documentation
 [api:Image]

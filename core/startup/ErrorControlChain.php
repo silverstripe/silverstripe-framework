@@ -67,9 +67,21 @@ class ErrorControlChain {
 		$this->error = (bool)$error;
 	}
 
+	/**
+	 * Sets whether errors are suppressed or not
+	 * Notes:
+	 * - Errors cannot be suppressed if not handling errors.
+	 * - Errors cannot be un-suppressed if original mode dis-allowed visible errors
+	 *
+	 * @param bool $suppression
+	 */
 	public function setSuppression($suppression) {
 		$this->suppression = (bool)$suppression;
-		if ($this->handleFatalErrors) ini_set('display_errors', !$suppression);
+		// Don't modify errors unless handling fatal errors, and if errors were
+		// originally allowed to be displayed.
+		if ($this->handleFatalErrors && $this->originalDisplayErrors) {
+			ini_set('display_errors', !$suppression);
+		}
 	}
 
 	/**
@@ -167,7 +179,7 @@ class ErrorControlChain {
 		$this->handleFatalErrors = true;
 
 		$this->originalDisplayErrors = ini_get('display_errors');
-		ini_set('display_errors', !$this->suppression);
+		$this->setSuppression($this->suppression);
 
 		$this->step();
 	}

@@ -1,4 +1,4 @@
-# How to customize the CMS tree
+# How to customise the CMS tree
 
 ## Overview
 

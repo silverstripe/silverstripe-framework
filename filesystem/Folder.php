@@ -165,6 +165,7 @@ class Folder extends File {
 
 				// Check allowed extensions, unless admin users are allowed to bypass these exclusions
 				if($checkExtensions
+					&& !is_dir($baseDir . $actualChild)
 					&& ($extension = self::get_file_extension($actualChild))
 					&& !in_array(strtolower($extension), $allowedExtensions)
 				) {
