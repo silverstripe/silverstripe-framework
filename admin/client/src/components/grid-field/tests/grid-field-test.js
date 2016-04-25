@@ -21,7 +21,7 @@ describe('GridFieldTableComponent', () => {
     let gridfield;
 
     it('should return props.header if it is set', () => {
-      props.header = <div className="header"></div>;
+      props.header = <tr className="header"></tr>;
 
       gridfield = ReactTestUtils.renderIntoDocument(
         <GridFieldTableComponent {...props} />
@@ -47,13 +47,13 @@ describe('GridFieldTableComponent', () => {
     let gridfield;
 
     it('should return props.rows if it is set', () => {
-      props.rows = ['row1'];
+      props.rows = [<tr className="row" key="row1"><td>row1</td></tr>];
 
       gridfield = ReactTestUtils.renderIntoDocument(
         <GridFieldTableComponent {...props} />
       );
 
-      expect(gridfield.generateRows()[0]).toBe('row1');
+      expect(gridfield.generateRows()[0].props.className).toBe('row');
     });
 
     it('should generate and return rows from props.data if it is set', () => {
