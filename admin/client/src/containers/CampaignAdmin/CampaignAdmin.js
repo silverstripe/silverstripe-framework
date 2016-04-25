@@ -16,7 +16,6 @@ class CampaignAdmin extends SilverStripeComponent {
     super(props);
 
     this.addCampaign = this.addCampaign.bind(this);
-    this.createFn = this.createFn.bind(this);
     this.publishApi = backend.createEndpointFetcher({
       url: this.props.sectionConfig.publishEndpoint.url,
       method: this.props.sectionConfig.publishEndpoint.method,
@@ -25,6 +24,8 @@ class CampaignAdmin extends SilverStripeComponent {
         id: { urlReplacement: ':id', remove: true },
       },
     });
+    this.campaignListCreateFn = this.campaignListCreateFn.bind(this);
+    this.campaignEditCreateFn = this.campaignEditCreateFn.bind(this);
   }
 
   componentDidMount() {
@@ -52,7 +53,7 @@ class CampaignAdmin extends SilverStripeComponent {
       const applies = window.ss.router.routeAppliesToCurrentLocation(route);
       if (!applies) {
         captureRoute = false;
-  }
+      }
       next();
     });
   }
@@ -80,7 +81,17 @@ class CampaignAdmin extends SilverStripeComponent {
    * @return object
    */
   renderIndexView() {
-    const schemaUrl = this.props.sectionConfig.forms.editForm.schemaUrl;
+    const schemaUrl = this.props.sectionConfig.forms.EditForm.schemaUrl;
+    const formActionProps = {
+      label: i18n._t('Campaigns.ADDCAMPAIGN'),
+      icon: 'plus',
+      handleClick: this.addCampaign,
+    };
+    const formBuilderProps = {
+      createFn: this.campaignListCreateFn,
+      formId: 'EditForm',
+      schemaUrl,
+    };
 
     return (
       <div className="cms-content__inner no-preview">
@@ -93,16 +104,12 @@ class CampaignAdmin extends SilverStripeComponent {
           <div className="panel-scrollable--single-toolbar">
             <div className="toolbar--content">
               <div className="btn-toolbar">
-          <FormAction
-            label={i18n._t('Campaigns.ADDCAMPAIGN')}
-                  icon={'plus'}
-            handleClick={this.addCampaign}
-          />
+                <FormAction {...formActionProps} />
               </div>
             </div>
-          <FormBuilder schemaUrl={schemaUrl} createFn={this.createFn} />
+            <FormBuilder {...formBuilderProps} />
+          </div>
         </div>
-      </div>
       </div>
     );
   }
@@ -126,22 +133,42 @@ class CampaignAdmin extends SilverStripeComponent {
   }
 
   /**
-   * @todo
+   * Renders the Detail Edit Form for a Campaign.
    */
   renderDetailEditView() {
-    return <p>Edit</p>;
+    const baseSchemaUrl = this.props.sectionConfig.forms.DetailEditForm.schemaUrl;
+    const formBuilderProps = {
+      createFn: this.campaignEditCreateFn,
+      formId: 'DetailEditForm',
+      schemaUrl: `${baseSchemaUrl}/ChangeSet/${this.props.campaignId}`,
+    };
+
+    return (
+      <div className="cms-middle no-preview">
+        <div className="cms-campaigns collapse in" aria-expanded="true">
+          <NorthHeader showBackButton>
+            <div className="breadcrumb breadcrumb--current-only">
+              <h2 className="text-truncate toolbar__heading">Campaigns</h2>
+            </div>
+          </NorthHeader>
+          <FormBuilder {...formBuilderProps} />
+        </div>
+      </div>
+    );
   }
 
   /**
-   * Hook to allow customisation of components being constructed by FormBuilder.
+   * Hook to allow customisation of components being constructed
+   * by the Campaign list FormBuilder.
    *
    * @param object Component - Component constructor.
    * @param object props - Props passed from FormBuilder.
    *
    * @return object - Instanciated React component
    */
-  createFn(Component, props) {
+  campaignListCreateFn(Component, props) {
     const campaignViewRoute = this.props.sectionConfig.campaignViewRoute;
+    const typeUrlParam = 'set';
 
     if (props.component === 'GridField') {
       const extendedProps = Object.assign({}, props, {
@@ -149,9 +176,17 @@ class CampaignAdmin extends SilverStripeComponent {
           handleDrillDown: (event, record) => {
             // Set url and set list
             const path = campaignViewRoute
-              .replace(/:type\?/, 'set')
+              .replace(/:type\?/, typeUrlParam)
               .replace(/:id\?/, record.ID)
               .replace(/:view\?/, 'show');
+
+            window.ss.router.show(path);
+          },
+          handleEditRecord: (event, id) => {
+            const path = campaignViewRoute
+              .replace(/:type\?/, typeUrlParam)
+              .replace(/:id\?/, id)
+              .replace(/:view\?/, 'edit');
 
             window.ss.router.show(path);
           },
@@ -180,6 +215,30 @@ class CampaignAdmin extends SilverStripeComponent {
     ];
   }
 
+  /*
+   * Hook to allow customisation of components being constructed
+   * by the Campaign detail edit FormBuilder.
+   *
+   * @param object Component - Component constructor.
+   * @param object props - Props passed from FormBuilder.
+   *
+   * @return object - Instanciated React component
+   */
+  campaignEditCreateFn(Component, props) {
+    if (props.name === 'action_save') {
+      const extendedProps = Object.assign({}, props, {
+        bootstrapButtonStyle: 'success',
+        type: 'submit',
+        label: props.title,
+        icon: 'save',
+      });
+
+      return <Component key={props.name} {...extendedProps} />;
+    }
+
+    return <Component key={props.name} {...props} />;
+  }
+
   /**
    * Gets preview URL for itemid
    * @param int id
@@ -201,17 +260,19 @@ class CampaignAdmin extends SilverStripeComponent {
 }
 
 CampaignAdmin.propTypes = {
-  sectionConfig: React.PropTypes.shape({
+  actions: React.PropTypes.object.isRequired,
+  campaignId: React.PropTypes.string,
+  config: React.PropTypes.shape({
     forms: React.PropTypes.shape({
       editForm: React.PropTypes.shape({
         schemaUrl: React.PropTypes.string,
       }),
     }),
-  }),
-  config: React.PropTypes.shape({
     SecurityID: React.PropTypes.string,
   }),
+  sectionConfig: React.PropTypes.object.isRequired,
   sectionConfigKey: React.PropTypes.string.isRequired,
+  view: React.PropTypes.string,
 };
 
 function mapStateToProps(state, ownProps) {

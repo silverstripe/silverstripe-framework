@@ -4,7 +4,7 @@ Used for form actions. For example a submit button.
 
 ## Props
 
-### handleClick (function - required)
+### handleClick (function)
 
 The handler for when a button is clicked
 

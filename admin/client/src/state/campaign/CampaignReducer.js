@@ -1,11 +1,11 @@
 import deepFreeze from 'deep-freeze';
 import ACTION_TYPES from './CampaignActionTypes';
 
-const initialState = {
+const initialState = deepFreeze({
   campaignId: null,
   isPublishing: false,
   view: null,
-};
+});
 
 function reducer(state = initialState, action) {
   switch (action.type) {

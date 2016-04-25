@@ -10,11 +10,15 @@ class TextField extends SilverStripeComponent {
   }
 
   render() {
+    const labelText = this.props.leftTitle !== null
+      ? this.props.leftTitle
+      : this.props.title;
+
     return (
       <div className="field text">
-        {this.props.label &&
+        {labelText &&
           <label className="left" htmlFor={`gallery_${this.props.name}`}>
-            {this.props.label}
+            {labelText}
           </label>
         }
         <div className="middleColumn">
@@ -29,26 +33,31 @@ class TextField extends SilverStripeComponent {
       className: ['text', this.props.extraClass].join(' '),
       id: `gallery_${this.props.name}`,
       name: this.props.name,
-      onChange: this.props.onChange,
+      onChange: this.handleChange,
       type: 'text',
       value: this.props.value,
     };
   }
 
-  handleChange() {
-    if (typeof this.props.onChange === 'undefined') {
+  /**
+   * Handles changes to the text field's value.
+   *
+   * @param object event
+   */
+  handleChange(event) {
+    if (typeof this.props.handleFieldUpdate === 'undefined') {
       return;
     }
 
-    this.props.onChange();
+    this.props.handleFieldUpdate(event, { id: this.props.id, value: event.target.value });
   }
 }
 
 TextField.propTypes = {
-  label: React.PropTypes.string,
+  leftTitle: React.PropTypes.string,
   extraClass: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
-  onChange: React.PropTypes.func,
+  handleFieldUpdate: React.PropTypes.func,
   value: React.PropTypes.string,
 };
 

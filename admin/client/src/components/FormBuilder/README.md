@@ -25,3 +25,7 @@ The schema URL where the form will be scaffolded from e.g. '/admin/pages/schema/
 ### schema
 
 JSON schema representing the form. Used as the blueprint for generating the form.
+
+### onSubmit (func)
+
+Event handler passed to the Form Component as a prop.

@@ -25,12 +25,13 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	private static $menu_title = 'Campaigns';
 
+	private static $tree_class = 'ChangeSet';
+
 	private static $url_handlers = [
 		'GET sets' => 'readCampaigns',
 		'POST set/$ID/publish' => 'publishCampaign',
 		'POST set/$ID' => 'createCampaign',
 		'GET set/$ID/$Name' => 'readCampaign',
-		'PUT set/$ID' => 'updateCampaign',
 		'DELETE set/$ID' => 'deleteCampaign',
 	];
 
@@ -56,8 +57,11 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		return array_merge(parent::getClientConfig(), [
 			'forms' => [
 				// TODO Use schemaUrl instead
-				'editForm' => [
+				'EditForm' => [
 					'schemaUrl' => $this->Link('schema/EditForm')
+				],
+				'DetailEditForm' => [
+					'schemaUrl' => $this->Link('schema/DetailEditForm')
 				]
 			],
 			'campaignViewRoute' => $this->Link() . ':type?/:id?/:view?',
@@ -325,8 +329,6 @@ JSON;
 		return $hal;
 	}
 
-
-
 	/**
 	 * Gets viewable list of campaigns
 	 *
@@ -353,41 +355,17 @@ JSON;
 
 		if ($request->getHeader('Accept') == 'text/json') {
 			$response->addHeader('Content-Type', 'application/json');
-			$changeSet = ChangeSet::get()->byId($request->param('ID'));
-
-			switch ($request->param('Name')) {
-				case "edit":
-					$response->setBody('{"message":"show the edit view"}');
-					break;
-				case "show":
-					$response->setBody(Convert::raw2json($this->getChangeSetResource($changeSet)));
-					break;
-				default:
-					$response->setBody('{"message":"404"}');
+			if ($request->param('Name')) {
+				$changeSet = ChangeSet::get()->byId($request->param('ID'));
+				$response->setBody(Convert::raw2json($this->getChangeSetResource($changeSet)));
+			} else {
+				$response->setBody('{"message":"Resource not found"}');
 			}
 
 			return $response;
-
 		} else {
 			return $this->index($request);
 		}
-	}
-
-	/**
-	 * REST endpoint to update a campaign.
-	 *
-	 * @param SS_HTTPRequest $request
-	 *
-	 * @return SS_HTTPResponse
-	 */
-	public function updateCampaign(SS_HTTPRequest $request) {
-		$response = new SS_HTTPResponse();
-		$response->addHeader('Content-Type', 'application/json');
-		$response->setBody(Convert::raw2json(['campaign' => 'update']));
-
-		// TODO Implement data update and permission checks
-
-		return $response;
 	}
 
 	/**
@@ -465,19 +443,50 @@ JSON;
 	}
 
 	/**
-	 * @todo Use GridFieldDetailForm once it can handle structured data and form schemas
+	 * Url handler for edit form
 	 *
+	 * @param SS_HTTPRequest $request
 	 * @return Form
 	 */
-	public function getDetailEditForm() {
-		return Form::create(
+	public function DetailEditForm($request) {
+		// Get ID either from posted back value, or url parameter
+		$id = $request->param('ID') ?: $request->postVar('ID');
+		return $this->getDetailEditForm($id);
+	}
+
+	/**
+	 * @todo Use GridFieldDetailForm once it can handle structured data and form schemas
+	 *
+	 * @param int $id
+	 * @return Form
+	 */
+	public function getDetailEditForm($id) {
+		// Get record-specific fields
+		$record = null;
+		if($id) {
+			$record = ChangeSet::get()->byId($id);
+		}
+		if(!$record) {
+			$record = ChangeSet::singleton();
+		}
+		$fields = $record->getCMSFields();
+
+		// Add standard fields
+		$fields->push(HiddenField::create('ID'));
+		$form = Form::create(
 			$this,
 			'DetailEditForm',
-			ChangeSet::singleton()->getCMSFields(),
+			$fields,
 			FieldList::create(
 				FormAction::create('save', 'Save')
 			)
 		);
+		// Configure form to respond to validation errors with form schema
+		// if requested via react.
+		$form->setValidationResponseCallback(function() use ($form) {
+			return $this->getSchemaResponse($form);
+		});
+		return $form;
 	}
 
 	/**

@@ -105,6 +105,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'schema',
 	];
 	
+	private static $url_handlers = [
+		'GET schema/$FormName/$RecordType/$ItemID' => 'schema'
+	];
+
 	private static $dependencies = [
 		'schema' => '%$FormSchema'
 	];
@@ -226,7 +230,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function schema($request) {
 		$response = $this->getResponse();
-		$formName = $request->param('ID');
+		$formName = $request->param('FormName');
+		$recordType = $request->param('RecordType');
+		$itemID = $request->param('ItemID');
+		
+		if (!$formName || !$recordType || !$itemID) {
+			throw new SS_HTTPResponse_Exception(
+				'Missing request params',
+				400
+			);
+		}
 
 		if(!$this->hasMethod("get{$formName}")) {
 			throw new SS_HTTPResponse_Exception(
@@ -242,11 +255,30 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			);
 		}
 
-		$form = $this->{"get{$formName}"}();
+		$form = $this->{"get{$formName}"}($itemID);
+		$form->loadDataFrom($recordType::get()->byId($itemID));
 		$response->addHeader('Content-Type', 'application/json');
 		$response->setBody(Convert::raw2json($this->getSchemaForForm($form)));
 
 		return $response;
+	}
+
+	/**
+	 * Given a form, generate a response containing the requested form
+	 * schema if X-Formschema-Request header is set.
+	 *
+	 * @param Form $form
+	 * @return SS_HTTPResponse
+	 */
+	protected function getSchemaResponse($form) {
+		$request = $this->getRequest();
+		if($request->getHeader('X-Formschema-Request')) {
+			$data = $this->getSchemaForForm($form);
+			$response = new SS_HTTPResponse(Convert::raw2json($data));
+			$response->addHeader('Content-Type', 'application/json');
+			return $response;
+		}
+		return null;
 	}
 
 	/**
@@ -1118,6 +1150,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
 	 * Save  handler
+	 *
+	 * @param array $data
+	 * @param Form $form
+	 * @return SS_HTTPResponse
 	 */
 	public function save($data, $form) {
 		$request = $this->getRequest();
@@ -1140,9 +1176,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->extend('onAfterSave', $record);
 		$this->setCurrentPageID($record->ID);
 
-		$this->getResponse()->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
-
+		$message = _t('LeftAndMain.SAVEDUP', 'Saved.');
 		if($request->getHeader('X-Formschema-Request')) {
+			$form->setMessage($message, 'good');
 			$data = $this->getSchemaForForm($form);
 			$response = new SS_HTTPResponse(Convert::raw2json($data));
 			$response->addHeader('Content-Type', 'application/json');
@@ -1150,6 +1186,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$response = $this->getResponseNegotiator()->respond($request);
 		}
 
+		$response->addHeader('X-Status', rawurlencode($message));
 		return $response;
 	}
 
