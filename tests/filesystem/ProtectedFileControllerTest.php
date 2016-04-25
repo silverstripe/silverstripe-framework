@@ -169,8 +169,9 @@ class ProtectedFileControllerTest extends FunctionalTest {
 		$result = $this->get('assets/FileTest-subfolder');
 		$this->assertResponseEquals(403, null, $result);
 
+		// Flysystem reports root folder as not present
 		$result = $this->get('assets');
-		$this->assertResponseEquals(403, null, $result);
+		$this->assertResponseEquals(404, null, $result);
 	}
 
 	/**
