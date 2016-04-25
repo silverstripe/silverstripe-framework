@@ -335,14 +335,22 @@ JSON;
 
 		if ($request->getHeader('Accept') == 'text/json') {
 			$response->addHeader('Content-Type', 'application/json');
-			if ($request->param('Name')) {
-				$changeSet = ChangeSet::get()->byId($request->param('ID'));
-				$response->setBody(Convert::raw2json($this->getChangeSetResource($changeSet)));
-			} else {
-				$response->setBody('{"message":"Resource not found"}');
+			if (!$request->param('Name')) {
+				return (new SS_HTTPResponse(null, 400));
 			}
 
-			return $response;
+			$changeSet = ChangeSet::get()->byId($request->param('ID'));
+			if(!$changeSet) {
+				return (new SS_HTTPResponse(null, 404));
+			}
+
+			if(!$changeSet->canView()) {
+				return (new SS_HTTPResponse(null, 403));
+			}
+
+			$body = Convert::raw2json($this->getChangeSetResource($changeSet));
+			return (new SS_HTTPResponse($body, 200))
+				->addHeader('Content-Type', 'application/json');
 		} else {
 			return $this->index($request);
 		}
@@ -358,24 +366,21 @@ JSON;
 	public function deleteCampaign(SS_HTTPRequest $request) {
 		$id = $request->param('ID');
 		if (!$id || !is_numeric($id)) {
-			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
-				->addHeader('Content-Type', 'application/json');
+			return (new SS_HTTPResponse(null, 400));
 		}
 
 		$record = ChangeSet::get()->byID($id);
 		if(!$record) {
-			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 404))
-				->addHeader('Content-Type', 'application/json');
+			return (new SS_HTTPResponse(null, 404));
 		}
 
 		if(!$record->canDelete()) {
-			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 401))
-				->addHeader('Content-Type', 'application/json');
+			return (new SS_HTTPResponse(null, 403));
 		}
 
 		$record->delete();
 
-		return (new SS_HTTPResponse('', 204));
+		return (new SS_HTTPResponse(null, 204));
 	}
 
 	/**
@@ -388,25 +393,21 @@ JSON;
 	public function publishCampaign(SS_HTTPRequest $request) {
 		// Protect against CSRF on destructive action
 		if(!SecurityToken::inst()->checkRequest($request)) {
-			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
-				->addHeader('Content-Type', 'application/json');
+			return (new SS_HTTPResponse(null, 400));
 		}
 
 		$id = $request->param('ID');
 		if(!$id || !is_numeric($id)) {
-			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 400))
-				->addHeader('Content-Type', 'application/json');
+			return (new SS_HTTPResponse(null, 400));
 		}
 
 		$record = ChangeSet::get()->byID($id);
 		if(!$record) {
-			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 404))
-				->addHeader('Content-Type', 'application/json');
+			return (new SS_HTTPResponse(null, 404));
 		}
 
 		if(!$record->canPublish()) {
-			return (new SS_HTTPResponse(json_encode(['status' => 'error']), 401))
-				->addHeader('Content-Type', 'application/json');
+			return (new SS_HTTPResponse(null, 403));
 		}
 
 		try {
@@ -445,10 +446,15 @@ JSON;
 		$record = null;
 		if($id) {
 			$record = ChangeSet::get()->byId($id);
+			if(!$record || !$record->canView()) {
+				return null;
+			}
 		}
+
 		if(!$record) {
 			$record = ChangeSet::singleton();
 		}
+
 		$fields = $record->getCMSFields();
 
 		// Add standard fields
@@ -467,6 +473,7 @@ JSON;
 		$form->setValidationResponseCallback(function() use ($form) {
 			return $this->getSchemaResponse($form);
 		});
+
 		return $form;
 	}
 

@@ -104,7 +104,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'BatchActionsForm',
 		'schema',
 	];
-	
+
 	private static $url_handlers = [
 		'GET schema/$FormName/$RecordType/$ItemID' => 'schema'
 	];
@@ -235,30 +235,28 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$itemID = $request->param('ItemID');
 
 		if (!$formName || !$recordType) {
-			throw new SS_HTTPResponse_Exception(
-				'Missing request params',
-				400
-			);
+			return (new SS_HTTPResponse('Missing request params', 400));
 		}
 
 		if(!$this->hasMethod("get{$formName}")) {
-			throw new SS_HTTPResponse_Exception(
-				'Form not found',
-				400
-			);
+			return (new SS_HTTPResponse('Form not found', 404));
 		}
 
 		if(!$this->hasAction($formName)) {
-			throw new SS_HTTPResponse_Exception(
-				'Form not accessible',
-				401
-			);
+			return (new SS_HTTPResponse('Form not accessible', 401));
 		}
 
 		$form = $this->{"get{$formName}"}($itemID);
 
-		if ($itemID) {
-			$form->loadDataFrom($recordType::get()->byId($itemID));
+		if($itemID) {
+			$record = $recordType::get()->byId($itemID);
+			if(!$record) {
+				return (new SS_HTTPResponse('Record not found', 404));
+			}
+			if(!$record->canView()) {
+				return (new SS_HTTPResponse('Record not accessible', 403));
+			}
+			$form->loadDataFrom($record);
 		}
 
 		$response->addHeader('Content-Type', 'application/json');
