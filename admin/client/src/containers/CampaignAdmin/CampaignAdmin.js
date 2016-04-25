@@ -6,7 +6,7 @@ import * as actions from 'state/campaign/CampaignActions';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormAction from 'components/FormAction/FormAction';
 import i18n from 'i18n';
-import NorthHeader from 'components/NorthHeader/NorthHeader';
+import Toolbar from 'components/Toolbar/Toolbar';
 import FormBuilder from 'components/FormBuilder/FormBuilder';
 import CampaignAdminList from './CampaignAdminList';
 
@@ -98,11 +98,11 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div className="cms-content__inner no-preview">
         <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader>
+          <Toolbar>
             <div className="breadcrumb breadcrumb--current-only">
               <h2 className="breadcrumb__item-title breadcrumb__item-title--last">Campaigns</h2>
             </div>
-          </NorthHeader>
+          </Toolbar>
           <div className="panel-scrollable--single-toolbar">
             <div className="toolbar--content">
               <div className="btn-toolbar">
@@ -144,11 +144,11 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader showBackButton>
+          <Toolbar showBackButton>
             <div className="breadcrumb breadcrumb--current-only">
               <h2 className="text-truncate toolbar__heading">Campaigns</h2>
             </div>
-          </NorthHeader>
+          </Toolbar>
           <FormBuilder schemaUrl={schemaUrl} />
         </div>
       </div>
@@ -168,11 +168,11 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader showBackButton>
+          <Toolbar showBackButton>
             <div className="breadcrumb breadcrumb--current-only">
-              <h2 className="text-truncate toolbar__heading">Campaigns</h2>
+              <h2 className="text-truncate breadcrumb__item-title--last">Campaigns</h2>
             </div>
-          </NorthHeader>
+          </Toolbar>
           <div className="cms-middle__scrollable">
             <FormBuilder {...formBuilderProps} />
           </div>

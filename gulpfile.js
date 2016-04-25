@@ -285,8 +285,8 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/components/TextField/TextField`,
       { expose: 'components/TextField/TextField' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/NorthHeader/NorthHeader`,
-      { expose: 'components/NorthHeader/NorthHeader' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/Toolbar/Toolbar`,
+      { expose: 'components/Toolbar/Toolbar' }
     )
     .require(`${PATHS.ADMIN_JS_SRC}/components/Breadcrumb/Breadcrumb`,
       { expose: 'components/Breadcrumb/Breadcrumb' }
@@ -373,7 +373,7 @@ gulp.task('bundle-framework', function bundleBoot() {
       gulpUtil.log('Finished', `bundled ${bundleFileName} ${msg}`);
     })
     .transform('babelify', babelifyOptions)
-    .external('components/NorthHeader/NorthHeader')
+    .external('components/Toolbar/Toolbar')
     .external('components/FormBuilder/FormBuilder')
     .external('components/FormAction/FormAction')
     .external('deep-freeze')

@@ -1,7 +1,7 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
-class NorthHeader extends SilverStripeComponent {
+class Toolbar extends SilverStripeComponent {
 
   constructor(props) {
     super(props);
@@ -14,8 +14,9 @@ class NorthHeader extends SilverStripeComponent {
       'btn',
       'btn-secondary',
       'action',
-      'font-icon-left-open',
+      'font-icon-left-open-big',
       'toolbar__back-button',
+      'btn--no-text',
     ];
     const backButtonProps = {
       className: buttonClassNames.join(' '),
@@ -52,13 +53,13 @@ class NorthHeader extends SilverStripeComponent {
   }
 }
 
-NorthHeader.propTypes = {
+Toolbar.propTypes = {
   handleBackButtonClick: React.PropTypes.func,
   showBackButton: React.PropTypes.bool,
 };
 
-NorthHeader.defaultProps = {
+Toolbar.defaultProps = {
   showBackButton: false,
 };
 
-export default NorthHeader;
+export default Toolbar;
