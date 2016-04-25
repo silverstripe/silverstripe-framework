@@ -346,9 +346,9 @@ class ChangeSet extends DataObject {
 
 	public function getCMSFields() {
 		$fields = new FieldList();
-		$fields->push(TextField::create('Name'));
+		$fields->push(TextField::create('Name', $this->fieldLabel('Name')));
 		if($this->isInDB()) {
-			$state = ReadonlyField::create('State')
+			$state = ReadonlyField::create('State', $this->fieldLabel('State'))
 				->setDontEscape(true);
 			$fields->push($state); // Escape is done in react
 		}
@@ -467,5 +467,13 @@ class ChangeSet extends DataObject {
 			]
 		);
 		return $string;
+	}
+
+	public function fieldLabels($includerelations = true) {
+		$labels = parent::fieldLabels($includerelations);
+		$labels['Name'] = _t('ChangeSet.NAME', 'Name');
+		$labels['State'] = _t('ChangeSet.STATE', 'State');
+
+		return $labels;
 	}
 }

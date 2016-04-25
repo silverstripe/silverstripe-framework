@@ -464,8 +464,8 @@ JSON;
 			'DetailEditForm',
 			$fields,
 			FieldList::create(
-				FormAction::create('save', 'Save'),
-				FormAction::create('cancel', 'Cancel')
+				FormAction::create('save', _t('CMSMain.SAVE', 'Save')),
+				FormAction::create('cancel', _t('LeftAndMain.CANCEL', 'Cancel'))
 			)
 		);
 		// Configure form to respond to validation errors with form schema
