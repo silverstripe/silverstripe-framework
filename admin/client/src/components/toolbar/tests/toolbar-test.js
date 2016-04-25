@@ -2,6 +2,6 @@
 
 jest.dontMock('../index');
 
-describe('NorthHeaderComponent', () => {
+describe('ToolbarComponent', () => {
 
 });

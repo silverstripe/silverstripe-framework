@@ -7,7 +7,7 @@ import SilverStripeComponent from 'silverstripe-component';
 import Accordion from 'components/accordion/index';
 import AccordionGroup from 'components/accordion/group';
 import AccordionItem from 'components/accordion/item';
-import NorthHeader from 'components/north-header/index';
+import Toolbar from 'components/toolbar/index';
 import FormAction from 'components/form-action/index';
 import CampaignItem from './item';
 import BreadcrumbComponent from 'components/breadcrumb/index';
@@ -85,9 +85,9 @@ class CampaignListContainer extends SilverStripeComponent {
     return (
       <div className={classNames}>
         <div className="cms-content__left collapse in" aria-expanded="true">
-          <NorthHeader>
+          <Toolbar>
             <BreadcrumbComponent crumbs={this.props.breadcrumbs} multiline />
-          </NorthHeader>
+          </Toolbar>
           <div className="container-fluid campaign-items panel-scrollable--double-toolbar">
             <Accordion>
               {accordionGroups}

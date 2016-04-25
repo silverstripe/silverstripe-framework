@@ -6,7 +6,7 @@ import * as actions from 'state/campaign/actions';
 import SilverStripeComponent from 'silverstripe-component';
 import FormAction from 'components/form-action/index';
 import i18n from 'i18n';
-import NorthHeader from 'components/north-header/index';
+import Toolbar from 'components/toolbar/index';
 import FormBuilder from 'components/form-builder/index';
 import CampaignListContainer from './list';
 
@@ -96,11 +96,11 @@ class CampaignAdminContainer extends SilverStripeComponent {
     return (
       <div className="cms-content__inner no-preview">
         <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader>
+          <Toolbar>
             <div className="breadcrumb breadcrumb--current-only">
               <h2 className="breadcrumb__item-title breadcrumb__item-title--last">Campaigns</h2>
             </div>
-          </NorthHeader>
+          </Toolbar>
           <div className="panel-scrollable--single-toolbar">
             <div className="toolbar--content">
               <div className="btn-toolbar">
@@ -146,9 +146,11 @@ class CampaignAdminContainer extends SilverStripeComponent {
     return (
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <NorthHeader showBackButton>
-            <h2 className="text-truncate north-header__heading">Campaigns</h2>
-          </NorthHeader>
+          <Toolbar showBackButton>
+            <div className="breadcrumb breadcrumb--current-only">
+              <h2 className="text-truncate breadcrumb__item-title--last">Campaigns</h2>
+            </div>
+          </Toolbar>
           <FormBuilder {...formBuilderProps} />
         </div>
       </div>
@@ -225,6 +227,7 @@ class CampaignAdminContainer extends SilverStripeComponent {
   campaignEditCreateFn(Component, props) {
     if (props.name === 'action_save') {
       const extendedProps = Object.assign({}, props, {
+        bootstrapButtonStyle: 'success',
         type: 'submit',
         label: props.title,
         icon: 'save',
