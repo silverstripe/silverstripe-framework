@@ -46,8 +46,9 @@ File naming and style include ordering is inspired by
 
 ## Legacy conventions
 
-CSS written prior to SilverStripe 4.0 is not following the conventions outlined above,
-and will
+CSS written prior to SilverStripe 4.0 is not following the conventions outlined above.
+It is contained in a `legacy/` folder structure. If modifying these styles,
+consider porting them over into the new structure. Otherwise, follow these conventions:
 
 - Class naming: Use the `cms-` class prefix for major components in the cms interface,
   and the `ss-ui-` prefix for extensions to jQuery UI. Don't use the `ui-` class prefix, its reserved for jQuery UI built-in styles.
