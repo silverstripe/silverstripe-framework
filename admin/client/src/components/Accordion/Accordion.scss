@@ -1,53 +1,48 @@
-// Accordion styles
-.accordion-group {
+// Accordion based off Bootstrap collapse
+
+.accordion__block {
 	margin-top: $spacer-y * 1.25;
+}
 
-	&__title {
-		margin-bottom: 0;
+.accordion__title {
+	margin-bottom: 0;
+	margin-left: -$spacer-y;
+	margin-right: -$spacer-y;
+	padding: $spacer-x*.75 $spacer-y;
+	position: relative;
+	display: block;
+	font-size: $font-size-sm;
+	line-height: $line-height-base;
+	font-weight: 400;
+	color: $body-color;
+	text-transform: uppercase;
+	text-decoration: none;
+	border-bottom: 1px solid $border-color;
 
-		a {
-			/* Todo: extend table header */
-			font-size: $font-size-sm;
-			line-height: $line-height-base;
-			font-weight: 400;
-			text-transform: uppercase;
-			padding: $spacer-x*.75 $spacer-y;
-			/* end table header */
+	&::before {
+		padding: $spacer-x*.75 $spacer-y;
+		position: absolute;
+		right: 0;
+		top: 0;
+		font-size: $font-size-lg;
+		line-height: $line-height-base;
+		color: lighten($body-color,30);
+		text-align: center;
+		content: "7";
+		font-family: silverstripe;
+	}
 
-			display: block;
-			margin-left: -$spacer-y;
-			margin-right: -$spacer-y;
-			text-decoration: none;
-			position: relative;
-			border-bottom: 1px solid $border-color;
+	&:hover,
+	&:active,
+	&:focus {
+		text-decoration: none;
+
+		&::before {
 			color: $body-color;
-
-			&::before {
-				padding: $spacer-x*.75 $spacer-y;
-				position: absolute;
-				right: 0;
-				top: 0;
-				font-size: $font-size-lg;
-				line-height: $line-height-base;
-				color: lighten($body-color,30);
-				text-align: center;
-				content: "7";
-				font-family: silverstripe;
-			}
-
-			&.collapsed::before {
-				content: "6";
-			}
-
-			&:hover,
-			&:active,
-			&:focus {
-				text-decoration: none;
-
-				&::before {
-					color: $body-color;
-				}
-			}
 		}
 	}
+}
+
+.accordion__title.collapsed::before {
+	content: "6";
 }

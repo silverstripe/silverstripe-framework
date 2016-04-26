@@ -1,8 +1,10 @@
+// TODO move list-group to its own component
+
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import 'bootstrap-collapse';
 
-class AccordionGroup extends SilverStripeComponent {
+class AccordionBlock extends SilverStripeComponent {
   render() {
     const headerID = `${this.props.groupid}_Header`;
     const listID = `${this.props.groupid}_Items`;
@@ -15,12 +17,16 @@ class AccordionGroup extends SilverStripeComponent {
       'aria-labelledby': headerID,
     };
     return (
-      <div className="accordion-group">
-        <h6 className="accordion-group__title" role="tab" id={headerID}>
-          <a data-toggle="collapse" href={href} aria-expanded="true" aria-controls={listID}>
-            {this.props.title}
-          </a>
-        </h6>
+      <div className="accordion__block">
+        <a className="accordion__title"
+          data-toggle="collapse"
+          href={href}
+          aria-expanded="true"
+          aria-controls={listID}
+          id={headerID}
+          role="tab"
+        >{this.props.title}
+        </a>
         <div {...groupProps}>
           {this.props.children}
         </div>
@@ -28,4 +34,4 @@ class AccordionGroup extends SilverStripeComponent {
     );
   }
 }
-export default AccordionGroup;
+export default AccordionBlock;

@@ -5,8 +5,8 @@ import * as recordActions from 'state/records/RecordsActions';
 import * as campaignActions from 'state/campaign/CampaignActions';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import Accordion from 'components/Accordion/Accordion';
-import AccordionGroup from 'components/Accordion/AccordionGroup';
-import AccordionItem from 'components/Accordion/AccordionItem';
+import AccordionBlock from 'components/Accordion/AccordionBlock';
+import ListGroupItem from 'components/ListGroup/ListGroupItem';
 import Toolbar from 'components/Toolbar/Toolbar';
 import FormAction from 'components/FormAction/FormAction';
 import CampaignAdminItem from './CampaignAdminItem';
@@ -49,12 +49,13 @@ class CampaignAdminList extends SilverStripeComponent {
     const itemGroups = this.groupItemsForSet();
 
     // Get items in this set
-    let accordionGroups = [];
+    let accordionBlocks = [];
+
     Object.keys(itemGroups).forEach(className => {
       const group = itemGroups[className];
       const groupCount = group.items.length;
 
-      let accordionItems = [];
+      let listGroupItems = [];
       let title = `${groupCount} ${groupCount === 1 ? group.singular : group.plural}`;
       let groupid = `Set_${campaignId}_Group_${className}`;
 
@@ -86,18 +87,23 @@ class CampaignAdminList extends SilverStripeComponent {
           itemClassNames.push('active');
         }
 
-        accordionItems.push(
-          <AccordionItem key={item.ID} className={itemClassNames.join(' ')} handleClick={this.handleItemSelected} handleClickArg={item.ID} >
+        listGroupItems.push(
+          <ListGroupItem
+            key={item.ID}
+            className={itemClassNames.join(' ')}
+            handleClick={this.handleItemSelected}
+            handleClickArg={item.ID}
+          >
             <CampaignAdminItem item={item} campaign={this.props.record} />
-          </AccordionItem>
+          </ListGroupItem>
         );
       });
 
       // Merge into group
-      accordionGroups.push(
-        <AccordionGroup key={groupid} groupid={groupid} title={title}>
-          {accordionItems}
-        </AccordionGroup>
+      accordionBlocks.push(
+        <AccordionBlock key={groupid} groupid={groupid} title={title}>
+          {listGroupItems}
+        </AccordionBlock>
       );
     });
 
@@ -114,7 +120,7 @@ class CampaignAdminList extends SilverStripeComponent {
           </Toolbar>
           <div className="container-fluid campaign-items panel-scrollable--double-toolbar">
             <Accordion>
-              {accordionGroups}
+              {accordionBlocks}
             </Accordion>
           </div>
           <div className="toolbar--south">

@@ -4,7 +4,10 @@ import SilverStripeComponent from 'lib/SilverStripeComponent';
 class Accordion extends SilverStripeComponent {
   render() {
     return (
-      <div role="tablist" aria-multiselectable="true">{this.props.children}</div>
+      <div className="accordion"
+        role="tablist"
+        aria-multiselectable="true"
+      >{this.props.children}</div>
     );
   }
 }
