@@ -323,18 +323,19 @@ export class FormBuilderComponent extends SilverStripeComponent {
       // Add sensible defaults for common actions.
       switch (props.name) {
         case 'action_save':
-          props = deepFreeze(Object.assign({}, props, {
+          props = deepFreeze(Object.assign({}, {
             type: 'submit',
             label: props.title,
             icon: 'save',
-          }));
+            bootstrapButtonStyle: 'success',
+          }, props));
           break;
         case 'action_cancel':
-          props = deepFreeze(Object.assign({}, props, {
+          props = deepFreeze(Object.assign({}, {
             type: 'button',
             label: props.title,
             icon: 'cancel',
-          }));
+          }, props));
           break;
         default:
           break;
