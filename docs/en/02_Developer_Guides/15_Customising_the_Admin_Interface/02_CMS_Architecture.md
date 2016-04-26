@@ -204,26 +204,30 @@ to ensure they're loaded unless already present. A custom-built library called
 `jQuery.ondemand` (located in `framework/thirdparty`) takes care of this transparently -
 so as a developer just declare your dependencies through the [api:Requirements] API.
 
-## Ajax Loading and Browser History
+## Client-side routing
 
-SilverStripe uses the HTML5 browser history to modify the URL without a complete window refresh,
-and load its UI via Ajax by hooking into browser navigation events (through the [Page.js](https://github.com/visionmedia/page.js) wrapper `javascript/src/router`).
+SilverStripe uses the HTML5 browser history to modify the URL without a complete
+window refresh. We use the [Page.js](https://github.com/visionmedia/page.js)
+routing library and provide additional SilverStripe specific functionality via the
+`admin/client/src/lib/Router.js` wrapper.
 
-This technique has an impact on how any Ajax load needs to happen:
-In order to support browser history (and change the URL state),
-a CMS developer needs to fire a navigation event rather than invoking the Ajax call directly.
+The router is available on `window.ss.router` and provides the same API as
+described in the
+[Page.js docs](https://github.com/visionmedia/page.js/blob/master/Readme.md#api).
 
-The main point of contact here is `$('.cms-container').loadPanel(<url>, <title>, <data>)`
-in `LeftAndMain.js`. The `data` object can contain additional state which is required
-in case the same navigation event is fired again (e.g. when the user pressed the back button).
+### Registering routes
 
-No callbacks are allowed in this style of Ajax loading, as all state needs
-to be "repeatable". Any logic required to be exected after the Ajax call
-should be placed in jQuery.entinwe `onmatch()` rules which apply to the newly created DOM structures.
-See `$('.cms-container').handleStateChange()` in `LeftAndMain.js` for details.
+Top level (CMS section) routes are registered automatically via the config system.
+Additional routes can be registered like so `window.ss.router('admin/pages', callback)`.
+Once registered, routes can we called with `windw.ss.router.show('admin/pages')`.
 
-Alternatively, form-related Ajax calls can be invoked through their own wrappers,
-which don't cause history events and hence allow callbacks: `$('.cms-container').submitForm()`.
+Route callbacks are invoked with two arguments, `context` and `next`. The [context object](https://github.com/visionmedia/page.js/blob/master/Readme.md#context)
+can be used to pass state between route handlers and inspect the current
+history state. The `next` function invokes the next matching route. If `next`
+is called when there is no 'next' route, a page refresh will occur.
+
+It's worth noting that routes are invoked in the order they were registered,
+not by specificity.
 
 ## PJAX: Partial template replacement through Ajax
 
