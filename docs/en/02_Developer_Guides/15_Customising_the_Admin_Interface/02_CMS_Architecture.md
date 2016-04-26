@@ -15,51 +15,48 @@ with some special conventions.
 For a more practical-oriented approach to CMS customizations, refer to the
 [Howto: Extend the CMS Interface](/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface) which builds
 
+## Installation
 
-## Markup and Style Conventions
+In order to contribute to the core frontend code, you need [NodeJS 4.x](https://nodejs.org/).
+This will install the package manager necessary to download frontend requirements.
+Once NodeJS is ready to go, you can download those requirements:
 
-While SilverStripe is intended to work with JavaScript only,
-we're following the principles of "[Progressive Enhancement](http://en.wikipedia.org/wiki/Progressive_enhancement)"
-where feasible, relying on a comparatively light layer of JavaScript to enhance
-forms and markup generated on the server. This allows seamless customization of
-aspects like form fields. We're explaining this philosophy in more detail
-on our [blog](http://www.silverstripe.org/the-3-0-ui-a-better-framework-for-your-ideas/)).
+```
+(cd framework && npm install)
+```
 
-All CSS in the CMS UI is written in the [SCSS language extensions](http://sass-lang.com/)
-and compiled with [gulp-sass](https://www.npmjs.com/package/gulp-sass), which helps
-us maintain expressive and concise style declarations. The files are located in `framework/admin/scss`
-(and if you have the `cms` module installed, in `cms/scss`), and are compiled to a `css` folder on the
-same directory path. Changes to the SCSS files can be automatically converted by first checking that you
-have the required dev-dependencies installed, you can do this by running `npm install` from the
-root folder. now you can compile the css files by running `npm run css`, although if you are 
-actively developing, running `npm run css --development` will compile the expanded css and recompile
-the css whenever an .scss file is changed. Just be sure to run `npm run css` to compile the minified
-css before submitting a pull request.
-Each file describes its purpose at the top of the declarations. Note that you can write
-plain CSS without SCSS for your custom CMS interfaces as well, we just mandate SCSS for core usage.
+Note: For each core module (e.g. `framework` and `cms`), a separate `npm install` needs to be run.
 
-As there's a whole lot of CSS driving the CMS, we have certain best practices around writing it:
+## Building
 
- * Use dashed lowercase naming for both `id` and `class` attributes (`my-class-name`), instead of camel case (`myClassName`)
- * Use the `id` attribute sparingly. Remember that it "closes off" the structure to code reuse, as HTML elements
-   require unique `id` attributes. Code reuse can happen both in CSS and JavaScript behaviour.
- * Separate presentation from structure in class names, e.g. `left-menu` is encoding the component position
-   (which might change later on). A more structural name could be `cms-menu` (or `cms-tools-menu` for a more specific version)
- * Class naming: Use the `cms-` class prefix for major components in the cms interface,
-   and the `ss-ui-` prefix for extensions to jQuery UI. Don't use the `ui-` class prefix, its reserved for jQuery UI built-in styles.
- * Use jQuery UI's built-in styles where possible, e.g. `ui-widget` for a generic container, or `ui-state-highlight`
-   to highlight a specific component. See the [jQuery UI Theming API](http://jqueryui.com/docs/Theming/API) for a full list.
+All "source" files for the frontend logic are located in `framework/client/src`.
+The base CMS interface has its own folder with `framework/admin/client/src`.
+If you have the `cms`  module installed, there's additional files in `cms/client/src`.
 
-See our [system requirements](/getting_started/server_requirements) for a list of supported browsers.
+All build commands are run through `npm`. You can check the module's
+`package.json` for available commands.
+Under the hood, files are built through [Gulp](http://gulpjs.com/)
+and associated tooling.
+
+```
+(cd framework && npm run build --development)
+```
+Please make sure you build all files before submitting a pull request!
+
+## Coding Conventions
+
+Please follow our [CSS](/getting_started/css_coding_conventions)
+and [JavaScript](/getting_started/javascript_coding_conventions)
+coding conventions.
 
 ## Sprites
 
 We use sprites to handle various icons and images throughout the CMS. These are automatically generated
-by running `npm run sprites` and can be found at `/admin/images/sprites/dist`. To add new
+by running `npm run sprites` and can be found at `/admin/client/src/sprites/dist`. To add new
 images to the sprites, simply add the image to the folder matching the image's size in
-`/admin/images/sprites/src` then run `npm run sprites` to generate the sprite containing your image. 
-Along with the new sprite containing your image, there will also be a new variable in 
-`/admin/scss_spritey.scss` which you can use in your .scss file by first extending the class matching
+`/admin/client/sprites` then run `npm run sprites` to generate the sprite containing your image.
+Along with the new sprite containing your image, there will also be a new variable in
+`/admin/client/styles/legacy/_sprites.scss` which you can use in your .scss file by first extending the class matching
 the sprite (eg `@extend .icon-sprites-32x32;`), and then including your image using the variable
 matching your image (eg `@include sprite($sprites-32x32-my-image);`).
 
