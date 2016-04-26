@@ -25,7 +25,8 @@ class CampaignAdmin extends SilverStripeComponent {
       },
     });
     this.campaignListCreateFn = this.campaignListCreateFn.bind(this);
-    this.campaignCreationView = this.campaignCreationView.bind(this);
+    this.campaignAddCreateFn = this.campaignAddCreateFn.bind(this);
+    this.campaignEditCreateFn = this.campaignEditCreateFn.bind(this);
   }
 
   componentDidMount() {
@@ -139,7 +140,10 @@ class CampaignAdmin extends SilverStripeComponent {
    */
   renderDetailEditView() {
     const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
-    const schemaUrl = `${baseSchemaUrl}/ChangeSet/${this.props.campaignId}`;
+    const formBuilderProps = {
+      createFn: this.campaignEditCreateFn,
+      schemaUrl: `${baseSchemaUrl}/ChangeSet/${this.props.campaignId}`,
+    };
 
     return (
       <div className="cms-middle no-preview">
@@ -149,7 +153,7 @@ class CampaignAdmin extends SilverStripeComponent {
               <h2 className="text-truncate toolbar__heading">Campaigns</h2>
             </div>
           </Toolbar>
-          <FormBuilder schemaUrl={schemaUrl} />
+          <FormBuilder {...formBuilderProps} />
         </div>
       </div>
     );
@@ -161,7 +165,7 @@ class CampaignAdmin extends SilverStripeComponent {
   renderCreateView() {
     const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
     const formBuilderProps = {
-      createFn: this.campaignCreationView,
+      createFn: this.campaignAddCreateFn,
       schemaUrl: `${baseSchemaUrl}/ChangeSet`,
     };
 
@@ -183,6 +187,33 @@ class CampaignAdmin extends SilverStripeComponent {
 
   /**
    * Hook to allow customisation of components being constructed
+   * by the Campaign DetailEdit FormBuilder.
+   *
+   * @param {Object} Component - Component constructor.
+   * @param {Object} props - Props passed from FormBuilder.
+   *
+   * @return {Object} - Instanciated React component
+   */
+  campaignEditCreateFn(Component, props) {
+    const indexRoute = this.props.sectionConfig.route;
+
+    // Route to the Campaigns index view when 'Cancel' is clicked.
+    if (props.name === 'action_cancel') {
+      const extendedProps = Object.assign({}, props, {
+        handleClick: (event) => {
+          event.preventDefault();
+          window.ss.router.show(indexRoute);
+        },
+      });
+
+      return <Component key={props.name} {...extendedProps} />;
+    }
+
+    return <Component key={props.name} {...props} />;
+  }
+
+  /**
+   * Hook to allow customisation of components being constructed
    * by the Campaign creation FormBuilder.
    *
    * @param {Object} Component - Component constructor.
@@ -190,13 +221,14 @@ class CampaignAdmin extends SilverStripeComponent {
    *
    * @return {Object} - Instanciated React component
    */
-  campaignCreationView(Component, props) {
+  campaignAddCreateFn(Component, props) {
     const indexRoute = this.props.sectionConfig.route;
 
     // Route to the Campaigns index view when 'Cancel' is clicked.
     if (props.name === 'action_cancel') {
       const extendedProps = Object.assign({}, props, {
-        handleClick: () => {
+        handleClick: (event) => {
+          event.preventDefault();
           window.ss.router.show(indexRoute);
         },
       });
