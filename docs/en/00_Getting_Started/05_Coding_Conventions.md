@@ -1,8 +1,8 @@
-# Coding Conventions
+# PHP Coding Conventions
 
 This document provides guidelines for code formatting and documentation
 to developers contributing to SilverStripe. It applies to all PHP files
-in the framework/ and cms/ modules, as well as any supported additional modules.
+in the `framework/` and `cms/` modules, as well as any supported additional modules.
 
 Coding standards are an important aspect for every software project,
 and facilitate collaboration by making code more consistent and readable.
@@ -18,16 +18,16 @@ Always use hard tabs rather then spaces for indentation, with one tab per nestin
 ### Maximum Line Length
 
 The target line length is 100 columns with tabs being treated as four columns,
-meaning developers should strive keep each line of their code 
-under 80 columns where possible and practical. 
-However, longer lines are acceptable in some circumstances. 
+meaning developers should strive keep each line of their code
+under 80 columns where possible and practical.
+However, longer lines are acceptable in some circumstances.
 The maximum length of any line of PHP code is 120 columns.
 
 ### Line Termination
 
-Line termination follows the Unix text file convention. Lines must end with a single linefeed (LF) character. 
+Line termination follows the Unix text file convention. Lines must end with a single linefeed (LF) character.
 Linefeed characters are represented as ordinal 10, or hexadecimal 0x0A.
-Note: Do not use carriage returns (CR) as is the convention in Apple OS's (0x0D) or the carriage return - 
+Note: Do not use carriage returns (CR) as is the convention in Apple OS's (0x0D) or the carriage return -
 linefeed combination (CRLF) as is standard for the Windows OS (0x0D, 0x0A).
 
 ## Naming Conventions
@@ -41,8 +41,8 @@ Class and filenames are in `UpperCamelCase` format:
 	:::php
 	class MyClass {}
 
-If a class name is comprised of more than one word, the first letter of each 
-new word must be capitalized. Successive capitalized letters are used in 
+If a class name is comprised of more than one word, the first letter of each
+new word must be capitalized. Successive capitalized letters are used in
 acronyms, e.g. a class `XMLImporter` is used while `XmlImporter` is not.
 
 ### Methods
@@ -87,15 +87,15 @@ Member variables always declare their visibility by using one of the private, pr
 
 ### Constants
 
-All letters used in a constant name must be capitalized, 
+All letters used in a constant name must be capitalized,
 while all words in a constant name must be separated by underscore characters.
 
 	:::php
 	const INTEREST_RATE = 0.19;
-	
+
 	define('INTEREST_RATE', 0.19);
 
-Constants must be defined as class members with the `const` modifier. 
+Constants must be defined as class members with the `const` modifier.
 Defining constants in the global scope with the `define` function is permitted but strongly discouraged.
 
 ### File Naming and Directory Structure
@@ -108,14 +108,14 @@ Example: `mysite/code/MyClass.php`
 
 	:::php
 	<?php
-	
+
 	class MyClass {}
-	
+
 	class MyClass_Controller {}
-	
+
 	class MyClass_OtherRelatedClass {}
 
-To help with namespacing common class names (like Database) it is recommended to use a prefix convention `SS_ClassName` but the filename will remain `ClassName.php`. 
+To help with namespacing common class names (like Database) it is recommended to use a prefix convention `SS_ClassName` but the filename will remain `ClassName.php`.
 
 See [directory structure](directory_structure) for more information.
 
@@ -146,7 +146,7 @@ When a string is literal (contains no variable substitutions), the apostrophe or
 
 #### String Literals Containing Apostrophes
 
-When a literal string itself contains apostrophes, it is permitted to demarcate the string with quotation marks or "double quotes". 
+When a literal string itself contains apostrophes, it is permitted to demarcate the string with quotation marks or "double quotes".
 
 	:::php
 	$greeting = "They said 'hello'";
@@ -173,7 +173,7 @@ Strings must be concatenated using the "." operator. A space must always be adde
 	:::php
 	$copyright = 'SilverStripe Ltd (' . $year . ')';
 
-When concatenating strings with the "." operator, it is encouraged to break the statement into multiple lines to improve readability. 
+When concatenating strings with the "." operator, it is encouraged to break the statement into multiple lines to improve readability.
 In these cases, each successive line should be padded with white space such that the "."; operator is aligned under the "=" operator:
 
 	:::php
@@ -193,7 +193,7 @@ When declaring indexed arrays with the Array function, a trailing space must be 
 	:::php
 	$sampleArray = array(1, 2, 3, 'Zend', 'Studio');
 
-It is permitted to declare multi-line indexed arrays using the "array" construct. 
+It is permitted to declare multi-line indexed arrays using the "array" construct.
 In this case, each successive line must be padded with spaces such that beginning of each line is aligned:
 
 	:::php
@@ -201,9 +201,9 @@ In this case, each successive line must be padded with spaces such that beginnin
 	                     $a, $b, $c,
 	                     56.44, $d, 500);
 
-Alternately, the initial array item may begin on the following line. 
-If so, it should be padded at one indentation level greater than the line containing the array declaration, 
-and all successive lines should have the same indentation; 
+Alternately, the initial array item may begin on the following line.
+If so, it should be padded at one indentation level greater than the line containing the array declaration,
+and all successive lines should have the same indentation;
 the closing paren should be on a line by itself at the same indentation level as the line containing the array declaration:
 
 	:::php
@@ -213,22 +213,22 @@ the closing paren should be on a line by itself at the same indentation level as
 		56.44, $d, 500,
 	);
 
-When using this latter declaration, we encourage using a trailing comma for the last item in the array; 
+When using this latter declaration, we encourage using a trailing comma for the last item in the array;
 this minimizes the impact of adding new items on successive lines, and helps to ensure no parse errors occur due to a missing comma.
 
 #### Associative Arrays
 
-When declaring associative arrays with the `array` construct, breaking the statement into multiple lines is encouraged. 
+When declaring associative arrays with the `array` construct, breaking the statement into multiple lines is encouraged.
 In this case, each successive line must be padded with white space such that both the keys and the values are aligned:
 
 	:::php
 	$sampleArray = array('firstKey'  => 'firstValue',
 	                     'secondKey' => 'secondValue');
 
-Alternately, the initial array item may begin on the following line. 
-If so, it should be padded at one indentation level greater than the line containing the array declaration, 
-and all successive lines should have the same indentation; the closing paren should be on a line by itself at the 
-same indentation level as the line containing the array declaration. 
+Alternately, the initial array item may begin on the following line.
+If so, it should be padded at one indentation level greater than the line containing the array declaration,
+and all successive lines should have the same indentation; the closing paren should be on a line by itself at the
+same indentation level as the line containing the array declaration.
 For readability, the various "=>" assignment operators should be padded such that they align.
 
 	:::php
@@ -246,7 +246,7 @@ before or after the opening parathesis, as well as no space before the closing p
 	public function foo($arg1, $arg2) {} // good
 	public function foo ( $arg1, $arg2 ) {} // bad
 
-Keep the opening brace on the same line as the statement. 
+Keep the opening brace on the same line as the statement.
 
 	:::php
 	// good
@@ -255,16 +255,16 @@ Keep the opening brace on the same line as the statement.
 	}
 
 	// bad
-	public function bar() 
+	public function bar()
 	{
 		// ...
 	}
 
-In cases where the argument list exceeds the maximum line length, you may introduce line breaks. 
-Additional arguments to the function or method must be indented one additional level beyond the function or method declaration. 
-A line break should then occur before the closing argument paren, 
-which should then be placed on the same line as the opening brace of the function 
-or method with one space separating the two, and at the same indentation level as the function or method declaration. 
+In cases where the argument list exceeds the maximum line length, you may introduce line breaks.
+Additional arguments to the function or method must be indented one additional level beyond the function or method declaration.
+A line break should then occur before the closing argument paren,
+which should then be placed on the same line as the opening brace of the function
+or method with one space separating the two, and at the same indentation level as the function or method declaration.
 
 	:::php
 	public function bar($arg1, $arg2, $arg3,
@@ -283,7 +283,7 @@ apart from the last argument.
 No control structure is allowed to have spaces directly
 before or after the opening parenthesis, as well as no space before the closing parenthesis.
 
-The opening brace and closing brace are written on the same line as the conditional statement. 
+The opening brace and closing brace are written on the same line as the conditional statement.
 Any content within the braces must be indented using a tab.
 
 	:::php
@@ -291,10 +291,10 @@ Any content within the braces must be indented using a tab.
 	    $a = 2;
 	}
 
-If the conditional statement causes the line length to exceed the maximum line length and has several clauses, 
-you may break the conditional into multiple lines. In such a case, break the line prior to a logic operator, 
-and pad the line such that it aligns under the first character of the conditional clause. 
-The closing paren in the conditional will then be placed on a line with the opening brace, 
+If the conditional statement causes the line length to exceed the maximum line length and has several clauses,
+you may break the conditional into multiple lines. In such a case, break the line prior to a logic operator,
+and pad the line such that it aligns under the first character of the conditional clause.
+The closing paren in the conditional will then be placed on a line with the opening brace,
 with one space separating the two, at an indentation level equivalent to the opening control statement.
 
 	:::php
@@ -305,9 +305,9 @@ with one space separating the two, at an indentation level equivalent to the ope
 	    $a = $d;
 	}
 
-The intention of this latter declaration format is to prevent issues when adding or removing clauses 
-from the conditional during later revisions. For `if` statements that include `elseif` or `else`, 
-the formatting conventions are similar to the `if` construct. 
+The intention of this latter declaration format is to prevent issues when adding or removing clauses
+from the conditional during later revisions. For `if` statements that include `elseif` or `else`,
+the formatting conventions are similar to the `if` construct.
 The following examples demonstrate proper formatting for `if` statements with `else` and/or `elseif` constructs:
 
 	:::php
@@ -324,14 +324,14 @@ Statements with `if` can be written without braces on a single line as the block
 	:::php
 	// good
 	if($a == $b) doThis();
-	
+
 	// bad
 	if($a == $b) doThis();
 	else doThat();
 
 #### switch
 
-All content within the "switch" statement must be indented using tabs. 
+All content within the "switch" statement must be indented using tabs.
 Content under each "case" statement must be indented using an additional tab.
 
 	:::php
@@ -357,9 +357,9 @@ Try to avoid using PHP's ability to mix HTML into the code.
 	:::php
 	// PHP code
 	public function getTitle() {
-		return "<h2>Bad Example</h2>"; 
+		return "<h2>Bad Example</h2>";
 	}
-	
+
 	// Template code
 	$Title
 
@@ -370,7 +370,7 @@ Better: Keep HTML in template files:
 	public function getTitle() {
 		return "Better Example";
 	}
-	
+
 	// Template code
 	<h2>$Title</h2>
 
@@ -381,7 +381,7 @@ and [tag overview](http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumen
 
  * All class definitions and PHP files should have `@package` and `@subpackage`.
  * Methods should include at least `@param` and `@return`.
- * Include a blank line after the description. 
+ * Include a blank line after the description.
  * Use `{@link MyOtherClass}` and `{@link MyOtherClass->otherMethod}` for inline references.
  * Denote preformatted code examples in `<code></code>` blocks.
  * Always start block-level comments containing phpdoc with two asterisks (`/** ... */`).
@@ -389,32 +389,32 @@ and [tag overview](http://manual.phpdoc.org/HTMLSmartyConverter/HandS/phpDocumen
 Example:
 
 	:::php
-	/** 
+	/**
 	 * My short description for this class.
 	 * My longer description with
 	 * multiple lines and richer formatting.
-	 * 
+	 *
 	 * Usage:
 	 * <code>
 	 * $c = new MyClass();
 	 * $c->myMethod();
 	 * </code>
-	 * 
+	 *
 	 * @package custom
 	 */
 	class MyClass extends Class {
-	
+
 		/**
 		 * My Method.
 		 * This method returns something cool. {@link MyParentMethod} has other cool stuff in it.
-		 * 
+		 *
 		 * @param string $colour The colour of cool things that you want
 		 * @return DataList A list of everything cool
 		 */
 		public function myMethod($foo) {}
-		
+
 	}
-	
+
 ### Class Member Ordering
 
 Put code into the classes in the following order (where applicable).
@@ -431,7 +431,7 @@ Put code into the classes in the following order (where applicable).
 
 ### SQL Format
 
-If you have to use raw SQL, make sure your code works across databases. Make sure you escape your queries like below, 
+If you have to use raw SQL, make sure your code works across databases. Make sure you escape your queries like below,
 with the column or table name escaped with double quotes as below.
 
 	:::php
@@ -447,7 +447,7 @@ are single quoted.
 
 Use [ANSI SQL](http://en.wikipedia.org/wiki/SQL#Standardization) format where possible.
 
-### Secure Development 
+### Secure Development
 
 See [security](/developer_guides/security) for conventions related to handing security permissions.
 
@@ -458,4 +458,5 @@ which are licensed under BSD (see [license](http://framework.zend.com/license)).
 
 ## Related
 
+ * [JavaScript Coding Conventions](/getting_started/javascript_coding_conventions)
  * [Reference: CMS Architecture](/developer_guides/customising_the_admin_interface/cms_architecture)
