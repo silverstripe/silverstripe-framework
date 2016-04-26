@@ -55,7 +55,7 @@
     }
   }
 
-  @media (min-width: 992px) { /* lg */
+  @include media-breakpoint-up(lg) {
     padding-left: $cms-panel-sm;
 
     .cms-content__left {
@@ -69,7 +69,7 @@
       display: none;
     }
   }
-  @media (min-width: 1200px) { /* xl */
+  @include media-breakpoint-up(xl) {
     padding-left: $cms-panel-md;
 
     .cms-content__left {
