@@ -10,6 +10,10 @@ In 2016, SilverStripe started a rewrite of its CMS interface in
 [ReactJS](http://facebook.github.io/react/). Code written prior to this rewrite
 might not follow these conventions, and is placed in a `legacy/` folder structure.
 
+## Browser support
+
+Check our [requirements](/getting_started/server_requirements) documentation.
+
 ## Conventions
 
 We follow the [AirBnB JavaScript Conventions](https://github.com/airbnb/javascript).
@@ -39,3 +43,4 @@ and can be checked locally via `npm run lint`.
 ## Related
 
 * [PHP Coding Conventions](/getting_started/coding_conventions)
+* [CSS Coding Conventions](/getting_started/css_coding_conventions)
