@@ -16,6 +16,12 @@
 	line-height: 13px;
 }
 
+// Gives button a larger icon
+.btn--icon-large {
+	font-size: 20px;
+  line-height: 20px;
+}
+
 
 // For buttons with icon and no text, removes space after icon
 // TODO replace all .no-text classes for .btn--no-text
@@ -121,20 +127,6 @@
 
 	svg circle {
 		fill: $body-color;
-	}
-}
-
-
-// Trigger for the more options popup
-.btn__options {
-	@extend .btn-secondary;
-	@extend .btn--no-text;
-	font-size: 20px;
-  line-height: 20px;
-  color: $body-color;
-
-	&:hover {
-	  background-color: $btn-secondary-bg;
 	}
 }
 
