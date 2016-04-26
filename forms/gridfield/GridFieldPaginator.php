@@ -131,7 +131,6 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return SS_List
 	 */
 	public function getManipulatedData(GridField $gridField, SS_List $dataList) {
-
 		if(!$this->checkDataType($dataList)) return $dataList;
 
 		$state = $this->getGridPagerState($gridField);
@@ -139,11 +138,18 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		// Update item count prior to filter. GridFieldPageCount will rely on this value
 		$this->totalItems = $dataList->count();
 
+		$startRow = $this->itemsPerPage * ($state->currentPage - 1);
+
+		// Prevent visiting a page with an offset higher than the total number of items
+		if($startRow >= $this->totalItems) {
+			$state->currentPage = 1;
+			$startRow = 0;
+		}
+
 		if(!($dataList instanceof SS_Limitable) || ($dataList instanceof UnsavedRelationList)) {
 			return $dataList;
 		}
 
-		$startRow = $this->itemsPerPage * ($state->currentPage - 1);
 		return $dataList->limit((int)$this->itemsPerPage, (int)$startRow);
 	}
 
