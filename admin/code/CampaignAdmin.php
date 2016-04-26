@@ -52,7 +52,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function getClientConfig() {
 		return array_merge(parent::getClientConfig(), [
-			'forms' => [
+			'form' => [
 				// TODO Use schemaUrl instead
 				'EditForm' => [
 					'schemaUrl' => $this->Link('schema/EditForm')

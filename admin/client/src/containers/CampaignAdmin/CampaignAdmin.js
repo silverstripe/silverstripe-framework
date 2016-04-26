@@ -84,7 +84,7 @@ class CampaignAdmin extends SilverStripeComponent {
    * @return object
    */
   renderIndexView() {
-    const schemaUrl = this.props.sectionConfig.forms.EditForm.schemaUrl;
+    const schemaUrl = this.props.sectionConfig.form.EditForm.schemaUrl;
     const formActionProps = {
       label: i18n._t('Campaigns.ADDCAMPAIGN'),
       icon: 'plus',
@@ -138,7 +138,7 @@ class CampaignAdmin extends SilverStripeComponent {
    * Renders the Detail Edit Form for a Campaign.
    */
   renderDetailEditView() {
-    const baseSchemaUrl = this.props.sectionConfig.forms.DetailEditForm.schemaUrl;
+    const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
     const schemaUrl = `${baseSchemaUrl}/ChangeSet/${this.props.campaignId}`;
 
     return (
@@ -159,7 +159,7 @@ class CampaignAdmin extends SilverStripeComponent {
    * Render the view for creating a new Campaign.
    */
   renderCreateView() {
-    const baseSchemaUrl = this.props.sectionConfig.forms.DetailEditForm.schemaUrl;
+    const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
     const formBuilderProps = {
       createFn: this.campaignCreationView,
       schemaUrl: `${baseSchemaUrl}/ChangeSet`,
@@ -294,7 +294,7 @@ CampaignAdmin.propTypes = {
   actions: React.PropTypes.object.isRequired,
   campaignId: React.PropTypes.string,
   config: React.PropTypes.shape({
-    forms: React.PropTypes.shape({
+    form: React.PropTypes.shape({
       editForm: React.PropTypes.shape({
         schemaUrl: React.PropTypes.string,
       }),

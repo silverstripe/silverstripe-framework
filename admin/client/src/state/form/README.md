@@ -1,11 +1,11 @@
-# forms
+# form
 
 This state key holds form and form field data. Forms built using the `FormBuilder` component 
-have their state stored in child keys of `forms` (keyed by form ID) automatically.
+have their state stored in child keys of `form` (keyed by form ID) automatically.
 
 ```js
 {
-  forms: {
+  form: {
     DetailEditForm: {
       fields: [
         {

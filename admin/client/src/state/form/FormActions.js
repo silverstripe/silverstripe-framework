@@ -1,4 +1,4 @@
-import { ACTION_TYPES } from './FormsActionTypes';
+import { ACTION_TYPES } from './FormActionTypes';
 
 /**
  * Removes a form from state.

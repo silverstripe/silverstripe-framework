@@ -1,13 +1,14 @@
+/* global jest, describe, expect, it, beforeEach */
+
 jest.unmock('deep-freeze');
-jest.unmock('../FormsReducer');
-jest.unmock('../FormsActionTypes');
+jest.unmock('../FormReducer');
+jest.unmock('../FormActionTypes');
 
 import deepFreeze from 'deep-freeze';
-import { ACTION_TYPES } from '../FormsActionTypes';
-import formsReducer from '../FormsReducer';
+import { ACTION_TYPES } from '../FormActionTypes';
+import formReducer from '../FormReducer';
 
-describe('formsReducer', () => {
-
+describe('formReducer', () => {
   describe('ADD_FORM', () => {
     const initialState = deepFreeze({
       DetailEditForm: {
@@ -40,7 +41,7 @@ describe('formsReducer', () => {
         },
       };
 
-      const nextState = formsReducer(initialState, {
+      const nextState = formReducer(initialState, {
         type: ACTION_TYPES.ADD_FORM,
         payload,
       });
@@ -83,7 +84,7 @@ describe('formsReducer', () => {
     });
 
     it('should remove the form', () => {
-      const nextState = formsReducer(initialState, {
+      const nextState = formReducer(initialState, {
         type: ACTION_TYPES.REMOVE_FORM,
         payload: { formId: 'DetailEditForm' },
       });
@@ -109,7 +110,7 @@ describe('formsReducer', () => {
     });
 
     it('should update properties of a form field', () => {
-      const nextState = formsReducer(initialState, {
+      const nextState = formReducer(initialState, {
         type: ACTION_TYPES.UPDATE_FIELD,
         payload: {
           formId: 'DetailEditForm',
@@ -140,7 +141,7 @@ describe('formsReducer', () => {
     });
 
     it('should add top level form messages', () => {
-      const nextState = formsReducer(initialState, {
+      const nextState = formReducer(initialState, {
         type: ACTION_TYPES.SUBMIT_FORM_SUCCESS,
         payload: {
           id: 'DetailEditForm',

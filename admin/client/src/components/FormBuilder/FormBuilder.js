@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as formsActions from 'state/forms/FormsActions';
+import * as formActions from 'state/form/FormActions';
 import * as schemaActions from 'state/schema/SchemaActions';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormComponent from 'components/Form/Form';
@@ -161,7 +161,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
         }
 
         if (typeof formState.id !== 'undefined') {
-          this.props.formsActions.addForm(formState);
+          this.props.formActions.addForm(formState);
         }
       });
 
@@ -209,9 +209,9 @@ export class FormBuilderComponent extends SilverStripeComponent {
    */
   handleFieldUpdate(event, updates, fn) {
     if (typeof fn !== 'undefined') {
-      fn(this.getFormId(), this.props.formsActions.updateField);
+      fn(this.getFormId(), this.props.formActions.updateField);
     } else {
-      this.props.formsActions.updateField(this.getFormId(), updates);
+      this.props.formActions.updateField(this.getFormId(), updates);
     }
   }
 
@@ -248,13 +248,13 @@ export class FormBuilderComponent extends SilverStripeComponent {
    */
   handleSubmit(event) {
     const schemaFields = this.props.schemas[this.props.schemaUrl].schema.fields;
-    const fieldValues = this.props.forms[this.getFormId()].fields
+    const fieldValues = this.props.form[this.getFormId()].fields
       .reduce((prev, curr) => Object.assign({}, prev, {
         [schemaFields.find(schemaField => schemaField.id === curr.id).name]: curr.value,
       }), {});
 
     const submitFn = () => {
-      this.props.formsActions.submitForm(
+      this.props.formActions.submitForm(
         this.submitApi,
         this.getFormId(),
         fieldValues
@@ -372,7 +372,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @param {string} formId - ID of the form to clean up.
    */
   removeForm(formId) {
-    this.props.formsActions.removeForm(formId);
+    this.props.formActions.removeForm(formId);
   }
 
   render() {
@@ -381,7 +381,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
       return null;
     }
     const formSchema = this.getFormSchema();
-    const formState = this.props.forms[formId];
+    const formState = this.props.form[formId];
 
     // If the response from fetching the initial data
     // hasn't come back yet, don't render anything.
@@ -423,8 +423,8 @@ export class FormBuilderComponent extends SilverStripeComponent {
 FormBuilderComponent.propTypes = {
   config: React.PropTypes.object,
   createFn: React.PropTypes.func,
-  forms: React.PropTypes.object.isRequired,
-  formsActions: React.PropTypes.object.isRequired,
+  form: React.PropTypes.object.isRequired,
+  formActions: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func,
   schemas: React.PropTypes.object.isRequired,
   schemaActions: React.PropTypes.object.isRequired,
@@ -434,14 +434,14 @@ FormBuilderComponent.propTypes = {
 function mapStateToProps(state) {
   return {
     config: state.config,
-    forms: state.forms,
+    form: state.form,
     schemas: state.schemas,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    formsActions: bindActionCreators(formsActions, dispatch),
+    formActions: bindActionCreators(formActions, dispatch),
     schemaActions: bindActionCreators(schemaActions, dispatch),
   };
 }

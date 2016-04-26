@@ -1,9 +1,9 @@
 import deepFreeze from 'deep-freeze';
-import { ACTION_TYPES } from './FormsActionTypes';
+import { ACTION_TYPES } from './FormActionTypes';
 
 const initialState = deepFreeze({});
 
-function formsReducer(state = initialState, action) {
+function formReducer(state = initialState, action) {
   switch (action.type) {
 
     case ACTION_TYPES.REMOVE_FORM:
@@ -47,4 +47,4 @@ function formsReducer(state = initialState, action) {
   }
 }
 
-export default formsReducer;
+export default formReducer;

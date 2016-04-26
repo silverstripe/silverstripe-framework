@@ -12,8 +12,8 @@ describe('FormBuilderComponent', () => {
 
     beforeEach(() => {
       const props = {
-        forms: {},
-        formsActions: {},
+        form: {},
+        formActions: {},
         schemas: {},
         schemaActions: {},
         schemaUrl: 'admin/assets/schema/1',
