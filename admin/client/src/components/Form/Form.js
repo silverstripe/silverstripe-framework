@@ -36,7 +36,7 @@ class Form extends SilverStripeComponent {
 
         {actions &&
           <div className="actions-fix-btm">
-            <div className="btn-group" role="group">
+            <div role="group">
               {actions}
             </div>
           </div>
