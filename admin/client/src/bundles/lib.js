@@ -20,3 +20,4 @@ require('../../../../client/src/legacy/HtmlEditorField.js');
 require('../../../../client/src/legacy/TabSet.js');
 require('../legacy/ssui.core.js');
 require('../../../../client/src/legacy/GridField.js');
+require('json-js');
