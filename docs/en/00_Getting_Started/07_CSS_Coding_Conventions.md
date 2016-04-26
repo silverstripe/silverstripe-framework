@@ -16,7 +16,7 @@ Check our [requirements](/getting_started/server_requirements) documentation.
 ## Tools and libraries
 
 Styles are written in the [SCSS language](http://sass-lang.com/).
-We use We use [Bootstrap 4](http://v4-alpha.getbootstrap.com/) styles where possible.
+We use [Bootstrap 4](http://v4-alpha.getbootstrap.com/) styles where possible.
 
 ## Conventions
 
