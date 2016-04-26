@@ -336,7 +336,6 @@ export class FormBuilderComponent extends SilverStripeComponent {
           props = deepFreeze(Object.assign({}, {
             type: 'button',
             label: props.title,
-            icon: 'cancel',
           }, props));
           break;
         default:

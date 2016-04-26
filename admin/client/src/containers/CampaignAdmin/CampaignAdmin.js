@@ -150,7 +150,7 @@ class CampaignAdmin extends SilverStripeComponent {
         <div className="cms-campaigns collapse in" aria-expanded="true">
           <Toolbar showBackButton>
             <div className="breadcrumb breadcrumb--current-only">
-              <h2 className="text-truncate toolbar__heading">Campaigns</h2>
+              <h2 className="text-truncate breadcrumb__item-title--last">Campaigns</h2>
             </div>
           </Toolbar>
           <FormBuilder {...formBuilderProps} />
