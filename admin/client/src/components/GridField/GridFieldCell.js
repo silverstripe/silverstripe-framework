@@ -9,8 +9,14 @@ class GridFieldCell extends SilverStripeComponent {
   }
 
   render() {
+    const classNames = ['grid-field__cell'];
+
+    if (typeof this.props.className !== 'undefined') {
+      classNames.push(this.props.className);
+    }
+
     const props = {
-      className: `grid-field__cell ${this.props.className}`,
+      className: classNames.join(' '),
       onClick: this.handleDrillDown,
     };
 

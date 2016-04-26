@@ -24,6 +24,12 @@ An object of HTML attributes for the form. For example:
 }
 ```
 
+### componentWillUnmount (func)
+
+Optional function which will be called in the component's 'native' `componentWillUnmount` method.
+
+This can be used to tidy up Redux state that's no longer required.
+
 ### data
 
 Ad hoc data passed to the front-end from the server.
@@ -35,3 +41,7 @@ A list of field objects to display in the form. These objects should be transfor
 ### mapFieldsToComponents (required)
 
 A function that maps each schema field (`this.props.fields`) to the component responsibe for render it.
+
+### handleSubmit (func)
+
+Called then the form is submitted.

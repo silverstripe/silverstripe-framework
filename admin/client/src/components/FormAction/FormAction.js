@@ -72,7 +72,7 @@ class FormAction extends SilverStripeComponent {
    * @returns object|null
    */
   getLoadingIcon() {
-    if (this.props.loading) {
+    if (this.props.loading === true) {
       return (
         <div className="btn__loading-icon" >
           <svg viewBox="0 0 44 12">

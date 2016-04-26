@@ -40,78 +40,78 @@ class GridField extends SilverStripeComponent {
   }
 
   render() {
-    const records = this.props.records;
-    const handleDrillDown = this.props.data.handleDrillDown;
-
-    if (!records) {
+    if (!this.props.records) {
       return <div></div>;
     }
 
-    const columns = this.props.data.columns;
-
     // Placeholder to align the headers correctly with the content
-    const actionPlaceholder = <th className={'grid-field__action-placeholder'} ></th>;
-    const headerCells = columns.map((column, i) =>
-      <GridFieldHeaderCell key={i}>{column.name}</GridFieldHeaderCell>
+    const actionPlaceholder = <th key="holder" className={'grid-field__action-placeholder'}></th>;
+    const headerCells = this.props.data.columns.map((column) =>
+      <GridFieldHeaderCell key={`${column.name}`}>{column.name}</GridFieldHeaderCell>
     );
     const header = <GridFieldHeader>{headerCells.concat(actionPlaceholder)}</GridFieldHeader>;
-
-    const rows = Object.keys(records).map((i) => {
-      const record = records[i];
-      // Build cells
-      const cells = columns.map((column, j) => {
-        // Get value by dot notation
-        const val = column.field.split('.').reduce((a, b) => a[b], record);
-        const cellProps = {
-          handleDrillDown: handleDrillDown ? (event) => handleDrillDown(event, record) : null,
-          className: handleDrillDown ? 'grid-field__cell--drillable' : '',
-          key: j,
-          width: column.width,
-        };
-        return (
-          <GridFieldCell {...cellProps}>
-            {val}
-          </GridFieldCell>
-        );
-      });
-
-      const rowActions = (
-        <GridFieldCell key={`${i}-actions`}>
-          <GridFieldAction
-            icon={'cog'}
-            handleClick={this.editRecord}
-            key={`action-${i}-edit`}
-            record={record}
-          />
-          <GridFieldAction
-            icon={'cancel'}
-            handleClick={this.deleteRecord}
-            key={`action-${i}-delete`}
-            record={record}
-          />
-        </GridFieldCell>
-      );
-
-      const rowProps = {
-        key: i,
-        className: handleDrillDown ? 'grid-field__row--drillable' : '',
-      };
-
-      return (
-        <GridFieldRow {...rowProps}>
-          {cells.concat(rowActions)}
-        </GridFieldRow>
-      );
-    });
+    const rows = Object.keys(this.props.records).map((key) =>
+      this.createRow(this.props.records[key])
+    );
 
     return (
       <GridFieldTable header={header} rows={rows} />
     );
   }
 
+  createRowActions(record) {
+    return (
+      <GridFieldCell key="Actions">
+        <GridFieldAction
+          icon={'cog'}
+          handleClick={this.editRecord}
+          record={record}
+        />
+        <GridFieldAction
+          icon={'cancel'}
+          handleClick={this.deleteRecord}
+          record={record}
+        />
+      </GridFieldCell>
+    );
+  }
+
+  createCell(record, column) {
+    const handleDrillDown = this.props.data.handleDrillDown;
+    const cellProps = {
+      className: handleDrillDown ? 'grid-field__cell--drillable' : '',
+      handleDrillDown: handleDrillDown ? (event) => handleDrillDown(event, record) : null,
+      key: `${column.name}`,
+      width: column.width,
+    };
+    const val = column.field.split('.').reduce((a, b) => a[b], record);
+
+    return <GridFieldCell {...cellProps}>{val}</GridFieldCell>;
+  }
+
   /**
-   * @param number int
-   * @param event
+   * Create a row components for the passed record.
+   */
+  createRow(record) {
+    const rowProps = {
+      className: this.props.data.handleDrillDown ? 'grid-field__row--drillable' : '',
+      key: `${record.ID}`,
+    };
+    const cells = this.props.data.columns.map((column) =>
+      this.createCell(record, column)
+    );
+    const rowActions = this.createRowActions(record);
+
+    return (
+      <GridFieldRow {...rowProps}>
+        {cells.concat(rowActions)}
+      </GridFieldRow>
+    );
+  }
+
+  /**
+   * @param object event
+   * @param number id
    */
   deleteRecord(event, id) {
     event.preventDefault();
@@ -123,9 +123,19 @@ class GridField extends SilverStripeComponent {
     );
   }
 
-  editRecord(event) {
+  /**
+   * @param object event
+   * @param number id
+   */
+  editRecord(event, id) {
     event.preventDefault();
-    // TODO
+
+    if (typeof this.props.data === 'undefined' ||
+      typeof this.props.data.handleEditRecord === 'undefined') {
+      return;
+    }
+
+    this.props.data.handleEditRecord(event, id);
   }
 
 }
@@ -136,13 +146,14 @@ GridField.propTypes = {
     headerColumns: React.PropTypes.array,
     collectionReadEndpoint: React.PropTypes.object,
     handleDrillDown: React.PropTypes.func,
+    handleEditRecord: React.PropTypes.func,
   }),
 };
 
 function mapStateToProps(state, ownProps) {
   const recordType = ownProps.data ? ownProps.data.recordType : null;
   return {
-    records: (state.records && recordType) ? state.records[recordType] : {},
+    records: recordType && state.records[recordType] ? state.records[recordType] : {},
   };
 }
 

@@ -29,7 +29,7 @@ function recordsReducer(state = initialState, action) {
       recordType = action.payload.recordType;
       // TODO Automatic pluralisation from recordType
       records = action.payload.data._embedded[`${recordType}s`] || {};
-      records = records.reduce((prev, val) => Object.assign({}, prev, { [val.id]: val }), {});
+      records = records.reduce((prev, val) => Object.assign({}, prev, { [val.ID]: val }), {});
       return deepFreeze(Object.assign({}, state, {
         [recordType]: records,
       }));

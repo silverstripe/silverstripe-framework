@@ -16,7 +16,7 @@ describe('TextField', () => {
       label: '',
       name: '',
       value: '',
-      onChange: jest.genMockFunction(),
+      handleFieldUpdate: jest.genMockFunction(),
     };
   });
 
@@ -29,10 +29,10 @@ describe('TextField', () => {
       );
     });
 
-    it('should call the onChange function on props', () => {
-      textField.handleChange();
+    it('should call the handleFieldUpdate function on props', () => {
+      textField.handleChange({ target: { value: '' } });
 
-      expect(textField.props.onChange.mock.calls.length).toBe(1);
+      expect(textField.props.handleFieldUpdate).toBeCalled();
     });
   });
 });

@@ -100,6 +100,9 @@ en:
     EMAIL: Email
     HELLO: Hi
     PASSWORD: Password
+  ChangeSet:
+    Name: Name
+    State: State
   CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -334,6 +337,7 @@ en:
   Image_iframe_ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
+    CANCEL: Cancel
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: 'Choose an action...'

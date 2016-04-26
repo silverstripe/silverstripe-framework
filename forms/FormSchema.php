@@ -23,13 +23,13 @@ class FormSchema {
 	 */
 	public function getSchema(Form $form) {
 		$request = $form->controller()->getRequest();
-		$params = $request->AllParams();
 
 		$schema = [
 			'name' => $form->getName(),
-			'id' => isset($params['ID']) ? $params['ID'] : null,
-			'action' => isset($params['Action']) ? $params['Action'] : null,
-			'method' => $form->controller()->getRequest()->HttpMethod(),
+			'id' => $form->FormName(),
+			'action' => $form->FormAction(),
+			'method' => $form->FormMethod(),
+			// @todo Not really reliable. Refactor into action on $this->Link('schema')
 			'schema_url' => $request->getUrl(),
 			'attributes' => $form->getAttributes(),
 			'data' => [],
@@ -57,7 +57,7 @@ class FormSchema {
 	 */
 	public function getState(Form $form) {
 		$state = [
-			'id' => $form->getName(),
+			'id' => $form->FormName(),
 			'fields' => [],
 			'messages' => []
 		];
