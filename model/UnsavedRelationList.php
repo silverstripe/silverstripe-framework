@@ -301,7 +301,7 @@ class UnsavedRelationList extends ArrayList {
 		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
 	}
 
-	public function byIDs() {
+	public function byIDs($ids) {
 		throw new LogicException(__FUNCTION__ . " can't be called on an UnsavedRelationList.");
 	}
 

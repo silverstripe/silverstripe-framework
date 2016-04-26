@@ -407,6 +407,16 @@ class DataListTest extends SapphireTest {
 		$this->assertNotContains('WHERE ("DataObjectTest_SubTeam"."ID" = ?)', $query);
 	}
 
+	public function testByIDs() {
+		$knownIDs = $this->allFixtureIDs('DataObjectTest_Player');
+		$removedID = array_pop($knownIDs);
+		$filteredPlayers = DataObjectTest_Player::get()->byIDs($knownIDs);
+		foreach ($filteredPlayers as $player) {
+			$this->assertContains($player->ID, $knownIDs);
+			$this->assertNotEquals($removedID, $player->ID);
+		}
+	}
+
 	/**
 	 * Test DataList->removeByID()
 	 */
