@@ -1,7 +1,9 @@
+// TODO Separate out bootstrap btn reset styles to a separate style sheet or divide within this sheet
+// TODO Rename component to something like Btn or Button?
 // General buttons
 .btn {
 	height: 32px;
-	margin-right: 1rem;
+	margin-right: $spacer-x * .75; // 12px
 	position: relative;
 }
 
@@ -14,26 +16,14 @@
 	line-height: 13px;
 }
 
-// Btn icons with no text require .btn--no-text
-.btn--no-text[class*="font-icon-"]::before {
+
+// For buttons with icon and no text, removes space after icon
+// TODO replace all .no-text classes for .btn--no-text
+.btn--no-text[class*="font-icon-"]::before,
+.no-text[class*="font-icon-"]::before {
 	margin-right: 0;
 }
 
-.btn-group {
-	margin-right: 1rem;
-
-	.btn {
-		margin-right: 0;
-	}
-
-	.btn-success {
-		border-left: 1px solid darken($btn-success-bg, 6%);
-
-		&:first-child {
-			border-left: none;
-		}
-	}
-}
 
 // SVG loading icon
 .btn__loading-icon {
@@ -48,30 +38,28 @@
 	svg {
 		width: 24px;
 		height: 20px;
+	}
 
-		circle {
-			width: 4px;
-			height: 5px;
-			animation: loading-icon 1.2s infinite ease-in-out both;
-			fill: $gray;
-			transform-origin: 50% 50%;
-		}
+	circle {
+		width: 4px;
+		height: 5px;
+		animation: loading-icon 1.2s infinite ease-in-out both;
+		fill: $gray;
+		transform-origin: 50% 50%;
+	}
 
-		circle:nth-child(1) {
-			animation-delay: -.32s;
-		}
+	circle:nth-child(1) {
+		animation-delay: -.32s;
+	}
 
-		circle:nth-child(2) {
-			animation-delay: -.16s;
-		}
+	circle:nth-child(2) {
+		animation-delay: -.16s;
 	}
 }
 
-.btn--loading {
-	> span,
-	&::before {
-		visibility: hidden;
-	}
+.btn--loading > span,
+.btn--loading::before {
+	visibility: hidden;
 }
 
 @keyframes loading-icon {
@@ -79,63 +67,91 @@
 	40% { transform: scale(1); }
 }
 
-// Specific button types
-.btn-link {
-	&:hover,
-	&:focus {
-		text-decoration: none;
-	}
-}
 
-.btn-secondary {
-
-	&:hover,
-	&:active,
-	&:active:focus,
-	&:active:hover,
-	&:focus {
-		background-color: $gray-lighter;
-	}
-
-	.toolbar--content & {
-		border-color: transparent;
-	}
-}
-
-.btn-success-outline {
-	border-color: lighten($brand-success,10%);
-
-	&:hover,
-	&:active,
-	&:focus {
-		color: $brand-success;
-		background-image: none;
-		background-color: transparent;
-		border-color: lighten($brand-success,10%);
-	}
-
-	svg circle {
-		fill: $brand-success;
-	}
-}
-
-.btn-success {
-	box-shadow: 0 1px 0 $btn-success-shadow;
+// Specific button variations
+.btn-primary {
+	border-bottom-color: $btn-primary-shadow;
 
 	svg circle {
 		fill: #fff;
 	}
 }
+.btn-primary-outline {
+	border-color: lighten($btn-primary-border,10%);
 
-.btn--options {
+	&:hover,
+	&:active,
+	&:focus {
+		color: darken($btn-primary-bg, 10%);
+		background-image: none;
+		background-color: lighten($btn-primary-bg, 50%);
+		border-color: $btn-primary-border;
+	}
 
-  .font-icon-dot-3 {
-    font-size: 20px;
-    line-height: 20px;
-    color: $body-color;
-  }
+	svg circle {
+		fill: $btn-primary-bg;
+	}
+}
 
-  &:hover {
-    background-color: $gray-lighter;
-  }
+
+.btn-secondary {
+	border-color: transparent;
+	background-color: transparent;
+
+	&:hover,
+	&:active,
+	&:focus,
+	&:active:hover,
+	&:active:focus {
+		background-color: $gray-lighter;
+		border-color: transparent;
+	}
+}
+.btn-secondary-outline {
+	color: $btn-secondary-color;
+
+	&:hover,
+	&:focus,
+	&:active,
+	&:active:focus,
+	&:active:hover {
+		background-color: $gray-lighter;
+		color: $btn-secondary-color;
+	}
+
+	svg circle {
+		fill: $body-color;
+	}
+}
+
+
+// Trigger for the more options popup
+.btn__options {
+	@extend .btn-secondary;
+	@extend .btn--no-text;
+	font-size: 20px;
+  line-height: 20px;
+  color: $body-color;
+
+	&:hover {
+	  background-color: $btn-secondary-bg;
+	}
+}
+
+
+// Grouped buttons
+.btn-group {
+	margin-right: $spacer-x * .75; // 12px
+}
+
+.btn-group .btn {
+	margin-right: 0;
+}
+
+.btn-group .btn-primary {
+	border-left: 1px solid $btn-primary-shadow;
+
+	&:first-child {
+		border-left: none;
+	}
 }

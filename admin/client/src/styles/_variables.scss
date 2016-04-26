@@ -32,7 +32,7 @@ $gray-light: #d3d9dd;
 $gray-lighter: #e8e9ea;
 // $gray-lightest: #f7f7f9;
 //
-$brand-primary: #29abe2; //#0275d8;
+$brand-primary: #29abe2;
 $brand-success: #3fa142;
 // $brand-info: #5bc0de;
 // $brand-warning: #f0ad4e;
@@ -253,38 +253,38 @@ $table-border-color: $gray-lighter;
 // For each of Bootstrap's buttons, define text, background and border color.
 
 $btn-padding-x: .7692rem; // 10px
-$btn-padding-y: .3846rem;
+$btn-padding-y: .3846rem; // 5px
 $btn-font-weight: normal;
 
 $btn-primary-color: #fff;
-// $btn-primary-bg: $brand-primary;
-// $btn-primary-border: $btn-primary-bg;
+$btn-primary-bg: $brand-success;
+$btn-primary-border: $btn-primary-bg;
+$btn-primary-shadow: darken($btn-primary-bg, 6%);
 
-$btn-secondary-color: $gray-dark;
-$btn-secondary-bg: transparent;
-$btn-secondary-border: $border-color;
+$btn-secondary-color: $body-color;
+$btn-secondary-bg: $gray-lighter;
+$btn-secondary-border: $border-color-dark;
 
 // $btn-info-color: #fff;
 // $btn-info-bg: $brand-info;
 // $btn-info-border: $btn-info-bg;
 
-$btn-success-color: #fff;
-$btn-success-bg: $brand-success;
-$btn-success-border: $btn-success-bg;
-$btn-success-shadow: darken($btn-success-bg, 6%);
+// $btn-success-color: #fff;
+// $btn-success-bg: $brand-success;
+// $btn-success-border: $btn-success-bg;
 
 $btn-complete-color: #555;
-$btn-complete-bg: $brand-success;
+$btn-complete-bg: $btn-primary-bg;
 $btn-complete-border: $gray-light;
-$btn-complete-shadow: darken($btn-success-bg, 6%);
+$btn-complete-shadow: darken($btn-primary-bg, 6%);
 
 // $btn-warning-color: #fff;
 // $btn-warning-bg: $brand-warning;
 // $btn-warning-border: $btn-warning-bg;
 
-$btn-danger-color: $brand-danger;
-$btn-danger-bg: transparent;
-$btn-danger-border: transparent;
+$btn-danger-color: #fff;
+$btn-danger-bg: $brand-danger;
+$btn-danger-border: $brand-danger;
 
 // $btn-link-disabled-color: $gray-light;
 //

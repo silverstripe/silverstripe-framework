@@ -30,8 +30,7 @@ class Preview extends SilverStripeComponent {
         <a href="" className="cms-content__back-btn font-icon-left-open-big" />
         <div className="toolbar--south">
           <div className="btn-toolbar">
-            <button className="btn btn-secondary btn-secondary" type="button">
-              <i className="font-icon-edit" /> Edit
+            <button className="btn btn-secondary btn-secondary font-icon-edit" type="button">
             </button>
           </div>
         </div>
