@@ -21,6 +21,7 @@ describe('formReducer', () => {
             value: 'Test',
           },
         ],
+        submitting: false,
       },
     });
 
@@ -54,6 +55,7 @@ describe('formReducer', () => {
       expect(nextState.EditForm.fields[0].messages).toBeDefined();
       expect(nextState.EditForm.fields[0].valid).toBe(true);
       expect(nextState.EditForm.fields[0].value).toBe('Test');
+      expect(nextState.EditForm.submitting).toBe(false);
     });
   });
 
@@ -137,6 +139,7 @@ describe('formReducer', () => {
             value: 'Test',
           },
         ],
+        submitting: true,
       },
     });
 
@@ -172,6 +175,59 @@ describe('formReducer', () => {
       expect(nextState.DetailEditForm.messages.length).toBe(1);
       expect(nextState.DetailEditForm.messages[0].type).toBe('good');
       expect(nextState.DetailEditForm.messages[0].value).toBe('Saved.');
+      expect(nextState.DetailEditForm.submitting).toBe(false);
+    });
+  });
+
+  describe('SUBMIT_FORM_REQUEST', () => {
+    it('should set submitting to true', () => {
+      const initialState = deepFreeze({
+        DetailEditForm: {
+          fields: [
+            {
+              data: [],
+              id: 'Form_DetailEditForm_Name',
+              messages: [],
+              valid: true,
+              value: 'Test',
+            },
+          ],
+          submitting: false,
+        },
+      });
+
+      const nextState = formReducer(initialState, {
+        type: ACTION_TYPES.SUBMIT_FORM_REQUEST,
+        payload: { formId: 'DetailEditForm' },
+      });
+
+      expect(nextState.DetailEditForm.submitting).toBe(true);
+    });
+  });
+
+  describe('SUBMIT_FORM_FAILURE', () => {
+    it('should set submitting to false', () => {
+      const initialState = deepFreeze({
+        DetailEditForm: {
+          fields: [
+            {
+              data: [],
+              id: 'Form_DetailEditForm_Name',
+              messages: [],
+              valid: true,
+              value: 'Test',
+            },
+          ],
+          submitting: true,
+        },
+      });
+
+      const nextState = formReducer(initialState, {
+        type: ACTION_TYPES.SUBMIT_FORM_FAILURE,
+        payload: { formId: 'DetailEditForm' },
+      });
+
+      expect(nextState.DetailEditForm.submitting).toBe(false);
     });
   });
 });

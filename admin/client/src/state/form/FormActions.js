@@ -59,7 +59,7 @@ export function submitForm(submitApi, formId, fieldValues) {
   return (dispatch) => {
     dispatch({
       type: ACTION_TYPES.SUBMIT_FORM_REQUEST,
-      payload: {},
+      payload: { formId },
     });
 
     submitApi(Object.assign({ ID: formId }, fieldValues), { 'X-Formschema-Request': 'state' })
@@ -72,7 +72,7 @@ export function submitForm(submitApi, formId, fieldValues) {
       .catch((error) => {
         dispatch({
           type: ACTION_TYPES.SUBMIT_FORM_FAILURE,
-          payload: { error },
+          payload: { formId, error },
         });
       });
   };

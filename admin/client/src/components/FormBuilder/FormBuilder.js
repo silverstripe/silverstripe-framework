@@ -316,6 +316,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
    */
   mapActionsToComponents(actions) {
     const createFn = this.props.createFn;
+    const form = this.props.form[this.getFormId()];
 
     return actions.map((action, i) => {
       let props = deepFreeze(action);
@@ -327,6 +328,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
             type: 'submit',
             label: props.title,
             icon: 'save',
+            loading: typeof form !== 'undefined' ? form.submitting : false,
             bootstrapButtonStyle: 'success',
           }, props));
           break;
@@ -401,7 +403,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
     // If there is structural and state data availabe merge those data for each field.
     // Otherwise just use the structural data.
-    const fieldData = formSchema.schema && formState
+    const fieldData = formSchema.schema && formState && formState.fields
       ? formSchema.schema.fields.map((f, i) => this.mergeFieldData(f, formState.fields[i]))
       : formSchema.schema.fields;
 
