@@ -16,12 +16,14 @@ class Preview extends SilverStripeComponent {
         <div className="preview__file-container panel-scrollable">
           <img className="preview__file--fits-space" src="http://placehold.it/250x150" />
         </div>
+        <a href="" className="cms-content__back-btn font-icon-left-open-big"></a>
         <div className="toolbar--south">
           <div className="btn-toolbar">
             <button className="btn btn-secondary btn-secondary" type="button"><i className="font-icon-edit"></i> Edit</button>
             <button type="button" data-container="body" className="btn btn-link btn--options" data-toggle="popover" title="Page actions" data-placement="top" data-content="<a href=''>Add to campaign</a><a href=''>Remove from campaign</a>"><i className="font-icon-dot-3"></i></button>
           </div>
         </div>
+
       </div>
 
     );
