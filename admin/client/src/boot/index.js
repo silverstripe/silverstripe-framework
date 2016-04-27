@@ -47,23 +47,26 @@ function appBoot() {
 
   const initialState = {};
   const rootReducer = combineReducers(reducerRegister.getAll());
-
-  // Combine middleware
   const middleware = [thunkMiddleware];
 
   if (window.ss.config.environment === 'dev') {
     middleware.push(createLogger());
   }
-  const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
 
-  // TODO: The store needs to be passed into route callbacks on the route context.
-  window.store = createStoreWithMiddleware(rootReducer, initialState);
+  const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
+  const store = window.store = createStoreWithMiddleware(rootReducer, initialState);
 
   // Set the initial config state.
-  window.store.dispatch(configActions.setConfig(window.ss.config));
+  store.dispatch(configActions.setConfig(window.ss.config));
 
   // Initialise routes
   router.base(getBasePath());
+
+  router('*', (ctx, next) => {
+    // eslint-disable-next-line no-param-reassign
+    ctx.store = store;
+    next();
+  });
 
   // Register all top level routes.
   ConfigHelpers
