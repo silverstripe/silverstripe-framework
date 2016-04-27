@@ -9,7 +9,7 @@
 .grid-field__row--drillable {
     cursor: pointer;
 }
-.grid-field__cell[data-reactid$=-actions] {
+.grid-field__cell--actions {
     white-space: nowrap;
     width: 1px;
 }
