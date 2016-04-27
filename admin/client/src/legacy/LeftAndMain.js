@@ -2,15 +2,12 @@
  * File: LeftAndMain.js
  */
 import $ from 'jQuery';
-import router from 'lib/Router';
-import Config from 'lib/Config';
 
 var windowWidth, windowHeight;
 
 $.noConflict();
 
 window.ss = window.ss || {};
-window.ss.router = router;
 
 /**
  * @func debounce
@@ -42,19 +39,6 @@ window.ss.debounce = function (func, wait, immediate) {
     }
   };
 };
-
-/**
- * Extracts the pathname from a URL.
- *
- * @param string url
- * @return string
- */
-function getUrlPath(url) {
-  var anchor = document.createElement('a');
-  anchor.href = url;
-
-  return anchor.pathname
-}
 
 $(window).bind('resize.leftandmain', function(e) {
   $('.cms-container').trigger('windowresize');
@@ -166,7 +150,7 @@ $.entwine('ss', function($) {
 
     // Only redirect if controller url differs to the requested or current one
     if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
-      router.show(url, {
+      window.ss.router.show(url, {
         id: (new Date()).getTime() + String(Math.random()).replace(/\D/g,''), // Ensure that redirections are followed through by history API by handing it a unique ID
         pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']
       });
@@ -224,33 +208,6 @@ $.entwine('ss', function($) {
      * Constructor: onmatch
      */
     onadd: function() {
-      var self = this,
-        basePath = getUrlPath($('base')[0].href);
-
-        // Cleanup baseurl
-        basePath = basePath.replace(/\/$/, ''); // No trailing slash
-        if(basePath.match(/^[^\/]/)) {
-          basePath = '/' + basePath; // Mandatory leading slash
-        }
-        router.base(basePath);
-
-        // Register all top level routes.
-        Config.getTopLevelRoutes().forEach((route) => {
-          router(`/${route}(/*?)?`, (ctx, next) => {
-
-          // If the page isn't ready.
-          if (document.readyState !== 'complete') {
-            return next();
-          }
-
-          // Load the panel then call the next route.
-          self.handleStateChange(null, ctx.state)
-            .done(next);
-        });
-      });
-
-      router.start();
-
       // Browser detection
       if($.browser.msie && parseInt($.browser.version, 10) < 8) {
         $('.ss-loading-screen').append(
@@ -427,7 +384,7 @@ $.entwine('ss', function($) {
         data.__forceReload = Math.random(); // Make sure the page reloads even if the URL is the same.
       }
 
-      router.show(url, data);
+      window.ss.router.show(url, data);
     },
 
     /**
@@ -526,21 +483,22 @@ $.entwine('ss', function($) {
 
     /**
      * Handles ajax loading of new panels through the window.history object.
-     * To trigger loading, pass a new URL to router.show().
-     * Use loadPanel() as a router.show() wrapper as it provides some additional functionality
-     * like global changetracking and user aborts.
+     * To trigger loading, pass a new URL to window.ss.router.show().
+     * Use loadPanel() as a window.ss.router.show() wrapper as it provides some
+     * additional functionality like global changetracking and user aborts.
      *
      * Due to the nature of history management, no callbacks are allowed.
      * Use the 'beforestatechange' and 'afterstatechange' events instead,
      * or overwrite the beforeLoad() and afterLoad() methods on the
      * DOM element you're loading the new content into.
-     * Although you can pass data into router.show(url, data), it shouldn't contain
-     * DOM elements or callback closures.
+     * Although you can pass data into window.ss.router.show(url, data), it
+     * shouldn't contain DOM elements or callback closures.
      *
      * The passed URL should allow reconstructing important interface state
      * without additional parameters, in the following use cases:
-     * - Explicit loading through router.show()
-     * - Implicit loading through browser navigation event triggered by the user (forward or back)
+     * - Explicit loading through window.ss.router.show()
+     * - Implicit loading through browser navigation event triggered by the user
+     *   (forward or back).
      * - Full window refresh without ajax
      * For example, a ModelAdmin search event should contain the search terms
      * as URL parameters, and the result display should automatically appear
@@ -572,9 +530,9 @@ $.entwine('ss', function($) {
 
         // Restore best last state
         if (lastState !== null) {
-          router.show(lastState.url);
+          window.ss.router.show(lastState.url);
         } else {
-          router.back();
+          window.ss.router.back();
         }
 
         this.setPauseState(false);

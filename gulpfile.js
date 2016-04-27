@@ -249,6 +249,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require('redux-thunk',
       { expose: 'redux-thunk' }
     )
+    .require('page.js',
+      { expose: 'page.js' }
+    )
     .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
       { expose: 'bootstrap-collapse' }
     )
