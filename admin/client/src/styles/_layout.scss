@@ -10,6 +10,75 @@
   transition: width .2s;
 }
 
+// .cms-content can be split into different left/right zones
+// Exampale modifier: --left-sm = small left side panel with right panel width set to auto.
+.cms-content__split {
+  height: 100%;
+}
+.cms-content__split--left-sm {
+  .cms-content__right {
+    position: relative;
+    display: none;
+  }
+  .cms-content__left {
+    width: 100%;
+    position: absolute;
+    left: 0;
+  }
+
+  // Overlay preview if there isn't enough space for both items and preview
+  .cms-content--selected {
+    display: block;
+  }
+
+  // Back button for smaller screens, closes preview
+  .cms-content__back-btn {
+    width: 36px;
+    height: 36px;
+    background-color: rgba($gray-dark, 0.8);
+    display: block;
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    content: "5";
+    font-size: 16px;
+    line-height: 20px;
+    color: #fff;
+    padding: 8px;
+    border-radius: 50%;
+    font-family: silverstripe;
+    z-index: 1;
+    cursor: pointer;
+    &:hover {
+      background-color: $gray-dark;
+      text-decoration: none;
+    }
+  }
+
+  @media (min-width: 992px) { /* lg */
+    padding-left: $cms-panel-sm;
+
+    .cms-content__left {
+      width: $cms-panel-sm;
+    }
+    .cms-content__right {
+      display: block;
+      border-left: 1px solid $border-color;
+    }
+    .cms-content__back-btn {
+      display: none;
+    }
+  }
+  @media (min-width: 1200px) { /* xl */
+    padding-left: $cms-panel-md;
+
+    .cms-content__left {
+      width: $cms-panel-md;
+    }
+  }
+}
+
+
 .panel-scrollable,
 .panel-scrollable--single-toolbar,
 .panel-scrollable--double-toolbar {
@@ -21,35 +90,4 @@
 }
 .panel-scrollable--double-toolbar {
   height: calc(100% - #{$toolbar-total-height * 2});
-}
-
-// .cms-content can be split into different left/right zones
-// Exampale modifier: --left-sm = small left side panel with right panel width set to auto.
-.cms-content__split {
-  height: 100%;
-}
-.cms-content__split--left-sm {
-  .cms-content__right {
-    position: relative;
-    border-left: 1px solid $border-color;
-  }
-  .cms-content__left {
-    width: 100%;
-    position: absolute;
-    left: 0;
-  }
-  @media (min-width: 992px) { /* lg */
-    padding-left: $cms-panel-sm;
-
-    .cms-content__left {
-      width: $cms-panel-sm;
-    }
-  }
-  @media (min-width: 1200px) { /* xl */
-    padding-left: $cms-panel-md;
-
-    .cms-content__left {
-      width: $cms-panel-md;
-    }
-  }
 }
