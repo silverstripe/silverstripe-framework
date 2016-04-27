@@ -14,14 +14,24 @@
 interface CMSPreviewable {
 
 	/**
+	 * Determine the preview link, if available, for this object.
+	 * If no preview is available for this record, it may return null.
+	 *
 	 * @param string $action
-	 * @return string Absolute URL to the end-user view for this record.
+	 * @return string Link to the end-user view for this record.
 	 * Example: http://mysite.com/my-record
 	 */
 	public function PreviewLink($action = null);
 
 	/**
-	 * @return string Absolute URL to the CMS-author view. Should point to a
+	 * To determine preview mechanism (e.g. embedded / iframe)
+	 *
+	 * @return string
+	 */
+	public function getMimeType();
+
+	/**
+	 * @return string Link to the CMS-author view. Should point to a
 	 * controller subclassing {@link LeftAndMain}. Example:
 	 * http://mysite.com/admin/edit/6
 	 */

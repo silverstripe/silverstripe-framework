@@ -295,15 +295,9 @@ JSON;
 			'Thumbnail' => $changeSetItem->ThumbnailURL($thumbnailWidth, $thumbnailHeight),
 		];
 		// Get preview urls
-		$previewLinks = [];
 		$previews = $changeSetItem->getPreviewLinks();
-		foreach($previews as $name => $link) {
-			$previewLinks[$name] = [
-				'href' => $link,
-			];
-		}
-		if($previewLinks) {
-			$hal['_links']['preview'] = $previewLinks;
+		if($previews) {
+			$hal['_links']['preview'] = $previews;
 		}
 
 		// Get edit link

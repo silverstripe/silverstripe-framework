@@ -120,4 +120,15 @@ class Image extends File implements ShortcodeHandler {
 		$regenerator = ShortcodeParser::get('regenerator');
 		return $regenerator->parse($value);
 	}
+
+	public function PreviewLink($action = null) {
+		// Since AbsoluteLink can whitelist protected assets,
+		// do permission check first
+		if(!$this->canView()) {
+			return false;
+		}
+		$link = $this->AbsoluteLink();
+		$this->extend('updatePreviewLink', $link, $action);
+		return $link;
+	}
 }

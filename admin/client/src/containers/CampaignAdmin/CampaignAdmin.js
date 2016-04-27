@@ -297,20 +297,6 @@ class CampaignAdmin extends SilverStripeComponent {
     ];
   }
 
-  /**
-   * Gets preview URL for itemid
-   * @param int id
-   * @returns string
-   */
-  previewURLForItem(id) {
-    if (!id) {
-      return '';
-    }
-
-    // hard code in baseurl for any itemid preview url
-    return document.getElementsByTagName('base')[0].href;
-  }
-
   addCampaign() {
     const path = this.props.sectionConfig.campaignViewRoute
       .replace(/:type\?/, 'set')

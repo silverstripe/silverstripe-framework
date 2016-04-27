@@ -349,27 +349,29 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	/**
 	 * Gets the list of modes this record can be previewed in.
 	 *
-	 * @return array Map of mode names to url
+	 * {@link https://tools.ietf.org/html/draft-kelly-json-hal-07#section-5}
+	 *
+	 * @return array Map of links in acceptable HAL format
 	 */
 	public function getPreviewLinks() {
 		$links = [];
 
 		// Preview draft
 		$stage = $this->getObjectInStage(Versioned::DRAFT);
-		if($stage instanceof CMSPreviewable && $stage->canView()) {
-			$links[Versioned::DRAFT] = Controller::join_links(
-				$stage->PreviewLink(),
-				'?stage=' . Versioned::DRAFT
-			);
+		if($stage instanceof CMSPreviewable && $stage->canView() && ($link = $stage->PreviewLink())) {
+			$links[Versioned::DRAFT] = [
+				'href' => Controller::join_links($link, '?stage=' . Versioned::DRAFT),
+				'type' => $stage->getMimeType(),
+			];
 		}
 
 		// Preview live
 		$live = $this->getObjectInStage(Versioned::LIVE);
-		if($live instanceof CMSPreviewable && $live->canView()) {
-			$links[Versioned::LIVE] = Controller::join_links(
-				$live->PreviewLink(),
-				'?stage=' . Versioned::LIVE
-			);
+		if($live instanceof CMSPreviewable && $live->canView() && ($link = $live->PreviewLink())) {
+			$links[Versioned::LIVE] = [
+				'href' => Controller::join_links($link, '?stage=' . Versioned::LIVE),
+				'type' => $live->getMimeType(),
+			];
 		}
 
 		return $links;

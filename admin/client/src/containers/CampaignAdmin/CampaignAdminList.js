@@ -41,6 +41,7 @@ class CampaignAdminList extends SilverStripeComponent {
   render() {
     let itemID = this.props.campaign.changeSetItemId;
     let previewUrl = null;
+    let previewType = null;
     const campaignId = this.props.campaignId;
     const campaign = this.props.record;
 
@@ -69,8 +70,10 @@ class CampaignAdminList extends SilverStripeComponent {
         if (selected && item._links.preview) {
           if (item._links.preview.Stage) {
             previewUrl = item._links.preview.Stage.href;
+            previewType = item._links.preview.Stage.type;
           } else if (item._links.preview.Live) {
             previewUrl = item._links.preview.Live.href;
+            previewType = item._links.preview.Live.type;
           }
         }
 
@@ -118,7 +121,7 @@ class CampaignAdminList extends SilverStripeComponent {
             {this.renderButtonToolbar()}
           </div>
         </div>
-        { previewUrl && <Preview previewUrl={previewUrl} /> }
+        { previewUrl && <Preview previewUrl={previewUrl} previewType={previewType} /> }
       </div>
     );
   }
@@ -181,20 +184,6 @@ class CampaignAdminList extends SilverStripeComponent {
         <FormAction {...actionProps} />
       </div>
     );
-  }
-
-  /**
-   * Gets preview URL for itemid
-   * @param int id
-   * @returns string
-   */
-  previewURLForItem(id) {
-    if (!id) {
-      return '';
-    }
-
-    // hard code in baseurl for any itemid preview url
-    return document.getElementsByTagName('base')[0].href;
   }
 
   /**
