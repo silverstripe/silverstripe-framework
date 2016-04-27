@@ -345,4 +345,47 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 			'ObjectClass' => ClassInfo::baseDataClass($objectClass)
 		]);
 	}
+
+	/**
+	 * Gets the list of modes this record can be previewed in.
+	 *
+	 * @return array Map of mode names to url
+	 */
+	public function getPreviewLinks() {
+		$links = [];
+
+		// Preview draft
+		$stage = $this->getObjectInStage(Versioned::DRAFT);
+		if($stage instanceof CMSPreviewable && $stage->canView()) {
+			$links[Versioned::DRAFT] = Controller::join_links(
+				$stage->PreviewLink(),
+				'?stage=' . Versioned::DRAFT
+			);
+		}
+
+		// Preview live
+		$live = $this->getObjectInStage(Versioned::LIVE);
+		if($live instanceof CMSPreviewable && $live->canView()) {
+			$links[Versioned::LIVE] = Controller::join_links(
+				$live->PreviewLink(),
+				'?stage=' . Versioned::LIVE
+			);
+		}
+
+		return $links;
+	}
+
+	/**
+	 * Get edit link for this item
+	 *
+	 * @return string
+	 */
+	public function CMSEditLink()
+	{
+		$link = $this->getObjectInStage(Versioned::DRAFT);
+		if($link instanceof CMSPreviewable) {
+			return $link->CMSEditLink();
+		}
+		return null;
+	}
 }

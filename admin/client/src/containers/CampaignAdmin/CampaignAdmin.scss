@@ -4,7 +4,7 @@
 		margin-left: -$spacer-y;
 		margin-right: -$spacer-y;
 		border-bottom: 1px solid $border-color-light;
-		margin-bottom: $spacer-y*.75;
+		margin-bottom: 0;
 	}
 
 	.list-group-item {
@@ -39,7 +39,7 @@
 		}
 	}
 
-	.list-group-item__heading {
+	.list-group-item-heading {
 		font-weight: 400;
 		font-size: 14px;
 		margin: 2px 0 5px;
@@ -52,7 +52,8 @@
 		display: block;
 		background: #ccc;
 		float: left;
-		margin: -12px 12px 0 -$spacer-y;
+		// See negate padding on bootstrap .list-group-item in _list-group.scss
+		margin: -12px 12px 0 (0 - $spacer-y);
 	}
 
 	.label {

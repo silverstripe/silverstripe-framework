@@ -6,6 +6,7 @@ import i18n from 'i18n';
  * Describes an individual campaign item
  */
 class CampaignAdminItem extends SilverStripeComponent {
+
   render() {
     let thumbnail = null;
     const badge = {};
@@ -41,22 +42,25 @@ class CampaignAdminItem extends SilverStripeComponent {
     // Linked items
     let links = (
       <span className="list-group-item--has-links">
-        <i className="font-icon-link"></i>
+        <i className="font-icon-link" />
         3 linked items
       </span>
     );
 
     // Thumbnail
     if (item.Thumbnail) {
-      thumbnail = <span className="list-group-item__thumbnail"><img src={item.Thumbnail} /></span>;
+      thumbnail = (
+        <span className="list-group-item__thumbnail">
+          <img alt={item.Title} src={item.Thumbnail} />
+        </span>
+      );
     }
-
 
     return (
       <div>
         {thumbnail}
-        <h4 className="list-group-item__heading">{item.Title}</h4>
-        <span className="list-group-item--is-linked"><i className="font-icon-link"></i></span>
+        <h4 className="list-group-item-heading">{item.Title}</h4>
+        <span className="list-group-item--is-linked"><i className="font-icon-link" /></span>
         {links}
         {badge.className && badge.Title &&
           <span className={badge.className}>{badge.Title}</span>

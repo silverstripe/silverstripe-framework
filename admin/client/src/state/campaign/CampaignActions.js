@@ -1,11 +1,26 @@
 import ACTION_TYPES from './CampaignActionTypes';
 import RECORD_ACTION_TYPES from 'state/records/RecordsActionTypes';
 
+
+/**
+ * Set selected changeset item
+ *
+ * @param {number} changeSetItemId ID of changesetitem in the currently visible changeset
+ * @return {object}
+ */
+export function selectChangeSetItem(changeSetItemId) {
+  return {
+    type: ACTION_TYPES.SET_CAMPAIGN_SELECTED_CHANGESETITEM,
+    payload: { changeSetItemId },
+  };
+}
+
 /**
  * Show specified campaign set
  *
- * @param number campaignId - ID of the Campaign to show.
- * @param string view - The view mode to display the Campaign in.
+ * @param {number} campaignId ID of the Campaign to show.
+ * @param {string} view The view mode to display the Campaign in.
+ * @return {function}
  */
 export function showCampaignView(campaignId, view) {
   return {

@@ -65,7 +65,7 @@ use SilverStripe\Filesystem\Storage\AssetContainer;
  * @mixin Hierarchy
  * @mixin Versioned
  */
-class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumbnail {
+class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumbnail, CMSPreviewable {
 
 	use ImageManipulation;
 
@@ -1161,5 +1161,17 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 
 	public function canViewFile() {
 		return $this->File->canViewFile();
+	}
+
+	public function CMSEditLink() {
+		$link = null;
+		$this->extend('updateCMSEditLink', $link);
+		return $link;
+	}
+
+	public function PreviewLink($action = null) {
+		$link = $this->Link();
+		$this->extend('updatePreviewLink', $link, $action);
+		return $link;
 	}
 }
