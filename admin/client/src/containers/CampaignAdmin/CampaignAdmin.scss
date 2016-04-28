@@ -17,13 +17,22 @@
 		&:first-child {
 			border-top: none;
 		}
-		&:hover {
+		&:hover,
+		&:focus {
 			text-decoration: none;
 
 			.list-group-item--has-links {
 				display: block;
 				opacity: 1;
 			}
+		}
+
+		&:focus {
+			outline-width: 1px;
+	    outline-offset: -1px;
+	    outline-style: solid;
+			outline-color: $brand-primary;
+	    z-index: 1;
 		}
 
 		&.active {
@@ -35,6 +44,11 @@
 			.list-group-item__status {
 				color: #FFF;
 				opacity: 1;
+			}
+
+			// Focus color clashes with selected colour
+			&:focus {
+				outline-color: darken($brand-primary, 10%);
 			}
 		}
 	}
