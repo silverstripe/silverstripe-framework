@@ -20,7 +20,11 @@ class Preview extends SilverStripeComponent {
         <div className="toolbar--south">
           <div className="btn-toolbar">
             <button className="btn btn-secondary btn-secondary" type="button"><i className="font-icon-edit"></i> Edit</button>
-            <button type="button" data-container="body" className="btn btn-link btn--options" data-toggle="popover" title="Page actions" data-placement="top" data-content="<a href=''>Add to campaign</a><a href=''>Remove from campaign</a>"><i className="font-icon-dot-3"></i></button>
+            {/* More options button and popover for Alpha 2
+              <a tabIndex="0" role="button" data-container="body" className="btn btn-link btn--options" title="" data-toggle="popover" data-trigger="focus" data-placement="top"
+              data-content="<ul><li><a href=''>Add to campaign</a></li><li><a href=''>Remove from campaign</a></li></ul>">
+              <i className="font-icon-dot-3"></i>
+            </a> */}
           </div>
         </div>
 

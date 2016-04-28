@@ -11,6 +11,10 @@ import SchemaReducer from 'state/schema/SchemaReducer';
 import RecordsReducer from 'state/records/RecordsReducer';
 import CampaignReducer from 'state/campaign/CampaignReducer';
 
+import 'tetherWrapper';
+import 'bootstrap-popover';
+import 'bootstrap-tooltip';
+
 // Sections
 // eslint-disable-next-line no-unused-vars
 import CampaignAdmin from 'containers/CampaignAdmin/index';
@@ -37,7 +41,23 @@ function appBoot() {
 
   // Set the initial config state.
   window.store.dispatch(configActions.setConfig(window.ss.config));
+
+
+  // Enable BS Popovers and tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
+  $(function () {
+    $('[data-toggle="popover"]').popover({html:true})
+  })
+
+  // Accessibility support for popover focus (requires anchor element)
+  $('.popover-dismiss').popover({
+    trigger: 'focus'
+  })
 }
+
 
 // TODO: This should be using `window.onload` but isn't because
 // Entwine hooks are being used to set up the <Provider>.

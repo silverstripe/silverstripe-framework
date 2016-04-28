@@ -252,6 +252,12 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
       { expose: 'bootstrap-collapse' }
     )
+    .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/popover.js`,
+      { expose: 'bootstrap-popover' }
+    )
+    .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/tooltip.js`,
+      { expose: 'bootstrap-tooltip' }
+    )
     .require(`${PATHS.ADMIN_JS_SRC}/components/Form/Form`,
       { expose: 'components/Form/Form' }
     )
@@ -294,6 +300,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }
     )
+    .require(`${PATHS.FRAMEWORK_JS_SRC}/TetherWrapper.js`,
+      { expose: 'tetherWrapper' }
+    )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Config`,
       { expose: 'lib/Config' }
     )
@@ -311,9 +320,6 @@ gulp.task('bundle-lib', function bundleLib() {
     )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Backend`,
       { expose: 'lib/Backend' }
-    )
-    .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
-      { expose: 'bootstrap-collapse' }
     )
     .bundle()
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
@@ -390,7 +396,10 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('redux')
     .external('lib/Backend')
     .external('lib/SilverStripeComponent')
+    .external('tetherWrapper')
     .external('bootstrap-collapse')
+    .external('bootstrap-popover')
+    .external('bootstrap-tooltip')
     .bundle()
     .on('update', bundleBoot)
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
