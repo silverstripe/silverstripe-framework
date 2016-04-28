@@ -23,9 +23,11 @@ export function selectChangeSetItem(changeSetItemId) {
  * @return {function}
  */
 export function showCampaignView(campaignId, view) {
-  return {
-    type: ACTION_TYPES.SET_CAMPAIGN_ACTIVE_CHANGESET,
-    payload: { campaignId, view },
+  return (dispatch) => {
+    dispatch({
+      type: ACTION_TYPES.SET_CAMPAIGN_ACTIVE_CHANGESET,
+      payload: { campaignId, view },
+    });
   };
 }
 

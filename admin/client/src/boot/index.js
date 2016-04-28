@@ -4,6 +4,7 @@ import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import ConfigHelpers from 'lib/Config';
 import router from 'lib/Router';
+import routeRegister from 'lib/RouteRegister';
 import reducerRegister from 'lib/ReducerRegister';
 import * as configActions from 'state/config/ConfigActions';
 import ConfigReducer from 'state/config/ConfigReducer';
@@ -15,7 +16,7 @@ import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
 
 // Sections
 // eslint-disable-next-line no-unused-vars
-import CampaignAdmin from 'containers/CampaignAdmin/index';
+import CampaignAdmin from 'containers/CampaignAdmin/controller';
 
 window.ss = window.ss || {};
 window.ss.router = router;
@@ -72,8 +73,7 @@ function appBoot() {
   ConfigHelpers
     .getTopLevelRoutes()
     .forEach((route) => {
-      router(`/${route}(/*?)?`, (ctx, next) => {
-        // If the page isn't ready.
+      routeRegister.add(`/${route}(/*?)?`, (ctx, next) => {
         if (document.readyState !== 'complete') {
           next();
           return;
@@ -87,13 +87,18 @@ function appBoot() {
       });
     });
 
+  const registeredRoutes = routeRegister.getAll();
+
+  for (const route in registeredRoutes) {
+    if (registeredRoutes.hasOwnProperty(route)) {
+      router(route, registeredRoutes[route]);
+    }
+  }
+
   router.start();
+
+  // Clean up referneces to callbacks in the route register.
+  routeRegister.removeAll();
 }
 
-// TODO: This should be using `window.onload` but isn't because
-// Entwine hooks are being used to set up the <Provider>.
-// `window.onload` happens AFTER these Entwine hooks which means
-// the store is undefined when the <Provider> is constructed.
-$.entwine('ss', () => {
-  $('body').entwine({ onadd: () => appBoot() });
-});
+window.onload = appBoot;
