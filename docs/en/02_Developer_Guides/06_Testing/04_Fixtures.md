@@ -59,7 +59,7 @@ We can represent multiple instances of them in `YAML` as follows:
 			Origin: Wellington
 		crusaders:
 			Name: The Crusaders
-			Origin: Bay of Plenty
+			Origin: Canterbury
 
 This `YAML` is broken up into three levels, signified by the indentation of each line. In the first level of 
 indentation, `Player` and `Team`, represent the class names of the objects we want to be created.
@@ -107,7 +107,7 @@ We can also declare the relationships conversely. Another way we could write the
 			Players: =>Player.john
 		crusaders:
 			Name: Crusaders
-			Origin: Bay of Plenty
+			Origin: Canterbury
 			Players: =>Player.joe,=>Player.jack
 
 The database is populated by instantiating `DataObject` objects and setting the fields declared in the `YAML`, then 
