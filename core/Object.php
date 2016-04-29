@@ -61,7 +61,7 @@ abstract class Object {
 		if(!isset(self::$_cache_inst_args[$classSpec.$firstArg])) {
 			// an $extension value can contain parameters as a string,
 			// e.g. "Versioned('Stage','Live')"
-			if(strpos($classSpec, '(') === false) {
+			if(strpos($classSpec,'(') === false) {
 				if($firstArg === null) {
 					self::$_cache_inst_args[$classSpec.$firstArg] = Object::create($classSpec);
 				} else {

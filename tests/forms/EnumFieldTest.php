@@ -22,6 +22,8 @@ class EnumFieldTest extends SapphireTest {
 
 	public function testEnumParsing() {
 		$enum = new DBEnum('testField', "
+			,
+			0,
 			Item1,
 			Item2,
 			Item 3,
@@ -32,6 +34,8 @@ class EnumFieldTest extends SapphireTest {
 		");
 
 		$this->assertEquals(ArrayLib::valuekey(array(
+			'',
+			'0',
 			'Item1',
 			'Item2',
 			'Item 3',

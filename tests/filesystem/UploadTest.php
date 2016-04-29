@@ -729,8 +729,8 @@ class UploadTest_Validator extends Upload_Validator implements TestOnly {
 			$arg = File::format_size($this->getAllowedMaxFileSize($ext));
 			$this->errors[] = _t(
 				'File.TOOLARGE',
-				'Filesize is too large, maximum {size} allowed',
-				'Argument 1: Filesize (e.g. 1MB)',
+				'File size is too large, maximum {size} allowed',
+				'Argument 1: File size (e.g. 1MB)',
 				array('size' => $arg)
 			);
 			return false;

@@ -5,7 +5,7 @@
 		<% if $Width %>
 			<span>$Preview.Fit(30, 40)</span>
 		<% else %>
-		<span class="no-preview"></span>
+			<span>$StripThumbnail</span>
 		<% end_if %>
 	</div>
 

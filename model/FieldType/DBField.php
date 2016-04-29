@@ -275,6 +275,14 @@ abstract class DBField extends ViewableData {
 		return Convert::raw2js($this->value);
 	}
 
+	/**
+	 * Return JSON encoded value
+	 * @return string
+	 */
+	public function JSON() {
+		return Convert::raw2json($this->value);
+	}
+
 	public function HTML(){
 		return Convert::raw2xml($this->value);
 	}

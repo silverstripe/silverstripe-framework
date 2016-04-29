@@ -185,7 +185,6 @@ class MemberTest extends FunctionalTest {
 	 * Test that changed passwords will send an email
 	 */
 	public function testChangedPasswordEmaling() {
-		$oldSetting = Config::inst()->get('Member', 'notify_password_change');
 		Config::inst()->update('Member', 'notify_password_change', true);
 
 		$this->clearEmails();
@@ -195,15 +194,14 @@ class MemberTest extends FunctionalTest {
 		$valid = $member->changePassword('32asDF##$$%%');
 		$this->assertTrue($valid->valid());
 
-		$this->assertEmailSent("dummy@silverstripe.tld", null, "Your password has been changed",
-			'/dummy@silverstripe\.tld/');
+		$this->assertEmailSent('testuser@example.com', null, 'Your password has been changed',
+			'/testuser@example\.com/');
 
-		Config::inst()->update('Member', 'notify_password_change', $oldSetting);
 	}
 
 	/**
 	 * Test that triggering "forgotPassword" sends an Email with a reset link
-	 */
+		*/
 	public function testForgotPasswordEmaling() {
 		$this->clearEmails();
 		$this->autoFollowRedirection = false;
@@ -217,11 +215,11 @@ class MemberTest extends FunctionalTest {
 		$this->assertEquals($response->getStatusCode(), 302);
 
 		// We should get redirected to Security/passwordsent
-		$this->assertContains('Security/passwordsent/dummy@silverstripe.tld',
+		$this->assertContains('Security/passwordsent/testuser@example.com',
 			urldecode($response->getHeader('Location')));
 
 		// Check existance of reset link
-		$this->assertEmailSent("dummy@silverstripe.tld", null, 'Your password reset link',
+		$this->assertEmailSent("testuser@example.com", null, 'Your password reset link',
 			'/Security\/changepassword\?m='.$member->ID.'&t=[^"]+/');
 	}
 

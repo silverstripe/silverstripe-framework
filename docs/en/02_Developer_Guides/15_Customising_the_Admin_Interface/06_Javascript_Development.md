@@ -168,7 +168,7 @@ consideration, we provide a library for entwineUI style programming. In entwineU
 objects. entwine extends this concept beyond what is provided by other libraries to provide a very easy to use system
 with class like, ploymorphic, namespaced properties."
 
-Use jQuery.entwine when your code is likely to be customized by others, for example for most work in the CMS interface.
+Use jQuery.entwine when your code is likely to be customised by others, for example for most work in the CMS interface.
 It is also suited for more complex applications beyond a single-purpose plugin.
 
 Example: Highlighter

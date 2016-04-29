@@ -1,4 +1,4 @@
-# How to customize the CMS Menu
+# How to customise the CMS Menu
 
 ## Adding an administration panel
 
