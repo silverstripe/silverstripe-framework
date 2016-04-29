@@ -55,9 +55,4 @@ class ReducerRegister {
 
 }
 
-// Create an instance to export. The same instance is exported to
-// each script which imports the reducerRegister. This means the
-// same register is available throughout the application.
-const reducerRegister = new ReducerRegister();
-
-export default reducerRegister;
+export default ReducerRegister;

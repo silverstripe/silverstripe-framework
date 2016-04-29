@@ -77,6 +77,4 @@ class RouteRegister {
   }
 }
 
-const routeRegister = new RouteRegister();
-
-export default routeRegister;
+export default RouteRegister;

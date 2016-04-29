@@ -309,6 +309,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/lib/ReducerRegister.js`,
       { expose: 'lib/ReducerRegister' }
     )
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/RouteRegister.js`,
+      { expose: 'lib/RouteRegister' }
+    )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Router.js`,
       { expose: 'lib/Router' }
     )
@@ -317,9 +320,6 @@ gulp.task('bundle-lib', function bundleLib() {
     )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Backend`,
       { expose: 'lib/Backend' }
-    )
-    .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
-      { expose: 'bootstrap-collapse' }
     )
     .bundle()
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
