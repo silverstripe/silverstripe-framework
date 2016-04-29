@@ -64,7 +64,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	private $objCache = array();
 	
 	// -----------------------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Converts a field spec into an object creator. For example: "Int" becomes "new Int($fieldName);" and "Varchar(50)"
 	 * becomes "new DBVarchar($fieldName, 50);".
@@ -88,7 +88,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	// FIELD GETTERS & SETTERS -----------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Check if a field exists on this object or its failover.
 	 *
@@ -181,7 +181,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	// -----------------------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Add methods from the {@link ViewableData::$failover} object, as well as wrapping any methods prefixed with an
 	 * underscore into a {@link ViewableData::cachedCall()}.
@@ -237,7 +237,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	// CASTING ---------------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Get the class a field on this object would be casted to, as well as the casting helper for casting a field to
 	 * an object (see {@link ViewableData::castingHelper()} for information on casting helpers).
@@ -329,7 +329,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	// TEMPLATE ACCESS LAYER -------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Render this object into the template, and get the result as a string. You can pass one of the following as the
 	 * $template parameter:
@@ -537,7 +537,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	// ITERATOR SUPPORT ------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * Return a single-item iterator so you can iterate over the fields of a single record.
 	 *
@@ -551,7 +551,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	}
 	
 	// UTILITY METHODS -------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * When rendering some objects it is necessary to iterate over the object being rendered, to do this, you need
 	 * access to itself.
@@ -576,7 +576,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function ThemeDir($subtheme = false) {
 		if(
-			Config::inst()->get('SSViewer', 'theme_enabled') 
+			Config::inst()->get('SSViewer', 'theme_enabled')
 			&& $theme = Config::inst()->get('SSViewer', 'theme')
 		) {
 			return THEMES_DIR . "/$theme" . ($subtheme ? "_$subtheme" : null);
