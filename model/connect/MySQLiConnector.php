@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * Connector for MySQL using the MySQLi method
  * @package framework

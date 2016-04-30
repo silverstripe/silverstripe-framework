@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Model;
+
 /**
  * A list decorator that allows a list to be grouped into sub-lists by common
  * values of a field.

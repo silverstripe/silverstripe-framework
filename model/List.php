@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Model;
+
 /**
  * An interface that a class can implement to be treated as a list container.
  *

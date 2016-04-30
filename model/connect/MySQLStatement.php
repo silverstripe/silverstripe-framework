@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * Provides a record-view for mysqli statements
  *

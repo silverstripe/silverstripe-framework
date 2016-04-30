@@ -7,7 +7,11 @@
  * @package framework
  * @subpackage model
  */
-abstract class SS_Database {
+
+namespace SilverStripe\Model\Connect;
+
+
+abstract class Database {
 
 	/**
 	 * Database connector object

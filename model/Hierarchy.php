@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Model;
+
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents. The most
  * obvious example of this is SiteTree.

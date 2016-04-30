@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\Model\Relation;
+namespace SilverStripe\Model;
 
 /**
  * An {@link ArrayList} that represents an unsaved relation.

@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model;
+
 /**
  * Subclass of {@link DataList} representing a has_many relation.
  *

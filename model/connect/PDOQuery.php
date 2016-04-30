@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * A result-set from a PDO database.
  * @package framework

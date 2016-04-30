@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * PDO driver database connector
  * @package framework

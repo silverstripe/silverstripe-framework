@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model;
+
 /**
  * Additional interface for {@link SS_List} classes that are filterable.
  *
@@ -10,7 +12,7 @@
  * @package framework
  * @subpackage model
  */
-interface SS_Filterable extends SS_List {
+interface Filterable extends SS_List {
 
 	/**
 	 * Returns TRUE if the list can be filtered by a given field expression.

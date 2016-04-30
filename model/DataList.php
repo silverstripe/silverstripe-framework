@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Model;
+
 /**
  * Implements a "lazy loading" DataObjectSet.
  * Uses {@link DataQuery} to do the actual query generation.

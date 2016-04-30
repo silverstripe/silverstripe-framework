@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Model;
+
 /**
  * A list object that wraps around an array of objects or arrays.
  *

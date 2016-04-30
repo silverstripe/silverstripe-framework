@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * Builds a SQL query string from a SQLExpression object
  *

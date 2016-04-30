@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model;
+
 use SilverStripe\Model\FieldType\DBField;
 
 /**

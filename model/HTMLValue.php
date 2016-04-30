@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model;
+
 /**
  * This class handles the converting of HTML fragments between a string and a DOMDocument based
  * representation.
@@ -10,7 +12,7 @@
  * @package framework
  * @subpackage integration
  */
-abstract class SS_HTMLValue extends ViewableData {
+abstract class HTMLValue extends ViewableData {
 
 	public function __construct($fragment = null) {
 		if ($fragment) $this->setContent($fragment);
@@ -153,7 +155,7 @@ abstract class SS_HTMLValue extends ViewableData {
 	}
 }
 
-class SS_HTML4Value extends SS_HTMLValue {
+class HTML4Value extends HTMLValue {
 
 	/**
 	 * @param string $content

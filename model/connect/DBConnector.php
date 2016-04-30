@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * Represents an object responsible for wrapping DB connector api
  *

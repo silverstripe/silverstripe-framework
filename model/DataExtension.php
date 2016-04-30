@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Model;
+
 /**
  * An extension that adds additional functionality to a {@link DataObject}.
  *

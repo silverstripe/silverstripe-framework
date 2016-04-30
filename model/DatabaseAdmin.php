@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Model;
+
 // Include the DB class
 require_once("model/DB.php");
 

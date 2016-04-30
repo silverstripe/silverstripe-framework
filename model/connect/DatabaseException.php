@@ -1,12 +1,14 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * Error class for database exceptions
  *
  * @package framework
  * @subpackage model
  */
-class SS_DatabaseException extends Exception {
+class DatabaseException extends Exception {
 
 	/**
 	 * The SQL that generated this error

@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model;
+
 /**
  * Additional interface for {@link SS_List} classes that are sortable.
  *
@@ -10,7 +12,7 @@
  * @package framework
  * @subpackage model
  */
-interface SS_Sortable extends SS_List {
+interface Sortable extends SS_List {
 
 	/**
 	 * Returns TRUE if the list can be sorted by a field.

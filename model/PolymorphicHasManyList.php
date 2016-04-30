@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model;
+
 /**
  * Represents a has_many list linked against a polymorphic relationship
  *

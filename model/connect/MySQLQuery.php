@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * A result-set from a MySQL database (using MySQLiConnector)
  *

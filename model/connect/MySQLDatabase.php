@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * MySQL connector class.
  *
@@ -8,6 +10,9 @@
  * @package framework
  * @subpackage model
  */
+
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\ArrayList;
 class MySQLDatabase extends SS_Database {
 
 	/**
