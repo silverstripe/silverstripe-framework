@@ -37,6 +37,7 @@ class GridFieldCell extends SilverStripeComponent {
 }
 
 GridFieldCell.PropTypes = {
+  className: React.PropTypes.string,
   width: React.PropTypes.number,
   handleDrillDown: React.PropTypes.func,
 };

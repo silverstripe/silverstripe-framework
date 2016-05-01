@@ -61,7 +61,7 @@ class GridField extends SilverStripeComponent {
 
   createRowActions(record) {
     return (
-      <GridFieldCell key="Actions">
+      <GridFieldCell className="grid-field__cell--actions" key="Actions">
         <GridFieldAction
           icon={'cog'}
           handleClick={this.editRecord}
