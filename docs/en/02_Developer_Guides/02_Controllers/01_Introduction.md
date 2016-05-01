@@ -109,7 +109,7 @@ Action methods can return one of four main things:
 	 * We can render HTML and leave SilverStripe to set the response code and body.
 	 */
 	public function htmlaction() {
-		return $this->customize(new ArrayData(array(
+		return $this->customise(new ArrayData(array(
 			'Title' => 'HTML Action'
 		)))->renderWith('MyCustomTemplate');
 	}

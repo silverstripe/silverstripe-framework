@@ -180,15 +180,15 @@ en:
     JsType: 'Javascript file'
     Mp3Type: 'MP3 audio file'
     MpgType: 'MPEG video file'
-    NOFILESIZE: 'Filesize is zero bytes.'
+    NOFILESIZE: 'File size is zero bytes.'
     NOVALIDUPLOAD: 'File is not a valid upload'
     Name: Name
     PLURALNAME: Files
     PdfType: 'Adobe Acrobat PDF file'
     PngType: 'PNG image - good general-purpose format'
     SINGULARNAME: File
-    TOOLARGE: 'Filesize is too large, maximum {size} allowed'
-    TOOLARGESHORT: 'Filesize exceeds {size}'
+    TOOLARGE: 'File size is too large, maximum {size} allowed'
+    TOOLARGESHORT: 'File size exceeds {size}'
     TiffType: 'Tagged image format'
     Title: Title
     WavType: 'WAV audo file'

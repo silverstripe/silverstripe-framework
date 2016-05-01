@@ -2,7 +2,7 @@ title: Import CSV Data through a Controller
 
 # Import CSV Data through a Controller
 
-You can have more customized logic and interface feedback through a custom controller. Let's create a simple upload 
+You can have more customised logic and interface feedback through a custom controller. Let's create a simple upload 
 form (which is used for `MyDataObject` instances). You can access it through 
 `http://yoursite.com/MyController/?flush=all`.
 

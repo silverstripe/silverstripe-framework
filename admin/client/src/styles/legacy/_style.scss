@@ -541,6 +541,14 @@ body.cms {
 			}
 		}
 
+    //jquery UI override
+    li.ui-tabs-active,
+    li.ui-state-default,
+    li.ui-state-active {
+      margin-bottom: -1px;
+      padding-bottom: 0;
+    }
+
 		.ui-state-default {
 			border: 0;
 			background: transparent;
@@ -548,8 +556,9 @@ body.cms {
 			a {
 				line-height: 28px;
 				padding-top: 12px;
-				padding-bottom: 8px;
+				padding-bottom: 5px;
 				color: lighten($color-text, 10%);
+        border-bottom: 3px solid transparent;
 
 				&:hover {
 					color: $color-text;
@@ -558,12 +567,11 @@ body.cms {
 		}
 
 		.ui-state-active {
-			padding-bottom: 1px;
 			background-color: transparent;
 			cursor: text;
 
 			a {
-				border-bottom: 3px solid #66727d;
+				border-color: #66727d;
 				padding-left: 0;
 				padding-right: 0;
 				margin: 0 12px 0;
@@ -699,12 +707,8 @@ body.cms {
 	margin: 0 16px 0;
 
 	li {
-		margin-bottom: -1px;
-
-		&.first a {
-			margin-left: 0;
-			padding-left: 0;
-		}
+		// Align tab content with gutter (supports multiple rows of tabs)
+		margin: 0 ($grid-x*1.5) -1px ($grid-x*-1.5);
 	}
 }
 
