@@ -526,7 +526,7 @@ class SecurityTest extends FunctionalTest {
 		));
 		$this->assertEquals($attempt->Status, 'Failure');
 		$this->assertEquals($attempt->Email, 'testuser@example.com');
-		$this->assertEquals($attempt->Member(), $member);
+		$this->assertEquals($attempt->Member()->toMap(), $member->toMap());
 
 		/* UNSUCCESSFUL ATTEMPTS WITH NONEXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('wronguser@silverstripe.com', 'wrongpassword');
@@ -555,7 +555,7 @@ class SecurityTest extends FunctionalTest {
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Success');
 		$this->assertEquals($attempt->Email, 'testuser@example.com');
-		$this->assertEquals($attempt->Member(), $member);
+		$this->assertEquals($attempt->Member()->toMap(), $member->toMap());
 	}
 
 	public function testDatabaseIsReadyWithInsufficientMemberColumns() {
