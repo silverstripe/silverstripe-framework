@@ -310,15 +310,14 @@ abstract class DBSchemaManager {
 
 			// Check if options changed
 			$tableOptionsChanged = false;
-			if (isset($options[get_class($this)]) || true) {
-				if (isset($options[get_class($this)])) {
-					if (preg_match('/ENGINE=([^\s]*)/', $options[get_class($this)], $alteredEngineMatches)) {
-						$alteredEngine = $alteredEngineMatches[1];
-						$tableStatus = $this->query(sprintf(
-												'SHOW TABLE STATUS LIKE \'%s\'', $table
-										))->first();
-						$tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
-					}
+			// Check for DB constant on the schema class
+			$dbIDName = sprintf('%s::ID', get_class($this));
+			$dbID = defined($dbIDName) ? constant($dbIDName) : null;
+			if ($dbID && isset($options[$dbID])) {
+				if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID], $alteredEngineMatches)) {
+					$alteredEngine = $alteredEngineMatches[1];
+					$tableStatus = $this->query(sprintf('SHOW TABLE STATUS LIKE \'%s\'', $table))->first();
+					$tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
 				}
 			}
 

@@ -6,12 +6,12 @@ use Config;
 use Convert;
 use SilverStripe\Model\FieldType\DBField;
 use SilverStripe\Filesystem\Storage\DBFile;
-use HTMLText;
 use Image_Backend;
 use Injector;
 use InvalidArgumentException;
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Model\FieldType\DBHTMLText;
 
 /**
  * Provides image manipulation functionality.
@@ -169,6 +169,7 @@ trait ImageManipulation {
 	 *
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param string $backgroundColor
 	 * @return AssetContainer
 	 */
 	public function Pad($width, $height, $backgroundColor = 'FFFFFF') {
@@ -454,32 +455,32 @@ trait ImageManipulation {
 	/**
 	 * Default CMS thumbnail
 	 *
-	 * @return DBFile|HTMLText Either a resized thumbnail, or html for a thumbnail icon
+	 * @return DBFile|DBHTMLText Either a resized thumbnail, or html for a thumbnail icon
 	 */
 	public function CMSThumbnail() {
-		$width = Config::inst()->get(get_class($this), 'cms_thumbnail_width');
-		$height = Config::inst()->get(get_class($this), 'cms_thumbnail_height');
+		$width = (int)Config::inst()->get(get_class($this), 'cms_thumbnail_width');
+		$height = (int)Config::inst()->get(get_class($this), 'cms_thumbnail_height');
 		return $this->ThumbnailIcon($width, $height);
 	}
 
 	/**
 	 * Generates a thumbnail for use in the gridfield view
 	 *
-	 * @return AssetContainer|HTMLText Either a resized thumbnail, or html for a thumbnail icon
+	 * @return AssetContainer|DBHTMLText Either a resized thumbnail, or html for a thumbnail icon
 	 */
 	public function StripThumbnail() {
-		$width = Config::inst()->get(get_class($this), 'strip_thumbnail_width');
-		$height = Config::inst()->get(get_class($this), 'strip_thumbnail_height');
+		$width = (int)Config::inst()->get(get_class($this), 'strip_thumbnail_width');
+		$height = (int)Config::inst()->get(get_class($this), 'strip_thumbnail_height');
 		return $this->ThumbnailIcon($width, $height);
 	}
 
 	/**
 	 * Get preview for this file
 	 *
-	 * @return AssetContainer|HTMLText Either a resized thumbnail, or html for a thumbnail icon
+	 * @return AssetContainer|DBHTMLText Either a resized thumbnail, or html for a thumbnail icon
 	 */
 	public function PreviewThumbnail() {
-		$width = Config::inst()->get(get_class($this), 'asset_preview_width');
+		$width = (int)Config::inst()->get(get_class($this), 'asset_preview_width');
 		return $this->ScaleWidth($width)  ?: $this->IconTag();
 	}
 
@@ -491,7 +492,7 @@ trait ImageManipulation {
 	 * @return AssetContainer
 	 */
 	public function Thumbnail($width, $height) {
-		return $this->Pad($height, $height);
+		return $this->Pad($width, $height);
 	}
 
 	/**
@@ -501,7 +502,7 @@ trait ImageManipulation {
 	 *
 	 * @param int $width
 	 * @param int $height
-	 * @return AssetContainer|HTMLText
+	 * @return AssetContainer|DBHTMLText
 	 */
 	public function ThumbnailIcon($width, $height) {
 		return $this->Thumbnail($width, $height) ?: $this->IconTag();
@@ -510,7 +511,7 @@ trait ImageManipulation {
 	/**
 	 * Get HTML for img containing the icon for this file
 	 *
-	 * @return type
+	 * @return DBHTMLText
 	 */
 	public function IconTag() {
 		return DBField::create_field(
@@ -622,7 +623,7 @@ trait ImageManipulation {
 	/**
 	 * Get the orientation of this image.
 	 *
-	 * @return ORIENTATION_SQUARE | ORIENTATION_PORTRAIT | ORIENTATION_LANDSCAPE
+	 * @return int ORIENTATION_SQUARE | ORIENTATION_PORTRAIT | ORIENTATION_LANDSCAPE
 	 */
 	public function getOrientation() {
 		$width = $this->getWidth();
@@ -684,6 +685,7 @@ trait ImageManipulation {
 		return $this->manipulate(
 			$variant,
 			function(AssetStore $store, $filename, $hash, $variant) use ($callback) {
+				/** @var Image_Backend $backend */
 				$backend = $this->getImageBackend();
 				if(!$backend) {
 					return null;

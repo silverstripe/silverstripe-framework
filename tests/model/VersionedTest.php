@@ -926,6 +926,7 @@ class VersionedTest extends SapphireTest {
 		$public1ID = $this->idFromFixture('VersionedTest_PublicStage', 'public1');
 		$public2ID = $this->idFromFixture('VersionedTest_PublicViaExtension', 'public2');
 		$privateID = $this->idFromFixture('VersionedTest_DataObject', 'page1');
+		$singleID = $this->idFromFixture('VersionedTest_SingleStage', 'single');
 
 		// Test that all (and only) public pages are viewable in stage mode
 		Session::clear("loggedInAs");
@@ -933,16 +934,21 @@ class VersionedTest extends SapphireTest {
 		$public1 = Versioned::get_one_by_stage('VersionedTest_PublicStage', 'Stage', array('"ID"' => $public1ID));
 		$public2 = Versioned::get_one_by_stage('VersionedTest_PublicViaExtension', 'Stage', array('"ID"' => $public2ID));
 		$private = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', array('"ID"' => $privateID));
+		// Also test an object that has just a single-stage (eg. is only versioned)
+		$single = Versioned::get_one_by_stage('VersionedTest_SingleStage', 'Stage', array('"ID"' => $singleID));
+
 
 		$this->assertTrue($public1->canView());
 		$this->assertTrue($public2->canView());
 		$this->assertFalse($private->canView());
+		$this->assertFalse($single->canView());
 
 		// Adjusting the current stage should not allow objects loaded in stage to be viewable
 		Versioned::set_stage(Versioned::LIVE);
 		$this->assertTrue($public1->canView());
 		$this->assertTrue($public2->canView());
 		$this->assertFalse($private->canView());
+		$this->assertFalse($single->canView());
 
 		// Writing the private page to live should be fine though
 		$private->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
@@ -968,6 +974,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($public1->canView());
 		$this->assertTrue($public2->canView());
 		$this->assertTrue($private->canView());
+		$this->assertTrue($single->canView());
 	}
 
 	public function testCanViewStage() {

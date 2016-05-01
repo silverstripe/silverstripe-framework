@@ -137,7 +137,7 @@
           destUrl = settings.url,
           msg = xhr.getResponseHeader('X-Status') !== null ? xhr.getResponseHeader('X-Status') : xhr.statusText,
           msgType = xhr.status < 200 || xhr.status > 399 ? 'bad' : 'good',
-          ignoredMessages = ['OK'];
+          ignoredMessages = ['OK', 'success'];
       if (window.history.state) {
         origUrl = window.history.state.path;
       } else {
@@ -156,7 +156,7 @@
         return;
       }
 
-      if (xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
+      if (xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages) === -1) {
         statusMessage(decodeURIComponent(msg), msgType);
       }
 
@@ -657,10 +657,10 @@
 
         this.find('.cms-tabset, .ss-tabset').each(function () {
           var index,
+              tab,
               tabset = $(this),
               tabsetId = tabset.attr('id'),
-              tab,
-              forcedTab = tabset.find('.ss-tabs-force-active');
+              forcedTab = tabset.children('ul').children('li.ss-tabs-force-active');
 
           if (!tabset.data('tabs')) {
             return;
@@ -669,16 +669,16 @@
           tabset.tabs('refresh');
 
           if (forcedTab.length) {
-            index = forcedTab.index();
+            index = forcedTab.first().index();
           } else if (overrideStates && overrideStates[tabsetId]) {
             tab = tabset.find(overrideStates[tabsetId].tabSelector);
             if (tab.length) {
               index = tab.index();
             }
           } else if (sessionStates) {
-            $.each(sessionStates, function (i, sessionState) {
-              if (tabset.is('#' + sessionState.id)) {
-                index = sessionState.selected;
+            $.each(sessionStates, function (i, state) {
+              if (tabsetId == state.id) {
+                index = state.selected;
               }
             });
           }

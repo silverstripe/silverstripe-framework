@@ -14,7 +14,7 @@ use SilverStripe\Filesystem\Storage\AssetContainer;
  *
  * <b>Security</b>
  *
- * Caution: It is recommended to disable any script execution in the"assets/"
+ * Caution: It is recommended to disable any script execution in the "assets/"
  * directory in the webserver configuration, to reduce the risk of exploits.
  * See http://doc.silverstripe.org/secure-development#filesystem
  *
@@ -37,15 +37,15 @@ use SilverStripe\Filesystem\Storage\AssetContainer;
  *
  * <b>Properties</b>
  *
- * -"Title": Optional title of the file (for display purposes only).
- *   Defaults to"Name". Note that the Title field of Folder (subclass of File)
+ * - "Title": Optional title of the file (for display purposes only).
+ *   Defaults to "Name". Note that the Title field of Folder (subclass of File)
  *   is linked to Name, so Name and Title will always be the same.
  * -"File": Physical asset backing this DB record. This is a composite DB field with
  *   its own list of properties. {@see DBFile} for more information
- * -"Content": Typically unused, but handy for a textual representation of
+ * - "Content": Typically unused, but handy for a textual representation of
  *   files, e.g. for fulltext indexing of PDF documents.
- * -"ParentID": Points to a {@link Folder} record. Should be in sync with
- *  "Filename". A ParentID=0 value points to the"assets/" folder, not the webroot.
+ * - "ParentID": Points to a {@link Folder} record. Should be in sync with
+ *   "Filename". A ParentID=0 value points to the "assets/" folder, not the webroot.
  * -"ShowInSearch": True if this file is searchable
  *
  * @package framework
@@ -84,8 +84,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	private static $non_live_permissions = array('CMS_ACCESS_LeftAndMain', 'CMS_ACCESS_AssetAdmin', 'VIEW_DRAFT_CONTENT');
 
 	private static $db = array(
-		"Name" =>"Varchar(255)",
-		"Title" =>"Varchar(255)",
+		"Name" => "Varchar(255)",
+		"Title" => "Varchar(255)",
 		"File" =>"DBFile",
 		// Only applies to files, doesn't inherit for folder
 		'ShowInSearch' => 'Boolean(1)',
@@ -105,7 +105,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		"Versioned"
 	);
 
-	private static $casting = array(
+	private static $casting = array (
 		'TreeTitle' => 'HTMLText'
 	);
 
@@ -204,7 +204,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	}
 
 	/**
-	 * Replace"[file_link id=n]" shortcode with an anchor tag or link to the file.
+	 * Replace "[file_link id=n]" shortcode with an anchor tag or link to the file.
 	 *
 	 * @param array $arguments Arguments passed to the parser
 	 * @param string $content Raw shortcode
@@ -368,7 +368,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		$result = $this->extendedCan('canView', $member);
 		if($result !== null) {
 			return $result;
-		}
+	}
 
 		return true;
 	}
@@ -486,7 +486,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	 * Returns a category based on the file extension.
 	 * This can be useful when grouping files by type,
 	 * showing icons on filelinks, etc.
-	 * Possible group values are:"audio","mov","zip","image".
+	 * Possible group values are: "audio", "mov", "zip", "image".
 	 *
 	 * @param string $ext Extension to check
 	 * @return string
@@ -508,7 +508,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	public static function get_category_extensions($categories) {
 		if(empty($categories)) {
 			return array();
-		}
+	}
 
 		// Fix arguments into a single array
 		if(!is_array($categories)) {
@@ -541,7 +541,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	 */
 	public function appCategory() {
 		return self::get_app_category($this->getExtension());
-	}
+		}
 
 
 	/**
@@ -563,7 +563,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		// Set default name
 		if(!$this->getField('Name')) {
 			$this->Name ="new-" . strtolower($this->class);
-		}
+	}
 
 		// Propegate changes to the AssetStore and update the DBFile field
 		$this->updateFilesystem();
@@ -589,12 +589,12 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		// Check the file exists
 		if(!$this->File->exists()) {
 			return false;
-		}
+				}
 
 		// Avoid moving files on live; Rely on this being done on stage prior to publish.
 		if(Versioned::get_stage() !== Versioned::DRAFT) {
 			return false;
-		}
+			}
 
 		// Check path updated record will point to
 		// If no changes necessary, skip
@@ -634,7 +634,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	 * and removes characters that might be invalid on the filesystem.
 	 * Also adds a suffix to the name if the filename already exists
 	 * on the filesystem, and is associated to a different {@link File} database record
-	 * in the same folder. This means"myfile.jpg" might become"myfile-1.jpg".
+	 * in the same folder. This means "myfile.jpg" might become "myfile-1.jpg".
 	 *
 	 * Does not change the filesystem itself, please use {@link write()} for this.
 	 *
@@ -672,7 +672,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 				))->first()
 			) {
 				$suffix++;
-				$name ="$base-$suffix.$ext";
+				$name = "$base-$suffix.$ext";
 			}
 		}
 
@@ -709,7 +709,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	public function getURL($grant = true) {
 		if($this->File->exists()) {
 			return $this->File->getURL($grant);
-		}
+	}
 	}
 
 	/**
@@ -721,7 +721,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	public function getSourceURL($grant = true) {
 		if($this->File->exists()) {
 			return $this->File->getSourceURL($grant);
-		}
+	}
 	}
 
 	/**
@@ -776,18 +776,18 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		$parent = $this->Parent();
 		if($parent && $parent->exists()) {
 			$folder = $parent->Filename;
-		}
+	}
 
 		// Detect change in foldername
 		$newFolder = ltrim(dirname(trim($filename, '/')), '.');
 		if($folder !== $newFolder) {
 			if(!$newFolder) {
 				$this->ParentID = 0;
-			} else {
+		} else {
 				$parent = Folder::find_or_make($newFolder);
 				$this->ParentID = $parent->ID;
-			}
 		}
+	}
 
 		// Update base name
 		$this->Name = basename($filename);
@@ -805,14 +805,14 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 
 	/**
 	 * Gets the extension of a filepath or filename,
-	 * by stripping away everything before the last"dot".
-	 * Caution: Only returns the last extension in"double-barrelled"
-	 * extensions (e.g."gz" for"tar.gz").
+	 * by stripping away everything before the last "dot".
+	 * Caution: Only returns the last extension in "double-barrelled"
+	 * extensions (e.g. "gz" for "tar.gz").
 	 *
 	 * Examples:
-	 * -"myfile" returns""
-	 * -"myfile.txt" returns"txt"
-	 * -"myfile.tar.gz" returns"gz"
+	 * - "myfile" returns ""
+	 * - "myfile.txt" returns "txt"
+	 * - "myfile.tar.gz" returns "gz"
 	 *
 	 * @param string $filename
 	 * @return string
@@ -831,16 +831,16 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		$extension = strtolower($extension);
 
 		// Check if exact extension has an icon
-		if(!file_exists(FRAMEWORK_PATH ."/client/dist/images/app_icons/{$extension}_32.gif")) {
+		if(!file_exists(FRAMEWORK_PATH ."/client/dist/images/app_icons/{$extension}_32.png")) {
 			$extension = static::get_app_category($extension);
 
 			// Fallback to category specific icon
-			if(!file_exists(FRAMEWORK_PATH ."/client/dist/images/app_icons/{$extension}_32.gif")) {
+			if(!file_exists(FRAMEWORK_PATH ."/client/dist/images/app_icons/{$extension}_32.png")) {
 				$extension ="generic";
 			}
 		}
 
-		return FRAMEWORK_DIR ."/client/dist/images/app_icons/{$extension}_32.gif";
+		return FRAMEWORK_DIR ."/client/dist/images/app_icons/{$extension}_32.png";
 	}
 
 	/**
@@ -898,7 +898,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		$size = $this->getAbsoluteSize();
 		if($size) {
 			return static::format_size($size);
-		}
+	}
 		return false;
 	}
 
@@ -956,7 +956,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	 */
 	public function getAbsoluteSize(){
 		return $this->File->getAbsoluteSize();
-	}
+		}
 
 	public function validate() {
 		$result = new ValidationResult();
@@ -996,7 +996,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		foreach($exts as $ext) {
 			if(!is_subclass_of($class, 'File')) {
 				throw new InvalidArgumentException(
-					sprintf('Class"%s" (for extension"%s") is not a valid subclass of File', $class, $ext)
+					sprintf('Class "%s" (for extension "%s") is not a valid subclass of File', $class, $ext)
 				);
 			}
 			self::config()->class_for_file_extension = array($ext => $class);

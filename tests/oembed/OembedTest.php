@@ -38,6 +38,70 @@ class OembedTest extends SapphireTest {
 		$this->assertEquals($query['maxwidth'], 'bar', 'Magically creates maxwidth option');
 	}
 
+	public function testAutodiscover() {
+		// Test href after type tag
+		$body = <<<EOS
+<title id="pageTitle">Some content</title>
+<link rel="search" type="application/opensearchdescription+xml" href="/osd.xml" title="Facebook" />
+<link
+	rel="alternate" type="application/json+oembed"
+	href="https://www.facebook.com/plugins/post/oembed.json/?url=https%3A%2F%2Fwww.facebook.com%2Fsomeusername%2Fposts%2F10209305859558135"
+	title="My post"
+/>
+EOS;
+		$this->assertEquals(
+			'https://www.facebook.com/plugins/post/oembed.json/?url=https%3A%2F%2Fwww.facebook.com%2Fsomeusername%2Fposts%2F10209305859558135',
+			Oembed::autodiscover_from_body($body)
+		);
+
+		// Test href before the type tag
+		$body2 = <<<EOS
+<title id="pageTitle">Some content</title>
+<link rel="search" type="application/opensearchdescription+xml" href="/osd.xml" title="Facebook" />
+<link
+	href="https://www.facebook.com/plugins/post/oembed.json/?url=https%3A%2F%2Fwww.facebook.com%2Fsomeusername%2Fposts%2F10209305859558135"
+	rel="alternate" type="application/json+oembed"
+
+	title="My post"
+/>
+EOS;
+		$this->assertEquals(
+			'https://www.facebook.com/plugins/post/oembed.json/?url=https%3A%2F%2Fwww.facebook.com%2Fsomeusername%2Fposts%2F10209305859558135',
+			Oembed::autodiscover_from_body($body2)
+		);
+	}
+
+	public function testFindThumbnail()
+	{
+		$data = array(
+			"author_name"=> "Some User",
+			"author_url"=> null,
+			"provider_url" => "https://www.facebook.com",
+			"provider_name" => "Facebook",
+			"success" => true,
+			"height" => null,
+			"html" => "<div />",
+			"type" => "rich",
+			"version" => "1.0",
+			"url" => "https://www.facebook.com/someuser/posts/6465132161654421654",
+			"width" => 552
+		);
+
+		// Test facebook url
+		$result = new Oembed_Result('https://www.facebook.com/someuser/posts/6465132161654421654');
+		$this->assertEquals(
+			"https://graph.facebook.com/6465132161654421654/picture",
+			$result->findThumbnail($data)
+		);
+
+		// Test respect existing url
+		$data['thumbnail_url'] = 'http://www.silverstripe.com/picture.jpg';
+		$this->assertEquals(
+			"http://www.silverstripe.com/picture.jpg",
+			$result->findThumbnail($data)
+		);
+	}
+
 	public function testRequestProtocolReflectedInGetOembedFromUrl() {
 		Config::inst()->update('Oembed', 'providers', array(
 			'http://*.silverstripe.com/watch*'=> array(

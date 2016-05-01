@@ -64,6 +64,7 @@ use SilverStripe\Framework\Injector\Factory;
  *
  * Specify a configuration array of the format
  *
+ * <code>
  * array(
  *		array(
  *			'id'			=> 'BeanId',					// the name to be used if diff from the filename
@@ -96,6 +97,7 @@ use SilverStripe\Framework\Injector\Factory;
  *		// or simply
  *		'OtherBean'		=> 'SomeClass',
  * )
+ * </code>
  *
  * In addition to specifying the bindings directly in the configuration,
  * you can simply create a publicly accessible property on the target

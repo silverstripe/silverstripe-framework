@@ -170,7 +170,7 @@ class MySQLDatabase extends SS_Database {
 				"Relevance" => $relevance['SiteTree'], "CanViewType"
 			),
 			'File' => array(
-				"ClassName", "$baseClasses[File].\"ID\"", "ParentID" => "_{$charset}''",
+				"ClassName", "$baseClasses[File].\"ID\"", "ParentID",
 				"Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content" => "_{$charset}''",
 				"LastEdited", "Created",
 				"Name",

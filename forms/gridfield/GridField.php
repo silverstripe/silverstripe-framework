@@ -507,11 +507,14 @@ class GridField extends FormField {
 			$header . "\n" . $footer . "\n" . $body
 		);
 
-		return DBField::create_field('HTMLText', FormField::create_tag(
+		$field = DBField::create_field('HTMLText', FormField::create_tag(
 			'fieldset',
 			$fieldsetAttributes,
 			$content['before'] . $table . $content['after']
 		));
+		$field->setOptions(array('shortcodes' => false));
+
+		return $field;
 	}
 
 	/**
@@ -588,6 +591,8 @@ class GridField extends FormField {
 		} else {
 			$classes[] = 'odd';
 		}
+		
+		$this->extend('updateNewRowClasses', $classes, $total, $index, $record);
 
 		return $classes;
 	}
@@ -598,6 +603,7 @@ class GridField extends FormField {
 	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
+		$this->extend('onBeforeRender', $this);
 		return $this->FieldHolder($properties);
 	}
 

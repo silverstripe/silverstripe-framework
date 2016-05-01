@@ -157,7 +157,7 @@ $.entwine('ss', function($) {
       destUrl = settings.url,
       msg = xhr.getResponseHeader('X-Status') !== null ? xhr.getResponseHeader('X-Status') : xhr.statusText, // Handle custom status message headers
       msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
-      ignoredMessages = ['OK'];
+      ignoredMessages = ['OK', 'success'];
     if(window.history.state) {
       origUrl = window.history.state.path;
     } else {
@@ -179,7 +179,7 @@ $.entwine('ss', function($) {
     }
 
     // Show message (but ignore aborted requests)
-    if (xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
+    if (xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages) === -1) {
       // Decode into UTF-8, HTTP headers don't allow multibyte
       statusMessage(decodeURIComponent(msg), msgType);
     }
@@ -906,8 +906,10 @@ $.entwine('ss', function($) {
         sessionStates = sessionData ? JSON.parse(sessionData) : false;
 
       this.find('.cms-tabset, .ss-tabset').each(function() {
-        var index, tabset = $(this), tabsetId = tabset.attr('id'), tab,
-          forcedTab = tabset.find('.ss-tabs-force-active');
+        var index, tab,
+          tabset = $(this),
+          tabsetId = tabset.attr('id'),
+          forcedTab = tabset.children('ul').children('li.ss-tabs-force-active');
 
         if(!tabset.data('tabs')){
           return; // don't act on uninit'ed controls
@@ -916,18 +918,18 @@ $.entwine('ss', function($) {
         // The tabs may have changed, notify the widget that it should update its internal state.
         tabset.tabs('refresh');
 
-        // Make sure the intended tab is selected.
+        // Make sure the intended tab is selected. Only force the tab on the correct tabset though
         if(forcedTab.length) {
-          index = forcedTab.index();
+          index = forcedTab.first().index();
         } else if(overrideStates && overrideStates[tabsetId]) {
           tab = tabset.find(overrideStates[tabsetId].tabSelector);
           if(tab.length){
             index = tab.index();
           }
         } else if(sessionStates) {
-          $.each(sessionStates, function(i, sessionState) {
-            if(tabset.is('#' + sessionState.id)){
-              index = sessionState.selected;
+          $.each(sessionStates, function(i, state) {
+            if(tabsetId == state.id) {
+              index = state.selected;
             }
           });
         }

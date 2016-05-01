@@ -3,7 +3,7 @@ summary: Add custom CSS properties to the rich-text editor.
 
 # WYSIWYG Styles
 
-SilverStripe lets you customize the style of content in the CMS. This is done by setting up a CSS file called
+SilverStripe lets you customise the style of content in the CMS. This is done by setting up a CSS file called
 `editor.css` in either your theme or in your `mysite` folder. This is set through
 
 	:::php

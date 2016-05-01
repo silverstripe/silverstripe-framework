@@ -972,7 +972,7 @@ class UploadField extends FileField {
 			$config['maxFileSize'] = $allowedMaxFileSize;
 			$config['errorMessages']['maxFileSize'] = _t(
 				'File.TOOLARGESHORT',
-				'Filesize exceeds {size}',
+				'File size exceeds {size}',
 				array('size' => File::format_size($config['maxFileSize']))
 			);
 		}

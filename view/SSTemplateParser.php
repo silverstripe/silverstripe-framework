@@ -545,7 +545,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	function CallArguments_Argument(&$res, $sub) {
 		if (!empty($res['php'])) $res['php'] .= ', ';
 		
-		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] : 
+		$res['php'] .= ($sub['ArgumentMode'] == 'default') ? $sub['string_php'] :
 			str_replace('$$FINAL', 'XML_val', $sub['php']);
 	}
 
@@ -1083,7 +1083,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		$matchrule = "QuotedString"; $result = $this->construct($matchrule, $matchrule, null);
 		$_142 = NULL;
 		do {
-			$stack[] = $result; $result = $this->construct( $matchrule, "q" ); 
+			$stack[] = $result; $result = $this->construct( $matchrule, "q" );
 			if (( $subres = $this->rx( '/[\'"]/' ) ) !== FALSE) {
 				$result["text"] .= $subres;
 				$subres = $result; $result = array_pop($stack);
@@ -1093,7 +1093,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				$result = array_pop($stack);
 				$_142 = FALSE; break;
 			}
-			$stack[] = $result; $result = $this->construct( $matchrule, "String" ); 
+			$stack[] = $result; $result = $this->construct( $matchrule, "String" );
 			if (( $subres = $this->rx( '/ (\\\\\\\\ | \\\\. | [^'.$this->expression($result, $stack, 'q').'\\\\])* /' ) ) !== FALSE) {
 				$result["text"] .= $subres;
 				$subres = $result; $result = array_pop($stack);
@@ -1413,7 +1413,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		if ($sub['ArgumentMode'] == 'default') {
 			if (!empty($res['php'])) $res['php'] .= $sub['string_php'];
 			else $res['php'] = str_replace('$$FINAL', 'XML_val', $sub['lookup_php']);
-		}	
+		}
 		else {
 			$res['php'] .= str_replace('$$FINAL', 'XML_val', $sub['php']);
 		}
@@ -1433,7 +1433,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$pos_199 = $this->pos;
 			$_198 = NULL;
 			do {
-				$stack[] = $result; $result = $this->construct( $matchrule, "Not" ); 
+				$stack[] = $result; $result = $this->construct( $matchrule, "Not" );
 				if (( $subres = $this->literal( 'not' ) ) !== FALSE) {
 					$result["text"] .= $subres;
 					$subres = $result; $result = array_pop($stack);
@@ -1780,22 +1780,22 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 	function If_IfPart(&$res, $sub) {
-		$res['php'] = 
+		$res['php'] =
 			'if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
 				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
-	} 
+	}
 
 	function If_ElseIfPart(&$res, $sub) {
-		$res['php'] .= 
+		$res['php'] .=
 			'else if (' . $sub['IfArgument']['php'] . ') { ' . PHP_EOL .
 				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	}
 
 	function If_ElsePart(&$res, $sub) {
-		$res['php'] .= 
-			'else { ' . PHP_EOL . 
+		$res['php'] .=
+			'else { ' . PHP_EOL .
 				(isset($sub['Template']) ? $sub['Template']['php'] : '') . PHP_EOL .
 			'}';
 	}
@@ -1813,7 +1813,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			else { $_274 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_274 = FALSE; break; }
-			$stack[] = $result; $result = $this->construct( $matchrule, "Call" ); 
+			$stack[] = $result; $result = $this->construct( $matchrule, "Call" );
 			$_270 = NULL;
 			do {
 				$matcher = 'match_'.'Word'; $key = $matcher; $pos = $this->pos;
@@ -2285,7 +2285,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_363 = NULL;
 			do {
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" ); 
+				$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" );
 				$_359 = NULL;
 				do {
 					$_357 = NULL;
@@ -2665,12 +2665,12 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 
 
-	function CacheRestrictedTemplate_CacheBlock(&$res, $sub) { 
+	function CacheRestrictedTemplate_CacheBlock(&$res, $sub) {
 		throw new SSTemplateParseException('You cant have cache blocks nested within with, loop or control blocks ' .
 			'that are within cache blocks', $this);
 	}
 	
-	function CacheRestrictedTemplate_UncachedBlock(&$res, $sub) { 
+	function CacheRestrictedTemplate_UncachedBlock(&$res, $sub) {
 		throw new SSTemplateParseException('You cant have uncache blocks nested within with, loop or control blocks ' .
 			'that are within cache blocks', $this);
 	}
@@ -2688,7 +2688,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if (( $subres = $this->literal( '<%' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_491 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$stack[] = $result; $result = $this->construct( $matchrule, "CacheTag" ); 
+			$stack[] = $result; $result = $this->construct( $matchrule, "CacheTag" );
 			$_444 = NULL;
 			do {
 				$_442 = NULL;
@@ -2745,7 +2745,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			$_460 = NULL;
 			do {
 				if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-				$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" ); 
+				$stack[] = $result; $result = $this->construct( $matchrule, "Conditional" );
 				$_456 = NULL;
 				do {
 					$_454 = NULL;
@@ -3370,7 +3370,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		$template = $res['template'];
 		$arguments = $res['arguments'];
 
-		$res['php'] = '$val .= SSViewer::execute_template('.$template.', $scope->getItem(), array(' . 
+		$res['php'] = '$val .= SSViewer::execute_template('.$template.', $scope->getItem(), array(' .
 			implode(',', $arguments)."), \$scope);\n";
 
 		if($this->includeDebuggingComments) { // Add include filename comments on dev sites
@@ -3638,7 +3638,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 				unset( $pos_621 );
 			}
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$stack[] = $result; $result = $this->construct( $matchrule, "Zap" ); 
+			$stack[] = $result; $result = $this->construct( $matchrule, "Zap" );
 			if (( $subres = $this->literal( '%>' ) ) !== FALSE) {
 				$result["text"] .= $subres;
 				$subres = $result; $result = array_pop($stack);
@@ -3741,7 +3741,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if ($arg['ArgumentMode'] == 'string') {
 				throw new SSTemplateParseException('Control block cant take string as argument.', $this);
 			}
-			$on = str_replace('$$FINAL', 'obj', 
+			$on = str_replace('$$FINAL', 'obj',
 				($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
 		}
 
@@ -3766,7 +3766,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		}
 		
 		$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
-		return 
+		return
 			$on . '; $scope->pushScope();' . PHP_EOL .
 				$res['Template']['php'] . PHP_EOL .
 			'; $scope->popScope(); ';
@@ -3930,7 +3930,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 	function MismatchedEndBlock__finalise(&$res) {
 		$blockname = $res['Word']['text'];
-		throw new SSTemplateParseException('Unexpected close tag end_' . $blockname . 
+		throw new SSTemplateParseException('Unexpected close tag end_' . $blockname .
 			' encountered. Perhaps you have mis-nested blocks, or have mis-spelled a tag?', $this);
 	}
 
@@ -4029,7 +4029,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if (( $subres = $this->literal( '<%' ) ) !== FALSE) { $result["text"] .= $subres; }
 			else { $_679 = FALSE; break; }
 			if (( $subres = $this->whitespace(  ) ) !== FALSE) { $result["text"] .= $subres; }
-			$stack[] = $result; $result = $this->construct( $matchrule, "Tag" ); 
+			$stack[] = $result; $result = $this->construct( $matchrule, "Tag" );
 			$_673 = NULL;
 			do {
 				if (( $subres = $this->literal( 'end_' ) ) !== FALSE) { $result["text"] .= $subres; }
@@ -4729,7 +4729,7 @@ EOC;
 		// Include top level debugging comments if desired
 		if($includeDebuggingComments && $templateName && stripos($code, "<?xml") === false) {
 			$code = $this->includeDebuggingComments($code, $templateName);
-		}	
+		}
 		
 		return $code;
 	}
