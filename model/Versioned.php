@@ -1478,8 +1478,11 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function isLatestVersion() {
 		$version = self::get_latest_version($this->owner->class, $this->owner->ID);
-
-		return ($version->Version == $this->owner->Version);
+		if($version) {
+			return ($version->Version == $this->owner->Version);
+		}
+		
+		return false;
 	}
 
 	/**

@@ -46,7 +46,8 @@
 		this.defaults = {
 			fieldSelector: ':input:not(:submit)',
 			ignoreFieldSelector: "",
-			changedCssClass: 'changed'
+			changedCssClass: 'changed',
+			customChangeEvents: {}
 		};
 
 		var options = $.extend({}, this.defaults, _options);
@@ -88,9 +89,31 @@
 
 			// setup original values
 			var fields = this.getFields(), origVal;
-			fields.filter(':radio,:checkbox').bind('click.changetracker', onchange);
-			fields.not(':radio,:checkbox').bind('change.changetracker', onchange);
+
+			// omit radio buttons and checkboxes, along with any other selectors that have a custom change event
+			var omittedSelectors = [':radio', ':checkbox']
+				.concat($.map(options, function(key, val) {
+					if(typeof key === 'string') return key;
+				}))
+				.join(',');
+
+			fields.filter(omittedSelectors).on('click.changetracker', onchange);
+			fields.not(omittedSelectors).on('change.changetracker', onchange);
+			
+			// Handle omitted selectors
 			fields.each(function() {
+				// For selectors with custom change events
+				for(var selector in options.customChangeEvents) {
+					var eventName;
+					if(options.customChangeEvents.hasOwnProperty(selector)) {
+						eventName = options.customChangeEvents[selector];
+						if($(this).is(selector)) {
+							$(this).on(eventName, onchange);
+						}
+					}					
+				}
+
+				// For radio and checkbox
 				if($(this).is(':radio,:checkbox')) {
 					origVal = self.find(':input[name=' + $(this).attr('name') + ']:checked').val();
 				} else {
@@ -109,10 +132,10 @@
 
 		this.destroy = function() {
 			this.getFields()
-				.unbind('.changetracker')
+				.off('.changetracker')
 				.removeClass(options.changedCssClass)
 				.removeData('changetracker.origVal');
-			this.unbind('.changetracker')
+			this.off('.changetracker')
 				.removeData('changetracker');
 		};
 
@@ -155,4 +178,10 @@
 		}
 
 	};
+<<<<<<< daa665d7409b026dd4a659a2e9134def64e77ab6
 }(jQuery));
+=======
+
+
+}(jQuery));
+>>>>>>> NEW: check changed state text fields on keyup, rather than just change

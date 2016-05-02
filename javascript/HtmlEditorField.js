@@ -106,14 +106,27 @@ ss.editorWrappers.tinyMCE = (function() {
 					});
 				}
 			});
-			this.instance.onChange.add(function(ed, l) {
-				// Update underlying textarea on every change, so external handlers
-				// such as changetracker have a chance to trigger properly.
-				ed.save();
-				jQuery(ed.getElement()).trigger('change');
-			});
-			// Add more events here as needed.
+			
+			var changeHandler = function(wait) {
+				var timeoutID;
+				return function(ed) {
+					var context = this, args = arguments;
+					var later = function() {
+						timeoutID = null;
+						ed.save();
+						jQuery(ed.getElement()).trigger('change');
+					};					
+					clearTimeout(timeoutID);
+					timeoutID = setTimeout(later, wait);
+				};
+			};	
 
+			// Update underlying textarea on every change, so external handlers
+			// such as changetracker have a chance to trigger properly.
+			this.instance.onKeyUp.add(changeHandler(250));			
+			
+			// Add more events here as needed.
+			
 			this.instance.render();
 		},
 		/**
