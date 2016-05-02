@@ -3,6 +3,7 @@
 	height: 32px;
 	margin-right: 1rem;
 	position: relative;
+	box-shadow: none;
 }
 
 // Button icons
@@ -81,6 +82,8 @@
 
 // Specific button types
 .btn-link {
+	border-radius: $btn-border-radius; // needed for btn hover on some buttons
+
 	&:hover,
 	&:focus {
 		text-decoration: none;

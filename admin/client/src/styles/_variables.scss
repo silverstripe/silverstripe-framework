@@ -53,9 +53,9 @@ $border-color-dark: darken($background-main, 14);
 
 $enable-flex: true;
 // $enable-rounded: true;
-// $enable-shadows: false;
+// $enable-shadows: true;
 // $enable-gradients: false;
-// $enable-transitions: false;
+$enable-transitions: true;
 // $enable-hover-media-query: false;
 // $enable-grid-classes: true;
 
@@ -218,18 +218,18 @@ $text-muted: #7f8b97;
 //
 // Define common padding and border radius sizes and more.
 
-// $line-height-lg: (4 / 3);
-// $line-height-sm: 1.5;
-//
-// $border-radius: .25rem;
-// $border-radius-lg: .3rem;
-// $border-radius-sm: .2rem;
-//
-// $component-active-color: #fff;
-// $component-active-bg: $brand-primary;
-//
-// $caret-width: .3em;
-// $caret-width-lg: $caret-width;
+$line-height-lg: (4 / 3);
+$line-height-sm: 1.5;
+
+$border-radius: .23rem;
+$border-radius-lg: .25rem;
+$border-radius-sm: .154rem;
+
+$component-active-color: #fff;
+$component-active-bg: $brand-primary;
+
+$caret-width: .3em;
+$caret-width-lg: $caret-width;
 
 
 // Tables
@@ -295,9 +295,9 @@ $btn-danger-border: transparent;
 // $btn-padding-y-lg: .75rem;
 
 // Allows for customizing button radius independently from global border radius
-// $btn-border-radius: $border-radius;
-// $btn-border-radius-lg: $border-radius-lg;
-// $btn-border-radius-sm: $border-radius-sm;
+$btn-border-radius: $border-radius;
+$btn-border-radius-lg: $border-radius-lg;
+$btn-border-radius-sm: $border-radius-sm;
 
 
 // Forms
@@ -355,9 +355,9 @@ $btn-danger-border: transparent;
 // $dropdown-border-width: $border-width;
 // $dropdown-divider-bg: #e5e5e5;
 //
-// $dropdown-link-color: $gray-dark;
-// $dropdown-link-hover-color: darken($gray-dark, 5%);
-// $dropdown-link-hover-bg: #f5f5f5;
+$dropdown-link-color: $gray-dark;
+$dropdown-link-hover-color: darken($gray-dark, 5%);
+$dropdown-link-hover-bg: #f5f5f5;
 //
 // $dropdown-link-active-color: $component-active-color;
 // $dropdown-link-active-bg: $component-active-bg;
@@ -374,8 +374,8 @@ $btn-danger-border: transparent;
 
 // $zindex-navbar: 1000;
 // $zindex-dropdown: 1000;
-// $zindex-popover: 1060;
-// $zindex-tooltip: 1070;
+$zindex-popover: 1060;
+$zindex-tooltip: 1070;
 // $zindex-navbar-fixed: 1030;
 // $zindex-navbar-sticky: 1030;
 // $zindex-modal-bg: 1040;
@@ -527,18 +527,19 @@ $navbar-padding-vertical: ($spacer / 2);
 
 // Popovers
 
-// $popover-bg: #fff;
-// $popover-max-width: 276px;
-// $popover-border-width: $border-width;
-// $popover-border-color: rgba(0,0,0,.2);
-//
-// $popover-title-bg: darken($popover-bg, 3%);
-//
-// $popover-arrow-width: 10px;
-// $popover-arrow-color: $popover-bg;
-//
-// $popover-arrow-outer-width: ($popover-arrow-width + 1);
-// $popover-arrow-outer-color: fade-in($popover-border-color, 0.05);
+$popover-bg: #fff;
+$popover-max-width: 276px;
+$popover-border-width: $border-width;
+$popover-border-color: rgba($border-color,.9);
+
+$popover-title-bg: darken($popover-bg, 3%);
+
+$popover-arrow-width: 10px;
+$popover-arrow-color: $popover-bg;
+
+$popover-arrow-outer-width: ($popover-arrow-width + 1);
+$popover-arrow-outer-color: fade-in($popover-border-color, 0.1);
+$popover-padding: $spacer-y $spacer-x;
 
 
 // Labels
@@ -617,24 +618,24 @@ $navbar-padding-vertical: ($spacer / 2);
 
 // List group
 
-// $list-group-bg: #fff;
-// $list-group-border-color: #ddd;
-// $list-group-border-width: $border-width;
-// $list-group-border-radius: $border-radius;
-//
-// $list-group-hover-bg: #f5f5f5;
-// $list-group-active-color: $component-active-color;
-// $list-group-active-bg: $component-active-bg;
-// $list-group-active-border: $list-group-active-bg;
-// $list-group-active-text-color: lighten($list-group-active-bg, 40%);
-//
-// $list-group-disabled-color: $gray-light;
-// $list-group-disabled-bg: $gray-lighter;
-// $list-group-disabled-text-color: $list-group-disabled-color;
-//
-// $list-group-link-color: #555;
-// $list-group-link-hover-color: $list-group-link-color;
-// $list-group-link-heading-color: #333;
+$list-group-bg: #fff;
+$list-group-border-color: #ddd;
+$list-group-border-width: $border-width;
+$list-group-border-radius: $border-radius;
+
+$list-group-hover-bg: #f5f5f5;
+$list-group-active-color: $component-active-color;
+$list-group-active-bg: $component-active-bg;
+$list-group-active-border: $list-group-active-bg;
+$list-group-active-text-color: lighten($list-group-active-bg, 40%);
+
+$list-group-disabled-color: $gray-light;
+$list-group-disabled-bg: $gray-lighter;
+$list-group-disabled-text-color: $list-group-disabled-color;
+
+$list-group-link-color: #555;
+$list-group-link-hover-color: $list-group-link-color;
+$list-group-link-heading-color: #333;
 
 
 // Image thumbnails

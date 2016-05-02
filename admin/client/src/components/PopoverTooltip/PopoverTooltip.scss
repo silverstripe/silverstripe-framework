@@ -1,0 +1,39 @@
+// Popover: Custom styles built on top of the Bootstrap popover component
+
+.popover {
+	@include box-shadow(0 1px 8px 1px rgba(0,0,0,.2));
+	font-size: $font-size-base;
+	min-width: 230px;
+}
+.popover-title {
+	display: none;
+}
+.popover-content {
+	padding: $popover-padding;
+
+  // Unable to use classes within the popover, so we use elements to style
+	ul {
+		padding-left: 0 !important;
+		list-style-type: none;
+		margin-left: -$spacer-x;
+		margin-right: -$spacer-x;
+		margin-bottom: 0
+	}
+
+	a {
+		display: block;
+		padding: $spacer-y/4 $spacer-x;
+		color: $dropdown-link-color;
+
+		&:hover {
+			text-decoration: none;
+			background-color: $dropdown-link-hover-bg;
+			color: $dropdown-link-hover-color;
+		}
+	}
+}
+
+// Tooltip: custom styles built on top of the Bootstrap tooltip componentDidMount
+.tooltip {
+  
+}

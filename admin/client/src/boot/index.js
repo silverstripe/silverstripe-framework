@@ -39,6 +39,7 @@ function appBoot() {
   window.store.dispatch(configActions.setConfig(window.ss.config));
 }
 
+
 // TODO: This should be using `window.onload` but isn't because
 // Entwine hooks are being used to set up the <Provider>.
 // `window.onload` happens AFTER these Entwine hooks which means
