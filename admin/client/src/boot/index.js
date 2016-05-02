@@ -5,7 +5,7 @@ import createLogger from 'redux-logger';
 import ConfigHelpers from 'lib/Config';
 import router from 'lib/Router';
 import routeRegister from 'lib/RouteRegister';
-import ReducerRegister from 'lib/ReducerRegister';
+import reducerRegister from 'lib/ReducerRegister';
 import * as configActions from 'state/config/ConfigActions';
 import ConfigReducer from 'state/config/ConfigReducer';
 import FormReducer from 'state/form/FormReducer';
@@ -37,7 +37,6 @@ import CampaignAdmin from 'containers/CampaignAdmin/controller';
  */
 window.ss = window.ss || {};
 window.ss.router = router;
-window.ss.reducerRegister = new ReducerRegister();
 
 function getBasePath() {
   const a = document.createElement('a');
@@ -65,7 +64,7 @@ function appBoot() {
   reducerRegister.add('breadcrumbs', BreadcrumbsReducer);
 
   const initialState = {};
-  const rootReducer = combineReducers(window.ss.reducerRegister.getAll());
+  const rootReducer = combineReducers(reducerRegister.getAll());
   const middleware = [thunkMiddleware];
 
   if (window.ss.config.environment === 'dev') {
