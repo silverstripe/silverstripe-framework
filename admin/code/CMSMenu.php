@@ -79,8 +79,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		// doesn't work if called outside of a controller context (e.g. in _config.php)
 		// as the locale won't be detected properly. Use {@link LeftAndMain->MainMenu()} to update
 		// titles for existing menu entries
-		$defaultTitle = LeftAndMain::menu_title_for_class($controllerClass);
-		$menuTitle = _t("{$controllerClass}.MENUTITLE", $defaultTitle);
+		$menuTitle = LeftAndMain::menu_title($controllerClass);
 
 		return new CMSMenuItem($menuTitle, $link, $controllerClass, $menuPriority);
 	}
@@ -335,7 +334,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		$cmsClasses = self::get_cms_classes();
 		$entities = array();
 		foreach($cmsClasses as $cmsClass) {
-			$defaultTitle = LeftAndMain::menu_title_for_class($cmsClass);
+			$defaultTitle = LeftAndMain::menu_title($cmsClass, false);
 			$ownerModule = i18n::get_owner_module($cmsClass);
 			$entities["{$cmsClass}.MENUTITLE"] = array($defaultTitle, 'Menu title', $ownerModule);
 		}

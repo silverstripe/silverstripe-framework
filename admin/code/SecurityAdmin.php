@@ -297,7 +297,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	}
 
 	public function providePermissions() {
-		$title = _t("SecurityAdmin.MENUTITLE", LeftAndMain::menu_title_for_class($this->class));
+		$title = $this->menu_title();
 		return array(
 			"CMS_ACCESS_SecurityAdmin" => array(
 				'name' => _t('CMSMain.ACCESS', "Access to '{title}' section", array('title' => $title)),

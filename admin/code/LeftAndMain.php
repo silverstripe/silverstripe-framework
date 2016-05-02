@@ -683,14 +683,40 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	/**
-	 * Returns the menu title for the given LeftAndMain subclass.
-	 * Implemented static so that we can get this value without instantiating an object.
-	 * Menu title is *not* internationalised.
+	 * @deprecated 5.0
 	 */
 	public static function menu_title_for_class($class) {
+		Deprecation::notice('5.0', 'Use menu_title() instead');
+		return static::menu_title($class, false);
+	}
+
+	/**
+	 * Get menu title for this section (translated)
+	 *
+	 * @param string $class Optional class name if called on LeftAndMain directly
+	 * @param bool $localise Determine if menu title should be localised via i18n.
+	 * @return string Menu title for the given class
+	 */
+	public static function menu_title($class = null, $localise = true) {
+		if($class && is_subclass_of($class, __CLASS__)) {
+			// Respect oveloading of menu_title() in subclasses
+			return $class::menu_title(null, $localise);
+		}
+		if(!$class) {
+			$class = get_called_class();
+		}
+
+		// Get default class title
 		$title = Config::inst()->get($class, 'menu_title', Config::FIRST_SET);
-		if(!$title) $title = preg_replace('/Admin$/', '', $class);
-		return $title;
+		if(!$title) {
+			$title = preg_replace('/Admin$/', '', $class);
+		}
+
+		// Check localisation
+		if(!$localise) {
+			return $title;
+		}
+		return i18n::_t("{$class}.MENUTITLE", $title);
 	}
 
 	/**
@@ -799,11 +825,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 					// already set in CMSMenu::populate_menu(), but from a static pre-controller
 					// context, so doesn't respect the current user locale in _t() calls - as a workaround,
-					// we simply call LeftAndMain::menu_title_for_class() again
+					// we simply call LeftAndMain::menu_title() again
 					// if we're dealing with a controller
 					if($menuItem->controller) {
-						$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
-						$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
+						$title = LeftAndMain::menu_title($menuItem->controller);
 					} else {
 						$title = $menuItem->title;
 					}
@@ -878,11 +903,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return ArrayList
 	 */
 	public function Breadcrumbs($unlinked = false) {
-		$defaultTitle = LeftAndMain::menu_title_for_class($this->class);
-		$title = _t("{$this->class}.MENUTITLE", $defaultTitle);
 		$items = new ArrayList(array(
 			new ArrayData(array(
-				'Title' => $title,
+				'Title' => $this->menu_title(),
 				'Link' => ($unlinked) ? false : $this->Link()
 			))
 		));
@@ -1885,12 +1908,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return string
 	 */
 	public function SectionTitle() {
-		$class = get_class($this);
-		$defaultTitle = LeftAndMain::menu_title_for_class($class);
-		if($title = _t("{$class}.MENUTITLE", $defaultTitle)) return $title;
+		$title = $this->menu_title();
+		if($title) {
+			return $title;
+		}
 
 		foreach($this->MainMenu() as $menuItem) {
-			if($menuItem->LinkingMode != 'link') return $menuItem->Title;
+			if($menuItem->LinkingMode != 'link') {
+				return $menuItem->Title;
+			}
 		}
 	}
 
@@ -1928,7 +1954,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if($class == 'ModelAdmin') continue;
 			if(ClassInfo::classImplements($class, 'TestOnly')) continue;
 
-			$title = _t("{$class}.MENUTITLE", LeftAndMain::menu_title_for_class($class));
+			$title = LeftAndMain::menu_title($class);
 			$perms["CMS_ACCESS_" . $class] = array(
 				'name' => _t(
 					'CMSMain.ACCESS',

@@ -25,6 +25,14 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 			'Controller menu item has the correct priority');
 		CMSMenu::clear_menu();
 
+		// Add another controller
+		CMSMenu::add_controller('CMSMenuTest_CustomTitle');
+		$menuItems = CMSMenu::get_menu_items();
+		$menuItem = $menuItems['CMSMenuTest_CustomTitle'];
+		$this->assertInstanceOf('CMSMenuItem', $menuItem, 'Controller menu item is of class CMSMenuItem');
+		$this->assertEquals('CMSMenuTest_CustomTitle (localised)', $menuItem->title);
+		CMSMenu::clear_menu();
+
 		// Add a link to the menu
 		CMSMenu::add_link('LinkCode', 'link title', 'http://www.example.com');
 		$menuItems = CMSMenu::get_menu_items();
@@ -106,4 +114,19 @@ class CMSMenuTest_LeftAndMainController extends LeftAndMain implements TestOnly 
 	private static $menu_title = 'CMSMenuTest_LeftAndMainController';
 
 	private static $menu_priority = 50;
+}
+
+class CMSMenuTest_CustomTitle extends LeftAndMain implements TestOnly {
+
+	private static $url_segment = 'CMSMenuTest_CustomTitle';
+
+	private static $menu_priority = 50;
+
+	public static function menu_title($class = null, $localised = false) {
+		if($localised) {
+			return __CLASS__ . ' (localised)';
+		} else {
+			return __CLASS__ . ' (unlocalised)';
+		}
+	}
 }
