@@ -4,7 +4,7 @@
 		margin-left: -$spacer-y;
 		margin-right: -$spacer-y;
 		border-bottom: 1px solid $border-color-light;
-		margin-bottom: $spacer-y*.75;
+		margin-bottom: 0;
 	}
 
 	.list-group-item {
@@ -17,13 +17,22 @@
 		&:first-child {
 			border-top: none;
 		}
-		&:hover {
+		&:hover,
+		&:focus {
 			text-decoration: none;
 
 			.list-group-item--has-links {
 				display: block;
 				opacity: 1;
 			}
+		}
+
+		&:focus {
+			outline-width: 1px;
+	    outline-offset: -1px;
+	    outline-style: solid;
+			outline-color: $brand-primary;
+	    z-index: 1;
 		}
 
 		&.active {
@@ -36,10 +45,15 @@
 				color: #FFF;
 				opacity: 1;
 			}
+
+			// Focus color clashes with selected colour
+			&:focus {
+				outline-color: darken($brand-primary, 10%);
+			}
 		}
 	}
 
-	.list-group-item__heading {
+	.list-group-item-heading {
 		font-weight: 400;
 		font-size: 14px;
 		margin: 2px 0 5px;
@@ -52,7 +66,8 @@
 		display: block;
 		background: #ccc;
 		float: left;
-		margin: -12px 12px 0 -$spacer-y;
+		// See negate padding on bootstrap .list-group-item in _list-group.scss
+		margin: -12px 12px 0 (0 - $spacer-y);
 	}
 
 	.label {

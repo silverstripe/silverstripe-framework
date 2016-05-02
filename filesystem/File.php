@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Filesystem\Storage\DBFile;
 use SilverStripe\Filesystem\Thumbnail;
 use SilverStripe\Filesystem\ImageManipulation;
 use SilverStripe\Filesystem\Storage\AssetContainer;
@@ -65,7 +66,7 @@ use SilverStripe\Filesystem\Storage\AssetContainer;
  * @mixin Hierarchy
  * @mixin Versioned
  */
-class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumbnail {
+class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumbnail, CMSPreviewable {
 
 	use ImageManipulation;
 
@@ -709,7 +710,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	public function getURL($grant = true) {
 		if($this->File->exists()) {
 			return $this->File->getURL($grant);
-	}
+		}
 	}
 
 	/**
@@ -721,7 +722,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	public function getSourceURL($grant = true) {
 		if($this->File->exists()) {
 			return $this->File->getSourceURL($grant);
-	}
+		}
 	}
 
 	/**
@@ -1161,5 +1162,18 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 
 	public function canViewFile() {
 		return $this->File->canViewFile();
+	}
+
+	public function CMSEditLink() {
+		$link = null;
+		$this->extend('updateCMSEditLink', $link);
+		return $link;
+	}
+
+	public function PreviewLink($action = null) {
+		// No preview for non-images by default
+		$link = null;
+		$this->extend('updatePreviewLink', $link, $action);
+		return $link;
 	}
 }

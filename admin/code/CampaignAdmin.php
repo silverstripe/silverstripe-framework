@@ -233,6 +233,9 @@ JSON;
 	 * @return array
 	 */
 	protected function getChangeSetResource(ChangeSet $changeSet) {
+		// Before presenting the changeset to the client,
+		// synchronise it with new changes.
+		$changeSet->sync();
 		$hal = [
 			'_links' => [
 				'self' => [
@@ -291,6 +294,20 @@ JSON;
 			'Plural' => $baseSingleton->i18n_plural_name(),
 			'Thumbnail' => $changeSetItem->ThumbnailURL($thumbnailWidth, $thumbnailHeight),
 		];
+		// Get preview urls
+		$previews = $changeSetItem->getPreviewLinks();
+		if($previews) {
+			$hal['_links']['preview'] = $previews;
+		}
+
+		// Get edit link
+		$editLink = $changeSetItem->CMSEditLink();
+		if($editLink) {
+			$hal['_links']['edit'] = [
+				'href' => $editLink,
+			];
+		}
+
 		// Depending on whether the object was added implicitly or explicitly, set
 		// other related objects.
 		if($changeSetItem->Added === ChangeSetItem::IMPLICITLY) {

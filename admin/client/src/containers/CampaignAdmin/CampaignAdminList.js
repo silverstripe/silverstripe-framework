@@ -24,6 +24,7 @@ class CampaignAdminList extends SilverStripeComponent {
     super(props);
 
     this.handlePublish = this.handlePublish.bind(this);
+    this.handleItemSelected = this.handleItemSelected.bind(this);
   }
 
   componentDidMount() {
@@ -38,18 +39,17 @@ class CampaignAdminList extends SilverStripeComponent {
    * @return object
    */
   render() {
-    const itemID = 1; // todo - hook up to "click" handler for changesetitems
+    let itemID = this.props.campaign.changeSetItemId;
+    let previewUrl = null;
+    let previewType = null;
     const campaignId = this.props.campaignId;
     const campaign = this.props.record;
 
     // Trigger different layout when preview is enabled
-    const previewUrl = this.previewURLForItem(itemID);
     const itemGroups = this.groupItemsForSet();
-    const classNames = previewUrl ? 'cms-content__split cms-content__split--left-sm' : 'cms-content__split cms-content__split--none';
 
     // Get items in this set
     let accordionGroups = [];
-
     Object.keys(itemGroups).forEach(className => {
       const group = itemGroups[className];
       const groupCount = group.items.length;
@@ -60,15 +60,34 @@ class CampaignAdminList extends SilverStripeComponent {
 
       // Create items for this group
       group.items.forEach(item => {
-        // Add extra css class for published items
-        let itemClassName = '';
+        // Auto-select first item
+        if (!itemID) {
+          itemID = item.ID;
+        }
 
+        // Find preview url
+        const selected = (itemID === item.ID);
+        if (selected && item._links.preview) {
+          if (item._links.preview.Stage) {
+            previewUrl = item._links.preview.Stage.href;
+            previewType = item._links.preview.Stage.type;
+          } else if (item._links.preview.Live) {
+            previewUrl = item._links.preview.Live.href;
+            previewType = item._links.preview.Live.type;
+          }
+        }
+
+        // Add extra css class for published items
+        const itemClassNames = [];
         if (item.ChangeType === 'none' || campaign.State === 'published') {
-          itemClassName = 'list-group-item--published';
+          itemClassNames.push('list-group-item--published');
+        }
+        if (selected) {
+          itemClassNames.push('active');
         }
 
         accordionItems.push(
-          <AccordionItem key={item.ID} className={itemClassName}>
+          <AccordionItem key={item.ID} className={itemClassNames.join(' ')} handleClick={this.handleItemSelected} handleClickArg={item.ID} >
             <CampaignAdminItem item={item} campaign={this.props.record} />
           </AccordionItem>
         );
@@ -81,6 +100,11 @@ class CampaignAdminList extends SilverStripeComponent {
         </AccordionGroup>
       );
     });
+
+    // Get preview details
+    const classNames = previewUrl
+      ? 'cms-content__split cms-content__split--left-sm'
+      : 'cms-content__split cms-content__split--none';
 
     return (
       <div className={classNames}>
@@ -97,9 +121,19 @@ class CampaignAdminList extends SilverStripeComponent {
             {this.renderButtonToolbar()}
           </div>
         </div>
-        { previewUrl && <Preview previewUrl={previewUrl} /> }
+        { previewUrl && <Preview previewUrl={previewUrl} previewType={previewType} /> }
       </div>
     );
+  }
+
+  /**
+   * Callback for items being clicked on
+   *
+   * @param {object} event
+   * @param {number} itemId
+   */
+  handleItemSelected(event, itemId) {
+    this.props.campaignActions.selectChangeSetItem(itemId);
   }
 
   renderButtonToolbar() {
@@ -150,20 +184,6 @@ class CampaignAdminList extends SilverStripeComponent {
         <FormAction {...actionProps} />
       </div>
     );
-  }
-
-  /**
-   * Gets preview URL for itemid
-   * @param int id
-   * @returns string
-   */
-  previewURLForItem(id) {
-    if (!id) {
-      return '';
-    }
-
-    // hard code in baseurl for any itemid preview url
-    return document.getElementsByTagName('base')[0].href;
   }
 
   /**
@@ -222,6 +242,7 @@ class CampaignAdminList extends SilverStripeComponent {
 CampaignAdminList.propTypes = {
   campaign: React.PropTypes.shape({
     isPublishing: React.PropTypes.bool.isRequired,
+    changeSetItemId: React.PropTypes.number,
   }),
   campaignActions: React.PropTypes.object.isRequired,
   publishApi: React.PropTypes.func.isRequired,
