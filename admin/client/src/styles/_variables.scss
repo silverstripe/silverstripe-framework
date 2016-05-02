@@ -632,9 +632,9 @@ $navbar-padding-vertical: ($spacer / 2);
 // $list-group-disabled-bg: $gray-lighter;
 // $list-group-disabled-text-color: $list-group-disabled-color;
 //
-// $list-group-link-color: #555;
+$list-group-link-color: $body-color;
 // $list-group-link-hover-color: $list-group-link-color;
-// $list-group-link-heading-color: #333;
+$list-group-link-heading-color: $body-color;
 
 
 // Image thumbnails

@@ -60,7 +60,7 @@ class CampaignAdminItem extends SilverStripeComponent {
       <div>
         {thumbnail}
         <h4 className="list-group-item-heading">{item.Title}</h4>
-        <span className="list-group-item--is-linked"><i className="font-icon-link" /></span>
+        <span className="list-group-item--is-linked"><i className="font-icon-link"></i></span>
         {links}
         {badge.className && badge.Title &&
           <span className={badge.className}>{badge.Title}</span>
