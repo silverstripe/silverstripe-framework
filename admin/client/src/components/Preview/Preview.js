@@ -19,17 +19,12 @@ class Preview extends SilverStripeComponent {
         <a href="" className="cms-content__back-btn font-icon-left-open-big"></a>
         <div className="toolbar--south">
           <div className="btn-toolbar">
-            <button className="btn btn-secondary btn-secondary" type="button"><i className="font-icon-edit"></i> Edit</button>
-            {/* More options button and popover for Alpha 2
-              <a tabIndex="0" role="button" data-container="body" className="btn btn-link btn--options" title="" data-toggle="popover" data-trigger="focus" data-placement="top"
-              data-content="<ul><li><a href=''>Add to campaign</a></li><li><a href=''>Remove from campaign</a></li></ul>">
-              <i className="font-icon-dot-3"></i>
-            </a> */}
+            <button className="btn btn-secondary" type="button">
+              <i className="font-icon-edit"></i> edit
+            </button>
           </div>
         </div>
-
       </div>
-
     );
   }
 }

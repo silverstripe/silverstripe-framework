@@ -297,6 +297,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/components/Breadcrumb/Breadcrumb`,
       { expose: 'components/Breadcrumb/Breadcrumb' }
     )
+    .require(`${PATHS.ADMIN_JS_SRC}/components/PopoverTooltip/PopoverTooltip`,
+      { expose: 'components/PopoverTooltip/PopoverTooltip' }
+    )
     .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }
     )
@@ -382,6 +385,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('components/Toolbar/Toolbar')
     .external('components/FormBuilder/FormBuilder')
     .external('components/FormAction/FormAction')
+    .external('components/PopoverTooltip/PopoverTooltip')
     .external('deep-freeze')
     .external('components/GridField/GridField')
     .external('i18n')
