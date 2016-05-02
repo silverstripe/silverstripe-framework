@@ -833,6 +833,17 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals('007', $list->first()->ShirtNumber);
 	}
 
+	public function testFilterOnInvalidRelation() {
+		$this->setExpectedException(
+			'InvalidArgumentException',
+			"MascotAnimal is not a relation on model DataObjectTest_Team"
+		);
+		// Filter on missing relation 'MascotAnimal'
+		DataObjectTest_Team::get()
+			->filter('MascotAnimal.Name', 'Richard')
+			->toArray();
+	}
+
 	public function testFilterAndExcludeById() {
 		$id = $this->idFromFixture('DataObjectTest_SubTeam', 'subteam1');
 		$list = DataObjectTest_SubTeam::get()->filter('ID', $id);

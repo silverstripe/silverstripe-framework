@@ -641,16 +641,20 @@ class DataQuery {
 	 * mappings to the query object state. This has to be called
 	 * in any overloaded {@link SearchFilter->apply()} methods manually.
 	 *
-	 * @param String|array $relation The array/dot-syntax relation to follow
+	 * @param string|array $relation The array/dot-syntax relation to follow
 	 * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
 	 * if this relation will be used for sorting, and should not include duplicate rows.
-	 * @return The model class of the related item
+	 * @return string The model class of the related item
 	 */
 	public function applyRelation($relation, $linearOnly = false) {
 		// NO-OP
-		if(!$relation) return $this->dataClass;
+		if(!$relation) {
+			return $this->dataClass;
+		}
 
-		if(is_string($relation)) $relation = explode(".", $relation);
+		if(is_string($relation)) {
+			$relation = explode(".", $relation);
+		}
 
 		$modelClass = $this->dataClass;
 
@@ -682,6 +686,8 @@ class DataQuery {
 				);
 				$modelClass = $componentClass;
 
+			} else {
+				throw new InvalidArgumentException("$rel is not a relation on model $modelClass");
 			}
 		}
 
