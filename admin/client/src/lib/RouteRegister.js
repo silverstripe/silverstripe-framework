@@ -108,4 +108,29 @@ class RouteRegister {
   }
 }
 
-export default RouteRegister;
+/*
+ * We're assigning an instances to the `ss` namespace because singletons only
+ * work within the context on a single Browserify bundle.
+ *
+ * For example - the `lib` bundle exposes a singleton called `routeRegister`.
+ * If the `framework` imports `routeRegister`, as an external dependency, then
+ * all modules in `framework` will get the same copy of `register` when importing it.
+ *
+ * Likewise if the `custom` bundle imports `routeRegister` as an external dependency,
+ * all modules in `custom` will get the same copy of `routeRegister`.
+ *
+ * This works as expected within the context of one bundle, all modules in that bundle
+ * importing `routeRegister` get the exact same copy, a singleton.
+ *
+ * However this is not true across bundles. While all modules in `framework` get a single
+ * copy of `routeRegister` and all modules in `custom` get a single copy of `routeRegister`,
+ * the copy of `routeRegister` in `framework` is not the same copy of `routeRegister`
+ * available in `custom`.
+ *
+ * @TODO Look into SystemJS as a solution https://github.com/systemjs/systemjs
+ */
+
+window.ss = window.ss || {};
+window.ss.routeRegister = window.ss.routeRegister || new RouteRegister();
+
+export default window.ss.routeRegister;

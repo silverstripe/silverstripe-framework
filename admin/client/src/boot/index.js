@@ -4,7 +4,7 @@ import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import ConfigHelpers from 'lib/Config';
 import router from 'lib/Router';
-import RouteRegister from 'lib/RouteRegister';
+import routeRegister from 'lib/RouteRegister';
 import ReducerRegister from 'lib/ReducerRegister';
 import * as configActions from 'state/config/ConfigActions';
 import ConfigReducer from 'state/config/ConfigReducer';
@@ -37,7 +37,6 @@ import CampaignAdmin from 'containers/CampaignAdmin/controller';
  */
 window.ss = window.ss || {};
 window.ss.router = router;
-window.ss.routeRegister = new RouteRegister();
 window.ss.reducerRegister = new ReducerRegister();
 
 function getBasePath() {
@@ -92,7 +91,7 @@ function appBoot() {
   ConfigHelpers
     .getTopLevelRoutes()
     .forEach((route) => {
-      window.ss.routeRegister.add(`/${route}(/*?)?`, (ctx, next) => {
+      routeRegister.add(`/${route}(/*?)?`, (ctx, next) => {
         if (document.readyState !== 'complete') {
           next();
           return;
@@ -106,7 +105,7 @@ function appBoot() {
       });
     });
 
-  const registeredRoutes = window.ss.routeRegister.getAll();
+  const registeredRoutes = routeRegister.getAll();
 
   for (const route in registeredRoutes) {
     if (registeredRoutes.hasOwnProperty(route)) {
@@ -117,7 +116,7 @@ function appBoot() {
   router.start();
 
   // Clean up referneces to callbacks in the route register.
-  window.ss.routeRegister.removeAll();
+  routeRegister.removeAll();
 }
 
 window.onload = appBoot;

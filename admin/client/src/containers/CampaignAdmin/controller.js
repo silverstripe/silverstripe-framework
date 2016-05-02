@@ -4,13 +4,14 @@ import { Provider } from 'react-redux';
 import ConfigHelpers from 'lib/Config';
 import CampaignAdmin from './CampaignAdmin';
 import * as CampaignActions from 'state/campaign/CampaignActions';
+import routeRegister from 'lib/RouteRegister';
 
 document.addEventListener('DOMContentLoaded', () => {
   const config = ConfigHelpers.getSection('CampaignAdmin');
   const baseRoute = window.ss.router.resolveURLToBase(config.route);
   const viewRoute = window.ss.router.resolveURLToBase(config.campaignViewRoute);
 
-  window.ss.routeRegister.add(`${baseRoute}*`, (ctx, next) => {
+  routeRegister.add(`${baseRoute}*`, (ctx, next) => {
     ReactDOM.render(
       <Provider store={ctx.store}>
         <CampaignAdmin sectionConfig={config} securityId={window.ss.config.SecurityID} />
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     next();
   });
 
-  window.ss.routeRegister.add(viewRoute, (ctx) => {
+  routeRegister.add(viewRoute, (ctx) => {
     CampaignActions.showCampaignView(ctx.params.id, ctx.params.view)(ctx.store.dispatch);
   });
 });
