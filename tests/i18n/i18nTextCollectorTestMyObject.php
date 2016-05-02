@@ -12,7 +12,7 @@ class i18nTextCollectorTestMyObject extends DataObject implements TestOnly {
 	);
 
 	private static $has_many = array(
-		'SilverStripe\Model\Relation' => 'Group'
+		'Relation' => 'Group'
 	);
 
 	private static $singular_name = "My Object";

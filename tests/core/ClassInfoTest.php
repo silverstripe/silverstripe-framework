@@ -280,6 +280,6 @@ class ClassInfoTest_HasFields extends ClassInfoTest_NoFields {
 class ClassInfoTest_WithRelation extends ClassInfoTest_NoFields {
 
 	private static $has_one = array(
-		'SilverStripe\Model\Relation' => 'ClassInfoTest_HasFields'
+		'Relation' => 'ClassInfoTest_HasFields'
 	);
 }

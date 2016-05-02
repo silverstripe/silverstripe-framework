@@ -37,7 +37,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 				'PermissionProvider', ' ', 'AS', ' ', 'P',
 			),
 			array('silverstripe', '\\', 'test', '\\', 'ClassA'),
-			array('\\', 'SilverStripe\Model\DataObject'),
+			array('\\', 'DataObject'),
 		);
 
 		$this->assertEquals(count($expectedItems), count($parsedTokens));

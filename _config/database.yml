@@ -2,21 +2,33 @@
 name: databaseconnectors
 ---
 Injector:
+  MySQLSchemaManager:
+    class: 'SilverStripe\Model\Connect\MySQLSchemaManager'
+    type: prototype
+  MySQLQueryBuilder:
+    class: 'SilverStripe\Model\Connect\MySQLQueryBuilder'
+    type: prototype
   MySQLPDODatabase:
-    class: 'MySQLDatabase'
+    class: 'SilverStripe\Model\Connect\MySQLDatabase'
     properties:
       connector: %$PDOConnector
       schemaManager: %$MySQLSchemaManager
       queryBuilder: %$MySQLQueryBuilder
   MySQLDatabase:
-    class: 'MySQLDatabase'
+    class: 'SilverStripe\Model\Connect\MySQLDatabase'
+    properties:
+      connector: %$MySQLiConnector
+      schemaManager: %$MySQLSchemaManager
+      queryBuilder: %$MySQLQueryBuilder
+  'SilverStripe\Model\Connect\MySQLDatabase':
+    class: 'SilverStripe\Model\Connect\MySQLDatabase'
     properties:
       connector: %$MySQLiConnector
       schemaManager: %$MySQLSchemaManager
       queryBuilder: %$MySQLQueryBuilder
   MySQLiConnector:
-    class: 'MySQLiConnector'
+    class: 'SilverStripe\Model\Connect\MySQLiConnector'
     type: prototype
   PDOConnector:
-    class: 'PDOConnector'
+    class: 'SilverStripe\Model\Connect\PDOConnector'
     type: prototype

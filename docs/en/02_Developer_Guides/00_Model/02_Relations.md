@@ -89,7 +89,7 @@ Ideally, the associated has_many (or belongs_to) should be specified with dot no
 
 		// Generates columns FanOfID and FanOfClass
 		private static $has_one = array(
-			"FanOf" => "DataObject"
+			"FanOf" => 'SilverStripe\Model\DataObject'
 		);
 	}
 

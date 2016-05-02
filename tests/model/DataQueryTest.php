@@ -333,7 +333,7 @@ class DataQueryTest_C extends DataObject implements TestOnly {
 class DataQueryTest_D extends DataObject implements TestOnly {
 
 	private static $has_one = array(
-		'SilverStripe\Model\Relation' => 'DataQueryTest_B',
+		'Relation' => 'DataQueryTest_B',
 	);
 }
 
