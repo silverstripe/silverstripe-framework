@@ -4,6 +4,7 @@
  * Contains the basic typography related styles for the admin interface.
  */
 
+
  // Tables
 // Used as a base for components: GridField.
 
@@ -57,4 +58,11 @@
 	code {
 		font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
 	}
+}
+
+.label {
+  text-transform: uppercase;
+  font-size: $font-size-xxs;
+  font-weight: 400;
+  letter-spacing: .4px;
 }
