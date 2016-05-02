@@ -31,7 +31,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 		$response = $this->get('GridFieldAddExistingAutocompleterTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$btns = $parser->getBySelector('.ss-gridfield #action_gridfield_relationfind');
+		$btns = $parser->getBySelector('.ss-gridfield .action_gridfield_relationfind');
 
 		$response = $this->post(
 			'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield/search'
@@ -74,7 +74,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 		$this->assertEquals(1, count($items));
 		$this->assertEquals($team1->ID, (int)$items[0]['data-id']);
 
-		$btns = $parser->getBySelector('.ss-gridfield #action_gridfield_relationadd');
+		$btns = $parser->getBySelector('.ss-gridfield .action_gridfield_relationadd');
 		$response = $this->post(
 			'GridFieldAddExistingAutocompleterTest_Controller/Form/field/testfield',
 			array(
