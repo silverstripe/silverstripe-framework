@@ -1,26 +1,27 @@
 <?php
 /**
- * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour, 
+ * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,
  * from a template-parsing perspective.
- * 
+ *
  * @package framework
  * @subpackage tests
  */
 class ViewableDataTest extends SapphireTest {
-	
+
 	public function testRequiresCasting() {
 		$caster = new ViewableDataTest_Castable();
-		
+
 		$this->assertTrue($caster->obj('alwaysCasted') instanceof ViewableDataTest_RequiresCasting);
 		$this->assertTrue($caster->obj('noCastingInformation') instanceof ViewableData_Caster);
-		
+
 		$this->assertTrue($caster->obj('alwaysCasted', null, false) instanceof ViewableDataTest_RequiresCasting);
 		$this->assertFalse($caster->obj('noCastingInformation', null, false) instanceof ViewableData_Caster);
 	}
 
 	public function testFailoverRequiresCasting() {
 		$caster = new ViewableDataTest_Castable();
-		$container = new ViewableDataTest_Container($caster);
+		$container = new ViewableDataTest_Container();
+		$container->setFailover($caster);
 
 		$this->assertTrue($container->obj('alwaysCasted') instanceof ViewableDataTest_RequiresCasting);
 		$this->assertTrue($caster->obj('alwaysCasted', null, false) instanceof ViewableDataTest_RequiresCasting);
@@ -28,7 +29,7 @@ class ViewableDataTest extends SapphireTest {
 		/* @todo This currently fails, because the default_cast static variable is always taken from the topmost
 		 * 	     object, not the failover object the field actually came from. Should we fix this, or declare current
 		 *       behaviour as correct?
-		 * 
+		 *
 		 * $this->assertTrue($container->obj('noCastingInformation') instanceof ViewableData_Caster);
 		 * $this->assertFalse($caster->obj('noCastingInformation', null, false) instanceof ViewableData_Caster);
 		*/
@@ -36,27 +37,27 @@ class ViewableDataTest extends SapphireTest {
 
 	public function testCastingXMLVal() {
 		$caster = new ViewableDataTest_Castable();
-		
+
 		$this->assertEquals('casted', $caster->XML_val('alwaysCasted'));
 		$this->assertEquals('noCastingInformation', $caster->XML_val('noCastingInformation'));
-		
+
 		// test automatic escaping is only applied by casted classes
 		$this->assertEquals('<foo>', $caster->XML_val('unsafeXML'));
 		$this->assertEquals('&lt;foo&gt;', $caster->XML_val('castedUnsafeXML'));
 	}
-	
+
 	public function testUncastedXMLVal() {
 		$caster = new ViewableDataTest_Castable();
 		$this->assertEquals($caster->XML_val('uncastedZeroValue'), 0);
 	}
-	
+
 	public function testArrayCustomise() {
 		$viewableData    = new ViewableDataTest_Castable();
 		$newViewableData = $viewableData->customise(array (
 			'test'         => 'overwritten',
 			'alwaysCasted' => 'overwritten'
 		));
-		
+
 		$this->assertEquals('test', $viewableData->XML_val('test'));
 		$this->assertEquals('casted', $viewableData->XML_val('alwaysCasted'));
 
@@ -99,7 +100,7 @@ class ViewableDataTest extends SapphireTest {
 		$data->test = 'This &amp; This';
 		$this->assertEquals($data->RAW_val('test'), 'This & This');
 	}
-	
+
 	public function testSQLVal() {
 		$data = new ViewableDataTest_Castable();
 		$this->assertEquals($data->SQL_val('test'), 'test');
@@ -156,36 +157,68 @@ class ViewableDataTest extends SapphireTest {
 
 		$this->assertEquals($uncastedData, $castedData->getValue(), 'Casted and uncasted strings are not equal.');
 	}
+
+	public function testCaching() {
+		$objCached = new ViewableDataTest_Cached();
+		$objNotCached = new ViewableDataTest_NotCached();
+
+		$objCached->Test = 'AAA';
+		$objNotCached->Test = 'AAA';
+
+		$this->assertEquals('AAA', $objCached->obj('Test', null, true, true));
+		$this->assertEquals('AAA', $objNotCached->obj('Test', null, true, true));
+
+		$objCached->Test = 'BBB';
+		$objNotCached->Test = 'BBB';
+
+		// Cached data must be always the same
+		$this->assertEquals('AAA', $objCached->obj('Test', null, true, true));
+		$this->assertEquals('BBB', $objNotCached->obj('Test', null, true, true));
+	}
+
+	public function testSetFailover() {
+		$failover = new ViewableData();
+		$container = new ViewableDataTest_Container();
+		$container->setFailover($failover);
+
+		$this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
+		$this->assertFalse($container->hasMethod('testMethod'), 'testMethod() is already defined when it shouldn’t be');
+
+		// Ensure that defined methods detected from the failover aren't cached when setting a new failover
+		$container->setFailover(new ViewableDataTest_Failover);
+		$this->assertTrue($container->hasMethod('testMethod'));
+	}
+
 }
 
 /**#@+
  * @ignore
  */
 class ViewableDataTest_Castable extends ViewableData {
-	
+
 	private static $default_cast = 'ViewableData_Caster';
-	
+
 	private static $casting = array (
 		'alwaysCasted'    => 'ViewableDataTest_RequiresCasting',
 		'castedUnsafeXML' => 'ViewableData_UnescaptedCaster'
 	);
-	
+
 	public $test = 'test';
-	
+
 	public $uncastedZeroValue = 0;
-	
+
 	public function alwaysCasted() {
 		return 'alwaysCasted';
 	}
-	
+
 	public function noCastingInformation() {
 		return 'noCastingInformation';
 	}
-	
+
 	public function unsafeXML() {
 		return '<foo>';
 	}
-	
+
 	public function castedUnsafeXML() {
 		return $this->unsafeXML();
 	}
@@ -196,47 +229,43 @@ class ViewableDataTest_Castable extends ViewableData {
 }
 
 class ViewableDataTest_RequiresCasting extends ViewableData {
-	
+
 	public $test = 'overwritten';
-	
+
 	public function forTemplate() {
 		return 'casted';
 	}
-	
+
 	public function setValue() {}
-	
+
 }
 
 class ViewableData_UnescaptedCaster extends ViewableData {
-	
+
 	protected $value;
-	
+
 	public function setValue($value) {
 		$this->value = $value;
 	}
-	
+
 	public function forTemplate() {
 		return Convert::raw2xml($this->value);
 	}
-	
+
 }
 
 class ViewableData_Caster extends ViewableData {
-	
+
 	public function forTemplate() {
 		return 'casted';
 	}
-	
+
 	public function setValue() {}
-	
+
 }
 
 class ViewableDataTest_Container extends ViewableData {
 
-	public function __construct($failover) {
-		$this->failover = $failover;
-		parent::__construct();
-	}
 }
 
 class ViewableDataTest_CastingClass extends ViewableData {
@@ -253,4 +282,19 @@ class ViewableDataTest_NoCastingInformation extends ViewableData {
 	}
 }
 
-/**#@-*/
+class ViewableDataTest_Cached extends ViewableData {
+	public $Test;
+}
+
+class ViewableDataTest_NotCached extends ViewableData {
+	public $Test;
+
+	protected function objCacheGet($key) {
+		// Disable caching
+		return null;
+	}
+}
+
+class ViewableDataTest_Failover extends ViewableData {
+	public function testMethod() {}
+}

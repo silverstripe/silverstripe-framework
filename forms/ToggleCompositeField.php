@@ -18,6 +18,8 @@ class ToggleCompositeField extends CompositeField {
 	protected $headingLevel = 3;
 
 	/**
+	 * @inheritdoc
+	 *
 	 * @param string $name
 	 * @param string $title
 	 * @param array|FieldList $children
@@ -30,9 +32,11 @@ class ToggleCompositeField extends CompositeField {
 	}
 
 	/**
+	 * @inheritdoc
+	 *
 	 * @param array $properties
 	 *
-	 * @return HTMLText
+	 * @return string|HTMLText
 	 */
 	public function FieldHolder($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
@@ -40,7 +44,7 @@ class ToggleCompositeField extends CompositeField {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/ToggleCompositeField.js');
 
-		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery.ui.css');
+		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 
 		$context = $this;
 
@@ -52,7 +56,9 @@ class ToggleCompositeField extends CompositeField {
 	}
 
 	/**
-	 * {@inheritdoc}
+	 * @inheritdoc
+	 *
+	 * @return array
 	 */
 	public function getAttributes() {
 		$attributes = array(
@@ -105,7 +111,7 @@ class ToggleCompositeField extends CompositeField {
 	 * @return $this
 	 */
 	public function setHeadingLevel($headingLevel) {
-		$this->headingLevel = $headingLevel;
+		$this->headingLevel = (int) $headingLevel;
 
 		return $this;
 	}

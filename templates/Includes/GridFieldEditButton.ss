@@ -1,1 +1,1 @@
-<a class="action action-detail edit-link" href="$Link" title="<% _t('GridFieldEditButton_ss.EDIT', 'Edit') %>"><% _t('GridFieldEditButton_ss.EDIT', 'Edit') %></a>
+<a class="action action-detail edit-link" href="$Link" title="<%t GridFieldEditButton_ss.EDIT 'Edit' %>"><%t GridFieldEditButton_ss.EDIT 'Edit' %></a>

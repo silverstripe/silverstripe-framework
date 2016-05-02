@@ -10,7 +10,7 @@
  * @package framework
  * @subpackage model
  */
-interface SS_Filterable {
+interface SS_Filterable extends SS_List {
 
 	/**
 	 * Returns TRUE if the list can be filtered by a given field expression.
@@ -19,7 +19,7 @@ interface SS_Filterable {
 	 * @return bool
 	 */
 	public function canFilterBy($by);
-	
+
 	/**
 	 * Return a new instance of this list that only includes items with these charactaristics
 	 *

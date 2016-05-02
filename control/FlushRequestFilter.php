@@ -15,7 +15,7 @@ class FlushRequestFilter implements RequestFilter {
 		}
 
 		return true;
-	}	
+	}
 
 	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
 		return true;

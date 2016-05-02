@@ -73,7 +73,7 @@ Enable multiple fileuploads by using a many_many (or has_many) relation. Again, 
 
 ```php
 	class GalleryImageExtension extends DataExtension {
-		private static $belongs_many_many = array('Galleries' => 'GalleryPage);
+		private static $belongs_many_many = array('Galleries' => 'GalleryPage');
 	}
 ```
 
@@ -110,7 +110,8 @@ This example will save all uploads in the `/assets/customfolder/` folder. If the
 		'Root.Upload',	
 		$uploadField = new UploadField(
 			$name = 'GalleryImages',
-			$title = 'Please upload one or more images'		)	
+			$title = 'Please upload one or more images'
+		)	
 	);
 	$uploadField->setFolderName('customfolder');
 ```
@@ -146,6 +147,16 @@ NOTE: this only sets the configuration for your UploadField, this does NOT chang
 	$sizeMB = 2; // 2 MB
 	$size = $sizeMB * 1024 * 1024; // 2 MB in bytes
 	$this->getValidator()->setAllowedMaxFileSize($size);
+```
+
+You can also specify a default global maximum file size setting in your config for different file types. This is overridden when specifying the max allowed file size on the UploadField instance.
+
+```yaml
+	Upload_Validator: 
+	  default_max_file_size: 
+	    '[image]': '1m'
+	    '[doc]': '5m'
+	    'jpeg': 2000
 ```
 
 ### Preview dimensions
@@ -296,6 +307,19 @@ Certain default values for the above can be configured using the YAML config sys
 ```
 
 The above settings can also be set on a per-instance basis by using `setConfig` with the appropriate key.
+
+The `Upload_Validator` class has configuration options for setting the `default_max_file_size`.
+
+```yaml
+	Upload_Validator: 
+	  default_max_file_size: 
+	    '[image]': '1m'
+	    '[doc]': '5m'
+	    'jpeg': 2000
+```
+
+You can specify the file extension or the app category (as specified in the `File` class) in square brackets. It supports setting the file size in bytes or using the syntax supported by `File::ini2bytes()`.
+
 
 You can also configure the underlying [api:Upload] class, by using the YAML config system.
 

@@ -10,11 +10,11 @@
  * <code>
  * $factory = new FixtureFactory();
  * $relatedObj = $factory->createObject(
- * 	'MyRelatedClass', 
+ * 	'MyRelatedClass',
  * 	'relation1'
  * );
  * $obj = $factory->createObject(
- * 	'MyClass', 
+ * 	'MyClass',
  * 	'object1'
  * 	array('MyRelationName' => '=>MyRelatedClass.relation1')
  * );
@@ -25,7 +25,7 @@
  * @subpackage core
  */
 class FixtureFactory {
-	
+
 	/**
 	 * @var array Array of fixture items, keyed by class and unique identifier,
 	 * with values being the generated database ID. Does not store object instances.
@@ -50,14 +50,14 @@ class FixtureFactory {
 				'FixtureBlueprint', $name, $class, $defaults
 			);
 		}
-		
+
 		return $this;
 	}
 
 	/**
 	 * Writes the fixture into the database using DataObjects
 	 *
-	 * @param String $name Name of the {@link FixtureBlueprint} to use, 
+	 * @param String $name Name of the {@link FixtureBlueprint} to use,
 	 *                     usually a DataObject subclass.
 	 * @param String $identifier Unique identifier for this fixture type
 	 * @param Array $data Map of properties. Overrides default data.
@@ -78,7 +78,7 @@ class FixtureFactory {
 
 		return $obj;
 	}
-	
+
 	/**
 	 * Writes the fixture into the database directly using a database manipulation.
 	 * Does not use blueprints. Only supports tables with a primary key.
@@ -89,12 +89,13 @@ class FixtureFactory {
 	 * @return Int Database identifier
 	 */
 	public function createRaw($table, $identifier, $data) {
-		$manipulation = array($table => array("fields" => array(), "command" => "insert")); 
-		foreach($data as $fieldName => $fieldVal) { 
-			$manipulation[$table]["fields"][$fieldName] = "'" . $this->parseValue($fieldVal) . "'"; 
+		$fields = array();
+		foreach($data as $fieldName => $fieldVal) {
+			$fields["\"{$fieldName}\""] = $this->parseValue($fieldVal);
 		}
-		DB::manipulate($manipulation);
-		$id = DB::getGeneratedID($table);
+		$insert = new SQLInsert("\"{$table}\"", $fields);
+		$insert->execute();
+		$id = DB::get_generated_id($table);
 		$this->fixtures[$table][$identifier] = $id;
 
 		return $id;
@@ -112,10 +113,10 @@ class FixtureFactory {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Return all of the IDs in the fixture of a particular class name.
-	 * 
+	 *
 	 * @return A map of fixture-identifier => object-id
 	 */
 	public function getIds($class) {
@@ -127,7 +128,7 @@ class FixtureFactory {
 	}
 
 	/**
-	 * @param String 
+	 * @param String
 	 * @param String $identifier
 	 * @param Int $databaseId
 	 */
@@ -138,7 +139,7 @@ class FixtureFactory {
 
 	/**
 	 * Get an object from the fixture.
-	 * 
+	 *
 	 * @param $class The data class, as specified in your fixture file.  Parent classes won't work
 	 * @param $identifier The identifier string, as provided in your fixture file
 	 */
@@ -159,7 +160,7 @@ class FixtureFactory {
 	 * Remove all fixtures previously defined through {@link createObject()}
 	 * or {@link createRaw()}, both from the internal fixture mapping and the database.
 	 * If the $class argument is set, limit clearing to items of this class.
-	 * 
+	 *
 	 * @param String $class
 	 */
 	public function clear($limitToClass = null) {
@@ -171,10 +172,10 @@ class FixtureFactory {
 					$class::get()->byId($dbId)->delete();
 				} else {
 					$table = $class;
-					DB::manipulate(array(
-						$table => array("fields" => array('ID' => $dbId), 
-							"command" => "delete")
+					$delete = new SQLDelete("\"$table\"", array(
+						"\"$table\".\"ID\"" => $dbId
 					));
+					$delete->execute();
 				}
 
 				unset($this->fixtures[$class][$id]);
@@ -198,7 +199,7 @@ class FixtureFactory {
 	}
 
 	/**
-	 * Parse a value from a fixture file.  If it starts with => 
+	 * Parse a value from a fixture file.  If it starts with =>
 	 * it will get an ID from the fixture dictionary
 	 *
 	 * @param String $fieldVal
@@ -222,5 +223,5 @@ class FixtureFactory {
 			return $value;
 		}
 	}
-	
+
 }

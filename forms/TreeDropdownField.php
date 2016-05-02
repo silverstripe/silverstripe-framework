@@ -1,36 +1,36 @@
 <?php
 /**
- * Dropdown-like field that allows you to select an item from a hierarchical 
+ * Dropdown-like field that allows you to select an item from a hierarchical
  * AJAX-expandable tree.
- * 
- * Creates a field which opens a dropdown (actually a div via javascript 
- * included for you) which contains a tree with the ability to select a singular 
- * item for the value of the field. This field has the ability to store one-to-one 
+ *
+ * Creates a field which opens a dropdown (actually a div via javascript
+ * included for you) which contains a tree with the ability to select a singular
+ * item for the value of the field. This field has the ability to store one-to-one
  * joins related to hierarchy or a hierarchy based filter.
- * 
- * **Note:** your source object must use an implementation of hierarchy for this 
+ *
+ * **Note:** your source object must use an implementation of hierarchy for this
  * field to generate the tree correctly, e.g. {@link Group}, {@link SiteTree} etc.
- * 
+ *
  * All operations are carried out through javascript and provides no fallback
  * to non JS.
- * 
+ *
  * <b>Usage</b>.
- * 
+ *
  * <code>
  * static $has_one = array(
  *   'RightContent' => 'SiteTree'
  * );
- * 
+ *
  * function getCMSFields() {
  * ...
  * $treedropdownfield = new TreeDropdownField("RightContentID", "Choose a page to show on the right:", "SiteTree");
  * ..
  * }
  * </code>
- * 
- * This will generate a tree allowing the user to expand and contract subsections 
+ *
+ * This will generate a tree allowing the user to expand and contract subsections
  * to find the appropriate page to save to the field.
- * 
+ *
  * @see TreeMultiselectField for the same implementation allowing multiple selections
  * @see DropdownField for a simple dropdown field.
  * @see CheckboxSetField for multiple selections through checkboxes.
@@ -41,15 +41,15 @@
  */
 
 class TreeDropdownField extends FormField {
-	
+
 	private static $url_handlers = array(
 		'$Action!/$ID' => '$Action'
 	);
-	
+
 	private static $allowed_actions = array(
 		'tree'
 	);
-	
+
 	/**
 	 * @ignore
 	 */
@@ -59,18 +59,19 @@ class TreeDropdownField extends FormField {
 	 * @var string default child method in Hierarchy->getChildrenAsUL
 	 */
 	protected $childrenMethod = 'AllChildrenIncludingDeleted';
+
 	/**
 	 * @var string default child counting method in Hierarchy->getChildrenAsUL
 	 */
 	protected $numChildrenMethod = 'numChildren';
-	
+
 	/**
 	 * Used by field search to leave only the relevant entries
 	 */
 	protected $searchIds = null, $showSearch, $searchExpanded = array();
-	
+
 	/**
-	 * CAVEAT: for search to work properly $labelField must be a database field, 
+	 * CAVEAT: for search to work properly $labelField must be a database field,
 	 * or you need to setSearchFunction.
 	 *
 	 * @param string $name the field name
@@ -85,14 +86,14 @@ class TreeDropdownField extends FormField {
 	 *   a compact view. Note, that all value strings must be XML encoded
 	 *   safely prior to being passed in.
 	 *
-	 * @param string $keyField to field on the source class to save as the 
+	 * @param string $keyField to field on the source class to save as the
 	 *		field value (default ID).
-	 * @param string $labelField the field name to show as the human-readable 
+	 * @param string $labelField the field name to show as the human-readable
 	 *		value on the tree (default Title).
-	 * @param bool $showSearch enable the ability to search the tree by 
+	 * @param bool $showSearch enable the ability to search the tree by
 	 *		entering the text in the input field.
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID', 
+	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID',
 		$labelField = 'TreeTitle', $showSearch = true
 	) {
 
@@ -100,7 +101,7 @@ class TreeDropdownField extends FormField {
 		$this->keyField     = $keyField;
 		$this->labelField   = $labelField;
 		$this->showSearch	= $showSearch;
-		
+
 		//Extra settings for Folders
 		if ($sourceObject == 'Folder') {
 			$this->childrenMethod = 'ChildFolders';
@@ -122,9 +123,9 @@ class TreeDropdownField extends FormField {
 		$this->baseID = (int) $ID;
 		return $this;
 	}
-	
+
 	/**
-	 * Set a callback used to filter the values of the tree before 
+	 * Set a callback used to filter the values of the tree before
 	 * displaying to the user.
 	 *
 	 * @param callback $callback
@@ -133,13 +134,13 @@ class TreeDropdownField extends FormField {
 		if(!is_callable($callback, true)) {
 			throw new InvalidArgumentException('TreeDropdownField->setFilterCallback(): not passed a valid callback');
 		}
-		
+
 		$this->filterCallback = $callback;
 		return $this;
 	}
 
 	/**
-	 * Set a callback used to disable checkboxes for some items in the tree 
+	 * Set a callback used to disable checkboxes for some items in the tree
 	 *
 	 * @param callback $callback
 	 */
@@ -147,13 +148,13 @@ class TreeDropdownField extends FormField {
 		if(!is_callable($callback, true)) {
 			throw new InvalidArgumentException('TreeDropdownField->setDisableFunction(): not passed a valid callback');
 		}
-		
+
 		$this->disableCallback = $callback;
 		return $this;
 	}
-	
+
 	/**
-	 * Set a callback used to search the hierarchy globally, even before 
+	 * Set a callback used to search the hierarchy globally, even before
 	 * applying the filter.
 	 *
 	 * @param callback $callback
@@ -162,7 +163,7 @@ class TreeDropdownField extends FormField {
 		if(!is_callable($callback, true)) {
 			throw new InvalidArgumentException('TreeDropdownField->setSearchFunction(): not passed a valid callback');
 		}
-		
+
 		$this->searchCallback = $callback;
 		return $this;
 	}
@@ -184,18 +185,18 @@ class TreeDropdownField extends FormField {
 	 * {@link Hierarchy}. The method specified determines the structure of the returned list. Use "ChildFolders"
 	 * in place of the default to get a drop-down listing with only folders, i.e. not including the child elements in
 	 * the currently selected folder. setNumChildrenMethod() should be used as well for proper functioning.
-	 * 
+	 *
 	 * See {@link Hierarchy} for a complete list of possible methods.
 	 */
 	public function setChildrenMethod($method) {
 		$this->childrenMethod = $method;
 		return $this;
 	}
-	
+
 	/**
 	 * @param $method The parameter to numChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
 	 * {@link Hierarchy}. Should be used in conjunction with setChildrenMethod().
-	 * 
+	 *
 	 */
 	public function setNumChildrenMethod($method) {
 		$this->numChildrenMethod = $method;
@@ -203,16 +204,16 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @return string
+	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
-		
+
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jstree/jquery.jstree.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/javascript/TreeDropdownField.js');
-		
+
 		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
 
@@ -234,7 +235,7 @@ class TreeDropdownField extends FormField {
 
 		// TODO Implement for TreeMultiSelectField
 		$metadata = array(
-			'id' => $record ? $record->ID : null, 
+			'id' => $record ? $record->ID : null,
 			'ClassName' => $record ? $record->ClassName : $this->sourceObject
 		);
 
@@ -253,7 +254,7 @@ class TreeDropdownField extends FormField {
 	public function extraClass() {
 		return implode(' ', array(parent::extraClass(), ($this->showSearch ? "searchable" : null)));
 	}
-	
+
 	/**
 	 * Get the whole tree of a part of the tree via an AJAX request.
 	 *
@@ -270,11 +271,11 @@ class TreeDropdownField extends FormField {
 			$output .= "</ul>";
 			return $output;
 		}
-		
+
 		// Regular source specification
 		$isSubTree = false;
 
-		$this->search = Convert::Raw2SQL($request->requestVar('search'));
+		$this->search = $request->requestVar('search');
 		$ID = (is_numeric($request->latestparam('ID')))
 			? (int)$request->latestparam('ID')
 			: (int)$request->requestVar('ID');
@@ -291,26 +292,26 @@ class TreeDropdownField extends FormField {
 			if($this->baseID) {
 				$obj = DataObject::get_by_id($this->sourceObject, $this->baseID);
 			}
-			
+
 			if(!$this->baseID || !$obj) $obj = singleton($this->sourceObject);
 		}
-		
+
 		// pre-process the tree - search needs to operate globally, not locally as marking filter does
 		if ( $this->search != "" )
 			$this->populateIDs();
-		
+
 		if ($this->filterCallback || $this->search != "" )
 			$obj->setMarkingFilterFunction(array($this, "filterMarking"));
-		
+
 		$obj->markPartialTree($nodeCountThreshold = 30, $context = null,
 			$this->childrenMethod, $this->numChildrenMethod);
-		
+
 		// allow to pass values to be selected within the ajax request
 		if( isset($_REQUEST['forceValue']) || $this->value ) {
 			$forceValue = ( isset($_REQUEST['forceValue']) ? $_REQUEST['forceValue'] : $this->value);
 			if(($values = preg_split('/,\s*/', $forceValue)) && count($values)) foreach($values as $value) {
 				if(!$value || $value == 'unchanged') continue;
-				
+
 				$obj->markToExpose($this->objectForKey($value));
 			}
 		}
@@ -345,7 +346,7 @@ class TreeDropdownField extends FormField {
 						_t('LeftAndMain.TooManyPages', 'Too many pages')
 					);
 				}
-			};	
+			};
 		} else {
 			$nodeCountCallback = null;
 		}
@@ -355,7 +356,7 @@ class TreeDropdownField extends FormField {
 				"",
 				$titleFn,
 				null,
-				true, 
+				true,
 				$this->childrenMethod,
 				$this->numChildrenMethod,
 				true, // root call
@@ -368,7 +369,7 @@ class TreeDropdownField extends FormField {
 				'class="tree"',
 				$titleFn,
 				null,
-				true, 
+				true,
 				$this->childrenMethod,
 				$this->numChildrenMethod,
 				true, // root call
@@ -391,7 +392,7 @@ class TreeDropdownField extends FormField {
 		if ($this->search != "") {
 			return isset($this->searchIds[$node->ID]) && $this->searchIds[$node->ID] ? true : false;
 		}
-		
+
 		return true;
 	}
 
@@ -448,7 +449,7 @@ class TreeDropdownField extends FormField {
 	public function getSourceObject() {
 		return $this->sourceObject;
 	}
-	
+
 	/**
 	 * Populate $this->searchIds with the IDs of the pages matching the searched parameter and their parents.
 	 * Reverse-constructs the tree starting from the leaves. Initially taken from CMSSiteTreeFilter, but modified
@@ -471,6 +472,7 @@ class TreeDropdownField extends FormField {
 					$filters["Name:PartialMatch"] = $this->search;
 				}
 			}
+
 			if(empty($filters)) {
 				throw new InvalidArgumentException(sprintf(
 					'Cannot query by %s.%s, not a valid database column',
@@ -480,16 +482,16 @@ class TreeDropdownField extends FormField {
 			}
 			$res = DataObject::get($this->sourceObject)->filterAny($filters);
 		}
-		
+
 		if( $res ) {
 			// iteratively fetch the parents in bulk, until all the leaves can be accessed using the tree control
 			foreach($res as $row) {
 				if ($row->ParentID) $parents[$row->ParentID] = true;
 				$this->searchIds[$row->ID] = true;
 			}
-			
+
 			$sourceObject = $this->sourceObject;
-			
+
 			while (!empty($parents)) {
 				$items = $sourceObject::get()
 					->filter("ID",array_keys($parents));
@@ -511,11 +513,9 @@ class TreeDropdownField extends FormField {
 	 * @return DataObject
 	 */
 	protected function objectForKey($key) {
-		if($this->keyField == 'ID') {
-			return DataObject::get_by_id($this->sourceObject, $key);
-		} else {
-			return DataObject::get_one($this->sourceObject, "\"{$this->keyField}\" = '".Convert::raw2sql($key)."'");
-		}
+		return DataObject::get($this->sourceObject)
+			->filter($this->keyField, $key)
+			->first();
 	}
 
 	/**
@@ -526,10 +526,10 @@ class TreeDropdownField extends FormField {
 		$copy->setKeyField($this->keyField);
 		$copy->setLabelField($this->labelField);
 		$copy->setSourceObject($this->sourceObject);
-		
+
 		return $copy;
 	}
-	
+
 }
 
 /**
@@ -538,7 +538,7 @@ class TreeDropdownField extends FormField {
  */
 class TreeDropdownField_Readonly extends TreeDropdownField {
 	protected $readonly = true;
-	
+
 	public function Field($properties = array()) {
 		$fieldName = $this->labelField;
 		if($this->value) {

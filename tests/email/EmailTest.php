@@ -111,7 +111,7 @@ class EmailTest extends SapphireTest {
 		$oldProject = $project;
 		$project = 'emailtest';
 
-		Email::set_mailer(new EmailTest_Mailer());
+		Injector::inst()->registerService(new EmailTest_Mailer(), 'Mailer');
 		$email = new Email(
 			'from@example.com',
 			'to@example.com',
@@ -160,7 +160,7 @@ class EmailTest extends SapphireTest {
 		$oldProject = $project;
 		$project = 'emailtest';
 
-		Email::set_mailer(new EmailTest_Mailer());
+		Injector::inst()->registerService(new EmailTest_Mailer(), 'Mailer');
 		$email = new Email(
 			'from@example.com',
 			'to@example.com',

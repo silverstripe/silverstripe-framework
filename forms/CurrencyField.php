@@ -4,8 +4,8 @@
  * Limited to US-centric formats, including a hardcoded currency
  * symbol and decimal separators.
  * See {@link MoneyField} for a more flexible implementation.
- * 
- * @todo Add localization support, see http://open.silverstripe.com/ticket/2931 
+ *
+ * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  *
  * @package forms
  * @subpackage fields-formattedinput
@@ -17,7 +17,7 @@ class CurrencyField extends TextField {
 	 */
 	public function setValue($val) {
 		if(!$val) $val = 0.00;
-		$this->value = '$' . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
+		$this->value = Config::inst()->get('Currency','currency_symbol') . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
 		return $this;
 	}
 	/**
@@ -44,8 +44,10 @@ class CurrencyField extends TextField {
 	}
 
 	public function validate($validator) {
+        $currencySymbol = preg_quote(Config::inst()->get('Currency','currency_symbol'));
+        $regex = '/^\s*(\-?'.$currencySymbol.'?|'.$currencySymbol.'\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
 		if(!empty ($this->value)
-				&& !preg_match('/^\s*(\-?\$?|\$\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/', $this->value)) {
+				&& !preg_match($regex, $this->value)) {
 
 			$validator->validationError($this->name, _t('Form.VALIDCURRENCY', "Please enter a valid currency"),
 				"validation", false);
@@ -61,9 +63,9 @@ class CurrencyField extends TextField {
  * @subpackage fields-formattedinput
  */
 class CurrencyField_Readonly extends ReadonlyField{
-	
+
 	/**
-	 * overloaded to display the correctly formated value for this datatype 
+	 * overloaded to display the correctly formated value for this datatype
 	 */
 	public function Field($properties = array()) {
 		if($this->value){
@@ -76,14 +78,14 @@ class CurrencyField_Readonly extends ReadonlyField{
 		return "<span class=\"readonly ".$this->extraClass()."\" id=\"" . $this->id() . "\">$val</span>"
 			. "<input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
-	
+
 	/**
 	 * This already is a readonly field.
 	 */
 	public function performReadonlyTransformation() {
 		return clone $this;
 	}
-	
+
 }
 
 /**
@@ -92,11 +94,11 @@ class CurrencyField_Readonly extends ReadonlyField{
  * @subpackage fields-formattedinput
  */
 class CurrencyField_Disabled extends CurrencyField{
-	
+
 	protected $disabled = true;
-	
+
 	/**
-	 * overloaded to display the correctly formated value for this datatype 
+	 * overloaded to display the correctly formated value for this datatype
 	 */
 	public function Field($properties = array()) {
 		if($this->value){

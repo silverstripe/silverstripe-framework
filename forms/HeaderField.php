@@ -9,6 +9,7 @@
  * @subpackage fields-dataless
  */
 class HeaderField extends DatalessField {
+
 	/**
 	 * The level of the <h1> to <h6> HTML tag.
 	 *

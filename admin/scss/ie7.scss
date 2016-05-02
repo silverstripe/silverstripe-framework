@@ -6,7 +6,7 @@
 html {
 	overflow: hidden;
 }
- 
+
 //add line below the cms-content-toolbar
 .cms-content-toolbar {
 	padding-bottom:5px;
@@ -14,16 +14,16 @@ html {
 
 .cms-menu-list{
 	li{
-		list-style-type: none;      
+		list-style-type: none;
 	    width: 100%;
-	    float: left;    
+	    float: left;
 	    margin: 0px;
-	    padding: 0px;  
+	    padding: 0px;
 	}
 }
 
 
-/* Site tree 
+/* Site tree
 ------------------------- */
 
 //fix for the tree view modes not displaying inline
@@ -54,7 +54,7 @@ html {
 /* Forms and files area
 -----------------------------*/
 .field {
-	input.text, 
+	input.text,
 	textarea,
 	.TreeDropdownField {
 		width: 94%;	// Disable 100% width on IE7 because box-sizing is not respected
@@ -72,7 +72,7 @@ select {
 .ss-uploadfield-edit-iframe{
 	.field {
 		&.treedropdown{
-			height:150px !important;				
+			height:150px !important;
 		}
 		.TreeDropdownField {
 			ul{
@@ -115,11 +115,11 @@ select {
 
 .cms-menu-list{
 	li{
-		list-style-type: none;      
+		list-style-type: none;
 	    width: 100%;
-	    float: left;    
+	    float: left;
 	    margin: 0px;
-	    padding: 0px;  
+	    padding: 0px;
 	}
 }
 
@@ -131,7 +131,7 @@ select {
 	text-indent: 0px !important;
 }
 
-/* Gridfield 
+/* Gridfield
 ------------------------- */
 
 .cms table.ss-gridfield-table {
@@ -141,7 +141,7 @@ select {
 		width: auto;
 	}
 	tr th.extra span input {
-		//fix for filter and reset icons on datagrid 
+		//fix for filter and reset icons on datagrid
 		height:23px;
 	}
 }
@@ -179,7 +179,7 @@ select {
 .cms .cms-content .cms-content-fields {
 	.field.dropdown .middleColumn {
 		max-width:512px;
-	}	
+	}
 }
 
 //fix for input on datagrid pagination
@@ -216,10 +216,10 @@ table.ss-gridfield-table {
 		&.ss-gridfield-item.even {
 			background: #F0F4F7;
 		}
-	}	
-}	
+	}
+}
 
-//fix for view children arrow in pages list view 
+//fix for view children arrow in pages list view
 .cms .ss-gridfield table.ss-gridfield-table tbody {
 	td {
 		&.col-listChildrenLink {
@@ -233,14 +233,20 @@ table.ss-gridfield-table {
 }
 
 .ss-ui-button{
-	&.ss-gridfield-button-filter{		
+	&.ss-gridfield-button-filter{
 			border:none !important;
 	}
 }
 
 
 
-//fix for model admin filter styling 
+/**
+ * DEPRECATED:
+ * .cms-content-tools will be removed in 4.0
+ * Use .cms-content-filters instead.
+ *
+ * Fix for model admin filter styling
+ */
 .ModelAdmin .cms-content-fields .cms-content-tools .cms-panel-content {
 	.cms-search-form {
 		overflow:hidden;
@@ -254,27 +260,27 @@ table.ss-gridfield-table {
 // CMS Content header & tab fix
 .cms-content-header {
 	h2 {
-		float: left;	
+		float: left;
 		.section-icon {
 			display: none;
 		}
 	}
-	
+
 	.cms-content-header-tabs {
 		position: absolute;
 		right: 0;
-	}	
+	}
 }
 
 .ss-ui-button{
-	&.ss-gridfield-button-filter{		
+	&.ss-gridfield-button-filter{
 		border:none !important;
 	}
-}	
+}
 .cms-content-controls{
 	.preview-mode-selector.dropdown{
 		display:none !important;
-	} 
+	}
 }
 .cms .Actions > .cms-preview-toggle-link{
 	display:block;
@@ -282,7 +288,7 @@ table.ss-gridfield-table {
 
 @include IEVerticalPanelText;
 
-//IE7 can't use before and after. Compromise 
+//IE7 can't use before and after. Compromise
 .cms .cms-content-actions .Actions .action-menus.ss-ui-action-tabset {
 	width: 190px;
 	ul.ui-tabs-nav {
@@ -296,7 +302,7 @@ table.ss-gridfield-table {
 			background: transparent url(../images/sprites-32x32/arrow_up_lighter.png) no-repeat right top;
 			&:hover {
 				background: transparent url(../images/sprites-32x32/arrow_up_darker.png) no-repeat right top;
-			}		
+			}
 		}
 	}
 	.ui-tabs-panel button.ss-ui-button {

@@ -20,16 +20,19 @@ class ClassInfo {
 	}
 
 	/**
-	 * @todo Improve documentation
+	 * Returns true if a class or interface name exists.
+	 *
+	 * @param  string $class
+	 * @return bool
 	 */
 	public static function exists($class) {
-		return SS_ClassLoader::instance()->classExists($class);
+		return class_exists($class, false) || interface_exists($class, false) || SS_ClassLoader::instance()->getItemPath($class);
 	}
 
 	/**
 	 * Cache for {@link hasTable()}
 	 */
-	private static $_cache_all_tables = null;
+	private static $_cache_all_tables = array();
 
 	/**
 	 * @var Array Cache for {@link ancestry()}.
@@ -40,17 +43,11 @@ class ClassInfo {
 	 * @todo Move this to SS_Database or DB
 	 */
 	public static function hasTable($class) {
-		if(DB::isActive()) {
-			// Cache the list of all table names to reduce on DB traffic
-			if(empty(self::$_cache_all_tables)) {
-				self::$_cache_all_tables = array();
-				$tables = DB::query(DB::getConn()->allTablesSQL())->column();
-				foreach($tables as $table) self::$_cache_all_tables[strtolower($table)] = true;
-			}
-			return isset(self::$_cache_all_tables[strtolower($class)]);
-		} else {
-			return false;
+		// Cache the list of all table names to reduce on DB traffic
+		if(empty(self::$_cache_all_tables) && DB::is_active()) {
+			self::$_cache_all_tables = DB::get_schema()->tableList();
 		}
+		return !empty(self::$_cache_all_tables[strtolower($class)]);
 	}
 
 	public static function reset_db_cache() {
@@ -60,34 +57,43 @@ class ClassInfo {
 
 	/**
 	 * Returns the manifest of all classes which are present in the database.
+	 *
 	 * @param string $class Class name to check enum values for ClassName field
+	 * @param boolean $includeUnbacked Flag indicating whether or not to include
+	 * types that don't exist as implemented classes. By default these are excluded.
+	 * @return array List of subclasses
 	 */
 	public static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		$class = self::class_name($class);
-		$classes = DB::getConn()->enumValuesForField($class, 'ClassName');
+		$classes = DB::get_schema()->enumValuesForField($class, 'ClassName');
 		if (!$includeUnbacked) $classes = array_filter($classes, array('ClassInfo', 'exists'));
 		return $classes;
 	}
 
 	/**
 	 * Returns an array of the current class and all its ancestors and children
-	 * which have a DB table.
+	 * which require a DB table.
 	 *
 	 * @param string|object $class
 	 * @todo Move this into data object
 	 * @return array
 	 */
 	public static function dataClassesFor($class) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		$result = array();
 
 		$class = self::class_name($class);
 
 		$classes = array_merge(
 			self::ancestry($class),
-			self::subclassesFor($class));
+			self::subclassesFor($class)
+		);
 
 		foreach ($classes as $class) {
-			if (self::hasTable($class)) $result[$class] = $class;
+			if (DataObject::has_own_table($class)) $result[$class] = $class;
 		}
 
 		return $result;
@@ -101,6 +107,8 @@ class ClassInfo {
 	 * @return string
 	 */
 	public static function baseDataClass($class) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		$class = self::class_name($class);
 
 		if (!is_subclass_of($class, 'DataObject')) {
@@ -135,6 +143,8 @@ class ClassInfo {
 	 * @return array Names of all subclasses as an associative array.
 	 */
 	public static function subclassesFor($class) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		//normalise class case
 		$className = self::class_name($class);
 		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($class);
@@ -167,6 +177,7 @@ class ClassInfo {
 			);
 			return $nameOrObject;
 		}
+
 		$reflection = new ReflectionClass($nameOrObject);
 		return $reflection->getName();
 	}
@@ -180,6 +191,8 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function ancestry($class, $tablesOnly = false) {
+		if(is_string($class) && !class_exists($class)) return null;
+
 		$class = self::class_name($class);
 
 		$lClass = strtolower($class);
@@ -301,16 +314,20 @@ class ClassInfo {
 
 		//normalise class name
 		$candidateClass = self::class_name($candidateClass);
-
 		$exists = self::exists($candidateClass);
 
-		while($candidateClass && $candidateClass != 'DataObject' && $exists) {
-			if(DataObject::has_own_table($candidateClass)) {
-				$inst = singleton($candidateClass);
+		// Short circuit for fixed fields
+		$fixed = DataObject::config()->fixed_fields;
+		if($exists && isset($fixed[$fieldName])) {
+			return self::baseDataClass($candidateClass);
+		}
 
-				if($inst->hasOwnTableDatabaseField($fieldName)) {
-					break;
-				}
+		// Find regular field
+		while($candidateClass && $candidateClass != 'DataObject' && $exists) {
+			if( DataObject::has_own_table($candidateClass)
+				&& DataObject::has_own_table_database_field($candidateClass, $fieldName)
+			) {
+				break;
 			}
 
 			$candidateClass = get_parent_class($candidateClass);

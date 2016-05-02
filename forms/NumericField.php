@@ -83,12 +83,13 @@ class NumericField extends TextField {
 	}
 
 	/**
-	 * @param Validator $validator
+	 * Validate this field
 	 *
+	 * @param Validator $validator
 	 * @return bool
 	 */
 	public function validate($validator) {
-		if(!$this->value && !$validator->fieldIsRequired($this->name)) {
+		if(!$this->value) {
 			return true;
 		}
 

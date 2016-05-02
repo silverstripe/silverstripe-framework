@@ -31,6 +31,34 @@ functionality. It is usually added through the [api:DataObject::getCMSFields()] 
 		}
 	}
 
+### Specify which configuration to use
+
+By default, a config named 'cms' is used in any new [api:HTMLEditorField].
+
+If you have created your own [api:HtmlEditorConfig] and would like to use it,
+you can call `HtmlEditorConfig::set_active('myConfig')` and all subsequently created [api:HTMLEditorField]
+will use the configuration with the name 'myConfig'.
+
+You can also specify which [api:HtmlEditorConfig] to use on a per field basis via the construct argument.
+This is particularly useful if you need different configurations for multiple [api:HTMLEditorField] on the same page or form.
+
+	:::php
+	class MyObject extends DataObject {
+		private static $db = array(
+			'Content' => 'HTMLText',
+			'OtherContent' => 'HTMLText'
+		);
+		
+		public function getCMSFields() {
+			return new FieldList(array(
+				new HTMLEditorField('Content'),
+				new HTMLEditorField('OtherContent', 'Other content', $this->OtherContent, 'myConfig')
+			));
+		}
+	}
+
+In the above example, the 'Content' field will use the default 'cms' config while 'OtherContent' will be using 'myConfig'.
+
 ## Configuration
 
 To keep the JavaScript editor configuration manageable and extensible, we've wrapped it in a PHP class called 
@@ -41,7 +69,6 @@ There can be multiple configs, which should always be created / accessed using [
 then set the currently active config using `set_active()`.
 
 <div class="info" markdown="1">
-By default, a config named 'cms' is used in any field created throughout the CMS interface.
 </div>
 
 <div class="notice" markdown='1'>
@@ -190,6 +217,18 @@ To refresh a oEmbed cache, append `?flush=1` to a URL.
 </div>
 
 To disable oEmbed usage, set the `Oembed.enabled` configuration property to "false".
+
+## Limiting oembed URLs
+
+HtmlEditorField can have whitelists set on both the scheme (default http & https) and domains allowed when
+inserting files for use with oembed.
+
+This is performed through the config variables `HtmlEditorField_Toolbar::$fileurl_scheme_whitelist` and
+`HtmlEditorField_Toolbar::$fileurl_domain_whitelist`.
+
+Setting these configuration variables to empty arrays will disable the whitelist. Setting them to an array of
+lower case strings will require the scheme or domain respectively to exactly match one of those strings (no
+wildcards are currently supported).
 
 ### Doctypes
 

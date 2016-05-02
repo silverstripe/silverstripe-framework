@@ -2,15 +2,12 @@
 
 namespace SilverStripe\Framework\Test\Behaviour;
 
-use Behat\Behat\Context\ClosuredContextInterface,
-	Behat\Behat\Context\TranslatedContextInterface,
-	Behat\Behat\Context\BehatContext,
+use Behat\Behat\Context\BehatContext,
 	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException,
-	Behat\Mink\Exception\ElementNotFoundException,
-	Behat\Gherkin\Node\PyStringNode,
-	Behat\Gherkin\Node\TableNode,
-	Behat\Mink\Element\NodeElement;
+	Behat\Behat\Event\StepEvent,
+	Behat\Mink\Element\NodeElement,
+	Behat\Mink\Session,
+	WebDriver\Exception\UnexpectedAlertOpen;
 
 
 // PHPUnit
@@ -38,9 +35,33 @@ class CmsUiContext extends BehatContext {
 
 	/**
 	 * Get Mink session from MinkContext
+	 *
+	 * @return Session
 	 */
 	public function getSession($name = null) {
 		return $this->getMainContext()->getSession($name);
+	}
+
+	/**
+	 * Wait until CMS loading overlay isn't present.
+	 * This is an addition to the "ajax steps" logic in
+	 * SilverStripe\BehatExtension\Context\BasicContext
+	 * which also waits for any ajax requests to finish before continuing.
+	 *
+	 * The check also applies in when not in the CMS, which is a structural issue:
+	 * Every step could cause the CMS to be loaded, and we don't know if we're in the
+	 * CMS UI until we run a check.
+	 *
+	 * Excluding scenarios with @modal tag is required,
+	 * because modal dialogs stop any JS interaction
+	 *
+	 * @AfterStep ~@modal
+	 */
+	public function handleCmsLoadingAfterStep(StepEvent $event) {
+		$timeoutMs = $this->getMainContext()->getAjaxTimeout();
+		$this->getSession()->wait($timeoutMs,
+            "document.getElementsByClassName('cms-content-loading-overlay').length == 0"
+        );
 	}
 
 	/**
@@ -68,7 +89,7 @@ class CmsUiContext extends BehatContext {
 
 	protected function getCmsTabsElement() {
 		$this->getSession()->wait(
-			5000, 
+			5000,
 			"window.jQuery && window.jQuery('.cms-content-header-tabs').size() > 0"
 		);
 
@@ -81,7 +102,7 @@ class CmsUiContext extends BehatContext {
 
 	protected function getCmsContentToolbarElement() {
 		$this->getSession()->wait(
-			5000, 
+			5000,
 			"window.jQuery && window.jQuery('.cms-content-toolbar').size() > 0 "
 			. "&& window.jQuery('.cms-content-toolbar').children().size() > 0"
 		);
@@ -95,7 +116,7 @@ class CmsUiContext extends BehatContext {
 
 	protected function getCmsTreeElement() {
 		$this->getSession()->wait(
-			5000, 
+			5000,
 			"window.jQuery && window.jQuery('.cms-tree').size() > 0"
 		);
 
@@ -138,7 +159,7 @@ class CmsUiContext extends BehatContext {
 
 	/**
 	 * Applies a specific action to an element
-	 * 
+	 *
 	 * @param NodeElement $element Element to act on
 	 * @param string $action Action, which may be one of 'hover', 'double click', 'right click', or 'left click'
 	 * The default 'click' behaves the same as left click
@@ -205,12 +226,35 @@ class CmsUiContext extends BehatContext {
 		//Tries to find the first visiable toggle in the page
 		$page = $this->getSession()->getPage();
 		$toggle_elements = $page->findAll('css', '.toggle-expand');
-		assertNotNull($toggle_elements, 'Panel toggle not found');	
+		assertNotNull($toggle_elements, 'Panel toggle not found');
 		foreach($toggle_elements as $toggle){
 			if($toggle->isVisible()){
 				$toggle->click();
 			}
-		}		
+		}
+	}
+
+	/**
+	 * @When /^I (expand|collapse) the content filters$/
+	 */
+	public function iExpandTheContentFilters($action) {
+		$page = $this->getSession()->getPage();
+		$filterButton = $page->find('css', '#filters-button');
+		assertNotNull($filterButton, sprintf('Filter button link not found'));
+
+		$filterButtonCssClass = $filterButton->getAttribute('class');
+
+		if($action == 'expand') {
+			if(strpos($filterButtonCssClass, 'active') === false) {
+				$filterButton->click();
+			}
+		} else {
+			if(strpos($filterButtonCssClass, 'active') !== false) {
+				$filterButton->click();
+			}
+		}
+
+		$this->getSession()->wait(2000, 'window.jQuery(".cms-content-filters:animated").length === 0');
 	}
 
 	/**
@@ -245,7 +289,7 @@ class CmsUiContext extends BehatContext {
 	 */
 	public function iShouldSeeACmsTab($negate, $tab) {
 		$this->getSession()->wait(
-			5000, 
+			5000,
 			"window.jQuery && window.jQuery('.ui-tabs-nav').size() > 0"
 		);
 
@@ -270,7 +314,7 @@ class CmsUiContext extends BehatContext {
 	 */
 	public function iClickTheCmsTab($tab) {
 		$this->getSession()->wait(
-			5000, 
+			5000,
 			"window.jQuery && window.jQuery('.ui-tabs-nav').size() > 0"
 		);
 
@@ -330,10 +374,10 @@ class CmsUiContext extends BehatContext {
 
 		$driver->switchToIFrame('cms-preview-iframe');
 		$this->getSession()->wait(
-			5000, 
+			5000,
 			"window.jQuery && !window.jQuery('iframe[name=cms-preview-iframe]').hasClass('loading')"
 		);
-		$driver->switchToWindow($origWindowName);   
+		$driver->switchToWindow($origWindowName);
 	}
 
 	/**
@@ -344,7 +388,7 @@ class CmsUiContext extends BehatContext {
 		assertNotNull($controls, 'Preview controls not found');
 
 		$label = $controls->find('xpath', sprintf(
-			'.//label[(@for="%s")]', 
+			'.//label[(@for="%s")]',
 			$mode
 		));
 		assertNotNull($label, 'Preview mode switch not found');
@@ -362,7 +406,7 @@ class CmsUiContext extends BehatContext {
 		// TODO Remove once we have native support in Mink and php-webdriver,
 		// see https://groups.google.com/forum/#!topic/behat/QNhOuGHKEWI
 		$origWindowName = $driver->getWebDriverSession()->window_handle();
-		
+
 		$driver->switchToIFrame('cms-preview-iframe');
 		$this->getMainContext()->assertPageNotContainsText($content);
 		$driver->switchToWindow($origWindowName);
@@ -406,7 +450,7 @@ class CmsUiContext extends BehatContext {
 
 	/**
 	 * Workaround for chosen.js dropdowns or tree dropdowns which hide the original dropdown field.
-	 * 
+	 *
 	 * @When /^(?:|I )fill in the "(?P<field>(?:[^"]|\\")*)" dropdown with "(?P<value>(?:[^"]|\\")*)"$/
 	 * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for the "(?P<field>(?:[^"]|\\")*)" dropdown$/
 	 */
@@ -415,7 +459,7 @@ class CmsUiContext extends BehatContext {
 		$value = $this->fixStepArgument($value);
 
 		$nativeField = $this->getSession()->getPage()->find(
-			'named', 
+			'named',
 			array('select', $this->getSession()->getSelectorsHandler()->xpathLiteral($field))
 		);
 		if($nativeField && $nativeField->isVisible()) {
@@ -476,14 +520,14 @@ class CmsUiContext extends BehatContext {
 		assertNotNull($linkEl, 'Chosen.js link element not found');
 		$this->getSession()->wait(100); // wait for dropdown overlay to appear
 		$linkEl->click();
-			
+
 		if(in_array('treedropdown', explode(' ', $container->getAttribute('class')))) {
 			// wait for ajax dropdown to load
 			$this->getSession()->wait(
 				5000,
 				"window.jQuery && "
 				. "window.jQuery('#" . $container->getAttribute('id') . " .treedropdownfield-panel li').length > 0"
-			); 
+			);
 		} else {
 			// wait for dropdown overlay to appear (might be animated)
 			$this->getSession()->wait(300);
@@ -518,7 +562,7 @@ class CmsUiContext extends BehatContext {
 
 	/**
 	 * Returns the closest parent element having a specific class attribute.
-	 * 
+	 *
 	 * @param  NodeElement $el
 	 * @param  String  $class
 	 * @return Element|null

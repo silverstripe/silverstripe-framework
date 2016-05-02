@@ -3,7 +3,7 @@
  * Generates entropy values based on strongest available methods
  * (mcrypt_create_iv(), openssl_random_pseudo_bytes(), /dev/urandom, COM.CAPICOM.Utilities.1, mt_rand()).
  * Chosen method depends on operating system and PHP version.
- * 
+ *
  * @package framework
  * @subpackage security
  * @author Ingo Schommer
@@ -13,12 +13,12 @@ class RandomGenerator {
 	/**
 	 * Note: Returned values are not guaranteed to be crypto-safe,
 	 * depending on the used retrieval method.
-	 * 
+	 *
 	 * @return string Returns a random series of bytes
 	 */
 	public function generateEntropy() {
 		$isWin = preg_match('/WIN/', PHP_OS);
-		
+
 		// TODO Fails with "Could not gather sufficient random data" on IIS, temporarily disabled on windows
 		if(!$isWin) {
 			if(function_exists('mcrypt_create_iv')) {
@@ -63,9 +63,9 @@ class RandomGenerator {
 	 * Generates a random token that can be used for session IDs, CSRF tokens etc., based on
 	 * hash algorithms.
 	 *
-	 * If you are using it as a password equivalent (e.g. autologin token) do NOT store it 
+	 * If you are using it as a password equivalent (e.g. autologin token) do NOT store it
 	 * in the database as a plain text but encrypt it with Member::encryptWithUserSettings.
-	 * 
+	 *
 	 * @param String $algorithm Any identifier listed in hash_algos() (Default: whirlpool)
 	 *
 	 * @return String Returned length will depend on the used $algorithm
@@ -75,13 +75,14 @@ class RandomGenerator {
 	}
 
 	/**
-	 * @deprecated 3.1
+	 * @deprecated
 	 */
 	public function generateHash($algorithm = 'whirlpool') {
-		Deprecation::notice('3.1',
+		Deprecation::notice('4.0',
 			'RandomGenerator::generateHash is deprecated because of a confusing name that hints the output is secure, '.
 			'while in fact it is just a random string. Use RandomGenerator::randomToken instead.',
-			Deprecation::SCOPE_METHOD);
+			Deprecation::SCOPE_METHOD
+		);
 
 		return $this->randomToken($algorithm);
 	}

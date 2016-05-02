@@ -1,7 +1,7 @@
 <?php
 /**
  * Image_Backend
- * 
+ *
  * A backend for manipulation of images via the Image class
  *
  * @package framework
@@ -24,7 +24,7 @@ interface Image_Backend {
 	 * @return void
 	 */
 	public function writeTo($path);
-		
+
 	/**
 	 * setQuality
 	 *
@@ -32,26 +32,26 @@ interface Image_Backend {
 	 * @return void
 	 */
 	public function setQuality($quality);
-	
+
 	/**
 	 * setImageResource
-	 * 
+	 *
 	 * Set the backend-specific resource handling the manipulations. Replaces Image::setGD()
 	 *
 	 * @param mixed $resource
 	 * @return void
 	 */
 	public function setImageResource($resource);
-	
+
 	/**
 	 * getImageResource
-	 * 
+	 *
 	 * Get the backend-specific resource handling the manipulations. Replaces Image::getGD()
 	 *
 	 * @return mixed
 	 */
 	public function getImageResource();
-	
+
 	/**
 	 * hasImageResource
 	 *
@@ -67,7 +67,7 @@ interface Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function resize($width, $height);
-	
+
 	/**
 	 * resizeRatio
 	 *
@@ -76,7 +76,7 @@ interface Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function resizeRatio($maxWidth, $maxHeight, $useAsMinimum = false);
-	
+
 	/**
 	 * resizeByWidth
 	 *
@@ -84,7 +84,7 @@ interface Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function resizeByWidth($width);
-	
+
 	/**
 	 * resizeByHeight
 	 *
@@ -92,7 +92,7 @@ interface Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function resizeByHeight($height);
-	
+
 	/**
 	 * paddedResize
 	 *
@@ -101,7 +101,7 @@ interface Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function paddedResize($width, $height, $backgroundColor = "FFFFFF");
-	
+
 	/**
 	 * croppedResize
 	 *
@@ -110,4 +110,22 @@ interface Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function croppedResize($width, $height);
+
+	/**
+	 * imageAvailable
+	 *
+	 * @param string $filename
+	 * @param string $manipulation
+	 * @return boolean
+	 */
+	public function imageAvailable($filename, $manipulation);
+
+	/**
+	 * onBeforeDelete
+	 *
+	 * @param Image $frontend
+	 * @return void
+	 */
+	public function onBeforeDelete($frontend);
+
 }

@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class HTMLTextTest extends SapphireTest {
-	
+
 	/**
 	 * Test {@link HTMLText->LimitCharacters()}
 	 */
@@ -14,28 +14,28 @@ class HTMLTextTest extends SapphireTest {
 			'<p>This is some text in a paragraph.</p>' => 'This is some text in...',
 			'This text contains &amp; in it' => 'This text contains &amp;...'
 		);
-		
+
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new HTMLText('Test');
 			$textObj->setValue($originalValue);
 			$this->assertEquals($expectedValue, $textObj->LimitCharacters());
 		}
 	}
-	
+
 	public function testSummaryBasics() {
 		$cases = array(
 			'<h1>Should not take header</h1><p>Should take paragraph</p>' => 'Should take paragraph',
 			'<p>Should strip <b>tags, but leave</b> text</p>' => 'Should strip tags, but leave text',
 			'<p>Unclosed tags <br>should not phase it</p>' => 'Unclosed tags should not phase it',
 			'<p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
-			'<img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>' 
+			'<img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>'
 				=> 'Second paragraph',
 			'  <img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>'
 				=> 'Second paragraph',
 			'<p><img src="remove me">example <img src="include me">text words hello<img src="hello"></p>'
 				=> 'example text words hello',
 		);
-		
+
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new HTMLText('Test');
 			$textObj->setValue($originalValue);
@@ -50,7 +50,7 @@ class HTMLTextTest extends SapphireTest {
 			'<p>A sentence is. nicer than hard limits</p>' => 'A sentence is.',
 			'<p>But not. If it\'s too short</p>' => 'But not. If it\'s too...'
 		);
-		
+
 		foreach($cases as $originalValue => $expectedValue) {
 			$textObj = new HTMLText('Test');
 			$textObj->setValue($originalValue);
@@ -62,10 +62,10 @@ class HTMLTextTest extends SapphireTest {
 		$cases = array(
 			'...', ' -> more', ''
 		);
-		
+
 		$orig = '<p>Cut it off, cut it off</p>';
 		$match = 'Cut it off, cut';
-		
+
 		foreach($cases as $add) {
 			$textObj = new HTMLText();
 			$textObj->setValue($orig);
@@ -76,19 +76,19 @@ class HTMLTextTest extends SapphireTest {
 	public function testSummaryFlexTooBigShouldNotCauseError() {
 		$orig = '<p>Cut it off, cut it off</p>';
 		$match = 'Cut it off, cut';
-		
+
 		$textObj = new HTMLText();
 		$textObj->setValue($orig);
 		$this->assertEquals($match, $textObj->Summary(4, 10, ''));
 	}
-	
+
 	public function testSummaryInvalidHTML() {
 		$cases = array(
 			'It\'s got a <p<> tag, but<p junk true>This doesn\'t <a id="boo">make</b class="wa"> < ><any< sense</p>'
 				=> 'This doesn\'t make any',
 			'This doesn\'t <a style="much horray= true>even</b> < ><have< a <i>p tag' => 'This doesn\'t even have'
 		);
-		
+
 		foreach($cases as $orig => $match) {
 			$textObj = new HTMLText();
 			$textObj->setValue($orig);
@@ -107,13 +107,13 @@ class HTMLTextTest extends SapphireTest {
 			'&nbsp; Illustrator Eric Carle submitted new, bolder artwork for the 25th anniversary edition.</p>'
 				=> 'This classic picture book features a repetitive format that lends itself to audience interaction.'
 		);
-		
+
 		foreach($cases as $orig => $match) {
 			$textObj = new HTMLText();
 			$textObj->setValue($orig);
 			$this->assertEquals($match, $textObj->FirstSentence());
 		}
-	}	
+	}
 
 	public function testRAW() {
 		$data = DBField::create_field('HTMLText', 'This &amp; This');
@@ -122,7 +122,7 @@ class HTMLTextTest extends SapphireTest {
 		$data = DBField::create_field('HTMLText', 'This & This');
 		$this->assertEquals($data->RAW(), 'This & This');
 	}
-	
+
 	public function testXML() {
 		$data = DBField::create_field('HTMLText', 'This & This');
 		$this->assertEquals($data->XML(), 'This &amp; This');
@@ -184,7 +184,7 @@ class HTMLTextTest extends SapphireTest {
 			$textObj->whitelistContent('<meta content="Keep"><p>Remove</p><link href="Also Keep" />Remove Text'),
 			'Removes any elements not in whitelist excluding text elements'
 		);
-		
+
 		$textObj = new HTMLText('Test', 'meta,link,text()');
 		$this->assertEquals(
 			'<meta content="Keep"><link href="Also Keep">Keep Text',

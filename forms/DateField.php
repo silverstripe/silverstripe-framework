@@ -5,9 +5,9 @@ require_once 'Zend/Date.php';
  * Form field to display an editable date string,
  * either in a single `<input type="text">` field,
  * or in three separate fields for day, month and year.
- * 
+ *
  * # Configuration
- * 
+ *
  * - 'showcalendar' (boolean): Determines if a calendar picker is shown.
  *    By default, jQuery UI datepicker is used (see {@link DateField_View_JQuery}).
  * - 'jslocale' (string): Overwrites the "Locale" value set in this class.
@@ -25,38 +25,38 @@ require_once 'Zend/Date.php';
  *    Example: '2010-03-31', or '-7 days'
  * - 'max' (string): Maximum allowed date value (in ISO format, or strtotime() compatible).
  *    Example: '2010-03-31', or '1 year'
- * 
+ *
  * Depending which UI helper is used, further namespaced configuration options are available.
  * For the default jQuery UI, all options prefixed/namespaced with "jQueryUI." will be respected as well.
  * Example: <code>$myDateField->setConfig('jQueryUI.showWeek', true);</code>
  * See http://docs.jquery.com/UI/Datepicker for details.
- * 
+ *
  * # Localization
- * 
+ *
  * The field will get its default locale from {@link i18n::get_locale()}, and set the `dateformat`
- * configuration accordingly. Changing the locale through {@link setLocale()} will not update the 
+ * configuration accordingly. Changing the locale through {@link setLocale()} will not update the
  * `dateformat` configuration automatically.
- * 
+ *
  * See http://doc.silverstripe.org/framework/en/topics/i18n for more information about localizing form fields.
- * 
+ *
  * # Usage
- * 
+ *
  * ## Example: German dates with separate fields for day, month, year
- * 
+ *
  *   $f = new DateField('MyDate');
  *   $f->setLocale('de_DE');
  *   $f->setConfig('dmyfields', true);
- * 
+ *
  * # Validation
- * 
+ *
  * Caution: JavaScript validation is only supported for the 'en_NZ' locale at the moment,
  * it will be disabled automatically for all other locales.
- * 
+ *
  * @package forms
  * @subpackage fields-datetime
  */
 class DateField extends TextField {
-	
+
 	/**
 	 * @config
 	 * @var array
@@ -72,34 +72,34 @@ class DateField extends TextField {
 		'min' => null,
 		'max' => null,
 	);
-	
+
 	/**
 	 * @var array
 	 */
 	protected $config;
-		
+
 	/**
 	 * @var String
 	 */
 	protected $locale = null;
-	
+
 	/**
 	 * @var Zend_Date Just set if the date is valid.
 	 * {@link $value} will always be set to aid validation,
 	 * and might contain invalid values.
 	 */
 	protected $valueObj = null;
-	
+
 	public function __construct($name, $title = null, $value = null) {
 		if(!$this->locale) {
 			$this->locale = i18n::get_locale();
 		}
-		
+
 		$this->config = $this->config()->default_config;
 		if(!$this->getConfig('dateformat')) {
-			$this->setConfig('dateformat', i18n::get_date_format());
+			$this->setConfig('dateformat', Config::inst()->get('i18n', 'date_format'));
 		}
-		
+
 		foreach ($this->config()->default_config AS $defaultK => $defaultV) {
 			if ($defaultV) {
 				if ($defaultK=='locale')
@@ -114,28 +114,28 @@ class DateField extends TextField {
 
 	public function FieldHolder($properties = array()) {
 		if ($this->getConfig('showcalendar')) {
-			// TODO Replace with properly extensible view helper system 
-			$d = DateField_View_JQuery::create($this); 
+			// TODO Replace with properly extensible view helper system
+			$d = DateField_View_JQuery::create($this);
 			if(!$d->regionalSettingsExist()) {
 				$dateformat = $this->getConfig('dateformat');
 
-				// if no localefile is present, the jQuery DatePicker 
+				// if no localefile is present, the jQuery DatePicker
 				// month- and daynames will default to English, so the date
-				// will not pass Zend validatiobn. We provide a fallback  
+				// will not pass Zend validatiobn. We provide a fallback
 				if (preg_match('/(MMM+)|(EEE+)/', $dateformat)) {
 					$this->setConfig('dateformat', $this->getConfig('datavalueformat'));
 				}
-			} 
+			}
 			$d->onBeforeRender();
 		}
-		$html = parent::FieldHolder(); 
+		$html = parent::FieldHolder();
 
 		if(!empty($d)) {
-			$html = $d->onAfterRender($html); 
-		}	
+			$html = $d->onAfterRender($html);
+		}
 		return $html;
 	}
-	
+
 	function SmallFieldHolder($properties = array()){
 		$d = DateField_View_JQuery::create($this);
 		$d->onBeforeRender();
@@ -163,7 +163,7 @@ class DateField extends TextField {
 			$config['jqueryuiconfig'] =  Convert::array2json(array_filter($jqueryUIConfig));
 		$config = array_filter($config);
 		foreach($config as $k => $v) $this->setAttribute('data-' . $k, $v);
-		
+
 		// Three separate fields for day, month and year
 		if($this->getConfig('dmyfields')) {
 			// values
@@ -180,12 +180,12 @@ class DateField extends TextField {
 				->addExtraClass('month')
 				->setAttribute('placeholder', $this->getConfig('dmyplaceholders') ? $fieldNames['month'] : null)
 				->setMaxLength(2);
-			
+
 			$fieldYear = NumericField::create($this->name . '[year]', false, ($valArr) ? $valArr['year'] : null)
 				->addExtraClass('year')
 				->setAttribute('placeholder', $this->getConfig('dmyplaceholders') ? $fieldNames['year'] : null)
 				->setMaxLength(4);
-			
+
 			// order fields depending on format
 			$sep = $this->getConfig('dmyseparator');
 			$format = $this->getConfig('dateformat');
@@ -198,27 +198,27 @@ class DateField extends TextField {
 
 			// dmyfields doesn't work with showcalendar
 			$this->setConfig('showcalendar',false);
-		} 
+		}
 		// Default text input field
 		else {
 			$html = parent::Field();
 		}
-		
+
 		return $html;
 	}
 
 	public function Type() {
 		return 'date text';
 	}
-		
+
 	/**
 	 * Sets the internal value to ISO date format.
-	 * 
-	 * @param String|Array $val 
+	 *
+	 * @param String|Array $val
 	 */
 	public function setValue($val) {
 		$locale = new Zend_Locale($this->locale);
-		
+
 		if(empty($val)) {
 			$this->value = null;
 			$this->valueObj = null;
@@ -252,7 +252,7 @@ class DateField extends TextField {
 				if(!empty($val) && Zend_Date::isDate($val, $this->getConfig('dateformat'), $locale)) {
 					$this->valueObj = new Zend_Date($val, $this->getConfig('dateformat'), $locale);
 					$this->value = $this->valueObj->get($this->getConfig('dateformat'), $locale);
-					
+
 				}
 				// load ISO date from database (usually through Form->loadDataForm())
 				else if(!empty($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'))) {
@@ -268,7 +268,7 @@ class DateField extends TextField {
 
 		return $this;
 	}
-	
+
 	/**
 	 * @return String ISO 8601 date, suitable for insertion into database
 	 */
@@ -279,12 +279,12 @@ class DateField extends TextField {
 			return null;
 		}
 	}
-	
+
 	public function performReadonlyTransformation() {
 		$field = $this->castedCopy('DateField_Disabled');
 		$field->setValue($this->dataValue());
 		$field->readonly = true;
-		
+
 		return $field;
 	}
 
@@ -303,17 +303,17 @@ class DateField extends TextField {
 	/**
 	 * Validate an array with expected keys 'day', 'month' and 'year.
 	 * Used because Zend_Date::isDate() doesn't provide this.
-	 * 
+	 *
 	 * @param Array $val
 	 * @return boolean
 	 */
 	public function validateArrayValue($val) {
 		if(!is_array($val)) return false;
-		
+
 		// Validate against Zend_Date,
 		// but check for empty array keys (they're included in standard form submissions)
 		return (
-			array_key_exists('year', $val)  
+			array_key_exists('year', $val)
 			&& (!$val['year'] || Zend_Date::isDate($val['year'], 'yyyy', $this->locale))
 			&& array_key_exists('month', $val)
 			&& (!$val['month'] || Zend_Date::isDate($val['month'], 'MM', $this->locale))
@@ -321,15 +321,15 @@ class DateField extends TextField {
 			&& (!$val['day'] || Zend_Date::isDate($val['day'], 'dd', $this->locale))
 		);
 	}
-	
+
 	/**
-	 * @deprecated 3.2 Use the "DateField.default_config" config setting instead
+	 * @deprecated 4.0 Use the "DateField.default_config" config setting instead
 	 * @param String $k
 	 * @param mixed $v
 	 * @return boolean
 	 */
 	public static function set_default_config($k, $v) {
-		Deprecation::notice('3.2', 'Use the "DateField.default_config" config setting instead');
+		Deprecation::notice('4.0', 'Use the "DateField.default_config" config setting instead');
 		return Config::inst()->update('DateField', 'default_config', array($k => $v));
 	}
 
@@ -338,7 +338,7 @@ class DateField extends TextField {
 	 */
 	public function validate($validator) {
 		$valid = true;
-		
+
 		// Don't validate empty fields
 		if(empty($this->value)) return true;
 
@@ -350,17 +350,17 @@ class DateField extends TextField {
 		}
 		if(!$valid) {
 			$validator->validationError(
-				$this->name, 
+				$this->name,
 				_t(
-					'DateField.VALIDDATEFORMAT2', "Please enter a valid date format ({format})", 
+					'DateField.VALIDDATEFORMAT2', "Please enter a valid date format ({format})",
 					array('format' => $this->getConfig('dateformat'))
-				), 
-				"validation", 
+				),
+				"validation",
 				false
 			);
 			return false;
 		}
-		
+
 		// min/max - Assumes that the date value was valid in the first place
 		if($min = $this->getConfig('min')) {
 			// ISO or strtotime()
@@ -371,13 +371,13 @@ class DateField extends TextField {
 			}
 			if(!$this->valueObj || (!$this->valueObj->isLater($minDate) && !$this->valueObj->equals($minDate))) {
 				$validator->validationError(
-					$this->name, 
+					$this->name,
 					_t(
 						'DateField.VALIDDATEMINDATE',
-						"Your date has to be newer or matching the minimum allowed date ({date})", 
+						"Your date has to be newer or matching the minimum allowed date ({date})",
 						array('date' => $minDate->toString($this->getConfig('dateformat')))
 					),
-					"validation", 
+					"validation",
 					false
 				);
 				return false;
@@ -392,38 +392,38 @@ class DateField extends TextField {
 			}
 			if(!$this->valueObj || (!$this->valueObj->isEarlier($maxDate) && !$this->valueObj->equals($maxDate))) {
 				$validator->validationError(
-					$this->name, 
+					$this->name,
 					_t('DateField.VALIDDATEMAXDATE',
-						"Your date has to be older or matching the maximum allowed date ({date})", 
+						"Your date has to be older or matching the maximum allowed date ({date})",
 						array('date' => $maxDate->toString($this->getConfig('dateformat')))
 					),
-					"validation", 
+					"validation",
 					false
 				);
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getLocale() {
 		return $this->locale;
 	}
-	
+
 	/**
 	 * Caution: Will not update the 'dateformat' config value.
-	 * 
+	 *
 	 * @param String $locale
 	 */
 	public function setLocale($locale) {
 		$this->locale = $locale;
 		return $this;
 	}
-	
+
 	/**
 	 * @param string $name
 	 * @param mixed $val
@@ -447,11 +447,11 @@ class DateField extends TextField {
 				}
 				break;
 		}
-		
+
 		$this->config[$name] = $val;
 		return $this;
 	}
-	
+
 	/**
 	 * @param String $name Optional, returns the whole configuration array if empty
 	 * @return mixed|array
@@ -472,9 +472,9 @@ class DateField extends TextField {
  * @subpackage fields-datetime
  */
 class DateField_Disabled extends DateField {
-	
+
 	protected $disabled = true;
-		
+
 	public function Field($properties = array()) {
 		if($this->valueObj) {
 			if($this->valueObj->isToday()) {
@@ -489,45 +489,41 @@ class DateField_Disabled extends DateField {
 		} else {
 			$val = '<i>('._t('DateField.NOTSET', 'not set').')</i>';
 		}
-		
+
 		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
 	}
-	
+
 	public function Type() {
 		return "date_disabled readonly";
-	}
-	
-	public function validate($validator) {
-		return true;	
 	}
 }
 
 /**
  * Preliminary API to separate optional view properties
  * like calendar popups from the actual datefield logic.
- * 
+ *
  * Caution: This API is highly volatile, and might change without prior deprecation.
- * 
+ *
  * @package framework
  * @subpackage forms
  */
 class DateField_View_JQuery extends Object {
-	
+
 	protected $field;
-	
+
 	/*
 	 * the current jQuery UI DatePicker locale file
 	 */
-	protected $jqueryLocaleFile = '';	
-	
+	protected $jqueryLocaleFile = '';
+
 	/**
-	 * @var array Maps values from {@link i18n::$all_locales} to 
+	 * @var array Maps values from {@link i18n::$all_locales} to
 	 * localizations existing in jQuery UI.
 	 */
 	private static $locale_map = array(
 		'en_GB' => 'en-GB',
-		'en_US' => 'en', 
-		'en_NZ' => 'en-GB', 
+		'en_US' => 'en',
+		'en_NZ' => 'en-GB',
 		'fr_CH' => 'fr',
 		'pt_BR' => 'pt-BR',
 		'sr_SR' => 'sr-SR',
@@ -535,14 +531,14 @@ class DateField_View_JQuery extends Object {
 		'zh_HK' => 'zh-HK',
 		'zh_TW' => 'zh-TW',
 	);
-	
+
 	/**
 	 * @param DateField $field
 	 */
 	public function __construct($field) {
 		$this->field = $field;
 	}
-	
+
 	/**
 	 * @return DateField
 	 */
@@ -560,41 +556,41 @@ class DateField_View_JQuery extends Object {
 		if (file_exists(Director::baseFolder() . '/' .$localeFile)){
 			$this->jqueryLocaleFile = $localeFile;
 			return true;
-		} else { 
+		} else {
 			// file goes before internal en_US settings,
-			// but both will validate  
-			return ($lang == 'en'); 
+			// but both will validate
+			return ($lang == 'en');
 		}
-	}	
+	}
 
 	public function onBeforeRender() {
 	}
-	
+
 	/**
 	 * @param String $html
-	 * @return 
+	 * @return
 	 */
 	public function onAfterRender($html) {
 		if($this->getField()->getConfig('showcalendar')) {
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-			
+
 			// Include language files (if required)
 			if ($this->jqueryLocaleFile){
 				Requirements::javascript($this->jqueryLocaleFile);
 			}
-			
+
 			Requirements::javascript(FRAMEWORK_DIR . "/javascript/DateField.js");
 		}
-		
+
 		return $html;
 	}
-	
+
 	/**
 	 * Determines which language to use for jQuery UI, which
 	 * can be different from the value set in i18n.
-	 * 
+	 *
 	 * @return String
 	 */
 	protected function getLang() {
@@ -610,16 +606,16 @@ class DateField_View_JQuery extends Object {
 			// Fall back to default lang (meaning "en_US" turns into "en")
 			$lang = i18n::get_lang_from_locale($locale);
 		}
-		
+
 		return $lang;
 	}
-	
+
 	/**
 	 * Convert iso to jquery UI date format.
 	 * Needs to be consistent with Zend formatting, otherwise validation will fail.
 	 * Removes all time settings like hour/minute/second from the format.
 	 * See http://docs.jquery.com/UI/Datepicker/formatDate
-	 * 
+	 *
 	 * @param String $format
 	 * @return String
 	 */
@@ -634,7 +630,7 @@ class DateField_View_JQuery extends Object {
 			'/e/' => 'N',
 			'/D/' => '',
 			'/EEEE/' => 'DD',
-			'/EEE/' => 'D', 
+			'/EEE/' => 'D',
 			'/w/' => '',
 			// make single "M" lowercase
 			'/([^M])M([^M])/' => '$1m$2',
@@ -674,7 +670,7 @@ class DateField_View_JQuery extends Object {
 		);
 		$patterns = array_keys($convert);
 		$replacements = array_values($convert);
-		
+
 		return preg_replace($patterns, $replacements, $format);
 	}
 }

@@ -8,38 +8,38 @@
  */
 
 class SessionTest extends SapphireTest {
-	
+
 	public function testGetSetBasics() {
 		Session::set('Test', 'Test');
-		
+
 		$this->assertEquals(Session::get('Test'), 'Test');
 	}
-	
+
 	public function testClearElement() {
 		Session::set('Test', 'Test');
 		Session::clear('Test');
-		
+
 		$this->assertEquals(Session::get('Test'), '');
 	}
-	
+
 	public function testClearAllElements() {
 		Session::set('Test', 'Test');
 		Session::set('Test-1', 'Test-1');
-		
+
 		Session::clear_all();
-		
+
 		// should session get return null? The array key should probably be
 		// unset from the data array
 		$this->assertEquals(Session::get('Test'), '');
 		$this->assertEquals(Session::get('Test-1'), '');
 	}
-	
+
 	public function testGetAllElements() {
 		Session::clear_all(); // Remove all session that might've been set by the test harness
-		
+
 		Session::set('Test', 'Test');
 		Session::set('Test-2', 'Test-2');
-		
+
 		$session = Session::get_all();
 		unset($session['HTTP_USER_AGENT']);
 
@@ -103,7 +103,7 @@ class SessionTest extends SapphireTest {
 
 		// Change our UA
 		$_SERVER['HTTP_USER_AGENT'] = 'Fake Agent';
-		
+
 		// Verify the new session reset our values
 		$s2 = Injector::inst()->create('Session', $s);
 		$this->assertNotEquals($s2->inst_get('val'), 123);

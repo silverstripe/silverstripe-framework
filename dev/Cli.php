@@ -2,7 +2,7 @@
 /**
  * Class to facilitate command-line output.
  * Support less-trivial output stuff such as colours (on xterm-color)
- * 
+ *
  * @package framework
  * @subpackage dev
  */
@@ -17,7 +17,7 @@ class SS_Cli extends Object {
 		if(!defined('STDOUT')) define('STDOUT', fopen("php://stdout","w"));
 		return function_exists('posix_isatty') ? @posix_isatty(STDOUT) : false;
 	}
-	
+
 	/**
 	 * Return text encoded for CLI output, optionally coloured
 	 * @param string $fgColour The foreground colour - black, red, green, yellow, blue, magenta, cyan, white.
@@ -28,17 +28,17 @@ class SS_Cli extends Object {
 	 */
 	public static function text($text, $fgColour = null, $bgColour = null, $bold = false) {
 		if(!self::supports_colour()) return $text;
-		
+
 		if($fgColour || $bgColour || $bold) {
 			$prefix = self::start_colour($fgColour, $bgColour, $bold);
 			$suffix = self::end_colour();
 		} else {
 			$prefix = $suffix = "";
 		}
-		
+
 		return $prefix . $text . $suffix;
-		
-		
+
+
 	}
 
 	/**
@@ -61,22 +61,22 @@ class SS_Cli extends Object {
 			'cyan' => 6,
 			'white' => 7,
 		);
-		
+
 		$prefix = "";
 
 		if($fgColour || $bold) {
 			if(!$fgColour) $fgColour = "white";
 			$prefix .= "\033[" . ($bold ? "1;" :"") . "3" . $colours[$fgColour] . "m";
 		}
-	
+
 
 		if($bgColour) {
 			$prefix .= "\033[4" . $colours[$bgColour] . "m";
 		}
-		
+
 		return $prefix;
 	}
-	
+
 	/**
 	 * Send control codes for returning to normal colour
 	 */

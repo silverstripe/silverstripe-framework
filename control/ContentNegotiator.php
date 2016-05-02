@@ -12,14 +12,14 @@
  * - if the user agent is detected as W3C Validator we always deliver "xhtml"
  * - if an HTTP Accept header is sent from the client, we respect its order (this is the most common case)
  * - if none of the above matches, fallback is "html"
- * 
+ *
  * ContentNegotiator doesn't enable you to send content as a true XML document
  * through the "text/xml" or "application/xhtml+xml" Content-Type.
  * Please see http://webkit.org/blog/68/understanding-html-xml-and-xhtml/ for further information.
- * 
+ *
  * @package framework
  * @subpackage control
- * 
+ *
  * @todo Check for correct XHTML doctype in xhtml()
  * @todo Allow for other HTML4 doctypes (e.g. Transitional) in html()
  * @todo Make content replacement and doctype setting two separately configurable behaviours - some
@@ -33,7 +33,7 @@ class ContentNegotiator extends Object {
 	 * @var string
 	 */
 	private static $content_type = '';
-	
+
 	/**
 	 * @config
 	 * @var string
@@ -45,7 +45,7 @@ class ContentNegotiator extends Object {
 	 * @var boolean
 	 */
 	private static $enabled = false;
-	
+
 	/**
 	 * @config
 	 * @var string
@@ -56,10 +56,10 @@ class ContentNegotiator extends Object {
 	 * Set the character set encoding for this page.  By default it's utf-8, but you could change it to, say,
 	 * windows-1252, to improve interoperability with extended characters being imported from windows excel.
 	 *
-	 * @deprecated 3.2 Use the "ContentNegotiator.encoding" config setting instead
+	 * @deprecated 4.0 Use the "ContentNegotiator.encoding" config setting instead
 	 */
 	public static function set_encoding($encoding) {
-		Deprecation::notice('3.2', 'Use the "ContentNegotiator.encoding" config setting instead');
+		Deprecation::notice('4.0', 'Use the "ContentNegotiator.encoding" config setting instead');
 		Config::inst()->update('ContentNegotiator', 'encoding', $encoding);
 	}
 
@@ -67,30 +67,30 @@ class ContentNegotiator extends Object {
 	 * Return the character encoding set bhy ContentNegotiator::set_encoding().  It's recommended that all classes
 	 * that need to specify the character set make use of this function.
 	 *
-	 * @deprecated 3.2 Use the "ContentNegotiator.encoding" config setting instead
+	 * @deprecated 4.0 Use the "ContentNegotiator.encoding" config setting instead
 	 */
 	public static function get_encoding() {
-		Deprecation::notice('3.2', 'Use the "ContentNegotiator.encoding" config setting instead');
+		Deprecation::notice('4.0', 'Use the "ContentNegotiator.encoding" config setting instead');
 		return Config::inst()->get('ContentNegotiator', 'encoding');
 	}
 
 	/**
 	 * Enable content negotiation for all templates, not just those with the xml header.
 	 *
-	 * @deprecated 3.2 Use the "ContentNegotiator.enabled" config setting instead
+	 * @deprecated 4.0 Use the "ContentNegotiator.enabled" config setting instead
 	 */
 	public static function enable() {
-		Deprecation::notice('3.2', 'Use the "ContentNegotiator.enabled" config setting instead');
+		Deprecation::notice('4.0', 'Use the "ContentNegotiator.enabled" config setting instead');
 		Config::inst()->update('ContentNegotiator', 'enabled', true);
 	}
-	
+
 	/**
 	 * Disable content negotiation for all templates, not just those with the xml header.
 	 *
-	 * @deprecated 3.2 Use the "ContentNegotiator.enabled" config setting instead
+	 * @deprecated 4.0 Use the "ContentNegotiator.enabled" config setting instead
 	 */
 	public static function disable() {
-		Deprecation::notice('3.2', 'Use the "ContentNegotiator.enabled" config setting instead');
+		Deprecation::notice('4.0', 'Use the "ContentNegotiator.enabled" config setting instead');
 		Config::inst()->update('ContentNegotiator', 'enabled', false);
 	}
 
@@ -100,9 +100,9 @@ class ContentNegotiator extends Object {
 	 */
 	public static function enabled_for($response) {
 		$contentType = $response->getHeader("Content-Type");
-		
+
 		// Disable content negotation for other content types
-		if($contentType && substr($contentType, 0,9) != 'text/html' 
+		if($contentType && substr($contentType, 0,9) != 'text/html'
 				&& substr($contentType, 0,21) != 'application/xhtml+xml') {
 			return false;
 		}
@@ -130,7 +130,7 @@ class ContentNegotiator extends Object {
 			// case in here so that designers don't get worried that their templates are HTML4.
 			if(isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
 				$chosenFormat = "xhtml";
-	
+
 			} else {
 				foreach($mimes as $format => $mime) {
 					$regExp = '/' . str_replace(array('+','/'),array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
@@ -154,7 +154,7 @@ class ContentNegotiator extends Object {
 		$negotiator->$chosenFormat( $response );
 	}
 
-	/** 
+	/**
 	 * Check user defined content type and use it, if it's empty use the strict application/xhtml+xml.
 	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;
 	 * <input>, checked, selected).
@@ -176,7 +176,7 @@ class ContentNegotiator extends Object {
 		$response->addHeader("Vary" , "Accept");
 
 		// Fix base tag
-		$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/', 
+		$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/',
 			'<base href="$1" />', $content);
 
 		$content = str_replace('&nbsp;','&#160;', $content);
@@ -190,7 +190,7 @@ class ContentNegotiator extends Object {
 
 		$response->setBody($content);
 	}
-	
+
 	/*
 	 * Check user defined content type and use it, if it's empty use the text/html.
 	 * If find a XML header replaces it and existing doctypes with HTML4.01 Strict.
@@ -212,12 +212,12 @@ class ContentNegotiator extends Object {
 		$hasXMLHeader = (substr($content,0,5) == '<' . '?xml' );
 
 		// Fix base tag
-		$content = preg_replace('/<base href="([^"]*)" \/>/', 
+		$content = preg_replace('/<base href="([^"]*)" \/>/',
 			'<base href="$1"><!--[if lte IE 6]></base><![endif]-->', $content);
 
 		$content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
 		$content = str_replace(array('/>','xml:lang','application/xhtml+xml'),array('>','lang','text/html'), $content);
-		
+
 		// Only replace the doctype in templates with the xml header
 		if($hasXMLHeader) {
 			$content = preg_replace('/<!DOCTYPE[^>]+>/',
@@ -225,7 +225,7 @@ class ContentNegotiator extends Object {
 				$content);
 		}
 		$content = preg_replace('/<html xmlns="[^"]+"/','<html ', $content);
-		
+
 		$response->setBody($content);
 	}
 

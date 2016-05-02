@@ -9,19 +9,19 @@
 		$('.import-form .advanced').entwine({
 			onmatch: function() {
 				this._super();
-				
+
 				this.hide();
 			},
 			onunmatch: function() {
 				this._super();
 			}
 		});
-		
+
 		/**
 		 * Class: .import-form a.toggle-advanced
 		 */
 		$('.import-form a.toggle-advanced').entwine({
-			
+
 			/**
 			 * Function: onclick
 			 */
@@ -31,5 +31,5 @@
 			}
 		});
 	});
-	
+
 }(jQuery));

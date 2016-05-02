@@ -122,11 +122,11 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
         if ($matches[1] == $o.'url'.$c) {
             return $matches[0];
         }
-        
+
         if(!BBCodeParser::autolinkUrls()){
         	return $matches[0];
         }
-        
+
 
         $punctuation = '.,;:'; // Links can't end with these chars
         $trailing = '';
@@ -162,7 +162,7 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
         if (in_array($scheme, $this->_allowedSchemes)) {
             return $matches[1].$o.'url'.$c.$matches[2].$o.'/url'.$c.$trailing;
         }
-        
+
         return $matches[0];
     }
 
@@ -201,7 +201,7 @@ class SSHTMLBBCodeParser_Filter_Links extends SSHTMLBBCodeParser_Filter
             //If protocol is in the approved list than allow it
             return $o.'url='.$urlServ.$path.$c.$matches[6].$o.'/url'.$c;
         }
-        
+
         //Else remove url tag
         return $matches[6];
     }

@@ -4,27 +4,27 @@
 * types, based on a given set of input parameters.
 * SearchContext is intentionally decoupled from any controller-logic,
 * it just receives a set of search parameters and an object class it acts on.
-* 
+*
 * The default output of a SearchContext is either a {@link SQLQuery} object
 * for further refinement, or a {@link SS_List} that can be used to display
 * search results, e.g. in a {@link TableListField} instance.
-* 
+*
 * In case you need multiple contexts, consider namespacing your request parameters
 * by using {@link FieldList->namespace()} on the $fields constructor parameter.
-* 
+*
 * Each DataObject subclass can have multiple search contexts for different cases,
 * e.g. for a limited frontend search and a fully featured backend search.
 * By default, you can use {@link DataObject->getDefaultSearchContext()} which is automatically
 * scaffolded. It uses {@link DataObject::$searchable_fields} to determine which fields
 * to include.
-* 
+*
 * @see http://doc.silverstripe.com/doku.php?id=searchcontext
 *
 * @package framework
 * @subpackage search
 */
 class SearchContext extends Object {
-	
+
 	/**
 	 * DataObject subclass to which search parameters relate to.
 	 * Also determines as which object each result is provided.
@@ -32,7 +32,7 @@ class SearchContext extends Object {
 	 * @var string
 	 */
 	protected $modelClass;
-	
+
 	/**
 	 * FormFields mapping to {@link DataObject::$db} properties
 	 * which are supposed to be searchable.
@@ -40,42 +40,42 @@ class SearchContext extends Object {
 	 * @var FieldList
 	 */
 	protected $fields;
-	
+
 	/**
 	 * Array of {@link SearchFilter} subclasses.
 	 *
 	 * @var array
 	 */
 	protected $filters;
-	
+
 	/**
 	 * The logical connective used to join WHERE clauses. Defaults to AND.
 	 * @var string
 	 */
 	public $connective = 'AND';
-	
+
 	/**
 	 * A key value pair of values that should be searched for.
 	 * The keys should match the field names specified in {@link self::$fields}.
 	 * Usually these values come from a submitted searchform
 	 * in the form of a $_REQUEST object.
 	 * CAUTION: All values should be treated as insecure client input.
-	 * 
+	 *
 	 * @param string $modelClass The base {@link DataObject} class that search properties related to.
 	 * 						Also used to generate a set of result objects based on this class.
 	 * @param FieldList $fields Optional. FormFields mapping to {@link DataObject::$db} properties
-	 *	 					which are to be searched. Derived from modelclass using 
+	 *	 					which are to be searched. Derived from modelclass using
 	 *						{@link DataObject::scaffoldSearchFields()} if left blank.
 	 * @param array $filters Optional. Derived from modelclass if left blank
-	 */	
+	 */
 	public function __construct($modelClass, $fields = null, $filters = null) {
 		$this->modelClass = $modelClass;
 		$this->fields = ($fields) ? $fields : new FieldList();
 		$this->filters = ($filters) ? $filters : array();
-		
+
 		parent::__construct();
 	}
-		
+
 	/**
 	 * Returns scaffolded search fields for UI.
 	 *
@@ -86,7 +86,7 @@ class SearchContext extends Object {
 		// $this->fields is causing weirdness, so we ignore for now, using the default scaffolding
 		//return singleton($this->modelClass)->scaffoldSearchFields();
 	}
-	
+
 	/**
 	 * @todo move to SQLQuery
 	 * @todo fix hack
@@ -99,7 +99,7 @@ class SearchContext extends Object {
 		$fields[] = '"'.$classes[0].'".\"ClassName\" AS "RecordClassName"';
 		return $fields;
 	}
-	
+
 	/**
 	 * Returns a SQL object representing the search context for the given
 	 * list of query parameters.
@@ -108,9 +108,9 @@ class SearchContext extends Object {
 	 *  If a filter is applied to a relationship in dot notation,
 	 *  the parameter name should have the dots replaced with double underscores,
 	 *  for example "Comments__Name" instead of the filter name "Comments.Name".
-	 * @param string|array $sort Database column to sort on. 
+	 * @param string|array $sort Database column to sort on.
 	 *  Falls back to {@link DataObject::$default_sort} if not provided.
-	 * @param string|array $limit 
+	 * @param string|array $limit
 	 * @param DataList $existingQuery
 	 * @return DataList
 	 */
@@ -120,7 +120,7 @@ class SearchContext extends Object {
 				throw new InvalidArgumentException("existingQuery must be DataList");
 			}
 			if($existingQuery->dataClass() != $this->modelClass) {
-				throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass() 
+				throw new InvalidArgumentException("existingQuery's dataClass is " . $existingQuery->dataClass()
 					. ", $this->modelClass expected.");
 			}
 			$query = $existingQuery;
@@ -130,7 +130,7 @@ class SearchContext extends Object {
 
 		if(is_array($limit)) {
 			$query = $query->limit(
-				isset($limit['limit']) ? $limit['limit'] : null, 
+				isset($limit['limit']) ? $limit['limit'] : null,
 				isset($limit['start']) ? $limit['start'] : null
 			);
 		} else {
@@ -139,7 +139,7 @@ class SearchContext extends Object {
 
 		$query = $query->sort($sort);
 
-		// hack to work with $searchParems when it's an Object 
+		// hack to work with $searchParems when it's an Object
 		$searchParamArray = array();
 		if (is_object($searchParams)) {
 			$searchParamArray = $searchParams->getVars();
@@ -157,11 +157,11 @@ class SearchContext extends Object {
 				}
 			}
 		}
-		
+
 		if($this->connective != "AND") {
 			throw new Exception("SearchContext connective '$this->connective' not supported after ORM-rewrite.");
 		}
-		
+
 		return $query;
 	}
 
@@ -169,7 +169,7 @@ class SearchContext extends Object {
 	 * Returns a result set from the given search parameters.
 	 *
 	 * @todo rearrange start and limit params to reflect DataObject
-	 * 
+	 *
 	 * @param array $searchParams
 	 * @param string|array $sort
 	 * @param string|array $limit
@@ -192,7 +192,7 @@ class SearchContext extends Object {
 	public function clearEmptySearchFields($value) {
 		return ($value != '');
 	}
-		
+
 	/**
 	 * Accessor for the filter attached to a named field.
 	 *
@@ -206,7 +206,7 @@ class SearchContext extends Object {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Get the map of filters in the current search context.
 	 *
@@ -215,7 +215,7 @@ class SearchContext extends Object {
 	public function getFilters() {
 		return $this->filters;
 	}
-	
+
 	/**
 	 * Overwrite the current search context filter map.
 	 *
@@ -223,8 +223,8 @@ class SearchContext extends Object {
 	 */
 	public function setFilters($filters) {
 		$this->filters = $filters;
-	}	
-	
+	}
+
 	/**
 	 * Adds a instance of {@link SearchFilter}.
 	 *
@@ -233,7 +233,7 @@ class SearchContext extends Object {
 	public function addFilter($filter) {
 		$this->filters[$filter->getFullName()] = $filter;
 	}
-	
+
 	/**
 	 * Removes a filter by name.
 	 *
@@ -242,16 +242,16 @@ class SearchContext extends Object {
 	public function removeFilterByName($name) {
 		unset($this->filters[$name]);
 	}
-	
+
 	/**
 	 * Get the list of searchable fields in the current search context.
 	 *
 	 * @return FieldList
 	 */
 	public function getFields() {
-		return $this->fields; 
+		return $this->fields;
 	}
-	
+
 	/**
 	 * Apply a list of searchable fields to the current search context.
 	 *
@@ -260,7 +260,7 @@ class SearchContext extends Object {
 	public function setFields($fields) {
 		$this->fields = $fields;
 	}
-	
+
 	/**
 	 * Adds a new {@link FormField} instance.
 	 *
@@ -269,7 +269,7 @@ class SearchContext extends Object {
 	public function addField($field) {
 		$this->fields->push($field);
 	}
-	
+
 	/**
 	 * Removes an existing formfield instance by its name.
 	 *
@@ -278,6 +278,6 @@ class SearchContext extends Object {
 	public function removeFieldByName($fieldName) {
 		$this->fields->removeByName($fieldName);
 	}
-	
+
 }
 

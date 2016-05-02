@@ -31,35 +31,36 @@ class MultiEnum extends Enum {
 	}
 
 	public function requireField(){
-
+		$charset = Config::inst()->get('MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('MySQLDatabase', 'collation');
 		$values=array(
 			'type'=>'set',
 			'parts'=>array(
 				'enums'=>$this->enum,
-				'character set'=>'utf8',
-				'collate'=> 'utf8_general_ci',
-				'default'=>Convert::raw2sql($this->default),
+				'character set'=> $charset,
+				'collate'=> $collation,
+				'default'=> $this->default,
 				'table'=>$this->tableName,
 				'arrayValue'=>$this->arrayValue
 			)
 		);
 
-		DB::requireField($this->tableName, $this->name, $values);
+		DB::require_field($this->tableName, $this->name, $values);
 
 	}
-	
-	
+
+
 	/**
-	 * Return a {@link CheckboxSetField} suitable for editing this field 
+	 * Return a {@link CheckboxSetField} suitable for editing this field
 	 */
 	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null,
 			$emptyString = null) {
-		
+
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
 		$field = new CheckboxSetField($name, $title, $this->enumValues($hasEmpty), $value, $form);
-			
+
 		return $field;
 	}
 }

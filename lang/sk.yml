@@ -336,7 +336,6 @@ sk:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
-    DropdownBatchActionsDefault: 'Vybrať akciu...'
     HELP: Pomoc
     PAGETYPE: 'Typ stránky:'
     PERMAGAIN: 'Boli ste odhlásený'

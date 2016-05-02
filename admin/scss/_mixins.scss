@@ -15,7 +15,7 @@
 @mixin hide-text-overflow {
 	overflow: hidden;
 	white-space: nowrap;
-	
+
 	// could optionally use the compass mixin but that
 	// would require a 3rd party plugin
 	text-overflow: ellipsis;
@@ -46,9 +46,9 @@
 
 
 //** ----------------------------------------------------
-// * Clear the properties of sub form fields. 
+// * Clear the properties of sub form fields.
 // *
-// * Often needed for nested form fields and 
+// * Often needed for nested form fields and
 // * ----------------------------------------------------- */
 @mixin clear-form-field-styles {
 	.field {
@@ -102,19 +102,19 @@
 
 
 @mixin transition($properties: margin 0.3s ease-in 0s){
-   	-moz-transition: $properties; 
+   	-moz-transition: $properties;
 	-webkit-transition: $properties;
-	-o-transition: $properties; 
+	-o-transition: $properties;
 	transition: $properties;
 }
 
 @mixin duration($time, $webkit:true){
   @if($webkit){
     -webkit-transition-duration: $time;
-  } 
+  }
   -moz-transition-duration: $time;
   -o-transition-duration: $time;
-  transition-duration: $time; 
+  transition-duration: $time;
 }
 
 //** ----------------------------------------------------
@@ -127,7 +127,7 @@
 		float: none;
 		padding-bottom: 10px;
 	}
-	
+
 	.middleColumn {
 		margin-left: 0px;
 		clear: left;
@@ -154,20 +154,20 @@ Used in side panels and action tabs
 		font-size: $font-base-size;
 		margin:5px 0;
 	}
-	
+
 	.ui-widget-content {
 		background: none;
 	}
-	
+
 	.field {
-		/* 
+		/*
 		 * Fields are more compressed in some areas compared to the
 		 * main content editing window so the below alters the internal
 		 * spacing of the fields so we can move that spacing to between
 		 * the form fields rather than padding
 		 */
 		border-bottom:none;
-		@include box-shadow(none);	
+		@include box-shadow(none);
 		label {
 			float: none;
 			width: auto;
@@ -181,7 +181,7 @@ Used in side panels and action tabs
 				font-style:italic;
 				font-weight:normal;
 				font-size:1em;
-				float:left;				
+				float:left;
 				@include text-shadow(none);
 				&.fill{
 					&:before{
@@ -204,23 +204,23 @@ Used in side panels and action tabs
 				}
 			}
 		}
-		
+
 		.middleColumn {
 			margin: 0;
 		}
-		
+
 		input.text,
 		select,
 		textarea {
 			padding: 5px;
 			font-size: 11px;
 		}
-		
+
 		&.checkbox {
 			padding: 0 8px 0;
-			
-			input { 
-				margin: 2px 0; 
+
+			input {
+				margin: 2px 0;
 			}
 		}
 	}
@@ -228,7 +228,7 @@ Used in side panels and action tabs
 	.fieldgroup {
 		.fieldgroup-field {
 			padding: 0;
-			
+
 			.field {
 				margin: 0;
 				padding: 0;
@@ -244,9 +244,9 @@ Used in side panels and action tabs
 		width:100% !important;
 		.chzn-single{
 			padding: 0 0 0 5px;
-			float:none;					
+			float:none;
 		}
-	} 
+	}
 	.cms-content-actions, .cms-preview-controls{
 		padding:0;
 		height:auto;
@@ -259,19 +259,19 @@ Used in side panels and action tabs
 	.CompositeField{
 		margin:0;
 		padding:0;
-		float:none;				
+		float:none;
 	}
 	.parent-mode{
 		padding-top:0;
-	}		
+	}
 	.treedropdown, .SelectionGroup li.selected div.field{
-		margin:10px 0 0 0;	
-		//@include box-shadow(inset 0 1px 0 #fff, 0 1px 1px rgba(0,0,0,0.1));							
+		margin:10px 0 0 0;
+		//@include box-shadow(inset 0 1px 0 #fff, 0 1px 1px rgba(0,0,0,0.1));
 		.treedropdownfield-title{
 			position:absolute;
-			z-index:2;					
+			z-index:2;
 			padding:5px;
-		}				
+		}
 		.treedropdownfield-panel{
 			margin-top:11px;
 		}
@@ -290,5 +290,5 @@ Used in side panels and action tabs
 		padding-right:0;
 		overflow:visible;
 		border-bottom:none;
-	}	
+	}
 }

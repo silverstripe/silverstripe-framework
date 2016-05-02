@@ -16,15 +16,15 @@
 				<% end_loop %>
 				<% else %>
 					<tr>
-						<td colspan="$Header.Count"><p><% _t('GridField.NoItemsFound', 'No items found') %></p></td>
+						<td colspan="$Header.Count"><p><%t GridField.NoItemsFound 'No items found' %></p></td>
 					</tr>
 				<% end_if %>
 			</tbody>
 		</table>
 		<p>
-			<% _t('GridField.PRINTEDAT', 'Printed at') %> $Datetime.Time, $Datetime.Date
+			<%t GridField.PRINTEDAT 'Printed at' %> $Datetime.Time, $Datetime.Date
 			<br />
-			<% _t('GridField.PRINTEDBY', 'Printed by') %> $Member.Name
+			<%t GridField.PRINTEDBY 'Printed by' %> $Member.Name
 		</p>
 	</body>
 

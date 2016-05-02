@@ -3,7 +3,9 @@
 /*
  * A hierarchy of data types, to...
  *
- * @deprecated. This is testing`
+ * @deprecated
+ *
+ * This is testing`
  * {@link DataObject::Aggregate()} and {@link DataObject::RelationshipAggregate()}
  * which are deprecated. Aggregates are handled directly by DataList instead.
  * This test should be removed or merged into DataListTest once those functions are
@@ -13,46 +15,63 @@ class AggregateTest_Foo extends DataObject implements TestOnly {
 	private static $db = array(
 		"Foo" => "Int"
 	);
-	
+
 	private static $has_one = array('Bar' => 'AggregateTest_Bar');
 	private static $belongs_many_many = array('Bazi' => 'AggregateTest_Baz');
 }
 
+/**
+ * @deprecated
+ */
 class AggregateTest_Fab extends AggregateTest_Foo {
 	private static $db = array(
 		"Fab" => "Int"
 	);
 }
 
+/**
+ * @deprecated
+ */
 class AggregateTest_Fac extends AggregateTest_Fab {
 	private static $db = array(
 		"Fac" => "Int"
 	);
 }
 
+
+/**
+ * @deprecated
+ */
 class AggregateTest_Bar extends DataObject implements TestOnly {
 	private static $db = array(
 		"Bar" => "Int"
 	);
-	
+
 	private static $has_many = array(
 		"Foos" => "AggregateTest_Foo"
 	);
 }
 
+
+/**
+ * @deprecated
+ */
 class AggregateTest_Baz extends DataObject implements TestOnly {
 	private static $db = array(
 		"Baz" => "Int"
 	);
-	
+
 	private static $many_many = array(
 		"Foos" => "AggregateTest_Foo"
 	);
 }
 
+/**
+ * @deprecated
+ */
 class AggregateTest extends SapphireTest {
 	protected static $fixture_file = 'AggregateTest.yml';
-	
+
 	protected $extraDataObjects = array(
 		'AggregateTest_Foo',
 		'AggregateTest_Fab',
@@ -60,7 +79,7 @@ class AggregateTest extends SapphireTest {
 		'AggregateTest_Bar',
 		'AggregateTest_Baz'
 	);
-	
+
 	protected $originalDeprecation;
 
 	public function setUp() {
@@ -71,10 +90,10 @@ class AggregateTest extends SapphireTest {
 	}
 
 	public function tearDown() {
-		parent::tearDown();
 		Deprecation::restore_settings($this->originalDeprecation);
+		parent::tearDown();
 	}
-	
+
 	/**
 	 * Test basic aggregation on a passed type
 	 */
@@ -90,7 +109,7 @@ class AggregateTest extends SapphireTest {
 		$this->assertEquals($foo->Aggregate('AggregateTest_Fab')->Max('Fab'), 3);
 	}
 	/* */
-	
+
 	/**
 	 * Test basic aggregation on a given dataobject
 	 * @return unknown_type
@@ -108,7 +127,7 @@ class AggregateTest extends SapphireTest {
 		$this->assertEquals($fab->Aggregate()->Max('Fab'), 3);
 	}
 	/* */
-	
+
 	/**
 	 * Test base-level field access - was failing due to use of custom_database_fields, not just database_fields
 	 * @return unknown_type
@@ -120,7 +139,7 @@ class AggregateTest extends SapphireTest {
 			$this->formatDate($foo->Aggregate('AggregateTest_Foo')->Max('LastEdited')),
 			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"LastEdited" DESC')->LastEdited)
 		);
-		
+
 		$this->assertEquals(
 			$this->formatDate($foo->Aggregate('AggregateTest_Foo')->Max('Created')),
 			$this->formatDate(DataObject::get_one('AggregateTest_Foo', '', '', '"Created" DESC')->Created)
@@ -133,14 +152,14 @@ class AggregateTest extends SapphireTest {
 	 */
 	public function testChildAggregate() {
 		$foo = $this->objFromFixture('AggregateTest_Foo', 'foo1');
-	
+
 		// For base classes, aggregate is calculcated on it and all children classes
 		$this->assertEquals($foo->Aggregate('AggregateTest_Foo')->Max('Foo'), 9);
 
 		// For subclasses, aggregate is calculated for that subclass and it's children only
 		$this->assertEquals($foo->Aggregate('AggregateTest_Fab')->Max('Foo'), 9);
 		$this->assertEquals($foo->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
-		
+
 	}
 	/* */
 
@@ -148,10 +167,10 @@ class AggregateTest extends SapphireTest {
 	 * Test aggregates are cached properly
 	 */
 	public function testCache() {
-		$this->markTestIncomplete();		
+		$this->markTestIncomplete();
 	}
 	/* */
-	
+
 	/**
 	 * Test cache is correctly flushed on write
 	 */
@@ -175,10 +194,10 @@ class AggregateTest extends SapphireTest {
 		// For subclasses, aggregate is calculated for that subclass and it's children only
 		$this->assertEquals($fab->Aggregate('AggregateTest_Fab')->Max('Foo'), 9);
 		$this->assertEquals($fab->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
-				
+
 		$fab->Foo = 15;
 		$fab->write();
-		
+
 		// For base classes, aggregate is calculcated on it and all children classes
 		$this->assertEquals($fab->Aggregate('AggregateTest_Foo')->Max('Foo'), 15);
 
@@ -187,7 +206,7 @@ class AggregateTest extends SapphireTest {
 		$this->assertEquals($fab->Aggregate('AggregateTest_Fac')->Max('Foo'), 6);
 	}
 	/* */
-	
+
 	/**
 	 * Test basic relationship aggregation
 	 */
@@ -199,10 +218,10 @@ class AggregateTest extends SapphireTest {
 		$this->assertEquals($baz1->RelationshipAggregate('Foos')->Max('Foo'), 8);
 	}
 	/* */
-	
+
 	/**
 	 * Copied from DataObject::__construct(), special case for MSSQLDatabase.
-	 * 
+	 *
 	 * @param String
 	 * @return String
 	 */

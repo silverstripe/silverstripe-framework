@@ -1,9 +1,9 @@
 <?php
 /**
- * This component provides a button for opening the add new form provided by 
+ * This component provides a button for opening the add new form provided by
  * {@link GridFieldDetailForm}.
  *
- * Only returns a button if {@link DataObject->canCreate()} for this record 
+ * Only returns a button if {@link DataObject->canCreate()} for this record
  * returns true.
  *
  * @package forms

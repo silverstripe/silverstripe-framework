@@ -1,7 +1,7 @@
 <?php
 
 class FulltextFilterTest extends SapphireTest {
-	
+
 	protected $extraDataObjects = array(
 		'FulltextFilterTest_DataObject'
 	);
@@ -40,26 +40,36 @@ class FulltextFilterTest extends SapphireTest {
 	}
 
 	public function testGenerateQuery() {
+		// Test if columns have table identifier
+		$filter1 = new FulltextFilter('SearchFields', 'SilverStripe');
+		$filter1->setModel('FulltextFilterTest_DataObject');
+		$query1 = FulltextFilterTest_DataObject::get()->dataQuery();
+		$filter1->apply($query1);
+		$this->assertNotEquals('"ColumnA","ColumnB"', $filter1->getDbName());
+		$this->assertNotEquals(
+			array("MATCH (\"ColumnA\",\"ColumnB\") AGAINST ('SilverStripe')"),
+			$query1->query()->getWhere()
+		);
+
 		// Test SearchFields
 		$filter1 = new FulltextFilter('SearchFields', 'SilverStripe');
 		$filter1->setModel('FulltextFilterTest_DataObject');
 		$query1 = FulltextFilterTest_DataObject::get()->dataQuery();
 		$filter1->apply($query1);
-		$this->assertEquals('"ColumnA", "ColumnB"', $filter1->getDbName());
+		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA","FulltextFilterTest_DataObject"."ColumnB"', $filter1->getDbName());
 		$this->assertEquals(
-			array("MATCH (\"ColumnA\", \"ColumnB\") AGAINST ('SilverStripe')"),
+			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\",\"FulltextFilterTest_DataObject\".\"ColumnB\") AGAINST ('SilverStripe')"),
 			$query1->query()->getWhere()
 		);
-
 
 		// Test Other searchfields
 		$filter2 = new FulltextFilter('OtherSearchFields', 'SilverStripe');
 		$filter2->setModel('FulltextFilterTest_DataObject');
 		$query2 = FulltextFilterTest_DataObject::get()->dataQuery();
 		$filter2->apply($query2);
-		$this->assertEquals('"ColumnC", "ColumnD"', $filter2->getDbName());
+		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnC","FulltextFilterTest_DataObject"."ColumnD"', $filter2->getDbName());
 		$this->assertEquals(
-			array("MATCH (\"ColumnC\", \"ColumnD\") AGAINST ('SilverStripe')"),
+			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnC\",\"FulltextFilterTest_DataObject\".\"ColumnD\") AGAINST ('SilverStripe')"),
 			$query2->query()->getWhere()
 		);
 
@@ -97,7 +107,7 @@ class FulltextFilterTest_DataObject extends DataObject implements TestOnly {
 		'OtherSearchFields' => 'fulltext ("ColumnC", "ColumnD")',
 		'SingleIndex' => 'fulltext ("ColumnE")'
 	);
-	
+
 	private static $create_table_options = array(
 		"MySQLDatabase" => "ENGINE=MyISAM",
 	);

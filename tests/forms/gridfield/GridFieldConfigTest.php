@@ -17,7 +17,7 @@ class GridFieldConfigTest extends SapphireTest {
 			->addComponent($c3 = new GridFieldConfigTest_MyOtherComponent());
 
 		$this->assertEquals(
-			new ArrayList(array($c1, $c2, $c3)), 
+			new ArrayList(array($c1, $c2, $c3)),
 			$config->getComponents()
 		);
 	}
@@ -29,7 +29,7 @@ class GridFieldConfigTest extends SapphireTest {
 			->addComponent($c3 = new GridFieldConfigTest_MyOtherComponent());
 
 		$this->assertEquals(
-			new ArrayList(array($c1)), 
+			new ArrayList(array($c1)),
 			$config->getComponentsByType('GridFieldConfigTest_MyComponent')
 		);
 		$this->assertEquals(
@@ -44,7 +44,7 @@ class GridFieldConfigTest extends SapphireTest {
 			new ArrayList(),
 			$config->getComponentsByType('GridFieldConfigTest_UnknownComponent')
 		);
-	}	
+	}
 
 	public function testGetComponentByType() {
 		$config = GridFieldConfig::create()
@@ -53,7 +53,7 @@ class GridFieldConfigTest extends SapphireTest {
 			->addComponent($c3 = new GridFieldConfigTest_MyOtherComponent());
 
 		$this->assertEquals(
-			$c1, 
+			$c1,
 			$config->getComponentByType('GridFieldConfigTest_MyComponent')
 		);
 		$this->assertEquals(
@@ -73,7 +73,7 @@ class GridFieldConfigTest extends SapphireTest {
 			);
 
 		$this->assertEquals(
-			$c1, 
+			$c1,
 			$config->getComponentByType('GridFieldConfigTest_MyComponent')
 		);
 		$this->assertEquals(
@@ -81,7 +81,7 @@ class GridFieldConfigTest extends SapphireTest {
 			$config->getComponentByType('GridFieldConfigTest_MyOtherComponent')
 		);
 	}
-	
+
 	public function testRemoveComponents() {
 		$config = GridFieldConfig::create()
 			->addComponent($c1 = new GridFieldConfigTest_MyComponent())
@@ -90,29 +90,29 @@ class GridFieldConfigTest extends SapphireTest {
 			->addComponent($c4 = new GridFieldConfigTest_MyOtherComponent());
 
 		$this->assertEquals(
-			4, 
+			4,
 			$config->getComponents()->count()
 		);
-		
+
 		$config->removeComponent($c1);
 		$this->assertEquals(
-			3, 
+			3,
 			$config->getComponents()->count()
 		);
-		
+
 		$config->removeComponentsByType("GridFieldConfigTest_MyComponent");
 		$this->assertEquals(
-			2, 
+			2,
 			$config->getComponents()->count()
 		);
-		
+
 		$config->removeComponentsByType("GridFieldConfigTest_MyOtherComponent");
 		$this->assertEquals(
-			0, 
+			0,
 			$config->getComponents()->count()
 		);
 	}
-	
+
 }
 
 class GridFieldConfigTest_MyComponent implements GridField_URLHandler, TestOnly {

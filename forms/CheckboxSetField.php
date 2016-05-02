@@ -4,7 +4,7 @@
  *
  * ASSUMPTION -> IF you pass your source as an array, you pass values as an array too. Likewise objects are handled
  * the same.
- * 
+ *
  * Example:
  * <code>
  * new CheckboxSetField(
@@ -19,7 +19,7 @@
  *  $value = "1"
  * );
  * </code>
- * 
+ *
  * <b>Saving</b>
  * The checkbox set field will save its data in one of ways:
  * - If the field name matches a many-many join on the object being edited, that many-many join will be updated to
@@ -27,17 +27,17 @@
  *   the database records.
  * - If the field name matches a database field, a comma-separated list of values will be saved to that field.  The
  *   keys can be text or numbers.
- * 
+ *
  * @todo Document the different source data that can be used
  * with this form field - e.g ComponentSet, ArrayList,
  * array. Is it also appropriate to accept so many different
  * types of data when just using an array would be appropriate?
- * 
+ *
  * @package forms
  * @subpackage fields-basic
  */
 class CheckboxSetField extends OptionsetField {
-	
+
 	/**
 	 * @var array
 	 */
@@ -82,7 +82,7 @@ class CheckboxSetField extends OptionsetField {
 				}
 			}
 		}
-		
+
 		// Source is not an array
 		if(!is_array($source) && !is_a($source, 'SQLMap')) {
 			if(is_array($values)) {
@@ -126,9 +126,9 @@ class CheckboxSetField extends OptionsetField {
 		if(is_array($source)) {
 			unset($source['']);
 		}
-		
+
 		$options = array();
-		
+
 		if ($source == null) {
 			$source = array();
 		}
@@ -168,21 +168,21 @@ class CheckboxSetField extends OptionsetField {
 	 * Default selections, regardless of the {@link setValue()} settings.
 	 * Note: Items marked as disabled through {@link setDisabledItems()} can still be
 	 * selected by default through this method.
-	 * 
+	 *
 	 * @param Array $items Collection of array keys, as defined in the $source array
 	 */
 	public function setDefaultItems($items) {
 		$this->defaultItems = $items;
 		return $this;
 	}
-	
+
 	/**
 	 * @return Array
 	 */
 	public function getDefaultItems() {
 		return $this->defaultItems;
 	}
-	
+
 	/**
 	 * Load a value into this CheckboxSetField
 	 */
@@ -198,7 +198,7 @@ class CheckboxSetField extends OptionsetField {
 
 		return $this;
 	}
-	
+
 	/**
 	 * Save the current value of this CheckboxSetField into a DataObject.
 	 * If the field it is saving to is a has_many or many_many relationship,
@@ -228,11 +228,11 @@ class CheckboxSetField extends OptionsetField {
 			}
 		}
 	}
-	
+
 	/**
-	 * Return the CheckboxSetField value as a string 
+	 * Return the CheckboxSetField value as a string
 	 * selected item keys.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function dataValue() {
@@ -243,30 +243,30 @@ class CheckboxSetField extends OptionsetField {
 					$filtered[] = str_replace(",", "{comma}", $item);
 				}
 			}
-			
+
 			return implode(',', $filtered);
 		}
-		
+
 		return '';
 	}
-	
+
 	public function performDisabledTransformation() {
 		$clone = clone $this;
 		$clone->setDisabled(true);
-		
+
 		return $clone;
 	}
-	
+
 	/**
 	 * Transforms the source data for this CheckboxSetField
 	 * into a comma separated list of values.
-	 * 
+	 *
 	 * @return ReadonlyField
 	 */
 	public function performReadonlyTransformation() {
 		$values = '';
 		$data = array();
-		
+
 		$items = $this->value;
 		if($this->source) {
 			foreach($this->source as $source) {
@@ -275,7 +275,7 @@ class CheckboxSetField extends OptionsetField {
 				}
 			}
 		}
-		
+
 		if($items) {
 			// Items is a DO Set
 			if($items instanceof SS_List) {
@@ -283,13 +283,13 @@ class CheckboxSetField extends OptionsetField {
 					$data[] = $item->Title;
 				}
 				if($data) $values = implode(', ', $data);
-				
+
 			// Items is an array or single piece of string (including comma seperated string)
 			} else {
 				if(!is_array($items)) {
 					$items = preg_split('/ *, */', trim($items));
 				}
-				
+
 				foreach($items as $item) {
 					if(is_array($item)) {
 						$data[] = $item['Title'];
@@ -301,23 +301,65 @@ class CheckboxSetField extends OptionsetField {
 						$data[] = $item;
 					}
 				}
-				
+
 				$values = implode(', ', $data);
 			}
 		}
-		
+
 		$field = $this->castedCopy('ReadonlyField');
 		$field->setValue($values);
-		
+
 		return $field;
 	}
 
 	public function Type() {
 		return 'optionset checkboxset';
 	}
-	
+
 	public function ExtraOptions() {
 		return FormField::ExtraOptions();
 	}
-	
+
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate($validator) {
+		$values = $this->value;
+		if (!$values) {
+			return true;
+		}
+		$sourceArray = $this->getSourceAsArray();
+		if (is_array($values)) {
+			if (!array_intersect_key($sourceArray, $values)) {
+				$validator->validationError(
+					$this->name,
+					_t(
+						'CheckboxSetField.SOURCE_VALIDATION',
+						"Please select a value within the list provided. '{value}' is not a valid option",
+						array('value' => implode(' and ', array_diff($sourceArray, $values)))
+					),
+					"validation"
+				);
+				return false;
+			}
+		} else {
+			if (!in_array($this->value, $sourceArray)) {
+				$validator->validationError(
+					$this->name,
+					_t(
+						'CheckboxSetField.SOURCE_VALIDATION',
+						"Please select a value within the list provided. '{value}' is not a valid option",
+						array('value' => $this->value)
+					),
+					"validation"
+				);
+				return false;
+			}
+		}
+		return true;
+	}
+
 }

@@ -1,9 +1,9 @@
 <?php
 /**
- * This class is a {@link GridField} component that adds a delete action for 
+ * This class is a {@link GridField} component that adds a delete action for
  * objects.
  *
- * This component also supports unlinking a relation instead of deleting the 
+ * This component also supports unlinking a relation instead of deleting the
  * object.
  *
  * Use the {@link $removeRelation} property set in the constructor.
@@ -12,25 +12,25 @@
  * $action = new GridFieldDeleteAction(); // delete objects permanently
  *
  * // removes the relation to object instead of deleting
- * $action = new GridFieldDeleteAction(true); 
+ * $action = new GridFieldDeleteAction(true);
  * </code>
  *
  * @package forms
  * @subpackage fields-gridfield
  */
 class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_ActionProvider {
-	
+
 	/**
-	 * If this is set to true, this {@link GridField_ActionProvider} will 
-	 * remove the object from the list, instead of deleting. 
+	 * If this is set to true, this {@link GridField_ActionProvider} will
+	 * remove the object from the list, instead of deleting.
 	 *
-	 * In the case of a has one, has many or many many list it will uncouple 
+	 * In the case of a has one, has many or many many list it will uncouple
 	 * the item from the list.
 	 *
 	 * @var boolean
 	 */
 	protected $removeRelation = false;
-	
+
 	/**
 	 *
 	 * @param boolean $removeRelation - true if removing the item from the list, but not deleting it
@@ -38,19 +38,19 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	public function __construct($removeRelation = false) {
 		$this->removeRelation = $removeRelation;
 	}
-	
+
 	/**
 	 * Add a column 'Delete'
-	 * 
-	 * @param type $gridField
-	 * @param array $columns 
+	 *
+	 * @param GridField $gridField
+	 * @param array $columns
 	 */
 	public function augmentColumns($gridField, &$columns) {
 		if(!in_array('Actions', $columns)) {
 			$columns[] = 'Actions';
 		}
 	}
-	
+
 	/**
 	 * Return any special attributes that will be used for FormField::create_tag()
 	 *
@@ -62,10 +62,10 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	public function getColumnAttributes($gridField, $record, $columnName) {
 		return array('class' => 'col-buttons');
 	}
-	
+
 	/**
-	 * Add the title 
-	 * 
+	 * Add the title
+	 *
 	 * @param GridField $gridField
 	 * @param string $columnName
 	 * @return array
@@ -75,33 +75,33 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 			return array('title' => '');
 		}
 	}
-	
+
 	/**
 	 * Which columns are handled by this component
-	 * 
-	 * @param type $gridField
-	 * @return type 
+	 *
+	 * @param GridField $gridField
+	 * @return array
 	 */
 	public function getColumnsHandled($gridField) {
 		return array('Actions');
 	}
-	
+
 	/**
 	 * Which GridField actions are this component handling
 	 *
 	 * @param GridField $gridField
-	 * @return array 
+	 * @return array
 	 */
 	public function getActions($gridField) {
 		return array('deleterecord', 'unlinkrelation');
 	}
-	
+
 	/**
 	 *
 	 * @param GridField $gridField
 	 * @param DataObject $record
 	 * @param string $columnName
-	 * @return string - the HTML for the column 
+	 * @return string - the HTML for the column
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
 		if($this->removeRelation) {
@@ -114,7 +114,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 				->setAttribute('data-icon', 'chain--minus');
 		} else {
 			if(!$record->canDelete()) return;
-			
+
 			$field = GridField_FormAction::create($gridField,  'DeleteRecord'.$record->ID, false, "deleterecord",
 					array('RecordID' => $record->ID))
 				->addExtraClass('gridfield-button-delete')
@@ -124,7 +124,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 		}
 		return $field->Field();
 	}
-	
+
 	/**
 	 * Handle the actions and apply any changes to the GridField
 	 *
@@ -140,7 +140,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 			if(!$item) {
 				return;
 			}
-			
+
 			if($actionName == 'deleterecord') {
 				if(!$item->canDelete()) {
 					throw new ValidationException(
@@ -156,6 +156,6 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 
 				$gridField->getList()->remove($item);
 			}
-		} 
+		}
 	}
 }

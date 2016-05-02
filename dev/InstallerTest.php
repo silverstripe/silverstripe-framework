@@ -5,7 +5,7 @@
  * @subpackage testing
  */
 class InstallerTest extends Controller {
-	
+
 	private static $allowed_actions = array(
 		'testrewrite'
 	);

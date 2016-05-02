@@ -166,7 +166,7 @@ The Menu for our site is created using a **loop**. Loops allow us to iterate ove
 	<% loop $Menu(1) %>
 
 returns a set of first level menu items. We can then use the template variable
-*$MenuTitle* to show the title of the page we are linking to, *$Link* for the URL of the page and *$LinkingMode* to help style our menu with CSS (explained in more detail shortly).
+*$MenuTitle* to show the title of the page we are linking to, *$Link* for the URL of the page, and `$isSection` and `$isCurrent` to help style our menu with CSS (explained in more detail shortly).
 
 > *$Title* refers to **Page Name** in the CMS, whereas *$MenuTitle* refers to (the often shorter) **Navigation label**
 
@@ -174,7 +174,7 @@ returns a set of first level menu items. We can then use the template variable
 	:::ss
 	<ul>
 		<% loop $Menu(1) %>	  
-			<li class="$LinkingMode">
+			<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 				<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 			</li>
 		<% end_loop %>
@@ -191,16 +191,12 @@ This creates the navigation at the top of the page:
 
 ### Highlighting the current page
 
-A useful feature is highlighting the current page the user is looking at. We can do this with the template variable: `$LinkingMode`. It returns one of three values:
+A useful feature is highlighting the current page the user is looking at. We can do this by using the `is` methods `$isSection` and `$isCurrent`.
 
-*  *current* - This page is being visited
-*  *link* - This page is not currently being visited
-*  *section* - A page under this page is being visited
-
-For example, if you were here: "Home > Company > Staff > Bob Smith", you may want to highlight 'Company' to say you are in that section. If you add $LinkingMode to your navigation elements as a class, ie:
+For example, if you were here: "Home > Company > Staff > Bob Smith", you may want to highlight 'Company' to say you are in that section.
 
 	:::ss
-	<li class="$LinkingMode">
+	<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 	 	<a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 	</li>
 
@@ -231,7 +227,7 @@ Adding a second level menu is very similar to adding the first level menu. Open 
 	:::ss
 	<ul>
 	  <% loop $Menu(2) %>
-	    <li class="$LinkingMode">
+	    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 		    <a href="$Link" title="Go to the $Title.XML page">
 		    	<span class="arrow">→</span>
 		    	<span class="text">$MenuTitle.XML</span>
@@ -243,7 +239,7 @@ Adding a second level menu is very similar to adding the first level menu. Open 
 This should look very familiar. It is the same idea as our first menu, except the loop block now uses *Menu(2)* instead of *Menu(1)*. 
 As we can see here, the *Menu* control takes a single
 argument - the level of the menu we want to get. Our css file will style this linked list into the second level menu,
-using our usual *$LinkingMode* technique to highlight the current page.
+using our usual `is` technique to highlight the current page.
 
 To make sure the menu is not displayed on every page, for example, those that *don't* have any nested pages. We use an **if block**. 
 Look again in the *Sidebar.ss* file and you will see that the menu is surrounded with an **if block**
@@ -254,7 +250,7 @@ like this:
 		...
 			<ul>
 				<% loop $Menu(2) %>
-				<li class="$LinkingMode">
+				<li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 					<a href="$Link" title="Go to the $Title.XML page">
 						<span class="arrow">→</span>
 						<span class="text">$MenuTitle.XML</span>
@@ -301,12 +297,12 @@ The following example runs an if statement and a loop on *Children*, checking to
 	:::ss
 	<ul>
 	  <% loop $Menu(1) %>
-	    <li class="$LinkingMode">
+	    <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 	      <a href="$Link" title="$Title.XML">$MenuTitle.XML</a>
 	      <% if $Children %>
 		      <ul>
 		        <% loop $Children %>
-		          <li class="$LinkingMode">
+		          <li class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>">
 		          	<a href="$Link" title="Go to the $Title.XML page">
 		          		<span class="arrow">→</span>
 		          		<span class="text">$MenuTitle.XML</span>
@@ -371,7 +367,7 @@ It always tries to use the most specific template in an inheritance chain.
 
 ### Creating a new template
 
-To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=1*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customize the *HomePage* template. 
+To create a new template layout, create a copy of *Page.ss* (found in *themes/simple/templates/Layout*) and call it *HomePage.ss*. If we flush the cache (*?flush=1*), SilverStripe should now be using *HomePage.ss* for the homepage, and *Page.ss* for the rest of the site. Now let's customise the *HomePage* template. 
 
 First, we don't need the breadcrumbs and the secondary menu for the homepage. Let's remove them:
 	:::ss
@@ -405,7 +401,7 @@ then descend into the *themes/simple/templates/Layout* folder, and will use *Pag
 
 ## Summary
 
-So far we have taken a look at the different areas and functionality within the pages area of the CMS. We have learnt about template variables, controls and if statements and used these to build a basic, but fully functional, website. We have also briefly covered page types, and looked at how they correspond to templates and sub-templates. Using this knowledge, we have customized our website's homepage design.
+So far we have taken a look at the different areas and functionality within the pages area of the CMS. We have learnt about template variables, controls and if statements and used these to build a basic, but fully functional, website. We have also briefly covered page types, and looked at how they correspond to templates and sub-templates. Using this knowledge, we have customised our website's homepage design.
 
 In the next tutorial, [Extending a Basic Site](/tutorials/extending_a_basic_site), we will explore page types on a deeper level, and look at customising our own page types to extend the functionality of SilverStripe.
 

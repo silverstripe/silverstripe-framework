@@ -22,7 +22,7 @@ class TextareaFieldTest extends SapphireTest {
 		$field = $field->performReadonlyTransformation();
 		$this->assertContains('These are some unicodes: äöü', $field->Field());
 	}
-	
+
 	/**
 	 * Quick smoke test to ensure that text with special html chars is being displayed properly in readonly fields.
 	 */
@@ -34,5 +34,5 @@ class TextareaFieldTest extends SapphireTest {
 		$this->assertContains('These are some special &lt;html&gt; chars including &#039;single&#039; &amp;'
 			. ' &quot;double&quot; quotations', $field->Field());
 	}
-	
+
 }

@@ -3,9 +3,9 @@ require_once 'Zend/Log/Writer/Abstract.php';
 
 /**
  * Sends an error message to an email.
- * 
+ *
  * @see SS_Log for more information on using writers.
- * 
+ *
  * @package framework
  * @subpackage dev
  */
@@ -25,24 +25,24 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		$this->emailAddress = $emailAddress;
 		$this->customSmtpServer = $customSmtpServer;
 	}
-	
+
 	public static function factory($emailAddress, $customSmtpServer = false) {
 		return new SS_LogEmailWriter($emailAddress, $customSmtpServer);
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "SS_LogEmailWriter.send_from" config setting instead
+	 * @deprecated 4.0 Use the "SS_LogEmailWriter.send_from" config setting instead
 	 */
 	public static function set_send_from($address) {
-		Deprecation::notice('3.2', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
+		Deprecation::notice('4.0', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
 		Config::inst()->update('SS_LogEmailWriter', 'send_from', $address);
 	}
 
 	/**
-	 * @deprecated 3.2 Use the "SS_LogEmailWriter.send_from" config setting instead
+	 * @deprecated 4.0 Use the "SS_LogEmailWriter.send_from" config setting instead
 	 */
 	public static function get_send_from() {
-		Deprecation::notice('3.2', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
+		Deprecation::notice('4.0', 'Use the "SS_LogEmailWriter.send_from" config setting instead');
 		return Config::inst()->get('SS_LogEmailWriter', 'send_from');
 	}
 
@@ -84,7 +84,7 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 				$subject,
 				$data,
 				"Content-type: text/html\nFrom: " . $from
-			);			
+			);
 		}
 
 		// reset the SMTP server to the original

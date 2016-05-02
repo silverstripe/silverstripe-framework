@@ -43,7 +43,7 @@ class EmailFieldTest extends FunctionalTest {
 
 	/**
 	 * Check that input type='email' fields are submitted by SimpleTest
-	 * 
+	 *
 	 * @see SimpleTagBuilder::_createInputTag()
 	 */
 	function testEmailFieldPopulation() {
@@ -80,16 +80,16 @@ class EmailFieldTest_Controller extends Controller implements TestOnly {
 	);
 
 	protected $template = 'BlankPage';
-	
+
 	function Link($action = null) {
 		return Controller::join_links(
 			'EmailFieldTest_Controller',
-			$this->request->latestParam('Action'),
-			$this->request->latestParam('ID'),
+			$this->getRequest()->latestParam('Action'),
+			$this->getRequest()->latestParam('ID'),
 			$action
 		);
 	}
-	
+
 	function Form() {
 		$form = new Form(
 			$this,
@@ -107,10 +107,10 @@ class EmailFieldTest_Controller extends Controller implements TestOnly {
 
 		// Disable CSRF protection for easier form submission handling
 		$form->disableSecurityToken();
-		
+
 		return $form;
 	}
-	
+
 	function doSubmit($data, $form, $request) {
 		$form->sessionMessage('Test save was successful', 'good');
 		return $this->redirectBack();

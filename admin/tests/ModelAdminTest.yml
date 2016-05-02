@@ -5,7 +5,7 @@ ModelAdminTest_Contact:
    ingo:
       Name: ingo
       Phone: 04 987 6543
-      
+
 Member:
    admin:
       FirstName: admin

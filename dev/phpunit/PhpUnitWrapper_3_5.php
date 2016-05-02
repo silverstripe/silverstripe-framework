@@ -10,7 +10,7 @@ class PhpUnitWrapper_3_5 extends PhpUnitWrapper_Generic {
 		return 'PhpUnit V3.5';
 	}
 
-	/** 
+	/**
 	 * Initialise the wrapper class.
 	 */
 	public function init() {

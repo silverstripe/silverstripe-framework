@@ -37,7 +37,7 @@ class SS_LogTest extends SapphireTest {
 
 		SS_Log::remove_writer($testEmailWriter);
 		$writers = SS_Log::get_writers();
-		
+
 		$this->assertEquals(1, count($writers));
 
 		SS_Log::remove_writer($testFileWriter);
@@ -60,8 +60,8 @@ class SS_LogTest extends SapphireTest {
 		$this->assertContains('test', $extraRows[count($extraRows)-2]->td[1]->asXML(), 'Contains extra data value');
 		$this->assertContains('my-array', $extraRows[count($extraRows)-1]->td[0]->asXML(), 'Contains extra data key');
 		$this->assertContains(
-			"array('one'=&gt;1,)", 
-			str_replace(array("\r", "\n", " "), '', $extraRows[count($extraRows)-1]->td[1]->asXML()), 
+			"array('one'=&gt;1,)",
+			str_replace(array("\r", "\n", " "), '', $extraRows[count($extraRows)-1]->td[1]->asXML()),
 			'Serializes arrays correctly'
 		);
 	}
@@ -87,15 +87,15 @@ class SS_LogTest extends SapphireTest {
 	protected function exceptionGeneratorThrower() {
 		throw new Exception("thrown from SS_LogTest::testExceptionGeneratorTop");
 	}
-	
+
 	protected function exceptionGenerator() {
 		$this->exceptionGeneratorThrower();
 	}
-	
+
 	public function testEmailException() {
 		$testEmailWriter = new SS_LogEmailWriter('test@test.com');
 		SS_Log::add_writer($testEmailWriter, SS_Log::ERR);
-		
+
 		// Trigger exception handling mechanism
 		try {
 			$this->exceptionGenerator();
@@ -112,21 +112,21 @@ class SS_LogTest extends SapphireTest {
 				SS_Log::ERR
 			);
 		}
-		
+
 		// Ensure email is sent
 		$this->assertEmailSent('test@test.com');
-		
+
 		// Begin parsing of email body
 		$email = $this->findEmail('test@test.com');
 		$parser = new CSSContentParser($email['htmlContent']);
-		
+
 		// Check that the first three lines of the stacktrace are correct
 		$stacktrace = $parser->getByXpath('//body/div[1]/ul[1]');
 		$this->assertContains('<b>SS_LogTest-&gt;exceptionGeneratorThrower()</b>', $stacktrace[0]->li[0]->asXML());
 		$this->assertContains('<b>SS_LogTest-&gt;exceptionGenerator()</b>', $stacktrace[0]->li[1]->asXML());
 		$this->assertContains('<b>SS_LogTest-&gt;testEmailException()</b>', $stacktrace[0]->li[2]->asXML());
 	}
-	
+
 	public function testSubclassedLogger() {
 		$this->assertTrue(SS_Log::get_logger() !== SS_LogTest_NewLogger::get_logger());
 	}

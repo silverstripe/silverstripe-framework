@@ -1,38 +1,21 @@
 <?php
 /**
- * Generates a three-pane UI for editing model classes,
- * with an automatically generated search panel, tabular results
- * and edit forms.
- * Relies on data such as {@link DataObject::$db} and {@DataObject::getCMSFields()}
+ * Generates a three-pane UI for editing model classes, with an
+ * automatically generated search panel, tabular results and edit forms.
+ *
+ * Relies on data such as {@link DataObject::$db} and {@link DataObject::getCMSFields()}
  * to scaffold interfaces "out of the box", while at the same time providing
  * flexibility to customize the default output.
- * 
- * Add a route
- * <code>
- * Director::config()->rules = array(array('admin/mymodel/$Class/$Action/$ID' => 'MyModelAdmin'));
- * </code>
  *
- * @todo saving logic (should mostly use Form->saveInto() and iterate over relations)
- * @todo ajax form loading and saving
- * @todo ajax result display
- * @todo relation formfield scaffolding (one tab per relation) - relations don't have DBField sublclasses, we do
- * 	we define the scaffold defaults. can be ComplexTableField instances for a start. 
- * @todo has_many/many_many relation autocomplete field (HasManyComplexTableField doesn't work well with larger
- *       datasets)
- * 
- * Long term TODOs:
- * @todo Hook into RESTful interface on DataObjects (yet to be developed)
- * @todo Permission control via datamodel and Form class
- * 
  * @uses SearchContext
- * 
+ *
  * @package framework
  * @subpackage admin
  */
 abstract class ModelAdmin extends LeftAndMain {
 
-	private static $url_rule = '/$ModelClass/$Action';	
-	
+	private static $url_rule = '/$ModelClass/$Action';
+
 	/**
 	 * List of all managed {@link DataObject}s in this interface.
 	 *
@@ -40,14 +23,14 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * <code>
 	 * array('MyObjectClass','MyOtherObjectClass')
 	 * </code>
-	 * 
+	 *
 	 * Extended notation with options (e.g. custom titles):
 	 * <code>
 	 * array(
 	 *   'MyObjectClass' => array('title' => "Custom title")
 	 * )
 	 * </code>
-	 * 
+	 *
 	 * Available options:
 	 * - 'title': Set custom titles for the tabs or dropdown names
 	 *
@@ -64,12 +47,12 @@ abstract class ModelAdmin extends LeftAndMain {
 	private static $menu_priority = -0.5;
 
 	private static $menu_icon = 'framework/admin/images/menu-icons/16x16/db.png';
-	
+
 	private static $allowed_actions = array(
 		'ImportForm',
 		'SearchForm',
 	);
-	
+
 	private static $url_handlers = array(
 		'$ModelClass/$Action' => 'handleAction'
 	);
@@ -78,27 +61,27 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @var String
 	 */
 	protected $modelClass;
-	
+
 	/**
-	 * Change this variable if you don't want the Import from CSV form to appear. 
+	 * Change this variable if you don't want the Import from CSV form to appear.
 	 * This variable can be a boolean or an array.
-	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo') 
+	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo')
 	 */
 	public $showImportForm = true;
-		
+
 	/**
 	 * List of all {@link DataObject}s which can be imported through
 	 * a subclass of {@link BulkLoader} (mostly CSV data).
 	 * By default {@link CsvBulkLoader} is used, assuming a standard mapping
 	 * of column names to {@link DataObject} properties/relations.
-	 * 
+	 *
 	 * e.g. "BlogEntry" => "BlogEntryCsvBulkLoader"
 	 *
 	 * @config
 	 * @var array
 	 */
 	private static $model_importers = null;
-	
+
 	/**
 	 * Amount of results showing on a single page.
 	 *
@@ -106,7 +89,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @var int
 	 */
 	private static $page_length = 30;
-		
+
 	/**
 	 * Initialize the model admin interface. Sets up embedded jquery libraries and requisite plugins.
 	 */
@@ -115,8 +98,8 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		$models = $this->getManagedModels();
 
-		if($this->request->param('ModelClass')) {
-			$this->modelClass = $this->unsanitiseClassName($this->request->param('ModelClass'));
+		if($this->getRequest()->param('ModelClass')) {
+			$this->modelClass = $this->unsanitiseClassName($this->getRequest()->param('ModelClass'));
 		} else {
 			reset($models);
 			$this->modelClass = key($models);
@@ -126,7 +109,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		if(!array_key_exists($this->modelClass, $models)) {
 			user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
-		
+
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ModelAdmin.js');
 	}
 
@@ -155,7 +138,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			$listField->getConfig()->getComponentByType('GridFieldDetailForm')->setValidator($detailValidator);
 		}
 
-		$form = CMSForm::create( 
+		$form = CMSForm::create(
 			$this,
 			'EditForm',
 			new FieldList($listField),
@@ -169,7 +152,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 
 		$this->extend('updateEditForm', $form);
-		
+
 		return $form;
 	}
 
@@ -217,22 +200,19 @@ abstract class ModelAdmin extends LeftAndMain {
 		$form->setFormAction($this->Link($this->sanitiseClassName($this->modelClass)));
 		$form->addExtraClass('cms-search-form');
 		$form->disableSecurityToken();
-		$form->loadDataFrom($this->request->getVars());
+		$form->loadDataFrom($this->getRequest()->getVars());
 
 		$this->extend('updateSearchForm', $form);
 
 		return $form;
 	}
-	
+
 	public function getList() {
 		$context = $this->getSearchContext();
 		$params = $this->getRequest()->requestVar('q');
 
 		if(is_array($params)) {
-			$trimRecursive = function($v) use(&$trimRecursive) {
-				return is_array($v) ? array_map($trimRecursive, $v) : trim($v);
-			};
-			$params = $trimRecursive($params);
+			$params = ArrayLib::array_map_recursive('trim', $params);
 		}
 
 		$list = $context->getResults($params);
@@ -242,18 +222,18 @@ abstract class ModelAdmin extends LeftAndMain {
 		return $list;
 	}
 
-	
+
 	/**
 	 * Returns managed models' create, search, and import forms
 	 * @uses SearchContext
 	 * @uses SearchFilter
-	 * @return SS_List of forms 
+	 * @return SS_List of forms
 	 */
 	protected function getManagedModelTabs() {
 		$models = $this->getManagedModels();
 		$forms  = new ArrayList();
-		
-		foreach($models as $class => $options) { 
+
+		foreach($models as $class => $options) {
 			$forms->push(new ArrayData(array (
 				'Title'     => $options['title'],
 				'ClassName' => $class,
@@ -261,7 +241,7 @@ abstract class ModelAdmin extends LeftAndMain {
 				'LinkOrCurrent' => ($class == $this->modelClass) ? 'current' : 'link'
 			)));
 		}
-		
+
 		return $forms;
 	}
 
@@ -280,7 +260,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	protected function unsanitiseClassName($class) {
 		return str_replace('-', '\\', $class);
 	}
-	
+
 	/**
 	 * @return array Map of class name to an array of 'title' (see {@link $managed_models})
 	 */
@@ -291,9 +271,9 @@ abstract class ModelAdmin extends LeftAndMain {
 		}
 		if(!count($models)) {
 			user_error(
-				'ModelAdmin::getManagedModels(): 
+				'ModelAdmin::getManagedModels():
 				You need to specify at least one DataObject subclass in public static $managed_models.
-				Make sure that this property is defined, and that its visibility is set to "public"', 
+				Make sure that this property is defined, and that its visibility is set to "public"',
 				E_USER_ERROR
 			);
 		}
@@ -305,10 +285,10 @@ abstract class ModelAdmin extends LeftAndMain {
 				unset($models[$k]);
 			}
 		}
-		
+
 		return $models;
 	}
-	
+
 	/**
 	 * Returns all importers defined in {@link self::$model_importers}.
 	 * If none are defined, we fall back to {@link self::managed_models}
@@ -332,7 +312,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		foreach($importerClasses as $modelClass => $importerClass) {
 			$importers[$modelClass] = new $importerClass($modelClass);
 		}
-		
+
 		return $importers;
 	}
 
@@ -377,19 +357,19 @@ abstract class ModelAdmin extends LeftAndMain {
 			'ClassName' => $this->sanitiseClassName($this->modelClass),
 			'ModelName' => Convert::raw2att($modelName),
 			'Fields' => $specFields,
-			'Relations' => $specRelations, 
+			'Relations' => $specRelations,
 		))->renderWith('ModelAdmin_ImportSpec');
-		
+
 		$fields->push(new LiteralField("SpecFor{$modelName}", $specHTML));
 		$fields->push(
 			new CheckboxField('EmptyBeforeImport', _t('ModelAdmin.EMPTYBEFOREIMPORT', 'Replace data'),
 				false)
-		); 
-		
+		);
+
 		$actions = new FieldList(
 			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
 		);
-		
+
 		$form = new Form(
 			$this,
 			"ImportForm",
@@ -404,12 +384,12 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		return $form;
 	}
-	
+
 	/**
 	 * Imports the submitted CSV file based on specifications given in
 	 * {@link self::model_importers}.
 	 * Redirects back with a success/failure message.
-	 * 
+	 *
 	 * @todo Figure out ajax submission of files via jQuery.form plugin
 	 *
 	 * @param array $data
@@ -417,7 +397,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @param SS_HTTPRequest $request
 	 */
 	public function import($data, $form, $request) {
-		if(!$this->showImportForm || (is_array($this->showImportForm) 
+		if(!$this->showImportForm || (is_array($this->showImportForm)
 				&& !in_array($this->modelClass,$this->showImportForm))) {
 
 			return false;
@@ -470,37 +450,37 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		// Show the class name rather than ModelAdmin title as root node
 		$models = $this->getManagedModels();
-		$params = $this->request->getVars();
+		$params = $this->getRequest()->getVars();
 		if(isset($params['url'])) unset($params['url']);
-		
+
 		$items[0]->Title = $models[$this->modelClass]['title'];
 		$items[0]->Link = Controller::join_links(
 			$this->Link($this->sanitiseClassName($this->modelClass)),
 			'?' . http_build_query($params)
 		);
-		
+
 		return $items;
 	}
 
 	/**
-	 * overwrite the static page_length of the admin panel, 
+	 * overwrite the static page_length of the admin panel,
 	 * should be called in the project _config file.
 	 *
-	 * @deprecated 3.1 Use "ModelAdmin.page_length" config setting
+	 * @deprecated 4.0 Use "ModelAdmin.page_length" config setting
 	 */
 	public static function set_page_length($length){
-		Deprecation::notice('3.2', 'Use "ModelAdmin.page_length" config setting');
+		Deprecation::notice('4.0', 'Use "ModelAdmin.page_length" config setting');
 		self::config()->page_length = $length;
 	}
-	
+
 	/**
 	 * Return the static page_length of the admin, default as 30
 	 *
-	 * @deprecated 3.1 Use "ModelAdmin.page_length" config setting
+	 * @deprecated 4.0 Use "ModelAdmin.page_length" config setting
 	 */
 	public static function get_page_length(){
-		Deprecation::notice('3.2', 'Use "ModelAdmin.page_length" config setting');
+		Deprecation::notice('4.0', 'Use "ModelAdmin.page_length" config setting');
 		return self::config()->page_length;
-	} 
-	
+	}
+
 }

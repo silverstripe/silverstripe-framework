@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class BacktraceTest extends SapphireTest {
-	
+
 	public function testFullFuncNameWithArgsAndCustomCharLimit() {
 		$func = array(
 			'class' => 'MyClass',
@@ -22,7 +22,7 @@ class BacktraceTest extends SapphireTest {
 			SS_Backtrace::full_func_name($func, true, 20)
 		);
 	}
-	
+
 	public function testIgnoredFunctionArgs() {
 		$bt = array(
 			array(
@@ -50,7 +50,7 @@ class BacktraceTest extends SapphireTest {
 			)
 		);
 		$orig = Config::inst()->get('SS_Backtrace', 'ignore_function_args');
-		Config::inst()->update('SS_Backtrace', 'ignore_function_args', 
+		Config::inst()->update('SS_Backtrace', 'ignore_function_args',
 			array(
 				array('MyClass', 'myIgnoredClassFunction'),
 				'myIgnoredGlobalFunction'
@@ -62,9 +62,9 @@ class BacktraceTest extends SapphireTest {
 		$this->assertEquals('<filtered>', $filtered[0]['args']['password'], 'Filters global functions');
 		$this->assertEquals('<filtered>', $filtered[1]['args']['password'], 'Filters class functions');
 		$this->assertEquals('myval', $filtered[2]['args']['myarg'], 'Doesnt filter other functions');
-		
+
 		Config::inst()->remove('SS_Backtrace', 'ignore_function_args');
 		Config::inst()->update('SS_Backtrace', 'ignore_function_args', $orig);
 	}
-	
+
 }

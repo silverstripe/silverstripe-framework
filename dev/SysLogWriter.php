@@ -4,7 +4,7 @@ require_once 'Zend/Log/Writer/Abstract.php';
 /**
  * Sends an error message to the system log whenever an
  * error occurs.
- * 
+ *
  * @see SS_Log for more information on using writers
  * @uses Zend_Log_Writer_Abstract
  * @package framework
@@ -29,7 +29,7 @@ class SS_SysLogWriter extends Zend_Log_Writer_Abstract {
 	public function __destruct() {
 		closelog();
 	}
-	
+
 	/**
 	 * @param $option See {@link __construct}
 	 * @return SS_SysLogWriter

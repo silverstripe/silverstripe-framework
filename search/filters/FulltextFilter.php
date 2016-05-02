@@ -15,7 +15,7 @@
  *
  * To enable full-text matching on fields, you also need to add an index to the
  * database table, using the {$indexes} hash in your DataObject subclass:
- * 
+ *
  * <code>
  *   private static $indexes = array(
  *      'SearchFields' => 'fulltext(Name, Title, Description)'
@@ -28,20 +28,14 @@ class FulltextFilter extends SearchFilter {
 
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		return $query->where(sprintf(
-			"MATCH (%s) AGAINST ('%s')",
-			$this->getDbName(),
-			Convert::raw2sql($this->getValue())
-		));
+		$predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName());
+		return $query->where(array($predicate => $this->getValue()));
 	}
 
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		return $query->where(sprintf(
-			"NOT MATCH (%s) AGAINST ('%s')",
-			$this->getDbName(),
-			Convert::raw2sql($this->getValue())
-		));
+		$predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName());
+		return $query->where(array($predicate => $this->getValue()));
 	}
 
 	public function isEmpty() {
@@ -64,12 +58,12 @@ class FulltextFilter extends SearchFilter {
 		if(is_array($indexes) && array_key_exists($this->getName(), $indexes)) {
 			$index = $indexes[$this->getName()];
 			if(is_array($index) && array_key_exists("value", $index)) {
-				return $index['value'];
+				return $this->prepareColumns($index['value']);
 			} else {
 				// Parse a fulltext string (eg. fulltext ("ColumnA", "ColumnB")) to figure out which columns
 				// we need to search.
 				if(preg_match('/^fulltext\s+\((.+)\)$/i', $index, $matches)) {
-					return $matches[1];
+					return $this->prepareColumns($matches[1]);
 				} else {
 					throw new Exception("Invalid fulltext index format for '" . $this->getName()
 						. "' on '" . $this->model . "'");
@@ -78,6 +72,21 @@ class FulltextFilter extends SearchFilter {
 		}
 
 		return parent::getDbName();
+	}
+
+	/**
+	 * Adds table identifier to the every column.
+	 * Columns must have table identifier to prevent duplicate column name error.
+	 *
+	 * @return string
+	*/
+	protected function prepareColumns($columns) {
+		$cols = preg_split('/"?\s*,\s*"?/', trim($columns, '(") '));
+		$class = ClassInfo::table_for_object_field($this->model, current($cols));
+		$cols = array_map(function($col) use ($class) {
+			return sprintf('"%s"."%s"', $class, $col);
+		}, $cols);
+		return implode(',', $cols);
 	}
 
 }

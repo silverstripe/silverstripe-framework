@@ -41,6 +41,6 @@ AggregateTest_Baz:
       Baz: 1
       Foos: =>AggregateTest_Foo.foo1,=>AggregateTest_Foo.foo2,=>AggregateTest_Fab.fab1,=>AggregateTest_Fab.fab2
    baz2:
-      Baz: 2      
+      Baz: 2
       Foos: =>AggregateTest_Foo.foo3,=>AggregateTest_Fab.fab3
-      
+

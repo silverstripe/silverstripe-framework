@@ -10,7 +10,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 
 		// enable fulltext option on this table
 		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options',
-			array('MySQLDatabase' => 'ENGINE=MyISAM'));
+			array(MySQLSchemaManager::ID => 'ENGINE=MyISAM'));
 
 		parent::setUpOnce();
 	}
@@ -19,25 +19,28 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 	 * Check that once a schema has been generated, then it doesn't need any more updating
 	 */
 	public function testFieldsDontRerequestChanges() {
-		$db = DB::getConn();
+		$schema = DB::get_schema();
+		$test = $this;
 		DB::quiet();
 
 		// Table will have been initially created by the $extraDataObjects setting
 
 		// Verify that it doesn't need to be recreated
-		$db->beginSchemaUpdate();
-		$obj = new DataObjectSchemaGenerationTest_DO();
-		$obj->requireTable();
-		$needsUpdating = $db->doesSchemaNeedUpdating();
-		$db->cancelSchemaUpdate();
-		$this->assertFalse($needsUpdating);
+		$schema->schemaUpdate(function() use ($test, $schema) {
+			$obj = new DataObjectSchemaGenerationTest_DO();
+			$obj->requireTable();
+			$needsUpdating = $schema->doesSchemaNeedUpdating();
+			$schema->cancelSchemaUpdate();
+			$test->assertFalse($needsUpdating);
+		});
 	}
 
 	/**
 	 * Check that updates to a class fields are reflected in the database
 	 */
 	public function testFieldsRequestChanges() {
-		$db = DB::getConn();
+		$schema = DB::get_schema();
+		$test = $this;
 		DB::quiet();
 
 		// Table will have been initially created by the $extraDataObjects setting
@@ -48,30 +51,33 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		));
 
 		// Verify that the above extra field triggered a schema update
-		$db->beginSchemaUpdate();
-		$obj = new DataObjectSchemaGenerationTest_DO();
-		$obj->requireTable();
-		$needsUpdating = $db->doesSchemaNeedUpdating();
-		$db->cancelSchemaUpdate();
-		$this->assertTrue($needsUpdating);
+		$schema->schemaUpdate(function() use ($test, $schema) {
+			$obj = new DataObjectSchemaGenerationTest_DO();
+			$obj->requireTable();
+			$needsUpdating = $schema->doesSchemaNeedUpdating();
+			$schema->cancelSchemaUpdate();
+			$test->assertTrue($needsUpdating);
+		});
 	}
 
 	/**
 	 * Check that indexes on a newly generated class do not subsequently request modification
 	 */
 	public function testIndexesDontRerequestChanges() {
-		$db = DB::getConn();
+		$schema = DB::get_schema();
+		$test = $this;
 		DB::quiet();
 
 		// Table will have been initially created by the $extraDataObjects setting
 
 		// Verify that it doesn't need to be recreated
-		$db->beginSchemaUpdate();
-		$obj = new DataObjectSchemaGenerationTest_IndexDO();
-		$obj->requireTable();
-		$needsUpdating = $db->doesSchemaNeedUpdating();
-		$db->cancelSchemaUpdate();
-		$this->assertFalse($needsUpdating);
+		$schema->schemaUpdate(function() use ($test, $schema) {
+			$obj = new DataObjectSchemaGenerationTest_IndexDO();
+			$obj->requireTable();
+			$needsUpdating = $schema->doesSchemaNeedUpdating();
+			$schema->cancelSchemaUpdate();
+			$test->assertFalse($needsUpdating);
+		});
 
 		// Test with alternate index format, although these indexes are the same
 		Config::inst()->remove('DataObjectSchemaGenerationTest_IndexDO', 'indexes');
@@ -80,19 +86,21 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		);
 
 		// Verify that it still doesn't need to be recreated
-		$db->beginSchemaUpdate();
-		$obj2 = new DataObjectSchemaGenerationTest_IndexDO();
-		$obj2->requireTable();
-		$needsUpdating = $db->doesSchemaNeedUpdating();
-		$db->cancelSchemaUpdate();
-		$this->assertFalse($needsUpdating);
+		$schema->schemaUpdate(function() use ($test, $schema) {
+			$obj2 = new DataObjectSchemaGenerationTest_IndexDO();
+			$obj2->requireTable();
+			$needsUpdating = $schema->doesSchemaNeedUpdating();
+			$schema->cancelSchemaUpdate();
+			$test->assertFalse($needsUpdating);
+		});
 	}
 
 	/**
 	 * Check that updates to a dataobject's indexes are reflected in DDL
 	 */
 	public function testIndexesRerequestChanges() {
-		$db = DB::getConn();
+		$schema = DB::get_schema();
+		$test = $this;
 		DB::quiet();
 
 		// Table will have been initially created by the $extraDataObjects setting
@@ -105,12 +113,13 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		));
 
 		// Verify that the above index change triggered a schema update
-		$db->beginSchemaUpdate();
-		$obj = new DataObjectSchemaGenerationTest_IndexDO();
-		$obj->requireTable();
-		$needsUpdating = $db->doesSchemaNeedUpdating();
-		$db->cancelSchemaUpdate();
-		$this->assertTrue($needsUpdating);
+		$schema->schemaUpdate(function() use ($test, $schema) {
+			$obj = new DataObjectSchemaGenerationTest_IndexDO();
+			$obj->requireTable();
+			$needsUpdating = $schema->doesSchemaNeedUpdating();
+			$schema->cancelSchemaUpdate();
+			$test->assertTrue($needsUpdating);
+		});
 	}
 
 	/**
@@ -169,6 +178,11 @@ class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
 	private static $db = array(
 		'Enum1' => 'Enum("A, B, C, D","")',
 		'Enum2' => 'Enum("A, B, C, D","A")',
+		'NumberField' => 'Decimal',
+		'FloatingField' => 'Decimal(10,3,1.1)',
+		'TextValue' => 'Varchar',
+		'Date' => 'SS_Datetime',
+		'MyNumber' => 'Int'
 	);
 }
 

@@ -2,9 +2,9 @@
 /**
  * Allows input of credit card numbers via four separate form fields,
  * including generic validation of its numeric values.
- * 
+ *
  * @todo Validate
- * 
+ *
  * @package forms
  * @subpackage fields-formattedinput
  */
@@ -25,7 +25,7 @@ class CreditCardField extends TextField {
 			)
 		);
 	}
-	
+
 	public function Field($properties = array()) {
 		$parts = $this->value;
 		if(!is_array($parts)) $parts = explode("\n", chunk_split($parts,4,"\n"));
@@ -57,12 +57,14 @@ class CreditCardField extends TextField {
 		if(is_array($this->value)) return implode("", $this->value);
 		else return $this->value;
 	}
-	
+
 	public function validate($validator){
-		// If the field is empty then don't return an invalidation message
-		if(!trim(implode("", $this->value))) return true;
-		
+		if(!$this->value || !trim(implode("", $this->value))) {
+			return true;
+		}
+
 		$i=0;
+
 		if($this->value) foreach($this->value as $part){
 			if(!$part || !(strlen($part) == 4) || !preg_match("/([0-9]{4})/", $part)){
 				switch($i){
@@ -74,7 +76,7 @@ class CreditCardField extends TextField {
 				$validator->validationError(
 					$this->name,
 					_t(
-						'Form.VALIDATIONCREDITNUMBER', 
+						'Form.VALIDATIONCREDITNUMBER',
 						"Please ensure you have entered the {number} credit card number correctly",
 						array('number' => $number)
 					),

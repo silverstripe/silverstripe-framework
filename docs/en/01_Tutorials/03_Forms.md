@@ -306,7 +306,7 @@ This code introduces a few new concepts, so let's step through it.
 	```php
 	$submissions = new GroupedList(BrowserPollSubmission::get());
 ```
-First we get all of the `BrowserPollSubmission` records from the database. This returns the submissions as a [api:DataList].Then we wrap it inside a [api:GroupedList], which adds the ability to group those records. The resulting object will behave just like the original `DataList`, though (with the addition of a `groupBy()` method). 
+First we get all of the `BrowserPollSubmission` records from the database. This returns the submissions as a [api:DataList]. Then we wrap it inside a [api:GroupedList], which adds the ability to group those records. The resulting object will behave just like the original `DataList`, though (with the addition of a `groupBy()` method). 
 
 ```php
 	$total = $submissions->Count();

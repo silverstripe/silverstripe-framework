@@ -1,7 +1,7 @@
 <?php
 /**
  * Test reporter optimised for CLI (ie, plain-text) output
- * 
+ *
  * @package framework
  * @subpackage testing
  */
@@ -29,7 +29,7 @@ class CliTestReporter extends SapphireTestReporter {
 				}
 			}
 		}
-		
+
 		echo "\n\n";
 		if ($failCount == 0 && $incompleteCount > 0) {
 			echo SS_Cli::text(" OK, BUT INCOMPLETE TESTS! ", "black", "yellow");
@@ -43,7 +43,7 @@ class CliTestReporter extends SapphireTestReporter {
 			SS_Cli::text("$failCount failures"), SS_Cli::text("$incompleteCount incomplete"));
 
 		echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
-		
+
 		// Use sake dev/tests/all --showslow to show slow tests
 		if((isset($_GET['args']) && is_array($_GET['args']) && in_array('--showslow', $_GET['args']))
 				|| isset($_GET['showslow'])) {
@@ -61,7 +61,7 @@ class CliTestReporter extends SapphireTestReporter {
 		}
 		echo "\n";
 	}
-	
+
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
 		// Status indicator, a la PHPUnit
 		switch($this->currentTest['status']) {
@@ -71,7 +71,7 @@ class CliTestReporter extends SapphireTestReporter {
 			case TEST_SUCCESS: echo SS_Cli::text(".","green"); break;
 			default: echo SS_Cli::text("?", "yellow"); break;
 		}
-		
+
 		static $colCount = 0;
 		$colCount++;
 		if($colCount % 80 == 0) echo " - $colCount\n";
@@ -79,25 +79,25 @@ class CliTestReporter extends SapphireTestReporter {
 		$this->writeTest($this->currentTest);
 		parent::endTest($test, $time);
 	}
-	
-	
+
+
 	protected function writeTest($test) {
 		if ($test['status'] != TEST_SUCCESS) {
 			$filteredTrace = array();
 			$ignoredClasses = array('TestRunner');
 			foreach($test['trace'] as $item) {
 				if(isset($item['file'])
-						&& strpos($item['file'], 'PHPUnit/Framework') === false 
+						&& strpos($item['file'], 'PHPUnit/Framework') === false
 						&& (!isset($item['class']) || !in_array($item['class'], $ignoredClasses))) {
-					
+
 					$filteredTrace[] = $item;
 				}
-				
+
 				if(isset($item['class']) && isset($item['function']) && $item['class'] == 'PHPUnit_Framework_TestSuite'
 						&& $item['function'] == 'run') {
 					break;
 				}
-				
+
 			}
 
 			$color = ($test['status'] == 2) ? 'yellow' : 'red';
@@ -106,5 +106,5 @@ class CliTestReporter extends SapphireTestReporter {
 			echo "--------------------\n";
 		}
 	}
-	
+
 }

@@ -1,10 +1,12 @@
 ## SilverStripe Framework
 
-[![Build Status](https://api.travis-ci.org/silverstripe/silverstripe-framework.svg?branch=3.1)](https://travis-ci.org/silverstripe/silverstripe-framework)
+[![Build Status](https://api.travis-ci.org/silverstripe/silverstripe-framework.svg?branch=master)](https://travis-ci.org/silverstripe/silverstripe-framework)
 [![Latest Stable Version](https://poser.pugx.org/silverstripe/framework/version.svg)](http://www.silverstripe.org/stable-download/)
 [![Latest Unstable Version](https://poser.pugx.org/silverstripe/framework/v/unstable.svg)](https://packagist.org/packages/silverstripe/framework)
 [![Total Downloads](https://poser.pugx.org/silverstripe/framework/downloads.svg)](https://packagist.org/packages/silverstripe/framework)
 [![License](https://poser.pugx.org/silverstripe/framework/license.svg)](https://github.com/silverstripe/silverstripe-framework#license)
+[![Dependency Status](https://www.versioneye.com/php/silverstripe:framework/badge.svg)](https://www.versioneye.com/php/silverstripe:framework)
+[![Reference Status](https://www.versioneye.com/php/silverstripe:framework/reference_badge.svg?style=flat)](https://www.versioneye.com/php/silverstripe:framework/references)
 
 PHP5 framework forming the base for the SilverStripe CMS ([http://silverstripe.org](http://silverstripe.org)). 
 Requires a [`silverstripe-installer`](http://github.com/silverstripe/silverstripe-installer) base project. Typically used alongside the [`cms`](http://github.com/silverstripe/silverstripe-cms) module.

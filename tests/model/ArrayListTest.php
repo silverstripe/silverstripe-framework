@@ -67,26 +67,26 @@ class ArrayListTest extends SapphireTest {
 			(object) array('First' => 'SecondFirst', 'Second' => 'SecondSecond'),
 			new ArrayListTest_Object('ThirdFirst', 'ThirdSecond')
 		));
-		
+
 		$this->assertEquals($list->toNestedArray(), array(
 			array('First' => 'FirstFirst', 'Second' => 'FirstSecond'),
 			array('First' => 'SecondFirst', 'Second' => 'SecondSecond'),
 			array('First' => 'ThirdFirst', 'Second' => 'ThirdSecond')
 		));
 	}
-	
+
 	public function testEach() {
 		$list = new ArrayList(array(1, 2, 3));
-		
+
 		$count = 0;
 		$test = $this;
-		
+
 		$list->each(function($item) use (&$count, $test) {
 			$count++;
-			
+
 			$test->assertTrue(is_int($item));
 		});
-		
+
 		$this->assertEquals($list->Count(), $count);
 	}
 
@@ -273,7 +273,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John'),
 			array('Name' => 'Steve')
 		));
-		
+
 		// Check original list isn't altered
 		$this->assertEquals($list->toArray(), array(
 			array('Name' => 'Steve'),
@@ -281,7 +281,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John')
 		));
 	}
-	
+
 	public function testSortSimpleASCOrder() {
 		$list = new ArrayList(array(
 			array('Name' => 'Steve'),
@@ -304,7 +304,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John'),
 			array('Name' => 'Steve')
 		));
-		
+
 		// Sort quoted string
 		$list3 = $list->sort('"Name" ASCENDING');
 		$this->assertEquals($list3->toArray(), array(
@@ -320,7 +320,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John'),
 			array('Name' => 'Steve')
 		));
-		
+
 		// Check original list isn't altered
 		$this->assertEquals($list->toArray(), array(
 			array('Name' => 'Steve'),
@@ -328,7 +328,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John')
 		));
 	}
-	
+
 	public function testSortSimpleDESCOrder() {
 		$list = new ArrayList(array(
 			array('Name' => 'Steve'),
@@ -351,7 +351,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John'),
 			(object) array('Name' => 'Bob')
 		));
-		
+
 		// Sort quoted string
 		$list3 = $list->sort('"Name" DESCENDING');
 		$this->assertEquals($list3->toArray(), array(
@@ -367,7 +367,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John'),
 			(object) array('Name' => 'Bob')
 		));
-		
+
 		// Check original list isn't altered
 		$this->assertEquals($list->toArray(), array(
 			array('Name' => 'Steve'),
@@ -375,7 +375,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'John')
 		));
 	}
-	
+
 	public function testReverse() {
 		$list = new ArrayList(array(
 			array('Name' => 'John'),
@@ -385,7 +385,7 @@ class ArrayListTest extends SapphireTest {
 
 		$list = $list->sort('Name', 'ASC');
 		$list = $list->reverse();
-		
+
 		$this->assertEquals($list->toArray(), array(
 			array('Name' => 'Steve'),
 			array('Name' => 'John'),
@@ -408,18 +408,18 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals($list->first()->Name, 'Object2', 'Object2 should be first in the list');
 		$this->assertEquals($list->last()->Name, 'Object3', 'Object3 should be last in the list');
 	}
-	
+
 	public function testMultiSort() {
 		$list = new ArrayList(array(
 			(object) array('ID'=>3, 'Name'=>'Bert', 'Importance'=>1),
 			(object) array('ID'=>1, 'Name'=>'Aron', 'Importance'=>2),
 			(object) array('ID'=>2, 'Name'=>'Aron', 'Importance'=>1),
 		));
-		
+
 		$list = $list->sort(array('Name'=>'ASC', 'Importance'=>'ASC'));
 		$this->assertEquals($list->first()->ID, 2, 'Aron.2 should be first in the list');
 		$this->assertEquals($list->last()->ID, 3, 'Bert.3 should be last in the list');
-		
+
 		$list = $list->sort(array('Name'=>'ASC', 'Importance'=>'DESC'));
 		$this->assertEquals($list->first()->ID, 1, 'Aron.2 should be first in the list');
 		$this->assertEquals($list->last()->ID, 3, 'Bert.3 should be last in the list');
@@ -448,7 +448,6 @@ class ArrayListTest extends SapphireTest {
 		// This call will trigger a fatal error if there are issues with circular dependencies
 		$items->sort('Sort');
 	}
-	
 	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
 	 */
@@ -461,7 +460,7 @@ class ArrayListTest extends SapphireTest {
 		$list = $list->filter('Name','Bob');
 		$this->assertEquals(array((object)array('Name'=>'Bob')), $list->toArray(), 'List should only contain Bob');
 	}
-	
+
 	/**
 	 * $list->filter('Name', array('Steve', 'John'); // Steve and John in list
 	 */
@@ -471,7 +470,7 @@ class ArrayListTest extends SapphireTest {
 			(object) array('Name' => 'Bob'),
 			array('Name' => 'John')
 		));
-		
+
 		$expected = array(
 			array('Name' => 'Steve'),
 			array('Name' => 'John')
@@ -479,7 +478,7 @@ class ArrayListTest extends SapphireTest {
 		$list = $list->filter('Name',array('Steve','John'));
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and John');
 	}
-	
+
 	/**
 	 * $list->filter('Name', array('Steve', 'John'); // negative version
 	 */
@@ -492,7 +491,7 @@ class ArrayListTest extends SapphireTest {
 		$list = $list->filter(array('Name'=>'Clair'));
 		$this->assertEquals(array(), $list->toArray(), 'List should be empty');
 	}
-	
+
 	/**
 	 * $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
 	 */
@@ -506,7 +505,7 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals(array((object)array('Name'=>'Steve', 'ID'=>2)), $list->toArray(),
 			'List should only contain object Steve');
 	}
-	
+
 	/**
 	 * $list->filter(array('Name'=>'bob, 'Age'=>21)); // negative version
 	 */
@@ -519,7 +518,7 @@ class ArrayListTest extends SapphireTest {
 		$list = $list->filter(array('Name'=>'Steve', 'ID'=>4));
 		$this->assertEquals(array(), $list->toArray(), 'List should be empty');
 	}
-	
+
 	/**
 	 * $list->filter(array('Name'=>'Steve', 'Age'=>array(21, 43))); // Steve with the Age 21 or 43
 	 */
@@ -530,9 +529,9 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'Clair', 'ID' => 2, 'Age'=>21),
 			array('Name' => 'Steve', 'ID' => 3, 'Age'=>43)
 		));
-		
+
 		$list = $list->filter(array('Name'=>'Steve','Age'=>array(21, 43)));
-		
+
 		$expected = array(
 			array('Name' => 'Steve', 'ID' => 1, 'Age'=>21),
 			array('Name' => 'Steve', 'ID' => 3, 'Age'=>43)
@@ -540,7 +539,7 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve');
 	}
-	
+
 	/**
 	 * $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
 	 */
@@ -552,17 +551,83 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'Clair', 'ID' => 2, 'Age'=>52),
 			array('Name' => 'Steve', 'ID' => 3, 'Age'=>43)
 		));
-		
+
 		$list = $list->filter(array('Name'=>array('Steve','Clair'),'Age'=>array(21, 43)));
-		
+
 		$expected = array(
 			array('Name' => 'Steve', 'ID' => 1, 'Age'=>21),
 			array('Name' => 'Clair', 'ID' => 2, 'Age'=>21),
 			array('Name' => 'Steve', 'ID' => 3, 'Age'=>43)
 		);
-		
+
 		$this->assertEquals(3, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Steve and Clair');
+	}
+
+	public function testFilterAny() {
+
+		$list = new ArrayList(array(
+			$steve = array('Name' => 'Steve', 'ID' => 1, 'Age' => 21),
+			$bob = array('Name' => 'Bob', 'ID' => 2, 'Age' => 18),
+			$clair = array('Name' => 'Clair', 'ID' => 3, 'Age' => 21),
+			$phil = array('Name' => 'Phil', 'ID' => 4, 'Age' => 21),
+			$oscar = array('Name' => 'Oscar', 'ID' => 5, 'Age' => 52),
+			$mike = array('Name' => 'Mike', 'ID' => 6, 'Age' => 43),
+		));
+
+		// only bob in the list
+		//$list = $list->filterAny('Name', 'bob');
+		$filteredList = $list->filterAny('Name', 'Bob')->toArray();
+		$this->assertCount(1, $filteredList);
+		$this->assertContains($bob, $filteredList);
+
+		// azis or bob in the list
+		//$list = $list->filterAny('Name', array('aziz', 'bob');
+		$filteredList = $list->filterAny('Name', array('Aziz', 'Bob'))->toArray();
+		$this->assertCount(1, $filteredList);
+		$this->assertContains($bob, $filteredList);
+
+		$filteredList = $list->filterAny('Name', array('Steve', 'Bob'))->toArray();
+		$this->assertCount(2, $filteredList);
+		$this->assertContains($steve, $filteredList);
+		$this->assertContains($bob, $filteredList);
+
+		// bob or anyone aged 21 in the list
+		//$list = $list->filterAny(array('Name'=>'bob, 'Age'=>21));
+		$filteredList = $list->filterAny(array('Name' => 'Bob', 'Age' => 21))->toArray();
+		$this->assertCount(4, $filteredList);
+		$this->assertContains($bob, $filteredList);
+		$this->assertContains($steve, $filteredList);
+		$this->assertContains($clair, $filteredList);
+		$this->assertContains($phil, $filteredList);
+
+		// bob or anyone aged 21 or 43 in the list
+		// $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43)));
+		$filteredList = $list->filterAny(array('Name' => 'Bob', 'Age' => array(21, 43)))->toArray();
+		$this->assertCount(5, $filteredList);
+		$this->assertContains($bob, $filteredList);
+		$this->assertContains($steve, $filteredList);
+		$this->assertContains($clair, $filteredList);
+		$this->assertContains($mike, $filteredList);
+		$this->assertContains($phil, $filteredList);
+
+		// all bobs, phils or anyone aged 21 or 43 in the list
+		//$list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+		$filteredList = $list->filterAny(array('Name' => array('Bob', 'Phil'), 'Age' => array(21, 43)))->toArray();
+		$this->assertCount(5, $filteredList);
+		$this->assertContains($bob, $filteredList);
+		$this->assertContains($steve, $filteredList);
+		$this->assertContains($clair, $filteredList);
+		$this->assertContains($mike, $filteredList);
+		$this->assertContains($phil, $filteredList);
+
+		$filteredList = $list->filterAny(array('Name' => array('Bob', 'Nobody'), 'Age' => array(21, 43)))->toArray();
+		$this->assertCount(5, $filteredList);
+		$this->assertContains($bob, $filteredList);
+		$this->assertContains($steve, $filteredList);
+		$this->assertContains($clair, $filteredList);
+		$this->assertContains($mike, $filteredList);
+		$this->assertContains($phil, $filteredList);
 	}
 
 	/**
@@ -590,7 +655,7 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Clair');
 		$this->assertTrue($list instanceof SS_Filterable, 'The List should be of type SS_Filterable');
 	}
-	
+
 	/**
 	 * $list->exclude('Name', 'bob'); // exclude bob from list
 	 */
@@ -600,7 +665,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'Bob'),
 			array('Name' => 'John')
 		));
-		
+
 		$list = $list->exclude('Name', 'Bob');
 		$expected = array(
 			array('Name' => 'Steve'),
@@ -609,7 +674,7 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should not contain Bob');
 	}
-	
+
 	/**
 	 * $list->exclude('Name', 'bob'); // No exclusion version
 	 */
@@ -619,7 +684,7 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'Bob'),
 			array('Name' => 'John')
 		));
-		
+
 		$list = $list->exclude('Name', 'Clair');
 		$expected = array(
 			array('Name' => 'Steve'),
@@ -628,7 +693,7 @@ class ArrayListTest extends SapphireTest {
 		);
 		$this->assertEquals($expected, $list->toArray(), 'List should be unchanged');
 	}
-	
+
 	/**
 	 * $list->exclude('Name', array('Steve','John'));
 	 */
@@ -643,7 +708,7 @@ class ArrayListTest extends SapphireTest {
 		$this->assertEquals(1, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Bob');
 	}
-	
+
 	/**
 	 * $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude all Bob that has Age 21
 	 */
@@ -653,14 +718,14 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'Bob' , 'Age' => 32),
 			array('Name' => 'John', 'Age' => 21)
 		));
-		
+
 		$list = $list->exclude(array('Name' => 'Bob', 'Age' => 21));
-		
+
 		$expected = array(
 			array('Name' => 'Bob', 'Age' => 32),
 			array('Name' => 'John', 'Age' => 21)
 		);
-		
+
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain John and Bob');
 	}
@@ -690,7 +755,7 @@ class ArrayListTest extends SapphireTest {
 		);
 		$this->assertEquals($expected, $list->toArray());
 	}
-	
+
 	/**
 	 * $list->exclude(array('Name'=>array('bob','phil'), 'Age'=>array(10, 16), 'Bananas'=>true));
 	 */
@@ -785,6 +850,21 @@ class ArrayListTest extends SapphireTest {
 
 		$element = $list->byID(4);
 		$this->assertNull($element);
+	}
+
+	public function testByIDs() {
+		$list = new ArrayList(array(
+			array('ID' => 1, 'Name' => 'Steve'),
+			array('ID' => 2, 'Name' => 'Bob'),
+			array('ID' => 3, 'Name' => 'John')
+		));
+		$knownIDs = $list->column('ID');
+		$removedID = array_pop($knownIDs);
+		$filteredItems = $list->byIDs($knownIDs);
+		foreach ($filteredItems as $item) {
+			$this->assertContains($item->ID, $knownIDs);
+			$this->assertNotEquals($removedID, $item->ID);
+		}
 	}
 
 	public function testByIDEmpty() {

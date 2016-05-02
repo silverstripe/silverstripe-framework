@@ -5,12 +5,12 @@
  */
 class PermissionRoleTest extends FunctionalTest {
 	protected static $fixture_file = 'PermissionRoleTest.yml';
-	
+
 	public function testDelete() {
 		$role = $this->objFromFixture('PermissionRole', 'role');
-		
+
 		$role->delete();
-		
+
 		$this->assertEquals(0, DataObject::get('PermissionRole', "\"ID\"={$role->ID}")->count(),
 			'Role is removed');
 		$this->assertEquals(0, DataObject::get('PermissionRoleCode',"\"RoleID\"={$role->ID}")->count(),

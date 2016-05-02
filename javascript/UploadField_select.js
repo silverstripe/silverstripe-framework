@@ -1,7 +1,7 @@
 (function($) {
 	$.entwine('ss', function($) {
 		// Install the directory selection handler
-		$('form.uploadfield-form #ParentID .TreeDropdownField').entwine({
+		$('form.uploadfield-form .TreeDropdownField').entwine({
 			onmatch: function() {
 				this._super();
 

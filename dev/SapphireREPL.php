@@ -23,7 +23,7 @@ define('30719',E_ALL);
  * @subpackage dev
  */
 class SapphireREPL extends Controller {
-	
+
 	private static $allowed_actions = array(
 		'index'
 	);
@@ -80,8 +80,8 @@ class SapphireREPL extends Controller {
 				}
 				catch( Exception $__repl_exception ) {
 					echo SS_Cli::start_colour("red");
-					printf( '%s (code: %d) got thrown'.PHP_EOL, 
-						get_class($__repl_exception), 
+					printf( '%s (code: %d) got thrown'.PHP_EOL,
+						get_class($__repl_exception),
 						$__repl_exception->getCode() );
 					print $__repl_exception;
 					echo "\n";

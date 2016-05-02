@@ -96,7 +96,7 @@ environments. If for some reason you don't have access to the command line, you 
 
 ### Via the CLI
 
-The [sake](../cli) executable that comes with SilverStripe can trigger a customized [api:TestRunner] class that 
+The [sake](../cli) executable that comes with SilverStripe can trigger a customised [api:TestRunner] class that 
 handles the PHPUnit configuration and output formatting. While the custom test runner a handy tool, it's also more 
 limited than using `phpunit` directly, particularly around formatting test output.
 
@@ -116,6 +116,46 @@ limited than using `phpunit` directly, particularly around formatting test outpu
 	sake dev/tests/all SkipTests=MySkippedTest
 	# Skip some tests
 
+## Making Tests Run Fast
+A major impedement to testing is that by default tests are extremely slow to run.  There are two things that can be done to speed them up:
+
+### Disable xDebug
+Unless executing a coverage report there is no need to have xDebug enabled.
+
+    :::bash
+    # Disable xdebug
+    sudo php5dismod xdebug
+    
+    # Run tests
+    phpunit framework/tests/
+    
+    # Enable xdebug
+    sudo php5enmod xdebug
+    
+### Use SQLite In Memory
+SQLIte can be configured to run in memory as opposed to disk and this makes testing an order of magnitude faster.  To effect this change add the following to mysite/_config.php - this enables an optional flag to switch between MySQL and SQLite.  Note also that the package silverstripe/sqlite3 will need installed, version will vary depending on which version of SilverStripe is being tested.
+
+    :::php
+    if(Director::isDev()) {
+    	if(isset($_GET['db']) && ($db = $_GET['db'])) {
+        	global $databaseConfig;
+        	if($db == 'sqlite3') {
+        		$databaseConfig['type'] = 'SQLite3Database';
+        		$databaseConfig['path'] = ':memory:';
+        	}
+    	}
+	}
+
+To use SQLite append '' db=sqlite3 after the phpunit command.
+
+    :::bash
+    phpunit framework/tests '' db=sqlite3
+    
+### Speed Comparison
+Testing against a medium sized module with 93 tests:
+* SQLite - 16.15s
+* MySQL - 314s
+This means using SQLite will run tests over 20 times faster.
 
 ## Test Databases and Fixtures
 
@@ -136,7 +176,7 @@ databases on your machine. To get rid of them is a call to `http://yoursite.com/
 ## Custom PHPUnit Configuration
 
 The `phpunit` executable can be configured by command line arguments or through an XML file. SilverStripe comes with a 
-default `phpunit.xml.dist` that you can use as a starting point. Copy the file into `phpunit.xml` and customize to your 
+default `phpunit.xml.dist` that you can use as a starting point. Copy the file into `phpunit.xml` and customise to your 
 needs.
 
 **phpunit.xml**

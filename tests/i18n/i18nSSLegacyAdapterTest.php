@@ -8,10 +8,10 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		
+
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
-		FileSystem::makeFolder($this->alternateBaseSavePath);
+		Filesystem::makeFolder($this->alternateBaseSavePath);
 		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 
 		// Push a template loader running from the fake webroot onto the stack.
@@ -20,12 +20,12 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		SS_TemplateLoader::instance()->pushManifest($templateManifest);
 		$this->_oldTheme = Config::inst()->get('SSViewer', 'theme');
 		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
-		
+
 		$classManifest = new SS_ClassManifest($this->alternateBasePath, false, true, false);
 		SS_ClassLoader::instance()->pushManifest($classManifest);
 
 		$this->originalLocale = i18n::get_locale();
-		
+
 		// Override default adapter to avoid cached translations between tests.
 		// Emulates behaviour in i18n::get_translators()
 		$this->origAdapter = i18n::get_translator('core');
@@ -38,7 +38,7 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		$adapter->removeCache();
 		i18n::include_by_locale('en');
 	}
-	
+
 	public function tearDown() {
 		SS_TemplateLoader::instance()->popManifest();
 		SS_ClassLoader::instance()->popManifest();
@@ -46,10 +46,10 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		Config::inst()->update('Director', 'alternate_base_folder', null);
 		Config::inst()->update('SSViewer', 'theme', $this->_oldTheme);
 		i18n::register_translator($this->origAdapter, 'core');
-		
+
 		parent::tearDown();
 	}
-	
+
 	public function testTranslate() {
 		i18n::set_locale('en_US');
 		$this->assertEquals(
@@ -86,5 +86,5 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		// 	'Finds translations in PHP module files if only language locale is set'
 		// );
 	}
-	
+
 }

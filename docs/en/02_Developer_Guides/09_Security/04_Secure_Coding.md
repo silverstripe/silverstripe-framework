@@ -8,15 +8,58 @@ See our "[Release Process](/contributing/release_process#security-releases) on h
 ## SQL Injection
 
 The [coding-conventions](/getting_started/coding_conventions) help guard against SQL injection attacks but still require developer
-diligence: ensure that any variable you insert into a filter / sort / join clause has been escaped.
+diligence: ensure that any variable you insert into a filter / sort / join clause is either parameterised, or has been
+escaped.
 
 See [http://shiflett.org/articles/sql-injection](http://shiflett.org/articles/sql-injection).
 
+### Parameterised queries
+
+Parameterised queries, or prepared statements, allow the logic around the query and its structure to be separated from
+the parameters passed in to be executed. Many DB adaptors support these as standard including [PDO](http://php.net/manual/en/pdo.prepare.php),
+[MySQL](http://php.net/manual/en/mysqli.prepare.php), [SQL Server](http://php.net/manual/en/function.sqlsrv-prepare.php),
+[SQLite](http://php.net/manual/en/sqlite3.prepare.php), and [PostgreSQL](http://php.net/manual/en/function.pg-prepare.php).
+
+The use of parameterised queries whenever possible will safeguard your code in most cases, but care
+must still be taken when working with literal values or table/column identifiers that may 
+come from user input.
+
+Example:
+	
+	:::php
+	$records = DB::prepared_query('SELECT * FROM "MyClass" WHERE "ID" = ?', array(3));
+	$records = MyClass::get()->where(array('"ID" = ?' => 3));
+	$records = MyClass::get()->where(array('"ID"' => 3));
+	$records = DataObject::get_by_id('MyClass', 3);
+	$records = DataObject::get_one('MyClass', array('"ID" = ?' => 3));
+	$records = MyClass::get()->byID(3);
+	$records = SQLQuery::create()->addWhere(array('"ID"' => 3))->execute();
+
+Parameterised updates and inserts are also supported, but the syntax is a little different
+
+	:::php
+	SQLInsert::create('"MyClass"')
+		->assign('"Name"', 'Daniel')
+		->addAssignments(array(
+			'"Position"' => 'Accountant',
+			'"Age"' => array(
+				'GREATEST(0,?,?)' => array(24, 28)
+			)
+		))
+		->assignSQL('"Created"', 'NOW()')
+		->execute();
+	DB::prepared_query(
+		'INSERT INTO "MyClass" ("Name", "Position", "Age", "Created") VALUES(?, ?, GREATEST(0,?,?), NOW())'
+		array('Daniel', 'Accountant', 24, 28)
+	);
+
+
 ### Automatic escaping
 
-SilverStripe automatically escapes data in SQL statements wherever possible,
-through database-specific methods (see [api:Database::addslashes()]).
-For [api:MySQLDatabase], this will be [mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string).
+SilverStripe internally will use parameterised queries in SQL statements wherever possible.
+
+If necessary Silverstripe performs any required escaping through database-specific methods (see [api:Database::addslashes()]).
+For [api:MySQLDatabase], this will be `[mysql_real_escape_string()](http://de3.php.net/mysql_real_escape_string)`.
 
 *  Most [api:DataList] accessors (see escaping note in method documentation)
 *  DataObject::get_by_id()
@@ -29,7 +72,8 @@ For [api:MySQLDatabase], this will be [mysql_real_escape_string()](http://de3.ph
 *  FormField->saveInto()
 *  DBField->saveInto()
 
-Data is escaped when saving back to the database, not when writing to object-properties.
+Data is not escaped when writing to object-properties, as inserts and updates are normally
+handled via prepared statements.
 
 Example:
 	
@@ -38,23 +82,25 @@ Example:
 	$members = Member::get()->filter('Name', $_GET['name']); 
 	// automatically escaped/quoted
 	$members = Member::get()->filter(array('Name' => $_GET['name'])); 
-	// needs to be escaped/quoted manually
-	$members = Member::get()->where(sprintf('"Name" = \'%s\'', Convert::raw2sql($_GET['name']))); 
+	// parameterised condition
+	$members = Member::get()->where(array('"Name" = ?' => $_GET['name'])); 
+	// needs to be escaped and quoted manually (note raw2sql called with the $quote parameter set to true)
+	$members = Member::get()->where(sprintf('"Name" = %s', Convert::raw2sql($_GET['name'], true))); 
 
 <div class="warning" markdown='1'>
-It is NOT good practice to "be sure" and convert the data passed to the functions below manually. This might
+It is NOT good practice to "be sure" and convert the data passed to the functions above manually. This might
 result in *double escaping* and alters the actually saved data (e.g. by adding slashes to your content).
 </div>
 
 ### Manual escaping
 
-As a rule of thumb, whenever you're creating raw queries (or just chunks of SQL), you need to take care of escaping
-yourself. See [coding-conventions](/getting_started/coding_conventions) and [datamodel](/developer_guides/model/data_types_and_casting) for ways to cast and convert
-your data.
+As a rule of thumb, whenever you're creating SQL queries (or just chunks of SQL) you should use parameterisation,
+but there may be cases where you need to take care of escaping yourself. See [coding-conventions](/getting_started/coding-conventions)
+and [datamodel](/developer_guides/model) for ways to parameterise, cast, and convert your data.
 
 *  `SQLQuery`
-*  `DataObject::buildSQL()`
 *  `DB::query()`
+*  `DB::prepared_query()`
 *  `Director::urlParams()`
 *  `Controller->requestParams`, `Controller->urlParams`
 *  `SS_HTTPRequest` data
@@ -65,8 +111,9 @@ Example:
 	:::php
 	class MyForm extends Form {
 	  public function save($RAW_data, $form) {
-	    $SQL_data = Convert::raw2sql($RAW_data); // works recursively on an array
-	    $objs = Player::get()->where("Name = '{$SQL_data[name]}'");
+			// Pass true as the second parameter of raw2sql to quote the value safely
+			$SQL_data = Convert::raw2sql($RAW_data, true); // works recursively on an array
+			$objs = Player::get()->where("Name = " . $SQL_data['name']);
 	    // ...
 	  }
 	}
@@ -81,15 +128,17 @@ Example:
 	class MyController extends Controller {
 	  private static $allowed_actions = array('myurlaction');
 	  public function myurlaction($RAW_urlParams) {
-	    $SQL_urlParams = Convert::raw2sql($RAW_urlParams); // works recursively on an array
-	    $objs = Player::get()->where("Name = '{$SQL_data[OtherID]}'");
+			// Pass true as the second parameter of raw2sql to quote the value safely
+			$SQL_urlParams = Convert::raw2sql($RAW_urlParams, true); // works recursively on an array
+			$objs = Player::get()->where("Name = " . $SQL_data['OtherID']);
 	    // ...
 	  }
 	}
 
 
-As a rule of thumb, you should escape your data **as close to querying as possible**.
-This means if you've got a chain of functions passing data through, escaping should happen at the end of the chain.
+As a rule of thumb, you should escape your data **as close to querying as possible**
+(or preferably, use parameterised queries). This means if you've got a chain of functions
+passing data through, escaping should happen at the end of the chain.
 
 	:::php
 	class MyController extends Controller {
@@ -102,12 +151,12 @@ This means if you've got a chain of functions passing data through, escaping sho
 	  }
 	
 	  public function saveName($RAW_name) {
-	    $SQL_name = Convert::raw2sql($RAW_name);
-	    DB::query("UPDATE Player SET Name = '{$SQL_name}'");
+			$SQL_name = Convert::raw2sql($RAW_name, true);
+			DB::query("UPDATE Player SET Name = {$SQL_name}");
 	  }
 	}
 
-This might not be applicable in all cases - especially if you are building an API thats likely to be customized. If
+This might not be applicable in all cases - especially if you are building an API thats likely to be customised. If
 you're passing unescaped data, make sure to be explicit about it by writing *phpdoc*-documentation and *prefixing* your
 variables ($RAW_data instead of $data).
 
@@ -390,7 +439,6 @@ disallow certain filetypes.
 Example configuration for Apache2:
 
 	<VirtualHost *:80>
-	  ...
 	  <LocationMatch assets/>
 	    php_flag engine off
 	    Options -ExecCGI -Includes -Indexes
@@ -419,6 +467,37 @@ Here's an example for a `.htaccess` file used by the Apache web server:
 		Order allow,deny
 		Allow from all
 	</Files>
+
+
+### User uploaded files
+
+Certain file types are by default excluded from user upload. html, xhtml, htm, and xml files may have embedded,
+or contain links to, external resources or scripts that may hijack browser sessions and impersonate that user.
+Even if the uploader of this content may be a trusted user, there is no safeguard against these users being
+deceived by the content source.
+
+Flash files (swf) are also prone to a variety of security vulnerabilities of their own, and thus by default are
+disabled from file upload. As a standard practice, any users wishing to allow flash upload to their sites should
+take the following precautions:
+
+ * Only allow flash uploads from trusted sources, preferably those with available source.
+ * Make use of the [AllowScriptAccess](http://helpx.adobe.com/flash/kb/control-access-scripts-host-web.html)
+   parameter to ensure that any embedded Flash file is isolated from its environments scripts. In an ideal
+   situation, all flash content would be served from another domain, and this value is set to "sameDomain". If this
+   is not feasible, this should be set to "never". For trusted flash files you may set this to "sameDomain" without
+   an isolated domain name, but do so at your own risk.
+ * Take note of any regional cookie legislation that may affect your users. See
+   [Cookie Law and Flash Cookies](http://eucookiedirective.com/cookie-law-and-flash-cookies/).
+
+See [the Adobe Flash security page](http://www.adobe.com/devnet/flashplayer/security.html) for more information.
+	
+
+ADMIN privileged users may be allowed to override the above upload restrictions if the
+`File.apply_restrictions_to_admin` config is set to false. By default this is true, which enforces these
+restrictions globally.
+
+Additionally, if certain file uploads should be made available to non-privileged users, you can add them to the
+list of allowed extensions by adding these to the `File.allowed_extensions` config.
 
 ## Passwords
 
@@ -464,8 +543,7 @@ controller's `init()` method:
 	class MyController extends Controller {
 		public function init() {
 			parent::init();
-
-			$this->response->addHeader('X-Frame-Options', 'SAMEORIGIN');
+			$this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
 		}
 	}
 	

@@ -1,19 +1,19 @@
 <?php
 /**
- * This class is a snapshot of the current status of a {@link GridField}. 
+ * This class is a snapshot of the current status of a {@link GridField}.
  *
- * It's designed to be inserted into a Form as a HiddenField and passed through 
+ * It's designed to be inserted into a Form as a HiddenField and passed through
  * to actions such as the {@link GridField_FormAction}.
- * 
+ *
  * @see GridField
- * 
+ *
  * @package forms
  * @subpackage fields-gridfield
  */
 class GridState extends HiddenField {
 
-	/** 
-	 * @var GridField 
+	/**
+	 * @var GridField
 	 */
 	protected $grid;
 
@@ -21,7 +21,7 @@ class GridState extends HiddenField {
 	 * @var GridState_Data
 	 */
 	protected $data = null;
-	
+
 	/**
 	 *
 	 * @param GridField $name
@@ -37,18 +37,18 @@ class GridState extends HiddenField {
 
 	/**
 	 * @param mixed $d
-	 * @return object 
+	 * @return object
 	 */
 	public static function array_to_object($d) {
 		if(is_array($d)) {
 			return (object) array_map(array('GridState', 'array_to_object'), $d);
 		}
-		
+
 		return $d;
 	}
 
 	/**
-	 * @param mixed $value 
+	 * @param mixed $value
 	 */
 	public function setValue($value) {
 		if (is_string($value)) {
@@ -57,9 +57,9 @@ class GridState extends HiddenField {
 
 		parent::setValue($value);
 	}
-	
+
 	/**
-	 * @var GridState_Data
+	 * @return GridState_Data
 	 */
 	public function getData() {
 		if(!$this->data) {
@@ -70,7 +70,7 @@ class GridState extends HiddenField {
 	}
 
 	/**
-	 * @return DataList 
+	 * @return DataList
 	 */
 	public function getList() {
 		return $this->grid->getList();
@@ -79,7 +79,7 @@ class GridState extends HiddenField {
 	/**
 	 * Returns a json encoded string representation of this state.
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function Value() {
 		if(!$this->data) {
@@ -92,7 +92,7 @@ class GridState extends HiddenField {
 	/**
 	 * Returns a json encoded string representation of this state.
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function dataValue() {
 		return $this->Value();
@@ -100,7 +100,7 @@ class GridState extends HiddenField {
 
 	/**
 	 *
-	 * @return type 
+	 * @return string
 	 */
 	public function attrValue() {
 		return Convert::raw2att($this->Value());
@@ -108,7 +108,7 @@ class GridState extends HiddenField {
 
 	/**
 	 *
-	 * @return type 
+	 * @return string
 	 */
 	public function __toString() {
 		return $this->Value();
@@ -116,11 +116,11 @@ class GridState extends HiddenField {
 }
 
 /**
- * Simple set of data, similar to stdClass, but without the notice-level 
+ * Simple set of data, similar to stdClass, but without the notice-level
  * errors.
  *
  * @see GridState
- * 
+ *
  * @package forms
  * @subpackage fields-gridfield
  */
@@ -130,14 +130,31 @@ class GridState_Data {
 	 * @var array
 	 */
 	protected $data;
-	
+
 	public function __construct($data = array()) {
 		$this->data = $data;
 	}
-	
+
 	public function __get($name) {
+		return $this->getData($name, new GridState_Data());
+	}
+
+	public function __call($name, $arguments) {
+		// Assume first parameter is default value
+		$default = empty($arguments) ? new GridState_Data() : $arguments[0];
+		return $this->getData($name, $default);
+	}
+
+	/**
+	 * Retrieve the value for the given key
+	 *
+	 * @param string $name The name of the value to retrieve
+	 * @param mixed $default Default value to assign if not set
+	 * @return mixed The value associated with this key, or the value specified by $default if not set
+	 */
+	public function getData($name, $default = null) {
 		if(!isset($this->data[$name])) {
-			$this->data[$name] = new GridState_Data();
+			$this->data[$name] = $default;
 		} else if(is_array($this->data[$name])) {
 			$this->data[$name] = new GridState_Data($this->data[$name]);
 		}
@@ -148,22 +165,26 @@ class GridState_Data {
 	public function __set($name, $value) {
 		$this->data[$name] = $value;
 	}
-	
+
 	public function __isset($name) {
 		return isset($this->data[$name]);
+	}
+
+	public function __unset($name) {
+		unset($this->data[$name]);
 	}
 
 	public function __toString() {
 		if(!$this->data) {
 			return "";
 		}
-		
+
 		return json_encode($this->toArray());
 	}
 
 	public function toArray() {
 		$output = array();
-		
+
 		foreach($this->data as $k => $v) {
 			$output[$k] = (is_object($v) && method_exists($v, 'toArray')) ? $v->toArray() : $v;
 		}
@@ -174,12 +195,12 @@ class GridState_Data {
 
 /**
  * @see GridState
- * 
+ *
  * @package forms
  * @subpackage fields-gridfield
  */
 class GridState_Component implements GridField_HTMLProvider {
-	
+
 	public function getHTMLFragments($gridField) {
 		return array(
 			'before' => $gridField->getState(false)->Field()

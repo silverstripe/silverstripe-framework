@@ -18,7 +18,7 @@ class CMSProfileController extends LeftAndMain {
 		$this->setCurrentPageID(Member::currentUserID());
 
 		$form = parent::getEditForm($id, $fields);
-		
+
 		if($form instanceof SS_HTTPResponse) {
 			return $form;
 		}
@@ -45,7 +45,7 @@ class CMSProfileController extends LeftAndMain {
 		}
 
 		$form->addExtraClass('member-profile-form root-form cms-edit-form center');
-		
+
 		return $form;
 	}
 
@@ -82,7 +82,7 @@ class CMSProfileController extends LeftAndMain {
 			$response->addHeader('X-Reload', true);
 			$response->addHeader('X-ControllerURL', $this->Link());
 		}
-		
+
 		return $response;
 	}
 

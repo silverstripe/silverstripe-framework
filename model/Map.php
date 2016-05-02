@@ -2,18 +2,18 @@
 
 /**
  * Creates a map from an SS_List by defining a key column and a value column.
- * 
+ *
  * @package framework
  * @subpackage model
  */
 class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 
 	protected $list, $keyField, $valueField;
-	
+
 	/**
 	 * @see SS_Map::unshift()
 	 *
-	 * @var array $firstItems 
+	 * @var array $firstItems
 	 */
 	protected $firstItems = array();
 
@@ -36,7 +36,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		$this->keyField = $keyField;
 		$this->valueField = $valueField;
 	}
-	
+
 	/**
 	 * Set the key field for this map.
 	 *
@@ -54,7 +54,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	public function setValueField($valueField) {
 		$this->valueField = $valueField;
 	}
-	
+
 	/**
 	 * Return an array equivalent to this map.
 	 *
@@ -105,7 +105,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		if($oldItems) {
 			$this->firstItems = $this->firstItems + $oldItems;
 		}
-		
+
 		return $this;
 	}
 
@@ -125,12 +125,12 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		if($oldItems) {
 			$this->lastItems = $this->lastItems + $oldItems;
 		}
-		
+
 		return $this;
 	}
 
 	// ArrayAccess
-	
+
 	/**
 	 * @var string $key
 	 *
@@ -144,7 +144,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		if(isset($this->lastItems[$key])) {
 			return true;
 		}
-		
+
 		$record = $this->list->find($this->keyField, $key);
 
 		return $record != null;
@@ -176,10 +176,10 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	}
 
 	/**
-	 * Sets a value in the map by a given key that has been set via 
+	 * Sets a value in the map by a given key that has been set via
 	 * {@link SS_Map::push()} or {@link SS_Map::unshift()}
 	 *
-	 * Keys in the map cannot be set since these values are derived from a 
+	 * Keys in the map cannot be set since these values are derived from a
 	 * {@link DataQuery} instance. In this case, use {@link SS_Map::toArray()}
 	 * and manipulate the resulting array.
 	 *
@@ -196,16 +196,16 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		}
 
 		user_error(
-			"SS_Map is read-only. Please use $map->push($key, $value) to append values", 
+			"SS_Map is read-only. Please use $map->push($key, $value) to append values",
 			E_USER_ERROR
 		);
 	}
 
 	/**
-	 * Removes a value in the map by a given key which has been added to the map 
+	 * Removes a value in the map by a given key which has been added to the map
 	 * via {@link SS_Map::push()} or {@link SS_Map::unshift()}
 	 *
-	 * Keys in the map cannot be unset since these values are derived from a 
+	 * Keys in the map cannot be unset since these values are derived from a
 	 * {@link DataQuery} instance. In this case, use {@link SS_Map::toArray()}
 	 * and manipulate the resulting array.
 	 *
@@ -218,19 +218,19 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 
 			return;
 		}
-		
+
 		if(isset($this->lastItems[$key])) {
 			unset($this->lastItems[$key]);
-			
+
 			return;
 		}
 
 		user_error(
-			"SS_Map is read-only. Unset cannot be called on keys derived from the DataQuery", 
+			"SS_Map is read-only. Unset cannot be called on keys derived from the DataQuery",
 			E_USER_ERROR
 		);
 	}
-	
+
 	/**
 	 * Returns an SS_Map_Iterator instance for iterating over the complete set
 	 * of items in the map.
@@ -241,9 +241,9 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	 */
 	public function getIterator() {
 		return new SS_Map_Iterator(
-			$this->list->getIterator(), 
-			$this->keyField, 
-			$this->valueField, 
+			$this->list->getIterator(),
+			$this->keyField,
+			$this->valueField,
 			$this->firstItems,
 			$this->lastItems
 		);
@@ -256,8 +256,8 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 	 * @return int
 	 */
 	public function count() {
-		return $this->list->count() + 
-			count($this->firstItems) + 
+		return $this->list->count() +
+			count($this->firstItems) +
 			count($this->lastItems);
 	}
 }
@@ -272,7 +272,7 @@ class SS_Map_Iterator implements Iterator {
 
 	protected $items;
 	protected $keyField, $titleField;
-	
+
 	protected $firstItemIdx = 0;
 
 	protected $endItemIdx;
@@ -281,7 +281,7 @@ class SS_Map_Iterator implements Iterator {
 	protected $lastItems = array();
 
 	protected $excludedItems = array();
-	
+
 	/**
 	 * @param Iterator $items The iterator to build this map from
 	 * @param string $keyField The field to use for the keys
@@ -308,9 +308,9 @@ class SS_Map_Iterator implements Iterator {
 				$this->excludedItems[] = $k;
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * Rewind the Iterator to the first element.
 	 *
@@ -329,16 +329,16 @@ class SS_Map_Iterator implements Iterator {
 				if($rewoundItem->hasMethod($this->titleField)) {
 					return $rewoundItem->{$this->titleField}();
 				}
-				
+
 				return $rewoundItem->{$this->titleField};
 			} else if(!$this->items->valid() && $this->lastItems) {
 				$this->endItemIdx = 0;
 
-				return $this->lastItems[0][1];	
+				return $this->lastItems[0][1];
 			}
 		}
 	}
-	
+
 	/**
 	 * Return the current element.
 	 *
@@ -352,12 +352,12 @@ class SS_Map_Iterator implements Iterator {
 		} else {
 			if($this->items->current()->hasMethod($this->titleField)) {
 				return $this->items->current()->{$this->titleField}();
-			} 
+			}
 
 			return $this->items->current()->{$this->titleField};
 		}
 	}
-	
+
 	/**
 	 * Return the key of the current element.
 	 *
@@ -372,7 +372,7 @@ class SS_Map_Iterator implements Iterator {
 			return $this->items->current()->{$this->keyField};
 		}
 	}
-	
+
 	/**
 	 * Move forward to next element.
 	 *
@@ -401,7 +401,7 @@ class SS_Map_Iterator implements Iterator {
 			if($this->endItemIdx === null) {
 				$this->endItemIdx = -1;
 			}
-			
+
 			$this->endItemIdx++;
 
 			if(isset($this->lastItems[$this->endItemIdx])) {
@@ -411,7 +411,7 @@ class SS_Map_Iterator implements Iterator {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Checks if current position is valid.
 	 *

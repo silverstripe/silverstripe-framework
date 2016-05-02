@@ -10,7 +10,7 @@ class CSVParserTest extends SapphireTest {
 	public function testParsingWithHeaders() {
 		/* By default, a CSV file will be interpreted as having headers */
 		$csv = new CSVParser($this->getCurrentRelativePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv');
-		
+
 		$firstNames = $birthdays = $biographies = $registered = array();
 		foreach($csv as $record) {
 			/* Each row in the CSV file will be keyed with the header row */
@@ -20,12 +20,12 @@ class CSVParserTest extends SapphireTest {
 			$birthdays[] = $record['Birthday'];
 			$registered[] = $record['IsRegistered'];
 		}
-		
+
 		$this->assertEquals(array('John','Jane','Jamie','Järg'), $firstNames);
-		
+
 		$this->assertEquals(array(
 			"He's a good guy",
-			"She is awesome." . PHP_EOL 
+			"She is awesome." . PHP_EOL
 				. "So awesome that she gets multiple rows and \"escaped\" strings in her biography",
 			"Pretty old, with an escaped comma",
 			"Unicode FTW"), $biographies);
@@ -36,13 +36,13 @@ class CSVParserTest extends SapphireTest {
 	public function testParsingWithHeadersAndColumnMap() {
 		/* By default, a CSV file will be interpreted as having headers */
 		$csv = new CSVParser($this->getCurrentRelativePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv');
-		
+
 		/* We can set up column remapping.  The keys are case-insensitive. */
 		$csv->mapColumns(array(
 			'FirstName' => '__fn',
 			'bIoGrApHy' => '__BG',
 		));
-		
+
 		$firstNames = $birthdays = $biographies = $registered = array();
 		foreach($csv as $record) {
 			/* Each row in the CSV file will be keyed with the renamed columns.  Any unmapped column names will be
@@ -53,7 +53,7 @@ class CSVParserTest extends SapphireTest {
 			$birthdays[] = $record['Birthday'];
 			$registered[] = $record['IsRegistered'];
 		}
-		
+
 		$this->assertEquals(array('John','Jane','Jamie','Järg'), $firstNames);
 		$this->assertEquals(array(
 			"He's a good guy",
@@ -68,9 +68,9 @@ class CSVParserTest extends SapphireTest {
 	public function testParsingWithExplicitHeaderRow() {
 		/* If your CSV file doesn't have a header row */
 		$csv = new CSVParser($this->getCurrentRelativePath() .'/CsvBulkLoaderTest_PlayersWithHeader.csv');
-		
+
 		$csv->provideHeaderRow(array('__fn','__bio','__bd','__reg'));
-		
+
 		$firstNames = $birthdays = $biographies = $registered = array();
 		foreach($csv as $record) {
 			/* Each row in the CSV file will be keyed with the header row that you gave */
@@ -80,8 +80,8 @@ class CSVParserTest extends SapphireTest {
 			$birthdays[] = $record['__bd'];
 			$registered[] = $record['__reg'];
 		}
-		
-		/* And the first row will be returned in the data */		
+
+		/* And the first row will be returned in the data */
 		$this->assertEquals(array('FirstName','John','Jane','Jamie','Järg'), $firstNames);
 		$this->assertEquals(array(
 			'Biography',

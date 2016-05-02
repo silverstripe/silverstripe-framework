@@ -1,13 +1,14 @@
 (function($) {
+
 	$.entwine('ss.preview', function($){
 
 		/**
 		 * Shows a previewable website state alongside its editable version in backend UI.
 		 *
-		 * Relies on the server responses to indicate if a preview is available for the 
+		 * Relies on the server responses to indicate if a preview is available for the
 		 * currently loaded admin interface - signified by class ".cms-previewable" being present.
 		 *
-		 * The preview options at the bottom are constructured by grabbing a SilverStripeNavigator 
+		 * The preview options at the bottom are constructured by grabbing a SilverStripeNavigator
 		 * structure also provided by the backend.
 		 */
 		$('.cms-preview').entwine({
@@ -47,8 +48,8 @@
 					height: '100%'
 				},
 				mobile: {
-					width: '335px', // add 15px for approx desktop scrollbar 
-					height: '568px' 
+					width: '335px', // add 15px for approx desktop scrollbar
+					height: '568px'
 				},
 				mobileLandscape: {
 					width: '583px', // add 15px for approx desktop scrollbar
@@ -76,7 +77,7 @@
 			 * @param {String}
 			 * @param {Boolean} Set to FALSE to avoid persisting the state
 			 */
-			changeState: function(stateName, save) {				
+			changeState: function(stateName, save) {
 				var self = this, states = this._getNavigatorStates();
 				if(save !== false) {
 					$.each(states, function(index, state) {
@@ -96,7 +97,7 @@
 			 * Change the preview mode.
 			 * modeName can be: split, content, preview.
 			 */
-			changeMode: function(modeName, save) {				
+			changeMode: function(modeName, save) {
 				var container = $('.cms-container');
 
 				if (modeName == 'split') {
@@ -149,7 +150,7 @@
 			 * API
 			 * Update the visual appearance to match the internal preview state.
 			 */
-			redraw: function() {			
+			redraw: function() {
 
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
@@ -187,7 +188,7 @@
 			 */
 			loadState : function(name) {
 				if(this._supportsLocalStorage()) return window.localStorage.getItem('cms-preview-state-' + name);
-			}, 
+			},
 
 			/**
 			 * Disable the area - it will not appear in the GUI.
@@ -250,7 +251,7 @@
 					// Load edit view for new page, but only if the preview is activated at the moment.
 					// This avoids e.g. force-redirections of the edit view on RedirectorPage instances.
 					self._loadCurrentPage();
-					
+
 					$(this).removeClass('loading');
 				});
 
@@ -266,13 +267,13 @@
 
 				// Preview might not be available in all admin interfaces - block/disable when necessary
 				this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
-				this.find('.cms-preview-overlay').hide();			
+				this.find('.cms-preview-overlay').hide();
 
 				this.disablePreview();
 
 				this._super();
 			},
-			
+
 			/**
 			* Detect and use localStorage if available. In IE11 windows 8.1 call to window.localStorage was throwing out an access denied error in some cases which was causing the preview window not to display correctly in the CMS admin area.
 			*/
@@ -288,6 +289,20 @@
 				} catch (exception) {
 					console.warn('localStorge is not available due to current browser / system settings.');
 				}
+			},
+
+			onenable: function () {
+				var $viewModeSelector = $('.preview-mode-selector');
+
+				$viewModeSelector.removeClass('split-disabled');
+				$viewModeSelector.find('.disabled-tooltip').hide();
+			},
+
+			ondisable: function () {
+				var $viewModeSelector = $('.preview-mode-selector');
+
+				$viewModeSelector.addClass('split-disabled');
+				$viewModeSelector.find('.disabled-tooltip').show();
 			},
 
 			/**
@@ -339,7 +354,10 @@
 			 * Update preview whenever any panels are reloaded.
 			 */
 			'from .cms-container': {
-				onafterstatechange: function(){
+				onafterstatechange: function(e, data) {
+					// Don't update preview if we're dealing with a custom redirect
+					if(data.xhr.getResponseHeader('X-ControllerURL')) return;
+
 					this._initialiseFromContent();
 				}
 			},
@@ -385,7 +403,7 @@
 					var stateLink = $('.cms-preview-states .state-name[data-name=' + name + ']');
 					if(stateLink.length) {
 						return {
-							name: name, 
+							name: name,
 							url: stateLink.attr('data-link'),
 							active: stateLink.is(':radio') ? stateLink.is(':checked') : stateLink.is(':selected')
 						};
@@ -434,6 +452,9 @@
 					// No state available at all.
 					this.setCurrentStateName(null);
 				}
+				
+				// Mark url as a preview url so it can get special treatment
+				url += ((url.indexOf('?') === -1) ? '?' : '&') + 'CMSPreview=1';
 
 				// If this preview panel isn't visible at the moment, delay loading the URL until it (maybe) is later
 				if (this.is('.column-hidden')) {
@@ -483,14 +504,14 @@
 					containerEl = $('.cms-container');
 
 				// Load this page in the admin interface if appropriate
-				var id = $(doc).find('meta[name=x-page-id]').attr('content'); 
+				var id = $(doc).find('meta[name=x-page-id]').attr('content');
 				var editLink = $(doc).find('meta[name=x-cms-edit-link]').attr('content');
 				var contentPanel = $('.cms-content');
-				
+
 				if(id && contentPanel.find(':input[name=ID]').val() != id) {
-					// Ignore behaviour without history support (as we need ajax loading 
+					// Ignore behaviour without history support (as we need ajax loading
 					// for the new form to load in the background)
-					if(window.History.enabled) 
+					if(window.History.enabled)
 						$('.cms-container').entwine('.ss').loadPanel(editLink);
 				}
 			},
@@ -505,7 +526,7 @@
 				}else{
 					return;
 				}
-		
+
 				if(!doc) return;
 
 				// Open external links in new window to avoid "escaping" the internal page context in the preview
@@ -514,7 +535,7 @@
 				for (var i = 0; i < links.length; i++) {
 					var href = links[i].getAttribute('href');
 					if(!href) continue;
-					
+
 					if (href.match(/^http:\/\//)) links[i].setAttribute('target', '_blank');
 				}
 
@@ -535,7 +556,7 @@
 				$('.cms-preview')._initialiseFromContent();
 			}
 		});
-		
+
 		/**
 		 * "Preview state" functions.
 		 * -------------------------------------------------------------------
@@ -553,17 +574,17 @@
 			/**
 			 * Reacts to the user changing the state of the preview.
 			 */
-			onclick: function(e) {	
+			onclick: function(e) {
 				//Add and remove classes to make switch work ok in old IE
 				this.parent().find('.active').removeClass('active');
 				this.next('label').addClass('active');
 
 				var targetStateName = $(this).attr('data-name');
 				// Reload preview with the selected state.
-				$('.cms-preview').changeState(targetStateName);				
+				$('.cms-preview').changeState(targetStateName);
 			}
-		});	
-		
+		});
+
 		/**
 		 * "Preview mode" functions
 		 * -------------------------------------------------------------------
@@ -578,13 +599,13 @@
 					.trigger('liszt:updated')
 					._addIcon();
 			}
-		});	
+		});
 
 		$('.preview-mode-selector select').entwine({
 			/**
 			 * Reacts to the user changing the preview mode.
 			 */
-			onchange: function(e) {				
+			onchange: function(e) {
 				this._super(e);
 				e.preventDefault();
 
@@ -593,32 +614,40 @@
 			}
 		});
 
-		
+
 		$('.preview-mode-selector .chzn-results li').entwine({
 			/**
-			 *  IE8 doesn't support programatic access to onchange event 
+			 *  IE8 doesn't support programatic access to onchange event
 			 *	so react on click
 			 */
-			onclick:function(e){				
+			onclick:function(e){
 				if ($.browser.msie) {
-					e.preventDefault();					
+					e.preventDefault();
 					var index = this.index();
-					var targetStateName = this.closest('.preview-mode-selector').find('select option:eq('+index+')').val();					
-													
+					var targetStateName = this.closest('.preview-mode-selector').find('select option:eq('+index+')').val();
+
 					//var targetStateName = $(this).val();
 					$('.cms-preview').changeMode(targetStateName);
 				}
 			}
 		});
-		
+
 		/**
 		 * Adjust the visibility of the preview-mode selector in the CMS part (hidden if preview is visible).
 		 */
 		$('.cms-preview.column-hidden').entwine({
 			onmatch: function() {
 				$('#preview-mode-dropdown-in-content').show();
+				// Alert the user as to why the preview is hidden
+				if ($('.cms-preview .result-selected').hasClass('font-icon-columns')) {
+					statusMessage(ss.i18n._t(
+						'LeftAndMain.DISABLESPLITVIEW',
+						"Screen too small to show site preview in split mode"),
+					"error");
+				}
 				this._super();
 			},
+
 			onunmatch: function() {
 				$('#preview-mode-dropdown-in-content').hide();
 				this._super();
@@ -651,7 +680,7 @@
 			/**
 			 * Change the appearance of the size selector.
 			 */
-			changeVisibleSize: function(size) {				
+			changeVisibleSize: function(size) {
 				this.find('select')
 					.val(size)
 					.trigger('liszt:updated')
@@ -671,14 +700,14 @@
 			}
 		});
 
-		
+
 		/**
 		 * "Chosen" plumbing.
 		 * -------------------------------------------------------------------
 		 */
 
 		/*
-		*	Add a class to the chzn select trigger based on the currently 
+		*	Add a class to the chzn select trigger based on the currently
 		*	selected option. Update as this changes
 		*/
 		$('.preview-selector select.preview-dropdown').entwine({
@@ -700,16 +729,16 @@
 			},
 
 			_addIcon: function(){
-				var selected = this.find(':selected');				
-				var iconClass = selected.attr('data-icon');	
-								
+				var selected = this.find(':selected');
+				var iconClass = selected.attr('data-icon');
+
 				var target = this.parent().find('.chzn-container a.chzn-single');
 				var oldIcon = target.attr('data-icon');
 				if(typeof oldIcon !== 'undefined'){
 					target.removeClass(oldIcon);
 				}
 				target.addClass(iconClass);
-				target.attr('data-icon', iconClass);				
+				target.attr('data-icon', iconClass);
 
 				return this;
 			}
@@ -719,13 +748,13 @@
 			_alignRight: function(){
 				var that = this;
 				$(this).hide();
-				/* Delay so styles applied after chosen applies css	
+				/* Delay so styles applied after chosen applies css
 				   (the line after we find out the dropdown is open)
 				*/
-				setTimeout(function(){ 
+				setTimeout(function(){
 					$(that).css({left:'auto', right:0});
-					$(that).show();	
-				}, 100);							
+					$(that).show();
+				}, 100);
 			},
 			_removeRightAlign:function(){
 				$(this).css({right:'auto'});
@@ -733,16 +762,16 @@
 
 		});
 
-		/* 
-		* Means of having extra styled data in chzn 'preview-selector' selects 
-		* When chzn ul is ready, grab data-description from original select. 
+		/*
+		* Means of having extra styled data in chzn 'preview-selector' selects
+		* When chzn ul is ready, grab data-description from original select.
 		* If it exists, append to option and add description class to list item
 		*/
 		/*
 
-		Currently buggy (adds dexcription, then re-renders). This may need to 
-		be done inside chosen. Chosen recommends to do this stuff in the css, 
-		but that option is inaccessible and untranslatable 
+		Currently buggy (adds dexcription, then re-renders). This may need to
+		be done inside chosen. Chosen recommends to do this stuff in the css,
+		but that option is inaccessible and untranslatable
 		(https://github.com/harvesthq/chosen/issues/399)
 
 		$('.preview-selector .chzn-drop ul').entwine({
@@ -755,18 +784,28 @@
 			},
 			extraData: function(){
 				var that = this;
-				var options = this.closest('.preview-selector').find('select option');	
-					
+				var options = this.closest('.preview-selector').find('select option');
+
 				$.each(options, function(index, option){
 					var target = $(that).find("li:eq(" + index + ")");
 					var description = $(option).attr('data-description');
 					if(description != undefined && !$(target).hasClass('description')){
 						$(target).append('<span>' + description + '</span>');
-						$(target).addClass('description');						
+						$(target).addClass('description');
 					}
 				});
 			}
 		}); */
+
+		$('.preview-mode-selector .chzn-drop li:last-child').entwine({
+			onmatch: function () {
+				if ($('.preview-mode-selector').hasClass('split-disabled')) {
+					this.parent().append('<div class="disabled-tooltip"></div>');
+				} else {
+					this.parent().append('<div class="disabled-tooltip" style="display: none;"></div>');
+				}
+			}
+		});
 
 		/**
 		 * Recalculate the preview space to allow for horizontal scrollbar and the preview actions panel
@@ -783,7 +822,7 @@
 				if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 				var previewHeight = (this.height() - toolbarSize);
 				this.height(previewHeight);
-			}, 
+			},
 
 			onmatch: function() {
 				this._redraw();
@@ -800,11 +839,9 @@
 		/**
 		 * Rotate preview to landscape
 		 */
-		$('.preview-device-outer').click(function() {
-			if(!$('.preview-device-outer').hasClass('rotate')) {
-				$('.preview-device-outer').addClass('rotate');
-			} else {
-				$('.preview-device-outer').removeClass('rotate');
+		$('.preview-device-outer').entwine({
+			onclick: function () {
+				this.toggleClass('rotate');
 			}
 		});
 	});

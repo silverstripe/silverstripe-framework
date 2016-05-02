@@ -187,7 +187,7 @@ Here is a summary of the callback parameter values based on some example shortco
 	$attributes 	=> array();
 	$content 		=> null;
 	$parser         => ShortcodeParser instance,
-	$tagName 		=> 'myshortcode')
+	$tagName 		=> 'my_shortcode')
 
 	[my_shortcode,attribute="foo",other="bar"]
 

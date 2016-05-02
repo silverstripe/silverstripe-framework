@@ -5,6 +5,6 @@
  * @package framework
  */
 interface HiddenClass {
-	
+
 }
 

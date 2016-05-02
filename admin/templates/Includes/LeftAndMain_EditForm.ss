@@ -3,10 +3,10 @@
 <% end_if %>
 	<div class="cms-content-header north">
 		<div class="cms-content-header-info">
-			<% include BackLink_Button %>			
+			<% include BackLink_Button %>
 			<% with $Controller %>
 				<% include CMSBreadcrumbs %>
-			<% end_with %>			
+			<% end_with %>
 		</div>
 		<% if $Fields.hasTabset %>
 			<% with $Fields.fieldByName('Root') %>
@@ -26,7 +26,7 @@
 	<% with $Controller %>
 		$EditFormTools
 	<% end_with %>
-	
+
 	<div class="cms-content-fields center <% if not $Fields.hasTabset %>cms-panel-padded<% end_if %>">
 		<% if $Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
@@ -35,7 +35,7 @@
 		<% end_if %>
 
 		<fieldset>
-			<% if $Legend %><legend>$Legend</legend><% end_if %> 
+			<% if $Legend %><legend>$Legend</legend><% end_if %>
 			<% loop $Fields %>
 				$FieldHolder
 			<% end_loop %>
@@ -51,7 +51,7 @@
 			<% end_loop %>
 			<% if $Controller.LinkPreview %>
 			<a href="$Controller.LinkPreview" class="cms-preview-toggle-link ss-ui-button" data-icon="preview">
-				<% _t('LeftAndMain.PreviewButton', 'Preview') %> &raquo;
+				<%t LeftAndMain.PreviewButton 'Preview' %> &raquo;
 			</a>
 			<% end_if %>
 		</div>

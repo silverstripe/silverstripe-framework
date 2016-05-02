@@ -3,7 +3,7 @@ summary: Send HTML and plain text email from your SilverStripe application.
 # Email
 
 Creating and sending email in SilverStripe is done through the [api:Email] and [api:Mailer] classes. This document 
-covers how to create an `Email` instance, customize it with a HTML template, then send it through a custom `Mailer`.
+covers how to create an `Email` instance, customise it with a HTML template, then send it through a custom `Mailer`.
 
 ## Configuration
 
@@ -32,7 +32,7 @@ to `*text*`).
 
 <div class="info" markdown="1">
 The default HTML template for emails is named `GenericEmail` and is located in `framework/templates/email/`. To 
-customize this template, copy it to the `mysite/templates/Email/` folder or use `setTemplate` when you create the 
+customise this template, copy it to the `mysite/templates/Email/` folder or use `setTemplate` when you create the 
 `Email` instance.
 </div>
 
@@ -211,6 +211,15 @@ assets folder instead.
 	} else {
 		Email::set_mailer(new LocalMailer());
 	}
+
+
+### Setting bounce handler
+
+A bounce handler email can be specified one of a few ways:
+
+* Via config by setting the `Mailer.default_bounce_email` config to the desired email address.
+* Via _ss_environment.php by setting the `BOUNCE_EMAIL` definition.
+* Via PHP by calling `Email::mailer()->setBounceEmail('bounce@mycompany.com');`
 
 ## API Documentation
 

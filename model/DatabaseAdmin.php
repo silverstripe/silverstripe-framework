@@ -7,7 +7,7 @@ require_once("model/DB.php");
  *
  * Utility functions for administrating the database. These can be accessed
  * via URL, e.g. http://www.yourdomain.com/db/build.
- * 
+ *
  * @package framework
  * @subpackage model
  */
@@ -20,20 +20,20 @@ class DatabaseAdmin extends Controller {
 		'cleanup',
 		'import'
 	);
-	
+
 	public function init() {
 		parent::init();
-		
+
 		// We allow access to this controller regardless of live-status or ADMIN permission only
 		// if on CLI or with the database not ready. The latter makes it less errorprone to do an
 		// initial schema build without requiring a default-admin login.
 		// Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
 		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
 		$canAccess = (
-			Director::isDev() 
-			|| !Security::database_is_ready() 
+			Director::isDev()
+			|| !Security::database_is_ready()
 			// We need to ensure that DevelopmentAdminTest can simulate permission failures when running
-			// "dev/tests" from CLI. 
+			// "dev/tests" from CLI.
 			|| (Director::is_cli() && !$isRunningTests)
 			|| Permission::check("ADMIN")
 		);
@@ -175,12 +175,12 @@ class DatabaseAdmin extends Controller {
 		if($quiet) {
 			DB::quiet();
 		} else {
-			$conn = DB::getConn();
+			$conn = DB::get_conn();
 			// Assumes database class is like "MySQLDatabase" or "MSSQLDatabase" (suffixed with "Database")
 			$dbType = substr(get_class($conn), 0, -8);
 			$dbVersion = $conn->getVersion();
-			$databaseName = (method_exists($conn, 'currentDatabase')) ? $conn->currentDatabase() : "";
-			
+			$databaseName = (method_exists($conn, 'currentDatabase')) ? $conn->getSelectedDatabase() : "";
+
 			if(Director::is_cli()) {
 				echo sprintf("\n\nBuilding database %s using %s %s\n\n", $databaseName, $dbType, $dbVersion);
 			} else {
@@ -189,23 +189,29 @@ class DatabaseAdmin extends Controller {
 		}
 
 		// Set up the initial database
-		if(!DB::isActive()) {
+		if(!DB::is_active()) {
 			if(!$quiet) {
 				echo '<p><b>Creating database</b></p>';
 			}
+
+			// Load parameters from existing configuration
 			global $databaseConfig;
-			$parameters = $databaseConfig ? $databaseConfig : $_REQUEST['db'];
-			$connect = DB::getConnect($parameters);
-			$username = $parameters['username'];
-			$password = $parameters['password'];
+			if(empty($databaseConfig) && empty($_REQUEST['db'])) {
+				user_error("No database configuration available", E_USER_ERROR);
+			}
+			$parameters = (!empty($databaseConfig)) ? $databaseConfig : $_REQUEST['db'];
+
+			// Check database name is given
+			if(empty($parameters['database'])) {
+				user_error("No database name given; please give a value for \$databaseConfig['database']",
+							E_USER_ERROR);
+			}
 			$database = $parameters['database'];
 
-			if(!$database) {
-				user_error("No database name given; please give a value for \$databaseConfig['database']",
-					E_USER_ERROR);
-			}
-
-			DB::createDatabase($connect, $username, $password, $database);
+			// Establish connection and create database in two steps
+			unset($parameters['database']);
+			DB::connect($parameters);
+			DB::create_database($database);
 		}
 
 		// Build the database.  Most of the hard work is handled by DataObject
@@ -217,22 +223,27 @@ class DatabaseAdmin extends Controller {
 			else echo "\n<p><b>Creating database tables</b></p>\n\n";
 		}
 
-		$conn = DB::getConn();
-		$conn->beginSchemaUpdate();
-		foreach($dataClasses as $dataClass) {
-			// Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
-			if(class_exists($dataClass)) {
+		// Initiate schema update
+		$dbSchema = DB::get_schema();
+		$dbSchema->schemaUpdate(function() use($dataClasses, $testMode, $quiet){
+			foreach($dataClasses as $dataClass) {
+				// Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
+				if(!class_exists($dataClass)) continue;
+
+				// Check if this class should be excluded as per testing conventions
 				$SNG = singleton($dataClass);
-				if($testMode || !($SNG instanceof TestOnly)) {
-					if(!$quiet) {
-						if(Director::is_cli()) echo " * $dataClass\n";
-						else echo "<li>$dataClass</li>\n";
-					}
-					$SNG->requireTable();
+				if(!$testMode && $SNG instanceof TestOnly) continue;
+
+				// Log data
+				if(!$quiet) {
+					if(Director::is_cli()) echo " * $dataClass\n";
+					else echo "<li>$dataClass</li>\n";
 				}
+
+				// Instruct the class to apply its schema to the database
+				$SNG->requireTable();
 			}
-		}
-		$conn->endSchemaUpdate();
+		});
 		ClassInfo::reset_db_cache();
 
 		if($populate) {
@@ -255,30 +266,30 @@ class DatabaseAdmin extends Controller {
 			}
 		}
 
-		touch(TEMP_FOLDER . '/database-last-generated-' .
-					str_replace(array('\\', '/', ':'), '.', Director::baseFolder()));
+		touch(TEMP_FOLDER
+			. '/database-last-generated-'
+			. str_replace(array('\\', '/', ':'), '.', Director::baseFolder())
+		);
 
 		if(isset($_REQUEST['from_installer'])) {
 			echo "OK";
 		}
-		
+
 		if(!$quiet) {
 			echo (Director::is_cli()) ? "\n Database build completed!\n\n" :"<p>Database build completed!</p>";
 		}
-		
+
 		ClassInfo::reset_db_cache();
 	}
-	
+
 	/**
 	 * Clear all data out of the database
-	 * @todo Move this code into SS_Database class, for DB abstraction
+	 *
+	 * @deprecated since version 4.0
 	 */
 	public function clearAllData() {
-		$tables = DB::getConn()->tableList();
-		foreach($tables as $table) {
-			if(method_exists(DB::getConn(), 'clearTable')) DB::getConn()->clearTable($table);
-			else DB::query("TRUNCATE \"$table\"");
-		}
+		Deprecation::notice('4.0', 'Use DB::get_conn()->clearAllData() instead');
+		DB::get_conn()->clearAllData();
 	}
 
 	/**
@@ -298,7 +309,7 @@ class DatabaseAdmin extends Controller {
 			$subclasses = ClassInfo::subclassesFor($baseClass);
 			unset($subclasses[0]);
 			foreach($subclasses as $k => $subclass) {
-				if(DataObject::database_fields($subclass)) {
+				if(DataObject::has_own_table($subclass)) {
 					unset($subclasses[$k]);
 				}
 			}
@@ -329,5 +340,3 @@ class DatabaseAdmin extends Controller {
 	}
 
 }
-
-

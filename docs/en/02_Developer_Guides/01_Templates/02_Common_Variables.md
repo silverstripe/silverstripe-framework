@@ -153,30 +153,30 @@ link.
 ### Linking Modes
 
 	:::ss
-	$LinkingMode
+	$isSection
+	$isCurrent
 
-When looping over a list of `SiteTree` instances through a `<% loop $Menu %>` or `<% loop $Children %>`, `$LinkingMode`
-will return context about the page relative to the currently viewed page. It can have the following values:
-
- * `link`: You are neither on this page nor in this section.
- * `current`: You are currently on this page.
- * `section`: The current page is a child of this menu item, so the current "section"
+When looping over a list of `SiteTree` instances through a `<% loop $Menu %>` or `<% loop $Children %>`, `$isSection` and `$isCurrent`
+will return true or false based on page being looped over relative to the currently viewed page. 
 
 For instance, to only show the menu item linked if it's the current one:
 
 	:::ss
-	<% if $LinkingMode = current %>
+	<% if $isCurrent %>
 		$Title
 	<% else %>
 		<a href="$Link">$Title</a>
 	<% end_if %>
+	
+An example for checking for `current` or `section` is as follows:
 
-`$LinkingMode` is reused for several other variables and utility functions.
+    :::ss
+    <a class="<% if $isCurrent %>current<% else_if $isSection %>section<% end_if %>" href="$Link">$MenuTitle</a>
 
- * `$LinkOrCurrent`: Determines if the item is the current page. Returns "link" or "current" strings.
- * `$LinkOrSection`: Determines if the item is in the current section, so in the path towards the current page. Useful 
- for menus which you only want to show a second level menu when you are on that page or a child of it. Returns "link" 
- or "section" strings.
+
+
+**Additional Utility Method**
+
  * `$InSection(page-url)`: This if block will pass if we're currently on the page-url page or one of its children.
 
 	:::ss
@@ -380,7 +380,7 @@ By default, it uses the template defined in `cms/templates/BreadcrumbsTemplate.s
 	<% end_if %>
 
 <div class="info" markdown="1">
-To customize the markup that the `$Breadcrumbs` generates, copy `cms/templates/BreadcrumbsTemplate.ss` to 
+To customise the markup that the `$Breadcrumbs` generates, copy `cms/templates/BreadcrumbsTemplate.ss` to 
 `mysite/templates/BreadcrumbsTemplate.ss`, modify the newly copied template and flush your SilverStripe cache.
 </div>
 

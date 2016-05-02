@@ -5,6 +5,55 @@
  */
 class FormFieldTest extends SapphireTest {
 
+	protected $requiredExtensions = array(
+		'FormField' => array('FormFieldTest_Extension')
+	);
+
+	public function testDefaultClasses() {
+		Config::nest();
+
+		Config::inst()->update('FormField', 'default_classes', array(
+			'class1',
+		));
+
+		$field = new FormField('MyField');
+
+		$this->assertContains('class1', $field->extraClass(), 'Class list does not contain expected class');
+
+		Config::inst()->update('FormField', 'default_classes', array(
+			'class1',
+			'class2',
+		));
+
+		$field = new FormField('MyField');
+
+		$this->assertContains('class1 class2', $field->extraClass(), 'Class list does not contain expected class');
+
+		Config::inst()->update('FormField', 'default_classes', array(
+			'class3',
+		));
+
+		$field = new FormField('MyField');
+
+		$this->assertContains('class3', $field->extraClass(), 'Class list does not contain expected class');
+
+		$field->removeExtraClass('class3');
+
+		$this->assertNotContains('class3', $field->extraClass(), 'Class list contains unexpected class');
+
+		Config::inst()->update('TextField', 'default_classes', array(
+			'textfield-class',
+		));
+
+		$field = new TextField('MyField');
+
+		//check default classes inherit
+		$this->assertContains('class3', $field->extraClass(), 'Class list does not contain inherited class');
+		$this->assertContains('textfield-class', $field->extraClass(), 'Class list does not contain expected class');
+
+		Config::unnest();
+	}
+
 	public function testAddExtraClass() {
 		$field = new FormField('MyField');
 		$field->addExtraClass('class1');
@@ -128,7 +177,7 @@ class FormFieldTest extends SapphireTest {
 			$constructor = $reflectionClass->getMethod('__construct');
 			if($constructor->getNumberOfRequiredParameters() > 1) continue;
 			if($fieldClass == 'CompositeField' || is_subclass_of($fieldClass, 'CompositeField')) continue;
-			
+
 			if ( $fieldClass = 'NullableField' ) {
 				$instance = new $fieldClass(new TextField("{$fieldClass}_instance"));
 			} else {
@@ -137,7 +186,7 @@ class FormFieldTest extends SapphireTest {
 			$isReadonlyBefore = $instance->isReadonly();
 			$readonlyInstance = $instance->performReadonlyTransformation();
 			$this->assertEquals(
-				$isReadonlyBefore, 
+				$isReadonlyBefore,
 				$instance->isReadonly(),
 				"FormField class {$fieldClass} retains its readonly state after calling performReadonlyTransformation()"
 			);
@@ -152,7 +201,7 @@ class FormFieldTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 	public function testEveryFieldTransformsDisabledAsClone() {
 		$fieldClasses = ClassInfo::subclassesFor('FormField');
 		foreach($fieldClasses as $fieldClass) {
@@ -161,17 +210,17 @@ class FormFieldTest extends SapphireTest {
 			$constructor = $reflectionClass->getMethod('__construct');
 			if($constructor->getNumberOfRequiredParameters() > 1) continue;
 			if($fieldClass == 'CompositeField' || is_subclass_of($fieldClass, 'CompositeField')) continue;
-			
+
 			if ( $fieldClass = 'NullableField' ) {
 				$instance = new $fieldClass(new TextField("{$fieldClass}_instance"));
 			} else {
 				$instance = new $fieldClass("{$fieldClass}_instance");
 			}
-						
+
 			$isDisabledBefore = $instance->isDisabled();
 			$disabledInstance = $instance->performDisabledTransformation();
 			$this->assertEquals(
-				$isDisabledBefore, 
+				$isDisabledBefore,
 				$instance->isDisabled(),
 				"FormField class {$fieldClass} retains its disabled state after calling performDisabledTransformation()"
 			);
@@ -186,5 +235,22 @@ class FormFieldTest extends SapphireTest {
 			);
 		}
 	}
-	
+
+	public function testUpdateAttributes() {
+		$field = new FormField('MyField');
+		$this->assertArrayHasKey('extended', $field->getAttributes());
+	}
+
+}
+
+/**
+ * @package framework
+ * @subpackage tests
+ */
+class FormFieldTest_Extension extends Extension implements TestOnly {
+
+	public function updateAttributes(&$attrs) {
+		$attrs['extended'] = true;
+	}
+
 }

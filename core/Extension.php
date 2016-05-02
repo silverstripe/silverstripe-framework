@@ -24,21 +24,21 @@ abstract class Extension {
 	 * @var Object
 	 */
 	protected $owner;
-	
+
 	/**
 	 * The base class that this extension was applied to; $this->owner must be one of these
 	 * @var DataObject
 	 */
 	protected $ownerBaseClass;
-	
+
 	/**
 	 * Reference counter to ensure that the owner isn't cleared until clearOwner() has
 	 * been called as many times as setOwner()
 	 */
 	private $ownerRefs = 0;
-	
+
 	public $class;
-	
+
 	public function __construct() {
 		$this->class = get_class($this);
 	}
@@ -68,13 +68,13 @@ abstract class Extension {
 		if($ownerBaseClass) $this->ownerBaseClass = $ownerBaseClass;
 		else if(!$this->ownerBaseClass && $owner) $this->ownerBaseClass = $owner->class;
 	}
-	
+
 	public function clearOwner() {
 		if($this->ownerRefs <= 0) user_error("clearOwner() called more than setOwner()", E_USER_WARNING);
 		$this->ownerRefs--;
 		if($this->ownerRefs == 0) $this->owner = null;
 	}
-	
+
 	/**
 	 * Returns the owner of this extension.
 	 *
@@ -83,12 +83,12 @@ abstract class Extension {
 	public function getOwner() {
 		return $this->owner;
 	}
-	
+
 	/**
 	 * Helper method to strip eval'ed arguments from a string
-	 * thats passed to {@link DataObject::$extensions} or 
+	 * thats passed to {@link DataObject::$extensions} or
 	 * {@link Object::add_extension()}.
-	 * 
+	 *
 	 * @param string $extensionStr E.g. "Versioned('Stage','Live')"
 	 * @return string Extension classname, e.g. "Versioned"
 	 */

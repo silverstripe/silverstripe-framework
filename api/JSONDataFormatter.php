@@ -9,23 +9,23 @@ class JSONDataFormatter extends DataFormatter {
 	 * @todo pass this from the API to the data formatter somehow
 	 */
 	private static $api_base = "api/v1/";
-	
+
 	protected $outputContentType = 'application/json';
-	
+
 	public function supportedExtensions() {
 		return array(
-			'json', 
+			'json',
 			'js'
 		);
 	}
 
 	public function supportedMimeTypes() {
 		return array(
-			'application/json', 
+			'application/json',
 			'text/x-json'
 		);
 	}
-	
+
 	/**
 	 * Generate a JSON representation of the given {@link DataObject}.
 	 *
@@ -62,9 +62,9 @@ class JSONDataFormatter extends DataFormatter {
 		}
 
 		if($this->relationDepth > 0) {
-			foreach($obj->has_one() as $relName => $relClass) {
+			foreach($obj->hasOne() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
-				
+
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
@@ -82,7 +82,7 @@ class JSONDataFormatter extends DataFormatter {
 				));
 			}
 
-			foreach($obj->has_many() as $relName => $relClass) {
+			foreach($obj->hasMany() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
 
 				// Field filtering
@@ -102,10 +102,10 @@ class JSONDataFormatter extends DataFormatter {
 				}
 				$serobj->$relName = $innerParts;
 			}
-	
-			foreach($obj->many_many() as $relName => $relClass) {
+
+			foreach($obj->manyMany() as $relName => $relClass) {
 				if(!singleton($relClass)->stat('api_access')) continue;
-				
+
 				// Field filtering
 				if($fields && !in_array($relName, $fields)) continue;
 				if($this->customRelations && !in_array($relName, $this->customRelations)) continue;
@@ -124,13 +124,13 @@ class JSONDataFormatter extends DataFormatter {
 				$serobj->$relName = $innerParts;
 			}
 		}
-		
+
 		return $serobj;
 	}
 
 	/**
 	 * Generate a JSON representation of the given {@link SS_List}.
-	 * 
+	 *
 	 * @param SS_List $set
 	 * @return String XML
 	 */
@@ -148,7 +148,7 @@ class JSONDataFormatter extends DataFormatter {
 
 		return Convert::array2json($serobj);
 	}
-	
+
 	public function convertStringToArray($strData) {
 		return Convert::json2array($strData);
 	}

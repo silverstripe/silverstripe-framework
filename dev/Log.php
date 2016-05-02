@@ -6,19 +6,19 @@ require_once 'Zend/Log.php';
  * which takes a message (or a map of context variables) and
  * sends it to one or more {@link Zend_Log_Writer_Abstract}
  * subclasses for output.
- * 
+ *
  * These priorities are currently supported:
  *  - SS_Log::ERR
  *  - SS_Log::WARN
  *  - SS_Log::NOTICE
- * 
+ *
  * You can add an error writer by calling {@link SS_Log::add_writer()}
- * 
+ *
  * Example usage of logging errors by email notification:
  * <code>
  * SS_Log::add_writer(new SS_LogEmailWriter('my@email.com'), SS_Log::ERR);
  * </code>
- * 
+ *
  * Example usage of logging errors by file:
  * <code>
  *	SS_Log::add_writer(new SS_LogFileWriter('/var/log/silverstripe/errors.log'), SS_Log::ERR);
@@ -28,19 +28,19 @@ require_once 'Zend/Log.php';
  * <code>
  * SS_Log::add_writer(new SS_LogEmailWriter('my@email.com'), SS_Log::WARN, '<=');
  * </code>
- *	
+ *
  * Each writer object can be assigned a formatter. The formatter is
  * responsible for formatting the message before giving it to the writer.
  * {@link SS_LogErrorEmailFormatter} is such an example that formats errors
  * into HTML for human readability in an email client.
- * 
+ *
  * Formatters are added to writers like this:
  * <code>
  * $logEmailWriter = new SS_LogEmailWriter('my@email.com');
  * $myEmailFormatter = new MyLogEmailFormatter();
  * $logEmailWriter->setFormatter($myEmailFormatter);
  * </code>
- * 
+ *
  * @package framework
  * @subpackage dev
  */
@@ -73,9 +73,9 @@ class SS_Log {
 	protected static $log_globals = array(
 		'_SERVER' => array(
 			'HTTP_ACCEPT',
-			'HTTP_ACCEPT_CHARSET', 
-			'HTTP_ACCEPT_ENCODING', 
-			'HTTP_ACCEPT_LANGUAGE', 
+			'HTTP_ACCEPT_CHARSET',
+			'HTTP_ACCEPT_ENCODING',
+			'HTTP_ACCEPT_LANGUAGE',
 			'HTTP_REFERRER',
 			'HTTP_USER_AGENT',
 			'HTTPS',
@@ -85,7 +85,7 @@ class SS_Log {
 
 	/**
 	 * Get the logger currently in use, or create a new one if it doesn't exist.
-	 * 
+	 *
 	 * @return object
 	 */
 	public static function get_logger() {
@@ -134,7 +134,7 @@ class SS_Log {
 	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
 	 * @param $comparison Priority comparison operator.  Acts on the integer values of the error
 	 * levels, where more serious errors are lower numbers.  By default this is "=", which means only
-	 * the given priority will be logged.  Set to "<=" if you want to track errors of *at least* 
+	 * the given priority will be logged.  Set to "<=" if you want to track errors of *at least*
 	 * the given priority.
 	 */
 	public static function add_writer($writer, $priority = null, $comparison = '=') {
@@ -144,12 +144,12 @@ class SS_Log {
 
 	/**
 	 * Dispatch a message by priority level.
-	 * 
+	 *
 	 * The message parameter can be either a string (a simple error
 	 * message), or an array of variables. The latter is useful for passing
 	 * along a list of debug information for the writer to handle, such as
 	 * error code, error line, error context (backtrace).
-	 * 
+	 *
 	 * @param mixed $message Exception object or array of error context variables
 	 * @param const $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN or SS_Log::NOTICE
 	 * @param  mixed    $extras    Extra information to log in event

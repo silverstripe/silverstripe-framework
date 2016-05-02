@@ -1,9 +1,16 @@
 .ModelAdmin .cms-content-fields {
-	overflow:hidden; //removes scrolling from filter panel
 	.cms-edit-form {
-		overflow-y:auto; //adds scrolling only to the datagrid 
+		overflow-y:auto; //adds scrolling only to the datagrid
 		overflow-x:hidden;
 	}
+
+	/**
+	 * DEPRECATED:
+	 * .cms-content-tools will be removed in 4.0
+	 * Use .cms-content-filters instead.
+	 *
+	 * Hide certain elements when shown in "sidebar mode"
+	 */
 	.cms-content-tools .cms-panel-content {
 		.cms-search-form {
 			.resetformaction {
@@ -13,5 +20,5 @@
 		#Form_ImportForm {
 			overflow:hidden;
 		}
-	}	
+	}
 }

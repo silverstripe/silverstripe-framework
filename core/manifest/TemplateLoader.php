@@ -63,17 +63,14 @@ class SS_TemplateLoader {
 	 */
 	public function findTemplates($templates, $theme = null) {
 		$result = array();
-		$project = project();
-		
+
 		foreach ((array) $templates as $template) {
-			$found = false;
-			
 			if (strpos($template, '/')) {
 				list($type, $template) = explode('/', $template, 2);
 			} else {
 				$type = null;
 			}
-			
+
 			if ($found = $this->getManifest()->getCandidateTemplate($template, $theme)) {
 					if ($type && isset($found[$type])) {
 						$found = array(
@@ -83,7 +80,7 @@ class SS_TemplateLoader {
 					$result = array_merge($found, $result);
 				}
 			}
-			
+
 		return $result;
 	}
 

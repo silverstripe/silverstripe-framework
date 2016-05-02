@@ -4,7 +4,7 @@ name: coreencryptors
 PasswordEncryptor:
   encryptors:
     none:
-      PasswordEncryptor_None: 
+      PasswordEncryptor_None:
     md5:
       PasswordEncryptor_LegacyPHPHash: md5
     sha1:

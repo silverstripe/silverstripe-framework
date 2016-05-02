@@ -21,7 +21,7 @@ abstract class SearchFilter extends Object {
 	protected $name;
 
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	protected $fullName;
 
@@ -37,13 +37,13 @@ abstract class SearchFilter extends Object {
 
 	/**
 	 * @var string Name of a has-one, has-many or many-many relation (not the classname).
-	 * Set in the constructor as part of the name in dot-notation, and used in 
+	 * Set in the constructor as part of the name in dot-notation, and used in
 	 * {@link applyRelation()}.
 	 */
 	protected $relation;
 
 	/**
-	 * @param string $fullName Determines the name of the field, as well as the searched database 
+	 * @param string $fullName Determines the name of the field, as well as the searched database
 	 *  column. Can contain a relation name in dot notation, which will automatically join
 	 *  the necessary tables (e.g. "Comments.Name" to join the "Comments" has-many relationship and
 	 *  search the "Name" column when applying this filter to a SiteTree class).
@@ -80,15 +80,15 @@ abstract class SearchFilter extends Object {
 	 * search query.
 	 *
 	 * @param string $className
-	 */	
+	 */
 	public function setModel($className) {
 		$this->model = $className;
 	}
 
 	/**
-	 * Set the current value to be filtered on.
+	 * Set the current value(s) to be filtered on.
 	 *
-	 * @param string $value
+	 * @param string|array $value
 	 */
 	public function setValue($value) {
 		$this->value = $value;
@@ -96,9 +96,8 @@ abstract class SearchFilter extends Object {
 
 	/**
 	 * Accessor for the current value to be filtered on.
-	 * Caution: Data is not escaped.
 	 *
-	 * @return string
+	 * @return string|array
 	 */
 	public function getValue() {
 		return $this->value;
@@ -141,7 +140,7 @@ abstract class SearchFilter extends Object {
 	/**
 	 * The full name passed to the constructor,
 	 * including any (optional) relations in dot notation.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getFullName() {
@@ -157,7 +156,7 @@ abstract class SearchFilter extends Object {
 
 	/**
 	 * Normalizes the field name to table mapping.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getDbName() {
@@ -165,7 +164,6 @@ abstract class SearchFilter extends Object {
 		if($this->name == "NULL") {
 			return $this->name;
 		}
-		
 		// Ensure that we're dealing with a DataObject.
 		if (!is_subclass_of($this->model, 'DataObject')) {
 			throw new InvalidArgumentException(
@@ -174,7 +172,7 @@ abstract class SearchFilter extends Object {
 		}
 
 		$candidateClass = ClassInfo::table_for_object_field(
-			$this->model, 
+			$this->model,
 			$this->name
 		);
 
@@ -184,7 +182,7 @@ abstract class SearchFilter extends Object {
 			$parts = explode('.', $this->fullName);
 			return '"' . implode('"."', $parts) . '"';
 		}
-		
+
 		return sprintf('"%s"."%s"', $candidateClass, $this->name);
 	}
 
@@ -279,7 +277,7 @@ abstract class SearchFilter extends Object {
 	 * and that the filter should be applied.
 	 * Relies on the field being populated with
 	 * {@link setValue()}
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isEmpty() {
@@ -288,7 +286,7 @@ abstract class SearchFilter extends Object {
 
 	/**
 	 * Determines case sensitivity based on {@link getModifiers()}.
-	 * 
+	 *
 	 * @return Mixed TRUE or FALSE to enforce sensitivity, NULL to use field collation.
 	 */
 	protected function getCaseSensitive() {

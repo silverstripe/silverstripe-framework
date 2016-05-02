@@ -2,14 +2,14 @@
 
 /**
  * Support class for converting unicode strings into a suitable 7-bit ASCII equivalent.
- * 
+ *
  * Usage:
- * 
+ *
  * <code>
  * $tr = new SS_Transliterator();
  * $ascii = $tr->toASCII($unicode);
  * </code>
- * 
+ *
  * @package framework
  * @subpackage model
  */
@@ -20,7 +20,7 @@ class SS_Transliterator extends Object {
 	 * Even if this variable is true, iconv() won't be used if it's not installed.
 	 */
 	private static $use_iconv = false;
-		
+
 	/**
 	 * Convert the given utf8 string to a safe ASCII source
 	 */
@@ -51,7 +51,7 @@ class SS_Transliterator extends Object {
 
 		return strtr($source, $table);
 	}
-	
+
 	/**
 	 * Transliteration using iconv()
 	 */

@@ -1,6 +1,6 @@
 <?php
 /**
- * @package framework 
+ * @package framework
  * @subpackage forms
  */
 class MemberDatetimeOptionsetFieldTest extends SapphireTest {
@@ -11,7 +11,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		require_once 'Zend/Date.php';
 		$defaultDateFormat = Zend_Locale_Format::getDateFormat($member->Locale);
 		$dateFormatMap = array(
-			'MMM d, yyyy' => Zend_Date::now()->toString('MMM d, yyyy'),
+			'yyyy-MM-dd' => Zend_Date::now()->toString('yyyy-MM-dd'),
 			'yyyy/MM/dd' => Zend_Date::now()->toString('yyyy/MM/dd'),
 			'MM/dd/yyyy' => Zend_Date::now()->toString('MM/dd/yyyy'),
 			'dd/MM/yyyy' => Zend_Date::now()->toString('dd/MM/yyyy'),
@@ -44,15 +44,17 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	public function testDateFormatDefaultCheckedInFormField() {
+		Config::inst()->update('i18n', 'date_format', 'yyyy-MM-dd');
 		$field = $this->createDateFormatFieldForMember($this->objFromFixture('Member', 'noformatmember'));
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
-		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_MMM_d__y');
+		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_yyyy-MM-dd');
 		$this->assertEquals('checked', (string) $xmlArr[0]['checked']);
 	}
 
 	public function testTimeFormatDefaultCheckedInFormField() {
+		Config::inst()->update('i18n', 'time_format', 'h:mm:ss a');
 		$field = $this->createTimeFormatFieldForMember($this->objFromFixture('Member', 'noformatmember'));
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
@@ -87,11 +89,12 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 
 	public function testDateFormValid() {
 		$field = new MemberDatetimeOptionsetField('DateFormat', 'DateFormat');
-		$this->assertTrue($field->validate(null));
+		$validator = new RequiredFields();
+		$this->assertTrue($field->validate($validator));
 		$_POST['DateFormat_custom'] = 'dd MM yyyy';
-		$this->assertTrue($field->validate(null));
+		$this->assertTrue($field->validate($validator));
 		$_POST['DateFormat_custom'] = 'sdfdsfdfd1244';
-		$this->assertFalse($field->validate(null));
+		$this->assertFalse($field->validate($validator));
 	}
 
 }

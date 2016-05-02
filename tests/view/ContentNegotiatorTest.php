@@ -1,7 +1,7 @@
 <?php
 
 class ContentNegotiatorTest extends SapphireTest {
-	
+
 	/**
 	 * Small helper to render templates from strings
 	 * Cloned from SSViewerTest
@@ -11,7 +11,7 @@ class ContentNegotiatorTest extends SapphireTest {
 		if(!$data) $data = new SSViewerTestFixture();
 		return $t->process($data);
 	}
-	
+
 	public function testXhtmltagReplacement() {
 		$tmpl1 = '<?xml version="1.0" encoding="UTF-8"?>
 			<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"'
@@ -37,13 +37,13 @@ class ContentNegotiatorTest extends SapphireTest {
 				</form>
 				<body>
 			</html>';
-		
+
 		// Check that the content negotiator converts to the equally legal formats
-		$negotiator = new ContentNegotiator();	
-		
+		$negotiator = new ContentNegotiator();
+
 		$response = new SS_HTTPResponse($this->render($tmpl1));
 		$negotiator->xhtml($response);
-		
+
 		////////////////////////
 		// XHTML select options
 		////////////////////////
@@ -53,7 +53,7 @@ class ContentNegotiatorTest extends SapphireTest {
 		// Just transform this
 		$this->assertRegExp('/<option class="foo" selected="selected">dd<\/option>/', $response->getBody());
 		$this->assertRegExp('/<option selected="selected" value="">ll<\/option>/', $response->getBody());
-		
+
 		////////////////////////////////////////////////
 		// XHTML checkbox options + XHTML input closure
 		////////////////////////////////////////////////

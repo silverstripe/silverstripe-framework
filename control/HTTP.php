@@ -3,7 +3,7 @@
 /**
  * A class with HTTP-related helpers.
  * Like Debug, this is more a bundle of methods than a class ;-)
- * 
+ *
  * @package framework
  * @subpackage misc
  */
@@ -25,9 +25,9 @@ class HTTP {
 	protected static $etag = null;
 
 	/**
-     * @config
-     */
-    private static $cache_ajax_requests = true;
+	 * @config
+	 */
+	private static $cache_ajax_requests = true;
 
 	/**
 	 * Turns a local system filename into a URL by comparing it to the script
@@ -47,17 +47,17 @@ class HTTP {
 		}
 
 		$urlBase = substr(
-			$_SERVER['PHP_SELF'], 
-			0, 
+			$_SERVER['PHP_SELF'],
+			0,
 			-(strlen($_SERVER['SCRIPT_FILENAME']) - $commonLength)
 		);
-		
+
 		$url = $urlBase . substr($filename, $commonLength);
 		$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? "https" : "http";
 
 		// Count the number of extra folders the script is in.
 		// $prefix = str_repeat("../", substr_count(substr($_SERVER[SCRIPT_FILENAME],$commonBaseLength)));
-	
+
 		return "$protocol://". $_SERVER['HTTP_HOST'] . $url;
 	}
 
@@ -85,27 +85,27 @@ class HTTP {
 	 * <li><code>'myRewriter($URL)'</code></li>
 	 * <li><code>'(substr($URL,0,1)=="/") ? "../" . substr($URL,1) : $URL'</code></li>
 	 * </ul>
-	 * 
+	 *
 	 * As of 3.2 $code should be a callable which takes a single parameter and returns
 	 * the rewritten URL. e.g.
-	 * 
+	 *
 	 * <code>
-	 * function($url) { 
+	 * function($url) {
 	 *		return Director::absoluteURL($url, true);
 	 * }
 	 * </code>
-	 * 
+	 *
 	 * @param string $content The HTML to search for links to rewrite
 	 * @param string|callable $code Either a string that can evaluate to an expression
-	 * to rewrite links (depreciated), or a callable that takes a single 
+	 * to rewrite links (depreciated), or a callable that takes a single
 	 * parameter and returns the rewritten URL
 	 * @return The content with all links rewritten as per the logic specified in $code
 	 */
 	public static function urlRewriter($content, $code) {
 		if(!is_callable($code)) {
-			Deprecation::notice(3.1, 'HTTP::urlRewriter expects a callable as the second parameter');
+			Deprecation::notice('4.0', 'HTTP::urlRewriter expects a callable as the second parameter');
 		}
-		
+
 		// Replace attributes
 		$attribs = array("src","background","a" => "href","link" => "href", "base" => "href");
 		foreach($attribs as $tag => $attrib) {
@@ -152,12 +152,12 @@ class HTTP {
 	 * Uses parse_url() to dissect the URL, and http_build_query() to reconstruct it
 	 * with the additional parameter. Converts any '&' (ampersand)
 	 * URL parameter separators to the more XHTML compliant '&amp;'.
-	 * 
+	 *
 	 * CAUTION: If the URL is determined to be relative,
 	 * it is prepended with Director::absoluteBaseURL().
 	 * This method will always return an absolute URL because
 	 * Director::makeRelative() can lead to inconsistent results.
-	 * 
+	 *
 	 * @param String $varname
 	 * @param String $varvalue
 	 * @param String $currentURL Relative or absolute URL (Optional).
@@ -184,7 +184,7 @@ class HTTP {
 		$params = array();
 		if(isset($parts['query'])) parse_str($parts['query'], $params);
 		$params[$varname] = $varvalue;
-		
+
 		// Generate URI segments and formatting
 		$scheme = (isset($parts['scheme'])) ? $parts['scheme'] : 'http';
 		$user = (isset($parts['user']) && $parts['user'] != '')  ? $parts['user'] : '';
@@ -193,22 +193,22 @@ class HTTP {
 			// format in either user:pass@host.com or user@host.com
 			$user .= (isset($parts['pass']) && $parts['pass'] != '') ? ':' . $parts['pass'] . '@' : '@';
 		}
-		
+
 		$host = (isset($parts['host'])) ? $parts['host'] : '';
 		$port = (isset($parts['port']) && $parts['port'] != '') ? ':'.$parts['port'] : '';
 		$path = (isset($parts['path']) && $parts['path'] != '') ? $parts['path'] : '';
-		
+
 		// handle URL params which are existing / new
 		$params = ($params) ?  '?' . http_build_query($params, null, $separator) : '';
-		
+
 		// keep fragments (anchors) intact.
 		$fragment = (isset($parts['fragment']) && $parts['fragment'] != '') ?  '#'.$parts['fragment'] : '';
-		
-		// Recompile URI segments	
+
+		// Recompile URI segments
 		$newUri =  $scheme . '://' . $user . $host . $port . $path . $params . $fragment;
 
 		if($isRelative) return Director::makeRelative($newUri);
-		
+
 		return $newUri;
 	}
 
@@ -216,7 +216,7 @@ class HTTP {
 		$url = self::setGetVar($varname, $varvalue, $currentURL);
 		return Convert::xml2raw($url);
 	}
-	
+
 	/**
 	 * Search for all tags with a specific attribute, then return the value of that attribute in a flat array.
 	 *
@@ -226,31 +226,31 @@ class HTTP {
 	 */
 	public static function findByTagAndAttribute($content, $attributes) {
 		$regexes = array();
-		
+
 		foreach($attributes as $tag => $attribute) {
 			$regexes[] = "/<{$tag} [^>]*$attribute *= *([\"'])(.*?)\\1[^>]*>/i";
 			$regexes[] = "/<{$tag} [^>]*$attribute *= *([^ \"'>]+)/i";
 		}
-		
+
 		$result = array();
-		
+
 		if($regexes) foreach($regexes as $regex) {
 			if(preg_match_all($regex, $content, $matches)) {
 				$result = array_merge_recursive($result, (isset($matches[2]) ? $matches[2] : $matches[1]));
 			}
 		}
-		
+
 		return count($result) ? $result : null;
 	}
-	
+
 	public static function getLinksIn($content) {
 		return self::findByTagAndAttribute($content, array("a" => "href"));
 	}
-	
+
 	public static function getImagesIn($content) {
 		return self::findByTagAndAttribute($content, array("img" => "src"));
 	}
-	
+
 	/**
 	 * Get the MIME type based on a file's extension.
 	 *
@@ -311,12 +311,12 @@ class HTTP {
 	 * session_cache_limiter functionality. It is your responsibility to ensure only cacheable data
 	 * is in fact cached, and HTTP::$cache_age isn't set when the HTTP body contains session-specific content.
 	 *
-	 * @param SS_HTTPResponse The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
+	 * @param SS_HTTPResponse $body The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
 	 *                            deprecated; in these cases, the headers are output directly.
 	 */
 	public static function add_cache_headers($body = null) {
 		$cacheAge = self::$cache_age;
-		
+
 		// Validate argument
 		if($body && !($body instanceof SS_HTTPResponse)) {
 			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
@@ -326,28 +326,29 @@ class HTTP {
 		// Development sites have frequently changing templates; this can get stuffed up by the code
 		// below.
 		if(Director::isDev()) $cacheAge = 0;
-		
+
 		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
 		// us trying.
 		if(headers_sent() && !$body) return;
 
-		// Popuplate $responseHeaders with all the headers that we want to build
+		// Populate $responseHeaders with all the headers that we want to build
 		$responseHeaders = array();
+
 		$config = Config::inst();
-		// currently using a config setting to cancel this, seems to be so taht the CMS caches ajax requests
+		$cacheControlHeaders = Config::inst()->get('HTTP', 'cache_control');
+
+
+		// currently using a config setting to cancel this, seems to be so that the CMS caches ajax requests
 		if(function_exists('apache_request_headers') && $config->get(get_called_class(), 'cache_ajax_requests')) {
-			$requestHeaders = apache_request_headers();
-			if(isset($requestHeaders['X-Requested-With']) && $requestHeaders['X-Requested-With']=='XMLHttpRequest') {
-				$cacheAge = 0;
-			}
-			// bdc: now we must check for DUMB IE6:
+			$requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
+
 			if(isset($requestHeaders['x-requested-with']) && $requestHeaders['x-requested-with']=='XMLHttpRequest') {
 				$cacheAge = 0;
 			}
 		}
 
 		if($cacheAge > 0) {
-			$responseHeaders["Cache-Control"] = "max-age={$cacheAge}, must-revalidate, no-transform";
+			$cacheControlHeaders['max-age'] = self::$cache_age;
 
 			// Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
 			// defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
@@ -357,7 +358,10 @@ class HTTP {
 
 			// To do: User-Agent should only be added in situations where you *are* actually
 			// varying according to user-agent.
-			$responseHeaders['Vary'] = 'Cookie, X-Forwarded-Protocol, User-Agent, Accept';
+			$vary = $config->get('HTTP', 'vary');
+			if ($vary && strlen($vary)) {
+				$responseHeaders['Vary'] = $vary;
+			}
 		}
 		else {
 			if($body) {
@@ -376,26 +380,40 @@ class HTTP {
 				// IE6-IE8 have problems saving files when https and no-cache are used
 				// (http://support.microsoft.com/kb/323308)
 				// Note: this is also fixable by ticking "Do not save encrypted pages to disk" in advanced options.
-				$responseHeaders["Cache-Control"] = "max-age=3, must-revalidate, no-transform";
-				
+				$cacheControlHeaders['max-age'] = 3;
+
 				// Set empty pragma to avoid PHP's session_cache_limiter adding conflicting caching information,
 				// defaulting to "nocache" on most PHP configurations (see http://php.net/session_cache_limiter).
 				// Since it's a deprecated HTTP 1.0 option, all modern HTTP clients and proxies should
 				// prefer the caching information indicated through the "Cache-Control" header.
 				$responseHeaders["Pragma"] = "";
 			} else {
-				$responseHeaders["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate, no-transform";
+				$cacheControlHeaders['no-cache'] = "true";
+				$cacheControlHeaders['no-store'] = "true";
 			}
 		}
+
+		foreach($cacheControlHeaders as $header => $value) {
+			if(is_null($value)) {
+				unset($cacheControlHeaders[$header]);
+			} elseif((is_bool($value) && $value) || $value === "true") {
+				$cacheControlHeaders[$header] = $header;
+			} else {
+				$cacheControlHeaders[$header] = $header."=".$value;
+			}
+		}
+
+		$responseHeaders['Cache-Control'] = implode(', ', $cacheControlHeaders);
+		unset($cacheControlHeaders, $header, $value);
 
 		if(self::$modification_date && $cacheAge > 0) {
 			$responseHeaders["Last-Modified"] = self::gmt_date(self::$modification_date);
 
 			// Chrome ignores Varies when redirecting back (http://code.google.com/p/chromium/issues/detail?id=79758)
-			// which means that if you log out, you get redirected back to a page which Chrome then checks against 
+			// which means that if you log out, you get redirected back to a page which Chrome then checks against
 			// last-modified (which passes, getting a 304)
 			// when it shouldn't be trying to use that page at all because it's the "logged in" version.
-			// By also using and etag that includes both the modification date and all the varies 
+			// By also using and etag that includes both the modification date and all the varies
 			// values which we also check against we can catch this and not return a 304
 			$etagParts = array(self::$modification_date, serialize($_COOKIE));
 			$etagParts[] = Director::is_https() ? 'https' : 'http';
@@ -431,11 +449,17 @@ class HTTP {
 		if(self::$etag) {
 			$responseHeaders['ETag'] = self::$etag;
 		}
-		
+
 		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
 		foreach($responseHeaders as $k => $v) {
-			if($body) $body->addHeader($k, $v);
-			else if(!headers_sent()) header("$k: $v");
+			if($body) {
+				// Set the header now if it's not already set.
+				if ($body->getHeader($k) === null) {
+					$body->addHeader($k, $v);
+				}
+			} elseif(!headers_sent()) {
+				header("$k: $v");
+			}
 		}
 	}
 
@@ -448,8 +472,8 @@ class HTTP {
 	public static function gmt_date($timestamp) {
 		return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
 	}
-	
-	/* 
+
+	/*
 	 * Return static variable cache_age in second
 	 */
 	public static function get_cache_age() {

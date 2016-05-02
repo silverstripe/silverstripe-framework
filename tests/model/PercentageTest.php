@@ -4,7 +4,7 @@
  * @subpackage tests
  */
 class PercentageTest extends SapphireTest {
-	
+
 	public function testNice() {
 		/* Test the default Nice() output of Percentage */
 		$cases = array(
@@ -17,7 +17,7 @@ class PercentageTest extends SapphireTest {
 			'1.0500' => '105.00%',
 			'0.95' => '95.00%'
 		);
-		
+
 		foreach($cases as $original => $expected) {
 			$percentage = new Percentage('Probability');
 			$percentage->setValue($original);
@@ -35,12 +35,12 @@ class PercentageTest extends SapphireTest {
 			'1.05' => '105%',
 			'1.0500' => '105%'
 		);
-		
+
 		foreach($cases as $original => $expected) {
 			$percentage = new Percentage('Probability', 2);
 			$percentage->setValue($original);
 			$this->assertEquals($expected, $percentage->Nice());
 		}
 	}
-	
+
 }

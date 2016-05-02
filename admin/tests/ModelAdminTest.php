@@ -2,13 +2,13 @@
 
 class ModelAdminTest extends FunctionalTest {
 	protected static $fixture_file = 'ModelAdminTest.yml';
-	
+
 	protected $extraDataObjects = array(
 		'ModelAdminTest_Admin',
 		'ModelAdminTest_Contact',
 		'ModelAdminTest_Player'
 	);
-	
+
 	public function testModelAdminOpens() {
 		$this->autoFollowRedirection = false;
 		$this->logInAs('admin');
@@ -35,7 +35,7 @@ class ModelAdminTest extends FunctionalTest {
 
 class ModelAdminTest_Admin extends ModelAdmin implements TestOnly {
 	private static $url_segment = 'testadmin';
-	
+
 	private static $managed_models = array(
 		'ModelAdminTest_Contact',
 	);

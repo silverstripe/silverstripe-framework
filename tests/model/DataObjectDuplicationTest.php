@@ -3,7 +3,7 @@
 class DataObjectDuplicationTest extends SapphireTest {
 
 	protected $usesDatabase = true;
-	
+
 	protected $extraDataObjects = array(
 		'DataObjectDuplicateTestClass1',
 		'DataObjectDuplicateTestClass2',

@@ -1,0 +1,22 @@
+---
+name: databaseconnectors
+---
+Injector:
+  MySQLPDODatabase:
+    class: 'MySQLDatabase'
+    properties:
+      connector: %$PDOConnector
+      schemaManager: %$MySQLSchemaManager
+      queryBuilder: %$MySQLQueryBuilder
+  MySQLDatabase:
+    class: 'MySQLDatabase'
+    properties:
+      connector: %$MySQLiConnector
+      schemaManager: %$MySQLSchemaManager
+      queryBuilder: %$MySQLQueryBuilder
+  MySQLiConnector:
+    class: 'MySQLiConnector'
+    type: prototype
+  PDOConnector:
+    class: 'PDOConnector'
+    type: prototype

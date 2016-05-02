@@ -30,7 +30,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 
 			$options .= "<li class=\"".$extraClass."\">"
 				. "<input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled"
-				. " class=\"radio\" /> <label title=\"$ATT_key\" for=\"$itemID\">$value</label></li>\n"; 
+				. " class=\"radio\" /> <label title=\"$ATT_key\" for=\"$itemID\">$value</label></li>\n";
 		}
 
 		// Add "custom" input field
@@ -39,7 +39,7 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		$options .= "<li class=\"valCustom\">"
 			. sprintf(
 					"<input id=\"%s_custom\" name=\"%s\" type=\"radio\" value=\"__custom__\" class=\"radio\" %s />",
-					$itemID, $this->name, 
+					$itemID, $this->name,
 					$checked
 				)
 			. sprintf(
@@ -68,8 +68,8 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	 * @todo Put this text into a template?
 	 */
 	public function getDescription() {
-		$output = 
-			'<a href="#" class="toggle">' 
+		$output =
+			'<a href="#" class="toggle">'
 			. _t('MemberDatetimeOptionsetField.Toggle', 'Show formatting help')
 			. '</a>'
 			. '<ul class="toggle-content">'
@@ -119,6 +119,12 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		}
 	}
 
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
 	public function validate($validator) {
 		$value = isset($_POST[$this->name . '_custom']) ? $_POST[$this->name . '_custom'] : null;
 		if(!$value) return true; // no custom value, don't validate

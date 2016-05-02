@@ -15,9 +15,13 @@ After:
 Director:
   rules:
     'Security//$Action/$ID/$OtherID': 'Security'
-    '$Controller//$Action/$ID/$OtherID':  '*'
+    'CMSSecurity//$Action/$ID/$OtherID': 'CMSSecurity'
     'dev': 'DevelopmentAdmin'
     'interactive': 'SapphireREPL'
+    'InstallerTest//$Action/$ID/$OtherID': 'InstallerTest'
+    'JSTestRunner//$Action/$ID/$OtherID': 'JSTestRunner'
+    'SapphireInfo//$Action/$ID/$OtherID': 'SapphireInfo'
+    'SapphireREPL//$Action/$ID/$OtherID': 'SapphireREPL'
 ---
 Name: adminroutes
 Before: '*'

@@ -2,15 +2,15 @@
 
 /**
  * Special request handler for admin/batchaction
- *  
+ *
  * @package framework
  * @subpackage admin
  */
 class CMSBatchActionHandler extends RequestHandler {
-	
+
 	/** @config */
 	private static $batch_actions = array();
-	
+
 	private static $url_handlers = array(
 		'$BatchAction/applicablepages' => 'handleApplicablePages',
 		'$BatchAction/confirmation' => 'handleConfirmation',
@@ -22,39 +22,21 @@ class CMSBatchActionHandler extends RequestHandler {
 		'handleApplicablePages',
 		'handleConfirmation',
 	);
-	
+
 	protected $parentController;
-	
+
 	/**
 	 * @var String
 	 */
 	protected $urlSegment;
-	
+
 	/**
 	 * @var String $recordClass The classname that should be affected
 	 * by any batch changes. Needs to be set in the actual {@link CMSBatchAction}
 	 * implementations as well.
 	 */
 	protected $recordClass = 'SiteTree';
-	
-	/**
-	 * Register a new batch action.  Each batch action needs to be represented by a subclass
-	 * of {@link CMSBatchAction}.
-	 * 
-	 * @param $urlSegment The URL Segment of the batch action - the URL used to process this
-	 * action will be admin/batchactions/(urlSegment)
-	 * @param $batchActionClass The name of the CMSBatchAction subclass to register
-	 */
-	public static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
-		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {
-			Config::inst()->update('CMSBatchActionHandler', 'batch_actions', 
-				array($urlSegment => array('class' => $batchActionClass, 'recordClass' => $recordClass))
-			);
-		} else {
-			user_error("CMSBatchActionHandler::register() - Bad class '$batchActionClass'", E_USER_ERROR);
-		}
-	}
-	
+
 	/**
 	 * @param string $parentController
 	 * @param string $urlSegment
@@ -63,138 +45,159 @@ class CMSBatchActionHandler extends RequestHandler {
 	public function __construct($parentController, $urlSegment, $recordClass = null) {
 		$this->parentController = $parentController;
 		$this->urlSegment = $urlSegment;
-		if($recordClass) $this->recordClass = $recordClass;
-		
+		if($recordClass) {
+			$this->recordClass = $recordClass;
+		}
+
 		parent::__construct();
 	}
-	
+
+	/**
+	 * Register a new batch action.  Each batch action needs to be represented by a subclass
+	 * of {@link CMSBatchAction}.
+	 *
+	 * @param $urlSegment The URL Segment of the batch action - the URL used to process this
+	 * action will be admin/batchactions/(urlSegment)
+	 * @param $batchActionClass The name of the CMSBatchAction subclass to register
+	 */
+	public static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
+		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {
+			Config::inst()->update(
+				'CMSBatchActionHandler',
+				'batch_actions',
+				array(
+					$urlSegment => array(
+						'class' => $batchActionClass,
+						'recordClass' => $recordClass
+					)
+				)
+			);
+		} else {
+			user_error("CMSBatchActionHandler::register() - Bad class '$batchActionClass'", E_USER_ERROR);
+		}
+	}
+
 	public function Link() {
 		return Controller::join_links($this->parentController->Link(), $this->urlSegment);
 	}
 
+	/**
+	 * Invoke a batch action
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
+	 */
 	public function handleBatchAction($request) {
 		// This method can't be called without ajax.
 		if(!$request->isAjax()) {
-			$this->parentController->redirectBack();
-			return;
+			return $this->parentController->redirectBack();
 		}
-		
+
 		// Protect against CSRF on destructive action
-		if(!SecurityToken::inst()->checkRequest($request)) return $this->httpError(400);
-
-		$actions = $this->batchActions();
-		$actionClass = $actions[$request->param('BatchAction')]['class'];
-		$actionHandler = new $actionClass();
-		
-		// Sanitise ID list and query the database for apges
-		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
-		foreach($ids as $k => $v) if(!is_numeric($v)) unset($ids[$k]);
-		
-		if($ids) {
-			if(class_exists('Translatable') && SiteTree::has_extension('Translatable')) {
-				Translatable::disable_locale_filter();
-			}
-			
-			$pages = DataObject::get(
-				$this->recordClass, 
-				sprintf(
-					'"%s"."ID" IN (%s)',
-					ClassInfo::baseDataClass($this->recordClass),
-					implode(", ", $ids)
-				)
-			);
-			
-			if(class_exists('Translatable') && SiteTree::has_extension('Translatable')) {
-				Translatable::enable_locale_filter();
-			}
-			
-			$record_class = $this->recordClass;
-			if($record_class::has_extension('Versioned')) {
-				// If we didn't query all the pages, then find the rest on the live site
-				if(!$pages || $pages->Count() < sizeof($ids)) {
-					foreach($ids as $id) $idsFromLive[$id] = true;
-					if($pages) foreach($pages as $page) unset($idsFromLive[$page->ID]);
-					$idsFromLive = array_keys($idsFromLive);
-
-					$sql = sprintf(
-						'"%s"."ID" IN (%s)',
-						$this->recordClass,
-						implode(", ", $idsFromLive)
-					);
-					$livePages = Versioned::get_by_stage($this->recordClass, 'Live', $sql);
-					if($pages) {
-						// Can't merge into a DataList, need to condense into an actual list first
-						// (which will retrieve all records as objects, so its an expensive operation)
-						$pages = new ArrayList($pages->toArray());
-						$pages->merge($livePages);
-					}	else {
-						$pages = $livePages;
-					}
-				}
-			}
-		} else {
-			$pages = new ArrayList();
+		if(!SecurityToken::inst()->checkRequest($request)) {
+			return $this->httpError(400);
 		}
-		
-		return $actionHandler->run($pages);
-	} 
 
+		// Find the action handler
+		$action = $request->param('BatchAction');
+		$actionHandler = $this->actionByName($action);
+
+		// Sanitise ID list and query the database for apges
+		$csvIDs = $request->requestVar('csvIDs');
+		$ids = $this->cleanIDs($csvIDs);
+
+		// Filter ids by those which are applicable to this action
+		// Enforces front end filter in LeftAndMain.BatchActions.js:refreshSelected
+		$ids = $actionHandler->applicablePages($ids);
+
+		// Query ids and pass to action to process
+		$pages = $this->getPages($ids);
+		return $actionHandler->run($pages);
+	}
+
+	/**
+	 * Respond with the list of applicable pages for a given filter
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
+	 */
 	public function handleApplicablePages($request) {
 		// Find the action handler
-		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
-		$actionClass = $actions[$request->param('BatchAction')];
-		$actionHandler = new $actionClass['class']();
+		$action = $request->param('BatchAction');
+		$actionHandler = $this->actionByName($action);
 
 		// Sanitise ID list and query the database for apges
-		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
-		foreach($ids as $k => $id) $ids[$k] = (int)$id;
-		$ids = array_filter($ids);
-		
-		if($actionHandler->hasMethod('applicablePages')) {
+		$csvIDs = $request->requestVar('csvIDs');
+		$ids = $this->cleanIDs($csvIDs);
+
+		// Filter by applicable pages
+		if($ids) {
 			$applicableIDs = $actionHandler->applicablePages($ids);
 		} else {
-			$applicableIDs = $ids;
+			$applicableIDs = array();
 		}
-		
+
 		$response = new SS_HTTPResponse(json_encode($applicableIDs));
 		$response->addHeader("Content-type", "application/json");
 		return $response;
 	}
-	
+
+	/**
+	 * Check if this action has a confirmation step
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
+	 */
 	public function handleConfirmation($request) {
 		// Find the action handler
-		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
-		$actionClass = $actions[$request->param('BatchAction')];
-		$actionHandler = new $actionClass();
+		$action = $request->param('BatchAction');
+		$actionHandler = $this->actionByName($action);
 
 		// Sanitise ID list and query the database for apges
-		$ids = preg_split('/ *, */', trim($request->requestVar('csvIDs')));
-		foreach($ids as $k => $id) $ids[$k] = (int)$id;
-		$ids = array_filter($ids);
-		
+		$csvIDs = $request->requestVar('csvIDs');
+		$ids = $this->cleanIDs($csvIDs);
+
+		// Check dialog
 		if($actionHandler->hasMethod('confirmationDialog')) {
 			$response = new SS_HTTPResponse(json_encode($actionHandler->confirmationDialog($ids)));
 		} else {
 			$response = new SS_HTTPResponse(json_encode(array('alert' => false)));
 		}
-		
+
 		$response->addHeader("Content-type", "application/json");
 		return $response;
 	}
-	
+
+	/**
+	 * Get an action for a given name
+	 *
+	 * @param string $name Name of the action
+	 * @return CMSBatchAction An instance of the given batch action
+	 * @throws InvalidArgumentException if invalid action name is passed.
+	 */
+	protected function actionByName($name) {
+		// Find the action handler
+		$actions = $this->batchActions();
+		if(!isset($actions[$name]['class'])) {
+			throw new InvalidArgumentException("Invalid batch action: {$name}");
+		}
+		return $this->buildAction($actions[$name]['class']);
+	}
+
 	/**
 	 * Return a SS_List of ArrayData objects containing the following pieces of info
 	 * about each batch action:
 	 *  - Link
 	 *  - Title
+	 *
+	 * @return ArrayList
 	 */
 	public function batchActionList() {
 		$actions = $this->batchActions();
 		$actionList = new ArrayList();
-		
+
 		foreach($actions as $urlSegment => $action) {
-			$actionClass = $action['class'];
-			$actionObj = new $actionClass();
+			$actionObj = $this->buildAction($action['class']);
 			if($actionObj->canView()) {
 				$actionDef = new ArrayData(array(
 					"Link" => Controller::join_links($this->Link(), $urlSegment),
@@ -203,23 +206,88 @@ class CMSBatchActionHandler extends RequestHandler {
 				$actionList->push($actionDef);
 			}
 		}
-		
+
 		return $actionList;
 	}
-	
+
+	/**
+	 * Safely generate batch action object for a given classname
+	 *
+	 * @param string $class Class name to check
+	 * @return CMSBatchAction An instance of the given batch action
+	 * @throws InvalidArgumentException if invalid action class is passed.
+	 */
+	protected function buildAction($class) {
+		if(!is_subclass_of($class, 'CMSBatchAction')) {
+			throw new InvalidArgumentException("{$class} is not a valid subclass of CMSBatchAction");
+		}
+		return $class::singleton();
+	}
+
+	/**
+	 * Sanitise ID list from string input
+	 *
+	 * @param string $csvIDs
+	 * @return array List of IDs as ints
+	 */
+	protected function cleanIDs($csvIDs) {
+		$ids = preg_split('/ *, */', trim($csvIDs));
+		foreach($ids as $k => $id) {
+			$ids[$k] = (int)$id;
+		}
+		return array_filter($ids);
+	}
+
 	/**
 	 * Get all registered actions through the static defaults set by {@link register()}.
 	 * Filters for the currently set {@link recordClass}.
-	 * 
+	 *
 	 * @return array See {@link register()} for the returned format.
 	 */
 	public function batchActions() {
-		$actions = Config::inst()->get($this->class, 'batch_actions', Config::FIRST_SET);
-		if($actions) foreach($actions as $action) {
-			if($action['recordClass'] != $this->recordClass) unset($action);
-		}
-		
+		$actions = $this->config()->batch_actions;
+		$recordClass = $this->recordClass;
+		$actions = array_filter($actions, function($action) use ($recordClass) {
+			return $action['recordClass'] === $recordClass;
+		});
 		return $actions;
+	}
+
+	/**
+	 * Safely query and return all pages queried
+	 *
+	 * @param array $ids
+	 * @return SS_List
+	 */
+	protected function getPages($ids) {
+		// Check empty set
+		if(empty($ids)) {
+			return new ArrayList();
+		}
+
+		$recordClass = $this->recordClass;
+
+		// Bypass translatable filter
+		if(class_exists('Translatable') && $recordClass::has_extension('Translatable')) {
+			Translatable::disable_locale_filter();
+		}
+
+		// Bypass versioned filter
+		if($recordClass::has_extension('Versioned')) {
+			// Workaround for get_including_deleted not supporting byIDs filter very well
+			// Ensure we select both stage / live records
+			$pages = Versioned::get_including_deleted($recordClass, array(
+				'"RecordID" IN ('.DB::placeholders($ids).')' => $ids
+			));
+		} else {
+			$pages = DataObject::get($recordClass)->byIDs($ids);
+		}
+
+		if(class_exists('Translatable') && $recordClass::has_extension('Translatable')) {
+			Translatable::enable_locale_filter();
+		}
+
+		return $pages;
 	}
 
 }

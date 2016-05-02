@@ -119,7 +119,7 @@ Jasmine.ActionCollection.prototype.waitForDone = function(action) {
     afterExecute();
     return;
   }
-  
+
   var id = setInterval(function() {
     if (action.finished) {
       clearInterval(id);
@@ -739,7 +739,7 @@ var it = function(description, func) {
   return that;
 };
 
-//this mirrors the spec syntax so you can define a spec description that will not run. 
+//this mirrors the spec syntax so you can define a spec description that will not run.
 var xit = function() {
   return {runs: function() {
   } };

@@ -5,27 +5,27 @@
  * function, but could also be more sophisticated to facilitate
  * password migrations from other systems.
  * Use {@link register()} to add new implementations.
- * 
+ *
  * Used in {@link Security::encrypt_password()}.
- * 
+ *
  * @package framework
  * @subpackage security
  */
 abstract class PasswordEncryptor {
-	
+
 	/**
 	 * @var array
 	 * @config
 	 */
 	private static $encryptors = array();
-	
+
 	/**
 	 * @return Array Map of encryptor code to the used class.
 	 */
 	public static function get_encryptors() {
 		return Config::inst()->get('PasswordEncryptor', 'encryptors');
 	}
-	
+
 	/**
 	 * @param String $algorithm
 	 * @return PasswordEncryptor
@@ -38,7 +38,7 @@ abstract class PasswordEncryptor {
 				sprintf('No implementation found for "%s"', $algorithm)
 			);
 		}
-		
+
 		$class=key($encryptors[$algorithm]);
 		if(!class_exists($class)) {
 			throw new PasswordEncryptor_NotFoundException(
@@ -50,27 +50,27 @@ abstract class PasswordEncryptor {
 		if(!$refClass->getConstructor()) {
 			return new $class;
 		}
-		
+
 		$arguments = $encryptors[$algorithm];
 		return($refClass->newInstanceArgs($arguments));
 	}
-		
+
 	/**
 	 * Return a string value stored in the {@link Member->Password} property.
 	 * The password should be hashed with {@link salt()} if applicable.
-	 * 
+	 *
 	 * @param String $password Cleartext password to be hashed
 	 * @param String $salt (Optional)
 	 * @param Member $member (Optional)
 	 * @return String Maximum of 512 characters.
 	 */
 	abstract public function encrypt($password, $salt = null, $member = null);
-	
+
 	/**
 	 * Return a string value stored in the {@link Member->Salt} property.
-	 * 
+	 *
 	 * @uses RandomGenerator
-	 * 
+	 *
 	 * @param String $password Cleartext password
 	 * @param Member $member (Optional)
 	 * @return String Maximum of 50 characters
@@ -79,7 +79,7 @@ abstract class PasswordEncryptor {
 		$generator = new RandomGenerator();
 		return substr($generator->randomToken('sha1'), 0, 50);
 	}
-	
+
 	/**
 	 * This usually just returns a strict string comparison,
 	 * but is necessary for retain compatibility with password hashed
@@ -95,7 +95,7 @@ abstract class PasswordEncryptor {
  * Blowfish encryption - this is the default from SilverStripe 3.
  * PHP 5.3+ will provide a php implementation if there is no system
  * version available.
- * 
+ *
  * @package framework
  * @subpackage security
  */
@@ -105,8 +105,8 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	 * Higher costs will increase security, but also increase server load.
 	 * If you are using basic auth, you may need to decrease this as encryption
 	 * will be run on every request.
-	 * The two digit cost parameter is the base-2 logarithm of the iteration 
-	 * count for the underlying Blowfish-based hashing algorithmeter and must 
+	 * The two digit cost parameter is the base-2 logarithm of the iteration
+	 * count for the underlying Blowfish-based hashing algorithmeter and must
 	 * be in range 04-31, values outside this range will cause crypt() to fail.
 	 */
 	protected static $cost = 10;
@@ -114,9 +114,9 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	/**
 	 * Sets the cost of the blowfish algorithm.
 	 * See {@link PasswordEncryptor_Blowfish::$cost}
-	 * Cost is set as an integer but 
+	 * Cost is set as an integer but
 	 * Ensure that set values are from 4-31
-	 * 
+	 *
 	 * @param int $cost range 4-31
 	 * @return null
 	 */
@@ -126,7 +126,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 
 	/**
 	 * Gets the cost that is set for the blowfish algorithm
-	 * 
+	 *
 	 * @param int $cost
 	 * @return null
 	 */
@@ -213,7 +213,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	}
 
 	/**
-	 * The algorithm returned by using '$2a$' is not consistent - 
+	 * The algorithm returned by using '$2a$' is not consistent -
 	 * it might be either the correct (y), incorrect (x) or mostly-correct (a)
 	 * version, depending on the version of PHP and the operating system,
 	 * so we need to test it.
@@ -263,14 +263,14 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
  * Encryption using built-in hash types in PHP.
  * Please note that the implemented algorithms depend on the PHP
  * distribution and architecture.
- * 
+ *
  * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_PHPHash extends PasswordEncryptor {
-	
+
 	protected $algorithm = 'sha1';
-	
+
 	/**
 	 * @param String $algorithm A PHP built-in hashing algorithm as defined by hash_algos()
 	 */
@@ -280,17 +280,17 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
 				sprintf('Hash algorithm "%s" not found in hash_algos()', $algorithm)
 			);
 		}
-		
+
 		$this->algorithm = $algorithm;
 	}
-	
+
 	/**
 	 * @return string
 	 */
 	public function getAlgorithm() {
 		return $this->algorithm;
 	}
-	
+
 	public function encrypt($password, $salt = null, $member = null) {
 		return hash($this->algorithm, $password . $salt);
 	}
@@ -299,19 +299,19 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
 /**
  * Legacy implementation for SilverStripe 2.1 - 2.3,
  * which had a design flaw in password hashing that caused
- * the hashes to differ between architectures due to 
+ * the hashes to differ between architectures due to
  * floating point precision problems in base_convert().
  * See http://open.silverstripe.org/ticket/3004
- * 
+ *
  * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 	public function encrypt($password, $salt = null, $member = null) {
 		$password = parent::encrypt($password, $salt, $member);
-		
+
 		// Legacy fix: This shortening logic is producing unpredictable results.
-		// 
+		//
 		// Convert the base of the hexadecimal password to 36 to make it shorter
 		// In that way we can store also a SHA256 encrypted password in just 64
 		// letters.
@@ -319,7 +319,7 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 	}
 
 	public function check($hash, $password, $salt = null, $member = null) {
-		// Due to flawed base_convert() floating poing precision, 
+		// Due to flawed base_convert() floating poing precision,
 		// only the first 10 characters are consistently useful for comparisons.
 		return (substr($hash, 0, 10) === substr($this->encrypt($password, $salt, $member), 0, 10));
 	}
@@ -327,17 +327,15 @@ class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash {
 
 /**
  * Uses MySQL's PASSWORD encryption. Requires an active DB connection.
- * 
+ *
  * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_MySQLPassword extends PasswordEncryptor {
 	public function encrypt($password, $salt = null, $member = null) {
-		return DB::query(
-			sprintf("SELECT PASSWORD('%s')", Convert::raw2sql($password))
-		)->value();
+		return DB::prepared_query("SELECT PASSWORD(?)", array($password))->value();
 	}
-	
+
 	public function salt($password, $member = null) {
 		return false;
 	}
@@ -345,17 +343,15 @@ class PasswordEncryptor_MySQLPassword extends PasswordEncryptor {
 
 /**
  * Uses MySQL's OLD_PASSWORD encyrption. Requires an active DB connection.
- * 
+ *
  * @package framework
  * @subpackage security
  */
 class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor {
 	public function encrypt($password, $salt = null, $member = null) {
-		return DB::query(
-			sprintf("SELECT OLD_PASSWORD('%s')", Convert::raw2sql($password))
-		)->value();
+		return DB::prepared_query("SELECT OLD_PASSWORD(?)", array($password))->value();
 	}
-	
+
 	public function salt($password, $member = null) {
 		return false;
 	}
@@ -365,7 +361,7 @@ class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor {
  * Cleartext passwords (used in SilverStripe 2.1).
  * Also used when Security::$encryptPasswords is set to FALSE.
  * Not recommended.
- * 
+ *
  * @package framework
  * @subpackage security
  */
@@ -373,7 +369,7 @@ class PasswordEncryptor_None extends PasswordEncryptor {
 	public function encrypt($password, $salt = null, $member = null) {
 		return $password;
 	}
-	
+
 	public function salt($password, $member = null) {
 		return false;
 	}

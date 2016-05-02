@@ -15,7 +15,7 @@ div.TreeDropdownField {
 		padding: 0;
 		margin: 0;
 	}
-	
+
 	.treedropdownfield-title {
 		float: left;
 		padding: 7px;
@@ -32,10 +32,10 @@ div.TreeDropdownField {
 
 		//Style search box to match chosen search
 		$bgImage: '../admin/thirdparty/chosen/chosen/chosen-sprite.png';
-		
+
 		background:url($bgImage) no-repeat 100% -22px; //For browers that only support 1 background
 		@include background(
-			url($bgImage) no-repeat 100% -22px, 
+			url($bgImage) no-repeat 100% -22px,
 			linear-gradient(top, #eeeeee 1%, #ffffff 15%)
 		);
 		@include box-sizing(border-box);
@@ -53,7 +53,7 @@ div.TreeDropdownField {
 
 	&.searchable .treedropdownfield-panel.loading{
 		min-height: 16px /* icon */ + 14px /* padding */ + 34px /* approx height search input */; // Ensure there's room for loading indicator
-		background-position: 98% 39px; 
+		background-position: 98% 39px;
 	}
 
 	.treedropdownfield-panel {
@@ -73,10 +73,10 @@ div.TreeDropdownField {
 
 		&.loading {
 			min-height: 16px /* icon */ + 14px /* padding */; // Ensure there's room for loading indicator
-			background: #fff url("../images/network-save.gif") 98% 7px no-repeat; 
+			background: #fff url("../images/network-save.gif") 98% 7px no-repeat;
 		}
 
-		.tree-holder{ 
+		.tree-holder{
 			position:relative;
 			z-index:1;
 			> ul{
@@ -105,7 +105,7 @@ div.TreeDropdownField {
 			}
 		}
 	}
-		
+
 	.treedropdownfield-toggle-panel-link {
 		border: none;
 		margin: 0;
@@ -115,12 +115,12 @@ div.TreeDropdownField {
 		-webkit-border-radius: 0 4px 4px 0;
 		-moz-border-radius: 0 4px 4px 0;
 		border-radius: 0 4px 4px 0;
-		
+
 		&.treedropdownfield-open-tree {
 			background: transparent;
 			border: none;
 		}
-		
+
 		a {
 			text-decoration: none;
 			display: block;
@@ -129,9 +129,9 @@ div.TreeDropdownField {
 			opacity: 0.5;
 		}
 	}
-	
-	a.jstree-loading .jstree-pageicon { 
+
+	a.jstree-loading .jstree-pageicon {
 		// Apply to .jstree-pageicon since .jstree-icon is hidden
-		background: #fff url("../images/network-save.gif") center center no-repeat; 
+		background: #fff url("../images/network-save.gif") center center no-repeat;
 	}
 }

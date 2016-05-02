@@ -8,12 +8,12 @@ class i18nTextCollectorTestMyObject extends DataObject implements TestOnly {
 		'FirstProperty' => 'Varchar',
 		'SecondProperty' => 'Int'
 	);
-	
+
 	private static $has_many = array(
 		'Relation' => 'Group'
 	);
-	
+
 	private static $singular_name = "My Object";
-	
+
 	private static $plural_name = "My Objects";
 }

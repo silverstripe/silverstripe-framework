@@ -89,27 +89,27 @@ Action methods can return one of four main things:
 	 * We can manually create a response and return that to ignore any previous data.
 	 */
 	public function someaction(SS_HTTPRequest $request) {
-		$this->response = new SS_HTTPResponse();
-		$this->response->setStatusCode(400);
-		$this->response->setBody('invalid');
+		$this->setResponse(new SS_HTTPResponse());
+		$this->getResponse()->setStatusCode(400);
+		$this->getResponse()->setBody('invalid');
 
-		return $this->response;
+		return $this->getResponse();
 	}
 
 	/**
 	 * Or, we can modify the response that is waiting to go out.
 	 */
 	public function anotheraction(SS_HTTPRequest $request) {
-		$this->response->setStatusCode(400);
+		$this->getResponse()->setStatusCode(400);
 
-		return $this->response;
+		return $this->getResponse();
 	}
 
 	/**
 	 * We can render HTML and leave SilverStripe to set the response code and body.
 	 */
 	public function htmlaction() {
-		return $this->customize(new ArrayData(array(
+		return $this->customise(new ArrayData(array(
 			'Title' => 'HTML Action'
 		)))->renderWith('MyCustomTemplate');
 	}
@@ -118,13 +118,13 @@ Action methods can return one of four main things:
 	 * We can send stuff to the browser which isn't HTML
 	 */
 	public function ajaxaction() {
-		$this->response->setBody(json_encode(array(
+		$this->getResponse()->setBody(json_encode(array(
 			'json' => true
 		)));
 
-		$this->response->addHeader("Content-type", "application/json");
+		$this->getResponse()->addHeader("Content-type", "application/json");
 
-		return $this->response;
+		return $this->getResponse().
 	}
 
 For more information on how a URL gets mapped to an action see the [Routing](routing) documentation.

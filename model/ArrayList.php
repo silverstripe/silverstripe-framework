@@ -20,11 +20,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Holds the items in the list
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $items = array();
-	
+
 	/**
 	 *
 	 * @param array $items - an initial array to fill this object with
@@ -33,7 +33,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		$this->items = array_values($items);
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Return the class of items in this list, by looking at the first item inside it.
 	 */
@@ -52,18 +52,18 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Returns true if this list has items
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function exists() {
-		return (bool) count($this);
+		return !empty($this->items);
 	}
 
 	/**
 	 * Returns an Iterator for this ArrayList.
 	 * This function allows you to use ArrayList in foreach loops
 	 *
-	 * @return ArrayIterator 
+	 * @return ArrayIterator
 	 */
 	public function getIterator() {
 		foreach($this->items as $i => $item) {
@@ -75,12 +75,12 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Return an array of the actual items that this ArrayList contains.
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function toArray() {
 		return $this->items;
 	}
-	
+
 	/**
 	 * Walks the list using the specified callback
 	 *
@@ -104,8 +104,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Return this list as an array and every object it as an sub array as well
-	 * 
-	 * @return array 
+	 *
+	 * @return array
 	 */
 	public function toNestedArray() {
 		$result = array();
@@ -127,10 +127,10 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Get a sub-range of this dataobjectset as an array
-	 * 
+	 *
 	 * @param int $offset
 	 * @param int $length
-	 * @return ArrayList 
+	 * @return ArrayList
 	 */
 	public function limit($length, $offset = 0) {
 		if(!$length) {
@@ -146,7 +146,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Add this $item into this list
 	 *
-	 * @param mixed $item 
+	 * @param mixed $item
 	 */
 	public function add($item) {
 		$this->push($item);
@@ -154,8 +154,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Remove this item from this list
-	 * 
-	 * @param mixed $item 
+	 *
+	 * @param mixed $item
 	 */
 	public function remove($item) {
 		$renumberKeys = false;
@@ -275,16 +275,16 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Returns a map of this list
 	 *
-	 * @param type $keyfield - the 'key' field of the result array
-	 * @param type $titlefield - the value field of the result array
-	 * @return array 
+	 * @param string $keyfield - the 'key' field of the result array
+	 * @param string $titlefield - the value field of the result array
+	 * @return array
 	 */
 	public function map($keyfield = 'ID', $titlefield = 'Title') {
 		$map = array();
 
 		foreach ($this->items as $item) {
 			$map[$this->extractValue($item, $keyfield)] = $this->extractValue(
-				$item, 
+				$item,
 				$titlefield
 			);
 		}
@@ -295,9 +295,9 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Find the first item of this list where the given key = value
 	 *
-	 * @param type $key
-	 * @param type $value
-	 * @return type 
+	 * @param string $key
+	 * @param string $value
+	 * @return mixed
 	 */
 	public function find($key, $value) {
 		foreach ($this->items as $item) {
@@ -332,7 +332,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	public function canSortBy($by) {
 		return true;
 	}
-	
+
 	/**
 	 * Reverses an {@link ArrayList}
 	 *
@@ -341,13 +341,13 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	public function reverse() {
 		$list = clone $this;
 		$list->items = array_reverse($this->items);
-		
+
 		return $list;
 	}
-	
+
 	/**
 	 * Parses a specified column into a sort field and direction
-	 * 
+	 *
 	 * @param type $column String to parse containing the column name
 	 * @param type $direction Optional Additional argument which may contain the direction
 	 * @return array Sort specification in the form array("Column", SORT_ASC).
@@ -358,7 +358,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			$column = $direction;
 			$direction = null;
 		}
-		
+
 		// Parse column specification, considering possible ansi sql quoting
 		if(preg_match('/^"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column, $match)) {
 			$column = $match['column'];
@@ -368,7 +368,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		} else {
 			throw new InvalidArgumentException("Invalid sort() column");
 		}
-		
+
 		// Parse sort direction specification
 		if(empty($direction) || preg_match('/^asc(ending)?$/i', $direction)) {
 			$direction = SORT_ASC;
@@ -377,14 +377,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		} else {
 			throw new InvalidArgumentException("Invalid sort() direction");
 		}
-		
+
 		return array($column, $direction);
 	}
-	
+
 	/**
 	 * Sorts this list by one or more fields. You can either pass in a single
 	 * field name and direction, or a map of field names to sort directions.
-	 * 
+	 *
 	 * Note that columns may be double quoted as per ANSI sql standard
 	 *
 	 * @return DataList
@@ -396,14 +396,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	public function sort() {
 		$args = func_get_args();
-		
+
 		if(count($args)==0){
 			return $this;
 		}
 		if(count($args)>2){
 			throw new InvalidArgumentException('This method takes zero, one or two arguments');
 		}
-		
+
 		// One argument and it's a string
 		if(count($args)==1 && is_string($args[0])){
 			list($column, $direction) = $this->parseSortColumn($args[0]);
@@ -439,26 +439,26 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			foreach($this->items as $index => $item) {
 				$values[$column][] = $this->extractValue($item, $column);
 			}
-			// PHP 5.3 requires below arguments to be reference when using array_multisort together 
+			// PHP 5.3 requires below arguments to be reference when using array_multisort together
 			// with call_user_func_array
 			// First argument is the 'value' array to be sorted
 			$multisortArgs[] = &$values[$column];
-			// First argument is the direction to be sorted, 
+			// First argument is the direction to be sorted,
 			$multisortArgs[] = &$sortDirection[$column];
 		}
 
 		$multisortArgs[] = &$originalKeys;
-		
+
 		$list = clone $this;
 		// As the last argument we pass in a reference to the items that all the sorting will be applied upon
 		$multisortArgs[] = &$list->items;
 		call_user_func_array('array_multisort', $multisortArgs);
 		return $list;
 	}
-	
+
 	/**
 	 * Returns true if the given column can be used to filter the records.
-	 * 
+	 *
 	 * It works by checking the fields available in the first record of the list.
 	 */
 	public function canFilterBy($by) {
@@ -473,44 +473,29 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Filter the list to include items with these charactaristics
-	 * 
+	 *
 	 * @return ArrayList
 	 * @see SS_List::filter()
 	 * @example $list->filter('Name', 'bob'); // only bob in the list
 	 * @example $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
 	 * @example $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the Age 21 in list
 	 * @example $list->filter(array('Name'=>'bob, 'Age'=>array(21, 43))); // bob with the Age 21 or 43
-	 * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43))); 
+	 * @example $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
 	 *          // aziz with the age 21 or 43 and bob with the Age 21 or 43
 	 */
 	public function filter() {
-		if(count(func_get_args())>2){
-			throw new InvalidArgumentException('filter takes one array or two arguments');
-		}
-		
-		if(count(func_get_args()) == 1 && !is_array(func_get_arg(0))){
-			throw new InvalidArgumentException('filter takes one array or two arguments');
-		}
-		
-		$keepUs = array();
-		if(count(func_get_args())==2){
-			$keepUs[func_get_arg(0)] = func_get_arg(1);
-		}
-		
-		if(count(func_get_args())==1 && is_array(func_get_arg(0))){
-			foreach(func_get_arg(0) as $column => $value) {
-				$keepUs[$column] = $value;
-			}
-		}
-		
+
+		$keepUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
+
 		$itemsToKeep = array();
 		foreach($this->items as $item){
 			$keepItem = true;
-			foreach($keepUs as $column => $value ) {
-				if(is_array($value) && !in_array($this->extractValue($item, $column), $value)) {
+			foreach ($keepUs as $column => $value) {
+				if ((is_array($value) && !in_array($this->extractValue($item, $column), $value))
+					|| (!is_array($value) && $this->extractValue($item, $column) != $value)
+				) {
 					$keepItem = false;
-				} elseif(!is_array($value) && $this->extractValue($item, $column) != $value) {
-					$keepItem = false;
+					break;
 				}
 			}
 			if($keepItem) {
@@ -522,7 +507,89 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		$list->items = $itemsToKeep;
 		return $list;
 	}
-	
+
+	/**
+	 * Return a copy of this list which contains items matching any of these charactaristics.
+	 *
+	 * @example // only bob in the list
+	 *          $list = $list->filterAny('Name', 'bob');
+	 * @example // azis or bob in the list
+	 *          $list = $list->filterAny('Name', array('aziz', 'bob');
+	 * @example // bob or anyone aged 21 in the list
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>21));
+	 * @example // bob or anyone aged 21 or 43 in the list
+	 *          $list = $list->filterAny(array('Name'=>'bob, 'Age'=>array(21, 43)));
+	 * @example // all bobs, phils or anyone aged 21 or 43 in the list
+	 *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
+	 *
+	 * @param string|array See {@link filter()}
+	 * @return DataList
+	 */
+	public function filterAny() {
+		$keepUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
+
+		$itemsToKeep = array();
+
+		foreach ($this->items as $item) {
+			foreach ($keepUs as $column => $value) {
+				$extractedValue = $this->extractValue($item, $column);
+				$matches = is_array($value) ? in_array($extractedValue, $value) : $extractedValue == $value;
+				if ($matches) {
+					$itemsToKeep[] = $item;
+					break;
+				}
+			}
+		}
+
+		$list = clone $this;
+		$list->items = array_unique($itemsToKeep, SORT_REGULAR);
+		return $list;
+
+	}
+
+	/**
+	 * Take the "standard" arguments that the filter/exclude functions take and return a single array with
+	 * 'colum' => 'value'
+	 *
+	 * @param $column array|string The column name to filter OR an assosicative array of column => value
+	 * @param $value array|string|null The values to filter the $column against
+	 *
+	 * @return array The normalised keyed array
+	 */
+	protected function normaliseFilterArgs($column, $value = null) {
+		if(count(func_get_args())>2){
+			throw new InvalidArgumentException('filter takes one array or two arguments');
+		}
+
+		if(count(func_get_args()) == 1 && !is_array(func_get_arg(0))){
+			throw new InvalidArgumentException('filter takes one array or two arguments');
+		}
+
+		$keepUs = array();
+		if(count(func_get_args())==2){
+			$keepUs[func_get_arg(0)] = func_get_arg(1);
+		}
+
+		if(count(func_get_args())==1 && is_array(func_get_arg(0))){
+			foreach(func_get_arg(0) as $column => $value) {
+				$keepUs[$column] = $value;
+			}
+		}
+
+		return $keepUs;
+	}
+
+	/**
+	 * Filter this list to only contain the given Primary IDs
+	 *
+	 * @param array $ids Array of integers, will be automatically cast/escaped.
+	 * @return ArrayList
+	 */
+	public function byIDs($ids) {
+		$ids = array_map('intval', $ids); // sanitize
+		return $this->filter('ID', $ids);
+	}
+
 	public function byID($id) {
 		$firstElement = $this->filter("ID", $id)->first();
 
@@ -548,7 +615,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 			));
 		}
 
-		$output = ArrayList::create();
+		$output = static::create();
 
 		foreach($this as $item) {
 			if(call_user_func($callback, $item, $this)) $output->push($item);
@@ -570,25 +637,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 *          // bob age 21 or 43, phil age 21 or 43 would be excluded
 	 */
 	public function exclude() {
-		if(count(func_get_args())>2){
-			throw new InvalidArgumentException('exclude() takes one array or two arguments');
-		}
-		
-		if(count(func_get_args()) == 1 && !is_array(func_get_arg(0))){
-			throw new InvalidArgumentException('exclude() takes one array or two arguments');
-		}
-		
-		$removeUs = array();
-		if(count(func_get_args())==2){
-			$removeUs[func_get_arg(0)] = func_get_arg(1);
-		}
-		
-		if(count(func_get_args())==1 && is_array(func_get_arg(0))){
-			foreach(func_get_arg(0) as $column => $excludeValue) {
-				$removeUs[$column] = $excludeValue;
-			}
-		}
 
+		$removeUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
 
 		$hitsRequiredToRemove = count($removeUs);
 		$matches = array();
@@ -617,23 +667,23 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	}
 
 	protected function shouldExclude($item, $args) {
-		
+
 	}
 
 
 	/**
 	 * Returns whether an item with $key exists
-	 * 
+	 *
 	 * @param mixed $key
 	 * @return bool
 	 */
 	public function offsetExists($offset) {
 		return array_key_exists($offset, $this->items);
 	}
-	
+
 	/**
 	 * Returns item stored in list with index $key
-	 * 
+	 *
 	 * @param mixed $key
 	 * @return DataObject
 	 */
@@ -643,7 +693,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Set an item with the key in $key
-	 * 
+	 *
 	 * @param mixed $key
 	 * @param mixed $value
 	 */
@@ -657,7 +707,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Unset an item with the key in $key
-	 * 
+	 *
 	 * @param mixed $key
 	 */
 	public function offsetUnset($offset) {

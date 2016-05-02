@@ -6,6 +6,14 @@
  */
 class ClassInfoTest extends SapphireTest {
 
+	protected $extraDataObjects = array(
+		'ClassInfoTest_BaseClass',
+		'ClassInfoTest_ChildClass',
+		'ClassInfoTest_GrandChildClass',
+		'ClassInfoTest_BaseDataClass',
+		'ClassInfoTest_NoFields',
+	);
+
 	public function setUp() {
 		parent::setUp();
 		ClassInfo::reset_db_cache();
@@ -189,6 +197,16 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertNull(
 			ClassInfo::table_for_object_field(null, null)
 		);
+
+		// Test fixed fields
+		$this->assertEquals(
+			'ClassInfoTest_BaseDataClass',
+			ClassInfo::table_for_object_field('ClassInfoTest_HasFields', 'ID')
+		);
+		$this->assertEquals(
+			'ClassInfoTest_BaseDataClass',
+			ClassInfo::table_for_object_field('ClassInfoTest_NoFields', 'Created')
+		);
 	}
 }
 
@@ -197,7 +215,7 @@ class ClassInfoTest extends SapphireTest {
  * @subpackage tests
  */
 
-class ClassInfoTest_BaseClass extends DataObject {
+class ClassInfoTest_BaseClass extends DataObject implements TestOnly {
 
 }
 
@@ -224,7 +242,7 @@ class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
  * @subpackage tests
  */
 
-class ClassInfoTest_BaseDataClass extends DataObject {
+class ClassInfoTest_BaseDataClass extends DataObject implements TestOnly {
 
 	private static $db = array(
 		'Title' => 'Varchar'

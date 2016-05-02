@@ -259,7 +259,7 @@ class Config {
 	 * leak through to other instances.
 	 */
 	public function __construct() {
-		$this->cache = new Config_LRU();
+		$this->cache = new Config_MemCache();
 	}
 
 	public function __clone() {
@@ -498,7 +498,7 @@ class Config {
 			}
 		}
 
-		$value = $nothing = null;
+		$nothing = null;
 
 		// Then the manifest values
 		foreach($this->manifests as $manifest) {
@@ -645,12 +645,12 @@ class Config {
 	 * every other source is filtered on request, so no amount of changes to parent's configuration etc can override a
 	 * remove call.
 	 *
-	 * @param $class string - The class to remove a configuration value from
-	 * @param $name string - The configuration name
-	 * @param $key any - An optional key to filter against.
+	 * @param string $class The class to remove a configuration value from
+	 * @param string $name The configuration name
+	 * @param mixed $key An optional key to filter against.
 	 *   If referenced config value is an array, only members of that array that match this key will be removed
 	 *   Must also match value if provided to be removed
-	 * @param $value any - And optional value to filter against.
+	 * @param mixed $value And optional value to filter against.
 	 *   If referenced config value is an array, only members of that array that match this value will be removed
 	 *   If referenced config value is not an array, value will be removed only if it matches this argument
 	 *   Must also match key if provided and referenced config value is an array to be removed
@@ -690,6 +690,7 @@ class Config {
 /**
  * @package framework
  * @subpackage core
+ * @deprecated 4.0
  */
 class Config_LRU {
 	const SIZE = 1000;
@@ -701,6 +702,7 @@ class Config_LRU {
 	protected $c = 0;
 
 	public function __construct() {
+		Deprecation::notice('4.0', 'Please use Config_MemCache instead', Deprecation::SCOPE_CLASS);
 		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
 			// SplFixedArray causes seg faults before PHP 5.3.7
 			$this->cache = array();
@@ -792,6 +794,69 @@ class Config_LRU {
 		else {
 			for ($i = 0; $i < self::SIZE; $i++) $this->cache[$i]->key = null;
 			$this->indexing = array();
+		}
+	}
+}
+
+/**
+ * @package framework
+ * @subpackage core
+ */
+class Config_MemCache {
+	protected $cache;
+
+	protected $i = 0;
+	protected $c = 0;
+	protected $tags = array();
+
+	public function __construct() {
+		$this->cache = array();
+	}
+
+	public function set($key, $val, $tags = array()) {
+		foreach($tags as $t) {
+			if(!isset($this->tags[$t])) {
+				$this->tags[$t] = array();
+			}
+			$this->tags[$t][$key] = true;
+		}
+
+		$this->cache[$key] = array($val, $tags);
+	}
+
+	private $hit = 0;
+	private $miss = 0;
+
+	public function stats() {
+		return $this->miss ? ($this->hit / $this->miss) : 0;
+	}
+
+	public function get($key) {
+		if(isset($this->cache[$key])) {
+			++$this->hit;
+			return $this->cache[$key][0];
+		}
+
+		++$this->miss;
+		return false;
+	}
+
+	public function clean($tag = null) {
+		if($tag) {
+			if(isset($this->tags[$tag])) {
+				foreach($this->tags[$tag] as $k => $dud) {
+					// Remove the key from everywhere else it is tagged
+					$ts = $this->cache[$k][1];
+					foreach($ts as $t) {
+						unset($this->tags[$t][$k]);
+					}
+					unset($this->cache[$k]);
+				}
+				unset($this->tags[$tag]);
+			}
+		} else {
+			$this->cache = array();
+			$this->tags = array();
 		}
 	}
 }

@@ -18,6 +18,7 @@ class DirectorTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 
+
 		// Hold the original request URI once so it doesn't get overwritten
 		if(!self::$originalRequestURI) {
 			self::$originalRequestURI = $_SERVER['REQUEST_URI'];
@@ -61,6 +62,7 @@ class DirectorTest extends SapphireTest {
 				$_SERVER[$header] = $value;
 			}
 		}
+
 
 		parent::tearDown();
 	}
@@ -266,6 +268,7 @@ class DirectorTest extends SapphireTest {
 		unset($_SESSION['isLive']);
 		unset($_GET['isTest']);
 		unset($_GET['isDev']);
+		$_SESSION = $_SESSION ?: array();
 
 		// Test isDev=1
 		$_GET['isDev'] = '1';
@@ -297,8 +300,13 @@ class DirectorTest extends SapphireTest {
 		$_POST = array('somekey' => 'postvalue');
 		$_COOKIE = array('somekey' => 'cookievalue');
 
+		$cookies = Injector::inst()->createWithArgs(
+			'Cookie_Backend',
+			array(array('somekey' => 'sometestcookievalue'))
+		);
+
 		$getresponse = Director::test('errorpage?somekey=sometestgetvalue', array('somekey' => 'sometestpostvalue'),
-			null, null, null, null, array('somekey' => 'sometestcookievalue'));
+			null, null, null, null, $cookies);
 
 		$this->assertEquals('getvalue', $_GET['somekey'],
 			'$_GET reset to original value after Director::test()');
@@ -314,7 +322,16 @@ class DirectorTest extends SapphireTest {
 			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
 				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method))
 					. '?' . http_build_query($fixture);
-				$getresponse = Director::test($url, $fixture, null, strtoupper($method), null, null, $fixture);
+
+				$getresponse = Director::test(
+					$url,
+					$fixture,
+					null,
+					strtoupper($method),
+					null,
+					null,
+					Injector::inst()->createWithArgs('Cookie_Backend', array($fixture))
+				);
 
 				$this->assertInstanceOf('SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
 				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
@@ -390,7 +407,7 @@ class DirectorTest extends SapphireTest {
 			'HTTP_USER_AGENT'      => 'User Agent',
 			'HTTP_ACCEPT'          => 'text/html',
 			'HTTP_ACCEPT_LANGUAGE' => 'en-us',
-			'HTTP_COOKIE'          => 'PastMember=1',
+			'HTTP_COOKIE'          => 'MyCookie=1',
 			'SERVER_PROTOCOL'      => 'HTTP/1.1',
 			'REQUEST_METHOD'       => 'GET',
 			'REQUEST_URI'          => '/',
@@ -404,7 +421,7 @@ class DirectorTest extends SapphireTest {
 			'User-Agent'      => 'User Agent',
 			'Accept'          => 'text/html',
 			'Accept-Language' => 'en-us',
-			'Cookie'          => 'PastMember=1',
+			'Cookie'          => 'MyCookie=1',
 			'Content-Type'    => 'text/xml',
 			'Content-Length'  => '10'
 		);
@@ -474,6 +491,23 @@ class DirectorTest extends SapphireTest {
 		$this->assertTrue(Director::is_https());
 
 		$_SERVER = $origServer;
+	}
+
+	public function testTestIgnoresHashes() {
+		//test that hashes are ignored
+		$url = "DirectorTestRequest_Controller/returnGetValue?somekey=key";
+		$hash = "#test";
+		$response = Director::test($url . $hash, null, null, null, null, null, null, $request);
+		$this->assertFalse($response->isError());
+		$this->assertEquals('key', $response->getBody());
+		$this->assertEquals($request->getURL(true), $url);
+
+		//test encoded hashes are accepted
+		$url = "DirectorTestRequest_Controller/returnGetValue?somekey=test%23key";
+		$response = Director::test($url, null, null, null, null, null, null, $request);
+		$this->assertFalse($response->isError());
+		$this->assertEquals('test#key', $response->getBody());
+		$this->assertEquals($request->getURL(true), $url);
 	}
 
 	public function testRequestFilterInDirectorTest() {

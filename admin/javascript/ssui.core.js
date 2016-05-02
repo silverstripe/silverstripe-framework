@@ -23,7 +23,7 @@
 		toggleAlternate: function() {
 			if (this._trigger('ontogglealternate')===false) return;
 
-			// Only switch to alternate if it has been enabled through options. 
+			// Only switch to alternate if it has been enabled through options.
 			if (!this.options.alternate.icon && !this.options.alternate.text) return;
 
 			this.options.showingAlternate = !this.options.showingAlternate;
@@ -36,7 +36,7 @@
 		_refreshAlternate: function() {
 			this._trigger('beforerefreshalternate');
 
-			// Only switch to alternate if it has been enabled through options. 
+			// Only switch to alternate if it has been enabled through options.
 			if (!this.options.alternate.icon && !this.options.alternate.text) return;
 
 			if (this.options.showingAlternate) {
@@ -85,7 +85,7 @@
 			// Create missing elements.
 			if (this.options.alternate.icon) {
 				this.buttonElement.append(
-					"<span class='ui-button-icon-alternate ui-button-icon-primary ui-icon btn-icon-" 
+					"<span class='ui-button-icon-alternate ui-button-icon-primary ui-icon btn-icon-"
 					+ this.options.alternate.icon + "'></span>"
 				);
 			}
@@ -152,12 +152,12 @@
 			var iframe = $('<iframe marginWidth="0" marginHeight="0" frameBorder="0" scrolling="auto"></iframe>');
 			iframe.bind('load', function(e) {
 				if($(this).attr('src') == 'about:blank') return;
-				
+
 				iframe.addClass('loaded').show(); // more reliable than 'src' attr check (in IE)
 				self._resizeIframe();
 				self.uiDialog.removeClass('loading');
 			}).hide();
-			
+
 			if(this.options.dialogExtraClass) this.uiDialog.addClass(this.options.dialogExtraClass);
 			this.element.append(iframe);
 
@@ -166,7 +166,7 @@
 		},
 		open: function() {
 			$.ui.dialog.prototype.open.call(this);
-			
+
 			var self = this, iframe = this.element.children('iframe');
 
 			// Load iframe
@@ -212,14 +212,14 @@
 				this._setOptions(opts);
 
 				// Resize iframe within dialog
-				iframe.attr('width', 
-					opts.width 
+				iframe.attr('width',
+					opts.width
 					- parseFloat(this.element.css('paddingLeft'))
 					- parseFloat(this.element.css('paddingRight'))
 				);
-				iframe.attr('height', 
+				iframe.attr('height',
 					opts.height
-					- parseFloat(this.element.css('paddingTop')) 
+					- parseFloat(this.element.css('paddingTop'))
 					- parseFloat(this.element.css('paddingBottom'))
 				);
 
@@ -230,7 +230,7 @@
 			}
 		}
 	});
-	
+
 	$.widget("ssui.titlebar", {
 		_create: function() {
 			this.originalTitle = this.element.attr('title');
@@ -307,7 +307,7 @@
 			(this.originalTitle && this.element.attr('title', this.originalTitle));
 		}
 	});
-	
+
 	$.extend($.ssui.titlebar, {
 		version: "0.0.1",
 		options: {

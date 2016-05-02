@@ -135,7 +135,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$parser = new CSSContentParser($response->getBody());
 		$editform = $parser->getBySelector('#Form_ItemEditForm');
 		$editformurl = (string) $editform[0]['action'];
-		
+
 		$response = $this->post(
 			$editformurl,
 			array(
@@ -151,6 +151,38 @@ class GridFieldDetailFormTest extends FunctionalTest {
 			->sort('Name')
 			->First();
 		$this->assertDOSContains(array(array('Surname' => 'Baggins')), $group->People());
+	}
+
+	public function testEditFormWithManyMany() {
+		$this->logInWithPermission('ADMIN');
+
+		// Edit the first person
+		$response = $this->get('GridFieldDetailFormTest_CategoryController');
+		// Find the link to add a new favourite group
+		$parser = new CSSContentParser($response->getBody());
+		$addLink = $parser->getBySelector('#Form_Form_testgroupsfield .new-link');
+		$addLink = (string) $addLink[0]['href'];
+
+		// Add a new favourite group
+		$response = $this->get($addLink);
+		$parser = new CSSContentParser($response->getBody());
+		$addform = $parser->getBySelector('#Form_ItemEditForm');
+		$addformurl = (string) $addform[0]['action'];
+
+		$response = $this->post(
+			$addformurl,
+			array(
+				'Name' => 'My Favourite Group',
+				'ajax' => 1,
+				'action_doSave' => 1
+			)
+		);
+		$this->assertFalse($response->isError());
+
+		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$favouriteGroup = $person->FavouriteGroups()->first();
+
+		$this->assertInstanceOf('GridFieldDetailFormTest_PeopleGroup', $favouriteGroup);
 	}
 
 	public function testEditFormWithManyManyExtraData() {
@@ -173,12 +205,16 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$manyManyField = $parser->getByXpath('//*[@id="Form_ItemEditForm"]//input[@name="ManyMany[IsPublished]"]');
 		$this->assertTrue((bool)$manyManyField);
-		
+
+		// Test save of IsPublished field
 		$response = $this->post(
 			$editformurl,
 			array(
 				'Name' => 'Updated Category',
-				'ManyMany' => array('IsPublished' => 1),
+				'ManyMany' => array(
+					'IsPublished' => 1,
+					'PublishedBy' => 'Richard'
+				),
 				'action_doSave' => 1
 			)
 		);
@@ -187,7 +223,33 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
 		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
 		$this->assertEquals(
-			array('IsPublished' => 1),
+			array(
+				'IsPublished' => 1,
+				'PublishedBy' => 'Richard'
+			),
+			$person->Categories()->getExtraData('', $category->ID)
+		);
+
+		// Test update of value with falsey value
+		$response = $this->post(
+			$editformurl,
+			array(
+				'Name' => 'Updated Category',
+				'ManyMany' => array(
+					'PublishedBy' => ''
+				),
+				'action_doSave' => 1
+			)
+		);
+		$this->assertFalse($response->isError());
+
+		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
+		$this->assertEquals(
+			array(
+				'IsPublished' => 0,
+				'PublishedBy' => ''
+			),
 			$person->Categories()->getExtraData('', $category->ID)
 		);
 	}
@@ -216,7 +278,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$personEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_People"]' .
-			'//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');		
+			'//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $person->ID . '")]//a');
 		$this->assertEquals(
 			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
 				. '/item/%d/edit', $group->ID, $person->ID),
@@ -228,7 +290,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
 		$categoryEditLink = $parser->getByXpath('//fieldset[@id="Form_ItemEditForm_Categories"]'
-			. '//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');	
+			. '//tr[contains(@class, "ss-gridfield-item") and contains(@data-id, "' . $category->ID . '")]//a');
 		$this->assertEquals(
 			sprintf('GridFieldDetailFormTest_GroupController/Form/field/testfield/item/%d/ItemEditForm/field/People'
 				. '/item/%d/ItemEditForm/field/Categories/item/%d/edit', $group->ID, $person->ID, $category->ID),
@@ -249,7 +311,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 	public function testItemEditFormCallback() {
 		$this->logInWithPermission('ADMIN');
-		
+
 		$category = new GridFieldDetailFormTest_Category();
 		$component = new GridFieldDetailForm();
 		$component->setItemEditFormCallback(function($form, $component) {
@@ -285,8 +347,8 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$response = $this->get($addLink);
 		$parser = new CSSContentParser($response->getBody());
-		$title = $parser->getBySelector('#GroupID span');
-		$id = $parser->getBySelector('#GroupID input');
+		$title = $parser->getBySelector('#Form_ItemEditForm_GroupID_Holder span');
+		$id = $parser->getBySelector('#Form_ItemEditForm_GroupID_Holder input');
 
 		$this->assertEquals($group->Name, (string) $title[0]);
 		$this->assertEquals($group->ID, (string) $id[0]['value']);
@@ -311,12 +373,14 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 	);
 
 	private static $many_many = array(
-		'Categories' => 'GridFieldDetailFormTest_Category'
+		'Categories' => 'GridFieldDetailFormTest_Category',
+		'FavouriteGroups' => 'GridFieldDetailFormTest_PeopleGroup'
 	);
 
 	private static $many_many_extraFields = array(
 		'Categories' => array(
-			'IsPublished' => 'Boolean'
+			'IsPublished' => 'Boolean',
+			'PublishedBy' => 'Varchar'
 		)
 	);
 
@@ -328,6 +392,12 @@ class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
 		$fields->replaceField('Categories',
 			GridField::create('Categories', 'Categories',
 				$this->Categories(),
+				GridFieldConfig_RelationEditor::create()
+			)
+		);
+		$fields->replaceField('FavouriteGroups',
+			GridField::create('FavouriteGroups', 'Favourite Groups',
+				$this->FavouriteGroups(),
 				GridFieldConfig_RelationEditor::create()
 			)
 		);
@@ -355,6 +425,10 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 		'People' => 'GridFieldDetailFormTest_Person'
 	);
 
+	private static $belongs_many_many = array(
+		'People' => 'GridFieldDetailFormTest_Person'
+	);
+
 	private static $default_sort = '"Name"';
 
 	public function getCMSFields() {
@@ -376,7 +450,7 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
  */
 
 class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
-	
+
 	private static $db = array(
 		'Name' => 'Varchar'
 	);
@@ -406,7 +480,7 @@ class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
  */
 
 class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
-	
+
 	private static $allowed_actions = array('Form');
 
 	protected $template = 'BlankPage';
@@ -457,21 +531,33 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 class GridFieldDetailFormTest_CategoryController extends Controller implements TestOnly {
 
 	private static $allowed_actions = array('Form');
-	
+
 	protected $template = 'BlankPage';
 
 	public function Form() {
 		// GridField lists categories for a specific person
 		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
 		$detailFields = singleton('GridFieldDetailFormTest_Category')->getCMSFields();
-		$detailFields->addFieldToTab('Root.Main', new CheckboxField('ManyMany[IsPublished]'));
-		$field = new GridField('testfield', 'testfield', $person->Categories());
-		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$detailFields->addFieldsToTab('Root.Main', array(
+			new CheckboxField('ManyMany[IsPublished]'),
+			new TextField('ManyMany[PublishedBy]'))
+		);
+		$categoriesField = new GridField('testfield', 'testfield', $person->Categories());
+		$categoriesField->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$gridFieldForm->setFields($detailFields);
-		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
-		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
-		$field->getConfig()->addComponent(new GridFieldEditButton());
-		return new Form($this, 'Form', new FieldList($field), new FieldList());
+		$categoriesField->getConfig()->addComponent(new GridFieldToolbarHeader());
+		$categoriesField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
+		$categoriesField->getConfig()->addComponent(new GridFieldEditButton());
+
+		$favGroupsField = new GridField('testgroupsfield', 'testgroupsfield', $person->FavouriteGroups());
+		$favGroupsField->getConfig()->addComponent(new GridFieldDetailForm($this, 'Form'));
+		$favGroupsField->getConfig()->addComponent(new GridFieldToolbarHeader());
+		$favGroupsField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
+		$favGroupsField->getConfig()->addComponent(new GridFieldEditButton());
+
+		$fields = new FieldList($categoriesField, $favGroupsField);
+
+		return new Form($this, 'Form', $fields, new FieldList());
 	}
 }
 

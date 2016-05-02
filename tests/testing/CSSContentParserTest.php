@@ -11,7 +11,7 @@ class CSSContentParserTest extends SapphireTest {
 		$this->assertEquals("//div", $parser->selector2xpath("div"));
 		$this->assertEquals("//div[contains(@class,'test')]", $parser->selector2xpath("div.test"));
 		$this->assertEquals(
-			"//*[@id='UserProfile']//div[contains(@class,'test')]//*[contains(@class,'other')]//div[@id='Item']", 
+			"//*[@id='UserProfile']//div[contains(@class,'test')]//*[contains(@class,'other')]//div[@id='Item']",
 			$parser->selector2xpath("#UserProfile div.test .other div#Item"));
 	}
 

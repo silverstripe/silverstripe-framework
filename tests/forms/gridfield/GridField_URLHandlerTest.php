@@ -39,10 +39,10 @@ class GridField_URLHandlerTest_Controller extends Controller implements TestOnly
 	public function Form() {
 		$gridConfig = GridFieldConfig::create();
 		$gridConfig->addComponent(new GridField_URLHandlerTest_Component());
-		
+
 		$gridData = new ArrayList();
 		$gridField = new GridField('Grid', 'My grid', $gridData, $gridConfig);
-		
+
 		return new Form($this, 'Form', new FieldList(
 			$gridField
 		), new FieldList());
@@ -54,11 +54,11 @@ class GridField_URLHandlerTest_Controller extends Controller implements TestOnly
  * Test URLHandler with a nested request handler
  */
 class GridField_URLHandlerTest_Component extends RequestHandler implements GridField_URLHandler {
-	
+
 	private static $allowed_actions = array('Form', 'showform', 'testpage', 'handleItem');
 
 	protected $gridField;
-	
+
 	public function getURLHandlers($gridField) {
 		return array(
 			'showform' => 'showform',
@@ -67,22 +67,22 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 			'item/$ID' => 'handleItem',
 		);
 	}
-	
+
 	public function handleItem($gridField, $request) {
 		$id = $request->param("ID");
 		return new GridField_URLHandlerTest_Component_ItemRequest(
 				$gridField, $id,
 				Controller::join_links($gridField->Link(), 'item/' . $id));
 	}
-	
+
 	public function Link() {
 		return $this->gridField->Link();
 	}
-	
+
 	public function showform($gridField, $request) {
 		return "<head>" .  SSViewer::get_base_tag("") . "</head>" . $this->Form($gridField, $request)->forTemplate();
 	}
-	
+
 	public function Form($gridField, $request) {
 		$this->gridField = $gridField;
 		return new Form($this, 'Form', new FieldList(
@@ -102,26 +102,26 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 }
 
 class GridField_URLHandlerTest_Component_ItemRequest extends RequestHandler {
-	
+
 	private static $allowed_actions = array('Form', 'showform', 'testpage');
 
 	protected $gridField;
-	
+
 	protected $link;
-	
+
 	protected $id;
-	
+
 	public function __construct($gridField, $id, $link) {
 		$this->gridField = $gridField;
 		$this->id = $id;
 		$this->link = $link;
 		parent::__construct();
 	}
-	
+
 	public function Link() {
 		return $this->link;
 	}
-	
+
 	public function showform() {
 		return "<head>" .  SSViewer::get_base_tag("") . "</head>" . $this->Form()->forTemplate();
 	}
@@ -133,7 +133,7 @@ class GridField_URLHandlerTest_Component_ItemRequest extends RequestHandler {
 			new FormAction('doAction', 'Go')
 		));
 	}
-	
+
 	public function doAction($data, $form) {
 		return "Submitted " . $data['Test'] . " to item #" . $this->id;
 	}

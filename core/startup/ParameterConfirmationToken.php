@@ -9,6 +9,9 @@
  *
  * WARNING: This class is experimental and designed specifically for use pre-startup in main.php
  * It will likely be heavily refactored before the release of 3.2
+ *
+ * @package framework
+ * @subpackage misc
  */
 class ParameterConfirmationToken {
 
@@ -64,7 +67,7 @@ class ParameterConfirmationToken {
 		if(!$token) {
 			return false;
 		}
-		
+
 		$file = $this->pathForToken($token);
 		$content = null;
 
@@ -84,7 +87,7 @@ class ParameterConfirmationToken {
 	public function __construct($parameterName) {
 		// Store the parameter name
 		$this->parameterName = $parameterName;
-		
+
 		// Store the parameter value
 		$this->parameter = isset($_GET[$parameterName]) ? $_GET[$parameterName] : null;
 
@@ -97,7 +100,7 @@ class ParameterConfirmationToken {
 
 	/**
 	 * Get the name of this token
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getName() {
@@ -107,7 +110,7 @@ class ParameterConfirmationToken {
 	/**
 	 * Is the parameter requested?
 	 * ?parameter and ?parameter=1 are both considered requested
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function parameterProvided() {
@@ -117,7 +120,7 @@ class ParameterConfirmationToken {
 	/**
 	 * Is the necessary token provided for this parameter?
 	 * A value must be provided for the token
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function tokenProvided() {
@@ -126,7 +129,7 @@ class ParameterConfirmationToken {
 
 	/**
 	 * Is this parameter requested without a valid token?
-	 * 
+	 *
 	 * @return bool True if the parameter is given without a valid token
 	 */
 	public function reloadRequired() {
@@ -225,9 +228,9 @@ You are being redirected. If you are not redirected soon, <a href='$location'>cl
 	}
 
 	/**
-	 * Given a list of token names, suppress all tokens that have not been validated, and 
+	 * Given a list of token names, suppress all tokens that have not been validated, and
 	 * return the non-validated token with the highest priority
-	 * 
+	 *
 	 * @param array $keys List of token keys in ascending priority (low to high)
 	 * @return ParameterConfirmationToken The token container for the unvalidated $key given with the highest priority
 	 */

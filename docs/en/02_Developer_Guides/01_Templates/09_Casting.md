@@ -1,4 +1,4 @@
-title: Formating, Modifying and Casting Variables
+title: Formatting, Modifying and Casting Variables
 summary: Information on casting, security, modifying data before it's displayed to the user and how to format data within the template.
 
 # Formatting and Casting
@@ -8,7 +8,7 @@ All objects that are being rendered in a template should be a [api:ViewableData]
 [scope](syntax#scope).
 
 For instance, if we provide a [api:HtmlText] instance to the template we can call the `FirstParagraph` method. This will 
-output the result of the [api:HtmlText::FirstParagraph] method to the template.
+output the result of the [api:HtmlText::FirstParagraph()] method to the template.
 
 **mysite/code/Page.ss**
 

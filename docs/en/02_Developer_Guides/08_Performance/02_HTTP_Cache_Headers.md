@@ -29,5 +29,25 @@ clause in `Cache-Control` and `Pragma` will be included.
 	:::php
 	HTTP::register_modification_date('2014-10-10');
 
-Used to set the modification date to something more recent than the default. [api:DataObject::__construct()] calls 
-[api:HTTP::register_modification_date()] whenever a record comes from the database ensuring the newest date is present.
+Used to set the modification date to something more recent than the default. [api:DataObject::__construct] calls 
+[api:HTTP::register_modification_date(] whenever a record comes from the database ensuring the newest date is present.
+
+### Vary: cache header
+
+By default, SilverStripe will output a `Vary` header (used by upstream caches for determining uniqueness) 
+that looks like
+
+```
+Cookie, X-Forwarded-Protocol, User-Agent, Accept
+```
+
+To change the value of the `Vary` header, you can change this value by specifying the header in configuration
+
+```yml
+HTTP:
+  vary: ""
+```
+
+
+
+

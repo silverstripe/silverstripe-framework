@@ -64,6 +64,7 @@ use SilverStripe\Framework\Injector\Factory;
  *
  * Specify a configuration array of the format
  *
+ * <code>
  * array(
  *		array(
  *			'id'			=> 'BeanId',					// the name to be used if diff from the filename
@@ -96,6 +97,7 @@ use SilverStripe\Framework\Injector\Factory;
  *		// or simply
  *		'OtherBean'		=> 'SomeClass',
  * )
+ * </code>
  *
  * In addition to specifying the bindings directly in the configuration,
  * you can simply create a publicly accessible property on the target
@@ -331,14 +333,10 @@ class Injector {
 	 * of a particular type is injected, and what items should be injected
 	 * for those properties / methods.
 	 *
-	 * @param type $class
-	 *					The class to set a mapping for
-	 * @param type $property
-	 *					The property to set the mapping for
-	 * @param type $injectType
-	 *					The registered type that will be injected
-	 * @param string $injectVia
-	 *					Whether to inject by setting a property or calling a setter
+	 * @param string $class The class to set a mapping for
+	 * @param string $property The property to set the mapping for
+	 * @param string $toInject The registered type that will be injected
+	 * @param string $injectVia Whether to inject by setting a property or calling a setter
 	 */
 	public function setInjectMapping($class, $property, $toInject, $injectVia = 'property') {
 		$mapping = isset($this->injectMap[$class]) ? $this->injectMap[$class] : array();
@@ -763,9 +761,10 @@ class Injector {
 	/**
 	 * Register a service with an explicit name
 	 *
-	 * @deprecated since 3.1.1
+	 * @deprecated since 4.0
 	 */
 	public function registerNamedService($name, $service) {
+		Deprecation::notice('4.0', 'registerNamedService is deprecated, use registerService instead');
 		return $this->registerService($service, $name);
 	}
 
@@ -773,8 +772,7 @@ class Injector {
 	 * Removes a named object from the cached list of objects managed
 	 * by the inject
 	 *
-	 * @param type $name
-	 *				The name to unregister
+	 * @param string $name The name to unregister
 	 */
 	public function unregisterNamedObject($name) {
 		unset($this->serviceCache[$name]);
@@ -809,7 +807,7 @@ class Injector {
 	 *				Optional set of arguments to pass as constructor arguments
 	 *				if this object is to be created from scratch
 	 *				(ie asSingleton = false)
-	 *
+	 * @return mixed the instance of the specified object
 	 */
 	public function get($name, $asSingleton = true, $constructorArgs = null) {
 		// reassign the name as it might actually be a compound name
@@ -882,7 +880,8 @@ class Injector {
 	 *
 	 * Additional parameters are passed through as
 	 *
-	 * @param type $name
+	 * @param string $name
+	 * @return mixed A new instance of the specified object
 	 */
 	public function create($name) {
 		$constructorArgs = func_get_args();

@@ -176,7 +176,7 @@ class SSHTMLBBCodeParser
 		// extract the definedTags from subclasses */
 		$this->addFilters($this->_options['filters']);
 	}
-	
+
 	static function &getStaticProperty($class, $var)
 	{
 		static $properties;
@@ -212,18 +212,18 @@ class SSHTMLBBCodeParser
 		$filter = ucfirst($filter);
 		if (!array_key_exists($filter, $this->_filters)) {
 			$class = 'SSHTMLBBCodeParser_Filter_'.$filter;
-			if (fopen('BBCodeParser/Filter/'.$filter.'.php','r',true)) { 
-				include_once 'BBCodeParser/Filter/'.$filter.'.php'; 
+			if (fopen('BBCodeParser/Filter/'.$filter.'.php','r',true)) {
+				include_once 'BBCodeParser/Filter/'.$filter.'.php';
 			}
 			if (!class_exists($class)) {
 
 				//PEAR::raiseError("Failed to load filter $filter", null, PEAR_ERROR_DIE);
 			}
 			else {
-				$this->_filters[$filter] = new $class; 
-				$this->_definedTags = array_merge( 
-					$this->_definedTags, 
-					$this->_filters[$filter]->_definedTags 
+				$this->_filters[$filter] = new $class;
+				$this->_definedTags = array_merge(
+					$this->_definedTags,
+					$this->_filters[$filter]->_definedTags
 				);
 			}
 		}

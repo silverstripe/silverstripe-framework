@@ -1,7 +1,7 @@
-<?php 
+<?php
 
 /**
- * The `[api:SS_Cache]` class provides a bunch of static functions wrapping the Zend_Cache system 
+ * The `[api:SS_Cache]` class provides a bunch of static functions wrapping the Zend_Cache system
  * in something a little more easy to use with the SilverStripe config system.
  *
  * @see http://doc.silverstripe.org/framework/en/topics/caching
@@ -10,7 +10,7 @@
  * @subpackage core
  */
 class SS_Cache {
-	
+
 	/**
 	 * @var array $backends
 	 */
@@ -25,7 +25,7 @@ class SS_Cache {
 	 * @var array $cache_lifetime
 	 */
 	protected static $cache_lifetime = array();
-	
+
 	/**
 	 * Initialize the 'default' named cache backend.
 	 */
@@ -38,14 +38,14 @@ class SS_Cache {
 			}
 
 			self::$backends['default'] = array(
-				'File', 
+				'File',
 				array(
 					'cache_dir' => $cachedir
 				)
 			);
 
 			self::$cache_lifetime['default'] = array(
-				'lifetime' => 600, 
+				'lifetime' => 600,
 				'priority' => 1
 			);
 		}
@@ -53,7 +53,7 @@ class SS_Cache {
 
 	/**
 	 * Add a new named cache backend.
-	 * 
+	 *
 	 * @see http://framework.zend.com/manual/en/zend.cache.html
 	 *
 	 * @param string $name The name of this backend as a freeform string
@@ -66,17 +66,17 @@ class SS_Cache {
 		self::init();
 		self::$backends[$name] = array($type, $options);
 	}
-	
+
 	/**
 	 * Pick a named cache backend for a particular named cache.
 	 *
-	 * The priority call with the highest number will be the actual backend 
-	 * picked. A backend picked for a specific cache name will always be used 
-	 * instead of 'any' if it exists, no matter the priority.  
+	 * The priority call with the highest number will be the actual backend
+	 * picked. A backend picked for a specific cache name will always be used
+	 * instead of 'any' if it exists, no matter the priority.
 	 *
 	 * @param string $name The name of the backend, as passed as the first argument to add_backend
 	 * @param string $for The name of the cache to pick this backend for (or 'any' for any backend)
-	 * @param integer $priority The priority of this pick 
+	 * @param integer $priority The priority of this pick
 	 *
 	 * @return none
 	 */
@@ -91,9 +91,9 @@ class SS_Cache {
 
 		if ($priority >= $current) {
 			self::$backend_picks[$for] = array(
-				'name' => $name, 
+				'name' => $name,
 				'priority' => $priority
-			); 
+			);
 		}
 	}
 
@@ -118,25 +118,25 @@ class SS_Cache {
 	 * @param string $for The name of the cache to set this lifetime for (or 'any' for all backends)
 	 * @param integer $lifetime The lifetime of an item of the cache, in seconds, or -1 to disable caching
 	 * @param integer $priority The priority. The highest priority setting is used. Unlike backends, 'any' is not
-	 *                          special in terms of priority. 
+	 *                          special in terms of priority.
 	 */
 	public static function set_cache_lifetime($for, $lifetime=600, $priority=1) {
 		self::init();
-		
+
 		$current = -1;
 
 		if (isset(self::$cache_lifetime[$for])) {
 			$current = self::$cache_lifetime[$for]['priority'];
 		}
-		
+
 		if ($priority >= $current) {
 			self::$cache_lifetime[$for] = array(
-				'lifetime' => $lifetime, 
+				'lifetime' => $lifetime,
 				'priority' => $priority
-			); 
+			);
 		}
 	}
-	
+
 	/**
 	 * Build a cache object.
 	 *
@@ -145,12 +145,12 @@ class SS_Cache {
 	 * @param string $for The name of the cache to build
 	 * @param string $frontend (optional) The type of Zend_Cache frontend
 	 * @param array $frontendOptions (optional) Any frontend options to use.
-	 * 
+	 *
 	 * @return Zend_Cache_Frontend The cache object
 	 */
 	public static function factory($for, $frontend='Output', $frontendOptions=null) {
 		self::init();
-		
+
 		$backend_name = 'default';
 		$backend_priority = -1;
 		$cache_lifetime = self::$cache_lifetime['default']['lifetime'];
@@ -163,7 +163,7 @@ class SS_Cache {
 					$backend_priority = self::$backend_picks[$name]['priority'];
 				}
 			}
-			
+
 			if (isset(self::$cache_lifetime[$name])) {
 				if(self::$cache_lifetime[$name]['priority'] > $lifetime_priority) {
 					$cache_lifetime = self::$cache_lifetime[$name]['lifetime'];
@@ -171,11 +171,11 @@ class SS_Cache {
 				}
 			}
 		}
-		
+
 		$backend = self::$backends[$backend_name];
 
 		$basicOptions = array('cache_id_prefix' => $for);
-		
+
 		if ($cache_lifetime >= 0) {
 			$basicOptions['lifetime'] = $cache_lifetime;
 		} else {
@@ -183,7 +183,7 @@ class SS_Cache {
 		}
 
 		$frontendOptions = $frontendOptions ? array_merge($basicOptions, $frontendOptions) : $basicOptions;
-		
+
 		require_once 'Zend/Cache.php';
 
 		return Zend_Cache::factory(

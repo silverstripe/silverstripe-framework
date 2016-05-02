@@ -5,7 +5,41 @@ jQuery.noConflict();
  */
 (function($) {
 
+	window.ss = window.ss || {};
+
 	var windowWidth, windowHeight;
+
+	/**
+	 * @func debounce
+	 * @param func {function} - The callback to invoke after `wait` milliseconds.
+	 * @param wait {number} - Milliseconds to wait.
+	 * @param immediate {boolean} - If true the callback will be invoked at the start rather than the end.
+	 * @return {function}
+	 * @desc Returns a function that will not be called until it hasn't been invoked for `wait` seconds.
+	 */
+	window.ss.debounce = function (func, wait, immediate) {
+		var timeout, context, args;
+
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+
+		return function() {
+			var callNow = immediate && !timeout;
+
+			context = this;
+			args = arguments;
+
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+
+			if (callNow) {
+				func.apply(context, args);
+			}
+		};
+	};
+
 	$(window).bind('resize.leftandmain', function(e) {
 		// Entwine's 'fromWindow::onresize' does not trigger on IE8. Use synthetic event.
 		var cb = function() {$('.cms-container').trigger('windowresize');};
@@ -110,6 +144,10 @@ jQuery.noConflict();
 			);
 		};
 
+		var ajaxCompleteEvent = window.ss.debounce(function () {
+			$(window).trigger('ajaxComplete');
+		}, 1000, true);
+
 		$(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
 		// global ajax handlers
@@ -154,6 +192,8 @@ jQuery.noConflict();
 				// Decode into UTF-8, HTTP headers don't allow multibyte
 				statusMessage(decodeURIComponent(msg), msgType);
 			}
+
+			ajaxCompleteEvent(this);
 		});
 
 		/**
@@ -184,7 +224,7 @@ jQuery.noConflict();
 			 * See LeftAndMain.Layout.js for description of these options.
 			 */
 			LayoutOptions: {
-				minContentWidth: 820,
+				minContentWidth: 940,
 				minPreviewWidth: 400,
 				mode: 'content'
 			},
@@ -216,12 +256,13 @@ jQuery.noConflict();
 				$('body').removeClass('loading');
 				$(window).unbind('resize', positionLoadingSpinner);
 				this.restoreTabState();
-
 				this._super();
 			},
 
 			fromWindow: {
-				onstatechange: function(){ this.handleStateChange(); }
+				onstatechange: function(e){
+					this.handleStateChange(e);
+				}
 			},
 
 			'onwindowresize': function() {
@@ -323,6 +364,34 @@ jQuery.noConflict();
 			},
 
 			/**
+			 * Confirm whether the current user can navigate away from this page
+			 *
+			 * @param {array} selectors Optional list of selectors
+			 * @returns {boolean} True if the navigation can proceed
+			 */
+			checkCanNavigate: function(selectors) {
+				// Check change tracking (can't use events as we need a way to cancel the current state change)
+				var contentEls = this._findFragments(selectors || ['Content']),
+					trackedEls = contentEls
+						.find(':data(changetracker)')
+						.add(contentEls.filter(':data(changetracker)')),
+					safe = true;
+
+				if(!trackedEls.length) {
+					return true;
+				}
+
+				trackedEls.each(function() {
+					// See LeftAndMain.EditForm.js
+					if(!$(this).confirmUnsavedChanges()) {
+						safe = false;
+					}
+				});
+
+				return safe;
+			},
+
+			/**
 			 * Proxy around History.pushState() which handles non-HTML5 fallbacks,
 			 * as well as global change tracking. Change tracking needs to be synchronous rather than event/callback
 			 * based because the user needs to be able to abort the action completely.
@@ -340,18 +409,9 @@ jQuery.noConflict();
 				if(!title) title = "";
 				if (!forceReferer) forceReferer = History.getState().url;
 
-				// Check change tracking (can't use events as we need a way to cancel the current state change)
-				var contentEls = this._findFragments(data.pjax ? data.pjax.split(',') : ['Content']);
-				var trackedEls = contentEls.find(':data(changetracker)').add(contentEls.filter(':data(changetracker)'));
-
-				if(trackedEls.length) {
-					var abort = false;
-
-					trackedEls.each(function() {
-						if(!$(this).confirmUnsavedChanges()) abort = true;
-					});
-
-					if(abort) return;
+				// Check for unsaved changes
+				if(!this.checkCanNavigate(data.pjax ? data.pjax.split(',') : ['Content'])) {
+					return;
 				}
 
 				// Save tab selections so we can restore them later
@@ -458,6 +518,16 @@ jQuery.noConflict();
 			},
 
 			/**
+			 * Last html5 history state
+			 */
+			LastState: null,
+
+			/**
+			 * Flag to pause handleStateChange
+			 */
+			PauseState: false,
+
+			/**
 			 * Handles ajax loading of new panels through the window.History object.
 			 * To trigger loading, pass a new URL to window.History.pushState().
 			 * Use loadPanel() as a pushState() wrapper as it provides some additional functionality
@@ -480,6 +550,10 @@ jQuery.noConflict();
 			 * if the URL is loaded without ajax.
 			 */
 			handleStateChange: function() {
+				if(this.getPauseState()) {
+					return;
+				}
+
 				// Don't allow parallel loading to avoid edge cases
 				if(this.getStateChangeXHR()) this.getStateChangeXHR().abort();
 
@@ -496,6 +570,30 @@ jQuery.noConflict();
 					document.location.href = state.url;
 					return;
 				}
+
+				if(!this.checkCanNavigate()) {
+					// If history is emulated (ie8 or below) disable attempting to restore
+					if(h.emulated.pushState) {
+						return;
+					}
+
+					var lastState = this.getLastState();
+
+					// Suppress panel loading while resetting state
+					this.setPauseState(true);
+
+					// Restore best last state
+					if(lastState) {
+						h.pushState(lastState.id, lastState.title, lastState.url);
+					} else {
+						h.back();
+					}
+					this.setPauseState(false);
+
+					// Abort loading of this panel
+					return;
+				}
+				this.setLastState(state);
 
 				// If any of the requested Pjax fragments don't exist in the current view,
 				// fetch the "Content" view instead, which is the "outermost" fragment
@@ -822,7 +920,9 @@ jQuery.noConflict();
 						tab,
 						forcedTab = tabset.children('ul').children('li.ss-tabs-force-active');
 
-					if(!tabset.data('tabs')) return; // don't act on uninit'ed controls
+					if(!tabset.data('tabs')){
+						return; // don't act on uninit'ed controls
+					}
 
 					// The tabs may have changed, notify the widget that it should update its internal state.
 					tabset.tabs('refresh');
@@ -832,19 +932,19 @@ jQuery.noConflict();
 						index = forcedTab.first().index();
 					} else if(overrideStates && overrideStates[tabsetId]) {
 						tab = tabset.find(overrideStates[tabsetId].tabSelector);
-						if(tab.length) index = tab.index();
+						if(tab.length){
+							index = tab.index();
+						}
 					} else if(sessionStates) {
 						$.each(sessionStates, function(i, state) {
-							if(tabsetId == state.id) {
-								tabset.tabs('select', state.selected);
+							if(tabsetId == state.id){
+								index = state.selected;
 							}
 						});
-
-						index = null;
 					}
-
-					if(index !== null) {
-						tabset.tabs('select', index);
+					if(index !== null){
+						tabset.tabs('option', 'active', index);
+						self.trigger('tabstaterestored');
 					}
 				});
 			},
@@ -1254,7 +1354,7 @@ jQuery.noConflict();
 				form.find(".dropdown select").prop('selectedIndex', 0).trigger("liszt:updated"); // Reset chosen.js
 				form.submit();
 				}
-		})
+		});
 
 		/**
 		 * Allows to lazy load a panel, by leaving it empty
@@ -1365,15 +1465,55 @@ jQuery.noConflict();
 				});
 			}
 		});
+
+		/**
+		 * CMS content filters
+		 */
+		$('#filters-button').entwine({
+			onmatch: function () {
+				this._super();
+
+				this.data('collapsed', true); // The current collapsed state of the element.
+				this.data('animating', false); // True if the element is currently animating.
+			},
+			onunmatch: function () {
+				this._super();
+			},
+			showHide: function () {
+				var self = this,
+					$filters = $('.cms-content-filters').first(),
+					collapsed = this.data('collapsed');
+
+				// Prevent the user from spamming the UI with animation requests.
+				if (this.data('animating')) {
+					return;
+				}
+
+				this.toggleClass('active');
+				this.data('animating', true);
+
+				// Slide the element down / up based on it's current collapsed state.
+				$filters[collapsed ? 'slideDown' : 'slideUp']({
+					complete: function () {
+						// Update the element's state.
+						self.data('collapsed', !collapsed);
+						self.data('animating', false);
+					}
+				});
+			},
+			onclick: function () {
+				this.showHide();
+			}
+		});
 	});
 
 }(jQuery));
 
 var statusMessage = function(text, type) {
 	text = jQuery('<div/>').text(text).html(); // Escape HTML entities in text
-	jQuery.noticeAdd({text: text, type: type});
+	jQuery.noticeAdd({text: text, type: type, stayTime: 5000, inEffect: {left: '0', opacity: 'show'}});
 };
 
 var errorMessage = function(text) {
-	jQuery.noticeAdd({text: text, type: 'error'});
+	jQuery.noticeAdd({text: text, type: 'error', stayTime: 5000, inEffect: {left: '0', opacity: 'show'}});
 };

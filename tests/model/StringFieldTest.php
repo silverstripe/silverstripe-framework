@@ -15,7 +15,7 @@ class StringFieldTest extends SapphireTest {
 			DBField::create_field('StringFieldTest_MyStringField', "this is\na test!")->forTemplate()
 		);
 	}
-	
+
 	/**
 	 * @covers StringField->LowerCase()
 	 */

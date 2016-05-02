@@ -1,9 +1,9 @@
 <?php
 /**
  * Multi-line listbox field, created from a <select> tag.
- * 
+ *
  * <b>Usage</b>
- * 
+ *
  * <code>
  * new ListboxField(
  *    $name = "pickanumber",
@@ -15,13 +15,13 @@
  *    ),
  *    $value = 1
  * )
- * </code> 
- * 
+ * </code>
+ *
  * @see DropdownField for a simple <select> field with a single element.
  * @see CheckboxSetField for multiple selections through checkboxes.
  * @see OptionsetField for single selections via radiobuttons.
  * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
- * 
+ *
  * @package forms
  * @subpackage fields-basic
  */
@@ -36,7 +36,7 @@ class ListboxField extends DropdownField {
 	/**
 	 * Should the user be able to select multiple
 	 * items on this dropdown field?
-	 * 
+	 *
 	 * @var boolean
 	 */
 	protected $multiple = false;
@@ -50,10 +50,10 @@ class ListboxField extends DropdownField {
 	 * @var Array
 	 */
 	protected $defaultItems = array();
-	
+
 	/**
 	 * Creates a new dropdown field.
-	 * 
+	 *
 	 * @param string $name The field name
 	 * @param string $title The field title
 	 * @param array $source An map of the dropdown items
@@ -64,17 +64,17 @@ class ListboxField extends DropdownField {
 	public function __construct($name, $title = '', $source = array(), $value = '', $size = null, $multiple = false) {
 		if($size) $this->size = $size;
 		if($multiple) $this->multiple = $multiple;
-		
+
 		parent::__construct($name, $title, $source, $value);
 	}
-	
+
 	/**
 	 * Returns a <select> tag containing all the appropriate <option> tags
 	 */
 	public function Field($properties = array()) {
 		if($this->multiple) $this->name .= '[]';
 		$options = array();
-		
+
 		// We have an array of values
 		if(is_array($this->value)){
 			// Loop through and figure out which values were selected.
@@ -97,11 +97,11 @@ class ListboxField extends DropdownField {
 				));
 			}
 		}
-		
+
 		$properties = array_merge($properties, array(
 			'Options' => new ArrayList($options)
 		));
-		
+
 		return $this->customise($properties)->renderWith($this->getTemplates());
 	}
 
@@ -114,8 +114,8 @@ class ListboxField extends DropdownField {
 			)
 		);
 	}
-	
-	/** 
+
+	/**
 	 * Sets the size of this dropdown in rows.
 	 * @param int $size The height in rows (e.g. 3)
 	 */
@@ -123,8 +123,8 @@ class ListboxField extends DropdownField {
 		$this->size = $size;
 		return $this;
 	}
-	
-	/** 
+
+	/**
 	 * Sets this field to have a muliple select attribute
 	 * @param boolean $bool
 	 */
@@ -132,7 +132,7 @@ class ListboxField extends DropdownField {
 		$this->multiple = $bool;
 		return $this;
 	}
-	
+
 	public function setSource($source) {
 		if($source) {
 			$hasCommas = array_filter(array_keys($source),
@@ -141,16 +141,16 @@ class ListboxField extends DropdownField {
 				throw new InvalidArgumentException('No commas allowed in $source keys');
 			}
 		}
-		
+
 		parent::setSource($source);
 
 		return $this;
 	}
 
 	/**
-	 * Return the CheckboxSetField value as a string 
+	 * Return the CheckboxSetField value as a string
 	 * selected item keys.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function dataValue() {
@@ -166,7 +166,7 @@ class ListboxField extends DropdownField {
 			return parent::dataValue();
 		}
 	}
-	
+
 	/**
 	 * Save the current value of this field into a DataObject.
 	 * If the field it is saving to is a has_many or many_many relationship,
@@ -196,17 +196,17 @@ class ListboxField extends DropdownField {
 				} else {
 					$record->$fieldname = null;
 				}
-			}	
+			}
 		} else {
 			parent::saveInto($record);
 		}
 	}
 
 	/**
-	 * Load a value into this CheckboxSetField
+	 * Load a value into this ListboxField
 	 */
 	public function setValue($val, $obj = null) {
-		// If we're not passed a value directly, 
+		// If we're not passed a value directly,
 		// we can look for it in a relation method on the object passed as a second arg
 		if(!$val && $obj && $obj instanceof DataObject && $obj->hasMethod($this->name)) {
 			$funcName = $this->name;
@@ -231,7 +231,7 @@ class ListboxField extends DropdownField {
 			} else {
 				if(!in_array($val, array_keys($this->getSource()))) {
 					throw new InvalidArgumentException(sprintf(
-						'Invalid value "%s" for multiple=false', 
+						'Invalid value "%s" for multiple=false',
 						Convert::raw2xml($val)
 					));
 				}
@@ -241,21 +241,21 @@ class ListboxField extends DropdownField {
 		} else {
 			parent::setValue($val);
 		}
-		
+
 		return $this;
 	}
 
 	/**
 	 * Mark certain elements as disabled,
 	 * regardless of the {@link setDisabled()} settings.
-	 * 
+	 *
 	 * @param array $items Collection of array keys, as defined in the $source array
 	 */
 	public function setDisabledItems($items) {
 		$this->disabledItems = $items;
 		return $this;
 	}
-	
+
 	/**
 	 * @return Array
 	 */
@@ -267,19 +267,60 @@ class ListboxField extends DropdownField {
 	 * Default selections, regardless of the {@link setValue()} settings.
 	 * Note: Items marked as disabled through {@link setDisabledItems()} can still be
 	 * selected by default through this method.
-	 * 
+	 *
 	 * @param Array $items Collection of array keys, as defined in the $source array
 	 */
 	public function setDefaultItems($items) {
 		$this->defaultItems = $items;
 		return $this;
 	}
-	
+
 	/**
 	 * @return Array
 	 */
 	public function getDefaultItems() {
 		return $this->defaultItems;
 	}
-	
+
+	/**
+	 * Validate this field
+	 *
+	 * @param Validator $validator
+	 * @return bool
+	 */
+	public function validate($validator) {
+		$values = $this->value;
+		if (!$values) {
+			return true;
+		}
+		$source = $this->getSourceAsArray();
+		if (is_array($values)) {
+			if (!array_intersect_key($source,array_flip($values))) {
+				$validator->validationError(
+					$this->name,
+					_t(
+						"Please select a value within the list provided. {value} is not a valid option",
+						array('value' => $this->value)
+					),
+					"validation"
+				);
+				return false;
+			}
+		} else {
+			if (!array_key_exists($this->value, $source)) {
+				$validator->validationError(
+					$this->name,
+					_t(
+						'ListboxField.SOURCE_VALIDATION',
+						"Please select a value within the list provided. %s is not a valid option",
+						array('value' => $this->value)
+					),
+					"validation"
+				);
+				return false;
+			}
+		}
+		return true;
+	}
+
 }

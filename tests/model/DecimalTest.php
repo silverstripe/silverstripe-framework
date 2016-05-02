@@ -8,7 +8,7 @@ class DecimalTest extends SapphireTest {
 	protected static $fixture_file = 'DecimalTest.yml';
 
 	protected $testDataObject;
-	
+
 	protected $extraDataObjects = array(
 		'DecimalTest_DataObject'
 	);

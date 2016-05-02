@@ -24,14 +24,14 @@ class PasswordEncryptorTest extends SapphireTest {
 		$e = PasswordEncryptor::create_for_algorithm('test');
 		$this->assertInstanceOf('PasswordEncryptorTest_TestEncryptor', $e );
 	}
-	
+
 	/**
 	 * @expectedException PasswordEncryptor_NotFoundException
 	 */
 	public function testCreateForCodeNotFound() {
 		PasswordEncryptor::create_for_algorithm('unknown');
 	}
-	
+
 	public function testRegister() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors',
 			array('test'=>array('PasswordEncryptorTest_TestEncryptor'=>null)));
@@ -40,21 +40,21 @@ class PasswordEncryptorTest extends SapphireTest {
 		$encryptor = $encryptors['test'];
 		$this->assertContains('PasswordEncryptorTest_TestEncryptor', key($encryptor));
 	}
-	
+
 	public function testUnregister() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors',
 			array('test'=>array('PasswordEncryptorTest_TestEncryptor'=>null)));
 		Config::inst()->remove('PasswordEncryptor', 'encryptors', 'test');
 		$this->assertNotContains('test', array_keys(PasswordEncryptor::get_encryptors()));
 	}
-	
+
 	public function testEncryptorPHPHashWithArguments() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors',
 			array('test_md5'=>array('PasswordEncryptor_PHPHash'=>'md5')));
 		$e = PasswordEncryptor::create_for_algorithm('test_md5');
 		$this->assertEquals('md5', $e->getAlgorithm());
 	}
-	
+
 	public function testEncryptorPHPHash() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors',
 			array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
@@ -62,7 +62,7 @@ class PasswordEncryptorTest extends SapphireTest {
 		$password = 'mypassword';
 		$salt = 'mysalt';
 		$this->assertEquals(
-			hash('sha1', $password . $salt), 
+			hash('sha1', $password . $salt),
 			$e->encrypt($password, $salt)
 		);
 	}
@@ -71,13 +71,13 @@ class PasswordEncryptorTest extends SapphireTest {
 		Config::inst()->update('PasswordEncryptor', 'encryptors',
 			array('test_blowfish'=>array('PasswordEncryptor_Blowfish'=>'')));
 		$e = PasswordEncryptor::create_for_algorithm('test_blowfish');
-		
+
 		$password = 'mypassword';
 
 		$salt = $e->salt($password);
 		$modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
 
-		$this->assertTrue($e->checkAEncryptionLevel() == 'y' || $e->checkAEncryptionLevel() == 'x' 
+		$this->assertTrue($e->checkAEncryptionLevel() == 'y' || $e->checkAEncryptionLevel() == 'x'
 			|| $e->checkAEncryptionLevel() == 'a');
 		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
@@ -99,7 +99,7 @@ class PasswordEncryptorTest extends SapphireTest {
 		$modSalt = substr($salt, 0, 3) . str_shuffle(substr($salt, 3, strlen($salt)));
 
 		$this->assertEquals(11, PasswordEncryptor_Blowfish::get_cost());
-		
+
 		$this->assertTrue($e->check($e->encrypt($password, $salt), "mypassword", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "anotherpw", $salt));
 		$this->assertFalse($e->check($e->encrypt($password, $salt), "mypassword", $modSalt));
@@ -112,7 +112,7 @@ class PasswordEncryptorTest extends SapphireTest {
 
 		//Don't actually test this one. It takes too long. 31 takes too long to process
 	}
-	
+
 	public function testEncryptorPHPHashCheck() {
 		Config::inst()->update('PasswordEncryptor', 'encryptors',
 			array('test_sha1'=>array('PasswordEncryptor_PHPHash'=>'sha1')));
@@ -120,10 +120,10 @@ class PasswordEncryptorTest extends SapphireTest {
 		$this->assertTrue($e->check(sha1('mypassword'), 'mypassword'));
 		$this->assertFalse($e->check(sha1('mypassword'), 'mywrongpassword'));
 	}
-	
+
 	/**
 	 * See http://open.silverstripe.org/ticket/3004
-	 * 
+	 *
 	 * Handy command for reproducing via CLI on different architectures:
 	 * 	php -r "echo(base_convert(sha1('mypassword'), 16, 36));"
 	 */
@@ -145,7 +145,7 @@ class PasswordEncryptorTest_TestEncryptor extends PasswordEncryptor implements T
 	public function encrypt($password, $salt = null, $member = null) {
 		return 'password';
 	}
-	
+
 	public function salt($password, $member = null) {
 		return 'salt';
 	}

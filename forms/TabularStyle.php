@@ -17,14 +17,14 @@ class TabularStyle extends ViewableData {
 		$this->failover = $form;
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Return a representation of this form as a table row
 	 */
 	public function AsTableRow() {
 		return "<tr class=\"addrow\">{$this->CellFields()}<td class=\"actions\">{$this->CellActions()}</td></tr>";
 	}
-	
+
 	public function CellFields() {
 		$result = "";
 		$hiddenFields = '';
@@ -35,10 +35,10 @@ class TabularStyle extends ViewableData {
 				$hiddenFields .= $field->Field();
 			}
 		}
-		
+
 		// Add hidden fields in the last cell
 		$result = substr($result,0,-5) . $hiddenFields . substr($result,-5);
-		
+
 		return $result;
 	}
 
@@ -49,8 +49,8 @@ class TabularStyle extends ViewableData {
 		}
 		return $actions;
 	}
-	
-	
+
+
 
 	/**
 	 * This is the 'wrapper' aspect of the code

@@ -1,0 +1,5 @@
+---
+Name: cookie
+---
+Injector:
+  Cookie_Backend: CookieJar

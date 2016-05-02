@@ -5,30 +5,30 @@
  * @uses SimpleImageField
  * @uses FileIFrameField
  * @uses DropdownField
- * 
+ *
  * @param string $name
- * @param DataObject $object The object that the foreign key is stored on (should have a relation with $name) 
- * 
+ * @param DataObject $object The object that the foreign key is stored on (should have a relation with $name)
+ *
  * @package framework
  * @subpackage model
  */
 class ForeignKey extends Int {
 
 	/**
-	 * @var DataObject 
+	 * @var DataObject
 	 */
 	protected $object;
 
 	private static $default_search_filter_class = 'ExactMatchFilter';
-	
+
 	public function __construct($name, $object = null) {
 		$this->object = $object;
 		parent::__construct($name);
 	}
-	
+
 	public function scaffoldFormField($title = null, $params = null) {
 		$relationName = substr($this->name,0,-2);
-		$hasOneClass = $this->object->has_one($relationName);
+		$hasOneClass = $this->object->hasOneComponent($relationName);
 
 		if($hasOneClass && singleton($hasOneClass) instanceof Image) {
 			$field = new UploadField($relationName, $title);
@@ -46,9 +46,9 @@ class ForeignKey extends Int {
 			} else {
 				$field = new NumericField($this->name, $title);
 			}
-			
+
 		}
-		
+
 		return $field;
 	}
 }

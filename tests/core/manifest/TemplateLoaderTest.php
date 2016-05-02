@@ -6,11 +6,11 @@
  * @subpackage tests
  */
 class TemplateLoaderTest extends SapphireTest {
-	
+
 	private $base;
 	private $manifest;
 	private $loader;
-	
+
 	/**
 	 * Set up manifest before each test
 	 */
@@ -21,7 +21,7 @@ class TemplateLoaderTest extends SapphireTest {
 		$this->loader = new SS_TemplateLoader();
 		$this->refreshLoader();
 	}
-	
+
 	/**
 	 * Test that 'main' and 'Layout' templates are loaded from module
 	 */
@@ -34,7 +34,7 @@ class TemplateLoaderTest extends SapphireTest {
 		$this->assertEquals($expect, $this->loader->findTemplates('PAGE'));
 		$this->assertEquals($expect, $this->loader->findTemplates(array('Foo', 'Page')));
 	}
-	
+
 	/**
 	 * Test that 'main' and 'Layout' templates are loaded from set theme
 	 */
@@ -47,7 +47,7 @@ class TemplateLoaderTest extends SapphireTest {
 		$this->assertEquals($expect, $this->loader->findTemplates('PAGE', 'theme'));
 		$this->assertEquals($expect, $this->loader->findTemplates(array('Foo', 'Page'), 'theme'));
 	}
-	
+
 	/**
 	 * Test that 'main' and 'Layout' templates are loaded from project without a set theme
 	 */
@@ -58,7 +58,7 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 		$this->createTestTemplates($templates);
 		$this->refreshLoader();
-		
+
 		$expect = array(
 			'main'   => "$this->base/myproject/templates/Page.ss",
 			'Layout' => "$this->base/myproject/templates/Layout/Page.ss"
@@ -66,10 +66,10 @@ class TemplateLoaderTest extends SapphireTest {
 		$this->assertEquals($expect, $this->loader->findTemplates('Page'));
 		$this->assertEquals($expect, $this->loader->findTemplates('PAGE'));
 		$this->assertEquals($expect, $this->loader->findTemplates(array('Foo', 'Page')));
-		
+
 		$this->removeTestTemplates($templates);
 	}
-	
+
 	/**
 	 * Test that 'Layout' template is loaded from module
 	 */
@@ -79,7 +79,7 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 		$this->assertEquals($expect, $this->loader->findTemplates('Layout/Page'));
 	}
-	
+
 	/**
 	 * Test that 'Layout' template is loaded from theme
 	 */
@@ -89,7 +89,7 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 		$this->assertEquals($expect, $this->loader->findTemplates('Layout/Page', 'theme'));
 	}
-	
+
 	/**
 	 * Test that 'main' template is found in theme and 'Layout' is found in module
 	 */
@@ -100,7 +100,7 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 		$this->assertEquals($expect, $this->loader->findTemplates(array('CustomThemePage', 'Page'), 'theme'));
 	}
-	
+
 	/**
 	 * Test that project template overrides module template of same name
 	 */
@@ -110,7 +110,7 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 		$this->assertEquals($expect, $this->loader->findTemplates('CustomTemplate'));
 	}
-	
+
 	/**
 	 * Test that project templates overrides theme templates
 	 */
@@ -121,16 +121,16 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 		$this->createTestTemplates($templates);
 		$this->refreshLoader();
-		
+
 		$expect = array(
 			'main'   => "$this->base/myproject/templates/Page.ss",
 			'Layout' => "$this->base/myproject/templates/Layout/Page.ss"
 		);
 		$this->assertEquals($expect, $this->loader->findTemplates('Page'), 'theme');
-		
+
 		$this->removeTestTemplates($templates);
 	}
-	
+
 	/**
 	 * Test that project 'Layout' template overrides theme 'Layout' template
 	 */
@@ -140,16 +140,16 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 		$this->createTestTemplates($templates);
 		$this->refreshLoader();
-		
+
 		$expect = array(
 			'main' => "$this->base/themes/theme/templates/Page.ss",
 			'Layout' => "$this->base/myproject/templates/Layout/Page.ss"
 		);
 		$this->assertEquals($expect, $this->loader->findTemplates('Page', 'theme'));
-		
+
 		$this->removeTestTemplates($templates);
 	}
-	
+
 	/**
 	 * Test that project 'main' template overrides theme 'main' template
 	 */
@@ -159,27 +159,27 @@ class TemplateLoaderTest extends SapphireTest {
 		);
 		$this->createTestTemplates($templates);
 		$this->refreshLoader();
-		
+
 		$expect = array(
 			'main' => "$this->base/myproject/templates/Page.ss",
 			'Layout' => "$this->base/themes/theme/templates/Layout/Page.ss"
 		);
 		$this->assertEquals($expect, $this->loader->findTemplates('Page', 'theme'));
-		
+
 		$this->removeTestTemplates($templates);
 	}
-	
+
 	protected function refreshLoader() {
 		$this->manifest->regenerate(false);
 		$this->loader->pushManifest($this->manifest);
 	}
-	
+
 	protected function createTestTemplates($templates) {
 		foreach ($templates as $template) {
 			file_put_contents($template, '');
 		}
 	}
-	
+
 	protected function removeTestTemplates($templates) {
 		foreach ($templates as $template) {
 			unlink($template);

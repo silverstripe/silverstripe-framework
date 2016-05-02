@@ -181,7 +181,7 @@ fi:
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
-    PdfType: 'Adobe Acrobat PDF-tiedosto'
+    PdfType: 'Adobe Acrobat PDF -tiedosto'
     PngType: 'PNG-kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
     TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
@@ -257,7 +257,7 @@ fi:
     DefaultGroupTitleContentAuthors: 'Sisällöntuottajat'
     Description: Kuvaus
     GroupReminder: 'Valitessasi isäntäryhmän roolit periytyvät tähän ryhmään'
-    HierarchyPermsError: 'Isäntäryhmään ei voitu asettaa "%s" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
+    HierarchyPermsError: 'Isäntä ryhmään ei voitu asettaa "%s" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     Locked: 'Lukittu?'
     NoRoles: 'Rooleja ei löytynyt'
     PLURALNAME: Ryhmät

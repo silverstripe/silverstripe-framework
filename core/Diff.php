@@ -249,7 +249,7 @@ class _DiffEngine
 	 */
 	public function _diag ($xoff, $xlim, $yoff, $ylim, $nchunks) {
 	$flip = false;
-	
+
 	if ($xlim - $xoff > $ylim - $yoff) {
 		// Things seems faster (I'm not sure I understand why)
 			// when the shortest sequence in X.
@@ -436,7 +436,7 @@ class _DiffEngine
 		 */
 		while ($j < $other_len && $other_changed[$j])
 		$j++;
-	
+
 		while ($i < $len && ! $changed[$i]) {
 		USE_ASSERTS && assert('$j < $other_len && ! $other_changed[$j]');
 		$i++; $j++;
@@ -659,7 +659,7 @@ class Diff
 		$lcs = $this->lcs();
 		trigger_error("Diff okay: LCS = $lcs", E_USER_NOTICE);
 	}
-	
+
 
 
 	/**
@@ -712,7 +712,7 @@ class Diff
 
 		$tagStack[1] = $tagStack[2] = 0;
 		$rechunked[1] = $rechunked[2] = array();
-		
+
 		// Go through everything, converting edited tags (and their content) into single chunks.  Otherwise
 		// the generated HTML gets crusty
 		foreach($diff->edits as $edit) {
@@ -722,35 +722,35 @@ class Diff
 					$stuffFor[1] = $edit->orig;
 					$stuffFor[2] = $edit->orig;
 					break;
-				
+
 				case 'change':
 					$lookForTag = true;
 					$stuffFor[1] = $edit->orig;
 					$stuffFor[2] = $edit->final;
 					break;
-				
+
 				case 'add':
 					$lookForTag = true;
 					$stuffFor[1] = null;
 					$stuffFor[2] = $edit->final;
 					break;
-				
+
 				case 'delete':
 					$lookForTag = true;
 					$stuffFor[1] = $edit->orig;
 					$stuffFor[2] = null;
 					break;
 			}
-			
+
 			foreach($stuffFor as $listName => $chunks) {
 				if($chunks) {
 					foreach($chunks as $item) {
 						// $tagStack > 0 indicates that we should be tag-building
 						if($tagStack[$listName]) $rechunked[$listName][sizeof($rechunked[$listName])-1] .= ' ' . $item;
 						else $rechunked[$listName][] = $item;
-	
-						if($lookForTag && !$tagStack[$listName] && isset($item[0]) && $item[0] == "<" 
-								&& substr($item,0,2) != "</") { 
+
+						if($lookForTag && !$tagStack[$listName] && isset($item[0]) && $item[0] == "<"
+								&& substr($item,0,2) != "</") {
 							$tagStack[$listName] = 1;
 						} else if($tagStack[$listName]) {
 							if(substr($item,0,2) == "</") $tagStack[$listName]--;
@@ -760,7 +760,7 @@ class Diff
 				}
 			}
 		}
-		
+
 		// Diff the re-chunked data, turning it into maked up HTML
 		$diff = new Diff($rechunked[1], $rechunked[2]);
 		$content = '';
@@ -772,25 +772,25 @@ class Diff
 				case 'copy':
 					$content .= " " . implode(" ", $orig) . " ";
 					break;
-				
+
 				case 'change':
 					$content .= " <ins>" . implode(" ", $final) . "</ins> ";
 					$content .= " <del>" . implode(" ", $orig) . "</del> ";
 					break;
-				
+
 				case 'add':
 					$content .= " <ins>" . implode(" ", $final) . "</ins> ";
 					break;
-				
+
 				case 'delete':
 					$content .= " <del>" . implode(" ", $orig) . "</del> ";
 					break;
 			}
-		}		
+		}
 
 		return self::cleanHTML($content);
 	}
-	
+
 	/**
 	 * @param string|array If passed as an array, values will be concatenated with a comma.
 	 */
@@ -799,7 +799,7 @@ class Diff
 			throw new InvalidArgumentException('$content parameter needs to be a string or array');
 		}
 		if(is_array($content)) $content = implode(',', $content);
-		
+
 		$content = str_replace(array("&nbsp;","<", ">"),array(" "," <", "> "),$content);
 		$candidateChunks = preg_split("/[\t\r\n ]+/", $content);
 		while(list($i,$item) = each($candidateChunks)) {
@@ -816,7 +816,7 @@ class Diff
 		}
 		return $chunks;
 	}
-	
+
 }
 
 

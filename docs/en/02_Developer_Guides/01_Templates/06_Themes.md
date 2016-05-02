@@ -47,11 +47,35 @@ located within the `themes` directory.
 
 ![themes:basicfiles.gif](../../_images/basicfiles.gif)
 
+Your theme can also be organised into split folders for each module it caters for.
+
+```
+themes
+    blackcandy
+        css
+            style.css
+        images
+        templates
+            Page.ss
+            Layout
+                Page.ss
+            Includes
+    blackcandy_blog
+        css
+            blog.css
+        images
+        templates
+            Layout
+                BlogHolder.ss
+                BlogEntry.ss
+            Includes
+```
+
 ## Submitting your theme to SilverStripe
 
 If you want to submit your theme to the SilverStripe directory then check
 
-* You should ensure your templates are well structured, modular and commented so it's easy for other people to customize 
+* You should ensure your templates are well structured, modular and commented so it's easy for other people to customise 
 *  Templates should not contain text inside images and all images provided must be open source and not break any 
 copyright or license laws. This includes any icons your template uses.
 *  A theme does not include any PHP files. Only CSS, HTML, Images and javascript.

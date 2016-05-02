@@ -10,7 +10,7 @@
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
 class SQLFormatter extends Object {
-	
+
 	protected static $newline_before_tokens = array(
 		'SELECT',
 		'UPDATE',
@@ -26,19 +26,19 @@ class SQLFormatter extends Object {
 		'GROUP BY',
 		'LIMIT',
 	);
-	
+
 	public function formatPlain($sql) {
 		$sql = $this->addNewlines($sql, false);
 
 		return $sql;
 	}
-	
+
 	public function formatHTML($sql) {
 		$sql = $this->addNewlines($sql, true);
 
 		return $sql;
 	}
-	
+
 	/**
 	 * Newlines for tokens defined in $newline_before_tokens.
 	 * Case-sensitive, only applies to uppercase SQL to avoid
@@ -50,8 +50,8 @@ class SQLFormatter extends Object {
 			$breakToken = ($useHtmlFormatting) ? "<br />$eol" : $eol;
 			$sql = preg_replace('/[^\n](' . $token . ')/', $breakToken . '$1', $sql);
 		}
-		
+
 		return $sql;
 	}
-	
+
 }

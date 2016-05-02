@@ -168,7 +168,7 @@ consideration, we provide a library for entwineUI style programming. In entwineU
 objects. entwine extends this concept beyond what is provided by other libraries to provide a very easy to use system
 with class like, ploymorphic, namespaced properties."
 
-Use jQuery.entwine when your code is likely to be customized by others, for example for most work in the CMS interface.
+Use jQuery.entwine when your code is likely to be customised by others, for example for most work in the CMS interface.
 It is also suited for more complex applications beyond a single-purpose plugin.
 
 Example: Highlighter
@@ -250,7 +250,7 @@ Ready](http://docs.jquery.com/How_jQuery_Works#Launching_Code_on_Document_Ready)
 jQuery supports automatically reapplying event handlers when new DOM elements get inserted, mostly through Ajax calls.
 This "binding" saves you from reapplying this step manually.
 
-Caution: Only applies to certain events, see the [jQuery.on() documentation](http://api.jquery.com/on/).
+Caution: Only applies to certain events, see the [jQuery.on() documentation](http://api.jquery.com/on/#direct-and-delegated-events).
 
 Example: Add a 'loading' classname to all pressed buttons
 
@@ -261,13 +261,10 @@ Example: Add a 'loading' classname to all pressed buttons
 	});
 
 	// binding, applies to any inserted elements as well
-	$('input[[type=submit]]').on(function() {
+	$('.cms-container').on('click', 'input[[type=submit]]', function() {
 	  $(this).addClass('loading');
 	});
 
-
-See [jQuery FAQ: Why do my events stop working after an AJAX
-request](http://docs.jquery.com/Frequently_Asked_Questions#Why_do_my_events_stop_working_after_an_AJAX_request.3F).
 
 ### Assume Element Collections
 
@@ -376,7 +373,7 @@ PHP:
 	    if(!$results) return new HTTPResponse("Not found", 404);
 
 	    // Use HTTPResponse to pass custom status messages
-	    $this->response->setStatusCode(200, "Found " . $results->Count() . " elements");
+	    $this->getResponse()->setStatusCode(200, "Found " . $results->Count() . " elements");
 
 	    // render all results with a custom template
 	    $vd = new ViewableData();

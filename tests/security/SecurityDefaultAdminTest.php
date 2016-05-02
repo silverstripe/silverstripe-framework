@@ -5,11 +5,11 @@ class SecurityDefaultAdminTest extends SapphireTest {
 
 	protected $defaultUsername = null;
 	protected $defaultPassword = null;
-	
+
 	public function setUp() {
 		parent::setUp();
 
-		// TODO Workaround to force database clearing with no fixture present, 
+		// TODO Workaround to force database clearing with no fixture present,
 		// and avoid sideeffects from other tests
 		if(!self::using_temp_db()) self::create_temp_db();
 		self::empty_temp_db();
@@ -26,7 +26,7 @@ class SecurityDefaultAdminTest extends SapphireTest {
 		Permission::flush_permission_cache();
 		parent::tearDown();
 	}
-	
+
 	public function testCheckDefaultAdmin() {
 		$this->assertTrue(Security::has_default_admin());
 		$this->assertTrue(
@@ -42,7 +42,7 @@ class SecurityDefaultAdminTest extends SapphireTest {
 			'Fails with incorrect password'
 		);
 	}
-	
+
 	public function testFindAnAdministratorCreatesNewUser() {
 		$adminMembers = Permission::get_members_by_permission('ADMIN');
 		$this->assertEquals(0, $adminMembers->count());
@@ -75,14 +75,14 @@ class SecurityDefaultAdminTest extends SapphireTest {
 	public function testDefaultAdmin() {
 		$adminMembers = Permission::get_members_by_permission('ADMIN');
 		$this->assertEquals(0, $adminMembers->count());
-		
+
 		$admin = Member::default_admin();
-		
+
 		$this->assertInstanceOf('Member', $admin);
 		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 		$this->assertEquals($admin->Email, Security::default_admin_username());
 		$this->assertNull($admin->Password);
 
 	}
-	
+
 }

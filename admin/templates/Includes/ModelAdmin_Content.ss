@@ -2,30 +2,37 @@
 
 	<div class="cms-content-header north">
 		<div class="cms-content-header-info">
-			<h2>
-				<% include CMSSectionIcon %>
-				<% if $SectionTitle %>
-					$SectionTitle
-				<% else %>
-					<% _t('ModelAdmin.Title', 'Data Models') %>
-				<% end_if %>
-			</h2>
+			<div class="breadcrumbs-wrapper">
+				<h2 id="page-title-heading">
+					<span class="cms-panel-link crumb last">
+						<% if $SectionTitle %>
+							$SectionTitle
+						<% else %>
+							<%t ModelAdmin.Title 'Data Models' %>
+						<% end_if %>
+					</span>
+				</h2>
+			</div>
 		</div>
 
 		<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">
-			<ul>
-			<% loop $ManagedModelTabs %>
+			<button id="filters-button" class="icon-button font-icon-search no-text" title="<%t CMSPagesController_Tools_ss.FILTER 'Filter' %>"></button>
+			<ul class="cms-tabset-nav-primary">
+				<% loop $ManagedModelTabs %>
 				<li class="tab-$ClassName $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">
 					<a href="$Link" class="cms-panel-link" title="Form_EditForm">$Title</a>
 				</li>
-			<% end_loop %>
+				<% end_loop %>
 			</ul>
 		</div>
 	</div>
 
-	<div class="cms-content-fields center ui-widget-content" data-layout-type="border">
+	<div class="cms-content-fields center ui-widget-content cms-panel-padded" data-layout-type="border">
 		$Tools
-		$EditForm
+
+		<div class="cms-content-view">
+			$EditForm
+		</div>
 	</div>
-	
+
 </div>

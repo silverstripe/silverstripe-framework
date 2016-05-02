@@ -1,9 +1,9 @@
 <?php
 /**
  * The action buttons are <input type="submit"> as well as <button> tags.
- * 
+ *
  * Upon clicking the button below will redirect the user to doAction under the current controller.
- * 
+ *
  * <code>
  * new FormAction (
  *    // doAction has to be a defined controller member
@@ -11,7 +11,7 @@
  *    $title = "Submit button"
  * )
  * </code>
- * 
+ *
  * @package forms
  * @subpackage actions
  */
@@ -23,11 +23,11 @@ class FormAction extends FormField {
 	 * @var string
 	 */
 	protected $action;
-	
+
 	/**
 	 * Enables the use of <button> instead of <input>
 	 * in {@link Field()} - for more customizeable styling.
-	 * 
+	 *
 	 * @var boolean
 	 */
 	public $useButtonTag = false;
@@ -38,7 +38,7 @@ class FormAction extends FormField {
 	 * @var string
 	 */
 	protected $buttonContent = null;
-	
+
 	/**
 	 * Create a new action button.
 	 *
@@ -49,7 +49,7 @@ class FormAction extends FormField {
 	public function __construct($action, $title = "", $form = null) {
 		$this->action = "action_$action";
 		$this->setForm($form);
-		
+
 		parent::__construct($this->action, $title);
 	}
 
@@ -61,7 +61,7 @@ class FormAction extends FormField {
 	public function actionName() {
 		return substr($this->name, 7);
 	}
-	
+
 	/**
 	 * Set the full action name, including action_
 	 * This provides an opportunity to replace it with something else
@@ -74,6 +74,10 @@ class FormAction extends FormField {
 		return $this;
 	}
 
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function Field($properties = array()) {
 		$properties = array_merge(
 			$properties,
@@ -83,10 +87,14 @@ class FormAction extends FormField {
 				'UseButtonTag' => $this->useButtonTag
 			)
 		);
-		
+
 		return parent::Field($properties);
 	}
-	
+
+	/**
+	 * @param array $properties
+	 * @return HTMLText
+	 */
 	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);
 	}
@@ -100,7 +108,7 @@ class FormAction extends FormField {
 
 		// Remove this method override in 4.0
 		$decoded = Convert::xml2raw($title);
-		if($decoded !== $title) {
+		if($title && $decoded !== $title) {
 			Deprecation::notice(
 				'4.0',
 				'The FormAction title field should not be html encoded. Use buttonContent to set custom html instead'
@@ -113,7 +121,7 @@ class FormAction extends FormField {
 
 	public function getAttributes() {
 		$type = (isset($this->attributes['src'])) ? 'image' : 'submit';
-		
+
 		return array_merge(
 			parent::getAttributes(),
 			array(

@@ -5,7 +5,7 @@
  * @subpackage tests
  */
 class NumericFieldTest extends SapphireTest {
-	
+
 	protected $usesDatabase = false;
 
 	/**
@@ -85,7 +85,7 @@ class NumericFieldTest extends SapphireTest {
 				$field->dataValue(),
 				"Expected $input loaded via dataobject to be left intact in locale $locale"
 			);
-			
+
 			// Test expected formatted value (Substitute nbsp for spaces)
 			$this->assertEquals(
 				$this->clean($output),
@@ -136,7 +136,7 @@ class NumericFieldTest extends SapphireTest {
 			'12.1' => '12,1',
 			'14000.5' => "14 000,5",
 		));
-		
+
 		$this->checkInputValidation('fr_FR', array(
 			'13000' => 13000,
 			'12,00' => 12.00,
@@ -177,36 +177,20 @@ class NumericFieldTest extends SapphireTest {
 		));
 	}
 
-	/**
-	 * Test empty values
-	 */
-	public function testEmptyValidator() {
-		i18n::set_locale('en_US');
-		$field = new NumericField('Number');
-		$validator = new RequiredFields('Number');
-
-		// Treats '0' as given for the sake of required fields
-		$field->setValue('0');
-		$this->assertTrue($field->validate($validator));
-		$this->assertEquals(0, $field->dataValue());
-
-		// Treat literal 0
-		$field->setValue(0);
-		$this->assertTrue($field->validate($validator));
-		$this->assertEquals(0, $field->dataValue());
-
-		// Should fail the 'required but not given' test
-		$field->setValue('');
-		$this->assertFalse($field->validate($validator));
-
-		$field->setValue(false);
-		$this->assertFalse($field->validate($validator));
-	}
-
 	public function testReadonly() {
 		i18n::set_locale('en_US');
 		$field = new NumericField('Number');
 		$this->assertRegExp("#<span[^>]+>\s*0\s*<\/span>#", "".$field->performReadonlyTransformation()->Field()."");
+	}
+
+	public function testNumberTypeOnInputHtml() {
+		$field = new NumericField('Number');
+
+		$html = $field->Field();
+
+		// @todo - Revert to number one day when html5 number supports proper localisation
+		// See https://github.com/silverstripe/silverstripe-framework/pull/4565
+		$this->assertContains('type="text"', $html, 'number type not set');
 	}
 
 }

@@ -4,36 +4,36 @@
  * @subpackage tests
  */
 class URLSegmentFilterTest extends SapphireTest {
-	
+
 	protected $usesDatabase = false;
-	
+
 	public function testReplacesCommonEnglishSymbols() {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(false);
 		$this->assertEquals(
-			'john-and-spencer', 
+			'john-and-spencer',
 			$f->filter('John & Spencer')
 		);
 	}
-	
+
 	public function testReplacesWhitespace() {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(false);
 		$this->assertEquals(
-			'john-and-spencer', 
+			'john-and-spencer',
 			$f->filter('John and Spencer')
 		);
 		$this->assertEquals(
-			'john-and-spencer', 
+			'john-and-spencer',
 			$f->filter('John+and+Spencer')
 		);
 	}
-	
+
 	public function testTransliteratesNonAsciiUrls() {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(false);
 		$this->assertEquals(
-			'broetchen', 
+			'broetchen',
 			$f->filter('Brötchen')
 		);
 	}
@@ -50,15 +50,24 @@ class URLSegmentFilterTest extends SapphireTest {
 		$f = new URLSegmentFilter();
 		$f->setAllowMultibyte(true);
 		$this->assertEquals(
-			urlencode('brötchen'), 
+			urlencode('brötchen'),
 			$f->filter('Brötchen')
+		);
+	}
+
+	public function testReplacesForwardSlashesWithAllowMultiByteOption() {
+		$f = new URLSegmentFilter();
+		$f->setAllowMultibyte(true);
+		$this->assertEquals(
+			urlencode('this-that'),
+			$f->filter('this/that')
 		);
 	}
 
 	public function testReplacements() {
 		$f = new URLSegmentFilter();
 		$this->assertEquals(
-			'tim-and-struppi', 
+			'tim-and-struppi',
 			$f->filter('Tim&Struppi')
 		);
 
@@ -67,7 +76,7 @@ class URLSegmentFilterTest extends SapphireTest {
 		$rs['/&/u'] = '-und-';
 		$f->setReplacements($rs);
 		$this->assertEquals(
-			'tim-und-struppi', 
+			'tim-und-struppi',
 			$f->filter('Tim&Struppi')
 		);
 	}
@@ -85,6 +94,12 @@ class URLSegmentFilterTest extends SapphireTest {
 	public function testReplacesTrailingDashes() {
 		$filter = new URLSegmentFilter();
 		$this->assertEquals('url-has-trailing-dashes', $filter->filter('url-has-trailing-dashes--'));
+	}
+	
+	public function testRemovesBadCharactersWithMultibyteAllowed() {
+		$filter = new URLSegmentFilter();
+		$filter->setAllowMultibyte(true);
+		$this->assertEquals('url-with-bad-characters', $filter->filter('url?-with/-bad#-characters='));
 	}
 
 }

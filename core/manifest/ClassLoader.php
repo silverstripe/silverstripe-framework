@@ -34,7 +34,7 @@ class SS_ClassLoader {
 	public function getManifest() {
 		return $this->manifests[count($this->manifests) - 1]['instance'];
 	}
-	
+
 	/**
 	 * Returns true if this class loader has a manifest.
 	 */
@@ -78,11 +78,11 @@ class SS_ClassLoader {
 		}
 		return $path;
 	}
-	
+
 	/**
 	 * Returns the path for a class or interface in the currently active manifest,
 	 * or any previous ones if later manifests aren't set to "exclusive".
-	 * 
+	 *
 	 * @return String
 	 */
 	public function getItemPath($class) {
@@ -101,7 +101,8 @@ class SS_ClassLoader {
 	 * @return bool
 	 */
 	public function classExists($class) {
-		return class_exists($class, false) || $this->getItemPath($class);
+		Deprecation::notice('4.0', 'Use ClassInfo::exists.');
+		return ClassInfo::exists($class);
 	}
 
 }

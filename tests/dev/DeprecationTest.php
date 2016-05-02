@@ -15,12 +15,16 @@ class DeprecationTest extends SapphireTest {
 	static $originalVersionInfo;
 
 	public function setUp() {
+		parent::setUp();
+
 		self::$originalVersionInfo = Deprecation::dump_settings();
 		Deprecation::$notice_level = E_USER_NOTICE;
+		Deprecation::set_enabled(true);
 	}
 
 	public function tearDown() {
 		Deprecation::restore_settings(self::$originalVersionInfo);
+		parent::tearDown();
 	}
 
 	public function testLesserVersionTriggersNoNotice() {

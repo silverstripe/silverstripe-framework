@@ -12,7 +12,7 @@ class ValidationResult extends Object {
 	 */
 	protected $isValid;
 
-	
+
 	/**
 	 * Array of errors
 	 */
@@ -27,7 +27,7 @@ class ValidationResult extends Object {
 		if($message) $this->errorList[] = $message;
 		parent::__construct();
 	}
-	
+
 	/**
 	 * Record an error against this validation result,
 	 * @param $message The validation error message
@@ -36,7 +36,7 @@ class ValidationResult extends Object {
 	 */
 	public function error($message, $code = null) {
 		$this->isValid = false;
-		
+
 		if($code) {
 			if(!is_numeric($code)) {
 				$this->errorList[$code] = $message;
@@ -51,7 +51,7 @@ class ValidationResult extends Object {
 
 		return $this;
 	}
-	
+
 	/**
 	 * Returns true if the result is valid.
 	 * @return boolean
@@ -59,7 +59,7 @@ class ValidationResult extends Object {
 	public function valid() {
 		return $this->isValid;
 	}
-	
+
 	/**
 	 * Get an array of errors
 	 * @return array
@@ -77,7 +77,7 @@ class ValidationResult extends Object {
 		foreach($this->errorList as $k => $v) if(!is_numeric($k)) $codeList[] = $k;
 		return $codeList;
 	}
-	
+
 	/**
 	 * Get the error message as a string.
 	 * @return string
@@ -85,7 +85,7 @@ class ValidationResult extends Object {
 	public function message() {
 		return implode("; ", $this->errorList);
 	}
-	
+
 	/**
 	 * Get a starred list of all messages
 	 * @return string
@@ -93,7 +93,7 @@ class ValidationResult extends Object {
 	public function starredList() {
 		return " * " . implode("\n * ", $this->errorList);
 	}
-	
+
 	/**
 	 * Combine this Validation Result with the ValidationResult given in other.
 	 * It will be valid if both this and the other result are valid.
@@ -108,6 +108,6 @@ class ValidationResult extends Object {
 
 		return $this;
 	}
-	
-	
+
+
 }

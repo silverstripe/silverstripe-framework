@@ -4,7 +4,7 @@
  * Dummy parameter token
  */
 class ParameterConfirmationTokenTest_Token extends ParameterConfirmationToken implements TestOnly {
-	
+
 	public function currentAbsoluteURL() {
 		return parent::currentAbsoluteURL();
 	}
@@ -33,7 +33,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 	}
 
 	protected $oldHost = null;
-	
+
 	public function setUp() {
 		parent::setUp();
 		$this->oldHost = $_SERVER['HTTP_HOST'];
@@ -46,7 +46,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$_GET['parameterconfirmationtokentest_emptytoken'] = '1';
 		$_GET['parameterconfirmationtokentest_emptytokentoken'] = '';
 	}
-	
+
 	public function tearDown() {
 		foreach($_GET as $param) {
 			if(stripos($param, 'parameterconfirmationtokentest_') === 0) unset($_GET[$param]);
@@ -54,7 +54,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$_SERVER['HTTP_HOST'] = $this->oldHost;
 		parent::tearDown();
 	}
-	
+
 	public function testParameterDetectsParameters() {
 		$withoutToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_notoken');
 		$emptyParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_empty');
@@ -62,7 +62,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$withoutParameter = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_noparam');
 		$nullToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_nulltoken');
 		$emptyToken = new ParameterConfirmationTokenTest_Token('parameterconfirmationtokentest_emptytoken');
-		
+
 		// Check parameter
 		$this->assertTrue($withoutToken->parameterProvided());
 		$this->assertTrue($emptyParameter->parameterProvided());  // even if empty, it's still provided
@@ -70,7 +70,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$this->assertFalse($withoutParameter->parameterProvided());
 		$this->assertTrue($nullToken->parameterProvided());
 		$this->assertTrue($emptyToken->parameterProvided());
-		
+
 		// Check token
 		$this->assertFalse($withoutToken->tokenProvided());
 		$this->assertFalse($emptyParameter->tokenProvided());
@@ -78,7 +78,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$this->assertFalse($withoutParameter->tokenProvided());
 		$this->assertFalse($nullToken->tokenProvided());
 		$this->assertFalse($emptyToken->tokenProvided());
-		
+
 		// Check if reload is required
 		$this->assertTrue($withoutToken->reloadRequired());
 		$this->assertTrue($emptyParameter->reloadRequired());
@@ -86,13 +86,13 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 		$this->assertFalse($withoutParameter->reloadRequired());
 		$this->assertTrue($nullToken->reloadRequired());
 		$this->assertTrue($emptyToken->reloadRequired());
-		
+
 		// Check suppression
 		$this->assertTrue(isset($_GET['parameterconfirmationtokentest_notoken']));
 		$withoutToken->suppress();
 		$this->assertFalse(isset($_GET['parameterconfirmationtokentest_notoken']));
 	}
-	
+
 	public function testPrepareTokens() {
 		// Test priority ordering
 		$token = ParameterConfirmationToken::prepare_tokens(array(
@@ -110,7 +110,7 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 
 	/**
 	 * currentAbsoluteURL needs to handle base or url being missing, or any combination of slashes.
-	 * 
+	 *
 	 * There should always be exactly one slash between each part in the result, and any trailing slash
 	 * should be preserved.
 	 */

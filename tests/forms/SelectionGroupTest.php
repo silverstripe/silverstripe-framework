@@ -29,7 +29,7 @@ class SelectionGroupTest extends SapphireTest {
 		$this->assertContains('one view', (string)$listElOne->div);
 		$this->assertContains('two view', (string)$listElTwo->div);
 	}
-	
+
 	function testLegacyItemsFieldHolder() {
 		$items = array(
 			'one' => new LiteralField('one', 'one view'),

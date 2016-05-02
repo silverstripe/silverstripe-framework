@@ -7,17 +7,17 @@ table {
 	color: #333;
 	font-size: 12pt;
 	tr{
-		
+
 	}
 	th{
 		border-bottom: 2px solid #333;
-		padding: 5px 10px; 
+		padding: 5px 10px;
 		font-weight: bold;
 		text-align: left;
 		&:first-child{
-			padding-left: 0px; 
+			padding-left: 0px;
 		}
-		
+
 	}
 	td{
 		border-top: 1px solid #aaa;
@@ -25,7 +25,7 @@ table {
 		text-align: left;
 		padding: 5px 10px;
 		&:first-child{
-			padding-left: 0px; 
-		} 
+			padding-left: 0px;
+		}
 	}
 }

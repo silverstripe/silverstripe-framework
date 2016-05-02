@@ -4,7 +4,7 @@
  *
  * Relies on a {@link FixtureFactory} to manage database relationships between instances,
  * and manage the mappings between fixture identifiers and their database IDs.
- * 
+ *
  * @package framework
  * @subpackage core
  */
@@ -45,7 +45,7 @@ class FixtureBlueprint {
 	 */
 	public function __construct($name, $class = null, $defaults = array()) {
 		if(!$class) $class = $name;
-		
+
 		if(!is_subclass_of($class, 'DataObject')) {
 			throw new InvalidArgumentException(sprintf(
 				'Class "%s" is not a valid subclass of DataObject',
@@ -57,7 +57,7 @@ class FixtureBlueprint {
 		$this->class = $class;
 		$this->defaults = $defaults;
 	}
-	
+
 	/**
 	 * @param String $identifier Unique identifier for this fixture type
 	 * @param Array $data Map of property names to their values.
@@ -78,15 +78,15 @@ class FixtureBlueprint {
 		try {
 			$class = $this->class;
 			$obj = DataModel::inst()->$class->newObject();
-			
+
 			// If an ID is explicitly passed, then we'll sort out the initial write straight away
 			// This is just in case field setters triggered by the population code in the next block
 			// Call $this->write().  (For example, in FileTest)
 			if(isset($data['ID'])) {
 				$obj->ID = $data['ID'];
-				
+
 				// The database needs to allow inserting values into the foreign key column (ID in our case)
-				$conn = DB::getConn();
+				$conn = DB::get_conn();
 				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
 					$conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($class), true);
 				}
@@ -106,11 +106,15 @@ class FixtureBlueprint {
 					$obj->$fieldName = $fieldVal;
 				}
 			}
-			
+
 			// Populate overrides
 			if($data) foreach($data as $fieldName => $fieldVal) {
 				// Defer relationship processing
-				if($obj->many_many($fieldName) || $obj->has_many($fieldName) || $obj->has_one($fieldName)) {
+				if(
+					$obj->manyManyComponent($fieldName)
+					|| $obj->hasManyComponent($fieldName)
+					|| $obj->hasOneComponent($fieldName)
+				) {
 					continue;
 				}
 
@@ -124,17 +128,17 @@ class FixtureBlueprint {
 				$fixtures[$class] = array();
 			}
 			$fixtures[$class][$identifier] = $obj->ID;
-					
+
 			// Populate all relations
 			if($data) foreach($data as $fieldName => $fieldVal) {
-				if($obj->many_many($fieldName) || $obj->has_many($fieldName)) {
+				if($obj->manyManyComponent($fieldName) || $obj->hasManyComponent($fieldName)) {
 					$obj->write();
 
 					$parsedItems = array();
 
 					if(is_array($fieldVal)) {
 						// handle lists of many_many relations. Each item can
-						// specify the many_many_extraFields against each 
+						// specify the many_many_extraFields against each
 						// related item.
 						foreach($fieldVal as $relVal) {
 							$item = key($relVal);
@@ -165,18 +169,21 @@ class FixtureBlueprint {
 							$parsedItems[] = $this->parseValue($item, $fixtures);
 						}
 
-						if($obj->has_many($fieldName)) {
+						if($obj->hasManyComponent($fieldName)) {
 							$obj->getComponents($fieldName)->setByIDList($parsedItems);
-						} elseif($obj->many_many($fieldName)) {
+						} elseif($obj->manyManyComponent($fieldName)) {
 							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
 						}
 					}
-				} elseif($obj->has_one($fieldName)) {
-					// Sets has_one with relation name
-					$obj->{$fieldName . 'ID'} = $this->parseValue($fieldVal, $fixtures);
-				} elseif($obj->has_one(preg_replace('/ID$/', '', $fieldName))) {
-					// Sets has_one with database field
-					$obj->$fieldName = $this->parseValue($fieldVal, $fixtures);
+				} else {
+					$hasOneField = preg_replace('/ID$/', '', $fieldName);
+					if($className = $obj->hasOneComponent($hasOneField)) {
+						$obj->{$hasOneField.'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
+						// Inject class for polymorphic relation
+						if($className === 'DataObject') {
+							$obj->{$hasOneField.'Class'} = $fieldClass;
+						}
+					}
 				}
 			}
 			$obj->write();
@@ -184,6 +191,11 @@ class FixtureBlueprint {
 			// If LastEdited was set in the fixture, set it here
 			if($data && array_key_exists('LastEdited', $data)) {
 				$this->overrideField($obj, 'LastEdited', $data['LastEdited'], $fixtures);
+			}
+
+			// Ensure Folder objects exist physically, as otherwise future File fixtures can't detect them
+			if($obj instanceof Folder) {
+				Filesystem::makeFolder($obj->getFullPath());
 			}
 		} catch(Exception $e) {
 			Config::inst()->update('DataObject', 'validation_enabled', $validationenabled);
@@ -221,8 +233,8 @@ class FixtureBlueprint {
 
 	/**
 	 * See class documentation.
-	 * 
-	 * @param String $type 
+	 *
+	 * @param String $type
 	 * @param callable $callback
 	 */
 	public function addCallback($type, $callback) {
@@ -235,7 +247,7 @@ class FixtureBlueprint {
 	}
 
 	/**
-	 * @param String $type 
+	 * @param String $type
 	 * @param callable $callback
 	 */
 	public function removeCallback($type, $callback) {
@@ -252,14 +264,16 @@ class FixtureBlueprint {
 	}
 
 	/**
-	 * Parse a value from a fixture file.  If it starts with => 
+	 * Parse a value from a fixture file.  If it starts with =>
 	 * it will get an ID from the fixture dictionary
 	 *
-	 * @param String $fieldVal
-	 * @param  Array $fixtures See {@link createObject()}
-	 * @return String Fixture database ID, or the original value
+	 * @param string $fieldVal
+	 * @param array $fixtures See {@link createObject()}
+	 * @param string $class If the value parsed is a class relation, this parameter
+	 * will be given the value of that class's name
+	 * @return string Fixture database ID, or the original value
 	 */
-	protected function parseValue($value, $fixtures = null) {
+	protected function parseValue($value, $fixtures = null, &$class = null) {
 		if(substr($value,0,2) == '=>') {
 			// Parse a dictionary reference - used to set foreign keys
 			list($class, $identifier) = explode('.', substr($value,2), 2);
@@ -289,7 +303,7 @@ class FixtureBlueprint {
 		DB::manipulate(array(
 			$table => array(
 				"command" => "update", "id" => $obj->ID,
-				"fields" => array($fieldName => is_string($value) ? "'$value'" : $value)
+				"fields" => array($fieldName => $value)
 			)
 		));
 		$obj->$fieldName = $value;

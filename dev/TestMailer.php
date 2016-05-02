@@ -5,7 +5,7 @@
  */
 class TestMailer extends Mailer {
 	protected $emailsSent = array();
-	
+
 	/**
 	 * Send a plain-text email.
 	 * TestMailer will merely record that the email was asked to be sent, without sending anything.
@@ -23,10 +23,10 @@ class TestMailer extends Mailer {
 			'attachedFiles' => $attachedFiles,
 			'customHeaders' => $customHeaders,
 		);
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Send a multi-part HTML email
 	 * TestMailer will merely record that the email was asked to be sent, without sending anything.
@@ -48,17 +48,17 @@ class TestMailer extends Mailer {
 			'customHeaders' => $customHeaders,
 			'inlineImages' => $inlineImages,
 		);
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Clear the log of emails sent
 	 */
 	public function clearEmails() {
 		$this->emailsSent = array();
 	}
-	
+
 	/**
 	 * Search for an email that was sent.
 	 * All of the parameters can either be a string, or, if they start with "/", a PREG-compatible regular expression.
@@ -80,7 +80,7 @@ class TestMailer extends Mailer {
 					if(!$matched) break;
 				}
 			}
-			
+
 			if($matched) return $email;
 		}
 	}

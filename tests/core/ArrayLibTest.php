@@ -17,7 +17,7 @@ class ArrayLibTest extends SapphireTest {
 				'col2' => 'val4'
 			)
 		);
-		
+
 		$this->assertEquals(
 			ArrayLib::invert($arr),
 			array(
@@ -47,7 +47,30 @@ class ArrayLibTest extends SapphireTest {
 			)
 		);
 	}
-	
+
+	public function testArrayMapRecursive() {
+		$array = array(
+			'a ',
+			array('  b', 'c'),
+		);
+		$strtoupper = array(
+			'A ',
+			array('  B', 'C'),
+		);
+		$trim = array(
+			'a',
+			array('b', 'c'),
+		);
+		$this->assertEquals(
+			$strtoupper,
+			ArrayLib::array_map_recursive('strtoupper', $array)
+		);
+		$this->assertEquals(
+			$trim,
+			ArrayLib::array_map_recursive('trim', $array)
+		);
+	}
+
 	public function testArrayMergeRecursive() {
 		$first = array(
 			'first' => 'a',
@@ -68,7 +91,7 @@ class ArrayLibTest extends SapphireTest {
 			ArrayLib::array_merge_recursive($first, $second),
 			'First values should supplement second values'
 		);
-		
+
 		$first = array(
 			'first' => 'a',
 			'second' => 'b',
@@ -87,7 +110,7 @@ class ArrayLibTest extends SapphireTest {
 			ArrayLib::array_merge_recursive($first, $second),
 			'Second values should override first values'
 		);
-		
+
 		$first = array(
 			'first' => array(
 				'first' => 'a',
@@ -120,7 +143,7 @@ class ArrayLibTest extends SapphireTest {
 			ArrayLib::array_merge_recursive($first, $second),
 			'Nested second values should override first values'
 		);
-		
+
 		$first = array(
 			'first' => array(
 				'first' => 'a',
@@ -154,7 +177,7 @@ class ArrayLibTest extends SapphireTest {
 			ArrayLib::array_merge_recursive($first, $second),
 			'Nested first values should supplement second values'
 		);
-		
+
 		$first = array(
 			'first' => array(
 				0 => 'a',
@@ -182,7 +205,7 @@ class ArrayLibTest extends SapphireTest {
 				2 => 'd',
 			),
 		);
-		
+
 		$this->assertEquals(
 			$expected,
 			ArrayLib::array_merge_recursive($first, $second),

@@ -79,7 +79,7 @@ class SS_ConfigStaticManifest {
 			$static = $this->statics[$class][$name];
 
 			if ($static['access'] != T_PRIVATE) {
-				Deprecation::notice('3.2.0', "Config static $class::\$$name must be marked as private",
+				Deprecation::notice('4.0', "Config static $class::\$$name must be marked as private",
 					Deprecation::SCOPE_GLOBAL);
 				// Don't warn more than once per static
 				$this->statics[$class][$name]['access'] = T_PRIVATE;
@@ -239,7 +239,7 @@ class SS_ConfigStaticManifest_Parser {
 		$depth = 0; $namespace = null; $class = null; $clsdepth = null; $access = 0;
 
 		while($token = $this->next()) {
-			$type = is_array($token) ? $token[0] : $token;
+			$type = ($token === (array)$token) ? $token[0] : $token;
 
 			if($type == T_CLASS) {
 				$next = $this->nextString();
@@ -302,7 +302,7 @@ class SS_ConfigStaticManifest_Parser {
 		$value = '';
 
 		while($token = $this->next()) {
-			$type = is_array($token) ? $token[0] : $token;
+			$type = ($token === (array)$token) ? $token[0] : $token;
 
 			if($type == T_PUBLIC || $type == T_PRIVATE || $type == T_PROTECTED) {
 				$access = $type;
@@ -320,15 +320,16 @@ class SS_ConfigStaticManifest_Parser {
 				// NOP
 			}
 			else {
-				user_error('Unexpected token when building static manifest: '.print_r($token, true), E_USER_ERROR);
+				user_error('Unexpected token ("' . token_name($type) . '") when building static manifest in class "'
+					. $class . '": '.print_r($token, true), E_USER_ERROR);
 			}
 		}
 
 		if($token == '=') {
 			$depth = 0;
 
-			while($token = $this->next(false)){
-				$type = is_array($token) ? $token[0] : $token;
+			while($token = ($this->pos >= $this->length) ? null : $this->tokens[$this->pos++]) {
+				$type = ($token === (array)$token) ? $token[0] : $token;
 
 				// Track array nesting depth
 				if($type == T_ARRAY || $type == '[') {
@@ -350,7 +351,7 @@ class SS_ConfigStaticManifest_Parser {
 					$value .= $class;
 				}
 				else {
-					$value .= is_array($token) ? $token[1] : $token;
+					$value .= ($token === (array)$token) ? $token[1] : $token;
 				}
 			}
 		}

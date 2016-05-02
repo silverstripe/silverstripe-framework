@@ -36,7 +36,7 @@ Make sure you know the basic concepts of PHP5 before attempting to follow the tu
 
 ## SilverStripe Concepts
 
-The [Developer Gudes](/developer_guides) contain more detailed documentation on certain SilverStripe topics, 'how to'
+The [Developer Guides](/developer_guides) contain more detailed documentation on certain SilverStripe topics, 'how to'
 examples and reference documentation.
 
 [CHILDREN Folder=02_Developer_Guides]

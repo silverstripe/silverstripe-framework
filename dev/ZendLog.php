@@ -4,10 +4,10 @@ require_once 'Zend/Log.php';
 /**
  * Extensions to Zend_Log to make it work nicer
  * with {@link SS_Log}.
- * 
+ *
  * Please refer to {@link SS_Log} for information on
  * setting up logging for your projects.
- * 
+ *
  * @package framework
  * @subpackage dev
  */

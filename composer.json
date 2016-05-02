@@ -16,14 +16,18 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.2,<7",
-		"composer/installers": "*"
+		"php": ">=5.3.3,<7",
+		"composer/installers": "~1.0"
 	},
 	"require-dev": {
-		"phpunit/PHPUnit": "~3.7@stable"
+		"phpunit/PHPUnit": "~3.7"
+	},
+	"extra": {
+		"branch-alias": {
+			"3.x-dev": "3.4.x-dev"
+		}
 	},
 	"autoload": {
 		"classmap": ["tests/behat/features/bootstrap"]	
-	},
-	"minimum-stability": "dev"
+	}
 }
