@@ -150,7 +150,7 @@ jQuery.noConflict();
 			}
 
 			// Show message (but ignore aborted requests)
-			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages) != -1) {
+			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages) === -1) {
 				// Decode into UTF-8, HTTP headers don't allow multibyte
 				statusMessage(decodeURIComponent(msg), msgType);
 			}
@@ -816,9 +816,9 @@ jQuery.noConflict();
 					sessionStates = sessionData ? JSON.parse(sessionData) : false;
 
 				this.find('.cms-tabset, .ss-tabset').each(function() {
-					var index, 
-						tabset = $(this), 
-						tabsetId = tabset.attr('id'), 
+					var index,
+						tabset = $(this),
+						tabsetId = tabset.attr('id'),
 						tab,
 						forcedTab = tabset.children('ul').children('li.ss-tabs-force-active');
 
