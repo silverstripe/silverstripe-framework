@@ -33,10 +33,6 @@ class Preview extends SilverStripeComponent {
             <button className="btn btn-secondary btn-secondary" type="button">
               <i className="font-icon-edit" /> Edit
             </button>
-            <button type="button" data-container="body" className="btn btn-link btn--options"
-              data-toggle="popover" title="Page actions" data-placement="top"
-              data-content="<a href=''>Add to campaign</a><a href=''>Remove from campaign</a>"
-            ><i className="font-icon-dot-3" /></button>
           </div>
         </div>
       </div>
