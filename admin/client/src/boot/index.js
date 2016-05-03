@@ -18,26 +18,6 @@ import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
 // eslint-disable-next-line no-unused-vars
 import CampaignAdmin from 'containers/CampaignAdmin/controller';
 
-/*
- * We're assigning instances to the `ss` namespace because singletons only
- * work within the context on a single Browserify bundle.
- *
- * For example - assume the `lib` bundle exposes a singleton called `register`.
- * If bundle `a` imports `register`, as an external dependency, then all modules
- * in bundle `a` will get the same copy of `register` when importing it.
- *
- * Likewise if bundle `b` imports `register` as an external dependency, all modules
- * in bundle `b` will get the same copy of `register`.
- *
- * However the copy of `register` available to all modules in bundle `a` is not
- * the same copy of `register` that's available to modules in bundle `b`.
- * Singletons only work within the context of a Browserify bundle but not across bundles.
- *
- * @TODO Look into SystemJS as a solution https://github.com/systemjs/systemjs
- */
-window.ss = window.ss || {};
-window.ss.router = router;
-
 function getBasePath() {
   const a = document.createElement('a');
   a.href = document.getElementsByTagName('base')[0].href;

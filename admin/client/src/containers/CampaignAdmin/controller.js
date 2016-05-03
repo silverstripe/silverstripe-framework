@@ -5,12 +5,13 @@ import { Provider } from 'react-redux';
 import ConfigHelpers from 'lib/Config';
 import CampaignAdmin from './CampaignAdmin';
 import * as CampaignActions from 'state/campaign/CampaignActions';
+import router from 'lib/Router';
 import routeRegister from 'lib/RouteRegister';
 
 document.addEventListener('DOMContentLoaded', () => {
   const config = ConfigHelpers.getSection('CampaignAdmin');
-  const baseRoute = window.ss.router.resolveURLToBase(config.route);
-  const viewRoute = window.ss.router.resolveURLToBase(config.campaignViewRoute);
+  const baseRoute = router.resolveURLToBase(config.route);
+  const viewRoute = router.resolveURLToBase(config.campaignViewRoute);
 
   routeRegister.add(`${baseRoute}*`, (ctx, next) => {
     // We have to manually select the section menu item because the legacy
