@@ -1,7 +1,7 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
-class AccordionItem extends SilverStripeComponent {
+class ListGroupItem extends SilverStripeComponent {
 
   constructor(props) {
     super(props);
@@ -24,9 +24,9 @@ class AccordionItem extends SilverStripeComponent {
   }
 }
 
-AccordionItem.propTypes = {
+ListGroupItem.propTypes = {
   handleClickArg: React.PropTypes.any,
   handleClick: React.PropTypes.func,
 };
 
-export default AccordionItem;
+export default ListGroupItem;

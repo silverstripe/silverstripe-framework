@@ -26,21 +26,7 @@ body.cms {
 	overflow: hidden;
 }
 
-.cms {
-	a {
-		color: $color-text-blue-link;
-		text-decoration: none;
 
-		&:hover,
-		&:focus {
-			text-decoration: underline;
-		}
-	}
-
-	strong {
-		font-weight: bold;
-	}
-}
 
 /** --------------------------------------------
  * Helpers
@@ -1081,12 +1067,17 @@ body.cms {
 
 /**
  * DEPRECATED:
- * .cms-content-tools will be removed in 4.0
+ * .cms-content-tools and ui-widget will be removed in 4.0
  * Use .cms-content-filters instead.
  *
  * Content Tools is the sidebar on the left of the main content
  * panel
  */
+
+.ui-widget-content a {
+	color: $link-color;
+}
+
 .cms-content-tools {
 	background: $tab-panel-texture-color;
 	width: $grid-x * 36;
