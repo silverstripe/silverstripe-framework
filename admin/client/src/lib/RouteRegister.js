@@ -8,7 +8,7 @@ import deepFreeze from 'deep-freeze';
 let register = deepFreeze({});
 
 /**
- * RouteRegister is the iterface developers should use to register routes with
+ * RouteRegister is the interface developers should use to register routes with
  * the main client application. Routes should not be registered with Page.js directly.
  *
  * Register routes using the `DOMContentLoaded` event in your controller file.
@@ -24,13 +24,36 @@ let register = deepFreeze({});
  * }
  * ```
  *
- * Any route callback you register will invoked _after_ passing through to top level wildcard route.
- * This route adds some custom properties to the `ctx` object which will be useful in your callback.
+ * This route callback will be invoked _after_ passing through a top level wildcard route
+ * defined in `appBoot` (see `/admin/client/src/boot/index.js`).
+ * The wildcard route adds custom properties to the `ctx` object which will be
+ * useful in your callback.
  *
  * `ctx.store` - [Redux store](http://redux.js.org/docs/api/Store.html) for the client application.
  *
- * All routes registered with `RouteRegister` are applied to Page.js by `appBoot()`
- * see `/admin/client/src/boot/index.js`.
+ * You can use `ctx.store` to create a React UI
+ *
+ * __controller.js__
+ * ```
+ * import React from 'react';
+ * import ReactDOM from 'react-dom';
+ * import { Provider } from 'react-redux';
+ * import routeRegister from 'lib/RouteRegister';
+ * import MySection from './MySection';
+ *
+ * document.addEventListener('DOMContentLoaded', () => {
+ *   routeRegister.add('/some/route', (ctx, next) => {
+ *       ReactDOM.render(
+ *         <Provider store={ctx.store}>
+ *           <MySection />
+ *         </Provider>
+ *         , document.getElementsByClassName('cms-content')[0]
+ *       );
+ *   });
+ * }
+ * ```
+ *
+ * All routes registered with `RouteRegister` are applied to Page.js in `appBoot()`
  *
  * Page.js doesn't provide a way to inspect which routes are registered
  * so you can use `RouteRegister` to do this using the `get` or `getAll` methods.
