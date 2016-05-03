@@ -18,7 +18,7 @@ let register = deepFreeze({});
  * import routeRegister from 'lib/RouteRegister';
  *
  * document.addEventListener('DOMContentLoaded', () => {
- *   routeRegister.add('', (ctx, next) => {
+ *   routeRegister.add('/some/route', (ctx, next) => {
  *     // Do stuff.
  *   });
  * }
