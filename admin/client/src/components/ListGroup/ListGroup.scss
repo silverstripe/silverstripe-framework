@@ -13,6 +13,7 @@
 	min-height: 64px;
 	cursor: pointer;
 	text-decoration: none;
+  transition: opacity .2s ease-in-out;
 
 	&:first-child {
 		border-top: none;
@@ -51,15 +52,8 @@
   transition: opacity .2s ease-in-out;
 }
 
-// Temp off for Alpha1
-.list-group-item:hover .list-group-item__info,
-.list-group-item.active .list-group-item__info {
-  opacity: 0;
-}
-
 .list-group-item--inactive {
   opacity: .6;
-	transition: opacity .2s ease-in-out;
 
   &:hover {
 		opacity: 1;
@@ -82,4 +76,10 @@
 
 .list-group-item--inactive:hover .list-group-item__status {
 	opacity: 1;
+}
+
+// Temp hide links for Alpha1 (change opacity to 1)
+.list-group-item:hover .list-group-item__info,
+.list-group-item.active .list-group-item__info {
+  opacity: 0;
 }
