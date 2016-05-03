@@ -652,8 +652,10 @@ class SS_ConfigManifest {
 	 * @return void
 	 */
 	public function mergeInYamlFragment(&$into, $fragment) {
-		foreach ($fragment as $k => $v) {
-			Config::merge_high_into_low($into[$k], $v);
+		if ($fragment) {
+			foreach ($fragment as $k => $v) {
+				Config::merge_high_into_low($into[$k], $v);
+			}
 		}
 	}
 
