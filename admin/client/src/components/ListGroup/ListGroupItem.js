@@ -1,5 +1,3 @@
-// TODO move to its own component list-group
-
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
