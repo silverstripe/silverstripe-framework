@@ -414,36 +414,119 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	/**
+	 * List of allowed schemes (no wildcard, all lower case) or empty to allow all schemes
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $fileurl_scheme_whitelist = array('http', 'https');
+
+	/**
+	 * List of allowed domains (no wildcard, all lower case) or empty to allow all domains
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $fileurl_domain_whitelist = array();
+
+	/**
+	 * Find local File dataobject given ID
+	 *
+	 * @param int $id
+	 * @return array
+	 */
+	protected function viewfile_getLocalFileByID($id) {
+		/** @var File $file */
+		$file = DataObject::get_by_id('File', $id);
+		if ($file && $file->canView()) {
+			return array($file, $file->getURL());
+		}
+		return [null, null];
+	}
+
+	/**
+	 * Get remote File given url
+	 *
+	 * @param string $fileUrl Absolute URL
+	 * @return array
+	 * @throws SS_HTTPResponse_Exception
+	 */
+	protected function viewfile_getRemoteFileByURL($fileUrl) {
+		if(!Director::is_absolute_url($fileUrl)) {
+			throw $this->getErrorFor(_t(
+				"HtmlEditorField_Toolbar.ERROR_ABSOLUTE",
+				"Only absolute urls can be embedded"
+			));
+		}
+		$scheme = strtolower(parse_url($fileUrl, PHP_URL_SCHEME));
+		$allowed_schemes = self::config()->fileurl_scheme_whitelist;
+		if (!$scheme || ($allowed_schemes && !in_array($scheme, $allowed_schemes))) {
+			throw $this->getErrorFor(_t(
+				"HtmlEditorField_Toolbar.ERROR_SCHEME",
+				"This file scheme is not included in the whitelist"
+			));
+		}
+		$domain = strtolower(parse_url($fileUrl, PHP_URL_HOST));
+		$allowed_domains = self::config()->fileurl_domain_whitelist;
+		if (!$domain || ($allowed_domains && !in_array($domain, $allowed_domains))) {
+			throw $this->getErrorFor(_t(
+				"HtmlEditorField_Toolbar.ERROR_HOSTNAME",
+				"This file hostname is not included in the whitelist"
+			));
+		}
+		return [null, $fileUrl];
+	}
+
+	/**
+	 * Prepare error for the front end
+	 *
+	 * @param string $message
+	 * @param int $code
+	 * @return SS_HTTPResponse_Exception
+	 */
+	protected function getErrorFor($message, $code = 400) {
+		$exception = new SS_HTTPResponse_Exception($message, $code);
+		$exception->getResponse()->addHeader('X-Status', $message);
+		return $exception;
+	}
+
+	/**
 	 * View of a single file, either on the filesystem or on the web.
 	 *
+	 * @throws SS_HTTPResponse_Exception
 	 * @param SS_HTTPRequest $request
 	 * @return string
 	 */
 	public function viewfile($request) {
-		// TODO Would be cleaner to consistently pass URL for both local and remote files,
-		// but GridField doesn't allow for this kind of metadata customization at the moment.
 		$file = null;
-		if($url = $request->getVar('FileURL')) {
-			// URLS should be used for remote resources (not local assets)
-			$url = Director::absoluteURL($url);
+		$url = null;
+		// Get file and url by request method
+		if($fileUrl = $request->getVar('FileURL')) {
+			// Get remote url
+			list($file, $url) = $this->viewfile_getRemoteFileByURL($fileUrl);
 		} elseif($id = $request->getVar('ID')) {
-			// Use local dataobject
-			$file = DataObject::get_by_id('File', $id);
-			if(!$file) {
-				throw new InvalidArgumentException("File could not be found");
-			}
-			$url = $file->getURL();
-			if(!$url) {
-				return $this->httpError(404, 'File not found');
-			}
+			// Or we could have been passed an ID directly
+			list($file, $url) = $this->viewfile_getLocalFileByID($id);
 		} else {
-			throw new LogicException('Need either "ID" or "FileURL" parameter to identify the file');
+			// Or we could have been passed nothing, in which case panic
+			throw $this->getErrorFor(_t(
+				"HtmlEditorField_Toolbar.ERROR_ID",
+				'Need either "ID" or "FileURL" parameter to identify the file'
+			));
+		}
+
+		// Validate file exists
+		if(!$url) {
+			throw $this->getErrorFor(_t(
+				"HtmlEditorField_Toolbar.ERROR_NOTFOUND",
+				'Unable to find file to view'
+			));
 		}
 
 		// Instanciate file wrapper and get fields based on its type
 		// Check if appCategory is an image and exists on the local system, otherwise use oEmbed to refference a
 		// remote image
-		$fileCategory = File::get_app_category(File::get_file_extension($url));
+		$fileCategory = $this->getFileCategory($url, $file);
 		switch($fileCategory) {
 			case 'image':
 			case 'image/supported':
@@ -456,10 +539,12 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 				// Only remote files can be linked via o-embed
 				// {@see HtmlEditorField_Toolbar::getAllowedExtensions())
 				if($file) {
-					throw new InvalidArgumentException(
+					throw $this->getErrorFor(_t(
+						"HtmlEditorField_Toolbar.ERROR_OEMBED_REMOTE",
 						"Oembed is only compatible with remote files"
-					);
+					));
 				}
+
 				// Other files should fallback to oembed
 				$fileWrapper = new HtmlEditorField_Embed($url, $file);
 				break;
@@ -473,9 +558,27 @@ class HtmlEditorField_Toolbar extends RequestHandler {
 	}
 
 	/**
+	 * Guess file category from either a file or url
+	 *
+	 * @param string $url
+	 * @param File $file
+	 * @return string
+	 */
+	protected function getFileCategory($url, $file) {
+		if($file) {
+			return $file->appCategory();
+		}
+		if($url) {
+			return File::get_app_category(File::get_file_extension($url));
+		}
+		return null;
+	}
+
+	/**
 	 * Find all anchors available on the given page.
 	 *
 	 * @return array
+	 * @throws SS_HTTPResponse_Exception
 	 */
 	public function getanchors() {
 		$id = (int)$this->getRequest()->getVar('PageID');
