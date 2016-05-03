@@ -1,0 +1,17 @@
+// Campaign items which have linked assications
+.campaign-admin__item-links--has-links,
+.campaign-admin__item-links--is-linked {
+	color: $brand-primary;
+	float: right;
+	position: absolute;
+	right: $spacer-y;
+	top: 27px;
+  font-size: $font-size-sm;
+
+	&::before {
+		font-size: 16px;
+		position: relative;
+		top: 3px;
+		margin-right: 1px;
+	}
+}

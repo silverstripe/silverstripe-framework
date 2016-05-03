@@ -41,10 +41,9 @@ class CampaignAdminItem extends SilverStripeComponent {
 
     // Linked items
     let links = (
-      <span className="list-group-item--has-links">
-        <i className="font-icon-link" />
-        3 linked items
-      </span>
+      <span
+        className="list-group-item__info campaign-admin__item-links--has-links font-icon-link"
+      >3 linked items</span>
     );
 
     // Thumbnail
@@ -60,7 +59,9 @@ class CampaignAdminItem extends SilverStripeComponent {
       <div>
         {thumbnail}
         <h4 className="list-group-item-heading">{item.Title}</h4>
-        <span className="list-group-item--is-linked"><i className="font-icon-link"></i></span>
+        <span
+          className="list-group-item__info campaign-admin__item-links--is-linked font-icon-link"
+        ></span>
         {links}
         {badge.className && badge.Title &&
           <span className={badge.className}>{badge.Title}</span>

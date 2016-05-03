@@ -81,7 +81,7 @@ class CampaignAdminList extends SilverStripeComponent {
         // Add extra css class for published items
         const itemClassNames = [];
         if (item.ChangeType === 'none' || campaign.State === 'published') {
-          itemClassNames.push('list-group-item--published');
+          itemClassNames.push('list-group-item--inactive');
         }
         if (selected) {
           itemClassNames.push('active');
