@@ -329,7 +329,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
             label: props.title,
             icon: 'save',
             loading: typeof form !== 'undefined' ? form.submitting : false,
-            bootstrapButtonStyle: 'success',
+            bootstrapButtonStyle: 'primary',
           }, props));
           break;
         case 'action_cancel':

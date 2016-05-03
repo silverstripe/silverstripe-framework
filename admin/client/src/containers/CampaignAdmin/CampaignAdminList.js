@@ -155,7 +155,7 @@ class CampaignAdminList extends SilverStripeComponent {
     if (this.props.record.State === 'open') {
       actionProps = Object.assign(actionProps, {
         label: i18n._t('Campaigns.PUBLISHCAMPAIGN'),
-        bootstrapButtonStyle: 'success',
+        bootstrapButtonStyle: 'primary',
         loading: this.props.campaign.isPublishing,
         handleClick: this.handlePublish,
         icon: 'rocket',
