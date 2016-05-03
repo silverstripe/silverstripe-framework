@@ -8,6 +8,8 @@
  * @package framework
  * @subpackage search
  */
+
+use SilverStripe\Model\DataQuery;
 abstract class SearchFilter extends Object {
 
 	/**
@@ -165,7 +167,7 @@ abstract class SearchFilter extends Object {
 			return $this->name;
 		}
 		// Ensure that we're dealing with a DataObject.
-		if (!is_subclass_of($this->model, 'DataObject')) {
+		if (!is_subclass_of($this->model, 'SilverStripe\Model\DataObject')) {
 			throw new InvalidArgumentException(
 				"Model supplied to " . get_class($this) . " should be an instance of DataObject."
 			);
@@ -176,7 +178,7 @@ abstract class SearchFilter extends Object {
 			$this->name
 		);
 
-		if($candidateClass == 'DataObject') {
+		if($candidateClass == 'SilverStripe\Model\DataObject') {
 			// fallback to the provided name in the event of a joined column
 			// name (as the candidate class doesn't check joined records)
 			$parts = explode('.', $this->fullName);

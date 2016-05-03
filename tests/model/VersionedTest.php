@@ -1,6 +1,10 @@
 <?php
 
 use SilverStripe\Model\FieldType\DBDatetime;
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataExtension;
+
 
 /**
  * @package framework

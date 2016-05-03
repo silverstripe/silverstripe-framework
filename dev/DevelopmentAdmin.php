@@ -13,6 +13,8 @@
  * @package framework
  * @subpackage dev
  */
+
+use SilverStripe\Model\DatabaseAdmin;
 class DevelopmentAdmin extends Controller {
 
 	private static $url_handlers = array(

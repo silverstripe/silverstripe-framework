@@ -9,6 +9,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class SearchFilterApplyRelationTest extends SapphireTest {
 
 	protected static $fixture_file = 'SearchFilterApplyRelationTest.yml';

@@ -2,10 +2,12 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use ArrayLib;
 use DropdownField;
 use Config;
+use SilverStripe\Model\DB;
+
 
 /**
  * Class Enum represents an enumeration of a set of strings.
@@ -82,8 +84,8 @@ class DBEnum extends DBString {
 	 * @return void
 	 */
 	public function requireField() {
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 
 		$parts = array(
 			'datatype' => 'enum',

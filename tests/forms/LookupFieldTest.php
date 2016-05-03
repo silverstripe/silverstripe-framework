@@ -5,6 +5,8 @@
  * @subpackage tests
  */
 
+
+use SilverStripe\Model\DataObject;
 class LookupFieldTest extends SapphireTest {
 
 	protected static $fixture_file = 'LookupFieldTest.yml';

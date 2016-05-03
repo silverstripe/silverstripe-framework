@@ -4,6 +4,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class NumericFieldTest extends SapphireTest {
 
 	protected $usesDatabase = false;

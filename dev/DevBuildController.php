@@ -1,5 +1,7 @@
 <?php
 
+
+use SilverStripe\Model\DatabaseAdmin;
 class DevBuildController extends Controller {
 
 	private static $url_handlers = array(

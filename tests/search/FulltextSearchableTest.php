@@ -21,7 +21,7 @@ class FulltextSearchableTest extends SapphireTest {
 		parent::tearDown();
 
 		File::remove_extension('FulltextSearchable');
-		Config::inst()->update('File', 'create_table_options', array('MySQLDatabase' => 'ENGINE=InnoDB'));
+		Config::inst()->update('File', 'create_table_options', array('SilverStripe\Model\Connect\MySQLDatabase' => 'ENGINE=InnoDB'));
 	}
 
 	public function testEnable() {

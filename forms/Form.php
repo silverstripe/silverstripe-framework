@@ -43,6 +43,8 @@
  * @package forms
  * @subpackage core
  */
+
+use SilverStripe\Model\DataObjectInterface;
 class Form extends RequestHandler {
 
 	const ENC_TYPE_URLENCODED = 'application/x-www-form-urlencoded';

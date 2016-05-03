@@ -1,13 +1,19 @@
 <?php
 
 namespace SilverStripe\Model\Connect;
+use PDOStatement;
+use PDO;
+
+use SilverStripe\Model\Connect\Query;
+
+
 
 /**
  * A result-set from a PDO database.
  * @package framework
  * @subpackage model
  */
-class PDOQuery extends SS_Query {
+class PDOQuery extends Query {
 	/**
 	 * The internal MySQL handle that points to the result set.
 	 * @var PDOStatement

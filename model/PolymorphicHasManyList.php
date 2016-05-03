@@ -1,6 +1,10 @@
 <?php
 
 namespace SilverStripe\Model;
+use ClassInfo;
+use Convert;
+use InvalidArgumentException;
+
 
 /**
  * Represents a has_many list linked against a polymorphic relationship

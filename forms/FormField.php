@@ -27,6 +27,8 @@
  * @package forms
  * @subpackage core
  */
+
+use SilverStripe\Model\DataObjectInterface;
 class FormField extends RequestHandler {
 
 	/** @see $schemaDataType */

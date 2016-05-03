@@ -10,6 +10,8 @@
  * @package framework
  * @subpackage control
  */
+
+use SilverStripe\Model\DataModel;
 interface RequestFilter {
 
 	/**

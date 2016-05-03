@@ -1,5 +1,7 @@
 <?php
 
+
+use SilverStripe\Model\DataObject;
 class DataObjectDuplicationTest extends SapphireTest {
 
 	protected $usesDatabase = true;

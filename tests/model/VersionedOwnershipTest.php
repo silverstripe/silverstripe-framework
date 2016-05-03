@@ -3,6 +3,8 @@
 /**
  * Tests ownership API of versioned DataObjects
  */
+
+use SilverStripe\Model\DataObject;
 class VersionedOwnershipTest extends SapphireTest {
 
 	protected $extraDataObjects = array(

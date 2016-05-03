@@ -7,6 +7,9 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
 class SQLUpdateTest extends SapphireTest {
 
 	public static $fixture_file = 'SQLUpdateTest.yml';

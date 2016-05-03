@@ -6,6 +6,10 @@
  * @package framework
  * @subpackage admin
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
 class CMSBatchActionHandler extends RequestHandler {
 
 	/** @config */

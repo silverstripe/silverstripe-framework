@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class MemberCsvBulkLoaderTest extends SapphireTest {
 	protected static $fixture_file = 'MemberCsvBulkLoaderTest.yml';
 

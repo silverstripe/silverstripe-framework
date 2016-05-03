@@ -5,6 +5,8 @@
  * @package framework
  * @subpackage security
  */
+
+use SilverStripe\Model\DataObject;
 class GroupCsvBulkLoader extends CsvBulkLoader {
 
 	public $duplicateChecks = array(

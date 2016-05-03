@@ -6,6 +6,8 @@
  * @mixin Versioned
  * @mixin DataObject
  */
+
+use SilverStripe\Model\DataObject;
 trait ChangeSetTest_Permissions {
 	public function canEdit($member = null) {
 		return $this->can(__FUNCTION__, $member);

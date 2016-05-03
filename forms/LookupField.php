@@ -9,6 +9,8 @@
  * @package forms
  * @subpackage fields-basic
  */
+
+use SilverStripe\Model\DataObjectInterface;
 class LookupField extends MultiSelectField {
 
 	/**

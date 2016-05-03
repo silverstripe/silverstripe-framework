@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Model\DB;
+
 
 /**
  * Service to help migrate File dataobjects to the new APL.

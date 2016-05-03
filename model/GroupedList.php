@@ -1,6 +1,9 @@
 <?php
 
 namespace SilverStripe\Model;
+use ArrayData;
+use SS_ListDecorator;
+
 
 /**
  * A list decorator that allows a list to be grouped into sub-lists by common

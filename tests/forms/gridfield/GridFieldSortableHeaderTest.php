@@ -4,6 +4,9 @@
  * @subpackage tests
  */
 
+
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\DataObject;
 class GridFieldSortableHeaderTest extends SapphireTest {
 
 	protected static $fixture_file = 'GridFieldSortableHeaderTest.yml';

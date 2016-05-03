@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\HTMLValue;
+
 /**
  * Sanitises an HTMLValue so it's contents are the elements and attributes that are whitelisted
  * using the same configuration as TinyMCE
@@ -245,7 +247,7 @@ class HTMLEditorSanitiser {
 	 *
 	 * @param SS_HTMLValue $html - The HTMLValue to remove any non-whitelisted elements & attributes from
 	 */
-	public function sanitise (SS_HTMLValue $html) {
+	public function sanitise (HTMLValue $html) {
 		if(!$this->elements && !$this->elementPatterns) return;
 
 		$doc = $html->getDocument();

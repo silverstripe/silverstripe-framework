@@ -16,6 +16,8 @@
  * @see Director::$rules
  * @see Director::$environment_type
  */
+
+use SilverStripe\Model\DataModel;
 class Director implements TemplateGlobalProvider {
 
 	/**

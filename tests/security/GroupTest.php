@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class GroupTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GroupTest.yml';

@@ -2,12 +2,15 @@
 
 namespace SilverStripe\Filesystem;
 
-use DataObject;
+
 use Injector;
 use Member;
 use Versioned;
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\Filesystem\Storage\DBFile;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataExtension;
+
 
 /**
  * This class provides the necessary business logic to ensure that any assets attached
@@ -24,7 +27,7 @@ use SilverStripe\Filesystem\Storage\DBFile;
  *
  * @property DataObject|Versioned $owner A {@see DataObject}, potentially decorated with {@see Versioned} extension.
  */
-class AssetControlExtension extends \DataExtension
+class AssetControlExtension extends DataExtension
 {
 
 	/**

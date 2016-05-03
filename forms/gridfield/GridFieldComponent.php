@@ -6,6 +6,9 @@
  * @package forms
  * @subpackage fields-gridfield
  */
+
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\DataObjectInterface;
 interface GridFieldComponent {
 }
 

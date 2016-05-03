@@ -19,6 +19,8 @@
  * @package forms
  * @subpackage fields-gridfield
  */
+
+use SilverStripe\Model\ArrayList;
 class GridFieldConfig extends Object {
 
 	/**

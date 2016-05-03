@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class EncryptAllPasswordsTaskTest extends SapphireTest {
 	public function testRun() {
 		$m = new Member();

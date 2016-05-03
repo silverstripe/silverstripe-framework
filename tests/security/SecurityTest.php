@@ -2,6 +2,9 @@
 
 use SilverStripe\Model\FieldType\DBDatetime;
 use SilverStripe\Model\FieldType\DBClassName;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DB;
+
 
 /**
  * Test the security class, including log-in form, change password form, etc

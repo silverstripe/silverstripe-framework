@@ -1,6 +1,14 @@
 <?php
 
 namespace SilverStripe\Model\Connect;
+use SQLExpression;
+use SQLSelect;
+use SQLDelete;
+use SQLInsert;
+use SQLUpdate;
+use SQLConditionalExpression;
+use InvalidArgumentException;
+
 
 /**
  * Builds a SQL query string from a SQLExpression object

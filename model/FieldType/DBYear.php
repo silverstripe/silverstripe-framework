@@ -2,8 +2,10 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use DropdownField;
+use SilverStripe\Model\DB;
+
 
 /**
  * @package framework

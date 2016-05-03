@@ -4,11 +4,13 @@
  * @subpackage tests
  */
 
+
+use SilverStripe\Model\ArrayList;
 class GridFieldConfigTest extends SapphireTest {
 
 	public function testGetComponents() {
 		$config = GridFieldConfig::create();
-		$this->assertInstanceOf('ArrayList', $config->getComponents());
+		$this->assertInstanceOf('SilverStripe\Model\ArrayList', $config->getComponents());
 		$this->assertEquals($config->getComponents()->Count(), 0);
 
 		$config

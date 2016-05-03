@@ -9,6 +9,11 @@
  * @package forms
  * @subpackage fields-gridfield
  */
+
+use SilverStripe\Model\Sortable;
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\DataObject;
 class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
 
 	/**
@@ -46,7 +51,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	 * Returns false if it's a bad data type, and if appropriate, throws an exception.
 	 */
 	protected function checkDataType($dataList) {
-		if($dataList instanceof SS_Sortable) {
+		if($dataList instanceof Sortable) {
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {

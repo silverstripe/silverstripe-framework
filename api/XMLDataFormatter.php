@@ -3,6 +3,10 @@
  * @package framework
  * @subpackage formatters
  */
+
+use SilverStripe\Model\DataObjectInterface;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\SS_List;
 class XMLDataFormatter extends DataFormatter {
 
 	/**

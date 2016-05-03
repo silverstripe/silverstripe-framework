@@ -1,5 +1,9 @@
 <?php
 
+
+use SilverStripe\Model\DataQuery;
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
 class DataQueryTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataQueryTest.yml';
@@ -329,7 +333,7 @@ class DataQueryTest_C extends DataObject implements TestOnly {
 class DataQueryTest_D extends DataObject implements TestOnly {
 
 	private static $has_one = array(
-		'Relation' => 'DataQueryTest_B',
+		'SilverStripe\Model\Relation' => 'DataQueryTest_B',
 	);
 }
 

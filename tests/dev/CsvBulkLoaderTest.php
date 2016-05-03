@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * @package framework

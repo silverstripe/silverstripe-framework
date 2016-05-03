@@ -1,6 +1,8 @@
 <?php
 
 
+
+use SilverStripe\Model\DataObject;
 class GridFieldPrintButtonTest extends SapphireTest {
 
 	protected $extraDataObjects = array(

@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Model\DataObject;
 require_once 'Zend/Translate.php';
 
 /**

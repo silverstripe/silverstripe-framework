@@ -19,6 +19,8 @@
  * @method HasManyList Codes() List of PermissionRoleCode objects
  * @method ManyManyList Groups() List of Group objects
  */
+
+use SilverStripe\Model\DataObject;
 class PermissionRole extends DataObject {
 	private static $db = array(
 		"Title" => "Varchar",

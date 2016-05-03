@@ -3,6 +3,8 @@
 // namespace SilverStripe\Framework\Model\Versioning
 
 use SilverStripe\Filesystem\Thumbnail;
+use SilverStripe\Model\DataObject;
+
 
 
 /**
@@ -47,7 +49,7 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 
 	private static $has_one = array(
 		'ChangeSet' => 'ChangeSet',
-		'Object'      => 'DataObject',
+		'Object'      => 'SilverStripe\Model\DataObject',
 	);
 
 	private static $many_many = array(

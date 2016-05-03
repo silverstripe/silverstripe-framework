@@ -9,6 +9,16 @@
  */
 
 namespace SilverStripe\Model\Connect;
+use Director;
+use Debug;
+use SQLUpdate;
+use SQLInsert;
+use BadMethodCallException;
+use Deprecation;
+use SQLExpression;
+use Exception;
+
+
 
 
 abstract class Database {

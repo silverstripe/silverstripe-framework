@@ -6,6 +6,8 @@
  * @package framework
  * @subpackage model
  */
+
+use SilverStripe\Model\SS_List;
 class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 
 	protected $list, $keyField, $valueField;

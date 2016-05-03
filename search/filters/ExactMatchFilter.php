@@ -13,6 +13,9 @@
  * @package framework
  * @subpackage search
  */
+
+use SilverStripe\Model\DataQuery;
+use SilverStripe\Model\DB;
 class ExactMatchFilter extends SearchFilter {
 
 	public function setModifiers(array $modifiers) {

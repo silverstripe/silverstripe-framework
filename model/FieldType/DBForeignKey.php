@@ -2,11 +2,14 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DataList;
+
 use UploadField;
 use DropdownField;
 use NumericField;
-use DataObject;
+
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * A special type Int field used for foreign keys in has_one relationships.

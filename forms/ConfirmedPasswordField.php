@@ -9,6 +9,9 @@
  * @package forms
  * @subpackage fields-formattedinput
  */
+
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataObjectInterface;
 class ConfirmedPasswordField extends FormField {
 
 	/**

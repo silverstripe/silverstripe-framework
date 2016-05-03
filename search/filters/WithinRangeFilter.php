@@ -12,6 +12,8 @@
  * @package framework
  * @subpackage search
  */
+
+use SilverStripe\Model\DataQuery;
 class WithinRangeFilter extends SearchFilter {
 
 	private $min;

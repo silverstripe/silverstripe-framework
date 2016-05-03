@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Model\ArrayList;
 require_once('HTML/HTMLBBCodeParser.php');
 /*Seting up the PEAR bbcode parser*/
 $config = parse_ini_file('BBCodeParser.ini', true);

@@ -4,6 +4,9 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataModel;
+use SilverStripe\Model\DataObject;
 class FormTest extends FunctionalTest {
 
 	protected static $fixture_file = 'FormTest.yml';

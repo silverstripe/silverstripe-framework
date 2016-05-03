@@ -2,10 +2,13 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DataList;
+
 use DropdownField;
-use DB;
-use DataObject;
+
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * A special type Int field used for primary keys.

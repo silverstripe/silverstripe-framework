@@ -2,6 +2,8 @@
 
 use Filesystem as SS_Filesystem;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * Tests for the File class

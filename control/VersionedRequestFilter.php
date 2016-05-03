@@ -6,6 +6,8 @@
  * @package framework
  * @subpackage control
  */
+
+use SilverStripe\Model\DataModel;
 class VersionedRequestFilter implements RequestFilter {
 
 	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {

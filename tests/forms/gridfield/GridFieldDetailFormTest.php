@@ -4,6 +4,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class GridFieldDetailFormTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GridFieldDetailFormTest.yml';

@@ -4,6 +4,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataExtension;
 class CMSProfileControllerTest extends FunctionalTest {
 
 	protected static $fixture_file = 'CMSProfileControllerTest.yml';

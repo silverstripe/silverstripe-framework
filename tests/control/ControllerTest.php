@@ -1,5 +1,7 @@
 <?php
 
+
+use SilverStripe\Model\DataModel;
 class ControllerTest extends FunctionalTest {
 
 	protected static $fixture_file = 'ControllerTest.yml';

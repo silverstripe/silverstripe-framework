@@ -4,6 +4,8 @@
  * @package framework
  * @subpackage admin
  */
+
+use SilverStripe\Model\DataModel;
 class AdminRootController extends Controller {
 
 	/**

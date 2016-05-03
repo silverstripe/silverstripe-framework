@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\Model\Relation;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataObjectInterface;
+
 
 /**
  * Represents a SelectField that may potentially have multiple selections, and may have

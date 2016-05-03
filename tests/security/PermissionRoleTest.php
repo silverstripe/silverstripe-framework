@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class PermissionRoleTest extends FunctionalTest {
 	protected static $fixture_file = 'PermissionRoleTest.yml';
 

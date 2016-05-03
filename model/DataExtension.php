@@ -1,6 +1,13 @@
 <?php
 
 namespace SilverStripe\Model;
+use Exception;
+use ValidationResult;
+use SQLSelect;
+use FieldList;
+use Config;
+use Extension;
+
 
 /**
  * An extension that adds additional functionality to a {@link DataObject}.

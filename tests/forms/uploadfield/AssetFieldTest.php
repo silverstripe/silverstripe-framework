@@ -4,6 +4,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class AssetFieldTest extends FunctionalTest {
 
 	protected static $fixture_file = 'AssetFieldTest.yml';

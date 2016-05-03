@@ -24,6 +24,8 @@
  *
  * @todo Add support for databases besides MySQL
  */
+
+use SilverStripe\Model\DataQuery;
 class FulltextFilter extends SearchFilter {
 
 	protected function applyOne(DataQuery $query) {

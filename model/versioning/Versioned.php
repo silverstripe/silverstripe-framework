@@ -13,6 +13,15 @@
  * @package framework
  * @subpackage model
  */
+
+use SilverStripe\Model\DataQuery;
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataDifferencer;
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\DataExtension;
+use SilverStripe\Model\SS_List;
 class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 	/**
@@ -1029,7 +1038,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				if(!$ownedClass) {
 					continue;
 				}
-				if($ownedClass === 'DataObject') {
+				if($ownedClass === 'SilverStripe\Model\DataObject') {
 					throw new LogicException(sprintf(
 						"Relation %s on class %s cannot be owned as it is polymorphic",
 						$owned, $class
@@ -1380,7 +1389,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function canBeVersioned($table) {
 		return ClassInfo::exists($table)
-			&& is_subclass_of($table, 'DataObject')
+			&& is_subclass_of($table, 'SilverStripe\Model\DataObject')
 			&& DataObject::has_own_table($table);
 	}
 
@@ -2150,7 +2159,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return DataList A modified DataList designated to the specified stage
 	 */
 	public static function get_by_stage(
-		$class, $stage, $filter = '', $sort = '', $join = '', $limit = null, $containerClass = 'DataList'
+		$class, $stage, $filter = '', $sort = '', $join = '', $limit = null, $containerClass = 'SilverStripe\Model\DataList'
 	) {
 		$result = DataObject::get($class, $filter, $sort, $join, $limit, $containerClass);
 		return $result->setDataQueryParam(array(

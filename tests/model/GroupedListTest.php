@@ -5,6 +5,9 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\GroupedList;
 class GroupedListTest extends SapphireTest {
 
 	public function testGroupBy() {

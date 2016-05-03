@@ -12,6 +12,8 @@
  *
  * @method Member Member() Owner of the password
  */
+
+use SilverStripe\Model\DataObject;
 class MemberPassword extends DataObject {
 	private static $db = array(
 		'Password' => 'Varchar(160)',

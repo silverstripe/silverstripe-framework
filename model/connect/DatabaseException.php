@@ -1,6 +1,8 @@
 <?php
 
 namespace SilverStripe\Model\Connect;
+use Exception;
+
 
 /**
  * Error class for database exceptions

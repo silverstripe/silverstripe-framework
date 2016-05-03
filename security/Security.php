@@ -4,6 +4,10 @@
  * @package framework
  * @subpackage security
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
 class Security extends Controller implements TemplateGlobalProvider {
 
 	private static $allowed_actions = array(

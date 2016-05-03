@@ -6,6 +6,8 @@
  *
  * @subpackage control
  */
+
+use SilverStripe\Model\DataModel;
 class FlushRequestFilter implements RequestFilter {
 
 	/**

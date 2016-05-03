@@ -104,7 +104,7 @@ class FormScaffolder extends Object {
 		if($this->obj->hasOne()) {
 			foreach($this->obj->hasOne() as $relationship => $component) {
 				if($this->restrictFields && !in_array($relationship, $this->restrictFields)) continue;
-				$fieldName = $component === 'DataObject'
+				$fieldName = $component === 'SilverStripe\Model\DataObject'
 					? $relationship // Polymorphic has_one field is composite, so don't refer to ID subfield
 					: "{$relationship}ID";
 				if($this->fieldClasses && isset($this->fieldClasses[$fieldName])) {

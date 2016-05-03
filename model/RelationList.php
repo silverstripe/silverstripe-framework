@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Model\Relation;
+use SilverStripe\Model\DataList;
+
 
 /**
  * A DataList that represents a relation.

@@ -43,6 +43,10 @@
  * @package forms
  * @subpackage fields-relational
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataObjectInterface;
 class TreeMultiselectField extends TreeDropdownField {
 	public function __construct($name, $title=null, $sourceObject="Group", $keyField="ID", $labelField="Title") {
 		parent::__construct($name, $title, $sourceObject, $keyField, $labelField);

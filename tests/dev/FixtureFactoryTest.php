@@ -4,6 +4,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class FixtureFactoryTest extends SapphireTest {
 
 	protected $usesDatabase = true;

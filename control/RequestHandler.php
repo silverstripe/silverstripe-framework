@@ -33,6 +33,8 @@
  * @package framework
  * @subpackage control
  */
+
+use SilverStripe\Model\DataModel;
 class RequestHandler extends ViewableData {
 
 	/**

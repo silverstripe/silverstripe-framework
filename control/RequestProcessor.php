@@ -6,6 +6,8 @@
  * @package framework
  * @subpackage control
  */
+
+use SilverStripe\Model\DataModel;
 class RequestProcessor implements RequestFilter {
 
 	/**

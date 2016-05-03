@@ -8,6 +8,9 @@
  * @package framework
  * @subpackage core
  */
+
+use SilverStripe\Model\DataModel;
+use SilverStripe\Model\DB;
 class FixtureBlueprint {
 
 	/**
@@ -46,7 +49,7 @@ class FixtureBlueprint {
 	public function __construct($name, $class = null, $defaults = array()) {
 		if(!$class) $class = $name;
 
-		if(!is_subclass_of($class, 'DataObject')) {
+		if(!is_subclass_of($class, 'SilverStripe\Model\DataObject')) {
 			throw new InvalidArgumentException(sprintf(
 				'Class "%s" is not a valid subclass of DataObject',
 				$class
@@ -72,7 +75,7 @@ class FixtureBlueprint {
 		// which they are imported doesnt guarantee valid relations until after the import is complete.
 		// Also disable filesystem manipulations
 		Config::nest();
-		Config::inst()->update('DataObject', 'validation_enabled', false);
+		Config::inst()->update('SilverStripe\Model\DataObject', 'validation_enabled', false);
 		Config::inst()->update('File', 'update_filesystem', false);
 
 		$this->invokeCallbacks('beforeCreate', array($identifier, &$data, &$fixtures));
@@ -182,7 +185,7 @@ class FixtureBlueprint {
 					if($className = $obj->hasOneComponent($hasOneField)) {
 						$obj->{$hasOneField.'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
 						// Inject class for polymorphic relation
-						if($className === 'DataObject') {
+						if($className === 'SilverStripe\Model\DataObject') {
 							$obj->{$hasOneField.'Class'} = $fieldClass;
 						}
 					}

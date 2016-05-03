@@ -4,6 +4,10 @@
  * @subpackage tests
  */
 
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\DataObject;
 class DataObjectLazyLoadingTest extends SapphireTest {
 
 	protected static $fixture_file = array(

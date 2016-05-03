@@ -1,6 +1,8 @@
 <?php
 
 use Filesystem as SS_Filesystem;
+use SilverStripe\Model\DataExtension;
+
 
 /**
  * Ensures that File dataobjects can be safely migrated from 3.x

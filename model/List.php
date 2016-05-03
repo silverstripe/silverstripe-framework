@@ -1,6 +1,10 @@
 <?php
 
 namespace SilverStripe\Model;
+use ArrayAccess;
+use Countable;
+use IteratorAggregate;
+
 
 /**
  * An interface that a class can implement to be treated as a list container.

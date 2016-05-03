@@ -6,7 +6,7 @@ use  ModelAdmin;
 use Controller  as  Cont ;
 use SS_HTTPRequest as Request,SS_HTTPResponse AS Response, PermissionProvider AS P;
 use silverstripe\test\ClassA;
-use \DataObject;
+
 
 class ClassI extends ModelAdmin implements P {
 }

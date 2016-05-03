@@ -1,6 +1,8 @@
 <?php
 
 // Not actually a data object, we just want a ViewableData object that's just for us
+
+use SilverStripe\Model\DataObject;
 class SSViewerCacheBlockTest_Model extends DataObject implements TestOnly {
 
 	public function Test($arg = null) {

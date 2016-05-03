@@ -3,6 +3,8 @@
 /**
  * Test the API for creating GridField_URLHandler compeonnts
  */
+
+use SilverStripe\Model\ArrayList;
 class GridField_URLHandlerTest extends FunctionalTest {
 	public function testFormSubmission() {
 		$result = $this->get("GridField_URLHandlerTest_Controller/Form/field/Grid/showform");

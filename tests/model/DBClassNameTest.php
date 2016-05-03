@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Model\FieldType\DBClassName;
+use SilverStripe\Model\DataObject;
+
 
 class DBClassNameTest extends SapphireTest {
 
@@ -63,9 +65,9 @@ class DBClassNameTest extends SapphireTest {
 	 */
 	public function testBaseClassDetection() {
 		// Explicit DataObject
-		$field1 = new DBClassName('MyClass', 'DataObject');
-		$this->assertEquals('DataObject', $field1->getBaseClass());
-		$this->assertNotEquals('DataObject', $field1->getDefault());
+		$field1 = new DBClassName('MyClass', 'SilverStripe\Model\DataObject');
+		$this->assertEquals('SilverStripe\Model\DataObject', $field1->getBaseClass());
+		$this->assertNotEquals('SilverStripe\Model\DataObject', $field1->getDefault());
 
 		// Explicit base class
 		$field2 = new DBClassName('MyClass', 'DBClassNameTest_Object');
@@ -86,14 +88,14 @@ class DBClassNameTest extends SapphireTest {
 
 		// Missing
 		$field5 = new DBClassName('MyClass');
-		$this->assertEquals('DataObject', $field5->getBaseClass());
-		$this->assertNotEquals('DataObject', $field5->getDefault());
+		$this->assertEquals('SilverStripe\Model\DataObject', $field5->getBaseClass());
+		$this->assertNotEquals('SilverStripe\Model\DataObject', $field5->getDefault());
 
 		// Invalid class
 		$field6 = new DBClassName('MyClass');
 		$field6->setTable('InvalidTable');
-		$this->assertEquals('DataObject', $field6->getBaseClass());
-		$this->assertNotEquals('DataObject', $field6->getDefault());
+		$this->assertEquals('SilverStripe\Model\DataObject', $field6->getBaseClass());
+		$this->assertNotEquals('SilverStripe\Model\DataObject', $field6->getDefault());
 
 		// Custom default_classname
 		$field7 = new DBClassName('MyClass');

@@ -1,6 +1,9 @@
 <?php
 
 namespace SilverStripe\Model\Connect;
+use Convert;
+use Iterator;
+
 
 /**
  * Abstract query-result class.

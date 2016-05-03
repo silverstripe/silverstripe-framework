@@ -11,6 +11,8 @@
  * @package framework
  * @subpackage security
  */
+
+use SilverStripe\Model\DB;
 abstract class PasswordEncryptor {
 
 	/**

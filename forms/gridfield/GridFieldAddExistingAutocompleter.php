@@ -18,6 +18,11 @@
  * @package forms
  * @subpackage fields-gridfield
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataList;
 class GridFieldAddExistingAutocompleter
 	implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 

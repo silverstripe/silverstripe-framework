@@ -4,6 +4,9 @@
  * @package framework
  * @subpackage admin
  */
+
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\ArrayList;
 class CMSProfileController extends LeftAndMain {
 
 	private static $url_segment = 'myprofile';

@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class DatetimeFieldTest extends SapphireTest {
 
 	public function setUp() {

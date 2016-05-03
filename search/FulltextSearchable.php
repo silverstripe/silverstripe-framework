@@ -14,6 +14,9 @@
  * @package framework
  * @subpackage search
  */
+
+use SilverStripe\Model\Connect\MySQLSchemaManager;
+use SilverStripe\Model\DataExtension;
 class FulltextSearchable extends DataExtension {
 
 	/**

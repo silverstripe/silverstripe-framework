@@ -2,10 +2,12 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use NullableField;
 use TextField;
 use Config;
+use SilverStripe\Model\DB;
+
 
 /**
  * Class Varchar represents a variable-length string of up to 255 characters, designed to store raw text
@@ -58,8 +60,8 @@ class DBVarchar extends DBString {
  	 * @see DBField::requireField()
  	 */
 	public function requireField() {
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 
 		$parts = array(
 			'datatype'=>'varchar',

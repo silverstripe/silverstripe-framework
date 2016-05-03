@@ -2,13 +2,15 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use HTTP;
 use Convert;
 use NullableField;
 use TextareaField;
 use TextField;
 use Config;
+use SilverStripe\Model\DB;
+
 
 /**
  * Represents a variable-length string of up to 2 megabytes, designed to store raw text
@@ -48,8 +50,8 @@ class DBText extends DBString {
  	 * @see DBField::requireField()
  	 */
 	public function requireField() {
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 
 		$parts = array(
 			'datatype' => 'mediumtext',

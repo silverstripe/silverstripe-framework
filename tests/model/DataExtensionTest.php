@@ -1,5 +1,8 @@
 <?php
 
+
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataExtension;
 class DataExtensionTest extends SapphireTest {
 	protected static $fixture_file = 'DataExtensionTest.yml';
 
@@ -14,7 +17,7 @@ class DataExtensionTest extends SapphireTest {
 	);
 
 	protected $requiredExtensions = array(
-		'DataObject' => array( 'DataExtensionTest_AppliedToDO' ),
+		'SilverStripe\Model\DataObject' => array( 'DataExtensionTest_AppliedToDO' ),
 	);
 
 	public function testOneToManyAssociationWithExtension() {

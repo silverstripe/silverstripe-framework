@@ -2,9 +2,12 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use Object;
-use DataObject;
+
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DB;
+
 
 /**
  * Apply this interface to any {@link DBField} that doesn't have a 1-1 mapping with a database field.

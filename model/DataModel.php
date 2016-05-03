@@ -15,6 +15,9 @@ namespace SilverStripe\Model;
  * @package framework
  * @subpackage model
  */
+
+use SilverStripe\Model\DataModel;
+use SilverStripe\Model\DataList;
 class DataModel {
 
 	/**

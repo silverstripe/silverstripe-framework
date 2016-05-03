@@ -1,6 +1,15 @@
 <?php
 
 namespace SilverStripe\Model;
+use SQLConditionGroup;
+use InvalidArgumentException;
+use ClassInfo;
+use SS_ClassLoader;
+use SQLSelect;
+use Injector;
+use Convert;
+use Object;
+
 
 /**
  * An object representing a query of data from the DataObject's supporting database.
@@ -709,7 +718,7 @@ class DataQuery {
 			throw new InvalidArgumentException("Could not find a has_one relationship {$localField} on {$localClass}");
 		}
 
-		if ($foreignClass === 'DataObject') {
+		if ($foreignClass === 'SilverStripe\Model\DataObject') {
 			throw new InvalidArgumentException(
 				"Could not join polymorphic has_one relationship {$localField} on {$localClass}"
 			);
@@ -752,7 +761,7 @@ class DataQuery {
 	 * @param string $foreignClass Class to join
 	 */
 	protected function joinHasManyRelation($localClass, $localField, $foreignClass) {
-		if(!$foreignClass || $foreignClass === 'DataObject') {
+		if(!$foreignClass || $foreignClass === 'SilverStripe\Model\DataObject') {
 			throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
 		}
 

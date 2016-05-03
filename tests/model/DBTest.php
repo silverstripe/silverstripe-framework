@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DB;
 class DBTest extends SapphireTest {
 
 	function testValidAlternativeDatabaseName() {
