@@ -225,6 +225,22 @@ Would setup the following
 * Look at the properties to be injected and look for the config for `MySQLDatabase`
 * Create a MySQLDatabase class, passing dbusername and dbpassword as the parameters to the constructor.
 
+## Service inheritance
+
+By default, services registered with Injector do not inherit from one another; This is because it registers
+named services, which may not be actual classes, and thus should not behave as though they were.
+
+Thus if you want an object to have the injected dependencies of a service of another name, you must
+assign a reference to that service.
+
+
+	:::yaml
+	Injector:
+	  JSONServiceDefinition:
+	    properties:
+	      Serialiser: JSONSerialiser
+	  GZIPJSONProvider: %$JSONServiceDefinition
+
 
 ## Testing with Injector
 

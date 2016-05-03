@@ -487,38 +487,30 @@ class InjectorTest extends SapphireTest {
 
 	public function testInheritedConfig() {
 
-		// Test top-down caching of config inheritance
+		// Test that child class does not automatically inherit config
 		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
-		Config::inst()->update('Injector', 'MyParentClass', array('properties' => array('one' => 'the one')));
-		Config::inst()->update('Injector', 'MyChildClass', array('properties' => array('one' => 'the two')));
+		Config::inst()->update('Injector', 'MyParentClass', [
+			'properties' => ['one' => 'the one'],
+			'class' => 'MyParentClass',
+		]);
 		$obj = $injector->get('MyParentClass');
+		$this->assertInstanceOf('MyParentClass', $obj);
 		$this->assertEquals($obj->one, 'the one');
 
+		// Class isn't inherited and parent properties are ignored
 		$obj = $injector->get('MyChildClass');
-		$this->assertEquals($obj->one, 'the two');
+		$this->assertInstanceOf('MyChildClass', $obj);
+		$this->assertNotEquals($obj->one, 'the one');
 
-		$obj = $injector->get('MyGrandChildClass');
-		$this->assertEquals($obj->one, 'the two');
-
-		$obj = $injector->get('MyGreatGrandChildClass');
-		$this->assertEquals($obj->one, 'the two');
-
-		// Test bottom-up caching of config inheritance
+		// Set child class as alias
 		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
-		Config::inst()->update('Injector', 'MyParentClass', array('properties' => array('one' => 'the three')));
-		Config::inst()->update('Injector', 'MyChildClass', array('properties' => array('one' => 'the four')));
+		Config::inst()->update('Injector', 'MyChildClass', '%$MyParentClass');
 
-		$obj = $injector->get('MyGreatGrandChildClass');
-		$this->assertEquals($obj->one, 'the four');
-
-		$obj = $injector->get('MyGrandChildClass');
-		$this->assertEquals($obj->one, 'the four');
-
+		// Class isn't inherited and parent properties are ignored
 		$obj = $injector->get('MyChildClass');
-		$this->assertEquals($obj->one, 'the four');
+		$this->assertInstanceOf('MyParentClass', $obj);
+		$this->assertEquals($obj->one, 'the one');
 
-		$obj = $injector->get('MyParentClass');
-		$this->assertEquals($obj->one, 'the three');
 	}
 
 	public function testSameNamedSingeltonPrototype() {
@@ -793,6 +785,7 @@ class ConstructableObject implements TestOnly {
 		$this->property = $prop;
 	}
 }
+
 
 class TestObject implements TestOnly {
 

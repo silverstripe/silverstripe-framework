@@ -19,53 +19,36 @@ class SilverStripeServiceConfigurationLocator extends ServiceConfigurationLocato
 	protected $configs = array();
 
 	public function locateConfigFor($name) {
-
 		// Check direct or cached result
 		$config = $this->configFor($name);
-		if($config !== null) return $config;
-
-		// do parent lookup if it's a class
-		if (class_exists($name)) {
-			$parents = array_reverse(array_values(ClassInfo::ancestry($name)));
-			array_shift($parents);
-
-			foreach ($parents as $parent) {
-				// have we already got for this?
-				$config = $this->configFor($parent);
-				if($config !== null) {
-					// Cache this result
-					$this->configs[$name] = $config;
-					return $config;
-				}
-			}
+		if(!$config) {
+			return null;
 		}
 
-		// there is no parent config, so we'll record that as false so we don't do the expensive
-		// lookup through parents again
-		$this->configs[$name] = false;
+		// If config is in `%$Source` format then inherit from the named config
+		if(is_string($config) && stripos($config, '%$') === 0) {
+			$name = substr($config, 2);
+			return $this->locateConfigFor($name);
+		}
+
+		// Return the located config
+		return $config;
 	}
 
 	/**
 	 * Retrieves the config for a named service without performing a hierarchy walk
 	 *
 	 * @param string $name Name of service
-	 * @return mixed Returns either the configuration data, if there is any. A missing config is denoted
-	 * by a value of either null (there is no direct config assigned and a hierarchy walk is necessary)
-	 * or false (there is no config for this class, nor within the hierarchy for this class).
+	 * @return mixed Get config for this service
 	 */
 	protected function configFor($name) {
-
 		// Return cached result
-		if (isset($this->configs[$name])) {
-			return $this->configs[$name]; // Potentially false
+		if (array_key_exists($name, $this->configs)) {
+			return $this->configs[$name];
 		}
 
 		$config = Config::inst()->get('Injector', $name);
-		if ($config) {
-			$this->configs[$name] = $config;
-			return $config;
-		} else {
-			return null;
-		}
+		$this->configs[$name] = $config;
+		return $config;
 	}
 }
