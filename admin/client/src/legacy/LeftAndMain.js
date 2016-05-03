@@ -925,6 +925,10 @@ $.entwine('ss', function($) {
     },
 
     _tabStateUrl: function() {
+      if (window.history.state === null) {
+        return;
+      }
+
       return window.history.state.path
         .replace(/\?.*/, '')
         .replace(/#.*/, '')

@@ -1,3 +1,4 @@
+import $ from 'jQuery';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -12,6 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewRoute = window.ss.router.resolveURLToBase(config.campaignViewRoute);
 
   routeRegister.add(`${baseRoute}*`, (ctx, next) => {
+    // We have to manually select the section menu item because the legacy
+    // implementation depends on a PJAX response to select the correct menu item.
+    // See `updateMenuFromResponse` in `/admin/client/src/legacy/LeftAndMain.Menu.js`
+    // This can be removed when we refactor the menu to a React component.
+    $('#Menu-CampaignAdmin').entwine('ss').select();
+
     ReactDOM.render(
       <Provider store={ctx.store}>
         <CampaignAdmin sectionConfig={config} securityId={window.ss.config.SecurityID} />
