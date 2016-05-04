@@ -156,6 +156,11 @@ correctly configured form.
 
 ## JavaScript through jQuery.entwine
 
+__Deprecated:__
+The following documentation regarding Entwine applies to legacy code only.
+If you're developing new functionality in React powered sections please refer to
+[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+
 [jQuery.entwine](https://github.com/hafriedlander/jquery.entwine) is a thirdparty library
 which allows us to attach behaviour to DOM elements in a flexible and structured mannger.
 It replaces the `behaviour.js` library used in previous versions of the CMS interface.

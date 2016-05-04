@@ -2,6 +2,11 @@ title: Admin Layout
 
 # CMS layout
 
+__Deprecated:__
+The following documentation regarding JavaScript layouts applies to legacy code only.
+If you're developing new functionality in React powered sections please refer to
+[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+
 The CMS markup is structured into "panels", which are the base units containing interface components (or other panels),
 as declared by the class `cms-panel`. Panels can be made collapsible, and get the ability to be resized and aligned with
 a layout manager, in our case [jLayout](http://www.bramstein.com/projects/jlayout/). This layout manager applies CSS
