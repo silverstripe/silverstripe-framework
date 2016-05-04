@@ -1,7 +1,8 @@
 // Variables
 //
 // This file contains the keys for bootstrap variables, the commented code is bootstrap's default values.
-// Uncomment code when you change the values of a variable.
+// Commented lines indicate that the default Bootstrap values are being used.
+// All variables which are uncommented the values will be in use so be cautious when adjusting their values..
 
 
 // Table of Contents
@@ -18,12 +19,10 @@
 // Components
 
 // General variable structure
-//
 // Variable format should follow the `$component-modifier-state-property` order.
 
 
 // Colors
-//
 // Grayscale and brand colors for use across Bootstrap.
 
 $gray-dark: #4f5861;
@@ -31,12 +30,14 @@ $gray: #55595c;
 $gray-light: #d3d9dd;
 $gray-lighter: #e8e9ea;
 // $gray-lightest: #f7f7f9;
-//
+$white: #fff; // Never change variable, use new variable if needed
+
+
 $brand-primary: #29abe2;
 $brand-success: #3fa142;
 // $brand-info: #5bc0de;
 // $brand-warning: #f0ad4e;
-$brand-danger: #D40404;
+$brand-danger: #d40404;
 
 // Backgrounds
 $background-main: #f6f7f8;
@@ -146,7 +147,7 @@ $container-max-widths: (
 // Set the number of columns and specify the width of the gutters.
 
 // $grid-columns:               12;
-$grid-gutter-width: $spacer*2;
+$grid-gutter-width: $spacer * 2;
 
 
 // Typography
@@ -162,17 +163,17 @@ $font-family-base: $font-family-sans-serif;
 $font-size-root: 13px;
 
 $font-size-base: 1rem;
-$font-size-lg: 1.23rem; /* 16px */
-$font-size-sm: .923rem; /* 12px */
-$font-size-xs: .846rem; /* 11px */
-$font-size-xxs: .77rem; /* 10px */
+$font-size-lg: 1.23rem; // 16px
+$font-size-sm: .923rem; // 12px
+$font-size-xs: .846rem; // 11px
+$font-size-xxs: .77rem; // 10px
 
 $font-size-h1: 2.5rem;
-$font-size-h2: 18px; /* 2rem; */
-$font-size-h3: 16px; /* 1.75rem; */
-$font-size-h4: 14px; /* 1.5rem; */
-$font-size-h5: 13px; /* 1.25rem; */
-$font-size-h6: 12px; /* 1rem; */
+$font-size-h2: 18px; // 2rem;
+$font-size-h3: 16px; // 1.75rem;
+$font-size-h4: 14px; // 1.5rem;
+$font-size-h5: 13px; // 1.25rem;
+$font-size-h6: 12px; // 1rem;
 
 // $display1-size: 6rem;
 // $display2-size: 5.5rem;
@@ -185,7 +186,7 @@ $font-size-h6: 12px; /* 1rem; */
 // $display4-weight: 300;
 
 $line-height: 1.539;
-$line-height-base: 20px;      /* can be used with varying font-sizes, holds grid sizing */
+$line-height-base: 20px; // can be used with varying font-sizes, holds grid sizing
 
 $headings-margin-bottom: $spacer;
 // $headings-font-family: inherit;
@@ -218,18 +219,18 @@ $text-muted: #7f8b97;
 //
 // Define common padding and border radius sizes and more.
 
-// $line-height-lg: (4 / 3);
-// $line-height-sm: 1.5;
-//
-// $border-radius: .25rem;
-// $border-radius-lg: .3rem;
-// $border-radius-sm: .2rem;
-//
-// $component-active-color: #fff;
-// $component-active-bg: $brand-primary;
-//
-// $caret-width: .3em;
-// $caret-width-lg: $caret-width;
+$line-height-lg: (4 / 3);
+$line-height-sm: 1.5;
+
+$border-radius: .25rem;
+$border-radius-lg: .3rem;
+$border-radius-sm: .2rem;
+
+$component-active-color: #fff;
+$component-active-bg: $brand-primary;
+
+$caret-width: .3em;
+$caret-width-lg: $caret-width;
 
 
 // Tables
@@ -237,9 +238,9 @@ $text-muted: #7f8b97;
 // Customizes the `.table` component with basic values, each used across all table variations.
 
 $table-cell-padding: $spacer;
-$table-sm-cell-padding: $spacer*.75;
+$table-sm-cell-padding: $spacer * .75;
 
-$table-bg: #FFF;
+$table-bg: #fff;
 $table-bg-accent: #f9f9f9;
 $table-bg-hover: #f5f5f5;
 $table-bg-active: $brand-primary;
@@ -295,9 +296,9 @@ $btn-danger-border: $brand-danger;
 // $btn-padding-y-lg: .75rem;
 
 // Allows for customizing button radius independently from global border radius
-// $btn-border-radius: $border-radius;
-// $btn-border-radius-lg: $border-radius-lg;
-// $btn-border-radius-sm: $border-radius-sm;
+$btn-border-radius: .23rem;
+$btn-border-radius-lg: .25rem;
+$btn-border-radius-sm: .154rem;
 
 
 // Forms
@@ -617,23 +618,23 @@ $navbar-padding-vertical: ($spacer / 2);
 
 // List group
 
-// $list-group-bg: #fff;
-// $list-group-border-color: #ddd;
-// $list-group-border-width: $border-width;
-// $list-group-border-radius: $border-radius;
-//
-// $list-group-hover-bg: #f5f5f5;
-// $list-group-active-color: $component-active-color;
-// $list-group-active-bg: $component-active-bg;
-// $list-group-active-border: $list-group-active-bg;
-// $list-group-active-text-color: lighten($list-group-active-bg, 40%);
-//
-// $list-group-disabled-color: $gray-light;
-// $list-group-disabled-bg: $gray-lighter;
-// $list-group-disabled-text-color: $list-group-disabled-color;
-//
+$list-group-bg: #fff;
+$list-group-border-color: #ddd;
+$list-group-border-width: $border-width;
+$list-group-border-radius: $border-radius;
+
+$list-group-hover-bg: #f5f5f5;
+$list-group-active-color: $component-active-color;
+$list-group-active-bg: $component-active-bg;
+$list-group-active-border: $list-group-active-bg;
+$list-group-active-text-color: lighten($list-group-active-bg, 40%);
+
+$list-group-disabled-color: $gray-light;
+$list-group-disabled-bg: $gray-lighter;
+$list-group-disabled-text-color: $list-group-disabled-color;
+
 $list-group-link-color: $body-color;
-// $list-group-link-hover-color: $list-group-link-color;
+$list-group-link-hover-color: $list-group-link-color;
 $list-group-link-heading-color: $body-color;
 
 

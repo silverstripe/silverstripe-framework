@@ -1,24 +1,25 @@
 // TODO Separate out bootstrap btn reset styles to a separate style sheet or divide within this sheet
 // TODO Rename component to something like Btn or Button?
+
 // General buttons
 .btn {
-	height: 32px;
-	margin-right: $spacer-x * .75; // 12px
-	position: relative;
+  height: 32px;
+  margin-right: $spacer-x * .75; // 12px
+  position: relative;
 }
 
 // Button icons
 .btn[class*="font-icon-"]::before {
-	font-size: 16px;
-	position: relative;
-	top: 3px;
-	margin-right: 6px;
-	line-height: 13px;
+  font-size: 16px;
+  position: relative;
+  top: 3px;
+  margin-right: 6px;
+  line-height: 13px;
 }
 
 // Gives button a larger icon
 .btn--icon-large {
-	font-size: 20px;
+  font-size: 20px;
   line-height: 20px;
 }
 
@@ -27,123 +28,130 @@
 // TODO replace all .no-text classes for .btn--no-text
 .btn--no-text[class*="font-icon-"]::before,
 .no-text[class*="font-icon-"]::before {
-	margin-right: 0;
+  margin-right: 0;
 }
 
 
 // SVG loading icon
 .btn__loading-icon {
-	float: left;
-	margin: 0 4px 0 0;
-	height: 20px;
-	position: absolute;
-	left: 50%;
-	top: $btn-padding-y;
-	transform: translate(-50%);
+  float: left;
+  margin: 0 4px 0 0;
+  height: 20px;
+  position: absolute;
+  left: 50%;
+  top: $btn-padding-y;
+  transform: translate(-50%);
 
-	svg {
-		width: 24px;
-		height: 20px;
-	}
+  svg {
+    width: 24px;
+    height: 20px;
+  }
 
-	circle {
-		width: 4px;
-		height: 5px;
-		animation: loading-icon 1.2s infinite ease-in-out both;
-		fill: $gray;
-		transform-origin: 50% 50%;
-	}
+  circle {
+    width: 4px;
+    height: 5px;
+    animation: loading-icon 1.2s infinite ease-in-out both;
+    fill: $gray;
+    transform-origin: 50% 50%;
+  }
 
-	circle:nth-child(1) {
-		animation-delay: -.32s;
-	}
+  circle:nth-child(1) {
+    animation-delay: -.32s;
+  }
 
-	circle:nth-child(2) {
-		animation-delay: -.16s;
-	}
+  circle:nth-child(2) {
+    animation-delay: -.16s;
+  }
 }
 
 .btn--loading > span,
 .btn--loading::before {
-	visibility: hidden;
+  visibility: hidden;
 }
 
 @keyframes loading-icon {
-	0%, 80%, 100% { transform: scale(0); }
-	40% { transform: scale(1); }
+  0%, 80%, 100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1);
+  }
 }
 
 
 // Specific button variations
 .btn-primary {
-	border-bottom-color: $btn-primary-shadow;
+  border-bottom-color: $btn-primary-shadow;
 
-	svg circle {
-		fill: #fff;
-	}
+  svg circle {
+    fill: $white;
+  }
 }
+
 .btn-primary-outline {
-	border-color: lighten($btn-primary-border,10%);
+  border-color: lighten($btn-primary-border, 10%);
 
-	&:hover,
-	&:active,
-	&:focus {
-		color: darken($btn-primary-bg, 10%);
-		background-image: none;
-		background-color: lighten($btn-primary-bg, 50%);
-		border-color: $btn-primary-border;
-	}
+  &:hover,
+  &:active,
+  &:focus {
+    color: darken($btn-primary-bg, 10%);
+    background-image: none;
+    background-color: lighten($btn-primary-bg, 50%);
+    border-color: $btn-primary-border;
+  }
 
-	svg circle {
-		fill: $btn-primary-bg;
-	}
+  svg circle {
+    fill: $btn-primary-bg;
+  }
 }
 
 
 .btn-secondary {
-	border-color: transparent;
-	background-color: transparent;
+  border-color: transparent;
+  background-color: transparent;
 
-	&:hover,
-	&:active,
-	&:focus,
-	&:active:hover,
-	&:active:focus {
-		background-color: $gray-lighter;
-		border-color: transparent;
-	}
+  &:hover,
+  &:active,
+  &:focus,
+  &:active:hover,
+  &:active:focus {
+    background-color: $gray-lighter;
+    border-color: transparent;
+  }
 }
+
 .btn-secondary-outline {
-	color: $btn-secondary-color;
+  color: $btn-secondary-color;
 
-	&:hover,
-	&:focus,
-	&:active,
-	&:active:focus,
-	&:active:hover {
-		background-color: $gray-lighter;
-		color: $btn-secondary-color;
-	}
+  &:hover,
+  &:focus,
+  &:active,
+  &:active:focus,
+  &:active:hover {
+    background-color: $gray-lighter;
+    color: $btn-secondary-color;
+  }
 
-	svg circle {
-		fill: $body-color;
-	}
+  svg circle {
+    fill: $body-color;
+  }
 }
 
 
 // Grouped buttons
 .btn-group {
-	margin-right: $spacer-x * .75; // 12px
-}
+  margin-right: $spacer-x * .75; // 12px
 
-.btn-group .btn {
-	margin-right: 0;
-}
+  .btn {
+    margin-right: 0;
+  }
 
-.btn-group .btn-primary {
-	border-left: 1px solid $btn-primary-shadow;
+  .btn-primary {
+    border-left: 1px solid $btn-primary-shadow;
 
-	&:first-child {
-		border-left: none;
-	}
+    &:first-child {
+      border-left: 0;
+    }
+  }
 }
