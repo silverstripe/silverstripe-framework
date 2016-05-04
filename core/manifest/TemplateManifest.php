@@ -178,34 +178,86 @@ class SS_TemplateManifest {
 		$this->inited = true;
 	}
 
-	public function handleFile($basename, $pathname, $depth) {
+	public function handleFile($basename, $pathname, $depth)
+	{
 		$projectFile = false;
 		$theme = null;
 
-		if (strpos($pathname, $this->base . '/' . THEMES_DIR) === 0) {
-			$start = strlen($this->base . '/' . THEMES_DIR) + 1;
-			$theme = substr($pathname, $start);
-			$theme = substr($theme, 0, strpos($theme, '/'));
-			$theme = strtok($theme, '_');
-		} else if($this->project && (strpos($pathname, $this->base . '/' . $this->project .'/') === 0)) {
+		// Template in theme
+		if (preg_match(
+			'#'.preg_quote($this->base.'/'.THEMES_DIR).'/([^/_]+)(_[^/]+)?/(.*)$#',
+			$pathname,
+			$matches
+		)) {
+			$theme = $matches[1];
+			$relPath = $matches[3];
+
+		// Template in project
+		} elseif (preg_match(
+			'#'.preg_quote($this->base.'/'.$this->project).'/(.*)$#',
+			$pathname,
+			$matches
+		)) {
 			$projectFile = true;
+			$relPath = $matches[1];
+
+		// Template in module
+		} elseif (preg_match(
+			'#'.preg_quote($this->base).'/([^/]+)/(.*)$#',
+			$pathname,
+			$matches
+		)) {
+			$relPath = $matches[2];
+
+		} else {
+			throw new \LogicException("Can't determine meaning of path: $pathname");
 		}
 
-		$type = basename(dirname($pathname));
-		$name = strtolower(substr($basename, 0, -3));
-
-		if ($type == self::TEMPLATES_DIR) {
-			$type = 'main';
+		// If a templates subfolder is used, ignore that
+		if (preg_match('#'.preg_quote(self::TEMPLATES_DIR).'/(.*)$#', $relPath, $matches)) {
+			$relPath = $matches[1];
 		}
+
+		// Layout and Content folders have special meaning
+		if (preg_match('#^(.*/)?(Layout|Content|Includes)/([^/]+)$#', $relPath, $matches)) {
+			$type = $matches[2];
+			$relPath = "$matches[1]$matches[3]";
+		} else {
+			$type = "main";
+		}
+
+		$name = strtolower(substr($relPath, 0, -3));
+		$name = str_replace('/', '\\', $name);
 
 		if ($theme) {
 			$this->templates[$name]['themes'][$theme][$type] = $pathname;
-		} else if($projectFile) {
+		} else if ($projectFile) {
 			$this->templates[$name][$this->project][$type] = $pathname;
 		} else {
 			$this->templates[$name][$type] = $pathname;
 		}
 
+		// If we've found a template in a subdirectory, then allow its use for a non-namespaced class
+		// as well. This was a common SilverStripe 3 approach, where templates were placed into
+		// subfolders to suit the whim of the developer.
+		if (strpos($name, '\\') !== false) {
+			$name2 = substr($name, strrpos($name, '\\') + 1);
+			// In of these cases, the template will only be provided if it isn't already set. This
+			// matches SilverStripe 3 prioritisation.
+			if ($theme) {
+				if (!isset($this->templates[$name2]['themes'][$theme][$type])) {
+					$this->templates[$name2]['themes'][$theme][$type] = $pathname;
+				}
+			} else if ($projectFile) {
+				if (!isset($this->templates[$name2][$this->project][$type])) {
+					$this->templates[$name2][$this->project][$type] = $pathname;
+				}
+			} else {
+				if (!isset($this->templates[$name2][$type])) {
+					$this->templates[$name2][$type] = $pathname;
+				}
+			}
+		}
 	}
 
 	protected function init() {
