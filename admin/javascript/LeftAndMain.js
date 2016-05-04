@@ -188,7 +188,7 @@ jQuery.noConflict();
 			}
 
 			// Show message (but ignore aborted requests)
-			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages)) {
+			if(xhr.status !== 0 && msg && $.inArray(msg, ignoredMessages) === -1) {
 				// Decode into UTF-8, HTTP headers don't allow multibyte
 				statusMessage(decodeURIComponent(msg), msgType);
 			}
@@ -261,7 +261,7 @@ jQuery.noConflict();
 
 			fromWindow: {
 				onstatechange: function(e){
-					this.handleStateChange(e);
+					this.handleStateChange(e); 
 				}
 			},
 
@@ -365,7 +365,7 @@ jQuery.noConflict();
 
 			/**
 			 * Confirm whether the current user can navigate away from this page
-			 *
+			 * 
 			 * @param {array} selectors Optional list of selectors
 			 * @returns {boolean} True if the navigation can proceed
 			 */
@@ -521,7 +521,7 @@ jQuery.noConflict();
 			 * Last html5 history state
 			 */
 			LastState: null,
-
+			
 			/**
 			 * Flag to pause handleStateChange
 			 */
@@ -553,7 +553,7 @@ jQuery.noConflict();
 				if(this.getPauseState()) {
 					return;
 				}
-
+				
 				// Don't allow parallel loading to avoid edge cases
 				if(this.getStateChangeXHR()) this.getStateChangeXHR().abort();
 
@@ -576,12 +576,12 @@ jQuery.noConflict();
 					if(h.emulated.pushState) {
 						return;
 					}
-
+					
 					var lastState = this.getLastState();
-
+					
 					// Suppress panel loading while resetting state
 					this.setPauseState(true);
-
+					
 					// Restore best last state
 					if(lastState) {
 						h.pushState(lastState.id, lastState.title, lastState.url);
@@ -589,7 +589,7 @@ jQuery.noConflict();
 						h.back();
 					}
 					this.setPauseState(false);
-
+					
 					// Abort loading of this panel
 					return;
 				}
