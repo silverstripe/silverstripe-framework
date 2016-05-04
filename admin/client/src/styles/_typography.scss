@@ -1,8 +1,7 @@
-/**
- * File: typography.scss
- *
- * Contains the basic typography related styles for the admin interface.
- */
+//
+// File: typography.scss
+//
+// Contains the basic typography related styles for the admin interface.
 
 
  // Tables
@@ -11,7 +10,7 @@
 .table {
   margin-left: -$spacer-x;
   margin-right: -$spacer-x;
-  min-width: calc(100% + #{$spacer-x*2});
+  min-width: calc(100% + #{$spacer-x * 2});
   margin-bottom: $spacer-y * 2;
   border-top: 0;
 
@@ -20,14 +19,7 @@
     border-bottom: $table-border-width solid $table-border-color;
     text-transform: uppercase;
     font-size: $font-size-sm;
-  }
-
-  thead th {
-    // font-size: 12px;
-    // text-transform: uppercase;
     font-weight: normal;
-    // border-bottom: 1px solid #bbb;
-    // border-top: 0;
   }
 
   th,
@@ -37,12 +29,14 @@
     line-height: 20px;
 
     &:first-child {
-        padding-left: #{$spacer-x + $spacer-x*.25};
+      padding-left: #{$spacer-x + $spacer-x * .25};
     }
+
     &:last-child {
-        padding-right: #{$spacer-x + $spacer-x*.25};
+      padding-right: #{$spacer-x + $spacer-x * .25};
     }
   }
+
   tfoot {
     background-color: transparent;
     font-size: $font-size-sm;
@@ -55,8 +49,8 @@
 }
 
 .cms {
-	code {
-		font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
+  code {
+    font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
 	}
 }
 

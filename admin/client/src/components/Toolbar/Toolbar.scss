@@ -13,7 +13,7 @@
   }
 }
 
-// Northern bar containing breadcrum, tabs etc.
+// Northern bar containing breadcrumb, tabs etc.
 .toolbar--north {
   display: block;
   background-image: none;
@@ -24,14 +24,14 @@
 
 // Secondary content actions eg. Add page button
 .toolbar--content {
-  padding: $spacer-y*.625 $spacer-x*.75;
-  margin-bottom: $spacer-y/2;
+  padding: $spacer-y * .625 $spacer-x * .75;
+  margin-bottom: $spacer-y / 2;
 }
 
 // Primary content actions
 .toolbar--south {
-  padding-top: $spacer-y*.625;
-  padding-bottom: $spacer-y*.625;
+  padding-top: $spacer-y * .625;
+  padding-bottom: $spacer-y * .625;
   position: absolute;
   bottom: 0;
   border-top: 1px solid $border-color;
@@ -40,8 +40,8 @@
 
 .toolbar__back-button {
   float: left;
-  margin: $spacer-y*.625 $spacer-x/2 $spacer-y*.625 #{-$spacer-x/4};
-  padding-left: $spacer-x/4;
-  padding-right: $spacer-x/4;
+  margin: $spacer-y * .625 $spacer-x / 2 $spacer-y * .625 #{-$spacer-x / 4};
+  padding-left: $spacer-x / 4;
+  padding-right: $spacer-x / 4;
   border: 0;
 }

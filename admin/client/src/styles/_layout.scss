@@ -15,11 +15,13 @@
 .cms-content__split {
   height: 100%;
 }
+
 .cms-content__split--left-sm {
   .cms-content__right {
     position: relative;
     display: none;
   }
+
   .cms-content__left {
     width: 100%;
     position: absolute;
@@ -43,12 +45,13 @@
     content: "5";
     font-size: 16px;
     line-height: 20px;
-    color: #fff;
+    color: $white;
     padding: 8px;
     border-radius: 50%;
     font-family: silverstripe;
     z-index: 1;
     cursor: pointer;
+
     &:hover {
       background-color: $gray-dark;
       text-decoration: none;
@@ -61,14 +64,17 @@
     .cms-content__left {
       width: $cms-panel-sm;
     }
+
     .cms-content__right {
       display: block;
       border-left: 1px solid $border-color;
     }
+
     .cms-content__back-btn {
       display: none;
     }
   }
+
   @include media-breakpoint-up(xl) {
     padding-left: $cms-panel-md;
 
@@ -85,9 +91,11 @@
   overflow-y: auto;
   height: 100%;
 }
+
 .panel-scrollable--single-toolbar {
   height: calc(100% - #{$toolbar-total-height});
 }
+
 .panel-scrollable--double-toolbar {
   height: calc(100% - #{$toolbar-total-height * 2});
 }

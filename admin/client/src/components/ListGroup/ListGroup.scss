@@ -4,46 +4,51 @@
   margin-left: -$spacer-y;
   margin-right: -$spacer-y;
   border-bottom: 1px solid $border-color-light;
-  margin-bottom: $spacer-y*.75;
+  margin-bottom: $spacer-y * .75;
 }
 
 .list-group-item {
-	padding-left: $spacer-y;
-	padding-right: $spacer-y;
-	min-height: 64px;
-	cursor: pointer;
-	text-decoration: none;
+  padding-left: $spacer-y;
+  padding-right: $spacer-y;
+  min-height: 64px;
+  cursor: pointer;
+  text-decoration: none;
   transition: opacity .2s ease-in-out;
 
-	&:first-child {
-		border-top: none;
-	}
-
-	&:hover {
-		text-decoration: none;
+  &:first-child {
+    border-top: 0;
   }
 
-	&.active {
-		background-color: $brand-primary;
-		color: #FFF;
-		opacity: 1;
+  &:hover {
+    text-decoration: none;
+  }
+
+  &.active {
+    background-color: $brand-primary;
+    color: $white;
+    opacity: 1;
+
+    .list-group-item__status {
+      color: $white;
+      opacity: 1;
+    }
 	}
 }
 
 .list-group-item-heading {
-	font-weight: 400;
-	font-size: 14px;
-	margin: 2px 0 5px;
-	color: $body-color;
+  font-weight: 400;
+  font-size: 14px;
+  margin: 2px 0 5px;
+  color: $body-color;
 }
 
 .list-group-item__thumbnail {
-	width: 64px;
-	height: 64px;
-	display: block;
-	background: #ccc;
-	float: left;
-	margin: -12px 12px 0 -$spacer-y;
+  width: 64px;
+  height: 64px;
+  display: block;
+  background: $gray-lighter;
+  float: left;
+  margin: -12px 12px 0 - $spacer-y;
 }
 
 .list-group-item__info {
@@ -56,8 +61,16 @@
   opacity: .6;
 
   &:hover {
-		opacity: 1;
+    opacity: 1;
+
+    .list-group-item__status {
+      opacity: 1;
+    }
 	}
+
+  .list-group-item__status {
+    opacity: 0;
+  }
 }
 
 .list-group-item__status {
@@ -65,18 +78,6 @@
   transition: opacity .2s ease-in-out;
 }
 
-.list-group-item.active .list-group-item__status {
-	color: #FFF;
-	opacity: 1;
-}
-
-.list-group-item--inactive .list-group-item__status {
-  opacity: 0;
-}
-
-.list-group-item--inactive:hover .list-group-item__status {
-	opacity: 1;
-}
 
 // Temp hide links for Alpha1 (change opacity to 1)
 .list-group-item:hover .list-group-item__info,

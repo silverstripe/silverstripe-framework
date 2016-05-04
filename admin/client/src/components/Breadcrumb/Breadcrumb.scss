@@ -1,29 +1,27 @@
 .breadcrumb {
-	font-size: $font-size-xs;
-	line-height: 14px;
-	margin-bottom: 0;
-	float: left;
-	max-width: 70%;
-	max-height: $toolbar-height;
+  font-size: $font-size-xs;
+  line-height: 14px;
+  margin-bottom: 0;
+  float: left;
+  max-width: 70%;
+  max-height: $toolbar-height;
 }
 
 .breadcrumb--current-only {  // Todo: move to breadcrumb
-    padding: 14px 0;
+  padding: 14px 0;
 }
-
-.breadcrumb__item {}
 
 .breadcrumb>li.breadcrumb__item--last, // TODO Fix Bootstrap clash
 .breadcrumb__item--last {
-	display: block;
-	float: none;
+  display: block;
+  float: none;
 }
 
 .cms h2.breadcrumb__item-title--last, // TODO Fix CMS clash
 .breadcrumb__item-title--last {
-	margin: 0;
-	font-size: $font-size-lg;
-	font-weight: normal;
-	line-height: 24px;
-	@include text-truncate;
+  margin: 0;
+  font-size: $font-size-lg;
+  font-weight: normal;
+  line-height: 24px;
+  @include text-truncate;
 }

@@ -6,30 +6,34 @@
 // @extend .table;
 // @extend .table-hover;
 }
-.grid-field__row--drillable {
-    cursor: pointer;
-}
-.grid-field__cell--actions {
-    white-space: nowrap;
-    width: 1px;
-}
-.grid-field__icon-action {
-    background: none;
-    border: 0;
-    color: lighten($body-color, 10%);
-    padding: $spacer-y $spacer-x/2;
-    margin-top: -$spacer-y;
-    margin-bottom: -$spacer-y;
-    height: calc(#{$line-height-base} + #{$table-cell-padding*2}); // height of icon + spacing top and bottom
-    vertical-align: top;
 
-    &:hover {
-        color: $body-color;
-        background: darken($body-bg,3%);
-    }
-    &::before {
-        font-size: 20px;
-    }
+.grid-field__row--drillable {
+  cursor: pointer;
+}
+
+.grid-field__cell--actions {
+  white-space: nowrap;
+  width: 1px;
+}
+
+.grid-field__icon-action {
+  background: none;
+  border: 0;
+  color: lighten($body-color, 10%);
+  padding: $spacer-y $spacer-x / 2;
+  margin-top: -$spacer-y;
+  margin-bottom: -$spacer-y;
+  height: calc(#{$line-height-base} + #{$table-cell-padding * 2}); // height of icon + spacing top and bottom
+  vertical-align: top;
+
+  &:hover {
+    color: $body-color;
+    background: darken($body-bg, 3%);
+  }
+
+  &::before {
+    font-size: 20px;
+  }
 }
 
 // Responsive grid-field
@@ -44,9 +48,10 @@
     &:first-child {
       display: table-cell;
     }
+
     &.grid-field__cell[data-reactid$=-actions],
     &.grid-field__action-placeholder {
-        display: table-cell;
+      display: table-cell;
     }
   }
 }
@@ -58,41 +63,43 @@
 .grid-field {
 
   .ss-gridfield-sort {  // Todo: rename to grid-filed__sort
-      background: transparent url(../images/arrows.png) no-repeat right -1px;
-      border: none;
-      width: 100%;
+    background: transparent url(../images/arrows.png) no-repeat right -1px;
+    border: 0;
+    width: 100%;
+    padding: 0;
+    text-shadow: none;
+    border-radius: 0;
+    text-transform: uppercase;
+    font-weight: normal;
+    text-align: left;
+
+    .ui-button-text {
       padding: 0;
-      text-shadow: none;
-      border-radius: 0;
-      text-transform: uppercase;
-      font-weight: normal;
-      text-align: left;
+      line-height: 20px;
+      color: $body-color-light;
+    }
 
-      .ui-button-text {
-        padding: 0;
-        line-height: 20px;
-        color: $body-color-light;
-      }
+    &:hover {
+      box-shadow: none;
+      background: transparent url(../images/arrows.png) no-repeat right -41px;
+    }
 
-      &:hover {
-        box-shadow: none;
-        background: transparent url(../images/arrows.png) no-repeat right -41px;
-      }
-      &.ss-gridfield-sorted-asc,
-      &.ss-gridfield-sorted-asc:hover {
-        background-position-y: -118px;
-      }
-      &.ss-gridfield-sorted-desc,
-      &.ss-gridfield-sorted-desc:hover {
-        background-position-y: -78px;
-      }
+    &.ss-gridfield-sorted-asc,
+    &.ss-gridfield-sorted-asc:hover {
+      background-position-y: -118px;
+    }
+
+    &.ss-gridfield-sorted-desc,
+    &.ss-gridfield-sorted-desc:hover {
+      background-position-y: -78px;
+    }
   }
 
-  thead tr.title th {
-      font-size: 15px;
-      font-weight: bold;
-      text-transform: none;
-      border-bottom: 0;
-      padding-bottom: 0;
+  .title th {
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: none;
+    border-bottom: 0;
+    padding-bottom: 0;
   }
 }
