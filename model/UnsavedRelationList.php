@@ -13,8 +13,6 @@ use SilverStripe\Model\Relation;
  * of $dataClass). Unsaved objects are then written when the list is saved
  * into an instance of {@link RelationList}.
  *
- * Most methods that alter the list of objects throw LogicExceptions.
- *
  * @package framework
  * @subpackage model
  */
@@ -51,6 +49,8 @@ class UnsavedRelationList extends ArrayList implements Relation {
 	/**
 	 * Create a new UnsavedRelationList
 	 *
+	 * @param array $baseClass
+	 * @param string $relationName
 	 * @param string $dataClass The DataObject class used in the relation
 	 */
 	public function __construct($baseClass, $relationName, $dataClass) {
@@ -63,7 +63,8 @@ class UnsavedRelationList extends ArrayList implements Relation {
 	/**
 	 * Add an item to this relationship
 	 *
-	 * @param $extraFields A map of additional columns to insert into the joinTable in the case of a many_many relation
+	 * @param mixed $item
+	 * @param array $extraFields A map of additional columns to insert into the joinTable in the case of a many_many relation
 	 */
 	public function add($item, $extraFields = null) {
 		$this->push($item, $extraFields);
@@ -87,6 +88,7 @@ class UnsavedRelationList extends ArrayList implements Relation {
 	 * Pushes an item onto the end of this list.
 	 *
 	 * @param array|object $item
+	 * @param array $extraFields
 	 */
 	public function push($item, $extraFields = null) {
 		if((is_object($item) && !$item instanceof $this->dataClass)
@@ -165,6 +167,8 @@ class UnsavedRelationList extends ArrayList implements Relation {
 	 * Remove the items from this list with the given IDs
 	 *
 	 * @param array $items
+	 * @param array $items
+	 * @return $this
 	 */
 	public function removeMany($items) {
 		$this->items = array_diff($this->items, $items);
@@ -255,7 +259,7 @@ class UnsavedRelationList extends ArrayList implements Relation {
 
 	/**
 	 * Returns a copy of this list with the relationship linked to the given foreign ID.
-	 * @param $id An ID or an array of IDs.
+	 * @param int|array $id An ID or an array of IDs.
 	 */
 	public function forForeignID($id) {
 		$class = singleton($this->baseClass);

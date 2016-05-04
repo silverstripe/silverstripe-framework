@@ -187,6 +187,13 @@ class UploadTest extends SapphireTest {
 		$retrievedSize = $v->getAllowedMaxFileSize('txt');
 		$this->assertEquals(4096, $retrievedSize, 'Max file size check on instance values failed (instance extension set check)');
 
+		// Check a wildcard max file size against a file with an extension
+		$v = new UploadTest_Validator();
+		$v->setAllowedMaxFileSize(2000);
+
+		$retrievedSize = $v->getAllowedMaxFileSize('.jpg');
+		$this->assertEquals(2000, $retrievedSize, 'Max file size check on instance values failed (wildcard max file size)');
+
 		Config::unnest();
 	}
 

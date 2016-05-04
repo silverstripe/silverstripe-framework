@@ -510,12 +510,10 @@ class Upload_Validator {
 			if ($category && isset($this->allowedMaxFileSize['[' . $category . ']'])) {
 				return $this->allowedMaxFileSize['[' . $category . ']'];
 			}
+		}
 
-			return false;
-		} else {
 			return (isset($this->allowedMaxFileSize['*'])) ? $this->allowedMaxFileSize['*'] : false;
 		}
-	}
 
 	/**
 	 * Set filesize maximums (in bytes or INI format).
