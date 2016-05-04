@@ -67,9 +67,13 @@ function getAbsoluteBase() {
   return null;
 }
 
+// Ensure that subsequent references to router.js don't nest page.show more than once
+if (!page.oldshow) {
+  page.oldshow = page.show;
+}
 page.getAbsoluteBase = getAbsoluteBase.bind(page);
 page.resolveURLToBase = resolveURLToBase.bind(page);
-page.show = show(page.show);
+page.show = show(page.oldshow);
 page.routeAppliesToCurrentLocation = routeAppliesToCurrentLocation;
 
 /*
