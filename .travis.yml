@@ -35,6 +35,9 @@ matrix:
       env: DB=MYSQL BEHAT_TEST=1 CMS_TEST=1
     - php: 7.0
       env: DB=MYSQL PDO=1
+  allow_failures:
+    - php: 7.0
+      env: DB=MYSQL PDO=1
 
 before_script:
  - printf "\n" | pecl install imagick

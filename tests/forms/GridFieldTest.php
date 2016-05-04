@@ -117,6 +117,10 @@ class GridFieldTest extends SapphireTest {
 	public function testGetStateData() {
 		$obj = new GridField('testfield', 'testfield');
 
+		// @todo - PHP 7.0.6 change requires __isset() to return true
+		// for each reference from left to right along an isset() invocation.
+		// See https://bugs.php.net/bug.php?id=62059
+
 		// Check value persistance
 		$this->assertEquals(15, $obj->State->NoValue(15));
 		$this->assertEquals(15, $obj->State->NoValue(-1));
