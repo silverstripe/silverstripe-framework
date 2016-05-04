@@ -66,12 +66,16 @@ function appBoot() {
     next();
   });
 
-  // Register all top level routes.
+  /*
+   * Register all top level routes.
+   * This can be removed when top level sections are converted to React,
+   * have their own JavaScript controllers, and register their own routes.
+   */
   ConfigHelpers
     .getTopLevelRoutes()
     .forEach((route) => {
       routeRegister.add(`/${route}(/*?)?`, (ctx, next) => {
-        if (document.readyState !== 'complete') {
+        if (document.readyState !== 'complete' || ctx.init) {
           next();
           return;
         }
@@ -93,9 +97,6 @@ function appBoot() {
   }
 
   router.start();
-
-  // Clean up referneces to callbacks in the route register.
-  routeRegister.removeAll();
 }
 
 window.onload = appBoot;
