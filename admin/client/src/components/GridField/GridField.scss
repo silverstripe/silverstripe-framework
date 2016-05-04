@@ -1,12 +1,6 @@
 // Grid-field
 // Extends basic table styles, requires .table .table-hover
 
-.grid-field__table {
-// Todo: Add extends
-// @extend .table;
-// @extend .table-hover;
-}
-
 .grid-field__row--drillable {
   cursor: pointer;
 }
@@ -38,9 +32,8 @@
 
 // Responsive grid-field
 // Todo:
-// * replace with mixins - @include media-breakpoint-down(sm)
 // * add .text-truncate for overflowing cells
-@media (max-width: 47.9em) {
+@include media-breakpoint-down(sm) {
   .grid-field__table td,
   .grid-field__table th {
     display: none;
@@ -49,7 +42,7 @@
       display: table-cell;
     }
 
-    &.grid-field__cell[data-reactid$=-actions],
+    &.grid-field__cell--actions,
     &.grid-field__action-placeholder {
       display: table-cell;
     }
