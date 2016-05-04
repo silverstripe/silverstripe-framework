@@ -40,8 +40,7 @@ class CampaignAdminList extends SilverStripeComponent {
    */
   render() {
     let itemID = this.props.campaign.changeSetItemId;
-    let previewUrl = null;
-    let previewType = null;
+    let itemLinks = null;
     const campaignId = this.props.campaignId;
     const campaign = this.props.record;
 
@@ -65,17 +64,11 @@ class CampaignAdminList extends SilverStripeComponent {
         if (!itemID) {
           itemID = item.ID;
         }
-
-        // Find preview url
         const selected = (itemID === item.ID);
+
+        // Check links
         if (selected && item._links.preview) {
-          if (item._links.preview.Stage) {
-            previewUrl = item._links.preview.Stage.href;
-            previewType = item._links.preview.Stage.type;
-          } else if (item._links.preview.Live) {
-            previewUrl = item._links.preview.Live.href;
-            previewType = item._links.preview.Live.type;
-          }
+          itemLinks = item._links;
         }
 
         // Add extra css class for published items
@@ -108,7 +101,7 @@ class CampaignAdminList extends SilverStripeComponent {
     });
 
     // Get preview details
-    const classNames = previewUrl
+    const classNames = itemLinks
       ? 'cms-content__split cms-content__split--left-sm'
       : 'cms-content__split cms-content__split--none';
 
@@ -127,7 +120,7 @@ class CampaignAdminList extends SilverStripeComponent {
             {this.renderButtonToolbar()}
           </div>
         </div>
-        { previewUrl && <Preview previewUrl={previewUrl} previewType={previewType} /> }
+        { itemLinks && <Preview itemLinks={itemLinks} /> }
       </div>
     );
   }
