@@ -236,7 +236,7 @@ ja:
     ResultUpdated: '%dグループを更新しました'
   Hierarchy:
     InfiniteLoopNotAllowed: '無限ループが"{型}"階層内で見つかりました。　これを解決するために親を変更してください。'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'URLを追加'
     ADJUSTDETAILSDIMENSIONS: '詳細 &amp; 大きさ'
     ANCHORVALUE: アンカー

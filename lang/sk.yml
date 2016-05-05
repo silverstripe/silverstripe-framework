@@ -275,7 +275,7 @@ sk:
     ResultUpdated: 'Aktualizované %d skupiny'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Nekonečná smyčka sa nachádza v {type} hierarchii. Prosím zmeňte rodiča pre vyriešenie tohto problému'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Pridať URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozmery'
     ANCHORSCANNOTACCESSPAGE: 'Nemáte povolený prístup k obsahu cieľovej stránky.'

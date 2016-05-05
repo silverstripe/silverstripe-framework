@@ -84,7 +84,7 @@ is:
     Sort: 'Röðun'
     has_many_Permissions: Leyfi
     many_many_Members: Félagar
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Markstikla
     BUTTONINSERTLINK: 'Bæta við hlekk'
     BUTTONREMOVELINK: 'Fjarlægja hlekk'

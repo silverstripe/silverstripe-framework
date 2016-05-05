@@ -239,7 +239,7 @@ nb:
     ResultUpdated: 'Oppdaterte %d grupper'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Uendelig løkke ble funnet i hierarkiet til "{type}". Vennligst skift ut overordnet type for å løse dette.'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Legg til nettadresse'
     ADJUSTDETAILSDIMENSIONS: 'Detaljer og dimensjoner'
     ANCHORVALUE: Lenke

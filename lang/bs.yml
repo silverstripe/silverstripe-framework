@@ -80,7 +80,7 @@ bs:
     NONE: ništa
   GridFieldDetailForm:
     Create: Kreiraj
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Sidro
     BUTTONINSERTLINK: 'Ubaci link'
     BUTTONREMOVELINK: 'Ukloni link'

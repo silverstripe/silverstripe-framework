@@ -224,7 +224,7 @@ et_EE:
     ResultCreated: '{count} gruppi on loodud'
     ResultDeleted: '%d gruppi on kustutatud'
     ResultUpdated: '%d gruppi on uuendatud'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Lisa URL'
     ADJUSTDETAILSDIMENSIONS: 'Üksikasjad ja mõõtmed'
     ANCHORVALUE: Link

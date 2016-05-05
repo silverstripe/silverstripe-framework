@@ -4,7 +4,7 @@ Image:
     FileHash: f5c7c2f814b0f20ceb30b72edbac220d6eff65ed
     Name: HTMLEditorFieldTest_example.jpg
 
-HtmlEditorFieldTest_Object:
+HTMLEditorFieldTest_Object:
   home:
     Title: Home Page
   about:

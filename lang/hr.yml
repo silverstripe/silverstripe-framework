@@ -88,7 +88,7 @@ hr:
     Parent: 'Roditeljska grupa'
     has_many_Permissions: Dozvole
     many_many_Members: Članovi
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: 'Ubaci vezu'
     BUTTONREMOVELINK: 'Obriši vezu'
     CSSCLASS: 'Poravnanje / Stil'

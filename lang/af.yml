@@ -178,7 +178,7 @@ af:
     Help1: '<p> Voer een of meer groepe in <em>CSV</em>formaat (komma geskeide waardes).<small> <a href="#" class="toggle-advanced">Wys gevorderde gebruike</a></small></p>'
     ResultDeleted: 'Verwyderde %d groepe'
     ResultUpdated: '%d Groepe was opgedateer'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Voeg URL by'
     ANCHORVALUE: Anker
     BUTTONINSERT: Plaas in

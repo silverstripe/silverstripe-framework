@@ -10,7 +10,7 @@
  * @package forms
  * @subpackage fields-formattedinput
  */
-class HtmlEditorSanitiser {
+class HTMLEditorSanitiser {
 
 	/** @var [stdClass] - $element => $rule hash for whitelist element rules where the element name isn't a pattern */
 	protected $elements = array();
@@ -21,14 +21,14 @@ class HtmlEditorSanitiser {
 	protected $globalAttributes = array();
 
 	/**
-	 * Construct a sanitiser from a given HtmlEditorConfig
+	 * Construct a sanitiser from a given HTMLEditorConfig
 	 *
-	 * Note that we build data structures from the current state of HtmlEditorConfig - later changes to
+	 * Note that we build data structures from the current state of HTMLEditorConfig - later changes to
 	 * the passed instance won't cause this instance to update it's whitelist
 	 *
-	 * @param HtmlEditorConfig $config
+	 * @param HTMLEditorConfig $config
 	 */
-	public function __construct(HtmlEditorConfig $config) {
+	public function __construct(HTMLEditorConfig $config) {
 		$valid = $config->getOption('valid_elements');
 		if ($valid) $this->addValidElements($valid);
 

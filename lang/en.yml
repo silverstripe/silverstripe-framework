@@ -278,7 +278,7 @@ en:
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'

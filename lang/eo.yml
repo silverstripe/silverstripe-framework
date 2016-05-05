@@ -267,7 +267,7 @@ eo:
     ResultUpdated: 'Aktualigis %d grupojn'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Senfina iteracio troviĝis en la "{type}"-hierarkio. Bonvole ŝanĝu la patron por solvi tion.'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Aldoni je URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaloj kaj dimensioj'
     ANCHORSCANNOTACCESSPAGE: 'Vi ne rajtas aliri la enhavon de la cela paĝo.'

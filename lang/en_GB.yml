@@ -11,7 +11,7 @@ en_GB:
     NOFILESIZE: 'File size is zero bytes.'
   ForgotPasswordEmail_ss:
     HELLO: Hello
-  HtmlEditorField:
+  HTMLEditorField:
     CSSCLASSCENTER: 'Centred, on its own.'
     LINK: 'Link'
   LeftAndMain:

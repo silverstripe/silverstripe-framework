@@ -1,7 +1,7 @@
 <?php
 
 // Default CMS HTMLEditorConfig
-HtmlEditorConfig::get('cms')->setOptions(array(
+HTMLEditorConfig::get('cms')->setOptions(array(
 	'friendly_name' => 'Default CMS',
 	'priority' => '50',
 
@@ -28,7 +28,7 @@ HtmlEditorConfig::get('cms')->setOptions(array(
 		. "object[width|height|data|type],param[name|value],map[class|name|id],area[shape|coords|href|target|alt]"
 ));
 
-HtmlEditorConfig::get('cms')
+HTMLEditorConfig::get('cms')
 	->enablePlugins(array(
 		'contextmenu' => null,
 		'image' => null,

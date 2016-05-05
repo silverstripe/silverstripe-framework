@@ -272,7 +272,7 @@ fa_IR:
     ResultCreated: '{count} گروه ایجاد شده'
     ResultDeleted: 'گروه‌های %d حذف شد'
     ResultUpdated: 'گروه‌های %d به‌روز شد'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'افزودن URL'
     ADJUSTDETAILSDIMENSIONS: 'جزئیات و ابعاد'
     ANCHORSCANNOTACCESSPAGE: 'شما مجاز به دسترسی به محتوای صفحه مورد نظر نیستید.'

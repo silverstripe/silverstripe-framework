@@ -3,29 +3,29 @@
 /**
  * A PHP version of TinyMCE's configuration, to allow various parameters to be configured on a site or section basis
  *
- * There can be multiple HtmlEditorConfig's, which should always be created / accessed using HtmlEditorConfig::get.
+ * There can be multiple HTMLEditorConfig's, which should always be created / accessed using HTMLEditorConfig::get.
  * You can then set the currently active config using set_active.
  * The order of precendence for which config is used is (lowest to highest):
  *
  * - default_config config setting
  * - Active config assigned
- * - Config name assigned to HtmlEditorField
- * - Config instance assigned to HtmlEditorField
+ * - Config name assigned to HTMLEditorField
+ * - Config instance assigned to HTMLEditorField
  *
  * Typically global config changes should set the active config.
  *
- * The defaut config class can be changed via dependency injection to replace HtmlEditorConfig.
+ * The defaut config class can be changed via dependency injection to replace HTMLEditorConfig.
  *
  * @author "Hamish Friedlander" <hamish@silverstripe.com>
  * @package forms
  * @subpackage fields-formattedinput
  */
-abstract class HtmlEditorConfig extends Object {
+abstract class HTMLEditorConfig extends Object {
 
 	/**
 	 * Array of registered configurations
 	 *
-	 * @var HtmlEditorConfig[]
+	 * @var HTMLEditorConfig[]
 	 */
 	protected static $configs = array();
 
@@ -46,11 +46,11 @@ abstract class HtmlEditorConfig extends Object {
 	private static $default_config = 'default';
 
 	/**
-	 * Get the HtmlEditorConfig object for the given identifier. This is a correct way to get an HtmlEditorConfig
+	 * Get the HTMLEditorConfig object for the given identifier. This is a correct way to get an HTMLEditorConfig
 	 * instance - do not call 'new'
 	 *
 	 * @param string $identifier The identifier for the config set. If omitted, the active config is returned.
-	 * @return HtmlEditorConfig The configuration object.
+	 * @return HTMLEditorConfig The configuration object.
 	 * This will be created if it does not yet exist for that identifier
 	 */
 	public static function get($identifier = null) {
@@ -68,10 +68,10 @@ abstract class HtmlEditorConfig extends Object {
 	 * Assign a new config for the given identifier
 	 *
 	 * @param string $identifier A specific identifier
-	 * @param HtmlEditorConfig $config
-	 * @return HtmlEditorConfig The assigned config
+	 * @param HTMLEditorConfig $config
+	 * @return HTMLEditorConfig The assigned config
 	 */
-	public static function set_config($identifier, HtmlEditorConfig $config) {
+	public static function set_config($identifier, HTMLEditorConfig $config) {
 		self::$configs[$identifier] = $config;
 		return $config;
 	}
@@ -100,7 +100,7 @@ abstract class HtmlEditorConfig extends Object {
 	/**
 	 * Get the currently active configuration object
 	 *
-	 * @return HtmlEditorConfig The active configuration object
+	 * @return HTMLEditorConfig The active configuration object
 	 */
 	public static function get_active() {
 		$identifier = self::get_active_identifier();
@@ -110,10 +110,10 @@ abstract class HtmlEditorConfig extends Object {
 	/**
 	 * Assigns the currently active config an explicit instance
 	 *
-	 * @param HtmlEditorConfig $config
-	 * @return HtmlEditorConfig The given config
+	 * @param HTMLEditorConfig $config
+	 * @return HTMLEditorConfig The given config
 	 */
-	public static function set_active(HtmlEditorConfig $config) {
+	public static function set_active(HTMLEditorConfig $config) {
 		$identifier = static::get_active_identifier();
 		return static::set_config($identifier, $config);
 	}

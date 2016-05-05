@@ -101,7 +101,7 @@ uk:
     RolesAddEditLink: 'Керувати ролями'
     has_many_Permissions: Права
     many_many_Members: Члени
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Якір
     BUTTONINSERTLINK: 'Вставити посилання'
     BUTTONREMOVELINK: 'Вмдалити посилання'

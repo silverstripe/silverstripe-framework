@@ -238,7 +238,7 @@ mi:
     ResultUpdated: 'Kua whakahōutia e %d ngā rōpū'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Kua kitea he koromeke mutunga kore i roto i te aroākapanga "{type}". Hurihia te matua hei whakaea i tēnei'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Tāpiri PRO'
     ADJUSTDETAILSDIMENSIONS: 'Ngā taipitopito &amp; ngā rahinga'
     ANCHORVALUE: Punga

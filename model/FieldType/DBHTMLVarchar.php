@@ -3,7 +3,7 @@
 namespace SilverStripe\Model\FieldType;
 
 use ShortcodeParser;
-use HtmlEditorField;
+use HTMLEditorField;
 use TextField;
 
 /**
@@ -41,7 +41,7 @@ class DBHTMLVarchar extends DBVarchar {
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
-		return new HtmlEditorField($this->name, $title, 1);
+		return new HTMLEditorField($this->name, $title, 1);
 	}
 
 	public function scaffoldSearchField($title = null) {

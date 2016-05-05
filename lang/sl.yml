@@ -230,7 +230,7 @@ sl:
     ResultCreated: 'Ustvarjenih je {count} skupin'
     ResultDeleted: 'Število izbrisanih skupin %d'
     ResultUpdated: 'Število ponastavljenih skupin %d'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Dodaj URL'
     ANCHORVALUE: Sidro
     BUTTONADDURL: 'Dodaj url'

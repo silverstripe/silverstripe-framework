@@ -41,7 +41,7 @@ hu:
     Parent: 'Szülő csoport'
     has_many_Permissions: Jogosultságok
     many_many_Members: Tagok
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: 'Link beszúrása'
     BUTTONREMOVELINK: 'Link eltávolítása'
     CSSCLASS: 'Elhelyezkedés / stílus'

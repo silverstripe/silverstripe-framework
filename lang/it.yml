@@ -273,7 +273,7 @@ it:
     ResultUpdated: 'Aggiornati %d gruppi'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Trovato loop infinito nella gerarchia di "{type}". Cambia il padre per risolvere il problema'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Aggiungi URL'
     ADJUSTDETAILSDIMENSIONS: 'Dettagli e dimensioni'
     ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'

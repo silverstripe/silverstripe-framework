@@ -122,7 +122,7 @@ gl_ES:
     Help1: '<p>Importar un ou máis grupos no formato <em>CSV</em>  (valores separados por comas). <small><a href="#" class="toggle-advanced">Amosar uso avanzado</a></small></p>'
     ResultDeleted: 'Eliminados %d grupos'
     ResultUpdated: 'Actualizados %d grupos'
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Áncora
     BUTTONINSERT: Inserir
     BUTTONINSERTLINK: 'Inserir ligazón'
