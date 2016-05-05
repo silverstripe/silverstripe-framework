@@ -14340,8 +14340,8 @@
       }
     },
     "tinymce": {
-      "version": "4.3.5",
-      "resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.3.5.tgz"
+      "version": "4.3.11",
+      "resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.3.11.tgz"
     },
     "url": {
       "version": "0.11.0",
