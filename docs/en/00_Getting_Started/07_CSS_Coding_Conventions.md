@@ -25,6 +25,13 @@ and the [BEM](http://getbem.com/) methodology (block-element-modifier).
 File naming and style include ordering is inspired by
 [ITCSS](https://www.xfive.co/blog/itcss-scalable-maintainable-css-architecture/).
 
+## Linting
+
+We use [SCSSLint](https://github.com/brigade/scss-lint) to ensure all new SCSS
+written complies with the rules below. Please consider installing it
+in your development environment (you'll need Ruby). There's also
+quite a few [SCSSLint IDE integrations](https://github.com/brigade/scss-lint#editor-integration)
+which highlight any linting errors right in your code.
 
 ## File and Folder Naming
 
