@@ -1,3 +1,5 @@
+// scss-lint:disable all
+
 /*<?php
 // *************
 // Self-generating. Run with PHP on the command line to re-generate.
@@ -1833,4 +1835,3 @@ die;
 @mixin user-select($args...) {
 	user-select: $args;
 }
-
