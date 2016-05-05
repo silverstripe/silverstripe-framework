@@ -25,13 +25,13 @@
 // Colors
 // Grayscale and brand colors for use across Bootstrap.
 
-$gray-dark: #4f5861;
+
+$gray-dark: #4f5861; // Used for text
 $gray: #55595c;
 $gray-light: #d3d9dd;
 $gray-lighter: #e8e9ea;
 // $gray-lightest: #f7f7f9;
-$white: #fff; // Never change variable, use new variable if needed
-
+$white: #fff; // Never change, create new variable if needed
 
 $brand-primary: #29abe2;
 $brand-success: #3fa142;
@@ -41,7 +41,7 @@ $brand-danger: #d40404;
 
 // Backgrounds
 $background-main: #f6f7f8;
-$background-north: darken($background-main, 2);
+$background-darker: darken($background-main, 2);
 
 // Borders
 $border-color-light: darken($background-main, 6);
@@ -95,10 +95,11 @@ $border-width: 1px;
 //
 // Settings for the `<body>` element.
 
-$body-bg: #f6f7f8;
-$body-color: $gray-dark;
-$body-color-light: lighten($gray-dark, 10);
-$body-color-lightest: lighten($gray-dark, 20);
+$body-bg: $background-main;
+$body-color: $gray-dark; // eg. Text, labels, iconography
+$body-color-light: lighten($gray-dark, 10); // eg. Field descriptions
+$body-color-lighter: lighten($gray-dark, 20); // eg. placeholder text
+$body-color-dark:    darken($body-color, 10%);  // eg. iconography hovered
 
 
 // Links
@@ -228,6 +229,7 @@ $border-radius-sm: .2rem;
 
 $component-active-color: #fff;
 $component-active-bg: $brand-primary;
+$component-active-border-color: $brand-primary;
 
 $caret-width: .3em;
 $caret-width-lg: $caret-width;
@@ -697,3 +699,36 @@ $cms-panel-xs: 60px;
 $cms-panel-sm: 300px;
 $cms-panel-md: 448px;
 $cms-panel-lg: 638px;
+
+// Shadows, these need work to make consistent (used in AssetAdmin)
+$shadow-light: rgba(0, 0, 0, .2);
+$dropdown-shadow: 0 0 3px $shadow-light;
+$gallery-item-shadow: 0 1px 4px $gray-light;
+
+// Masks: typically behind modals, drag drop areas
+$page-mask-light: rgba(236, 239, 241, .9);
+
+
+// Variables for use within but not limited to the AssetAdmin module
+// Gallery item path to framework
+
+$framework-path:     "../../../../framework";
+
+// Gallery items
+
+$gallery-thumb-width:   176px;
+$gallery-thumb-height:  132px;
+
+$gallery-item-width:    $gallery-thumb-width + 2; // include borders
+$gallery-item-height:   174px;
+$gallery-title-height:  40px;
+
+$gallery-folder-height:	  54px;
+$gallery-folder-title-height: $gallery-folder-height - 2;
+
+
+// Transition speeds
+
+$transition-speed-slow:   1s;
+$transition-speed-mid:  .5s;
+$transition-speed-fast:   .3s;
