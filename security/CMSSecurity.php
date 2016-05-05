@@ -186,9 +186,16 @@ PHP
 
 		// Get redirect url
 		$controller = $this->getResponseController(_t('CMSSecurity.SUCCESS', 'Success'));
-		$backURL = $this->request->requestVar('BackURL')
-			?: Session::get('BackURL')
-			?: Director::absoluteURL(AdminRootController::config()->url_base, true);
+		$backURLs = array(
+			$this->getRequest()->requestVar('BackURL'),
+			Session::get('BackURL'),
+			Director::absoluteURL(AdminRootController::config()->url_base, true),
+		);
+		foreach ($backURLs as $backURL) {
+			if ($backURL && Director::is_site_url($backURL)) {
+				break;
+			}
+		}
 
 		// Show login
 		$controller = $controller->customise(array(
