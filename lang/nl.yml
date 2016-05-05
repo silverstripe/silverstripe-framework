@@ -269,6 +269,7 @@ nl:
     many_many_Members: Leden
   GroupImportForm:
     Help1: '<p>Importeer een of meerdere groepen in <em>CSV</em>-formaat (comma-separated values). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
+    Help2: '<div class="advanced"> <h4>Geavanceerd gebruik</h4> <ul> <li>Toegestane kolommen: <em>%s</em></li> <li>Bestaande groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li> <li>Groepshiërarchiën kunnen aangemaakt worden door een <em>ParentCode</em> kolom te gebruiken</li>; <li>Toegangscodes kunnen toegewezen worden met de <em>PermissionCode</em> kolom. Bestaande toegangscodes worden niet verwijderd.</li> </ul> </div>'
     ResultCreated: '{count} groepen aangemaakt'
     ResultDeleted: '%d groepen verwijderd'
     ResultUpdated: '%d groepen aangepast'
@@ -300,6 +301,8 @@ nl:
     FROMWEB: 'Vanaf een website'
     FindInFolder: 'Zoek in map'
     IMAGEALT: 'Alternatieve tekst (alt tekst)'
+    IMAGEALTTEXT: 'Alternatieve tekst (alt tekst) - wordt getoond als de afbeelding niet kan worden geladen'
+    IMAGEALTTEXTDESC: 'Getoond voor schermlezers of als afbeelding niet kan worden weergegeven'
     IMAGEDIMENSIONS: Dimensies
     IMAGEHEIGHTPX: Hoogte
     IMAGETITLE: 'Tooltip (title) - Toon extra informatie over de afbeelding'
@@ -319,6 +322,7 @@ nl:
     PAGE: Pagina
     SUBJECT: 'Email onderwerp'
     URL: URL
+    URLDESCRIPTION: 'Voeg video''s of afbeeldingen van een andere webpagina toe, door de URL in te voeren. Zorg er voor dat je de juiste toestemming hebt, om het materiaal te delen op het internet.<br><br>De bestanden worden niet opgeslagen in het CMS, maar geëmbed vanaf de originele locatie. Als het bestand niet meer beschikbaar is op de originele locatie, is deze niet meer zichtbaar op deze pagina.'
     URLNOTANOEMBEDRESOURCE: '{url} kon niet worden omgezet in een media-bron.'
     UpdateMEDIA: 'Media bijwerken'
   Image:
@@ -334,9 +338,11 @@ nl:
     DELETED: Verwijderd.
     DropdownBatchActionsDefault: Acties
     HELP: Help
+    PAGETYPE: 'Pagina type'
     PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als u weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hieronder in.'
     PERMALREADY: 'Helaas, je hebt geen toegang tot dat deel van het CMS. Hieronder kun je inloggen als iemand anders.'
     PERMDEFAULT: 'Je moet ingelogd zijn, om dit deel van de website te bekijken. Vul hieronder je inlog gegevens in.'
+    PLEASESAVE: 'Deze pagina kon niet bijgewerkt worden, omdat deze nog niet is bewaard.'
     PreviewButton: Voorbeeld
     REORGANISATIONSUCCESSFUL: 'Menu-indeling is aangepast'
     SAVEDUP: Opgeslagen.
@@ -424,6 +430,7 @@ nl:
     Toggle: 'Toon opmaak hulp'
   MemberImportForm:
     Help1: '<p>Importeer leden in <em>CSV</em>-formaat (comma-separated values). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
+    Help2: '<div class="advanced"><h4>Geavanceerd gebruik</h4><ul><li>Toegestane kolommen: <em>%s</em></li><li>Bestaande gebruikers worden geïdentificeerd door middel van hun unieke <em>Code</em>, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li><li>Groepen kunnen worden toegekend door <em>Groups</em> column. Groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>, meerdere groepen kunnen worden gescheiden door een komma. Bestaande groepsleden worden niet verwijderd.</li></ul></div>'
     ResultCreated: '{count} leden aangemaakt'
     ResultDeleted: '%d leden verwijderd'
     ResultNone: 'Geen wijzingen'
