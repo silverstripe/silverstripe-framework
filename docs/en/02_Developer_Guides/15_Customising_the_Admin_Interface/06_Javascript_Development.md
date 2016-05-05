@@ -6,6 +6,11 @@ summary: Advanced documentation about writing and customizing javascript within 
 The following document is an advanced guide on building rich javascript interactions within the SilverStripe CMS and
 a list of our best practices for contributing and modifying the core javascript framework.
 
+__Deprecated:__
+The following documentation regarding jQuery, jQueryUI and Entwine applies to legacy code only.
+If you're developing new functionality in React powered sections please refer to
+[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+
 ## jQuery, jQuery UI and jQuery.entwine: Our libraries of choice
 
 We predominantly use [jQuery](http://jquery.com) as our abstraction library for DOM related programming, within the
