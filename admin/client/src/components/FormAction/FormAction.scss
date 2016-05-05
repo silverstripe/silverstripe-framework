@@ -42,34 +42,30 @@
 }
 
 
-// SVG loading icon
+// loading icon
 .btn__loading-icon {
-  float: left;
-  margin: 0 4px 0 0;
-  height: 20px;
   position: absolute;
   left: 50%;
-  top: $btn-padding-y;
-  transform: translate(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: -2px;
 
-  svg {
-    width: 24px;
-    height: 20px;
-  }
-
-  circle {
-    width: 4px;
-    height: 5px;
+  .btn__circle {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: $gray;
+    display: inline-block;
+    margin: 0 2px;
     animation: loading-icon 1.2s infinite ease-in-out both;
-    fill: $gray;
-    transform-origin: 50% 50%;
+    white-space: nowrap;
   }
 
-  circle:nth-child(1) {
+  .btn__circle--1 {
     animation-delay: -.32s;
   }
 
-  circle:nth-child(2) {
+  .btn__circle--2 {
     animation-delay: -.16s;
   }
 }
@@ -94,8 +90,8 @@
 .btn-primary {
   border-bottom-color: $btn-primary-shadow;
 
-  svg circle {
-    fill: $white;
+  .btn__circle {
+    background: $white;
   }
 }
 
@@ -111,8 +107,8 @@
     border-color: $btn-primary-border;
   }
 
-  svg circle {
-    fill: $btn-primary-bg;
+  .btn__circle {
+    background: $btn-primary-bg;
   }
 }
 
@@ -143,8 +139,26 @@
     color: $btn-secondary-color;
   }
 
-  svg circle {
-    fill: $body-color;
+  .btn__circle {
+    background: $btn-secondary-color;
+  }
+}
+
+.btn-danger {
+  .btn__circle {
+    background: $white;
+  }
+}
+
+.btn-danger-outline {
+  .btn__circle {
+    background: $brand-danger;
+  }
+}
+
+.btn-link {
+  .btn__circle {
+    background: $link-color;
   }
 }
 
