@@ -701,6 +701,7 @@ $cms-panel-md: 448px;
 $cms-panel-lg: 638px;
 
 // Shadows, these need work to make consistent (used in AssetAdmin)
+// TODO tidy all shadows cms wide
 $shadow-light: rgba(0, 0, 0, .2);
 $dropdown-shadow: 0 0 3px $shadow-light;
 $gallery-item-shadow: 0 1px 4px $gray-light;
@@ -710,10 +711,6 @@ $page-mask-light: rgba(236, 239, 241, .9);
 
 
 // Variables for use within but not limited to the AssetAdmin module
-// Gallery item path to framework
-
-$framework-path:     "../../../../framework";
-
 // Gallery items
 
 $gallery-thumb-width:   176px;
