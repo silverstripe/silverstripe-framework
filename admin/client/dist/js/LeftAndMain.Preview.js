@@ -345,7 +345,9 @@
 					this.setCurrentStateName(null);
 				}
 
-				url += (url.indexOf('?') === -1 ? '?' : '&') + 'CMSPreview=1';
+				if (url) {
+					url += (url.indexOf('?') === -1 ? '?' : '&') + 'CMSPreview=1';
+				}
 
 				if (this.is('.column-hidden')) {
 					this.setPendingURL(url);
