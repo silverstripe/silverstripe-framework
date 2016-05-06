@@ -944,6 +944,9 @@ body.cms {
 }
 
 .cms-add-form {
+  .field > label.left {
+    width: auto;
+  }
 	.step-label {
 		opacity:0.9;
 		.flyout {
@@ -951,9 +954,7 @@ body.cms {
 			padding-top:5px;
 		}
 		.title {
-			padding-top:5px; //aligns label with point of arrow
 			font-weight:bold; //to match pagetype label
-			text-shadow: 1px 1px 0 $color-text-shadow;
 		}
 	}
 	ul.SelectionGroup {
