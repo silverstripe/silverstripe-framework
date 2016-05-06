@@ -237,7 +237,7 @@ $border-radius-lg: .3rem;
 $border-radius-sm: .2rem;
 
 $component-active-color: #fff;
-$component-active-bg: $brand-primary;
+$component-active-bg: $brand-primary; // SS3 was #338DC1
 $component-active-bg-light: lighten($component-active-bg, 42%);
 $component-active-border-color: $brand-primary;
 
@@ -252,7 +252,7 @@ $caret-width-lg: $caret-width;
 $table-cell-padding: $spacer;
 $table-sm-cell-padding: $spacer * .75;
 
-$table-bg: #fff;
+$table-bg: transparent;
 $table-bg-accent: #f9f9f9;
 $table-bg-hover: #f5f5f5;
 $table-bg-active: $brand-primary;
@@ -730,7 +730,6 @@ $z-depth-1: 0 2px 5px 0 $shadow-level-1, 0 2px 10px 0 $shadow-level-1;
 $z-depth-2: 0 8px 12px 0 $shadow-level-3, 0 6px 20px 0 $shadow-level-2;
 $z-depth-3: 0 12px 20px 0 $shadow-level-4, 0 17px 40px 0 $shadow-level-3;
 $z-depth-4: 0 16px 28px 0 $shadow-level-5, 0 25px 55px 0 $shadow-level-5;
-
 
 // Masks: typically behind modals, drag drop areas
 $page-mask-light: rgba(236, 239, 241, .9);

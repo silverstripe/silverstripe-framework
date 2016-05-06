@@ -154,11 +154,12 @@ body.cms {
 	width: 100%;
 }
 
+
 // We have a faux three column layout when displaying Page content in the CMS.
 .has-panel {
 	.cms-tree-view-sidebar,
 	.cms-versions-form {
-		padding: 0 $grid-x*1.5 $grid-y*1.5 $grid-x*2;
+		padding: $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half;
 	}
 
 	.cms-content-header.north {
@@ -186,15 +187,15 @@ body.cms {
 		top: 0;
 		left: 0;
 		bottom: 1px;
-		width: 300px;
+		width: $cms-panel-sm;
 		padding-bottom: $grid-y;
 		padding-left: $grid-x * 2;
 		padding-right: $grid-x*2;
-		box-shadow: 1px 0 0 0 $color-separator;
+		box-shadow: 1px 0 0 0 $border-color-dark;
 	}
 
 	.cms-content-header-nav {
-		margin-left: 300px;
+		margin-left: $cms-panel-sm;
 	}
 
 	.section-heading {
@@ -235,7 +236,24 @@ body.cms {
 		.cms-panel-content {
 			height: calc(100% - 53px) !important; // TEMP until JS is removed
 		}
+
+    // History panel
+    .cms-helper-hide-actions {
+      height: 100% !important;
+    }
 	}
+}
+
+// History checkboxes
+.cms-versions-form {
+  .form-group::after {
+    visibility: hidden;
+    margin: 0;
+  }
+
+  .checkbox {
+    margin-bottom: 0;
+  }
 }
 
 #page-title-heading {
@@ -640,8 +658,7 @@ body.cms {
 		margin-top: 0;
 			a {
 			margin: 0;
-			// overlap divider line below
-			line-height: 40px - 1px;
+			line-height: 41px;
 			padding-top: 0;
 			padding-bottom: 0;
 			}
@@ -665,7 +682,7 @@ body.cms {
 		z-index:2;
 
 		a {
-			border-bottom: 4px solid #66727d;
+			border-bottom: 3px solid #66727d;
 			padding: 0;
 			margin: 0 12px 0;
 		}
@@ -752,7 +769,7 @@ body.cms {
 		z-index: 100001;
 
 		span.notice {
-			width: 300px;
+			width: $cms-panel-sm;
 			font-size: 14px;
 			padding: 10px 20px;
 			color: #dc7f00;
@@ -1105,7 +1122,6 @@ body.cms {
 	}
 
 	.field {
-
 		&.checkbox {
 			padding: 0 0 8px;
 		}
@@ -1116,42 +1132,38 @@ body.cms {
 	}
 
 	table {
-		margin: 8px -4px;
-		thead {
-			th {
-				color: $color-text-dark;
-				font-weight: bold;
-				line-height: 16px;
-				font-size: 11px;
-				padding: 4px;
-			}
-		}
+		margin: 8px #{-$grid-gutter-width-half};
+		width: calc(100% + #{$grid-gutter-width-half * 2});
 
 		tr {
 			&.active {
-				background-color: $color-menu-button;
+				background-color: $component-active-bg;
 				color: $color-text-light;
-
-				td.first-column {
-					border-radius: 6px 0 0 6px;
-				}
-				td.last-column {
-					border-radius: 0 6px 6px 0;
-				}
+				border-top: 2px solid $component-active-bg;
+			}
+			+ .active td {
+				border-color: $component-active-bg;
 			}
 		}
 
-		td {
-			padding: 4px;
-			line-height: 16px;
-			vertical-align: top;
+		th {
+			font-weight: bold;
 		}
 	}
 
-	td {
+	td,
+	th {
 		border-bottom: 1px solid darken($color-widget-bg, 10%);
 		padding: $grid-y - 1 2px;
 		font-size: 11px;
+		vertical-align: top;
+
+		&.first-column {
+			padding-left: $grid-gutter-width-half;
+		}
+		&.last-column {
+			padding-right: $grid-gutter-width-half;
+		}
 	}
 }
 
@@ -1518,7 +1530,7 @@ form.member-profile-form {
 
 	&#cms-content-tools-CMSPageEditController {
 		.cms-panel-content-collapsed {
-			width: 60px;
+			width: $cms-panel-xs;
 			display: none; // Avoids FOUC
 
 			h2, h3 {
@@ -1540,7 +1552,7 @@ form.member-profile-form {
 	.cms-panel-content-collapsed {
 		width: 60px;
 		display: none; // Avoids FOUC
-		height: calc(100% - 52px);
+		height: calc(100% - $toolbar-height);
 		overflow: hidden;
 
 		h2, h3 {
