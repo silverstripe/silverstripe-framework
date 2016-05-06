@@ -24,6 +24,10 @@ form.nostyle {
 	padding: 0 0 $grid-y - 1 0;
 	margin: $grid-y 0;
 
+	.row {
+		margin-bottom: 1rem;
+	}
+
 	&.noborder, &:last-child {
 		padding-bottom: 0;
 		border-bottom: none;
@@ -398,7 +402,7 @@ form.small .field, .field.small {
 				padding-left:0;
 				padding-right:0;
 			}
-			&:hover, &:focus, &:active{	
+			&:hover, &:focus, &:active{
 				box-shadow: none;
 				outline: none;
 				background: none;
@@ -734,7 +738,6 @@ form.small .field, .field.small {
 				margin-left: 0;
 			}
 			label {
-				float: none;
 				margin-left: 0;
 
 				&.ss-ui-button {
@@ -751,14 +754,12 @@ form.small .field, .field.small {
  * Checkbox Field
  * ---------------------------------------------------- */
 .field.checkbox {
-	padding-left: $grid-x * 23;
 	margin-bottom: $grid-y;
-
-	input {
-		margin-left: 0;
-	}
 }
 input.checkbox {
+	// inline-block is used here to override display: block; when .checkbox is in the input's class
+	// Please refer to TODO on line 5 in CheckboxField_holder.ss
+	display: inline-block;
 	margin-left: 0
 }
 
@@ -862,7 +863,7 @@ fieldset.switch-states{
 		border: 2px solid lighten(#2d3035,65%);
 		border-radius: 3px;
 		-webkit-animation: bugfix infinite 1s; //Bugfix for older Webkit, including mobile Webkit.
-		background:lighten(#2d3035,69%); 
+		background:lighten(#2d3035,69%);
 		display: block;
 		height: 28px;
 		position: relative;
@@ -912,8 +913,8 @@ fieldset.switch-states{
 		}
 		.slide-button{
 			border-radius: 3px;
-			transition: all .3s ease-out;	
-			background-color: #2b9c32; 
+			transition: all .3s ease-out;
+			background-color: #2b9c32;
 			display:block;
 			height: 24px;
 			left: 0;
