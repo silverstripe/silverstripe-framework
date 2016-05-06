@@ -27,9 +27,7 @@ class CreditCardField extends TextField {
 	}
 
 	public function Field($properties = array()) {
-		$parts = $this->value;
-		if(!is_array($parts)) $parts = explode("\n", chunk_split($parts,4,"\n"));
-		$parts = array_pad($parts, 4, "");
+		$parts = $this->arrayValue();
 
 		$properties['ValueOne'] = $parts[0];
 		$properties['ValueTwo'] = $parts[1];
@@ -54,38 +52,60 @@ class CreditCardField extends TextField {
 	}
 
 	public function dataValue() {
-		if(is_array($this->value)) return implode("", $this->value);
-		else return $this->value;
+		if(is_array($this->value)) {
+			return implode("", $this->value);
+		} else {
+			return $this->value;
+		}
+	}
+
+	/**
+	 * Get either list of values, or null
+	 *
+	 * @return array
+	 */
+	public function arrayValue() {
+		if (is_array($this->value)) {
+			return $this->value;
+		}
+
+		$value = $this->dataValue();
+		return $this->parseCreditCard($value);
+	}
+
+	/**
+	 * Parse credit card value into list of four four-digit values
+	 *
+	 * @param string $value
+	 * @return array|null
+	 */
+	protected function parseCreditCard($value) {
+		if(preg_match("/([0-9]{4})([0-9]{4})([0-9]{4})([0-9]{4})/", $value, $parts)) {
+			return [ $parts[1], $parts[2], $parts[3], $parts[4] ];
+		}
+		return null;
 	}
 
 	public function validate($validator){
-		if(!$this->value || !trim(implode("", $this->value))) {
+		$value = $this->dataValue();
+		if(empty($value)) {
 			return true;
 		}
 
-		$i=0;
-
-		if($this->value) foreach($this->value as $part){
-			if(!$part || !(strlen($part) == 4) || !preg_match("/([0-9]{4})/", $part)){
-				switch($i){
-					case 0: $number = _t('CreditCardField.FIRST', 'first'); break;
-					case 1: $number = _t('CreditCardField.SECOND', 'second'); break;
-					case 2: $number = _t('CreditCardField.THIRD', 'third'); break;
-					case 3: $number = _t('CreditCardField.FOURTH', 'fourth'); break;
-				}
-				$validator->validationError(
-					$this->name,
-					_t(
-						'Form.VALIDATIONCREDITNUMBER',
-						"Please ensure you have entered the {number} credit card number correctly",
-						array('number' => $number)
-					),
-					"validation",
-					false
-				);
-				return false;
-			}
-		$i++;
+		// Check if format is valid
+		if ($this->parseCreditCard($value)) {
+			return true;
 		}
+
+		// Format is invalid
+		$validator->validationError(
+			$this->name,
+			_t(
+				'Form.VALIDATIONCREDIT',
+				"Please ensure you have entered the credit card number correctly"
+			),
+			"validation"
+		);
+		return false;
 	}
 }

@@ -27,9 +27,9 @@
 
 
 $gray-dark: #4f5861; // Used for text
-$gray: #55595c;
-$gray-light: #d3d9dd;
-$gray-lighter: #e8e9ea;
+$gray: lighten($gray-dark, 2%);
+$gray-light: lighten($gray-dark, 50%);
+$gray-lighter: lighten($gray-dark, 57%);
 // $gray-lightest: #f7f7f9;
 $gray-darker: darken($gray-dark, 10%);
 $gray-darkest: darken($gray-dark, 20%);
@@ -207,7 +207,7 @@ $headings-color: inherit;
 // $lead-font-size: 1.25rem;
 // $lead-font-weight: 300;
 //
-$text-muted: #7f8b97;
+$text-muted: lighten($body-color, 10%);
 //
 // $abbr-border-color: $gray-light;
 //
@@ -317,9 +317,10 @@ $btn-border-radius-sm: .154rem;
 
 $input-padding-x: .75rem;
 $input-padding-y: .5385rem;
+$input-max-width: 895px; // Approx max possible at small screen sizes
 
 $input-bg: #fff;
-$input-bg-disabled: $gray-lighter;
+$input-bg-disabled: $background-darker;
 
 $input-color: $body-color-light;
 $input-border-color: $border-color-dark;
@@ -332,7 +333,7 @@ $input-border-radius: $border-radius;
 $input-border-radius-lg: $border-radius-lg;
 $input-border-radius-sm: $border-radius-sm;
 
-// $input-border-focus: #66afe9;
+$input-border-focus: #66afe9;
 // $input-box-shadow-focus: rgba(102,175,233,.6);
 //
 // $input-color-placeholder: #999;

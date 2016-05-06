@@ -46,6 +46,13 @@ class FieldList extends ArrayList {
 		}
 	}
 
+	public function __clone() {
+		// Clone all fields in this list
+		foreach($this->items as $key => $field) {
+			$this->items[$key] = clone $field;
+		}
+	}
+
 	/**
 	 * Return a sequential set of all fields that have data.  This excludes wrapper composite fields
 	 * as well as heading / help text fields.

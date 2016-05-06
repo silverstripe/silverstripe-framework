@@ -2,7 +2,6 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Member;
 
 
@@ -99,6 +98,21 @@ class ConfirmedPasswordField extends FormField {
 	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_STRUCTURAL;
 
 	/**
+	 * @var PasswordField
+	 */
+	protected $passwordField = null;
+
+	/**
+	 * @var PasswordField
+	 */
+	protected $confirmPasswordfield = null;
+
+	/**
+	 * @var HiddenField
+	 */
+	protected $hiddenField = null;
+
+	/**
 	 * @param string $name
 	 * @param string $title
 	 * @param mixed $value
@@ -109,13 +123,16 @@ class ConfirmedPasswordField extends FormField {
 	public function __construct($name, $title = null, $value = "", $form = null, $showOnClick = false,
 			$titleConfirmField = null) {
 
+		// Set field title
+		$title = isset($title) ? $title : _t('Member.PASSWORD', 'Password');
+
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->children = new FieldList(
-			new PasswordField(
+			$this->passwordField = new PasswordField(
 				"{$name}[_Password]",
-				(isset($title)) ? $title : _t('Member.PASSWORD', 'Password')
+				$title
 			),
-			new PasswordField(
+			$this->confirmPasswordfield = new PasswordField(
 				"{$name}[_ConfirmPassword]",
 				(isset($titleConfirmField)) ? $titleConfirmField : _t('Member.CONFIRMPASSWORD', 'Confirm Password')
 			)
@@ -123,7 +140,7 @@ class ConfirmedPasswordField extends FormField {
 
 		// has to be called in constructor because Field() isn't triggered upon saving the instance
 		if($showOnClick) {
-			$this->children->push(new HiddenField("{$name}[_PasswordFieldVisible]"));
+			$this->children->push($this->hiddenField = new HiddenField("{$name}[_PasswordFieldVisible]"));
 		}
 
 		// disable auto complete
@@ -134,11 +151,20 @@ class ConfirmedPasswordField extends FormField {
 
 		$this->showOnClick = $showOnClick;
 
-		// we have labels for the subfields
-		$title = false;
-
 		parent::__construct($name, $title);
 		$this->setValue($value);
+	}
+
+	public function Title()
+	{
+		// Title is displayed on nested field, not on the top level field
+		return null;
+	}
+
+	public function setTitle($title)
+	{
+		parent::setTitle($title);
+		$this->passwordField->setTitle($title);
 	}
 
 	/**
@@ -329,10 +355,11 @@ class ConfirmedPasswordField extends FormField {
 	 * @return $this
 	 */
 	public function setName($name) {
-		$this->children->fieldByName($this->getName() . '[_Password]')
-				->setName($name . '[_Password]');
-		$this->children->fieldByName($this->getName() . '[_ConfirmPassword]')
-				->setName($name . '[_ConfirmPassword]');
+		$this->passwordField->setName($name . '[_Password]');
+		$this->confirmPasswordfield->setName($name . '[_ConfirmPassword]');
+		if($this->hiddenField) {
+			$this->hiddenField->setName($name . '[_PasswordFieldVisible]');
+		}
 
 		return parent::setName($name);
 	}
@@ -344,9 +371,8 @@ class ConfirmedPasswordField extends FormField {
 	 * @return boolean
 	 */
 	public function isSaveable() {
-		$isVisible = $this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]');
-
-		return (!$this->showOnClick || ($this->showOnClick && $isVisible && $isVisible->Value()));
+		return !$this->showOnClick
+			|| ($this->showOnClick && $this->hiddenField && $this->hiddenField->Value());
 	}
 
 	/**
@@ -363,15 +389,12 @@ class ConfirmedPasswordField extends FormField {
 			return true;
 		}
 
-		$passwordField = $this->children->fieldByName($name.'[_Password]');
-		$passwordConfirmField = $this->children->fieldByName($name.'[_ConfirmPassword]');
-		$passwordField->setValue($this->value);
-		$passwordConfirmField->setValue($this->confirmValue);
-
-		$value = $passwordField->Value();
+		$this->passwordField->setValue($this->value);
+		$this->confirmPasswordfield->setValue($this->confirmValue);
+		$value = $this->passwordField->Value();
 
 		// both password-fields should be the same
-		if($value != $passwordConfirmField->Value()) {
+		if($value != $this->confirmPasswordfield->Value()) {
 			$validator->validationError(
 				$name,
 				_t('Form.VALIDATIONPASSWORDSDONTMATCH',"Passwords don't match"),
@@ -383,7 +406,7 @@ class ConfirmedPasswordField extends FormField {
 
 		if(!$this->canBeEmpty) {
 			// both password-fields shouldn't be empty
-			if(!$value || !$passwordConfirmField->Value()) {
+			if(!$value || !$this->confirmPasswordfield->Value()) {
 				$validator->validationError(
 					$name,
 					_t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"),
@@ -517,6 +540,11 @@ class ConfirmedPasswordField extends FormField {
 			->setValue('*****');
 
 		return $field;
+	}
+
+	public function performDisabledTransformation()
+	{
+		return $this->performReadonlyTransformation();
 	}
 
 	/**

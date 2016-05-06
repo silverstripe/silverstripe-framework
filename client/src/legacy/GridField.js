@@ -307,8 +307,8 @@ $.entwine('ss', function($) {
 	 */
 	$('.ss-gridfield .filter-header :input').entwine({
 		onmatch: function() {
-			var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
-				resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+			var filterbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-filter'),
+				resetbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-reset');
 
 			if(this.val()) {
 				filterbtn.addClass('filtered');
@@ -323,8 +323,8 @@ $.entwine('ss', function($) {
 			// Skip reset button events, they should trigger default submission
 			if(this.closest('.ss-gridfield-button-reset').length) return;
 
-			var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
-				resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+			var filterbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-filter'),
+				resetbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-reset');
 
 			if(e.keyCode == '13') {
 				var btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');

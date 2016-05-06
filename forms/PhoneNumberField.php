@@ -13,20 +13,118 @@ use SilverStripe\ORM\DataObjectInterface;
  * @package forms
  * @subpackage fields-formattedinput
  */
-class PhoneNumberField extends FormField {
+class PhoneNumberField extends FieldGroup {
 
+	/**
+	 * Default area code
+	 *
+	 * @var string
+	 */
 	protected $areaCode;
+
+	/**
+	 * Default country code
+	 * @var string
+	 */
 	protected $countryCode;
+
+	/**
+	 * Default extension
+	 *
+	 * @var string
+	 */
 	protected $ext;
 
-	public function __construct($name, $title = null, $value = '', $extension = null, $areaCode = null,
-			$countryCode = null) {
+	/**
+	 * @return NumericField
+	 */
+	public function getCountryField() {
+		return $this->getChildField('Country');
+	}
 
+	/**
+	 * @return NumericField
+	 */
+	public function getAreaField() {
+		return $this->getChildField('Area');
+	}
+
+	/**
+	 * @return NumericField
+	 */
+	public function getNumberField() {
+		return $this->getChildField('Number');
+	}
+
+	/**
+	 * @return NumericField
+	 */
+	public function getExtensionField() {
+		return $this->getChildField('Extension');
+	}
+
+	protected function getChildField($name) {
+		$endsWith = "[{$name}]";
+		foreach($this->getChildren() as $child) {
+
+			/** @var Formfield $child */
+			if(substr($child->getName(), 0 - strlen($endsWith)) === $endsWith) {
+				return $child;
+			}
+		}
+		return null;
+	}
+
+	public function __construct(
+		$name, $title = null, $value = '', $extension = null, $areaCode = null, $countryCode = null
+	) {
 		$this->areaCode = $areaCode;
 		$this->ext = $extension;
 		$this->countryCode = $countryCode;
 
-		parent::__construct($name, $title, $value);
+		// Build fields
+		$fields = new FieldList();
+		if($this->countryCode !== null) {
+			$countryField = NumericField::create($name.'[Country]', false, $countryCode, 4)
+				->addExtraClass('phonenumber-field__country');
+			$fields->push($countryField);
+		}
+
+		if($this->areaCode !== null) {
+			$areaField = NumericField::create($name.'[Area]', false, $areaCode, 4)
+				->addExtraClass('phonenumber-field__area');
+			$fields->push($areaField);
+		}
+		$numberField = NumericField::create($name.'[Number]', false, null, 10)
+			->addExtraClass('phonenumber-field__number');
+		$fields->push($numberField);
+
+		if($this->ext !== null) {
+			$extensionField = NumericField::create( $name.'[Extension]', false, $extension, 6)
+				->addExtraClass('phonenumber-field__extension');
+			$fields->push($extensionField);
+		}
+
+		parent::__construct($title, $fields);
+
+		$this->setName($name);
+		if (isset($value)) {
+			$this->setValue($value);
+		}
+	}
+
+	public function setName($name) {
+		parent::setName($name);
+		foreach($this->getChildren() as $child) {
+			/** @var FormField $child */
+			$thisName = $child->getName();
+			$thisName = preg_replace('/^.*(\[\\w+\\])$/', $name . '\\1', $thisName);
+			$child->setName($thisName);
+		}
+	}
+
+	public function hasData() {
+		return true;
 	}
 
 	/**
@@ -34,104 +132,89 @@ class PhoneNumberField extends FormField {
 	 * @return string
 	 */
 	public function Field($properties = array()) {
-		$fields = new FieldGroup( $this->name );
-		list($countryCode, $areaCode, $phoneNumber, $extension) = $this->parseValue();
-
-		if ($this->value=="") {
-			$countryCode=$this->countryCode;
-			$areaCode=$this->areaCode;
-			$extension=$this->ext;
-		}
-
-		if($this->countryCode !== null) {
-			$fields->push(new NumericField($this->name.'[Country]', '+', $countryCode, 4));
-		}
-
-		if($this->areaCode !== null) {
-			$fields->push(new NumericField($this->name.'[Area]', '(', $areaCode, 4));
-			$fields->push(new NumericField($this->name.'[Number]', ')', $phoneNumber, 10));
-		} else {
-			$fields->push(new NumericField($this->name.'[Number]', '', $phoneNumber, 10));
-		}
-
-		if($this->ext !== null) {
-			$fields->push(new NumericField( $this->name.'[Extension]', 'ext', $extension, 6));
-		}
-
-		$description = $this->getDescription();
-		if($description) {
-			$fields->getChildren()->first()->setDescription($description);
-		}
-
-		foreach($fields as $field) {
+		foreach($this->getChildren() as $field) {
 			/** @var FormField $field */
 			$field->setDisabled($this->isDisabled());
-			$field->setReadonly($this->isReadonly());
+			$field->setReadonly($this->IsReadonly());
+			$field->setForm($this->getForm());
 		}
-
-		return $fields->Field($properties);
+		return parent::Field($properties);
 	}
 
 	public function setValue( $value ) {
 		$this->value = self::joinPhoneNumber( $value );
+		$parts = $this->parseValue();
+		if($countryField = $this->getCountryField()) {
+			$countryField->setValue($parts['Country']);
+		}
+		if($areaField = $this->getAreaField()) {
+			$areaField->setValue($parts['Area']);
+		}
+		$this->getNumberField()->setValue($parts['Number']);
+		if ($extensionField = $this->getExtensionField()) {
+			$extensionField->setValue($parts['Extension']);
+		}
 		return $this;
 	}
 
+	/**
+	 * Join phone number into a string
+	 *
+	 * @param array|string $value Input
+	 * @return string
+	 */
 	public static function joinPhoneNumber( $value ) {
 		if( is_array( $value ) ) {
 			$completeNumber = '';
-			if( isset($value['Country']) && $value['Country']!=null) {
+			if( !empty($value['Country'])) {
 				$completeNumber .= '+' . $value['Country'];
 			}
 
-			if( isset($value['Area']) && $value['Area']!=null) {
+			if( !empty($value['Area'])) {
 				$completeNumber .= '(' . $value['Area'] . ')';
 			}
 
 			$completeNumber .= $value['Number'];
 
-			if( isset($value['Extension']) && $value['Extension']!=null) {
+			if( !empty($value['Extension']) ) {
 				$completeNumber .= '#' . $value['Extension'];
 			}
 
 			return $completeNumber;
-		} else
+		} else {
 			return $value;
+		}
 	}
 
+	/**
+	 * Returns array with parsed phone format
+	 *
+	 * @return array Array with Country, Area, Number, and Extension keys (in order)
+	 */
 	protected function parseValue() {
-		if( !is_array( $this->value ))
-			preg_match( '/^(?:(?:\+(\d+))?\s*\((\d+)\))?\s*([0-9A-Za-z]*)\s*(?:[#]\s*(\d+))?$/', $this->value, $parts);
-		else
-			return array( '', '', $this->value, '' );
-
-		if(is_array($parts)) array_shift( $parts );
-
-		for ($x=0;$x<=3;$x++) {
-			if (!isset($parts[$x])) $parts[]='';
+		if (is_array($this->value)) {
+			return $this->value;
 		}
-
-		return $parts;
+		// Parse value in form "+ countrycode (areacode) phone # extension"
+		$valid = preg_match(
+			'/^(?:(?:\+(?<Country>\d+))?\s*\((?<Area>\d+)\))?\s*(?<Number>[0-9A-Za-z]*)\s*(?:[#]\s*(?<Extension>\d+))?$/',
+			$this->value,
+			$parts
+		);
+		if(!$valid) {
+			$parts = [];
+		}
+		return array(
+			'Country' => isset($parts['Country']) ? $parts['Country'] : '',
+			'Area' => isset($parts['Area']) ? $parts['Area'] : '',
+			'Number' => isset($parts['Number']) ? $parts['Number'] : '',
+			'Extension' => isset($parts['Extension']) ? $parts['Extension'] : '',
+		);
 	}
 
 	public function saveInto(DataObjectInterface $record) {
-		list( $countryCode, $areaCode, $phoneNumber, $extension ) = $this->parseValue();
-		$fieldName = $this->name;
-
-		$completeNumber = '';
-
-		if( $countryCode )
-			$completeNumber .= '+' . $countryCode;
-
-		if( $areaCode )
-			$completeNumber .= '(' . $areaCode . ')';
-
-		$completeNumber .= $phoneNumber;
-
-		if( $extension )
-			$completeNumber .= '#' . $extension;
-
-		$record->$fieldName = $completeNumber;
+		$completeNumber = static::joinPhoneNumber($this->parseValue());
+		$record->setCastedField($this->getName(), $completeNumber);
 	}
 
 	/**
@@ -158,5 +241,21 @@ class PhoneNumberField extends FormField {
 		}
 
 		return true;
+	}
+
+	public function performReadonlyTransformation()
+	{
+		// Just setReadonly without casting to NumericField_Readonly
+		$clone = clone $this;
+		$clone->setReadonly(true);
+		return $clone;
+	}
+
+	public function performDisabledTransformation()
+	{
+		// Just setDisabled without casting to NumericField_Disabled
+		$clone = clone $this;
+		$clone->setDisabled(true);
+		return $clone;
 	}
 }

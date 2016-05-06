@@ -33,7 +33,7 @@ class MoneyField extends FormField {
 	protected $allowedCurrencies;
 
 	/**
-	 * @var FormField
+	 * @var NumericField
 	 */
 	protected $fieldAmount = null;
 
@@ -42,31 +42,47 @@ class MoneyField extends FormField {
 	 */
 	protected $fieldCurrency = null;
 
+	/**
+	 * Gets field for the currency selector
+	 *
+	 * @return FormField
+	 */
+	public function getCurrencyField() {
+		return $this->fieldCurrency;
+	}
+
+	/**
+	 * Gets field for the amount input
+	 *
+	 * @return NumericField
+	 */
+	public function getAmountField() {
+		return $this->fieldAmount;
+	}
+
 	public function __construct($name, $title = null, $value = "") {
+		$this->setName($name);
+
 		// naming with underscores to prevent values from actually being saved somewhere
 		$this->fieldAmount = new NumericField("{$name}[Amount]", _t('MoneyField.FIELDLABELAMOUNT', 'Amount'));
-		$this->fieldCurrency = $this->FieldCurrency($name);
+		$this->fieldCurrency = $this->buildCurrencyField();
 
 		parent::__construct($name, $title, $value);
 	}
 
-	/**
-	 * @param array
-	 * @return string
-	 */
-	public function Field($properties = array()) {
-		return
-			"<div class=\"fieldgroup\">" .
-			"<div class=\"fieldgroup-field\">" . $this->fieldCurrency->SmallFieldHolder() . "</div>" .
-			"<div class=\"fieldgroup-field\">" . $this->fieldAmount->SmallFieldHolder() . "</div>" .
-			"</div>";
+	public function __clone()
+	{
+		$this->fieldAmount = clone $this->fieldAmount;
+		$this->fieldCurrency = clone $this->fieldCurrency;
 	}
 
 	/**
-	 * @param string $name - Name of field
+	 * Builds a new currency field based on the allowed currencies configured
+	 *
 	 * @return FormField
 	 */
-	protected function FieldCurrency($name) {
+	protected function buildCurrencyField() {
+		$name = $this->getName();
 		$allowedCurrencies = $this->getAllowedCurrencies();
 		if($allowedCurrencies) {
 			$field = new DropdownField(
@@ -83,6 +99,8 @@ class MoneyField extends FormField {
 			);
 		}
 
+		$field->setReadonly($this->isReadonly());
+		$field->setDisabled($this->isDisabled());
 		return $field;
 	}
 
@@ -113,6 +131,8 @@ class MoneyField extends FormField {
 	 * method.
 	 *
 	 * (see @link MoneyFieldTest_CustomSetter_Object for more information)
+	 *
+	 * @param DataObjectInterface|Object $dataObject
 	 */
 	public function saveInto(DataObjectInterface $dataObject) {
 		$fieldName = $this->getName();
@@ -141,10 +161,6 @@ class MoneyField extends FormField {
 		return $clone;
 	}
 
-	/**
-	 * @todo Implement removal of readonly state with $bool=false
-	 * @todo Set readonly state whenever field is recreated, e.g. in setAllowedCurrencies()
-	 */
 	public function setReadonly($bool) {
 		parent::setReadonly($bool);
 
@@ -165,13 +181,14 @@ class MoneyField extends FormField {
 
 	/**
 	 * @param array $arr
+	 * @return $this
 	 */
 	public function setAllowedCurrencies($arr) {
 		$this->allowedCurrencies = $arr;
 
 		// @todo Has to be done twice in case allowed currencies changed since construction
 		$oldVal = $this->fieldCurrency->dataValue();
-		$this->fieldCurrency = $this->FieldCurrency($this->name);
+		$this->fieldCurrency = $this->buildCurrencyField();
 		$this->fieldCurrency->setValue($oldVal);
 
 		return $this;
@@ -201,5 +218,11 @@ class MoneyField extends FormField {
 	 */
 	public function validate($validator) {
 		return !(is_null($this->fieldAmount) || is_null($this->fieldCurrency));
+	}
+
+	public function setForm($form) {
+		$this->fieldCurrency->setForm($form);
+		$this->fieldAmount->setForm($form);
+		return parent::setForm($form);
 	}
 }

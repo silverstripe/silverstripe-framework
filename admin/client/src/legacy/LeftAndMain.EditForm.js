@@ -449,3 +449,7 @@ $.entwine('ss', function($){
   });
 
 });
+
+var errorMessage = function(text) {
+  jQuery.noticeAdd({text: text, type: 'error', stayTime: 5000, inEffect: {left: '0', opacity: 'show'}});
+};

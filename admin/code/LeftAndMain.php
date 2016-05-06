@@ -127,6 +127,17 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	];
 
 	/**
+	 * Assign themes to use for cms
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $admin_themes = [
+		'/framework/admin/themes/cms-forms',
+		SSViewer::DEFAULT_THEME,
+	];
+
+	/**
 	 * @config
 	 * @var Array Codes which are required from the current user to view this controller.
 	 * If multiple codes are provided, all of them are required.
@@ -573,9 +584,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$dummy = null;
 		$this->extend('init', $dummy);
 
-		// The user's theme shouldn't affect the CMS, if, for example, they have
-		// replaced TableListField.ss or Form.ss.
-		Config::inst()->update('SSViewer', 'theme_enabled', false);
+		// Assign default cms theme and replace user-specified themes
+		SSViewer::set_themes($this->config()->admin_themes);
 
 		//set the reading mode for the admin to stage
 		Versioned::set_stage(Versioned::DRAFT);
@@ -1663,7 +1673,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				new FormAction('submit', _t('Form.SubmitBtnLabel', "Go"))
 			)
 		);
-		$form->addExtraClass('cms-batch-actions nostyle');
+		$form->addExtraClass('cms-batch-actions form--no-dividers');
 		$form->unsetValidator();
 
 		$this->extend('updateBatchActionsForm', $form);

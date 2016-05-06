@@ -878,13 +878,18 @@ class SSViewer implements Flushable {
 		$classes = array_reverse(ClassInfo::ancestry($className));
 		foreach($classes as $class) {
 			$template = $class . $suffix;
-			if(SSViewer::hasTemplate($template)) $templates[] = $template;
-			elseif(SSViewer::hasTemplate('Includes/'.$template)) $templates[] = 'Includes/'.$template;
+			if(SSViewer::hasTemplate($template)) {
+				$templates[] = $template;
+			} elseif(SSViewer::hasTemplate('Includes/'.$template)) {
+				$templates[] = 'Includes/'.$template;
+			}
 
 			// If the class is "Page_Controller", look for Page.ss
 			if(stripos($class,'_controller') !== false) {
 				$template = str_ireplace('_controller','',$class) . $suffix;
-				if(SSViewer::hasTemplate($template)) $templates[] = $template;
+				if(SSViewer::hasTemplate($template)) {
+					$templates[] = $template;
+				}
 			}
 
 			if($baseClass && $class == $baseClass) break;

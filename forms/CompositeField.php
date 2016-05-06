@@ -202,13 +202,32 @@ class CompositeField extends FormField {
 	}
 
 	public function setForm($form) {
-		foreach($this->children as $field) {
+		foreach($this->getChildren() as $field) {
 			if ($field instanceof FormField) {
 				$field->setForm($form);
 			}
 		}
 
 		parent::setForm($form);
+		return $this;
+	}
+
+
+
+	public function setDisabled($disabled) {
+		parent::setDisabled($disabled);
+		foreach($this->getChildren() as $child) {
+			$child->setDisabled($disabled);
+		}
+		return $this;
+	}
+
+	public function setReadonly($readonly)
+	{
+		parent::setReadonly($readonly);
+		foreach($this->getChildren() as $child) {
+			$child->setReadonly($readonly);
+		}
 		return $this;
 	}
 
@@ -294,6 +313,11 @@ class CompositeField extends FormField {
 		else return $this->children;
 	}
 
+	public function __clone() {
+		/** {@see FieldList::__clone(}} */
+		$this->setChildren(clone $this->children);
+	}
+
 	/**
 	 * Return a readonly version of this field. Keeps the composition but returns readonly
 	 * versions of all the child {@link FormField} objects.
@@ -309,8 +333,8 @@ class CompositeField extends FormField {
 			$newChildren->push($child);
 		}
 
-		$clone->children = $newChildren;
-		$clone->readonly = true;
+		$clone->setChildren($newChildren);
+		$clone->setReadonly(true);
 		$clone->addExtraClass($this->extraClass());
 		$clone->setDescription($this->getDescription());
 
@@ -332,8 +356,8 @@ class CompositeField extends FormField {
 			$newChildren->push($child);
 		}
 
-		$clone->children = $newChildren;
-		$clone->readonly = true;
+		$clone->setChildren($newChildren);
+		$clone->setDisabled(true);
 		$clone->addExtraClass($this->extraClass());
 		$clone->setDescription($this->getDescription());
 		foreach($this->attributes as $k => $v) {

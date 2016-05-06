@@ -111,7 +111,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			"holder_id": null,
 			"title": false,
 			"source": null,
-			"extraClass": "hidden nolabel",
+			"extraClass": "hidden form-group--no-label",
 			"description": null,
 			"rightTitle": null,
 			"leftTitle": null,

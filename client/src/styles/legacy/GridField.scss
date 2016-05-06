@@ -133,12 +133,9 @@ $gf_grid_x:	16px;
 					color: #55595c;
 					font-weight: normal;
 				}
-				.fieldholder-small {
-					padding-bottom: 0;
-				}
-				.fieldgroup {
+				.form__fieldgroup {
 					max-width:$gf_grid_x*32; //max width 512px
-					.fieldgroup-field {
+					.form__fieldgroup-item {
 						padding:0;
 					}
 				}
@@ -351,11 +348,11 @@ $gf_grid_x:	16px;
 				border-right: 1px solid $gf_colour_border;
 
 				div {
-					&.fieldgroup,&.fieldgroup-field {
+					&.form__fieldgroup,&.form__fieldgroup-item {
 						width: 100%;
 						position:relative;
 					}
-					&.fieldgroup {
+					&.form__fieldgroup {
 						min-width: $gf_grid_x*12.5;
 						padding-right:0;
 						&.filter-buttons{

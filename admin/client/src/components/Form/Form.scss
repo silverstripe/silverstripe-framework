@@ -1,50 +1,288 @@
 .form {
   padding-bottom: $spacer-y;
-
-  // scss-lint:disable SelectorDepth
-  .readonly .form__field-holder > div {
-    padding: 8px 0;
-    text-transform: capitalize;
-  }
-  // scss-lint:enable SelectorDepth
 }
 
-// For larger panels form elements are presented inline
-.form--inline {
+// Form divider lines
+.form__divider::after,
+.form-group::after {
+  border-bottom: 1px solid $border-color-light;
+  visibility: visible;
+  width: 100%;
+  content: "\0020";
+  display: block;
+}
 
-  @include media-breakpoint-up(md) {
+.form__divider::after {
+  margin: $spacer-y 0;
+}
+
+.form-group::after {
+  margin: $spacer-y 0 #{-$spacer-y};
+}
+
+// Remove underline and column offset
+// Used on places like tree batch actions
+.form--no-dividers {
+  .form-group {
+    padding-bottom: 0;
+
+    &::after {
+      visibility: hidden;
+      content: "";
+      display: none;
+    }
+  }
+}
+
+.form-group {
+  padding-bottom: $spacer-y;
+
+  .form-group {
+    padding-bottom: 0;
+
+    &::after {
+      border-bottom: 0;
+      margin: 0;
+      visibility: hidden;
+    }
+  }
+
+  // TODO Fix for when the .form-group--no-label class is used but there is actually a label
+  &.form-group--no-label:not(.stacked) .form__field-label + .form__field-holder {
+    @include make-col-offset(0);
+  }
+}
+
+.form__field-label {
+  // If word is to long force break with hyphenation
+  @include break-word();
+}
+
+.form__field-holder {
+  max-width: $input-max-width;
+}
+
+.form__field-extra-label,
+.form__field-description {
+  color: $text-muted;
+  padding-top: $input-padding-y;
+  padding-bottom: $input-padding-y;
+  margin-bottom: 0;
+  font-size: $font-size-sm;
+}
+
+.form__field-extra-label {
+  font-style: italic;
+}
+
+
+// TODO convert all readonly fields to inputs,
+// and remove .form-control-static class from them
+.form-control-static {
+  padding-left: $input-padding-x;
+  padding-right: $input-padding-x;
+  background-color: $input-bg-disabled;
+  border: 1px solid darken($input-bg-disabled, 3%);
+  max-width: $input-max-width;
+  @include border-radius($input-border-radius);
+
+  &:focus {
+    border-color: $input-border-focus;
+    outline: none;
+  }
+}
+
+
+// Readonlys should be converted to an input
+// scss-lint:disable all
+.form__field-holder p.readonly,
+.form__field-holder input.readonly,
+.form__field-holder span.readonly,
+.readonly .form__field-holder > div {
+  @extend .form-control-static;
+}
+// scss-lint:enable all
+
+
+// Radio / Checkbox
+input[type="checkbox"],
+input[type="radio"],
+input.checkbox,
+input.radio {
+  display: inline;
+  margin-right: 6px;
+  margin-bottom: 0;
+}
+
+
+// Grouped/Nested form fields
+// Nested as only as a fix for date fields within the filter panel
+.form__fieldgroup .form__fieldgroup-item {
+  display: inline-block;
+  margin-right: $spacer-x / 2;
+  margin-top: 8px;
+  min-width: 166px;
+  vertical-align: bottom; // Align fields with no labels
+}
+
+.form__fieldgroup-label {
+  display: block;
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.cms-edit-form:not(.AssetAdmin) .form__field-holder--stacked {
+  .form__field-label {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .form__field-holder {
+    margin-left: -$grid-gutter-width-half;
+  }
+}
+
+
+@mixin form-responsive($breakpoint-inline, $breakpoint-inline-limit-width, $breakpoint-inline-limit-width-max) {
+  @include media-breakpoint-up($breakpoint-inline) {
     .form-group {
       @include make-row();
+
+      &::after {
+        margin: $spacer-y $grid-gutter-width-half #{-$spacer-y};
+        width: calc(100% - #{$grid-gutter-width}); // IE10 fix for avoiding horizontal scrollbars
+      }
+
+      &:not(.stacked) {
+        .form__field-label {
+          @include make-col-span(3);
+          // Override the `<label>` default with .form-control-label styles
+          padding-top: $input-padding-y;
+          padding-bottom: $input-padding-y;
+          margin-bottom: 0;
+          display: block;
+        }
+
+        .form__field-holder {
+          @include make-col();
+          @include make-col-span(9);
+        }
+      }
+    }
+
+    .form-group.checkbox > .form__field-holder,
+    .form-group--no-label > .form__field-holder,
+    .form__field-holder--no-label {
+      @include make-col-offset(3);
+
+      // IE For some reason in IE10 the gutters are not accounted for in the offset (perhaps box-sizing issue)
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        left: $grid-gutter-width;
+      }
     }
 
     .form__field-label {
       @include make-col();
-      @include make-col-span(3);
-      // Override the `<label>` default with .form-control-label styles
-      padding-top: $input-padding-y;
-      padding-bottom: $input-padding-y;
-      margin-bottom: 0;
+      @include make-col-span(12);
     }
 
-    .form__field-holder {
+    .stacked .form__field-holder {
+      @include make-col();
+      @include make-col-span(12);
+      max-width: 100%;
+    }
+
+    // Outer CompositeField doesn't have label but inner CompositeField does
+    .form-group--no-label .form-group .form__field-holder {
+      @include make-col-offset(0);
+    }
+
+    .form__field-extra-label {
       @include make-col();
       @include make-col-span(9);
+      @include make-col-offset(3);
+
+      // IE10 Possibly scrollbar effects the width to push columns
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        @include make-col-offset(0);
+      }
+    }
+
+    .optionset {
+      margin-top: 7px;
+    }
+
+    // Confirm password fields
+    .form__field-holder .form-group.password {
+      .form__field-holder,
+      .form__field-label {
+        @include make-col();
+        @include make-col-span(12);
+      }
+
+      .form__field-extra-label {
+        @include make-col-span(12);
+        @include make-col-offset(0);
+      }
     }
   }
 
-  @include media-breakpoint-up(xl) {
-    .form__field-label {
+  @include media-breakpoint-up($breakpoint-inline-limit-width) {
+    .form-group:not(.stacked) {
+      .form__field-label {
+        @include make-col-span(2);
+      }
+
+      .form__field-holder {
+        @include make-col-span(8);
+
+        // IE10 Possibly scrollbar effects the width to push columns
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+          @include make-col-span(6);
+        }
+      }
+    }
+
+    .form-group.checkbox .form__field-holder,
+    .form-group--no-label .form__field-holder,
+    .form__field-holder--no-label {
+      @include make-col-offset(2);
+    }
+
+    .stacked .form__field-holder {
+      @include make-col-span(10);
+    }
+
+    .form__field-extra-label {
       @include make-col-span(2);
-    }
-
-    .form__field-holder {
-      @include make-col-span(6);
+      @include make-col-offset(0);
     }
   }
 
-  @include media-breakpoint-up(xxl) {
-    .form__field-holder {
-      @include make-col-span(5);
+  @include media-breakpoint-up($breakpoint-inline-limit-width-max) {
+    .form-group:not(.stacked) {
+      .form__field-holder {
+        @include make-col-span(7);
+      }
+    }
+
+    .form__field-extra-label {
+      @include make-col-span(3);
+      @include make-col-offset(0);
+
+      // IE10 Possibly scrollbar effects the width to push columns
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        @include make-col-span(1);
+      }
     }
   }
+}
+
+
+// TEMPORARY
+// Apply .form--inline to forms to state whether or not the label and input should become inline
+// @include form-responsive(turns inline, stops being full width, reduced portion of screen width is used)
+.form--inline,
+.cms-edit-form:not(.AssetAdmin) {
+  @include form-responsive(lg, xl, xxl);
 }
