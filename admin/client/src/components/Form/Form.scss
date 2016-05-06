@@ -148,6 +148,28 @@ input.radio {
     .form-group {
       @include make-row();
 
+      // Composite fields
+      // TODO reduce nesting
+      // scss-lint:disable SelectorDepth
+      .form__field-holder .form-group {
+        .form__field-holder,
+        .form__field-label {
+          @include make-col();
+          @include make-col-span(12);
+        }
+
+        .form__field-holder {
+          margin-left: 0;
+        }
+
+        // TODO make label display on the right side like normal .form__field-extra-label
+        .form__field-extra-label {
+          @include make-col-span(12);
+          @include make-col-offset(0);
+        }
+      }
+      // scss-lint:enable SelectorDepth
+
       &::after {
         margin: $spacer-y $grid-gutter-width-half #{-$spacer-y};
         width: calc(100% - #{$grid-gutter-width}); // IE10 fix for avoiding horizontal scrollbars
@@ -208,22 +230,9 @@ input.radio {
       }
     }
 
-    .optionset {
+    .optionset,
+    .selection-group {
       margin-top: 7px;
-    }
-
-    // Confirm password fields
-    .form__field-holder .form-group.password {
-      .form__field-holder,
-      .form__field-label {
-        @include make-col();
-        @include make-col-span(12);
-      }
-
-      .form__field-extra-label {
-        @include make-col-span(12);
-        @include make-col-offset(0);
-      }
     }
   }
 

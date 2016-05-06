@@ -1,4 +1,4 @@
-<ul>
+<ul class="list-unstyled selection-group">
 	<% if $IsReadonly %>
 		<% loop $FieldSet %>
 			<% if $Selected %>
