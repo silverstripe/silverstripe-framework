@@ -103,13 +103,28 @@ class Oembed implements ShortcodeHandler {
 	 */
 	protected static function autodiscover_from_url($url)
 	{
-		// Fetch the URL (cache for a week by default)
-		$service = new RestfulService($url, 60 * 60 * 24 * 7);
-		$body = $service->request();
-		if (!$body || $body->isError()) {
+		$timeout   = 5;
+		$sapphireInfo = new SapphireInfo();
+		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
+		$curlRequest = curl_init();
+		curl_setopt_array(
+			$curlRequest,
+			array(
+				CURLOPT_URL            => $url,
+				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_USERAGENT      => $useragent,
+				CURLOPT_CONNECTTIMEOUT => $timeout,
+				CURLOPT_FOLLOWLOCATION => 1,
+
+			)
+		);
+
+		$response = curl_exec($curlRequest);
+		$headers = curl_getinfo($curlRequest);
+		if(!$response || $headers['http_code'] !== 200) {
 			return false;
 		}
-		$body = $body->getBody();
+		$body = $response;		
 		return static::autodiscover_from_body($body);
 	}
 
@@ -283,15 +298,29 @@ class Oembed_Result extends ViewableData {
 		if($this->data !== false) {
 			return;
 		}
+		$timeout   = 5;
+		$sapphireInfo = new SapphireInfo();
+		$useragent = 'SilverStripe/' . $sapphireInfo->Version();
+		$curlRequest = curl_init();
+		curl_setopt_array(
+			$curlRequest,
+			array(
+				CURLOPT_URL            => $this->url,
+				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_USERAGENT      => $useragent,
+				CURLOPT_CONNECTTIMEOUT => $timeout,
+				CURLOPT_FOLLOWLOCATION => 1,
 
-		// Fetch from Oembed URL (cache for a week by default)
-		$service = new RestfulService($this->url, 60*60*24*7);
-		$body = $service->request();
-		if(!$body || $body->isError()) {
+			)
+		);
+
+		$response = curl_exec($curlRequest);
+		$headers = curl_getinfo($curlRequest);
+		if(!$response || $headers['http_code'] !== 200) {
 			$this->data = array();
 			return;
 		}
-		$body = $body->getBody();
+		$body = $response;
 		$data = json_decode($body, true);
 		if(!$data) {
 			// if the response is no valid JSON we might have received a binary stream to an image
