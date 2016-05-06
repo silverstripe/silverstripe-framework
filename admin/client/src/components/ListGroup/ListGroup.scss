@@ -48,7 +48,7 @@
   display: block;
   background: $gray-lighter;
   float: left;
-  margin: -12px 12px 0 - $spacer-y;
+  margin: -12px 12px 0 #{0 - $spacer-y};
 }
 
 .list-group-item__info {
