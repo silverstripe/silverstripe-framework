@@ -90,7 +90,7 @@ pt_BR:
     Sort: 'Ordenação'
     has_many_Permissions: Permissões
     many_many_Members: Membros
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Âncora
     BUTTONINSERTLINK: 'Inserir link'
     BUTTONREMOVELINK: 'Remover link'

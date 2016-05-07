@@ -147,7 +147,7 @@ es_MX:
     Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>\n'
     ResultDeleted: '%d grupos eliminados'
     ResultUpdated: '%d grupos actualizados'
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Anclar
     BUTTONINSERT: Insertar
     BUTTONINSERTLINK: 'Insertar enlace'

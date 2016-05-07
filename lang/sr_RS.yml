@@ -239,7 +239,7 @@ sr_RS:
     ResultUpdated: 'Ажурирано %d група'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Откривена је бесконачна петља у оквиру "{type}" хијерархије. Промените родитеља да би сте разрешили ситуацију'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Додај URL'
     ADJUSTDETAILSDIMENSIONS: 'Детаљи &amp; димензије'
     ANCHORVALUE: Сидро

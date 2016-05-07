@@ -239,7 +239,7 @@ ru:
     ResultUpdated: 'Обновлено %d групп'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Обнаружен бесконечный цикл в иерархической структуре "{type}". Для исправления ошибки измените страницу, находящуюся уровнем выше'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Добавить URL'
     ADJUSTDETAILSDIMENSIONS: 'Дополнительные сведения и размеры'
     ANCHORVALUE: Якорь

@@ -167,7 +167,7 @@ bg:
     ResultCreated: 'Бяха създадени {count} група/и'
     ResultDeleted: 'Бяха изтрити %d групи'
     ResultUpdated: 'Бяха обновени %d групи'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Добави URL'
     ADJUSTDETAILSDIMENSIONS: 'Детайли и размери'
     ANCHORVALUE: Котва

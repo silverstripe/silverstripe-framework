@@ -239,7 +239,7 @@ pl:
     ResultUpdated: 'Zaktualizowano grup: %d'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Znaleziono nieskończoną pętlę wewnątrz hierarchii "{type}". Proszę zmień rodzica by to rozwiązać.'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Dodaj adres URL'
     ADJUSTDETAILSDIMENSIONS: 'Szczegóły i rozmiar'
     ANCHORVALUE: Odnośnik

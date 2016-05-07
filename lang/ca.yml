@@ -91,7 +91,7 @@ ca:
     Sort: 'Ordre'
     has_many_Permissions: Permisos
     many_many_Members: Membres
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Ancla
     BUTTONINSERTLINK: 'Insereix un enllaç'
     BUTTONREMOVELINK: 'Suprimeix un enllaç'

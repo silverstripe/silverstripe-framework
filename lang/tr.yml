@@ -109,7 +109,7 @@ tr:
     Sort: 'Sırala'
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Çapa
     BUTTONINSERTLINK: 'Bağlantı ekle'
     BUTTONREMOVELINK: 'Bağlantıyı sil'

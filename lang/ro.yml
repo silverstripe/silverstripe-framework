@@ -84,7 +84,7 @@ ro:
     Parent: 'Grup de Baza'
     has_many_Permissions: Permisiuni
     many_many_Members: Membri
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: 'Insereaza link'
     BUTTONREMOVELINK: 'Indeparteaza link'
     CSSCLASS: 'Aliniere / stil'

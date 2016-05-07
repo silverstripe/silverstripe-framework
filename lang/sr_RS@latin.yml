@@ -239,7 +239,7 @@ sr_RS@latin:
     ResultUpdated: 'Ažurirano %d grupa'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Otkrivena je beskonačna petlja u okviru "{type}" hijerarhije. Promenite roditelja da bi ste razrešili situaciju'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Dodaj URL'
     ADJUSTDETAILSDIMENSIONS: 'Detalji &amp; dimenzije'
     ANCHORVALUE: Sidro

@@ -275,7 +275,7 @@ es:
     ResultUpdated: 'Actualizados grupos %d'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Bucle infinito encontrado dentro de la jerarquía "{type}". Por favor, cambie el padre para resolver el problema'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Añadir URL'
     ADJUSTDETAILSDIMENSIONS: 'Detalles &amp; dimensiones'
     ANCHORSCANNOTACCESSPAGE: 'No se le permite acceder al contenido de la página destino.'

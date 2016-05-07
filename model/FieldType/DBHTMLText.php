@@ -6,7 +6,7 @@ use Injector;
 use HTTP;
 use ShortcodeParser;
 use DOMDocument;
-use HtmlEditorField;
+use HTMLEditorField;
 use TextField;
 use Exception;
 
@@ -264,7 +264,7 @@ class DBHTMLText extends DBText {
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
-		return new HtmlEditorField($this->name, $title);
+		return new HTMLEditorField($this->name, $title);
 	}
 
 	public function scaffoldSearchField($title = null, $params = null) {

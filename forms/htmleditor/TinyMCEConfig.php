@@ -3,7 +3,7 @@
 /**
  * Default configuration for HtmlEditor specific to tinymce
  */
-class TinyMCEConfig extends HtmlEditorConfig {
+class TinyMCEConfig extends HTMLEditorConfig {
 
 	/**
 	 * Location of module relative to BASE_DIR. This must contain the following dirs
@@ -440,7 +440,7 @@ class TinyMCEConfig extends HtmlEditorConfig {
 	 */
 	public function getScriptURL() {
 		// If gzip is disabled just return core script url
-		$useGzip = Config::inst()->get('HtmlEditorField', 'use_gzip');
+		$useGzip = Config::inst()->get('HTMLEditorField', 'use_gzip');
 		if(!$useGzip) {
 			return THIRDPARTY_DIR . '/tinymce/tinymce.min.js';
 		}

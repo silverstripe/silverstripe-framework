@@ -275,7 +275,7 @@ lt:
     ResultUpdated: 'Atnaujinta %d grupių'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Rastas begalinis sąryšis "{type}" hierarchijoje. Prašome patikrinti tėvinius sąryšius'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Pridėti URL'
     ADJUSTDETAILSDIMENSIONS: 'Detalesnė inf. ir matmenys'
     ANCHORSCANNOTACCESSPAGE: 'Neturite teisių pasiekti pasirinkto puslapio turinį.'

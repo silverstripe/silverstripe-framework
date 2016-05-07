@@ -40,7 +40,7 @@ ms:
     Parent: 'Kumpulan Induk'
     has_many_Permissions: Keizinan
     many_many_Members: Ahli-ahli
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: 'Masukkan pautan'
     BUTTONREMOVELINK: 'Hapuskan pautan'
     CSSCLASS: 'Penjajaran / gaya'

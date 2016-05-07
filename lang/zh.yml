@@ -262,7 +262,7 @@ zh:
     ResultUpdated: '已更新 %d 小组'
   Hierarchy:
     InfiniteLoopNotAllowed: '"{type}" 层次结构中发现无限循环。请更改父类型来解决此问题'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: '添加网址'
     ADJUSTDETAILSDIMENSIONS: '详情 &amp;amp; 体积'
     ANCHORSCANNOTACCESSPAGE: '您不允许访问该页面的内容。'

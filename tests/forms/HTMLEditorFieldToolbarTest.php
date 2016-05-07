@@ -1,6 +1,6 @@
 <?php
 
-class HtmlEditorFieldToolbarTest_Toolbar extends HtmlEditorField_Toolbar {
+class HTMLEditorFieldToolbarTest_Toolbar extends HTMLEditorField_Toolbar {
 	public function viewfile_getLocalFileByID($id) {
 		return parent::viewfile_getLocalFileByID($id);
 	}
@@ -10,22 +10,22 @@ class HtmlEditorFieldToolbarTest_Toolbar extends HtmlEditorField_Toolbar {
 	}
 }
 
-class HtmlEditorFieldToolbarTest extends SapphireTest {
+class HTMLEditorFieldToolbarTest extends SapphireTest {
 
-	protected static $fixture_file = 'HtmlEditorFieldToolbarTest.yml';
+	protected static $fixture_file = 'HTMLEditorFieldToolbarTest.yml';
 
 	/**
-	 * @return HtmlEditorFieldToolbarTest_Toolbar
+	 * @return HTMLEditorFieldToolbarTest_Toolbar
 	 */
 	protected function getToolbar() {
-		return new HtmlEditorFieldToolbarTest_Toolbar(null, '/');
+		return new HTMLEditorFieldToolbarTest_Toolbar(null, '/');
 	}
 
 	public function setUp() {
 		parent::setUp();
 
-		Config::inst()->update('HtmlEditorField_Toolbar', 'fileurl_scheme_whitelist', array('http'));
-		Config::inst()->update('HtmlEditorField_Toolbar', 'fileurl_domain_whitelist', array('example.com'));
+		Config::inst()->update('HTMLEditorField_Toolbar', 'fileurl_scheme_whitelist', array('http'));
+		Config::inst()->update('HTMLEditorField_Toolbar', 'fileurl_domain_whitelist', array('example.com'));
 
 		// Filesystem mock
 		AssetStoreTest_SpyStore::activate(__CLASS__);
@@ -49,7 +49,7 @@ class HtmlEditorFieldToolbarTest extends SapphireTest {
 		/** @var File $exampleFile */
 		$exampleFile = $this->objFromFixture('File', 'example_file');
 		$expectedUrl = $exampleFile->AbsoluteLink();
-		Config::inst()->update('HtmlEditorField_Toolbar', 'fileurl_domain_whitelist', array(
+		Config::inst()->update('HTMLEditorField_Toolbar', 'fileurl_domain_whitelist', array(
 			'example.com',
 			strtolower(parse_url($expectedUrl, PHP_URL_HOST))
 		));

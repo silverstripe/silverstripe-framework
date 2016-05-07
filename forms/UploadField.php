@@ -1601,7 +1601,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 */
 	protected function getListField($folderID) {
 		// Generate the folder selection field.
-		$folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
+		$folderField = new TreeDropdownField('ParentID', _t('HTMLEditorField.FOLDER', 'Folder'), 'Folder');
 		$folderField->setValue($folderID);
 
 		// Generate the file list field.

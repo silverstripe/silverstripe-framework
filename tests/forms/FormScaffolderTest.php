@@ -89,7 +89,7 @@ class FormScaffolderTest extends SapphireTest {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
 		$fields = $article1->scaffoldFormFields(array(
-			'fieldClasses' => array('Title' => 'HtmlEditorField')
+			'fieldClasses' => array('Title' => 'HTMLEditorField')
 		));
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
@@ -99,7 +99,7 @@ class FormScaffolderTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			get_class($fields->dataFieldByName('Title')),
-			'HtmlEditorField',
+			'HTMLEditorField',
 			'getCMSFields() doesnt include fields left out in a "restrictFields" definition'
 		);
 	}

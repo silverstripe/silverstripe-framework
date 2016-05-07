@@ -141,7 +141,7 @@ class Group extends DataObject {
 
 		// Only add a dropdown for HTML editor configurations if more than one is available.
 		// Otherwise Member->getHtmlEditorConfigForCMS() will default to the 'cms' configuration.
-		$editorConfigMap = HtmlEditorConfig::get_available_configs_map();
+		$editorConfigMap = HTMLEditorConfig::get_available_configs_map();
 		if(count($editorConfigMap) > 1) {
 			$fields->addFieldToTab('Root.Permissions',
 				new DropdownField(

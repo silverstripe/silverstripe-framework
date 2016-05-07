@@ -1647,7 +1647,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		foreach($this->Groups() as $group) {
 			$configName = $group->HtmlEditorConfig;
 			if($configName) {
-				$config = HtmlEditorConfig::get($group->HtmlEditorConfig);
+				$config = HTMLEditorConfig::get($group->HtmlEditorConfig);
 				if($config && $config->getOption('priority') > $currentPriority) {
 					$currentName = $configName;
 					$currentPriority = $config->getOption('priority');

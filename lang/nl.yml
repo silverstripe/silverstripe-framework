@@ -240,7 +240,7 @@ nl:
     ResultUpdated: '%d groepen aangepast'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig het hogere niveau om dit op te lossen'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Voeg URL toe'
     ADJUSTDETAILSDIMENSIONS: 'Details en afmetingen'
     ANCHORVALUE: Anker
