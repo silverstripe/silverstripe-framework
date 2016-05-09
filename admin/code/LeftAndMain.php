@@ -1209,6 +1209,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		$message = _t('LeftAndMain.SAVEDUP', 'Saved.');
 		if($request->getHeader('X-Formschema-Request')) {
+			// Ensure that newly created records have all their data loaded back into the form.
+			$form->loadDataFrom($record);
 			$form->setMessage($message, 'good');
 			$data = $this->getSchemaForForm($form);
 			$response = new SS_HTTPResponse(Convert::raw2json($data));
