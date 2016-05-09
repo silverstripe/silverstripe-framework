@@ -16,8 +16,12 @@ form.nostyle {
 
 .field {
 	display: block;
-	@include doubleborder(bottom, $color-light-separator, $box-shadow-shine-minimal);
+	border-bottom: 1px solid $color-light-separator;
 	//overflow: hidden;
+
+  &.ui-tabs {
+    border-bottom: 0;
+  }
 
 	// bottom padding accounts for the border and we have a negative
 	// margin with a postive padding to ensure the bottom border extends over the edges
@@ -398,7 +402,7 @@ form.small .field, .field.small {
 				padding-left:0;
 				padding-right:0;
 			}
-			&:hover, &:focus, &:active{	
+			&:hover, &:focus, &:active{
 				box-shadow: none;
 				outline: none;
 				background: none;
@@ -694,6 +698,14 @@ form.small .field, .field.small {
 			margin-right: 1em;
 			width: auto;
 		}
+
+    .checkbox {
+      display: inline;
+    }
+
+    .fieldgroup .fieldgroup-field {
+      padding-top: 0;
+    }
 	}
 
 	&.stacked {
@@ -754,12 +766,14 @@ form.small .field, .field.small {
 	padding-left: $grid-x * 23;
 	margin-bottom: $grid-y;
 
-	input {
-		margin-left: 0;
-	}
+  input {
+    margin-left: 0;
+    position: relative;
+    display: inline;
+  }
 }
 input.checkbox {
-	margin-left: 0
+	margin-left: 0;
 }
 
 /** ----------------------------------------------------
@@ -781,8 +795,9 @@ input.radio {
  * Optionsets and Checkboxsets
  * ---------------------------------------------------- */
 .optionset {
-	padding-bottom: 8px;
-	padding-top: 8px;
+  padding-bottom: 8px;
+  padding-top: 8px;
+  padding-left: 0;
 
 	li {
 		float: left;
@@ -862,7 +877,7 @@ fieldset.switch-states{
 		border: 2px solid lighten(#2d3035,65%);
 		border-radius: 3px;
 		-webkit-animation: bugfix infinite 1s; //Bugfix for older Webkit, including mobile Webkit.
-		background:lighten(#2d3035,69%); 
+		background:lighten(#2d3035,69%);
 		display: block;
 		height: 28px;
 		position: relative;
@@ -912,8 +927,8 @@ fieldset.switch-states{
 		}
 		.slide-button{
 			border-radius: 3px;
-			transition: all .3s ease-out;	
-			background-color: #2b9c32; 
+			transition: all .3s ease-out;
+			background-color: #2b9c32;
 			display:block;
 			height: 24px;
 			left: 0;
@@ -1130,4 +1145,9 @@ fieldset.switch-states{
 			margin-bottom: 0;
 		}
 	}
+}
+
+// Fix for multiple divider lines on the page/settings tab
+.parentTypeSelector .field.optionset {
+  border-bottom: 0;
 }
