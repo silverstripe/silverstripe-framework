@@ -207,6 +207,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		if(class_exists('RootURLController')) RootURLController::reset();
 		if(class_exists('Translatable')) Translatable::reset();
+		if(class_exists('Subsite', false)) Subsite::disable_subsite_filter(true);
 		Versioned::reset();
 		DataObject::reset();
 		if(class_exists('SiteTree')) SiteTree::reset();
