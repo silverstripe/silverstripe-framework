@@ -9,6 +9,11 @@
  * and read the jQuery UI theming API: http://jqueryui.com/docs/Theming/API
  */
 
+
+.ui-widget {
+  font-family: $font-family-sans-serif;
+}
+
 .ui-widget-content,
 .ui-widget {
 	color: $color-text;
