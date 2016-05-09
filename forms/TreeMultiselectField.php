@@ -89,7 +89,7 @@ class TreeMultiselectField extends TreeDropdownField {
 	 * formfield can contain multiple values.
 	 */
 	public function Field($properties = array()) {
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang');
 
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
