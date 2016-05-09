@@ -26,41 +26,45 @@ class CampaignAdminList extends SilverStripeComponent {
 
     this.handlePublish = this.handlePublish.bind(this);
     this.handleItemSelected = this.handleItemSelected.bind(this);
+    this.setBreadcrumbs = this.setBreadcrumbs.bind(this);
   }
 
   componentDidMount() {
     const fetchURL = this.props.itemListViewEndpoint.replace(/:id/, this.props.campaignId);
     super.componentDidMount();
+    this.setBreadcrumbs();
+    this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL).then(this.setBreadcrumbs);
+  }
 
-    // Load record
-    this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL)
-      .then(() => {
-        // Setup breadcrumbs if record is loaded
-        if (!this.props.record) {
-          return;
-        }
+  /**
+   * Update breadcrumbs for this view
+   */
+  setBreadcrumbs() {
+    // Setup breadcrumbs if record is loaded
+    if (!this.props.record) {
+      return;
+    }
 
-        // Check that we haven't navigated away from this page once the callback has returned
-        const thisLink = this.props.sectionConfig.campaignViewRoute
-          .replace(/:type\?/, 'set')
-          .replace(/:id\?/, this.props.campaignId)
-          .replace(/:view\?/, 'show');
-        const applies = window.ss.router.routeAppliesToCurrentLocation(
-          window.ss.router.resolveURLToBase(thisLink)
-        );
-        if (!applies) {
-          return;
-        }
+    // Check that we haven't navigated away from this page once the callback has returned
+    const thisLink = this.props.sectionConfig.campaignViewRoute
+      .replace(/:type\?/, 'set')
+      .replace(/:id\?/, this.props.campaignId)
+      .replace(/:view\?/, 'show');
+    const applies = window.ss.router.routeAppliesToCurrentLocation(
+      window.ss.router.resolveURLToBase(thisLink)
+    );
+    if (!applies) {
+      return;
+    }
 
-        // Push breadcrumb
-        const breadcrumbs = this.props.baseBreadcrumbs.slice(0);
-        breadcrumbs.push({
-          text: this.props.record.Name,
-          href: thisLink,
-        });
+    // Push breadcrumb
+    const breadcrumbs = this.props.baseBreadcrumbs.slice(0);
+    breadcrumbs.push({
+      text: this.props.record.Name,
+      href: thisLink,
+    });
 
-        this.props.breadcrumbsActions.setBreadcrumbs(breadcrumbs);
-      });
+    this.props.breadcrumbsActions.setBreadcrumbs(breadcrumbs);
   }
 
   /**
@@ -139,7 +143,7 @@ class CampaignAdminList extends SilverStripeComponent {
       <div className={classNames}>
         <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
           <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
-            <BreadcrumbComponent multiline />
+            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
           <div className="container-fluid campaign-items panel-scrollable--double-toolbar">
             <Accordion>
@@ -292,6 +296,7 @@ function mapStateToProps(state, ownProps) {
   return {
     record: record || {},
     campaign: state.campaign,
+    breadcrumbs: state.breadcrumbs,
   };
 }
 

@@ -50,7 +50,7 @@ class CampaignAdmin extends SilverStripeComponent {
         this.setupBreadcrumbs(ctx.params.id, ctx.params.view);
       } else {
         // If component is not mounted, we need to allow root routes to load
-        // this section in via ajaxan
+        // this section in via ajax
         next();
       }
     });
@@ -101,7 +101,7 @@ class CampaignAdmin extends SilverStripeComponent {
     this.props.breadcrumbsActions.setBreadcrumbs(breadcrumbs);
   }
 
-  handleBackButtonClick() {
+  handleBackButtonClick(event) {
     // Go back to second from last breadcrumb (where last item is current)
     if (this.props.breadcrumbs.length > 1) {
       const last = this.props.breadcrumbs[this.props.breadcrumbs.length - 2];
@@ -154,7 +154,7 @@ class CampaignAdmin extends SilverStripeComponent {
       <div className="cms-content__inner no-preview">
         <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
           <Toolbar>
-            <BreadcrumbComponent multiline />
+            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
           <div className="panel-scrollable--single-toolbar">
             <div className="toolbar--content">
@@ -203,7 +203,7 @@ class CampaignAdmin extends SilverStripeComponent {
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
           <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
-            <BreadcrumbComponent multiline />
+            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
           <FormBuilder {...formBuilderProps} />
         </div>
@@ -225,7 +225,7 @@ class CampaignAdmin extends SilverStripeComponent {
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
           <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
-            <BreadcrumbComponent multiline />
+            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
           <div className="cms-middle__scrollable">
             <FormBuilder {...formBuilderProps} />
@@ -340,7 +340,7 @@ class CampaignAdmin extends SilverStripeComponent {
    * Generate route with the given id and view
    * @param {numeric} id
    * @param {string} view
-     */
+   */
   getActionRoute(id, view) {
     return this.props.sectionConfig.campaignViewRoute
       .replace(/:type\?/, 'set')

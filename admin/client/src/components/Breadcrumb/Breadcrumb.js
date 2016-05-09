@@ -1,8 +1,7 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
-export class Breadcrumb extends SilverStripeComponent {
+class Breadcrumb extends SilverStripeComponent {
 
   render() {
     return (
@@ -39,10 +38,4 @@ Breadcrumb.propTypes = {
   crumbs: React.PropTypes.array,
 };
 
-function mapStateToProps(state) {
-  return {
-    crumbs: state.breadcrumbs,
-  };
-}
-
-export default connect(mapStateToProps)(Breadcrumb);
+export default Breadcrumb;
