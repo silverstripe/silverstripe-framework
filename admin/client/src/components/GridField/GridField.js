@@ -41,8 +41,11 @@ class GridField extends SilverStripeComponent {
   }
 
   render() {
-    if (!this.props.records) {
-      return <div></div>;
+    // props.records is keyed by record identifiers
+    const ids = Object.getOwnPropertyNames(this.props.records) || [];
+    if (!ids.length) {
+      // TODO Replace with better loading indicator
+      return <div>Loading...</div>;
     }
 
     // Placeholder to align the headers correctly with the content
