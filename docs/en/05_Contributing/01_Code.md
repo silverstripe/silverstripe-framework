@@ -47,8 +47,7 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 
 		# verify current branch 'base' then branch and switch
 		git status
-		git branch ###-description
-		git checkout ###-description
+		git checkout -b ###-description
 
 5. As time passes, the upstream repository accumulates new commits. Keep your working copy's branch and issue branch up to date by periodically [rebasing your development branch on the latest upstream](code#rebase-your-development-branch-on-the-latest-upstream).
 
