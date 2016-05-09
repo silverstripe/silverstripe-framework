@@ -29,12 +29,13 @@ Used for the button's `type` attribute. Defaults to `button`
 The style of button to be shown, adds a class `btn-{style}` to the button. Defaults to `secondary`.
 
 Recommended values are:
- * 'danger'
- * 'success'
  * 'primary'
- * 'link'
+ * 'primary-outline'
  * 'secondary'
- * 'success-outline'
+ * 'secondary-outline'
+ * 'link'
+ * 'danger'
+
 
 ### icon (string)
 
