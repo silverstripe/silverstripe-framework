@@ -172,7 +172,12 @@ class DropdownField extends FormField {
 					if($value) {
 						$selected = ($value == $this->value);
 					} else {
-						$selected = ($value === $this->value) || (((string) $value) === ((string) $this->value));
+						// Safety check against casting arrays as strings in PHP>5.4
+						if(!is_array($value) && !is_array($this->value)) {
+							$selected = ($value === $this->value) || (((string) $value) === ((string) $this->value));
+						} else {
+							$selected = ($value === $this->value);
+						}
 					}
 
 					$this->isSelected = $selected;
