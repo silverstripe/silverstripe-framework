@@ -510,7 +510,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			]
 		]);
 
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', false, true);
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang', false, true);
 		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/client/lang', false, true);
 
 		if ($this->config()->session_keepalive_ping) {
