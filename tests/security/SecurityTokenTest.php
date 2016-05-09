@@ -93,6 +93,16 @@ class SecurityTokenTest extends SapphireTest {
 		$t->setValue('mytoken');
 		$r = new SS_HTTPRequest('GET', 'dummy', array($n => 'mytoken'));
 		$this->assertTrue($t->checkRequest($r), 'Valid token returns true');
+
+		$t->setValue('mytoken');
+		$r = new SS_HTTPRequest('GET', 'dummy');
+		$r->addHeader('X-Securityid', 'mytoken');
+		$this->assertTrue($t->checkRequest($r), 'Valid token returns true');
+
+		$t->setValue('mytoken');
+		$r = new SS_HTTPRequest('GET', 'dummy');
+		$r->addHeader('X-Securityid', 'wrongtoken');
+		$this->assertFalse($t->checkRequest($r), 'Valid token returns true');
 	}
 
 	public function testAddToUrl() {

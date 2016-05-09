@@ -255,6 +255,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/components/Form/Form`,
       { expose: 'components/Form/Form' }
     )
+    .require(`${PATHS.ADMIN_JS_SRC}/components/Form/FormConstants`,
+      { expose: 'components/Form/FormConstants' }
+    )
     .require(`${PATHS.ADMIN_JS_SRC}/components/FormAction/FormAction`,
       { expose: 'components/FormAction/FormAction' }
     )
