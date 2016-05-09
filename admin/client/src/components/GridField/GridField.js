@@ -8,6 +8,7 @@ import GridFieldHeaderCell from './GridFieldHeaderCell';
 import GridFieldRow from './GridFieldRow';
 import GridFieldCell from './GridFieldCell';
 import GridFieldAction from './GridFieldAction';
+import FormConstants from 'components/Form/FormConstants';
 import * as actions from 'state/records/RecordsActions';
 
 /**
@@ -115,11 +116,15 @@ class GridField extends SilverStripeComponent {
    */
   deleteRecord(event, id) {
     event.preventDefault();
+    const headers = {};
+    headers[FormConstants.CSRF_HEADER] = this.props.config.SecurityID;
+
     this.props.actions.deleteRecord(
       this.props.data.recordType,
       id,
       this.props.data.itemDeleteEndpoint.method,
-      this.props.data.itemDeleteEndpoint.url
+      this.props.data.itemDeleteEndpoint.url,
+      headers
     );
   }
 
@@ -153,6 +158,7 @@ GridField.propTypes = {
 function mapStateToProps(state, ownProps) {
   const recordType = ownProps.data ? ownProps.data.recordType : null;
   return {
+    config: state.config,
     records: recordType && state.records[recordType] ? state.records[recordType] : {},
   };
 }

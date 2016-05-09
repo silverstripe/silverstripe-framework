@@ -381,6 +381,11 @@ JSON;
 	 * @return SS_HTTPResponse
 	 */
 	public function deleteCampaign(SS_HTTPRequest $request) {
+		// Check security ID
+		if (!SecurityToken::inst()->checkRequest($request)) {
+			return new SS_HTTPResponse(null, 400);
+		}
+
 		$id = $request->param('ID');
 		if (!$id || !is_numeric($id)) {
 			return (new SS_HTTPResponse(null, 400));

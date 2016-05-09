@@ -99,19 +99,25 @@ export function fetchRecord(recordType, method, url) {
 /**
  * Deletes a record
  *
- * @param string recordType Type of record (the "class name")
- * @param number id Database identifier
- * @param string method HTTP method
- * @param string url API endpoint
+ * @param {string} recordType Type of record (the "class name")
+ * @param {number} id Database identifier
+ * @param {string} method HTTP method
+ * @param {string} url API endpoint
+ * @param {object} Headers
  */
-export function deleteRecord(recordType, id, method, url) {
+export function deleteRecord(recordType, id, method, url, headers = {}) {
   const payload = { recordType, id };
+  const methodToLowerCase = method.toLowerCase();
+  const args = methodToLowerCase === 'get'
+      ? [populate(url, payload), headers]
+      : [populate(url, payload), {}, headers];
+
   return (dispatch) => {
     dispatch({
       type: ACTION_TYPES.DELETE_RECORD_REQUEST,
       payload,
     });
-    return backend[method.toLowerCase()](populate(url, payload))
+    return backend[methodToLowerCase](...args)
       .then(() => {
         dispatch({
           type: ACTION_TYPES.DELETE_RECORD_SUCCESS,
