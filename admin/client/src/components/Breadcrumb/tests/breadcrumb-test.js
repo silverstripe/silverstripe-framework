@@ -5,7 +5,7 @@ jest.dontMock('../Breadcrumb');
 // FYI: Changing these to import statements broke jest's automocking
 const React = require('react');
 const ReactTestUtils = require('react-addons-test-utils');
-const BreadcrumbsComponent = require('../Breadcrumb').default;
+const BreadcrumbsComponent = require('../Breadcrumb').Breadcrumb;
 
 describe('BreadcrumbsComponent', () => {
   let props;

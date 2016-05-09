@@ -2,7 +2,9 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import backend from 'lib/Backend';
-import * as actions from 'state/campaign/CampaignActions';
+import * as campaignActions from 'state/campaign/CampaignActions';
+import * as breadcrumbsActions from 'state/breadcrumbs/BreadcrumbsActions';
+import BreadcrumbComponent from 'components/Breadcrumb/Breadcrumb';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormAction from 'components/FormAction/FormAction';
 import i18n from 'i18n';
@@ -27,6 +29,8 @@ class CampaignAdmin extends SilverStripeComponent {
     this.campaignListCreateFn = this.campaignListCreateFn.bind(this);
     this.campaignAddCreateFn = this.campaignAddCreateFn.bind(this);
     this.campaignEditCreateFn = this.campaignEditCreateFn.bind(this);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    this.baseBreadcrumbs = this.baseBreadcrumbs.bind(this);
   }
 
   componentDidMount() {
@@ -40,10 +44,13 @@ class CampaignAdmin extends SilverStripeComponent {
       if (captureRoute) {
         // If this component is mounted, then handle all page changes via
         // state / redux
-        this.props.actions.showCampaignView(ctx.params.id, ctx.params.view);
+        this.props.campaignActions.showCampaignView(ctx.params.id, ctx.params.view);
+
+        // reset admin to top level of breadcrumbs
+        this.setupBreadcrumbs(ctx.params.id, ctx.params.view);
       } else {
         // If component is not mounted, we need to allow root routes to load
-        // this section in via ajax
+        // this section in via ajaxan
         next();
       }
     });
@@ -57,6 +64,53 @@ class CampaignAdmin extends SilverStripeComponent {
       }
       next();
     });
+  }
+
+  baseBreadcrumbs() {
+    return [{
+      text: i18n._t('Campaigns.CAMPAIGN', 'Campaigns'),
+      href: this.props.sectionConfig.route,
+    }];
+  }
+
+  setupBreadcrumbs(id, view) {
+    // Set root breadcrumb
+    const breadcrumbs = this.baseBreadcrumbs();
+    switch (view) {
+      case 'show':
+        // NOOP - Lazy loaded in CampaignAdminList.js
+        break;
+      case 'edit':
+        // @todo - Lazy load in FormBuilder / GridField
+        breadcrumbs.push({
+          text: i18n._t('Campaigns.EDIT_CAMPAIGN', 'Editing Campaign'),
+          href: this.getActionRoute(id, view),
+        });
+        break;
+      case 'create':
+        breadcrumbs.push({
+          text: i18n._t('Campaigns.ADD_CAMPAIGN', 'Add Campaign'),
+          href: this.getActionRoute(id, view),
+        });
+        break;
+      default:
+        // NOOP
+        break;
+    }
+
+    this.props.breadcrumbsActions.setBreadcrumbs(breadcrumbs);
+  }
+
+  handleBackButtonClick() {
+    // Go back to second from last breadcrumb (where last item is current)
+    if (this.props.breadcrumbs.length > 1) {
+      const last = this.props.breadcrumbs[this.props.breadcrumbs.length - 2];
+      if (last && last.href) {
+        event.preventDefault();
+        window.ss.router.show(last.href);
+        return;
+      }
+    }
   }
 
   render() {
@@ -100,9 +154,7 @@ class CampaignAdmin extends SilverStripeComponent {
       <div className="cms-content__inner no-preview">
         <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
           <Toolbar>
-            <div className="breadcrumb breadcrumb--current-only">
-              <h2 className="breadcrumb__item-title breadcrumb__item-title--last">Campaigns</h2>
-            </div>
+            <BreadcrumbComponent multiline />
           </Toolbar>
           <div className="panel-scrollable--single-toolbar">
             <div className="toolbar--content">
@@ -124,10 +176,12 @@ class CampaignAdmin extends SilverStripeComponent {
    */
   renderItemListView() {
     const props = {
+      sectionConfig: this.props.sectionConfig,
       campaignId: this.props.campaignId,
       itemListViewEndpoint: this.props.sectionConfig.itemListViewEndpoint,
       publishApi: this.publishApi,
-      breadcrumbs: this.getBreadcrumbs(),
+      baseBreadcrumbs: this.baseBreadcrumbs(),
+      handleBackButtonClick: this.handleBackButtonClick,
     };
 
     return (
@@ -148,10 +202,8 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <Toolbar showBackButton>
-            <div className="breadcrumb breadcrumb--current-only">
-              <h2 className="text-truncate breadcrumb__item-title--last">Campaigns</h2>
-            </div>
+          <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
+            <BreadcrumbComponent multiline />
           </Toolbar>
           <FormBuilder {...formBuilderProps} />
         </div>
@@ -172,10 +224,8 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div className="cms-middle no-preview">
         <div className="cms-campaigns collapse in" aria-expanded="true">
-          <Toolbar showBackButton>
-            <div className="breadcrumb breadcrumb--current-only">
-              <h2 className="text-truncate breadcrumb__item-title--last">Campaigns</h2>
-            </div>
+          <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
+            <BreadcrumbComponent multiline />
           </Toolbar>
           <div className="cms-middle__scrollable">
             <FormBuilder {...formBuilderProps} />
@@ -281,35 +331,27 @@ class CampaignAdmin extends SilverStripeComponent {
     return <Component key={props.name} {...props} />;
   }
 
-  /**
-   * @todo Use dynamic breadcrumbs
-   */
-  getBreadcrumbs() {
-    return [
-      {
-        text: 'Campaigns',
-        href: 'admin/campaigns',
-      },
-      {
-        text: 'March release',
-        href: 'admin/campaigns/show/1',
-      },
-    ];
-  }
-
   addCampaign() {
-    const path = this.props.sectionConfig.campaignViewRoute
-      .replace(/:type\?/, 'set')
-      .replace(/:id\?/, 0)
-      .replace(/:view\?/, 'create');
-
+    const path = this.getActionRoute(0, 'create');
     window.ss.router.show(path);
   }
 
+  /**
+   * Generate route with the given id and view
+   * @param {numeric} id
+   * @param {string} view
+     */
+  getActionRoute(id, view) {
+    return this.props.sectionConfig.campaignViewRoute
+      .replace(/:type\?/, 'set')
+      .replace(/:id\?/, id)
+      .replace(/:view\?/, view);
+  }
 }
 
 CampaignAdmin.propTypes = {
-  actions: React.PropTypes.object.isRequired,
+  breadcrumbsActions: React.PropTypes.object.isRequired,
+  campaignActions: React.PropTypes.object.isRequired,
   campaignId: React.PropTypes.string,
   config: React.PropTypes.shape({
     form: React.PropTypes.shape({
@@ -330,12 +372,14 @@ function mapStateToProps(state, ownProps) {
     sectionConfig: state.config.sections[ownProps.sectionConfigKey],
     campaignId: state.campaign.campaignId,
     view: state.campaign.view,
+    breadcrumbs: state.breadcrumbs.breadcrumbs,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(actions, dispatch),
+    breadcrumbsActions: bindActionCreators(breadcrumbsActions, dispatch),
+    campaignActions: bindActionCreators(campaignActions, dispatch),
   };
 }
 
