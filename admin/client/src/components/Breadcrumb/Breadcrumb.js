@@ -41,7 +41,7 @@ Breadcrumb.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    crumbs: state.breadcrumbs.breadcrumbs,
+    crumbs: state.breadcrumbs,
   };
 }
 

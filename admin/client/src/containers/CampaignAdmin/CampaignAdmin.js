@@ -372,7 +372,7 @@ function mapStateToProps(state, ownProps) {
     sectionConfig: state.config.sections[ownProps.sectionConfigKey],
     campaignId: state.campaign.campaignId,
     view: state.campaign.view,
-    breadcrumbs: state.breadcrumbs.breadcrumbs,
+    breadcrumbs: state.breadcrumbs,
   };
 }
 
