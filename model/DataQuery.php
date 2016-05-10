@@ -13,6 +13,8 @@
  */
 class DataQuery {
 
+	public $lastAlias;
+
 	/**
 	 * @var string
 	 */
@@ -648,6 +650,7 @@ class DataQuery {
 	 * @return The model class of the related item
 	 */
 	public function applyRelation($relation) {
+		$this->lastAlias = '';
 		// NO-OP
 		if(!$relation) return $this->dataClass;
 
@@ -711,6 +714,15 @@ class DataQuery {
 				if (!$this->query->isJoinedTo($componentBaseClass)) {
 				$this->query->addLeftJoin($componentBaseClass,
 					"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
+				}
+				else {
+					$alias = uniqid($componentBaseClass);
+					$this->query->addLeftJoin(
+						$componentBaseClass,
+						"\"$relationTable\".\"$componentField\" = \"$alias\".\"ID\"",
+						$alias
+					);
+					$this->lastAlias = $alias;
 				}
 				if(ClassInfo::hasTable($componentClass)	&& !$this->query->isJoinedTo($componentClass)) {
 					$this->query->addLeftJoin($componentClass,
