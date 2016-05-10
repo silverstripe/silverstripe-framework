@@ -71,17 +71,17 @@ body.cms {
 }
 
 .cms-content-header { // Todo: should add .container-fluid to markup or extend .container-fluid
-	padding-left: $spacer-x;
-	padding-right: $spacer-x;
-	min-width: 100%;
-	z-index: 60;
-	min-height: 52px;
-	background: {
-		image: url(../images/textures/cms_content_header.png);
-		repeat: repeat;
-		position: left bottom;
-		color: $color-darker-bg;
-	}
+  padding-left: $grid-gutter-width / 2;
+  padding-right: $grid-gutter-width / 2;
+  min-width: 100%;
+  z-index: 60;
+  min-height: 52px;
+  background: {
+    image: url(../images/textures/cms_content_header.png);
+    repeat: repeat;
+    position: left bottom;
+    color: $color-darker-bg;
+  }
 
 	a {
 		color: $color-text-blue-link;
@@ -678,7 +678,7 @@ body.cms {
 
 .cms-content-header-tabs {
 	float: right;
-	margin-top: $grid-y*1.5;
+	margin-top: $spacer-y * .625;
 
 	&.icon-button-group-tabs {
 		margin-top: 12px;
@@ -1037,7 +1037,7 @@ body.cms {
 .cms-content-toolbar {
 	min-height: 29px;
 	display: block;
-	margin: $grid-y*1.5 0 0;
+	margin: $spacer-y * .625 0 0;
 	padding-bottom: 0;
 	@include legacy-pie-clearfix();
 	border-bottom: 0;

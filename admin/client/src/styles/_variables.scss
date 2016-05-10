@@ -147,8 +147,8 @@ $container-max-widths: (
 //
 // Set the number of columns and specify the width of the gutters.
 
-// $grid-columns:               12;
-$grid-gutter-width: $spacer * 2;
+$grid-columns: 12;
+$grid-gutter-width: $spacer * 2.5; // 40px
 
 
 // Typography
@@ -190,11 +190,11 @@ $line-height: 1.539;
 $line-height-base: 20px; // can be used with varying font-sizes, holds grid sizing
 
 $headings-margin-bottom: $spacer;
-// $headings-font-family: inherit;
-// $headings-font-weight: 500;
-// $headings-line-height: 1.1;
-// $headings-color: inherit;
-//
+$headings-font-family: inherit;
+$headings-font-weight: 500;
+$headings-line-height: 1.1;
+$headings-color: inherit;
+
 // $lead-font-size: 1.25rem;
 // $lead-font-weight: 300;
 //
@@ -264,7 +264,7 @@ $btn-primary-bg: $brand-success;
 $btn-primary-border: $btn-primary-bg;
 $btn-primary-shadow: darken($btn-primary-bg, 6%);
 
-$btn-secondary-color: $body-color;
+$btn-secondary-color: $body-color-light;
 $btn-secondary-bg: $gray-lighter;
 $btn-secondary-border: $border-color-dark;
 

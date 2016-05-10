@@ -1,16 +1,18 @@
 // List-group, based on Bootstraps list-group
 
 .list-group {
-  margin-left: -$spacer-y;
-  margin-right: -$spacer-y;
+  margin-left: -$grid-gutter-width / 2;
+  margin-right: -$grid-gutter-width / 2;
   border-bottom: 1px solid $border-color-light;
   margin-bottom: $spacer-y * .75;
 }
 
 .list-group-item {
-  padding-left: $spacer-y;
-  padding-right: $spacer-y;
-  min-height: 64px;
+  padding-top: $spacer-y * .625;
+  padding-right: $grid-gutter-width / 2;
+  padding-bottom: $spacer-y * .625;
+  padding-left: $grid-gutter-width / 2;
+  min-height: 65px; // img height plus border
   cursor: pointer;
   text-decoration: none;
   transition: opacity .2s ease-in-out;
@@ -48,7 +50,7 @@
   display: block;
   background: $gray-lighter;
   float: left;
-  margin: -12px 12px 0 #{0 - $spacer-y};
+  margin: -12px 12px 0 #{0 - $grid-gutter-width / 2};
 }
 
 .list-group-item__info {

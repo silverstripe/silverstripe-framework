@@ -8,9 +8,9 @@
 // Used as a base for components: GridField.
 
 .table {
-  margin-left: -$spacer-x;
-  margin-right: -$spacer-x;
-  min-width: calc(100% + #{$spacer-x * 2});
+  margin-left: #{0 - $grid-gutter-width / 2};
+  margin-right: #{0 - $grid-gutter-width / 2};
+  min-width: calc(100% + #{$grid-gutter-width});
   margin-bottom: $spacer-y * 2;
   border-top: 0;
 
@@ -29,11 +29,11 @@
     line-height: 20px;
 
     &:first-child {
-      padding-left: #{$spacer-x + $spacer-x * .25};
+      padding-left: #{$grid-gutter-width / 2};
     }
 
     &:last-child {
-      padding-right: #{$spacer-x + $spacer-x * .25};
+      padding-right: #{$grid-gutter-width / 2};
     }
   }
 
