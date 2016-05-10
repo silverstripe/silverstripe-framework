@@ -2219,18 +2219,21 @@ body.cms-dialog {
 	.cms-file-info-data {
 		float: left;
 		width: 55%;
+		padding-bottom: $spacer-y;
 
 		.field {
 			// Unsetting styles from .field, make it more compact visually
 			margin: 0;
-			padding-bottom: $grid-x;
+			padding-bottom: 0;
 			border: none;
 			box-shadow: none;
 			label.left {
 				width: $grid-x*12;
+				padding-top: 0;
 			}
 			.middleColumn {
 				margin-left: $grid-x*13;
+				padding-top: 0;
 			}
 			label, span {
 				padding: 0;

@@ -62,7 +62,7 @@ form.nostyle {
 			display: block;
 			width: $grid-x * 22;
 			padding: $grid-y $grid-x $grid-y 0;
-			line-height: $grid-y * 2;
+			margin-bottom: 0;
 		}
 		&.right {
 			cursor: pointer;
@@ -80,7 +80,6 @@ form.nostyle {
 
 	span.readonly {
 		padding-top: $grid-y;
-		line-height: $grid-y * 2;
 		display: block;
 	}
 

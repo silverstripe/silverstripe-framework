@@ -1,4 +1,15 @@
 .form-component {
-  margin-top: $spacer-y / 2;
   padding-bottom: $spacer-y;
+}
+
+// Vertically align readonly text with label
+.field.readonly {
+
+  label.left {
+    padding-top: 8px;
+  }
+
+  .middleColumn {
+    padding-top: 8px;
+  }
 }

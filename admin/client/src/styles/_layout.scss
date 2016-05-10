@@ -85,6 +85,7 @@
 }
 
 
+// Scrolling panels
 .panel-scrollable,
 .panel-scrollable--single-toolbar,
 .panel-scrollable--double-toolbar {
@@ -98,4 +99,10 @@
 
 .panel-scrollable--double-toolbar {
   height: calc(100% - #{$toolbar-total-height * 2});
+}
+
+
+// Spacing utilities
+.spacer--top-md {
+  margin-top: $spacer-y;
 }
