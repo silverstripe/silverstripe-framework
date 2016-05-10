@@ -40,7 +40,7 @@
 
 .toolbar__back-button {
   float: left;
-  margin: $spacer-y * .625 $spacer-x / 2 $spacer-y * .625 #{-$spacer-x / 4};
+  margin: $spacer-y * .625 $spacer-x / 2 $spacer-y * .625 #{-$spacer-x * .625};
   padding-left: $spacer-x / 4;
   padding-right: $spacer-x / 4;
   border: 0;
