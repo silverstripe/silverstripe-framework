@@ -10,7 +10,8 @@
  */
 
 
-.ui-widget {
+.ui-widget,
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
   font-family: $font-family-sans-serif;
 }
 

@@ -206,7 +206,7 @@ class CampaignAdmin extends SilverStripeComponent {
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
-        <div className="panel-scrollable--single-toolbar container-fluid">
+        <div className="panel-scrollable--single-toolbar container-fluid spacer--top-md">
           <FormBuilder {...formBuilderProps} />
         </div>
       </div>
@@ -228,7 +228,7 @@ class CampaignAdmin extends SilverStripeComponent {
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
-        <div className="panel-scrollable--single-toolbar container-fluid">
+        <div className="panel-scrollable--single-toolbar container-fluid spacer--top-md">
           <FormBuilder {...formBuilderProps} />
         </div>
       </div>
