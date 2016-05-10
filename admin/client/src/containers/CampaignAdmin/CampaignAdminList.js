@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import * as breadcrumbsActions from 'state/breadcrumbs/BreadcrumbsActions';
 import * as recordActions from 'state/records/RecordsActions';
 import * as campaignActions from 'state/campaign/CampaignActions';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
@@ -25,12 +26,45 @@ class CampaignAdminList extends SilverStripeComponent {
 
     this.handlePublish = this.handlePublish.bind(this);
     this.handleItemSelected = this.handleItemSelected.bind(this);
+    this.setBreadcrumbs = this.setBreadcrumbs.bind(this);
   }
 
   componentDidMount() {
     const fetchURL = this.props.itemListViewEndpoint.replace(/:id/, this.props.campaignId);
     super.componentDidMount();
-    this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL);
+    this.setBreadcrumbs();
+    this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL).then(this.setBreadcrumbs);
+  }
+
+  /**
+   * Update breadcrumbs for this view
+   */
+  setBreadcrumbs() {
+    // Setup breadcrumbs if record is loaded
+    if (!this.props.record) {
+      return;
+    }
+
+    // Check that we haven't navigated away from this page once the callback has returned
+    const thisLink = this.props.sectionConfig.campaignViewRoute
+      .replace(/:type\?/, 'set')
+      .replace(/:id\?/, this.props.campaignId)
+      .replace(/:view\?/, 'show');
+    const applies = window.ss.router.routeAppliesToCurrentLocation(
+      window.ss.router.resolveURLToBase(thisLink)
+    );
+    if (!applies) {
+      return;
+    }
+
+    // Push breadcrumb
+    const breadcrumbs = this.props.baseBreadcrumbs.slice(0);
+    breadcrumbs.push({
+      text: this.props.record.Name,
+      href: thisLink,
+    });
+
+    this.props.breadcrumbsActions.setBreadcrumbs(breadcrumbs);
   }
 
   /**
@@ -107,9 +141,9 @@ class CampaignAdminList extends SilverStripeComponent {
 
     return (
       <div className={classNames}>
-        <div className="cms-content__left collapse in" aria-expanded="true">
-          <Toolbar>
-            <BreadcrumbComponent crumbs={this.props.breadcrumbs} multiline />
+        <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
+          <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
+            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
           <div className="container-fluid campaign-items panel-scrollable--double-toolbar">
             <Accordion>
@@ -243,10 +277,14 @@ CampaignAdminList.propTypes = {
     isPublishing: React.PropTypes.bool.isRequired,
     changeSetItemId: React.PropTypes.number,
   }),
+  breadcrumbsActions: React.PropTypes.object.isRequired,
   campaignActions: React.PropTypes.object.isRequired,
   publishApi: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
   recordActions: React.PropTypes.object.isRequired,
+  baseBreadcrumbs: React.PropTypes.array.isRequired,
+  sectionConfig: React.PropTypes.object.isRequired,
+  handleBackButtonClick: React.PropTypes.func,
 };
 
 function mapStateToProps(state, ownProps) {
@@ -258,11 +296,13 @@ function mapStateToProps(state, ownProps) {
   return {
     record: record || {},
     campaign: state.campaign,
+    breadcrumbs: state.breadcrumbs,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    breadcrumbsActions: bindActionCreators(breadcrumbsActions, dispatch),
     recordActions: bindActionCreators(recordActions, dispatch),
     campaignActions: bindActionCreators(campaignActions, dispatch),
   };

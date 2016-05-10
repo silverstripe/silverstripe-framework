@@ -10,6 +10,7 @@ import FormReducer from 'state/form/FormReducer';
 import SchemaReducer from 'state/schema/SchemaReducer';
 import RecordsReducer from 'state/records/RecordsReducer';
 import CampaignReducer from 'state/campaign/CampaignReducer';
+import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
 
 // Sections
 // eslint-disable-next-line no-unused-vars
@@ -21,6 +22,7 @@ function appBoot() {
   reducerRegister.add('schemas', SchemaReducer);
   reducerRegister.add('records', RecordsReducer);
   reducerRegister.add('campaign', CampaignReducer);
+  reducerRegister.add('breadcrumbs', BreadcrumbsReducer);
 
   const initialState = {};
   const rootReducer = combineReducers(reducerRegister.getAll());

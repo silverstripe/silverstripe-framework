@@ -56,6 +56,7 @@ class Toolbar extends SilverStripeComponent {
 Toolbar.propTypes = {
   handleBackButtonClick: React.PropTypes.func,
   showBackButton: React.PropTypes.bool,
+  breadcrumbs: React.PropTypes.array,
 };
 
 Toolbar.defaultProps = {
