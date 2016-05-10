@@ -4,7 +4,7 @@
 // General buttons
 .btn {
   height: 32px;
-  margin-right: $spacer-x * .75; // 12px
+  margin-right: $spacer-x * .5; // 8px
   position: relative;
 }
 
@@ -18,9 +18,10 @@
 }
 
 // Gives button a larger icon
-.btn--icon-large {
+.btn--icon-large[class*="font-icon-"]::before  {
   font-size: 20px;
   line-height: 20px;
+  top: 0;
 }
 
 
