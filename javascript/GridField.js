@@ -373,10 +373,13 @@
 						});
 					},
 					select: function(event, ui) {
-						$(this).closest(".ss-gridfield").find("#action_gridfield_relationfind").replaceWith(
-							'<input type="hidden" name="relationID" value="'+ui.item.id+'" id="relationID"/>'
-						);
-						var addbutton = $(this).closest(".ss-gridfield").find("#action_gridfield_relationadd");
+						var hiddenField = $('<input type="hidden" name="relationID" class="action_gridfield_relationfind" />');
+						hiddenField.val(ui.item.id);
+						$(this)
+							.closest(".ss-gridfield")
+							.find(".action_gridfield_relationfind")
+							.replaceWith(hiddenField);
+						var addbutton = $(this).closest(".ss-gridfield").find(".action_gridfield_relationadd");
 						if(addbutton.data('button')){
 							addbutton.button('enable');
 						}else{
