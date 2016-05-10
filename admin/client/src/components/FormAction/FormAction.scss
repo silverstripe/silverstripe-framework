@@ -9,26 +9,28 @@
 }
 
 // Button icons
+.btn[class*="font-icon-"]::before,
+.btn--icon-large[class*="font-icon-"]::before,
+.btn--icon-xl[class*="font-icon-"]::before {
+  position: relative;
+  margin-right: 6px;
+  line-height: $line-height-base;
+  float: left;
+}
+
 .btn[class*="font-icon-"]::before {
   font-size: 16px;
-  position: relative;
-  top: 3px;
-  margin-right: 6px;
-  line-height: 13px;
 }
 
 // Gives button a larger icon
 .btn--icon-large[class*="font-icon-"]::before {
   font-size: 20px;
-  line-height: 20px;
-  top: 0;
+  top: -1px;
 }
 
 .btn--icon-xl[class*="font-icon-"]::before {
   font-size: 22px;
-  line-height: 20px;
   top: -1px;
-  float: left;
 }
 
 
