@@ -73,7 +73,7 @@ class CampaignAdminList extends SilverStripeComponent {
    * @return object
    */
   render() {
-    let itemID = this.props.campaign.changeSetItemId;
+    let itemId = this.props.campaign.changeSetItemId;
     let itemLinks = null;
     const campaignId = this.props.campaignId;
     const campaign = this.props.record;
@@ -95,13 +95,13 @@ class CampaignAdminList extends SilverStripeComponent {
       // Create items for this group
       group.items.forEach(item => {
         // Auto-select first item
-        if (!itemID) {
-          itemID = item.ID;
+        if (!itemId) {
+          itemId = item.ID;
         }
-        const selected = (itemID === item.ID);
+        const selected = (itemId === item.ID);
 
         // Check links
-        if (selected && item._links.preview) {
+        if (selected && item._links) {
           itemLinks = item._links;
         }
 
@@ -134,27 +134,32 @@ class CampaignAdminList extends SilverStripeComponent {
       );
     });
 
-    // Get preview details
-    const classNames = itemLinks
-      ? 'cms-content__split cms-content__split--left-sm'
-      : 'cms-content__split cms-content__split--none';
+    // Set body
+    const pagesLink = this.props.config.sections.CMSMain.route;
+    const body = accordionBlocks.length
+      ? (<Accordion>{accordionBlocks}</Accordion>)
+      : (
+        <div className="alert alert-warning" role="alert">
+          <strong>This campaign is empty.</strong> You can add pages by selecting{' '}
+          <em>Add to campaign</em> from within the <em>More Options</em> popup on{' '}
+          the <a href={pagesLink}>edit page screen</a>.
+        </div>
+      );
 
     return (
-      <div className={classNames}>
+      <div className="cms-content__split cms-content__split--left-sm">
         <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
           <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
             <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
           <div className="container-fluid campaign-items panel-scrollable--double-toolbar">
-            <Accordion>
-              {accordionBlocks}
-            </Accordion>
+            {body}
           </div>
           <div className="toolbar--south">
             {this.renderButtonToolbar()}
           </div>
         </div>
-        { itemLinks && <Preview itemLinks={itemLinks} /> }
+        <Preview itemLinks={itemLinks} itemId={itemId} />
       </div>
     );
   }
@@ -173,7 +178,7 @@ class CampaignAdminList extends SilverStripeComponent {
     const items = this.getItems();
 
     // let itemSummaryLabel;
-    if (!items) {
+    if (!items || !items.length) {
       return <div className="btn-toolbar"></div>;
     }
 
@@ -294,6 +299,7 @@ function mapStateToProps(state, ownProps) {
     record = state.records.ChangeSet[parseInt(ownProps.campaignId, 10)];
   }
   return {
+    config: state.config,
     record: record || {},
     campaign: state.campaign,
     breadcrumbs: state.breadcrumbs,
