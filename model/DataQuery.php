@@ -673,7 +673,7 @@ class DataQuery {
 					);
 					$this->lastAlias = $alias;
 				}
-				if(ClassInfo::hasTable($componentClass)) {
+				if(ClassInfo::hasTable($componentClass)	&& !$this->query->isJoinedTo($componentClass)) {
 					$this->query->addLeftJoin($componentClass,
 						"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
 				}
