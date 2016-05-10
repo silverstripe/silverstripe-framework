@@ -162,7 +162,9 @@ class CampaignAdmin extends SilverStripeComponent {
                 <FormAction {...formActionProps} />
               </div>
             </div>
-            <FormBuilder {...formBuilderProps} />
+            <div className="container-fluid">
+              <FormBuilder {...formBuilderProps} />
+            </div>
           </div>
         </div>
       </div>
@@ -200,11 +202,11 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div className="cms-middle no-preview">
-        <div className="cms-campaigns collapse in" aria-expanded="true">
-          <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
-            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
-          </Toolbar>
+      <div className="cms-content__inner">
+        <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
+          <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
+        </Toolbar>
+        <div className="panel-scrollable--single-toolbar container-fluid">
           <FormBuilder {...formBuilderProps} />
         </div>
       </div>
@@ -222,14 +224,12 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div className="cms-middle no-preview">
-        <div className="cms-campaigns collapse in" aria-expanded="true">
-          <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
-            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
-          </Toolbar>
-          <div className="cms-middle__scrollable">
-            <FormBuilder {...formBuilderProps} />
-          </div>
+      <div className="cms-content__inner">
+        <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
+          <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
+        </Toolbar>
+        <div className="panel-scrollable--single-toolbar container-fluid">
+          <FormBuilder {...formBuilderProps} />
         </div>
       </div>
     );

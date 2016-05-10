@@ -279,11 +279,9 @@
 	}
 
 	li {
-		line-height: 18px; /* new v4 global line-height */
 
 		a {
 			display: block;
-			line-height: $grid-y * 2;
 			min-height: 50px;
 			color: $color-text-default;
 			padding: (2 * $grid-y + 1) 5px (2 * $grid-y + 1) 8px;

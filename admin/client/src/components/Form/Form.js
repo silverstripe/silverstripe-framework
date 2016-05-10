@@ -19,7 +19,7 @@ class Form extends SilverStripeComponent {
 
   render() {
     const defaultFormProps = {
-      className: 'container-fluid form-component',
+      className: 'form-component',
       onSubmit: this.handleSubmit,
     };
     const formProps = Object.assign({}, this.props.attributes, defaultFormProps);
@@ -35,10 +35,8 @@ class Form extends SilverStripeComponent {
         }
 
         {actions &&
-          <div className="btn-toolbar">
-            <div role="group">
-              {actions}
-            </div>
+          <div className="btn-toolbar" role="group">
+            {actions}
           </div>
         }
       </form>
