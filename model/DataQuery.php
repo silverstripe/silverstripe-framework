@@ -661,7 +661,7 @@ class DataQuery {
 					$this->query->addLeftJoin($componentBaseClass,
 						"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
 				}
-				if(ClassInfo::hasTable($componentClass)) {
+				if(ClassInfo::hasTable($componentClass)	&& !$this->query->isJoinedTo($componentClass)) {
 					$this->query->addLeftJoin($componentClass,
 						"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
 				}
