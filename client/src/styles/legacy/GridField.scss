@@ -129,6 +129,13 @@ $gf_grid_x:	16px;
 			color: darken($color-base, 50%);
 			background: transparent;
 			tr.filter-header {
+				.text {
+					color: #55595c;
+					font-weight: normal;
+				}
+				.fieldholder-small {
+					padding-bottom: 0;
+				}
 				.fieldgroup {
 					max-width:$gf_grid_x*32; //max width 512px
 					.fieldgroup-field {
@@ -526,7 +533,7 @@ $gf_grid_x:	16px;
 
 							&.filtered{
 								display:block;
-								background: url(../admin/client/dist/images/sprites/src/btn-icon/cross.png) no-repeat 0px 0px;
+								background: url(../../../admin/client/src/sprites/btn-icon/cross.png) no-repeat 0px 0px;
 								opacity:0.5;
 								&:hover{
 									opacity:0.8;
