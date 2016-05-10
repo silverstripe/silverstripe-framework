@@ -241,6 +241,74 @@ class FormFieldTest extends SapphireTest {
 		$this->assertArrayHasKey('extended', $field->getAttributes());
 	}
 
+	public function testSetSchemaComponent() {
+		$field = new FormField('MyField');
+		$field = $field->setSchemaComponent('MyComponent');
+		$component = $field->getSchemaComponent();
+		$this->assertEquals('MyComponent', $component);
+	}
+
+	public function testGetSchemaDataDefaults() {
+		$field = new FormField('MyField');
+		$schema = $field->getSchemaDataDefaults();
+		$this->assertInternalType('array', $schema);
+	}
+
+	public function testGetSchemaData() {
+		$field = new FormField('MyField');
+		$schema = $field->getSchemaData();
+		$this->assertEquals('MyField', $schema['name']);
+
+		// Make sure the schema data is up-to-date with object properties.
+		$field->setName('UpdatedField');
+		$schema = $field->getSchemaData();
+		$this->assertEquals($field->getName(), $schema['name']);
+	}
+
+	public function testSetSchemaData() {
+		$field = new FormField('MyField');
+
+		// Make sure the user can update values.
+		$field = $field->setSchemaData(['name' => 'MyUpdatedField']);
+		$schema = $field->getSchemaData();
+		$this->assertEquals($schema['name'], 'MyUpdatedField');
+
+		// Make user the user can't define custom keys on the schema.
+		$field = $field->setSchemaData(['myCustomKey' => 'yolo']);
+		$schema = $field->getSchemaData();
+		$this->assertEquals(array_key_exists('myCustomKey', $schema), false);
+	}
+
+	public function testGetSchemaState() {
+		$field = new FormField('MyField');
+		$field->setValue('My value');
+		$schema = $field->getSchemaState();
+		$this->assertEquals('My value', $schema['value']);
+	}
+
+	public function testSetSchemaState() {
+		$field = new FormField('MyField');
+
+		// Make sure the user can update values.
+		$field = $field->setSchemaState(['value' => 'My custom value']);
+		$schema = $field->getSchemaState();
+		$this->assertEquals($schema['value'], 'My custom value');
+
+		// Make user the user can't define custom keys on the schema.
+		$field = $field->setSchemaState(['myCustomKey' => 'yolo']);
+		$schema = $field->getSchemaState();
+		$this->assertEquals(array_key_exists('myCustomKey', $schema), false);
+	}
+
+	public function testGetSchemaStateWithFormValidation() {
+		$field = new FormField('MyField');
+		$validator = new RequiredFields('MyField');
+		$form = new Form(new Controller(), 'TestForm', new FieldList($field), new FieldList(), $validator);
+		$validator->validationError('MyField', 'Something is wrong', 'error');
+		$schema = $field->getSchemaState();
+		$this->assertEquals(count($schema['messages']), 1);
+		$this->assertEquals('Something is wrong', $schema['messages'][0]['value']);
+	}
 }
 
 /**

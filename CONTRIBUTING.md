@@ -19,7 +19,7 @@ Each release is labeled in the format `$MAJOR`.`$MINOR`.`$PATCH`. For example, 3
 * `$PATCH` version is incremented if only backwards compatible **bug fixes** are introduced. A bug fix is defined as 
 	an internal change that fixes incorrect behavior.
 
-Git Branches are setup for each `$MINOR` version (i.e 3.1, 3.2). Each `$PATCH` release is a git tag off the `$MINOR` 
+Git Branches are setup for each `$MINOR` version (e.g. 3.1, 3.2). Each `$PATCH` release is a git tag off the `$MINOR` 
 branch. For example, 3.1.8 will be a git tag of 3.1.8.
 
 When contributing code, be aware of the scope of your changes. If your change is backwards incompatible, raise your 

@@ -42,7 +42,7 @@ zh_CN:
     Parent: '主团队'
     has_many_Permissions: 权限
     many_many_Members: 成员
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: '插入链接'
     BUTTONREMOVELINK: '删除链接'
     CSSCLASS: '对齐/样式'

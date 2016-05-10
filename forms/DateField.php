@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBDate;
+
 require_once 'Zend/Date.php';
 
 /**
@@ -56,6 +59,8 @@ require_once 'Zend/Date.php';
  * @subpackage fields-datetime
  */
 class DateField extends TextField {
+
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DATE;
 
 	/**
 	 * @config
@@ -245,7 +250,7 @@ class DateField extends TextField {
 					$this->valueObj = null;
 				}
 			} else {
-				// Setting in corect locale.
+				// Setting in correct locale.
 				// Caution: Its important to have this check *before* the ISO date fallback,
 				// as some dates are falsely detected as ISO by isDate(), e.g. '03/04/03'
 				// (en_NZ for 3rd of April, definetly not yyyy-MM-dd)
@@ -481,7 +486,7 @@ class DateField_Disabled extends DateField {
 				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
 					. ' ('._t('DateField.TODAY','today').')');
 			} else {
-				$df = new Date($this->name);
+				$df = new DBDate($this->name);
 				$df->setValue($this->dataValue());
 				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
 					. ', ' . $df->Ago());
@@ -581,7 +586,7 @@ class DateField_View_JQuery extends Object {
 				Requirements::javascript($this->jqueryLocaleFile);
 			}
 
-			Requirements::javascript(FRAMEWORK_DIR . "/javascript/DateField.js");
+			Requirements::javascript(FRAMEWORK_DIR . "/client/dist/js/DateField.js");
 		}
 
 		return $html;
@@ -674,4 +679,3 @@ class DateField_View_JQuery extends Object {
 		return preg_replace($patterns, $replacements, $format);
 	}
 }
-

@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBVarchar;
+
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
  *
@@ -64,7 +67,7 @@ class ViewableData extends Object implements IteratorAggregate {
 
 	/**
 	 * Converts a field spec into an object creator. For example: "Int" becomes "new Int($fieldName);" and "Varchar(50)"
-	 * becomes "new Varchar($fieldName, 50);".
+	 * becomes "new DBVarchar($fieldName, 50);".
 	 *
 	 * @param string $fieldSchema The field spec
 	 * @return string
@@ -193,34 +196,7 @@ class ViewableData extends Object implements IteratorAggregate {
 			}
 		}
 
-		foreach($this->allMethodNames() as $method) {
-			if($method[0] == '_' && $method[1] != '_') {
-				$this->createMethod(
-					substr($method, 1),
-					"return \$obj->deprecatedCachedCall('$method', \$args, '" . substr($method, 1) . "');"
-				);
-			}
-		}
-
 		parent::defineMethods();
-	}
-
-	/**
-	 * Method to facilitate deprecation of underscore-prefixed methods automatically being cached.
-	 *
-	 * @param string $field
-	 * @param array $arguments
-	 * @param string $identifier an optional custom cache identifier
-	 * @return unknown
-	 */
-	public function deprecatedCachedCall($method, $args = null, $identifier = null) {
-		Deprecation::notice(
-			'4.0',
-			'You are calling an underscore-prefixed method (e.g. _mymethod()) without the underscore. This behaviour,
-				and the caching logic behind it, has been deprecated.',
-			Deprecation::SCOPE_GLOBAL
-		);
-		return $this->cachedCall($method, $args, $identifier);
 	}
 
 	/**
@@ -283,17 +259,15 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * on this object.
 	 *
 	 * @param string $field
-	 * @return string
+	 * @return string Casting helper
 	 */
 	public function castingHelper($field) {
-		if($this->hasMethod('db') && $fieldSpec = $this->db($field)) {
-			return $fieldSpec;
+		$specs = $this->config()->casting;
+		if(isset($specs[$field])) {
+			return $specs[$field];
+		} elseif($this->failover) {
+			return $this->failover->castingHelper($field);
 		}
-
-		$specs = Config::inst()->get(get_class($this), 'casting');
-		if(isset($specs[$field])) return $specs[$field];
-
-		if($this->failover) return $this->failover->castingHelper($field);
 	}
 
 	/**
@@ -320,7 +294,9 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function escapeTypeForField($field) {
 		$class = $this->castingClass($field) ?: $this->config()->default_cast;
 
-		return Config::inst()->get($class, 'escape_type', Config::FIRST_SET);
+		// TODO: It would be quicker not to instantiate the object, but to merely
+		// get its class from the Injector
+		return Injector::inst()->get($class, true)->config()->escape_type;
 	}
 
 	/**
@@ -743,7 +719,7 @@ class ViewableData_Debugger extends ViewableData {
 	 * @return string The rendered debugger
 	 */
 	public function __toString() {
-		return $this->forTemplate();
+		return (string)$this->forTemplate();
 	}
 
 	/**

@@ -1,9 +1,9 @@
 <?php
 
-require_once 'thirdparty/spyc/spyc.php';
+use Symfony\Component\Yaml\Parser;
 
 /**
- * Uses the Spyc library to parse a YAML document (see http://yaml.org).
+ * Uses Symfony's YAML component to parse a YAML document (see http://yaml.org).
  * YAML is a simple markup languages that uses tabs and colons instead of the more verbose XML tags,
  * and because of this much better for developers creating files by hand.
  *
@@ -64,8 +64,6 @@ require_once 'thirdparty/spyc/spyc.php';
  *
  * @package framework
  * @subpackage core
- *
- * @see http://code.google.com/p/spyc/
  */
 class YamlFixture extends Object {
 
@@ -82,12 +80,6 @@ class YamlFixture extends Object {
 	 * @var String
 	 */
 	protected $fixtureString;
-
-	/**
-	 * @var FixtureFactory
-	 * @deprecated 3.1 Use writeInto() and FixtureFactory instead
-	 */
-	protected $factory;
 
 	/**
 	 * @param String Absolute file path, or relative path to {@link Director::baseFolder()}
@@ -124,68 +116,6 @@ class YamlFixture extends Object {
 	}
 
 	/**
-	 * Get the ID of an object from the fixture.
-	 *
-	 * @deprecated 4.0 Use writeInto() and FixtureFactory accessors instead
-	 *
-	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
-	 * @param $identifier The identifier string, as provided in your fixture file
-	 */
-	public function idFromFixture($className, $identifier) {
-		Deprecation::notice('4.0', 'Use writeInto() and FixtureFactory accessors instead');
-
-		if(!$this->factory) $this->factory = Injector::inst()->create('FixtureFactory');
-		return $this->factory->getId($className, $identifier);
-
-	}
-
-	/**
-	 * Return all of the IDs in the fixture of a particular class name.
-	 *
-	 * @deprecated 4.0 Use writeInto() and FixtureFactory accessors instead
-	 *
-	 * @return A map of fixture-identifier => object-id
-	 */
-	public function allFixtureIDs($className) {
-		Deprecation::notice('4.0', 'Use writeInto() and FixtureFactory accessors instead');
-
-		if(!$this->factory) $this->factory = Injector::inst()->create('FixtureFactory');
-		return $this->factory->getIds($className);
-	}
-
-	/**
-	 * Get an object from the fixture.
-	 *
-	 * @deprecated 4.0 Use writeInto() and FixtureFactory accessors instead
-	 *
-	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
-	 * @param $identifier The identifier string, as provided in your fixture file
-	 */
-	public function objFromFixture($className, $identifier) {
-		Deprecation::notice('4.0', 'Use writeInto() and FixtureFactory accessors instead');
-
-		if(!$this->factory) $this->factory = Injector::inst()->create('FixtureFactory');
-		return $this->factory->get($className, $identifier);
-	}
-
-	/**
-	 * Load a YAML fixture file into the database.
-	 * Once loaded, you can use idFromFixture() and objFromFixture() to get items from the fixture.
-	 *
-	 * Caution: In order to support reflexive relations which need a valid object ID,
-	 * the record is written twice: first after populating all non-relational fields,
-	 * then again after populating all relations (has_one, has_many, many_many).
-	 *
-	 * @deprecated 4.0 Use writeInto() and FixtureFactory instance instead
-	 */
-	public function saveIntoDatabase(DataModel $model) {
-		Deprecation::notice('4.0', 'Use writeInto() and FixtureFactory instance instead');
-
-		if(!$this->factory) $this->factory = Injector::inst()->create('FixtureFactory');
-		$this->writeInto($this->factory);
-	}
-
-	/**
 	 * Persists the YAML data in a FixtureFactory,
 	 * which in turn saves them into the database.
 	 * Please use the passed in factory to access the fixtures afterwards.
@@ -193,11 +123,16 @@ class YamlFixture extends Object {
 	 * @param  FixtureFactory $factory
 	 */
 	public function writeInto(FixtureFactory $factory) {
-		$parser = new Spyc();
+		$parser = new Parser();
 		if (isset($this->fixtureString)) {
-			$fixtureContent = $parser->load($this->fixtureString);
+			$fixtureContent = $parser->parse($this->fixtureString);
 		} else {
-			$fixtureContent = $parser->loadFile($this->fixtureFile);
+			if (!file_exists($this->fixtureFile)) return;
+
+			$contents = file_get_contents($this->fixtureFile);
+			$fixtureContent = $parser->parse($contents);
+
+			if (!$fixtureContent) return;
 		}
 
 		foreach($fixtureContent as $class => $items) {

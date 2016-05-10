@@ -17,6 +17,8 @@ class ReadonlyField extends FormField {
 	 */
 	protected $includeHiddenField = false;
 
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
+
 	/**
 	 * If true, a hidden field will be included in the HTML for the readonly field.
 	 *
@@ -52,9 +54,30 @@ class ReadonlyField extends FormField {
 		}
 	}
 
+	/**
+	 * If $dontEscape is true the returned value will be plain text
+	 * and should be escaped in templates via .XML
+	 *
+	 * If $dontEscape is false the returned value will be safely encoded,
+	 * but should not be escaped by the frontend.
+	 *
+	 * @return mixed|string
+	 */
 	public function Value() {
-		if($this->value) return $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
-		else return '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
+		if($this->value) {
+			if($this->dontEscape) {
+				return $this->value;
+			} else {
+				return Convert::raw2xml($this->value);
+			}
+		} else {
+			$value = '(' . _t('FormField.NONE', 'none') . ')';
+			if($this->dontEscape) {
+				return $value;
+			} else {
+				return '<i>'.Convert::raw2xml($value).'</i>';
+			}
+		}
 	}
 
 	public function getAttributes() {

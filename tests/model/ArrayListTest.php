@@ -214,11 +214,15 @@ class ArrayListTest extends SapphireTest {
 			(object) array('ID' => 3, 'Name' => 'Bob'),
 			array('ID' => 5, 'Name' => 'John')
 		));
-		$this->assertEquals($list->map('ID', 'Name'), array(
+		$map = $list->map('ID', 'Name');
+		// Items added after calling map should not be included retroactively
+		$list->add(array('ID' => 7, 'Name' => 'Andrew'));
+		$this->assertInstanceOf('SS_Map', $map);
+		$this->assertEquals(array(
 			1 => 'Steve',
 			3 => 'Bob',
 			5 => 'John'
-		));
+		), $map->toArray());
 	}
 
 	public function testFind() {

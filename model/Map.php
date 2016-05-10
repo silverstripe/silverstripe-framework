@@ -286,7 +286,7 @@ class SS_Map_Iterator implements Iterator {
 	 * @param Iterator $items The iterator to build this map from
 	 * @param string $keyField The field to use for the keys
 	 * @param string $titleField The field to use for the values
-	 * @param array $fristItems An optional map of items to show first
+	 * @param array $firstItems An optional map of items to show first
 	 * @param array $lastItems An optional map of items to show last
 	 */
 	public function __construct(Iterator $items, $keyField, $titleField, $firstItems = null, $lastItems = null) {
@@ -326,11 +326,7 @@ class SS_Map_Iterator implements Iterator {
 			return $this->firstItems[$this->firstItemIdx][1];
 		} else {
 			if($rewoundItem) {
-				if($rewoundItem->hasMethod($this->titleField)) {
-					return $rewoundItem->{$this->titleField}();
-				}
-
-				return $rewoundItem->{$this->titleField};
+				return $this->extractValue($rewoundItem, $this->titleField);
 			} else if(!$this->items->valid() && $this->lastItems) {
 				$this->endItemIdx = 0;
 
@@ -349,12 +345,28 @@ class SS_Map_Iterator implements Iterator {
 			return $this->lastItems[$this->endItemIdx][1];
 		} else if(isset($this->firstItems[$this->firstItemIdx])) {
 			return $this->firstItems[$this->firstItemIdx][1];
-		} else {
-			if($this->items->current()->hasMethod($this->titleField)) {
-				return $this->items->current()->{$this->titleField}();
-			}
+		}
+		return $this->extractValue($this->items->current(), $this->titleField);
+	}
 
-			return $this->items->current()->{$this->titleField};
+	/**
+	 * Extracts a value from an item in the list, where the item is either an
+	 * object or array.
+	 *
+	 * @param  array|object $item
+	 * @param  string $key
+	 * @return mixed
+	 */
+	protected function extractValue($item, $key) {
+		if (is_object($item)) {
+			if(method_exists($item, 'hasMethod') && $item->hasMethod($key)) {
+				return $item->{$key}();
+			}
+			return $item->{$key};
+		} else {
+			if (array_key_exists($key, $item)) {
+				return $item[$key];
+			}
 		}
 	}
 
@@ -369,7 +381,7 @@ class SS_Map_Iterator implements Iterator {
 		} else if(isset($this->firstItems[$this->firstItemIdx])) {
 			return $this->firstItems[$this->firstItemIdx][0];
 		} else {
-			return $this->items->current()->{$this->keyField};
+			return $this->extractValue($this->items->current(), $this->keyField);
 		}
 	}
 

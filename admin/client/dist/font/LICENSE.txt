@@ -1,0 +1,27 @@
+Font license info
+The SilverStripe custom icon font set is a collection of hand crafted and sourced icons through http://app.fontastic.me/
+Fontastic allows us to package together icons from multiple sources for use as a single set.
+
+## Entypo
+
+    Author:    Daniel Bruce
+    License:   Creative Commons 3.0
+    Homepage:  http://www.entypo.com
+
+## Picol
+
+    Author:    Melih Bilgil
+    License:   Creative Commons 3.0
+    Homepage:  http://picol.org/
+
+## Foundation icons
+
+    Author:    Zurb
+    License:   Creative Commons 3.0
+    Homepage:  http://zurb.com/playground/foundation-icons
+
+## Font Awesome
+
+    Author:    Dave Gandy
+    License:   MIT License (MIT)
+    Homepage:  https://fortawesome.github.io/Font-Awesome/

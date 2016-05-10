@@ -118,36 +118,11 @@ class ObjectTest extends SapphireTest {
 	public function testCreateWithArgs() {
 		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
 		$this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
-
-		$strongObj = Object::strong_create('ObjectTest_CreateTest', 'arg1', 'arg2', array(), null, 'arg5');
-		$this->assertEquals($strongObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
 	}
 
 	public function testCreateLateStaticBinding() {
 		$createdObj = ObjectTest_CreateTest::create('arg1', 'arg2', array(), null, 'arg5');
 		$this->assertEquals($createdObj->constructArguments, array('arg1', 'arg2', array(), null, 'arg5'));
-	}
-
-	/**
-	 * Tests that {@link Object::useCustomClass()} correnctly replaces normal and strong objects
-	 */
-	public function testUseCustomClass() {
-		$obj1 = ObjectTest_CreateTest::create();
-		$this->assertTrue($obj1 instanceof ObjectTest_CreateTest);
-
-		Object::useCustomClass('ObjectTest_CreateTest', 'ObjectTest_CreateTest2');
-		$obj2 = ObjectTest_CreateTest::create();
-		$this->assertTrue($obj2 instanceof ObjectTest_CreateTest2);
-
-		$obj2_2 = Object::strong_create('ObjectTest_CreateTest');
-		$this->assertTrue($obj2_2 instanceof ObjectTest_CreateTest);
-
-		Object::useCustomClass('ObjectTest_CreateTest', 'ObjectTest_CreateTest3', true);
-		$obj3 = ObjectTest_CreateTest::create();
-		$this->assertTrue($obj3 instanceof ObjectTest_CreateTest3);
-
-		$obj3_2 = Object::strong_create('ObjectTest_CreateTest');
-		$this->assertTrue($obj3_2 instanceof ObjectTest_CreateTest3);
 	}
 
 	/**
@@ -378,11 +353,18 @@ class ObjectTest extends SapphireTest {
 		$this->assertEquals($object->extend('extendableMethod', $argument), array('ExtendTest2(modified)'));
 		$this->assertEquals($argument, 'modified');
 
-		$this->assertEquals($object->invokeWithExtensions('extendableMethod'), array('ExtendTest()', 'ExtendTest2()'));
-		$this->assertEquals (
-			$object->invokeWithExtensions('extendableMethod', 'test'),
-			array('ExtendTest(test)', 'ExtendTest2(modified)')
+		$this->assertEquals(
+			array('ExtendTest()', 'ExtendTest2()'),
+			$object->invokeWithExtensions('extendableMethod')
 		);
+		$arg1 = 'test';
+		$arg2 = 'bob';
+		$this->assertEquals (
+			array('ExtendTest(test,bob)', 'ExtendTest2(modified,objectmodified)'),
+			$object->invokeWithExtensions('extendableMethod', $arg1, $arg2)
+		);
+		$this->assertEquals('modified', $arg1);
+		$this->assertEquals('objectmodified', $arg2);
 
 		$object2 = new ObjectTest_Extending();
 		$first = 1;
@@ -591,7 +573,11 @@ class ObjectTest_CacheTest extends Object {
 
 class ObjectTest_ExtendTest extends Object {
 	private static $extensions = array('ObjectTest_ExtendTest1', 'ObjectTest_ExtendTest2');
-	public function extendableMethod($argument = null) { return "ExtendTest($argument)"; }
+	public function extendableMethod(&$argument = null, &$argument2 = null) {
+		$args = implode(',', array_filter(func_get_args()));
+		if($argument2) $argument2 = 'objectmodified';
+		return "ExtendTest($args)";
+	}
 }
 
 class ObjectTest_ExtendTest1 extends Extension {
@@ -602,7 +588,10 @@ class ObjectTest_ExtendTest1 extends Extension {
 }
 
 class ObjectTest_ExtendTest2 extends Extension {
-	public function extendableMethod($argument = null) { return "ExtendTest2($argument)"; }
+	public function extendableMethod($argument = null) {
+		$args = implode(',', array_filter(func_get_args()));
+		return "ExtendTest2($args)";
+	}
 }
 
 class ObjectTest_ExtendTest3 extends Extension {

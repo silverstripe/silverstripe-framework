@@ -263,7 +263,7 @@ id_ID:
     ResultUpdated: '%d kelompok diperbarui'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Putaran berulang ditemukan pada hirarki "{type}". Mohon ganti induk untuk mengatasi masalah ini'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Tambah URL'
     ADJUSTDETAILSDIMENSIONS: 'Rincian &amp; dimensi'
     ANCHORSCANNOTACCESSPAGE: 'Anda tidak dijinkan mengakses konten laman yang diminta.'

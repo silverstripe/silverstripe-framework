@@ -1,12 +1,12 @@
 FormScaffolderTest_Tag:
-   tag1:
-      Title: Tag 1
+  tag1:
+    Title: Tag 1
 FormScaffolderTest_Article:
-   article1:
-      Title: Article 1
-      Content: Test
-      Tags: =>FormScaffolderTest_Tag.tag1
+  article1:
+    Title: Article 1
+    Content: Test
+    Tags: =>FormScaffolderTest_Tag.tag1
 FormScaffolderTest_Author:
-   author1:
-      FirstName: Author 1
-      Tags: =>FormScaffolderTest_Article.article1
+  author1:
+    FirstName: Author 1
+    Tags: =>FormScaffolderTest_Article.article1

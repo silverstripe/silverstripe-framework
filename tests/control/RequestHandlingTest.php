@@ -7,6 +7,13 @@
 class RequestHandlingTest extends FunctionalTest {
 	protected static $fixture_file = null;
 
+	protected $illegalExtensions = array(
+		// Suppress CMS error page handling
+		'Controller' => array('ErrorPageControllerExtension'),
+		'Form' => array('ErrorPageControllerExtension'),
+		'LeftAndMain' => array('ErrorPageControllerExtension'),
+	);
+
 	public function setUp() {
 		parent::setUp();
 
@@ -185,6 +192,7 @@ class RequestHandlingTest extends FunctionalTest {
 		RequestHandlingTest_ControllerExtension::$called_404_error = false;
 
 		$response = Director::test('RequestHandlingTest_Controller/throwhttperror');
+
 		$this->assertEquals(404, $response->getStatusCode());
 		$this->assertEquals('This page does not exist.', $response->getBody());
 

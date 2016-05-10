@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\Relation;
+
 /**
  * A DataList that represents a relation.
  *
@@ -8,10 +10,24 @@
  * @package framework
  * @subpackage model
  */
-abstract class RelationList extends DataList {
+abstract class RelationList extends DataList implements Relation {
 
 	public function getForeignID() {
 		return $this->dataQuery->getQueryParam('Foreign.ID');
+	}
+
+	public function getQueryParams() {
+		$params = parent::getQueryParams();
+
+		// Remove `Foreign.` query parameters for created objects,
+		// as this would interfere with relations on those objects.
+		foreach(array_keys($params) as $key) {
+			if(stripos($key, 'Foreign.') === 0) {
+				unset($params[$key]);
+			}
+		}
+
+		return $params;
 	}
 
 	/**
@@ -19,6 +35,7 @@ abstract class RelationList extends DataList {
 	 * the given foreign ID.
 	 *
 	 * @param int|array $id An ID or an array of IDs.
+	 * @return static
 	 */
 	public function forForeignID($id) {
 		// Turn a 1-element array into a simple value

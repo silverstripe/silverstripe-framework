@@ -80,7 +80,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 			"Does not validate when passwords differ"
 		);
 	}
-	
+
     public function testFormValidation() {
         $form = new Form(
             new Controller(),

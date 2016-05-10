@@ -73,7 +73,7 @@ class Group extends DataObject {
 	 * @return FieldList
 	 */
 	public function getCMSFields() {
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/PermissionCheckboxSetField.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/PermissionCheckboxSetField.js');
 
 		$fields = new FieldList(
 			new TabSet("Root",
@@ -141,7 +141,7 @@ class Group extends DataObject {
 
 		// Only add a dropdown for HTML editor configurations if more than one is available.
 		// Otherwise Member->getHtmlEditorConfigForCMS() will default to the 'cms' configuration.
-		$editorConfigMap = HtmlEditorConfig::get_available_configs_map();
+		$editorConfigMap = HTMLEditorConfig::get_available_configs_map();
 		if(count($editorConfigMap) > 1) {
 			$fields->addFieldToTab('Root.Permissions',
 				new DropdownField(
@@ -202,7 +202,6 @@ class Group extends DataObject {
 			}
 
 			$rolesField = ListboxField::create('Roles', false, $allRoles->map()->toArray())
-					->setMultiple(true)
 					->setDefaultItems($groupRoleIDs)
 					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))
 					->setDisabledItems($inheritedRoleIDs);
@@ -245,22 +244,10 @@ class Group extends DataObject {
 	 * including all members which are "inherited" from children groups of this record.
 	 * See {@link DirectMembers()} for retrieving members without any inheritance.
 	 *
-	 * @param string $filter
+	 * @param String $filter
 	 * @return ManyManyList
 	 */
-	public function Members($filter = "", $sort = "", $join = "", $limit = "") {
-		if($sort || $join || $limit) {
-			Deprecation::notice('4.0',
-				"The sort, join, and limit arguments are deprecated, use sort(), join() and limit() on the resulting"
-				. " DataList instead.");
-		}
-
-		if($join) {
-			throw new \InvalidArgumentException(
-				'The $join argument has been removed. Use leftJoin($table, $joinClause) instead.'
-			);
-		}
-
+	public function Members($filter = '') {
 		// First get direct members as a base result
 		$result = $this->DirectMembers();
 
@@ -277,7 +264,7 @@ class Group extends DataObject {
 		}
 		// Now set all children groups as a new foreign key
 		$groups = Group::get()->byIDs($this->collateFamilyIDs());
-		$result = $result->forForeignID($groups->column('ID'))->where($filter)->sort($sort)->limit($limit);
+		$result = $result->forForeignID($groups->column('ID'))->where($filter);
 
 		return $result;
 	}
@@ -357,7 +344,7 @@ class Group extends DataObject {
 		$this->setField("Code", Convert::raw2url($val));
 	}
 
-	protected function validate() {
+	public function validate() {
 		$result = parent::validate();
 
 		// Check if the new group hierarchy would add certain "privileged permissions",

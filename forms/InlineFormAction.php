@@ -1,9 +1,12 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Render a button that will submit the form its contained in through ajax.
  * If you want to add custom behaviour, please set {@link includeDefaultJS()} to FALSE
  *
- * @see framework/javascript/InlineFormAction.js
+ * @see framework/client/dist/js/InlineFormAction.js
  *
  * @package forms
  * @subpackage actions
@@ -33,7 +36,7 @@ class InlineFormAction extends FormField {
 	 */
 	public function Field($properties = array()) {
 		if($this->includeDefaultJS) {
-			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/javascript/InlineFormAction.js',
+			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/client/dist/js/InlineFormAction.js',
 				array('ID'=>$this->id()));
 		}
 
@@ -54,7 +57,7 @@ class InlineFormAction extends FormField {
 	}
 
 	/**
-	 * Optionally disable the default javascript include (framework/javascript/InlineFormAction.js),
+	 * Optionally disable the default javascript include (framework/client/dist/js/InlineFormAction.js),
 	 * which routes to an "admin-custom"-URL.
 	 *
 	 * @param $bool boolean

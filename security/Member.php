@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBDatetime;
+
 /**
  * The member class which represents the users of the system
  *
@@ -9,11 +12,8 @@
  * @property string $Surname
  * @property string $Email
  * @property string $Password
- * @property string $RememberLoginToken
  * @property string $TempIDHash
  * @property string $TempIDExpired
- * @property int $NumVisit @deprecated 4.0
- * @property string $LastVisited @deprecated 4.0
  * @property string $AutoLoginHash
  * @property string $AutoLoginExpired
  * @property string $PasswordEncryption
@@ -34,9 +34,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
 		'TempIDExpired' => 'SS_Datetime', // Expiry of temp login
 		'Password' => 'Varchar(160)',
-		'RememberLoginToken' => 'Varchar(160)', // Note: this currently holds a hash, not a token.
-		'NumVisit' => 'Int', // @deprecated 4.0
-		'LastVisited' => 'SS_Datetime', // @deprecated 4.0
 		'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
 		'AutoLoginExpired' => 'SS_Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
@@ -63,6 +60,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	private static $has_many = array(
 		'LoggedPasswords' => 'MemberPassword',
+		'RememberLoginHashes' => 'RememberLoginHash'
 	);
 
 	private static $many_many = array();
@@ -82,24 +80,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @var boolean
 	 */
 	private static $notify_password_change = false;
-
-	/**
-	 * Flag whether or not member visits should be logged (count only)
-	 *
-	 * @deprecated 4.0
-	 * @var bool
-	 * @config
-	 */
-	private static $log_last_visited = true;
-
-	/**
-	 * Flag whether we should count number of visits
-	 *
-	 * @deprecated 4.0
-	 * @var bool
-	 * @config
-	 */
-	private static $log_num_visits = true;
 
 	/**
 	 * All searchable database columns
@@ -131,7 +111,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @var array
 	 */
 	private static $hidden_fields = array(
-		'RememberLoginToken',
 		'AutoLoginHash',
 		'AutoLoginExpired',
 		'PasswordEncryption',
@@ -140,7 +119,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'TempIDHash',
 		'TempIDExpired',
 		'Salt',
-		'NumVisit', // @deprecated 4.0
 	);
 
 	/**
@@ -470,18 +448,22 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// This lets apache rules detect whether the user has logged in
 		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0);
 
-		$this->addVisit();
-
+		// Cleans up any potential previous hash for this member on this device
+		if ($alcDevice = Cookie::get('alc_device')) {
+			RememberLoginHash::get()->filter('DeviceID', $alcDevice)->removeAll();
+		}
 		if($remember) {
-			// Store the hash and give the client the cookie with the token.
-			$generator = new RandomGenerator();
-			$token = $generator->randomToken('sha1');
-			$hash = $this->encryptWithUserSettings($token);
-			$this->RememberLoginToken = $hash;
-			Cookie::set('alc_enc', $this->ID . ':' . $token, 90, null, null, null, true);
+			$rememberLoginHash = RememberLoginHash::generate($this);
+			$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
+			$deviceExpiryDays = Config::inst()->get('RememberLoginHash', 'device_expiry_days');
+			Cookie::set('alc_enc', $this->ID . ':' . $rememberLoginHash->getToken(),
+				$tokenExpiryDays, null, null, null, true);
+			Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
 		} else {
-			$this->RememberLoginToken = null;
+			Cookie::set('alc_enc', null);
+			Cookie::set('alc_device', null);
 			Cookie::force_expiry('alc_enc');
+			Cookie::force_expiry('alc_device');
 		}
 
 		// Clear the incorrect log-in count
@@ -501,19 +483,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * @deprecated 4.0
-	 */
-	public function addVisit() {
-		if($this->config()->log_num_visits) {
-			Deprecation::notice(
-				'4.0',
-				'Member::$NumVisit is deprecated. From 4.0 onwards you should implement this as a custom extension'
-			);
-			$this->NumVisit++;
-		}
-	}
-
-	/**
 	 * Trigger regeneration of TempID.
 	 *
 	 * This should be performed any time the user presents their normal identification (normally Email)
@@ -523,7 +492,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$generator = new RandomGenerator();
 		$this->TempIDHash = $generator->randomToken('sha1');
 		$this->TempIDExpired = self::config()->temp_id_lifetime
-			? date('Y-m-d H:i:s', strtotime(SS_Datetime::now()->getValue()) + self::config()->temp_id_lifetime)
+			? date('Y-m-d H:i:s', strtotime(DBDatetime::now()->getValue()) + self::config()->temp_id_lifetime)
 			: null;
 		$this->write();
 	}
@@ -553,7 +522,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public static function autoLogin() {
 		// Don't bother trying this multiple times
-		self::$_already_tried_to_auto_log_in = true;
+		if (!class_exists('SapphireTest', false) || !SapphireTest::is_running_test()) {
+			self::$_already_tried_to_auto_log_in = true;
+		}
 
 		if(strpos(Cookie::get('alc_enc'), ':') === false
 			|| Session::get("loggedInAs")
@@ -562,37 +533,56 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			return;
 		}
 
-		list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
+		if(strpos(Cookie::get('alc_enc'), ':') && Cookie::get('alc_device') && !Session::get("loggedInAs")) {
+			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
+			$deviceID = Cookie::get('alc_device');
 
-		$member = DataObject::get_by_id("Member", $uid);
+			$member = Member::get()->byId($uid);
 
-		// check if autologin token matches
-		if($member) {
-			$hash = $member->encryptWithUserSettings($token);
-			if(!$member->RememberLoginToken || $member->RememberLoginToken !== $hash) {
-				$member = null;
+			$rememberLoginHash = null;
+
+			// check if autologin token matches
+			if($member) {
+				$hash = $member->encryptWithUserSettings($token);
+				$rememberLoginHash = RememberLoginHash::get()
+					->filter(array(
+						'MemberID' => $member->ID,
+						'DeviceID' => $deviceID,
+						'Hash' => $hash
+					))->First();
+				if(!$rememberLoginHash) {
+					$member = null;
+				} else {
+					// Check for expired token
+					$expiryDate = new DateTime($rememberLoginHash->ExpiryDate);
+					$now = SS_Datetime::now();
+					$now = new DateTime($now->Rfc2822());
+					if ($now > $expiryDate) {
+						$member = null;
+					}
+				}
 			}
-		}
 
-		if($member) {
-			self::session_regenerate_id();
-			Session::set("loggedInAs", $member->ID);
-			// This lets apache rules detect whether the user has logged in
-			if(Member::config()->login_marker_cookie) {
-				Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+			if($member) {
+				self::session_regenerate_id();
+				Session::set("loggedInAs", $member->ID);
+				// This lets apache rules detect whether the user has logged in
+				if(Member::config()->login_marker_cookie) {
+					Cookie::set(Member::config()->login_marker_cookie, 1, 0, null, null, false, true);
+				}
+
+				if ($rememberLoginHash) {
+					$rememberLoginHash->renew();
+					$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
+					Cookie::set('alc_enc', $member->ID . ':' . $rememberLoginHash->getToken(),
+						$tokenExpiryDays, null, null, false, true);
+				}
+
+				$member->write();
+
+				// Audit logging hook
+				$member->extend('memberAutoLoggedIn');
 			}
-
-			$generator = new RandomGenerator();
-			$token = $generator->randomToken('sha1');
-			$hash = $member->encryptWithUserSettings($token);
-			$member->RememberLoginToken = $hash;
-			Cookie::set('alc_enc', $member->ID . ':' . $token, 90, null, null, false, true);
-
-			$member->addVisit();
-			$member->write();
-
-			// Audit logging hook
-			$member->extend('memberAutoLoggedIn');
 		}
 	}
 
@@ -609,8 +599,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		$this->extend('memberLoggedOut');
 
-		$this->RememberLoginToken = null;
+		// Clears any potential previous hashes for this member
+		RememberLoginHash::clear($this, Cookie::get('alc_device'));
+
+		Cookie::set('alc_enc', null); // // Clear the Remember Me cookie
 		Cookie::force_expiry('alc_enc');
+		Cookie::set('alc_device', null);
+		Cookie::force_expiry('alc_device');
 
 		// Switch back to live in order to avoid infinite loops when
 		// redirecting to the login screen (if this login screen is versioned)
@@ -714,7 +709,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		// Exclude expired
 		if(static::config()->temp_id_lifetime) {
-			$members = $members->filter('TempIDExpired:GreaterThan', SS_Datetime::now()->getValue());
+			$members = $members->filter('TempIDExpired:GreaterThan', DBDatetime::now()->getValue());
 		}
 
 		return $members->first();
@@ -746,7 +741,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		));
 
 		$fields->removeByName(static::config()->hidden_fields);
-		$fields->removeByName('LastVisited');
 		$fields->removeByName('FailedLoginCount');
 
 
@@ -871,7 +865,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			&& $this->record['Password']
 			&& $this->config()->notify_password_change
 		) {
-			$e = Member_ChangePasswordEmail::create();
+			/** @var Email $e */
+			$e = Email::create();
+			$e->setSubject(_t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'));
+			$e->setTemplate('ChangePasswordEmail');
 			$e->populateTemplate($this);
 			$e->setTo($this->Email);
 			$e->send();
@@ -1217,8 +1214,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * If no $groups is passed, all members will be returned
 	 *
 	 * @param mixed $groups - takes a SS_List, an array or a single Group.ID
-	 * @return SQLMap Returns an SQLMap that returns all Member data.
-	 * @see map()
+	 * @return SS_Map Returns an SS_Map that returns all Member data.
 	 */
 	public static function map_in_groups($groups = null) {
 		$groupIDList = array();
@@ -1360,9 +1356,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				_t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'),
 				i18n::get_existing_translations()
 			));
-
 			$mainFields->removeByName($self->config()->hidden_fields);
-			$mainFields->makeFieldReadonly('LastVisited');
 
 			if( ! $self->config()->lock_out_after_incorrect_logins) {
 				$mainFields->removeByName('FailedLoginCount');
@@ -1376,6 +1370,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			// Members shouldn't be able to directly view/edit logged passwords
 			$fields->removeByName('LoggedPasswords');
 
+			$fields->removeByName('RememberLoginHashes');
+
 			if(Permission::check('EDIT_PERMISSIONS')) {
 				$groupsMap = array();
 				foreach(Group::get() as $group) {
@@ -1385,7 +1381,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				asort($groupsMap);
 				$fields->addFieldToTab('Root.Main',
 					ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
-						->setMultiple(true)
 						->setSource($groupsMap)
 						->setAttribute(
 							'data-placeholder',
@@ -1464,8 +1459,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$labels['Surname'] = _t('Member.SURNAME', 'Surname');
 		$labels['Email'] = _t('Member.EMAIL', 'Email');
 		$labels['Password'] = _t('Member.db_Password', 'Password');
-		$labels['NumVisit'] = _t('Member.db_NumVisit', 'Number of Visits');
-		$labels['LastVisited'] = _t('Member.db_LastVisited', 'Last Visited Date');
 		$labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
 		$labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
 		$labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
@@ -1478,85 +1471,99 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return $labels;
 	}
 
-	/**
-	 * Users can view their own record.
-	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions.
-	 * This is likely to be customized for social sites etc. with a looser permission model.
-	 */
-	public function canView($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+    /**
+     * Users can view their own record.
+     * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions.
+     * This is likely to be customized for social sites etc. with a looser permission model.
+     */
+    public function canView($member = null) {
+        //get member
+        if(!($member instanceof Member)) {
+            $member = Member::currentUser();
+        }
+        //check for extensions, we do this first as they can overrule everything
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if($extended !== null) {
+            return $extended;
+        }
 
-		// extended access checks
-		$results = $this->extend('canView', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
-		}
+        //need to be logged in and/or most checks below rely on $member being a Member
+        if(!$member) {
+            return false;
+        }
+        // members can usually view their own record
+        if($this->ID == $member->ID) {
+            return true;
+        }
+        //standard check
+        return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
+    }
+    /**
+     * Users can edit their own record.
+     * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
+     */
+    public function canEdit($member = null) {
+        //get member
+        if(!($member instanceof Member)) {
+            $member = Member::currentUser();
+        }
+        //check for extensions, we do this first as they can overrule everything
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if($extended !== null) {
+            return $extended;
+        }
 
-		// members can usually edit their own record
-		if($member && $this->ID == $member->ID) return true;
+        //need to be logged in and/or most checks below rely on $member being a Member
+        if(!$member) {
+            return false;
+        }
 
-		if(
-			Permission::checkMember($member, 'ADMIN')
-			|| Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin')
-		) {
-			return true;
-		}
+        // HACK: we should not allow for an non-Admin to edit an Admin
+        if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) {
+            return false;
+        }
+        // members can usually edit their own record
+        if($this->ID == $member->ID) {
+            return true;
+        }
+        //standard check
+        return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
+    }
+    /**
+     * Users can edit their own record.
+     * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
+     */
+    public function canDelete($member = null) {
+        if(!($member instanceof Member)) {
+            $member = Member::currentUser();
+        }
+        //check for extensions, we do this first as they can overrule everything
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if($extended !== null) {
+            return $extended;
+        }
 
-		return false;
-	}
+        //need to be logged in and/or most checks below rely on $member being a Member
+        if(!$member) {
+            return false;
+        }
+        // Members are not allowed to remove themselves,
+        // since it would create inconsistencies in the admin UIs.
+        if($this->ID && $member->ID == $this->ID) {
+            return false;
+        }
 
-	/**
-	 * Users can edit their own record.
-	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
-	 */
-	public function canEdit($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-
-		// extended access checks
-		$results = $this->extend('canEdit', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
-		}
-
-		// No member found
-		if(!($member && $member->exists())) return false;
-
-		// If the requesting member is not an admin, but has access to manage members,
-		// they still can't edit other members with ADMIN permission.
-		// This is a bit weak, strictly speaking they shouldn't be allowed to
-		// perform any action that could change the password on a member
-		// with "higher" permissions than himself, but thats hard to determine.
-		if(!Permission::checkMember($member, 'ADMIN') && Permission::checkMember($this, 'ADMIN')) return false;
-
-		return $this->canView($member);
-	}
-
-	/**
-	 * Users can edit their own record.
-	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
-	 */
-	public function canDelete($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
-
-		// extended access checks
-		$results = $this->extend('canDelete', $member);
-		if($results && is_array($results)) {
-			if(!min($results)) return false;
-			else return true;
-		}
-
-		// No member found
-		if(!($member && $member->exists())) return false;
-
-		// Members are not allowed to remove themselves,
-		// since it would create inconsistencies in the admin UIs.
-		if($this->ID && $member->ID == $this->ID) return false;
-
-		return $this->canEdit($member);
-	}
-
+        // HACK: if you want to delete a member, you have to be a member yourself.
+        // this is a hack because what this should do is to stop a user
+        // deleting a member who has more privileges (e.g. a non-Admin deleting an Admin)
+        if(Permission::checkMember($this, 'ADMIN')) {
+            if( ! Permission::checkMember($member, 'ADMIN')) {
+                return false;
+            }
+        }
+        //standard check
+        return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
+    }
 
 	/**
 	 * Validate this member object.
@@ -1640,7 +1647,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		foreach($this->Groups() as $group) {
 			$configName = $group->HtmlEditorConfig;
 			if($configName) {
-				$config = HtmlEditorConfig::get($group->HtmlEditorConfig);
+				$config = HTMLEditorConfig::get($group->HtmlEditorConfig);
 				if($config && $config->getOption('priority') > $currentPriority) {
 					$currentName = $configName;
 					$currentPriority = $config->getOption('priority');
@@ -1690,7 +1697,7 @@ class Member_GroupSet extends ManyManyList {
 
 		// Find directly applied groups
 		$manyManyFilter = parent::foreignIDFilter($id);
-		$query = new SQLQuery('"Group_Members"."GroupID"', '"Group_Members"', $manyManyFilter);
+		$query = new SQLSelect('"Group_Members"."GroupID"', '"Group_Members"', $manyManyFilter);
 		$groupIDs = $query->execute()->column();
 
 		// Get all ancestors, iteratively merging these into the master set
@@ -1755,46 +1762,6 @@ class Member_GroupSet extends ManyManyList {
 		if($id) {
 			return DataObject::get_by_id('Member', $id);
 		}
-	}
-}
-
-/**
- * Class used as template to send an email saying that the password has been
- * changed.
- *
- * @package framework
- * @subpackage security
- */
-class Member_ChangePasswordEmail extends Email {
-
-	protected $from = '';   // setting a blank from address uses the site's default administrator email
-	protected $subject = '';
-	protected $ss_template = 'ChangePasswordEmail';
-
-	public function __construct() {
-		parent::__construct();
-
-		$this->subject = _t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject');
-	}
-}
-
-
-
-/**
- * Class used as template to send the forgot password email
- *
- * @package framework
- * @subpackage security
- */
-class Member_ForgotPasswordEmail extends Email {
-	protected $from = '';  // setting a blank from address uses the site's default administrator email
-	protected $subject = '';
-	protected $ss_template = 'ForgotPasswordEmail';
-
-	public function __construct() {
-		parent::__construct();
-
-		$this->subject = _t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject');
 	}
 }
 

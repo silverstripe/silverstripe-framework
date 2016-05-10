@@ -287,7 +287,7 @@ class RequestHandler extends ViewableData {
 
 		$actionRes = $this->$action($request);
 
-		$res = $this->extend('afterCallActionHandler', $request, $action);
+		$res = $this->extend('afterCallActionHandler', $request, $action, $actionRes);
 		if ($res) return reset($res);
 
 		return $actionRes;
@@ -302,7 +302,7 @@ class RequestHandler extends ViewableData {
 	 * so it is recommended to use the $class argument
 	 * when invoking this method.
 	 *
-	 * @param String $limitToClass
+	 * @param string $limitToClass
 	 * @return array|null
 	 */
 	public function allowedActions($limitToClass = null) {
@@ -460,6 +460,7 @@ class RequestHandler extends ViewableData {
 	 * @param int $errorCode
 	 * @param string $errorMessage Plaintext error message
 	 * @uses SS_HTTPResponse_Exception
+	 * @throws SS_HTTPResponse_Exception
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
 

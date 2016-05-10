@@ -15,39 +15,50 @@ with some special conventions.
 For a more practical-oriented approach to CMS customizations, refer to the
 [Howto: Extend the CMS Interface](/developer_guides/customising_the_admin_interface/how_tos/extend_cms_interface) which builds
 
+## Installation
 
-## Markup and Style Conventions
+In order to contribute to the core frontend code, you need [NodeJS 4.x](https://nodejs.org/).
+This will install the package manager necessary to download frontend requirements.
+Once NodeJS is ready to go, you can download those requirements:
 
-While SilverStripe is intended to work with JavaScript only,
-we're following the principles of "[Progressive Enhancement](http://en.wikipedia.org/wiki/Progressive_enhancement)"
-where feasible, relying on a comparatively light layer of JavaScript to enhance
-forms and markup generated on the server. This allows seamless customization of
-aspects like form fields. We're explaining this philosophy in more detail
-on our [blog](http://www.silverstripe.org/the-3-0-ui-a-better-framework-for-your-ideas/)).
+```
+(cd framework && npm install)
+```
 
-All CSS in the CMS UI is written in the [SCSS language extensions](http://sass-lang.com/)
-and the [Compass framework](http://compass-style.org/), which helps
-us maintain expressive and concise style declarations. The files are located in `framework/admin/scss`
-(and if you have the `cms` module installed, in `cms/scss`), and are compiled to a `css` folder on the
-same directory path. Changes to the SCSS files can be automatically converted by installing
-the ["compass" module](https://github.com/silverstripe-labs/silverstripe-compass) for SilverStripe,
-although [installing the compass framework](http://compass-style.org/install/) directly works as well.
-Each file describes its purpose at the top of the declarations. Note that you can write
-plain CSS without SCSS for your custom CMS interfaces as well, we just mandate SCSS for core usage.
+Note: For each core module (e.g. `framework` and `cms`), a separate `npm install` needs to be run.
 
-As there's a whole lot of CSS driving the CMS, we have certain best practives around writing it:
+## Building
 
- * Use dashed lowercase naming for both `id` and `class` attributes (`my-class-name`), instead of camel case (`myClassName`)
- * Use the `id` attribute sparingly. Remember that it "closes off" the structure to code reuse, as HTML elements
-   require unique `id` attributes. Code reuse can happen both in CSS and JavaScript behaviour.
- * Separate presentation from structure in class names, e.g. `left-menu` is encoding the component position
-   (which might change later on). A more structural name could be `cms-menu` (or `cms-tools-menu` for a more specific version)
- * Class naming: Use the `cms-` class prefix for major components in the cms interface,
-   and the `ss-ui-` prefix for extensions to jQuery UI. Don't use the `ui-` class prefix, its reserved for jQuery UI built-in styles.
- * Use jQuery UI's built-in styles where possible, e.g. `ui-widget` for a generic container, or `ui-state-highlight`
-   to highlight a specific component. See the [jQuery UI Theming API](http://jqueryui.com/docs/Theming/API) for a full list.
+All "source" files for the frontend logic are located in `framework/client/src`.
+The base CMS interface has its own folder with `framework/admin/client/src`.
+If you have the `cms`  module installed, there's additional files in `cms/client/src`.
 
-See our [system requirements](/getting_started/server_requirements) for a list of supported browsers.
+All build commands are run through `npm`. You can check the module's
+`package.json` for available commands.
+Under the hood, files are built through [Gulp](http://gulpjs.com/)
+and associated tooling.
+
+```
+(cd framework && npm run build --development)
+```
+Please make sure you build all files before submitting a pull request!
+
+## Coding Conventions
+
+Please follow our [CSS](/getting_started/css_coding_conventions)
+and [JavaScript](/getting_started/javascript_coding_conventions)
+coding conventions.
+
+## Sprites
+
+We use sprites to handle various icons and images throughout the CMS. These are automatically generated
+by running `npm run sprites` and can be found at `/admin/client/src/sprites/dist`. To add new
+images to the sprites, simply add the image to the folder matching the image's size in
+`/admin/client/sprites` then run `npm run sprites` to generate the sprite containing your image.
+Along with the new sprite containing your image, there will also be a new variable in
+`/admin/client/styles/legacy/_sprites.scss` which you can use in your .scss file by first extending the class matching
+the sprite (eg `@extend .icon-sprites-32x32;`), and then including your image using the variable
+matching your image (eg `@include sprite($sprites-32x32-my-image);`).
 
 ## Templates and Controllers
 
@@ -145,6 +156,11 @@ correctly configured form.
 
 ## JavaScript through jQuery.entwine
 
+__Deprecated:__
+The following documentation regarding Entwine applies to legacy code only.
+If you're developing new functionality in React powered sections please refer to
+[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+
 [jQuery.entwine](https://github.com/hafriedlander/jquery.entwine) is a thirdparty library
 which allows us to attach behaviour to DOM elements in a flexible and structured mannger.
 It replaces the `behaviour.js` library used in previous versions of the CMS interface.
@@ -174,8 +190,8 @@ Due to the procedural and selector-driven style of UI programming in jQuery.entw
 it can be difficult to find the piece of code responsible for a certain behaviour.
 Therefore it is important to adhere to file naming conventions.
 E.g. a feature only applicable to `ModelAdmin` should be placed in
-`framework/admin/javascript/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
-would be better suited in `framework/admin/javascript/LeftAndMain.EditForm.js`.
+`framework/admin/javascript/src/ModelAdmin.js`, while something modifying all forms (including ModelAdmin forms)
+would be better suited in `framework/admin/javascript/src/LeftAndMain.EditForm.js`.
 Selectors used in these files should mirrow the "scope" set by its filename,
 so don't place a rule applying to all form buttons inside `ModelAdmin.js`.
 
@@ -190,26 +206,30 @@ to ensure they're loaded unless already present. A custom-built library called
 `jQuery.ondemand` (located in `framework/thirdparty`) takes care of this transparently -
 so as a developer just declare your dependencies through the [api:Requirements] API.
 
-## Ajax Loading and Browser History
+## Client-side routing
 
-SilverStripe uses the HTML5 browser history to modify the URL without a complete window refresh,
-and load its UI via Ajax by hooking into browser navigation events (through the
-[history.js](https://github.com/balupton/History.js/) wrapper library).
-This technique has an impact on how any Ajax load needs to happen:
-In order to support browser history (and change the URL state),
-a CMS developer needs to fire a navigation event rather than invoking the Ajax call directly.
+SilverStripe uses the HTML5 browser history to modify the URL without a complete
+window refresh. We use the [Page.js](https://github.com/visionmedia/page.js)
+routing library and provide additional SilverStripe specific functionality via the
+`admin/client/src/lib/Router.js` wrapper.
 
-The main point of contact here is `$('.cms-container').loadPanel(<url>, <title>, <data>)`
-in `LeftAndMain.js`. The `data` object can contain additional state which is required
-in case the same navigation event is fired again (e.g. when the user pressed the back button).
+The router is available on `window.ss.router` and provides the same API as
+described in the
+[Page.js docs](https://github.com/visionmedia/page.js/blob/master/Readme.md#api).
 
-No callbacks are allowed in this style of Ajax loading, as all state needs
-to be "repeatable". Any logic required to be exected after the Ajax call
-should be placed in jQuery.entinwe `onmatch()` rules which apply to the newly created DOM structures.
-See `$('.cms-container').handleStateChange()` in `LeftAndMain.js` for details.
+### Registering routes
 
-Alternatively, form-related Ajax calls can be invoked through their own wrappers,
-which don't cause history events and hence allow callbacks: `$('.cms-container').submitForm()`.
+Top level (CMS section) routes are registered automatically via the config system.
+Additional routes can be registered like so `window.ss.router('admin/pages', callback)`.
+Once registered, routes can we called with `windw.ss.router.show('admin/pages')`.
+
+Route callbacks are invoked with two arguments, `context` and `next`. The [context object](https://github.com/visionmedia/page.js/blob/master/Readme.md#context)
+can be used to pass state between route handlers and inspect the current
+history state. The `next` function invokes the next matching route. If `next`
+is called when there is no 'next' route, a page refresh will occur.
+
+It's worth noting that routes are invoked in the order they were registered,
+not by specificity.
 
 ## PJAX: Partial template replacement through Ajax
 
@@ -387,11 +407,10 @@ To avoid repetition, we've written some helpers for various use cases:
 SilverStripe automatically applies a [jQuery UI button style](http://jqueryui.com/demos/button/)
 to all elements with the class `.ss-ui-button`. We've extended the jQuery UI widget a bit
 to support defining icons via HTML5 data attributes (see `ssui.core.js`).
-These icon identifiers relate to icon files in `framework/admin/images/btn-icons`,
-and are sprited into a single file through SCSS and the Compass framework
-(see [tutorial](http://compass-style.org/help/tutorials/spriting/)).
-Compass also creates the correct CSS classes to show those sprites via background images
-(see `framework/admin/scss/_sprites.scss`).
+These icon identifiers relate to icon files in `framework/admin/images/sprites/src/btn-icons`,
+and are sprited into a single file through SCSS and [sprity](https://www.npmjs.com/package/sprity)
+(sprites are compiled with `npm run sprites`). There are classes set up to show the correct sprite via
+background images (see `framework/admin/scss/_sprites.scss`).
 
 Input: `<a href="..." class="ss-ui-button" data-icon="add" />Button text</a>`
 
@@ -431,7 +450,7 @@ Note: You can see any additional HTTP headers through the web developer tools in
 
 The CMS tree for viewing hierarchical structures (mostly pages) is powered
 by the [jstree](http://jstree.com) library. It is configured through
-`framework/admin/javascript/LeftAndMain.Tree.js`, as well as some
+`framework/admin/javascript/src/LeftAndMain.Tree.js`, as well as some
 HTML5 metadata generated on its container (see the `data-hints` attribute).
 For more information, see the [Howto: Customise the CMS tree](/developer_guides/customising_the_admin_interface/how_tos/customise_cms_tree).
 

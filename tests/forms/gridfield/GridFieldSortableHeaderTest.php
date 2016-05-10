@@ -10,8 +10,10 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
 		'GridFieldSortableHeaderTest_Team',
+		'GridFieldSortableHeaderTest_TeamGroup',
 		'GridFieldSortableHeaderTest_Cheerleader',
-		'GridFieldSortableHeaderTest_CheerleaderHat'
+		'GridFieldSortableHeaderTest_CheerleaderHat',
+		'GridFieldSortableHeaderTest_Mom'
 	);
 
 	/**
@@ -103,6 +105,95 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		);
 	}
 
+	/**
+	 * Test getManipulatedData on subclassed dataobjects
+	 */
+	public function testInheritedGetManiplatedData() {
+		$list = GridFieldSortableHeaderTest_TeamGroup::get();
+		$config = new GridFieldConfig_RecordEditor();
+		$gridField = new GridField('testfield', 'testfield', $list, $config);
+		$state = $gridField->State->GridFieldSortableHeader;
+		$compontent = $gridField->getConfig()->getComponentByType('GridFieldSortableHeader');
+
+		// Test that inherited dataobjects will work correctly
+		$state->SortColumn = 'Cheerleader.Hat.Colour';
+		$state->SortDirection = 'asc';
+		$relationListA = $compontent->getManipulatedData($gridField, $list);
+		$relationListAsql = Convert::nl2os($relationListA->sql(), ' ');
+
+		// Assert that all tables are joined properly
+		$this->assertContains('FROM "GridFieldSortableHeaderTest_Team"', $relationListAsql);
+		$this->assertContains(
+			'LEFT JOIN "GridFieldSortableHeaderTest_TeamGroup" '
+			. 'ON "GridFieldSortableHeaderTest_TeamGroup"."ID" = "GridFieldSortableHeaderTest_Team"."ID"',
+			$relationListAsql
+		);
+		$this->assertContains(
+			'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
+			. 'ON "GridFieldSortableHeaderTest_Cheerleader"."ID" = "GridFieldSortableHeaderTest_Team"."CheerleaderID"',
+			$relationListAsql
+		);
+		$this->assertContains(
+			'LEFT JOIN "GridFieldSortableHeaderTest_CheerleaderHat" '
+			. 'ON "GridFieldSortableHeaderTest_CheerleaderHat"."ID" = "GridFieldSortableHeaderTest_Cheerleader"."HatID"', $relationListAsql);
+
+		// Test sorting is correct
+		$this->assertEquals(
+			array('Cologne', 'Auckland', 'Wellington', 'Melbourne'),
+			$relationListA->column('City')
+		);
+		$state->SortDirection = 'desc';
+		$relationListAdesc = $compontent->getManipulatedData($gridField, $list);
+		$this->assertEquals(
+			array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
+			$relationListAdesc->column('City')
+		);
+
+		// Test subclasses of tables
+		$state->SortColumn = 'CheerleadersMom.Hat.Colour';
+		$state->SortDirection = 'asc';
+		$relationListB = $compontent->getManipulatedData($gridField, $list);
+		$relationListBsql = $relationListB->sql();
+
+		// Assert that subclasses are included in the query
+		$this->assertContains('FROM "GridFieldSortableHeaderTest_Team"', $relationListBsql);
+		$this->assertContains(
+			'LEFT JOIN "GridFieldSortableHeaderTest_TeamGroup" '
+			. 'ON "GridFieldSortableHeaderTest_TeamGroup"."ID" = "GridFieldSortableHeaderTest_Team"."ID"',
+			$relationListBsql
+		);
+		// Joined tables are joined basetable first
+		$this->assertContains(
+			'LEFT JOIN "GridFieldSortableHeaderTest_Cheerleader" '
+				. 'ON "GridFieldSortableHeaderTest_Cheerleader"."ID" = "GridFieldSortableHeaderTest_Team"."CheerleadersMomID"',
+			$relationListBsql
+		);
+		// Then the basetable of the joined record is joined to the specific subtable
+		$this->assertContains(
+			'LEFT JOIN "GridFieldSortableHeaderTest_Mom" '
+			. 'ON "GridFieldSortableHeaderTest_Cheerleader"."ID" = "GridFieldSortableHeaderTest_Mom"."ID"',
+			$relationListBsql
+		);
+		$this->assertContains(
+			'LEFT JOIN "GridFieldSortableHeaderTest_CheerleaderHat" '
+			. 'ON "GridFieldSortableHeaderTest_CheerleaderHat"."ID" = "GridFieldSortableHeaderTest_Cheerleader"."HatID"',
+			$relationListBsql
+		);
+
+
+		// Test sorting is correct
+		$this->assertEquals(
+			array('Cologne', 'Auckland', 'Wellington', 'Melbourne'),
+			$relationListB->column('City')
+		);
+		$state->SortDirection = 'desc';
+		$relationListBdesc = $compontent->getManipulatedData($gridField, $list);
+		$this->assertEquals(
+			array('Melbourne', 'Wellington', 'Auckland', 'Cologne'),
+			$relationListBdesc->column('City')
+		);
+	}
+
 }
 
 class GridFieldSortableHeaderTest_Team extends DataObject implements TestOnly {
@@ -119,9 +210,16 @@ class GridFieldSortableHeaderTest_Team extends DataObject implements TestOnly {
 	);
 
 	private static $has_one = array(
-		'Cheerleader' => 'GridFieldSortableHeaderTest_Cheerleader'
+		'Cheerleader' => 'GridFieldSortableHeaderTest_Cheerleader',
+		'CheerleadersMom' => 'GridFieldSortableHeaderTest_Mom'
 	);
 
+}
+
+class GridFieldSortableHeaderTest_TeamGroup extends GridFieldSortableHeaderTest_Team implements TestOnly {
+	private static $db = array(
+		'GroupName' => 'Varchar'
+	);
 }
 
 class GridFieldSortableHeaderTest_Cheerleader extends DataObject implements TestOnly {
@@ -135,6 +233,15 @@ class GridFieldSortableHeaderTest_Cheerleader extends DataObject implements Test
 		'Hat' => 'GridFieldSortableHeaderTest_CheerleaderHat'
 	);
 
+}
+
+/**
+ * Should have access to same properties as cheerleader
+ */
+class GridFieldSortableHeaderTest_Mom extends GridFieldSortableHeaderTest_Cheerleader implements TestOnly {
+	private static $db = array(
+		'NumberOfCookiesBaked' => 'Int'
+	);
 }
 
 class GridFieldSortableHeaderTest_CheerleaderHat extends DataObject implements TestOnly {

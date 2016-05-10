@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Filesystem\Storage\AssetContainer;
+
 /**
  * Field for uploading single or multiple files of all types, including images.
  *
@@ -78,11 +80,18 @@ class UploadField extends FileField {
 	/**
 	 * Config for this field used in the front-end javascript
 	 * (will be merged into the config of the javascript file upload plugin).
-	 * See framework/_config/uploadfield.yml for configuration defaults and documentation.
 	 *
 	 * @var array
 	 */
-	protected $ufConfig = array(
+	protected $ufConfig = array();
+
+	/**
+	 * Front end config defaults
+	 *
+	 * @config
+	 * @var array
+	 */
+	private static $defaultConfig = array(
 		/**
 		 * Automatically upload the file once selected
 		 *
@@ -210,7 +219,7 @@ class UploadField extends FileField {
 		$this->addExtraClass('ss-upload'); // class, used by js
 		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
 
-		$this->ufConfig = array_merge($this->ufConfig, self::config()->defaultConfig);
+		$this->ufConfig = self::config()->defaultConfig;
 
 		parent::__construct($name, $title);
 
@@ -370,7 +379,7 @@ class UploadField extends FileField {
 	 * @param array $value Array of submitted form data, if submitting from a form
 	 * @param array|DataObject|SS_List $record Full source record, either as a DataObject,
 	 * SS_List of items, or an array of submitted form data
-	 * @return UploadField Self reference
+	 * @return $this Self reference
 	 */
 	public function setValue($value, $record = null) {
 
@@ -513,10 +522,10 @@ class UploadField extends FileField {
 	 * Customises a file with additional details suitable for rendering in the
 	 * UploadField.ss template
 	 *
-	 * @param File $file
+	 * @param AssetContainer $file
 	 * @return ViewableData_Customised
 	 */
-	protected function customiseFile(File $file) {
+	protected function customiseFile(AssetContainer $file) {
 		$file = $file->customise(array(
 			'UploadFieldThumbnailURL' => $this->getThumbnailURLForFile($file),
 			'UploadFieldDeleteLink' => $this->getItemHandler($file->ID)->DeleteLink(),
@@ -750,11 +759,10 @@ class UploadField extends FileField {
 	 * FieldList $fields for the EditForm
 	 * @example 'getCMSFields'
 	 *
-	 * @param File $file File context to generate fields for
+	 * @param DataObject $file File context to generate fields for
 	 * @return FieldList List of form fields
 	 */
-	public function getFileEditFields(File $file) {
-
+	public function getFileEditFields(DataObject $file) {
 		// Empty actions, generate default
 		if(empty($this->fileEditFields)) {
 			$fields = $file->getCMSFields();
@@ -766,7 +774,9 @@ class UploadField extends FileField {
 		}
 
 		// Fields instance
-		if ($this->fileEditFields instanceof FieldList) return $this->fileEditFields;
+		if ($this->fileEditFields instanceof FieldList) {
+			return $this->fileEditFields;
+		}
 
 		// Method to call on the given file
 		if($file->hasMethod($this->fileEditFields)) {
@@ -792,11 +802,10 @@ class UploadField extends FileField {
 	 * FieldList $actions or string $name (of a method on File to provide a actions) for the EditForm
 	 * @example 'getCMSActions'
 	 *
-	 * @param File $file File context to generate form actions for
+	 * @param DataObject $file File context to generate form actions for
 	 * @return FieldList Field list containing FormAction
 	 */
-	public function getFileEditActions(File $file) {
-
+	public function getFileEditActions(DataObject $file) {
 		// Empty actions, generate default
 		if(empty($this->fileEditActions)) {
 			$actions = new FieldList($saveAction = new FormAction('doEdit', _t('UploadField.DOEDIT', 'Save')));
@@ -805,7 +814,9 @@ class UploadField extends FileField {
 		}
 
 		// Actions instance
-		if ($this->fileEditActions instanceof FieldList) return $this->fileEditActions;
+		if ($this->fileEditActions instanceof FieldList) {
+			return $this->fileEditActions;
+		}
 
 		// Method to call on the given file
 		if($file->hasMethod($this->fileEditActions)) {
@@ -831,15 +842,19 @@ class UploadField extends FileField {
 	 * Determines the validator to use for the edit form
 	 * @example 'getCMSValidator'
 	 *
-	 * @param File $file File context to generate validator from
+	 * @param DataObject $file File context to generate validator from
 	 * @return Validator Validator object
 	 */
-	public function getFileEditValidator(File $file) {
+	public function getFileEditValidator(DataObject $file) {
 		// Empty validator
-		if(empty($this->fileEditValidator)) return null;
+		if(empty($this->fileEditValidator)) {
+			return null;
+		}
 
 		// Validator instance
-		if($this->fileEditValidator instanceof Validator) return $this->fileEditValidator;
+		if($this->fileEditValidator instanceof Validator) {
+			return $this->fileEditValidator;
+		}
 
 		// Method to call on the given file
 		if($file->hasMethod($this->fileEditValidator)) {
@@ -862,26 +877,32 @@ class UploadField extends FileField {
 	}
 
 	/**
-	 * @param File $file
-	 * @return string
+	 *
+	 * @param AssetContainer $file
+	 * @return string URL to thumbnail
 	 */
-	protected function getThumbnailURLForFile(File $file) {
-		if ($file->exists() && file_exists(Director::baseFolder() . '/' . $file->getFilename())) {
-			$width = $this->getPreviewMaxWidth();
-			$height = $this->getPreviewMaxHeight();
-			if ($file->hasMethod('getThumbnail')) {
-				$r = $file->getThumbnail($width, $height);
-				if ($r) return $r->getURL();
-			} elseif ($file->hasMethod('getThumbnailURL')) {
-				return $file->getThumbnailURL($width, $height);
-			} elseif ($file->hasMethod('Fit')) {
-				$r = $file->Fit($width, $height);
-				if ($r) return $r->getURL();
-			} else {
-				return $file->Icon();
-			}
+	protected function getThumbnailURLForFile(AssetContainer $file) {
+		if (!$file->exists()) {
+			return null;
 		}
-		return false;
+
+		// Attempt to generate image at given size
+		$width = $this->getPreviewMaxWidth();
+		$height = $this->getPreviewMaxHeight();
+		if ($file->hasMethod('ThumbnailURL')) {
+			return $file->ThumbnailURL($width, $height);
+		}
+		if ($file->hasMethod('Thumbnail')) {
+			return $file->Thumbnail($width, $height)->getURL();
+		}
+		if ($file->hasMethod('Fit')) {
+			return $file->Fit($width, $height)->getURL();
+		}
+
+		// Check if unsized icon is available
+		if($file->hasMethod('getIcon')) {
+			return $file->getIcon();
+		}
 	}
 
 	public function getAttributes() {
@@ -892,8 +913,13 @@ class UploadField extends FileField {
 	}
 
 	public function extraClass() {
-		if($this->isDisabled()) $this->addExtraClass('disabled');
-		if($this->isReadonly()) $this->addExtraClass('readonly');
+		if($this->isDisabled()) {
+			$this->addExtraClass('disabled');
+		}
+		if($this->isReadonly()) {
+			$this->addExtraClass('readonly');
+		}
+
 		return parent::extraClass();
 	}
 
@@ -901,8 +927,8 @@ class UploadField extends FileField {
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js');
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/ssui.core.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang');
 
 		Requirements::combine_files('uploadfield.js', array(
 			// @todo jquery templates is a project no longer maintained and should be retired at some point.
@@ -912,12 +938,12 @@ class UploadField extends FileField {
 			THIRDPARTY_DIR . '/jquery-fileupload/cors/jquery.xdr-transport.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload.js',
 			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload-ui.js',
-			FRAMEWORK_DIR . '/javascript/UploadField_uploadtemplate.js',
-			FRAMEWORK_DIR . '/javascript/UploadField_downloadtemplate.js',
-			FRAMEWORK_DIR . '/javascript/UploadField.js',
+			FRAMEWORK_DIR . '/client/dist/js/UploadField_uploadtemplate.js',
+			FRAMEWORK_DIR . '/client/dist/js/UploadField_downloadtemplate.js',
+			FRAMEWORK_DIR . '/client/dist/js/UploadField.js',
 		));
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css'); // TODO hmmm, remove it?
-		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/UploadField.css');
 
 		// Calculated config as per jquery.fileupload-ui.js
 		$allowedMaxFileNumber = $this->getAllowedMaxFileNumber();
@@ -1096,10 +1122,9 @@ class UploadField extends FileField {
 	 *
 	 * @param array $tmpFile Temporary file data
 	 * @param string $error Error message
-	 * @return File File object, or null if error
+	 * @return AssetContainer File object, or null if error
 	 */
 	protected function saveTemporaryFile($tmpFile, &$error = null) {
-
 		// Determine container object
 		$error = null;
 		$fileObject = null;
@@ -1117,8 +1142,17 @@ class UploadField extends FileField {
 		// Search for relations that can hold the uploaded files, but don't fallback
 		// to default if there is no automatic relation
 		if ($relationClass = $this->getRelationAutosetClass(null)) {
+			// Allow File to be subclassed
+			if($relationClass === 'File' && isset($tmpFile['name'])) {
+				$relationClass = File::get_class_for_file_extension(
+					File::get_file_extension($tmpFile['name'])
+				);
+			}
 			// Create new object explicitly. Otherwise rely on Upload::load to choose the class.
 			$fileObject = Object::create($relationClass);
+			if(! ($fileObject instanceof DataObject) || !($fileObject instanceof AssetContainer)) {
+				throw new InvalidArgumentException("Invalid asset container $relationClass");
+			}
 		}
 
 		// Get the uploaded file into a new file object.
@@ -1144,22 +1178,21 @@ class UploadField extends FileField {
 	 * Safely encodes the File object with all standard fields required
 	 * by the front end
 	 *
-	 * @param File $file
+	 * @param AssetContainer $file Object which contains a file
 	 * @return array Array encoded list of file attributes
 	 */
-	protected function encodeFileAttributes(File $file) {
-
+	protected function encodeFileAttributes(AssetContainer $file) {
 		// Collect all output data.
-		$file =  $this->customiseFile($file);
+		$customised =  $this->customiseFile($file);
 		return array(
 			'id' => $file->ID,
-			'name' => $file->Name,
-			'url' => $file->URL,
-			'thumbnail_url' => $file->UploadFieldThumbnailURL,
-			'edit_url' => $file->UploadFieldEditLink,
-			'size' => $file->AbsoluteSize,
-			'type' => $file->FileType,
-			'buttons' => $file->UploadFieldFileButtons,
+			'name' => basename($file->getFilename()),
+			'url' => $file->getURL(),
+			'thumbnail_url' => $customised->UploadFieldThumbnailURL,
+			'edit_url' => $customised->UploadFieldEditLink,
+			'size' => $file->getAbsoluteSize(),
+			'type' => File::get_file_type($file->getFilename()),
+			'buttons' => $customised->UploadFieldFileButtons,
 			'fieldname' => $this->getName()
 		);
 	}
@@ -1243,13 +1276,10 @@ class UploadField extends FileField {
 		// Resolve expected folder name
 		$folderName = $this->getFolderName();
 		$folder = Folder::find_or_make($folderName);
-		$parentPath = $folder
-			? BASE_PATH."/".$folder->getFilename()
-			: ASSETS_PATH."/";
+		$parentPath = $folder ? $folder->getFilename() : '';
 
 		// check if either file exists
-		return file_exists($parentPath.$originalFile)
-			|| file_exists($parentPath.$filteredFile);
+		return File::find($parentPath.$originalFile) || File::find($parentPath.$filteredFile);
 	}
 
 	/**
@@ -1341,7 +1371,7 @@ class UploadField_ItemHandler extends RequestHandler {
 
 	/**
 	 * @param UploadFIeld $parent
-	 * @param int $item
+	 * @param int $itemID
 	 */
 	public function __construct($parent, $itemID) {
 		$this->parent = $parent;
@@ -1422,7 +1452,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		if($item instanceof Folder) return $this->httpError(403);
 		if(!$item->canEdit()) return $this->httpError(403);
 
-		Requirements::css(FRAMEWORK_DIR . '/css/UploadField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/UploadField.css');
 
 		return $this->customise(array(
 			'Form' => $this->EditForm()
@@ -1504,7 +1534,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 * @config
 	 * @var int
 	 */
-	private static $page_size = 11; 
+	private static $page_size = 11;
 
 	private static $url_handlers = array(
 		'$Action!' => '$Action',
@@ -1524,7 +1554,7 @@ class UploadField_SelectHandler extends RequestHandler {
 
 	public function index() {
 		// Requires a separate JS file, because we can't reach into the iframe with entwine.
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/UploadField_select.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/UploadField_select.js');
 		return $this->renderWith('CMSDialog');
 	}
 
@@ -1571,7 +1601,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	 */
 	protected function getListField($folderID) {
 		// Generate the folder selection field.
-		$folderField = new TreeDropdownField('ParentID', _t('HtmlEditorField.FOLDER', 'Folder'), 'Folder');
+		$folderField = new TreeDropdownField('ParentID', _t('HTMLEditorField.FOLDER', 'Folder'), 'Folder');
 		$folderField->setValue($folderID);
 
 		// Generate the file list field.
@@ -1589,7 +1619,7 @@ class UploadField_SelectHandler extends RequestHandler {
 			'Created' => 'SS_Datetime->Nice'
 		));
 
- 		// Set configurable pagination for file list field  
+ 		// Set configurable pagination for file list field
 		$pageSize = Config::inst()->get(get_class($this), 'page_size');
 		$config->addComponent(new GridFieldPaginator($pageSize));
 

@@ -237,7 +237,7 @@ ar:
     ResultUpdated: 'تحديث مجموعات %d '
   Hierarchy:
     InfiniteLoopNotAllowed: 'العثور على حلقة لا نهائية ضمن "{نوع}" التسلسل الهرمي . الرجاء تغيير الأصل لحل هذه'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'أضف رابط الموقع URL'
     ADJUSTDETAILSDIMENSIONS: 'التفاصيل &amp; و الأبعاد'
     ANCHORVALUE: رابط

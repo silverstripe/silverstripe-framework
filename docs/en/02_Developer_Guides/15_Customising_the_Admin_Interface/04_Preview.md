@@ -2,6 +2,11 @@
 
 ## Overview
 
+__Deprecated:__
+The following documentation regarding JavaScript layouts and Entwine applies to legacy code only.
+If you're developing new functionality in React powered sections please refer to
+[ReactJS in SilverStripe](./How_Tos/Extend_CMS_Interface.md#reactjs-in-silverstripe).
+
 With the addition of side-by-side editing, the preview has the ability to appear
 within the CMS window when editing content in the _Pages_ section of the CMS.
 The site is rendered into an iframe. It will update itself whenever the content
@@ -77,7 +82,7 @@ to the `LeftAndMain.extra_requirements_javascript` [configuration value](../conf
 	    - mysite/javascript/MyLeftAndMain.Preview.js
 
 In order to find out which configuration values are available, the source code
-is your best reference at the moment - have a look in `framework/admin/javascript/LeftAndMain.Preview.js`.
+is your best reference at the moment - have a look in `framework/admin/javascript/src/LeftAndMain.Preview.js`.
 To understand how layouts are handled in the CMS UI, have a look at the
 [CMS Architecture](cms_architecture) guide.
 

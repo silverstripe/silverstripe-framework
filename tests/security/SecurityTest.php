@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBDatetime;
+use SilverStripe\Model\FieldType\DBClassName;
+
 /**
  * Test the security class, including log-in form, change password form, etc
  *
@@ -361,7 +365,7 @@ class SecurityTest extends FunctionalTest {
 	public function testChangePasswordFromLostPassword() {
 		$admin = $this->objFromFixture('Member', 'test');
 		$admin->FailedLoginCount = 99;
-		$admin->LockedOutUntil = SS_Datetime::now()->Format('Y-m-d H:i:s');
+		$admin->LockedOutUntil = DBDatetime::now()->Format('Y-m-d H:i:s');
 		$admin->write();
 
 		$this->assertNull($admin->AutoLoginHash, 'Hash is empty before lost password');
@@ -522,7 +526,7 @@ class SecurityTest extends FunctionalTest {
 		));
 		$this->assertEquals($attempt->Status, 'Failure');
 		$this->assertEquals($attempt->Email, 'testuser@example.com');
-		$this->assertEquals($attempt->Member(), $member);
+		$this->assertEquals($attempt->Member()->toMap(), $member->toMap());
 
 		/* UNSUCCESSFUL ATTEMPTS WITH NONEXISTING USER ARE LOGGED */
 		$this->doTestLoginForm('wronguser@silverstripe.com', 'wrongpassword');
@@ -551,14 +555,14 @@ class SecurityTest extends FunctionalTest {
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Success');
 		$this->assertEquals($attempt->Email, 'testuser@example.com');
-		$this->assertEquals($attempt->Member(), $member);
+		$this->assertEquals($attempt->Member()->toMap(), $member->toMap());
 	}
 
 	public function testDatabaseIsReadyWithInsufficientMemberColumns() {
 		$old = Security::$force_database_is_ready;
 		Security::$force_database_is_ready = null;
 		Security::$database_is_ready = false;
-		DataObject::clear_classname_spec_cache();
+		DBClassName::clear_classname_cache();
 
 		// Assumption: The database has been built correctly by the test runner,
 		// and has all columns present in the ORM

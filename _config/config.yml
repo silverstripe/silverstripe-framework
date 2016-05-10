@@ -1,6 +1,9 @@
 ---
 Name: coreconfig
 ---
+Injector:
+  FormSchema:
+    class: SilverStripe\Forms\Schema\FormSchema
 Upload:
   # Replace an existing file rather than renaming the new one.
   replaceFile: false

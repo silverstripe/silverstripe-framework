@@ -1,5 +1,8 @@
 <?php
 
+use Filesystem as SS_Filesystem;
+use SilverStripe\Filesystem\Storage\AssetStore;
+
 /**
  * Tests for the File class
  */
@@ -9,11 +12,58 @@ class FileTest extends SapphireTest {
 
 	protected $extraDataObjects = array('FileTest_MyCustomFile');
 
+	public function setUp() {
+		parent::setUp();
+		$this->logInWithPermission('ADMIN');
+		Versioned::set_stage(Versioned::DRAFT);
+
+		// Set backend root to /ImageTest
+		AssetStoreTest_SpyStore::activate('FileTest');
+
+		// Create a test folders for each of the fixture references
+		$folderIDs = $this->allFixtureIDs('Folder');
+		foreach($folderIDs as $folderID) {
+			$folder = DataObject::get_by_id('Folder', $folderID);
+			$filePath = ASSETS_PATH . '/FileTest/' . $folder->getFilename();
+			SS_Filesystem::makeFolder($filePath);
+		}
+
+		// Create a test files for each of the fixture references
+		$fileIDs = $this->allFixtureIDs('File');
+		foreach($fileIDs as $fileID) {
+			$file = DataObject::get_by_id('File', $fileID);
+			$root = ASSETS_PATH . '/FileTest/';
+			if($folder = $file->Parent()) {
+				$root .= $folder->getFilename();
+			}
+			$path = $root . substr($file->getHash(), 0, 10) . '/' . basename($file->getFilename());
+			SS_Filesystem::makeFolder(dirname($path));
+			$fh = fopen($path, "w+");
+			fwrite($fh, str_repeat('x', 1000000));
+			fclose($fh);
+		}
+
+		// Conditional fixture creation in case the 'cms' module is installed
+		if(class_exists('ErrorPage')) {
+			$page = new ErrorPage(array(
+				'Title' => 'Page not Found',
+				'ErrorCode' => 404
+			));
+			$page->write();
+			$page->copyVersionToStage('Stage', 'Live');
+		}
+	}
+
+	public function tearDown() {
+		AssetStoreTest_SpyStore::reset();
+		parent::tearDown();
+	}
+
 	public function testLinkShortcodeHandler() {
 		$testFile = $this->objFromFixture('File', 'asdf');
 
 		$parser = new ShortcodeParser();
-		$parser->register('file_link', array('File', 'link_shortcode_handler'));
+		$parser->register('file_link', array('File', 'handle_shortcode'));
 
 		$fileShortcode = sprintf('[file_link,id=%d]', $testFile->ID);
 		$fileEnclosed  = sprintf('[file_link,id=%d]Example Content[/file_link]', $testFile->ID);
@@ -57,28 +107,33 @@ class FileTest extends SapphireTest {
 		// Creating the folder is necessary to avoid having "Filename" overwritten by setName()/setRelativePath(),
 		// because the parent folders don't exist in the database
 		$folder = Folder::find_or_make('/FileTest/');
-		$testfilePath = 'assets/FileTest/CreateWithFilenameHasCorrectPath.txt'; // Important: No leading slash
-		$fh = fopen(BASE_PATH . '/' . $testfilePath, "w");
+		$testfilePath = BASE_PATH . '/assets/FileTest/CreateWithFilenameHasCorrectPath.txt'; // Important: No leading slash
+		$fh = fopen($testfilePath, "w");
 		fwrite($fh, str_repeat('x',1000000));
 		fclose($fh);
 
 		$file = new File();
-		$file->Filename = $testfilePath;
-		// TODO This should be auto-detected
+		$file->setFromLocalFile($testfilePath);
 		$file->ParentID = $folder->ID;
 		$file->write();
 
-		$this->assertEquals('CreateWithFilenameHasCorrectPath.txt', $file->Name,
-			'"Name" property is automatically set from "Filename"');
-		$this->assertEquals($testfilePath, $file->Filename,
-			'"Filename" property remains unchanged');
+		$this->assertEquals(
+			'CreateWithFilenameHasCorrectPath.txt',
+			$file->Name,
+			'"Name" property is automatically set from "Filename"'
+		);
+		$this->assertEquals(
+			'FileTest/CreateWithFilenameHasCorrectPath.txt',
+			$file->Filename,
+			'"Filename" property remains unchanged'
+		);
 
 		// TODO This should be auto-detected, see File->updateFilesystem()
 		// $this->assertInstanceOf('Folder', $file->Parent(), 'Parent folder is created in database');
-		// $this->assertFileExists($file->Parent()->getFullPath(), 'Parent folder is created on filesystem');
+		// $this->assertFileExists($file->Parent()->getURL(), 'Parent folder is created on filesystem');
 		// $this->assertEquals('FileTest', $file->Parent()->Name);
 		// $this->assertInstanceOf('Folder', $file->Parent()->Parent(), 'Grandparent folder is created in database');
-		// $this->assertFileExists($file->Parent()->Parent()->getFullPath(),
+		// $this->assertFileExists($file->Parent()->Parent()->getURL(),
 		// 'Grandparent folder is created on filesystem');
 		// $this->assertEquals('assets', $file->Parent()->Parent()->Name);
 	}
@@ -103,65 +158,170 @@ class FileTest extends SapphireTest {
 
 		// Invalid ext
 		$file->Name = 'asdf.php';
-		$v = $file->doValidate();
+		$v = $file->validate();
 		$this->assertFalse($v->valid());
 		$this->assertContains('Extension is not allowed', $v->message());
 
 		// Valid ext
 		$file->Name = 'asdf.txt';
-		$v = $file->doValidate();
+		$v = $file->validate();
 		$this->assertTrue($v->valid());
 
 		// Capital extension is valid as well
 		$file->Name = 'asdf.TXT';
-		$v = $file->doValidate();
+		$v = $file->validate();
 		$this->assertTrue($v->valid());
 
 		Config::inst()->remove('File', 'allowed_extensions');
 		Config::inst()->update('File', 'allowed_extensions', $orig);
 	}
 
+	public function testAppCategory() {
+		// Test various categories
+		$this->assertEquals('image', File::get_app_category('jpg'));
+		$this->assertEquals('image', File::get_app_category('JPG'));
+		$this->assertEquals('image', File::get_app_category('JPEG'));
+		$this->assertEquals('image', File::get_app_category('png'));
+		$this->assertEquals('image', File::get_app_category('tif'));
+		$this->assertEquals('document', File::get_app_category('pdf'));
+		$this->assertEquals('video', File::get_app_category('mov'));
+		$this->assertEquals('audio', File::get_app_category('OGG'));
+	}
+
+	public function testGetCategoryExtensions() {
+		// Test specific categories
+		$images = array(
+			'alpha', 'als', 'bmp', 'cel', 'gif', 'ico', 'icon', 'jpeg', 'jpg', 'pcx', 'png', 'ps', 'tif', 'tiff'
+		);
+		$this->assertEquals($images, File::get_category_extensions('image'));
+		$this->assertEquals(array('gif', 'jpeg', 'jpg', 'png'), File::get_category_extensions('image/supported'));
+		$this->assertEquals($images, File::get_category_extensions(array('image', 'image/supported')));
+		$this->assertEquals(
+			array('fla', 'gif', 'jpeg', 'jpg', 'png', 'swf'),
+			File::get_category_extensions(array('flash', 'image/supported'))
+		);
+
+		// Test other categories have at least one item
+		$this->assertNotEmpty(File::get_category_extensions('archive'));
+		$this->assertNotEmpty(File::get_category_extensions('audio'));
+		$this->assertNotEmpty(File::get_category_extensions('document'));
+		$this->assertNotEmpty(File::get_category_extensions('flash'));
+		$this->assertNotEmpty(File::get_category_extensions('video'));
+	}
+
+	/**
+	 * @dataProvider allowedExtensions
+	 * @param string $extension
+	 */
+	public function testAllFilesHaveCategory($extension) {
+		$this->assertNotEmpty(
+			File::get_app_category($extension),
+			"Assert that extension {$extension} has a valid category"
+		);
+	}
+
+	/**
+	 * Gets the list of all extensions for testing
+	 *
+	 * @return array
+	 */
+	public function allowedExtensions() {
+		$args = array();
+		foreach(array_filter(File::config()->allowed_extensions) as $ext) {
+			$args[] = array($ext);
+		}
+		return $args;
+	}
+
 	public function testSetNameChangesFilesystemOnWrite() {
+		/** @var File $file */
 		$file = $this->objFromFixture('File', 'asdf');
-		$oldPath = $file->getFullPath();
+		$this->logInWithPermission('ADMIN');
+		$file->publishRecursive();
+		$oldTuple = $file->File->getValue();
+
+		// Rename
+		$file->Name = 'renamed.txt';
+		$newTuple = $oldTuple;
+		$newTuple['Filename'] = $file->generateFilename();
 
 		// Before write()
-		$file->Name = 'renamed.txt';
-		$this->assertFileExists($oldPath,
-			'Old path is still present');
-		$this->assertFileNotExists($file->getFullPath(),
-			'New path is updated in memory, not written before write() is called');
-
-		$file->write();
+		$this->assertTrue(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old path is still present'
+		);
+		$this->assertFalse(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is updated in memory, not written before write() is called'
+		);
 
 		// After write()
-		clearstatcache();
-		$this->assertFileNotExists($oldPath, 'Old path is removed after write()');
-		$this->assertFileExists($file->getFullPath(), 'New path is created after write()');
+		$file->write();
+		$this->assertTrue(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old path exists after draft change'
+		);
+		$this->assertTrue(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is created after write()'
+		);
+
+		// After publish
+		$file->publishRecursive();
+		$this->assertFalse(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old file is finally removed after publishing new file'
+		);
+		$this->assertTrue(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is created after write()'
+		);
 	}
 
 	public function testSetParentIDChangesFilesystemOnWrite() {
 		$file = $this->objFromFixture('File', 'asdf');
+		$this->logInWithPermission('ADMIN');
+		$file->publishRecursive();
 		$subfolder = $this->objFromFixture('Folder', 'subfolder');
-		$oldPath = $file->getFullPath();
+		$oldTuple = $file->File->getValue();
 
 		// set ParentID
 		$file->ParentID = $subfolder->ID;
+		$newTuple = $oldTuple;
+		$newTuple['Filename'] = $file->generateFilename();
 
 		// Before write()
-		$this->assertFileExists($oldPath,
-			'Old path is still present');
-		$this->assertFileNotExists($file->getFullPath(),
-			'New path is updated in memory, not written before write() is called');
-
+		$this->assertTrue(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old path is still present'
+		);
+		$this->assertFalse(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is updated in memory, not written before write() is called'
+		);
 		$file->write();
 
 		// After write()
-		clearstatcache();
-		$this->assertFileNotExists($oldPath,
-			'Old path is removed after write()');
-		$this->assertFileExists($file->getFullPath(),
-			'New path is created after write()');
+		$file->write();
+		$this->assertTrue(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old path exists after draft change'
+		);
+		$this->assertTrue(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is created after write()'
+		);
+
+		// After publish
+		$file->publishSingle();
+		$this->assertFalse(
+			$this->getAssetStore()->exists($oldTuple['Filename'], $oldTuple['Hash']),
+			'Old file is finally removed after publishing new file'
+		);
+		$this->assertTrue(
+			$this->getAssetStore()->exists($newTuple['Filename'], $newTuple['Hash']),
+			'New path is created after write()'
+		);
 	}
 
 	/**
@@ -175,7 +335,7 @@ class FileTest extends SapphireTest {
 		Config::inst()->update('File', 'allowed_extensions', array('txt'));
 
 		$file = $this->objFromFixture('File', 'asdf');
-		$oldPath = $file->getFullPath();
+		$oldPath = $file->getURL();
 
 		$file->Name = 'renamed.php'; // evil extension
 		try {
@@ -187,50 +347,22 @@ class FileTest extends SapphireTest {
 		}
 	}
 
-	public function testLinkAndRelativeLink() {
-		$file = $this->objFromFixture('File', 'asdf');
-		$this->assertEquals(ASSETS_DIR . '/FileTest.txt', $file->RelativeLink());
-		$this->assertEquals(Director::baseURL() . ASSETS_DIR . '/FileTest.txt', $file->Link());
-	}
-
-	public function testGetRelativePath() {
-		$rootfile = $this->objFromFixture('File', 'asdf');
-		$this->assertEquals('assets/FileTest.txt', $rootfile->getRelativePath(), 'File in assets/ folder');
-
-		$subfolderfile = $this->objFromFixture('File', 'subfolderfile');
-		$this->assertEquals('assets/FileTest-subfolder/FileTestSubfolder.txt', $subfolderfile->getRelativePath(),
-			'File in subfolder within assets/ folder, with existing Filename');
-
-		$subfolderfilesetfromname = $this->objFromFixture('File', 'subfolderfile-setfromname');
-		$this->assertEquals('assets/FileTest-subfolder/FileTestSubfolder2.txt',
-			$subfolderfilesetfromname->getRelativePath(),
-			'File in subfolder within assets/ folder, with Filename generated through setName()');
-	}
-
-	public function testGetFullPath() {
-		$rootfile = $this->objFromFixture('File', 'asdf');
-		$this->assertEquals(ASSETS_PATH . '/FileTest.txt', $rootfile->getFullPath(), 'File in assets/ folder');
-	}
-
 	public function testGetURL() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
-		$this->assertEquals(Director::baseURL() . $rootfile->getFilename(), $rootfile->getURL());
+		$this->assertEquals('/assets/FileTest/55b443b601/FileTest.txt', $rootfile->getURL());
 	}
 
 	public function testGetAbsoluteURL() {
 		$rootfile = $this->objFromFixture('File', 'asdf');
-		$this->assertEquals(Director::absoluteBaseURL() . $rootfile->getFilename(), $rootfile->getAbsoluteURL());
+		$this->assertEquals(
+			Director::absoluteBaseURL() . 'assets/FileTest/55b443b601/FileTest.txt',
+			$rootfile->getAbsoluteURL()
+		);
 	}
 
 	public function testNameAndTitleGeneration() {
-		/* If objects are loaded into the system with just a Filename, then Name is generated but Title isn't */
-		$file = $this->objFromFixture('File', 'asdf');
-		$this->assertEquals('FileTest.txt', $file->Name);
-		$this->assertNull($file->Title);
-
-		/* However, if Name is set instead of Filename, then Title is set */
-		$file = $this->objFromFixture('File', 'setfromname');
-		$this->assertEquals(ASSETS_DIR . '/FileTest.png', $file->Filename);
+		// When name is assigned, title is automatically assigned
+		$file = $this->objFromFixture('Image', 'setfromname');
 		$this->assertEquals('FileTest', $file->Title);
 	}
 
@@ -244,13 +376,13 @@ class FileTest extends SapphireTest {
 	}
 
 	public function testFileType() {
-		$file = $this->objFromFixture('File', 'gif');
+		$file = $this->objFromFixture('Image', 'gif');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
 
 		$file = $this->objFromFixture('File', 'pdf');
 		$this->assertEquals("Adobe Acrobat PDF file", $file->FileType);
 
-		$file = $this->objFromFixture('File', 'gifupper');
+		$file = $this->objFromFixture('Image', 'gifupper');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
 
 		/* Only a few file types are given special descriptions; the rest are unknown */
@@ -276,17 +408,32 @@ class FileTest extends SapphireTest {
 		$this->assertEquals("93132.3 GB", File::format_size(100000000000000));
 	}
 
-	public function testDeleteDatabaseOnly() {
+	public function testDeleteFile() {
+		/** @var File $file */
 		$file = $this->objFromFixture('File', 'asdf');
-		$fileID = $file->ID;
-		$filePath = $file->getFullPath();
+		$this->logInWithPermission('ADMIN');
+		$file->publishSingle();
+		$tuple = $file->File->getValue();
 
-		$file->deleteDatabaseOnly();
+		// Before delete
+		$this->assertTrue(
+			$this->getAssetStore()->exists($tuple['Filename'], $tuple['Hash']),
+			'File is still present'
+		);
 
-		DataObject::flush_and_destroy_cache();
+		// after unpublish
+		$file->doUnpublish();
+		$this->assertTrue(
+			$this->getAssetStore()->exists($tuple['Filename'], $tuple['Hash']),
+			'File is still present after unpublish'
+		);
 
-		$this->assertFileExists($filePath);
-		$this->assertFalse(DataObject::get_by_id('File', $fileID));
+		// after delete
+		$file->delete();
+		$this->assertFalse(
+			$this->getAssetStore()->exists($tuple['Filename'], $tuple['Hash']),
+			'File is deleted after unpublish and delete'
+		);
 	}
 
 	public function testRenameFolder() {
@@ -300,9 +447,11 @@ class FileTest extends SapphireTest {
 
 		//get folder again and see if the filename has changed
 		$folder = DataObject::get_by_id('Folder',$folderID);
-		$this->assertEquals($folder->Filename, ASSETS_DIR ."/". $newTitle ."/",
-			"Folder Filename updated after rename of Title");
-
+		$this->assertEquals(
+			$newTitle . "/",
+			$folder->Filename,
+			"Folder Filename updated after rename of Title"
+		);
 
 		//rename a folder's name
 		$newTitle2 = "FileTest-folder-renamed2";
@@ -324,43 +473,6 @@ class FileTest extends SapphireTest {
 		$folder = DataObject::get_by_id('Folder',$folderID);
 		$this->assertEquals($folder->Title, $newTitle3,
 			"Folder Title updated after rename of Filename");
-	}
-
-
-	public function testGetClassForFileExtension() {
-		$orig = File::config()->class_for_file_extension;
-		File::config()->class_for_file_extension = array('*' => 'MyGenericFileClass');
-		File::config()->class_for_file_extension = array('foo' => 'MyFooFileClass');
-
-		$this->assertEquals(
-			'MyFooFileClass',
-			File::get_class_for_file_extension('foo'),
-			'Finds directly mapped file classes'
-		);
-		$this->assertEquals(
-			'MyFooFileClass',
-			File::get_class_for_file_extension('FOO'),
-			'Works without case sensitivity'
-		);
-		$this->assertEquals(
-			'MyGenericFileClass',
-			File::get_class_for_file_extension('unknown'),
-			'Falls back to generic class for unknown extensions'
-		);
-
-		File::config()->class_for_file_extension = $orig;
-	}
-
-	public function testFolderConstructChild() {
-		$orig = File::config()->class_for_file_extension;
-		File::config()->class_for_file_extension = array('gif' => 'FileTest_MyCustomFile');
-
-		$folder1 = $this->objFromFixture('Folder', 'folder1');
-		$fileID = $folder1->constructChild('myfile.gif');
-		$file = DataObject::get_by_id('File', $fileID);
-		$this->assertEquals('FileTest_MyCustomFile', get_class($file));
-
-		File::config()->class_for_file_extension = $orig;
 	}
 
 	public function testSetsOwnerOnFirstWrite() {
@@ -386,7 +498,7 @@ class FileTest extends SapphireTest {
 	}
 
 	public function testCanEdit() {
-		$file = $this->objFromFixture('File', 'gif');
+		$file = $this->objFromFixture('Image', 'gif');
 
 		// Test anonymous permissions
 		Session::set('loggedInAs', null);
@@ -413,73 +525,21 @@ class FileTest extends SapphireTest {
 		$this->assertTrue($file->canEdit(), "Admins can edit files");
 	}
 
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public function setUp() {
-		parent::setUp();
-
-		if(!file_exists(ASSETS_PATH)) mkdir(ASSETS_PATH);
-
-		/* Create a test folders for each of the fixture references */
-		$folderIDs = $this->allFixtureIDs('Folder');
-		foreach($folderIDs as $folderID) {
-			$folder = DataObject::get_by_id('Folder', $folderID);
-			if(!file_exists(BASE_PATH."/$folder->Filename")) mkdir(BASE_PATH."/$folder->Filename");
-		}
-
-		/* Create a test files for each of the fixture references */
-		$fileIDs = $this->allFixtureIDs('File');
-		foreach($fileIDs as $fileID) {
-			$file = DataObject::get_by_id('File', $fileID);
-			$fh = fopen(BASE_PATH."/$file->Filename", "w");
-			fwrite($fh, str_repeat('x',1000000));
-			fclose($fh);
-		}
-
-		// Conditional fixture creation in case the 'cms' module is installed
-		if(class_exists('ErrorPage')) {
-			$page = new ErrorPage(array(
-				'Title' => 'Page not Found',
-				'ErrorCode' => 404
-			));
-			$page->write();
-			$page->publish('Stage', 'Live');
-		}
+	public function testJoinPaths() {
+		$this->assertEquals('name/file.jpg', File::join_paths('/name', 'file.jpg'));
+		$this->assertEquals('name/file.jpg', File::join_paths('name', 'file.jpg'));
+		$this->assertEquals('name/file.jpg', File::join_paths('/name', '/file.jpg'));
+		$this->assertEquals('name/file.jpg', File::join_paths('name/', '/', 'file.jpg'));
+		$this->assertEquals('file.jpg', File::join_paths('/', '/', 'file.jpg'));
+		$this->assertEquals('', File::join_paths('/', '/'));
 	}
 
-	public function tearDown() {
-		parent::tearDown();
-
-		/* Remove the test files that we've created */
-		$fileIDs = $this->allFixtureIDs('File');
-		foreach($fileIDs as $fileID) {
-			$file = DataObject::get_by_id('File', $fileID);
-			if($file && file_exists(BASE_PATH."/$file->Filename")) unlink(BASE_PATH."/$file->Filename");
-		}
-
-		/* Remove the test folders that we've crated */
-		$folderIDs = $this->allFixtureIDs('Folder');
-		foreach($folderIDs as $folderID) {
-			$folder = DataObject::get_by_id('Folder', $folderID);
-			if($folder && file_exists(BASE_PATH."/$folder->Filename")) {
-				Filesystem::removeFolder(BASE_PATH."/$folder->Filename");
-			}
-		}
-
-		// Remove left over folders and any files that may exist
-		if(file_exists('../assets/FileTest')) Filesystem::removeFolder('../assets/FileTest');
-		if(file_exists('../assets/FileTest-subfolder')) Filesystem::removeFolder('../assets/FileTest-subfolder');
-		if(file_exists('../assets/FileTest.txt')) unlink('../assets/FileTest.txt');
-
-		if (file_exists("../assets/FileTest-folder-renamed1")) {
-			Filesystem::removeFolder("../assets/FileTest-folder-renamed1");
-		}
-		if (file_exists("../assets/FileTest-folder-renamed2")) {
-			Filesystem::removeFolder("../assets/FileTest-folder-renamed2");
-		}
-		if (file_exists("../assets/FileTest-folder-renamed3")) {
-			Filesystem::removeFolder("../assets/FileTest-folder-renamed3");
-		}
+	/**
+	 * @return AssetStore
+	 */
+	protected function getAssetStore() {
+		return Injector::inst()->get('AssetStore');
 	}
 
 }

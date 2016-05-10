@@ -13,14 +13,32 @@ Versioning in SilverStripe is handled through the [api:Versioned] class. As a [a
 be applied to any [api:DataObject] subclass. The extension class will automatically update read and write operations
 done via the ORM via the `augmentSQL` database hook.
 
-Adding Versioned to your `DataObject` subclass works the same as any other extension. It accepts two or more arguments 
-denoting the different "stages", which map to different database tables. 
+Adding Versioned to your `DataObject` subclass works the same as any other extension. It has one of two behaviours,
+which can be applied via the constructor argument.
 
-**mysite/_config/app.yml**
-	:::yml
-	MyRecord:
-	  extensions:
-	    - Versioned("Stage","Live")
+By default, adding the `Versioned extension will create a "Stage" and "Live" stage on your model, and will
+also track versioned history.
+
+
+	:::php
+	class MyStagedModel extends DataObject {
+		private staic $extensions = [
+			"Versioned"
+		];
+	}
+
+
+Alternatively, staging can be disabled, so that only versioned changes are tracked for your model. This
+can be specified by setting the constructor argument to "Versioned"
+
+
+	:::php
+	class VersionedModel extends DataObject {
+		private staic $extensions = [
+			"Versioned('Versioned')"
+		];
+	}
+
 
 <div class="notice" markdown="1">
 The extension is automatically applied to `SiteTree` class. For more information on extensions see 
@@ -34,8 +52,9 @@ of `DataObject`. Adding this extension to children of the base class will have u
 
 ## Database Structure
 
-Depending on how many stages you configured, two or more new tables will be created for your records. In the above, this
-will create a new `MyRecord_Live` table once you've rebuilt the database.
+Depending on whether staging is enabled, one or more new tables will be created for your records. `<class>_versions`
+is always created to track historic versions for your model. If staging is enabled this will also create a new
+`<class>_Live` table once you've rebuilt the database.
 
 <div class="notice" markdown="1">
 Note that the "Stage" naming has a special meaning here, it will leave the original table name unchanged, rather than 
@@ -98,8 +117,14 @@ The usual call to `DataObject->write()` will write to whatever stage is currentl
 `<class>_versions` table. To avoid this, use [api:Versioned::writeWithoutVersion()] instead.
 
 To move a saved version from one stage to another, call [writeToStage(<stage>)](api:Versioned->writeToStage()) on the 
-object. The process of moving a version to a different stage is also called "publishing", so we've created a shortcut 
-for this: `publish(<from-stage>, <to-stage>)`.
+object. The process of moving a version to a different stage is also called "publishing". This can be
+done via one of several ways:
+
+ * `copyVersionToStage` which will allow you to specify a source (which could be either a version
+   number, or a stage), as well as a destination stage.
+ * `publishSingle` Publishes this record to live from the draft.
+ * `publishRecursive` Publishes this record, and any dependant objects this record may refer to.
+   See "DataObject ownership" for reference on dependant objects.
 
 	:::php
 	$record = Versioned::get_by_stage('MyRecord', 'Stage')->byID(99);
@@ -108,7 +133,7 @@ for this: `publish(<from-stage>, <to-stage>)`.
 	// and write a row to `MyRecord_versions`.
 	$record->write(); 
 	// will copy the saved record information to the `MyRecord_Live` table
-	$record->publish('Stage', 'Live');
+	$record->publishRecursive();
 
 Similarly, an "unpublish" operation does the reverse, and removes a record from a specific stage.
 
@@ -128,6 +153,97 @@ is initialized. But it can also be set and reset temporarily to force a specific
 	Versioned::set_reading_mode('Stage'); // temporarily overwrite mode
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
 	Versioned::set_reading_mode($origMode); // reset current mode
+
+### DataObject ownership
+
+Typically when publishing versioned dataobjects, it is necessary to ensure that some linked components
+are published along with it. Unless this is done, site front-end content can appear incorrectly published.
+
+For instance, a page which has a list of rotating banners will require that those banners are published
+whenever that page is.
+
+The solution to this problem is the ownership API, which declares a two-way relationship between
+objects along database relations. This relationship is similar to many_many/belongs_many_many
+and has_one/has_many, however it relies on a pre-existing relationship to function.
+
+For instance, in order to specify this dependency, you must apply `owns` on the owner to point to any
+owned relationships.
+
+When pages of type `MyPage` are published, any owned images and banners will be automatically published,
+without requiring any custom code.
+
+
+	:::php
+	class MyPage extends Page {
+		private static $has_many = array(
+			'Banners' => 'Banner'
+		);
+		private static $owns = array(
+			'Banners'
+		);
+	}
+	
+	class Banner extends Page {
+		private static $extensions = array(
+			'Versioned'
+		);
+		private static $has_one = array(
+			'Parent' => 'MyPage',
+			'Image' => 'Image',
+		);
+		private static $owns = array(
+			'Image'
+		);
+	}
+
+
+Note that ownership cannot be used with polymorphic relations. E.g. has_one to non-type specific `DataObject`. 
+
+#### DataObject ownership with custom relations
+
+In some cases you might need to apply ownership where there is no underlying db relation, such as
+those calculated at runtime based on business logic. In cases where you are not backing ownership
+with standard relations (has_one, has_many, etc) it is necessary to declare ownership on both
+sides of the relation.
+
+This can be done by creating methods on both sides of your relation (e.g. parent and child class)
+that can be used to traverse between each, and then by ensuring you configure both
+`owns` config (on the parent) and `owned_by` (on the child).
+
+E.g.
+
+	:::php
+	class MyParent extends DataObject {
+		private static $extensions = array(
+			'Versioned'
+		);
+		private static $owns = array(
+			'ChildObjects'
+		);
+		public function ChildObjects() {
+			return MyChild::get();
+		}
+	}
+	class MyChild extends DataObject {
+		private static $extensions = array(
+			'Versioned'
+		);
+		private static $owned_by = array(
+			'Parent'
+		);
+		public function Parent() {
+			return MyParent::get()->first();
+		}
+	}
+
+#### DataObject Ownership in HTML Content
+
+If you are using `[api:HTMLText]` or `[api:HTMLVarchar]` fields in your `DataObject::$db` definitions,
+it's likely that your authors can insert images into those fields via the CMS interface.
+These images are usually considered to be owned by the `DataObject`, and should be published alongside it.
+The ownership relationship is tracked through an `[image]` [shortcode](/developer-guides/extending/shortcodes),
+which is automatically transformed into an `<img>` tag at render time. In addition to storing the image path,
+the shortcode references the database identifier of the `Image` object.
 
 ### Custom SQL
 

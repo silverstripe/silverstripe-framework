@@ -52,13 +52,13 @@ class GridFieldLevelup extends Object implements GridField_HTMLProvider {
 			// Attributes
 			$attrs = array_merge($this->attributes, array(
 				'href' => sprintf($this->linkSpec, $parentID),
-				'class' => 'cms-panel-link list-parent-link'
+				'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup'
 			));
 			$attrsStr = '';
 			foreach($attrs as $k => $v) $attrsStr .= " $k=\"" . Convert::raw2att($v) . "\"";
 
 			$forTemplate = new ArrayData(array(
-				'UpLink' => sprintf('<a%s>%s</a>', $attrsStr, _t('GridField.LEVELUP', 'Level up'))
+				'UpLink' => sprintf('<a%s></a>', $attrsStr)
 			));
 
 			return array(

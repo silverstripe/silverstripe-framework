@@ -101,6 +101,14 @@ Links to internal `File` database records work exactly the same, but with the `[
 	:::php
 	<a href="[file_link,id=99]">
 
+### Images
+
+Images inserted through the "Insert Media" form (WYSIWYG editor) need to retain a relationship with
+the underlying `[api:Image]` database record. The `[image]` shortcode saves this database reference
+instead of hard-linking to the filesystem path of a given image.
+
+	[image id="99" alt="My text"]
+
 ### Media (Photo, Video and Rich Content)
 
 Many media formats can be embedded into websites through the `<object>` tag, but some require plugins like Flash or 

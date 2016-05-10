@@ -50,6 +50,9 @@
  * @subpackage core
  */
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 /*
  * _ss_environment.php handler
  */
@@ -139,7 +142,12 @@ if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
 }
 
 if(defined('SS_ERROR_LOG')) {
-	SS_Log::add_writer(new SS_LogFileWriter(BASE_PATH . '/' . SS_ERROR_LOG), SS_Log::WARN, '<=');
+	$logger = Injector::inst()->get('Logger');
+	if($logger instanceof Logger) {
+		$logger->pushHandler(new StreamHandler(BASE_PATH . '/' . SS_ERROR_LOG, Logger::WARNING));
+	} else {
+		user_error("SS_ERROR_LOG setting only works with Monolog, you are using another logger", E_USER_WARNING);
+	}
 }
 
 // Allow database adapters to handle their own configuration

@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: 858ca34cf44ad951e65027cb5f3699cf6b580795
-  branch: master
-lock: false
-repository_class: Piston::Git::Repository
-repository_url: https://github.com/jzaefferer/jquery-validation.git

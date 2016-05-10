@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Shows a categorized list of available permissions (through {@link Permission::get_codes()}).
  * Permissions which are assigned to a given {@link Group} record
@@ -76,8 +79,8 @@ class PermissionCheckboxSetField extends FormField {
 	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
-		Requirements::css(FRAMEWORK_DIR . '/css/CheckboxSetField.css');
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/PermissionCheckboxSetField.js');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/CheckboxSetField.css');
+		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/PermissionCheckboxSetField.js');
 
 		$uninheritedCodes = array();
 		$inheritedCodes = array();

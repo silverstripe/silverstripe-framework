@@ -18,6 +18,8 @@ class GroupedDropdownFieldTest extends SapphireTest {
 			)
 		));
 
+		$this->assertEquals(array("1", "2", "3", "4"), $field->getValidValues());
+
 		$validator = new RequiredFields();
 
 		$field->setValue("1");
@@ -43,11 +45,10 @@ class GroupedDropdownFieldTest extends SapphireTest {
 		//disabled items shouldn't validate
 		$field->setDisabledItems(array('1'));
 		$field->setValue('1');
-		$this->assertFalse($field->validate($validator));
 
-		//grouped disabled items shouldn't validate
-		$field->setDisabledItems(array("Group One" => array("2")));
-		$field->setValue('2');
+		$this->assertEquals(array("2", "3", "4"), $field->getValidValues());
+		$this->assertEquals(array("1"), $field->getDisabledItems());
+
 		$this->assertFalse($field->validate($validator));
 	}
 

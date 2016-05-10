@@ -1,0 +1,62 @@
+//
+// File: typography.scss
+//
+// Contains the basic typography related styles for the admin interface.
+
+
+ // Tables
+// Used as a base for components: GridField.
+
+.table {
+  margin-left: #{0 - $grid-gutter-width / 2};
+  margin-right: #{0 - $grid-gutter-width / 2};
+  min-width: calc(100% + #{$grid-gutter-width});
+  margin-bottom: $spacer-y * 2;
+  border-top: 0;
+
+  thead th {
+    background-color: $body-bg;
+    border-bottom: $table-border-width solid $table-border-color;
+    text-transform: uppercase;
+    font-size: $font-size-sm;
+    font-weight: normal;
+  }
+
+  th,
+  td {
+    border-top: 0;
+    border-bottom: $table-border-width solid $table-border-color;
+    line-height: 20px;
+
+    &:first-child {
+      padding-left: #{$grid-gutter-width / 2};
+    }
+
+    &:last-child {
+      padding-right: #{$grid-gutter-width / 2};
+    }
+  }
+
+  tfoot {
+    background-color: transparent;
+    font-size: $font-size-sm;
+
+    td {
+      border-bottom: 0;
+      background-color: $body-bg;
+    }
+  }
+}
+
+.cms {
+  code {
+    font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
+	}
+}
+
+.label {
+  text-transform: uppercase;
+  font-size: $font-size-xxs;
+  font-weight: 400;
+  letter-spacing: .4px;
+}

@@ -52,7 +52,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('This has a *strong tag with attributes*.', Convert::html2raw($val2),
 			'Strong tags with attributes are replaced with asterisks');
 
-		$val3 = '<script type="text/javascript">Some really nasty javascript here</script>';
+		$val3 = '<script type="application/javascript">Some really nasty javascript here</script>';
 		$this->assertEquals('', Convert::html2raw($val3),
 			'Script tags are completely removed');
 
@@ -60,7 +60,7 @@ class ConvertTest extends SapphireTest {
 		$this->assertEquals('', Convert::html2raw($val4),
 			'Style tags are completely removed');
 
-		$val5 = '<script type="text/javascript">Some really nasty
+		$val5 = '<script type="application/javascript">Some really nasty
 		multiline javascript here</script>';
 		$this->assertEquals('', Convert::html2raw($val5),
 			'Multiline script tags are completely removed');

@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * A composite field for date and time entry,
  * based on {@link DateField} and {@link TimeField}.
@@ -40,6 +43,8 @@ class DatetimeField extends FormField {
 	 * @var TimeField
 	 */
 	protected $timeField = null;
+
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DATETIME;
 
 	/**
 	 * @config
@@ -108,7 +113,7 @@ class DatetimeField extends FormField {
 	 * @return HTMLText
 	 */
 	public function Field($properties = array()) {
-		Requirements::css(FRAMEWORK_DIR . '/css/DatetimeField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/DatetimeField.css');
 
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
 		return DBField::create_field('HTMLText', $this->dateField->FieldHolder() .

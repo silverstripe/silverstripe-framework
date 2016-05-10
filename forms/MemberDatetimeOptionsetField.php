@@ -5,63 +5,87 @@
  */
 class MemberDatetimeOptionsetField extends OptionsetField {
 
+	const CUSTOM_OPTION = '__custom__';
+
+	/**
+	 * Non-ambiguous date to use for the preview.
+	 * Must be in 'y-MM-dd HH:mm:ss' format
+	 *
+	 * @var string
+	 */
+	private static $preview_date = '25-12-2011 17:30:00';
+
 	public function Field($properties = array()) {
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberDatetimeOptionsetField.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberDatetimeOptionsetField.js');
+		$options = array();
+		$odd = false;
 
-		$options = '';
-		$odd = 0;
-		$source = $this->getSource();
-
-		foreach($source as $key => $value) {
-			// convert the ID to an HTML safe value (dots are not replaced, as they are valid in an ID attribute)
-			$itemID = $this->id() . '_' . preg_replace('/[^\.a-zA-Z0-9\-\_]/', '_', $key);
-			if($key == $this->value) {
-				$useValue = false;
-				$checked = " checked=\"checked\"";
-			} else {
-				$checked = "";
+		// Add all options striped
+		$anySelected = false;
+		foreach($this->getSourceEmpty() as $value => $title) {
+			$odd = !$odd;
+			if(!$anySelected) {
+				$anySelected = $this->isSelectedValue($value, $this->Value());
 			}
-
-			$odd = ($odd + 1) % 2;
-			$extraClass = $odd ? "odd" : "even";
-			$extraClass .= " val" . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $key);
-			$disabled = ($this->disabled || in_array($key, $this->disabledItems)) ? "disabled=\"disabled\"" : "";
-			$ATT_key = Convert::raw2att($key);
-
-			$options .= "<li class=\"".$extraClass."\">"
-				. "<input id=\"$itemID\" name=\"$this->name\" type=\"radio\" value=\"$key\"$checked $disabled"
-				. " class=\"radio\" /> <label title=\"$ATT_key\" for=\"$itemID\">$value</label></li>\n";
+			$options[] = $this->getFieldOption($value, $title, $odd);
 		}
 
-		// Add "custom" input field
-		$value = ($this->value && !array_key_exists($this->value, $this->source)) ? $this->value : null;
-		$checked = ($value) ? " checked=\"checked\"" : '';
-		$options .= "<li class=\"valCustom\">"
-			. sprintf(
-					"<input id=\"%s_custom\" name=\"%s\" type=\"radio\" value=\"__custom__\" class=\"radio\" %s />",
-					$itemID, $this->name,
-					$checked
-				)
-			. sprintf(
-					'<label for="%s_custom">%s:</label>',
-					$itemID, _t('MemberDatetimeOptionsetField.Custom', 'Custom')
-				)
-			. sprintf(
-					"<input class=\"customFormat cms-help cms-help-tooltip\" name=\"%s_custom\" value=\"%s\" />\n",
-				$this->name, Convert::raw2xml($value)
-			)
-			. sprintf(
-				"<input type=\"hidden\" class=\"formatValidationURL\" value=\"%s\" />",
-				$this->Link() . '/validate'
-			);
-		$options .= ($value) ? sprintf(
-			'<span class="preview">(%s: "%s")</span>',
-			_t('MemberDatetimeOptionsetField.Preview', 'Preview'),
-			Convert::raw2xml(Zend_Date::now()->toString($value))
-		) : '';
+		// Add "custom" input field option
+		$options[] = $this->getCustomFieldOption(!$anySelected, !$odd);
 
-		$id = $this->id();
-		return "<ul id=\"$id\" class=\"optionset {$this->extraClass()}\">\n$options</ul>\n";
+		// Build fieldset
+		$properties = array_merge($properties, array(
+			'Options' => new ArrayList($options)
+		));
+
+		return $this->customise($properties)->renderWith(
+			$this->getTemplates()
+		);
+	}
+
+	/**
+	 * Create the "custom" selection field option
+	 *
+	 * @param bool $isChecked True if this is checked
+	 * @param bool $odd Is odd striped
+	 * @return ArrayData
+	 */
+	protected function getCustomFieldOption($isChecked, $odd) {
+		// Add "custom" input field
+		$option = $this->getFieldOption(
+			self::CUSTOM_OPTION,
+			_t('MemberDatetimeOptionsetField.Custom', 'Custom'),
+			$odd
+		);
+		$option->setField('isChecked', $isChecked);
+		$option->setField('CustomName', $this->getName().'[Custom]');
+		$option->setField('CustomValue', $this->Value());
+		if($this->Value()) {
+			$preview = Convert::raw2xml($this->previewFormat($this->Value()));
+			$option->setField('CustomPreview', $preview);
+			$option->setField('CustomPreviewLabel', _t('MemberDatetimeOptionsetField.Preview', 'Preview'));
+		}
+		return $option;
+	}
+
+	/**
+	 * For a given format, generate a preview for the date
+	 *
+	 * @param string $format Date format
+	 * @return string
+	 */
+	protected function previewFormat($format) {
+		$date = $this->config()->preview_date;
+		$zendDate = new Zend_Date($date, 'y-MM-dd HH:mm:ss');
+		return $zendDate->toString($format);
+	}
+
+	public function getOptionName() {
+		return parent::getOptionName() . '[Options]';
+	}
+
+	public function Type() {
+		return 'optionset memberdatetimeoptionset';
 	}
 
 	/**
@@ -110,13 +134,20 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		return $output;
 	}
 
+
 	public function setValue($value) {
-		if($value == '__custom__') {
-			$value = isset($_REQUEST[$this->name . '_custom']) ? $_REQUEST[$this->name . '_custom'] : null;
+		// Extract custom option from postback
+		if(is_array($value)) {
+			if(empty($value['Options'])) {
+				$value = '';
+			} elseif($value['Options'] === self::CUSTOM_OPTION) {
+				$value = $value['Custom'];
+			} else {
+				$value = $value['Options'];
+			}
 		}
-		if($value) {
-			parent::setValue($value);
-		}
+
+		return parent::setValue($value);
 	}
 
 	/**
@@ -126,8 +157,10 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	 * @return bool
 	 */
 	public function validate($validator) {
-		$value = isset($_POST[$this->name . '_custom']) ? $_POST[$this->name . '_custom'] : null;
-		if(!$value) return true; // no custom value, don't validate
+		$value = $this->Value();
+		if(!$value) {
+			return true; // no custom value, don't validate
+		}
 
 		// Check that the current date with the date format is valid or not
 		require_once 'Zend/Date.php';
@@ -135,12 +168,17 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 		$valid = Zend_Date::isDate($date, $value);
 		if($valid) {
 			return true;
-		} else {
-			if($validator) {
-				$validator->validationError($this->name,
-					_t('MemberDatetimeOptionsetField.DATEFORMATBAD',"Date format is invalid"), "validation", false);
-			}
-			return false;
 		}
+
+		// Fail
+		$validator->validationError(
+			$this->getName(),
+			_t(
+				'MemberDatetimeOptionsetField.DATEFORMATBAD',
+				"Date format is invalid"
+			),
+			"validation"
+		);
+		return false;
 	}
 }

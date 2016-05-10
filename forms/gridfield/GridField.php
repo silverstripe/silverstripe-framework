@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Displays a {@link SS_List} in a grid format.
  *
@@ -105,7 +107,12 @@ class GridField extends FormField {
 
 		$this->setConfig($config);
 
-		$this->config->addComponent(new GridState_Component());
+		$state = $this->config->getComponentByType('GridState_Component');
+
+		if (!$state) {
+			$this->config->addComponent(new GridState_Component());
+		}
+
 		$this->state = new GridState($this);
 
 		$this->addExtraClass('ss-gridfield');
@@ -283,15 +290,14 @@ class GridField extends FormField {
 	 */
 	public function FieldHolder($properties = array()) {
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(FRAMEWORK_DIR . '/css/GridField.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/GridField.css');
 
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/json-js/json2.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/i18n.js');
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang');
+		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/i18n.js');
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/javascript/GridField.js');
+		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/GridField.js');
 
 		$columns = $this->getColumns();
 

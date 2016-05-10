@@ -1,0 +1,18 @@
+Folder:
+  folder1:
+    Name: folder
+    Title: folder
+  folder2:
+    Name: subfolder
+    Title: subfolder
+    Parent: =>Folder.folder1
+
+File:
+  example_file:
+    Name: example.pdf
+    Parent: =>Folder.folder2
+
+Image:
+  example_image:
+    Name: HTMLEditorFieldTest_example.jpg
+    Parent: =>Folder.folder2

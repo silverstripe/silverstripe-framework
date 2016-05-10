@@ -51,112 +51,6 @@ the [PHPUnit](http://www.phpunit.de) documentation. It provides a lot of fundame
 documentation.
 </div>
 
-## Running Tests
-
-### PHPUnit Binary
-
-The `phpunit` binary should be used from the root directory of your website.
-
-	:::bash
-	phpunit
-	# Runs all tests
-	
-	phpunit framework/tests/
-	# Run all tests of a specific module
-
-	phpunit framework/tests/filesystem
-	# Run specific tests within a specific module
-	
-	phpunit framework/tests/filesystem/FolderTest.php
-	# Run a specific test
-	
-	phpunit framework/tests '' flush=all
-	# Run tests with optional `$_GET` parameters (you need an empty second argument)
-
-<div class="alert" markdown="1">
-The manifest is not flushed when running tests. Add `flush=all` to the test command to do this (see above example.)
-</div>
-
-<div class="alert" markdown="1">
-If phpunit is not installed globally on your machine, you may need to replace the above usage of `phpunit` with the full
-path (e.g `vendor/bin/phpunit framework/tests`)
-</div>
-
-<div class="info" markdown="1">
-All command-line arguments are documented on [phpunit.de](http://www.phpunit.de/manual/current/en/textui.html).
-</div>
-	
-### Via a Web Browser
-
-Executing tests from the command line is recommended, since it most closely reflects test runs in any automated testing 
-environments. If for some reason you don't have access to the command line, you can also run tests through the browser.
-	
-	http://yoursite.com/dev/tests
-
-
-### Via the CLI
-
-The [sake](../cli) executable that comes with SilverStripe can trigger a customised [api:TestRunner] class that 
-handles the PHPUnit configuration and output formatting. While the custom test runner a handy tool, it's also more 
-limited than using `phpunit` directly, particularly around formatting test output.
-
-	:::bash
-	sake dev/tests/all
-	# Run all tests
-
-	sake dev/tests/module/framework,cms
-	# Run all tests of a specific module (comma-separated)
-
-	sake dev/tests/FolderTest,OtherTest
-	# Run specific tests (comma-separated)
-
-	sake dev/tests/all "flush=all&foo=bar"
-	# Run tests with optional `$_GET` parameters
-
-	sake dev/tests/all SkipTests=MySkippedTest
-	# Skip some tests
-
-## Making Tests Run Fast
-A major impedement to testing is that by default tests are extremely slow to run.  There are two things that can be done to speed them up:
-
-### Disable xDebug
-Unless executing a coverage report there is no need to have xDebug enabled.
-
-    :::bash
-    # Disable xdebug
-    sudo php5dismod xdebug
-    
-    # Run tests
-    phpunit framework/tests/
-    
-    # Enable xdebug
-    sudo php5enmod xdebug
-    
-### Use SQLite In Memory
-SQLIte can be configured to run in memory as opposed to disk and this makes testing an order of magnitude faster.  To effect this change add the following to mysite/_config.php - this enables an optional flag to switch between MySQL and SQLite.  Note also that the package silverstripe/sqlite3 will need installed, version will vary depending on which version of SilverStripe is being tested.
-
-    :::php
-    if(Director::isDev()) {
-    	if(isset($_GET['db']) && ($db = $_GET['db'])) {
-        	global $databaseConfig;
-        	if($db == 'sqlite3') {
-        		$databaseConfig['type'] = 'SQLite3Database';
-        		$databaseConfig['path'] = ':memory:';
-        	}
-    	}
-	}
-
-To use SQLite append '' db=sqlite3 after the phpunit command.
-
-    :::bash
-    phpunit framework/tests '' db=sqlite3
-    
-### Speed Comparison
-Testing against a medium sized module with 93 tests:
-* SQLite - 16.15s
-* MySQL - 314s
-This means using SQLite will run tests over 20 times faster.
-
 ## Test Databases and Fixtures
 
 SilverStripe tests create their own database when the test starts. New `ss_tmp` databases are created using the same 
@@ -170,13 +64,13 @@ permissions to create new databases on your server.
 
 <div class="notice" markdown="1">
 The test database is rebuilt every time one of the test methods is run. Over time, you may have several hundred test 
-databases on your machine. To get rid of them is a call to `http://yoursite.com/dev/tests/cleanupdb`
+databases on your machine. To get rid of them, run `sake dev/tasks/CleanupTestDatabasesTask`.
 </div>
 
 ## Custom PHPUnit Configuration
 
 The `phpunit` executable can be configured by command line arguments or through an XML file. SilverStripe comes with a 
-default `phpunit.xml.dist` that you can use as a starting point. Copy the file into `phpunit.xml` and customise to your 
+default `phpunit.xml.dist` that you can use as a starting point. Copy the file into `phpunit.xml` and customize to your 
 needs.
 
 **phpunit.xml**
@@ -200,11 +94,6 @@ needs.
 		</groups>
 	</phpunit>
 
-<div class="alert" markdown="1">
-This configuration file doesn't apply for running tests through the "sake" wrapper
-</div>
-
-
 ### setUp() and tearDown()
 
 In addition to loading data through a [Fixture File](fixtures), a test case may require some additional setup work to be
@@ -223,7 +112,7 @@ end of each test.
 			for($i=0; $i<100; $i++) {
 				$page = new Page(array('Title' => "Page $i"));
 				$page->write();
-				$page->publish('Stage', 'Live');
+				$page->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 			}
 
 			// set custom configuration for the test.
@@ -286,38 +175,6 @@ It's important to remember that the `parent::setUp();` functions will need to be
 		Config::inst()->get('ClassName', 'var_name'); // this will be 'var_value'
 	}
 
-## Generating a Coverage Report
-
-PHPUnit can generate a code coverage report ([docs](http://www.phpunit.de/manual/current/en/code-coverage-analysis.html))
-by executing the following commands.
-
-	:::bash
-	phpunit --coverage-html assets/coverage-report
-	# Generate coverage report for the whole project
-
- 	phpunit --coverage-html assets/coverage-report mysite/tests/
- 	# Generate coverage report for the "mysite" module
-
-<div class="notice" markdown="1">
-These commands will output a report to the `assets/coverage-report/` folder. To view the report, open the `index.html`
-file within a web browser.
-</div>
-
-Typically, only your own custom PHP code in your project should be regarded when producing these reports. To exclude 
-some `thirdparty/` directories add the following to the `phpunit.xml` configuration file.
-
-	:::xml
-	<filter>
-		<blacklist>
-			<directory suffix=".php">framework/dev/</directory>
-			<directory suffix=".php">framework/thirdparty/</directory>
-			<directory suffix=".php">cms/thirdparty/</directory>
-			
-			<!-- Add your custom rules here -->
-			<directory suffix=".php">mysite/thirdparty/</directory>
-		</blacklist>
-	</filter>
-
 ## Related Documentation
 
 * [How to Write a SapphireTest](how_tos/write_a_sapphiretest)
@@ -326,6 +183,5 @@ some `thirdparty/` directories add the following to the `phpunit.xml` configurat
 
 ## API Documentation
 
-* [api:TestRunner]
 * [api:SapphireTest]
 * [api:FunctionalTest]

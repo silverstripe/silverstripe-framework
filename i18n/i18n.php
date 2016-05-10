@@ -24,7 +24,7 @@ require_once 'i18nSSLegacyAdapter.php';
  * <%t MyNamespace.MYENTITY 'Counting {count} things' count=$ThingsCount %>
  * </code>
  *
- * Javascript (see framework/javascript/i18n.js):
+ * Javascript (see framework/client/dist/js/i18n.js):
  * <code>
  * ss.i18n._t('MyEntity.MyNamespace','My default natural language value');
  * </code>
@@ -127,7 +127,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	/**
 	 * Use javascript i18n through the ss.i18n class (enabled by default).
 	 * If set to TRUE, includes javascript requirements for the base library
-	 * (framework/javascript/i18n.js) and all necessary lang files (e.g. framework/lang/de_DE.js)
+	 * (framework/client/dist/js/i18n.js) and all necessary lang files (e.g. framework/lang/de_DE.js)
 	 * plus fallbacks to the default locale (e.g. framework/lang/en_US.js).
 	 * If set to FALSE, only includes a stub implementation
 	 * which is necessary. Mainly disabled to save bandwidth
@@ -840,7 +840,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		),
 		'ko' => array(
 			'name' => 'Korean',
-			'native' => '&#54620;&#44397;&#50612; [&#38867;&#22283;&#35486;]'
+			'native' => '&#54620;&#44397;&#50612;'
 		),
 		'ku' => array(
 			'name' => 'Kurdish',
@@ -2053,43 +2053,21 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 			}
 		}
 
-		// get current locale (either default or user preference)
+		// Find best translation
 		$locale = i18n::get_locale();
-		$lang = i18n::get_lang_from_locale($locale);
-
-		// Only call getter if static isn't already defined (for performance reasons)
-		$translatorsByPrio = self::$translators;
-		if(!$translatorsByPrio) $translatorsByPrio = self::get_translators();
-
-		$returnValue = (is_string($string)) ? $string : ''; // Fall back to default string argument
-
-		foreach($translatorsByPrio as $priority => $translators) {
-			foreach($translators as $name => $translator) {
-				$adapter = $translator->getAdapter();
-
-				// at this point, we need to ensure the language and locale are loaded
-				// as include_by_locale() doesn't load a fallback.
-
-				// TODO Remove reliance on global state, by refactoring into an i18nTranslatorManager
-				// which is instanciated by core with a $clean instance variable.
-
-				if(!$adapter->isAvailable($lang)) {
-					i18n::include_by_locale($lang);
-				}
-
-				if(!$adapter->isAvailable($locale)) {
-					i18n::include_by_locale($locale);
-				}
-
-				$translation = $adapter->translate($entity, $locale);
-
-					// Return translation only if we found a match thats not the entity itself (Zend fallback)
-				if($translation && $translation != $entity) {
-						$returnValue = $translation;
-					break 2;
-					}
-				}
+		$returnValue = static::with_translators(function(Zend_Translate_Adapter $adapter) use ($entity, $locale) {
+			// Return translation only if we found a match thats not the entity itself (Zend fallback)
+			$translation = $adapter->translate($entity, $locale);
+			if($translation && $translation != $entity) {
+				return $translation;
 			}
+			return null;
+		});
+
+		// Fall back to default string argument
+		if($returnValue === null) {
+			$returnValue = (is_string($string)) ? $string : '';
+		}
 
 		// inject the variables from injectionArray (if present)
 		if($injectionArray) {
@@ -2122,18 +2100,94 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 					$placeholder = '{'.$variable.'}';
 					$returnValue = str_replace($placeholder, $injection, $returnValue, $count);
 					if(!$count) {
-						SS_Log::log(sprintf(
+						Injector::inst()->get('Logger')->log('notice', sprintf(
 							"Couldn't find placeholder '%s' in translation string '%s' (id: '%s')",
 							$placeholder,
 							$returnValue,
 							$entity
-						), SS_Log::NOTICE);
+						));
 					}
 				}
 			}
 		}
 
 		return $returnValue;
+	}
+
+	/**
+	 * Pluralise an item or items.
+	 *
+	 * @param string $singular Singular form
+	 * @param string $plural Plural form
+	 * @param int $number Number of items (natural number only)
+	 * @param bool $prependNumber Include number in result
+	 * @return string Result with the number and pluralised form appended. E.g. '1 page'
+	 */
+	public static function pluralise($singular, $plural, $number, $prependNumber = true) {
+		$locale = static::get_locale();
+		$form = static::with_translators(
+			function(Zend_Translate_Adapter $adapter) use ($singular, $plural, $number, $locale) {
+				// Return translation only if we found a match thats not the entity itself (Zend fallback)
+				$result = $adapter->plural($singular, $plural, $number, $locale);
+				if($result) {
+					return $result;
+				}
+				return null;
+			}
+		);
+		if($prependNumber) {
+			return _t('i18n.PLURAL', '{number} {form}', [
+				'number' => $number,
+				'form' => $form
+			]);
+		} else {
+			return $form;
+		}
+	}
+
+	/**
+	 * Loop over all translators in order of precedence, and return the first non-null value
+	 * returned via $callback
+	 *
+	 * @param callable $callback Callback which is given the translator
+	 * @return mixed First non-null result from $callback, or null if none matched
+	 */
+	protected static function with_translators($callback) {
+		// get current locale (either default or user preference)
+		$locale = i18n::get_locale();
+		$lang = i18n::get_lang_from_locale($locale);
+
+		// Only call getter if static isn't already defined (for performance reasons)
+		$translatorsByPrio = self::$translators ?: self::get_translators();
+
+		foreach($translatorsByPrio as $priority => $translators) {
+			/** @var Zend_Translate $translator */
+			foreach($translators as $name => $translator) {
+				$adapter = $translator->getAdapter();
+
+				// at this point, we need to ensure the language and locale are loaded
+				// as include_by_locale() doesn't load a fallback.
+
+				// TODO Remove reliance on global state, by refactoring into an i18nTranslatorManager
+				// which is instanciated by core with a $clean instance variable.
+
+				if(!$adapter->isAvailable($lang)) {
+					i18n::include_by_locale($lang);
+				}
+
+				if(!$adapter->isAvailable($locale)) {
+					i18n::include_by_locale($locale);
+				}
+
+				$result = call_user_func($callback, $adapter);
+				if($result !== null) {
+					return $result;
+				}
+			}
+		}
+
+		// Nothing matched
+		return null;
 	}
 
 

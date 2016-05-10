@@ -137,7 +137,7 @@ class CMSMemberLoginForm extends LoginForm {
 <!DOCTYPE html>
 <html><body>
 $message
-<script type="text/javascript">
+<script type="application/javascript">
 setTimeout(function(){top.location.href = "$changePasswordURLJS";}, 0);
 </script>
 </body></html>

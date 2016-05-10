@@ -74,7 +74,6 @@ class ErrorControlChainTest extends SapphireTest {
 
 		if ($rv != 0) {
 			$this->markTestSkipped("Can't run PHP from the command line - is it in your path?");
-			$this->skipTest = true;
 		}
 
 		parent::setUp();

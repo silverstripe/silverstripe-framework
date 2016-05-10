@@ -72,9 +72,15 @@ class ShortcodeParser extends Object {
 	 *
 	 * @param string $shortcode The shortcode tag to map to the callback - normally in lowercase_underscore format.
 	 * @param callback $callback The callback to replace the shortcode with.
+	 * @return $this
 	 */
 	public function register($shortcode, $callback) {
-		if(is_callable($callback)) $this->shortcodes[$shortcode] = $callback;
+		if(is_callable($callback)) {
+			$this->shortcodes[$shortcode] = $callback;
+		} else {
+			throw new InvalidArgumentException("Callback is not callable");
+		}
+		return $this;
 	}
 
 	/**
@@ -240,7 +246,7 @@ class ShortcodeParser extends Object {
 	 * @return array - The list of tags found. When using an open/close pair, only one item will be in the array,
 	 * with "content" set to the text between the tags
 	 */
-	protected function extractTags($content) {
+	public function extractTags($content) {
 		$tags = array();
 
 		// Step 1: perform basic regex scan of individual tags
@@ -256,7 +262,9 @@ class ShortcodeParser extends Object {
 					preg_match_all(static::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
 
 					foreach ($attrmatches as $attr) {
-						list($whole, $name, $value) = array_values(array_filter($attr));
+						list($whole, $name, $value) = array_values(array_filter($attr, function($attrPart) {
+							return $attrPart !== '';
+						}));
 						$attrs[$name] = $value;
 				}
 				}

@@ -8,7 +8,7 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
 ## Web server software requirements
 
- * PHP 5.3.3+, <7
+ * PHP 5.5 or newer
  * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
  * Required modules: dom, gd2, fileinfo, hash, iconv, mbstring, mysqli (or other database driver), session, simplexml, tokenizer, xml.
@@ -23,7 +23,7 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
   * MySQL 5.0+
   * PostgreSQL 8.3+ (requires ["postgresql" module](http://silverstripe.org/postgresql-module))
   * SQL Server 2008+ (requires ["mssql" module](http://silverstripe.org/microsoft-sql-server-database/))
-  * Support for [Oracle](http://www.silverstripe.org/oracle-database-module/) and [SQLite](http://silverstripe.org/sqlite-database/) is not commercially supported, but is under development by our open source community.
+  * Support for `[Oracle](http://www.silverstripe.org/oracle-database-module/)` and [SQLite](http://silverstripe.org/sqlite-database/) is not commercially supported, but is under development by our open source community.
  * One of the following web server products: 
   * Apache 2.0+ with mod_rewrite and "AllowOverride All" set
   * IIS 7+
@@ -33,11 +33,6 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
   * Linux/Unix/BSD
   * Microsoft Windows XP SP3, Vista, Windows 7, Server 2008, Server 2008 R2
   * Mac OS X 10.4+
-
-### Why doesn't SilverStripe 3 work with PHP 7?
-Unfortunately, SilverStripe has classes named the same as PHP reserved words, such as "Int" and "Float". This means that 
-we are unable to make SilverStripe 3 support PHP 7 without breaking backward compatibility. SilverStripe 4 will work 
-with PHP 7 and will be released in 2016. Until then, we recommend that you use PHP 5.6.
 
 ## Web server hardware requirements
 
@@ -54,7 +49,7 @@ For more information on how to scale SilverStripe see the [Performance](/develop
 
 ## Client side (CMS) requirements
 
-SilverStripe CMS is designed to work well with Google Chrome, Mozilla Firefox and Internet Explorer 8+. We aim to
+SilverStripe CMS is designed to work well with Google Chrome, Mozilla Firefox and Internet Explorer 10+. We aim to
 provide satisfactory experiences in Apple Safari. SilverStripe CMS works well across Windows, Linux, and Mac operating
 systems.
 

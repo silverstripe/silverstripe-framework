@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * @package framework
  * @subpackage tests
@@ -38,18 +41,28 @@ class DataObjectTest extends SapphireTest {
 		// Assert fields are included
 		$this->assertArrayHasKey('Name', $dbFields);
 
-		// Assert the base fields are excluded
-		$this->assertArrayNotHasKey('Created', $dbFields);
-		$this->assertArrayNotHasKey('LastEdited', $dbFields);
-		$this->assertArrayNotHasKey('ClassName', $dbFields);
-		$this->assertArrayNotHasKey('ID', $dbFields);
+		// Assert the base fields are included
+		$this->assertArrayHasKey('Created', $dbFields);
+		$this->assertArrayHasKey('LastEdited', $dbFields);
+		$this->assertArrayHasKey('ClassName', $dbFields);
+		$this->assertArrayHasKey('ID', $dbFields);
 
 		// Assert that the correct field type is returned when passing a field
 		$this->assertEquals('Varchar', $obj->db('Name'));
 		$this->assertEquals('Text', $obj->db('Comment'));
 
+		// Test with table required
+		$this->assertEquals('DataObjectTest_TeamComment.Varchar', $obj->db('Name', true));
+		$this->assertEquals('DataObjectTest_TeamComment.Text', $obj->db('Comment', true));
+
 		$obj = new DataObjectTest_ExtendedTeamComment();
 		$dbFields = $obj->db();
+
+		// fixed fields are still included in extended classes
+		$this->assertArrayHasKey('Created', $dbFields);
+		$this->assertArrayHasKey('LastEdited', $dbFields);
+		$this->assertArrayHasKey('ClassName', $dbFields);
+		$this->assertArrayHasKey('ID', $dbFields);
 
 		// Assert overloaded fields have correct data type
 		$this->assertEquals('HTMLText', $obj->db('Comment'));
@@ -58,10 +71,14 @@ class DataObjectTest extends SapphireTest {
 
 		// assertEquals doesn't verify the order of array elements, so access keys manually to check order:
 		// expected: array('Name' => 'Varchar', 'Comment' => 'HTMLText')
-		reset($dbFields);
-		$this->assertEquals('Name', key($dbFields), 'DataObject::db returns fields in correct order');
-		next($dbFields);
-		$this->assertEquals('Comment', key($dbFields), 'DataObject::db returns fields in correct order');
+		$this->assertEquals(
+			array(
+				'Name',
+				'Comment'
+			),
+			array_slice(array_keys($dbFields), 4, 2),
+			'DataObject::db returns fields in correct order'
+		);
 	}
 
 	public function testConstructAcceptsValues() {
@@ -301,6 +318,12 @@ class DataObjectTest extends SapphireTest {
 		// There will be a method called $obj->relname() that returns the object itself
 		$this->assertEquals($team1ID, $captain1->FavouriteTeam()->ID);
 
+		// Test that getNonReciprocalComponent can find has_one from the has_many end
+		$this->assertEquals(
+			$team1ID,
+			$captain1->inferReciprocalComponent('DataObjectTest_Team', 'PlayerFans')->ID
+		);
+
 		// Check entity with polymorphic has-one
 		$fan1 = $this->objFromFixture("DataObjectTest_Fan", "fan1");
 		$this->assertTrue((bool)$fan1->hasValue('Favourite'));
@@ -318,7 +341,7 @@ class DataObjectTest extends SapphireTest {
 		// check behaviour of dbObject with polymorphic relations
 		$favouriteDBObject = $fan1->dbObject('Favourite');
 		$favouriteValue = $favouriteDBObject->getValue();
-		$this->assertInstanceOf('PolymorphicForeignKey', $favouriteDBObject);
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBPolymorphicForeignKey', $favouriteDBObject);
 		$this->assertEquals($favourite->ID, $favouriteValue->ID);
 		$this->assertEquals($favourite->ClassName, $favouriteValue->ClassName);
 	}
@@ -391,10 +414,19 @@ class DataObjectTest extends SapphireTest {
 		// Test getComponents() gets the ComponentSet of the other side of the relation
 		$this->assertTrue($team1->Comments()->Count() == 2);
 
+		$team1Comments = [
+			['Comment' => 'This is a team comment by Joe'],
+			['Comment' => 'This is a team comment by Bob'],
+		];
+
 		// Test the IDs on the DataObjects are set correctly
-		foreach($team1->Comments() as $comment) {
-			$this->assertEquals($team1->ID, $comment->TeamID);
-		}
+		$this->assertDOSEquals($team1Comments, $team1->Comments());
+
+		// Test that has_many can be infered from the has_one via getNonReciprocalComponent
+		$this->assertDOSEquals(
+			$team1Comments,
+			$team1->inferReciprocalComponent('DataObjectTest_TeamComment', 'Team')
+		);
 
 		// Test that we can add and remove items that already exist in the database
 		$newComment = new DataObjectTest_TeamComment();
@@ -810,26 +842,8 @@ class DataObjectTest extends SapphireTest {
 		$subteamInstance = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
 
 		$this->assertEquals(
-			array_keys($teamInstance->inheritedDatabaseFields()),
 			array(
-				//'ID',
-				//'ClassName',
-				//'Created',
-				//'LastEdited',
-				'Title',
-				'DatabaseField',
-				'ExtendedDatabaseField',
-				'CaptainID',
-				'HasOneRelationshipID',
-				'ExtendedHasOneRelationshipID'
-			),
-			'inheritedDatabaseFields() contains all fields defined on instance: base, extended and foreign keys'
-		);
-
-		$this->assertEquals(
-			array_keys(DataObject::database_fields('DataObjectTest_Team', false)),
-			array(
-				//'ID',
+				'ID',
 				'ClassName',
 				'LastEdited',
 				'Created',
@@ -837,37 +851,59 @@ class DataObjectTest extends SapphireTest {
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
+				'FounderID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
-			'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
+			array_keys($teamInstance->db()),
+			'inheritedDatabaseFields() contains all fields defined on instance: base, extended and foreign keys'
 		);
 
 		$this->assertEquals(
-			array_keys($subteamInstance->inheritedDatabaseFields()),
 			array(
-				//'ID',
-				//'ClassName',
-				//'Created',
-				//'LastEdited',
-				'SubclassDatabaseField',
-				'ParentTeamID',
+				'ID',
+				'ClassName',
+				'LastEdited',
+				'Created',
 				'Title',
 				'DatabaseField',
 				'ExtendedDatabaseField',
 				'CaptainID',
+				'FounderID',
+				'HasOneRelationshipID',
+				'ExtendedHasOneRelationshipID'
+			),
+			array_keys(DataObject::database_fields('DataObjectTest_Team', false)),
+			'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
+		);
+
+		$this->assertEquals(
+			array(
+				'ID',
+				'ClassName',
+				'LastEdited',
+				'Created',
+				'Title',
+				'DatabaseField',
+				'ExtendedDatabaseField',
+				'CaptainID',
+				'FounderID',
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID',
+				'SubclassDatabaseField',
+				'ParentTeamID',
 			),
+			array_keys($subteamInstance->db()),
 			'inheritedDatabaseFields() on subclass contains all fields, including base, extended  and foreign keys'
 		);
 
 		$this->assertEquals(
-			array_keys(DataObject::database_fields('DataObjectTest_SubTeam', false)),
 			array(
+				'ID',
 				'SubclassDatabaseField',
 				'ParentTeamID',
 			),
+			array_keys(DataObject::database_fields('DataObjectTest_SubTeam')),
 			'databaseFields() on subclass contains only fields defined on instance'
 		);
 	}
@@ -1199,6 +1235,7 @@ class DataObjectTest extends SapphireTest {
 
 	public function testMultipleManyManyWithSameClass() {
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$company2 = $this->objFromFixture('DataObjectTest_EquipmentCompany', 'equipmentcompany2');
 		$sponsors = $team->Sponsors();
 		$equipmentSuppliers = $team->EquipmentSuppliers();
 
@@ -1219,6 +1256,25 @@ class DataObjectTest extends SapphireTest {
 		$teamWithoutSponsor = $this->objFromFixture('DataObjectTest_Team', 'team3');
 		$this->assertInstanceOf('ManyManyList', $teamWithoutSponsor->Sponsors());
 		$this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
+
+		// Test that belongs_many_many can be infered from with getNonReciprocalComponent
+		$this->assertDOSEquals(
+			[
+				['Name' => 'Company corp'],
+				['Name' => 'Team co.'],
+			],
+			$team->inferReciprocalComponent('DataObjectTest_EquipmentCompany', 'SponsoredTeams')
+		);
+
+		// Test that many_many can be infered from getNonReciprocalComponent
+		$this->assertDOSEquals(
+			[
+				['Title' => 'Team 1'],
+				['Title' => 'Team 2'],
+				['Title' => 'Subteam 1'],
+			],
+			$company2->inferReciprocalComponent('DataObjectTest_Team', 'Sponsors')
+		);
 
 		// Check many_many_extraFields still works
 		$equipmentCompany = $this->objFromFixture('DataObjectTest_EquipmentCompany', 'equipmentcompany1');
@@ -1248,6 +1304,7 @@ class DataObjectTest extends SapphireTest {
 		$subTeam->Sponsors()->add($subEquipmentCompany, array('SponsorFee' => 1200));
 		$this->assertEquals(1200, $subTeam->Sponsors()->byID($subEquipmentCompany->ID)->SponsorFee,
 			'Data from inherited many_many_extraFields was not stored/extracted correctly');
+
 	}
 
 	public function testManyManyExtraFields() {
@@ -1516,6 +1573,7 @@ class DataObjectTest extends SapphireTest {
 		$company = new DataObjectTest_Company();
 		$ceo     = new DataObjectTest_CEO();
 
+		$company->Name = 'New Company';
 		$company->write();
 		$ceo->write();
 
@@ -1524,6 +1582,19 @@ class DataObjectTest extends SapphireTest {
 		$company->write();
 
 		$this->assertEquals($company->ID, $ceo->Company()->ID, 'belongs_to returns the right results.');
+
+		// Test belongs_to can be infered via getNonReciprocalComponent
+		// Note: Will be returned as has_many since the belongs_to is ignored.
+		$this->assertDOSEquals(
+			[['Name' => 'New Company']],
+			$ceo->inferReciprocalComponent('DataObjectTest_Company', 'CEO')
+		);
+
+		// Test has_one to a belongs_to can be infered via getNonReciprocalComponent
+		$this->assertEquals(
+			$ceo->ID,
+			$company->inferReciprocalComponent('DataObjectTest_CEO', 'Company')->ID
+		);
 
 		// Test automatic creation of class where no assigment exists
 		$ceo = new DataObjectTest_CEO();
@@ -1649,16 +1720,16 @@ class DataObjectTest extends SapphireTest {
 		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
 
 		// Test traversal of a single has_one
-		$this->assertInstanceOf("Varchar", $captain->relObject('FavouriteTeam.Title'));
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBVarchar', $captain->relObject('FavouriteTeam.Title'));
 		$this->assertEquals("Team 1", $captain->relObject('FavouriteTeam.Title')->getValue());
 
 		// Test direct field access
-		$this->assertInstanceOf("Boolean", $captain->relObject('IsRetired'));
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBBoolean', $captain->relObject('IsRetired'));
 		$this->assertEquals(1, $captain->relObject('IsRetired')->getValue());
 
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
 		// Test that we can traverse more than once, and that arbitrary methods are okay
-		$this->assertInstanceOf("Varchar", $player->relObject('Teams.First.Title'));
+		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBVarchar', $player->relObject('Teams.First.Title'));
 		$this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
 	}
 
@@ -1697,7 +1768,9 @@ class DataObjectTest_Player extends Member implements TestOnly {
 	);
 
 	private static $has_many = array(
-		'Fans' => 'DataObjectTest_Fan.Favourite' // Polymorphic - Player fans
+		'Fans' => 'DataObjectTest_Fan.Favourite', // Polymorphic - Player fans
+		'CaptainTeams' => 'DataObjectTest_Team.Captain',
+		'FoundingTeams' => 'DataObjectTest_Team.Founder'
 	);
 
 	private static $belongs_to = array (
@@ -1719,13 +1792,15 @@ class DataObjectTest_Team extends DataObject implements TestOnly {
 
 	private static $has_one = array(
 		"Captain" => 'DataObjectTest_Player',
+		"Founder" => 'DataObjectTest_Player',
 		'HasOneRelationship' => 'DataObjectTest_Player',
 	);
 
 	private static $has_many = array(
 		'SubTeams' => 'DataObjectTest_SubTeam',
 		'Comments' => 'DataObjectTest_TeamComment',
-		'Fans' => 'DataObjectTest_Fan.Favourite' // Polymorphic - Team fans
+		'Fans' => 'DataObjectTest_Fan.Favourite', // Polymorphic - Team fans
+		'PlayerFans' => 'DataObjectTest_Player.FavouriteTeam'
 	);
 
 	private static $many_many = array(
@@ -1771,7 +1846,7 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 
 		// Field types
 		'DateField' => 'Date',
-		'DatetimeField' => 'Datetime',
+		'DatetimeField' => 'SS_Datetime',
 
 		'MyFieldWithDefault' => 'Varchar',
 		'MyFieldWithAltDefault' => 'Varchar'
@@ -1851,7 +1926,7 @@ class DataObjectTest_ValidatedObject extends DataObject implements TestOnly {
 		'Name' => 'Varchar(50)'
 	);
 
-	protected function validate() {
+	public function validate() {
 		if(!empty($this->Name)) {
 			return new ValidationResult();
 		} else {
@@ -1928,7 +2003,8 @@ class DataObjectTest_TeamComment extends DataObject implements TestOnly {
 class DataObjectTest_Fan extends DataObject implements TestOnly {
 
 	private static $db = array(
-		'Name' => 'Varchar(255)'
+		'Name' => 'Varchar(255)',
+		'Email' => 'Varchar',
 	);
 
 	private static $has_one = array(

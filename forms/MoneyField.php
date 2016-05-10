@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\Model\FieldType\DBMoney;
+
 /**
  * A form field that can save into a {@link Money} database field.
  * See {@link CurrencyField} for a similiar implementation
@@ -10,6 +14,8 @@
  * @subpackage fields-formattedinput
  */
 class MoneyField extends FormField {
+
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
 
 	/**
 	 * @var string $_locale
@@ -83,7 +89,7 @@ class MoneyField extends FormField {
 		if(is_array($val)) {
 			$this->fieldCurrency->setValue($val['Currency']);
 			$this->fieldAmount->setValue($val['Amount']);
-		} elseif($val instanceof Money) {
+		} elseif($val instanceof DBMoney) {
 			$this->fieldCurrency->setValue($val->getCurrency());
 			$this->fieldAmount->setValue($val->getAmount());
 		}
@@ -106,15 +112,18 @@ class MoneyField extends FormField {
 	 * (see @link MoneyFieldTest_CustomSetter_Object for more information)
 	 */
 	public function saveInto(DataObjectInterface $dataObject) {
-		$fieldName = $this->name;
+		$fieldName = $this->getName();
 		if($dataObject->hasMethod("set$fieldName")) {
 			$dataObject->$fieldName = DBField::create_field('Money', array(
 				"Currency" => $this->fieldCurrency->dataValue(),
 				"Amount" => $this->fieldAmount->dataValue()
 			));
 		} else {
-			$dataObject->$fieldName->setCurrency($this->fieldCurrency->dataValue());
-			$dataObject->$fieldName->setAmount($this->fieldAmount->dataValue());
+			$currencyField = "{$fieldName}Currency";
+			$amountField = "{$fieldName}Amount";
+
+			$dataObject->$currencyField = $this->fieldCurrency->dataValue();
+			$dataObject->$amountField = $this->fieldAmount->dataValue();
 		}
 	}
 

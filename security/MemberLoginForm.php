@@ -91,10 +91,18 @@ class MemberLoginForm extends LoginForm {
 					$emailField->setAttribute('autocomplete', 'off');
 				}
 				if(Security::config()->autologin_enabled) {
-					$fields->push(new CheckboxField(
-						"Remember",
-						_t('Member.REMEMBERME', "Remember me next time?")
-					));
+					$fields->push(
+						CheckboxField::create(
+							"Remember",
+							_t('Member.KEEPMESIGNEDIN', "Keep me signed in")
+						)->setAttribute(
+							'title',
+							sprintf(
+								_t('Member.REMEMBERME', "Remember me next time? (for %d days on this device)"),
+								Config::inst()->get('RememberLoginHash', 'token_expiry_days')
+							)
+						)
+					);
 				}
 			}
 			if(!$actions) {
@@ -317,7 +325,10 @@ JS;
 		if($member) {
 			$token = $member->generateAutologinTokenAndStoreHash();
 
-			$e = Member_ForgotPasswordEmail::create();
+			/** @var Email $e */
+			$e = Email::create();
+			$e->setSubject(_t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'));
+			$e->setTemplate('ForgotPasswordEmail');
 			$e->populateTemplate($member);
 			$e->populateTemplate(array(
 				'PasswordResetLink' => Security::getPasswordResetLink($member, $token)

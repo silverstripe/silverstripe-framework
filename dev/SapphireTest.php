@@ -1,5 +1,7 @@
 <?php
-require_once 'TestRunner.php';
+
+use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\Model\FieldType\DBDatetime;
 
 /**
  * Test case class for the Sapphire framework.
@@ -30,11 +32,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @var FixtureFactory
 	 */
 	protected $fixtureFactory;
-
-	/**
-	 * @var bool Set whether to include this test in the TestRunner or to skip this.
-	 */
-	protected $skipTest = false;
 
 	/**
 	 * @var Boolean If set to TRUE, this will force a test database to be generated
@@ -124,7 +121,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 
 	/**
-	 * Determines if unit tests are currently run (via {@link TestRunner}).
+	 * Determines if unit tests are currently run, flag set during test bootstrap.
 	 * This is used as a cheap replacement for fully mockable state
 	 * in certain contiditions (e.g. access checks).
 	 * Caution: When set to FALSE, certain controllers might bypass
@@ -169,20 +166,24 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 	protected $model;
 
+	/**
+	 * State of Versioned before this test is run
+	 *
+	 * @var string
+	 */
+	protected $originalReadingMode = null;
+
 	public function setUp() {
 
 		//nest config and injector for each test so they are effectively sandboxed per test
 		Config::nest();
 		Injector::nest();
 
+		$this->originalReadingMode = \Versioned::get_reading_mode();
+
 		// We cannot run the tests on this abstract class.
-		if(get_class($this) == "SapphireTest") $this->skipTest = true;
-
-		if($this->skipTest) {
-			$this->markTestSkipped(sprintf(
-				'Skipping %s ', get_class($this)
-			));
-
+		if(get_class($this) == "SapphireTest") {
+			$this->markTestSkipped(sprintf('Skipping %s ', get_class($this)));
 			return;
 		}
 
@@ -191,7 +192,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		self::$is_running_test = true;
 
 		// i18n needs to be set to the defaults or tests fail
-		i18n::set_locale(i18n::default_locale());
+		i18n::set_locale(Config::inst()->get('i18n', 'default_locale'));
 		i18n::config()->date_format = null;
 		i18n::config()->time_format = null;
 
@@ -206,6 +207,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		if(class_exists('RootURLController')) RootURLController::reset();
 		if(class_exists('Translatable')) Translatable::reset();
+		if(class_exists('Subsite', false)) Subsite::disable_subsite_filter(true);
 		Versioned::reset();
 		DataObject::reset();
 		if(class_exists('SiteTree')) SiteTree::reset();
@@ -398,8 +400,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Get the ID of an object from the fixture.
 	 *
-	 * @param $className The data class, as specified in your fixture file.  Parent classes won't work
-	 * @param $identifier The identifier string, as provided in your fixture file
+	 * @param string $className The data class, as specified in your fixture file.  Parent classes won't work
+	 * @param string $identifier The identifier string, as provided in your fixture file
 	 * @return int
 	 */
 	protected function idFromFixture($className, $identifier) {
@@ -515,7 +517,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->originalIsRunningTest = null;
 
 		// Reset mocked datetime
-		SS_Datetime::clear_mock_now();
+		DBDatetime::clear_mock_now();
 
 		// Stop the redirection that might have been requested in the test.
 		// Note: Ideally a clean Controller should be created for each test.
@@ -525,6 +527,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$controller->response->setStatusCode(200);
 			$controller->response->removeHeader('Location');
 		}
+
+		\Versioned::set_reading_mode($this->originalReadingMode);
+
 		//unnest injector / config now that tests are over
 		Injector::unnest();
 		Config::unnest();
@@ -652,10 +657,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Assert that the given {@link SS_List} includes only DataObjects matching the given
 	 * key-value pairs.  Each match must correspond to 1 distinct record.
 	 *
-	 * @param $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
-	 * either pass a single pattern or an array of patterns.
-	 * @param $dataObjectSet The {@link SS_List} to test.
-	 *
 	 * Example
 	 * --------
 	 * Check that *only* the entries Sam Minnee and Ingo Schommer exist in $members.  Order doesn't
@@ -664,31 +665,42 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 *        array('FirstName' =>'Sam', 'Surname' => 'Minnee'),
 	 *        array('FirstName' => 'Ingo', 'Surname' => 'Schommer'),
 	 *      ), $members);
+	 *
+	 * @param mixed $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
+	 * either pass a single pattern or an array of patterns.
+	 * @param mixed $dataObjectSet The {@link SS_List} to test.
 	 */
 	public function assertDOSEquals($matches, $dataObjectSet) {
-		if(!$dataObjectSet) return false;
-
+		// Extract dataobjects
 		$extracted = array();
-		foreach($dataObjectSet as $item) $extracted[] = $item->toMap();
-
-		foreach($matches as $match) {
-			$matched = false;
-			foreach($extracted as $i => $item) {
-				if($this->dataObjectArrayMatch($item, $match)) {
-					// Remove it from $extracted so that we don't get duplicate mapping.
-					unset($extracted[$i]);
-					$matched = true;
-					break;
-				}
+		if($dataObjectSet) {
+			foreach ($dataObjectSet as $item) {
+				/** @var DataObject $item */
+				$extracted[] = $item->toMap();
 			}
+		}
 
-			// We couldn't find a match - assertion failed
-			$this->assertTrue(
-				$matched,
-				"Failed asserting that the SS_List contains an item matching "
-				. var_export($match, true) . "\n\nIn the following SS_List:\n"
-				. $this->DOSSummaryForMatch($dataObjectSet, $match)
-			);
+		// Check all matches
+		if($matches) {
+			foreach ($matches as $match) {
+				$matched = false;
+				foreach ($extracted as $i => $item) {
+					if ($this->dataObjectArrayMatch($item, $match)) {
+						// Remove it from $extracted so that we don't get duplicate mapping.
+						unset($extracted[$i]);
+						$matched = true;
+						break;
+					}
+				}
+
+				// We couldn't find a match - assertion failed
+				$this->assertTrue(
+					$matched,
+					"Failed asserting that the SS_List contains an item matching "
+					. var_export($match, true) . "\n\nIn the following SS_List:\n"
+					. $this->DOSSummaryForMatch($dataObjectSet, $match)
+				);
+			}
 		}
 
 		// If we have leftovers than the DOS has extra data that shouldn't be there
@@ -704,13 +716,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * Assert that the every record in the given {@link SS_List} matches the given key-value
 	 * pairs.
 	 *
-	 * @param $match The pattern to match.  The pattern is a map of key-value pairs.
-	 * @param $dataObjectSet The {@link SS_List} to test.
-	 *
 	 * Example
 	 * --------
 	 * Check that every entry in $members has a Status of 'Active':
 	 *     $this->assertDOSAllMatch(array('Status' => 'Active'), $members);
+	 *
+	 * @param mixed $match The pattern to match.  The pattern is a map of key-value pairs.
+	 * @param mixed $dataObjectSet The {@link SS_List} to test.
 	 */
 	public function assertDOSAllMatch($match, $dataObjectSet) {
 		$extracted = array();
@@ -809,6 +821,36 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$extracted = array();
 		foreach($dataObjectSet as $item) $extracted[] = array_intersect_key($item->toMap(), $match);
 		return var_export($extracted, true);
+	}
+
+	/**
+	 * Pushes a class and template manifest instance that include tests onto the
+	 * top of the loader stacks.
+	 */
+	public static function use_test_manifest() {
+		$flush = true;
+		if(isset($_GET['flush']) && $_GET['flush'] === '0') {
+			$flush = false;
+		}
+
+		$classManifest = new SS_ClassManifest(
+			BASE_PATH, true, $flush
+		);
+
+		SS_ClassLoader::instance()->pushManifest($classManifest, false);
+		SapphireTest::set_test_class_manifest($classManifest);
+
+		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
+			BASE_PATH, project(), true, $flush
+		));
+
+		Config::inst()->pushConfigStaticManifest(new SS_ConfigStaticManifest(
+			BASE_PATH, true, $flush
+		));
+
+		// Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
+		// (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
+		DataObject::reset();
 	}
 
 	/**
@@ -941,22 +983,41 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Create a member and group with the given permission code, and log in with it.
 	 * Returns the member ID.
+	 *
+	 * @param string|array $permCode Either a permission, or list of permissions
+	 * @return int Member ID
 	 */
 	public function logInWithPermission($permCode = "ADMIN") {
-		if(!isset($this->cache_generatedMembers[$permCode])) {
-			$group = Injector::inst()->create('Group');
+		if(is_array($permCode)) {
+			$permArray = $permCode;
+			$permCode = implode('.', $permCode);
+		} else {
+			$permArray = array($permCode);
+		}
+
+		// Check cached member
+		if(isset($this->cache_generatedMembers[$permCode])) {
+			$member = $this->cache_generatedMembers[$permCode];
+		} else {
+			// Generate group with these permissions
+			$group = Group::create();
 			$group->Title = "$permCode group";
 			$group->write();
 
-			$permission = Injector::inst()->create('Permission');
-			$permission->Code = $permCode;
-			$permission->write();
-			$group->Permissions()->add($permission);
+			// Create each individual permission
+			foreach($permArray as $permArrayItem) {
+				$permission = Permission::create();
+				$permission->Code = $permArrayItem;
+				$permission->write();
+				$group->Permissions()->add($permission);
+			}
 
 			$member = DataObject::get_one('Member', array(
 				'"Member"."Email"' => "$permCode@example.org"
 			));
-			if(!$member) $member = Injector::inst()->create('Member');
+			if (!$member) {
+				$member = Member::create();
+			}
 
 			$member->FirstName = $permCode;
 			$member->Surname = "User";
@@ -966,9 +1027,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			$this->cache_generatedMembers[$permCode] = $member;
 		}
-
-		$this->cache_generatedMembers[$permCode]->logIn();
-		return $this->cache_generatedMembers[$permCode]->ID;
+		$member->logIn();
+		return $member->ID;
 	}
 
 	/**

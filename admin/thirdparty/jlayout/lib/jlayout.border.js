@@ -7,7 +7,14 @@
  */
 /*global jLayout:true */
 (function () {
-	jLayout = (typeof jLayout === 'undefined') ? {} : jLayout;
+	// Customised
+	// Defining global alias because Browserify adds 'use strict'
+	// which throws a runtime error if globals are undefined and not declared.
+
+	// Original
+	// jLayout = (typeof jLayout === 'undefined') ? {} : jLayout;
+
+	window.jLayout = (typeof window.jLayout === 'undefined') ? {} : window.jLayout;
 
 	jLayout.border = function (spec) {
 		var my = {},

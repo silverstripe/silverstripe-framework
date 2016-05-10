@@ -53,7 +53,7 @@ si:
     Parent: 'මවු කාන්ඩය'
     has_many_Permissions: අවසර
     many_many_Members: සාමාජිකයින්
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: 'බැදීමක් යොදන්න'
     BUTTONREMOVELINK: 'බැදීම ගලවන්න'
     CSSCLASS: 'අලයින්මන්ට් / ස්ටයිල්'

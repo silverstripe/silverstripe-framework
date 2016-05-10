@@ -2,7 +2,7 @@
 
 /**
  * An object representing a query of data from the DataObject's supporting database.
- * Acts as a wrapper over {@link SQLQuery} and performs all of the query generation.
+ * Acts as a wrapper over {@link SQLSelect} and performs all of the query generation.
  * Used extensively by {@link DataList}.
  *
  * Unlike DataList, modifiers on DataQuery modify the object rather than returning a clone.
@@ -19,7 +19,7 @@ class DataQuery {
 	protected $dataClass;
 
 	/**
-	 * @var SQLQuery
+	 * @var SQLSelect
 	 */
 	protected $query;
 
@@ -65,7 +65,7 @@ class DataQuery {
 	}
 
 	/**
-	 * Return the {@link SQLQuery} object that represents the current query; note that it will
+	 * Return the {@link SQLSelect} object that represents the current query; note that it will
 	 * be a clone of the object.
 	 */
 	public function query() {
@@ -90,7 +90,7 @@ class DataQuery {
 			$fieldExpression = key($fieldExpression);
 		}
 
-		$where = $this->query->toAppropriateExpression()->getWhere();
+		$where = $this->query->getWhere();
 		// Iterate through each condition
 		foreach($where as $i => $condition) {
 
@@ -103,7 +103,7 @@ class DataQuery {
 			// As each condition is a single length array, do a single
 			// iteration to extract the predicate and parameters
 			foreach($condition as $predicate => $parameters) {
-				// @see SQLQuery::addWhere for why this is required here
+				// @see SQLSelect::addWhere for why this is required here
 				if(strpos($predicate, $fieldExpression) !== false) {
 					unset($where[$i]);
 					$matched = true;
@@ -146,7 +146,7 @@ class DataQuery {
 		$baseClass = array_shift($tableClasses);
 
 		// Build our intial query
-		$this->query = new SQLQuery(array());
+		$this->query = new SQLSelect(array());
 		$this->query->setDistinct(true);
 
 		if($sort = singleton($this->dataClass)->stat('default_sort')) {
@@ -167,7 +167,7 @@ class DataQuery {
 	 * Ensure that the query is ready to execute.
 	 *
 	 * @param array|null $queriedColumns Any columns to filter the query by
-	 * @return SQLQuery The finalised sql query
+	 * @return SQLSelect The finalised sql query
 	 */
 	public function getFinalisedQuery($queriedColumns = null) {
 		if(!$queriedColumns) $queriedColumns = $this->queriedColumns;
@@ -207,7 +207,8 @@ class DataQuery {
 			$selectColumns = null;
 			if ($queriedColumns) {
 				// Restrict queried columns to that on the selected table
-				$tableFields = DataObject::database_fields($tableClass, false);
+				$tableFields = DataObject::database_fields($tableClass);
+				unset($tableFields['ID']);
 				$selectColumns = array_intersect($queriedColumns, array_keys($tableFields));
 			}
 
@@ -225,6 +226,8 @@ class DataQuery {
 			}
 		}
 
+
+
 		// Resolve colliding fields
 		if($this->collidingFields) {
 			foreach($this->collidingFields as $k => $collisions) {
@@ -233,10 +236,10 @@ class DataQuery {
 					if(preg_match('/^"([^"]+)"/', $collision, $matches)) {
 						$collisionBase = $matches[1];
 						if(class_exists($collisionBase)) {
-							$collisionClasses = ClassInfo::subclassesFor($collisionBase);
-							$collisionClasses = Convert::raw2sql($collisionClasses, true);
-							$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ("
-								. implode(", ", $collisionClasses) . ") THEN $collision";
+						$collisionClasses = ClassInfo::subclassesFor($collisionBase);
+						$collisionClasses = Convert::raw2sql($collisionClasses, true);
+						$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ("
+							. implode(", ", $collisionClasses) . ") THEN $collision";
 						}
 					} else {
 						user_error("Bad collision item '$collision'", E_USER_WARNING);
@@ -281,7 +284,7 @@ class DataQuery {
 	/**
 	 * Ensure that if a query has an order by clause, those columns are present in the select.
 	 *
-	 * @param SQLQuery $query
+	 * @param SQLSelect $query
 	 * @return null
 	 */
 	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = array()) {
@@ -324,7 +327,7 @@ class DataQuery {
 					// add new columns sort
 					$newOrderby[$qualCol] = $dir;
 
-					// To-do: Remove this if block once SQLQuery::$select has been refactored to store getSelect()
+					// To-do: Remove this if block once SQLSelect::$select has been refactored to store getSelect()
 					// format internally; then this check can be part of selectField()
 					$selects = $query->getSelect();
 					if(!isset($selects[$col]) && !in_array($qualCol, $selects)) {
@@ -350,7 +353,9 @@ class DataQuery {
 	}
 
 	/**
-	 * Execute the query and return the result as {@link Query} object.
+	 * Execute the query and return the result as {@link SS_Query} object.
+	 *
+	 * @return SS_Query
 	 */
 	public function execute() {
 		return $this->getFinalisedQuery()->execute();
@@ -441,11 +446,12 @@ class DataQuery {
 	/**
 	 * Update the SELECT clause of the query with the columns from the given table
 	 */
-	protected function selectColumnsFromTable(SQLQuery &$query, $tableClass, $columns = null) {
+	protected function selectColumnsFromTable(SQLSelect &$query, $tableClass, $columns = null) {
 		// Add SQL for multi-value fields
-		$databaseFields = DataObject::database_fields($tableClass, false);
+		$databaseFields = DataObject::database_fields($tableClass);
 		$compositeFields = DataObject::composite_fields($tableClass, false);
-		if($databaseFields) foreach($databaseFields as $k => $v) {
+		unset($databaseFields['ID']);
+		foreach($databaseFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
 				// Update $collidingFields if necessary
 				if($expressionForField = $query->expressionForField($k)) {
@@ -457,9 +463,10 @@ class DataQuery {
 				}
 			}
 		}
-		if($compositeFields) foreach($compositeFields as $k => $v) {
+		foreach($compositeFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && $v) {
 				$dbO = Object::create_from_string($v, $k);
+				$dbO->setTable($tableClass);
 				$dbO->addToQuery($query);
 			}
 		}
@@ -510,8 +517,8 @@ class DataQuery {
 	/**
 	 * Adds a WHERE clause.
 	 *
-	 * @see SQLQuery::addWhere() for syntax examples, although DataQuery
-	 * won't expand multiple arguments as SQLQuery does.
+	 * @see SQLSelect::addWhere() for syntax examples, although DataQuery
+	 * won't expand multiple arguments as SQLSelect does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -527,8 +534,8 @@ class DataQuery {
 	/**
 	 * Append a WHERE with OR.
 	 *
-	 * @see SQLQuery::addWhere() for syntax examples, although DataQuery
-	 * won't expand multiple method arguments as SQLQuery does.
+	 * @see SQLSelect::addWhere() for syntax examples, although DataQuery
+	 * won't expand multiple method arguments as SQLSelect does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -544,7 +551,7 @@ class DataQuery {
 	/**
 	 * Set the ORDER BY clause of this query
 	 *
-	 * @see SQLQuery::orderby()
+	 * @see SQLSelect::orderby()
 	 *
 	 * @param String $sort Column to sort on (escaped SQL statement)
 	 * @param String $direction Direction ("ASC" or "DESC", escaped SQL statement)
@@ -634,82 +641,186 @@ class DataQuery {
 	 * mappings to the query object state. This has to be called
 	 * in any overloaded {@link SearchFilter->apply()} methods manually.
 	 *
-	 * @param String|array $relation The array/dot-syntax relation to follow
-	 * @return The model class of the related item
+	 * @param string|array $relation The array/dot-syntax relation to follow
+	 * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
+	 * if this relation will be used for sorting, and should not include duplicate rows.
+	 * @return string The model class of the related item
 	 */
-	public function applyRelation($relation) {
+	public function applyRelation($relation, $linearOnly = false) {
 		// NO-OP
-		if(!$relation) return $this->dataClass;
+		if(!$relation) {
+			return $this->dataClass;
+		}
 
-		if(is_string($relation)) $relation = explode(".", $relation);
+		if(is_string($relation)) {
+			$relation = explode(".", $relation);
+		}
 
 		$modelClass = $this->dataClass;
 
 		foreach($relation as $rel) {
 			$model = singleton($modelClass);
 			if ($component = $model->hasOneComponent($rel)) {
-				if(!$this->query->isJoinedTo($component)) {
-					$foreignKey = $rel;
-					$realModelClass = ClassInfo::table_for_object_field($modelClass, "{$foreignKey}ID");
-					$this->query->addLeftJoin($component,
-						"\"$component\".\"ID\" = \"{$realModelClass}\".\"{$foreignKey}ID\"");
-
-					/**
-					 * add join clause to the component's ancestry classes so that the search filter could search on
-					 * its ancestor fields.
-					 */
-					$ancestry = ClassInfo::ancestry($component, true);
-					if(!empty($ancestry)){
-						$ancestry = array_reverse($ancestry);
-						foreach($ancestry as $ancestor){
-							if($ancestor != $component){
-								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-							}
-						}
-					}
-				}
+				// Join via has_one
+				$this->joinHasOneRelation($modelClass, $rel, $component);
 				$modelClass = $component;
 
 			} elseif ($component = $model->hasManyComponent($rel)) {
-				if(!$this->query->isJoinedTo($component)) {
-					$ancestry = $model->getClassAncestry();
-					$foreignKey = $model->getRemoteJoinField($rel);
-					$this->query->addLeftJoin($component,
-						"\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
-					/**
-					 * add join clause to the component's ancestry classes so that the search filter could search on
-					 * its ancestor fields.
-					 */
-					$ancestry = ClassInfo::ancestry($component, true);
-					if(!empty($ancestry)){
-						$ancestry = array_reverse($ancestry);
-						foreach($ancestry as $ancestor){
-							if($ancestor != $component){
-								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
-							}
-						}
-					}
+				// Fail on non-linear relations
+				if($linearOnly) {
+					throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
 				}
+				// Join via has_many
+				$this->joinHasManyRelation($modelClass, $rel, $component);
 				$modelClass = $component;
 
 			} elseif ($component = $model->manyManyComponent($rel)) {
-				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
-				$parentBaseClass = ClassInfo::baseDataClass($parentClass);
-				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-				$this->query->addInnerJoin($relationTable,
-					"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-				$this->query->addLeftJoin($componentBaseClass,
-					"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
-				if(ClassInfo::hasTable($componentClass)) {
-					$this->query->addLeftJoin($componentClass,
-						"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+				// Fail on non-linear relations
+				if($linearOnly) {
+					throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
 				}
+				// Join via many_many
+				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
+				$this->joinManyManyRelationship(
+					$parentClass, $componentClass, $parentField, $componentField, $relationTable
+				);
 				$modelClass = $componentClass;
 
+			} else {
+				throw new InvalidArgumentException("$rel is not a relation on model $modelClass");
 			}
 		}
 
 		return $modelClass;
+	}
+
+	/**
+	 * Join the given class to this query with the given key
+	 *
+	 * @param string $localClass Name of class that has the has_one to the joined class
+	 * @param string $localField Name of the has_one relationship to joi
+	 * @param string $foreignClass Class to join
+	 */
+	protected function joinHasOneRelation($localClass, $localField, $foreignClass)
+	{
+		if (!$foreignClass) {
+			throw new InvalidArgumentException("Could not find a has_one relationship {$localField} on {$localClass}");
+		}
+
+		if ($foreignClass === 'DataObject') {
+			throw new InvalidArgumentException(
+				"Could not join polymorphic has_one relationship {$localField} on {$localClass}"
+			);
+		}
+
+		// Skip if already joined
+		if($this->query->isJoinedTo($foreignClass)) {
+			return;
+		}
+
+		$realModelClass = ClassInfo::table_for_object_field($localClass, "{$localField}ID");
+		$foreignBase = ClassInfo::baseDataClass($foreignClass);
+		$this->query->addLeftJoin(
+			$foreignBase,
+			"\"$foreignBase\".\"ID\" = \"{$realModelClass}\".\"{$localField}ID\""
+		);
+
+		/**
+		 * add join clause to the component's ancestry classes so that the search filter could search on
+		 * its ancestor fields.
+		 */
+		$ancestry = ClassInfo::ancestry($foreignClass, true);
+		if(!empty($ancestry)){
+			$ancestry = array_reverse($ancestry);
+			foreach($ancestry as $ancestor){
+				if($ancestor != $foreignBase) {
+					$this->query->addLeftJoin($ancestor, "\"$foreignBase\".\"ID\" = \"$ancestor\".\"ID\"");
+				}
+			}
+		}
+	}
+
+	/**
+	 * Join the given has_many relation to this query.
+	 *
+	 * Doesn't work with polymorphic relationships
+	 *
+	 * @param string $localClass Name of class that has the has_many to the joined class
+	 * @param string $localField Name of the has_many relationship to join
+	 * @param string $foreignClass Class to join
+	 */
+	protected function joinHasManyRelation($localClass, $localField, $foreignClass) {
+		if(!$foreignClass || $foreignClass === 'DataObject') {
+			throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
+		}
+
+		// Skip if already joined
+		if($this->query->isJoinedTo($foreignClass)) {
+			return;
+		}
+
+		// Join table with associated has_one
+		$model = singleton($localClass);
+		$ancestry = $model->getClassAncestry();
+		$foreignKey = $model->getRemoteJoinField($localField, 'has_many', $polymorphic);
+		if($polymorphic) {
+			$this->query->addLeftJoin(
+				$foreignClass,
+				"\"$foreignClass\".\"{$foreignKey}ID\" = \"{$ancestry[0]}\".\"ID\" AND "
+					. "\"$foreignClass\".\"{$foreignKey}Class\" = \"{$ancestry[0]}\".\"ClassName\""
+			);
+		} else {
+			$this->query->addLeftJoin(
+				$foreignClass,
+				"\"$foreignClass\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\""
+			);
+		}
+
+		/**
+		 * add join clause to the component's ancestry classes so that the search filter could search on
+		 * its ancestor fields.
+		 */
+		$ancestry = ClassInfo::ancestry($foreignClass, true);
+		$ancestry = array_reverse($ancestry);
+		foreach($ancestry as $ancestor){
+			if($ancestor != $foreignClass){
+				$this->query->addInnerJoin($ancestor, "\"$foreignClass\".\"ID\" = \"$ancestor\".\"ID\"");
+			}
+		}
+	}
+
+	/**
+	 * Join table via many_many relationship
+	 *
+	 * @param string $parentClass
+	 * @param string $componentClass
+	 * @param string $parentField
+	 * @param string $componentField
+	 * @param string $relationTable Name of relation table
+	 */
+	protected function joinManyManyRelationship($parentClass, $componentClass, $parentField, $componentField, $relationTable) {
+		$parentBaseClass = ClassInfo::baseDataClass($parentClass);
+		$componentBaseClass = ClassInfo::baseDataClass($componentClass);
+		$this->query->addLeftJoin(
+			$relationTable,
+			"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\""
+		);
+		$this->query->addLeftJoin(
+			$componentBaseClass,
+			"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\""
+		);
+
+		/**
+		 * add join clause to the component's ancestry classes so that the search filter could search on
+		 * its ancestor fields.
+		 */
+		$ancestry = ClassInfo::ancestry($componentClass, true);
+		$ancestry = array_reverse($ancestry);
+		foreach($ancestry as $ancestor){
+			if($ancestor != $componentBaseClass){
+				$this->query->addInnerJoin($ancestor, "\"$componentBaseClass\".\"ID\" = \"$ancestor\".\"ID\"");
+			}
+		}
 	}
 
 	/**
@@ -765,7 +876,7 @@ class DataQuery {
 
 	/**
 	 * @param  String $field Select statement identifier, either the unquoted column name,
-	 * the full composite SQL statement, or the alias set through {@link SQLQuery->selectField()}.
+	 * the full composite SQL statement, or the alias set through {@link SQLSelect->selectField()}.
 	 * @return String The expression used to query this field via this DataQuery
 	 */
 	protected function expressionForField($field) {
@@ -790,7 +901,7 @@ class DataQuery {
 	 * @param $fieldExpression String The field to select (escaped SQL statement)
 	 * @param $alias String The alias of that field (escaped SQL statement)
 	 */
-	protected function selectField($fieldExpression, $alias = null) {
+	public function selectField($fieldExpression, $alias = null) {
 		$this->query->selectField($fieldExpression, $alias);
 	}
 
@@ -830,9 +941,7 @@ class DataQuery {
 /**
  * Represents a subgroup inside a WHERE clause in a {@link DataQuery}
  *
- * Stores the clauses for the subgroup inside a specific {@link SQLQuery}
- * object.
- *
+ * Stores the clauses for the subgroup inside a specific {@link SQLSelect} object.
  * All non-where methods call their DataQuery versions, which uses the base
  * query object.
  *
@@ -842,14 +951,14 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 
 	/**
 	 *
-	 * @var SQLQuery
+	 * @var SQLSelect
 	 */
 	protected $whereQuery;
 
 	public function __construct(DataQuery $base, $connective) {
 		$this->dataClass = $base->dataClass;
 		$this->query = $base->query;
-		$this->whereQuery = new SQLQuery();
+		$this->whereQuery = new SQLSelect();
 		$this->whereQuery->setConnective($connective);
 
 		$base->where($this);
@@ -875,14 +984,13 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 		$parameters = array();
 
 		// Ignore empty conditions
-		$query = $this->whereQuery->toAppropriateExpression();
-		$where = $query->getWhere();
+		$where = $this->whereQuery->getWhere();
 		if(empty($where)) {
 			return null;
 		}
 
 		// Allow database to manage joining of conditions
-		$sql = DB::get_conn()->getQueryBuilder()->buildWhereFragment($query, $parameters);
+		$sql = DB::get_conn()->getQueryBuilder()->buildWhereFragment($this->whereQuery, $parameters);
 		return preg_replace('/^\s*WHERE\s*/i', '', $sql);
 	}
 }

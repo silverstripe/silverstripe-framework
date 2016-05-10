@@ -1,45 +1,48 @@
 <?php
 
 /**
- * A class with HTTP-related helpers.
- * Like Debug, this is more a bundle of methods than a class ;-)
+ * A class with HTTP-related helpers. Like Debug, this is more a bundle of methods than a class.
  *
  * @package framework
+ *
  * @subpackage misc
  */
 class HTTP {
 
 	/**
-	 * @var int $cache_age
+	 * @var int
 	 */
 	protected static $cache_age = 0;
 
 	/**
-	 * @var timestamp $modification_date
+	 * @var int
 	 */
 	protected static $modification_date = null;
 
 	/**
-	 * @var string $etag
+	 * @var string
 	 */
 	protected static $etag = null;
 
 	/**
 	 * @config
+	 *
+	 * @var bool
 	 */
 	private static $cache_ajax_requests = true;
 
 	/**
-	 * Turns a local system filename into a URL by comparing it to the script
-	 * filename.
+	 * Turns a local system filename into a URL by comparing it to the script filename.
 	 *
-	 * @param string
+	 * @param string $filename
+	 *
+	 * @return string
 	 */
 	public static function filename2url($filename) {
 		$slashPos = -1;
 
 		while(($slashPos = strpos($filename, "/", $slashPos+1)) !== false) {
-			if(substr($filename, 0, $slashPos) == substr($_SERVER['SCRIPT_FILENAME'],0,$slashPos)) {
+			if(substr($filename, 0, $slashPos) == substr($_SERVER['SCRIPT_FILENAME'], 0, $slashPos)) {
 				$commonLength = $slashPos;
 			} else {
 				break;
@@ -56,19 +59,23 @@ class HTTP {
 		$protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? "https" : "http";
 
 		// Count the number of extra folders the script is in.
-		// $prefix = str_repeat("../", substr_count(substr($_SERVER[SCRIPT_FILENAME],$commonBaseLength)));
+		// $prefix = str_repeat("../", substr_count(substr($_SERVER[SCRIPT_FILENAME], $commonBaseLength)));
 
 		return "$protocol://". $_SERVER['HTTP_HOST'] . $url;
 	}
 
 	/**
-	 * Turn all relative URLs in the content to absolute URLs
+	 * Turn all relative URLs in the content to absolute URLs.
+	 *
+	 * @param string $html
+	 *
+	 * @return string
 	 */
 	public static function absoluteURLs($html) {
 		$html = str_replace('$CurrentPageURL', $_SERVER['REQUEST_URI'], $html);
 		return HTTP::urlRewriter($html, function($url) {
 			//no need to rewrite, if uri has a protocol (determined here by existence of reserved URI character ":")
-			if(preg_match('/^\w+:/', $url)){
+			if(preg_match('/^\w+:/', $url)) {
 				return $url;
 			}
 			return Director::absoluteURL($url, true);
@@ -78,28 +85,26 @@ class HTTP {
 	/**
 	 * Rewrite all the URLs in the given content, evaluating the given string as PHP code.
 	 *
-	 * Put $URL where you want the URL to appear, however, you can't embed $URL in strings
-	 * Some example code:
+	 * Put $URL where you want the URL to appear, however, you can't embed $URL in strings, for example:
 	 * <ul>
 	 * <li><code>'"../../" . $URL'</code></li>
 	 * <li><code>'myRewriter($URL)'</code></li>
-	 * <li><code>'(substr($URL,0,1)=="/") ? "../" . substr($URL,1) : $URL'</code></li>
+	 * <li><code>'(substr($URL, 0, 1)=="/") ? "../" . substr($URL, 1) : $URL'</code></li>
 	 * </ul>
 	 *
-	 * As of 3.2 $code should be a callable which takes a single parameter and returns
-	 * the rewritten URL. e.g.
-	 *
+	 * As of 3.2 $code should be a callable which takes a single parameter and returns the rewritten,
+	 * for example:
 	 * <code>
 	 * function($url) {
 	 *		return Director::absoluteURL($url, true);
 	 * }
 	 * </code>
 	 *
-	 * @param string $content The HTML to search for links to rewrite
-	 * @param string|callable $code Either a string that can evaluate to an expression
-	 * to rewrite links (depreciated), or a callable that takes a single
-	 * parameter and returns the rewritten URL
-	 * @return The content with all links rewritten as per the logic specified in $code
+	 * @param string $content The HTML to search for links to rewrite.
+	 * @param string|callable $code Either a string that can evaluate to an expression to rewrite links
+	 * (depreciated), or a callable that takes a single parameter and returns the rewritten URL.
+	 *
+	 * @return The content with all links rewritten as per the logic specified in $code.
 	 */
 	public static function urlRewriter($content, $code) {
 		if(!is_callable($code)) {
@@ -107,7 +112,7 @@ class HTTP {
 		}
 
 		// Replace attributes
-		$attribs = array("src","background","a" => "href","link" => "href", "base" => "href");
+		$attribs = array("src", "background", "a" => "href", "link" => "href", "base" => "href");
 		foreach($attribs as $tag => $attrib) {
 			if(!is_numeric($tag)) $tagPrefix = "$tag ";
 			else $tagPrefix = "";
@@ -146,23 +151,21 @@ class HTTP {
 	}
 
 	/**
-	 * Will try to include a GET parameter for an existing URL,
-	 * preserving existing parameters and fragments.
-	 * If no URL is given, falls back to $_SERVER['REQUEST_URI'].
-	 * Uses parse_url() to dissect the URL, and http_build_query() to reconstruct it
-	 * with the additional parameter. Converts any '&' (ampersand)
-	 * URL parameter separators to the more XHTML compliant '&amp;'.
+	 * Will try to include a GET parameter for an existing URL, preserving existing parameters and
+	 * fragments. If no URL is given, falls back to $_SERVER['REQUEST_URI']. Uses parse_url() to
+	 * dissect the URL, and http_build_query() to reconstruct it with the additional parameter.
+	 * Converts any '&' (ampersand) URL parameter separators to the more XHTML compliant '&amp;'.
 	 *
-	 * CAUTION: If the URL is determined to be relative,
-	 * it is prepended with Director::absoluteBaseURL().
-	 * This method will always return an absolute URL because
-	 * Director::makeRelative() can lead to inconsistent results.
+	 * CAUTION: If the URL is determined to be relative, it is prepended with Director::absoluteBaseURL().
+	 * This method will always return an absolute URL because Director::makeRelative() can lead to
+	 * inconsistent results.
 	 *
-	 * @param String $varname
-	 * @param String $varvalue
-	 * @param String $currentURL Relative or absolute URL (Optional).
-	 * @param String $separator Separator for http_build_query(). (Optional).
-	 * @return String Absolute URL
+	 * @param string $varname
+	 * @param string $varvalue
+	 * @param string $currentURL Relative or absolute URL.
+	 * @param string $separator Separator for http_build_query().
+	 *
+	 * @return string
 	 */
 	public static function setGetVar($varname, $varvalue, $currentURL = null, $separator = '&amp;') {
 		$uri = $currentURL ? $currentURL : Director::makeRelative($_SERVER['REQUEST_URI']);
@@ -212,16 +215,25 @@ class HTTP {
 		return $newUri;
 	}
 
+	/**
+	 * @param string $varname
+	 * @param string $varvalue
+	 * @param null|string $currentURL
+	 *
+	 * @return string
+	 */
 	public static function RAW_setGetVar($varname, $varvalue, $currentURL = null) {
 		$url = self::setGetVar($varname, $varvalue, $currentURL);
 		return Convert::xml2raw($url);
 	}
 
 	/**
-	 * Search for all tags with a specific attribute, then return the value of that attribute in a flat array.
+	 * Search for all tags with a specific attribute, then return the value of that attribute in a
+	 * flat array.
 	 *
 	 * @param string $content
-	 * @param array $attributes an array of tags to attributes, for example "[a] => 'href', [div] => 'id'"
+	 * @param array $attributes An array of tags to attributes, for example "[a] => 'href', [div] => 'id'"
+	 *
 	 * @return array
 	 */
 	public static function findByTagAndAttribute($content, $attributes) {
@@ -243,23 +255,32 @@ class HTTP {
 		return count($result) ? $result : null;
 	}
 
+	/**
+	 * @param string $content
+	 *
+	 * @return array
+	 */
 	public static function getLinksIn($content) {
 		return self::findByTagAndAttribute($content, array("a" => "href"));
 	}
 
+	/**
+	 * @param string $content
+	 *
+	 * @return array
+	 */
 	public static function getImagesIn($content) {
 		return self::findByTagAndAttribute($content, array("img" => "src"));
 	}
 
 	/**
-	 * Get the MIME type based on a file's extension.
+	 * Get the MIME type based on a file's extension. If the finfo class exists in PHP, and the file
+	 * exists relative to the project root, then use that extension, otherwise fallback to a list of
+	 * commonly known MIME types.
 	 *
-	 * If the finfo class exists in PHP, and the file actually exists, then use that
-	 * extension, otherwise fallback to a list of commonly known MIME types.
+	 * @param string $filename
 	 *
-	 * @uses finfo
-	 * @param string $filename Relative path to filename from project root, e.g. "mysite/tests/file.csv"
-	 * @return string MIME type
+	 * @return string
 	 */
 	public static function get_mime_type($filename) {
 		// If the finfo module is compiled into PHP, use it.
@@ -284,23 +305,34 @@ class HTTP {
 	}
 
 	/**
-	 * Set the maximum age of this page in web caches, in seconds
+	 * Set the maximum age of this page in web caches, in seconds.
+	 *
+	 * @param int $age
 	 */
 	public static function set_cache_age($age) {
 		self::$cache_age = $age;
 	}
 
+	/**
+	 * @param string $dateString
+	 */
 	public static function register_modification_date($dateString) {
 		$timestamp = strtotime($dateString);
 		if($timestamp > self::$modification_date)
 			self::$modification_date = $timestamp;
 	}
 
+	/**
+	 * @param int $timestamp
+	 */
 	public static function register_modification_timestamp($timestamp) {
 		if($timestamp > self::$modification_date)
 			self::$modification_date = $timestamp;
 	}
 
+	/**
+	 * @param string $etag
+	 */
 	public static function register_etag($etag) {
 		self::$etag = $etag;
 	}
@@ -309,10 +341,13 @@ class HTTP {
 	 * Add the appropriate caching headers to the response, including If-Modified-Since / 304 handling.
 	 * Note that setting HTTP::$cache_age will overrule any cache headers set by PHP's
 	 * session_cache_limiter functionality. It is your responsibility to ensure only cacheable data
-	 * is in fact cached, and HTTP::$cache_age isn't set when the HTTP body contains session-specific content.
+	 * is in fact cached, and HTTP::$cache_age isn't set when the HTTP body contains session-specific
+	 * content.
 	 *
-	 * @param SS_HTTPResponse $body The SS_HTTPResponse object to augment.  Omitted the argument or passing a string is
-	 *                            deprecated; in these cases, the headers are output directly.
+	 * Omitting the $body argument or passing a string is deprecated; in these cases, the headers are
+	 * output directly.
+	 *
+	 * @param SS_HTTPResponse $body
 	 */
 	public static function add_cache_headers($body = null) {
 		$cacheAge = self::$cache_age;
@@ -465,16 +500,21 @@ class HTTP {
 
 
 	/**
-	 * Return an {@link http://www.faqs.org/rfcs/rfc2822 RFC 2822} date in the
-	 * GMT timezone (a timestamp is always in GMT: the number of seconds
-	 * since January 1 1970 00:00:00 GMT)
+	 * Return an {@link http://www.faqs.org/rfcs/rfc2822 RFC 2822} date in the GMT timezone (a timestamp
+	 * is always in GMT: the number of seconds since January 1 1970 00:00:00 GMT)
+	 *
+	 * @param int $timestamp
+	 *
+	 * @return string
 	 */
 	public static function gmt_date($timestamp) {
 		return gmdate('D, d M Y H:i:s', $timestamp) . ' GMT';
 	}
 
-	/*
+	/**
 	 * Return static variable cache_age in second
+	 *
+	 * @return int
 	 */
 	public static function get_cache_age() {
 		return self::$cache_age;

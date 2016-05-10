@@ -17,11 +17,13 @@ class SSViewerTest extends SapphireTest {
 		parent::setUp();
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		Config::inst()->update('SSViewer_FromString', 'cache_template', false);
+		AssetStoreTest_SpyStore::activate('SSViewerTest');
 		$this->oldServer = $_SERVER;
 	}
 
 	public function tearDown() {
 		$_SERVER = $this->oldServer;
+		AssetStoreTest_SpyStore::reset();
 		parent::tearDown();
 	}
 
@@ -145,57 +147,45 @@ class SSViewerTest extends SapphireTest {
 		$requirements->expects($this->once())->method('javascript')->with($jsFile);
 		$requirements->expects($this->once())->method('css')->with($cssFile);
 
+		$origReq = Requirements::backend();
 		Requirements::set_backend($requirements);
-
 		$template = $this->render("<% require javascript($jsFile) %>
 		<% require css($cssFile) %>");
+		Requirements::set_backend($origReq);
+
 		$this->assertFalse((bool)trim($template), "Should be no content in this return.");
 	}
 
 	public function testRequirementsCombine(){
-		$oldBackend = Requirements::backend();
-		$testBackend = new Requirements_Backend();
-		Requirements::set_backend($testBackend);
-		$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
+		$testBackend = Injector::inst()->create('Requirements_Backend');
+		$testBackend->setSuffixRequirements(false);
+		//$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
 
 		$jsFile = FRAMEWORK_DIR . '/tests/view/themes/javascript/bad.js';
 		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
-		Requirements::combine_files('testRequirementsCombine.js', array($jsFile));
-		require_once('thirdparty/jsmin/jsmin.php');
+		$testBackend->combineFiles('testRequirementsCombine.js', array($jsFile));
 
 		// first make sure that our test js file causes an exception to be thrown
 		try{
+			require_once('thirdparty/jsmin/jsmin.php');
 			$content = JSMin::minify($content);
-			Requirements::set_backend($oldBackend);
 			$this->fail('JSMin did not throw exception on minify bad file: ');
-		}catch(Exception $e){
+		} catch(Exception $e) {
 			// exception thrown... good
 		}
 
-		// secondly, make sure that requirements combine throws the correct warning, and only that warning
-		@unlink($combinedTestFilePath);
-		try{
-			Requirements::process_combined_files();
-		}catch(PHPUnit_Framework_Error_Warning $e){
-			if(strstr($e->getMessage(), 'Failed to minify') === false){
-				Requirements::set_backend($oldBackend);
-				$this->fail('Requirements::process_combined_files raised a warning, which is good, but this is not the expected warning ("Failed to minify..."): '.$e);
-			}
-		}catch(Exception $e){
-			Requirements::set_backend($oldBackend);
-			$this->fail('Requirements::process_combined_files did not catch exception caused by minifying bad js file: '.$e);
-		}
+		// secondly, make sure that requirements is generated, even though minification failed
+		$testBackend->processCombinedFiles();
+		$js = $testBackend->getJavascript();
+		$combinedTestFilePath = BASE_PATH . reset($js);
+		$this->assertContains('_combinedfiles/testRequirementsCombine-4c0e97a.js', $combinedTestFilePath);
 
 		// and make sure the combined content matches the input content, i.e. no loss of functionality
-		if(!file_exists($combinedTestFilePath)){
-			Requirements::set_backend($oldBackend);
+		if(!file_exists($combinedTestFilePath)) {
 			$this->fail('No combined file was created at expected path: '.$combinedTestFilePath);
 		}
 		$combinedTestFileContents = file_get_contents($combinedTestFilePath);
 		$this->assertContains($jsFileContents, $combinedTestFileContents);
-
-		// reset
-		Requirements::set_backend($oldBackend);
 	}
 
 
@@ -1373,9 +1363,9 @@ EOC;
 		$template = new SSViewer(array('SSViewerTestProcess'));
 		$basePath = dirname($this->getCurrentRelativePath()) . '/forms';
 
-		$backend = new Requirements_Backend;
-		$backend->set_combined_files_enabled(false);
-		$backend->combine_files(
+		$backend = Injector::inst()->create('Requirements_Backend');
+		$backend->setCombinedFilesEnabled(false);
+		$backend->combineFiles(
 			'RequirementsTest_ab.css',
 			array(
 				$basePath . '/RequirementsTest_a.css',

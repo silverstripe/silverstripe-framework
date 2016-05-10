@@ -275,21 +275,13 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Returns a map of this list
 	 *
-	 * @param string $keyfield - the 'key' field of the result array
-	 * @param string $titlefield - the value field of the result array
-	 * @return array
+	 * @param string $keyfield The 'key' field of the result array
+	 * @param string $titlefield The value field of the result array
+	 * @return SS_Map
 	 */
 	public function map($keyfield = 'ID', $titlefield = 'Title') {
-		$map = array();
-
-		foreach ($this->items as $item) {
-			$map[$this->extractValue($item, $keyfield)] = $this->extractValue(
-				$item,
-				$titlefield
-			);
-		}
-
-		return $map;
+		$list = clone $this;
+		return new SS_Map($list, $keyfield, $titlefield);
 	}
 
 	/**
@@ -724,9 +716,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 */
 	protected function extractValue($item, $key) {
 		if (is_object($item)) {
-			return $item->$key;
+			if(method_exists($item, 'hasMethod') && $item->hasMethod($key)) {
+				return $item->{$key}();
+			}
+			return $item->{$key};
 		} else {
-			if (array_key_exists($key, $item)) return $item[$key];
+			if (array_key_exists($key, $item)) {
+				return $item[$key];
+			}
 		}
 	}
 

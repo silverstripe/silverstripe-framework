@@ -31,7 +31,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function init() {
 		parent::init();
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/SecurityAdmin.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/SecurityAdmin.js');
 	}
 
 	/**
@@ -177,13 +177,12 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 		$actions = new FieldList();
 
-		$form = CMSForm::create(
+		$form = Form::create(
 			$this,
 			'EditForm',
 			$fields,
 			$actions
 		)->setHTMLID('Form_EditForm');
-		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->addExtraClass('cms-edit-form');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		// Tab nav in CMS is rendered through separate template
@@ -200,12 +199,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function memberimport() {
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
-
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
 		return $this->renderWith('BlankPage', array(
 			'Form' => $this->MemberImportForm()->forTemplate(),
 			'Content' => ' '
@@ -232,12 +229,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function groupimport() {
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
 		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/MemberImportForm.css');
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/MemberImportForm.js');
-
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
 		return $this->renderWith('BlankPage', array(
 			'Content' => ' ',
 			'Form' => $this->GroupImportForm()->forTemplate()
@@ -302,7 +297,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	}
 
 	public function providePermissions() {
-		$title = _t("SecurityAdmin.MENUTITLE", LeftAndMain::menu_title_for_class($this->class));
+		$title = $this->menu_title();
 		return array(
 			"CMS_ACCESS_SecurityAdmin" => array(
 				'name' => _t('CMSMain.ACCESS', "Access to '{title}' section", array('title' => $title)),

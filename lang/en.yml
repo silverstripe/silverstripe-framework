@@ -30,7 +30,7 @@ en:
     INSERTURL: 'Insert from URL'
     REMOVEINFO: 'Remove this file from this field'
     TOTAL: Total
-    TOUPLOAD: 'Choose files to upload...'
+    TOUPLOAD: 'Upload files'
     UPLOADINPROGRESS: 'Please wait… upload in progress'
     UPLOADOR: OR
   BBCodeParser:
@@ -100,6 +100,9 @@ en:
     EMAIL: Email
     HELLO: Hi
     PASSWORD: Password
+  ChangeSet:
+    Name: Name
+    State: State
   CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -153,7 +156,7 @@ en:
     INVALID_REQUEST: 'Invalid request'
   DropdownField:
     CHOOSE: (Choose)
-    CHOOSESEARCH: '(Choose or Search)'
+    CHOOSESEARCH: '(choose folder)'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   EmailField:
     VALIDATION: 'Please enter an email address'
@@ -275,7 +278,7 @@ en:
     ResultUpdated: 'Updated %d groups'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Add URL'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; dimensions'
     ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
@@ -309,7 +312,7 @@ en:
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
-    INSERTMEDIA: 'Insert Media'
+    INSERTMEDIA: 'Insert media from'
     LINK: 'Insert Link'
     LINKANCHOR: 'Anchor on this page'
     LINKDESCR: 'Link description'
@@ -324,7 +327,7 @@ en:
     URL: URL
     URLDESCRIPTION: 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.'
     URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update Media'
+    UpdateMEDIA: 'Update media'
   Image:
     PLURALNAME: Files
     SINGULARNAME: File
@@ -334,6 +337,7 @@ en:
   Image_iframe_ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
+    CANCEL: Cancel
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: 'Choose an action...'
@@ -383,13 +387,14 @@ en:
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    KEEPMESIGNEDIN: 'Keep me signed in'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     NoPassword: 'There is no password on this member.'
     PASSWORD: Password
     PASSWORDEXPIRED: 'Your password has expired. Please choose a new one.'
     PLURALNAME: Members
-    REMEMBERME: 'Remember me next time?'
+    REMEMBERME: 'Remember me next time? (for %d days on this device)'
     SINGULARNAME: Member
     SUBJECTPASSWORDCHANGED: 'Your password has been changed'
     SUBJECTPASSWORDRESET: 'Your password reset link'

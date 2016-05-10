@@ -2,13 +2,6 @@
 
 <p>
 	<%t ChangePasswordEmail_ss.CHANGEPASSWORDTEXT1 'You changed your password for' is 'for a url' %> $AbsoluteBaseURL.<br />
-	<%t ChangePasswordEmail_ss.CHANGEPASSWORDTEXT2 'You can now use the following credentials to log in:' %>
-</p>
-
-<p>
-	<%t ChangePasswordEmail_ss.EMAIL 'Email' %>: $Email
-	<% if $CleartextPassword %>
-		<br />
-		<%t ChangePasswordEmail_ss.PASSWORD 'Password' %>: $CleartextPassword
-	<% end_if %>
+	<%t ChangePasswordEmail_ss.CHANGEPASSWORDFOREMAIL 'The password for account with email address {email} has been changed. If you didn\'t change your password please change your password using the link below' email=$Email %><br />
+	<a href="Security/changepassword"><%t ChangePasswordEmail_ss.CHANGEPASSWORDTEXT3 'Change password' %></a>
 </p>

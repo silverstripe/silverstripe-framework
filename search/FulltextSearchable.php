@@ -44,7 +44,7 @@ class FulltextSearchable extends DataExtension {
 	public static function enable($searchableClasses = array('SiteTree', 'File')) {
 		$defaultColumns = array(
 			'SiteTree' => '"Title","MenuTitle","Content","MetaDescription"',
-			'File' => '"Title","Filename","Content"'
+			'File' => '"Name","Title"'
 		);
 
 		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);

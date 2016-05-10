@@ -80,6 +80,11 @@ class Form extends RequestHandler {
 	protected $validator;
 
 	/**
+	 * @var callable {@see setValidationResponseCallback()}
+	 */
+	protected $validationResponseCallback;
+
+	/**
 	 * @var string
 	 */
 	protected $formMethod = "POST";
@@ -193,6 +198,8 @@ class Form extends RequestHandler {
 	/**
 	 * @var array
 	 */
+	protected $validationExemptActions = array();
+
 	private static $allowed_actions = array(
 		'handleField',
 		'httpSubmission',
@@ -227,20 +234,10 @@ class Form extends RequestHandler {
 	 * @param FieldList $fields All of the fields in the form - a {@link FieldList} of {@link FormField} objects.
 	 * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of
 	 *                           {@link FormAction} objects
-	 * @param Validator $validator Override the default validator instance (Default: {@link RequiredFields})
+	 * @param Validator|null $validator Override the default validator instance (Default: {@link RequiredFields})
 	 */
-	public function __construct($controller, $name, FieldList $fields, FieldList $actions, $validator = null) {
+	public function __construct($controller, $name, FieldList $fields, FieldList $actions, Validator $validator = null) {
 		parent::__construct();
-
-		if(!$fields instanceof FieldList) {
-			throw new InvalidArgumentException('$fields must be a valid FieldList instance');
-		}
-		if(!$actions instanceof FieldList) {
-			throw new InvalidArgumentException('$actions must be a valid FieldList instance');
-		}
-		if($validator && !$validator instanceof Validator) {
-			throw new InvalidArgumentException('$validator must be a Validator instance');
-		}
 
 		$fields->setForm($this);
 		$actions->setForm($this);
@@ -488,15 +485,44 @@ class Form extends RequestHandler {
 	}
 
 	/**
+	 * @return callable
+	 */
+	public function getValidationResponseCallback() {
+		return $this->validationResponseCallback;
+	}
+
+	/**
+	 * Overrules validation error behaviour in {@link httpSubmission()}
+	 * when validation has failed. Useful for optional handling of a certain accepted content type.
+	 *
+	 * The callback can opt out of handling specific responses by returning NULL,
+	 * in which case the default form behaviour will kick in.
+	 *
+	 * @param $callback
+	 * @return self
+	 */
+	public function setValidationResponseCallback($callback) {
+		$this->validationResponseCallback = $callback;
+
+		return $this;
+	}
+
+	/**
 	 * Returns the appropriate response up the controller chain
 	 * if {@link validate()} fails (which is checked prior to executing any form actions).
 	 * By default, returns different views for ajax/non-ajax request, and
 	 * handles 'application/json' requests with a JSON object containing the error messages.
-	 * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError}.
+	 * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError},
+	 * and can be overruled by setting {@link $validationResponseCallback}.
 	 *
 	 * @return SS_HTTPResponse|string
 	 */
 	protected function getValidationErrorResponse() {
+		$callback = $this->getValidationResponseCallback();
+		if($callback && $callbackResponse = $callback()) {
+			return $callbackResponse;
+		}
+
 		$request = $this->getRequest();
 		if($request->isAjax()) {
 				// Special case for legacy Validator.js implementation
@@ -665,6 +691,41 @@ class Form extends RequestHandler {
 	public function unsetValidator(){
 		$this->validator = null;
 		return $this;
+	}
+
+	/**
+	 * Set actions that are exempt from validation
+	 *
+	 * @param array
+	 */
+	public function setValidationExemptActions($actions) {
+		$this->validationExemptActions = $actions;
+		return $this;
+	}
+
+	/**
+	 * Get a list of actions that are exempt from validation
+	 *
+	 * @return array
+	 */
+	public function getValidationExemptActions() {
+		return $this->validationExemptActions;
+	}
+
+	/**
+	 * Passed a FormAction, returns true if that action is exempt from Form validation
+	 *
+	 * @param FormAction $action
+	 * @return bool
+	 */
+	public function actionIsValidationExempt($action) {
+		if ($action->getValidationExempt()) {
+			return true;
+		}
+		if (in_array($action->actionName(), $this->getValidationExemptActions())) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1287,6 +1348,7 @@ class Form extends RequestHandler {
 	 *
 	 * This includes form validation, if it fails, we redirect back
 	 * to the form with appropriate error messages.
+	 * Always return true if the current form action is exempt from validation
 	 *
 	 * Triggered through {@link httpSubmission()}.
 	 *
@@ -1296,6 +1358,11 @@ class Form extends RequestHandler {
 	 * @return boolean
 	 */
 	public function validate(){
+		$action = $this->buttonClicked();
+		if($action && $this->actionIsValidationExempt($action)) {
+			return true;
+		}
+
 		if($this->validator){
 			$errors = $this->validator->validate();
 
@@ -1635,7 +1702,10 @@ class Form extends RequestHandler {
 	 * @return FormAction
 	 */
 	public function buttonClicked() {
-		foreach($this->actions->dataFields() as $action) {
+		$actions = $this->actions->dataFields();
+		if(!$actions) return;
+
+		foreach($actions as $action) {
 			if($action->hasMethod('actionname') && $this->buttonClickedFunc == $action->actionName()) {
 				return $action;
 			}

@@ -1,0 +1,17 @@
+engines:
+  eslint:
+    enabled: true
+  scss-lint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript
+ratings:
+  paths:
+  - client/src/**
+  - admin/client/src/**
+exclude_paths:
+- "client/dist/**"
+- "admin/client/dist/**"

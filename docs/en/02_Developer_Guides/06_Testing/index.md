@@ -16,32 +16,62 @@ the [Testing Glossary](testing_glossary). To get started now, follow the install
 
 If you are familiar with PHP coding but new to unit testing then check out Mark's presentation [Getting to Grips with SilverStripe Testing](http://www.slideshare.net/maetl/getting-to-grips-with-silverstripe-testing).
 
-You should also read over [the PHPUnit manual](http://www.phpunit.de/manual/current/en/). It provides a lot of
+You should also read over the [PHPUnit manual](http://www.phpunit.de/manual/current/en/). It provides a lot of
 fundamental concepts that we build on in this documentation.
 
-Unit tests are not included in the zip/tar.gz SilverStripe [downloads](http://www.silverstripe.org/software/download/) so to get them, install SilverStripe [with composer](/getting_started/composer).
+## Running Tests
 
-## Invoking phpunit
+In order to run tests, you need to install SilverStripe using [/getting-started/composer](Composer),
+which will pull in the required development dependencies to run tests.
+These are not included in the standard archive downloads provided from silverstripe.org.
 
-Once you have used composer to create your project, `cd` to your project root. Composer will have installed PHPUnit alongside the required PHP classes into the `vendor/bin/` directory.
+Tests are run from the commandline, in your webroot folder:
 
-If you don't want to invoke PHPUnit through its full path (`vendor/bin/phpunit`), add `./vendor/bin` to your $PATH, or symlink phpunit into the root directory of your website:
+ * `vendor/bin/phpunit`: Runs all tests (as defined by `phpunit.xml`)
+ * `vendor/bin/phpunit framework/tests/`: Run all tests of a specific module
+ * `vendor/bin/phpunit framework/tests/filesystem`: Run specific tests within a specific module
+ * `vendor/bin/phpunit framework/tests/filesystem/FolderTest.php`: Run a specific test 
+ * `vendor/bin/phpunit framework/tests '' flush=all`: Run tests with optional request parameters (note the empty second argument)
 
-- `PATH=./vendor/bin:$PATH` in your shell's profile script; **or**
-- `ln -s vendor/bin/phpunit phpunit` at the command prompt in your project root
+Check the PHPUnit manual for all available [command line arguments](http://www.phpunit.de/manual/current/en/textui.html).
+
+On Linux or OSX, you can avoid typing the full path on every invocation by adding `vendor/bin` 
+to your `$PATH` definition in the shell profile (usually `~/.profile`): `PATH=./vendor/bin:$PATH`
+
+## Generating a Coverage Report
+
+PHPUnit can generate a code coverage report ([docs](http://www.phpunit.de/manual/current/en/code-coverage-analysis.html))
+which shows you how much of your logic is executed by your tests. This is very useful to determine gaps in tests.
+
+	:::bash
+	vendor/bin/phpunit --coverage-html <output-folder> <optional-tests-folder>
+
+To view the report, open the `index.html` in `<output-folder>` in a web browser.
+
+Typically, only your own custom PHP code in your project should be regarded when producing these reports. To exclude 
+some `thirdparty/` directories add the following to the `phpunit.xml` configuration file.
+
+	:::xml
+	<filter>
+		<blacklist>
+			<directory suffix=".php">framework/dev/</directory>
+			<directory suffix=".php">framework/thirdparty/</directory>
+			<directory suffix=".php">cms/thirdparty/</directory>
+			
+			<!-- Add your custom rules here -->
+			<directory suffix=".php">mysite/thirdparty/</directory>
+		</blacklist>
+	</filter>
 
 ## Configuration
 
-### phpunit.xml
-
-The `phpunit` executable can be configured by command line arguments or through an XML file. File-based configuration has
+The `phpunit` executable can be configured by [command line arguments](http://www.phpunit.de/manual/current/en/textui.html) 
+or through an XML file. File-based configuration has
 the advantage of enforcing certain rules across test executions (e.g. excluding files from code coverage reports), and
 of course this information can be version controlled and shared with other team members.
 
-**Note: This doesn't apply for running tests through the "sake" wrapper**
-
 SilverStripe comes with a default `phpunit.xml.dist` that you can use as a starting point. Copy the file into a new
-`phpunit.xml` and customise to your needs - PHPUnit will auto-detect its existence, and prioritize it over the default
+`phpunit.xml` and customize to your needs - PHPUnit will auto-detect its existence, and prioritize it over the default
 file.
 
 There's nothing stopping you from creating multiple XML files (see the `--configuration` flag in
@@ -50,7 +80,7 @@ There's nothing stopping you from creating multiple XML files (see the `--config
 
 ### Database Permissions
 
-SilverStripe tests create thier own database when they are run. Because of this the database user in your config file
+SilverStripe tests create their own temporary database on every execution. Because of this the database user in your config file
 should have the appropriate permissions to create new databases on your server, otherwise tests will not run.
 
 ## Writing Tests
@@ -72,56 +102,3 @@ Tutorials and recipes for creating tests using the SilverStripe framework:
 * [Creating a SilverStripe test](how_tos/write_a_sapphiretest): Writing tests to check core data objects
 * [Creating a functional test](how_tos/write_a_functionaltest): An overview of functional tests and how to write a functional test
 * [Testing Outgoing Email](how_tos/testing_email): An overview of the built-in email testing code
-
-## Running Tests
-
-### Via the "phpunit" Binary on Command Line
-
-The `phpunit` binary should be used from the root directory of your website.
-
-	# Runs all tests defined in phpunit.xml
-	phpunit
-
-	# Run all tests of a specific module
-	phpunit framework/tests/
-
-	# Run specific tests within a specific module
-	phpunit framework/tests/filesystem
-
-	# Run a specific test
-	phpunit framework/tests/filesystem/FolderTest.php
-
-	# Run tests with optional `$_GET` parameters (you need an empty second argument)
-	phpunit framework/tests '' flush=all
-
-All command-line arguments are documented on
-[phpunit.de](http://www.phpunit.de/manual/current/en/textui.html).
-
-### Via the "sake" Wrapper on Command Line
-
-The [sake](/developer_guides/cli/) executable that comes with SilverStripe can trigger a customised
-[api:TestRunner] class that handles the PHPUnit configuration and output formatting.
-While the custom test runner a handy tool, its also more limited than using `phpunit` directly,
-particularly around formatting test output.
-
-	# Run all tests
-	sake dev/tests/all
-
-	# Run all tests of a specific module (comma-separated)
-	sake dev/tests/module/framework,cms
-
-	# Run specific tests (comma-separated)
-	sake dev/tests/FolderTest,OtherTest
-
-	# Run tests with optional `$_GET` parameters
-	sake dev/tests/all flush=all
-
-	# Skip some tests
-	sake dev/tests/all SkipTests=MySkippedTest
-
-### Via Web Browser
-
-Executing tests from the command line is recommended, since it most closely reflects
-test runs in any automated testing environments. However, you can also run tests through the browser:
-
-	http://localhost/dev/tests

@@ -149,10 +149,10 @@ class HierarchyTest extends SapphireTest {
 		$obj2b = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
 
 		// Get a published set of objects for our fixture
-		$obj1->publish("Stage", "Live");
-		$obj2->publish("Stage", "Live");
-		$obj2a->publish("Stage", "Live");
-		$obj2b->publish("Stage", "Live");
+		$obj1->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
+		$obj2->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
+		$obj2a->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
+		$obj2b->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 
 		// Then delete 2a from stage and move 2b to a sub-node of 1.
 		$obj2a->delete();
@@ -536,7 +536,7 @@ class HierarchyTest_Object extends DataObject implements TestOnly {
 
 	private static $extensions = array(
 		'Hierarchy',
-		"Versioned('Stage', 'Live')",
+		'Versioned',
 	);
 
 	public function cmstreeclasses() {

@@ -6,13 +6,8 @@ use Behat\Behat\Context\BehatContext,
 	Behat\Behat\Context\Step,
 	Behat\Behat\Event\StepEvent,
 	Behat\Mink\Element\NodeElement,
-	Behat\Mink\Session,
-	WebDriver\Exception\UnexpectedAlertOpen;
+	Behat\Mink\Session;
 
-
-// PHPUnit
-require_once 'PHPUnit/Autoload.php';
-require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
  * CmsUiContext
@@ -516,7 +511,7 @@ class CmsUiContext extends BehatContext {
 		assertNotNull($container, 'Chosen.js field container not found');
 
 		// Click on newly expanded list element, indirectly setting the dropdown value
-		$linkEl = $container->find('xpath', './/a[./@href]');
+		$linkEl = $container->find('xpath', './/a');
 		assertNotNull($linkEl, 'Chosen.js link element not found');
 		$this->getSession()->wait(100); // wait for dropdown overlay to appear
 		$linkEl->click();

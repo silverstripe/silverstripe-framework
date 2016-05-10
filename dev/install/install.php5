@@ -4,7 +4,7 @@
  ************************************************************************************
  **                                                                                **
  **  If you can read this text in your browser then you don't have PHP installed.  **
- **  Please install PHP 5.3.3 or higher, preferably PHP 5.3.4+.                    **
+ **  Please install PHP 5.5.0 or higher.                                           **
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
@@ -382,7 +382,7 @@ class InstallRequirements {
 		$isIIS = $this->isIIS();
 		$webserver = $this->findWebserver();
 
-		$this->requirePHPVersion('5.3.4', '5.3.3', array(
+		$this->requirePHPVersion('5.5.0', '5.5.0', array(
 			"PHP Configuration",
 			"PHP5 installed",
 			null,
@@ -980,7 +980,9 @@ class InstallRequirements {
 			return true;
 		} elseif(isset($_SERVER['HTTP_MOD_REWRITE']) && $_SERVER['HTTP_MOD_REWRITE'] == 'On') {
 			return true;
-		} else {
+		} elseif(isset($_SERVER['REDIRECT_HTTP_MOD_REWRITE']) && $_SERVER['REDIRECT_HTTP_MOD_REWRITE'] == 'On') {
+        	   return true;
+        	} else {
 			return false;
 		}
 	}
@@ -1233,7 +1235,7 @@ class Installer extends InstallRequirements {
 		<head>
 			<meta charset="utf-8"/>
 			<title>Installing SilverStripe...</title>
-			<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/dev/install/css/install.css"/>
+			<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/dev/install/client/dist/styles/install.css"/>
 			<script src="<?php echo FRAMEWORK_NAME; ?>/thirdparty/jquery/jquery.js"></script>
 		</head>
 		<body>
@@ -1445,17 +1447,6 @@ PHP
 		} catch(Exception $e) {
 			$this->statusMessage(
 				sprintf('Warning: Default CMS admin account could not be created (error: %s)', $e->getMessage())
-			);
-		}
-
-		// Syncing filesystem (so /assets/Uploads is available instantly, see ticket #2266)
-		// show a warning if there was a problem doing so
-		try {
-			$this->statusMessage('Creating initial filesystem assets...');
-			Filesystem::sync();
-		} catch(Exception $e) {
-			$this->statusMessage(
-				sprintf('Warning: Creating initial filesystem assets failed (error: %s)', $e->getMessage())
 			);
 		}
 

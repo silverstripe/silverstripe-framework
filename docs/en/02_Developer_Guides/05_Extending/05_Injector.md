@@ -111,6 +111,16 @@ Now the dependencies will be replaced with our configuration.
 	echo ($object->textProperty == 'My Text Value');
 	// returns true;
 
+As well as properties, method calls can also be specified:
+
+	:::yml
+	Injector:
+	  Logger:
+	    class: Monolog\Logger
+	    calls:
+	      - [ pushHandler, [ %$DefaultHandler ] ]
+
+
 ## Factories
 
 Some services require non-trivial construction which means they must be created by a factory class. To do this, create
@@ -214,6 +224,22 @@ Would setup the following
 * Load the configuration for PermissionService, and create an object of type `RestrictivePermissionService`
 * Look at the properties to be injected and look for the config for `MySQLDatabase`
 * Create a MySQLDatabase class, passing dbusername and dbpassword as the parameters to the constructor.
+
+## Service inheritance
+
+By default, services registered with Injector do not inherit from one another; This is because it registers
+named services, which may not be actual classes, and thus should not behave as though they were.
+
+Thus if you want an object to have the injected dependencies of a service of another name, you must
+assign a reference to that service.
+
+
+	:::yaml
+	Injector:
+	  JSONServiceDefinition:
+	    properties:
+	      Serialiser: JSONSerialiser
+	  GZIPJSONProvider: %$JSONServiceDefinition
 
 
 ## Testing with Injector

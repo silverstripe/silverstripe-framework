@@ -29,15 +29,15 @@ class CMSSecurity extends Security {
 
 		// Include CMS styles and js
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
 		Requirements::combine_files(
 			'cmssecurity.js',
 			array(
 				THIRDPARTY_DIR . '/jquery/jquery.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/lib.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/CMSSecurity.js'
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/sspath.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/CMSSecurity.js'
 			)
 		);
 	}
@@ -115,7 +115,7 @@ class CMSSecurity extends Security {
 <!DOCTYPE html>
 <html><body>
 $message
-<script type="text/javascript">
+<script type="application/javascript">
 setTimeout(function(){top.location.href = "$loginURLJS";}, 0);
 </script>
 </body></html>

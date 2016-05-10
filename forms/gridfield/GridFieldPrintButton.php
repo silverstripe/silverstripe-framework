@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBDatetime;
+
 /**
  * Adds an "Print" button to the bottom or top of a GridField.
  *
@@ -55,6 +57,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 
 		$button->setAttribute('data-icon', 'grid_print');
 		$button->addExtraClass('gridfield-button-print');
+		$button->addExtraClass('font-icon-print');
 
 		return array(
 			$this->targetFragment => '<p class="grid-print-button">' . $button->Field() . '</p>',
@@ -104,7 +107,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	public function handlePrint($gridField, $request = null) {
 		set_time_limit(60);
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_DIR . '/css/GridField_print.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/GridField_print.css');
 
 		if($data = $this->generatePrintData($gridField)){
 			return $data->renderWith("GridField_print");
@@ -213,7 +216,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 			"Title" => $this->getTitle($gridField),
 			"Header" => $header,
 			"ItemRows" => $itemRows,
-			"Datetime" => SS_Datetime::now(),
+			"Datetime" => DBDatetime::now(),
 			"Member" => Member::currentUser(),
 		));
 

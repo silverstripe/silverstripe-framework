@@ -1,14 +1,16 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBVarchar;
+
 class ArrayDataTest extends SapphireTest {
 
 	public function testViewabledataItemsInsideArraydataArePreserved() {
 		/* ViewableData objects will be preserved, but other objects will be converted */
 		$arrayData = new ArrayData(array(
-			"A" => new Varchar("A"),
+			"A" => new DBVarchar("A"),
 			"B" => new stdClass(),
 		));
-		$this->assertEquals("Varchar", get_class($arrayData->A));
+		$this->assertEquals('SilverStripe\Model\FieldType\DBVarchar', get_class($arrayData->A));
 		$this->assertEquals("ArrayData", get_class($arrayData->B));
 	}
 

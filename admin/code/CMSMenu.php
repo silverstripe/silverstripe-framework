@@ -18,6 +18,16 @@
 class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 
 	/**
+	 * Sort by menu priority, highest to lowest
+	 */
+	const MENU_PRIORITY = 'menu_priority';
+
+	/**
+	 * Sort by url priority, highest to lowest
+	 */
+	const URL_PRIORITY = 'url_priority';
+
+	/**
 	 * An array of changes to be made to the menu items, in the order that the changes should be
 	 * applied.  Each item is a map in one of the two forms:
 	 *  - array('type' => 'add', 'item' => new CMSMenuItem(...) )
@@ -69,8 +79,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		// doesn't work if called outside of a controller context (e.g. in _config.php)
 		// as the locale won't be detected properly. Use {@link LeftAndMain->MainMenu()} to update
 		// titles for existing menu entries
-		$defaultTitle = LeftAndMain::menu_title_for_class($controllerClass);
-		$menuTitle = _t("{$controllerClass}.MENUTITLE", $defaultTitle);
+		$menuTitle = LeftAndMain::menu_title($controllerClass);
 
 		return new CMSMenuItem($menuTitle, $link, $controllerClass, $menuPriority);
 	}
@@ -269,12 +278,18 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * A utility funciton to retrieve subclasses of a given class that
 	 * are instantiable (ie, not abstract) and have a valid menu title.
 	 *
+	 * Sorted by url_priority config.
+	 *
 	 * @todo A variation of this function could probably be moved to {@link ClassInfo}
 	 * @param string $root The root class to begin finding subclasses
 	 * @param boolean $recursive Look for subclasses recursively?
+	 * @param string $sort Name of config on which to sort. Can be 'menu_priority' or 'url_priority'
 	 * @return array Valid, unique subclasses
 	 */
-	public static function get_cms_classes($root = 'LeftAndMain', $recursive = true) {
+	public static function get_cms_classes($root = null, $recursive = true, $sort = self::MENU_PRIORITY) {
+		if(!$root) {
+			$root = 'LeftAndMain';
+		}
 		$subClasses = array_values(ClassInfo::subclassesFor($root));
 		foreach($subClasses as $className) {
 			if($recursive && $className != $root) {
@@ -289,9 +304,18 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 			} else {
 				// Separate conditional to avoid autoloading the class
 				$classReflection = new ReflectionClass($className);
-				if(!$classReflection->isInstantiable()) unset($subClasses[$key]);
+				if(!$classReflection->isInstantiable()) {
+					unset($subClasses[$key]);
+				}
 			}
 		}
+
+		// Sort by specified sorting config
+		usort($subClasses, function ($a, $b) use ($sort) {
+			$priorityA = Config::inst()->get($a, $sort);
+			$priorityB = Config::inst()->get($b, $sort);
+			return $priorityB - $priorityA;
+		});
 
 		return $subClasses;
 	}
@@ -310,7 +334,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		$cmsClasses = self::get_cms_classes();
 		$entities = array();
 		foreach($cmsClasses as $cmsClass) {
-			$defaultTitle = LeftAndMain::menu_title_for_class($cmsClass);
+			$defaultTitle = LeftAndMain::menu_title($cmsClass, false);
 			$ownerModule = i18n::get_owner_module($cmsClass);
 			$entities["{$cmsClass}.MENUTITLE"] = array($defaultTitle, 'Menu title', $ownerModule);
 		}

@@ -84,7 +84,7 @@ az:
     Sort: 'Sıralama'
     has_many_Permissions: Səlahiyyətlər
     many_many_Members: Üzvlər
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Ankor
     BUTTONINSERTLINK: 'Link əlavə et'
     BUTTONREMOVELINK: 'Linki sil'

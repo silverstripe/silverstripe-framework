@@ -1,0 +1,88 @@
+// List-group, based on Bootstraps list-group
+
+.list-group {
+  margin-left: -$grid-gutter-width / 2;
+  margin-right: -$grid-gutter-width / 2;
+  border-bottom: 1px solid $border-color-light;
+  margin-bottom: $spacer-y * .75;
+}
+
+.list-group-item {
+  padding-top: $spacer-y * .625;
+  padding-right: $grid-gutter-width / 2;
+  padding-bottom: $spacer-y * .625;
+  padding-left: $grid-gutter-width / 2;
+  min-height: 65px; // img height plus border
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity .2s ease-in-out;
+
+  &:first-child {
+    border-top: 0;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &.active {
+    background-color: $brand-primary;
+    color: $white;
+    opacity: 1;
+
+    .list-group-item__status {
+      color: $white;
+      opacity: 1;
+    }
+	}
+}
+
+.list-group-item-heading {
+  font-weight: 400;
+  font-size: 14px;
+  margin: 2px 0 5px;
+  color: $body-color;
+}
+
+.list-group-item__thumbnail {
+  width: 64px;
+  height: 64px;
+  display: block;
+  background: $gray-lighter;
+  float: left;
+  margin: -12px 12px 0 #{0 - $grid-gutter-width / 2};
+}
+
+.list-group-item__info {
+  opacity: 0;
+  display: block;
+  transition: opacity .2s ease-in-out;
+}
+
+.list-group-item--inactive {
+  opacity: .6;
+
+  &:hover {
+    opacity: 1;
+
+    .list-group-item__status {
+      opacity: 1;
+    }
+	}
+
+  .list-group-item__status {
+    opacity: 0;
+  }
+}
+
+.list-group-item__status {
+  display: inline-block;
+  transition: opacity .2s ease-in-out;
+}
+
+
+// Temp hide links for Alpha1 (change opacity to 1)
+.list-group-item:hover .list-group-item__info,
+.list-group-item.active .list-group-item__info {
+  opacity: 0;
+}

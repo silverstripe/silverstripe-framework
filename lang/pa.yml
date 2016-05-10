@@ -12,7 +12,7 @@ pa:
   Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords ਮੇਲ ਨਹੀ ਖਾਦੇ '
     VALIDATIONPASSWORDSNOTEMPTY: 'Passwords ਖ਼ਾਲੀ ਨਹੀ ਹੋ ਸਕਦੇ '
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: 'ਿਲੰਕ ਪਾਉ'
     BUTTONREMOVELINK: 'ਿਲੰਕ ਕੱਟੋਂ'
     EMAIL: 'ਈਮੇਲ ਪਤਾ'

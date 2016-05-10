@@ -327,7 +327,9 @@ abstract class DBSchemaManager {
 		}
 
 		//DB ABSTRACTION: we need to convert this to a db-specific version:
-		$this->requireField($table, 'ID', $this->IdColumn(false, $hasAutoIncPK));
+		if(!isset($fieldSchema['ID'])) {
+			$this->requireField($table, 'ID', $this->IdColumn(false, $hasAutoIncPK));
+		}
 
 		// Create custom fields
 		if ($fieldSchema) {
@@ -346,6 +348,11 @@ abstract class DBSchemaManager {
 				$fieldObj->arrayValue = $arrayValue;
 
 				$fieldObj->setTable($table);
+
+				if($fieldObj instanceof PrimaryKey) {
+					$fieldObj->setAutoIncrement($hasAutoIncPK);
+				}
+
 				$fieldObj->requireField();
 			}
 		}
@@ -578,7 +585,7 @@ abstract class DBSchemaManager {
 			$spec['parts']['name'] = $field;
 			$spec_orig['parts']['name'] = $field;
 			//Convert the $spec array into a database-specific string
-			$spec = $this->$spec['type']($spec['parts'], true);
+			$spec = $this->{$spec['type']}($spec['parts'], true);
 		}
 
 		// Collations didn't come in until MySQL 4.1.  Anything earlier will throw a syntax error if you try and use
@@ -615,7 +622,7 @@ abstract class DBSchemaManager {
 		// Get the version of the field as we would create it. This is used for comparison purposes to see if the
 		// existing field is different to what we now want
 		if (is_array($spec_orig)) {
-			$spec_orig = $this->$spec_orig['type']($spec_orig['parts']);
+			$spec_orig = $this->{$spec_orig['type']}($spec_orig['parts']);
 		}
 
 		if ($newTable || $fieldValue == '') {
@@ -624,7 +631,6 @@ abstract class DBSchemaManager {
 		} else if ($fieldValue != $specValue) {
 			// If enums/sets are being modified, then we need to fix existing data in the table.
 			// Update any records where the enum is set to a legacy value to be set to the default.
-			// One hard-coded exception is SiteTree - the default for this is Page.
 			foreach (array('enum', 'set') as $enumtype) {
 				if (preg_match("/^$enumtype/i", $specValue)) {
 					$newStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i", "", $spec_orig);
@@ -642,7 +648,6 @@ abstract class DBSchemaManager {
 					if (count($holder)) {
 						$default = explode('default ', $spec_orig);
 						$default = $default[1];
-						if ($default == "'SiteTree'") $default = "'Page'";
 						$query = "UPDATE \"$table\" SET $field=$default WHERE $field IN (";
 						for ($i = 0; $i + 1 < count($holder); $i++) {
 							$query .= "'{$holder[$i]}', ";

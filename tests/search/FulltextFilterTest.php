@@ -9,7 +9,7 @@ class FulltextFilterTest extends SapphireTest {
 	protected static $fixture_file = "FulltextFilterTest.yml";
 
 	public function testFilter() {
-		if(DB::getConn() instanceof MySQLDatabase) {
+		if(DB::get_conn() instanceof MySQLDatabase) {
 			$baseQuery = FulltextFilterTest_DataObject::get();
 			$this->assertEquals(3, $baseQuery->count(), "FulltextFilterTest_DataObject count does not match.");
 
@@ -58,7 +58,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter1->apply($query1);
 		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA","FulltextFilterTest_DataObject"."ColumnB"', $filter1->getDbName());
 		$this->assertEquals(
-			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\",\"FulltextFilterTest_DataObject\".\"ColumnB\") AGAINST ('SilverStripe')"),
+			array(array(
+				"MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\",\"FulltextFilterTest_DataObject\".\"ColumnB\") AGAINST (?)" => array('SilverStripe')
+			)),
 			$query1->query()->getWhere()
 		);
 
@@ -69,7 +71,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter2->apply($query2);
 		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnC","FulltextFilterTest_DataObject"."ColumnD"', $filter2->getDbName());
 		$this->assertEquals(
-			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnC\",\"FulltextFilterTest_DataObject\".\"ColumnD\") AGAINST ('SilverStripe')"),
+			array(array(
+				"MATCH (\"FulltextFilterTest_DataObject\".\"ColumnC\",\"FulltextFilterTest_DataObject\".\"ColumnD\") AGAINST (?)" => array('SilverStripe')
+			)),
 			$query2->query()->getWhere()
 		);
 
@@ -80,7 +84,9 @@ class FulltextFilterTest extends SapphireTest {
 		$filter3->apply($query3);
 		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA"', $filter3->getDbName());
 		$this->assertEquals(
-			array("MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\") AGAINST ('SilverStripe')"),
+			array(array(
+				"MATCH (\"FulltextFilterTest_DataObject\".\"ColumnA\") AGAINST (?)" => array('SilverStripe')
+			)),
 			$query3->query()->getWhere()
 		);
 	}

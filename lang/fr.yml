@@ -238,7 +238,7 @@ fr:
     ResultUpdated: '%d groupes mises à jour'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Une boucle infinie s’est produite dans la hiérarchie « {type} ». Modifiez le parent pour le résoudre.'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Ajouter URL'
     ADJUSTDETAILSDIMENSIONS: 'Détails &amp; dimensions'
     ANCHORVALUE: Ancre

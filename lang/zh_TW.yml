@@ -28,7 +28,7 @@ zh_TW:
     VALIDATIONNOTUNIQUE: '您輸入的數值並不是獨特的。'
     VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
     VALIDATIONPASSWORDSNOTEMPTY: '密碼不能是空的'
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: '插入連結'
     BUTTONREMOVELINK: '移除連結'
     CSSCLASS: '對齊/樣式'

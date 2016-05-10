@@ -1,0 +1,13 @@
+Image:
+  example_image:
+    FileFilename: HTMLEditorFieldTest-example.jpg
+    FileHash: f5c7c2f814b0f20ceb30b72edbac220d6eff65ed
+    Name: HTMLEditorFieldTest_example.jpg
+
+HTMLEditorFieldTest_Object:
+  home:
+    Title: Home Page
+  about:
+    Title: About Us
+  contact:
+    Title: Contact Us

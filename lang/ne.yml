@@ -15,7 +15,7 @@ ne:
     VALIDATIONNOTUNIQUE: 'लेखिएको मान भिन्न छैन '
     VALIDATIONPASSWORDSDONTMATCH: 'पासओडहरु मिल्दैन्नन'
     VALIDATIONPASSWORDSNOTEMPTY: 'पासओडहरु खालि छोड्न मिल्दैन'
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: 'लिन्क राखनुहोस्'
     BUTTONREMOVELINK: 'लिन्क हटाउनुहोस्'
     CSSCLASS: 'समरेखिन / स्टाईल'

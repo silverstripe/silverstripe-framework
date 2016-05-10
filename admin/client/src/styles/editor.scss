@@ -1,0 +1,12 @@
+// Editor variables
+$state-danger-bg: #f2dede;
+$state-danger-border: darken($state-danger-bg, 5%);
+$text-color: #fff;
+
+body.mceContentBody a.ss-broken {
+  background-color: $state-danger-bg;
+  border: 1px $state-danger-border solid;
+  color: $text-color;
+  padding: 1px;
+  text-decoration: underline;
+}

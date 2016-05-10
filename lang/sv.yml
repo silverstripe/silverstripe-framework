@@ -267,7 +267,7 @@ sv:
     ResultUpdated: 'Uppdaterade %d grupper'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Oändlig loop hittades i hierarkin "{type}". Var vänlig ändra föräldern för att lösa detta'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'Lägg till URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaljer &amp; dimensioner'
     ANCHORSCANNOTACCESSPAGE: 'Du har inte tillåtelse att se innehållet på sidan'

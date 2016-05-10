@@ -5,12 +5,17 @@
  * @subpackage admin
  */
 
+use SilverStripe\Forms\Schema\FormSchema;
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * LeftAndMain is the parent class of all the two-pane views in the CMS.
  * If you are wanting to add more areas to the CMS, you can do it by subclassing LeftAndMain.
  *
  * This is essentially an abstract class which should be subclassed.
  * See {@link CMSMain} for a good example.
+ *
+ * @property FormSchema $schema
  */
 class LeftAndMain extends Controller implements PermissionProvider {
 
@@ -84,7 +89,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * @var array
 	 */
-	private static $allowed_actions = array(
+	private static $allowed_actions = [
 		'index',
 		'save',
 		'savetreenode',
@@ -97,7 +102,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		'AddForm',
 		'batchactions',
 		'BatchActionsForm',
-	);
+		'schema',
+	];
+
+	private static $url_handlers = [
+		'GET schema/$FormName/$RecordType/$ItemID' => 'schema'
+	];
+
+	private static $dependencies = [
+		'schema' => '%$FormSchema'
+	];
 
 	/**
 	 * @config
@@ -168,6 +182,142 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @var PjaxResponseNegotiator
 	 */
 	protected $responseNegotiator;
+
+	/**
+	 * Gets the combined configuration of all LeafAndMain subclasses required by the client app.
+	 *
+	 * @return array
+	 *
+	 * WARNING: Experimental API
+	 */
+	public function getCombinedClientConfig() {
+		$combinedClientConfig = ['sections' => []];
+		$cmsClassNames = CMSMenu::get_cms_classes('LeftAndMain', true, CMSMenu::URL_PRIORITY);
+
+		foreach ($cmsClassNames as $className) {
+			$combinedClientConfig['sections'][$className] =  Injector::inst()->get($className)->getClientConfig();
+		}
+
+		// Get "global" CSRF token for use in JavaScript
+		$token = SecurityToken::inst();
+		$combinedClientConfig[$token->getName()] = $token->getValue();
+
+		// Set env
+		$combinedClientConfig['environment'] = Director::get_environment_type();
+
+		return Convert::raw2json($combinedClientConfig);
+	}
+
+	/**
+	 * Returns configuration required by the client app.
+	 *
+	 * @return array
+	 *
+	 * WARNING: Experimental API
+	 */
+	public function getClientConfig() {
+		return [
+			'route' => $this->Link()
+		];
+	}
+
+	/**
+	 * Gets a JSON schema representing the current edit form.
+	 *
+	 * WARNING: Experimental API.
+	 *
+	 * @return SS_HTTPResponse
+	 */
+	public function schema($request) {
+		$response = $this->getResponse();
+		$formName = $request->param('FormName');
+		$recordType = $request->param('RecordType');
+		$itemID = $request->param('ItemID');
+
+		if (!$formName || !$recordType) {
+			return (new SS_HTTPResponse('Missing request params', 400));
+		}
+
+		if(!$this->hasMethod("get{$formName}")) {
+			return (new SS_HTTPResponse('Form not found', 404));
+		}
+
+		if(!$this->hasAction($formName)) {
+			return (new SS_HTTPResponse('Form not accessible', 401));
+		}
+
+		$form = $this->{"get{$formName}"}($itemID);
+
+		if($itemID) {
+			$record = $recordType::get()->byId($itemID);
+			if(!$record) {
+				return (new SS_HTTPResponse('Record not found', 404));
+			}
+			if(!$record->canView()) {
+				return (new SS_HTTPResponse('Record not accessible', 403));
+			}
+			$form->loadDataFrom($record);
+		}
+
+		$response->addHeader('Content-Type', 'application/json');
+		$response->setBody(Convert::raw2json($this->getSchemaForForm($form)));
+
+		return $response;
+	}
+
+	/**
+	 * Given a form, generate a response containing the requested form
+	 * schema if X-Formschema-Request header is set.
+	 *
+	 * @param Form $form
+	 * @return SS_HTTPResponse
+	 */
+	protected function getSchemaResponse($form) {
+		$request = $this->getRequest();
+		if($request->getHeader('X-Formschema-Request')) {
+			$data = $this->getSchemaForForm($form);
+			$response = new SS_HTTPResponse(Convert::raw2json($data));
+			$response->addHeader('Content-Type', 'application/json');
+			return $response;
+		}
+		return null;
+	}
+
+	/**
+	 * Returns a representation of the provided {@link Form} as structured data,
+	 * based on the request data.
+	 *
+	 * @param Form $form
+	 * @return array
+	 */
+	protected function getSchemaForForm(Form $form) {
+		$request = $this->getRequest();
+		$return = null;
+
+		// Valid values for the "X-Formschema-Request" header are "schema" and "state".
+		// If either of these values are set they will be stored in the $schemaParst array
+		// and used to construct the response body.
+		if ($schemaHeader = $request->getHeader('X-Formschema-Request')) {
+			$schemaParts = array_filter(explode(',', $schemaHeader), function($value) {
+				$validHeaderValues = ['schema', 'state'];
+				return in_array(trim($value), $validHeaderValues);
+			});
+		} else {
+			$schemaParts = ['schema'];
+		}
+
+		$return = ['id' => $form->FormName()];
+
+		if (in_array('schema', $schemaParts)) {
+			$return['schema'] = $this->schema->getSchema($form);
+		}
+
+		if (in_array('state', $schemaParts)) {
+			$return['state'] = $this->schema->getState($form);
+		}
+
+		return $return;
+	}
 
 	/**
 	 * @param Member $member
@@ -277,16 +427,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// Set the members html editor config
 		if(Member::currentUser()) {
-			HtmlEditorConfig::set_active(Member::currentUser()->getHtmlEditorConfigForCMS());
+			HTMLEditorConfig::set_active_identifier(Member::currentUser()->getHtmlEditorConfigForCMS());
 		}
 
 		// Set default values in the config if missing.  These things can't be defined in the config
 		// file because insufficient information exists when that is being processed
-		$htmlEditorConfig = HtmlEditorConfig::get_active();
+		$htmlEditorConfig = HTMLEditorConfig::get_active();
 		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
 		if(!$htmlEditorConfig->getOption('content_css')) {
 			$cssFiles = array();
-			$cssFiles[] = FRAMEWORK_ADMIN_DIR . '/css/editor.css';
+			$cssFiles[] = FRAMEWORK_ADMIN_DIR . '/client/dist/styles/editor.css';
 
 			// Use theme from the site config
 			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
@@ -308,96 +458,79 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
 		}
 
-		// Using uncompressed files as they'll be processed by JSMin in the Requirements class.
-		// Not as effective as other compressors or pre-compressed+finetuned files,
-		// but overall the unified minification into a single file brings more performance benefits
-		// than a couple of saved bytes (after gzip) in individual files.
-		// We also re-compress already compressed files through JSMin as this causes weird runtime bugs.
-		Requirements::combine_files(
-			'lib.js',
-			array(
+		Requirements::customScript("
+			window.ss = window.ss || {};
+			window.ss.config = " . $this->getCombinedClientConfig() . ";
+		");
+
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js', [
+			'provides' => [
 				THIRDPARTY_DIR . '/jquery/jquery.js',
-				FRAMEWORK_DIR . '/javascript/jquery-ondemand/jquery.ondemand.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/lib.js',
 				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
-				THIRDPARTY_DIR . '/json-js/json2.js',
 				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
 				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
 				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
 				THIRDPARTY_DIR . '/jquery-form/jquery.form.js',
+				THIRDPARTY_DIR . '/jquery-ondemand/jquery.ondemand.js',
+				THIRDPARTY_DIR . '/jquery-changetracker/lib/jquery.changetracker.js',
+				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.adapter.jquery.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/history-js/scripts/uncompressed/history.html4.js',
-				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
 				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/jquery-changetracker/lib/jquery.changetracker.js',
-				FRAMEWORK_DIR . '/javascript/i18n.js',
-				FRAMEWORK_DIR . '/javascript/TreeDropdownField.js',
-				FRAMEWORK_DIR . '/javascript/DateField.js',
-				FRAMEWORK_DIR . '/javascript/HtmlEditorField.js',
-				FRAMEWORK_DIR . '/javascript/TabSet.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/ssui.core.js',
-				FRAMEWORK_DIR . '/javascript/GridField.js',
-			)
-		);
+				FRAMEWORK_DIR . '/client/dist/js/TreeDropdownField.js',
+				FRAMEWORK_DIR . '/client/dist/js/DateField.js',
+				FRAMEWORK_DIR . '/client/dist/js/HtmlEditorField.js',
+				FRAMEWORK_DIR . '/client/dist/js/TabSet.js',
+				FRAMEWORK_DIR . '/client/dist/js/GridField.js',
+				FRAMEWORK_DIR . '/client/dist/js/i18n.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/sspath.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/ssui.core.js'
+			]
+		]);
 
-		if (Director::isDev()) Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/leaktools.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-legacy.js', [
+			'provides' => [
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Layout.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.ActionTabSet.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Panel.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Tree.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Content.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.EditForm.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Menu.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Preview.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.BatchActions.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.FieldHelp.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.FieldDescriptionToggle.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.TreeDropdownField.js',
+				FRAMEWORK_ADMIN_DIR . '/client/dist/js/AddToCampaignForm.js'
+			]
+		]);
 
-		$leftAndMainIncludes = array_unique(array_merge(
-			array(
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Layout.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.ActionTabSet.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Panel.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Tree.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Content.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.EditForm.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Menu.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Preview.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.BatchActions.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldHelp.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.FieldDescriptionToggle.js',
-				FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.TreeDropdownField.js',
-			),
-			Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/javascript/lang', true, true),
-			Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/javascript/lang', true, true)
-		));
+		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang', false, true);
+		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/client/lang', false, true);
 
-		if($this->config()->session_keepalive_ping) {
-			$leftAndMainIncludes[] = FRAMEWORK_ADMIN_DIR . '/javascript/LeftAndMain.Ping.js';
+		if ($this->config()->session_keepalive_ping) {
+			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Ping.js');
 		}
 
-		Requirements::combine_files('leftandmain.js', $leftAndMainIncludes);
-
-		// TODO Confuses jQuery.ondemand through document.write()
 		if (Director::isDev()) {
+			// TODO Confuses jQuery.ondemand through document.write()
 			Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
+			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/leaktools.js');
 		}
+
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-framework.js');
 
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
 		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(FRAMEWORK_ADMIN_DIR .'/thirdparty/chosen/chosen/chosen.css');
 		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
-		Requirements::css(FRAMEWORK_DIR . '/css/TreeDropdownField.css');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/screen.css');
-		Requirements::css(FRAMEWORK_DIR . '/css/GridField.css');
-
-		// Browser-specific requirements
-		$ie = isset($_SERVER['HTTP_USER_AGENT']) ? strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') : false;
-		if($ie) {
-			$version = substr($_SERVER['HTTP_USER_AGENT'], $ie + 5, 3);
-
-			if($version == 7) {
-				Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie7.css');
-			} else if($version == 8) {
-				Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/ie8.css');
-			}
-		}
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/TreeDropdownField.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/GridField.css');
 
 		// Custom requirements
 		$extraJs = $this->stat('extra_requirements_javascript');
@@ -446,7 +579,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		Config::inst()->update('SSViewer', 'theme_enabled', false);
 
 		//set the reading mode for the admin to stage
-		Versioned::reading_stage('Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 	}
 
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
@@ -550,14 +683,40 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	/**
-	 * Returns the menu title for the given LeftAndMain subclass.
-	 * Implemented static so that we can get this value without instantiating an object.
-	 * Menu title is *not* internationalised.
+	 * @deprecated 5.0
 	 */
 	public static function menu_title_for_class($class) {
+		Deprecation::notice('5.0', 'Use menu_title() instead');
+		return static::menu_title($class, false);
+	}
+
+	/**
+	 * Get menu title for this section (translated)
+	 *
+	 * @param string $class Optional class name if called on LeftAndMain directly
+	 * @param bool $localise Determine if menu title should be localised via i18n.
+	 * @return string Menu title for the given class
+	 */
+	public static function menu_title($class = null, $localise = true) {
+		if($class && is_subclass_of($class, __CLASS__)) {
+			// Respect oveloading of menu_title() in subclasses
+			return $class::menu_title(null, $localise);
+		}
+		if(!$class) {
+			$class = get_called_class();
+		}
+
+		// Get default class title
 		$title = Config::inst()->get($class, 'menu_title', Config::FIRST_SET);
-		if(!$title) $title = preg_replace('/Admin$/', '', $class);
-		return $title;
+		if(!$title) {
+			$title = preg_replace('/Admin$/', '', $class);
+		}
+
+		// Check localisation
+		if(!$localise) {
+			return $title;
+		}
+		return i18n::_t("{$class}.MENUTITLE", $title);
 	}
 
 	/**
@@ -666,11 +825,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 					// already set in CMSMenu::populate_menu(), but from a static pre-controller
 					// context, so doesn't respect the current user locale in _t() calls - as a workaround,
-					// we simply call LeftAndMain::menu_title_for_class() again
+					// we simply call LeftAndMain::menu_title() again
 					// if we're dealing with a controller
 					if($menuItem->controller) {
-						$defaultTitle = LeftAndMain::menu_title_for_class($menuItem->controller);
-						$title = _t("{$menuItem->controller}.MENUTITLE", $defaultTitle);
+						$title = LeftAndMain::menu_title($menuItem->controller);
 					} else {
 						$title = $menuItem->title;
 					}
@@ -745,11 +903,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return ArrayList
 	 */
 	public function Breadcrumbs($unlinked = false) {
-		$defaultTitle = LeftAndMain::menu_title_for_class($this->class);
-		$title = _t("{$this->class}.MENUTITLE", $defaultTitle);
 		$items = new ArrayList(array(
 			new ArrayData(array(
-				'Title' => $title,
+				'Title' => $this->menu_title(),
 				'Link' => ($unlinked) ? false : $this->Link()
 			))
 		));
@@ -1019,18 +1175,29 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
 	 * Save  handler
+	 *
+	 * @param array $data
+	 * @param Form $form
+	 * @return SS_HTTPResponse
 	 */
 	public function save($data, $form) {
+		$request = $this->getRequest();
 		$className = $this->stat('tree_class');
 
 		// Existing or new record?
 		$id = $data['ID'];
-		if(substr($id,0,3) != 'new') {
+		if(is_numeric($id) && $id > 0) {
 			$record = DataObject::get_by_id($className, $id);
-			if($record && !$record->canEdit()) return Security::permissionFailure($this);
-			if(!$record || !$record->ID) $this->httpError(404, "Bad record ID #" . (int)$id);
+			if($record && !$record->canEdit()) {
+				return Security::permissionFailure($this);
+			}
+			if(!$record || !$record->ID) {
+				$this->httpError(404, "Bad record ID #" . (int)$id);
+			}
 		} else {
-			if(!singleton($this->stat('tree_class'))->canCreate()) return Security::permissionFailure($this);
+			if(!singleton($this->stat('tree_class'))->canCreate()) {
+				return Security::permissionFailure($this);
+			}
 			$record = $this->getNewItem($id, false);
 		}
 
@@ -1040,8 +1207,36 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->extend('onAfterSave', $record);
 		$this->setCurrentPageID($record->ID);
 
-		$this->getResponse()->addHeader('X-Status', rawurlencode(_t('LeftAndMain.SAVEDUP', 'Saved.')));
-		return $this->getResponseNegotiator()->respond($this->getRequest());
+		$message = _t('LeftAndMain.SAVEDUP', 'Saved.');
+		if($request->getHeader('X-Formschema-Request')) {
+			// Ensure that newly created records have all their data loaded back into the form.
+			$form->loadDataFrom($record);
+			$form->setMessage($message, 'good');
+			$data = $this->getSchemaForForm($form);
+			$response = new SS_HTTPResponse(Convert::raw2json($data));
+			$response->addHeader('Content-Type', 'application/json');
+		} else {
+			$response = $this->getResponseNegotiator()->respond($request);
+		}
+
+		$response->addHeader('X-Status', rawurlencode($message));
+		return $response;
+	}
+
+	/**
+	 * Create new item.
+	 *
+	 * @param string|int $id
+	 * @param bool $setID
+	 * @return DataObject
+	 */
+	public function getNewItem($id, $setID = true) {
+		$class = $this->stat('tree_class');
+		$object = Injector::inst()->create($class);
+		if($setID) {
+			$object->ID = $id;
+		}
+		return $object;
 	}
 
 	public function delete($data, $form) {
@@ -1268,14 +1463,27 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$actionsFlattened = $actions->dataFields();
 			if($actionsFlattened) foreach($actionsFlattened as $action) $action->setUseButtonTag(true);
 
-			$form = CMSForm::create(
+			$negotiator = $this->getResponseNegotiator();
+			$form = Form::create(
 				$this, "EditForm", $fields, $actions
 			)->setHTMLID('Form_EditForm');
-			$form->setResponseNegotiator($this->getResponseNegotiator());
 			$form->addExtraClass('cms-edit-form');
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
+			$form->setValidationResponseCallback(function() use ($negotiator, $form) {
+				$request = $this->getRequest();
+				if($request->isAjax() && $negotiator) {
+					$form->setupFormErrors();
+					$result = $form->forTemplate();
+
+					return $negotiator->respond($request, array(
+						'CurrentForm' => function() use($result) {
+							return $result;
+						}
+					));
+				}
+			});
 
 			// Announce the capability so the frontend can decide whether to allow preview or not.
 			if(in_array('CMSPreviewable', class_implements($record))) {
@@ -1326,7 +1534,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return Form
 	 */
 	public function EmptyForm() {
-		$form = CMSForm::create(
+		$form = Form::create(
 			$this,
 			"EditForm",
 			new FieldList(
@@ -1345,7 +1553,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			),
 			new FieldList()
 		)->setHTMLID('Form_EditForm');
-		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->unsetValidator();
 		$form->addExtraClass('cms-edit-form');
 		$form->addExtraClass('root-form');
@@ -1359,7 +1566,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Return the CMS's HTML-editor toolbar
 	 */
 	public function EditorToolbar() {
-		return HtmlEditorField_Toolbar::create($this, "EditorToolbar");
+		return HTMLEditorField_Toolbar::create($this, "EditorToolbar");
 	}
 
 	/**
@@ -1452,7 +1659,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$form->setActions(null);
 
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/css/LeftAndMain_printable.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/dist/css/LeftAndMain_printable.css');
 		return array(
 			"PrintForm" => $form
 		);
@@ -1703,20 +1910,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return string
 	 */
 	public function SectionTitle() {
-		$class = get_class($this);
-		$defaultTitle = LeftAndMain::menu_title_for_class($class);
-		if($title = _t("{$class}.MENUTITLE", $defaultTitle)) return $title;
+		$title = $this->menu_title();
+		if($title) {
+			return $title;
+		}
 
 		foreach($this->MainMenu() as $menuItem) {
-			if($menuItem->LinkingMode != 'link') return $menuItem->Title;
+			if($menuItem->LinkingMode != 'link') {
+				return $menuItem->Title;
+			}
 		}
-	}
-
-	/**
-	 * Return the base directory of the tiny_mce codebase
-	 */
-	public function MceRoot() {
-		return MCE_ROOT;
 	}
 
 	/**
@@ -1734,7 +1937,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String
 	 */
 	public function Locale() {
-		return DBField::create_field('DBLocale', i18n::get_locale());
+		return DBField::create_field('Locale', i18n::get_locale());
 	}
 
 	public function providePermissions() {
@@ -1753,7 +1956,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if($class == 'ModelAdmin') continue;
 			if(ClassInfo::classImplements($class, 'TestOnly')) continue;
 
-			$title = _t("{$class}.MENUTITLE", LeftAndMain::menu_title_for_class($class));
+			$title = LeftAndMain::menu_title($class);
 			$perms["CMS_ACCESS_" . $class] = array(
 				'name' => _t(
 					'CMSMain.ACCESS',
@@ -1770,7 +1973,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
 	 * Register the given javascript file as required in the CMS.
-	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/javascript/loader.js'
+	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/client/dist/js/loader.js'
 	 *
 	 * @deprecated since version 4.0
 	 */
@@ -1869,7 +2072,7 @@ class LeftAndMainMarkingFilter {
 			}
 		}
 
-		return new SQLQuery(
+		return new SQLSelect(
 			array("ParentID", "ID"),
 			'SiteTree',
 			$where

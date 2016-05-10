@@ -3,35 +3,41 @@
  * A set of static methods for manipulating cookies.
  *
  * @package framework
+ *
  * @subpackage misc
  */
 class Cookie {
 
 	/**
 	 * @config
-	 * @var boolean
+	 *
+	 * @var bool
 	 */
 	private static $report_errors = true;
 
 	/**
-	 * Fetch the current instance of the cookie backend
+	 * Fetch the current instance of the cookie backend.
 	 *
-	 * @return Cookie_Backend The cookie backend
+	 * @return Cookie_Backend
 	 */
 	public static function get_inst() {
 		return Injector::inst()->get('Cookie_Backend');
 	}
 
 	/**
-	 * Set a cookie variable
+	 * Set a cookie variable.
 	 *
-	 * @param string $name The variable name
-	 * @param mixed $value The variable value.
-	 * @param int $expiry The expiry time, in days. Defaults to 90.
-	 * @param string $path See http://php.net/set_session
-	 * @param string $domain See http://php.net/set_session
-	 * @param boolean $secure See http://php.net/set_session
-	 * @param boolean $httpOnly See http://php.net/set_session
+	 * Expiry time is set in days, and defaults to 90.
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 * @param int $expiry
+	 * @param string $path
+	 * @param string $domain
+	 * @param bool $secure
+	 * @param bool $httpOnly
+	 *
+	 * See http://php.net/set_session
 	 */
 	public static function set($name, $value, $expiry = 90, $path = null, $domain = null, $secure = false,
 		$httpOnly = true
@@ -40,58 +46,36 @@ class Cookie {
 	}
 
 	/**
-	 * Get the cookie value by name
+	 * Get the cookie value by name. Returns null if not set.
 	 *
-	 * @param string $name The name of the cookie to get
-	 * @param boolean $includeUnsent Include cookies we've yet to send when fetching values
+	 * @param string $name
+	 * @param bool $includeUnsent
 	 *
-	 * @return string|null The cookie value or null if unset
+	 * @return null|string
 	 */
 	public static function get($name, $includeUnsent = true) {
 		return self::get_inst()->get($name, $includeUnsent);
 	}
 
 	/**
-	 * Get all the cookies
+	 * Get all the cookies.
 	 *
-	 * @param boolean $includeUnsent Include cookies we've yet to send
-	 * @return array All the cookies
+	 * @param bool $includeUnsent
+	 *
+	 * @return array
 	 */
 	public static function get_all($includeUnsent = true) {
 		return self::get_inst()->getAll($includeUnsent);
 	}
 
 	/**
-	 * @deprecated
-	 */
-	public static function forceExpiry($name, $path = null, $domain = null) {
-		Deprecation::notice('4.0', 'Use Cookie::force_expiry instead.');
-
-		return self::force_expiry($name, $path, $domain);
-	}
-
-	/**
-	 * @param string
-	 * @param string
-	 * @param string
+	 * @param string $name
+	 * @param null|string $path
+	 * @param null|string $domain
+	 * @param bool $secure
+	 * @param bool $httpOnly
 	 */
 	public static function force_expiry($name, $path = null, $domain = null, $secure = false, $httpOnly = true) {
 		return self::get_inst()->forceExpiry($name, $path, $domain, $secure, $httpOnly);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function set_report_errors($reportErrors) {
-		Deprecation::notice('4.0', 'Use "Cookie.report_errors" config setting instead');
-		Config::inst()->update('Cookie', 'report_errors', $reportErrors);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public static function report_errors() {
-		Deprecation::notice('4.0', 'Use "Cookie.report_errors" config setting instead');
-		return Config::inst()->get('Cookie', 'report_errors');
 	}
 }

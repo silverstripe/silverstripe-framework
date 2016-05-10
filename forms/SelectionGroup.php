@@ -58,7 +58,7 @@ class SelectionGroup extends CompositeField {
 
 		parent::__construct($selectionItems);
 
-		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/SelectionGroup.css');
 	}
 
 	public function FieldSet() {
@@ -111,8 +111,8 @@ class SelectionGroup extends CompositeField {
 
 	public function FieldHolder($properties = array()) {
 		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR   . '/javascript/SelectionGroup.js');
-		Requirements::css(FRAMEWORK_DIR . '/css/SelectionGroup.css');
+		Requirements::javascript(FRAMEWORK_DIR   . '/client/dist/js/SelectionGroup.js');
+		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/SelectionGroup.css');
 
 		$obj = $properties ? $this->customise($properties) : $this;
 

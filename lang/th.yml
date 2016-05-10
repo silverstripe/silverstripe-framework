@@ -161,7 +161,7 @@ th:
     ResultCreated: 'สร้างกลุ่มแล้ว {count} กลุ่ม'
     ResultDeleted: 'ลบกลุ่มแล้ว %d กลุ่ม'
     ResultUpdated: 'อัพเดทแล้ว %d กลุ่ม'
-  HtmlEditorField:
+  HTMLEditorField:
     ADDURL: 'เพิ่ม URL'
     ADJUSTDETAILSDIMENSIONS: 'รายละเอียด &amp; ขนาดสัดส่วน'
     BUTTONINSERT: แทรก

@@ -337,7 +337,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		$obj1->PageName = "old-value";
 		$obj1->ExtraField = "old-value";
 		$obj1ID = $obj1->write();
-		$obj1->publish('Stage', 'Live');
+		$obj1->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 
 		$obj1 = VersionedLazySub_DataObject::get()->byID($obj1ID);
 		$this->assertEquals(
@@ -408,7 +408,7 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 			$obj1ID
 		));
 
-		Versioned::reading_stage('Live');
+		Versioned::set_stage(Versioned::LIVE);
 		$obj1 = VersionedLazy_DataObject::get()->byID($obj1ID);
 		$this->assertEquals(
 			'live-value',

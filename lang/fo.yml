@@ -67,7 +67,7 @@ fo:
     Sort: 'Raða eftir'
     has_many_Permissions: Loyvir
     many_many_Members: Limir
-  HtmlEditorField:
+  HTMLEditorField:
     BUTTONINSERTLINK: 'Stovna leinku'
     BUTTONREMOVELINK: 'Strika leinku'
     CSSCLASSCENTER: 'Í miðuni, einsamalt.'

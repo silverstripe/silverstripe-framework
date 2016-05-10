@@ -8,4 +8,5 @@ introduction: Upload, manage and manipulate files and images.
 
 * [api:File]
 * [api:Image]
+* [api:DBFile]
 * [api:Folder]

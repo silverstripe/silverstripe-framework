@@ -132,7 +132,8 @@ abstract class SS_Database {
 			$sql,
 			function($sql) use($connector, $parameters, $errorLevel) {
 				return $connector->preparedQuery($sql, $parameters, $errorLevel);
-			}
+			},
+			$parameters
 		);
 	}
 
@@ -165,14 +166,20 @@ abstract class SS_Database {
 	 *
 	 * @param string $sql Query to run, and single parameter to callback
 	 * @param callable $callback Callback to execute code
+	 * @param array $parameters Parameters to display
 	 * @return mixed Result of query
 	 */
-	protected function benchmarkQuery($sql, $callback) {
+	protected function benchmarkQuery($sql, $callback, $parameters = null) {
 		if (isset($_REQUEST['showqueries']) && Director::isDev()) {
 			$starttime = microtime(true);
 			$result = $callback($sql);
 			$endtime = round(microtime(true) - $starttime, 4);
-			Debug::message("\n$sql\n{$endtime}s\n", false);
+			$message = $sql;
+			if($parameters) {
+				$message .= "\nparams: \"" . implode('", "', $parameters) . '"';
+			}
+			Debug::message("\n{$message}\n{$endtime}s\n", false);
+
 			return $result;
 		} else {
 			return $callback($sql);
@@ -335,6 +342,20 @@ abstract class SS_Database {
 	}
 
 	/**
+	 * Generates a WHERE clause for null comparison check
+	 *
+	 * @param string $field Quoted field name
+	 * @param bool $isNull Whether to check for NULL or NOT NULL
+	 * @return string Non-parameterised null comparison clause
+	 */
+	public function nullCheckClause($field, $isNull) {
+		$clause = $isNull
+			? "%s IS NULL"
+			: "%s IS NOT NULL";
+		return sprintf($clause, $field);
+	}
+
+	/**
 	 * Generate a WHERE clause for text matching.
 	 *
 	 * @param String $field Quoted field name
@@ -467,6 +488,42 @@ abstract class SS_Database {
 	 * @return boolean Flag indicating support for transactions
 	 */
 	abstract public function supportsTransactions();
+
+	/**
+	 * Invoke $callback within a transaction
+	 *
+	 * @param callable $callback Callback to run
+	 * @param callable $errorCallback Optional callback to run after rolling back transaction.
+	 * @param bool|string $transactionMode Optional transaction mode to use
+	 * @param bool $errorIfTransactionsUnsupported If true, this method will fail if transactions are unsupported.
+	 * Otherwise, the $callback will potentially be invoked outside of a transaction.
+	 * @throws Exception
+	 */
+	public function withTransaction(
+		$callback, $errorCallback = null, $transactionMode = false, $errorIfTransactionsUnsupported = false
+	) {
+		$supported = $this->supportsTransactions();
+		if(!$supported && $errorIfTransactionsUnsupported) {
+			throw new BadMethodCallException("Transactions not supported by this database.");
+		}
+		if($supported) {
+			$this->transactionStart($transactionMode);
+		}
+		try {
+			call_user_func($callback);
+		} catch (Exception $ex) {
+			if($supported) {
+				$this->transactionRollback();
+			}
+			if($errorCallback) {
+				call_user_func($errorCallback);
+			}
+			throw $ex;
+		}
+		if($supported) {
+			$this->transactionEnd();
+		}
+	}
 
 	/*
 	 * Determines if the current database connection supports a given list of extensions

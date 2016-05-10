@@ -1,63 +1,81 @@
 <?php
 /**
- * Base controller class.
- * Controllers are the cornerstone of all site functionality in SilverStripe.  The {@link Director}
- * selects a controller to pass control to, and then calls {@link run()}.  This method will execute
+ * Controllers are the cornerstone of all site functionality in SilverStripe. The {@link Director}
+ * selects a controller to pass control to, and then calls {@link run()}. This method will execute
  * the appropriate action - either by calling the action method, or displaying the action's template.
  *
  * See {@link getTemplate()} for information on how the template is chosen.
+ *
  * @package framework
+ *
  * @subpackage control
  */
 class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
-	 * @var array $urlParams An array of arguments extracted from the URL
+	 * An array of arguments extracted from the URL.
+	 *
+	 * @var array
 	 */
 	protected $urlParams;
 
 	/**
-	 * @var array $requestParams Contains all GET and POST parameters
-	 * passed to the current {@link SS_HTTPRequest}.
-	 * @uses SS_HTTPRequest->requestVars()
+	 * Contains all GET and POST parameters passed to the current {@link SS_HTTPRequest}.
+	 *
+	 * @var array
 	 */
 	protected $requestParams;
 
 	/**
-	 * @var string $action The URL part matched on the current controller as
-	 * determined by the "$Action" part of the {@link $url_handlers} definition.
-	 * Should correlate to a public method on this controller.
-	 * Used in {@link render()} and {@link getViewer()} to determine
-	 * action-specific templates.
+	 * The URL part matched on the current controller as determined by the "$Action" part of the
+	 * {@link $url_handlers} definition. Should correlate to a public method on this controller.
+	 *
+	 * Used in {@link render()} and {@link getViewer()} to determine action-specific templates.
+	 *
+	 * @var string
 	 */
 	protected $action;
 
 	/**
-	 * The {@link Session} object for this controller
+	 * The {@link Session} object for this controller.
+	 *
+	 * @var Session
 	 */
 	protected $session;
 
 	/**
-	 * Stack of current controllers.
-	 * Controller::$controller_stack[0] is the current controller.
+	 * Stack of current controllers. Controller::$controller_stack[0] is the current controller.
+	 *
+	 * @var array
 	 */
 	protected static $controller_stack = array();
 
+	/**
+	 * @var bool
+	 */
 	protected $basicAuthEnabled = true;
 
 	/**
-	 * @var SS_HTTPResponse $response The response object that the controller returns.
+	 * The response object that the controller returns.
+	 *
 	 * Set in {@link handleRequest()}.
+	 *
+	 * @var SS_HTTPResponse
 	 */
 	protected $response;
 
 	/**
-	 * Default URL handlers - (Action)/(ID)/(OtherID)
+	 * Default URL handlers.
+	 *
+	 * @var array
 	 */
 	private static $url_handlers = array(
 		'$Action//$ID/$OtherID' => 'handleAction',
 	);
 
+	/**
+	 * @var array
+	 */
 	private static $allowed_actions = array(
 		'handleAction',
 		'handleIndex',
@@ -71,26 +89,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	public function init() {
 		if($this->basicAuthEnabled) BasicAuth::protect_site_if_necessary();
 
-		// Directly access the session variable just in case the Group or Member tables don't yet exist
-		if(Member::config()->log_last_visited) {
-			Deprecation::notice(
-				'4.0',
-				'Member::$LastVisited is deprecated. From 4.0 onwards you should implement this as a custom extension'
-			);
-			if(Session::get('loggedInAs') && Security::database_is_ready() && ($member = Member::currentUser())) {
-				DB::prepared_query(
-					sprintf('UPDATE "Member" SET "LastVisited" = %s WHERE "ID" = ?', DB::get_conn()->now()),
-					array($member->ID)
-				);
-			}
-		}
-
 		// This is used to test that subordinate controllers are actually calling parent::init() - a common bug
 		$this->baseInitCalled = true;
 	}
 
 	/**
-	 * Returns a link to this controller.  Overload with your own Link rules if they exist.
+	 * Returns a link to this controller. Overload with your own Link rules if they exist.
+	 *
+	 * @return string
 	 */
 	public function Link() {
 		return get_class($this) .'/';
@@ -100,32 +106,29 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Executes this controller, and return an {@link SS_HTTPResponse} object with the result.
 	 *
 	 * This method first does a few set-up activities:
-	 *  - Push this controller ont to the controller stack -
-	 *    see {@link Controller::curr()} for information about this.
-	 *  - Call {@link init()}
-	 *  - Defer to {@link RequestHandler->handleRequest()} to determine which action
-	 *    should be executed
+	 * - Push this controller ont to the controller stack - see {@link Controller::curr()} for
+	 *   information about this.
+	 * - Call {@link init()}
+	 * - Defer to {@link RequestHandler->handleRequest()} to determine which action should be executed.
 	 *
-	 * Note: $requestParams['executeForm'] support was removed,
-	 * make the following change in your URLs:
-	 * "/?executeForm=FooBar" -> "/FooBar"
+	 * Note: $requestParams['executeForm'] support was removed, make the following change in your URLs:
+	 * "/?executeForm=FooBar" -> "/FooBar".
+	 *
 	 * Also make sure "FooBar" is in the $allowed_actions of your controller class.
 	 *
-	 * Note: You should rarely need to overload run() -
-	 * this kind of change is only really appropriate for things like nested
-	 * controllers - {@link ModelAsController} and {@link RootURLController}
-	 * are two examples here.  If you want to make more
-	 * orthodox functionality, it's better to overload {@link init()} or {@link index()}.
+	 * Note: You should rarely need to overload run() - this kind of change is only really appropriate
+	 * for things like nested controllers - {@link ModelAsController} and {@link RootURLController}
+	 * are two examples here. If you want to make more orthodox functionality, it's better to overload
+	 * {@link init()} or {@link index()}.
 	 *
-	 * Important: If you are going to overload handleRequest,
-	 * make sure that you start the method with $this->pushCurrent()
-	 * and end the method with $this->popCurrent().
-	 * Failure to do this will create weird session errors.
+	 * Important: If you are going to overload handleRequest, make sure that you start the method with
+	 * $this->pushCurrent() and end the method with $this->popCurrent(). Failure to do this will create
+	 * weird session errors.
 	 *
-	 * @param $request The {@link SS_HTTPRequest} object that is responsible
-	 *  for distributing request parsing.
-	 * @return SS_HTTPResponse The response that this controller produces,
-	 *  including HTTP headers such as redirection info
+	 * @param SS_HTTPRequest $request
+	 * @param DataModel $model
+	 *
+	 * @return SS_HTTPResponse
 	 */
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
@@ -185,12 +188,15 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Controller's default action handler.  It will call the method named in $Action, if that method exists.
-	 * If $Action isn't given, it will use "index" as a default.
+	 * Controller's default action handler.  It will call the method named in "$Action", if that method
+	 * exists. If "$Action" isn't given, it will use "index" as a default.
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @param string $action
+	 *
+	 * @return HTMLText|SS_HTTPResponse
 	 */
 	protected function handleAction($request, $action) {
-		$this->extend('beforeCallActionHandler', $request, $action);
-
 		foreach($request->latestParams() as $k => $v) {
 			if($v || !isset($this->urlParams[$k])) $this->urlParams[$k] = $v;
 		}
@@ -207,25 +213,45 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 			} else {
 				return $result;
 			}
-		} else {
-			return $this->getViewer($action)->process($this);
 		}
+
+		// Fall back to index action with before/after handlers
+		$beforeResult = $this->extend('beforeCallActionHandler', $request, $action);
+		if ($beforeResult) {
+			return reset($beforeResult);
+		}
+
+		$result = $this->getViewer($action)->process($this);
+
+		$afterResult = $this->extend('afterCallActionHandler', $request, $action, $result);
+		if($afterResult) {
+			return reset($afterResult);
+		}
+
+		return $result;
 	}
 
+	/**
+	 * @param array $urlParams
+	 */
 	public function setURLParams($urlParams) {
 		$this->urlParams = $urlParams;
 	}
 
 	/**
-	 * @return array The parameters extracted from the URL by the {@link Director}.
+	 * Returns the parameters extracted from the URL by the {@link Director}.
+	 *
+	 * @return array
 	 */
 	public function getURLParams() {
 		return $this->urlParams;
 	}
 
 	/**
-	 * Returns the SS_HTTPResponse object that this controller is building up.
-	 * Can be used to set the status code and headers
+	 * Returns the SS_HTTPResponse object that this controller is building up. Can be used to set the
+	 * status code and headers.
+	 *
+	 * @return SS_HTTPResponse
 	 */
 	public function getResponse() {
 		if (!$this->response) {
@@ -238,21 +264,27 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Sets the SS_HTTPResponse object that this controller is building up.
 	 *
 	 * @param SS_HTTPResponse $response
-	 * @return Controller
+	 *
+	 * @return $this
 	 */
 	public function setResponse(SS_HTTPResponse $response) {
 		$this->response = $response;
 		return $this;
 	}
 
+	/**
+	 * @var bool
+	 */
 	protected $baseInitCalled = false;
 
 	/**
 	 * Return the object that is going to own a form that's being processed, and handle its execution.
-	 * Note that the result needn't be an actual controller object.
+	 * Note that the result need not be an actual controller object.
+	 *
+	 * @return mixed
 	 */
 	public function getFormOwner() {
-		// Get the appropraite ocntroller: sometimes we want to get a form from another controller
+		// Get the appropriate controller: sometimes we want to get a form from another controller
 		if(isset($this->requestParams['formController'])) {
 			$formController = Director::getControllerForURL($this->requestParams['formController']);
 
@@ -267,8 +299,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * This is the default action handler used if a method doesn't exist.
-	 * It will process the controller object with the template returned by {@link getViewer()}
+	 * This is the default action handler used if a method doesn't exist. It will process the
+	 * controller object with the template returned by {@link getViewer()}.
+	 *
+	 * @param string $action
+	 *
+	 * @return HTMLText
 	 */
 	public function defaultAction($action) {
 		return $this->getViewer($action)->process($this);
@@ -276,14 +312,19 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * Returns the action that is being executed on this controller.
+	 *
+	 * @return string
 	 */
 	public function getAction() {
 		return $this->action;
 	}
 
 	/**
-	 * Return an SSViewer object to process the data
-	 * @return SSViewer The viewer identified being the default handler for this Controller/Action combination
+	 * Return the viewer identified being the default handler for this Controller/Action combination.
+	 *
+	 * @param string $action
+	 *
+	 * @return SSViewer
 	 */
 	public function getViewer($action) {
 		// Hard-coded templates
@@ -322,15 +363,23 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		return new SSViewer($templates);
 	}
 
+	/**
+	 * @param string $action
+	 *
+	 * @return bool
+	 */
 	public function hasAction($action) {
 		return parent::hasAction($action) || $this->hasActionTemplate($action);
 	}
 
 	/**
-	 * Removes all the "action" part of the current URL and returns the result.
-	 * If no action parameter is present, returns the full URL
-	 * @static
-	 * @return String
+	 * Removes all the "action" part of the current URL and returns the result. If no action parameter
+	 * is present, returns the full URL.
+	 *
+	 * @param string $fullURL
+	 * @param null|string $action
+	 *
+	 * @return string
 	 */
 	public function removeAction($fullURL, $action = null) {
 		if (!$action) $action = $this->getAction();    //default to current action
@@ -345,7 +394,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * Return the class that defines the given action, so that we know where to check allowed_actions.
-	 * Overrides RequestHandler to also look at defined templates
+	 * Overrides RequestHandler to also look at defined templates.
+	 *
+	 * @param string $action
+	 *
+	 * @return string
 	 */
 	protected function definingClassForAction($action) {
 		$definingClass = parent::definingClassForAction($action);
@@ -361,9 +414,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Returns TRUE if this controller has a template that is specifically designed to handle a specific action.
+	 * Returns TRUE if this controller has a template that is specifically designed to handle a
+	 * specific action.
 	 *
 	 * @param string $action
+	 *
 	 * @return bool
 	 */
 	public function hasActionTemplate($action) {
@@ -381,11 +436,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Render the current controller with the templates determined
-	 * by {@link getViewer()}.
+	 * Render the current controller with the templates determined by {@link getViewer()}.
 	 *
-	 * @param array $params Key-value array for custom template variables (Optional)
-	 * @return string Parsed template content
+	 * @param array $params
+	 *
+	 * @return string
 	 */
 	public function render($params = null) {
 		$template = $this->getViewer($this->getAction());
@@ -399,16 +454,17 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Call this to disable site-wide basic authentication for a specific contoller.
-	 * This must be called before Controller::init().  That is, you must call it in your controller's
-	 * init method before it calls parent::init().
+	 * Call this to disable site-wide basic authentication for a specific controller. This must be
+	 * called before Controller::init(). That is, you must call it in your controller's init method
+	 * before it calls parent::init().
 	 */
 	public function disableBasicAuth() {
 		$this->basicAuthEnabled = false;
 	}
 
 	/**
-	 * Returns the current controller
+	 * Returns the current controller.
+	 *
 	 * @return Controller
 	 */
 	public static function curr() {
@@ -420,19 +476,23 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Tests whether we have a currently active controller or not
-	 * @return boolean True if there is at least 1 controller in the stack.
+	 * Tests whether we have a currently active controller or not. True if there is at least 1
+	 * controller in the stack.
+	 *
+	 * @return bool
 	 */
 	public static function has_curr() {
 		return Controller::$controller_stack ? true : false;
 	}
 
 	/**
-	 * Returns true if the member is allowed to do the given action.
-	 * @param perm The permission to be checked, such as 'View'.
-	 * @param member The member whose permissions need checking.  Defaults to the currently logged
+	 * Returns true if the member is allowed to do the given action. Defaults to the currently logged
 	 * in user.
-	 * @return boolean
+	 *
+	 * @param string $perm
+	 * @param null|member $member
+	 *
+	 * @return bool
 	 */
 	public function can($perm, $member = null) {
 		if(!$member) $member = Member::currentUser();
@@ -447,12 +507,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		}
 	}
 
-	//---------------------------------------------------------------------------------------------------------------
-
 	/**
-	 * Pushes this controller onto the stack of current controllers.
-	 * This means that any redirection, session setting, or other things that rely on Controller::curr() will now
-	 * write to this controller object.
+	 * Pushes this controller onto the stack of current controllers. This means that any redirection,
+	 * session setting, or other things that rely on Controller::curr() will now write to this
+	 * controller object.
 	 */
 	public function pushCurrent() {
 		array_unshift(self::$controller_stack, $this);
@@ -481,6 +539,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	/**
 	 * Redirect to the given URL.
 	 *
+	 * @param string $url
+	 * @param int $code
+	 *
 	 * @return SS_HTTPResponse
 	 */
 	public function redirect($url, $code=302) {
@@ -500,12 +561,14 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Redirect back. Uses either the HTTP_REFERER or a manually set request-variable called "BackURL".
-	 * This variable is needed in scenarios where not HTTP-Referer is sent (
-	 * e.g when calling a page by location.href in IE).
-	 * If none of the two variables is available, it will redirect to the base
+	 * Redirect back. Uses either the HTTP-Referer or a manually set request-variable called "BackURL".
+	 * This variable is needed in scenarios where HTTP-Referer is not sent (e.g when calling a page by
+	 * location.href in IE). If none of the two variables is available, it will redirect to the base
 	 * URL (see {@link Director::baseURL()}).
+	 *
 	 * @uses redirect()
+	 *
+	 * @return bool|SS_HTTPResponse
 	 */
 	public function redirectBack() {
 		// Don't cache the redirect back ever
@@ -539,16 +602,18 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Tests whether a redirection has been requested.
-	 * @return string If redirect() has been called, it will return the URL redirected to.  Otherwise, it will
-	 * return null;
+	 * Tests whether a redirection has been requested. If redirect() has been called, it will return
+	 * the URL redirected to. Otherwise, it will return null.
+	 *
+	 * @return null|string
 	 */
 	public function redirectedTo() {
 		return $this->getResponse() && $this->getResponse()->getHeader('Location');
 	}
 
 	/**
-	 * Get the Session object representing this Controller's session
+	 * Get the Session object representing this Controller's session.
+	 *
 	 * @return Session
 	 */
 	public function getSession() {
@@ -557,21 +622,23 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**
 	 * Set the Session object.
+	 *
+	 * @param Session $session
 	 */
 	public function setSession(Session $session) {
 		$this->session = $session;
 	}
 
 	/**
-	 * Joins two or more link segments together, putting a slash between them if necessary.
-	 * Use this for building the results of {@link Link()} methods.
-	 * If either of the links have query strings,
+	 * Joins two or more link segments together, putting a slash between them if necessary. Use this
+	 * for building the results of {@link Link()} methods. If either of the links have query strings,
 	 * then they will be combined and put at the end of the resulting url.
 	 *
 	 * Caution: All parameters are expected to be URI-encoded already.
 	 *
-	 * @param String
-	 * @return String
+	 * @param string
+	 *
+	 * @return string
 	 */
 	public static function join_links() {
 		$args = func_get_args();
@@ -604,6 +671,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		return $result;
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function get_template_global_variables() {
 		return array(
 			'CurrentPage' => 'curr',

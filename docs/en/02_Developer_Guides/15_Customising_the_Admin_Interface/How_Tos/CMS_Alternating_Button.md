@@ -62,6 +62,11 @@ Here we initialise the button based on the backend check, and assume that the bu
 
 ## Frontend support
 
+__Deprecated:__
+The following documentation regarding jQuery, jQueryUI and Entwine applies to legacy code only.
+If you're developing new functionality in React powered sections please refer to
+[ReactJS in SilverStripe](./Extend_CMS_Interface.md#reactjs-in-silverstripe).
+
 As with the *Save* and *Save & publish* buttons, you might want to add some scripted reactions to user actions on the
 frontend. You can affect the state of the button through the jQuery UI calls.
 

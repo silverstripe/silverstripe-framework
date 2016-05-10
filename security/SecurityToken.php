@@ -174,10 +174,28 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	 * See {@link check()}.
 	 *
 	 * @param SS_HTTPRequest $request
-	 * @return Boolean
+	 * @return bool
 	 */
 	public function checkRequest($request) {
-		return $this->check($request->requestVar($this->getName()));
+		$token = $this->getRequestToken($request);
+		return $this->check($token);
+	}
+
+	/**
+	 * Get security token from request
+	 *
+	 * @param SS_HTTPREquest $request
+	 * @return string
+	 */
+	protected function getRequestToken($request) {
+		$name = $this->getName();
+		$header = 'X-' . ucwords(strtolower($name));
+		if($token = $request->getHeader($header)) {
+			return $token;
+		}
+
+		// Get from request var
+		return $request->requestVar($name);
 	}
 
 	/**

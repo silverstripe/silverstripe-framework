@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Utility class to render views of the differences between two data objects (or two versions of the
  * same data object).
@@ -139,7 +142,9 @@ class DataDifferencer extends ViewableData {
 				if($this->fromRecord->hasMethod($relName)) {
 					$relObjFrom = $this->fromRecord->$relName();
 					if($relObjFrom) {
-						$fromTitle = ($relObjFrom->hasMethod('Title') || $relObjFrom->hasField('Title')) ? $relObjFrom->Title : '';
+						$fromTitle = ($relObjFrom->hasMethod('Title') || $relObjFrom->hasField('Title'))
+							? $relObjFrom->Title
+							: '';
 					} else {
 						$fromTitle = '';
 					}

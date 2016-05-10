@@ -29,9 +29,9 @@ class XMLDataFormatter extends DataFormatter {
 	/**
 	 * Generate an XML representation of the given {@link DataObject}.
 	 *
-	 * @param DataObject $obj
-	 * @param $includeHeader Include <?xml ...?> header (Default: true)
-	 * @return String XML
+	 * @param DataObjectInterface|DataObject $obj
+	 * @param array $fields
+	 * @return string XML
 	 */
 	public function convertDataObject(DataObjectInterface $obj, $fields = null) {
 		$response = Controller::curr()->getResponse();
@@ -131,11 +131,12 @@ class XMLDataFormatter extends DataFormatter {
 	 * Generate an XML representation of the given {@link SS_List}.
 	 *
 	 * @param SS_List $set
+	 * @param array $fields
 	 * @return String XML
 	 */
 	public function convertDataObjectSet(SS_List $set, $fields = null) {
 		Controller::curr()->getResponse()->addHeader("Content-Type", "text/xml");
-		$className = $set->class;
+		$className = get_class($set);
 
 		$xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		$xml .= (is_numeric($this->totalSize)) ? "<$className totalSize=\"{$this->totalSize}\">\n" : "<$className>\n";

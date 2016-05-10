@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\Relation;
+
 /**
  * An {@link ArrayList} that represents an unsaved relation.
  *
@@ -14,7 +16,7 @@
  * @package framework
  * @subpackage model
  */
-class UnsavedRelationList extends ArrayList {
+class UnsavedRelationList extends ArrayList implements Relation {
 
 	/**
 	 * The DataObject class name that this relation is on
@@ -154,27 +156,6 @@ class UnsavedRelationList extends ArrayList {
 	}
 
 	/**
-	 * Returns true if the given column can be used to filter the records.
-	 *
-	 * @param string $by
-	 * @return bool
-	 */
-	public function canFilterBy($by) {
-		return false;
-	}
-
-
-	/**
-	 * Returns true if the given column can be used to sort the records.
-	 *
-	 * @param string $by
-	 * @return bool
-	 */
-	public function canSortBy($by) {
-		return false;
-	}
-
-	/**
      * Remove all items from this relation.
      */
 	public function removeAll() {
@@ -185,6 +166,7 @@ class UnsavedRelationList extends ArrayList {
 	/**
 	 * Remove the items from this list with the given IDs
 	 *
+	 * @param array $items
 	 * @param array $items
 	 * @return $this
 	 */
@@ -293,5 +275,12 @@ class UnsavedRelationList extends ArrayList {
 	 */
 	public function dbObject($fieldName) {
 		return singleton($this->dataClass)->dbObject($fieldName);
+	}
+
+	protected function extractValue($item, $key) {
+		if(is_numeric($item)) {
+			$item = DataObject::get_by_id($this->dataClass, $item);
+		}
+		return parent::extractValue($item, $key);
 	}
 }

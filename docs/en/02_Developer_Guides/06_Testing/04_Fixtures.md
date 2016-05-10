@@ -275,7 +275,7 @@ publish a page, which requires a method call.
 	$blueprint = Injector::inst()->create('FixtureBlueprint', 'Member');
 
 	$blueprint->addCallback('afterCreate', function($obj, $identifier, $data, $fixtures) {
-		$obj->publish('Stage', 'Live');
+		$obj->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 	});
 
 	$page = $factory->define('Page', $blueprint);

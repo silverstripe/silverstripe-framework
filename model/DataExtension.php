@@ -2,32 +2,12 @@
 /**
  * An extension that adds additional functionality to a {@link DataObject}.
  *
+ * @property DataObject $owner
+ *
  * @package framework
  * @subpackage model
  */
 abstract class DataExtension extends Extension {
-
-	public static function get_extra_config($class, $extension, $args) {
-		if(method_exists($extension, 'extraDBFields')) {
-			$extraStaticsMethod = 'extraDBFields';
-		} elseif(method_exists($extension, 'extraStatics')) {
-			$extraStaticsMethod = 'extraStatics';
-		} else {
-			return null;
-		}
-
-		Deprecation::notice('4.0',
-			"$extraStaticsMethod deprecated. Just define statics on your extension, or use get_extra_config",
-			Deprecation::SCOPE_GLOBAL);
-
-		$statics = Injector::inst()
-			->get($extension, true, $args)
-			->$extraStaticsMethod($class, $extension);
-
-		if ($statics) {
-			return $statics;
-		}
-	}
 
 	public static function unload_extra_statics($class, $extension) {
 		throw new Exception('unload_extra_statics gone');
@@ -45,9 +25,10 @@ abstract class DataExtension extends Extension {
 	/**
 	 * Edit the given query object to support queries for this extension
 	 *
-	 * @param SQLQuery $query Query to augment.
+	 * @param SQLSelect $query Query to augment.
+	 * @param DataQuery $dataQuery Container DataQuery for this SQLSelect
 	 */
-	public function augmentSQL(SQLQuery &$query) {
+	public function augmentSQL(SQLSelect $query, DataQuery $dataQuery = null) {
 	}
 
 	/**

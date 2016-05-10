@@ -57,14 +57,6 @@ class MySQLDatabase extends SS_Database {
 	}
 
 	/**
-	 * @deprecated 4.0 Use "MySQLDatabase.connection_charset" config setting instead
-	 */
-	public static function set_connection_charset($charset = 'utf8') {
-		Deprecation::notice('4.0', 'Use "MySQLDatabase.connection_charset" config setting instead');
-		Config::inst()->update('MySQLDatabase', 'connection_charset', $charset);
-	}
-
-	/**
 	 * Sets the SQL mode
 	 *
 	 * @param string $mode Connection mode
@@ -144,7 +136,7 @@ class MySQLDatabase extends SS_Database {
 				MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$keywords' $boolean)
 				+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityKeywords' $boolean)
 			";
-			$match['File'] = "MATCH (Filename, Title, Content) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
+			$match['File'] = "MATCH (Name, Title) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
 
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*', '+', '-'), '', $keywords);
@@ -152,7 +144,7 @@ class MySQLDatabase extends SS_Database {
 			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
 					. "AGAINST ('$relevanceKeywords') "
 					. "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
-			$relevance['File'] = "MATCH (Filename, Title, Content) AGAINST ('$relevanceKeywords')";
+			$relevance['File'] = "MATCH (Name, Title) AGAINST ('$relevanceKeywords')";
 		} else {
 			$relevance['SiteTree'] = $relevance['File'] = 1;
 			$match['SiteTree'] = $match['File'] = "1 = 1";
@@ -174,14 +166,14 @@ class MySQLDatabase extends SS_Database {
 				"ClassName", "$baseClasses[SiteTree].\"ID\"", "ParentID",
 				"Title", "MenuTitle", "URLSegment", "Content",
 				"LastEdited", "Created",
-				"Filename" => "_{$charset}''", "Name" => "_{$charset}''",
+				"Name" => "_{$charset}''",
 				"Relevance" => $relevance['SiteTree'], "CanViewType"
 			),
 			'File' => array(
 				"ClassName", "$baseClasses[File].\"ID\"", "ParentID",
-				"Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content",
+				"Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content" => "_{$charset}''",
 				"LastEdited", "Created",
-				"Filename", "Name",
+				"Name",
 				"Relevance" => $relevance['File'], "CanViewType" => "NULL"
 			),
 		);

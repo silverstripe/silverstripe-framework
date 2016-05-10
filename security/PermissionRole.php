@@ -87,7 +87,7 @@ class PermissionRole extends DataObject {
 		return Permission::check('APPLY_ROLES', 'any', $member);
 	}
 
-	public function canCreate($member = null) {
+	public function canCreate($member = null, $context = array()) {
 		return Permission::check('APPLY_ROLES', 'any', $member);
 	}
 

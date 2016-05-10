@@ -102,7 +102,7 @@ es_AR:
     Help1: '<p>Importar uno o más grupos en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
     ResultDeleted: 'Se eliminaron %d grupos'
     ResultUpdated: 'Se actualizaron %d grupos'
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Anclar
     BUTTONINSERTLINK: 'Insertar enlace'
     BUTTONREMOVELINK: 'Quitar enlace'

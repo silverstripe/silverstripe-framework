@@ -20,13 +20,17 @@ DataObjectTest_Team:
 DataObjectTest_Player:
   captain1:
     FirstName: Captain
+    Surname: Zookeeper
     ShirtNumber: 007
     FavouriteTeam: =>DataObjectTest_Team.team1
     Teams: =>DataObjectTest_Team.team1
+    FoundingTeams: =>DataObjectTest_Team.team1
     IsRetired: 1
   captain2:
     FirstName: Captain 2
+    Surname: Aaron
     Teams: =>DataObjectTest_Team.team2
+    FoundingTeams: =>DataObjectTest_Team.team2
   player1:
     FirstName: Player 1
   player2:
@@ -62,6 +66,7 @@ DataObjectTest_TeamComment:
 DataObjectTest_Fan:
   fan1:
     Name: Damian
+    Email: damian@thefans.com
     Favourite: =>DataObjectTest_Team.team1
   fan2:
     Name: Stephen
@@ -69,10 +74,14 @@ DataObjectTest_Fan:
     SecondFavourite: =>DataObjectTest_Team.team2
   fan3:
     Name: Richard
+    Email: richie@richers.com
     Favourite: =>DataObjectTest_Team.team1
   fan4:
     Name: Mitch
     Favourite: =>DataObjectTest_SubTeam.subteam1
+  fan5:
+    Name: Hamish
+    Email: ''
 DataObjectTest_Company:
   company1:
     Name: Company corp

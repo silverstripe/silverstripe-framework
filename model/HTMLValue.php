@@ -20,7 +20,6 @@ abstract class SS_HTMLValue extends ViewableData {
 	abstract public function setContent($fragment);
 
 	/**
-	 * @param string $content
 	 * @return string
 	 */
 	public function getContent() {
@@ -54,6 +53,11 @@ abstract class SS_HTMLValue extends ViewableData {
 		$res = preg_replace_callback('/__HTMLVALUE_(\d+)/', function($matches) use ($attrs) {
 			return Convert::raw2att($attrs[$matches[0]]);
 		}, $res);
+
+		// Prevent &nbsp; being encoded as literal utf-8 characters
+		// Possible alternative solution: http://stackoverflow.com/questions/2142120/php-encoding-with-domdocument
+		$from = mb_convert_encoding('&nbsp;', 'utf-8', 'html-entities');
+		$res = str_replace($from, '&nbsp;', $res);
 
 		return $res;
 	}

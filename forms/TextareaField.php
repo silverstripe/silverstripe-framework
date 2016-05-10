@@ -18,6 +18,17 @@
  * @subpackage fields-basic
  */
 class TextareaField extends FormField {
+
+	/**
+	 * Value should be XML
+	 *
+	 * @var array
+	 */
+	private static $casting = array(
+		'Value' => 'Text',
+		'ValueEntities' => 'HTMLText',
+	);
+
 	/**
 	 * Visible number of text lines.
 	 *
@@ -46,6 +57,15 @@ class TextareaField extends FormField {
 	}
 
 	/**
+	 * Gets number of rows
+	 *
+	 * @return int
+	 */
+	public function getRows() {
+		return $this->rows;
+	}
+
+	/**
 	 * Set the number of columns in the textarea
 	 *
 	 * @param int $cols
@@ -59,14 +79,23 @@ class TextareaField extends FormField {
 	}
 
 	/**
+	 * Gets the number of columns in this textarea
+	 *
+	 * @return int
+	 */
+	public function getColumns() {
+		return $this->cols;
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),
 			array(
-				'rows' => $this->rows,
-				'cols' => $this->cols,
+				'rows' => $this->getRows(),
+				'cols' => $this->getColumns(),
 				'value' => null,
 				'type' => null
 			)
@@ -88,9 +117,13 @@ class TextareaField extends FormField {
 	}
 
 	/**
-	 * @return string
+	 * Return value with all values encoded in html entities
+	 *
+	 * Invoke with $ValueEntities.RAW to suppress HTMLText parsing shortcodes.
+	 *
+	 * @return string Raw HTML
 	 */
-	public function Value() {
-		return htmlentities($this->value, ENT_COMPAT, 'UTF-8');
+	public function ValueEntities() {
+		return htmlentities($this->Value(), ENT_COMPAT, 'UTF-8');
 	}
 }

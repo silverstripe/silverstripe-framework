@@ -1,0 +1,21 @@
+ChangeSetTest_Base:
+  base:
+    Foo: 1
+ChangeSetTest_End:
+  end1:
+    Baz: 1
+  end2:
+    Baz: 2
+ChangeSetTest_EndChild:
+  endchild1:
+    Baz: 3
+    Qux: 3
+ChangeSetTest_Mid:
+  mid1:
+    Bar: 1
+    Base: =>ChangeSetTest_Base.base
+    End: =>ChangeSetTest_End.end1
+  mid2:
+    Bar: 2
+    Base: =>ChangeSetTest_Base.base
+    End: =>ChangeSetTest_End.end2

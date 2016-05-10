@@ -12,6 +12,7 @@
  * @subpackage core
  */
 abstract class Extension {
+
 	/**
 	 * This is used by extensions designed to be applied to controllers.
 	 * It works the same way as {@link Controller::$allowed_actions}.
@@ -32,10 +33,12 @@ abstract class Extension {
 	protected $ownerBaseClass;
 
 	/**
-	 * Reference counter to ensure that the owner isn't cleared until clearOwner() has
-	 * been called as many times as setOwner()
+	 * Ownership stack for recursive methods.
+	 * Last item is current owner.
+	 *
+	 * @var array
 	 */
-	private $ownerRefs = 0;
+	private $ownerStack = [];
 
 	public $class;
 
@@ -55,6 +58,7 @@ abstract class Extension {
 
 	/**
 	 * Set the owner of this extension.
+	 *
 	 * @param Object $owner The owner object,
 	 * @param string $ownerBaseClass The base class that the extension is applied to; this may be
 	 * the class of owner, or it may be a parent.  For example, if Versioned was applied to SiteTree,
@@ -62,17 +66,32 @@ abstract class Extension {
 	 * would be 'SiteTree'.
 	 */
 	public function setOwner($owner, $ownerBaseClass = null) {
-		if($owner) $this->ownerRefs++;
+		if($owner) {
+			$this->ownerStack[] = $owner;
+		}
 		$this->owner = $owner;
 
-		if($ownerBaseClass) $this->ownerBaseClass = $ownerBaseClass;
-		else if(!$this->ownerBaseClass && $owner) $this->ownerBaseClass = $owner->class;
+		// Set ownerBaseClass
+		if($ownerBaseClass) {
+			$this->ownerBaseClass = $ownerBaseClass;
+		} elseif(!$this->ownerBaseClass && $owner) {
+			$this->ownerBaseClass = get_class($owner);
+		}
 	}
 
+	/**
+	 * Clear the current owner, and restore extension to the state prior to the last setOwner()
+	 */
 	public function clearOwner() {
-		if($this->ownerRefs <= 0) user_error("clearOwner() called more than setOwner()", E_USER_WARNING);
-		$this->ownerRefs--;
-		if($this->ownerRefs == 0) $this->owner = null;
+		if(empty($this->ownerStack)) {
+			throw new BadMethodCallException("clearOwner() called more than setOwner()");
+		}
+		array_pop($this->ownerStack);
+		if($this->ownerStack) {
+			$this->owner = end($this->ownerStack);
+		} else {
+			$this->owner = null;
+		}
 	}
 
 	/**
@@ -86,17 +105,15 @@ abstract class Extension {
 
 	/**
 	 * Helper method to strip eval'ed arguments from a string
-	 * thats passed to {@link DataObject::$extensions} or
+	 * that's passed to {@link DataObject::$extensions} or
 	 * {@link Object::add_extension()}.
 	 *
 	 * @param string $extensionStr E.g. "Versioned('Stage','Live')"
 	 * @return string Extension classname, e.g. "Versioned"
 	 */
 	public static function get_classname_without_arguments($extensionStr) {
-		return (($p = strpos($extensionStr, '(')) !== false) ? substr($extensionStr, 0, $p) : $extensionStr;
+		$parts = explode('(', $extensionStr);
+		return $parts[0];
 	}
 
-
-
 }
-

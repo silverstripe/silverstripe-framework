@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Model\FieldType\DBComposite;
+
 /**
  * Subclass of {@link DataList} representing a many_many relation.
  *
@@ -88,7 +90,7 @@ class ManyManyList extends RelationList {
 		foreach($this->extraFields as $field => $spec) {
 			$obj = Object::create_from_string($spec);
 
-			if($obj instanceof CompositeDBField) {
+			if($obj instanceof DBComposite) {
 				$this->_compositeExtraFields[$field] = array();
 
 				// append the composite field names to the select
@@ -122,18 +124,17 @@ class ManyManyList extends RelationList {
 				// convert joined extra fields into their composite field types.
 				$value = array();
 
-				foreach($composed as $subField => $subSpec) {
-					if(isset($row[$fieldName . $subSpec])) {
-						$value[$subSpec] = $row[$fieldName . $subSpec];
+				foreach($composed as $subField) {
+					if(isset($row[$fieldName . $subField])) {
+						$value[$subField] = $row[$fieldName . $subField];
 
 						// don't duplicate data in the record
-						unset($row[$fieldName . $subSpec]);
+						unset($row[$fieldName . $subField]);
 					}
 				}
 
 				$obj = Object::create_from_string($this->extraFields[$fieldName], $fieldName);
 				$obj->setValue($value, null, false);
-
 				$add[$fieldName] = $obj;
 			}
 		}
@@ -147,14 +148,6 @@ class ManyManyList extends RelationList {
 		return $dataObject;
 	}
 
-	/**
-	 * Return a filter expression for when getting the contents of the
-	 * relationship for some foreign ID
-	 *
-	 * @param int $id
-	 *
-	 * @return string
-	 */
 	protected function foreignIDFilter($id = null) {
 		if ($id === null) {
 			$id = $this->getForeignID();
@@ -220,7 +213,7 @@ class ManyManyList extends RelationList {
 				// With the current query, simply add the foreign and local conditions
 				// The query can be a bit odd, especially if custom relation classes
 				// don't join expected tables (@see Member_GroupSet for example).
-				$query = new SQLQuery("*", "\"{$this->joinTable}\"");
+				$query = new SQLSelect("*", "\"{$this->joinTable}\"");
 				$query->addWhere($foreignFilter);
 				$query->addWhere(array(
 					"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
@@ -363,7 +356,7 @@ class ManyManyList extends RelationList {
 		foreach ($this->extraFields as $fieldName => $dbFieldSpec) {
 			$cleanExtraFields[] = "\"{$fieldName}\"";
 		}
-		$query = new SQLQuery($cleanExtraFields, "\"{$this->joinTable}\"");
+		$query = new SQLSelect($cleanExtraFields, "\"{$this->joinTable}\"");
 		$filter = $this->foreignIDWriteFilter($this->getForeignID());
 		if($filter) {
 			$query->setWhere($filter);

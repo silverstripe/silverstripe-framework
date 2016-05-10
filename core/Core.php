@@ -62,6 +62,10 @@ gc_enable();
 // Include the files needed the initial manifest building, as well as any files
 // that are needed for the boostrap process on every request.
 require_once 'cache/Cache.php';
+require_once 'core/CustomMethods.php';
+require_once 'core/Extensible.php';
+require_once 'core/Injectable.php';
+require_once 'core/Configurable.php';
 require_once 'core/Object.php';
 require_once 'core/ClassInfo.php';
 require_once 'core/DAG.php';
@@ -70,9 +74,8 @@ require_once 'view/TemplateGlobalProvider.php';
 require_once 'control/Director.php';
 require_once 'dev/Debug.php';
 require_once 'dev/DebugView.php';
+require_once 'dev/CliDebugView.php';
 require_once 'dev/Backtrace.php';
-require_once 'dev/ZendLog.php';
-require_once 'dev/Log.php';
 require_once 'filesystem/FileFinder.php';
 require_once 'core/manifest/ManifestCache.php';
 require_once 'core/manifest/ClassLoader.php';
@@ -113,7 +116,7 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 }
 
 // Now that the class manifest is up, load the static configuration
-$configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
+$configManifest = new SS_ConfigStaticManifest();
 Config::inst()->pushConfigStaticManifest($configManifest);
 
 // And then the yaml configuration
@@ -136,8 +139,9 @@ if(Director::isLive()) {
 /**
  * Load error handlers
  */
-Debug::loadErrorHandlers();
 
+$errorHandler = Injector::inst()->get('ErrorHandler');
+$errorHandler->start();
 
 ///////////////////////////////////////////////////////////////////////////////
 // HELPER FUNCTIONS

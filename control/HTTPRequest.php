@@ -620,7 +620,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * If you specify shifting more than 1 item off, then the items will be returned as an array
 	 *
 	 * @param int $count Shift Count
-	 * @return String|Array
+	 * @return string|Array
 	 */
 	public function shift($count = 1) {
 		$return = array();
@@ -670,7 +670,7 @@ class SS_HTTPRequest implements ArrayAccess {
 			}
 		}
 
-		if ($headerOverrideIP) {
+		if ($headerOverrideIP && filter_var($headerOverrideIP, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
 			return $this->getIPFromHeaderValue($headerOverrideIP);
 		} elseif(isset($_SERVER['REMOTE_ADDR'])) {
 			return $_SERVER['REMOTE_ADDR'];

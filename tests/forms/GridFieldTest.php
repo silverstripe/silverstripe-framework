@@ -22,8 +22,8 @@ class GridFieldTest extends SapphireTest {
 	/**
 	 * @covers GridField::__construct
 	 * @covers GridField::getConfig
-	 * @covers GridField::setComponents
-	 * @covers GridField::getDefaultConfig
+	 * @covers GridFieldConfig_Base::__construct
+	 * @covers GridFieldConfig::addComponent
 	 */
 	public function testGridFieldDefaultConfig() {
 		$obj = new GridField('testfield', 'testfield');
@@ -45,8 +45,8 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::__construct
-	 * @covers GridField::setComponents
+	 * @covers GridFieldConfig::__construct
+	 * @covers GridFieldConfig::addComponent
 	 */
 	public function testGridFieldSetCustomConfig() {
 
@@ -116,6 +116,10 @@ class GridFieldTest extends SapphireTest {
 	 */
 	public function testGetStateData() {
 		$obj = new GridField('testfield', 'testfield');
+
+		// @todo - PHP 7.0.6 change requires __isset() to return true
+		// for each reference from left to right along an isset() invocation.
+		// See https://bugs.php.net/bug.php?id=62059
 
 		// Check value persistance
 		$this->assertEquals(15, $obj->State->NoValue(15));

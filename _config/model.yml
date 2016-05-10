@@ -1,0 +1,53 @@
+Injector:
+  Boolean:
+    class: SilverStripe\Model\FieldType\DBBoolean
+  Currency:
+    class: SilverStripe\Model\FieldType\DBCurrency
+  DBClassName:
+    class: SilverStripe\Model\FieldType\DBClassName
+  Date:
+    class: SilverStripe\Model\FieldType\DBDate
+  Datetime:
+    class: SilverStripe\Model\FieldType\DBDatetime
+  SS_Datetime:
+    class: SilverStripe\Model\FieldType\DBDatetime
+  Decimal:
+    class: SilverStripe\Model\FieldType\DBDecimal
+  Double:
+    class: SilverStripe\Model\FieldType\DBDouble
+  Enum:
+    class: SilverStripe\Model\FieldType\DBEnum
+  DBFile:
+    class: SilverStripe\Filesystem\Storage\DBFile
+  Float:
+    class: SilverStripe\Model\FieldType\DBFloat
+  ForeignKey:
+    class: SilverStripe\Model\FieldType\DBForeignKey
+  HTMLText:
+    class: SilverStripe\Model\FieldType\DBHTMLText
+  HTMLVarchar:
+    class: SilverStripe\Model\FieldType\DBHTMLVarchar
+  Int:
+    class: SilverStripe\Model\FieldType\DBInt
+  Locale:
+    class: SilverStripe\Model\FieldType\DBLocale
+  DBLocale:
+    class: SilverStripe\Model\FieldType\DBLocale
+  Money:
+    class: SilverStripe\Model\FieldType\DBMoney
+  MultiEnum:
+    class: SilverStripe\Model\FieldType\DBMultiEnum
+  Percentage:
+    class: SilverStripe\Model\FieldType\DBPercentage
+  PolymorphicForeignKey:
+    class: SilverStripe\Model\FieldType\DBPolymorphicForeignKey
+  PrimaryKey:
+    class: SilverStripe\Model\FieldType\DBPrimaryKey
+  Text:
+    class: SilverStripe\Model\FieldType\DBText
+  Time:
+    class: SilverStripe\Model\FieldType\DBTime
+  Varchar:
+    class: SilverStripe\Model\FieldType\DBVarchar
+  Year:
+    class: SilverStripe\Model\FieldType\DBYear

@@ -9,6 +9,9 @@
  * @subpackage fields-formattedinput
  */
 class NumericField extends TextField {
+
+	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DECIMAL;
+
 	/**
 	 * Override locale for this field.
 	 *

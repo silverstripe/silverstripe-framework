@@ -76,17 +76,6 @@ foreach ($dirsToCheck as $dir) {
 	}
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// GLOBALS AND DEFINE SETTING
-
-function stripslashes_recursively(&$array) {
-	trigger_error('stripslashes_recursively is deprecated in 3.2', E_USER_DEPRECATED);
-	foreach($array as $k => $v) {
-		if(is_array($v)) stripslashes_recursively($array[$k]);
-		else $array[$k] = stripslashes($v);
-	}
-}
-
 /**
  * Validate whether the request comes directly from a trusted server or not
  * This is necessary to validate whether or not the values of X-Forwarded-
@@ -122,7 +111,7 @@ if(!defined('TRUSTED_PROXY')) {
  */
 if(!isset($_SERVER['HTTP_HOST'])) {
 	// HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
-	global $_FILE_TO_URL_MAPPING;	
+	global $_FILE_TO_URL_MAPPING;
 	if(isset($_FILE_TO_URL_MAPPING)) {
 		$fullPath = $testPath = realpath($_SERVER['SCRIPT_FILENAME']);
 		while($testPath && $testPath != '/' && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
@@ -163,18 +152,6 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	 * need checking
 	 */
 } else {
-	/**
-	 * Fix magic quotes setting
-	 */
-	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
-		if($_REQUEST) stripslashes_recursively($_REQUEST);
-		if($_GET) stripslashes_recursively($_GET);
-		if($_POST) stripslashes_recursively($_POST);
-		if($_COOKIE) stripslashes_recursively($_COOKIE);
-		// No more magic_quotes!
-		trigger_error('get_magic_quotes_gpc support is being removed from Silverstripe. Please set this to off in ' .
-		' your php.ini and see http://php.net/manual/en/security.magicquotes.php', E_USER_DEPRECATED);
-	}
 
 	/**
 	 * Fix HTTP_HOST from reverse proxies
@@ -182,7 +159,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	$trustedProxyHeader = (defined('SS_TRUSTED_PROXY_HOST_HEADER'))
 		? SS_TRUSTED_PROXY_HOST_HEADER
 		: 'HTTP_X_FORWARDED_HOST';
-		
+
 	if (TRUSTED_PROXY && !empty($_SERVER[$trustedProxyHeader])) {
 		// Get the first host, in case there's multiple separated through commas
 		$_SERVER['HTTP_HOST'] = strtok($_SERVER[$trustedProxyHeader], ',');

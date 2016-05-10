@@ -66,12 +66,12 @@ class SS_HTTPResponse {
 	);
 
 	/**
-	 * @var Int
+	 * @var int
 	 */
 	protected $statusCode = 200;
 
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected $statusDescription = "OK";
 
@@ -104,8 +104,8 @@ class SS_HTTPResponse {
 	}
 
 	/**
-	 * @param String $code
-	 * @param String $description Optional. See {@link setStatusDescription()}.
+	 * @param string $code
+	 * @param string $description Optional. See {@link setStatusDescription()}.
 	 *  No newlines are allowed in the description.
 	 *  If omitted, will default to the standard HTTP description
 	 *  for the given $code value (see {@link $status_codes}).
@@ -124,7 +124,7 @@ class SS_HTTPResponse {
 	 * The text to be given alongside the status code ("reason phrase").
 	 * Caution: Will be overwritten by {@link setStatusCode()}.
 	 *
-	 * @param String $description
+	 * @param string $description
 	 * @return SS_HTTPRequest $this
 	 */
 	public function setStatusDescription($description) {
@@ -133,7 +133,7 @@ class SS_HTTPResponse {
 	}
 
 	/**
-	 * @return Int
+	 * @return int
 	 */
 	public function getStatusCode() {
 		return $this->statusCode;
@@ -244,9 +244,9 @@ class SS_HTTPResponse {
 			echo <<<EOT
 <p>Redirecting to <a href="{$urlATT}" title="Click this link if your browser does not redirect you">{$title}</a></p>
 <meta http-equiv="refresh" content="1; url={$urlATT}" />
-<script type="text/javascript">setTimeout(function(){
+<script type="application/javascript">setTimeout(function(){
 	window.location.href = "{$urlJS}";
-}, 50);</script>";
+}, 50);</script>
 EOT
 			;
 		} else {
@@ -271,7 +271,11 @@ EOT
 			// an error, and the response doesn't have any body yet that might contain
 			// a more specific error description.
 			if(Director::isLive() && $this->isError() && !$this->body) {
-				Debug::friendlyError($this->statusCode, $this->getStatusDescription());
+				$formatter = Injector::inst()->get('FriendlyErrorFormatter');
+				echo $formatter->format(array(
+					'code' => $this->statusCode
+				));
+
 			} else {
 				echo $this->body;
 			}
@@ -309,7 +313,7 @@ class SS_HTTPResponse_Exception extends Exception {
 	protected $response;
 
 	/**
-	 * @param  string|SS_HTTPResponse body Either the plaintext content of the error message, or an SS_HTTPResponse
+	 * @param string|SS_HTTPResponse body Either the plaintext content of the error message, or an SS_HTTPResponse
 	 *                                     object representing it.  In either case, the $statusCode and
 	 *                                     $statusDescription will be the HTTP status of the resulting response.
 	 * @see SS_HTTPResponse::__construct();

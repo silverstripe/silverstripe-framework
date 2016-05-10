@@ -1,0 +1,221 @@
+$btn-icon-cross: -0px -0px 15px 15px;
+$btn-icon-accept: -0px -15px 16px 16px;
+$btn-icon-add: -0px -31px 16px 16px;
+$btn-icon-unpublish: -0px -47px 16px 16px;
+$btn-icon-add_disabled: -0px -63px 16px 16px;
+$btn-icon-addpage: -0px -79px 16px 16px;
+$btn-icon-addpage_disabled: -0px -95px 16px 16px;
+$btn-icon-arrow-circle-135-left: -0px -111px 16px 16px;
+$btn-icon-arrow-circle-double: -0px -127px 16px 16px;
+$btn-icon-back: -0px -143px 16px 16px;
+$btn-icon-back_disabled: -0px -159px 16px 16px;
+$btn-icon-chain--arrow: -0px -175px 16px 16px;
+$btn-icon-chain--exclamation: -0px -191px 16px 16px;
+$btn-icon-chain--minus: -0px -207px 16px 16px;
+$btn-icon-chain--pencil: -0px -223px 16px 16px;
+$btn-icon-chain--plus: -0px -239px 16px 16px;
+$btn-icon-chain-small: -0px -255px 16px 16px;
+$btn-icon-chain-unchain: -0px -271px 16px 16px;
+$btn-icon-chain: -0px -287px 16px 16px;
+$btn-icon-cross-circle: -0px -303px 16px 16px;
+$btn-icon-cross-circle_disabled: -0px -319px 16px 16px;
+$btn-icon-unpublish_disabled: -0px -335px 16px 16px;
+$btn-icon-decline: -0px -351px 16px 16px;
+$btn-icon-decline_disabled: -0px -367px 16px 16px;
+$btn-icon-delete: -0px -383px 16px 16px;
+$btn-icon-accept_disabled: -0px -399px 16px 16px;
+$btn-icon-disk: -0px -415px 16px 16px;
+$btn-icon-document--pencil: -0px -431px 16px 16px;
+$btn-icon-download-csv: -0px -447px 16px 16px;
+$btn-icon-drive-upload: -0px -463px 16px 16px;
+$btn-icon-drive-upload_disabled: -0px -479px 16px 16px;
+$btn-icon-grid_print: -0px -495px 16px 16px;
+$btn-icon-information: -0px -511px 16px 16px;
+$btn-icon-magnifier: -0px -527px 16px 16px;
+$btn-icon-minus-circle: -0px -543px 16px 16px;
+$btn-icon-minus-circle_disabled: -0px -559px 16px 16px;
+$btn-icon-navigation: -0px -575px 16px 16px;
+$btn-icon-navigation_disabled: -0px -591px 16px 16px;
+$btn-icon-network-cloud: -0px -607px 16px 16px;
+$btn-icon-network-cloud_disabled: -0px -623px 16px 16px;
+$btn-icon-pencil: -0px -639px 16px 16px;
+$btn-icon-pencil_disabled: -0px -655px 16px 16px;
+$btn-icon-plug-disconnect-prohibition: -0px -671px 16px 16px;
+$btn-icon-plug-disconnect-prohibition_disabled: -0px -687px 16px 16px;
+$btn-icon-preview: -0px -703px 16px 16px;
+$btn-icon-preview_disabled: -0px -719px 16px 16px;
+$btn-icon-settings: -0px -735px 16px 16px;
+$btn-icon-settings_disabled: -0px -751px 16px 16px;
+$btn-icon-deleteLight: -0px -767px 13px 17px;
+$btn-icon-addMedia: -0px -784px 19px 20px;
+$sprites-32x32-menu-arrow-up: -0px -0px 8px 6px;
+$sprites-32x32-menu-arrow-down: -0px -6px 8px 6px;
+$sprites-32x32-menu-arrow-deselected-down: -0px -12px 8px 6px;
+$sprites-32x32-menu-arrow-deselected-up: -0px -18px 8px 6px;
+$sprites-32x32-arrow_down_darker: -0px -24px 16px 16px;
+$sprites-32x32-arrow_down_lighter: -0px -40px 16px 16px;
+$sprites-32x32-logout: -0px -56px 16px 16px;
+$sprites-32x32-arrow_up_lighter: -0px -72px 16px 16px;
+$sprites-32x32-arrow_up_darker: -0px -88px 16px 16px;
+$sprites-32x32-preview_dual_window: -0px -104px 20px 17px;
+$sprites-32x32-preview_tablet: -0px -121px 20px 17px;
+$sprites-32x32-preview_split: -0px -138px 20px 17px;
+$sprites-32x32-preview_auto: -0px -155px 20px 17px;
+$sprites-32x32-preview_desktop: -0px -172px 20px 17px;
+$sprites-32x32-preview_preview: -0px -189px 20px 17px;
+$sprites-32x32-preview_edit: -0px -206px 20px 17px;
+$sprites-32x32-preview_mobile: -0px -223px 20px 17px;
+$sprites-32x32-numeric-label: -0px -240px 9px 26px;
+$sprites-32x32-dialog-close-over: -0px -266px 30px 30px;
+$sprites-32x32-dialog-close: -0px -296px 30px 30px;
+$sprites-32x32-blue-document-text: -0px -326px 32px 32px;
+$sprites-32x32-blue-document: -0px -358px 32px 32px;
+$sprites-32x32-blue-folder-horizontal: -0px -390px 32px 32px;
+$sprites-32x32-blue-folder: -0px -422px 32px 32px;
+$sprites-32x32-table: -0px -454px 32px 32px;
+$sprites-32x32-blue-document-horizontal: -0px -486px 32px 32px;
+$sprites-32x32-document-horizontal: -0px -518px 32px 32px;
+$sprites-32x32-document-text-image: -0px -550px 32px 32px;
+$sprites-32x32-document-text: -0px -582px 32px 32px;
+$sprites-32x32-document: -0px -614px 32px 32px;
+$sprites-32x32-folder-horizontal: -0px -646px 32px 32px;
+$sprites-32x32-folder: -0px -678px 32px 32px;
+$sprites-32x32-blue-document-text-image: -0px -710px 32px 32px;
+$sprites-32x32-image: -0px -742px 32px 32px;
+$sprites-32x32-script-text: -0px -774px 32px 32px;
+$sprites-32x32-script: -0px -806px 32px 32px;
+$sprites-32x32-image-sunset: -0px -838px 32px 32px;
+$sprites-64x64-2x-tab-edit-hover: -0px -0px 80px 80px;
+$sprites-64x64-2x-tab-edit: -0px -80px 80px 80px;
+$sprites-64x64-2x-tab-list-hover: -0px -160px 80px 80px;
+$sprites-64x64-2x-tab-list: -0px -240px 80px 80px;
+$sprites-64x64-2x-tab-tree-hover: -0px -320px 80px 80px;
+$sprites-64x64-2x-tab-tree: -0px -400px 80px 80px;
+$sprites-64x64-tab-list-hover: -0px -0px 40px 40px;
+$sprites-64x64-tab-tree: -0px -40px 40px 40px;
+$sprites-64x64-tab-edit: -0px -80px 40px 40px;
+$sprites-64x64-tab-gallery-hover: -0px -120px 40px 40px;
+$sprites-64x64-tab-gallery: -0px -160px 40px 40px;
+$sprites-64x64-tab-edit-hover: -0px -200px 40px 40px;
+$sprites-64x64-tab-list: -0px -240px 40px 40px;
+$sprites-64x64-tab-search-hover: -0px -280px 40px 40px;
+$sprites-64x64-tab-search: -0px -320px 40px 40px;
+$sprites-64x64-tab-tree-hover: -0px -360px 40px 40px;
+$sprites-64x64-preview: -0px -400px 50px 44px;
+$sprites-32x32-2x-menu-arrow-down: -0px -0px 16px 12px;
+$sprites-32x32-2x-menu-arrow-up: -0px -12px 16px 12px;
+$sprites-32x32-2x-menu-arrow-deselected-down: -0px -24px 16px 12px;
+$sprites-32x32-2x-menu-arrow-deselected-up: -0px -36px 16px 12px;
+$sprites-32x32-2x-arrow_down_darker: -0px -48px 32px 32px;
+$sprites-32x32-2x-arrow_down_lighter: -0px -80px 32px 32px;
+$sprites-32x32-2x-logout: -0px -112px 32px 32px;
+$sprites-32x32-2x-arrow_up_darker: -0px -144px 32px 32px;
+$sprites-32x32-2x-arrow_up_lighter: -0px -176px 32px 32px;
+$sprites-32x32-2x-preview_auto: -0px -208px 40px 34px;
+$sprites-32x32-2x-preview_desktop: -0px -242px 40px 34px;
+$sprites-32x32-2x-preview_edit: -0px -276px 40px 34px;
+$sprites-32x32-2x-preview_mobile: -0px -310px 40px 34px;
+$sprites-32x32-2x-preview_preview: -0px -344px 40px 34px;
+$sprites-32x32-2x-preview_split: -0px -378px 40px 34px;
+$sprites-32x32-2x-preview_tablet: -0px -412px 40px 34px;
+$sprites-32x32-2x-dialog-close: -0px -446px 60px 60px;
+$sprites-32x32-2x-dialog-close-over: -0px -506px 60px 60px;
+$menu-icons-16x16-2x-home: -0px -0px 32px 32px;
+$menu-icons-16x16-2x-blog: -0px -32px 32px 32px;
+$menu-icons-16x16-2x-community: -0px -64px 32px 32px;
+$menu-icons-16x16-2x-db: -0px -96px 32px 32px;
+$menu-icons-16x16-2x-document: -0px -128px 32px 32px;
+$menu-icons-16x16-2x-gears: -0px -160px 32px 32px;
+$menu-icons-16x16-2x-collection: -0px -192px 32px 32px;
+$menu-icons-16x16-2x-information: -0px -224px 32px 32px;
+$menu-icons-16x16-2x-network: -0px -256px 32px 32px;
+$menu-icons-16x16-2x-pencil: -0px -288px 32px 32px;
+$menu-icons-16x16-2x-picture: -0px -320px 32px 32px;
+$menu-icons-16x16-2x-pie-chart: -0px -352px 32px 32px;
+$menu-icons-24x24-home: -0px -0px 24px 24px;
+$menu-icons-24x24-blog: -0px -24px 24px 24px;
+$menu-icons-24x24-community: -0px -48px 24px 24px;
+$menu-icons-24x24-db: -0px -72px 24px 24px;
+$menu-icons-24x24-document: -0px -96px 24px 24px;
+$menu-icons-24x24-gears: -0px -120px 24px 24px;
+$menu-icons-24x24-collection: -0px -144px 24px 24px;
+$menu-icons-24x24-information: -0px -168px 24px 24px;
+$menu-icons-24x24-network: -0px -192px 24px 24px;
+$menu-icons-24x24-pencil: -0px -216px 24px 24px;
+$menu-icons-24x24-picture: -0px -240px 24px 24px;
+$menu-icons-24x24-pie-chart: -0px -264px 24px 24px;
+$menu-icons-16x16-home: -0px -0px 16px 16px;
+$menu-icons-16x16-blog: -0px -16px 16px 16px;
+$menu-icons-16x16-community: -0px -32px 16px 16px;
+$menu-icons-16x16-db: -0px -48px 16px 16px;
+$menu-icons-16x16-document: -0px -64px 16px 16px;
+$menu-icons-16x16-gears: -0px -80px 16px 16px;
+$menu-icons-16x16-collection: -0px -96px 16px 16px;
+$menu-icons-16x16-information: -0px -112px 16px 16px;
+$menu-icons-16x16-network: -0px -128px 16px 16px;
+$menu-icons-16x16-pencil: -0px -144px 16px 16px;
+$menu-icons-16x16-picture: -0px -160px 16px 16px;
+$menu-icons-16x16-pie-chart: -0px -176px 16px 16px;
+$menu-icons-24x24-2x-home: -0px -0px 48px 48px;
+$menu-icons-24x24-2x-blog: -0px -48px 48px 48px;
+$menu-icons-24x24-2x-db: -0px -96px 48px 48px;
+$menu-icons-24x24-2x-document: -0px -144px 48px 48px;
+$menu-icons-24x24-2x-gears: -0px -192px 48px 48px;
+$menu-icons-24x24-2x-community: -0px -240px 48px 48px;
+$menu-icons-24x24-2x-information: -0px -288px 48px 48px;
+$menu-icons-24x24-2x-network: -0px -336px 48px 48px;
+$menu-icons-24x24-2x-pencil: -0px -384px 48px 48px;
+$menu-icons-24x24-2x-picture: -0px -432px 48px 48px;
+$menu-icons-24x24-2x-pie-chart: -0px -480px 48px 48px;
+@mixin sprite-width($sprite) {
+  width: nth($sprite, 3);
+}
+@mixin sprite-height($sprite) {
+  height: nth($sprite, 4);
+}
+@function sprite-width($sprite) {
+  @return nth($sprite, 3);
+}
+@function sprite-height($sprite) {
+  @return nth($sprite, 4);
+}
+@mixin sprite-position($sprite) {
+  $sprite-offset-x: nth($sprite, 1);
+  $sprite-offset-y: nth($sprite, 2);
+  background-position: $sprite-offset-x $sprite-offset-y;
+}
+@mixin sprite($sprite, $display: block) {
+  @include sprite-position($sprite);
+  background-repeat: no-repeat;
+  overflow: hidden;
+  display: $display;
+  @include sprite-width($sprite);
+  @include sprite-height($sprite);
+}
+.icon-btn-icon {
+  background-image: url('../images/sprites/sprite-btn-icon.png');
+}
+.icon-sprites-32x32 {
+  background-image: url('../images/sprites/sprite-sprites-32x32.png');
+}
+.icon-sprites-64x64-2x {
+  background-image: url('../images/sprites/sprite-sprites-64x64-2x.png');
+}
+.icon-sprites-64x64 {
+  background-image: url('../images/sprites/sprite-sprites-64x64.png');
+}
+.icon-sprites-32x32-2x {
+  background-image: url('../images/sprites/sprite-sprites-32x32-2x.png');
+}
+.icon-menu-icons-16x16-2x {
+  background-image: url('../images/sprites/sprite-menu-icons-16x16-2x.png');
+}
+.icon-menu-icons-24x24 {
+  background-image: url('../images/sprites/sprite-menu-icons-24x24.png');
+}
+.icon-menu-icons-16x16 {
+  background-image: url('../images/sprites/sprite-menu-icons-16x16.png');
+}
+.icon-menu-icons-24x24-2x {
+  background-image: url('../images/sprites/sprite-menu-icons-24x24-2x.png');
+}

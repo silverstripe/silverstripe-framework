@@ -1,145 +1,224 @@
-<?php
+	<?php
 
-class DbDatetimeTest extends FunctionalTest {
+use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\Model\FieldType\DBDatetime;
 
-	protected static $fixture_file = 'DbDatetimeTest.yml';
+/**
+ * Tests for {@link Datetime} class.
+ *
+ * @todo Current date comparisons are slightly dodgy, as they only compare
+ *  the current date (not hour, minute, second) and assume that the date
+ *  doesn't switch throughout the test execution. This means tests might
+ *  fail when run at 23:59:59.
+ *
+ * @package framework
+ * @subpackage tests
+ */
+class DBDatetimeTest extends SapphireTest {
+	public function testNowWithSystemDate() {
+		$systemDatetime = DBField::create_field('Datetime', date('Y-m-d H:i:s'));
+		$nowDatetime = DBDatetime::now();
 
-	protected $extraDataObjects = array('DbDatetimeTest_Team');
-
-	protected $offset;
-
-	protected $adapter;
-
-	/**
-	 * Check if dates match more or less. This takes into the account the db query
-	 * can overflow to the next second giving offset readings.
-	 */
-	private function matchesRoughly($date1, $date2, $comment = '', $offset) {
-		$allowedDifference = 5 + abs($offset); // seconds
-
-		$time1 = is_numeric($date1) ? $date1 : strtotime($date1);
-		$time2 = is_numeric($date2) ? $date2 : strtotime($date2);
-
-		$this->assertTrue(abs($time1-$time2)<$allowedDifference,
-			$comment . " (times differ by " . abs($time1-$time2) . " seconds)");
+		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
 	}
 
-	private function getDbNow() {
-		$query = 'SELECT ' . $this->adapter->formattedDatetimeClause('now', '%U');
-		return DB::query($query)->value();
+	public function testNowWithMockDate() {
+		// Test setting
+		$mockDate = '2001-12-31 22:10:59';
+		DBDatetime::set_mock_now($mockDate);
+		$systemDatetime = DBField::create_field('Datetime', date('Y-m-d H:i:s'));
+		$nowDatetime = DBDatetime::now();
+		$this->assertNotEquals($systemDatetime->Date(), $nowDatetime->Date());
+		$this->assertEquals($nowDatetime->getValue(), $mockDate);
+
+		// Test clearing
+		DBDatetime::clear_mock_now();
+		$systemDatetime = DBField::create_field('Datetime', date('Y-m-d H:i:s'));
+		$nowDatetime = DBDatetime::now();
+		$this->assertEquals($systemDatetime->Date(), $nowDatetime->Date());
 	}
 
-	/**
-	 * Needs to be run within a test*() context.
-	 *
-	 * @return Int Offset in seconds
-	 */
-	private function checkPreconditions() {
-		// number of seconds of php and db time are out of sync
-		$offset = time() - strtotime(DB::query('SELECT ' . DB::get_conn()->now())->value());
-		$threshold = 5; // seconds
+	public function testSetNullAndZeroValues() {
+		$date = DBField::create_field('Datetime', '');
+		$this->assertNull($date->getValue(), 'Empty string evaluates to NULL');
 
-		if($offset > 5) {
-			$this->markTestSkipped('The time of the database is out of sync with the webserver by '
-				. abs($offset) . ' seconds.');
+		$date = DBField::create_field('Datetime', null);
+		$this->assertNull($date->getValue(), 'NULL is set as NULL');
+
+		$date = DBField::create_field('Datetime', false);
+		$this->assertNull($date->getValue(), 'Boolean FALSE evaluates to NULL');
+
+		$date = DBField::create_field('Datetime', '0');
+		$this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'String zero is UNIX epoch time');
+
+		$date = DBField::create_field('Datetime', 0);
+		$this->assertEquals('1970-01-01 00:00:00', $date->getValue(), 'Numeric zero is UNIX epoch time');
+	}
+
+	public function testExtendedDateTimes() {
+		$date = DBField::create_field('Datetime', '1500-10-10 15:32:24');
+		$this->assertEquals('10 Oct 1500 15 32 24', $date->Format('d M Y H i s'));
+
+		$date = DBField::create_field('Datetime', '3000-10-10 15:32:24');
+		$this->assertEquals('10 Oct 3000 15 32 24', $date->Format('d M Y H i s'));
+	}
+
+	public function testNice() {
+		$date = DBField::create_field('Datetime', '2001-12-31 22:10:59');
+		$this->assertEquals('31/12/2001 10:10pm', $date->Nice());
+	}
+
+	public function testNice24() {
+		$date = DBField::create_field('Datetime', '2001-12-31 22:10:59');
+		$this->assertEquals('31/12/2001 22:10', $date->Nice24());
+	}
+
+	public function testDate() {
+		$date = DBField::create_field('Datetime', '2001-12-31 22:10:59');
+		$this->assertEquals('31/12/2001', $date->Date());
+	}
+
+	public function testTime() {
+		$date = DBField::create_field('Datetime', '2001-12-31 22:10:59');
+		$this->assertEquals('10:10pm', $date->Time());
+	}
+
+	public function testTime24() {
+		$date = DBField::create_field('Datetime', '2001-12-31 22:10:59');
+		$this->assertEquals('22:10', $date->Time24());
+	}
+
+	public function testURLDateTime(){
+		$date = DBField::create_field('Datetime', '2001-12-31 22:10:59');
+		$this->assertEquals('2001-12-31%2022:10:59', $date->URLDateTime());
+	}
+
+	public function testAgoInPast() {
+		DBDatetime::set_mock_now('2000-12-31 12:00:00');
+
+		$this->assertEquals(
+			'10 years ago',
+			DBField::create_field('Datetime', '1990-12-31 12:00:00')->Ago(),
+			'Exact past match on years'
+		);
+
+		$this->assertEquals(
+			'10 years ago',
+			DBField::create_field('Datetime', '1990-12-30 12:00:00')->Ago(),
+			'Approximate past match on years'
+		);
+
+		$this->assertEquals(
+			'1 year ago',
+			DBField::create_field('Datetime', '1999-12-30 12:00:12')->Ago(true, 1),
+			'Approximate past match in singular, significance=1'
+		);
+
+		$this->assertEquals(
+			'12 months ago',
+			DBField::create_field('Datetime', '1999-12-30 12:00:12')->Ago(),
+			'Approximate past match in singular'
+		);
+
+		$this->assertEquals(
+			'50 mins ago',
+			DBField::create_field('Datetime', '2000-12-31 11:10:11')->Ago(),
+			'Approximate past match on minutes'
+		);
+
+		$this->assertEquals(
+			'59 secs ago',
+			DBField::create_field('Datetime', '2000-12-31 11:59:01')->Ago(),
+			'Approximate past match on seconds'
+		);
+
+		$this->assertEquals(
+			'less than a minute ago',
+			DBField::create_field('Datetime', '2000-12-31 11:59:01')->Ago(false),
+			'Approximate past match on seconds with $includeSeconds=false'
+		);
+
+		$this->assertEquals(
+			'1 min ago',
+			DBField::create_field('Datetime', '2000-12-31 11:58:50')->Ago(false),
+			'Test between 1 and 2 minutes with includeSeconds=false'
+		);
+
+		$this->assertEquals(
+			'70 secs ago',
+			DBField::create_field('Datetime', '2000-12-31 11:58:50')->Ago(true),
+			'Test between 1 and 2 minutes with includeSeconds=true'
+		);
+
+		$this->assertEquals(
+			'4 mins ago',
+			DBField::create_field('Datetime', '2000-12-31 11:55:50')->Ago(),
+			'Past match on minutes'
+		);
+
+		$this->assertEquals(
+			'1 hour ago',
+			DBField::create_field('Datetime', '2000-12-31 10:50:58')->Ago(true, 1),
+			'Past match on hours, significance=1'
+		);
+
+		$this->assertEquals(
+			'3 hours ago',
+			DBField::create_field('Datetime', '2000-12-31 08:50:58')->Ago(),
+			'Past match on hours'
+		);
+
+		DBDatetime::clear_mock_now();
+	}
+
+	public function testAgoInFuture() {
+		DBDatetime::set_mock_now('2000-12-31 00:00:00');
+
+		$this->assertEquals(
+			'in 10 years',
+			DBField::create_field('Datetime', '2010-12-31 12:00:00')->Ago(),
+			'Exact past match on years'
+		);
+
+		$this->assertEquals(
+			'in 1 hour',
+			DBField::create_field('Datetime', '2000-12-31 1:01:05')->Ago(true, 1),
+			'Approximate past match on minutes, significance=1'
+		);
+
+		$this->assertEquals(
+			'in 61 mins',
+			DBField::create_field('Datetime', '2000-12-31 1:01:05')->Ago(),
+			'Approximate past match on minutes'
+		);
+
+		DBDatetime::clear_mock_now();
+	}
+
+	public function testFormatFromSettings() {
+
+		$memberID = $this->logInWithPermission();
+		$member = DataObject::get_by_id('Member', $memberID);
+		$member->DateFormat = 'dd/MM/YYYY';
+		$member->TimeFormat = 'hh:mm:ss';
+		$member->write();
+
+		$fixtures = array(
+			'2000-12-31 10:11:01' => '31/12/2000 10:11:01',
+			'2000-12-31 1:11:01' => '31/12/2000 01:11:01',
+			'12/12/2000 1:11:01' => '12/12/2000 01:11:01',
+			'2000-12-31' => '31/12/2000 12:00:00',
+			'2014-04-01 10:11:01' => '01/04/2014 10:11:01',
+			'10:11:01' => date('d/m/Y').' 10:11:01'
+		);
+
+		foreach($fixtures as $from => $to) {
+			$date = DBField::create_field('Datetime', $from);
+			// With member
+			$this->assertEquals($to, $date->FormatFromSettings($member));
+			// Without member
+			$this->assertEquals($to, $date->FormatFromSettings());
 		}
-
-		if(method_exists($this->adapter, 'supportsTimezoneOverride') && !$this->adapter->supportsTimezoneOverride()) {
-			$this->markTestSkipped("Database doesn't support timezone overrides");
-		}
-
-		return $offset;
 	}
 
-	public function setUp() {
-		parent::setUp();
-		$this->adapter = DB::get_conn();
-	}
-
-	public function testCorrectNow() {
-		$offset = $this->checkPreconditions();
-
-		$clause = $this->adapter->formattedDatetimeClause('now', '%U');
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->assertRegExp('/^\d*$/', (string) $result);
-		$this->assertTrue($result>0);
-	}
-
-	public function testDbDatetimeFormat() {
-		$offset = $this->checkPreconditions();
-
-		$clause = $this->adapter->formattedDatetimeClause('1973-10-14 10:30:00', '%H:%i, %d/%m/%Y');
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, date('H:i, d/m/Y', strtotime('1973-10-14 10:30:00')), 'nice literal time',
-			$offset);
-
-		$clause = $this->adapter->formattedDatetimeClause('now', '%d');
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, date('d', $this->getDbNow()), 'todays day', $offset);
-
-		$clause = $this->adapter->formattedDatetimeClause('"Created"', '%U') . ' AS test FROM "DbDateTimeTest_Team"';
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created),
-			'fixture ->Created as timestamp', $offset);
-	}
-
-	public function testDbDatetimeInterval() {
-		$offset = $this->checkPreconditions();
-
-		$clause = $this->adapter->datetimeIntervalClause('1973-10-14 10:30:00', '+18 Years');
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, '1991-10-14 10:30:00', 'add 18 years', $offset);
-
-		$clause = $this->adapter->datetimeIntervalClause('now', '+1 Day');
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, date('Y-m-d H:i:s', strtotime('+1 Day', $this->getDbNow())), 'tomorrow',
-			$offset);
-
-		$query = new SQLQuery();
-		$query->setSelect(array());
-		$query->selectField($this->adapter->datetimeIntervalClause('"Created"', '-15 Minutes'), 'test')
-			->setFrom('"DbDateTimeTest_Team"')
-			->setLimit(1);
-
-		$result = $query->execute()->value();
-		$this->matchesRoughly($result,
-				date('Y-m-d H:i:s', strtotime(DataObject::get_one('DbDateTimeTest_Team')->Created) - 900),
-				'15 Minutes before creating fixture', $offset);
-	}
-
-	public function testDbDatetimeDifference() {
-		$offset = $this->checkPreconditions();
-
-		$clause = $this->adapter->datetimeDifferenceClause('1974-10-14 10:30:00', '1973-10-14 10:30:00');
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result/86400, 365, '1974 - 1973 = 365 * 86400 sec', $offset);
-
-		$clause = $this->adapter->datetimeDifferenceClause(date('Y-m-d H:i:s', strtotime('-15 seconds')), 'now');
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, -15, '15 seconds ago - now', $offset);
-
-		$clause = $this->adapter->datetimeDifferenceClause('now',
-			$this->adapter->datetimeIntervalClause('now', '+45 Minutes'));
-		$result = DB::query('SELECT ' . $clause)->value();
-		$this->matchesRoughly($result, -45 * 60, 'now - 45 minutes ahead', $offset);
-
-		$query = new SQLQuery();
-		$query->setSelect(array());
-		$query->selectField($this->adapter->datetimeDifferenceClause('"LastEdited"', '"Created"'), 'test')
-			->setFrom('"DbDateTimeTest_Team"')
-			->setLimit(1);
-
-		$result = $query->execute()->value();
-		$lastedited = Dataobject::get_one('DbDateTimeTest_Team')->LastEdited;
-		$created = Dataobject::get_one('DbDateTimeTest_Team')->Created;
-		$this->matchesRoughly($result, strtotime($lastedited) - strtotime($created),
-			'age of HomePage record in seconds since unix epoc', $offset);
-	}
-
-}
-
-class DbDateTimeTest_Team extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
 }

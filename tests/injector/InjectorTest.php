@@ -487,38 +487,30 @@ class InjectorTest extends SapphireTest {
 
 	public function testInheritedConfig() {
 
-		// Test top-down caching of config inheritance
+		// Test that child class does not automatically inherit config
 		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
-		Config::inst()->update('Injector', 'MyParentClass', array('properties' => array('one' => 'the one')));
-		Config::inst()->update('Injector', 'MyChildClass', array('properties' => array('one' => 'the two')));
+		Config::inst()->update('Injector', 'MyParentClass', [
+			'properties' => ['one' => 'the one'],
+			'class' => 'MyParentClass',
+		]);
 		$obj = $injector->get('MyParentClass');
+		$this->assertInstanceOf('MyParentClass', $obj);
 		$this->assertEquals($obj->one, 'the one');
 
+		// Class isn't inherited and parent properties are ignored
 		$obj = $injector->get('MyChildClass');
-		$this->assertEquals($obj->one, 'the two');
+		$this->assertInstanceOf('MyChildClass', $obj);
+		$this->assertNotEquals($obj->one, 'the one');
 
-		$obj = $injector->get('MyGrandChildClass');
-		$this->assertEquals($obj->one, 'the two');
-
-		$obj = $injector->get('MyGreatGrandChildClass');
-		$this->assertEquals($obj->one, 'the two');
-
-		// Test bottom-up caching of config inheritance
+		// Set child class as alias
 		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
-		Config::inst()->update('Injector', 'MyParentClass', array('properties' => array('one' => 'the three')));
-		Config::inst()->update('Injector', 'MyChildClass', array('properties' => array('one' => 'the four')));
+		Config::inst()->update('Injector', 'MyChildClass', '%$MyParentClass');
 
-		$obj = $injector->get('MyGreatGrandChildClass');
-		$this->assertEquals($obj->one, 'the four');
-
-		$obj = $injector->get('MyGrandChildClass');
-		$this->assertEquals($obj->one, 'the four');
-
+		// Class isn't inherited and parent properties are ignored
 		$obj = $injector->get('MyChildClass');
-		$this->assertEquals($obj->one, 'the four');
+		$this->assertInstanceOf('MyParentClass', $obj);
+		$this->assertEquals($obj->one, 'the one');
 
-		$obj = $injector->get('MyParentClass');
-		$this->assertEquals($obj->one, 'the three');
 	}
 
 	public function testSameNamedSingeltonPrototype() {
@@ -619,6 +611,91 @@ class InjectorTest extends SapphireTest {
 		$this->assertInstanceOf('TestObject', $injector->get('service'));
 	}
 
+	public function testMethods() {
+		// do it again but have test object configured as a constructor dependency
+		$injector = new Injector();
+		$config = array(
+			'A' => array(
+				'class' => 'TestObject',
+			),
+			'B' => array(
+				'class' => 'TestObject',
+			),
+			'TestService' => array(
+				'class' => 'TestObject',
+				'calls' => array(
+					array('myMethod', array('%$A')),
+					array('myMethod', array('%$B')),
+					array('noArgMethod')
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('TestService');
+		$this->assertTrue($item instanceof TestObject);
+		$this->assertEquals(
+			array($injector->get('A'), $injector->get('B'), 'noArgMethod called'),
+			$item->methodCalls
+		);
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testNonExistentMethods() {
+		$injector = new Injector();
+		$config = array(
+			'TestService' => array(
+				'class' => 'TestObject',
+				'calls' => array(
+					array('thisDoesntExist')
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('TestService');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testProtectedMethods() {
+		$injector = new Injector();
+		$config = array(
+			'TestService' => array(
+				'class' => 'TestObject',
+				'calls' => array(
+					array('protectedMethod')
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('TestService');
+	}
+
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testTooManyArrayValues() {
+		$injector = new Injector();
+		$config = array(
+			'TestService' => array(
+				'class' => 'TestObject',
+				'calls' => array(
+					array('method', array('args'), 'what is this?')
+				)
+			)
+		);
+
+		$injector->load($config);
+		$item = $injector->get('TestService');
+	}
+
+
+
 	/**
 	 * Test nesting of injector
 	 */
@@ -709,14 +786,28 @@ class ConstructableObject implements TestOnly {
 	}
 }
 
+
 class TestObject implements TestOnly {
 
 	public $sampleService;
+
+	public $methodCalls = array();
 
 	public function setSomething($v) {
 		$this->sampleService = $v;
 	}
 
+	public function myMethod($arg) {
+		$this->methodCalls[] = $arg;
+	}
+
+	public function noArgMethod() {
+		$this->methodCalls[] = 'noArgMethod called';
+	}
+
+	protected function protectedMethod() {
+		$this->methodCalls[] = 'protectedMethod called';
+	}
 }
 
 class OtherTestObject implements TestOnly {

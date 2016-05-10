@@ -110,7 +110,7 @@ pt:
     many_many_Members: Membros
   GroupImportForm:
     ResultDeleted: 'Apagados %d grupos'
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Âncora
     BUTTONINSERT: Inserir
     BUTTONINSERTLINK: 'Inserir link'

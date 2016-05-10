@@ -2,21 +2,16 @@
 
 namespace SilverStripe\Framework\Test\Behaviour;
 
-use Behat\Behat\Context\ClosuredContextInterface,
-	Behat\Behat\Context\TranslatedContextInterface,
-	Behat\Behat\Context\BehatContext,
-	Behat\Behat\Context\Step,
-	Behat\Behat\Exception\PendingException,
-	Behat\Mink\Exception\ElementHtmlException,
-	Behat\Gherkin\Node\PyStringNode,
-	Behat\Gherkin\Node\TableNode,
-	Behat\MinkExtension\Context\MinkContext as MinkContext;
-
+use Behat\Behat\Context\ClosuredContextInterface;
+use Behat\Behat\Context\TranslatedContextInterface;
+use Behat\Behat\Context\BehatContext;
+use Behat\Behat\Context\Step;
+use Behat\Behat\Exception\PendingException;
+use Behat\Mink\Exception\ElementHtmlException;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use Behat\MinkExtension\Context\MinkContext as MinkContext;
 use Symfony\Component\DomCrawler\Crawler;
-
-// PHPUnit
-require_once 'PHPUnit/Autoload.php';
-require_once 'PHPUnit/Framework/Assert/Functions.php';
 
 /**
  * CmsFormsContext
@@ -203,7 +198,7 @@ class CmsFormsContext extends BehatContext {
 // TODO <IE9 support
 // TODO Allow text matches across nodes
 var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(),
-	doc = editor.getDOM().doc,
+	doc = editor.getInstance().getDoc(),
 	sel = editor.getInstance().selection,
 	rng = document.createRange(),
 	matched = false;
@@ -267,6 +262,23 @@ JS;
 	}
 
 	/**
+     * Click on the element with the provided CSS Selector
+     *
+     * @When /^I press the "([^"]*)" HTML field button$/
+     */
+    public function iClickOnTheHtmlFieldButton($button)
+    {
+		$xpath = "//*[@aria-label='".$button."']";
+        $session = $this->getSession();
+        $element = $session->getPage()->find('xpath', $xpath);
+        if (null === $element) {
+            throw new \InvalidArgumentException(sprintf('Could not find element with xpath %s', $xpath));
+        }
+
+        $element->click();
+    }
+
+	/*
 	 * @example Given the CMS settings has the following data
 	 *	| Title | My site title |
 	 *	| Theme | My site theme |

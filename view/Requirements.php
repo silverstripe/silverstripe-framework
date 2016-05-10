@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Filesystem\Storage\GeneratedAssetHandler;
+
 /**
  * Requirements tracker for JavaScript and CSS.
  *
@@ -9,10 +11,24 @@
 class Requirements implements Flushable {
 
 	/**
+	 * Flag whether combined files should be deleted on flush.
+	 *
+	 * By default all combined files are deleted on flush. If combined files are stored in source control,
+	 * and thus updated manually, you might want to turn this on to disable this behaviour.
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $disable_flush_combined = false;
+
+	/**
 	 * Triggered early in the request when a flush is requested
 	 */
 	public static function flush() {
+		$disabled = Config::inst()->get(static::class, 'disable_flush_combined');
+		if(!$disabled) {
 		self::delete_all_combined_files();
+	}
 	}
 
 	/**
@@ -21,7 +37,7 @@ class Requirements implements Flushable {
 	 * @param bool $enable
 	 */
 	public static function set_combined_files_enabled($enable) {
-		self::backend()->set_combined_files_enabled($enable);
+		self::backend()->setCombinedFilesEnabled($enable);
 	}
 
 	/**
@@ -30,7 +46,7 @@ class Requirements implements Flushable {
 	 * @return bool
 	 */
 	public static function get_combined_files_enabled() {
-		return self::backend()->get_combined_files_enabled();
+		return self::backend()->getCombinedFilesEnabled();
 	}
 
 	/**
@@ -51,7 +67,7 @@ class Requirements implements Flushable {
 	 * @param bool
 	 */
 	public static function set_suffix_requirements($var) {
-		self::backend()->set_suffix_requirements($var);
+		self::backend()->setSuffixRequirements($var);
 	}
 
 	/**
@@ -60,7 +76,7 @@ class Requirements implements Flushable {
 	 * @return bool
 	 */
 	public static function get_suffix_requirements() {
-		return self::backend()->get_suffix_requirements();
+		return self::backend()->getSuffixRequirements();
 	}
 
 	/**
@@ -71,9 +87,12 @@ class Requirements implements Flushable {
 	 */
 	private static $backend = null;
 
+	/**
+	 * @return Requirements_Backend
+	 */
 	public static function backend() {
 		if(!self::$backend) {
-			self::$backend = new Requirements_Backend();
+			self::$backend = Injector::inst()->create('Requirements_Backend');
 		}
 		return self::$backend;
 	}
@@ -91,9 +110,11 @@ class Requirements implements Flushable {
 	 * Register the given JavaScript file as required.
 	 *
 	 * @param string $file Relative to docroot
+	 * @param array $options List of options. Available options include:
+	 * - 'provides' : List of scripts files included in this file
 	 */
-	public static function javascript($file) {
-		self::backend()->javascript($file);
+	public static function javascript($file, $options = array()) {
+		self::backend()->javascript($file, $options);
 	}
 
 	/**
@@ -112,7 +133,7 @@ class Requirements implements Flushable {
 	 * @return array
 	 */
 	public static function get_custom_scripts() {
-		return self::backend()->get_custom_scripts();
+		return self::backend()->getCustomScripts();
 	}
 
 	/**
@@ -172,7 +193,7 @@ class Requirements implements Flushable {
 	 *                       (e.g. 'screen,projector')
 	 */
 	public static function themedCSS($name, $module = null, $media = null) {
-		return self::backend()->themedCSS($name, $module, $media);
+		self::backend()->themedCSS($name, $module, $media);
 	}
 
 	/**
@@ -224,7 +245,7 @@ class Requirements implements Flushable {
 	 * Removes all items from the block list
 	 */
 	public static function unblock_all() {
-		self::backend()->unblock_all();
+		self::backend()->unblockAll();
 	}
 
 	/**
@@ -232,13 +253,20 @@ class Requirements implements Flushable {
 	 * requirements. Needs to receive a valid HTML/XHTML template in the $content parameter,
 	 * including a head and body tag.
 	 *
-	 * @param string $templateFile No longer used, only retained for compatibility
 	 * @param string $content      HTML content that has already been parsed from the $templateFile
 	 *                             through {@link SSViewer}
 	 * @return string HTML content augmented with the requirements tags
 	 */
-	public static function includeInHTML($templateFile, $content) {
-		return self::backend()->includeInHTML($templateFile, $content);
+	public static function includeInHTML($content) {
+		if(func_num_args() > 1) {
+			Deprecation::notice(
+				'5.0',
+				'$templateFile argument is deprecated. includeInHTML takes a sole $content parameter now.'
+			);
+			$content = func_get_arg(1);
+		}
+
+		return self::backend()->includeInHTML($content);
 	}
 
 	/**
@@ -248,7 +276,7 @@ class Requirements implements Flushable {
 	 * @param SS_HTTPResponse $response
 	 */
 	public static function include_in_response(SS_HTTPResponse $response) {
-		return self::backend()->include_in_response($response);
+		self::backend()->includeInResponse($response);
 	}
 
 	/**
@@ -273,12 +301,10 @@ class Requirements implements Flushable {
 	 * increases performance by fewer HTTP requests.
 	 *
 	 * The combined file is regenerated based on every file modification time. Optionally a
-	 * rebuild can be triggered by appending ?flush=1 to the URL. If all files to be combined are
-	 * JavaScript, we use the external JSMin library to minify the JavaScript.
+	 * rebuild can be triggered by appending ?flush=1 to the URL.
 	 *
 	 * All combined files will have a comment on the start of each concatenated file denoting their
-	 * original position. For easier debugging, we only minify JavaScript if not in development
-	 * mode ({@link Director::isDev()}).
+	 * original position.
 	 *
 	 * CAUTION: You're responsible for ensuring that the load order for combined files is
 	 * retained - otherwise combining JavaScript files can lead to functional errors in the
@@ -316,26 +342,18 @@ class Requirements implements Flushable {
 	 * @return bool|void
 	 */
 	public static function combine_files($combinedFileName, $files, $media = null) {
-		self::backend()->combine_files($combinedFileName, $files, $media);
+		self::backend()->combineFiles($combinedFileName, $files, $media);
 	}
 
 	/**
 	 * Return all combined files; keys are the combined file names, values are lists of
-	 * files being combined.
+	 * associative arrays with 'files', 'type', and 'media' keys for details about this
+	 * combined file.
 	 *
 	 * @return array
 	 */
 	public static function get_combine_files() {
-		return self::backend()->get_combine_files();
-	}
-
-	/**
-	 * Delete all dynamically generated combined files from the filesystem
-	 *
-	 * @param string $combinedFileName If left blank, all combined files are deleted.
-	 */
-	public static function delete_combined_files($combinedFileName = null) {
-		return self::backend()->delete_combined_files($combinedFileName);
+		return self::backend()->getCombinedFiles();
 	}
 
 	/**
@@ -343,22 +361,31 @@ class Requirements implements Flushable {
 	 * but doesn't delete the directory itself
 	 */
 	public static function delete_all_combined_files() {
-		return self::backend()->delete_all_combined_files();
+		self::backend()->deleteAllCombinedFiles();
 	}
 
 	/**
 	 * Re-sets the combined files definition. See {@link Requirements_Backend::clear_combined_files()}
 	 */
 	public static function clear_combined_files() {
-		self::backend()->clear_combined_files();
+		self::backend()->clearCombinedFiles();
 	}
 
 	/**
-	 * Do the heavy lifting involved in combining (and, in the case of JavaScript minifying) the
-	 * combined files.
+	 * Do the heavy lifting involved in combining the combined files.
  	 */
 	public static function process_combined_files() {
-		return self::backend()->process_combined_files();
+		self::backend()->processCombinedFiles();
+	}
+
+	/**
+	 * Set whether you want to write the JS to the body of the page rather than at the end of the
+	 * head tag.
+	 *
+	 * @return bool
+	 */
+	public static function get_write_js_to_body() {
+		return self::backend()->getWriteJavascriptToBody();
 	}
 
 	/**
@@ -368,24 +395,71 @@ class Requirements implements Flushable {
 	 * @param bool
 	 */
 	public static function set_write_js_to_body($var) {
-		self::backend()->set_write_js_to_body($var);
+		self::backend()->setWriteJavascriptToBody($var);
+	}
+
+	/**
+	 * Get whether to force the JavaScript to end of the body. Useful if you use inline script tags
+	 * that don't rely on scripts included via {@link Requirements::javascript()).
+	 *
+	 * @return bool
+	 */
+	public static function get_force_js_to_bottom() {
+		return self::backend()->getForceJSToBottom();
 	}
 
 	/**
 	 * Set whether to force the JavaScript to end of the body. Useful if you use inline script tags
 	 * that don't rely on scripts included via {@link Requirements::javascript()).
 	 *
-	 * @param boolean $var If true, force the JavaScript to be included at the bottom of the page
+	 * @param bool $var If true, force the JavaScript to be included at the bottom of the page
 	 */
 	public static function set_force_js_to_bottom($var) {
-		self::backend()->set_force_js_to_bottom($var);
+		self::backend()->setForceJSToBottom($var);
 	}
+
+	/**
+	 * Check if JS minification is enabled
+	 *
+	 * @return bool
+	 */
+	public static function get_minify_combined_js_files() {
+		return self::backend()->getMinifyCombinedJSFiles();
+	}
+
+	/**
+	 * Enable or disable js minification
+	 *
+	 * @param bool $minify
+	 */
+	public static function set_minify_combined_js_files($minify) {
+		self::backend()->setMinifyCombinedJSFiles($minify);
+	}
+
+	/**
+	 * Check if header comments are written
+	 *
+	 * @return bool
+	 */
+	public static function get_write_header_comments() {
+		return self::backend()->getWriteHeaderComment();
+	}
+
+	/**
+	 * Flag whether header comments should be written for each combined file
+	 *
+	 * @param bool $write
+	 */
+	public function set_write_header_comments($write) {
+		self::backend()->setWriteHeaderComment($write);
+	}
+
 
 	/**
 	 * Output debugging information
 	 */
 	public static function debug() {
-		return self::backend()->debug();
+		self::backend()->debug();
 	}
 
 }
@@ -394,7 +468,8 @@ class Requirements implements Flushable {
  * @package framework
  * @subpackage view
  */
-class Requirements_Backend {
+class Requirements_Backend
+{
 
 	/**
 	 * Whether to add caching query params to the requests for file-based requirements.
@@ -404,46 +479,67 @@ class Requirements_Backend {
 	 *
 	 * @var bool
 	 */
-	protected $suffix_requirements = true;
+	protected $suffixRequirements = true;
 
 	/**
 	 * Whether to combine CSS and JavaScript files
 	 *
 	 * @var bool
 	 */
-	protected $combined_files_enabled = true;
+	protected $combinedFilesEnabled = true;
+
+	/**
+	 * Determine if files should be combined automatically on dev mode.
+	 *
+	 * By default combined files will not be combined except in test or
+	 * live environments. Turning this on will allow for pre-combining of files in development mode.
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $combine_in_dev = false;
 
 	/**
 	 * Paths to all required JavaScript files relative to docroot
 	 *
-	 * @var array $javascript
+	 * @var array
 	 */
 	protected $javascript = array();
 
 	/**
+	 * Map of included scripts to array of contained files.
+	 * To be used alongside front-end combination mechanisms.
+	 *
+	 * @var array Map of providing filepath => array(provided filepaths)
+	 */
+	protected $providedJavascript = array();
+
+	/**
 	 * Paths to all required CSS files relative to the docroot.
 	 *
-	 * @var array $css
+	 * @var array
 	 */
 	protected $css = array();
 
 	/**
 	 * All custom javascript code that is inserted into the page's HTML
 	 *
-	 * @var array $customScript
+	 * @var array
 	 */
 	protected $customScript = array();
 
 	/**
 	 * All custom CSS rules which are inserted directly at the bottom of the HTML <head> tag
 	 *
-	 * @var array $customCSS
+	 * @var array
 	 */
 	protected $customCSS = array();
 
 	/**
 	 * All custom HTML markup which is added before the closing <head> tag, e.g. additional
 	 * metatags.
+	 *
+	 * @var array
 	 */
 	protected $customHeadTags = array();
 
@@ -451,7 +547,7 @@ class Requirements_Backend {
 	 * Remembers the file paths or uniquenessIDs of all Requirements cleared through
 	 * {@link clear()}, so that they can be restored later.
 	 *
-	 * @var array $disabled
+	 * @var array
 	 */
 	protected $disabled = array();
 
@@ -463,7 +559,7 @@ class Requirements_Backend {
 	 *
 	 * Use {@link unblock()} or {@link unblock_all()} to revert changes.
 	 *
-	 * @var array $blocked
+	 * @var array
 	 */
 	protected $blocked = array();
 
@@ -471,23 +567,23 @@ class Requirements_Backend {
 	 * A list of combined files registered via {@link combine_files()}. Keys are the output file
 	 * names, values are lists of input files.
 	 *
-	 * @var array $combine_files
+	 * @var array
 	 */
-	public $combine_files = array();
+	protected $combinedFiles = array();
 
 	/**
 	 * Use the JSMin library to minify any javascript file passed to {@link combine_files()}.
 	 *
 	 * @var bool
 	 */
-	public $combine_js_with_jsmin = true;
+	protected $minifyCombinedJSFiles = true;
 
 	/**
 	 * Whether or not file headers should be written when combining files
 	 *
 	 * @var boolean
 	 */
-	public $write_header_comment = true;
+	protected $writeHeaderComment = true;
 
 	/**
 	 * Where to save combined files. By default they're placed in assets/_combinedfiles, however
@@ -505,37 +601,100 @@ class Requirements_Backend {
 	 *
 	 * @var bool
 	 */
-	public $write_js_to_body = true;
+	public $writeJavascriptToBody = true;
 
 	/**
 	 * Force the JavaScript to the bottom of the page, even if there's a script tag in the body already
 	 *
 	 * @var boolean
 	 */
-	protected $force_js_to_bottom = false;
+	protected $forceJSToBottom = false;
+
+	/**
+	 * Configures the default prefix for combined files.
+	 *
+	 * This defaults to `_combinedfiles`, and is the folder within the configured asset backend that
+	 * combined files will be stored in. If using a backend shared with other systems, it is usually
+	 * necessary to distinguish combined files from other assets.
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $default_combined_files_folder = '_combinedfiles';
+
+	/**
+	 * Flag to include the hash in the querystring instead of the filename for combined files.
+	 *
+	 * By default the `<hash>` of the source files is appended to the end of the combined file
+	 * (prior to the file extension). If combined files are versioned in source control or running
+	 * in a distributed environment (such as one where the newest version of a file may not always be
+	 * immediately available) then it may sometimes be necessary to disable this. When this is set to true,
+	 * the hash will instead be appended via a querystring parameter to enable cache busting, but not in
+	 * the filename itself. I.e. `assets/_combinedfiles/name.js?m=<hash>`
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $combine_hash_querystring = false;
+
+	/**
+	 * @var GeneratedAssetHandler
+	 */
+	protected $assetHandler = null;
+
+	/**
+	 * Gets the backend storage for generated files
+	 *
+	 * @return GeneratedAssetHandler
+	 */
+	public function getAssetHandler() {
+		return $this->assetHandler;
+	}
+
+	/**
+	 * Set a new asset handler for this backend
+	 *
+	 * @param GeneratedAssetHandler $handler
+	 */
+	public function setAssetHandler(GeneratedAssetHandler $handler) {
+		$this->assetHandler = $handler;
+	}
 
 	/**
 	 * Enable or disable the combination of CSS and JavaScript files
 	 *
-	 * @param $enable
+	 * @param bool $enable
 	 */
-	public function set_combined_files_enabled($enable) {
-		$this->combined_files_enabled = (bool) $enable;
+	public function setCombinedFilesEnabled($enable) {
+		$this->combinedFilesEnabled = (bool) $enable;
 	}
 
 	/**
-	 * Check whether file combination is enabled.
+	 * Check if header comments are written
 	 *
 	 * @return bool
 	 */
-	public function get_combined_files_enabled() {
-		return $this->combined_files_enabled;
+	public function getWriteHeaderComment() {
+		return $this->writeHeaderComment;
 	}
 
 	/**
-	 * Set the folder to save combined files in. By default they're placed in assets/_combinedfiles,
+	 * Flag whether header comments should be written for each combined file
+	 *
+	 * @param bool $write
+	 * @return $this
+	 */
+	public function setWriteHeaderComment($write) {
+		$this->writeHeaderComment = $write;
+		return $this;
+	}
+
+	/**
+	 * Set the folder to save combined files in. By default they're placed in _combinedfiles,
 	 * however this may be an issue depending on your setup, especially for CSS files which often
 	 * contain relative paths.
+	 *
+	 * This must not include any 'assets' prefix
 	 *
 	 * @param string $folder
 	 */
@@ -544,10 +703,15 @@ class Requirements_Backend {
 	}
 
 	/**
-	 * @return string Folder relative to the webroot
+	 * Retrieve the combined files folder prefix
+	 *
+	 * @return string
 	 */
 	public function getCombinedFilesFolder() {
-		return ($this->combinedFilesFolder) ? $this->combinedFilesFolder : ASSETS_DIR . '/_combinedfiles';
+		if($this->combinedFilesFolder) {
+			return $this->combinedFilesFolder;
+		}
+		return Config::inst()->get(__CLASS__, 'default_combined_files_folder');
 	}
 
 	/**
@@ -558,8 +722,8 @@ class Requirements_Backend {
 	 *
 	 * @param bool
 	 */
-	public function set_suffix_requirements($var) {
-		$this->suffix_requirements = $var;
+	public function setSuffixRequirements($var) {
+		$this->suffixRequirements = $var;
 	}
 
 	/**
@@ -567,8 +731,8 @@ class Requirements_Backend {
 	 *
 	 * @return bool
 	 */
-	public function get_suffix_requirements() {
-		return $this->suffix_requirements;
+	public function getSuffixRequirements() {
+		return $this->suffixRequirements;
 	}
 
 	/**
@@ -576,49 +740,163 @@ class Requirements_Backend {
 	 * head tag.
 	 *
 	 * @param bool
+	 * @return $this
 	 */
-	public function set_write_js_to_body($var) {
-		$this->write_js_to_body = $var;
+	public function setWriteJavascriptToBody($var) {
+		$this->writeJavascriptToBody = $var;
+		return $this;
+	}
+
+	/**
+	 * Check whether you want to write the JS to the body of the page rather than at the end of the
+	 * head tag.
+	 *
+	 * @return bool
+	 */
+	public function getWriteJavascriptToBody() {
+		return $this->writeJavascriptToBody;
 	}
 
 	/**
 	 * Forces the JavaScript requirements to the end of the body, right before the closing tag
 	 *
 	 * @param bool
+	 * @return $this
 	 */
-	public function set_force_js_to_bottom($var) {
-		$this->force_js_to_bottom = $var;
+	public function setForceJSToBottom($var) {
+		$this->forceJSToBottom = $var;
+		return $this;
+	}
+
+	/**
+	 * Check if the JavaScript requirements are written to the end of the body, right before the closing tag
+	 *
+	 * @return bool
+	 */
+	public function getForceJSToBottom() {
+		return $this->forceJSToBottom;
+	}
+
+	/**
+	 * Check if minify js files should be combined
+	 *
+	 * @return bool
+	 */
+	public function getMinifyCombinedJSFiles() {
+		return $this->minifyCombinedJSFiles;
+	}
+
+	/**
+	 * Set if combined js files should be minified
+	 *
+	 * @param bool $minify
+	 * @return $this
+	 */
+	public function setMinifyCombinedJSFiles($minify) {
+		$this->minifyCombinedJSFiles = $minify;
+		return $this;
 	}
 
 	/**
 	 * Register the given JavaScript file as required.
 	 *
 	 * @param string $file Relative to docroot
+	 * @param array $options List of options. Available options include:
+	 * - 'provides' : List of scripts files included in this file
 	 */
-	public function javascript($file) {
+	public function javascript($file, $options = array()) {
 		$this->javascript[$file] = true;
+
+		// Record scripts included in this file
+		if(isset($options['provides'])) {
+			$this->providedJavascript[$file] = array_values($options['provides']);
+	}
 	}
 
 	/**
-	 * Returns an array of all required JavaScript
+	 * Remove a javascript requirement
+	 *
+	 * @param string $file
+	 */
+	protected function unsetJavascript($file) {
+		unset($this->javascript[$file]);
+	}
+
+	/**
+	 * Gets all scripts that are already provided by prior scripts.
+	 * This follows these rules:
+	 *  - Files will not be considered provided if they are separately
+	 *    included prior to the providing file.
+	 *  - Providing files can be blocked, and don't provide anything
+	 *  - Provided files can't be blocked (you need to block the provider)
+	 *  - If a combined file includes files that are provided by prior
+	 *    scripts, then these should be excluded from the combined file.
+	 *  - If a combined file includes files that are provided by later
+	 *    scripts, then these files should be included in the combined
+	 *    file, but we can't block the later script either (possible double
+	 *    up of file).
+	 *
+	 * @return array Array of provided files (map of $path => $path)
+	 */
+	public function getProvidedScripts() {
+		$providedScripts = array();
+		$includedScripts = array();
+		foreach($this->javascript as $script => $flag) {
+			// Ignore scripts that are explicitly blocked
+			if(isset($this->blocked[$script])) {
+				continue;
+			}
+			// At this point, the file is included.
+			// This might also be combined at this point, potentially.
+			$includedScripts[$script] = true;
+
+			// Record any files this provides, EXCEPT those already included by now
+			if(isset($this->providedJavascript[$script])) {
+				foreach($this->providedJavascript[$script] as $provided) {
+					if(!isset($includedScripts[$provided])) {
+						$providedScripts[$provided] = $provided;
+					}
+				}
+			}
+		}
+		return $providedScripts;
+	}
+
+	/**
+	 * Returns an array of required JavaScript, excluding blocked
+	 * and duplicates of provided files.
 	 *
 	 * @return array
 	 */
-	public function get_javascript() {
-		return array_keys(array_diff_key($this->javascript, $this->blocked));
+	public function getJavascript() {
+		return array_keys(array_diff_key(
+			$this->javascript,
+			$this->getBlocked(),
+			$this->getProvidedScripts()
+		));
+	}
+
+	/**
+	 * Gets all javascript, including blocked files. Unwraps the array into a non-associative list
+	 *
+	 * @return array Indexed array of javascript files
+	 */
+	protected function getAllJavascript() {
+		return array_keys($this->javascript);
 	}
 
 	/**
 	 * Register the given JavaScript code into the list of requirements
 	 *
 	 * @param string     $script       The script content as a string (without enclosing <script> tag)
-	 * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
+	 * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
 	 */
 	public function customScript($script, $uniquenessID = null) {
-		if($uniquenessID) $this->customScript[$uniquenessID] = $script;
-		else $this->customScript[] = $script;
-
-		$script .= "\n";
+		if($uniquenessID) {
+			$this->customScript[$uniquenessID] = $script;
+		} else {
+			$this->customScript[] = $script;
+		}
 	}
 
 	/**
@@ -626,38 +904,54 @@ class Requirements_Backend {
 	 *
 	 * @return array
 	 */
-	public function get_custom_scripts() {
-		$requirements = "";
-
-		if($this->customScript) {
-			foreach($this->customScript as $script) {
-				$requirements .= "$script\n";
-			}
-		}
-
-		return $requirements;
+	public function getCustomScripts() {
+		return array_diff_key($this->customScript, $this->blocked);
 	}
 
 	/**
 	 * Register the given CSS styles into the list of requirements
 	 *
 	 * @param string     $script       CSS selectors as a string (without enclosing <style> tag)
-	 * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
+	 * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
 	 */
 	public function customCSS($script, $uniquenessID = null) {
-		if($uniquenessID) $this->customCSS[$uniquenessID] = $script;
-		else $this->customCSS[] = $script;
+		if($uniquenessID) {
+			$this->customCSS[$uniquenessID] = $script;
+		} else {
+			$this->customCSS[] = $script;
+		}
+	}
+
+	/**
+	 * Return all registered custom CSS
+	 *
+	 * @return array
+	 */
+	public function getCustomCSS() {
+		return array_diff_key($this->customCSS, $this->blocked);
 	}
 
 	/**
 	 * Add the following custom HTML code to the <head> section of the page
 	 *
 	 * @param string     $html         Custom HTML code
-	 * @param string|int $uniquenessID A unique ID that ensures a piece of code is only added once
+	 * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
 	 */
 	public function insertHeadTags($html, $uniquenessID = null) {
-		if($uniquenessID) $this->customHeadTags[$uniquenessID] = $html;
-		else $this->customHeadTags[] = $html;
+		if($uniquenessID) {
+			$this->customHeadTags[$uniquenessID] = $html;
+		} else {
+			$this->customHeadTags[] = $html;
+		}
+	}
+
+	/**
+	 * Return all custom head tags
+	 *
+	 * @return array
+	 */
+	public function getCustomHeadTags() {
+		return array_diff_key($this->customHeadTags, $this->blocked);
 	}
 
 	/**
@@ -665,8 +959,8 @@ class Requirements_Backend {
 	 * variables will be interpolated with values from $vars similar to a .ss template.
 	 *
 	 * @param string         $file         The template file to load, relative to docroot
-	 * @param string[]|int[] $vars         The array of variables to interpolate.
-	 * @param string|int     $uniquenessID A unique ID that ensures a piece of code is only added once
+	 * @param string[] $vars The array of variables to interpolate.
+	 * @param string $uniquenessID A unique ID that ensures a piece of code is only added once
 	 */
 	public function javascriptTemplate($file, $vars, $uniquenessID = null) {
 		$script = file_get_contents(Director::getAbsFile($file));
@@ -696,12 +990,39 @@ class Requirements_Backend {
 	}
 
 	/**
+	 * Remove a css requirement
+	 *
+	 * @param string $file
+	 */
+	protected function unsetCSS($file) {
+		unset($this->css[$file]);
+	}
+
+	/**
 	 * Get the list of registered CSS file requirements, excluding blocked files
+	 *
+	 * @return array Associative array of file to spec
+	 */
+	public function getCSS() {
+		return array_diff_key($this->css, $this->blocked);
+	}
+
+	/**
+	 * Gets all CSS files requirements, including blocked
+	 *
+	 * @return array Associative array of file to spec
+	 */
+	protected function getAllCSS() {
+		return $this->css;
+	}
+
+	/**
+	 * Gets the list of all blocked files
 	 *
 	 * @return array
 	 */
-	public function get_css() {
-		return array_diff_key($this->css, $this->blocked);
+	public function getBlocked() {
+		return $this->blocked;
 	}
 
 	/**
@@ -745,6 +1066,7 @@ class Requirements_Backend {
 		$this->customCSS = $this->disabled['customCSS'];
 		$this->customHeadTags = $this->disabled['customHeadTags'];
 	}
+
 	/**
 	 * Block inclusion of a specific file
 	 *
@@ -768,13 +1090,13 @@ class Requirements_Backend {
 	 * @param string|int $fileOrID
 	 */
 	public function unblock($fileOrID) {
-		if(isset($this->blocked[$fileOrID])) unset($this->blocked[$fileOrID]);
+		unset($this->blocked[$fileOrID]);
 	}
 
 	/**
 	 * Removes all items from the block list
 	 */
-	public function unblock_all() {
+	public function unblockAll() {
 		$this->blocked = array();
 	}
 
@@ -783,99 +1105,155 @@ class Requirements_Backend {
 	 * requirements. Needs to receive a valid HTML/XHTML template in the $content parameter,
 	 * including a head and body tag.
 	 *
-	 * @param string $templateFile No longer used, only retained for compatibility
 	 * @param string $content      HTML content that has already been parsed from the $templateFile
 	 *                             through {@link SSViewer}
 	 * @return string HTML content augmented with the requirements tags
 	 */
-	public function includeInHTML($templateFile, $content) {
-		if(
-			(strpos($content, '</head>') !== false || strpos($content, '</head ') !== false)
-			&& ($this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags)
-		) {
-			$requirements = '';
-			$jsRequirements = '';
+	public function includeInHTML($content) {
+		if(func_num_args() > 1) {
+			Deprecation::notice(
+				'5.0',
+				'$templateFile argument is deprecated. includeInHTML takes a sole $content parameter now.'
+			);
+			$content = func_get_arg(1);
+		}
 
-			// Combine files - updates $this->javascript and $this->css
-			$this->process_combined_files();
+		// Skip if content isn't injectable, or there is nothing to inject
+		$tagsAvailable = preg_match('#</head\b#', $content);
+		$hasFiles = $this->css || $this->javascript || $this->customCSS || $this->customScript || $this->customHeadTags;
+		if(!$tagsAvailable || !$hasFiles) {
+			return $content;
+		}
+		$requirements = '';
+		$jsRequirements = '';
 
-			foreach(array_diff_key($this->javascript,$this->blocked) as $file => $dummy) {
-				$path = Convert::raw2xml($this->path_for_file($file));
-				if($path) {
-					$jsRequirements .= "<script type=\"text/javascript\" src=\"$path\"></script>\n";
-				}
-			}
+		// Combine files - updates $this->javascript and $this->css
+		$this->processCombinedFiles();
 
-			// Add all inline JavaScript *after* including external files they might rely on
-			if($this->customScript) {
-				foreach(array_diff_key($this->customScript,$this->blocked) as $script) {
-					$jsRequirements .= "<script type=\"text/javascript\">\n//<![CDATA[\n";
-					$jsRequirements .= "$script\n";
-					$jsRequirements .= "\n//]]>\n</script>\n";
-				}
-			}
-
-			foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {
-				$path = Convert::raw2xml($this->path_for_file($file));
-				if($path) {
-					$media = (isset($params['media']) && !empty($params['media']))
-						? " media=\"{$params['media']}\"" : "";
-					$requirements .= "<link rel=\"stylesheet\" type=\"text/css\"{$media} href=\"$path\" />\n";
-				}
-			}
-
-			foreach(array_diff_key($this->customCSS, $this->blocked) as $css) {
-				$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
-			}
-
-			foreach(array_diff_key($this->customHeadTags,$this->blocked) as $customHeadTag) {
-				$requirements .= "$customHeadTag\n";
-			}
-
-			if ($this->force_js_to_bottom) {
-				// Remove all newlines from code to preserve layout
-				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
-
-				// Forcefully put the scripts at the bottom of the body instead of before the first
-				// script tag.
-				$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
-
-				// Put CSS at the bottom of the head
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-			} elseif($this->write_js_to_body) {
-				// Remove all newlines from code to preserve layout
-				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
-
-				// If your template already has script tags in the body, then we try to put our script
-				// tags just before those. Otherwise, we put it at the bottom.
-				$p2 = stripos($content, '<body');
-				$p1 = stripos($content, '<script', $p2);
-
-				$commentTags = array();
-				$canWriteToBody = ($p1 !== false)
-					&&
-					// Check that the script tag is not inside a html comment tag
-					!(
-						preg_match('/.*(?|(<!--)|(-->))/U', $content, $commentTags, 0, $p1)
-						&&
-						$commentTags[1] == '-->'
-					);
-
-				if($canWriteToBody) {
-					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
-				} else {
-					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
-				}
-
-				// Put CSS at the bottom of the head
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-			} else {
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-				$content = preg_replace("/(<\/head>)/i", $jsRequirements . "\\1", $content);
+		foreach($this->getJavascript() as $file) {
+			$path = Convert::raw2att($this->pathForFile($file));
+			if($path) {
+				$jsRequirements .= "<script type=\"application/javascript\" src=\"$path\"></script>";
 			}
 		}
 
+		// Add all inline JavaScript *after* including external files they might rely on
+		foreach($this->getCustomScripts() as $script) {
+			$jsRequirements .= "<script type=\"application/javascript\">//<![CDATA[\n";
+			$jsRequirements .= "$script\n";
+			$jsRequirements .= "//]]></script>";
+		}
+
+		foreach($this->getCSS() as $file => $params) {
+			$path = Convert::raw2att($this->pathForFile($file));
+			if($path) {
+				$media = (isset($params['media']) && !empty($params['media']))
+					? " media=\"{$params['media']}\"" : "";
+				$requirements .= "<link rel=\"stylesheet\" type=\"text/css\" {$media} href=\"$path\" />\n";
+			}
+		}
+
+		foreach($this->getCustomCSS() as $css) {
+			$requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
+		}
+
+		foreach($this->getCustomHeadTags() as $customHeadTag) {
+			$requirements .= "$customHeadTag\n";
+		}
+
+		// Inject CSS  into body
+		$content = $this->insertTagsIntoHead($requirements, $content);
+
+		// Inject scripts
+		if ($this->getForceJSToBottom()) {
+			$content = $this->insertScriptsAtBottom($jsRequirements, $content);
+		} elseif($this->getWriteJavascriptToBody()) {
+			$content = $this->insertScriptsIntoBody($jsRequirements, $content);
+		} else {
+			$content = $this->insertTagsIntoHead($jsRequirements, $content);
+		}
 		return $content;
+	}
+
+	/**
+	 * Given a block of HTML, insert the given scripts at the bottom before
+	 * the closing </body> tag
+	 *
+	 * @param string $jsRequirements String containing one or more javascript <script /> tags
+	 * @param string $content HTML body
+	 * @return string Merged HTML
+	 */
+	protected function insertScriptsAtBottom($jsRequirements, $content) {
+		// Forcefully put the scripts at the bottom of the body instead of before the first
+		// script tag.
+		$content = preg_replace(
+			'/(<\/body[^>]*>)/i',
+			$this->escapeReplacement($jsRequirements) . '\\1',
+			$content
+		);
+		return $content;
+	}
+
+	/**
+	 * Given a block of HTML, insert the given scripts inside the <body></body>
+	 *
+	 * @param string $jsRequirements String containing one or more javascript <script /> tags
+	 * @param string $content HTML body
+	 * @return string Merged HTML
+	 */
+	protected function insertScriptsIntoBody($jsRequirements, $content) {
+		// If your template already has script tags in the body, then we try to put our script
+		// tags just before those. Otherwise, we put it at the bottom.
+		$bodyTagPosition = stripos($content, '<body');
+		$scriptTagPosition = stripos($content, '<script', $bodyTagPosition);
+
+		$commentTags = array();
+		$canWriteToBody = ($scriptTagPosition !== false)
+			&&
+			// Check that the script tag is not inside a html comment tag
+			!(
+				preg_match('/.*(?|(<!--)|(-->))/U', $content, $commentTags, 0, $scriptTagPosition)
+				&&
+				$commentTags[1] == '-->'
+			);
+
+		if($canWriteToBody) {
+			// Insert content before existing script tags
+			$content = substr($content, 0, $scriptTagPosition)
+				. $jsRequirements
+				. substr($content, $scriptTagPosition);
+		} else {
+			// Insert content at bottom of page otherwise
+			$content = $this->insertScriptsAtBottom($jsRequirements, $content);
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Given a block of HTML, insert the given code inside the <head></head> block
+	 *
+	 * @param string $jsRequirements String containing one or more html tags
+	 * @param string $content HTML body
+	 * @return string Merged HTML
+	 */
+	protected function insertTagsIntoHead($jsRequirements, $content) {
+		$content = preg_replace(
+			'/(<\/head>)/i',
+			$this->escapeReplacement($jsRequirements) . '\\1',
+			$content
+		);
+		return $content;
+	}
+
+	/**
+	 * Safely escape a literal string for use in preg_replace replacement
+	 *
+	 * @param string $replacement
+	 * @return string
+	 */
+	protected function escapeReplacement($replacement) {
+		return addcslashes($replacement, '\\$');
 	}
 
 	/**
@@ -884,29 +1262,33 @@ class Requirements_Backend {
 	 *
 	 * @param SS_HTTPResponse $response
 	 */
-	public function include_in_response(SS_HTTPResponse $response) {
-		$this->process_combined_files();
+	public function includeInResponse(SS_HTTPResponse $response) {
+		$this->processCombinedFiles();
 		$jsRequirements = array();
 		$cssRequirements = array();
 
-		foreach(array_diff_key($this->javascript, $this->blocked) as $file => $dummy) {
-			$path = $this->path_for_file($file);
+		foreach($this->getJavascript() as $file) {
+			$path = $this->pathForFile($file);
 			if($path) {
 				$jsRequirements[] = str_replace(',', '%2C', $path);
 			}
 		}
 
-		$response->addHeader('X-Include-JS', implode(',', $jsRequirements));
+		if(count($jsRequirements)) {
+			$response->addHeader('X-Include-JS', implode(',', $jsRequirements));
+		}
 
-		foreach(array_diff_key($this->css,$this->blocked) as $file => $params) {
-			$path = $this->path_for_file($file);
+		foreach($this->getCSS() as $file => $params) {
+			$path = $this->pathForFile($file);
 			if($path) {
 				$path = str_replace(',', '%2C', $path);
 				$cssRequirements[] = isset($params['media']) ? "$path:##:$params[media]" : $path;
 			}
 		}
 
-		$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
+		if(count($cssRequirements)) {
+			$response->addHeader('X-Include-CSS', implode(',', $cssRequirements));
+		}
 	}
 
 	/**
@@ -920,7 +1302,7 @@ class Requirements_Backend {
 	 *                         requirements
 	 * @param bool   $langOnly Only include language files, not the base libraries
 	 *
-	 * @return array
+	 * @return array|null All relative files if $return is true, or null otherwise
 	 */
 	public function add_i18n_javascript($langDir, $return = false, $langOnly = false) {
 		$files = array();
@@ -929,15 +1311,15 @@ class Requirements_Backend {
 			// Include i18n.js even if no languages are found.  The fact that
 			// add_i18n_javascript() was called indicates that the methods in
 			// here are needed.
-			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/javascript/i18n.js';
+			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/client/dist/js/i18n.js';
 
 			if(substr($langDir,-1) != '/') $langDir .= '/';
 
 			$candidates = array(
 				'en.js',
 				'en_US.js',
-				i18n::get_lang_from_locale(i18n::default_locale()) . '.js',
-				i18n::default_locale() . '.js',
+				i18n::get_lang_from_locale(i18n::config()->default_locale) . '.js',
+				i18n::config()->default_locale . '.js',
 				i18n::get_lang_from_locale(i18n::get_locale()) . '.js',
 				i18n::get_locale() . '.js',
 			);
@@ -948,13 +1330,18 @@ class Requirements_Backend {
 			}
 		} else {
 			// Stub i18n implementation for when i18n is disabled.
-			if(!$langOnly) $files[] = FRAMEWORK_DIR . '/javascript/i18nx.js';
+			if(!$langOnly) {
+				$files[] = FRAMEWORK_DIR . '/client/dist/js/i18nx.js';
+			}
 		}
 
 		if($return) {
 			return $files;
 		} else {
-			foreach($files as $file) $this->javascript($file);
+			foreach($files as $file) {
+				$this->javascript($file);
+			}
+			return null;
 		}
 	}
 
@@ -964,15 +1351,16 @@ class Requirements_Backend {
 	 * @param string $fileOrUrl
 	 * @return string|bool
 	 */
-	protected function path_for_file($fileOrUrl) {
-		if(preg_match('{^//|http[s]?}', $fileOrUrl)) {
+	protected function pathForFile($fileOrUrl) {
+		// Since combined urls could be root relative, treat them as urls here.
+		if(preg_match('{^(//)|(http[s]?:)}', $fileOrUrl) || Director::is_root_relative_url($fileOrUrl)) {
 			return $fileOrUrl;
 		} elseif(Director::fileExists($fileOrUrl)) {
 			$filePath = preg_replace('/\?.*/', '', Director::baseFolder() . '/' . $fileOrUrl);
 			$prefix = Director::baseURL();
 			$mtimesuffix = "";
 			$suffix = '';
-			if($this->suffix_requirements) {
+			if($this->getSuffixRequirements()) {
 				$mtimesuffix = "?m=" . filemtime($filePath);
 				$suffix = '&';
 			}
@@ -987,7 +1375,7 @@ class Requirements_Backend {
 			}
 			return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
 		} else {
-			return false;
+			throw new InvalidArgumentException("File {$fileOrUrl} does not exist");
 		}
 	}
 
@@ -996,13 +1384,10 @@ class Requirements_Backend {
 	 * increases performance by fewer HTTP requests.
 	 *
 	 * The combined file is regenerated based on every file modification time. Optionally a
-	 * rebuild can be triggered by appending ?flush=1 to the URL. If all files to be combined are
-	 * JavaScript, we use the external JSMin library to minify the JavaScript. This can be
-	 * controlled using {@link $combine_js_with_jsmin}.
+	 * rebuild can be triggered by appending ?flush=1 to the URL.
 	 *
 	 * All combined files will have a comment on the start of each concatenated file denoting their
-	 * original position. For easier debugging, we only minify JavaScript if not in development
-	 * mode ({@link Director::isDev()}).
+	 * original position.
 	 *
 	 * CAUTION: You're responsible for ensuring that the load order for combined files is
 	 * retained - otherwise combining JavaScript files can lead to functional errors in the
@@ -1035,268 +1420,320 @@ class Requirements_Backend {
 	 *
 	 * @param string $combinedFileName Filename of the combined file relative to docroot
 	 * @param array  $files            Array of filenames relative to docroot
-	 * @param string $media
-	 *
-	 * @return bool|void
+	 * @param string $media If including CSS Files, you can specify a media type
 	 */
-	public function combine_files($combinedFileName, $files, $media = null) {
-		// duplicate check
-		foreach($this->combine_files as $_combinedFileName => $_files) {
-			$duplicates = array_intersect($_files, $files);
-			if($duplicates && $combinedFileName != $_combinedFileName) {
-				user_error("Requirements_Backend::combine_files(): Already included files " . implode(',', $duplicates)
-					. " in combined file '{$_combinedFileName}'", E_USER_NOTICE);
-				return false;
+	public function combineFiles($combinedFileName, $files, $media = null) {
+		// Skip this combined files if already included
+		if(isset($this->combinedFiles[$combinedFileName])) {
+			return;
 			}
+
+		// Add all files to necessary type list
+		$paths = array();
+		$combinedType = null;
+		foreach($files as $file) {
+			// Get file details
+			list($path, $type) = $this->parseCombinedFile($file);
+			if($type === 'javascript') {
+				$type = 'js';
 		}
-		foreach($files as $index=>$file) {
-			if(is_array($file)) {
-				// Either associative array path=>path type=>type or numeric 0=>path 1=>type
-				// Otherwise, assume path is the first item
-				if (isset($file['type']) && in_array($file['type'], array('css', 'javascript', 'js'))) {
-					switch ($file['type']) {
+			if($combinedType && $type && $combinedType !== $type) {
+				throw new InvalidArgumentException(
+					"Cannot mix js and css files in same combined file {$combinedFileName}"
+				);
+			}
+			switch($type) {
 						case 'css':
-							$this->css($file['path'], $media);
+					$this->css($path, $media);
+					break;
+				case 'js':
+					$this->javascript($path);
 							break;
 						default:
-							$this->javascript($file['path']);
-							break;
-					}
-					$files[$index] = $file['path'];
-				} elseif (isset($file[1]) && in_array($file[1], array('css', 'javascript', 'js'))) {
-					switch ($file[1]) {
-						case 'css':
-							$this->css($file[0], $media);
-							break;
-						default:
-							$this->javascript($file[0]);
-							break;
-					}
-					$files[$index] = $file[0];
-				} else {
-					$file = array_shift($file);
-				}
+					throw new InvalidArgumentException("Invalid combined file type: {$type}");
 			}
-			if (!is_array($file)) {
-				if(substr($file, -2) == 'js') {
-					$this->javascript($file);
-				} elseif(substr($file, -3) == 'css') {
-					$this->css($file, $media);
-				} else {
-					user_error("Requirements_Backend::combine_files(): Couldn't guess file type for file '$file', "
-						. "please specify by passing using an array instead.", E_USER_NOTICE);
+			$combinedType = $type;
+			$paths[] = $path;
+					}
+
+		// Duplicate check
+		foreach($this->combinedFiles as $existingCombinedFilename => $combinedItem) {
+			$existingFiles = $combinedItem['files'];
+			$duplicates = array_intersect($existingFiles, $paths);
+			if($duplicates) {
+				throw new InvalidArgumentException(sprintf(
+					"Requirements_Backend::combine_files(): Already included file(s) %s in combined file '%s'",
+					implode(',', $duplicates),
+					$existingCombinedFilename
+				));
+					}
 				}
+
+		$this->combinedFiles[$combinedFileName] = array(
+			'files' => $paths,
+			'type' => $combinedType,
+			'media' => $media
+		);
 			}
+
+	/**
+	 * Return path and type of given combined file
+	 *
+	 * @param string|array $file Either a file path, or an array spec
+	 * @return array array with two elements, path and type of file
+	 */
+	protected function parseCombinedFile($file) {
+		// Array with path and type keys
+		if(is_array($file) && isset($file['path']) && isset($file['type'])) {
+			return array($file['path'], $file['type']);
+				}
+
+		// Extract value from indexed array
+		if(is_array($file)) {
+			$path = array_shift($file);
+
+			// See if there's a type specifier
+			if($file) {
+				$type = array_shift($file);
+				return array($path, $type);
+			}
+
+			// Otherwise convent to string
+			$file = $path;
 		}
-		$this->combine_files[$combinedFileName] = $files;
+
+		$type = File::get_file_extension($file);
+		return array($file, $type);
 	}
 
 	/**
 	 * Return all combined files; keys are the combined file names, values are lists of
-	 * files being combined.
+	 * associative arrays with 'files', 'type', and 'media' keys for details about this
+	 * combined file.
 	 *
 	 * @return array
 	 */
-	public function get_combine_files() {
-		return $this->combine_files;
+	public function getCombinedFiles() {
+		return array_diff_key($this->combinedFiles, $this->blocked);
 	}
 
 	/**
-	 * Delete all dynamically generated combined files from the filesystem
+	 * Includes all combined files, including blocked ones
 	 *
-	 * @param string $combinedFileName If left blank, all combined files are deleted.
+	 * @return array
 	 */
-	public function delete_combined_files($combinedFileName = null) {
-		$combinedFiles = ($combinedFileName) ? array($combinedFileName => null) : $this->combine_files;
-		$combinedFolder = ($this->getCombinedFilesFolder()) ?
-			(Director::baseFolder() . '/' . $this->combinedFilesFolder) : Director::baseFolder();
-		foreach($combinedFiles as $combinedFile => $sourceItems) {
-			$filePath = $combinedFolder . '/' . $combinedFile;
-			if(file_exists($filePath)) {
-				unlink($filePath);
-			}
-		}
+	protected function getAllCombinedFiles() {
+		return $this->combinedFiles;
 	}
 
 	/**
-	 * Deletes all generated combined files in the configured combined files directory,
-	 * but doesn't delete the directory itself.
+	 * Clears all combined files
 	 */
-	public function delete_all_combined_files() {
+	public function deleteAllCombinedFiles() {
 		$combinedFolder = $this->getCombinedFilesFolder();
-		if(!$combinedFolder) return false;
-
-		$path = Director::baseFolder() . '/' . $combinedFolder;
-		if(file_exists($path)) {
-			Filesystem::removeFolder($path, true);
+		if($combinedFolder) {
+			$this->getAssetHandler()->removeContent($combinedFolder);
 		}
 	}
 
 	/**
 	 * Clear all registered CSS and JavaScript file combinations
 	 */
-	public function clear_combined_files() {
-		$this->combine_files = array();
+	public function clearCombinedFiles() {
+		$this->combinedFiles = array();
 	}
 
 	/**
-	 * Do the heavy lifting involved in combining (and, in the case of JavaScript minifying) the
-	 * combined files.
+	 * Do the heavy lifting involved in combining the combined files.
 	 */
-	public function process_combined_files() {
-		// The class_exists call prevents us loading SapphireTest.php (slow) just to know that
-		// SapphireTest isn't running :-)
-		if(class_exists('SapphireTest', false)) $runningTest = SapphireTest::is_running_test();
-		else $runningTest = false;
-
-		if((Director::isDev() && !$runningTest && !isset($_REQUEST['combine'])) || !$this->combined_files_enabled) {
+	public function processCombinedFiles() {
+		// Check if combining is enabled
+		if(!$this->getCombinedFilesEnabled()) {
 			return;
 		}
 
-		// Make a map of files that could be potentially combined
-		$combinerCheck = array();
-		foreach($this->combine_files as $combinedFile => $sourceItems) {
-			foreach($sourceItems as $sourceItem) {
-				if(isset($combinerCheck[$sourceItem]) && $combinerCheck[$sourceItem] != $combinedFile){
-					user_error("Requirements_Backend::process_combined_files - file '$sourceItem' appears in two " .
-						"combined files:" .	" '{$combinerCheck[$sourceItem]}' and '$combinedFile'", E_USER_WARNING);
-				}
-				$combinerCheck[$sourceItem] = $combinedFile;
+		// Before scripts are modified, detect files that are provided by preceding ones
+		$providedScripts = $this->getProvidedScripts();
 
-			}
-		}
+		// Process each combined files
+		foreach($this->getAllCombinedFiles() as $combinedFile => $combinedItem) {
+			$fileList = $combinedItem['files'];
+			$type = $combinedItem['type'];
+			$media = $combinedItem['media'];
 
-		// Work out the relative URL for the combined files from the base folder
-		$combinedFilesFolder = ($this->getCombinedFilesFolder()) ? ($this->getCombinedFilesFolder() . '/') : '';
-
-		// Figure out which ones apply to this request
-		$combinedFiles = array();
-		$newJSRequirements = array();
-		$newCSSRequirements = array();
-		foreach($this->javascript as $file => $dummy) {
-			if(isset($combinerCheck[$file])) {
-				$newJSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = true;
-				$combinedFiles[$combinerCheck[$file]] = true;
-			} else {
-				$newJSRequirements[$file] = true;
-			}
-		}
-
-		foreach($this->css as $file => $params) {
-			if(isset($combinerCheck[$file])) {
-				// Inherit the parameters from the last file in the combine set.
-				$newCSSRequirements[$combinedFilesFolder . $combinerCheck[$file]] = $params;
-				$combinedFiles[$combinerCheck[$file]] = true;
-			} else {
-				$newCSSRequirements[$file] = $params;
-			}
-		}
-
-		// Process the combined files
-		$base = Director::baseFolder() . '/';
-		foreach(array_diff_key($combinedFiles, $this->blocked) as $combinedFile => $dummy) {
-			$fileList = $this->combine_files[$combinedFile];
-			$combinedFilePath = $base . $combinedFilesFolder . '/' . $combinedFile;
-
-
-			// Make the folder if necessary
-			if(!file_exists(dirname($combinedFilePath))) {
-				Filesystem::makeFolder(dirname($combinedFilePath));
+			// Generate this file, unless blocked
+			$combinedURL = null;
+			if(!isset($this->blocked[$combinedFile])) {
+				// Filter files for blocked / provided
+				$filteredFileList = array_diff(
+					$fileList,
+					$this->getBlocked(),
+					$providedScripts
+				);
+				$combinedURL = $this->getCombinedFileURL($combinedFile, $filteredFileList, $type);
 			}
 
-			// If the file isn't writeable, don't even bother trying to make the combined file and return. The
-			// files will be included individually instead. This is a complex test because is_writable fails
-			// if the file doesn't exist yet.
-			if((file_exists($combinedFilePath) && !is_writable($combinedFilePath))
-				|| (!file_exists($combinedFilePath) && !is_writable(dirname($combinedFilePath)))
-			) {
-				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'",
-					E_USER_WARNING);
-				return false;
-			}
-
-			// Determine if we need to build the combined include
-			if(file_exists($combinedFilePath)) {
-				// file exists, check modification date of every contained file
-				$srcLastMod = 0;
-				foreach($fileList as $file) {
-					if(file_exists($base . $file)) {
-						$srcLastMod = max(filemtime($base . $file), $srcLastMod);
+			// Replace all existing files, injecting the combined file at the position of the first item
+			// in order to preserve inclusion order.
+			// Note that we iterate across blocked files in order to get the correct order, and validate
+			// that the file is included in the correct location (regardless of which files are blocked).
+			$included = false;
+			switch($type) {
+				case 'css': {
+					$newCSS = array(); // Assoc array of css file => spec
+					foreach($this->getAllCSS() as $css => $spec) {
+						if(!in_array($css, $fileList)) {
+							$newCSS[$css] = $spec;
+						} elseif(!$included && $combinedURL) {
+							$newCSS[$combinedURL] = array('media' => $media);
+							$included = true;
+						}
+						// If already included, or otherwise blocked, then don't add into CSS
 					}
+					$this->css = $newCSS;
+					break;
 				}
-				$refresh = $srcLastMod > filemtime($combinedFilePath);
-			} else {
-				// File doesn't exist, or refresh was explicitly required
-				$refresh = true;
-			}
-
-			if(!$refresh) continue;
-
-			$failedToMinify = false;
-			$combinedData = "";
-			foreach(array_diff($fileList, $this->blocked) as $file) {
-				$fileContent = file_get_contents($base . $file);
-
-				try{
-					$fileContent = $this->minifyFile($file, $fileContent);
-				}catch(Exception $e){
-					$failedToMinify = true;
+				case 'js': {
+					// Assoc array of file => true
+					$newJS = array();
+					foreach($this->getAllJavascript() as $script) {
+						if(!in_array($script, $fileList)) {
+							$newJS[$script] = true;
+						} elseif(!$included && $combinedURL) {
+							$newJS[$combinedURL] = true;
+							$included = true;
+						}
+						// If already included, or otherwise blocked, then don't add into scripts
+					}
+					$this->javascript = $newJS;
+					break;
 				}
-
-				if ($this->write_header_comment) {
-					// Write a header comment for each file for easier identification and debugging. The semicolon between each file is required for jQuery to be combined properly and protects against unterminated statements.
-					$combinedData .= "/****** FILE: $file *****/\n";
-				}
-
-				$combinedData .= $fileContent . "\n";
-			}
-
-			$successfulWrite = false;
-			$fh = fopen($combinedFilePath, 'wb');
-			if($fh) {
-				if(fwrite($fh, $combinedData) == strlen($combinedData)) $successfulWrite = true;
-				fclose($fh);
-				unset($fh);
-			}
-
-			if($failedToMinify){
-				// Failed to minify, use unminified files instead. This warning is raised at the end to allow code execution
-				// to complete in case this warning is caught inside a try-catch block.
-				user_error('Failed to minify '.$file.', exception: '.$e->getMessage(), E_USER_WARNING);
-			}
-
-			// Unsuccessful write - just include the regular JS files, rather than the combined one
-			if(!$successfulWrite) {
-				user_error("Requirements_Backend::process_combined_files(): Couldn't create '$combinedFilePath'",
-					E_USER_WARNING);
-				continue;
 			}
 		}
-
-		// Note: Alters the original information, which means you can't call this method repeatedly - it will behave
-		// differently on the subsequent calls
-		$this->javascript = $newJSRequirements;
-		$this->css = $newCSSRequirements;
 	}
 
 	/**
-	 * Minify the given $content according to the file type indicated in $filename
+	 * Given a set of files, combine them (as necessary) and return the url
 	 *
-	 * @param string $filename
-	 * @param string $content
+	 * @param string $combinedFile Filename for this combined file
+	 * @param array $fileList List of files to combine
+	 * @param string $type Either 'js' or 'css'
+	 * @return string|null URL to this resource, if there are files to combine
+	 */
+	protected function getCombinedFileURL($combinedFile, $fileList, $type) {
+		// Skip empty lists
+		if(empty($fileList)) {
+			return null;
+		}
+
+		// Generate path (Filename)
+		$hashQuerystring = Config::inst()->get(static::class, 'combine_hash_querystring');
+		if(!$hashQuerystring) {
+			$combinedFile = $this->hashedCombinedFilename($combinedFile, $fileList);
+			}
+		$combinedFileID =  File::join_paths($this->getCombinedFilesFolder(), $combinedFile);
+
+		// Send file combination request to the backend, with an optional callback to perform regeneration
+		$minify = $this->getMinifyCombinedJSFiles();
+		$combinedURL = $this
+			->getAssetHandler()
+			->getContentURL(
+				$combinedFileID,
+				function() use ($fileList, $minify, $type) {
+					// Physically combine all file content
+					$combinedData = '';
+					$base = Director::baseFolder() . '/';
+					$minifier = Injector::inst()->get('Requirements_Minifier');
+					foreach($fileList as $file) {
+						$fileContent = file_get_contents($base . $file);
+						// Use configured minifier
+						if($minify) {
+							$fileContent = $minifier->minify($fileContent, $type, $file);
+			}
+
+						if ($this->writeHeaderComment) {
+							// Write a header comment for each file for easier identification and debugging.
+							$combinedData .= "/****** FILE: $file *****/\n";
+					}
+						$combinedData .= $fileContent . "\n";
+				}
+					return $combinedData;
+			}
+			);
+
+		// If the name isn't hashed, we will need to append the querystring m= parameter instead
+		// Since url won't be automatically suffixed, add it in here
+		if($hashQuerystring && $this->getSuffixRequirements()) {
+			$hash = $this->hashOfFiles($fileList);
+			$q = stripos($combinedURL, '?') === false ? '?' : '&';
+			$combinedURL .= "{$q}m={$hash}";
+		}
+
+		return $combinedURL;
+	}
+
+	/**
+	 * Given a filename and list of files, generate a new filename unique to these files
+	 *
+	 * @param string $combinedFile
+	 * @param array $fileList
 	 * @return string
 	 */
-	protected function minifyFile($filename, $content) {
-		// if we have a javascript file and jsmin is enabled, minify the content
-		$isJS = stripos($filename, '.js');
-		if($isJS && $this->combine_js_with_jsmin) {
-			require_once('thirdparty/jsmin/jsmin.php');
+	protected function hashedCombinedFilename($combinedFile, $fileList) {
+		$name = pathinfo($combinedFile, PATHINFO_FILENAME);
+		$hash = $this->hashOfFiles($fileList);
+		$extension = File::get_file_extension($combinedFile);
+		return $name . '-' . substr($hash, 0, 7) . '.' . $extension;
+	}
 
-			increase_time_limit_to();
-			$content = JSMin::minify($content);
+	/**
+	 * Check if combined files are enabled
+	 *
+	 * @return bool
+	 */
+	public function getCombinedFilesEnabled() {
+		if(!$this->combinedFilesEnabled) {
+			return false;
 		}
-		$content .= ($isJS ? ';' : '') . "\n";
-		return $content;
+
+		// Tests should be combined
+		if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
+			return true;
+		}
+
+		// Check if specified via querystring
+		if(isset($_REQUEST['combine'])) {
+			return true;
+		}
+
+		// Non-dev sites are always combined
+		if(!Director::isDev()) {
+			return true;
+		}
+
+		// Fallback to default
+		return Config::inst()->get(__CLASS__, 'combine_in_dev');
+	}
+
+	/**
+	 * For a given filelist, determine some discriminating value to determine if
+	 * any of these files have changed.
+	 *
+	 * @param array $fileList List of files
+	 * @return string SHA1 bashed file hash
+	 */
+	protected function hashOfFiles($fileList) {
+		// Get hash based on hash of each file
+		$base = Director::baseFolder() . '/';
+		$hash = '';
+		foreach($fileList as $file) {
+			if(file_exists($base . $file)) {
+				$hash .= sha1_file($base . $file);
+			} else {
+				throw new InvalidArgumentException("Combined file {$file} does not exist");
+			}
+		}
+		return sha1($hash);
 	}
 
 	/**
@@ -1340,7 +1777,23 @@ class Requirements_Backend {
 		Debug::show($this->customCSS);
 		Debug::show($this->customScript);
 		Debug::show($this->customHeadTags);
-		Debug::show($this->combine_files);
+		Debug::show($this->combinedFiles);
 	}
 
+}
+
+/**
+ * Provides an abstract interface for minifying content
+ */
+interface Requirements_Minifier {
+
+	/**
+	 * Minify the given content
+	 *
+	 * @param string $content
+	 * @param string $type Either js or css
+	 * @param string $filename Name of file to display in case of error
+	 * @return string minified content
+	 */
+	public function minify($content, $type, $filename);
 }

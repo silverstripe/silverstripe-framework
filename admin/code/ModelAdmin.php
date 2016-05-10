@@ -46,7 +46,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 */
 	private static $menu_priority = -0.5;
 
-	private static $menu_icon = 'framework/admin/images/menu-icons/16x16/db.png';
+	private static $menu_icon = 'framework/admin/client/src/sprites/menu-icons/16x16/db.png';
 
 	private static $allowed_actions = array(
 		'ImportForm',
@@ -110,7 +110,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/javascript/ModelAdmin.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/ModelAdmin.js');
 	}
 
 	public function Link($action = null) {
@@ -138,13 +138,12 @@ abstract class ModelAdmin extends LeftAndMain {
 			$listField->getConfig()->getComponentByType('GridFieldDetailForm')->setValidator($detailValidator);
 		}
 
-		$form = CMSForm::create(
+		$form = Form::create(
 			$this,
 			'EditForm',
 			new FieldList($listField),
 			new FieldList()
 		)->setHTMLID('Form_EditForm');
-		$form->setResponseNegotiator($this->getResponseNegotiator());
 		$form->addExtraClass('cms-edit-form cms-panel-padded center');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		$editFormAction = Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EditForm');

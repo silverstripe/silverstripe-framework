@@ -17,22 +17,17 @@
  * @subpackage core
  */
 
-/**
- * PHP 5.2 introduced a conflict with the Datetime field type, which was renamed to SSDatetime. This was later renamed
- * to SS_Datetime to be consistent with other namespaced classes.
- *
- * Overload both of these to support legacy code.
- */
-Object::useCustomClass('SSDatetime', 'SS_Datetime', true);
-Object::useCustomClass('Datetime',   'SS_Datetime', true);
+ShortcodeParser::get('default')
+	->register('file_link', array('File', 'handle_shortcode'))
+	->register('embed', array('Oembed', 'handle_shortcode'))
+	->register('image', array('Image', 'handle_shortcode'));
 
-/**
- * The root directory of TinyMCE
- */
-define('MCE_ROOT', FRAMEWORK_DIR . '/thirdparty/tinymce/');
+// Shortcode parser which only regenerates shortcodes
+ShortcodeParser::get('regenerator')
+	->register('image', array('Image', 'regenerate_shortcode'));
 
-ShortcodeParser::get('default')->register('file_link', array('File', 'link_shortcode_handler'));
-ShortcodeParser::get('default')->register('embed', array('Oembed', 'handle_shortcode'));
+// @todo
+//	->register('dbfile_link', array('DBFile', 'handle_shortcode'))
 
 // Zend_Cache temp directory setting
 $_ENV['TMPDIR'] = TEMP_FOLDER; // for *nix

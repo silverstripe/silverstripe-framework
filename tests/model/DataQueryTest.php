@@ -171,10 +171,10 @@ class DataQueryTest extends SapphireTest {
 	}
 
 	public function testOrderByMultiple() {
-		$dq = new DataQuery('SQLQueryTest_DO');
+		$dq = new DataQuery('SQLSelectTest_DO');
 		$dq = $dq->sort('"Name" ASC, MID("Name", 8, 1) DESC');
 		$this->assertContains(
-			'ORDER BY "SQLQueryTest_DO"."Name" ASC, "_SortColumn0" DESC',
+			'ORDER BY "SQLSelectTest_DO"."Name" ASC, "_SortColumn0" DESC',
 			$dq->sql($parameters)
 		);
 	}

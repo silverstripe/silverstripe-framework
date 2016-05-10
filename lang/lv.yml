@@ -88,7 +88,7 @@ lv:
     Sort: 'Kārtošanas secība'
     has_many_Permissions: Atļaujas
     many_many_Members: Dalībnieki
-  HtmlEditorField:
+  HTMLEditorField:
     ANCHORVALUE: Enkurs
     BUTTONINSERTLINK: 'Ievietot saiti'
     BUTTONREMOVELINK: 'Noņemt saiti'

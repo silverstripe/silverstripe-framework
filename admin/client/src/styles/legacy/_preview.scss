@@ -1,0 +1,375 @@
+
+/* -------------------------- */
+.cms-content-controls{
+
+	/* Styling the background, controls sit on */
+	&.cms-preview-controls {
+		z-index: 1;
+		background: $tab-panel-texture-color;
+	}
+
+	/* Styling for icons in controls */
+	.icon-view, .preview-selector.dropdown a.chosen-single {
+		white-space: nowrap;
+		&:before {
+			display:inline-block;
+			float:left;
+			width: 20px;
+			overflow: hidden;
+			color: $color-text-dark;
+		}
+	}
+
+	.cms-navigator{
+		width: 100%;
+		padding: $grid-y*1.5 $grid-y*1.5;
+		height: 52px; /* should be set in js Layout to match page actions */
+	}
+
+	/* Preview selectors. Overrides default chosen styles and applies its own */
+	.preview-selector {
+		float:right;
+		border-bottom:none;
+		position:relative;
+		box-shadow: none;
+		margin: 2px 0 0 4px;
+		padding: 0;
+		height: 28px;
+
+		.chosen-container {
+			width: auto !important; //over-ride chosen inline styles for preview selector
+		}
+
+		a.chosen-single {
+			width: 28px;
+			padding: 6px;
+			height: 28px;
+			margin: -2px 0 0;
+			filter: none;	/* remove ie background */
+			background: none;
+			border: none;
+			box-shadow: none;
+			border-radius: 3px;
+
+			&::before {
+				font-size: 18px;
+				margin-top: -1px;
+				margin-left: -1px;
+			}
+
+			&:hover, &.chosen-single-with-drop  {
+				background-color: darken($color-widget-bg,6%);
+				box-shadow: 0 0 3px rgba(0, 0, 0, 0.05) inset, 0 1px 0 $box-shadow-shine;
+			}
+			&.chosen-single-with-drop {
+				border-radius: 0 0 3px 3px;
+			}
+			div {
+				display: none;
+			}
+		}
+
+		// Rise up from bottom instead of down from top
+		.chosen-drop {
+			bottom: 32px !important;
+			top: auto !important;
+		}
+
+		// Rise out from right, not from left (this needs to be done only when visible)
+		.chosen-with-drop .chosen-drop {
+			left: auto !important;
+			right: 0 !important;
+			width: auto !important;
+		}
+
+		.chosen-drop{
+			padding: 0;
+			margin-top: -5px;
+
+			border: 1px solid #aaa;
+			border-radius: 3px 3px 0 3px;
+			box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+
+			ul.chosen-results {
+				padding: 0;
+				margin: 0;
+				overflow: visible;
+				width: 135px;
+
+				li {
+					font-size: 12px;
+					line-height: 16px;
+					padding: 7px 16px 7px 6px;
+					color: $color-text-blue-link;
+					border-bottom: 1px solid #DDD;
+					background-color: #FFF;
+
+					&:before {
+						margin-right: 2px;
+						font-size: 16px;
+					}
+					&.description {
+						padding-top: 5px;
+						padding-bottom: 5px;
+						&:before {
+							margin-top: 5px;
+						}
+					}
+					&.highlighted, &:hover, &:focus {
+						color: $color-text-blue-link;
+						filter: none;
+						background: lighten($color-widget-bg, 2%);
+						text-decoration: none;
+					}
+					&.first {
+						border-radius: 3px 3px 0 0;
+					}
+					&.last {
+						border-bottom: none;
+						border-radius: 0 0 0 3px;
+					}
+					&.restricted { /* disable option (eg.split mode for smaller screen sizes) */
+						color: #CCC;
+						background-color: #EEE;
+						pointer-events: none;
+						/*text-decoration: line-through;*/
+						&:before {
+							opacity: 0.2;
+						}
+					}
+
+					/* Description styling */
+					span {
+						display: block;
+						color: lighten($color-text-dark, 30%);
+						font-size: 0.85em;
+						line-height: 1.1em;
+						padding-left: 23px;
+					}
+					.icon-view {
+						margin-right: 4px;
+					}
+				}
+
+				li.result-selected {
+					background: darken($color-widget-bg, 2%);
+					color: $color-text;
+
+					&.highlighted, &:hover, &:focus {
+						background: darken($color-widget-bg, 4%);
+						color: $color-text;
+					}
+				}
+			}
+		}
+
+		&.split-disabled {
+			.chosen-drop ul.chosen-results li.font-icon-columns {
+				&, &.highlighted, &:hover, &:focus {
+					color: $color-text-disabled;
+					background: #fff;
+					pointer-events: none;
+					cursor: default;
+				}
+
+				&::before {
+					color: $color-text-disabled;
+				}
+			}
+		}
+
+		.disabled-tooltip {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 32px;
+			background: rgba(255, 255, 255, 0); // Prevent clicking on browsers that do not support pointer-events: none;
+
+			&::before {
+				content: 'Screen size too small';
+				text-align: center;
+				background: #555;
+				color: white;
+				padding: 4px 0;
+				position: absolute;
+				top: -24px;
+				left: -1px;
+				right: -1px;
+				border-radius: 3px 3px 0 0;
+				display: none;
+				z-index: 2;
+			}
+
+			&::after {
+				content: '';
+				position: absolute;
+				width: 10px;
+				height: 10px;
+				transform: rotate(45deg);
+				display: none;
+				background: #555;
+				left: 47%;
+				top: -6px;
+			}
+
+			&:hover::after,
+			&:hover::before {
+				display: block;
+			}
+		}
+	}
+
+	.cms-preview-states{
+		float: right;
+		select{
+			max-width:150px;
+		}
+
+		&.dropdown{
+			max-width:150px;
+			a.chosen-single{
+				span{
+					margin:0;
+				}
+			}
+			.chosen-container{
+				max-width:150px;
+			}
+		}
+	}
+}
+
+/* Styling for the preview screen sizes */
+.cms-preview {
+	background-color: $tab-panel-texture-color;
+	border-left: 1px solid $border-color-dark;
+	height: 100%;
+	width: 100%;
+
+	.cms-preview-overlay {
+		width: 100%;
+		height: 100%;
+	}
+
+	.preview-note {
+		color: #CDD7DC;
+		display: block;
+		font-size: 22px;
+		font-weight: bold;
+		height: 82px;
+		margin-top: -50px;
+		margin-left: -150px;	/* half of width */
+		position: absolute;
+		text-align: center;
+		text-shadow: 0 1px 0 #fff;
+		top: 50%;
+		left: 50%;
+		width: 300px;
+
+		span {
+			@extend .icon-sprites-64x64;
+			@include sprite($sprites-64x64-preview);
+
+			height: 41px;
+			margin: 0 auto 20px;
+			width: 50px;
+		}
+	}
+	.preview-scroll {
+		height: calc(100% - #{$toolbar-total-height});
+		overflow: auto;
+		position: relative;
+		width: 100%;
+		.preview-device-outer {
+			height: 100%;
+			width: 100%;
+			overflow: hidden;
+			.preview-device-inner {
+				box-sizing: border-box;
+				width: 100%;
+				height:100%;
+				background-color: #FFF;
+				iframe {
+					height: 100%;
+					overflow-y: auto;
+					width: 100%;
+					border: 0;
+				}
+			}
+		}
+	}
+	&.mobile, &.mobileLandscape, &.tablet, &.tabletLandscape, &.desktop {
+		.preview-scroll {
+			background-color: $tab-panel-texture-color; /* cover website preview icon */
+			.preview-device-outer {
+				border-radius: 7px;
+				background: lighten(#D2DBE0, 1%);
+				border: 1px solid transparent;
+				border-left:1px solid darken(#D2DBE0, 1%);
+				padding: 16px;
+				box-sizing: content-box;
+				.preview-device-inner {
+					border-top:2px solid lighten(#D2DBE0,5%);
+					border-right: 1px solid transparent;
+					border-bottom:1px solid lighten(#D2DBE0,5%);
+					border-left:1px solid darken(#D2DBE0, 5%);
+				}
+			}
+		}
+	}
+
+	&.mobile {
+		.preview-scroll .preview-device-outer {
+			transform: rotate(0deg);
+			transition: all .3s ease-in 1s;
+			margin: 20px auto 20px;
+			overflow:hidden;
+			padding-top: 16px;
+			.preview-device-inner {
+				transform: rotate(0deg);
+				transition: all .3s ease-out 1s;
+			}
+			&.rotate {
+				transform: rotate(-90deg);
+				transition: all .3s ease-in 1s;
+				height: 583px;
+				margin: 0px auto 0px;
+				width: 320px;
+				.preview-device-inner {
+					transform-origin: 160px 160px;
+					transform: rotate(90deg);
+					transition: all .3s ease-out 1s;
+					height: 320px;
+					width: 583px;
+				}
+			}
+		}
+	}
+	&.mobileLandscape .preview-scroll .preview-device-outer {
+		transition: all .3s ease-out 1s;
+		margin: 12% auto;
+		padding-top: 16px;
+		.preview-device-inner {
+			transition: all .3s ease-out 1s;
+		}
+	}
+	&.tablet .preview-scroll .preview-device-outer {
+		transition: all .3s ease-out 1s;
+		margin: 0 auto;
+		.preview-device-inner {
+			transition: all .3s ease-out 1s;
+		}
+	}
+	&.tabletLandscape .preview-scroll .preview-device-outer {
+		transition: all .3s ease-out 1s;
+		margin: 0 auto;
+		.preview-device-inner {
+			transition: all .3s ease-out 1s;
+		}
+	}
+	&.desktop .preview-scroll .preview-device-outer {
+		transition: all .3s ease-out 1s;
+		margin: 0 auto;
+	}
+}

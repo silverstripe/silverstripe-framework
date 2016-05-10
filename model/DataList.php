@@ -158,7 +158,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param string|array $keyOrArray Either the single key to set, or an array of key value pairs to set
 	 * @param mixed $val If $keyOrArray is not an array, this is the value to set
-	 * @return DataList
+	 * @return static
 	 */
 	public function setDataQueryParam($keyOrArray, $val = null) {
 		$clone = clone $this;
@@ -179,7 +179,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Returns the SQL query that will be used to get this DataList's records.  Good for debugging. :-)
 	 *
 	 * @param array $parameters Out variable for parameters required for this query
-	 * @param string The resulting SQL query (may be paramaterised)
+	 * @return string The resulting SQL query (may be paramaterised)
 	 */
 	public function sql(&$parameters = array()) {
 		return $this->dataQuery->query()->sql($parameters);
@@ -189,8 +189,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new DataList instance with a WHERE clause added to this list's query.
 	 *
 	 * Supports parameterised queries.
-	 * See SQLQuery::addWhere() for syntax examples, although DataList
-	 * won't expand multiple method arguments as SQLQuery does.
+	 * See SQLSelect::addWhere() for syntax examples, although DataList
+	 * won't expand multiple method arguments as SQLSelect does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -207,8 +207,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * All conditions provided in the filter will be joined with an OR
 	 *
 	 * Supports parameterised queries.
-	 * See SQLQuery::addWhere() for syntax examples, although DataList
-	 * won't expand multiple method arguments as SQLQuery does.
+	 * See SQLSelect::addWhere() for syntax examples, although DataList
+	 * won't expand multiple method arguments as SQLSelect does.
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
@@ -273,7 +273,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * order set.
 	 *
 	 * @see SS_List::sort()
-	 * @see SQLQuery::orderby
+	 * @see SQLSelect::orderby
 	 * @example $list = $list->sort('Name'); // default ASC sorting
 	 * @example $list = $list->sort('Name DESC'); // DESC sorting
 	 * @example $list = $list->sort('Name', 'ASC');
@@ -297,28 +297,26 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 		if ($count == 2) {
 			list($col, $dir) = func_get_args();
+
+			// Validate direction
+			if(!in_array(strtolower($dir),array('desc','asc'))){
+				user_error('Second argument to sort must be either ASC or DESC');
+			}
+
+			$sort = array($col => $dir);
 		}
 		else {
 			$sort = func_get_arg(0);
 		}
 
-		return $this->alterDataQuery(function($query, $list) use ($sort, $col, $dir){
+		return $this->alterDataQuery(function(DataQuery $query, DataList $list) use ($sort){
 
-			if ($col) {
-				// sort('Name','Desc')
-				if(!in_array(strtolower($dir),array('desc','asc'))){
-					user_error('Second argument to sort must be either ASC or DESC');
-				}
-
-				$query->sort($col, $dir);
-			}
-
-			else if(is_string($sort) && $sort){
-				// sort('Name ASC')
+			if(is_string($sort) && $sort){
 				if(stristr($sort, ' asc') || stristr($sort, ' desc')) {
 					$query->sort($sort);
 				} else {
-					$query->sort($sort, 'ASC');
+					$list->applyRelation($sort, $column, true);
+					$query->sort($column, 'ASC');
 				}
 			}
 
@@ -326,15 +324,11 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				// sort(array('Name'=>'desc'));
 				$query->sort(null, null); // wipe the sort
 
-				foreach($sort as $col => $dir) {
+				foreach($sort as $column => $direction) {
 					// Convert column expressions to SQL fragment, while still allowing the passing of raw SQL
 					// fragments.
-					try {
-						$relCol = $list->getRelationName($col);
-					} catch(InvalidArgumentException $e) {
-						$relCol = $col;
-					}
-					$query->sort($relCol, $dir, false);
+					$list->applyRelation($column, $relationColumn, true);
+					$query->sort($relationColumn, $direction, false);
 				}
 			}
 		});
@@ -351,6 +345,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @example $list = $list->filter(array('Name'=>'bob', 'Age'=>array(21, 43))); // bob with the Age 21 or 43
 	 * @example $list = $list->filter(array('Name'=>array('aziz','bob'), 'Age'=>array(21, 43)));
 	 *          // aziz with the age 21 or 43 and bob with the Age 21 or 43
+	 *
+	 * Note: When filtering on nullable columns, null checks will be automatically added.
+	 * E.g. ->filter('Field:not', 'value) will generate '... OR "Field" IS NULL', and
+	 * ->filter('Field:not', null) will generate '"Field" IS NOT NULL'
 	 *
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
@@ -475,36 +473,57 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Translates a {@link Object} relation name to a Database name and apply
-	 * the relation join to the query.  Throws an InvalidArgumentException if
-	 * the $field doesn't correspond to a relation.
+	 * Given a field or relation name, apply it safely to this datalist.
 	 *
-	 * @throws InvalidArgumentException
-	 * @param string $field
+	 * Unlike getRelationName, this is immutable and will fallback to the quoted field
+	 * name if not a relation.
 	 *
-	 * @return string
+	 * @param string $field Name of field or relation to apply
+	 * @param string &$columnName Quoted column name
+	 * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
+	 * if this relation will be used for sorting, and should not include duplicate rows.
+	 * @return DataList DataList with this relation applied
 	 */
-	public function getRelationName($field) {
-		if(!preg_match('/^[A-Z0-9._]+$/i', $field)) {
-			throw new InvalidArgumentException("Bad field expression $field");
+	public function applyRelation($field, &$columnName = null, $linearOnly = false) {
+		// If field is invalid, return it without modification
+		if(!$this->isValidRelationName($field)) {
+			$columnName = $field;
+			return $this;
 		}
 
-		if (!$this->inAlterDataQueryCall) {
-			Deprecation::notice(
-				'4.0',
-				'getRelationName is mutating, and must be called inside an alterDataQuery block'
-			);
-		}
-
+		// Simple fields without relations are mapped directly
 		if(strpos($field,'.') === false) {
-			return '"'.$field.'"';
+			$columnName = '"'.$field.'"';
+			return $this;
 		}
 
-		$relations = explode('.', $field);
-		$fieldName = array_pop($relations);
-		$relationModelName = $this->dataQuery->applyRelation($field);
+		return $this->alterDataQuery(
+			function(DataQuery $query, DataList $list) use ($field, &$columnName, $linearOnly) {
+				$relations = explode('.', $field);
+				$fieldName = array_pop($relations);
 
-		return '"'.$relationModelName.'"."'.$fieldName.'"';
+				// Apply
+				$relationModelName = $query->applyRelation($relations, $linearOnly);
+
+				// Find the db field the relation belongs to
+				$className = ClassInfo::table_for_object_field($relationModelName, $fieldName);
+				if(empty($className)) {
+					$className = $relationModelName;
+				}
+
+				$columnName = '"'.$className.'"."'.$fieldName.'"';
+			}
+		);
+	}
+
+	/**
+	 * Check if the given field specification could be interpreted as an unquoted relation name
+	 *
+	 * @param string $field
+	 * @return bool
+	 */
+	protected function isValidRelationName($field) {
+		return preg_match('/^[A-Z0-9._]+$/i', $field);
 	}
 
 	/**
@@ -718,7 +737,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataObject
 	 */
 	protected function createDataObject($row) {
-		$defaultClass = $this->dataClass;
+		$class = $this->dataClass;
 
 		// Failover from RecordClassName to ClassName
 		if(empty($row['RecordClassName'])) {
@@ -727,15 +746,22 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 
 		// Instantiate the class mentioned in RecordClassName only if it exists, otherwise default to $this->dataClass
 		if(class_exists($row['RecordClassName'])) {
-			$item = Injector::inst()->create($row['RecordClassName'], $row, false, $this->model);
-		} else {
-			$item = Injector::inst()->create($defaultClass, $row, false, $this->model);
+			$class = $row['RecordClassName'];
 		}
 
-		//set query params on the DataObject to tell the lazy loading mechanism the context the object creation context
-		$item->setSourceQueryParams($this->dataQuery()->getQueryParams());
+		$item = Injector::inst()->create($class, $row, false, $this->model, $this->getQueryParams());
 
 		return $item;
+	}
+
+	/**
+	 * Get query parameters for this list.
+	 * These values will be assigned as query parameters to newly created objects from this list.
+	 *
+	 * @return array
+	 */
+	public function getQueryParams() {
+		return $this->dataQuery()->getQueryParams();
 	}
 
 	/**

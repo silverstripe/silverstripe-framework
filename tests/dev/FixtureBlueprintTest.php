@@ -287,7 +287,7 @@ class FixtureBlueprintTest_SiteTree extends DataObject implements TestOnly {
 class FixtureBlueprintTest_Page extends FixtureBlueprintTest_SiteTree {
 
 	private static $db = array(
-		'PublishDate' => 'SS_DateTime'
+		'PublishDate' => 'Datetime'
 	);
 }
 

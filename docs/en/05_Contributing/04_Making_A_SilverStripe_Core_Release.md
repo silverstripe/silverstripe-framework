@@ -315,9 +315,12 @@ minor version will require a new branch option to be made available on each site
   and deployed via [SilverStripe Platform](https://platform.silverstripe.com/naut/project/api/environment/live). Currently
   the only way to rebuild the api docs is via SSH in and running the apigen task.
 
-It's also a good idea to check that `Deprecation::notification_version('4.0.0');` in framework/_config.php points to
+Further manual work on major or minor releases:
+
+ * Check that `Deprecation::notification_version('4.0.0');` in framework/_config.php points to
 the right major version. This should match the major version of the current release. E.g. all versions of 4.x
 should be set to `4.0.0`.
+ * Update the [userhelp.silverstripe.org](userhelp.silverstripe.org) version link in `LeftAndMain.help_link`
 
 *Updating markdown files*
 
