@@ -20,6 +20,8 @@ class DataListTest extends SapphireTest {
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment',
 		'DataObjectTest\NamespacedClass',
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 	);
 
 	public function testFilterDataObjectByCreatedDate() {

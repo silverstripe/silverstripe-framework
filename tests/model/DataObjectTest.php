@@ -17,7 +17,9 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment',
-		'DataObjectTest_ExtendedTeamComment'
+		'DataObjectTest_ExtendedTeamComment',
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 	);
 
 	public function testDb() {

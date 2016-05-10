@@ -18,7 +18,9 @@ class SS_MapTest extends SapphireTest {
 		'DataObjectTest_FieldlessSubTable',
 		'DataObjectTest_ValidatedObject',
 		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment'
+		'DataObjectTest_TeamComment',
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 	);
 	
 
