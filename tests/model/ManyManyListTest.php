@@ -12,7 +12,9 @@ class ManyManyListTest extends SapphireTest {
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
 		'DataObjectTest_Player',
-		'ManyManyListTest_ExtraFields'
+		'DataObjectTest_Company',
+		'DataObjectTest_TeamComment',
+		'ManyManyListTest_ExtraFields',
 	);
 
 
