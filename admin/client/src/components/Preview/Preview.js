@@ -14,7 +14,7 @@ class Preview extends SilverStripeComponent {
     let previewType = '';
 
     // Find preview url
-    if (this.props.itemLinks.preview) {
+    if (this.props.itemLinks && this.props.itemLinks.preview) {
       if (this.props.itemLinks.preview.Stage) {
         previewUrl = this.props.itemLinks.preview.Stage.href;
         previewType = this.props.itemLinks.preview.Stage.type;
@@ -28,7 +28,7 @@ class Preview extends SilverStripeComponent {
     let editUrl = null;
     const editKey = 'edit';
     let toolbarButtons = [];
-    if (this.props.itemLinks.edit) {
+    if (this.props.itemLinks && this.props.itemLinks.edit) {
       editUrl = this.props.itemLinks.edit.href;
       toolbarButtons.push(
         <a key={editKey} href={editUrl} className="btn btn-secondary-outline font-icon-edit">
@@ -38,7 +38,13 @@ class Preview extends SilverStripeComponent {
     }
 
     // Build body
-    if (!previewUrl) {
+    if (!this.props.itemId) {
+      body = (
+        <div className="preview__overlay">
+          <h3 className="preview__overlay-text">No preview available.</h3>
+        </div>
+      );
+    } else if (!previewUrl) {
       body = (
         <div className="preview__overlay">
           <h3 className="preview__overlay-text">There is no preview available for this item.</h3>
@@ -70,7 +76,8 @@ class Preview extends SilverStripeComponent {
 }
 
 Preview.propTypes = {
-  itemLinks: React.PropTypes.object.isRequired,
+  itemLinks: React.PropTypes.object,
+  itemId: React.PropTypes.number,
 };
 
 export default Preview;
