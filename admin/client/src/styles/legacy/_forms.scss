@@ -61,6 +61,7 @@ form.nostyle {
 			float: left;
 			display: block;
 			width: $grid-x * 22;
+			margin-bottom: 0; // overrides bootstrap reboot
 			padding: $grid-y $grid-x $grid-y 0;
 			line-height: $grid-y * 2;
 		}
