@@ -503,7 +503,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$fieldName = array_pop($relations);
 
 				// Apply
-				$relationModelName = $query->applyRelation($field, $linearOnly);
+				$relationModelName = $query->applyRelation($relations, $linearOnly);
 
 				// Find the db field the relation belongs to
 				$className = ClassInfo::table_for_object_field($relationModelName, $fieldName);
