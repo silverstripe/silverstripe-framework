@@ -18,10 +18,17 @@
 }
 
 // Gives button a larger icon
-.btn--icon-large[class*="font-icon-"]::before  {
+.btn--icon-large[class*="font-icon-"]::before {
   font-size: 20px;
   line-height: 20px;
   top: 0;
+}
+
+.btn--icon-xl[class*="font-icon-"]::before {
+  font-size: 22px;
+  line-height: 20px;
+  top: -1px;
+  float: left;
 }
 
 
