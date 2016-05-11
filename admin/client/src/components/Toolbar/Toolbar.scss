@@ -37,10 +37,12 @@
   width: 100%;
 }
 
-.toolbar__back-button {
+.toolbar__back-button,
+.cms_backlink .toolbar__back-button { // TEMP: Needed for anchor buttons to override legacy styles
   float: left;
   margin: $spacer-y * .625 $spacer-x / 2 $spacer-y * .625 #{-$spacer-x * .625};
   padding-left: $spacer-x / 4;
   padding-right: $spacer-x / 4;
   border: 0;
+  color: $body-color-light; // TEMP: Needed for anchor buttons to override legacy styles
 }
