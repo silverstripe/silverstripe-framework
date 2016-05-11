@@ -318,9 +318,7 @@ it:
     PAGE: Pagina
     SUBJECT: 'Oggetto email'
     URL: URL
-    URLDESCRIPTION: 'Inserisci video e immagini dal Web nella tua pagina semplicemente inserendo l''URL del file.
-
-      Si sicuro di avere i diritti o i permessi prima di condividere media direttamente dal Web.<br /><br />NB : i file non sono aggiunti allo storage file del CMS, ma incorpora il file dalla sua location principale, se per un qualsiasi motivo il file non e'' più raggiungibile nella sua location principale, non sara'' più visibile su questa pagina.'
+    URLDESCRIPTION: 'Inserisci video e immagini dal Web nella tua pagina semplicemente inserendo l''URL del file. Si sicuro di avere i diritti o i permessi prima di condividere media direttamente dal Web.<br /><br />NB : i file non sono aggiunti allo storage file del CMS, ma incorpora il file dalla sua location principale, se per un qualsiasi motivo il file non e'' più raggiungibile nella sua location principale, non sara'' più visibile su questa pagina.'
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
     UpdateMEDIA: 'Aggiorna Media'
   Image:
