@@ -295,7 +295,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
       // Props which every form field receives.
       // Leave it up to the schema and component to determine
       // which props are required.
-      const props = Object.assign({}, field, { handleFieldUpdate });
+      const props = Object.assign({}, field, { onChange: handleFieldUpdate });
 
       // Provides container components a place to hook in
       // and apply customisations to scaffolded components.
