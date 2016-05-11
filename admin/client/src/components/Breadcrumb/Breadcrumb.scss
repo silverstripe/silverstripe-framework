@@ -7,10 +7,6 @@
   max-height: $toolbar-height;
 }
 
-.breadcrumb--current-only {  // Todo: move to breadcrumb
-  padding: 14px 0;
-}
-
 .breadcrumb>li.breadcrumb__item--last, // TODO Fix Bootstrap clash
 .breadcrumb__item--last {
   display: block;
@@ -24,4 +20,9 @@
   font-weight: normal;
   line-height: 24px;
   @include text-truncate;
+}
+
+// If only the title is shown
+.breadcrumb__item:only-child {
+  margin-top: 6px;
 }
