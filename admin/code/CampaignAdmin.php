@@ -19,7 +19,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		'publishCampaign',
 	];
 
-	private static $menu_priority = 11;
+	private static $menu_priority = 3;
 
 	private static $menu_title = 'Campaigns';
 
