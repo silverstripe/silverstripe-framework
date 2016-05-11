@@ -75,7 +75,7 @@ body.cms {
   padding-right: $grid-gutter-width / 2;
   min-width: 100%;
   z-index: 60;
-  min-height: 52px;
+  min-height: $toolbar-total-height;
   background: {
     image: url(../images/textures/cms_content_header.png);
     repeat: repeat;
@@ -119,7 +119,8 @@ body.cms {
 		}
 
 		.cms_backlink {
-			vertical-align: middle;
+			margin-top: -7px;
+			float: left;
 		}
 	}
 
@@ -214,10 +215,6 @@ body.cms {
 	.breadcrumbs-wrapper {
 		float: left;
 		padding-top: $grid-y - 1;
-	}
-
-	.cms-content-header-tabs {
-		margin-top: $grid-y;
 	}
 
 	.view-controls {
@@ -678,7 +675,7 @@ body.cms {
 
 .cms-content-header-tabs {
 	float: right;
-	margin-top: $spacer-y * .625;
+	margin-top: 9px;
 
 	&.icon-button-group-tabs {
 		margin-top: 12px;
@@ -2049,7 +2046,7 @@ body.cms-dialog {
 
 		padding: 12px 16px;
 		width: 100%;
-		height: 52px;
+		height: $toolbar-total-height;
 		margin: 0;
 		border: 0;
 
