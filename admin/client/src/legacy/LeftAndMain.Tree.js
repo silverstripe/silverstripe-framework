@@ -7,7 +7,7 @@ import $ from 'jQuery';
 $.entwine('ss.tree', function($){
 
 	$('.cms-tree').entwine({
-		
+
 		Hints: null,
 
 		IsUpdatingTree: false,
@@ -19,24 +19,24 @@ $.entwine('ss.tree', function($){
 
 			// Don't reapply (expensive) tree behaviour if already present
 			if($.isNumeric(this.data('jstree_instance_id'))) return;
-			
+
 			var hints = this.attr('data-hints');
 			if(hints) this.setHints($.parseJSON(hints));
-			
+
 			/**
 			 * @todo Icon and page type hover support
 			 * @todo Sorting of sub nodes (originally placed in context menu)
 			 * @todo Automatic load of full subtree via ajax on node checkbox selection (minNodeCount = 0)
 			 *  to avoid doing partial selection with "hidden nodes" (unloaded markup)
 			 * @todo Disallow drag'n'drop when node has "noChildren" set (see siteTreeHints)
-			 * @todo Disallow moving of pages marked as deleted 
+			 * @todo Disallow moving of pages marked as deleted
 			 *  most likely by server response codes rather than clientside
 			 * @todo "defaultChild" when creating a page (sitetreeHints)
 			 * @todo Duplicate page (originally located in context menu)
 			 * @todo Update tree node title information and modified state after reordering (response is a JSON array)
-			 * 
+			 *
 			 * Tasks most likely not required after moving to a standalone tree:
-			 * 
+			 *
 			 * @todo Context menu - to be replaced by a bezel UI
 			 * @todo Refresh form for selected tree node if affected by reordering (new parent relationship)
 			 * @todo Cancel current form load via ajax when new load is requested (synchronous loading)
@@ -63,7 +63,7 @@ $.entwine('ss.tree', function($){
 
 						self.updateFromEditForm();
 						self.css('visibility', 'visible');
-						
+
 						// Only show checkboxes with .multiple class
 						data.inst.hide_checkboxes();
 					})
@@ -75,7 +75,7 @@ $.entwine('ss.tree', function($){
 								return false;
 							}
 						}
-						
+
 						if($.inArray(data.func, ['check_node', 'uncheck_node'])) {
 							// don't allow check and uncheck if parent is disabled
 							var node = $(data.args[0]).parents('li:first');
@@ -97,10 +97,13 @@ $.entwine('ss.tree', function($){
 						});
 
 						$.ajax({
-							'url': self.data('urlSavetreenode'),
+							'url': $.path.addSearchParams(
+								self.data('urlSavetreenode'),
+								self.data('extraParams')
+							),
 							'type': 'POST',
 							'data': {
-								ID: nodeID, 
+								ID: nodeID,
 								ParentID: newParentID,
 								SiblingIDs: siblingIDs
 							},
@@ -138,7 +141,7 @@ $.entwine('ss.tree', function($){
 		'from .cms-container form': {
 			onaftersubmitform: function(e){
 				var id = $('.cms-edit-form :input[name=ID]').val();
-				// TODO Trigger by implementing and inspecting "changed records" metadata 
+				// TODO Trigger by implementing and inspecting "changed records" metadata
 				// sent by form submission response (as HTTP response headers)
 				this.updateNodesFromServer([id]);
 			}
@@ -164,9 +167,9 @@ $.entwine('ss.tree', function($){
 						// Check if a node is allowed to be moved.
 						// Caution: Runs on every drag over a new node
 						'check_move': function(data) {
-							var movedNode = $(data.o), newParent = $(data.np), 
+							var movedNode = $(data.o), newParent = $(data.np),
 								isMovedOntoContainer = data.ot.get_container()[0] == data.np[0],
-								movedNodeClass = movedNode.getClassname(), 
+								movedNodeClass = movedNode.getClassname(),
 								newParentClass = newParent.getClassname(),
 								// Check allowedChildren of newParent or against root node rules
 								hints = self.getHints(),
@@ -176,11 +179,11 @@ $.entwine('ss.tree', function($){
 
 							// Special case for VirtualPage: Check that original page type is an allowed child
 							if(hint && movedNode.attr('class').match(/VirtualPage-([^\s]*)/)) movedNodeClass = RegExp.$1;
-							
+
 							if(hint) disallowedChildren = (typeof hint.disallowedChildren != 'undefined') ? hint.disallowedChildren : [];
 							var isAllowed = (
 								// Don't allow moving the root node
-								movedNode.data('id') !== 0 
+								movedNode.data('id') !== 0
 								// Archived pages can't be moved
 								&& !movedNode.hasClass('status-archived')
 								// Only allow moving node inside the root container, not before/after it
@@ -190,7 +193,7 @@ $.entwine('ss.tree', function($){
 								// movedNode is allowed as a child
 								&& (!disallowedChildren.length || $.inArray(movedNodeClass, disallowedChildren) == -1)
 							);
-							
+
 							return isAllowed;
 						}
 					}
@@ -209,16 +212,16 @@ $.entwine('ss.tree', function($){
 				// Caution: SilverStripe has disabled $.vakata.css.add_sheet() for performance reasons,
 				// which means you need to add any CSS manually to framework/admin/scss/_tree.css
 				'plugins': [
-					'html_data', 'ui', 'dnd', 'crrm', 'themes', 
+					'html_data', 'ui', 'dnd', 'crrm', 'themes',
 					'checkbox' // checkboxes are hidden unless .multiple is set
 				]
 			};
 		},
-		
+
 		/**
 		 * Function:
 		 *  search
-		 * 
+		 *
 		 * Parameters:
 		 *  (Object) data Pass empty data to cancel search
 		 *  (Function) callback Success callback
@@ -228,13 +231,13 @@ $.entwine('ss.tree', function($){
 			else this.removeData('searchparams');
 			this.jstree('refresh', -1, callback);
 		},
-		
+
 		/**
 		 * Function: getNodeByID
-		 * 
+		 *
 		 * Parameters:
-		 *  (Int) id 
-		 * 
+		 *  (Int) id
+		 *
 		 * Returns
 		 *  DOMElement
 		 */
@@ -254,10 +257,10 @@ $.entwine('ss.tree', function($){
 		 *  (Function) Success callback
 		 */
 		createNode: function(html, data, callback) {
-			var self = this, 
+			var self = this,
 				parentNode = data.ParentID !== void 0 ? self.getNodeByID(data.ParentID) : false, // Explicitly check for undefined as 0 is a valid ParentID
 				newNode = $(html);
-			
+
 			// Extract the state for the new node from the properties taken from the provided HTML template.
 			// This will correctly initialise the behaviour of the node for ajax loading of children.
 			var properties = {data: ''};
@@ -267,9 +270,9 @@ $.entwine('ss.tree', function($){
 				properties.state = 'closed';
 			}
 			this.jstree(
-				'create_node', 
-				parentNode.length ? parentNode : -1, 
-				'last', 
+				'create_node',
+				parentNode.length ? parentNode : -1,
+				'last',
 				properties,
 				function(node) {
 					var origClasses = node.attr('class');
@@ -288,7 +291,7 @@ $.entwine('ss.tree', function($){
 		/**
 		 * Updates a node's state in the tree,
 		 * including all of its HTML, as well as its position.
-		 * 
+		 *
 		 * Parameters:
 		 *  (DOMElement) Existing node
 		 *  (String) HTML New node content (<li>)
@@ -325,7 +328,7 @@ $.entwine('ss.tree', function($){
 				this.jstree('move_node', node, parentNode.length ? parentNode : -1);
 			}
 		},
-		
+
 		/**
 		 * Sets the current state based on the form the tree is managing.
 		 */
@@ -352,8 +355,8 @@ $.entwine('ss.tree', function($){
 		 * Reloads the view of one or more tree nodes
 		 * from the server, ensuring that their state is up to date
 		 * (icon, title, hierarchy, badges, etc).
-		 * This is easier, more consistent and more extensible 
-		 * than trying to correct all aspects via DOM modifications, 
+		 * This is easier, more consistent and more extensible
+		 * than trying to correct all aspects via DOM modifications,
 		 * based on the sparse data available in the current edit form.
 		 *
 		 * Parameters:
@@ -370,7 +373,7 @@ $.entwine('ss.tree', function($){
 				// Duplicates can be caused by the subtree reloading through
 				// a tree "open"/"select" event, while at the same time creating a new node
 				self.getNodeByID(node.data('id')).not(node).remove();
-				
+
 				// Select this node
 				self.jstree('deselect_all');
 				self.jstree('select_node', node);
@@ -432,7 +435,7 @@ $.entwine('ss.tree', function($){
 		}
 
 	});
-	
+
 	$('.cms-tree.multiple').entwine({
 		onmatch: function() {
 			this._super();
@@ -445,7 +448,7 @@ $.entwine('ss.tree', function($){
 		},
 		/**
 		 * Function: getSelectedIDs
-		 * 
+		 *
 		 * Returns:
 		 * 	(Array)
 		 */
@@ -459,32 +462,32 @@ $.entwine('ss.tree', function($){
 				.get();
 		}
 	});
-	
+
 	$('.cms-tree li').entwine({
-		
+
 		/**
 		 * Function: setEnabled
-		 * 
+		 *
 		 * Parameters:
 		 * 	(bool)
 		 */
 		setEnabled: function(bool) {
 			this.toggleClass('disabled', !(bool));
 		},
-		
+
 		/**
 		 * Function: getClassname
-		 * 
+		 *
 		 * Returns PHP class for this element. Useful to check business rules like valid drag'n'drop targets.
 		 */
 		getClassname: function() {
 			var matches = this.attr('class').match(/class-([^\s]*)/i);
 			return matches ? matches[1] : '';
 		},
-		
+
 		/**
 		 * Function: getID
-		 * 
+		 *
 		 * Returns:
 		 * 	(Number)
 		 */

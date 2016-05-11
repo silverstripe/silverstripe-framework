@@ -30,14 +30,37 @@ class SQLSelectTest extends SapphireTest {
 
 		//basic counting
 		$qry = SQLSelectTest_DO::get()->dataQuery()->getFinalisedQuery();
-		$qry->setGroupBy('Common');
+		$qry->setGroupBy('"Common"');
 		$ids = $this->allFixtureIDs('SQLSelectTest_DO');
-		$this->assertEquals(count($ids), $qry->count('"SQLSelectTest_DO"."ID"'));
-
+		$count = $qry->count('"SQLSelectTest_DO"."ID"');
+		$this->assertEquals(count($ids), $count);
+		$this->assertInternalType("int", $count);
 		//test with `having`
 		if (DB::get_conn() instanceof MySQLDatabase) {
 			$qry->setHaving('"Date" > 2012-02-01');
-			$this->assertEquals(1, $qry->count('"SQLSelectTest_DO"."ID"'));
+			$count = $qry->count('"SQLSelectTest_DO"."ID"');
+			$this->assertEquals(1, $count);
+			$this->assertInternalType("int", $count);
+		}
+	}
+	public function testUnlimitedRowCount() {
+		//basic counting
+		$qry = SQLSelectTest_DO::get()->dataQuery()->getFinalisedQuery();
+		$ids = $this->allFixtureIDs('SQLSelectTest_DO');
+		$qry->setLimit(1);
+		$count = $qry->unlimitedRowCount('"SQLSelectTest_DO"."ID"');
+		$this->assertEquals(count($ids), $count);
+		$this->assertInternalType("int", $count);
+		// Test without column - SQLSelect has different logic for this
+		$count = $qry->unlimitedRowCount();
+		$this->assertEquals(2, $count);
+		$this->assertInternalType("int", $count);
+		//test with `having`
+		if (DB::get_conn() instanceof MySQLDatabase) {
+			$qry->setHaving('"Date" > 2012-02-01');
+			$count = $qry->unlimitedRowCount('"SQLSelectTest_DO"."ID"');
+			$this->assertEquals(1, $count);
+			$this->assertInternalType("int", $count);
 		}
 	}
 

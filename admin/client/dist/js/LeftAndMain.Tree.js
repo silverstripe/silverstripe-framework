@@ -91,7 +91,7 @@
 					});
 
 					$.ajax({
-						'url': self.data('urlSavetreenode'),
+						'url': $.path.addSearchParams(self.data('urlSavetreenode'), self.data('extraParams')),
 						'type': 'POST',
 						'data': {
 							ID: nodeID,

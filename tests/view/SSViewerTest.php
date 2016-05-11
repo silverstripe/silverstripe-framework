@@ -691,6 +691,31 @@ after')
 			'<p>A</p><p>Bar</p>'
 		);
 
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeScopeInheritanceWithArgsInLoop Title="SomeArg" %>',
+				new ArrayData(array('Items' => new ArrayList(array(
+					new ArrayData(array('Title' => 'Foo')),
+					new ArrayData(array('Title' => 'Bar'))
+				))))),
+			'SomeArg - Foo - Bar - SomeArg'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeScopeInheritanceWithArgsInWith Title="A" %>',
+				new ArrayData(array('Item' => new ArrayData(array('Title' =>'B'))))),
+			'A - B - A'
+		);
+
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeScopeInheritanceWithArgsInNestedWith Title="A" %>',
+				new ArrayData(array(
+					'Item' => new ArrayData(array(
+						'Title' =>'B', 'NestedItem' => new ArrayData(array('Title' => 'C'))
+					)))
+				)),
+			'A - B - C - B - A'
+		);
+
 		$data = new ArrayData(array(
 			'Nested' => new ArrayData(array(
 				'Object' => new ArrayData(array('Key' => 'A'))

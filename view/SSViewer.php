@@ -26,9 +26,17 @@ use SilverStripe\Model\FieldType\DBField;
  */
 class SSViewer_Scope {
 
+	const ITEM = 0;
+	const ITEM_ITERATOR = 1;
+	const ITEM_ITERATOR_TOTAL = 2;
+	const POP_INDEX = 3;
+	const UP_INDEX = 4;
+	const CURRENT_INDEX = 5;
+	const ITEM_OVERLAY = 6;
+	
 	// The stack of previous "global" items
-	// And array of item, itemIterator, itemIteratorTotal, pop_index, up_index, current_index
-	private $itemStack = array();
+	// An indexed array of item, item iterator, item iterator total, pop index, up index, current index & parent overlay
+	private $itemStack = array(); 
 
 	// The current "global" item (the one any lookup starts from)
 	protected $item;
@@ -137,12 +145,12 @@ class SSViewer_Scope {
 	public function pushScope(){
 		$newLocalIndex = count($this->itemStack)-1;
 
-		$this->popIndex = $this->itemStack[$newLocalIndex][3] = $this->localIndex;
+		$this->popIndex = $this->itemStack[$newLocalIndex][SSViewer_Scope::POP_INDEX] = $this->localIndex;
 		$this->localIndex = $newLocalIndex;
 
 		// We normally keep any previous itemIterator around, so local $Up calls reference the right element. But
 		// once we enter a new global scope, we need to make sure we use a new one
-		$this->itemIterator = $this->itemStack[$newLocalIndex][1] = null;
+		$this->itemIterator = $this->itemStack[$newLocalIndex][SSViewer_Scope::ITEM_ITERATOR] = null;
 
 		return $this;
 	}
@@ -161,9 +169,9 @@ class SSViewer_Scope {
 			if (is_array($this->item)) $this->itemIterator = new ArrayIterator($this->item);
 			else $this->itemIterator = $this->item->getIterator();
 
-			$this->itemStack[$this->localIndex][1] = $this->itemIterator;
+			$this->itemStack[$this->localIndex][SSViewer_Scope::ITEM_ITERATOR] = $this->itemIterator;
 			$this->itemIteratorTotal = iterator_count($this->itemIterator); //count the total number of items
-			$this->itemStack[$this->localIndex][2] = $this->itemIteratorTotal;
+			$this->itemStack[$this->localIndex][SSViewer_Scope::ITEM_ITERATOR_TOTAL] = $this->itemIteratorTotal;
 			$this->itemIterator->rewind();
 		}
 		else {
@@ -182,6 +190,27 @@ class SSViewer_Scope {
 
 		$this->resetLocalScope();
 		return $retval;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getItemStack() {
+		return $this->itemStack;
+	}
+
+	/**
+	 * @param array
+	 */
+	protected function setItemStack(array $stack) {
+		$this->itemStack = $stack;
+	}
+
+	/**
+	 * @return int|null
+	 */
+	protected function getUpIndex() {
+		return $this->upIndex;
 	}
 }
 
@@ -519,6 +548,70 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			return $res;
 		}
 
+	}
+
+	/**
+	 * Store the current overlay (as it doesn't directly apply to the new scope
+	 * that's being pushed). We want to store the overlay against the next item
+	 * "up" in the stack (hence upIndex), rather than the current item, because
+	 * SSViewer_Scope::obj() has already been called and pushed the new item to
+	 * the stack by this point
+	 * @return SSViewer_Scope
+	 */
+	public function pushScope() {
+		$scope = parent::pushScope();
+
+		$itemStack = $this->getItemStack();
+		$itemStack[$this->getUpIndex()][SSViewer_Scope::ITEM_OVERLAY] = $this->overlay;
+
+		$this->setItemStack($itemStack);
+		$this->overlay = array();
+
+		return $scope;
+	}
+
+	/**
+	 * Now that we're going to jump up an item in the item stack, we need to
+	 * restore the overlay that was previously stored against the next item "up"
+	 * in the stack from the current one
+	 * @return SSViewer_Scope
+	 */
+	public function popScope() {
+		$itemStack = $this->getItemStack();
+		$this->overlay = $itemStack[$this->getUpIndex()][SSViewer_Scope::ITEM_OVERLAY];
+
+		return parent::popScope();
+	}
+
+	/**
+	 * $Up and $Top need to restore the overlay from the parent and top-level
+	 * scope respectively.
+	 */
+	public function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+		$overlayIndex = false;
+
+		switch($name) {
+			case 'Up':
+				$upIndex = $this->getUpIndex();
+				if ($upIndex === null) {
+					user_error('Up called when we\'re already at the top of the scope', E_USER_ERROR);
+				}
+
+				$overlayIndex = $upIndex; // Parent scope
+				break;
+			case 'Top':
+				$overlayIndex = 0; // Top-level scope
+				break;
+		}
+
+		if ($overlayIndex !== false) {
+			$itemStack = $this->getItemStack();
+			if (!$this->overlay && isset($itemStack[$overlayIndex][SSViewer_Scope::ITEM_OVERLAY])) {
+				$this->overlay = $itemStack[$overlayIndex][SSViewer_Scope::ITEM_OVERLAY];
+			}
+		}
+
+		return parent::obj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
 	}
 
 	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
