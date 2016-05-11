@@ -50,6 +50,7 @@ class ExactMatchFilter extends SearchFilter {
 	 */
 	protected function applyMany(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
+		$column = $query->lastAlias ? sprintf('"%s"."%s"', $query->lastAlias, $this->name) : $this->getDbName();
 		$modifiers = $this->getModifiers();
 		$values = array();
 		foreach($this->getValue() as $value) {
@@ -59,13 +60,13 @@ class ExactMatchFilter extends SearchFilter {
 			$valueStr = "'" . implode("', '", $values) . "'";
 			return $query->where(sprintf(
 				'%s IN (%s)',
-				$this->getDbName(),
+				$column,
 				$valueStr
 			));
 		} else {
 			foreach($values as &$v) {
 				$v = DB::getConn()->comparisonClause(
-					$this->getDbName(),
+					$column,
 					$v,
 					true, // exact?
 					false, // negate?
