@@ -70,11 +70,11 @@ $gf_grid_x:	16px;
 			}
 		}
 
-		span button#action_gridfield_relationfind {
+		span button.action_gridfield_relationfind {
 	 		display:none; //hides find button - redundant functionality
 	 	}
 
-	 	p button#action_export {
+	 	p button.action_export {
 			span.btn-icon-download-csv {
 				height:17px; //exact height of icon
 			}
@@ -125,7 +125,7 @@ $gf_grid_x:	16px;
 				border-top-right-radius: 0;
 				border-bottom-right-radius: 0;
 			}
-			button#action_gridfield_relationadd {
+			button.action_gridfield_relationadd {
 				height: 32px;
 				margin-left: 0; // Webkit needs this
 				border-top-left-radius: 0;
@@ -439,7 +439,7 @@ $gf_grid_x:	16px;
 
 
 				button {
-					&#action_gridfield_relationadd:hover {
+					&.action_gridfield_relationadd:hover {
 						color: #444 !important; /* Not sure why IE think it needs this */
 					}
 					&:hover {

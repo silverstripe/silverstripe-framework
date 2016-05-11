@@ -96,21 +96,23 @@ class GridFieldAddExistingAutocompleter
 		$dataClass = $gridField->getList()->dataClass();
 
 		$forTemplate = new ArrayData(array());
-		$forTemplate->Fields = new ArrayList();
+		$forTemplate->Fields = new FieldList();
 
 		$searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"));
 
 		$searchField->setAttribute('data-search-url', Controller::join_links($gridField->Link('search')));
 		$searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
-		$searchField->addExtraClass('relation-search no-change-track');
+		$searchField->addExtraClass('relation-search no-change-track action_gridfield_relationsearch');
 
 		$findAction = new GridField_FormAction($gridField, 'gridfield_relationfind',
 			_t('GridField.Find', "Find"), 'find', 'find');
 		$findAction->setAttribute('data-icon', 'relationfind');
+		$findAction->addExtraClass('action_gridfield_relationfind');
 
 		$addAction = new GridField_FormAction($gridField, 'gridfield_relationadd',
 			_t('GridField.LinkExisting', "Link Existing"), 'addto', 'addto');
 		$addAction->setAttribute('data-icon', 'chain--plus');
+		$addAction->addExtraClass('action_gridfield_relationadd');
 
 		// If an object is not found, disable the action
 		if(!is_int($gridField->State->GridFieldAddRelation(null))) {
@@ -120,6 +122,9 @@ class GridFieldAddExistingAutocompleter
 		$forTemplate->Fields->push($searchField);
 		$forTemplate->Fields->push($findAction);
 		$forTemplate->Fields->push($addAction);
+		if($form = $gridField->getForm()) {
+			$forTemplate->Fields->setForm($form);
+		}
 
 		return array(
 			$this->targetFragment => $forTemplate->renderWith($this->itemClass)
