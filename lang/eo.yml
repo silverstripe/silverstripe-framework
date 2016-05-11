@@ -1,5 +1,7 @@
 eo:
   AssetAdmin:
+    ALLOWEDEXTS: 'Permesitaj alŝutaj dosieraj sufiksoj'
+    HIDEALLOWEDEXTS: 'Kaŝi permesitajn sufiksojn'
     NEWFOLDER: Nova dosierujo
     SHOWALLOWEDEXTS: 'Vidigi permesitajn sufiksojn'
   AssetTableField:
@@ -7,12 +9,14 @@ eo:
     DIM: Dimensioj
     FILENAME: Nomo de dosiero
     FOLDER: Dosierujo
+    HEIGHT: Alto
     LASTEDIT: 'Laste ŝanĝita'
     OWNER: Posedanto
     SIZE: 'Grando'
     TITLE: Titolo
     TYPE: 'Tipo'
     URL: URL
+    WIDTH: Larĝo
   AssetUploadField:
     ChooseFiles: 'Elekti dosierojn'
     DRAGFILESHERE: 'Ŝovi dosieron ĉi tien'
@@ -23,7 +27,10 @@ eo:
     FILES: Dosieroj
     FROMCOMPUTER: 'Elekti dosierojn el via komputilo'
     FROMCOMPUTERINFO: 'Alŝuti el via komputilo'
+    INSERTURL: 'Enigi el URL'
+    REMOVEINFO: 'Forigi ĉi tiun dosieron el ĉi tiu kampo'
     TOTAL: Totalo
+    TOUPLOAD: 'Elekti dosierojn alŝutotajn...'
     UPLOADINPROGRESS: 'Bonvolu atendi...alŝuto daŭras'
     UPLOADOR: AŬ
   BBCodeParser:
@@ -146,6 +153,7 @@ eo:
     INVALID_REQUEST: 'Malvalida peto'
   DropdownField:
     CHOOSE: (Elekti)
+    CHOOSESEARCH: '(Elekti aŭ serĉi)'
     SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   EmailField:
     VALIDATION: 'Bonvolu enigi readreson'
@@ -299,6 +307,7 @@ eo:
     IMAGETITLETEXT: 'Teksto de titolo (ŝpruchelpilo)'
     IMAGETITLETEXTDESC: 'Por plua informo pri la bildo'
     IMAGEWIDTHPX: Larĝo
+    INSERTMEDIA: 'Enigi registraĵojn'
     LINK: 'Ligilo'
     LINKANCHOR: 'Ankri al ĉi tiu paĝo'
     LINKDESCR: 'Ligila priskribo'
@@ -311,7 +320,9 @@ eo:
     PAGE: Paĝo
     SUBJECT: 'Temo de retpoŝto'
     URL: URL
+    URLDESCRIPTION: 'Enigu videojn kaj bildojn el la TTT en vian paĝon simple enigante la URL de la dosiero. Certigu ke vi havas permesojn antaŭ ol kunhavigi registraĵojn rekte el la TTT.<br /><br />Bonvolu noti ke dosieroj ne aldoniĝas al la konservejo de dosieroj de la CMS sed dosieroj enkorpiĝas el ties origina loko. Se ial la dosiero ne plu haveblas en ĝia origina loko, ĝi ne plu estos videbla en ĉi tiu paĝo.'
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ne estas konvertebla al memorilo.'
+    UpdateMEDIA: 'Ĝisdatigi registraĵojn'
   Image:
     PLURALNAME: Dosieroj
     SINGULARNAME: Dosiero

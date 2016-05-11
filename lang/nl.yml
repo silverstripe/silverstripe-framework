@@ -1,18 +1,22 @@
 nl:
   AssetAdmin:
+    ALLOWEDEXTS: 'Toegestane extensies'
+    HIDEALLOWEDEXTS: 'Verberg toegestane extensies'
     NEWFOLDER: Nieuwe map
     SHOWALLOWEDEXTS: 'Toon toegestane extensies'
   AssetTableField:
     CREATED: 'Eerste upload'
-    DIM: Dimensies
+    DIM: Afmetingen
     FILENAME: Bestandsnaam
     FOLDER: Map
+    HEIGHT: Hoogte
     LASTEDIT: 'Laatste wijziging'
     OWNER: Eigenaar
     SIZE: 'Grootte'
     TITLE: Titel
     TYPE: 'Type'
     URL: URL
+    WIDTH: Breedte
   AssetUploadField:
     ChooseFiles: 'Selecteer bestand'
     DRAGFILESHERE: 'Sleep bestanden hierheen'
@@ -23,7 +27,10 @@ nl:
     FILES: Bestanden
     FROMCOMPUTER: 'Selecteer bestanden op uw computer'
     FROMCOMPUTERINFO: 'Uploaden vanaf uw computer'
+    INSERTURL: 'Voeg toe van URL'
+    REMOVEINFO: 'Verwijder bestand van dit veld'
     TOTAL: Totaal
+    TOUPLOAD: 'Selecteer bestanden voor upload'
     UPLOADINPROGRESS: 'Een ogenblik geduld... upload wordt uitgevoerd'
     UPLOADOR: OF
   BBCodeParser:
@@ -59,6 +66,8 @@ nl:
     ERRORNOTREC: 'De gebruikersnaam en/of het wachtwoord wordt niet herkend'
   Boolean:
     ANY: Elke
+    NOANSWER: 'Nee'
+    YESANSWER: 'Ja'
   CMSLoadingScreen_ss:
     LOADING: Laden...
     REQUIREJS: 'Het CMS vereist dat JavaScript ingeschakeld is.'
@@ -67,22 +76,44 @@ nl:
     ACCESSALLINTERFACES: 'Toegang tot alle CMS onderdelen'
     ACCESSALLINTERFACESHELP: 'Overstemt meer specifieke toegangsinstellingen'
     SAVE: Bewaar
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten?'
+    BUTTONLOGIN: 'Opnieuw inloggen'
+    BUTTONLOGOUT: 'Uitloggen'
+    PASSWORDEXPIRED: '<p>Je wachtwoord is verlopen. <a target="_top" href="{link}">Kies een nieuw wachtwoord.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Website voorbeeld'
+  CMSPagesController_Tools_ss:
+    FILTER: Filter
   CMSProfileController:
     MENUTITLE: 'Mijn Profiel'
+  CMSSecurity:
+    INVALIDUSER: '<p>Ongeldige gebruiker <a target="_top" href="{link}">Log hier opnieuw in</a> om verder te gaan.</p>'
+    LoginMessage: '<p>Je kunt verder met wat je aan het doen was, door opnieuw in te loggen.</p>'
+    SUCCESS: Succes
+    SUCCESSCONTENT: '<p>Je bent ingelogd. <a target="_top" href="{link}">Klik hier</a> als je niet automatisch wordt doorgestuurd.</p>'
+    TimedOutTitleAnonymous: 'Sessie is verlopen'
+    TimedOutTitleMember: 'Hallo {name}!<br />Je sessie is verlopen.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
     CHANGEPASSWORDTEXT2: 'U kunt nu onderstaande gegevens gebruiken om in te loggen:'
     EMAIL: E-mail
     HELLO: Hallo
     PASSWORD: Wachtwoord
+  CheckboxField:
+    NOANSWER: 'Nee'
+    YESANSWER: 'Ja'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. {value} is geen geldige keuze.'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. ''{value}'' is geen geldige keuze.'
   ConfirmedPasswordField:
     ATLEAST: 'Een wachtwoord moet tenminste {min} karakters hebben.'
     BETWEEN: 'Een wachtwoord moet tussen de {min} en {max} karakters hebben'
     MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
     SHOWONCLICKTITLE: 'Verander wachtwoord'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Je moet inloggen met je CMS wachtwoord om die inhoud te kunnen zien. <a href="%s">Klik hier</a> om terug te keren naar de gepubliceerde site.'
     NOTLOGGEDIN: 'Niet ingelogd'
   CreditCardField:
     FIRST: eerste
@@ -122,6 +153,8 @@ nl:
     INVALID_REQUEST: 'Fout bij verwerken'
   DropdownField:
     CHOOSE: (Kies)
+    CHOOSESEARCH: '(Kies of zoek)'
+    SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. {value} is geen geldige keuze.'
   EmailField:
     VALIDATION: 'Gelieve een e-mailadres in te voeren.'
   Enum:
@@ -170,6 +203,7 @@ nl:
     TEXT3: voor
   Form:
     CSRF_EXPIRED_MESSAGE: 'Uw sessie is verlopen. Verzend het formulier opnieuw.'
+    CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klik op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
     FIELDISREQUIRED: '{name} is verplicht'
     SubmitBtnLabel: Versturen
     VALIDATIONCREDITNUMBER: 'Gelieve uw credit card number {number} juist in te vullen'
@@ -235,6 +269,7 @@ nl:
     many_many_Members: Leden
   GroupImportForm:
     Help1: '<p>Importeer een of meerdere groepen in <em>CSV</em>-formaat (comma-separated values). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
+    Help2: '<div class="advanced"> <h4>Geavanceerd gebruik</h4> <ul> <li>Toegestane kolommen: <em>%s</em></li> <li>Bestaande groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li> <li>Groepshiërarchiën kunnen aangemaakt worden door een <em>ParentCode</em> kolom te gebruiken</li>; <li>Toegangscodes kunnen toegewezen worden met de <em>PermissionCode</em> kolom. Bestaande toegangscodes worden niet verwijderd.</li> </ul> </div>'
     ResultCreated: '{count} groepen aangemaakt'
     ResultDeleted: '%d groepen verwijderd'
     ResultUpdated: '%d groepen aangepast'
@@ -243,6 +278,8 @@ nl:
   HtmlEditorField:
     ADDURL: 'Voeg URL toe'
     ADJUSTDETAILSDIMENSIONS: 'Details en afmetingen'
+    ANCHORSCANNOTACCESSPAGE: 'Je bent niet gemachtigd om de opgevraagde pagina te bekijken.'
+    ANCHORSPAGENOTFOUND: 'Pagina niet gevonden.'
     ANCHORVALUE: Anker
     BUTTONADDURL: 'Voeg URL toe'
     BUTTONINSERT: Invoegen
@@ -270,6 +307,7 @@ nl:
     IMAGETITLETEXT: 'Tooltip (title)'
     IMAGETITLETEXTDESC: 'Toon extra informatie over de afbeelding'
     IMAGEWIDTHPX: Breedte
+    INSERTMEDIA: 'Voeg media in'
     LINK: 'Link invoegen'
     LINKANCHOR: 'Anker op deze pagina'
     LINKDESCR: 'Linkomschrijving'
@@ -280,8 +318,11 @@ nl:
     LINKOPENNEWWIN: 'Link in een nieuw venster openen?'
     LINKTO: 'Verwijs naar'
     PAGE: Pagina
+    SUBJECT: 'Email onderwerp'
     URL: URL
+    URLDESCRIPTION: 'Voeg video''s of afbeeldingen van een andere webpagina toe, door de URL in te voeren. Zorg er voor dat je de juiste toestemming hebt, om het materiaal te delen op het internet.<br><br>De bestanden worden niet opgeslagen in het CMS, maar geëmbed vanaf de originele locatie. Als het bestand niet meer beschikbaar is op de originele locatie, is deze niet meer zichtbaar op deze pagina.'
     URLNOTANOEMBEDRESOURCE: '{url} kon niet worden omgezet in een media-bron.'
+    UpdateMEDIA: 'Media bijwerken'
   Image:
     PLURALNAME: Bestanden
     SINGULARNAME: Bestand
@@ -295,15 +336,20 @@ nl:
     DELETED: Verwijderd.
     HELP: Help
     PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als u weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hieronder in.'
+    PERMALREADY: 'Helaas, je hebt geen toegang tot dat deel van het CMS. Hieronder kun je inloggen als iemand anders.'
+    PERMDEFAULT: 'Je moet ingelogd zijn, om dit deel van de website te bekijken. Vul hieronder je inlog gegevens in.'
     PreviewButton: Voorbeeld
     REORGANISATIONSUCCESSFUL: 'Menu-indeling is aangepast'
     SAVEDUP: Opgeslagen.
     ShowAsList: 'laat als lijst zien'
     TooManyPages: 'Te veel pagina''s'
     ValidationError: 'Validatiefout'
+    VersionUnknown: onbekend
   LeftAndMain_Menu_ss:
     Hello: Hallo
     LOGOUT: 'Uitloggen'
+  ListboxField:
+    SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. %s is geen geldige keuze.'
   LoginAttempt:
     Email: 'E-mailadres '
     IP: 'IP adres'
@@ -336,6 +382,7 @@ nl:
     NEWPASSWORD: 'Nieuw wachtwoord'
     NoPassword: 'Er is geen wachtwoord voor deze gebruiker.'
     PASSWORD: Wachtwoord
+    PASSWORDEXPIRED: 'Je wachtwoord is verlopen. Kies een nieuw wachtwoord.'
     PLURALNAME: Leden
     REMEMBERME: 'Wachtwoord onthouden voor de volgende keer?'
     SINGULARNAME: Lid
@@ -378,6 +425,7 @@ nl:
     Toggle: 'Toon opmaak hulp'
   MemberImportForm:
     Help1: '<p>Importeer leden in <em>CSV</em>-formaat (comma-separated values). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
+    Help2: '<div class="advanced"><h4>Geavanceerd gebruik</h4><ul><li>Toegestane kolommen: <em>%s</em></li><li>Bestaande gebruikers worden geïdentificeerd door middel van hun unieke <em>Code</em>, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li><li>Groepen kunnen worden toegekend door <em>Groups</em> column. Groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>, meerdere groepen kunnen worden gescheiden door een komma. Bestaande groepsleden worden niet verwijderd.</li></ul></div>'
     ResultCreated: '{count} leden aangemaakt'
     ResultDeleted: '%d leden verwijderd'
     ResultNone: 'Geen wijzingen'
@@ -441,6 +489,7 @@ nl:
     SINGULARNAME: Rol
     Title: Titel
   PermissionRoleCode:
+    PLURALNAME: 'Permissie codes'
     PermsError: 'U moet (ADMIN) rechten hebben om de code "%s" toe te kennen'
     SINGULARNAME: 'Machtigingen rol code'
   Permissions:
@@ -506,6 +555,8 @@ nl:
     Print: Afdrukken
   TableListField_PageControls_ss:
     OF: van
+  TextField:
+    VALIDATEMAXLENGTH: 'De waarde voor {name} mag niet langer zijn dan {maxLength} tekens.'
   TimeField:
     VALIDATEFORMAT: 'Vul een geldig datumformaat in ({format})'
   ToggleField:

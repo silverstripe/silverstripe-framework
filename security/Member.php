@@ -368,7 +368,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Returns true if this user is locked out
 	 */
 	public function isLockedOut() {
-		return $this->LockedOutUntil && time() < strtotime($this->LockedOutUntil);
+		return $this->LockedOutUntil && SS_Datetime::now()->Format('U') < strtotime($this->LockedOutUntil);
 	}
 
 	/**
@@ -1607,7 +1607,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
 				$lockoutMins = self::config()->lock_out_delay_mins;
-				$this->LockedOutUntil = date('Y-m-d H:i:s', time() + $lockoutMins*60);
+				$this->LockedOutUntil = date('Y-m-d H:i:s', SS_Datetime::now()->Format('U') + $lockoutMins*60);
 				$this->FailedLoginCount = 0;
 			}
 		}

@@ -1068,6 +1068,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return SS_HTTPResponse JSON string with a
 	 */
 	public function savetreenode($request) {
+		if (!SecurityToken::inst()->checkRequest($request)) {
+			return $this->httpError(400);
+		}
 		if (!Permission::check('SITETREE_REORGANISE') && !Permission::check('ADMIN')) {
 			$this->response->setStatusCode(
 				403,
@@ -1492,6 +1495,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @param int $id
 	 */
 	public function setCurrentPageID($id) {
+		$id = (int)$id;
 		Session::set($this->sessionNamespace() . ".currentPage", $id);
 	}
 
