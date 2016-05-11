@@ -58,11 +58,11 @@ class TextField extends SilverStripeComponent {
    * @param object event
    */
   handleChange(event) {
-    if (typeof this.props.handleFieldUpdate === 'undefined') {
+    if (typeof this.props.onChange === 'undefined') {
       return;
     }
 
-    this.props.handleFieldUpdate(event, { id: this.props.id, value: event.target.value });
+    this.props.onChange(event, { id: this.props.id, value: event.target.value });
   }
 }
 
@@ -70,7 +70,7 @@ TextField.propTypes = {
   leftTitle: React.PropTypes.string,
   extraClass: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
-  handleFieldUpdate: React.PropTypes.func,
+  onChange: React.PropTypes.func,
   value: React.PropTypes.string,
   readOnly: React.PropTypes.bool,
 };

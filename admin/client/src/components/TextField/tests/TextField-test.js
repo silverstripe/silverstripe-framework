@@ -16,11 +16,11 @@ describe('TextField', () => {
       label: '',
       name: '',
       value: '',
-      handleFieldUpdate: jest.genMockFunction(),
+      onChange: jest.genMockFunction(),
     };
   });
 
-  describe('handleChange()', () => {
+  describe('onChange()', () => {
     let textField;
 
     beforeEach(() => {
@@ -29,10 +29,10 @@ describe('TextField', () => {
       );
     });
 
-    it('should call the handleFieldUpdate function on props', () => {
+    it('should call the onChange function on props', () => {
       textField.handleChange({ target: { value: '' } });
 
-      expect(textField.props.handleFieldUpdate).toBeCalled();
+      expect(textField.props.onChange).toBeCalled();
     });
   });
 });
