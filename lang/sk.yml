@@ -301,8 +301,8 @@ sk:
     FROMWEB: 'Z webu'
     FindInFolder: 'Vyhľadať v priečinku'
     IMAGEALT: 'Atlernatívny text (alt)'
-    IMAGEALTTEXT: 'Atlernatívny text (alt) - sa zobrazí, ak nemôže byť obrázok zobrazený'
-    IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, alebo ak obrázok nemôže byť zobrazený'
+    IMAGEALTTEXT: 'Atlernatívny text (alt) - vypísaný pokiaľ nemože byť zobrazený obrázok'
+    IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, keď obrázok nemôže byť zobrazený'
     IMAGEDIMENSIONS: Rozmery
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
@@ -336,9 +336,9 @@ sk:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
-    DropdownBatchActionsDefault: 'Vybrať akciu...'
+    DropdownBatchActionsDefault: 'Vyberte akciu...'
     HELP: Pomoc
-    PAGETYPE: 'Typ stránky:'
+    PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Boli ste odhlásený'
     PERMALREADY: 'Je nám ľúto, ale k tejto časti CMS nemáte prístup . Ak sa chcete prihlásiť ako niekto iný, urobte tak nižšie.'
     PERMDEFAULT: 'Musíte byť prihlásený/á k prístupu do oblasti administrácie, zadajte vaše prihlasovacie údaje dole, prosím.'
