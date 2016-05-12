@@ -59,6 +59,28 @@ DataObjectTest_TeamComment:
     Name: Phil
     Comment: Phil is a unique guy, and comments on team2
     Team: =>DataObjectTest_Team.team2
+ManyManyListTest_Product:
+  producta:
+    Title: 'Product A'
+  productb:
+    Title: 'Product B'
+    RelatedProducts: =>ManyManyListTest_Product.producta
+ManyManyListTest_Category:
+  categorya:
+    Title: 'Category A'
+    Products: =>ManyManyListTest_Product.producta,=>ManyManyListTest_Product.productb
+  comment1:
+    Name: Joe
+    Comment: This is a team comment by Joe
+    Team: =>DataObjectTest_Team.team1
+  comment2:
+    Name: Bob
+    Comment: This is a team comment by Bob
+    Team: =>DataObjectTest_Team.team1
+  comment3:
+    Name: Phil
+    Comment: Phil is a unique guy, and comments on team2
+    Team: =>DataObjectTest_Team.team2
 DataObjectTest_Fan:
   fan1:
     Name: Damian

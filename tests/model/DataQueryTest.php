@@ -11,6 +11,7 @@ class DataQueryTest extends SapphireTest {
 		'DataQueryTest_D',
 		'DataQueryTest_E',
 		'DataQueryTest_F',
+		'DataQueryTest_G',
 	);
 
 
@@ -63,11 +64,39 @@ class DataQueryTest extends SapphireTest {
 	}
 
 	public function testApplyReplationDeepInheretence() {
+		//test has_one relation
 		$newDQ = new DataQuery('DataQueryTest_E');
 		//apply a relation to a relation from an ancestor class
 		$newDQ->applyRelation('TestA');
 		$this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
 		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
+
+		//test many_many relation
+
+		//test many_many with separate inheritance
+		$newDQ = new DataQuery('DataQueryTest_C');
+		$baseDBTable = ClassInfo::baseDataClass('DataQueryTest_C');
+		$newDQ->applyRelation('ManyTestAs');
+		//check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
+		$this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
+		//check we are explicitly selecting "FROM" the DO's table
+		$this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql());
+
+		//test many_many with shared inheritance
+		$newDQ = new DataQuery('DataQueryTest_E');
+		$baseDBTable = ClassInfo::baseDataClass('DataQueryTest_E');
+		//check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
+		$this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
+		//check we are explicitly selecting "FROM" the DO's table
+		$this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause is missing from the query');
+		$newDQ->applyRelation('ManyTestGs');
+		//confirm we are still joined to the base table
+		$this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
+		//double check it is the "FROM" clause
+		$this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql(), 'The FROM clause has been removed from the query');
+		//another (potentially less crude check) for checking "FROM" clause
+		$fromTables = $newDQ->query()->getFrom();
+		$this->assertEquals('"' . $baseDBTable . '"', $fromTables[$baseDBTable]);
 	}
 
 	public function testRelationReturn() {
@@ -310,6 +339,10 @@ class DataQueryTest_E extends DataQueryTest_C implements TestOnly {
 		'SortOrder' => 'Int'
 	);
 
+	private static $many_many = array(
+		'ManyTestGs' => 'DataQueryTest_G',
+	);
+
 	private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
 }
 
@@ -320,4 +353,12 @@ class DataQueryTest_F extends DataObject implements TestOnly {
 		'MyDate' => 'SS_Datetime',
 		'MyString' => 'Text'
 	);
+}
+
+class DataQueryTest_G extends DataQueryTest_C implements TestOnly {
+
+	private static $belongs_many_many = array(
+		'ManyTestEs' => 'DataQueryTest_E',
+	);
+
 }

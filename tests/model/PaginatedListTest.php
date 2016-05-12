@@ -12,7 +12,9 @@ class PaginatedListTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'DataObjectTest_Team',
 		'DataObjectTest_SubTeam',
-		'DataObjectTest_Player'
+		'DataObjectTest_Player',
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 	);
 
 	public function testPageStart() {

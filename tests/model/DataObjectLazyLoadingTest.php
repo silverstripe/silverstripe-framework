@@ -35,6 +35,9 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'DataObjectTest_Play',
 		'DataObjectTest_Ploy',
 		'DataObjectTest_Bogey',
+		// From ManyManyListTest
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 		// From VersionedTest
 		'VersionedTest_DataObject',
 		'VersionedTest_Subclass',
