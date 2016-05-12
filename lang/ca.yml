@@ -91,7 +91,7 @@ ca:
     Sort: 'Ordre'
     has_many_Permissions: Permisos
     many_many_Members: Membres
-  HTMLEditorField:
+  HtmlEditorField:
     ANCHORVALUE: Ancla
     BUTTONINSERTLINK: 'Insereix un enllaç'
     BUTTONREMOVELINK: 'Suprimeix un enllaç'
@@ -140,12 +140,10 @@ ca:
     NEWPASSWORD: 'Nova contrasenya'
     PASSWORD: Contrasenya
     PLURALNAME: Membres
-    REMEMBERME: 'Recorda''m el proper cop'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'
     SUBJECTPASSWORDRESET: 'Enllaç per canviar la contrasenya'
     SURNAME: Cognom
-    VALIDATIONMEMBEREXISTS: 'Ja existeix un membre amb aquesta adreça de correu electrònic'
     YOUROLDPASSWORD: 'La vostra contrasenya anterior'
     belongs_many_many_Groups: Grups
     db_LastVisited: 'Data de la darrera visita'

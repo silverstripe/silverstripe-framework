@@ -152,7 +152,6 @@ ru:
     PngType: 'Изображение PNG - универсальный графический формат'
     SINGULARNAME: Файл
     TOOLARGE: 'Превышен допустимый размер файла (максимально {size})'
-    TOOLARGESHORT: 'Размер файла больше {size}'
     TiffType: 'Изображение TIFF'
     Title: Заголовок
     WavType: 'Аудиофайл WAV'
@@ -239,7 +238,7 @@ ru:
     ResultUpdated: 'Обновлено %d групп'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Обнаружен бесконечный цикл в иерархической структуре "{type}". Для исправления ошибки измените страницу, находящуюся уровнем выше'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Добавить URL'
     ADJUSTDETAILSDIMENSIONS: 'Дополнительные сведения и размеры'
     ANCHORVALUE: Якорь
@@ -336,13 +335,11 @@ ru:
     NoPassword: 'Для этого пользователя не задан пароль.'
     PASSWORD: Пароль
     PLURALNAME: Члены группы
-    REMEMBERME: 'Запомнить меня?'
     SINGULARNAME: Член группы
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
     SURNAME: Фамилия
     TIMEFORMAT: 'Формат времени'
-    VALIDATIONMEMBEREXISTS: 'Этот адрес email уже зарегистрирован'
     ValidationIdentifierFailed: 'Невозможно заменить существующего участника #{id} c таким же идентификатором ({name} = {value}))'
     WELCOMEBACK: 'Добро пожаловать, {firstname}'
     YOUROLDPASSWORD: 'Ваш прежний пароль'

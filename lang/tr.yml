@@ -109,7 +109,7 @@ tr:
     Sort: 'Sırala'
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
-  HTMLEditorField:
+  HtmlEditorField:
     ANCHORVALUE: Çapa
     BUTTONINSERTLINK: 'Bağlantı ekle'
     BUTTONREMOVELINK: 'Bağlantıyı sil'
@@ -164,12 +164,10 @@ tr:
     NEWPASSWORD: 'Yeni Şifre'
     PASSWORD: Şifre
     PLURALNAME: Üyeler
-    REMEMBERME: 'Beni hatırla?'
     SINGULARNAME: Üye
     SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'
     SUBJECTPASSWORDRESET: 'Parola değiştirme bağlantınız'
     SURNAME: Soyad
-    VALIDATIONMEMBEREXISTS: 'Bu eposta adresine sahip bir kullanıcı zaten bulunmaktadır'
     YOUROLDPASSWORD: 'Eski şifreniz'
     belongs_many_many_Groups: Gruplar
     db_LastVisited: 'Son Ziyaret Tarihi'

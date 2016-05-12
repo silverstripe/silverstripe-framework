@@ -29,7 +29,6 @@ de:
     FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
     REMOVEINFO: 'Entferne diese Datei aus dem Feld'
     TOTAL: Insgesamt
-    TOUPLOAD: 'Dateien für den Upload auswählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: oder
   BBCodeParser:
@@ -152,7 +151,6 @@ de:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
-    CHOOSESEARCH: '(Auswahl und Suche)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
@@ -184,7 +182,6 @@ de:
     PngType: 'PNG Bild - vielseitig einsetzbar'
     SINGULARNAME: Datei
     TOOLARGE: 'Die Datei ist zu groß, maximal sind {size} erlaubt'
-    TOOLARGESHORT: 'Dateigröße übersteigt {size}'
     TiffType: 'TIFF Bild - ideal für hohe Auflösungen'
     Title: Titel
     WavType: 'WAV Audiodatei'
@@ -274,7 +271,7 @@ de:
     ResultUpdated: '%d Gruppe(n) aktualisiert'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Es wurde eine Endlosschleife innerhalb der "{type}"-Hierarchie gefunden. Bitte ändern Sie die übergeordnete Seite, um den Fehler zu beheben'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'URL hinzufügen'
     ADJUSTDETAILSDIMENSIONS: 'Details &amp; Dimensionen'
     ANCHORSCANNOTACCESSPAGE: 'Sie haben keine Berechtigungen, den Inhalt dieser Seite zu sehen.'
@@ -380,13 +377,11 @@ de:
     PASSWORD: Passwort
     PASSWORDEXPIRED: 'Ihr Passwort ist abgelaufen. Bitte wählen Sie ein neues Passwort.'
     PLURALNAME: Benutzer
-    REMEMBERME: 'Für das nächste Mal merken?'
     SINGULARNAME: Benutzer
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
     SURNAME: Nachname
     TIMEFORMAT: 'Uhrzeitformat'
-    VALIDATIONMEMBEREXISTS: 'Es gibt bereits ein Mitglied mit dem/der selben %s'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
     YOUROLDPASSWORD: 'Ihr altes Passwort'

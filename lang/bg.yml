@@ -1,24 +1,34 @@
 bg:
   AssetAdmin:
+    ALLOWEDEXTS: 'Позволени разширения на файловете за качване'
+    HIDEALLOWEDEXTS: 'Скрий позволените разширения'
     NEWFOLDER: НоваПапка
+    SHOWALLOWEDEXTS: 'Покажи позволените разширения'
   AssetTableField:
     CREATED: 'Създаден'
     DIM: Размери
     FILENAME: Име на файл
     FOLDER: Папка
+    HEIGHT: Височина
     LASTEDIT: 'Последна промяна'
     OWNER: Собственик
     SIZE: 'Големина на файла'
     TITLE: Заглавие
     TYPE: 'Тип на файла'
+    URL: URL
+    WIDTH: Широчина
   AssetUploadField:
     ChooseFiles: 'Избери файлове'
     DRAGFILESHERE: 'Завлечете файловете тук'
     DROPAREA: 'Зона за пускане'
     EDITALL: 'Редакция на всички'
     EDITANDORGANIZE: 'Редактиране и подреждане'
+    EDITINFO: 'Редактиране на файлове'
     FILES: Файлове
     FROMCOMPUTER: 'Избери файлове от компютъра'
+    FROMCOMPUTERINFO: 'Качи от компютъра'
+    INSERTURL: 'Въведи URL на файла'
+    REMOVEINFO: 'Премахни файла от това поле'
     TOTAL: Общо
     UPLOADINPROGRESS: 'Моля, изчакайте... файловете се качват'
     UPLOADOR: ИЛИ
@@ -53,19 +63,40 @@ bg:
     ENTERINFO: 'Моля, въведете потребителско име и парола.'
     ERRORNOTADMIN: 'Този потребител не е администратор.'
     ERRORNOTREC: 'Това потребителско име / парола не е разпознато'
+  Boolean:
+    ANY: Всички
+    NOANSWER: 'Не'
+    YESANSWER: 'Да'
   CMSLoadingScreen_ss:
     LOADING: Зареждане ...
+    REQUIREJS: 'Необходимо е да активирате JavaScript.'
   CMSMain:
     ACCESS: 'Достъп до секция ''{title}'''
     ACCESSALLINTERFACES: 'Достъп до всички секции на CMS'
     SAVE: Запис
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Забравена парола?'
+    BUTTONLOGIN: 'Влез обратно'
+    BUTTONLOGOUT: 'Изход'
+  CMSPageHistoryController_versions_ss:
+    PREVIEW: 'Преглед на сайта'
+  CMSPagesController_Tools_ss:
+    FILTER: Филтър
   CMSProfileController:
     MENUTITLE: 'Моят профил'
+  CMSSecurity:
+    SUCCESS: Успешно
+    TimedOutTitleAnonymous: 'Вашата сесия е изтекла.'
+    TimedOutTitleMember: 'Здравей {name}!<br />Твоята сесия е изтекла.'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
     CHANGEPASSWORDTEXT2: 'Вече можете да ползвате следните данни за вход:'
+    EMAIL: Ел. поща
     HELLO: Здравей!
     PASSWORD: Парола
+  CheckboxField:
+    NOANSWER: 'Не'
+    YESANSWER: 'Да'
   ConfirmedPasswordField:
     ATLEAST: 'Паролата трябва да е дълга мин. {min} символа.'
     BETWEEN: 'Паролата трябва да е дълга от {min} до {max} символа.'
@@ -80,14 +111,29 @@ bg:
     PLURALNAME: 'Обекти с данни'
     SINGULARNAME: 'Обект с данни'
   Date:
+    DAY: ден
+    DAYS: дни
+    HOUR: час
+    HOURS: часа
+    LessThanMinuteAgo: 'по-малко от минута'
+    MIN: минута
+    MINS: минути
+    MONTH: месец
+    MONTHS: месеци
+    SEC: секунда
+    SECS: секунди
     TIMEDIFFAGO: 'преди {difference}'
     TIMEDIFFIN: 'за {difference}'
+    YEAR: година
+    YEARS: години
   DateField:
-    NOTSET: 'Не нагласено'
+    NOTSET: 'не е зададена'
     TODAY: днес
     VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
     VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
     VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
+  DatetimeField:
+    NOTSET: 'не е зададена'
   Director:
     INVALID_REQUEST: 'Грешна заявка'
   DropdownField:
@@ -107,7 +153,6 @@ bg:
     PLURALNAME: Файлове
     SINGULARNAME: Файл
     TOOLARGE: 'Много голям файл, разрешено е до {size}'
-    TOOLARGESHORT: 'Големината на файла надхвърля {size}'
     Title: Заглавие
   Filesystem:
     SYNCRESULTS: 'Синхронизацията завърши: бяха създадени {createdcount} елемента, бяха изтрити {deletedcount} елемента'
@@ -167,7 +212,7 @@ bg:
     ResultCreated: 'Бяха създадени {count} група/и'
     ResultDeleted: 'Бяха изтрити %d групи'
     ResultUpdated: 'Бяха обновени %d групи'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Добави URL'
     ADJUSTDETAILSDIMENSIONS: 'Детайли и размери'
     ANCHORVALUE: Котва
@@ -246,12 +291,10 @@ bg:
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
     PLURALNAME: Потребители
-    REMEMBERME: 'Запомни ме за следващия път?'
     SINGULARNAME: Потребител
     SUBJECTPASSWORDCHANGED: 'Вашата парола беше променена'
     SUBJECTPASSWORDRESET: 'Връзка за анулиране на паролата'
     SURNAME: Фамилия
-    VALIDATIONMEMBEREXISTS: 'Вече съществува потребител с този email'
     WELCOMEBACK: 'Добре дошли отново, {firstname}'
     YOUROLDPASSWORD: 'Вашата стара парола'
     belongs_many_many_Groups: Групи

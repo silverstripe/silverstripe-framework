@@ -177,7 +177,6 @@ sv:
     PngType: 'PNG-bild - bra allmänt format'
     SINGULARNAME: Fil
     TOOLARGE: 'Filen är för stor, max {size} tillåts'
-    TOOLARGESHORT: 'Filstorlek överskriden {size}'
     TiffType: 'Tiff bildformat'
     Title: Titel
     WavType: 'WAV-ljudfil'
@@ -267,7 +266,7 @@ sv:
     ResultUpdated: 'Uppdaterade %d grupper'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Oändlig loop hittades i hierarkin "{type}". Var vänlig ändra föräldern för att lösa detta'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Lägg till URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaljer &amp; dimensioner'
     ANCHORSCANNOTACCESSPAGE: 'Du har inte tillåtelse att se innehållet på sidan'
@@ -373,13 +372,11 @@ sv:
     PASSWORD: Lösenord
     PASSWORDEXPIRED: 'Ditt lösenord har gått ut. Vänligen ange ett nytt.'
     PLURALNAME: Medlemmar
-    REMEMBERME: 'Kom ihåg mig nästa gång?'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'
     SUBJECTPASSWORDRESET: 'Din återställningslänk'
     SURNAME: Efternamn
     TIMEFORMAT: 'Tidsformat'
-    VALIDATIONMEMBEREXISTS: 'Det finns redan en medlem med samma %s'
     ValidationIdentifierFailed: 'Kan inte skriva över medlem #{id} med samma identifierare ({name} = {value}))'
     WELCOMEBACK: 'Välkommen tillbaka, {firstname}'
     YOUROLDPASSWORD: 'Ditt gamla lösenord'

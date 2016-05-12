@@ -30,7 +30,6 @@ cs:
     INSERTURL: 'Vložit z URL'
     REMOVEINFO: 'Odstranit tento soubor z tohoto pole'
     TOTAL: Celkem
-    TOUPLOAD: 'Vyberte soubory k nahrání...'
     UPLOADINPROGRESS: 'Prosím čekejte... probíhá nahrávání'
     UPLOADOR: NEBO
   BBCodeParser:
@@ -153,7 +152,6 @@ cs:
     INVALID_REQUEST: 'Neplatný požadavek'
   DropdownField:
     CHOOSE: (Vyberte)
-    CHOOSESEARCH: '(Vybrat nebo vyhledat)'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v seznamu. {value} není platná volba'
   EmailField:
     VALIDATION: 'Prosím zadejte e-mailovou adresu'
@@ -185,7 +183,6 @@ cs:
     PngType: 'PNG obrázek - vhodný jako univerzálmí formát'
     SINGULARNAME: Soubor
     TOOLARGE: 'Velikost souboru je příliš velká, povolené maximum {size}'
-    TOOLARGESHORT: 'Velikost souboru překračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Titulek
     WavType: 'WAV audo soubor'
@@ -275,7 +272,7 @@ cs:
     ResultUpdated: 'Aktualizováno %d skupin'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Nekonečná smyčka se nachází v "{type}" hierarchii. Prosím změňte rodiče pro vyřešení tohoto problému'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Přidat URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaily &amp; rozměry'
     ANCHORSCANNOTACCESSPAGE: 'Nemáte povolen přístup k obsahu cílové stránky.'
@@ -301,6 +298,8 @@ cs:
     FROMWEB: 'Z webu'
     FindInFolder: 'Hledat ve složce'
     IMAGEALT: 'Alternativní text (alt)'
+    IMAGEALTTEXT: 'Alternativní text (alt) - bude ukázán, když obrázek nemúže být zobrazen'
+    IMAGEALTTEXTDESC: 'Zobrazeno na obrazovce, když obrázek nemůže být zobrazen'
     IMAGEDIMENSIONS: Rozměry
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
@@ -334,10 +333,13 @@ cs:
   LeftAndMain:
     CANT_REORGANISE: 'Nemáte oprávnění měnit stránky nejvyšší úrovně. Vaše změna nebyla uložena.'
     DELETED: Smazáno.
+    DropdownBatchActionsDefault: 'Vyberte akci...'
     HELP: Nápověda
+    PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
     PERMALREADY: 'Omlouvám se, ale nemůžete vstoupit do této části CMS. Pokud se chcete přihlásit jako někdo jiný, udělejte tak níže.'
     PERMDEFAULT: 'Musíte být přihlášen/a k přístup do oblasti administrace, níže zadejte vaše přihlašovací údaje, prosím.'
+    PLEASESAVE: 'Prosím uložte stránku: Tato stránka nemohla být aktualizována, protože ještě nebyla uložena.'
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.
@@ -384,13 +386,11 @@ cs:
     PASSWORD: Heslo
     PASSWORDEXPIRED: 'Vaše heslo expirovalo. Prosím, zvolte nové heslo.'
     PLURALNAME: Členové
-    REMEMBERME: 'Zapamatovat si mě pro příště?'
     SINGULARNAME: Člen
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bylo změněno'
     SUBJECTPASSWORDRESET: 'Nulovací odkaz pro Vaše heslo'
     SURNAME: Příjmení
     TIMEFORMAT: 'Formát času'
-    VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejnou %s'
     ValidationIdentifierFailed: 'Nemůžete přepsat existujícího člena #{id} s identickým identifikátorem ({name} = {value}))'
     WELCOMEBACK: 'Vítejte zpět, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'

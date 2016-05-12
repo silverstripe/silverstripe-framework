@@ -30,7 +30,6 @@ lt:
     INSERTURL: 'Įkelti iš nuorodos'
     REMOVEINFO: 'Pašalinti šią bylą iš šio lauko'
     TOTAL: Viso
-    TOUPLOAD: 'Pasirinkite norimas bylas...'
     UPLOADINPROGRESS: 'Prašome palaukti... vyksta įkėlimas'
     UPLOADOR: ARBA
   BBCodeParser:
@@ -153,7 +152,6 @@ lt:
     INVALID_REQUEST: 'Klaidinga užklausa'
   DropdownField:
     CHOOSE: (Pasirinkti)
-    CHOOSESEARCH: '(Pasirinkti arba Ieškoti)'
     SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
   EmailField:
     VALIDATION: 'Prašome suvesti el. pašto adresą'
@@ -185,7 +183,6 @@ lt:
     PngType: 'PNG paveikslėlis - geras bendro tipo formatas'
     SINGULARNAME: Byla
     TOOLARGE: 'Byla per didelė, didžiausias galimas dydis yra {size}'
-    TOOLARGESHORT: 'Bylos dydis viršija {size}'
     TiffType: 'Tagged paveikslėlių formatas'
     Title: Pavadinimas
     WavType: 'WAV garso byla'
@@ -275,7 +272,7 @@ lt:
     ResultUpdated: 'Atnaujinta %d grupių'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Rastas begalinis sąryšis "{type}" hierarchijoje. Prašome patikrinti tėvinius sąryšius'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Pridėti URL'
     ADJUSTDETAILSDIMENSIONS: 'Detalesnė inf. ir matmenys'
     ANCHORSCANNOTACCESSPAGE: 'Neturite teisių pasiekti pasirinkto puslapio turinį.'
@@ -384,13 +381,11 @@ lt:
     PASSWORD: Slaptažodis
     PASSWORDEXPIRED: 'Jūsų slaptažodžio galiojimas pasibaigė. Prašome sukurti naują.'
     PLURALNAME: Vartotojai
-    REMEMBERME: 'Prisiminti jungiantis kitą kartą?'
     SINGULARNAME: Vartotojas
     SUBJECTPASSWORDCHANGED: 'Jūsų slaptažodis pakeistas'
     SUBJECTPASSWORDRESET: 'Slaptažodžio atstatymo nuoroda'
     SURNAME: Pavardė
     TIMEFORMAT: 'Laiko formatas'
-    VALIDATIONMEMBEREXISTS: 'Vartotojas šiuo el. pašto adresu %s jau egzistuoja.'
     ValidationIdentifierFailed: 'Nepavyko atnaujinti vartotojo #{id} duomenų su atpažinimo kodu ({name} = {value})'
     WELCOMEBACK: 'Sveiki, {firstname}'
     YOUROLDPASSWORD: 'Jūsų senas slaptažodis'

@@ -152,7 +152,6 @@ pl:
     PngType: 'Plik PNG, dobry do zastosowania w większości przypadków'
     SINGULARNAME: Plik
     TOOLARGE: 'Plik jest za duży, maksymalnie dozwolone jest {size}'
-    TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
     TiffType: 'Plik TIFF'
     Title: Tytuł
     WavType: 'WAV plik audio'
@@ -239,7 +238,7 @@ pl:
     ResultUpdated: 'Zaktualizowano grup: %d'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Znaleziono nieskończoną pętlę wewnątrz hierarchii "{type}". Proszę zmień rodzica by to rozwiązać.'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Dodaj adres URL'
     ADJUSTDETAILSDIMENSIONS: 'Szczegóły i rozmiar'
     ANCHORVALUE: Odnośnik
@@ -336,13 +335,11 @@ pl:
     NoPassword: 'Hasło nie zostało skonfigurowane dla tego użytkownika.'
     PASSWORD: Hasło
     PLURALNAME: Użytkownicy
-    REMEMBERME: 'Zapamiętaj mnie?'
     SINGULARNAME: Użytkownik
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'
     SURNAME: Nazwisko
     TIMEFORMAT: 'Format czasu'
-    VALIDATIONMEMBEREXISTS: 'Użytkownik z tym adresem już istnieje'
     ValidationIdentifierFailed: 'Nie można nadpisać istniejącego użytkownika #{id} o identycznym identyfikatorze ({name} = {value})'
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'

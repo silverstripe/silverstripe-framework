@@ -15,7 +15,7 @@ ne:
     VALIDATIONNOTUNIQUE: 'लेखिएको मान भिन्न छैन '
     VALIDATIONPASSWORDSDONTMATCH: 'पासओडहरु मिल्दैन्नन'
     VALIDATIONPASSWORDSNOTEMPTY: 'पासओडहरु खालि छोड्न मिल्दैन'
-  HTMLEditorField:
+  HtmlEditorField:
     BUTTONINSERTLINK: 'लिन्क राखनुहोस्'
     BUTTONREMOVELINK: 'लिन्क हटाउनुहोस्'
     CSSCLASS: 'समरेखिन / स्टाईल'
@@ -54,11 +54,9 @@ ne:
     INTERFACELANG: 'चलाउने भाषा'
     NEWPASSWORD: 'नयाँ पासओड'
     PASSWORD: पासओड
-    REMEMBERME: 'अर्को पटक मलाई सम्झनुस् '
     SUBJECTPASSWORDCHANGED: 'तपाईंको पासओड परिवतन भएको छ ।'
     SUBJECTPASSWORDRESET: 'तपाईंको पासओड पुनर्स्थापना लिक'
     SURNAME: थर
-    VALIDATIONMEMBEREXISTS: 'यो ईमेल भएको प्रयोगकता पहिले देखि छ ।'
     YOUROLDPASSWORD: 'तपाईंको पुरानो पासओड'
   MemberAuthenticator:
     TITLE: 'ईमेल &amp; पासओड'

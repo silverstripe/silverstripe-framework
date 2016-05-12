@@ -30,7 +30,6 @@ fi:
     INSERTURL: 'Lisää URL-osoitteesta'
     REMOVEINFO: 'Poista tämä tiedosto tästä kentästä'
     TOTAL: Yhteensä
-    TOUPLOAD: 'Valitse siirrettävät tiedostot...'
     UPLOADINPROGRESS: 'Ole hyvä ja odota... siirto käynnissä'
     UPLOADOR: TAI
   BBCodeParser:
@@ -153,7 +152,6 @@ fi:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
   DropdownField:
     CHOOSE: (Valitse)
-    CHOOSESEARCH: '(Valitse tai Hae)'
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
@@ -181,11 +179,10 @@ fi:
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
-    PdfType: 'Adobe Acrobat PDF -tiedosto'
+    PdfType: 'Adobe Acrobat PDF-tiedosto'
     PngType: 'PNG-kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
     TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
-    TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
     TiffType: 'TIFF-kuva'
     Title: Otsikko
     WavType: 'WAV-äänitiedosto'
@@ -257,7 +254,7 @@ fi:
     DefaultGroupTitleContentAuthors: 'Sisällöntuottajat'
     Description: Kuvaus
     GroupReminder: 'Valitessasi isäntäryhmän roolit periytyvät tähän ryhmään'
-    HierarchyPermsError: 'Isäntä ryhmään ei voitu asettaa "%s" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
+    HierarchyPermsError: 'Isäntäryhmään ei voitu asettaa "%s" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     Locked: 'Lukittu?'
     NoRoles: 'Rooleja ei löytynyt'
     PLURALNAME: Ryhmät
@@ -275,7 +272,7 @@ fi:
     ResultUpdated: 'Päivitetty %d ryhmää'
   Hierarchy:
     InfiniteLoopNotAllowed: '"{type}" -hierarkiasta löytyi loputon silmukka. Ole hyvä ja muuta isäntää korjataksesi ongelman.'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Lisää URL-osoite'
     ADJUSTDETAILSDIMENSIONS: 'Tarkat tiedot &amp; mitat'
     ANCHORSCANNOTACCESSPAGE: 'Sinulla ei ole oikeuksia tarkastella tämän sivun sisältöä.'
@@ -301,8 +298,6 @@ fi:
     FROMWEB: 'Webistä'
     FindInFolder: 'Etsi kansiosta'
     IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
-    IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
-    IMAGEALTTEXTDESC: 'Näytetään ruudunlukuohjelmille tai jos kuvia ei voi näyttää'
     IMAGEDIMENSIONS: Mitat
     IMAGEHEIGHTPX: Korkeus
     IMAGETITLE: 'Otsikko (tooltip) - kuvan lisätietoja varten'
@@ -336,13 +331,10 @@ fi:
   LeftAndMain:
     CANT_REORGANISE: 'Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu.'
     DELETED: Poistettu.
-    DropdownBatchActionsDefault: 'Valitse toiminto...'
     HELP: Ohje
-    PAGETYPE: 'Sivutyyppi'
     PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla.'
     PERMALREADY: 'Pahoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alta.'
     PERMDEFAULT: 'Sinun tulee olla kirjautuneena ylläpito-osioon; syötä tunnuksesi kenttiin.'
-    PLEASESAVE: 'Tallenna sivu: tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu.'
     PreviewButton: Esikatselu
     REORGANISATIONSUCCESSFUL: 'Hakemistopuu uudelleenjärjestettiin onnistuneesti.'
     SAVEDUP: Tallennettu.
@@ -389,13 +381,11 @@ fi:
     PASSWORD: Salasana
     PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Jäsenet
-    REMEMBERME: 'Muista seuraavalla kerralla?'
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
     TIMEFORMAT: 'Aikamuoto'
-    VALIDATIONMEMBEREXISTS: 'Rekisteröityneellä käyttäjällä on jo käytössä tämä sähköpostiosoite.'
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
     WELCOMEBACK: 'Tervetuloa takaisin, {firstname}'
     YOUROLDPASSWORD: 'Vanha salasanasi'

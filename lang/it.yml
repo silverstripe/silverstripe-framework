@@ -29,7 +29,6 @@ it:
     INSERTURL: 'Inserisci da URL'
     REMOVEINFO: 'Rimuovi questo file da questo campo'
     TOTAL: Totale
-    TOUPLOAD: 'Scegli file da caricare...'
     UPLOADINPROGRESS: 'Attendere prego... caricamento in corso'
     UPLOADOR: O
   BBCodeParser:
@@ -152,7 +151,6 @@ it:
     INVALID_REQUEST: 'Richiesta non valida'
   DropdownField:
     CHOOSE: (Scegli)
-    CHOOSESEARCH: '(Scegli o Cerca)'
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
   EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
@@ -184,7 +182,6 @@ it:
     PngType: 'Immagine PNG - consigliata per utilizzo generico'
     SINGULARNAME: File
     TOOLARGE: 'La dimensione del file è troppo grande, massimo consentito {size}'
-    TOOLARGESHORT: 'La dimensione del file eccede {size}'
     TiffType: 'Immagine TIFF'
     Title: Titolo
     WavType: 'File audio WAV'
@@ -273,7 +270,7 @@ it:
     ResultUpdated: 'Aggiornati %d gruppi'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Trovato loop infinito nella gerarchia di "{type}". Cambia il padre per risolvere il problema'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Aggiungi URL'
     ADJUSTDETAILSDIMENSIONS: 'Dettagli e dimensioni'
     ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'
@@ -318,7 +315,7 @@ it:
     PAGE: Pagina
     SUBJECT: 'Oggetto email'
     URL: URL
-    URLDESCRIPTION: 'Inserisci video e immagini dal Web nella tua pagina semplicemente inserendo l''URL del file.<br />Si sicuro di avere i diritti o i permessi prima di condividere media direttamente dal Web.<br /><br />NB : i file non sono aggiunti allo storage file del CMS, ma incorpora il file dalla sua location principale, se per un qualsiasi motivo il file non e'' più raggiungibile nella sua location principale, non sara'' più visibile su questa pagina.'
+    URLDESCRIPTION: 'Inserisci video e immagini dal Web nella tua pagina semplicemente inserendo l''URL del file. Si sicuro di avere i diritti o i permessi prima di condividere media direttamente dal Web.<br /><br />NB : i file non sono aggiunti allo storage file del CMS, ma incorpora il file dalla sua location principale, se per un qualsiasi motivo il file non e'' più raggiungibile nella sua location principale, non sara'' più visibile su questa pagina.'
     URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
     UpdateMEDIA: 'Aggiorna Media'
   Image:
@@ -382,13 +379,11 @@ it:
     PASSWORD: Password
     PASSWORDEXPIRED: 'La tua password è scaduta. Per favore selezionarne una nuova.'
     PLURALNAME: Utenti
-    REMEMBERME: 'Ricordati di me la prossima volta?'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
     SURNAME: Cognome
     TIMEFORMAT: 'Formato dell''ora'
-    VALIDATIONMEMBEREXISTS: 'Esiste già un utente con l''e-mail %s'
     ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
     WELCOMEBACK: 'Bentornato, {firstname}'
     YOUROLDPASSWORD: 'La tua vecchia password'

@@ -90,7 +90,7 @@ pt_BR:
     Sort: 'Ordenação'
     has_many_Permissions: Permissões
     many_many_Members: Membros
-  HTMLEditorField:
+  HtmlEditorField:
     ANCHORVALUE: Âncora
     BUTTONINSERTLINK: 'Inserir link'
     BUTTONREMOVELINK: 'Remover link'
@@ -139,12 +139,10 @@ pt_BR:
     NEWPASSWORD: 'Nova Senha'
     PASSWORD: Senha
     PLURALNAME: Membros
-    REMEMBERME: 'Lembrar de mim'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Sua senha foi alterada'
     SUBJECTPASSWORDRESET: 'Link para resetar sua senha'
     SURNAME: Sobrenome
-    VALIDATIONMEMBEREXISTS: 'Já existe um membro com este email'
     YOUROLDPASSWORD: 'Senha antiga'
     belongs_many_many_Groups: Grupo
     db_LastVisited: 'Ultima data de visita'

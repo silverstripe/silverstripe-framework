@@ -79,6 +79,7 @@ hr:
     TEXT2: 'link za resetiranje lozinke'
     TEXT3: za
   Form:
+    SubmitBtnLabel: Kreni
     VALIDATIONNOTUNIQUE: 'Unešena vrijednost nije unikatna'
     VALIDATIONPASSWORDSDONTMATCH: 'Lozinke se ne slažu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak'
@@ -88,7 +89,7 @@ hr:
     Parent: 'Roditeljska grupa'
     has_many_Permissions: Dozvole
     many_many_Members: Članovi
-  HTMLEditorField:
+  HtmlEditorField:
     BUTTONINSERTLINK: 'Ubaci vezu'
     BUTTONREMOVELINK: 'Obriši vezu'
     CSSCLASS: 'Poravnanje / Stil'
@@ -129,12 +130,10 @@ hr:
     NEWPASSWORD: 'Nova lozinka'
     PASSWORD: Lozinka
     PLURALNAME: Članovi
-    REMEMBERME: 'Zapamti me'
     SINGULARNAME: Član
     SUBJECTPASSWORDCHANGED: 'Vaša lozinka je izmjenjena'
     SUBJECTPASSWORDRESET: 'Link za reset lozinke'
     SURNAME: Prezime
-    VALIDATIONMEMBEREXISTS: 'Već postoji korisnik sa istim %s'
     YOUROLDPASSWORD: 'Stara lozinka'
     belongs_many_many_Groups: Grupe
     db_LockedOutUntil: 'Zaključano do'

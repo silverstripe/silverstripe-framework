@@ -112,7 +112,6 @@ af:
     Name: Naam
     PLURALNAME: Lêers
     SINGULARNAME: Lêer
-    TOOLARGESHORT: 'Lêer is groter as {size}'
     Title: Titel
     WavType: 'WAV klank lêer'
   Filesystem:
@@ -178,7 +177,7 @@ af:
     Help1: '<p> Voer een of meer groepe in <em>CSV</em>formaat (komma geskeide waardes).<small> <a href="#" class="toggle-advanced">Wys gevorderde gebruike</a></small></p>'
     ResultDeleted: 'Verwyderde %d groepe'
     ResultUpdated: '%d Groepe was opgedateer'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Voeg URL by'
     ANCHORVALUE: Anker
     BUTTONINSERT: Plaas in
@@ -261,13 +260,11 @@ af:
     NEWPASSWORD: 'Nuwe wagwoord'
     PASSWORD: Wagwoord
     PLURALNAME: Lidde
-    REMEMBERME: 'Onthou volgende keer vir my?'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'U wagwoord het verander.'
     SUBJECTPASSWORDRESET: 'U wagwoord herlaai skakel'
     SURNAME: Van
     TIMEFORMAT: 'Tyd formaat'
-    VALIDATIONMEMBEREXISTS: '''n Ander lid bestaan al klaar met dieselfde %s'
     ValidationIdentifierFailed: 'Kan nie bestaande lid #{id} met identiese identiteit ({name}={value})) oorskryf nie'
     WELCOMEBACK: 'Welkom terug, {firstname}'
     YOUROLDPASSWORD: 'U ou wagwoord'

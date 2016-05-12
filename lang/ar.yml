@@ -150,7 +150,6 @@ ar:
     PngType: 'الصورة بصيغة PNG - و هي صيغة جيدة للأغراض العامة'
     SINGULARNAME: الملف
     TOOLARGE: 'حجم الملف كبير جدا، الحد الأقصى {حجم} المسموح به'
-    TOOLARGESHORT: 'حجم الملف يتجاوز {الحجم}'
     TiffType: 'تنسيق الصورة ذات الكلمات الدلالية'
     Title: العنوان
     WavType: 'ملف صوتي بصيغة WAV'
@@ -237,7 +236,7 @@ ar:
     ResultUpdated: 'تحديث مجموعات %d '
   Hierarchy:
     InfiniteLoopNotAllowed: 'العثور على حلقة لا نهائية ضمن "{نوع}" التسلسل الهرمي . الرجاء تغيير الأصل لحل هذه'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'أضف رابط الموقع URL'
     ADJUSTDETAILSDIMENSIONS: 'التفاصيل &amp; و الأبعاد'
     ANCHORVALUE: رابط
@@ -334,13 +333,11 @@ ar:
     NoPassword: 'لا توجد كلمة مرور بشأن هذا العضو.'
     PASSWORD: رقم المرور
     PLURALNAME: الأعضاء
-    REMEMBERME: 'تذكرني في المرة القادمة ؟'
     SINGULARNAME: العضو
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
     SUBJECTPASSWORDRESET: 'رابط إعادة تكوين كلمة المرور'
     SURNAME: اسم العائلة
     TIMEFORMAT: 'صيغة الوقت'
-    VALIDATIONMEMBEREXISTS: 'يوجد عضو مسجل بهذا البريد الإلكتروني من قبل'
     ValidationIdentifierFailed: 'لا يمكن الكتابة فوق رقم العضوية الحالي {معرف} مع معرف مطابق ({اسم} = {قيمة}))'
     WELCOMEBACK: 'مرحبا بك مرة أخرى، {الاسم الأول}'
     YOUROLDPASSWORD: 'رقم المرور السابق'

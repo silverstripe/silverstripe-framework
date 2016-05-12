@@ -80,7 +80,7 @@ bs:
     NONE: ništa
   GridFieldDetailForm:
     Create: Kreiraj
-  HTMLEditorField:
+  HtmlEditorField:
     ANCHORVALUE: Sidro
     BUTTONINSERTLINK: 'Ubaci link'
     BUTTONREMOVELINK: 'Ukloni link'
@@ -124,11 +124,9 @@ bs:
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova šifra'
     PASSWORD: Šifra
-    REMEMBERME: 'Zapamti me slijedeći put'
     SUBJECTPASSWORDCHANGED: 'Vaša šifra je promijenjena'
     SUBJECTPASSWORDRESET: 'Link za ponovno podešavanje Vaše šifre'
     SURNAME: Prezime
-    VALIDATIONMEMBEREXISTS: 'Već postoji korisnik sa ovom e-mail adresom'
     YOUROLDPASSWORD: 'Vaša stara šifra'
   MemberAuthenticator:
     TITLE: 'E-mail i šifra'

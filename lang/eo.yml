@@ -1,5 +1,7 @@
 eo:
   AssetAdmin:
+    ALLOWEDEXTS: 'Permesitaj alŝutaj dosieraj sufiksoj'
+    HIDEALLOWEDEXTS: 'Kaŝi permesitajn sufiksojn'
     NEWFOLDER: Nova dosierujo
     SHOWALLOWEDEXTS: 'Vidigi permesitajn sufiksojn'
   AssetTableField:
@@ -7,12 +9,14 @@ eo:
     DIM: Dimensioj
     FILENAME: Nomo de dosiero
     FOLDER: Dosierujo
+    HEIGHT: Alto
     LASTEDIT: 'Laste ŝanĝita'
     OWNER: Posedanto
     SIZE: 'Grando'
     TITLE: Titolo
     TYPE: 'Tipo'
     URL: URL
+    WIDTH: Larĝo
   AssetUploadField:
     ChooseFiles: 'Elekti dosierojn'
     DRAGFILESHERE: 'Ŝovi dosieron ĉi tien'
@@ -23,6 +27,8 @@ eo:
     FILES: Dosieroj
     FROMCOMPUTER: 'Elekti dosierojn el via komputilo'
     FROMCOMPUTERINFO: 'Alŝuti el via komputilo'
+    INSERTURL: 'Enigi el URL'
+    REMOVEINFO: 'Forigi ĉi tiun dosieron el ĉi tiu kampo'
     TOTAL: Totalo
     UPLOADINPROGRESS: 'Bonvolu atendi...alŝuto daŭras'
     UPLOADOR: AŬ
@@ -177,7 +183,6 @@ eo:
     PngType: 'PNG-bildo - ĝeneralcela formato'
     SINGULARNAME: Dosiero
     TOOLARGE: 'Dosiero estas tro granda; maksimumo estas {size}'
-    TOOLARGESHORT: 'Grando de dosiero superas je {size}'
     TiffType: 'Markita bildoformato'
     Title: Titolo
     WavType: 'WAV-sondosiero'
@@ -267,7 +272,7 @@ eo:
     ResultUpdated: 'Aktualigis %d grupojn'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Senfina iteracio troviĝis en la "{type}"-hierarkio. Bonvole ŝanĝu la patron por solvi tion.'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Aldoni je URL'
     ADJUSTDETAILSDIMENSIONS: 'Detaloj kaj dimensioj'
     ANCHORSCANNOTACCESSPAGE: 'Vi ne rajtas aliri la enhavon de la cela paĝo.'
@@ -299,6 +304,7 @@ eo:
     IMAGETITLETEXT: 'Teksto de titolo (ŝpruchelpilo)'
     IMAGETITLETEXTDESC: 'Por plua informo pri la bildo'
     IMAGEWIDTHPX: Larĝo
+    INSERTMEDIA: 'Enigi registraĵojn'
     LINK: 'Ligilo'
     LINKANCHOR: 'Ankri al ĉi tiu paĝo'
     LINKDESCR: 'Ligila priskribo'
@@ -311,7 +317,9 @@ eo:
     PAGE: Paĝo
     SUBJECT: 'Temo de retpoŝto'
     URL: URL
+    URLDESCRIPTION: 'Enigu videojn kaj bildojn el la TTT en vian paĝon simple enigante la URL de la dosiero. Certigu ke vi havas permesojn antaŭ ol kunhavigi registraĵojn rekte el la TTT.<br /><br />Bonvolu noti ke dosieroj ne aldoniĝas al la konservejo de dosieroj de la CMS sed dosieroj enkorpiĝas el ties origina loko. Se ial la dosiero ne plu haveblas en ĝia origina loko, ĝi ne plu estos videbla en ĉi tiu paĝo.'
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ne estas konvertebla al memorilo.'
+    UpdateMEDIA: 'Ĝisdatigi registraĵojn'
   Image:
     PLURALNAME: Dosieroj
     SINGULARNAME: Dosiero
@@ -373,13 +381,11 @@ eo:
     PASSWORD: Pasvorto
     PASSWORDEXPIRED: 'Via pasvorto finiĝis. Bonvolu elekti novan.'
     PLURALNAME: Membroj
-    REMEMBERME: 'Memoru min je la sekva fojo?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: Familia nomo
     TIMEFORMAT: 'Formato de horo'
-    VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama %s'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'

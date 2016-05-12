@@ -174,7 +174,6 @@ id_ID:
     PngType: 'Gambar PNG - bagus untuk format serba-bisa'
     SINGULARNAME: Berkas
     TOOLARGE: 'Ukuran berkas terlalu besar, maksimal {size} dibolehkan'
-    TOOLARGESHORT: 'Ukuran berkas melebihi {size}'
     TiffType: 'Format gambar tertanda'
     Title: Judul
     WavType: 'Berkas audio WAV'
@@ -263,7 +262,7 @@ id_ID:
     ResultUpdated: '%d kelompok diperbarui'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Putaran berulang ditemukan pada hirarki "{type}". Mohon ganti induk untuk mengatasi masalah ini'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Tambah URL'
     ADJUSTDETAILSDIMENSIONS: 'Rincian &amp; dimensi'
     ANCHORSCANNOTACCESSPAGE: 'Anda tidak dijinkan mengakses konten laman yang diminta.'
@@ -364,13 +363,11 @@ id_ID:
     PASSWORD: Kata kunci
     PASSWORDEXPIRED: 'Kata kunci Anda telah kadaluarsa. Mohon buat yang baru.'
     PLURALNAME: Pengguna
-    REMEMBERME: 'Ingat akun saya?'
     SINGULARNAME: Pengguna
     SUBJECTPASSWORDCHANGED: 'Kata kunci Anda telah diganti'
     SUBJECTPASSWORDRESET: 'Tautan penggantian kata kunci Anda'
     SURNAME: Nama Belakang
     TIMEFORMAT: 'Format waktu'
-    VALIDATIONMEMBEREXISTS: 'Pengguna dengan %s yang sama sudah ada'
     ValidationIdentifierFailed: 'Tidak dapat menimpa pengguna #{id} dengan pengenal yang sama ({name} = {value}))'
     WELCOMEBACK: 'Selamat Datang kembali, {firstname}'
     YOUROLDPASSWORD: 'Kata kunci lama'

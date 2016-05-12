@@ -84,7 +84,7 @@ ro:
     Parent: 'Grup de Baza'
     has_many_Permissions: Permisiuni
     many_many_Members: Membri
-  HTMLEditorField:
+  HtmlEditorField:
     BUTTONINSERTLINK: 'Insereaza link'
     BUTTONREMOVELINK: 'Indeparteaza link'
     CSSCLASS: 'Aliniere / stil'
@@ -118,7 +118,6 @@ ro:
     NEWPASSWORD: 'Noua parola'
     PASSWORD: Parola
     PLURALNAME: Membri
-    REMEMBERME: 'Tine-ma minte?'
     SINGULARNAME: Membru
     SUBJECTPASSWORDCHANGED: 'Parola dumneavoastra a fost schimbata'
     SUBJECTPASSWORDRESET: 'Link-ul de resetare a parolei'

@@ -152,7 +152,6 @@ sr_RS:
     PngType: 'PNG слика - добар формат опште намене'
     SINGULARNAME: Датотека
     TOOLARGE: 'Датотека је превелика; максимална дозвољена величина је {size}'
-    TOOLARGESHORT: 'Величина датотеке премашује {size}'
     TiffType: 'Означени формат слике'
     Title: Наслов
     WavType: 'WAV аудио датотека'
@@ -239,7 +238,7 @@ sr_RS:
     ResultUpdated: 'Ажурирано %d група'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Откривена је бесконачна петља у оквиру "{type}" хијерархије. Промените родитеља да би сте разрешили ситуацију'
-  HTMLEditorField:
+  HtmlEditorField:
     ADDURL: 'Додај URL'
     ADJUSTDETAILSDIMENSIONS: 'Детаљи &amp; димензије'
     ANCHORVALUE: Сидро
@@ -336,13 +335,11 @@ sr_RS:
     NoPassword: 'Не постоји лозинка за тог члана.'
     PASSWORD: Лозинка
     PLURALNAME: Чланови
-    REMEMBERME: 'Запамти ме за следећи пут'
     SINGULARNAME: Члан
     SUBJECTPASSWORDCHANGED: 'Ваша лозинка је промењена'
     SUBJECTPASSWORDRESET: 'Линк за ресетовање Ваше лозинке'
     SURNAME: Презиме
     TIMEFORMAT: 'Формат времена'
-    VALIDATIONMEMBEREXISTS: 'Већ постоји члан са овом адресом е-поште'
     ValidationIdentifierFailed: 'Није могуће преписати преко постојећег члана  #{id} са истим идентификатором ({name} = {value}))'
     WELCOMEBACK: 'Добро дошли поново, {firstname}'
     YOUROLDPASSWORD: 'Ваша стара лозинка'
