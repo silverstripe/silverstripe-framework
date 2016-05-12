@@ -5,7 +5,7 @@
  * @subpackage tests
  */
 class SS_MapTest extends SapphireTest {
-
+	
 	// Borrow the model from DataObjectTest
 	protected static $fixture_file = 'DataObjectTest.yml';
 
@@ -32,8 +32,10 @@ class SS_MapTest extends SapphireTest {
 		'DataObjectTest_Play',
 		'DataObjectTest_Ploy',
 		'DataObjectTest_Bogey',
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 	);
-
+	
 
 	public function testValues() {
 		$list = DataObjectTest_TeamComment::get()->sort('Name');
@@ -89,13 +91,13 @@ class SS_MapTest extends SapphireTest {
 			. "Bob: This is a team comment by Bob\n"
 			. "Phil: Phil is a unique guy, and comments on team2\n", $text);
 	}
-
+	
 	public function testDefaultConfigIsIDAndTitle() {
 		$list = DataObjectTest_Team::get();
 		$map = new SS_Map($list);
 		$this->assertEquals('Team 1', $map[$this->idFromFixture('DataObjectTest_Team', 'team1')]);
 	}
-
+	
 	public function testSetKeyFieldAndValueField() {
 		$list = DataObjectTest_TeamComment::get();
 		$map = new SS_Map($list);
@@ -103,7 +105,7 @@ class SS_MapTest extends SapphireTest {
 		$map->setValueField('Comment');
 		$this->assertEquals('This is a team comment by Joe', $map['Joe']);
 	}
-
+	
 	public function testToArray() {
 		$list = DataObjectTest_TeamComment::get();
 		$map = new SS_Map($list, 'Name', 'Comment');
@@ -181,10 +183,10 @@ class SS_MapTest extends SapphireTest {
 			"Phil" => "Phil is a unique guy, and comments on team2"), $map->toArray());
 
 		$map->unshift(0, '(Select)');
-
+		
 		$this->assertEquals('(All)', $map[-1]);
 		$this->assertEquals('(Select)', $map[0]);
-
+		
 		$this->assertEquals(array(
 			0 => "(Select)",
 			-1 => "(All)",
@@ -230,7 +232,7 @@ class SS_MapTest extends SapphireTest {
 			1 => "(All)"
 		), $map->toArray());
 	}
-
+	
 	public function testCount() {
 		$list = DataObjectTest_TeamComment::get();
 		$map = new SS_Map($list, 'Name', 'Comment');
@@ -275,7 +277,7 @@ class SS_MapTest extends SapphireTest {
 		$list = DataObjectTest_TeamComment::get()->sort('ID');
 		$map = new SS_Map($list, 'Name', 'Comment');
 		$map->push(1, 'Pushed');
-
+		
 		$text = "";
 
 		foreach($map as $k => $v) {
@@ -298,7 +300,7 @@ class SS_MapTest extends SapphireTest {
 		foreach($map as $k => $v) {
 			$text .= "$k: $v\n";
 		}
-
+		
 		$this->assertEquals("1: unshifted\n", $text);
 	}
 
@@ -311,7 +313,7 @@ class SS_MapTest extends SapphireTest {
 		foreach($map as $k => $v) {
 			$text .= "$k: $v\n";
 		}
-
+		
 		$this->assertEquals("1: pushed\n", $text);
 	}
 }

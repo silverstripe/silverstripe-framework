@@ -805,10 +805,12 @@ class DataQuery {
 			$relationTable,
 			"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\""
 		);
-		$this->query->addLeftJoin(
-			$componentBaseClass,
-			"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\""
-		);
+		if (!$this->query->isJoinedTo($componentBaseClass)) {
+			$this->query->addLeftJoin(
+				$componentBaseClass,
+				"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\""
+			);
+		}
 
 		/**
 		 * add join clause to the component's ancestry classes so that the search filter could search on
@@ -817,7 +819,7 @@ class DataQuery {
 		$ancestry = ClassInfo::ancestry($componentClass, true);
 		$ancestry = array_reverse($ancestry);
 		foreach($ancestry as $ancestor){
-			if($ancestor != $componentBaseClass){
+			if($ancestor != $componentBaseClass && !$this->query->isJoinedTo($ancestor)){
 				$this->query->addInnerJoin($ancestor, "\"$componentBaseClass\".\"ID\" = \"$ancestor\".\"ID\"");
 			}
 		}

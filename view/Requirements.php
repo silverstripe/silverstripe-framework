@@ -27,8 +27,8 @@ class Requirements implements Flushable {
 	public static function flush() {
 		$disabled = Config::inst()->get(static::class, 'disable_flush_combined');
 		if(!$disabled) {
-		self::delete_all_combined_files();
-	}
+			self::delete_all_combined_files();
+		}
 	}
 
 	/**

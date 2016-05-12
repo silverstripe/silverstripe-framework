@@ -28,6 +28,8 @@ class HasManyListTest extends SapphireTest {
 		'DataObjectTest_Play',
 		'DataObjectTest_Ploy',
 		'DataObjectTest_Bogey',
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 	);
 
 	public function testRelationshipEmptyOnNewRecords() {
