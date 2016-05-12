@@ -42,10 +42,13 @@ class GridField extends SilverStripeComponent {
 
   render() {
     // props.records is keyed by record identifiers
-    const ids = Object.getOwnPropertyNames(this.props.records) || [];
-    if (!ids.length) {
+    if (this.props.records === NotYetLoaded) {
       // TODO Replace with better loading indicator
       return <div>Loading...</div>;
+    }
+
+    if (!Object.getOwnPropertyNames(this.props.records).length) {
+      return <div>No campaigns created yet.</div>;
     }
 
     // Placeholder to align the headers correctly with the content
@@ -158,11 +161,13 @@ GridField.propTypes = {
   }),
 };
 
+const NotYetLoaded = {};
+
 function mapStateToProps(state, ownProps) {
   const recordType = ownProps.data ? ownProps.data.recordType : null;
   return {
     config: state.config,
-    records: recordType && state.records[recordType] ? state.records[recordType] : {},
+    records: recordType && state.records[recordType] ? state.records[recordType] : NotYetLoaded
   };
 }
 
