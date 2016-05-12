@@ -9,10 +9,24 @@
 class Requirements implements Flushable {
 
 	/**
+	 * Flag whether combined files should be deleted on flush.
+	 *
+	 * By default all combined files are deleted on flush. If combined files are stored in source control,
+	 * and thus updated manually, you might want to turn this on to disable this behaviour.
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $disable_flush_combined = false;
+
+	/**
 	 * Triggered early in the request when a flush is requested
 	 */
 	public static function flush() {
-		self::delete_all_combined_files();
+		$disabled = Config::inst()->get(__CLASS__, 'disable_flush_combined');
+		if(!$disabled) {
+			self::delete_all_combined_files();
+		}
 	}
 
 	/**
