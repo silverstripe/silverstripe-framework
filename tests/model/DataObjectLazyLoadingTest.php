@@ -23,7 +23,9 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'DataObjectTest_Player',
 		'DataObjectTest_TeamComment',
 		'VersionedTest_DataObject',
-		'VersionedTest_Subclass'
+		'VersionedTest_Subclass',
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 	);
 
 	public function testQueriedColumnsID() {
