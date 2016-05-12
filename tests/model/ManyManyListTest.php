@@ -15,6 +15,8 @@ class ManyManyListTest extends SapphireTest {
 		'DataObjectTest_Company',
 		'DataObjectTest_TeamComment',
 		'ManyManyListTest_ExtraFields',
+		'ManyManyListTest_Product',
+		'ManyManyListTest_Category',
 	);
 
 
@@ -267,6 +269,17 @@ class ManyManyListTest extends SapphireTest {
 		$this->assertSQLEquals($expected, $list->sql($parameters));
 	}
 
+	public function testFilteringOnPreviouslyJoinedTable() {
+
+		/** @var ManyManyListTest_Category $category */
+		$category = $this->objFromFixture('ManyManyListTest_Category', 'categorya');
+
+		/** @var ManyManyList $productsRelatedToProductB */
+		$productsRelatedToProductB = $category->Products()->filter('RelatedProducts.Title', 'Product B');
+
+		$this->assertEquals(1, $productsRelatedToProductB->count());
+	}
+
 
 }
 
@@ -291,3 +304,33 @@ class ManyManyListTest_ExtraFields extends DataObject implements TestOnly {
 		)
 	);
 }
+
+class ManyManyListTest_Product extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Title' => 'Varchar'
+	);
+
+	private static $many_many = array(
+		'RelatedProducts' => 'ManyManyListTest_Product'
+	);
+
+	private static $belongs_many_many = array(
+		'RelatedTo' => 'ManyManyListTest_Product',
+		'Categories' => 'ManyManyListTest_Category'
+	);
+
+}
+
+class ManyManyListTest_Category extends DataObject implements TestOnly {
+
+	private static $db = array(
+		'Title' => 'Varchar'
+	);
+
+	private static $many_many = array(
+		'Products' => 'ManyManyListTest_Product'
+	);
+
+}
+
