@@ -130,6 +130,9 @@ the third paramter of the `combine_files` function:
 
 	Requirements::combine_files('print.css', $printStylesheets, 'print');
 
+By default, all requirements files are flushed (deleted) when ?flush querystring parameter is set.
+This can be disabled by setting the `Requirements.disable_flush_combined` config to `true`.
+
 ## Clearing assets
 
 	:::php
