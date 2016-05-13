@@ -224,6 +224,32 @@ class DropdownFieldTest extends SapphireTest {
 	}
 
 	/**
+	 * The Field() method should be able to handle arrays as values in an edge case. If it couldn't handle it then
+	 * this test would trigger an array to string conversion PHP notice
+	 *
+	 * @dataProvider arrayValueProvider
+	 */
+	public function testDropdownWithArrayValues($value) {
+		$field = $this->createDropdownField();
+		$field->setValue($value);
+		$this->assertInstanceOf('HTMLText', $field->Field());
+        $this->assertSame($value, $field->Value());
+	}
+
+	/**
+	 * @return array
+	 */
+	public function arrayValueProvider() {
+		return array(
+			array(array()),
+			array(array(0)),
+			array(array(123)),
+			array(array('string')),
+			array('Regression-ish test.')
+		);
+	}
+
+	/**
 	 * Create a test dropdown field, with the option to
 	 * set what source and blank value it should contain
 	 * as optional parameters.
