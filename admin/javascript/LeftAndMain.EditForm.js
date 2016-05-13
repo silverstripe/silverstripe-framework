@@ -46,6 +46,14 @@
 			ChangeTrackerOptions: {
 				ignoreFieldSelector: '.no-change-track, .ss-upload :input, .cms-navigator :input'
 			},
+
+			/**
+			 * Variable: ValidationErrorShown
+			 * Boolean for tracking whether a validation error has been already been shown. Used because tabs can
+			 * sometimes be inadvertently initialised multiple times, but we don't want duplicate messages
+			 * (Boolean)
+			 */
+			ValidationErrorShown: false,
 		
 			/**
 			 * Constructor: onmatch
@@ -77,49 +85,43 @@
 					}
 				}
 
+				// Reset error display
+				this.setValidationErrorShown(false);
+
 				// TODO
 				// // Rewrite # links
 				// html = html.replace(/(<a[^>]+href *= *")#/g, '$1' + window.location.href.replace(/#.*$/,'') + '#');
 				// 
 				// // Rewrite iframe links (for IE)
 				// html = html.replace(/(<iframe[^>]*src=")([^"]+)("[^>]*>)/g, '$1' + $('base').attr('href') + '$2$3');
-				
-				// Show validation errors if necessary
-				if(this.hasClass('validationerror')) {
-					// Ensure the first validation error is visible
-					var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
-					$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
-
-					// Selects the discovered tab set (since we'll need to look a few times).
-					var selectErroredTab = function($tabSet) {
-						$tabSet.tabs('option', 'active', tabError.index('.tab'));
-					};
-
-					// Attempt #1: Look for nearest .ss-tabset (usually nested deeper underneath a .cms-tabset).
-					var $tabSet = tabError.closest('.ss-tabset');
-					if ($tabSet.length) {
-						selectErroredTab($tabSet);
-					} else {
-						// TODO: Crappy effort to get this to execute later so we can check for the higher level tab instance that may help us select this error.
-						// TODO: This is necessary since this .onadd() method/event will fire before the higher level .cms-tabset is actually initialized.
-						setTimeout(function() {
-							// Attempt #2: Next level in tab-ception, try to select the tab within this higher level .cms-tabset if possible.
-							$tabSet = tabError.closest('.cms-tabset');
-
-							// Ensure that this isn't a CMS link but rather a regular sub-page tab that won't navigate you if selected.
-							var $tabLinks = $($tabSet.data('tabs').tabs).find('.cms-panel-link');
-
-							if ($tabSet.length > 0 && $tabLinks.length == 0) {
-								selectErroredTab($tabSet);
-							} else {
-								// Attempt #3: Last ditch effort, let's just give up and show the old fashioned dialog.
-								errorMessage(ss.i18n._t('ModelAdmin.VALIDATIONERROR', 'Validation Error'));
-							}
-						}, 1);
-					}
-				}
 
 				this._super();
+			},
+			'from .cms-tabset': {
+				onafterredrawtabs: function () {
+					// Show validation errors if necessary
+					if(this.hasClass('validationerror')) {
+						// Ensure the first validation error is visible
+						var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
+						$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
+
+						// Attempt #1: Look for nearest .ss-tabset (usually nested deeper underneath a .cms-tabset).
+						var $tabSet = tabError.closest('.ss-tabset');
+
+						// Attempt #2: Next level in tab-ception, try to select the tab within this higher level .cms-tabset if possible
+						if (!$tabSet.length) {
+							$tabSet = tabError.closest('.cms-tabset');
+						}
+
+						if ($tabSet.length) {
+							$tabSet.tabs('option', 'active', tabError.index('.tab'));
+						} else if (!this.getValidationErrorShown()) {
+							// Ensure that this error message popup won't be added more than once
+							this.setValidationErrorShown(true);
+							errorMessage(ss.i18n._t('ModelAdmin.VALIDATIONERROR', 'Validation Error'));
+						}
+					}
+				}
 			},
 			onremove: function() {
 				this.changetracker('destroy');

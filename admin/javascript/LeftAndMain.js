@@ -1450,6 +1450,8 @@ jQuery.noConflict();
 						}
 					}
 				});
+
+				this.trigger('afterredrawtabs');
 			},
 
 			/**
