@@ -54,12 +54,27 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	protected $showOnClick = false;
 
+	/**
+	 * Check if the existing password should be entered first
+	 *
+	 * @var bool
+	 */
+	protected $requireExistingPassword = false;
+
 
 	/**
-	 * A place to temporarly store the confirm password value
+	 * A place to temporarily store the confirm password value
+	 *
 	 * @var string
 	 */
 	protected $confirmValue;
+
+	/**
+	 * Store value of "Current Password" field
+	 *
+	 * @var string
+	 */
+	protected $currentPasswordValue;
 
 	/**
 	 * Title for the link that triggers the visibility of password fields.
@@ -105,6 +120,7 @@ class ConfirmedPasswordField extends FormField {
 
 		// disable auto complete
 		foreach($this->children as $child) {
+			/** @var FormField $child */
 			$child->setAttribute('autocomplete', 'off');
 		}
 
@@ -113,7 +129,7 @@ class ConfirmedPasswordField extends FormField {
 		// we have labels for the subfields
 		$title = false;
 
-		parent::__construct($name, $title, null, $form);
+		parent::__construct($name, $title);
 		$this->setValue($value);
 	}
 
@@ -147,6 +163,7 @@ class ConfirmedPasswordField extends FormField {
 		}
 
 		foreach($this->children as $field) {
+			/** @var FormField $field */
 			$field->setDisabled($this->isDisabled());
 			$field->setReadonly($this->isReadonly());
 
@@ -220,6 +237,7 @@ class ConfirmedPasswordField extends FormField {
 	 */
 	public function setRightTitle($title) {
 		foreach($this->children as $field) {
+			/** @var FormField $field */
 			$field->setRightTitle($title);
 		}
 
@@ -227,15 +245,20 @@ class ConfirmedPasswordField extends FormField {
 	}
 
 	/**
-	 * @param array $titles 2 entry array with the customized title for each
-	 *						of the 2 children.
+	 * Set child field titles. Titles in order should be:
+	 *  - "Current Password" (if getRequireExistingPassword() is set)
+	 *  - "Password"
+	 *  - "Confirm Password"
 	 *
-	 * @return ConfirmedPasswordField
+	 * @param array $titles List of child titles
+	 * @return $this
 	 */
 	public function setChildrenTitles($titles) {
-		if(is_array($titles) && count($titles) == 2) {
+		$expectedChildren = $this->getRequireExistingPassword() ? 3 : 2;
+		if(is_array($titles) && count($titles) == $expectedChildren) {
 			foreach($this->children as $field) {
 				if(isset($titles[0])) {
+					/** @var FormField $field */
 					$field->setTitle($titles[0]);
 
 					array_shift($titles);
@@ -251,8 +274,8 @@ class ConfirmedPasswordField extends FormField {
 	 * to handle both cases.
 	 *
 	 * @param mixed $value
-	 *
-	 * @return ConfirmedPasswordField
+	 * @param mixed $data
+	 * @return $this
 	 */
 	public function setValue($value, $data = null) {
 		// If $data is a DataObject, don't use the value, since it's a hashed value
@@ -264,6 +287,9 @@ class ConfirmedPasswordField extends FormField {
 		if(is_array($value)) {
 			$this->value = $value['_Password'];
 			$this->confirmValue = $value['_ConfirmPassword'];
+			$this->currentPasswordValue = ($this->getRequireExistingPassword() && isset($value['_CurrentPassword']))
+				? $value['_CurrentPassword']
+				: null;
 
 			if($this->showOnClick && isset($value['_PasswordFieldVisible'])) {
 				$this->children->fieldByName($this->getName() . '[_PasswordFieldVisible]')
@@ -292,6 +318,7 @@ class ConfirmedPasswordField extends FormField {
 	 * Update the names of the child fields when updating name of field.
 	 *
 	 * @param string $name new name to give to the field.
+	 * @return $this
 	 */
 	public function setName($name) {
 		$this->children->fieldByName($this->getName() . '[_Password]')
@@ -340,8 +367,7 @@ class ConfirmedPasswordField extends FormField {
 			$validator->validationError(
 				$name,
 				_t('Form.VALIDATIONPASSWORDSDONTMATCH',"Passwords don't match"),
-				"validation",
-				false
+				"validation"
 			);
 
 			return false;
@@ -353,8 +379,7 @@ class ConfirmedPasswordField extends FormField {
 				$validator->validationError(
 					$name,
 					_t('Form.VALIDATIONPASSWORDSNOTEMPTY', "Passwords can't be empty"),
-					"validation",
-					false
+					"validation"
 				);
 
 				return false;
@@ -363,6 +388,8 @@ class ConfirmedPasswordField extends FormField {
 
 		// lengths
 		if(($this->minLength || $this->maxLength)) {
+			$errorMsg = null;
+			$limit = null;
 			if($this->minLength && $this->maxLength) {
 				$limit = "{{$this->minLength},{$this->maxLength}}";
 				$errorMsg = _t(
@@ -390,8 +417,7 @@ class ConfirmedPasswordField extends FormField {
 				$validator->validationError(
 					$name,
 					$errorMsg,
-					"validation",
-					false
+					"validation"
 				);
 			}
 		}
@@ -402,10 +428,52 @@ class ConfirmedPasswordField extends FormField {
 					$name,
 					_t('Form.VALIDATIONSTRONGPASSWORD',
 						"Passwords must have at least one digit and one alphanumeric character"),
-					"validation",
-					false
+					"validation"
 				);
 
+				return false;
+			}
+		}
+
+		// Check if current password is valid
+		if(!empty($value) && $this->getRequireExistingPassword()) {
+			if(!$this->currentPasswordValue) {
+				$validator->validationError(
+					$name,
+					_t(
+						'ConfirmedPasswordField.CURRENT_PASSWORD_MISSING',
+						"You must enter your current password."
+					),
+					"validation"
+				);
+				return false;
+			}
+
+			// Check this password is valid for the current user
+			$member = Member::currentUser();
+			if(!$member) {
+				$validator->validationError(
+					$name,
+					_t(
+						'ConfirmedPasswordField.LOGGED_IN_ERROR',
+						"You must be logged in to change your password."
+					),
+					"validation"
+				);
+				return false;
+			}
+
+			// With a valid user and password, check the password is correct
+			$checkResult = $member->checkPassword($this->currentPasswordValue);
+			if(!$checkResult->valid()) {
+				$validator->validationError(
+					$name,
+					_t(
+						'ConfirmedPasswordField.CURRENT_PASSWORD_ERROR',
+						"The current password you have entered is not correct."
+					),
+					"validation"
+				);
 				return false;
 			}
 		}
@@ -441,5 +509,37 @@ class ConfirmedPasswordField extends FormField {
 			->setValue('*****');
 
 		return $field;
+	}
+
+	/**
+	 * Check if existing password is required
+	 *
+	 * @return bool
+	 */
+	public function getRequireExistingPassword() {
+		return $this->requireExistingPassword;
+	}
+
+	/**
+	 * Set if the existing password should be required
+	 *
+	 * @param bool $show Flag to show or hide this field
+	 * @return $this
+	 */
+	public function setRequireExistingPassword($show) {
+		// Don't modify if already added / removed
+		if((bool)$show === $this->requireExistingPassword) {
+			return $this;
+		}
+		$this->requireExistingPassword = $show;
+		$name = $this->getName();
+		$currentName = "{$name}[_CurrentPassword]";
+		if ($show) {
+			$confirmField = PasswordField::create($currentName, _t('Member.CURRENT_PASSWORD', 'Current Password'));
+			$this->children->unshift($confirmField);
+		} else {
+			$this->children->removeByName($currentName, true);
+		}
+		return $this;
 	}
 }
