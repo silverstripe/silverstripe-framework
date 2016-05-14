@@ -1,4 +1,5 @@
 <?php
+
 /**
  * A simple parser that allows you to map BBCode-like "shortcodes" to an arbitrary callback.
  * It is a simple regex based parser that allows you to replace simple bbcode-like tags
@@ -121,14 +122,17 @@ class ShortcodeParser extends Object {
 	/**
 	 * Return the text to insert in place of a shoprtcode.
 	 * Behaviour in the case of missing shortcodes depends on the setting of ShortcodeParser::$error_behavior.
-	 * @param $tag A map containing the the following keys:
+	 *
+	 * @param array $tag A map containing the the following keys:
 	 *  - 'open': The name of the tag
 	 *  - 'attrs': Attributes of the tag
 	 *  - 'content': Content of the tag
-	 * @param $extra Extra-meta data
-	 * @param $isHTMLAllowed A boolean indicating whether it's okay to insert HTML tags into the result
+	 * @param array $extra Extra-meta data
+	 * @param boolean $isHTMLAllowed A boolean indicating whether it's okay to insert HTML tags into the result
+	 *
+	 * @return bool|mixed|string
 	 */
-	function getShortcodeReplacementText($tag, $extra = array(), $isHTMLAllowed = true) {
+	public function getShortcodeReplacementText($tag, $extra = array(), $isHTMLAllowed = true) {
 		$content = $this->callShortcode($tag['open'], $tag['attrs'], $tag['content'], $extra);
 
 		// Missing tag
@@ -157,7 +161,8 @@ class ShortcodeParser extends Object {
 	}
 
 	protected function insertAfter($new, $after) {
-		$parent = $after->parentNode; $next = $after->nextSibling;
+		$parent = $after->parentNode;
+		$next = $after->nextSibling;
 
 		if ($next) {
 			$parent->insertBefore($new, $next);
@@ -182,6 +187,9 @@ class ShortcodeParser extends Object {
 		}
 	}
 
+	/**
+	 * @var string
+	 */
 	protected static $marker_class = '--ss-shortcode-marker';
 
 	protected static $block_level_elements = array(
@@ -612,4 +620,5 @@ class ShortcodeParser extends Object {
 
 		return $content;
 	}
+
 }

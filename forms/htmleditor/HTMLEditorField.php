@@ -1,4 +1,7 @@
 <?php
+use Embed\Adapters\AdapterInterface;
+use Embed\Embed;
+
 /**
  * A TinyMCE-powered WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
  * are created from <textarea> tags, which are then converted with JavaScript.
@@ -523,8 +526,8 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 			));
 		}
 
-		// Instanciate file wrapper and get fields based on its type
-		// Check if appCategory is an image and exists on the local system, otherwise use oEmbed to refference a
+		// Instantiate file wrapper and get fields based on its type
+		// Check if appCategory is an image and exists on the local system, otherwise use Embed to reference a
 		// remote image
 		$fileCategory = $this->getFileCategory($url, $file);
 		switch($fileCategory) {
@@ -541,11 +544,11 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 				if($file) {
 					throw $this->getErrorFor(_t(
 						"HTMLEditorField_Toolbar.ERROR_OEMBED_REMOTE",
-						"Oembed is only compatible with remote files"
+						"Embed is only compatible with remote files"
 					));
 				}
 
-				// Other files should fallback to oembed
+				// Other files should fallback to embed
 				$fileWrapper = new HTMLEditorField_Embed($url, $file);
 				break;
 		}
@@ -1031,9 +1034,9 @@ abstract class HTMLEditorField_File extends ViewableData {
 }
 
 /**
- * Encapsulation of an oembed tag, linking to an external media source.
+ * Encapsulation of an embed tag, linking to an external media source.
  *
- * @see Oembed
+ * @see Embed
  * @package forms
  * @subpackage fields-formattedinput
  */
@@ -1045,16 +1048,16 @@ class HTMLEditorField_Embed extends HTMLEditorField_File {
 	);
 
 	/**
-	 * Oembed result
+	 * Embed result
 	 *
-	 * @var Oembed_Result
+	 * @var Embed
 	 */
-	protected $oembed;
+	protected $embed;
 
 	public function __construct($url, File $file = null) {
 		parent::__construct($url, $file);
-		$this->oembed = Oembed::get_oembed_from_url($url);
-		if(!$this->oembed) {
+		$this->embed = Embed::create($url);
+		if(!$this->embed) {
 			$controller = Controller::curr();
 			$response = $controller->getResponse();
 			$response->addHeader('X-Status',
@@ -1093,32 +1096,32 @@ class HTMLEditorField_Embed extends HTMLEditorField_File {
 	}
 
 	/**
-	 * Get width of this oembed
+	 * Get width of this Embed
 	 *
 	 * @return int
 	 */
 	public function getWidth() {
-		return $this->oembed->Width ?: 100;
+		return $this->embed->width ?: 100;
 	}
 
 	/**
-	 * Get height of this oembed
+	 * Get height of this Embed
 	 *
 	 * @return int
 	 */
 	public function getHeight() {
-		return $this->oembed->Height ?: 100;
+		return $this->embed->height ?: 100;
 	}
 
 	public function getPreviewURL() {
 		// Use thumbnail url
-		if(!empty($this->oembed->thumbnail_url)) {
-			return $this->oembed->thumbnail_url;
+		if($this->embed->image) {
+			return $this->embed->image;
 		}
 
 		// Use direct image type
-		if($this->getType() == 'photo' && !empty($this->Oembed->url)) {
-			return $this->Oembed->url;
+		if($this->getType() == 'photo' && !empty($this->embed->url)) {
+			return $this->embed->url;
 		}
 
 		// Default media
@@ -1126,32 +1129,37 @@ class HTMLEditorField_Embed extends HTMLEditorField_File {
 	}
 
 	public function getName() {
-		if(isset($this->oembed->title)) {
-			return $this->oembed->title;
+		if($this->embed->title) {
+			return $this->embed->title;
 		} else {
 			return parent::getName();
 		}
 	}
 
 	/**
-	 * Get OEmbed type
+	 * Get Embed type
 	 *
 	 * @return string
 	 */
 	public function getType() {
-		return $this->oembed->type;
+		return $this->embed->type;
 	}
 
+	/**
+	 * Get filetype
+	 *
+	 * @return string
+	 */
 	public function getFileType() {
 		return $this->getType()
 			?: parent::getFileType();
 	}
 
 	/**
-	 * @return Oembed_Result
+	 * @return AdapterInterface
 	 */
-	public function getOembed() {
-		return $this->oembed;
+	public function getEmbed() {
+		return $this->embed;
 	}
 
 	public function appCategory() {
@@ -1159,12 +1167,12 @@ class HTMLEditorField_Embed extends HTMLEditorField_File {
 	}
 
 	/**
-	 * Info for this oembed
+	 * Info for this Embed
 	 *
 	 * @return string
 	 */
 	public function getInfo() {
-		return $this->oembed->info;
+		return $this->embed->info;
 	}
 }
 

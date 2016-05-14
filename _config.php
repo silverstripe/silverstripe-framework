@@ -19,7 +19,7 @@
 
 ShortcodeParser::get('default')
 	->register('file_link', array('File', 'handle_shortcode'))
-	->register('embed', array('Oembed', 'handle_shortcode'))
+	->register('embed', array('SilverStripe\Forms\HtmlEditor\EmbedShortcodeProvider', 'handle_shortcode'))
 	->register('image', array('Image', 'handle_shortcode'));
 
 // Shortcode parser which only regenerates shortcodes

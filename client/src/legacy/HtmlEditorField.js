@@ -1397,7 +1397,7 @@ $.entwine('ss', function($) {
 
 
 	/**
-	 * Insert an oembed object tag into the content.
+	 * Insert an Embed object tag into the content.
 	 * Requires the 'media' plugin for serialization of tags into <img> placeholders.
 	 */
 	$('form.htmleditorfield-mediaform .ss-htmleditorfield-file.embed').entwine({
