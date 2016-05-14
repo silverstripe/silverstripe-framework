@@ -41,7 +41,7 @@ class FormAction extends SilverStripeComponent {
 
     // If there is no text
     if (typeof this.props.label === 'undefined') {
-      buttonClasses.push('no-text');
+      buttonClasses.push('btn--no-text');
     }
 
     // Add icon class
@@ -75,11 +75,9 @@ class FormAction extends SilverStripeComponent {
     if (this.props.loading === true) {
       return (
         <div className="btn__loading-icon" >
-          <svg viewBox="0 0 44 12">
-            <circle cx="6" cy="6" r="6" />
-            <circle cx="22" cy="6" r="6" />
-            <circle cx="38" cy="6" r="6" />
-          </svg>
+          <span className="btn__circle btn__circle--1" ></span>
+          <span className="btn__circle btn__circle--2" ></span>
+          <span className="btn__circle btn__circle--3" ></span>
         </div>
       );
     }
