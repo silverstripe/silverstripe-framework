@@ -62,6 +62,9 @@ class SS_DatetimeTest extends SapphireTest {
 	public function testNice() {
 		$date = DBField::create_field('SS_Datetime', '2001-12-31 22:10:59');
 		$this->assertEquals('31/12/2001 10:10pm', $date->Nice());
+
+		Config::inst()->update('SS_Datetime', 'nice_format', 'd F Y, H:i:s');
+		$this->assertEquals('31 December 2001, 22:10:59', $date->Nice());
 	}
 
 	public function testNice24() {
