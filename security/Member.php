@@ -312,15 +312,23 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * Check if the passed password matches the stored one (if the member is not locked out).
 	 *
-	 * @param  string $password
+	 * @param string $password
 	 * @return ValidationResult
 	 */
 	public function checkPassword($password) {
 		$result = $this->canLogIn();
 
 		// Short-circuit the result upon failure, no further checks needed.
-		if (!$result->valid()) return $result;
+		if (!$result->valid()) {
+			return $result;
+		}
 
+		// Allow default admin to login as self
+		if($this->isDefaultAdmin() && Security::check_default_admin($this->Email, $password)) {
+			return $result;
+		}
+
+		// Check a password is set on this member
 		if(empty($this->Password) && $this->exists()) {
 			$result->error(_t('Member.NoPassword','There is no password on this member.'));
 			return $result;
@@ -335,6 +343,16 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Check if this user is the currently configured default admin
+	 *
+	 * @return bool
+	 */
+	public function isDefaultAdmin() {
+		return Security::has_default_admin()
+			&& $this->Email === Security::default_admin_username();
 	}
 
 	/**
@@ -730,14 +748,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public function getMemberFormFields() {
 		$fields = parent::getFrontendFields();
 
-		$fields->replaceField('Password', $password = new ConfirmedPasswordField (
-			'Password',
-			$this->fieldLabel('Password'),
-			null,
-			null,
-			(bool) $this->ID
-		));
-		$password->setCanBeEmpty(true);
+		$fields->replaceField('Password', $this->getMemberPasswordField());
 
 		$fields->replaceField('Locale', new DropdownField (
 			'Locale',
@@ -753,6 +764,36 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$this->extend('updateMemberFormFields', $fields);
 		return $fields;
 	}
+
+	/**
+	 * Builds "Change / Create Password" field for this member
+	 *
+	 * @return ConfirmedPasswordField
+	 */
+	public function getMemberPasswordField() {
+		$editingPassword = $this->isInDB();
+		$label = $editingPassword
+			? _t('Member.EDIT_PASSWORD', 'New Password')
+			: $this->fieldLabel('Password');
+		/** @var ConfirmedPasswordField $password */
+		$password = ConfirmedPasswordField::create(
+			'Password',
+			$label,
+			null,
+			null,
+			$editingPassword
+		);
+
+		// If editing own password, require confirmation of existing
+		if($editingPassword && $this->ID == Member::currentUserID()) {
+			$password->setRequireExistingPassword(true);
+		}
+
+		$password->setCanBeEmpty(true);
+		$this->extend('updateMemberPasswordField', $password);
+		return $password;
+	}
+
 
 	/**
 	 * Returns the {@link RequiredFields} instance for the Member object. This
@@ -1341,19 +1382,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		require_once 'Zend/Date.php';
 
 		$self = $this;
-		$this->beforeUpdateCMSFields(function($fields) use ($self) {
-			$mainFields = $fields->fieldByName("Root")->fieldByName("Main")->Children;
+		$this->beforeUpdateCMSFields(function(FieldList $fields) use ($self) {
+			/** @var FieldList $mainFields */
+			$mainFields = $fields->fieldByName("Root")->fieldByName("Main")->getChildren();
 
-			$password = new ConfirmedPasswordField(
-				'Password',
-				null,
-				null,
-				null,
-				true // showOnClick
-			);
-			$password->setCanBeEmpty(true);
-			if( ! $self->ID) $password->showOnClick = false;
-			$mainFields->replaceField('Password', $password);
+			// Build change password field
+			$mainFields->replaceField('Password', $self->getMemberPasswordField());
 
 			$mainFields->replaceField('Locale', new DropdownField(
 				"Locale",
