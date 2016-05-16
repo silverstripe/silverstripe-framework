@@ -71,6 +71,39 @@ We ask for this so that the ownership in the license is clear and unambiguous, a
 The core team is then responsible for reviewing patches and deciding if they will make it into core.  If
 there are any problems they will follow up with you, so please ensure they have a way to contact you!
 
+
+### Picking the right version
+
+SilverStripe core and module releases (since the 3.1.8 release) follow the [Semantic Versioning](http://semver.org) 
+(SemVer) specification for releases. Using this specification declares to the entire development community the severity 
+and intention of each release. It gives developers the ability to safely declare their dependencies and understand the
+scope involved in each upgrade.
+
+Each release is labeled in the format `$MAJOR`.`$MINOR`.`$PATCH`. For example, 3.1.8 or 3.2.0.
+
+* `$MAJOR` version is incremented if any backwards incompatible changes are introduced to the public API. 
+* `$MINOR` version is incremented if new, backwards compatible **functionality** is introduced to the public API or 
+	improvements are introduced within the private code. 
+* `$PATCH` version is incremented if only backwards compatible **bug fixes** are introduced. A bug fix is defined as 
+	an internal change that fixes incorrect behavior.
+
+**Public API** refers to any aspect of the system that has been designed to be used by SilverStripe modules & site developers. In SilverStripe 3, because we haven't been clear, in principle we have to treat every public or protected method as *potentially* part of the public API, but sometimes it comes to a judgement call about how likely it is that a given method will have been used in a particular way. If we were strict about never changing publicly exposed behaviour, it would be difficult to fix any bug whatsoever, which isn't in the interests of our user community.
+
+In future major releases of SilverStripe, we will endeavour to be more explicit about documenting the public API.
+
+**Contributing bug fixes**
+
+Bug fixes should be raised against the most recent MINOR release branch. For example, If your project is on 3.3.1 and 3.4.0 is released, please raise your bugfix against the `3.4` branch. Older MINOR release branches are primarily intended for critical bugfixes and security issues.
+
+**Contributing features**
+
+When contributing a backwards compatible change, raise it against the same MAJOR branch as your project. For example, if your project is on 3.3.1, raise it against the `3` branch. It will be included in the next MINOR release, e.g. 3.4.0. And then when it is released, you should upgrade your project to use it. As it is a MINOR change, it shouldn't break anything, and be a relatively painless upgrade.
+
+**Contributing backwards-incompatible public API changes, and removing or radically changing existing feautres**
+
+When contributing a backwards incompatible change, you must raise it against the `master` branch.
+
+
 ### The Pull Request Process
 
 Once your pull request is issued, it's not the end of the road. A [core committer](/contributing/core_committers/) will most likely have some questions for you and may ask you to make some changes depending on discussions you have.
@@ -125,10 +158,7 @@ If you're familiar with it, here's the short version of what you need to know. O
 
 * **Squash your commits, so that each commit addresses a single issue.** After you rebase your work on top of the upstream master, you can squash multiple commits into one. Say, for instance, you've got three commits in related to Issue #100. Squash all three into one with the message "Description of the issue here (fixes #100)" We won't accept pull requests for multiple commits related to a single issue; it's up to you to squash and clean your commit tree. (Remember, if you squash commits you've already pushed to GitHub, you won't be able to push that same branch again. Create a new local branch, squash, and push the new squashed branch.)
 
-* **Choose the correct branch**: Assume the current release is 3.0.3, and 3.1.0 is in beta state.
-Most pull requests should go against the `3.1` *pre-release branch*, only critical bugfixes
-against the `3.0` *release branch*. If you're changing an API or introducing a major feature,
-the pull request should go against `master` (read more about our [release process](release_process)). Branches are periodically merged "upwards" (3.0 into 3.1, 3.1 into master).
+* **Choose the correct branch**: see [Picking the right version](#picking-the-right-version).
 
 ### Editing files directly on GitHub.com
 
