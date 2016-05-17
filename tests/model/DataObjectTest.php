@@ -533,29 +533,29 @@ class DataObjectTest extends SapphireTest {
 		$obj->IsRetired = true;
 
 		$this->assertEquals(
-			$obj->getChangedFields(false, 1),
+			$obj->getChangedFields(true, DataObject::CHANGE_STRICT),
 			array(
 				'FirstName' => array(
 					'before' => 'Captain',
 					'after' => 'Captain-changed',
-					'level' => 2
+					'level' => DataObject::CHANGE_VALUE
 				),
 				'IsRetired' => array(
 					'before' => 1,
 					'after' => true,
-					'level' => 1
+					'level' => DataObject::CHANGE_STRICT
 				)
 			),
 			'Changed fields are correctly detected with strict type changes (level=1)'
 		);
 
 		$this->assertEquals(
-			$obj->getChangedFields(false, 2),
+			$obj->getChangedFields(true, DataObject::CHANGE_VALUE),
 			array(
 				'FirstName' => array(
 					'before'=>'Captain',
 					'after'=>'Captain-changed',
-					'level' => 2
+					'level' => DataObject::CHANGE_VALUE
 				)
 			),
 			'Changed fields are correctly detected while ignoring type changes (level=2)'
@@ -564,50 +564,58 @@ class DataObjectTest extends SapphireTest {
 		$newObj = new DataObjectTest_Player();
 		$newObj->FirstName = "New Player";
 		$this->assertEquals(
-			$newObj->getChangedFields(false, 2),
 			array(
 				'FirstName' => array(
 					'before' => null,
 					'after' => 'New Player',
-					'level' => 2
+					'level' => DataObject::CHANGE_VALUE
 				)
 			),
+			$newObj->getChangedFields(true, DataObject::CHANGE_VALUE),
 			'Initialised fields are correctly detected as full changes'
 		);
 	}
 
 	public function testIsChanged() {
 		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$obj->NonDBField = 'bob';
 		$obj->FirstName = 'Captain-changed';
 		$obj->IsRetired = true; // type change only, database stores "1"
 
-		$this->assertTrue($obj->isChanged('FirstName', 1));
-		$this->assertTrue($obj->isChanged('FirstName', 2));
-		$this->assertTrue($obj->isChanged('IsRetired', 1));
-		$this->assertFalse($obj->isChanged('IsRetired', 2));
+		// Now that DB fields are changed, isChanged is true
+		$this->assertTrue($obj->isChanged('NonDBField'));
+		$this->assertFalse($obj->isChanged('NonField'));
+		$this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_STRICT));
+		$this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+		$this->assertTrue($obj->isChanged('IsRetired', DataObject::CHANGE_STRICT));
+		$this->assertFalse($obj->isChanged('IsRetired', DataObject::CHANGE_VALUE));
 		$this->assertFalse($obj->isChanged('Email', 1), 'Doesnt change mark unchanged property');
 		$this->assertFalse($obj->isChanged('Email', 2), 'Doesnt change mark unchanged property');
 
 		$newObj = new DataObjectTest_Player();
 		$newObj->FirstName = "New Player";
-		$this->assertTrue($newObj->isChanged('FirstName', 1));
-		$this->assertTrue($newObj->isChanged('FirstName', 2));
-		$this->assertFalse($newObj->isChanged('Email', 1));
-		$this->assertFalse($newObj->isChanged('Email', 2));
+		$this->assertTrue($newObj->isChanged('FirstName', DataObject::CHANGE_STRICT));
+		$this->assertTrue($newObj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+		$this->assertFalse($newObj->isChanged('Email', DataObject::CHANGE_STRICT));
+		$this->assertFalse($newObj->isChanged('Email', DataObject::CHANGE_VALUE));
 
 		$newObj->write();
-		$this->assertFalse($newObj->isChanged('FirstName', 1));
-		$this->assertFalse($newObj->isChanged('FirstName', 2));
-		$this->assertFalse($newObj->isChanged('Email', 1));
-		$this->assertFalse($newObj->isChanged('Email', 2));
+		$this->assertFalse($newObj->ischanged());
+		$this->assertFalse($newObj->isChanged('FirstName', DataObject::CHANGE_STRICT));
+		$this->assertFalse($newObj->isChanged('FirstName', DataObject::CHANGE_VALUE));
+		$this->assertFalse($newObj->isChanged('Email', DataObject::CHANGE_STRICT));
+		$this->assertFalse($newObj->isChanged('Email', DataObject::CHANGE_VALUE));
 
 		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
 		$obj->FirstName = null;
-		$this->assertTrue($obj->isChanged('FirstName', 1));
-		$this->assertTrue($obj->isChanged('FirstName', 2));
+		$this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_STRICT));
+		$this->assertTrue($obj->isChanged('FirstName', DataObject::CHANGE_VALUE));
 
 		/* Test when there's not field provided */
-		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
+		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain2');
+		$this->assertFalse($obj->isChanged());
+		$obj->NonDBField = 'new value';
+		$this->assertFalse($obj->isChanged());
 		$obj->FirstName = "New Player";
 		$this->assertTrue($obj->isChanged());
 
@@ -1109,7 +1117,7 @@ class DataObjectTest extends SapphireTest {
 
 	public function testValidateModelDefinitionsFailsWithArray() {
 		Config::nest();
-		
+
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1126,7 +1134,7 @@ class DataObjectTest extends SapphireTest {
 
 	public function testValidateModelDefinitionsFailsWithIntKey() {
 		Config::nest();
-		
+
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1143,7 +1151,7 @@ class DataObjectTest extends SapphireTest {
 
 	public function testValidateModelDefinitionsFailsWithIntValue() {
 		Config::nest();
-		
+
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1163,7 +1171,7 @@ class DataObjectTest extends SapphireTest {
 	 */
 	public function testValidateModelDefinitionsPassesWithExtraFields() {
 		Config::nest();
-		
+
 		$object = new DataObjectTest_Team;
 		$method = $this->makeAccessible($object, 'validateModelDefinitions');
 
@@ -1810,7 +1818,7 @@ class DataObjectTest_SubTeam extends DataObjectTest_Team implements TestOnly {
 	private static $many_many = array(
 		'FormerPlayers' => 'DataObjectTest_Player'
 	);
-	
+
 	private static $many_many_extraFields = array(
 		'FormerPlayers' => array(
 			'Position' => 'Varchar(100)'

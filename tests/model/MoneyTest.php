@@ -71,6 +71,35 @@ class MoneyTest extends SapphireTest {
 		$this->assertEquals(0.0000, $moneyTest->MyMoneyAmount);
 	}
 
+	public function testIsChanged() {
+		$obj1 = $this->objFromFixture('MoneyTest_DataObject', 'test1');
+		$this->assertFalse($obj1->isChanged());
+		$this->assertFalse($obj1->isChanged('MyMoney'));
+
+		// modify non-db field
+		$m1 = new Money();
+		$m1->setAmount(500);
+		$m1->setCurrency('NZD');
+		$obj1->NonDBMoneyField = $m1;
+		$this->assertFalse($obj1->isChanged()); // Because only detects DB fields
+		$this->assertTrue($obj1->isChanged('NonDBMoneyField')); // Allow change detection to non-db fields explicitly named
+
+		// Modify db field
+		$obj2 = $this->objFromFixture('MoneyTest_DataObject', 'test2');
+		$m2 = new Money();
+		$m2->setAmount(500);
+		$m2->setCurrency('NZD');
+		$obj2->MyMoney = $m2;
+		$this->assertTrue($obj2->isChanged()); // Detects change to DB field
+		$this->assertTrue($obj2->ischanged('MyMoney'));
+
+		// Modify sub-fields
+		$obj3 = $this->objFromFixture('MoneyTest_DataObject', 'test3');
+		$obj3->MyMoneyCurrency = 'USD';
+		$this->assertTrue($obj3->isChanged()); // Detects change to DB field
+		$this->assertTrue($obj3->ischanged('MyMoneyCurrency'));
+	}
+
 	/**
 	 * Write a Money object to the database, then re-read it to ensure it
 	 * is re-read properly.
