@@ -249,8 +249,8 @@ form.nostyle input.text, form.nostyle textarea, form.nostyle select, form.nostyl
 .field { display: block; border-bottom: 1px solid #D2D5D8; -webkit-box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); -moz-box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); -o-box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); box-shadow: 0 1px 0 rgba(245, 245, 245, 0.8); padding: 0 0 7px 0; margin: 8px 0; *zoom: 1; }
 .field.noborder, .field:last-child { padding-bottom: 0; border-bottom: none; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 .field:after { content: "\0020"; display: block; height: 0; clear: both; overflow: hidden; visibility: hidden; }
-.field.nolabel .middleColumn { margin-left: 0; }
-.field.nolabel .description { margin-left: 0; }
+.field.nolabel > .middleColumn { margin-left: 0; }
+.field.nolabel > .description { margin-left: 0; }
 .field.checkbox label.right { margin: 4px 0 0 0; display: inline; font-style: normal; color: #4f5861; clear: none; }
 .field label.left { float: left; display: block; width: 176px; padding: 8px 8px 8px 0; line-height: 16px; }
 .field label.right { cursor: pointer; clear: both; color: #7f8b97; display: block; font-style: italic; margin: 4px 0 0 184px; }

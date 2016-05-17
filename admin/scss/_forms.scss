@@ -36,10 +36,10 @@ form.nostyle {
 	@include legacy-pie-clearfix();
 
 	&.nolabel {
-		.middleColumn {
+		> .middleColumn {
 			margin-left: 0;
 		}
-		.description {
+		> .description {
 			margin-left: 0;
 		}
 	}
@@ -638,11 +638,11 @@ form.small .field, .field.small {
 			.ui-icon {
 				display: none;
 			}
-			
+
 			&.no-text {
 				padding: 5px 6px;
 				color: lighten($color-text, 10%);
-				
+
 				&.active,
 				&:active,
 				&:focus,
