@@ -150,7 +150,7 @@ shortcuts and methods for fetching, sorting and filtering data from our database
 	$players = Player::get();
 	// returns a `DataList` containing all the `Player` objects.
 
-	$player = Player::get()->byId(2);
+	$player = Player::get()->byID(2);
 	// returns a single `Player` object instance that has the ID of 2.
 
 	echo $player->ID;
