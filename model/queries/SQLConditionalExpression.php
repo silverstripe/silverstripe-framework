@@ -650,9 +650,8 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 * @return boolean
 	 */
 	public function filtersOnID() {
-		$regexp = '/^(.*\.)?("|`)?ID("|`)?\s?=/';
+		$regexp = '/^(.*\.)?("|`)?ID("|`)?\s?(=|IN)/';
 
-		// @todo - Test this works with paramaterised queries
 		foreach($this->getWhereParameterised($parameters) as $predicate) {
 			if(preg_match($regexp, $predicate)) return true;
 		}
@@ -668,7 +667,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 * @return boolean
 	 */
 	public function filtersOnFK() {
-		$regexp = '/^(.*\.)?("|`)?[a-zA-Z]+ID("|`)?\s?=/';
+		$regexp = '/^(.*\.)?("|`)?[a-zA-Z]+ID("|`)?\s?(=|IN)/';
 
 		// @todo - Test this works with paramaterised queries
 		foreach($this->getWhereParameterised($parameters) as $predicate) {
