@@ -322,6 +322,41 @@ class SQLQueryTest extends SapphireTest {
 		);
 
 		$query = new SQLQuery();
+		$query->setWhere('"ID" = 5');
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with simple quoted column name"
+		);
+
+		$query = new SQLQuery();
+		$query->setWhere(array('"ID"' => 4));
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with parameterised quoted column name"
+		);
+
+		$query = new SQLQuery();
+		$query->setWhere(array('"ID" = ?' => 4));
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with parameterised quoted column name"
+		);
+
+		$query = new SQLQuery();
+		$query->setWhere('"ID" IN (5,4)');
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with WHERE ID IN"
+		);
+
+		$query = new SQLQuery();
+		$query->setWhere(array('"ID" IN ?' => array(1,2)));
+		$this->assertTrue(
+			$query->filtersOnID(),
+			"filtersOnID() is true with parameterised WHERE ID IN"
+		);
+
+		$query = new SQLQuery();
 		$query->setWhere("ID=5");
 		$this->assertTrue(
 			$query->filtersOnID(),
