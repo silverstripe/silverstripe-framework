@@ -41,6 +41,17 @@ class Debug {
 	private static $friendly_error_header = 'There has been an error';
 
 	/**
+	 * Set to true to enable friendly errors to set a http response code corresponding to the error.
+	 * If left false then error pages will be served as HTTP 200.
+	 *
+	 * Will be removed in 4.0, and fixed to on.
+	 *
+	 * @config
+	 * @var bool
+	 */
+	private static $friendly_error_httpcode = false;
+
+	/**
 	 * @config
 	 * @var string The body of the message shown to users on the live site when a fatal error occurs.
 	 */
@@ -318,22 +329,21 @@ class Debug {
 	 * @return string HTML error message for non-ajax requests, plaintext for ajax-request.
 	 */
 	public static function friendlyError($statusCode=500, $friendlyErrorMessage=null, $friendlyErrorDetail=null) {
+		// Ensure the error message complies with the HTTP 1.1 spec
 		if(!$friendlyErrorMessage) {
 			$friendlyErrorMessage = Config::inst()->get('Debug', 'friendly_error_header');
 		}
+		$friendlyErrorMessage = strip_tags(str_replace(array("\n", "\r"), '', $friendlyErrorMessage));
 
 		if(!$friendlyErrorDetail) {
 			$friendlyErrorDetail = Config::inst()->get('Debug', 'friendly_error_detail');
 		}
 
 		if(!headers_sent()) {
-			// Ensure the error message complies with the HTTP 1.1 spec
-			$msg = strip_tags(str_replace(array("\n", "\r"), '', $friendlyErrorMessage));
-			if(Controller::has_curr()) {
-				$response = Controller::curr()->getResponse();
-				$response->setStatusCode($statusCode, $msg);
-			} else {
-				header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $msg");
+			// Allow toggle between legacy behaviour and correctly setting HTTP response code
+			// In 4.0 this should be fixed to always set this response code.
+			if(Config::inst()->get('Debug', 'friendly_error_httpcode') || !Controller::has_curr()) {
+				header($_SERVER['SERVER_PROTOCOL'] . " $statusCode $friendlyErrorMessage");
 			}
 		}
 
