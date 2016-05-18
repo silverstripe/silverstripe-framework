@@ -39,6 +39,8 @@
 				ignoreFieldSelector: '.no-change-track, .ss-upload :input, .cms-navigator :input'
 			},
 
+			ValidationErrorShown: false,
+
 			onadd: function onadd() {
 				var self = this;
 
@@ -54,13 +56,29 @@
 					}
 				}
 
-				if (this.hasClass('validationerror')) {
-					var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
-					$('.cms-container').clearCurrentTabState();
-					tabError.closest('.ss-tabset').tabs('option', 'active', tabError.index('.tab'));
-				}
+				this.setValidationErrorShown(false);
 
 				this._super();
+			},
+			'from .cms-tabset': {
+				onafterredrawtabs: function onafterredrawtabs() {
+					if (this.hasClass('validationerror')) {
+						var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
+						$('.cms-container').clearCurrentTabState();
+						var $tabSet = tabError.closest('.ss-tabset');
+
+						if (!$tabSet.length) {
+							$tabSet = tabError.closest('.cms-tabset');
+						}
+
+						if ($tabSet.length) {
+							$tabSet.tabs('option', 'active', tabError.index('.tab'));
+						} else if (!this.getValidationErrorShown()) {
+							this.setValidationErrorShown(true);
+							errorMessage(ss.i18n._t('ModelAdmin.VALIDATIONERROR', 'Validation Error'));
+						}
+					}
+				}
 			},
 			onremove: function onremove() {
 				this.changetracker('destroy');

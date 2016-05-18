@@ -1083,6 +1083,7 @@
             }
           }
         });
+        this.trigger('afterredrawtabs');
       },
 
       rewriteHashlinks: function rewriteHashlinks() {

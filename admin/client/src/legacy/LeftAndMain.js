@@ -1439,6 +1439,7 @@ $.entwine('ss', function($) {
           }
         }
       });
+      this.trigger('afterredrawtabs');
     },
 
     /**
