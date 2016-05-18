@@ -27,6 +27,7 @@
     "symfony/config": "^2.8",
     "symfony/translation": "^2.8",
     "vlucas/phpdotenv": "^2.4",
+    "nikic/php-parser": "^2.1",
     "silverstripe/config": "^1@dev"
   },
   "require-dev": {
