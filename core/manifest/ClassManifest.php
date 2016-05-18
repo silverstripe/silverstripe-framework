@@ -1,4 +1,9 @@
 <?php
+
+use PhpParser\ParserFactory;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
+
 /**
  * A utility class which builds a manifest of all classes, interfaces and some
  * additional items present in a directory, and caches it.
@@ -133,6 +138,10 @@ class SS_ClassManifest {
 		));
 	}
 
+	protected $parser;
+	protected $traverser;
+	protected $visitor;
+
 	/**
 	 * Constructs and initialises a new class manifest, either loading the data
 	 * from the cache or re-scanning for classes.
@@ -150,6 +159,11 @@ class SS_ClassManifest {
 
 		$this->cache = new $cacheClass('classmanifest'.($includeTests ? '_tests' : ''));
 		$this->cacheKey = 'manifest';
+
+		$this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP5, new PhpParser\Lexer);
+		$this->traverser = new NodeTraverser;
+		$this->traverser->addVisitor(new PhpParser\NodeVisitor\NameResolver);
+		$this->traverser->addVisitor($this->visitor = new SilverStripeNodeVisitor);
 
 		if (!$forceRegen && $data = $this->cache->load($this->cacheKey)) {
 			$this->classes      = $data['classes'];
@@ -512,22 +526,18 @@ class SS_ClassManifest {
 			}
 		}
 
-		if (!$classes) {
-			$tokens     = token_get_all($file);
+		if (!$valid) {
+			$this->visitor->reset();
+			$stmts = $this->parser->parse(file_get_contents($pathname));
+			$this->traverser->traverse($stmts);
 
-			$classes = self::get_namespaced_class_parser()->findAll($tokens);
+			$classes = $this->visitor->getClasses();
+			$traits = $this->visitor->getTraits();
+			$namespace = $this->visitor->getNamespace();
 
-			$namespace = self::get_namespace_parser()->findAll($tokens);
+			$imports = [];//$this->getImportsFromTokens($tokens);
 
-			if($namespace) {
-				$namespace = implode('', $namespace[0]['namespaceName']);
-			} else {
-				$namespace = '';
-			}
-
-			$imports = $this->getImportsFromTokens($tokens);
-
-			$interfaces = self::get_interface_parser()->findAll($tokens);
+			$interfaces = $this->visitor->getInterfaces();
 
 			$cache = array(
 				'classes' => $classes,
@@ -634,6 +644,74 @@ class SS_ClassManifest {
 		} else {
 			return array();
 		}
+	}
+
+}
+
+class SilverStripeNodeVisitor extends NodeVisitorAbstract {
+
+	private $classes = [];
+
+	private $traits = [];
+
+	private $namespace = '';
+
+	private $interfaces = [];
+
+	public function reset() {
+		$this->classes = [];
+		$this->traits = [];
+		$this->namespace = '';
+		$this->interfaces = [];
+	}
+
+	public function enterNode(PhpParser\Node $node) {
+		if ($node instanceof PhpParser\Node\Stmt\Class_) {
+			$extends = [];
+			$implements = [];
+
+			if ($node->extends) {
+				$extends[] = (string)$node->extends;
+			}
+
+			if ($node->implements) {
+				foreach ($node->implements as $implement) {
+					$implements[] = (string)$implement;
+				}
+			}
+
+			$this->classes[] = [
+				'className' => $node->name,
+				'extends' => $extends,
+				'implements' => $implements
+			];
+		} else if ($node instanceof PhpParser\Node\Stmt\Trait_) {
+			$this->traits[] = ['traitName' => (string)$node->name];
+		} else if ($node instanceof PhpParser\Node\Stmt\Namespace_) {
+			$this->namespace = (string)$node->name;
+		} else if ($node instanceof PhpParser\Node\Stmt\Interface_) {
+			$this->interfaces[] = ['interfaceName' => (string)$node->name];
+		}
+
+		if (!$node instanceof PhpParser\Node\Stmt\Namespace_) {
+			return NodeTraverser::DONT_TRAVERSE_CHILDREN;
+		}
+	}
+
+	public function getClasses() {
+		return $this->classes;
+	}
+
+	public function getTraits() {
+		return $this->traits;
+	}
+
+	public function getNamespace() {
+		return $this->namespace;
+	}
+
+	public function getInterfaces() {
+		return $this->interfaces;
 	}
 
 }

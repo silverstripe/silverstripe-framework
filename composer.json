@@ -17,7 +17,8 @@
 	],
 	"require": {
 		"php": ">=5.3.3,<7",
-		"composer/installers": "~1.0"
+		"composer/installers": "~1.0",
+		"nikic/php-parser": "~2.1.0"
 	},
 	"require-dev": {
 		"phpunit/PHPUnit": "~3.7"
@@ -28,6 +29,10 @@
 		}
 	},
 	"autoload": {
-		"classmap": ["tests/behat/features/bootstrap"]	
+		"psr-4": {
+			"SilverStripe\\": ""
+		},
+		"files": ["core/Constants.php"],
+		"classmap": ["tests/behat/features/bootstrap"]
 	}
 }
