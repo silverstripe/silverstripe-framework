@@ -188,8 +188,8 @@ class Requirements implements Flushable {
 	 * @param string $type  Comma-separated list of types to use in the script tag
 	 *                       (e.g. 'text/javascript,text/ecmascript')
 	 */
-	public static function themedScript($name, $module = null, $type = null) {
-		return self::backend()->themedScript($name, $module, $type);
+	public static function themedJavascript($name, $module = null, $type = null) {
+		return self::backend()->themedJavascript($name, $module, $type);
 	}
 
 	/**
@@ -1345,6 +1345,8 @@ class Requirements_Backend {
 			$this->css($theme . $css, $media);
 		} elseif($module) {
 			$this->css($module . $css, $media);
+		} elseif (Director::isDev()) {
+			throw Exception("The css file doesn't exists. Please check if the file $name.css exists in any context or search for themedCSS references calling this file in your templates.");
 		}
 	}
 
@@ -1361,7 +1363,7 @@ class Requirements_Backend {
 	 * @param string $type  Comma-separated list of types to use in the script tag
 	 *                       (e.g. 'text/javascript,text/ecmascript')
 	 */
-	public function themedScript($name, $module = null, $type = null) {
+	public function themedJavascript($name, $module = null, $type = null) {
 		$theme = SSViewer::get_theme_folder();
 		$project = project();
 		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
@@ -1377,6 +1379,8 @@ class Requirements_Backend {
 			$this->javascript($theme . $js);
 		} elseif($module) {
 			$this->javascript($module . $js);
+		} elseif (Director::isDev()) {
+			throw Exception("The javascript file doesn't exists. Please check if the file $name.js exists in any context or search for themedJavascript references calling this file in your templates.");
 		}
 	}
 
