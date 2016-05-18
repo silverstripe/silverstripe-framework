@@ -137,6 +137,18 @@ class GridFieldExportButtonTest extends SapphireTest {
 			$button->generateExportFileData($this->gridField)
 		);
 	}
+
+	public function testZeroValue() {
+		$button = new GridFieldExportButton();
+		$button->setExportColumns(array(
+			'RugbyTeamNumber' => 'Rugby Team Number'
+		));
+
+		$this->assertEquals(
+			"\"Rugby Team Number\"\n2\n0\n",
+			$button->generateExportFileData($this->gridField)
+		);
+	}
 }
 
 /**
@@ -147,7 +159,8 @@ class GridFieldExportButtonTest_Team extends DataObject implements TestOnly {
 
 	private static $db = array(
 		'Name' => 'Varchar',
-		'City' => 'Varchar'
+		'City' => 'Varchar',
+		'RugbyTeamNumber' => 'Int'
 	);
 
 	public function canView($member = null) {
@@ -164,7 +177,8 @@ class GridFieldExportButtonTest_NoView extends DataObject implements TestOnly {
 
 	private static $db = array(
 		'Name' => 'Varchar',
-		'City' => 'Varchar'
+		'City' => 'Varchar',
+		'RugbyTeamNumber' => 'Int'
 	);
 
 	public function canView($member = null) {

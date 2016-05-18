@@ -1038,7 +1038,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Doesn't write to the database. Only sets fields as changed
 	 * if they are not already marked as changed.
 	 *
-	 * @return DataObject $this
+	 * @return $this
 	 */
 	public function forceChange() {
 		// Ensure lazy fields loaded
@@ -1233,22 +1233,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param bool $forceChanges If set to true, force all fields to be treated as changed
 	 * @return bool True if any changes are detected
 	 */
-	protected function updateChanges($forceChanges = false) {
-		// Update the changed array with references to changed obj-fields
-		foreach($this->record as $field => $value) {
-			// Only mark ID as changed if $forceChanges
-			if($field === 'ID' && !$forceChanges) continue;
-			// Determine if this field should be forced, or can mark itself, changed
-			if($forceChanges
-				|| !$this->isInDB()
-				|| (is_object($value) && method_exists($value, 'isChanged') && $value->isChanged())
-			) {
-				$this->changed[$field] = self::CHANGE_VALUE;
+	protected function updateChanges($forceChanges = false)
+	{
+		if($forceChanges) {
+			// Force changes, but only for loaded fields
+			foreach($this->record as $field => $value) {
+				$this->changed[$field] = static::CHANGE_VALUE;
 			}
+			return true;
 		}
-
-		// Check changes exist, abort if there are no changes
-		return $this->changed && (bool)array_filter($this->changed);
+		return $this->isChanged();
 	}
 
 	/**
@@ -1383,7 +1377,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$isNewRecord = !$this->isInDB() || $forceInsert;
 
 		// Check changes exist, abort if there are none
-		$hasChanges = $this->updateChanges($forceInsert);
+		$hasChanges = $this->updateChanges($isNewRecord);
 		if($hasChanges || $forceWrite || $isNewRecord) {
 			// New records have their insert into the base data table done first, so that they can pass the
 			// generated primary key on to the rest of the manipulation
@@ -2476,9 +2470,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Loads all the stub fields that an initial lazy load didn't load fully.
 	 *
 	 * @param string $tableClass Base table to load the values from. Others are joined as required.
-	 * Not specifying a tableClass will load all lazy fields from all tables.
+	 *                   Not specifying a tableClass will load all lazy fields from all tables.
+	 * @return bool Flag if lazy loading succeeded
 	 */
 	protected function loadLazyFields($tableClass = null) {
+		if(!$this->isInDB() || !is_numeric($this->ID)) {
+			return false;
+		}
+
 		if (!$tableClass) {
 			$loaded = array();
 
@@ -2489,7 +2488,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 			}
 
-			return;
+			return false;
 		}
 
 		$dataQuery = new DataQuery($tableClass);
@@ -2499,11 +2498,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			foreach($params as $key => $value) {
 				$dataQuery->setQueryParam($key, $value);
 			}
-		}
-
-		// TableField sets the record ID to "new" on new row data, so don't try doing anything in that case
-		if(!is_numeric($this->record['ID'])) {
-			return;
 		}
 
 		// Limit query to the current record, unless it has the Versioned extension,
@@ -2551,6 +2545,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -2624,7 +2619,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function isChanged($fieldName = null, $changeLevel = self::CHANGE_STRICT) {
-		$fields = $fieldName ? array($fieldName) : false;
+		$fields = $fieldName ? array($fieldName) : true;
 		$changed = $this->getChangedFields($fields, $changeLevel);
 		if(!isset($fieldName)) {
 			return !empty($changed);

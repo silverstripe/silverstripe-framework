@@ -184,6 +184,11 @@ abstract class SelectField extends FormField {
 			return true;
 		}
 
+		// Safety check against casting arrays as strings in PHP>5.4
+ 		if(is_array($dataValue) || is_array($userValue)) {
+			return false;
+		}
+
 		// For non-falsey values do loose comparison
 		if($dataValue) {
 			return $dataValue == $userValue;
