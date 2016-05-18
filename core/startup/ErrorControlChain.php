@@ -77,11 +77,33 @@ class ErrorControlChain {
 	 */
 	public function setSuppression($suppression) {
 		$this->suppression = (bool)$suppression;
-		// Don't modify errors unless handling fatal errors, and if errors were
-		// originally allowed to be displayed.
-		if ($this->handleFatalErrors && $this->originalDisplayErrors) {
-			ini_set('display_errors', !$suppression);
+		// If handling fatal errors, conditionally disable, or restore error display
+		// Note: original value of display_errors could also evaluate to "off"
+		if ($this->handleFatalErrors) {
+			if($suppression) {
+				$this->setDisplayErrors(0);
+			} else {
+				$this->setDisplayErrors($this->originalDisplayErrors);
+			}
 		}
+	}
+
+	/**
+	 * Set display_errors
+	 *
+	 * @param mixed $errors
+	 */
+	protected function setDisplayErrors($errors) {
+		ini_set('display_errors', $errors);
+	}
+
+	/**
+	 * Get value of display_errors ini value
+	 *
+	 * @return mixed
+	 */
+	protected function getDisplayErrors() {
+		return ini_get('display_errors');
 	}
 
 	/**
@@ -178,7 +200,7 @@ class ErrorControlChain {
 		register_shutdown_function(array($this, 'handleFatalError'));
 		$this->handleFatalErrors = true;
 
-		$this->originalDisplayErrors = ini_get('display_errors');
+		$this->originalDisplayErrors = $this->getDisplayErrors();
 		$this->setSuppression($this->suppression);
 
 		$this->step();
@@ -202,7 +224,7 @@ class ErrorControlChain {
 		else {
 			// Now clean up
 			$this->handleFatalErrors = false;
-			ini_set('display_errors', $this->originalDisplayErrors);
+			$this->setDisplayErrors($this->originalDisplayErrors);
 		}
 	}
 }
