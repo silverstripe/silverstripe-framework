@@ -64,7 +64,7 @@ class ClassInfo {
 	 * @return array List of subclasses
 	 */
 	public static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
-		if(is_string($class) && !class_exists($class)) return null;
+		if(is_string($class) && !class_exists($class)) return array();
 
 		$class = self::class_name($class);
 		$classes = DB::get_schema()->enumValuesForField($class, 'ClassName');
@@ -81,7 +81,7 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function dataClassesFor($class) {
-		if(is_string($class) && !class_exists($class)) return null;
+		if(is_string($class) && !class_exists($class)) return array();
 
 		$result = array();
 
@@ -143,7 +143,7 @@ class ClassInfo {
 	 * @return array Names of all subclasses as an associative array.
 	 */
 	public static function subclassesFor($class) {
-		if(is_string($class) && !class_exists($class)) return null;
+		if(is_string($class) && !class_exists($class)) return array();
 
 		//normalise class case
 		$className = self::class_name($class);
@@ -191,7 +191,7 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function ancestry($class, $tablesOnly = false) {
-		if(is_string($class) && !class_exists($class)) return null;
+		if(is_string($class) && !class_exists($class)) return array();
 
 		$class = self::class_name($class);
 
