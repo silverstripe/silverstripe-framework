@@ -24,10 +24,10 @@
 	},
 	"extra": {
 		"branch-alias": {
-			"3.x-dev": "3.4.x-dev"
+			"3.x-dev": "3.5.x-dev"
 		}
 	},
 	"autoload": {
-		"classmap": ["tests/behat/features/bootstrap"]	
+		"classmap": ["tests/behat/features/bootstrap"]
 	}
 }
