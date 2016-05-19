@@ -1781,6 +1781,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$extraFields = $this->manyManyExtraFieldsForComponent($componentName) ?: array();
 		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField, $extraFields);
 
+
+		// Store component data in query meta-data
+		$result = $result->alterDataQuery(function($query) use ($extraFields) {
+			$query->setQueryParam('Component.ExtraFields', $extraFields);
+		});
+		
 		if($this->model) $result->setDataModel($this->model);
 
 		$this->extend('updateManyManyComponents', $result);
@@ -2685,6 +2691,28 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$this->$fieldName = $val;
 		}
 		return $this;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function castingHelper($field) {
+		if ($fieldSpec = $this->db($field)) {
+			return $fieldSpec;
+		}
+
+		// many_many_extraFields aren't presented by db(), so we check if the source query params
+		// provide us with meta-data for a many_many relation we can inspect for extra fields.
+		$queryParams = $this->getSourceQueryParams();
+		if (!empty($queryParams['Component.ExtraFields'])) {
+			$extraFields = $queryParams['Component.ExtraFields'];
+
+			if (isset($extraFields[$field])) {
+				return $extraFields[$field];
+			}
+		}
+
+		return parent::castingHelper($field);
 	}
 
 	/**

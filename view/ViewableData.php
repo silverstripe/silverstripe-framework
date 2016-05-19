@@ -287,6 +287,12 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function castingHelper($field) {
 		if($this->hasMethod('db') && $fieldSpec = $this->db($field)) {
+			Deprecation::notice(
+				'4.0',
+				'ViewableData::castingHelper() will no longer extract casting information "db". Please override
+				castingHelper in your ViewableData subclass.',
+				Deprecation::SCOPE_GLOBAL
+			);
 			return $fieldSpec;
 		}
 
