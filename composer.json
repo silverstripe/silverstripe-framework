@@ -22,11 +22,6 @@
 	"require-dev": {
 		"phpunit/PHPUnit": "~3.7"
 	},
-	"extra": {
-		"branch-alias": {
-			"3.x-dev": "3.3.x-dev"
-		}
-	},
 	"autoload": {
 		"classmap": ["tests/behat/features/bootstrap"]	
 	}
