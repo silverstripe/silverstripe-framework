@@ -25,6 +25,14 @@
  */
 class SS_Datetime extends Date implements TemplateGlobalProvider {
 
+	/**
+	 * @config
+	 * @see Date::nice_format
+	 * @see Time::nice_format
+	 */
+	private static $nice_format = 'd/m/Y g:ia';
+
+
 	public function setValue($value, $record = null) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
 			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
@@ -54,11 +62,12 @@ class SS_Datetime extends Date implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Returns the date and time (in 12-hour format) using the format string 'd/m/Y g:ia' e.g. '31/01/2014 2:23pm'.
+	 * Returns the date and time in the format specified by the config value nice_format, or 'd/m/Y g:ia' 
+	 * by default (e.g. '31/01/2014 2:23pm').
 	 * @return string Formatted date and time.
 	 */
 	public function Nice() {
-		if($this->value) return $this->Format('d/m/Y g:ia');
+		if($this->value) return $this->Format($this->config()->nice_format);
 	}
 
 	/**
