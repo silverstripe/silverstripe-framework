@@ -90,13 +90,11 @@ th:
     JsType: 'ไฟล์จาวาสคริปต์'
     Mp3Type: 'ไฟล์เสียง MP3'
     MpgType: 'ไฟล์วีดีโอ MPEG'
-    NOFILESIZE: 'ขนาดไฟล์มีขนาดเป็นศูนย์'
     Name: ชื่อ
     PLURALNAME: ไฟล์
     PdfType: 'ไฟล์ Adobe Acrobat PDF'
     PngType: 'รูปภาพ PNG - ดีสำหรับรูปแบบที่มีเป้าหมายสำหรับใช้งานทั่วไป'
     SINGULARNAME: ไฟล์
-    TOOLARGESHORT: 'ขนาดไฟล์เกินจำนวนที่จำกัดไว้ {size}'
     TiffType: 'ไฟล์รูปภาพ TIF'
     Title: ชื่อ
     WavType: 'ไฟล์เสียง WAV'
@@ -228,7 +226,6 @@ th:
     NEWPASSWORD: 'รหัสผ่านใหม่'
     PASSWORD: รหัสผ่าน
     PLURALNAME: สมาชิก
-    REMEMBERME: 'จำรหัสผ่านไว้สำหรับครั้งต่อไป?'
     SINGULARNAME: สมาชิก
     SUBJECTPASSWORDCHANGED: 'รหัสผ่านได้รับการเปลี่ยนแปลงแล้ว'
     SUBJECTPASSWORDRESET: 'ลิงค์สำหรับรีเซ็ตรหัสผ่านใหม่ของคุณ'

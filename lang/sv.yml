@@ -169,15 +169,12 @@ sv:
     JsType: 'Javascript-fil'
     Mp3Type: 'MP3-ljudfil'
     MpgType: 'MPEG-videofil'
-    NOFILESIZE: 'Filstorleken är noll bytes'
     NOVALIDUPLOAD: 'Filen är inte giltig för uppladdning'
     Name: Namn
     PLURALNAME: Filer
     PdfType: 'Adobe Acrobat PDF-fil'
     PngType: 'PNG-bild - bra allmänt format'
     SINGULARNAME: Fil
-    TOOLARGE: 'Filen är för stor, max {size} tillåts'
-    TOOLARGESHORT: 'Filstorlek överskriden {size}'
     TiffType: 'Tiff bildformat'
     Title: Titel
     WavType: 'WAV-ljudfil'
@@ -373,13 +370,11 @@ sv:
     PASSWORD: Lösenord
     PASSWORDEXPIRED: 'Ditt lösenord har gått ut. Vänligen ange ett nytt.'
     PLURALNAME: Medlemmar
-    REMEMBERME: 'Kom ihåg mig nästa gång?'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Ditt lösenord har ändrats'
     SUBJECTPASSWORDRESET: 'Din återställningslänk'
     SURNAME: Efternamn
     TIMEFORMAT: 'Tidsformat'
-    VALIDATIONMEMBEREXISTS: 'Det finns redan en medlem med samma %s'
     ValidationIdentifierFailed: 'Kan inte skriva över medlem #{id} med samma identifierare ({name} = {value}))'
     WELCOMEBACK: 'Välkommen tillbaka, {firstname}'
     YOUROLDPASSWORD: 'Ditt gamla lösenord'

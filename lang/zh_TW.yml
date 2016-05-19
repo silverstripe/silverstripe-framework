@@ -70,11 +70,9 @@ zh_TW:
     INTERFACELANG: '介面語言'
     NEWPASSWORD: '新密碼'
     PASSWORD: 密碼
-    REMEMBERME: '下次記住我'
     SUBJECTPASSWORDCHANGED: '密碼更改成功。'
     SUBJECTPASSWORDRESET: '密碼重設'
     SURNAME: 姓
-    VALIDATIONMEMBEREXISTS: '已經有人使用此電子郵件地址'
     YOUROLDPASSWORD: '舊密碼'
   MemberAuthenticator:
     TITLE: '電子郵件 &amp; 密碼'

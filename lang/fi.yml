@@ -30,7 +30,6 @@ fi:
     INSERTURL: 'Lisää URL-osoitteesta'
     REMOVEINFO: 'Poista tämä tiedosto tästä kentästä'
     TOTAL: Yhteensä
-    TOUPLOAD: 'Valitse siirrettävät tiedostot...'
     UPLOADINPROGRESS: 'Ole hyvä ja odota... siirto käynnissä'
     UPLOADOR: TAI
   BBCodeParser:
@@ -153,7 +152,6 @@ fi:
     INVALID_REQUEST: 'Pyyntö on virheellinen'
   DropdownField:
     CHOOSE: (Valitse)
-    CHOOSESEARCH: '(Valitse tai Hae)'
     SOURCE_VALIDATION: 'Valitse arvo pudotusvalikosta. {value} ei kelpaa'
   EmailField:
     VALIDATION: 'Anna sähköpostiosoite, ole hyvä.'
@@ -177,15 +175,12 @@ fi:
     JsType: 'Javascript-tiedosto'
     Mp3Type: 'MP3-äänitiedosto'
     MpgType: 'MPEG-videotiedosto'
-    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
     PdfType: 'Adobe Acrobat PDF-tiedosto'
     PngType: 'PNG-kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
-    TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
-    TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
     TiffType: 'TIFF-kuva'
     Title: Otsikko
     WavType: 'WAV-äänitiedosto'
@@ -384,13 +379,11 @@ fi:
     PASSWORD: Salasana
     PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Jäsenet
-    REMEMBERME: 'Muista seuraavalla kerralla?'
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
     TIMEFORMAT: 'Aikamuoto'
-    VALIDATIONMEMBEREXISTS: 'Rekisteröityneellä käyttäjällä on jo käytössä tämä sähköpostiosoite.'
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
     WELCOMEBACK: 'Tervetuloa takaisin, {firstname}'
     YOUROLDPASSWORD: 'Vanha salasanasi'

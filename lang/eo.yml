@@ -30,7 +30,6 @@ eo:
     INSERTURL: 'Enigi el URL'
     REMOVEINFO: 'Forigi ĉi tiun dosieron el ĉi tiu kampo'
     TOTAL: Totalo
-    TOUPLOAD: 'Elekti dosierojn alŝutotajn...'
     UPLOADINPROGRESS: 'Bonvolu atendi...alŝuto daŭras'
     UPLOADOR: AŬ
   BBCodeParser:
@@ -153,7 +152,6 @@ eo:
     INVALID_REQUEST: 'Malvalida peto'
   DropdownField:
     CHOOSE: (Elekti)
-    CHOOSESEARCH: '(Elekti aŭ serĉi)'
     SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   EmailField:
     VALIDATION: 'Bonvolu enigi readreson'
@@ -177,15 +175,12 @@ eo:
     JsType: 'Ĝavaskripta dosiero'
     Mp3Type: 'MP3-sondosiero'
     MpgType: 'AVI-videa dosiero'
-    NOFILESIZE: 'Dosiero havas nul bajtojn'
     NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
     Name: Nomo
     PLURALNAME: Dosieroj
     PdfType: 'Dosiero de Adobe Acrobat PDF'
     PngType: 'PNG-bildo - ĝeneralcela formato'
     SINGULARNAME: Dosiero
-    TOOLARGE: 'Dosiero estas tro granda; maksimumo estas {size}'
-    TOOLARGESHORT: 'Grando de dosiero superas je {size}'
     TiffType: 'Markita bildoformato'
     Title: Titolo
     WavType: 'WAV-sondosiero'
@@ -384,13 +379,11 @@ eo:
     PASSWORD: Pasvorto
     PASSWORDEXPIRED: 'Via pasvorto finiĝis. Bonvolu elekti novan.'
     PLURALNAME: Membroj
-    REMEMBERME: 'Memoru min je la sekva fojo?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: Familia nomo
     TIMEFORMAT: 'Formato de horo'
-    VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama %s'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'

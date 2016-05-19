@@ -159,12 +159,10 @@ uk:
     NEWPASSWORD: 'Новий пароль'
     PASSWORD: Пароль
     PLURALNAME: Члени
-    REMEMBERME: 'Пам''ятати мене наступного разу?'
     SINGULARNAME: Член
     SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'
     SUBJECTPASSWORDRESET: 'Посилання на відновлення Вашого паролю'
     SURNAME: Прізвище
-    VALIDATIONMEMBEREXISTS: 'Вже існує користувач з таким email'
     YOUROLDPASSWORD: 'Ваш старий пароль'
     belongs_many_many_Groups: Групи
     db_LastVisited: 'Дата останнього відвідування'

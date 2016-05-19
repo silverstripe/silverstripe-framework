@@ -69,7 +69,6 @@ es_AR:
   File:
     Content: Contenido
     Filename: Nombre de Archivo
-    NOFILESIZE: 'El tamaño del fichero es de cero bytes.'
     NOVALIDUPLOAD: 'El archivo no es una subida válida'
     Name: Nombre
     PLURALNAME: Archivos
@@ -155,12 +154,10 @@ es_AR:
     NEWPASSWORD: 'Nueva contraseña'
     PASSWORD: Contraseña
     PLURALNAME: Miembros
-    REMEMBERME: '¿Recordarme la siguiente vez?'
     SINGULARNAME: Miembro
     SUBJECTPASSWORDCHANGED: 'Tu contraseña ha sido cambiada'
     SUBJECTPASSWORDRESET: 'Enlace para renovar tu contraseña'
     SURNAME: Apellido
-    VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con la misma %s'
     YOUROLDPASSWORD: 'Contraseña anterior'
     belongs_many_many_Groups: Grupos
     db_LastVisited: 'Fecha de Última Visita'

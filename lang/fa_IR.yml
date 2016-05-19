@@ -30,7 +30,6 @@ fa_IR:
     INSERTURL: 'وارد‌کردن از نشانی اینترنتی'
     REMOVEINFO: 'حذف این فایل از این فیلد'
     TOTAL: مجموع
-    TOUPLOAD: 'انتخاب فایل‌ها برای آپلود...'
     UPLOADINPROGRESS: 'لطفاً صبر کنید... آپلود در جریان است'
     UPLOADOR: یا
   BBCodeParser:
@@ -153,7 +152,6 @@ fa_IR:
     INVALID_REQUEST: 'درخواست نامعتبر'
   DropdownField:
     CHOOSE: (گزینش)
-    CHOOSESEARCH: '(گزینش یا جستجو)'
     SOURCE_VALIDATION: 'لطفاً یک ارزش از لیست فراهم‌شده برگزینید. {value} یک گزینه معتبر نیست'
   EmailField:
     VALIDATION: 'لطفاً یک نشانی ایمیل وارد نمایید'
@@ -177,15 +175,12 @@ fa_IR:
     JsType: 'فایل جاوااسکریپت'
     Mp3Type: 'فایل صوتی MP3'
     MpgType: 'فایل ویدیویی MPEG'
-    NOFILESIZE: 'حجم فایل صفر بایت است.'
     NOVALIDUPLOAD: 'فایل یک بارگذاری معتبر نیست'
     Name: نام
     PLURALNAME: فایل‌ها
     PdfType: 'فایل اکروبات PDF'
     PngType: 'تصویر PNG - قالب مناسب همه منظوره'
     SINGULARNAME: فايل
-    TOOLARGE: 'حجم فایل بسیار زیاد است، حداکثر {size} مجاز است'
-    TOOLARGESHORT: 'حجم فایل از {size} فراتر است'
     TiffType: 'قالب تصویر تگ‌شده'
     Title: عنوان
     WavType: 'فایل صوتی WAV'
@@ -360,13 +355,11 @@ fa_IR:
     NoPassword: 'رمز عبوری برای این کاربر وجود ندارد'
     PASSWORD: رمز عبور
     PLURALNAME: اعضاء
-    REMEMBERME: 'مرا برای بار بعدی به خاطر بسپار؟'
     SINGULARNAME: عضو
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما دگرگون شد'
     SUBJECTPASSWORDRESET: 'پیوند ازنوسازی گذرواژه شما'
     SURNAME: نام خانوادگی
     TIMEFORMAT: 'قالب زمان'
-    VALIDATIONMEMBEREXISTS: 'یک عضو با %s یکسان از پیش وجود دارد'
     WELCOMEBACK: 'خوش آمدید، {firstname}'
     YOUROLDPASSWORD: 'رمز عبور قدیمی'
     belongs_many_many_Groups: گروه‌ها

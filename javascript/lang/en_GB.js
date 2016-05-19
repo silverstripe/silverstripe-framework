@@ -45,5 +45,6 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
     "TreeDropdownField.OpenLink": "Open",
     "TreeDropdownField.FieldTitle": "Choose",
     "TreeDropdownField.SearchFieldTitle": "Choose or Search"
-});
+}
+);
 }
