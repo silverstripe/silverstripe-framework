@@ -82,7 +82,6 @@ require_once 'core/manifest/ClassManifest.php';
 require_once 'core/manifest/ManifestFileFinder.php';
 require_once 'core/manifest/TemplateLoader.php';
 require_once 'core/manifest/TemplateManifest.php';
-require_once 'core/manifest/TokenisedRegularExpression.php';
 require_once 'control/injector/Injector.php';
 
 // Initialise the dependency injector as soon as possible, as it is
