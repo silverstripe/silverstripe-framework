@@ -142,15 +142,12 @@ ja:
     JsType: 'Javascriptのファイル'
     Mp3Type: 'MP3 オーディオファイル'
     MpgType: 'MPEG ビデオファイル'
-    NOFILESIZE: 'ファイルサイズが0バイトです。'
     NOVALIDUPLOAD: 'ファイルが有効なアップロードではありません'
     Name: 名前
     PLURALNAME: ファイル
     PdfType: 'Adobe AcrobatのPDFファイル'
     PngType: 'PNG イメージ - 最適な汎用形式'
     SINGULARNAME: ファイル
-    TOOLARGE: 'ファイルサイズが大きすぎます。許可されている最大サイズは{size}です。'
-    TOOLARGESHORT: '{size}をファイルサイズは超えました'
     TiffType: 'タグ付けされたイメージ形式'
     Title: タイトル
     WavType: 'WAV オーディオファイル'
@@ -333,13 +330,11 @@ ja:
     NoPassword: 'このメンバーにはパスワードはありません。'
     PASSWORD: パスワード
     PLURALNAME: メンバー
-    REMEMBERME: 'パスワードを記憶？'
     SINGULARNAME: メンバー
     SUBJECTPASSWORDCHANGED: 'パスワードが変わりました。'
     SUBJECTPASSWORDRESET: 'パスワード再発行'
     SURNAME: 姓
     TIMEFORMAT: '時間の形式'
-    VALIDATIONMEMBEREXISTS: '入力したメールアドレス（%s）は、他のメンバーにすでに使用されています。'
     ValidationIdentifierFailed: '同一の識別名 ({name} = {value})) を持つ既存のメンバー #{id} を上書きすることはできません'
     WELCOMEBACK: '{firstname}さん、おかえりなさい'
     YOUROLDPASSWORD: '古いパスワード'

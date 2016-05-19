@@ -107,7 +107,6 @@ fo:
     NEWPASSWORD: 'Nýtt loyniorð'
     PASSWORD: Loyniorð
     PLURALNAME: Limir
-    REMEMBERME: 'Minst til mín?'
     SINGULARNAME: Limur
     SUBJECTPASSWORDCHANGED: 'Títt loyniorð er nú broytt'
     SUBJECTPASSWORDRESET: 'Leinka til at nullstilla títt loyniorð'

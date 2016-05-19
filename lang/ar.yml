@@ -142,15 +142,12 @@ ar:
     JsType: 'ملف جافا سكريبت'
     Mp3Type: 'ملف صوتي بصيغة MP3'
     MpgType: 'مقطع ملف فيديو بصيغة MPEG'
-    NOFILESIZE: 'حجم الملف 0 بايت'
     NOVALIDUPLOAD: 'نوع الملف غير قابل للرفع'
     Name: الاسم
     PLURALNAME: الملفات
     PdfType: 'ملف بصيغة أدوب أكروبات بي دي إف'
     PngType: 'الصورة بصيغة PNG - و هي صيغة جيدة للأغراض العامة'
     SINGULARNAME: الملف
-    TOOLARGE: 'حجم الملف كبير جدا، الحد الأقصى {حجم} المسموح به'
-    TOOLARGESHORT: 'حجم الملف يتجاوز {الحجم}'
     TiffType: 'تنسيق الصورة ذات الكلمات الدلالية'
     Title: العنوان
     WavType: 'ملف صوتي بصيغة WAV'
@@ -334,13 +331,11 @@ ar:
     NoPassword: 'لا توجد كلمة مرور بشأن هذا العضو.'
     PASSWORD: رقم المرور
     PLURALNAME: الأعضاء
-    REMEMBERME: 'تذكرني في المرة القادمة ؟'
     SINGULARNAME: العضو
     SUBJECTPASSWORDCHANGED: 'تم تغيير كلمة المرور'
     SUBJECTPASSWORDRESET: 'رابط إعادة تكوين كلمة المرور'
     SURNAME: اسم العائلة
     TIMEFORMAT: 'صيغة الوقت'
-    VALIDATIONMEMBEREXISTS: 'يوجد عضو مسجل بهذا البريد الإلكتروني من قبل'
     ValidationIdentifierFailed: 'لا يمكن الكتابة فوق رقم العضوية الحالي {معرف} مع معرف مطابق ({اسم} = {قيمة}))'
     WELCOMEBACK: 'مرحبا بك مرة أخرى، {الاسم الأول}'
     YOUROLDPASSWORD: 'رقم المرور السابق'

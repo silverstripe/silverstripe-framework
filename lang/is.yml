@@ -58,7 +58,6 @@ is:
   File:
     Content: Efni
     Filename: Skráarnafn
-    NOFILESIZE: 'Skrárstærðin eru núll bæti.'
     NOVALIDUPLOAD: 'Það er ekki hægt að sækja þessa skrá'
     Name: Nafn
     PLURALNAME: Skrár
@@ -131,12 +130,10 @@ is:
     NEWPASSWORD: 'Nýtt lykilorð'
     PASSWORD: Lykilorð
     PLURALNAME: Félagar
-    REMEMBERME: 'Muna eftir mér í næsta skipti?'
     SINGULARNAME: Félagar
     SUBJECTPASSWORDCHANGED: 'Lykilorði þínu hefur verið breytt'
     SUBJECTPASSWORDRESET: 'Linkur til að búa til nýtt lykilorð'
     SURNAME: Eftirnafn
-    VALIDATIONMEMBEREXISTS: 'Það er nú þegar til félagi með þetta tölvupóstfang'
     YOUROLDPASSWORD: 'Gamla lykilorðið þitt'
     belongs_many_many_Groups: Hópar
     db_LastVisited: 'Síðast heimsótt'

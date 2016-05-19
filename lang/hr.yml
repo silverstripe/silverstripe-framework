@@ -130,12 +130,10 @@ hr:
     NEWPASSWORD: 'Nova lozinka'
     PASSWORD: Lozinka
     PLURALNAME: Članovi
-    REMEMBERME: 'Zapamti me'
     SINGULARNAME: Član
     SUBJECTPASSWORDCHANGED: 'Vaša lozinka je izmjenjena'
     SUBJECTPASSWORDRESET: 'Link za reset lozinke'
     SURNAME: Prezime
-    VALIDATIONMEMBEREXISTS: 'Već postoji korisnik sa istim %s'
     YOUROLDPASSWORD: 'Stara lozinka'
     belongs_many_many_Groups: Grupe
     db_LockedOutUntil: 'Zaključano do'
