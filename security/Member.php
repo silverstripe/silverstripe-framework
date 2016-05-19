@@ -582,6 +582,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
 
+		if (!$uid || !$token) {
+			return;
+		}
+
 		$member = DataObject::get_by_id("Member", $uid);
 
 		// check if autologin token matches
