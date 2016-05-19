@@ -3,8 +3,9 @@
 namespace SilverStripe\Core\Manifest;
 
 use Exception;
+use PhpParser\Error;
 use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitorAbstract;
+use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\ParserFactory;
 use SilverStripe\Control\Director;
 
@@ -48,127 +49,17 @@ class ClassManifest
     protected $traits       = array();
 
     /**
-     * @return TokenisedRegularExpression
+     * @var \PhpParser\Parser
      */
-    public static function get_class_parser()
-    {
-        return new TokenisedRegularExpression(array(
-            0 => T_CLASS,
-            1 => array(T_WHITESPACE, 'optional' => true),
-            2 => array(T_STRING, 'can_jump_to' => array(7, 14), 'save_to' => 'className'),
-            3 => array(T_WHITESPACE, 'optional' => true),
-            4 => T_EXTENDS,
-            5 => array(T_WHITESPACE, 'optional' => true),
-            6 => array(T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => 14),
-            7 => array(T_WHITESPACE, 'optional' => true),
-            8 => T_IMPLEMENTS,
-            9 => array(T_WHITESPACE, 'optional' => true),
-            10 => array(T_STRING, 'can_jump_to' => 14, 'save_to' => 'interfaces[]'),
-            11 => array(T_WHITESPACE, 'optional' => true),
-            12 => array(',', 'can_jump_to' => 10, 'save_to' => 'interfaces[]'),
-            13 => array(T_WHITESPACE, 'can_jump_to' => 10),
-            14 => array(T_WHITESPACE, 'optional' => true),
-            15 => '{',
-        ));
-    }
-
+    private $parser;
     /**
-     * @return TokenisedRegularExpression
+     * @var NodeTraverser
      */
-    public static function get_namespaced_class_parser()
-    {
-        return new TokenisedRegularExpression(array(
-            0 => T_CLASS,
-            1 => array(T_WHITESPACE, 'optional' => true),
-            2 => array(T_STRING, 'can_jump_to' => array(8, 16), 'save_to' => 'className'),
-            3 => array(T_WHITESPACE, 'optional' => true),
-            4 => T_EXTENDS,
-            5 => array(T_WHITESPACE, 'optional' => true),
-            6 => array(T_NS_SEPARATOR, 'save_to' => 'extends[]', 'optional' => true),
-            7 => array(T_STRING, 'save_to' => 'extends[]', 'can_jump_to' => array(6, 16)),
-            8 => array(T_WHITESPACE, 'optional' => true),
-            9 => T_IMPLEMENTS,
-            10 => array(T_WHITESPACE, 'optional' => true),
-            11 => array(T_NS_SEPARATOR, 'save_to' => 'interfaces[]', 'optional' => true),
-            12 => array(T_STRING, 'can_jump_to' => array(11, 16), 'save_to' => 'interfaces[]'),
-            13 => array(T_WHITESPACE, 'optional' => true),
-            14 => array(',', 'can_jump_to' => 11, 'save_to' => 'interfaces[]'),
-            15 => array(T_WHITESPACE, 'can_jump_to' => 11),
-            16 => array(T_WHITESPACE, 'optional' => true),
-            17 => '{',
-        ));
-    }
-
+    private $traverser;
     /**
-     * @return TokenisedRegularExpression
+     * @var ClassManifestVisitor
      */
-    public static function get_trait_parser()
-    {
-        return new TokenisedRegularExpression(array(
-            0 => T_TRAIT,
-            1 => array(T_WHITESPACE, 'optional' => true),
-            2 => array(T_STRING, 'save_to' => 'traitName')
-        ));
-    }
-
-    /**
-     * @return TokenisedRegularExpression
-     */
-    public static function get_namespace_parser()
-    {
-        return new TokenisedRegularExpression(array(
-            0 => T_NAMESPACE,
-            1 => array(T_WHITESPACE, 'optional' => true),
-            2 => array(T_NS_SEPARATOR, 'save_to' => 'namespaceName[]', 'optional' => true),
-            3 => array(T_STRING, 'save_to' => 'namespaceName[]', 'can_jump_to' => 2),
-            4 => array(T_WHITESPACE, 'optional' => true),
-            5 => ';',
-        ));
-    }
-
-    /**
-     * @return TokenisedRegularExpression
-     */
-    public static function get_interface_parser()
-    {
-        return new TokenisedRegularExpression(array(
-            0 => T_INTERFACE,
-            1 => array(T_WHITESPACE, 'optional' => true),
-            2 => array(T_STRING, 'save_to' => 'interfaceName')
-        ));
-    }
-
-    /**
-     * Create a {@link TokenisedRegularExpression} that extracts the namespaces imported with the 'use' keyword
-     *
-     * This searches symbols for a `use` followed by 1 or more namespaces which are optionally aliased using the `as`
-     * keyword. The relevant matching tokens are added one-by-one into an array (using `save_to` param).
-     *
-     * eg: use Namespace\ClassName as Alias, OtherNamespace\ClassName;
-     *
-     * @return TokenisedRegularExpression
-     */
-    public static function get_imported_namespace_parser()
-    {
-        return new TokenisedRegularExpression(array(
-            0 => T_USE,
-            1 => array(T_WHITESPACE, 'optional' => true),
-            2 => array(T_NS_SEPARATOR, 'save_to' => 'importString[]', 'optional' => true),
-            3 => array(T_STRING, 'save_to' => 'importString[]', 'can_jump_to' => array(2, 8)),
-            4 => array(T_WHITESPACE, 'save_to' => 'importString[]'),
-            5 => array(T_AS, 'save_to' => 'importString[]'),
-            6 => array(T_WHITESPACE, 'save_to' => 'importString[]'),
-            7 => array(T_STRING, 'save_to' => 'importString[]'),
-            8 => array(T_WHITESPACE, 'optional' => true),
-            9 => array(',', 'save_to' => 'importString[]', 'optional' => true, 'can_jump_to' => 2),
-            10 => array(T_WHITESPACE, 'optional' => true, 'can_jump_to' => 2),
-            11 => ';',
-        ));
-    }
-
-    protected $parser;
-    protected $traverser;
-    protected $visitor;
+    private $visitor;
 
     /**
      * Constructs and initialises a new class manifest, either loading the data
@@ -189,11 +80,6 @@ class ClassManifest
         $this->cache = new $cacheClass('classmanifest'.($includeTests ? '_tests' : ''));
         $this->cacheKey = 'manifest';
 
-        $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP5, new PhpParser\Lexer);
-        $this->traverser = new NodeTraverser;
-        $this->traverser->addVisitor(new PhpParser\NodeVisitor\NameResolver);
-        $this->traverser->addVisitor($this->visitor = new SilverStripeNodeVisitor);
-
         if (!$forceRegen && $data = $this->cache->load($this->cacheKey)) {
             $this->classes      = $data['classes'];
             $this->descendants  = $data['descendants'];
@@ -205,6 +91,35 @@ class ClassManifest
         } else {
             $this->regenerate($cache);
         }
+    }
+
+    public function getParser()
+    {
+        if (!$this->parser) {
+            $this->parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        }
+
+        return $this->parser;
+    }
+
+    public function getTraverser()
+    {
+        if (!$this->traverser) {
+            $this->traverser = new NodeTraverser;
+            $this->traverser->addVisitor(new NameResolver);
+            $this->traverser->addVisitor($this->getVisitor());
+        }
+
+        return $this->traverser;
+    }
+
+    public function getVisitor()
+    {
+        if (!$this->visitor) {
+            $this->visitor = new ClassManifestVisitor;
+        }
+
+        return $this->visitor;
     }
 
     /**
@@ -447,125 +362,6 @@ class ClassManifest
         }
     }
 
-    /**
-     * Find a the full namespaced declaration of a class (or interface) from a list of candidate imports
-     *
-     * This is typically used to determine the full class name in classes that have imported namesapced symbols (having
-     * used the `use` keyword)
-     *
-     * NB: remember the '\\' is an escaped backslash and is interpreted as a single \
-     *
-     * @param string $class The class (or interface) name to find in the candidate imports
-     * @param string $namespace The namespace that was declared for the classes definition (if there was one)
-     * @param array $imports The list of imported symbols (Classes or Interfaces) to test against
-     *
-     * @return string The fully namespaced class name
-     */
-    protected function findClassOrInterfaceFromCandidateImports($class, $namespace = '', $imports = array())
-    {
-
-        //normalise the namespace
-        $namespace = rtrim($namespace, '\\');
-
-        //by default we'll use the $class as our candidate
-        $candidateClass = $class;
-
-        if (!$class) {
-            return $candidateClass;
-        }
-        //if the class starts with a \ then it is explicitly in the global namespace and we don't need to do
-        // anything else
-        if (substr($class, 0, 1) == '\\') {
-            $candidateClass = substr($class, 1);
-            return $candidateClass;
-        }
-        //if there's a namespace, starting assumption is the class is defined in that namespace
-        if ($namespace) {
-            $candidateClass = $namespace . '\\' . $class;
-        }
-
-        if (empty($imports)) {
-            return $candidateClass;
-        }
-
-        //normalised class name (PHP is case insensitive for symbols/namespaces
-        $lClass = strtolower($class);
-
-        //go through all the imports and see if the class exists within one of them
-        foreach ($imports as $alias => $import) {
-            //normalise import
-            $import = trim($import, '\\');
-
-            //if there is no string key, then there was no declared alias - we'll use the main declaration
-            if (is_int($alias)) {
-                $alias = strtolower($import);
-            } else {
-                $alias = strtolower($alias);
-            }
-
-            //exact match? Then it's a class in the global namespace that was imported OR it's an alias of
-            // another namespace
-            // or if it ends with the \ClassName then it's the class we are looking for
-            if ($lClass == $alias
-                || substr_compare(
-                    $alias,
-                    '\\' . $lClass,
-                    strlen($alias) - strlen($lClass) - 1,
-                    // -1 because the $lClass length is 1 longer due to \
-                    strlen($alias)
-                ) === 0
-            ) {
-                $candidateClass = $import;
-                break;
-            }
-        }
-        return $candidateClass;
-    }
-
-    /**
-     * Return an array of array($alias => $import) from tokenizer's tokens of a PHP file
-     *
-     * NB: If there is no alias we don't set a key to the array
-     *
-     * @param array $tokens The parsed tokens from tokenizer's parsing of a PHP file
-     *
-     * @return array The array of imports as (optional) $alias => $import
-     */
-    protected function getImportsFromTokens($tokens)
-    {
-        //parse out the imports
-        $imports = self::get_imported_namespace_parser()->findAll($tokens);
-
-        //if there are any imports, clean them up
-        // imports come to us as array('importString' => array([array of matching tokens]))
-        // we need to join this nested array into a string and split out the alias and the import
-        if (!empty($imports)) {
-            $cleanImports = array();
-            foreach ($imports as $import) {
-                if (!empty($import['importString'])) {
-                    //join the array up into a string
-                    $importString = implode('', $import['importString']);
-                    //split at , to get each import declaration
-                    $importSet = explode(',', $importString);
-                    foreach ($importSet as $importDeclaration) {
-                        //split at ' as ' (any case) to see if we are aliasing the namespace
-                        $importDeclaration = preg_split('/\s+as\s+/i', $importDeclaration);
-                        //shift off the fully namespaced import
-                        $qualifiedImport = array_shift($importDeclaration);
-                        //if there are still items in the array, it's the alias
-                        if (!empty($importDeclaration)) {
-                            $cleanImports[array_shift($importDeclaration)] = $qualifiedImport;
-                        } else {
-                            $cleanImports[] = $qualifiedImport;
-                        }
-                    }
-                }
-            }
-            $imports = $cleanImports;
-        }
-        return $imports;
-    }
-
     public function handleFile($basename, $pathname, $depth)
     {
         if ($basename == self::CONF_FILE) {
@@ -575,8 +371,6 @@ class ClassManifest
 
         $classes    = null;
         $interfaces = null;
-        $namespace = null;
-        $imports = null;
         $traits = null;
 
         // The results of individual file parses are cached, since only a few
@@ -589,78 +383,50 @@ class ClassManifest
         if ($data = $this->cache->load($key)) {
             $valid = (
                 isset($data['classes']) && is_array($data['classes'])
-                && isset($data['interfaces']) && is_array($data['interfaces'])
-                && isset($data['namespace']) && is_string($data['namespace'])
-                && isset($data['imports']) && is_array($data['imports'])
-                && isset($data['traits']) && is_array($data['traits'])
+                && isset($data['interfaces'])
+                && is_array($data['interfaces'])
+                && isset($data['traits'])
+                && is_array($data['traits'])
             );
 
             if ($valid) {
                 $classes = $data['classes'];
                 $interfaces = $data['interfaces'];
-                $namespace = $data['namespace'];
-                $imports = $data['imports'];
                 $traits = $data['traits'];
             }
         }
 
         if (!$valid) {
-            $this->visitor->reset();
-            $stmts = $this->parser->parse(file_get_contents($pathname));
-            $this->traverser->traverse($stmts);
+            $fileContents = ClassContentRemover::remove_class_content($pathname);
+            try {
+                $stmts = $this->getParser()->parse($fileContents);
+            } catch (Error $e) {
+                // if our mangled contents breaks, try again with the proper file contents
+                $stmts = $this->getParser()->parse(file_get_contents($pathname));
+            }
+            $this->getTraverser()->traverse($stmts);
 
-            $classes = $this->visitor->getClasses();
-            $traits = $this->visitor->getTraits();
-            $namespace = $this->visitor->getNamespace();
-
-            $imports = [];//$this->getImportsFromTokens($tokens);
-
-            $interfaces = $this->visitor->getInterfaces();
+            $classes = $this->getVisitor()->getClasses();
+            $interfaces = $this->getVisitor()->getInterfaces();
+            $traits = $this->getVisitor()->getTraits();
 
             $cache = array(
                 'classes' => $classes,
                 'interfaces' => $interfaces,
-                'namespace' => $namespace,
-                'imports' => $imports,
-                'traits' => $traits
+                'traits' => $traits,
             );
             $this->cache->save($cache, $key);
         }
 
-        // Ensure namespace has no trailing slash, and namespaceBase does
-        $namespaceBase = '';
-        if ($namespace) {
-            $namespace = rtrim($namespace, '\\');
-            $namespaceBase = $namespace . '\\';
-        }
+        foreach ($classes as $className => $classInfo) {
+            $extends = isset($classInfo['extends']) ? $classInfo['extends'] : null;
+            $implements = isset($classInfo['interfaces']) ? $classInfo['interfaces'] : null;
 
-        foreach ($classes as $class) {
-            $name = $namespaceBase . $class['className'];
-            $extends = isset($class['extends']) ? implode('', $class['extends']) : null;
-            $implements = isset($class['interfaces']) ? $class['interfaces'] : null;
-
-            if ($extends) {
-                $extends = $this->findClassOrInterfaceFromCandidateImports($extends, $namespace, $imports);
-            }
-
-            if (!empty($implements)) {
-                //join all the tokens
-                $implements = implode('', $implements);
-                //split at comma
-                $implements = explode(',', $implements);
-                //normalise interfaces
-                foreach ($implements as &$interface) {
-                    $interface = $this->findClassOrInterfaceFromCandidateImports($interface, $namespace, $imports);
-                }
-                //release the var name
-                unset($interface);
-            }
-
-            $lowercaseName = strtolower($name);
+            $lowercaseName = strtolower($className);
             if (array_key_exists($lowercaseName, $this->classes)) {
                 throw new Exception(sprintf(
                     'There are two files containing the "%s" class: "%s" and "%s"',
-                    $name,
+                    $className,
                     $this->classes[$lowercaseName],
                     $pathname
                 ));
@@ -669,15 +435,17 @@ class ClassManifest
             $this->classes[$lowercaseName] = $pathname;
 
             if ($extends) {
-                $extends = strtolower($extends);
+                foreach ($extends as $ancestor) {
+                    $ancestor = strtolower($ancestor);
 
-                if (!isset($this->children[$extends])) {
-                    $this->children[$extends] = array($name);
-                } else {
-                    $this->children[$extends][] = $name;
+                    if (!isset($this->children[$ancestor])) {
+                        $this->children[$ancestor] = array($className);
+                    } else {
+                        $this->children[$ancestor][] = $className;
+                    }
                 }
             } else {
-                $this->roots[] = $name;
+                $this->roots[] = $className;
             }
 
             if ($implements) {
@@ -685,19 +453,19 @@ class ClassManifest
                     $interface = strtolower($interface);
 
                     if (!isset($this->implementors[$interface])) {
-                        $this->implementors[$interface] = array($name);
+                        $this->implementors[$interface] = array($className);
                     } else {
-                        $this->implementors[$interface][] = $name;
+                        $this->implementors[$interface][] = $className;
                     }
                 }
             }
         }
 
-        foreach ($interfaces as $interface) {
-            $this->interfaces[strtolower($namespaceBase . $interface['interfaceName'])] = $pathname;
+        foreach ($interfaces as $interfaceName => $interfaceInfo) {
+            $this->interfaces[strtolower($interfaceName)] = $pathname;
         }
-        foreach ($traits as $trait) {
-            $this->traits[strtolower($namespaceBase . $trait['traitName'])] = $pathname;
+        foreach ($traits as $traitName => $traitInfo) {
+            $this->traits[strtolower($traitName)] = $pathname;
         }
     }
 
@@ -728,79 +496,4 @@ class ClassManifest
             return array();
         }
     }
-}
-
-class SilverStripeNodeVisitor extends NodeVisitorAbstract
-{
-
-    private $classes = [];
-
-    private $traits = [];
-
-    private $namespace = '';
-
-    private $interfaces = [];
-
-    public function reset()
-    {
-        $this->classes = [];
-        $this->traits = [];
-        $this->namespace = '';
-        $this->interfaces = [];
-    }
-
-    public function enterNode(PhpParser\Node $node)
-    {
-        if ($node instanceof PhpParser\Node\Stmt\Class_) {
-            $extends = [];
-            $implements = [];
-
-            if ($node->extends) {
-                $extends[] = (string)$node->extends;
-            }
-
-            if ($node->implements) {
-                foreach ($node->implements as $implement) {
-                    $implements[] = (string)$implement;
-                }
-            }
-
-            $this->classes[] = [
-                'className' => $node->name,
-                'extends' => $extends,
-                'implements' => $implements
-            ];
-        } else if ($node instanceof PhpParser\Node\Stmt\Trait_) {
-            $this->traits[] = ['traitName' => (string)$node->name];
-        } else if ($node instanceof PhpParser\Node\Stmt\Namespace_) {
-            $this->namespace = (string)$node->name;
-        } else if ($node instanceof PhpParser\Node\Stmt\Interface_) {
-            $this->interfaces[] = ['interfaceName' => (string)$node->name];
-        }
-
-        if (!$node instanceof PhpParser\Node\Stmt\Namespace_) {
-            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
-        }
-    }
-
-    public function getClasses()
-    {
-        return $this->classes;
-    }
-
-    public function getTraits()
-    {
-        return $this->traits;
-    }
-
-    public function getNamespace()
-    {
-        return $this->namespace;
-    }
-
-    public function getInterfaces()
-    {
-        return $this->interfaces;
-    }
-
 }

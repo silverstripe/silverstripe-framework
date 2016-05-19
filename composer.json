@@ -18,17 +18,17 @@
   "require": {
     "php": ">=5.5.0",
     "composer/installers": "~1.0",
-    "monolog/monolog": "~1.11",
-    "league/flysystem": "~1.0.12",
-    "symfony/yaml": "~2.7",
     "embed/embed": "^2.6",
+    "league/flysystem": "~1.0.12",
+    "monolog/monolog": "~1.11",
+    "nikic/php-parser": "^2 || ^3",
+    "silverstripe/config": "^1@dev",
     "swiftmailer/swiftmailer": "~5.4",
     "symfony/cache": "^3.3@dev",
     "symfony/config": "^2.8",
     "symfony/translation": "^2.8",
-    "vlucas/phpdotenv": "^2.4",
-    "nikic/php-parser": "^2.1",
-    "silverstripe/config": "^1@dev"
+    "symfony/yaml": "~2.7",
+    "vlucas/phpdotenv": "^2.4"
   },
   "require-dev": {
     "phpunit/PHPUnit": "~4.8",
