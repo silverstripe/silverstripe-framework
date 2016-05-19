@@ -249,14 +249,14 @@ class SS_ClassManifest {
 	/**
 	 * Returns an array of module names mapped to their paths.
 	 *
-	 * "Modules" in SilverStripe are simply directories with a _config.php 
+	 * "Modules" in SilverStripe are simply directories with a _config.php
 	 * file.
 	 *
 	 * @return array
 	 */
 	public function getModules() {
 		$modules = array();
-		
+
 		if($this->configs) {
 			foreach($this->configs as $configPath) {
 				$modules[basename(dirname($configPath))] = dirname($configPath);
@@ -347,8 +347,7 @@ class SS_ClassManifest {
 		// files will have changed and TokenisedRegularExpression is quite
 		// slow. A combination of the file name and file contents hash are used,
 		// since just using the datetime lead to problems with upgrading.
-		$file = file_get_contents($pathname);
-		$key  = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5($file);
+		$key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5_file($pathname);
 
 		if ($data = $this->cache->load($key)) {
 			$valid = (
@@ -364,8 +363,8 @@ class SS_ClassManifest {
 		}
 
 		if (!$classes) {
-			$tokens     = token_get_all($file);
-			
+			$tokens = token_get_all(file_get_contents($pathname));
+
 			$classes = self::get_namespaced_class_parser()->findAll($tokens);
 			$namespace = self::get_namespace_parser()->findAll($tokens);
 			if($namespace) {
