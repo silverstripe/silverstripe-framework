@@ -55,3 +55,17 @@ ManyManyListTest_Category:
   categorya:
     Title: 'Category A'
     Products: =>ManyManyListTest_Product.producta,=>ManyManyListTest_Product.productb
+DataObjectTest_C:
+  test1:
+    Title: 'Test 1'
+  test2:
+    Title: 'Test 2'
+  test3:
+    Title: 'Test 3'
+DataObjectTest_B:
+  test1:
+    Title: 'Test1'
+    ManyCs: =>DataObjectTest_C.test1,=>DataObjectTest_C.test2
+  test2:
+    Title: 'Test2'
+    ManyCs: =>DataObjectTest_C.test1,=>DataObjectTest_C.test3
