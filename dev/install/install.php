@@ -15,7 +15,7 @@
 define('FRAMEWORK_NAME', 'framework');
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
-	header("HTTP/1.1 500 Server Error");
+	header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
 	echo str_replace(
 		array('$PHPVersion', 'sapphire'),
 		array(phpversion(), FRAMEWORK_NAME),

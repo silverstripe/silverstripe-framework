@@ -15,7 +15,7 @@
  */
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
-	header("HTTP/1.1 500 Server Error");
+	header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
 	echo str_replace('$PHPVersion', phpversion(), file_get_contents("dev/install/php5-required.html"));
 	die();
 }
@@ -52,10 +52,18 @@ if (version_compare(phpversion(), '5.5.0', '<')) {
  * @see Director::direct()
  */
 
-/**
- * Include the defines that set BASE_PATH, etc
- */
-require_once('core/Constants.php');
+// require composers autoloader
+if (file_exists($autoloadPath = dirname(__DIR__) . '/vendor/autoload.php')) {
+	require_once $autoloadPath;
+}
+else {
+	if (!headers_sent()) {
+		header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+		header('Content-Type: text/plain');
+	}
+	echo "Failed to include composer's autoloader, unable to continue\n";
+	exit(1);
+}
 
 // IIS will sometimes generate this.
 if(!empty($_SERVER['HTTP_X_ORIGINAL_URL'])) {

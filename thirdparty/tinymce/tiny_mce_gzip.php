@@ -12,7 +12,18 @@
 $frameworkPath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
 $basePath = rtrim(dirname($frameworkPath), DIRECTORY_SEPARATOR);
 
-require_once $frameworkPath . '/core/Constants.php';
+// require composers autoloader
+if(file_exists($basePath . '/vendor/autoload.php')) {
+	require_once $basePath . '/vendor/autoload.php';
+}
+else {
+	if (!headers_sent()) {
+		header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+		header('Content-Type: text/plain');
+	}
+	echo "Failed to include composer's autoloader, unable to continue\n";
+	exit(1);
+}
 
 // Handle incoming request if it's a script call
 if (TinyMCE_Compressor::getParam("js")) {
@@ -374,4 +385,3 @@ class TinyMCE_Compressor {
 		return $content;
 	}
 }
-?>

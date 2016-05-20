@@ -58,6 +58,15 @@ if(isset($_SERVER['argv'][1])) {
 	$_GET['url'] = $_SERVER['argv'][1];
 }
 
+// require composers autoloader
+if (file_exists($autoloadPath = dirname(__DIR__) . '/vendor/autoload.php')) {
+	require_once $autoloadPath;
+}
+else  {
+	echo "Failed to include composer's autoloader, unable to continue\n";
+	exit(1);
+}
+
 /**
  * Include SilverStripe's core code
  */

@@ -31,7 +31,18 @@ if(function_exists('session_start') && !session_id()) {
 	session_start();
 }
 
-require_once FRAMEWORK_NAME . '/core/Constants.php'; // this also includes TempPath.php;
+// require composers autoloader
+if (file_exists($autoloadPath = dirname(__DIR__) . '/../../vendor/autoload.php')) {
+	require_once $autoloadPath;
+}
+else  {
+	if (!headers_sent()) {
+		header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+		header('Content-Type: text/plain');
+	}
+	echo "Failed to include composer's autoloader, unable to continue\n";
+	exit(1);
+}
 
 $envFileExists = defined('SS_ENVIRONMENT_FILE');
 $usingEnv = $envFileExists && !empty($_REQUEST['useEnv']);

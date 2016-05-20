@@ -31,6 +31,10 @@
 		}
 	},
 	"autoload": {
+		"psr-4": {
+			"SilverStripe\\": ""
+		},
+		"files": ["core/Constants.php"],
 		"classmap": ["tests/behat/features/bootstrap"]
 	}
 }
