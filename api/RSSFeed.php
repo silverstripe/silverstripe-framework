@@ -149,7 +149,7 @@ class RSSFeed extends ViewableData {
 		if(isset($this->entries)) {
 			foreach($this->entries as $entry) {
 				$output->push(
-					new RSSFeed_Entry($entry, $this->titleField, $this->descriptionField, $this->authorField));
+					RSSFeed_Entry::create($entry, $this->titleField, $this->descriptionField, $this->authorField));
 			}
 		}
 		return $output;
@@ -184,7 +184,11 @@ class RSSFeed extends ViewableData {
 	}
 
 	/**
-	 * Output the feed to the browser
+	 * Output the feed to the browser.
+	 *
+	 * TODO: Pass $response object to ->outputToBrowser() to loosen dependence on global state for easier testing/prototyping so dev can inject custom SS_HTTPResponse instance.
+	 *
+	 * @return	HTMLText
 	 */
 	public function outputToBrowser() {
 		$prevState = Config::inst()->get('SSViewer', 'source_file_comments');
