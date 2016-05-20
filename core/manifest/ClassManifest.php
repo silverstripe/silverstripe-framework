@@ -493,8 +493,7 @@ class SS_ClassManifest {
 		// files will have changed and TokenisedRegularExpression is quite
 		// slow. A combination of the file name and file contents hash are used,
 		// since just using the datetime lead to problems with upgrading.
-		$file = file_get_contents($pathname);
-		$key  = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5($file);
+		$key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5_file($pathname);
 
 		if ($data = $this->cache->load($key)) {
 			$valid = (
@@ -513,7 +512,7 @@ class SS_ClassManifest {
 		}
 
 		if (!$classes) {
-			$tokens     = token_get_all($file);
+			$tokens = token_get_all(file_get_contents($pathname));
 
 			$classes = self::get_namespaced_class_parser()->findAll($tokens);
 
