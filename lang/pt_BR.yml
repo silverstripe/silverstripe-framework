@@ -65,7 +65,6 @@ pt_BR:
   File:
     Content: Conteudo
     Filename: Nome do Arquivo
-    NOFILESIZE: 'O tamanho do arquivo é zero bytes.'
     Name: Nome
     PLURALNAME: Arquivos
     SINGULARNAME: Arquivo

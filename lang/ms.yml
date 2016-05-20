@@ -26,7 +26,6 @@ ms:
   DropdownField:
     CHOOSE: (Pilih)
   File:
-    NOFILESIZE: 'Saiz fail bersamaan sifar bait.'
     PLURALNAME: Fail-fail
     SINGULARNAME: Fail
   Form:

@@ -19,13 +19,13 @@ An example of a `SearchFilter` in use:
 	:::php
 	// fetch any player that starts with a S
 	$players = Player::get()->filter(array(
-		'FirstName:StartsWith' => 'S'
+		'FirstName:StartsWith' => 'S',
 		'PlayerNumber:GreaterThan' => '10'
 	));
 
 	// to fetch any player that's name contains the letter 'z'
 	$players = Player::get()->filterAny(array(
-		'FirstName:PartialMatch' => 'z'
+		'FirstName:PartialMatch' => 'z',
 		'LastName:PartialMatch' => 'z'
 	));
 

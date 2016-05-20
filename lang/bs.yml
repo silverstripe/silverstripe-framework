@@ -63,8 +63,6 @@ bs:
     TODAY: danas
   DropdownField:
     CHOOSE: (Izaberite)
-  File:
-    NOFILESIZE: 'Veličina datoteke je nula bajta.'
   ForgotPasswordEmail_ss:
     HELLO: Pozdrav
     TEXT1: 'Ovo je Vaš'

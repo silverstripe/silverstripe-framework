@@ -57,7 +57,6 @@ az:
   File:
     Content: Məzmun
     Filename: Faylın adı
-    NOFILESIZE: 'Faylın ölçüsü sıfır baytdır'
     NOVALIDUPLOAD: 'Fayl yükləmək üçün yararlı deyil'
     Name: Ad
     PLURALNAME: Fayllar

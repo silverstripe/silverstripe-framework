@@ -107,7 +107,6 @@ af:
     IcoType: 'Ikoon prentjie'
     JpgType: 'JPEG prentjie - werk goed vir fotos'
     Mp3Type: 'MP3 klank lêer'
-    NOFILESIZE: 'Lêergrootte is nul grepe.'
     NOVALIDUPLOAD: 'Lêer is nie geld vir oplaai nie'
     Name: Naam
     PLURALNAME: Lêers

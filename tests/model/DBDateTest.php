@@ -63,6 +63,10 @@ class DBDateTest extends SapphireTest {
 		$this->assertEquals('04/03/2003', DBField::create_field('Date', '04-03-2003')->Nice(),
 			"Date->Nice() works with DD/MM/YYYY format"
 		);
+
+		$date = DBField::create_field('Date', '2003-03-04');
+		Config::inst()->update('SilverStripe\Model\FieldType\DBDate', 'nice_format', 'd F Y');
+		$this->assertEquals('04 March 2003', $date->Nice());
 	}
 
 	public function testNiceUS(){

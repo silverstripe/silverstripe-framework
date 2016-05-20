@@ -63,7 +63,6 @@ pt:
     Content: Conteúdo
     Filename: Nome do ficheiro
     HtlType: 'Ficheiro HTML'
-    NOFILESIZE: 'O tamanho do ficheiro é de 0 bytes.'
     NOVALIDUPLOAD: 'O carregamento do ficheiro é válido'
     Name: Nome
     PLURALNAME: Ficheiros

@@ -955,6 +955,16 @@ class DataObjectTest extends SapphireTest {
 		$this->assertEmpty($fields);
 	}
 
+	public function testCastingHelper() {
+		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+
+		$this->assertEquals('Varchar', $team->castingHelper('Title'), 'db field wasn\'t casted correctly');
+		$this->assertEquals('HTMLVarchar', $team->castingHelper('DatabaseField'), 'db field wasn\'t casted correctly');
+
+		$sponsor = $team->Sponsors()->first();
+		$this->assertEquals('Int', $sponsor->castingHelper('SponsorFee'), 'many_many_extraFields not casted correctly');
+	}
+
 	public function testSummaryFieldsCustomLabels() {
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$summaryFields = $team->summaryFields();

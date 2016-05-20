@@ -90,7 +90,6 @@ th:
     JsType: 'ไฟล์จาวาสคริปต์'
     Mp3Type: 'ไฟล์เสียง MP3'
     MpgType: 'ไฟล์วีดีโอ MPEG'
-    NOFILESIZE: 'ขนาดไฟล์มีขนาดเป็นศูนย์'
     Name: ชื่อ
     PLURALNAME: ไฟล์
     PdfType: 'ไฟล์ Adobe Acrobat PDF'

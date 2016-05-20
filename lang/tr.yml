@@ -81,7 +81,6 @@ tr:
   File:
     Content: İçerik
     Filename: Dosya adı
-    NOFILESIZE: 'Dosya boyutu sıfır (0) bayt.'
     Name: Ad
     PLURALNAME: Dosyalar
     SINGULARNAME: Dosya

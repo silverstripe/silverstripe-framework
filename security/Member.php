@@ -553,6 +553,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		if(strpos(Cookie::get('alc_enc'), ':') && Cookie::get('alc_device') && !Session::get("loggedInAs")) {
 			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
+			
+			if (!$uid || !$token) {
+				return;
+			}
+			
 			$deviceID = Cookie::get('alc_device');
 
 			$member = Member::get()->byId($uid);

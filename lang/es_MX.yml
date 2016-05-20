@@ -93,7 +93,6 @@ es_MX:
   File:
     Content: Contenido
     Filename: Nombre del archivo
-    NOFILESIZE: 'El tamaño del archivo es 0 bits'
     NOVALIDUPLOAD: 'No es un archivo válido'
     Name: Nombre
     PLURALNAME: Archivos

@@ -74,7 +74,6 @@ gl_ES:
   File:
     Content: Contido
     Filename: Nome ficheiro
-    NOFILESIZE: 'O tamaño do ficheiro é cero bytes.'
     NOVALIDUPLOAD: 'Ficheiro non v&aacute;lido para subir'
     Name: Nome
     PLURALNAME: Ficheiros

@@ -5,11 +5,13 @@ class HierarchyTest extends SapphireTest {
 	protected static $fixture_file = 'HierarchyTest.yml';
 
 	protected $requiredExtensions = array(
-		'HierarchyTest_Object' => array('Hierarchy', 'Versioned')
+		'HierarchyTest_Object' => array('Hierarchy', 'Versioned'),
+		'HierarchyHideTest_Object' => array('Hierarchy', 'Versioned'),
 	);
 
 	protected $extraDataObjects = array(
-		'HierarchyTest_Object'
+		'HierarchyTest_Object',
+		'HierarchyHideTest_Object'
 	);
 
 	/**
@@ -482,6 +484,35 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals('unexpanded jstree-closed closed', $nodeClass, 'obj2 should have children in the sitetree');
 	}
 
+	public function testNoHideFromHeirarchy() {
+		$obj4 = $this->objFromFixture('HierarchyHideTest_Object', 'obj4');
+		$obj4->publish("Stage", "Live");
+
+		foreach($obj4->stageChildren() as $child) {
+			$child->publish("Stage", "Live");
+		}
+		$this->assertEquals($obj4->stageChildren()->Count(), 2);
+		$this->assertEquals($obj4->liveChildren()->Count(), 2);
+	}
+
+	public function testHideFromHeirarchy() {
+		HierarchyHideTest_Object::config()->hide_from_hierarchy = array('HierarchyHideTest_SubObject');
+		$obj4 = $this->objFromFixture('HierarchyHideTest_Object', 'obj4');
+		$obj4->publish("Stage", "Live");
+
+		// load without using stage children otherwise it'll bbe filtered before it's publish
+		// we need to publish all of them, and expect liveChildren to return some.
+		$children = HierarchyHideTest_Object::get()
+			->filter('ParentID', (int)$obj4->ID)
+			->exclude('ID', (int)$obj4->ID);
+
+		foreach($children as $child) {
+			$child->publish("Stage", "Live");
+		}
+		$this->assertEquals($obj4->stageChildren()->Count(), 1);
+		$this->assertEquals($obj4->liveChildren()->Count(), 1);
+	}
+
 	/**
 	 * @param String $html  [description]
 	 * @param array $nodes Breadcrumb path as array
@@ -542,4 +573,23 @@ class HierarchyTest_Object extends DataObject implements TestOnly {
 	public function cmstreeclasses() {
 		return $this->markingClasses();
 	}
+}
+
+class HierarchyHideTest_Object extends DataObject implements TestOnly {
+	private static $db = array(
+		'Title' => 'Varchar'
+	);
+
+	private static $extensions = array(
+		'Hierarchy',
+		"Versioned('Stage', 'Live')",
+	);
+
+	public function cmstreeclasses() {
+		return $this->markingClasses();
+	}
+}
+
+class HierarchyHideTest_SubObject extends HierarchyHideTest_Object {
+
 }

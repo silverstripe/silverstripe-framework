@@ -69,7 +69,6 @@ es_AR:
   File:
     Content: Contenido
     Filename: Nombre de Archivo
-    NOFILESIZE: 'El tamaño del fichero es de cero bytes.'
     NOVALIDUPLOAD: 'El archivo no es una subida válida'
     Name: Nombre
     PLURALNAME: Archivos

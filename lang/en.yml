@@ -140,6 +140,9 @@ en:
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    CURRENT_PASSWORD_ERROR: 'The current password you have entered is not correct.'
+    CURRENT_PASSWORD_MISSING: 'You must enter your current password.'
+    LOGGED_IN_ERROR: 'You must be logged in to change your password.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
   ContentController:
@@ -448,9 +451,11 @@ en:
     CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
+    CURRENT_PASSWORD: 'Current Password'
     DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
+    EDIT_PASSWORD: 'New Password'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'

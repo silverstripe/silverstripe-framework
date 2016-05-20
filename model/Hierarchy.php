@@ -41,6 +41,32 @@ class Hierarchy extends DataExtension {
 	 */
 	private static $node_threshold_leaf = 250;
 
+	/**
+	 * A list of classnames to exclude from display in both the CMS and front end
+	 * displays. ->Children() and ->AllChildren affected.
+	 * Especially useful for big sets of pages like listings
+	 * If you use this, and still need the classes to be editable
+	 * then add a model admin for the class
+	 * Note: Does not filter subclasses (non-inheriting)
+	 *
+	 * @var array
+	 * @config
+	 */
+	private static $hide_from_hierarchy = array();
+
+	/**
+	 * A list of classnames to exclude from display in the page tree views of the CMS,
+	 * unlike $hide_from_hierarchy above which effects both CMS and front end.
+	 * Especially useful for big sets of pages like listings
+	 * If you use this, and still need the classes to be editable
+	 * then add a model admin for the class
+	 * Note: Does not filter subclasses (non-inheriting)
+	 *
+	 * @var array
+	 * @config
+	 */
+	private static $hide_from_cms_tree = array();
+
 	public static function get_extra_config($class, $extension, $args) {
 		return array(
 			'has_one' => array('Parent' => $class)
@@ -644,6 +670,18 @@ class Hierarchy extends DataExtension {
 	}
 
 	/**
+	 * Checks if we're on a controller where we should filter. ie. Are we loading the SiteTree?
+	 *
+	 * @return bool
+	 */
+	public function showingCMSTree() {
+		if (!Controller::has_curr()) return false;
+		$controller = Controller::curr();
+		return $controller instanceof LeftAndMain
+			&& in_array($controller->getAction(), array("treeview", "listview", "getsubtree"));
+	}
+
+	/**
 	 * Return children in the stage site.
 	 *
 	 * @param bool $showAll Include all of the elements, even those not shown in the menus. Only applicable when
@@ -652,9 +690,17 @@ class Hierarchy extends DataExtension {
 	 */
 	public function stageChildren($showAll = false) {
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$hide_from_hierarchy = $this->owner->config()->hide_from_hierarchy;
+		$hide_from_cms_tree = $this->owner->config()->hide_from_cms_tree;
 		$staged = $baseClass::get()
-			->filter('ParentID', (int)$this->owner->ID)
-			->exclude('ID', (int)$this->owner->ID);
+				->filter('ParentID', (int)$this->owner->ID)
+				->exclude('ID', (int)$this->owner->ID);
+		if ($hide_from_hierarchy) {
+			$staged = $staged->exclude('ClassName', $hide_from_hierarchy);
+		}
+		if ($hide_from_cms_tree && $this->showingCMSTree()) {
+			$staged = $staged->exclude('ClassName', $hide_from_cms_tree);
+		}
 		if (!$showAll && $this->owner->db('ShowInMenus')) {
 			$staged = $staged->filter('ShowInMenus', 1);
 		}
@@ -677,6 +723,8 @@ class Hierarchy extends DataExtension {
 		}
 
 		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$hide_from_hierarchy = $this->owner->config()->hide_from_hierarchy;
+		$hide_from_cms_tree = $this->owner->config()->hide_from_cms_tree;
 		$children = $baseClass::get()
 			->filter('ParentID', (int)$this->owner->ID)
 			->exclude('ID', (int)$this->owner->ID)
@@ -684,8 +732,13 @@ class Hierarchy extends DataExtension {
 				'Versioned.mode' => $onlyDeletedFromStage ? 'stage_unique' : 'stage',
 				'Versioned.stage' => 'Live'
 			));
-
-		if(!$showAll) $children = $children->filter('ShowInMenus', 1);
+		if ($hide_from_hierarchy) {
+			$children = $children->exclude('ClassName', $hide_from_hierarchy);
+		}
+		if ($hide_from_cms_tree && $this->showingCMSTree()) {
+			$children = $children->exclude('ClassName', $hide_from_cms_tree);
+		}
+		if(!$showAll && $this->owner->db('ShowInMenus')) $children = $children->filter('ShowInMenus', 1);
 
 		return $children;
 	}
