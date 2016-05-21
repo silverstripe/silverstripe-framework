@@ -728,6 +728,28 @@ after')
 		$this->assertEqualIgnoringWhitespace('A B', $res, 'Objects can be passed as named arguments');
 	}
 
+	public function testNamespaceInclude() {
+		$data = new ArrayData([]);
+
+		$this->assertEquals(
+			"tests:( NamespaceInclude\n )",
+			$this->render('tests:( <% include Namespace\NamespaceInclude %> )', $data),
+			'Backslashes work for namespace references in includes'
+		);
+
+		$this->assertEquals(
+			"tests:( NamespaceInclude\n )",
+			$this->render('tests:( <% include Namespace/NamespaceInclude %> )', $data),
+			'Forward slashes work for namespace references in includes'
+		);
+
+		$this->assertEquals(
+			"tests:( NamespaceInclude\n )",
+			$this->render('tests:( <% include NamespaceInclude %> )', $data),
+			'Namespace can be missed for a namespaed include'
+		);
+	}
+
 
 	public function testRecursiveInclude() {
 		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
