@@ -224,7 +224,7 @@ class DataQueryTest extends SapphireTest {
 		$query = $query->distinct(true);
 		$this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query contains distinct');
  	}
-	
+
 	public function testComparisonClauseInt() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"SortOrder\") VALUES (2)");
 		$query = new DataQuery('DataQueryTest_F');
@@ -232,7 +232,7 @@ class DataQueryTest extends SapphireTest {
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find SortOrder");
 		$this->resetDBSchema(true);
 	}
-	
+
 	public function testComparisonClauseDateFull() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
@@ -240,7 +240,7 @@ class DataQueryTest extends SapphireTest {
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
 	}
-	
+
 	public function testComparisonClauseDateStartsWith() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
@@ -248,7 +248,7 @@ class DataQueryTest extends SapphireTest {
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
 	}
-	
+
 	public function testComparisonClauseDateStartsPartial() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
 		$query = new DataQuery('DataQueryTest_F');
@@ -256,7 +256,7 @@ class DataQueryTest extends SapphireTest {
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
 	}
-	
+
 	public function testComparisonClauseTextCaseInsensitive() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyString\") VALUES ('HelloWorld')");
 		$query = new DataQuery('DataQueryTest_F');
@@ -264,17 +264,56 @@ class DataQueryTest extends SapphireTest {
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
 		$this->resetDBSchema(true);
 	}
-	
+
 	public function testComparisonClauseTextCaseSensitive() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyString\") VALUES ('HelloWorld')");
 		$query = new DataQuery('DataQueryTest_F');
 		$query->where(DB::get_conn()->comparisonClause('"MyString"', 'HelloWorld', false, false, true));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
-		
+
 		$query2 = new DataQuery('DataQueryTest_F');
 		$query2->where(DB::get_conn()->comparisonClause('"MyString"', 'helloworld', false, false, true));
 		$this->assertEquals(0, $query2->count(), "Found mystring. Shouldn't be able too.");
 		$this->resetDBSchema(true);
+	}
+
+	/**
+	 * Tests that getFinalisedQuery can include all tables
+	 */
+	public function testConditionsIncludeTables() {
+		// Including filter on parent table only doesn't pull in second
+		$query = new DataQuery('DataQueryTest_C');
+		$query->sort('"SortOrder"');
+		$query->where(array(
+			'"DataQueryTest_C"."Title" = ?' => array('First')
+		));
+		$result = $query->getFinalisedQuery(array('Title'));
+		$from = $result->getFrom();
+		$this->assertContains('DataQueryTest_C', array_keys($from));
+		$this->assertNotContains('DataQueryTest_E', array_keys($from));
+
+		// Including filter on sub-table requires it
+		$query = new DataQuery('DataQueryTest_C');
+		$query->sort('"SortOrder"');
+		$query->where(array(
+			'"DataQueryTest_C"."Title" = ? OR "DataQueryTest_E"."SortOrder" > ?' => array(
+				'First', 2
+			)
+		));
+		$result = $query->getFinalisedQuery(array('Title'));
+		$from = $result->getFrom();
+
+		// Check that including "SortOrder" prompted inclusion of DataQueryTest_E table
+		$this->assertContains('DataQueryTest_C', array_keys($from));
+		$this->assertContains('DataQueryTest_E', array_keys($from));
+		$arrayResult = iterator_to_array($result->execute());
+		$first = array_shift($arrayResult);
+		$this->assertNotNull($first);
+		$this->assertEquals('First', $first['Title']);
+		$second = array_shift($arrayResult);
+		$this->assertNotNull($second);
+		$this->assertEquals('Last', $second['Title']);
+		$this->assertEmpty(array_shift($arrayResult));
 	}
 
 }
