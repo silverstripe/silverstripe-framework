@@ -3,10 +3,9 @@ summary: A look at the operations, variables and language controls you can use w
 
 # Template Syntax
 
-SilverStripe templates are plain text files that have `.ss` extension and located within the `templates` directory of 
-a module, theme, or your `mysite` folder. A template can contain any markup language (e.g HTML, CSV, JSON..) and before
-being rendered to the user, they're processed through [api:SSViewer]. This process replaces placeholders such as `$Var` 
-with real content from your [model](../model) and allows you to define logic controls like `<% if $Var %>`. 
+A template can contain any markup language (e.g HTML, CSV, JSON..) and before being rendered to the user, they're
+processed through [api:SSViewer]. This process replaces placeholders such as `$Var` with real content from your
+[model](../model) and allows you to define logic controls like `<% if $Var %>`.
 
 An example of a SilverStripe template is below:
 
@@ -44,6 +43,17 @@ An example of a SilverStripe template is below:
 Templates can be used for more than HTML output. You can use them to output your data as JSON, XML, CSV or any other 
 text-based format.
 </div>
+
+## Template file location
+
+SilverStripe templates are plain text files that have `.ss` extension and located within the `templates` directory of
+a module, theme, or your `mysite` folder.
+
+By default, templates will have the same name as the class they are used to render. So, your Page class will
+be rendered with the `templates/Page.ss` template.
+
+When the class has a namespace, the namespace will be interpreted as subfolder within the `templates` path. For, example, the class `SilverStripe\Control\Controller` will be rendered with the
+`templates/SilverStripe/Control/Controller.ss` template.
 
 ## Variables
 
@@ -190,11 +200,15 @@ You can use inequalities like `<`, `<=`, `>`, `>=` to compare numbers.
 
 ## Includes
 
-Within SilverStripe templates we have the ability to include other templates from the `template/Includes` directory 
-using the `<% include %>` tag.
+Within SilverStripe templates we have the ability to include other templates using the `<% include %>` tag. The includes
+will be searched for using the same filename look-up rules as a regular template, so this will include 
+`templates/Includes/Sidebar.ss`
 
 	:::ss
-	<% include SideBar %>
+	<% include Includes\SideBar %>
+
+Note that in SilverStripe 3, you didn't have to specify a namespace in your `include` tag, as the template engine didn't
+use namespaces. As of SilverStripe 4, the template namespaces need to match the folder structure of your template files.
 
 The `include` tag can be particularly helpful for nested functionality and breaking large templates up. In this example, 
 the include only happens if the user is logged in.
