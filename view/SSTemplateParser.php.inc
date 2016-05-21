@@ -233,6 +233,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 	/*!*
 	
 	Word: / [A-Za-z_] [A-Za-z0-9_]* /
+	NamespacedWord: / [A-Za-z_\/\\] [A-Za-z0-9_\/\\]* /
 	Number: / [0-9]+ /
 	Value: / [A-Za-z0-9_]+ /
 
@@ -810,7 +811,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 
 	# The include tag
 
-	Include: "<%" < "include" < Template:Word < (NamedArgument ( < "," < NamedArgument )*)? > "%>"
+	Include: "<%" < "include" < Template:NamespacedWord < (NamedArgument ( < "," < NamedArgument )*)? > "%>"
 
 	*/
 	function Include__construct(&$res){
