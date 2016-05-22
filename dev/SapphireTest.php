@@ -226,13 +226,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->model = DataModel::inst();
 
 		// Set up fixture
-		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
-			if(substr(DB::get_conn()->getSelectedDatabase(), 0, strlen($prefix) + 5) 
-					!= strtolower(sprintf('%stmpdb', $prefix))) {
-
-				//echo "Re-creating temp database... ";
+		if($fixtureFile || $this->usesDatabase) {
+			if (!self::using_temp_db()) {
 				self::create_temp_db();
-				//echo "done.\n";
 			}
 
 			singleton('DataObject')->flushCache();
