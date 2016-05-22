@@ -47,7 +47,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 * @deprecated since version 4.0
 	 */
 	protected $originalMailer;
-
+	
 	protected $originalMemberPasswordValidator;
 	protected $originalRequirements;
 	protected $originalIsRunningTest;
@@ -217,7 +217,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Config::inst()->update('Director', 'rules', array(
 			'$Controller//$Action/$ID/$OtherID' => '*'
 		));
-
+		
 		$fixtureFile = static::get_fixture_file();
 
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
@@ -226,13 +226,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		$this->model = DataModel::inst();
 
 		// Set up fixture
-		if($fixtureFile || $this->usesDatabase || !self::using_temp_db()) {
-			if(substr(DB::get_conn()->getSelectedDatabase(), 0, strlen($prefix) + 5)
-					!= strtolower(sprintf('%stmpdb', $prefix))) {
-
-				//echo "Re-creating temp database... ";
+		if($fixtureFile || $this->usesDatabase) {
+			if (!self::using_temp_db()) {
 				self::create_temp_db();
-				//echo "done.\n";
 			}
 
 			singleton('DataObject')->flushCache();
@@ -371,7 +367,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				}
 			}
 		}
-
+		
 		//unnest injector / config now that the test suite is over
 		// this will reset all the extensions on the object too (see setUpOnce)
 		Injector::unnest();
@@ -723,22 +719,22 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				. var_export($match, true) . ": " . var_export($item, true)
 			);
 		}
-	}
+	} 
 
 	/**
 	 * Removes sequences of repeated whitespace characters from SQL queries
 	 * making them suitable for string comparison
-	 *
+	 * 
 	 * @param string $sql
 	 * @return string The cleaned and normalised SQL string
 	 */
 	protected function normaliseSQL($sql) {
 		return trim(preg_replace('/\s+/m', ' ', $sql));
 	}
-
+	
 	/**
 	 * Asserts that two SQL queries are equivalent
-	 *
+	 * 
 	 * @param string $expectedSQL
 	 * @param string $actualSQL
 	 * @param string $message
@@ -753,7 +749,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		// Normalise SQL queries to remove patterns of repeating whitespace
 		$expectedSQL = $this->normaliseSQL($expectedSQL);
 		$actualSQL = $this->normaliseSQL($actualSQL);
-
+		
 		$this->assertEquals($expectedSQL, $actualSQL, $message, $delta, $maxDepth, $canonicalize, $ignoreCase);
 	}
 
@@ -817,7 +813,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	public static function using_temp_db() {
 		$dbConn = DB::get_conn();
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
-		return $dbConn && (substr($dbConn->getSelectedDatabase(), 0, strlen($prefix) + 5)
+		return $dbConn && (substr($dbConn->getSelectedDatabase(), 0, strlen($prefix) + 5) 
 			== strtolower(sprintf('%stmpdb', $prefix)));
 	}
 
@@ -923,7 +919,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 						if(!($SNG instanceof TestOnly)) $SNG->requireTable();
 					}
 				}
-
+				
 				// If we have additional dataobjects which need schema, do so here:
 				if($extraDataObjects) {
 					foreach($extraDataObjects as $dataClass) {
@@ -1001,7 +997,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// Remove all the test themes we created
 		SS_TemplateLoader::instance()->popManifest();
-
+		
 		Config::unnest();
 
 		if ($e) throw $e;
