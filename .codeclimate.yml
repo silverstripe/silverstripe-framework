@@ -15,3 +15,6 @@ ratings:
 exclude_paths:
 - "client/dist/**"
 - "admin/client/dist/**"
+- "templates/"
+- "tests/"
+- "thirdparty/"
