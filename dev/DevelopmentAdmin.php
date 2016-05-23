@@ -29,7 +29,7 @@ class DevelopmentAdmin extends Controller {
 		'generatesecuretoken',
 	);
 
-	public function init() {
+	protected function init() {
 		parent::init();
 
 		// Special case for dev/build: Defer permission checks to DatabaseAdmin->init() (see #4957)

@@ -15,7 +15,7 @@ class TaskRunner extends Controller {
 		'runTask',
 	);
 
-	public function init() {
+	protected function init() {
 		parent::init();
 
 		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());

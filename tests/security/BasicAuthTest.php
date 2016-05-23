@@ -133,7 +133,7 @@ class BasicAuthTest_ControllerSecuredWithPermission extends Controller implement
 
 	protected $template = 'BlankPage';
 
-	public function init() {
+	protected function init() {
 		self::$post_init_called = false;
 		self::$index_called = false;
 
@@ -155,7 +155,7 @@ class BasicAuthTest_ControllerSecuredWithoutPermission extends Controller implem
 
 	protected $template = 'BlankPage';
 
-	public function init() {
+	protected function init() {
 		BasicAuth::protect_entire_site(true, null);
 		parent::init();
 	}

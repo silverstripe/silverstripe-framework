@@ -11,7 +11,7 @@ class SapphireInfo extends Controller {
 		'environmenttype',
 	);
 
-	public function init() {
+	protected function init() {
 		parent::init();
 		if(!Director::is_cli() && !Permission::check('ADMIN')) return Security::permissionFailure();
 	}

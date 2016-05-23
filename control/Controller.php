@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Controllers are the cornerstone of all site functionality in SilverStripe. The {@link Director}
  * selects a controller to pass control to, and then calls {@link run()}. This method will execute
@@ -86,11 +87,36 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 *
 	 * @uses BasicAuth::requireLogin()
 	 */
-	public function init() {
+	protected function init() {
 		if($this->basicAuthEnabled) BasicAuth::protect_site_if_necessary();
 
 		// This is used to test that subordinate controllers are actually calling parent::init() - a common bug
 		$this->baseInitCalled = true;
+	}
+
+	/**
+	 * A stand in function to protect the init function from failing to be called as well as providing before and
+	 * after hooks for the init function itself
+	 *
+	 * This should be called on all controllers before handling requests
+	 */
+	public function doInit() {
+		//extension hook
+		$this->extend('onBeforeInit');
+
+		// Safety call
+		$this->baseInitCalled = false;
+		$this->init();
+		if (!$this->baseInitCalled) {
+			user_error(
+				"init() method on class '$this->class' doesn't call Controller::init()."
+				. "Make sure that you have parent::init() included.",
+				E_USER_WARNING
+			);
+		}
+
+		$this->extend('onAfterInit');
+
 	}
 
 	/**
@@ -103,27 +129,60 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
+	 * {@inheritdoc}
+	 *
+	 * Also set the URLParams
+	 */
+	public function setRequest($request) {
+		$return = parent::setRequest($request);
+		$this->setURLParams($this->getRequest()->allParams());
+
+		return $return;
+	}
+
+	/**
+	 * A bootstrap for the handleRequest method
+	 *
+	 * @todo setDataModel and setRequest are redundantly called in parent::handleRequest() - sort this out
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @param DataModel $model
+	 */
+	protected function beforeHandleRequest(SS_HTTPRequest $request, DataModel $model) {
+		//Push the current controller to protect against weird session issues
+		$this->pushCurrent();
+		//Set up the internal dependencies (request, response, datamodel)
+		$this->setRequest($request);
+		$this->setResponse(new SS_HTTPResponse());
+		$this->setDataModel($model);
+		//kick off the init functionality
+		$this->doInit();
+
+	}
+
+	/**
+	 * Cleanup for the handleRequest method
+	 */
+	protected function afterHandleRequest() {
+		//Pop the current controller from the stack
+		$this->popCurrent();
+	}
+
+	/**
 	 * Executes this controller, and return an {@link SS_HTTPResponse} object with the result.
 	 *
-	 * This method first does a few set-up activities:
-	 * - Push this controller ont to the controller stack - see {@link Controller::curr()} for
-	 *   information about this.
-	 * - Call {@link init()}
-	 * - Defer to {@link RequestHandler->handleRequest()} to determine which action should be executed.
+	 * This method defers to {@link RequestHandler->handleRequest()} to determine which action
+	 *    should be executed
 	 *
-	 * Note: $requestParams['executeForm'] support was removed, make the following change in your URLs:
-	 * "/?executeForm=FooBar" -> "/FooBar".
+	 * Note: You should rarely need to overload handleRequest() -
+	 * this kind of change is only really appropriate for things like nested
+	 * controllers - {@link ModelAsController} and {@link RootURLController}
+	 * are two examples here.  If you want to make more
+	 * orthodox functionality, it's better to overload {@link init()} or {@link index()}.
 	 *
-	 * Also make sure "FooBar" is in the $allowed_actions of your controller class.
-	 *
-	 * Note: You should rarely need to overload run() - this kind of change is only really appropriate
-	 * for things like nested controllers - {@link ModelAsController} and {@link RootURLController}
-	 * are two examples here. If you want to make more orthodox functionality, it's better to overload
-	 * {@link init()} or {@link index()}.
-	 *
-	 * Important: If you are going to overload handleRequest, make sure that you start the method with
-	 * $this->pushCurrent() and end the method with $this->popCurrent(). Failure to do this will create
-	 * weird session errors.
+	 * Important: If you are going to overload handleRequest,
+	 * make sure that you start the method with $this->beforeHandleRequest()
+	 * and end the method with $this->afterHandleRequest()
 	 *
 	 * @param SS_HTTPRequest $request
 	 * @param DataModel $model
@@ -131,60 +190,68 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * @return SS_HTTPResponse
 	 */
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
-		if(!$request) user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
-
-		$this->pushCurrent();
-		$this->urlParams = $request->allParams();
-		$this->setRequest($request);
-		$this->getResponse();
-		$this->setDataModel($model);
-
-		$this->extend('onBeforeInit');
-
-		// Init
-		$this->baseInitCalled = false;
-		$this->init();
-		if(!$this->baseInitCalled) {
-			user_error("init() method on class '$this->class' doesn't call Controller::init()."
-				. "Make sure that you have parent::init() included.", E_USER_WARNING);
+		if (!$request) {
+			user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		}
 
-		$this->extend('onAfterInit');
+		//set up the controller for the incoming request
+		$this->beforeHandleRequest($request, $model);
 
-		$response = $this->getResponse();
-		// If we had a redirection or something, halt processing.
-		if($response->isFinished()) {
-			$this->popCurrent();
-			return $response;
+		//if the before handler manipulated the response in a way that we shouldn't proceed, then skip our request
+		// handling
+		if (!$this->getResponse()->isFinished()) {
+
+			//retrieve the response for the request
+			$response = parent::handleRequest($request, $model);
+
+			//prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses)
+			$this->prepareResponse($response);
 		}
 
-		$body = parent::handleRequest($request, $model);
-		if($body instanceof SS_HTTPResponse) {
-			if(isset($_REQUEST['debug_request'])) {
-				Debug::message("Request handler returned SS_HTTPResponse object to $this->class controller;"
-					. "returning it without modification.");
+		//after request work
+		$this->afterHandleRequest();
+
+		//return the response
+		return $this->getResponse();
+	}
+
+	/**
+	 * Prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses) and
+	 * changes the controller response object appropriately
+	 *
+	 * @param $response
+	 */
+	protected function prepareResponse($response) {
+		if ($response instanceof SS_HTTPResponse) {
+			if (isset($_REQUEST['debug_request'])) {
+				Debug::message(
+					"Request handler returned SS_HTTPResponse object to $this->class controller;"
+					. "returning it without modification."
+				);
 			}
-			$response = $body;
 			$this->setResponse($response);
 
-		} else {
-			if($body instanceof Object && $body->hasMethod('getViewer')) {
-				if(isset($_REQUEST['debug_request'])) {
-					Debug::message("Request handler $body->class object to $this->class controller;"
-						. "rendering with template returned by $body->class::getViewer()");
+		}
+		else {
+			if ($response instanceof Object && $response->hasMethod('getViewer')) {
+				if (isset($_REQUEST['debug_request'])) {
+					Debug::message(
+						"Request handler $response->class object to $this->class controller;"
+						. "rendering with template returned by $response->class::getViewer()"
+					);
 				}
-				$body = $body->getViewer($this->getAction())->process($body);
+				$response = $response->getViewer($this->getAction())->process($response);
 			}
 
-			$response->setBody($body);
+			$this->getResponse()->setbody($response);
+
 		}
 
+		//deal with content if appropriate
+		ContentNegotiator::process($this->getResponse());
 
-		ContentNegotiator::process($response);
-		HTTP::add_cache_headers($response);
-
-		$this->popCurrent();
-		return $response;
+		//add cache headers
+		HTTP::add_cache_headers($this->getResponse());
 	}
 
 	/**
@@ -236,6 +303,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 */
 	public function setURLParams($urlParams) {
 		$this->urlParams = $urlParams;
+		return $this;
 	}
 
 	/**

@@ -20,6 +20,6 @@ class FakeController extends Controller {
 
 		$this->setResponse(new SS_HTTPResponse());
 
-		$this->init();
+		$this->doInit();
 	}
 }

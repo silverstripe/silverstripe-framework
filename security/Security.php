@@ -304,7 +304,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		);
 	}
 
-	public function init() {
+	protected function init() {
 		parent::init();
 
 		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
@@ -450,7 +450,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		$controller = Page_Controller::create($tmpPage);
 		$controller->setDataModel($this->model);
-		$controller->init();
+		$controller->doInit();
 		return $controller;
 	}
 
