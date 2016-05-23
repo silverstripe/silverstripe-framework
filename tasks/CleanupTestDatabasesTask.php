@@ -13,7 +13,7 @@ class CleanupTestDatabasesTask extends BuildTask {
 
 	public function run($request) {
 		if(!Permission::check('ADMIN') && !Director::is_cli()) {
-			$response = Security::permissionFailure($this);
+			$response = Security::permissionFailure();
 			if($response) {
 				$response->output();
 			}
