@@ -361,11 +361,11 @@ div.pageComments {
 		#BrowserPoll form input.year {
 			width:35px;
 		}
-		#BrowserPoll form p.Actions {
+		#BrowserPoll form p.btn-toolbar {
 			text-align:right;
 			padding:0 22px 15px 0;
 		}
-			#BrowserPoll form p.Actions input {
+			#BrowserPoll form p.btn-toolbar input {
 				padding:2px;
 			}
 		#BrowserPoll form ul.optionset {

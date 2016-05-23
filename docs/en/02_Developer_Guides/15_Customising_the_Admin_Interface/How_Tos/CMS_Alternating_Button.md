@@ -73,17 +73,17 @@ frontend. You can affect the state of the button through the jQuery UI calls.
 First of all, you can toggle the state of the button - execute this code in the browser's console to see how it works.
 
 	:::js
-	jQuery('.cms-edit-form .Actions #Form_EditForm_action_cleanup').button('toggleAlternate');
+	jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('toggleAlternate');
 
 Another, more useful, scenario is to check the current state.
 
 	:::js
-	jQuery('.cms-edit-form .Actions #Form_EditForm_action_cleanup').button('option', 'showingAlternate');
+	jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button('option', 'showingAlternate');
 
 You can also force the button into a specific state by using UI options.
 
 	:::js
-	jQuery('.cms-edit-form .Actions #Form_EditForm_action_cleanup').button({showingAlternate: true});
+	jQuery('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').button({showingAlternate: true});
 
 This will allow you to react to user actions in the CMS and give immediate feedback. Here is an example taken from the
 CMS core that tracks the changes to the input fields and reacts by enabling the *Save* and *Save & publish* buttons
@@ -140,7 +140,7 @@ cases.
 	(function($) {
 
 		$.entwine('mysite', function($){
-			$('.cms-edit-form .Actions #Form_EditForm_action_cleanup').entwine({
+			$('.cms-edit-form .btn-toolbar #Form_EditForm_action_cleanup').entwine({
 				/**
 				 * onafterrefreshalternate is SS-specific jQuery UI hook that is executed
 				 * every time the button is rendered (including on initialisation).

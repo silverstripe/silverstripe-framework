@@ -7,7 +7,7 @@ summary: Capture and store user information through web forms.
 
 This tutorial is intended to be a continuation of the first two tutorials ([first tutorial](/tutorials/building_a_basic_site), [second tutorial](/tutorials/extending_a_basic_site)). In this tutorial we will build on the site we developed in the earlier tutorials and explore forms in SilverStripe. We will look at custom coded forms: forms which need to be written in PHP.
 
-Instead of using a custom coded form, we could use the [userforms module](http://addons.silverstripe.org/add-ons/silverstripe/userforms). This module allows users to construct forms via the CMS. A form created this way is much quicker to implement, but also lacks the flexibility of a coded form. 
+Instead of using a custom coded form, we could use the [userforms module](http://addons.silverstripe.org/add-ons/silverstripe/userforms). This module allows users to construct forms via the CMS. A form created this way is much quicker to implement, but also lacks the flexibility of a coded form.
 
 ## What are we working towards?
 
@@ -27,7 +27,7 @@ The poll we will be creating on our homepage will ask the user for their name an
 		private static $allowed_actions = array('BrowserPollForm');
 
 		// ...
-	
+
 		public function BrowserPollForm() {
 			// Create fields
 			$fields = new FieldList(
@@ -41,18 +41,18 @@ The poll we will be creating on our homepage will ask the user for their name an
 					'Lynx' => 'Lynx'
 				))
 			);
-			
+
 			// Create actions
 			$actions = new FieldList(
 				new FormAction('doBrowserPoll', 'Submit')
 			);
-		
+
 			return new Form($this, 'BrowserPollForm', $fields, $actions);
 		}
-	
+
 	   ...
 	}
-	
+
 	...
 ```
 
@@ -73,8 +73,8 @@ Let's step through this code.
 	);
 ```
 
-First we create our form fields. 
-We do this by creating a [api:FieldList] and passing our fields as arguments. 
+First we create our form fields.
+We do this by creating a [api:FieldList] and passing our fields as arguments.
 The first field is a [api:TextField] with the name 'Name'.
 There is a second argument when creating a field which specifies the text on the label of the field. If no second
 argument is passed, as in this case, it is assumed the label is the same as the name of the field.
@@ -87,7 +87,7 @@ array mapping the values to the options listed in the dropdown.
 	);
 ```
 
-After creating the fields, we create the form actions. Form actions appear as buttons at the bottom of the form. 
+After creating the fields, we create the form actions. Form actions appear as buttons at the bottom of the form.
 The first argument is the name of the function to call when the button is pressed, and the second is the label of the button.
 Here we create a 'Submit' button which calls the 'doBrowserPoll' method, which we will create later.
 All the form actions (in this case only one) are collected into a [api:FieldList] object the same way we did with
@@ -159,7 +159,7 @@ Add the following code to the existing `form.css` file:
 		font-size:1em;
 	}
 
-	#BrowserPoll .Actions {
+	#BrowserPoll .btn-toolbar {
 		padding:5px 0;
 	}
 
@@ -184,7 +184,7 @@ If you recall, in the [second tutorial](/tutorials/extending_a_basic_site) we sa
 **mysite/code/BrowserPollSubmission.php**
 
 	```php
-	<?php	
+	<?php
 	class BrowserPollSubmission extends DataObject {
 		private static $db = array(
 			'Name' => 'Text',
@@ -196,7 +196,7 @@ If we then rebuild the database ([http://localhost/your_site_name/dev/build](htt
 
 **mysite/code/HomePage.php**
 
-	```php	
+	```php
 	class HomePage_Controller extends Page_Controller {
 		// ...
 		public function doBrowserPoll($data, $form) {
@@ -268,7 +268,7 @@ it is.
 		public function BrowserPollForm() {
 			if(Session::get('BrowserPollVoted')) return false;
 			// ...
-		}	
+		}
 	}
 ```
 
@@ -289,7 +289,7 @@ Create the function 'BrowserPollResults' on the *HomePage_Controller* class.
 	public function BrowserPollResults() {
 		$submissions = new GroupedList(BrowserPollSubmission::get());
 		$total = $submissions->Count();
-		
+
 		$list = new ArrayList();
 		foreach($submissions->groupBy('Browser') as $browserName => $browserSubmissions) {
 			$percentage = (int) ($browserSubmissions->Count() / $total * 100);
@@ -306,7 +306,7 @@ This code introduces a few new concepts, so let's step through it.
 	```php
 	$submissions = new GroupedList(BrowserPollSubmission::get());
 ```
-First we get all of the `BrowserPollSubmission` records from the database. This returns the submissions as a [api:DataList]. Then we wrap it inside a [api:GroupedList], which adds the ability to group those records. The resulting object will behave just like the original `DataList`, though (with the addition of a `groupBy()` method). 
+First we get all of the `BrowserPollSubmission` records from the database. This returns the submissions as a [api:DataList]. Then we wrap it inside a [api:GroupedList], which adds the ability to group those records. The resulting object will behave just like the original `DataList`, though (with the addition of a `groupBy()` method).
 
 ```php
 	$total = $submissions->Count();
@@ -324,14 +324,14 @@ We get the total number of submissions, which is needed to calculate the percent
 	}
 ```
 
-Now we create an empty [api:ArrayList] to hold the data we'll pass to the template. Its similar to [api:DataList], but can hold arbitrary objects rather than just DataObject` instances. Then we iterate over the 'Browser' submissions field. 
+Now we create an empty [api:ArrayList] to hold the data we'll pass to the template. Its similar to [api:DataList], but can hold arbitrary objects rather than just DataObject` instances. Then we iterate over the 'Browser' submissions field.
 
 The `groupBy()` method splits our list by the 'Browser' field passed to it, creating new lists with submissions just for a specific browser. Each of those lists is keyed by the browser name. The aggregated result is then contained in an [api:ArrayData] object, which behaves much like a standard PHP array, but allows us to use it in SilverStripe templates.
 
 
 The final step is to create the template to display our data. Change the 'BrowserPoll' div to the below.
 
-**themes/simple/templates/Layout/HomePage.ss** 
+**themes/simple/templates/Layout/HomePage.ss**
 
 ```ss
 	<div id="BrowserPoll">

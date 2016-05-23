@@ -16,7 +16,7 @@
 	</fieldset>
 
 	<% if $Actions %>
-	<div class="Actions">
+	<div class="btn-toolbar">
 		<% loop $Actions %>
 			$Field
 		<% end_loop %>

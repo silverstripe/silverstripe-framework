@@ -413,31 +413,19 @@ form.small .field, .field.small {
 				.ui-button-text {
 					padding-left: 16px /* icon */ + ($grid-x/2);
 				}
-
-
 			}
 		}
 	}
 
-	.Actions, .cms-actions-row {
-		> * {
-			display: block;
-			float: left;
-			margin-right: $grid-x;
-		}
-
+	.btn-toolbar, .cms-actions-row {
 		> *:last-child {
 			margin-right: 0;
 		}
 	}
 
-	.Actions {
-		min-height: 30px;
-		overflow: auto;
-		padding: $grid-x $grid-y * 1.5;
-	}
-	.south .Actions, .ui-tabs-panel .Actions,  .ui-tabs-panel iframe .Actions {
-		padding: 0;
+	.south .btn-toolbar, .ui-tabs-panel .btn-toolbar,  .ui-tabs-panel iframe .btn-toolbar {
+		padding-top: 0;
+    padding-bottom: 0;
 	}
 
 	input.loading, button.loading,
@@ -1109,10 +1097,6 @@ fieldset.switch-states{
 		max-width: 100%;
 	}
 
-	.Actions {
-		margin: $grid-y 0;
-	}
-
 	@media screen and (max-width:767px) {
 		fieldset {
 			.field,
@@ -1140,14 +1124,29 @@ fieldset.switch-states{
 				position: static;
 			}
 		}
-
-		.Actions {
-			margin-bottom: 0;
-		}
 	}
 }
 
 // Fix for multiple divider lines on the page/settings tab
 .parentTypeSelector .field.optionset {
   border-bottom: 0;
+}
+
+// TEMPORARY transitional fixes from JQuery-ui to bootstrap
+.btn .ui-button-text {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-right: 0;
+}
+
+.btn .ui-icon + .ui-button-text {
+  padding-left: 18px;
+}
+
+.btn-toolbar .ss-ui-button {
+  margin-left: 5px;
+}
+
+.toolbar--south.cms-content-actions {
+  width: 100% !important;
 }

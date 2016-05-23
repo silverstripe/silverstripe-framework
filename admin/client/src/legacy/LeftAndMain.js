@@ -454,9 +454,9 @@ $.entwine('ss', function($) {
       var self = this;
 
       // look for save button
-      if(!button) button = this.find('.Actions :submit[name=action_save]');
+      if(!button) button = this.find('.btn-toolbar :submit[name=action_save]');
       // default to first button if none given - simulates browser behaviour
-      if(!button) button = this.find('.Actions :submit:first');
+      if(!button) button = this.find('.btn-toolbar :submit:first');
 
       form.trigger('beforesubmitform');
       this.trigger('submitform', {form: form, button: button});
@@ -1179,7 +1179,7 @@ $.entwine('ss', function($) {
   /**
    * Add styling to all contained buttons, and create buttonsets if required.
    */
-  $('.cms-content .Actions').entwine({
+  $('.cms-content .btn-toolbar').entwine({
     onmatch: function() {
       this.find('.ss-ui-button').click(function() {
           var form = this.form;
@@ -1431,7 +1431,7 @@ $.entwine('ss', function($) {
         },
         activate: function(e, ui) {
           // Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
-          var actions = $(this).closest('form').find('.Actions');
+          var actions = $(this).closest('form').find('.btn-toolbar');
           if($(ui.newTab).closest('li').hasClass('readonly')) {
             actions.fadeOut();
           } else {

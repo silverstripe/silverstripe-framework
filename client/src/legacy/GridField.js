@@ -206,7 +206,7 @@ $.entwine('ss', function($) {
 	});
 
 	// Covers both tabular delete button, and the button on the detail form
-	$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .Actions button.action.action-delete').entwine({
+	$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .btn-toolbar button.action.action-delete').entwine({
 		onclick: function(e){
 			if(!confirm(i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
 				e.preventDefault();
