@@ -3,7 +3,6 @@
  * This file is the Framework bootstrap.  It will get your environment ready to call Director::direct().
  *
  * It takes care of:
- *  - Including Constants.php to include _ss_environment and initialise necessary constants
  *  - Checking of PHP memory limit
  *  - Including all the files needed to get the manifest built
  *  - Building and including the manifest
@@ -21,11 +20,6 @@
  * live mode, where reporting is limited to fatal errors and warnings (see later in this file)
  */
 error_reporting(E_ALL | E_STRICT);
-
-/**
- * Include Constants (if it hasn't already been included) to pull in BASE_PATH, etc
- */
-require_once dirname(__FILE__).'/Constants.php';
 
 global $_increase_time_limit_max;
 $_increase_time_limit_max = -1;
@@ -109,11 +103,6 @@ $manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
 $loader = SS_ClassLoader::instance();
 $loader->registerAutoloader();
 $loader->pushManifest($manifest);
-
-// Fall back to Composer's autoloader (e.g. for PHPUnit), if composer is used
-if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
-	require_once BASE_PATH . '/vendor/autoload.php';
-}
 
 // Now that the class manifest is up, load the static configuration
 $configManifest = new SS_ConfigStaticManifest();
