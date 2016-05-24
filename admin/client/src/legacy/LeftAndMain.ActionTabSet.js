@@ -121,7 +121,7 @@ $.entwine('ss', function($) {
 
 				if (activeTab.position() !== null){
 					topPosition = -activePanel.outerHeight();
-					containerSouth = activePanel.parents('.south');
+					containerSouth = activePanel.parents('.toolbar--south');
 					if (containerSouth){
 						// If container is the southern panel, make tab appear from the top of the container
 						padding = activeTab.offset().top - containerSouth.offset().top;

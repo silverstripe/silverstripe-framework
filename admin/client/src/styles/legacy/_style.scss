@@ -230,12 +230,10 @@ body.cms {
 	}
 
 	.cms-content-tools {
+    position: relative !important; // TEMP until JS is removed
+
 		.cms-panel-content {
-			padding-top: 0;
-			overflow-x: hidden;
-		}
-		.cms-panel-toggle.south {
-			border-top: 1px solid $color-light-separator;
+			height: calc(100% - 53px) !important; // TEMP until JS is removed
 		}
 	}
 }
@@ -1077,8 +1075,6 @@ body.cms {
 .cms-content-tools {
 	background: $tab-panel-texture-color;
 	width: $grid-x * 36;
-	overflow-y: auto;
-	overflow-x: hidden;
 	z-index: 70;
 	box-shadow: 1px 0 0 0 $border-color-dark;
 	z-index: 1000;
@@ -1466,6 +1462,7 @@ form.member-profile-form {
 		background: $tab-panel-texture-color;
 		width: 800px;
 		z-index: 40;
+		overflow: hidden !important; // TEMP until JS is removed
 	}
 
 	.cms-content-fields {
@@ -1553,22 +1550,18 @@ form.member-profile-form {
 .cms-panel {
 
 	.cms-panel-toggle {
-		&.south {
-			border-top: 1px solid $color-light-separator;
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-			min-height: 53px;
-		}
 
-		a {
+		.toggle-collapse,
+		.toggle-expand {
 			display: block;
+			position: absolute;
 			text-align: right;
 			padding: 14px 0;
 			width: 100%;
 			text-decoration: none;
 			line-height: 20px;
 			height: 52px;
+			margin: -#{$spacer-y * .625} #{0 - $grid-gutter-width-half};
 
 			span {
 				display: inline-block;

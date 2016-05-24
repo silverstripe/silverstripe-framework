@@ -4,11 +4,11 @@
 		<% include LeftAndMain_MenuStatus %>
 	</div>
 
-	<div class="cms-panel-content center">
+	<div class="panel-scrollable panel-scrollable--triple-toolbar cms-panel-content">
 		<% include LeftAndMain_MenuList %>
 	</div>
 
-	<div class="cms-panel-toggle south">
+	<div class="toolbar toolbar--south cms-panel-toggle">
 		<% include LeftAndMain_MenuToggle %>
 	</div>
 </div>
