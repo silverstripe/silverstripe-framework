@@ -1,9 +1,7 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\Model\FieldType\DBField;
 use SilverStripe\Model\FieldType\DBDatetime;
-use SilverStripe\Model\FieldType\DBPrimaryKey;
 use SilverStripe\Model\FieldType\DBComposite;
 use SilverStripe\Model\FieldType\DBClassName;
 
@@ -558,15 +556,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Helper function to duplicate relations from one object to another
-	 * @param $sourceObject the source object to duplicate from
-	 * @param $destinationObject the destination object to populate with the duplicated relations
-	 * @param $name the name of the relation to duplicate (e.g. members)
+	 * @param DataObject $sourceObject the source object to duplicate from
+	 * @param DataObject $destinationObject the destination object to populate with the duplicated relations
+	 * @param string $name the name of the relation to duplicate (e.g. members)
 	 */
 	private function duplicateRelations($sourceObject, $destinationObject, $name) {
 		$relations = $sourceObject->$name();
 		if ($relations) {
 			if ($relations instanceOf RelationList) {   //many-to-something relation
-				if ($relations->Count() > 0) {  //with more than one thing it is related to
+				if ($relations->count() > 0) {  //with more than one thing it is related to
 					foreach($relations as $relation) {
 						$destinationObject->$name()->add($relation);
 					}
@@ -1432,7 +1430,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Write the cached components to the database. Cached components could refer to two different instances of the
 	 * same record.
 	 *
-	 * @param $recursive Recursively write components
+	 * @param bool $recursive Recursively write components
 	 * @return DataObject $this
 	 */
 	public function writeComponents($recursive = false) {
@@ -1503,13 +1501,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return array Class ancestry
 	 */
 	public function getClassAncestry() {
-		if(!isset(self::$_cache_get_class_ancestry[$this->class])) {
-			self::$_cache_get_class_ancestry[$this->class] = array($this->class);
-			while(($class=get_parent_class(self::$_cache_get_class_ancestry[$this->class][0])) != "DataObject") {
-				array_unshift(self::$_cache_get_class_ancestry[$this->class], $class);
-			}
-		}
-		return self::$_cache_get_class_ancestry[$this->class];
+		return ClassInfo::ancestry(get_class($this));
 	}
 
 	/**
@@ -2006,7 +1998,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Return all of the database fields in this object
 	 *
 	 * @param string $fieldName Limit the output to a specific field name
-	 * @param string $includeTable If returning a single column, prefix the column with the table name
+	 * @param bool $includeTable If returning a single column, prefix the column with the table name
 	 * in Table.Column(spec) format
 	 * @return array|string|null The database fields, or if searching a single field, just this one field if found
 	 * Field will be a string in ClassName(args) format, or Table.ClassName(args) format if $includeTable is true
@@ -2243,15 +2235,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * This is experimental, and is currently only a Postgres-specific enhancement.
 	 *
+	 * @param $class
 	 * @return array or false
 	 */
 	public function database_extensions($class){
 		$extensions = Config::inst()->get($class, 'database_extensions', Config::UNINHERITED);
 
-		if($extensions)
+		if($extensions) {
 			return $extensions;
-		else
+		} else {
 			return false;
+		}
 	}
 
 	/**
@@ -2418,7 +2412,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * need to be overload by solid dataobject, so that the customised actions of that dataobject,
 	 * including that dataobject's extensions customised actions could be added to the EditForm.
 	 *
-	 * @return an Empty FieldList(); need to be overload by solid subclass
+	 * @return FieldList an Empty FieldList(); need to be overload by solid subclass
 	 */
 	public function getCMSActions() {
 		$actions = new FieldList();
@@ -2767,7 +2761,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function hasDatabaseField($field) {
 		return $this->db($field)
-			&& ! self::is_composite_field(get_class($this), $field);
+ 			&& ! self::is_composite_field(get_class($this), $field);
 	}
 
 	/**
@@ -2795,8 +2789,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Remove string-based "constructor-arguments" from the DBField definition
 		if(isset($fieldMap[$field])) {
 			$spec = $fieldMap[$field];
-			if(is_string($spec)) return strtok($spec,'(');
-			else return $spec['type'];
+			if(is_string($spec)) {
+				return strtok($spec,'(');
+			} else {
+				return $spec['type'];
+			}
 		}
 	}
 
@@ -3110,7 +3107,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Temporary hack to return an association name, based on class, to get around the mangle
 	 * of having to deal with reverse lookup of relationships to determine autogenerated foreign keys.
 	 *
-	 * @return String
+	 * @param string $className
+	 * @return string
 	 */
 	public function getReverseAssociation($className) {
 		if (is_array($this->manyMany())) {
@@ -3310,7 +3308,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * @var Array Parameters used in the query that built this object.
+	 * @var array Parameters used in the query that built this object.
 	 * This can be used by decorators (e.g. lazy loading) to
 	 * run additional queries using the same context.
 	 */
@@ -3345,7 +3343,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * @see $sourceQueryParams
-	 * @param array
+	 * @param string $key
+	 * @param string $value
 	 */
 	public function setSourceQueryParam($key, $value) {
 		$this->sourceQueryParams[$key] = $value;
@@ -3353,11 +3352,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * @see $sourceQueryParams
-	 * @return Mixed
+	 * @param string $key
+	 * @return string
 	 */
 	public function getSourceQueryParam($key) {
-		if(isset($this->sourceQueryParams[$key])) return $this->sourceQueryParams[$key];
-		else return null;
+		if(isset($this->sourceQueryParams[$key])) {
+			return $this->sourceQueryParams[$key];
+		}
+		return null;
 	}
 
 	//-------------------------------------------------------------------------------------------//
@@ -3368,8 +3370,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * the value is the type of index.
 	 */
 	public function databaseIndexes() {
-		$has_one = $this->uninherited('has_one',true);
-		$classIndexes = $this->uninherited('indexes',true);
+		$has_one = $this->uninherited('has_one');
+		$classIndexes = $this->uninherited('indexes');
 		//$fileIndexes = $this->uninherited('fileIndexes', true);
 
 		$indexes = array();
@@ -3417,8 +3419,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		// Build any child tables for many_many items
-		if($manyMany = $this->uninherited('many_many', true)) {
-			$extras = $this->uninherited('many_many_extraFields', true);
+		if($manyMany = $this->uninherited('many_many')) {
+			$extras = $this->uninherited('many_many_extraFields');
 			foreach($manyMany as $relationship => $childClass) {
 				// Build field list
 				$manymanyFields = array(
@@ -3682,7 +3684,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$fields = array();
 			// try to scaffold a couple of usual suspects
 			if ($this->hasField('Name')) $fields['Name'] = 'Name';
-			if ($this->hasDataBaseField('Title')) $fields['Title'] = 'Title';
+			if ($this->hasDatabaseField('Title')) $fields['Title'] = 'Title';
 			if ($this->hasField('Description')) $fields['Description'] = 'Description';
 			if ($this->hasField('FirstName')) $fields['FirstName'] = 'First Name';
 		}
@@ -3718,8 +3720,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$filters = array();
 
 		foreach($this->searchableFields() as $name => $spec) {
-			$filterClass = $spec['filter'];
-
 			if($spec['filter'] instanceof SearchFilter) {
 				$filters[$name] = $spec['filter'];
 			} else {

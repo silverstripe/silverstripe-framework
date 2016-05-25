@@ -108,11 +108,12 @@ class SearchContext extends Object {
 	 *  If a filter is applied to a relationship in dot notation,
 	 *  the parameter name should have the dots replaced with double underscores,
 	 *  for example "Comments__Name" instead of the filter name "Comments.Name".
-	 * @param string|array $sort Database column to sort on.
+	 * @param array|bool|string $sort Database column to sort on.
 	 *  Falls back to {@link DataObject::$default_sort} if not provided.
-	 * @param string|array $limit
+	 * @param array|bool|string $limit
 	 * @param DataList $existingQuery
 	 * @return DataList
+	 * @throws Exception
 	 */
 	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
 		if($existingQuery) {
@@ -140,7 +141,6 @@ class SearchContext extends Object {
 		$query = $query->sort($sort);
 
 		// hack to work with $searchParems when it's an Object
-		$searchParamArray = array();
 		if (is_object($searchParams)) {
 			$searchParamArray = $searchParams->getVars();
 		} else {
@@ -171,9 +171,10 @@ class SearchContext extends Object {
 	 * @todo rearrange start and limit params to reflect DataObject
 	 *
 	 * @param array $searchParams
-	 * @param string|array $sort
-	 * @param string|array $limit
+	 * @param array|bool|string $sort
+	 * @param array|bool|string $limit
 	 * @return SS_List
+	 * @throws Exception
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {
 		$searchParams = array_filter((array)$searchParams, array($this,'clearEmptySearchFields'));
@@ -186,7 +187,7 @@ class SearchContext extends Object {
 	 * Callback map function to filter fields with empty values from
 	 * being included in the search expression.
 	 *
-	 * @param unknown_type $value
+	 * @param mixed $value
 	 * @return boolean
 	 */
 	public function clearEmptySearchFields($value) {

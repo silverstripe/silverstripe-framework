@@ -918,6 +918,7 @@ class Injector {
 	 * Additional parameters are passed through as
 	 *
 	 * @param string $name
+	 * @param mixed $arguments,... arguments to pass to the constructor
 	 * @return mixed A new instance of the specified object
 	 */
 	public function create($name) {

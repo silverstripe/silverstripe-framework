@@ -14,6 +14,8 @@ class ClassInfo {
 
 	/**
 	 * Wrapper for classes getter.
+	 *
+	 * @return array
 	 */
 	public static function allClasses() {
 		return SS_ClassLoader::instance()->getManifest()->getClasses();
@@ -93,7 +95,9 @@ class ClassInfo {
 		);
 
 		foreach ($classes as $class) {
-			if (DataObject::has_own_table($class)) $result[$class] = $class;
+			if (DataObject::has_own_table($class)) {
+				$result[$class] = $class;
+			}
 		}
 
 		return $result;
@@ -143,7 +147,9 @@ class ClassInfo {
 	 * @return array Names of all subclasses as an associative array.
 	 */
 	public static function subclassesFor($class) {
-		if(is_string($class) && !class_exists($class)) return array();
+		if(is_string($class) && !class_exists($class)) {
+			return [];
+		}
 
 		//normalise class case
 		$className = self::class_name($class);
@@ -163,21 +169,14 @@ class ClassInfo {
 	 * eg: self::class_name('dataobJEct'); //returns 'DataObject'
 	 *
 	 * @param string|object $nameOrObject The classname or object you want to normalise
-	 *
 	 * @return string The normalised class name
 	 */
 	public static function class_name($nameOrObject) {
 		if (is_object($nameOrObject)) {
 			return get_class($nameOrObject);
 		} elseif (!self::exists($nameOrObject)) {
-			Deprecation::notice(
-				'4.0',
-				"ClassInfo::class_name() passed a class that doesn't exist. Support for this will be removed in 4.0",
-				Deprecation::SCOPE_GLOBAL
-			);
-			return $nameOrObject;
+			throw new InvalidArgumentException("Class {$nameOrObject} doesn't exist");
 		}
-
 		$reflection = new ReflectionClass($nameOrObject);
 		return $reflection->getName();
 	}

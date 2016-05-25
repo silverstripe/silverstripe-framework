@@ -27,6 +27,7 @@ class ExactMatchFilter extends SearchFilter {
 	/**
 	 * Applies an exact match (equals) on a field value.
 	 *
+	 * @param DataQuery $query
 	 * @return DataQuery
 	 */
 	protected function applyOne(DataQuery $query) {
@@ -36,6 +37,7 @@ class ExactMatchFilter extends SearchFilter {
 	/**
 	 * Excludes an exact match (equals) on a field value.
 	 *
+	 * @param DataQuery $query
 	 * @return DataQuery
 	 */
 	protected function excludeOne(DataQuery $query) {
@@ -81,6 +83,7 @@ class ExactMatchFilter extends SearchFilter {
 	 * Applies an exact match (equals) on a field value against multiple
 	 * possible values.
 	 *
+	 * @param DataQuery $query
 	 * @return DataQuery
 	 */
 	protected function applyMany(DataQuery $query) {
@@ -91,6 +94,7 @@ class ExactMatchFilter extends SearchFilter {
 	 * Excludes an exact match (equals) on a field value against multiple
 	 * possible values.
 	 *
+	 * @param DataQuery $query
 	 * @return DataQuery
 	 */
 	protected function excludeMany(DataQuery $query) {

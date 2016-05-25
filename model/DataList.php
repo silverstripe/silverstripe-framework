@@ -111,8 +111,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Note that this function is re-entrant - it's safe to call this inside a callback passed to
 	 * alterDataQuery
 	 *
-	 * @param $callback
+	 * @param callable $callback
 	 * @return DataList
+	 * @throws Exception
 	 */
 	public function alterDataQuery($callback) {
 		if ($this->inAlterDataQueryCall) {
@@ -197,7 +198,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function where($filter) {
-		return $this->alterDataQuery(function($query) use ($filter){
+		return $this->alterDataQuery(function(DataQuery $query) use ($filter){
 			$query->where($filter);
 		});
 	}
@@ -215,7 +216,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function whereAny($filter) {
-		return $this->alterDataQuery(function($query) use ($filter){
+		return $this->alterDataQuery(function(DataQuery $query) use ($filter){
 			$query->whereAny($filter);
 		});
 	}
@@ -250,9 +251,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param int $limit
 	 * @param int $offset
+	 * @return DataList
 	 */
 	public function limit($limit, $offset = 0) {
-		return $this->alterDataQuery(function($query) use ($limit, $offset){
+		return $this->alterDataQuery(function(DataQuery $query) use ($limit, $offset){
 			$query->limit($limit, $offset);
 		});
 	}
@@ -261,9 +263,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new DataList instance with distinct records or not
 	 *
 	 * @param bool $value
+	 * @return DataList
 	 */
 	public function distinct($value) {
-		return $this->alterDataQuery(function($query) use ($value){
+		return $this->alterDataQuery(function(DataQuery $query) use ($value){
 			$query->distinct($value);
 		});
 	}
@@ -293,9 +296,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new InvalidArgumentException('This method takes zero, one or two arguments');
 		}
 
-		$sort = $col = $dir = null;
-
 		if ($count == 2) {
+			$col = null;
+			$dir = null;
 			list($col, $dir) = func_get_args();
 
 			// Validate direction
@@ -372,6 +375,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new instance of the list with an added filter
 	 *
 	 * @param array $filterArray
+	 * @return DataList
 	 */
 	public function addFilter($filterArray) {
 		$list = $this;
@@ -423,7 +427,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
 		}
 
-		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
+		return $this->alterDataQuery(function(DataQuery $query) use ($whereArguments) {
 			$subquery = $query->disjunctiveGroup();
 
 			foreach($whereArguments as $field => $value) {
@@ -432,8 +436,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$filterType = array_shift($fieldArgs);
 				$modifiers = $fieldArgs;
 
-				// This is here since PHP 5.3 can't call protected/private methods in a closure.
-				$t = singleton($list->dataClass())->dbObject($field);
 				if($filterType) {
 					$className = "{$filterType}Filter";
 				} else {
@@ -443,8 +445,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 					$className = 'ExactMatchFilter';
 					array_unshift($modifiers, $filterType);
 				}
-				$t = new $className($field, $value, $modifiers);
-				$t->apply($subquery);
+				$filter = Injector::inst()->create($className, $field, $value, $modifiers);
+				$filter->apply($subquery);
 			}
 		});
 	}
@@ -465,9 +467,12 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				gettype($callback)
 			));
 		}
+		/** @var ArrayList $output */
 		$output = ArrayList::create();
 		foreach($this as $item) {
-			if(call_user_func($callback, $item, $this)) $output->push($item);
+			if(call_user_func($callback, $item, $this)) {
+				$output->push($item);
+			}
 		}
 		return $output;
 	}
@@ -498,7 +503,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		}
 
 		return $this->alterDataQuery(
-			function(DataQuery $query, DataList $list) use ($field, &$columnName, $linearOnly) {
+			function(DataQuery $query) use ($field, &$columnName, $linearOnly) {
 				$relations = explode('.', $field);
 				$fieldName = array_pop($relations);
 
@@ -533,7 +538,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param string $filter - example StartsWith, relates to a filtercontext
 	 * @param array $modifiers - Modifiers to pass to the filter, ie not,nocase
 	 * @param string $value - the value that the filtercontext will use for matching
-	 * @todo Deprecated SearchContexts and pull their functionality into the core of the ORM
+	 * @return DataList
 	 */
 	private function applyFilterContext($field, $filter, $modifiers, $value) {
 		if($filter) {
@@ -581,7 +586,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
 		}
 
-		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
+		return $this->alterDataQuery(function(DataQuery $query) use ($whereArguments) {
 			$subquery = $query->disjunctiveGroup();
 
 			foreach($whereArguments as $field => $value) {
@@ -590,8 +595,6 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$filterType = array_shift($fieldArgs);
 				$modifiers = $fieldArgs;
 
-				// This is here since PHP 5.3 can't call protected/private methods in a closure.
-				$t = singleton($list->dataClass())->dbObject($field);
 				if($filterType) {
 					$className = "{$filterType}Filter";
 				} else {
@@ -601,8 +604,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 					$className = 'ExactMatchFilter';
 					array_unshift($modifiers, $filterType);
 				}
-				$t = new $className($field, $value, $modifiers);
-				$t->exclude($subquery);
+				$filter = Injector::inst()->create($className, $field, $value, $modifiers);
+				$filter->exclude($subquery);
 			}
 		});
 	}
@@ -612,16 +615,16 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * The $list passed needs to contain the same dataclass as $this
 	 *
-	 * @param SS_List $list
+	 * @param DataList $list
 	 * @return DataList
 	 * @throws BadMethodCallException
 	 */
-	public function subtract(SS_List $list) {
-		if($this->dataclass() != $list->dataclass()) {
+	public function subtract(DataList $list) {
+		if($this->dataClass() != $list->dataClass()) {
 			throw new InvalidArgumentException('The list passed must have the same dataclass as this class');
 		}
 
-		return $this->alterDataQuery(function($query) use ($list){
+		return $this->alterDataQuery(function(DataQuery $query) use ($list){
 			$query->subtract($list->dataQuery());
 		});
 	}
@@ -639,7 +642,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
-		return $this->alterDataQuery(function($query) use ($table, $onClause, $alias, $order, $parameters){
+		return $this->alterDataQuery(function(DataQuery $query) use ($table, $onClause, $alias, $order, $parameters){
 			$query->innerJoin($table, $onClause, $alias, $order, $parameters);
 		});
 	}
@@ -657,7 +660,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
-		return $this->alterDataQuery(function($query) use ($table, $onClause, $alias, $order, $parameters){
+		return $this->alterDataQuery(function(DataQuery $query) use ($table, $onClause, $alias, $order, $parameters){
 			$query->leftJoin($table, $onClause, $alias, $order, $parameters);
 		});
 	}
@@ -833,6 +836,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		foreach($this->dataQuery->firstRow()->execute() as $row) {
 			return $this->createDataObject($row);
 		}
+		return null;
 	}
 
 	/**
@@ -844,6 +848,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		foreach($this->dataQuery->lastRow()->execute() as $row) {
 			return $this->createDataObject($row);
 		}
+		return null;
 	}
 
 	/**
@@ -873,7 +878,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function setQueriedColumns($queriedColumns) {
-		return $this->alterDataQuery(function($query) use ($queriedColumns){
+		return $this->alterDataQuery(function(DataQuery $query) use ($queriedColumns){
 			$query->setQueriedColumns($queriedColumns);
 		});
 	}
@@ -1038,6 +1043,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new item to add to this DataList.
 	 *
 	 * @todo This doesn't factor in filters.
+	 * @param array $initialFields
+	 * @return DataObject
 	 */
 	public function newObject($initialFields = null) {
 		$class = $this->dataClass;
@@ -1047,7 +1054,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Remove this item by deleting it
 	 *
-	 * @param DataClass $item
+	 * @param DataObject $item
 	 * @todo Allow for amendment of this behaviour - for example, we can remove an item from
 	 * an "ActiveItems" DataList by chaning the status to inactive.
 	 */
@@ -1059,13 +1066,13 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Remove an item from this DataList by ID
 	 *
-	 * @param int $itemID - The primary ID
+	 * @param int $itemID The primary ID
 	 */
 	public function removeByID($itemID) {
 		$item = $this->byID($itemID);
 
 		if($item) {
-			return $item->delete();
+			$item->delete();
 		}
 	}
 
@@ -1075,60 +1082,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataList
 	 */
 	public function reverse() {
-		return $this->alterDataQuery(function($query){
+		return $this->alterDataQuery(function(DataQuery $query){
 			$query->reverseSort();
 		});
-	}
-
-	/**
-	 * This method won't function on DataLists due to the specific query that it represent
-	 *
-	 * @param mixed $item
-	 */
-	public function push($item) {
-		user_error("Can't call DataList::push() because its data comes from a specific query.", E_USER_ERROR);
-	}
-
-	/**
-	 * This method won't function on DataLists due to the specific query that it represent
-	 *
-	 * @param mixed $item
-	 */
-	public function insertFirst($item) {
-		user_error("Can't call DataList::insertFirst() because its data comes from a specific query.", E_USER_ERROR);
-	}
-
-	/**
-	 * This method won't function on DataLists due to the specific query that it represent
-	 *
-	 */
-	public function shift() {
-		user_error("Can't call DataList::shift() because its data comes from a specific query.", E_USER_ERROR);
-	}
-
-	/**
-	 * This method won't function on DataLists due to the specific query that it represent
-	 *
-	 */
-	public function replace() {
-		user_error("Can't call DataList::replace() because its data comes from a specific query.", E_USER_ERROR);
-	}
-
-	/**
-	 * This method won't function on DataLists due to the specific query that it represent
-	 *
-	 */
-	public function merge() {
-		user_error("Can't call DataList::merge() because its data comes from a specific query.", E_USER_ERROR);
-	}
-
-	/**
-	 * This method won't function on DataLists due to the specific query that it represent
-	 *
-	 */
-	public function removeDuplicates() {
-		user_error("Can't call DataList::removeDuplicates() because its data comes from a specific query.",
-			E_USER_ERROR);
 	}
 
 	/**
@@ -1138,7 +1094,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return bool
 	 */
 	public function offsetExists($key) {
-		return ($this->limit(1,$key)->First() != null);
+		return ($this->limit(1,$key)->first() != null);
 	}
 
 	/**
@@ -1148,7 +1104,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @return DataObject
 	 */
 	public function offsetGet($key) {
-		return $this->limit(1, $key)->First();
+		return $this->limit(1, $key)->first();
 	}
 
 	/**

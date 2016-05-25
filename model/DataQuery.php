@@ -43,7 +43,7 @@ class DataQuery {
 	/**
 	 * Create a new DataQuery.
 	 *
-	 * @param String The name of the DataObject class that you wish to query
+	 * @param string $dataClass The name of the DataObject class that you wish to query
 	 */
 	public function __construct($dataClass) {
 		$this->dataClass = $dataClass;
@@ -59,6 +59,8 @@ class DataQuery {
 
 	/**
 	 * Return the {@link DataObject} class that is being queried.
+	 *
+	 * @return string
 	 */
 	public function dataClass() {
 		return $this->dataClass;
@@ -67,6 +69,8 @@ class DataQuery {
 	/**
 	 * Return the {@link SQLSelect} object that represents the current query; note that it will
 	 * be a clone of the object.
+	 *
+	 * @return SQLSelect
 	 */
 	public function query() {
 		return $this->getFinalisedQuery();
@@ -126,21 +130,12 @@ class DataQuery {
 	/**
 	 * Set up the simplest initial query
 	 */
-	public function initialiseQuery() {
+	protected function initialiseQuery() {
 		// Get the tables to join to.
 		// Don't get any subclass tables - let lazy loading do that.
 		$tableClasses = ClassInfo::ancestry($this->dataClass, true);
-
-		// Error checking
 		if(!$tableClasses) {
-			if(!SS_ClassLoader::instance()->hasManifest()) {
-				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not"
-					. " querying the database in _config.php.", E_USER_ERROR);
-			} else {
-				user_error("DataList::create Can't find data classes (classes linked to tables) for"
-					. " $this->dataClass. Please ensure you run dev/build after creating a new DataObject.",
-					E_USER_ERROR);
-			}
+			throw new InvalidArgumentException("DataQuery::create() Can't find data classes for '{$this->dataClass}'");
 		}
 
 		$baseClass = array_shift($tableClasses);
@@ -255,7 +250,6 @@ class DataQuery {
 			if($this->dataClass != $baseClass) {
 				// Get the ClassName values to filter to
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
-				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
 				$classNamesPlaceholders = DB::placeholders($classNames);
 				$query->addWhere(array(
 					"\"$baseClass\".\"ClassName\" IN ($classNamesPlaceholders)" => $classNames
@@ -285,6 +279,7 @@ class DataQuery {
 	 * Ensure that if a query has an order by clause, those columns are present in the select.
 	 *
 	 * @param SQLSelect $query
+	 * @param array $originalSelect
 	 * @return null
 	 */
 	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = array()) {
@@ -385,6 +380,7 @@ class DataQuery {
 	 *
 	 * @param String $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
+	 * @return string
 	 */
 	public function max($field) {
 		return $this->aggregate("MAX(\"$field\")");
@@ -393,8 +389,9 @@ class DataQuery {
 	/**
 	 * Return the minimum value of the given field in this DataList
 	 *
-	 * @param String $field Unquoted database column name. Will be ANSI quoted
+	 * @param string $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
+	 * @return string
 	 */
 	public function min($field) {
 		return $this->aggregate("MIN(\"$field\")");
@@ -403,8 +400,9 @@ class DataQuery {
 	/**
 	 * Return the average value of the given field in this DataList
 	 *
-	 * @param String $field Unquoted database column name. Will be ANSI quoted
+	 * @param string $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
+	 * @return string
 	 */
 	public function avg($field) {
 		return $this->aggregate("AVG(\"$field\")");
@@ -413,8 +411,9 @@ class DataQuery {
 	/**
 	 * Return the sum of the values of the given field in this DataList
 	 *
-	 * @param String $field Unquoted database column name. Will be ANSI quoted
+	 * @param string $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
+	 * @return string
 	 */
 	public function sum($field) {
 		return $this->aggregate("SUM(\"$field\")");
@@ -422,6 +421,10 @@ class DataQuery {
 
 	/**
 	 * Runs a raw aggregate expression.  Please handle escaping yourself
+	 *
+	 * @param string $expression An aggregate expression, such as 'MAX("Balance")', or a set of them
+	 * (as an escaped SQL statement)
+	 * @return string
 	 */
 	public function aggregate($expression) {
 		return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
@@ -445,6 +448,10 @@ class DataQuery {
 
 	/**
 	 * Update the SELECT clause of the query with the columns from the given table
+	 *
+	 * @param SQLSelect $query
+	 * @param string $tableClass
+	 * @param array $columns
 	 */
 	protected function selectColumnsFromTable(SQLSelect &$query, $tableClass, $columns = null) {
 		// Add SQL for multi-value fields
@@ -475,7 +482,8 @@ class DataQuery {
 	/**
 	 * Append a GROUP BY clause to this query.
 	 *
-	 * @param String $groupby Escaped SQL statement
+	 * @param string $groupby Escaped SQL statement
+	 * @return $this
 	 */
 	public function groupby($groupby) {
 		$this->query->addGroupBy($groupby);
@@ -485,7 +493,8 @@ class DataQuery {
 	/**
 	 * Append a HAVING clause to this query.
 	 *
-	 * @param String $having Escaped SQL statement
+	 * @param string $having Escaped SQL statement
+	 * @return $this
 	 */
 	public function having($having) {
 		$this->query->addHaving($having);
@@ -583,6 +592,7 @@ class DataQuery {
 	 *
 	 * @param int $limit
 	 * @param int $offset
+	 * @return $this
 	 */
 	public function limit($limit, $offset = 0) {
 		$this->query->setLimit($limit, $offset);
@@ -610,6 +620,7 @@ class DataQuery {
 	 * will cause the query to appear first. The default is 20, and joins created automatically by the
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
+	 * @return $this
 	 */
 	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
 		if($table) {
@@ -628,6 +639,7 @@ class DataQuery {
 	 * will cause the query to appear first. The default is 20, and joins created automatically by the
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
+	 * @return $this
 	 */
 	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
 		if($table) {
@@ -760,6 +772,7 @@ class DataQuery {
 		}
 
 		// Join table with associated has_one
+		/** @var DataObject $model */
 		$model = singleton($localClass);
 		$ancestry = $model->getClassAncestry();
 		$foreignKey = $model->getRemoteJoinField($localField, 'has_many', $polymorphic);
@@ -830,6 +843,7 @@ class DataQuery {
 	 *
 	 * @param DataQuery $subtractQuery
 	 * @param string $field
+	 * @return $this
 	 */
 	public function subtract(DataQuery $subtractQuery, $field='ID') {
 		$fieldExpression = $subtractQuery->expressionForField($field);
@@ -846,8 +860,9 @@ class DataQuery {
 	/**
 	 * Select the given fields from the given table.
 	 *
-	 * @param String $table Unquoted table name (will be escaped automatically)
-	 * @param Array $fields Database column names (will be escaped automatically)
+	 * @param string $table Unquoted table name (will be escaped automatically)
+	 * @param array $fields Database column names (will be escaped automatically)
+	 * @return $this
 	 */
 	public function selectFromTable($table, $fields) {
 		$fieldExpressions = array_map(function($item) use($table) {
@@ -882,19 +897,20 @@ class DataQuery {
 	 * @return String The expression used to query this field via this DataQuery
 	 */
 	protected function expressionForField($field) {
-
 		// Prepare query object for selecting this field
 		$query = $this->getFinalisedQuery(array($field));
 
 		// Allow query to define the expression for this field
 		$expression = $query->expressionForField($field);
-		if(!empty($expression)) return $expression;
+		if(!empty($expression)) {
+			return $expression;
+		}
 
 		// Special case for ID, if not provided
 		if($field === 'ID') {
-			$baseClass = ClassInfo::baseDataClass($this->dataClass);
-			return "\"$baseClass\".\"ID\"";
+			return DataObject::quoted_column('ID', $this->dataClass);
 		}
+		return null;
 	}
 
 	/**
@@ -918,17 +934,27 @@ class DataQuery {
 	/**
 	 * Set an arbitrary query parameter, that can be used by decorators to add additional meta-data to the query.
 	 * It's expected that the $key will be namespaced, e.g, 'Versioned.stage' instead of just 'stage'.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @return $this
 	 */
 	public function setQueryParam($key, $value) {
 		$this->queryParams[$key] = $value;
+		return $this;
 	}
 
 	/**
 	 * Set an arbitrary query parameter, that can be used by decorators to add additional meta-data to the query.
+	 *
+	 * @param string $key
+	 * @return string
 	 */
 	public function getQueryParam($key) {
-		if(isset($this->queryParams[$key])) return $this->queryParams[$key];
-		else return null;
+		if(isset($this->queryParams[$key])) {
+			return $this->queryParams[$key];
+		}
+		return null;
 	}
 
 	/**
@@ -958,7 +984,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 	protected $whereQuery;
 
 	public function __construct(DataQuery $base, $connective) {
-		$this->dataClass = $base->dataClass;
+		parent::__construct($base->dataClass);
 		$this->query = $base->query;
 		$this->whereQuery = new SQLSelect();
 		$this->whereQuery->setConnective($connective);

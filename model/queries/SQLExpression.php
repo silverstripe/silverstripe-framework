@@ -24,24 +24,6 @@ abstract class SQLExpression {
 	protected $replacementsNew = array();
 
 	/**
-	 * @deprecated since version 4.0
-	 */
-	public function __get($field) {
-		Deprecation::notice('4.0', 'use get{Field} to get the necessary protected field\'s value');
-		return $this->$field;
-	}
-
-	/**
-	 * @deprecated since version 4.0
-	 */
-	public function __set($field, $value) {
-		Deprecation::notice('4.0', 'use set{Field} to set the necessary protected field\'s value');
-		return $this->$field = $value;
-	}
-
-
-
-	/**
 	 * Swap some text in the SQL query with another.
 	 *
 	 * Note that values in parameters will not be replaced
@@ -125,7 +107,7 @@ abstract class SQLExpression {
 	 * Copies the query parameters contained in this object to another
 	 * SQLExpression
 	 *
-	 * @param SQLExpression $expression The object to copy properties to
+	 * @param SQLExpression $object The object to copy properties to
 	 */
 	protected function copyTo(SQLExpression $object) {
 		$target = array_keys(get_object_vars($object));
