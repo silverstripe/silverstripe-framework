@@ -11,6 +11,8 @@ import GridFieldAction from './GridFieldAction';
 import FormConstants from 'components/Form/FormConstants';
 import * as actions from 'state/records/RecordsActions';
 
+const NotYetLoaded = {};
+
 /**
  * The component acts as a container for a grid field,
  * with smarts around data retrieval from external sources.
@@ -161,13 +163,11 @@ GridField.propTypes = {
   }),
 };
 
-const NotYetLoaded = {};
-
 function mapStateToProps(state, ownProps) {
   const recordType = ownProps.data ? ownProps.data.recordType : null;
   return {
     config: state.config,
-    records: recordType && state.records[recordType] ? state.records[recordType] : NotYetLoaded
+    records: recordType && state.records[recordType] ? state.records[recordType] : NotYetLoaded,
   };
 }
 
