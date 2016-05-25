@@ -992,33 +992,46 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 */
 	public static function database_is_ready() {
 		// Used for unit tests
-		if(self::$force_database_is_ready !== NULL) return self::$force_database_is_ready;
+		if(self::$force_database_is_ready !== null) {
+			return self::$force_database_is_ready;
+		}
 
-		if(self::$database_is_ready) return self::$database_is_ready;
+		if(self::$database_is_ready) {
+			return self::$database_is_ready;
+		}
 
-		$requiredTables = ClassInfo::dataClassesFor('Member');
-		$requiredTables[] = 'Group';
-		$requiredTables[] = 'Permission';
+		$requiredClasses = ClassInfo::dataClassesFor('Member');
+		$requiredClasses[] = 'Group';
+		$requiredClasses[] = 'Permission';
 
-		foreach($requiredTables as $table) {
+		foreach($requiredClasses as $class) {
 			// Skip test classes, as not all test classes are scaffolded at once
-			if(is_subclass_of($table, 'TestOnly')) continue;
+			if(is_subclass_of($class, 'TestOnly')) {
+				continue;
+			}
 
 			// if any of the tables aren't created in the database
-			if(!ClassInfo::hasTable($table)) return false;
+			$table = DataObject::getSchema()->tableName($class);
+			if(!ClassInfo::hasTable($table)) {
+				return false;
+			}
 
 			// HACK: DataExtensions aren't applied until a class is instantiated for
 			// the first time, so create an instance here.
-			singleton($table);
+			singleton($class);
 
 			// if any of the tables don't have all fields mapped as table columns
 			$dbFields = DB::field_list($table);
-			if(!$dbFields) return false;
+			if(!$dbFields) {
+				return false;
+			}
 
-			$objFields = DataObject::database_fields($table);
+			$objFields = DataObject::database_fields($class);
 			$missingFields = array_diff_key($objFields, $dbFields);
 
-			if($missingFields) return false;
+			if($missingFields) {
+				return false;
+			}
 		}
 		self::$database_is_ready = true;
 

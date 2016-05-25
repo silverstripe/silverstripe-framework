@@ -93,8 +93,11 @@ class SearchContext extends Object {
 	 */
 	protected function applyBaseTableFields() {
 		$classes = ClassInfo::dataClassesFor($this->modelClass);
-		$fields = array("\"".ClassInfo::baseDataClass($this->modelClass).'".*');
-		if($this->modelClass != $classes[0]) $fields[] = '"'.$classes[0].'".*';
+		$baseTable = DataObject::getSchema()->baseDataTable($this->modelClass);
+		$fields = array("\"{$baseTable}\".*");
+		if($this->modelClass != $classes[0]) {
+			$fields[] = '"'.$classes[0].'".*';
+		}
 		//$fields = array_keys($model->db());
 		$fields[] = '"'.$classes[0].'".\"ClassName\" AS "RecordClassName"';
 		return $fields;

@@ -176,19 +176,13 @@ class Convert {
 	 * table, or column name. Supports encoding of multi identfiers separated by
 	 * a delimiter (e.g. ".")
 	 *
-	 * @param string|array $identifier The identifier to escape. E.g. 'SiteTree.Title'
+	 * @param string|array $identifier The identifier to escape. E.g. 'SiteTree.Title' or list of identifiers
+	 * to be joined via the separator.
 	 * @param string $separator The string that delimits subsequent identifiers
-	 * @return string|array The escaped identifier. E.g. '"SiteTree"."Title"'
+	 * @return string The escaped identifier. E.g. '"SiteTree"."Title"'
 	 */
 	public static function symbol2sql($identifier, $separator = '.') {
-		if(is_array($identifier)) {
-			foreach($identifier as $k => $v) {
-				$identifier[$k] = self::symbol2sql($v, $separator);
-			}
-			return $identifier;
-		} else {
-			return DB::get_conn()->escapeIdentifier($identifier, $separator);
-		}
+		return DB::get_conn()->escapeIdentifier($identifier, $separator);
 	}
 
 	/**

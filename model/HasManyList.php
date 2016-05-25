@@ -35,15 +35,18 @@ class HasManyList extends RelationList {
 	}
 
 	protected function foreignIDFilter($id = null) {
-		if ($id === null) $id = $this->getForeignID();
+		if ($id === null) {
+			$id = $this->getForeignID();
+		}
 
 		// Apply relation filter
-		$key = "\"$this->foreignKey\"";
+		$key = DataObject::getSchema()->sqlColumnForField($this->dataClass(), $this->getForeignKey());
 		if(is_array($id)) {
 			return array("$key IN (".DB::placeholders($id).")"  => $id);
 		} else if($id !== null){
 			return array($key => $id);
 		}
+		return null;
 	}
 
 	/**

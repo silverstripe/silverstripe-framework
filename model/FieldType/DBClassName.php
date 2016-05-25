@@ -91,13 +91,14 @@ class DBClassName extends DBEnum {
 			return $this->baseClass;
 		}
 		// Default to the basename of the record
+		$schema = DataObject::getSchema();
 		if($this->record) {
-			return ClassInfo::baseDataClass($this->record);
+			return $schema->baseDataClass($this->record);
 		}
 		// During dev/build only the table is assigned
-		$tableClass = $this->getClassNameFromTable($this->getTable());
-		if($tableClass) {
-			return $tableClass;
+		$tableClass = $schema->tableClass($this->getTable());
+		if($tableClass && ($baseClass = $schema->baseDataClass($tableClass))) {
+			return $baseClass;
 		}
 		// Fallback to global default
 		return 'DataObject';
@@ -112,28 +113,6 @@ class DBClassName extends DBEnum {
 	public function setBaseClass($baseClass) {
 		$this->baseClass = $baseClass;
 		return $this;
-	}
-
-	/**
-	 * Given a table name, find the base data class
-	 *
-	 * @param string $table
-	 * @return string|null
-	 */
-	protected function getClassNameFromTable($table) {
-		if(empty($table)) {
-			return null;
-		}
-		$class = ClassInfo::baseDataClass($table);
-		if($class) {
-			return $class;
-		}
-		// If there is no class for this table, strip table modifiers (_Live / _versions) off the end
-		if(preg_match('/^(?<class>.+)(_[^_]+)$/i', $table, $matches)) {
-			return $this->getClassNameFromTable($matches['class']);
-		}
-
-		return null;
 	}
 
 	/**

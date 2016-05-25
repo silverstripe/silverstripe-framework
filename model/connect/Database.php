@@ -232,11 +232,18 @@ abstract class SS_Database {
 	 * is simply double quoted. Don't pass in already escaped identifiers in,
 	 * as this will double escape the value!
 	 *
-	 * @param string $value The identifier to escape
-	 * @param string $separator optional identifier splitter
+	 * @param string|array $value The identifier to escape or list of split components
+	 * @param string $separator Splitter for each component
+	 * @return string
 	 */
 	public function escapeIdentifier($value, $separator = '.') {
-		return $this->connector->escapeIdentifier($value, $separator);
+		// Split string into components
+		if(!is_array($value)) {
+			$value = explode($separator, $value);
+		}
+
+		// Implode quoted column
+		return '"' . implode('"'.$separator.'"', $value) . '"';
 	}
 
 	/**

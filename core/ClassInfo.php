@@ -78,8 +78,9 @@ class ClassInfo {
 	 * Returns an array of the current class and all its ancestors and children
 	 * which require a DB table.
 	 *
+	 * @todo Move this into {@see DataObjectSchema}
+	 *
 	 * @param string|object $class
-	 * @todo Move this into data object
 	 * @return array
 	 */
 	public static function dataClassesFor($class) {
@@ -104,28 +105,11 @@ class ClassInfo {
 	}
 
 	/**
-	 * Returns the root class (the first to extend from DataObject) for the
-	 * passed class.
-	 *
-	 * @param  string|object $class
-	 * @return string
+	 * @deprecated 4.0..5.0
 	 */
 	public static function baseDataClass($class) {
-		if(is_string($class) && !class_exists($class)) return null;
-
-		$class = self::class_name($class);
-
-		if (!is_subclass_of($class, 'DataObject')) {
-			throw new InvalidArgumentException("$class is not a subclass of DataObject");
-		}
-
-		while ($next = get_parent_class($class)) {
-			if ($next == 'DataObject') {
-				return $class;
-			}
-
-			$class = $next;
-		}
+		Deprecation::notice('5.0', 'Use DataObject::getSchema()->baseDataClass()');
+		return DataObject::getSchema()->baseDataClass($class);
 	}
 
 	/**
@@ -174,8 +158,6 @@ class ClassInfo {
 	public static function class_name($nameOrObject) {
 		if (is_object($nameOrObject)) {
 			return get_class($nameOrObject);
-		} elseif (!self::exists($nameOrObject)) {
-			throw new InvalidArgumentException("Class {$nameOrObject} doesn't exist");
 		}
 		$reflection = new ReflectionClass($nameOrObject);
 		return $reflection->getName();
@@ -291,53 +273,12 @@ class ClassInfo {
 		return strtolower(self::$method_from_cache[$lClass][$lMethod]) == $lCompclass;
 	}
 
-
 	/**
-	 * Returns the table name in the class hierarchy which contains a given
-	 * field column for a {@link DataObject}. If the field does not exist, this
-	 * will return null.
-	 *
-	 * @param string $candidateClass
-	 * @param string $fieldName
-	 *
-	 * @return string
+	 * @deprecated 4.0..5.0
 	 */
 	public static function table_for_object_field($candidateClass, $fieldName) {
-		if(!$candidateClass
-			|| !$fieldName
-			|| !class_exists($candidateClass)
-			|| !is_subclass_of($candidateClass, 'DataObject')
-		) {
-			return null;
-		}
-
-		//normalise class name
-		$candidateClass = self::class_name($candidateClass);
-		$exists = self::exists($candidateClass);
-
-		// Short circuit for fixed fields
-		$fixed = DataObject::config()->fixed_fields;
-		if($exists && isset($fixed[$fieldName])) {
-			return self::baseDataClass($candidateClass);
-		}
-
-		// Find regular field
-		while($candidateClass && $candidateClass != 'DataObject' && $exists) {
-			if( DataObject::has_own_table($candidateClass)
-				&& DataObject::has_own_table_database_field($candidateClass, $fieldName)
-			) {
-				break;
-			}
-
-			$candidateClass = get_parent_class($candidateClass);
-			$exists = $candidateClass && self::exists($candidateClass);
-		}
-
-		if(!$candidateClass || !$exists) {
-			return null;
-		}
-
-		return $candidateClass;
+		Deprecation::notice('5.0', 'Use DataObject::getSchema()->tableForField()');
+		return DataObject::getSchema()->tableForField($candidateClass, $fieldName);
 	}
 }
 

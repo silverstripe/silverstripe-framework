@@ -150,7 +150,10 @@ class ChangeSetTest extends SapphireTest {
 			$object = $this->objFromFixture($class, $identifier);
 
 			foreach($items as $i => $item) {
-				if ($item->ObjectClass == ClassInfo::baseDataClass($object) && $item->ObjectID == $object->ID && $item->Added == $mode) {
+				if ( $item->ObjectClass == $object->baseClass()
+					&& $item->ObjectID == $object->ID
+					&& $item->Added == $mode
+				) {
 					unset($items[$i]);
 					continue 2;
 				}
@@ -171,7 +174,7 @@ class ChangeSetTest extends SapphireTest {
 			);
 		}
 	}
-	
+
 	public function testAddObject() {
 		$cs = new ChangeSet();
 		$cs->write();

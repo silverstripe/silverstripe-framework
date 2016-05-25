@@ -511,12 +511,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 				$relationModelName = $query->applyRelation($relations, $linearOnly);
 
 				// Find the db field the relation belongs to
-				$className = ClassInfo::table_for_object_field($relationModelName, $fieldName);
-				if(empty($className)) {
-					$className = $relationModelName;
-				}
-
-				$columnName = '"'.$className.'"."'.$fieldName.'"';
+				$columnName = DataObject::getSchema()->sqlColumnForField($relationModelName, $fieldName);
 			}
 		);
 	}

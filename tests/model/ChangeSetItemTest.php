@@ -28,7 +28,7 @@ class ChangeSetItemTest extends SapphireTest {
 
 		$item = new ChangeSetItem([
 			'ObjectID' => $object->ID,
-			'ObjectClass' => ClassInfo::baseDataClass($object->ClassName)
+			'ObjectClass' => $object->baseClass(),
 		]);
 
 		$this->assertEquals(
@@ -80,7 +80,7 @@ class ChangeSetItemTest extends SapphireTest {
 
 		$item = new ChangeSetItem([
 			'ObjectID' => $object->ID,
-			'ObjectClass' => ClassInfo::baseDataClass($object)
+			'ObjectClass' => $object->baseClass(),
 		]);
 		$item->write();
 

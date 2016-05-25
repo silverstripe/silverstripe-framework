@@ -9,32 +9,10 @@ class DataListTest extends SapphireTest {
 	// Borrow the model from DataObjectTest
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	protected $extraDataObjects = array(
-		// From DataObjectTest
-		'DataObjectTest_Team',
-		'DataObjectTest_Fixture',
-		'DataObjectTest_SubTeam',
-		'OtherSubclassWithSameField',
-		'DataObjectTest_FieldlessTable',
-		'DataObjectTest_FieldlessSubTable',
-		'DataObjectTest_ValidatedObject',
-		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment',
-		'DataObjectTest_EquipmentCompany',
-		'DataObjectTest_SubEquipmentCompany',
-		'DataObjectTest\NamespacedClass',
-		'DataObjectTest\RelationClass',
-		'DataObjectTest_ExtendedTeamComment',
-		'DataObjectTest_Company',
-		'DataObjectTest_Staff',
-		'DataObjectTest_CEO',
-		'DataObjectTest_Fan',
-		'DataObjectTest_Play',
-		'DataObjectTest_Ploy',
-		'DataObjectTest_Bogey',
-		'ManyManyListTest_Product',
-		'ManyManyListTest_Category',
-	);
+	public function setUpOnce() {
+		$this->extraDataObjects = DataObjectTest::$extra_data_objects;
+		parent::setUpOnce();
+	}
 
 	public function testFilterDataObjectByCreatedDate() {
 		// create an object to test with

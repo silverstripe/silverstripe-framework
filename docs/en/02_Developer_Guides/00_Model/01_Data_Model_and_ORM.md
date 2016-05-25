@@ -489,6 +489,59 @@ offset, if not provided as an argument, will default to 0.
 Note that the `limit` argument order is different from a MySQL LIMIT clause.
 </div>
 
+### Mapping classes to tables with DataObjectSchema
+
+Note that in most cases, the underlying database table for any DataObject instance will be the same as the class name.
+However in cases where dealing with namespaced classes, especially when using DB schema which don't support
+slashes in table names, it is necessary to provide an alternate mapping.
+
+For instance, the below model will be stored in the table name `BannerImage`
+
+
+	:::php
+	namespace SilverStripe\BannerManager;
+	class BannerImage extends \DataObject {
+		private static $table_name = 'BannerImage';
+	}
+
+
+Note that any model class which does not explicitly declare a `table_name` config option will have a name
+automatically generated for them. In the above case, the table name would have been
+`SilverStripe\BannerManager\BannerImage`
+
+When creating raw SQL queries that contain table names, it is necessary to ensure your queries have the correct
+table. This functionality can be provided by the [api:DataObjectSchema] service, which can be accessed via
+`DataObject::getSchema()`. This service provides the following methods, most of which have a table and class
+equivalent version.
+
+Methods which return class names:
+ 
+ * `tableClass($table)` Finds the class name for a given table. This also handles suffixed tables such as `Table_Live`.
+ * `baseDataClass($class)` Returns the base data class for the given class.
+ * `classForField($class, $field)` Finds the specific class that directly holds the given field
+
+Methods which return table names:
+
+ * `tableName($class)` Returns the table name for a given class or object.
+ * `baseDataTable($class)` Returns the base data class for the given class.
+ * `tableForField($class, $field)` Finds the specific class that directly holds the given field and returns the table. 
+
+Note that in cases where the class name is required, an instance of the object may be substituted.
+
+For example, if running a query against a particular model, you will need to ensure you use the correct
+table and column.
+
+
+	:::php
+	public function countDuplicates($model, $fieldToCheck) {
+		$table = DataObject::getSchema()->tableForField($model, $field);
+		$query = new SQLSelect();
+		$query->setFrom("\"{$table}\"");
+		$query->setWhere(["\"{$table}\".\"{$field}\"" => $model->$fieldToCheck]);
+		return $query->count();
+	}
+
+
 ### Raw SQL
 
 Occasionally, the system described above won't let you do exactly what you need to do. In these situations, we have 
@@ -620,3 +673,4 @@ To retrieve a news article, SilverStripe joins the [api:SiteTree], [api:Page] an
 * [api:DataObject]
 * [api:DataList]
 * [api:DataQuery]
+* [api:DataObjectSchema]

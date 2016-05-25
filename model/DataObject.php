@@ -193,8 +193,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected static $_cache_has_own_table = array();
 	protected static $_cache_get_one;
 	protected static $_cache_get_class_ancestry;
-	protected static $_cache_composite_fields = array();
-	protected static $_cache_database_fields = array();
 	protected static $_cache_field_labels = array();
 
 	/**
@@ -221,6 +219,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	);
 
 	/**
+	 * Override table name for this class. If ignored will default to FQN of class.
+	 * This option is not inheritable, and must be set on each class.
+	 * If left blank naming will default to the legacy (3.x) behaviour.
+	 *
+	 * @var string
+	 */
+	private static $table_name = null;
+
+	/**
 	 * Non-static relationship cache, indexed by component name.
 	 */
 	protected $components;
@@ -229,6 +236,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Non-static cache of has_many and many_many relations that can't be written until this object is saved.
 	 */
 	protected $unsavedRelations;
+
+	/**
+	 * Get schema object
+	 *
+	 * @return DataObjectSchema
+	 */
+	public static function getSchema() {
+		return Injector::inst()->get('DataObjectSchema');
+	}
 
 	/**
 	 * Return the complete map of fields to specification on this object, including fixed_fields.
@@ -246,74 +262,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(empty($class)) {
 			$class = get_called_class();
 		}
-
-		// Refresh cache
-		self::cache_database_fields($class);
-
-		// Return cached values
-		return self::$_cache_database_fields[$class];
-	}
-
-	/**
-	 * Cache all database and composite fields for the given class.
-	 * Will do nothing if already cached
-	 *
-	 * @param string $class Class name to cache
-	 */
-	protected static function cache_database_fields($class) {
-		// Skip if already cached
-		if( isset(self::$_cache_database_fields[$class])
-			&& isset(self::$_cache_composite_fields[$class])
-		) {
-			return;
-		}
-
-		$compositeFields = array();
-		$dbFields = array();
-
-		// Ensure fixed fields appear at the start
-		$fixedFields = self::config()->fixed_fields;
-		if(get_parent_class($class) === 'DataObject') {
-			// Merge fixed with ClassName spec and custom db fields
-			$dbFields = $fixedFields;
-		} else {
-			$dbFields['ID'] = $fixedFields['ID'];
-		}
-
-		// Check each DB value as either a field or composite field
-		$db = Config::inst()->get($class, 'db', Config::UNINHERITED) ?: array();
-		foreach($db as $fieldName => $fieldSpec) {
-			$fieldClass = strtok($fieldSpec, '(');
-			if(singleton($fieldClass) instanceof DBComposite) {
-				$compositeFields[$fieldName] = $fieldSpec;
-			} else {
-				$dbFields[$fieldName] = $fieldSpec;
-			}
-		}
-
-		// Add in all has_ones
-		$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED) ?: array();
-		foreach($hasOne as $fieldName => $hasOneClass) {
-			if($hasOneClass === 'DataObject') {
-				$compositeFields[$fieldName] = 'PolymorphicForeignKey';
-			} else {
-				$dbFields["{$fieldName}ID"] = 'ForeignKey';
-			}
-		}
-
-		// Merge composite fields into DB
-		foreach($compositeFields as $fieldName => $fieldSpec) {
-			$fieldObj = Object::create_from_string($fieldSpec, $fieldName);
-			$fieldObj->setTable($class);
-			$nestedFields = $fieldObj->compositeDatabaseFields();
-			foreach($nestedFields as $nestedName => $nestedSpec) {
-				$dbFields["{$fieldName}{$nestedName}"] = $nestedSpec;
-			}
-		}
-
-		// Return cached results
-		self::$_cache_database_fields[$class] = $dbFields;
-		self::$_cache_composite_fields[$class] = $compositeFields;
+		return static::getSchema()->databaseFields($class);
 	}
 
 	/**
@@ -337,10 +286,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$class = get_called_class();
 		}
 
-		// Get all fields
-		$fields = self::database_fields($class);
-
 		// Remove fixed fields. This assumes that NO fixed_fields are composite
+		$fields = static::getSchema()->databaseFields($class);
 		$fields = array_diff_key($fields, self::config()->fixed_fields);
 		return $fields;
 	}
@@ -377,24 +324,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if(empty($class)) {
 			$class = get_called_class();
 		}
-		if($class === 'DataObject') {
-			return array();
-		}
-
-		// Refresh cache
-		self::cache_database_fields($class);
-
-		// Get fields for this class
-		$compositeFields = self::$_cache_composite_fields[$class];
-		if(!$aggregated) {
-			return $compositeFields;
-		}
-
-		// Recursively merge
-		return array_merge(
-			$compositeFields,
-			self::composite_fields(get_parent_class($class))
-		);
+		return static::getSchema()->compositeFields($class, $aggregated);
 	}
 
 	/**
@@ -1250,10 +1180,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @param string $now Timestamp to use for the current time
 	 * @param bool $isNewRecord Whether this should be treated as a new record write
 	 * @param array $manipulation Manipulation to write to
-	 * @param string $class Table and Class to select and write to
+	 * @param string $class Class of table to manipulate
 	 */
 	protected function prepareManipulationTable($baseTable, $now, $isNewRecord, &$manipulation, $class) {
-		$manipulation[$class] = array();
+		$table = $this->getSchema()->tableName($class);
+		$manipulation[$table] = array();
 
 		// Extract records for this table
 		foreach($this->record as $fieldName => $fieldValue) {
@@ -1261,7 +1192,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// Check if this record pertains to this table, and
 			// we're not attempting to reset the BaseTable->ID
 			if(	empty($this->changed[$fieldName])
-				|| ($class === $baseTable && $fieldName === 'ID')
+				|| ($table === $baseTable && $fieldName === 'ID')
 				|| (!self::has_own_table_database_field($class, $fieldName)
 					&& !self::is_composite_field($class, $fieldName, false))
 			) {
@@ -1276,25 +1207,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			// Write to manipulation
-			$fieldObj->writeToManipulation($manipulation[$class]);
+			$fieldObj->writeToManipulation($manipulation[$table]);
 		}
 
 		// Ensure update of Created and LastEdited columns
-		if($baseTable === $class) {
-			$manipulation[$class]['fields']['LastEdited'] = $now;
+		if($baseTable === $table) {
+			$manipulation[$table]['fields']['LastEdited'] = $now;
 			if($isNewRecord) {
-				$manipulation[$class]['fields']['Created']
+				$manipulation[$table]['fields']['Created']
 					= empty($this->record['Created'])
 						? $now
 						: $this->record['Created'];
-				$manipulation[$class]['fields']['ClassName'] = $this->class;
+				$manipulation[$table]['fields']['ClassName'] = $this->class;
 			}
 		}
 
 		// Inserts done one the base table are performed in another step, so the manipulation should instead
 		// attempt an update, as though it were a normal update.
-		$manipulation[$class]['command'] = $isNewRecord ? 'insert' : 'update';
-		$manipulation[$class]['id'] = $this->record['ID'];
+		$manipulation[$table]['command'] = $isNewRecord ? 'insert' : 'update';
+		$manipulation[$table]['id'] = $this->record['ID'];
+		$manipulation[$table]['class'] = $class;
 	}
 
 	/**
@@ -1379,7 +1311,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		if($hasChanges || $forceWrite || $isNewRecord) {
 			// New records have their insert into the base data table done first, so that they can pass the
 			// generated primary key on to the rest of the manipulation
-			$baseTable = ClassInfo::baseDataClass($this->class);
+			$baseTable = $this->baseTable();
 			$this->writeBaseRecord($baseTable, $now);
 
 			// Write the DB manipulation for all changed fields
@@ -1730,7 +1662,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			case 'has_one': {
 				// Mock has_many
 				$joinField = "{$remoteRelation}ID";
-				$componentClass = ClassInfo::table_for_object_field($remoteClass, $joinField);
+				$componentClass = static::getSchema()->classForField($remoteClass, $joinField);
 				$result = HasManyList::create($componentClass, $joinField);
 				if ($this->model) {
 					$result->setDataModel($this->model);
@@ -1907,7 +1839,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$result = $result->alterDataQuery(function($query) use ($extraFields) {
 			$query->setQueryParam('Component.ExtraFields', $extraFields);
 		});
-		
+
 		if($this->model) {
 			$result->setDataModel($this->model);
 		}
@@ -1998,12 +1930,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Return all of the database fields in this object
 	 *
 	 * @param string $fieldName Limit the output to a specific field name
-	 * @param bool $includeTable If returning a single column, prefix the column with the table name
+	 * @param bool $includeClass If returning a single column, prefix the column with the class name
 	 * in Table.Column(spec) format
-	 * @return array|string|null The database fields, or if searching a single field, just this one field if found
-	 * Field will be a string in ClassName(args) format, or Table.ClassName(args) format if $includeTable is true
+	 * @return array|string|null The database fields, or if searching a single field,
+	 * just this one field if found. Field will be a string in FieldClass(args)
+	 * format, or RecordClass.FieldClass(args) format if $includeClass is true
 	 */
-	public function db($fieldName = null, $includeTable = false) {
+	public function db($fieldName = null, $includeClass = false) {
 		$classes = ClassInfo::ancestry($this, true);
 
 		// If we're looking for a specific field, we want to hit subclasses first as they may override field types
@@ -2021,17 +1954,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			// Check for search field
 			if($fieldName && isset($db[$fieldName])) {
 				// Return found field
-				if(!$includeTable) {
+				if(!$includeClass) {
 					return $db[$fieldName];
 				}
-
-				// Set table for the given field
-				if(in_array($fieldName, $this->config()->fixed_fields)) {
-					$table = $this->baseTable();
-				} else {
-					$table = $class;
-				}
-				return $table . "." . $db[$fieldName];
+				return $class . "." . $db[$fieldName];
 			}
 		}
 
@@ -2179,54 +2105,60 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		foreach($classes as $class) {
 			$manyMany = Config::inst()->get($class, 'many_many', Config::UNINHERITED);
 			// Check if the component is defined in many_many on this class
-			$candidate = (isset($manyMany[$component])) ? $manyMany[$component] : null;
-			if($candidate) {
-				$parentField = $class . "ID";
-				$childField = ($class == $candidate) ? "ChildID" : $candidate . "ID";
-				return array($class, $candidate, $parentField, $childField, "{$class}_$component");
+			if(isset($manyMany[$component])) {
+				$candidate = $manyMany[$component];
+				$classTable = static::getSchema()->tableName($class);
+				$candidateTable = static::getSchema()->tableName($candidate);
+				$parentField = "{$classTable}ID";
+				$childField = $class === $candidate ? "ChildID" : "{$candidateTable}ID";
+				$joinTable = "{$classTable}_{$component}";
+				return array($class, $candidate, $parentField, $childField, $joinTable);
 			}
 
 			// Check if the component is defined in belongs_many_many on this class
 			$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
-			$candidate = (isset($belongsManyMany[$component])) ? $belongsManyMany[$component] : null;
-			if($candidate) {
-				// Extract class and relation name from dot-notation
-				if(strpos($candidate, '.') !== false) {
-					list($candidate, $relationName) = explode('.', $candidate, 2);
-				}
+			if(!isset($belongsManyMany[$component])) {
+				continue;
+			}
 
-				$childField = $candidate . "ID";
+			// Extract class and relation name from dot-notation
+			$candidate = $belongsManyMany[$component];
+			$relationName = null;
+			if(strpos($candidate, '.') !== false) {
+				list($candidate, $relationName) = explode('.', $candidate, 2);
+			}
+			$candidateTable = static::getSchema()->tableName($candidate);
+			$childField = $candidateTable . "ID";
 
-				// We need to find the inverse component name
-				$otherManyMany = Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
-				if(!$otherManyMany) {
-					throw new LogicException("Inverse component of $candidate not found ({$this->class})");
-				}
-
-				// If we've got a relation name (extracted from dot-notation), we can already work out
-				// the join table and candidate class name...
-				if(isset($relationName) && isset($otherManyMany[$relationName])) {
-					$candidateClass = $otherManyMany[$relationName];
-					$joinTable = "{$candidate}_{$relationName}";
-				} else {
-					// ... otherwise, we need to loop over the many_manys and find a relation that
-					// matches up to this class
-					foreach($otherManyMany as $inverseComponentName => $candidateClass) {
-						if($candidateClass == $class || is_subclass_of($class, $candidateClass)) {
-							$joinTable = "{$candidate}_{$inverseComponentName}";
-							break;
-						}
+			// We need to find the inverse component name, if not explicitly given
+			$otherManyMany = Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
+			if(!$relationName && $otherManyMany) {
+				foreach($otherManyMany as $inverseComponentName => $childClass) {
+					if($childClass === $class || is_subclass_of($class, $childClass)) {
+						$relationName = $inverseComponentName;
+						break;
 					}
 				}
-
-				// If we could work out the join table, we've got all the info we need
-				if(isset($joinTable)) {
-					$parentField = ($class == $candidate) ? "ChildID" : $candidateClass . "ID";
-					return array($class, $candidate, $parentField, $childField, $joinTable);
-				}
-
-				throw new LogicException("Orphaned \$belongs_many_many value for $this->class.$component");
 			}
+
+			// Check valid relation found
+			if(!$relationName || !$otherManyMany || !isset($otherManyMany[$relationName])) {
+				throw new LogicException("Inverse component of $candidate not found ({$this->class})");
+			}
+
+			// If we've got a relation name (extracted from dot-notation), we can already work out
+			// the join table and candidate class name...
+			$childClass = $otherManyMany[$relationName];
+			$joinTable = "{$candidateTable}_{$relationName}";
+
+			// If we could work out the join table, we've got all the info we need
+			if ($childClass === $candidate) {
+				$parentField = "ChildID";
+			} else {
+				$childTable = static::getSchema()->tableName($childClass);
+				$parentField = "{$childTable}ID";
+			}
+			return array($class, $candidate, $parentField, $childField, $joinTable);
 		}
 	}
 
@@ -2470,16 +2402,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Loads all the stub fields that an initial lazy load didn't load fully.
 	 *
-	 * @param string $tableClass Base table to load the values from. Others are joined as required.
-	 *                   Not specifying a tableClass will load all lazy fields from all tables.
+	 * @param string $class Class to load the values from. Others are joined as required.
+	 * Not specifying a tableClass will load all lazy fields from all tables.
 	 * @return bool Flag if lazy loading succeeded
 	 */
-	protected function loadLazyFields($tableClass = null) {
+	protected function loadLazyFields($class = null) {
 		if(!$this->isInDB() || !is_numeric($this->ID)) {
 			return false;
 		}
 
-		if (!$tableClass) {
+		if (!$class) {
 			$loaded = array();
 
 			foreach ($this->record as $key => $value) {
@@ -2492,7 +2424,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return false;
 		}
 
-		$dataQuery = new DataQuery($tableClass);
+		$dataQuery = new DataQuery($class);
 
 		// Reset query parameter context to that of this DataObject
 		if($params = $this->getSourceQueryParams()) {
@@ -2503,16 +2435,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Limit query to the current record, unless it has the Versioned extension,
 		// in which case it requires special handling through augmentLoadLazyFields()
-		$baseTable = ClassInfo::baseDataClass($this);
+		$baseIDColumn = static::getSchema()->sqlColumnForField($this, 'ID');
 		$dataQuery->where([
-			"\"{$baseTable}\".\"ID\"" => $this->record['ID']
+			$baseIDColumn => $this->record['ID']
 		])->limit(1);
 
 		$columns = array();
 
 		// Add SQL for fields, both simple & multi-value
 		// TODO: This is copy & pasted from buildSQL(), it could be moved into a method
-		$databaseFields = self::database_fields($tableClass);
+		$databaseFields = self::database_fields($class);
 		if($databaseFields) foreach($databaseFields as $k => $v) {
 			if(!isset($this->record[$k]) || $this->record[$k] === null) {
 				$columns[] = $k;
@@ -2805,19 +2737,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return bool
 	 */
 	public static function has_own_table($dataClass) {
-		if(!is_subclass_of($dataClass,'DataObject')) return false;
-
-		$dataClass = ClassInfo::class_name($dataClass);
-		if(!isset(self::$_cache_has_own_table[$dataClass])) {
-			if(get_parent_class($dataClass) == 'DataObject') {
-				self::$_cache_has_own_table[$dataClass] = true;
-			} else {
-				self::$_cache_has_own_table[$dataClass]
-					= Config::inst()->get($dataClass, 'db', Config::UNINHERITED)
-					|| Config::inst()->get($dataClass, 'has_one', Config::UNINHERITED);
-			}
+		if(!is_subclass_of($dataClass, 'DataObject')) {
+			return false;
 		}
-		return self::$_cache_has_own_table[$dataClass];
+		$fields = static::database_fields($dataClass);
+		return !empty($fields);
 	}
 
 	/**
@@ -3263,12 +3187,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Reset all global caches associated with DataObject.
 	 */
 	public static function reset() {
+		// @todo Decouple these
 		DBClassName::clear_classname_cache();
+		ClassInfo::reset_db_cache();
+		static::getSchema()->reset();
 		self::$_cache_has_own_table = array();
 		self::$_cache_get_one = array();
-		self::$_cache_composite_fields = array();
-		self::$_cache_database_fields = array();
-		self::$_cache_get_class_ancestry = array();
 		self::$_cache_field_labels = array();
 	}
 
@@ -3286,25 +3210,27 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			user_error("DataObject::get_by_id passed a non-numeric ID #$id", E_USER_WARNING);
 		}
 
-		// Check filter column
-		if(is_subclass_of($callerClass, 'DataObject')) {
-			$baseClass = ClassInfo::baseDataClass($callerClass);
-			$column = "\"$baseClass\".\"ID\"";
-		} else{
-			// This simpler code will be used by non-DataObject classes that implement DataObjectInterface
-			$column = '"ID"';
-		}
-
-		// Relegate to get_one
+		// Pass to get_one
+		$column = static::getSchema()->sqlColumnForField($callerClass, 'ID');
 		return DataObject::get_one($callerClass, array($column => $id), $cache);
 	}
 
 	/**
 	 * Get the name of the base table for this object
+	 *
+	 * @return string
 	 */
 	public function baseTable() {
-		$tableClasses = ClassInfo::dataClassesFor($this->class);
-		return array_shift($tableClasses);
+		return static::getSchema()->baseDataTable($this);
+	}
+
+	/**
+	 * Get the base class for this object
+	 *
+	 * @return string
+	 */
+	public function baseClass() {
+		return static::getSchema()->baseDataClass($this);
 	}
 
 	/**
@@ -3403,19 +3329,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	public function requireTable() {
 		// Only build the table if we've actually got fields
 		$fields = self::database_fields($this->class);
+		$table = static::getSchema()->tableName($this->class);
 		$extensions = self::database_extensions($this->class);
 
 		$indexes = $this->databaseIndexes();
 
 		// Validate relationship configuration
 		$this->validateModelDefinitions();
-
 		if($fields) {
-			$hasAutoIncPK = ($this->class == ClassInfo::baseDataClass($this->class));
-			DB::require_table($this->class, $fields, $indexes, $hasAutoIncPK, $this->stat('create_table_options'),
-				$extensions);
+			$hasAutoIncPK = get_parent_class($this) === 'DataObject';
+			DB::require_table(
+				$table, $fields, $indexes, $hasAutoIncPK, $this->stat('create_table_options'), $extensions
+			);
 		} else {
-			DB::dont_require_table($this->class);
+			DB::dont_require_table($table);
 		}
 
 		// Build any child tables for many_many items
@@ -3423,9 +3350,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$extras = $this->uninherited('many_many_extraFields');
 			foreach($manyMany as $relationship => $childClass) {
 				// Build field list
+				if($this->class === $childClass) {
+					$childField = "ChildID";
+				} else {
+					$childTable = $this->getSchema()->tableName($childClass);
+					$childField = "{$childTable}ID";
+				}
 				$manymanyFields = array(
-					"{$this->class}ID" => "Int",
-				(($this->class == $childClass) ? "ChildID" : "{$childClass}ID") => "Int",
+					"{$table}ID" => "Int",
+					$childField => "Int",
 				);
 				if(isset($extras[$relationship])) {
 					$manymanyFields = array_merge($manymanyFields, $extras[$relationship]);
@@ -3433,12 +3366,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 				// Build index list
 				$manymanyIndexes = array(
-					"{$this->class}ID" => true,
-				(($this->class == $childClass) ? "ChildID" : "{$childClass}ID") => true,
+					"{$table}ID" => true,
+					$childField => true,
 				);
-
-				DB::require_table("{$this->class}_$relationship", $manymanyFields, $manymanyIndexes, true, null,
-					$extensions);
+				$manyManyTable = "{$table}_$relationship";
+				DB::require_table($manyManyTable, $manymanyFields, $manymanyIndexes, true, null, $extensions);
 			}
 		}
 
