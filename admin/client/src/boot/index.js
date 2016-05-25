@@ -45,4 +45,6 @@ function appBoot() {
 // Entwine hooks are being used to set up the <Provider>.
 // `window.onload` happens AFTER these Entwine hooks which means
 // the store is undefined when the <Provider> is constructed.
-$('body').entwine({ onadd: () => appBoot() });
+$.entwine('ss', () => {
+  $('body').entwine({ onadd: () => appBoot() });
+});
