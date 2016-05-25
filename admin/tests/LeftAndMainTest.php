@@ -4,6 +4,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class LeftAndMainTest extends FunctionalTest {
 
 	protected static $fixture_file = 'LeftAndMainTest.yml';
@@ -299,7 +301,7 @@ class LeftAndMainTest_Object extends DataObject implements TestOnly {
 	private static $default_sort = '"Sort"';
 
 	private static $extensions = array(
-		'Hierarchy'
+		'SilverStripe\Model\Hierarchy'
 	);
 
 	public function CMSTreeClasses() {}

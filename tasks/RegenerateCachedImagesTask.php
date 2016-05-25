@@ -6,6 +6,8 @@
  * @package framework
  * @subpackage filesystem
  */
+
+use SilverStripe\Model\DataObject;
 class RegenerateCachedImagesTask extends BuildTask {
 
 	protected $title = 'Regenerate Cached Images Task';

@@ -12,6 +12,10 @@
  *
  * @method Group Group()
  */
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\ArrayList;
 class Permission extends DataObject implements TemplateGlobalProvider {
 
 	// the (1) after Type specifies the DB default value which is needed for

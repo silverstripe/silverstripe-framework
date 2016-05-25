@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model;
+
 /**
  * Representation of a DataModel - a collection of DataLists for each different
  * data type.
@@ -13,6 +15,9 @@
  * @package framework
  * @subpackage model
  */
+
+use SilverStripe\Model\DataModel;
+use SilverStripe\Model\DataList;
 class DataModel {
 
 	/**

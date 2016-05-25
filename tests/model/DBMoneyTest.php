@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\Model\FieldType\DBMoney;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DB;
+
 
 /**
  * Partially based on Zend_CurrencyTest.

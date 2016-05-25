@@ -3,10 +3,15 @@
 namespace SilverStripe\Model;
 
 use DBField;
-use SS_Filterable;
-use SS_Limitable;
-use SS_List;
-use SS_Sortable;
+
+
+
+
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\Filterable;
+use SilverStripe\Model\Sortable;
+use SilverStripe\Model\Limitable;
+
 
 /**
  * Abstract representation of a DB relation field, either saved or in memory
@@ -14,7 +19,7 @@ use SS_Sortable;
  * @package framework
  * @subpackage model
  */
-interface Relation extends SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
+interface Relation extends SS_List, Filterable, Sortable, Limitable {
 
 	/**
 	 * Sets the ComponentSet to be the given ID list.

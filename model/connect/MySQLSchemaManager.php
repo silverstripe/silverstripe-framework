@@ -1,5 +1,10 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+use Config;
+use Convert;
+
+
 /**
  * Represents schema management object for MySQL
  *
@@ -12,7 +17,7 @@ class MySQLSchemaManager extends DBSchemaManager {
 	 * Identifier for this schema, used for configuring schema-specific table
 	 * creation options
 	 */
-	const ID = 'MySQLDatabase';
+	const ID = 'SilverStripe\Model\Connect\MySQLDatabase';
 
 	public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
@@ -195,8 +200,8 @@ class MySQLSchemaManager extends DBSchemaManager {
 	}
 
 	public function createDatabase($name) {
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 		$this->query("CREATE DATABASE \"$name\" DEFAULT CHARACTER SET {$charset} DEFAULT COLLATE {$collation}");
 	}
 
@@ -436,8 +441,8 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
 		// utf8 collate utf8_general_ci default '{$this->default}'");
 		$valuesString = implode(",", Convert::raw2sql($values['enums'], true));
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 		return "enum($valuesString) character set {$charset} collate {$collation}" . $this->defaultClause($values);
 	}
 
@@ -454,8 +459,8 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//DB::requireField($this->tableName, $this->name, "enum('" . implode("','", $this->enum) . "') character set
 		//utf8 collate utf8_general_ci default '{$this->default}'");
 		$valuesString = implode(",", Convert::raw2sql($values['enums'], true));
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 		return "set($valuesString) character set {$charset} collate {$collation}" . $this->defaultClause($values);
 	}
 
@@ -510,8 +515,8 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//For reference, this is what typically gets passed to this function:
 		//$parts=Array('datatype'=>'mediumtext', 'character set'=>'utf8', 'collate'=>'utf8_general_ci');
 		//DB::requireField($this->tableName, $this->name, "mediumtext character set utf8 collate utf8_general_ci");
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 		return 'mediumtext character set ' . $charset . ' collate ' . $collation . $this->defaultClause($values);
 	}
 
@@ -542,8 +547,8 @@ class MySQLSchemaManager extends DBSchemaManager {
 		//DB::requireField($this->tableName, $this->name, "varchar($this->size) character set utf8 collate
 		// utf8_general_ci");
 		$default = $this->defaultClause($values);
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 		return "varchar({$values['precision']}) character set {$charset} collate {$collation}{$default}";
 	}
 

@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Model\DataObject;
 class XMLDataFormatterTest extends SapphireTest {
 	protected $arguments, $contents, $tagName;
 

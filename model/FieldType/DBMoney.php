@@ -2,11 +2,11 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use i18n;
 use Zend_Currency;
 use MoneyField;
-use DataObject;
+
 
 /**
  * Partially based on Zend_Currency.

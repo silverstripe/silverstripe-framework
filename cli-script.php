@@ -13,6 +13,9 @@
 /**
  * Ensure that people can't access this from a web-server
  */
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataModel;
 if(PHP_SAPI != "cli" && PHP_SAPI  != "cgi" && PHP_SAPI != "cgi-fcgi") {
 	echo "cli-script.php can't be run from a web request, you have to run it on the command-line.";
 	die();

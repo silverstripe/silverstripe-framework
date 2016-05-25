@@ -2,6 +2,8 @@
 
 use SilverStripe\Model\FieldType\DBField;
 use SilverStripe\Model\FieldType\DBDatetime;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * Tests for {@link Datetime} class.

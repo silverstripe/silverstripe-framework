@@ -2,10 +2,13 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use NumericField;
-use ArrayList;
+
 use ArrayData;
+use SilverStripe\Model\DB;
+use SilverStripe\Model\ArrayList;
+
 
 /**
  * Represents a signed 32 bit integer field.

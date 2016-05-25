@@ -5,6 +5,8 @@
  */
 
 // Make sure display_errors is on
+
+use SilverStripe\Model\DB;
 ini_set('display_errors', 1);
 
 // Fake the script name and base

@@ -5,6 +5,8 @@
  * @package framework
  * @subpackage filesystem
  */
+
+use SilverStripe\Model\DataObject;
 class Filesystem extends Object {
 
 	/**

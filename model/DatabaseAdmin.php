@@ -1,4 +1,17 @@
 <?php
+
+namespace SilverStripe\Model;
+use SapphireTest;
+use Director;
+use Security;
+use Permission;
+use SS_ClassLoader;
+use ClassInfo;
+use TestOnly;
+use Deprecation;
+use Controller;
+
+
 // Include the DB class
 require_once("model/DB.php");
 
@@ -53,13 +66,13 @@ class DatabaseAdmin extends Controller {
 		// Get all root data objects
 		$allClasses = get_declared_classes();
 		foreach($allClasses as $class) {
-			if(get_parent_class($class) == "DataObject")
+			if(get_parent_class($class) == 'SilverStripe\Model\DataObject')
 				$rootClasses[$class] = array();
 		}
 
 		// Assign every other data object one of those
 		foreach($allClasses as $class) {
-			if(!isset($rootClasses[$class]) && is_subclass_of($class, "DataObject")) {
+			if(!isset($rootClasses[$class]) && is_subclass_of($class, 'SilverStripe\Model\DataObject')) {
 				foreach($rootClasses as $rootClass => $dummy) {
 					if(is_subclass_of($class, $rootClass)) {
 						$rootClasses[$rootClass][] = $class;
@@ -125,7 +138,7 @@ class DatabaseAdmin extends Controller {
 	 * Check if database needs to be built, and build it if it does.
 	 */
 	public static function autoBuild() {
-		$dataClasses = ClassInfo::subclassesFor('DataObject');
+		$dataClasses = ClassInfo::subclassesFor('SilverStripe\Model\DataObject');
 		$lastBuilt = self::lastBuilt();
 		foreach($dataClasses as $class) {
 			if(filemtime(getClassFile($class)) > $lastBuilt) {
@@ -141,7 +154,7 @@ class DatabaseAdmin extends Controller {
 	 * DataObject classes
 	 */
 	public function buildDefaults() {
-		$dataClasses = ClassInfo::subclassesFor('DataObject');
+		$dataClasses = ClassInfo::subclassesFor('SilverStripe\Model\DataObject');
 		array_shift($dataClasses);
 		foreach($dataClasses as $dataClass){
 			singleton($dataClass)->requireDefaultRecords();
@@ -215,7 +228,7 @@ class DatabaseAdmin extends Controller {
 		}
 
 		// Build the database.  Most of the hard work is handled by DataObject
-		$dataClasses = ClassInfo::subclassesFor('DataObject');
+		$dataClasses = ClassInfo::subclassesFor('SilverStripe\Model\DataObject');
 		array_shift($dataClasses);
 
 		if(!$quiet) {
@@ -299,7 +312,7 @@ class DatabaseAdmin extends Controller {
 	public function cleanup() {
 		$allClasses = get_declared_classes();
 		foreach($allClasses as $class) {
-			if(get_parent_class($class) == 'DataObject') {
+			if(get_parent_class($class) == 'SilverStripe\Model\DataObject') {
 				$baseClasses[] = $class;
 			}
 		}

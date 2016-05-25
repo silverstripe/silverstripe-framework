@@ -7,6 +7,8 @@
  * @package forms
  * @subpackage fields-gridfield
  */
+
+use SilverStripe\Model\DataObject;
 class GridFieldLevelup extends Object implements GridField_HTMLProvider {
 
 	/**

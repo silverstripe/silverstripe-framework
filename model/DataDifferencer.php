@@ -1,6 +1,14 @@
 <?php
 
+namespace SilverStripe\Model;
+
 use SilverStripe\Model\FieldType\DBField;
+use Diff;
+use Image;
+use Convert;
+use ArrayData;
+use ViewableData;
+
 
 /**
  * Utility class to render views of the differences between two data objects (or two versions of the

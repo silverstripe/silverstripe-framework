@@ -6,6 +6,8 @@
  * @package framework
  * @subpackage admin
  */
+
+use SilverStripe\Model\DataObject;
 class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	private static $allowed_actions = [

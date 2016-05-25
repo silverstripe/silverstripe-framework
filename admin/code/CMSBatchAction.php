@@ -13,6 +13,9 @@
  * @package framework
  * @subpackage admin
  */
+
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\DataObject;
 abstract class CMSBatchAction extends Object {
 
 	protected $managedClass = 'SiteTree';

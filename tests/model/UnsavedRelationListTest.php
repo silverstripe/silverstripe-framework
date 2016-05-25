@@ -1,5 +1,7 @@
 <?php
 
+
+use SilverStripe\Model\DataObject;
 class UnsavedRelationListTest extends SapphireTest {
 	protected static $fixture_file = 'UnsavedRelationListTest.yml';
 
@@ -242,7 +244,7 @@ class UnsavedRelationListTest_DataObject extends DataObject implements TestOnly 
 
 	private static $has_one = array(
 		'Parent' => 'UnsavedRelationListTest_DataObject',
-		'RelatedObject' => 'DataObject'
+		'RelatedObject' => 'SilverStripe\Model\DataObject'
 	);
 
 	private static $has_many = array(

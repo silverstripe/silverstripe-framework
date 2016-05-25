@@ -11,6 +11,8 @@
  * @package forms
  * @subpackage fields-formattedinput
  */
+
+use SilverStripe\Model\DataObjectInterface;
 class PhoneNumberField extends FormField {
 
 	protected $areaCode;

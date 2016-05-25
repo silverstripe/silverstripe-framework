@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\DataObject;
 class GridFieldTest extends SapphireTest {
 
 	/**
@@ -72,8 +76,8 @@ class GridFieldTest extends SapphireTest {
 	public function testGridFieldModelClass() {
 		$obj = new GridField('testfield', 'testfield', Member::get());
 		$this->assertEquals('Member', $obj->getModelClass(), 'Should return Member');
-		$obj->setModelClass('DataModel');
-		$this->assertEquals('DataModel', $obj->getModelClass(), 'Should return Member');
+		$obj->setModelClass('SilverStripe\Model\DataModel');
+		$this->assertEquals('SilverStripe\Model\DataModel', $obj->getModelClass(), 'Should return Member');
 	}
 
 	/**

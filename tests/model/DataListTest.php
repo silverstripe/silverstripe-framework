@@ -4,6 +4,10 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\DB;
+use SilverStripe\Model\Filterable;
 class DataListTest extends SapphireTest {
 
 	// Borrow the model from DataObjectTest
@@ -1054,7 +1058,7 @@ class DataListTest extends SapphireTest {
 
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals($expected, $result, 'List should only contain comments from Team 1 (Joe and Bob)');
-		$this->assertTrue($list instanceof SS_Filterable, 'The List should be of type SS_Filterable');
+		$this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
 	}
 
 	/**

@@ -14,6 +14,9 @@
  * @subpackage core
  */
 
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataModel;
 if (version_compare(phpversion(), '5.5.0', '<')) {
 	header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
 	echo str_replace('$PHPVersion', phpversion(), file_get_contents("dev/install/php5-required.html"));

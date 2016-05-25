@@ -1,6 +1,8 @@
 <?php
 
 use Filesystem as SS_Filesystem;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * @author Ingo Schommer (ingo at silverstripe dot com)

@@ -1,6 +1,9 @@
 <?php
 
 use Filesystem as SS_Filesystem;
+use SilverStripe\Model\DataDifferencer;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * @package framework

@@ -4,6 +4,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class ClassInfoTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
@@ -88,7 +90,7 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('ClassInfoTest_GRANDChildClass'));
 
 		$this->setExpectedException('InvalidArgumentException');
-		ClassInfo::baseDataClass('DataObject');
+		ClassInfo::baseDataClass('SilverStripe\Model\DataObject');
 	}
 
 	/**
@@ -99,7 +101,7 @@ class ClassInfoTest extends SapphireTest {
 		$expect = ArrayLib::valuekey(array(
 			'Object',
 			'ViewableData',
-			'DataObject',
+			'SilverStripe\Model\DataObject',
 			'ClassInfoTest_BaseClass',
 			'ClassInfoTest_ChildClass',
 		));
@@ -182,7 +184,7 @@ class ClassInfoTest extends SapphireTest {
 		);
 
 		// existing behaviour fallback to DataObject? Should be null.
-		$this->assertEquals('DataObject',
+		$this->assertEquals('SilverStripe\Model\DataObject',
 			ClassInfo::table_for_object_field('ClassInfoTest_BaseClass', 'Nonexist')
 		);
 

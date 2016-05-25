@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Model\FieldType\DBComposite;
+use SilverStripe\Model\DB;
+
 
 /**
  * Subclass of {@link DataList} representing a many_many relation.

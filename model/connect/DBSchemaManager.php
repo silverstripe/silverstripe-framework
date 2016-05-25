@@ -1,5 +1,17 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
+use Config;
+use Object;
+use PrimaryKey;
+use Director;
+use SilverStripe\Model\Connect\Database;
+use Exception;
+
+
+
+
 /**
  * Represents and handles all schema management for a database
  *
@@ -40,7 +52,7 @@ abstract class DBSchemaManager {
 	 *
 	 * @param SS_Database $connector
 	 */
-	public function setDatabase(SS_Database $database) {
+	public function setDatabase(Database $database) {
 		$this->database = $database;
 	}
 
@@ -304,7 +316,7 @@ abstract class DBSchemaManager {
 			$this->transCreateTable($table, $options, $extensions);
 			$this->alterationMessage("Table $table: created", "created");
 		} else {
-			if (Config::inst()->get('DBSchemaManager', 'check_and_repair_on_build')) {
+			if (Config::inst()->get('SilverStripe\Model\Connect\DBSchemaManager', 'check_and_repair_on_build')) {
 				$this->checkAndRepairTable($table, $options);
 			}
 

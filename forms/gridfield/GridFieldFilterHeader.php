@@ -8,6 +8,10 @@
  * @package forms
  * @subpackage fields-gridfield
  */
+
+use SilverStripe\Model\Filterable;
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\ArrayList;
 class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
 
 	/**
@@ -40,7 +44,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	 * Returns false if it's a bad data type, and if appropriate, throws an exception.
 	 */
 	protected function checkDataType($dataList) {
-		if($dataList instanceof SS_Filterable) {
+		if($dataList instanceof Filterable) {
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {

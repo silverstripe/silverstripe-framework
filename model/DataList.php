@@ -1,4 +1,25 @@
 <?php
+
+namespace SilverStripe\Model;
+use InvalidArgumentException;
+use LogicException;
+use ClassInfo;
+use Debug;
+use SS_Map;
+use Injector;
+use ArrayIterator;
+use ViewableData;
+
+
+
+use SilverStripe\Model\Filterable;
+use SilverStripe\Model\Sortable;
+use SilverStripe\Model\Limitable;
+use Exception;
+
+
+
+
 /**
  * Implements a "lazy loading" DataObjectSet.
  * Uses {@link DataQuery} to do the actual query generation.
@@ -22,7 +43,7 @@
  * @package framework
  * @subpackage model
  */
-class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
+class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable {
 	/**
 	 * The DataObject class name that this data list is querying
 	 *

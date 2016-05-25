@@ -12,6 +12,8 @@
  * @package framework
  * @subpackage admin
  */
+
+use SilverStripe\Model\ArrayList;
 abstract class ModelAdmin extends LeftAndMain {
 
 	private static $url_rule = '/$ModelClass/$Action';

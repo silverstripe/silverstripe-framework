@@ -5,6 +5,9 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataObject;
 class PaginatedListTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataObjectTest.yml';

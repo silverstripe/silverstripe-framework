@@ -1,5 +1,7 @@
 <?php
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * Tests {@see AssetControlExtension}

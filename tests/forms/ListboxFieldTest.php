@@ -4,6 +4,8 @@
  * @subpackage tests
  */
 
+
+use SilverStripe\Model\DataObject;
 class ListboxFieldTest extends SapphireTest {
 
 	protected static $fixture_file = 'ListboxFieldTest.yml';

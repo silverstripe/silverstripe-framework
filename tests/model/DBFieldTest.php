@@ -3,6 +3,8 @@
 use SilverStripe\Model\FieldType\DBField;
 use SilverStripe\Model\FieldType\DBVarchar;
 use SilverStripe\Model\FieldType\DBText;
+use SilverStripe\Model\DB;
+
 
 /**
  *

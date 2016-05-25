@@ -3,6 +3,8 @@
 /**
  * Represents a field that allows users to select one or more items from a list
  */
+
+use SilverStripe\Model\SS_List;
 abstract class SelectField extends FormField {
 
 	/**

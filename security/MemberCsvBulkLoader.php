@@ -6,6 +6,8 @@
  * @package framework
  * @subpackage security
  */
+
+use SilverStripe\Model\DataObject;
 class MemberCsvBulkLoader extends CsvBulkLoader {
 
 	/**

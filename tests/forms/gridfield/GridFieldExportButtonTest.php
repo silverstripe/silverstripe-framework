@@ -4,6 +4,10 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataObject;
 class GridFieldExportButtonTest extends SapphireTest {
 
 	protected $list;

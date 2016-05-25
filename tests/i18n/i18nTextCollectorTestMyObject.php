@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class i18nTextCollectorTestMyObject extends DataObject implements TestOnly {
 	private static $db = array(
 		'FirstProperty' => 'Varchar',

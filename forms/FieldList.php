@@ -5,6 +5,8 @@
  * @package    forms
  * @subpackage fields-structural
  */
+
+use SilverStripe\Model\ArrayList;
 class FieldList extends ArrayList {
 
 	/**

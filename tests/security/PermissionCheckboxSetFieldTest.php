@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class PermissionCheckboxSetFieldTest extends SapphireTest {
 	protected static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';
 

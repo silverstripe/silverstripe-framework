@@ -20,6 +20,8 @@
  *
  * @method Member Member() Member object of the user trying to log in, only if Member with Email exists
  */
+
+use SilverStripe\Model\DataObject;
 class LoginAttempt extends DataObject {
 
 	private static $db = array(

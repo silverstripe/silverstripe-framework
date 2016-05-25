@@ -1,4 +1,22 @@
 <?php
+
+namespace SilverStripe\Model;
+use ArrayData;
+use ArrayIterator;
+use Debug;
+use SS_Map;
+use InvalidArgumentException;
+use LogicException;
+use ViewableData;
+
+
+
+use SilverStripe\Model\Filterable;
+use SilverStripe\Model\Sortable;
+use SilverStripe\Model\Limitable;
+
+
+
 /**
  * A list object that wraps around an array of objects or arrays.
  *
@@ -16,7 +34,7 @@
  * @package framework
  * @subpackage model
  */
-class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
+class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, Limitable {
 
 	/**
 	 * Holds the items in the list

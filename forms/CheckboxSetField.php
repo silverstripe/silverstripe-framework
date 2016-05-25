@@ -36,6 +36,8 @@
  * @package forms
  * @subpackage fields-basic
  */
+
+use SilverStripe\Model\ArrayList;
 class CheckboxSetField extends MultiSelectField {
 
 	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_MULTISELECT;

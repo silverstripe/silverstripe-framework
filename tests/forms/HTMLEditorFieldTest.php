@@ -1,6 +1,8 @@
 <?php
 
 use Filesystem as SS_Filesystem;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * @package framework

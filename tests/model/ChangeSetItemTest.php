@@ -1,5 +1,7 @@
 <?php
 
+
+use SilverStripe\Model\DataObject;
 class ChangeSetItemTest_Versioned extends DataObject {
 	private static $db = [
 		'Foo' => 'Int'

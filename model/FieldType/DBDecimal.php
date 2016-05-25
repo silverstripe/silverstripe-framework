@@ -2,8 +2,10 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use NumericField;
+use SilverStripe\Model\DB;
+
 
 /**
  * Represents a Decimal field.

@@ -7,7 +7,13 @@
  * @package framework
  * @subpackage model
  */
-abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sortable, SS_Filterable, SS_Limitable {
+
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\Sortable;
+use SilverStripe\Model\Filterable;
+use SilverStripe\Model\Limitable;
+abstract class SS_ListDecorator extends ViewableData implements SS_List, Sortable, Filterable, Limitable {
 
 	/**
 	 * @var SS_List

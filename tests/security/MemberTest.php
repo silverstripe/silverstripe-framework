@@ -3,6 +3,10 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataExtension;
 class MemberTest extends FunctionalTest {
 	protected static $fixture_file = 'MemberTest.yml';
 
@@ -169,7 +173,7 @@ class MemberTest extends FunctionalTest {
 		$this->assertTrue($passwords->current()->checkPassword('test1'), "Password test1 not found in MemberRecord");
 
 		$passwords->next();
-		$this->assertInstanceOf('DataObject', $passwords->current());
+		$this->assertInstanceOf('SilverStripe\Model\DataObject', $passwords->current());
 		$this->assertTrue($passwords->current()->checkPassword('1nitialPassword'),
 			"Password 1nitialPassword not found in MemberRecord");
 

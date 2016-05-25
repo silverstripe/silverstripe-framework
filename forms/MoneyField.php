@@ -2,6 +2,8 @@
 
 use SilverStripe\Model\FieldType\DBField;
 use SilverStripe\Model\FieldType\DBMoney;
+use SilverStripe\Model\DataObjectInterface;
+
 
 /**
  * A form field that can save into a {@link Money} database field.

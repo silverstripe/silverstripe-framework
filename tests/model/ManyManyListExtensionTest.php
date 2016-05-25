@@ -4,6 +4,9 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataExtension;
 class ManyManyListExtensionTest extends SapphireTest {
 
 	protected static $fixture_file = 'ManyManyListExtensionTest.yml';

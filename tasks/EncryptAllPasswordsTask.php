@@ -12,6 +12,8 @@
  * @package framework
  * @subpackage tasks
  */
+
+use SilverStripe\Model\DataObject;
 class EncryptAllPasswordsTask extends BuildTask {
 	protected $title = 'Encrypt all passwords tasks';
 

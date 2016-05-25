@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use CheckboxField;
 use DropdownField;
+use SilverStripe\Model\DB;
+
 
 /**
  * Represents a boolean field.

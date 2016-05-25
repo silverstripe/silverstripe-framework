@@ -8,6 +8,8 @@
  * @package forms
  * @subpackage fields-formattedinput
  */
+
+use SilverStripe\Model\DataObject;
 class NumericField extends TextField {
 
 	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DECIMAL;

@@ -6,6 +6,10 @@
  * @package forms
  * @subpackage fields-gridfield
  */
+
+use SilverStripe\Model\Limitable;
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\UnsavedRelationList;
 class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipulator, GridField_ActionProvider {
 
 	/**
@@ -67,7 +71,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * Returns false if it's a bad data type, and if appropriate, throws an exception.
 	 */
 	protected function checkDataType($dataList) {
-		if($dataList instanceof SS_Limitable) {
+		if($dataList instanceof Limitable) {
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {
@@ -146,7 +150,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			$startRow = 0;
 		}
 
-		if(!($dataList instanceof SS_Limitable) || ($dataList instanceof UnsavedRelationList)) {
+		if(!($dataList instanceof Limitable) || ($dataList instanceof UnsavedRelationList)) {
 			return $dataList;
 		}
 

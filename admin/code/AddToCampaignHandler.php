@@ -2,6 +2,8 @@
 
 use SilverStripe\Framework\Core\Injectable;
 use SilverStripe\Model\FieldType\DBHTMLText;
+use SilverStripe\Model\DataObject;
+
 
 
 /**
@@ -97,7 +99,7 @@ class AddToCampaignHandler {
 		$id = (int)$id;
 		$class = ClassInfo::class_name($class);
 
-		if (!$class || !is_subclass_of($class, 'DataObject') || !Object::has_extension($class, 'Versioned')) {
+		if (!$class || !is_subclass_of($class, 'SilverStripe\Model\DataObject') || !Object::has_extension($class, 'Versioned')) {
 			$this->editForm->httpError(400, _t(
 				'AddToCampaign.ErrorGeneral',
 				'We apologise, but there was an error'

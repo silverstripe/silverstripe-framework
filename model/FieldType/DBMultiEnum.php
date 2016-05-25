@@ -2,8 +2,10 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use CheckboxSetField;
+use SilverStripe\Model\DB;
+
 
 /**
  * @package framework
@@ -36,8 +38,8 @@ class DBMultiEnum extends DBEnum {
 	}
 
 	public function requireField(){
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
-		$collation = Config::inst()->get('MySQLDatabase', 'collation');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
+		$collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'collation');
 		$values=array(
 			'type'=>'set',
 			'parts'=>array(

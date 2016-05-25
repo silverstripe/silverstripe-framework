@@ -1,6 +1,13 @@
 <?php
 
 use SilverStripe\Filesystem\Storage\AssetContainer;
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataObjectInterface;
+use SilverStripe\Model\UnsavedRelationList;
+use SilverStripe\Model\DataList;
+
 
 /**
  * Field for uploading single or multiple files of all types, including images.

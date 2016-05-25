@@ -5,6 +5,8 @@
  *
  * @todo test Director::alternateBaseFolder()
  */
+
+use SilverStripe\Model\DataModel;
 class DirectorTest extends SapphireTest {
 
 	protected static $originalRequestURI;
@@ -566,7 +568,7 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 	public $failPre = false;
 	public $failPost = false;
 
-	public function preRequest(\SS_HTTPRequest $request, \Session $session, \DataModel $model) {
+	public function preRequest(\SS_HTTPRequest $request, \Session $session, DataModel $model) {
 		++$this->preCalls;
 
 		if ($this->failPre) {
@@ -574,7 +576,7 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 		}
 	}
 
-	public function postRequest(\SS_HTTPRequest $request, \SS_HTTPResponse $response, \DataModel $model) {
+	public function postRequest(\SS_HTTPRequest $request, \SS_HTTPResponse $response, DataModel $model) {
 		++$this->postCalls;
 
 		if ($this->failPost) {

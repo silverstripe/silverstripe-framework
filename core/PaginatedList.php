@@ -5,6 +5,9 @@
  * @package framework
  * @subpackage view
  */
+
+use SilverStripe\Model\SS_List;
+use SilverStripe\Model\ArrayList;
 class PaginatedList extends SS_ListDecorator {
 
 	protected $request;

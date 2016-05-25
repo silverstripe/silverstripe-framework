@@ -1,4 +1,19 @@
 <?php
+
+namespace SilverStripe\Model;
+
+use Deprecation;
+use SQLExpression;
+use Director;
+use InvalidArgumentException;
+use Config;
+use LogicException;
+use Cookie;
+use Injector;
+use SilverStripe\Model\Connect\Database;
+
+
+
 /**
  * Global database interface, complete with static methods.
  * Use this class for interacting with the database.
@@ -45,14 +60,14 @@ class DB {
 	 * be accessed through DB::get_conn($name).  This is useful when you have an application that
 	 * needs to connect to more than one database.
 	 */
-	public static function set_conn(SS_Database $connection, $name = 'default') {
+	public static function set_conn(Database $connection, $name = 'default') {
 		self::$connections[$name] = $connection;
 	}
 
 	/**
 	 * @deprecated since version 4.0 Use DB::set_conn instead
 	 */
-	public static function setConn(SS_Database $connection, $name = 'default') {
+	public static function setConn(Database $connection, $name = 'default') {
 		Deprecation::notice('4.0', 'Use DB::set_conn instead');
 		self::set_conn($connection, $name);
 	}

@@ -4,6 +4,10 @@
  * @subpackage tests
  */
 
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DataExtension;
 class VersionableExtensionsTest extends SapphireTest
 {
 	protected static $fixture_file = 'VersionableExtensionsFixtures.yml';

@@ -10,6 +10,9 @@
  * @package framework
  * @subpackage core
  */
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
 class ClassInfo {
 
 	/**
@@ -111,12 +114,12 @@ class ClassInfo {
 
 		$class = self::class_name($class);
 
-		if (!is_subclass_of($class, 'DataObject')) {
+		if (!is_subclass_of($class, 'SilverStripe\Model\DataObject')) {
 			throw new InvalidArgumentException("$class is not a subclass of DataObject");
 		}
 
 		while ($next = get_parent_class($class)) {
-			if ($next == 'DataObject') {
+			if ($next == 'SilverStripe\Model\DataObject') {
 				return $class;
 			}
 
@@ -307,7 +310,7 @@ class ClassInfo {
 		if(!$candidateClass
 			|| !$fieldName
 			|| !class_exists($candidateClass)
-			|| !is_subclass_of($candidateClass, 'DataObject')
+			|| !is_subclass_of($candidateClass, 'SilverStripe\Model\DataObject')
 		) {
 			return null;
 		}
@@ -323,7 +326,7 @@ class ClassInfo {
 		}
 
 		// Find regular field
-		while($candidateClass && $candidateClass != 'DataObject' && $exists) {
+		while($candidateClass && $candidateClass != 'SilverStripe\Model\DataObject' && $exists) {
 			if( DataObject::has_own_table($candidateClass)
 				&& DataObject::has_own_table_database_field($candidateClass, $fieldName)
 			) {

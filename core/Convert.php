@@ -20,6 +20,8 @@
  * @package framework
  * @subpackage misc
  */
+
+use SilverStripe\Model\DB;
 class Convert {
 
 	/**

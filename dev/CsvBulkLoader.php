@@ -14,6 +14,8 @@
  * @todo Support for deleting existing records not matched in the import
  * (through relation checks)
  */
+
+use SilverStripe\Model\DataObject;
 class CsvBulkLoader extends BulkLoader {
 
 	/**

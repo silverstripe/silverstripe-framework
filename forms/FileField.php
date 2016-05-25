@@ -41,6 +41,8 @@
  * @package forms
  * @subpackage fields-files
  */
+
+use SilverStripe\Model\DataObjectInterface;
 class FileField extends FormField {
 
 	/**

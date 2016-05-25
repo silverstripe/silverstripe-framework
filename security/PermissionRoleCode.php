@@ -11,6 +11,8 @@
  *
  * @method PermissionRole Role()
  */
+
+use SilverStripe\Model\DataObject;
 class PermissionRoleCode extends DataObject {
 	private static $db = array(
 		"Code" => "Varchar",

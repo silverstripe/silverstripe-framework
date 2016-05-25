@@ -4,6 +4,10 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\DB;
 class CheckboxSetFieldTest extends SapphireTest {
 
 	protected static $fixture_file = 'CheckboxSetFieldTest.yml';

@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
 /**
  * MySQL connector class.
  *
@@ -8,7 +10,14 @@
  * @package framework
  * @subpackage model
  */
-class MySQLDatabase extends SS_Database {
+
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\ArrayList;
+use Config;
+use Exception;
+use PaginatedList;
+
+class MySQLDatabase extends Database {
 
 	/**
 	 * Default connection charset (may be overridden in $databaseConfig)
@@ -26,14 +35,14 @@ class MySQLDatabase extends SS_Database {
 
 		// Set charset
 		if( empty($parameters['charset'])
-			&& ($charset = Config::inst()->get('MySQLDatabase', 'connection_charset'))
+			&& ($charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'connection_charset'))
 		) {
 			$parameters['charset'] = $charset;
 		}
 
 		// Set collation
 		if( empty($parameters['collation'])
-			&& ($collation = Config::inst()->get('MySQLDatabase', 'connection_collation'))
+			&& ($collation = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'connection_collation'))
 		) {
 			$parameters['collation'] = $collation;
 		}
@@ -158,7 +167,7 @@ class MySQLDatabase extends SS_Database {
 			$baseClasses[$class] = '"' . $class . '"';
 		}
 
-		$charset = Config::inst()->get('MySQLDatabase', 'charset');
+		$charset = Config::inst()->get('SilverStripe\Model\Connect\MySQLDatabase', 'charset');
 
 		// Make column selection lists
 		$select = array(

@@ -6,6 +6,9 @@
  * @package framework
  * @subpackage formatters
  */
+
+use SilverStripe\Model\DataObjectInterface;
+use SilverStripe\Model\SS_List;
 abstract class DataFormatter extends Object {
 
 	/**

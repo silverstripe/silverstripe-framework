@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
-use DataObject;
+
+
 use ClassInfo;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * A special ForeignKey class that handles relations with arbitrary class types
@@ -16,7 +18,7 @@ class DBPolymorphicForeignKey extends DBComposite {
 
 	private static $composite_db = array(
 		'ID' => 'Int',
-		'Class' => 'DBClassName("DataObject")'
+		'Class' => 'DBClassName("SilverStripe\\\\Model\\\\DataObject")'
 	);
 
 	public function scaffoldFormField($title = null, $params = null) {
@@ -79,7 +81,7 @@ class DBPolymorphicForeignKey extends DBComposite {
 	public function getValue() {
 		$id = $this->getIDValue();
 		$class = $this->getClassValue();
-		if($id && $class && is_subclass_of($class, 'DataObject')) {
+		if($id && $class && is_subclass_of($class, 'SilverStripe\Model\DataObject')) {
 			return DataObject::get_by_id($class, $id);
 		}
 	}

@@ -4,6 +4,10 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataExtension;
 class UploadFieldTest extends FunctionalTest {
 
 	protected static $fixture_file = 'UploadFieldTest.yml';

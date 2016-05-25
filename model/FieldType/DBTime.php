@@ -2,10 +2,12 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use Convert;
 use Zend_Date;
 use TimeField;
+use SilverStripe\Model\DB;
+
 
 
 /**

@@ -1,12 +1,14 @@
 <?php
 
 namespace DataObjectTest;
+use SilverStripe\Model\DataObject;
+
 
 /**
  * Right now this is only used in DataListTest, but extending it to DataObjectTest in the future would make sense.
  * Note that it was deliberated named to include "\N" to try and trip bad code up.
  */
-class NamespacedClass extends \DataObject implements \TestOnly {
+class NamespacedClass extends DataObject implements \TestOnly {
 	private static $db = array(
 		'Name' => 'Varchar',
 	);
@@ -16,13 +18,13 @@ class NamespacedClass extends \DataObject implements \TestOnly {
 	);
 }
 
-class RelationClass extends \DataObject implements \TestOnly {
+class RelationClass extends DataObject implements \TestOnly {
 
 	private static $db = array(
 		'Title' => 'Varchar'
 	);
 
 	private static $has_one = array(
-		'Parent' => 'DataObject'
+		'Parent' => 'SilverStripe\Model\DataObject'
 	);
 }

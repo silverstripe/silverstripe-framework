@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\DataObject;
 class ComponentSetTest extends SapphireTest {
 
 	protected static $fixture_file = 'ComponentSetTest.yml';

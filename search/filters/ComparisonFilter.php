@@ -13,6 +13,8 @@
  * @package framework
  * @subpackage search
  */
+
+use SilverStripe\Model\DataQuery;
 abstract class ComparisonFilter extends SearchFilter {
 
 	/**

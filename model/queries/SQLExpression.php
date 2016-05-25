@@ -7,6 +7,8 @@
  * @package framework
  * @subpackage model
  */
+
+use SilverStripe\Model\DB;
 abstract class SQLExpression {
 
 	/**

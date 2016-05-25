@@ -1,5 +1,11 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+
+use SilverStripe\Model\Connect\Query;
+
+
+
 /**
  * Provides a record-view for mysqli statements
  *
@@ -9,7 +15,7 @@
  * @package framework
  * @subpackage model
  */
-class MySQLStatement extends SS_Query {
+class MySQLStatement extends Query {
 
 	/**
 	 * The related mysqli statement object if generated using a prepared query

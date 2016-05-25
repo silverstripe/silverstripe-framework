@@ -11,6 +11,8 @@
  *
  * @subpackage control
  */
+
+use SilverStripe\Model\DataModel;
 class Controller extends RequestHandler implements TemplateGlobalProvider {
 
 	/**

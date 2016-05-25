@@ -1,5 +1,13 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+use SQLFormatter;
+
+use Config;
+use SilverStripe\Model\Connect\DatabaseException;
+
+
+
 /**
  * Represents an object responsible for wrapping DB connector api
  *
@@ -52,7 +60,7 @@ abstract class DBConnector {
 		if($errorLevel === E_USER_ERROR) {
 			// Treating errors as exceptions better allows for responding to errors
 			// in code, such as credential checking during installation
-			throw new SS_DatabaseException($msg, 0, null, $sql, $parameters);
+			throw new DatabaseException($msg, 0, null, $sql, $parameters);
 		} else {
 			user_error($msg, $errorLevel);
 		}

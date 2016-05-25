@@ -1,5 +1,9 @@
 <?php
 
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\Connect\MySQLDatabase;
+use SilverStripe\Model\DataObject;
 class FulltextFilterTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
@@ -115,7 +119,7 @@ class FulltextFilterTest_DataObject extends DataObject implements TestOnly {
 	);
 
 	private static $create_table_options = array(
-		"MySQLDatabase" => "ENGINE=MyISAM",
+		'SilverStripe\Model\Connect\MySQLDatabase' => "ENGINE=MyISAM",
 	);
 
 }

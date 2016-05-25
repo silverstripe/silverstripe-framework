@@ -14,6 +14,9 @@
  * @subpackage bulkloading
  * @author Ingo Schommer, Silverstripe Ltd. (<firstname>@silverstripe.com)
  */
+
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\ArrayList;
 abstract class BulkLoader extends ViewableData {
 
 	/**

@@ -24,6 +24,9 @@
  * @package framework
  * @subpackage core
  */
+
+use SilverStripe\Model\DB;
+use SilverStripe\Model\DataObject;
 class FixtureFactory {
 
 	/**

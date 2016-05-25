@@ -14,6 +14,8 @@
  * @property string $RememberLoginHash
  */
 
+
+use SilverStripe\Model\DataObject;
 class RememberLoginHash extends DataObject {
 
 	private static $db = array (

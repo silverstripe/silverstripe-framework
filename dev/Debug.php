@@ -23,6 +23,8 @@
  * @package framework
  * @subpackage dev
  */
+
+use SilverStripe\Model\DB;
 class Debug {
 
 	/**

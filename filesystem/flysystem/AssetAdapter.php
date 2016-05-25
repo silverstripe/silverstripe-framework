@@ -3,6 +3,8 @@
 namespace SilverStripe\Filesystem\Flysystem;
 
 use League\Flysystem\Adapter\Local;
+use SilverStripe\Model\ArrayList;
+
 
 /**
  * Adapter for local filesystem based on assets directory
@@ -121,7 +123,7 @@ class AssetAdapter extends Local {
 	 */
 	protected function renderTemplate($template) {
 		// Build allowed extensions
-		$allowedExtensions = new \ArrayList();
+		$allowedExtensions = new ArrayList();
 		foreach(\File::config()->allowed_extensions as $extension) {
 			if($extension) {
 				$allowedExtensions->push(new \ArrayData(array(

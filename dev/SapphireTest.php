@@ -2,6 +2,11 @@
 
 use SilverStripe\Model\FieldType\DBField;
 use SilverStripe\Model\FieldType\DBDatetime;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\Hierarchy;
+use SilverStripe\Model\DataModel;
+use SilverStripe\Model\DB;
+
 
 /**
  * Test case class for the Sapphire framework.
@@ -232,7 +237,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				self::create_temp_db();
 			}
 
-			singleton('DataObject')->flushCache();
+			singleton('SilverStripe\Model\DataObject')->flushCache();
 
 			self::empty_temp_db();
 
@@ -866,7 +871,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			if($dbName && DB::get_conn()->databaseExists($dbName)) {
 				// Some DataExtensions keep a static cache of information that needs to
 				// be reset whenever the database is killed
-				foreach(ClassInfo::subclassesFor('DataExtension') as $class) {
+				foreach(ClassInfo::subclassesFor('SilverStripe\Model\DataExtension') as $class) {
 					$toCall = array($class, 'on_db_reset');
 					if(is_callable($toCall)) call_user_func($toCall);
 				}
@@ -886,7 +891,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			// Some DataExtensions keep a static cache of information that needs to
 			// be reset whenever the database is cleaned out
-			$classes = array_merge(ClassInfo::subclassesFor('DataExtension'), ClassInfo::subclassesFor('DataObject'));
+			$classes = array_merge(ClassInfo::subclassesFor('SilverStripe\Model\DataExtension'), ClassInfo::subclassesFor('SilverStripe\Model\DataObject'));
 			foreach($classes as $class) {
 				$toCall = array($class, 'on_db_reset');
 				if(is_callable($toCall)) call_user_func($toCall);
@@ -946,7 +951,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
 			Injector::inst()->unregisterAllObjects();
 
-			$dataClasses = ClassInfo::subclassesFor('DataObject');
+			$dataClasses = ClassInfo::subclassesFor('SilverStripe\Model\DataObject');
 			array_shift($dataClasses);
 
 			DB::quiet();
@@ -971,7 +976,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			});
 
 			ClassInfo::reset_db_cache();
-			singleton('DataObject')->flushCache();
+			singleton('SilverStripe\Model\DataObject')->flushCache();
 		}
 	}
 

@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Model;
+
 /**
  * DataObjectInterface is an interface that other data systems in your application can implement in order to behave in
  * a manner similar to DataObject.

@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\ArrayList;
 class RSSFeedTest extends SapphireTest {
 
 	protected static $original_host;

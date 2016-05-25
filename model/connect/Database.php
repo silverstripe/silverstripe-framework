@@ -7,7 +7,21 @@
  * @package framework
  * @subpackage model
  */
-abstract class SS_Database {
+
+namespace SilverStripe\Model\Connect;
+use Director;
+use Debug;
+use SQLUpdate;
+use SQLInsert;
+use BadMethodCallException;
+use Deprecation;
+use SQLExpression;
+use Exception;
+
+
+
+
+abstract class Database {
 
 	/**
 	 * Database connector object

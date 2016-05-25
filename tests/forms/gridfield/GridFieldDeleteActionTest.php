@@ -1,5 +1,8 @@
 <?php
 
+
+use SilverStripe\Model\DataList;
+use SilverStripe\Model\DataObject;
 class GridFieldDeleteActionTest extends SapphireTest {
 
 	/** @var ArrayList */

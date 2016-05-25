@@ -19,6 +19,10 @@
  * @method HasManyList Groups() List of child groups
  * @method ManyManyList Roles() List of PermissionRoles
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\UnsavedRelationList;
 class Group extends DataObject {
 
 	private static $db = array(
@@ -45,7 +49,7 @@ class Group extends DataObject {
 	);
 
 	private static $extensions = array(
-		"Hierarchy",
+		'SilverStripe\Model\Hierarchy',
 	);
 
 	public function populateDefaults() {
@@ -459,7 +463,7 @@ class Group extends DataObject {
 	 * Filters to only those groups that the current user can edit
 	 */
 	public function AllChildrenIncludingDeleted() {
-		$extInstance = $this->getExtensionInstance('Hierarchy');
+		$extInstance = $this->getExtensionInstance('SilverStripe\Model\Hierarchy');
 		$extInstance->setOwner($this);
 		$children = $extInstance->AllChildrenIncludingDeleted();
 		$extInstance->clearOwner();

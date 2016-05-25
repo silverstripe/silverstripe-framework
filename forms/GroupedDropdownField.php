@@ -48,6 +48,8 @@
  * @package forms
  * @subpackage fields-basic
  */
+
+use SilverStripe\Model\ArrayList;
 class GroupedDropdownField extends DropdownField {
 
 	/**

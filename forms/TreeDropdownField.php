@@ -40,6 +40,8 @@
  * @subpackage fields-relational
  */
 
+
+use SilverStripe\Model\DataObject;
 class TreeDropdownField extends FormField {
 
 	private static $url_handlers = array(
@@ -336,7 +338,7 @@ class TreeDropdownField extends FormField {
 		// Limit the amount of nodes shown for performance reasons.
 		// Skip the check if we're filtering the tree, since its not clear how many children will
 		// match the filter criteria until they're queried (and matched up with previously marked nodes).
-		$nodeThresholdLeaf = Config::inst()->get('Hierarchy', 'node_threshold_leaf');
+		$nodeThresholdLeaf = Config::inst()->get('SilverStripe\Model\Hierarchy', 'node_threshold_leaf');
 		if($nodeThresholdLeaf && !$this->filterCallback && !$this->search) {
 			$className = $this->sourceObject;
 			$nodeCountCallback = function($parent, $numChildren) use($className, $nodeThresholdLeaf) {

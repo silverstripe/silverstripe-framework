@@ -1,5 +1,10 @@
 <?php
 
+namespace SilverStripe\Model\Connect;
+use Convert;
+use Iterator;
+
+
 /**
  * Abstract query-result class.
  * Once again, this should be subclassed by an actual database implementation.  It will only
@@ -12,7 +17,7 @@
  * @package framework
  * @subpackage model
  */
-abstract class SS_Query implements Iterator {
+abstract class Query implements Iterator {
 
 	/**
 	 * The current record in the interator.

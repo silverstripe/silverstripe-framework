@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Model;
+
 /**
  * Additional interface for {@link SS_List} classes that are limitable - able to have a subset of the list extracted.
  *
@@ -10,7 +12,7 @@
  * @package framework
  * @subpackage model
  */
-interface SS_Limitable extends SS_List {
+interface Limitable extends SS_List {
 
 	/**
 	 * Returns a new instance of this list where no more than $limit records are included.

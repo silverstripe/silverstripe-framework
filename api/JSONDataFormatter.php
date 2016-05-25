@@ -3,6 +3,9 @@
  * @package framework
  * @subpackage formatters
  */
+
+use SilverStripe\Model\DataObjectInterface;
+use SilverStripe\Model\SS_List;
 class JSONDataFormatter extends DataFormatter {
 
 	/**

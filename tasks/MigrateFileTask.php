@@ -6,6 +6,8 @@
  * @package framework
  * @subpackage filesystem
  */
+
+use SilverStripe\Model\DB;
 class MigrateFileTask extends BuildTask {
 
 	protected $title = 'Migrate File dataobjects from 3.x';

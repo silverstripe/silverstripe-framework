@@ -2,13 +2,15 @@
 
 namespace SilverStripe\Model\FieldType;
 
-use DB;
+
 use Convert;
 use Member;
 use DatetimeField;
 use Zend_Date;
 use TemplateGlobalProvider;
 use DateTime;
+use SilverStripe\Model\DB;
+
 
 /**
  * Represents a date-time field.

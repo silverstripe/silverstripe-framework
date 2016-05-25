@@ -3,6 +3,8 @@
  * @package framework
  * @subpackage security
  */
+
+use SilverStripe\Model\ArrayList;
 class MemberDatetimeOptionsetField extends OptionsetField {
 
 	const CUSTOM_OPTION = '__custom__';

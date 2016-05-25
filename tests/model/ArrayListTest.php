@@ -3,6 +3,10 @@
  * @package framework
  * @subpackage tests
  */
+
+use SilverStripe\Model\ArrayList;
+use SilverStripe\Model\DataObject;
+use SilverStripe\Model\Filterable;
 class ArrayListTest extends SapphireTest {
 
 	public function testPushOperator() {
@@ -657,7 +661,7 @@ class ArrayListTest extends SapphireTest {
 
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Clair');
-		$this->assertTrue($list instanceof SS_Filterable, 'The List should be of type SS_Filterable');
+		$this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
 	}
 
 	/**
