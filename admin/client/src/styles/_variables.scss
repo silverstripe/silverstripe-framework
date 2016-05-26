@@ -230,6 +230,7 @@ $border-radius-sm: .2rem;
 
 $component-active-color: #fff;
 $component-active-bg: $brand-primary;
+$component-active-bg-light: lighten($brand-primary, 42%);
 $component-active-border-color: $brand-primary;
 
 $caret-width: .3em;
