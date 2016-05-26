@@ -7,14 +7,18 @@ The requirements class takes care of including CSS and JavaScript into your appl
 coding any references in the `<head>` tag of your template, as it enables a more flexible handling through the 
 [api:Requirements] class.
 
+The examples below are using certain folder naming conventions (CSS files in `css/`, JavaScript files in `javascript/`).
+SilverStripe core modules like `cms` use a different naming convention (CSS and JavaScript files in `client/src/`).
+The `Requirements` class can work with arbitrary file paths.
+
 ## Template Requirements API
 
-**mysite/templates/Page.ss**
+**<my-module-dir>/templates/SomeTemplate.ss**
 
 	:::ss
-	<% require css("cms/css/TreeSelector.css") %>
-	<% require themedCSS("TreeSelector") %>
-	<% require javascript("cms/javascript/LeftAndMain.js") %>
+	<% require css("<my-module-dir>/css/some_file.css") %>
+	<% require themedCSS("some_themed_file") %>
+	<% require javascript("<my-module-dir>/javascript/some_file.js") %>
 
 <div class="alert" markdown="1">
 Requiring assets from the template is restricted compared to the PHP API.
@@ -33,8 +37,8 @@ as close to rendering as possible (e.g. in [api:FormField]).
         public function init() {
             parent::init();
 		
-            Requirements::javascript("cms/javascript/LeftAndMain.js");
-            Requirements::css("cms/css/TreeSelector.css");
+            Requirements::javascript("<my-module-dir>/javascript/some_file.js");
+            Requirements::css("<my-module-dir>/css/some_file.css");
         }
     }
 
@@ -47,7 +51,7 @@ If you're using the CSS method a second argument can be used. This argument defi
 `<link>` element, so you can define 'screen' or 'print' for example.
 
 	:::php
-    Requirements::css("cms/css/TreeSelector.css", "screen,projection");
+    Requirements::css("<my-module-dir>/css/some_file.css", "screen,projection");
 
 ### Javascript Files
 
@@ -59,12 +63,12 @@ JavaScript in a separate file and instead load, via search and replace, several 
 
 	:::php
     $vars = array(
-        "EditorCSS" => "cms/css/editor.css",
+        "MemberID" => Member::currentUserID(),
     );
 
-	Requirements::javascriptTemplate("cms/javascript/editor.template.js", $vars);
+	Requirements::javascriptTemplate("<my-module-dir>/javascript/some_file.js", $vars);
 
-In this example, `editor.template.js` is expected to contain a replaceable variable expressed as `$EditorCSS`.
+In this example, `some_file.js` is expected to contain a replaceable variable expressed as `MemberID`.
 
 If you are using front-end script combination mechanisms, you can optionally declare
 that your included files provide these scripts. This will ensure that subsequent
@@ -73,12 +77,12 @@ files.
 
 
     :::php
-    Requirements::javascript('mysite/js/dist/bundle.js', ['provides' => [
-        'mysite/js/jquery.js'
-        'mysite/js/src/main.js',
-        'mysite/js/src/functions.js'
+    Requirements::javascript('<my-module-dir>/javascript/dist/bundle.js', ['provides' => [
+        '<my-module-dir>/javascript/jquery.js'
+        '<my-module-dir>/javascript/src/main.js',
+        '<my-module-dir>/javascript/src/functions.js'
     ]]);
-    Requirements::javascript('mysite/js/jquery.js'); // Will will skip this file
+    Requirements::javascript('<my-module-dir>/javascript/jquery.js'); // Will will skip this file
 
 
 ### Custom Inline CSS or Javascript
@@ -110,8 +114,8 @@ by reducing HTTP requests.
 	Requirements::combine_files(
 		'foobar.js',
 		array(
-			'mysite/javascript/foo.js',
-			'mysite/javascript/bar.js',
+			'<my-module-dir>/javascript/foo.js',
+			'<my-module-dir>/javascript/bar.js',
 		)
 	);
 

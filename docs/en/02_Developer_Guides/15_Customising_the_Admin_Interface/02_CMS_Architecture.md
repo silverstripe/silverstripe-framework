@@ -1,4 +1,4 @@
-# CMS architecture
+# CMS Architecture
 
 ## Introduction
 

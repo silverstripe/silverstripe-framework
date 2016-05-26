@@ -355,8 +355,7 @@ In a similar fashion you can use 'setFileEditActions' to set the actions for the
    String values are interpreted as permission codes.
  * `setCanUpload`: (boolean|string) Can the user upload new files, or just select from existing files.
    String values are interpreted as permission codes.
- * `setDownloadTemplateName`: (string) javascript template used to display already uploaded files, see
-   javascript/UploadField_downloadtemplate.js.
+ * `setDownloadTemplateName`: (string) javascript template used to display already uploaded files.
  * `setFileEditFields`: (FieldList|string) FieldList $fields or string $name (of a method on File to
    provide a fields) for the EditForm (Example: 'getCMSFields').
  * `setFileEditActions`: (FieldList|string) FieldList $actions or string $name (of a method on File to
@@ -368,8 +367,7 @@ In a similar fashion you can use 'setFileEditActions' to set the actions for the
  * `setPreviewMaxHeight`: (int).
  * `setTemplateFileButtons`: (string) Template name to use for the file buttons.
  * `setTemplateFileEdit`: (string) Template name to use for the file edit form.
- * `setUploadTemplateName`: (string) javascript template used to display uploading files, see
-   javascript/UploadField_uploadtemplate.js.
+ * `setUploadTemplateName`: (string) javascript template used to display uploading files.
  * `setCanPreviewFolder`: (boolean|string) Is the upload folder visible to uploading users? String values
    are interpreted as permission codes.
 
