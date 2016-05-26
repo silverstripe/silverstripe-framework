@@ -279,4 +279,5 @@ If the Javascript files are preferred to be placed in the `<head>` tag rather th
 
 ## API Documentation
 
-* [api:Requirements]
+ * [api:Requirements]
+ * [CMS Architecture and Build Tooling](/developer_guides/customising_the_admin_interface/cms_architecture)
