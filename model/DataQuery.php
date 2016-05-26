@@ -170,7 +170,9 @@ class DataQuery {
 	 * @return SQLQuery The finalised sql query
 	 */
 	public function getFinalisedQuery($queriedColumns = null) {
-		if(!$queriedColumns) $queriedColumns = $this->queriedColumns;
+		if(!$queriedColumns) {
+			$queriedColumns = $this->queriedColumns;
+		}
 		if($queriedColumns) {
 			$queriedColumns = array_merge($queriedColumns, array('Created', 'LastEdited', 'ClassName'));
 		}
@@ -185,11 +187,19 @@ class DataQuery {
 			// Specifying certain columns allows joining of child tables
 			$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
 
+			// Ensure that any filtered columns are included in the selected columns
 			foreach ($query->getWhereParameterised($parameters) as $where) {
-				// Check for just the column, in the form '"Column" = ?' and the form '"Table"."Column"' = ?
-				if (preg_match('/^"([^"]+)"/', $where, $matches) ||
-					preg_match('/^"([^"]+)"\."[^"]+"/', $where, $matches)) {
-					if (!in_array($matches[1], $queriedColumns)) $queriedColumns[] = $matches[1];
+				// Check for any columns in the form '"Column" = ?' or '"Table"."Column"' = ?
+				if(preg_match_all(
+					'/(?:"(?<table>[^"]+)"\.)?"(?<column>[^"]+)"(?:[^\.]|$)/',
+					$where, $matches, PREG_SET_ORDER
+				)) {
+					foreach($matches as $match) {
+						$column = $match['column'];
+						if (!in_array($column, $queriedColumns)) {
+							$queriedColumns[] = $column;
+						}
+					}
 				}
 			}
 		} else {
