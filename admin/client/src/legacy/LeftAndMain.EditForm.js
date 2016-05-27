@@ -383,13 +383,13 @@ $.entwine('ss', function($){
 	});
 
 	/**
-	 * Class: .cms-edit-form .Actions :submit
+	 * Class: .cms-edit-form .btn-toolbar :submit
 	 *
 	 * All buttons in the right CMS form go through here by default.
 	 * We need this onclick overloading because we can't get to the
 	 * clicked button from a form.onsubmit event.
 	 */
-	$('.cms-edit-form .Actions input.action[type=submit], .cms-edit-form .Actions button.action').entwine({
+	$('.cms-edit-form .btn-toolbar input.action[type=submit], .cms-edit-form .btn-toolbar button.action').entwine({
 		/**
 		 * Function: onclick
 		 */
@@ -415,7 +415,7 @@ $.entwine('ss', function($){
 	 * If we've a history state to go back to, go back, otherwise fall back to
 	 * submitting the form with the 'doCancel' action.
 	 */
-	$('.cms-edit-form .Actions input.action[type=submit].ss-ui-action-cancel, .cms-edit-form .Actions button.action.ss-ui-action-cancel').entwine({
+	$('.cms-edit-form .btn-toolbar input.action[type=submit].ss-ui-action-cancel, .cms-edit-form .btn-toolbar button.action.ss-ui-action-cancel').entwine({
 		onclick: function(e) {
 			if (window.history.length > 1) {
 				window.history.back();

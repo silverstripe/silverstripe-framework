@@ -1,6 +1,7 @@
 
 /* -------------------------- */
-.cms-content-controls{
+.cms-content-controls,
+.toolbar--south {
 
 	/* Styling the background, controls sit on */
 	&.cms-preview-controls {
@@ -22,7 +23,7 @@
 
 	.cms-navigator{
 		width: 100%;
-		padding: $grid-y*1.5 $grid-y*1.5;
+		padding: 1px $grid-y*1.5;
 		height: 52px; /* should be set in js Layout to match page actions */
 	}
 
@@ -276,11 +277,9 @@
 			width: 50px;
 		}
 	}
-	.preview-scroll {
-		height: calc(100% - #{$toolbar-total-height});
-		overflow: auto;
+	.panel-scrollable {
 		position: relative;
-		width: 100%;
+
 		.preview-device-outer {
 			height: 100%;
 			width: 100%;
@@ -300,7 +299,7 @@
 		}
 	}
 	&.mobile, &.mobileLandscape, &.tablet, &.tabletLandscape, &.desktop {
-		.preview-scroll {
+		.panel-scrollable {
 			background-color: $tab-panel-texture-color; /* cover website preview icon */
 			.preview-device-outer {
 				border-radius: 7px;
@@ -320,7 +319,7 @@
 	}
 
 	&.mobile {
-		.preview-scroll .preview-device-outer {
+		.panel-scrollable .preview-device-outer {
 			transform: rotate(0deg);
 			transition: all .3s ease-in 1s;
 			margin: 20px auto 20px;
@@ -346,7 +345,7 @@
 			}
 		}
 	}
-	&.mobileLandscape .preview-scroll .preview-device-outer {
+	&.mobileLandscape .panel-scrollable .preview-device-outer {
 		transition: all .3s ease-out 1s;
 		margin: 12% auto;
 		padding-top: 16px;
@@ -354,21 +353,21 @@
 			transition: all .3s ease-out 1s;
 		}
 	}
-	&.tablet .preview-scroll .preview-device-outer {
+	&.tablet .panel-scrollable .preview-device-outer {
 		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 		.preview-device-inner {
 			transition: all .3s ease-out 1s;
 		}
 	}
-	&.tabletLandscape .preview-scroll .preview-device-outer {
+	&.tabletLandscape .panel-scrollable .preview-device-outer {
 		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 		.preview-device-inner {
 			transition: all .3s ease-out 1s;
 		}
 	}
-	&.desktop .preview-scroll .preview-device-outer {
+	&.desktop .panel-scrollable .preview-device-outer {
 		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 	}

@@ -104,14 +104,9 @@
 	}
 
 	.cms-panel-content {
-		width: ($grid-x * 20);
-		overflow-x: hidden;
-		overflow-y: auto;
-		position: relative !important;
-		top:auto !important;
-		left:auto !important;
 		box-shadow: inset #C1C7CC -1px 0 0;
-		height: calc(100% - #{$toolbar-total-height * 3}); // account for logo, logout and south bar
+		overflow-x: hidden;
+		height: calc(100% - #{$toolbar-total-height * 3}) !important; // account for logo, logout and south bar
 	}
 
 	&.collapsed {
@@ -158,10 +153,6 @@
 			display: block; // override panel defaults
 		}
 
-		.ss-ui-button.sticky-toggle {
-			width: 50%;
-		}
-
 		.cms-menu-list li a {
 			padding-left: 18px;
 			padding-right: 18px;
@@ -169,16 +160,15 @@
 
 		.ss-ui-button.sticky-toggle {
 			background-position: 12px center;
+      width: 40px;
 		}
 	}
 
 	.cms-panel-toggle {
 		height: $toolbar-total-height;
+		background-color: $color-theme-bg;
+		box-shadow: inset $color-separator -1px 0 0;
 
-		&.south {
-			background-color: $color-theme-bg;
-			box-shadow: inset $color-separator -1px 0 0;
-		}
 		a,
 		a.toggle-expand {
 			float: right;
@@ -201,6 +191,9 @@
 		background-position: 16px center;
 		border: 0;
 		transition: position .2s;
+    margin-top: -$spacer-y * .625;
+    margin-left: -$grid-gutter-width-half;
+    z-index: 2;
 
 		&:hover {
 			box-shadow: 0 0 0;
@@ -218,7 +211,6 @@
 		&:hover {
 			+ .sticky-status-indicator {
 				display: block;
-				padding: 3px 3px 0;
 			}
 		}
 	}
@@ -226,8 +218,8 @@
 	.sticky-status-indicator {
 		display: none;
 		position: absolute;
-		top: -22px;
-		left: 2px;
+		top: 3px;
+		left: 10px;
 		font-size: 9px;
 		color: #555d60;
 		text-transform: uppercase;

@@ -1,6 +1,12 @@
 // TODO Separate out bootstrap btn reset styles to a separate style sheet or divide within this sheet
 // TODO Rename component to something like Btn or Button?
 
+// Manage spacing surrounding buttons and between them
+.btn-toolbar {
+  margin-top: $spacer-y;
+  margin-bottom: $spacer-y;
+}
+
 // General buttons
 .btn {
   height: 32px;

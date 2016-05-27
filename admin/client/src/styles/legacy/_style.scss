@@ -37,7 +37,7 @@ body.cms {
 }
 
 .cms-helper-hide-actions {
-	.Actions {
+	.btn-toolbar {
 		@extend .hide;
 	}
 }
@@ -230,12 +230,10 @@ body.cms {
 	}
 
 	.cms-content-tools {
+    position: relative !important; // TEMP until JS is removed
+
 		.cms-panel-content {
-			padding-top: 0;
-			overflow-x: hidden;
-		}
-		.cms-panel-toggle.south {
-			border-top: 1px solid $color-light-separator;
+			height: calc(100% - 53px) !important; // TEMP until JS is removed
 		}
 	}
 }
@@ -587,7 +585,7 @@ body.cms {
 			}
 		}
 
-		.Actions {
+		.btn-toolbar {
 			padding: 0; // Avoid double padding with parent
 		}
 	}
@@ -783,10 +781,11 @@ body.cms {
 	min-height: $toolbar-total-height;
 	max-height: $toolbar-total-height;
 	background-color: $tab-panel-texture-color;
+  padding: $spacer-y * .625 0;
 
-	&.south .Actions {
-		height: $toolbar-height;
-		padding: $grid-y+2 $grid-x*2;
+	&.south .btn-toolbar {
+    margin-top: 0;
+    margin-bottom: 0;
 	}
 }
 
@@ -1076,8 +1075,6 @@ body.cms {
 .cms-content-tools {
 	background: $tab-panel-texture-color;
 	width: $grid-x * 36;
-	overflow-y: auto;
-	overflow-x: hidden;
 	z-index: 70;
 	box-shadow: 1px 0 0 0 $border-color-dark;
 	z-index: 1000;
@@ -1101,7 +1098,7 @@ body.cms {
 		overflow: auto;
 		height:100%;
 
-		.Actions .ss-ui-action-constructive {
+		.btn-toolbar .ss-ui-action-constructive {
 			margin-right:5px; //accounts for the scrollbar in the filter - keeps the actions on one line instead of wrapping onto two.
 		}
 	}
@@ -1333,7 +1330,7 @@ body.cms {
 		}
 	}
 
-	.Actions {
+	.btn-toolbar {
 		display: inline-block;
 		padding: 0;
 		margin-left: -4px;
@@ -1397,7 +1394,7 @@ form.member-profile-form {
 	.advanced h4 {
 		margin-bottom: .5em;
 	}
-	.Actions {
+	.btn-toolbar {
 		text-align: left;
 		border: 0;
 	}
@@ -1465,6 +1462,7 @@ form.member-profile-form {
 		background: $tab-panel-texture-color;
 		width: 800px;
 		z-index: 40;
+		overflow: hidden !important; // TEMP until JS is removed
 	}
 
 	.cms-content-fields {
@@ -1547,31 +1545,23 @@ form.member-profile-form {
 			color: $body-color-light;
 		}
 	}
-	.btn-toolbar {
-		margin-top: 20px;
-		margin-bottom: 20px;
-	}
 }
 
 .cms-panel {
 
 	.cms-panel-toggle {
-		&.south {
-			border-top: 1px solid $color-light-separator;
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-			min-height: 53px;
-		}
 
-		a {
+		.toggle-collapse,
+		.toggle-expand {
 			display: block;
+			position: absolute;
 			text-align: right;
 			padding: 14px 0;
 			width: 100%;
 			text-decoration: none;
 			line-height: 20px;
 			height: 52px;
+			margin: -#{$spacer-y * .625} #{0 - $grid-gutter-width-half};
 
 			span {
 				display: inline-block;
@@ -1734,9 +1724,8 @@ form.member-profile-form {
 		padding-bottom: $grid-y;
 		padding-top:0px;
 
-		.Actions {
+		.btn-toolbar {
 			overflow: auto;
-			margin: $grid-y 0;
 			padding-bottom: $grid-y;
 			float: right;
 		}
@@ -1902,7 +1891,7 @@ body.cms-dialog {
 		}
 	}
 
-	.Actions {
+	.btn-toolbar {
 		padding:$grid-y $grid-x*2 ;
 
 		.ui-tabs-panel {
@@ -2066,8 +2055,8 @@ body.cms-dialog {
 		@extend .ss-ui-action-constructive;
 	}
 
-	.Actions {
-		padding: 0 16px;
+	.btn-toolbar {
+		padding: 0 20px;
 	}
 
 	.chosen-results > li {
@@ -2144,9 +2133,6 @@ body.cms-dialog {
 	margin-bottom: $grid-y*2;
 	.filter &{
 		margin-bottom:0;
-	}
-	.Actions {
-		padding: 0;
 	}
 }
 
@@ -2370,7 +2356,7 @@ form.import-form {
  * Hide preview toggle link by default.
  * May be shown js if needed.
  * -------------------------------------------- */
-.cms .Actions > .cms-preview-toggle-link,
+.cms .btn-toolbar > .cms-preview-toggle-link,
 .cms .cms-navigator > .cms-preview-toggle-link{
 	display:none;
 }

@@ -152,7 +152,7 @@ class CampaignAdminList extends SilverStripeComponent {
           <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
             <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
-          <div className="container-fluid campaign-items panel-scrollable--double-toolbar">
+          <div className="container-fluid campaign-items panel-scrollable panel-scrollable--double-toolbar">
             {body}
           </div>
           <div className="toolbar--south">

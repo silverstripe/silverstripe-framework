@@ -346,9 +346,9 @@
       submitForm: function submitForm(form, button, callback, ajaxOptions) {
         var self = this;
 
-        if (!button) button = this.find('.Actions :submit[name=action_save]');
+        if (!button) button = this.find('.btn-toolbar :submit[name=action_save]');
 
-        if (!button) button = this.find('.Actions :submit:first');
+        if (!button) button = this.find('.btn-toolbar :submit:first');
 
         form.trigger('beforesubmitform');
         this.trigger('submitform', { form: form, button: button });
@@ -883,7 +883,7 @@
       }
     });
 
-    $('.cms-content .Actions').entwine({
+    $('.cms-content .btn-toolbar').entwine({
       onmatch: function onmatch() {
         this.find('.ss-ui-button').click(function () {
           var form = this.form;
@@ -1075,7 +1075,7 @@
             return false;
           },
           activate: function activate(e, ui) {
-            var actions = $(this).closest('form').find('.Actions');
+            var actions = $(this).closest('form').find('.btn-toolbar');
             if ($(ui.newTab).closest('li').hasClass('readonly')) {
               actions.fadeOut();
             } else {

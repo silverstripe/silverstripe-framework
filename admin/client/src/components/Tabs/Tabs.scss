@@ -1,0 +1,29 @@
+// Tabs, styles built on top of Bootstrap 4 tab functionality
+.nav-tabs {
+
+  //Spacing between items
+  .nav-item+.nav-item {
+    margin-left: .462rem; // 6px
+  }
+
+  .nav-link {
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    border-radius: 0;
+    color: $body-color-light;
+
+    &:hover,
+    &:focus {
+      color: $body-color;
+      border-bottom-color: $nav-tabs-link-hover-border-color;
+    }
+
+    &.active,
+    &.active:active,
+    &.active:focus,
+    &.active:hover {
+      border-bottom-color: $nav-tabs-active-link-hover-border-color;
+    }
+  }
+}

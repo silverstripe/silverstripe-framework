@@ -97,7 +97,7 @@
 
 					if (activeTab.position() !== null) {
 						topPosition = -activePanel.outerHeight();
-						containerSouth = activePanel.parents('.south');
+						containerSouth = activePanel.parents('.toolbar--south');
 						if (containerSouth) {
 							padding = activeTab.offset().top - containerSouth.offset().top;
 							topPosition = topPosition - padding;

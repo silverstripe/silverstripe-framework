@@ -1009,7 +1009,7 @@ $.entwine('ss', function($) {
 			this.find('.ss-uploadfield-item-actions')[editingSelected ? 'hide' : 'show']();
 			this.find('.ss-uploadfield-item-name')[editingSelected ? 'hide' : 'show']();
 			this.find('.ss-uploadfield-item-preview')[editingSelected ? 'hide' : 'show']();
-			this.find('.Actions .media-update')[editingSelected ? 'show' : 'hide']();
+			this.find('.btn-toolbar .media-update')[editingSelected ? 'show' : 'hide']();
 			this.find('.ss-uploadfield-item-editform').toggleEditForm(editingSelected);
 			this.find('.htmleditorfield-from-cms .field.treedropdown').css('left', $('.htmleditorfield-mediaform-heading:visible').outerWidth());
 			this.closest('.ui-dialog').addClass('ss-uploadfield-dropzone');

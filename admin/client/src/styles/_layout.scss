@@ -86,9 +86,7 @@
 
 
 // Scrolling panels
-.panel-scrollable,
-.panel-scrollable--single-toolbar,
-.panel-scrollable--double-toolbar {
+.panel-scrollable {
   overflow-y: auto;
   height: 100%;
 }
@@ -99,6 +97,10 @@
 
 .panel-scrollable--double-toolbar {
   height: calc(100% - #{$toolbar-total-height * 2});
+}
+
+.panel-scrollable--triple-toolbar {
+  height: calc(100% - #{$toolbar-total-height * 3});
 }
 
 

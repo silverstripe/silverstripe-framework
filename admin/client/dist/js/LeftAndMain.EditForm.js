@@ -253,7 +253,7 @@
 			}
 		});
 
-		$('.cms-edit-form .Actions input.action[type=submit], .cms-edit-form .Actions button.action').entwine({
+		$('.cms-edit-form .btn-toolbar input.action[type=submit], .cms-edit-form .btn-toolbar button.action').entwine({
 			onclick: function onclick(e) {
 				if (this.hasClass('gridfield-button-delete') && !confirm(_i18n2.default._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
 					e.preventDefault();
@@ -268,7 +268,7 @@
 			}
 		});
 
-		$('.cms-edit-form .Actions input.action[type=submit].ss-ui-action-cancel, .cms-edit-form .Actions button.action.ss-ui-action-cancel').entwine({
+		$('.cms-edit-form .btn-toolbar input.action[type=submit].ss-ui-action-cancel, .cms-edit-form .btn-toolbar button.action.ss-ui-action-cancel').entwine({
 			onclick: function onclick(e) {
 				if (window.history.length > 1) {
 					window.history.back();

@@ -191,7 +191,7 @@
 			}
 		});
 
-		$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .Actions button.action.action-delete').entwine({
+		$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .btn-toolbar button.action.action-delete').entwine({
 			onclick: function onclick(e) {
 				if (!confirm(_i18n2.default._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
 					e.preventDefault();
