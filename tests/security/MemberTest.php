@@ -1271,6 +1271,29 @@ class MemberTest extends FunctionalTest {
 		$this->assertTrue($fail, 'Passes with email and surname now (no firstname)');
 	}
 
+    /**
+     * Test that deleteing a member causes the creation of a DeletedMemeber record
+     */
+    public function testDeletingMember() {
+        $member = $this->objFromFixture('Member', 'test');
+        $memberID = $member->ID;
+
+        // delete the member
+        $member->delete();
+
+        // Check for DeletedMember
+        $deletedMember = DataObject::get_by_id('DeletedMember', $memberID);
+        $this->assertNotNull($deletedMember);
+
+        // Ensure the basic fields are present
+        $this->assertEquals($deletedMember->Surname, "User");
+
+        // Ensure the name and email is prefixed
+        $this->assertEquals($deletedMember->Email, "(deleted) testuser@example.com");
+        $this->assertEquals($deletedMember->FirstName, "(deleted) Test");
+        $this->assertEquals($deletedMember->Name, "(deleted) Test User");
+
+    }
 }
 
 /**
