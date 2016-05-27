@@ -133,7 +133,7 @@ $.entwine('ss', function($) {
 				// else remove the rise-up class and set top to 0
 				this.removeClass('rise-up');
 				if (activeTab.position() !== null){
-					$(activePanel).css('top','0px');
+					$(activePanel).css('bottom','0px');
 				}
 			}
 			return false;
