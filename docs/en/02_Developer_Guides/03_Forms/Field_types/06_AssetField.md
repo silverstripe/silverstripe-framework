@@ -214,12 +214,10 @@ If the AssetField doesn't save into a relation, there's technically no saveable 
    String values are interpreted as permission codes.
  * `setCanUpload`: (boolean|string) Can the user upload new files, or just select from existing files.
    String values are interpreted as permission codes.
- * `setDownloadTemplateName`: (string) javascript template used to display already uploaded files, see
-   javascript/UploadField_downloadtemplate.js.
+ * `setDownloadTemplateName`: (string) javascript template used to display already uploaded files.
  * `setPreviewMaxWidth`: (int).
  * `setPreviewMaxHeight`: (int).
  * `setTemplateFileButtons`: (string) Template name to use for the file buttons.
- * `setUploadTemplateName`: (string) javascript template used to display uploading files, see
-   javascript/UploadField_uploadtemplate.js.
+ * `setUploadTemplateName`: (string) javascript template used to display uploading files.
  * `setCanPreviewFolder`: (boolean|string) Is the upload folder visible to uploading users? String values
    are interpreted as permission codes.

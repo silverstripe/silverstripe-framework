@@ -144,52 +144,14 @@ The default setting for the CMS's `extended_valid_elements` we are overriding he
 
 ## Writing custom plugins
 
-It is also possible to add custom buttons to TinyMCE. A simple example of this is SilverStripe's `ssmacron` plugin. The 
-source can be found in the Framework's `thirdparty/tinymce_ssmacron` directory.
-
-Here is how we can create a project-specific plugin. Create a `mysite/javascript/myplugin` directory, add the plugin 
-button icon - here `myplugin.png` - and the source code - here `editor_plugin.js`. Here is a very simple example of a 
-plugin that adds a button to the editor:
-
-	:::js
-	(function() {
-		tinymce.create('tinymce.plugins.myplugin', {
-			
-			init : function(ed, url) {
-				var self = this;
-				
-				ed.addButton ('myplugin', {
-					'title' : 'My plugin',
-					'image' : url+'/myplugin.png',
-					'onclick' : function () {
-						alert('Congratulations! Your plugin works!');
-					}
-				});
-				
-			},
-			
-			getInfo : function() {
-				return {
-					longname  : 'myplugin',
-					author	  : 'Me',
-					authorurl : 'http://me.org.nz/',
-					infourl   : 'http://me.org.nz/myplugin/',
-					version   : "1.0"
-				};
-			}
-		});
-		
-		tinymce.PluginManager.add('myplugin', tinymce.plugins.myplugin);
-	})();
-
-You can then enable this plugin through the [api:HtmlEditorConfig::enablePlugins()]:
+It is also possible to add custom plugins to TinyMCE, for example toolbar buttons.
+You can enable them through [api:HtmlEditorConfig::enablePlugins()]:
 
 **mysite/_config.php**
 	:::php
 	HtmlEditorConfig::get('cms')->enablePlugins(array('myplugin' => '../../../mysite/javascript/myplugin/editor_plugin.js'));
 
-For more complex examples see the [Creating a Plugin](http://www.tinymce.com/wiki.php/Creating_a_plugin) in TinyMCE
-documentation, or browse through plugins that come with the Framework at `thirdparty/tinymce/plugins`.
+You can learn how to [create a plugin](http://www.tinymce.com/wiki.php/Creating_a_plugin) from the TinyMCE documentation.
 
 ## Image and media insertion
 
