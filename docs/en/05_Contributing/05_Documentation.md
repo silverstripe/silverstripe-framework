@@ -44,6 +44,11 @@ If you submit a new feature or an API change, we strongly recommend that your pa
 
 In order to balance editorial control with effective collaboration, we keep documentation alongside the module source code, e.g. in `framework/docs/`, or as code comments within PHP code. Contributing documentation is the same process as providing any other patch (see [Contributing code](code)).
 
+Documentation should always be provided for the earliest stable release it applies to
+(we're merging up these changes to newer versions periodically).
+One exception are docs in `docs/en/contributing/`, which should always be changed on `master` since 
+its contents are general advice and don't apply to any particular release.  
+
 ## What to write
 
 See [what to write (jacobian.org)](http://jacobian.org/writing/great-documentation/what-to-write/) for an excellent introduction to the different types of documentation. Also see [producing OSS: "documentation"](http://producingoss.com/en/getting-started.html#documentation) for good rules of thumb 
