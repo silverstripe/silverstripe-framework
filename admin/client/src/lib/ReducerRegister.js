@@ -17,7 +17,7 @@ class ReducerRegister {
    * @param object reducer - Redux reducer.
    */
   add(key, reducer) {
-    if (typeof register[key] !== 'undefined') {
+    if (typeof register[key] !== 'undefined' && !Object.is(register[key], reducer)) {
       throw new Error(`Reducer already exists at '${key}'`);
     }
 
