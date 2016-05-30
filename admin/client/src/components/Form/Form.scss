@@ -1,15 +1,50 @@
-.form-component {
+.form {
   padding-bottom: $spacer-y;
+
+  // scss-lint:disable all BorderZero
+  .readonly .form__field-holder > div { // Nesting required
+    padding: 8px 0;
+    text-transform: capitalize;
+  }
+  // scss-lint:enable all BorderZero
 }
 
-// Vertically align readonly text with label
-.field.readonly {
+// For larger panels form elements are presented inline
+.form--inline {
 
-  label.left {
-    padding-top: 8px;
+  @include media-breakpoint-up(md) {
+    .form-group {
+      @include make-row();
+    }
+
+    .form__field-label {
+      @include make-col();
+      @include make-col-span(3);
+      // Override the `<label>` default with .form-control-label styles
+      padding-top: $input-padding-y;
+      padding-bottom: $input-padding-y;
+      margin-bottom: 0;
+    }
+
+    .form__field-holder {
+      @include make-col();
+      @include make-col-span(9);
+    }
   }
 
-  .middleColumn {
-    padding-top: 8px;
+  @include media-breakpoint-up(xl) {
+    .form__field-label {
+      @include make-col-span(2);
+    }
+
+    .form__field-holder {
+      @include make-col-span(6);
+    }
+  }
+
+  @include media-breakpoint-up(xxl) {
+    .form__field-holder {
+      @include make-col-span(5);
+    }
   }
 }

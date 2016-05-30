@@ -102,9 +102,3 @@
 .panel-scrollable--triple-toolbar {
   height: calc(100% - #{$toolbar-total-height * 3});
 }
-
-
-// Spacing utilities
-.spacer--top-md {
-  margin-top: $spacer-y;
-}

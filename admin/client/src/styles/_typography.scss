@@ -3,6 +3,9 @@
 //
 // Contains the basic typography related styles for the admin interface.
 
+h1 {
+  font-weight: 300;
+}
 
  // Tables
 // Used as a base for components: GridField.
@@ -13,6 +16,14 @@
   min-width: calc(100% + #{$grid-gutter-width});
   margin-bottom: $spacer-y * 2;
   border-top: 0;
+
+  tbody tr:first-child {
+    border-top: 1px solid $border-color-light;
+  }
+
+  thead + tbody tr:first-child {
+    border-top: 0;
+  }
 
   thead th {
     background-color: $body-bg;
@@ -54,9 +65,27 @@
 	}
 }
 
+// Bootstrap badge
 .label {
   text-transform: uppercase;
   font-size: $font-size-xxs;
   font-weight: 400;
   letter-spacing: .4px;
+}
+
+// Bootstrap Alerts
+.alert {
+  margin-top: $spacer-y;
+}
+
+// Helpers
+.break-string {
+  word-break: break-all;
+}
+
+.sub-heading {
+  margin-top: -$headings-margin-bottom;
+  font-size: $font-size-xs;
+  display: block;
+  color: $text-muted;
 }

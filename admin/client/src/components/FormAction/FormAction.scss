@@ -1,7 +1,7 @@
 // TODO Separate out bootstrap btn reset styles to a separate style sheet or divide within this sheet
 // TODO Rename component to something like Btn or Button?
 
-// Manage spacing surrounding buttons and between them
+// Button wrapper
 .btn-toolbar {
   margin-top: $spacer-y;
   margin-bottom: $spacer-y;
@@ -15,17 +15,12 @@
 }
 
 // Button icons
-.btn[class*="font-icon-"]::before,
-.btn--icon-large[class*="font-icon-"]::before,
-.btn--icon-xl[class*="font-icon-"]::before {
+.btn[class*="font-icon-"]::before {
   position: relative;
   margin-right: 6px;
   line-height: $line-height-base;
-  float: left;
-}
-
-.btn[class*="font-icon-"]::before {
   font-size: 16px;
+  float: left;
 }
 
 // Gives button a larger icon
@@ -168,6 +163,18 @@
   }
 }
 
+// Apply to things like panel close btn
+.btn--top-right {
+  float: right;
+  right: 0;
+  margin-right: 5px;
+  position: absolute;
+
+  // Temp override JQueryUI color
+  &::before {
+    color: $body-color-light;
+  }
+}
 
 // Grouped buttons
 .btn-group {

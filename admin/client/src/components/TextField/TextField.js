@@ -23,16 +23,18 @@ class TextField extends SilverStripeComponent {
 
     // The extraClass property is defined on both the holder and element
     // for legacy reasons (same behaviour as PHP rendering)
-    const classNames = ['field', 'text', 'form-group', this.props.extraClass].join(' ');
+    const classNames = ['form-group', this.props.extraClass].join(' ');
 
     return (
       <div className={classNames}>
         {labelText &&
-          <label className="left" htmlFor={`gallery_${this.props.name}`}>
+          <label className="form__field-label" htmlFor={`gallery_${this.props.name}`}>
             {labelText}
           </label>
         }
+        <div className="form__field-holder">
         {field}
+        </div>
       </div>
     );
   }
@@ -41,7 +43,7 @@ class TextField extends SilverStripeComponent {
     return {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
-      className: ['text', 'form-control', this.props.extraClass].join(' '),
+      className: ['form-control', this.props.extraClass].join(' '),
       id: `gallery_${this.props.name}`,
       name: this.props.name,
       onChange: this.handleChange,
