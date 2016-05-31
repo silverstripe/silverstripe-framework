@@ -107,7 +107,7 @@
 				} else {
 					this.removeClass('rise-up');
 					if (activeTab.position() !== null) {
-						$(activePanel).css('top', '0px');
+						$(activePanel).css('bottom', '100%');
 					}
 				}
 				return false;

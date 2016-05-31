@@ -130,10 +130,10 @@ $.entwine('ss', function($) {
 					$(activePanel).css('top',topPosition+"px");
 				}
 			} else {
-				// else remove the rise-up class and set top to 0
+				// else remove the rise-up class and set bottom to 100%
 				this.removeClass('rise-up');
 				if (activeTab.position() !== null){
-					$(activePanel).css('top','0px');
+					$(activePanel).css('bottom','100%');
 				}
 			}
 			return false;
