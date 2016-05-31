@@ -391,7 +391,7 @@ class BulkLoader_Result extends Object {
 	 */
 	public function addDeleted($obj, $message = null) {
 		$data = $obj->toMap();
-		$data['Message'] = $message;
+		$data['_BulkLoaderMessage'] = $message;
 		$this->deleted[] = $this->lastChange = $data;
 		$this->lastChange['ChangeType'] = 'deleted';
 	}
