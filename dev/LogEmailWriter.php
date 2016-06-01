@@ -15,7 +15,7 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 	 * @config
 	 * @var $send_from Email address to send log information from
 	 */
-	private static $send_from = 'errors@silverstripe.com';
+	private static $send_from = null;
 
 	protected $emailAddress;
 
@@ -69,6 +69,12 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		// Use plain mail() implementation to avoid complexity of Mailer implementation.
 		// Only use built-in mailer when we're in test mode (to allow introspection)
 		$mailer = Email::mailer();
+
+		$headers = "Content-type: text/html";
+		if ($from) {
+			$headers .= "\nFrom: " . $from;
+		}
+
 		if($mailer instanceof TestMailer) {
 			$mailer->sendHTML(
 				$this->emailAddress,
@@ -76,14 +82,14 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 				$subject,
 				$data,
 				null,
-				"Content-type: text/html\nFrom: " . $from
+				$headers
 			);
 		} else {
 			mail(
 				$this->emailAddress,
 				$subject,
 				$data,
-				"Content-type: text/html\nFrom: " . $from
+				$headers
 			);
 		}
 
