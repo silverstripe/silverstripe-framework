@@ -458,5 +458,5 @@ which are licensed under BSD (see [license](http://framework.zend.com/license)).
 
 ## Related
 
- * [JavaScript Coding Conventions](/getting_started/javascript_coding_conventions)
+ * [JavaScript Coding Conventions](/contributing/javascript_coding_conventions)
  * [Reference: CMS Architecture](/developer_guides/customising_the_admin_interface/cms_architecture)

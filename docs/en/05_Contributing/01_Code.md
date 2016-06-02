@@ -105,7 +105,8 @@ When contributing a backwards incompatible change, you must raise it against the
 ### The Pull Request Process
 
 Once your pull request is issued, it's not the end of the road. A [core committer](/contributing/core_committers/) will most likely have some questions for you and may ask you to make some changes depending on discussions you have.
-If you've been naughty and not adhered to the coding conventions, expect a few requests to make changes so your code is in-line.
+If you've been naughty and not adhered to the [coding conventions](coding_conventions), 
+expect a few requests to make changes so your code is in-line.
 
 If your change is particularly significant, it may be referred to the [mailing list](https://groups.google.com/forum/#!forum/silverstripe-dev) for further community discussion.
 
@@ -113,7 +114,7 @@ A core committer will also "label" your PR using the labels defined in GitHub, t
 
 #### GitHub Labels
 
-The current GitHub labels are grouped into 5 sections:
+The current GitHub labels are grouped into five sections:
 
 1. *Changes* - These are designed to signal what kind of change they are and how they fit into the [Semantic Versioning](http://semver.org/) schema
 2. *Impact* - What impact does this bug/issue/fix have, does it break a feature completely, is it just a side effect or is it trivial and not a bit problem (but a bit annoying)
@@ -166,7 +167,7 @@ After you have edited the file, GitHub will offer to create a pull request for y
 
 ## Check List
 
-* Adhere to our [coding conventions](/getting_started/coding_conventions)
+* Adhere to our [coding conventions](/contributing/coding_conventions)
 * If your patch is extensive, discuss it first on the [silverstripe-dev google group](https://groups.google.com/group/silverstripe-dev) (ideally before doing any serious coding)
 * When working on existing tickets, provide status updates through ticket comments
 * Check your patches against the "master" branch, as well as the latest release branch
