@@ -11,10 +11,12 @@ dependencies in your project codebase however you like.
 The [Node.js](https://nodejs.org) JavaScript runtime is the foundation of our client-side
 build tool chain. If you want to do things like upgrade dependencies, make changes to core
 JavaScript or SCSS files, you'll need Node installed on your dev environment. Our build
-tooling supports the v4.2.x (LTS) version of Node.
-
+tooling supports the v4.2.x (LTS) version of Node. 
 You'll likely want to manage multiple versions of Node, we suggest using
 [Node Version Manager](https://github.com/creationix/nvm).
+Since we're compiling SVG icons, you'll also need to compile native Node addons,
+which requires `gcc` or a similar compiler - see [node-gyp](https://github.com/nodejs/node-gyp#installation)
+for instructions on how to get a compiler running on your platform.
 
 ### npm
 
