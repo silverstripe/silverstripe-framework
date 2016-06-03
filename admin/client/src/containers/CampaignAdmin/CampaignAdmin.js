@@ -162,7 +162,7 @@ class CampaignAdmin extends SilverStripeComponent {
                 <FormAction {...formActionProps} />
               </div>
             </div>
-            <div className="container-fluid">
+            <div className="campaign-admin container-fluid">
               <FormBuilder {...formBuilderProps} />
             </div>
           </div>
@@ -206,8 +206,11 @@ class CampaignAdmin extends SilverStripeComponent {
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
-        <div className="panel-scrollable panel-scrollable--single-toolbar container-fluid spacer--top-md">
-          <FormBuilder {...formBuilderProps} />
+
+        <div className="panel-scrollable panel-scrollable--single-toolbar container-fluid m-t-1">
+          <div className="form--inline">
+            <FormBuilder {...formBuilderProps} />
+          </div>
         </div>
       </div>
     );
@@ -228,7 +231,7 @@ class CampaignAdmin extends SilverStripeComponent {
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
-        <div className="panel-scrollable panel-scrollable--single-toolbar container-fluid spacer--top-md">
+        <div className="panel-scrollable panel-scrollable--single-toolbar container-fluid m-t-1">
           <FormBuilder {...formBuilderProps} />
         </div>
       </div>

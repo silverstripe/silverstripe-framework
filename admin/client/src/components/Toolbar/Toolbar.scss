@@ -25,6 +25,26 @@
 // Secondary content actions eg. Add page button
 .toolbar--content {
   padding: $spacer-y * .625 $spacer-x * .625;
+
+  @include media-breakpoint-down(md) {
+
+    // If toolbar has too many items for smaller screens
+    &.toolbar--space-save {
+
+      // Hide labels and decrease spacing for smaller screens
+      .btn__text {
+        @include sr-only();
+      }
+
+      .btn {
+        margin-right: 0;
+      }
+
+      .btn::before {
+        margin-right: 0;
+      }
+    }
+  }
 }
 
 // Primary content actions

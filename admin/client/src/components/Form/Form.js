@@ -19,7 +19,7 @@ class Form extends SilverStripeComponent {
 
   render() {
     const defaultFormProps = {
-      className: 'form-component',
+      className: 'form',
       onSubmit: this.handleSubmit,
     };
     const formProps = Object.assign({}, this.props.attributes, defaultFormProps);
