@@ -278,6 +278,12 @@ class HTTPTest extends FunctionalTest {
 				'<link href=http://www.silverstripe.org/base.css />',
 				HTTP::absoluteURLs('<link href=base.css />')
 			);
+
+			// Test special characters are retained
+			$test->assertEquals(
+				'<a href="http://www.silverstripe.org/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>',
+				HTTP::absoluteURLs('<a href="/Security/changepassword?m=3&amp;t=7214fdfde">password reset link</a>')
+			);
 		});
 	}
 

@@ -104,7 +104,7 @@ class HTTP {
 	 * @param string|callable $code Either a string that can evaluate to an expression to rewrite links
 	 * (depreciated), or a callable that takes a single parameter and returns the rewritten URL.
 	 *
-	 * @return The content with all links rewritten as per the logic specified in $code.
+	 * @return string The content with all links rewritten as per the logic specified in $code.
 	 */
 	public static function urlRewriter($content, $code) {
 		if(!is_callable($code)) {
@@ -132,14 +132,15 @@ class HTTP {
 
 		// Callback for regexp replacement
 		$callback = function($matches) use($code) {
+			// Decode HTML attribute
+			$URL = Convert::xml2raw($matches[2]);
 			if(is_callable($code)) {
-				$rewritten = $code($matches[2]);
+				$rewritten = $code($URL);
 			} else {
 				// Expose the $URL variable to be used by the $code expression
-				$URL = $matches[2];
 				$rewritten = eval("return ($code);");
 			}
-			return $matches[1] . $rewritten . $matches[3];
+			return $matches[1] . Convert::raw2xml($rewritten) . $matches[3];
 		};
 
 		// Execute each expression
