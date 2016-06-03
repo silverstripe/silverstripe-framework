@@ -1,4 +1,5 @@
 <?php
+use SilverStripe\Model\FieldType\DBHTMLText;
 
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBHTMLText;

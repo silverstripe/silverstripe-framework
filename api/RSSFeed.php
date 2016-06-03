@@ -4,6 +4,7 @@
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 
 /**
@@ -195,7 +196,7 @@ class RSSFeed extends ViewableData {
 	 *
 	 * TODO: Pass $response object to ->outputToBrowser() to loosen dependence on global state for easier testing/prototyping so dev can inject custom SS_HTTPResponse instance.
 	 *
-	 * @return	HTMLText
+	 * @return DBHTMLText
 	 */
 	public function outputToBrowser() {
 		$prevState = Config::inst()->get('SSViewer', 'source_file_comments');
@@ -281,9 +282,12 @@ class RSSFeed_Entry extends ViewableData {
 
 	/**
 	 * Create a new RSSFeed entry.
+	 * @param ViewableData $entry
+	 * @param string $titleField
+	 * @param string $descriptionField
+	 * @param string $authorField
 	 */
-	public function __construct($entry, $titleField, $descriptionField,
-											$authorField) {
+	public function __construct($entry, $titleField, $descriptionField, $authorField) {
 		$this->failover = $entry;
 		$this->titleField = $titleField;
 		$this->descriptionField = $descriptionField;
@@ -340,15 +344,19 @@ class RSSFeed_Entry extends ViewableData {
 	 * Get a link to this entry
 	 *
 	 * @return string Returns the URL of this entry
+	 * @throws BadMethodCallException
 	 */
 	public function AbsoluteLink() {
 		if($this->failover->hasMethod('AbsoluteLink')) {
 			return $this->failover->AbsoluteLink();
 		} else if($this->failover->hasMethod('Link')) {
 			return Director::absoluteURL($this->failover->Link());
-		} else {
-			user_error($this->failover->class . " object has neither an AbsoluteLink nor a Link method."
-				. " Can't put a link in the RSS feed", E_USER_WARNING);
 		}
+
+		throw new BadMethodCallException(
+			$this->failover->class .
+			" object has neither an AbsoluteLink nor a Link method." .
+			" Can't put a link in the RSS feed", E_USER_WARNING
+		);
 	}
 }

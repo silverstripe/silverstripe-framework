@@ -3,7 +3,7 @@
 /**
  * A simple parser that allows you to map BBCode-like "shortcodes" to an arbitrary callback.
  * It is a simple regex based parser that allows you to replace simple bbcode-like tags
- * within a HTMLText or HTMLVarchar field when rendered into a template. The API is inspired by and very similar to the
+ * within a DBHTMLText or DBHTMLVarchar field when rendered into a template. The API is inspired by and very similar to the
  * [Wordpress implementation](http://codex.wordpress.org/Shortcode_API) of shortcodes.
  *
  * @see http://doc.silverstripe.org/framework/en/reference/shortcodes

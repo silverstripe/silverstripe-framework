@@ -4,7 +4,7 @@ namespace SilverStripe\Filesystem\Flysystem;
 
 use League\Flysystem\Adapter\Local;
 use SilverStripe\ORM\ArrayList;
-
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * Adapter for local filesystem based on assets directory
@@ -119,7 +119,7 @@ class AssetAdapter extends Local {
 	 * Render server configuration file from a template file
 	 *
 	 * @param string $template
-	 * @return \HTMLText Rendered results
+	 * @return DBHTMLText Rendered results
 	 */
 	protected function renderTemplate($template) {
 		// Build allowed extensions
