@@ -801,6 +801,25 @@ abstract class Object {
 	}
 
 	/**
+	 * @param object $extension
+	 * @return array
+	 */
+	protected function findMethodsFromExtension($extension) {
+		if (method_exists($extension, 'allMethodNames')) {
+			if ($extension instanceof Extension) $extension->setOwner($this);
+			$methods = $extension->allMethodNames(true);
+			if ($extension instanceof Extension) $extension->clearOwner();
+		} else {
+			if (!isset(self::$built_in_methods[$extension->class])) {
+				self::$built_in_methods[$extension->class] = array_map('strtolower', get_class_methods($extension));
+			}
+			$methods = self::$built_in_methods[$extension->class];
+		}
+
+		return $methods;
+	}
+
+	/**
 	 * Add all the methods from an object property (which is an {@link Extension}) to this object.
 	 *
 	 * @param string $property the property name
@@ -815,19 +834,8 @@ abstract class Object {
 			);
 		}
 
-		if(method_exists($extension, 'allMethodNames')) {
-			if ($extension instanceof Extension) $extension->setOwner($this);
-			$methods = $extension->allMethodNames(true);
-			if ($extension instanceof Extension) $extension->clearOwner();
-
-		} else {
-			if(!isset(self::$built_in_methods[$extension->class])) {
-				self::$built_in_methods[$extension->class] = array_map('strtolower', get_class_methods($extension));
-			}
-			$methods = self::$built_in_methods[$extension->class];
-		}
-
-		if($methods) {
+		$methods = $this->findMethodsFromExtension($extension);
+		if ($methods) {
 			$methodInfo = array(
 				'property' => $property,
 				'index'    => $index,
@@ -860,19 +868,8 @@ abstract class Object {
 			);
 		}
 
-		if(method_exists($extension, 'allMethodNames')) {
-			if ($extension instanceof Extension) $extension->setOwner($this);
-			$methods = $extension->allMethodNames(true);
-			if ($extension instanceof Extension) $extension->clearOwner();
-
-		} else {
-			if(!isset(self::$built_in_methods[$extension->class])) {
-				self::$built_in_methods[$extension->class] = array_map('strtolower', get_class_methods($extension));
-			}
-			$methods = self::$built_in_methods[$extension->class];
-		}
-
-		if($methods) {
+		$methods = $this->findMethodsFromExtension($extension);
+		if ($methods) {
 			foreach ($methods as $method) {
 				$methodInfo = self::$extra_methods[$this->class][$method];
 
