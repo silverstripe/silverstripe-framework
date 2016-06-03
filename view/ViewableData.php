@@ -134,6 +134,11 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param ViewableData $failover
 	 */
 	public function setFailover(ViewableData $failover) {
+		// Ensure cached methods from previous failover are removed
+		if ($this->failover) {
+			$this->removeMethodsFrom('failover');
+		}
+
 		$this->failover = $failover;
 		$this->defineMethods();
 	}
