@@ -211,7 +211,7 @@ class DBFieldTest extends SapphireTest {
 
 	public function testStringFieldsWithMultibyteData() {
 		$plainFields = array('Varchar', 'Text');
-		$htmlFields = array('HTMLVarchar', 'HTMLText');
+		$htmlFields = array('HTMLVarchar', 'HTMLText', 'HTMLFragment');
 		$allFields = array_merge($plainFields, $htmlFields);
 
 		$value = 'üåäöÜÅÄÖ';

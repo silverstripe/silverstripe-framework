@@ -40,7 +40,7 @@ class ReadonlyField extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		// Include a hidden field in the HTML
@@ -51,32 +51,6 @@ class ReadonlyField extends FormField {
 
 		} else {
 			return parent::Field($properties);
-		}
-	}
-
-	/**
-	 * If $dontEscape is true the returned value will be plain text
-	 * and should be escaped in templates via .XML
-	 *
-	 * If $dontEscape is false the returned value will be safely encoded,
-	 * but should not be escaped by the frontend.
-	 *
-	 * @return mixed|string
-	 */
-	public function Value() {
-		if($this->value) {
-			if($this->dontEscape) {
-				return $this->value;
-			} else {
-				return Convert::raw2xml($this->value);
-			}
-		} else {
-			$value = '(' . _t('FormField.NONE', 'none') . ')';
-			if($this->dontEscape) {
-				return $value;
-			} else {
-				return '<i>'.Convert::raw2xml($value).'</i>';
-			}
 		}
 	}
 
@@ -92,6 +66,54 @@ class ReadonlyField extends FormField {
 
 	public function Type() {
 		return 'readonly';
+	}
+
+	public function castingHelper($field) {
+		// Get dynamic cast for 'Value' field
+		if(strcasecmp($field, 'Value') === 0) {
+			return $this->getValueCast();
+		}
+
+		// Fall back to default casting
+		return parent::castingHelper($field);
+	}
+
+
+	/**
+	 * If $dontEscape is true the returned value will be plain text
+	 * and should be escaped in templates via .XML
+	 *
+	 * If $dontEscape is false the returned value will be safely encoded,
+	 * but should not be escaped by the frontend.
+	 *
+	 * @return mixed|string
+	 */
+	public function Value() {
+		// Get raw value
+		$value = $this->dataValue();
+		if($value) {
+			return $value;
+		}
+
+		// "none" text
+		$label = _t('FormField.NONE', 'none');
+		return "<i>('{$label}')</i>";
+	}
+
+	/**
+	 * Get custom cating helper for Value() field
+	 *
+	 * @return string
+	 */
+	public function getValueCast() {
+		// Casting class for 'none' text
+		$value = $this->dataValue();
+		if(empty($value)) {
+			return 'HTMLFragment';
+		}
+
+		// Use default casting
+		return $this->config()->casting['Value'];
 	}
 
 }

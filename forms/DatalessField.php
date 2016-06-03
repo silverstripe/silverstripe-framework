@@ -32,7 +32,7 @@ class DatalessField extends FormField {
 	 * Returns the field's representation in the form.
 	 * For dataless fields, this defaults to $Field.
 	 *
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);
@@ -57,6 +57,7 @@ class DatalessField extends FormField {
 
 	/**
 	 * @param bool $bool
+	 * @return $this
 	 */
 	public function setAllowHTML($bool) {
 		$this->allowHTML = $bool;

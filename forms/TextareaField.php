@@ -26,7 +26,7 @@ class TextareaField extends FormField {
 	 */
 	private static $casting = array(
 		'Value' => 'Text',
-		'ValueEntities' => 'HTMLText',
+		'ValueEntities' => 'HTMLFragment',
 	);
 
 	/**
@@ -118,8 +118,6 @@ class TextareaField extends FormField {
 
 	/**
 	 * Return value with all values encoded in html entities
-	 *
-	 * Invoke with $ValueEntities.RAW to suppress HTMLText parsing shortcodes.
 	 *
 	 * @return string Raw HTML
 	 */

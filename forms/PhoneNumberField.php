@@ -31,7 +31,7 @@ class PhoneNumberField extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return FieldGroup|HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		$fields = new FieldGroup( $this->name );
@@ -60,14 +60,17 @@ class PhoneNumberField extends FormField {
 		}
 
 		$description = $this->getDescription();
-		if($description) $fields->getChildren()->First()->setDescription($description);
+		if($description) {
+			$fields->getChildren()->first()->setDescription($description);
+		}
 
 		foreach($fields as $field) {
+			/** @var FormField $field */
 			$field->setDisabled($this->isDisabled());
 			$field->setReadonly($this->isReadonly());
 		}
 
-		return $fields;
+		return $fields->Field($properties);
 	}
 
 	public function setValue( $value ) {
@@ -150,8 +153,7 @@ class PhoneNumberField extends FormField {
 			$validator->validationError(
 				$this->name,
 				_t('PhoneNumberField.VALIDATION', "Please enter a valid phone number"),
-				"validation",
-				false
+				"validation"
 			);
 			return false;
 		}

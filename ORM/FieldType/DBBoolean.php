@@ -42,9 +42,6 @@ class DBBoolean extends DBField {
 		return ($this->value) ? 'true' : 'false';
 	}
 
-	/**
-	 * Saves this field to the given data object.
-	 */
 	public function saveInto($dataObject) {
 		$fieldName = $this->name;
 		if($fieldName) {

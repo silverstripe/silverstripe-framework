@@ -25,6 +25,10 @@ Injector:
     class: SilverStripe\ORM\FieldType\DBForeignKey
   HTMLText:
     class: SilverStripe\ORM\FieldType\DBHTMLText
+    properties:
+      ProcessShortcodes: true
+  HTMLFragment:
+    class: SilverStripe\ORM\FieldType\DBHTMLText
   HTMLVarchar:
     class: SilverStripe\ORM\FieldType\DBHTMLVarchar
   Int:

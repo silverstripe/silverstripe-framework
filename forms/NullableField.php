@@ -106,7 +106,7 @@ class NullableField extends FormField {
 	/**
 	 * @param array $properties
 	 *
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		if($this->isReadonly()) {
@@ -117,12 +117,12 @@ class NullableField extends FormField {
 
 		$nullableCheckbox->setValue(is_null($this->dataValue()));
 
-		return DBField::create_field('HTMLText', sprintf(
+		return sprintf(
 			'%s %s&nbsp;<span>%s</span>',
 			$this->valueField->Field(),
 			$nullableCheckbox->Field(),
 			$this->getIsNullLabel()
-		));
+		);
 	}
 
 	/**

@@ -1,10 +1,8 @@
 <?php
 
-
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
-
-
 
 /**
  * This tracks the current scope for an SSViewer instance. It has three goals:
@@ -100,12 +98,12 @@ class SSViewer_Scope {
 			$this->currentIndex) = end($this->itemStack);
 	}
 
-	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function getObj($name, $arguments = [], $cache = false, $cacheName = null) {
 		$on = $this->itemIterator ? $this->itemIterator->current() : $this->item;
-		return $on->obj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
+		return $on->obj($name, $arguments, $cache, $cacheName);
 	}
 
-	public function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function obj($name, $arguments = [], $cache = false, $cacheName = null) {
 		switch ($name) {
 			case 'Up':
 				if ($this->upIndex === null) {
@@ -122,7 +120,7 @@ class SSViewer_Scope {
 				break;
 
 			default:
-				$this->item = $this->getObj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
+				$this->item = $this->getObj($name, $arguments, $cache, $cacheName);
 				$this->itemIterator = null;
 				$this->upIndex = $this->currentIndex ? $this->currentIndex : count($this->itemStack)-1;
 				$this->currentIndex = count($this->itemStack);
@@ -598,7 +596,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	 * $Up and $Top need to restore the overlay from the parent and top-level
 	 * scope respectively.
 	 */
-	public function obj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function obj($name, $arguments = [], $cache = false, $cacheName = null) {
 		$overlayIndex = false;
 
 		switch($name) {
@@ -622,13 +620,15 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 			}
 		}
 
-		return parent::obj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
+		return parent::obj($name, $arguments, $cache, $cacheName);
 	}
 
-	public function getObj($name, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function getObj($name, $arguments = [], $cache = false, $cacheName = null) {
 		$result = $this->getInjectedValue($name, (array)$arguments);
-		if($result) return $result['obj'];
-		else return parent::getObj($name, $arguments, $forceReturnedObject, $cache, $cacheName);
+		if($result) {
+			return $result['obj'];
+		}
+		return parent::getObj($name, $arguments, $cache, $cacheName);
 	}
 
 	public function __call($name, $arguments) {
@@ -1187,7 +1187,7 @@ class SSViewer implements Flushable {
 	 * @param array|null $arguments - arguments to an included template
 	 * @param Object $inheritedScope - the current scope of a parent template including a sub-template
 	 *
-	 * @return HTMLText Parsed template output.
+	 * @return DBHTMLText Parsed template output.
 	 */
 	public function process($item, $arguments = null, $inheritedScope = null) {
 		SSViewer::$topLevel[] = $item;
@@ -1252,7 +1252,7 @@ class SSViewer implements Flushable {
 			}
 		}
 
-		return DBField::create_field('HTMLText', $output, null, array('shortcodes' => false));
+		return DBField::create_field('HTMLFragment', $output);
 	}
 
 	/**

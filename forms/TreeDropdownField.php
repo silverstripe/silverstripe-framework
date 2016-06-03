@@ -216,7 +216,7 @@ class TreeDropdownField extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return DBHTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang');
@@ -398,8 +398,9 @@ class TreeDropdownField extends FormField {
 	 * Marking public function for the tree, which combines different filters sensibly.
 	 * If a filter function has been set, that will be called. And if search text is set,
 	 * filter on that too. Return true if all applicable conditions are true, false otherwise.
-	 * @param object $node
-	 * @return mixed
+	 * 
+	 * @param mixed $node
+	 * @return bool
 	 */
 	public function filterMarking($node) {
 		if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;

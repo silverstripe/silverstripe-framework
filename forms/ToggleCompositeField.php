@@ -35,8 +35,7 @@ class ToggleCompositeField extends CompositeField {
 	 * @inheritdoc
 	 *
 	 * @param array $properties
-	 *
-	 * @return string|HTMLText
+	 * @return string
 	 */
 	public function FieldHolder($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');

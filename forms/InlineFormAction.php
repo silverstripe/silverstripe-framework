@@ -1,9 +1,5 @@
 <?php
 
-
-use SilverStripe\ORM\FieldType\DBField;
-
-
 /**
  * Render a button that will submit the form its contained in through ajax.
  * If you want to add custom behaviour, please set {@link includeDefaultJS()} to FALSE
@@ -19,9 +15,10 @@ class InlineFormAction extends FormField {
 
 	/**
 	 * Create a new action button.
-	 * @param action The method to call when the button is clicked
-	 * @param title The label on the button
-	 * @param extraClass A CSS class to apply to the button in addition to 'action'
+	 *
+	 * @param string $action The method to call when the button is clicked
+	 * @param string $title The label on the button
+	 * @param string $extraClass A CSS class to apply to the button in addition to 'action'
 	 */
 	public function __construct($action, $title = "", $extraClass = '') {
 		$this->extraClass = ' '.$extraClass;
@@ -34,24 +31,23 @@ class InlineFormAction extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		if($this->includeDefaultJS) {
-			Requirements::javascriptTemplate(FRAMEWORK_DIR . '/client/dist/js/InlineFormAction.js',
-				array('ID'=>$this->id()));
+			Requirements::javascriptTemplate(
+				FRAMEWORK_DIR . '/client/dist/js/InlineFormAction.js',
+				array('ID'=>$this->ID())
+			);
 		}
 
-		return DBField::create_field(
-			'HTMLText',
-			FormField::create_tag('input', array(
+		return FormField::create_tag('input', array(
 				'type' => 'submit',
 				'name' => sprintf('action_%s', $this->getName()),
 		        'value' => $this->title,
 		        'id' => $this->ID(),
 		        'class' => sprintf('action%s', $this->extraClass),
-			))
-		);
+		));
 	}
 
 	public function Title() {
@@ -80,19 +76,17 @@ class InlineFormAction_ReadOnly extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
-		return DBField::create_field('HTMLText',
-			FormField::create_tag('input', array(
+		return FormField::create_tag('input', array(
 				'type' => 'submit',
 	            'name' => sprintf('action_%s', $this->name),
 	            'value' => $this->title,
-	            'id' => $this->id(),
+			'id' => $this->ID(),
 				'disabled' => 'disabled',
 	            'class' => 'action disabled ' . $this->extraClass,
-			))
-		);
+		));
 	}
 
 	public function Title() {

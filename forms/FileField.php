@@ -87,7 +87,7 @@ class FileField extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		$properties = array_merge($properties, array(

@@ -1,10 +1,11 @@
 <?php
+
 use SilverStripe\Framework\Core\Extensible;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ValidationException;
-
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * Provides view and edit forms at GridField-specific URLs.
@@ -603,7 +604,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 * Response object for this request after a successful save
 	 *
 	 * @param bool $isNewRecord True if this record was just created
-	 * @return SS_HTTPResponse|HTMLText
+	 * @return SS_HTTPResponse|DBHTMLText
 	 */
 	protected function redirectAfterSave($isNewRecord) {
 		$controller = $this->getToplevelController();

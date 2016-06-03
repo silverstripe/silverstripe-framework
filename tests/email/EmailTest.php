@@ -165,7 +165,7 @@ class EmailTest extends SapphireTest {
 			'from@example.com',
 			'to@example.com',
 			'Test send plain',
-			'Testing Email->sendPlain()',
+			'Testing Email->send()',
 			null,
 			'cc@example.com',
 			'bcc@example.com'
@@ -180,7 +180,7 @@ class EmailTest extends SapphireTest {
 		$this->assertEquals('to@example.com', $sent['to']);
 		$this->assertEquals('from@example.com', $sent['from']);
 		$this->assertEquals('Test send plain', $sent['subject']);
-		$this->assertContains('Testing Email->sendPlain()', $sent['content']);
+		$this->assertContains('Testing Email-&gt;send()', $sent['content']);
 		$this->assertNull($sent['plaincontent']);
 		$this->assertEquals(
 			array(

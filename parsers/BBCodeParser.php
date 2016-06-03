@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBField;
+
 require_once('HTML/HTMLBBCodeParser.php');
 /*Seting up the PEAR bbcode parser*/
 $config = parse_ini_file('BBCodeParser.ini', true);
@@ -36,58 +38,6 @@ class BBCodeParser extends TextParser {
 	 * but this can be overridden by setting  BBCodeParser::set_icon_folder('themes/yourtheme/images/');
 	 */
 	private static $smilies_location = null;
-
-	/**
-	 * @deprecated 4.0 Use the "BBCodeParser.smilies_location" config setting instead
-	 */
-	public static function smilies_location() {
-		Deprecation::notice('4.0', 'Use the "BBCodeParser.smilies_location" config setting instead');
-		if(!BBCodeParser::$smilies_location) {
-			return FRAMEWORK_DIR . '/images/smilies';
-		}
-		return static::config()->smilies_location;
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "BBCodeParser.smilies_location" config setting instead
-	 */
-	public static function set_icon_folder($path) {
-		Deprecation::notice('4.0', 'Use the "BBCodeParser.smilies_location" config setting instead');
-		static::config()->smilies_location = $path;
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "BBCodeParser.autolink_urls" config setting instead
-	 */
-	public static function autolinkUrls() {
-		Deprecation::notice('4.0', 'Use the "BBCodeParser.autolink_urls" config setting instead');
-		return static::config()->autolink_urls;
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "BBCodeParser.autolink_urls" config setting instead
-	 */
-	public static function disable_autolink_urls($autolink = false) {
-		Deprecation::notice('4.0', 'Use the "BBCodeParser.autolink_urls" config setting instead');
-		static::config()->autolink_urls = $autolink;
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "BBCodeParser.allow_smilies" config setting instead
-	 */
-	public static function smiliesAllowed() {
-		Deprecation::notice('4.0', 'Use the "BBCodeParser.allow_smilies" config setting instead');
-		return static::config()->allow_smilies;
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "BBCodeParser.allow_smilies" config setting instead
-	 */
-	public static function enable_smilies() {
-		Deprecation::notice('4.0', 'Use the "BBCodeParser.allow_smilies" config setting instead');
-		static::config()->allow_similies = true;
-	}
-
 
 	public static function usable_tags() {
 		return new ArrayList(
@@ -167,7 +117,7 @@ class BBCodeParser extends TextParser {
 	 * Main BBCode parser method. This takes plain jane content and
 	 * runs it through so many filters
 	 *
-	 * @return Text
+	 * @return DBField
 	 */
 	public function parse() {
 		$this->content = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $this->content);
@@ -197,7 +147,9 @@ class BBCodeParser extends TextParser {
 			);
 			$this->content = preg_replace(array_keys($smilies), array_values($smilies), $this->content);
 		}
-		return $this->content;
+
+		// Ensure to return cast value
+		return DBField::create_field('HTMLFragment', $this->content);
 	}
 
 }

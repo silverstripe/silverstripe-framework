@@ -52,15 +52,14 @@ class MoneyField extends FormField {
 
 	/**
 	 * @param array
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
-		return DBField::create_field('HTMLText',
+		return
 			"<div class=\"fieldgroup\">" .
 			"<div class=\"fieldgroup-field\">" . $this->fieldCurrency->SmallFieldHolder() . "</div>" .
 			"<div class=\"fieldgroup-field\">" . $this->fieldAmount->SmallFieldHolder() . "</div>" .
-			"</div>"
-		);
+			"</div>";
 	}
 
 	/**

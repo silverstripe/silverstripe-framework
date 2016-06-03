@@ -189,10 +189,7 @@ the database.  However, the template engine knows to escape fields without the `
 to prevent them from rendering HTML interpreted by browsers. This escaping prevents attacks like CSRF or XSS (see 
 "[security](../security)"), which is important if these fields store user-provided data.
 
-<div class="hint" markdown="1">
-You can disable this auto-escaping by using the `$MyField.RAW` escaping hints, or explicitly request escaping of HTML 
-content via `$MyHtmlField.XML`.
-</div>
+See the [Template casting](/developer_guides/templates/casting) section for controlling casting in your templates.
 
 ## Overloading
 

@@ -26,6 +26,10 @@
  * @subpackage misc
  */
 abstract class TextParser extends Object {
+
+	/**
+	 * @var string
+	 */
 	protected $content;
 
 	/**
@@ -34,12 +38,15 @@ abstract class TextParser extends Object {
 	 * @param string $content The contents of the dbfield
 	 */
 	public function __construct($content = "") {
+		parent::__construct();
 		$this->content = $content;
 		parent::__construct();
 	}
 
 	/**
 	 * Convenience method, shouldn't really be used, but it's here if you want it
+	 *
+	 * @param string $content
 	 */
 	public function setContent($content = "") {
 		$this->content = $content;
@@ -48,6 +55,8 @@ abstract class TextParser extends Object {
 	/**
 	 * Define your own parse method to parse $this->content appropriately.
 	 * See the class doc-block for more implementation details.
+	 *
+	 * @return DBField
 	 */
 	abstract public function parse();
 }

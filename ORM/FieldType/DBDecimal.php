@@ -63,9 +63,6 @@ class DBDecimal extends DBField {
 		DB::require_field($this->tableName, $this->name, $values);
 	}
 
-	/**
-	 * @param DataObject $dataObject
-	 */
 	public function saveInto($dataObject) {
 		$fieldName = $this->name;
 

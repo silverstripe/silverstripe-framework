@@ -236,7 +236,7 @@ class MemberTest extends FunctionalTest {
 
 		// Check existance of reset link
 		$this->assertEmailSent("testuser@example.com", null, 'Your password reset link',
-			'/Security\/changepassword\?m='.$member->ID.'&t=[^"]+/');
+			'/Security\/changepassword\?m='.$member->ID.'&amp;t=[^"]+/');
 	}
 
 	/**

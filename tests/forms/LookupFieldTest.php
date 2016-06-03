@@ -35,10 +35,9 @@ class LookupFieldTest extends SapphireTest {
 	public function testUnknownStringValueWithNumericArraySource() {
 		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
 		$f = new LookupField('test', 'test', $source);
-		$f->setValue('<ins>w00t</ins>');
-		$f->dontEscape = true; // simulates CMSMain->compareversions()
+		$f->setValue('w00t');
 		$this->assertEquals(
-			'<span class="readonly" id="test"><ins>w00t</ins></span><input type="hidden" name="test" value="" />',
+			'<span class="readonly" id="test">w00t</span><input type="hidden" name="test" value="" />',
 			trim($f->Field()->getValue())
 		);
 	}

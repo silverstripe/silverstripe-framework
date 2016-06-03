@@ -299,45 +299,41 @@ class RSSFeed_Entry extends ViewableData {
 	/**
 	 * Get the description of this entry
 	 *
-	 * @return string Returns the description of the entry.
+	 * @return DBField Returns the description of the entry.
 	 */
 	public function Title() {
-		return $this->rssField($this->titleField, 'Varchar');
+		return $this->rssField($this->titleField);
 	}
 
 	/**
 	 * Get the description of this entry
 	 *
-	 * @return string Returns the description of the entry.
+	 * @return DBField Returns the description of the entry.
 	 */
 	public function Description() {
-		return $this->rssField($this->descriptionField, 'HTMLText');
+		return $this->rssField($this->descriptionField);
 	}
 
 	/**
 	 * Get the author of this entry
 	 *
-	 * @return string Returns the author of the entry.
+	 * @return DBField Returns the author of the entry.
 	 */
 	public function Author() {
-		if($this->authorField) return $this->failover->obj($this->authorField);
+		return $this->rssField($this->authorField);
 	}
 
 	/**
-	 * Return the named field as an obj() call from $this->failover.
-	 * Default to the given class if there's no casting information.
+	 * Return the safely casted field
+	 *
+	 * @param string $fieldName Name of field
+	 * @return DBField
 	 */
-	public function rssField($fieldName, $defaultClass = 'Varchar') {
+	public function rssField($fieldName) {
 		if($fieldName) {
-			if($this->failover->castingHelper($fieldName)) {
-				$value = $this->failover->$fieldName;
-				$obj = $this->failover->obj($fieldName);
-				$obj->setValue($value);
-				return $obj;
-			} else {
-				return DBField::create_field($defaultClass, $this->failover->XML_val($fieldName), $fieldName);
-			}
+			return $this->failover->obj($fieldName);
 		}
+		return null;
 	}
 
 	/**

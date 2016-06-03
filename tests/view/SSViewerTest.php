@@ -5,7 +5,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\Permission;
-
+use SilverStripe\Model\FieldType\DBField;
 
 class SSViewerTest extends SapphireTest {
 
@@ -835,21 +835,17 @@ after')
 			$t = SSViewer::fromString('$HTMLValue.XML')->process($vd)
 		);
 
-		// Uncasted value (falls back to ViewableData::$default_cast="HTMLText")
-		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
+		// Uncasted value (falls back to ViewableData::$default_cast="Text")
+		$vd = new SSViewerTest_ViewableData();
 		$vd->UncastedValue = '<b>html</b>';
 		$this->assertEquals(
-			'<b>html</b>',
+			'&lt;b&gt;html&lt;/b&gt;',
 			$t = SSViewer::fromString('$UncastedValue')->process($vd)
 		);
-		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
-		$vd->UncastedValue = '<b>html</b>';
 		$this->assertEquals(
 			'<b>html</b>',
 			$t = SSViewer::fromString('$UncastedValue.RAW')->process($vd)
 		);
-		$vd = new SSViewerTest_ViewableData(); // TODO Fix caching
-		$vd->UncastedValue = '<b>html</b>';
 		$this->assertEquals(
 			'&lt;b&gt;html&lt;/b&gt;',
 			$t = SSViewer::fromString('$UncastedValue.XML')->process($vd)
@@ -1247,8 +1243,14 @@ after')
 			</html>');
 		$tmpl = new SSViewer($tmplFile);
 		$obj = new ViewableData();
-		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
-		$obj->ExternalInsertedLink = '<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>';
+		$obj->InsertedLink = DBField::create_field(
+			'HTMLFragment',
+			'<a class="inserted" href="#anchor">InsertedLink</a>'
+		);
+		$obj->ExternalInsertedLink = DBField::create_field(
+			'HTMLFragment',
+			'<a class="external-inserted" href="http://google.com#anchor">ExternalInsertedLink</a>'
+		);
 		$result = $tmpl->process($obj);
 		$this->assertContains(
 			'<a class="inserted" href="' . $base . '#anchor">InsertedLink</a>',
@@ -1295,7 +1297,10 @@ after')
 			</html>');
 		$tmpl = new SSViewer($tmplFile);
 		$obj = new ViewableData();
-		$obj->InsertedLink = '<a class="inserted" href="#anchor">InsertedLink</a>';
+		$obj->InsertedLink = DBField::create_field(
+			'HTMLFragment',
+			'<a class="inserted" href="#anchor">InsertedLink</a>'
+		);
 		$result = $tmpl->process($obj);
 
 		$code = <<<'EOC'
@@ -1583,7 +1588,7 @@ class SSViewerTestFixture extends ViewableData {
 		if($arguments) return $childName . '(' . implode(',', $arguments) . ')';
 		else return $childName;
 	}
-	public function obj($fieldName, $arguments=null, $forceReturnedObject=true, $cache=false, $cacheName=null) {
+	public function obj($fieldName, $arguments=null, $cache=false, $cacheName=null) {
 		$childName = $this->argedName($fieldName, $arguments);
 
 		// Special field name Loop### to create a list
@@ -1618,9 +1623,11 @@ class SSViewerTestFixture extends ViewableData {
 
 class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 
+	private static $default_cast = 'Text';
+
 	private static $casting = array(
 		'TextValue' => 'Text',
-		'HTMLValue' => 'HTMLText'
+		'HTMLValue' => 'HTMLFragment'
 	);
 
 	public function methodWithOneArgument($arg1) {
@@ -1667,14 +1674,14 @@ class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
 
 	public static function get_template_global_variables() {
 		return array(
-			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html', 'casting' => 'HTMLText'),
+			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html', 'casting' => 'HTMLFragment'),
 			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html'),
 
 			'SSViewerTest_GlobalAutomatic',
 			'SSViewerTest_GlobalReferencedByString' => 'get_reference',
 			'SSViewerTest_GlobalReferencedInArray' => array('method' => 'get_reference'),
 
-			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix', 'casting' => 'HTMLText')
+			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix', 'casting' => 'HTMLFragment')
 
 		);
 	}

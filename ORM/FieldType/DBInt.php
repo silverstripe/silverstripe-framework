@@ -29,14 +29,14 @@ class DBInt extends DBField {
 	}
 
 	public function requireField() {
-		$parts=Array(
-			'datatype'=>'int',
-			'precision'=>11,
-			'null'=>'not null',
-			'default'=>$this->defaultVal,
-			'arrayValue'=>$this->arrayValue);
-
-		$values=Array('type'=>'int', 'parts'=>$parts);
+		$parts = [
+			'datatype' => 'int',
+			'precision' => 11,
+			'null' => 'not null',
+			'default' => $this->defaultVal,
+			'arrayValue' => $this->arrayValue
+		];
+		$values = ['type' => 'int', 'parts' => $parts];
 		DB::require_field($this->tableName, $this->name, $values);
 	}
 

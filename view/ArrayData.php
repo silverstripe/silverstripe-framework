@@ -74,9 +74,11 @@ class ArrayData extends ViewableData {
 	*
 	* @param string $field
 	* @param mixed $value
+	* @return $this
 	*/
 	public function setField($field, $value) {
 		$this->array[$field] = $value;
+		return $this;
 	}
 
 	/**

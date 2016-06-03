@@ -225,11 +225,14 @@ abstract class DBComposite extends DBField {
 	 * @param string $field
 	 * @param mixed $value
 	 * @param bool $markChanged
+	 * @return $this
 	 */
 	public function setField($field, $value, $markChanged = true) {
+		$this->objCacheClear();
+
 		// Skip non-db fields
 		if(!$this->hasField($field)) {
-			return;
+			return $this;
 		}
 
 		// Set changed
@@ -246,6 +249,7 @@ abstract class DBComposite extends DBField {
 
 		// Set local record
 		$this->record[$field] = $value;
+		return $this;
 	}
 
 	/**
