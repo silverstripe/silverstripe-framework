@@ -278,7 +278,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 */
 	public function castingClass($field) {
 		$spec = $this->castingHelper($field);
-		if(!$spec) return null;
+		if(!$spec) return $this->config()->get('default_cast');
 
 		$bPos = strpos($spec,'(');
 		if($bPos === false) return $spec;
@@ -418,8 +418,8 @@ class ViewableData extends Object implements IteratorAggregate {
 				$value = $this->$fieldName;
 			}
 
-			if(!is_object($value) && ($this->castingClass($fieldName) || $forceReturnedObject)) {
-				if(!$castConstructor = $this->castingHelper($fieldName)) {
+			if(!is_object($value) && ($this->castingClass($fieldName))) {
+				if (!$castConstructor = $this->castingHelper($fieldName)) {
 					$castConstructor = $this->config()->default_cast;
 				}
 
@@ -430,13 +430,6 @@ class ViewableData extends Object implements IteratorAggregate {
 			}
 
 			if($cache) $this->objCacheSet($cacheName, $value);
-		}
-
-		if(!is_object($value) && $forceReturnedObject) {
-			$default = $this->config()->default_cast;
-			$castedValue = new $default($fieldName);
-			$castedValue->setValue($value);
-			$value = $castedValue;
 		}
 
 		return $value;
