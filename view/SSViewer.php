@@ -558,12 +558,15 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	 */
 	public function pushScope() {
 		$scope = parent::pushScope();
+		$upIndex = $this->getUpIndex();
 
-		$itemStack = $this->getItemStack();
-		$itemStack[$this->getUpIndex()][SSViewer_Scope::ITEM_OVERLAY] = $this->overlay;
+		if ($upIndex !== null) {
+			$itemStack = $this->getItemStack();
+			$itemStack[$upIndex][SSViewer_Scope::ITEM_OVERLAY] = $this->overlay;
 
-		$this->setItemStack($itemStack);
-		$this->overlay = array();
+			$this->setItemStack($itemStack);
+			$this->overlay = array();
+		}
 
 		return $scope;
 	}
@@ -575,8 +578,12 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 	 * @return SSViewer_Scope
 	 */
 	public function popScope() {
-		$itemStack = $this->getItemStack();
-		$this->overlay = $itemStack[$this->getUpIndex()][SSViewer_Scope::ITEM_OVERLAY];
+		$upIndex = $this->getUpIndex();
+
+		if ($upIndex !== null) {
+			$itemStack = $this->getItemStack();
+			$this->overlay = $itemStack[$this->getUpIndex()][SSViewer_Scope::ITEM_OVERLAY];
+		}
 
 		return parent::popScope();
 	}
