@@ -23,13 +23,24 @@
     text-transform: capitalize;
   }
   // scss-lint:enable SelectorDepth
-
-  // TEMP until .text can be replaced with .form-control
-  input.text {
-    @extend .form-control;
-  }
 }
 
+.form__field-extra-label,
+.form__field-description {
+  color: $text-muted;
+  padding-top: $input-padding-y;
+  padding-bottom: $input-padding-y;
+  margin-bottom: 0;
+  // font-style: italic;
+  font-size: $font-size-sm;
+}
+
+.form-control-static {
+  padding-left: $input-padding-x;
+  padding-right: $input-padding-x;
+  background-color: $input-bg-disabled;
+  @include border-radius($input-border-radius);
+}
 
 @mixin form-responsive($breakpoint-inline, $breakpoint-inline-limit-width, $breakpoint-inline-limit-width-max) {
   @include media-breakpoint-up($breakpoint-inline) {
@@ -50,6 +61,12 @@
       @include make-col();
       @include make-col-span(9);
     }
+
+    .form__field-extra-label {
+      @include make-col();
+      @include make-col-span(9);
+      @include make-col-offset(3);
+    }
   }
 
   @include media-breakpoint-up($breakpoint-inline-limit-width) {
@@ -60,11 +77,21 @@
     .form__field-holder {
       @include make-col-span(6);
     }
+
+    .form__field-extra-label {
+      @include make-col-span(4);
+      @include make-col-offset(0);
+    }
   }
 
   @include media-breakpoint-up($breakpoint-inline-limit-width-max) {
     .form__field-holder {
       @include make-col-span(5);
+    }
+
+    .form__field-extra-label {
+      @include make-col-span(5);
+      @include make-col-offset(0);
     }
   }
 }
