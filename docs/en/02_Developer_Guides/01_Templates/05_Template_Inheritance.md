@@ -101,3 +101,7 @@ footer and navigation will remain the same and we don't want to replicate this w
 	<blink>Hi!</blink>
 
 
+If your classes have in a namespace, the Layout folder will be a found inside of the appropriate namespace folder.
+
+For example, the layout template for `SilverStripe\Control\Controller` will be
+found at `templates/SilverStripe/Control/Layout/Controller.ss`.

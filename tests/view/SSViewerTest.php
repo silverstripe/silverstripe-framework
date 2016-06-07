@@ -728,6 +728,28 @@ after')
 		$this->assertEqualIgnoringWhitespace('A B', $res, 'Objects can be passed as named arguments');
 	}
 
+	public function testNamespaceInclude() {
+		$data = new ArrayData([]);
+
+		$this->assertEquals(
+			"tests:( NamespaceInclude\n )",
+			$this->render('tests:( <% include Namespace\NamespaceInclude %> )', $data),
+			'Backslashes work for namespace references in includes'
+		);
+
+		$this->assertEquals(
+			"tests:( NamespaceInclude\n )",
+			$this->render('tests:( <% include Namespace/NamespaceInclude %> )', $data),
+			'Forward slashes work for namespace references in includes'
+		);
+
+		$this->assertEquals(
+			"tests:( NamespaceInclude\n )",
+			$this->render('tests:( <% include NamespaceInclude %> )', $data),
+			'Namespace can be missed for a namespaed include'
+		);
+	}
+
 
 	public function testRecursiveInclude() {
 		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
@@ -1124,23 +1146,23 @@ after')
 		$self = $this;
 		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			// Test passing a string
-			$templates = SSViewer::get_templates_by_class('SSViewerTest_Controller', '', 'Controller');
-			$self->assertCount(2, $templates);
+			$templates = SSViewer::get_templates_by_class(
+				'TestNamespace\SSViewerTest_Controller',
+				'',
+				'Controller'
+			);
+			$self->assertEquals([
+				'TestNamespace\SSViewerTest_Controller',
+    			'Controller',
+			], $templates);
 
 			// Test to ensure we're stopping at the base class.
-			$templates = SSViewer::get_templates_by_class('SSViewerTest_Controller', '', 'SSViewerTest_Controller');
+			$templates = SSViewer::get_templates_by_class('TestNamespace\SSViewerTest_Controller', '', 'TestNamespace\SSViewerTest_Controller');
 			$self->assertCount(1, $templates);
 
 			// Make sure we can filter our templates by suffix.
 			$templates = SSViewer::get_templates_by_class('SSViewerTest', '_Controller');
 			$self->assertCount(1, $templates);
-
-			// Test passing a valid object
-			$templates = SSViewer::get_templates_by_class("SSViewerTest_Controller", '', 'Controller');
-
-			// Test that templates are returned in the correct order
-			$self->assertEquals('SSViewerTest_Controller', array_shift($templates));
-			$self->assertEquals('Controller', array_shift($templates));
 
 			// Let's throw something random in there.
 			$self->setExpectedException('InvalidArgumentException');
@@ -1593,11 +1615,6 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 	}
 }
 
-
-class SSViewerTest_Controller extends Controller {
-
-}
-
 class SSViewerTest_Object extends DataObject implements TestOnly {
 
 	public $number = null;
@@ -1687,4 +1704,3 @@ class SSViewerTest_LevelTest extends ViewableData implements TestOnly {
 		return new self($number);
 	}
 }
-

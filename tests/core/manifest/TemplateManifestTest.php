@@ -25,7 +25,7 @@ class TemplateManifestTest extends SapphireTest {
 	public function testGetTemplates() {
 		$expect = array(
 			'root' => array(
-				'module' => "{$this->base}/module/Root.ss"
+				'main' => "{$this->base}/module/Root.ss"
 			),
 			'page' => array(
 				'main'   => "{$this->base}/module/templates/Page.ss",
@@ -53,6 +53,30 @@ class TemplateManifestTest extends SapphireTest {
 				array(
 					'theme' => array('main' => "{$this->base}/themes/theme/templates/CustomThemePage.ss",)
 				)
+			),
+			'mynamespace\myclass' => array(
+				'main' => "{$this->base}/module/templates/MyNamespace/MyClass.ss",
+				'Layout' => "{$this->base}/module/templates/MyNamespace/Layout/MyClass.ss",
+				'themes' => array(
+					'theme' => array(
+						'main' => "{$this->base}/themes/theme/templates/MyNamespace/MyClass.ss",
+					)
+				),
+			),
+			'mynamespace\mysubnamespace\mysubclass' => array(
+				'main' => "{$this->base}/module/templates/MyNamespace/MySubnamespace/MySubclass.ss",
+			),
+			'myclass' => array(
+				'main' => "{$this->base}/module/templates/MyNamespace/MyClass.ss",
+				'Layout' => "{$this->base}/module/templates/MyNamespace/Layout/MyClass.ss",
+				'themes' => array(
+					'theme' => array(
+						'main' => "{$this->base}/themes/theme/templates/MyNamespace/MyClass.ss",
+					)
+				),
+			),
+			'mysubclass' => array(
+				'main' => "{$this->base}/module/templates/MyNamespace/MySubnamespace/MySubclass.ss",
 			),
 			'include' => array('themes' => array(
 				'theme' => array(
