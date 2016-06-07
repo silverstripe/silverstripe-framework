@@ -15,18 +15,18 @@ form.nostyle {
 }
 
 .field {
-	display: block;
-	border-bottom: 1px solid $color-light-separator;
-	//overflow: hidden;
+	// display: block;
+	// border-bottom: 1px solid $color-light-separator;
+	// overflow: hidden;
+
+  // bottom padding accounts for the border and we have a negative
+  // margin with a postive padding to ensure the bottom border extends over the edges
+  // padding: 0 0 $grid-y - 1 0;
+  // margin: $grid-y 0;
 
   &.ui-tabs {
     border-bottom: 0;
   }
-
-	// bottom padding accounts for the border and we have a negative
-	// margin with a postive padding to ensure the bottom border extends over the edges
-	padding: 0 0 $grid-y - 1 0;
-	margin: $grid-y 0;
 
 	&.noborder, &:last-child {
 		padding-bottom: 0;
@@ -106,10 +106,10 @@ form.nostyle {
 	textarea,
 	select,
 	.TreeDropdownField {
-		margin-left: 10px;
-		width: 100%;
-		max-width: $grid-x * 64;
-		box-sizing: border-box;
+		// margin-left: 10px;
+		// width: 100%;
+		// max-width: $grid-x * 64;
+		// box-sizing: border-box;
 		&.description {
 			margin:0; //overrides help class adding left margin to the textarea input.
 		}
@@ -121,21 +121,21 @@ form.nostyle {
 	input.text,
 	textarea,
 	.TreeDropdownField {
-		background: #fff;
-		border: 1px solid lighten($color-medium-separator, 20%);
-		padding: ($grid-y - 1) ($grid-x - 1);
-		line-height: $grid-y * 2;
-		margin: 0;
-		outline: none;
-		transition: box-shadow .2s ease-in,
-					border .2s ease-in;
-		border-radius: 4px;
-		background-image: linear-gradient(#EAEAEA, #fff 10%);
+		// background: #fff;
+		// border: 1px solid lighten($color-medium-separator, 20%);
+		// padding: ($grid-y - 1) ($grid-x - 1);
+		// line-height: $grid-y * 2;
+		// margin: 0;
+		// outline: none;
+		// transition: box-shadow .2s ease-in,
+		// 			border .2s ease-in;
+		// border-radius: 4px;
+		// background-image: linear-gradient(#EAEAEA, #fff 10%);
 
 		&:focus {
-			border: 1px solid lighten($color-medium-separator, 10%);
-			border-top-color: $color-medium-separator;
-			box-shadow: 0 1px 3px rgba(0,0,0,0.2) inset;
+			// border: 1px solid lighten($color-medium-separator, 10%);
+			// border-top-color: $color-medium-separator;
+			// box-shadow: 0 1px 3px rgba(0,0,0,0.2) inset;
 		}
 	}
 
@@ -659,10 +659,10 @@ form.small .field, .field.small {
 		display: block;
 		padding: $grid-y $grid-x 0 0;
 
-		.field {
-			border: none;
-			padding-bottom: 0;
-		}
+		// .field {
+		// 	border: none;
+		// 	padding-bottom: 0;
+		// }
 
 		.fieldholder-small {
 			padding: 0 0 $grid-y 0;

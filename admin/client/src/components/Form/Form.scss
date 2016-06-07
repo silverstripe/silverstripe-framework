@@ -1,18 +1,38 @@
+// .form-component {
+//   padding-bottom: $spacer-y;
+// }
+//
+// // Vertically align readonly text with label
+// .field.readonly {
+//
+//   label.left {
+//     padding-top: 8px;
+//   }
+//
+//   .middleColumn {
+//     padding-top: 8px;
+//   }
+// }
+
 .form {
   padding-bottom: $spacer-y;
 
   // scss-lint:disable SelectorDepth
-  .readonly .form__field-holder > div {
+  .readonly .form__field-holder > div { // Nesting required
     padding: 8px 0;
     text-transform: capitalize;
   }
   // scss-lint:enable SelectorDepth
+
+  // TEMP until .text can be replaced with .form-control
+  input.text {
+    @extend .form-control;
+  }
 }
 
-// For larger panels form elements are presented inline
-.form--inline {
 
-  @include media-breakpoint-up(md) {
+@mixin form-responsive($breakpoint-inline, $breakpoint-inline-limit-width, $breakpoint-inline-limit-width-max) {
+  @include media-breakpoint-up($breakpoint-inline) {
     .form-group {
       @include make-row();
     }
@@ -32,7 +52,7 @@
     }
   }
 
-  @include media-breakpoint-up(xl) {
+  @include media-breakpoint-up($breakpoint-inline-limit-width) {
     .form__field-label {
       @include make-col-span(2);
     }
@@ -42,9 +62,16 @@
     }
   }
 
-  @include media-breakpoint-up(xxl) {
+  @include media-breakpoint-up($breakpoint-inline-limit-width-max) {
     .form__field-holder {
       @include make-col-span(5);
     }
   }
+}
+
+
+// Apply to forms to state when the label and input become inline
+// @include form-responsive(turns inline, stops being full width, input only takes up a portion of screen width)
+.form--inline {
+  @include form-responsive(md, xl, xxl);
 }
