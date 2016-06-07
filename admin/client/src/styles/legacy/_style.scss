@@ -469,13 +469,28 @@ body.cms {
 	}
 
 	.ui-tabs-panel {
-		padding: $grid-y*1.5 $grid-x*2;
+		padding: $grid-y*1.5 $grid-gutter-width-half;
 		background: transparent; // default it's white
 		border: 0; // suppress default borders
 
 		&.cms-edit-form {
 			padding: 0;
 		}
+
+    .ui-tabs {
+
+      .ui-tabs-nav {
+        margin-left: $grid-gutter-width-half;
+        margin-right: $grid-gutter-width-half;
+        float: none;
+        border-bottom: 1px solid $nav-tabs-link-hover-border-color;
+      }
+
+      .first .ui-tabs-anchor {
+        margin-left: 0;
+        padding-left: 0;
+      }
+    }
 	}
 
 	.ui-widget-header {

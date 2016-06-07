@@ -90,12 +90,12 @@ form.nostyle {
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
 	.description {
-		clear: both;
-		color: lighten($color-text, 8.5%); //8.5% is the minimum required to meet contrast standards while still retaining visual difference from normal text
-		display: block;
-		font-style: italic;
-		line-height: $grid-y * 2;
-		margin: $grid-y/2 0 0 $grid-x*23; // left align with .middleColumn
+		// clear: both;
+		// display: block;
+		// line-height: $grid-y * 2;
+		// margin: $grid-y/2 0 0 $grid-x*23; // left align with .middleColumn
+    font-style: italic;
+    color: $text-muted; //8.5% is the minimum required to meet contrast standards while still retaining visual difference from normal text
 	}
 
 	&.checkbox .description, &.ss-gridfield .description {
@@ -106,12 +106,13 @@ form.nostyle {
 	textarea,
 	select,
 	.TreeDropdownField {
+    @extend .form-control;
 		// margin-left: 10px;
 		// width: 100%;
 		// max-width: $grid-x * 64;
 		// box-sizing: border-box;
 		&.description {
-			margin:0; //overrides help class adding left margin to the textarea input.
+			// margin:0; //overrides help class adding left margin to the textarea input.
 		}
 		.description {
 			max-width: $grid-x * 64;
@@ -236,7 +237,7 @@ form.nostyle {
 }
 
 form.stacked .field, .field.stacked {
-	@include form-field-stacked;
+	// @include form-field-stacked;
 }
 
 form.small .field, .field.small {
@@ -448,9 +449,7 @@ form.small .field, .field.small {
 
 	.ss-ui-button {
 		margin-top:0px;
-		font-weight: bold;
 		text-decoration: none;
-		line-height: $grid-y * 2;
 		color: lighten($color-text-dark, 10%);
 		border: 1px solid $color-button-generic-border;
 		border-bottom: 1px solid darken($color-button-generic-border, 10%);
@@ -458,7 +457,7 @@ form.small .field, .field.small {
 		background-color: $color-button-generic;
 		white-space: nowrap;
 		background-image: linear-gradient(lighten($color-button-generic, 10%), darken($color-button-generic, 5%));
-		text-shadow: lighten($color-button-generic, 20%) 0 1px 1px;
+    vertical-align: top;
 
 		&.ui-state-hover, &:hover {
 			text-decoration: none;
@@ -484,13 +483,11 @@ form.small .field, .field.small {
 		/* constructive */
 		&.ss-ui-action-constructive {
 			text-shadow:none;
-			font-weight: bold;
 			color: $color-text-light;
 			border-color: $color-button-constructive-border;
 			border-bottom-color: darken($color-button-constructive-border, 10%);
 			background-color: $color-button-constructive;
 			background-image: linear-gradient(scale-color(lighten($color-button-constructive, 10%), $red:50%), $color-button-constructive);
-			text-shadow: darken($color-button-constructive, 3%) 0 -1px -1px;
 
 			&.ui-state-hover, &:hover {
 				border-color: darken($color-button-constructive-border, 10%);
@@ -820,7 +817,7 @@ input.radio {
 
 .htmleditor {
 
-	@include form-field-stacked;
+	// @include form-field-stacked;
 
 	textarea {
 		visibility: hidden; // enabled by JS
@@ -831,11 +828,10 @@ input.radio {
 			width: auto;
 		}
 	}
-	label.left {
-		padding-bottom: $grid-y/2;
-	}
+	// label.left {
+	// 	padding-bottom: $grid-y/2;
+	// }
 }
-
 
 .action-hidden {
 	display:  none;
@@ -1135,6 +1131,10 @@ fieldset.switch-states{
   padding-top: 0;
   padding-bottom: 0;
   padding-right: 0;
+}
+
+.ui-button-text-only .ui-button-text {
+  padding: 0;
 }
 
 .btn .ui-icon + .ui-button-text {
