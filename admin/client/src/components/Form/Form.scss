@@ -1,12 +1,12 @@
 .form {
   padding-bottom: $spacer-y;
 
-  // scss-lint:disable all BorderZero
-  .readonly .form__field-holder > div { // Nesting required
+  // scss-lint:disable SelectorDepth
+  .readonly .form__field-holder > div {
     padding: 8px 0;
     text-transform: capitalize;
   }
-  // scss-lint:enable all BorderZero
+  // scss-lint:enable SelectorDepth
 }
 
 // For larger panels form elements are presented inline
