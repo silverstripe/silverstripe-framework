@@ -1,7 +1,7 @@
 <div id="$Name" class="field<% if $extraClass %> $extraClass<% end_if %>">
-  	<div class="row form-group">
-		<% if $Title %><label class="col-sm-2 form-control-label">$Title</label><% end_if %>
-		<div class="col-sm-10<% if not $Title %> col-sm-push-2<% end_if %>">
+  	<div class="form-group">
+		<% if $Title %><label class="form-control-label">$Title</label><% end_if %>
+		<div class="form__field-holder <% if not $Title %> col-sm-push-2<% end_if %>">
 			$Field
 		</div>
 	</div>
