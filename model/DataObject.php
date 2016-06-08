@@ -313,6 +313,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 		}
 
+		// Classes with only ID shouldn't have tables
+		if(count($dbFields) < 2) {
+			$dbFields = [];
+			$compositeFields = [];
+		}
+
 		// Return cached results
 		self::$_cache_database_fields[$class] = $dbFields;
 		self::$_cache_composite_fields[$class] = $compositeFields;
@@ -1915,7 +1921,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$result = $result->alterDataQuery(function($query) use ($extraFields) {
 			$query->setQueryParam('Component.ExtraFields', $extraFields);
 		});
-		
+
 		if($this->model) {
 			$result->setDataModel($this->model);
 		}
