@@ -299,6 +299,8 @@ minor version will require a new branch option to be made available on each site
   * New branches (minor releases) require a code update. Changes are made to
     [github](https://github.com/silverstripe/doc.silverstripe.org) and deployed via
     [SilverStripe Platform](https://platform.silverstripe.com/naut/project/SS-Developer-Docs/environment/Production/)
+  * The new version needs to be added to `app/_config/docs-repositories.yml`
+  * Update the version for the "contributing" rewrite rule in `.htaccess` (`RewriteRule ^(.*)/(.*)/contributing/?(.*)?$ ...`)
   * Updates to markdown only can be made via the [build tasks](https://docs.silverstripe.org/dev/tasks).
     See below for more details.
 * [userhelp.silverstripe.org](https://userhelp.silverstripe.org/en/3.2):
