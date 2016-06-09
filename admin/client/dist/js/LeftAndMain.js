@@ -1,23 +1,19 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define('ss.LeftAndMain', ['jQuery', 'lib/Router', 'lib/Config'], factory);
+    define('ss.LeftAndMain', ['jQuery'], factory);
   } else if (typeof exports !== "undefined") {
-    factory(require('jQuery'), require('lib/Router'), require('lib/Config'));
+    factory(require('jQuery'));
   } else {
     var mod = {
       exports: {}
     };
-    factory(global.jQuery, global.Router, global.Config);
+    factory(global.jQuery);
     global.ssLeftAndMain = mod.exports;
   }
-})(this, function (_jQuery, _Router, _Config) {
+})(this, function (_jQuery) {
   'use strict';
 
   var _jQuery2 = _interopRequireDefault(_jQuery);
-
-  var _Router2 = _interopRequireDefault(_Router);
-
-  var _Config2 = _interopRequireDefault(_Config);
 
   function _interopRequireDefault(obj) {
     return obj && obj.__esModule ? obj : {
@@ -36,7 +32,6 @@
   _jQuery2.default.noConflict();
 
   window.ss = window.ss || {};
-  window.ss.router = _Router2.default;
 
   window.ss.debounce = function (func, wait, immediate) {
     var timeout, context, args;
@@ -60,13 +55,6 @@
       }
     };
   };
-
-  function getUrlPath(url) {
-    var anchor = document.createElement('a');
-    anchor.href = url;
-
-    return anchor.pathname;
-  }
 
   (0, _jQuery2.default)(window).bind('resize.leftandmain', function (e) {
     (0, _jQuery2.default)('.cms-container').trigger('windowresize');
@@ -145,7 +133,7 @@
       }
 
       if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
-        _Router2.default.show(url, {
+        window.ss.router.show(url, {
           id: new Date().getTime() + String(Math.random()).replace(/\D/g, ''),
           pjax: xhr.getResponseHeader('X-Pjax') ? xhr.getResponseHeader('X-Pjax') : settings.headers['X-Pjax']
         });
@@ -177,27 +165,6 @@
       },
 
       onadd: function onadd() {
-        var self = this,
-            basePath = getUrlPath($('base')[0].href);
-
-        basePath = basePath.replace(/\/$/, '');
-        if (basePath.match(/^[^\/]/)) {
-          basePath = '/' + basePath;
-        }
-        _Router2.default.base(basePath);
-
-        _Config2.default.getTopLevelRoutes().forEach(function (route) {
-          (0, _Router2.default)('/' + route + '(/*?)?', function (ctx, next) {
-            if (document.readyState !== 'complete') {
-              return next();
-            }
-
-            self.handleStateChange(null, ctx.state).done(next);
-          });
-        });
-
-        _Router2.default.start();
-
         if ($.browser.msie && parseInt($.browser.version, 10) < 8) {
           $('.ss-loading-screen').append('<p class="ss-loading-incompat-warning"><span class="notice">' + 'Your browser is not compatible with the CMS interface. Please use Internet Explorer 8+, Google Chrome or Mozilla Firefox.' + '</span></p>').css('z-index', $('.ss-loading-screen').css('z-index') + 1);
           $('.loading-animation').remove();
@@ -336,7 +303,7 @@
           data.__forceReload = Math.random();
         }
 
-        _Router2.default.show(url, data);
+        window.ss.router.show(url, data);
       },
 
       reloadCurrentPanel: function reloadCurrentPanel() {
@@ -423,9 +390,9 @@
           this.setPauseState(true);
 
           if (lastState !== null) {
-            _Router2.default.show(lastState.url);
+            window.ss.router.show(lastState.url);
           } else {
-            _Router2.default.back();
+            window.ss.router.back();
           }
 
           this.setPauseState(false);
@@ -707,6 +674,10 @@
       },
 
       _tabStateUrl: function _tabStateUrl() {
+        if (window.history.state === null) {
+          return;
+        }
+
         return window.history.state.path.replace(/\?.*/, '').replace(/#.*/, '').replace($('base').attr('href'), '');
       },
 
