@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import backend from 'lib/Backend';
 import * as breadcrumbsActions from 'state/breadcrumbs/BreadcrumbsActions';
 import BreadcrumbComponent from 'components/Breadcrumb/Breadcrumb';
@@ -29,19 +30,24 @@ class CampaignAdmin extends SilverStripeComponent {
     this.campaignAddCreateFn = this.campaignAddCreateFn.bind(this);
     this.campaignEditCreateFn = this.campaignEditCreateFn.bind(this);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-    this.baseBreadcrumbs = this.baseBreadcrumbs.bind(this);
   }
 
-  baseBreadcrumbs() {
-    return [{
+  componentWillReceiveProps(props) {
+    const hasChangedRoute = (
+      this.props.campaignId !== props.campaignId ||
+      this.props.view !== props.view
+    );
+    if (hasChangedRoute) {
+      this.setBreadcrumbs(props.view, props.campaignId);
+    }
+  }
+
+  setBreadcrumbs(view, id) {
+    // Set root breadcrumb
+    const breadcrumbs = [{
       text: i18n._t('Campaigns.CAMPAIGN', 'Campaigns'),
       href: this.props.sectionConfig.route,
     }];
-  }
-
-  setupBreadcrumbs(id, view) {
-    // Set root breadcrumb
-    const breadcrumbs = this.baseBreadcrumbs();
     switch (view) {
       case 'show':
         // NOOP - Lazy loaded in CampaignAdminList.js
@@ -148,7 +154,6 @@ class CampaignAdmin extends SilverStripeComponent {
       campaignId: this.props.campaignId,
       itemListViewEndpoint: this.props.sectionConfig.itemListViewEndpoint,
       publishApi: this.publishApi,
-      baseBreadcrumbs: this.baseBreadcrumbs(),
       handleBackButtonClick: this.handleBackButtonClick,
     };
 
