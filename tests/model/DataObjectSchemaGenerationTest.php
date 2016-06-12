@@ -5,7 +5,8 @@ use SilverStripe\Model\FieldType\DBClassName;
 class DataObjectSchemaGenerationTest extends SapphireTest {
 	protected $extraDataObjects = array(
 		'DataObjectSchemaGenerationTest_DO',
-		'DataObjectSchemaGenerationTest_IndexDO'
+		'DataObjectSchemaGenerationTest_IndexDO',
+		'DataObjectSchemaGenerationTest_NoTable',
 	);
 
 	public function setUpOnce() {
@@ -15,6 +16,12 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 			array(MySQLSchemaManager::ID => 'ENGINE=MyISAM'));
 
 		parent::setUpOnce();
+	}
+
+	public function testTablesCreated() {
+		$this->assertTrue(DB::get_schema()->hasTable('DataObjectSchemaGenerationTest_DO'));
+		$this->assertTrue(DB::get_schema()->hasTable('DataObjectSchemaGenerationTest_IndexDO'));
+		$this->assertFalse(DB::get_schema()->hasTable('DataObjectSchemaGenerationTest_NoTable'));
 	}
 
 	/**
@@ -138,7 +145,8 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$this->assertEquals(
 			array(
 				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
-				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO',
+				'DataObjectSchemaGenerationTest_NoTable' => 'DataObjectSchemaGenerationTest_NoTable',
 			),
 			$do1->dbObject('ClassName')->getEnum()
 		);
@@ -153,7 +161,8 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$this->assertEquals(
 			array(
 				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
-				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO',
+				'DataObjectSchemaGenerationTest_NoTable' => 'DataObjectSchemaGenerationTest_NoTable',
 			),
 			$item1->dbObject('ClassName')->getEnum()
 		);
@@ -168,7 +177,8 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$this->assertEquals(
 			array(
 				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
-				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO',
+				'DataObjectSchemaGenerationTest_NoTable' => 'DataObjectSchemaGenerationTest_NoTable',
 			),
 			$item2->dbObject('ClassName')->getEnum()
 		);
@@ -185,7 +195,8 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$this->assertEquals(
 			array(
 				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
-				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO',
+				'DataObjectSchemaGenerationTest_NoTable' => 'DataObjectSchemaGenerationTest_NoTable',
 			),
 			$item1->dbObject('ClassName')->getEnum()
 		);
@@ -231,4 +242,8 @@ class DataObjectSchemaGenerationTest_IndexDO extends DataObjectSchemaGenerationT
 		),
 		'SearchFields' => 'fulltext ("Title","Content")'
 	);
+}
+
+class DataObjectSchemaGenerationTest_NoTable extends DataObjectSchemaGenerationTest_DO implements TestOnly {
+
 }
