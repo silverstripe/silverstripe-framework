@@ -64,6 +64,6 @@ consider porting them over into the new structure. Otherwise, follow these conve
 
 ## Related
 
-* [PHP Coding Conventions](/getting_started/coding_conventions)
-* [JavaScript Coding Conventions](/getting_started/javascript_coding_conventions)
+* [PHP Coding Conventions](/contributing/php_coding_conventions)
+* [JavaScript Coding Conventions](/contributing/javascript_coding_conventions)
 * [Browser support](/getting_started/server_requirements/)

@@ -42,5 +42,5 @@ and can be checked locally via `npm run lint`.
 
 ## Related
 
-* [PHP Coding Conventions](/getting_started/coding_conventions)
-* [CSS Coding Conventions](/getting_started/css_coding_conventions)
+* [PHP Coding Conventions](/contributing/php_coding_conventions)
+* [CSS Coding Conventions](/contributing/css_coding_conventions)

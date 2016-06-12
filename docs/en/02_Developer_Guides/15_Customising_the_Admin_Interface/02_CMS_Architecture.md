@@ -45,8 +45,8 @@ Please make sure you build all files before submitting a pull request!
 
 ## Coding Conventions
 
-Please follow our [CSS](/getting_started/css_coding_conventions)
-and [JavaScript](/getting_started/javascript_coding_conventions)
+Please follow our [CSS](/contributing/css_coding_conventions)
+and [JavaScript](/contributing/javascript_coding_conventions)
 coding conventions.
 
 ## Sprites

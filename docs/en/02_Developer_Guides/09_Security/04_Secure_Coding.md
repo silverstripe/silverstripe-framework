@@ -7,7 +7,7 @@ See our "[Release Process](/contributing/release_process#security-releases) on h
 
 ## SQL Injection
 
-The [coding-conventions](/getting_started/coding_conventions) help guard against SQL injection attacks but still require developer
+The [coding-conventions](/contributing/coding_conventions) help guard against SQL injection attacks but still require developer
 diligence: ensure that any variable you insert into a filter / sort / join clause is either parameterised, or has been
 escaped.
 
