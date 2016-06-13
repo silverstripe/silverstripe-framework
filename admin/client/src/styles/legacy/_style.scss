@@ -484,6 +484,7 @@ body.cms {
         margin-right: $grid-gutter-width-half;
         float: none;
         border-bottom: 1px solid $nav-tabs-link-hover-border-color;
+        margin-bottom: 10px;
       }
 
       .first .ui-tabs-anchor {
@@ -1463,12 +1464,27 @@ form.member-profile-form {
 }
 
 .memberdatetimeoptionset {
+  @extend .form-inline;
+
 	.description {
 		font-style: normal;
 	}
 	.toggle {
 		font-size: $font-size-sm;
 	}
+  .toggle-content {
+    padding-left: 0;
+    li {
+      margin-right: 20px;
+    }
+  }
+  .radio {
+    width: 200px;
+    margin-bottom: 6px;
+  }
+  .valcustom {
+    vertical-align: top;
+  }
 }
 
 .cms {
@@ -1488,12 +1504,11 @@ form.member-profile-form {
 		background: $tab-panel-texture-color;
 		width: 100%;
 		#Root_Main {
-			.confirmedpassword {
-				border-bottom:none;
-				box-shadow:none;
-			}
+
 			.customFormat {
-				max-width:80px;
+				max-width: 100px;
+        padding-top: 0;
+        padding-bottom: 0;
 			}
 			.cms-help-toggle {
 				text-indent: -9999em;
@@ -1507,17 +1522,28 @@ form.member-profile-form {
 				float:none;
 			}
 		}
-				}
+
+    .form-group.confirmedpassword {
+      border-bottom: none;
+      box-shadow: none;
+
+      .form__field-holder--no-label {
+        margin-left: 0;
+      }
+    }
+	}
 	form.member-profile-form {
 		#Root .ui-tabs-nav {
 			display: none;
-			}
+		}
 
-		#Root_Main, #Root_Permissions {
-			border: none;
-			}
+	#Root_Main, #Root_Permissions {
+		border: none;
 		}
 	}
+}
+
+
 
 /** --------------------------------------------
  * "Settings" Form

@@ -1,28 +1,26 @@
-// .form-component {
-//   padding-bottom: $spacer-y;
-// }
-//
-// // Vertically align readonly text with label
-// .field.readonly {
-//
-//   label.left {
-//     padding-top: 8px;
-//   }
-//
-//   .middleColumn {
-//     padding-top: 8px;
-//   }
-// }
-
 .form {
   padding-bottom: $spacer-y;
+}
 
-  // scss-lint:disable SelectorDepth
-  .readonly .form__field-holder > div { // Nesting required
-    padding: 8px 0;
-    text-transform: capitalize;
+.form-group {
+  padding-bottom: $spacer-y;
+
+  // Add divider lines
+  &::after {
+    border-bottom: 1px solid $border-color-light;
+    visibility: visible;
+    width: 100%;
+    margin: $spacer-y 0 #{-$spacer-y};
   }
-  // scss-lint:enable SelectorDepth
+
+  .form-group {
+    padding-bottom: 0;
+
+    &::after {
+      border-bottom: 0;
+      visibility: hidden;
+    }
+  }
 }
 
 .form__field-extra-label,
@@ -31,21 +29,67 @@
   padding-top: $input-padding-y;
   padding-bottom: $input-padding-y;
   margin-bottom: 0;
-  // font-style: italic;
   font-size: $font-size-sm;
 }
 
+input.text {
+  max-width: 600px;
+}
+
+// TODO convert all readonly fields to inputs,
+// and remove .form-control-static class from them
 .form-control-static {
   padding-left: $input-padding-x;
   padding-right: $input-padding-x;
   background-color: $input-bg-disabled;
+  border: 1px solid $input-bg-disabled;
   @include border-radius($input-border-radius);
+
+  &:focus {
+    border-color: $input-border-focus;
+    outline: none;
+  }
+}
+
+// Readonlys should be converted to an input
+// scss-lint:disable all
+// .form__field-holder .currency.readonly,
+// .form__field-holder span.readonly,
+.form__field-holder .readonly,
+.readonly .form__field-holder > div {
+  @extend .form-control-static;
+}
+// scss-lint:enable all
+
+
+// Radio / Checkbox
+.radio input[type="radio"],
+.radio-inline input[type="radio"],
+.checkbox input[type="checkbox"],
+.checkbox-inline input[type="checkbox"] {
+  margin-right: 6px;
 }
 
 @mixin form-responsive($breakpoint-inline, $breakpoint-inline-limit-width, $breakpoint-inline-limit-width-max) {
   @include media-breakpoint-up($breakpoint-inline) {
     .form-group {
       @include make-row();
+
+      &.checkbox .form__field-holder,
+      &.nolabel .form__field-holder,
+      .form__field-holder--no-label {
+        @include make-col-offset(3);
+      }
+
+      &::after {
+        margin: $spacer-y $grid-gutter-width-half #{-$spacer-y};
+      }
+
+      &.treedropdown {
+        // scss-lint:disable ImportantRule
+        display: flex !important;
+        // scss-lint:enable ImportantRule
+      }
     }
 
     .form__field-label {
@@ -55,6 +99,7 @@
       padding-top: $input-padding-y;
       padding-bottom: $input-padding-y;
       margin-bottom: 0;
+      display: block;
     }
 
     .form__field-holder {
@@ -67,38 +112,52 @@
       @include make-col-span(9);
       @include make-col-offset(3);
     }
+
+    .optionset {
+      margin-top: 7px;
+    }
   }
 
   @include media-breakpoint-up($breakpoint-inline-limit-width) {
+    .form-group {
+      &.checkbox .form__field-holder,
+      &.nolabel .form__field-holder,
+      .form__field-holder--no-label {
+        @include make-col-offset(2);
+      }
+    }
+
     .form__field-label {
       @include make-col-span(2);
     }
 
     .form__field-holder {
-      @include make-col-span(6);
+      @include make-col-span(8);
     }
 
     .form__field-extra-label {
-      @include make-col-span(4);
+      @include make-col-span(2);
       @include make-col-offset(0);
     }
   }
 
   @include media-breakpoint-up($breakpoint-inline-limit-width-max) {
     .form__field-holder {
-      @include make-col-span(5);
+      @include make-col-span(7);
     }
 
     .form__field-extra-label {
-      @include make-col-span(5);
+      @include make-col-span(3);
       @include make-col-offset(0);
     }
   }
 }
 
 
-// Apply to forms to state when the label and input become inline
-// @include form-responsive(turns inline, stops being full width, input only takes up a portion of screen width)
-.form--inline {
-  @include form-responsive(md, xl, xxl);
+// Apply .form--inline to forms to state when the label and input become inline
+// @include form-responsive(turns inline, stops being full width, smaller portion of screen width is used)
+.form--inline,
+.CMSMain,
+.cms-content {
+  @include form-responsive(lg, xl, xxl);
 }

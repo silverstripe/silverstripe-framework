@@ -1,14 +1,10 @@
 <div class="fieldholder-small">
-	<div class="row form-group">
-		<% if $Title %><label class="col-sm-2 fieldholder-small-label" <% if $ID %>for="$ID"<% end_if %>>$Title</label><% end_if %>
-	  	<div class="col-sm-10<% if $Title %> col-sm-push-2<% end_if %>">
-			<%-- TODO: add `.form-control` class to `<input ...>` --%>
-			$Field
-		</div>
+	<% if $Title %><label class="fieldholder-small-label" <% if $ID %>aria-describedby="<% if $RightTitle %>extra-label-$ID<% end_if %>" for="$ID"<% end_if %>>$Title</label><% end_if %>
+  	<div>
+		<%-- TODO: add `.form-control` class to `<input ...>` --%>
+		$Field
 	</div>
-	<% if $RightTitle %>
-		<div class="col-sm-10- col-sm-push-2">
-			<p class="text-muted fieldholder-small-label" <% if $ID %>for="$ID"<% end_if %>>$RightTitle</p>
-		</div>
-	<% end_if %>
 </div>
+<% if $RightTitle %>
+	<p class="form__field-extra-label" <% if $ID %>id="extra-label-$ID"<% end_if %>>$RightTitle</p>
+<% end_if %>

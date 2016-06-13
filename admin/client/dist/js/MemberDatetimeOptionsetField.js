@@ -25,14 +25,14 @@
 
 		$('.memberdatetimeoptionset').entwine({
 			onmatch: function onmatch() {
-				this.find('.description .toggle-content').hide();
+				this.find('.toggle-content').hide();
 				this._super();
 			}
 		});
 
 		$('.memberdatetimeoptionset .toggle').entwine({
 			onclick: function onclick(e) {
-				jQuery(this).closest('.description').find('.toggle-content').toggle();
+				jQuery(this).closest('.description').parent().find('.toggle-content').toggle();
 				return false;
 			}
 		});
