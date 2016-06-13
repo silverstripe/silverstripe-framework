@@ -23,6 +23,11 @@
   }
 }
 
+.form__field-label {
+  // If word is to long force break with hyphenation
+  @include break-word();
+}
+
 .form__field-extra-label,
 .form__field-description {
   color: $text-muted;
@@ -33,7 +38,7 @@
 }
 
 input.text {
-  max-width: 600px;
+  max-width: $input-max-width;
 }
 
 // TODO convert all readonly fields to inputs,
@@ -43,6 +48,7 @@ input.text {
   padding-right: $input-padding-x;
   background-color: $input-bg-disabled;
   border: 1px solid $input-bg-disabled;
+  max-width: $input-max-width;
   @include border-radius($input-border-radius);
 
   &:focus {
@@ -53,8 +59,6 @@ input.text {
 
 // Readonlys should be converted to an input
 // scss-lint:disable all
-// .form__field-holder .currency.readonly,
-// .form__field-holder span.readonly,
 .form__field-holder .readonly,
 .readonly .form__field-holder > div {
   @extend .form-control-static;
