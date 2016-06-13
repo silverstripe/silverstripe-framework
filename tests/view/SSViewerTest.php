@@ -726,6 +726,16 @@ after')
 			'A - B - C - B - A'
 		);
 
+		$this->assertEquals(
+			$this->render('<% include SSViewerTestIncludeScopeInheritanceWithUpAndTop Title="A" %>',
+				new ArrayData(array(
+					'Item' => new ArrayData(array(
+						'Title' =>'B', 'NestedItem' => new ArrayData(array('Title' => 'C'))
+					)))
+				)),
+			'A - A - A'
+		);
+
 		$data = new ArrayData(array(
 			'Nested' => new ArrayData(array(
 				'Object' => new ArrayData(array('Key' => 'A'))

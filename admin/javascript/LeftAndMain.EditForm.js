@@ -46,7 +46,7 @@
 			ChangeTrackerOptions: {
 				ignoreFieldSelector: '.no-change-track, .ss-upload :input, .cms-navigator :input'
 			},
-		
+
 			/**
 			 * Variable: ValidationErrorShown
 			 * Boolean for tracking whether a validation error has been already been shown. Used because tabs can
@@ -94,16 +94,16 @@
 				// 
 				// // Rewrite iframe links (for IE)
 				// html = html.replace(/(<iframe[^>]*src=")([^"]+)("[^>]*>)/g, '$1' + $('base').attr('href') + '$2$3');
-				
+
 				this._super();
 			},
 			'from .cms-tabset': {
 				onafterredrawtabs: function () {
-				// Show validation errors if necessary
-				if(this.hasClass('validationerror')) {
-					// Ensure the first validation error is visible
-					var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
-					$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
+					// Show validation errors if necessary
+					if(this.hasClass('validationerror')) {
+						// Ensure the first validation error is visible
+						var tabError = this.find('.message.validation, .message.required').first().closest('.tab');
+						$('.cms-container').clearCurrentTabState(); // clear state to avoid override later on
 
 						// Attempt #1: Look for nearest .ss-tabset (usually nested deeper underneath a .cms-tabset).
 						var $tabSet = tabError.closest('.ss-tabset');
@@ -111,7 +111,7 @@
 						// Attempt #2: Next level in tab-ception, try to select the tab within this higher level .cms-tabset if possible
 						if (!$tabSet.length) {
 							$tabSet = tabError.closest('.cms-tabset');
-				}
+						}
 
 						if ($tabSet.length) {
 							$tabSet.tabs('option', 'active', tabError.index('.tab'));
@@ -347,7 +347,7 @@
 
 					//Fall back to nearest visible element if hidden (for select type fields)
 					if(!$(elementID).is(':visible')){
-						elementID = '#' + $(elementID).closest('.field').attr('id');
+						elementID = '#' + $(elementID).closest('.field:visible').attr('id');
 						scrollY = $(elementID).position().top;
 					}
 
