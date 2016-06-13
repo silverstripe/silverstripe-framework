@@ -343,7 +343,11 @@ class BulkLoader_Result extends Object {
 	 * @return ArrayList
 	 */
 	public function Deleted() {
-		return $this->mapToArrayList($this->deleted);
+		$set = new ArrayList();
+		foreach ($this->deleted as $arrItem) {
+			$set->push(ArrayData::create($arrItem));
+		}
+		return $set;
 	}
 
 	/**
@@ -386,11 +390,9 @@ class BulkLoader_Result extends Object {
 	 * @param $message string
 	 */
 	public function addDeleted($obj, $message = null) {
-		$this->deleted[] = $this->lastChange = array(
-			'ID' => $obj->ID,
-			'ClassName' => $obj->class,
-			'Message' => $message
-		);
+		$data = $obj->toMap();
+		$data['_BulkLoaderMessage'] = $message;
+		$this->deleted[] = $this->lastChange = $data;
 		$this->lastChange['ChangeType'] = 'deleted';
 	}
 
