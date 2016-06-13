@@ -347,7 +347,7 @@
 
 					//Fall back to nearest visible element if hidden (for select type fields)
 					if(!$(elementID).is(':visible')){
-						elementID = '#' + $(elementID).closest('.field').attr('id');
+						elementID = '#' + $(elementID).closest('.field:visible').attr('id');
 						scrollY = $(elementID).position().top;
 					}
 
