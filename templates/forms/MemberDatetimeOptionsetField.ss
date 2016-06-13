@@ -8,7 +8,7 @@
 			<% if $CustomName %>
 				<input class="form-control customFormat cms-help cms-help-tooltip" name="$CustomName" value="$CustomValue.ATT">
 				<% if $CustomPreview %>
-					<span class="preview">({$CustomPreviewLabel.XML}: "{$CustomPreview.XML}")</span>
+					<span class="form__field-description">({$CustomPreviewLabel.XML}: "{$CustomPreview.XML}")</span>
 				<% end_if %>
 			<% end_if %>
 		</div>

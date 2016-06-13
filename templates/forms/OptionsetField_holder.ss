@@ -1,18 +1,28 @@
-<div id="$Name" class="field<% if $extraClass %> $extraClass<% end_if %>">
-  	<div class="form-group">
-		<% if $Title %><label class="form-control-label">$Title</label><% end_if %>
-		<div class="form__field-holder <% if not $Title %> col-sm-push-2<% end_if %>">
-			$Field
-		</div>
+<div id="$Name" class="form-group field<% if $extraClass %> $extraClass<% end_if %>">
+
+    <% if $Title %>
+        <label
+            class="form__field-label"
+            <% if $Message || $RightTitle || $Description %>
+                aria-describedby="<% if $Message %>message-$ID <% else_if $RightTitle %>extra-label-$ID <% else_if $Description %>discribes-$ID <% end_if %>"
+            <% end_if %>
+        >
+            $Title
+        </label>
+    <% end_if %>
+
+    <div class="form__field-holder <% if not $Title %> form__field-holder--no-label<% end_if %>">
+		$Field
+
+        <%-- TODO: refactor so it renders the below using a method, instead of template conditional --%>
+    	<% if $RightTitle || $Message || $Description %>
+    		<% if $RightTitle %><p class="text-muted">$RightTitle</p><% end_if %>
+
+    		<%-- TODO: use Bootstraps alert classes in $MessageType --%>
+    		<% if $Message %><div class="alert $MessageType" role="alert" id="massage-$ID">$Message</div><% end_if %>
+
+    		<% if $Description %><p class="description" id="discribes-$ID">$Description</p><% end_if %>
+    	<% end_if %>
 	</div>
-
-  	<%-- TODO: refactor so it renders the below using a method, instead of template conditional --%>
-	<% if $RightTitle || $Message || $Description %>
-		<% if $RightTitle %><p class="text-muted">$RightTitle</p><% end_if %>
-
-		<%-- TODO: use Bootstrap's alert classes in $MessageType --%>
-		<% if $Message %><div class="alert $MessageType" role="alert">$Message</div><% end_if %>
-
-		<% if $Description %><p class="description">$Description</p><% end_if %>
-	<% end_if %>
+    <% if $RightTitle %><p class="form__field-extra-label" id="extra-label-$ID">$RightTitle</p><% end_if %>
 </div>

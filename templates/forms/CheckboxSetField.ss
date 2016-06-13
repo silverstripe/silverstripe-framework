@@ -1,7 +1,7 @@
 <div $AttributesHTML>
 	<% if $Options.Count %>
 		<% loop $Options %>
-			<div class="$Class">
+			<div class="checkbox $Class">
 				<label>
 					<input id="$ID" class="checkbox" name="$Name" type="checkbox" value="$Value"<% if $isChecked %> checked="checked"<% end_if %><% if $isDisabled %> disabled="disabled"<% end_if %> />
 					$Title
