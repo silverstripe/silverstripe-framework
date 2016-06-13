@@ -46,7 +46,7 @@ and `MyDate`. The attribute `HiddenProperty` should not be searchable, and `MyDa
 			'MyDate' => 'Date'
 		);
 		
-		public function getCustomSearchContext() {
+		public function getDefaultSearchContext() {
 			$fields = $this->scaffoldSearchFields(array(
 				'restrictFields' => array('PublicProperty','MyDate')
 			));

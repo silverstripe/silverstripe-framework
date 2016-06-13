@@ -17,7 +17,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
     "Campaigns.ITEM_SUMMARY_PLURAL": "%s items",
     "Campaigns.ITEM_SUMMARY_SINGULAR": "%s item",
     "Campaigns.PUBLISHCAMPAIGN": "Publish campaign",
-    "Campaigns.REVERTCAMPAIGN": "Revert",
+    "Campaigns.REVERTCAMPAIGN": "Whakahokia",
     "LeftAndMain.CONFIRMUNSAVED": "Kei te hiahia whakatere atu i tēnei whārangi?\n\nWHAKATŪPATO: Kāore anō ō huringa kia tiakina.\n\nPēhi AE kia haere tonu, Whakakore rānei kia noho i te whārangi onāianei.",
     "LeftAndMain.CONFIRMUNSAVEDSHORT": "WHAKATŪPATO: Kāore anō ō huringa kia tiakina.",
     "LeftAndMain.PAGEWASDELETED": "I mukua tēnei whārangi.  Hei whakatika i tētahi whārangi, tīpakohia i te taha mauī.",

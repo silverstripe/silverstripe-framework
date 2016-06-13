@@ -277,6 +277,45 @@ class DataQueryTest extends SapphireTest {
 		$this->resetDBSchema(true);
 	}
 
+	/**
+	 * Tests that getFinalisedQuery can include all tables
+	 */
+	public function testConditionsIncludeTables() {
+		// Including filter on parent table only doesn't pull in second
+		$query = new DataQuery('DataQueryTest_C');
+		$query->sort('"SortOrder"');
+		$query->where(array(
+			'"DataQueryTest_C"."Title" = ?' => array('First')
+		));
+		$result = $query->getFinalisedQuery(array('Title'));
+		$from = $result->getFrom();
+		$this->assertContains('DataQueryTest_C', array_keys($from));
+		$this->assertNotContains('DataQueryTest_E', array_keys($from));
+
+		// Including filter on sub-table requires it
+		$query = new DataQuery('DataQueryTest_C');
+		$query->sort('"SortOrder"');
+		$query->where(array(
+			'"DataQueryTest_C"."Title" = ? OR "DataQueryTest_E"."SortOrder" > ?' => array(
+				'First', 2
+			)
+		));
+		$result = $query->getFinalisedQuery(array('Title'));
+		$from = $result->getFrom();
+
+		// Check that including "SortOrder" prompted inclusion of DataQueryTest_E table
+		$this->assertContains('DataQueryTest_C', array_keys($from));
+		$this->assertContains('DataQueryTest_E', array_keys($from));
+		$arrayResult = iterator_to_array($result->execute());
+		$first = array_shift($arrayResult);
+		$this->assertNotNull($first);
+		$this->assertEquals('First', $first['Title']);
+		$second = array_shift($arrayResult);
+		$this->assertNotNull($second);
+		$this->assertEquals('Last', $second['Title']);
+		$this->assertEmpty(array_shift($arrayResult));
+	}
+
 }
 
 

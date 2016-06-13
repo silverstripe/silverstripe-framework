@@ -22,7 +22,7 @@ HTMLEditorConfig::get('cms')->setOptions(array(
 		. "-div[id|dir|class|align|style],-span[class|align|style],-pre[class|align],address[class|align],"
 		. "-h1[id|dir|class|align|style],-h2[id|dir|class|align|style],-h3[id|dir|class|align|style],"
 		. "-h4[id|dir|class|align|style],-h5[id|dir|class|align|style],-h6[id|dir|class|align|style],hr[class],"
-		. "dd[id|class|title|dir],dl[id|class|title|dir],dt[id|class|title|dir],@[id,style,class]",
+		. "dd[id|class|title|dir],dl[id|class|title|dir],dt[id|class|title|dir]",
 	'extended_valid_elements' => "img[class|src|alt|title|hspace|vspace|width|height|align|onmouseover|onmouseout|name"
 		. "|usemap|data*],iframe[src|name|width|height|align|frameborder|marginwidth|marginheight|scrolling],"
 		. "object[width|height|data|type],param[name|value],map[class|name|id],area[shape|coords|href|target|alt]"

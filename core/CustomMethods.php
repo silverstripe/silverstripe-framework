@@ -162,7 +162,24 @@ trait CustomMethods {
 		}
 	}
 
+	/**
+	 * @param object $extension
+	 * @return array
+	 */
+	protected function findMethodsFromExtension($extension) {
+		if (method_exists($extension, 'allMethodNames')) {
+			if ($extension instanceof \Extension) $extension->setOwner($this);
+			$methods = $extension->allMethodNames(true);
+			if ($extension instanceof \Extension) $extension->clearOwner();
+		} else {
+			if (!isset(self::$built_in_methods[$extension->class])) {
+				self::$built_in_methods[$extension->class] = array_map('strtolower', get_class_methods($extension));
+			}
+			$methods = self::$built_in_methods[$extension->class];
+		}
 
+		return $methods;
+	}
 
 	/**
 	 * Add all the methods from an object property (which is an {@link Extension}) to this object.
@@ -175,29 +192,14 @@ trait CustomMethods {
 		$class = get_class($this);
 		$extension = ($index !== null) ? $this->{$property}[$index] : $this->$property;
 
-		if(!$extension) {
-			throw new InvalidArgumentException (
+		if (!$extension) {
+			throw new InvalidArgumentException(
 				"Object->addMethodsFrom(): could not add methods from {$class}->{$property}[$index]"
 			);
 		}
 
-		if(method_exists($extension, 'allMethodNames')) {
-			if ($extension instanceof \Extension) {
-				$extension->setOwner($this);
-			}
-			$methods = $extension->allMethodNames(true);
-			if ($extension instanceof \Extension) {
-				$extension->clearOwner();
-			}
-
-		} else {
-			if(!isset(self::$built_in_methods[$extension->class])) {
-				self::$built_in_methods[$extension->class] = array_map('strtolower', get_class_methods($extension));
-			}
-			$methods = self::$built_in_methods[$extension->class];
-		}
-
-		if($methods) {
+		$methods = $this->findMethodsFromExtension($extension);
+		if ($methods) {
 			$methodInfo = array(
 				'property' => $property,
 				'index'    => $index,
@@ -211,6 +213,37 @@ trait CustomMethods {
 					array_merge(self::$extra_methods[$class], $newMethods);
 			} else {
 				self::$extra_methods[$class] = $newMethods;
+			}
+		}
+	}
+
+	/**
+	 * Add all the methods from an object property (which is an {@link Extension}) to this object.
+	 *
+	 * @param string $property the property name
+	 * @param string|int $index an index to use if the property is an array
+	 */
+	protected function removeMethodsFrom($property, $index = null) {
+		$extension = ($index !== null) ? $this->{$property}[$index] : $this->$property;
+
+		if (!$extension) {
+			throw new InvalidArgumentException(
+				"Object->removeMethodsFrom(): could not remove methods from {$this->class}->{$property}[$index]"
+			);
+		}
+
+		$methods = $this->findMethodsFromExtension($extension);
+		if ($methods) {
+			foreach ($methods as $method) {
+				$methodInfo = self::$extra_methods[$this->class][$method];
+
+				if ($methodInfo['property'] === $property && $methodInfo['index'] === $index) {
+					unset(self::$extra_methods[$this->class][$method]);
+				}
+			}
+
+			if (empty(self::$extra_methods[$this->class])) {
+				unset(self::$extra_methods[$this->class]);
 			}
 		}
 	}
