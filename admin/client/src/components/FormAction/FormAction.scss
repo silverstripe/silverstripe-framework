@@ -5,6 +5,10 @@
 .btn-toolbar {
   margin-top: $spacer-y;
   margin-bottom: $spacer-y;
+
+  fieldset + & {
+    margin-top: 0;
+  }
 }
 
 // General buttons
