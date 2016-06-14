@@ -225,8 +225,8 @@ gulp.task('bundle-lib', function bundleLib() {
       gulpUtil.log('Finished', `bundled ${bundleFileName} ${msg}`)
     )
     .transform('babelify', babelifyOptions)
-    .require('deep-freeze',
-      { expose: 'deep-freeze' }
+    .require('deep-freeze-strict',
+      { expose: 'deep-freeze-strict' }
     )
     .require('react',
       { expose: 'react' }
@@ -382,7 +382,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('components/Toolbar/Toolbar')
     .external('components/FormBuilder/FormBuilder')
     .external('components/FormAction/FormAction')
-    .external('deep-freeze')
+    .external('deep-freeze-strict')
     .external('components/GridField/GridField')
     .external('i18n')
     .external('jQuery')

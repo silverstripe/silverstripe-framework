@@ -1,6 +1,6 @@
 /* global jest, describe, afterEach, it, expect */
 
-jest.unmock('deep-freeze');
+jest.unmock('deep-freeze-strict');
 jest.unmock('../RouteRegister.js');
 
 import routeRegister from '../RouteRegister.js';

@@ -1,6 +1,6 @@
 /* global jest, describe, beforeEach, it, expect */
 
-jest.unmock('deep-freeze');
+jest.unmock('deep-freeze-strict');
 jest.unmock('../SchemaActionTypes');
 jest.unmock('../SchemaReducer');
 

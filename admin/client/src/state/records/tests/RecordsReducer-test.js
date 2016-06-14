@@ -1,6 +1,6 @@
 /* global jest, describe, beforeEach, it, expect */
 
-jest.dontMock('deep-freeze');
+jest.dontMock('deep-freeze-strict');
 jest.dontMock('../RecordsReducer');
 jest.dontMock('../RecordsActionTypes');
 

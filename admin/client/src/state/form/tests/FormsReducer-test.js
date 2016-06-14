@@ -1,10 +1,10 @@
 /* global jest, describe, expect, it, beforeEach */
 
-jest.unmock('deep-freeze');
+jest.unmock('deep-freeze-strict');
 jest.unmock('../FormReducer');
 jest.unmock('../FormActionTypes');
 
-import deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze-strict';
 import { ACTION_TYPES } from '../FormActionTypes';
 import formReducer from '../FormReducer';
 
