@@ -68,11 +68,13 @@
 
 
 // Radio / Checkbox
-.radio input[type="radio"],
-.radio-inline input[type="radio"],
-.checkbox input[type="checkbox"],
-.checkbox-inline input[type="checkbox"] {
+input[type="checkbox"],
+input[type="radio"],
+input.checkbox,
+input.radio {
+  display: inline;
   margin-right: 6px;
+  margin-bottom: 0;
 }
 
 
@@ -81,6 +83,8 @@
 .form__fieldgroup .form__fieldgroup-item {
   display: inline-block;
   margin-right: $spacer-x / 2;
+  margin-top: 8px;
+  min-width: 166px;
   vertical-align: bottom; // Align fields with no labels
 }
 
@@ -88,7 +92,6 @@
   display: block;
   font-size: $font-size-sm;
   color: $text-muted;
-  margin-top: 8px;
 }
 
 

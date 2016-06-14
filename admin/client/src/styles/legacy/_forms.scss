@@ -668,62 +668,6 @@ form.small .field, .field.small {
 	}
 }
 
-/** ----------------------------------------------------
- * Checkbox Field
- * ---------------------------------------------------- */
-.field.checkbox,
-.optionset,
-.checkboxset {
-
-  > .checkbox {
-    margin-bottom: 0;
-  }
-
-  input.checkbox {
-    display: inline;
-  }
-}
-
-/** ----------------------------------------------------
- * Radiobutton Field
- * ---------------------------------------------------- */
-.field.radio input.radio {
-  display: inline;
-}
-
-/** ----------------------------------------------------
- * Optionsets and Checkboxsets
- * ---------------------------------------------------- */
-.optionset {
-
-	li {
-		// float: left;
-		// display: block;
-		// width: $grid-x * 27;
-		// padding-bottom: $grid-x;
-		// padding-top: 0;
-		// line-height: $grid-y * 2;
-		list-style: none;
-
-		input {
-			display: inline-block;
-			padding-right: 0;
-			margin-right: 0;
-		}
-
-		label {
-			display: inline;
-			cursor: pointer;
-			padding-left: $grid-y;
-		}
-	}
-
-	&.field {
-		padding-top: 0;
-	}
-
-}
-
 
 /** ----------------------------------------------------
  * HTML Text
