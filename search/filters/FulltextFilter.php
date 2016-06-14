@@ -51,6 +51,7 @@ class FulltextFilter extends SearchFilter {
 	 * 	MyDataObject::get()->filter('SearchFields:fulltext', 'search term')
 	 * </code>
 	 *
+	 * @throws Exception
 	 * @return string
 	*/
 	public function getDbName() {
@@ -65,8 +66,11 @@ class FulltextFilter extends SearchFilter {
 				if(preg_match('/^fulltext\s+\((.+)\)$/i', $index, $matches)) {
 					return $this->prepareColumns($matches[1]);
 				} else {
-					throw new Exception("Invalid fulltext index format for '" . $this->getName()
-						. "' on '" . $this->model . "'");
+					throw new Exception(sprintf(
+						"Invalid fulltext index format for '%s' on '%s'",
+						$this->getName(),
+						$this->model
+					));
 				}
 			}
 		}
@@ -78,13 +82,14 @@ class FulltextFilter extends SearchFilter {
 	 * Adds table identifier to the every column.
 	 * Columns must have table identifier to prevent duplicate column name error.
 	 *
+	 * @param array $columns
 	 * @return string
-	*/
+	 */
 	protected function prepareColumns($columns) {
 		$cols = preg_split('/"?\s*,\s*"?/', trim($columns, '(") '));
-		$class = ClassInfo::table_for_object_field($this->model, current($cols));
-		$cols = array_map(function($col) use ($class) {
-			return sprintf('"%s"."%s"', $class, $col);
+		$table = DataObject::getSchema()->tableForField($this->model, current($cols));
+		$cols = array_map(function($col) use ($table) {
+			return sprintf('"%s"."%s"', $table, $col);
 		}, $cols);
 		return implode(',', $cols);
 	}

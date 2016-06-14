@@ -35,15 +35,18 @@ class HasManyList extends RelationList {
 	}
 
 	protected function foreignIDFilter($id = null) {
-		if ($id === null) $id = $this->getForeignID();
+		if ($id === null) {
+			$id = $this->getForeignID();
+		}
 
 		// Apply relation filter
-		$key = "\"$this->foreignKey\"";
+		$key = DataObject::getSchema()->sqlColumnForField($this->dataClass(), $this->getForeignKey());
 		if(is_array($id)) {
 			return array("$key IN (".DB::placeholders($id).")"  => $id);
 		} else if($id !== null){
 			return array($key => $id);
 		}
+		return null;
 	}
 
 	/**
@@ -51,7 +54,7 @@ class HasManyList extends RelationList {
 	 *
 	 * It does so by setting the relationFilters.
 	 *
-	 * @param $item The DataObject to be added, or its ID
+	 * @param DataObject|int $item The DataObject to be added, or its ID
 	 */
 	public function add($item) {
 		if(is_numeric($item)) {
@@ -83,7 +86,7 @@ class HasManyList extends RelationList {
 	 *
 	 * Doesn't actually remove the item, it just clears the foreign key value.
 	 *
-	 * @param $itemID The ID of the item to be removed.
+	 * @param int $itemID The ID of the item to be removed.
 	 */
 	public function removeByID($itemID) {
 		$item = $this->byID($itemID);
@@ -95,7 +98,7 @@ class HasManyList extends RelationList {
 	 * Remove an item from this relation.
 	 * Doesn't actually remove the item, it just clears the foreign key value.
 	 *
-	 * @param $item The DataObject to be removed
+	 * @param DataObject $item The DataObject to be removed
 	 * @todo Maybe we should delete the object instead?
 	 */
 	public function remove($item) {

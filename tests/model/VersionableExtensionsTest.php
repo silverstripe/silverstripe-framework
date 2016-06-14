@@ -68,30 +68,24 @@ class VersionableExtensionsTest_DataObject extends DataObject implements TestOnl
 }
 
 
-class VersionableExtensionsTest_Extension extends DataExtension implements TestOnly {
+class VersionableExtensionsTest_Extension extends DataExtension implements VersionableExtension, TestOnly {
 
 
-	public function isVersionedTable($table){
+	public function isVersionedTable($table) {
 		return true;
 	}
 
 
 	/**
-	 * fieldsInExtraTables function.
+	 * Update fields and indexes for the versonable suffix table
 	 *
-	 * @access public
-	 * @param mixed $suffix
+	 * @param string $suffix Table suffix being built
+	 * @param array $fields List of fields in this model
+	 * @param array $indexes List of indexes in this model
 	 * @return array
 	 */
-	public function fieldsInExtraTables($suffix){
-		$fields = array();
-		//$fields['db'] = DataObject::database_fields($this->owner->class);
-		$fields['indexes'] = $this->owner->databaseIndexes();
-
-		$fields['db'] = array_merge(
-			DataObject::database_fields($this->owner->class)
-		);
-
-		return $fields;
+	public function updateVersionableFields($suffix, &$fields, &$indexes){
+		$indexes['ExtraField'] = true;
+		$fields['ExtraField'] = 'Varchar()';
 	}
 }

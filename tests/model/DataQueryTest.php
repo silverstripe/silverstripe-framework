@@ -75,7 +75,7 @@ class DataQueryTest extends SapphireTest {
 
 		//test many_many with separate inheritance
 		$newDQ = new DataQuery('DataQueryTest_C');
-		$baseDBTable = ClassInfo::baseDataClass('DataQueryTest_C');
+		$baseDBTable = DataObject::getSchema()->baseDataTable('DataQueryTest_C');
 		$newDQ->applyRelation('ManyTestAs');
 		//check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
 		$this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
@@ -84,7 +84,7 @@ class DataQueryTest extends SapphireTest {
 
 		//test many_many with shared inheritance
 		$newDQ = new DataQuery('DataQueryTest_E');
-		$baseDBTable = ClassInfo::baseDataClass('DataQueryTest_E');
+		$baseDBTable = DataObject::getSchema()->baseDataTable('DataQueryTest_E');
 		//check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
 		$this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
 		//check we are explicitly selecting "FROM" the DO's table

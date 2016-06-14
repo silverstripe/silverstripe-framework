@@ -33,7 +33,7 @@ class VersionedTest extends SapphireTest {
 			'VersionedTest_WithIndexes_versions' =>
 				array('value' => false, 'message' => 'Unique indexes are no longer unique in _versions table'),
 			'VersionedTest_WithIndexes_Live' =>
-				array('value' => false, 'message' => 'Unique indexes are no longer unique in _Live table'),
+				array('value' => true, 'message' => 'Unique indexes are unique in _Live table'),
 		);
 
 		// Test each table's performance
@@ -56,7 +56,7 @@ class VersionedTest extends SapphireTest {
 				if (in_array($indexSpec['value'], $expectedColumns)) {
 					$isUnique = $indexSpec['type'] === 'unique';
 					$this->assertEquals($isUnique, $expectation['value'], $expectation['message']);
-}
+				}
 			}
 		}
 	}
@@ -314,7 +314,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testWritingNewToStage() {
-		$origStage = Versioned::get_stage();
+		$origReadingMode = Versioned::get_reading_mode();
 
 		Versioned::set_stage(Versioned::DRAFT);
 		$page = new VersionedTest_DataObject();
@@ -333,7 +333,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals(1, $stage->count());
 		$this->assertEquals($stage->First()->Title, 'testWritingNewToStage');
 
-		Versioned::set_stage($origStage);
+		Versioned::set_reading_mode($origReadingMode);
 	}
 
 	/**
@@ -343,7 +343,7 @@ class VersionedTest extends SapphireTest {
 	 * the VersionedTest_DataObject record though.
 	 */
 	public function testWritingNewToLive() {
-		$origStage = Versioned::get_stage();
+		$origReadingMode = Versioned::get_reading_mode();
 
 		Versioned::set_stage(Versioned::LIVE);
 		$page = new VersionedTest_DataObject();
@@ -362,7 +362,7 @@ class VersionedTest extends SapphireTest {
 		));
 		$this->assertEquals(0, $stage->count());
 
-		Versioned::set_stage($origStage);
+		Versioned::set_reading_mode($origReadingMode);
 	}
 
 	/**

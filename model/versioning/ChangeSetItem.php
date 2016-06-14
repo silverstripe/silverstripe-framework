@@ -67,7 +67,7 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 
 	public function onBeforeWrite() {
 		// Make sure ObjectClass refers to the base data class in the case of old or wrong code
-		$this->ObjectClass = ClassInfo::baseDataClass($this->ObjectClass);
+		$this->ObjectClass = $this->getSchema()->baseDataClass($this->ObjectClass);
 		parent::onBeforeWrite();
 	}
 
@@ -328,7 +328,7 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	public static function get_for_object($object) {
 		return ChangeSetItem::get()->filter([
 			'ObjectID' => $object->ID,
-			'ObjectClass' => ClassInfo::baseDataClass($object)
+			'ObjectClass' => $object->baseClass(),
 		]);
 	}
 
@@ -342,7 +342,7 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	public static function get_for_object_by_id($objectID, $objectClass) {
 		return ChangeSetItem::get()->filter([
 			'ObjectID' => $objectID,
-			'ObjectClass' => ClassInfo::baseDataClass($objectClass)
+			'ObjectClass' => static::getSchema()->baseDataClass($objectClass)
 		]);
 	}
 

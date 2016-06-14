@@ -117,7 +117,7 @@ class ChangeSet extends DataObject {
 
 		$references = [
 			'ObjectID'    => $object->ID,
-			'ObjectClass' => ClassInfo::baseDataClass($object)
+			'ObjectClass' => $object->baseClass(),
 		];
 
 		// Get existing item in case already added
@@ -146,7 +146,7 @@ class ChangeSet extends DataObject {
 	public function removeObject(DataObject $object) {
 		$item = ChangeSetItem::get()->filter([
 				'ObjectID' => $object->ID,
-				'ObjectClass' => ClassInfo::baseDataClass($object),
+				'ObjectClass' => $object->baseClass(),
 				'ChangeSetID' => $this->ID
 			])->first();
 
@@ -159,9 +159,17 @@ class ChangeSet extends DataObject {
 		$this->sync();
 	}
 
-	protected function implicitKey($item) {
-		if ($item instanceof ChangeSetItem) return $item->ObjectClass.'.'.$item->ObjectID;
-		return ClassInfo::baseDataClass($item).'.'.$item->ID;
+	/**
+	 * Build identifying string key for this object
+	 *
+	 * @param DataObject $item
+	 * @return string
+	 */
+	protected function implicitKey(DataObject $item) {
+		if ($item instanceof ChangeSetItem) {
+			return $item->ObjectClass.'.'.$item->ObjectID;
+		}
+		return $item->baseClass().'.'.$item->ID;
 	}
 
 	protected function calculateImplicit() {
@@ -174,16 +182,18 @@ class ChangeSet extends DataObject {
 		/** @var string[][] $references List of which explicit items reference each thing in referenced */
 		$references = array();
 
+		/** @var ChangeSetItem $item */
 		foreach ($this->Changes()->filter(['Added' => ChangeSetItem::EXPLICITLY]) as $item) {
 			$explicitKey = $this->implicitKey($item);
 			$explicit[$explicitKey] = true;
 
 			foreach ($item->findReferenced() as $referee) {
+				/** @var DataObject $referee */
 				$key = $this->implicitKey($referee);
 
 				$referenced[$key] = [
 					'ObjectID' => $referee->ID,
-					'ObjectClass' => ClassInfo::baseDataClass($referee)
+					'ObjectClass' => $referee->baseClass(),
 				];
 
 				$references[$key][] = $item->ID;
@@ -220,6 +230,7 @@ class ChangeSet extends DataObject {
 			$implicit = $this->calculateImplicit();
 
 			// Adjust the existing implicit ChangeSetItems for this ChangeSet
+			/** @var ChangeSetItem $item */
 			foreach ($this->Changes()->filter(['Added' => ChangeSetItem::IMPLICITLY]) as $item) {
 				$objectKey = $this->implicitKey($item);
 

@@ -24,6 +24,16 @@ class DataQuery {
 	protected $query;
 
 	/**
+	 * Map of all field names to an array of conflicting column SQL
+	 *
+	 * E.g.
+	 * array(
+	 *   'Title' => array(
+	 *     '"MyTable"."Title"',
+	 *     '"AnotherTable"."Title"',
+	 *   )
+	 * )
+	 *
 	 * @var array
 	 */
 	protected $collidingFields = array();
@@ -31,7 +41,7 @@ class DataQuery {
 	private $queriedColumns = null;
 
 	/**
-	 * @var Boolean
+	 * @var bool
 	 */
 	private $queryFinalised = false;
 
@@ -43,7 +53,7 @@ class DataQuery {
 	/**
 	 * Create a new DataQuery.
 	 *
-	 * @param String The name of the DataObject class that you wish to query
+	 * @param string $dataClass The name of the DataObject class that you wish to query
 	 */
 	public function __construct($dataClass) {
 		$this->dataClass = $dataClass;
@@ -59,6 +69,8 @@ class DataQuery {
 
 	/**
 	 * Return the {@link DataObject} class that is being queried.
+	 *
+	 * @return string
 	 */
 	public function dataClass() {
 		return $this->dataClass;
@@ -67,6 +79,8 @@ class DataQuery {
 	/**
 	 * Return the {@link SQLSelect} object that represents the current query; note that it will
 	 * be a clone of the object.
+	 *
+	 * @return SQLSelect
 	 */
 	public function query() {
 		return $this->getFinalisedQuery();
@@ -126,24 +140,12 @@ class DataQuery {
 	/**
 	 * Set up the simplest initial query
 	 */
-	public function initialiseQuery() {
-		// Get the tables to join to.
-		// Don't get any subclass tables - let lazy loading do that.
-		$tableClasses = ClassInfo::ancestry($this->dataClass, true);
-
-		// Error checking
-		if(!$tableClasses) {
-			if(!SS_ClassLoader::instance()->hasManifest()) {
-				user_error("DataObjects have been requested before the manifest is loaded. Please ensure you are not"
-					. " querying the database in _config.php.", E_USER_ERROR);
-			} else {
-				user_error("DataList::create Can't find data classes (classes linked to tables) for"
-					. " $this->dataClass. Please ensure you run dev/build after creating a new DataObject.",
-					E_USER_ERROR);
-			}
+	protected function initialiseQuery() {
+		// Join on base table and let lazy loading join subtables
+		$baseClass = DataObject::getSchema()->baseDataClass($this->dataClass());
+		if(!$baseClass) {
+			throw new InvalidArgumentException("DataQuery::create() Can't find data classes for '{$this->dataClass}'");
 		}
-
-		$baseClass = array_shift($tableClasses);
 
 		// Build our intial query
 		$this->query = new SQLSelect(array());
@@ -153,7 +155,8 @@ class DataQuery {
 			$this->sort($sort);
 		}
 
-		$this->query->setFrom("\"$baseClass\"");
+		$baseTable = DataObject::getSchema()->tableName($baseClass);
+		$this->query->setFrom("\"{$baseTable}\"");
 
 		$obj = Injector::inst()->get($baseClass);
 		$obj->extend('augmentDataQueryCreation', $this->query, $this);
@@ -177,8 +180,11 @@ class DataQuery {
 			$queriedColumns = array_merge($queriedColumns, array('Created', 'LastEdited', 'ClassName'));
 		}
 
+		$schema = DataObject::getSchema();
 		$query = clone $this->query;
-		$ancestorTables = ClassInfo::ancestry($this->dataClass, true);
+		$baseDataClass = $schema->baseDataClass($this->dataClass());
+		$baseIDColumn = $schema->sqlColumnForField($baseDataClass, 'ID');
+		$ancestorClasses = ClassInfo::ancestry($this->dataClass(), true);
 
 		// Generate the list of tables to iterate over and the list of columns required
 		// by any existing where clauses. This second step is skipped if we're fetching
@@ -203,11 +209,8 @@ class DataQuery {
 				}
 			}
 		} else {
-			$tableClasses = $ancestorTables;
+			$tableClasses = $ancestorClasses;
 		}
-
-		$tableNames = array_values($tableClasses);
-		$baseClass = $tableNames[0];
 
 		// Iterate over the tables and check what we need to select from them. If any selects are made (or the table is
 		// required for a select)
@@ -223,7 +226,9 @@ class DataQuery {
 			}
 
 			// If this is a subclass without any explicitly requested columns, omit this from the query
-			if(!in_array($tableClass, $ancestorTables) && empty($selectColumns)) continue;
+			if(!in_array($tableClass, $ancestorClasses) && empty($selectColumns)) {
+				continue;
+			}
 
 			// Select necessary columns (unless an explicitly empty array)
 			if($selectColumns !== array()) {
@@ -231,52 +236,61 @@ class DataQuery {
 			}
 
 			// Join if not the base table
-			if($tableClass !== $baseClass) {
-				$query->addLeftJoin($tableClass, "\"$tableClass\".\"ID\" = \"$baseClass\".\"ID\"", $tableClass, 10);
+			if($tableClass !== $baseDataClass) {
+				$tableName = $schema->tableName($tableClass);
+				$query->addLeftJoin(
+					$tableName,
+					"\"{$tableName}\".\"ID\" = {$baseIDColumn}",
+					$tableName,
+					10
+				);
 			}
 		}
 
-
-
 		// Resolve colliding fields
 		if($this->collidingFields) {
-			foreach($this->collidingFields as $k => $collisions) {
+			foreach($this->collidingFields as $collisionField => $collisions) {
 				$caseClauses = array();
 				foreach($collisions as $collision) {
-					if(preg_match('/^"([^"]+)"/', $collision, $matches)) {
-						$collisionBase = $matches[1];
-						if(class_exists($collisionBase)) {
-						$collisionClasses = ClassInfo::subclassesFor($collisionBase);
-						$collisionClasses = Convert::raw2sql($collisionClasses, true);
-						$caseClauses[] = "WHEN \"$baseClass\".\"ClassName\" IN ("
-							. implode(", ", $collisionClasses) . ") THEN $collision";
+					if(preg_match('/^"(?<table>[^"]+)"\./', $collision, $matches)) {
+						$collisionTable = $matches['table'];
+						$collisionClass = $schema->tableClass($collisionTable);
+						if($collisionClass) {
+							$collisionClassColumn = $schema->sqlColumnForField($collisionClass, 'ClassName');
+							$collisionClasses = ClassInfo::subclassesFor($collisionClass);
+							$collisionClassesSQL = implode(', ', Convert::raw2sql($collisionClasses, true));
+							$caseClauses[] = "WHEN {$collisionClassColumn} IN ({$collisionClassesSQL}) THEN $collision";
 						}
 					} else {
 						user_error("Bad collision item '$collision'", E_USER_WARNING);
 					}
 				}
-				$query->selectField("CASE " . implode( " ", $caseClauses) . " ELSE NULL END", $k);
+				$query->selectField("CASE " . implode( " ", $caseClauses) . " ELSE NULL END", $collisionField);
 			}
 		}
 
 
 		if($this->filterByClassName) {
 			// If querying the base class, don't bother filtering on class name
-			if($this->dataClass != $baseClass) {
+			if($this->dataClass != $baseDataClass) {
 				// Get the ClassName values to filter to
 				$classNames = ClassInfo::subclassesFor($this->dataClass);
-				if(!$classNames) user_error("DataList::create() Can't find data sub-classes for '$callerClass'");
 				$classNamesPlaceholders = DB::placeholders($classNames);
+				$baseClassColumn = $schema->sqlColumnForField($baseDataClass, 'ClassName');
 				$query->addWhere(array(
-					"\"$baseClass\".\"ClassName\" IN ($classNamesPlaceholders)" => $classNames
+					"{$baseClassColumn} IN ($classNamesPlaceholders)" => $classNames
 				));
 			}
 		}
 
-		$query->selectField("\"$baseClass\".\"ID\"", "ID");
+		// Select ID
+		$query->selectField($baseIDColumn, "ID");
+
+		// Select RecordClassName
+		$baseClassColumn = $schema->sqlColumnForField($baseDataClass, 'ClassName');
 		$query->selectField("
-			CASE WHEN \"$baseClass\".\"ClassName\" IS NOT NULL THEN \"$baseClass\".\"ClassName\"
-			ELSE ".Convert::raw2sql($baseClass, true)." END",
+			CASE WHEN {$baseClassColumn} IS NOT NULL THEN {$baseClassColumn}
+			ELSE ".Convert::raw2sql($baseDataClass, true)." END",
 			"RecordClassName"
 		);
 
@@ -295,12 +309,10 @@ class DataQuery {
 	 * Ensure that if a query has an order by clause, those columns are present in the select.
 	 *
 	 * @param SQLSelect $query
+	 * @param array $originalSelect
 	 * @return null
 	 */
 	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = array()) {
-		$tableClasses = ClassInfo::dataClassesFor($this->dataClass);
-		$baseClass = array_shift($tableClasses);
-
 		if($orderby = $query->getOrderBy()) {
 			$newOrderby = array();
 			$i = 0;
@@ -324,10 +336,9 @@ class DataQuery {
 				}
 
 				if(count($parts) == 1) {
-
-					if(DataObject::has_own_table_database_field($baseClass, $parts[0])) {
-						$qualCol = "\"$baseClass\".\"{$parts[0]}\"";
-					} else {
+					// Get expression for sort value
+					$qualCol = DataObject::getSchema()->sqlColumnForField($this->dataClass(), $parts[0]);;
+					if(!$qualCol) {
 						$qualCol = "\"$parts[0]\"";
 					}
 
@@ -384,10 +395,12 @@ class DataQuery {
 	/**
 	 * Return the number of records in this query.
 	 * Note that this will issue a separate SELECT COUNT() query.
+	 *
+	 * @return int
 	 */
 	public function count() {
-		$baseClass = ClassInfo::baseDataClass($this->dataClass);
-		return $this->getFinalisedQuery()->count("DISTINCT \"$baseClass\".\"ID\"");
+		$quotedColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
+		return $this->getFinalisedQuery()->count("DISTINCT {$quotedColumn}");
 	}
 
 	/**
@@ -395,6 +408,7 @@ class DataQuery {
 	 *
 	 * @param String $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
+	 * @return string
 	 */
 	public function max($field) {
 		return $this->aggregate("MAX(\"$field\")");
@@ -403,8 +417,9 @@ class DataQuery {
 	/**
 	 * Return the minimum value of the given field in this DataList
 	 *
-	 * @param String $field Unquoted database column name. Will be ANSI quoted
+	 * @param string $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
+	 * @return string
 	 */
 	public function min($field) {
 		return $this->aggregate("MIN(\"$field\")");
@@ -413,8 +428,9 @@ class DataQuery {
 	/**
 	 * Return the average value of the given field in this DataList
 	 *
-	 * @param String $field Unquoted database column name. Will be ANSI quoted
+	 * @param string $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
+	 * @return string
 	 */
 	public function avg($field) {
 		return $this->aggregate("AVG(\"$field\")");
@@ -423,8 +439,9 @@ class DataQuery {
 	/**
 	 * Return the sum of the values of the given field in this DataList
 	 *
-	 * @param String $field Unquoted database column name. Will be ANSI quoted
+	 * @param string $field Unquoted database column name. Will be ANSI quoted
 	 * automatically so must not contain double quotes.
+	 * @return string
 	 */
 	public function sum($field) {
 		return $this->aggregate("SUM(\"$field\")");
@@ -432,6 +449,10 @@ class DataQuery {
 
 	/**
 	 * Runs a raw aggregate expression.  Please handle escaping yourself
+	 *
+	 * @param string $expression An aggregate expression, such as 'MAX("Balance")', or a set of them
+	 * (as an escaped SQL statement)
+	 * @return string
 	 */
 	public function aggregate($expression) {
 		return $this->getFinalisedQuery()->aggregate($expression)->execute()->value();
@@ -455,6 +476,10 @@ class DataQuery {
 
 	/**
 	 * Update the SELECT clause of the query with the columns from the given table
+	 *
+	 * @param SQLSelect $query
+	 * @param string $tableClass Class to select from
+	 * @param array $columns
 	 */
 	protected function selectColumnsFromTable(SQLSelect &$query, $tableClass, $columns = null) {
 		// Add SQL for multi-value fields
@@ -464,19 +489,23 @@ class DataQuery {
 		foreach($databaseFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
 				// Update $collidingFields if necessary
-				if($expressionForField = $query->expressionForField($k)) {
-					if(!isset($this->collidingFields[$k])) $this->collidingFields[$k] = array($expressionForField);
-					$this->collidingFields[$k][] = "\"$tableClass\".\"$k\"";
-
+				$expressionForField = $query->expressionForField($k);
+				$quotedField = DataObject::getSchema()->sqlColumnForField($tableClass, $k);
+				if($expressionForField) {
+					if(!isset($this->collidingFields[$k])) {
+						$this->collidingFields[$k] = array($expressionForField);
+					}
+					$this->collidingFields[$k][] = $quotedField;
 				} else {
-					$query->selectField("\"$tableClass\".\"$k\"", $k);
+					$query->selectField($quotedField, $k);
 				}
 			}
 		}
 		foreach($compositeFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && $v) {
+				$tableName = DataObject::getSchema()->tableName($tableClass);
 				$dbO = Object::create_from_string($v, $k);
-				$dbO->setTable($tableClass);
+				$dbO->setTable($tableName);
 				$dbO->addToQuery($query);
 			}
 		}
@@ -485,7 +514,8 @@ class DataQuery {
 	/**
 	 * Append a GROUP BY clause to this query.
 	 *
-	 * @param String $groupby Escaped SQL statement
+	 * @param string $groupby Escaped SQL statement
+	 * @return $this
 	 */
 	public function groupby($groupby) {
 		$this->query->addGroupBy($groupby);
@@ -495,7 +525,8 @@ class DataQuery {
 	/**
 	 * Append a HAVING clause to this query.
 	 *
-	 * @param String $having Escaped SQL statement
+	 * @param string $having Escaped SQL statement
+	 * @return $this
 	 */
 	public function having($having) {
 		$this->query->addHaving($having);
@@ -593,6 +624,7 @@ class DataQuery {
 	 *
 	 * @param int $limit
 	 * @param int $offset
+	 * @return $this
 	 */
 	public function limit($limit, $offset = 0) {
 		$this->query->setLimit($limit, $offset);
@@ -620,6 +652,7 @@ class DataQuery {
 	 * will cause the query to appear first. The default is 20, and joins created automatically by the
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
+	 * @return $this
 	 */
 	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
 		if($table) {
@@ -638,6 +671,7 @@ class DataQuery {
 	 * will cause the query to appear first. The default is 20, and joins created automatically by the
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
+	 * @return $this
 	 */
 	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
 		if($table) {
@@ -722,18 +756,19 @@ class DataQuery {
 				"Could not join polymorphic has_one relationship {$localField} on {$localClass}"
 			);
 		}
+		$schema = DataObject::getSchema();
 
 		// Skip if already joined
-		if($this->query->isJoinedTo($foreignClass)) {
+		$foreignBaseClass = $schema->baseDataClass($foreignClass);
+		$foreignBaseTable = $schema->tableName($foreignBaseClass);
+		if($this->query->isJoinedTo($foreignBaseTable)) {
 			return;
 		}
 
-		$realModelClass = ClassInfo::table_for_object_field($localClass, "{$localField}ID");
-		$foreignBase = ClassInfo::baseDataClass($foreignClass);
-		$this->query->addLeftJoin(
-			$foreignBase,
-			"\"$foreignBase\".\"ID\" = \"{$realModelClass}\".\"{$localField}ID\""
-		);
+		// Join base table
+		$foreignIDColumn = $schema->sqlColumnForField($foreignBaseClass, 'ID');
+		$localColumn = $schema->sqlColumnForField($localClass, "{$localField}ID");
+		$this->query->addLeftJoin($foreignBaseTable, "{$foreignIDColumn} = {$localColumn}");
 
 		/**
 		 * add join clause to the component's ancestry classes so that the search filter could search on
@@ -743,8 +778,9 @@ class DataQuery {
 		if(!empty($ancestry)){
 			$ancestry = array_reverse($ancestry);
 			foreach($ancestry as $ancestor){
-				if($ancestor != $foreignBase) {
-					$this->query->addLeftJoin($ancestor, "\"$foreignBase\".\"ID\" = \"$ancestor\".\"ID\"");
+				$ancestorTable = $schema->tableName($ancestor);
+				if($ancestorTable !== $foreignBaseTable) {
+					$this->query->addLeftJoin($ancestorTable, "{$foreignIDColumn} = \"{$ancestorTable}\".\"ID\"");
 				}
 			}
 		}
@@ -763,27 +799,30 @@ class DataQuery {
 		if(!$foreignClass || $foreignClass === 'DataObject') {
 			throw new InvalidArgumentException("Could not find a has_many relationship {$localField} on {$localClass}");
 		}
+		$schema = DataObject::getSchema();
 
 		// Skip if already joined
-		if($this->query->isJoinedTo($foreignClass)) {
+		$foreignTable = $schema->tableName($foreignClass);
+		if($this->query->isJoinedTo($foreignTable)) {
 			return;
 		}
 
 		// Join table with associated has_one
+		/** @var DataObject $model */
 		$model = singleton($localClass);
-		$ancestry = $model->getClassAncestry();
 		$foreignKey = $model->getRemoteJoinField($localField, 'has_many', $polymorphic);
+		$localIDColumn = $schema->sqlColumnForField($localClass, 'ID');
 		if($polymorphic) {
+			$foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, "{$foreignKey}ID");
+			$foreignKeyClassColumn = $schema->sqlColumnForField($foreignClass, "{$foreignKey}Class");
+			$localClassColumn = $schema->sqlColumnForField($localClass, 'ClassName');
 			$this->query->addLeftJoin(
-				$foreignClass,
-				"\"$foreignClass\".\"{$foreignKey}ID\" = \"{$ancestry[0]}\".\"ID\" AND "
-					. "\"$foreignClass\".\"{$foreignKey}Class\" = \"{$ancestry[0]}\".\"ClassName\""
+				$foreignTable,
+				"{$foreignKeyIDColumn} = {$localIDColumn} AND {$foreignKeyClassColumn} = {$localClassColumn}"
 			);
 		} else {
-			$this->query->addLeftJoin(
-				$foreignClass,
-				"\"$foreignClass\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\""
-			);
+			$foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, $foreignKey);
+			$this->query->addLeftJoin($foreignTable, "{$foreignKeyIDColumn} = {$localIDColumn}");
 		}
 
 		/**
@@ -792,9 +831,10 @@ class DataQuery {
 		 */
 		$ancestry = ClassInfo::ancestry($foreignClass, true);
 		$ancestry = array_reverse($ancestry);
-		foreach($ancestry as $ancestor){
-			if($ancestor != $foreignClass){
-				$this->query->addInnerJoin($ancestor, "\"$foreignClass\".\"ID\" = \"$ancestor\".\"ID\"");
+		foreach($ancestry as $ancestor) {
+			$ancestorTable = $schema->tableName($ancestor);
+			if($ancestorTable !== $foreignTable) {
+				$this->query->addInnerJoin($ancestorTable, "\"{$foreignTable}\".\"ID\" = \"{$ancestorTable}\".\"ID\"");
 			}
 		}
 	}
@@ -809,16 +849,23 @@ class DataQuery {
 	 * @param string $relationTable Name of relation table
 	 */
 	protected function joinManyManyRelationship($parentClass, $componentClass, $parentField, $componentField, $relationTable) {
-		$parentBaseClass = ClassInfo::baseDataClass($parentClass);
-		$componentBaseClass = ClassInfo::baseDataClass($componentClass);
+		$schema = DataObject::getSchema();
+
+		// Join on parent table
+		$parentIDColumn = $schema->sqlColumnForField($parentClass, 'ID');
 		$this->query->addLeftJoin(
 			$relationTable,
-			"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\""
+			"\"$relationTable\".\"$parentField\" = {$parentIDColumn}"
 		);
-		if (!$this->query->isJoinedTo($componentBaseClass)) {
+
+		// Join on base table of component class
+		$componentBaseClass = $schema->baseDataClass($componentClass);
+		$componentBaseTable = $schema->tableName($componentBaseClass);
+		$componentIDColumn = $schema->sqlColumnForField($componentBaseClass, 'ID');
+		if (!$this->query->isJoinedTo($componentBaseTable)) {
 			$this->query->addLeftJoin(
-				$componentBaseClass,
-				"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\""
+				$componentBaseTable,
+				"\"$relationTable\".\"$componentField\" = {$componentIDColumn}"
 			);
 		}
 
@@ -828,9 +875,10 @@ class DataQuery {
 		 */
 		$ancestry = ClassInfo::ancestry($componentClass, true);
 		$ancestry = array_reverse($ancestry);
-		foreach($ancestry as $ancestor){
-			if($ancestor != $componentBaseClass && !$this->query->isJoinedTo($ancestor)){
-				$this->query->addInnerJoin($ancestor, "\"$componentBaseClass\".\"ID\" = \"$ancestor\".\"ID\"");
+		foreach($ancestry as $ancestor) {
+			$ancestorTable = $schema->tableName($ancestor);
+			if($ancestorTable != $componentBaseTable && !$this->query->isJoinedTo($ancestorTable)) {
+				$this->query->addLeftJoin($ancestorTable, "{$componentIDColumn} = \"{$ancestorTable}\".\"ID\"");
 			}
 		}
 	}
@@ -840,6 +888,7 @@ class DataQuery {
 	 *
 	 * @param DataQuery $subtractQuery
 	 * @param string $field
+	 * @return $this
 	 */
 	public function subtract(DataQuery $subtractQuery, $field='ID') {
 		$fieldExpression = $subtractQuery->expressionForField($field);
@@ -856,12 +905,13 @@ class DataQuery {
 	/**
 	 * Select the given fields from the given table.
 	 *
-	 * @param String $table Unquoted table name (will be escaped automatically)
-	 * @param Array $fields Database column names (will be escaped automatically)
+	 * @param string $table Unquoted table name (will be escaped automatically)
+	 * @param array $fields Database column names (will be escaped automatically)
+	 * @return $this
 	 */
 	public function selectFromTable($table, $fields) {
 		$fieldExpressions = array_map(function($item) use($table) {
-			return "\"$table\".\"$item\"";
+			return "\"{$table}\".\"{$item}\"";
 		}, $fields);
 
 		$this->query->setSelect($fieldExpressions);
@@ -892,19 +942,20 @@ class DataQuery {
 	 * @return String The expression used to query this field via this DataQuery
 	 */
 	protected function expressionForField($field) {
-
 		// Prepare query object for selecting this field
 		$query = $this->getFinalisedQuery(array($field));
 
 		// Allow query to define the expression for this field
 		$expression = $query->expressionForField($field);
-		if(!empty($expression)) return $expression;
+		if(!empty($expression)) {
+			return $expression;
+		}
 
 		// Special case for ID, if not provided
 		if($field === 'ID') {
-			$baseClass = ClassInfo::baseDataClass($this->dataClass);
-			return "\"$baseClass\".\"ID\"";
+			return DataObject::getSchema()->sqlColumnForField($this->dataClass, 'ID');
 		}
+		return null;
 	}
 
 	/**
@@ -928,17 +979,27 @@ class DataQuery {
 	/**
 	 * Set an arbitrary query parameter, that can be used by decorators to add additional meta-data to the query.
 	 * It's expected that the $key will be namespaced, e.g, 'Versioned.stage' instead of just 'stage'.
+	 *
+	 * @param string $key
+	 * @param string $value
+	 * @return $this
 	 */
 	public function setQueryParam($key, $value) {
 		$this->queryParams[$key] = $value;
+		return $this;
 	}
 
 	/**
 	 * Set an arbitrary query parameter, that can be used by decorators to add additional meta-data to the query.
+	 *
+	 * @param string $key
+	 * @return string
 	 */
 	public function getQueryParam($key) {
-		if(isset($this->queryParams[$key])) return $this->queryParams[$key];
-		else return null;
+		if(isset($this->queryParams[$key])) {
+			return $this->queryParams[$key];
+		}
+		return null;
 	}
 
 	/**
@@ -968,7 +1029,7 @@ class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
 	protected $whereQuery;
 
 	public function __construct(DataQuery $base, $connective) {
-		$this->dataClass = $base->dataClass;
+		parent::__construct($base->dataClass);
 		$this->query = $base->query;
 		$this->whereQuery = new SQLSelect();
 		$this->whereQuery->setConnective($connective);

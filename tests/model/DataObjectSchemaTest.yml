@@ -1,0 +1,36 @@
+Namespaced\DOST\MyObject:
+  object1:
+    Title: 'Object 1'
+    Description: 'Description 1'
+
+Namespaced\DOST\MyObject_CustomTable:
+  customtable1:
+    Title: 'Custom Table 1'
+    Description: 'Description A'
+  customtable2:
+    Title: 'Custom Table 2'
+    Description: 'Description B'
+  customtable3:
+    Title: 'Custom Table 3'
+    Description: 'Orphaned item'
+
+Namespaced\DOST\MyObject_NestedObject:
+  nested1:
+    Title: 'Nested 1'
+    Description: 'Nested Description'
+    Content: '<p>Hello!</p>'
+
+Namespaced\DOST\MyObject_NoFields:
+  nofields1: {}
+
+Namespaced\DOST\MyObject_NamespacedTable:
+  namespaced1:
+    Title: 'Namespaced 1'
+    Owner: =>Namespaced\DOST\MyObject_NoFields.nofields1
+
+Namespaced\DOST\MyObject_Namespaced_Subclass:
+  subclass1:
+    Title: 'Subclass 1'
+    Details: 'Oh, Hi!'
+    Children: =>Namespaced\DOST\MyObject_CustomTable.customtable1, =>Namespaced\DOST\MyObject_CustomTable.customtable2
+

@@ -10,7 +10,12 @@ class DataObjectTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	protected $extraDataObjects = array(
+	/**
+	 * Standard set of dataobject test classes
+	 *
+	 * @var array
+	 */
+	public static $extra_data_objects = array(
 		'DataObjectTest_Team',
 		'DataObjectTest_Fixture',
 		'DataObjectTest_SubTeam',
@@ -32,9 +37,16 @@ class DataObjectTest extends SapphireTest {
 		'DataObjectTest_Play',
 		'DataObjectTest_Ploy',
 		'DataObjectTest_Bogey',
+		// From ManyManyListTest
+		'ManyManyListTest_ExtraFields',
 		'ManyManyListTest_Product',
 		'ManyManyListTest_Category',
 	);
+
+	public function setUpOnce() {
+		$this->extraDataObjects = static::$extra_data_objects;
+		parent::setUpOnce();
+	}
 
 	public function testDb() {
 		$obj = new DataObjectTest_TeamComment();

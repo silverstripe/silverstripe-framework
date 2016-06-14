@@ -49,7 +49,7 @@ class ManyManyList extends RelationList {
 	 * @param string $joinTable The name of the table whose entries define the content of this many_many relation.
 	 * @param string $localKey The key in the join table that maps to the dataClass' PK.
 	 * @param string $foreignKey The key in the join table that maps to joined class' PK.
-	 * @param string $extraFields A map of field => fieldtype of extra fields on the join table.
+	 * @param array $extraFields A map of field => fieldtype of extra fields on the join table.
 	 *
 	 * @example new ManyManyList('Group','Group_Members', 'GroupID', 'MemberID');
 	 */
@@ -69,8 +69,11 @@ class ManyManyList extends RelationList {
 	 */
 	protected function linkJoinTable() {
 		// Join to the many-many join table
-		$baseClass = ClassInfo::baseDataClass($this->dataClass);
-		$this->dataQuery->innerJoin($this->joinTable, "\"{$this->joinTable}\".\"{$this->localKey}\" = \"{$baseClass}\".\"ID\"");
+		$dataClassIDColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
+		$this->dataQuery->innerJoin(
+			$this->joinTable,
+			"\"{$this->joinTable}\".\"{$this->localKey}\" = {$dataClassIDColumn}"
+		);
 
 		// Add the extra fields to the query
 		if($this->extraFields) {
@@ -184,6 +187,7 @@ class ManyManyList extends RelationList {
 	 * @param mixed $item
 	 * @param array $extraFields A map of additional columns to insert into the joinTable.
 	 * Column names should be ANSI quoted.
+	 * @throws Exception
 	 */
 	public function add($item, $extraFields = array()) {
 		// Ensure nulls or empty strings are correctly treated as empty arrays
@@ -292,7 +296,9 @@ class ManyManyList extends RelationList {
 			user_error("Can't call ManyManyList::remove() until a foreign ID is set", E_USER_WARNING);
 		}
 
-		$query->addWhere(array("\"{$this->localKey}\"" => $itemID));
+		$query->addWhere(array(
+			"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
+		));
 		$query->execute();
 	}
 
@@ -303,15 +309,16 @@ class ManyManyList extends RelationList {
 	 * @return void
 	 */
 	public function removeAll() {
-		$base = ClassInfo::baseDataClass($this->dataClass());
 
 		// Remove the join to the join table to avoid MySQL row locking issues.
 		$query = $this->dataQuery();
 		$foreignFilter = $query->getQueryParam('Foreign.Filter');
 		$query->removeFilterOn($foreignFilter);
 
+		// Select ID column
 		$selectQuery = $query->query();
-		$selectQuery->setSelect("\"{$base}\".\"ID\"");
+		$dataClassIDColumn = DataObject::getSchema()->sqlColumnForField($this->dataClass(), 'ID');
+		$selectQuery->setSelect($dataClassIDColumn);
 
 		$from = $selectQuery->getFrom();
 		unset($from[$this->joinTable]);
@@ -364,7 +371,7 @@ class ManyManyList extends RelationList {
 			user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
 		}
 		$query->addWhere(array(
-			"\"{$this->localKey}\"" => $itemID
+			"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID
 		));
 		$queryResult = $query->execute()->current();
 		if ($queryResult) {

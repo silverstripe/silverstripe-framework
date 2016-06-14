@@ -8,10 +8,13 @@ class ClassInfoTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
 		'ClassInfoTest_BaseClass',
+		'ClassInfoTest_BaseDataClass',
 		'ClassInfoTest_ChildClass',
 		'ClassInfoTest_GrandChildClass',
-		'ClassInfoTest_BaseDataClass',
+		'ClassInfoTest_HasFields',
 		'ClassInfoTest_NoFields',
+		'ClassInfoTest_WithCustomTable',
+		'ClassInfoTest_WithRelation',
 	);
 
 	public function setUp() {
@@ -26,6 +29,7 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertTrue(ClassInfo::exists('CLASSINFOTEST'));
 		$this->assertTrue(ClassInfo::exists('stdClass'));
 		$this->assertTrue(ClassInfo::exists('stdCLASS'));
+		$this->assertFalse(ClassInfo::exists('SomeNonExistantClass'));
 	}
 
 	public function testSubclassesFor() {
@@ -50,12 +54,15 @@ class ClassInfoTest extends SapphireTest {
 		);
 	}
 
-	public function testClassName() {
+	public function testClassName()
+	{
 		$this->assertEquals('ClassInfoTest', ClassInfo::class_name($this));
 		$this->assertEquals('ClassInfoTest', ClassInfo::class_name('ClassInfoTest'));
 		$this->assertEquals('ClassInfoTest', ClassInfo::class_name('CLaSsInfOTEsT'));
+	}
 
-		// This is for backwards compatiblity and will be removed in 4.0
+	public function testNonClassName() {
+		$this->setExpectedException('ReflectionException', 'Class IAmAClassThatDoesNotExist does not exist');
 		$this->assertEquals('IAmAClassThatDoesNotExist', ClassInfo::class_name('IAmAClassThatDoesNotExist'));
 	}
 
@@ -74,21 +81,6 @@ class ClassInfoTest extends SapphireTest {
 			$classes,
 			'ClassInfo::classes_for_folder() returns additional classes not matching the filename'
 		);
-	}
-
-	/**
-	 * @covers ClassInfo::baseDataClass()
-	 */
-	public function testBaseDataClass() {
-		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('ClassInfoTest_BaseClass'));
-		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('classinfotest_baseclass'));
-		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('ClassInfoTest_ChildClass'));
-		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('CLASSINFOTEST_CHILDCLASS'));
-		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('ClassInfoTest_GrandChildClass'));
-		$this->assertEquals('ClassInfoTest_BaseClass', ClassInfo::baseDataClass('ClassInfoTest_GRANDChildClass'));
-
-		$this->setExpectedException('InvalidArgumentException');
-		ClassInfo::baseDataClass('DataObject');
 	}
 
 	/**
@@ -125,7 +117,8 @@ class ClassInfoTest extends SapphireTest {
 		$expect = array(
 			'ClassInfoTest_BaseDataClass' => 'ClassInfoTest_BaseDataClass',
 			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields',
-			'ClassInfoTest_WithRelation' => 'ClassInfoTest_WithRelation'
+			'ClassInfoTest_WithRelation' => 'ClassInfoTest_WithRelation',
+			'ClassInfoTest_WithCustomTable' => 'ClassInfoTest_WithCustomTable',
 		);
 
 		$classes = array(
@@ -152,62 +145,6 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertEquals($expect, ClassInfo::dataClassesFor(strtolower($classes[2])));
 	}
 
-	public function testTableForObjectField() {
-		$this->assertEquals('ClassInfoTest_WithRelation',
-			ClassInfo::table_for_object_field('ClassInfoTest_WithRelation', 'RelationID')
-		);
-
-		$this->assertEquals('ClassInfoTest_WithRelation',
-			ClassInfo::table_for_object_field('ClassInfoTest_withrelation', 'RelationID')
-		);
-
-		$this->assertEquals('ClassInfoTest_BaseDataClass',
-			ClassInfo::table_for_object_field('ClassInfoTest_BaseDataClass', 'Title')
-		);
-
-		$this->assertEquals('ClassInfoTest_BaseDataClass',
-			ClassInfo::table_for_object_field('ClassInfoTest_HasFields', 'Title')
-		);
-
-		$this->assertEquals('ClassInfoTest_BaseDataClass',
-			ClassInfo::table_for_object_field('ClassInfoTest_NoFields', 'Title')
-		);
-
-		$this->assertEquals('ClassInfoTest_BaseDataClass',
-			ClassInfo::table_for_object_field('classinfotest_nofields', 'Title')
-		);
-
-		$this->assertEquals('ClassInfoTest_HasFields',
-			ClassInfo::table_for_object_field('ClassInfoTest_HasFields', 'Description')
-		);
-
-		// existing behaviour fallback to DataObject? Should be null.
-		$this->assertEquals('DataObject',
-			ClassInfo::table_for_object_field('ClassInfoTest_BaseClass', 'Nonexist')
-		);
-
-		$this->assertNull(
-			ClassInfo::table_for_object_field('SomeFakeClassHere', 'Title')
-		);
-
-		$this->assertNull(
-			ClassInfo::table_for_object_field('Object', 'Title')
-		);
-
-		$this->assertNull(
-			ClassInfo::table_for_object_field(null, null)
-		);
-
-		// Test fixed fields
-		$this->assertEquals(
-			'ClassInfoTest_BaseDataClass',
-			ClassInfo::table_for_object_field('ClassInfoTest_HasFields', 'ID')
-		);
-		$this->assertEquals(
-			'ClassInfoTest_BaseDataClass',
-			ClassInfo::table_for_object_field('ClassInfoTest_NoFields', 'Created')
-		);
-	}
 }
 
 /**
@@ -267,6 +204,13 @@ class ClassInfoTest_HasFields extends ClassInfoTest_NoFields {
 
 	private static $db = array(
 		'Description' => 'Varchar'
+	);
+}
+
+class ClassInfoTest_WithCustomTable extends ClassInfoTest_NoFields {
+	private static $table_name = 'CITWithCustomTable';
+	private static $db = array(
+		'Description' => 'Text'
 	);
 }
 

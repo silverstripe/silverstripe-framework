@@ -449,32 +449,32 @@ class Hierarchy extends DataExtension {
 	 * Mark this DataObject as expanded.
 	 */
 	public function markExpanded() {
-		self::$marked[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
-		self::$expanded[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
+		self::$marked[$this->owner->baseClass()][$this->owner->ID] = true;
+		self::$expanded[$this->owner->baseClass()][$this->owner->ID] = true;
 	}
 
 	/**
 	 * Mark this DataObject as unexpanded.
 	 */
 	public function markUnexpanded() {
-		self::$marked[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
-		self::$expanded[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = false;
+		self::$marked[$this->owner->baseClass()][$this->owner->ID] = true;
+		self::$expanded[$this->owner->baseClass()][$this->owner->ID] = false;
 	}
 
 	/**
 	 * Mark this DataObject's tree as opened.
 	 */
 	public function markOpened() {
-		self::$marked[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
-		self::$treeOpened[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID] = true;
+		self::$marked[$this->owner->baseClass()][$this->owner->ID] = true;
+		self::$treeOpened[$this->owner->baseClass()][$this->owner->ID] = true;
 	}
 
 	/**
 	 * Mark this DataObject's tree as closed.
 	 */
 	public function markClosed() {
-		if(isset(self::$treeOpened[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID])) {
-			unset(self::$treeOpened[ClassInfo::baseDataClass($this->owner->class)][$this->owner->ID]);
+		if(isset(self::$treeOpened[$this->owner->baseClass()][$this->owner->ID])) {
+			unset(self::$treeOpened[$this->owner->baseClass()][$this->owner->ID]);
 		}
 	}
 
@@ -484,7 +484,7 @@ class Hierarchy extends DataExtension {
 	 * @return bool
 	 */
 	public function isMarked() {
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$baseClass = $this->owner->baseClass();
 		$id = $this->owner->ID;
 		return isset(self::$marked[$baseClass][$id]) ? self::$marked[$baseClass][$id] : false;
 	}
@@ -495,7 +495,7 @@ class Hierarchy extends DataExtension {
 	 * @return bool
 	 */
 	public function isExpanded() {
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$baseClass = $this->owner->baseClass();
 		$id = $this->owner->ID;
 		return isset(self::$expanded[$baseClass][$id]) ? self::$expanded[$baseClass][$id] : false;
 	}
@@ -506,7 +506,7 @@ class Hierarchy extends DataExtension {
 	 * @return bool
 	 */
 	public function isTreeOpened() {
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$baseClass = $this->owner->baseClass();
 		$id = $this->owner->ID;
 		return isset(self::$treeOpened[$baseClass][$id]) ? self::$treeOpened[$baseClass][$id] : false;
 	}
@@ -593,7 +593,7 @@ class Hierarchy extends DataExtension {
 	public function doAllChildrenIncludingDeleted($context = null) {
 		if(!$this->owner) user_error('Hierarchy::doAllChildrenIncludingDeleted() called without $this->owner');
 
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$baseClass = $this->owner->baseClass();
 		if($baseClass) {
 			$stageChildren = $this->owner->stageChildren(true);
 
@@ -630,9 +630,13 @@ class Hierarchy extends DataExtension {
 			throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
 		}
 
-		$baseClass=ClassInfo::baseDataClass($this->owner->class);
-		return Versioned::get_including_deleted($baseClass,
-			"\"ParentID\" = " . (int)$this->owner->ID, "\"$baseClass\".\"ID\" ASC");
+		$baseTable = $this->owner->baseTable();
+		$parentIDColumn = $this->owner->getSchema()->sqlColumnForField($this->owner, 'ParentID');
+		return Versioned::get_including_deleted(
+			$this->owner->baseClass(),
+			[ $parentIDColumn => $this->owner->ID ],
+			"\"{$baseTable}\".\"ID\" ASC"
+		);
 	}
 
 	/**
@@ -646,8 +650,7 @@ class Hierarchy extends DataExtension {
 			throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
 		}
 
-		return Versioned::get_including_deleted(ClassInfo::baseDataClass($this->owner->class),
-			"\"ParentID\" = " . (int)$this->owner->ID)->count();
+		return $this->AllHistoricalChildren()->count();
 	}
 
 	/**
@@ -689,7 +692,7 @@ class Hierarchy extends DataExtension {
 	 * @return DataList
 	 */
 	public function stageChildren($showAll = false) {
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$baseClass = $this->owner->baseClass();
 		$hide_from_hierarchy = $this->owner->config()->hide_from_hierarchy;
 		$hide_from_cms_tree = $this->owner->config()->hide_from_cms_tree;
 		$staged = $baseClass::get()
@@ -722,7 +725,7 @@ class Hierarchy extends DataExtension {
 			throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
 		}
 
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$baseClass = $this->owner->baseClass();
 		$hide_from_hierarchy = $this->owner->config()->hide_from_hierarchy;
 		$hide_from_cms_tree = $this->owner->config()->hide_from_cms_tree;
 		$children = $baseClass::get()
@@ -822,7 +825,7 @@ class Hierarchy extends DataExtension {
 		}
 
 		$nextNode = null;
-		$baseClass = ClassInfo::baseDataClass($this->owner->class);
+		$baseClass = $this->owner->baseClass();
 
 		$children = $baseClass::get()
 			->filter('ParentID', (int)$this->owner->ID)
@@ -832,7 +835,7 @@ class Hierarchy extends DataExtension {
 		}
 
 		// Try all the siblings of this node after the given node
-		/*if( $siblings = DataObject::get( ClassInfo::baseDataClass($this->owner->class),
+		/*if( $siblings = DataObject::get( $this->owner->baseClass(),
 		"\"ParentID\"={$this->owner->ParentID}" . ( $afterNode ) ? "\"Sort\"
 		> {$afterNode->Sort}" : "" , '\"Sort\" ASC' ) ) $searchNodes->merge( $siblings );*/
 

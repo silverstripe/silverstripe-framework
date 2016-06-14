@@ -90,10 +90,8 @@ class Debug {
 	}
 
 	/**
-	 * ??
-	 *
-	 * @param unknown_type $val
-	 * @return unknown
+	 * @param mixed $val
+	 * @return string
 	 */
 	public static function text($val) {
 		if(is_object($val)) {

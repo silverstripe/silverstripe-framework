@@ -59,13 +59,14 @@ class FixtureBlueprint {
 	}
 
 	/**
-	 * @param String $identifier Unique identifier for this fixture type
-	 * @param Array $data Map of property names to their values.
-	 * @param Array $fixtures Map of fixture names to an associative array of their in-memory
+	 * @param string $identifier Unique identifier for this fixture type
+	 * @param array $data Map of property names to their values.
+	 * @param array $fixtures Map of fixture names to an associative array of their in-memory
 	 *                        identifiers mapped to their database IDs. Used to look up
 	 *                        existing fixtures which might be referenced in the $data attribute
 	 *                        via the => notation.
 	 * @return DataObject
+	 * @throws Exception
 	 */
 	public function createObject($identifier, $data = null, $fixtures = null) {
 		// We have to disable validation while we import the fixtures, as the order in
@@ -89,12 +90,13 @@ class FixtureBlueprint {
 
 				// The database needs to allow inserting values into the foreign key column (ID in our case)
 				$conn = DB::get_conn();
+				$baseTable = DataObject::getSchema()->baseDataTable($class);
 				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
-					$conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($class), true);
+					$conn->allowPrimaryKeyEditing($baseTable, true);
 				}
 				$obj->write(false, true);
 				if(method_exists($conn, 'allowPrimaryKeyEditing')) {
-					$conn->allowPrimaryKeyEditing(ClassInfo::baseDataClass($class), false);
+					$conn->allowPrimaryKeyEditing($baseTable, false);
 				}
 			}
 
@@ -206,7 +208,8 @@ class FixtureBlueprint {
 	}
 
 	/**
-	 * @param Array $defaults
+	 * @param array $defaults
+	 * @return $this
 	 */
 	public function setDefaults($defaults) {
 		$this->defaults = $defaults;
@@ -214,14 +217,14 @@ class FixtureBlueprint {
 	}
 
 	/**
-	 * @return Array
+	 * @return array
 	 */
 	public function getDefaults() {
 		return $this->defaults;
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getClass() {
 		return $this->class;
@@ -230,8 +233,9 @@ class FixtureBlueprint {
 	/**
 	 * See class documentation.
 	 *
-	 * @param String $type
+	 * @param string $type
 	 * @param callable $callback
+	 * @return $this
 	 */
 	public function addCallback($type, $callback) {
 		if(!array_key_exists($type, $this->callbacks)) {
@@ -243,12 +247,15 @@ class FixtureBlueprint {
 	}
 
 	/**
-	 * @param String $type
+	 * @param string $type
 	 * @param callable $callback
+	 * @return $this
 	 */
 	public function removeCallback($type, $callback) {
 		$pos = array_search($callback, $this->callbacks[$type]);
-		if($pos !== false) unset($this->callbacks[$type][$pos]);
+		if($pos !== false) {
+			unset($this->callbacks[$type][$pos]);
+		}
 
 		return $this;
 	}
@@ -263,7 +270,7 @@ class FixtureBlueprint {
 	 * Parse a value from a fixture file.  If it starts with =>
 	 * it will get an ID from the fixture dictionary
 	 *
-	 * @param string $fieldVal
+	 * @param string $value
 	 * @param array $fixtures See {@link createObject()}
 	 * @param string $class If the value parsed is a class relation, this parameter
 	 * will be given the value of that class's name
@@ -293,13 +300,16 @@ class FixtureBlueprint {
 	}
 
 	protected function overrideField($obj, $fieldName, $value, $fixtures = null) {
-		$table = ClassInfo::table_for_object_field(get_class($obj), $fieldName);
+		$class = get_class($obj);
+		$table = DataObject::getSchema()->tableForField($class, $fieldName);
 		$value = $this->parseValue($value, $fixtures);
 
 		DB::manipulate(array(
 			$table => array(
-				"command" => "update", "id" => $obj->ID,
-				"fields" => array($fieldName => $value)
+				"command" => "update",
+				"id" => $obj->ID,
+				"class" => $class,
+				"fields" => array($fieldName => $value),
 			)
 		));
 		$obj->$fieldName = $value;

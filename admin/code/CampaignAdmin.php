@@ -271,7 +271,7 @@ JSON;
 	 * @return array
 	 */
 	protected function getChangeSetItemResource(ChangeSetItem $changeSetItem) {
-		$baseClass = ClassInfo::baseDataClass($changeSetItem->ObjectClass);
+		$baseClass = DataObject::getSchema()->baseDataClass($changeSetItem->ObjectClass);
 		$baseSingleton = DataObject::singleton($baseClass);
 		$thumbnailWidth = (int)$this->config()->thumbnail_width;
 		$thumbnailHeight = (int)$this->config()->thumbnail_height;
