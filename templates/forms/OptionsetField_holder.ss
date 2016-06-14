@@ -4,7 +4,7 @@
         <label
             class="form__field-label"
             <% if $Message || $RightTitle || $Description %>
-                aria-describedby="<% if $Message %>message-$ID <% else_if $RightTitle %>extra-label-$ID <% else_if $Description %>discribes-$ID <% end_if %>"
+                aria-describedby="<% if $Message %>message-$ID <% else_if $RightTitle %>extra-label-$ID <% else_if $Description %>describes-$ID <% end_if %>"
             <% end_if %>
         >
             $Title
@@ -19,9 +19,9 @@
     		<% if $RightTitle %><p class="text-muted">$RightTitle</p><% end_if %>
 
     		<%-- TODO: use Bootstraps alert classes in $MessageType --%>
-    		<% if $Message %><div class="alert $MessageType" role="alert" id="massage-$ID">$Message</div><% end_if %>
+    		<% if $Message %><div class="alert $MessageType" role="alert" id="message-$ID">$Message</div><% end_if %>
 
-    		<% if $Description %><p class="description" id="discribes-$ID">$Description</p><% end_if %>
+    		<% if $Description %><p class="description" id="describes-$ID">$Description</p><% end_if %>
     	<% end_if %>
 	</div>
     <% if $RightTitle %><p class="form__field-extra-label" id="extra-label-$ID">$RightTitle</p><% end_if %>
