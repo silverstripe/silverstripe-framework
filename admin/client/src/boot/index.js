@@ -1,4 +1,5 @@
 import $ from 'jQuery';
+import ReactDOM from 'react-dom';
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
@@ -63,6 +64,11 @@ function appBoot() {
   router('*', (ctx, next) => {
     // eslint-disable-next-line no-param-reassign
     ctx.store = store;
+    next();
+  });
+
+  router.exit('*', (ctx, next) => {
+    ReactDOM.unmountComponentAtNode(document.getElementsByClassName('cms-content')[0]);
     next();
   });
 
