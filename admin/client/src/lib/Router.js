@@ -17,7 +17,7 @@ import url from 'url';
  */
 function resolveURLToBase(path) {
   // Resolve path to base
-  const absoluteBase = this.getAbsoluteBase();
+  const absoluteBase = page.getAbsoluteBase();
   const absolutePath = url.resolve(absoluteBase, path);
 
   // Validate that this url belongs to this base; If not, normalise
@@ -33,8 +33,8 @@ function resolveURLToBase(path) {
 /**
  * Wrapper for `page.show()` with SilverStripe specific behaviour.
  *
- * @param {page} originalPage
- * @return {function} Replacement function for show
+ * @param {Function} pageShow
+ * @return {Function} Replacement function for show
  */
 function show(pageShow) {
   return (path, state, dispatch, push) => (
@@ -45,9 +45,8 @@ function show(pageShow) {
 /**
  * Checks if the passed route applies to the current location.
  *
- * @param string route - The route to check.
- *
- * @return boolean
+ * @param {String} route - The route to check.
+ * @return {Boolean}
  */
 function routeAppliesToCurrentLocation(route) {
   const r = new page.Route(route);
@@ -55,22 +54,41 @@ function routeAppliesToCurrentLocation(route) {
 }
 
 /**
- * Find base url if available
+ * Get absolute base url
  *
- * @returns {string}
+ * @returns {String}
  */
 function getAbsoluteBase() {
-  const baseTags = window.document.getElementsByTagName('base');
-  if (baseTags && baseTags[0]) {
-    return baseTags[0].href;
+  return page.absoluteBaseURL;
+}
+
+/**
+ * Set base url for router
+ *
+ * @param {String} base
+ */
+function setAbsoluteBase(base) {
+  // Store absolute base
+  page.absoluteBaseURL = base;
+
+  // Set page.js base
+  const a = document.createElement('a');
+  a.href = base;
+  let basePath = a.pathname;
+
+  // No trailing slash, and mandatory leading slash, UNLESS empty.
+  basePath = basePath.replace(/\/$/, '');
+  if (basePath.match(/^[^\/]/)) {
+    basePath = `/${basePath}`;
   }
-  return null;
+  page.base(basePath);
 }
 
 // Ensure that subsequent references to router.js don't nest page.show more than once
 if (!page.oldshow) {
   page.oldshow = page.show;
 }
+page.setAbsoluteBase = setAbsoluteBase.bind(page);
 page.getAbsoluteBase = getAbsoluteBase.bind(page);
 page.resolveURLToBase = resolveURLToBase.bind(page);
 page.show = show(page.oldshow);

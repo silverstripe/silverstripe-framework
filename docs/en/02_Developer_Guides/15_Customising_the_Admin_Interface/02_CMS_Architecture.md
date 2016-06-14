@@ -209,18 +209,34 @@ so as a developer just declare your dependencies through the [api:Requirements] 
 ## Client-side routing
 
 SilverStripe uses the HTML5 browser history to modify the URL without a complete
-window refresh. We use the [Page.js](https://github.com/visionmedia/page.js)
-routing library and provide additional SilverStripe specific functionality via the
-`admin/client/src/lib/Router.js` wrapper.
-
-The router is available on `window.ss.router` and provides the same API as
-described in the
-[Page.js docs](https://github.com/visionmedia/page.js/blob/master/Readme.md#api).
+window refresh. We us the below systems in combination to achieve this:
+  * [Page.js](https://github.com/visionmedia/page.js) routing library is used for most
+    cms sections, which provides additional SilverStripe specific functionality via the
+    `admin/client/src/lib/Router.js` wrapper.
+	The router is available on `window.ss.router` and provides the same API as
+	described in the
+	[Page.js docs](https://github.com/visionmedia/page.js/blob/master/Readme.md#api).
+  * [React router](https://github.com/reactjs/react-router) is used for react-powered
+    CMS sections. This provides a native react-controlled bootstrapping and route handling
+    system that works most effectively with react components. Unlike page.js routes, these
+    may be lazy-loaded or registered during the lifetime of the application on the
+    `window.ss.routeRegister` wrapper. The `history` object is passed to react components.
 
 ### Registering routes
 
-Top level (CMS section) routes are registered automatically via the config system.
-Additional routes can be registered like so `window.ss.router('admin/pages', callback)`.
+### page.js (non-react) CMS sections
+
+CMS sections that rely on entwine, page.js, and normal ajax powered content loading mechanisms
+(such as modeladmin) will typically have a single wildcard route that initiates the pajax loading
+mechanism.
+
+The main place that routes are registered are via the `LeftAndMain::getClientConfig()` overridden method,
+which by default registers a single 'url' route. This will generate a wildcard route handler for each CMS
+section in the form `/admin/<section>(/*)?`, which will capture any requests for this section.
+
+Additional routes can be registered like so `window.ss.router('admin/pages', callback)`, however
+these must be registered prior to `window.onload`, as they would otherwise be added with lower priority
+than the wildcard routes, as page.js prioritises routes in order of registration, not by specificity.
 Once registered, routes can we called with `windw.ss.router.show('admin/pages')`.
 
 Route callbacks are invoked with two arguments, `context` and `next`. The [context object](https://github.com/visionmedia/page.js/blob/master/Readme.md#context)
@@ -228,8 +244,60 @@ can be used to pass state between route handlers and inspect the current
 history state. The `next` function invokes the next matching route. If `next`
 is called when there is no 'next' route, a page refresh will occur.
 
-It's worth noting that routes are invoked in the order they were registered,
-not by specificity.
+### React router CMS sections
+
+Similarly to page.js powered routing, the main point of registration for react routing
+sections is the `LeftAndMain::getClientConfig()` overridden method, which controls the main
+routing mechanism for this section. However, there are two major differences:
+
+Firstly, `reactRouter` must be passed as a boolean flag to indicate that this section is
+controlled by the react section, and thus should suppress registration of a page.js route
+for this section.
+
+
+	:::php
+	public function getClientConfig() {
+		return array_merge(parent::getClientConfig(), [
+			'reactRouter' => true
+		]);
+	}
+
+
+Secondly, you should ensure that your react CMS section triggers route registration on the client side
+with the reactRouteRegister component. This will need to be done on the `DOMContentLoaded` event
+to ensure routes are registered before window.load is invoked. 
+
+
+	:::js
+	import { withRouter } from 'react-router';
+	import ConfigHelpers from 'lib/Config';
+	import reactRouteRegister from 'lib/ReactRouteRegister';
+	import MyAdmin from './MyAdmin';
+	
+	document.addEventListener('DOMContentLoaded', () => {
+		const sectionConfig = ConfigHelpers.getSection('MyAdmin');
+	
+		reactRouteRegister.add({
+			path: sectionConfig.url,
+			component: withRouter(MyAdminComponent),
+			childRoutes: [
+				{ path: 'form/:id/:view', component: MyAdminComponent },
+			],
+		});
+	});
+
+
+Child routes can be registered post-boot by using `ReactRouteRegister` in the same way.
+
+
+	:::js
+	// Register a nested url under `sectionConfig.url`
+	const sectionConfig = ConfigHelpers.getSection('MyAdmin');
+	reactRouteRegister.add({
+		path: 'nested',
+		component: NestedComponent,
+	}, [ sectionConfig.url ]);
+
 
 ## PJAX: Partial template replacement through Ajax
 

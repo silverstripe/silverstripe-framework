@@ -120,17 +120,12 @@
     $(window).bind('resize', positionLoadingSpinner).trigger('resize');
 
     $(document).ajaxComplete(function (e, xhr, settings) {
-      var origUrl,
+      var origUrl = document.URL,
           url = xhr.getResponseHeader('X-ControllerURL'),
           destUrl = settings.url,
           msg = xhr.getResponseHeader('X-Status') !== null ? xhr.getResponseHeader('X-Status') : xhr.statusText,
           msgType = xhr.status < 200 || xhr.status > 399 ? 'bad' : 'good',
           ignoredMessages = ['OK', 'success'];
-      if (window.history.state) {
-        origUrl = window.history.state.path;
-      } else {
-        origUrl = document.URL;
-      }
 
       if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
         window.ss.router.show(url, {
@@ -180,12 +175,6 @@
         $(window).unbind('resize', positionLoadingSpinner);
         this.restoreTabState();
         this._super();
-      },
-
-      fromWindow: {
-        onstatechange: function onstatechange(event, historyState) {
-          this.handleStateChange(event, historyState);
-        }
       },
 
       'onwindowresize': function onwindowresize() {
@@ -289,7 +278,7 @@
         var title = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
         var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
         var forceReload = arguments[3];
-        var forceReferer = arguments.length <= 4 || arguments[4] === undefined ? window.history.state.path : arguments[4];
+        var forceReferer = arguments.length <= 4 || arguments[4] === undefined ? document.URL : arguments[4];
 
         if (!this.checkCanNavigate(data.pjax ? data.pjax.split(',') : ['Content'])) {
           return;
@@ -307,7 +296,7 @@
       },
 
       reloadCurrentPanel: function reloadCurrentPanel() {
-        this.loadPanel(window.history.state.path, null, null, true);
+        this.loadPanel(document.URL, null, null, true);
       },
 
       submitForm: function submitForm(form, button, callback, ajaxOptions) {
@@ -335,7 +324,7 @@
 
         formData.push({ name: $(button).attr('name'), value: '1' });
 
-        formData.push({ name: 'BackURL', value: window.history.state.path.replace(/\/$/, '') });
+        formData.push({ name: 'BackURL', value: document.URL.replace(/\/$/, '') });
 
         this.saveTabState();
 
@@ -425,7 +414,7 @@
 
         var promise = $.ajax({
           headers: headers,
-          url: historyState.path
+          url: historyState.path || document.URL
         }).done(function (data, status, xhr) {
           var els = self.handleAjaxResponse(data, status, xhr, historyState);
           self.trigger('afterstatechange', { data: data, status: status, xhr: xhr, element: els, state: historyState });
@@ -674,11 +663,7 @@
       },
 
       _tabStateUrl: function _tabStateUrl() {
-        if (window.history.state === null) {
-          return;
-        }
-
-        return window.history.state.path.replace(/\?.*/, '').replace(/#.*/, '').replace($('base').attr('href'), '');
+        return window.location.href.replace(/\?.*/, '').replace(/#.*/, '').replace($('base').attr('href'), '');
       },
 
       showLoginDialog: function showLoginDialog() {

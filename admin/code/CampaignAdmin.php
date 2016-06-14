@@ -60,7 +60,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function getClientConfig() {
 		return array_merge(parent::getClientConfig(), [
-			'reactRoute' => true,
+			'reactRouter' => true,
 			'form' => [
 				// TODO Use schemaUrl instead
 				'EditForm' => [
@@ -70,8 +70,10 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 					'schemaUrl' => $this->Link('schema/DetailEditForm')
 				],
 			],
-			'campaignViewRoute' => $this->Link() . ':type?/:id?/:view?',
-			'itemListViewEndpoint' => $this->Link() . 'set/:id/show',
+			'itemListViewEndpoint' => [
+				'url' => $this->Link() . 'set/:id/show',
+				'method' => 'get'
+			],
 			'publishEndpoint' => [
 				'url' => $this->Link() . 'set/:id/publish',
 				'method' => 'post'

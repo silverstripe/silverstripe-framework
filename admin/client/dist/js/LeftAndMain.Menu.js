@@ -317,7 +317,7 @@
         if (children.length) {
           children.first().find('a').click();
         } else {
-          if (!$('.cms-container').loadPanel(url)) return false;
+          document.location.href = url;
         }
 
         item.select();

@@ -1,5 +1,6 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+import { Link } from 'react-router';
 
 class Breadcrumb extends SilverStripeComponent {
 
@@ -19,7 +20,7 @@ class Breadcrumb extends SilverStripeComponent {
     return [].concat(
      this.props.crumbs.slice(0, -1).map((crumb, index) => [
        <li className="breadcrumb__item">
-         <a key={index} className="breadcrumb__item-title" href={crumb.href}>{crumb.text}</a>
+         <Link key={index} className="breadcrumb__item-title" to={crumb.href}>{crumb.text}</Link>
         </li>,
      ]),
        this.props.crumbs.slice(-1).map((crumb, index) => [

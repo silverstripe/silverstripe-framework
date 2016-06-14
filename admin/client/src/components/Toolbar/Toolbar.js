@@ -1,6 +1,5 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
-import router from 'lib/Router';
 
 class Toolbar extends SilverStripeComponent {
 
@@ -50,7 +49,6 @@ class Toolbar extends SilverStripeComponent {
     }
 
     event.preventDefault();
-    router.back();
   }
 }
 
