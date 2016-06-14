@@ -1,1 +1,1 @@
-<span class="readonly" id="$ID">$AttrValue</span><input type="hidden" name="$Name" value="$InputValue" />
+<p class="form-contro-static readonly" id="$ID">$AttrValue</p><input type="hidden" name="$Name" value="$InputValue" />
