@@ -75,10 +75,6 @@ form.nostyle {
 		display: block;
 	}
 
-	// .fieldgroup .fieldgroup-field.last {  /* This is used on page/settings/visibility */
-  //   	padding-bottom: 8px; /* replicates li item spacing */
-  //   }
-
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
 	.description {
@@ -436,6 +432,7 @@ form.small .field, .field.small {
 		white-space: nowrap;
 		background-image: linear-gradient(lighten($color-button-generic, 10%), darken($color-button-generic, 5%));
 		vertical-align: top;
+    @extend .btn;
 
 		&.ui-state-hover, &:hover {
 			text-decoration: none;
@@ -625,54 +622,6 @@ form.small .field, .field.small {
 	}
 }
 
-/** ----------------------------------------------------
- * Grouped form fields
- * ---------------------------------------------------- */
-.fieldgroup {
-	.fieldgroup-field {
-		// float: left;
-    display: inline-block;
-		padding: 0 $grid-x 0 0;
-    vertical-align: bottom;
-
-		.fieldgroup input.text, .fieldgroup textarea, .fieldgroup select, .fieldgroup .TreeDropdownField {
-			margin-left: 0;
-		}
-
-		// Style specific label with display block, otherwise
-		// checkbox falls under the text
-		.fieldholder-small-label {
-			display: block;
-      font-size: $font-size-sm;
-      color: $text-muted;
-      padding-top: 0;
-      padding-bottom: 0;
-      padding-right: 0;
-      margin-right: 0;
-		}
-
-		label {
-			padding: $grid-y $grid-x $grid-y 0;
-			margin-left: 0;
-			margin-right: 1em;
-			width: auto;
-		}
-
-    .checkbox {
-      display: inline;
-    }
-
-    .fieldgroup .fieldgroup-field {
-      padding-top: 0;
-    }
-	}
-
-	&.stacked {
-		.fieldgroup-field {
-			float: none;
-		}
-	}
-}
 
 .ss-toggle {
 	margin: $grid-y 0;
@@ -915,171 +864,27 @@ fieldset.switch-states{
 //old web-kit browser fix
 @-webkit-keyframes bugfix { from { position: relative; } to { position: relative; } }
 
-//Styling for filter/search dropdown
+
+// ------------------------------------------------------------------
+// Search and Filters available in the top bar.
+// This is a toggleable element that displays a form for filtering content.
+// ----------------------------------------------------------------- */
 .cms-content-filters {
-	fieldset {
-		margin-left: -16px;
-		margin-right: -16px;
-	}
+  display: none;
+  width: 100%;
+  padding: $grid-gutter-width-half;
+  border-bottom: 1px solid $color-light-separator;
 
-	.fieldgroup {
-		width: 50%;
-		display: inline-block;
-		max-width: 440px;
-		padding-right: 16px;
-		padding-left: 16px;
-		margin-bottom: 16px;
-		box-sizing: border-box;
-		margin-right: -2px;
-		vertical-align: top;
+  .chosen-results {
+    max-height: 180px;
+  }
 
-		.first {
-			label, h1, h2, h3, h4, h5 {
-				display: block;
-				width: 176px;
-				padding: 8px 8px 6px 0;
-				line-height: 16px;
-				font-weight: bold;
-				margin: 0;
-				font-size: 100%;
-			}
-		}
-
-		.field {
-			width: 100%;
-			padding-right: 0;
-			padding-left: 0;
-		}
-
-		.fieldgroup-field {
-			position: relative;
-			margin-right: 0;
-			width: 48%;
-			display: inline-block;
-			padding: 0;
-
-			.description {
-				margin-top: 24px;
-			}
-
-			label {
-				position: absolute;
-				top: 28px;
-				font-style: italic;
-				color: #777;
-				font-weight: normal;
-			}
-
-			&.first {
-				width: 100%;
-				float: left;
-			}
-
-			&.last {
-				padding-right: 0;
-				float: right;
-			}
-		}
-
-		.fieldgroup {
-			margin: 0;
-			padding: 0;
-		}
-	}
-
-	.field {
-		border: none;
-		box-shadow: none;
-		width: 50%;
-		max-width: 440px;
-		display: inline-block;
-		margin: 0 0 8px 0;
-		padding-right: 16px;
-		padding-left: 16px;
-		padding-bottom: 0;
-		box-sizing: border-box;
-		margin-right: -2px;
-		vertical-align: top;
-
-		label.left {
-			text-shadow: none;
-			padding-bottom: 6px;
-		}
-
-		&.dropdown {
-			float: none;
-			display: inline-block;
-		}
-
-		.chosen-container {
-			width: 100% !important;
-			max-width: 100%;
-		}
-
-		input.text {
-			max-width: 100%;
-		}
-
-		&.checkbox {
-			display: block;
-		}
-
-		&.datetime {
-			> label.left {
-				float: none;
-			}
-
-			input.fieldgroup-field {
-				width: 96%;
-				padding: 7px;
-			}
-		}
-	}
-
-	.importSpec {
-		margin-bottom: 8px;
-		padding-left: 16px;
-	}
-
-	.description {
-		margin-left: 0;
-	}
-
-	.middleColumn {
-		width: 100%;
-		margin-left: 0;
-		max-width: 100%;
-	}
-
-	@media screen and (max-width:767px) {
-		fieldset {
-			.field,
-			.fieldgroup {
-				width: 100%;
-				max-width: 100%;
-			}
-		}
-	}
-
-	// Context specific rules for when the filters are in a panel
-	.cms-panel & {
-		.field,
-		.fieldgroup {
-			width: 100%;
-			margin-bottom: 16px;
-		}
-
-		.fieldgroup-field {
-			h4 {
-				padding-top: 0;
-			}
-
-			label {
-				position: static;
-			}
-		}
-	}
+  .importSpec {
+    margin-bottom: 8px;
+    padding-left: 16px;
+  }
 }
+
 
 .ss-uploadfield .form__field-holder .ss-uploadfield-item {
   padding: 0;
