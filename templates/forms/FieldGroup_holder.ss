@@ -3,7 +3,7 @@
     <label
         class="form__field-label"
         <% if $Message || $RightTitle || $Description %>
-            aria-describedby="<% if $Message %>message-$ID <% else_if $RightTitle %>extra-label-$ID <% else_if $Description %>discribes-$ID <% end_if %>"
+            aria-describedby="<% if $Message %>message-$ID <% else_if $RightTitle %>extra-label-$ID <% else_if $Description %>describes-$ID <% end_if %>"
         <% end_if %>
         <% if $Name %>for="control-$Name"<% end_if %>
     >
