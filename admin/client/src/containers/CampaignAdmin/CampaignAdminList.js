@@ -33,7 +33,11 @@ class CampaignAdminList extends SilverStripeComponent {
     const fetchURL = this.props.itemListViewEndpoint.replace(/:id/, this.props.campaignId);
     super.componentDidMount();
     this.setBreadcrumbs();
-    this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL).then(this.setBreadcrumbs);
+
+    // Only load record if not already present
+    if (!Object.keys(this.props.record).length) {
+      this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL).then(this.setBreadcrumbs);
+    }
   }
 
   /**
