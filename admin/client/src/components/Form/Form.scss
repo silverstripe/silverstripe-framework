@@ -28,6 +28,10 @@
   @include break-word();
 }
 
+.form__field-holder {
+  max-width: $input-max-width;
+}
+
 .form__field-extra-label,
 .form__field-description {
   color: $text-muted;
@@ -37,9 +41,6 @@
   font-size: $font-size-sm;
 }
 
-input.text {
-  max-width: $input-max-width;
-}
 
 // TODO convert all readonly fields to inputs,
 // and remove .form-control-static class from them
@@ -73,6 +74,23 @@ input.text {
 .checkbox-inline input[type="checkbox"] {
   margin-right: 6px;
 }
+
+
+// Grouped/Nested form fields
+// Nested as only as a fix for date fields within the filter panel
+.form__fieldgroup .form__fieldgroup-item {
+  display: inline-block;
+  margin-right: $spacer-x / 2;
+  vertical-align: bottom; // Align fields with no labels
+}
+
+.form__fieldgroup-label {
+  display: block;
+  font-size: $font-size-sm;
+  color: $text-muted;
+  margin-top: 8px;
+}
+
 
 @mixin form-responsive($breakpoint-inline, $breakpoint-inline-limit-width, $breakpoint-inline-limit-width-max) {
   @include media-breakpoint-up($breakpoint-inline) {
@@ -158,10 +176,9 @@ input.text {
 }
 
 
-// Apply .form--inline to forms to state when the label and input become inline
-// @include form-responsive(turns inline, stops being full width, smaller portion of screen width is used)
+// Apply .form--inline to forms to state whether or not the label and input should become inline
+// @include form-responsive(turns inline, stops being full width, reduced portion of screen width is used)
 .form--inline,
-.CMSMain,
-.cms-content {
+.cms-edit-form {
   @include form-responsive(lg, xl, xxl);
 }

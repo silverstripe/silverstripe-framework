@@ -11,9 +11,9 @@
     </label>
     <% end_if %>
 
-    <div <% if $Name %>id="control-$Name"<% end_if %> role="group" class="form__field-holder fieldgroup<% if $Zebra %> fieldgroup-$Zebra<% end_if %>">
+    <div <% if $Name %>id="control-$Name"<% end_if %> role="group" class="form__field-holder form__fieldgroup<% if $Zebra %> form__fieldgroup-$Zebra<% end_if %>">
         <% loop $FieldList %>
-            <div class="fieldgroup-field $FirstLast $EvenOdd">
+            <div class="form__fieldgroup-item $FirstLast $EvenOdd">
                 $SmallFieldHolder
             </div>
         <% end_loop %>

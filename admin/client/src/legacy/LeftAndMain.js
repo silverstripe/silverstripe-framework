@@ -1218,7 +1218,7 @@ $.entwine('ss', function($) {
    * For the CMS we also need to tell the parent div that it has a select so
    * we can fix the height cropping.
    */
-  $('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
+  $('.cms .field.dropdown select, .cms .field select[multiple], .form__fieldgroup-item select.dropdown').entwine({
     onmatch: function() {
       if(this.is('.no-chosen')) {
         this._super();

@@ -56,9 +56,9 @@ class MoneyField extends FormField {
 	 */
 	public function Field($properties = array()) {
 		return DBField::create_field('HTMLText',
-			"<div class=\"fieldgroup\">" .
-			"<div class=\"fieldgroup-field\">" . $this->fieldCurrency->SmallFieldHolder() . "</div>" .
-			"<div class=\"fieldgroup-field\">" . $this->fieldAmount->SmallFieldHolder() . "</div>" .
+			"<div class=\"form__fieldgroup\">" .
+			"<div class=\"form__fieldgroup-item\">" . $this->fieldCurrency->SmallFieldHolder() . "</div>" .
+			"<div class=\"form__fieldgroup-item\">" . $this->fieldAmount->SmallFieldHolder() . "</div>" .
 			"</div>"
 		);
 	}
