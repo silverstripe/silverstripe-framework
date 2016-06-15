@@ -337,9 +337,10 @@ class DataQuery {
 
 				if(count($parts) == 1) {
 					// Get expression for sort value
-					$qualCol = DataObject::getSchema()->sqlColumnForField($this->dataClass(), $parts[0]);;
-					if(!$qualCol) {
-						$qualCol = "\"$parts[0]\"";
+					$qualCol = "\"{$parts[0]}\"";
+					$table = DataObject::getSchema()->tableForField($this->dataClass(), $parts[0]);
+					if($table) {
+						$qualCol = "\"{$table}\".{$qualCol}";
 					}
 
 					// remove original sort
