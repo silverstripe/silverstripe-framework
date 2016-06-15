@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataExtension;
+
 class DataExtensionTest extends SapphireTest {
 	protected static $fixture_file = 'DataExtensionTest.yml';
 
@@ -14,7 +17,7 @@ class DataExtensionTest extends SapphireTest {
 	);
 
 	protected $requiredExtensions = array(
-		'DataObject' => array( 'DataExtensionTest_AppliedToDO' ),
+		'\SilverStripe\ORM\DataObject' => array( 'DataExtensionTest_AppliedToDO' ),
 	);
 
 	public function testOneToManyAssociationWithExtension() {
@@ -152,7 +155,7 @@ class DataExtensionTest extends SapphireTest {
 	public function testDbObjectOnExtendedFields() {
 		$member = $this->objFromFixture('DataExtensionTest_Member', 'member1');
 		$this->assertNotNull($member->dbObject('Website'));
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBVarchar', $member->dbObject('Website'));
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBVarchar', $member->dbObject('Website'));
 	}
 
 	public function testExtensionCanBeAppliedToDataObject() {

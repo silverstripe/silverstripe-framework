@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\FieldType\DBField;
+
 /**
  * Represents a field in a form.
  *

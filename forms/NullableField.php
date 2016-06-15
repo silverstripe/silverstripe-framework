@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+
+use SilverStripe\ORM\FieldType\DBField;
+
 
 /**
  * NullableField is a field that wraps other fields when you want to allow the user to specify

@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBVarchar;
+
 
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
@@ -315,7 +315,7 @@ class ViewableData extends Object implements IteratorAggregate {
 
 		foreach($ancestry as $class) {
 			if(!isset(self::$casting_cache[$class]) && $merge) {
-				$mergeFields = is_subclass_of($class, 'DataObject') ? array('db', 'casting') : array('casting');
+				$mergeFields = is_subclass_of($class, 'SilverStripe\\ORM\\DataObject') ? array('db', 'casting') : array('casting');
 
 				if($mergeFields) foreach($mergeFields as $field) {
 					$casting = Config::inst()->get($class, $field, Config::UNINHERITED);

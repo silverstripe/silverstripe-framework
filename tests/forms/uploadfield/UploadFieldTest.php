@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataExtension;
+
 /**
  * @package framework
  * @subpackage tests

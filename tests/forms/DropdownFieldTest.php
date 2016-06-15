@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * @package framework
  * @subpackage tests
@@ -263,7 +265,7 @@ class DropdownFieldTest extends SapphireTest {
 	public function testDropdownWithArrayValues($value) {
 		$field = $this->createDropdownField();
 		$field->setValue($value);
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBHTMLText', $field->Field());
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBHTMLText', $field->Field());
         $this->assertSame($value, $field->Value());
 	}
 

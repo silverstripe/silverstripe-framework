@@ -240,6 +240,12 @@ class i18nTextCollector extends Object {
 	}
 
 	/**
+	 * Map of translation keys => module names
+	 * @var array
+	 */
+	protected $classModuleCache = [];
+
+	/**
 	 * Determine the best module to be given ownership over this key
 	 *
 	 * @param array $entitiesByModule
@@ -249,8 +255,12 @@ class i18nTextCollector extends Object {
 	protected function getBestModuleForKey($entitiesByModule, $key) {
 		// Check classes
 		$class = current(explode('.', $key));
-		$owner = i18n::get_owner_module($class);
+		if(array_key_exists($class, $this->classModuleCache)) {
+			return $this->classModuleCache[$class];
+		}
+		$owner = $this->findModuleForClass($class);
 		if($owner) {
+			$this->classModuleCache[$class] = $owner;
 			return $owner;
 		}
 
@@ -259,18 +269,56 @@ class i18nTextCollector extends Object {
 
 		// Display notice if not found
 		Debug::message(
-			"Duplicate key {$key} detected in multiple modules with no obvious owner",
+			"Duplicate key {$key} detected in no / multiple modules with no obvious owner",
 			false
 		);
 
 		// Fall back to framework then cms modules
 		foreach(array('framework', 'cms') as $module) {
 			if(isset($entitiesByModule[$module][$key])) {
+				$this->classModuleCache[$class] = $module;
 				return $module;
 			}
 		}
 
 		// Do nothing
+		$this->classModuleCache[$class] = null;
+		return null;
+	}
+
+	/**
+	 * Given a partial class name, attempt to determine the best module to assign strings to.
+	 *
+	 * @param string $class Either a FQN class name, or a non-qualified class name.
+	 * @return string Name of module
+	 */
+	protected function findModuleForClass($class) {
+		if(ClassInfo::exists($class)) {
+			return i18n::get_owner_module($class);
+		}
+
+
+		// If we can't find a class, see if it needs to be fully qualified
+		if(strpos($class, '\\') !== false) {
+			return null;
+		}
+
+		// Find FQN that ends with $class
+		$classes = preg_grep(
+			'/'.preg_quote("\\{$class}", '\/').'$/i',
+			SS_ClassLoader::instance()->getManifest()->getClassNames()
+		);
+
+		// Find all modules for candidate classes
+		$modules = array_unique(array_map(function($class) {
+			return i18n::get_owner_module($class);
+		}, $classes));
+
+		if(count($modules) === 1) {
+			return reset($modules);
+		}
+
+		// Couldn't find it! Exists in none, or multiple modules.
 		return null;
 	}
 

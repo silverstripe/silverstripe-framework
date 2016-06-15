@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+
 /**
  * Special request handler for admin/batchaction
  *
@@ -273,7 +278,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		}
 
 		// Bypass versioned filter
-		if($recordClass::has_extension('Versioned')) {
+		if($recordClass::has_extension('SilverStripe\\ORM\\Versioning\\Versioned')) {
 			// Workaround for get_including_deleted not supporting byIDs filter very well
 			// Ensure we select both stage / live records
 			$pages = Versioned::get_including_deleted($recordClass, array(

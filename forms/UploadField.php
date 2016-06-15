@@ -1,6 +1,15 @@
 <?php
 
 use SilverStripe\Filesystem\Storage\AssetContainer;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\RelationList;
+use SilverStripe\ORM\UnsavedRelationList;
+use SilverStripe\ORM\DataList;
+
 
 /**
  * Field for uploading single or multiple files of all types, including images.
@@ -1616,7 +1625,7 @@ class UploadField_SelectHandler extends RequestHandler {
 			'Size' => singleton('File')->fieldLabel('Size')
 		));
 		$colsComponent->setFieldCasting(array(
-			'Created' => 'SS_Datetime->Nice'
+			'Created' => 'DBDatetime->Nice'
 		));
 
  		// Set configurable pagination for file list field

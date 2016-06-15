@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBDate;
+
+use SilverStripe\ORM\FieldType\DBDate;
+
 
 require_once 'Zend/Date.php';
 

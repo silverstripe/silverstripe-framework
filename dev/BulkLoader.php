@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ArrayList;
 /**
  * A base for bulk loaders of content into the SilverStripe database.
  * Bulk loaders give SilverStripe authors the ability to do large-scale uploads into their SilverStripe databases.

@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * @package framework
  * @subpackage tests
@@ -251,7 +253,7 @@ class DatetimeFieldTest extends SapphireTest {
 class DatetimeFieldTest_Model extends DataObject implements TestOnly {
 
 	private static $db = array(
-		'MyDatetime' => 'SS_Datetime'
+		'MyDatetime' => 'Datetime'
 	);
 
 }

@@ -1,6 +1,9 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBClassName;
+
+use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\DataObject;
+
 
 class DBClassNameTest extends SapphireTest {
 
@@ -63,9 +66,9 @@ class DBClassNameTest extends SapphireTest {
 	 */
 	public function testBaseClassDetection() {
 		// Explicit DataObject
-		$field1 = new DBClassName('MyClass', 'DataObject');
-		$this->assertEquals('DataObject', $field1->getBaseClass());
-		$this->assertNotEquals('DataObject', $field1->getDefault());
+		$field1 = new DBClassName('MyClass', 'SilverStripe\\ORM\\DataObject');
+		$this->assertEquals('SilverStripe\\ORM\\DataObject', $field1->getBaseClass());
+		$this->assertNotEquals('SilverStripe\\ORM\\DataObject', $field1->getDefault());
 
 		// Explicit base class
 		$field2 = new DBClassName('MyClass', 'DBClassNameTest_Object');
@@ -86,14 +89,14 @@ class DBClassNameTest extends SapphireTest {
 
 		// Missing
 		$field5 = new DBClassName('MyClass');
-		$this->assertEquals('DataObject', $field5->getBaseClass());
-		$this->assertNotEquals('DataObject', $field5->getDefault());
+		$this->assertEquals('SilverStripe\\ORM\\DataObject', $field5->getBaseClass());
+		$this->assertNotEquals('SilverStripe\\ORM\\DataObject', $field5->getDefault());
 
 		// Invalid class
 		$field6 = new DBClassName('MyClass');
 		$field6->setTable('InvalidTable');
-		$this->assertEquals('DataObject', $field6->getBaseClass());
-		$this->assertNotEquals('DataObject', $field6->getDefault());
+		$this->assertEquals('SilverStripe\\ORM\\DataObject', $field6->getBaseClass());
+		$this->assertNotEquals('SilverStripe\\ORM\\DataObject', $field6->getDefault());
 
 		// Custom default_classname
 		$field7 = new DBClassName('MyClass');
@@ -106,12 +109,12 @@ class DBClassNameTest extends SapphireTest {
 class DBClassNameTest_Object extends DataObject implements TestOnly {
 
 	private static $extensions = array(
-		'Versioned'
+		'SilverStripe\\ORM\\Versioning\\Versioned'
 	);
 
 	private static $db = array(
 		'DefaultClass' => 'DBClassName',
-		'AnyClass' => 'DBClassName("DataObject")',
+		'AnyClass' => "DBClassName('SilverStripe\\ORM\\DataObject')",
 		'ChildClass' => 'DBClassName("DBClassNameTest_ObjectSubClass")',
 		'LeafClass' => 'DBClassName("DBClassNameTest_ObjectSubSubClass")'
 	);

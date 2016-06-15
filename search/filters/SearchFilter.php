@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataQuery;
 /**
  * Base class for filtering implementations,
  * which work together with {@link SearchContext}
@@ -166,7 +169,7 @@ abstract class SearchFilter extends Object {
 		}
 
 		// Ensure that we're dealing with a DataObject.
-		if (!is_subclass_of($this->model, 'DataObject')) {
+		if (!is_subclass_of($this->model, 'SilverStripe\\ORM\\DataObject')) {
 			throw new InvalidArgumentException(
 				"Model supplied to " . get_class($this) . " should be an instance of DataObject."
 			);

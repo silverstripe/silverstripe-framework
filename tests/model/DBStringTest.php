@@ -1,7 +1,10 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
-use SilverStripe\Model\FieldType\DBString;
+
+
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBString;
+
 
 /**
  * @package framework

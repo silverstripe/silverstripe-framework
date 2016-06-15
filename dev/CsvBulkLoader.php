@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * Utility class to facilitate complex CSV-imports by defining column-mappings
  * and custom converters.

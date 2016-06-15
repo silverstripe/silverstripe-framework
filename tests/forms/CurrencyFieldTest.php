@@ -60,7 +60,7 @@ class CurrencyFieldTest extends SapphireTest {
 		);
 
         //tests with updated currency symbol setting
-        Config::inst()->update('SilverStripe\Model\FieldType\DBCurrency', 'currency_symbol', '€');
+        Config::inst()->update('SilverStripe\\ORM\\FieldType\\DBCurrency', 'currency_symbol', '€');
 
         $f->setValue('123.45');
         $this->assertTrue(
@@ -164,7 +164,7 @@ class CurrencyFieldTest extends SapphireTest {
 		);
 
         //update currency symbol via config
-        Config::inst()->update('SilverStripe\Model\FieldType\DBCurrency', 'currency_symbol', '€');
+        Config::inst()->update('SilverStripe\\ORM\\FieldType\\DBCurrency', 'currency_symbol', '€');
 
         $f->setValue('123.45');
         $this->assertEquals(
@@ -235,7 +235,7 @@ class CurrencyFieldTest extends SapphireTest {
 		);
 
         //tests with updated currency symbol setting
-        Config::inst()->update('SilverStripe\Model\FieldType\DBCurrency', 'currency_symbol', '€');
+        Config::inst()->update('SilverStripe\\ORM\\FieldType\\DBCurrency', 'currency_symbol', '€');
 
         $f->setValue('€123.45');
         $this->assertEquals(

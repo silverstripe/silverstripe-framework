@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
+use SilverStripe\ORM\DataExtension;
 /**
  * Provides a simple search engine for your site based on the MySQL FULLTEXT index.
  * Adds the {@link FulltextSearchable} extension to data classes,

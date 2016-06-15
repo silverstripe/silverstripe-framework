@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataList;
 /**
  * This class is is responsible for adding objects to another object's has_many
  * and many_many relation, as defined by the {@link RelationList} passed to the

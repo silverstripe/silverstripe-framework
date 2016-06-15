@@ -2,12 +2,16 @@
 
 namespace SilverStripe\Filesystem;
 
-use DataObject;
+
 use Injector;
 use Member;
-use Versioned;
+
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\Filesystem\Storage\DBFile;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataExtension;
+
 
 /**
  * This class provides the necessary business logic to ensure that any assets attached
@@ -24,7 +28,7 @@ use SilverStripe\Filesystem\Storage\DBFile;
  *
  * @property DataObject|Versioned $owner A {@see DataObject}, potentially decorated with {@see Versioned} extension.
  */
-class AssetControlExtension extends \DataExtension
+class AssetControlExtension extends DataExtension
 {
 
 	/**
@@ -235,7 +239,7 @@ class AssetControlExtension extends \DataExtension
 	 */
 	protected function isVersioned()
 	{
-		return $this->owner->has_extension('Versioned') && class_exists('Versioned');
+		return $this->owner->has_extension('SilverStripe\\ORM\\Versioning\\Versioned') && class_exists('SilverStripe\\ORM\\Versioning\\Versioned');
 	}
 
 	/**

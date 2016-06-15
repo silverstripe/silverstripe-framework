@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataModel;
+
 /**
  * File similar to main.php designed for command-line scripts
  *
@@ -77,7 +80,7 @@ global $databaseConfig;
 // We don't have a session in cli-script, but this prevents errors
 $_SESSION = null;
 
-require_once("model/DB.php");
+require_once("ORM/DB.php");
 
 
 // Connect to database

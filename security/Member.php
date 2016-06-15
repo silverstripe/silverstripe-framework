@@ -1,6 +1,16 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBDatetime;
+
+use SilverStripe\ORM\ValidationResult;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\ORM\ManyManyList;
+
 
 /**
  * The member class which represents the users of the system
@@ -32,10 +42,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'Surname' => 'Varchar',
 		'Email' => 'Varchar(254)', // See RFC 5321, Section 4.5.3.1.3. (256 minus the < and > character)
 		'TempIDHash' => 'Varchar(160)', // Temporary id used for cms re-authentication
-		'TempIDExpired' => 'SS_Datetime', // Expiry of temp login
+		'TempIDExpired' => 'Datetime', // Expiry of temp login
 		'Password' => 'Varchar(160)',
 		'AutoLoginHash' => 'Varchar(160)', // Used to auto-login the user on password reset
-		'AutoLoginExpired' => 'SS_Datetime',
+		'AutoLoginExpired' => 'Datetime',
 		// This is an arbitrary code pointing to a PasswordEncryptor instance,
 		// not an actual encryption algorithm.
 		// Warning: Never change this field after its the first password hashing without
@@ -43,7 +53,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'PasswordEncryption' => "Varchar(50)",
 		'Salt' => 'Varchar(50)',
 		'PasswordExpiry' => 'Date',
-		'LockedOutUntil' => 'SS_Datetime',
+		'LockedOutUntil' => 'Datetime',
 		'Locale' => 'Varchar(6)',
 		// handled in registerFailedLogin(), only used if $lock_out_after_incorrect_logins is set
 		'FailedLoginCount' => 'Int',
@@ -364,7 +374,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Returns true if this user is locked out
 	 */
 	public function isLockedOut() {
-		return $this->LockedOutUntil && SS_Datetime::now()->Format('U') < strtotime($this->LockedOutUntil);
+		return $this->LockedOutUntil && DBDatetime::now()->Format('U') < strtotime($this->LockedOutUntil);
 	}
 
 	/**
@@ -553,11 +563,11 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		if(strpos(Cookie::get('alc_enc'), ':') && Cookie::get('alc_device') && !Session::get("loggedInAs")) {
 			list($uid, $token) = explode(':', Cookie::get('alc_enc'), 2);
-			
+
 			if (!$uid || !$token) {
 				return;
 			}
-			
+
 			$deviceID = Cookie::get('alc_device');
 
 			$member = Member::get()->byId($uid);
@@ -578,7 +588,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				} else {
 					// Check for expired token
 					$expiryDate = new DateTime($rememberLoginHash->ExpiryDate);
-					$now = SS_Datetime::now();
+					$now = DBDatetime::now();
 					$now = new DateTime($now->Rfc2822());
 					if ($now > $expiryDate) {
 						$member = null;
@@ -1325,7 +1335,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		$groupIDList = array();
 
-		if(is_a($groups, 'SS_List')) {
+		if(is_a($groups, 'SilverStripe\\ORM\\SS_List')) {
 			foreach($groups as $group) {
 				$groupIDList[] = $group->ID;
 			}
@@ -1654,7 +1664,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 			if($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
 				$lockoutMins = self::config()->lock_out_delay_mins;
-				$this->LockedOutUntil = date('Y-m-d H:i:s', SS_Datetime::now()->Format('U') + $lockoutMins*60);
+				$this->LockedOutUntil = date('Y-m-d H:i:s', DBDatetime::now()->Format('U') + $lockoutMins*60);
 				$this->FailedLoginCount = 0;
 			}
 		}

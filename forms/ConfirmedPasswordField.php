@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataObjectInterface;
+
 /**
  * Two masked input fields, checks for matching passwords.
  *

@@ -1,53 +1,53 @@
 Injector:
   Boolean:
-    class: SilverStripe\Model\FieldType\DBBoolean
+    class: SilverStripe\ORM\FieldType\DBBoolean
   Currency:
-    class: SilverStripe\Model\FieldType\DBCurrency
+    class: SilverStripe\ORM\FieldType\DBCurrency
   DBClassName:
-    class: SilverStripe\Model\FieldType\DBClassName
+    class: SilverStripe\ORM\FieldType\DBClassName
   Date:
-    class: SilverStripe\Model\FieldType\DBDate
+    class: SilverStripe\ORM\FieldType\DBDate
   Datetime:
-    class: SilverStripe\Model\FieldType\DBDatetime
-  SS_Datetime:
-    class: SilverStripe\Model\FieldType\DBDatetime
+    class: SilverStripe\ORM\FieldType\DBDatetime
+  DBDatetime:
+    class: SilverStripe\ORM\FieldType\DBDatetime
   Decimal:
-    class: SilverStripe\Model\FieldType\DBDecimal
+    class: SilverStripe\ORM\FieldType\DBDecimal
   Double:
-    class: SilverStripe\Model\FieldType\DBDouble
+    class: SilverStripe\ORM\FieldType\DBDouble
   Enum:
-    class: SilverStripe\Model\FieldType\DBEnum
+    class: SilverStripe\ORM\FieldType\DBEnum
   DBFile:
     class: SilverStripe\Filesystem\Storage\DBFile
   Float:
-    class: SilverStripe\Model\FieldType\DBFloat
+    class: SilverStripe\ORM\FieldType\DBFloat
   ForeignKey:
-    class: SilverStripe\Model\FieldType\DBForeignKey
+    class: SilverStripe\ORM\FieldType\DBForeignKey
   HTMLText:
-    class: SilverStripe\Model\FieldType\DBHTMLText
+    class: SilverStripe\ORM\FieldType\DBHTMLText
   HTMLVarchar:
-    class: SilverStripe\Model\FieldType\DBHTMLVarchar
+    class: SilverStripe\ORM\FieldType\DBHTMLVarchar
   Int:
-    class: SilverStripe\Model\FieldType\DBInt
+    class: SilverStripe\ORM\FieldType\DBInt
   Locale:
-    class: SilverStripe\Model\FieldType\DBLocale
+    class: SilverStripe\ORM\FieldType\DBLocale
   DBLocale:
-    class: SilverStripe\Model\FieldType\DBLocale
+    class: SilverStripe\ORM\FieldType\DBLocale
   Money:
-    class: SilverStripe\Model\FieldType\DBMoney
+    class: SilverStripe\ORM\FieldType\DBMoney
   MultiEnum:
-    class: SilverStripe\Model\FieldType\DBMultiEnum
+    class: SilverStripe\ORM\FieldType\DBMultiEnum
   Percentage:
-    class: SilverStripe\Model\FieldType\DBPercentage
+    class: SilverStripe\ORM\FieldType\DBPercentage
   PolymorphicForeignKey:
-    class: SilverStripe\Model\FieldType\DBPolymorphicForeignKey
+    class: SilverStripe\ORM\FieldType\DBPolymorphicForeignKey
   PrimaryKey:
-    class: SilverStripe\Model\FieldType\DBPrimaryKey
+    class: SilverStripe\ORM\FieldType\DBPrimaryKey
   Text:
-    class: SilverStripe\Model\FieldType\DBText
+    class: SilverStripe\ORM\FieldType\DBText
   Time:
-    class: SilverStripe\Model\FieldType\DBTime
+    class: SilverStripe\ORM\FieldType\DBTime
   Varchar:
-    class: SilverStripe\Model\FieldType\DBVarchar
+    class: SilverStripe\ORM\FieldType\DBVarchar
   Year:
-    class: SilverStripe\Model\FieldType\DBYear
+    class: SilverStripe\ORM\FieldType\DBYear

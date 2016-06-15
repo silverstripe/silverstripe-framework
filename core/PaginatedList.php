@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\SS_ListDecorator;
 /**
  * A decorator that wraps around a data list in order to provide pagination.
  *

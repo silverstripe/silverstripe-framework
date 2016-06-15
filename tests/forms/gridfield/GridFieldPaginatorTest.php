@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataList;
 class GridFieldPaginatorTest extends FunctionalTest {
 	/** @var ArrayList */
 	protected $list;

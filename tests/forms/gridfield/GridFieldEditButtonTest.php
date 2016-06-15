@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+
 class GridFieldEditButtonTest extends SapphireTest {
 
 	/** @var ArrayList */

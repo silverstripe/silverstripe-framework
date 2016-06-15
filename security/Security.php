@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
 /**
  * Implements a basic security model
  * @package framework

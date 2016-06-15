@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\ORM\Queries\SQLUpdate;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * Tests for {@see SQLUpdate}

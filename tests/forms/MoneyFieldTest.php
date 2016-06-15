@@ -1,6 +1,9 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBMoney;
+
+use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * @package framework

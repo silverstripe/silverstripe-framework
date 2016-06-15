@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\ValidationResult;
+use SilverStripe\ORM\ValidationException;
+
 /**
  * @package framework
  * @subpackage Testing

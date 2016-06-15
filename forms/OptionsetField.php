@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * Set of radio buttons designed to emulate a dropdown.
  *

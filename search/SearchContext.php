@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataList;
 /**
 * Manages searching of properties on one or more {@link DataObject}
 * types, based on a given set of input parameters.

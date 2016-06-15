@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\ORM\SS_Filterable;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ArrayList;
 /**
  * GridFieldFilterHeader alters the {@link GridField} with some filtering
  * fields in the header of each column.

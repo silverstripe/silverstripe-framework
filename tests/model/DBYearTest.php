@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBYear;
+
+use SilverStripe\ORM\FieldType\DBYear;
+
 
 /**
  * @package framework

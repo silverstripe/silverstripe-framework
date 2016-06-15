@@ -6,7 +6,7 @@ $frameworkPath = defined('FRAMEWORK_PATH') ? FRAMEWORK_PATH : FRAMEWORK_NAME;
 // Use MySQLi as default
 DatabaseAdapterRegistry::register(
 	array(
-		'class' => 'MySQLDatabase',
+		'class' => 'SilverStripe\\ORM\\Connect\\MySQLDatabase',
 		'title' => 'MySQL 5.0+ (using MySQLi)',
 		'helperPath' => $frameworkPath . '/dev/install/MySQLDatabaseConfigurationHelper.php',
 		'supported' => class_exists('MySQLi'),

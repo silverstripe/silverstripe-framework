@@ -1,6 +1,11 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DataObjectInterface;
+
 
 /**
  * Shows a categorized list of available permissions (through {@link Permission::get_codes()}).

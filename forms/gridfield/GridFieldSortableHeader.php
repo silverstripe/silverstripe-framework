@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\ORM\SS_Sortable;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\DataObject;
+
 /**
  * GridFieldSortableHeader adds column headers to a {@link GridField} that can
  * also sort the columns.

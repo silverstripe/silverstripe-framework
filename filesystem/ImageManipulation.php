@@ -4,14 +4,16 @@ namespace SilverStripe\Filesystem;
 
 use Config;
 use Convert;
-use SilverStripe\Model\FieldType\DBField;
+
 use SilverStripe\Filesystem\Storage\DBFile;
 use Image_Backend;
 use Injector;
 use InvalidArgumentException;
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetStore;
-use SilverStripe\Model\FieldType\DBHTMLText;
+
+use SilverStripe\ORM\FieldType\DBField;
+
 
 /**
  * Provides image manipulation functionality.

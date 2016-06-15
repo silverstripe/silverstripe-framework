@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+
+use SilverStripe\ORM\FieldType\DBField;
+
 
 /**
  * Render a button that will submit the form its contained in through ajax.

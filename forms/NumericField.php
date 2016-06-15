@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * Text input field with validation for numeric values. Supports validating
  * the numeric value as to the {@link i18n::get_locale()} value, or an

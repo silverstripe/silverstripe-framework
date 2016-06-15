@@ -1,6 +1,9 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
+
 
 /**
  * @package framework

@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DB;
+
 /**
  * Migrates all 3.x file dataobjects to use the new DBFile field.
  *

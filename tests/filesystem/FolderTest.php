@@ -1,6 +1,9 @@
 <?php
 
 use Filesystem as SS_Filesystem;
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * @author Ingo Schommer (ingo at silverstripe dot com)

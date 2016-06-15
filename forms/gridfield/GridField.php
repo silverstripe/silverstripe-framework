@@ -1,6 +1,11 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DataModel;
+use SilverStripe\ORM\DataObjectInterface;
+
 
 /**
  * Displays a {@link SS_List} in a grid format.

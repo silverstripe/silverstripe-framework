@@ -1,6 +1,11 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBClassName;
+
+use SilverStripe\ORM\Connect\MySQLSchemaManager;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\ORM\DataObject;
+
 
 class DataObjectSchemaGenerationTest extends SapphireTest {
 	protected $extraDataObjects = array(
@@ -134,6 +139,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		DBClassName::clear_classname_cache();
 		$do1 = new DataObjectSchemaGenerationTest_DO();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		/** @skipUpgrade */
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
 			array(
@@ -149,6 +155,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item1->write();
 		DBClassName::clear_classname_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		/** @skipUpgrade */
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
 			array(
@@ -164,6 +171,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item2->write();
 		DBClassName::clear_classname_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		/** @skipUpgrade */
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
 			array(
@@ -181,6 +189,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item2->write();
 		DBClassName::clear_classname_cache();
 		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		/** @skipUpgrade */
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
 			array(
@@ -201,7 +210,7 @@ class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
 		'NumberField' => 'Decimal',
 		'FloatingField' => 'Decimal(10,3,1.1)',
 		'TextValue' => 'Varchar',
-		'Date' => 'SS_Datetime',
+		'Date' => 'Datetime',
 		'MyNumber' => 'Int'
 	);
 }

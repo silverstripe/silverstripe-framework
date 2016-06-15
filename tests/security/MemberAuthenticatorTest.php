@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
 /**
  * @package framework
  * @subpackage tests
@@ -169,7 +172,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 	{
 		Config::inst()->update('Member', 'lock_out_after_incorrect_logins', 1);
 		Config::inst()->update('Member', 'lock_out_delay_mins', 10);
-		SS_Datetime::set_mock_now('2016-04-18 00:00:00');
+		DBDatetime::set_mock_now('2016-04-18 00:00:00');
 		$controller = new Security();
 		$form = new Form($controller, 'Form', new FieldList(), new FieldList());
 

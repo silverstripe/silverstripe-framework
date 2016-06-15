@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataModel;
+use SilverStripe\ORM\DataObject;
+
 /**
  * @package framework
  * @subpackage tests

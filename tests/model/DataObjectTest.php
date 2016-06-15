@@ -1,6 +1,13 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Connect\MySQLDatabase;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\ValidationResult;
+
 
 /**
  * @package framework
@@ -314,7 +321,7 @@ class DataObjectTest extends SapphireTest {
 			'belongs_many_many is properly inspected');
 		$this->assertEquals(singleton('DataObjectTest_CEO')->getRelationClass('Company'), 'DataObjectTest_Company',
 			'belongs_to is properly inspected');
-		$this->assertEquals(singleton('DataObjectTest_Fan')->getRelationClass('Favourite'), 'DataObject',
+		$this->assertEquals(singleton('DataObjectTest_Fan')->getRelationClass('Favourite'), 'SilverStripe\\ORM\\DataObject',
 			'polymorphic has_one is properly inspected');
 	}
 
@@ -355,7 +362,7 @@ class DataObjectTest extends SapphireTest {
 		// check behaviour of dbObject with polymorphic relations
 		$favouriteDBObject = $fan1->dbObject('Favourite');
 		$favouriteValue = $favouriteDBObject->getValue();
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBPolymorphicForeignKey', $favouriteDBObject);
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBPolymorphicForeignKey', $favouriteDBObject);
 		$this->assertEquals($favourite->ID, $favouriteValue->ID);
 		$this->assertEquals($favourite->ClassName, $favouriteValue->ClassName);
 	}
@@ -1048,7 +1055,7 @@ class DataObjectTest extends SapphireTest {
 	public function testWritingInvalidDataObjectThrowsException() {
 		$validatedObject = new DataObjectTest_ValidatedObject();
 
-		$this->setExpectedException('ValidationException');
+		$this->setExpectedException('SilverStripe\\ORM\\ValidationException');
 		$validatedObject->write();
 	}
 
@@ -1102,7 +1109,7 @@ class DataObjectTest extends SapphireTest {
 		$this->assertFalse(DataObject::has_own_table("DataObjectTest_FieldlessSubTable"));
 
 		/* Return false if you don't pass it a subclass of DataObject */
-		$this->assertFalse(DataObject::has_own_table("DataObject"));
+		$this->assertFalse(DataObject::has_own_table("SilverStripe\\ORM\\DataObject"));
 		$this->assertFalse(DataObject::has_own_table("ViewableData"));
 		$this->assertFalse(DataObject::has_own_table("ThisIsntADataObject"));
 	}
@@ -1286,7 +1293,7 @@ class DataObjectTest extends SapphireTest {
 
 		// Check everything works when no relation is present
 		$teamWithoutSponsor = $this->objFromFixture('DataObjectTest_Team', 'team3');
-		$this->assertInstanceOf('ManyManyList', $teamWithoutSponsor->Sponsors());
+		$this->assertInstanceOf('SilverStripe\\ORM\\ManyManyList', $teamWithoutSponsor->Sponsors());
 		$this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
 
 		// Test that belongs_many_many can be infered from with getNonReciprocalComponent
@@ -1414,7 +1421,8 @@ class DataObjectTest extends SapphireTest {
 		$assertions = array(
 			'DataObjectTest_Player'       => 'Data Object Test Player',
 			'DataObjectTest_Team'         => 'Data Object Test Team',
-			'DataObjectTest_Fixture'      => 'Data Object Test Fixture'
+			'DataObjectTest_Fixture'      => 'Data Object Test Fixture',
+			'DataObjectTest\NamespacedClass' => 'Namespaced Class',
 		);
 
 		foreach($assertions as $class => $expectedSingularName) {
@@ -1752,16 +1760,16 @@ class DataObjectTest extends SapphireTest {
 		$captain = $this->objFromFixture('DataObjectTest_Player', 'captain1');
 
 		// Test traversal of a single has_one
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBVarchar', $captain->relObject('FavouriteTeam.Title'));
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBVarchar', $captain->relObject('FavouriteTeam.Title'));
 		$this->assertEquals("Team 1", $captain->relObject('FavouriteTeam.Title')->getValue());
 
 		// Test direct field access
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBBoolean', $captain->relObject('IsRetired'));
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBBoolean', $captain->relObject('IsRetired'));
 		$this->assertEquals(1, $captain->relObject('IsRetired')->getValue());
 
 		$player = $this->objFromFixture('DataObjectTest_Player', 'player2');
 		// Test that we can traverse more than once, and that arbitrary methods are okay
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBVarchar', $player->relObject('Teams.First.Title'));
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBVarchar', $player->relObject('Teams.First.Title'));
 		$this->assertEquals("Team 1", $player->relObject('Teams.First.Title')->getValue());
 	}
 
@@ -1878,7 +1886,7 @@ class DataObjectTest_Fixture extends DataObject implements TestOnly {
 
 		// Field types
 		'DateField' => 'Date',
-		'DatetimeField' => 'SS_Datetime',
+		'DatetimeField' => 'Datetime',
 
 		'MyFieldWithDefault' => 'Varchar',
 		'MyFieldWithAltDefault' => 'Varchar'
@@ -1976,7 +1984,7 @@ class DataObjectTest_Company extends DataObject implements TestOnly {
 	private static $has_one = array (
 		'CEO'         => 'DataObjectTest_CEO',
 		'PreviousCEO' => 'DataObjectTest_CEO',
-		'Owner'       => 'DataObject' // polymorphic
+		'Owner'       => 'SilverStripe\\ORM\\DataObject' // polymorphic
 	);
 
 	private static $has_many = array (
@@ -2040,8 +2048,8 @@ class DataObjectTest_Fan extends DataObject implements TestOnly {
 	);
 
 	private static $has_one = array(
-		'Favourite' => 'DataObject', // Polymorphic relation
-		'SecondFavourite' => 'DataObject'
+		'Favourite' => 'SilverStripe\\ORM\\DataObject', // Polymorphic relation
+		'SecondFavourite' => 'SilverStripe\\ORM\\DataObject'
 	);
 }
 

@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataModel;
+
 /**
  * Represents a request processer that delegates pre and post request handling to nested request filters
  *

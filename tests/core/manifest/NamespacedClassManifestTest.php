@@ -37,7 +37,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 				'PermissionProvider', ' ', 'AS', ' ', 'P',
 			),
 			array('silverstripe', '\\', 'test', '\\', 'ClassA'),
-			array('\\', 'DataObject'),
+			array('\\', 'Object'),
 		);
 
 		$this->assertEquals(count($expectedItems), count($parsedTokens));
@@ -61,7 +61,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 			'Response' => 'SS_HTTPResponse',
 			'P' => 'PermissionProvider',
 			'silverstripe\test\ClassA',
-			'\DataObject',
+			'\Object',
 		);
 
 		$imports = $method->invoke($this->manifest, $tokens);

@@ -1,7 +1,15 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
-use SilverStripe\Model\FieldType\DBDatetime;
+
+
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Hierarchy\Hierarchy;
+use SilverStripe\ORM\DataModel;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\DB;
+
 
 /**
  * Test case class for the Sapphire framework.
@@ -179,7 +187,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Config::nest();
 		Injector::nest();
 
-		$this->originalReadingMode = \Versioned::get_reading_mode();
+		$this->originalReadingMode = Versioned::get_reading_mode();
 
 		// We cannot run the tests on this abstract class.
 		if(get_class($this) == "SapphireTest") {
@@ -232,7 +240,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				self::create_temp_db();
 			}
 
-			singleton('DataObject')->flushCache();
+			singleton('SilverStripe\\ORM\\DataObject')->flushCache();
 
 			self::empty_temp_db();
 
@@ -523,7 +531,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$controller->response->removeHeader('Location');
 		}
 
-		\Versioned::set_reading_mode($this->originalReadingMode);
+		Versioned::set_reading_mode($this->originalReadingMode);
 
 		//unnest injector / config now that tests are over
 		Injector::unnest();
@@ -866,7 +874,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			if($dbName && DB::get_conn()->databaseExists($dbName)) {
 				// Some DataExtensions keep a static cache of information that needs to
 				// be reset whenever the database is killed
-				foreach(ClassInfo::subclassesFor('DataExtension') as $class) {
+				foreach(ClassInfo::subclassesFor('SilverStripe\\ORM\\DataExtension') as $class) {
 					$toCall = array($class, 'on_db_reset');
 					if(is_callable($toCall)) call_user_func($toCall);
 				}
@@ -886,7 +894,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			// Some DataExtensions keep a static cache of information that needs to
 			// be reset whenever the database is cleaned out
-			$classes = array_merge(ClassInfo::subclassesFor('DataExtension'), ClassInfo::subclassesFor('DataObject'));
+			$classes = array_merge(ClassInfo::subclassesFor('SilverStripe\\ORM\\DataExtension'), ClassInfo::subclassesFor('SilverStripe\\ORM\\DataObject'));
 			foreach($classes as $class) {
 				$toCall = array($class, 'on_db_reset');
 				if(is_callable($toCall)) call_user_func($toCall);
@@ -946,7 +954,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			// clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
 			Injector::inst()->unregisterAllObjects();
 
-			$dataClasses = ClassInfo::subclassesFor('DataObject');
+			$dataClasses = ClassInfo::subclassesFor('SilverStripe\\ORM\\DataObject');
 			array_shift($dataClasses);
 
 			DB::quiet();
@@ -971,7 +979,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			});
 
 			ClassInfo::reset_db_cache();
-			singleton('DataObject')->flushCache();
+			singleton('SilverStripe\\ORM\\DataObject')->flushCache();
 		}
 	}
 

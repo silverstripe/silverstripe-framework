@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\ORM\SS_Limitable;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\UnsavedRelationList;
 /**
  * GridFieldPaginator paginates the {@link GridField} list and adds controls
  * to the bottom of the {@link GridField}.

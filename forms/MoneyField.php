@@ -1,7 +1,11 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
-use SilverStripe\Model\FieldType\DBMoney;
+
+
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\DataObjectInterface;
+
 
 /**
  * A form field that can save into a {@link Money} database field.

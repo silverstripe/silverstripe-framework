@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * @package framework
  * @subpackage tests
@@ -91,7 +93,7 @@ class ClassInfoTest extends SapphireTest {
 		$expect = ArrayLib::valuekey(array(
 			'Object',
 			'ViewableData',
-			'DataObject',
+			'SilverStripe\\ORM\\DataObject',
 			'ClassInfoTest_BaseClass',
 			'ClassInfoTest_ChildClass',
 		));

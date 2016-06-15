@@ -1,6 +1,10 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBMoney;
+
+use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+
 
 /**
  * Partially based on Zend_CurrencyTest.
@@ -25,14 +29,14 @@ class DBMoneyTest extends SapphireTest {
 
 	public function testMoneyFieldsReturnedAsObjects() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBMoney', $obj->MyMoney);
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $obj->MyMoney);
 	}
 
 
 	public function testLoadFromFixture() {
 		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
 
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBMoney', $obj->MyMoney);
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $obj->MyMoney);
 		$this->assertEquals($obj->MyMoney->getCurrency(), 'EUR');
 		$this->assertEquals($obj->MyMoney->getAmount(), 1.23);
 	}
@@ -46,7 +50,7 @@ class DBMoneyTest extends SapphireTest {
 		$this->assertNotContains('MyMoney', array_keys($changed));
 
 		// With changes
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBMoney', $obj->MyMoney);
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $obj->MyMoney);
 		$obj->MyMoney->setAmount(99);
 		$changed = $obj->getChangedFields();
 		$this->assertContains('MyMoney', array_keys($changed), 'Field is detected as changed');
@@ -263,7 +267,7 @@ class DBMoneyTest extends SapphireTest {
 	public function testLoadIntoDataObject() {
 		$obj = new MoneyTest_DataObject();
 
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBMoney', $obj->obj('MyMoney'));
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $obj->obj('MyMoney'));
 
 		$m = new DBMoney();
 		$m->setValue(array(

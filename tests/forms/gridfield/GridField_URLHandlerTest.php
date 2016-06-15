@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\ArrayList;
+
 /**
  * Test the API for creating GridField_URLHandler compeonnts
  */

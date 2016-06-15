@@ -1,5 +1,7 @@
 <?php
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * Description of DBFileTest
@@ -60,7 +62,7 @@ class DBFileTest extends SapphireTest {
 		$obj->MyFile->setFromLocalFile($fish, 'awesome-fish.jpg');
 
 		// This should fail
-		$this->setExpectedException('ValidationException');
+		$this->setExpectedException('SilverStripe\\ORM\\ValidationException');
 		$obj->MyFile->setFromString('puppies', 'subdir/puppy-document.txt');
 	}
 

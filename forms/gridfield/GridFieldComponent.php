@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\DataObjectInterface;
+
 /**
  * Base interface for all components that can be added to GridField.
  *

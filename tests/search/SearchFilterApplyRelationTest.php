@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * This test class will focus on the when an search filter contains relational
  * component such as has_one, has_many, many_many, the {@link SearchFilter::applyRelation($query)}

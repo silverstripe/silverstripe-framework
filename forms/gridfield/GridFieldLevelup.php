@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * Adds a "level up" link to a GridField table, which is useful when viewing
  * hierarchical data. Requires the managed record to have a "getParent()"

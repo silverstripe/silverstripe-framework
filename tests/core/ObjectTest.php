@@ -383,18 +383,18 @@ class ObjectTest extends SapphireTest {
 	public function testParseClassSpec() {
 		// Simple case
 		$this->assertEquals(
-			array('Versioned',array('Stage', 'Live')),
-			Object::parse_class_spec("Versioned('Stage','Live')")
+			array('SilverStripe\\ORM\\Versioning\\Versioned',array('Stage', 'Live')),
+			Object::parse_class_spec("SilverStripe\\ORM\\Versioning\\Versioned('Stage','Live')")
 		);
 		// String with commas
 		$this->assertEquals(
-			array('Versioned',array('Stage,Live', 'Stage')),
-			Object::parse_class_spec("Versioned('Stage,Live','Stage')")
+			array('SilverStripe\\ORM\\Versioning\\Versioned',array('Stage,Live', 'Stage')),
+			Object::parse_class_spec("SilverStripe\\ORM\\Versioning\\Versioned('Stage,Live','Stage')")
 		);
 		// String with quotes
 		$this->assertEquals(
-			array('Versioned',array('Stage\'Stage,Live\'Live', 'Live')),
-			Object::parse_class_spec("Versioned('Stage\'Stage,Live\'Live','Live')")
+			array('SilverStripe\\ORM\\Versioning\\Versioned',array('Stage\'Stage,Live\'Live', 'Live')),
+			Object::parse_class_spec("SilverStripe\\ORM\\Versioning\\Versioned('Stage\'Stage,Live\'Live','Live')")
 		);
 
 		// True, false and null values

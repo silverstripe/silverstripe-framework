@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DB;
+
 /**
  * Supports debugging and core error handling.
  *

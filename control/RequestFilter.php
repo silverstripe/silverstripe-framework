@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataModel;
+
 /**
  * A request filter is an object that's executed before and after a
  * request occurs. By returning 'false' from the preRequest method,

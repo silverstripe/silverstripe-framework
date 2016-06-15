@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Versioning\ChangeSet;
+use SilverStripe\ORM\Versioning\ChangeSetItem;
+use SilverStripe\ORM\Versioning\Versioned;
+
 /**
  * Provides a set of targettable permissions for tested models
  *
@@ -55,7 +60,7 @@ class ChangeSetTest_Base extends DataObject implements TestOnly {
 	];
 
 	private static $extensions = [
-		"Versioned",
+		"SilverStripe\\ORM\\Versioning\\Versioned",
 	];
 }
 
@@ -79,7 +84,7 @@ class ChangeSetTest_Mid extends DataObject implements TestOnly {
 	];
 
 	private static $extensions = [
-		"Versioned",
+		"SilverStripe\\ORM\\Versioning\\Versioned",
 	];
 }
 
@@ -94,7 +99,7 @@ class ChangeSetTest_End extends DataObject implements TestOnly {
 	];
 
 	private static $extensions = [
-		"Versioned",
+		"SilverStripe\\ORM\\Versioning\\Versioned",
 	];
 }
 

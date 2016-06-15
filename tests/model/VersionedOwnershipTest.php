@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
+
 /**
  * Tests ownership API of versioned DataObjects
  */
@@ -37,15 +41,15 @@ class VersionedOwnershipTest extends SapphireTest {
 	}
 
 	/**
-	 * Virtual "sleep" that doesn't actually slow execution, only advances SS_DateTime::now()
+	 * Virtual "sleep" that doesn't actually slow execution, only advances DBDateTime::now()
 	 *
 	 * @param int $minutes
 	 */
 	protected function sleep($minutes) {
-		$now = SS_Datetime::now();
+		$now = DBDatetime::now();
 		$date = DateTime::createFromFormat('Y-m-d H:i:s', $now->getValue());
 		$date->modify("+{$minutes} minutes");
-		SS_Datetime::set_mock_now($date->format('Y-m-d H:i:s'));
+		DBDatetime::set_mock_now($date->format('Y-m-d H:i:s'));
 	}
 
 	/**
@@ -193,7 +197,7 @@ class VersionedOwnershipTest extends SapphireTest {
 
 		// Check that stage record is ok
 		/** @var VersionedOwnershipTest_Subclass $subclass2Stage */
-		$subclass2Stage = \Versioned::get_by_stage('VersionedOwnershipTest_Subclass', 'Stage')->byID($subclass2ID);
+		$subclass2Stage = Versioned::get_by_stage('VersionedOwnershipTest_Subclass', 'Stage')->byID($subclass2ID);
 		$this->assertDOSEquals(
 			[
 				['Title' => 'Related 2 Modified'],
@@ -215,7 +219,7 @@ class VersionedOwnershipTest extends SapphireTest {
 
 		// Live records are unchanged
 		/** @var VersionedOwnershipTest_Subclass $subclass2Live */
-		$subclass2Live = \Versioned::get_by_stage('VersionedOwnershipTest_Subclass', 'Live')->byID($subclass2ID);
+		$subclass2Live = Versioned::get_by_stage('VersionedOwnershipTest_Subclass', 'Live')->byID($subclass2ID);
 		$this->assertDOSEquals(
 			[
 				['Title' => 'Related 2'],
@@ -588,7 +592,7 @@ class VersionedOwnershipTest extends SapphireTest {
  */
 class VersionedOwnershipTest_Object extends DataObject implements TestOnly {
 	private static $extensions = array(
-		'Versioned',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	private static $db = array(
@@ -630,7 +634,7 @@ class VersionedOwnershipTest_Subclass extends VersionedOwnershipTest_Object impl
  */
 class VersionedOwnershipTest_Related extends DataObject implements TestOnly {
 	private static $extensions = array(
-		'Versioned',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	private static $db = array(
@@ -662,7 +666,7 @@ class VersionedOwnershipTest_Related extends DataObject implements TestOnly {
  */
 class VersionedOwnershipTest_RelatedMany extends DataObject implements TestOnly {
 	private static $extensions = array(
-		'Versioned',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	private static $db = array(
@@ -684,7 +688,7 @@ class VersionedOwnershipTest_RelatedMany extends DataObject implements TestOnly 
 class VersionedOwnershipTest_Attachment extends DataObject implements TestOnly {
 
 	private static $extensions = array(
-		'Versioned',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	private static $db = array(
@@ -707,7 +711,7 @@ class VersionedOwnershipTest_Attachment extends DataObject implements TestOnly {
  */
 class VersionedOwnershipTest_Page extends DataObject implements TestOnly {
 	private static $extensions = array(
-		'Versioned',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	private static $db = array(
@@ -742,7 +746,7 @@ class VersionedOwnershipTest_Page extends DataObject implements TestOnly {
  */
 class VersionedOwnershipTest_Banner extends DataObject implements TestOnly {
 	private static $extensions = array(
-		'Versioned',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	private static $db = array(
@@ -766,7 +770,7 @@ class VersionedOwnershipTest_Banner extends DataObject implements TestOnly {
  */
 class VersionedOwnershipTest_CustomRelation extends DataObject implements TestOnly {
 	private static $extensions = array(
-		'Versioned',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	private static $db = array(
@@ -796,7 +800,7 @@ class VersionedOwnershipTest_CustomRelation extends DataObject implements TestOn
  */
 class VersionedOwnershipTest_Image extends DataObject implements TestOnly {
 	private static $extensions = array(
-		'Versioned',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	private static $db = array(

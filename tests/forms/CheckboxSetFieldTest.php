@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+
 /**
  * @package framework
  * @subpackage tests

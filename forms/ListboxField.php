@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * Multi-line listbox field, created from a <select> tag.
  *

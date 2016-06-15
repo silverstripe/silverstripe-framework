@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DB;
+
 /**
  * This bootstraps the SilverStripe system so that phpunit can be run directly on SilverStripe tests.
  */

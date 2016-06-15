@@ -1,6 +1,12 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBDatetime;
+
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\DataExtension;
+
 
 /**
  * @package framework
@@ -22,8 +28,8 @@ class VersionedTest extends SapphireTest {
 	);
 
 	protected $requiredExtensions = array(
-		"VersionedTest_DataObject" => array('Versioned'),
-		"VersionedTest_WithIndexes" => array('Versioned'),
+		"VersionedTest_DataObject" => array('SilverStripe\\ORM\\Versioning\\Versioned'),
+		"VersionedTest_WithIndexes" => array('SilverStripe\\ORM\\Versioning\\Versioned'),
 	);
 
 	public function testUniqueIndexes() {
@@ -198,11 +204,11 @@ class VersionedTest extends SapphireTest {
 	public function testVersionedFieldsAdded() {
 		$obj = new VersionedTest_DataObject();
 		// Check that the Version column is added as a full-fledged column
-		$this->assertInstanceOf('SilverStripe\\Model\\FieldType\\DBInt', $obj->dbObject('Version'));
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBInt', $obj->dbObject('Version'));
 
 		$obj2 = new VersionedTest_Subclass();
 		// Check that the Version column is added as a full-fledged column
-		$this->assertInstanceOf('SilverStripe\\Model\\FieldType\\DBInt', $obj2->dbObject('Version'));
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBInt', $obj2->dbObject('Version'));
 	}
 
 	public function testVersionedFieldsNotInCMS() {
@@ -412,15 +418,15 @@ class VersionedTest extends SapphireTest {
 	}
 
 	/**
-	 * Virtual "sleep" that doesn't actually slow execution, only advances SS_DateTime::now()
+	 * Virtual "sleep" that doesn't actually slow execution, only advances DBDateTime::now()
 	 *
 	 * @param int $minutes
 	 */
 	protected function sleep($minutes) {
-		$now = SS_Datetime::now();
+		$now = DBDatetime::now();
 		$date = DateTime::createFromFormat('Y-m-d H:i:s', $now->getValue());
 		$date->modify("+{$minutes} minutes");
-		SS_Datetime::set_mock_now($date->format('Y-m-d H:i:s'));
+		DBDatetime::set_mock_now($date->format('Y-m-d H:i:s'));
 	}
 
 	/**
@@ -936,7 +942,7 @@ class VersionedTest extends SapphireTest {
 			"NewField" => "Varchar",
 		));
 
-		VersionedTest_RelatedWithoutVersion::add_extension("Versioned");
+		VersionedTest_RelatedWithoutVersion::add_extension("SilverStripe\\ORM\\Versioning\\Versioned");
 		$this->resetDBSchema(true);
 		$testData = new VersionedTest_RelatedWithoutVersion();
 		$testData->NewField = 'Test';
@@ -1050,7 +1056,7 @@ class VersionedTest_DataObject extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		"Versioned",
+		"SilverStripe\\ORM\\Versioning\\Versioned",
 	);
 
 	private static $has_one = array(
@@ -1085,7 +1091,7 @@ class VersionedTest_WithIndexes extends DataObject implements TestOnly {
 		'UniqS' => 'Int',
 	);
 	private static $extensions = array(
-		"Versioned"
+		"SilverStripe\\ORM\\Versioning\\Versioned"
 	);
 	private static $indexes = array(
 		'UniqS_idx' => 'unique ("UniqS")',
@@ -1147,7 +1153,7 @@ class VersionedTest_SingleStage extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		'Versioned("Versioned")'
+		'SilverStripe\ORM\Versioning\Versioned("Versioned")'
 	);
 }
 
@@ -1162,7 +1168,7 @@ class VersionedTest_PublicStage extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		"Versioned"
+		"SilverStripe\\ORM\\Versioning\\Versioned"
 	);
 
 	public function canView($member = null) {
@@ -1200,7 +1206,7 @@ class VersionedTest_PublicViaExtension extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		"Versioned",
+		"SilverStripe\\ORM\\Versioning\\Versioned",
 		"VersionedTest_PublicExtension"
 	);
 }

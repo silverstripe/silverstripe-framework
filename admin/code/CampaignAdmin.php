@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\ORM\Versioning\ChangeSet;
+use SilverStripe\ORM\Versioning\ChangeSetItem;
+use SilverStripe\ORM\DataObject;
+
 /**
  * Campaign section of the CMS
  *
@@ -23,7 +27,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	private static $menu_title = 'Campaigns';
 
-	private static $tree_class = 'ChangeSet';
+	private static $tree_class = 'SilverStripe\\ORM\\Versioning\\ChangeSet';
 
 	private static $url_handlers = [
 		'GET sets' => 'readCampaigns',

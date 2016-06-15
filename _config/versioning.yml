@@ -3,4 +3,4 @@ Name: versioning
 ---
 GridFieldDetailForm:
   extensions:
-    - VersionedGridFieldDetailForm
+    - SilverStripe\ORM\Versioning\VersionedGridFieldDetailForm

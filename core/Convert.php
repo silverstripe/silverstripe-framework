@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DB;
 /**
  * Library of conversion functions, implemented as static methods.
  *

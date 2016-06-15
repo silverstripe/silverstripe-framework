@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\ValidationResult;
+
 /**
  * This class represents a validator for member passwords.
  *

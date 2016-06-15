@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * Tests schema inspection of DataObjects
  */
@@ -304,7 +306,7 @@ class DataObjectSchemaTest extends SapphireTest
 		$this->assertEquals('DataObjectSchemaTest_BaseClass', $schema->baseDataClass('DataObjectSchemaTest_GRANDChildClass'));
 
 		$this->setExpectedException('InvalidArgumentException');
-		$schema->baseDataClass('DataObject');
+		$schema->baseDataClass('SilverStripe\\ORM\\DataObject');
 	}
 }
 

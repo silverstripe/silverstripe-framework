@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataExtension;
+
 /**
  * @package framework
  * @subpackage tests

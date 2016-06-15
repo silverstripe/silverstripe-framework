@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+
+use SilverStripe\ORM\FieldType\DBField;
+
 
 /**
  * This tracks the current scope for an SSViewer instance. It has three goals:

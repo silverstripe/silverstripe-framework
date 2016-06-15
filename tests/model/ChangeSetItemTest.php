@@ -1,12 +1,15 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Versioning\ChangeSetItem;
+
 class ChangeSetItemTest_Versioned extends DataObject {
 	private static $db = [
 		'Foo' => 'Int'
 	];
 
 	private static $extensions = [
-		"Versioned"
+		"SilverStripe\\ORM\\Versioning\\Versioned"
 	];
 
 	function canEdit($member = null) { return true; }

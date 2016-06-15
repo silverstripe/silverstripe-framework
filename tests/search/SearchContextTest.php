@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 class SearchContextTest extends SapphireTest {
 
 	protected static $fixture_file = 'SearchContextTest.yml';
@@ -238,7 +240,7 @@ class SearchContextTest_Project extends DataObject implements TestOnly {
 class SearchContextTest_Deadline extends DataObject implements TestOnly {
 
 	private static $db = array(
-		"CompletionDate" => "SS_Datetime"
+		"CompletionDate" => "Datetime"
 	);
 
 	private static $has_one = array(

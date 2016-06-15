@@ -4,15 +4,19 @@ namespace SilverStripe\Filesystem\Storage;
 
 use SilverStripe\Filesystem\Thumbnail;
 use SilverStripe\Filesystem\ImageManipulation;
-use SilverStripe\Model\FieldType\DBComposite;
+
 
 use Injector;
 use AssetField;
 use File;
 use Director;
 use Permission;
-use ValidationResult;
-use ValidationException;
+
+
+use SilverStripe\ORM\ValidationResult;
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\FieldType\DBComposite;
+
 
 /**
  * Represents a file reference stored in a database

@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\SS_Filterable;
+
 /**
  * @package framework
  * @subpackage tests

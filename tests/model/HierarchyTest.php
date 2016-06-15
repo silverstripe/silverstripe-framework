@@ -1,12 +1,16 @@
 <?php
 
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+
 class HierarchyTest extends SapphireTest {
 
 	protected static $fixture_file = 'HierarchyTest.yml';
 
 	protected $requiredExtensions = array(
-		'HierarchyTest_Object' => array('Hierarchy', 'Versioned'),
-		'HierarchyHideTest_Object' => array('Hierarchy', 'Versioned'),
+		'HierarchyTest_Object' => array('SilverStripe\\ORM\\Hierarchy\\Hierarchy', 'SilverStripe\\ORM\\Versioning\\Versioned'),
+		'HierarchyHideTest_Object' => array('SilverStripe\\ORM\\Hierarchy\\Hierarchy', 'SilverStripe\\ORM\\Versioning\\Versioned'),
 	);
 
 	protected $extraDataObjects = array(
@@ -566,8 +570,8 @@ class HierarchyTest_Object extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		'Hierarchy',
-		'Versioned',
+		'SilverStripe\\ORM\\Hierarchy\\Hierarchy',
+		'SilverStripe\\ORM\\Versioning\\Versioned',
 	);
 
 	public function cmstreeclasses() {
@@ -581,8 +585,8 @@ class HierarchyHideTest_Object extends DataObject implements TestOnly {
 	);
 
 	private static $extensions = array(
-		'Hierarchy',
-		"Versioned('Stage', 'Live')",
+		'SilverStripe\\ORM\\Hierarchy\\Hierarchy',
+		"SilverStripe\\ORM\\Versioning\\Versioned('Stage', 'Live')",
 	);
 
 	public function cmstreeclasses() {
