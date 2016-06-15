@@ -9,8 +9,8 @@
   &::after {
     border-bottom: 1px solid $border-color-light;
     visibility: visible;
-    width: 100%;
     margin: $spacer-y 0 #{-$spacer-y};
+    width: calc(100% - #{$grid-gutter-width}); // IE10 fix for avoiding horizontal scrollbars
   }
 
   .form-group {
@@ -104,16 +104,15 @@ input.radio {
       &.nolabel .form__field-holder,
       .form__field-holder--no-label {
         @include make-col-offset(3);
+
+        // IE For some reason in IE10 the gutters are not accounted for in the offset (perhaps box-sizing issue)
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+          left: $grid-gutter-width;
+        }
       }
 
       &::after {
         margin: $spacer-y $grid-gutter-width-half #{-$spacer-y};
-      }
-
-      &.treedropdown {
-        // scss-lint:disable ImportantRule
-        display: flex !important;
-        // scss-lint:enable ImportantRule
       }
     }
 
