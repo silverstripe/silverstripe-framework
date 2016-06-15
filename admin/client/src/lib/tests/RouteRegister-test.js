@@ -17,14 +17,6 @@ describe('RouteRegister', () => {
       expect(register.test).toBeDefined();
       expect(register.test).toBe(callback);
     });
-
-    it('should throw an error if the route already exists', () => {
-      const callback = () => {};
-      routeRegister.add('test', callback);
-      expect(() => {
-        routeRegister.add('test', callback);
-      }).toThrow();
-    });
   });
 
   describe('remove', () => {

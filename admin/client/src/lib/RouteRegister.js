@@ -62,17 +62,13 @@ let register = deepFreeze({});
  */
 class RouteRegister {
   /**
-   * Adds a route to the register.
+   * Adds a route to the register. Overrides existing routes as required.
    *
    * @param {string} route - The route to register.
    * @param {function} callback - Called when the route matches.
    * @return {object}
    */
   add(route, callback) {
-    if (typeof register[route] !== 'undefined') {
-      throw new Error(`Route callback already registered for '${route}'`);
-    }
-
     register = deepFreeze(Object.assign({}, register, {
       [route]: callback,
     }));

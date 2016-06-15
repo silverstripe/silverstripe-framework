@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { combineReducers, createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
-import ConfigHelpers from 'lib/Config';
+import Config from 'lib/Config';
 import router from 'lib/Router';
 import routeRegister from 'lib/RouteRegister';
 import reducerRegister from 'lib/ReducerRegister';
@@ -48,7 +48,7 @@ function appBoot() {
   const rootReducer = combineReducers(reducerRegister.getAll());
   const middleware = [thunkMiddleware];
 
-  if (window.ss.config.environment === 'dev') {
+  if (Config.get('environment') === 'dev') {
     middleware.push(createLogger());
   }
 
@@ -56,7 +56,7 @@ function appBoot() {
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
   // Set the initial config state.
-  store.dispatch(configActions.setConfig(window.ss.config));
+  store.dispatch(configActions.setConfig(Config.getAll()));
 
   // Initialise routes
   router.base(getBasePath());
@@ -77,22 +77,31 @@ function appBoot() {
    * This can be removed when top level sections are converted to React,
    * have their own JavaScript controllers, and register their own routes.
    */
-  ConfigHelpers
-    .getTopLevelRoutes()
-    .forEach((route) => {
-      routeRegister.add(`/${route}(/*?)?`, (ctx, next) => {
-        if (document.readyState !== 'complete' || ctx.init) {
-          next();
-          return;
-        }
+  const sections = Config.get('sections');
+  Object.keys(sections).forEach((key) => {
+    const sectionConfig = sections[key];
 
-        // Load the panel then call the next route.
-        $('.cms-container')
-          .entwine('ss')
-          .handleStateChange(null, ctx.state)
-          .done(next);
-      });
+    // Skip react routes which are handled by individual route setup
+    if (sectionConfig.reactRoute) {
+      return;
+    }
+
+    let route = sectionConfig.route;
+    route = route.replace(/\/$/, ''); // Remove trailing slash
+    route = `/${route}(/*?)?`; // add optional trailing slash
+    routeRegister.add(route, (ctx, next) => {
+      if (document.readyState !== 'complete' || ctx.init) {
+        next();
+        return;
+      }
+
+      // Load the panel then call the next route.
+      $('.cms-container')
+        .entwine('ss')
+        .handleStateChange(null, ctx.state)
+        .done(next);
     });
+  });
 
   const registeredRoutes = routeRegister.getAll();
 
