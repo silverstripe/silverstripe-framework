@@ -242,6 +242,19 @@ class SS_ConfigStaticManifest_Parser {
 			$type = is_array($token) ? $token[0] : $token;
 
 			if($type == T_CLASS) {
+				// Fetch the last token
+				$pos = $this->pos - 1; // Subtract 1 as the pointer is always 1 place ahead of the current token
+				do {
+					$pos--;
+					$prev = $this->tokens[$pos];
+				} while ($pos > 0 && is_array($prev) && $prev[0] == T_WHITESPACE);
+
+				// Ignore class keyword if it's being used for class name resolution: ClassName::class
+				$lastType = ($prev === (array)$prev) ? $prev[0] : $prev;
+				if ($lastType === T_PAAMAYIM_NEKUDOTAYIM) {
+					continue;
+				}
+
 				$next = $this->nextString();
 				if($next === null) {
 					user_error("Couldn\'t parse {$this->path} when building config static manifest", E_USER_ERROR);
