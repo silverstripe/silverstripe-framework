@@ -1,10 +1,10 @@
 import React from 'react';
-import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import backend from 'lib/Backend';
-import * as campaignActions from 'state/campaign/CampaignActions';
 import * as breadcrumbsActions from 'state/breadcrumbs/BreadcrumbsActions';
 import BreadcrumbComponent from 'components/Breadcrumb/Breadcrumb';
+import router from 'lib/Router';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormAction from 'components/FormAction/FormAction';
 import i18n from 'i18n';
@@ -21,7 +21,7 @@ class CampaignAdmin extends SilverStripeComponent {
     this.publishApi = backend.createEndpointFetcher({
       url: this.props.sectionConfig.publishEndpoint.url,
       method: this.props.sectionConfig.publishEndpoint.method,
-      defaultData: { SecurityID: this.props.config.SecurityID },
+      defaultData: { SecurityID: this.props.securityId },
       payloadSchema: {
         id: { urlReplacement: ':id', remove: true },
       },
@@ -30,52 +30,24 @@ class CampaignAdmin extends SilverStripeComponent {
     this.campaignAddCreateFn = this.campaignAddCreateFn.bind(this);
     this.campaignEditCreateFn = this.campaignEditCreateFn.bind(this);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
-    this.baseBreadcrumbs = this.baseBreadcrumbs.bind(this);
   }
 
-  componentDidMount() {
-    super.componentDidMount();
-    // While a component is mounted it will intercept all routes and handle internally
-    let captureRoute = true;
-    const route = window.ss.router.resolveURLToBase(this.props.sectionConfig.campaignViewRoute);
-
-    // Capture routing within this section
-    window.ss.router(route, (ctx, next) => {
-      if (captureRoute) {
-        // If this component is mounted, then handle all page changes via
-        // state / redux
-        this.props.campaignActions.showCampaignView(ctx.params.id, ctx.params.view);
-
-        // reset admin to top level of breadcrumbs
-        this.setupBreadcrumbs(ctx.params.id, ctx.params.view);
-      } else {
-        // If component is not mounted, we need to allow root routes to load
-        // this section in via ajax
-        next();
-      }
-    });
-
-    // When leaving this section to go to another top level section then
-    // disable route capturing.
-    window.ss.router.exit(route, (ctx, next) => {
-      const applies = window.ss.router.routeAppliesToCurrentLocation(route);
-      if (!applies) {
-        captureRoute = false;
-      }
-      next();
-    });
+  componentWillReceiveProps(props) {
+    const hasChangedRoute = (
+      this.props.campaignId !== props.campaignId ||
+      this.props.view !== props.view
+    );
+    if (hasChangedRoute) {
+      this.setBreadcrumbs(props.view, props.campaignId);
+    }
   }
 
-  baseBreadcrumbs() {
-    return [{
+  setBreadcrumbs(view, id) {
+    // Set root breadcrumb
+    const breadcrumbs = [{
       text: i18n._t('Campaigns.CAMPAIGN', 'Campaigns'),
       href: this.props.sectionConfig.route,
     }];
-  }
-
-  setupBreadcrumbs(id, view) {
-    // Set root breadcrumb
-    const breadcrumbs = this.baseBreadcrumbs();
     switch (view) {
       case 'show':
         // NOOP - Lazy loaded in CampaignAdminList.js
@@ -182,7 +154,6 @@ class CampaignAdmin extends SilverStripeComponent {
       campaignId: this.props.campaignId,
       itemListViewEndpoint: this.props.sectionConfig.itemListViewEndpoint,
       publishApi: this.publishApi,
-      baseBreadcrumbs: this.baseBreadcrumbs(),
       handleBackButtonClick: this.handleBackButtonClick,
     };
 
@@ -255,7 +226,7 @@ class CampaignAdmin extends SilverStripeComponent {
       const extendedProps = Object.assign({}, props, {
         handleClick: (event) => {
           event.preventDefault();
-          window.ss.router.show(indexRoute);
+          router.show(indexRoute);
         },
       });
 
@@ -282,7 +253,7 @@ class CampaignAdmin extends SilverStripeComponent {
       const extendedProps = Object.assign({}, props, {
         handleClick: (event) => {
           event.preventDefault();
-          window.ss.router.show(indexRoute);
+          router.show(indexRoute);
         },
       });
 
@@ -315,7 +286,7 @@ class CampaignAdmin extends SilverStripeComponent {
               .replace(/:id\?/, record.ID)
               .replace(/:view\?/, 'show');
 
-            window.ss.router.show(path);
+            router.show(path);
           },
           handleEditRecord: (event, id) => {
             const path = campaignViewRoute
@@ -323,7 +294,7 @@ class CampaignAdmin extends SilverStripeComponent {
               .replace(/:id\?/, id)
               .replace(/:view\?/, 'edit');
 
-            window.ss.router.show(path);
+            router.show(path);
           },
         }),
       });
@@ -354,25 +325,15 @@ class CampaignAdmin extends SilverStripeComponent {
 
 CampaignAdmin.propTypes = {
   breadcrumbsActions: React.PropTypes.object.isRequired,
-  campaignActions: React.PropTypes.object.isRequired,
   campaignId: React.PropTypes.string,
-  config: React.PropTypes.shape({
-    form: React.PropTypes.shape({
-      editForm: React.PropTypes.shape({
-        schemaUrl: React.PropTypes.string,
-      }),
-    }),
-    SecurityID: React.PropTypes.string,
-  }),
   sectionConfig: React.PropTypes.object.isRequired,
-  sectionConfigKey: React.PropTypes.string.isRequired,
+  securityId: React.PropTypes.string.isRequired,
   view: React.PropTypes.string,
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     config: state.config,
-    sectionConfig: state.config.sections[ownProps.sectionConfigKey],
     campaignId: state.campaign.campaignId,
     view: state.campaign.view,
     breadcrumbs: state.breadcrumbs,
@@ -382,7 +343,6 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     breadcrumbsActions: bindActionCreators(breadcrumbsActions, dispatch),
-    campaignActions: bindActionCreators(campaignActions, dispatch),
   };
 }
 

@@ -52,6 +52,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function getClientConfig() {
 		return array_merge(parent::getClientConfig(), [
+			'reactRoute' => true,
 			'form' => [
 				// TODO Use schemaUrl instead
 				'EditForm' => [

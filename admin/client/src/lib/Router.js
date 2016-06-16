@@ -67,9 +67,38 @@ function getAbsoluteBase() {
   return null;
 }
 
+// Ensure that subsequent references to router.js don't nest page.show more than once
+if (!page.oldshow) {
+  page.oldshow = page.show;
+}
 page.getAbsoluteBase = getAbsoluteBase.bind(page);
 page.resolveURLToBase = resolveURLToBase.bind(page);
-page.show = show(page.show);
+page.show = show(page.oldshow);
 page.routeAppliesToCurrentLocation = routeAppliesToCurrentLocation;
 
-export default page;
+/*
+ * We're assigning an instances to the `ss` namespace because singletons only
+ * work within the context on a single Browserify bundle.
+ *
+ * For example - the `lib` bundle exposes a singleton called `router`.
+ * If the `framework` imports `router`, as an external dependency, then
+ * all modules in `framework` will get the same copy of `register` when importing it.
+ *
+ * Likewise if the `custom` bundle imports `router` as an external dependency,
+ * all modules in `custom` will get the same copy of `router`.
+ *
+ * This works as expected within the context of one bundle, all modules in that bundle
+ * importing `router` get the exact same copy, a singleton.
+ *
+ * However this is not true across bundles. While all modules in `framework` get a single
+ * copy of `router` and all modules in `custom` get a single copy of `router`,
+ * the copy of `router` in `framework` is not the same copy of `router`
+ * available in `custom`.
+ *
+ * @TODO Look into SystemJS as a solution https://github.com/systemjs/systemjs
+ */
+
+window.ss = window.ss || {};
+window.ss.router = window.ss.router || page;
+
+export default window.ss.router;

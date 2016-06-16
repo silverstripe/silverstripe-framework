@@ -55,9 +55,29 @@ class ReducerRegister {
 
 }
 
-// Create an instance to export. The same instance is exported to
-// each script which imports the reducerRegister. This means the
-// same register is available throughout the application.
-const reducerRegister = new ReducerRegister();
+/*
+ * We're assigning an instances to the `ss` namespace because singletons only
+ * work within the context on a single Browserify bundle.
+ *
+ * For example - the `lib` bundle exposes a singleton called `reducerRegister`.
+ * If the `framework` imports `reducerRegister`, as an external dependency, then
+ * all modules in `framework` will get the same copy of `register` when importing it.
+ *
+ * Likewise if the `custom` bundle imports `reducerRegister` as an external dependency,
+ * all modules in `custom` will get the same copy of `reducerRegister`.
+ *
+ * This works as expected within the context of one bundle, all modules in that bundle
+ * importing `reducerRegister` get the exact same copy, a singleton.
+ *
+ * However this is not true across bundles. While all modules in `framework` get a single
+ * copy of `reducerRegister` and all modules in `custom` get a single copy of `reducerRegister`,
+ * the copy of `reducerRegister` in `framework` is not the same copy of `reducerRegister`
+ * available in `custom`.
+ *
+ * @TODO Look into SystemJS as a solution https://github.com/systemjs/systemjs
+ */
 
-export default reducerRegister;
+window.ss = window.ss || {};
+window.ss.reducerRegister = window.ss.reducerRegister || new ReducerRegister();
+
+export default window.ss.reducerRegister;

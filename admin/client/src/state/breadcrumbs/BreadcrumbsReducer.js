@@ -1,4 +1,4 @@
-import deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze-strict';
 import ACTION_TYPES from './BreadcrumbsActionTypes';
 
 const initialState = deepFreeze([]);

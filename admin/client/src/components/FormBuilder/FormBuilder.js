@@ -10,7 +10,7 @@ import TextField from 'components/TextField/TextField';
 import HiddenField from 'components/HiddenField/HiddenField';
 import GridField from 'components/GridField/GridField';
 import fetch from 'isomorphic-fetch';
-import deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze-strict';
 import backend from 'lib/Backend';
 import merge from 'merge';
 

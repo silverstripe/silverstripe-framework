@@ -225,8 +225,8 @@ gulp.task('bundle-lib', function bundleLib() {
       gulpUtil.log('Finished', `bundled ${bundleFileName} ${msg}`)
     )
     .transform('babelify', babelifyOptions)
-    .require('deep-freeze',
-      { expose: 'deep-freeze' }
+    .require('deep-freeze-strict',
+      { expose: 'deep-freeze-strict' }
     )
     .require('react',
       { expose: 'react' }
@@ -248,6 +248,9 @@ gulp.task('bundle-lib', function bundleLib() {
     )
     .require('redux-thunk',
       { expose: 'redux-thunk' }
+    )
+    .require('page.js',
+      { expose: 'page.js' }
     )
     .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
       { expose: 'bootstrap-collapse' }
@@ -306,6 +309,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/lib/ReducerRegister.js`,
       { expose: 'lib/ReducerRegister' }
     )
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/RouteRegister.js`,
+      { expose: 'lib/RouteRegister' }
+    )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Router.js`,
       { expose: 'lib/Router' }
     )
@@ -314,9 +320,6 @@ gulp.task('bundle-lib', function bundleLib() {
     )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Backend`,
       { expose: 'lib/Backend' }
-    )
-    .require(`${PATHS.MODULES}/bootstrap/dist/js/umd/collapse.js`,
-      { expose: 'bootstrap-collapse' }
     )
     .bundle()
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
@@ -379,7 +382,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('components/Toolbar/Toolbar')
     .external('components/FormBuilder/FormBuilder')
     .external('components/FormAction/FormAction')
-    .external('deep-freeze')
+    .external('deep-freeze-strict')
     .external('components/GridField/GridField')
     .external('i18n')
     .external('jQuery')

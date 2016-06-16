@@ -33,7 +33,11 @@ class CampaignAdminList extends SilverStripeComponent {
     const fetchURL = this.props.itemListViewEndpoint.replace(/:id/, this.props.campaignId);
     super.componentDidMount();
     this.setBreadcrumbs();
-    this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL).then(this.setBreadcrumbs);
+
+    // Only load record if not already present
+    if (!Object.keys(this.props.record).length) {
+      this.props.recordActions.fetchRecord('ChangeSet', 'get', fetchURL).then(this.setBreadcrumbs);
+    }
   }
 
   /**
@@ -58,7 +62,10 @@ class CampaignAdminList extends SilverStripeComponent {
     }
 
     // Push breadcrumb
-    const breadcrumbs = this.props.baseBreadcrumbs.slice(0);
+    const breadcrumbs = [{
+      text: i18n._t('Campaigns.CAMPAIGN', 'Campaigns'),
+      href: this.props.sectionConfig.route,
+    }];
     breadcrumbs.push({
       text: this.props.record.Name,
       href: thisLink,
@@ -287,7 +294,6 @@ CampaignAdminList.propTypes = {
   publishApi: React.PropTypes.func.isRequired,
   record: React.PropTypes.object.isRequired,
   recordActions: React.PropTypes.object.isRequired,
-  baseBreadcrumbs: React.PropTypes.array.isRequired,
   sectionConfig: React.PropTypes.object.isRequired,
   handleBackButtonClick: React.PropTypes.func,
 };
