@@ -199,6 +199,25 @@ class SS_ConfigStaticManifest_Parser {
 	}
 
 	/**
+	 * Get the previous token processed. Does *not* decrement the pointer
+	 *
+	 * @param bool $ignoreWhitespace - if true will skip any whitespace tokens & only return non-whitespace ones
+	 * @return null | mixed - Either the previous token or null if there isn't one
+	 */
+	protected function lastToken($ignoreWhitespace = true) {
+		// Subtract 1 as the pointer is always 1 place ahead of the current token
+		$pos = $this->pos - 1;
+		do {
+			if($pos <= 0) return null;
+			$pos--;
+			$prev = $this->tokens[$pos];
+		}
+		while($ignoreWhitespace && is_array($prev) && $prev[0] == T_WHITESPACE);
+
+		return $prev;
+	}
+
+	/**
 	 * Get the next set of tokens that form a string to process,
 	 * incrementing the pointer
 	 *
@@ -242,6 +261,14 @@ class SS_ConfigStaticManifest_Parser {
 			$type = ($token === (array)$token) ? $token[0] : $token;
 
 			if($type == T_CLASS) {
+				$lastToken = $this->lastToken();
+				$lastType = ($lastToken === (array)$lastToken) ? $lastToken[0] : $lastToken;
+
+				// Ignore class keyword in ClassName::class context
+				if ($lastType === T_PAAMAYIM_NEKUDOTAYIM) {
+					continue;
+				}
+
 				$next = $this->nextString();
 				if($next === null) {
 					user_error("Couldn\'t parse {$this->path} when building config static manifest", E_USER_ERROR);

@@ -257,6 +257,16 @@ DOC;
 
 		$this->assertEquals($expected, $statics[':ss:test2']);
 	}
+
+	public function testParsingClassKeyword() {
+		$parser = new SS_ConfigStaticManifest_Parser(__DIR__ .
+			'/ConfigStaticManifestTest/ConfigStaticManifestTestClassKeyword.php');
+		$parser->parse();
+
+		$statics = $parser->getStatics();
+
+		$this->assertEquals('bar', $statics['ConfigStaticManifestTestClassKeyword']['foo']['value']);
+	}
 }
 
 class ConfigStaticManifestTest_Parser extends SS_ConfigStaticManifest_Parser implements TestOnly {
