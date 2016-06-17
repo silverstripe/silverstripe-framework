@@ -606,10 +606,13 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 				);
 			}
 
+			// Parse the shortcodes so [img id=x] doesn't end up as anchor x
+			$htmlValue = $page->obj('Content')->forTemplate();
+
 			// Similar to the regex found in HTMLEditorField.js / getAnchors method.
 			if (preg_match_all(
 				"/\\s+(name|id)\\s*=\\s*([\"'])([^\\2\\s>]*?)\\2|\\s+(name|id)\\s*=\\s*([^\"']+)[\\s +>]/im",
-				$page->Content,
+				$htmlValue,
 				$matches
 			)) {
 				$anchors = array_values(array_unique(array_filter(

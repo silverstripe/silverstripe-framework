@@ -76,6 +76,7 @@ class DB {
 		if(isset(self::$connections[$name])) {
 			return self::$connections[$name];
 		}
+		return null;
 	}
 
 	/**
