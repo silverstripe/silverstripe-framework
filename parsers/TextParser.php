@@ -1,4 +1,6 @@
 <?php
+use SilverStripe\Model\FieldType\DBField;
+
 /**
  * Parses text in a variety of ways.
  *

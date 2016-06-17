@@ -80,5 +80,6 @@ class DBPolymorphicForeignKey extends DBComposite {
 		if($id && $class && is_subclass_of($class, 'SilverStripe\ORM\DataObject')) {
 			return DataObject::get_by_id($class, $id);
 		}
+		return null;
 	}
 }

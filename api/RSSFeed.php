@@ -311,7 +311,14 @@ class RSSFeed_Entry extends ViewableData {
 	 * @return DBField Returns the description of the entry.
 	 */
 	public function Description() {
-		return $this->rssField($this->descriptionField);
+		$description = $this->rssField($this->descriptionField);
+
+		// HTML fields need links re-written
+		if($description instanceof DBHTMLText) {
+			return $description->obj('AbsoluteLinks');
+		}
+
+		return $description;
 	}
 
 	/**

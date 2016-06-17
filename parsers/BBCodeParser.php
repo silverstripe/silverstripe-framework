@@ -105,7 +105,7 @@ class BBCodeParser extends TextParser {
 		);
 	}
 
-	public function useable_tagsHTML(){
+	public function useable_tagsHTML() {
 		$useabletags = "<ul class='bbcodeExamples'>";
 		foreach($this->usable_tags()->toArray() as $tag){
 			$useabletags = $useabletags."<li><span>".$tag->Example."</span></li>";
@@ -120,19 +120,12 @@ class BBCodeParser extends TextParser {
 	 * @return DBField
 	 */
 	public function parse() {
-		$this->content = str_replace(array('&', '<', '>'), array('&amp;', '&lt;', '&gt;'), $this->content);
+		// Convert content to plain text
+		$this->content = DBField::create_field('HTMLFragment', $this->content)->Plain();
 
 		$p = new SSHTMLBBCodeParser();
 		$this->content = $p->qparse($this->content);
 		unset($p);
-
-		$this->content = "<p>".$this->content."</p>";
-
-		$this->content = preg_replace('/(<p[^>]*>)\s+/i', '\\1', $this->content);
-		$this->content = preg_replace('/\s+(<\/p[^>]*>)/i', '\\1', $this->content);
-
-		$this->content = preg_replace("/\n\s*\n/", "</p><p>", $this->content);
-		$this->content = str_replace("\n", "<br />", $this->content);
 
 		if($this->config()->allow_smilies) {
 			$smilies = array(

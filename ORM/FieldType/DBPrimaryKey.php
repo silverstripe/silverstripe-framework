@@ -5,7 +5,6 @@ namespace SilverStripe\ORM\FieldType;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 
-
 /**
  * A special type Int field used for primary keys.
  *

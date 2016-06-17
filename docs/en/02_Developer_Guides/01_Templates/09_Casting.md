@@ -145,3 +145,16 @@ html. To ensure that the correct encoding is used for that field in a template, 
 `$Field` by itself to allow the casting helper to determine the best encoding itself.
 </div>
 
+## Cast summary methods
+
+Certain subclasses of DBField also have additional summary or manipulations methods, each of
+which can be chained in order to perform more complicated manipulations.
+
+For instance, The following class methods can be used in templates for the below types:
+
+Text / HTMLText methods:
+
+* `$Plain` Will convert any HTML to plain text version. For example, could be used for plain-text
+  version of emails.
+* `$LimitSentences(<num>)` Will limit to the first `<num>` sentences in the content. If called on
+  HTML content this will have all HTML stripped and converted to plain text.

@@ -24,8 +24,8 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertEquals($htmlString, $htmlField->obj('ATT')->forTemplate());
 		$this->assertEquals($textString, $htmlField->obj('RAW')->forTemplate());
 		$this->assertEquals('\"', $htmlField->obj('JS')->forTemplate());
-		$this->assertEquals($textString, $htmlField->obj('HTML')->forTemplate());
-		$this->assertEquals($textString, $htmlField->obj('XML')->forTemplate());
+		$this->assertEquals($htmlString, $htmlField->obj('HTML')->forTemplate());
+		$this->assertEquals($htmlString, $htmlField->obj('XML')->forTemplate());
 
 		$textField = DBField::create_field('Text', $textString);
 		$this->assertEquals($htmlString, $textField->forTemplate());

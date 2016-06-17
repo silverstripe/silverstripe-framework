@@ -12,142 +12,385 @@ use SilverStripe\ORM\FieldType\DBField;
  */
 class DBHTMLTextTest extends SapphireTest {
 
+	public function setUp() {
+		parent::setUp();
+
+		// Set test handler
+		ShortcodeParser::get('htmltest')
+			->register('test_shortcode', array('DBHTMLTextTest_Shortcode', 'handle_shortcode'));
+		ShortcodeParser::set_active('htmltest');
+	}
+
+	public function tearDown() {
+		ShortcodeParser::set_active('default');
+		parent::tearDown();
+	}
+
 	/**
-	 * Test {@link HTMLText->LimitCharacters()}
+	 * Test {@link Text->LimitCharacters()}
 	 */
-	public function testLimitCharacters() {
-		$cases = array(
-			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
-			'<p>This is some text in a paragraph.</p>' => 'This is some text in...',
-			'This text contains &amp; in it' => 'This text contains &amp;...'
-		);
-
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBHTMLText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->LimitCharacters());
-		}
+	public function providerLimitCharacters()
+	{
+		// HTML characters are stripped safely
+		return [
+			['The little brown fox jumped over the lazy cow.', 'The little brown fox...'],
+			['<p>Short &amp; Sweet</p>', 'Short &amp; Sweet'],
+			['This text contains &amp; in it', 'This text contains &amp;...'],
+		];
 	}
 
-	public function testSummaryBasics() {
-		$cases = array(
-			'<h1>Should not take header</h1><p>Should take paragraph</p>' => 'Should take paragraph',
-			'<p>Should strip <b>tags, but leave</b> text</p>' => 'Should strip tags, but leave text',
-			'<p>Unclosed tags <br>should not phase it</p>' => 'Unclosed tags should not phase it',
-			'<p>Second paragraph</p><p>should not cause errors or appear in output</p>' => 'Second paragraph',
-			'<img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>'
-				=> 'Second paragraph',
-			'  <img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>'
-				=> 'Second paragraph',
-			'<p><img src="remove me">example <img src="include me">text words hello<img src="hello"></p>'
-				=> 'example text words hello',
-		);
-
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBHTMLText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->Summary());
-		}
+	/**
+	 * Test {@link DBHTMLText->LimitCharacters()}
+	 * @dataProvider providerLimitCharacters
+	 * @param string $originalValue
+	 * @param string $expectedValue
+	 */
+	public function testLimitCharacters($originalValue, $expectedValue) {
+		$textObj = DBField::create_field('HTMLFragment', $originalValue);
+		$result = $textObj->obj('LimitCharacters')->forTemplate();
+		$this->assertEquals($expectedValue, $result);
 	}
 
-	public function testSummaryLimits() {
-		$cases = array(
-			'<p>A long paragraph should be cut off if limit is set</p>' => 'A long paragraph should be...',
-			'<p>No matter <i>how many <b>tags</b></i> are in it</p>' => 'No matter how many tags...',
-			'<p>A sentence is. nicer than hard limits</p>' => 'A sentence is.',
-			'<p>But not. If it\'s too short</p>' => 'But not. If it\'s too...'
-		);
+	/**
+	 * @return array
+	 */
+	public function providerLimitCharactersToClosestWord()
+	{
+		// HTML is converted safely to plain text
+		return [
+			// Standard words limited, ellipsis added if truncated
+			['<p>Lorem ipsum dolor sit amet</p>', 24, 'Lorem ipsum dolor sit...'],
 
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBHTMLText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->Summary(5, 3, '...'));
-		}
+			// Complete words less than the character limit don't get truncated, ellipsis not added
+			['<p>Lorem ipsum</p>', 24, 'Lorem ipsum'],
+			['<p>Lorem</p>', 24, 'Lorem'],
+			['', 24, ''],    // No words produces nothing!
+
+			// Special characters are encoded safely
+			['Nice &amp; Easy', 24, 'Nice &amp; Easy'],
+
+			// HTML is safely converted to plain text
+			['<p>Lorem ipsum dolor sit amet</p>', 24, 'Lorem ipsum dolor sit...'],
+			['<p><span>Lorem ipsum dolor sit amet</span></p>', 24, 'Lorem ipsum dolor sit...'],
+			['<p>Lorem ipsum</p>', 24, 'Lorem ipsum'],
+			['Lorem &amp; ipsum dolor sit amet', 24, 'Lorem &amp; ipsum dolor sit...']
+		];
+	}
+
+	/**
+	 * Test {@link DBHTMLText->LimitCharactersToClosestWord()}
+	 * @dataProvider providerLimitCharactersToClosestWord
+	 *
+	 * @param string $originalValue Raw string input
+	 * @param int $limit
+	 * @param string $expectedValue Expected template value
+	 */
+	public function testLimitCharactersToClosestWord($originalValue, $limit, $expectedValue) {
+		$textObj = DBField::create_field('HTMLFragment', $originalValue);
+		$result = $textObj->obj('LimitCharactersToClosestWord', [$limit])->forTemplate();
+		$this->assertEquals($expectedValue, $result);
+	}
+
+	public function providerSummary()
+	{
+		return [
+			[
+				'<p>Should strip <b>tags, but leave</b> text</p>',
+				50,
+				'Should strip tags, but leave text',
+			],
+			[
+				// Line breaks are preserved
+				'<p>Unclosed tags <br>should not phase it</p>',
+				50,
+				"Unclosed tags <br />\nshould not phase it",
+			],
+			[
+				// Paragraphs converted to linebreak
+				'<p>Second paragraph</p><p>should not cause errors or appear in output</p>',
+				50,
+				"Second paragraph<br />\n<br />\nshould not cause errors or appear in output",
+			],
+			[
+				'<img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>',
+				50,
+				"Second paragraph<br />\n<br />\nshould not cause errors or appear in output",
+			],
+			[
+				'  <img src="hello" /><p>Second paragraph</p><p>should not cause errors or appear in output</p>',
+				50,
+				"Second paragraph<br />\n<br />\nshould not cause errors or appear in output",
+			],
+			[
+				'<p><img src="remove me">example <img src="include me">text words hello<img src="hello"></p>',
+				50,
+				'example text words hello',
+			],
+
+			// Shorter limits
+			[
+				'<p>A long paragraph should be cut off if limit is set</p>',
+				5,
+				'A long paragraph should be...',
+			],
+			[
+				'<p>No matter <i>how many <b>tags</b></i> are in it</p>',
+				5,
+				'No matter how many tags...',
+			],
+			[
+				'<p>A sentence is. nicer than hard limits</p>',
+				5,
+				'A sentence is.',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider providerSummary
+	 * @param string $originalValue
+	 * @param int $limit
+	 * @param string $expectedValue
+	 */
+	public function testSummary($originalValue, $limit, $expectedValue) {
+		$textObj = DBField::create_field('HTMLFragment', $originalValue);
+		$result = $textObj->obj('Summary', [$limit])->forTemplate();
+		$this->assertEquals($expectedValue, $result);
 	}
 
 	public function testSummaryEndings() {
 		$cases = array(
-			'...', ' -> more', ''
+			'...',
+			' -> more',
+			''
 		);
 
 		$orig = '<p>Cut it off, cut it off</p>';
 		$match = 'Cut it off, cut';
 
 		foreach($cases as $add) {
-			$textObj = new DBHTMLText();
-			$textObj->setValue($orig);
-			$this->assertEquals($match.$add, $textObj->Summary(4, 0, $add));
+			$textObj = DBField::create_field('HTMLFragment', $orig);
+			$result = $textObj->obj('Summary', [4, $add])->forTemplate();
+			$this->assertEquals($match.Convert::raw2xml($add), $result);
 		}
 	}
 
-	public function testSummaryFlexTooBigShouldNotCauseError() {
-		$orig = '<p>Cut it off, cut it off</p>';
-		$match = 'Cut it off, cut';
 
-		$textObj = new DBHTMLText();
-		$textObj->setValue($orig);
-		$this->assertEquals($match, $textObj->Summary(4, 10, ''));
+
+	public function providerFirstSentence()
+	{
+		return [
+			// Same behaviour as DBTextTest
+			['', ''],
+			['First sentence.', 'First sentence.'],
+			['First sentence. Second sentence', 'First sentence.'],
+			['First sentence? Second sentence', 'First sentence?'],
+			['First sentence! Second sentence', 'First sentence!'],
+
+			// DBHTHLText strips HTML first
+			['<br />First sentence.', 'First sentence.'],
+			['<p>First sentence. Second sentence. Third sentence</p>', 'First sentence.'],
+		];
 	}
 
-	public function testSummaryInvalidHTML() {
-		$cases = array(
-			'It\'s got a <p<> tag, but<p junk true>This doesn\'t <a id="boo">make</b class="wa"> < ><any< sense</p>'
-				=> 'This doesn\'t make any',
-			'This doesn\'t <a style="much horray= true>even</b> < ><have< a <i>p tag' => 'This doesn\'t even have'
-		);
-
-		foreach($cases as $orig => $match) {
-			$textObj = new DBHTMLText();
-			$textObj->setValue($orig);
-			$this->assertEquals($match, $textObj->Summary(4, 0, ''));
-		}
+	/**
+	 * @dataProvider providerFirstSentence
+	 * @param string $originalValue
+	 * @param string $expectedValue
+     */
+	public function testFirstSentence($originalValue, $expectedValue) {
+		$textObj = DBField::create_field('HTMLFragment', $originalValue);
+		$result = $textObj->obj('FirstSentence')->forTemplate();
+		$this->assertEquals($expectedValue, $result);
 	}
 
-	public function testFirstSentence() {
-		$many = str_repeat('many ', 100);
-		$cases = array(
-			'<h1>should ignore</h1><p>First sentence. Second sentence.</p>' => 'First sentence.',
-			'<h1>should ignore</h1><p>First Mr. sentence. Second sentence.</p>' => 'First Mr. sentence.',
-			"<h1>should ignore</h1><p>Sentence with {$many}words. Second sentence.</p>"
-				=> "Sentence with {$many}words.",
-			'<p>This classic picture book features a repetitive format that lends itself to audience interaction.'.
-			'&nbsp; Illustrator Eric Carle submitted new, bolder artwork for the 25th anniversary edition.</p>'
-				=> 'This classic picture book features a repetitive format that lends itself to audience interaction.'
-		);
+	public function providerToPlain()
+	{
+		return [
+			[
+				'<p><img />Lots of <strong>HTML <i>nested</i></strong> tags',
+				'Lots of HTML nested tags',
+			],
+			[
+				'<p>Multi</p><p>Paragraph<br>Also has multilines.</p>',
+				"Multi\n\nParagraph\nAlso has multilines.",
+			],
+			[
+				'<p>Collapses</p><p></p><p>Excessive<br/><br /><br>Newlines</p>',
+				"Collapses\n\nExcessive\n\nNewlines",
+			]
+		];
+	}
 
-		foreach($cases as $orig => $match) {
-			$textObj = new DBHTMLText();
-			$textObj->setValue($orig);
-			$this->assertEquals($match, $textObj->FirstSentence());
-		}
+	/**
+	 * @dataProvider providerToPlain
+	 * @param string $html
+	 * @param string $plain
+	 */
+	public function testToPlain($html, $plain) {
+		/** @var DBHTMLText $textObj */
+		$textObj = DBField::create_field('HTMLFragment', $html);
+		$this->assertEquals($plain, $textObj->Plain());
+	}
+
+	/**
+	 * each test is in the format input, charactere limit, highlight, expected output
+	 *
+	 * @return array
+	 */
+	public function providerContextSummary()
+	{
+		return [
+			[
+				'This is some text. It is a test',
+				20,
+				'test',
+				'... text. It is a <span class="highlight">test</span>'
+			],
+			[
+				// Retains case of original string
+				'This is some test text. Test test what if you have multiple keywords.',
+				50,
+				'some test',
+				'This is <span class="highlight">some</span> <span class="highlight">test</span> text.'
+				. ' <span class="highlight">Test</span> <span class="highlight">test</span> what if you have...'
+			],
+			[
+				'Here is some text &amp; HTML included',
+				20,
+				'html',
+				'... text &amp; <span class="highlight">HTML</span> inc...'
+			],
+			[
+				'A dog ate a cat while looking at a Foobar',
+				100,
+				'a',
+				// test that it does not highlight too much (eg every a)
+				'A dog ate a cat while looking at a Foobar',
+			],
+			[
+				'A dog ate a cat while looking at a Foobar',
+				100,
+				'ate',
+				// it should highlight 3 letters or more.
+				'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
+			],
+
+			// HTML Content is plain-textified, and incorrect tags removed
+			[
+				'<p>A dog ate a cat while <span class="highlight">looking</span> at a Foobar</p>',
+				100,
+				'ate',
+				// it should highlight 3 letters or more.
+				'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
+			]
+		];
+	}
+
+	/**
+	 * @dataProvider providerContextSummary
+	 * @param string $originalValue Input
+	 * @param int $limit Numer of characters
+	 * @param string $keywords Keywords to highlight
+	 * @param string $expectedValue Expected output (XML encoded safely)
+     */
+	public function testContextSummary($originalValue, $limit, $keywords, $expectedValue)
+	{
+		$text = DBField::create_field('HTMLFragment', $originalValue);
+		$result = $text->obj('ContextSummary', [$limit, $keywords])->forTemplate();
+		// it should highlight 3 letters or more.
+		$this->assertEquals($expectedValue, $result);
 	}
 
 	public function testRAW() {
-		$data = DBField::create_field('HTMLText', 'This &amp; This');
-		$this->assertEquals($data->RAW(), 'This &amp; This');
+		$data = DBField::create_field('HTMLFragment', 'This &amp; This');
+		$this->assertEquals('This &amp; This', $data->RAW());
 
-		$data = DBField::create_field('HTMLText', 'This & This');
-		$this->assertEquals($data->RAW(), 'This & This');
+		$data = DBField::create_field('HTMLFragment', 'This & This');
+		$this->assertEquals('This & This', $data->RAW());
 	}
 
 	public function testXML() {
-		$data = DBField::create_field('HTMLText', 'This & This');
-		$this->assertEquals($data->XML(), 'This &amp; This');
+		$data = DBField::create_field('HTMLFragment', 'This & This');
+		$this->assertEquals('This &amp; This', $data->XML());
+		$data = DBField::create_field('HTMLFragment', 'This &amp; This');
+		$this->assertEquals('This &amp;amp; This', $data->XML());
 	}
 
 	public function testHTML() {
-		$data = DBField::create_field('HTMLText', 'This & This');
-		$this->assertEquals($data->HTML(), 'This &amp; This');
+		$data = DBField::create_field('HTMLFragment', 'This & This');
+		$this->assertEquals('This &amp; This', $data->HTML());
+		$data = DBField::create_field('HTMLFragment', 'This &amp; This');
+		$this->assertEquals('This &amp;amp; This', $data->HTML());
 	}
 
 	public function testJS() {
-		$data = DBField::create_field('HTMLText', '"this is a test"');
-		$this->assertEquals($data->JS(), '\"this is a test\"');
+		$data = DBField::create_field('HTMLText', '"this is &amp; test"');
+		$this->assertEquals('\"this is \x26amp; test\"', $data->JS());
 	}
 
 	public function testATT() {
-		$data = DBField::create_field('HTMLText', '"this is a test"');
-		$this->assertEquals($data->ATT(), '&quot;this is a test&quot;');
+		// HTML Fragment
+		$data = DBField::create_field('HTMLFragment', '"this is a test"');
+		$this->assertEquals('&quot;this is a test&quot;', $data->ATT());
+
+		// HTML Text (passes shortcodes + tidy)
+		$data = DBField::create_field('HTMLText', '&quot;');
+		$this->assertEquals('&quot;', $data->ATT());
+	}
+
+	public function testShortcodesProcessed()
+	{
+		/** @var DBHTMLText $obj */
+		$obj = DBField::create_field(
+			'HTMLText',
+			'<p>Some content <strong>[test_shortcode]</strong> with shortcode</p>'
+		);
+		// Basic DBField methods process shortcodes
+		$this->assertEquals(
+			'Some content shortcode content with shortcode',
+			$obj->Plain()
+		);
+		$this->assertEquals(
+			'<p>Some content <strong>shortcode content</strong> with shortcode</p>',
+			$obj->RAW()
+		);
+		$this->assertEquals(
+			'&lt;p&gt;Some content &lt;strong&gt;shortcode content&lt;/strong&gt; with shortcode&lt;/p&gt;',
+			$obj->XML()
+		);
+		$this->assertEquals(
+			'&lt;p&gt;Some content &lt;strong&gt;shortcode content&lt;/strong&gt; with shortcode&lt;/p&gt;',
+			$obj->HTML()
+		);
+		// Test summary methods
+		$this->assertEquals(
+			'Some content shortcode...',
+			$obj->Summary(3)
+		);
+		$this->assertEquals(
+			'Some content shortcode content with shortcode',
+			$obj->LimitSentences(1)
+		);
+		$this->assertEquals(
+			'Some content shortco...',
+			$obj->LimitCharacters(20)
+		);
+	}
+
+	public function testParse() {
+		// Test parse
+		/** @var DBHTMLText $obj */
+		$obj = DBField::create_field(
+			'HTMLText',
+			'<p>[b]Some content[/b] [test_shortcode] with shortcode</p>'
+		);
+
+		// BBCode strips HTML and applies own formatting
+		$this->assertEquals(
+			'<strong>Some content</strong> shortcode content with shortcode',
+			$obj->Parse('BBCodeParser')->forTemplate()
+		);
 	}
 
 	function testExists() {
@@ -320,5 +563,17 @@ class DBHTMLTextTest extends SapphireTest {
 		);
 
 		ShortcodeParser::set_active('default');
+	}
+}
+
+class DBHTMLTextTest_Shortcode implements ShortcodeHandler, TestOnly {
+	public static function get_shortcodes()
+	{
+		return 'test';
+	}
+
+	public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
+	{
+		return 'shortcode content';
 	}
 }

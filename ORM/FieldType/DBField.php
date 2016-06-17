@@ -4,8 +4,8 @@ namespace SilverStripe\ORM\FieldType;
 
 use FormField;
 use SearchFilter;
-use SilverStripe\ORM\Connect\SS_Query;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Queries\SQLSelect;
 use ViewableData;
 use Convert;
 use Object;
@@ -256,7 +256,7 @@ abstract class DBField extends ViewableData {
 	 * gets you the default representations
 	 * of all columns.
 	 *
-	 * @param SS_Query $query
+	 * @param SQLSelect $query
 	 */
 	public function addToQuery(&$query) {
 
@@ -288,7 +288,8 @@ abstract class DBField extends ViewableData {
 	 * @return string
 	 */
 	public function forTemplate() {
-		return Convert::raw2xml($this->getValue());
+		// Default to XML encoding
+		return $this->XML();
 	}
 
 	/**
@@ -369,7 +370,7 @@ abstract class DBField extends ViewableData {
 	 *
 	 * @return string
 	 */
-	public function XML(){
+	public function XML() {
 		return Convert::raw2xml($this->RAW());
 	}
 
@@ -379,7 +380,7 @@ abstract class DBField extends ViewableData {
 	 * @return string
 	 */
 	public function CDATA() {
-		return $this->forTemplate();
+		return $this->XML();
 	}
 
 	/**
@@ -402,7 +403,7 @@ abstract class DBField extends ViewableData {
 		if(empty($fieldName)) {
 			throw new \BadMethodCallException("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object");
 		}
-			$dataObject->$fieldName = $this->value;
+		$dataObject->$fieldName = $this->value;
 	}
 
 	/**
@@ -440,7 +441,6 @@ abstract class DBField extends ViewableData {
 	 *       search filters (note: parameter hack now in place to pass in the required full path - using $this->name
 	 *       won't work)
 	 *
-	 * @param string|bool $name
 	 * @param string $name Override name of this field
 	 * @return SearchFilter
 	 */

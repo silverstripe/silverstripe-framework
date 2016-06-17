@@ -36,10 +36,10 @@ class DBDate extends DBField {
 	/**
 	 * @config
 	 * @see DBDateTime::nice_format
-	 * @see Time::nice_format
+	 * @see DBTime::nice_format
 	 */
 	private static $nice_format = 'd/m/Y';
-
+	
 	public function setValue($value, $record = null, $markChanged = true) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
 			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
@@ -80,44 +80,56 @@ class DBDate extends DBField {
 
 	/**
 	 * Returns the date in the format specified by the config value nice_format, or dd/mm/yy by default
-	 */
+	 *
+	 * @return string
+	 */	 
 	public function Nice() {
-		if($this->value) return $this->Format($this->config()->nice_format);
+		return $this->Format($this->config()->nice_format);
 	}
 
 	/**
 	 * Returns the date in US format: “01/18/2006”
+	 *
+	 * @return string
 	 */
 	public function NiceUS() {
-		if($this->value) return $this->Format('m/d/Y');
+		return $this->Format('m/d/Y');
 	}
 
 	/**
 	 * Returns the year from the given date
+	 *
+	 * @return string
 	 */
 	public function Year() {
-		if($this->value) return $this->Format('Y');
+		return $this->Format('Y');
 	}
 
 	/**
 	 * Returns the Full day, of the given date.
+	 *
+	 * @return string
 	 */
 	public function Day(){
-		if($this->value) return $this->Format('l');
+		return $this->Format('l');
 	}
 
 	/**
 	 * Returns a full textual representation of a month, such as January.
+	 *
+	 * @return string
 	 */
 	public function Month() {
-		if($this->value) return $this->Format('F');
+		return $this->Format('F');
 	}
 
 	/**
 	 * Returns the short version of the month such as Jan
+	 *
+	 * @return string
 	 */
 	public function ShortMonth() {
-		if($this->value) return $this->Format('M');
+		return $this->Format('M');
 	}
 
 	/**
@@ -126,25 +138,27 @@ class DBDate extends DBField {
 	 * @return string
 	 */
 	public function DayOfMonth($includeOrdinal = false) {
-		if($this->value) {
 			$format = 'j';
 			if ($includeOrdinal) $format .= 'S';
 			return $this->Format($format);
 		}
-	}
 
 	/**
 	 * Returns the date in the format 24 December 2006
+	 *
+	 * @return string
 	 */
 	public function Long() {
-		if($this->value) return $this->Format('j F Y');
+		return $this->Format('j F Y');
 	}
 
 	/**
 	 * Returns the date in the format 24 Dec 2006
+	 *
+	 * @return string
 	 */
 	public function Full() {
-		if($this->value) return $this->Format('j M Y');
+		return $this->Format('j M Y');
 	}
 
 	/**
@@ -158,6 +172,7 @@ class DBDate extends DBField {
 			$date = new DateTime($this->value);
 			return $date->format($format);
 		}
+		return null;
 	}
 
 	/**
@@ -173,6 +188,7 @@ class DBDate extends DBField {
 		if($this->value) {
 			return strftime($formattingString, strtotime($this->value));
 		}
+		return null;
 	}
 
 	/**
@@ -217,12 +233,28 @@ class DBDate extends DBField {
 		else return "$d1 - $d2 $m1 $y1";
 	}
 
+	/**
+	 * Return string in RFC822 format
+	 *
+	 * @return string
+	 */
 	public function Rfc822() {
-		if($this->value) return date('r', strtotime($this->value));
+		if($this->value) {
+			return date('r', strtotime($this->value));
+		}
+		return null;
 	}
 
+	/**
+	 * Return date in RFC2822 format
+	 *
+	 * @return string
+	 */
 	public function Rfc2822() {
-		if($this->value) return date('Y-m-d H:i:s', strtotime($this->value));
+		if($this->value) {
+			return date('Y-m-d H:i:s', strtotime($this->value));
+		}
+		return null;
 	}
 
 	public function Rfc3339() {
@@ -249,7 +281,9 @@ class DBDate extends DBField {
 	 * @return  String
 	 */
 	public function Ago($includeSeconds = true, $significance = 2) {
-		if($this->value) {
+		if(!$this->value) {
+			return null;
+		}
 			$time = DBDatetime::now()->Format('U');
 			if(strtotime($this->value) == $time || $time > strtotime($this->value)) {
 				return _t(
@@ -267,7 +301,6 @@ class DBDate extends DBField {
 				);
 			}
 		}
-	}
 
 	/**
 	 * @param boolean $includeSeconds Show seconds, or just round to "less than a minute".
@@ -304,7 +337,9 @@ class DBDate extends DBField {
 	 * @return string The resulting formatted period
 	 */
 	public function TimeDiffIn($format) {
-		if(!$this->value) return false;
+		if(!$this->value) {
+			return null;
+		}
 
 		$time = DBDatetime::now()->Format('U');
 		$ago = abs($time - strtotime($this->value));
@@ -333,6 +368,9 @@ class DBDate extends DBField {
 			case "years":
 				$span = round($ago/86400/365);
 				return ($span != 1) ? "{$span} "._t("Date.YEARS", "years") : "{$span} "._t("Date.YEAR", "year");
+
+			default:
+				throw new \InvalidArgumentException("Invalid format $format");
 		}
 	}
 

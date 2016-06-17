@@ -191,6 +191,8 @@ class Convert {
 	 * Convert XML to raw text.
 	 * @uses html2raw()
 	 * @todo Currently &#xxx; entries are stripped; they should be converted
+	 * @param mixed $val
+	 * @return array|string
 	 */
 	public static function xml2raw($val) {
 		if(is_array($val)) {
@@ -234,6 +236,7 @@ class Convert {
 	 * false by default.
 	 * @param boolean $disableExternals Disables the loading of external entities. false by default.
 	 * @return array
+	 * @throws Exception
 	 */
 	public static function xml2array($val, $disableDoctypes = false, $disableExternals = false) {
 		// Check doctype
@@ -242,6 +245,7 @@ class Convert {
 		}
 
 		// Disable external entity loading
+		$oldVal = null;
 		if($disableExternals) $oldVal = libxml_disable_entity_loader($disableExternals);
 		try {
 			$xml = new SimpleXMLElement($val);
@@ -263,7 +267,7 @@ class Convert {
 	 * @return mixed
 	 */
 	protected static function recursiveXMLToArray($xml) {
-		if(is_object($xml) && get_class($xml) == 'SimpleXMLElement') {
+		if($xml instanceof SimpleXMLElement) {
 			$attributes = $xml->attributes();
 			foreach($attributes as $k => $v) {
 				if($v) $a[$k] = (string) $v;

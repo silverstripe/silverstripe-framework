@@ -159,7 +159,7 @@ class DatabaseTest extends SapphireTest {
 	}
 
 	public function testTransactions() {
-		$conn = DB::getConn();
+		$conn = DB::get_conn();
 		if(!$conn->supportsTransactions()) {
 			$this->markTestSkipped("DB Doesn't support transactions");
 			return;

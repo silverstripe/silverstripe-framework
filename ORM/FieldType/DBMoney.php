@@ -63,6 +63,7 @@ class DBMoney extends DBComposite {
 	}
 
 	/**
+	 * @param array $options
 	 * @return string
 	 */
 	public function Nice($options = array()) {

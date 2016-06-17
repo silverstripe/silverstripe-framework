@@ -47,7 +47,7 @@ class DBTime extends DBField {
 	 * @return string
 	 */
 	public function Nice() {
-		if($this->value) return $this->Format($this->config()->nice_format);
+		return $this->Format($this->config()->nice_format);
 	}
 
 	/**
@@ -57,7 +57,7 @@ class DBTime extends DBField {
 	 * @return string Time in 24 hour format
 	 */
 	public function Nice24() {
-		if($this->value) return date('H:i', strtotime($this->value));
+		return $this->Format('H:i');
 	}
 
 	/**
@@ -67,7 +67,10 @@ class DBTime extends DBField {
 	 * @return string The date in the requested format
 	 */
 	public function Format($format) {
-		if($this->value) return date($format, strtotime($this->value));
+		if($this->value) {
+			return date($format, strtotime($this->value));
+		}
+		return null;
 	}
 
 	public function TwelveHour( $parts ) {

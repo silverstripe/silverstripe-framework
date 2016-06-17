@@ -32,7 +32,7 @@ class DBText extends DBString {
 
 	private static $casting = array(
 		"BigSummary" => "Text",
-		"ContextSummary" => "HTMLText", // Always returns HTML as it contains formatting and highlighting
+		"ContextSummary" => "HTMLFragment", // Always returns HTML as it contains formatting and highlighting
 		"FirstParagraph" => "Text",
 		"FirstSentence" => "Text",
 		"LimitSentences" => "Text",
@@ -72,9 +72,9 @@ class DBText extends DBString {
 	public function LimitSentences($maxSentences = 2) {
 		if(!is_numeric($maxSentences)) {
 			throw new InvalidArgumentException("Text::LimitSentence() expects one numeric argument");
-	}
+		}
 
-		$value = $this->NoHTML();
+		$value = $this->Plain();
 		if( !$value ) {
 			return "";
 		}
@@ -114,40 +114,32 @@ class DBText extends DBString {
 	 * Builds a basic summary, up to a maximum number of words
 	 *
 	 * @param int $maxWords
-	 * @param int $maxParagraphs Optional paragraph limit
+	 * @param string $add
 	 * @return string
 	 */
-	public function Summary($maxWords = 50, $maxParagraphs = 1) {
+	public function Summary($maxWords = 50, $add = '...') {
 		// Get plain-text version
-		$value = $this->NoHTML();
+		$value = $this->Plain();
 		if(!$value) {
 			return '';
-			}
-
-		// Set max paragraphs
-		if($maxParagraphs) {
-			// Split on >2 linebreaks
-			$paragraphs = preg_split('#\n{2,}#', $value);
-			if(count($paragraphs) > $maxParagraphs) {
-				$paragraphs = array_slice($paragraphs, 0, $maxParagraphs);
 		}
-			$value = implode("\n\n", $paragraphs);
-	}
 
-		// Find sentences
-		$sentences = explode('.', $value);
+		// Split on sentences (don't remove period)
+		$sentences = array_filter(array_map(function($str) {
+			return trim($str);
+		}, preg_split('@(?<=\.)@', $value)));
 		$wordCount = count(preg_split('#\s+#', $sentences[0]));
 
 		// if the first sentence is too long, show only the first $maxWords words
 		if($wordCount > $maxWords) {
-			return implode( ' ', array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)) . '...';
+			return implode( ' ', array_slice(explode( ' ', $sentences[0] ), 0, $maxWords)) . $add;
 		}
 
 		// add each sentence while there are enough words to do so
 		$result = '';
 		do {
 			// Add next sentence
-			$result .= ' ' . trim(array_shift( $sentences )).'.';
+			$result .= ' ' . array_shift( $sentences );
 
 			// If more sentences to process, count number of words
 			if($sentences) {
@@ -159,30 +151,20 @@ class DBText extends DBString {
 	}
 
 	/**
-	* Performs the same function as the big summary, but doesn't trim new paragraphs off data.
-	 *
-	 * @param int $maxWords
-	 * @return string
-	*/
-	public function BigSummary($maxWords = 50) {
-		return $this->Summary($maxWords, 0);
-		}
-
-	/**
 	 * Get first paragraph
 	 *
 	 * @return string
 	 */
 	public function FirstParagraph() {
-		$value = $this->NoHTML();
+		$value = $this->Plain();
 		if(empty($value)) {
 			return '';
-			}
+		}
 
 		// Split paragraphs and return first
 		$paragraphs = preg_split('#\n{2,}#', $value);
 		return reset($paragraphs);
-		}
+	}
 
 	/**
 	 * Perform context searching to give some context to searches, optionally
@@ -205,7 +187,7 @@ class DBText extends DBString {
 		}
 
 		// Get raw text value, but XML encode it (as we'll be merging with HTML tags soon)
-		$text = nl2br(Convert::raw2xml($this->NoHTML()));
+		$text = nl2br(Convert::raw2xml($this->Plain()));
 		$keywords = Convert::raw2xml($keywords);
 
 		// Find the search string
@@ -230,9 +212,10 @@ class DBText extends DBString {
 			if($stringPieces) {
 				foreach($stringPieces as $stringPiece) {
 					if(strlen($stringPiece) > 2) {
-						$summary = str_ireplace(
-							$stringPiece,
-							"<span class=\"highlight\">$stringPiece</span>",
+						// Maintain case of original string
+						$summary = preg_replace(
+							'/' . preg_quote($stringPiece, '/') . '/i',
+							'<span class="highlight">$0</span>',
 							$summary
 						);
 					}
@@ -245,7 +228,7 @@ class DBText extends DBString {
 		if($position > 0) {
 			$summary = $prefix . $summary;
 		}
-		if(strlen($this->value) > ($characters + $position)) {
+		if(strlen($text) > ($characters + $position)) {
 			$summary = $summary . $suffix;
 		}
 
@@ -267,14 +250,10 @@ class DBText extends DBString {
 
 		/** @var TextParser $obj */
 		$obj = \Injector::inst()->createWithArgs($parser, [$this->forTemplate()]);
-			return $obj->parse();
+		return $obj->parse();
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 * @see DBField::scaffoldFormField()
-	 */
-	public function scaffoldFormField($title = null, $params = null) {
+	public function scaffoldFormField($title = null) {
 		if(!$this->nullifyEmpty) {
 			// Allow the user to select if it's null instead of automatically assuming empty string is
 			return new NullableField(new TextareaField($this->name, $title));
@@ -284,11 +263,7 @@ class DBText extends DBString {
 		}
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 * @see DBField::scaffoldSearchField()
-	 */
-	public function scaffoldSearchField($title = null, $params = null) {
+	public function scaffoldSearchField($title = null) {
 		return new TextField($this->name, $title);
 	}
 }

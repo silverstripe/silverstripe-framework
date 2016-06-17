@@ -78,21 +78,29 @@ class DBVarchar extends DBString {
 
 	/**
 	 * Return the first letter of the string followed by a .
+	 *
+	 * @return string
 	 */
 	public function Initial() {
 		if($this->exists()) {
 			$value = $this->RAW();
 			return $value[0] . '.';
 		}
+		return null;
 	}
 
 	/**
 	 * Ensure that the given value is an absolute URL.
+	 *
+	 * @return string
 	 */
 	public function URL() {
 		$value = $this->RAW();
-		if(preg_match('#^[a-zA-Z]+://#', $value)) return $value;
-		else return "http://" . $value;
+		if(preg_match('#^[a-zA-Z]+://#', $value)) {
+			return $value;
+		} else {
+			return "http://" . $value;
+		}
 	}
 
 	/**
@@ -103,11 +111,7 @@ class DBVarchar extends DBString {
 		return str_replace("\n", '\par ', $this->RAW());
 	}
 
-	/**
-	 * (non-PHPdoc)
-	 * @see DBField::scaffoldFormField()
-	 */
-	public function scaffoldFormField($title = null, $params = null) {
+	public function scaffoldFormField($title = null) {
 		if(!$this->nullifyEmpty) {
 			// Allow the user to select if it's null instead of automatically assuming empty string is
 			return new NullableField(new TextField($this->name, $title));
