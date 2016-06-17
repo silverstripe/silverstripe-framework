@@ -647,11 +647,11 @@ abstract class DBSchemaManager {
 			// Update any records where the enum is set to a legacy value to be set to the default.
 			foreach (array('enum', 'set') as $enumtype) {
 				if (preg_match("/^$enumtype/i", $specValue)) {
-					$newStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i", "", $spec_orig);
-					$new = preg_split("/'\s*,\s*'/", $newStr);
+					$newStr = preg_replace("/(^$enumtype\\s*\\(')|('\\).*)/i", "", $spec_orig);
+					$new = preg_split("/'\\s*,\\s*'/", $newStr);
 
-					$oldStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i", "", $fieldValue);
-					$old = preg_split("/'\s*,\s*'/", $oldStr);
+					$oldStr = preg_replace("/(^$enumtype\\s*\\(')|('\\).*)/i", "", $fieldValue);
+					$old = preg_split("/'\\s*,\\s*'/", $oldStr);
 
 					$holder = array();
 					foreach ($old as $check) {

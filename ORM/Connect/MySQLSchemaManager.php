@@ -239,10 +239,9 @@ class MySQLSchemaManager extends DBSchemaManager {
 
 	public function fieldList($table) {
 		$fields = $this->query("SHOW FULL FIELDS IN \"$table\"");
+		$fieldList = array();
 		foreach ($fields as $field) {
-
-			// ensure that '' is converted to \' in field specification (mostly for the benefit of ENUM values)
-			$fieldSpec = str_replace('\'\'', '\\\'', $field['Type']);
+			$fieldSpec = $field['Type'];
 			if (!$field['Null'] || $field['Null'] == 'NO') {
 				$fieldSpec .= ' not null';
 			}
