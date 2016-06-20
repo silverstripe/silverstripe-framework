@@ -14,7 +14,7 @@ form.nostyle {
 	@include clear-form-field-styles();
 }
 
-.field {
+.field { // TODO convert to .form-group
 
   &.ui-tabs {
     border-bottom: 0;
@@ -26,48 +26,12 @@ form.nostyle {
 		box-shadow: none;
 	}
 
-	// using the legacy version as some of the more complex form fields
-	// need to use relative positioning and overflow hidden will not expand
-	// the containing boxes
-	@include legacy-pie-clearfix();
-
-	&.nolabel {
-		> .middleColumn {
-			margin-left: 0;
-		}
-
-		> .description {
-			margin-left: 0;
-		}
-	}
-
 	&.checkbox label.right {
 		margin: $grid-y/2 0 0 0;
 		display:inline;
 		font-style: normal;
 		color: $color-text;
 		clear:none;
-	}
-	label {
-		&.left {
-			float: left;
-			display: block;
-			width: $grid-x * 22;
-			padding: $grid-y $grid-x $grid-y 0;
-			margin-bottom: 0;
-		}
-		&.right {
-			cursor: pointer;
-			clear: both;
-			color: lighten($color-text, 20%);
-			display: block;
-			font-style: italic;
-			margin: $grid-y/2 0 0 $grid-x*23;
-		}
-	}
-
-	.middleColumn {
-		margin-left: $grid-x * 23;
 	}
 
 	span.readonly {
@@ -92,10 +56,6 @@ form.nostyle {
 	select,
 	.TreeDropdownField {
     @extend .form-control;
-
-		.description {
-			max-width: $grid-x * 64;
-		}
 	}
 
   input.creditcard {
@@ -844,6 +804,12 @@ fieldset.switch-states{
   padding-top: 0;
   padding-bottom: 0;
   padding-right: 0;
+}
+
+// Align buttons with input
+.urlsegment .update,
+.urlsegment .cancel {
+  margin-top: 3px;
 }
 
 .ui-button-text-only .ui-button-text {
