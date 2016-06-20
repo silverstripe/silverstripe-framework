@@ -973,6 +973,8 @@ class UploadField extends FileField {
 				_t('UploadField.OVERWRITEWARNING', 'File with the same name already exists');
 		}
 
+		$this->extend('onBeforeRender', $this);
+
 		$mergedConfig = array_merge($config, $this->ufConfig);
 		return $this->customise(array(
 			'configString' => str_replace('"', "&quot;", Convert::raw2json($mergedConfig)),

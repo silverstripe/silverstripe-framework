@@ -54,6 +54,8 @@ class CheckboxSetField extends OptionsetField {
 			'Options' => $this->getOptions()
 		));
 
+		$this->extend('onBeforeRender', $this);
+
 		return $this->customise($properties)->renderWith(
 			$this->getTemplates()
 		);

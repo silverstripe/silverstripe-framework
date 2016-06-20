@@ -135,6 +135,9 @@ class TreeMultiselectField extends TreeDropdownField {
 				'Value' => $value
 			)
 		);
+
+		$this->extend('onBeforeRender', $this);
+
 		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
 
