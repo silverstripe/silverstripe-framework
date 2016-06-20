@@ -86,6 +86,33 @@ function stripslashes_recursively(&$array) {
 	}
 }
 
+function get_list_ip($ip_addr_cidr){
+	$ip_arr = explode("/", $ip_addr_cidr);
+	if (count($ip_arr) !== 2) {
+		return array($ip_addr_cidr);
+	}
+
+	$bin = "";
+
+	for($i=1;$i<=32;$i++) {
+		$bin .= $ip_arr[1] >= $i ? '1' : '0';
+	}
+
+	$ip_arr[1] = bindec($bin);
+
+	$ip = ip2long($ip_arr[0]);
+	$nm = $ip_arr[1];
+	$nw = ($ip & $nm);
+	$bc = $nw | ~$nm;
+	$bc_long = ip2long(long2ip($bc));
+
+	for($zm=1;($nw + $zm)<=($bc_long - 1);$zm++)
+	{
+		$ret[]=long2ip($nw + $zm);
+	}
+	return $ret;
+}
+
 /**
  * Validate whether the request comes directly from a trusted server or not
  * This is necessary to validate whether or not the values of X-Forwarded-
@@ -104,7 +131,16 @@ if(!defined('TRUSTED_PROXY')) {
 			if(SS_TRUSTED_PROXY_IPS === '*') {
 				$trusted = true;
 			} elseif(isset($_SERVER['REMOTE_ADDR'])) {
-				$trusted = in_array($_SERVER['REMOTE_ADDR'], explode(',', SS_TRUSTED_PROXY_IPS));
+				$formattedIPs = '';
+				$trustedIPs = array();
+				$ssTrustedProxyIPs = explode(',', SS_TRUSTED_PROXY_IPS);
+				foreach ($ssTrustedProxyIPs as $ss_ip) {
+					$formattedIPs = get_list_ip(trim($ss_ip));
+					if (is_array($formattedIPs)) { 
+						$trustedIPs = array_merge($trustedIPs, $formattedIPs);
+					}
+				}
+				$trusted = in_array($_SERVER['REMOTE_ADDR'], $trustedIPs);
 			}
 		}
 	}
