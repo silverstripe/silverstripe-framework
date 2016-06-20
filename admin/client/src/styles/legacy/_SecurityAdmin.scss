@@ -6,7 +6,7 @@
   }
 
   .cms-content & {
-    &.form-group.nolabel .form__field-holder--no-label {
+    &.form-group.form-group--no-label .form__field-holder--no-label {
       @include make-col-offset(0);
       @include make-col-span(12);
     }

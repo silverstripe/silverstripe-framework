@@ -533,7 +533,7 @@ class FormField extends RequestHandler {
 	}
 
 	/**
-	 * Compiles all CSS-classes. Optionally includes a "nolabel" class if no title was set on the
+	 * Compiles all CSS-classes. Optionally includes a "form-group--no-label" class if no title was set on the
 	 * FormField.
 	 *
 	 * Uses {@link Message()} and {@link MessageType()} to add validation error classes which can
@@ -554,7 +554,7 @@ class FormField extends RequestHandler {
 		}
 
 		if(!$this->Title()) {
-			$classes[] = 'nolabel';
+			$classes[] = 'form-group--no-label';
 		}
 
 		// Allow custom styling of any element in the container based on validation errors,

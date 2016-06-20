@@ -2,16 +2,36 @@
   padding-bottom: $spacer-y;
 }
 
+// Remove underline and column offset
+// Used on tree batch actions
+.form--no-dividers .form-group::after {
+  visibility: hidden;
+  content: "";
+  display: none;
+}
+
+
+// Form divider lines
+.form__divider::after,
+.form-group::after {
+  border-bottom: 1px solid $border-color-light;
+  visibility: visible;
+  width: 100%;
+  content: "\0020";
+  display: block;
+}
+
+.form__divider::after {
+  margin: $spacer-y 0;
+}
+
+.form-group::after {
+  margin: $spacer-y 0 #{-$spacer-y};
+}
+
+
 .form-group {
   padding-bottom: $spacer-y;
-
-  // Add divider lines
-  &::after {
-    border-bottom: 1px solid $border-color-light;
-    visibility: visible;
-    margin: $spacer-y 0 #{-$spacer-y};
-    width: calc(100% - #{$grid-gutter-width}); // IE10 fix for avoiding horizontal scrollbars
-  }
 
   .form-group {
     padding-bottom: 0;
@@ -20,6 +40,11 @@
       border-bottom: 0;
       visibility: hidden;
     }
+  }
+
+  // Fix for when the .form-group--no-label class is used but there is actually a label
+  &.form-group--no-label:not(.stacked) .form__field-label + .form__field-holder {
+    @include make-col-offset(0);
   }
 }
 
@@ -100,8 +125,13 @@ input.radio {
     .form-group {
       @include make-row();
 
+      &::after {
+        margin: $spacer-y $grid-gutter-width-half #{-$spacer-y};
+        width: calc(100% - #{$grid-gutter-width}); // IE10 fix for avoiding horizontal scrollbars
+      }
+
       &.checkbox .form__field-holder,
-      &.nolabel .form__field-holder,
+      &.form-group--no-label .form__field-holder,
       .form__field-holder--no-label {
         @include make-col-offset(3);
 
@@ -111,24 +141,32 @@ input.radio {
         }
       }
 
-      &::after {
-        margin: $spacer-y $grid-gutter-width-half #{-$spacer-y};
+      .form__field-label {
+        @include make-col();
+        @include make-col-span(12);
+      }
+
+      &:not(.stacked) {
+        .form__field-label {
+          @include make-col-span(3);
+          // Override the `<label>` default with .form-control-label styles
+          padding-top: $input-padding-y;
+          padding-bottom: $input-padding-y;
+          margin-bottom: 0;
+          display: block;
+        }
+
+        .form__field-holder {
+          @include make-col();
+          @include make-col-span(9);
+        }
       }
     }
 
-    .form__field-label {
+    .stacked .form__field-holder {
       @include make-col();
-      @include make-col-span(3);
-      // Override the `<label>` default with .form-control-label styles
-      padding-top: $input-padding-y;
-      padding-bottom: $input-padding-y;
-      margin-bottom: 0;
-      display: block;
-    }
-
-    .form__field-holder {
-      @include make-col();
-      @include make-col-span(9);
+      @include make-col-span(12);
+      max-width: 100%;
     }
 
     .form__field-extra-label {
@@ -145,18 +183,24 @@ input.radio {
   @include media-breakpoint-up($breakpoint-inline-limit-width) {
     .form-group {
       &.checkbox .form__field-holder,
-      &.nolabel .form__field-holder,
+      &.form-group--no-label .form__field-holder,
       .form__field-holder--no-label {
         @include make-col-offset(2);
       }
+
+      &:not(.stacked) {
+        .form__field-label {
+          @include make-col-span(2);
+        }
+
+        .form__field-holder {
+          @include make-col-span(8);
+        }
+      }
     }
 
-    .form__field-label {
-      @include make-col-span(2);
-    }
-
-    .form__field-holder {
-      @include make-col-span(8);
+    .stacked .form__field-holder {
+      @include make-col-span(10);
     }
 
     .form__field-extra-label {
@@ -166,21 +210,30 @@ input.radio {
   }
 
   @include media-breakpoint-up($breakpoint-inline-limit-width-max) {
-    .form__field-holder {
-      @include make-col-span(7);
+    :not(.stacked) {
+      .form__field-holder {
+        @include make-col-span(7);
+      }
+
+      .form__field-extra-label {
+        @include make-col-span(3);
+        @include make-col-offset(0);
+      }
     }
 
-    .form__field-extra-label {
-      @include make-col-span(3);
-      @include make-col-offset(0);
+    .stacked {
+      .form__field-holder {
+        @include make-col-span(10);
+      }
     }
   }
 }
+
 
 // TEMPORARY
 // Apply .form--inline to forms to state whether or not the label and input should become inline
 // @include form-responsive(turns inline, stops being full width, reduced portion of screen width is used)
 .form--inline,
-.cms-edit-form:not(.AssetAdmin) {
+:not(.AssetAdmin) {
   @include form-responsive(lg, xl, xxl);
 }
