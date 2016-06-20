@@ -1254,57 +1254,49 @@ body.cms {
 		vertical-align: middle;
 	}
 }
-.cms-content-batchactions-dropdown {
-	display: inline-block;
 
-	// Context specific rules for when batch actions are in the SiteTree panel.
-	.cms-content-tools & {
+// Tree batch actions
+.cms-batch-actions {
+	position: relative;
+	max-width: 400px;
+
+	fieldset {
 		width: 100%;
+		float: left;
 	}
 
-	fieldset { // The dropdown element wrapper
-		display: inline-block;
-		width: 200px;
-
-		.view-mode-batchactions-label {
-			display: inline;
-		}
-
-		// Context specific rules for when batch actions are in the SiteTree panel.
-		.cms-content-tools & {
-			width: 82%;
-		}
+	.form__field-holder--no-label {
+		margin-left: 0 !important;
+		flex-basis: 100% !important;
+		padding-right: 23px;
 	}
 
 	.dropdown { // The 'select' element
 		width: 100%;
 		height: 32px;
+	}
 
-		.chosen-single {
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-			box-shadow: none;
-		}
+	.chosen-container-single .chosen-single {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.field .chosen-container-active.chosen-with-drop .chosen-single {
+		border-top-right-radius: 0;
 	}
 
 	.btn-toolbar {
-		display: inline-block;
-		padding: 0;
-		margin-left: -4px;
-		min-height: auto;
-
-		// Context specific rules for when batch actions are in the SiteTree panel.
-		.cms-content-tools & {
-			width: 16%;
-		}
+		position: absolute;
+		right: 0;
 	}
 
-	.action {
-		width: 100%;
-		height: 32px;
-		margin-bottom: 0;
+	.action,
+  .btn {
+		padding-top: 7px;
+		padding-bottom: 7px;
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
+		width: calc(#{$grid-gutter-width} + 1px); // gutters + 1px border
 	}
 }
 
