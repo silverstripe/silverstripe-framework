@@ -34,7 +34,6 @@
   }
 }
 
-
 .form-group {
   padding-bottom: $spacer-y;
 
@@ -126,7 +125,6 @@ input.radio {
 
 
 
-
 @mixin form-responsive($breakpoint-inline, $breakpoint-inline-limit-width, $breakpoint-inline-limit-width-max) {
   @include media-breakpoint-up($breakpoint-inline) {
     .form-group {
@@ -135,22 +133,6 @@ input.radio {
       &::after {
         margin: $spacer-y $grid-gutter-width-half #{-$spacer-y};
         width: calc(100% - #{$grid-gutter-width}); // IE10 fix for avoiding horizontal scrollbars
-      }
-
-      &.checkbox .form__field-holder,
-      &.form-group--no-label .form__field-holder,
-      .form__field-holder--no-label {
-        @include make-col-offset(3);
-
-        // IE For some reason in IE10 the gutters are not accounted for in the offset (perhaps box-sizing issue)
-        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-          left: $grid-gutter-width;
-        }
-      }
-
-      .form__field-label {
-        @include make-col();
-        @include make-col-span(12);
       }
 
       &:not(.stacked) {
@@ -170,10 +152,31 @@ input.radio {
       }
     }
 
+    .form-group.checkbox .form__field-holder,
+    .form-group--no-label .form__field-holder,
+    .form__field-holder--no-label {
+      @include make-col-offset(3);
+
+      // IE For some reason in IE10 the gutters are not accounted for in the offset (perhaps box-sizing issue)
+      @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        left: $grid-gutter-width;
+      }
+    }
+
+    .form__field-label {
+      @include make-col();
+      @include make-col-span(12);
+    }
+
     .stacked .form__field-holder {
       @include make-col();
       @include make-col-span(12);
       max-width: 100%;
+    }
+
+    // Outer CompositeField doesn't have label but inner CompositeField does
+    .form-group--no-label .form-group .form__field-holder {
+      @include make-col-offset(0);
     }
 
     .form__field-extra-label {
@@ -189,11 +192,6 @@ input.radio {
 
   @include media-breakpoint-up($breakpoint-inline-limit-width) {
     .form-group {
-      &.checkbox .form__field-holder,
-      &.form-group--no-label .form__field-holder,
-      .form__field-holder--no-label {
-        @include make-col-offset(2);
-      }
 
       &:not(.stacked) {
         .form__field-label {
@@ -204,6 +202,12 @@ input.radio {
           @include make-col-span(8);
         }
       }
+    }
+
+    .form-group.checkbox .form__field-holder,
+    .form-group--no-label .form__field-holder,
+    .form__field-holder--no-label {
+      @include make-col-offset(2);
     }
 
     .stacked .form__field-holder {
@@ -225,12 +229,6 @@ input.radio {
       .form__field-extra-label {
         @include make-col-span(3);
         @include make-col-offset(0);
-      }
-    }
-
-    .stacked {
-      .form__field-holder {
-        @include make-col-span(10);
       }
     }
   }
