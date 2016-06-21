@@ -2,7 +2,6 @@
   padding-bottom: $spacer-y;
 }
 
-
 // Form divider lines
 .form__divider::after,
 .form-group::after {
@@ -23,8 +22,7 @@
 
 // Remove underline and column offset
 // Used on places like tree batch actions
-.form--no-dividers,
-.CompositeField .CompositeField {
+.form--no-dividers {
   .form-group {
     padding-bottom: 0;
 
