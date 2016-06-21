@@ -2,14 +2,6 @@
   padding-bottom: $spacer-y;
 }
 
-// Remove underline and column offset
-// Used on tree batch actions
-.form--no-dividers .form-group::after {
-  visibility: hidden;
-  content: "";
-  display: none;
-}
-
 
 // Form divider lines
 .form__divider::after,
@@ -27,6 +19,21 @@
 
 .form-group::after {
   margin: $spacer-y 0 #{-$spacer-y};
+}
+
+// Remove underline and column offset
+// Used on places like tree batch actions
+.form--no-dividers,
+.CompositeField .CompositeField {
+  .form-group {
+    padding-bottom: 0;
+
+    &::after {
+      visibility: hidden;
+      content: "";
+      display: none;
+    }
+  }
 }
 
 
@@ -118,6 +125,8 @@ input.radio {
   font-size: $font-size-sm;
   color: $text-muted;
 }
+
+
 
 
 @mixin form-responsive($breakpoint-inline, $breakpoint-inline-limit-width, $breakpoint-inline-limit-width-max) {
@@ -234,6 +243,6 @@ input.radio {
 // Apply .form--inline to forms to state whether or not the label and input should become inline
 // @include form-responsive(turns inline, stops being full width, reduced portion of screen width is used)
 .form--inline,
-:not(.AssetAdmin) {
+.cms-edit-form:not(.AssetAdmin) {
   @include form-responsive(lg, xl, xxl);
 }
