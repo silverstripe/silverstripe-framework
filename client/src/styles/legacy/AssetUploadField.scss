@@ -4,7 +4,7 @@
 @import "../_elementMixins";
 
 .ss-uploadfield-view-allowed-extensions {
-	margin-top: -42px;
+	margin-top: -36px;
 	float: right;
 
 	.toggle-content {
@@ -18,7 +18,6 @@
 	    top: 0;
 	    bottom: 0;
 	    border-left: 1px solid $color-separator;
-		box-shadow: 0 0 3px $color-separator;
 	    background: $tab-panel-texture-color;
 		transition: all .3s linear;
 
@@ -39,7 +38,7 @@
 		float: right;
 		color: $color-text;
 		width: 16px;
-		height: 16px;
+		height: 18px;
 		overflow: hidden;
 
 		&:hover,
@@ -72,10 +71,22 @@ body.cms.ss-uploadfield-edit-iframe {
 }
 
 .ss-assetuploadfield {
-	border-bottom: 0;
-	box-shadow: none;
 	margin: 0;
 	padding: 0;
+
+  > fieldset {
+    @extend .clearfix;
+  }
+
+
+  &::after {
+    content: "";
+    visibility: hidden;
+  }
+
+  .form__field-holder {
+    max-width: 100%;
+  }
 
 	h3 {
 		border-bottom: 1px solid $color-shadow-light;
@@ -322,7 +333,7 @@ body.cms.ss-uploadfield-edit-iframe {
 		}
 
 		.ss-uploadfield-fromcomputer {
-			margin: 12px 2px;
+			margin: 10px 2px;
 			overflow: hidden;
 			font-weight: normal;
 
