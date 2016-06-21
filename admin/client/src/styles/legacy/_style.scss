@@ -1858,12 +1858,7 @@ body.cms-dialog {
 			width:300px;
 			@include hide-text-overflow;
 		}
-		.cms-file-info{
-			.field{
-				border:none;
-				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-			}
-		}
+
 		.field{
 			border-bottom: 1px solid $color-shadow-light;
     		box-shadow: 0 1px 0 lighten($color-shadow-light, 95%);
@@ -2125,47 +2120,12 @@ body.cms-dialog {
  * -------------------------------------------- */
 
 .cms-file-info {
-	overflow: auto;
-	// Emulate .field bottom border styling without applying .field class,
-	// as it messes up the nested .field element styling (blocklevel labels)
-	border-bottom: 1px solid $color-shadow-light;
-	box-shadow: 0 1px 0 lighten($color-shadow-light, 95%);
-	margin-bottom: $grid-x;
 
 	// Preview might not always be available
-	.cms-file-info-preview {
-		float: left;
-		width: $grid-x * 22; // Same as ".field label"
-		margin-right: $grid-x;
-
-		img {
+	.cms-file-info-preview img {
 			max-width: $grid-x * 22; // Same as ".field label"
 			max-height: $grid-x * 16; // Fitting typical info displayed (~5 rows)
-		}
-	}
-	.cms-file-info-data {
-		float: left;
-		width: 55%;
-		padding-bottom: $spacer-y;
-
-		.field {
-			// Unsetting styles from .field, make it more compact visually
-			margin: 0;
-			padding-bottom: 0;
-			border: none;
-			box-shadow: none;
-			label.left {
-				width: $grid-x*12;
-				padding-top: 0;
-			}
-			.middleColumn {
-				margin-left: $grid-x*13;
-				padding-top: 0;
-			}
-			label, span {
-				padding: 0;
-			}
-		}
+			margin-bottom: $spacer-y;
 	}
 }
 
