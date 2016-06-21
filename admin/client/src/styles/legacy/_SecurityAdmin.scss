@@ -5,8 +5,8 @@
     margin-top: $spacer-y;
   }
 
-  .cms-content & {
-    &.form-group.form-group--no-label .form__field-holder--no-label {
+  .cms-content.cms-edit-form & {
+    &.form-group--no-label > .form__field-holder--no-label {
       @include make-col-offset(0);
       @include make-col-span(12);
     }
