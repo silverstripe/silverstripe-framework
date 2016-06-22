@@ -169,7 +169,7 @@ class CampaignAdmin extends SilverStripeComponent {
     const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
     const formBuilderProps = {
       createFn: this.campaignEditCreateFn,
-      schemaUrl: `${baseSchemaUrl}/ChangeSet/${this.props.campaignId}`,
+      schemaUrl: `${baseSchemaUrl}/${this.props.campaignId}`,
     };
 
     return (
@@ -191,10 +191,9 @@ class CampaignAdmin extends SilverStripeComponent {
    * Render the view for creating a new Campaign.
    */
   renderCreateView() {
-    const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
     const formBuilderProps = {
       createFn: this.campaignAddCreateFn,
-      schemaUrl: `${baseSchemaUrl}/ChangeSet`,
+      schemaUrl: this.props.sectionConfig.form.DetailEditForm.schemaUrl,
     };
 
     return (

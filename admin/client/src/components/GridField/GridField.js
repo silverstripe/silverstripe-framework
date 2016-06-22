@@ -113,7 +113,8 @@ class GridField extends SilverStripeComponent {
 
     return (
       <GridFieldRow {...rowProps}>
-        {cells.concat(rowActions)}
+        {cells}
+        {rowActions}
       </GridFieldRow>
     );
   }

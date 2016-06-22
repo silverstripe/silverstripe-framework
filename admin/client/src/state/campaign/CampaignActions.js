@@ -35,10 +35,11 @@ export function showCampaignView(campaignId, view) {
  * Publish a campaign and all its items
  *
  * @param {Function} publishApi See lib/Backend
+ * @param {string} recordType
  * @param {number} campaignId
  * @return {Object}
  */
-export function publishCampaign(publishApi, campaignId) {
+export function publishCampaign(publishApi, recordType, campaignId) {
   return (dispatch) => {
     dispatch({
       type: ACTION_TYPES.PUBLISH_CAMPAIGN_REQUEST,
@@ -53,7 +54,7 @@ export function publishCampaign(publishApi, campaignId) {
         });
         dispatch({
           type: RECORD_ACTION_TYPES.FETCH_RECORD_SUCCESS,
-          payload: { recordType: 'ChangeSet', data },
+          payload: { recordType, data },
         });
       })
       .catch((error) => {
