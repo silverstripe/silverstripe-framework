@@ -360,6 +360,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		// Parse column specification, considering possible ansi sql quoting
+		$column = str_replace('"', '', $column); // Remove quotes so sorts like '"SiteTree"."Sort"' work.
 		if(preg_match('/^"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column, $match)) {
 			$column = $match['column'];
 			if(empty($direction) && !empty($match['direction'])) {
