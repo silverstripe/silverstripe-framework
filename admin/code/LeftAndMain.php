@@ -106,7 +106,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	];
 
 	private static $url_handlers = [
-		'GET schema/$FormName/$RecordType/$ItemID' => 'schema'
+		'GET schema/$FormName/$ItemID' => 'schema'
 	];
 
 	private static $dependencies = [
@@ -226,15 +226,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *
 	 * WARNING: Experimental API.
 	 *
+	 * @param SS_HTTPRequest $request
 	 * @return SS_HTTPResponse
 	 */
 	public function schema($request) {
 		$response = $this->getResponse();
 		$formName = $request->param('FormName');
-		$recordType = $request->param('RecordType');
 		$itemID = $request->param('ItemID');
 
-		if (!$formName || !$recordType) {
+		if (!$formName) {
 			return (new SS_HTTPResponse('Missing request params', 400));
 		}
 
@@ -247,17 +247,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		$form = $this->{"get{$formName}"}($itemID);
-
-		if($itemID) {
-			$record = $recordType::get()->byId($itemID);
-			if(!$record) {
-				return (new SS_HTTPResponse('Record not found', 404));
-			}
-			if(!$record->canView()) {
-				return (new SS_HTTPResponse('Record not accessible', 403));
-			}
-			$form->loadDataFrom($record);
-		}
 
 		$response->addHeader('Content-Type', 'application/json');
 		$response->setBody(Convert::raw2json($this->getSchemaForForm($form)));

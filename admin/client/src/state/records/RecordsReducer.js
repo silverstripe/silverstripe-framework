@@ -27,8 +27,10 @@ function recordsReducer(state = initialState, action) {
 
     case ACTION_TYPES.FETCH_RECORDS_SUCCESS:
       recordType = action.payload.recordType;
-      // TODO Automatic pluralisation from recordType
-      records = action.payload.data._embedded[`${recordType}s`] || {};
+      if (!recordType) {
+        throw new Error('Undefined record type');
+      }
+      records = action.payload.data._embedded[recordType] || {};
       records = records.reduce((prev, val) => Object.assign({}, prev, { [val.ID]: val }), {});
       return deepFreeze(Object.assign({}, state, {
         [recordType]: records,
@@ -44,6 +46,9 @@ function recordsReducer(state = initialState, action) {
       recordType = action.payload.recordType;
       record = action.payload.data;
 
+      if (!recordType) {
+        throw new Error('Undefined record type');
+      }
       return deepFreeze(Object.assign({}, state, {
         [recordType]: Object.assign({}, state[recordType], { [record.ID]: record }),
       }));
