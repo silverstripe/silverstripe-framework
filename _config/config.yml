@@ -19,4 +19,4 @@ HTTP:
     max-age: 0
     must-revalidate: "true"
     no-transform: "true"
-  vary: "Cookie, X-Forwarded-Protocol, User-Agent, Accept"
+  vary: "Cookie, X-Forwarded-Proto, User-Agent, Accept"
