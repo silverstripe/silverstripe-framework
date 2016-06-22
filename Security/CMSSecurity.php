@@ -1,5 +1,16 @@
 <?php
 
+namespace SilverStripe\Security;
+
+use Requirements;
+use Controller;
+use Director;
+use Convert;
+use Session;
+use AdminRootController;
+use SS_HTTPResponse;
+
+
 /**
  * Provides a security interface functionality within the cms
  * @package framework
@@ -12,7 +23,7 @@ class CMSSecurity extends Security {
 	);
 
 	private static $allowed_actions = array(
-		'LoginForm',
+		'SilverStripe\\Security\\LoginForm',
 		'success'
 	);
 
@@ -43,6 +54,7 @@ class CMSSecurity extends Security {
 	}
 
 	public function Link($action = null) {
+		/** @skipUpgrade */
 		return Controller::join_links(Director::baseURL(), "CMSSecurity", $action);
 	}
 
@@ -173,7 +185,7 @@ PHP
 	}
 
 	public function getTemplatesFor($action) {
-		return array("CMSSecurity_{$action}", "CMSSecurity")
+		return array("CMSSecurity_{$action}", "SilverStripe\\Security\\CMSSecurity")
 			+ parent::getTemplatesFor($action);
 	}
 

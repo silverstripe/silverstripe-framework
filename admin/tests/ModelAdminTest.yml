@@ -1,19 +1,19 @@
 ModelAdminTest_Contact:
-   sam:
-      Name: Sam
-      Phone: 021 123 456
-   ingo:
-      Name: ingo
-      Phone: 04 987 6543
+  sam:
+    Name: Sam
+    Phone: 021 123 456
+  ingo:
+    Name: ingo
+    Phone: 04 987 6543
 
-Member:
-   admin:
-      FirstName: admin
-Group:
-   admin:
-      Title: Admin
-      Members: =>Member.admin
-Permission:
-   admin:
-      Code: ADMIN
-      Group: =>Group.admin
+SilverStripe\Security\Member:
+  admin:
+    FirstName: admin
+SilverStripe\Security\Group:
+  admin:
+    Title: Admin
+    Members: =>SilverStripe\Security\Member.admin
+SilverStripe\Security\Permission:
+  admin:
+    Code: ADMIN
+    Group: =>SilverStripe\Security\Group.admin

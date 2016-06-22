@@ -1,4 +1,10 @@
 <?php
+
+namespace SilverStripe\Security;
+
+use Form;
+use Injector;
+
 /**
  * Abstract base class for a login form
  *
@@ -27,7 +33,7 @@ abstract class LoginForm extends Form {
 	 * @return Authenticator Returns the authenticator instance for this login form.
 	 */
 	public function getAuthenticator() {
-		if(!class_exists($this->authenticator_class) || !is_subclass_of($this->authenticator_class, 'Authenticator')) {
+		if(!class_exists($this->authenticator_class) || !is_subclass_of($this->authenticator_class, 'SilverStripe\\Security\\Authenticator')) {
 			user_error("The form uses an invalid authenticator class! '{$this->authenticator_class}'"
 				. " is not a subclass of 'Authenticator'", E_USER_ERROR);
 			return;

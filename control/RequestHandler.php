@@ -1,6 +1,10 @@
 <?php
 
 use SilverStripe\ORM\DataModel;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\PermissionFailureException;
+use SilverStripe\Security\Permission;
+
 
 /**
  * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
@@ -123,6 +127,8 @@ class RequestHandler extends ViewableData {
 
 	/**
 	 * Set the DataModel for this request.
+	 *
+	 * @param DataModel $model
 	 */
 	public function setDataModel($model) {
 		$this->model = $model;
@@ -144,9 +150,8 @@ class RequestHandler extends ViewableData {
 	 * action will return an array of data with which to
 	 * customise the controller.
 	 *
-	 * @param $request The {@link SS_HTTPRequest} object that is reponsible for distributing URL parsing
-	 * @uses SS_HTTPRequest
-	 * @uses SS_HTTPRequest->match()
+	 * @param SS_HTTPRequest $request The object that is reponsible for distributing URL parsing
+	 * @param DataModel $model
 	 * @return SS_HTTPResponse|RequestHandler|string|array
 	 */
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
@@ -240,6 +245,10 @@ class RequestHandler extends ViewableData {
 		return $this;
 	}
 
+	/**
+	 * @param SS_HTTPRequest $request
+	 * @return array
+     */
 	protected function findAction($request) {
 		$handlerClass = ($this->class) ? $this->class : get_class($this);
 
@@ -386,6 +395,9 @@ class RequestHandler extends ViewableData {
 
 	/**
 	 * Return the class that defines the given action, so that we know where to check allowed_actions.
+	 *
+	 * @param string $actionOrigCasing
+	 * @return string
 	 */
 	protected function definingClassForAction($actionOrigCasing) {
 		$action = strtolower($actionOrigCasing);
@@ -403,6 +415,10 @@ class RequestHandler extends ViewableData {
 	/**
 	 * Check that the given action is allowed to be called from a URL.
 	 * It will interrogate {@link self::$allowed_actions} to determine this.
+	 *
+	 * @param string $action
+	 * @return bool
+	 * @throws Exception
 	 */
 	public function checkAccessAction($action) {
 		$actionOrigCasing = $action;

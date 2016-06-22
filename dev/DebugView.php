@@ -218,10 +218,10 @@ class DebugView extends Object
 	 *
 	 * @param string $title The main title
 	 * @param string $subtitle The subtitle
-	 * @param string|false $description The description to show
+	 * @param string|bool $description The description to show
 	 * @return string
 	 */
-	public function renderInfo($title, $subtitle, $description=false) {
+	public function renderInfo($title, $subtitle, $description = false) {
 		$output = '<div class="info">';
 		$output .= "<h1>" . Convert::raw2xml($title) . "</h1>";
 		if($subtitle) $output .= "<h3>" . Convert::raw2xml($subtitle) . "</h3>";
@@ -274,7 +274,7 @@ class DebugView extends Object
 	 * Render a fragment of the a source file
 	 *
 	 * @param array $lines An array of file lines; the keys should be the original line numbers
-	 * @param int errLine The line of the error
+	 * @param int $errline The line of the error
 	 * @return string
 	 */
 	public function renderSourceFragment($lines, $errline) {

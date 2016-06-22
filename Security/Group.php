@@ -1,8 +1,33 @@
 <?php
 
+namespace SilverStripe\Security;
+
+
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\HasManyList;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\UnsavedRelationList;
+use Requirements;
+use FieldList;
+use TabSet;
+use Tab;
+use TextField;
+use DropdownField;
+use TextareaField;
+use Config;
+use GridFieldConfig_RelationEditor;
+use GridFieldButtonRow;
+use GridFieldExportButton;
+use GridFieldPrintButton;
+use GridField;
+use HTMLEditorConfig;
+use LiteralField;
+use ListboxField;
+use HiddenField;
+use InvalidArgumentException;
+use Convert;
+
 /**
  * A security group.
  *
@@ -35,22 +60,24 @@ class Group extends DataObject {
 	);
 
 	private static $has_one = array(
-		"Parent" => "Group",
+		"Parent" => "SilverStripe\\Security\\Group",
 	);
 
 	private static $has_many = array(
-		"Permissions" => "Permission",
-		"Groups" => "Group"
+		"Permissions" => "SilverStripe\\Security\\Permission",
+		"Groups" => "SilverStripe\\Security\\Group"
 	);
 
 	private static $many_many = array(
-		"Members" => "Member",
-		"Roles" => "PermissionRole",
+		"Members" => "SilverStripe\\Security\\Member",
+		"Roles" => "SilverStripe\\Security\\PermissionRole",
 	);
 
 	private static $extensions = array(
 		"SilverStripe\\ORM\\Hierarchy\\Hierarchy",
 	);
+
+	private static $table_name = "Group";
 
 	public function populateDefaults() {
 		parent::populateDefaults();
@@ -61,7 +88,7 @@ class Group extends DataObject {
 	public function getAllChildren() {
 		$doSet = new ArrayList();
 
-		$children = DataObject::get('Group')->filter("ParentID", $this->ID);
+		$children = Group::get()->filter("ParentID", $this->ID);
 		foreach($children as $child) {
 			$doSet->push($child);
 			$doSet->merge($child->getAllChildren());
@@ -94,7 +121,7 @@ class Group extends DataObject {
 					$permissionsField = new PermissionCheckboxSetField(
 						'Permissions',
 						false,
-						'Permission',
+						'SilverStripe\\Security\\Permission',
 						'GroupID',
 						$this
 					)
@@ -163,7 +190,7 @@ class Group extends DataObject {
 
 		// Only show the "Roles" tab if permissions are granted to edit them,
 		// and at least one role exists
-		if(Permission::check('APPLY_ROLES') && DataObject::get('PermissionRole')) {
+		if(Permission::check('APPLY_ROLES') && DataObject::get('SilverStripe\\Security\\PermissionRole')) {
 			$fields->findOrMakeTab('Root.Roles', _t('SecurityAdmin.ROLES', 'Roles'));
 			$fields->addFieldToTab('Root.Roles',
 				new LiteralField(
@@ -223,9 +250,8 @@ class Group extends DataObject {
 	}
 
 	/**
-	 *
-	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
-	 *
+	 * @param bool $includerelations Indicate if the labels returned include relation fields
+	 * @return array
 	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
@@ -358,7 +384,7 @@ class Group extends DataObject {
 			$inheritedCodes = Permission::get()
 				->filter('GroupID', $this->Parent()->collateAncestorIDs())
 				->column('Code');
-			$privilegedCodes = Config::inst()->get('Permission', 'privileged_permissions');
+			$privilegedCodes = Config::inst()->get('SilverStripe\\Security\\Permission', 'privileged_permissions');
 			if(array_intersect($inheritedCodes, $privilegedCodes)) {
 				$result->error(sprintf(
 					_t(
@@ -406,7 +432,7 @@ class Group extends DataObject {
 	 * @return boolean
 	 */
 	public function canEdit($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'SilverStripe\\Security\\Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		// extended access checks
 		$results = $this->extend('canEdit', $member);
@@ -436,7 +462,7 @@ class Group extends DataObject {
 	 * @return boolean
 	 */
 	public function canView($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'SilverStripe\\Security\\Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		// extended access checks
 		$results = $this->extend('canView', $member);
@@ -449,7 +475,7 @@ class Group extends DataObject {
 	}
 
 	public function canDelete($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		if(!$member || !(is_a($member, 'SilverStripe\\Security\\Member')) || is_numeric($member)) $member = Member::currentUser();
 
 		// extended access checks
 		$results = $this->extend('canDelete', $member);
@@ -487,7 +513,7 @@ class Group extends DataObject {
 		parent::requireDefaultRecords();
 
 		// Add default author group if no other group exists
-		$allGroups = DataObject::get('Group');
+		$allGroups = DataObject::get('SilverStripe\\Security\\Group');
 		if(!$allGroups->count()) {
 			$authorGroup = new Group();
 			$authorGroup->Code = 'content-authors';

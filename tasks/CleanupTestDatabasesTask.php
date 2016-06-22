@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 /**
  * Cleans up leftover databases from aborted test executions (starting with ss_tmpdb)
  * Task is restricted to users with administrator rights or running through CLI.

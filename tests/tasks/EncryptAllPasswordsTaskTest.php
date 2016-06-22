@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+
 /**
  * @package framework
  * @subpackage tests
@@ -15,7 +17,7 @@ class EncryptAllPasswordsTaskTest extends SapphireTest {
 		$t = new EncryptAllPasswordsTask();
 		$t->run(null);
 
-		$m = DataObject::get_by_id('Member', $m->ID);
+		$m = DataObject::get_by_id('SilverStripe\\Security\\Member', $m->ID);
 		$this->assertEquals($m->PasswordEncryption, 'blowfish');
 		$this->assertNotEquals($m->Password, 'plain');
 		$result = $m->checkPassword('plain');

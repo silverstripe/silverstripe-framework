@@ -5,12 +5,15 @@ namespace SilverStripe\ORM;
 use Controller;
 use SapphireTest;
 use Director;
-use Security;
-use Permission;
+
+
 use SS_ClassLoader;
 use ClassInfo;
 use TestOnly;
 use Deprecation;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Permission;
+
 
 // Include the DB class
 require_once("DB.php");
@@ -183,6 +186,7 @@ class DatabaseAdmin extends Controller {
 	 *
 	 * @param boolean $quiet Don't show messages
 	 * @param boolean $populate Populate the database, as well as setting up its schema
+	 * @param bool $testMode
 	 */
 	public function doBuild($quiet = false, $populate = true, $testMode = false) {
 		if($quiet) {

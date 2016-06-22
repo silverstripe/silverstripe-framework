@@ -9,6 +9,9 @@ use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+
 
 
 /**
@@ -100,7 +103,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 
 	private static $has_one = array(
 		"Parent" => "File",
-		"Owner" => "Member"
+		"Owner" => "SilverStripe\\Security\\Member"
 	);
 
 	private static $defaults = array(
@@ -186,7 +189,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 
 	/**
 	 * @config
-	 * @var If this is true, then restrictions set in {@link $allowed_max_file_size} and
+	 * @var bool If this is true, then restrictions set in {@link $allowed_max_file_size} and
 	 * {@link $allowed_extensions} will be applied to users with admin privileges as
 	 * well.
 	 */

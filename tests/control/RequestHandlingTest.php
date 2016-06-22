@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Security\SecurityToken;
+
 /**
  * Tests for RequestHandler and SS_HTTPRequest.
  * We've set up a simple URL handling model based on

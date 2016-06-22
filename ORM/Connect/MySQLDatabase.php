@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Connect;
 use Config;
 use Exception;
 use PaginatedList;
+use SilverStripe\Framework\Core\Configurable;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
 

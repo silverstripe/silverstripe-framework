@@ -1,4 +1,11 @@
 <?php
+
+namespace SilverStripe\Security;
+
+use Object;
+use Form;
+use Controller;
+
 /**
  * Abstract base class for an authentication method
  *
@@ -16,7 +23,7 @@ abstract class Authenticator extends Object {
 	 *
 	 * @var array
 	 */
-	private static $authenticators = array('MemberAuthenticator');
+	private static $authenticators = array('SilverStripe\\Security\\MemberAuthenticator');
 
 	/**
 	 * Used to influence the order of authenticators on the login-screen
@@ -24,7 +31,7 @@ abstract class Authenticator extends Object {
 	 *
 	 * @var string
 	 */
-	private static $default_authenticator = 'MemberAuthenticator';
+	private static $default_authenticator = 'SilverStripe\\Security\\MemberAuthenticator';
 
 
 	/**
@@ -43,7 +50,7 @@ abstract class Authenticator extends Object {
 	/**
 	 * Method that creates the login form for this authentication method
 	 *
-	 * @param Controller The parent controller, necessary to create the
+	 * @param Controller $controller The parent controller, necessary to create the
 	 *                   appropriate form action tag
 	 * @return Form Returns the login form to use with this authentication
 	 *              method
@@ -99,7 +106,7 @@ abstract class Authenticator extends Object {
 		if(class_exists($authenticator) == false)
 			return false;
 
-		if(is_subclass_of($authenticator, 'Authenticator') == false)
+		if(is_subclass_of($authenticator, 'SilverStripe\\Security\\Authenticator') == false)
 			return false;
 
 		if(in_array($authenticator, self::$authenticators) == false) {

@@ -20,24 +20,24 @@ class SS_Backtrace {
 		array('mysqli', 'mysqli'),
 		array('mysqli', 'select_db'),
 		array('SilverStripe\\ORM\\DB', 'connect'),
-		array('Security', 'check_default_admin'),
-		array('Security', 'encrypt_password'),
-		array('Security', 'setDefaultAdmin'),
+		array('SilverStripe\\Security\\Security', 'check_default_admin'),
+		array('SilverStripe\\Security\\Security', 'encrypt_password'),
+		array('SilverStripe\\Security\\Security', 'setDefaultAdmin'),
 		array('SilverStripe\\ORM\\DB', 'createDatabase'),
-		array('Member', 'checkPassword'),
-		array('Member', 'changePassword'),
-		array('MemberPassword', 'checkPassword'),
-		array('PasswordValidator', 'validate'),
-		array('PasswordEncryptor_PHPHash', 'encrypt'),
-		array('PasswordEncryptor_PHPHash', 'salt'),
-		array('PasswordEncryptor_LegacyPHPHash', 'encrypt'),
-		array('PasswordEncryptor_LegacyPHPHash', 'salt'),
-		array('PasswordEncryptor_MySQLPassword', 'encrypt'),
-		array('PasswordEncryptor_MySQLPassword', 'salt'),
-		array('PasswordEncryptor_MySQLOldPassword', 'encrypt'),
-		array('PasswordEncryptor_MySQLOldPassword', 'salt'),
-		array('PasswordEncryptor_Blowfish', 'encrypt'),
-		array('PasswordEncryptor_Blowfish', 'salt'),
+		array('SilverStripe\\Security\\Member', 'checkPassword'),
+		array('SilverStripe\\Security\\Member', 'changePassword'),
+		array('SilverStripe\\Security\\MemberPassword', 'checkPassword'),
+		array('SilverStripe\\Security\\PasswordValidator', 'validate'),
+		array('SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'encrypt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_PHPHash', 'salt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_LegacyPHPHash', 'encrypt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_LegacyPHPHash', 'salt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_MySQLPassword', 'encrypt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_MySQLPassword', 'salt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'encrypt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_MySQLOldPassword', 'salt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'encrypt'),
+		array('SilverStripe\\Security\\PasswordEncryptor_Blowfish', 'salt'),
 	);
 
 	/**
@@ -113,9 +113,10 @@ class SS_Backtrace {
 	/**
 	 * Render or return a backtrace from the given scope.
 	 *
-	 * @param unknown_type $returnVal
-	 * @param unknown_type $ignoreAjax
-	 * @return unknown
+	 * @param mixed $returnVal
+	 * @param bool $ignoreAjax
+	 * @param array $ignoredFunctions
+	 * @return mixed
 	 */
 	public static function backtrace($returnVal = false, $ignoreAjax = false, $ignoredFunctions = null) {
 		$plainText = Director::is_cli() || (Director::is_ajax() && !$ignoreAjax);
@@ -132,9 +133,9 @@ class SS_Backtrace {
 	 * shown
 	 *
 	 * @param Object $item
-	 * @param boolean $showArg
-	 * @param Int $argCharLimit
-	 * @return String
+	 * @param bool $showArgs
+	 * @param int $argCharLimit
+	 * @return string
 	 */
 	public static function full_func_name($item, $showArgs = false, $argCharLimit = 10000) {
 		$funcName = '';
@@ -164,7 +165,7 @@ class SS_Backtrace {
 	 *
 	 * @param array $bt The trace array, as returned by debug_backtrace() or Exception::getTrace()
 	 * @param boolean $plainText Set to false for HTML output, or true for plain-text output
-	 * @param array List of functions that should be ignored. If not set, a default is provided
+	 * @param array $ignoredFunctions List of functions that should be ignored. If not set, a default is provided
 	 * @return string The rendered backtrace
 	 */
 	public static function get_rendered_backtrace($bt, $plainText = false, $ignoredFunctions = null) {

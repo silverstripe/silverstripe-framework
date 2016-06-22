@@ -1,6 +1,11 @@
 <?php
 
+namespace SilverStripe\Security;
+
+
 use SilverStripe\ORM\DataObject;
+
+
 /**
  * Keep track of users' previous passwords, so that we can check that new passwords aren't changed back to old ones.
  * @package framework
@@ -22,18 +27,16 @@ class MemberPassword extends DataObject {
 	);
 
 	private static $has_one = array(
-		'Member' => 'Member'
+		'Member' => 'SilverStripe\\Security\\Member'
 	);
-
-	private static $has_many = array();
-
-	private static $many_many = array();
-
-	private static $belongs_many_many = array();
+	
+	private static $table_name = "MemberPassword";
 
 	/**
 	 * Log a password change from the given member.
 	 * Call MemberPassword::log($this) from within Member whenever the password is changed.
+	 *
+	 * @param Member $member
 	 */
 	public static function log($member) {
 		$record = new MemberPassword();

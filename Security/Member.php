@@ -1,6 +1,8 @@
 <?php
 
+namespace SilverStripe\Security;
 
+use SilverStripe\ORM\SS_Map;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\DB;
@@ -10,7 +12,30 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\ManyManyList;
-
+use SilverStripe\MSSQL\MSSQLDatabase;
+use TemplateGlobalProvider;
+use Deprecation;
+use i18n;
+use Director;
+use Session;
+use Cookie;
+use Config;
+use SapphireTest;
+use DateTime;
+use DropdownField;
+use ConfirmedPasswordField;
+use Injector;
+use TestMailer;
+use Email;
+use FieldList;
+use ListboxField;
+use Zend_Locale_Format;
+use Zend_Locale;
+use Zend_Date;
+use MemberDatetimeOptionsetField;
+use HTMLEditorConfig;
+use RequiredFields;
+use GridFieldDetailForm_ItemRequest;
 
 /**
  * The member class which represents the users of the system
@@ -63,19 +88,15 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	);
 
 	private static $belongs_many_many = array(
-		'Groups' => 'Group',
+		'Groups' => 'SilverStripe\\Security\\Group',
 	);
-
-	private static $has_one = array();
 
 	private static $has_many = array(
-		'LoggedPasswords' => 'MemberPassword',
-		'RememberLoginHashes' => 'RememberLoginHash'
+		'LoggedPasswords' => 'SilverStripe\\Security\\MemberPassword',
+		'RememberLoginHashes' => 'SilverStripe\\Security\\RememberLoginHash'
 	);
 
-	private static $many_many = array();
-
-	private static $many_many_extraFields = array();
+	private static $table_name = "Member";
 
 	private static $default_sort = '"Surname", "FirstName"';
 
@@ -133,7 +154,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	/**
 	 * @config
-	 * @var Array See {@link set_title_columns()}
+	 * @var array See {@link set_title_columns()}
 	 */
 	private static $title_format = null;
 
@@ -148,8 +169,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	private static $unique_identifier_field = 'Email';
 
 	/**
+	 * Object for validating user's password
+	 *
 	 * @config
-	 * {@link PasswordValidator} object for validating user's password
+	 * @var PasswordValidator
 	 */
 	private static $password_validator = null;
 
@@ -243,8 +266,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(!Security::has_default_admin()) return null;
 
 		// Find or create ADMIN group
-		singleton('Group')->requireDefaultRecords();
-		$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
+		Group::singleton()->requireDefaultRecords();
+		$adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
 
 		// Find member
 		$admin = Member::get()
@@ -423,6 +446,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	/**
 	 * Set a {@link PasswordValidator} object to use to validate member's passwords.
+	 *
+	 * @param PasswordValidator $pv
 	 */
 	public static function set_password_validator($pv) {
 		self::$password_validator = $pv;
@@ -430,6 +455,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	/**
 	 * Returns the current {@link PasswordValidator}
+	 *
+	 * @return PasswordValidator
 	 */
 	public static function password_validator() {
 		return self::$password_validator;
@@ -482,8 +509,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		}
 		if($remember) {
 			$rememberLoginHash = RememberLoginHash::generate($this);
-			$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
-			$deviceExpiryDays = Config::inst()->get('RememberLoginHash', 'device_expiry_days');
+			$tokenExpiryDays = Config::inst()->get('SilverStripe\\Security\\RememberLoginHash', 'token_expiry_days');
+			$deviceExpiryDays = Config::inst()->get('SilverStripe\\Security\\RememberLoginHash', 'device_expiry_days');
 			Cookie::set('alc_enc', $this->ID . ':' . $rememberLoginHash->getToken(),
 				$tokenExpiryDays, null, null, null, true);
 			Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
@@ -497,10 +524,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Clear the incorrect log-in count
 		$this->registerSuccessfulLogin();
 
-		// Don't set column if its not built yet (the login might be precursor to a /dev/build...)
-		if(array_key_exists('LockedOutUntil', DB::field_list('Member'))) {
-			$this->LockedOutUntil = null;
-		}
+		$this->LockedOutUntil = null;
 
 		$this->regenerateTempID();
 
@@ -534,7 +558,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public static function logged_in_session_exists() {
 		if($id = Member::currentUserID()) {
-			if($member = DataObject::get_by_id('Member', $id)) {
+			if($member = DataObject::get_by_id('SilverStripe\\Security\\Member', $id)) {
 				if($member->exists()) return true;
 			}
 		}
@@ -570,7 +594,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 			$deviceID = Cookie::get('alc_device');
 
-			$member = Member::get()->byId($uid);
+			$member = Member::get()->byID($uid);
 
 			$rememberLoginHash = null;
 
@@ -606,7 +630,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 				if ($rememberLoginHash) {
 					$rememberLoginHash->renew();
-					$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
+					$tokenExpiryDays = Config::inst()->get('SilverStripe\\Security\\RememberLoginHash', 'token_expiry_days');
 					Cookie::set('alc_enc', $member->ID . ':' . $rememberLoginHash->getToken(),
 						$tokenExpiryDays, null, null, false, true);
 				}
@@ -652,6 +676,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 	/**
 	 * Utility for generating secure password hashes for this member.
+	 *
+	 * @param string $string
+	 * @return string
+	 * @throws PasswordEncryptor_NotFoundException
 	 */
 	public function encryptWithUserSettings($string) {
 		if (!$string) return null;
@@ -683,7 +711,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$generator = new RandomGenerator();
 			$token = $generator->randomToken();
 			$hash = $this->encryptWithUserSettings($token);
-		} while(DataObject::get_one('Member', array(
+		} while(DataObject::get_one('SilverStripe\\Security\\Member', array(
 			'"Member"."AutoLoginHash"' => $hash
 		)));
 
@@ -720,7 +748,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	public static function member_from_autologinhash($hash, $login = false) {
 
 		$nowExpression = DB::get_conn()->now();
-		$member = DataObject::get_one('Member', array(
+		$member = DataObject::get_one('SilverStripe\\Security\\Member', array(
 			"\"Member\".\"AutoLoginHash\"" => $hash,
 			"\"Member\".\"AutoLoginExpired\" > $nowExpression" // NOW() can't be parameterised
 		));
@@ -815,7 +843,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return Member_Validator
 	 */
 	public function getValidator() {
-		$validator = Injector::inst()->create('Member_Validator');
+		$validator = Injector::inst()->create('SilverStripe\\Security\\Member_Validator');
 		$validator->setForMember($this);
 		$this->extend('updateValidator', $validator);
 
@@ -826,13 +854,13 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	/**
 	 * Returns the current logged in user
 	 *
-	 * @return Member|null
+	 * @return Member
 	 */
 	public static function currentUser() {
 		$id = Member::currentUserID();
 
 		if($id) {
-			return Member::get()->byId($id);
+			return Member::get()->byID($id);
 		}
 	}
 
@@ -860,7 +888,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return string Returns a random password.
 	 */
 	public static function create_new_password() {
-		$words = Config::inst()->get('Security', 'word_list');
+		$words = Config::inst()->get('SilverStripe\\Security\\Security', 'word_list');
 
 		if($words && file_exists($words)) {
 			$words = file($words);
@@ -897,7 +925,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			if($this->ID) {
 				$filter[] = array('"Member"."ID" <> ?' => $this->ID);
 			}
-			$existingRecord = DataObject::get_one('Member', $filter);
+			$existingRecord = DataObject::get_one('SilverStripe\\Security\\Member', $filter);
 
 			if($existingRecord) {
 				throw new ValidationException(ValidationResult::create(false, _t(
@@ -1001,8 +1029,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Filter out admin groups to avoid privilege escalation,
 	 * If any admin groups are requested, deny the whole save operation.
 	 *
-	 * @param Array $ids Database IDs of Group records
-	 * @return boolean True if the change can be accepted
+	 * @param array $ids Database IDs of Group records
+	 * @return bool True if the change can be accepted
 	 */
 	public function onChangeGroups($ids) {
 		// unless the current user is an admin already OR the logged in user is an admin
@@ -1042,9 +1070,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function inGroup($group, $strict = false) {
 		if(is_numeric($group)) {
-			$groupCheckObj = DataObject::get_by_id('Group', $group);
+			$groupCheckObj = DataObject::get_by_id('SilverStripe\\Security\\Group', $group);
 		} elseif(is_string($group)) {
-			$groupCheckObj = DataObject::get_one('Group', array(
+			$groupCheckObj = DataObject::get_one('SilverStripe\\Security\\Group', array(
 				'"Group"."Code"' => $group
 			));
 		} elseif($group instanceof Group) {
@@ -1068,10 +1096,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * group code does not return a valid group object.
 	 *
 	 * @param string $groupcode
-	 * @param string Title of the group
+	 * @param string $title Title of the group
 	 */
 	public function addToGroupByCode($groupcode, $title = "") {
-		$group = DataObject::get_one('Group', array(
+		$group = DataObject::get_one('SilverStripe\\Security\\Group', array(
 			'"Group"."Code"' => $groupcode
 		));
 
@@ -1103,7 +1131,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * @param Array $columns Column names on the Member record to show in {@link getTitle()}.
+	 * @param array $columns Column names on the Member record to show in {@link getTitle()}.
 	 * @param String $sep Separator
 	 */
 	public static function set_title_columns($columns, $sep = ' ') {
@@ -1151,24 +1179,28 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Return a SQL CONCAT() fragment suitable for a SELECT statement.
 	 * Useful for custom queries which assume a certain member title format.
 	 *
-	 * @param String $tableName
 	 * @return String SQL
 	 */
-	public static function get_title_sql($tableName = 'Member') {
+	public static function get_title_sql() {
 		// This should be abstracted to SSDatabase concatOperator or similar.
 		$op = (DB::get_conn() instanceof MSSQLDatabase) ? " + " : " || ";
 
-		$format = self::config()->title_format;
-		if ($format) {
-			$columnsWithTablename = array();
-			foreach($format['columns'] as $column) {
-				$columnsWithTablename[] = "\"$tableName\".\"$column\"";
-			}
-
-			return "(".join(" $op '".$format['sep']."' $op ", $columnsWithTablename).")";
-		} else {
-			return "(\"$tableName\".\"Surname\" $op ' ' $op \"$tableName\".\"FirstName\")";
+		// Get title_format with fallback to default
+		$format = static::config()->title_format;
+		if (!$format) {
+			$format = [
+				'columns' => ['Surname', 'FirstName'],
+				'sep' => ' ',
+			];
 		}
+
+		$columnsWithTablename = array();
+		foreach($format['columns'] as $column) {
+			$columnsWithTablename[] = static::getSchema()->sqlColumnForField(__CLASS__, $column);
+		}
+
+		$sepSQL = \Convert::raw2sql($format['sep'], true);
+		return "(".join(" $op $sepSQL $op ", $columnsWithTablename).")";
 	}
 
 
@@ -1249,7 +1281,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return Member_Groupset
 	 */
 	public function Groups() {
-		$groups = Member_GroupSet::create('Group', 'Group_Members', 'GroupID', 'MemberID');
+		$groups = Member_GroupSet::create('SilverStripe\\Security\\Group', 'Group_Members', 'GroupID', 'MemberID');
 		$groups = $groups->forForeignID($this->ID);
 
 		$this->extend('updateGroups', $groups);
@@ -1326,7 +1358,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			}
 
 			$permsClause = DB::placeholders($perms);
-			$groups = DataObject::get('Group')
+			/** @skipUpgrade */
+			$groups = DataObject::get('SilverStripe\\Security\\Group')
 				->innerJoin("Permission", '"Permission"."GroupID" = "Group"."ID"')
 				->where(array(
 					"\"Permission\".\"Code\" IN ($permsClause)" => $perms
@@ -1343,6 +1376,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$groupIDList = $groups;
 		}
 
+		/** @skipUpgrade */
 		$members = Member::get()
 			->innerJoin("Group_Members", '"Group_Members"."MemberID" = "Member"."ID"')
 			->innerJoin("Group", '"Group"."ID" = "Group_Members"."GroupID"');
@@ -1429,7 +1463,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				}
 				asort($groupsMap);
 				$fields->addFieldToTab('Root.Main',
-					ListboxField::create('DirectGroups', singleton('Group')->i18n_plural_name())
+					ListboxField::create('DirectGroups', singleton('SilverStripe\\Security\\Group')->i18n_plural_name())
 						->setSource($groupsMap)
 						->setAttribute(
 							'data-placeholder',
@@ -1445,12 +1479,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 					$permissionsField = new PermissionCheckboxSetField_Readonly(
 						'Permissions',
 						false,
-						'Permission',
+						'SilverStripe\\Security\\Permission',
 						'GroupID',
 						// we don't want parent relationships, they're automatically resolved in the field
 						$self->getManyManyComponents('Groups')
 					);
-					$fields->findOrMakeTab('Root.Permissions', singleton('Permission')->i18n_plural_name());
+					$fields->findOrMakeTab('Root.Permissions', singleton('SilverStripe\\Security\\Permission')->i18n_plural_name());
 					$fields->addFieldToTab('Root.Permissions', $permissionsField);
 				}
 			}
@@ -1499,9 +1533,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	}
 
 	/**
-	 *
-	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
-	 *
+	 * @param bool $includerelations Indicate if the labels returned include relation fields
+	 * @return array
 	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
@@ -1522,11 +1555,14 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		return $labels;
 	}
 
-    /**
-     * Users can view their own record.
-     * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions.
-     * This is likely to be customized for social sites etc. with a looser permission model.
-     */
+	/**
+	 * Users can view their own record.
+	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions.
+	 * This is likely to be customized for social sites etc. with a looser permission model.
+	 *
+	 * @param Member $member
+	 * @return bool
+	 */
     public function canView($member = null) {
         //get member
         if(!($member instanceof Member)) {
@@ -1549,10 +1585,14 @@ class Member extends DataObject implements TemplateGlobalProvider {
         //standard check
         return Permission::checkMember($member, 'CMS_ACCESS_SecurityAdmin');
     }
-    /**
-     * Users can edit their own record.
-     * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
-     */
+
+	/**
+	 * Users can edit their own record.
+	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
+	 *
+	 * @param Member $member
+	 * @return bool
+	 */
     public function canEdit($member = null) {
         //get member
         if(!($member instanceof Member)) {
@@ -1583,6 +1623,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
     /**
      * Users can edit their own record.
      * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
+	 *
+	 * @param Member $member
+	 * @return bool
      */
     public function canDelete($member = null) {
         if(!($member instanceof Member)) {
@@ -1641,7 +1684,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Change password. This will cause rehashing according to
 	 * the `PasswordEncryption` property.
 	 *
-	 * @param String $password Cleartext password
+	 * @param string $password Cleartext password
+	 * @return ValidationResult
 	 */
 	public function changePassword($password) {
 		$this->Password = $password;
@@ -1755,7 +1799,7 @@ class Member_GroupSet extends ManyManyList {
 		$allGroupIDs = array();
 		while($groupIDs) {
 			$allGroupIDs = array_merge($allGroupIDs, $groupIDs);
-			$groupIDs = DataObject::get("Group")->byIDs($groupIDs)->column("ParentID");
+			$groupIDs = DataObject::get("SilverStripe\\Security\\Group")->byIDs($groupIDs)->column("ParentID");
 			$groupIDs = array_filter($groupIDs);
 		}
 
@@ -1811,7 +1855,7 @@ class Member_GroupSet extends ManyManyList {
 	protected function getMember() {
 		$id = $this->getForeignID();
 		if($id) {
-			return DataObject::get_by_id('Member', $id);
+			return DataObject::get_by_id('SilverStripe\\Security\\Member', $id);
 		}
 	}
 }

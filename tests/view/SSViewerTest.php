@@ -2,6 +2,10 @@
 
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\SecurityToken;
+use SilverStripe\Security\Permission;
+
 
 class SSViewerTest extends SapphireTest {
 

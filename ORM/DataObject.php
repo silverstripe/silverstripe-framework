@@ -19,8 +19,8 @@ use SearchContext;
 use FieldList;
 use FormField;
 use FormScaffolder;
-use Member;
-use Permission;
+
+
 use Object;
 use SearchFilter;
 use SilverStripe\ORM\Queries\SQLInsert;
@@ -30,6 +30,9 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBClassName;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+
 
 /**
  * A single database record & abstract class for the data-access-model.
@@ -907,10 +910,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Caution: Does not delete the merged object.
 	 * Caution: Does now overwrite Created date on the original object.
 	 *
-	 * @param $obj DataObject
-	 * @param $priority String left|right Determines who wins in case of a conflict (optional)
-	 * @param $includeRelations Boolean Merge any existing relations (optional)
-	 * @param $overwriteWithEmpty Boolean Overwrite existing left values with empty right values.
+	 * @param DataObject $rightObj
+	 * @param string $priority left|right Determines who wins in case of a conflict (optional)
+	 * @param bool $includeRelations Merge any existing relations (optional)
+	 * @param bool $overwriteWithEmpty Overwrite existing left values with empty right values.
 	 *                            Only applicable with $priority='right'. (optional)
 	 * @return Boolean
 	 */

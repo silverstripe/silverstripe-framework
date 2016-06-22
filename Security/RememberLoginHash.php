@@ -1,7 +1,13 @@
 <?php
 
+namespace SilverStripe\Security;
+
+
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\DataObject;
+use DateTime;
+use DateInterval;
+
 /**
  * Persists a token associated with a device for users who opted for the "Remember Me"
  * feature when logging in.
@@ -26,13 +32,15 @@ class RememberLoginHash extends DataObject {
 	);
 
 	private static $has_one = array (
-		'Member' => 'Member',
+		'Member' => 'SilverStripe\\Security\\Member',
 	);
 
 	private static $indexes = array(
 		'DeviceID' => true,
 		'Hash' => true
 	);
+
+	private static $table_name = "RememberLoginHash";
 
 	/**
 	 * Determines if logging out on one device also clears existing login tokens
@@ -95,7 +103,7 @@ class RememberLoginHash extends DataObject {
 	/**
 	 * Creates a new random token and hashes it using the
 	 * member information
-	 * @param Member The logged in user
+	 * @param Member $member The logged in user
 	 * @return string The hash to be stored in the database
 	 */
 	public function getNewHash(Member $member){
@@ -109,25 +117,27 @@ class RememberLoginHash extends DataObject {
 	 * The device is assigned a globally unique device ID
 	 * The returned login hash stores the hashed token in the
 	 * database, for this device and this member
-	 * @param Member The logged in user
+	 * @param Member $member The logged in user
 	 * @return RememberLoginHash The generated login hash
 	 */
 	public static function generate(Member $member) {
-		if(!$member->exists()) { return; }
-		if (Config::inst()->get('RememberLoginHash', 'force_single_token') == true) {
-			$rememberLoginHash = RememberLoginHash::get()->filter('MemberID', $member->ID)->removeAll();
+		if(!$member->exists()) {
+			return null;
+		}
+		if (static::config()->force_single_token) {
+			RememberLoginHash::get()->filter('MemberID', $member->ID)->removeAll();
 		}
 		$rememberLoginHash = RememberLoginHash::create();
 		do {
 			$deviceID = $rememberLoginHash->getNewDeviceID();
-		} while (RememberLoginHash::get()->filter('DeviceID', $deviceID)->Count());
+		} while (RememberLoginHash::get()->filter('DeviceID', $deviceID)->count());
 
 		$rememberLoginHash->DeviceID = $deviceID;
 		$rememberLoginHash->Hash = $rememberLoginHash->getNewHash($member);
 		$rememberLoginHash->MemberID = $member->ID;
 		$now = DBDatetime::now();
 		$expiryDate = new DateTime($now->Rfc2822());
-		$tokenExpiryDays = Config::inst()->get('RememberLoginHash', 'token_expiry_days');
+		$tokenExpiryDays = static::config()->token_expiry_days;
 		$expiryDate->add(new DateInterval('P'.$tokenExpiryDays.'D'));
 		$rememberLoginHash->ExpiryDate = $expiryDate->format('Y-m-d H:i:s');
 		$rememberLoginHash->extend('onAfterGenerateToken');
@@ -137,7 +147,7 @@ class RememberLoginHash extends DataObject {
 
 	/**
 	 * Generates a new hash for this member but keeps the device ID intact
-	 * @param Member the logged in user
+	 *
 	 * @return RememberLoginHash
 	 */
 	public function renew() {
@@ -152,11 +162,14 @@ class RememberLoginHash extends DataObject {
 	 * Deletes existing tokens for this member
 	 * if logout_across_devices is true, all tokens are deleted, otherwise
 	 * only the token for the provided device ID will be removed
+	 *
+	 * @param Member $member
+	 * @param string $alcDevice
 	 */
 	public static function clear(Member $member, $alcDevice = null) {
 		if(!$member->exists()) { return; }
 		$filter = array('MemberID'=>$member->ID);
-		if ((Config::inst()->get('RememberLoginHash', 'logout_across_devices') == false) && $alcDevice) {
+		if (!static::config()->logout_across_devices && $alcDevice) {
 			$filter['DeviceID'] = $alcDevice;
 		}
 		RememberLoginHash::get()

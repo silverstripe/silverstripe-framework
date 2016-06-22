@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\Security\BasicAuth;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\SecurityToken;
+
 /**
  * SilverStripe-specific testing object designed to support functional testing of your web app.  It simulates get/post
  * requests, form submission, and can validate resulting HTML, looking up content by CSS selector.
@@ -362,12 +366,13 @@ class FunctionalTest extends SapphireTest {
 
 	/**
 	 * Log in as the given member
-	 * @param $member The ID, fixture codename, or Member object of the member that you want to log in
+	 *
+	 * @param Member|int|string $member The ID, fixture codename, or Member object of the member that you want to log in
 	 */
 	public function logInAs($member) {
 		if(is_object($member)) $memberID = $member->ID;
 		elseif(is_numeric($member)) $memberID = $member;
-		else $memberID = $this->idFromFixture('Member', $member);
+		else $memberID = $this->idFromFixture('SilverStripe\\Security\\Member', $member);
 
 		$this->session()->inst_set('loggedInAs', $memberID);
 	}
@@ -377,7 +382,7 @@ class FunctionalTest extends SapphireTest {
 	 * This is helpful if you're not testing publication functionality and don't want "stage management" cluttering
 	 * your test.
 	 *
-	 * @param bool toggle the use of the draft site
+	 * @param bool $enabled toggle the use of the draft site
 	 */
 	public function useDraftSite($enabled = true) {
 		if($enabled) {

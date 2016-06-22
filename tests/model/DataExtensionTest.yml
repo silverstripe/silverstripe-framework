@@ -1,24 +1,24 @@
 DataExtensionTest_RelatedObject:
-   obj1:
-      FieldOne: Obj1
-   obj2:
-      FieldOne: Obj2
-Permission:
-   adminpermission:
-      Code: ADMIN
-Group:
-   admingroup:
-      Permissions: =>Permission.adminpermission
-Member:
-   admin:
-      Email: admin@test.com
-      Groups: =>Group.admingroup
-   websiteuser:
-      Email: websiteuser@test.com
+  obj1:
+    FieldOne: Obj1
+  obj2:
+    FieldOne: Obj2
+'SilverStripe\Security\Permission':
+  adminpermission:
+    Code: ADMIN
+'SilverStripe\Security\Group':
+  admingroup:
+    Permissions: '=>SilverStripe\Security\Permission.adminpermission'
+'SilverStripe\Security\Member':
+  admin:
+    Email: admin@test.com
+    Groups: '=>SilverStripe\Security\Group.admingroup'
+  websiteuser:
+    Email: websiteuser@test.com
 DataExtensionTest_Member:
-   member1:
-      Name: Sam
-      Website: http://www.example.org
+  member1:
+    Name: Sam
+    Website: http://www.example.org
 DataExtensionTest_MyObject:
-   object1:
-      Title: Object 1
+  object1:
+    Title: Object 1

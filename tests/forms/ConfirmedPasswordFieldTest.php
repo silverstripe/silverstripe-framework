@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Security\Member;
 /**
  * @package framework
  * @subpackage tests

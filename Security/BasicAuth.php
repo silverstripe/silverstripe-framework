@@ -1,4 +1,13 @@
 <?php
+
+namespace SilverStripe\Security;
+
+use SapphireTest;
+use Director;
+use SS_HTTPResponse;
+use SS_HTTPResponse_Exception;
+use Config;
+
 /**
  * Provides an interface to HTTP basic authentication.
  *
@@ -125,14 +134,15 @@ class BasicAuth {
 	 * define('SS_USE_BASIC_AUTH', true);
 	 *
 	 * @param boolean $protect Set this to false to disable protection.
-	 * @param String $code {@link Permission} code that is required from the user.
+	 * @param string $code {@link Permission} code that is required from the user.
 	 *  Defaults to "ADMIN". Set to NULL to just require a valid login, regardless
 	 *  of the permission codes a user has.
+	 * @param string $message
 	 */
 	public static function protect_entire_site($protect = true, $code = 'ADMIN', $message = null) {
-		Config::inst()->update('BasicAuth', 'entire_site_protected', $protect);
-		Config::inst()->update('BasicAuth', 'entire_site_protected_code', $code);
-		Config::inst()->update('BasicAuth', 'entire_site_protected_message', $message);
+		Config::inst()->update('SilverStripe\\Security\\BasicAuth', 'entire_site_protected', $protect);
+		Config::inst()->update('SilverStripe\\Security\\BasicAuth', 'entire_site_protected_code', $code);
+		Config::inst()->update('SilverStripe\\Security\\BasicAuth', 'entire_site_protected_message', $message);
 	}
 
 	/**
@@ -143,7 +153,7 @@ class BasicAuth {
 	 * please use {@link protect_entire_site()}.
 	 */
 	public static function protect_site_if_necessary() {
-		$config = Config::inst()->forClass('BasicAuth');
+		$config = Config::inst()->forClass('SilverStripe\\Security\\BasicAuth');
 		if($config->entire_site_protected) {
 			self::requireLogin($config->entire_site_protected_message, $config->entire_site_protected_code, false);
 		}

@@ -3,6 +3,8 @@
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+
 class GridFieldTest extends SapphireTest {
 
 	/**
@@ -75,7 +77,7 @@ class GridFieldTest extends SapphireTest {
 	 */
 	public function testGridFieldModelClass() {
 		$obj = new GridField('testfield', 'testfield', Member::get());
-		$this->assertEquals('Member', $obj->getModelClass(), 'Should return Member');
+		$this->assertEquals('SilverStripe\\Security\\Member', $obj->getModelClass(), 'Should return Member');
 		$obj->setModelClass('SilverStripe\\ORM\\DataModel');
 		$this->assertEquals('SilverStripe\\ORM\\DataModel', $obj->getModelClass(), 'Should return Member');
 	}

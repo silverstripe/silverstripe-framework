@@ -253,7 +253,7 @@ class DBDateTest extends SapphireTest {
 	public function testFormatFromSettings() {
 
 		$memberID = $this->logInWithPermission();
-		$member = DataObject::get_by_id('Member', $memberID);
+		$member = DataObject::get_by_id('SilverStripe\\Security\\Member', $memberID);
 		$member->DateFormat = 'dd/MM/YYYY';
 		$member->write();
 

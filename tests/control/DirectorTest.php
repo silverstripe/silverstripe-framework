@@ -394,7 +394,7 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testForceSSLOnSubPagesPattern() {
-		$_SERVER['REQUEST_URI'] = Director::baseURL() . Config::inst()->get('Security', 'login_url');
+		$_SERVER['REQUEST_URI'] = Director::baseURL() . Config::inst()->get('SilverStripe\\Security\\Security', 'login_url');
 		$output = Director::forceSSL(array('/^Security/'));
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 	}

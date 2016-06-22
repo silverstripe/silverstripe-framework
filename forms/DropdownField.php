@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+
 /**
  * Dropdown field, created from a <select> tag.
  *
@@ -112,7 +114,7 @@ class DropdownField extends SingleSelectField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return DBHTMLText
 	 */
 	public function Field($properties = array()) {
 		$options = array();

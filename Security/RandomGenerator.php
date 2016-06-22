@@ -1,4 +1,9 @@
 <?php
+
+namespace SilverStripe\Security;
+
+use Exception;
+
 /**
  * Generates entropy values based on strongest available methods
  * (mcrypt_create_iv(), openssl_random_pseudo_bytes(), /dev/urandom, COM.CAPICOM.Utilities.1, mt_rand()).
@@ -46,7 +51,7 @@ class RandomGenerator {
 		// try to read from the windows RNG
 		if($isWin && class_exists('COM')) {
 			try {
-				$comObj = new COM('CAPICOM.Utilities.1');
+				$comObj = new \COM('CAPICOM.Utilities.1');
 
 				if(is_callable(array($comObj,'GetRandom'))) {
 					return  base64_decode($comObj->GetRandom(64, 0));

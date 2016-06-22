@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Security\RandomGenerator;
+
 /**
  * Class ParameterConfirmationToken
  *

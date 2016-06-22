@@ -4,6 +4,8 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\MSSQL\MSSQLDatabase;
+
 /**
  * @package framework
  * @subpackage Testing

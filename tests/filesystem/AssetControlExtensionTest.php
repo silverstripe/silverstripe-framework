@@ -2,6 +2,8 @@
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+
 
 
 /**

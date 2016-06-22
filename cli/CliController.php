@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 /**
  * Base class invoked from CLI rather than the webserver (Cron jobs, handling email bounces).
  * You can call subclasses of CliController directly, which will trigger a

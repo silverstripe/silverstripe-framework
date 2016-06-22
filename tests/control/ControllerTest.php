@@ -57,7 +57,7 @@ class ControllerTest extends FunctionalTest {
 	}
 
 	public function testAllowedActions() {
-		$adminUser = $this->objFromFixture('Member', 'admin');
+		$adminUser = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 
 		$response = $this->get("ControllerTest_UnsecuredController/");
 		$this->assertEquals(200, $response->getStatusCode(),

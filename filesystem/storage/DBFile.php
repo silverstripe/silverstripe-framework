@@ -10,12 +10,14 @@ use Injector;
 use AssetField;
 use File;
 use Director;
-use Permission;
+
 
 
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\FieldType\DBComposite;
+use SilverStripe\Security\Permission;
+
 
 
 /**

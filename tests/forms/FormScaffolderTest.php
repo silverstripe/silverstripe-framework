@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Member;
+
 
 /**
  * Tests for DataObject FormField scaffolding

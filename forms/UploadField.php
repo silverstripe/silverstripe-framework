@@ -9,6 +9,8 @@ use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\RelationList;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\ORM\DataList;
+use SilverStripe\Security\Permission;
+
 
 
 /**
@@ -220,7 +222,6 @@ class UploadField extends FileField {
 	 * @param string $title The field label.
 	 * @param SS_List $items If no items are defined, the field will try to auto-detect an existing relation on
 	 *                       @link $record}, with the same name as the field name.
-	 * @param Form $form Reference to the container form
 	 */
 	public function __construct($name, $title = null, SS_List $items = null) {
 
@@ -248,7 +249,8 @@ class UploadField extends FileField {
 	/**
 	 * Set name of template used for Buttons on each file (replace, edit, remove, delete) (without path or extension)
 	 *
-	 * @param string
+	 * @param string $template
+	 * @return $this
 	 */
 	public function setTemplateFileButtons($template) {
 		$this->templateFileButtons = $template;
@@ -265,7 +267,8 @@ class UploadField extends FileField {
 	/**
 	 * Set name of template used for the edit (inline & popup) of a file file (without path or extension)
 	 *
-	 * @param string
+	 * @param string $template
+	 * @return $this
 	 */
 	public function setTemplateFileEdit($template) {
 		$this->templateFileEdit = $template;
@@ -328,7 +331,8 @@ class UploadField extends FileField {
 	}
 
 	/**
-	 * @param String
+	 * @param string $name
+	 * @return $this
 	 */
 	public function setDisplayFolderName($name) {
 		$this->displayFolderName = $name;
@@ -344,7 +348,9 @@ class UploadField extends FileField {
 
 	/**
 	 * Force a record to be used as "Parent" for uploaded Files (eg a Page with a has_one to File)
+	 *
 	 * @param DataObject $record
+	 * @return $this
 	 */
 	public function setRecord($record) {
 		$this->record = $record;
@@ -389,6 +395,7 @@ class UploadField extends FileField {
 	 * @param array|DataObject|SS_List $record Full source record, either as a DataObject,
 	 * SS_List of items, or an array of submitted form data
 	 * @return $this Self reference
+	 * @throws ValidationException
 	 */
 	public function setValue($value, $record = null) {
 
@@ -727,7 +734,7 @@ class UploadField extends FileField {
 	 * Defaults to 'ss-uploadfield-uploadtemplate'
 	 *
 	 * @see javascript/UploadField_uploadtemplate.js
-	 * @var string
+	 * @return string
 	 */
 	public function getUploadTemplateName() {
 		return $this->getConfig('uploadTemplateName');
@@ -748,7 +755,7 @@ class UploadField extends FileField {
 	 * Defaults to 'ss-downloadfield-downloadtemplate'
 	 *
 	 * @see javascript/DownloadField_downloadtemplate.js
-	 * @var string
+	 * @return string
 	 */
 	public function getDownloadTemplateName() {
 		return $this->getConfig('downloadTemplateName');
@@ -1295,6 +1302,7 @@ class UploadField extends FileField {
 	 * Determines if a specified file exists
 	 *
 	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
 	 */
 	public function fileexists(SS_HTTPRequest $request) {
 		// Assert that requested filename doesn't attempt to escape the directory
@@ -1327,7 +1335,7 @@ class UploadField extends FileField {
 	 * Gets the foreign class that needs to be created, or 'File' as default if there
 	 * is no relationship, or it cannot be determined.
 	 *
-	 * @param $default Default value to return if no value could be calculated
+	 * @param string $default Default value to return if no value could be calculated
 	 * @return string Foreign class name.
 	 */
 	public function getRelationAutosetClass($default = 'File') {
@@ -1605,7 +1613,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	}
 
 	/**
-	 * @param $folderID The ID of the folder to display.
+	 * @param int $folderID The ID of the folder to display.
 	 * @return FormField
 	 */
 	protected function getListField($folderID) {

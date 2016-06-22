@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Member;
+
 /**
  * @package framework
  * @subpackage tests
@@ -30,9 +33,9 @@ class GroupTest extends FunctionalTest {
 	public function testMemberGroupRelationForm() {
 		Session::set('loggedInAs', $this->idFromFixture('GroupTest_Member', 'admin'));
 
-		$adminGroup = $this->objFromFixture('Group', 'admingroup');
-		$parentGroup = $this->objFromFixture('Group', 'parentgroup');
-		$childGroup = $this->objFromFixture('Group', 'childgroup');
+		$adminGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'admingroup');
+		$parentGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'parentgroup');
+		$childGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'childgroup');
 
 		// Test single group relation through checkboxsetfield
 		$form = new GroupTest_MemberForm($this, 'Form');
@@ -86,8 +89,8 @@ class GroupTest extends FunctionalTest {
 	}
 
 	public function testCollateAncestorIDs() {
-		$parentGroup = $this->objFromFixture('Group', 'parentgroup');
-		$childGroup = $this->objFromFixture('Group', 'childgroup');
+		$parentGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'parentgroup');
+		$childGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'childgroup');
 		$orphanGroup = new Group();
 		$orphanGroup->ParentID = 99999;
 		$orphanGroup->write();
@@ -110,26 +113,26 @@ class GroupTest extends FunctionalTest {
 	}
 
 	public function testDelete() {
-		$group = $this->objFromFixture('Group', 'parentgroup');
+		$group = $this->objFromFixture('SilverStripe\\Security\\Group', 'parentgroup');
 		$groupID = $group->ID;
-		$childGroupID = $this->idFromFixture('Group', 'childgroup');
+		$childGroupID = $this->idFromFixture('SilverStripe\\Security\\Group', 'childgroup');
 		$group->delete();
 
-		$this->assertEquals(0, DataObject::get('Group', "\"ID\" = {$groupID}")->Count(),
+		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Group', "\"ID\" = {$groupID}")->Count(),
 			'Group is removed');
-		$this->assertEquals(0, DataObject::get('Permission', "\"GroupID\" = {$groupID}")->Count(),
+		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Permission', "\"GroupID\" = {$groupID}")->Count(),
 			'Permissions removed along with the group');
-		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$groupID}")->Count(),
+		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Group', "\"ParentID\" = {$groupID}")->Count(),
 			'Child groups are removed');
-		$this->assertEquals(0, DataObject::get('Group', "\"ParentID\" = {$childGroupID}")->Count(),
+		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Group', "\"ParentID\" = {$childGroupID}")->Count(),
 			'Grandchild groups are removed');
 	}
 
 	public function testValidatesPrivilegeLevelOfParent() {
 		$nonAdminUser = $this->objFromFixture('GroupTest_Member', 'childgroupuser');
 		$adminUser = $this->objFromFixture('GroupTest_Member', 'admin');
-		$nonAdminGroup = $this->objFromFixture('Group', 'childgroup');
-		$adminGroup = $this->objFromFixture('Group', 'admingroup');
+		$nonAdminGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'childgroup');
+		$adminGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'admingroup');
 
 		$nonAdminValidateMethod = new ReflectionMethod($nonAdminGroup, 'validate');
 		$nonAdminValidateMethod->setAccessible(true);
@@ -154,7 +157,7 @@ class GroupTest extends FunctionalTest {
 		$newlyAdminGroup = $nonAdminGroup;
 
 		$this->logInWithPermission('ADMIN');
-		$inheritedAdminGroup = $this->objFromFixture('Group', 'group1');
+		$inheritedAdminGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'group1');
 		$inheritedAdminMethod = new ReflectionMethod($inheritedAdminGroup, 'validate');
 		$inheritedAdminMethod->setAccessible(true);
 		$inheritedAdminGroup->ParentID = $adminGroup->ID;
@@ -173,7 +176,7 @@ class GroupTest extends FunctionalTest {
 class GroupTest_Member extends Member implements TestOnly {
 
 	public function getCMSFields() {
-		$groups = DataObject::get('Group');
+		$groups = DataObject::get('SilverStripe\\Security\\Group');
 		$groupsMap = ($groups) ? $groups->map() : false;
 		$fields = new FieldList(
 			new HiddenField('ID', 'ID'),

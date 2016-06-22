@@ -43,12 +43,12 @@ class DataQueryTest extends SapphireTest {
 	 * Test the leftJoin() and innerJoin method of the DataQuery object
 	 */
 	public function testJoins() {
-		$dq = new DataQuery('Member');
+		$dq = new DataQuery('SilverStripe\\Security\\Member');
 		$dq->innerJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
 		$this->assertSQLContains("INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
 			$dq->sql($parameters));
 
-		$dq = new DataQuery('Member');
+		$dq = new DataQuery('SilverStripe\\Security\\Member');
 		$dq->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
 		$this->assertSQLContains("LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
 			$dq->sql($parameters));

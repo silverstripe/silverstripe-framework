@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\PermissionRoleCode;
+
 /**
  * @package framework
  * @subpackage tests
@@ -9,13 +11,13 @@ class PermissionRoleTest extends FunctionalTest {
 	protected static $fixture_file = 'PermissionRoleTest.yml';
 
 	public function testDelete() {
-		$role = $this->objFromFixture('PermissionRole', 'role');
+		$role = $this->objFromFixture('SilverStripe\\Security\\PermissionRole', 'role');
 
 		$role->delete();
 
-		$this->assertEquals(0, DataObject::get('PermissionRole', "\"ID\"={$role->ID}")->count(),
+		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\PermissionRole', "\"ID\"={$role->ID}")->count(),
 			'Role is removed');
-		$this->assertEquals(0, DataObject::get('PermissionRoleCode',"\"RoleID\"={$role->ID}")->count(),
+		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\PermissionRoleCode',"\"RoleID\"={$role->ID}")->count(),
 			'Permissions removed along with the role');
 	}
 

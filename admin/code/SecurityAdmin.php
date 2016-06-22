@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\PermissionRole;
+use SilverStripe\Security\PermissionProvider;
+
 /**
  * Security section of the CMS
  *
@@ -14,9 +21,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	private static $menu_title = 'Security';
 
-	private static $tree_class = 'Group';
+	private static $tree_class = 'SilverStripe\\Security\\Group';
 
-	private static $subitem_class = 'Member';
+	private static $subitem_class = 'SilverStripe\\Security\\Member';
 
 	private static $allowed_actions = array(
 		'EditForm',
@@ -36,6 +43,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	/**
 	 * Shortcut action for setting the correct active tab.
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
 	 */
 	public function users($request) {
 		return $this->index($request);
@@ -43,6 +53,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	/**
 	 * Shortcut action for setting the correct active tab.
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
 	 */
 	public function groups($request) {
 		return $this->index($request);
@@ -50,6 +63,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	/**
 	 * Shortcut action for setting the correct active tab.
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
 	 */
 	public function roles($request) {
 		return $this->index($request);
@@ -79,7 +95,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		if($record && method_exists($record, 'getValidator')) {
 			$validator = $record->getValidator();
 		} else {
-			$validator = Injector::inst()->get('Member')->getValidator();
+			$validator = Member::singleton()->getValidator();
 		}
 
 		$memberListConfig
@@ -94,7 +110,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		);
 		$columns = $groupList->getConfig()->getComponentByType('GridFieldDataColumns');
 		$columns->setDisplayFields(array(
-			'Breadcrumbs' => singleton('Group')->fieldLabel('Title')
+			'Breadcrumbs' => singleton('SilverStripe\\Security\\Group')->fieldLabel('Title')
 		));
 		$columns->setFieldFormatting(array(
 			'Breadcrumbs' => function($val, $item) {
@@ -117,7 +133,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 						)
 					)
 				),
-				$groupsTab = new Tab('Groups', singleton('Group')->i18n_plural_name(),
+				$groupsTab = new Tab('Groups', singleton('SilverStripe\\Security\\Group')->i18n_plural_name(),
 					$groupList
 				)
 			),
@@ -276,7 +292,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$firstCrumb = $crumbs->shift();
 			if($params['FieldName'] == 'Groups') {
 				$crumbs->unshift(new ArrayData(array(
-					'Title' => singleton('Group')->i18n_plural_name(),
+					'Title' => singleton('SilverStripe\\Security\\Group')->i18n_plural_name(),
 					'Link' => $this->Link('groups')
 				)));
 			} elseif($params['FieldName'] == 'Users') {
@@ -335,7 +351,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	public static function add_hidden_permission($codes){
 		if(is_string($codes)) $codes = array($codes);
 		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
-		Config::inst()->update('Permission', 'hidden_permissions', $codes);
+		Config::inst()->update('SilverStripe\\Security\\Permission', 'hidden_permissions', $codes);
 	}
 
 	/**
@@ -345,7 +361,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	public static function remove_hidden_permission($codes){
 		if(is_string($codes)) $codes = array($codes);
 		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
-		Config::inst()->remove('Permission', 'hidden_permissions', $codes);
+		Config::inst()->remove('SilverStripe\\Security\\Permission', 'hidden_permissions', $codes);
 	}
 
 	/**
@@ -354,7 +370,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 */
 	public static function get_hidden_permissions(){
 		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
-		Config::inst()->get('Permission', 'hidden_permissions', Config::FIRST_SET);
+		Config::inst()->get('SilverStripe\\Security\\Permission', 'hidden_permissions', Config::FIRST_SET);
 	}
 
 	/**
@@ -364,6 +380,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 */
 	public static function clear_hidden_permissions(){
 		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
-		Config::inst()->remove('Permission', 'hidden_permissions', Config::anything());
+		Config::inst()->remove('SilverStripe\\Security\\Permission', 'hidden_permissions', Config::anything());
 	}
 }

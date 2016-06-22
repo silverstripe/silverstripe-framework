@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+
 /**
  * @package framework
  * @subpackage tests

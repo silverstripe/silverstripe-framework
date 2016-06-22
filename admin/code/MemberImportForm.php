@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Security\MemberCsvBulkLoader;
+
 /**
  * Imports {@link Member} records by CSV upload, as defined in
  * {@link MemberCsvBulkLoader}.

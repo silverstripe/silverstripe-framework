@@ -115,8 +115,49 @@ mappings:
   VersionedGridFieldDetailForm: SilverStripe\ORM\Versioning\VersionedGridFieldDetailForm
   VersionedGridFieldItemRequest: SilverStripe\ORM\Versioning\VersionedGridFieldItemRequest
   Hierarchy: SilverStripe\ORM\Hierarchy\Hierarchy
+  Authenticator: SilverStripe\Security\Authenticator
+  BasicAuth: SilverStripe\Security\BasicAuth
+  ChangePasswordForm: SilverStripe\Security\ChangePasswordForm
+  CMSMemberLoginForm: SilverStripe\Security\CMSMemberLoginForm
+  CMSSecurity: SilverStripe\Security\CMSSecurity
+  Group: SilverStripe\Security\Group
+  GroupCsvBulkLoader: SilverStripe\Security\GroupCsvBulkLoader
+  LoginAttempt: SilverStripe\Security\LoginAttempt
+  LoginForm: SilverStripe\Security\LoginForm
+  Member: SilverStripe\Security\Member
+  Member_GroupSet: SilverStripe\Security\Member_GroupSet
+  Member_Validator: SilverStripe\Security\Member_Validator
+  MemberAuthenticator: SilverStripe\Security\MemberAuthenticator
+  MemberCsvBulkLoader: SilverStripe\Security\MemberCsvBulkLoader
+  MemberLoginForm: SilverStripe\Security\MemberLoginForm
+  MemberPassword: SilverStripe\Security\MemberPassword
+  PasswordEncryptor: SilverStripe\Security\PasswordEncryptor
+  PasswordEncryptor_Blowfish: SilverStripe\Security\PasswordEncryptor_Blowfish
+  PasswordEncryptor_PHPHash: SilverStripe\Security\PasswordEncryptor_PHPHash
+  PasswordEncryptor_LegacyPHPHash: SilverStripe\Security\PasswordEncryptor_LegacyPHPHash
+  PasswordEncryptor_MySQLPassword: SilverStripe\Security\PasswordEncryptor_MySQLPassword
+  PasswordEncryptor_MySQLOldPassword: SilverStripe\Security\PasswordEncryptor_MySQLOldPassword
+  PasswordEncryptor_None: SilverStripe\Security\PasswordEncryptor_None
+  PasswordEncryptor_NotFoundException: SilverStripe\Security\PasswordEncryptor_NotFoundException
+  PasswordEncryptor_EncryptionFailed: SilverStripe\Security\PasswordEncryptor_EncryptionFailed
+  PasswordValidator: SilverStripe\Security\PasswordValidator
+  Permission: SilverStripe\Security\Permission
+  Permission_Group: SilverStripe\Security\Permission_Group
+  PermissionCheckboxSetField: SilverStripe\Security\PermissionCheckboxSetField
+  PermissionCheckboxSetField_Readonly: SilverStripe\Security\PermissionCheckboxSetField_Readonly
+  PermissionFailureException: SilverStripe\Security\PermissionFailureException
+  PermissionProvider: SilverStripe\Security\PermissionProvider
+  PermissionRole: SilverStripe\Security\PermissionRole
+  PermissionRoleCode: SilverStripe\Security\PermissionRoleCode
+  RandomGenerator: SilverStripe\Security\RandomGenerator
+  RememberLoginHash: SilverStripe\Security\RememberLoginHash
+  Security: SilverStripe\Security\Security
+  SecurityToken: SilverStripe\Security\SecurityToken
+  NullSecurityToken: SilverStripe\Security\NullSecurityToken
 skipConfigs:
   - db
   - casting
   - table_name
   - fixed_fields
+  - menu_title
+  - allowed_actions

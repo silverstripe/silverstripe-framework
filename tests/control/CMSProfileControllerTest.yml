@@ -1,4 +1,4 @@
-Permission:
+'SilverStripe\Security\Permission':
   admin:
     Code: ADMIN
   cmsmain:
@@ -8,31 +8,31 @@ Permission:
   test:
     Code: CMS_ACCESS_TestController
 
-Group:
+'SilverStripe\Security\Group':
   admins:
     Title: Administrators
-    Permissions: =>Permission.admin
+    Permissions: '=>SilverStripe\Security\Permission.admin'
   cmsusers:
     Title: CMS Users
-    Permissions: =>Permission.cmsmain, =>Permission.leftandmain
+    Permissions: '=>SilverStripe\Security\Permission.cmsmain, =>SilverStripe\Security\Permission.leftandmain'
   test:
     Title: Test group
-    Permissions: =>Permission.test
+    Permissions: '=>SilverStripe\Security\Permission.test'
 
-Member:
+'SilverStripe\Security\Member':
   admin:
     FirstName: Admin
     Email: admin@user.com
-    Groups: =>Group.admins
+    Groups: '=>SilverStripe\Security\Group.admins'
   user1:
     FirstName: Joe
     Email: user1@user.com
-    Groups: =>Group.cmsusers
+    Groups: '=>SilverStripe\Security\Group.cmsusers'
   user2:
     FirstName: Steve
     Email: user2@user.com
-    Groups: =>Group.cmsusers
+    Groups: '=>SilverStripe\Security\Group.cmsusers'
   user3:
     FirstName: Files
     Email: user3@example.com
-    Groups: =>Group.test
+    Groups: '=>SilverStripe\Security\Group.test'

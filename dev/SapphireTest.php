@@ -9,6 +9,11 @@ use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DB;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Permission;
+
 
 
 /**
@@ -1015,7 +1020,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				$group->Permissions()->add($permission);
 			}
 
-			$member = DataObject::get_one('Member', array(
+			$member = DataObject::get_one('SilverStripe\\Security\\Member', array(
 				'"Member"."Email"' => "$permCode@example.org"
 			));
 			if (!$member) {

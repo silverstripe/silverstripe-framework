@@ -4,6 +4,8 @@ use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetNameGenerator;
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+
 
 
 /**
@@ -148,8 +150,8 @@ class Upload extends Controller {
 	/**
 	 * Save an file passed from a form post into the AssetStore directly
 	 *
-	 * @param $tmpFile array Indexed array that PHP generated for every file it uploads.
-	 * @param $folderPath string Folder path relative to /assets
+	 * @param array $tmpFile Indexed array that PHP generated for every file it uploads.
+	 * @param string|bool $folderPath Folder path relative to /assets
 	 * @return array|false Either the tuple array, or false if the file could not be saved
 	 */
 	public function load($tmpFile, $folderPath = false) {
@@ -174,7 +176,9 @@ class Upload extends Controller {
 	 *
 	 * @param array $tmpFile
 	 * @param AssetContainer $file
+	 * @param string|bool $folderPath
 	 * @return bool True if the file was successfully saved into this record
+	 * @throws Exception
 	 */
 	public function loadIntoFile($tmpFile, $file = null, $folderPath = false) {
 		$this->file = $file;

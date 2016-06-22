@@ -5,6 +5,8 @@ use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\Security\Member;
+
 
 
 /**
@@ -509,23 +511,23 @@ class FileTest extends SapphireTest {
 		$this->assertFalse($file->canEdit(), "Anonymous users can't edit files");
 
 		// Test permissionless user
-		$this->objFromFixture('Member', 'frontend')->logIn();
+		$this->objFromFixture('SilverStripe\\Security\\Member', 'frontend')->logIn();
 		$this->assertFalse($file->canEdit(), "Permissionless users can't edit files");
 
 		// Test global CMS section users
-		$this->objFromFixture('Member', 'cms')->logIn();
+		$this->objFromFixture('SilverStripe\\Security\\Member', 'cms')->logIn();
 		$this->assertTrue($file->canEdit(), "Users with all CMS section access can edit files");
 
 		// Test cms access users without file access
-		$this->objFromFixture('Member', 'security')->logIn();
+		$this->objFromFixture('SilverStripe\\Security\\Member', 'security')->logIn();
 		$this->assertFalse($file->canEdit(), "Security CMS users can't edit files");
 
 		// Test asset-admin user
-		$this->objFromFixture('Member', 'assetadmin')->logIn();
+		$this->objFromFixture('SilverStripe\\Security\\Member', 'assetadmin')->logIn();
 		$this->assertTrue($file->canEdit(), "Asset admin users can edit files");
 
 		// Test admin
-		$this->objFromFixture('Member', 'admin')->logIn();
+		$this->objFromFixture('SilverStripe\\Security\\Member', 'admin')->logIn();
 		$this->assertTrue($file->canEdit(), "Admins can edit files");
 	}
 

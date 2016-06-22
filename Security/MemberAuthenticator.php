@@ -1,6 +1,14 @@
 <?php
 
+namespace SilverStripe\Security;
+
+
 use SilverStripe\ORM\ValidationResult;
+use InvalidArgumentException;
+use Controller;
+use Form;
+use Session;
+
 /**
  * Authenticator for the default "member" method
  *
@@ -123,7 +131,7 @@ class MemberAuthenticator extends Authenticator {
 
 			} else {
 				// Audit logging hook
-				singleton('Member')->extend('authenticationFailedUnknownUser', $data);
+				Member::singleton()->extend('authenticationFailedUnknownUser', $data);
 			}
 		}
 
@@ -170,16 +178,18 @@ class MemberAuthenticator extends Authenticator {
 	/**
 	 * Method that creates the login form for this authentication method
 	 *
-	 * @param Controller The parent controller, necessary to create the
+	 * @param Controller $controller The parent controller, necessary to create the
 	 *                   appropriate form action tag
 	 * @return Form Returns the login form to use with this authentication
 	 *              method
 	 */
 	public static function get_login_form(Controller $controller) {
+		/** @skipUpgrade */
 		return MemberLoginForm::create($controller, "LoginForm");
 	}
 
 	public static function get_cms_login_form(\Controller $controller) {
+		/** @skipUpgrade */
 		return CMSMemberLoginForm::create($controller, "LoginForm");
 	}
 

@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Security\GroupCsvBulkLoader;
+use SilverStripe\Security\Group;
 /**
  * @package framework
  * @subpackage tests

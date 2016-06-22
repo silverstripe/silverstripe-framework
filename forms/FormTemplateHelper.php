@@ -41,9 +41,9 @@ class FormTemplateHelper {
 			return Convert::raw2htmlid($id);
 		}
 
-		return Convert::raw2htmlid(
-			get_class($form) . '_' . str_replace(array('.', '/'), '', $form->getName())
-		);
+		$reflection = new ReflectionClass($form);
+		$shortName = str_replace(array('.', '/'), '', $form->getName());
+		return Convert::raw2htmlid($reflection->getShortName() . '_' . $shortName);
 	}
 
 	/**

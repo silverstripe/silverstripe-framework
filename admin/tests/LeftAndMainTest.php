@@ -64,7 +64,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 
 	public function testExtraCssAndJavascript() {
-		$admin = $this->objFromFixture('Member', 'admin');
+		$admin = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 		$this->session()->inst_set('loggedInAs', $admin->ID);
 		$response = $this->get('LeftAndMainTest_Controller');
 
@@ -146,7 +146,7 @@ class LeftAndMainTest extends FunctionalTest {
 	 * Check that all subclasses of leftandmain can be accessed
 	 */
 	public function testLeftAndMainSubclasses() {
-		$adminuser = $this->objFromFixture('Member','admin');
+		$adminuser = $this->objFromFixture('SilverStripe\\Security\\Member','admin');
 		$this->session()->inst_set('loggedInAs', $adminuser->ID);
 
 		$this->resetMenu();
@@ -172,9 +172,9 @@ class LeftAndMainTest extends FunctionalTest {
 	}
 
 	public function testCanView() {
-		$adminuser = $this->objFromFixture('Member', 'admin');
-		$securityonlyuser = $this->objFromFixture('Member', 'securityonlyuser');
-		$allcmssectionsuser = $this->objFromFixture('Member', 'allcmssectionsuser');
+		$adminuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
+		$securityonlyuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'securityonlyuser');
+		$allcmssectionsuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'allcmssectionsuser');
 		$allValsFn = create_function('$obj', 'return $obj->getValue();');
 
 		// anonymous user

@@ -4,6 +4,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Security\Permission;
+
 
 /**
  * Provides a set of targettable permissions for tested models

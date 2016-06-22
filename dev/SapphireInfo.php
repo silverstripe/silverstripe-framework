@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 /**
  * Returns information about the current site instance.
  * @package framework

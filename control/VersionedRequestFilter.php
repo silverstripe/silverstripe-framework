@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Security\Security;
+
 
 /**
  * Initialises the versioned stage when a request is made.

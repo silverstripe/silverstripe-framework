@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Security\Member;
 /**
  * The object manages the main CMS menu. See {@link LeftAndMain::init()} for
  * example usage.
@@ -53,7 +55,6 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * Add a LeftAndMain controller to the CMS menu.
 	 *
 	 * @param string $controllerClass The class name of the controller
-	 * @return The result of the operation
 	 * @todo A director rule is added when a controller link is added, but it won't be removed
 	 *			when the item is removed. Functionality needed in {@link Director}.
 	 */
@@ -65,6 +66,9 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 
 	/**
 	 * Return a CMSMenuItem to add the given controller to the CMSMenu
+	 *
+	 * @param string $controllerClass
+	 * @return CMSMenuItem
 	 */
 	protected static function menuitem_for_controller($controllerClass) {
 		$urlBase      = Config::inst()->get($controllerClass, 'url_base', Config::FIRST_SET);
@@ -107,15 +111,15 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * uses {@link CMSMenu::$menu_items}
 	 *
 	 * @param string $code Unique identifier for this menu item (e.g. used by {@link replace_menu_item()} and
-	 * 					{@link remove_menu_item}. Also used as a CSS-class for icon customization.
+	 *                    {@link remove_menu_item}. Also used as a CSS-class for icon customization.
 	 * @param string $menuTitle Localized title showing in the menu bar
 	 * @param string $url A relative URL that will be linked in the menu bar.
 	 * @param string $controllerClass The controller class for this menu, used to check permisssions.
-	 * 					If blank, it's assumed that this is public, and always shown to users who
-	 * 					have the rights to access some other part of the admin area.
+	 *                    If blank, it's assumed that this is public, and always shown to users who
+	 *                    have the rights to access some other part of the admin area.
+	 * @param int $priority
 	 * @param array $attributes an array of attributes to include on the link.
-	 *
-	 * @return boolean Success
+	 * @return bool Success
 	 */
 	public static function add_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1,
 											$attributes = null) {
@@ -237,16 +241,16 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * Replace a navigation item to the main administration menu showing in the top bar.
 	 *
 	 * @param string $code Unique identifier for this menu item (e.g. used by {@link replace_menu_item()} and
-	 * 					{@link remove_menu_item}. Also used as a CSS-class for icon customization.
+	 *                    {@link remove_menu_item}. Also used as a CSS-class for icon customization.
 	 * @param string $menuTitle Localized title showing in the menu bar
 	 * @param string $url A relative URL that will be linked in the menu bar.
-	 * 					Make sure to add a matching route via {@link Director::$rules} to this url.
+	 *                    Make sure to add a matching route via {@link Director::$rules} to this url.
 	 * @param string $controllerClass The controller class for this menu, used to check permisssions.
-	 * 					If blank, it's assumed that this is public, and always shown to users who
-	 * 					have the rights to access some other part of the admin area.
+	 *                    If blank, it's assumed that this is public, and always shown to users who
+	 *                    have the rights to access some other part of the admin area.
+	 * @param int $priority
 	 * @param array $attributes an array of attributes to include on the link.
-	 *
-	 * @return boolean Success
+	 * @return bool Success
 	 */
 	public static function replace_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1,
 												$attributes = null) {
@@ -265,6 +269,9 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 
 	/**
 	 * Add a previously built menu item object to the menu
+	 *
+	 * @param string $code
+	 * @param CMSMenuItem $cmsMenuItem
 	 */
 	protected static function add_menu_item_obj($code, $cmsMenuItem) {
 		self::$menu_item_changes[] = array(

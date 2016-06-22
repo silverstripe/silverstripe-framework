@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\BasicAuth;
 /**
  * @package framework
  * @subpackage tests

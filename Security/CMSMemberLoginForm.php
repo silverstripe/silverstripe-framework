@@ -1,5 +1,19 @@
 <?php
 
+namespace SilverStripe\Security;
+
+use Controller;
+use FieldList;
+use HiddenField;
+use PasswordField;
+use LiteralField;
+use CheckboxField;
+use FormAction;
+use Session;
+use Convert;
+use SS_HTTPResponse;
+
+
 /**
  * Provides the in-cms session re-authentication form for the "member" authenticator
  *
@@ -8,7 +22,7 @@
  */
 class CMSMemberLoginForm extends LoginForm {
 
-	protected $authenticator_class = 'MemberAuthenticator';
+	protected $authenticator_class = 'SilverStripe\\Security\\MemberAuthenticator';
 
 	/**
 	 * Get link to use for external security actions
@@ -68,7 +82,7 @@ class CMSMemberLoginForm extends LoginForm {
 	/**
 	 * Try to authenticate the user
 	 *
-	 * @param array Submitted data
+	 * @param array $data Submitted data
 	 * @return Member Returns the member object on successful authentication
 	 *                or NULL on failure.
 	 */
@@ -89,6 +103,7 @@ class CMSMemberLoginForm extends LoginForm {
 	 * This method is called when the user clicks on "Log in"
 	 *
 	 * @param array $data Submitted data
+	 * @return \SS_HTTPResponse
 	 */
 	public function dologin($data) {
 		if($this->performLogin($data)) {
@@ -110,7 +125,7 @@ class CMSMemberLoginForm extends LoginForm {
 	 */
 	protected function redirectToChangePassword() {
 		// Since this form is loaded via an iframe, this redirect must be performed via javascript
-		$changePasswordForm = new ChangePasswordForm($this->controller, 'ChangePasswordForm');
+		$changePasswordForm = new ChangePasswordForm($this->controller, 'SilverStripe\\Security\\ChangePasswordForm');
 		$changePasswordForm->sessionMessage(
 			_t('Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
 			'good'

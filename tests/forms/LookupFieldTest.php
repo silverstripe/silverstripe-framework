@@ -66,11 +66,11 @@ class LookupFieldTest extends SapphireTest {
 	}
 
 	public function testArrayValueWithSqlMapSource() {
-		$member1 = $this->objFromFixture('Member', 'member1');
-		$member2 = $this->objFromFixture('Member', 'member2');
-		$member3 = $this->objFromFixture('Member', 'member3');
+		$member1 = $this->objFromFixture('SilverStripe\\Security\\Member', 'member1');
+		$member2 = $this->objFromFixture('SilverStripe\\Security\\Member', 'member2');
+		$member3 = $this->objFromFixture('SilverStripe\\Security\\Member', 'member3');
 
-		$source = DataObject::get('Member');
+		$source = DataObject::get('SilverStripe\\Security\\Member');
 		$f = new LookupField('test', 'test', $source->map('ID', 'FirstName'));
 		$f->setValue(array($member1->ID, $member2->ID));
 

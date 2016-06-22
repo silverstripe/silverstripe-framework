@@ -16,8 +16,10 @@ class MySQLSchemaManager extends DBSchemaManager {
 	/**
 	 * Identifier for this schema, used for configuring schema-specific table
 	 * creation options
+	 *
+	 * @skipUpgrade
 	 */
-	const ID = 'SilverStripe\ORM\Connect\MySQLDatabase';
+	const ID = 'MySQLDatabase';
 
 	public function createTable($table, $fields = null, $indexes = null, $options = null, $advancedOptions = null) {
 		$fieldSchemas = $indexSchemas = "";
