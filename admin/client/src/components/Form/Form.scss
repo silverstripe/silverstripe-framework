@@ -55,6 +55,7 @@
 .form__field-label {
   // If word is to long force break with hyphenation
   @include break-word();
+  margin-bottom: .46rem;
 }
 
 .form__field-holder {
@@ -185,8 +186,13 @@ input.radio {
       @include make-col-offset(3);
     }
 
-    .optionset {
+    .optionset,
+    .selectiongroup {
       margin-top: 7px;
+    }
+
+    .selectiongroup {
+      margin-bottom: 0;
     }
   }
 
