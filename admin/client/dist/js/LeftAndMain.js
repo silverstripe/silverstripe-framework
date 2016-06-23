@@ -913,7 +913,7 @@
       }
     });
 
-    $('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
+    $('.cms .field.dropdown select, .cms .field select[multiple], .form__fieldgroup-item select.dropdown').entwine({
       onmatch: function onmatch() {
         if (this.is('.no-chosen')) {
           this._super();

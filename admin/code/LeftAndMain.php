@@ -1636,7 +1636,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				new FormAction('submit', _t('Form.SubmitBtnLabel', "Go"))
 			)
 		);
-		$form->addExtraClass('cms-batch-actions nostyle');
+		$form->addExtraClass('cms-batch-actions form--no-dividers');
 		$form->unsetValidator();
 
 		$this->extend('updateBatchActionsForm', $form);

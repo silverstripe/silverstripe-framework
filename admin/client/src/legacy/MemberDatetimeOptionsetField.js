@@ -4,14 +4,14 @@ $.entwine('ss', function($){
 
 	$('.memberdatetimeoptionset').entwine({
 		onmatch: function() {
-			this.find('.description .toggle-content').hide();
+			this.find('.toggle-content').hide();
 			this._super();
 		}
 	});
 
 	$('.memberdatetimeoptionset .toggle').entwine({
 		onclick: function(e) {
-			jQuery(this).closest('.description').find('.toggle-content').toggle();
+			jQuery(this).closest('.description').parent().find('.toggle-content').toggle();
 			return false;
 		}
 	});

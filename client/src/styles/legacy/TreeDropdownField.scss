@@ -16,10 +16,10 @@ div.TreeDropdownField {
 	}
 
 	.treedropdownfield-title {
-		float: left;
-		padding: 7px;
-		width: 90%;
-		line-height: 16px;
+		// float: left;
+		// padding: 7px;
+		// width: 90%;
+		// line-height: 16px;
 		overflow:hidden;
 		outline: none;
 		z-index:1;
@@ -57,30 +57,37 @@ div.TreeDropdownField {
 		position: absolute;
 		display: none;
 		cursor: default;
-		border: 1px solid #aaa;
-		border-top: none;
-		margin: 1px 0 0 -1px; /* account for border on container div */
+		border: 1px solid #66afe9;
+		border-top: 0;
+		margin: -1px 0 0 -1px; /* account for border on container div */
 		background-color: #fff;
 		z-index: 70;
 		-webkit-box-shadow: 0 4px 5px rgba(0,0,0,.15);
 		-moz-box-shadow   : 0 4px 5px rgba(0,0,0,.15);
 		-o-box-shadow     : 0 4px 5px rgba(0,0,0,.15);
 		box-shadow        : 0 4px 5px rgba(0,0,0,.15);
+    right: 0;
+    left: 0;
+    width: calc(100% + 2px) !important;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 
 		&.loading {
 			min-height: 16px /* icon */ + 14px /* padding */; // Ensure there's room for loading indicator
 			background: #fff url("../images/network-save.gif") 98% 7px no-repeat;
 		}
 
-		.tree-holder{
-			position:relative;
-			z-index:1;
-			> ul{
-				position:relative;
-				max-height:200px;
-				overflow-y: auto;
-			}
-		}
+    .tree-holder {
+      position: relative;
+      z-index: 1;
+
+      > ul {
+        position: relative;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+      }
+    }
 
 		ul{
 			overflow-x:hidden;
@@ -111,6 +118,9 @@ div.TreeDropdownField {
 		-webkit-border-radius: 0 4px 4px 0;
 		-moz-border-radius: 0 4px 4px 0;
 		border-radius: 0 4px 4px 0;
+		position: absolute;
+		right: 5px;
+		top: 0;
 
 		&.treedropdownfield-open-tree {
 			background: transparent;

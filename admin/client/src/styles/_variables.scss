@@ -36,6 +36,7 @@ $gray-darkest: darken($gray-dark, 20%);
 $white: #fff; // Never change, create new variable if needed
 $black: #000; // Never change
 
+$brand-secondary: #005a93;
 $brand-primary: #29abe2;
 $brand-success: #3fa142;
 // $brand-info: #5bc0de;
@@ -315,6 +316,7 @@ $btn-border-radius-sm: .154rem;
 
 $input-padding-x: .75rem;
 $input-padding-y: .5385rem;
+$input-max-width: 895px; // Approx max possible at small screen sizes
 
 $input-bg: #fff;
 $input-bg-disabled: $gray-lighter;
@@ -330,7 +332,7 @@ $input-border-radius: $border-radius;
 $input-border-radius-lg: $border-radius-lg;
 $input-border-radius-sm: $border-radius-sm;
 
-// $input-border-focus: #66afe9;
+$input-border-focus: #66afe9;
 // $input-box-shadow-focus: rgba(102,175,233,.6);
 //
 // $input-color-placeholder: #999;
@@ -711,6 +713,7 @@ $cms-panel-lg: 638px;
 // Shadows, these need work to make consistent (used in AssetAdmin)
 // TODO tidy all shadows cms wide
 $shadow-light: rgba(0, 0, 0, .2);
+$shadow: rgba(0, 0, 0, .3);
 $dropdown-shadow: 0 0 3px $shadow-light;
 $gallery-item-shadow: 0 1px 4px $gray-light;
 
