@@ -150,6 +150,10 @@ input.radio {
           @include make-col();
           @include make-col-span(9);
         }
+
+        .form__field-holder--no-label {
+          @include make-col-offset(0);
+        }
       }
     }
 
