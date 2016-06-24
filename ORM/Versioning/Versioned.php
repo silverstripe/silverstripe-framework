@@ -788,7 +788,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				$data = array_intersect_key($data, $fields);
 
 				foreach ($data as $k => $v) {
-					if (!isset($newManipulation['fields'][$k])) {
+					// If the value is not set at all in the manipulation currently, use the existing value from the database
+					if (is_array($newManipulation['fields']) && !array_key_exists($k, $newManipulation['fields'])) {
 						$newManipulation['fields'][$k] = $v;
 					}
 				}
