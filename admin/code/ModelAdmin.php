@@ -280,7 +280,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		// Normalize models to have their model class in array key
 		foreach($models as $k => $v) {
 			if(is_numeric($k)) {
-				$models[$v] = array('title' => singleton($v)->i18n_singular_name());
+				$models[$v] = array('title' => singleton($v)->i18n_plural_name());
 				unset($models[$k]);
 			}
 		}
