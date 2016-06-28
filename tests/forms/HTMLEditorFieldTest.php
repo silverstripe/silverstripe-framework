@@ -24,6 +24,15 @@ class HTMLEditorFieldTest extends FunctionalTest {
 		// Set backend root to /HTMLEditorFieldTest
 		AssetStoreTest_SpyStore::activate('HTMLEditorFieldTest');
 
+		// Set the File Name Filter replacements so files have the expected names
+        Config::inst()->update('FileNameFilter', 'default_replacements', array(
+            '/\s/' => '-', // remove whitespace
+            '/_/' => '-', // underscores to dashes
+            '/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
+            '/[\-]{2,}/' => '-', // remove duplicate dashes
+            '/^[\.\-_]+/' => '', // Remove all leading dots, dashes or underscores
+        ));
+
 		// Create a test files for each of the fixture references
 		$files = File::get()->exclude('ClassName', 'Folder');
 		foreach($files as $file) {
