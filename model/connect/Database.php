@@ -15,6 +15,13 @@ abstract class SS_Database {
 	 * @var DBConnector
 	 */
 	protected $connector = null;
+	
+	/**
+	 * Amount of queries executed, for debugging purposes.
+	 * 
+	 * @var int
+	 */
+	protected $queryCount = 0;
 
 	/**
 	 * Get the current connector
@@ -171,6 +178,7 @@ abstract class SS_Database {
 	 */
 	protected function benchmarkQuery($sql, $callback, $parameters = null) {
 		if (isset($_REQUEST['showqueries']) && Director::isDev()) {
+			$this->queryCount++;
 			$starttime = microtime(true);
 			$result = $callback($sql);
 			$endtime = round(microtime(true) - $starttime, 4);
@@ -178,7 +186,7 @@ abstract class SS_Database {
 			if($parameters) {
 				$message .= "\nparams: \"" . implode('", "', $parameters) . '"';
 			}
-			Debug::message("\n{$message}\n{$endtime}s\n", false);
+			Debug::message("\n$this->queryCount: {$message}\n{$endtime}s\n", false);
 
 			return $result;
 		} else {
