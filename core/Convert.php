@@ -439,4 +439,47 @@ class Convert {
 			true
 		);
 	}
+
+	/**
+	 * Converts upper camel case names to lower camel case,
+	 * with leading upper case characters replaced with lower case.
+	 * Tries to retain word case.
+	 *
+	 * Examples:
+	 * - ID => id
+	 * - IDField => idField
+	 * - iDField => iDField
+	 *
+	 * @param $str
+	 * @return string
+	 */
+	public static function upperCamelToLowerCamel($str) {
+		$return = null;
+		$matches = null;
+		if(preg_match('/(^[A-Z]{1,})([A-Z]{1})([a-z]+.*)/', $str, $matches)) {
+			// If string has trailing lowercase after more than one leading uppercase characters,
+			// match everything but the last leading uppercase character.
+			$return = implode('', [
+				strtolower($matches[1]),
+				$matches[2],
+				$matches[3]
+			]);
+		} else if(preg_match('/(^[A-Z]{1})([a-z]+.*)/', $str, $matches)) {
+			// If string has trailing lowercase after exactly one leading uppercase characters,
+			// match everything but the last leading uppercase character.
+			$return = implode('', [
+				strtolower($matches[1]),
+				$matches[2]
+			]);
+		} elseif(preg_match('/^[A-Z]+$/', $str)) {
+			// If string has leading uppercase without trailing lowercase,
+			// just lowerase the whole thing.
+			$return = strtolower($str);
+		} else {
+			// If string has no leading uppercase, just return.
+			$return = $str;
+		}
+
+		return $return;
+	}
 }

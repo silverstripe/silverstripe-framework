@@ -396,4 +396,42 @@ XML
 			Convert::base64url_decode(Convert::base64url_encode($data))
 		);
 	}
+
+	public function testUpperCamelToLowerCamel() {
+		$this->assertEquals(
+			'd',
+			Convert::upperCamelToLowerCamel('D'),
+			'Single character'
+		);
+		$this->assertEquals(
+			'id',
+			Convert::upperCamelToLowerCamel('ID'),
+			'Multi leading upper without trailing lower'
+		);
+		$this->assertEquals(
+			'id',
+			Convert::upperCamelToLowerCamel('Id'),
+			'Single leading upper with trailing lower'
+		);
+		$this->assertEquals(
+			'idField',
+			Convert::upperCamelToLowerCamel('IdField'),
+			'Single leading upper with trailing upper camel'
+		);
+		$this->assertEquals(
+			'idField',
+			Convert::upperCamelToLowerCamel('IDField'),
+			'Multi leading upper with trailing upper camel'
+		);
+		$this->assertEquals(
+			'iDField',
+			Convert::upperCamelToLowerCamel('iDField'),
+			'Single leading lower with trailing upper camel'
+		);
+		$this->assertEquals(
+			'_IDField',
+			Convert::upperCamelToLowerCamel('_IDField'),
+			'Non-alpha leading  with trailing upper camel'
+		);
+	}
 }
