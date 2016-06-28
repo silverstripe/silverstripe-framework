@@ -987,7 +987,7 @@ class Requirements_Backend {
 			$mtimesuffix = "";
 			$suffix = '';
 			if($this->suffix_requirements) {
-				$mtimesuffix = "?m=" . filemtime($filePath);
+				$mtimesuffix = "?m=" . $this->generateNonce($filePath);
 				$suffix = '&';
 			}
 			if(strpos($fileOrUrl, '?') !== false) {
@@ -1002,6 +1002,16 @@ class Requirements_Backend {
 			return "{$prefix}{$fileOrUrl}{$mtimesuffix}{$suffix}";
 		} else {
 			return false;
+		}
+	}
+
+	protected function generateNonce($filePath) {
+		if(!file_exists($filePath)) return 'notfound';
+
+		if(Config::inst()->get('Requirements_Backend', 'nonce_format') === 'md5') {
+			return hash_file('md5', $filePath);
+		} else {
+			return filemtime($filePath);
 		}
 	}
 
