@@ -137,7 +137,7 @@ class GridFieldAddExistingAutocompleter
 	 * @return array
 	 */
 	public function getActions($gridField) {
-		return array('addto');
+		return array('addto', 'find');
 	}
 
 	/**
