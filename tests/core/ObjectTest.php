@@ -427,7 +427,7 @@ class ObjectTest extends SapphireTest {
 		// 5.4 Shorthand Array
 		$this->assertEquals(
 			array('Enum',array(array('Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted')),
-			Object::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'), 'Unsubmitted']")
+			Object::parse_class_spec("Enum(['Accepted', 'Pending', 'Declined', 'Unsubmitted'], 'Unsubmitted')")
 		);
 		// 5.4 Nested shorthand array
 		$this->assertEquals(
@@ -436,6 +436,28 @@ class ObjectTest extends SapphireTest {
 			Object::parse_class_spec(
 				"Enum(['Accepted', 'Pending', 'Declined', ['UnsubmittedA','UnsubmittedB']], 'Unsubmitted')")
 		);
+
+		// Associative array
+		$this->assertEquals(
+			array('Varchar', array(255, array('nullifyEmpty' => false))),
+			Object::parse_class_spec("Varchar(255, array('nullifyEmpty' => false))")
+		);
+		// Nested associative array
+		$this->assertEquals(
+			array('Test', array('string', array('nested' => array('foo' => 'bar')))),
+			Object::parse_class_spec("Test('string', array('nested' => array('foo' => 'bar')))")
+		);
+		// 5.4 shorthand associative array
+		$this->assertEquals(
+			array('Varchar', array(255, array('nullifyEmpty' => false))),
+			Object::parse_class_spec("Varchar(255, ['nullifyEmpty' => false])")
+		);
+		// 5.4 shorthand nested associative array
+		$this->assertEquals(
+			array('Test', array('string', array('nested' => array('foo' => 'bar')))),
+			Object::parse_class_spec("Test('string', ['nested' => ['foo' => 'bar']])")
+		);
+
 		// Namespaced class
 		$this->assertEquals(
 			array('Test\MyClass', array()),
