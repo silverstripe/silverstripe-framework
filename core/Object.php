@@ -393,11 +393,7 @@ abstract class Object {
 		return $default;
 	}
 
-	/**
-	 * @deprecated
-	 */
 	public static function get_static($class, $name, $uncached = false) {
-		Deprecation::notice('4.0', 'Replaced by Config#get');
 		return Config::inst()->get($class, $name, Config::FIRST_SET);
 	}
 
