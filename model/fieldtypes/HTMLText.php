@@ -175,6 +175,15 @@ class HTMLText extends Text {
 		return $this->Summary();
 	}
 
+	public function RAW() {
+		if ($this->processShortcodes) {
+			return ShortcodeParser::get_active()->parse($this->value);
+		}
+		else {
+			return $this->value;
+		}
+	}
+
 	/**
 	 * Return the value of the field with relative links converted to absolute urls (with placeholders parsed).
 	 * @return string
@@ -184,12 +193,7 @@ class HTMLText extends Text {
 	}
 
 	public function forTemplate() {
-		if ($this->processShortcodes) {
-			return ShortcodeParser::get_active()->parse($this->value);
-		}
-		else {
-			return $this->value;
-		}
+		return $this->RAW();
 	}
 
 	public function prepValueForDB($value) {
