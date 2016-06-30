@@ -537,6 +537,8 @@ class ShortcodeParser extends Object {
 		// If no content, don't try and parse it
 		if (!trim($content)) return $content;
 
+		if (strpos($content, '[') === false) return $content;
+
 		// First we operate in text mode, replacing any shortcodes with marker elements so that later we can
 		// use a proper DOM
 		list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
