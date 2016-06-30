@@ -31,10 +31,11 @@ class HTMLVarchar extends Varchar {
 		else {
 			return $this->value;
 		}
+
 	}
 
 	public function exists() {
-		return parent::exists() && $this->value != '<p></p>';
+		return parent::exists() && $this->RAW() != '<p></p>';
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
