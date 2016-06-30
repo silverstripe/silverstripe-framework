@@ -192,4 +192,26 @@ class HTMLTextTest extends SapphireTest {
 			'Removes any elements not in whitelist including text elements'
 		);
 	}
+
+	public function testShortCodeParsedInRAW() {
+		$parser = ShortcodeParser::get('HTMLTextTest');
+		$parser->register('shortcode', function($arguments, $content, $parser, $tagName, $extra) {
+			return 'replaced';
+		});
+		ShortcodeParser::set_active('HTMLTextTest');
+		/** @var HTMLText $field */
+		$field = DBField::create_field('HTMLText', '<p>[shortcode]</p>');
+		$this->assertEquals('<p>replaced</p>', $field->RAW());
+		$this->assertEquals('<p>replaced</p>', (string)$field);
+
+		$field->setOptions(array(
+			'shortcodes' => false,
+		));
+
+		$this->assertEquals('<p>[shortcode]</p>', $field->RAW());
+		$this->assertEquals('<p>[shortcode]</p>', (string)$field);
+
+
+		ShortcodeParser::set_active('default');
+	}
 }

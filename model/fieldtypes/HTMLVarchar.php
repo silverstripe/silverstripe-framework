@@ -21,6 +21,10 @@ class HTMLVarchar extends Varchar {
 	}
 
 	public function forTemplate() {
+		return $this->RAW();
+	}
+
+	public function RAW() {
 		if ($this->processShortcodes) {
 			return ShortcodeParser::get_active()->parse($this->value);
 		}
