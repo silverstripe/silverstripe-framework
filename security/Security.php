@@ -130,6 +130,15 @@ class Security extends Controller implements TemplateGlobalProvider {
 	private static $logout_url = "Security/logout";
 
 	/**
+	 * The default lost password URL
+	 *
+	 * @config
+	 *
+	 * @var string
+	 */
+	private static $lost_password_url = "Security/lostpassword";
+
+	/**
 	 * Get location of word list file
 	 *
 	 * @deprecated 4.0 Use the "Security.word_list" config setting instead
@@ -651,9 +660,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @param string $autoLoginHash The auto login token.
 	 */
 	public static function getPasswordResetLink($member, $autologinToken) {
-		$autologinToken = urldecode($autologinToken);
+		$autologinToken      = urldecode($autologinToken);
 		$selfControllerClass = __CLASS__;
-		$selfController = new $selfControllerClass();
+		$selfController      = new $selfControllerClass();
 		return $selfController->Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
 	}
 
@@ -1108,7 +1117,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public static function login_url() {
-		return self::config()->login_url;
+		return Controller::join_links(Director::baseURL(), self::config()->login_url);
 	}
 
 
@@ -1120,9 +1129,19 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public static function logout_url() {
-		return self::config()->logout_url;
+		return Controller::join_links(Director::baseURL(), self::config()->logout_url);
 	}
 
+	/**
+	 * Get the URL of the logout page.
+	 *
+	 * To update the logout url use the "Security.logout_url" config setting.
+	 *
+	 * @return string
+	 */
+	public static function lost_password_url() {
+		return Controller::join_links(Director::baseURL(), self::config()->lost_password_url);
+	}
 
 	/**
 	 * Defines global accessible templates variables.
@@ -1133,6 +1152,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		return array(
 			"LoginURL" => "login_url",
 			"LogoutURL" => "logout_url",
+			"LostPasswordURL" => "lost_password_url",
 		);
 	}
 
