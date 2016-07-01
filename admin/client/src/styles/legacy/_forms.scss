@@ -16,9 +16,9 @@ form.nostyle {
 
 .field { // TODO convert to .form-group
 
-  &.ui-tabs {
-    border-bottom: 0;
-  }
+	&.ui-tabs {
+		border-bottom: 0;
+	}
 
 	&.noborder {
 		padding-bottom: 0;
@@ -39,6 +39,10 @@ form.nostyle {
 		display: block;
 	}
 
+	.fieldgroup .fieldgroup-field.last {  /* This is used on page/settings/visibility */
+			padding-bottom: 8px; /* replicates li item spacing */
+		}
+
 	// Additional help text to clarify the field intent,
 	// displayed alongside the field (rather than in a tooltip)
 	.description {
@@ -46,7 +50,7 @@ form.nostyle {
     color: $text-muted; //8.5% is the minimum required to meet contrast standards while still retaining visual difference from normal text
 	}
 
-	&.checkbox .description, &.ss-gridfield .description {
+	&.checkbox .description, &.grid-field .description {
 		margin-left: 0;
 	}
 
@@ -75,7 +79,7 @@ form.nostyle {
 
   // TODO remove ID style
 	&#Action {
-    box-shadow: none;
+			box-shadow: none;
 	}
 
 	// When a field's description is toggleable, it's given an icon (right title) which is used as
@@ -205,10 +209,8 @@ form.small .field, .field.small {
 	}
 
 	/* dropdowns */
-	.dropdown {
-		select {
-			margin-top: $grid-y;
-		}
+	.dropdown select {
+		margin-top: $grid-y;
 	}
 
   /* Chosen override */
@@ -217,16 +219,20 @@ form.small .field, .field.small {
     max-width: $input-max-width !important;
     vertical-align: bottom;
 
-    .chosen-results {
-      padding-top: 4px;
+		.chosen-results {
+			padding-top: 4px;
 
-      li {
-        font-size: 11px;
-        line-height: $grid-y * 2;
-        padding: $grid-y / 2 $grid-x / 2;
-      }
-    }
-  }
+			li {
+				font-size: 11px;
+				line-height: $grid-y * 2;
+				padding: $grid-y / 2 $grid-x / 2;
+			}
+		}
+	}
+
+	.chosen-container-active .chosen-single {
+		border: 1px solid lighten($color-medium-separator, 10%);
+	}
 
   .chosen-container-single .chosen-single  {
     border: 1px solid $border-color-dark;
@@ -302,277 +308,326 @@ form.small .field, .field.small {
 /** ----------------------------------------------------
  * Buttons
  * ---------------------------------------------------- */
+.ss-ui-button {
+	margin-top: 0px;
+	text-decoration: none;
+	line-height: $grid-y * 2;
+	color: lighten($color-text-dark, 10%);
+	border: 1px solid $color-button-generic-border;
+	border-bottom: 1px solid darken($color-button-generic-border, 10%);
+	cursor: pointer;
+	background-color: $color-button-generic;
+	white-space: nowrap;
+	background-image: linear-gradient(lighten($color-button-generic, 10%), darken($color-button-generic, 5%));
 
-.cms {
-	.button-no-style{
-		button{
-			border-radius: 0;
-			background: none;
-			border: none;
-			color: $color-text-blue-link;
-			display: block;
-			font-weight:normal;
-			margin:0;
-			outline:none;
-			padding-left:10px;
-			padding-right:10px;
-			text-align: left;
-			text-shadow: none;
-			white-space:normal;
-			&.ss-ui-action-destructive{
-				color: darken($color-error,25%);
-			}
-			span{
-				padding-left:0;
-				padding-right:0;
-			}
-			&:hover, &:focus, &:active{
-				box-shadow: none;
-				outline: none;
-				background: none;
-				border: none;
-			}
-			&.loading {
-				background: transparent url(../images/network-save.gif) no-repeat right $grid-x center;
-				.ui-button-text {
-					padding-left: 16px /* icon */ + ($grid-x/2);
-				}
-			}
-		}
-	}
-
-	.btn-toolbar, .cms-actions-row {
-		> *:last-child {
-			margin-right: 0;
-		}
-	}
-
-	.south .btn-toolbar, .ui-tabs-panel .btn-toolbar,  .ui-tabs-panel iframe .btn-toolbar {
-		padding-top: 0;
-    padding-bottom: 0;
-	}
-
-	input.loading, button.loading,
-	input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading,
-	.ui-widget-header input.ui-state-default.loading {
-		.ui-icon {
-			background: transparent url(../images/network-save.gif) no-repeat 0 0;
-		}
-
-		color: lighten($color-text-dark, 20%);
-		border-color: darken($color-button-disabled, 10%);
-		cursor: default;
-	}
-
-	input.loading, button.loading {
-		&.ss-ui-action-constructive {
-			.ui-icon {
-				background: transparent url(../images/network-save-constructive.gif) no-repeat 0 0;
-			}
-		}
-	}
-
-	.ss-ui-button {
-		margin-top:0px;
+	&.ui-state-hover,
+	&:hover {
 		text-decoration: none;
-		color: lighten($color-text-dark, 10%);
-		border: 1px solid $color-button-generic-border;
-		border-bottom: 1px solid darken($color-button-generic-border, 10%);
-		cursor: pointer;
-		background-color: $color-button-generic;
-		white-space: nowrap;
-		background-image: linear-gradient(lighten($color-button-generic, 10%), darken($color-button-generic, 5%));
-		vertical-align: top;
-    @extend .btn;
-
-		&.ui-state-hover, &:hover {
-			text-decoration: none;
-			background-color: lighten($color-button-generic, 10%);
-			background-image: linear-gradient(lighten($color-button-generic, 20%), $color-button-generic);
-			box-shadow: 0 0 5px darken($color-button-generic, 20%);
-		}
-
-		&:active, &:focus, &.ui-state-active, &.ui-state-focus {
-			border: 1px solid darken($color-button-generic, 20%);
-			background-color: lighten($color-button-generic, 10%);
-			background-image: linear-gradient(lighten($color-button-generic, 20%), $color-button-generic);
-			box-shadow: 0 0 5px darken($color-button-generic, 20%) inset;
-		}
-
-		&.ss-ui-action-minor {
-			span {
-				padding-left: 0;
-				padding-right: 0;
-			}
-		}
-
-		/* constructive */
-		&.ss-ui-action-constructive {
-			text-shadow:none;
-			color: $color-text-light;
-			border-color: $color-button-constructive-border;
-			border-bottom-color: darken($color-button-constructive-border, 10%);
-			background-color: $color-button-constructive;
-			background-image: linear-gradient(scale-color(lighten($color-button-constructive, 10%), $red:50%), $color-button-constructive);
-
-			&.ui-state-hover, &:hover {
-				border-color: darken($color-button-constructive-border, 10%);
-				background-color: $color-button-constructive;
-				background-image: linear-gradient(
-					scale-color(saturate(lighten($color-button-constructive, 10%), 10%), $red:60%),
-					lighten($color-button-constructive, 5%)
-				);
-			}
-			&:active, &:focus, &.ui-state-active, &.ui-state-focus {
-				background-color: darken($color-button-constructive, 2%);
-				box-shadow: inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6);
-			}
-		}
-
-		/* destructive */
-		&.ss-ui-action-destructive {
-			color: $color-button-destructive;
-			background-color: $color-button-generic;
-		}
-
-		&.ss-ui-button-small {
-			.ui-button-text {
-				font-size: $font-size-sm;
-			}
-		}
-
-		&.ui-state-highlight {
-			background-color: $color-button-highlight;
-			border: 1px solid $color-button-highlight-border;
-		}
-
-		&.ss-ui-action-minor {
-			background: none;
-			border: 0;
-			color: lighten($color-text-dark, 10%);
-			text-decoration: underline;
-			box-shadow: none;
-
-			&:hover {
-				text-decoration: none;
-				color: $color-text-dark;
-			}
-			&:focus,
-			&:active {
-				text-decoration: none;
-				color: lighten($color-text-dark, 20%);
-			}
-		}
-
-		&.ss-ui-button-loading {
-			opacity: 0.8;
-		}
-
-		/* font-icon buttons */
-		&[class*="font-icon-"],
-		&[class^="font-icon-"],
-		&.ss-ui-button-constructive[class*="font-icon-"] {
-			padding: 5px 8px;
-			margin-bottom: $grid-y*1.5;
-			vertical-align: middle;
-			box-shadow: none;
-			border: 0;
-			background: none;
-			text-shadow: none;
-			text-decoration: none;
-			font-weight: normal;
-			color: $color-text;
-
-			&:hover {
-				box-shadow: none;
-				background: #dee3e8;
-				color: darken($color-text, 10%);
-				border: 0;
-			}
-
-			&:focus {
-				box-shadow: none;
-				background: #dee3e8;
-				color: darken($color-text, 10%);
-				border: 0;
-			}
-
-			&:before {
-				font-size: 16px;
-				margin-right: 5px;
-				margin-top: 0;
-				vertical-align: middle;
-			}
-
-			&.ui-state-focus {
-				box-shadow: none;
-			}
-
-			&.active,
-			&:active {
-				box-shadow: 0 0 3px rgba(191, 194, 196, .9) inset;
-				background: #dee3e8;
-				color: darken($color-text, 10%);
-				border: 0;
-			}
-
-			&.font-icon-search {
-				padding: 4px 5px;
-				margin-right: 6px;
-
-				&::before {
-					font-size: 20px;
-				}
-			}
-
-			.ui-button-text {
-				display: inline-block;
-				padding: 0;
-			}
-
-			.ui-icon {
-				display: none;
-			}
-
-			&.no-text {
-				padding: 5px 6px;
-				color: lighten($color-text, 10%);
-
-				&:hover,
-				&:active,
-				&:focus,
-				&.active {
-					box-shadow: none;
-					background: none;
-					color: darken($color-text, 10%);
-				}
-
-				&::before {
-					margin: 0;
-				}
-			}
-		}
+		background-color: lighten($color-button-generic, 10%);
+		background-image: linear-gradient(lighten($color-button-generic, 20%), $color-button-generic);
+		box-shadow: 0 0 5px darken($color-button-generic, 20%);
 	}
 
-	.ss-ui-buttonset {
-		.ui-button {
-			margin-left: -1px;
-		}
-	}
-
-	.ss-ui-buttonset {
-		margin: 0 $grid-x 0 0;
-		padding: 0;
-	}
-
-	.ss-ui-loading-icon {
-		background: url(../images/network-save.gif) no-repeat;
-		display: block;
-		width: 16px;
-		height: 16px;
+	&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+		border: 1px solid darken($color-button-generic, 20%);
+		background-color: lighten($color-button-generic, 10%);
+		background-image: linear-gradient(lighten($color-button-generic, 20%), $color-button-generic);
+		box-shadow: 0 0 5px darken($color-button-generic, 20%) inset;
 	}
 }
 
+.button-no-style {
+	button {
+		border-radius: 0;
+		background: none;
+		border: none;
+		color: $color-text-blue-link;
+		display: block;
+		font-weight:normal;
+		margin:0;
+		outline:none;
+		padding-left:10px;
+		padding-right:10px;
+		text-align: left;
+		text-shadow: none;
+		white-space:normal;
+		&.ss-ui-action-destructive{
+			color: darken($color-error,25%);
+		}
+		span{
+			padding-left:0;
+			padding-right:0;
+		}
+		&:hover, &:focus, &:active{
+			box-shadow: none;
+			outline: none;
+			background: none;
+			border: none;
+		}
+		&.loading {
+			background: transparent url(../images/network-save.gif) no-repeat $grid-x center;
+			.ui-button-text {
+				padding-left: 16px /* icon */ + ($grid-x/2);
+			}
+		}
+	}
+}
+
+.btn-toolbar, .cms-actions-row {
+	> *:last-child {
+		margin-right: 0;
+	}
+}
+
+.south .btn-toolbar, .ui-tabs-panel .btn-toolbar,  .ui-tabs-panel iframe .btn-toolbar {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+input.loading, button.loading,
+input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading,
+.ui-widget-header input.ui-state-default.loading {
+	.ui-icon {
+		background: transparent url(../images/network-save.gif) no-repeat 0 0;
+	}
+
+	color: lighten($color-text-dark, 20%);
+	border-color: darken($color-button-disabled, 10%);
+	cursor: default;
+}
+
+input.loading,
+button.loading {
+	&.ss-ui-action-constructive .ui-icon {
+		background: transparent url(../images/network-save-constructive.gif) no-repeat 0 0;
+	}
+}
+
+.btn-toolbar .ss-ui-action-constructive:first-child {
+	margin-left: 15px;
+
+	.toolbar--south &,
+	.toolbar & {
+		margin-left: 5px;
+	}
+}
+
+
+
+.ss-ui-button {
+	&.ss-ui-action-minor {
+		span {
+			padding-left: 0;
+			padding-right: 0;
+		}
+	}
+
+	/* constructive */
+	&.ss-ui-action-constructive {
+		text-shadow:none;
+		font-weight: bold;
+		color: $color-text-light;
+		border-color: $color-button-constructive-border;
+		border-bottom-color: darken($color-button-constructive-border, 10%);
+		background-color: $color-button-constructive;
+		background-image: linear-gradient(scale-color(lighten($color-button-constructive, 10%), $red:50%), $color-button-constructive);
+		text-shadow: darken($color-button-constructive, 3%) 0 -1px -1px;
+
+		&.ui-state-hover, &:hover {
+			border-color: darken($color-button-constructive-border, 10%);
+			background-color: $color-button-constructive;
+			background-image: linear-gradient(
+				scale-color(saturate(lighten($color-button-constructive, 10%), 10%), $red:60%),
+				lighten($color-button-constructive, 5%)
+			);
+		}
+		&:active, &:focus, &.ui-state-active, &.ui-state-focus {
+			background-color: darken($color-button-constructive, 2%);
+			box-shadow: inset 0 1px 3px rgb(23, 24, 26), 0 1px 0 rgba(255, 255, 255, .6);
+		}
+	}
+
+	/* destructive */
+	&.ss-ui-action-destructive {
+		color: $color-button-destructive;
+		background-color: $color-button-generic;
+	}
+
+	&.ss-ui-button-small {
+		.ui-button-text {
+			font-size: $font-size-sm;
+		}
+	}
+
+	&.ui-state-highlight {
+		background-color: $color-button-highlight;
+		border: 1px solid $color-button-highlight-border;
+	}
+
+	&.ss-ui-action-minor {
+		background: none;
+		border: 0;
+		color: lighten($color-text-dark, 10%);
+		text-decoration: underline;
+		box-shadow: none;
+
+		&:hover {
+			text-decoration: none;
+			color: $color-text-dark;
+		}
+		&:focus,
+		&:active {
+			text-decoration: none;
+			color: lighten($color-text-dark, 20%);
+		}
+	}
+
+	&.ss-ui-button-loading {
+		opacity: 0.8;
+	}
+
+	/* font-icon buttons */
+	&[class*="font-icon-"],
+	&[class^="font-icon-"],
+	&.ss-ui-button-constructive[class*="font-icon-"] {
+		padding: 5px 8px;
+		margin-bottom: $grid-y*1.5;
+		vertical-align: middle;
+		box-shadow: none;
+		border: 0;
+		background: none;
+		text-shadow: none;
+		text-decoration: none;
+		font-weight: normal;
+		color: $color-text;
+
+		&:hover {
+			box-shadow: none;
+			background: #dee3e8;
+			color: darken($color-text, 10%);
+			border: 0;
+		}
+
+		&:focus {
+			box-shadow: none;
+			background: #dee3e8;
+			color: darken($color-text, 10%);
+			border: 0;
+		}
+
+		&:before {
+			font-size: 16px;
+			margin-right: 5px;
+			margin-top: 0;
+			vertical-align: top;
+		}
+
+		&.ui-state-focus {
+			box-shadow: none;
+		}
+
+		&.active,
+		&:active {
+			box-shadow: 0 0 3px rgba(191, 194, 196, .9) inset;
+			background: #dee3e8;
+			color: darken($color-text, 10%);
+			border: 0;
+		}
+
+		.ui-button-text {
+			display: inline-block;
+			padding: 0;
+		}
+
+		.ui-icon {
+			display: none;
+		}
+
+		&.no-text,
+		&.btn--no-text {
+
+			&:hover,
+			&:active,
+			&:focus,
+			&.active {
+				box-shadow: none;
+				color: darken($color-text, 10%);
+			}
+
+			&::before {
+				margin: 0;
+			}
+		}
+	}
+}
+
+.ss-ui-buttonset {
+	margin: 0 $grid-x 0 0;
+	padding: 0;
+
+	.ui-button {
+		margin-left: -1px;
+	}
+}
+
+.ss-ui-loading-icon {
+	background: url(../images/network-save.gif) no-repeat;
+	display: block;
+	width: 16px;
+	height: 16px;
+}
+
+
+/** ----------------------------------------------------
+ * Grouped form fields
+ * ---------------------------------------------------- */
+.fieldgroup {
+	.fieldgroup-field {
+		float: left;
+		display: block;
+		padding: $grid-y $grid-x 0 0;
+
+		.field {
+			border: none;
+			padding-bottom: 0;
+		}
+
+		.fieldholder-small {
+			padding: 0 0 $grid-y 0;
+		}
+
+		.fieldgroup input.text, .fieldgroup textarea, .fieldgroup select, .fieldgroup .TreeDropdownField {
+			margin-left: 0;
+		}
+
+		// Style specific label with display block, otherwise
+		// checkbox falls under the text
+		.fieldholder-small-label {
+			display: block;
+		}
+
+		label {
+			padding: $grid-y $grid-x $grid-y 0;
+			margin-left: 0;
+			margin-right: 1em;
+			width: auto;
+		}
+
+		.checkbox {
+			display: inline;
+		}
+
+		.fieldgroup .fieldgroup-field {
+			padding-top: 0;
+		}
+	}
+
+	&.stacked {
+		.fieldgroup-field {
+			float: none;
+		}
+	}
+}
 
 .ss-toggle {
 	margin: $grid-y 0;
@@ -636,7 +691,6 @@ form.small .field, .field.small {
 		}
 	}
 }
-
 
 .action-hidden {
 	display:  none;
@@ -748,16 +802,23 @@ fieldset.switch-states{
   padding: 0;
 }
 
+.field.tabset {
+	border-bottom: 0;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-bottom: 0
+}
+
 // Fix for multiple divider lines on the page/settings tab
 .parentTypeSelector .field.optionset {
-  border-bottom: 0;
+	border-bottom: 0;
 }
 
 // TEMPORARY transitional fixes from JQuery-ui to bootstrap
 .btn .ui-button-text {
-  padding-top: 0;
-  padding-bottom: 0;
-  padding-right: 0;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-right: 0;
 }
 
 // Align buttons with input
@@ -766,22 +827,23 @@ fieldset.switch-states{
   margin-top: 3px;
 }
 
-.ui-button-text-only .ui-button-text {
-  padding: 0;
-}
-
 .ui-datepicker {
   box-shadow: 0 0 8px 0 $shadow-level-5;
 }
 
 .btn .ui-icon + .ui-button-text {
-  padding-left: 18px;
+	padding-left: 18px;
 }
 
 .btn-toolbar .ss-ui-button {
-  margin-left: 5px;
+	margin-left: 5px;
 }
 
 .toolbar--south.cms-content-actions {
-  width: 100% !important;
+	width: 100% !important;
+}
+
+// Override Bootstrap hidden file upload until they have a good way of showing uploaded file names
+.file input.file {
+	opacity: 1;
 }

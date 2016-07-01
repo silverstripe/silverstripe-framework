@@ -56,7 +56,7 @@ class MemberImportForm extends Form {
 
 		if(!$actions) {
 			$action = new FormAction('doImport', _t('SecurityAdmin_MemberImportForm.BtnImport', 'Import from CSV'));
-			$action->addExtraClass('ss-ui-button');
+			$action->addExtraClass('btn btn-secondary-outline ss-ui-button');
 			$actions = new FieldList($action);
 		}
 

@@ -122,16 +122,16 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$root = new TabSet(
 				'Root',
 				$usersTab = new Tab('Users', _t('SecurityAdmin.Users', 'Users'),
-					$memberList,
+
 					new LiteralField('MembersCautionText',
-						sprintf('<p class="caution-remove"><strong>%s</strong></p>',
+						sprintf('<div class="alert alert-warning" role="alert">%s</div>',
 							_t(
 								'SecurityAdmin.MemberListCaution',
-								'Caution: Removing members from this list will remove them from all groups and the'
-									. ' database'
+								'Caution: Removing members from this list will remove them from all groups and the database'
 							)
 						)
-					)
+					),
+					$memberList
 				),
 				$groupsTab = new Tab('Groups', singleton('SilverStripe\\Security\\Group')->i18n_plural_name(),
 					$groupList

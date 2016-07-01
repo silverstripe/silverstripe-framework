@@ -1240,7 +1240,7 @@ $.entwine('ss', function($) {
    * Overload the default GridField behaviour (open a new URL in the browser)
    * with the CMS-specific ajax loading.
    */
-  $('.cms .ss-gridfield').entwine({
+  $('.cms .grid-field').entwine({
     showDetailView: function(url) {
       // Include any GET parameters from the current URL, as the view state might depend on it.
       // For example, a list prefiltered through external search criteria might be passed to GridField.

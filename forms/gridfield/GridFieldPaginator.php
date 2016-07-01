@@ -207,7 +207,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		} else {
 			// First page button
 			$firstPage = new GridField_FormAction($gridField, 'pagination_first', 'First', 'paginate', 1);
-			$firstPage->addExtraClass('ss-gridfield-firstpage');
+			$firstPage->addExtraClass('btn btn-secondary btn--no-text font-icon-angle-double-left ss-gridfield-firstpage');
 			if($state->currentPage == 1)
 				$firstPage = $firstPage->performDisabledTransformation();
 
@@ -215,7 +215,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			$previousPageNum = $state->currentPage <= 1 ? 1 : $state->currentPage - 1;
 			$previousPage = new GridField_FormAction($gridField, 'pagination_prev', 'Previous',
 				'paginate', $previousPageNum);
-			$previousPage->addExtraClass('ss-gridfield-previouspage');
+			$previousPage->addExtraClass('btn btn-secondary btn--no-text font-icon-angle-left ss-gridfield-previouspage');
 			if($state->currentPage == 1)
 				$previousPage = $previousPage->performDisabledTransformation();
 
@@ -223,13 +223,13 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			$nextPageNum = $state->currentPage >= $totalPages ? $totalPages : $state->currentPage + 1;
 			$nextPage = new GridField_FormAction($gridField, 'pagination_next', 'Next',
 				'paginate', $nextPageNum);
-			$nextPage->addExtraClass('ss-gridfield-nextpage');
+			$nextPage->addExtraClass('btn btn-secondary btn--no-text font-icon-angle-right ss-gridfield-nextpage');
 			if($state->currentPage == $totalPages)
 				$nextPage = $nextPage->performDisabledTransformation();
 
 			// Last page button
 			$lastPage = new GridField_FormAction($gridField, 'pagination_last', 'Last', 'paginate', $totalPages);
-			$lastPage->addExtraClass('ss-gridfield-lastpage');
+			$lastPage->addExtraClass('btn btn-secondary btn--no-text font-icon-angle-double-right ss-gridfield-lastpage');
 			if($state->currentPage == $totalPages)
 				$lastPage = $lastPage->performDisabledTransformation();
 

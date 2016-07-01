@@ -233,3 +233,33 @@
 .font-icon-sad:before {
   content: "\23";
 }
+.font-icon-angle-double-right:before {
+  content: "\24";
+}
+.font-icon-angle-double-left:before {
+  content: "\25";
+}
+.font-icon-angle-right:before {
+  content: "\26";
+}
+.font-icon-angle-left:before {
+  content: "\27";
+}
+.font-icon-caret-up-down:before {
+  content: "\29";
+}
+.font-icon-caret-down-two:before {
+  content: "\28";
+}
+.font-icon-caret-up-two:before {
+  content: "\2a";
+}
+.font-icon-right-dir:before {
+  content: "\2b";
+}
+.font-icon-down-dir:before {
+  content: "\2c";
+}
+.font-icon-link-broken:before {
+  content: "\2d";
+}

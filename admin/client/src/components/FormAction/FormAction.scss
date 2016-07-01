@@ -27,15 +27,26 @@
   float: left;
 }
 
+.btn--icon-danger:hover::before {
+  color: $brand-danger;
+}
+
 // Gives button a larger icon
+.btn--icon-md[class*="font-icon-"]::before {
+  font-size: 17px;
+  position: relative;
+}
+
 .btn--icon-large[class*="font-icon-"]::before {
   font-size: 20px;
   top: -1px;
+  position: relative;
 }
 
 .btn--icon-xl[class*="font-icon-"]::before {
   font-size: 22px;
   top: -1px;
+  position: relative;
 }
 
 
@@ -44,6 +55,7 @@
 .btn--no-text[class*="font-icon-"]::before,
 .no-text[class*="font-icon-"]::before {
   margin-right: 0;
+  color: lighten($color-text, 10%);
 }
 
 

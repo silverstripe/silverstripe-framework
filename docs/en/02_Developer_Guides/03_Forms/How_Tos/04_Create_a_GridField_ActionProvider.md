@@ -29,7 +29,7 @@ below:
 		}
 
 		public function getColumnAttributes($gridField, $record, $columnName) {
-			return array('class' => 'col-buttons');
+			return array('class' => 'grid-field__col-compact');
 		}
 
 
@@ -88,11 +88,11 @@ manipulating the `GridFieldConfig` instance if required.
 	$config->addComponent(new GridFieldCustomAction());
 
 	$gridField = new GridField('Teams', 'Teams', $this->Teams(), $config);
-	
+
 	// option 2: adding the CustomAction to an exisitng GridField
 	$gridField->getConfig()->addComponent(new GridFieldCustomAction());
-	
-For documentation on adding a Component to a `GridField` created by `ModelAdmin` 
+
+For documentation on adding a Component to a `GridField` created by `ModelAdmin`
 please view the [GridField Customization](/developer_guides/forms/how_tos/create_a_gridfield_actionprovider) section.
 
 Now let's go back and dive through the `GridFieldCustomAction` class in more

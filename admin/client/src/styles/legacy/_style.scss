@@ -36,11 +36,9 @@ body.cms {
 	display: none;
 }
 
-.cms-helper-hide-actions {
-	.btn-toolbar {
+.cms-helper-hide-actions .btn-toolbar {
 		@extend .hide;
 	}
-}
 
 
 
@@ -106,7 +104,7 @@ body.cms {
 
 	.cms-content-header-info {
 		float:left;
-		padding-top: $grid-y - 1;
+		padding-top: 5px;
 
 		& * {
 			display: inline-block; // align back button and breadcrumbs
@@ -253,7 +251,7 @@ body.cms {
 
   .checkbox {
     margin-bottom: 0;
-  }
+	}
 }
 
 #page-title-heading {
@@ -412,12 +410,6 @@ body.cms {
 		+ button.ss-ui-button.icon-button {
 			border-left: 1px solid #CDCCD0;
 		}
-
-		&.font-icon-thumbnails {
-			&::before {
-				margin-left: -2px;
-			}
-	}
 	}
 
 	// Context specific overrides for Tabs.
@@ -472,7 +464,7 @@ body.cms {
 	}
 
 	.ui-tabs-panel {
-		padding: $grid-y*1.5 $grid-gutter-width-half;
+		padding: 0 $grid-gutter-width-half;
 		background: transparent; // default it's white
 		border: 0; // suppress default borders
 
@@ -487,7 +479,7 @@ body.cms {
         margin-right: $grid-gutter-width-half;
         float: none;
         border-bottom: 1px solid $nav-tabs-link-hover-border-color;
-        margin-bottom: 10px;
+        margin-bottom: $spacer-y;
       }
 
       .first .ui-tabs-anchor {
@@ -496,6 +488,12 @@ body.cms {
       }
     }
 	}
+
+  .ui-tabs-panel .toolbar--content {
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+
 
 	.ui-widget-header {
 		border: 0;
@@ -871,8 +869,8 @@ body.cms {
 }
 
 .cms-edit-form .ui-tabs-panel .message {
-  margin: $grid-x*2 0; // gets padding from tab panel
-}
+			margin: $grid-x*2 0; // gets padding from tab panel
+		}
 
 .notice-item {
 	border-radius: 3px;
@@ -987,21 +985,21 @@ body.cms {
     &.selected {
       background-color: $background-darker;
       cursor: pointer;
-    }
+			}
 
-    &.disabled {
-      color: $color-text-disabled;
+			&.disabled {
+				color: $color-text-disabled;
       opacity: 0.6;
     }
 
     &.disabled:hover {
-      background: none;
-    }
-  }
+					background: none;
+				}
+			}
 
   input[type="radio"] {
     position: static;
-  }
+			}
 
   .page-icon {
     display: inline-block;
@@ -1012,12 +1010,12 @@ body.cms {
     + .title {
       margin-right: 6px;
       font-weight: 500;
-    }
-  }
+			}
+			}
 
   .form__field-description {
-    font-style: italic;
-  }
+				font-style: italic;
+	}
 }
 
 /** --------------------------------------------
@@ -1140,7 +1138,7 @@ body.cms {
 				background-color: $component-active-bg;
 				color: $color-text-light;
 				border-top: 2px solid $component-active-bg;
-			}
+				}
 			+ .active td {
 				border-color: $component-active-bg;
 			}
@@ -1160,11 +1158,11 @@ body.cms {
 
 		&.first-column {
 			padding-left: $grid-gutter-width-half;
-		}
+	}
 		&.last-column {
 			padding-right: $grid-gutter-width-half;
 		}
-	}
+}
 }
 
 /** ------------------------------------------------------------------
@@ -1332,10 +1330,12 @@ form.member-profile-form {
 	.advanced h4 {
 		margin-bottom: .5em;
 	}
+
 	.btn-toolbar {
 		text-align: left;
 		border: 0;
 	}
+
 	input.customFormat {
 		width: $grid-x * 10;
 		border: 1px solid #ccc !important;
@@ -1343,10 +1343,12 @@ form.member-profile-form {
 		display: inline-block;
 		margin-left: 1em;
 	}
+
 	.formattingHelpToggle {
 		display: block;
 		font-size: 11px;
 	}
+
 	.formattingHelpText {
 		margin: 5px 0 0 -5px;
 		color: #333;
@@ -1354,9 +1356,11 @@ form.member-profile-form {
 		background: #fff;
 		border: 1px solid #ccc;
 	}
+
 	.formattingHelpText ul {
 		padding: 0;
 	}
+
 	.formattingHelpText li {
 		font-size: 11px;
 		color: #333;
@@ -1365,9 +1369,11 @@ form.member-profile-form {
 		float: none;
 		width: auto;
 	}
+
 	#Groups .middleColumn {
 		margin-left: 0;
 		width: 100%;
+
 		.TreeDropdownField {
 			width: 90%;
 			max-width: 90%;
@@ -1375,15 +1381,11 @@ form.member-profile-form {
 	}
 
 	// Same rules in .SecurityAdmin
-	#Permissions {
-		.optionset {
-			li {
+	#Permissions .optionset li {
 				float: none;
 				width: auto;
 			}
 		}
-	}
-}
 
 .memberdatetimeoptionset {
   @extend .form-inline;
@@ -1391,6 +1393,7 @@ form.member-profile-form {
 	.description {
 		font-style: normal;
 	}
+
 	.toggle {
 		font-size: $font-size-sm;
 	}
@@ -1425,13 +1428,19 @@ form.member-profile-form {
 		overflow-x: auto;
 		background: $tab-panel-texture-color;
 		width: 100%;
+
 		#Root_Main {
+			.confirmedpassword {
+				border-bottom:none;
+				box-shadow:none;
+			}
 
 			.customFormat {
 				max-width: 100px;
         padding-top: 0;
         padding-bottom: 0;
 			}
+
 			.cms-help-toggle {
 				text-indent: -9999em;
 				display: inline-block;
@@ -1439,12 +1448,12 @@ form.member-profile-form {
 				background:url(../images/question.png) no-repeat 0px 0px;
 			}
 		}
-		#Root_Permissions{
-			ul.optionset li {
+
+		#Root_Permissions ul.optionset li {
 				float:none;
 			}
 		}
-	}
+
 	form.member-profile-form {
 		#Root .ui-tabs-nav {
 			display: none;
@@ -1469,7 +1478,10 @@ form.member-profile-form {
 		white-space: nowrap;
 	}
 }
-#ViewerGroups, #EditorGroups, #CreateTopLevelGroups {
+
+#ViewerGroups,
+#EditorGroups,
+#CreateTopLevelGroups {
 	select {
 		// Fix for chosen.js width detection on hidden elements.
 		// TODO Remove once .field styling in _form.scss is refactored to allow flexible field widths
@@ -1482,7 +1494,6 @@ form.member-profile-form {
  * -------------------------------------------- */
 
 .cms-panel {
-
 	.cms-panel-toggle {
 
 		.toggle-collapse,
@@ -1513,23 +1524,23 @@ form.member-profile-form {
 
 	&.collapsed {
 		cursor: pointer;
+
 		.cms-panel-header *,
 		.cms-panel-content,
 		.cms-panel-toggle a.toggle-collapse{
 			display:none;
 		}
+
 		.cms-panel-toggle a.toggle-expand {
 			display: block;
 		}
-
 	}
 
 	.cms-panel-header {
 		width: 100%;
 	}
 
-	&#cms-content-tools-CMSPageEditController {
-		.cms-panel-content-collapsed {
+	&#cms-content-tools-CMSPageEditController .cms-panel-content-collapsed {
 			width: $cms-panel-xs;
 			display: none; // Avoids FOUC
 
@@ -1547,7 +1558,6 @@ form.member-profile-form {
 				text-align: right;
 			}
 		}
-	}
 
 	.cms-panel-content-collapsed {
 		width: 60px;
@@ -1555,7 +1565,8 @@ form.member-profile-form {
 		height: calc(100% - $toolbar-height);
 		overflow: hidden;
 
-		h2, h3 {
+		h2,
+    h3 {
 			border-bottom: 0;
 			margin-left: 18px;
 			transform-origin: bottom right;
@@ -1567,26 +1578,29 @@ form.member-profile-form {
 			position: relative;
 			right: 574px;
 			text-align: right;
-			border-bottom: none;
+			border-bottom: 0;
 			box-shadow: none;
 			margin-top: -5px;
 		}
 	}
 }
 
-.cms {
-	.cms-panel-padded {
+.cms .cms-panel-padded {
 		&.ReportAdmin {
-			> fieldset {
-				padding: 12px 16px;
-			}
-		}
+      .ss-gridfield-buttonrow {
+        margin-left: -20px;
+        margin-right: -20px;
+      }
+
+      > fieldset {
+  				padding: 0 $grid-gutter-width-half;
+  		}
+    }
 
 		.cms-content-view {
-			padding: 0 $grid-x*2 $grid-y*1.5;
+			padding: 0 $grid-gutter-width-half $grid-y*1.5;
 		}
 	}
-}
 
 .CMSPageAddController .cms-panel-padded {
 	padding: $grid-gutter-width-half;
@@ -1611,11 +1625,9 @@ form.member-profile-form {
 	background-image: none;
 }
 
-.cms .ui-dialog{
-	.ss-ui-dialog.ui-dialog-content {
+.cms .ui-dialog .ss-ui-dialog.ui-dialog-content {
 		padding-top: 0px; //removes padding so that tabs are flush with header
 	}
-}
 
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
@@ -1632,7 +1644,7 @@ form.member-profile-form {
 	.ui-dialog-titlebar.ui-widget-header {
 	  	font-size: $font-size-root +1;
 		padding: 0;
-		border:none;
+		border: 0;
 		background: transparent url(../images/textures/cms_content_header.png) repeat;
 		box-shadow: $color-shadow-dark 0 0 ($grid-x / 2) inset;
 
@@ -1655,7 +1667,7 @@ form.member-profile-form {
 	.cms-dialog-content {
 		background: $tab-panel-texture-color;
 		padding-bottom: $grid-y;
-		padding-top:0px;
+		padding-top: 0;
 
 		.btn-toolbar {
 			overflow: auto;
@@ -1769,12 +1781,15 @@ body.cms-dialog {
 			margin: 2px 0 0;
 			vertical-align: top;
 
-			&:hover, &:active{
+			&:hover,
+      &:active {
 				opacity:1;
 			}
 
 			&.ui-state-disabled {
-				&, &:hover, &:active {
+				&,
+        &:hover,
+        &:active {
 					opacity: 0.35;
 					filter: Alpha(Opacity=35);
 				}
@@ -1782,7 +1797,7 @@ body.cms-dialog {
 		}
 
 		&.loading button.add-url::before {
-			content: '';
+			content: "";
 			background: url(../images/throbber.gif) no-repeat center center;
 			padding: 8px;
 		}
@@ -1816,7 +1831,8 @@ body.cms-dialog {
 		}
 	}
 
-	.ss-insert-media, .ss-insert-link {
+	.ss-insert-media,
+  .ss-insert-link {
 		padding: $grid-y*1.5 $grid-x*2;
 
 		.ui-tabs-panel {
@@ -1831,6 +1847,7 @@ body.cms-dialog {
 			padding: 0;
 		}
 	}
+
 	.details{
 		.file-url{
 			display:block;
@@ -1838,31 +1855,36 @@ body.cms-dialog {
 			@include hide-text-overflow;
 		}
 
+		.cms-file-info {
 		.field{
+				border: none;
+				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+			}
+		}
+
+		.field {
 			border-bottom: 1px solid $color-shadow-light;
     		box-shadow: 0 1px 0 lighten($color-shadow-light, 95%);
+
     		&.last{
-				border-bottom:none;
+				border-bottom: 0;
 				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 				margin-bottom:0;
 			}
 		}
 	}
 
-	.CompositeField{
-		.text{
-			select{
+	.CompositeField .text select {
 				margin: 5px 0 0 0;
 			}
 		}
-	}
-}
 
 .htmleditorfield-linkform {
   .step2 {
     margin-bottom: $grid-x*2;
     line-height: 18px;
   }
+
 	.ss-uploadfield {
 		.middleColumn {
 			width: auto;
@@ -1871,23 +1893,20 @@ body.cms-dialog {
 }
 
 .htmleditorfield-mediaform {
-	.ss-gridfield {
-		.gridfield-button-delete {
+	.grid-field .gridfield-button-delete {
 			// TODO Remove from PHP instead of hiding
 			display: none; // delete action shouldn't be allowed here
 		}
-	}
 
-	.htmleditorfield-from-web, .htmleditorfield-from-cms {
-		&.ss-uploadfield {
-			.middleColumn {
+	.htmleditorfield-from-web,
+  .htmleditorfield-from-cms {
+		&.ss-uploadfield .middleColumn {
 				width:auto;
 				background:none;
-				border:none;
+			border: 0;
 				min-width: 0;
 			}
 		}
-	}
 
 	.htmleditorfield-from-cms {
 		&.ss-uploadfield {
@@ -1940,15 +1959,11 @@ body.cms-dialog {
 		}
 	}
 
-	.ss-assetuploadfield .ss-uploadfield-editandorganize {
-		.ss-uploadfield-files {
-			.ss-uploadfield-item-info {
+	.ss-assetuploadfield .ss-uploadfield-editandorganize .ss-uploadfield-files .ss-uploadfield-item-info {
 				background-color: grayscale(#5db4df);
 				background-image: linear-gradient(to bottom,  grayscale(#5db4df) 0%, grayscale(#5db1dd) 8%, grayscale(#439bcb) 50%, grayscale(#3f99cd) 54%, grayscale(#207db6) 96%, grayscale(#1e7cba) 100%);
 			}
 		}
-	}
-}
 
 /** --------------------------------------------
  * Add to campaign dialog
@@ -1996,7 +2011,7 @@ body.cms-dialog {
 
 		&::after {
 			font-style: normal;
-			content: 'Already contains item';
+			content: "Already contains item";
 			color: $color-text-blue-link;
 			margin-left: $spacer-x;
 			float: right;
@@ -2019,8 +2034,7 @@ body.cms-dialog {
 		left: 0;
 		width: 100%;
 		animation:add-to-campaign--slideup 2s 1;
-		background: white;
-
+		background: $white;
 		display: table;
 
 		span {
@@ -2030,7 +2044,8 @@ body.cms-dialog {
 			padding-bottom: $spacer-y;
 
 			&::before {
-				font-size: 48px; line-height: 40px;
+				font-size: 48px;
+        line-height: 40px;
 				display: block;
 				padding-bottom: $spacer-y;
 			}
@@ -2044,26 +2059,35 @@ body.cms-dialog {
 		}
 	}
 
-	.add-to-campaign__response--error {
-		span::before {
+	.add-to-campaign__response--error span::before {
 			/* This is a sad face emoticon. Some fonts don't carry it. @todo: replace or test in all browsers */
 			content: "☹";
 			color: $brand-danger;
 		}
 	}
-}
 
+
+/** --------------------------------------------
+ * Search forms (used in AssetAdmin, ModelAdmin, etc)
+ * -------------------------------------------- */
+.cms-search-form {
+	margin-bottom: $grid-y * 2;
+
+	.filter & {
+		margin-bottom: 0;
+}
+}
 
 /** --------------------------------------------
  * Step labels
  * -------------------------------------------- */
 .step-label > * {
   display: block;
-}
+	}
 
 .step-label .flyout {
   color: $brand-secondary;
-  font-weight: bold;
+    font-weight: bold;
   text-transform: uppercase;
 }
 
@@ -2095,7 +2119,6 @@ form.small {
 		// Ensure it fits beside the image preview, increased size for long url
 		max-width: 550px;
 
-
 		// Reduced label widths to fit everything in smaller space
 		.field {
 			padding-bottom: 0;
@@ -2103,6 +2126,7 @@ form.small {
 			label {
 				width: $grid-x*14;
 			}
+
 			.middleColumn {
 				margin-left: $grid-x*15;
 			}
@@ -2125,25 +2149,35 @@ form.small {
  	}
 }
 
-/**
- * Import forms
- */
+/** --------------------------------------------
+ * Page Edit Controller
+ * -------------------------------------------- */
 
-form.import-form {
-	ul {
-		list-style: disc;
-		li {
-			margin-left: 20px;
+/*.cms-container {
+	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
+		// Fix pixel gap between nav tree and main page header
+		 margin-left: -1px; // Removed to close gap far right of right tabs?
 		}
+}*/
+
+/** --------------------------------------------
+ * Page Settings Controller
+ * -------------------------------------------- */
+
+.cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings {
+	.optionset li {
+		white-space: nowrap;
+
+		label {
+			padding-left: 2px;
 	}
-	p {
-		margin-bottom: 5px;
 	}
-	label.left {
-		width: 250px;
+
+	.fieldgroup .fieldgroup-field {
+		width: $grid-x * 27;
+		padding-left: 0;
 	}
 }
-
 
 /** --------------------------------------------
  * Buttons for FileUpload

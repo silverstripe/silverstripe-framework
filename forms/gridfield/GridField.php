@@ -1,11 +1,12 @@
 <?php
 
 
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * Displays a {@link SS_List} in a grid format.
@@ -120,7 +121,7 @@ class GridField extends FormField {
 
 		$this->state = new GridState($this);
 
-		$this->addExtraClass('ss-gridfield');
+		$this->addExtraClass('grid-field');
 	}
 
 	/**
@@ -471,7 +472,7 @@ class GridField extends FormField {
 		$body = $this->getOptionalTableBody($content);
 		$footer = $this->getOptionalTableFooter($content);
 
-		$this->addExtraClass('ss-gridfield field');
+		$this->addExtraClass('ss-gridfield grid-field field');
 
 		$fieldsetAttributes = array_diff_key(
 			$this->getAttributes(),
@@ -492,9 +493,9 @@ class GridField extends FormField {
 
 		$tableAttributes = array(
 			'id' => $tableId,
-			'class' => 'ss-gridfield-table',
+			'class' => 'table grid-field__table',
 			'cellpadding' => '0',
-			'cellspacing' => '0',
+			'cellspacing' => '0'
 		);
 
 		if($this->getDescription()) {
@@ -592,7 +593,7 @@ class GridField extends FormField {
 		} else {
 			$classes[] = 'odd';
 		}
-		
+
 		$this->extend('updateNewRowClasses', $classes, $total, $index, $record);
 
 		return $classes;

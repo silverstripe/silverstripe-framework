@@ -628,7 +628,7 @@ en:
     Users: Users
   SecurityAdmin_MemberImportForm:
     BtnImport: 'Import from CSV'
-    FileFieldLabel: 'CSV File <small>(Allowed extensions: *.csv)</small>'
+    FileFieldLabel: 'CSV File (Allowed extensions: *.csv)'
   SilverStripeNavigator:
     Auto: Auto
     ChangeViewMode: 'Change view mode'

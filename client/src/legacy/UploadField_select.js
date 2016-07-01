@@ -9,7 +9,7 @@ $.entwine('ss', function($) {
 			var self = this;
 			this.bind('change', function() {
 				// Display the contents of the folder in the listing field.
-				var fileList = self.closest('form').find('.ss-gridfield');
+				var fileList = self.closest('form').find('.grid-field');
 				fileList.setState('ParentID', self.getValue());
 				fileList.reload();
 			});

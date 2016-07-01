@@ -62,7 +62,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 	 * @return array
 	 */
 	public function getColumnAttributes($gridField, $record, $columnName) {
-		return array('class' => 'col-buttons');
+		return array('class' => 'grid-field__col-compact');
 	}
 
 	/**
@@ -110,18 +110,17 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
 			if(!$record->canEdit()) return;
 
 			$field = GridField_FormAction::create($gridField, 'UnlinkRelation'.$record->ID, false,
-					"unlinkrelation", array('RecordID' => $record->ID))
-				->addExtraClass('gridfield-button-unlink')
-				->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"))
-				->setAttribute('data-icon', 'chain--minus');
+				"unlinkrelation", array('RecordID' => $record->ID))
+				->addExtraClass('btn btn--no-text btn--icon-md font-icon-link-broken grid-field__icon-action gridfield-button-unlink')
+				->setAttribute('title', _t('GridAction.UnlinkRelation', "Unlink"));
+
 		} else {
 			if(!$record->canDelete()) return;
 
 			$field = GridField_FormAction::create($gridField,  'DeleteRecord'.$record->ID, false, "deleterecord",
 					array('RecordID' => $record->ID))
-				->addExtraClass('gridfield-button-delete')
+				->addExtraClass('gridfield-button-delete btn--icon-md font-icon-trash-bin btn--no-text grid-field__icon-action')
 				->setAttribute('title', _t('GridAction.Delete', "Delete"))
-				->setAttribute('data-icon', 'cross-circle')
 				->setDescription(_t('GridAction.DELETE_DESCRIPTION','Delete'));
 		}
 		return $field->Field();

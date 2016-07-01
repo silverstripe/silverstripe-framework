@@ -24,7 +24,7 @@
 	}
 
 	_jQuery2.default.entwine('ss', function ($) {
-		$('.ss-gridfield').entwine({
+		$('.grid-field').entwine({
 
 			reload: function reload(ajaxOpts, successCallback) {
 				var self = this,
@@ -58,7 +58,7 @@
 								content = '<span class="non-sortable"></span>';
 								self.addClass('show-filter').find('.filter-header').show();
 							} else {
-								content = '<button type="button" name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
+								content = '<button type="button" name="showFilter" class="btn font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>';
 								self.removeClass('show-filter').find('.filter-header').hide();
 							}
 
@@ -93,22 +93,22 @@
 			}
 		});
 
-		$('.ss-gridfield *').entwine({
+		$('.grid-field *').entwine({
 			getGridField: function getGridField() {
-				return this.closest('.ss-gridfield');
+				return this.closest('.grid-field');
 			}
 		});
 
-		$('.ss-gridfield :button[name=showFilter]').entwine({
+		$('.grid-field :button[name=showFilter]').entwine({
 			onclick: function onclick(e) {
 				$('.filter-header').show('slow').find(':input:first').focus();
-				this.closest('.ss-gridfield').addClass('show-filter');
+				this.closest('.grid-field').addClass('show-filter');
 				this.parent().html('<span class="non-sortable"></span>');
 				e.preventDefault();
 			}
 		});
 
-		$('.ss-gridfield .ss-gridfield-item').entwine({
+		$('.grid-field .ss-gridfield-item').entwine({
 			onclick: function onclick(e) {
 				if ($(e.target).closest('.action').length) {
 					this._super(e);
@@ -126,7 +126,7 @@
 			}
 		});
 
-		$('.ss-gridfield .action').entwine({
+		$('.grid-field .action:button').entwine({
 			onclick: function onclick(e) {
 				var filterState = 'show';
 				if (this.button('option', 'disabled')) {
@@ -134,7 +134,7 @@
 					return;
 				}
 
-				if (this.hasClass('ss-gridfield-button-close') || !this.closest('.ss-gridfield').hasClass('show-filter')) {
+				if (this.hasClass('ss-gridfield-button-close') || !this.closest('.grid-field').hasClass('show-filter')) {
 					filterState = 'hidden';
 				}
 
@@ -166,7 +166,7 @@
 
 		});
 
-		$('.ss-gridfield .add-existing-autocompleter').entwine({
+		$('.grid-field .add-existing-autocompleter').entwine({
 			onbuttoncreate: function onbuttoncreate() {
 				var self = this;
 
@@ -191,7 +191,7 @@
 			}
 		});
 
-		$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .btn-toolbar button.action.action-delete').entwine({
+		$('.grid-field .grid-field__col-compact .action.gridfield-button-delete, .cms-edit-form .btn-toolbar button.action.action-delete').entwine({
 			onclick: function onclick(e) {
 				if (!confirm(_i18n2.default._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
 					e.preventDefault();
@@ -202,7 +202,7 @@
 			}
 		});
 
-		$('.ss-gridfield .action.gridfield-button-print').entwine({
+		$('.grid-field .action.gridfield-button-print').entwine({
 			UUID: null,
 			onmatch: function onmatch() {
 				this._super();
@@ -234,7 +234,7 @@
 			}
 		});
 
-		$('.ss-gridfield .action.no-ajax').entwine({
+		$('.grid-field .action.no-ajax').entwine({
 			onclick: function onclick(e) {
 				window.location.href = this.actionurl();
 				e.preventDefault();
@@ -242,14 +242,14 @@
 			}
 		});
 
-		$('.ss-gridfield .action-detail').entwine({
+		$('.grid-field .action-detail').entwine({
 			onclick: function onclick() {
 				this.getGridField().showDetailView($(this).prop('href'));
 				return false;
 			}
 		});
 
-		$('.ss-gridfield[data-selectable]').entwine({
+		$('.grid-field[data-selectable]').entwine({
 			getSelectedItems: function getSelectedItems() {
 				return this.find('.ss-gridfield-item.ui-selected');
 			},
@@ -260,7 +260,7 @@
 				});
 			}
 		});
-		$('.ss-gridfield[data-selectable] .ss-gridfield-items').entwine({
+		$('.grid-field[data-selectable] .ss-gridfield-items').entwine({
 			onadd: function onadd() {
 				this._super();
 
@@ -272,10 +272,10 @@
 			}
 		});
 
-		$('.ss-gridfield .filter-header :input').entwine({
+		$('.grid-field .filter-header :input').entwine({
 			onmatch: function onmatch() {
-				var filterbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-filter'),
-				    resetbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-reset');
+				var filterbtn = this.closest('.extra').find('.ss-gridfield-button-filter'),
+				    resetbtn = this.closest('.extra').find('.ss-gridfield-button-reset');
 
 				if (this.val()) {
 					filterbtn.addClass('filtered');
@@ -289,13 +289,13 @@
 			onkeydown: function onkeydown(e) {
 				if (this.closest('.ss-gridfield-button-reset').length) return;
 
-				var filterbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-filter'),
-				    resetbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-reset');
+				var filterbtn = this.closest('.extra').find('.ss-gridfield-button-filter'),
+				    resetbtn = this.closest('.extra').find('.ss-gridfield-button-reset');
 
 				if (e.keyCode == '13') {
 					var btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
 					var filterState = 'show';
-					if (this.hasClass('ss-gridfield-button-close') || !this.closest('.ss-gridfield').hasClass('show-filter')) {
+					if (this.hasClass('ss-gridfield-button-close') || !this.closest('.grid-field').hasClass('show-filter')) {
 						filterState = 'hidden';
 					}
 
@@ -308,7 +308,7 @@
 			}
 		});
 
-		$(".ss-gridfield .relation-search").entwine({
+		$(".grid-field .relation-search").entwine({
 			onfocusin: function onfocusin(event) {
 				this.autocomplete({
 					source: function source(request, response) {
@@ -331,8 +331,8 @@
 					select: function select(event, ui) {
 						var hiddenField = $('<input type="hidden" name="relationID" class="action_gridfield_relationfind" />');
 						hiddenField.val(ui.item.id);
-						$(this).closest(".ss-gridfield").find(".action_gridfield_relationfind").replaceWith(hiddenField);
-						var addbutton = $(this).closest(".ss-gridfield").find(".action_gridfield_relationadd");
+						$(this).closest(".grid-field").find(".action_gridfield_relationfind").replaceWith(hiddenField);
+						var addbutton = $(this).closest(".grid-field").find(".action_gridfield_relationadd");
 						if (addbutton.data('button')) {
 							addbutton.button('enable');
 						} else {
@@ -343,7 +343,7 @@
 			}
 		});
 
-		$(".ss-gridfield .pagination-page-number input").entwine({
+		$(".grid-field .pagination-page-number input").entwine({
 			onkeydown: function onkeydown(event) {
 				if (event.keyCode == 13) {
 					var newpage = parseInt($(this).val(), 10);
