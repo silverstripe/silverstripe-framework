@@ -256,9 +256,18 @@ class ShortcodeParser extends Object {
 					preg_match_all(static::attrrx(), $match['attrs'][0], $attrmatches, PREG_SET_ORDER);
 
 					foreach ($attrmatches as $attr) {
-						list($whole, $name, $value) = array_values(array_filter($attr));
+						$name = '';
+						$value = '';
+						$parts = array_values(array_filter($attr));
+						//the first element in the array is the complete delcaration (`id=1`) - we don't need this
+						array_shift($parts);
+
+						//the next two parts are what we care about (id and 1 from `id=1`)
+						$name = array_shift($parts) ?: $name;
+						$value = array_shift($parts) ?: $value;
+
 						$attrs[$name] = $value;
-				}
+					}
 				}
 
 				// And store the indexes, tag details, etc
