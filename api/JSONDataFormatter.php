@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\SS_List;
 /**
  * @package framework
  * @subpackage formatters

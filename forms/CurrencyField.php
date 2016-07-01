@@ -17,7 +17,7 @@ class CurrencyField extends TextField {
 	 */
 	public function setValue($val) {
 		if(!$val) $val = 0.00;
-		$this->value = Config::inst()->get('SilverStripe\Model\FieldType\DBCurrency','currency_symbol') . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
+		$this->value = Config::inst()->get('SilverStripe\\ORM\\FieldType\\DBCurrency','currency_symbol') . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
 		return $this;
 	}
 	/**
@@ -44,7 +44,7 @@ class CurrencyField extends TextField {
 	}
 
 	public function validate($validator) {
-        $currencySymbol = preg_quote(Config::inst()->get('SilverStripe\Model\FieldType\DBCurrency', 'currency_symbol'));
+        $currencySymbol = preg_quote(Config::inst()->get('SilverStripe\\ORM\\FieldType\\DBCurrency', 'currency_symbol'));
         $regex = '/^\s*(\-?'.$currencySymbol.'?|'.$currencySymbol.'\-?)?(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?\s*$/';
 		if(!empty ($this->value)
 				&& !preg_match($regex, $this->value)) {

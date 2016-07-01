@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 class ModelAdminTest extends FunctionalTest {
 	protected static $fixture_file = 'ModelAdminTest.yml';
 

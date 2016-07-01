@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\GroupedList;
 /**
  * Tests for the {@link GroupedList} list decorator.
  *

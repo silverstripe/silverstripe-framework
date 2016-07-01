@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * Regenerate all cached images that have been created as the result of a manipulation method being called on a
  * {@link Image} object

@@ -3,6 +3,8 @@
 use SilverStripe\Filesystem\Storage\AssetContainer;
 use SilverStripe\Filesystem\Storage\AssetNameGenerator;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * Manages uploads via HTML forms processed by PHP,

@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * Dropdown field, created from a <select> tag.
  *

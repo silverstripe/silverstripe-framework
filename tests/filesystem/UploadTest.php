@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\Versioning\Versioned;
+
 /**
  * @package framework
  * @subpackage tests

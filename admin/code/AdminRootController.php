@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataModel;
+
 /**
  * @package framework
  * @subpackage admin

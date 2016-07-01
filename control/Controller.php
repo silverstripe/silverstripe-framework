@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataModel;
+
 /**
  * Controllers are the cornerstone of all site functionality in SilverStripe. The {@link Director}
  * selects a controller to pass control to, and then calls {@link run()}. This method will execute

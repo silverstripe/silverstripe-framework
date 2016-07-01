@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * @package framework
  * @subpackage security

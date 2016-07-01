@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Connect\MySQLiConnector;
+use SilverStripe\ORM\Queries\SQLUpdate;
+use SilverStripe\ORM\DataObject;
 /**
  * @package framework
  * @subpackage testing
@@ -27,12 +32,12 @@ class MySQLDatabaseTest extends SapphireTest {
 			'SELECT "Sort", "Title" FROM "MySQLDatabaseTest_Data" WHERE "Sort" > ? ORDER BY "Sort"',
 			array(2)
 		);
-		$this->assertInstanceOf('MySQLStatement', $result1);
-		$this->assertInstanceOf('MySQLStatement', $result2);
+		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLStatement', $result1);
+		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLStatement', $result2);
 
 		// Also select non-prepared statement
 		$result3 = DB::get_connector()->query('SELECT "Sort", "Title" FROM "MySQLDatabaseTest_Data" ORDER BY "Sort"');
-		$this->assertInstanceOf('MySQLQuery', $result3);
+		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLQuery', $result3);
 
 		// Iterating one level should not buffer, but return the right result
 		$this->assertEquals(
@@ -101,13 +106,13 @@ class MySQLDatabaseTest extends SapphireTest {
 		// Test update which affects no rows
 		$query->setWhere(array('Title' => 'Bob'));
 		$result = $query->execute();
-		$this->assertInstanceOf('MySQLQuery', $result);
+		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLQuery', $result);
 		$this->assertEquals(0, DB::affected_rows());
 
 		// Test update which affects some rows
 		$query->setWhere(array('Title' => 'First Item'));
 		$result = $query->execute();
-		$this->assertInstanceOf('MySQLQuery', $result);
+		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLQuery', $result);
 		$this->assertEquals(1, DB::affected_rows());
 	}
 }

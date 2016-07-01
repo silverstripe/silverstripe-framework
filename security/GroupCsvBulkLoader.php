@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * @todo Migrate Permission->Arg and Permission->Type values
  *

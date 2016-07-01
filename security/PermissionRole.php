@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * A PermissionRole represents a collection of permission codes that can be applied to groups.
  *

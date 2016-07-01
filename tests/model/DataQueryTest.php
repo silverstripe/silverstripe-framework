@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DB;
+
 class DataQueryTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataQueryTest.yml';
@@ -389,7 +393,7 @@ class DataQueryTest_F extends DataObject implements TestOnly {
 
 	private static $db = array(
 		'SortOrder' => 'Int',
-		'MyDate' => 'SS_Datetime',
+		'MyDate' => 'Datetime',
 		'MyString' => 'Text'
 	);
 }

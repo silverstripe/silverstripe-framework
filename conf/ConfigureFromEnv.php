@@ -92,8 +92,9 @@ if(!isset($database) || !$database) {
 
 if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 	global $databaseConfig;
+	/** @skipUpgrade */
 	$databaseConfig = array(
-		"type" => defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : "MySQLDatabase",
+		"type" => defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLDatabase',
 		"server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : 'localhost',
 		"username" => SS_DATABASE_USERNAME,
 		"password" => SS_DATABASE_PASSWORD,

@@ -1,7 +1,11 @@
 <?php
 
 use SilverStripe\Framework\Core\Injectable;
-use SilverStripe\Model\FieldType\DBHTMLText;
+
+use SilverStripe\ORM\Versioning\ChangeSet;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Versioning\ChangeSetItem;
+
 
 
 /**
@@ -97,7 +101,7 @@ class AddToCampaignHandler {
 		$id = (int)$id;
 		$class = ClassInfo::class_name($class);
 
-		if (!$class || !is_subclass_of($class, 'DataObject') || !Object::has_extension($class, 'Versioned')) {
+		if (!$class || !is_subclass_of($class, 'SilverStripe\\ORM\\DataObject') || !Object::has_extension($class, 'SilverStripe\\ORM\\Versioning\\Versioned')) {
 			$this->editForm->httpError(400, _t(
 				'AddToCampaign.ErrorGeneral',
 				'We apologise, but there was an error'

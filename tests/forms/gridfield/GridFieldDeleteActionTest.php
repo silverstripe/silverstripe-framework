@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataObject;
+
 class GridFieldDeleteActionTest extends SapphireTest {
 
 	/** @var ArrayList */
@@ -67,7 +70,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 
 	public function testDeleteActionWithoutCorrectPermission() {
 		if(Member::currentUser()) { Member::currentUser()->logOut(); }
-		$this->setExpectedException('ValidationException');
+		$this->setExpectedException('SilverStripe\\ORM\\ValidationException');
 
 		$stateID = 'testGridStateActionField';
 		Session::set(

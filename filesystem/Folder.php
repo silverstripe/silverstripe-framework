@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\Versioning\Versioned;
 /**
  * Represents a logical folder, which may be used to organise assets
  * stored in the configured backend.

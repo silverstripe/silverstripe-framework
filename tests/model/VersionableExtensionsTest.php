@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\Versioning\VersionableExtension;
 /**
  * @package framework
  * @subpackage tests
@@ -9,7 +14,7 @@ class VersionableExtensionsTest extends SapphireTest
 	protected static $fixture_file = 'VersionableExtensionsFixtures.yml';
 
 	protected $requiredExtensions = array(
-		'VersionableExtensionsTest_DataObject'  => array('Versioned'),
+		'VersionableExtensionsTest_DataObject'  => array('SilverStripe\\ORM\\Versioning\\Versioned'),
 	);
 
 	protected $extraDataObjects = array(
@@ -21,7 +26,7 @@ class VersionableExtensionsTest extends SapphireTest
 	{
 		Config::nest();
 
-		VersionableExtensionsTest_DataObject::add_extension('Versioned');
+		VersionableExtensionsTest_DataObject::add_extension('SilverStripe\\ORM\\Versioning\\Versioned');
 		VersionableExtensionsTest_DataObject::add_extension('VersionableExtensionsTest_Extension');
 
 		$cfg = Config::inst();

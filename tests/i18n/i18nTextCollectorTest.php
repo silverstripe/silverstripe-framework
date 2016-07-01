@@ -24,6 +24,7 @@ class i18nTextCollectorTest extends SapphireTest {
 		parent::setUp();
 
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
+		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		Filesystem::makeFolder($this->alternateBaseSavePath);
 
@@ -40,6 +41,10 @@ class i18nTextCollectorTest extends SapphireTest {
 
 	public function tearDown() {
 		SS_TemplateLoader::instance()->popManifest();
+		// Pop if added during testing
+		if(SS_ClassLoader::instance()->getManifest() === $this->manifest) {
+			SS_ClassLoader::instance()->popManifest();
+		}
 		parent::tearDown();
 	}
 
@@ -520,6 +525,8 @@ YAML;
 		$local = i18n::get_locale();
 		i18n::set_locale('en_US');
 		i18n::set_default_locale('en_US');
+		i18n::include_by_locale('en');
+		i18n::include_by_locale('en_US');
 
 		$c = new i18nTextCollector();
 		$c->setWriter(new i18nTextCollector_Writer_Php());
@@ -688,28 +695,28 @@ YAML;
 	 * Test that duplicate keys are resolved to the appropriate modules
 	 */
 	public function testResolveDuplicates() {
+		SS_ClassLoader::instance()->pushManifest($this->manifest);
 		$collector = new i18nTextCollectorTest_Collector();
 
 		// Dummy data as collected
 		$data1 = array(
-			'framework' => array(
-				'DataObject.PLURALNAME' => array('Data Objects'),
-				'DataObject.SINGULARNAME' => array('Data Object')
+			'i18ntestmodule' => array(
+				'i18nTestModule.PLURALNAME' => array('Data Objects'),
+				'i18nTestModule.SINGULARNAME' => array('Data Object')
 			),
 			'mymodule' => array(
-				'DataObject.PLURALNAME' => array('Ignored String'),
-				'DataObject.STREETNAME' => array('Shortland Street')
+				'i18nTestModule.PLURALNAME' => array('Ignored String'),
+				'i18nTestModule.STREETNAME' => array('Shortland Street')
 			)
 		);
 		$expected = array(
-			'framework' => array(
-				'DataObject.PLURALNAME' => array('Data Objects'),
-				// Because DataObject is in framework module
-				'DataObject.SINGULARNAME' => array('Data Object')
+			'i18ntestmodule' => array(
+				'i18nTestModule.PLURALNAME' => array('Data Objects'),
+				'i18nTestModule.SINGULARNAME' => array('Data Object')
 			),
 			'mymodule' => array(
-				// Because this key doesn't exist in framework strings
-				'DataObject.STREETNAME' => array('Shortland Street')
+				// Because this key doesn't exist in i18ntestmodule strings
+				'i18nTestModule.STREETNAME' => array('Shortland Street')
 			)
 		);
 
@@ -719,22 +726,22 @@ YAML;
 		// Test getConflicts
 		$data2 = array(
 			'module1' => array(
-				'DataObject.ONE' => array('One'),
-				'DataObject.TWO' => array('Two'),
-				'DataObject.THREE' => array('Three'),
+				'i18ntestmodule.ONE' => array('One'),
+				'i18ntestmodule.TWO' => array('Two'),
+				'i18ntestmodule.THREE' => array('Three'),
 			),
 			'module2' => array(
-				'DataObject.THREE' => array('Three'),
+				'i18ntestmodule.THREE' => array('Three'),
 			),
 			'module3' => array(
-				'DataObject.TWO' => array('Two'),
-				'DataObject.THREE' => array('Three'),
+				'i18ntestmodule.TWO' => array('Two'),
+				'i18ntestmodule.THREE' => array('Three'),
 			)
 		);
 		$conflictsA = $collector->getConflicts_Test($data2);
 		sort($conflictsA);
 		$this->assertEquals(
-			array('DataObject.THREE', 'DataObject.TWO'),
+			array('i18ntestmodule.THREE', 'i18ntestmodule.TWO'),
 			$conflictsA
 		);
 
@@ -742,7 +749,7 @@ YAML;
 		unset($data2['module3']);
 		$conflictsB = $collector->getConflicts_Test($data2);
 		$this->assertEquals(
-			array('DataObject.THREE'),
+			array('i18ntestmodule.THREE'),
 			$conflictsB
 		);
 	}
@@ -751,6 +758,7 @@ YAML;
 	 * Test ability for textcollector to detect modules
 	 */
 	public function testModuleDetection() {
+		SS_ClassLoader::instance()->pushManifest($this->manifest);
 		$collector = new i18nTextCollectorTest_Collector();
 		$modules = $collector->getModules_Test($this->alternateBasePath);
 		$this->assertEquals(
@@ -763,6 +771,13 @@ YAML;
 			),
 			$modules
 		);
+
+		$this->assertEquals('i18ntestmodule', $collector->findModuleForClass_Test('i18nTestNamespacedClass'));
+		$this->assertEquals(
+			'i18ntestmodule',
+			$collector->findModuleForClass_Test('i18nTest\\i18nTestNamespacedClass')
+		);
+		$this->assertEquals('i18ntestmodule', $collector->findModuleForClass_Test('i18nTestSubModule'));
 	}
 
 	/**
@@ -784,11 +799,12 @@ YAML;
 		// Normal module should have predictable dir structure
 		$testFiles = $collector->getFileListForModule_Test('i18ntestmodule');
 		$testRoot = $this->alternateBasePath . '/i18ntestmodule';
-		$this->assertEquals(6, count($testFiles));
+		$this->assertEquals(7, count($testFiles));
 		// Code in code folder is detected
 		$this->assertArrayHasKey("{$testRoot}/code/i18nTestModule.php", $testFiles);
 		$this->assertArrayHasKey("{$testRoot}/code/subfolder/_config.php", $testFiles);
 		$this->assertArrayHasKey("{$testRoot}/code/subfolder/i18nTestSubModule.php", $testFiles);
+		$this->assertArrayHasKey("{$testRoot}/code/subfolder/i18nTestNamespacedClass.php", $testFiles);
 		// Templates in templates folder is detected
 		$this->assertArrayHasKey("{$testRoot}/templates/Includes/i18nTestModuleInclude.ss", $testFiles);
 		$this->assertArrayHasKey("{$testRoot}/templates/Layout/i18nTestModule.ss", $testFiles);
@@ -836,11 +852,15 @@ class i18nTextCollectorTest_Collector extends i18nTextCollector implements TestO
 	}
 
 	public function getFileListForModule_Test($module) {
-		return parent::getFileListForModule($module);
+		return $this->getFileListForModule($module);
 	}
 
 	public function getConflicts_Test($entitiesByModule) {
-		return parent::getConflicts($entitiesByModule);
+		return $this->getConflicts($entitiesByModule);
+	}
+
+	public function findModuleForClass_Test($class) {
+		return $this->findModuleForClass($class);
 	}
 
 }

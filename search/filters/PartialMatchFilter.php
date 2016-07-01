@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataQuery;
+use SilverStripe\ORM\DB;
 /**
  * @package framework
  * @subpackage search

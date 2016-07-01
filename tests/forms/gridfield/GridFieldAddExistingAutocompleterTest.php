@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GridFieldTest.yml';

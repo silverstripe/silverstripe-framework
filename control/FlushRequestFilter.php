@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataModel;
 /**
  * Triggers a call to flush() on all implementors of Flushable.
  *

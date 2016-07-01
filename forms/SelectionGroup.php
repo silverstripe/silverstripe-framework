@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * Represents a number of fields which are selectable by a radio
  * button that appears at the beginning of each item.  Using CSS, you can

@@ -22,7 +22,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		$error = null;
 		try {
 			switch($databaseConfig['type']) {
-				case 'MySQLDatabase':
+				case 'SilverStripe\\ORM\\Connect\\MySQLDatabase':
 					$conn = @new MySQLi($databaseConfig['server'], $databaseConfig['username'],
 										$databaseConfig['password']);
 					if($conn && empty($conn->connect_errno)) {

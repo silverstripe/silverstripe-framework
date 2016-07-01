@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Queries\SQLDelete;
 /**
  * Manages a set of database fixtures for {@link DataObject} records
  * as well as raw database table rows.

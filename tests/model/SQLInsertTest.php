@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\ORM\Queries\SQLInsert;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * Tests for {@see SQLInsert}
@@ -27,7 +31,7 @@ class SQLInsertTest extends SapphireTest {
 				->assign('"Description"', 'No description');
 		$sql = $query->sql($parameters);
 		// Only test this case if using the default query builder
-		if(get_class(DB::get_conn()->getQueryBuilder()) === 'DBQueryBuilder') {
+		if(get_class(DB::get_conn()->getQueryBuilder()) === 'SilverStripe\\ORM\\Connect\\DBQueryBuilder') {
 			$this->assertSQLEquals(
 				'INSERT INTO "SQLInsertTestBase" ("Title", "HasFun", "Age", "Description") VALUES (?, ?, ?, ?)',
 				$sql
@@ -59,7 +63,7 @@ class SQLInsertTest extends SapphireTest {
 		));
 		$sql = $query->sql($parameters);
 		// Only test this case if using the default query builder
-		if(get_class(DB::get_conn()->getQueryBuilder()) === 'DBQueryBuilder') {
+		if(get_class(DB::get_conn()->getQueryBuilder()) === 'SilverStripe\\ORM\\Connect\\DBQueryBuilder') {
 			$this->assertSQLEquals(
 				'INSERT INTO "SQLInsertTestBase" ("Title", "Age", "Description") VALUES (?, ?, ?), (?, ?, ?)',
 				$sql

@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataModel;
+use SilverStripe\ORM\Versioning\Versioned;
 /**
  * Director is responsible for processing URLs, and providing environment information.
  *

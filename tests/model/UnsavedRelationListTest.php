@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 class UnsavedRelationListTest extends SapphireTest {
 	protected static $fixture_file = 'UnsavedRelationListTest.yml';
 
@@ -15,10 +17,10 @@ class UnsavedRelationListTest extends SapphireTest {
 			'Returned UnsavedRelationList should be the same.');
 
 		$object->write();
-		$this->assertInstanceOf('RelationList', $object->Children());
+		$this->assertInstanceOf('SilverStripe\\ORM\\RelationList', $object->Children());
 		$this->assertNotEquals($children, $object->Children(),
 			'Return should be a RelationList after first write');
-		$this->assertInstanceOf('RelationList', $object->Siblings());
+		$this->assertInstanceOf('SilverStripe\\ORM\\RelationList', $object->Siblings());
 		$this->assertNotEquals($siblings, $object->Siblings(),
 			'Return should be a RelationList after first write');
 	}
@@ -242,7 +244,7 @@ class UnsavedRelationListTest_DataObject extends DataObject implements TestOnly 
 
 	private static $has_one = array(
 		'Parent' => 'UnsavedRelationListTest_DataObject',
-		'RelatedObject' => 'DataObject'
+		'RelatedObject' => 'SilverStripe\\ORM\\DataObject'
 	);
 
 	private static $has_many = array(

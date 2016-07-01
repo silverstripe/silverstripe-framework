@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBVarchar;
+
+use SilverStripe\ORM\FieldType\DBVarchar;
+
 
 class ArrayDataTest extends SapphireTest {
 
@@ -10,7 +12,7 @@ class ArrayDataTest extends SapphireTest {
 			"A" => new DBVarchar("A"),
 			"B" => new stdClass(),
 		));
-		$this->assertEquals('SilverStripe\Model\FieldType\DBVarchar', get_class($arrayData->A));
+		$this->assertEquals('SilverStripe\\ORM\\FieldType\\DBVarchar', get_class($arrayData->A));
 		$this->assertEquals("ArrayData", get_class($arrayData->B));
 	}
 

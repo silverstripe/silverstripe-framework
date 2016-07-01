@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataModel;
+
 /**
  * This class is the base class of any SilverStripe object that can be used to handle HTTP requests.
  *

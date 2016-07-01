@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObjectInterface;
 /**
  * Represents a file type which can be added to a form.
  * Automatically tries to save has_one-relations on the saved

@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\UnsavedRelationList;
 /**
  * A security group.
  *
@@ -45,7 +49,7 @@ class Group extends DataObject {
 	);
 
 	private static $extensions = array(
-		"Hierarchy",
+		"SilverStripe\\ORM\\Hierarchy\\Hierarchy",
 	);
 
 	public function populateDefaults() {
@@ -459,7 +463,7 @@ class Group extends DataObject {
 	 * Filters to only those groups that the current user can edit
 	 */
 	public function AllChildrenIncludingDeleted() {
-		$extInstance = $this->getExtensionInstance('Hierarchy');
+		$extInstance = $this->getExtensionInstance('SilverStripe\\ORM\\Hierarchy\\Hierarchy');
 		$extInstance->setOwner($this);
 		$children = $extInstance->AllChildrenIncludingDeleted();
 		$extInstance->clearOwner();

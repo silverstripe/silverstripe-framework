@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\DataModel;
 class GenericTemplateGlobalProvider implements TemplateGlobalProvider {
 
 	public static function get_template_global_variables() {

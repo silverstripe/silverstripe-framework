@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBCurrency;
+
+use SilverStripe\ORM\FieldType\DBCurrency;
+
 
 /**
  * @package framework

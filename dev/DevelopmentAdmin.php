@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DatabaseAdmin;
+
 /**
  * Base class for development tools.
  *

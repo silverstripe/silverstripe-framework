@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * Grouped dropdown, using <optgroup> tags.
  *

@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * A list designed to hold form field instances.
  *

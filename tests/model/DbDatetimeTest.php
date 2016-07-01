@@ -1,7 +1,11 @@
 	<?php
 
-use SilverStripe\Model\FieldType\DBField;
-use SilverStripe\Model\FieldType\DBDatetime;
+
+
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * Tests for {@link Datetime} class.

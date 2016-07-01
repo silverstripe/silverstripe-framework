@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\SS_Map;
+
 /**
  * Represents a field that allows users to select one or more items from a list
  */

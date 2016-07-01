@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 /**
  * Tests for the {@link PaginatedList} class.
  *
@@ -62,7 +65,7 @@ class PaginatedListTest extends SapphireTest {
 	}
 
 	public function testSetPaginationFromQuery() {
-		$query = $this->getMock('SQLSelect');
+		$query = $this->getMock('SilverStripe\\ORM\\Queries\\SQLSelect');
 		$query->expects($this->once())
 				->method('getLimit')
 				->will($this->returnValue(array('limit' => 15, 'start' => 30)));

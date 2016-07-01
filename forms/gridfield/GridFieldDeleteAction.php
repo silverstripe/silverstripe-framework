@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ValidationException;
 /**
  * This class is a {@link GridField} component that adds a delete action for
  * objects.

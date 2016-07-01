@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 
 class GridFieldPrintButtonTest extends SapphireTest {
 

@@ -1,7 +1,11 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
-use SilverStripe\Model\FieldType\DBDatetime;
+
+
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * @package framework
@@ -65,7 +69,7 @@ class DBDateTest extends SapphireTest {
 		);
 
 		$date = DBField::create_field('Date', '2003-03-04');
-		Config::inst()->update('SilverStripe\Model\FieldType\DBDate', 'nice_format', 'd F Y');
+		Config::inst()->update('SilverStripe\\ORM\\FieldType\\DBDate', 'nice_format', 'd F Y');
 		$this->assertEquals('04 March 2003', $date->Nice());
 	}
 

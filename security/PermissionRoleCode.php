@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * A PermissionRoleCode represents a single permission code assigned to a {@link PermissionRole}.
  *

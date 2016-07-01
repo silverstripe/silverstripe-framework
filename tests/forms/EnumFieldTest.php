@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBEnum;
+
+use SilverStripe\ORM\FieldType\DBEnum;
+
 
 /**
  * @package framework

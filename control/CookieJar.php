@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBDatetime;
+
+use SilverStripe\ORM\FieldType\DBDatetime;
+
 
 /**
  * A default backend for the setting and getting of cookies

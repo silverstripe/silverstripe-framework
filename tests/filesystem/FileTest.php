@@ -2,6 +2,10 @@
 
 use Filesystem as SS_Filesystem;
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ValidationException;
+
 
 /**
  * Tests for the File class
@@ -327,7 +331,7 @@ class FileTest extends SapphireTest {
 	/**
 	 * @see http://open.silverstripe.org/ticket/5693
 	 *
-	 * @expectedException ValidationException
+	 * @expectedException SilverStripe\ORM\ValidationException
 	 */
 	public function testSetNameWithInvalidExtensionDoesntChangeFilesystem() {
 		$orig = Config::inst()->get('File', 'allowed_extensions');

@@ -1,8 +1,13 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
-use SilverStripe\Model\FieldType\DBVarchar;
-use SilverStripe\Model\FieldType\DBText;
+
+
+
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\FieldType\DBVarchar;
+use SilverStripe\ORM\FieldType\DBText;
+use SilverStripe\ORM\FieldType\DBField;
+
 
 /**
  *

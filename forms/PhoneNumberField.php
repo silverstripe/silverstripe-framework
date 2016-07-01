@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObjectInterface;
+
 /**
  * @package forms
  * @subpackage fields-formattedinput

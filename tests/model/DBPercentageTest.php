@@ -1,6 +1,8 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBPercentage;
+
+use SilverStripe\ORM\FieldType\DBPercentage;
+
 
 /**
  * @package framework

@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ArrayList;
 /**
  * Represents a permission assigned to a group.
  * @package framework

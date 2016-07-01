@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\SS_List;
 /**
  * A DataFormatter object handles transformation of data from SilverStripe model objects to a particular output
  * format, and vice versa.  This is most commonly used in developing RESTful APIs.

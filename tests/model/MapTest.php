@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\SS_Map;
+use SilverStripe\ORM\ArrayList;
+
 /**
  * @package framework
  * @subpackage tests

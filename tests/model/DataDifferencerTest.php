@@ -1,6 +1,10 @@
 <?php
 
 use Filesystem as SS_Filesystem;
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\Versioning\DataDifferencer;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * @package framework
@@ -94,7 +98,7 @@ class DataDifferencerTest extends SapphireTest {
 class DataDifferencerTest_Object extends DataObject implements TestOnly {
 
 	private static $extensions = array(
-		'Versioned'
+		'SilverStripe\\ORM\\Versioning\\Versioned'
 	);
 
 	private static $db = array(

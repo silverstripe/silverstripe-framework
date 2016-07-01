@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 class YamlFixtureTest extends SapphireTest {
 
 	protected $extraDataObjects = array(

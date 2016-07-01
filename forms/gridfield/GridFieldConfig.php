@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * Encapsulates a collection of components following the
  * {@link GridFieldComponent} interface. While the {@link GridField} itself

@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ValidationResult;
 /**
  * Authenticator for the default "member" method
  *

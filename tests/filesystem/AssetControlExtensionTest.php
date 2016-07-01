@@ -1,5 +1,8 @@
 <?php
 use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * Tests {@see AssetControlExtension}
@@ -15,7 +18,7 @@ class AssetControlExtensionTest extends SapphireTest {
 		parent::setUp();
 
 		// Set backend and base url
-		\Versioned::set_stage(Versioned::DRAFT);
+		Versioned::set_stage(Versioned::DRAFT);
 		AssetStoreTest_SpyStore::activate('AssetControlExtensionTest');
 		$this->logInWithPermission('ADMIN');
 
@@ -46,7 +49,7 @@ class AssetControlExtensionTest extends SapphireTest {
 	}
 
 	public function testFileDelete() {
-		\Versioned::set_stage(Versioned::DRAFT);
+		Versioned::set_stage(Versioned::DRAFT);
 
 		/** @var AssetControlExtensionTest_VersionedObject $object1 */
 		$object1 = AssetControlExtensionTest_VersionedObject::get()
@@ -120,7 +123,7 @@ class AssetControlExtensionTest extends SapphireTest {
 	 * Test files being replaced
 	 */
 	public function testReplaceFile() {
-		\Versioned::set_stage(Versioned::DRAFT);
+		Versioned::set_stage(Versioned::DRAFT);
 
 		/** @var AssetControlExtensionTest_VersionedObject $object1 */
 		$object1 = AssetControlExtensionTest_VersionedObject::get()
@@ -208,7 +211,7 @@ class AssetControlExtensionTest extends SapphireTest {
  */
 class AssetControlExtensionTest_VersionedObject extends DataObject implements TestOnly {
 	private static $extensions = array(
-		'Versioned'
+		'SilverStripe\\ORM\\Versioning\\Versioned'
 	);
 
 	private static $db = array(

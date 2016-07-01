@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DB;
 /**
  * Allows pluggable password encryption.
  * By default, this might be PHP's integrated sha1()

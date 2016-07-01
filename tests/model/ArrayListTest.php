@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\SS_Filterable;
 /**
  * @package framework
  * @subpackage tests
@@ -217,7 +221,7 @@ class ArrayListTest extends SapphireTest {
 		$map = $list->map('ID', 'Name');
 		// Items added after calling map should not be included retroactively
 		$list->add(array('ID' => 7, 'Name' => 'Andrew'));
-		$this->assertInstanceOf('SS_Map', $map);
+		$this->assertInstanceOf('SilverStripe\\ORM\\SS_Map', $map);
 		$this->assertEquals(array(
 			1 => 'Steve',
 			3 => 'Bob',

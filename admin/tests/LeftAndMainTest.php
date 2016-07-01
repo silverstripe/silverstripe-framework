@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+
 /**
  * @package framework
  * @subpackage tests
@@ -299,7 +301,7 @@ class LeftAndMainTest_Object extends DataObject implements TestOnly {
 	private static $default_sort = '"Sort"';
 
 	private static $extensions = array(
-		'Hierarchy'
+		'SilverStripe\\ORM\\Hierarchy\\Hierarchy'
 	);
 
 	public function CMSTreeClasses() {}

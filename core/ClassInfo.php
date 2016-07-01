@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+
 /**
  * Provides introspection information about the class tree.
  *

@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataExtension;
+
 /**
  * Tests for DataObject FormField scaffolding
  *
@@ -120,7 +123,7 @@ class FormScaffolderTest_Article extends DataObject implements TestOnly {
 	);
 	private static $has_one = array(
 		'Author' => 'FormScaffolderTest_Author',
-		'Subject' => 'DataObject'
+		'Subject' => 'SilverStripe\\ORM\\DataObject'
 	);
 	private static $many_many = array(
 		'Tags' => 'FormScaffolderTest_Tag',

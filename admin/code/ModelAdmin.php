@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\ArrayList;
 /**
  * Generates a three-pane UI for editing model classes, with an
  * automatically generated search panel, tabular results and edit forms.

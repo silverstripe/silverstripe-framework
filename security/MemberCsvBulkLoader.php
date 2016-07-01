@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * Imports member records, and checks/updates duplicates based on their
  * 'Email' property.

@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataQuery;
 /**
  * Base class for creating comparison filters, eg; greater than, less than, greater than or equal, etc
  *

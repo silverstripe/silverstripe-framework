@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * Record all login attempts through the {@link LoginForm} object.
  * This behaviour is disabled by default.

@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+
 class SSViewerTest extends SapphireTest {
 
 	/**

@@ -1,6 +1,10 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+
+use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBField;
+
 
 /**
  * RSSFeed class

@@ -1,6 +1,11 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBMoney;
+
+use SilverStripe\ORM\FieldType\DBMoney;
+use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * @package framework
@@ -32,7 +37,7 @@ class ManyManyListTest extends SapphireTest {
 		$check = $obj->Clients()->First();
 
 		$this->assertEquals('Foo', $check->Reference, 'Basic scalar fields should exist');
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBMoney', $check->Worth, 'Composite fields should exist on the record');
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $check->Worth, 'Composite fields should exist on the record');
 		$this->assertEquals(100, $check->Worth->getAmount());
 	}
 

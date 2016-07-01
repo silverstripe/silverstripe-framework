@@ -153,7 +153,7 @@ class ViewableDataTest extends SapphireTest {
 
 		// Casted data should be the string wrapped in a DBField-object.
 		$this->assertNotEmpty($castedData, 'Casted data was empty.');
-		$this->assertInstanceOf('SilverStripe\Model\FieldType\DBField', $castedData, 'Casted data should be instance of DBField.');
+		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBField', $castedData, 'Casted data should be instance of DBField.');
 
 		$this->assertEquals($uncastedData, $castedData->getValue(), 'Casted and uncasted strings are not equal.');
 	}

@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\ORM\DataObject;
 /**
  * A collection of static methods for manipulating the filesystem.
  *

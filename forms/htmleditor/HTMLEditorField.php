@@ -1,6 +1,9 @@
 <?php
 use Embed\Adapters\AdapterInterface;
 use Embed\Embed;
+use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\DataObject;
+
 
 /**
  * A TinyMCE-powered WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
@@ -322,7 +325,7 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 			'Created' => singleton('File')->fieldLabel('Created'),
 		));
 		$columns->setFieldCasting(array(
-			'Created' => 'SS_Datetime->Nice'
+			'Created' => 'DBDatetime->Nice'
 		));
 
 		$fromCMS = new CompositeField(

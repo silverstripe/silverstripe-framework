@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\ORM\DataObjectInterface;
+
 /**
  * Read-only complement of {@link DropdownField}.
  *

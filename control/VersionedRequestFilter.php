@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\ORM\DataModel;
+use SilverStripe\ORM\Versioning\Versioned;
+
 /**
  * Initialises the versioned stage when a request is made.
  *
