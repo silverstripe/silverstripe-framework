@@ -224,6 +224,14 @@ class ShortcodeParserTest extends SapphireTest {
 		);
 	}
 
+	public function testFalseyArguments() {
+		$this->parser->parse('<p>[test_shortcode falsey=0]');
+
+		$this->assertEquals(array(
+			'falsey' => '',
+		), $this->arguments);
+	}
+
 	public function testNumericShortcodes() {
 		$this->assertEqualsIgnoringWhitespace(
 			'[2]',
