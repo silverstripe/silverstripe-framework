@@ -2,6 +2,10 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use FormField;
+use SearchFilter;
+use SilverStripe\ORM\Connect\SS_Query;
+use SilverStripe\ORM\DataObject;
 use ViewableData;
 use Convert;
 use Object;
@@ -151,7 +155,7 @@ abstract class DBField extends ViewableData {
 	 *
 	 * @param mixed $value
 	 * @param DataObject|array $record An array or object that this field is part of
-	 * @param boolean $markChanged Indicate wether this field should be marked changed.
+	 * @param bool $markChanged Indicate wether this field should be marked changed.
 	 *  Set to FALSE if you are initializing this field after construction, rather
 	 *  than setting a new value.
 	 */
@@ -348,6 +352,7 @@ abstract class DBField extends ViewableData {
 	 *       search filters (note: parameter hack now in place to pass in the required full path - using $this->name
 	 *       won't work)
 	 *
+	 * @param string|bool $name
 	 * @return SearchFilter
 	 */
 	public function defaultSearchFilter($name = false) {

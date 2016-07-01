@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\FieldType;
 
 use Convert;
+use Exception;
 use Member;
 use DatetimeField;
 use Zend_Date;
@@ -59,12 +60,11 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider {
 		if(is_numeric($value)) {
 			$this->value = date('Y-m-d H:i:s', $value);
 		} elseif(is_string($value)) {
-			// $this->value = date('Y-m-d H:i:s', strtotime($value));
-			try{
+			try {
 				$date = new DateTime($value);
-				$this->value = $date->Format('Y-m-d H:i:s');
+				$this->value = $date->format('Y-m-d H:i:s');
 				return;
-			}catch(Exception $e){
+			} catch(Exception $e) {
 				$this->value = null;
 				return;
 			}

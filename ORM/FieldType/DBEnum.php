@@ -50,9 +50,10 @@ class DBEnum extends DBString {
 	 * "MyField" => "Enum(array('Val1', 'Val2', 'Val3'), 'Val1')"
 	 * </code>
 	 *
-	 * @param enum: A string containing a comma separated list of options or an
+	 * @param string $name
+	 * @param string|array $enum A string containing a comma separated list of options or an
 	 *				array of Vals.
-	 * @param string The default option, which is either NULL or one of the
+	 * @param string $default The default option, which is either NULL or one of the
 	 *				 items in the enumeration.
 	 */
 	public function __construct($name = null, $enum = NULL, $default = NULL) {

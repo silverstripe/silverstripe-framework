@@ -26,10 +26,10 @@ abstract class SS_Database {
 	 * @var DBConnector
 	 */
 	protected $connector = null;
-	
+
 	/**
 	 * Amount of queries executed, for debugging purposes.
-	 * 
+	 *
 	 * @var int
 	 */
 	protected $queryCount = 0;
@@ -560,7 +560,7 @@ abstract class SS_Database {
 	 * @return boolean Flag indicating support for all of the above
 	 * @todo Write test cases
 	 */
-	protected function supportsExtensions($extensions) {
+	public function supportsExtensions($extensions) {
 		return false;
 	}
 

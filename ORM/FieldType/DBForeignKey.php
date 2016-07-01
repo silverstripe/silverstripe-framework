@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use File;
+use Image;
 use UploadField;
 use DropdownField;
 use NumericField;

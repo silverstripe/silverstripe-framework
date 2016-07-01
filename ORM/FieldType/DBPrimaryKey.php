@@ -43,7 +43,7 @@ class DBPrimaryKey extends DBInt {
 
 	/**
 	 * @param string $name
-	 * @param DataOject $object The object that this is primary key for (should have a relation with $name)
+	 * @param DataObject $object The object that this is primary key for (should have a relation with $name)
 	 */
 	public function __construct($name, $object = null) {
 		$this->object = $object;

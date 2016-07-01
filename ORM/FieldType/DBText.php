@@ -63,7 +63,7 @@ class DBText extends DBString {
 			'parts' => $parts
 		);
 
-		DB::require_field($this->tableName, $this->name, $values, $this->default);
+		DB::require_field($this->tableName, $this->name, $values);
 	}
 
 	/**
@@ -78,6 +78,7 @@ class DBText extends DBString {
 	 * Limit sentences, can be controlled by passing an integer.
 	 *
 	 * @param int $sentCount The amount of sentences you want.
+	 * @return string
 	 */
 	public function LimitSentences($sentCount = 2) {
 		if(!is_numeric($sentCount)) {
@@ -209,7 +210,7 @@ class DBText extends DBString {
 		// get first sentence?
 		// this needs to be more robust
 		if($plain && $plain != 'html') {
-			$data = Convert::xml2raw($this->value, true);
+			$data = Convert::xml2raw($this->value);
 			if(!$data) return "";
 
 			// grab the first paragraph, or, failing that, the whole content
@@ -238,8 +239,8 @@ class DBText extends DBString {
 	 * @param boolean $string Supplied string ("keywords")
 	 * @param boolean $striphtml Strip HTML?
 	 * @param boolean $highlight Add a highlight <span> element around search query?
-	 * @param String prefix text
-	 * @param String suffix
+	 * @param string $prefix text
+	 * @param string $suffix
 	 *
 	 * @return string
 	 */
@@ -293,6 +294,7 @@ class DBText extends DBString {
 	 * Allows a sub-class of TextParser to be rendered.
 	 *
 	 * @see TextParser for implementation details.
+	 * @param string $parser
 	 * @return string
 	 */
 	public function Parse($parser = "TextParser") {

@@ -29,11 +29,10 @@ class DBVarchar extends DBString {
 	/**
  	 * Construct a new short text field
  	 *
- 	 * @param $name string The name of the field
- 	 * @param $size int The maximum size of the field, in terms of characters
- 	 * @param $options array Optional parameters, e.g. array("nullifyEmpty"=>false).
+ 	 * @param string $name The name of the field
+ 	 * @param int $size The maximum size of the field, in terms of characters
+ 	 * @param array $options Optional parameters, e.g. array("nullifyEmpty"=>false).
  	 *                       See {@link StringField::setOptions()} for information on the available options
- 	 * @return unknown_type
  	 */
 	public function __construct($name = null, $size = 50, $options = array()) {
 		$this->size = $size ? $size : 50;

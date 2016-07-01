@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\FieldType;
 
 use NumericField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 
 /**
@@ -21,7 +22,7 @@ class DBDecimal extends DBField {
 	 * @param string $name
 	 * @param int $wholeSize
 	 * @param int $decimalSize
-	 * @param float $defaultValue
+	 * @param float|int $defaultValue
 	 */
 	public function __construct($name = null, $wholeSize = 9, $decimalSize = 2, $defaultValue = 0) {
 		$this->wholeSize = is_int($wholeSize) ? $wholeSize : 9;

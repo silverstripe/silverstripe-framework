@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use FormField;
 use i18n;
 use Zend_Currency;
 use MoneyField;
@@ -75,6 +76,7 @@ class DBMoney extends DBComposite {
 	}
 
 	/**
+	 * @param array $options
 	 * @return string
 	 */
 	public function NiceWithShortname($options = array()){
@@ -83,6 +85,7 @@ class DBMoney extends DBComposite {
 	}
 
 	/**
+	 * @param array $options
 	 * @return string
 	 */
 	public function NiceWithName($options = array()){
@@ -98,7 +101,8 @@ class DBMoney extends DBComposite {
 	}
 
 	/**
-	 * @param string
+	 * @param string $currency
+	 * @param bool $markChanged
 	 */
 	public function setCurrency($currency, $markChanged = true) {
 		$this->setField('Currency', $currency, $markChanged);
@@ -113,6 +117,7 @@ class DBMoney extends DBComposite {
 
 	/**
 	 * @param float $amount
+	 * @param bool $markChanged
 	 */
 	public function setAmount($amount, $markChanged = true) {
 		$this->setField('Amount', (float)$amount, $markChanged);
@@ -149,6 +154,8 @@ class DBMoney extends DBComposite {
 	}
 
 	/**
+	 * @param string $currency
+	 * @param string $locale
 	 * @return string
 	 */
 	public function getSymbol($currency = null, $locale = null) {
@@ -160,6 +167,8 @@ class DBMoney extends DBComposite {
 	}
 
 	/**
+	 * @param string $currency
+	 * @param string $locale
 	 * @return string
 	 */
 	public function getShortName($currency = null, $locale = null) {
@@ -170,6 +179,8 @@ class DBMoney extends DBComposite {
 	}
 
 	/**
+	 * @param string $currency
+	 * @param string $locale
 	 * @return string
 	 */
 	public function getCurrencyName($currency = null, $locale = null) {

@@ -49,14 +49,13 @@ abstract class DBString extends DBField {
 
 	/**
 	 * Update the optional parameters for this field.
-	 * @param $options array of options
+	 * @param array $options array of options
 	 * The options allowed are:
 	 *   <ul><li>"nullifyEmpty"
 	 *       This is a boolean flag.
 	 *       True (the default) means that empty strings are automatically converted to nulls to be stored in
 	 *       the database. Set it to false to ensure that nulls and empty strings are kept intact in the database.
 	 *   </li></ul>
-	 * @return unknown_type
 	 */
 	public function setOptions(array $options = array()) {
 		if(array_key_exists("nullifyEmpty", $options)) {

@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use Object;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\Queries\SQLSelect;
 
 
 /**
@@ -127,7 +128,7 @@ abstract class DBComposite extends DBField {
 	public function requireField() {
 		foreach($this->compositeDatabaseFields() as $field => $spec){
 			$key = $this->getName() . $field;
-			DB::requireField($this->tableName, $key, $spec);
+			DB::require_field($this->tableName, $key, $spec);
 		}
 	}
 
@@ -239,7 +240,8 @@ abstract class DBComposite extends DBField {
 		// Set bound object
 		if($this->record instanceof DataObject) {
 			$key = $this->getName() . $field;
-			return $this->record->setField($key, $value);
+			$this->record->setField($key, $value);
+			return;
 		}
 
 		// Set local record
@@ -272,8 +274,7 @@ abstract class DBComposite extends DBField {
 			return $fields[$field];
 		}
 
-
-		parent::castingHelper($field);
+		return parent::castingHelper($field);
 	}
 
 }

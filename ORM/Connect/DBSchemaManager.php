@@ -46,7 +46,7 @@ abstract class DBSchemaManager {
 	/**
 	 * Injector injection point for database controller
 	 *
-	 * @param SS_Database $connector
+	 * @param SS_Database $database
 	 */
 	public function setDatabase(SS_Database $database) {
 		$this->database = $database;
@@ -127,6 +127,7 @@ abstract class DBSchemaManager {
 		// Clear update list for client code to mess around with
 		$this->schemaUpdateTransaction = array();
 
+		/** @var Exception $error */
 		$error = null;
 		try {
 
@@ -302,8 +303,8 @@ abstract class DBSchemaManager {
 	 *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
 	 *     control over the index.
 	 * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
-	 * @param string $options SQL statement to append to the CREATE TABLE call.
-	 * @param array $extensions List of extensions
+	 * @param string|array $options SQL statement to append to the CREATE TABLE call.
+	 * @param array|bool $extensions List of extensions
 	 */
 	public function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK = true,
 		$options = array(), $extensions = false
@@ -539,6 +540,7 @@ abstract class DBSchemaManager {
 	 * @see parseIndexSpec() for approximate inverse
 	 *
 	 * @param string|array $indexSpec
+	 * @return string
 	 */
 	protected function convertIndexSpec($indexSpec) {
 		// Return already converted spec
@@ -551,7 +553,7 @@ abstract class DBSchemaManager {
 	/**
 	 * Returns true if the given table is exists in the current database
 	 *
-	 * @param string $table Name of table to check
+	 * @param string $tableName Name of table to check
 	 * @return boolean Flag indicating existence of table
 	 */
 	abstract public function hasTable($tableName);
@@ -879,7 +881,7 @@ abstract class DBSchemaManager {
 	 * @param array $options An map of additional options.  The available keys are as follows:
 	 *   - 'MSSQLDatabase'/'MySQLDatabase'/'PostgreSQLDatabase' - database-specific options such as "engine" for MySQL.
 	 *   - 'temporary' - If true, then a temporary table will be created
-	 * @param $advancedOptions Advanced creation options
+	 * @param array $advancedOptions Advanced creation options
 	 * @return string The table name generated.  This may be different from the table name, for example with temporary
 	 * tables.
 	 */
@@ -940,8 +942,7 @@ abstract class DBSchemaManager {
 	 * This allows the cached values for a table's field list to be erased.
 	 * If $tablename is empty, then the whole cache is erased.
 	 *
-	 * @param string $tableName
-	 *
+	 * @param string|bool $tableName
 	 * @return boolean
 	 */
 	public function clearCachedFieldlist($tableName = false) {

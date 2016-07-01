@@ -9,6 +9,7 @@ use Config;
 use LogicException;
 use Cookie;
 use Injector;
+use SilverStripe\ORM\Connect\DBSchemaManager;
 use SilverStripe\ORM\Queries\SQLExpression;
 use SilverStripe\ORM\Connect\SS_Database;
 

@@ -20,6 +20,9 @@ class DBPercentage extends DBDecimal {
 
 	/**
 	 * Create a new Decimal field.
+	 *
+	 * @param string $name
+	 * @param int $precision
 	 */
 	public function __construct($name = null, $precision = 4) {
 		if(!$precision) $precision = 4;

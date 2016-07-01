@@ -2,8 +2,6 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use Deprecation;
-
 /**
  * Represents a decimal field containing a currency amount.
  * The currency class only supports single currencies.  For multi-currency support, use {@link Money}
@@ -62,16 +60,6 @@ class DBCurrency extends DBDecimal {
 		} else {
 			$this->value = 0;
 		}
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "Currency.currency_symbol" config setting instead
-	 * @param [type] $value [description]
-	 */
-
-	public static function setCurrencySymbol($value) {
-		Deprecation::notice('4.0', 'Use the "Currency.currency_symbol" config setting instead');
-		DBCurrency::config()->currency_symbol = $value;
 	}
 }
 
