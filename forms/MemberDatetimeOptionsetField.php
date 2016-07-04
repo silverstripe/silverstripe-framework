@@ -17,6 +17,10 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	 */
 	private static $preview_date = '25-12-2011 17:30:00';
 
+	private static $casting = ['Description' => 'HTMLText'];
+
+	private $descriptionTemplate = '';
+
 	public function Field($properties = array()) {
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberDatetimeOptionsetField.js');
 		$options = array();
@@ -88,6 +92,21 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 
 	public function Type() {
 		return 'optionset memberdatetimeoptionset';
+	}
+
+	public function getDescription() {
+		if ($template = $this->getDescriptionTemplate()) {
+			return $this->renderWith($template);
+		}
+		return parent::getDescription();
+	}
+
+	public function getDescriptionTemplate() {
+		return $this->descriptionTemplate;
+	}
+
+	public function setDescriptionTemplate($template) {
+		$this->descriptionTemplate = $template;
 	}
 
 	public function setValue($value) {

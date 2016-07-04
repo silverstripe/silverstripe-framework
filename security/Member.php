@@ -1475,9 +1475,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				)
 			);
 			$dateFormatField->setValue($self->DateFormat);
-			$dateDescription = ArrayData::create(array())
-				->renderWith('MemberDatetimeOptionsetField_description_date');
-			$dateFormatField->setDescription($dateDescription);
+			$dateFormatField->setDescriptionTemplate('MemberDatetimeOptionsetField_description_date');
 
 			$defaultTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($self->Locale));
 			$timeFormatMap = array(
@@ -1494,9 +1492,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				)
 			);
 			$timeFormatField->setValue($self->TimeFormat);
-			$timeDescription = ArrayData::create(array())
-				->renderWith('MemberDatetimeOptionsetField_description_time');
-			$timeFormatField->setDescription($timeDescription);
+			$timeFormatField->setDescriptionTemplate('MemberDatetimeOptionsetField_description_time');
 		});
 
 		return parent::getCMSFields();
