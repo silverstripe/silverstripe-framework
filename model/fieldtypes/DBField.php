@@ -221,19 +221,19 @@ abstract class DBField extends ViewableData {
 	}
 
 	public function HTMLATT() {
-		return Convert::raw2htmlatt($this->value);
+		return Convert::raw2htmlatt($this->RAW());
 	}
 
 	public function URLATT() {
-		return urlencode($this->value);
+		return urlencode($this->RAW());
 	}
 
 	public function RAWURLATT() {
-		return rawurlencode($this->value);
+		return rawurlencode($this->RAW());
 	}
 
 	public function ATT() {
-		return Convert::raw2att($this->value);
+		return Convert::raw2att($this->RAW());
 	}
 
 	public function RAW() {
@@ -241,7 +241,7 @@ abstract class DBField extends ViewableData {
 	}
 
 	public function JS() {
-		return Convert::raw2js($this->value);
+		return Convert::raw2js($this->RAW());
 	}
 
 	/**
@@ -249,15 +249,15 @@ abstract class DBField extends ViewableData {
 	 * @return string
 	 */
 	public function JSON() {
-		return Convert::raw2json($this->value);
+		return Convert::raw2json($this->RAW());
 	}
 
 	public function HTML(){
-		return Convert::raw2xml($this->value);
+		return Convert::raw2xml($this->RAW());
 	}
 
 	public function XML(){
-		return Convert::raw2xml($this->value);
+		return Convert::raw2xml($this->RAW());
 	}
 
 	/**
