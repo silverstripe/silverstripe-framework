@@ -100,7 +100,7 @@ class HTMLText extends Text {
 			// Catch warnings thrown by loadHTML and turn them into a failure boolean rather than a SilverStripe error
 			set_error_handler(create_function('$no, $str', 'throw new Exception("HTML Parse Error: ".$str);'), E_ALL);
 			//  Nonbreaking spaces get converted into weird characters, so strip them
-			$value = str_replace('&nbsp;', ' ', $this->value);
+			$value = str_replace('&nbsp;', ' ', $this->RAW());
 			try {
 				$res = $doc->loadHTML('<meta content="text/html; charset=utf-8" http-equiv="Content-type"/>' . $value);
 			}
@@ -175,6 +175,15 @@ class HTMLText extends Text {
 		return $this->Summary();
 	}
 
+	public function RAW() {
+		if ($this->processShortcodes) {
+			return ShortcodeParser::get_active()->parse($this->value);
+		}
+		else {
+			return $this->value;
+		}
+	}
+
 	/**
 	 * Return the value of the field with relative links converted to absolute urls (with placeholders parsed).
 	 * @return string
@@ -184,12 +193,7 @@ class HTMLText extends Text {
 	}
 
 	public function forTemplate() {
-		if ($this->processShortcodes) {
-			return ShortcodeParser::get_active()->parse($this->value);
-		}
-		else {
-			return $this->value;
-		}
+		return $this->RAW();
 	}
 
 	public function prepValueForDB($value) {
@@ -237,14 +241,16 @@ class HTMLText extends Text {
 			return false;
 		}
 
+		$value = $this->RAW();
+
 		// If it's got a content tag
-		if(preg_match('/<(img|embed|object|iframe|meta|source|link)[^>]*>/i', $this->value)) {
+		if(preg_match('/<(img|embed|object|iframe|meta|source|link)[^>]*>/i', $value)) {
 			return true;
 		}
 
 		// If it's just one or two tags on its own (and not the above) it's empty.
 		// This might be <p></p> or <h1></h1> or whatever.
-		if(preg_match('/^[\\s]*(<[^>]+>[\\s]*){1,2}$/', $this->value)) {
+		if(preg_match('/^[\\s]*(<[^>]+>[\\s]*){1,2}$/', $value)) {
 			return false;
 		}
 

@@ -14,7 +14,13 @@ class ShortcodeParserTest extends SapphireTest {
 		
 		parent::setUp();
 	}
-	
+
+	public function tearDown() {
+		ShortcodeParser::get('test')->unregister('test_shortcode');
+
+		parent::tearDown();
+	}
+
 	/**
 	 * Tests that valid short codes that have not been registered are not replaced.
 	 */
@@ -218,6 +224,14 @@ class ShortcodeParserTest extends SapphireTest {
 		);
 	}
 
+	public function testFalseyArguments() {
+		$this->parser->parse('<p>[test_shortcode falsey=0]');
+
+		$this->assertEquals(array(
+			'falsey' => '',
+		), $this->arguments);
+	}
+
 	public function testNumericShortcodes() {
 		$this->assertEqualsIgnoringWhitespace(
 			'[2]',
@@ -240,6 +254,8 @@ class ShortcodeParserTest extends SapphireTest {
 			'<script>this is 2</script>',
 			$this->parser->parse('<script>[2]</script>')
 		);
+
+		$this->parser->unregister('2');
 	}
 
 	public function testExtraContext() {
@@ -248,6 +264,18 @@ class ShortcodeParserTest extends SapphireTest {
 		$this->assertInstanceOf('DOMNode', $this->extra['node']);
 		$this->assertInstanceOf('DOMElement', $this->extra['element']);
 		$this->assertEquals($this->extra['element']->tagName, 'a');
+	}
+
+	public function testNoParseAttemptIfNoCode() {
+		$stub = $this->getMock('ShortcodeParser', array('replaceElementTagsWithMarkers'));
+		$stub->register('test', function() {
+			return '';
+		});
+
+		$stub->expects($this->never())
+			->method('replaceElementTagsWithMarkers')->will($this->returnValue(array('', '')));
+
+		$stub->parse('<p>test</p>');
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------
