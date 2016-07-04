@@ -56,7 +56,7 @@ If you're using the CSS method a second argument can be used. This argument defi
 ### Javascript Files
 
 	:::php
-    Requirements::javascript($path);
+    Requirements::javascript($path, $options);
 
 A variant on the inclusion of custom javascript is the inclusion of *templated* javascript.  Here, you keep your
 JavaScript in a separate file and instead load, via search and replace, several PHP-generated variables into that code.
@@ -75,7 +75,6 @@ that your included files provide these scripts. This will ensure that subsequent
 Requirement calls that rely on those included scripts will not double include those
 files.
 
-
     :::php
     Requirements::javascript('<my-module-dir>/javascript/dist/bundle.js', ['provides' => [
         '<my-module-dir>/javascript/jquery.js'
@@ -84,6 +83,16 @@ files.
     ]]);
     Requirements::javascript('<my-module-dir>/javascript/jquery.js'); // Will will skip this file
 
+You can also use the second argumet to add the 'async' and/or 'defer attributes to the script tag generated:
+
+	:::php
+    Requirements::javascript(
+    	"<my-module-dir>/javascript/some_file.js", 
+    	array(
+    		"async" => true,
+    		"defer" => true,
+    	)
+    );
 
 ### Custom Inline CSS or Javascript
 
@@ -217,6 +226,20 @@ This can be disabled by setting the `Requirements.disable_flush_combined` config
 When combining CSS files, take care of relative urls, as these will not be re-written to match
 the destination location of the resulting combined CSS.
 </div>
+
+### Combined JS Files
+
+You can also add the 'async' and/or 'defer' attributes to combined Javascript files as you would with the 
+`Requirements::javascript` call - use the third paramter of the `combine_files` function:
+
+	:::php
+	$scripts = array(
+		"$themeDir/javascript/some_script.js",
+		"$themeDir/javascript/some_other_script.js",
+	);
+
+	Requirements::combine_files('scripts.js', $scripts, array('async' => true, 'defer' => true));
+
 
 ## Clearing assets
 
