@@ -102,6 +102,19 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$this->assertFalse($field->validate($validator));
 	}
 
+	public function testDescriptionTemplate() {
+		$field = new MemberDatetimeOptionsetField('DateFormat', 'DateFormat');
+
+		$this->assertEmpty($field->getDescription());
+
+		$field->setDescription('Test description');
+		$this->assertEquals('Test description', $field->getDescription());
+
+		$field->setDescriptionTemplate('MemberDatetimeOptionsetField_description_time');
+		$this->assertNotEmpty($field->getDescription());
+		$this->assertNotEquals('Test description', $field->getDescription());
+	}
+
 }
 class MemberDatetimeOptionsetFieldTest_Controller extends Controller {
 
