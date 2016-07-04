@@ -55,7 +55,7 @@ class XMLDataFormatterTest extends SapphireTest {
 
 		$page->Content = '[test_shortcode,id=-1]';
 		$xml = new SimpleXMLElement('<?xml version="1.0"?>' . $formatter->convertDataObjectWithoutHeader($page));
-		$this->assertEmpty('', (string)$xml->Content);
+		$this->assertEmpty((string)$xml->Content);
 
 		$page->Content = '[bad_code,id=1]';
 
