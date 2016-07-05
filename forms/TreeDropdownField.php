@@ -219,11 +219,12 @@ class TreeDropdownField extends FormField {
 		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/TreeDropdownField.css');
 
-		if($this->showSearch) {
-			$emptyTitle = _t('DropdownField.CHOOSESEARCH', '(choose folder)', 'start value of a dropdown');
-		} else {
-			$emptyTitle = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
-		}
+		$item = DataObject::singleton($this->sourceObject);
+		$emptyTitle = _t(
+			'DropdownField.CHOOSE_MODEL',
+			'(Choose {name})',
+			['name' => $item->i18n_singular_name()]
+		);
 
 		$record = $this->Value() ? $this->objectForKey($this->Value()) : null;
 		if($record instanceof ViewableData) {
