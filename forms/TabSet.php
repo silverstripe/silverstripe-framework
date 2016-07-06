@@ -1,4 +1,6 @@
 <?php
+use SilverStripe\ORM\FieldType\DBHTMLText;
+
 /**
  * Defines a set of tabs in a form.
  * The tabs are build with our standard tabstrip javascript library.
@@ -28,44 +30,88 @@
 class TabSet extends CompositeField {
 
 	/**
-	 * @param string $name Identifier
-	 * @param string $title (Optional) Natural language title of the tabset
-	 * @param Tab|TabSet $unknown All further parameters are inserted as children into the TabSet
+	 * @var TabSet
 	 */
-	public function __construct($name) {
-		$args = func_get_args();
+	protected $tabSet;
 
-		$name = array_shift($args);
-		if(!is_string($name)) user_error('TabSet::__construct(): $name parameter to a valid string', E_USER_ERROR);
-		$this->name = $name;
+	/**
+	 * @var string
+	 */
+	protected $id;
 
-		$this->id = $name;
-
-		// Legacy handling: only assume second parameter as title if its a string,
-		// otherwise it might be a formfield instance
-		if(isset($args[0]) && is_string($args[0])) {
-			$title = array_shift($args);
-		}
-		$this->title = (isset($title)) ? $title : FormField::name_to_label($name);
-
-		if($args) foreach($args as $tab) {
-			$isValidArg = (is_object($tab) && (!($tab instanceof Tab) || !($tab instanceof TabSet)));
-			if(!$isValidArg) user_error('TabSet::__construct(): Parameter not a valid Tab instance', E_USER_ERROR);
-
-			$tab->setTabSet($this);
+	/**
+	 * @param string $name Identifier
+	 * @param string|Tab|TabSet $titleOrTab Natural language title of the tabset, or first tab.
+	 * If its left out, the class uses {@link FormField::name_to_label()} to produce a title
+	 * from the {@link $name} parameter.
+	 * @param Tab|TabSet ...$tabs All further parameters are inserted as children into the TabSet
+	 */
+	public function __construct($name, $titleOrTab = null, $tabs = null) {
+		if(!is_string($name)) {
+			throw new InvalidArgumentException('Invalid string parameter for $name');
 		}
 
-		parent::__construct($args);
+		// Get following arguments
+		$tabs = func_get_args();
+		array_shift($tabs);
+
+		// Detect title from second argument, if it is a string
+		if($titleOrTab && is_string($titleOrTab)) {
+			$title = $titleOrTab;
+			array_shift($tabs);
+		} else {
+			$title = static::name_to_label($name);
+		}
+
+		// Normalise children list
+		if(count($tabs) === 1 && (is_array($tabs[0]) || $tabs[0] instanceof FieldList)) {
+			$tabs = $tabs[0];
+		}
+
+		// Ensure tabs are assigned to this tabset
+		if($tabs) {
+			foreach($tabs as $tab) {
+				if ($tab instanceof Tab || $tab instanceof TabSet) {
+					$tab->setTabSet($this);
+				} else {
+					throw new InvalidArgumentException("TabSet can only contain instances of other Tab or Tabsets");
+				}
+			}
+		}
+
+		parent::__construct($tabs);
+
+		// Assign name and title (not assigned by parent constructor)
+		$this->setName($name);
+		$this->setTitle($title);
+		$this->setID(Convert::raw2htmlid($name));
 	}
 
-	public function id() {
-		if($this->tabSet) return $this->tabSet->id() . '_' . $this->id . '_set';
-		else return $this->id;
+	public function ID() {
+		if($this->tabSet) {
+			return $this->tabSet->ID() . '_' . $this->id . '_set';
+		} else {
+			return $this->id;
+		}
+	}
+
+	/**
+	 * Set custom HTML ID to use for this tabset
+	 *
+	 * @param string $id
+	 * @return $this
+	 */
+	public function setID($id) {
+		$this->id = $id;
+		return $this;
 	}
 
 	/**
 	 * Returns a tab-strip and the associated tabs.
 	 * The HTML is a standardised format, containing a &lt;ul;
+	 *
+	 * @param array $properties
+	 * @return DBHTMLText|string
 	 */
 	public function FieldHolder($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
@@ -84,78 +130,73 @@ class TabSet extends CompositeField {
 	}
 
 	/**
-	 * Return a dataobject set of all this classes tabs
+	 * Return a set of all this classes tabs
+	 *
+	 * @return FieldList
 	 */
 	public function Tabs() {
 		return $this->children;
 	}
 
+	/**
+	 * @param FieldList $children Assign list of tabs
+	 */
 	public function setTabs($children){
 		$this->children = $children;
 	}
 
+	/**
+	 * Assign to a TabSet instance
+	 *
+	 * @param TabSet $val
+	 * @return $this
+	 */
 	public function setTabSet($val) {
 		$this->tabSet = $val;
 		return $this;
 	}
 
+	/**
+	 * Get parent tabset
+	 * 
+	 * @return TabSet
+	 */
 	public function getTabSet() {
-		if(isset($this->tabSet)) return $this->tabSet;
+		return $this->tabSet;
 	}
 
 	public function getAttributes() {
 		return array_merge(
 			$this->attributes,
 			array(
-				'id' => $this->id(),
+				'id' => $this->ID(),
 				'class' => $this->extraClass()
 			)
 		);
 	}
 
 	/**
-	 * Returns a named field.
-	 *
-	 * @param string $name Name of the field you want to find. Allows for dot notation.
-	 * @return FormField|null
-	 */
-	public function fieldByName($name) {
-		if(strpos($name,'.') !== false)	list($name, $remainder) = explode('.',$name,2);
-		else $remainder = null;
-
-		foreach($this->children as $child) {
-			if(trim($name) == trim($child->Name) || $name == $child->id) {
-				if($remainder) {
-					if($child->isComposite()) {
-						return $child->fieldByName($remainder);
-					} else {
-						user_error("Trying to get field '$remainder' from non-composite field $child->class.$name",
-							E_USER_WARNING);
-						return null;
-					}
-				} else {
-					return $child;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * Add a new child field to the end of the set.
+	 *
+	 * @param FormField $field
 	 */
 	public function push(FormField $field) {
+		if ($field instanceof Tab || $field instanceof TabSet) {
+			$field->setTabSet($this);
+		}
 		parent::push($field);
-		$field->setTabSet($this);
 	}
 
 	/**
 	 * Add a new child field to the beginning of the set.
+	 *
+	 * @param FormField $field
 	 */
 	public function unshift(FormField $field) {
+		if ($field instanceof Tab || $field instanceof TabSet) {
+			$field->setTabSet($this);
+		}
 		parent::unshift($field);
-		$field->setTabSet($this);
 	}
 
 	/**
@@ -163,10 +204,12 @@ class TabSet extends CompositeField {
 	 *
 	 * @param string $insertBefore Name of the field to insert before
 	 * @param FormField $field The form field to insert
-	 * @return	FormField|null
+	 * @return FormField|null
 	 */
 	public function insertBefore($insertBefore, $field) {
-		if($field instanceof Tab) $field->setTabSet($this);
+		if ($field instanceof Tab || $field instanceof TabSet) {
+			$field->setTabSet($this);
+		}
 		return parent::insertBefore($insertBefore, $field);
 	}
 
@@ -178,7 +221,9 @@ class TabSet extends CompositeField {
 	 * @return FormField|null
 	 */
 	public function insertAfter($insertAfter, $field) {
-		if($field instanceof Tab) $field->setTabSet($this);
+		if ($field instanceof Tab || $field instanceof TabSet) {
+			$field->setTabSet($this);
+		}
 		return parent::insertAfter($insertAfter, $field);
 	}
 }

@@ -648,7 +648,8 @@ class FormField extends RequestHandler {
 	 *
 	 * Caution: this doesn't work on all fields, see {@link setAttribute()}.
 	 *
-	 * @return null|string
+	 * @param string $name
+	 * @return string
 	 */
 	public function getAttribute($name) {
 		$attributes = $this->getAttributes();
@@ -1239,8 +1240,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @todo Make this abstract.
 	 *
-	 * @param Validator
-	 *
+	 * @param Validator $validator
 	 * @return bool
 	 */
 	public function validate($validator) {
@@ -1297,7 +1297,7 @@ class FormField extends RequestHandler {
 	 * @return bool
 	 */
 	public function Required() {
-		if($this->form && ($validator = $this->form->Validator)) {
+		if($this->form && ($validator = $this->form->getValidator())) {
 			return $validator->fieldIsRequired($this->name);
 		}
 
@@ -1451,14 +1451,14 @@ class FormField extends RequestHandler {
 			'id' => $this->ID(),
 			'type' => $this->getSchemaDataType(),
 			'component' => $this->getSchemaComponent(),
-			'holder_id' => null,
+			'holder_id' => $this->HolderID(),
 			'title' => $this->Title(),
 			'source' => null,
-			'extraClass' => $this->ExtraClass(),
+			'extraClass' => $this->extraClass(),
 			'description' => $this->getDescription(),
 			'rightTitle' => $this->RightTitle(),
 			'leftTitle' => $this->LeftTitle(),
-			'readOnly' => $this->isReadOnly(),
+			'readOnly' => $this->isReadonly(),
 			'disabled' => $this->isDisabled(),
 			'customValidationMessage' => $this->getCustomValidationMessage(),
 			'attributes' => [],
@@ -1472,7 +1472,7 @@ class FormField extends RequestHandler {
 	 * Any passed keys that are not defined in {@link getSchemaDataDefaults()} are ignored.
 	 * If you want to pass around ad hoc data use the `data` array e.g. pass `['data' => ['myCustomKey' => 'yolo']]`.
 	 *
-	 * @param array $schemaData - The data to be merged with $this->schemaData.
+	 * @param array $schemaState The data to be merged with $this->schemaData.
 	 * @return FormField
 	 *
 	 * @todo Add deep merging of arrays like `data` and `attributes`.
@@ -1514,6 +1514,7 @@ class FormField extends RequestHandler {
 					'type' => $error['messageType']
 				];
 			}
+			return null;
 		}, $errors));
 
 		return [

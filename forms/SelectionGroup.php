@@ -38,8 +38,6 @@ class SelectionGroup extends CompositeField {
 	 * @param mixed $value
 	 */
 	public function __construct($name, $items, $value = null) {
-		$this->name = $name;
-
 		if($value !== null) {
 			$this->setValue($value);
 		}
@@ -62,7 +60,7 @@ class SelectionGroup extends CompositeField {
 
 		parent::__construct($selectionItems);
 
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/SelectionGroup.css');
+		$this->setName($name);
 	}
 
 	public function FieldSet() {
@@ -138,15 +136,18 @@ class SelectionGroup_Item extends CompositeField {
 
 	/**
 	 * @param String $value Form field identifier
-	 * @param FormField $field Contents of the option
+	 * @param FormField|array $fields Contents of the option
 	 * @param String $title Title to show for the radio button option
 	 */
 	function __construct($value, $fields = null, $title = null) {
-		$this->value = $value;
-		$this->title = ($title) ? $title : $value;
-		if($fields && !is_array($fields)) $fields = array($fields);
+		$this->setValue($value);
+		if($fields && !is_array($fields)) {
+			$fields = array($fields);
+		}
 
 		parent::__construct($fields);
+
+		$this->setTitle($title ?: $value);
 	}
 
 	function getTitle() {

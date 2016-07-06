@@ -17,55 +17,98 @@
  * @subpackage fields-structural
  */
 class Tab extends CompositeField {
+
+	/**
+	 * @var TabSet
+	 */
 	protected $tabSet;
+
+	/**
+	 * @var string
+	 */
+	protected $id;
 
 	/**
 	 * @uses FormField::name_to_label()
 	 *
 	 * @param string $name Identifier of the tab, without characters like dots or spaces
-	 * @param string $title Natural language title of the tab. If its left out,
-	 *  the class uses {@link FormField::name_to_label()} to produce a title from the {@link $name} parameter.
-	 * @param FormField All following parameters are inserted as children to this tab
+	 * @param string|FormField $titleOrField Natural language title of the tabset, or first tab.
+	 * If its left out, the class uses {@link FormField::name_to_label()} to produce a title
+	 * from the {@link $name} parameter.
+	 * @param FormField ...$fields All following parameters are inserted as children to this tab
 	 */
-	public function __construct($name) {
-		$args = func_get_args();
-
-		$name = array_shift($args);
-		if(!is_string($name)) user_error('TabSet::__construct(): $name parameter to a valid string', E_USER_ERROR);
-		$this->name = $name;
-
-		$this->id = preg_replace('/[^0-9A-Za-z]+/', '', $name);
-
-		// Legacy handling: only assume second parameter as title if its a string,
-		// otherwise it might be a formfield instance
-		if(isset($args[0]) && is_string($args[0])) {
-			$title = array_shift($args);
+	public function __construct($name, $titleOrField = null, $fields = null) {
+		if(!is_string($name)) {
+			throw new InvalidArgumentException('Invalid string parameter for $name');
 		}
-		$this->title = (isset($title)) ? $title : FormField::name_to_label($name);
 
-		parent::__construct($args);
+		// Get following arguments
+		$fields = func_get_args();
+		array_shift($fields);
+
+		// Detect title from second argument, if it is a string
+		if($titleOrField && is_string($titleOrField)) {
+			$title = $titleOrField;
+			array_shift($fields);
+		} else {
+			$title = static::name_to_label($name);
+		}
+
+		// Remaining arguments are child fields
+		parent::__construct($fields);
+
+		// Assign name and title (not assigned by parent constructor)
+		$this->setName($name);
+		$this->setTitle($title);
+		$this->setID(Convert::raw2htmlid($name));
 	}
 
-	public function id() {
-		return ($this->tabSet) ? $this->tabSet->id() . '_' . $this->id : $this->id;
+	public function ID() {
+		if($this->tabSet) {
+			return $this->tabSet->ID() . '_' . $this->id;
+		} else {
+			return $this->id;
+		}
 	}
 
+	/**
+	 * Set custom HTML ID to use for this tabset
+	 *
+	 * @param string $id
+	 * @return $this
+	 */
+	public function setID($id) {
+		$this->id = $id;
+		return $this;
+	}
+
+	/**
+	 * Get child fields
+	 *
+	 * @return FieldList
+	 */
 	public function Fields() {
 		return $this->children;
 	}
 
+	/**
+	 * Assign to a TabSet instance
+	 *
+	 * @param TabSet $val
+	 * @return $this
+	 */
 	public function setTabSet($val) {
 		$this->tabSet = $val;
 		return $this;
 	}
 
 	/**
-	 * Returns the named field
+	 * Get parent tabset
+	 *
+	 * @return TabSet
 	 */
-	public function fieldByName($name) {
-		foreach($this->children as $child) {
-			if($name == $child->getName()) return $child;
-		}
+	public function getTabSet() {
+		return $this->tabSet;
 	}
 
 	public function extraClass() {
@@ -76,7 +119,7 @@ class Tab extends CompositeField {
 		return array_merge(
 			$this->attributes,
 			array(
-				'id' => $this->id(),
+				'id' => $this->ID(),
 				'class' => 'tab ' . $this->extraClass()
 			)
 		);

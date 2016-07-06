@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms\Schema;
 
-use Convert;
 use Form;
+use FormField;
 
 /**
  * Class FormSchema
@@ -38,11 +38,12 @@ class FormSchema {
 		];
 
 		foreach ($form->Actions() as $action) {
+			/** @var FormField $action */
 			$schema['actions'][] = $action->getSchemaData();
 		}
 
-		// TODO Implemented nested fields and use Fields() instead
-		foreach ($form->Fields()->dataFields() as $field) {
+		foreach ($form->Fields() as $field) {
+			/** @var FormField $field */
 			$schema['fields'][] = $field->getSchemaData();
 		}
 

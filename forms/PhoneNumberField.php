@@ -35,7 +35,6 @@ class PhoneNumberField extends FormField {
 	 */
 	public function Field($properties = array()) {
 		$fields = new FieldGroup( $this->name );
-		$fields->setID("{$this->name}_Holder");
 		list($countryCode, $areaCode, $phoneNumber, $extension) = $this->parseValue();
 
 		if ($this->value=="") {
