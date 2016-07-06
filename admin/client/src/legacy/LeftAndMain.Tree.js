@@ -298,7 +298,7 @@ $.entwine('ss.tree', function($){
 		 *  (Object) Map of additional data, e.g. ParentID
 		 */
 		updateNode: function(node, html, data) {
-			var self = this, newNode = $(html), origClasses = node.attr('class');
+			var self = this, newNode = $(html);
 
 			var nextNode = data.NextID ? this.getNodeByID(data.NextID) : false;
 			var prevNode = data.PrevID ? this.getNodeByID(data.PrevID) : false;
@@ -310,13 +310,9 @@ $.entwine('ss.tree', function($){
 				node.attr(attrName, newNode.attr(attrName));
 			});
 
-			// To avoid conflicting classes when the node gets its content replaced (see below)
-			// Filter out all previous status flags if they are not in the class property of the new node
-			origClasses = origClasses.replace(/status-[^\s]*/, '');
-
 			// Replace inner content
 			var origChildren = node.children('ul').detach();
-			node.addClass(origClasses).html(newNode.html()).append(origChildren);
+			node.html(newNode.html()).append(origChildren);
 
 			if (nextNode && nextNode.length) {
 				this.jstree('move_node', node, nextNode, 'before');
