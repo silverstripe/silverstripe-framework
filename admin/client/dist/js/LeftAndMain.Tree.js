@@ -219,8 +219,7 @@
 
 			updateNode: function updateNode(node, html, data) {
 				var self = this,
-				    newNode = $(html),
-				    origClasses = node.attr('class');
+				    newNode = $(html);
 
 				var nextNode = data.NextID ? this.getNodeByID(data.NextID) : false;
 				var prevNode = data.PrevID ? this.getNodeByID(data.PrevID) : false;
@@ -230,10 +229,8 @@
 					node.attr(attrName, newNode.attr(attrName));
 				});
 
-				origClasses = origClasses.replace(/status-[^\s]*/, '');
-
 				var origChildren = node.children('ul').detach();
-				node.addClass(origClasses).html(newNode.html()).append(origChildren);
+				node.html(newNode.html()).append(origChildren);
 
 				if (nextNode && nextNode.length) {
 					this.jstree('move_node', node, nextNode, 'before');

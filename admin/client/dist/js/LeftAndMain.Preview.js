@@ -89,12 +89,12 @@
 					container.entwine('.ss').contentViewMode();
 					this.setIsPreviewEnabled(false);
 				} else if (modeName == 'preview') {
-						container.entwine('.ss').previewMode();
-						this.setIsPreviewEnabled(true);
-						this._loadCurrentState();
-					} else {
-						throw 'Invalid mode: ' + modeName;
-					}
+					container.entwine('.ss').previewMode();
+					this.setIsPreviewEnabled(true);
+					this._loadCurrentState();
+				} else {
+					throw 'Invalid mode: ' + modeName;
+				}
 
 				if (save !== false) this.saveState('mode', modeName);
 
