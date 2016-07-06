@@ -28,6 +28,13 @@ class CampaignAdmin extends SilverStripeComponent {
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
+  componentWillMount() {
+    // Ensure default breadcrumbs are setup
+    if (this.props.breadcrumbs.length === 0) {
+      this.setBreadcrumbs(this.props.params.view, this.props.params.id);
+    }
+  }
+
   componentWillReceiveProps(props) {
     const hasChangedRoute = (
       this.props.params.id !== props.params.id ||
@@ -109,7 +116,7 @@ class CampaignAdmin extends SilverStripeComponent {
   renderIndexView() {
     const schemaUrl = this.props.sectionConfig.form.EditForm.schemaUrl;
     const formActionProps = {
-      label: i18n._t('Campaigns.ADDCAMPAIGN'),
+      title: i18n._t('Campaigns.ADDCAMPAIGN'),
       icon: 'plus',
       handleClick: this.addCampaign.bind(this),
     };
@@ -226,10 +233,10 @@ class CampaignAdmin extends SilverStripeComponent {
         },
       });
 
-      return <Component key={props.name} {...extendedProps} />;
+      return <Component key={props.id} {...extendedProps} />;
     }
 
-    return <Component key={props.name} {...props} />;
+    return <Component key={props.id} {...props} />;
   }
 
   /**

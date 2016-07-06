@@ -35,6 +35,15 @@ class FormAction extends FormField {
 	protected $action;
 
 	/**
+	 * Identifier of icon, if supported on the frontend
+	 *
+	 * @var string
+	 */
+	protected $icon = null;
+
+	protected $schemaComponent = 'FormAction';
+
+	/**
 	 * Enables the use of <button> instead of <input>
 	 * in {@link Field()} - for more customizeable styling.
 	 *
@@ -68,6 +77,36 @@ class FormAction extends FormField {
 		$this->setForm($form);
 
 		parent::__construct($this->action, $title);
+	}
+
+	/**
+	 * Add extra options to data
+	 */
+	public function getSchemaDataDefaults() {
+		$defaults = parent::getSchemaDataDefaults();
+		$defaults['attributes']['type'] = $this->getUseButtonTag() ? 'button' : 'submit';
+		$defaults['data']['icon'] = $this->getIcon();
+		return $defaults;
+	}
+
+	/**
+	 * Get button icon, if supported
+	 *
+	 * @return string
+	 */
+	public function getIcon() {
+		return $this->icon;
+	}
+
+	/**
+	 * Sets button icon
+	 *
+	 * @param string $icon Icon identifier (not path)
+	 * @return $this
+	 */
+	public function setIcon($icon) {
+		$this->icon = $icon;
+		return $this;
 	}
 
 	/**

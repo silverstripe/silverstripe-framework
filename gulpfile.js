@@ -231,6 +231,12 @@ gulp.task('bundle-lib', function bundleLib() {
     .require('react',
       { expose: 'react' }
     )
+    .require('tether',
+      { expose: 'tether' }
+    )
+    .require('react-bootstrap-4',
+      { expose: 'react-bootstrap-4' }
+    )
     .require('react-addons-css-transition-group',
       { expose: 'react-addons-css-transition-group' }
     )
@@ -408,6 +414,8 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('page.js')
     .external('react-addons-test-utils')
     .external('react-dom')
+    .external('tether')
+    .external('react-bootstrap-4')
     .external('react-redux')
     .external('react-router-redux')
     .external('react-router')

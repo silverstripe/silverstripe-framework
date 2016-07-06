@@ -12,6 +12,7 @@
   height: 32px;
   margin-right: $spacer-x * .5; // 8px
   position: relative;
+  box-shadow: none;
 }
 
 // Button icons
@@ -191,4 +192,10 @@
       border-left: 0;
     }
   }
+}
+
+// Remove focus from these actions
+// For things like popovers which have other indications they are focused
+.btn--no-focus:focus {
+  outline: none;
 }

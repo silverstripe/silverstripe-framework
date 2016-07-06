@@ -503,8 +503,10 @@ JSON;
 			'DetailEditForm',
 			$fields,
 			FieldList::create(
-				FormAction::create('save', _t('CMSMain.SAVE', 'Save')),
+				FormAction::create('save', _t('CMSMain.SAVE', 'Save'))
+					->setIcon('save'),
 				FormAction::create('cancel', _t('LeftAndMain.CANCEL', 'Cancel'))
+					->setUseButtonTag(true)
 			)
 		);
 
