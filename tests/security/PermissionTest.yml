@@ -1,25 +1,25 @@
-PermissionRole:
+'SilverStripe\Security\PermissionRole':
   author:
     Title: Author
   access:
    Title: Access Administrator
 
-PermissionRoleCode:
+'SilverStripe\Security\PermissionRoleCode':
   author1:
-    Role: =>PermissionRole.author
+    Role: '=>SilverStripe\Security\PermissionRole.author'
     Code: CMS_ACCESS_MyAdmin
   author2:
-    Role: =>PermissionRole.author
+    Role: '=>SilverStripe\Security\PermissionRole.author'
     Code: CMS_ACCESS_AssetAdmin
   access1:
-    Role: =>PermissionRole.access
+    Role: '=>SilverStripe\Security\PermissionRole.access'
     Code: CMS_ACCESS_SecurityAdmin
   access2:
-    Role: =>PermissionRole.access
+    Role: '=>SilverStripe\Security\PermissionRole.access'
     Code: EDIT_PERMISSIONS
 
 
-Member:
+'SilverStripe\Security\Member':
   author:
     FirstName: Test
     Surname: Author
@@ -34,30 +34,30 @@ Member:
     Surname: AndMain
     Email: leftandmain@example.com
 
-Group:
+'SilverStripe\Security\Group':
   author:
     Title: Authors
-    Members: =>Member.author
-    Roles: =>PermissionRole.author
+    Members: '=>SilverStripe\Security\Member.author'
+    Roles: '=>SilverStripe\Security\PermissionRole.author'
   access:
     Title: Access Administrators + Authors
-    Members: =>Member.access
-    Roles: =>PermissionRole.access,=>PermissionRole.author
+    Members: '=>SilverStripe\Security\Member.access'
+    Roles: '=>SilverStripe\Security\PermissionRole.access,=>SilverStripe\Security\PermissionRole.author'
   globalauthor:
-    Parent: =>Group.author
+    Parent: '=>SilverStripe\Security\Group.author'
     Title: Global Authors
-    Members: =>Member.globalauthor
+    Members: '=>SilverStripe\Security\Member.globalauthor'
   leftandmain:
     Title: LeftAndMain
-    Members: =>Member.leftandmain
+    Members: '=>SilverStripe\Security\Member.leftandmain'
 
-Permission:
+'SilverStripe\Security\Permission':
   extra1:
     Code: SITETREE_VIEW_ALL
-    Group: =>Group.author
+    Group: '=>SilverStripe\Security\Group.author'
   globalauthor:
     Code: SITETREE_EDIT_ALL
-    Group: =>Group.globalauthor
+    Group: '=>SilverStripe\Security\Group.globalauthor'
   leftandmain:
     Code: CMS_ACCESS_LeftAndMain
-    Group: =>Group.leftandmain
+    Group: '=>SilverStripe\Security\Group.leftandmain'

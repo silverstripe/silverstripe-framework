@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\Security\Member;
+
 /**
  * Generates a three-pane UI for editing model classes, with an
  * automatically generated search panel, tabular results and edit forms.
@@ -248,6 +251,8 @@ abstract class ModelAdmin extends LeftAndMain {
 
 	/**
 	 * Sanitise a model class' name for inclusion in a link
+	 *
+	 * @param string $class
 	 * @return string
 	 */
 	protected function sanitiseClassName($class) {
@@ -256,6 +261,8 @@ abstract class ModelAdmin extends LeftAndMain {
 
 	/**
 	 * Unsanitise a model class' name from a URL param
+	 *
+	 * @param string $class
 	 * @return string
 	 */
 	protected function unsanitiseClassName($class) {
@@ -444,6 +451,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	}
 
 	/**
+	 * @param bool $unlinked
 	 * @return ArrayList
 	 */
 	public function Breadcrumbs($unlinked = false) {

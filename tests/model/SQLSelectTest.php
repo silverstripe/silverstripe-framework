@@ -4,6 +4,9 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\SQLite\SQLite3Database;
+use SilverStripe\PostgreSQL\PostgreSQLDatabase;
+
 
 /**
  * @package framework

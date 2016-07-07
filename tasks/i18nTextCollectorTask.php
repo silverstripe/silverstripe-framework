@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 /**
  * @package framework
  * @subpackage tasks

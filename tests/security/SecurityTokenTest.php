@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Security\SecurityToken;
 /**
  * @package framework
  * @subpackage tests
@@ -41,7 +43,7 @@ class SecurityTokenTest extends SapphireTest {
 
 	public function testInst() {
 		$inst1 = SecurityToken::inst();
-		$this->assertInstanceOf('SecurityToken', $inst1);
+		$this->assertInstanceOf('SilverStripe\\Security\\SecurityToken', $inst1);
 	}
 
 	public function testInstReturnsSingleton() {

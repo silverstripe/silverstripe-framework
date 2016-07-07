@@ -6,6 +6,8 @@ use SilverStripe\Filesystem\Storage\DBFile;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\Security\Permission;
+
 
 
 /**
@@ -149,7 +151,6 @@ class AssetField extends FileField {
 	 *
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
-	 * @param Form $form Reference to the container form
 	 */
 	public function __construct($name, $title = null) {
 		$this->addExtraClass('ss-upload'); // class, used by js
@@ -237,7 +238,9 @@ class AssetField extends FileField {
 
 	/**
 	 * Force a record to be used as "Parent" for uploaded Files (eg a Page with a has_one to File)
+	 *
 	 * @param DataObject $record
+	 * @return $this
 	 */
 	public function setRecord($record) {
 		$this->record = $record;
@@ -444,7 +447,7 @@ class AssetField extends FileField {
 	 * Defaults to 'ss-uploadfield-uploadtemplate'
 	 *
 	 * @see javascript/UploadField_uploadtemplate.js
-	 * @var string
+	 * @return string
 	 */
 	public function getUploadTemplateName() {
 		return $this->getConfig('uploadTemplateName');
@@ -465,7 +468,7 @@ class AssetField extends FileField {
 	 * Defaults to 'ss-downloadfield-downloadtemplate'
 	 *
 	 * @see javascript/DownloadField_downloadtemplate.js
-	 * @var string
+	 * @return string
 	 */
 	public function getDownloadTemplateName() {
 		return $this->getConfig('downloadTemplateName');
@@ -753,7 +756,7 @@ class AssetField extends FileField {
 	 * Gets the foreign class that needs to be created, or 'File' as default if there
 	 * is no relationship, or it cannot be determined.
 	 *
-	 * @param $default Default value to return if no value could be calculated
+	 * @param string $default Default value to return if no value could be calculated
 	 * @return string Foreign class name.
 	 */
 	public function getRelationAutosetClass($default = 'File') {

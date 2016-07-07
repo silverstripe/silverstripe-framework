@@ -1201,7 +1201,8 @@ class FormField extends RequestHandler {
 	 * @return string
 	 */
 	public function Type() {
-		return strtolower(preg_replace('/Field$/', '', $this->class));
+		$type = new ReflectionClass($this);
+		return strtolower(preg_replace('/Field$/', '', $type->getShortName()));
 	}
 
 	/**

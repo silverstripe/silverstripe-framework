@@ -1,4 +1,15 @@
 <?php
+
+namespace SilverStripe\Security;
+
+use FieldList;
+use Object;
+use SS_HTTPRequest;
+use TemplateGlobalProvider;
+use Session;
+use HiddenField;
+use Controller;
+
 /**
  * @package framework
  * @subpackage security
@@ -110,7 +121,8 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * @return String
+	 * @param string $name
+	 * @return string
 	 */
 	public function setName($name) {
 		$val = $this->getValue();

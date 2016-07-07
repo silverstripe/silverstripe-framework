@@ -1,6 +1,13 @@
 <?php
 
+namespace SilverStripe\Security;
+
+
 use SilverStripe\ORM\DB;
+use Config;
+use ReflectionClass;
+use Exception;
+
 /**
  * Allows pluggable password encryption.
  * By default, this might be PHP's integrated sha1()
@@ -22,10 +29,10 @@ abstract class PasswordEncryptor {
 	private static $encryptors = array();
 
 	/**
-	 * @return Array Map of encryptor code to the used class.
+	 * @return array Map of encryptor code to the used class.
 	 */
 	public static function get_encryptors() {
-		return Config::inst()->get('PasswordEncryptor', 'encryptors');
+		return Config::inst()->get('SilverStripe\\Security\\PasswordEncryptor', 'encryptors');
 	}
 
 	/**
@@ -73,9 +80,9 @@ abstract class PasswordEncryptor {
 	 *
 	 * @uses RandomGenerator
 	 *
-	 * @param String $password Cleartext password
+	 * @param string $password Cleartext password
 	 * @param Member $member (Optional)
-	 * @return String Maximum of 50 characters
+	 * @return string Maximum of 50 characters
 	 */
 	public function salt($password, $member = null) {
 		$generator = new RandomGenerator();
@@ -87,6 +94,12 @@ abstract class PasswordEncryptor {
 	 * but is necessary for retain compatibility with password hashed
 	 * with flawed algorithms - see {@link PasswordEncryptor_LegacyPHPHash} and
 	 * {@link PasswordEncryptor_Blowfish}
+	 *
+	 * @param string $hash
+	 * @param string $password
+	 * @param string $salt
+	 * @param Member $member
+	 * @return bool
 	 */
 	public function check($hash, $password, $salt = null, $member = null) {
 		return $hash === $this->encrypt($password, $salt, $member);
@@ -129,8 +142,7 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 	/**
 	 * Gets the cost that is set for the blowfish algorithm
 	 *
-	 * @param int $cost
-	 * @return null
+	 * @return int
 	 */
 	public static function get_cost() {
 		return self::$cost;
@@ -242,6 +254,10 @@ class PasswordEncryptor_Blowfish extends PasswordEncryptor {
 
 	/**
 	 * self::$cost param is forced to be two digits with leading zeroes for ints 4-9
+	 *
+	 * @param string $password
+	 * @param Member $member
+	 * @return string
 	 */
 	public function salt($password, $member = null) {
 		$generator = new RandomGenerator();
@@ -274,7 +290,8 @@ class PasswordEncryptor_PHPHash extends PasswordEncryptor {
 	protected $algorithm = 'sha1';
 
 	/**
-	 * @param String $algorithm A PHP built-in hashing algorithm as defined by hash_algos()
+	 * @param string $algorithm A PHP built-in hashing algorithm as defined by hash_algos()
+	 * @throws Exception
 	 */
 	public function __construct($algorithm) {
 		if(!in_array($algorithm, hash_algos())) {

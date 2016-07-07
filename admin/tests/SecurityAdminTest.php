@@ -46,11 +46,11 @@ class SecurityAdminTest extends FunctionalTest {
 	// }
 
 	public function testPermissionFieldRespectsHiddenPermissions() {
-		$this->session()->inst_set('loggedInAs', $this->idFromFixture('Member', 'admin'));
+		$this->session()->inst_set('loggedInAs', $this->idFromFixture('SilverStripe\\Security\\Member', 'admin'));
 
-		$group = $this->objFromFixture('Group', 'admin');
+		$group = $this->objFromFixture('SilverStripe\\Security\\Group', 'admin');
 
-		Config::inst()->update('Permission', 'hidden_permissions', array('CMS_ACCESS_ReportAdmin'));
+		Config::inst()->update('SilverStripe\\Security\\Permission', 'hidden_permissions', array('CMS_ACCESS_ReportAdmin'));
 		$response = $this->get(sprintf('admin/security/EditForm/field/Groups/item/%d/edit', $group->ID));
 
 		$this->assertContains(

@@ -8,6 +8,10 @@
 class NamespacedClassManifestTest extends SapphireTest {
 
 	protected $base;
+
+	/**
+	 * @var SS_ClassManifest
+	 */
 	protected $manifest;
 
 	public function setUp() {
@@ -28,13 +32,14 @@ class NamespacedClassManifestTest extends SapphireTest {
 		$tokens = token_get_all($file);
 		$parsedTokens = SS_ClassManifest::get_imported_namespace_parser()->findAll($tokens);
 
+		/** @skipUpgrade */
 		$expectedItems = array(
 			array('ModelAdmin'),
 			array('Controller', '  ', 'as', '  ', 'Cont'),
 			array(
 				'SS_HTTPRequest', ' ', 'as', ' ', 'Request', ',',
-				'SS_HTTPResponse', ' ', 'AS', ' ', 'Response', ',',
-				'PermissionProvider', ' ', 'AS', ' ', 'P',
+				'SS_HTTPResponse', ' ', 'as', ' ', 'Response', ',',
+				'SilverStripe', '\\', 'Security', '\\', 'PermissionProvider', ' ', 'as', ' ', 'P',
 			),
 			array('silverstripe', '\\', 'test', '\\', 'ClassA'),
 			array('\\', 'Object'),
@@ -59,7 +64,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 			'Cont' => 'Controller',
 			'Request' => 'SS_HTTPRequest',
 			'Response' => 'SS_HTTPResponse',
-			'P' => 'PermissionProvider',
+			'P' => 'SilverStripe\\Security\\PermissionProvider',
 			'silverstripe\test\ClassA',
 			'\Object',
 		);
@@ -71,7 +76,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 	}
 
 	public function testClassInfoIsCorrect() {
-		$this->assertContains('SilverStripe\Framework\Tests\ClassI', ClassInfo::implementorsOf('PermissionProvider'));
+		$this->assertContains('SilverStripe\Framework\Tests\ClassI', ClassInfo::implementorsOf('SilverStripe\\Security\\PermissionProvider'));
 
 		//because we're using a nested manifest we have to "coalesce" the descendants again to correctly populate the
 		// descendants of the core classes we want to test against - this is a limitation of the test manifest not
@@ -83,20 +88,26 @@ class NamespacedClassManifestTest extends SapphireTest {
 		$this->assertContains('SilverStripe\Framework\Tests\ClassI', ClassInfo::subclassesFor('ModelAdmin'));
 	}
 
+	/**
+	 * @skipUpgrade
+	 */
 	public function testFindClassOrInterfaceFromCandidateImports() {
 		$method = new ReflectionMethod($this->manifest, 'findClassOrInterfaceFromCandidateImports');
 		$method->setAccessible(true);
 
 		$this->assertTrue(ClassInfo::exists('silverstripe\test\ClassA'));
 
-		$this->assertEquals('PermissionProvider', $method->invokeArgs($this->manifest, array(
-			'\PermissionProvider',
-			'Test\Namespace',
-			array(
-				'TestOnly',
-				'Controller',
-			),
-		)));
+		$this->assertEquals(
+			'PermissionProvider',
+			$method->invokeArgs($this->manifest, [
+				'\PermissionProvider',
+				'Test\Namespace',
+				array(
+					'TestOnly',
+					'Controller',
+				),
+			])
+		);
 
 		$this->assertEquals('PermissionProvider', $method->invokeArgs($this->manifest, array(
 			'PermissionProvider',
@@ -236,7 +247,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 			'silverstripe\test\interfacea' => array('silverstripe\test\ClassE'),
 			'interfacea' => array('silverstripe\test\ClassF'),
 			'silverstripe\test\subtest\interfacea' => array('silverstripe\test\ClassG'),
-			'permissionprovider' => array('SilverStripe\Framework\Tests\ClassI'),
+			'silverstripe\security\permissionprovider' => array('SilverStripe\Framework\Tests\ClassI'),
 		);
 		$this->assertEquals($expect, $this->manifest->getImplementors());
 	}

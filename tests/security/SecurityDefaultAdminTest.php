@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Security\Security;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Member;
 class SecurityDefaultAdminTest extends SapphireTest {
 
 	protected $usesDatabase = true;
@@ -49,7 +53,7 @@ class SecurityDefaultAdminTest extends SapphireTest {
 
 		$admin = Security::findAnAdministrator();
 
-		$this->assertInstanceOf('Member', $admin);
+		$this->assertInstanceOf('SilverStripe\\Security\\Member', $admin);
 		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 		$this->assertEquals($admin->Email, Security::default_admin_username());
 		$this->assertNull($admin->Password);
@@ -64,7 +68,7 @@ class SecurityDefaultAdminTest extends SapphireTest {
 
 		$admin = Security::findAnAdministrator();
 
-		$this->assertInstanceOf('Member', $admin);
+		$this->assertInstanceOf('SilverStripe\\Security\\Member', $admin);
 		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 
 		// User should be blank
@@ -78,7 +82,7 @@ class SecurityDefaultAdminTest extends SapphireTest {
 
 		$admin = Member::default_admin();
 
-		$this->assertInstanceOf('Member', $admin);
+		$this->assertInstanceOf('SilverStripe\\Security\\Member', $admin);
 		$this->assertTrue(Permission::checkMember($admin, 'ADMIN'));
 		$this->assertEquals($admin->Email, Security::default_admin_username());
 		$this->assertNull($admin->Password);

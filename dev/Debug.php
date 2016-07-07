@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\ORM\DB;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+
 
 /**
  * Supports debugging and core error handling.
@@ -30,6 +33,9 @@ class Debug {
 	/**
 	 * Show the contents of val in a debug-friendly way.
 	 * Debug::show() is intended to be equivalent to dprintr()
+	 * 
+	 * @param mixed $val
+	 * @param bool $showHeader
 	 */
 	public static function show($val, $showHeader = true) {
 		if(!Director::isLive()) {
@@ -195,9 +201,9 @@ class Debug {
 		// This basically does the same as
 		// Security::permissionFailure(null, "You need to login with developer access to make use of debugging tools.")
 		// We have to do this because of how early this method is called in execution.
-		$_SESSION['Security']['Message']['message']
+		$_SESSION['SilverStripe\\Security\\Security']['Message']['message']
 			= "You need to login with developer access to make use of debugging tools.";
-		$_SESSION['Security']['Message']['type'] =  'warning';
+		$_SESSION['SilverStripe\\Security\\Security']['Message']['type'] =  'warning';
 		$_SESSION['BackURL'] = $_SERVER['REQUEST_URI'];
 		header($_SERVER['SERVER_PROTOCOL'] . " 302 Found");
 		header("Location: " . Director::baseURL() . Security::login_url());

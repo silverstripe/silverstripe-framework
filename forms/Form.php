@@ -1,7 +1,13 @@
 <?php
 
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObjectInterface;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\SS_List;
+use SilverStripe\Security\SecurityToken;
+use SilverStripe\Security\NullSecurityToken;
+
 /**
  * Base class for all forms.
  * The form class is an extensible base for all forms on a SilverStripe application.  It can be used
@@ -700,6 +706,7 @@ class Form extends RequestHandler {
 	 * Set actions that are exempt from validation
 	 *
 	 * @param array
+	 * @return $this
 	 */
 	public function setValidationExemptActions($actions) {
 		$this->validationExemptActions = $actions;
@@ -855,7 +862,8 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * @return string $name
+	 * @param string $name
+	 * @return string
 	 */
 	public function getAttribute($name) {
 		if(isset($this->attributes[$name])) return $this->attributes[$name];
@@ -887,7 +895,7 @@ class Form extends RequestHandler {
 	/**
 	 * Return the attributes of the form tag - used by the templates.
 	 *
-	 * @param array Custom attributes to process. Falls back to {@link getAttributes()}.
+	 * @param array $attrs Custom attributes to process. Falls back to {@link getAttributes()}.
 	 * If at least one argument is passed as a string, all arguments act as excludes by name.
 	 *
 	 * @return string HTML attributes, ready for insertion into an HTML tag
@@ -966,7 +974,7 @@ class Form extends RequestHandler {
 	 * Set the target of this form to any value - useful for opening the form
 	 * contents in a new window or refreshing another frame.
 	 *
-	 * @param target $target The value of the target
+	 * @param string $target The value of the target
 	 * @return $this
 	 */
 	public function setTarget($target) {
@@ -1611,7 +1619,7 @@ class Form extends RequestHandler {
 	 * This is returned when you access a form as $FormObject rather
 	 * than <% with FormObject %>
 	 *
-	 * @return HTML
+	 * @return DBHTMLText
 	 */
 	public function forTemplate() {
 		$return = $this->renderWith(array_merge(
@@ -1631,7 +1639,7 @@ class Form extends RequestHandler {
 	 * It triggers slightly different behaviour, such as disabling the rewriting
 	 * of # links.
 	 *
-	 * @return HTML
+	 * @return DBHTMLText
 	 */
 	public function forAjaxTemplate() {
 		$view = new SSViewer(array(
@@ -1654,7 +1662,7 @@ class Form extends RequestHandler {
 	 * and _form_enctype.  These are the attributes of the form.  These fields
 	 * can be used to send the form to Ajax.
 	 *
-	 * @return HTML
+	 * @return DBHTMLText
 	 */
 	public function formHtmlContent() {
 		$this->IncludeFormTag = false;
@@ -1674,7 +1682,7 @@ class Form extends RequestHandler {
 	 * Render this form using the given template, and return the result as a string
 	 * You can pass either an SSViewer or a template name
 	 * @param string|array $template
-	 * @return HTMLText
+	 * @return DBHTMLText
 	 */
 	public function renderWithoutActionButton($template) {
 		$custom = $this->customise(array(
@@ -1724,7 +1732,7 @@ class Form extends RequestHandler {
 	public function defaultAction() {
 		if($this->hasDefaultAction && $this->actions) {
 			return $this->actions->First();
-	}
+		}
 	}
 
 	/**
@@ -1796,7 +1804,7 @@ class Form extends RequestHandler {
 	public static function single_field_required() {
 		if(self::current_action() == 'callfieldmethod') {
 			return $_REQUEST['fieldName'];
-	}
+		}
 	}
 
 	/**

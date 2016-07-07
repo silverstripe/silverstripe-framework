@@ -768,14 +768,15 @@ class Hierarchy extends DataExtension {
 	 * @return DataObject
 	 */
 	public function getParent($filter = null) {
-		if($p = $this->owner->__get("ParentID")) {
-			$tableClasses = ClassInfo::dataClassesFor($this->owner->class);
-			$baseClass = array_shift($tableClasses);
-			return DataObject::get_one($this->owner->class, array(
-				array("\"$baseClass\".\"ID\"" => $p),
-				$filter
-			));
+		$parentID = $this->owner->ParentID;
+		if(empty($parentID)) {
+			return null;
 		}
+		$idSQL = $this->owner->getSchema()->sqlColumnForField($this->owner, 'ID');
+		return DataObject::get_one($this->owner->class, array(
+			array($idSQL => $parentID),
+			$filter
+		));
 	}
 
 	/**

@@ -2,6 +2,10 @@
 
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DatabaseAdmin;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\RandomGenerator;
+use SilverStripe\Security\Security;
+
 
 /**
  * Base class for development tools.
@@ -202,7 +206,7 @@ class DevelopmentAdmin extends Controller {
 	 * Returns the token and suggests PHP configuration to set it.
 	 */
 	public function generatesecuretoken() {
-		$generator = Injector::inst()->create('RandomGenerator');
+		$generator = Injector::inst()->create('SilverStripe\\Security\\RandomGenerator');
 		$token = $generator->randomToken('sha1');
 		$body = <<<TXT
 Generated new token. Please add the following code to your YAML configuration:

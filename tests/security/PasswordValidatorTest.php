@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Security\PasswordValidator;
+use SilverStripe\Security\Member;
 /**
  * @package framework
  * @subpackage tests

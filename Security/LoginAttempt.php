@@ -1,6 +1,11 @@
 <?php
 
+namespace SilverStripe\Security;
+
+
 use SilverStripe\ORM\DataObject;
+
+
 /**
  * Record all login attempts through the {@link LoginForm} object.
  * This behaviour is disabled by default.
@@ -31,19 +36,14 @@ class LoginAttempt extends DataObject {
 	);
 
 	private static $has_one = array(
-		'Member' => 'Member', // only linked if the member actually exists
+		'Member' => 'SilverStripe\\Security\\Member', // only linked if the member actually exists
 	);
 
-	private static $has_many = array();
-
-	private static $many_many = array();
-
-	private static $belongs_many_many = array();
+	private static $table_name = "LoginAttempt";
 
 	/**
-	 *
-	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
-	 *
+	 * @param bool $includerelations Indicate if the labels returned include relation fields
+	 * @return array
 	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);

@@ -1,8 +1,30 @@
 <?php
 
+namespace SilverStripe\Security;
+
+use Form;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use Controller;
+use SS_HTTPRequest;
+use TemplateGlobalProvider;
+use Deprecation;
+use Director;
+use SS_HTTPResponse;
+use Session;
+use Config;
+use Exception;
+use Page;
+use Page_Controller;
+use ArrayData;
+use FieldList;
+use EmailField;
+use FormAction;
+use Convert;
+use Object;
+use ClassInfo;
+
 /**
  * Implements a basic security model
  * @package framework
@@ -303,7 +325,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		$controller->extend('permissionDenied', $member);
 
 		return $controller->redirect(
-			Config::inst()->get('Security', 'login_url')
+			Config::inst()->get('SilverStripe\\Security\\Security', 'login_url')
 			. "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
 		);
 	}
@@ -341,6 +363,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * Get the login form to process according to the submitted data
 	 *
 	 * @return Form
+	 * @throws Exception
 	 */
 	public function LoginForm() {
 		$authenticator = $this->getAuthenticator();
@@ -375,6 +398,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return string Returns the link to the given action
 	 */
 	public function Link($action = null) {
+		/** @skipUpgrade */
 		return Controller::join_links(Director::baseURL(), "Security", $action);
 	}
 
@@ -448,6 +472,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		// Use sitetree pages to render the security page
 		$tmpPage = new Page();
 		$tmpPage->Title = $title;
+		/** @skipUpgrade */
 		$tmpPage->URLSegment = "Security";
 		// Disable ID-based caching  of the log-in page by making it a random number
 		$tmpPage->ID = -1 * rand(1,10000000);
@@ -465,6 +490,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return array Template list
 	 */
 	public function getTemplatesFor($action) {
+		/** @skipUpgrade */
 		return array("Security_{$action}", 'Security', $this->stat('template_main'), 'BlankPage');
 	}
 
@@ -558,7 +584,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 	public function basicauthlogin() {
 		$member = BasicAuth::requireLogin("SilverStripe login", 'ADMIN');
-		$member->LogIn();
+		$member->logIn();
 	}
 
 	/**
@@ -652,7 +678,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * - t: plaintext token
 	 *
 	 * @param Member $member Member object associated with this link.
-	 * @param string $autoLoginHash The auto login token.
+	 * @param string $autologinToken The auto login token.
+	 * @return string
 	 */
 	public static function getPasswordResetLink($member, $autologinToken) {
 		$autologinToken = urldecode($autologinToken);
@@ -682,7 +709,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		// Extract the member from the URL.
 		$member = null;
 		if (isset($_REQUEST['m'])) {
-			$member = Member::get()->filter('ID', (int)$_REQUEST['m'])->First();
+			$member = Member::get()->filter('ID', (int)$_REQUEST['m'])->first();
 		}
 
 		// Check whether we are merely changin password, or resetting.
@@ -743,17 +770,23 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Factory method for the lost password form
 	 *
-	 * @return Form Returns the lost password form
+	 * @return ChangePasswordForm Returns the lost password form
 	 */
 	public function ChangePasswordForm() {
-		return Object::create('ChangePasswordForm', $this, 'ChangePasswordForm');
+		/** @skipUpgrade */
+		$formName = 'ChangePasswordForm';
+		return \Injector::inst()->createWithArgs(
+			'SilverStripe\\Security\\ChangePasswordForm',
+			[ $this,  $formName]
+		);
 	}
 
 	/**
 	 * Gets the template for an include used for security.
 	 * For use in any subclass.
 	 *
-	 * @return string|array Returns the template(s) for rendering
+	 * @param string $name
+	 * @return array Returns the template(s) for rendering
 	 */
 	public function getIncludeTemplate($name) {
 		return array('Security_' . $name);
@@ -776,17 +809,17 @@ class Security extends Controller implements TemplateGlobalProvider {
 		// coupling to subsites module
 		$origSubsite = null;
 		if(is_callable('Subsite::changeSubsite')) {
-			$origSubsite = Subsite::currentSubsiteID();
-			Subsite::changeSubsite(0);
+			$origSubsite = \Subsite::currentSubsiteID();
+			\Subsite::changeSubsite(0);
 		}
 
 		$member = null;
 
 		// find a group with ADMIN permission
-		$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
+		$adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
 
 		if(is_callable('Subsite::changeSubsite')) {
-			Subsite::changeSubsite($origSubsite);
+			\Subsite::changeSubsite($origSubsite);
 		}
 
 		if ($adminGroup) {
@@ -794,13 +827,13 @@ class Security extends Controller implements TemplateGlobalProvider {
 		}
 
 		if(!$adminGroup) {
-			singleton('Group')->requireDefaultRecords();
-			$adminGroup = Permission::get_groups_by_permission('ADMIN')->First();
+			Group::singleton()->requireDefaultRecords();
+			$adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
 		}
 
 		if(!$member) {
-			singleton('Member')->requireDefaultRecords();
-			$member = Permission::get_members_by_permission('ADMIN')->First();
+			Member::singleton()->requireDefaultRecords();
+			$member = Permission::get_members_by_permission('ADMIN')->first();
 		}
 
 		if(!$member) {
@@ -841,6 +874,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *
 	 * @param string $username The user name
 	 * @param string $password The password (in cleartext)
+	 * @return bool
 	 */
 	public static function setDefaultAdmin($username, $password) {
 		// don't overwrite if already set
@@ -1004,9 +1038,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 			return self::$database_is_ready;
 		}
 
-		$requiredClasses = ClassInfo::dataClassesFor('Member');
-		$requiredClasses[] = 'Group';
-		$requiredClasses[] = 'Permission';
+		$requiredClasses = ClassInfo::dataClassesFor('SilverStripe\\Security\\Member');
+		$requiredClasses[] = 'SilverStripe\\Security\\Group';
+		$requiredClasses[] = 'SilverStripe\\Security\\Permission';
 
 		foreach($requiredClasses as $class) {
 			// Skip test classes, as not all test classes are scaffolded at once

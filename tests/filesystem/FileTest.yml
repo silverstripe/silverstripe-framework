@@ -45,7 +45,7 @@ Image:
     FileFilename: FileTest.png
     FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
     Name: FileTest.png
-Permission:
+'SilverStripe\Security\Permission':
   admin:
     Code: ADMIN
   cmsmain:
@@ -54,31 +54,31 @@ Permission:
     Code: CMS_ACCESS_AssetAdmin
   securityadmin:
     Code: CMS_ACCESS_SecurityAdmin
-Group:
+'SilverStripe\Security\Group':
   admins:
     Title: Administrators
-    Permissions: =>Permission.admin
+    Permissions: '=>SilverStripe\Security\Permission.admin'
   cmsusers:
     Title: 'CMS Users'
-    Permissions: =>Permission.cmsmain
+    Permissions: '=>SilverStripe\Security\Permission.cmsmain'
   securityusers:
     Title: 'Security Users'
-    Permissions: =>Permission.securityadmin
+    Permissions: '=>SilverStripe\Security\Permission.securityadmin'
   assetusers:
     Title: 'Asset Users'
-    Permissions: =>Permission.assetadmin
-Member:
+    Permissions: '=>SilverStripe\Security\Permission.assetadmin'
+'SilverStripe\Security\Member':
   frontend:
     Email: frontend@example.com
   cms:
     Email: cms@silverstripe.com
-    Groups: =>Group.cmsusers
+    Groups: '=>SilverStripe\Security\Group.cmsusers'
   admin:
     Email: admin@silverstripe.com
-    Groups: =>Group.admins
+    Groups: '=>SilverStripe\Security\Group.admins'
   assetadmin:
     Email: assetadmin@silverstripe.com
-    Groups: =>Group.assetusers
+    Groups: '=>SilverStripe\Security\Group.assetusers'
   security:
     Email: security@silverstripe.com
-    Groups: =>Group.securityusers
+    Groups: '=>SilverStripe\Security\Group.securityusers'

@@ -1,11 +1,11 @@
-Group:
+'SilverStripe\Security\Group':
   mygroup:
     Code: mygroup
-Member:
+SilverStripe\Security\Member:
   user-in-mygroup:
     Email: user-in-mygroup@test.com
     Password: test
-    Groups: =>Group.mygroup
+    Groups: '=>SilverStripe\Security\Group.mygroup'
   user-without-groups:
     Email: user-without-groups@test.com
     Password: test
@@ -13,7 +13,7 @@ Member:
     Email: failedlogin@test.com
     Password: Password
     FailedLoginCount: 0
-Permission:
+'SilverStripe\Security\Permission':
   mycode:
     Code: MYCODE
-    Group: =>Group.mygroup
+    Group: '=>SilverStripe\Security\Group.mygroup'

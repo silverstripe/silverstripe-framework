@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+
 /**
  * A collection of static methods for manipulating the filesystem.
  *
@@ -105,9 +108,10 @@ class Filesystem extends Object {
 	/**
 	 * Return the most recent modification time of anything in the folder.
 	 *
-	 * @param $folder The folder, relative to the site root
-	 * @param $extensionList An option array of file extensions to limit the search to
-	 * @return String Same as filemtime() format.
+	 * @param string $folder The folder, relative to the site root
+	 * @param array $extensionList An option array of file extensions to limit the search to
+	 * @param bool $recursiveCall Not used
+	 * @return string Same as filemtime() format.
 	 */
 	public static function folderModTime($folder, $extensionList = null, $recursiveCall = false) {
 		//$cacheID = $folder . ',' . implode(',', $extensionList);

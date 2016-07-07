@@ -1,6 +1,11 @@
 <?php
 
+namespace SilverStripe\Security;
+
+
 use SilverStripe\ORM\DataObject;
+use CsvBulkLoader;
+
 /**
  * @todo Migrate Permission->Arg and Permission->Type values
  *
@@ -14,7 +19,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader {
 	);
 
 	public function __construct($objectClass = null) {
-		if(!$objectClass) $objectClass = 'Group';
+		if(!$objectClass) $objectClass = 'SilverStripe\\Security\\Group';
 
 		parent::__construct($objectClass);
 	}
@@ -30,7 +35,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader {
 		// are imported to avoid missing "early" references to parents
 		// which are imported later on in the CSV file.
 		if(isset($record['ParentCode']) && $record['ParentCode']) {
-			$parentGroup = DataObject::get_one('Group', array(
+			$parentGroup = DataObject::get_one('SilverStripe\\Security\\Group', array(
 				'"Group"."Code"' => $record['ParentCode']
 			));
 			if($parentGroup) {
@@ -43,7 +48,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader {
 		// existing permissions arent cleared.
 		if(isset($record['PermissionCodes']) && $record['PermissionCodes']) {
 			foreach(explode(',', $record['PermissionCodes']) as $code) {
-				$p = DataObject::get_one('Permission', array(
+				$p = DataObject::get_one('SilverStripe\\Security\\Permission', array(
 					'"Permission"."Code"' => $code,
 					'"Permission"."GroupID"' => $group->ID
 				));

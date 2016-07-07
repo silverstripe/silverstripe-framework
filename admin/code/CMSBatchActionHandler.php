@@ -2,8 +2,11 @@
 
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\SecurityToken;
+
 
 /**
  * Special request handler for admin/batchaction
@@ -28,6 +31,9 @@ class CMSBatchActionHandler extends RequestHandler {
 		'handleConfirmation',
 	);
 
+	/**
+	 * @var Controller
+	 */
 	protected $parentController;
 
 	/**
@@ -43,7 +49,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	protected $recordClass = 'SiteTree';
 
 	/**
-	 * @param string $parentController
+	 * @param Controller $parentController
 	 * @param string $urlSegment
 	 * @param string $recordClass
 	 */
@@ -61,9 +67,10 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * Register a new batch action.  Each batch action needs to be represented by a subclass
 	 * of {@link CMSBatchAction}.
 	 *
-	 * @param $urlSegment The URL Segment of the batch action - the URL used to process this
+	 * @param string $urlSegment The URL Segment of the batch action - the URL used to process this
 	 * action will be admin/batchactions/(urlSegment)
-	 * @param $batchActionClass The name of the CMSBatchAction subclass to register
+	 * @param string $batchActionClass The name of the CMSBatchAction subclass to register
+	 * @param string $recordClass
 	 */
 	public static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
 		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {

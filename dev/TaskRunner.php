@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
 /**
  * @package framework
  * @subpackage dev
@@ -59,6 +62,9 @@ class TaskRunner extends Controller {
 		}
 	}
 
+	/**
+	 * @param SS_HTTPRequest $request
+	 */
 	public function runTask($request) {
 		$name = $request->param('TaskName');
 		$tasks = $this->getTasks();

@@ -4,13 +4,15 @@ namespace SilverStripe\Filesystem;
 
 
 use Injector;
-use Member;
+
 
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\Filesystem\Storage\DBFile;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Member;
+
 
 
 /**

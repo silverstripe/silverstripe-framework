@@ -1,51 +1,51 @@
-Permission:
+'SilverStripe\Security\Permission':
   admin:
     Code: ADMIN
   security-admin:
     Code: CMS_ACCESS_SecurityAdmin
-Group:
+'SilverStripe\Security\Group':
   admingroup:
     Title: Admin
     Code: admin
-    Permissions: =>Permission.admin
+    Permissions: '=>SilverStripe\Security\Permission.admin'
   securityadminsgroup:
     Title: securityadminsgroup
     Code: securityadminsgroup
-    Permissions: =>Permission.security-admin
+    Permissions: '=>SilverStripe\Security\Permission.security-admin'
   staffgroup:
     Title: staffgroup
     Code: staffgroup
   managementgroup:
     Title: managementgroup
     Code: managementgroup
-    Parent: =>Group.staffgroup
+    Parent: '=>SilverStripe\Security\Group.staffgroup'
   accountinggroup:
     Title: accountinggroup
     Code: accountinggroup
-    Parent: =>Group.staffgroup
+    Parent: '=>SilverStripe\Security\Group.staffgroup'
   ceogroup:
     Title: ceogroup
     Code: ceogroup
-    Parent: =>Group.managementgroup
+    Parent: '=>SilverStripe\Security\Group.managementgroup'
   memberlessgroup:
     Title: Memberless Group
     code: memberless
-Member:
+'SilverStripe\Security\Member':
   admin:
     FirstName: Admin
     Email: admin@silverstripe.com
-    Groups: =>Group.admingroup
+    Groups: '=>SilverStripe\Security\Group.admingroup'
   other-admin:
     FirstName: OtherAdmin
     Email: other-admin@silverstripe.com
-    Groups: =>Group.admingroup
+    Groups: '=>SilverStripe\Security\Group.admingroup'
   test:
     FirstName: Test
     Surname: User
     Email: testuser@example.com
     Password: 1nitialPassword
     PasswordExpiry: 2030-01-01
-    Groups: =>Group.securityadminsgroup
+    Groups: '=>SilverStripe\Security\Group.securityadminsgroup'
   expiredpassword:
     FirstName: Test
     Surname: User
@@ -59,16 +59,16 @@ Member:
     Password: 1nitialPassword
   staffmember:
     Email: staffmember@test.com
-    Groups: =>Group.staffgroup
+    Groups: '=>SilverStripe\Security\Group.staffgroup'
   managementmember:
     Email: managementmember@test.com
-    Groups: =>Group.managementgroup
+    Groups: '=>SilverStripe\Security\Group.managementgroup'
   accountingmember:
     Email: accountingmember@test.com
-    Groups: =>Group.accountinggroup
+    Groups: '=>SilverStripe\Security\Group.accountinggroup'
   ceomember:
     Email: ceomember@test.com
-    Groups: =>Group.ceogroup
+    Groups: '=>SilverStripe\Security\Group.ceogroup'
   grouplessmember:
     FirstName: Groupless Member
   noformatmember:

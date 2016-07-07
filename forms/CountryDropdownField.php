@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Security\Member;
+
 /**
  * A simple extension to dropdown field, pre-configured to list countries.
  * It will default to the country of the current visitor.

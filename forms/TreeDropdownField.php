@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBHTMLText;
+
 /**
  * Dropdown-like field that allows you to select an item from a hierarchical
  * AJAX-expandable tree.
@@ -95,7 +97,7 @@ class TreeDropdownField extends FormField {
 	 * @param bool $showSearch enable the ability to search the tree by
 	 *		entering the text in the input field.
 	 */
-	public function __construct($name, $title = null, $sourceObject = 'Group', $keyField = 'ID',
+	public function __construct($name, $title = null, $sourceObject = 'SilverStripe\\Security\\Group', $keyField = 'ID',
 		$labelField = 'TreeTitle', $showSearch = true
 	) {
 
@@ -120,6 +122,7 @@ class TreeDropdownField extends FormField {
 	 * displays the whole tree.
 	 *
 	 * @param int $ID
+	 * @return $this
 	 */
 	public function setTreeBaseID($ID) {
 		$this->baseID = (int) $ID;
@@ -131,6 +134,7 @@ class TreeDropdownField extends FormField {
 	 * displaying to the user.
 	 *
 	 * @param callback $callback
+	 * @return $this
 	 */
 	public function setFilterFunction($callback) {
 		if(!is_callable($callback, true)) {
@@ -145,6 +149,7 @@ class TreeDropdownField extends FormField {
 	 * Set a callback used to disable checkboxes for some items in the tree
 	 *
 	 * @param callback $callback
+	 * @return $this
 	 */
 	public function setDisableFunction($callback) {
 		if(!is_callable($callback, true)) {
@@ -160,6 +165,7 @@ class TreeDropdownField extends FormField {
 	 * applying the filter.
 	 *
 	 * @param callback $callback
+	 * @return $this
 	 */
 	public function setSearchFunction($callback) {
 		if(!is_callable($callback, true)) {
@@ -175,7 +181,8 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @param Boolean
+	 * @param bool $bool
+	 * @return $this
 	 */
 	public function setShowSearch($bool) {
 		$this->showSearch = $bool;
@@ -183,12 +190,13 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @param $method The parameter to ChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
+	 * @param string $method The parameter to ChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
 	 * {@link Hierarchy}. The method specified determines the structure of the returned list. Use "ChildFolders"
 	 * in place of the default to get a drop-down listing with only folders, i.e. not including the child elements in
 	 * the currently selected folder. setNumChildrenMethod() should be used as well for proper functioning.
 	 *
 	 * See {@link Hierarchy} for a complete list of possible methods.
+	 * @return $this
 	 */
 	public function setChildrenMethod($method) {
 		$this->childrenMethod = $method;
@@ -196,9 +204,10 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @param $method The parameter to numChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
+	 * @param string $method The parameter to numChildrenMethod to use when calling Hierarchy->getChildrenAsUL in
 	 * {@link Hierarchy}. Should be used in conjunction with setChildrenMethod().
 	 *
+	 * @return $this
 	 */
 	public function setNumChildrenMethod($method) {
 		$this->numChildrenMethod = $method;
@@ -206,7 +215,8 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @return HTMLText
+	 * @param array $properties
+	 * @return DBHTMLText
 	 */
 	public function Field($properties = array()) {
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang');
@@ -263,6 +273,7 @@ class TreeDropdownField extends FormField {
 	 *
 	 * @param SS_HTTPRequest $request
 	 * @return string
+	 * @throws Exception
 	 */
 	public function tree(SS_HTTPRequest $request) {
 		// Array sourceObject is an explicit list of values - construct a "flat tree"
@@ -387,8 +398,8 @@ class TreeDropdownField extends FormField {
 	 * Marking public function for the tree, which combines different filters sensibly.
 	 * If a filter function has been set, that will be called. And if search text is set,
 	 * filter on that too. Return true if all applicable conditions are true, false otherwise.
-	 * @param $node
-	 * @return unknown_type
+	 * @param object $node
+	 * @return mixed
 	 */
 	public function filterMarking($node) {
 		if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) return false;
@@ -409,7 +420,8 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @param String $field
+	 * @param string $field
+	 * @return $this
 	 */
 	public function setLabelField($field) {
 		$this->labelField = $field;
@@ -424,7 +436,8 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @param String $field
+	 * @param string $field
+	 * @return $this
 	 */
 	public function setKeyField($field) {
 		$this->keyField = $field;
@@ -439,7 +452,8 @@ class TreeDropdownField extends FormField {
 	}
 
 	/**
-	 * @param String $field
+	 * @param string $class
+	 * @return $this
 	 */
 	public function setSourceObject($class) {
 		$this->sourceObject = $class;

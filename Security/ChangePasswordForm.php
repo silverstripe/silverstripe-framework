@@ -1,4 +1,17 @@
 <?php
+
+namespace SilverStripe\Security;
+
+use Form;
+use Session;
+use FieldList;
+use PasswordField;
+use FormAction;
+use HiddenField;
+use Director;
+use HTTP;
+use Convert;
+
 /**
  * Standard Change Password Form
  * @package framework

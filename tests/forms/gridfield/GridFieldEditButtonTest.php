@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Member;
+
 
 class GridFieldEditButtonTest extends SapphireTest {
 

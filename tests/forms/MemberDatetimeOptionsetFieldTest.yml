@@ -1,4 +1,4 @@
-Member:
+'SilverStripe\Security\Member':
    noformatmember:
       Email: noformat@test.com
    delocalemember:

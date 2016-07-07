@@ -14,8 +14,8 @@ After:
 ---
 Director:
   rules:
-    'Security//$Action/$ID/$OtherID': 'Security'
-    'CMSSecurity//$Action/$ID/$OtherID': 'CMSSecurity'
+    'Security//$Action/$ID/$OtherID': 'SilverStripe\Security\Security'
+    'CMSSecurity//$Action/$ID/$OtherID': 'SilverStripe\Security\CMSSecurity'
     'dev': 'DevelopmentAdmin'
     'interactive': 'SapphireREPL'
     'InstallerTest//$Action/$ID/$OtherID': 'InstallerTest'

@@ -1,6 +1,12 @@
 <?php
 
+namespace SilverStripe\Security;
+
+
 use SilverStripe\ORM\DataObject;
+use CsvBulkLoader;
+use Convert;
+
 /**
  * Imports member records, and checks/updates duplicates based on their
  * 'Email' property.
@@ -17,7 +23,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 	protected $groups = array();
 
 	public function __construct($objectClass = null) {
-		if(!$objectClass) $objectClass = 'Member';
+		if(!$objectClass) $objectClass = 'SilverStripe\\Security\\Member';
 
 		parent::__construct($objectClass);
 	}
@@ -64,14 +70,14 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 	}
 
 	/**
-	 * @param Array $groups
+	 * @param array $groups
 	 */
 	public function setGroups($groups) {
 		$this->groups = $groups;
 	}
 
 	/**
-	 * @return Array
+	 * @return array
 	 */
 	public function getGroups() {
 		return $this->groups;

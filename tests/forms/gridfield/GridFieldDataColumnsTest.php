@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Security\Member;
 class GridFieldDataColumnsTest extends SapphireTest {
 
 	/**
@@ -6,7 +8,7 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	 */
 	public function testGridFieldGetDefaultDisplayFields() {
 		$obj = new GridField('testfield', 'testfield', Member::get());
-		$expected = singleton('Member')->summaryFields();
+		$expected = singleton('SilverStripe\\Security\\Member')->summaryFields();
 		$columns = $obj->getConfig()->getComponentByType('GridFieldDataColumns');
 		$this->assertEquals($expected, $columns->getDisplayFields($obj));
 	}

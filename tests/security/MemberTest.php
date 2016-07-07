@@ -4,6 +4,16 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\MemberPassword;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\PasswordEncryptor_Blowfish;
+use SilverStripe\Security\RememberLoginHash;
+use SilverStripe\Security\Member_Validator;
+use SilverStripe\Security\PasswordValidator;
+
 
 /**
  * @package framework
@@ -16,7 +26,7 @@ class MemberTest extends FunctionalTest {
 	protected $local = null;
 
 	protected $illegalExtensions = array(
-		'Member' => array(
+		'SilverStripe\\Security\\Member' => array(
 			// TODO Coupling with modules, this should be resolved by automatically
 			// removing all applied extensions before a unit test
 			'ForumRole',
@@ -140,7 +150,7 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testSetPassword() {
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$member->Password = "test1";
 		$member->write();
 		$result = $member->checkPassword('test1');
@@ -151,7 +161,7 @@ class MemberTest extends FunctionalTest {
 	 * Test that password changes are logged properly
 	 */
 	public function testPasswordChangeLogging() {
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$this->assertNotNull($member);
 		$member->Password = "test1";
 		$member->write();
@@ -162,7 +172,7 @@ class MemberTest extends FunctionalTest {
 		$member->Password = "test3";
 		$member->write();
 
-		$passwords = DataObject::get("MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")
+		$passwords = DataObject::get("SilverStripe\\Security\\MemberPassword", "\"MemberID\" = $member->ID", "\"Created\" DESC, \"ID\" DESC")
 			->getIterator();
 		$this->assertNotNull($passwords);
 		$passwords->rewind();
@@ -191,11 +201,11 @@ class MemberTest extends FunctionalTest {
 	 * Test that changed passwords will send an email
 	 */
 	public function testChangedPasswordEmaling() {
-		Config::inst()->update('Member', 'notify_password_change', true);
+		Config::inst()->update('SilverStripe\\Security\\Member', 'notify_password_change', true);
 
 		$this->clearEmails();
 
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$this->assertNotNull($member);
 		$valid = $member->changePassword('32asDF##$$%%');
 		$this->assertTrue($valid->valid());
@@ -212,7 +222,7 @@ class MemberTest extends FunctionalTest {
 		$this->clearEmails();
 		$this->autoFollowRedirection = false;
 
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$this->assertNotNull($member);
 
 		// Initiate a password-reset
@@ -236,7 +246,7 @@ class MemberTest extends FunctionalTest {
 	 *  - at least 7 characters long
 	 */
 	public function testValidatePassword() {
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$this->assertNotNull($member);
 
 		Member::set_password_validator(new MemberTest_PasswordValidator());
@@ -320,7 +330,7 @@ class MemberTest extends FunctionalTest {
 	public function testPasswordExpirySetting() {
 		Member::config()->password_expiry_days = 90;
 
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$this->assertNotNull($member);
 		$valid = $member->changePassword("Xx?1234234");
 		$this->assertTrue($valid->valid());
@@ -336,15 +346,15 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testIsPasswordExpired() {
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$this->assertNotNull($member);
 		$this->assertFalse($member->isPasswordExpired());
 
-		$member = $this->objFromFixture('Member', 'noexpiry');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'noexpiry');
 		$member->PasswordExpiry = null;
 		$this->assertFalse($member->isPasswordExpired());
 
-		$member = $this->objFromFixture('Member', 'expiredpassword');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'expiredpassword');
 		$this->assertTrue($member->isPasswordExpired());
 
 		// Check the boundary conditions
@@ -361,21 +371,21 @@ class MemberTest extends FunctionalTest {
 	public function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat() {
 		Config::inst()->update('i18n', 'date_format', 'yyyy-MM-dd');
 		Config::inst()->update('i18n', 'time_format', 'H:mm');
-		$member = $this->objFromFixture('Member', 'noformatmember');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember');
 		$this->assertEquals('yyyy-MM-dd', $member->DateFormat);
 		$this->assertEquals('H:mm', $member->TimeFormat);
 	}
 
 	public function testInGroups() {
-		$staffmember = $this->objFromFixture('Member', 'staffmember');
-		$managementmember = $this->objFromFixture('Member', 'managementmember');
-		$accountingmember = $this->objFromFixture('Member', 'accountingmember');
-		$ceomember = $this->objFromFixture('Member', 'ceomember');
+		$staffmember = $this->objFromFixture('SilverStripe\\Security\\Member', 'staffmember');
+		$managementmember = $this->objFromFixture('SilverStripe\\Security\\Member', 'managementmember');
+		$accountingmember = $this->objFromFixture('SilverStripe\\Security\\Member', 'accountingmember');
+		$ceomember = $this->objFromFixture('SilverStripe\\Security\\Member', 'ceomember');
 
-		$staffgroup = $this->objFromFixture('Group', 'staffgroup');
-		$managementgroup = $this->objFromFixture('Group', 'managementgroup');
-		$accountinggroup = $this->objFromFixture('Group', 'accountinggroup');
-		$ceogroup = $this->objFromFixture('Group', 'ceogroup');
+		$staffgroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'staffgroup');
+		$managementgroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'managementgroup');
+		$accountinggroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'accountinggroup');
+		$ceogroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'ceogroup');
 
 		$this->assertTrue(
 			$staffmember->inGroups(array($staffgroup, $managementgroup)),
@@ -392,8 +402,8 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testAddToGroupByCode() {
-		$grouplessMember = $this->objFromFixture('Member', 'grouplessmember');
-		$memberlessGroup = $this->objFromFixture('Group','memberlessgroup');
+		$grouplessMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'grouplessmember');
+		$memberlessGroup = $this->objFromFixture('SilverStripe\\Security\\Group','memberlessgroup');
 
 		$this->assertFalse($grouplessMember->Groups()->exists());
 		$this->assertFalse($memberlessGroup->Members()->exists());
@@ -406,7 +416,7 @@ class MemberTest extends FunctionalTest {
 		$grouplessMember->addToGroupByCode('somegroupthatwouldneverexist', 'New Group');
 		$this->assertEquals($grouplessMember->Groups()->Count(), 2);
 
-		$group = DataObject::get_one('Group', array(
+		$group = DataObject::get_one('SilverStripe\\Security\\Group', array(
 			'"Group"."Code"' => 'somegroupthatwouldneverexist'
 		));
 		$this->assertNotNull($group);
@@ -416,8 +426,8 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testRemoveFromGroupByCode() {
-		$grouplessMember = $this->objFromFixture('Member', 'grouplessmember');
-		$memberlessGroup = $this->objFromFixture('Group','memberlessgroup');
+		$grouplessMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'grouplessmember');
+		$memberlessGroup = $this->objFromFixture('SilverStripe\\Security\\Group','memberlessgroup');
 
 		$this->assertFalse($grouplessMember->Groups()->exists());
 		$this->assertFalse($memberlessGroup->Members()->exists());
@@ -430,7 +440,7 @@ class MemberTest extends FunctionalTest {
 		$grouplessMember->addToGroupByCode('somegroupthatwouldneverexist', 'New Group');
 		$this->assertEquals($grouplessMember->Groups()->Count(), 2);
 
-		$group = DataObject::get_one('Group', "\"Code\" = 'somegroupthatwouldneverexist'");
+		$group = DataObject::get_one('SilverStripe\\Security\\Group', "\"Code\" = 'somegroupthatwouldneverexist'");
 		$this->assertNotNull($group);
 		$this->assertEquals($group->Code, 'somegroupthatwouldneverexist');
 		$this->assertEquals($group->Title, 'New Group');
@@ -444,15 +454,15 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testInGroup() {
-		$staffmember = $this->objFromFixture('Member', 'staffmember');
-		$managementmember = $this->objFromFixture('Member', 'managementmember');
-		$accountingmember = $this->objFromFixture('Member', 'accountingmember');
-		$ceomember = $this->objFromFixture('Member', 'ceomember');
+		$staffmember = $this->objFromFixture('SilverStripe\\Security\\Member', 'staffmember');
+		$managementmember = $this->objFromFixture('SilverStripe\\Security\\Member', 'managementmember');
+		$accountingmember = $this->objFromFixture('SilverStripe\\Security\\Member', 'accountingmember');
+		$ceomember = $this->objFromFixture('SilverStripe\\Security\\Member', 'ceomember');
 
-		$staffgroup = $this->objFromFixture('Group', 'staffgroup');
-		$managementgroup = $this->objFromFixture('Group', 'managementgroup');
-		$accountinggroup = $this->objFromFixture('Group', 'accountinggroup');
-		$ceogroup = $this->objFromFixture('Group', 'ceogroup');
+		$staffgroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'staffgroup');
+		$managementgroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'managementgroup');
+		$accountinggroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'accountinggroup');
+		$ceogroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'ceogroup');
 
 		$this->assertTrue(
 			$staffmember->inGroup($staffgroup),
@@ -501,9 +511,9 @@ class MemberTest extends FunctionalTest {
 	 * edit and delete their own record too.
 	 */
 	public function testCanManipulateOwnRecord() {
-		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
-		$member = $this->objFromFixture('Member', 'test');
-		$member2 = $this->objFromFixture('Member', 'staffmember');
+		$extensions = $this->removeExtensions(Object::get_extensions('SilverStripe\\Security\\Member'));
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
+		$member2 = $this->objFromFixture('SilverStripe\\Security\\Member', 'staffmember');
 
 		$this->session()->inst_set('loggedInAs', null);
 
@@ -529,9 +539,9 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testAuthorisedMembersCanManipulateOthersRecords() {
-		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
-		$member = $this->objFromFixture('Member', 'test');
-		$member2 = $this->objFromFixture('Member', 'staffmember');
+		$extensions = $this->removeExtensions(Object::get_extensions('SilverStripe\\Security\\Member'));
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
+		$member2 = $this->objFromFixture('SilverStripe\\Security\\Member', 'staffmember');
 
 		/* Group members with SecurityAdmin permissions can manipulate other records */
 		$this->session()->inst_set('loggedInAs', $member->ID);
@@ -544,8 +554,8 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testExtendedCan() {
-		$extensions = $this->removeExtensions(Object::get_extensions('Member'));
-		$member = $this->objFromFixture('Member', 'test');
+		$extensions = $this->removeExtensions(Object::get_extensions('SilverStripe\\Security\\Member'));
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 
 		/* Normal behaviour is that you can't view a member unless canView() on an extension returns true */
 		$this->assertFalse($member->canView());
@@ -554,7 +564,7 @@ class MemberTest extends FunctionalTest {
 
 		/* Apply a extension that allows viewing in any case (most likely the case for member profiles) */
 		Member::add_extension('MemberTest_ViewingAllowedExtension');
-		$member2 = $this->objFromFixture('Member', 'staffmember');
+		$member2 = $this->objFromFixture('SilverStripe\\Security\\Member', 'staffmember');
 
 		$this->assertTrue($member2->canView());
 		$this->assertFalse($member2->canDelete());
@@ -563,7 +573,7 @@ class MemberTest extends FunctionalTest {
 		/* Apply a extension that denies viewing of the Member */
 		Member::remove_extension('MemberTest_ViewingAllowedExtension');
 		Member::add_extension('MemberTest_ViewingDeniedExtension');
-		$member3 = $this->objFromFixture('Member', 'managementmember');
+		$member3 = $this->objFromFixture('SilverStripe\\Security\\Member', 'managementmember');
 
 		$this->assertFalse($member3->canView());
 		$this->assertFalse($member3->canDelete());
@@ -572,7 +582,7 @@ class MemberTest extends FunctionalTest {
 		/* Apply a extension that allows viewing and editing but denies deletion */
 		Member::remove_extension('MemberTest_ViewingDeniedExtension');
 		Member::add_extension('MemberTest_EditingAllowedDeletingDeniedExtension');
-		$member4 = $this->objFromFixture('Member', 'accountingmember');
+		$member4 = $this->objFromFixture('SilverStripe\\Security\\Member', 'accountingmember');
 
 		$this->assertTrue($member4->canView());
 		$this->assertFalse($member4->canDelete());
@@ -586,7 +596,7 @@ class MemberTest extends FunctionalTest {
 	 * Tests for {@link Member::getName()} and {@link Member::setName()}
 	 */
 	public function testName() {
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$member->setName('Test Some User');
 		$this->assertEquals('Test Some User', $member->getName());
 		$member->setName('Test');
@@ -597,10 +607,10 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testMembersWithSecurityAdminAccessCantEditAdminsUnlessTheyreAdminsThemselves() {
-		$adminMember = $this->objFromFixture('Member', 'admin');
-		$otherAdminMember = $this->objFromFixture('Member', 'other-admin');
-		$securityAdminMember = $this->objFromFixture('Member', 'test');
-		$ceoMember = $this->objFromFixture('Member', 'ceomember');
+		$adminMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
+		$otherAdminMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'other-admin');
+		$securityAdminMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
+		$ceoMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'ceomember');
 
 		// Careful: Don't read as english language.
 		// More precisely this should read canBeEditedBy()
@@ -615,9 +625,9 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testOnChangeGroups() {
-		$staffGroup = $this->objFromFixture('Group', 'staffgroup');
-		$staffMember = $this->objFromFixture('Member', 'staffmember');
-		$adminMember = $this->objFromFixture('Member', 'admin');
+		$staffGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'staffgroup');
+		$staffMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'staffmember');
+		$adminMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 		$newAdminGroup = new Group(array('Title' => 'newadmin'));
 		$newAdminGroup->write();
 		Permission::grant($newAdminGroup->ID, 'ADMIN');
@@ -654,8 +664,8 @@ class MemberTest extends FunctionalTest {
 	 * Test Member_GroupSet::add
 	 */
 	public function testOnChangeGroupsByAdd() {
-		$staffMember = $this->objFromFixture('Member', 'staffmember');
-		$adminMember = $this->objFromFixture('Member', 'admin');
+		$staffMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'staffmember');
+		$adminMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 
 		// Setup new admin group
 		$newAdminGroup = new Group(array('Title' => 'newadmin'));
@@ -704,7 +714,7 @@ class MemberTest extends FunctionalTest {
 	 * Test Member_GroupSet::add
 	 */
 	public function testOnChangeGroupsBySetIDList() {
-		$staffMember = $this->objFromFixture('Member', 'staffmember');
+		$staffMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'staffmember');
 
 		// Setup new admin group
 		$newAdminGroup = new Group(array('Title' => 'newadmin'));
@@ -726,7 +736,7 @@ class MemberTest extends FunctionalTest {
 	public function testUpdateCMSFields() {
 		Member::add_extension('MemberTest_FieldsExtension');
 
-		$member = singleton('Member');
+		$member = singleton('SilverStripe\\Security\\Member');
 		$fields = $member->getCMSFields();
 
 		$this->assertNotNull($fields->dataFieldByName('Email'), 'Scaffolded fields are retained');
@@ -748,11 +758,11 @@ class MemberTest extends FunctionalTest {
 	 * Test that only admin members are returned
 	 */
 	public function testMap_in_groupsReturnsAdmins() {
-		$adminID = $this->objFromFixture('Group', 'admingroup')->ID;
+		$adminID = $this->objFromFixture('SilverStripe\\Security\\Group', 'admingroup')->ID;
 		$members = Member::map_in_groups($adminID)->toArray();
 
-		$admin = $this->objFromFixture('Member', 'admin');
-		$otherAdmin = $this->objFromFixture('Member', 'other-admin');
+		$admin = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
+		$otherAdmin = $this->objFromFixture('SilverStripe\\Security\\Member', 'other-admin');
 
 		$this->assertTrue(in_array($admin->getTitle(), $members),
 			$admin->getTitle().' should be in the returned list.');
@@ -822,7 +832,7 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testRememberMeHashGeneration() {
-		$m1 = $this->objFromFixture('Member', 'grouplessmember');
+		$m1 = $this->objFromFixture('SilverStripe\\Security\\Member', 'grouplessmember');
 
 		$m1->login(true);
 		$hashes = RememberLoginHash::get()->filter('MemberID', $m1->ID);
@@ -833,9 +843,10 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testRememberMeHashAutologin() {
-		$m1 = $this->objFromFixture('Member', 'noexpiry');
+		/** @var Member $m1 */
+		$m1 = $this->objFromFixture('SilverStripe\\Security\\Member', 'noexpiry');
 
-		$m1->login(true);
+		$m1->logIn(true);
 		$firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->First();
 		$this->assertNotNull($firstHash);
 
@@ -892,7 +903,7 @@ class MemberTest extends FunctionalTest {
 			array(
 				'Email' => $m1->Email,
 				'Password' => '1nitialPassword',
-				'AuthenticationMethod' => 'MemberAuthenticator',
+				'AuthenticationMethod' => 'SilverStripe\\Security\\MemberAuthenticator',
 				'action_dologin' => 'action_dologin'
 			),
 			null,
@@ -907,7 +918,7 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testExpiredRememberMeHashAutologin() {
-		$m1 = $this->objFromFixture('Member', 'noexpiry');
+		$m1 = $this->objFromFixture('SilverStripe\\Security\\Member', 'noexpiry');
 
 		$m1->login(true);
 		$firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->First();
@@ -962,7 +973,7 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testRememberMeMultipleDevices() {
-		$m1 = $this->objFromFixture('Member', 'noexpiry');
+		$m1 = $this->objFromFixture('SilverStripe\\Security\\Member', 'noexpiry');
 
 		// First device
 		$m1->login(true);
@@ -1021,10 +1032,10 @@ class MemberTest extends FunctionalTest {
 		);
 		$this->assertContains($message, $response->getBody());
 
-		$logout_across_devices = Config::inst()->get('RememberLoginHash', 'logout_across_devices');
+		$logout_across_devices = Config::inst()->get('SilverStripe\\Security\\RememberLoginHash', 'logout_across_devices');
 
 		// Logging out from the second device - only one device being logged out
-		Config::inst()->update('RememberLoginHash', 'logout_across_devices', false);
+		Config::inst()->update('SilverStripe\\Security\\RememberLoginHash', 'logout_across_devices', false);
 		$response = $this->get(
 			'Security/logout',
 			$this->session(),
@@ -1040,7 +1051,7 @@ class MemberTest extends FunctionalTest {
 		);
 
 		// Logging out from any device when all login hashes should be removed
-		Config::inst()->update('RememberLoginHash', 'logout_across_devices', true);
+		Config::inst()->update('SilverStripe\\Security\\RememberLoginHash', 'logout_across_devices', true);
 		$m1->login(true);
 		$response = $this->get('Security/logout', $this->session());
 		$this->assertEquals(
@@ -1048,14 +1059,14 @@ class MemberTest extends FunctionalTest {
 			0
 		);
 
-		Config::inst()->update('RememberLoginHash', 'logout_across_devices', $logout_across_devices);
+		Config::inst()->update('SilverStripe\\Security\\RememberLoginHash', 'logout_across_devices', $logout_across_devices);
 	}
 
 	public function testCanDelete() {
-		$admin1 = $this->objFromFixture('Member', 'admin');
-		$admin2 = $this->objFromFixture('Member', 'other-admin');
-		$member1 = $this->objFromFixture('Member', 'grouplessmember');
-		$member2 = $this->objFromFixture('Member', 'noformatmember');
+		$admin1 = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
+		$admin2 = $this->objFromFixture('SilverStripe\\Security\\Member', 'other-admin');
+		$member1 = $this->objFromFixture('SilverStripe\\Security\\Member', 'grouplessmember');
+		$member2 = $this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember');
 
 		$this->assertTrue(
 			$admin1->canDelete($admin2),
@@ -1083,9 +1094,9 @@ class MemberTest extends FunctionalTest {
 		$maxFailedLoginsAllowed = 3;
 		//set up the config variables to enable login lockouts
 		Config::nest();
-		Config::inst()->update('Member', 'lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
+		Config::inst()->update('SilverStripe\\Security\\Member', 'lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
 
-		$member = $this->objFromFixture('Member', 'test');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$failedLoginCount = $member->FailedLoginCount;
 
 		for ($i = 1; $i < $maxFailedLoginsAllowed; ++$i) {
@@ -1107,9 +1118,9 @@ class MemberTest extends FunctionalTest {
 	public function testMemberValidator()
 	{
 		// clear custom requirements for this test
-		Config::inst()->update('Member_Validator', 'customRequired', null);
-		$memberA = $this->objFromFixture('Member', 'admin');
-		$memberB = $this->objFromFixture('Member', 'test');
+		Config::inst()->update('SilverStripe\\Security\\Member_Validator', 'customRequired', null);
+		$memberA = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
+		$memberB = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 
 		// create a blank form
 		$form = new MemberTest_ValidatorForm();
@@ -1173,7 +1184,7 @@ class MemberTest extends FunctionalTest {
 	public function testMemberValidatorWithExtensions()
 	{
 		// clear custom requirements for this test
-		Config::inst()->update('Member_Validator', 'customRequired', null);
+		Config::inst()->update('SilverStripe\\Security\\Member_Validator', 'customRequired', null);
 
 		// create a blank form
 		$form = new MemberTest_ValidatorForm();
@@ -1231,9 +1242,9 @@ class MemberTest extends FunctionalTest {
 	public function testCustomMemberValidator()
 	{
 		// clear custom requirements for this test
-		Config::inst()->update('Member_Validator', 'customRequired', null);
+		Config::inst()->update('SilverStripe\\Security\\Member_Validator', 'customRequired', null);
 
-		$member = $this->objFromFixture('Member', 'admin');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 
 		$form = new MemberTest_ValidatorForm();
 		$form->loadDataFrom($member);

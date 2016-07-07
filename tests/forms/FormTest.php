@@ -2,6 +2,9 @@
 
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\SecurityToken;
+use SilverStripe\Security\RandomGenerator;
+
 
 /**
  * @package framework
@@ -387,12 +390,12 @@ class FormTest extends FunctionalTest {
 		SecurityToken::enable();
 
 		$form1 = $this->getStubForm();
-		$this->assertInstanceOf('SecurityToken', $form1->getSecurityToken());
+		$this->assertInstanceOf('SilverStripe\\Security\\SecurityToken', $form1->getSecurityToken());
 
 		SecurityToken::disable();
 
 		$form2 = $this->getStubForm();
-		$this->assertInstanceOf('NullSecurityToken', $form2->getSecurityToken());
+		$this->assertInstanceOf('SilverStripe\\Security\\NullSecurityToken', $form2->getSecurityToken());
 
 		SecurityToken::enable();
 	}

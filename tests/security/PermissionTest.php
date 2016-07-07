@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\PermissionCheckboxSetField;
+
 /**
  * @package framework
  * @subpackage tests
@@ -19,12 +23,12 @@ class PermissionTest extends SapphireTest {
 	}
 
 	public function testDirectlyAppliedPermissions() {
-		$member = $this->objFromFixture('Member', 'author');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'author');
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
 	}
 
 	public function testCMSAccess() {
-		$members = Member::get()->byIDs($this->allFixtureIDs('Member'));
+		$members = Member::get()->byIDs($this->allFixtureIDs('SilverStripe\\Security\\Member'));
 		foreach ($members as $member) {
 			$this->assertTrue(Permission::checkMember($member, 'CMS_ACCESS'));
 		}
@@ -41,7 +45,7 @@ class PermissionTest extends SapphireTest {
 
 	public function testLeftAndMainAccessAll() {
 		//add user and group
-		$member = $this->objFromFixture('Member', 'leftandmain');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'leftandmain');
 
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
@@ -49,14 +53,14 @@ class PermissionTest extends SapphireTest {
 	}
 
 	public function testPermissionAreInheritedFromOneRole() {
-		$member = $this->objFromFixture('Member', 'author');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'author');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertFalse(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
 
 	public function testPermissionAreInheritedFromMultipleRoles() {
-		$member = $this->objFromFixture('Member', 'access');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'access');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
@@ -65,7 +69,7 @@ class PermissionTest extends SapphireTest {
 	}
 
 	public function testPermissionsForMember() {
-		$member = $this->objFromFixture('Member', 'access');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'access');
 		$permissions = Permission::permissions_for_member($member->ID);
 		$this->assertEquals(4, count($permissions));
 		$this->assertTrue(in_array('CMS_ACCESS_MyAdmin', $permissions));
@@ -73,7 +77,7 @@ class PermissionTest extends SapphireTest {
 		$this->assertTrue(in_array('CMS_ACCESS_SecurityAdmin', $permissions));
 		$this->assertTrue(in_array('EDIT_PERMISSIONS', $permissions));
 
-		$group = $this->objFromFixture("Group", "access");
+		$group = $this->objFromFixture("SilverStripe\\Security\\Group", "access");
 
 		Permission::deny($group->ID, "CMS_ACCESS_MyAdmin");
 		$permissions = Permission::permissions_for_member($member->ID);
@@ -82,7 +86,7 @@ class PermissionTest extends SapphireTest {
 	}
 
 	public function testRolesAndPermissionsFromParentGroupsAreInherited() {
-		$member = $this->objFromFixture('Member', 'globalauthor');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'globalauthor');
 
 		// Check that permissions applied to the group are there
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_EDIT_ALL"));
@@ -101,8 +105,8 @@ class PermissionTest extends SapphireTest {
 	 * Ensure the the get_*_by_permission functions are permission role aware
 	 */
 	public function testGettingMembersByPermission() {
-		$accessMember = $this->objFromFixture('Member', 'access');
-		$accessAuthor = $this->objFromFixture('Member', 'author');
+		$accessMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'access');
+		$accessAuthor = $this->objFromFixture('SilverStripe\\Security\\Member', 'author');
 
 		$result = Permission::get_members_by_permission(array('CMS_ACCESS_SecurityAdmin'));
 		$resultIDs = $result ? $result->column() : array();
@@ -114,14 +118,14 @@ class PermissionTest extends SapphireTest {
 
 
 	public function testHiddenPermissions(){
-		$permissionCheckboxSet = new PermissionCheckboxSetField('Permissions','Permissions','Permission','GroupID');
+		$permissionCheckboxSet = new PermissionCheckboxSetField('Permissions','Permissions','SilverStripe\\Security\\Permission','GroupID');
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 
-		Config::inst()->update('Permission', 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
+		Config::inst()->update('SilverStripe\\Security\\Permission', 'hidden_permissions', array('CMS_ACCESS_LeftAndMain'));
 
 		$this->assertNotContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 
-		Config::inst()->remove('Permission', 'hidden_permissions');
+		Config::inst()->remove('SilverStripe\\Security\\Permission', 'hidden_permissions');
 		$this->assertContains('CMS_ACCESS_LeftAndMain', $permissionCheckboxSet->Field());
 	}
 

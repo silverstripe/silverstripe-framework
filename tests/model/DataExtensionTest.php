@@ -120,8 +120,8 @@ class DataExtensionTest extends SapphireTest {
 		// in SiteTree->can*() methods to test one single feature reliably with them
 
 		$obj = $this->objFromFixture('DataExtensionTest_MyObject', 'object1');
-		$websiteuser = $this->objFromFixture('Member', 'websiteuser');
-		$admin = $this->objFromFixture('Member', 'admin');
+		$websiteuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'websiteuser');
+		$admin = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 
 		$this->assertFalse(
 			$obj->canOne($websiteuser),

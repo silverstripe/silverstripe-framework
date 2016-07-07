@@ -7,6 +7,8 @@
 
 use SilverStripe\Forms\Schema\FormSchema;
 
+use SilverStripe\ORM\Hierarchy\Hierarchy;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\ValidationException;
@@ -15,6 +17,12 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLSelect;
+use SilverStripe\Security\SecurityToken;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
+use SilverStripe\Security\Security;
+use SilverStripe\Security\PermissionProvider;
+
 
 
 /**
@@ -660,6 +668,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * You should implement a Link() function in your subclass of LeftAndMain,
 	 * to point to the URL of that particular controller.
 	 *
+	 * @param string $action
 	 * @return string
 	 */
 	public function Link($action = null) {
@@ -733,6 +742,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		return '';
 	}
 
+	/**
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
+	 * @throws SS_HTTPResponse_Exception
+     */
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
 		if($request->param('ID')) $this->setCurrentPageID($request->param('ID'));
@@ -775,7 +789,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Returns the main menu of the CMS.  This is also used by init()
 	 * to work out which sections the user has access to.
 	 *
-	 * @param Boolean
+	 * @param bool $cached
 	 * @return SS_List
 	 */
 	public function MainMenu($cached = true) {
@@ -874,6 +888,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Return a list of appropriate templates for this class, with the given suffix using
 	 * {@link SSViewer::get_templates_by_class()}
 	 *
+	 * @param string $suffix
 	 * @return array
 	 */
 	public function getTemplatesWithSuffix($suffix) {
@@ -898,6 +913,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	/**
+	 * @param bool $unlinked
 	 * @return ArrayList
 	 */
 	public function Breadcrumbs($unlinked = false) {
@@ -965,12 +981,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Get a site tree HTML listing which displays the nodes under the given criteria.
 	 *
-	 * @param $className The class of the root object
-	 * @param $rootID The ID of the root object.  If this is null then a complete tree will be
+	 * @param string $className The class of the root object
+	 * @param string $rootID The ID of the root object.  If this is null then a complete tree will be
 	 *  shown
-	 * @param $childrenMethod The method to call to get the children of the tree. For example,
+	 * @param string $childrenMethod The method to call to get the children of the tree. For example,
 	 *  Children, AllChildrenIncludingDeleted, or AllHistoricalChildren
-	 * @return String Nested unordered list with links to each page
+	 * @param string $numChildrenMethod
+	 * @param callable $filterFunction
+	 * @param int $nodeCountThreshold
+	 * @return string Nested unordered list with links to each page
 	 */
 	public function getSiteTreeFor($className, $rootID = null, $childrenMethod = null, $numChildrenMethod = null,
 			$filterFunction = null, $nodeCountThreshold = 30) {
@@ -1100,6 +1119,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Get a subtree underneath the request param 'ID'.
 	 * If ID = 0, then get the whole tree.
+	 *
+	 * @param SS_HTTPRequest $request
+	 * @return string
 	 */
 	public function getsubtree($request) {
 		$html = $this->getSiteTreeFor(
@@ -1124,7 +1146,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * all children with the node. Useful to refresh views after
 	 * state modifications, e.g. saving a form.
 	 *
-	 * @return String JSON
+	 * @param SS_HTTPRequest $request
+	 * @return string JSON
 	 */
 	public function updatetreenodes($request) {
 		$data = array();
@@ -1264,7 +1287,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * - 'SiblingIDs': Array of all sibling nodes to the moved node (incl. the node itself).
 	 *   In case of a 'ParentID' change, relates to the new siblings under the new parent.
 	 *
+	 * @param SS_HTTPRequest $request
 	 * @return SS_HTTPResponse JSON string with a
+	 * @throws SS_HTTPResponse_Exception
 	 */
 	public function savetreenode($request) {
 		if (!SecurityToken::inst()->checkRequest($request)) {

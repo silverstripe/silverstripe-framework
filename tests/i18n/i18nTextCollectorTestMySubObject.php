@@ -9,7 +9,7 @@ class i18nTextCollectorTestMySubObject extends i18nTextCollectorTestMyObject imp
 	);
 
 	private static $has_many = array(
-		'SubRelation' => 'Group'
+		'SubRelation' => 'SilverStripe\\Security\\Group'
 	);
 
 	private static $singular_name = "My Sub Object";

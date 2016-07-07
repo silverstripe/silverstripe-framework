@@ -45,7 +45,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 
 	public function testDateFormatDefaultCheckedInFormField() {
 		Config::inst()->update('i18n', 'date_format', 'yyyy-MM-dd');
-		$field = $this->createDateFormatFieldForMember($this->objFromFixture('Member', 'noformatmember'));
+		$field = $this->createDateFormatFieldForMember($this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember'));
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
@@ -55,7 +55,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 
 	public function testTimeFormatDefaultCheckedInFormField() {
 		Config::inst()->update('i18n', 'time_format', 'h:mm:ss a');
-		$field = $this->createTimeFormatFieldForMember($this->objFromFixture('Member', 'noformatmember'));
+		$field = $this->createTimeFormatFieldForMember($this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember'));
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
@@ -64,7 +64,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	public function testDateFormatChosenIsCheckedInFormField() {
-		$member = $this->objFromFixture('Member', 'noformatmember');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember');
 		$member->setField('DateFormat', 'MM/dd/yyyy');
 		$field = $this->createDateFormatFieldForMember($member);
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
@@ -75,7 +75,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	public function testDateFormatCustomFormatAppearsInCustomInputInField() {
-		$member = $this->objFromFixture('Member', 'noformatmember');
+		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember');
 		$member->setField('DateFormat', 'dd MM yy');
 		$field = $this->createDateFormatFieldForMember($member);
 		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),

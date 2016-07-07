@@ -7,6 +7,8 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\Member;
+
 
 
 /**

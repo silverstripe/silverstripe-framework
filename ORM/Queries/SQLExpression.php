@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Queries;
 
 use Exception;
 use Convert;
+use SilverStripe\ORM\Connect\SS_Query;
 use SilverStripe\ORM\DB;
 
 /**

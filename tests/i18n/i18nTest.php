@@ -590,15 +590,15 @@ class i18nTest_DataObject extends DataObject implements TestOnly {
 	);
 
 	private static $has_one = array(
-		'HasOneRelation' => 'Member'
+		'HasOneRelation' => 'SilverStripe\\Security\\Member'
 	);
 
 	private static $has_many = array(
-		'HasManyRelation' => 'Member'
+		'HasManyRelation' => 'SilverStripe\\Security\\Member'
 	);
 
 	private static $many_many = array(
-		'ManyManyRelation' => 'Member'
+		'ManyManyRelation' => 'SilverStripe\\Security\\Member'
 	);
 
 	/**

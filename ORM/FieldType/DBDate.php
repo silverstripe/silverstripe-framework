@@ -2,13 +2,15 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use Member;
+
 use Zend_Date;
 use DateTime;
 use DateField;
 use Convert;
 use Exception;
 use SilverStripe\ORM\DB;
+use SilverStripe\Security\Member;
+
 
 /**
  * Represents a date field.

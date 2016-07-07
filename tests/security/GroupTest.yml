@@ -1,32 +1,32 @@
-Group:
-   admingroup:
-      Code: admingroup
-   parentgroup:
-      Code: parentgroup
-   childgroup:
-      Code: childgroup
-      Parent: =>Group.parentgroup
-   grandchildgroup:
-      Code: grandchildgroup
-      Parent: =>Group.childgroup
-   group1:
-      Title: Group 1
-   group2:
-      Title: Group 2
+'SilverStripe\Security\Group':
+  admingroup:
+    Code: admingroup
+  parentgroup:
+    Code: parentgroup
+  childgroup:
+    Code: childgroup
+    Parent: '=>SilverStripe\Security\Group.parentgroup'
+  grandchildgroup:
+    Code: grandchildgroup
+    Parent: '=>SilverStripe\Security\Group.childgroup'
+  group1:
+    Title: Group 1
+  group2:
+    Title: Group 2
 GroupTest_Member:
-   admin:
-      FirstName: Admin
-      Groups: =>Group.admingroup
-   parentgroupuser:
-      FirstName: Parent Group User
-      Groups: =>Group.parentgroup
-   childgroupuser:
-      FirstName: Child Group User
-      Groups: =>Group.childgroup
-   allgroupuser:
-      FirstName: All Group User
-      Groups: =>Group.admingroup,=>Group.parentgroup,=>Group.childgroup
-Permission:
-   admincode:
-      Code: ADMIN
-      Group: =>Group.admingroup
+  admin:
+    FirstName: Admin
+    Groups: '=>SilverStripe\Security\Group.admingroup'
+  parentgroupuser:
+    FirstName: Parent Group User
+    Groups: '=>SilverStripe\Security\Group.parentgroup'
+  childgroupuser:
+    FirstName: Child Group User
+    Groups: '=>SilverStripe\Security\Group.childgroup'
+  allgroupuser:
+    FirstName: All Group User
+    Groups: '=>SilverStripe\Security\Group.admingroup,=>SilverStripe\Security\Group.parentgroup,=>SilverStripe\Security\Group.childgroup'
+'SilverStripe\Security\Permission':
+  admincode:
+    Code: ADMIN
+    Group: '=>SilverStripe\Security\Group.admingroup'

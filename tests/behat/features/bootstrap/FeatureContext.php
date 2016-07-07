@@ -42,11 +42,11 @@ class FeatureContext extends SilverStripeContext {
 
 		// Use blueprints to set user name from identifier
 		$factory = $fixtureContext->getFixtureFactory();
-		$blueprint = \Injector::inst()->create('FixtureBlueprint', 'Member');
+		$blueprint = \Injector::inst()->create('FixtureBlueprint', 'SilverStripe\\Security\\Member');
 		$blueprint->addCallback('beforeCreate', function($identifier, &$data, &$fixtures) {
 			if(!isset($data['FirstName'])) $data['FirstName'] = $identifier;
 		});
-		$factory->define('Member', $blueprint);
+		$factory->define('SilverStripe\\Security\\Member', $blueprint);
 	}
 
 	public function setMinkParameters(array $parameters) {
