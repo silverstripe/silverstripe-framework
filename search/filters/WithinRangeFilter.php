@@ -27,7 +27,7 @@ class WithinRangeFilter extends SearchFilter {
 
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		$predicate = sprintf('%1$s >= ? AND %1$s <= ?', $this->getDbName());
+		$predicate = sprintf('%1$s >= ? AND %1$s <= ?', $this->getDbName($query));
 		return $query->where(array(
 			$predicate => array(
 				$this->min,
@@ -38,7 +38,7 @@ class WithinRangeFilter extends SearchFilter {
 
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		$predicate = sprintf('%1$s < ? OR %1$s > ?', $this->getDbName());
+		$predicate = sprintf('%1$s < ? OR %1$s > ?', $this->getDbName($query));
 		return $query->where(array(
 			$predicate => array(
 				$this->min,

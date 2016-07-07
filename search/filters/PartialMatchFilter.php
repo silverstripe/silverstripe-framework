@@ -34,7 +34,7 @@ class PartialMatchFilter extends SearchFilter {
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$comparisonClause = DB::get_conn()->comparisonClause(
-			$this->getDbName(),
+			$this->getDbName($query),
 			null,
 			false, // exact?
 			false, // negate?
@@ -50,7 +50,7 @@ class PartialMatchFilter extends SearchFilter {
 		$this->model = $query->applyRelation($this->relation);
 		$whereClause = array();
 		$comparisonClause = DB::get_conn()->comparisonClause(
-			$this->getDbName(),
+			$this->getDbName($query),
 			null,
 			false, // exact?
 			false, // negate?
@@ -66,7 +66,7 @@ class PartialMatchFilter extends SearchFilter {
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$comparisonClause = DB::get_conn()->comparisonClause(
-			$this->getDbName(),
+			$this->getDbName($query),
 			null,
 			false, // exact?
 			true, // negate?
@@ -82,7 +82,7 @@ class PartialMatchFilter extends SearchFilter {
 		$this->model = $query->applyRelation($this->relation);
 		$values = $this->getValue();
 		$comparisonClause = DB::get_conn()->comparisonClause(
-			$this->getDbName(),
+			$this->getDbName($query),
 			null,
 			false, // exact?
 			true, // negate?

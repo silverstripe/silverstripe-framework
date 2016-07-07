@@ -32,7 +32,7 @@ class ExactMatchFilter extends SearchFilter {
 	protected function applyOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$where = DB::get_conn()->comparisonClause(
-			$this->getDbName(),
+			$this->getDbName($query),
 			null,
 			true, // exact?
 			false, // negate?
@@ -50,7 +50,7 @@ class ExactMatchFilter extends SearchFilter {
 	 */
 	protected function applyMany(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
-		$column = $query->lastAlias ? sprintf('"%s"."%s"', $query->lastAlias, $this->name) : $this->getDbName();
+		$column = $this->getDbName($query);
 		$caseSensitive = $this->getCaseSensitive();
 		$values = $this->getValue();
 		if($caseSensitive === null) {
@@ -87,7 +87,7 @@ class ExactMatchFilter extends SearchFilter {
 	protected function excludeOne(DataQuery $query) {
 		$this->model = $query->applyRelation($this->relation);
 		$where = DB::get_conn()->comparisonClause(
-			$this->getDbName(),
+			$this->getDbName($query),
 			null,
 			true, // exact?
 			true, // negate?
@@ -110,7 +110,7 @@ class ExactMatchFilter extends SearchFilter {
 		if($caseSensitive === null) {
 			// For queries using the default collation (no explicit case) we can use the WHERE .. NOT IN .. syntax,
 			// providing simpler SQL than many WHERE .. AND .. fragments.
-			$column = $this->getDbName();
+			$column = $this->getDbName($query);
 			// If values is an empty array, fall back to 3.1 behaviour and use empty string comparison
 			if(empty($values)) {
 				$values = array('');
@@ -122,7 +122,7 @@ class ExactMatchFilter extends SearchFilter {
 		} else {
 			// Generate reusable comparison clause
 			$comparisonClause = DB::get_conn()->comparisonClause(
-				$this->getDbName(),
+				$this->getDbName($query),
 				null,
 				true, // exact?
 				true, // negate?

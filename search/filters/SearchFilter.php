@@ -159,7 +159,7 @@ abstract class SearchFilter extends Object {
 	 *
 	 * @return string
 	 */
-	public function getDbName() {
+	public function getDbName(DataQuery $query) {
 		// Special handler for "NULL" relations
 		if($this->name == "NULL") {
 			return $this->name;
@@ -183,7 +183,14 @@ abstract class SearchFilter extends Object {
 			return '"' . implode('"."', $parts) . '"';
 		}
 
-		return sprintf('"%s"."%s"', $candidateClass, $this->name);
+		if ($this->relation) {
+			$alias = $query->getAliasFromRelation($this->relation);
+		}
+		else {
+			$alias = $candidateClass;
+		}
+
+		return sprintf('"%s"."%s"', $alias, $this->name);
 	}
 
 	/**
