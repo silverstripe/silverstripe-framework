@@ -102,6 +102,8 @@ class ListboxField extends DropdownField {
 			'Options' => new ArrayList($options)
 		));
 
+		$this->extend('onBeforeRender', $this);
+
 		return $this->customise($properties)->renderWith($this->getTemplates());
 	}
 

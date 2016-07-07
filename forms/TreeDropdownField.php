@@ -248,6 +248,8 @@ class TreeDropdownField extends FormField {
 			)
 		);
 
+		$this->extend('onBeforeRender', $this);
+
 		return $this->customise($properties)->renderWith('TreeDropdownField');
 	}
 
