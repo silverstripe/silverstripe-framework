@@ -642,6 +642,66 @@ class DataQuery {
 	}
 
 	/**
+	 * @param $relations string|array
+	 * @param $cb callable
+	 */
+	protected function relationWalk($relations, $cb)
+	{
+		if (is_string($relations)) $relations = explode('.', $relations);
+
+		$modelClass = $this->dataClass;
+
+		foreach ($relations as $relationName) {
+			/** @var DataObject $model */
+			$model = singleton($modelClass);
+			if ($relationClass = $model->hasOneComponent($relationName)) {
+				$result = $cb('has_one', $relationClass, $relationName, $model);
+			}
+			elseif ($relationClass = $model->hasManyComponent($relationName)) {
+				$result = $cb('has_many', $relationClass, $relationName, $model);
+			}
+			elseif ($relationSpec = $model->manyManyComponent($relationName)) {
+				$result = $cb('has_many', $relationSpec, $relationName, $model);
+				$relationClass = $relationSpec[1];
+			}
+			else {
+				$cb(null, null, null, null);
+				break;
+			}
+			if ($result === false) {
+				break;
+			}
+			$modelClass = $relationClass;
+		}
+	}
+
+	public function getAliasFromRelation($relation)
+	{
+		if (is_string($relation)) $relation = explode('.', $relation);
+
+		$alias = '';
+
+		$this->relationWalk($relation, function($type, $relationClass, $relationName, $model) use ($alias) {
+			switch ($type) {
+				case 'has_one':
+					$alias = $relationClass;
+					break;
+				case 'has_many':
+					$alias = $relationClass;
+					break;
+				case 'many_many':
+					list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $relationClass;
+					$alias = ClassInfo::baseDataClass($componentClass);
+					break;
+				default:
+					return false;
+			}
+		});
+
+		return $alias ?: implode('_', $relation);
+	}
+
+	/**
 	 * Traverse the relationship fields, and add the table
 	 * mappings to the query object state. This has to be called
 	 * in any overloaded {@link SearchFilter->apply()} methods manually.
@@ -658,14 +718,21 @@ class DataQuery {
 
 		$modelClass = $this->dataClass;
 
+		$seenRelations = array();
+
 		foreach($relation as $rel) {
+			$seenRelations[] = $rel;
+			$tableAlias = $this->getAliasFromRelation($seenRelations);
 			$model = singleton($modelClass);
 			if ($component = $model->hasOneComponent($rel)) {
-				if(!$this->query->isJoinedTo($component)) {
+				if(!$this->query->isJoinedTo($tableAlias)) {
 					$foreignKey = $rel;
 					$realModelClass = ClassInfo::table_for_object_field($modelClass, "{$foreignKey}ID");
-					$this->query->addLeftJoin($component,
-						"\"$component\".\"ID\" = \"{$realModelClass}\".\"{$foreignKey}ID\"");
+					$this->query->addLeftJoin(
+						$component,
+						"\"$tableAlias\".\"ID\" = \"{$realModelClass}\".\"{$foreignKey}ID\"",
+						$tableAlias
+					);
 
 					/**
 					 * add join clause to the component's ancestry classes so that the search filter could search on
@@ -676,7 +743,11 @@ class DataQuery {
 						$ancestry = array_reverse($ancestry);
 						foreach($ancestry as $ancestor){
 							if($ancestor != $component){
-								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+								$this->query->addInnerJoin(
+									$ancestor,
+									"\"$component\".\"ID\" = \"{$tableAlias}_{$ancestor}\".\"ID\"",
+									"{$tableAlias}_{$ancestor}"
+								);
 							}
 						}
 					}
@@ -684,11 +755,14 @@ class DataQuery {
 				$modelClass = $component;
 
 			} elseif ($component = $model->hasManyComponent($rel)) {
-				if(!$this->query->isJoinedTo($component)) {
+				if(!$this->query->isJoinedTo($tableAlias)) {
 					$ancestry = $model->getClassAncestry();
 					$foreignKey = $model->getRemoteJoinField($rel);
-					$this->query->addLeftJoin($component,
-						"\"$component\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"");
+					$this->query->addLeftJoin(
+						$component,
+						"\"$tableAlias\".\"{$foreignKey}\" = \"{$ancestry[0]}\".\"ID\"",
+						$tableAlias
+					);
 					/**
 					 * add join clause to the component's ancestry classes so that the search filter could search on
 					 * its ancestor fields.
@@ -698,7 +772,11 @@ class DataQuery {
 						$ancestry = array_reverse($ancestry);
 						foreach($ancestry as $ancestor){
 							if($ancestor != $component){
-								$this->query->addInnerJoin($ancestor, "\"$component\".\"ID\" = \"$ancestor\".\"ID\"");
+								$this->query->addInnerJoin(
+									$ancestor,
+									"\"$component\".\"ID\" = \"{$tableAlias}_{$ancestor}\".\"ID\"",
+									"{$tableAlias}_{$ancestor}"
+								);
 							}
 						}
 					}
@@ -709,24 +787,32 @@ class DataQuery {
 				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
 				$parentBaseClass = ClassInfo::baseDataClass($parentClass);
 				$componentBaseClass = ClassInfo::baseDataClass($componentClass);
-				$this->query->addInnerJoin($relationTable,
-					"\"$relationTable\".\"$parentField\" = \"$parentBaseClass\".\"ID\"");
-				if (!$this->query->isJoinedTo($componentBaseClass)) {
-				$this->query->addLeftJoin($componentBaseClass,
-					"\"$relationTable\".\"$componentField\" = \"$componentBaseClass\".\"ID\"");
-				}
-				else {
-					$alias = uniqid($componentBaseClass);
+				$this->query->addInnerJoin(
+					$relationTable,
+					"\"{$tableAlias}_{$relationTable}\".\"$parentField\" = \"$parentBaseClass\".\"ID\""
+				);
+				if (!$this->query->isJoinedTo("{$tableAlias}_{$componentBaseClass}")) {
 					$this->query->addLeftJoin(
 						$componentBaseClass,
-						"\"$relationTable\".\"$componentField\" = \"$alias\".\"ID\"",
-						$alias
+						"\"$relationTable\".\"$componentField\" = \"\"{$tableAlias}_{$componentBaseClass}\"\".\"ID\"",
+						"{$tableAlias}_{$componentBaseClass}"
 					);
-					$this->lastAlias = $alias;
 				}
-				if(ClassInfo::hasTable($componentClass)	&& !$this->query->isJoinedTo($componentClass)) {
-					$this->query->addLeftJoin($componentClass,
-						"\"$relationTable\".\"$componentField\" = \"$componentClass\".\"ID\"");
+//				else {
+//					$alias = uniqid($componentBaseClass);
+//					$this->query->addLeftJoin(
+//						$componentBaseClass,
+//						"\"$relationTable\".\"$componentField\" = \"$alias\".\"ID\"",
+//						$alias
+//					);
+//					$this->lastAlias = $alias;
+//				}
+				if(ClassInfo::hasTable($componentClass)	&& !$this->query->isJoinedTo("{$tableAlias}_{$componentClass}")) {
+					$this->query->addLeftJoin(
+						$componentClass,
+						"\"$relationTable\".\"$componentField\" = \"\"{$tableAlias}_{$componentClass}\".\"ID\"",
+						"{$tableAlias}_{$componentClass}"
+					);
 				}
 				$modelClass = $componentClass;
 
