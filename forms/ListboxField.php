@@ -102,7 +102,7 @@ class ListboxField extends DropdownField {
 			'Options' => new ArrayList($options)
 		));
 
-		return $this->customise($properties)->renderWith($this->getTemplates());
+		return parent::Field($properties);
 	}
 
 	public function getAttributes() {
