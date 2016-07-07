@@ -47,6 +47,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	private static $url_base = "admin";
 
 	/**
+	 * Enable front-end debugging (increases verbosity) in dev mode.
+	 * Will be ignored in live environments.
+	 *
+	 * @var bool
+	 */
+	private static $client_debugging = true;
+
+	/**
 	 * The current url segment attached to the LeftAndMain instance
 	 *
 	 * @config
@@ -221,6 +229,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// Set env
 		$combinedClientConfig['environment'] = Director::get_environment_type();
+		$combinedClientConfig['debugging'] = $this->config()->client_debugging;
 
 		return Convert::raw2json($combinedClientConfig);
 	}

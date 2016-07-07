@@ -48,7 +48,7 @@ function appBoot() {
   const rootReducer = combineReducers(reducerRegister.getAll());
   const middleware = [thunkMiddleware];
 
-  if (Config.get('environment') === 'dev') {
+  if ((Config.get('environment') === 'dev') && Config.get('debugging')) {
     middleware.push(createLogger());
   }
 
