@@ -83,9 +83,7 @@ class OptionsetField extends DropdownField {
 			'Options' => new ArrayList($options)
 		));
 
-		return $this->customise($properties)->renderWith(
-			$this->getTemplates()
-		);
+		return FormField::Field($properties);
 	}
 
 	/**
