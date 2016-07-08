@@ -112,6 +112,8 @@ class Requirements implements Flushable {
 	 * @param string $file Relative to docroot
 	 * @param array $options List of options. Available options include:
 	 * - 'provides' : List of scripts files included in this file
+	 * - 'async' : Boolean value to set async attribute to script tag
+	 * - 'defer' : Boolean value to set defer attribute to script tag
 	 */
 	public static function javascript($file, $options = array()) {
 		self::backend()->javascript($file, $options);
@@ -337,12 +339,19 @@ class Requirements implements Flushable {
 	 *
 	 * @param string $combinedFileName Filename of the combined file relative to docroot
 	 * @param array  $files            Array of filenames relative to docroot
-	 * @param string $media
+	 * @param array  $options          Array of options for combining files. Available options are:
+	 * - 'media' : If including CSS Files, you can specify a media type
+	 * - 'async' : If including JavaScript Files, boolean value to set async attribute to script tag
+	 * - 'defer' : If including JavaScript Files, boolean value to set defer attribute to script tag
 	 *
 	 * @return bool|void
 	 */
-	public static function combine_files($combinedFileName, $files, $media = null) {
-		self::backend()->combineFiles($combinedFileName, $files, $media);
+	public static function combine_files($combinedFileName, $files, $options = array()) {
+        if(is_string($options))  {
+            Deprecation::notice('4.0', 'Parameter media is deprecated. Use options array instead.');
+            $options = array('media' => $options);
+        }
+		self::backend()->combineFiles($combinedFileName, $files, $options);
 	}
 
 	/**
@@ -803,14 +812,37 @@ class Requirements_Backend
 	 * @param string $file Relative to docroot
 	 * @param array $options List of options. Available options include:
 	 * - 'provides' : List of scripts files included in this file
+	 * - 'async' : Boolean value to set async attribute to script tag
+	 * - 'defer' : Boolean value to set defer attribute to script tag
 	 */
 	public function javascript($file, $options = array()) {
-		$this->javascript[$file] = true;
+	    // make sure that async/defer is set if it is set once even if file is included multiple times
+        $async = (
+            isset($options['async']) && isset($options['async']) == true  
+            || (
+                isset($this->javascript[$file])
+                && isset($this->javascript[$file]['async'])
+                && $this->javascript[$file]['async'] == true
+            )
+        );
+        $defer = (
+            isset($options['defer']) && isset($options['defer']) == true
+            || (
+                isset($this->javascript[$file])
+                && isset($this->javascript[$file]['defer'])
+                && $this->javascript[$file]['defer'] == true
+            )
+        );
+        $this->javascript[$file] = array(
+            'async' => $async,
+            'defer' => $defer,
+        );
 
 		// Record scripts included in this file
 		if(isset($options['provides'])) {
 			$this->providedJavascript[$file] = array_values($options['provides']);
-	}
+	    }
+	
 	}
 
 	/**
@@ -841,7 +873,7 @@ class Requirements_Backend
 	public function getProvidedScripts() {
 		$providedScripts = array();
 		$includedScripts = array();
-		foreach($this->javascript as $script => $flag) {
+		foreach($this->javascript as $script => $options) {
 			// Ignore scripts that are explicitly blocked
 			if(isset($this->blocked[$script])) {
 				continue;
@@ -869,11 +901,11 @@ class Requirements_Backend
 	 * @return array
 	 */
 	public function getJavascript() {
-		return array_keys(array_diff_key(
+		return array_diff_key(
 			$this->javascript,
 			$this->getBlocked(),
 			$this->getProvidedScripts()
-		));
+		);
 	}
 
 	/**
@@ -882,7 +914,7 @@ class Requirements_Backend
 	 * @return array Indexed array of javascript files
 	 */
 	protected function getAllJavascript() {
-		return array_keys($this->javascript);
+		return $this->javascript;
 	}
 
 	/**
@@ -1130,10 +1162,12 @@ class Requirements_Backend
 		// Combine files - updates $this->javascript and $this->css
 		$this->processCombinedFiles();
 
-		foreach($this->getJavascript() as $file) {
+		foreach($this->getJavascript() as $file => $attributes) {
+		    $async = (isset($attributes['async']) && $attributes['async'] == true) ? " async" : "";
+		    $defer = (isset($attributes['defer']) && $attributes['defer'] == true) ? " defer" : "";
 			$path = Convert::raw2att($this->pathForFile($file));
 			if($path) {
-				$jsRequirements .= "<script type=\"application/javascript\" src=\"$path\"></script>";
+				$jsRequirements .= "<script type=\"application/javascript\" src=\"$path\"{$async}{$defer}></script>";
 			}
 		}
 
@@ -1267,7 +1301,7 @@ class Requirements_Backend
 		$jsRequirements = array();
 		$cssRequirements = array();
 
-		foreach($this->getJavascript() as $file) {
+		foreach($this->getJavascript() as $file => $attributes) {
 			$path = $this->pathForFile($file);
 			if($path) {
 				$jsRequirements[] = str_replace(',', '%2C', $path);
@@ -1399,10 +1433,14 @@ class Requirements_Backend
 	 * Example for combined JavaScript:
 	 * <code>
 	 * Requirements::combine_files(
-	 *  'foobar.js',
-	 *  array(
+	 *    'foobar.js',
+	 *    array(
 	 *        'mysite/javascript/foo.js',
 	 *        'mysite/javascript/bar.js',
+	 *    ),
+	 *    array(
+	 *        'async' => true,
+	 *        'defer' => true,
 	 *    )
 	 * );
 	 * </code>
@@ -1410,23 +1448,33 @@ class Requirements_Backend
 	 * Example for combined CSS:
 	 * <code>
 	 * Requirements::combine_files(
-	 *  'foobar.css',
+	 *    'foobar.css',
 	 *    array(
 	 *        'mysite/javascript/foo.css',
 	 *        'mysite/javascript/bar.css',
+	 *    ),
+	 *    array(
+	 *        'media' => 'print',
 	 *    )
 	 * );
 	 * </code>
 	 *
 	 * @param string $combinedFileName Filename of the combined file relative to docroot
 	 * @param array  $files            Array of filenames relative to docroot
-	 * @param string $media If including CSS Files, you can specify a media type
+	 * @param array  $options          Array of options for combining files. Available options are:
+	 * - 'media' : If including CSS Files, you can specify a media type
+	 * - 'async' : If including JavaScript Files, boolean value to set async attribute to script tag
+	 * - 'defer' : If including JavaScript Files, boolean value to set defer attribute to script tag
 	 */
-	public function combineFiles($combinedFileName, $files, $media = null) {
+	public function combineFiles($combinedFileName, $files, $options = array()) {
+	    if(is_string($options))  {
+            Deprecation::notice('4.0', 'Parameter media is deprecated. Use options array instead.');
+            $options = array('media' => $options);
+	    }
 		// Skip this combined files if already included
 		if(isset($this->combinedFiles[$combinedFileName])) {
 			return;
-			}
+		}
 
 		// Add all files to necessary type list
 		$paths = array();
@@ -1436,25 +1484,25 @@ class Requirements_Backend
 			list($path, $type) = $this->parseCombinedFile($file);
 			if($type === 'javascript') {
 				$type = 'js';
-		}
+		    }
 			if($combinedType && $type && $combinedType !== $type) {
 				throw new InvalidArgumentException(
 					"Cannot mix js and css files in same combined file {$combinedFileName}"
 				);
 			}
 			switch($type) {
-						case 'css':
-					$this->css($path, $media);
+				case 'css':
+					$this->css($path, (isset($options['media']) ? $options['media'] : null));
 					break;
 				case 'js':
-					$this->javascript($path);
-							break;
-						default:
+					$this->javascript($path, $options);
+					break;
+				default:
 					throw new InvalidArgumentException("Invalid combined file type: {$type}");
 			}
 			$combinedType = $type;
 			$paths[] = $path;
-					}
+		}
 
 		// Duplicate check
 		foreach($this->combinedFiles as $existingCombinedFilename => $combinedItem) {
@@ -1466,15 +1514,15 @@ class Requirements_Backend
 					implode(',', $duplicates),
 					$existingCombinedFilename
 				));
-					}
-				}
+			}
+		}
 
 		$this->combinedFiles[$combinedFileName] = array(
 			'files' => $paths,
 			'type' => $combinedType,
-			'media' => $media
+			'options' => $options,
 		);
-			}
+	}
 
 	/**
 	 * Return path and type of given combined file
@@ -1559,7 +1607,7 @@ class Requirements_Backend
 		foreach($this->getAllCombinedFiles() as $combinedFile => $combinedItem) {
 			$fileList = $combinedItem['files'];
 			$type = $combinedItem['type'];
-			$media = $combinedItem['media'];
+			$options = $combinedItem['options'];
 
 			// Generate this file, unless blocked
 			$combinedURL = null;
@@ -1585,7 +1633,7 @@ class Requirements_Backend
 						if(!in_array($css, $fileList)) {
 							$newCSS[$css] = $spec;
 						} elseif(!$included && $combinedURL) {
-							$newCSS[$combinedURL] = array('media' => $media);
+							$newCSS[$combinedURL] = array('media' => (isset($options['media']) ? $options['media'] : null));
 							$included = true;
 						}
 						// If already included, or otherwise blocked, then don't add into CSS
@@ -1594,13 +1642,13 @@ class Requirements_Backend
 					break;
 				}
 				case 'js': {
-					// Assoc array of file => true
+					// Assoc array of file => attributes
 					$newJS = array();
-					foreach($this->getAllJavascript() as $script) {
+					foreach($this->getAllJavascript() as $script => $attributes) {
 						if(!in_array($script, $fileList)) {
-							$newJS[$script] = true;
+							$newJS[$script] = $attributes;
 						} elseif(!$included && $combinedURL) {
-							$newJS[$combinedURL] = true;
+							$newJS[$combinedURL] = $options;
 							$included = true;
 						}
 						// If already included, or otherwise blocked, then don't add into scripts
