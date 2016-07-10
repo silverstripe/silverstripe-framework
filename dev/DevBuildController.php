@@ -24,10 +24,12 @@ class DevBuildController extends Controller {
 			echo "<div class=\"build\">";
 
 			$da = DatabaseAdmin::create();
-			return $da->handleRequest($request, $this->model);
+			$response = $da->handleRequest($request, $this->model);
 
 			echo "</div>";
 			$renderer->writeFooter();
+			
+			return $response;
 		}
 	}
 
