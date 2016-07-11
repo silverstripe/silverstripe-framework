@@ -80,9 +80,6 @@ global $databaseConfig;
 // We don't have a session in cli-script, but this prevents errors
 $_SESSION = null;
 
-require_once("ORM/DB.php");
-
-
 // Connect to database
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
 	echo "\nPlease configure your database connection details.  You can do this by creating a file

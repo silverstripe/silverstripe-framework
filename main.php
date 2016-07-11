@@ -147,7 +147,6 @@ $chain
 		require_once('core/Core.php');
 
 		// Connect to database
-		require_once('ORM/DB.php');
 		global $databaseConfig;
 		if ($databaseConfig) DB::connect($databaseConfig);
 

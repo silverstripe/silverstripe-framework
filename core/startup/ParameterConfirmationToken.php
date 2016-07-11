@@ -49,7 +49,6 @@ class ParameterConfirmationToken {
 	 */
 	protected function genToken() {
 		// Generate a new random token (as random as possible)
-		require_once(dirname(dirname(dirname(__FILE__))).'/security/RandomGenerator.php');
 		$rg = new RandomGenerator();
 		$token = $rg->randomToken('md5');
 
