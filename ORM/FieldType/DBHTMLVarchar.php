@@ -28,16 +28,21 @@ class DBHTMLVarchar extends DBVarchar {
 	}
 
 	public function forTemplate() {
+		return $this->RAW();
+	}
+
+	public function RAW() {
 		if ($this->processShortcodes) {
 			return ShortcodeParser::get_active()->parse($this->value);
 		}
 		else {
 			return $this->value;
 		}
+
 	}
 
 	public function exists() {
-		return parent::exists() && $this->value != '<p></p>';
+		return parent::exists() && $this->RAW() != '<p></p>';
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {

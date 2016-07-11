@@ -102,7 +102,7 @@ class MySQLiConnector extends DBConnector {
 	}
 
 	public function __destruct() {
-		if ($this->dbConn) {
+		if (is_resource($this->dbConn)) {
 			mysqli_close($this->dbConn);
 			$this->dbConn = null;
 		}

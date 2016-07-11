@@ -121,9 +121,7 @@ class OptionsetField extends SingleSelectField {
 			'Options' => new ArrayList($options)
 		));
 
-		return $this->customise($properties)->renderWith(
-			$this->getTemplates()
-		);
+		return FormField::Field($properties);
 	}
 
 	/**

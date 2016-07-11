@@ -88,9 +88,10 @@ abstract class DBString extends DBField {
 	 * @see core/model/fieldtypes/DBField#exists()
 	 */
 	public function exists() {
-		return $this->getValue() // All truthy values exist
-			|| (is_string($this->getValue()) && strlen($this->getValue())) // non-empty strings exist ('0' but not (int)0)
-			|| (!$this->getNullifyEmpty() && $this->getValue() === ''); // Remove this stupid exemption in 4.0
+		$value = $this->RAW();
+		return $value // All truthy values exist
+			|| (is_string($value) && strlen($value)) // non-empty strings exist ('0' but not (int)0)
+			|| (!$this->getNullifyEmpty() && $value === ''); // Remove this stupid exemption in 4.0
 	}
 
 	/**
@@ -122,7 +123,7 @@ abstract class DBString extends DBField {
 	 * @return string
 	 */
 	public function LimitCharacters($limit = 20, $add = '...') {
-		$value = trim($this->value);
+		$value = trim($this->RAW());
 		if($this->stat('escape_type') == 'xml') {
 			$value = strip_tags($value);
 			$value = html_entity_decode($value, ENT_COMPAT, 'UTF-8');
@@ -146,13 +147,13 @@ abstract class DBString extends DBField {
 	 */
 	public function LimitCharactersToClosestWord($limit = 20, $add = '...') {
 		// Strip HTML tags if they exist in the field
-		$this->value = strip_tags($this->value);
+		$value = strip_tags($this->RAW());
 
 		// Determine if value exceeds limit before limiting characters
-		$exceedsLimit = mb_strlen($this->value) > $limit;
+		$exceedsLimit = mb_strlen($value) > $limit;
 
 		// Limit to character limit
-		$value = $this->LimitCharacters($limit, '');
+		$value = DBField::create_field(get_class($this), $value)->LimitCharacters($limit, '');
 
 		// If value exceeds limit, strip punctuation off the end to the last space and apply ellipsis
 		if($exceedsLimit) {
@@ -178,11 +179,11 @@ abstract class DBString extends DBField {
 	 * @return string
 	 */
 	public function LimitWordCount($numWords = 26, $add = '...') {
-		$this->value = trim(Convert::xml2raw($this->value));
-		$ret = explode(' ', $this->value, $numWords + 1);
+		$value = trim(Convert::xml2raw($this->RAW()));
+		$ret = explode(' ', $value, $numWords + 1);
 
 		if(count($ret) <= $numWords - 1) {
-			$ret = $this->value;
+			$ret = $value;
 		} else {
 			array_pop($ret);
 			$ret = implode(' ', $ret) . $add;
@@ -213,7 +214,7 @@ abstract class DBString extends DBField {
 	 * @return string
 	 */
 	public function LowerCase() {
-		return mb_strtolower($this->value);
+		return mb_strtolower($this->RAW());
 	}
 
 	/**
@@ -221,7 +222,7 @@ abstract class DBString extends DBField {
 	 * @return string
 	 */
 	public function UpperCase() {
-		return mb_strtoupper($this->value);
+		return mb_strtoupper($this->RAW());
 	}
 
 	/**
@@ -230,6 +231,6 @@ abstract class DBString extends DBField {
 	 * @return string
 	 */
 	public function NoHTML() {
-		return strip_tags($this->value);
+		return strip_tags($this->RAW());
 	}
 }

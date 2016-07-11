@@ -145,7 +145,7 @@ class TreeMultiselectField extends TreeDropdownField {
 				'Value' => $value
 			)
 		);
-		return $this->customise($properties)->renderWith('TreeDropdownField');
+		return FormField::Field($properties);
 	}
 
 	/**

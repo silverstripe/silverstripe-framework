@@ -31,6 +31,8 @@ class PermissionTest extends SapphireTest {
 		$members = Member::get()->byIDs($this->allFixtureIDs('SilverStripe\\Security\\Member'));
 		foreach ($members as $member) {
 			$this->assertTrue(Permission::checkMember($member, 'CMS_ACCESS'));
+			$this->assertTrue(Permission::checkMember($member, array('CMS_ACCESS', 'CMS_ACCESS_Security')));
+			$this->assertTrue(Permission::checkMember($member, array('CMS_ACCESS_Security', 'CMS_ACCESS')));
 		}
 
 		$member = new Member();
@@ -41,6 +43,8 @@ class PermissionTest extends SapphireTest {
 		));
 		$member->write();
 		$this->assertFalse(Permission::checkMember($member, 'CMS_ACCESS'));
+		$this->assertFalse(Permission::checkMember($member, array('CMS_ACCESS', 'CMS_ACCESS_Security')));
+		$this->assertFalse(Permission::checkMember($member, array('CMS_ACCESS_Security', 'CMS_ACCESS')));
 	}
 
 	public function testLeftAndMainAccessAll() {

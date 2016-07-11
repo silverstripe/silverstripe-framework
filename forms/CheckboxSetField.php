@@ -53,9 +53,7 @@ class CheckboxSetField extends MultiSelectField {
 			'Options' => $this->getOptions()
 		));
 
-		return $this->customise($properties)->renderWith(
-			$this->getTemplates()
-		);
+		return FormField::Field($properties);
 	}
 
 	/**

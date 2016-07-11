@@ -71,7 +71,7 @@ class DBText extends DBString {
 	 * @return string
 	 */
 	public function AbsoluteLinks() {
-		return HTTP::absoluteURLs($this->value);
+		return HTTP::absoluteURLs($this->RAW());
 	}
 
 	/**
@@ -86,7 +86,7 @@ class DBText extends DBString {
 		}
 
 		$output = array();
-		$data = trim(Convert::xml2raw($this->value));
+		$data = trim(Convert::xml2raw($this->RAW()));
 		$sentences = explode('.', $data);
 
 		if ($sentCount == 0) return '';
@@ -106,7 +106,7 @@ class DBText extends DBString {
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
 	 */
 	public function FirstSentence() {
-		$paragraph = Convert::xml2raw( $this->value );
+		$paragraph = Convert::xml2raw( $this->RAW() );
 		if( !$paragraph ) return "";
 
 		$words = preg_split('/\s+/', $paragraph);
@@ -127,7 +127,7 @@ class DBText extends DBString {
 	public function Summary($maxWords = 50) {
 		// get first sentence?
 		// this needs to be more robust
-		$value = Convert::xml2raw( $this->value /*, true*/ );
+		$value = Convert::xml2raw( $this->RAW() /*, true*/ );
 		if(!$value) return '';
 
 		// grab the first paragraph, or, failing that, the whole content
@@ -169,7 +169,7 @@ class DBText extends DBString {
 
 		// get first sentence?
 		// this needs to be more robust
-		$data = $plain ? Convert::xml2raw($this->value, true) : $this->value;
+		$data = $plain ? Convert::xml2raw($this->RAW(), true) : $this->RAW();
 
 		if(!$data) return '';
 
@@ -209,8 +209,9 @@ class DBText extends DBString {
 	public function FirstParagraph($plain = 1) {
 		// get first sentence?
 		// this needs to be more robust
+		$value = $this->RAW();
 		if($plain && $plain != 'html') {
-			$data = Convert::xml2raw($this->value);
+			$data = Convert::xml2raw($value);
 			if(!$data) return "";
 
 			// grab the first paragraph, or, failing that, the whole content
@@ -219,12 +220,12 @@ class DBText extends DBString {
 
 			return $data;
 		} else {
-			if(strpos($this->value, "</p>") === false) return $this->value;
+			if(strpos($value, "</p>") === false) return $value;
 
-			$data = substr($this->value, 0, strpos($this->value, "</p>") + 4);
+			$data = substr($value, 0, strpos($value, "</p>") + 4);
 
-			if(strlen($data) < 20 && strpos($this->value, "</p>", strlen($data))) {
-				$data = substr($this->value, 0, strpos( $this->value, "</p>", strlen($data)) + 4 );
+			if(strlen($data) < 20 && strpos($value, "</p>", strlen($data))) {
+				$data = substr($value, 0, strpos( $value, "</p>", strlen($data)) + 4 );
 			}
 
 			return $data;
@@ -253,7 +254,7 @@ class DBText extends DBString {
 		}
 
 		// Remove HTML tags so we don't have to deal with matching tags
-		$text = $striphtml ? $this->NoHTML() : $this->value;
+		$text = $striphtml ? $this->NoHTML() : $this->RAW();
 
 		// Find the search string
 		$position = (int) stripos($text, $string);
@@ -285,7 +286,7 @@ class DBText extends DBString {
 		$summary = trim($summary);
 
 		if($position > 0) $summary = $prefix . $summary;
-		if(strlen($this->value) > ($characters + $position)) $summary = $summary . $suffix;
+		if(strlen($this->RAW()) > ($characters + $position)) $summary = $summary . $suffix;
 
 		return $summary;
 	}
@@ -299,14 +300,14 @@ class DBText extends DBString {
 	 */
 	public function Parse($parser = "TextParser") {
 		if($parser == "TextParser" || is_subclass_of($parser, "TextParser")) {
-			$obj = new $parser($this->value);
+			$obj = new $parser($this->RAW());
 			return $obj->parse();
 		} else {
 			// Fallback to using raw2xml and show a warning
 			// TODO Don't kill script execution, we can continue without losing complete control of the app
 			user_error("Couldn't find an appropriate TextParser sub-class to create (Looked for '$parser')."
 				. "Make sure it sub-classes TextParser and that you've done ?flush=1.", E_USER_WARNING);
-			return Convert::raw2xml($this->value);
+			return Convert::raw2xml($this->RAW());
 		}
 	}
 

@@ -65,11 +65,10 @@ class ListboxField extends MultiSelectField {
 	 */
 	public function Field($properties = array()) {
 		$properties = array_merge($properties, array(
-			'Options' => $this->getOptions()
+			'Options' => $this->getOptions(),
 		));
-		return $this
-			->customise($properties)
-			->renderWith($this->getTemplates());
+
+		return FormField::Field($properties);
 	}
 
 	/**
