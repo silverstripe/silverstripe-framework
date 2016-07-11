@@ -248,7 +248,7 @@ class TreeDropdownField extends FormField {
 			)
 		);
 
-		return $this->customise($properties)->renderWith('TreeDropdownField');
+		return parent::Field($properties);
 	}
 
 	public function extraClass() {
