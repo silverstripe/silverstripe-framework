@@ -147,7 +147,7 @@ you will get an instance of [api:HasManyList] rather than the object.
 		echo $player->FirstName;
 	}
 
-To specify multiple $has_manys to the same object you can use dot notation to distinguish them like below:
+To specify multiple `$has_many` to the same object you can use dot notation to distinguish them like below:
 
 	:::php
 	<?php
@@ -172,15 +172,25 @@ To specify multiple $has_manys to the same object you can use dot notation to di
 Multiple `$has_one` relationships are okay if they aren't linking to the same object type. Otherwise, they have to be
 named.
 
+If you're using the default scaffolded form fields with multiple `has_one` relationships, you will end up with a CMS field for each relation. If you don't want these you can remove them by their IDs:
+
+    :::php
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->removeByName(array('ManagerID', 'CleanerID'));
+        return $fields;
+    }
+
 
 ## belongs_to
 
 Defines a 1-to-1 relationship with another object, which declares the other end of the relationship with a 
-corresponding $has_one. A single database column named `<relationship-name>ID` will be created in the object with the 
+corresponding `$has_one`. A single database column named `<relationship-name>ID` will be created in the object with the 
 `$has_one`, but the $belongs_to by itself will not create a database field. This field will hold the ID of the object 
 declaring the `$belongs_to`.
 
-Similarly with $has_many, dot notation can be used to explicitly specify the `$has_one` which refers to this relation. 
+Similarly with `$has_many`, dot notation can be used to explicitly specify the `$has_one` which refers to this relation. 
 This is not mandatory unless the relationship would be otherwise ambiguous.
 
 	:::php
