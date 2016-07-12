@@ -360,7 +360,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		// Parse column specification, considering possible ansi sql quoting
-		if(preg_match('/^"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column, $match)) {
+		// Note that table prefix is allowed, but discarded
+		if(preg_match('/^("?(?<table>[^"\s]+)"?\\.)?"?(?<column>[^"\s]+)"?(\s+(?<direction>((asc)|(desc))(ending)?))?$/i', $column, $match)) {
 			$column = $match['column'];
 			if(empty($direction) && !empty($match['direction'])) {
 				$direction = $match['direction'];
@@ -448,7 +449,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		}
 
 		$multisortArgs[] = &$originalKeys;
-		
+
 		$list = clone $this;
 		// As the last argument we pass in a reference to the items that all the sorting will be applied upon
 		$multisortArgs[] = &$list->items;
