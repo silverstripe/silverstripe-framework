@@ -1,4 +1,6 @@
 <?php
+use SilverStripe\ORM\FieldType\DBHTMLText;
+
 /**
  * The action buttons are <input type="submit"> as well as <button> tags.
  *
@@ -108,7 +110,7 @@ class FormAction extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return string
+	 * @return DBHTMLText
 	 */
 	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);

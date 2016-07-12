@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,

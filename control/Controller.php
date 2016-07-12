@@ -1,8 +1,6 @@
 <?php
-use SilverStripe\Model\FieldType\DBHTMLText;
 
 use SilverStripe\ORM\DataModel;
-use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
 

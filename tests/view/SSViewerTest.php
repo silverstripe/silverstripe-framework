@@ -5,7 +5,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\Permission;
-use SilverStripe\Model\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBField;
 
 class SSViewerTest extends SapphireTest {
 
@@ -175,7 +175,7 @@ class SSViewerTest extends SapphireTest {
 		// first make sure that our test js file causes an exception to be thrown
 		try{
 			require_once('thirdparty/jsmin/jsmin.php');
-			$content = JSMin::minify($content);
+			JSMin::minify($jsFileContents);
 			$this->fail('JSMin did not throw exception on minify bad file: ');
 		} catch(Exception $e) {
 			// exception thrown... good

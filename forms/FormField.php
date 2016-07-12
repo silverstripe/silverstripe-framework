@@ -2,6 +2,7 @@
 
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * Represents a field in a form.
@@ -940,7 +941,7 @@ class FormField extends RequestHandler {
 	 * such as an input tag.
 	 *
 	 * @param array $properties
-	 * @return string
+	 * @return DBHTMLText
 	 */
 	public function Field($properties = array()) {
 		$context = $this;
@@ -974,7 +975,7 @@ class FormField extends RequestHandler {
 	 *
 	 * @param array $properties
 	 *
-	 * @return string
+	 * @return DBHTMLText
 	 */
 	public function FieldHolder($properties = array()) {
 		$context = $this;

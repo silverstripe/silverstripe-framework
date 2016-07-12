@@ -35,46 +35,14 @@ abstract class DBString extends DBField {
 	 *                       {@link StringField::setOptions()} for information on the available options
 	 */
 	public function __construct($name = null, $options = array()) {
-		$options = $this->parseConstructorOptions($options);
 		if($options) {
+			if(!is_array($options)) {
+				throw new \InvalidArgumentException("Invalid options $options");
+			}
 			$this->setOptions($options);
 		}
 
 		parent::__construct($name);
-	}
-
-	/**
-	 * Parses the "options" parameter passed to the constructor. This could be a
-	 * string value, or an array of options. Config specification might also
-	 * encode "key=value" pairs in non-associative strings.
-	 *
-	 * @param mixed $options
-	 * @return array The list of parsed options, or empty if there are none
-	 */
-	protected function parseConstructorOptions($options) {
-		if(is_string($options)) {
-			$options = [$options];
-		}
-		if(!is_array($options)) {
-			return [];
-		}
-		$parsed = [];
-		foreach($options as $option => $value) {
-			// Workaround for inability for config args to support associative arrays
-			if(is_numeric($option) && strpos($value, '=') !== false) {
-				list($option, $value) = explode('=', $value);
-				$option = trim($option);
-				$value = trim($value);
-			}
-			// Convert bool values
-			if(strcasecmp($value, 'true') === 0) {
-				$value = true;
-			} elseif(strcasecmp($value, 'false') === 0) {
-				$value = false;
-			}
-			$parsed[$option] = $value;
-		}
-		return $parsed;
 	}
 
 	/**

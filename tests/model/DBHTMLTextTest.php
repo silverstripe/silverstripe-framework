@@ -204,6 +204,29 @@ class DBHTMLTextTest extends SapphireTest {
 		$this->assertEquals($expectedValue, $result);
 	}
 
+	public function testCreate() {
+		/** @var DBHTMLText $field */
+		$field = Object::create_from_string("HTMLFragment(['whitelist' => 'link'])", 'MyField');
+		$this->assertEquals(['link'], $field->getWhitelist());
+		$field = Object::create_from_string("HTMLFragment(['whitelist' => 'link,a'])", 'MyField');
+		$this->assertEquals(['link', 'a'], $field->getWhitelist());
+		$field = Object::create_from_string("HTMLFragment(['whitelist' => ['link', 'a']])", 'MyField');
+		$this->assertEquals(['link', 'a'], $field->getWhitelist());
+		$field = Object::create_from_string("HTMLFragment", 'MyField');
+		$this->assertEmpty($field->getWhitelist());
+
+		// Test shortcodes
+		$field = Object::create_from_string("HTMLFragment(['shortcodes' => true])", 'MyField');
+		$this->assertEquals(true, $field->getProcessShortcodes());
+		$field = Object::create_from_string("HTMLFragment(['shortcodes' => false])", 'MyField');
+		$this->assertEquals(false, $field->getProcessShortcodes());
+
+		// Mix options
+		$field = Object::create_from_string("HTMLFragment(['shortcodes' => true, 'whitelist' => ['a'])", 'MyField');
+		$this->assertEquals(true, $field->getProcessShortcodes());
+		$this->assertEquals(['a'], $field->getWhitelist());
+	}
+
 	public function providerToPlain()
 	{
 		return [
@@ -335,7 +358,7 @@ class DBHTMLTextTest extends SapphireTest {
 		$this->assertEquals('&quot;this is a test&quot;', $data->ATT());
 
 		// HTML Text (passes shortcodes + tidy)
-		$data = DBField::create_field('HTMLText', '&quot;');
+		$data = DBField::create_field('HTMLText', '"');
 		$this->assertEquals('&quot;', $data->ATT());
 	}
 
@@ -397,45 +420,19 @@ class DBHTMLTextTest extends SapphireTest {
 		$h = new DBHTMLText();
 		$h->setValue("");
 		$this->assertFalse($h->exists());
-		$h->setValue("<p></p>");
-		$this->assertFalse($h->exists());
-		$h->setValue("<p> </p>");
-		$this->assertFalse($h->exists());
-		$h->setValue("<h2/>");
-		$this->assertFalse($h->exists());
-		$h->setValue("<h2></h2>");
-		$this->assertFalse($h->exists());
-
-		$h->setValue("something");
-		$this->assertTrue($h->exists());
-		$h->setValue("<img src=\"dummy.png\">");
-		$this->assertTrue($h->exists());
-		$h->setValue("<img src=\"dummy.png\"><img src=\"dummy.png\">");
-		$this->assertTrue($h->exists());
-		$h->setValue("<p><img src=\"dummy.png\"></p>");
-		$this->assertTrue($h->exists());
-
-		$h->setValue("<iframe src=\"http://www.google.com\"></iframe>");
-		$this->assertTrue($h->exists());
-		$h->setValue("<embed src=\"test.swf\">");
-		$this->assertTrue($h->exists());
-		$h->setValue("<object width=\"400\" height=\"400\" data=\"test.swf\"></object>");
-		$this->assertTrue($h->exists());
-
-
-		$h->setValue("<p>test</p>");
+		$h->setValue("<p>content</p>");
 		$this->assertTrue($h->exists());
 	}
 
 	function testWhitelist() {
-		$textObj = new DBHTMLText('Test', 'whitelist=meta,link');
+		$textObj = new DBHTMLText('Test', ['whitelist'=> 'meta,link']);
 		$this->assertEquals(
 			'<meta content="Keep"><link href="Also Keep">',
 			$textObj->whitelistContent('<meta content="Keep"><p>Remove</p><link href="Also Keep" />Remove Text'),
 			'Removes any elements not in whitelist excluding text elements'
 		);
 
-		$textObj = new DBHTMLText('Test', 'whitelist=meta,link,text()');
+		$textObj = new DBHTMLText('Test', ['whitelist'=> 'meta,link,text()']);
 		$this->assertEquals(
 			'<meta content="Keep"><link href="Also Keep">Keep Text',
 			$textObj->whitelistContent('<meta content="Keep"><p>Remove</p><link href="Also Keep" />Keep Text'),
@@ -528,7 +525,7 @@ class DBHTMLTextTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			'Replaced short code with this. home',
-			$field->NoHTML()
+			$field->Plain()
 		);
 		Config::nest();
 		Config::inst()->update('Director', 'alternate_base_url', 'http://example.com/');
@@ -550,11 +547,7 @@ class DBHTMLTextTest extends SapphireTest {
 			$field->Summary(2)
 		);
 		$this->assertEquals(
-			'Replaced short code with...',
-			$field->BigSummary(4)
-		);
-		$this->assertEquals(
-			'Replaced short code with this. home[home]',
+			'Replaced short code with this. home',
 			$field->FirstParagraph()
 		);
 		$this->assertEquals(

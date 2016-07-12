@@ -13,10 +13,10 @@ use TextField;
  * This behaves similarly to {@link Text}, but the template processor won't escape any HTML content within it.
  *
  * Options can be specified in a $db config via one of the following:
- *  - "HTMLFragment(['shortcodes=true', 'whitelist=meta,link'])"
- *  - "HTMLFragment('whitelist=meta,link')"
- *  - "HTMLFragment(['shortcodes=true'])". "HTMLText" is also a synonym for this.
- *  - "HTMLFragment('shortcodes=true')"
+ *  - "HTMLFragment(['shortcodes' => true, 'whitelist' => 'meta,link'])"
+ *  - "HTMLFragment(['whitelist' => 'meta,link'])"
+ *  - "HTMLFragment(['shortcodes' => true])". "HTMLText" is also a synonym for this.
+ *  - "HTMLFragment(['shortcodes' => true])"
  *
  * @see HTMLVarchar
  * @see Text
@@ -187,35 +187,6 @@ class DBHTMLText extends DBText {
 			$value = $dom->getContent();
 		}
 		return $value;
-	}
-
-	/**
-	 * Returns true if the field has meaningful content.
-	 * Excludes null content like <h1></h1>, <p></p> ,etc
-	 *
-	 * @return boolean
-	 */
-	public function exists() {
-		// If it's blank, it's blank
-		if(!parent::exists()) {
-			return false;
-		}
-
-		$value = $this->RAW();
-
-		// If it's got a content tag
-		if(preg_match('/<(img|embed|object|iframe|meta|source|link)[^>]*>/i', $value)) {
-			return true;
-		}
-
-		// If it's just one or two tags on its own (and not the above) it's empty.
-		// This might be <p></p> or <h1></h1> or whatever.
-		if(preg_match('/^[\\s]*(<[^>]+>[\\s]*){1,2}$/', $value)) {
-			return false;
-		}
-
-		// Otherwise its content is genuine content
-		return true;
 	}
 
 	public function scaffoldFormField($title = null) {

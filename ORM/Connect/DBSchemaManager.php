@@ -8,7 +8,6 @@ use Object;
 use Director;
 use SilverStripe\ORM\FieldType\DBPrimaryKey;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\ORM\FieldType\DBPrimaryKey;
 
 
 /**

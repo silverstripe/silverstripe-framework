@@ -35,10 +35,10 @@ class SSViewer_Scope {
 	const UP_INDEX = 4;
 	const CURRENT_INDEX = 5;
 	const ITEM_OVERLAY = 6;
-	
+
 	// The stack of previous "global" items
 	// An indexed array of item, item iterator, item iterator total, pop index, up index, current index & parent overlay
-	private $itemStack = array(); 
+	private $itemStack = array();
 
 	// The current "global" item (the one any lookup starts from)
 	protected $item;
