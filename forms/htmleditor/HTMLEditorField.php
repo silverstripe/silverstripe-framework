@@ -153,7 +153,7 @@ class HTMLEditorField extends TextareaField {
 class HTMLEditorField_Readonly extends ReadonlyField {
 	public function Field($properties = array()) {
 		$valforInput = $this->value ? Convert::raw2att($this->value) : "";
-		return "<span class=\"readonly typography\" id=\"" . $this->id() . "\">"
+		return "<span class=\"form-control-static readonly typography\" id=\"" . $this->id() . "\">"
 			. ( $this->value && $this->value != '<p></p>' ? $this->value : '<i>(not set)</i>' )
 			. "</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
 	}
@@ -269,7 +269,7 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 			new FieldList()
 		);
 
-		$headerWrap->addExtraClass('CompositeField composite cms-content-header nolabel ');
+		$headerWrap->addExtraClass('CompositeField composite cms-content-header form-group--no-label ');
 		$contentComposite->addExtraClass('ss-insert-link content');
 		$fileField->setAllowedMaxFileNumber(1);
 

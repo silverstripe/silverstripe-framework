@@ -67,9 +67,9 @@ class DatetimeField extends FormField {
 		$this->config = $this->config()->default_config;
 
 		$this->dateField = DateField::create($name . '[date]', false)
-			->addExtraClass('fieldgroup-field');
+			->addExtraClass('form__fieldgroup-item');
 		$this->timeField = TimeField::create($name . '[time]', false)
-			->addExtraClass('fieldgroup-field');
+			->addExtraClass('form__fieldgroup-item');
 		$this->timezoneField = new HiddenField($name . '[timezone]');
 
 		parent::__construct($name, $title, $value);
@@ -104,7 +104,7 @@ class DatetimeField extends FormField {
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
 		$config = array_filter($config);
-		$this->addExtraClass('fieldgroup');
+		$this->addExtraClass('form__fieldgroup');
 		$this->addExtraClass(Convert::raw2json($config));
 
 		return parent::FieldHolder($properties);
@@ -120,8 +120,7 @@ class DatetimeField extends FormField {
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
 		return DBField::create_field('HTMLText', $this->dateField->FieldHolder() .
 			$this->timeField->FieldHolder() .
-			$tzField .
-			'<div class="clear"><!-- --></div>'
+			$tzField
 		);
 	}
 
