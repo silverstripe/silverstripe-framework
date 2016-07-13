@@ -64,7 +64,7 @@ class RSSFeedTest extends SapphireTest {
 		$this->assertContains('<title>ItemD</title>', $content);
 
 		$this->assertContains(
-			'<description>&lt;p&gt;ItemD Content test shortcode output&lt;/p&gt;</description>',
+			'<description><![CDATA[<p>ItemD Content test shortcode output</p>]]></description>',
 			$content
 		);
 	}
@@ -168,7 +168,7 @@ class RSSFeedTest_ItemD extends ViewableData {
 	// ItemD test fields - all fields use casting but Content & AltContent cast as HTMLText
 	private static $casting = array(
 		'Title' => 'Varchar',
-		'Content' => 'HTMLText'
+		'Content' => 'HTMLText', // Supports shortcodes
 	);
 
 	public $Title = 'ItemD';

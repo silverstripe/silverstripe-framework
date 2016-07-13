@@ -3,7 +3,6 @@
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\NullSecurityToken;
@@ -213,6 +212,15 @@ class Form extends RequestHandler {
 		'handleField',
 		'httpSubmission',
 		'forTemplate',
+	);
+
+	private static $casting = array(
+		'AttributesHTML' => 'HTMLFragment',
+		'FormAttributes' => 'HTMLFragment',
+		'MessageType' => 'Text',
+		'Message' => 'HTMLFragment',
+		'FormName' => 'Text',
+		'Legend' => 'HTMLFragment',
 	);
 
 	/**
@@ -487,8 +495,8 @@ class Form extends RequestHandler {
 			|| $this->actions->dataFieldByName('action_' . $action)
 			// Always allow actions on fields
 			|| (
-				$field = $this->checkFieldsForAction($this->Fields(), $action)
-				&& $field->checkAccessAction($action)
+				($field = $this->checkFieldsForAction($this->Fields(), $action))
+					&& $field->checkAccessAction($action)
 			)
 		);
 	}
@@ -1732,7 +1740,7 @@ class Form extends RequestHandler {
 	public function defaultAction() {
 		if($this->hasDefaultAction && $this->actions) {
 			return $this->actions->First();
-		}
+	}
 	}
 
 	/**
@@ -1804,7 +1812,7 @@ class Form extends RequestHandler {
 	public static function single_field_required() {
 		if(self::current_action() == 'callfieldmethod') {
 			return $_REQUEST['fieldName'];
-		}
+	}
 	}
 
 	/**

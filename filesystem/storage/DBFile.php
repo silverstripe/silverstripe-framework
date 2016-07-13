@@ -100,7 +100,7 @@ class DBFile extends DBComposite implements AssetContainer, Thumbnail {
 		'Title' => 'Varchar',
 		'MimeType' => 'Varchar',
 		'String' => 'Text',
-		'Tag' => 'HTMLText',
+		'Tag' => 'HTMLFragment',
 		'Size' => 'Varchar'
 	);
 
@@ -113,7 +113,7 @@ class DBFile extends DBComposite implements AssetContainer, Thumbnail {
 	 *
 	 * @return string
 	 */
-	public function forTemplate() {
+	public function XML() {
 		return $this->getTag() ?: '';
 	}
 

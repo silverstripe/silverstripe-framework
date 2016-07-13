@@ -97,7 +97,7 @@ class DatetimeField extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function FieldHolder($properties = array()) {
 		$config = array(
@@ -112,16 +112,17 @@ class DatetimeField extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/DatetimeField.css');
 
 		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
-		return DBField::create_field('HTMLText', $this->dateField->FieldHolder() .
-			$this->timeField->FieldHolder() .
-			$tzField .
-			'<div class="clear"><!-- --></div>'
+		return sprintf(
+			'%s%s%s<div class="clear"><!-- --></div>',
+			$this->dateField->FieldHolder(),
+			$this->timeField->FieldHolder(),
+			$tzField
 		);
 	}
 
@@ -139,6 +140,7 @@ class DatetimeField extends FormField {
 	 * @param string|array $val String expects an ISO date format. Array notation with 'date' and 'time'
 	 *  keys can contain localized strings. If the 'dmyfields' option is used for {@link DateField},
 	 *  the 'date' value may contain array notation was well (see {@link DateField->setValue()}).
+	 * @return $this
 	 */
 	public function setValue($val) {
 		$locale = new Zend_Locale($this->locale);

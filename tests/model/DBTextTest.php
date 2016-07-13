@@ -7,6 +7,8 @@ use SilverStripe\ORM\FieldType\DBField;
 
 
 /**
+ * Tests parsing and summary methods on DBText
+ *
  * @package framework
  * @subpackage tests
  */
@@ -15,211 +17,224 @@ class DBTextTest extends SapphireTest {
 	/**
 	 * Test {@link Text->LimitCharacters()}
 	 */
-	public function testLimitCharacters() {
-		$cases = array(
-			'The little brown fox jumped over the lazy cow.' => 'The little brown fox...',
-			'<p>This is some text in a paragraph.</p>' => '<p>This is some text...'
-		);
+	public function providerLimitCharacters()
+	{
+		// Plain text values always encoded safely
+		// HTML stored in non-html fields is treated literally.
+		return [
+			['The little brown fox jumped over the lazy cow.', 'The little brown fox...'],
+			['<p>Short & Sweet</p>', '&lt;p&gt;Short &amp; Sweet&lt;/p&gt;'],
+			['This text contains &amp; in it', 'This text contains &amp;...'],
+		];
+	}
 
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->LimitCharacters());
-		}
+	/**
+	 * Test {@link Text->LimitCharacters()}
+	 * @dataProvider providerLimitCharacters
+	 * @param string $originalValue
+	 * @param string $expectedValue
+	 */
+	public function testLimitCharacters($originalValue, $expectedValue) {
+		$textObj = DBField::create_field('Text', $originalValue);
+		$result = $textObj->obj('LimitCharacters')->forTemplate();
+		$this->assertEquals($expectedValue, $result);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function providerLimitCharactersToClosestWord()
+	{
+		return [
+			// Standard words limited, ellipsis added if truncated
+			['Lorem ipsum dolor sit amet', 24, 'Lorem ipsum dolor sit...'],
+
+			// Complete words less than the character limit don't get truncated, ellipsis not added
+			['Lorem ipsum', 24, 'Lorem ipsum'],
+			['Lorem', 24, 'Lorem'],
+			['', 24, ''],    // No words produces nothing!
+
+			// Special characters are encoded safely
+			['Nice & Easy', 24, 'Nice &amp; Easy'],
+
+			// HTML stored in non-html fields is treated literally.
+			// If storing HTML you should use DBHTMLText instead
+			['<p>Lorem ipsum dolor sit amet</p>', 24, '&lt;p&gt;Lorem ipsum dolor...'],
+			['<p><span>Lorem ipsum dolor sit amet</span></p>', 24, '&lt;p&gt;&lt;span&gt;Lorem ipsum...'],
+			['<p>Lorem ipsum</p>', 24, '&lt;p&gt;Lorem ipsum&lt;/p&gt;'],
+			['Lorem &amp; ipsum dolor sit amet', 24, 'Lorem &amp;amp; ipsum dolor...']
+		];
 	}
 
 	/**
 	 * Test {@link Text->LimitCharactersToClosestWord()}
+	 * @dataProvider providerLimitCharactersToClosestWord
+	 *
+	 * @param string $originalValue Raw string input
+	 * @param int $limit
+	 * @param string $expectedValue Expected template value
 	 */
-	public function testLimitCharactersToClosestWord() {
-		$cases = array(
-			/* Standard words limited, ellipsis added if truncated */
-			'Lorem ipsum dolor sit amet' => 'Lorem ipsum dolor sit...',
-
-			/* Complete words less than the character limit don't get truncated, ellipsis not added */
-			'Lorem ipsum' => 'Lorem ipsum',
-			'Lorem' => 'Lorem',
-			'' => '',	// No words produces nothing!
-
-			/* HTML tags get stripped out, leaving the raw text */
-			'<p>Lorem ipsum dolor sit amet</p>' => 'Lorem ipsum dolor sit...',
-			'<p><span>Lorem ipsum dolor sit amet</span></p>' => 'Lorem ipsum dolor sit...',
-			'<p>Lorem ipsum</p>' => 'Lorem ipsum',
-
-			/* HTML entities are treated as a single character */
-			'Lorem &amp; ipsum dolor sit amet' => 'Lorem &amp; ipsum dolor...'
-		);
-
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->LimitCharactersToClosestWord(24));
-		}
+	public function testLimitCharactersToClosestWord($originalValue, $limit, $expectedValue) {
+		$textObj = DBField::create_field('Text', $originalValue);
+		$result = $textObj->obj('LimitCharactersToClosestWord', [$limit])->forTemplate();
+		$this->assertEquals($expectedValue, $result);
 	}
 
 	/**
 	 * Test {@link Text->LimitWordCount()}
 	 */
-	public function testLimitWordCount() {
-		$cases = array(
-			/* Standard words limited, ellipsis added if truncated */
-			'The little brown fox jumped over the lazy cow.' => 'The little brown...',
-			' This text has white space around the ends ' => 'This text has...',
+	public function providerLimitWordCount() {
+		return [
+			// Standard words limited, ellipsis added if truncated
+			['The little brown fox jumped over the lazy cow.', 3, 'The little brown...'],
+			[' This text has white space around the ends ', 3, 'This text has...'],
 
-			/* Words less than the limt word count don't get truncated, ellipsis not added */
-			'Two words' => 'Two words',	// Two words shouldn't have an ellipsis
-			'One' => 'One',	// Neither should one word
-			'' => '',	// No words produces nothing!
+			// Words less than the limt word count don't get truncated, ellipsis not added
+			['Two words', 3, 'Two words'],	// Two words shouldn't have an ellipsis
+			['These three words', 3, 'These three words'], // Three words shouldn't have an ellipsis
+			['One', 3, 'One'],	// Neither should one word
+			['', 3, ''],	// No words produces nothing!
 
-			/* HTML tags get stripped out, leaving the raw text */
-			'<p>Text inside a paragraph tag should also work</p>' => 'Text inside a...',
-			'<p><span>Text nested inside another tag should also work</span></p>' => 'Text nested inside...',
-			'<p>Two words</p>' => 'Two words'
-		);
+			// Text with special characters
+			['Nice & Easy', 3, 'Nice &amp; Easy'],
+			['One & Two & Three', 3, 'One &amp; Two...'],
 
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->LimitWordCount(3));
-		}
+			// HTML stored in non-html fields is treated literally.
+			// If storing HTML you should use DBHTMLText instead
+			['<p>Text inside a paragraph tag should also work</p>', 3, '&lt;p&gt;Text inside a...'],
+			['<p>Two words</p>', 3, '&lt;p&gt;Two words&lt;/p&gt;'],
+		];
 	}
 
 	/**
-	 * Test {@link Text->LimitWordCountXML()}
+	 * Test {@link DBText->LimitWordCount()}
+	 * @dataProvider providerLimitWordCount
+	 *
+	 * @param string $originalValue Raw string input
+	 * @param int $limit Number of words
+	 * @param string $expectedValue Expected template value
 	 */
-	public function testLimitWordCountXML() {
-		$cases = array(
-			'<p>Stuff & stuff</p>' => 'Stuff &amp;...',
-			"Stuff\nBlah Blah Blah" => "Stuff\nBlah Blah...",
-			"Stuff<Blah Blah" => "Stuff&lt;Blah Blah",
-			"Stuff>Blah Blah" => "Stuff&gt;Blah Blah"
-		);
-
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->LimitWordCountXML(3));
-		}
+	public function testLimitWordCount($originalValue, $limit, $expectedValue) {
+		$textObj = DBField::create_field('Text', $originalValue);
+		$result = $textObj->obj('LimitWordCount', [$limit])->forTemplate();
+		$this->assertEquals($expectedValue, $result);
 	}
 
 	/**
-	 * Test {@link Text->LimitSentences()}
 	 */
-	public function testLimitSentences() {
-		$cases = array(
-			'' => '',
-			'First sentence.' => 'First sentence.',
-			'First sentence. Second sentence' => 'First sentence. Second sentence.',
-			'<p>First sentence.</p>' => 'First sentence.',
-			'<p>First sentence. Second sentence. Third sentence</p>' => 'First sentence. Second sentence.',
-			'<p>First sentence. <em>Second sentence</em>. Third sentence</p>' => 'First sentence. Second sentence.',
-			'<p>First sentence. <em class="dummyClass">Second sentence</em>. Third sentence</p>'
-				=> 'First sentence. Second sentence.'
-		);
+	public function providerLimitSentences()
+	{
+		return [
+			['', 2, ''],
+			['First sentence.', 2, 'First sentence.'],
+			['First sentence. Second sentence.', 2, 'First sentence. Second sentence.'],
 
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->LimitSentences(2));
-		}
-	}
-
-	public function testFirstSentance() {
-		$cases = array(
-			'' => '',
-			'First sentence.' => 'First sentence.',
-			'First sentence. Second sentence' => 'First sentence.',
-			'First sentence? Second sentence' => 'First sentence?',
-			'First sentence! Second sentence' => 'First sentence!',
-			'<p>First sentence.</p>' => 'First sentence.',
-			'<p>First sentence. Second sentence. Third sentence</p>' => 'First sentence.',
-			'<p>First sentence. <em>Second sentence</em>. Third sentence</p>' => 'First sentence.',
-			'<p>First sentence. <em class="dummyClass">Second sentence</em>. Third sentence</p>'
-				=> 'First sentence.'
-		);
-
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = new DBText('Test');
-			$textObj->setValue($originalValue);
-			$this->assertEquals($expectedValue, $textObj->FirstSentence());
-		}
+			// HTML stored in non-html fields is treated literally.
+			// If storing HTML you should use DBHTMLText instead
+			['<p>First sentence.</p>', 2, '&lt;p&gt;First sentence.&lt;/p&gt;'],
+			['<p>First sentence. Second sentence. Third sentence</p>', 2, '&lt;p&gt;First sentence. Second sentence.'],
+		];
 	}
 
 	/**
-	 * Test {@link Text->BigSummary()}
-	 */
-	public function testBigSummaryPlain() {
-		$cases = array(
-			'<p>This text has multiple sentences. Big Summary uses this to split sentences up.</p>'
-				=> 'This text has multiple...',
-			'This text does not have multiple sentences' => 'This text does not...',
-			'Very short' => 'Very short',
-			'' => ''
-		);
+	 * Test {@link DBText->LimitSentences()}
+	 *
+	 * @dataProvider providerLimitSentences
+	 * @param string $originalValue
+	 * @param int $limit Number of sentences
+	 * @param string $expectedValue Expected template value
+     */
+	public function testLimitSentences($originalValue, $limit, $expectedValue) {
+		$textObj = DBField::create_field('Text', $originalValue);
+		$result = $textObj->obj('LimitSentences', [$limit])->forTemplate();
+		$this->assertEquals($expectedValue, $result);
+	}
 
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = DBField::create_field('Text', $originalValue);
-			$this->assertEquals($expectedValue, $textObj->BigSummary(4, true));
-		}
+	public function providerFirstSentence()
+	{
+		return [
+			['', ''],
+			['First sentence.', 'First sentence.'],
+			['First sentence. Second sentence', 'First sentence.'],
+			['First sentence? Second sentence', 'First sentence?'],
+			['First sentence! Second sentence', 'First sentence!'],
+
+			// HTML stored in non-html fields is treated literally.
+			// If storing HTML you should use DBHTMLText instead
+			['<br />First sentence.', '&lt;br /&gt;First sentence.'],
+			['<p>First sentence. Second sentence. Third sentence</p>', '&lt;p&gt;First sentence.'],
+		];
 	}
 
 	/**
-	 * Test {@link Text->BigSummary()}
-	 */
-	public function testBigSummary() {
-		$cases = array(
-			'<strong>This</strong> text has multiple sentences. Big Summary uses this to split sentences up.</p>'
-				=> '<strong>This</strong> text has multiple...',
-			'This text does not have multiple sentences' => 'This text does not...',
-			'Very short' => 'Very short',
-			'' => ''
-		);
-
-		foreach($cases as $originalValue => $expectedValue) {
-			$textObj = DBField::create_field('Text', $originalValue);
-			$this->assertEquals($expectedValue, $textObj->BigSummary(4, false));
-		}
+	 * @dataProvider providerFirstSentence
+	 * @param string $originalValue
+	 * @param string $expectedValue
+     */
+	public function testFirstSentence($originalValue, $expectedValue) {
+		$textObj = DBField::create_field('Text', $originalValue);
+		$result = $textObj->obj('FirstSentence')->forTemplate();
+		$this->assertEquals($expectedValue, $result);
 	}
 
-	public function testContextSummary() {
-		$testString1 = '<p>This is some text. It is a test</p>';
-		$testKeywords1 = 'test';
+	/**
+	 * each test is in the format input, charactere limit, highlight, expected output
+	 *
+	 * @return array
+	 */
+	public function providerContextSummary()
+	{
+		return [
+			[
+				'This is some text. It is a test',
+				20,
+				'test',
+				'... text. It is a <span class="highlight">test</span>'
+			],
+			[
+				// Retains case of original string
+				'This is some test text. Test test what if you have multiple keywords.',
+				50,
+				'some test',
+				'This is <span class="highlight">some</span> <span class="highlight">test</span> text.'
+				. ' <span class="highlight">Test</span> <span class="highlight">test</span> what if you have...'
+			],
+			[
+				'Here is some text & HTML included',
+				20,
+				'html',
+				'... text &amp; <span class="highlight">HTML</span> inc...'
+			],
+			[
+				'A dog ate a cat while looking at a Foobar',
+				100,
+				'a',
+				// test that it does not highlight too much (eg every a)
+				'A dog ate a cat while looking at a Foobar',
+			],
+			[
+				'A dog ate a cat while looking at a Foobar',
+				100,
+				'ate',
+				// it should highlight 3 letters or more.
+				'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
+			]
+		];
+	}
 
-		$testString2 = '<p>This is some test text. Test test what if you have multiple keywords.</p>';
-		$testKeywords2 = 'some test';
-
-		$testString3 = '<p>A dog ate a cat while looking at a Foobar</p>';
-		$testKeyword3 = 'a';
-		$testKeyword3a = 'ate';
-
-		$textObj = DBField::create_field('Text', $testString1, 'Text');
-
-		$this->assertEquals(
-			'... text. It is a <span class="highlight">test</span>...',
-			$textObj->ContextSummary(20, $testKeywords1)
-		);
-
-		$textObj->setValue($testString2);
-
-		$this->assertEquals(
-			'This is <span class="highlight">some</span> <span class="highlight">test</span> text.'
-				. ' <span class="highlight">test</span> <span class="highlight">test</span> what if you have...',
-			$textObj->ContextSummary(50, $testKeywords2)
-		);
-
-		$textObj->setValue($testString3);
-
-		// test that it does not highlight too much (eg every a)
-		$this->assertEquals(
-			'A dog ate a cat while looking at a Foobar',
-			$textObj->ContextSummary(100, $testKeyword3)
-		);
-
+	/**
+	 * @dataProvider providerContextSummary
+	 * @param string $originalValue Input
+	 * @param int $limit Numer of characters
+	 * @param string $keywords Keywords to highlight
+	 * @param string $expectedValue Expected output (XML encoded safely)
+     */
+	public function testContextSummary($originalValue, $limit, $keywords, $expectedValue)
+	{
+		$text = DBField::create_field('Text', $originalValue);
+		$result = $text->obj('ContextSummary', [$limit, $keywords])->forTemplate();
 		// it should highlight 3 letters or more.
-		$this->assertEquals(
-			'A dog <span class="highlight">ate</span> a cat while looking at a Foobar',
-			$textObj->ContextSummary(100, $testKeyword3a)
-		);
+		$this->assertEquals($expectedValue, $result);
 	}
 
 	public function testRAW() {

@@ -51,10 +51,8 @@ class DBEnum extends DBString {
 	 * </code>
 	 *
 	 * @param string $name
-	 * @param string|array $enum A string containing a comma separated list of options or an
-	 *				array of Vals.
-	 * @param string $default The default option, which is either NULL or one of the
-	 *				 items in the enumeration.
+	 * @param string|array $enum A string containing a comma separated list of options or an array of Vals.
+	 * @param string $default The default option, which is either NULL or one of the items in the enumeration.
 	 */
 	public function __construct($name = null, $enum = NULL, $default = NULL) {
 		if($enum) {
@@ -107,10 +105,14 @@ class DBEnum extends DBString {
 	/**
 	 * Return a dropdown field suitable for editing this field.
 	 *
+	 * @param string $title
+	 * @param string $name
+	 * @param bool $hasEmpty
+	 * @param string $value
+	 * @param string $emptyString
 	 * @return DropdownField
 	 */
-	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null,
-			$emptyString = null) {
+	public function formField($title = null, $name = null, $hasEmpty = false, $value = "",  $emptyString = null) {
 
 		if(!$title) {
 			$title = $this->getName();
@@ -119,7 +121,7 @@ class DBEnum extends DBString {
 			$name = $this->getName();
 		}
 
-		$field = new DropdownField($name, $title, $this->enumValues(false), $value, $form);
+		$field = new DropdownField($name, $title, $this->enumValues(false), $value);
 		if($hasEmpty) {
 			$field->setEmptyString($emptyString);
 		}
@@ -127,10 +129,7 @@ class DBEnum extends DBString {
 		return $field;
 	}
 
-	/**
-	 * @return DropdownField
-	 */
-	public function scaffoldFormField($title = null, $params = null) {
+	public function scaffoldFormField($title = null) {
 		return $this->formField($title);
 	}
 
@@ -141,7 +140,7 @@ class DBEnum extends DBString {
 	 */
 	public function scaffoldSearchField($title = null) {
 		$anyText = _t('Enum.ANY', 'Any');
-		return $this->formField($title, null, true, $anyText, null, "($anyText)");
+		return $this->formField($title, null, true, $anyText, "($anyText)");
 	}
 
 	/**

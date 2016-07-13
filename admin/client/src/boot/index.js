@@ -95,11 +95,10 @@ function appBoot() {
         return;
       }
 
-      // Load the panel then call the next route.
+      // Load the panel and stop processing routes.
       $('.cms-container')
         .entwine('ss')
-        .handleStateChange(null, ctx.state)
-        .done(next);
+        .handleStateChange(null, ctx.state);
     });
   });
 

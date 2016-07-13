@@ -28,7 +28,7 @@ interface TemplateGlobalProvider {
 	 *  - template name => method name
 	 *  - template name => array(), where the array can contain these key => value pairs
 	 *     - "method" => method name
-	 *     - "casting" => casting class to use (i.e., Varchar, HTMLText, etc)
+	 *     - "casting" => casting class to use (i.e., Varchar, HTMLFragment, etc)
 	 */
 	public static function get_template_global_variables();
 }

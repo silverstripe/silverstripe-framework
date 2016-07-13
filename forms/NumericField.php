@@ -199,10 +199,10 @@ class NumericField_Readonly extends ReadonlyField {
 	 * @return string
 	 */
 	public function Value() {
-		if($this->value) {
-			return Convert::raw2xml((string) $this->value);
-		}
+		return $this->value ?: '0';
+	}
 
-		return '0';
+	public function getValueCast() {
+		return 'Decimal';
 	}
 }

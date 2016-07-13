@@ -54,14 +54,20 @@ class DBMultiEnum extends DBEnum {
 
 	/**
 	 * Return a {@link CheckboxSetField} suitable for editing this field
+	 *
+	 * @param string $title
+	 * @param string $name
+	 * @param bool $hasEmpty
+	 * @param string $value
+	 * @param string $emptyString
+	 * @return CheckboxSetField
 	 */
-	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $form = null,
-			$emptyString = null) {
+	public function formField($title = null, $name = null, $hasEmpty = false, $value = "", $emptyString = null) {
 
 		if(!$title) $title = $this->name;
 		if(!$name) $name = $this->name;
 
-		$field = new CheckboxSetField($name, $title, $this->enumValues($hasEmpty), $value, $form);
+		$field = new CheckboxSetField($name, $title, $this->enumValues($hasEmpty), $value);
 
 		return $field;
 	}

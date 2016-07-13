@@ -4,6 +4,7 @@
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 
 /**
@@ -195,7 +196,7 @@ class RSSFeed extends ViewableData {
 	 *
 	 * TODO: Pass $response object to ->outputToBrowser() to loosen dependence on global state for easier testing/prototyping so dev can inject custom SS_HTTPResponse instance.
 	 *
-	 * @return	HTMLText
+	 * @return DBHTMLText
 	 */
 	public function outputToBrowser() {
 		$prevState = Config::inst()->get('SSViewer', 'source_file_comments');
@@ -281,9 +282,12 @@ class RSSFeed_Entry extends ViewableData {
 
 	/**
 	 * Create a new RSSFeed entry.
+	 * @param ViewableData $entry
+	 * @param string $titleField
+	 * @param string $descriptionField
+	 * @param string $authorField
 	 */
-	public function __construct($entry, $titleField, $descriptionField,
-											$authorField) {
+	public function __construct($entry, $titleField, $descriptionField, $authorField) {
 		$this->failover = $entry;
 		$this->titleField = $titleField;
 		$this->descriptionField = $descriptionField;
@@ -295,60 +299,67 @@ class RSSFeed_Entry extends ViewableData {
 	/**
 	 * Get the description of this entry
 	 *
-	 * @return string Returns the description of the entry.
+	 * @return DBField Returns the description of the entry.
 	 */
 	public function Title() {
-		return $this->rssField($this->titleField, 'Varchar');
+		return $this->rssField($this->titleField);
 	}
 
 	/**
 	 * Get the description of this entry
 	 *
-	 * @return string Returns the description of the entry.
+	 * @return DBField Returns the description of the entry.
 	 */
 	public function Description() {
-		return $this->rssField($this->descriptionField, 'HTMLText');
+		$description = $this->rssField($this->descriptionField);
+
+		// HTML fields need links re-written
+		if($description instanceof DBHTMLText) {
+			return $description->obj('AbsoluteLinks');
+		}
+
+		return $description;
 	}
 
 	/**
 	 * Get the author of this entry
 	 *
-	 * @return string Returns the author of the entry.
+	 * @return DBField Returns the author of the entry.
 	 */
 	public function Author() {
-		if($this->authorField) return $this->failover->obj($this->authorField);
+		return $this->rssField($this->authorField);
 	}
 
 	/**
-	 * Return the named field as an obj() call from $this->failover.
-	 * Default to the given class if there's no casting information.
+	 * Return the safely casted field
+	 *
+	 * @param string $fieldName Name of field
+	 * @return DBField
 	 */
-	public function rssField($fieldName, $defaultClass = 'Varchar') {
+	public function rssField($fieldName) {
 		if($fieldName) {
-			if($this->failover->castingHelper($fieldName)) {
-				$value = $this->failover->$fieldName;
-				$obj = $this->failover->obj($fieldName);
-				$obj->setValue($value);
-				return $obj;
-			} else {
-				return DBField::create_field($defaultClass, $this->failover->XML_val($fieldName), $fieldName);
-			}
+			return $this->failover->obj($fieldName);
 		}
+		return null;
 	}
 
 	/**
 	 * Get a link to this entry
 	 *
 	 * @return string Returns the URL of this entry
+	 * @throws BadMethodCallException
 	 */
 	public function AbsoluteLink() {
 		if($this->failover->hasMethod('AbsoluteLink')) {
 			return $this->failover->AbsoluteLink();
 		} else if($this->failover->hasMethod('Link')) {
 			return Director::absoluteURL($this->failover->Link());
-		} else {
-			user_error($this->failover->class . " object has neither an AbsoluteLink nor a Link method."
-				. " Can't put a link in the RSS feed", E_USER_WARNING);
 		}
+
+		throw new BadMethodCallException(
+			$this->failover->class .
+			" object has neither an AbsoluteLink nor a Link method." .
+			" Can't put a link in the RSS feed", E_USER_WARNING
+		);
 	}
 }

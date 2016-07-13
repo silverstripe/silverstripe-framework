@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\FieldType;
 use Convert;
 use Exception;
 use DatetimeField;
+use InvalidArgumentException;
 use Zend_Date;
 use TemplateGlobalProvider;
 use DateTime;
@@ -75,42 +76,47 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider {
 	/**
 	 * Returns the date and time in the format specified by the config value nice_format, or 'd/m/Y g:ia'
 	 * by default (e.g. '31/01/2014 2:23pm').
+	 *
 	 * @return string Formatted date and time.
 	 */
 	public function Nice() {
-		if($this->value) return $this->Format($this->config()->nice_format);
+		return $this->Format($this->config()->nice_format);
 	}
 
 	/**
 	 * Returns the date and time (in 24-hour format) using the format string 'd/m/Y H:i' e.g. '28/02/2014 13:32'.
+	 *
 	 * @return string Formatted date and time.
 	 */
 	public function Nice24() {
-		if($this->value) return $this->Format('d/m/Y H:i');
+		return $this->Format('d/m/Y H:i');
 	}
 
 	/**
 	 * Returns the date using the format string 'd/m/Y' e.g. '28/02/2014'.
+	 *
 	 * @return string Formatted date.
 	 */
 	public function Date() {
-		if($this->value) return $this->Format('d/m/Y');
+		return $this->Format('d/m/Y');
 	}
 
 	/**
 	 * Returns the time in 12-hour format using the format string 'g:ia' e.g. '1:32pm'.
+	 *
 	 * @return string Formatted time.
 	 */
 	public function Time() {
-		if($this->value) return $this->Format('g:ia');
+		return $this->Format('g:ia');
 	}
 
 	/**
 	 * Returns the time in 24-hour format using the format string 'H:i' e.g. '13:32'.
+	 *
 	 * @return string Formatted time.
 	 */
 	public function Time24() {
-		if($this->value) return $this->Format('H:i');
+		return $this->Format('H:i');
 	}
 
 	/**
@@ -149,7 +155,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider {
 	 * @return string Formatted date and time.
 	 */
 	public function URLDatetime() {
-		if($this->value) return $this->Format('Y-m-d%20H:i:s');
+		return $this->Format('Y-m-d%20H:i:s');
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
@@ -187,7 +193,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider {
 		if(self::$mock_now) {
 			return self::$mock_now;
 		} else {
-			return DBField::create_field('SilverStripe\ORM\FieldType\DBDatetime', date('Y-m-d H:i:s'));
+			return DBField::create_field('Datetime', date('Y-m-d H:i:s'));
 		}
 	}
 
@@ -203,9 +209,9 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider {
 		if($datetime instanceof DBDatetime) {
 			self::$mock_now = $datetime;
 		} elseif(is_string($datetime)) {
-			self::$mock_now = DBField::create_field('SilverStripe\ORM\FieldType\DBDatetime', $datetime);
+			self::$mock_now = DBField::create_field('Datetime', $datetime);
 		} else {
-			throw new Exception('DBDatetime::set_mock_now(): Wrong format: ' . $datetime);
+			throw new InvalidArgumentException('DBDatetime::set_mock_now(): Wrong format: ' . $datetime);
 		}
 	}
 
@@ -219,7 +225,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider {
 
 	public static function get_template_global_variables() {
 		return array(
-			'Now' => array('method' => 'now', 'casting' => 'SilverStripe\ORM\FieldType\DBDatetime'),
+			'Now' => array('method' => 'now', 'casting' => 'Datetime'),
 		);
 	}
 }

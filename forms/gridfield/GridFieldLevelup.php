@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
+
 /**
  * Adds a "level up" link to a GridField table, which is useful when viewing
  * hierarchical data. Requires the managed record to have a "getParent()"
@@ -60,7 +62,7 @@ class GridFieldLevelup extends Object implements GridField_HTMLProvider {
 			foreach($attrs as $k => $v) $attrsStr .= " $k=\"" . Convert::raw2att($v) . "\"";
 
 			$forTemplate = new ArrayData(array(
-				'UpLink' => sprintf('<a%s></a>', $attrsStr)
+				'UpLink' => DBField::create_field('HTMLFragment', sprintf('<a%s></a>', $attrsStr))
 			));
 
 			return array(

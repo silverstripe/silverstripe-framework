@@ -98,10 +98,63 @@ this purpose.
 There's some exceptions to this rule, see the ["security" guide](../security).
 </div>
 
-In case you want to explicitly allow un-escaped HTML input, the property can be cast as [api:HTMLText]. The following 
-example takes the `Content` field in a `SiteTree` class, which is of this type. It forces the content into an explicitly 
-escaped format.
+For every field used in templates, a casting helper will be applied. This will first check for any
+`casting` helper on your model specific to that field, and will fall back to the `default_cast` config
+in case none are specified.
 
-	:::ss
-	$Content.XML 
-	// transforms e.g. "<em>alert</em>" to "&lt;em&gt;alert&lt;/em&gt;"
+By default, `ViewableData.default_cast` is set to `Text`, which will ensure all fields have special
+characters HTML escaped by default.
+
+The most common casting types are:
+
+ * `Text` Which is a plain text string, and will be safely encoded via HTML entities when placed into
+ a template.
+ * `Varchar` which is the same as `Text` but for single-line text that should not have line breaks.
+ * `HTMLFragment` is a block of raw HTML, which should not be escaped. Take care to sanitise any HTML
+ value saved into the database.
+ * `HTMLText` is a `HTMLFragment`, but has shortcodes enabled. This should only be used for content
+ that is modified via a TinyMCE editor, which will insert shortcodes.
+ * `Int` for integers.
+ * `Decimal` for floating point values.
+ * `Boolean` For boolean values.
+ * `Datetime` for date and time.
+ 
+See the [Model data types and casting](/developer_guides/model/data_types_and_casting) section for
+instructions on configuring your model to declare casting types for fields.
+
+## Escape methods in templates
+
+Within the template, fields can have their encoding customised at a certain level with format methods.
+See [api:DBField] for the specific implementation, but they will generally follow the below rules:
+
+* `$Field` with no format method supplied will correctly cast itself for the HTML template, as defined
+  by the casting helper for that field. In most cases this is the best method to use for templates.
+* `$Field.XML` Will invoke `htmlentities` on special characters in the value, even if it's already
+  cast as HTML.
+* `$Field.ATT` will ensure the field is XML encoded for placement inside a HTML element property.
+  This will invoke `htmlentities` on the value (even if already cast as HTML) and will escape quotes.
+* `Field.JS` will cast this value as a javascript string. E.g. `var fieldVal = '$Field.JS';` can
+  be used in javascript defined in templates to encode values safely.
+* `$Field.CDATA` will cast this value safely for insertion as a literal string in an XML file.
+  E.g. `<element>$Field.CDATA</element>` will ensure that the `<element>` body is safely escaped
+  as a string.
+
+<div class="warning" markdown="1">
+Note: Take care when using `.XML` on `HTMLText` fields, as this will result in double-encoded
+html. To ensure that the correct encoding is used for that field in a template, simply use
+`$Field` by itself to allow the casting helper to determine the best encoding itself.
+</div>
+
+## Cast summary methods
+
+Certain subclasses of DBField also have additional summary or manipulations methods, each of
+which can be chained in order to perform more complicated manipulations.
+
+For instance, The following class methods can be used in templates for the below types:
+
+Text / HTMLText methods:
+
+* `$Plain` Will convert any HTML to plain text version. For example, could be used for plain-text
+  version of emails.
+* `$LimitSentences(<num>)` Will limit to the first `<num>` sentences in the content. If called on
+  HTML content this will have all HTML stripped and converted to plain text.

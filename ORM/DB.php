@@ -66,14 +66,6 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 Use DB::set_conn instead
-	 */
-	public static function setConn(SS_Database $connection, $name = 'default') {
-		Deprecation::notice('4.0', 'Use DB::set_conn instead');
-		self::set_conn($connection, $name);
-	}
-
-	/**
 	 * Get the global database connection.
 	 *
 	 * @param string $name An optional name given to a connection in the DB::setConn() call.  If omitted,
@@ -84,6 +76,7 @@ class DB {
 		if(isset(self::$connections[$name])) {
 			return self::$connections[$name];
 		}
+		return null;
 	}
 
 	/**
@@ -103,7 +96,10 @@ class DB {
 	 */
 	public static function get_schema($name = 'default') {
 		$connection = self::get_conn($name);
-		if($connection) return $connection->getSchemaManager();
+		if($connection) {
+			return $connection->getSchemaManager();
+		}
+		return null;
 	}
 
 	/**
@@ -134,7 +130,10 @@ class DB {
 	 */
 	public static function get_connector($name = 'default') {
 		$connection = self::get_conn($name);
-		if($connection) return $connection->getConnector();
+		if($connection) {
+			return $connection->getConnector();
+		}
+		return null;
 	}
 
 	/**
@@ -274,13 +273,6 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 DB::getConnect was never implemented and is obsolete
-	 */
-	public static function getConnect($parameters) {
-		Deprecation::notice('4.0', 'DB::getConnect was never implemented and is obsolete');
-	}
-
-	/**
 	 * Execute the given SQL query.
 	 * @param string $sql The SQL query to execute
 	 * @param int $errorLevel The level of error reporting to enable for the query
@@ -371,7 +363,7 @@ class DB {
 	 */
 	public static function manipulate($manipulation) {
 		self::$lastQuery = $manipulation;
-		return self::get_conn()->manipulate($manipulation);
+		self::get_conn()->manipulate($manipulation);
 	}
 
 	/**
@@ -385,28 +377,12 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 Use DB::get_generated_id instead
-	 */
-	public static function getGeneratedID($table) {
-		Deprecation::notice('4.0', 'Use DB::get_generated_id instead');
-		return self::get_generated_id($table);
-	}
-
-	/**
 	 * Check if the connection to the database is active.
 	 *
 	 * @return boolean
 	 */
 	public static function is_active() {
 		return ($conn = self::get_conn()) && $conn->isActive();
-	}
-
-	/**
-	 * @deprecated since version 4.0 Use DB::is_active instead
-	 */
-	public static function isActive() {
-		Deprecation::notice('4.0', 'Use DB::is_active instead');
-		return self::is_active();
 	}
 
 	/**
@@ -422,14 +398,6 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 Use DB::create_database instead
-	 */
-	public static function createDatabase($connect, $username, $password, $database) {
-		Deprecation::notice('4.0', 'Use DB::create_database instead');
-		return self::create_database($database);
-	}
-
-	/**
 	 * Create a new table.
 	 * @param string $table The name of the table
 	 * @param array$fields A map of field names to field types
@@ -438,7 +406,7 @@ class DB {
 	 *   - 'MSSQLDatabase'/'MySQLDatabase'/'PostgreSQLDatabase' - database-specific options such as "engine"
 	 *     for MySQL.
 	 *   - 'temporary' - If true, then a temporary table will be created
-	 * @param array $advancedOptions
+	 * @param array $advancedOptions Advanced creation options
 	 * @return string The table name generated.  This may be different from the table name, for example with
 	 * temporary tables.
 	 */
@@ -449,14 +417,6 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 Use DB::create_table instead
-	 */
-	public static function createTable($table, $fields = null, $indexes = null, $options = null) {
-		Deprecation::notice('4.0', 'Use DB::create_table instead');
-		return self::create_table($table, $fields, $indexes, $options);
-	}
-
-	/**
 	 * Create a new field on a table.
 	 * @param string $table Name of the table.
 	 * @param string $field Name of the field to add.
@@ -464,14 +424,6 @@ class DB {
 	 */
 	public static function create_field($table, $field, $spec) {
 		return self::get_schema()->createField($table, $field, $spec);
-	}
-
-	/**
-	 * @deprecated since version 4.0 Use DB::create_field instead
-	 */
-	public static function createField($table, $field, $spec) {
-		Deprecation::notice('4.0', 'Use DB::create_field instead');
-		return self::create_field($table, $field, $spec);
 	}
 
 	/**
@@ -492,18 +444,7 @@ class DB {
 	public static function require_table($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK = true,
 		$options = null, $extensions = null
 	) {
-		return self::get_schema()->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options,
-												$extensions);
-	}
-
-	/**
-	 * @deprecated since version 4.0 Use DB::require_table instead
-	 */
-	public static function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK = true,
-		$options = null, $extensions = null
-	) {
-		Deprecation::notice('4.0', 'Use DB::require_table instead');
-		return self::require_table($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options, $extensions);
+		self::get_schema()->requireTable($table, $fieldSchema, $indexSchema, $hasAutoIncPK, $options, $extensions);
 	}
 
 	/**
@@ -514,15 +455,7 @@ class DB {
 	 * @param string $spec The field specification.
 	 */
 	public static function require_field($table, $field, $spec) {
-		return self::get_schema()->requireField($table, $field, $spec);
-	}
-
-	/**
-	 * @deprecated since version 4.0 Use DB::require_field instead
-	 */
-	public static function requireField($table, $field, $spec) {
-		Deprecation::notice('4.0', 'Use DB::require_field instead');
-		return self::require_field($table, $field, $spec);
+		self::get_schema()->requireField($table, $field, $spec);
 	}
 
 	/**
@@ -537,28 +470,12 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 Use DB::require_index instead
-	 */
-	public static function requireIndex($table, $index, $spec) {
-		Deprecation::notice('4.0', 'Use DB::require_index instead');
-		self::require_index($table, $index, $spec);
-	}
-
-	/**
 	 * If the given table exists, move it out of the way by renaming it to _obsolete_(tablename).
 	 *
 	 * @param string $table The table name.
 	 */
 	public static function dont_require_table($table) {
 		self::get_schema()->dontRequireTable($table);
-	}
-
-	/**
-	 * @deprecated since version 4.0 Use DB::dont_require_table instead
-	 */
-	public static function dontRequireTable($table) {
-		Deprecation::notice('4.0', 'Use DB::dont_require_table instead');
-		self::dont_require_table($table);
 	}
 
 	/**
@@ -572,14 +489,6 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 Use DB::dont_require_field instead
-	 */
-	public static function dontRequireField($table, $fieldName) {
-		Deprecation::notice('4.0', 'Use DB::dont_require_field instead');
-		self::dont_require_field($table, $fieldName);
-	}
-
-	/**
 	 * Checks a table's integrity and repairs it if necessary.
 	 *
 	 * @param string $table The name of the table.
@@ -590,28 +499,12 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 Use DB::check_and_repair_table instead
-	 */
-	public static function checkAndRepairTable($table) {
-		Deprecation::notice('4.0', 'Use DB::check_and_repair_table instead');
-		self::check_and_repair_table($table);
-	}
-
-	/**
 	 * Return the number of rows affected by the previous operation.
 	 *
 	 * @return integer The number of affected rows
 	 */
 	public static function affected_rows() {
 		return self::get_conn()->affectedRows();
-	}
-
-	/**
-	 * @deprecated since version 4.0 Use DB::affected_rows instead
-	 */
-	public static function affectedRows() {
-		Deprecation::notice('4.0', 'Use DB::affected_rows instead');
-		return self::affected_rows();
 	}
 
 	/**
@@ -625,14 +518,6 @@ class DB {
 	}
 
 	/**
-	 * @deprecated since version 4.0 Use DB::table_list instead
-	 */
-	public static function tableList() {
-		Deprecation::notice('4.0', 'Use DB::table_list instead');
-		return self::table_list();
-	}
-
-	/**
 	 * Get a list of all the fields for the given table.
 	 * Returns a map of field name => field spec.
 	 *
@@ -641,14 +526,6 @@ class DB {
 	 */
 	public static function field_list($table) {
 		return self::get_schema()->fieldList($table);
-	}
-
-	/**
-	 * @deprecated since version 4.0 Use DB::field_list instead
-	 */
-	public static function fieldList($table) {
-		Deprecation::notice('4.0', 'Use DB::field_list instead');
-		return self::field_list($table);
 	}
 
 	/**

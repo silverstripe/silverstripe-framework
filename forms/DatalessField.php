@@ -1,4 +1,6 @@
 <?php
+use SilverStripe\ORM\FieldType\DBHTMLText;
+
 /**
  * Abstract class for all fields without data.
  * Labels, headings and the like should extend from this.
@@ -32,7 +34,7 @@ class DatalessField extends FormField {
 	 * Returns the field's representation in the form.
 	 * For dataless fields, this defaults to $Field.
 	 *
-	 * @return HTMLText
+	 * @return DBHTMLText
 	 */
 	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);
@@ -41,6 +43,8 @@ class DatalessField extends FormField {
 	/**
 	 * Returns the field's representation in a field group.
 	 * For dataless fields, this defaults to $Field.
+	 *
+	 * @return DBHTMLText
 	 */
 	public function SmallFieldHolder($properties = array()) {
 		return $this->Field($properties);
@@ -57,6 +61,7 @@ class DatalessField extends FormField {
 
 	/**
 	 * @param bool $bool
+	 * @return $this
 	 */
 	public function setAllowHTML($bool) {
 		$this->allowHTML = $bool;

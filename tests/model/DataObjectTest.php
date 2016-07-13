@@ -1534,13 +1534,6 @@ class DataObjectTest extends SapphireTest {
 		$this->assertTrue($team->hasValue('Title', null, false));
 		$this->assertFalse($team->hasValue('DatabaseField', null, false));
 
-		$team->DatabaseField = '<p></p>';
-		$this->assertTrue($team->hasValue('Title', null, false));
-		$this->assertFalse (
-			$team->hasValue('DatabaseField', null, false),
-			'Test that a blank paragraph on a HTML field is not a valid value.'
-		);
-
 		$team->Title = '<p></p>';
 		$this->assertTrue (
 			$team->hasValue('Title', null, false),

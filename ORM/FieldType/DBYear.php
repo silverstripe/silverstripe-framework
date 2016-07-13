@@ -40,9 +40,13 @@ class DBYear extends DBField {
 	 * @param int|bool $end end date to count down to
 	 * @return array
 	 */
-	private function getDefaultOptions($start=false, $end=false) {
-		if (!$start) $start = (int)date('Y');
-		if (!$end) $end = 1900;
+	private function getDefaultOptions($start = null, $end = null) {
+		if (!$start) {
+			$start = (int)date('Y');
+		}
+		if (!$end) {
+			$end = 1900;
+		}
 		$years = array();
 		for($i=$start;$i>=$end;$i--) {
 			$years[$i] = $i;

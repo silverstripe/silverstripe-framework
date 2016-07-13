@@ -12,8 +12,7 @@ class HiddenField extends FormField {
 
 	/**
 	 * @param array $properties
-	 *
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);

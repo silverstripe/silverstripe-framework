@@ -4,8 +4,8 @@ namespace SilverStripe\ORM\FieldType;
 
 use FormField;
 use SearchFilter;
-use SilverStripe\ORM\Connect\SS_Query;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Queries\SQLSelect;
 use ViewableData;
 use Convert;
 use Object;
@@ -48,12 +48,32 @@ use TextField;
  */
 abstract class DBField extends ViewableData {
 
+	/**
+	 * Raw value of this field
+	 *
+	 * @var mixed
+	 */
 	protected $value;
 
+	/**
+	 * Table this field belongs to
+	 *
+	 * @var string
+	 */
 	protected $tableName;
 
+	/**
+	 * Name of this field
+	 *
+	 * @var string
+	 */
 	protected $name;
 
+	/**
+	 * Used for generating DB schema. {@see DBSchemaManager}
+	 *
+	 * @var array
+	 */
 	protected $arrayValue;
 
 	/**
@@ -71,6 +91,19 @@ abstract class DBField extends ViewableData {
 	 * @config
 	 */
 	private static $default_search_filter_class = 'PartialMatchFilter';
+
+	private static $casting = array(
+		'ATT' => 'HTMLFragment',
+		'CDATA' => 'HTMLFragment',
+		'HTML' => 'HTMLFragment',
+		'HTMLATT' => 'HTMLFragment',
+		'JS' => 'HTMLFragment',
+		'RAW' => 'HTMLFragment',
+		'RAWURLATT' => 'HTMLFragment',
+		'URLATT' => 'HTMLFragment',
+		'XML' => 'HTMLFragment',
+		'ProcessedRAW' => 'HTMLFragment',
+	);
 
 	/**
 	 * @var $default mixed Default-value in the database.
@@ -97,6 +130,7 @@ abstract class DBField extends ViewableData {
 	 * @return DBField
 	 */
 	public static function create_field($className, $value, $name = null, $object = null) {
+		/** @var DBField $dbField */
 		$dbField = Object::create($className, $name, $object);
 		$dbField->setValue($value, null, false);
 
@@ -222,7 +256,7 @@ abstract class DBField extends ViewableData {
 	 * gets you the default representations
 	 * of all columns.
 	 *
-	 * @param SS_Query $query
+	 * @param SQLSelect $query
 	 */
 	public function addToQuery(&$query) {
 
@@ -249,50 +283,104 @@ abstract class DBField extends ViewableData {
 	}
 
 	/**
+	 * Determine 'default' casting for this field.
+	 *
 	 * @return string
 	 */
 	public function forTemplate() {
+		// Default to XML encoding
 		return $this->XML();
 	}
 
+	/**
+	 * Gets the value appropriate for a HTML attribute string
+	 *
+	 * @return string
+	 */
 	public function HTMLATT() {
 		return Convert::raw2htmlatt($this->RAW());
 	}
 
+	/**
+	 * urlencode this string
+	 *
+	 * @return string
+	 */
 	public function URLATT() {
 		return urlencode($this->RAW());
 	}
 
+	/**
+	 * rawurlencode this string
+	 *
+	 * @return string
+	 */
 	public function RAWURLATT() {
 		return rawurlencode($this->RAW());
 	}
 
+	/**
+	 * Gets the value appropriate for a HTML attribute string
+	 *
+	 * @return string
+	 */
 	public function ATT() {
 		return Convert::raw2att($this->RAW());
 	}
 
+	/**
+	 * Gets the raw value for this field.
+	 * Note: Skips processors implemented via forTemplate()
+	 *
+	 * @return mixed
+	 */
 	public function RAW() {
-		return $this->value;
+		return $this->getValue();
 	}
 
+	/**
+	 * Gets javascript string literal value
+	 *
+	 * @return string
+	 */
 	public function JS() {
 		return Convert::raw2js($this->RAW());
 	}
 
 	/**
 	 * Return JSON encoded value
+	 *
 	 * @return string
 	 */
 	public function JSON() {
 		return Convert::raw2json($this->RAW());
 	}
 
+	/**
+	 * Alias for {@see XML()}
+	 *
+	 * @return string
+	 */
 	public function HTML(){
+		return $this->XML();
+	}
+
+	/**
+	 * XML encode this value
+	 *
+	 * @return string
+	 */
+	public function XML() {
 		return Convert::raw2xml($this->RAW());
 	}
 
-	public function XML(){
-		return Convert::raw2xml($this->RAW());
+	/**
+	 * Safely escape for XML string
+	 *
+	 * @return string
+	 */
+	public function CDATA() {
+		return $this->XML();
 	}
 
 	/**
@@ -307,14 +395,15 @@ abstract class DBField extends ViewableData {
 
 	/**
 	 * Saves this field to the given data object.
+	 *
+	 * @param DataObject $dataObject
 	 */
 	public function saveInto($dataObject) {
 		$fieldName = $this->name;
-		if($fieldName) {
-			$dataObject->$fieldName = $this->value;
-		} else {
-			user_error("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object", E_USER_ERROR);
+		if(empty($fieldName)) {
+			throw new \BadMethodCallException("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object");
 		}
+		$dataObject->$fieldName = $this->value;
 	}
 
 	/**
@@ -352,10 +441,10 @@ abstract class DBField extends ViewableData {
 	 *       search filters (note: parameter hack now in place to pass in the required full path - using $this->name
 	 *       won't work)
 	 *
-	 * @param string|bool $name
+	 * @param string $name Override name of this field
 	 * @return SearchFilter
 	 */
-	public function defaultSearchFilter($name = false) {
+	public function defaultSearchFilter($name = null) {
 		$name = ($name) ? $name : $this->name;
 		$filterClass = $this->stat('default_search_filter_class');
 		return new $filterClass($name);
@@ -377,6 +466,22 @@ DBG;
 	}
 
 	public function __toString() {
-		return $this->forTemplate();
+		return (string)$this->forTemplate();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getArrayValue() {
+		return $this->arrayValue;
+	}
+
+	/**
+	 * @param array $value
+	 * @return $this
+	 */
+	public function setArrayValue($value) {
+		$this->arrayValue = $value;
+		return $this;
 	}
 }

@@ -7,6 +7,8 @@ use Config;
 use Object;
 use Director;
 use SilverStripe\ORM\FieldType\DBPrimaryKey;
+use SilverStripe\ORM\FieldType\DBField;
+
 
 /**
  * Represents and handles all schema management for a database
@@ -110,8 +112,7 @@ abstract class DBSchemaManager {
 	/**
 	 * Initiates a schema update within a single callback
 	 *
-	 * @var callable $callback
-	 * @throws Exception
+	 * @param callable $callback
 	 */
 	public function schemaUpdate($callback) {
 		// Begin schema update
@@ -153,15 +154,10 @@ abstract class DBSchemaManager {
 						break;
 				}
 			}
-		} catch(Exception $ex) {
-			$error = $ex;
-		}
-		// finally {
+		} finally {
 		$this->schemaUpdateTransaction = null;
 		$this->schemaIsUpdating = false;
-		// }
-
-		if($error) throw $error;
+		}
 	}
 
 	/**
@@ -303,7 +299,7 @@ abstract class DBSchemaManager {
 	 *   - array('fields' => array('A','B','C'), 'type' => 'index/unique/fulltext'): This gives you full
 	 *     control over the index.
 	 * @param boolean $hasAutoIncPK A flag indicating that the primary key on this table is an autoincrement type
-	 * @param string|array $options SQL statement to append to the CREATE TABLE call.
+	 * @param array $options Create table options (ENGINE, etc.)
 	 * @param array|bool $extensions List of extensions
 	 */
 	public function requireTable($table, $fieldSchema = null, $indexSchema = null, $hasAutoIncPK = true,
@@ -314,7 +310,7 @@ abstract class DBSchemaManager {
 			$this->alterationMessage("Table $table: created", "created");
 		} else {
 			if (Config::inst()->get('SilverStripe\ORM\Connect\DBSchemaManager', 'check_and_repair_on_build')) {
-				$this->checkAndRepairTable($table, $options);
+				$this->checkAndRepairTable($table);
 			}
 
 			// Check if options changed
@@ -353,12 +349,14 @@ abstract class DBSchemaManager {
 					$fieldSpec = substr($fieldSpec, 0, $pos);
 				}
 
+				/** @var DBField $fieldObj */
 				$fieldObj = Object::create_from_string($fieldSpec, $fieldName);
-				$fieldObj->arrayValue = $arrayValue;
+				$fieldObj->setArrayValue($arrayValue);
 
 				$fieldObj->setTable($table);
 
 				if($fieldObj instanceof DBPrimaryKey) {
+					/** @var DBPrimaryKey $fieldObj */
 					$fieldObj->setAutoIncrement($hasAutoIncPK);
 				}
 
@@ -383,7 +381,7 @@ abstract class DBSchemaManager {
 			$suffix = '';
 			while (isset($this->tableList[strtolower("_obsolete_{$table}$suffix")])) {
 				$suffix = $suffix
-						? ($suffix + 1)
+						? ((int)$suffix + 1)
 						: 2;
 			}
 			$this->renameTable($table, "_obsolete_{$table}$suffix");
@@ -414,6 +412,8 @@ abstract class DBSchemaManager {
 		$specString = $this->convertIndexSpec($spec);
 
 		// Check existing index
+		$oldSpecString = null;
+		$indexKey = null;
 		if (!$newTable) {
 			$indexKey = $this->indexKey($table, $index, $spec);
 			$indexList = $this->indexList($table);
@@ -502,6 +502,7 @@ abstract class DBSchemaManager {
 	 * Converts an array or string index spec into a universally useful array
 	 *
 	 * @see convertIndexSpec() for approximate inverse
+	 * @param string $name Index name
 	 * @param string|array $spec
 	 * @return array The resulting spec array with the required fields name, type, and value
 	 */
@@ -544,7 +545,9 @@ abstract class DBSchemaManager {
 	 */
 	protected function convertIndexSpec($indexSpec) {
 		// Return already converted spec
-		if (!is_array($indexSpec)) return $indexSpec;
+		if (!is_array($indexSpec)) {
+			return $indexSpec;
+		}
 
 		// Combine elements into standard string format
 		return "{$indexSpec['type']} ({$indexSpec['value']})";
@@ -643,11 +646,11 @@ abstract class DBSchemaManager {
 			// Update any records where the enum is set to a legacy value to be set to the default.
 			foreach (array('enum', 'set') as $enumtype) {
 				if (preg_match("/^$enumtype/i", $specValue)) {
-					$newStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i", "", $spec_orig);
-					$new = preg_split("/'\s*,\s*'/", $newStr);
+					$newStr = preg_replace("/(^$enumtype\\s*\\(')|('\\).*)/i", "", $spec_orig);
+					$new = preg_split("/'\\s*,\\s*'/", $newStr);
 
-					$oldStr = preg_replace("/(^$enumtype\s*\(')|('$\).*)/i", "", $fieldValue);
-					$old = preg_split("/'\s*,\s*'/", $newStr);
+					$oldStr = preg_replace("/(^$enumtype\\s*\\(')|('\\).*)/i", "", $fieldValue);
+					$old = preg_split("/'\\s*,\\s*'/", $oldStr);
 
 					$holder = array();
 					foreach ($old as $check) {
@@ -690,7 +693,7 @@ abstract class DBSchemaManager {
 			$suffix = '';
 			while (isset($fieldList[strtolower("_obsolete_{$fieldName}$suffix")])) {
 				$suffix = $suffix
-						? ($suffix + 1)
+						? ((int)$suffix + 1)
 						: 2;
 			}
 			$this->renameField($table, $fieldName, "_obsolete_{$fieldName}$suffix");
@@ -942,10 +945,10 @@ abstract class DBSchemaManager {
 	 * This allows the cached values for a table's field list to be erased.
 	 * If $tablename is empty, then the whole cache is erased.
 	 *
-	 * @param string|bool $tableName
+	 * @param string $tableName
 	 * @return boolean
 	 */
-	public function clearCachedFieldlist($tableName = false) {
+	public function clearCachedFieldlist($tableName = null) {
 		return true;
 	}
 

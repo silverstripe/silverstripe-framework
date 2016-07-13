@@ -1,4 +1,6 @@
 <?php
+use SilverStripe\ORM\FieldType\DBHTMLText;
+
 /**
  * The action buttons are <input type="submit"> as well as <button> tags.
  *
@@ -16,6 +18,14 @@
  * @subpackage actions
  */
 class FormAction extends FormField {
+
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $casting = [
+		'ButtonContent' => 'HTMLFragment',
+	];
 
 	/**
 	 * Action name, normally prefixed with 'action_'
@@ -83,7 +93,7 @@ class FormAction extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		$properties = array_merge(
@@ -100,7 +110,7 @@ class FormAction extends FormField {
 
 	/**
 	 * @param array $properties
-	 * @return HTMLText
+	 * @return DBHTMLText
 	 */
 	public function FieldHolder($properties = array()) {
 		return $this->Field($properties);
@@ -108,22 +118,6 @@ class FormAction extends FormField {
 
 	public function Type() {
 		return 'action';
-	}
-
-	public function Title() {
-		$title = parent::Title();
-
-		// Remove this method override in 4.0
-		$decoded = Convert::xml2raw($title);
-		if($title && $decoded !== $title) {
-			Deprecation::notice(
-				'4.0',
-				'The FormAction title field should not be html encoded. Use buttonContent to set custom html instead'
-			);
-			return $decoded;
-		}
-
-		return $title;
 	}
 
 	public function getAttributes() {
@@ -141,7 +135,7 @@ class FormAction extends FormField {
 	}
 
 	/**
-	 * Add content inside a button field.
+	 * Add content inside a button field. This should be pre-escaped raw HTML and should be used sparingly.
 	 *
 	 * @param string $content
 	 * @return $this
@@ -152,7 +146,7 @@ class FormAction extends FormField {
 	}
 
 	/**
-	 * Gets the content inside the button field
+	 * Gets the content inside the button field. This is raw HTML, and should be used sparingly.
 	 *
 	 * @return string
 	 */

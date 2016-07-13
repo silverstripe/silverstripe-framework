@@ -6,8 +6,6 @@
  */
 
 use SilverStripe\Forms\Schema\FormSchema;
-
-use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataModel;

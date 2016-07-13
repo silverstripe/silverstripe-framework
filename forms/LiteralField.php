@@ -14,6 +14,11 @@
  * @subpackage fields-dataless
  */
 class LiteralField extends DatalessField {
+
+	private static $casting = [
+		'Value' => 'HTMLFragment',
+	];
+
 	/**
 	 * @var string|FormField
 	 */

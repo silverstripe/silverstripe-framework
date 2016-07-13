@@ -1,6 +1,6 @@
 <?php
 
-
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
@@ -65,28 +65,6 @@ class ViewableData extends Object implements IteratorAggregate {
 
 	// -----------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * Converts a field spec into an object creator. For example: "Int" becomes "new Int($fieldName);" and "Varchar(50)"
-	 * becomes "new DBVarchar($fieldName, 50);".
-	 *
-	 * @param string $fieldSchema The field spec
-	 * @return string
-	 */
-	public static function castingObjectCreator($fieldSchema) {
-		Deprecation::notice('2.5', 'Use Object::create_from_string() instead');
-	}
-
-	/**
-	 * Convert a field schema (e.g. "Varchar(50)") into a casting object creator array that contains both a className
-	 * and castingHelper constructor code. See {@link castingObjectCreator} for more information about the constructor.
-	 *
-	 * @param string $fieldSchema
-	 * @return array
-	 */
-	public static function castingObjectCreatorPair($fieldSchema) {
-		Deprecation::notice('2.5', 'Use Object::create_from_string() instead');
-	}
-
 	// FIELD GETTERS & SETTERS -----------------------------------------------------------------------------------------
 
 	/**
@@ -114,6 +92,7 @@ class ViewableData extends Object implements IteratorAggregate {
 		} elseif($this->failover) {
 			return $this->failover->$property;
 		}
+		return null;
 	}
 
 	/**
@@ -124,6 +103,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param mixed $value
 	 */
 	public function __set($property, $value) {
+		$this->objCacheClear();
 		if($this->hasMethod($method = "set$property")) {
 			$this->$method($value);
 		} else {
@@ -180,9 +160,12 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string $field
 	 * @param mixed $value
+	 * @return $this
 	 */
 	public function setField($field, $value) {
+		$this->objCacheClear();
 		$this->$field = $value;
+		return $this;
 	}
 
 	// -----------------------------------------------------------------------------------------------------------------
@@ -190,11 +173,15 @@ class ViewableData extends Object implements IteratorAggregate {
 	/**
 	 * Add methods from the {@link ViewableData::$failover} object, as well as wrapping any methods prefixed with an
 	 * underscore into a {@link ViewableData::cachedCall()}.
+	 *
+	 * @throws LogicException
 	 */
 	public function defineMethods() {
+		if($this->failover && !is_object($this->failover)) {
+			throw new LogicException("ViewableData::\$failover set to a non-object");
+		}
 		if($this->failover) {
-			if(is_object($this->failover)) $this->addMethodsFrom('failover');
-			else user_error("ViewableData::\$failover set to a non-object", E_USER_WARNING);
+			$this->addMethodsFrom('failover');
 
 			if(isset($_REQUEST['debugfailover'])) {
 				Debug::message("$this->class created with a failover class of {$this->failover->class}");
@@ -244,50 +231,43 @@ class ViewableData extends Object implements IteratorAggregate {
 	// CASTING ---------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Get the class a field on this object would be casted to, as well as the casting helper for casting a field to
-	 * an object (see {@link ViewableData::castingHelper()} for information on casting helpers).
-	 *
-	 * The returned array contains two keys:
-	 *  - className: the class the field would be casted to (e.g. "Varchar")
-	 *  - castingHelper: the casting helper for casting the field (e.g. "return new Varchar($fieldName)")
+	 * Return the "casting helper" (a piece of PHP code that when evaluated creates a casted value object)
+	 * for a field on this object. This helper will be a subclass of DBField.
 	 *
 	 * @param string $field
-	 * @return array
-	 */
-	public function castingHelperPair($field) {
-		Deprecation::notice('2.5', 'use castingHelper() instead');
-		return $this->castingHelper($field);
-	}
-
-	/**
-	 * Return the "casting helper" (a piece of PHP code that when evaluated creates a casted value object) for a field
-	 * on this object.
-	 *
-	 * @param string $field
-	 * @return string Casting helper
+	 * @return string Casting helper As a constructor pattern, and may include arguments.
 	 */
 	public function castingHelper($field) {
 		$specs = $this->config()->casting;
 		if(isset($specs[$field])) {
 			return $specs[$field];
-		} elseif($this->failover) {
-			return $this->failover->castingHelper($field);
+		}
+
+		// If no specific cast is declared, fall back to failover.
+		// Note that if there is a failover, the default_cast will always
+		// be drawn from this object instead of the top level object.
+		$failover = $this->getFailover();
+		if($failover) {
+			$cast = $failover->castingHelper($field);
+			if($cast) {
+				return $cast;
 		}
 	}
 
+		// Fall back to default_cast
+		return $this->config()->get('default_cast');
+	}
+
 	/**
-	 * Get the class name a field on this object will be casted to
+	 * Get the class name a field on this object will be casted to.
 	 *
 	 * @param string $field
 	 * @return string
 	 */
 	public function castingClass($field) {
+		// Strip arguments
 		$spec = $this->castingHelper($field);
-		if(!$spec) return null;
-
-		$bPos = strpos($spec,'(');
-		if($bPos === false) return $spec;
-		else return substr($spec, 0, $bPos);
+		return trim(strtok($spec, '('));
 	}
 
 	/**
@@ -304,35 +284,6 @@ class ViewableData extends Object implements IteratorAggregate {
 		return Injector::inst()->get($class, true)->config()->escape_type;
 	}
 
-	/**
-	 * Save the casting cache for this object (including data from any failovers) into a variable
-	 *
-	 * @param reference $cache
-	 */
-	public function buildCastingCache(&$cache) {
-		$ancestry = array_reverse(ClassInfo::ancestry($this->class));
-		$merge    = true;
-
-		foreach($ancestry as $class) {
-			if(!isset(self::$casting_cache[$class]) && $merge) {
-				$mergeFields = is_subclass_of($class, 'SilverStripe\\ORM\\DataObject') ? array('db', 'casting') : array('casting');
-
-				if($mergeFields) foreach($mergeFields as $field) {
-					$casting = Config::inst()->get($class, $field, Config::UNINHERITED);
-					if($casting) foreach($casting as $field => $cast) {
-						if(!isset($cache[$field])) $cache[$field] = self::castingObjectCreatorPair($cast);
-					}
-				}
-
-				if($class == 'ViewableData') $merge = false;
-			} elseif($merge) {
-				$cache = ($cache) ? array_merge(self::$casting_cache[$class], $cache) : self::$casting_cache[$class];
-			}
-
-			if($class == 'ViewableData') break;
-		}
-	}
-
 	// TEMPLATE ACCESS LAYER -------------------------------------------------------------------------------------------
 
 	/**
@@ -344,7 +295,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string|array|SSViewer $template the template to render into
 	 * @param array $customFields fields to customise() the object with before rendering
-	 * @return HTMLText
+	 * @return DBHTMLText
 	 */
 	public function renderWith($template, $customFields = null) {
 		if(!is_object($template)) {
@@ -370,6 +321,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string $fieldName Name of field
 	 * @param array $arguments List of optional arguments given
+	 * @return string
 	 */
 	protected function objCacheName($fieldName, $arguments) {
 		return $arguments
@@ -384,7 +336,10 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return mixed
 	 */
 	protected function objCacheGet($key) {
-		if(isset($this->objCache[$key])) return $this->objCache[$key];
+		if(isset($this->objCache[$key])) {
+			return $this->objCache[$key];
+		}
+		return null;
 	}
 
 	/**
@@ -392,9 +347,21 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string $key Cache key
 	 * @param mixed $value
+	 * @return $this
 	 */
 	protected function objCacheSet($key, $value) {
 		$this->objCache[$key] = $value;
+		return $this;
+	}
+
+	/**
+	 * Clear object cache
+	 *
+	 * @return $this
+	 */
+	protected function objCacheClear() {
+		$this->objCache = [];
+		return $this;
 	}
 
 	/**
@@ -403,45 +370,40 @@ class ViewableData extends Object implements IteratorAggregate {
 	 *
 	 * @param string $fieldName
 	 * @param array $arguments
-	 * @param bool $forceReturnedObject if TRUE, the value will ALWAYS be casted to an object before being returned,
-	 *        even if there is no explicit casting information
 	 * @param bool $cache Cache this object
 	 * @param string $cacheName a custom cache name
+	 * @return Object|DBField
 	 */
-	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
-		if(!$cacheName && $cache) $cacheName = $this->objCacheName($fieldName, $arguments);
+	public function obj($fieldName, $arguments = [], $cache = false, $cacheName = null) {
+		if(!$cacheName && $cache) {
+			$cacheName = $this->objCacheName($fieldName, $arguments);
+		}
 
+		// Check pre-cached value
 		$value = $cache ? $this->objCacheGet($cacheName) : null;
-		if(!isset($value)) {
-			// HACK: Don't call the deprecated FormField::Name() method
-			$methodIsAllowed = true;
-			if($this instanceof FormField && $fieldName == 'Name') $methodIsAllowed = false;
+		if($value !== null) {
+			return $value;
+		}
 
-			if($methodIsAllowed && $this->hasMethod($fieldName)) {
-				$value = $arguments ? call_user_func_array(array($this, $fieldName), $arguments) : $this->$fieldName();
+		// Load value from record
+		if($this->hasMethod($fieldName)) {
+			$value = call_user_func_array(array($this, $fieldName), $arguments ?: []);
 			} else {
 				$value = $this->$fieldName;
 			}
 
-			if(!is_object($value) && ($this->castingClass($fieldName) || $forceReturnedObject)) {
-				if(!$castConstructor = $this->castingHelper($fieldName)) {
-					$castConstructor = $this->config()->default_cast;
-				}
-
-				$valueObject = Object::create_from_string($castConstructor, $fieldName);
-				$valueObject->setValue($value, $this);
-
-				$value = $valueObject;
-			}
-
-			if($cache) $this->objCacheSet($cacheName, $value);
+		// Cast object
+		if(!is_object($value)) {
+			// Force cast
+			$castingHelper = $this->castingHelper($fieldName);
+			$valueObject = Object::create_from_string($castingHelper, $fieldName);
+			$valueObject->setValue($value, $this);
+			$value = $valueObject;
 		}
 
-		if(!is_object($value) && $forceReturnedObject) {
-			$default = $this->config()->default_cast;
-			$castedValue = new $default($fieldName);
-			$castedValue->setValue($value);
-			$value = $castedValue;
+		// Record in cache
+		if($cache) {
+			$this->objCacheSet($cacheName, $value);
 		}
 
 		return $value;
@@ -454,9 +416,10 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param string $field
 	 * @param array $arguments
 	 * @param string $identifier an optional custom cache identifier
+	 * @return Object|DBField
 	 */
-	public function cachedCall($field, $arguments = null, $identifier = null) {
-		return $this->obj($field, $arguments, false, true, $identifier);
+	public function cachedCall($field, $arguments = [], $identifier = null) {
+		return $this->obj($field, $arguments, true, $identifier);
 	}
 
 	/**
@@ -468,67 +431,30 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param bool $cache
 	 * @return bool
 	 */
-	public function hasValue($field, $arguments = null, $cache = true) {
-		$result = $cache ? $this->cachedCall($field, $arguments) : $this->obj($field, $arguments, false, false);
-
-		if(is_object($result) && $result instanceof Object) {
+	public function hasValue($field, $arguments = [], $cache = true) {
+		$result = $this->obj($field, $arguments, $cache);
 			return $result->exists();
-		} else {
-			// Empty paragraph checks are a workaround for TinyMCE
-			return ($result && $result !== '<p></p>');
 		}
-	}
 
-	/**#@+
+	/**
+	 * Get the string value of a field on this object that has been suitable escaped to be inserted directly into a
+	 * template.
+	 *
 	 * @param string $field
 	 * @param array $arguments
 	 * @param bool $cache
 	 * @return string
 	 */
-
-	/**
-	 * Get the string value of a field on this object that has been suitable escaped to be inserted directly into a
-	 * template.
-	 */
-	public function XML_val($field, $arguments = null, $cache = false) {
-		$result = $this->obj($field, $arguments, false, $cache);
-		return (is_object($result) && $result instanceof Object) ? $result->forTemplate() : $result;
+	public function XML_val($field, $arguments = [], $cache = false) {
+		$result = $this->obj($field, $arguments, $cache);
+		// Might contain additional formatting over ->XML(). E.g. parse shortcodes, nl2br()
+		return $result->forTemplate();
 	}
-
-	/**
-	 * Return the value of the field without any escaping being applied.
-	 */
-	public function RAW_val($field, $arguments = null, $cache = true) {
-		return Convert::xml2raw($this->XML_val($field, $arguments, $cache));
-	}
-
-	/**
-	 * Return the value of a field in an SQL-safe format.
-	 */
-	public function SQL_val($field, $arguments = null, $cache = true) {
-		return Convert::raw2sql($this->RAW_val($field, $arguments, $cache));
-	}
-
-	/**
-	 * Return the value of a field in a JavaScript-save format.
-	 */
-	public function JS_val($field, $arguments = null, $cache = true) {
-		return Convert::raw2js($this->RAW_val($field, $arguments, $cache));
-	}
-
-	/**
-	 * Return the value of a field escaped suitable to be inserted into an XML node attribute.
-	 */
-	public function ATT_val($field, $arguments = null, $cache = true) {
-		return Convert::raw2att($this->RAW_val($field, $arguments, $cache));
-	}
-
-	/**#@-*/
 
 	/**
 	 * Get an array of XML-escaped values by field name
 	 *
-	 * @param array $elements an array of field names
+	 * @param array $fields an array of field names
 	 * @return array
 	 */
 	public function getXMLValues($fields) {
@@ -579,7 +505,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @param string $subtheme the subtheme path to get
 	 * @return string
 	 */
-	public function ThemeDir($subtheme = false) {
+	public function ThemeDir($subtheme = null) {
 		if(
 			Config::inst()->get('SSViewer', 'theme_enabled')
 			&& $theme = Config::inst()->get('SSViewer', 'theme')
@@ -681,20 +607,16 @@ class ViewableData_Customised extends ViewableData {
 
 	public function cachedCall($field, $arguments = null, $identifier = null) {
 		if($this->customised->hasMethod($field) || $this->customised->hasField($field)) {
-			$result = $this->customised->cachedCall($field, $arguments, $identifier);
-		} else {
-			$result = $this->original->cachedCall($field, $arguments, $identifier);
+			return $this->customised->cachedCall($field, $arguments, $identifier);
 		}
-
-		return $result;
+		return $this->original->cachedCall($field, $arguments, $identifier);
 	}
 
-	public function obj($fieldName, $arguments = null, $forceReturnedObject = true, $cache = false, $cacheName = null) {
+	public function obj($fieldName, $arguments = null, $cache = false, $cacheName = null) {
 		if($this->customised->hasField($fieldName) || $this->customised->hasMethod($fieldName)) {
-			return $this->customised->obj($fieldName, $arguments, $forceReturnedObject, $cache, $cacheName);
+			return $this->customised->obj($fieldName, $arguments, $cache, $cacheName);
 		}
-
-		return $this->original->obj($fieldName, $arguments, $forceReturnedObject, $cache, $cacheName);
+		return $this->original->obj($fieldName, $arguments,  $cache, $cacheName);
 	}
 
 }

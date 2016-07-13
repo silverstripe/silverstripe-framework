@@ -144,7 +144,7 @@ class ConfirmedPasswordField extends FormField {
 	/**
 	 * @param array $properties
 	 *
-	 * @return DBHTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');

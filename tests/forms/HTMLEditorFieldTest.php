@@ -126,14 +126,22 @@ class HTMLEditorFieldTest extends FunctionalTest {
 		if (!class_exists('Page')) {
 			$this->markTestSkipped();
 		}
-		$html = '<div name="foo"></div>
-<div name=\'bar\'></div>
+		$linkedPage = new Page();
+		$linkedPage->Title = 'Dummy';
+		$linkedPage->write();
+
+		$html = <<<EOS
+<div name="foo"></div>
+<div name='bar'></div>
 <div id="baz"></div>
-<div id=\'bam\'></div>
+[sitetree_link id="{$linkedPage->ID}"]
+<div id='bam'></div>
 <div id = "baz"></div>
 <div id = ""></div>
-<div id="some\'id"></div>
-<div id=bar></div>';
+<div id="some'id"></div>
+<div id=bar></div>
+EOS
+	;
 		$expected = array(
 			'foo',
 			'bar',

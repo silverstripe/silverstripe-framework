@@ -114,7 +114,7 @@ class DropdownField extends SingleSelectField {
 
 	/**
 	 * @param array $properties
-	 * @return DBHTMLText
+	 * @return string
 	 */
 	public function Field($properties = array()) {
 		$options = array();
