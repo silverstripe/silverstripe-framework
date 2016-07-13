@@ -774,7 +774,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// Set up a new entry in (table)_versions
 		$newManipulation = array(
 			"command" => "insert",
-			"fields" => isset($manipulation[$table]['fields']) ? $manipulation[$table]['fields'] : null,
+			"fields" => isset($manipulation[$table]['fields']) ? $manipulation[$table]['fields'] : [],
 			"class" => $class,
 		);
 
@@ -789,7 +789,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 				foreach ($data as $k => $v) {
 					// If the value is not set at all in the manipulation currently, use the existing value from the database
-					if (is_array($newManipulation['fields']) && !array_key_exists($k, $newManipulation['fields'])) {
+					if (!array_key_exists($k, $newManipulation['fields'])) {
 						$newManipulation['fields'][$k] = $v;
 					}
 				}
