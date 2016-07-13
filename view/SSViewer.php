@@ -3,6 +3,7 @@
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
+use SilverStripe\View\TemplateLoader;
 
 /**
  * This tracks the current scope for an SSViewer instance. It has three goals:
@@ -723,10 +724,19 @@ class SSViewer implements Flushable {
 	}
 
 	/**
-	 * @var array $chosenTemplates Associative array for the different
-	 * template containers: "main" and "Layout". Values are absolute file paths to *.ss files.
+	 * @var array $templates List of templates to select from
 	 */
-	private $chosenTemplates = array();
+	private $templates = null;
+
+	/**
+	 * @var string $chosen Absolute path to chosen template file
+	 */
+	private $chosen = null;
+
+	/**
+	 * @var array Templates to use when looking up 'Layout' or 'Content'
+	 */
+	private $subTemplates = null;
 
 	/**
 	 * @var boolean
@@ -735,8 +745,16 @@ class SSViewer implements Flushable {
 
 	/**
 	 * @config
-	 * @var string The used "theme", which usually consists of templates, images and stylesheets.
+	 * @var string A list (highest priority first) of themes to use
 	 * Only used when {@link $theme_enabled} is set to TRUE.
+	 */
+	private static $themes = [];
+
+	/**
+	 * @deprecated 4.0..5.0
+	 * @config
+	 * @var string The used "theme", which usually consists of templates, images and stylesheets.
+	 * Only used when {@link $theme_enabled} is set to TRUE, and $themes is empty
 	 */
 	private static $theme = null;
 
@@ -791,65 +809,33 @@ class SSViewer implements Flushable {
 		return $viewer;
 	}
 
+	public static function set_themes($themes = []) {
+		Config::inst()->remove('SSViewer', 'themes');
+		Config::inst()->update('SSViewer', 'themes', $themes);
+	}
+
+	public static function add_themes($themes = []) {
+		Config::inst()->update('SSViewer', 'themes', $themes);
+	}
+
+	public static function get_themes() {
+		$res = ['$default'];
+
+		if (Config::inst()->get('SSViewer', 'theme_enabled')) {
+			if ($list = Config::inst()->get('SSViewer', 'themes')) $res = $list;
+			elseif ($theme = Config::inst()->get('SSViewer', 'theme')) $res = [$theme, '$default'];
+		}
+
+		return $res;
+	}
+
 	/**
 	 * @deprecated 4.0 Use the "SSViewer.theme" config setting instead
 	 * @param string $theme The "base theme" name (without underscores).
 	 */
 	public static function set_theme($theme) {
-		Deprecation::notice('4.0', 'Use the "SSViewer.theme" config setting instead');
-		Config::inst()->update('SSViewer', 'theme', $theme);
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "SSViewer.theme" config setting instead
-	 * @return string
-	 */
-	public static function current_theme() {
-		Deprecation::notice('4.0', 'Use the "SSViewer.theme" config setting instead');
-		return Config::inst()->get('SSViewer', 'theme');
-	}
-
-	/**
-	 * Returns the path to the theme folder
-	 *
-	 * @return string
-	 */
-	public static function get_theme_folder() {
-		$theme = Config::inst()->get('SSViewer', 'theme');
-		return $theme ? THEMES_DIR . "/" . $theme : project();
-	}
-
-	/**
-	 * Returns an array of theme names present in a directory.
-	 *
-	 * @param  string $path
-	 * @param  bool   $subthemes Include subthemes (default false).
-	 * @return array
-	 */
-	public static function get_themes($path = null, $subthemes = false) {
-		$path   = rtrim($path ? $path : THEMES_PATH, '/');
-		$themes = array();
-
-		if (!is_dir($path)) return $themes;
-
-		foreach (scandir($path) as $item) {
-			if ($item[0] != '.' && is_dir("$path/$item")) {
-				if ($subthemes || strpos($item, '_') === false) {
-					$themes[$item] = $item;
-				}
-			}
-		}
-
-		return $themes;
-	}
-
-	/**
-	 * @deprecated since version 4.0
-	 * @return string
-	 */
-	public static function current_custom_theme(){
-		Deprecation::notice('4.0', 'Use the "SSViewer.theme" and "SSViewer.theme_enabled" config settings instead');
-		return Config::inst()->get('SSViewer', 'theme_enabled') ? Config::inst()->get('SSViewer', 'theme') : null;
+		Deprecation::notice('4.0', 'Use the "SSViewer#set_themes" instead');
+		self::set_themes([$theme]);
 	}
 
 	/**
@@ -873,6 +859,7 @@ class SSViewer implements Flushable {
 		foreach($classes as $class) {
 			$template = $class . $suffix;
 			if(SSViewer::hasTemplate($template)) $templates[] = $template;
+			elseif(SSViewer::hasTemplate('Includes/'.$template)) $templates[] = 'Includes/'.$template;
 
 			// If the class is "Page_Controller", look for Page.ss
 			if(stripos($class,'_controller') !== false) {
@@ -893,36 +880,32 @@ class SSViewer implements Flushable {
 	 *  array('MySpecificPage', 'MyPage', 'Page')
 	 *  </code>
 	 */
-	public function __construct($templateList, TemplateParser $parser = null) {
+	public function __construct($templates, TemplateParser $parser = null) {
 		if ($parser) {
 			$this->setParser($parser);
 		}
 
-		if(!is_array($templateList) && substr((string) $templateList,-3) == '.ss') {
-			$this->chosenTemplates['main'] = $templateList;
-		} else {
-			if(Config::inst()->get('SSViewer', 'theme_enabled')) {
-				$theme = Config::inst()->get('SSViewer', 'theme');
-			} else {
-				$theme = null;
-			}
-			$this->chosenTemplates = SS_TemplateLoader::instance()->findTemplates(
-				$templateList, $theme
-			);
-		}
+		$this->setTemplate($templates);
 
-		if(!$this->chosenTemplates) {
-			$templateList = (is_array($templateList)) ? $templateList : array($templateList);
+		if(!$this->chosen) {
+			$message = 'None of the following templates could be found: ';
+			$message .= print_r($templates, true);
 
-			$message = 'None of the following templates could be found';
-			if(!$theme) {
+			$themes = self::get_themes();
+			if(!$themes) {
 				$message .= ' (no theme in use)';
 			} else {
-				$message .= ' in theme "' . $theme . '"';
+				$message .= ' in themes "' . print_r($themes, true) . '"';
 			}
 
-			user_error($message . ': ' . implode(".ss, ", $templateList) . ".ss", E_USER_WARNING);
+			user_error($message, E_USER_WARNING);
 		}
+	}
+
+	public function setTemplate($templates) {
+		$this->templates = $templates;
+		$this->chosen = TemplateLoader::instance()->findTemplate($templates, self::get_themes());
+		$this->subTemplates = [];
 	}
 
 	/**
@@ -954,19 +937,7 @@ class SSViewer implements Flushable {
 	 * @return boolean
 	 */
 	public static function hasTemplate($templates) {
-		$manifest = SS_TemplateLoader::instance()->getManifest();
-
-		if(Config::inst()->get('SSViewer', 'theme_enabled')) {
-			$theme = Config::inst()->get('SSViewer', 'theme');
-		} else {
-			$theme = null;
-		}
-
-		foreach ((array) $templates as $template) {
-			if ($manifest->getCandidateTemplate($template, $theme)) return true;
-		}
-
-		return false;
+		return (bool)TemplateLoader::instance()->findTemplate($templates, self::get_themes());
 	}
 
 	/**
@@ -1033,7 +1004,7 @@ class SSViewer implements Flushable {
 	}
 
 	public function exists() {
-		return $this->chosenTemplates;
+		return $this->chosen;
 	}
 
 	/**
@@ -1043,21 +1014,7 @@ class SSViewer implements Flushable {
 	 * @return string Full system path to a template file
 	 */
 	public static function getTemplateFileByType($identifier, $type) {
-		$loader = SS_TemplateLoader::instance();
-		if(Config::inst()->get('SSViewer', 'theme_enabled')) {
-			$theme = Config::inst()->get('SSViewer', 'theme');
-		} else {
-			$theme = null;
-		}
-		$found  = $loader->findTemplates("$type/$identifier", $theme);
-
-		if (isset($found['main'])) {
-			return $found['main'];
-		}
-		else if (!empty($found)) {
-			$founds = array_values($found);
-			return $founds[0];
-		}
+		return TemplateLoader::instance()->findTemplate(['type' => $type, $identifier], self::get_themes());
 	}
 
 	/**
@@ -1192,13 +1149,7 @@ class SSViewer implements Flushable {
 	public function process($item, $arguments = null, $inheritedScope = null) {
 		SSViewer::$topLevel[] = $item;
 
-		if(isset($this->chosenTemplates['main'])) {
-			$template = $this->chosenTemplates['main'];
-		} else {
-			$keys = array_keys($this->chosenTemplates);
-			$key = reset($keys);
-			$template = $this->chosenTemplates[$key];
-		}
+		$template = $this->chosen;
 
 		$cacheFile = TEMP_FOLDER . "/.cache"
 			. str_replace(array('\\','/',':'), '.', Director::makeRelative(realpath($template)));
@@ -1218,14 +1169,27 @@ class SSViewer implements Flushable {
 		// Makes the rendered sub-templates available on the parent item,
 		// through $Content and $Layout placeholders.
 		foreach(array('Content', 'Layout') as $subtemplate) {
-			if(isset($this->chosenTemplates[$subtemplate])) {
+			$sub = null;
+			if(isset($this->subTemplates[$subtemplate])) {
+				$sub = $this->subTemplates[$subtemplate];
+			}
+			elseif(!is_array($this->templates)) {
+				$sub = ['type' => $subtemplate, $this->templates];
+			}
+			elseif(!array_key_exists('type', $this->templates) || !$this->templates['type']) {
+				$sub = array_merge($this->templates, ['type' => $subtemplate]);
+			}
+
+			if ($sub) {
 				$subtemplateViewer = clone $this;
 				// Disable requirements - this will be handled by the parent template
 				$subtemplateViewer->includeRequirements(false);
-				// The subtemplate is the only file we want to process, so set it as the "main" template file
-				$subtemplateViewer->chosenTemplates = array('main' => $this->chosenTemplates[$subtemplate]);
+				// Select the right template
+				$subtemplateViewer->setTemplate($sub);
 
-				$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
+				if ($subtemplateViewer->exists()) {
+					$underlay[$subtemplate] = $subtemplateViewer->process($item, $arguments);
+				}
 			}
 		}
 
@@ -1301,7 +1265,7 @@ class SSViewer implements Flushable {
 	 * 'Content' & 'Layout', and will have to contain 'main'
 	 */
 	public function templates() {
-		return $this->chosenTemplates;
+		return array_merge(['main' => $this->chosen], $this->subTemplates);
 	}
 
 	/**
@@ -1309,7 +1273,8 @@ class SSViewer implements Flushable {
 	 * @param string $file Full system path to the template file
 	 */
 	public function setTemplateFile($type, $file) {
-		$this->chosenTemplates[$type] = $file;
+		if (!$type || $type == 'main') $this->chosen = $file;
+		else $this->subTemplates[$type] = $file;
 	}
 
 	/**

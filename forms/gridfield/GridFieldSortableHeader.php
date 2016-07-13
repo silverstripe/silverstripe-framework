@@ -164,7 +164,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		}
 
 		return array(
-			'header' => $forTemplate->renderWith('GridFieldSortableHeader_Row'),
+			'header' => $forTemplate->renderWith('Includes/GridFieldSortableHeader_Row'),
 		);
 	}
 

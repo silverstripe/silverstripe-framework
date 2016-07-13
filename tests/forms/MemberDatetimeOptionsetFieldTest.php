@@ -110,7 +110,7 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$field->setDescription('Test description');
 		$this->assertEquals('Test description', $field->getDescription());
 
-		$field->setDescriptionTemplate('MemberDatetimeOptionsetField_description_time');
+		$field->setDescriptionTemplate('forms/MemberDatetimeOptionsetField_description_time');
 		$this->assertNotEmpty($field->getDescription());
 		$this->assertNotEquals('Test description', $field->getDescription());
 	}

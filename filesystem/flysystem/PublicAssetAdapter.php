@@ -21,10 +21,10 @@ class PublicAssetAdapter extends AssetAdapter implements PublicAdapter {
 	 */
 	private static $server_configuration = array(
 		'apache' => array(
-			'.htaccess' => "Assets_HTAccess"
+			'.htaccess' => "filesystem/Assets_HTAccess"
 		),
 		'microsoft-iis' => array(
-			'web.config' => "Assets_WebConfig"
+			'web.config' => "filesystem/Assets_WebConfig"
 		)
 	);
 

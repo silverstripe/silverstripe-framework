@@ -1051,7 +1051,7 @@ class FormField extends RequestHandler {
 		$matches = array();
 
 		foreach(array_reverse(ClassInfo::ancestry($this)) as $className) {
-			$matches[] = $className . $customTemplateSuffix;
+			$matches[] = 'forms/'. $className . $customTemplateSuffix;
 
 			if($className == "FormField") {
 				break;
@@ -1059,7 +1059,7 @@ class FormField extends RequestHandler {
 		}
 
 		if($customTemplate) {
-			array_unshift($matches, $customTemplate);
+			array_unshift($matches, 'forms/'.$customTemplate);
 		}
 
 		return $matches;

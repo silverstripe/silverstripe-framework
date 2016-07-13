@@ -16,10 +16,10 @@ class ProtectedAssetAdapter extends AssetAdapter implements ProtectedAdapter {
 
     private static $server_configuration = array(
         'apache' => array(
-            '.htaccess' => "Protected_HTAccess"
+            '.htaccess' => "filesystem/Protected_HTAccess"
         ),
         'microsoft-iis' => array(
-            'web.config' => "Protected_WebConfig"
+            'web.config' => "filesystem/Protected_WebConfig"
         )
     );
 

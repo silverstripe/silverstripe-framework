@@ -373,7 +373,7 @@ class Email extends ViewableData {
 				// Requery data so that updated versions of To, From, Subject, etc are included
 				$data = $this->templateData();
 
-				$template = new SSViewer($this->ss_template);
+				$template = new SSViewer('email/'.$this->ss_template);
 
 				if($template->exists()) {
 					$fullBody = $template->process($data);

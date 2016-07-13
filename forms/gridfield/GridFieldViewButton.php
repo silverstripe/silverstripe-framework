@@ -22,7 +22,7 @@ class GridFieldViewButton implements GridField_ColumnProvider {
 			$data = new ArrayData(array(
 				'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view')
 			));
-			return $data->renderWith('GridFieldViewButton');
+			return $data->renderWith('Includes/GridFieldViewButton');
 		}
 	}
 

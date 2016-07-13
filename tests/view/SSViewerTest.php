@@ -759,17 +759,11 @@ after')
 			$this->render('tests:( <% include Namespace/NamespaceInclude %> )', $data),
 			'Forward slashes work for namespace references in includes'
 		);
-
-		$this->assertEquals(
-			"tests:( NamespaceInclude\n )",
-			$this->render('tests:( <% include NamespaceInclude %> )', $data),
-			'Namespace can be missed for a namespaed include'
-		);
 	}
 
 
 	public function testRecursiveInclude() {
-		$view = new SSViewer(array('SSViewerTestRecursiveInclude'));
+		$view = new SSViewer(array('Includes/SSViewerTestRecursiveInclude'));
 
 		$data = new ArrayData(array(
 			'Title' => 'A',
@@ -1160,59 +1154,27 @@ after')
 		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			// Test passing a string
 			$templates = SSViewer::get_templates_by_class(
-				'TestNamespace\SSViewerTest_Controller',
+				'TestNamespace\SSViewerTestModel_Controller',
 				'',
 				'Controller'
 			);
 			$self->assertEquals([
-				'TestNamespace\SSViewerTest_Controller',
+				'TestNamespace\SSViewerTestModel_Controller',
     			'Controller',
 			], $templates);
 
 			// Test to ensure we're stopping at the base class.
-			$templates = SSViewer::get_templates_by_class('TestNamespace\SSViewerTest_Controller', '', 'TestNamespace\SSViewerTest_Controller');
+			$templates = SSViewer::get_templates_by_class('TestNamespace\SSViewerTestModel_Controller', '', 'TestNamespace\SSViewerTestModel_Controller');
 			$self->assertCount(1, $templates);
 
 			// Make sure we can filter our templates by suffix.
-			$templates = SSViewer::get_templates_by_class('SSViewerTest', '_Controller');
+			$templates = SSViewer::get_templates_by_class('TestNamespace\SSViewerTestModel', '_Controller');
 			$self->assertCount(1, $templates);
 
 			// Let's throw something random in there.
 			$self->setExpectedException('InvalidArgumentException');
 			$templates = SSViewer::get_templates_by_class(array());
 		});
-	}
-
-	/**
-	 * @covers SSViewer::get_themes()
-	 */
-	public function testThemeRetrieval() {
-		$ds = DIRECTORY_SEPARATOR;
-		$testThemeBaseDir = TEMP_FOLDER . $ds . 'test-themes';
-
-		if(file_exists($testThemeBaseDir)) Filesystem::removeFolder($testThemeBaseDir);
-
-		mkdir($testThemeBaseDir);
-		mkdir($testThemeBaseDir . $ds . 'blackcandy');
-		mkdir($testThemeBaseDir . $ds . 'blackcandy_blog');
-		mkdir($testThemeBaseDir . $ds . 'darkshades');
-		mkdir($testThemeBaseDir . $ds . 'darkshades_blog');
-
-		$this->assertEquals(array(
-			'blackcandy' => 'blackcandy',
-			'darkshades' => 'darkshades'
-		), SSViewer::get_themes($testThemeBaseDir), 'Our test theme directory contains 2 themes');
-
-		$this->assertEquals(array(
-			'blackcandy' => 'blackcandy',
-			'blackcandy_blog' => 'blackcandy_blog',
-			'darkshades' => 'darkshades',
-			'darkshades_blog' => 'darkshades_blog'
-		), SSViewer::get_themes($testThemeBaseDir, true),
-			'Our test theme directory contains 2 themes and 2 sub-themes');
-
-		// Remove all the test themes we created
-		Filesystem::removeFolder($testThemeBaseDir);
 	}
 
 	public function testRewriteHashlinks() {
@@ -1327,6 +1289,7 @@ EOC;
 		$origEnv = Config::inst()->get('Director', 'environment_type');
 		Config::inst()->update('Director', 'environment_type', 'dev');
 		Config::inst()->update('SSViewer', 'source_file_comments', true);
+		$i = FRAMEWORK_PATH . '/tests/templates/Includes';
 		$f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
 		$templates = array(
 			array(
@@ -1398,16 +1361,16 @@ EOC;
 				"<!-- template $f/SSViewerTestCommentsWithInclude.ss -->"
 					. "<div class='typography'>"
 					. "<!-- include 'SSViewerTestCommentsInclude' -->"
-					. "<!-- template $f/SSViewerTestCommentsInclude.ss -->"
+					. "<!-- template $i/SSViewerTestCommentsInclude.ss -->"
 					. "Included"
-					. "<!-- end template $f/SSViewerTestCommentsInclude.ss -->"
+					. "<!-- end template $i/SSViewerTestCommentsInclude.ss -->"
 					. "<!-- end include 'SSViewerTestCommentsInclude' -->"
 					. "</div>"
 					. "<!-- end template $f/SSViewerTestCommentsWithInclude.ss -->",
 			),
 		);
 		foreach ($templates as $template) {
-			$this->_renderWithSourceFileComments($template['name'], $template['expected']);
+			$this->_renderWithSourceFileComments('SSViewerTestComments/'.$template['name'], $template['expected']);
 		}
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
 		Config::inst()->update('Director', 'environment_type', $origEnv);

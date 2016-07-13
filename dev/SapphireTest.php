@@ -13,8 +13,8 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Permission;
-
-
+use SilverStripe\View\TemplateLoader;
+use SilverStripe\View\ThemeManifest;
 
 /**
  * Test case class for the Sapphire framework.
@@ -848,7 +848,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		SS_ClassLoader::instance()->pushManifest($classManifest, false);
 		SapphireTest::set_test_class_manifest($classManifest);
 
-		SS_TemplateLoader::instance()->pushManifest(new SS_TemplateManifest(
+		TemplateLoader::instance()->addSet('$default', new ThemeManifest(
 			BASE_PATH, project(), true, $flush
 		));
 
@@ -1054,21 +1054,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	 */
 	protected function useTestTheme($themeBaseDir, $theme, $callback) {
 		Config::nest();
-		global $project;
 
-		$manifest = new SS_TemplateManifest($themeBaseDir, $project, true, true);
-
-		SS_TemplateLoader::instance()->pushManifest($manifest);
-
-		Config::inst()->update('SSViewer', 'theme', $theme);
+		if (strpos($themeBaseDir, BASE_PATH) === 0) $themeBaseDir = substr($themeBaseDir, strlen(BASE_PATH));
+		SSViewer::set_themes([$themeBaseDir.'/themes/'.$theme, '$default']);
 
 		$e = null;
 
 		try { $callback(); }
 		catch (Exception $e) { /* NOP for now, just save $e */ }
-
-		// Remove all the test themes we created
-		SS_TemplateLoader::instance()->popManifest();
 
 		Config::unnest();
 

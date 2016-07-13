@@ -66,7 +66,7 @@ class GridFieldLevelup extends Object implements GridField_HTMLProvider {
 			));
 
 			return array(
-				'before' => $forTemplate->renderWith('GridFieldLevelup'),
+				'before' => $forTemplate->renderWith('Includes/GridFieldLevelup'),
 			);
 		}
 	}

@@ -3382,7 +3382,7 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		$template = $res['template'];
 		$arguments = $res['arguments'];
 
-		$res['php'] = '$val .= SSViewer::execute_template('.$template.', $scope->getItem(), array(' .
+		$res['php'] = '$val .= SSViewer::execute_template(["type" => "Includes", '.$template.'], $scope->getItem(), array(' .
 			implode(',', $arguments)."), \$scope);\n";
 
 		if($this->includeDebuggingComments) { // Add include filename comments on dev sites

@@ -13,7 +13,7 @@ class GridFieldToolbarHeader implements GridField_HTMLProvider {
 
 	public function getHTMLFragments( $gridField) {
 		return array(
-			'header' => $gridField->renderWith('GridFieldToolbarHeader')
+			'header' => $gridField->renderWith('Includes/GridFieldToolbarHeader')
 		);
 	}
 }

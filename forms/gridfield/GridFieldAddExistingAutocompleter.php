@@ -131,7 +131,7 @@ class GridFieldAddExistingAutocompleter
 		}
 
 		return array(
-			$this->targetFragment => $forTemplate->renderWith($this->itemClass)
+			$this->targetFragment => $forTemplate->renderWith('Includes/'.$this->itemClass)
 		);
 	}
 

@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\View\TemplateLoader;
+use SilverStripe\View\ThemeManifest;
+
 require_once 'Zend/Translate.php';
 
 /**
@@ -35,10 +38,13 @@ class i18nTest extends SapphireTest {
 		FileSystem::makeFolder($this->alternateBaseSavePath);
 		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 
-		// Push a template loader running from the fake webroot onto the stack.
-		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
-		$templateManifest->regenerate(false);
-		SS_TemplateLoader::instance()->pushManifest($templateManifest);
+		// Replace old template loader with new one with alternate base path
+		$this->_oldLoader = TemplateLoader::instance();
+		TemplateLoader::set_instance($loader = new TemplateLoader($this->alternateBasePath));
+		$loader->addSet('$default', new ThemeManifest(
+			$this->alternateBasePath, project(), false, true
+		));
+
 		$this->_oldTheme = Config::inst()->get('SSViewer', 'theme');
 		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
 
@@ -58,7 +64,7 @@ class i18nTest extends SapphireTest {
 	}
 
 	public function tearDown() {
-		SS_TemplateLoader::instance()->popManifest();
+		TemplateLoader::set_instance($this->_oldLoader);
 		i18n::set_locale($this->originalLocale);
 		Config::inst()->update('Director', 'alternate_base_folder', null);
 		Config::inst()->update('SSViewer', 'theme', $this->_oldTheme);

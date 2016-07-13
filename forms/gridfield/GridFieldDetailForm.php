@@ -441,7 +441,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// Always show with base template (full width, no other panels),
 			// regardless of overloaded CMS controller templates.
 			// TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
-			$form->setTemplate('LeftAndMain_EditForm');
+			$form->setTemplate('Includes/LeftAndMain_EditForm');
 			$form->addExtraClass('cms-content cms-edit-form center');
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
 			if($form->Fields()->hasTabset()) {

@@ -259,7 +259,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		$forTemplate = $this->getTemplateParameters($gridField);
 		if($forTemplate) {
 			return array(
-				'footer' => $forTemplate->renderWith($this->itemClass,
+				'footer' => $forTemplate->renderWith('Includes/'.$this->itemClass,
 					array('Colspan'=>count($gridField->getColumns())))
 			);
 		}

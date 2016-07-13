@@ -48,7 +48,7 @@ class GridFieldFooter implements GridField_HTMLProvider {
 
 		return array(
 			'footer' => $forTemplate->renderWith(
-				'GridFieldFooter',
+				'Includes/GridFieldFooter',
 				array(
 					'Colspan' => count($gridField->getColumns())
 				)
