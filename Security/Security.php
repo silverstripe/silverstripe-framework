@@ -7,6 +7,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use Controller;
+use SilverStripe\ORM\FieldType\DBField;
 use SS_HTTPRequest;
 use TemplateGlobalProvider;
 use Deprecation;
@@ -579,8 +580,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		// Finally, customise the controller to add any form messages and the form.
 		$customisedController = $controller->customise(array(
-			"Content" => $message,
-			"Message" => $message,
+			"Content" => DBField::create_field('HTMLFragment', $message),
+			"Message" => DBField::create_field('HTMLFragment', $message),
 			"MessageType" => $messageType,
 			"Form" => $content,
 		));

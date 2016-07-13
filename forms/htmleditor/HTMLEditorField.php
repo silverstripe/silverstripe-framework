@@ -809,9 +809,9 @@ abstract class HTMLEditorField_File extends ViewableData {
 	protected function getDetailFields() {
 		$fields = new FieldList(
 			ReadonlyField::create("FileType", _t('AssetTableField.TYPE','File type'), $this->getFileType()),
-			ReadonlyField::create(
+			HTMLReadonlyField::create(
 				'ClickableURL', _t('AssetTableField.URL','URL'), $this->getExternalLink()
-			)->setDontEscape(true)
+			)
 		);
 		// Get file size
 		if($this->getSize()) {
