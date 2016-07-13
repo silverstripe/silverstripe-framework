@@ -256,7 +256,8 @@ class FormField extends RequestHandler {
 	private static $casting = array(
 		'FieldHolder' => 'HTMLFragment',
 		'Field' => 'HTMLFragment',
-		'AttributesHTML' => 'HTMLFragment',
+		'AttributesHTML' => 'HTMLFragment', // property $AttributesHTML version
+		'getAttributesHTML' => 'HTMLFragment', // method $getAttributesHTML($arg) version
 		'Value' => 'Text',
 		'extraClass' => 'Text',
 		'ID' => 'Text',

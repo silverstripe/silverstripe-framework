@@ -50,10 +50,10 @@
 			<% if $canUpload %>
 				<label class="ss-uploadfield-fromcomputer ss-ui-button ui-corner-all" title="<%t UploadField.FROMCOMPUTERINFO 'Upload from your computer' %>" data-icon="drive-upload">
 					<%t UploadField.FROMCOMPUTER 'From your computer' %>
-					<input id="$id" name="{$Name}[Uploads][]" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %> />
+					<input id="$id" name="{$Name}[Uploads][]" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString.ATT" type="file"<% if $multiple %> multiple="multiple"<% end_if %> />
 				</label>
 			<% else %>
-				<input id="$id" name="{$Name}[Uploads][]" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="hidden" />
+				<input id="$id" name="{$Name}[Uploads][]" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString.ATT" type="hidden" />
 			<% end_if %>
 
 			<% if $canAttachExisting %>

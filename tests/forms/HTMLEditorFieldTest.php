@@ -2,6 +2,7 @@
 
 use Filesystem as SS_Filesystem;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 
 /**
@@ -180,6 +181,48 @@ EOS
 		$this->assertEquals('http://localdomain.com/folder/my_local_image.jpg', $file->URL);
 		$this->assertEquals('my_local_image.jpg', $file->Name);
 		$this->assertEquals('jpg', $file->Extension);
+	}
+
+	public function testReadonlyField() {
+		$editor = new HTMLEditorField('Content');
+		$fileID = $this->idFromFixture('Image', 'example_image');
+		$editor->setValue(sprintf(
+			'[image src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" id="%d"]',
+			$fileID
+		));
+		/** @var HTMLReadonlyField $readonly */
+		$readonly = $editor->performReadonlyTransformation();
+		/** @var DBHTMLText $readonlyContent */
+		$readonlyContent = $readonly->Field();
+
+		$this->assertEquals( <<<EOS
+<span class="readonly typography" id="Content">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="HTMLEditorFieldTest example" width="10" height="20">
+</span>
+
+
+EOS
+			,
+			$readonlyContent->getValue()
+		);
+
+		// Test with include input tag
+		$readonly = $editor->performReadonlyTransformation()
+			->setIncludeHiddenField(true);
+		/** @var DBHTMLText $readonlyContent */
+		$readonlyContent = $readonly->Field();
+		$this->assertEquals( <<<EOS
+<span class="readonly typography" id="Content">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="HTMLEditorFieldTest example" width="10" height="20">
+</span>
+
+	<input type="hidden" name="Content" value="[image src=&quot;/assets/HTMLEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example.jpg&quot; width=&quot;10&quot; height=&quot;20&quot; id=&quot;{$fileID}&quot;]" />
+
+
+EOS
+			,
+			$readonlyContent->getValue()
+		);
 	}
 }
 
