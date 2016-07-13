@@ -529,8 +529,8 @@ $.entwine('ss', function($) {
         this.setPauseState(true);
 
         // Restore best last state
-        if (lastState !== null) {
-          window.ss.router.show(lastState.url);
+        if (lastState && lastState.path) {
+          window.ss.router.show(lastState.path);
         } else {
           window.ss.router.back();
         }
