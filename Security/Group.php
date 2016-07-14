@@ -406,7 +406,7 @@ class Group extends DataObject {
 		// The "Code" attribute is usually treated as a more permanent identifier than database IDs
 		// in custom application logic, so can't be changed after its first set.
 		if(!$this->Code && $this->Title != _t('SecurityAdmin.NEWGROUP',"New Group")) {
-			if(!$this->Code) $this->setCode($this->Title);
+			$this->setCode($this->Title);
 		}
 	}
 
