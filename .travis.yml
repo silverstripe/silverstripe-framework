@@ -12,10 +12,10 @@ env:
     - TRAVIS_NODE_VERSION="4"
     - CORE_RELEASE=master
     - CORE_RELEASE_VERSION=4.0
-    - "ARTIFACTS_AWS_REGION=us-east-1"
-    - "ARTIFACTS_S3_BUCKET=silverstripe-travis-artifacts"
-    - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
-    - secure: "UmbXCNLK0f2Dk+7qX8bOVcgIt4QhRvccoWvMUxaPtIU+95HCbG10eeCxvfOeBax+tHcRXmeCG4vM4tcuT/WoANkAma/VX74DylFjbWhks2tsKOcr2kjTrOwe6Q9CXOBjVAlcx0lnV/a+w83KARjXGnCrIbE7p7r4EDw31rkVufg="
+    - ARTIFACTS_REGION=us-east-1
+    - ARTIFACTS_BUCKET=silverstripe-travis-artifacts
+    - secure: "jVR0iLTuvVfA6jKX5+A3AdUEs8Ps+r3SbL0zGR687K8IoSp3a/+JLH12zFCEexOuxwCtOhlMq8zoZsptCEduCDq+0payk5k6GjNVywFaWjJCV573JScdaHAtoumoHMUvua+Pxds0qKAD2XEYAcOR4Qu7S4HLJV6E1QqHg9PRW5s=" # Encrypted ARTIFACTS_KEY
+    - secure: "SDGv49c2Ee2YBz7dATE3WnHSVSvJiRJ2BVtRasVshdNDNz3NBRzh13C2fDwTGBU1J6PxiQaGTXBy/BGsvbYk2BvdzHVwozkBpHVSaCNdarpCJ5yZZTqKC3mpA1S5353r5tqronwFuMDpftzXnRMfLZGGQ4kYb9hjV55+FPUTFPk=" # Encrypted ARTIFACTS_SECRET
 
 matrix:
   include:
@@ -64,7 +64,7 @@ script:
  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
 
 after_failure:
- - php ~/travis-support/travis_upload_artifacts.php --if-env BEHAT_TEST,ARTIFACTS_AWS_SECRET_ACCESS_KEY --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_S3_BUCKET/
+ - php ~/travis-support/travis_upload_artifacts.php --if-env BEHAT_TEST,ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/
 
 branches:
   except:
