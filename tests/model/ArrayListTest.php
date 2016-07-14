@@ -282,6 +282,30 @@ class ArrayListTest extends SapphireTest {
 			array('Name' => 'Steve')
 		));
 
+		// Quoted name name with table
+		$list4 = $list->sort('"Record"."Name"');
+		$this->assertEquals($list4->toArray(), array(
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'Steve')
+		));
+
+		// Quoted name name with table (desc)
+		$list5 = $list->sort('"Record"."Name" DESC');
+		$this->assertEquals($list5->toArray(), array(
+			array('Name' => 'Steve'),
+			array('Name' => 'John'),
+			(object) array('Name' => 'Bob')
+		));
+
+		// Table without quotes
+		$list6 = $list->sort('Record.Name');
+		$this->assertEquals($list6->toArray(), array(
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'Steve')
+		));
+
 		// Check original list isn't altered
 		$this->assertEquals($list->toArray(), array(
 			array('Name' => 'Steve'),

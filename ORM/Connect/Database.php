@@ -10,6 +10,7 @@ use Deprecation;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\Queries\SQLExpression;
+use Config;
 
 /**
  * Abstract database connectivity class.
@@ -26,6 +27,15 @@ abstract class SS_Database {
 	 * @var DBConnector
 	 */
 	protected $connector = null;
+
+	/**
+	 * In cases where your environment does not have 'SHOW DATABASES' permission,
+	 * you can set this to true. Then selectDatabase() will always connect without
+	 * doing databaseExists() check.
+	 *
+	 * @var bool
+	 */
+	private static $optimistic_connect = false;
 
 	/**
 	 * Amount of queries executed, for debugging purposes.
@@ -713,18 +723,23 @@ abstract class SS_Database {
 	 * @return boolean Flag indicating success
 	 */
 	public function selectDatabase($name, $create = false, $errorLevel = E_USER_ERROR) {
-		if (!$this->schemaManager->databaseExists($name)) {
-			// Check DB creation permisson
-			if (!$create) {
-				if ($errorLevel !== false) {
-					user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel);
-				}
-				// Unselect database
-				$this->connector->unloadDatabase();
-				return false;
-			}
-			$this->schemaManager->createDatabase($name);
+		// In case our live environment is locked down, we can bypass a SHOW DATABASE check
+		$canConnect = Config::inst()->get(get_class($this), 'optimistic_connect')
+			|| $this->schemaManager->databaseExists($name);
+		if($canConnect) {
+			return $this->connector->selectDatabase($name);
 		}
+
+		// Check DB creation permisson
+		if (!$create) {
+			if ($errorLevel !== false) {
+				user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel);
+			}
+			// Unselect database
+			$this->connector->unloadDatabase();
+			return false;
+		}
+		$this->schemaManager->createDatabase($name);
 		return $this->connector->selectDatabase($name);
 	}
 
