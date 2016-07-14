@@ -29,9 +29,18 @@ class ReadonlyField extends FormField {
 	 * allowed to be modified by the user.
 	 *
 	 * @param boolean $includeHiddenField
+	 * @return $this
 	 */
 	public function setIncludeHiddenField($includeHiddenField) {
 		$this->includeHiddenField = $includeHiddenField;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getIncludeHiddenField() {
+		return $this->includeHiddenField;
 	}
 
 	public function performReadonlyTransformation() {

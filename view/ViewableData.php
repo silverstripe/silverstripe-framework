@@ -388,9 +388,9 @@ class ViewableData extends Object implements IteratorAggregate {
 		// Load value from record
 		if($this->hasMethod($fieldName)) {
 			$value = call_user_func_array(array($this, $fieldName), $arguments ?: []);
-			} else {
-				$value = $this->$fieldName;
-			}
+		} else {
+			$value = $this->$fieldName;
+		}
 
 		// Cast object
 		if(!is_object($value)) {

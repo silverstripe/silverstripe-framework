@@ -3,6 +3,7 @@ use Embed\Adapters\AdapterInterface;
 use Embed\Embed;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\FieldType\DBField;
 
 
 /**
@@ -153,15 +154,9 @@ class HTMLEditorField extends TextareaField {
  */
 class HTMLEditorField_Readonly extends HTMLReadonlyField {
 	private static $casting = [
-		'Value' => 'HTMLText'
+		'Value' => 'HTMLText',
 	];
 
-	public function Field($properties = array()) {
-		$valforInput = $this->value ? Convert::raw2att($this->value) : "";
-		return "<span class=\"readonly typography\" id=\"" . $this->id() . "\">"
-			. ( $this->value && $this->value != '<p></p>' ? $this->value : '<i>(not set)</i>' )
-			. "</span><input type=\"hidden\" name=\"".$this->name."\" value=\"".$valforInput."\" />";
-	}
 	public function Type() {
 		return 'htmleditorfield readonly';
 	}
@@ -245,7 +240,10 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 				$contentComposite = new CompositeField(
 					OptionsetField::create(
 						'LinkType',
-						sprintf($numericLabelTmpl, '1', _t('HTMLEditorField.LINKTO', 'Link to')),
+						DBField::create_field(
+							'HTMLFragment',
+							sprintf($numericLabelTmpl, '1', _t('HTMLEditorField.LINKTO', 'Link to'))
+						),
 						array(
 							'internal' => _t('HTMLEditorField.LINKINTERNAL', 'Page on the site'),
 							'external' => _t('HTMLEditorField.LINKEXTERNAL', 'Another website'),
