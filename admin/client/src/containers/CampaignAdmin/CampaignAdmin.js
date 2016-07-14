@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { withRouter } from 'react-router';
 import backend from 'lib/Backend';
 import * as breadcrumbsActions from 'state/breadcrumbs/BreadcrumbsActions';
 import BreadcrumbComponent from 'components/Breadcrumb/Breadcrumb';
-import router from 'lib/Router';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormAction from 'components/FormAction/FormAction';
 import i18n from 'i18n';
@@ -17,7 +17,6 @@ class CampaignAdmin extends SilverStripeComponent {
   constructor(props) {
     super(props);
 
-    this.addCampaign = this.addCampaign.bind(this);
     this.publishApi = backend.createEndpointFetcher({
       url: this.props.sectionConfig.publishEndpoint.url,
       method: this.props.sectionConfig.publishEndpoint.method,
@@ -26,19 +25,16 @@ class CampaignAdmin extends SilverStripeComponent {
         id: { urlReplacement: ':id', remove: true },
       },
     });
-    this.campaignListCreateFn = this.campaignListCreateFn.bind(this);
-    this.campaignAddCreateFn = this.campaignAddCreateFn.bind(this);
-    this.campaignEditCreateFn = this.campaignEditCreateFn.bind(this);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
   }
 
   componentWillReceiveProps(props) {
     const hasChangedRoute = (
-      this.props.campaignId !== props.campaignId ||
-      this.props.view !== props.view
+      this.props.params.id !== props.params.id ||
+      this.props.params.view !== props.params.view
     );
     if (hasChangedRoute) {
-      this.setBreadcrumbs(props.view, props.campaignId);
+      this.setBreadcrumbs(props.params.view, props.params.id);
     }
   }
 
@@ -46,7 +42,7 @@ class CampaignAdmin extends SilverStripeComponent {
     // Set root breadcrumb
     const breadcrumbs = [{
       text: i18n._t('Campaigns.CAMPAIGN', 'Campaigns'),
-      href: this.props.sectionConfig.route,
+      href: this.props.sectionConfig.url,
     }];
     switch (view) {
       case 'show':
@@ -79,7 +75,7 @@ class CampaignAdmin extends SilverStripeComponent {
       const last = this.props.breadcrumbs[this.props.breadcrumbs.length - 2];
       if (last && last.href) {
         event.preventDefault();
-        window.ss.router.show(last.href);
+        this.props.router.push(last.href);
         return;
       }
     }
@@ -88,7 +84,7 @@ class CampaignAdmin extends SilverStripeComponent {
   render() {
     let view = null;
 
-    switch (this.props.view) {
+    switch (this.props.params.view) {
       case 'show':
         view = this.renderItemListView();
         break;
@@ -115,10 +111,10 @@ class CampaignAdmin extends SilverStripeComponent {
     const formActionProps = {
       label: i18n._t('Campaigns.ADDCAMPAIGN'),
       icon: 'plus',
-      handleClick: this.addCampaign,
+      handleClick: this.addCampaign.bind(this),
     };
     const formBuilderProps = {
-      createFn: this.campaignListCreateFn,
+      createFn: this.campaignListCreateFn.bind(this),
       schemaUrl,
     };
 
@@ -151,10 +147,10 @@ class CampaignAdmin extends SilverStripeComponent {
   renderItemListView() {
     const props = {
       sectionConfig: this.props.sectionConfig,
-      campaignId: this.props.campaignId,
+      campaignId: this.props.params.id,
       itemListViewEndpoint: this.props.sectionConfig.itemListViewEndpoint,
       publishApi: this.publishApi,
-      handleBackButtonClick: this.handleBackButtonClick,
+      handleBackButtonClick: this.handleBackButtonClick.bind(this),
     };
 
     return (
@@ -168,8 +164,8 @@ class CampaignAdmin extends SilverStripeComponent {
   renderDetailEditView() {
     const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
     const formBuilderProps = {
-      createFn: this.campaignEditCreateFn,
-      schemaUrl: `${baseSchemaUrl}/${this.props.campaignId}`,
+      createFn: this.campaignEditCreateFn.bind(this),
+      schemaUrl: `${baseSchemaUrl}/${this.props.params.id}`,
     };
 
     return (
@@ -191,9 +187,10 @@ class CampaignAdmin extends SilverStripeComponent {
    * Render the view for creating a new Campaign.
    */
   renderCreateView() {
+    const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
     const formBuilderProps = {
-      createFn: this.campaignAddCreateFn,
-      schemaUrl: this.props.sectionConfig.form.DetailEditForm.schemaUrl,
+      createFn: this.campaignAddCreateFn.bind(this),
+      schemaUrl: `${baseSchemaUrl}/${this.props.params.id}`,
     };
 
     return (
@@ -218,14 +215,14 @@ class CampaignAdmin extends SilverStripeComponent {
    * @return {Object} - Instanciated React component
    */
   campaignEditCreateFn(Component, props) {
-    const indexRoute = this.props.sectionConfig.route;
+    const url = this.props.sectionConfig.url;
 
     // Route to the Campaigns index view when 'Cancel' is clicked.
     if (props.name === 'action_cancel') {
       const extendedProps = Object.assign({}, props, {
         handleClick: (event) => {
           event.preventDefault();
-          router.show(indexRoute);
+          this.props.router.push(url);
         },
       });
 
@@ -245,14 +242,14 @@ class CampaignAdmin extends SilverStripeComponent {
    * @return {Object} - Instanciated React component
    */
   campaignAddCreateFn(Component, props) {
-    const indexRoute = this.props.sectionConfig.route;
+    const url = this.props.sectionConfig.url;
 
     // Route to the Campaigns index view when 'Cancel' is clicked.
     if (props.name === 'action_cancel') {
       const extendedProps = Object.assign({}, props, {
         handleClick: (event) => {
           event.preventDefault();
-          router.show(indexRoute);
+          this.props.router.push(url);
         },
       });
 
@@ -272,28 +269,17 @@ class CampaignAdmin extends SilverStripeComponent {
    * @return object - Instanciated React component
    */
   campaignListCreateFn(Component, props) {
-    const campaignViewRoute = this.props.sectionConfig.campaignViewRoute;
+    const sectionUrl = this.props.sectionConfig.url;
     const typeUrlParam = 'set';
 
     if (props.component === 'GridField') {
       const extendedProps = Object.assign({}, props, {
         data: Object.assign({}, props.data, {
           handleDrillDown: (event, record) => {
-            // Set url and set list
-            const path = campaignViewRoute
-              .replace(/:type\?/, typeUrlParam)
-              .replace(/:id\?/, record.ID)
-              .replace(/:view\?/, 'show');
-
-            router.show(path);
+            this.props.router.push(`${sectionUrl}/${typeUrlParam}/${record.ID}/show`);
           },
           handleEditRecord: (event, id) => {
-            const path = campaignViewRoute
-              .replace(/:type\?/, typeUrlParam)
-              .replace(/:id\?/, id)
-              .replace(/:view\?/, 'edit');
-
-            router.show(path);
+            this.props.router.push(`${sectionUrl}/${typeUrlParam}/${id}/edit`);
           },
         }),
       });
@@ -306,7 +292,7 @@ class CampaignAdmin extends SilverStripeComponent {
 
   addCampaign() {
     const path = this.getActionRoute(0, 'create');
-    window.ss.router.show(path);
+    this.props.router.push(path);
   }
 
   /**
@@ -315,10 +301,7 @@ class CampaignAdmin extends SilverStripeComponent {
    * @param {string} view
    */
   getActionRoute(id, view) {
-    return this.props.sectionConfig.campaignViewRoute
-      .replace(/:type\?/, 'set')
-      .replace(/:id\?/, id)
-      .replace(/:view\?/, view);
+    return `${this.props.sectionConfig.url}/set/${id}/${view}`;
   }
 }
 
@@ -336,6 +319,8 @@ function mapStateToProps(state) {
     campaignId: state.campaign.campaignId,
     view: state.campaign.view,
     breadcrumbs: state.breadcrumbs,
+    sectionConfig: state.config.sections.CampaignAdmin,
+    securityId: state.config.SecurityID,
   };
 }
 
@@ -345,4 +330,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CampaignAdmin);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CampaignAdmin));

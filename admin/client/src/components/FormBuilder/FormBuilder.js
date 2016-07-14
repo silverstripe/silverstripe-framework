@@ -4,64 +4,16 @@ import { bindActionCreators } from 'redux';
 import * as formActions from 'state/form/FormActions';
 import * as schemaActions from 'state/schema/SchemaActions';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
-import FormComponent from 'components/Form/Form';
-import FormActionComponent from 'components/FormAction/FormAction';
-import TextField from 'components/TextField/TextField';
-import HiddenField from 'components/HiddenField/HiddenField';
-import GridField from 'components/GridField/GridField';
+import Form from 'components/Form/Form';
+import FormAction from 'components/FormAction/FormAction';
 import fetch from 'isomorphic-fetch';
 import deepFreeze from 'deep-freeze-strict';
 import backend from 'lib/Backend';
+import injector from 'lib/Injector';
 import merge from 'merge';
 
 import es6promise from 'es6-promise';
 es6promise.polyfill();
-
-// Using this to map field types to components until we implement dependency injection.
-const fakeInjector = {
-
-  /**
-   * Components registered with the fake DI container.
-   */
-  components: {
-    TextField,
-    GridField,
-    HiddenField,
-  },
-
-  /**
-   * Gets the component matching the passed component name.
-   * Used when a component type is provided bt the form schema.
-   *
-   * @param string componentName - The name of the component to get from the injector.
-   *
-   * @return object|null
-   */
-  getComponentByName(componentName) {
-    return this.components[componentName];
-  },
-
-  /**
-   * Default data type to component mappings.
-   * Used as a fallback when no component type is provided in the form schema.
-   *
-   * @param string dataType - The data type provided by the form schema.
-   *
-   * @return object|null
-   */
-  getComponentByDataType(dataType) {
-    switch (dataType) {
-      case 'Text':
-        return this.components.TextField;
-      case 'Hidden':
-        return this.components.HiddenField;
-      case 'Custom':
-        return this.components.GridField;
-      default:
-        return null;
-    }
-  },
-};
 
 export class FormBuilderComponent extends SilverStripeComponent {
 
@@ -285,8 +237,8 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
     return fields.map((field, i) => {
       const Component = field.component !== null
-        ? fakeInjector.getComponentByName(field.component)
-        : fakeInjector.getComponentByDataType(field.type);
+        ? injector.getComponentByName(field.component)
+        : injector.getComponentByDataType(field.type);
 
       if (Component === null) {
         return null;
@@ -343,10 +295,10 @@ export class FormBuilderComponent extends SilverStripeComponent {
       }
 
       if (typeof createFn === 'function') {
-        return createFn(FormActionComponent, props);
+        return createFn(FormAction, props);
       }
 
-      return <FormActionComponent key={i} {...props} />;
+      return <FormAction key={i} {...props} />;
     });
   }
 
@@ -418,7 +370,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
       mapFieldsToComponents: this.mapFieldsToComponents,
     };
 
-    return <FormComponent {...formProps} />;
+    return <Form {...formProps} />;
   }
 }
 

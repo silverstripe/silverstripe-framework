@@ -297,6 +297,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		if(!$root) {
 			$root = 'LeftAndMain';
 		}
+		$abstractClasses = ['LeftAndMain', 'CMSMain'];
 		$subClasses = array_values(ClassInfo::subclassesFor($root));
 		foreach($subClasses as $className) {
 			if($recursive && $className != $root) {
@@ -306,7 +307,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		$subClasses = array_unique($subClasses);
 		foreach($subClasses as $key => $className) {
 			// Remove abstract classes and LeftAndMain
-			if('LeftAndMain' == $className || ClassInfo::classImplements($className, 'TestOnly')) {
+			if(in_array($className, $abstractClasses) || ClassInfo::classImplements($className, 'TestOnly')) {
 				unset($subClasses[$key]);
 			} else {
 				// Separate conditional to avoid autoloading the class

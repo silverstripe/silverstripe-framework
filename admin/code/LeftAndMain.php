@@ -221,6 +221,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$combinedClientConfig['sections'][$className] =  Injector::inst()->get($className)->getClientConfig();
 		}
 
+		// Pass in base url (absolute and relative)
+		$combinedClientConfig['baseUrl'] = Director::baseURL();
+		$combinedClientConfig['absoluteBaseUrl'] = Director::absoluteBaseURL();
+
 		// Get "global" CSRF token for use in JavaScript
 		$token = SecurityToken::inst();
 		$combinedClientConfig[$token->getName()] = $token->getValue();
@@ -241,7 +245,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function getClientConfig() {
 		return [
-			'route' => $this->Link()
+			// Trim leading/trailing slash to make it easier to concatenate URL
+			// and use in routing definitions.
+			'url' => trim($this->Link(), '/'),
 		];
 	}
 

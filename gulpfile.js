@@ -65,7 +65,7 @@ const browserifyOptions = {
 
 const babelifyOptions = {
   presets: ['es2015', 'es2015-ie', 'react'],
-  plugins: ['transform-object-assign'],
+  plugins: ['transform-object-assign', 'transform-object-rest-spread'],
   ignore: /(node_modules|thirdparty)/,
   comments: false,
 };
@@ -249,6 +249,12 @@ gulp.task('bundle-lib', function bundleLib() {
     .require('redux-thunk',
       { expose: 'redux-thunk' }
     )
+    .require('react-router',
+      { expose: 'react-router' }
+    )
+    .require('react-router-redux',
+      { expose: 'react-router-redux' }
+    )
     .require('page.js',
       { expose: 'page.js' }
     )
@@ -297,6 +303,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/components/Breadcrumb/Breadcrumb`,
       { expose: 'components/Breadcrumb/Breadcrumb' }
     )
+    .require(`${PATHS.ADMIN_JS_SRC}/state/breadcrumbs/BreadcrumbsActions`,
+      { expose: 'state/breadcrumbs/BreadcrumbsActions' }
+    )
     .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }
     )
@@ -309,8 +318,11 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/lib/ReducerRegister.js`,
       { expose: 'lib/ReducerRegister' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/lib/RouteRegister.js`,
-      { expose: 'lib/RouteRegister' }
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/ReactRouteRegister.js`,
+      { expose: 'lib/ReactRouteRegister' }
+    )
+    .require(`${PATHS.ADMIN_JS_SRC}/lib/Injector.js`,
+      { expose: 'lib/Injector' }
     )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Router.js`,
       { expose: 'lib/Router' }
@@ -379,24 +391,29 @@ gulp.task('bundle-framework', function bundleBoot() {
       gulpUtil.log('Finished', `bundled ${bundleFileName} ${msg}`);
     })
     .transform('babelify', babelifyOptions)
-    .external('components/Toolbar/Toolbar')
-    .external('components/FormBuilder/FormBuilder')
+    .external('bootstrap-collapse')
+    .external('components/Breadcrumb/Breadcrumb')
+    .external('state/breadcrumbs/BreadcrumbsActions')
     .external('components/FormAction/FormAction')
-    .external('deep-freeze-strict')
+    .external('components/FormBuilder/FormBuilder')
     .external('components/GridField/GridField')
+    .external('components/Toolbar/Toolbar')
+    .external('deep-freeze-strict')
     .external('i18n')
     .external('jQuery')
+    .external('lib/Backend')
+    .external('lib/ReducerRegister')
+    .external('lib/ReactRouteRegister')
+    .external('lib/SilverStripeComponent')
     .external('page.js')
     .external('react-addons-test-utils')
     .external('react-dom')
     .external('react-redux')
+    .external('react-router-redux')
+    .external('react-router')
     .external('react')
-    .external('lib/ReducerRegister')
     .external('redux-thunk')
     .external('redux')
-    .external('lib/Backend')
-    .external('lib/SilverStripeComponent')
-    .external('bootstrap-collapse')
     .bundle()
     .on('update', bundleBoot)
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))

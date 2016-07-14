@@ -24,15 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 ## Registering routes
 
-The [RouteRegister](../lib/RouteRegister.js) can be used to register routes which will
+The [ReactRouteRegister](../lib/ReactRouteRegister.js) can be used to register routes which will
 be applied to Page.js when `appBoot` is called.
 
 __controller.js__
 ```
-import routeRegister from 'lib/RouteRegister';
+import reactRouteRegister from 'lib/ReactRouteRegister';
 
 document.addEventListener('DOMContentLoaded', () => {
-  routeRegister.add('/some/route', (ctx, next) => {
+  reactRouteRegister.add('/some/route', (ctx, next) => {
     // Do stuff.
   });
 });
@@ -47,13 +47,13 @@ the main application Redux store. This store is passed into every route callback
 __controller.js__
 ```
 import reducerRegister from 'lib/ReducerRegister';
-import routeRegister from 'lib/RouteRegister';
+import reactRouteRegister from 'lib/RouteRegister';
 import ProductReducer from '../state/product/ProductReducer';
 
 document.addEventListener('DOMContentLoaded', () => {
   reducerRegister.add('product', ProductReducer);
 
-  routeRegister.add('/products', (ctx, next) => {
+  reactRouteRegister.add('/products', (ctx, next) => {
     ctx.store.getState().product // -> { products: [] }
   });
 });

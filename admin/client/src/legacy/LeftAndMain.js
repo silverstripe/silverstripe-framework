@@ -136,17 +136,12 @@ $.entwine('ss', function($) {
   // global ajax handlers
   $(document).ajaxComplete(function(e, xhr, settings) {
     // Simulates a redirect on an ajax response.
-    var origUrl,
+    var origUrl = document.URL,
       url = xhr.getResponseHeader('X-ControllerURL'),
       destUrl = settings.url,
       msg = xhr.getResponseHeader('X-Status') !== null ? xhr.getResponseHeader('X-Status') : xhr.statusText, // Handle custom status message headers
       msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
       ignoredMessages = ['OK', 'success'];
-    if(window.history.state) {
-      origUrl = window.history.state.path;
-    } else {
-      origUrl = document.URL;
-    }
 
     // Only redirect if controller url differs to the requested or current one
     if (url !== null && (!isSameUrl(origUrl, url) || !isSameUrl(destUrl, url))) {
@@ -230,12 +225,6 @@ $.entwine('ss', function($) {
       $(window).unbind('resize', positionLoadingSpinner);
       this.restoreTabState();
       this._super();
-    },
-
-    fromWindow: {
-      onstatechange: function(event, historyState){
-        this.handleStateChange(event, historyState);
-      }
     },
 
     'onwindowresize': function() {
@@ -365,12 +354,13 @@ $.entwine('ss', function($) {
     },
 
     /**
-     * @param string url
-     * @param string title - New window title.
-     * @param object data - Any additional data passed through to `window.history.state`.
-     * @param boolean forceReload - Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
+     * @param {String} url
+     * @param {String} title New window title.
+     * @param {Object} data Any additional data passed through to `window.history.state`.
+     * @param {Boolean} forceReload Forces the replacement of the current history state, even if the URL is the same, i.e. allows reloading.
+     * @param {String} forceReferer
      */
-    loadPanel: function (url, title = '', data = {}, forceReload, forceReferer = window.history.state.path) {
+    loadPanel: function (url, title = '', data = {}, forceReload, forceReferer = document.URL) {
       // Check for unsaved changes
       if (!this.checkCanNavigate(data.pjax ? data.pjax.split(',') : ['Content'])) {
         return;
@@ -391,7 +381,7 @@ $.entwine('ss', function($) {
      * Nice wrapper for reloading current history state.
      */
     reloadCurrentPanel: function() {
-      this.loadPanel(window.history.state.path, null, null, true);
+      this.loadPanel(document.URL, null, null, true);
     },
 
     /**
@@ -440,7 +430,7 @@ $.entwine('ss', function($) {
       // Also rewrites anchors to their page counterparts, which is important
       // as automatic browser ajax response redirects seem to discard the hash/fragment.
       // TODO Replaces trailing slashes added by History after locale (e.g. admin/?locale=en/)
-      formData.push({ name: 'BackURL', value: window.history.state.path.replace(/\/$/, '') });
+      formData.push({ name: 'BackURL', value: document.URL.replace(/\/$/, '') });
 
       // Save tab selections so we can restore them later
       this.saveTabState();
@@ -577,7 +567,7 @@ $.entwine('ss', function($) {
 
       let promise = $.ajax({
         headers: headers,
-        url: historyState.path
+        url: historyState.path || document.URL
       })
       .done((data, status, xhr) => {
         var els = self.handleAjaxResponse(data, status, xhr, historyState);
@@ -925,11 +915,7 @@ $.entwine('ss', function($) {
     },
 
     _tabStateUrl: function() {
-      if (window.history.state === null) {
-        return;
-      }
-
-      return window.history.state.path
+      return window.location.href
         .replace(/\?.*/, '')
         .replace(/#.*/, '')
         .replace($('base').attr('href'), '');

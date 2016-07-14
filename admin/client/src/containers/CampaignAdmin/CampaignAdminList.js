@@ -30,7 +30,7 @@ class CampaignAdminList extends SilverStripeComponent {
   }
 
   componentDidMount() {
-    const fetchURL = this.props.itemListViewEndpoint.replace(/:id/, this.props.campaignId);
+    const fetchURL = this.props.itemListViewEndpoint.url.replace(/:id/, this.props.campaignId);
     super.componentDidMount();
     this.setBreadcrumbs();
 
@@ -51,26 +51,14 @@ class CampaignAdminList extends SilverStripeComponent {
       return;
     }
 
-    // Check that we haven't navigated away from this page once the callback has returned
-    const thisLink = this.props.sectionConfig.campaignViewRoute
-      .replace(/:type\?/, 'set')
-      .replace(/:id\?/, this.props.campaignId)
-      .replace(/:view\?/, 'show');
-    const applies = window.ss.router.routeAppliesToCurrentLocation(
-      window.ss.router.resolveURLToBase(thisLink)
-    );
-    if (!applies) {
-      return;
-    }
-
     // Push breadcrumb
     const breadcrumbs = [{
       text: i18n._t('Campaigns.CAMPAIGN', 'Campaigns'),
-      href: this.props.sectionConfig.route,
+      href: this.props.sectionConfig.url,
     }];
     breadcrumbs.push({
       text: this.props.record.Name,
-      href: thisLink,
+      href: `${this.props.sectionConfig.url}/set/${this.props.campaignId}/show`,
     });
 
     this.props.breadcrumbsActions.setBreadcrumbs(breadcrumbs);
@@ -144,7 +132,10 @@ class CampaignAdminList extends SilverStripeComponent {
     });
 
     // Set body
-    const pagesLink = this.props.config.sections.CMSMain.route;
+    const pagesLink = [
+      this.props.config.baseUrl,
+      this.props.config.sections.CMSPagesController.url,
+    ].join('/');
     const body = accordionBlocks.length
       ? (<Accordion>{accordionBlocks}</Accordion>)
       : (
