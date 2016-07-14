@@ -37,7 +37,7 @@ display up to two levels of tabs in the interface. If you want to group data fur
 ## Moving a field between tabs
 
 	:::php
-	$field = $fields->dataFieldByName('Content');
+	$content = $fields->dataFieldByName('Content');
 
 	$fields->removeFieldFromTab('Root.Main', 'Content');
 	$fields->addFieldToTab('Root.MyContent', $content);
