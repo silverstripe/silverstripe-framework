@@ -873,7 +873,7 @@ class Form extends RequestHandler {
 	/**
 	 * Set the target of this form to any value - useful for opening the form contents in a new window or refreshing
 	 * another frame
-	 * 
+	 *
 	 * @param string|FormTemplateHelper
 	 */
 	public function setTemplateHelper($helper) {
@@ -1635,11 +1635,17 @@ class Form extends RequestHandler {
 	 * @return FormAction
 	 */
 	public function buttonClicked() {
-		foreach($this->actions->dataFields() as $action) {
-			if($action->hasMethod('actionname') && $this->buttonClickedFunc == $action->actionName()) {
+		$actions = $this->actions->dataFields();
+ 		if(!$actions) {
+			return null;
+		}
+
+ 		foreach($actions as $action) {
+			if($action instanceof FormAction && $this->buttonClickedFunc == $action->actionName()) {
 				return $action;
 			}
 		}
+		return null;
 	}
 
 	/**
