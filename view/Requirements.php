@@ -1359,8 +1359,8 @@ class Requirements_Backend {
 			$this->css($theme . $css, $media);
 		} elseif($module) {
 			$this->css($module . $css, $media);
-		} elseif (Director::isDev()) {
-			throw Exception("The css file doesn't exists. Please check if the file $name.css exists in any context or search for themedCSS references calling this file in your templates.");
+		} else {
+			throw new InvalidArgumentException("The css file doesn't exists. Please check if the file $name.css exists in any context or search for themedCSS references calling this file in your templates.");
 		}
 	}
 
