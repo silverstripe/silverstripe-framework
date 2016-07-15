@@ -190,6 +190,23 @@ class Requirements implements Flushable {
 	}
 
 	/**
+	 * Registers the given themeable javascript as required.
+	 *
+	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
+	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
+	 * the module is used.
+	 *
+	 * @param string $name   The name of the file - eg '/javascript/File.js' would have the name 'File'
+	 * @param string $module The module to fall back to if the javascript file does not exist in the
+	 *                       current theme.
+	 * @param string $type  Comma-separated list of types to use in the script tag
+	 *                       (e.g. 'text/javascript,text/ecmascript')
+	 */
+	public static function themedJavascript($name, $module = null, $type = null) {
+		return self::backend()->themedJavascript($name, $module, $type);
+	}
+
+	/**
 	 * Clear either a single or all requirements
 	 *
 	 * Caution: Clearing single rules added via customCSS and customScript only works if you
@@ -1342,6 +1359,42 @@ class Requirements_Backend {
 			$this->css($theme . $css, $media);
 		} elseif($module) {
 			$this->css($module . $css, $media);
+		} elseif (Director::isDev()) {
+			throw Exception("The css file doesn't exists. Please check if the file $name.css exists in any context or search for themedCSS references calling this file in your templates.");
+		}
+	}
+
+	/**
+	 * Registers the given themeable javascript as required.
+	 *
+	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
+	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
+	 * the module is used.
+	 *
+	 * @param string $name   The name of the file - eg '/js/File.js' would have the name 'File'
+	 * @param string $module The module to fall back to if the javascript file does not exist in the
+	 *                       current theme.
+	 * @param string $type  Comma-separated list of types to use in the script tag
+	 *                       (e.g. 'text/javascript,text/ecmascript')
+	 */
+	public function themedJavascript($name, $module = null, $type = null) {
+		$theme = SSViewer::get_theme_folder();
+		$project = project();
+		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
+		$abstheme = $absbase . $theme;
+		$absproject = $absbase . $project;
+		$js = "/javascript/$name.js";
+
+		if(file_exists($absproject . $js)) {
+			$this->javascript($project . $js);
+		} elseif($module && file_exists($abstheme . '_' . $module.$js)) {
+			$this->javascript($theme . '_' . $module . $js);
+		} elseif(file_exists($abstheme . $js)) {
+			$this->javascript($theme . $js);
+		} elseif($module) {
+			$this->javascript($module . $js);
+		} else {
+			throw new InvalidArgumentException("The javascript file doesn't exists. Please check if the file $name.js exists in any context or search for themedJavascript references calling this file in your templates.");
 		}
 	}
 
