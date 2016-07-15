@@ -366,7 +366,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			'ModelName' => Convert::raw2att($modelName),
 			'Fields' => $specFields,
 			'Relations' => $specRelations,
-		))->renderWith('ModelAdmin_ImportSpec');
+		))->renderWith('Includes/ModelAdmin_ImportSpec');
 
 		$fields->push(new LiteralField("SpecFor{$modelName}", $specHTML));
 		$fields->push(

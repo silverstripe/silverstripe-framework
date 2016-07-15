@@ -86,7 +86,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 			'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
 		));
 
-		return $data->renderWith('GridFieldEditButton');
+		return $data->renderWith('Includes/GridFieldEditButton');
 	}
 
 	/**

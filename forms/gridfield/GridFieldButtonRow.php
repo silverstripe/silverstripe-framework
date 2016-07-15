@@ -27,7 +27,7 @@ class GridFieldButtonRow implements GridField_HTMLProvider {
 		));
 
 		return array(
-			$this->targetFragment => $data->renderWith('GridFieldButtonRow')
+			$this->targetFragment => $data->renderWith('Includes/GridFieldButtonRow')
 		);
 	}
 }

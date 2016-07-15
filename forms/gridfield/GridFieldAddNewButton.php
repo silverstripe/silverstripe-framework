@@ -44,7 +44,7 @@ class GridFieldAddNewButton implements GridField_HTMLProvider {
 		));
 
 		return array(
-			$this->targetFragment => $data->renderWith('GridFieldAddNewbutton'),
+			$this->targetFragment => $data->renderWith('Includes/GridFieldAddNewButton'),
 		);
 	}
 

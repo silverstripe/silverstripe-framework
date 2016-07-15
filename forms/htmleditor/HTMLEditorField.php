@@ -181,7 +181,7 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 	/**
 	 * @var string
 	 */
-	protected $templateViewFile = 'HTMLEditorField_viewfile';
+	protected $templateViewFile = 'Includes/HTMLEditorField_viewfile';
 
 	protected $controller, $name;
 

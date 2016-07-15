@@ -67,7 +67,7 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 		$paginator = $this->getPaginator($gridField);
 		if ($paginator && ($forTemplate = $paginator->getTemplateParameters($gridField))) {
 			return array(
-				$this->targetFragment => $forTemplate->renderWith($this->itemClass)
+				$this->targetFragment => $forTemplate->renderWith('Includes/'.$this->itemClass)
 			);
 		}
 	}

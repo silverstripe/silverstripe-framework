@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\View\TemplateLoader;
+
 /**
  * Default configuration for HtmlEditor specific to tinymce
  */
@@ -419,13 +421,18 @@ class TinyMCEConfig extends HTMLEditorConfig {
 			Director::absoluteBaseURL(),
 			FRAMEWORK_ADMIN_DIR . '/client/dist/styles/editor.css'
 		);
-		if($theme = SSViewer::get_theme_folder()) {
-			$editorDir = $theme . '/css/editor.css';
+
+		foreach(SSViewer::get_themes() as $theme) {
+			$path = TemplateLoader::instance()->getPath($theme);
+			$editorDir = $path . '/css/editor.css';;
+
 			if(file_exists(BASE_PATH . '/' . $editorDir)) {
 				$editor[] = Controller::join_links(
 					Director::absoluteBaseURL(),
 					$editorDir
 				);
+
+				break;
 			}
 		}
 		return $editor;

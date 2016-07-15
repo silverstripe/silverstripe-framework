@@ -1,9 +1,11 @@
 <?php
+
+use SilverStripe\View\TemplateLoader;
+
 /**
  * @package framework
  * @subpackage i18n
  */
-
 class i18nSSLegacyAdapterTest extends SapphireTest {
 
 	public function setUp() {
@@ -14,10 +16,10 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		Filesystem::makeFolder($this->alternateBaseSavePath);
 		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 
-		// Push a template loader running from the fake webroot onto the stack.
-		$templateManifest = new SS_TemplateManifest($this->alternateBasePath, null, false, true);
-		$templateManifest->regenerate(false);
-		SS_TemplateLoader::instance()->pushManifest($templateManifest);
+		// Replace old template loader with new one with alternate base path
+		$this->_oldLoader = TemplateLoader::instance();
+		TemplateLoader::set_instance(new TemplateLoader($this->alternateBasePath));
+
 		$this->_oldTheme = Config::inst()->get('SSViewer', 'theme');
 		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
 
@@ -40,7 +42,7 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 	}
 
 	public function tearDown() {
-		SS_TemplateLoader::instance()->popManifest();
+		TemplateLoader::set_instance($this->_oldLoader);
 		SS_ClassLoader::instance()->popManifest();
 		i18n::set_locale($this->originalLocale);
 		Config::inst()->update('Director', 'alternate_base_folder', null);

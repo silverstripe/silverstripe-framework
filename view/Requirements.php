@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\Filesystem\Storage\GeneratedAssetHandler;
+use SilverStripe\View\TemplateLoader;
 
 /**
  * Requirements tracker for JavaScript and CSS.
@@ -818,7 +819,7 @@ class Requirements_Backend
 	public function javascript($file, $options = array()) {
 	    // make sure that async/defer is set if it is set once even if file is included multiple times
         $async = (
-            isset($options['async']) && isset($options['async']) == true  
+            isset($options['async']) && isset($options['async']) == true
             || (
                 isset($this->javascript[$file])
                 && isset($this->javascript[$file]['async'])
@@ -842,7 +843,7 @@ class Requirements_Backend
 		if(isset($options['provides'])) {
 			$this->providedJavascript[$file] = array_values($options['provides']);
 	    }
-	
+
 	}
 
 	/**
@@ -1798,21 +1799,27 @@ class Requirements_Backend
 	 *                       (e.g. 'screen,projector')
 	 */
 	public function themedCSS($name, $module = null, $media = null) {
-		$theme = SSViewer::get_theme_folder();
-		$project = project();
-		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
-		$abstheme = $absbase . $theme;
-		$absproject = $absbase . $project;
 		$css = "/css/$name.css";
 
+		$project = project();
+		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
+		$absproject = $absbase . $project;
+
 		if(file_exists($absproject . $css)) {
-			$this->css($project . $css, $media);
-		} elseif($module && file_exists($abstheme . '_' . $module.$css)) {
-			$this->css($theme . '_' . $module . $css, $media);
-		} elseif(file_exists($abstheme . $css)) {
-			$this->css($theme . $css, $media);
-		} elseif($module) {
-			$this->css($module . $css, $media);
+			return $this->css($project . $css, $media);
+		}
+
+		foreach(SSViewer::get_themes() as $theme) {
+			$path = TemplateLoader::instance()->getPath($theme);
+			$abspath = BASE_PATH . '/' . $path;
+
+			if(file_exists($abspath . $css)) {
+				return $this->css($path . $css, $media);
+			}
+		}
+
+		if($module) {
+			return $this->css($module . $css, $media);
 		}
 	}
 

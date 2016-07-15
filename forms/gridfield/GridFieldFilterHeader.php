@@ -162,7 +162,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 		}
 
 		return array(
-			'header' => $forTemplate->renderWith('GridFieldFilterHeader_Row'),
+			'header' => $forTemplate->renderWith('Includes/GridFieldFilterHeader_Row'),
 		);
 	}
 }

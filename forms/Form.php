@@ -1632,7 +1632,7 @@ class Form extends RequestHandler {
 	public function forTemplate() {
 		$return = $this->renderWith(array_merge(
 			(array)$this->getTemplate(),
-			array('Form')
+			array('Includes/Form')
 		));
 
 		// Now that we're rendered, clear message

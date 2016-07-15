@@ -48,7 +48,7 @@ class AssetField extends FileField {
 	 *
 	 * @var string
 	 */
-	protected $templateFileButtons = 'AssetField_FileButtons';
+	protected $templateFileButtons = 'Includes/AssetField_FileButtons';
 
 	/**
 	 * Parent data record. Will be infered from parent form or controller if blank. The destination

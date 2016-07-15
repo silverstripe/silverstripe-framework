@@ -65,7 +65,7 @@ class UploadField extends FileField {
 	 *
 	 * @var string
 	 */
-	protected $templateFileButtons = 'UploadField_FileButtons';
+	protected $templateFileButtons = 'Includes/UploadField_FileButtons';
 
 	/**
 	 * Template to use for the edit form
