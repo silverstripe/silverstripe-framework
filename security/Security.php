@@ -139,6 +139,14 @@ class Security extends Controller implements TemplateGlobalProvider {
 	private static $lost_password_url = "Security/lostpassword";
 
 	/**
+	 * Value of X-Frame-Options header
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $frame_options = 'SAMEORIGIN';
+
+	/**
 	 * Get location of word list file
 	 *
 	 * @deprecated 4.0 Use the "Security.word_list" config setting instead
@@ -317,7 +325,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		parent::init();
 
 		// Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-		$this->getResponse()->addHeader('X-Frame-Options', 'SAMEORIGIN');
+		$this->getResponse()->addHeader('X-Frame-Options', $this->config()->frame_options);
 	}
 
 	public function index() {
