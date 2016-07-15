@@ -5,9 +5,7 @@ import * as formActions from 'state/form/FormActions';
 import * as schemaActions from 'state/schema/SchemaActions';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import Form from 'components/Form/Form';
-import FormAction from 'components/FormAction/FormAction';
 import fetch from 'isomorphic-fetch';
-import deepFreeze from 'deep-freeze-strict';
 import backend from 'lib/Backend';
 import injector from 'lib/Injector';
 import merge from 'merge';
@@ -44,7 +42,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
   /**
    * Gets the ID for this form
    *
-   * @returns {string}
+   * @returns {String}
    */
   getFormId() {
     const schema = this.getFormSchema();
@@ -62,10 +60,10 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * Fetches data used to generate a form. This can be form schema and or form state data.
    * When the response comes back the data is saved to state.
    *
-   * @param boolean schema - If form schema data should be returned in the response.
-   * @param boolean state - If form state data should be returned in the response.
+   * @param {Boolean} schema If form schema data should be returned in the response.
+   * @param {Boolean} state If form state data should be returned in the response.
    *
-   * @return object - Promise from the AJAX request.
+   * @return {Object} Promise from the AJAX request.
    */
   fetch(schema = true, state = true) {
     const headerValues = [];
@@ -227,15 +225,14 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * Only top level form fields are handled here, composite fields (TabSets etc),
    * are responsible for mapping and rendering their children.
    *
-   * @param array fields
-   *
-   * @return array
+   * @param {Array} fields
+   * @return {Array}
    */
   mapFieldsToComponents(fields) {
     const createFn = this.props.createFn;
     const handleFieldUpdate = this.handleFieldUpdate;
 
-    return fields.map((field, i) => {
+    return fields.map((field) => {
       const Component = field.component !== null
         ? injector.getComponentByName(field.component)
         : injector.getComponentByDataType(field.type);
@@ -244,10 +241,18 @@ export class FormBuilderComponent extends SilverStripeComponent {
         return null;
       }
 
+      // Events
+      const extraProps = { onChange: handleFieldUpdate };
+
+      // Build child nodes
+      if (field.children) {
+        extraProps.children = this.mapFieldsToComponents(field.children);
+      }
+
       // Props which every form field receives.
       // Leave it up to the schema and component to determine
       // which props are required.
-      const props = Object.assign({}, field, { onChange: handleFieldUpdate });
+      const props = Object.assign({}, field, extraProps);
 
       // Provides container components a place to hook in
       // and apply customisations to scaffolded components.
@@ -255,51 +260,18 @@ export class FormBuilderComponent extends SilverStripeComponent {
         return createFn(Component, props);
       }
 
-      return <Component key={i} {...props} />;
+      return <Component key={props.id} {...props} />;
     });
   }
 
   /**
    * Maps a list of form actions to their React Component.
    *
-   * @param array actions
-   *
-   * @return array
+   * @param {Array} actions
+   * @return {Array}
    */
   mapActionsToComponents(actions) {
-    const createFn = this.props.createFn;
-    const form = this.props.form[this.getFormId()];
-
-    return actions.map((action, i) => {
-      let props = deepFreeze(action);
-
-      // Add sensible defaults for common actions.
-      switch (props.name) {
-        case 'action_save':
-          props = deepFreeze(Object.assign({}, {
-            type: 'submit',
-            label: props.title,
-            icon: 'save',
-            loading: typeof form !== 'undefined' ? form.submitting : false,
-            bootstrapButtonStyle: 'primary',
-          }, props));
-          break;
-        case 'action_cancel':
-          props = deepFreeze(Object.assign({}, {
-            type: 'button',
-            label: props.title,
-          }, props));
-          break;
-        default:
-          break;
-      }
-
-      if (typeof createFn === 'function') {
-        return createFn(FormAction, props);
-      }
-
-      return <FormAction key={i} {...props} />;
-    });
+    return this.mapFieldsToComponents(actions);
   }
 
   /**

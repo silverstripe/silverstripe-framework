@@ -38,7 +38,6 @@ class HiddenField extends SilverStripeComponent {
 }
 
 HiddenField.propTypes = {
-  label: React.PropTypes.string,
   extraClass: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func,

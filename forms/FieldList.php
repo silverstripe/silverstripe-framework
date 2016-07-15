@@ -651,7 +651,6 @@ class FieldList extends ArrayList {
 	 * @return String Rewritten path, based on {@link tabPathRewrites}
 	 */
 	protected function rewriteTabPath($name) {
-		$isRunningTest = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
 		foreach($this->getTabPathRewrites() as $regex => $replace) {
 			if(preg_match($regex, $name)) {
 				$newName = preg_replace($regex, $replace, $name);

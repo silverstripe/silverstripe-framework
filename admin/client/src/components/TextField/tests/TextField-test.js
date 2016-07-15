@@ -13,7 +13,7 @@ describe('TextField', () => {
 
   beforeEach(() => {
     props = {
-      label: '',
+      title: '',
       name: '',
       value: '',
       onChange: jest.genMockFunction(),

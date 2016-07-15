@@ -7,7 +7,7 @@ import SilverStripeComponent from 'lib/SilverStripeComponent';
  */
 class App extends SilverStripeComponent {
   render() {
-    return (<div>{this.props.children}</div>);
+    return (<div className="app">{this.props.children}</div>);
   }
 }
 

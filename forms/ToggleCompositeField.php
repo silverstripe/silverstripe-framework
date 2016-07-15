@@ -25,10 +25,9 @@ class ToggleCompositeField extends CompositeField {
 	 * @param array|FieldList $children
 	 */
 	public function __construct($name, $title, $children) {
-		$this->name = $name;
-		$this->title = $title;
-
 		parent::__construct($children);
+		$this->setName($name);
+		$this->setTitle($title);
 	}
 
 	/**

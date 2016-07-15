@@ -9,22 +9,29 @@ class FormAction extends SilverStripeComponent {
   }
 
   render() {
-    const props = {
-      type: this.props.type,
-      className: this.getButtonClasses(),
-      disabled: this.props.disabled,
-      onClick: this.handleClick,
-    };
-
-    if (typeof this.props.id !== 'undefined') {
-      props.id = this.props.id;
-    }
-
     return (
-      <button {...props}>
+      <button {...this.getButtonProps()}>
         {this.getLoadingIcon()}
-        {this.props.label}
+        {this.props.title}
       </button>
+    );
+  }
+
+  /**
+   * Get props for the button
+   *
+   * @returns {Object}
+   */
+  getButtonProps() {
+    // Merge attributes
+    return Object.assign({},
+      typeof this.props.attributes === 'undefined' ? {} : this.props.attributes,
+      {
+        id: this.props.id,
+        className: this.getButtonClasses(),
+        disabled: this.props.disabled,
+        onClick: this.handleClick,
+      }
     );
   }
 
@@ -37,16 +44,20 @@ class FormAction extends SilverStripeComponent {
     const buttonClasses = ['btn'];
 
     // Add 'type' class
-    buttonClasses.push(`btn-${this.props.bootstrapButtonStyle}`);
+    const bootstrapStyle = this.getBootstrapButtonStyle();
+    if (bootstrapStyle) {
+      buttonClasses.push(`btn-${bootstrapStyle}`);
+    }
 
     // If there is no text
-    if (typeof this.props.label === 'undefined') {
+    if (typeof this.props.title === 'undefined') {
       buttonClasses.push('btn--no-text');
     }
 
     // Add icon class
-    if (typeof this.props.icon !== 'undefined') {
-      buttonClasses.push(`font-icon-${this.props.icon}`);
+    const icon = this.getIcon();
+    if (icon) {
+      buttonClasses.push(`font-icon-${icon}`);
     }
 
     // Add loading class
@@ -67,6 +78,34 @@ class FormAction extends SilverStripeComponent {
   }
 
   /**
+   * Gets the bootstrap classname for this action
+   *
+   * @return {String}
+   */
+  getBootstrapButtonStyle() {
+    // Add 'type' class
+    if (typeof this.props.bootstrapButtonStyle !== 'undefined') {
+      return this.props.bootstrapButtonStyle;
+    }
+
+    if (this.props.name === 'action_save') {
+      return 'primary';
+    }
+
+    return 'secondary';
+  }
+
+  /**
+   * Get icon name
+   *
+   * @returns {String}
+   */
+  getIcon() {
+    // In case this is specified directly
+    return this.props.icon || this.props.data.icon || null;
+  }
+
+  /**
    * Returns markup for the loading icon
    *
    * @returns object|null
@@ -75,9 +114,9 @@ class FormAction extends SilverStripeComponent {
     if (this.props.loading === true) {
       return (
         <div className="btn__loading-icon" >
-          <span className="btn__circle btn__circle--1" ></span>
-          <span className="btn__circle btn__circle--2" ></span>
-          <span className="btn__circle btn__circle--3" ></span>
+          <span className="btn__circle btn__circle--1" />
+          <span className="btn__circle btn__circle--2" />
+          <span className="btn__circle btn__circle--3" />
         </div>
       );
     }
@@ -88,7 +127,7 @@ class FormAction extends SilverStripeComponent {
   /**
    * Event handler triggered when a user clicks the button.
    *
-   * @param object event
+   * @param {Object} event
    * @return undefined
    */
   handleClick(event) {
@@ -104,18 +143,21 @@ class FormAction extends SilverStripeComponent {
 FormAction.propTypes = {
   id: React.PropTypes.string,
   handleClick: React.PropTypes.func,
-  label: React.PropTypes.string,
+  title: React.PropTypes.string,
   type: React.PropTypes.string,
   loading: React.PropTypes.bool,
   icon: React.PropTypes.string,
   disabled: React.PropTypes.bool,
   bootstrapButtonStyle: React.PropTypes.string,
   extraClass: React.PropTypes.string,
+  attributes: React.PropTypes.object,
 };
 
 FormAction.defaultProps = {
-  type: 'button',
-  bootstrapButtonStyle: 'secondary',
+  title: '',
+  icon: '',
+  attributes: {},
+  data: {},
   disabled: false,
 };
 

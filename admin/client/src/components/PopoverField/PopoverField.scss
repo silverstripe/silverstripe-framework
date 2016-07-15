@@ -1,0 +1,63 @@
+// Popover: Custom styles built on top of the Bootstrap popover component
+
+.popover {
+  box-shadow: $z-depth-1;
+  font-size: $font-size-base;
+  min-width: 230px;
+
+  &:focus {
+    outline: none;
+  }
+
+  .arrow {
+    // scss-lint:disable all
+    @extend .popover-arrow; // Temp uses Bootstrap 3 class name, until React Bootstrap has been updated to Bootstrap 4
+    // scss-lint:enable all
+  }
+}
+
+.popover-title {
+  // display: none;
+}
+
+.popover-content {
+  padding: calc(#{$popover-padding} - 1px);
+
+  // Unable to use classes within the popover, so we use elements to style
+  ul {
+    // scss-lint:disable ImportantRule
+    padding-left: 0 !important; // TODO remove important by removing nesting of lists
+    // scss-lint:enable ImportantRule
+    list-style-type: none;
+    margin-left: -$spacer-x;
+    margin-right: -$spacer-x;
+    margin-bottom: 0;
+  }
+
+  a {
+    display: block;
+    padding: #{$spacer-y / 4} $spacer-x;
+    color: $dropdown-link-color;
+
+    &:hover {
+      text-decoration: none;
+      background-color: $dropdown-link-hover-bg;
+      color: $dropdown-link-hover-color;
+    }
+  }
+
+  .btn {
+    padding-left: $popover-padding;
+    padding-right: $popover-padding;
+    margin-left: -$popover-padding;
+    margin-right: -$popover-padding;
+    display: block;
+    width: calc(100% + #{$popover-padding * 2});
+    text-align: left;
+    border-radius: 0;
+
+    &:hover {
+      background-color: $color-theme-bg;
+    }
+  }
+}

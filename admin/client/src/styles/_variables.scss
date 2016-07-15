@@ -36,6 +36,7 @@ $gray-darkest: darken($gray-dark, 20%);
 $white: #fff; // Never change, create new variable if needed
 $black: #000; // Never change
 
+
 $brand-primary: #29abe2;
 $brand-success: #3fa142;
 // $brand-info: #5bc0de;
@@ -45,6 +46,7 @@ $brand-danger: #d40404;
 // Backgrounds
 $background-main: #f6f7f8;
 $background-darker: darken($background-main, 2);
+
 
 // Borders
 $border-color-lighter: darken($background-main, 2);
@@ -58,9 +60,9 @@ $border-color-dark: darken($background-main, 14);
 
 $enable-flex: true;
 // $enable-rounded: true;
-// $enable-shadows: false;
+$enable-shadows: true;
 // $enable-gradients: false;
-// $enable-transitions: false;
+$enable-transitions: true;
 // $enable-hover-media-query: false;
 // $enable-grid-classes: true;
 
@@ -387,7 +389,7 @@ $input-border-radius-sm: $border-radius-sm;
 
 // $zindex-navbar: 1000;
 // $zindex-dropdown: 1000;
-// $zindex-popover: 1060;
+$zindex-popover: 1060;
 // $zindex-tooltip: 1070;
 // $zindex-navbar-fixed: 1030;
 // $zindex-navbar-sticky: 1030;
@@ -538,18 +540,19 @@ $state-warning-border: darken($state-warning-bg, 15%);
 
 // Popovers
 
-// $popover-bg: #fff;
-// $popover-max-width: 276px;
-// $popover-border-width: $border-width;
-// $popover-border-color: rgba(0,0,0,.2);
-//
-// $popover-title-bg: darken($popover-bg, 3%);
-//
-// $popover-arrow-width: 10px;
-// $popover-arrow-color: $popover-bg;
-//
-// $popover-arrow-outer-width: ($popover-arrow-width + 1);
-// $popover-arrow-outer-color: fade-in($popover-border-color, 0.05);
+$popover-bg: $white;
+$popover-max-width: 276px;
+$popover-border-width: $border-width;
+$popover-border-color: rgba(0 , 0, 0, .1);
+
+$popover-title-bg: $background-darker;
+
+$popover-arrow-width: 10px;
+$popover-arrow-color: $popover-bg;
+
+$popover-arrow-outer-width: ($popover-arrow-width + 1);
+$popover-arrow-outer-color: fade-in($popover-border-color, 0.05);
+$popover-padding: $spacer-x;
 
 
 // Labels
@@ -708,11 +711,25 @@ $cms-panel-sm: 300px;
 $cms-panel-md: 448px;
 $cms-panel-lg: 638px;
 
-// Shadows, these need work to make consistent (used in AssetAdmin)
-// TODO tidy all shadows cms wide
-$shadow-light: rgba(0, 0, 0, .2);
-$dropdown-shadow: 0 0 3px $shadow-light;
-$gallery-item-shadow: 0 1px 4px $gray-light;
+// Shadows
+$shadow-level-1: rgba(0, 0, 0, .1);
+$shadow-level-2: rgba(0, 0, 0, .15);
+$shadow-level-3: rgba(0, 0, 0, .2);
+$shadow-level-4: rgba(0, 0, 0, .25);
+$shadow-level-5: rgba(0, 0, 0, .30);
+
+// TODO tidy all shadows cms wide (including AssetAdmin)
+$shadow-light: $shadow-level-3;
+$shadow-lighter: $shadow-level-1;
+$dropdown-shadow: 0 0 3px $shadow-level-3;
+$gallery-item-shadow: 0 1px 4px $shadow-level-3;
+
+// Gives items depth of different levels
+$z-depth-1: 0 2px 5px 0 $shadow-level-1, 0 2px 10px 0 $shadow-level-1;
+$z-depth-2: 0 8px 12px 0 $shadow-level-3, 0 6px 20px 0 $shadow-level-2;
+$z-depth-3: 0 12px 20px 0 $shadow-level-4, 0 17px 40px 0 $shadow-level-3;
+$z-depth-4: 0 16px 28px 0 $shadow-level-5, 0 25px 55px 0 $shadow-level-5;
+
 
 // Masks: typically behind modals, drag drop areas
 $page-mask-light: rgba(236, 239, 241, .9);

@@ -59,20 +59,42 @@ class FieldGroup extends CompositeField {
 
 	protected $zebra;
 
-	public function __construct($arg1 = null, $arg2 = null) {
-		if(is_array($arg1) || is_a($arg1, 'FieldSet')) {
-			$fields = $arg1;
+	/**
+	 * Create a new field group.
+	 *
+	 * Accepts any number of arguments.
+	 *
+	 * @param mixed $titleOrField Either the field title, list of fields, or first field
+	 * @param mixed ...$otherFields Subsequent fields or field list (if passing in title to $titleOrField)
+	 */
+	public function __construct($titleOrField = null, $otherFields = null) {
+		$title = null;
+		if(is_array($titleOrField) || $titleOrField instanceof FieldList) {
+			$fields = $titleOrField;
 
-		} else if(is_array($arg2) || is_a($arg2, 'FieldList')) {
-			$this->title = $arg1;
-			$fields = $arg2;
+			// This would be discarded otherwise
+			if($otherFields) {
+				throw new InvalidArgumentException(
+					'$otherFields is not accepted if passing in field list to $titleOrField'
+				);
+			}
+
+		} else if(is_array($otherFields) || $otherFields instanceof FieldList) {
+			$title = $titleOrField;
+			$fields = $otherFields;
 
 		} else {
 			$fields = func_get_args();
-			if(!is_object(reset($fields))) $this->title = array_shift($fields);
+			if(!is_object(reset($fields))) {
+				$title = array_shift($fields);
+			}
 		}
 
 		parent::__construct($fields);
+
+		if($title) {
+			$this->setTitle($title);
+		}
 	}
 
 	/**
@@ -80,12 +102,13 @@ class FieldGroup extends CompositeField {
 	 * In some cases the FieldGroup doesn't have a title, but we still want
 	 * the ID / name to be set. This code, generates the ID from the nested children
 	 */
-	public function Name(){
+	public function getName(){
 		if(!$this->title) {
 			$fs = $this->FieldList();
 			$compositeTitle = '';
 			$count = 0;
 			foreach($fs as $subfield){
+				/** @var FormField $subfield */
 				$compositeTitle .= $subfield->getName();
 				if($subfield->getName()) $count++;
 			}
@@ -101,6 +124,7 @@ class FieldGroup extends CompositeField {
 	 * Set an odd/even class
 	 *
 	 * @param string $zebra one of odd or even.
+	 * @return $this
 	 */
 	public function setZebra($zebra) {
 		if($zebra == 'odd' || $zebra == 'even') $this->zebra = $zebra;
@@ -141,9 +165,5 @@ class FieldGroup extends CompositeField {
 		}
 
 		return (isset($MessageType)) ? implode(".  ", $MessageType) : "";
-	}
-
-	public function php($data) {
-		return;
 	}
 }

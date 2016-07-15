@@ -15,6 +15,8 @@ import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
 import TextField from 'components/TextField/TextField';
 import HiddenField from 'components/HiddenField/HiddenField';
 import GridField from 'components/GridField/GridField';
+import FormAction from 'components/FormAction/FormAction';
+import PopoverField from 'components/PopoverField/PopoverField';
 import { routerReducer } from 'react-router-redux';
 
 // Sections
@@ -33,6 +35,8 @@ function appBoot() {
   injector.register('TextField', TextField);
   injector.register('HiddenField', HiddenField);
   injector.register('GridField', GridField);
+  injector.register('PopoverField', PopoverField);
+  injector.register('FormAction', FormAction);
 
   const initialState = {};
   const rootReducer = combineReducers(reducerRegister.getAll());

@@ -57,10 +57,24 @@ class CompositeField extends FormField {
 		}
 		$this->children->setContainerField($this);
 
-		// Skipping FormField::__construct(), but we have to make sure this
-		// doesn't count as a broken constructor
-		$this->brokenOnConstruct = false;
-		Object::__construct();
+		parent::__construct(null, false);
+	}
+
+	/**
+	 * Merge child field data into this form
+	 */
+	public function getSchemaDataDefaults() {
+		$defaults = parent::getSchemaDataDefaults();
+		$children = $this->getChildren();
+		if($children && $children->count()) {
+			$childSchema = [];
+			/** @var FormField $child */
+			foreach($children as $child) {
+				$childSchema[] = $child->getSchemaData();
+			}
+			$defaults['children'] = $childSchema;
+		}
+		return $defaults;
 	}
 
 	/**
@@ -70,11 +84,6 @@ class CompositeField extends FormField {
 	 */
 	public function FieldList() {
 		return $this->children;
-	}
-
-	public function setID($id) {
-		$this->id = $id;
-		return $this;
 	}
 
 	/**
@@ -88,6 +97,7 @@ class CompositeField extends FormField {
 
 	/**
 	 * @param FieldList $children
+	 * @return $this
 	 */
 	public function setChildren($children) {
 		$this->children = $children;
@@ -95,7 +105,8 @@ class CompositeField extends FormField {
 	}
 
 	/**
-	 * @param string
+	 * @param string $tag
+	 * @return $this
 	 */
 	public function setTag($tag) {
 		$this->tag = $tag;
@@ -111,7 +122,8 @@ class CompositeField extends FormField {
 	}
 
 	/**
-	 * @param string
+	 * @param string $legend
+	 * @return $this
 	 */
 	public function setLegend($legend) {
 		$this->legend = $legend;
@@ -147,7 +159,6 @@ class CompositeField extends FormField {
 				'tabindex' => null,
 				'type' => null,
 				'value' => null,
-				'type' => null,
 				'title' => ($this->tag == 'fieldset') ? null : $this->legend
 			)
 		);
@@ -158,38 +169,46 @@ class CompositeField extends FormField {
 	 * list.
 	 *
 	 * Sequentialisation is used when connecting the form to its data source
+	 *
+	 * @param array $list
+	 * @param bool $saveableOnly
 	 */
 	public function collateDataFields(&$list, $saveableOnly = false) {
 		foreach($this->children as $field) {
-			if(is_object($field)) {
-				if($field->isComposite()) $field->collateDataFields($list, $saveableOnly);
-				if($saveableOnly) {
-					$isIncluded =  ($field->hasData() && !$field->isReadonly() && !$field->isDisabled());
-				} else {
-					$isIncluded =  ($field->hasData());
-				}
-				if($isIncluded) {
-					$name = $field->getName();
-					if($name) {
-						$formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';
-						if(isset($list[$name])) {
-							user_error("collateDataFields() I noticed that a field called '$name' appears twice in"
-								. " your form: '{$formName}'.  One is a '{$field->class}' and the other is a"
-								. " '{$list[$name]->class}'", E_USER_ERROR);
-						}
-						$list[$name] = $field;
+			if(! $field instanceof FormField) {
+				continue;
+			}
+			if($field instanceof CompositeField) {
+				$field->collateDataFields($list, $saveableOnly);
+			}
+			if($saveableOnly) {
+				$isIncluded =  ($field->hasData() && !$field->isReadonly() && !$field->isDisabled());
+			} else {
+				$isIncluded =  ($field->hasData());
+			}
+			if($isIncluded) {
+				$name = $field->getName();
+				if($name) {
+					$formName = (isset($this->form)) ? $this->form->FormName() : '(unknown form)';
+					if(isset($list[$name])) {
+						user_error("collateDataFields() I noticed that a field called '$name' appears twice in"
+							. " your form: '{$formName}'.  One is a '{$field->class}' and the other is a"
+							. " '{$list[$name]->class}'", E_USER_ERROR);
 					}
+					$list[$name] = $field;
 				}
 			}
 		}
 	}
 
 	public function setForm($form) {
-		foreach($this->children as $f)
-			if(is_object($f)) $f->setForm($form);
+		foreach($this->children as $field) {
+			if ($field instanceof FormField) {
+				$field->setForm($form);
+			}
+		}
 
 		parent::setForm($form);
-
 		return $this;
 	}
 
@@ -234,20 +253,23 @@ class CompositeField extends FormField {
 
 	/**
 	 * @uses FieldList->insertBefore()
+	 *
+	 * @param string $insertBefore
+	 * @param FormField $field
+	 * @return false|FormField
 	 */
 	public function insertBefore($insertBefore, $field) {
-		$ret = $this->children->insertBefore($insertBefore, $field);
-		$this->sequentialSet = null;
-		return $ret;
+		return $this->children->insertBefore($insertBefore, $field);
 	}
 
 	/**
 	 * @uses FieldList->insertAfter()
+	 * @param string $insertAfter
+	 * @param FormField $field
+	 * @return false|FormField
 	 */
 	public function insertAfter($insertAfter, $field) {
-		$ret = $this->children->insertAfter($insertAfter, $field);
-		$this->sequentialSet = null;
-		return $ret;
+		return $this->children->insertAfter($insertAfter, $field);
 	}
 
 	/**
@@ -281,9 +303,10 @@ class CompositeField extends FormField {
 	public function performReadonlyTransformation() {
 		$newChildren = new FieldList();
 		$clone = clone $this;
-		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
-			if(is_object($child)) $child = $child->transform(new ReadonlyTransformation());
-			$newChildren->push($child, $idx);
+		if($clone->getChildren()) foreach($clone->getChildren() as $child) {
+			/** @var FormField $child */
+			$child = $child->transform(new ReadonlyTransformation());
+			$newChildren->push($child);
 		}
 
 		$clone->children = $newChildren;
@@ -303,9 +326,10 @@ class CompositeField extends FormField {
 	public function performDisabledTransformation() {
 		$newChildren = new FieldList();
 		$clone = clone $this;
-		if($clone->getChildren()) foreach($clone->getChildren() as $idx => $child) {
-			if(is_object($child)) $child = $child->transform(new DisabledTransformation());
-			$newChildren->push($child, $idx);
+		if($clone->getChildren()) foreach($clone->getChildren() as $child) {
+			/** @var FormField $child */
+			$child = $child->transform(new DisabledTransformation());
+			$newChildren->push($child);
 		}
 
 		$clone->children = $newChildren;
@@ -332,12 +356,19 @@ class CompositeField extends FormField {
 	 *             be found.
 	 */
 	public function fieldPosition($field) {
-		if(is_string($field)) $field = $this->fieldByName($field);
-		if(!$field) return false;
+		if(is_string($field)) {
+			$field = $this->fieldByName($field);
+		}
+		if(!$field) {
+			return false;
+		}
 
 		$i = 0;
 		foreach($this->children as $child) {
-			if($child->getName() == $field->getName()) return $i;
+			/** @var FormField $child */
+			if($child->getName() == $field->getName()) {
+				return $i;
+			}
 			$i++;
 		}
 
@@ -348,25 +379,23 @@ class CompositeField extends FormField {
 	 * Transform the named field into a readonly feld.
 	 *
 	 * @param string|FormField
+	 * @return bool
 	 */
 	public function makeFieldReadonly($field) {
 		$fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 
 		// Iterate on items, looking for the applicable field
 		foreach($this->children as $i => $item) {
-			if($item->isComposite()) {
-				$item->makeFieldReadonly($fieldName);
-			} else {
-				// Once it's found, use FormField::transform to turn the field into a readonly version of itself.
-				if($item->getName() == $fieldName) {
-					$this->children->replaceField($fieldName, $item->transform(new ReadonlyTransformation()));
-
-					// Clear an internal cache
-					$this->sequentialSet = null;
-
-					// A true results indicates that the field was found
+			if($item instanceof CompositeField) {
+				if($item->makeFieldReadonly($fieldName)) {
 					return true;
-				}
+				};
+			} elseif($item instanceof FormField && $item->getName() == $fieldName) {
+				// Once it's found, use FormField::transform to turn the field into a readonly version of itself.
+				$this->children->replaceField($fieldName, $item->transform(new ReadonlyTransformation()));
+
+				// A true results indicates that the field was found
+				return true;
 			}
 		}
 		return false;
@@ -389,7 +418,8 @@ class CompositeField extends FormField {
 	 */
 	public function validate($validator) {
 		$valid = true;
-		foreach($this->children as $idx => $child){
+		foreach($this->children as $child){
+			/** @var FormField $child */
 			$valid = ($child && $child->validate($validator) && $valid);
 		}
 		return $valid;
