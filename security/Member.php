@@ -786,8 +786,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return string Returns a random password.
 	 */
 	public static function create_new_password() {
-		if(file_exists(Security::get_word_list())) {
-			$words = file(Security::get_word_list());
+		if(file_exists(Security::config()->word_list)) {
+			$words = file(Security::config()->word_list);
 
 			list($usec, $sec) = explode(' ', microtime());
 			srand($sec + ((float) $usec * 100000));
@@ -799,7 +799,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		} else {
 			$random = rand();
 			$string = md5($random);
-			$output = substr($string, 0, 6);
+			$output = substr($string, 0, 8);
 			return $output;
 		}
 	}
@@ -858,6 +858,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Note that this only works with cleartext passwords, as we can't rehash
 		// existing passwords.
 		if((!$this->ID && $this->Password) || $this->isChanged('Password')) {
+			//reset salt so that it gets regenerated - this will invalidate any persistant login cookies
+			// or other information encrypted with this Member's settings (see self::encryptWithUserSettings)
+			$this->Salt = '';
 			// Password was changed: encrypt the password according the settings
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext
