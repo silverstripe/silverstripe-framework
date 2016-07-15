@@ -176,7 +176,7 @@ jQuery.noConflict();
 			var msg = (xhr.getResponseHeader('X-Status')) ? xhr.getResponseHeader('X-Status') : xhr.statusText,
 				reathenticate = xhr.getResponseHeader('X-Reauthenticate'),
 				msgType = (xhr.status < 200 || xhr.status > 399) ? 'bad' : 'good',
-				ignoredMessages = ['OK', 'success'];
+				ignoredMessages = ['OK', 'success', 'HTTP/2.0 200'];
 
 			// Enable reauthenticate dialog if requested
 			if(reathenticate) {
