@@ -156,6 +156,9 @@ class PDOConnector extends DBConnector {
 		if(self::is_emulate_prepare()) {
 			$options[PDO::ATTR_EMULATE_PREPARES] = true;
 		}
+		else {
+			$options[PDO::ATTR_EMULATE_PREPARES] = false;
+		}
 
 		// May throw a PDOException if fails
 		$this->pdoConnection = new PDO(
