@@ -430,7 +430,8 @@ class Form extends RequestHandler {
 			$this->controller->hasMethod($funcName)
 			&& !$this->controller->checkAccessAction($funcName)
 			// If a button exists, allow it on the controller
-			&& !$this->actions->dataFieldByName('action_' . $funcName)
+			// buttonClicked() validates that the action set above is valid
+			&& !$this->buttonClicked()
 		) {
 			return $this->httpError(
 				403,
@@ -489,16 +490,28 @@ class Form extends RequestHandler {
 	 * @return bool
 	 */
 	public function checkAccessAction($action) {
-		return (
-			parent::checkAccessAction($action)
+		if (parent::checkAccessAction($action)) {
+			return true;
+		}
+
 			// Always allow actions which map to buttons. See httpSubmission() for further access checks.
-			|| $this->actions->dataFieldByName('action_' . $action)
-			// Always allow actions on fields
-			|| (
-				($field = $this->checkFieldsForAction($this->Fields(), $action))
-					&& $field->checkAccessAction($action)
-			)
-		);
+		$fields = $this->fields->dataFields() ?: array();
+		$actions = $this->actions->dataFields() ?: array();
+
+		$fieldsAndActions = array_merge($fields, $actions);
+ 		foreach ($fieldsAndActions as $fieldOrAction) {
+			if ($fieldOrAction instanceof FormAction && $fieldOrAction->actionName() === $action) {
+				return true;
+			}
+		}
+
+		// Always allow actions on fields
+		$field = $this->checkFieldsForAction($this->Fields(), $action);
+		if ($field && $field->checkAccessAction($action)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -1721,14 +1734,21 @@ class Form extends RequestHandler {
 	 * @return FormAction
 	 */
 	public function buttonClicked() {
-		$actions = $this->actions->dataFields();
-		if(!$actions) return;
+		$fields = $this->fields->dataFields() ?: array();
+		$actions = $this->actions->dataFields() ?: array();
 
-		foreach($actions as $action) {
-			if($action->hasMethod('actionname') && $this->buttonClickedFunc == $action->actionName()) {
-				return $action;
+ 		if(!$actions && !$fields) {
+			return null;
+		}
+
+		$fieldsAndActions = array_merge($fields, $actions);
+ 		foreach ($fieldsAndActions as $fieldOrAction) {
+			if ($fieldOrAction instanceof FormAction && $this->buttonClickedFunc === $fieldOrAction->actionName()) {
+				return $fieldOrAction;
 			}
 		}
+
+		return null;
 	}
 
 	/**
@@ -1740,7 +1760,7 @@ class Form extends RequestHandler {
 	public function defaultAction() {
 		if($this->hasDefaultAction && $this->actions) {
 			return $this->actions->First();
-	}
+		}
 	}
 
 	/**
