@@ -565,6 +565,60 @@ class FormTest extends FunctionalTest {
 		$this->assertEquals('bar', $attrs['foo']);
 	}
 
+	public function testButtonClicked() {
+		$form = $this->getStubForm();
+		$action = $form->buttonClicked();
+		$this->assertNull($action);
+
+		$controller = new FormTest_Controller();
+		$form = $controller->Form();
+		$request = new SS_HTTPRequest('POST', 'FormTest_Controller/Form', array(), array(
+			'Email' => 'test@test.com',
+			'SomeRequiredField' => 1,
+			'action_doSubmit' => 1
+		));
+
+		$form->httpSubmission($request);
+		$button = $form->buttonClicked();
+		$this->assertInstanceOf('FormAction', $button);
+		$this->assertEquals('doSubmit', $button->actionName());
+
+		$form = new Form(
+			$controller,
+			'Form',
+			new FieldList(new FormAction('doSubmit', 'Inline action')),
+			new FieldList()
+		);
+		$form->disableSecurityToken();
+		$request = new SS_HTTPRequest('POST', 'FormTest_Controller/Form', array(), array(
+			'action_doSubmit' => 1
+		));
+
+		$form->httpSubmission($request);
+		$button = $form->buttonClicked();
+		$this->assertInstanceOf('FormAction', $button);
+		$this->assertEquals('doSubmit', $button->actionName());
+	}
+
+	public function testCheckAccessAction() {
+		$controller = new FormTest_Controller();
+		$form = new Form(
+			$controller,
+			'Form',
+			new FieldList(),
+			new FieldList(new FormAction('actionName', 'Action'))
+		);
+		$this->assertTrue($form->checkAccessAction('actionName'));
+
+		$form = new Form(
+			$controller,
+			'Form',
+			new FieldList(new FormAction('inlineAction', 'Inline action')),
+			new FieldList()
+		);
+		$this->assertTrue($form->checkAccessAction('inlineAction'));
+	}
+
 	public function testAttributesHTML() {
 		$form = $this->getStubForm();
 
