@@ -310,8 +310,8 @@
           if (stateLink.length) {
             return {
               name: name,
-              url: stateLink.attr('data-link'),
-              active: stateLink.is(':radio') ? stateLink.is(':checked') : stateLink.is(':selected')
+              url: stateLink.attr('href'),
+              active: stateLink.hasClass('active')
             };
           } else {
             return null;
@@ -443,18 +443,21 @@
 
     $('.cms-preview-states').entwine({
       changeVisibleState: function changeVisibleState(state) {
-        this.find('input[data-name="' + state + '"]').prop('checked', true);
+        this.find('[data-name="' + state + '"]').addClass('active').siblings().removeClass('active');
       }
     });
 
     $('.cms-preview-states .state-name').entwine({
       onclick: function onclick(e) {
-        this.parent().find('.active').removeClass('active');
-        this.next('label').addClass('active');
+        if (e.which == 1) {
+          var targetStateName = $(this).attr('data-name');
 
-        var targetStateName = $(this).attr('data-name');
+          this.addClass('active').siblings().removeClass('active');
 
-        $('.cms-preview').changeState(targetStateName);
+          $('.cms-preview').changeState(targetStateName);
+
+          e.preventDefault();
+        }
       }
     });
 

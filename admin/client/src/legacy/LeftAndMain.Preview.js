@@ -405,8 +405,8 @@ $.entwine('ss.preview', function($){
         if(stateLink.length) {
           return {
             name: name,
-            url: stateLink.attr('data-link'),
-            active: stateLink.is(':radio') ? stateLink.is(':checked') : stateLink.is(':selected')
+            url: stateLink.attr('href'),
+            active: stateLink.hasClass('active')
           };
         } else {
           return null;
@@ -584,7 +584,7 @@ $.entwine('ss.preview', function($){
      * Change the appearance of the state selector.
      */
     changeVisibleState: function(state) {
-      this.find('input[data-name="'+state+'"]').prop('checked', true);
+      this.find('[data-name="'+state+'"]').addClass('active').siblings().removeClass('active');
     }
   });
 
@@ -593,13 +593,18 @@ $.entwine('ss.preview', function($){
      * Reacts to the user changing the state of the preview.
      */
     onclick: function(e) {
-      //Add and remove classes to make switch work ok in old IE
-      this.parent().find('.active').removeClass('active');
-      this.next('label').addClass('active');
+      //only intercept left click, so middle click can open new windows
+      if (e.which == 1) {
+        var targetStateName = $(this).attr('data-name');
 
-      var targetStateName = $(this).attr('data-name');
-      // Reload preview with the selected state.
-      $('.cms-preview').changeState(targetStateName);
+        //Add and remove classes to make switch work ok in old IE
+        this.addClass('active').siblings().removeClass('active');
+
+        // Reload preview with the selected state.
+        $('.cms-preview').changeState(targetStateName);
+
+        e.preventDefault();
+      }
     }
   });
 
