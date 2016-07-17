@@ -96,6 +96,25 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 			return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
 		}
 	}
+	
+	/**
+	 * Return the columns to export
+	 * 
+	 * @param GridField $gridField 
+	 * 
+	 * @return array
+	 */
+	protected function getExportColumnsForGridField(GridField $gridField) {
+		if($this->exportColumns) {
+			$exportColumns = $this->exportColumns;
+		} else if($dataCols = $gridField->getConfig()->getComponentByType('GridFieldDataColumns')) {
+			$exportColumns = $dataCols->getDisplayFields($gridField);
+		} else {
+			$exportColumns = singleton($gridField->getModelClass())->summaryFields();
+		}
+
+		return $exportColumns;
+	}
 
 	/**
 	 * Generate export fields for CSV.
@@ -104,9 +123,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * @return array
 	 */
 	public function generateExportFileData($gridField) {
-		$csvColumns = ($this->exportColumns)
-			? $this->exportColumns
-			: singleton($gridField->getModelClass())->summaryFields();
+		$csvColumns = $this->getExportColumnsForGridField($gridField);
 		$fileData = array();
 
 		if($this->csvHasHeader) {
