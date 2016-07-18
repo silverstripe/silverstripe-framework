@@ -550,7 +550,7 @@ class UploadField extends FileField {
 		));
 		// we do this in a second customise to have the access to the previous customisations
 		return $file->customise(array(
-			'UploadFieldFileButtons' => (string)$file->renderWith($this->getTemplateFileButtons())
+			'UploadFieldFileButtons' => $file->renderWith($this->getTemplateFileButtons())
 		));
 	}
 
