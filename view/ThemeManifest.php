@@ -98,6 +98,7 @@ class ThemeManifest {
 		$finder = new ManifestFileFinder();
 		$finder->setOptions(array(
 			'include_themes' => false,
+			'ignore_dirs' => array('node_modules', THEMES_DIR),
 			'ignore_tests'  => !$this->tests,
 			'dir_callback'  => array($this, 'handleDirectory')
 		));

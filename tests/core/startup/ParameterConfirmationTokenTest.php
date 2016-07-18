@@ -48,8 +48,10 @@ class ParameterConfirmationTokenTest extends SapphireTest {
 	}
 
 	public function tearDown() {
-		foreach($_GET as $param) {
-			if(stripos($param, 'parameterconfirmationtokentest_') === 0) unset($_GET[$param]);
+		foreach($_GET as $param => $value) {
+			if(stripos($param, 'parameterconfirmationtokentest_') === 0) {
+				unset($_GET[$param]);
+			}
 		}
 		$_SERVER['HTTP_HOST'] = $this->oldHost;
 		parent::tearDown();
