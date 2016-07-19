@@ -41,32 +41,32 @@
       },
 
       registerDefault: function registerDefault() {
-        this.register('admin/pages/batchactions/publish', function (ids) {
+        this.register(ss.config.adminUrl + 'pages/batchactions/publish', function (ids) {
           var confirmed = confirm(_i18n2.default.inject(_i18n2.default._t("CMSMAIN.BATCH_PUBLISH_PROMPT", "You have {num} page(s) selected.\n\nDo you really want to publish?"), { 'num': ids.length }));
           return confirmed ? ids : false;
         });
 
-        this.register('admin/pages/batchactions/unpublish', function (ids) {
+        this.register(ss.config.adminUrl + 'pages/batchactions/unpublish', function (ids) {
           var confirmed = confirm(_i18n2.default.inject(_i18n2.default._t("CMSMAIN.BATCH_UNPUBLISH_PROMPT", "You have {num} page(s) selected.\n\nDo you really want to unpublish"), { 'num': ids.length }));
           return confirmed ? ids : false;
         });
 
-        this.register('admin/pages/batchactions/delete', function (ids) {
+        this.register(ss.config.adminUrl + 'pages/batchactions/delete', function (ids) {
           var confirmed = confirm(_i18n2.default.inject(_i18n2.default._t("CMSMAIN.BATCH_DELETE_PROMPT", "You have {num} page(s) selected.\n\nDo you really want to delete?"), { 'num': ids.length }));
           return confirmed ? ids : false;
         });
 
-        this.register('admin/pages/batchactions/archive', function (ids) {
+        this.register(ss.config.adminUrl + 'pages/batchactions/archive', function (ids) {
           var confirmed = confirm(_i18n2.default.inject(_i18n2.default._t("CMSMAIN.BATCH_ARCHIVE_PROMPT", "You have {num} page(s) selected.\n\nAre you sure you want to archive these pages?\n\nThese pages and all of their children pages will be unpublished and sent to the archive."), { 'num': ids.length }));
           return confirmed ? ids : false;
         });
 
-        this.register('admin/pages/batchactions/restore', function (ids) {
+        this.register(ss.config.adminUrl + 'pages/batchactions/restore', function (ids) {
           var confirmed = confirm(_i18n2.default.inject(_i18n2.default._t("CMSMAIN.BATCH_RESTORE_PROMPT", "You have {num} page(s) selected.\n\nDo you really want to restore to stage?\n\nChildren of archived pages will be restored to the root level, unless those pages are also being restored."), { 'num': ids.length }));
           return confirmed ? ids : false;
         });
 
-        this.register('admin/pages/batchactions/deletefromlive', function (ids) {
+        this.register(ss.config.adminUrl + 'pages/batchactions/deletefromlive', function (ids) {
           var confirmed = confirm(_i18n2.default.inject(_i18n2.default._t("CMSMAIN.BATCH_DELETELIVE_PROMPT", "You have {num} page(s) selected.\n\nDo you really want to delete these pages from live?"), { 'num': ids.length }));
           return confirmed ? ids : false;
         });

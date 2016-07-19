@@ -35,16 +35,6 @@ use SilverStripe\Security\PermissionProvider;
 class LeftAndMain extends Controller implements PermissionProvider {
 
 	/**
-	 * The 'base' url for CMS administration areas.
-	 * Note that if this is changed, many javascript
-	 * behaviours need to be updated with the correct url
-	 *
-	 * @config
-	 * @var string $url_base
-	 */
-	private static $url_base = "admin";
-
-	/**
 	 * Enable front-end debugging (increases verbosity) in dev mode.
 	 * Will be ignored in live environments.
 	 *
@@ -232,6 +222,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Pass in base url (absolute and relative)
 		$combinedClientConfig['baseUrl'] = Director::baseURL();
 		$combinedClientConfig['absoluteBaseUrl'] = Director::absoluteBaseURL();
+        $combinedClientConfig['adminUrl'] = AdminRootController::admin_url();
 
 		// Get "global" CSRF token for use in JavaScript
 		$token = SecurityToken::inst();
@@ -701,7 +692,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		};
 
 		$link = Controller::join_links(
-			$this->stat('url_base', true),
+			AdminRootController::admin_url(),
 			$segment,
 			'/', // trailing slash needed if $action is null!
 			"$action"
@@ -847,7 +838,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 						// default menu is the one with a blank {@link url_segment}
 						} else if(singleton($menuItem->controller)->stat('url_segment') == '') {
-							if($this->Link() == $this->stat('url_base').'/') {
+							if($this->Link() == AdminRootController::admin_url()) {
 								$linkingmode = "current";
 							}
 

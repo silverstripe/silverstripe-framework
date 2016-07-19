@@ -17,7 +17,8 @@ use SilverStripe\Security\Member;
  * @package framework
  * @subpackage admin
  */
-class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
+class
+CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 
 	/**
 	 * Sort by menu priority, highest to lowest
@@ -71,7 +72,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 * @return CMSMenuItem
 	 */
 	protected static function menuitem_for_controller($controllerClass) {
-		$urlBase      = Config::inst()->get($controllerClass, 'url_base', Config::FIRST_SET);
+		$urlBase = AdminRootController::admin_url();
 		$urlSegment   = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
 		$menuPriority = Config::inst()->get($controllerClass, 'menu_priority', Config::FIRST_SET);
 

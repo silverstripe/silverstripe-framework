@@ -6,15 +6,35 @@ use SilverStripe\ORM\DataModel;
  * @package framework
  * @subpackage admin
  */
-class AdminRootController extends Controller {
+class AdminRootController extends Controller implements TemplateGlobalProvider {
 
 	/**
-	 * @var string
-	 * @config
-	 * The url base that all LeftAndMain derived panels will live under
-	 * Won't automatically update the base route if you change this - that has to be done seperately
+	 * Convenience function to return the admin route config.
+	 * Looks for the {@link Director::$rules} for the current admin Controller.
 	 */
-	private static $url_base = 'admin';
+	public static function get_admin_route() {
+		if (Controller::has_curr()) {
+			$routeParams = Controller::curr()->getRequest()->routeParams();
+			$adminControllerClass = isset($routeParams['Controller']) ? $routeParams['Controller'] : get_called_class();
+		}
+		else {
+			$adminControllerClass = get_called_class();
+		}
+
+		$rules = Config::inst()->get('Director', 'rules');
+		$adminRoute = array_search($adminControllerClass, $rules);
+		return $adminRoute ? $adminRoute : '';
+	}
+
+	/**
+	 * Returns the root admin URL for the site with trailing slash
+	 *
+	 * @return string
+	 * @uses get_admin_route()
+	 */
+	public static function admin_url() {
+		return self::get_admin_route() . '/';
+	}
 
 	/**
 	 * @var string
@@ -70,10 +90,9 @@ class AdminRootController extends Controller {
 	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
 		// If this is the final portion of the request (i.e. the URL is just /admin), direct to the default panel
 		if ($request->allParsed()) {
-			$base = $this->config()->url_base;
 			$segment = Config::inst()->get($this->config()->default_panel, 'url_segment');
 
-			$this->redirect(Controller::join_links($base, $segment, '/'));
+			$this->redirect(Controller::join_links(self::admin_url(), $segment, '/'));
 			return $this->getResponse();
 		}
 
@@ -91,5 +110,15 @@ class AdminRootController extends Controller {
 		}
 
 		return $this->httpError(404, 'Not found');
+	}
+
+	/**
+	 * @return array Returns an array of strings of the method names of methods on the call that should be exposed
+	 * as global variables in the templates.
+	 */
+	public static function get_template_global_variables() {
+		return array(
+			'adminURL' => 'admin_url'
+		);
 	}
 }

@@ -3,7 +3,7 @@
 	<% with $CurrentMember %>
 		<span>
 			<%t LeftAndMain_Menu_ss.Hello 'Hi' %>
-			<a href="{$AbsoluteBaseURL}admin/myprofile" class="profile-link">
+			<a href="{$AbsoluteBaseURL}{$AdminURL}admin/myprofile" class="profile-link">
 				<% if $FirstName && $Surname %>$FirstName $Surname<% else_if $FirstName %>$FirstName<% else %>$Email<% end_if %>
 			</a>
 		</span>

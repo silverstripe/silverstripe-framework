@@ -366,14 +366,14 @@ class DirectorTest extends SapphireTest {
 		Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
 
 		$this->assertEquals(
-			$request->params(),
 			array(
 				'Controller' => 'DirectorTestRequest_Controller',
 				'Action' => 'myaction',
 				'ID' => 'myid',
 				'OtherID' => 'myotherid',
 				'Locale' => 'en_NZ'
-			)
+			),
+            $request->params()
 		);
 	}
 

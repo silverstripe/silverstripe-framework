@@ -85,6 +85,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	public function schema($request) {
 		// TODO Hardcoding schema until we can get GridField to generate a schema dynamically
 		$treeClassJS = Convert::raw2js($this->config()->tree_class);
+        $adminURL = Convert::raw2js(AdminRootController::admin_url());
 		$json = <<<JSON
 {
 	"id": "Form_EditForm",
@@ -93,10 +94,10 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		"id": "Form_EditForm",
 		"action": "schema",
 		"method": "GET",
-		"schema_url": "admin\/campaigns\/schema\/EditForm",
+		"schema_url": "{$adminURL}campaigns\/schema\/EditForm",
 		"attributes": {
 			"id": "Form_EditForm",
-			"action": "admin\/campaigns\/EditForm",
+			"action": "{$adminURL}campaigns\/EditForm",
 			"method": "POST",
 			"enctype": "multipart\/form-data",
 			"target": null
@@ -138,26 +139,26 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 			"data": {
 				"recordType": "{$treeClassJS}",
 				"collectionReadEndpoint": {
-					"url": "admin\/campaigns\/sets",
+					"url": "{$adminURL}campaigns\/sets",
 					"method": "GET"
 				},
 				"itemReadEndpoint": {
-					"url": "admin\/campaigns\/set\/:id",
+					"url": "{$adminURL}campaigns\/set\/:id",
 					"method": "GET"
 				},
 				"itemUpdateEndpoint": {
-					"url": "admin\/campaigns\/set\/:id",
+					"url": "{$adminURL}campaigns\/set\/:id",
 					"method": "PUT"
 				},
 				"itemCreateEndpoint": {
-					"url": "admin\/campaigns\/set\/:id",
+					"url": "{$adminURL}campaigns\/set\/:id",
 					"method": "POST"
 				},
 				"itemDeleteEndpoint": {
-					"url": "admin\/campaigns\/set\/:id",
+					"url": "{$adminURL}campaigns\/set\/:id",
 					"method": "DELETE"
 				},
-				"editFormSchemaEndpoint": "admin\/campaigns\/schema\/DetailEditForm",
+				"editFormSchemaEndpoint": "{$adminURL}campaigns\/schema\/DetailEditForm",
 				"columns": [
 					{"name": "Title", "field": "Name"},
 					{"name": "Changes", "field": "ChangesCount"},

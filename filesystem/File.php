@@ -742,7 +742,12 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	 * @return string
 	 */
 	public function DeleteLink() {
-		return Director::absoluteBaseURL()."admin/assets/removefile/".$this->ID;
+		return Controller::join_links(
+		    Director::absoluteBaseURL(),
+            AdminRootController::admin_url(),
+            "assets/removefile/",
+            $this->ID
+        );
 	}
 
 	/**

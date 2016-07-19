@@ -47,7 +47,7 @@ $.entwine('ss.tree', function($){
      */
     registerDefault: function() {
       // Publish selected pages action
-      this.register('admin/pages/batchactions/publish', function(ids) {
+      this.register(ss.config.adminUrl + 'pages/batchactions/publish', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
@@ -61,7 +61,7 @@ $.entwine('ss.tree', function($){
       });
 
       // Unpublish selected pages action
-      this.register('admin/pages/batchactions/unpublish', function(ids) {
+      this.register(ss.config.adminUrl + 'pages/batchactions/unpublish', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
@@ -76,7 +76,7 @@ $.entwine('ss.tree', function($){
 
       // Delete selected pages action
       // @deprecated since 4.0 Use archive instead
-      this.register('admin/pages/batchactions/delete', function(ids) {
+      this.register(ss.config.adminUrl + 'pages/batchactions/delete', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
@@ -90,7 +90,7 @@ $.entwine('ss.tree', function($){
       });
 
       // Delete selected pages action
-      this.register('admin/pages/batchactions/archive', function(ids) {
+      this.register(ss.config.adminUrl + 'pages/batchactions/archive', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
@@ -104,7 +104,7 @@ $.entwine('ss.tree', function($){
       });
 
       // Restore selected archived pages
-      this.register('admin/pages/batchactions/restore', function(ids) {
+      this.register(ss.config.adminUrl + 'pages/batchactions/restore', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
@@ -118,7 +118,7 @@ $.entwine('ss.tree', function($){
       });
 
       // Delete selected pages from live action
-      this.register('admin/pages/batchactions/deletefromlive', function(ids) {
+      this.register(ss.config.adminUrl + 'pages/batchactions/deletefromlive', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
