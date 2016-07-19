@@ -12,7 +12,15 @@ use SilverStripe\View\ThemeManifest;
 class TemplateLoaderTest extends SapphireTest {
 
 	private $base;
+
+	/**
+	 * @var ThemeManifest
+	 */
 	private $manifest;
+
+	/**
+	 * @var TemplateLoader
+	 */
 	private $loader;
 
 	/**
@@ -23,9 +31,9 @@ class TemplateLoaderTest extends SapphireTest {
 		// Fake project root
 		$this->base = dirname(__FILE__) . '/fixtures/templatemanifest';
 		// New ThemeManifest for that root
-		$this->manifest = new \SilverStripe\View\ThemeManifest($this->base, 'myproject', false, true);
+		$this->manifest = new ThemeManifest($this->base, 'myproject', false, true);
 		// New Loader for that root
-		$this->loader = new \SilverStripe\View\TemplateLoader($this->base);
+		$this->loader = new TemplateLoader($this->base);
 		$this->loader->addSet('$default', $this->manifest);
 	}
 
@@ -41,6 +49,28 @@ class TemplateLoaderTest extends SapphireTest {
 		$this->assertEquals(
 			"$this->base/module/templates/Layout/Page.ss",
 			$this->loader->findTemplate(['type' => 'Layout', 'Page'], ['$default'])
+		);
+	}
+
+	public function testFindNestedThemeTemplates() {
+		// Without including the theme this template cannot be found
+		$this->assertEquals(null, $this->loader->findTemplate('NestedThemePage', ['$default']));
+
+		// With a nested theme available then it is available
+		$this->assertEquals(
+			"{$this->base}/module/themes/subtheme/templates/NestedThemePage.ss",
+			$this->loader->findTemplate('NestedThemePage', [
+				'silverstripe/module:subtheme',
+				'$default'
+			])
+		);
+
+		// Can also be found if excluding $default theme
+		$this->assertEquals(
+			"{$this->base}/module/themes/subtheme/templates/NestedThemePage.ss",
+			$this->loader->findTemplate('NestedThemePage', [
+				'silverstripe/module:subtheme',
+			])
 		);
 	}
 
