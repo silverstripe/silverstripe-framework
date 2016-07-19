@@ -732,7 +732,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		),
 		'zh' => array(
 			'name' => 'Chinese',
-			'native' => '&#20013;&#22269;&#30340;'
+			'native' => '&#20013;&#25991;'
 		),
 		'cs' => array(
 			'name' => 'Czech',
