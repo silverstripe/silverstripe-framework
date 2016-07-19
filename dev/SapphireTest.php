@@ -13,7 +13,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Permission;
-use SilverStripe\View\TemplateLoader;
+use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 
 /**
@@ -848,7 +848,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		SS_ClassLoader::instance()->pushManifest($classManifest, false);
 		SapphireTest::set_test_class_manifest($classManifest);
 
-		TemplateLoader::instance()->addSet('$default', new ThemeManifest(
+		ThemeResourceLoader::instance()->addSet('$default', new ThemeManifest(
 			BASE_PATH, project(), true, $flush
 		));
 

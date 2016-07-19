@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\View\TemplateLoader;
+use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 
 /**
@@ -9,7 +9,7 @@ use SilverStripe\View\ThemeManifest;
  * @package framework
  * @subpackage tests
  */
-class TemplateLoaderTest extends SapphireTest {
+class ThemeResourceLoaderTest extends SapphireTest {
 
 	private $base;
 
@@ -19,7 +19,7 @@ class TemplateLoaderTest extends SapphireTest {
 	private $manifest;
 
 	/**
-	 * @var TemplateLoader
+	 * @var ThemeResourceLoader
 	 */
 	private $loader;
 
@@ -28,12 +28,13 @@ class TemplateLoaderTest extends SapphireTest {
 	 */
 	public function setUp() {
 		parent::setUp();
+
 		// Fake project root
 		$this->base = dirname(__FILE__) . '/fixtures/templatemanifest';
 		// New ThemeManifest for that root
 		$this->manifest = new ThemeManifest($this->base, 'myproject', false, true);
 		// New Loader for that root
-		$this->loader = new TemplateLoader($this->base);
+		$this->loader = new ThemeResourceLoader($this->base);
 		$this->loader->addSet('$default', $this->manifest);
 	}
 
@@ -125,6 +126,58 @@ class TemplateLoaderTest extends SapphireTest {
 		$this->assertEquals(
 			"$this->base/module/templates/Layout/CustomThemePage.ss",
 			$this->loader->findTemplate(['type' => 'Layout', 'CustomThemePage'], ['theme', '$default'])
+		);
+	}
+
+	public function testFindThemedCSS() {
+		$this->assertEquals(
+			"myproject/css/project.css",
+			$this->loader->findThemedCSS('project', ['$default', 'theme'])
+		);
+		$this->assertEquals(
+			"themes/theme/css/project.css",
+			$this->loader->findThemedCSS('project', ['theme', '$default'])
+		);
+		$this->assertEmpty(
+			$this->loader->findThemedCSS('nofile', ['theme', '$default'])
+		);
+		$this->assertEquals(
+			'module/css/content.css',
+			$this->loader->findThemedCSS('content', ['/module', 'theme'])
+		);
+		$this->assertEquals(
+			'module/css/content.css',
+			$this->loader->findThemedCSS('content', ['/module', 'theme', '$default'])
+		);
+		$this->assertEquals(
+			'module/css/content.css',
+			$this->loader->findThemedCSS('content', ['$default', '/module', 'theme'])
+		);
+	}
+
+	public function testFindThemedJavascript() {
+		$this->assertEquals(
+			"myproject/javascript/project.js",
+			$this->loader->findThemedJavascript('project', ['$default', 'theme'])
+		);
+		$this->assertEquals(
+			"themes/theme/javascript/project.js",
+			$this->loader->findThemedJavascript('project', ['theme', '$default'])
+		);
+		$this->assertEmpty(
+			$this->loader->findThemedJavascript('nofile', ['theme', '$default'])
+		);
+		$this->assertEquals(
+			'module/javascript/content.js',
+			$this->loader->findThemedJavascript('content', ['/module', 'theme'])
+		);
+		$this->assertEquals(
+			'module/javascript/content.js',
+			$this->loader->findThemedJavascript('content', ['/module', 'theme', '$default'])
+		);
+		$this->assertEquals(
+			'module/javascript/content.js',
+			$this->loader->findThemedJavascript('content', ['$default', '/module', 'theme'])
 		);
 	}
 

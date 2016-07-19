@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\View\TemplateLoader;
+use SilverStripe\View\ThemeResourceLoader;
 
 /**
  * @package framework
@@ -17,8 +17,8 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
 
 		// Replace old template loader with new one with alternate base path
-		$this->_oldLoader = TemplateLoader::instance();
-		TemplateLoader::set_instance(new TemplateLoader($this->alternateBasePath));
+		$this->_oldLoader = ThemeResourceLoader::instance();
+		ThemeResourceLoader::set_instance(new ThemeResourceLoader($this->alternateBasePath));
 
 		$this->_oldTheme = Config::inst()->get('SSViewer', 'theme');
 		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
@@ -42,7 +42,7 @@ class i18nSSLegacyAdapterTest extends SapphireTest {
 	}
 
 	public function tearDown() {
-		TemplateLoader::set_instance($this->_oldLoader);
+		ThemeResourceLoader::set_instance($this->_oldLoader);
 		SS_ClassLoader::instance()->popManifest();
 		i18n::set_locale($this->originalLocale);
 		Config::inst()->update('Director', 'alternate_base_folder', null);

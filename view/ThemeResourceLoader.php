@@ -2,31 +2,44 @@
 
 namespace SilverStripe\View;
 
+use Deprecation;
+
 /**
  * Handles finding templates from a stack of template manifest objects.
  *
  * @package framework
  * @subpackage view
  */
-class TemplateLoader {
+class ThemeResourceLoader {
 
 	/**
-	 * @var TemplateLoader
+	 * @var ThemeResourceLoader
 	 */
 	private static $instance;
 
 	protected $base;
 
 	/**
-	 * @var ThemeManifest[]
+	 * List of template "sets" that contain a test manifest, and have an alias.
+	 * E.g. '$default'
+	 *
+	 * @var ThemeList[]
 	 */
 	protected $sets = [];
 
+	/**
+	 * @return ThemeResourceLoader
+	 */
 	public static function instance() {
 		return self::$instance ? self::$instance : self::$instance = new self();
 	}
 
-	public static function set_instance(TemplateLoader $instance) {
+	/**
+	 * Set instance
+	 *
+	 * @param ThemeResourceLoader $instance
+	 */
+	public static function set_instance(ThemeResourceLoader $instance) {
 		self::$instance = $instance;
 	}
 
@@ -38,10 +51,23 @@ class TemplateLoader {
 	 * Add a new theme manifest for a given identifier. E.g. '$default'
 	 *
 	 * @param string $set
-	 * @param ThemeManifest $manifest
+	 * @param ThemeList $manifest
 	 */
-	public function addSet($set, $manifest) {
+	public function addSet($set, ThemeList $manifest) {
 		$this->sets[$set] = $manifest;
+	}
+
+	/**
+	 * Get a named theme set
+	 *
+	 * @param string $set
+	 * @return ThemeList
+	 */
+	public function getSet($set) {
+		if(isset($this->sets[$set])) {
+			return $this->sets[$set];
+		}
+		return null;
 	}
 
 	/**
@@ -56,7 +82,7 @@ class TemplateLoader {
 	 *   of that module. ('/mymodule').
 	 *
 	 * @param string $identifier Theme identifier.
-	 * @return string Path from root, not including leading forward slash. E.g. themes/mytheme
+	 * @return string Path from root, not including leading or trailing forward slash. E.g. themes/mytheme
 	 */
 	public function getPath($identifier) {
 		$slashPos = strpos($identifier, '/');
@@ -111,7 +137,9 @@ class TemplateLoader {
 	 * theme-coupled resolution.
 	 * @param array $themes List of themes to use to resolve themes. In most cases
 	 * you should pass in {@see SSViewer::get_themes()}
-	 * @return string Path to resolved template file, or null if not resolved.
+	 * @return string Absolute path to resolved template file, or null if not resolved.
+	 * File location will be in the format themes/<theme>/templates/<directories>/<type>/<basename>.ss
+	 * Note that type (e.g. 'Layout') is not the root level directory under 'templates'.
 	 */
 	public function findTemplate($template, $themes) {
 		$type = '';
@@ -141,14 +169,13 @@ class TemplateLoader {
 			$tail = array_pop($parts);
 			$head = implode('/', $parts);
 
-			foreach($themes as $themename) {
-				$subthemes = isset($this->sets[$themename]) ? $this->sets[$themename]->getThemes() : [$themename];
-
-				foreach($subthemes as $theme) {
-					$themePath = $this->base . '/' . $this->getPath($theme);
-
-					$path = $themePath . '/templates/' . implode('/', array_filter([$head, $type, $tail])) . '.ss';
-					if (file_exists($path)) return $path;
+			$themePaths = $this->getThemePaths($themes);
+			foreach($themePaths as $themePath) {
+				// Join path
+				$pathParts = [ $this->base, $themePath, 'templates', $head, $type, $tail ];
+				$path = implode('/', array_filter($pathParts)) . '.ss';
+				if (file_exists($path)) {
+					return $path;
 				}
 			}
 		}
@@ -157,4 +184,73 @@ class TemplateLoader {
 		return null;
 	}
 
+	/**
+	 * Resolve themed CSS path
+	 *
+	 * @param string $name Name of CSS file without extension
+	 * @param array $themes List of themes
+	 * @return string Path to resolved CSS file (relative to base dir)
+	 */
+	public function findThemedCSS($name, $themes)
+	{
+		$css = "/css/$name.css";
+		$paths = $this->getThemePaths($themes);
+		foreach ($paths as $themePath) {
+			$abspath = $this->base . '/' . $themePath;
+
+			if (file_exists($abspath . $css)) {
+				return $themePath . $css;
+			}
+		}
+
+		// CSS exists in no context
+		return null;
+	}
+
+	/**
+	 * Registers the given themeable javascript as required.
+	 *
+	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
+	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
+	 * the module is used.
+	 *
+	 * @param string $name The name of the file - eg '/js/File.js' would have the name 'File'
+	 * @param array $themes List of themes
+	 * @return string Path to resolved javascript file (relative to base dir)
+	 */
+	public function findThemedJavascript($name, $themes) {
+        $js = "/javascript/$name.js";
+		$paths = $this->getThemePaths($themes);
+		foreach ($paths as $themePath) {
+			$abspath = $this->base . '/' . $themePath;
+
+			if (file_exists($abspath . $js)) {
+				return $themePath . $js;
+			}
+		}
+
+		// js exists in no context
+		return null;
+	}
+
+	/**
+	 * Resolve all themes to the list of root folders relative to site root
+	 *
+	 * @param array $themes List of themes to resolve. Supports named theme sets.
+	 * @return array List of root-relative folders in order of precendence.
+	 */
+	public function getThemePaths($themes) {
+		$paths = [];
+		foreach($themes as $themename) {
+			// Expand theme sets
+			$set = $this->getSet($themename);
+			$subthemes = $set ? $set->getThemes() : [$themename];
+
+			// Resolve paths
+			foreach ($subthemes as $theme) {
+				$paths[] = $this->getPath($theme);
+			}
+		}
+		return $paths;
+	}
 }
