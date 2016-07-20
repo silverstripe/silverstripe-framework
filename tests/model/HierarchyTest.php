@@ -59,12 +59,12 @@ class HierarchyTest extends SapphireTest {
 		// Obj 3 has been deleted; let's bring it back from the grave
 		$obj3 = Versioned::get_including_deleted("HierarchyTest_Object", "\"Title\" = 'Obj 3'")->First();
 
-		// Check that both obj 3 children are returned
-		$this->assertEquals(array("Obj 3a", "Obj 3b", "Obj 3c"),
+		// Check that all obj 3 children are returned
+		$this->assertEquals(array("Obj 3a", "Obj 3b", "Obj 3c", "Obj 3d"),
 			$obj3->AllHistoricalChildren()->column('Title'));
 
 		// Check numHistoricalChildren
-		$this->assertEquals(3, $obj3->numHistoricalChildren());
+		$this->assertEquals(4, $obj3->numHistoricalChildren());
 
 	}
 
@@ -94,11 +94,11 @@ class HierarchyTest extends SapphireTest {
 	public function testNumChildren() {
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj1')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3')->numChildren(), 3);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3')->numChildren(), 4);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2a')->numChildren(), 2);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2b')->numChildren(), 0);
 		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3a')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3b')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3d')->numChildren(), 0);
 
 		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
 		$this->assertEquals($obj1->numChildren(), 0);
@@ -178,6 +178,53 @@ class HierarchyTest extends SapphireTest {
 		$this->assertEquals('Obj 1', $obj1->getBreadcrumbs());
 		$this->assertEquals('Obj 2 &raquo; Obj 2a', $obj2a->getBreadcrumbs());
 		$this->assertEquals('Obj 2 &raquo; Obj 2a &raquo; Obj 2aa', $obj2aa->getBreadcrumbs());
+	}
+
+	/**
+	 * @covers Hierarchy::markChildren()
+	 */
+	public function testMarkChildrenDoesntUnmarkPreviouslyMarked() {
+		$obj3 = $this->objFromFixture('HierarchyTest_Object', 'obj3');
+		$obj3aa = $this->objFromFixture('HierarchyTest_Object', 'obj3aa');
+		$obj3ba = $this->objFromFixture('HierarchyTest_Object', 'obj3ba');
+		$obj3ca = $this->objFromFixture('HierarchyTest_Object', 'obj3ca');
+
+		$obj3->markPartialTree();
+		$obj3->markToExpose($obj3aa);
+		$obj3->markToExpose($obj3ba);
+		$obj3->markToExpose($obj3ca);
+
+		$expected = <<<EOT
+<ul>
+<li>Obj 3a
+<ul>
+<li>Obj 3aa
+</li>
+<li>Obj 3ab
+</li>
+</ul>
+</li>
+<li>Obj 3b
+<ul>
+<li>Obj 3ba
+</li>
+<li>Obj 3bb
+</li>
+</ul>
+</li>
+<li>Obj 3c
+<ul>
+<li>Obj 3c
+</li>
+</ul>
+</li>
+<li>Obj 3d
+</li>
+</ul>
+
+EOT;
+
+		$this->assertSame($expected, $obj3->getChildrenAsUL());
 	}
 
 	public function testGetChildrenAsUL() {
@@ -538,6 +585,8 @@ class HierarchyTest_Object extends DataObject implements TestOnly {
 		'Hierarchy',
 		"Versioned('Stage', 'Live')",
 	);
+
+	private static $default_sort = 'Title ASC';
 
 	public function cmstreeclasses() {
 		return $this->markingClasses();
