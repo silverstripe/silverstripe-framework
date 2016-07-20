@@ -494,13 +494,9 @@ class Form extends RequestHandler {
 			return true;
 		}
 
-			// Always allow actions which map to buttons. See httpSubmission() for further access checks.
-		$fields = $this->fields->dataFields() ?: array();
-		$actions = $this->actions->dataFields() ?: array();
-
-		$fieldsAndActions = array_merge($fields, $actions);
- 		foreach ($fieldsAndActions as $fieldOrAction) {
-			if ($fieldOrAction instanceof FormAction && $fieldOrAction->actionName() === $action) {
+		$actions = $this->getAllActions();
+ 		foreach ($actions as $formAction) {
+			if ($formAction->actionName() === $action) {
 				return true;
 			}
 		}
@@ -1734,21 +1730,31 @@ class Form extends RequestHandler {
 	 * @return FormAction
 	 */
 	public function buttonClicked() {
-		$fields = $this->fields->dataFields() ?: array();
-		$actions = $this->actions->dataFields() ?: array();
-
- 		if(!$actions && !$fields) {
-			return null;
-		}
-
-		$fieldsAndActions = array_merge($fields, $actions);
- 		foreach ($fieldsAndActions as $fieldOrAction) {
-			if ($fieldOrAction instanceof FormAction && $this->buttonClickedFunc === $fieldOrAction->actionName()) {
-				return $fieldOrAction;
+		$actions = $this->getAllActions();
+ 		foreach ($actions as $action) {
+			if ($this->buttonClickedFunc === $action->actionName()) {
+				return $action;
 			}
 		}
 
-		return null;
+			return null;
+		}
+
+	/**
+	 * Get a list of all actions, including those in the main "fields" FieldList
+	 * 
+	 * @return array
+	 */
+	protected function getAllActions() {
+		$fields = $this->fields->dataFields() ?: array();
+		$actions = $this->actions->dataFields() ?: array();
+
+		$fieldsAndActions = array_merge($fields, $actions);
+		$actions = array_filter($fieldsAndActions, function($fieldOrAction) {
+			return $fieldOrAction instanceof FormAction;
+		});
+
+		return $actions;
 	}
 
 	/**
