@@ -172,7 +172,8 @@ We call `setDisplayFields()` directly on the component responsible for their ren
 	Adding a `GridField` to a page type is a popular way to manage data,
 	but not the only one. If your data requires a dedicated interface
 	with more sophisticated search and management logic, consider
-	using the `[ModelAdmin](reference/modeladmin)` interface instead.
+	using the [ModelAdmin](/developer_guides/customising_the_admin_interface/modeladmin)
+	interface instead.
 </div>
 
 ![tutorial:tutorial5_project_creation.jpg](../_images/tutorial5_project_creation.jpg)
