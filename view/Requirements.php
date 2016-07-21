@@ -1,7 +1,7 @@
 <?php
 
 use SilverStripe\Filesystem\Storage\GeneratedAssetHandler;
-use SilverStripe\View\TemplateLoader;
+use SilverStripe\View\ThemeResourceLoader;
 
 /**
  * Requirements tracker for JavaScript and CSS.
@@ -190,13 +190,11 @@ class Requirements implements Flushable {
 	 * the module is used.
 	 *
 	 * @param string $name   The name of the file - eg '/css/File.css' would have the name 'File'
-	 * @param string $module The module to fall back to if the css file does not exist in the
-	 *                       current theme.
 	 * @param string $media  Comma-separated list of media types to use in the link tag
 	 *                       (e.g. 'screen,projector')
 	 */
-	public static function themedCSS($name, $module = null, $media = null) {
-		self::backend()->themedCSS($name, $module, $media);
+	public static function themedCSS($name, $media = null) {
+		self::backend()->themedCSS($name, $media);
 	}
 
 	/**
@@ -207,13 +205,11 @@ class Requirements implements Flushable {
 	 * the module is used.
 	 *
 	 * @param string $name   The name of the file - eg '/javascript/File.js' would have the name 'File'
-	 * @param string $module The module to fall back to if the javascript file does not exist in the
-	 *                       current theme.
 	 * @param string $type  Comma-separated list of types to use in the script tag
 	 *                       (e.g. 'text/javascript,text/ecmascript')
 	 */
-	public static function themedJavascript($name, $module = null, $type = null) {
-		return self::backend()->themedJavascript($name, $module, $type);
+	public static function themedJavascript($name, $type = null) {
+		return self::backend()->themedJavascript($name, $type);
 	}
 
 	/**
@@ -1810,34 +1806,19 @@ class Requirements_Backend
 	 * the module is used.
 	 *
 	 * @param string $name   The name of the file - eg '/css/File.css' would have the name 'File'
-	 * @param string $module The module to fall back to if the css file does not exist in the
-	 *                       current theme.
 	 * @param string $media  Comma-separated list of media types to use in the link tag
 	 *                       (e.g. 'screen,projector')
 	 */
-	public function themedCSS($name, $module = null, $media = null) {
-		$css = "/css/$name.css";
-
-		$project = project();
-		$absbase = BASE_PATH . DIRECTORY_SEPARATOR;
-		$absproject = $absbase . $project;
-
-		if(file_exists($absproject . $css)) {
-			return $this->css($project . $css, $media);
+	public function themedCSS($name, $media = null) {
+		$path = ThemeResourceLoader::instance()->findThemedCSS($name, SSViewer::get_themes());
+		if($path) {
+			$this->css($path, $media);
+		} else {
+			throw new \InvalidArgumentException(
+				"The css file doesn't exists. Please check if the file $name.css exists in any context or search for "
+				. "themedCSS references calling this file in your templates."
+			);
 		}
-
-		foreach(SSViewer::get_themes() as $theme) {
-			$path = TemplateLoader::instance()->getPath($theme);
-			$abspath = BASE_PATH . '/' . $path;
-
-			if(file_exists($abspath . $css)) {
-				return $this->css($path . $css, $media);
-			}
-		}
-        throw new \InvalidArgumentException(
-            "The css file doesn't exists. Please check if the file $name.css exists in any context or search for "
-            . "themedCSS references calling this file in your templates."
-        );
 	}
 
 	/**
@@ -1848,38 +1829,23 @@ class Requirements_Backend
 	 * the module is used.
 	 *
 	 * @param string $name   The name of the file - eg '/js/File.js' would have the name 'File'
-	 * @param string $module The module to fall back to if the javascript file does not exist in the
-	 *                       current theme.
 	 * @param string $type  Comma-separated list of types to use in the script tag
 	 *                       (e.g. 'text/javascript,text/ecmascript')
 	 */
-	public function themedJavascript($name, $module = null, $type = null) {
-        $js = "/javascript/$name.js";
-
-        $opts = array(
-            'type' => $type,
-        );
-
-        $project = project();
-        $absbase = BASE_PATH . DIRECTORY_SEPARATOR;
-        $absproject = $absbase . $project;
-
-        if(file_exists($absproject . $js)) {
-            return $this->javascript($project . $js, $opts);
-        }
-
-        foreach(SSViewer::get_themes() as $theme) {
-            $path = TemplateLoader::instance()->getPath($theme);
-            $abspath = BASE_PATH . '/' . $path;
-
-            if(file_exists($abspath . $js)) {
-                return $this->javascript($path . $js, $opts);
-            }
-        }
-		throw new \InvalidArgumentException(
-		    "The javascript file doesn't exists. Please check if the file $name.js exists in any context or search for "
-            . "themedJavascript references calling this file in your templates."
-        );
+	public function themedJavascript($name, $type = null) {
+        $path = ThemeResourceLoader::instance()->findThemedJavascript($name, SSViewer::get_themes());
+		if($path) {
+			$opts = [];
+			if($type) {
+				$opts['type'] = $type;
+			}
+			$this->javascript($path, $opts);
+		} else {
+			throw new \InvalidArgumentException(
+				"The javascript file doesn't exists. Please check if the file $name.js exists in any "
+				. "context or search for themedJavascript references calling this file in your templates."
+			);
+		}
 	}
 
 	/**

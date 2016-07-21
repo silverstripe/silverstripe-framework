@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\View\TemplateLoader;
+use SilverStripe\View\ThemeResourceLoader;
 
 /**
  * @package framework
@@ -38,12 +38,12 @@ class i18nTextCollectorTest extends SapphireTest {
 		);
 
 		// Replace old template loader with new one with alternate base path
-		$this->_oldLoader = TemplateLoader::instance();
-		TemplateLoader::set_instance(new TemplateLoader($this->alternateBasePath));
+		$this->_oldLoader = ThemeResourceLoader::instance();
+		ThemeResourceLoader::set_instance(new ThemeResourceLoader($this->alternateBasePath));
 	}
 
 	public function tearDown() {
-		TemplateLoader::set_instance($this->_oldLoader);
+		ThemeResourceLoader::set_instance($this->_oldLoader);
 		// Pop if added during testing
 		if(SS_ClassLoader::instance()->getManifest() === $this->manifest) {
 			SS_ClassLoader::instance()->popManifest();

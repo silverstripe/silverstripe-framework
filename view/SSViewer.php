@@ -3,7 +3,7 @@
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
-use SilverStripe\View\TemplateLoader;
+use SilverStripe\View\ThemeResourceLoader;
 
 /**
  * This tracks the current scope for an SSViewer instance. It has three goals:
@@ -687,6 +687,11 @@ class SSViewer_DataPresenter extends SSViewer_Scope {
 class SSViewer implements Flushable {
 
 	/**
+	 * Identifier for the default theme
+	 */
+	const DEFAULT_THEME = '$default';
+
+	/**
 	 * @config
 	 * @var boolean $source_file_comments
 	 */
@@ -809,6 +814,12 @@ class SSViewer implements Flushable {
 		return $viewer;
 	}
 
+	/**
+	 * Assign the list of active themes to apply.
+	 * If default themes should be included add $default as the last entry.
+	 *
+	 * @param array $themes
+	 */
 	public static function set_themes($themes = []) {
 		Config::inst()->remove('SSViewer', 'themes');
 		Config::inst()->update('SSViewer', 'themes', $themes);
@@ -819,14 +830,23 @@ class SSViewer implements Flushable {
 	}
 
 	public static function get_themes() {
-		$res = ['$default'];
+		$default = [self::DEFAULT_THEME];
 
-		if (Config::inst()->get('SSViewer', 'theme_enabled')) {
-			if ($list = Config::inst()->get('SSViewer', 'themes')) $res = $list;
-			elseif ($theme = Config::inst()->get('SSViewer', 'theme')) $res = [$theme, '$default'];
+		if (!Config::inst()->get('SSViewer', 'theme_enabled')) {
+			return $default;
 		}
 
-		return $res;
+		// Explicit list is assigned
+		if ($list = Config::inst()->get('SSViewer', 'themes')) {
+			return $list;
+		}
+
+		// Support legacy behaviour
+		if ($theme = Config::inst()->get('SSViewer', 'theme')) {
+			return [$theme, self::DEFAULT_THEME];
+		}
+
+		return $default;
 	}
 
 	/**
@@ -835,7 +855,7 @@ class SSViewer implements Flushable {
 	 */
 	public static function set_theme($theme) {
 		Deprecation::notice('4.0', 'Use the "SSViewer#set_themes" instead');
-		self::set_themes([$theme]);
+		self::set_themes([$theme, self::DEFAULT_THEME]);
 	}
 
 	/**
@@ -850,9 +870,9 @@ class SSViewer implements Flushable {
 	public static function get_templates_by_class($className, $suffix = '', $baseClass = null) {
 		// Figure out the class name from the supplied context.
 		if(!is_string($className) || !class_exists($className)) {
-			throw new InvalidArgumentException('SSViewer::get_templates_by_class() expects a valid class name as ' .
-				'its first parameter.');
-			return array();
+			throw new InvalidArgumentException(
+				'SSViewer::get_templates_by_class() expects a valid class name as its first parameter.'
+			);
 		}
 		$templates = array();
 		$classes = array_reverse(ClassInfo::ancestry($className));
@@ -904,7 +924,7 @@ class SSViewer implements Flushable {
 
 	public function setTemplate($templates) {
 		$this->templates = $templates;
-		$this->chosen = TemplateLoader::instance()->findTemplate($templates, self::get_themes());
+		$this->chosen = ThemeResourceLoader::instance()->findTemplate($templates, self::get_themes());
 		$this->subTemplates = [];
 	}
 
@@ -937,7 +957,7 @@ class SSViewer implements Flushable {
 	 * @return boolean
 	 */
 	public static function hasTemplate($templates) {
-		return (bool)TemplateLoader::instance()->findTemplate($templates, self::get_themes());
+		return (bool)ThemeResourceLoader::instance()->findTemplate($templates, self::get_themes());
 	}
 
 	/**
@@ -1014,7 +1034,7 @@ class SSViewer implements Flushable {
 	 * @return string Full system path to a template file
 	 */
 	public static function getTemplateFileByType($identifier, $type) {
-		return TemplateLoader::instance()->findTemplate(['type' => $type, $identifier], self::get_themes());
+		return ThemeResourceLoader::instance()->findTemplate(['type' => $type, $identifier], self::get_themes());
 	}
 
 	/**

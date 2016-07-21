@@ -20,7 +20,7 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\PermissionProvider;
-
+use SilverStripe\View\ThemeResourceLoader;
 
 
 /**
@@ -408,7 +408,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					&& $candidate->MenuItem->controller
 					&& singleton($candidate->MenuItem->controller)->canView()
 				) {
-					return $this->redirect($candidate->Link);
+					$this->redirect($candidate->Link);
+					return;
 				}
 			}
 
@@ -434,11 +435,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				),
 			);
 
-			return Security::permissionFailure($this, $messageSet);
+			Security::permissionFailure($this, $messageSet);
+			return;
 		}
 
 		// Don't continue if there's already been a redirection request.
-		if($this->redirectedTo()) return;
+		if($this->redirectedTo()) {
+			return;
+		}
 
 		// Audit logging hook
 		if(empty($_REQUEST['executeForm']) && !$this->getRequest()->isAjax()) $this->extend('accessedCMS');
@@ -452,29 +456,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// file because insufficient information exists when that is being processed
 		$htmlEditorConfig = HTMLEditorConfig::get_active();
 		$htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
-		if(!$htmlEditorConfig->getOption('content_css')) {
-			$cssFiles = array();
-			$cssFiles[] = FRAMEWORK_ADMIN_DIR . '/client/dist/styles/editor.css';
-
-			// Use theme from the site config
-			if(class_exists('SiteConfig') && ($config = SiteConfig::current_site_config()) && $config->Theme) {
-				$theme = $config->Theme;
-			} elseif(Config::inst()->get('SSViewer', 'theme_enabled') && Config::inst()->get('SSViewer', 'theme')) {
-				$theme = Config::inst()->get('SSViewer', 'theme');
-			} else {
-				$theme = false;
-			}
-
-			if($theme) $cssFiles[] = THEMES_DIR . "/{$theme}/css/editor.css";
-			else if(project()) $cssFiles[] = project() . '/css/editor.css';
-
-			// Remove files that don't exist
-			foreach($cssFiles as $k => $cssFile) {
-				if(!file_exists(BASE_PATH . '/' . $cssFile)) unset($cssFiles[$k]);
-			}
-
-			$htmlEditorConfig->setOption('content_css', implode(',', $cssFiles));
-		}
 
 		Requirements::customScript("
 			window.ss = window.ss || {};
@@ -1713,9 +1694,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($page) {
 			$navigator = new SilverStripeNavigator($page);
 			return $navigator->renderWith($this->getTemplatesWithSuffix('_SilverStripeNavigator'));
-		} else {
-			return false;
 		}
+		return null;
 	}
 
 	/**

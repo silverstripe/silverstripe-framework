@@ -77,7 +77,7 @@ require_once 'core/manifest/ConfigManifest.php';
 require_once 'core/manifest/ConfigStaticManifest.php';
 require_once 'core/manifest/ClassManifest.php';
 require_once 'core/manifest/ManifestFileFinder.php';
-require_once 'view/TemplateLoader.php';
+require_once 'view/ThemeResourceLoader.php';
 require_once 'core/manifest/TokenisedRegularExpression.php';
 require_once 'control/injector/Injector.php';
 
@@ -112,7 +112,7 @@ $configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigYamlManifest($configManifest);
 
 // Load template manifest
-SilverStripe\View\TemplateLoader::instance()->addSet('$default', new SilverStripe\View\ThemeManifest(
+SilverStripe\View\ThemeResourceLoader::instance()->addSet('$default', new SilverStripe\View\ThemeManifest(
 	BASE_PATH, project(), false, $flush
 ));
 

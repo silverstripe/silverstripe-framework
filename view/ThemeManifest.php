@@ -2,7 +2,8 @@
 
 namespace SilverStripe\View;
 
-use \ManifestFileFinder;
+use ManifestCache;
+use ManifestFileFinder;
 
 /**
  * A class which builds a manifest of all themes (which is really just a directory called "templates")
@@ -10,17 +11,50 @@ use \ManifestFileFinder;
  * @package framework
  * @subpackage manifest
  */
-class ThemeManifest {
+class ThemeManifest implements ThemeList {
 
 	const TEMPLATES_DIR = 'templates';
 
+	/**
+	 * Base path
+	 *
+	 * @var string
+	 */
 	protected $base;
+
+	/**
+	 * Include tests
+	 *
+	 * @var bool
+	 */
 	protected $tests;
+
+	/**
+	 * Path to application code
+	 *
+	 * @var string
+	 */
 	protected $project;
 
+	/**
+	 * Cache
+	 *
+	 * @var ManifestCache
+	 */
 	protected $cache;
+
+	/**
+	 * Cache key
+	 *
+	 * @var string
+	 */
 	protected $cacheKey;
 
+	/**
+	 * List of theme root directories
+	 *
+	 * @var string
+	 */
 	protected $themes = null;
 
 	/**
@@ -71,21 +105,10 @@ class ThemeManifest {
 		));
 	}
 
-	/**
-	 * Returns a map of all themes information. The map is in the following format:
-	 *
-	 * <code>
-	 *   [
-	 *     'mysite',
-	 *     'framework',
-	 *     'framework/admin'
-	 *   ]
-	 * </code>
-	 *
-	 * @return array
-	 */
 	public function getThemes() {
-		if ($this->themes === null) $this->init();
+		if ($this->themes === null) {
+			$this->init();
+		}
 		return $this->themes;
 	}
 
@@ -111,26 +134,38 @@ class ThemeManifest {
 		}
 	}
 
+	/**
+	 * Add a directory to the manifest
+	 *
+	 * @param string $basename
+	 * @param string $pathname
+	 * @param int $depth
+	 */
 	public function handleDirectory($basename, $pathname, $depth)
 	{
-		if ($basename == self::TEMPLATES_DIR) {
-			// We only want part of the full path, so split into directories
-			$parts = explode('/', $pathname);
-			// Take the end (the part relative to base), except the very last directory
-			$themeParts = array_slice($parts, -$depth, $depth-1);
-			// Then join again
-			$path = '/'.implode('/', $themeParts);
+		if ($basename !== self::TEMPLATES_DIR) {
+			return;
+		}
 
-			// If this is in the project, add to beginning of list. Else add to end.
-			if ($themeParts[0] == $this->project) {
-				array_unshift($this->themes, $path);
-			}
-			else {
-				array_push($this->themes, $path);
-			}
+		// We only want part of the full path, so split into directories
+		$parts = explode('/', $pathname);
+		// Take the end (the part relative to base), except the very last directory
+		$themeParts = array_slice($parts, -$depth, $depth-1);
+		// Then join again
+		$path = '/'.implode('/', $themeParts);
+
+		// If this is in the project, add to beginning of list. Else add to end.
+		if ($themeParts[0] == $this->project) {
+			array_unshift($this->themes, $path);
+		}
+		else {
+			array_push($this->themes, $path);
 		}
 	}
 
+	/**
+	 * Initialise the manifest
+	 */
 	protected function init() {
 		if ($data = $this->cache->load($this->cacheKey)) {
 			$this->themes = $data;
