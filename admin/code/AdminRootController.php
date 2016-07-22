@@ -9,28 +9,29 @@ use SilverStripe\ORM\DataModel;
 class AdminRootController extends Controller implements TemplateGlobalProvider {
 
 	/**
+ 	 * Fallback admin URL in case this cannot be infered from Director.rules
+	 *
+	 * @var string
+ 	 * @config
+	 */
+	private static $url_base = 'admin';
+
+	/**
 	 * Convenience function to return the admin route config.
 	 * Looks for the {@link Director::$rules} for the current admin Controller.
+	 *
+	 * @return string
 	 */
 	public static function get_admin_route() {
-		if (Controller::has_curr()) {
-			$routeParams = Controller::curr()->getRequest()->routeParams();
-			$adminControllerClass = isset($routeParams['Controller']) ? $routeParams['Controller'] : get_called_class();
-		}
-		else {
-			$adminControllerClass = get_called_class();
-		}
-
 		$rules = Config::inst()->get('Director', 'rules');
-		$adminRoute = array_search($adminControllerClass, $rules);
-		return $adminRoute ? $adminRoute : '';
+		$adminRoute = array_search(__CLASS__, $rules);
+		return $adminRoute ?: static::config()->url_base;
 	}
 
 	/**
 	 * Returns the root admin URL for the site with trailing slash
 	 *
 	 * @return string
-	 * @uses get_admin_route()
 	 */
 	public static function admin_url() {
 		return self::get_admin_route() . '/';
