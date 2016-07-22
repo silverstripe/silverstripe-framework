@@ -98,10 +98,22 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'Email',
 	);
 
+	/**
+	 * @config
+	 * @var array
+	 */
 	private static $summary_fields = array(
 		'FirstName',
 		'Surname',
 		'Email',
+	);
+
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $casting = array(
+		'Name' => 'Varchar',
 	);
 
 	/**
