@@ -7,6 +7,7 @@ use Injector;
 use ClassInfo;
 use Convert;
 use Object;
+use SilverStripe\ORM\Connect\SS_Query;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\ORM\Queries\SQLSelect;
 

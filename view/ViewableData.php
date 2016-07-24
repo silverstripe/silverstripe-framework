@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
