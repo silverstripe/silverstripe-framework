@@ -465,7 +465,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 
 		$this->NumVisit++;
 
-		if($remember) {
+		// Only set the cookie if autologin is enabled
+		if($remember && Security::config()->autologin_enabled) {
 			// Store the hash and give the client the cookie with the token.
 			$generator = new RandomGenerator();
 			$token = $generator->randomToken('sha1');
@@ -536,7 +537,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Don't bother trying this multiple times
 		self::$_already_tried_to_auto_log_in = true;
 
-		if(strpos(Cookie::get('alc_enc'), ':') === false
+		if(!Security::config()->autologin_enabled
+			|| strpos(Cookie::get('alc_enc'), ':') === false
 			|| Session::get("loggedInAs")
 			|| !Security::database_is_ready()
 		) {
