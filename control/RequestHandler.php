@@ -485,7 +485,7 @@ class RequestHandler extends ViewableData {
 		$request = $this->getRequest();
 
 		// Call a handler method such as onBeforeHTTPError404
-		$this->extend('onBeforeHTTPError' . $errorCode, $request);
+		$this->extend("onBeforeHTTPError{$errorCode}", $request);
 
 		// Call a handler method such as onBeforeHTTPError, passing 404 as the first arg
 		$this->extend('onBeforeHTTPError', $errorCode, $request);
