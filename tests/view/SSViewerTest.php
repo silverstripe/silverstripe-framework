@@ -1176,7 +1176,6 @@ after')
 	}
 
 	public function testRewriteHashlinks() {
-		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links'); 
 		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);
 
 		$_SERVER['HTTP_HOST'] = 'www.mysite.com';
@@ -1199,6 +1198,7 @@ after')
 				<a class="inline" href="#anchor">InlineLink</a>
 				$InsertedLink
 				<svg><use xlink:href="#sprite"></use></svg>
+				<a class="wrong-href" href="#test" data-href="#test">wronghreflink</a>
 				<body>
 			</html>');
 		$tmpl = new SSViewer($tmplFile);
@@ -1219,6 +1219,10 @@ after')
 			$result
 		);
 		$this->assertContains(
+			'<a class="wrong-href" href="' . $base . '#test" data-href="#test">wronghreflink</a>',
+			$result
+		);
+		$this->assertContains(
 			'<a class="external-inline" href="http://google.com#anchor">ExternalInlineLink</a>',
 			$result
 		);
@@ -1229,8 +1233,6 @@ after')
 		);
 
 		unlink($tmplFile);
-
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig); 
 	}
 	
 	public function testRewriteHashlinksInPhpMode() {
