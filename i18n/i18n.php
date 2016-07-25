@@ -2656,7 +2656,8 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 
 				// Load translations from themes
 				// TODO Replace with theme listing once implemented in TemplateManifest
-				$themesBase = Director::baseFolder() . '/themes';
+				$themesBase = THEMES_PATH;
+
 				if(is_dir($themesBase)) {
 					foreach(scandir($themesBase) as $theme) {
 						if(

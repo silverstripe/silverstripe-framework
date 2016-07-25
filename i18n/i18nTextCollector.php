@@ -155,10 +155,10 @@ class i18nTextCollector extends Object {
 		}
 
 		// Get all themes
-		foreach(glob($directory."/themes/*", GLOB_ONLYDIR) as $path) {
+		foreach(glob($directory. '/'. THEMES_DIR. "/*", GLOB_ONLYDIR) as $path) {
 			// Check for templates
 			if(is_dir("$path/templates")) {
-				$modules[] = 'themes/'.basename($path);
+				$modules[] = THEMES_DIR . basename($path);
 			}
 		}
 
