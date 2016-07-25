@@ -5,11 +5,14 @@
 .btn-toolbar {
   margin-top: $spacer-y;
   margin-bottom: $spacer-y;
+
+  fieldset + & {
+    margin-top: 0;
+  }
 }
 
 // General buttons
 .btn {
-  height: 32px;
   margin-right: $spacer-x * .5; // 8px
   position: relative;
   box-shadow: none;

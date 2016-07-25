@@ -74,10 +74,10 @@ class SelectionGroup extends CompositeField {
 
 		foreach($items as $item) {
 			if($this->value == $item->getValue()) {
-				$firstSelected = " class=\"selected\"";
+				$firstSelected = true;
 				$checked = true;
 			} else {
-				$firstSelected = "";
+				$firstSelected = false;
 				$checked = false;
 			}
 

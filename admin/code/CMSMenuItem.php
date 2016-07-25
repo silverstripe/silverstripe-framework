@@ -1,4 +1,5 @@
 <?php
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * A simple CMS menu item.
@@ -93,6 +94,6 @@ class CMSMenuItem extends Object {
 			$parts[] = ($value === true) ? "{$name}=\"{$name}\"" : "{$name}=\"" . Convert::raw2att($value) . "\"";
 		}
 
-		return implode(' ', $parts);
+		return DBField::create_field('HTMLFragment', implode(' ', $parts));
 	}
 }

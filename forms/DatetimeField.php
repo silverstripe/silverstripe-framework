@@ -1,9 +1,5 @@
 <?php
 
-
-use SilverStripe\ORM\FieldType\DBField;
-
-
 /**
  * A composite field for date and time entry,
  * based on {@link DateField} and {@link TimeField}.
@@ -46,6 +42,11 @@ class DatetimeField extends FormField {
 	 */
 	protected $timeField = null;
 
+	/**
+	 * @var HiddenField
+	 */
+	protected $timezoneField = null;
+
 	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DATETIME;
 
 	/**
@@ -66,10 +67,8 @@ class DatetimeField extends FormField {
 	public function __construct($name, $title = null, $value = ""){
 		$this->config = $this->config()->default_config;
 
-		$this->dateField = DateField::create($name . '[date]', false)
-			->addExtraClass('fieldgroup-field');
-		$this->timeField = TimeField::create($name . '[time]', false)
-			->addExtraClass('fieldgroup-field');
+		$this->timeField = TimeField::create($name . '[time]', false);
+		$this->dateField = DateField::create($name . '[date]', false);
 		$this->timezoneField = new HiddenField($name . '[timezone]');
 
 		parent::__construct($name, $title, $value);
@@ -104,7 +103,6 @@ class DatetimeField extends FormField {
 			'datetimeorder' => $this->getConfig('datetimeorder'),
 		);
 		$config = array_filter($config);
-		$this->addExtraClass('fieldgroup');
 		$this->addExtraClass(Convert::raw2json($config));
 
 		return parent::FieldHolder($properties);
@@ -116,14 +114,7 @@ class DatetimeField extends FormField {
 	 */
 	public function Field($properties = array()) {
 		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/DatetimeField.css');
-
-		$tzField = ($this->getConfig('usertimezone')) ? $this->timezoneField->FieldHolder() : '';
-		return sprintf(
-			'%s%s%s<div class="clear"><!-- --></div>',
-			$this->dateField->FieldHolder(),
-			$this->timeField->FieldHolder(),
-			$tzField
-		);
+		return parent::Field($properties);
 	}
 
 	/**
@@ -291,6 +282,15 @@ class DatetimeField extends FormField {
 	}
 
 	/**
+	 * Check if timezone field is included
+	 *
+	 * @return bool
+	 */
+	public function getHasTimezone() {
+		return $this->getConfig('usertimezone');
+	}
+
+	/**
 	 * @return FormField
 	 */
 	public function getTimezoneField() {
@@ -348,64 +348,14 @@ class DatetimeField extends FormField {
 	}
 
 	public function performReadonlyTransformation() {
-		$field = $this->castedCopy('DatetimeField_Readonly');
-		$field->setValue($this->dataValue());
-
-		$dateFieldConfig = $this->getDateField()->getConfig();
-		if($dateFieldConfig) {
-			foreach($dateFieldConfig as $k => $v) {
-				$field->getDateField()->setConfig($k, $v);
-			}
-		}
-
-		$timeFieldConfig = $this->getTimeField()->getConfig();
-		if($timeFieldConfig) {
-			foreach($timeFieldConfig as $k => $v) {
-				$field->getTimeField()->setConfig($k, $v);
-			}
-		}
-
+		$field = clone $this;
+		$field->setReadonly(true);
 		return $field;
 	}
 
 	public function __clone() {
 		$this->dateField = clone $this->dateField;
 		$this->timeField = clone $this->timeField;
+		$this->timezoneField = clone $this->timezoneField;
 	}
-}
-
-/**
- * The readonly class for our {@link DatetimeField}.
- *
- * @package forms
- * @subpackage fields-datetime
- */
-class DatetimeField_Readonly extends DatetimeField {
-
-	protected $readonly = true;
-
-	public function Field($properties = array()) {
-		$valDate = $this->dateField->dataValue();
-		$valTime = $this->timeField->dataValue();
-
-		if($valDate && $valTime) {
-			$format = sprintf(
-				$this->getConfig('datetimeorder'),
-				$this->dateField->getConfig('dateformat'),
-				$this->timeField->getConfig('timeformat')
-			);
-			$valueObj = new Zend_Date(
-				sprintf($this->getConfig('datetimeorder'), $valDate, $valTime),
-				$this->getConfig('datavalueformat'),
-				$this->dateField->getLocale()
-			);
-			$val = $valueObj->toString($format);
-
-		} else {
-			$val = sprintf('<em>%s</em>', _t('DatetimeField.NOTSET', 'Not set'));
-		}
-
-		return "<span class=\"readonly\" id=\"" . $this->id() . "\">$val</span>";
-	}
-
 }

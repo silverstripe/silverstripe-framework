@@ -3,7 +3,7 @@
 	<% include LeftAndMain_ViewModeSelector SelectID="preview-mode-dropdown-in-preview" %>
 
     <span id="preview-size-dropdown" class="preview-size-selector preview-selector field dropdown">
-		<select title="<%t SilverStripeNavigator.ViewDeviceWidth 'Select a preview width' %>" id="preview-size-dropdown-select" class="preview-dropdown dropdown nolabel" autocomplete="off" name="Action">
+		<select title="<%t SilverStripeNavigator.ViewDeviceWidth 'Select a preview width' %>" id="preview-size-dropdown-select" class="preview-dropdown dropdown form-group--no-label" autocomplete="off" name="Action">
 			<option data-icon="font-icon-resize" data-description="<%t SilverStripeNavigator.Responsive 'Responsive' %>" class="font-icon-resize icon-view first" value="auto">
 				<%t SilverStripeNavigator.Auto 'Auto' %>
 			</option>
@@ -32,7 +32,7 @@
 			</div>
 		<% else %>
 			<span id="preview-state-dropdown" class="cms-preview-states field dropdown">
-				<select title="<%t SilverStripeNavigator.PreviewState 'Preview State' %>" id="preview-states" class="preview-state dropdown nolabel" autocomplete="off" name="preview-state">
+				<select title="<%t SilverStripeNavigator.PreviewState 'Preview State' %>" id="preview-states" class="preview-state dropdown form-group--no-label" autocomplete="off" name="preview-state">
 					<% loop $Items %>
 					<option name="$Name" data-name="$Name" data-link="$Link" class="state-name $FirstLast" value="$Link" <% if $isActive %>selected<% end_if %>>
 						$Title

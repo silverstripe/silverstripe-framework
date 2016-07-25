@@ -898,7 +898,7 @@
       }
     });
 
-    $('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
+    $('.cms .field.dropdown select, .cms .field select[multiple], .form__fieldgroup-item select.dropdown').entwine({
       onmatch: function onmatch() {
         if (this.is('.no-chosen')) {
           this._super();
@@ -1090,9 +1090,5 @@
   var statusMessage = function statusMessage(text, type) {
     text = jQuery('<div/>').text(text).html();
     jQuery.noticeAdd({ text: text, type: type, stayTime: 5000, inEffect: { left: '0', opacity: 'show' } });
-  };
-
-  var errorMessage = function errorMessage(text) {
-    jQuery.noticeAdd({ text: text, type: 'error', stayTime: 5000, inEffect: { left: '0', opacity: 'show' } });
   };
 });

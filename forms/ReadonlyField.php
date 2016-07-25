@@ -47,32 +47,6 @@ class ReadonlyField extends FormField {
 		return clone $this;
 	}
 
-	/**
-	 * @param array $properties
-	 * @return string
-	 */
-	public function Field($properties = array()) {
-		// Include a hidden field in the HTML
-		if($this->includeHiddenField && $this->readonly) {
-			$hidden = clone $this;
-			$hidden->setReadonly(false);
-			return parent::Field($properties) . $hidden->Field($properties);
-
-		} else {
-			return parent::Field($properties);
-		}
-	}
-
-	public function getAttributes() {
-		return array_merge(
-			parent::getAttributes(),
-			array(
-				'type' => 'hidden',
-				'value' => $this->readonly ? null : $this->value,
-			)
-		);
-	}
-
 	public function Type() {
 		return 'readonly';
 	}

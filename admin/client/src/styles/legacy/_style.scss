@@ -59,7 +59,7 @@ body.cms {
 /**
  * DEPRECATED:
  * .cms-content-tools will be removed in 4.0
- * Use .cms-content-filters instead.
+ * Use .cms-content-filters instead (TODO rename to BEM).
  */
 .cms-content-tools,
 .cms-content-fields,
@@ -269,21 +269,6 @@ body.cms {
 	}
 }
 
-/** ------------------------------------------------------------------
- * Filters available in the top bar.
- * This is a togglable element that displays a form
- * used for filtering content.
- * ----------------------------------------------------------------- */
-.cms-content-filters {
-	display: none;
-	width: 100%;
-	padding: 12px 16px;
-	border-bottom: 1px solid $color-light-separator;
-
-	.cms-search-form {
-		margin-bottom: 0;
-	}
-}
 
 .cms-tabset-nav-primary {
 	display: inline-block;
@@ -469,13 +454,29 @@ body.cms {
 	}
 
 	.ui-tabs-panel {
-		padding: $grid-y*1.5 $grid-x*2;
+		padding: $grid-y*1.5 $grid-gutter-width-half;
 		background: transparent; // default it's white
 		border: 0; // suppress default borders
 
 		&.cms-edit-form {
 			padding: 0;
 		}
+
+    .ui-tabs {
+
+      .ui-tabs-nav {
+        margin-left: $grid-gutter-width-half;
+        margin-right: $grid-gutter-width-half;
+        float: none;
+        border-bottom: 1px solid $nav-tabs-link-hover-border-color;
+        margin-bottom: 10px;
+      }
+
+      .first .ui-tabs-anchor {
+        margin-left: 0;
+        padding-left: 0;
+      }
+    }
 	}
 
 	.ui-widget-header {
@@ -685,11 +686,15 @@ body.cms {
 	float: none;
 	padding: 0;
 	border-bottom: 1px solid $color-button-generic-border;
-	margin: 0 16px 0;
+	margin: 0 16px;
 
 	li {
 		// Align tab content with gutter (supports multiple rows of tabs)
-		margin: 0 ($grid-x*1.5) -1px ($grid-x*-1.5);
+		margin: 0 ($grid-x * .5) -1px ($grid-x * -1.5);
+
+		&:first-child {
+			margin-left: 0;
+		}
 	}
 }
 
@@ -935,7 +940,6 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-page-add-form-dialog {
-
 	display: none;
 }
 
@@ -1059,6 +1063,10 @@ body.cms {
 	}
 }
 
+.ui-widget-content a {
+	color: $link-color;
+}
+
 /**
  * DEPRECATED:
  * .cms-content-tools and ui-widget will be removed in 4.0
@@ -1067,11 +1075,6 @@ body.cms {
  * Content Tools is the sidebar on the left of the main content
  * panel
  */
-
-.ui-widget-content a {
-	color: $link-color;
-}
-
 .cms-content-tools {
 	background: $tab-panel-texture-color;
 	width: $grid-x * 36;
@@ -1080,10 +1083,6 @@ body.cms {
 	z-index: 1000;
 	float: left;
 	position: relative;
-
-	&.filter{
-		padding:0 !important;
-	}
 
 	.cms-panel-header {
 		clear: both;
@@ -1133,51 +1132,13 @@ body.cms {
 	}
 
 	.field {
-		/*
-		 * Fields are more compressed in the sidebar compared to the
-		 * main content editing window so the below alters the internal
-		 * spacing of the fields so we can move that spacing to between
-		 * the form fields rather than padding
-		 */
-		label {
-			float: none;
-			width: auto;
-			font-size: $font-size-root;
-			padding: 0 $grid-x 4px 0;
-		}
-
-		.middleColumn {
-			margin: 0;
-		}
-
-		input.text,
-		select,
-		textarea {
-			padding: 5px;
-			font-size: 11px;
-		}
 
 		&.checkbox {
 			padding: 0 0 8px;
-
-			input {
-				margin: 2px 0;
-			}
 		}
 
 		.description {
 			margin-left: 0;
-		}
-	}
-
-	.fieldgroup {
-		.fieldgroup-field {
-			padding: 0;
-
-			.field {
-				margin: 0;
-				padding: 0;
-			}
 		}
 	}
 
@@ -1297,57 +1258,49 @@ body.cms {
 		vertical-align: middle;
 	}
 }
-.cms-content-batchactions-dropdown {
-	display: inline-block;
 
-	// Context specific rules for when batch actions are in the SiteTree panel.
-	.cms-content-tools & {
+// Tree batch actions
+.cms-batch-actions {
+	position: relative;
+	max-width: 400px;
+
+	fieldset {
 		width: 100%;
+		float: left;
 	}
 
-	fieldset { // The dropdown element wrapper
-		display: inline-block;
-		width: 200px;
-
-		.view-mode-batchactions-label {
-			display: inline;
-		}
-
-		// Context specific rules for when batch actions are in the SiteTree panel.
-		.cms-content-tools & {
-			width: 82%;
-		}
+	.form__field-holder--no-label {
+		margin-left: 0 !important;
+		flex-basis: 100% !important;
+		padding-right: 23px;
 	}
 
 	.dropdown { // The 'select' element
 		width: 100%;
 		height: 32px;
+	}
 
-		.chosen-single {
-			border-top-right-radius: 0;
-			border-bottom-right-radius: 0;
-			box-shadow: none;
-		}
+	.chosen-container-single .chosen-single {
+		border-top-right-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	.field .chosen-container-active.chosen-with-drop .chosen-single {
+		border-top-right-radius: 0;
 	}
 
 	.btn-toolbar {
-		display: inline-block;
-		padding: 0;
-		margin-left: -4px;
-		min-height: auto;
-
-		// Context specific rules for when batch actions are in the SiteTree panel.
-		.cms-content-tools & {
-			width: 16%;
-		}
+		position: absolute;
+		right: 0;
 	}
 
-	.action {
-		width: 100%;
-		height: 32px;
-		margin-bottom: 0;
+	.action,
+  .btn {
+		padding-top: 7px;
+		padding-bottom: 7px;
 		border-top-left-radius: 0;
 		border-bottom-left-radius: 0;
+		width: calc(#{$grid-gutter-width} + 1px); // gutters + 1px border
 	}
 }
 
@@ -1448,12 +1401,27 @@ form.member-profile-form {
 }
 
 .memberdatetimeoptionset {
+  @extend .form-inline;
+
 	.description {
 		font-style: normal;
 	}
 	.toggle {
 		font-size: $font-size-sm;
 	}
+  .toggle-content {
+    padding-left: 0;
+    li {
+      margin-right: 20px;
+    }
+  }
+  .radio {
+    width: 200px;
+    margin-bottom: 6px;
+  }
+  .valcustom {
+    vertical-align: top;
+  }
 }
 
 .cms {
@@ -1473,12 +1441,11 @@ form.member-profile-form {
 		background: $tab-panel-texture-color;
 		width: 100%;
 		#Root_Main {
-			.confirmedpassword {
-				border-bottom:none;
-				box-shadow:none;
-			}
+
 			.customFormat {
-				max-width:80px;
+				max-width: 100px;
+        padding-top: 0;
+        padding-bottom: 0;
 			}
 			.cms-help-toggle {
 				text-indent: -9999em;
@@ -1492,17 +1459,19 @@ form.member-profile-form {
 				float:none;
 			}
 		}
-				}
+	}
 	form.member-profile-form {
 		#Root .ui-tabs-nav {
 			display: none;
-			}
+		}
 
-		#Root_Main, #Root_Permissions {
-			border: none;
-			}
+	#Root_Main, #Root_Permissions {
+		border: none;
 		}
 	}
+}
+
+
 
 /** --------------------------------------------
  * "Settings" Form
@@ -1884,12 +1853,7 @@ body.cms-dialog {
 			width:300px;
 			@include hide-text-overflow;
 		}
-		.cms-file-info{
-			.field{
-				border:none;
-				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-			}
-		}
+
 		.field{
 			border-bottom: 1px solid $color-shadow-light;
     		box-shadow: 0 1px 0 lighten($color-shadow-light, 95%);
@@ -2107,16 +2071,6 @@ body.cms-dialog {
 
 
 /** --------------------------------------------
- * Search forms (used in AssetAdmin, ModelAdmin, etc)
- * -------------------------------------------- */
-.cms-search-form {
-	margin-bottom: $grid-y*2;
-	.filter &{
-		margin-bottom:0;
-	}
-}
-
-/** --------------------------------------------
  * Step labels
  * -------------------------------------------- */
 .step-label {
@@ -2161,47 +2115,12 @@ body.cms-dialog {
  * -------------------------------------------- */
 
 .cms-file-info {
-	overflow: auto;
-	// Emulate .field bottom border styling without applying .field class,
-	// as it messes up the nested .field element styling (blocklevel labels)
-	border-bottom: 1px solid $color-shadow-light;
-	box-shadow: 0 1px 0 lighten($color-shadow-light, 95%);
-	margin-bottom: $grid-x;
 
 	// Preview might not always be available
-	.cms-file-info-preview {
-		float: left;
-		width: $grid-x * 22; // Same as ".field label"
-		margin-right: $grid-x;
-
-		img {
+	.cms-file-info-preview img {
 			max-width: $grid-x * 22; // Same as ".field label"
 			max-height: $grid-x * 16; // Fitting typical info displayed (~5 rows)
-		}
-	}
-	.cms-file-info-data {
-		float: left;
-		width: 55%;
-		padding-bottom: $spacer-y;
-
-		.field {
-			// Unsetting styles from .field, make it more compact visually
-			margin: 0;
-			padding-bottom: 0;
-			border: none;
-			box-shadow: none;
-			label.left {
-				width: $grid-x*12;
-				padding-top: 0;
-			}
-			.middleColumn {
-				margin-left: $grid-x*13;
-				padding-top: 0;
-			}
-			label, span {
-				padding: 0;
-			}
-		}
+			margin-bottom: $spacer-y;
 	}
 }
 
@@ -2265,38 +2184,8 @@ form.import-form {
 	label.left {
 		width: 250px;
 	}
-
 }
 
-/** --------------------------------------------
- * Page Edit Controller
- * -------------------------------------------- */
-
-/*.cms-container {
-	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
-		// Fix pixel gap between nav tree and main page header
-	 	margin-left: -1px; // Removed to close gap far right of right tabs?
-	}
-}*/
-
-/** --------------------------------------------
- * Page Settings Controller
- * -------------------------------------------- */
-
-.cms-container .CMSMain.CMSPageSettingsController {
-	.tab#Root_Settings {
-		.optionset li {
-			white-space:nowrap;
-			label {
-				padding-left:2px;
-			}
-		}
-		.fieldgroup .fieldgroup-field {
-			width:$grid-x*27;
-			padding-left:0;
-		}
-	}
-}
 
 /** --------------------------------------------
  * Buttons for FileUpload

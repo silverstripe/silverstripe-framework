@@ -1204,7 +1204,7 @@ $.entwine('ss', function($) {
    * For the CMS we also need to tell the parent div that it has a select so
    * we can fix the height cropping.
    */
-  $('.cms .field.dropdown select, .cms .field select[multiple], .fieldholder-small select.dropdown').entwine({
+  $('.cms .field.dropdown select, .cms .field select[multiple], .form__fieldgroup-item select.dropdown').entwine({
     onmatch: function() {
       if(this.is('.no-chosen')) {
         this._super();
@@ -1448,8 +1448,4 @@ $.entwine('ss', function($) {
 var statusMessage = function(text, type) {
   text = jQuery('<div/>').text(text).html(); // Escape HTML entities in text
   jQuery.noticeAdd({text: text, type: type, stayTime: 5000, inEffect: {left: '0', opacity: 'show'}});
-};
-
-var errorMessage = function(text) {
-  jQuery.noticeAdd({text: text, type: 'error', stayTime: 5000, inEffect: {left: '0', opacity: 'show'}});
 };

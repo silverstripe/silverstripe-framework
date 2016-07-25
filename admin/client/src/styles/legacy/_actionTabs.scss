@@ -218,6 +218,8 @@ $border: 1px solid darken(#D9D9D9, 15%);
 			ul.ui-tabs-nav{
 				margin: 0;
 				float: left; /* needed for ie but doesnt effect other browsers */
+				border-bottom: 0;
+
 				li{
 					background: none;
 					border: none;
