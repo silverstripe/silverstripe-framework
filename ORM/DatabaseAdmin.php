@@ -37,6 +37,20 @@ class DatabaseAdmin extends Controller {
 		'import'
 	);
 
+	/**
+	 * Obsolete classname values that should be remapped in dev/build
+	 */
+	private static $classname_value_remapping = [
+		'Group' => 'SilverStripe\\Security\\Group',
+		'LoginAttempt' => 'SilverStripe\\Security\\LoginAttempt',
+		'Member' => 'SilverStripe\\Security\\Member',
+		'MemberPassword' => 'SilverStripe\\Security\\MemberPassword',
+		'Permission' => 'SilverStripe\\Security\\Permission',
+		'PermissionRole' => 'SilverStripe\\Security\\PermissionRole',
+		'PermissionRoleCode' => 'SilverStripe\\Security\\PermissionRoleCode',
+		'RememberLoginHash' => 'SilverStripe\\Security\\RememberLoginHash',
+	];
+
 	protected function init() {
 		parent::init();
 
@@ -159,7 +173,7 @@ class DatabaseAdmin extends Controller {
 	public function buildDefaults() {
 		$dataClasses = ClassInfo::subclassesFor('SilverStripe\ORM\DataObject');
 		array_shift($dataClasses);
-		foreach($dataClasses as $dataClass){
+		foreach($dataClasses as $dataClass) {
 			singleton($dataClass)->requireDefaultRecords();
 			print "Defaults loaded for $dataClass<br/>";
 		}
@@ -281,6 +295,19 @@ class DatabaseAdmin extends Controller {
 					singleton($dataClass)->requireDefaultRecords();
 				}
 			}
+
+			// Remap obsolete class names
+			$schema = DataObject::getSchema();
+			foreach ($this->config()->classname_value_remapping as $oldClassName => $newClassName) {
+				$badRecordCount = $newClassName::get()->filter(["ClassName" => $oldClassName ])->count();
+				if($badRecordCount > 0) {
+					if(Director::is_cli()) echo " * Correcting $badRecordCount obsolete classname values for $newClassName\n";
+					else echo "<li>Correcting $badRecordCount obsolete classname values for $newClassName</li>\n";
+					$table = $schema->baseDataTable($newClassName);
+					DB::prepared_query("UPDATE \"$table\" SET \"ClassName\" = ? WHERE \"ClassName\" = ?", [ $newClassName, $oldClassName ]);
+				}
+			}
+
 		}
 
 		touch(TEMP_FOLDER
@@ -357,3 +384,4 @@ class DatabaseAdmin extends Controller {
 	}
 
 }
+
