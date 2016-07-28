@@ -1,8 +1,8 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define('ss.UploadField', ['./jQuery', './i18n'], factory);
+		define('ss.UploadField', ['../jQuery', '../i18n'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(require('./jQuery'), require('./i18n'));
+		factory(require('../jQuery'), require('../i18n'));
 	} else {
 		var mod = {
 			exports: {}

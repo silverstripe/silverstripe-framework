@@ -1,8 +1,8 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define('ss.GridField', ['./jQuery', './i18n'], factory);
+		define('ss.GridField', ['../jQuery', '../i18n'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(require('./jQuery'), require('./i18n'));
+		factory(require('../jQuery'), require('../i18n'));
 	} else {
 		var mod = {
 			exports: {}
@@ -274,8 +274,8 @@
 
 		$('.ss-gridfield .filter-header :input').entwine({
 			onmatch: function onmatch() {
-				var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
-				    resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+				var filterbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-filter'),
+				    resetbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-reset');
 
 				if (this.val()) {
 					filterbtn.addClass('filtered');
@@ -289,8 +289,8 @@
 			onkeydown: function onkeydown(e) {
 				if (this.closest('.ss-gridfield-button-reset').length) return;
 
-				var filterbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-filter'),
-				    resetbtn = this.closest('.fieldgroup').find('.ss-gridfield-button-reset');
+				var filterbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-filter'),
+				    resetbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-reset');
 
 				if (e.keyCode == '13') {
 					var btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
@@ -318,22 +318,21 @@
 							headers: {
 								"X-Pjax": 'Partial'
 							},
+							dataType: 'json',
 							type: "GET",
 							url: $(searchField).data('searchUrl'),
 							data: encodeURIComponent(searchField.attr('name')) + '=' + encodeURIComponent(searchField.val()),
-							success: function success(data) {
-								response($.map(JSON.parse(data), function (name, id) {
-									return { label: name, value: name, id: id };
-								}));
-							},
+							success: response,
 							error: function error(e) {
 								alert(_i18n2.default._t('GRIDFIELD.ERRORINTRANSACTION', 'An error occured while fetching data from the server\n Please try again later.'));
 							}
 						});
 					},
 					select: function select(event, ui) {
-						$(this).closest(".ss-gridfield").find("#action_gridfield_relationfind").replaceWith('<input type="hidden" name="relationID" value="' + ui.item.id + '" id="relationID"/>');
-						var addbutton = $(this).closest(".ss-gridfield").find("#action_gridfield_relationadd");
+						var hiddenField = $('<input type="hidden" name="relationID" class="action_gridfield_relationfind" />');
+						hiddenField.val(ui.item.id);
+						$(this).closest(".ss-gridfield").find(".action_gridfield_relationfind").replaceWith(hiddenField);
+						var addbutton = $(this).closest(".ss-gridfield").find(".action_gridfield_relationadd");
 						if (addbutton.data('button')) {
 							addbutton.button('enable');
 						} else {

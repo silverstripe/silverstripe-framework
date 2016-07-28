@@ -452,7 +452,7 @@ gulp.task('thirdparty', () => {
 gulp.task('umd', ['umd-admin', 'umd-framework'], () => {
   if (isDev) {
     gulp.watch(`${PATHS.ADMIN_JS_SRC}/legacy/*.js`, ['umd-admin']);
-    gulp.watch(`${PATHS.FRAMEWORK_JS_SRC}/*.js`, ['umd-framework']);
+    gulp.watch(`${PATHS.FRAMEWORK_JS_SRC}/**/*.js`, ['umd-framework']);
   }
 });
 
@@ -467,7 +467,7 @@ gulp.task('umd-admin', () => {
 
 gulp.task('umd-framework', () => { // eslint-disable-line
   return transformToUmd(glob.sync(
-    `${PATHS.FRAMEWORK_JS_SRC}/*.js`),
+    `${PATHS.FRAMEWORK_JS_SRC}/**/*.js`),
     PATHS.FRAMEWORK_JS_DIST
   );
 });
