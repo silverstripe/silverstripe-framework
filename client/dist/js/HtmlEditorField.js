@@ -367,7 +367,7 @@
 
 				this.resetFileField();
 
-				this.find('div.content .field').hide();
+				this.find('.step2').nextAll('.field').not('.field[id$="' + linkType + '_Holder"]').hide();
 				this.find('.field[id$="LinkType_Holder"]').show();
 				this.find('.field[id$="' + linkType + '_Holder"]').show();
 
