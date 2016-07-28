@@ -1,4 +1,4 @@
-import $ from '../jQuery';
+import $ from 'jQuery';
 
 $.entwine('ss', function($) {
 	// Install the directory selection handler

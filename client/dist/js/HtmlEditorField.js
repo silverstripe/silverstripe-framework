@@ -1,8 +1,8 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define('ss.HtmlEditorField', ['../jQuery', '../i18n'], factory);
+		define('ss.HtmlEditorField', ['jQuery', 'i18n'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(require('../jQuery'), require('../i18n'));
+		factory(require('jQuery'), require('i18n'));
 	} else {
 		var mod = {
 			exports: {}
@@ -368,7 +368,7 @@
 				this.resetFileField();
 
 				this.find('div.content .field').hide();
-				this.find('.field[id$="LinkType"]').show();
+				this.find('.field[id$="LinkType_Holder"]').show();
 				this.find('.field[id$="' + linkType + '_Holder"]').show();
 
 				if (linkType == 'internal' || linkType == 'anchor') {

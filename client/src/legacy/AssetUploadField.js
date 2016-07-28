@@ -1,4 +1,4 @@
-import $ from '../jQuery';
+import $ from 'jQuery';
 
 $('.ss-assetuploadfield').entwine({
 	onmatch: function() {

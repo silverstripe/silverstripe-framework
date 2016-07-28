@@ -1,4 +1,4 @@
-import $ from '../jQuery';
+import $ from 'jQuery';
 
 $(document).ready(function() {
   // Support both bootstrap / legacy selectors

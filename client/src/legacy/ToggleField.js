@@ -1,4 +1,4 @@
-import $ from '../jQuery';
+import $ from 'jQuery';
 
 var field = $('div.toggleField');
 

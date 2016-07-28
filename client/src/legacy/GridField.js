@@ -1,5 +1,5 @@
-import $ from '../jQuery';
-import i18n from '../i18n';
+import $ from 'jQuery';
+import i18n from 'i18n';
 
 $.entwine('ss', function($) {
 	$('.ss-gridfield').entwine({

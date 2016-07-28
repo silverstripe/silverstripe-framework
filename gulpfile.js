@@ -315,6 +315,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }
     )
+    .require(`${PATHS.FRAMEWORK_JS_SRC}/i18nx.js`,
+      { expose: 'i18nx' }
+    )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Config`,
       { expose: 'lib/Config' }
     )
@@ -374,6 +377,7 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .external('config')
     .external('jQuery')
     .external('i18n')
+    .external('i18nx')
     .external('lib/Router')
     .bundle()
     .on('update', bundleLeftAndMain)
@@ -406,6 +410,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('components/Toolbar/Toolbar')
     .external('deep-freeze-strict')
     .external('i18n')
+    .external('i18nx')
     .external('jQuery')
     .external('lib/Backend')
     .external('lib/ReducerRegister')
