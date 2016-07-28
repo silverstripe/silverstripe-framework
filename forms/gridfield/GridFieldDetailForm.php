@@ -598,6 +598,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 	public function doDelete($data, $form) {
 		$title = $this->record->Title;
+		$backLink = $this->getBacklink();
 		try {
 			if (!$this->record->canDelete()) {
 				throw new ValidationException(
@@ -628,7 +629,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$controller = $this->getToplevelController();
 		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
 
-		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
+		return $controller->redirect($backLink, 302); //redirect back to admin section
 	}
 
 	/**
