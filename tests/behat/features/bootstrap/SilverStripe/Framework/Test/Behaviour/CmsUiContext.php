@@ -383,7 +383,7 @@ class CmsUiContext extends BehatContext {
 		assertNotNull($controls, 'Preview controls not found');
 
 		$label = $controls->find('xpath', sprintf(
-			'.//label[(@for="%s")]',
+			'.//*[count(*)=0 and contains(text(), \'%s\')]',
 			$mode
 		));
 		assertNotNull($label, 'Preview mode switch not found');
