@@ -533,7 +533,7 @@ $.entwine('ss', function($) {
 
 			// Toggle field visibility depending on the link type.
 			this.find('div.content .field').hide();
-			this.find('.field[id$="LinkType"]').show();
+			this.find('.field[id$="LinkType_Holder"]').show();
 			this.find('.field[id$="' + linkType +'_Holder"]').show();
 
 			if(linkType == 'internal' || linkType == 'anchor') {
