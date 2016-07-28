@@ -35,9 +35,6 @@ class GridField_URLHandlerTest_Controller extends Controller implements TestOnly
 
 	private static $allowed_actions = array('Form');
 
-	public function Link() {
-		return get_class($this) ."/";
-	}
 	public function Form() {
 		$gridConfig = GridFieldConfig::create();
 		$gridConfig->addComponent(new GridField_URLHandlerTest_Component());
