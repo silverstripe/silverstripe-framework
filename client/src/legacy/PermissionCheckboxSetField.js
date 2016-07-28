@@ -1,4 +1,4 @@
-import $ from '../jQuery';
+import $ from 'jQuery';
 
 $.entwine('ss', function($){
 	/**
@@ -40,7 +40,7 @@ $.entwine('ss', function($){
 
 	/**
 	 * Automatically check all "CMS section" checkboxes when "Access to all CMS interfaces" is ticked.
-	 * 
+	 *
 	 * @todo This should really be abstracted into a declarative dependency system
 	 * instead of custom logic.
 	 */

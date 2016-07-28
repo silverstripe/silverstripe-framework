@@ -1,8 +1,8 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define('ss.ConfirmedPasswordField', ['./jQuery'], factory);
+		define('ss.ConfirmedPasswordField', ['jQuery'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(require('./jQuery'));
+		factory(require('jQuery'));
 	} else {
 		var mod = {
 			exports: {}

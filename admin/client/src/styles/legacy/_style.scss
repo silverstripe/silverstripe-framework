@@ -798,11 +798,31 @@ body.cms {
 /** --------------------------------------------
  * Messages
  * -------------------------------------------- */
+.alert {
+  &.good {
+    @extend .alert-success;
+  }
+
+  &.notice {
+    @extend .alert-info;
+  }
+
+  &.warning {
+   @extend .alert-warning;
+  }
+
+  &.error,
+  &.bad,
+  &.required,
+  &.validation {
+  @extend .alert-danger;
+  }
+}
 
 .message {												// White
 	display: block;
 	clear: both;
-	margin: 0 0 $grid-y;
+	margin: 0 0 $spacer-y;
 	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
 	font-weight: normal;
 	border: 1px #ccc solid;
@@ -833,18 +853,9 @@ body.cms {
 	}
 }
 
-
-.cms-edit-form {
-	.message {
-		margin: $grid-x*2; // TODO Remove double padding when adjacent to a padded tabs panel
-	}
-	.ui-tabs-panel {
-		.message {
-			margin: $grid-x*2 0; // gets padding from tab panel
-		}
-	}
+.cms-edit-form .ui-tabs-panel .message {
+  margin: $grid-x*2 0; // gets padding from tab panel
 }
-
 
 .notice-item {
 	border-radius: 3px;
@@ -944,90 +955,52 @@ body.cms {
 }
 
 .cms-add-form {
-  .field > label.left {
-    width: auto;
+  .message-restricted {
+    display: none;
   }
-	.step-label {
-		opacity:0.9;
 
-		.title {
-			font-weight:bold; //to match pagetype label
-		}
-	}
-	ul.SelectionGroup {
-		padding-left:28px;
-		overflow: visible;
-		@include legacy-pie-clearfix;
-	}
-	.parent-mode {
-		padding: $grid-x;
-		overflow: auto;
-	}
-}
+  .radio {
+    margin-left: -$grid-gutter-width-half;
+    margin-right: -$grid-gutter-width-half;
+    margin-bottom: 0;
+    padding: #{$spacer-y * .625} $grid-gutter-width-half #{$spacer-y * .75};
+    border-radius: $border-radius;
 
-#PageType {
-	ul {
-		padding-left: 20px;
-		li {
-			float: none;
-			width: 100%;
-			padding: 9px 0 9px 15px;
-			overflow: hidden;
-			border-bottom-width: 2px;
-			border-bottom: 2px groove lighten($color-shadow-light, 95%);
-			-webkit-border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
-			border-image: url(../images/textures/bg_fieldset_elements_border.png) 2 stretch stretch;
+    &:hover,
+    &.selected {
+      background-color: $background-darker;
+      cursor: pointer;
+    }
 
-			&:last-child {
-				border-bottom: none;
-			}
+    &.disabled {
+      color: $color-text-disabled;
+      opacity: 0.6;
+    }
 
-			&:hover, &.selected {
-				background-color: $color-highlight-opacity;
-			}
+    &.disabled:hover {
+      background: none;
+    }
+  }
 
-			&.disabled {
-				color: $color-text-disabled;
-				opacity: 0.5;
+  input[type="radio"] {
+    position: static;
+  }
 
-				&:hover {
-					background: none;
-				}
-			}
+  .page-icon {
+    display: inline-block;
+    top: 3px;
+    margin-right: 6px;
+    position: relative;
 
-			input {
-				margin: inherit;
-			}
+    + .title {
+      margin-right: 6px;
+      font-weight: 500;
+    }
+  }
 
-			label {
-				padding-left: 0;
-				padding-bottom: 0;
-			}
-
-			input, label, .page-icon, .title {
-				float: left;
-				line-height: 1.3em;
-			}
-
-			.page-icon {
-				margin: 0 4px;
-			}
-
-			.title {
-				width: 120px;
-				font-weight: bold;
-				padding-right: 10px;
-			}
-
-			.description {
-				font-style: italic;
-				// Undo some generic styles from tooltips
-				display: inline;
-				clear: none;
-				margin: 0;
-			}
-		}
-	}
+  .form__field-description {
+    font-style: italic;
+  }
 }
 
 /** --------------------------------------------
@@ -1603,11 +1576,10 @@ form.member-profile-form {
 	}
 }
 
-.CMSPageAddController {
-	.cms-panel-padded {
-		padding: $grid-y*2 $grid-x*2;
-	}
+.CMSPageAddController .cms-panel-padded {
+	padding: $grid-gutter-width-half;
 }
+
 /** ------------------------------------------------------------------
 * Dialog
 *
@@ -2073,40 +2045,14 @@ body.cms-dialog {
 /** --------------------------------------------
  * Step labels
  * -------------------------------------------- */
-.step-label {
+.step-label > * {
+  display: block;
+}
 
-	& > * {
-		display: inline-block;
-		vertical-align: top;
-	}
-
-  .flyout {
-    height: 26px;
-    font-size: $font-size-root +1;
-    font-weight: bold;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
-    background-color: #667980; // hardcoding colour since its tied to the sprite
-    padding: 4px 3px 4px 6px;
-    text-align: center;
-    text-shadow: none;
-    color: #fff;
-    line-height: 18px;
-  }
-
-	.arrow {
-		height: 26px;
-		width: 10px;
-		margin-right: 4px;
-		@extend .icon-sprites-32x32;
-		@include sprite($sprites-32x32-numeric-label);
-		display: inline-block;
-	}
-
-	.title {
-		height: 26px - 2*4px; // minus padding
-		padding: 4px;
-	}
+.step-label .flyout {
+  color: $brand-secondary;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 

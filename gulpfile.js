@@ -315,6 +315,9 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }
     )
+    .require(`${PATHS.FRAMEWORK_JS_SRC}/i18nx.js`,
+      { expose: 'i18nx' }
+    )
     .require(`${PATHS.ADMIN_JS_SRC}/lib/Config`,
       { expose: 'lib/Config' }
     )
@@ -374,6 +377,7 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .external('config')
     .external('jQuery')
     .external('i18n')
+    .external('i18nx')
     .external('lib/Router')
     .bundle()
     .on('update', bundleLeftAndMain)
@@ -406,6 +410,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('components/Toolbar/Toolbar')
     .external('deep-freeze-strict')
     .external('i18n')
+    .external('i18nx')
     .external('jQuery')
     .external('lib/Backend')
     .external('lib/ReducerRegister')
@@ -452,7 +457,7 @@ gulp.task('thirdparty', () => {
 gulp.task('umd', ['umd-admin', 'umd-framework'], () => {
   if (isDev) {
     gulp.watch(`${PATHS.ADMIN_JS_SRC}/legacy/*.js`, ['umd-admin']);
-    gulp.watch(`${PATHS.FRAMEWORK_JS_SRC}/*.js`, ['umd-framework']);
+    gulp.watch(`${PATHS.FRAMEWORK_JS_SRC}/**/*.js`, ['umd-framework']);
   }
 });
 
@@ -467,7 +472,7 @@ gulp.task('umd-admin', () => {
 
 gulp.task('umd-framework', () => { // eslint-disable-line
   return transformToUmd(glob.sync(
-    `${PATHS.FRAMEWORK_JS_SRC}/*.js`),
+    `${PATHS.FRAMEWORK_JS_SRC}/**/*.js`),
     PATHS.FRAMEWORK_JS_DIST
   );
 });

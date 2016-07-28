@@ -272,7 +272,9 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 			new FieldList()
 		);
 
+		$headerWrap->setName('HeaderWrap');
 		$headerWrap->addExtraClass('CompositeField composite cms-content-header form-group--no-label ');
+		$contentComposite->setName('ContentBody');
 		$contentComposite->addExtraClass('ss-insert-link content');
 		$fileField->setAllowedMaxFileNumber(1);
 

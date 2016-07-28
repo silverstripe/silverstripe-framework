@@ -73,12 +73,9 @@ form.nostyle {
     width: auto;
   }
 
-  .phonenumber-field__deco {
-  }
-
-
+  // TODO remove ID style
 	&#Action {
-    	box-shadow: none;
+    box-shadow: none;
 	}
 
 	// When a field's description is toggleable, it's given an icon (right title) which is used as

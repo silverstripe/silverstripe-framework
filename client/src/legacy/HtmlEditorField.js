@@ -6,8 +6,8 @@
  * ajax / iframe submissions
  */
 
-import $ from '../jQuery';
-import i18n from '../i18n';
+import $ from 'jQuery';
+import i18n from 'i18n';
 
 var ss = typeof window.ss !== 'undefined' ? window.ss : {};
 
@@ -532,7 +532,7 @@ $.entwine('ss', function($) {
 			this.resetFileField();
 
 			// Toggle field visibility depending on the link type.
-			this.find('div.content .field').hide();
+			this.find('.step2').nextAll('.field').not('.field[id$="' + linkType +'_Holder"]').hide();
 			this.find('.field[id$="LinkType_Holder"]').show();
 			this.find('.field[id$="' + linkType +'_Holder"]').show();
 

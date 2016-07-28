@@ -82,6 +82,7 @@ class SelectionGroup extends CompositeField {
 			}
 
 			$itemID = $this->ID() . '_' . (++$count);
+			// @todo Move into SelectionGroup_Item.ss template at some point.
 			$extra = array(
 				"RadioButton" => DBField::create_field('HTMLFragment', FormField::create_tag(
 					'input',
@@ -91,12 +92,16 @@ class SelectionGroup extends CompositeField {
 						'id' => $itemID,
 						'name' => $this->name,
 						'value' => $item->getValue(),
-						'checked' => $checked
+						'checked' => $checked,
+						'aria-labelledby' => "title-{$itemID}",
 					)
 				)),
 				"RadioLabel" => DBField::create_field('HTMLFragment', FormField::create_tag(
 					'label',
-					array('for' => $itemID),
+					array(
+						'id' => "title-{$itemID}",
+						'for' => $itemID
+					),
 					$item->getTitle()
 				)),
 				"Selected" => $firstSelected,
@@ -116,9 +121,7 @@ class SelectionGroup extends CompositeField {
 		Requirements::javascript(FRAMEWORK_DIR   . '/client/dist/js/SelectionGroup.js');
 		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/SelectionGroup.css');
 
-		$obj = $properties ? $this->customise($properties) : $this;
-
-		return $obj->renderWith($this->getTemplates());
+		return parent::FieldHolder($properties);
 	}
 }
 

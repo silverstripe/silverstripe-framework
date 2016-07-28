@@ -71,7 +71,7 @@ class CompositeFieldTest extends SapphireTest {
 		$composite->setTag('fieldset');
 		$composite->setLegend('My legend');
 
-		$parser = new CSSContentParser($composite->Field());
+		$parser = new CSSContentParser($composite->FieldHolder());
 		$root = $parser->getBySelector('fieldset.composite');
 		$legend = $parser->getBySelector('fieldset.composite legend');
 

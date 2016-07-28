@@ -1,8 +1,8 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define('ss.ToggleCompositeField', ['./jQuery'], factory);
+		define('ss.ToggleCompositeField', ['jQuery'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(require('./jQuery'));
+		factory(require('jQuery'));
 	} else {
 		var mod = {
 			exports: {}
