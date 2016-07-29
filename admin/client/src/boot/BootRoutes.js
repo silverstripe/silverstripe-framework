@@ -109,6 +109,7 @@ class BootRoutes {
     // Register all top level routes.
     // This can be removed when top level sections are converted to React,
     // have their own JavaScript controllers, and register their own routes.
+    let lastPath = null;
     Object.keys(sections).forEach((key) => {
       let route = pageRouter.resolveURLToBase(sections[key].url);
       route = route.replace(/\/$/, ''); // Remove trailing slash
@@ -120,11 +121,21 @@ class BootRoutes {
           next();
           return;
         }
+        // Bootstrap on initial load
+        if (!lastPath) {
+          lastPath = window.location.pathname;
+        }
 
-        // Load the panel and stop processing routes.
-        $('.cms-container')
-          .entwine('ss')
-          .handleStateChange(null, ctx.state);
+        // Verify that this is a true state change. E.g. not a hash change.
+        // This emulates behaviour of old html history.js
+        const forceReload = ctx.data && ctx.data.__forceReload;
+        if (ctx.path !== lastPath || forceReload) {
+          // Load the panel and stop processing routes.
+          lastPath = ctx.path.replace(/#.*$/, '');
+          $('.cms-container')
+            .entwine('ss')
+            .handleStateChange(null, ctx.state);
+        }
       });
     });
 

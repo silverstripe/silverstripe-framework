@@ -371,7 +371,7 @@ $.entwine('ss', function($) {
       data.__forceReferer = forceReferer;
 
       if (forceReload) {
-        data.__forceReload = Math.random(); // Make sure the page reloads even if the URL is the same.
+        data.__forceReload = 1 + Math.random(); // Make sure the page reloads even if the URL is the same.
       }
 
       window.ss.router.show(url, data);
