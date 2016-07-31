@@ -3,11 +3,12 @@ import $ from 'jQuery';
 $.fn.extend({
 	ssDatepicker: function(opts) {
 		return $(this).each(function() {
-			if($(this).data('datepicker')) return; // already applied
+      // disabled, readonly or already applied
+			if($(this).prop('disabled') || $(this).prop('readonly') || $(this).data('datepicker')) return;
 
 			$(this).siblings("button").addClass("ui-icon ui-icon-calendar");
 
-			var holder = $(this).parents('.field.date:first'),
+			var holder = $(this).closest('.field.date'),
 				config = $.extend(opts || {}, $(this).data(), $(this).data('jqueryuiconfig'), {});
 			if(!config.showcalendar) return;
 
