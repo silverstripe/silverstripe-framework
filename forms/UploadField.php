@@ -1208,7 +1208,7 @@ class UploadField extends FileField {
 			'edit_url' => $customised->UploadFieldEditLink,
 			'size' => $file->getAbsoluteSize(),
 			'type' => File::get_file_type($file->getFilename()),
-			'buttons' => $customised->UploadFieldFileButtons,
+			'buttons' => (string)$customised->UploadFieldFileButtons,
 			'fieldname' => $this->getName()
 		);
 	}
