@@ -74,6 +74,14 @@ class MySQLDatabaseConfigurationHelperTest extends SapphireTest {
 				. " WITH GRANT OPTION"
 		));
 
+		// Accept create on this database only
+		$this->assertNotEmpty($helper->checkDatabasePermissionGrant(
+			'database_name',
+			'create',
+			"GRANT ALL PRIVILEGES, CREATE ON \"database\\_name\".* TO 'root'@'localhost' IDENTIFIED BY PASSWORD 'XXXX'"
+				. " WITH GRANT OPTION"
+		));
+
 		// Accept create on any database (alternate wildcard syntax)
 		$this->assertNotEmpty($helper->checkDatabasePermissionGrant(
 			'database_name',
