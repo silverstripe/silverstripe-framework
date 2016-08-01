@@ -172,8 +172,10 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		if(!$this->checkValidDatabaseName($database)) return false;
 
 		// Escape all valid database patterns (permission must exist on all tables)
+		$sqlDatabase = addcslashes($database, '_%'); // See http://dev.mysql.com/doc/refman/5.7/en/string-literals.html
 		$dbPattern = sprintf(
-			'((%s)|(%s)|(%s))',
+			'((%s)|(%s)|(%s)|(%s))',
+			preg_quote("\"$sqlDatabase\".*"), // Regexp escape sql-escaped db identifier
 			preg_quote("\"$database\".*"),
 			preg_quote('"%".*'),
 			preg_quote('*.*')
