@@ -2954,24 +2954,27 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DBField The field as a DBField object
 	 */
 	public function dbObject($fieldName) {
+		// Check for field in DB
+		$helper = $this->db($fieldName, true);
+
+		if(!$helper) {
+			return null;
+		}
+
 		$value = isset($this->record[$fieldName])
 			? $this->record[$fieldName]
 			: null;
 
 		// If we have a DBField object in $this->record, then return that
-		if(is_object($value)) {
+		if($value instanceof DBField) {
 			return $value;
 		}
 
-		// Build and populate new field otherwise
-		$helper = $this->db($fieldName, true);
-		if($helper) {
-			list($table, $spec) = explode('.', $helper);
-			$obj = Object::create_from_string($spec, $fieldName);
-			$obj->setTable($table);
-			$obj->setValue($value, $this, false);
-			return $obj;
-		}
+		list($table, $spec) = explode('.', $helper);
+		$obj = Object::create_from_string($spec, $fieldName);
+		$obj->setTable($table);
+		$obj->setValue($value, $this, false);
+		return $obj;
 	}
 
 	/**

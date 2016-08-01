@@ -75,6 +75,8 @@ class DataDifferencer extends ViewableData {
 	public function ignoreFields($ignoredFields) {
 		if(!is_array($ignoredFields)) $ignoredFields = func_get_args();
 		$this->ignoredFields = array_merge($this->ignoredFields, $ignoredFields);
+
+		return $this;
 	}
 
 	/**
