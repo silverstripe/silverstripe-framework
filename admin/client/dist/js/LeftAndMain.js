@@ -289,7 +289,7 @@
         data.__forceReferer = forceReferer;
 
         if (forceReload) {
-          data.__forceReload = Math.random();
+          data.__forceReload = 1 + Math.random();
         }
 
         window.ss.router.show(url, data);
@@ -888,7 +888,9 @@
           config = $.extend(config, $.datepicker.regional[config.locale], {});
         }
 
-        $(this).datepicker(config);
+        if (!this.prop('disabled') && !this.prop('readonly')) {
+          $(this).datepicker(config);
+        }
 
 
         this._super();
