@@ -262,6 +262,19 @@ class ConfigTest extends SapphireTest {
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'bar'), null);
 	}
 
+	public function testForClass() {
+		$config = ConfigTest_DefinesFoo::config();
+		// Set values
+		$this->assertTrue(isset($config->foo), 'foo is set');
+		$this->assertFalse(empty($config->foo), 'foo is not empty');
+		$this->assertEquals(1, $config->foo, 'foo is 1');
+		
+		// Unset values
+		$this->assertFalse(isset($config->bar), 'bar is not set');
+		$this->assertTrue(empty($config->bar), 'bar is empty');
+		$this->assertEquals(null, $config->bar, 'bar is accessible but empty');
+	}
+
 	public function testFragmentOrder() {
 		$this->markTestIncomplete();
 	}
