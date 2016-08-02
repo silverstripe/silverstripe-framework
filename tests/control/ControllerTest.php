@@ -273,6 +273,14 @@ class ControllerTest extends FunctionalTest {
 		$this->assertEquals("my-page/0", Controller::join_links("my-page", 0));
 	}
 
+	public function testLink() {
+		$controller = new ControllerTest_HasAction();
+		$this->assertEquals('ControllerTest_HasAction/', $controller->Link());
+		$this->assertEquals('ControllerTest_HasAction/', $controller->Link(null));
+		$this->assertEquals('ControllerTest_HasAction/', $controller->Link(false));
+		$this->assertEquals('ControllerTest_HasAction/allowed-action/', $controller->Link('allowed-action'));
+	}
+
 	/**
 	 * @covers Controller::hasAction
 	 */

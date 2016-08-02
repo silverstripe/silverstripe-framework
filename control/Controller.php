@@ -127,10 +127,11 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	/**
 	 * Returns a link to this controller. Overload with your own Link rules if they exist.
 	 *
+	 * @param string $action Optional action
 	 * @return string
 	 */
-	public function Link() {
-		return get_class($this) .'/';
+	public function Link($action = null) {
+		return Controller::join_links(get_class($this), $action, '/');
 	}
 
 	/**

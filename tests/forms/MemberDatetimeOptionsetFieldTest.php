@@ -118,8 +118,8 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 }
 class MemberDatetimeOptionsetFieldTest_Controller extends Controller {
 
-	public function Link() {
-		return 'test';
+	public function Link($action = null) {
+		return Controller::join_links('test', $action, '/');
 	}
 
 }
