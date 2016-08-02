@@ -82,15 +82,15 @@ class ConfigTest_TestNest extends Object implements TestOnly {
 }
 
 class ConfigTest extends SapphireTest {
-	
+
 	protected $depSettings = null;
-	
+
 	public function setUp() {
 		parent::setUp();
 		$this->depSettings = Deprecation::dump_settings();
 		Deprecation::set_enabled(false);
 	}
-	
+
 	public function tearDown() {
 		Deprecation::restore_settings($this->depSettings);
 		parent::tearDown();
@@ -260,6 +260,19 @@ class ConfigTest extends SapphireTest {
 
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'foo'), 4);
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'bar'), null);
+	}
+
+	public function testForClass() {
+		$config = ConfigTest_DefinesFoo::config();
+		// Set values
+		$this->assertTrue(isset($config->foo));
+		$this->assertFalse(empty($config->foo));
+		$this->assertEquals(1, $config->foo);
+		
+		// Unset values
+		$this->assertFalse(isset($config->bar));
+		$this->assertTrue(empty($config->bar));
+		$this->assertNull($config->bar);
 	}
 
 	public function testFragmentOrder() {
