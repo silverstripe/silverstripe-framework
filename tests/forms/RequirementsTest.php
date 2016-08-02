@@ -141,6 +141,28 @@ class RequirementsTest extends SapphireTest {
         );
     }
 
+    public function testCustomType() {
+		/** @var Requirements_Backend $backend */
+		$backend = Injector::inst()->create('Requirements_Backend');
+		$basePath = $this->getCurrentRelativePath();
+		$this->setupRequirements($backend);
+
+		// require files normally (e.g. called from a FormField instance)
+		$backend->javascript($basePath . '/RequirementsTest_a.js', [
+			'type' => 'application/json'
+		]);
+		$backend->javascript($basePath . '/RequirementsTest_b.js');
+		$result = $backend->includeInHTML(self::$html_template);
+		$this->assertContains(
+			'<script type="application/json" src="/framework/tests/forms/RequirementsTest_a.js',
+			$result
+		);
+		$this->assertContains(
+			'<script type="application/javascript" src="/framework/tests/forms/RequirementsTest_b.js',
+			$result
+		);
+	}
+
 	public function testCombinedJavascript() {
 		/** @var Requirements_Backend $backend */
 		$backend = Injector::inst()->create('Requirements_Backend');

@@ -828,8 +828,18 @@ class Requirements_Backend
 	 * - 'provides' : List of scripts files included in this file
 	 * - 'async' : Boolean value to set async attribute to script tag
 	 * - 'defer' : Boolean value to set defer attribute to script tag
+	 * - 'type' : Override script type= value.
 	 */
 	public function javascript($file, $options = array()) {
+		// Get type
+		$type = null;
+		if (isset($this->javascript[$file]['type'])) {
+			$type = $this->javascript[$file]['type'];
+		}
+		if (isset($options['type'])) {
+			$type = $options['type'];
+		}
+
 	    // make sure that async/defer is set if it is set once even if file is included multiple times
         $async = (
             isset($options['async']) && isset($options['async']) == true
@@ -850,6 +860,7 @@ class Requirements_Backend
         $this->javascript[$file] = array(
             'async' => $async,
             'defer' => $defer,
+			'type' => $type,
         );
 
 		// Record scripts included in this file
@@ -1179,9 +1190,10 @@ class Requirements_Backend
 		foreach($this->getJavascript() as $file => $attributes) {
 		    $async = (isset($attributes['async']) && $attributes['async'] == true) ? " async" : "";
 		    $defer = (isset($attributes['defer']) && $attributes['defer'] == true) ? " defer" : "";
+			$type = Convert::raw2att(isset($attributes['type']) ? $attributes['type'] : "application/javascript");
 			$path = Convert::raw2att($this->pathForFile($file));
 			if($path) {
-				$jsRequirements .= "<script type=\"application/javascript\" src=\"$path\"{$async}{$defer}></script>";
+				$jsRequirements .= "<script type=\"{$type}\" src=\"{$path}\"{$async}{$defer}></script>";
 			}
 		}
 
