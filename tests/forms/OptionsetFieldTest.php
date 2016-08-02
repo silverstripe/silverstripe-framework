@@ -63,4 +63,18 @@ class OptionsetFieldTest extends SapphireTest {
 		preg_match('/Yes/', $field->Field(), $matches);
 		$this->assertEquals($matches[0], 'Yes');
 	}
+
+	public function testSafelyCast() {
+		$field1 = new OptionsetField('Options', 'Options', array(
+			1 => 'One',
+			2 => 'Two & Three',
+			3 => DBField::create_field('HTMLText', 'Four &amp; Five &amp; Six')
+		));
+		$fieldHTML = (string)$field1->Field();
+		$this->assertContains('One', $fieldHTML);
+		$this->assertContains('Two &amp; Three', $fieldHTML);
+		$this->assertNotContains('Two & Three', $fieldHTML);
+		$this->assertContains('Four &amp; Five &amp; Six', $fieldHTML);
+		$this->assertNotContains('Four & Five & Six', $fieldHTML);
+	}
 }
