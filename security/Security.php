@@ -324,10 +324,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 			if(in_array($authenticator, $authenticators)) {
 				return $authenticator;
 			}
-		} else {
-			return Authenticator::get_default_authenticator();
 		}
-
+		return Authenticator::get_default_authenticator();
 	}
 
 	/**
