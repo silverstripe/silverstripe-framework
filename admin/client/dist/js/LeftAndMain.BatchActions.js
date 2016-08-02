@@ -40,6 +40,20 @@
         }
       },
 
+      onmatch: function onmatch() {
+        var self = this;
+
+        self.getTree().bind('load_node.jstree', function (e, data) {
+          self.refreshSelected();
+        });
+      },
+
+      onunmatch: function onunmatch() {
+        var self = this;
+
+        self.getTree().unbind('load_node.jstree');
+      },
+
       registerDefault: function registerDefault() {
         this.register(ss.config.adminUrl + 'pages/batchactions/publish', function (ids) {
           var confirmed = confirm(_i18n2.default.inject(_i18n2.default._t("CMSMAIN.BATCH_PUBLISH_PROMPT", "You have {num} page(s) selected.\n\nDo you really want to publish?"), { 'num': ids.length }));
