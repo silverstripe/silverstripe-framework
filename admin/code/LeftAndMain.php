@@ -1484,6 +1484,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	public function currentPageID() {
 		if($this->getRequest()->requestVar('ID') && is_numeric($this->getRequest()->requestVar('ID')))	{
 			return $this->getRequest()->requestVar('ID');
+		} elseif ($this->getRequest()->requestVar('CMSMainCurrentPageID') && is_numeric($this->getRequest()->requestVar('CMSMainCurrentPageID'))) {
+			// see GridFieldDetailForm::ItemEditForm
+			return $this->getRequest()->requestVar('CMSMainCurrentPageID');
 		} elseif (isset($this->urlParams['ID']) && is_numeric($this->urlParams['ID'])) {
 			return $this->urlParams['ID'];
 		} elseif(Session::get($this->sessionNamespace() . ".currentPage")) {
