@@ -1,8 +1,8 @@
 <tr>
-	<td class="bottom-all" colspan="$Colspan">
+	<td class="grid-field__paginator bottom-all" colspan="$Colspan">
 		<% if $OnlyOnePage %>
 		<% else %>
-			<div class="datagrid-pagination">
+			<div class="grid-field__paginator__controls datagrid-pagination">
 				$FirstPage $PreviousPage
 				<span class="pagination-page-number">
 					<%t Pagination.Page 'Page' %>
@@ -13,7 +13,7 @@
 				$NextPage $LastPage
 			</div>
 		<% end_if %>
-		<span class="pagination-records-number">
+		<span class="grid-field__paginator_numbers pagination-records-number">
 			<%t Pagination.View 'View' is 'Verb. Example: View 1 of 2' %>
 			{$FirstShownRecord}&ndash;{$LastShownRecord}
 			<%t TableListField_PageControls_ss.OF 'of' is 'Example: View 1 of 2' %>

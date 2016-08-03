@@ -1,38 +1,246 @@
 // Grid-field
-// Extends basic table styles, requires .table .table-hover
+// Uses bootstrap .table styles
+// TODO remove nesting once buttons have been BEMified
 
-.grid-field__row--drillable {
-  cursor: pointer;
+.grid-field {
+  border-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-bottom: 0;
 }
 
-.grid-field__cell--actions {
-  white-space: nowrap;
-  width: 1px;
+.grid-field__table {
+  margin-bottom: 0;
 }
 
-.grid-field__icon-action {
-  background: none;
-  border: 0;
-  color: lighten($body-color, 10%);
-  padding: $spacer-y $spacer-x / 2;
-  margin-top: -$spacer-y;
-  margin-bottom: -$spacer-y;
-  height: calc(#{$line-height-base} + #{$table-cell-padding * 2}); // height of icon + spacing top and bottom
-  vertical-align: top;
+// Table head
+.grid-field__title-row th {
+  padding: $table-sm-cell-padding;
+  text-transform: none;
+}
+
+.grid-field__title {
+  text-transform: none;
+  margin: 0;
+  font-weight: 300;
+}
+
+// Gridfield header tools & actions (sort and filter)
+.grid-field__sort {
+  .grid-field & {
+    margin-top: #{-$spacer-y};
+    margin-left: #{-$spacer-x};
+    margin-right: #{-$spacer-x};
+    margin-bottom: calc(#{-$spacer-y} - 1px);
+    padding-top: $spacer-y;
+    padding-right: $spacer-x;
+    padding-bottom: calc(#{$spacer-y} + 1px);
+    padding-left: $spacer-x;
+    width: calc(100% + #{$spacer-x * 2});
+    height: $toolbar-height;
+    text-align: left;
+    border: 0;
+    border-radius: 0;
+    text-transform: uppercase;
+    line-height: 20px;
+    background: none;
+    font-weight: normal;
+    color: $body-color-light;
+
+    &:hover {
+      background-color: $background-darker;
+    }
+  }
 
   &:hover {
+    border-bottom: $table-border-width solid $border-color-light;
+  }
+
+  .ui-button-text { // TODO BEMify classes
+    display: inline;
+    padding: 0;
+    vertical-align: top;
+    color: $body-color-light;
+
+    &::after {
+      content: ")";
+      display: inline-block;
+      color: lighten($text-muted, 20%);
+      font-family: silverstripe;
+    }
+  }
+
+  &.ss-gridfield-sorted-desc, // TODO BEMify class
+  &.ss-gridfield-sorted-asc {
+    border-bottom: 1px solid $component-active-border-color;
+
+    .ui-button-text::after, // TODO BEMify class
+    &:hover.ui-button-text::after {
+      color: $component-active-border-color;
+    }
+  }
+
+  &.ss-gridfield-sorted-desc .ui-button-text::after { // TODO BEMify classes
+    content: "*";
+  }
+
+  &.ss-gridfield-sorted-asc .ui-button-text::after { // TODO BEMify classes
+    content: "(";
+  }
+
+  &:active,
+  &:focus,
+  &:hover {
+    box-shadow: none;
+  }
+
+  th:first-child & {
+    margin-left: -$grid-gutter-width-half;
+    padding-left: $grid-gutter-width-half;
+    width: calc(100% + #{$spacer-x + $grid-gutter-width-half});
+  }
+
+  th:last-child & {
+    margin-right: -$grid-gutter-width-half;
+    padding-right: $grid-gutter-width-half;
+    width: calc(100% + #{$spacer-x + $grid-gutter-width-half});
+  }
+
+  th:only-child & {
+    width: calc(100% + #{$grid-gutter-width-half + $grid-gutter-width-half});
+  }
+}
+
+.grid-field__filter-open {
+  .grid-field & {
+    vertical-align: bottom;
+    margin: 0;
+    float: right;
+    margin-top: -$btn-padding-y;
+    margin-bottom: -$btn-padding-y;
+  }
+}
+
+.grid-field__filter-submit,
+.grid-field__filter-clear {
+  .grid-field & {
+    margin: 0;
+  }
+
+  &:hover,
+  &[class*="font-icon-"]:hover,
+  &:active,
+  &[class*="font-icon-"]:active,
+  &:focus,
+  &[class*="font-icon-"]:focus, {
+    background-color: darken($table-bg-tools, 6%);
+
+    &::before {
+      color: $white;
+    }
+  }
+}
+
+input.grid-field__sort-field {
+  margin-left: -$input-padding-x;
+  margin-right: -$input-padding-x;
+
+  // Create space for the clear btn
+  &.text {
+    padding-right: 30px;
+  }
+
+  .grid-field & { // TODO Reduce nesting
+    width: calc(100% + #{$input-padding-x * 2});
+    border-color: $table-bg-tools;
+  }
+}
+
+div.grid-field__sort-field + .form__fieldgroup-item {
+  top: 14px;
+  right: 7px;
+  position: absolute;
+}
+
+.filter-header { // TODO BEMify classes
+  .fieldgroup:not(.filter-buttons),
+  .fieldgroup:not(.filter-buttons) .fieldgroup-field {
+    width: 100%;
+  }
+}
+
+.filter-buttons { // TODO BEMify classes
+  right: -5px;
+  position: relative;
+  width: auto;
+}
+
+// Grid-field body actions
+.grid-field__icon-action,
+.grid-field__icon-action[class*="font-icon-"] { // Override legacy styles (TODO: remove once jqueryui is removed)
+  background: none;
+  border: 0;
+  padding: $table-cell-padding ($table-cell-padding / 2);
+  margin-top: -$table-cell-padding;
+  margin-bottom: -$table-cell-padding;
+  margin-right: 0;
+  height: calc(#{$line-height-base} + #{$table-cell-padding * 2}); // height of icon + spacing top and bottom
+  vertical-align: top;
+  display: inline-block;
+  border-radius: 0;
+
+  &:hover,
+  &:active,
+  &:focus {
     color: $body-color;
-    background: darken($body-bg, 3%);
+    background-color: darken($table-bg-hover, 4%);
+    text-decoration: none; // For links
   }
 
   &::before {
-    font-size: 20px;
+    color: lighten($body-color, 10%);
   }
 }
 
+.grid-field__icon-action--hidden-on-hover {
+  opacity: 0;
+}
+
+.ss-gridfield-item:hover .grid-field__icon-action--hidden-on-hover {
+  opacity: 1;
+}
+
+// Grid-field body
+.grid-field__link-block {
+  margin: -16px -20px;
+  padding: 16px 20px;
+  display: block;
+
+  .grid-field .grid-field__table & {  // Override legacy styles (TODO: remove once jqueryui is removed)
+    color: $body-color-light;
+    text-decoration: none;
+  }
+}
+
+// Helpers
+// min-width columns which hold things like buttons
+.grid-field__col-compact {
+  width: 1px;
+  white-space: nowrap;
+
+  > * {
+    vertical-align: middle;
+    margin-right: 6px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+
 // Responsive grid-field
-// Todo:
-// * add .text-truncate for overflowing cells
+// Todo: add .text-truncate for overflowing cells
 @include media-breakpoint-down(sm) {
   .grid-field__table td,
   .grid-field__table th {
@@ -46,53 +254,5 @@
     &.grid-field__action-placeholder {
       display: table-cell;
     }
-  }
-}
-
-
-// OLD gridfield makeover - currently not in use.
-// Replace .ss-gridfield-table with .grid-field & .table
-// Has known scroll bugs
-.grid-field {
-
-  .ss-gridfield-sort {  // Todo: rename to grid-filed__sort
-    background: transparent url(../images/arrows.png) no-repeat right -1px;
-    border: 0;
-    width: 100%;
-    padding: 0;
-    text-shadow: none;
-    border-radius: 0;
-    text-transform: uppercase;
-    font-weight: normal;
-    text-align: left;
-
-    .ui-button-text {
-      padding: 0;
-      line-height: 20px;
-      color: $body-color-light;
-    }
-
-    &:hover {
-      box-shadow: none;
-      background: transparent url(../images/arrows.png) no-repeat right -41px;
-    }
-
-    &.ss-gridfield-sorted-asc,
-    &.ss-gridfield-sorted-asc:hover {
-      background-position-y: -118px;
-    }
-
-    &.ss-gridfield-sorted-desc,
-    &.ss-gridfield-sorted-desc:hover {
-      background-position-y: -78px;
-    }
-  }
-
-  .title th {
-    font-size: 15px;
-    font-weight: bold;
-    text-transform: none;
-    border-bottom: 0;
-    padding-bottom: 0;
   }
 }

@@ -22,7 +22,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get('GridFieldDetailFormTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$addlinkitem = $parser->getBySelector('.ss-gridfield .new-link');
+		$addlinkitem = $parser->getBySelector('.grid-field .new-link');
 		$addlink = (string) $addlinkitem[0]['href'];
 
 		$response = $this->get($addlink);
@@ -69,7 +69,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$response = $this->get('GridFieldDetailFormTest_Controller');
 		$this->assertFalse($response->isError());
 		$parser = new CSSContentParser($response->getBody());
-		$addlinkitem = $parser->getBySelector('.ss-gridfield .new-link');
+		$addlinkitem = $parser->getBySelector('.grid-field .new-link');
 		$addlink = (string) $addlinkitem[0]['href'];
 
 		$response = $this->get($addlink);
@@ -344,7 +344,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 		$response = $this->get('GridFieldDetailFormTest_Controller');
 		$parser = new CSSContentParser($response->getBody());
-		$addLink = $parser->getBySelector('.ss-gridfield .new-link');
+		$addLink = $parser->getBySelector('.grid-field .new-link');
 		$addLink = (string) $addLink[0]['href'];
 
 		$response = $this->get($addLink);

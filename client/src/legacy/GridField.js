@@ -2,7 +2,7 @@ import $ from 'jQuery';
 import i18n from 'i18n';
 
 $.entwine('ss', function($) {
-	$('.ss-gridfield').entwine({
+	$('.grid-field').entwine({
 		/**
 		 * @param {Object} Additional options for jQuery.ajax() call
 		 * @param {successCallback} callback to call after reloading succeeded.
@@ -48,7 +48,7 @@ $.entwine('ss', function($) {
 							content = '<span class="non-sortable"></span>';
 							self.addClass('show-filter').find('.filter-header').show();
 						} else {
-							content = '<button type="button" name="showFilter" class="ss-gridfield-button-filter trigger"></button>';
+							content = '<button type="button" name="showFilter" class="btn font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>';
 							self.removeClass('show-filter').find('.filter-header').hide();
 						}
 
@@ -88,27 +88,27 @@ $.entwine('ss', function($) {
 		}
 	});
 
-	$('.ss-gridfield *').entwine({
+	$('.grid-field *').entwine({
 		getGridField: function() {
-			return this.closest('.ss-gridfield');
+			return this.closest('.grid-field');
 		}
 	});
 
 
 
-	$('.ss-gridfield :button[name=showFilter]').entwine({
+	$('.grid-field :button[name=showFilter]').entwine({
 		onclick: function(e) {
 			$('.filter-header')
 				.show('slow') // animate visibility
 				.find(':input:first').focus(); // focus first search field
-			this.closest('.ss-gridfield').addClass('show-filter');
+			this.closest('.grid-field').addClass('show-filter');
 			this.parent().html('<span class="non-sortable"></span>');
 			e.preventDefault();
 		}
 	});
 
 
-	$('.ss-gridfield .ss-gridfield-item').entwine({
+	$('.grid-field .ss-gridfield-item').entwine({
 		onclick: function(e) {
 			if($(e.target).closest('.action').length) {
 				this._super(e);
@@ -126,7 +126,7 @@ $.entwine('ss', function($) {
 		}
 	});
 
-	$('.ss-gridfield .action').entwine({
+	$('.grid-field .action:button').entwine({
 		onclick: function(e){
 			var filterState='show'; //filterstate should equal current state.
 
@@ -136,7 +136,7 @@ $.entwine('ss', function($) {
 				return;
 			}
 
-			if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.ss-gridfield').hasClass('show-filter'))){
+			if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.grid-field').hasClass('show-filter'))){
 				filterState='hidden';
 			}
 
@@ -180,7 +180,7 @@ $.entwine('ss', function($) {
 	/**
 	 * Don't allow users to submit empty values in grid field auto complete inputs.
 	 */
-	$('.ss-gridfield .add-existing-autocompleter').entwine({
+	$('.grid-field .add-existing-autocompleter').entwine({
 		onbuttoncreate: function () {
 			var self = this;
 
@@ -206,7 +206,7 @@ $.entwine('ss', function($) {
 	});
 
 	// Covers both tabular delete button, and the button on the detail form
-	$('.ss-gridfield .col-buttons .action.gridfield-button-delete, .cms-edit-form .btn-toolbar button.action.action-delete').entwine({
+	$('.grid-field .grid-field__col-compact .action.gridfield-button-delete, .cms-edit-form .btn-toolbar button.action.action-delete').entwine({
 		onclick: function(e){
 			if(!confirm(i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))) {
 				e.preventDefault();
@@ -217,7 +217,7 @@ $.entwine('ss', function($) {
 		}
 	});
 
-	$('.ss-gridfield .action.gridfield-button-print').entwine({
+	$('.grid-field .action.gridfield-button-print').entwine({
 		UUID: null,
 		onmatch: function() {
 			this._super();
@@ -255,7 +255,7 @@ $.entwine('ss', function($) {
 	 * Useful e.g. for actions which rely on HTTP response headers being
 	 * interpreted natively by the browser, like file download triggers.
 	 */
-	$('.ss-gridfield .action.no-ajax').entwine({
+	$('.grid-field .action.no-ajax').entwine({
 		onclick: function(e){
 			window.location.href = this.actionurl();
 			e.preventDefault();
@@ -263,7 +263,7 @@ $.entwine('ss', function($) {
 		}
 	});
 
-	$('.ss-gridfield .action-detail').entwine({
+	$('.grid-field .action-detail').entwine({
 		onclick: function() {
 			this.getGridField().showDetailView($(this).prop('href'));
 			return false;
@@ -274,7 +274,7 @@ $.entwine('ss', function($) {
 	 * Allows selection of one or more rows in the grid field.
 	 * Purely clientside at the moment.
 	 */
-	$('.ss-gridfield[data-selectable]').entwine({
+	$('.grid-field[data-selectable]').entwine({
 		/**
 		 * @return {jQuery} Collection
 		 */
@@ -288,7 +288,7 @@ $.entwine('ss', function($) {
 			return $.map(this.getSelectedItems(), function(el) {return $(el).data('id');});
 		}
 	});
-	$('.ss-gridfield[data-selectable] .ss-gridfield-items').entwine({
+	$('.grid-field[data-selectable] .ss-gridfield-items').entwine({
 		onadd: function() {
 			this._super();
 
@@ -305,10 +305,10 @@ $.entwine('ss', function($) {
 	 * Catch submission event in filter input fields, and submit the correct button
 	 * rather than the whole form.
 	 */
-	$('.ss-gridfield .filter-header :input').entwine({
+	$('.grid-field .filter-header :input').entwine({
 		onmatch: function() {
-			var filterbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-filter'),
-				resetbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-reset');
+			var filterbtn = this.closest('.extra').find('.ss-gridfield-button-filter'),
+				resetbtn = this.closest('.extra').find('.ss-gridfield-button-reset');
 
 			if(this.val()) {
 				filterbtn.addClass('filtered');
@@ -323,13 +323,13 @@ $.entwine('ss', function($) {
 			// Skip reset button events, they should trigger default submission
 			if(this.closest('.ss-gridfield-button-reset').length) return;
 
-			var filterbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-filter'),
-				resetbtn = this.closest('.form__fieldgroup').find('.ss-gridfield-button-reset');
+			var filterbtn = this.closest('.extra').find('.ss-gridfield-button-filter'),
+				resetbtn = this.closest('.extra').find('.ss-gridfield-button-reset');
 
 			if(e.keyCode == '13') {
 				var btns = this.closest('.filter-header').find('.ss-gridfield-button-filter');
 				var filterState='show'; //filterstate should equal current state.
-				if(this.hasClass('ss-gridfield-button-close')||!(this.closest('.ss-gridfield').hasClass('show-filter'))){
+				if(this.hasClass('ss-gridfield-button-close')||!(this.closest('.grid-field').hasClass('show-filter'))){
 					filterState='hidden';
 				}
 
@@ -342,7 +342,7 @@ $.entwine('ss', function($) {
 		}
 	});
 
-	$(".ss-gridfield .relation-search").entwine({
+	$(".grid-field .relation-search").entwine({
 		onfocusin: function (event) {
 			this.autocomplete({
 				source: function(request, response){
@@ -366,10 +366,10 @@ $.entwine('ss', function($) {
 					var hiddenField = $('<input type="hidden" name="relationID" class="action_gridfield_relationfind" />');
 						hiddenField.val(ui.item.id);
 						$(this)
-							.closest(".ss-gridfield")
+							.closest(".grid-field")
 							.find(".action_gridfield_relationfind")
 							.replaceWith(hiddenField);
-					var addbutton = $(this).closest(".ss-gridfield").find(".action_gridfield_relationadd");
+					var addbutton = $(this).closest(".grid-field").find(".action_gridfield_relationadd");
 					if(addbutton.data('button')){
 						addbutton.button('enable');
 					} else {
@@ -380,7 +380,7 @@ $.entwine('ss', function($) {
 		}
 	});
 
-	$(".ss-gridfield .pagination-page-number input").entwine({
+	$(".grid-field .pagination-page-number input").entwine({
 		onkeydown: function(event) {
 			if(event.keyCode == 13) {
 				var newpage = parseInt($(this).val(), 10);

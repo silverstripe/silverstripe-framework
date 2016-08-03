@@ -269,9 +269,9 @@
 
 				dialog.find('iframe').bind('load', function (e) {
 					var contents = $(this).contents(),
-					    gridField = contents.find('.ss-gridfield');
+					    gridField = contents.find('.grid-field');
 
-					contents.find('table.ss-gridfield').css('margin-top', 0);
+					contents.find('table.grid-field').css('margin-top', 0);
 
 					contents.find('input[name=action_doAttach]').unbind('click.openSelectDialog').bind('click.openSelectDialog', function () {
 						var ids = $.map(gridField.find('.ss-gridfield-item.ui-selected'), function (el) {

@@ -11,26 +11,20 @@ h1 {
 // Used as a base for components: GridField.
 
 .table {
-  margin-left: #{0 - $grid-gutter-width / 2};
-  margin-right: #{0 - $grid-gutter-width / 2};
+  margin-left: -$grid-gutter-width-half;
+  margin-right: -$grid-gutter-width-half;
   min-width: calc(100% + #{$grid-gutter-width});
   margin-bottom: $spacer-y * 2;
   border-top: 0;
 
-  tbody tr:first-child {
-    border-top: 1px solid $border-color-light;
-  }
-
-  thead + tbody tr:first-child {
-    border-top: 0;
+  th {
+    background-color: $body-bg;
+    font-size: $font-size-sm;
+    font-weight: normal;
   }
 
   thead th {
-    background-color: $body-bg;
-    border-bottom: $table-border-width solid $table-border-color;
-    text-transform: uppercase;
-    font-size: $font-size-sm;
-    font-weight: normal;
+    border: 0;
   }
 
   th,
@@ -40,21 +34,38 @@ h1 {
     line-height: 20px;
 
     &:first-child {
-      padding-left: #{$grid-gutter-width / 2};
+      padding-left: $grid-gutter-width-half;
     }
 
     &:last-child {
-      padding-right: #{$grid-gutter-width / 2};
+      padding-right: $grid-gutter-width-half;
+    }
+  }
+
+  tbody {
+    background-color: $white;
+
+    tr.even {
+      background: $table-bg-accent; // can be altered in viariables
+    }
+
+    tr:hover,
+    tr.even:hover {
+      background: $table-bg-hover;
+    }
+
+    tr:first-child td {
+      border-top: $table-border-width solid $border-color-light;
     }
   }
 
   tfoot {
-    background-color: transparent;
+    // background-color: transparent;
     font-size: $font-size-sm;
 
     td {
       border-bottom: 0;
-      background-color: $body-bg;
+      // background-color: $body-bg;
     }
   }
 }
@@ -63,6 +74,10 @@ h1 {
   code {
     font-family: 'Bitstream Vera Sans Mono','Courier', monospace;
 	}
+}
+
+th {
+  text-transform: uppercase;
 }
 
 // Bootstrap badge

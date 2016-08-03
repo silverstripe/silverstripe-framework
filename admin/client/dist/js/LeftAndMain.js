@@ -927,7 +927,7 @@
       }
     });
 
-    $('.cms .ss-gridfield').entwine({
+    $('.cms .grid-field').entwine({
       showDetailView: function showDetailView(url) {
         var params = window.location.search.replace(/^\?/, '');
         if (params) url = $.path.addSearchParams(url, params);

@@ -236,7 +236,7 @@ $border-radius: .25rem;
 $border-radius-lg: .3rem;
 $border-radius-sm: .2rem;
 
-$component-active-color: #fff;
+$component-active-color: $white;
 $component-active-bg: $brand-primary; // SS3 was #338DC1
 $component-active-bg-light: lighten($component-active-bg, 42%);
 $component-active-border-color: $brand-primary;
@@ -253,9 +253,11 @@ $table-cell-padding: $spacer;
 $table-sm-cell-padding: $spacer * .75;
 
 $table-bg: transparent;
-$table-bg-accent: #f9f9f9;
-$table-bg-hover: #f5f5f5;
+$table-bg-accent: $white; // lighten(#f0f4f7, 1%) #F0F4F7 #e9f0f4
+$table-bg-hover: #f0f4f7;
 $table-bg-active: $brand-primary;
+$table-bg-tools: $gray-dark;
+$table-bg-footer: $background-main;
 
 $table-border-width: $border-width;
 $table-border-color: $gray-lighter;
@@ -269,7 +271,7 @@ $btn-padding-x: .7692rem; // 10px
 $btn-padding-y: .3846rem; // 5px
 $btn-font-weight: normal;
 
-$btn-primary-color: #fff;
+$btn-primary-color: $white;
 $btn-primary-bg: $brand-success;
 $btn-primary-border: $btn-primary-bg;
 $btn-primary-shadow: darken($btn-primary-bg, 6%);
@@ -295,7 +297,7 @@ $btn-complete-shadow: darken($btn-primary-bg, 6%);
 // $btn-warning-bg: $brand-warning;
 // $btn-warning-border: $btn-warning-bg;
 
-$btn-danger-color: #fff;
+$btn-danger-color: $white;
 $btn-danger-bg: $brand-danger;
 $btn-danger-border: $brand-danger;
 
@@ -319,7 +321,7 @@ $input-padding-x: .75rem;
 $input-padding-y: .5385rem;
 $input-max-width: 895px; // Approx max possible at small screen sizes
 
-$input-bg: #fff;
+$input-bg: $white;
 $input-bg-disabled: $background-darker;
 
 $input-color: $body-color-light;
@@ -334,8 +336,10 @@ $input-border-radius-lg: $border-radius-lg;
 $input-border-radius-sm: $border-radius-sm;
 
 $input-border-focus: #66afe9;
-// $input-box-shadow-focus: rgba(102,175,233,.6);
-//
+// scss-lint:disable ColorVariable
+$input-box-shadow-focus: rgba(102, 175, 233, .6);
+// scss-lint:enable ColorVariable
+
 // $input-color-placeholder: #999;
 //
 // $input-padding-x-sm: .75rem;

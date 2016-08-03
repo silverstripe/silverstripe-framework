@@ -31,262 +31,231 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+// scss-lint:disable EmptyLineBetweenBlocks
 .font-icon-search::before {
   content: "\73";
 }
-
 .font-icon-sync::before {
   content: "\63";
 }
-
 .font-icon-print::before {
   content: "\64";
 }
-
 .font-icon-list::before {
   content: "\65";
 }
-
 .font-icon-plus-circled::before {
   content: "\66";
 }
-
 .font-icon-check-mark-2::before {
   content: "\6b";
 }
-
 .font-icon-book::before {
   content: "\6e";
 }
-
 .font-icon-book-open::before {
   content: "\6f";
 }
-
 .font-icon-plus::before {
   content: "\6a";
 }
-
 .font-icon-tree::before {
   content: "\70";
 }
-
 .font-icon-flow-tree::before {
   content: "\71";
 }
-
 .font-icon-info-circled::before {
   content: "\79";
 }
-
 .font-icon-chart-line::before {
   content: "\42";
 }
-
 .font-icon-graph-bar::before {
   content: "\45";
 }
-
 .font-icon-torsos-all::before {
   content: "\46";
 }
-
 .font-icon-torso::before {
   content: "\48";
 }
-
 .font-icon-picture::before {
   content: "\76";
 }
-
 .font-icon-chart-pie::before {
   content: "\41";
 }
-
 .font-icon-sitemap::before {
   content: "\43";
 }
-
 .font-icon-globe-1::before {
   content: "\52";
 }
-
 .font-icon-chat::before {
   content: "\74";
 }
-
 .font-icon-comment::before {
   content: "\77";
 }
-
 .font-icon-logout::before {
   content: "\7a";
 }
-
 .font-icon-cancel-circled::before {
   content: "\51";
 }
-
 .font-icon-left-open::before {
   content: "\54";
 }
-
 .font-icon-right-open::before {
   content: "\55";
 }
-
 .font-icon-check-mark::before {
   content: "\47";
 }
-
 .font-icon-check-mark-circle::before {
   content: "\49";
 }
-
 .font-icon-back-in-time::before {
   content: "\58";
 }
-
 .font-icon-cog::before {
   content: "\59";
 }
-
 .font-icon-fast-forward::before {
   content: "\68";
 }
-
 .font-icon-install::before {
   content: "\61";
 }
-
 .font-icon-down-circled::before {
   content: "\69";
 }
-
 .font-icon-eye::before {
   content: "\6c";
 }
-
 .font-icon-columns::before {
   content: "\72";
 }
-
 .font-icon-edit-write::before {
   content: "\75";
 }
-
 .font-icon-monitor::before {
   content: "\78";
 }
-
 .font-icon-mobile::before {
   content: "\4a";
 }
-
 .font-icon-tablet::before {
   content: "\4b";
 }
-
 .font-icon-resize::before {
   content: "\4c";
 }
-
 .font-icon-pencil::before {
   content: "\6d";
 }
-
 .font-icon-trash::before {
   content: "\67";
 }
-
 .font-icon-edit::before {
   content: "\4e";
 }
-
 .font-icon-tick::before {
   content: "\4f";
 }
-
 .font-icon-upload::before {
   content: "\62";
 }
-
 .font-icon-folder-add::before {
   content: "\53";
 }
-
 .font-icon-silverstripe::before {
   content: "\4d";
 }
-
 .font-icon-thumbnails::before {
   content: "\57";
 }
-
 .font-icon-down-open::before {
   content: "\30";
 }
-
 .font-icon-up-open::before {
   content: "\31";
 }
-
 .font-icon-link::before {
   content: "\32";
 }
-
 .font-icon-level-up::before {
   content: "\56";
 }
-
 .font-icon-image::before {
   content: "\34";
 }
-
 .font-icon-trash-bin::before {
   content: "\50";
 }
-
 .font-icon-code::before {
   content: "\33";
 }
-
 .font-icon-left-open-big::before {
   content: "\35";
 }
-
 .font-icon-down-open-big::before {
   content: "\36";
 }
-
 .font-icon-up-open-big::before {
   content: "\37";
 }
-
 .font-icon-right-open-big::before {
   content: "\38";
 }
-
 .font-icon-dot-3::before {
   content: "\39";
 }
-
 .font-icon-save::before {
   content: "\21";
 }
-
 .font-icon-rocket::before {
   content: "\5a";
 }
-
 .font-icon-cancel::before {
   content: "\44";
 }
-
 .font-icon-happy::before {
   content: "\22";
 }
-
 .font-icon-sad::before {
   content: "\23";
 }
+.font-icon-angle-double-right::before {
+  content: "\24";
+}
+.font-icon-angle-double-left::before {
+  content: "\25";
+}
+.font-icon-angle-right::before {
+  content: "\26";
+}
+.font-icon-angle-left::before {
+  content: "\27";
+}
+.font-icon-caret-up-down::before {
+  content: "\29";
+}
+.font-icon-caret-down-two::before {
+  content: "\28";
+}
+.font-icon-caret-up-two::before {
+  content: "\2a";
+}
+.font-icon-right-dir::before {
+  content: "\2b";
+}
+.font-icon-down-dir::before {
+  content: "\2c";
+}
+.font-icon-link-broken::before {
+  content: "\2d";
+}
+
+// scss-lint:enable EmptyLineBetweenBlocks

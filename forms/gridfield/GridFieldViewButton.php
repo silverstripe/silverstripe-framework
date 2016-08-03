@@ -27,7 +27,7 @@ class GridFieldViewButton implements GridField_ColumnProvider {
 	}
 
 	public function getColumnAttributes($field, $record, $col) {
-		return array('class' => 'col-buttons');
+		return array('class' => 'grid-field__col-compact');
 	}
 
 	public function getColumnMetadata($gridField, $col) {

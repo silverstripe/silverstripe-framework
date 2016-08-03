@@ -277,13 +277,13 @@ $.entwine('ss', function($) {
 
 			// TODO Allow single-select
 			dialog.find('iframe').bind('load', function(e) {
-				var contents = $(this).contents(), gridField = contents.find('.ss-gridfield');
+				var contents = $(this).contents(), gridField = contents.find('.grid-field');
 				// TODO Fix jQuery custom event bubbling across iframes on same domain
 				// gridField.find('.ss-gridfield-items')).bind('selectablestop', function() {
 				// });
 
 				// Remove top margin (easier than including new selectors)
-				contents.find('table.ss-gridfield').css('margin-top', 0);
+				contents.find('table.grid-field').css('margin-top', 0);
 
 				// Can't use live() in iframes...
 				contents.find('input[name=action_doAttach]').unbind('click.openSelectDialog').bind('click.openSelectDialog', function() {

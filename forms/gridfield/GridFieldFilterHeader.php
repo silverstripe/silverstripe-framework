@@ -126,7 +126,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 					$value = $filterArguments[$columnField];
 				}
 				$field = new TextField('filter[' . $gridField->getName() . '][' . $columnField . ']', '', $value);
-				$field->addExtraClass('ss-gridfield-sort');
+				$field->addExtraClass('grid-field__sort-field');
 				$field->addExtraClass('no-change-track');
 
 				$field->setAttribute('placeholder',
@@ -135,7 +135,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 				$fields->push($field);
 				$fields->push(
 					GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
-						->addExtraClass('ss-gridfield-button-reset')
+						->addExtraClass('btn font-icon-cancel btn--no-text ss-gridfield-button-reset')
 						->setAttribute('title', _t('GridField.ResetFilter', "Reset"))
 						->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
 				);
@@ -144,13 +144,13 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 			if($currentColumn == count($columns)){
 				$fields->push(
 					GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
-						->addExtraClass('ss-gridfield-button-filter')
+						->addExtraClass('btn font-icon-search btn--no-text btn--icon-large grid-field__filter-submit ss-gridfield-button-filter')
 						->setAttribute('title', _t('GridField.Filter', "Filter"))
 						->setAttribute('id', 'action_filter_' . $gridField->getModelClass() . '_' . $columnField)
 				);
 				$fields->push(
 					GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
-						->addExtraClass('ss-gridfield-button-close')
+						->addExtraClass('btn font-icon-cancel btn--no-text grid-field__filter-clear ss-gridfield-button-close')
 						->setAttribute('title', _t('GridField.ResetFilter', "Reset"))
 						->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
 				);
