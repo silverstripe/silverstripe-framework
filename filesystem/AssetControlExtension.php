@@ -162,7 +162,8 @@ class AssetControlExtension extends DataExtension
 
 		// Unauthenticated member to use for checking visibility
 		$baseClass = $this->owner->baseClass();
-		$filter = array("\"{$baseClass}\".\"ID\"" => $this->owner->ID);
+		$baseTable = $this->owner->baseTable();
+		$filter = array("\"{$baseTable}\".\"ID\"" => $this->owner->ID);
 		$stages = $this->owner->getVersionedStages(); // {@see Versioned::getVersionedStages}
 		foreach ($stages as $stage) {
 			// Skip current stage; These should be handled explicitly
