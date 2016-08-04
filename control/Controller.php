@@ -363,7 +363,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 		if(isset($this->requestParams['formController'])) {
 			$formController = Director::getControllerForURL($this->requestParams['formController']);
 
-			while(is_a($formController, 'NestedController')) {
+			while ($formController instanceof NestedController) {
 				$formController = $formController->getNestedController();
 			}
 			return $formController;
