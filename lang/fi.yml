@@ -1,4 +1,10 @@
 fi:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'Vaikuttaa siltä, ettei sinulla ole riittäviä oikeuksia lisätä {ObjectTitle} kohteeseen {CampaignTitle}'
+    ErrorGeneral: 'Pahoittelut, mutta tapahtui virhe'
+    ErrorItemPermissionDenied: 'Vaikuttaa siltä, ettei sinulla ole oikeuksia lisätä kampanjaan kohdetta {ObjectTitle}'
+    ErrorNotFound: '{Type} ei löytynyt'
+    Success: 'Lisättiin onnistuneesti {ObjectTitle} kohteeseen {CampaignTitle}'
   AssetAdmin:
     ALLOWEDEXTS: 'Sallitut siirron tiedostopäätteet'
     HIDEALLOWEDEXTS: 'Piilota sallitut päätteet'
@@ -68,6 +74,8 @@ fi:
     ANY: Yhtään
     NOANSWER: 'Ei'
     YESANSWER: 'Kyllä'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Lisää kampanjaan'
   CMSLoadingScreen_ss:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaScript päällä.'
@@ -94,12 +102,34 @@ fi:
     SUCCESSCONTENT: '<p>Kirjautuminen onnistui. Mikäli automaattinen edelleenohjaus ei toimi <a target="_top" href="{link}">klikkaa tästä</a></p>'
     TimedOutTitleAnonymous: 'Istuntosi on vanhentunut.'
     TimedOutTitleMember: 'Hei {name}!<br />Istuntosi on vanhentunut.'
+  CampaignAdmin:
+    MENUTITLE: Kampanjat
+  Campaigns:
+    AddToCampaign: 'Lisää Kampanjaan'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Salasana tilille, jonka sähköposti on {email}, on vaihdettu. Jos et itse vaihtanut salasanaa, ole hyvä ja vaihda salasana klikkaamalla oheista linkkiä'
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
+    CHANGEPASSWORDTEXT3: 'Vaihda salasana'
     EMAIL: Sähköposti
     HELLO: Hei
     PASSWORD: Salasana
+  ChangeSet:
+    DESCRIPTION_AND: '{first} ja {second}'
+    DESCRIPTION_ITEM: kohde
+    DESCRIPTION_ITEMS: kohdetta
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, ja {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'toinen kohde'
+    DESCRIPTION_OTHER_ITEMS: 'toiset kohteet'
+    NAME: Nimi
+    PLURALNAME: Kampanjat
+    SINGULARNAME: Kampanja
+    STATE: Tila
+  ChangeSetItem:
+    PLURALNAME: 'Vaihda Valikoiman kohteet'
+    SINGULARNAME: 'Vaihda Valikoiman kohde'
   CheckboxField:
     NOANSWER: 'Ei'
     YESANSWER: 'Kyllä'
@@ -110,6 +140,9 @@ fi:
   ConfirmedPasswordField:
     ATLEAST: 'Salasanan on oltava vähintään {min} merkkiä pitkä.'
     BETWEEN: 'Salasanan on oltava väh. {min} ja enintään {max} merkkiä pitkä.'
+    CURRENT_PASSWORD_ERROR: 'Syöttämäsi salasana ei ole oikein.'
+    CURRENT_PASSWORD_MISSING: 'Sinun on syötettävä nykyinen salasana.'
+    LOGGED_IN_ERROR: 'Sinun täytyy olla kirjautuneena vaihtaaksesi salasanasi.'
     MAXIMUM: 'Salasana voi olla enintään {max} merkkiä pitkä.'
     SHOWONCLICKTITLE: 'Vaihda salasana'
   ContentController:
@@ -177,15 +210,12 @@ fi:
     JsType: 'Javascript-tiedosto'
     Mp3Type: 'MP3-äänitiedosto'
     MpgType: 'MPEG-videotiedosto'
-    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
     PdfType: 'Adobe Acrobat PDF-tiedosto'
     PngType: 'PNG-kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
-    TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
-    TOOLARGESHORT: 'Sallittu tiedostokoko ylitetty {size}'
     TiffType: 'TIFF-kuva'
     Title: Otsikko
     WavType: 'WAV-äänitiedosto'
@@ -273,6 +303,53 @@ fi:
     ResultCreated: 'Luotiin {count} ryhmä(ä)'
     ResultDeleted: 'Poistettu %d ryhmää'
     ResultUpdated: 'Päivitetty %d ryhmää'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'Sinulla ei ole oikeuksia tarkastella tämän sivun sisältöä.'
+    ANCHORSPAGENOTFOUND: 'Kohdesivua ei löytynyt.'
+    ANCHORVALUE: Ankkuri
+    BUTTONADDURL: 'Lisää URL'
+    CAPTIONTEXT: 'Kuvateksti'
+    CSSCLASS: 'Tasaus / tyyli'
+    CSSCLASSCENTER: 'Keskellä omillaan.'
+    CSSCLASSLEFT: 'Vasemmalla, tekstin ympäröimänä.'
+    CSSCLASSLEFTALONE: 'Keskellä omillaan.'
+    CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
+    DETAILS: Tiedot
+    EMAIL: 'Sähköposti'
+    FILE: Tiedosto
+    FOLDER: Kansio
+    IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
+    IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
+    IMAGEALTTEXTDESC: 'Näytetään ruudunlukuohjelmille tai jos kuvia ei voi näyttää'
+    IMAGEDIMENSIONS: Mitat
+    IMAGEHEIGHTPX: Korkeus
+    IMAGETITLE: 'Otsikkoteksti (vihjelappu) - kuvan lisätietoja varten'
+    IMAGETITLETEXT: 'Otsikko teksti (vihjelappu)'
+    IMAGETITLETEXTDESC: 'Kuvan lisätiedot'
+    IMAGEWIDTHPX: Leveys
+    INSERTMEDIA: 'Liitä media kohteesta'
+    LINK: 'Lisää linkki'
+    LINKANCHOR: 'Ankkuroi tähän sivuun'
+    LINKDESCR: 'Linkin kuvaus'
+    LINKEMAIL: 'Sähköposti'
+    LINKEXTERNAL: 'Toinen verkkosivusto'
+    LINKFILE: 'Lataa tiedosto'
+    LINKINTERNAL: 'Sivu sivustolla'
+    LINKOPENNEWWIN: 'Avataanko linkki uudessa ikkunassa?'
+    LINKTO: 'Linkitä'
+    PAGE: Sivu
+    SUBJECT: 'Sähköpostin aihe'
+    URL: URL
+    URLDESCRIPTION: 'Liittääksesi videoita tai kuvia verkosta, lisää tiedoston täydellinen verkko-osoite. Varmista, että sinulla on oikeudet jakaa media suoraa verkko-osoitteesta.<br /><br />Huomioithan, että mikäli alkuperäinen tiedosto häviää antamastasi osoitteesta, tiedosto ei näy enää tällä sivulla.'
+    URLNOTANOEMBEDRESOURCE: 'URL-osoitetteesta ''{url}'' ei voitu vaihtaa median lähteeksi.'
+    UpdateMEDIA: 'Päivitä media'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Vain absoluuttiset URL-osoitteet voidaan upottaa'
+    ERROR_HOSTNAME: 'Tämän tiedoston isäntänimi ei ole sallitujen listalla'
+    ERROR_ID: '"ID" tai "FileURL" parametri on pakollinen tiedoston tunnistamiseksi'
+    ERROR_NOTFOUND: 'Näytettävää tiedostoa ei löydy'
+    ERROR_OEMBED_REMOTE: 'Oembed on yhteensopiva vain ulkoisten tiedostojen kanssa'
+    ERROR_SCHEME: 'Tämän tiedoston skeema ei ole sallittujen listalla'
   Hierarchy:
     InfiniteLoopNotAllowed: '"{type}" -hierarkiasta löytyi loputon silmukka. Ole hyvä ja muuta isäntää korjataksesi ongelman.'
   HtmlEditorField:
@@ -332,6 +409,7 @@ fi:
   Image_iframe_ss:
     TITLE: 'Kuvansiirto iframe-kehys'
   LeftAndMain:
+    CANCEL: Peruuta
     CANT_REORGANISE: 'Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu.'
     DELETED: Poistettu.
     HELP: Ohje
@@ -365,9 +443,11 @@ fi:
     CANTEDIT: 'Sinulla ei ole oikeuksia tähän toimintoon.'
     CONFIRMNEWPASSWORD: 'Syötä uusi salasana uudelleen'
     CONFIRMPASSWORD: 'Syötä salasana uudelleen'
+    CURRENT_PASSWORD: 'Nykyinen salasana'
     DATEFORMAT: 'Päivämäärämuoto'
     DefaultAdminFirstname: 'Oletusylläpitäjä'
     DefaultDateTime: oletus
+    EDIT_PASSWORD: 'Uusi salasana'
     EMAIL: Sähköposti
     EMPTYNEWPASSWORD: 'Uusi salasana ei voi olla tyhjä, yritä uudelleen'
     ENTEREMAIL: 'Anna sähköpostiosoitteesi saadaksesi salasanan uudelleenasettamislinkin.'
@@ -378,19 +458,19 @@ fi:
     FIRSTNAME: 'Etunimi'
     INTERFACELANG: 'Käyttöliittymän kieli'
     INVALIDNEWPASSWORD: 'Salasana ({password}) ei ole kelvollinen'
+    KEEPMESIGNEDIN: 'Pidä minut kirjautuneena'
     LOGGEDINAS: 'Olet kirjautuneena nimellä {name}.'
     NEWPASSWORD: 'Uusi salasana'
     NoPassword: 'Tällä käyttäjällä ei ole salasanaa'
     PASSWORD: Salasana
     PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Jäsenet
-    REMEMBERME: 'Muista seuraavalla kerralla?'
+    REMEMBERME: 'Muista minut seuraavalla kerralla?'
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
     TIMEFORMAT: 'Aikamuoto'
-    VALIDATIONMEMBEREXISTS: 'Rekisteröityneellä käyttäjällä on jo käytössä tämä sähköpostiosoite.'
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
     WELCOMEBACK: 'Tervetuloa takaisin, {firstname}'
     YOUROLDPASSWORD: 'Vanha salasanasi'
@@ -460,6 +540,8 @@ fi:
   MoneyField:
     FIELDLABELAMOUNT: Määrä
     FIELDLABELCURRENCY: Valuutta
+  MultiSelectField:
+    SOURCE_VALIDATION: 'Valitse arvo annetuista vaihtoehdoista. {value} ei ole kelvollinen'
   NullableField:
     IsNullLabel: 'On nolla'
   NumericField:
@@ -497,6 +579,9 @@ fi:
     UserPermissionsIntro: 'Määriteltäessä käyttäjälle ryhmä, hänen käyttöoikeutensa mukautuvat ryhmälle tehtyjen asetusten mukaisesti. Katso tarkemmat ryhmäkohtaiset käyttöoikeusasetukset Ryhmät-välilehdeltä.'
   PhoneNumberField:
     VALIDATION: 'Kirjoita pätevä puhelinnumero'
+  RememberLoginHash:
+    PLURALNAME: 'Muista kirjautumistarkisteet'
+    SINGULARNAME: 'Muista kirjautumistarkiste'
   Security:
     ALREADYLOGGEDIN: 'Sinulla ei ole oikeuksia tälle sivulle. Jos sinulla on toinen tili, jolla on oikeudet tälle sivulle, voit kirjautua sillä sisään.'
     BUTTONSEND: 'Lähetä minulle salasanan palautuslinkki'
@@ -592,3 +677,14 @@ fi:
     UPLOADSINTO: 'tallentuu polkuun: /{path}'
   Versioned:
     has_many_Versions: Versiot
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Arkistoi
+    Archived: 'Arkistoitiin %s %s'
+    BUTTONARCHIVEDESC: 'Poista näkyviltä ja lähetä arkistoon'
+    BUTTONPUBLISH: Julkaise
+    BUTTONUNPUBLISH: Poista näkyvistä
+    BUTTONUNPUBLISHDESC: 'Poista tämä tietue julkaistulta sivustolta'
+    Published: 'Julkaistiin {name} {link}'
+    Unpublished: 'Poistettiin näkyvistä %s %s'
+  i18n:
+    PLURAL: '{number} {form}'

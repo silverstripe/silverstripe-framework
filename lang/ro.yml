@@ -118,7 +118,6 @@ ro:
     NEWPASSWORD: 'Noua parola'
     PASSWORD: Parola
     PLURALNAME: Membri
-    REMEMBERME: 'Tine-ma minte?'
     SINGULARNAME: Membru
     SUBJECTPASSWORDCHANGED: 'Parola dumneavoastra a fost schimbata'
     SUBJECTPASSWORDRESET: 'Link-ul de resetare a parolei'

@@ -29,7 +29,6 @@ de:
     FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
     REMOVEINFO: 'Entferne diese Datei aus dem Feld'
     TOTAL: Insgesamt
-    TOUPLOAD: 'Dateien für den Upload auswählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: oder
   BBCodeParser:
@@ -96,9 +95,14 @@ de:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Sie haben Ihr Passwort geändert für'
     CHANGEPASSWORDTEXT2: 'Sie können nun folgende Angaben benutzen um sich einzuloggen:'
+    CHANGEPASSWORDTEXT3: 'Passwort ändern'
     EMAIL: E-Mail
     HELLO: Hallo
     PASSWORD: Passwort
+  ChangeSet:
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    NAME: Name
   CheckboxField:
     NOANSWER: 'Nein'
     YESANSWER: 'Ja'
@@ -152,7 +156,6 @@ de:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
-    CHOOSESEARCH: '(Auswahl und Suche)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
@@ -176,15 +179,12 @@ de:
     JsType: 'Javascript Datei'
     Mp3Type: 'MP3 Audiodatei'
     MpgType: 'MPEG Videodatei'
-    NOFILESIZE: 'Dateigröße ist 0 Bytes'
     NOVALIDUPLOAD: 'Datei ist kein gültiger Upload'
     Name: Name
     PLURALNAME: Dateien
     PdfType: 'Adobe Acrobat PDF Datei'
     PngType: 'PNG Bild - vielseitig einsetzbar'
     SINGULARNAME: Datei
-    TOOLARGE: 'Die Datei ist zu groß, maximal sind {size} erlaubt'
-    TOOLARGESHORT: 'Dateigröße übersteigt {size}'
     TiffType: 'TIFF Bild - ideal für hohe Auflösungen'
     Title: Titel
     WavType: 'WAV Audiodatei'
@@ -272,6 +272,38 @@ de:
     ResultCreated: '{count} Gruppe(n) wurden erstellt'
     ResultDeleted: '%d Gruppe(n) gelöscht'
     ResultUpdated: '%d Gruppe(n) aktualisiert'
+  HTMLEditorField:
+    ANCHORVALUE: Anker
+    BUTTONADDURL: 'URL hinzufügen'
+    DETAILS: Details
+    EMAIL: 'E-Mail-Adresse'
+    FILE: Datei
+    FOLDER: Ordner
+    IMAGEALT: 'Alternativtext (alt)'
+    IMAGEALTTEXT: 'Alternativtext (alt) - erscheint, falls das Bild nicht angezeigt werden kann.'
+    IMAGEALTTEXTDESC: 'Wird von Screenreadern vorgelesen oder angezeigt, falls das Bild nicht angezeigt werden kann.'
+    IMAGEDIMENSIONS: Dimensionen
+    IMAGEHEIGHTPX: Höhe
+    IMAGETITLE: 'Titeltext (Tooltip) - für zusätzliche Informationen über das Bild'
+    IMAGETITLETEXT: 'Titeltext (Tooltip)'
+    IMAGETITLETEXTDESC: 'Weiterführende Informationen über das Bild'
+    IMAGEWIDTHPX: Breite
+    LINK: 'Verweis einfügen'
+    LINKANCHOR: 'Anker auf dieser Seite'
+    LINKDESCR: 'Beschreibung des Verweises'
+    LINKEMAIL: 'E-Mail-Adresse'
+    LINKEXTERNAL: 'Andere Website'
+    LINKFILE: 'Datei herunterladen'
+    LINKINTERNAL: 'Seite auf der Website'
+    LINKOPENNEWWIN: 'Verweis in neuem Fenster öffnen?'
+    LINKTO: 'Verweis zu'
+    PAGE: Seite
+    SUBJECT: 'E-Mail-Betreff'
+    URL: URL
+    URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
+    UpdateMEDIA: 'Medienobjekt aktualisieren'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Nur absolute URLs können eingebettet werden'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Es wurde eine Endlosschleife innerhalb der "{type}"-Hierarchie gefunden. Bitte ändern Sie die übergeordnete Seite, um den Fehler zu beheben'
   HtmlEditorField:
@@ -306,6 +338,7 @@ de:
     IMAGETITLETEXT: 'Titeltext (Tooltip)'
     IMAGETITLETEXTDESC: 'Weiterführende Informationen über das Bild'
     IMAGEWIDTHPX: Breite (px)
+    INSERTMEDIA: 'Medienobjekt einfügen'
     LINK: 'Verweis einfügen'
     LINKANCHOR: 'Anker auf dieser Seite'
     LINKDESCR: 'Beschreibung des Verweises'
@@ -319,6 +352,7 @@ de:
     SUBJECT: 'E-Mail-Betreff'
     URL: URL
     URLNOTANOEMBEDRESOURCE: 'Die URL ''{url}'' konnte nicht in eine Medienquelle umgewandelt werden'
+    UpdateMEDIA: 'Medienobjekt aktualisieren'
   Image:
     PLURALNAME: Dateien
     SINGULARNAME: Datei
@@ -328,6 +362,7 @@ de:
   Image_iframe_ss:
     TITLE: 'Iframe Bilder hochladen'
   LeftAndMain:
+    CANCEL: Abbrechen
     CANT_REORGANISE: 'Sie besitzen nicht die benötigten Zugriffsrechte um Seiten der höchsten Ebene zu bearbeiten. Ihre Änderungen wurden nicht gespeichert.'
     DELETED: Gelöscht.
     HELP: Hilfe
@@ -361,9 +396,11 @@ de:
     CANTEDIT: 'Sie haben keine Rechte, dies zu tun'
     CONFIRMNEWPASSWORD: 'Neues Passwort bestätigen'
     CONFIRMPASSWORD: 'Passwort bestätigen'
+    CURRENT_PASSWORD: 'Derzeitiges Passwort'
     DATEFORMAT: 'Datumsformat'
     DefaultAdminFirstname: 'Standardadmin'
     DefaultDateTime: Standard
+    EDIT_PASSWORD: 'Neues Passwort'
     EMAIL: E-Mail
     EMPTYNEWPASSWORD: 'Das neue Passwort darf nicht leer sein. Bitte versuchen Sie es erneut.'
     ENTEREMAIL: 'Bitte geben Sie eine E-Mail-Adresse ein, um einen Link zum Zurücksetzen des Passworts zu erhalten.'
@@ -374,6 +411,7 @@ de:
     FIRSTNAME: 'Vorname'
     INTERFACELANG: 'CMS-Sprache'
     INVALIDNEWPASSWORD: 'Das Passwort konnte nicht akzeptiert werden: {password}'
+    KEEPMESIGNEDIN: 'Eingeloggt bleiben'
     LOGGEDINAS: 'Sie sind als {name} eingeloggt.'
     NEWPASSWORD: 'Neues Passwort'
     NoPassword: 'Dieser Benutzer hat kein Passwort.'
@@ -386,7 +424,6 @@ de:
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
     SURNAME: Nachname
     TIMEFORMAT: 'Uhrzeitformat'
-    VALIDATIONMEMBEREXISTS: 'Es gibt bereits ein Mitglied mit dem/der selben %s'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
     YOUROLDPASSWORD: 'Ihr altes Passwort'
@@ -588,3 +625,10 @@ de:
     UPLOADSINTO: 'speichert nach /{path}'
   Versioned:
     has_many_Versions: Versionen
+  VersionedGridFieldItemRequest:
+    BUTTONPUBLISH: Veröffentlichen
+    BUTTONUNPUBLISH: Veröffentlichung zurücknehmen
+    BUTTONUNPUBLISHDESC: 'Entferne diesn Eintrag von der veröffentlichten Website'
+    Published: '{name} {link} veröffentlicht'
+  i18n:
+    PLURAL: '{number} {form}'

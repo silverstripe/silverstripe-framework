@@ -107,12 +107,10 @@ af:
     IcoType: 'Ikoon prentjie'
     JpgType: 'JPEG prentjie - werk goed vir fotos'
     Mp3Type: 'MP3 klank lêer'
-    NOFILESIZE: 'Lêergrootte is nul grepe.'
     NOVALIDUPLOAD: 'Lêer is nie geld vir oplaai nie'
     Name: Naam
     PLURALNAME: Lêers
     SINGULARNAME: Lêer
-    TOOLARGESHORT: 'Lêer is groter as {size}'
     Title: Titel
     WavType: 'WAV klank lêer'
   Filesystem:
@@ -261,13 +259,11 @@ af:
     NEWPASSWORD: 'Nuwe wagwoord'
     PASSWORD: Wagwoord
     PLURALNAME: Lidde
-    REMEMBERME: 'Onthou volgende keer vir my?'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'U wagwoord het verander.'
     SUBJECTPASSWORDRESET: 'U wagwoord herlaai skakel'
     SURNAME: Van
     TIMEFORMAT: 'Tyd formaat'
-    VALIDATIONMEMBEREXISTS: '''n Ander lid bestaan al klaar met dieselfde %s'
     ValidationIdentifierFailed: 'Kan nie bestaande lid #{id} met identiese identiteit ({name}={value})) oorskryf nie'
     WELCOMEBACK: 'Welkom terug, {firstname}'
     YOUROLDPASSWORD: 'U ou wagwoord'

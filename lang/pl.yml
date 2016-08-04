@@ -144,15 +144,12 @@ pl:
     JsType: 'Plik JavaScript'
     Mp3Type: 'Plik MP3'
     MpgType: 'MPEG plik wideo'
-    NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
     PLURALNAME: Pliki
     PdfType: 'Plik Adobe Acrobat PDF'
     PngType: 'Plik PNG, dobry do zastosowania w większości przypadków'
     SINGULARNAME: Plik
-    TOOLARGE: 'Plik jest za duży, maksymalnie dozwolone jest {size}'
-    TOOLARGESHORT: 'Rozmiar pliku przekracza {size}'
     TiffType: 'Plik TIFF'
     Title: Tytuł
     WavType: 'WAV plik audio'
@@ -336,13 +333,11 @@ pl:
     NoPassword: 'Hasło nie zostało skonfigurowane dla tego użytkownika.'
     PASSWORD: Hasło
     PLURALNAME: Użytkownicy
-    REMEMBERME: 'Zapamiętaj mnie?'
     SINGULARNAME: Użytkownik
     SUBJECTPASSWORDCHANGED: 'Twoje hasło zostało zmienione'
     SUBJECTPASSWORDRESET: 'Twój link do zmiany hasła'
     SURNAME: Nazwisko
     TIMEFORMAT: 'Format czasu'
-    VALIDATIONMEMBEREXISTS: 'Użytkownik z tym adresem już istnieje'
     ValidationIdentifierFailed: 'Nie można nadpisać istniejącego użytkownika #{id} o identycznym identyfikatorze ({name} = {value})'
     WELCOMEBACK: 'Witaj ponownie, {firstname}'
     YOUROLDPASSWORD: 'Twoje stare hasło'

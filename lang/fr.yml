@@ -1,5 +1,6 @@
 fr:
   AssetAdmin:
+    HIDEALLOWEDEXTS: 'Cacher les extensions autorisées'
     NEWFOLDER: Nouveau dossier
     SHOWALLOWEDEXTS: 'Montrer les extensions autorisées'
   AssetTableField:
@@ -7,6 +8,7 @@ fr:
     DIM: Dimensions
     FILENAME: Nom du fichier
     FOLDER: Dossier
+    HEIGHT: Hauteur
     LASTEDIT: 'Dernière modification'
     OWNER: Propriétaire
     SIZE: 'Taille'
@@ -80,6 +82,7 @@ fr:
   ConfirmedPasswordField:
     ATLEAST: 'Le mot de passe doit comporter au moins {min} caractères.'
     BETWEEN: 'Le mot de passe doit comporter entre {min} et {max} caractères.'
+    CURRENT_PASSWORD_MISSING: 'Vous devez saisir votre mot de passe actuel.'
     MAXIMUM: 'Le mot de passe ne doit comporter plus de {max} caractères.'
     SHOWONCLICKTITLE: 'Changer le mot de passe'
   ContentController:
@@ -144,15 +147,12 @@ fr:
     JsType: 'Fichier JavaScript'
     Mp3Type: 'Fichier audio MP3'
     MpgType: 'Fichier vidéo MPEG'
-    NOFILESIZE: 'La taille du fichier est de zéro bytes.'
     NOVALIDUPLOAD: 'Le fichier n’est pas valide pour le téléversement'
     Name: Nom
     PLURALNAME: Fichiers
     PdfType: 'Fichier PDF Adobe Acrobat'
     PngType: 'Image PNG (adaptée à tous les usages)'
     SINGULARNAME: Fichier
-    TOOLARGE: 'La taille du fichier dépasse la limite de {size}'
-    TOOLARGESHORT: 'La taille du fichier dépasse les {size}'
     TiffType: 'Image TIFF'
     Title: Titre
     WavType: 'Fichier audio WAV'
@@ -293,6 +293,7 @@ fr:
     DELETED: Supprimé.
     HELP: Aide
     PERMAGAIN: 'Vous avez été déconnecté du CMS. Si vous voulez vous reconnecter, entrez un nom d''utilisateur et un mot de passe ci-dessous.'
+    PERMDEFAULT: 'Vous devez être connecté afin d''accéder à l''interface d''administration. Saisissez vos identifiants ci-dessous.'
     PreviewButton: Aperçu
     REORGANISATIONSUCCESSFUL: 'L’arbre du site a été bien réorganisé.'
     SAVEDUP: Enregistré.
@@ -335,13 +336,11 @@ fr:
     NoPassword: 'Ce membre n''a pas de mot de passe'
     PASSWORD: Mot de passe
     PLURALNAME: Membres
-    REMEMBERME: 'Se souvenir de moi la prochaine fois ?'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'Votre mot de passe a été changé'
     SUBJECTPASSWORDRESET: 'Lien pour modifier votre mot de passe'
     SURNAME: Nom de famille
     TIMEFORMAT: 'Format horaire'
-    VALIDATIONMEMBEREXISTS: 'Il existe déjà un membre avec cet email'
     ValidationIdentifierFailed: 'On ne peut pas réenregistrer le membre nº {id} avec un identifiant identique  ({name} = {value}))'
     WELCOMEBACK: 'Bienvenue {firstname}'
     YOUROLDPASSWORD: 'Votre ancien mot de passe'
