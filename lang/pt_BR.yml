@@ -65,7 +65,6 @@ pt_BR:
   File:
     Content: Conteudo
     Filename: Nome do Arquivo
-    NOFILESIZE: 'O tamanho do arquivo é zero bytes.'
     Name: Nome
     PLURALNAME: Arquivos
     SINGULARNAME: Arquivo
@@ -139,12 +138,10 @@ pt_BR:
     NEWPASSWORD: 'Nova Senha'
     PASSWORD: Senha
     PLURALNAME: Membros
-    REMEMBERME: 'Lembrar de mim'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Sua senha foi alterada'
     SUBJECTPASSWORDRESET: 'Link para resetar sua senha'
     SURNAME: Sobrenome
-    VALIDATIONMEMBEREXISTS: 'Já existe um membro com este email'
     YOUROLDPASSWORD: 'Senha antiga'
     belongs_many_many_Groups: Grupo
     db_LastVisited: 'Ultima data de visita'

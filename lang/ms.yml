@@ -26,7 +26,6 @@ ms:
   DropdownField:
     CHOOSE: (Pilih)
   File:
-    NOFILESIZE: 'Saiz fail bersamaan sifar bait.'
     PLURALNAME: Fail-fail
     SINGULARNAME: Fail
   Form:
@@ -82,12 +81,10 @@ ms:
     NEWPASSWORD: 'Katalaluan Baru'
     PASSWORD: Kata Lalaun
     PLURALNAME: Ahli-ahli
-    REMEMBERME: 'Ingat (butiran login) saya selepas ini?'
     SINGULARNAME: Ahli
     SUBJECTPASSWORDCHANGED: 'Kata lalaun anda telah ditukar'
     SUBJECTPASSWORDRESET: 'Pautan penukaran kata lalaun anda'
     SURNAME: Nama keluarga
-    VALIDATIONMEMBEREXISTS: 'Email ini telah digunakan oleh ahli lain'
     YOUROLDPASSWORD: 'Kata lalaun lama anda'
     belongs_many_many_Groups: Kumpulan-kumpulan
     db_LockedOutUntil: 'Dikuncikan keluar sehingga'

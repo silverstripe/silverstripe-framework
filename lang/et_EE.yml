@@ -141,15 +141,12 @@ et_EE:
     JsType: 'Javascripti fail'
     Mp3Type: 'MP3-helifail'
     MpgType: 'MPEG-videofail'
-    NOFILESIZE: 'Faili suurus on null baiti.'
     NOVALIDUPLOAD: 'Fail ei ole üleslaadimiseks sobiv'
     Name: Nimi
     PLURALNAME: Failid
     PdfType: 'Adobe Acrobati PDF-fail'
     PngType: 'PNG-kujutis – hea üldotstarbelise vormingu jaoks'
     SINGULARNAME: Fail
-    TOOLARGE: 'Fail on liiga suur, lubatud on maksimaalselt {size}'
-    TOOLARGESHORT: 'Fail on suurem kui {size}'
     Title: Pealkiri
     WavType: 'WAV-helifail'
     XlsType: 'Exceli arvutustabel'
@@ -316,13 +313,11 @@ et_EE:
     NEWPASSWORD: 'Uus parool'
     PASSWORD: Parool
     PLURALNAME: Kasutajad
-    REMEMBERME: 'Pea mind meeles?'
     SINGULARNAME: Kasutaja
     SUBJECTPASSWORDCHANGED: 'Sinu parool on muudetud'
     SUBJECTPASSWORDRESET: 'Sinu parooli lähtestamise link'
     SURNAME: Perekonnanimi
     TIMEFORMAT: 'Kellaajavorming'
-    VALIDATIONMEMBEREXISTS: 'Sellise e-posti aadressiga liige on juba olemas'
     ValidationIdentifierFailed: 'Olemasolevat kasutajat #{id} ei saa sama identifikaatoriga üle kirjutada ({name} = {value})'
     WELCOMEBACK: 'Tere tulemast tagasi, {firstname}!'
     YOUROLDPASSWORD: 'Sinu vana parool'

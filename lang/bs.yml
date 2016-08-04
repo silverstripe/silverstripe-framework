@@ -63,8 +63,6 @@ bs:
     TODAY: danas
   DropdownField:
     CHOOSE: (Izaberite)
-  File:
-    NOFILESIZE: 'Veličina datoteke je nula bajta.'
   ForgotPasswordEmail_ss:
     HELLO: Pozdrav
     TEXT1: 'Ovo je Vaš'
@@ -124,11 +122,9 @@ bs:
     INTERFACELANG: 'Jezik sučelja'
     NEWPASSWORD: 'Nova šifra'
     PASSWORD: Šifra
-    REMEMBERME: 'Zapamti me slijedeći put'
     SUBJECTPASSWORDCHANGED: 'Vaša šifra je promijenjena'
     SUBJECTPASSWORDRESET: 'Link za ponovno podešavanje Vaše šifre'
     SURNAME: Prezime
-    VALIDATIONMEMBEREXISTS: 'Već postoji korisnik sa ovom e-mail adresom'
     YOUROLDPASSWORD: 'Vaša stara šifra'
   MemberAuthenticator:
     TITLE: 'E-mail i šifra'

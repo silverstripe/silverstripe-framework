@@ -85,12 +85,10 @@ zh_CN:
     NEWPASSWORD: '新密码'
     PASSWORD: 密码
     PLURALNAME: 成员
-    REMEMBERME: '记住我的信息？'
     SINGULARNAME: 成员
     SUBJECTPASSWORDCHANGED: '您的密码已更改'
     SUBJECTPASSWORDRESET: '重设您的密码链接'
     SURNAME: 姓
-    VALIDATIONMEMBEREXISTS: '已经存在用这个电子邮件的会员'
     YOUROLDPASSWORD: '您的旧密码'
     belongs_many_many_Groups: 团队
     db_LockedOutUntil: '禁止直至'

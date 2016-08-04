@@ -144,15 +144,12 @@ mi:
     JsType: 'kōnae Javascript'
     Mp3Type: 'kōnae ororongo MP3'
     MpgType: 'kōnae ataata MPEG'
-    NOFILESIZE: 'He kore ngā paita kei te kōnae'
     NOVALIDUPLOAD: 'Ehara te kōnae i te tukuatu pono'
     Name: Ingoa
     PLURALNAME: Ngā Kōnae
     PdfType: 'kōnae Adobe Acrobat PDF'
     PngType: 'atahanga PNG - he hōputu pai hei whakamahi whānui noa'
     SINGULARNAME: Kōnae
-    TOOLARGE: 'He rahi rawa te rahi kōnae, he {size} te rahi mōrahi ka taea'
-    TOOLARGESHORT: 'Ka hipa te {size} i te rahi kōnae'
     TiffType: 'Hōputu atatahanga tūtohu '
     Title: Taitara
     WavType: 'kōnae ororongo WAV'
@@ -335,13 +332,11 @@ mi:
     NoPassword: 'Kāore he kupuhipa i tēnei mema.'
     PASSWORD: Kupuhipa
     PLURALNAME: Ngā Mema
-    REMEMBERME: 'Ka maumahara mai ā muri atu?'
     SINGULARNAME: Mema
     SUBJECTPASSWORDCHANGED: 'Kua hurihia tō kupuhipa'
     SUBJECTPASSWORDRESET: 'Tō hono tautuhi kupuhipa anō'
     SURNAME: Ingoa Whānau
     TIMEFORMAT: 'Hōputu Wā'
-    VALIDATIONMEMBEREXISTS: 'Tīari kē ana tētahi mema me te %s ōrite'
     ValidationIdentifierFailed: 'Kāore e whakaaetia ki te tuhirua i te mema #{id} ki te pūtautuhi ōrite ({name} = {value}))'
     WELCOMEBACK: 'Nau mai, hoki mai, {firstname}'
     YOUROLDPASSWORD: 'Tō kupuhipa tawhito'

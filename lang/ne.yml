@@ -54,11 +54,9 @@ ne:
     INTERFACELANG: 'चलाउने भाषा'
     NEWPASSWORD: 'नयाँ पासओड'
     PASSWORD: पासओड
-    REMEMBERME: 'अर्को पटक मलाई सम्झनुस् '
     SUBJECTPASSWORDCHANGED: 'तपाईंको पासओड परिवतन भएको छ ।'
     SUBJECTPASSWORDRESET: 'तपाईंको पासओड पुनर्स्थापना लिक'
     SURNAME: थर
-    VALIDATIONMEMBEREXISTS: 'यो ईमेल भएको प्रयोगकता पहिले देखि छ ।'
     YOUROLDPASSWORD: 'तपाईंको पुरानो पासओड'
   MemberAuthenticator:
     TITLE: 'ईमेल &amp; पासओड'

@@ -1,4 +1,10 @@
 en:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'It seems you don''t have the necessary permissions to add {ObjectTitle} to {CampaignTitle}'
+    ErrorGeneral: 'We apologise, but there was an error'
+    ErrorItemPermissionDenied: 'It seems you don''t have the necessary permissions to add {ObjectTitle} to a campaign'
+    ErrorNotFound: 'That {Type} couldn''t be found'
+    Success: 'Successfully added {ObjectTitle} to {CampaignTitle}'
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed file upload extensions'
     HIDEALLOWEDEXTS: 'Hide allowed extensions'
@@ -68,6 +74,8 @@ en:
     ANY: Any
     NOANSWER: 'No'
     YESANSWER: 'Yes'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Add to campaign'
   CMSLoadingScreen_ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -94,12 +102,34 @@ en:
     SUCCESSCONTENT: '<p>Login success. If you are not automatically redirected <a target="_top" href="{link}">click here</a></p>'
     TimedOutTitleAnonymous: 'Your session has timed out.'
     TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
+  CampaignAdmin:
+    MENUTITLE: Campaigns
+  Campaigns:
+    AddToCampaign: 'Add To Campaign'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'
     CHANGEPASSWORDTEXT2: 'You can now use the following credentials to log in:'
+    CHANGEPASSWORDTEXT3: 'Change password'
     EMAIL: Email
     HELLO: Hi
     PASSWORD: Password
+  ChangeSet:
+    DESCRIPTION_AND: '{first} and {second}'
+    DESCRIPTION_ITEM: item
+    DESCRIPTION_ITEMS: items
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, and {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'other item'
+    DESCRIPTION_OTHER_ITEMS: 'other items'
+    NAME: Name
+    PLURALNAME: Campaigns
+    SINGULARNAME: Campaign
+    STATE: State
+  ChangeSetItem:
+    PLURALNAME: 'Change Set Items'
+    SINGULARNAME: 'Change Set Item'
   CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
@@ -110,6 +140,9 @@ en:
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
+    CURRENT_PASSWORD_ERROR: 'The current password you have entered is not correct.'
+    CURRENT_PASSWORD_MISSING: 'You must enter your current password.'
+    LOGGED_IN_ERROR: 'You must be logged in to change your password.'
     MAXIMUM: 'Passwords must be at most {max} characters long.'
     SHOWONCLICKTITLE: 'Change Password'
   ContentController:
@@ -273,6 +306,53 @@ en:
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
+    ANCHORSPAGENOTFOUND: 'Target page not found.'
+    ANCHORVALUE: Anchor
+    BUTTONADDURL: 'Add url'
+    CAPTIONTEXT: 'Caption text'
+    CSSCLASS: 'Alignment / style'
+    CSSCLASSCENTER: 'Centered, on its own.'
+    CSSCLASSLEFT: 'On the left, with text wrapping around.'
+    CSSCLASSLEFTALONE: 'On the left, on its own.'
+    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
+    DETAILS: Details
+    EMAIL: 'Email address'
+    FILE: File
+    FOLDER: Folder
+    IMAGEALT: 'Alternative text (alt)'
+    IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
+    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can''t be displayed'
+    IMAGEDIMENSIONS: Dimensions
+    IMAGEHEIGHTPX: Height
+    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
+    IMAGETITLETEXT: 'Title text (tooltip)'
+    IMAGETITLETEXTDESC: 'For additional information about the image'
+    IMAGEWIDTHPX: Width
+    INSERTMEDIA: 'Insert media from'
+    LINK: 'Insert Link'
+    LINKANCHOR: 'Anchor on this page'
+    LINKDESCR: 'Link description'
+    LINKEMAIL: 'Email address'
+    LINKEXTERNAL: 'Another website'
+    LINKFILE: 'Download a file'
+    LINKINTERNAL: 'Page on the site'
+    LINKOPENNEWWIN: 'Open link in a new window?'
+    LINKTO: 'Link to'
+    PAGE: Page
+    SUBJECT: 'Email subject'
+    URL: URL
+    URLDESCRIPTION: 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.'
+    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
+    UpdateMEDIA: 'Update media'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Only absolute urls can be embedded'
+    ERROR_HOSTNAME: 'This file hostname is not included in the whitelist'
+    ERROR_ID: 'Need either "ID" or "FileURL" parameter to identify the file'
+    ERROR_NOTFOUND: 'Unable to find file to view'
+    ERROR_OEMBED_REMOTE: 'Oembed is only compatible with remote files'
+    ERROR_SCHEME: 'This file scheme is not included in the whitelist'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
   HtmlEditorField:
@@ -334,6 +414,7 @@ en:
   Image_iframe_ss:
     TITLE: 'Image Uploading Iframe'
   LeftAndMain:
+    CANCEL: Cancel
     CANT_REORGANISE: 'You do not have permission to alter Top level pages. Your change was not saved.'
     DELETED: Deleted.
     DropdownBatchActionsDefault: Actions
@@ -370,9 +451,11 @@ en:
     CANTEDIT: 'You don''t have permission to do that'
     CONFIRMNEWPASSWORD: 'Confirm New Password'
     CONFIRMPASSWORD: 'Confirm Password'
+    CURRENT_PASSWORD: 'Current Password'
     DATEFORMAT: 'Date format'
     DefaultAdminFirstname: 'Default Admin'
     DefaultDateTime: default
+    EDIT_PASSWORD: 'New Password'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'The new password can''t be empty, please try again'
     ENTEREMAIL: 'Please enter an email address to get a password reset link.'
@@ -383,6 +466,7 @@ en:
     FIRSTNAME: 'First Name'
     INTERFACELANG: 'Interface Language'
     INVALIDNEWPASSWORD: 'We couldn''t accept that password: {password}'
+    KEEPMESIGNEDIN: 'Keep me signed in'
     LOGGEDINAS: 'You''re logged in as {name}.'
     NEWPASSWORD: 'New Password'
     NoPassword: 'There is no password on this member.'
@@ -465,6 +549,8 @@ en:
   MoneyField:
     FIELDLABELAMOUNT: Amount
     FIELDLABELCURRENCY: Currency
+  MultiSelectField:
+    SOURCE_VALIDATION: 'Please select values within the list provided. Invalid option(s) {value} given'
   NullableField:
     IsNullLabel: 'Is Null'
   NumericField:
@@ -502,6 +588,9 @@ en:
     UserPermissionsIntro: 'Assigning groups to this user will adjust the permissions they have. See the groups section for details of permissions on individual groups.'
   PhoneNumberField:
     VALIDATION: 'Please enter a valid phone number'
+  RememberLoginHash:
+    PLURALNAME: 'Remember Login Hashs'
+    SINGULARNAME: 'Remember Login Hash'
   Security:
     ALREADYLOGGEDIN: 'You don''t have access to this page.  If you have another account that can access that page, you can log in again below.'
     BUTTONSEND: 'Send me the password reset link'
@@ -597,3 +686,14 @@ en:
     UPLOADSINTO: 'saves into /{path}'
   Versioned:
     has_many_Versions: Versions
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Archive
+    Archived: 'Archived %s %s'
+    BUTTONARCHIVEDESC: 'Unpublish and send to archive'
+    BUTTONPUBLISH: Publish
+    BUTTONUNPUBLISH: Unpublish
+    BUTTONUNPUBLISHDESC: 'Remove this record from the published site'
+    Published: 'Published {name} {link}'
+    Unpublished: 'Unpublished %s %s'
+  i18n:
+    PLURAL: '{number} {form}'

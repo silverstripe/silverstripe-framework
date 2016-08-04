@@ -93,7 +93,6 @@ es_MX:
   File:
     Content: Contenido
     Filename: Nombre del archivo
-    NOFILESIZE: 'El tamaño del archivo es 0 bits'
     NOVALIDUPLOAD: 'No es un archivo válido'
     Name: Nombre
     PLURALNAME: Archivos
@@ -208,12 +207,10 @@ es_MX:
     NEWPASSWORD: 'Nueva contraseña'
     PASSWORD: Contraseña
     PLURALNAME: Miembros
-    REMEMBERME: '¿Recordarme la siguiente vez?'
     SINGULARNAME: Miembro
     SUBJECTPASSWORDCHANGED: 'Su contraseña se ha cambiado'
     SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
     SURNAME: Apellido
-    VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con el mismo %s'
     ValidationIdentifierFailed: 'No se puede sobreescribir el miembro existente  #{id} con el identificador idéntico ({name} = {value}))'
     WELCOMEBACK: 'Bienvenido nuevamente, {firstname}'
     YOUROLDPASSWORD: 'Contraseña anterior'

@@ -60,7 +60,6 @@ lv:
   File:
     Content: Saturs
     Filename: Faila nosaukums
-    NOFILESIZE: 'Faila izmērs ir nulle baiti.'
     NOVALIDUPLOAD: 'Augšupielādei nederīgs fails'
     Name: Nosaukms
     PLURALNAME: Faili
@@ -139,12 +138,10 @@ lv:
     NEWPASSWORD: 'Jaunā parole'
     PASSWORD: Parole
     PLURALNAME: Dalībnieki
-    REMEMBERME: 'Atcerēties mani nākamreiz?'
     SINGULARNAME: Dalībnieks
     SUBJECTPASSWORDCHANGED: 'Jūsu parole tika nomainīta'
     SUBJECTPASSWORDRESET: 'Jūsu paroles atiestatīšanas saite '
     SURNAME: Uzvārds
-    VALIDATIONMEMBEREXISTS: 'Lietotājs ar tādu pašu %s jau eksistē'
     YOUROLDPASSWORD: 'Jūsu vecā parole'
     belongs_many_many_Groups: Grupas
     db_LastVisited: 'Pēdējā apmeklējuma datums'
