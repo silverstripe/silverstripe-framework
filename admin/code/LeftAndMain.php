@@ -5,6 +5,8 @@
  * @subpackage admin
  */
 
+use SilverStripe\CMS\Controllers\CMSPageEditController;
+use SilverStripe\CMS\Controllers\CMSPagesController;
 use SilverStripe\Forms\Schema\FormSchema;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
@@ -21,6 +23,10 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\PermissionProvider;
 use SilverStripe\View\ThemeResourceLoader;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\CMS\Model\VirtualPage;
+use SilverStripe\CMS\Controllers\SilverStripeNavigator;
+
 
 
 /**
@@ -1036,14 +1042,19 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		if($currentPage) $obj->markToExpose($currentPage);
 
 		// NOTE: SiteTree/CMSMain coupling :-(
-		if(class_exists('SiteTree')) {
-			SiteTree::prepopulate_permission_cache('CanEditType', $obj->markedNodeIDs(),
-				'SiteTree::can_edit_multiple');
+		if(class_exists('SilverStripe\\CMS\\Model\\SiteTree')) {
+			SiteTree::prepopulate_permission_cache(
+				'CanEditType',
+				$obj->markedNodeIDs(),
+				'SilverStripe\\CMS\\Model\\SiteTree::can_edit_multiple'
+			);
 		}
 
 		// getChildrenAsUL is a flexible and complex way of traversing the tree
 		$controller = $this;
-		$recordController = ($this->stat('tree_class') == 'SiteTree') ?  singleton('CMSPageEditController') : $this;
+		$recordController = ($this->stat('tree_class') == 'SilverStripe\\CMS\\Model\\SiteTree')
+			?  CMSPageEditController::singleton()
+			: $this;
 		$titleFn = function(&$child, $numChildrenMethod) use(&$controller, &$recordController, $filter) {
 			$link = Controller::join_links($recordController->Link("show"), $child->ID);
 			$node = LeftAndMain_TreeNode::create($child, $link, $controller->isCurrentPage($child), $numChildrenMethod, $filter);
@@ -1056,23 +1067,27 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$nodeThresholdLeaf = Config::inst()->get('SilverStripe\\ORM\\Hierarchy\\Hierarchy', 'node_threshold_leaf');
 		if($nodeThresholdLeaf && !$filterFunction) {
 			$nodeCountCallback = function($parent, $numChildren) use(&$controller, $className, $nodeThresholdLeaf) {
-				if($className == 'SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
-					return sprintf(
-						'<ul><li class="readonly"><span class="item">'
-							. '%s (<a href="%s" class="cms-panel-link" data-pjax-target="Content">%s</a>)'
-							. '</span></li></ul>',
-						_t('LeftAndMain.TooManyPages', 'Too many pages'),
-						Controller::join_links(
-							$controller->LinkWithSearch($controller->Link()), '
-							?view=list&ParentID=' . $parent->ID
-						),
-						_t(
-							'LeftAndMain.ShowAsList',
-							'show as list',
-							'Show large amount of pages in list instead of tree view'
-						)
-					);
+				if ($className !== 'SilverStripe\\CMS\\Model\\SiteTree'
+					|| !$parent->ID
+					|| $numChildren >= $nodeThresholdLeaf
+				) {
+					return null;
 				}
+				return sprintf(
+					'<ul><li class="readonly"><span class="item">'
+						. '%s (<a href="%s" class="cms-panel-link" data-pjax-target="Content">%s</a>)'
+						. '</span></li></ul>',
+					_t('LeftAndMain.TooManyPages', 'Too many pages'),
+					Controller::join_links(
+						$controller->LinkWithSearch($controller->Link()), '
+						?view=list&ParentID=' . $parent->ID
+					),
+					_t(
+						'LeftAndMain.ShowAsList',
+						'show as list',
+						'Show large amount of pages in list instead of tree view'
+					)
+				);
 			};
 		} else {
 			$nodeCountCallback = null;
@@ -1089,7 +1104,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$html = $obj->getChildrenAsUL(
 				"",
 				$titleFn,
-				singleton('CMSPagesController'),
+				CMSPagesController::singleton(),
 				true,
 				$childrenMethod,
 				$numChildrenMethod,
@@ -1160,8 +1175,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 			$record = $this->getRecord($id);
 			if(!$record) continue; // In case a page is no longer available
-			$recordController = ($this->stat('tree_class') == 'SiteTree')
-				?  singleton('CMSPageEditController')
+			$recordController = ($this->stat('tree_class') == 'SilverStripe\\CMS\\Model\\SiteTree')
+				? CMSPageEditController::singleton()
 				: $this;
 
 			// Find the next & previous nodes, for proper positioning (Sort isn't good enough - it's not a raw offset)
@@ -1312,7 +1327,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$id = $request->requestVar('ID');
 		$parentID = $request->requestVar('ParentID');
 
-		if($className == 'SiteTree' && $page = DataObject::get_by_id('Page', $id)){
+		if($className == 'SilverStripe\\CMS\\Model\\SiteTree' && $page = DataObject::get_by_id('Page', $id)){
 			$root = $page->getParentType();
 			if(($parentID == '0' || $root == 'root') && !SiteConfig::current_site_config()->canCreateTopLevel()){
 				$this->getResponse()->setStatusCode(
@@ -1351,7 +1366,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			);
 
 			// Update all dependent pages
-			if(class_exists('VirtualPage')) {
+			if(class_exists('SilverStripe\\CMS\\Model\\VirtualPage')) {
 				$virtualPages = VirtualPage::get()->filter("CopyContentFromID", $node->ID);
 				foreach($virtualPages as $virtualPage) {
 					$statusUpdates['modified'][$virtualPage->ID] = array(
@@ -1462,6 +1477,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 			// Added in-line to the form, but plucked into different view by frontend scripts.
 			if(in_array('CMSPreviewable', class_implements($record))) {
+				/** @skipUpgrade */
 				$navField = new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator());
 				$navField->setAllowHTML(true);
 				$fields->push($navField);
@@ -2103,7 +2119,7 @@ class LeftAndMainMarkingFilter {
 
 		return new SQLSelect(
 			array("ParentID", "ID"),
-			'SiteTree',
+			'SilverStripe\\CMS\\Model\\SiteTree',
 			$where
 		);
 	}

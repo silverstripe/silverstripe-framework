@@ -76,7 +76,7 @@ class ChangeSet extends DataObject {
 	 * @var array
 	 */
 	private static $important_classes = array(
-		'SiteTree',
+		'SilverStripe\\CMS\\Model\\SiteTree',
 		'File',
 	);
 

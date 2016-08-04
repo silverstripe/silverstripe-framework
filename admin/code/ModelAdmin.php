@@ -190,6 +190,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 */
 	public function SearchForm() {
 		$context = $this->getSearchContext();
+		/** @skipUpgrade */
 		$form = new Form($this, "SearchForm",
 			$context->getSearchFields(),
 			new FieldList(

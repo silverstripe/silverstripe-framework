@@ -6,6 +6,8 @@ use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Member;
+use SilverStripe\CMS\Model\ErrorPage;
+
 
 
 
@@ -50,7 +52,7 @@ class FileTest extends SapphireTest {
 		}
 
 		// Conditional fixture creation in case the 'cms' module is installed
-		if(class_exists('ErrorPage')) {
+		if(class_exists('SilverStripe\\CMS\\Model\\ErrorPage')) {
 			$page = new ErrorPage(array(
 				'Title' => 'Page not Found',
 				'ErrorCode' => 404
@@ -90,7 +92,7 @@ class FileTest extends SapphireTest {
 		$this->assertEquals('', $parser->parse('[file_link,id="text"]'));
 		$this->assertEquals('', $parser->parse('[file_link]Example Content[/file_link]'));
 
-		if(class_exists('ErrorPage')) {
+		if(class_exists('SilverStripe\\CMS\\Model\\ErrorPage')) {
 			$errorPage = ErrorPage::get()->filter('ErrorCode', 404)->First();
 			$this->assertEquals(
 				$errorPage->Link(),

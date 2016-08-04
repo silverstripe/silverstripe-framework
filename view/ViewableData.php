@@ -542,6 +542,9 @@ class ViewableData extends Object implements IteratorAggregate {
 			$classes[] = $this->template;
 		}
 
+		// Strip out namespaces
+		$classes = preg_replace('#.*\\\\#', '', $classes);
+
 		return Convert::raw2att(implode(' ', $classes));
 	}
 

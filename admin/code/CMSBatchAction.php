@@ -19,7 +19,7 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 abstract class CMSBatchAction extends Object {
 
-	protected $managedClass = 'SiteTree';
+	protected $managedClass = 'SilverStripe\\CMS\\Model\\SiteTree';
 
 	/**
 	 * The the text to show in the dropdown for this action

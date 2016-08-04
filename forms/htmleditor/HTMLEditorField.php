@@ -220,7 +220,7 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 	 */
 	public function LinkForm() {
 		$siteTree = TreeDropdownField::create('internal', _t('HTMLEditorField.PAGE', "Page"),
-			'SiteTree', 'ID', 'MenuTitle', true);
+			'SilverStripe\\CMS\\Model\\SiteTree', 'ID', 'MenuTitle', true);
 		// mimic the SiteTree::getMenuTitle(), which is bypassed when the search is performed
 		$siteTree->setSearchFunction(array($this, 'siteTreeSearchCallback'));
 

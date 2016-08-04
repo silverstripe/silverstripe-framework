@@ -2,18 +2,13 @@
 
 namespace SilverStripe\Filesystem;
 
-
 use Injector;
-
-
 use SilverStripe\Filesystem\Storage\AssetStore;
 use SilverStripe\Filesystem\Storage\DBFile;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Member;
-
-
 
 /**
  * This class provides the necessary business logic to ensure that any assets attached

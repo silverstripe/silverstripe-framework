@@ -11,9 +11,9 @@ class RequestHandlingTest extends FunctionalTest {
 
 	protected $illegalExtensions = array(
 		// Suppress CMS error page handling
-		'Controller' => array('ErrorPageControllerExtension'),
-		'Form' => array('ErrorPageControllerExtension'),
-		'LeftAndMain' => array('ErrorPageControllerExtension'),
+		'Controller' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
+		'Form' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
+		'LeftAndMain' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
 	);
 
 	public function setUp() {

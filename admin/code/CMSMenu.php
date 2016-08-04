@@ -323,7 +323,8 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		if(!$root) {
 			$root = 'LeftAndMain';
 		}
-		$abstractClasses = ['LeftAndMain', 'CMSMain'];
+		/** @todo Make these actual abstract classes */
+		$abstractClasses = ['LeftAndMain', 'SilverStripe\\CMS\\Controllers\\CMSMain'];
 		$subClasses = array_values(ClassInfo::subclassesFor($root));
 		foreach($subClasses as $className) {
 			if($recursive && $className != $root) {
