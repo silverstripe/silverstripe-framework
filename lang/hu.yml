@@ -83,12 +83,10 @@ hu:
     NEWPASSWORD: 'Új jelszó'
     PASSWORD: Jelszó
     PLURALNAME: Tagok
-    REMEMBERME: 'Emlékezzen rám legközelebb'
     SINGULARNAME: Tag
     SUBJECTPASSWORDCHANGED: 'A jelszó megváltozott'
     SUBJECTPASSWORDRESET: 'A jelszó alapállapotba hozásához használható link'
     SURNAME: Családi név
-    VALIDATIONMEMBEREXISTS: 'Egy tag már létezik ezen e-mail címmel'
     YOUROLDPASSWORD: 'Régi jelszó'
     belongs_many_many_Groups: Csoportok
     db_LockedOutUntil: 'Kizárva eddig'

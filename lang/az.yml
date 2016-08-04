@@ -57,7 +57,6 @@ az:
   File:
     Content: Məzmun
     Filename: Faylın adı
-    NOFILESIZE: 'Faylın ölçüsü sıfır baytdır'
     NOVALIDUPLOAD: 'Fayl yükləmək üçün yararlı deyil'
     Name: Ad
     PLURALNAME: Fayllar
@@ -130,12 +129,10 @@ az:
     NEWPASSWORD: 'Yeni parol'
     PASSWORD: Parol
     PLURALNAME: Üzvlər
-    REMEMBERME: 'Yadda saxla?'
     SINGULARNAME: Üzv
     SUBJECTPASSWORDCHANGED: 'Sizin parolunuz dəyişildi'
     SUBJECTPASSWORDRESET: 'Parolu sıfırlama linki'
     SURNAME: Soyad
-    VALIDATIONMEMBEREXISTS: '%s adlı istifadəçi artıq mövcuddur'
     YOUROLDPASSWORD: 'Sizin keçmiş parol'
     belongs_many_many_Groups: Qruplar
     db_LastVisited: 'Son ziyarət tarixi'

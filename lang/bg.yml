@@ -30,7 +30,6 @@ bg:
     INSERTURL: 'Въведи URL на файла'
     REMOVEINFO: 'Премахни файла от това поле'
     TOTAL: Общо
-    TOUPLOAD: 'Избери файлове за качване...'
     UPLOADINPROGRESS: 'Моля, изчакайте... файловете се качват'
     UPLOADOR: ИЛИ
   BBCodeParser:
@@ -139,7 +138,6 @@ bg:
     INVALID_REQUEST: 'Грешна заявка'
   DropdownField:
     CHOOSE: (Избери)
-    CHOOSESEARCH: '(Избери или Търси)'
   EmailField:
     VALIDATION: 'Моля, въведете имейл адрес'
   Enum:
@@ -149,13 +147,10 @@ bg:
     Filename: Име на файл
     INVALIDEXTENSION: 'Това разширение не е разрешено (разрешени са: {extensions})'
     INVALIDEXTENSIONSHORT: 'Това разширение не е разрешено'
-    NOFILESIZE: 'Размер на файла е нула байта.'
     NOVALIDUPLOAD: 'Невалиден файл за качване'
     Name: Име
     PLURALNAME: Файлове
     SINGULARNAME: Файл
-    TOOLARGE: 'Много голям файл, разрешено е до {size}'
-    TOOLARGESHORT: 'Големината на файла надхвърля {size}'
     Title: Заглавие
   Filesystem:
     SYNCRESULTS: 'Синхронизацията завърши: бяха създадени {createdcount} елемента, бяха изтрити {deletedcount} елемента'
@@ -294,12 +289,10 @@ bg:
     NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
     PLURALNAME: Потребители
-    REMEMBERME: 'Запомни ме за следващия път?'
     SINGULARNAME: Потребител
     SUBJECTPASSWORDCHANGED: 'Вашата парола беше променена'
     SUBJECTPASSWORDRESET: 'Връзка за анулиране на паролата'
     SURNAME: Фамилия
-    VALIDATIONMEMBEREXISTS: 'Вече съществува потребител с този email'
     WELCOMEBACK: 'Добре дошли отново, {firstname}'
     YOUROLDPASSWORD: 'Вашата стара парола'
     belongs_many_many_Groups: Групи

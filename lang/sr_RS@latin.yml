@@ -144,15 +144,12 @@ sr_RS@latin:
     JsType: 'Javascript datoteka'
     Mp3Type: 'MP3 audio datoteka'
     MpgType: 'MPEG video datoteka'
-    NOFILESIZE: 'Datoteka je veličine 0 B.'
     NOVALIDUPLOAD: 'Datoteka za prenos nije valjana'
     Name: Ime
     PLURALNAME: Datoteke
     PdfType: 'Adobe Acrobat PDF datoteka'
     PngType: 'PNG slika - dobar format opšte namene'
     SINGULARNAME: Datoteka
-    TOOLARGE: 'Datoteka je prevelika; maksimalna dozvoljena veličina je {size}'
-    TOOLARGESHORT: 'Veličina datoteke premašuje {size}'
     TiffType: 'Označeni format slike'
     Title: Naslov
     WavType: 'WAV audio datoteka'
@@ -336,13 +333,11 @@ sr_RS@latin:
     NoPassword: 'Ne postoji lozinka za tog člana.'
     PASSWORD: Lozinka
     PLURALNAME: Članovi
-    REMEMBERME: 'Zapamti me za sledeći put'
     SINGULARNAME: Član
     SUBJECTPASSWORDCHANGED: 'Vaša lozinka je promenjena'
     SUBJECTPASSWORDRESET: 'Link za resetovanje Vaše lozinke'
     SURNAME: Prezime
     TIMEFORMAT: 'Format vremena'
-    VALIDATIONMEMBEREXISTS: 'Već postoji član sa ovom adresom e-pošte'
     ValidationIdentifierFailed: 'Nije moguće prepisati preko postojećeg člana  #{id} sa istim identifikatorom ({name} = {value}))'
     WELCOMEBACK: 'Dobro došli ponovo, {firstname}'
     YOUROLDPASSWORD: 'Vaša stara lozinka'

@@ -30,7 +30,6 @@ nl:
     INSERTURL: 'Voeg toe van URL'
     REMOVEINFO: 'Verwijder bestand van dit veld'
     TOTAL: Totaal
-    TOUPLOAD: 'Selecteer bestanden voor upload'
     UPLOADINPROGRESS: 'Een ogenblik geduld... upload wordt uitgevoerd'
     UPLOADOR: OF
   BBCodeParser:
@@ -153,7 +152,6 @@ nl:
     INVALID_REQUEST: 'Fout bij verwerken'
   DropdownField:
     CHOOSE: (Kies)
-    CHOOSESEARCH: '(Kies of zoek)'
     SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. {value} is geen geldige keuze.'
   EmailField:
     VALIDATION: 'Gelieve een e-mailadres in te voeren.'
@@ -177,15 +175,12 @@ nl:
     JsType: 'Javascript bestand'
     Mp3Type: 'MP3 audio bestand'
     MpgType: 'MPEG video bestand'
-    NOFILESIZE: 'Bestandsgrootte is nul bytes.'
     NOVALIDUPLOAD: 'Geen geldig bestand'
     Name: Naam
     PLURALNAME: Bestanden
     PdfType: 'Adobe Acrobat PDF bestand'
     PngType: 'PNG afbeelding - goed voor allerlei afbeeldingen'
     SINGULARNAME: Bestand
-    TOOLARGE: 'Bestand is te groot, maximaal {size} toegestaan'
-    TOOLARGESHORT: 'Bestand is groter dan {size}'
     TiffType: 'Tagged beeldformaat'
     Title: 'Titel '
     WavType: 'WAV audio bestand'
@@ -384,13 +379,11 @@ nl:
     PASSWORD: Wachtwoord
     PASSWORDEXPIRED: 'Je wachtwoord is verlopen. Kies een nieuw wachtwoord.'
     PLURALNAME: Leden
-    REMEMBERME: 'Wachtwoord onthouden voor de volgende keer?'
     SINGULARNAME: Lid
     SUBJECTPASSWORDCHANGED: 'Uw wachtwoord is veranderd'
     SUBJECTPASSWORDRESET: 'Link om uw wachtwoord opnieuw aan te maken'
     SURNAME: Achternaam
     TIMEFORMAT: 'Tijd formaat'
-    VALIDATIONMEMBEREXISTS: 'Er bestaat al een lid met dit emailadres, %s'
     ValidationIdentifierFailed: 'Een bestaande gebruiker #{id} kan niet dezelfde unieke velden hebben ({name} = {value}))'
     WELCOMEBACK: 'Welkom terug, {firstname}'
     YOUROLDPASSWORD: 'Uw oude wachtwoord'

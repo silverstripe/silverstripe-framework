@@ -79,12 +79,10 @@ he_IL:
     NEWPASSWORD: 'סיסמא חדשה'
     PASSWORD: סיסמא
     PLURALNAME: חברים רשומים
-    REMEMBERME: 'זכור אותי בפעם הבאה?'
     SINGULARNAME: חבר רשום
     SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'
     SUBJECTPASSWORDRESET: 'קישור לאתחול הסיסמא שלך'
     SURNAME: שם משפחה
-    VALIDATIONMEMBEREXISTS: 'קיים כבר משתמש עם כתובת דואר זו.'
     YOUROLDPASSWORD: 'הסיסמא הישנה שלך'
     belongs_many_many_Groups: קבוצות
     db_LockedOutUntil: 'נעול עד '

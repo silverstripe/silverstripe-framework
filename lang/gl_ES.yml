@@ -74,7 +74,6 @@ gl_ES:
   File:
     Content: Contido
     Filename: Nome ficheiro
-    NOFILESIZE: 'O tamaño do ficheiro é cero bytes.'
     NOVALIDUPLOAD: 'Ficheiro non v&aacute;lido para subir'
     Name: Nome
     PLURALNAME: Ficheiros
@@ -181,12 +180,10 @@ gl_ES:
     NEWPASSWORD: 'Novo Contrasinal'
     PASSWORD: Contrasinal
     PLURALNAME: Membros
-    REMEMBERME: 'Lembrarme a próxima vez?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'O teu contrasinal mudou'
     SUBJECTPASSWORDRESET: 'A túa ligazón de reinicio de contrasinal'
     SURNAME: Apelidos
-    VALIDATIONMEMBEREXISTS: 'Un membro ya existe co mesmo %s'
     YOUROLDPASSWORD: 'O teu vello contrasinal'
     belongs_many_many_Groups: Grupos
     db_LastVisited: 'Data Última Visita'

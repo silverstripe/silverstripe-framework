@@ -30,7 +30,6 @@ es:
     INSERTURL: 'Insertar desde URL'
     REMOVEINFO: 'Remover este archivo '
     TOTAL: Total
-    TOUPLOAD: 'Seleccionar archivos para subir'
     UPLOADINPROGRESS: 'Por favor espere .... carga en curso'
     UPLOADOR: O
   BBCodeParser:
@@ -153,7 +152,6 @@ es:
     INVALID_REQUEST: 'Solicitud no válida'
   DropdownField:
     CHOOSE: (Elegir)
-    CHOOSESEARCH: 'Seleccionar o Buscar'
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
@@ -177,15 +175,12 @@ es:
     JsType: 'Archivo Javascript'
     Mp3Type: 'Archivo de audio MP3'
     MpgType: 'Archivo de video MPEG'
-    NOFILESIZE: 'El tamaño del fichero es de cero bytes.'
     NOVALIDUPLOAD: 'El archivo no es válido para cargarlo'
     Name: Nombre
     PLURALNAME: Archivos
     PdfType: 'Archivo PDF de Adobe Acrobat'
     PngType: 'Imagen PNG - buen formato de propósito general'
     SINGULARNAME: Archivo
-    TOOLARGE: 'El tamaño del archivo es demasiado grande, máximo permitido {size}'
-    TOOLARGESHORT: 'El tamaño del archivo supera {size}'
     TiffType: 'Formato de imagen etiquetada'
     Title: Título
     WavType: 'Archivo de audio WAV'
@@ -384,13 +379,11 @@ es:
     PASSWORD: Contraseña
     PASSWORDEXPIRED: 'Su contraseña expiró. Por favor, elija una nueva.'
     PLURALNAME: Miembros
-    REMEMBERME: '¿Recordarme la próxima vez?'
     SINGULARNAME: Miembro
     SUBJECTPASSWORDCHANGED: 'Su contraseña ha sido cambiada'
     SUBJECTPASSWORDRESET: 'Enlace para restaurar su contraseña'
     SURNAME: Apellidos
     TIMEFORMAT: 'Formato de tiempo'
-    VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con este email.'
     ValidationIdentifierFailed: 'No se puede sobrescribir el miembro existente #{id} con identificador idéntico ({name} = {value}))'
     WELCOMEBACK: 'Bienvenido de nuevo, {firstname}'
     YOUROLDPASSWORD: 'Su contraseña anterior'

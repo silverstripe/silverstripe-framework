@@ -1,6 +1,12 @@
 fa_IR:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'به نظر می‌رسد شما دسترسی‌های لازم برای افزودن {ObjectTitle} به {CampaignTitle} را ندارید'
+    ErrorGeneral: 'پوزش می‌طلبیم، اما خطایی رخ داد'
+    ErrorItemPermissionDenied: 'به نظر می‌رسد شما دسترسی‌های لازم برای افزودن {ObjectTitle} به کمپین را ندارید'
+    ErrorNotFound: 'این {Type} یافت نشد'
+    Success: '{ObjectTitle} با موفقیت به {CampaignTitle} افزوده شد'
   AssetAdmin:
-    ALLOWEDEXTS: 'قالب‌های مجاز آپلود فایل'
+    ALLOWEDEXTS: 'قالب‌های مجاز جهت آپلود فایل'
     HIDEALLOWEDEXTS: 'مخفی‌کردن قالب‌های مجاز'
     NEWFOLDER: پوشه‌ی جدید
     SHOWALLOWEDEXTS: 'نمایش قالب‌های مجاز'
@@ -30,12 +36,12 @@ fa_IR:
     INSERTURL: 'وارد‌کردن از نشانی اینترنتی'
     REMOVEINFO: 'حذف این فایل از این فیلد'
     TOTAL: مجموع
-    TOUPLOAD: 'انتخاب فایل‌ها برای آپلود...'
+    TOUPLOAD: 'انتخاب فایل‌ها جهت آپلود...'
     UPLOADINPROGRESS: 'لطفاً صبر کنید... آپلود در جریان است'
     UPLOADOR: یا
   BBCodeParser:
     ALIGNEMENT: جاگذاری
-    ALIGNEMENTEXAMPLE: 'راست‌چین'
+    ALIGNEMENTEXAMPLE: 'راست‌چین شده'
     BOLD: 'متن درشت'
     BOLDEXAMPLE: درشت
     CODE: 'بلوک کد'
@@ -48,7 +54,7 @@ fa_IR:
     IMAGE: عکس
     IMAGEDESCRIPTION: 'نمایش یک تصویر در ارسال شما'
     ITALIC: 'نوشته ایتالیک'
-    ITALICEXAMPLE: ایتالیک
+    ITALICEXAMPLE: ایتالیک‌ها
     LINK: 'لینک وب‌سایت'
     LINKDESCRIPTION: 'لینک به یک وب‌سایت یا نشانی اینترنتی دیگر'
     STRUCK: 'متن باطل‌شده'
@@ -68,6 +74,8 @@ fa_IR:
     ANY: هر
     NOANSWER: 'خیر'
     YESANSWER: 'بله'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'افزودن به کمپین'
   CMSLoadingScreen_ss:
     LOADING: بارگذاری...
     REQUIREJS: 'سی‌ام‌اس نیازمند این است که جاوااسکریپت را فعال نمایید.'
@@ -94,12 +102,29 @@ fa_IR:
     SUCCESSCONTENT: '<p>ورود موفق. اگر به‌طور خودکار ارجاع نشدید <a target="_top" href="{link}">اینجا را کلیک کنید.</a></p>'
     TimedOutTitleAnonymous: 'جلسه شما به پایان رسیده است.'
     TimedOutTitleMember: 'سلام {name}!<br />زمان جلسه شما به پایان رسیده است.'
+  CampaignAdmin:
+    MENUTITLE: کمپین‌ها
+  Campaigns:
+    AddToCampaign: 'افزودن به کمپین'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'شما رمز عبورتان را تغییر دادید برای'
     CHANGEPASSWORDTEXT2: 'اکنون می‌توانید با این اطلاعات وارد شوید:'
+    CHANGEPASSWORDTEXT3: 'تغییر رمز عبور'
     EMAIL: ايميل
     HELLO: درود
     PASSWORD: رمز عبور
+  ChangeSet:
+    DESCRIPTION_AND: '{first} و {second}'
+    DESCRIPTION_ITEM: آیتم
+    DESCRIPTION_ITEMS: آیتم‌ها
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}، و {item}'
+    DESCRIPTION_LIST_MID: '{list}، {item}'
+    DESCRIPTION_OTHER_ITEM: 'آیتم دیگر'
+    DESCRIPTION_OTHER_ITEMS: 'آیتم‌های دیگر'
+    NAME: نام
+    PLURALNAME: کمپین‌ها
+    SINGULARNAME: کمپین
   CheckboxField:
     NOANSWER: 'خیر'
     YESANSWER: 'بله'
@@ -110,6 +135,8 @@ fa_IR:
   ConfirmedPasswordField:
     ATLEAST: 'رمزهای عبور باید حداقل {min} کاراکتر باشد.'
     BETWEEN: 'رمزهای عبور باید بین {min} تا {max} کاراکتر باشد.'
+    CURRENT_PASSWORD_MISSING: 'شما باید رمز عبور کنونی خود را وارد نمایید.'
+    LOGGED_IN_ERROR: 'جهت تغییر رمز عبور خود باید وارد شده باشید.'
     MAXIMUM: 'رمزهای عبور باید حداکثر {max} کاراکتر باشد.'
     SHOWONCLICKTITLE: 'تغییر رمز عبور'
   ContentController:
@@ -177,15 +204,12 @@ fa_IR:
     JsType: 'فایل جاوااسکریپت'
     Mp3Type: 'فایل صوتی MP3'
     MpgType: 'فایل ویدیویی MPEG'
-    NOFILESIZE: 'حجم فایل صفر بایت است.'
     NOVALIDUPLOAD: 'فایل یک بارگذاری معتبر نیست'
     Name: نام
     PLURALNAME: فایل‌ها
     PdfType: 'فایل اکروبات PDF'
     PngType: 'تصویر PNG - قالب مناسب همه منظوره'
     SINGULARNAME: فايل
-    TOOLARGE: 'حجم فایل بسیار زیاد است، حداکثر {size} مجاز است'
-    TOOLARGESHORT: 'حجم فایل از {size} فراتر است'
     TiffType: 'قالب تصویر تگ‌شده'
     Title: عنوان
     WavType: 'فایل صوتی WAV'
@@ -272,6 +296,36 @@ fa_IR:
     ResultCreated: '{count} گروه ایجاد شده'
     ResultDeleted: 'گروه‌های %d حذف شد'
     ResultUpdated: 'گروه‌های %d به‌روز شد'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'شما مجاز به دسترسی به محتوای صفحه هدف نیستید.'
+    ANCHORSPAGENOTFOUND: 'صفحه‌ی هدف پیدا نشد.'
+    BUTTONADDURL: 'افزودن نشانی اینترنتی'
+    CSSCLASS: 'چیدمان / سبک'
+    DETAILS: جزئیات
+    EMAIL: 'نشانی ایمیل'
+    FILE: فايل
+    FOLDER: پوشه
+    IMAGEDIMENSIONS: ابعاد
+    IMAGEHEIGHTPX: ارتفاع
+    IMAGETITLETEXT: 'متن عنوان (تول‌تیپ)'
+    IMAGETITLETEXTDESC: 'جهت اطلاعات بیشتر درباره تصویر'
+    IMAGEWIDTHPX: پهنا
+    INSERTMEDIA: 'واردکردن رسانه از'
+    LINK: 'واردکردن لینک'
+    LINKDESCR: 'توضیحات لینک'
+    LINKEMAIL: 'نشانی ایمیل'
+    LINKEXTERNAL: 'وب‌سایت دیگر'
+    LINKFILE: 'یک فایل دانلود کنید'
+    LINKINTERNAL: 'صفحه روی وب‌سایت'
+    LINKOPENNEWWIN: 'لینک در پنجره جدید باز شود؟'
+    LINKTO: 'لینک به'
+    PAGE: صفحه
+    SUBJECT: 'موضوع ایمیل'
+    URL: نشانی اینترنتی
+    URLDESCRIPTION: 'ویدیوها و تصاویر موجود در وب را به آسانی و با وارد نمودن نشانی اینترنتی آن فایل در صفحه درج نمایید. اطمینان حاصل نمایید که شما دارای حقوق یا اجازه‌های مرتبط با اشتراک‌گذاری آن رسانه از وب هستید.<br /><br />لطفاً در نظر داشته باشید که فایل‌ها در سی‌ام‌اس ذخیره نمی‌شوند و آن‌ها از محل اصلی خود فراخوانی می‌شوند، اگر به دلایلی آن فایل در محل اصلی خود موجود نباشد در این صفحه هم قابل دیدن نخواهد بود.'
+    UpdateMEDIA: 'به‌روز‌رسانی رسانه'
+  HTMLEditorField_Toolbar:
+    ERROR_NOTFOUND: 'ناتوان از یافتن فایل جهت دیدن'
   HtmlEditorField:
     ADDURL: 'افزودن URL'
     ADJUSTDETAILSDIMENSIONS: 'جزئیات و ابعاد'
@@ -317,6 +371,7 @@ fa_IR:
   Image_iframe_ss:
     TITLE: 'آی‌فریم آپلود عکس'
   LeftAndMain:
+    CANCEL: لغو
     DELETED: حذف شده
     HELP: کمک
     PERMAGAIN: 'شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید'
@@ -346,27 +401,30 @@ fa_IR:
     CANTEDIT: 'شما دسترسی انجام این کار را ندارید.'
     CONFIRMNEWPASSWORD: 'تکرار رمز عبور جدید'
     CONFIRMPASSWORD: 'تکرار رمز عبور'
+    CURRENT_PASSWORD: 'رمز ورود کنونی'
     DATEFORMAT: 'قالب تاریخ'
     DefaultAdminFirstname: 'مدیر پیشفرض'
     DefaultDateTime: پیش‌فرض
+    EDIT_PASSWORD: 'رمز ورود جدید'
     EMAIL: پست الکترونیک
     EMPTYNEWPASSWORD: 'رمز عبور جدید نمیتواند خالی باشد، لطفا دوباره تلاش کنید'
     ENTEREMAIL: 'لطفاً یک نشانی ایمیل وارد نمایید تا پیوند ازنوسازی رمز عبور را دریافت کنید.'
     ERRORPASSWORDNOTMATCH: 'رمز عبور کنونی همانند نیست، لطفاً مجدداً تلاش نمایید'
     FIRSTNAME: 'نام'
     INTERFACELANG: 'زبان برنامه'
+    KEEPMESIGNEDIN: 'مرا واردشده نگه‌دار'
     LOGGEDINAS: 'شما به {name} عنوان وارد شده‌اید.'
     NEWPASSWORD: 'گذرواژه تازه'
     NoPassword: 'رمز عبوری برای این کاربر وجود ندارد'
     PASSWORD: رمز عبور
+    PASSWORDEXPIRED: 'رمز عبور شما منقضی شده‌است. لطفاً یکی جدید برگزینید.'
     PLURALNAME: اعضاء
-    REMEMBERME: 'مرا برای بار بعدی به خاطر بسپار؟'
+    REMEMBERME: 'مرا برای بار بعد به‌خاطر بسپار؟'
     SINGULARNAME: عضو
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما دگرگون شد'
     SUBJECTPASSWORDRESET: 'پیوند ازنوسازی گذرواژه شما'
     SURNAME: نام خانوادگی
     TIMEFORMAT: 'قالب زمان'
-    VALIDATIONMEMBEREXISTS: 'یک عضو با %s یکسان از پیش وجود دارد'
     WELCOMEBACK: 'خوش آمدید، {firstname}'
     YOUROLDPASSWORD: 'رمز عبور قدیمی'
     belongs_many_many_Groups: گروه‌ها
@@ -435,6 +493,8 @@ fa_IR:
   Pagination:
     Page: صفحه
     View: نمایش
+  PasswordValidator:
+    TOOSHORT: 'رمز عبور بسیار کوتاه است، باید %s کاراکتر یا بیشتر باشد'
   Permission:
     AdminGroup: مدیر کل
     CMS_ACCESS_CATEGORY: 'دسترسی CMS'
@@ -463,6 +523,7 @@ fa_IR:
     CHANGEPASSWORDHEADER: 'تغییر گذرواژه'
     ENTERNEWPASSWORD: 'لطفاً گذرواژه جدید را وارد کنید.'
     ERRORPASSWORDPERMISSION: 'جهت تغییر رمز عبور خود باید وارد شده باشید!'
+    LOGGEDOUT: 'شما خارج شده‌اید. اگر مایل هستید دوباره وارد شوید، اطلاعات معتبر خود را در زیر وارد نمایید.'
     LOGIN: 'ورود'
     LOSTPASSWORDHEADER: 'فراموشی رمز عبور'
     PASSWORDSENTHEADER: 'پیوند ازنوسازی رمز عبور به ''{email}'' ارسال شد'
@@ -532,3 +593,10 @@ fa_IR:
     UPLOADSINTO: 'ذخیره شدن در /{path}'
   Versioned:
     has_many_Versions: نسخه ها
+  VersionedGridFieldItemRequest:
+    ARCHIVE: بایگانی
+    BUTTONARCHIVEDESC: 'عدم انتشار و ارسال به بایگانی'
+    BUTTONPUBLISH: انتشار
+    BUTTONUNPUBLISH: عدم انتشار
+  i18n:
+    PLURAL: '{number} {form}'

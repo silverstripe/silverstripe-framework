@@ -63,7 +63,6 @@ pt:
     Content: Conteúdo
     Filename: Nome do ficheiro
     HtlType: 'Ficheiro HTML'
-    NOFILESIZE: 'O tamanho do ficheiro é de 0 bytes.'
     NOVALIDUPLOAD: 'O carregamento do ficheiro é válido'
     Name: Nome
     PLURALNAME: Ficheiros
@@ -164,12 +163,10 @@ pt:
     INTERFACELANG: 'Linguagem do Interface'
     NEWPASSWORD: 'Nova Password'
     PLURALNAME: Membros
-    REMEMBERME: 'Lembrar-se de mim?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'A sua password foi alterada'
     SUBJECTPASSWORDRESET: 'Link para recuperar a password'
     SURNAME: Sobrenome
-    VALIDATIONMEMBEREXISTS: 'Já existe um membro com este email'
     YOUROLDPASSWORD: 'Password antiga'
     belongs_many_many_Groups: Grupos
     db_LastVisited: 'Data da Última Visita'
