@@ -210,15 +210,12 @@ fi:
     JsType: 'Javascript-tiedosto'
     Mp3Type: 'MP3-äänitiedosto'
     MpgType: 'MPEG-videotiedosto'
-    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
     PdfType: 'Adobe Acrobat PDF-tiedosto'
     PngType: 'PNG-kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
-    TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
-    TOOLARGESHORT: 'Tiedostokoko ylittää {size}'
     TiffType: 'TIFF-kuva'
     Title: Otsikko
     WavType: 'WAV-äänitiedosto'
@@ -381,8 +378,6 @@ fi:
     FROMWEB: 'Webistä'
     FindInFolder: 'Etsi kansiosta'
     IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
-    IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
-    IMAGEALTTEXTDESC: 'Näytetään ruudunlukuohjelmille tai jos kuvia ei voi näyttää'
     IMAGEDIMENSIONS: Mitat
     IMAGEHEIGHTPX: Korkeus
     IMAGETITLE: 'Otsikko (tooltip) - kuvan lisätietoja varten'
@@ -417,13 +412,10 @@ fi:
     CANCEL: Peruuta
     CANT_REORGANISE: 'Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu.'
     DELETED: Poistettu.
-    DropdownBatchActionsDefault: 'Valitse toimenpide...'
     HELP: Ohje
-    PAGETYPE: 'Sivutyyppi'
     PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla.'
     PERMALREADY: 'Pahoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alta.'
     PERMDEFAULT: 'Sinun tulee olla kirjautuneena ylläpito-osioon; syötä tunnuksesi kenttiin.'
-    PLEASESAVE: 'Tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu. Tallenna sivu.'
     PreviewButton: Esikatselu
     REORGANISATIONSUCCESSFUL: 'Hakemistopuu uudelleenjärjestettiin onnistuneesti.'
     SAVEDUP: Tallennettu.
@@ -479,7 +471,6 @@ fi:
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
     SURNAME: Sukunimi
     TIMEFORMAT: 'Aikamuoto'
-    VALIDATIONMEMBEREXISTS: '{identifier} niminen käyttäjä on jo olemassa'
     ValidationIdentifierFailed: 'Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))'
     WELCOMEBACK: 'Tervetuloa takaisin, {firstname}'
     YOUROLDPASSWORD: 'Vanha salasanasi'
