@@ -144,15 +144,12 @@ nb:
     JsType: 'Javascript-fil'
     Mp3Type: 'MP3 lydfil'
     MpgType: 'MPEG videofil'
-    NOFILESIZE: 'Filstørrelsen var 0 bytes.'
     NOVALIDUPLOAD: 'Filen er ikke en gyldig opplasting'
     Name: Navn
     PLURALNAME: Filer
     PdfType: 'Adobe Acrobat PDF-fil'
     PngType: 'PNG-bilde - bra til de fleste formål'
     SINGULARNAME: Fil
-    TOOLARGE: 'Filstørrelse for stor, maksimum {size} tillatt '
-    TOOLARGESHORT: 'Filstørrelse overstiger {size}'
     TiffType: 'Tagged image format'
     Title: Tittel
     WavType: 'WAV lydfil'
@@ -336,13 +333,11 @@ nb:
     NoPassword: 'Det finnes ikke noe passord for dette medlemmet.'
     PASSWORD: Passord
     PLURALNAME: Medlemmer
-    REMEMBERME: 'Husk meg neste gang?'
     SINGULARNAME: Medlem
     SUBJECTPASSWORDCHANGED: 'Passordet ditt har blitt endret'
     SUBJECTPASSWORDRESET: 'Lenke for nullstilling av passord'
     SURNAME: Etternavn
     TIMEFORMAT: 'Tidsformat'
-    VALIDATIONMEMBEREXISTS: 'Det eksisterer allerede et medlem med samme %s'
     ValidationIdentifierFailed: 'Kan ikke overskrive eksisterende medlem #{id} med identisk identifikator ({name})={value}))'
     WELCOMEBACK: 'Velkommen tilbake, {firstname}'
     YOUROLDPASSWORD: 'Ditt gamle passord'

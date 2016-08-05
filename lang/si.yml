@@ -94,12 +94,10 @@ si:
     NEWPASSWORD: 'අලුත් මුර පදයක්'
     PASSWORD: මුර පදය
     PLURALNAME: සාමාජිකයින්
-    REMEMBERME: 'මතක‌ තබා ගන්න?'
     SINGULARNAME: සාමාජිකයා
     SUBJECTPASSWORDCHANGED: 'මුර පදය අලුත් කරන ලදී'
     SUBJECTPASSWORDRESET: 'මුර පදය අලුත් කරන ලිපිනය'
     SURNAME: වාසගම
-    VALIDATIONMEMBEREXISTS: 'මෙම ඊමේල් ලිපිනය ඇති සාමාජිකයකු ඇත'
     YOUROLDPASSWORD: 'පරන මුර පදය'
     belongs_many_many_Groups: කාන්ඩ
     db_LockedOutUntil: 'අගුලුලා ඇත්තේ'

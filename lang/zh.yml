@@ -166,15 +166,12 @@ zh:
     JsType: 'Javascript 文件'
     Mp3Type: 'MP3 音频文件'
     MpgType: 'MPEG 视频文件'
-    NOFILESIZE: '文件尺寸为零字节。'
     NOVALIDUPLOAD: '该文件不是有效上传的'
     Name: 名称
     PLURALNAME: 文件
     PdfType: 'Adobe Acrobat PDF 文件'
     PngType: 'PNG 图片 - 良好的通用格式'
     SINGULARNAME: 文件
-    TOOLARGE: '文件尺寸过大，最大允许 {size}'
-    TOOLARGESHORT: '文件尺寸超过了 {size}'
     TiffType: '标记图片格式'
     Title: 标题
     WavType: 'WAV 音频文件'
@@ -367,13 +364,11 @@ zh:
     PASSWORD: 密码
     PASSWORDEXPIRED: '您的密码已过期。 请选择一个新的。'
     PLURALNAME: 成员
-    REMEMBERME: '下次记住我？'
     SINGULARNAME: 成员
     SUBJECTPASSWORDCHANGED: '您的密码已更改'
     SUBJECTPASSWORDRESET: '您的密码重设链接'
     SURNAME: 姓氏
     TIMEFORMAT: '时间格式'
-    VALIDATIONMEMBEREXISTS: '带有相同的 %s 的成员已经存在'
     ValidationIdentifierFailed: '不能用相同的标识符 ({name} = {value})) 重写现有成员 #{id}'
     WELCOMEBACK: '欢迎回来， {firstname}'
     YOUROLDPASSWORD: '您的旧密码'

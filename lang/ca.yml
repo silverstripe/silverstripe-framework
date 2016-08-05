@@ -66,7 +66,6 @@ ca:
   File:
     Content: Contingut
     Filename: Nom del fitxer
-    NOFILESIZE: 'La mida del fitxer és de zero bytes.'
     Name: Nom
     PLURALNAME: Fitxers
     SINGULARNAME: Fitxer
@@ -140,12 +139,10 @@ ca:
     NEWPASSWORD: 'Nova contrasenya'
     PASSWORD: Contrasenya
     PLURALNAME: Membres
-    REMEMBERME: 'Recorda''m el proper cop'
     SINGULARNAME: Membre
     SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'
     SUBJECTPASSWORDRESET: 'Enllaç per canviar la contrasenya'
     SURNAME: Cognom
-    VALIDATIONMEMBEREXISTS: 'Ja existeix un membre amb aquesta adreça de correu electrònic'
     YOUROLDPASSWORD: 'La vostra contrasenya anterior'
     belongs_many_many_Groups: Grups
     db_LastVisited: 'Data de la darrera visita'

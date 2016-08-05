@@ -1,6 +1,12 @@
 sk:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'Vyzerá to tak, že nemáte dostatok oprávnení pridať {ObjectTitle} do {CampaignTitle}'
+    ErrorGeneral: 'Ospravedlňujeme sa, ale nastala chyba'
+    ErrorItemPermissionDenied: 'Vyzerá to tak, že nemáte dostatok oprávnení pridať {ObjectTitle} do kampane'
+    ErrorNotFound: 'Toto {Type} nebolo nájdené'
+    Success: 'Úspešne pridané {ObjectTitle} do {CampaignTitle}'
   AssetAdmin:
-    ALLOWEDEXTS: 'Povolené extenzie nahatia súboru'
+    ALLOWEDEXTS: 'Povolené extenzie nahratia súboru'
     HIDEALLOWEDEXTS: 'Skryť povolené extenzie'
     NEWFOLDER: Nový priečinok
     SHOWALLOWEDEXTS: 'Ukázať povolené extenzie'
@@ -30,7 +36,7 @@ sk:
     INSERTURL: 'Vložiť z URL'
     REMOVEINFO: 'Odstrániť tento soubor z tohto poľa'
     TOTAL: Súhrn
-    TOUPLOAD: 'Vyberte súbory pre nahratie'
+    TOUPLOAD: 'Vyberte súbory pre nahratie...'
     UPLOADINPROGRESS: 'Čakajte prosím… prebieha nahrávanie'
     UPLOADOR: ALEBO
   BBCodeParser:
@@ -68,6 +74,8 @@ sk:
     ANY: Ktorýkoľvek
     NOANSWER: 'Nie'
     YESANSWER: 'Áno'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Pridať do kampane'
   CMSLoadingScreen_ss:
     LOADING: Načíta sa ...
     REQUIREJS: 'CMS vyžaduje, aby ste mali JavaScript zapnutý.'
@@ -94,12 +102,34 @@ sk:
     SUCCESSCONTENT: '<p>Úspešné prihlásenie. Ak nebudete automaticky presmerovaní <a target="_top" href="{link}">kliknite tu</a></p>'
     TimedOutTitleAnonymous: 'Čas Vášho sedenia vypršal.'
     TimedOutTitleMember: 'Ahoj {name}!<br />Čas Vášho sedenia vypršal.'
+  CampaignAdmin:
+    MENUTITLE: Kampane
+  Campaigns:
+    AddToCampaign: 'Pridať do kampane'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Heslo tohto účtu s email adresou {email} bolo zmenené. Ak ste nemenili vaše heslo, zmente si vaše heslo použitím odkazu dole, prosím'
     CHANGEPASSWORDTEXT1: 'Vaše heslo bolo zmenené pre'
     CHANGEPASSWORDTEXT2: 'Teraz môžete použiť nasledujúce prihlasovacie údaje na prihlásenie:'
+    CHANGEPASSWORDTEXT3: 'Zmeniť heslo'
     EMAIL: E-mail
     HELLO: Dobrý deň
     PASSWORD: Heslo
+  ChangeSet:
+    DESCRIPTION_AND: '{first} a {second}'
+    DESCRIPTION_ITEM: Položka
+    DESCRIPTION_ITEMS: Položky
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, a {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'iná položka'
+    DESCRIPTION_OTHER_ITEMS: 'iné položky'
+    NAME: Meno
+    PLURALNAME: Kampane
+    SINGULARNAME: Kampaň
+    STATE: Stav
+  ChangeSetItem:
+    PLURALNAME: 'Zmeniť položky'
+    SINGULARNAME: 'Zmeniť položku'
   CheckboxField:
     NOANSWER: 'Nie'
     YESANSWER: 'Áno'
@@ -110,6 +140,9 @@ sk:
   ConfirmedPasswordField:
     ATLEAST: 'Heslá musia byť nejmenej {min} znakov dlhé.'
     BETWEEN: 'Heslá musia byť {min} až {max} znakov dlhé.'
+    CURRENT_PASSWORD_ERROR: 'Vaše terajšie heslo, ktore ste zadali nie je správne.'
+    CURRENT_PASSWORD_MISSING: 'Musíte zadat vaše terajšie heslo.'
+    LOGGED_IN_ERROR: 'Pre zmenu vášho hesla musíte byť prihlásený.'
     MAXIMUM: 'Heslá musia byť najviac {max} znakov dlhé.'
     SHOWONCLICKTITLE: 'Zmeniť heslo'
   ContentController:
@@ -177,15 +210,12 @@ sk:
     JsType: 'Javascript súbor'
     Mp3Type: 'MP3 audio súbor'
     MpgType: 'MPEG video súbor'
-    NOFILESIZE: 'Veľkosť súboru je nula bajtov.'
     NOVALIDUPLOAD: 'Subor nie je povolený pre nahratie'
     Name: Meno
     PLURALNAME: Súbory
     PdfType: 'Adobe Acrobat PDF súbor'
     PngType: 'PNG obrázok - vhodný univerzálny formát'
     SINGULARNAME: Súbor
-    TOOLARGE: 'Veľkosť súboru je príliš veľká, maximum {size} je povolené'
-    TOOLARGESHORT: 'Veľkosť súboru prekračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Názov
     WavType: 'WAV audo súbor'
@@ -273,6 +303,53 @@ sk:
     ResultCreated: 'Vytvorených {count} skupín'
     ResultDeleted: 'Zmazané %d skupiny'
     ResultUpdated: 'Aktualizované %d skupiny'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'Nemáte povolený prístup k obsahu cieľovej stránky.'
+    ANCHORSPAGENOTFOUND: 'Cieľová stránka nebola nájdená.'
+    ANCHORVALUE: Kotva
+    BUTTONADDURL: 'Pridať url'
+    CAPTIONTEXT: 'Text nadpisu'
+    CSSCLASS: 'Zarovnanie / štýl'
+    CSSCLASSCENTER: 'Centrované samotné.'
+    CSSCLASSLEFT: 'Vľavo, s obtekajúcim textom.'
+    CSSCLASSLEFTALONE: 'Vľavo, samostatne.'
+    CSSCLASSRIGHT: 'Vpravo, s obtekajúcim textom.'
+    DETAILS: Podrobnosti
+    EMAIL: 'Emailová adresa'
+    FILE: Súbor
+    FOLDER: Priečinok
+    IMAGEALT: 'Atlernatívny text (alt)'
+    IMAGEALTTEXT: 'Atlernatívny text (alt) - zobrazí sa ak obrázok nemože byť zobrazený '
+    IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke, ak obrázok nemôže byť zobrazený'
+    IMAGEDIMENSIONS: Rozmery
+    IMAGEHEIGHTPX: Výška
+    IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
+    IMAGETITLETEXT: 'Text titulky (tooltip)'
+    IMAGETITLETEXTDESC: 'Pre doplňujúce informácie o obrázku'
+    IMAGEWIDTHPX: Šírka
+    INSERTMEDIA: 'Vložiť média zo'
+    LINK: 'Vložiť odkaz'
+    LINKANCHOR: 'Kotva na tejto stránke'
+    LINKDESCR: 'Popis odkazu'
+    LINKEMAIL: 'Emailová adresa'
+    LINKEXTERNAL: 'Iná web stránka'
+    LINKFILE: 'Stiahnuť súbor'
+    LINKINTERNAL: 'Stránka na vašom webe'
+    LINKOPENNEWWIN: 'Otvoriť odkaz v novom okne?'
+    LINKTO: 'Odkaz na'
+    PAGE: Stránka
+    SUBJECT: 'Predmet emailu'
+    URL: URL
+    URLDESCRIPTION: 'Vložte videá a obrázky z webu do Vašej stránky, jednoduchým zadaním URL súboru. Uistite sa, že máte príslušné práva pred zdielaním médií z webu.<br /><br />Prosím, uvedomte si, že súbory nie sú pridané do úložiska CMS, ale súbor je vstavaný z jeho pôvodného umiestenia, ak z nejakých dôvodov súbor nie je dostupný v jeho pôvodnom umiestení, nebude zobraziteľný na tejto stránke.'
+    URLNOTANOEMBEDRESOURCE: 'URL ''{url}'' nemôže byť vložené do zdroja médií.'
+    UpdateMEDIA: 'Aktualizovať média'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Iba absolutné url môžu byť zabudované'
+    ERROR_HOSTNAME: 'Toto hostname nie je obsiahnuté v whitelist'
+    ERROR_ID: 'Je potreba buď "ID" alebo "FileURL" parameter pre identifikáciu súboru'
+    ERROR_NOTFOUND: 'Nie je možné nájsť súbor pre náhľad'
+    ERROR_OEMBED_REMOTE: 'Oembed je kompatibilné iba so vzdialenými súbormi'
+    ERROR_SCHEME: 'Táto schéma súboru nie je obsiahnutá v whitelist'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Nekonečná smyčka sa nachádza v {type} hierarchii. Prosím zmeňte rodiča pre vyriešenie tohto problému'
   HtmlEditorField:
@@ -332,6 +409,7 @@ sk:
   Image_iframe_ss:
     TITLE: 'Rámec pre nahranie obrázku'
   LeftAndMain:
+    CANCEL: Zrušiť
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
     HELP: Pomoc
@@ -365,9 +443,11 @@ sk:
     CANTEDIT: 'Nemáte oprávnenie toto vykonať'
     CONFIRMNEWPASSWORD: 'Potvrďte nové heslo'
     CONFIRMPASSWORD: 'Potvrďte heslo'
+    CURRENT_PASSWORD: 'Terajšie heslo'
     DATEFORMAT: 'Formát dátumu'
     DefaultAdminFirstname: 'Predvolený administrátor'
     DefaultDateTime: predvolený
+    EDIT_PASSWORD: 'Nové heslo'
     EMAIL: E-mail
     EMPTYNEWPASSWORD: 'Nové heslo nesmie byť prázdne, skúste to prosím znova'
     ENTEREMAIL: 'Prosím zadajte emailovú adresu pre zaslanie odkazu na resetovanie hesla.'
@@ -378,6 +458,7 @@ sk:
     FIRSTNAME: 'Meno'
     INTERFACELANG: 'Jazyk rozhrania'
     INVALIDNEWPASSWORD: 'Nemohli sme pripustiť, že heslo: {password}'
+    KEEPMESIGNEDIN: 'Držať ma prihláseného'
     LOGGEDINAS: 'Ste prihlásený/á ako {name}.'
     NEWPASSWORD: 'Nové heslo'
     NoPassword: 'Nie je tu heslo pre tohto člena.'
@@ -390,7 +471,6 @@ sk:
     SUBJECTPASSWORDRESET: 'Odkaz na resetovanie hesla'
     SURNAME: Priezvisko
     TIMEFORMAT: 'Formát času'
-    VALIDATIONMEMBEREXISTS: 'Člen s takýmto e-mailom už existuje'
     ValidationIdentifierFailed: 'Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorm ({name} = {value})'
     WELCOMEBACK: 'Vitajte späť, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
@@ -460,6 +540,8 @@ sk:
   MoneyField:
     FIELDLABELAMOUNT: Množstvo
     FIELDLABELCURRENCY: Mena
+  MultiSelectField:
+    SOURCE_VALIDATION: 'Prosím vyberte hodnoty zo zoznamu. Daná neplatná voľba(y) {value}'
   NullableField:
     IsNullLabel: 'Je Null'
   NumericField:
@@ -497,6 +579,9 @@ sk:
     UserPermissionsIntro: 'Priradenie skupín tomuto užívateľovi upraví oprávnenia, ktoré má. Pozri sekcia skupiny pre podrobnosti o oprávneniach k jednotlivým skupinám.'
   PhoneNumberField:
     VALIDATION: 'Prosím zadajte platné telefónne číslo'
+  RememberLoginHash:
+    PLURALNAME: 'Pamätať si hash-e prihlásenia'
+    SINGULARNAME: 'Pamätať si hash prihlásenia'
   Security:
     ALREADYLOGGEDIN: 'K tejto stránke nemáte prístup. Ak máte iný účet, ktorý k nej má prístup, môžete sa prihlásiť.'
     BUTTONSEND: 'Pošlite mi odkaz na resetovanie hesla'
@@ -592,3 +677,14 @@ sk:
     UPLOADSINTO: 'uloží do /{path}'
   Versioned:
     has_many_Versions: verzie
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Archív
+    Archived: 'Archivované %s %s'
+    BUTTONARCHIVEDESC: 'Nezverejniť a odoslať do archívu'
+    BUTTONPUBLISH: Zverejniť
+    BUTTONUNPUBLISH: Nezverejniť
+    BUTTONUNPUBLISHDESC: 'Odstrániť tento záznam z publikovaného webu'
+    Published: 'Zverejnené {name} {link}'
+    Unpublished: 'Nezverejné %s %s'
+  i18n:
+    PLURAL: '{number} {form}'

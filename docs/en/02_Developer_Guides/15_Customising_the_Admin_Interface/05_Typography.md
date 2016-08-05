@@ -11,6 +11,11 @@ SilverStripe lets you customise the style of content in the CMS. This is done by
 
 Will load the `mysite/css/editor.css` file.
 
+If using this config option in `mysite/_config.php`, you will have to instead call:
+
+	:::php
+	HtmlEditorConfig::get('cms')->setOption('content_css', project() . '/css/editor.css');
+
 Any CSS classes within this file will be automatically added to the `WYSIWYG` editors 'style' dropdown. For instance, to
 add the color 'red' as an option within the `WYSIWYG` add the following to the `editor.css`
 

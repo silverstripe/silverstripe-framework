@@ -81,7 +81,6 @@ tr:
   File:
     Content: İçerik
     Filename: Dosya adı
-    NOFILESIZE: 'Dosya boyutu sıfır (0) bayt.'
     Name: Ad
     PLURALNAME: Dosyalar
     SINGULARNAME: Dosya
@@ -164,12 +163,10 @@ tr:
     NEWPASSWORD: 'Yeni Şifre'
     PASSWORD: Şifre
     PLURALNAME: Üyeler
-    REMEMBERME: 'Beni hatırla?'
     SINGULARNAME: Üye
     SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'
     SUBJECTPASSWORDRESET: 'Parola değiştirme bağlantınız'
     SURNAME: Soyad
-    VALIDATIONMEMBEREXISTS: 'Bu eposta adresine sahip bir kullanıcı zaten bulunmaktadır'
     YOUROLDPASSWORD: 'Eski şifreniz'
     belongs_many_many_Groups: Gruplar
     db_LastVisited: 'Son Ziyaret Tarihi'

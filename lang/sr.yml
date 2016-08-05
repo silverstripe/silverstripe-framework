@@ -144,15 +144,12 @@ sr:
     JsType: 'Javascript датотека'
     Mp3Type: 'MP3 аудио датотека'
     MpgType: 'MPEG видео датотека'
-    NOFILESIZE: 'Датотека је величине 0 B.'
     NOVALIDUPLOAD: 'Датотека за пренос није ваљана'
     Name: Име
     PLURALNAME: Датотеке
     PdfType: 'Adobe Acrobat PDF датотека'
     PngType: 'PNG слика - добар формат опште намене'
     SINGULARNAME: Датотека
-    TOOLARGE: 'Датотека је превелика; максимална дозвољена величина је {size}'
-    TOOLARGESHORT: 'Величина датотеке премашује {size}'
     TiffType: 'Означени формат слике'
     Title: Наслов
     WavType: 'WAV аудио датотека'
@@ -336,13 +333,11 @@ sr:
     NoPassword: 'Не постоји лозинка за тог члана.'
     PASSWORD: Лозинка
     PLURALNAME: Чланови
-    REMEMBERME: 'Запамти ме за следећи пут'
     SINGULARNAME: Члан
     SUBJECTPASSWORDCHANGED: 'Ваша лозинка је промењена'
     SUBJECTPASSWORDRESET: 'Линк за ресетовање Ваше лозинке'
     SURNAME: Презиме
     TIMEFORMAT: 'Формат времена'
-    VALIDATIONMEMBEREXISTS: 'Већ постоји члан са овом адресом е-поште'
     ValidationIdentifierFailed: 'Није могуће преписати преко постојећег члана  #{id} са истим идентификатором ({name} = {value}))'
     WELCOMEBACK: 'Добро дошли поново, {firstname}'
     YOUROLDPASSWORD: 'Ваша стара лозинка'

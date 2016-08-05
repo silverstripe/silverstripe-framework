@@ -1,4 +1,10 @@
 eo:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'Ŝajnas ke vi ne havas la bezonatajn permesojn por aldoni je {ObjectTitle} al {CampaignTitle}'
+    ErrorGeneral: 'Bedaŭrinde okazis eraro.'
+    ErrorItemPermissionDenied: 'Ŝajnas ke vi ne havas la bezonatajn permesojn por aldoni je {ObjectTitle} al kampanjo'
+    ErrorNotFound: 'Ne eblis trovi tiun {Type}'
+    Success: 'Sukcesis aldoni je {ObjectTitle} al {CampaignTitle}'
   AssetAdmin:
     ALLOWEDEXTS: 'Permesitaj alŝutaj dosieraj sufiksoj'
     HIDEALLOWEDEXTS: 'Kaŝi permesitajn sufiksojn'
@@ -68,6 +74,8 @@ eo:
     ANY: Ajna
     NOANSWER: 'Ne'
     YESANSWER: 'Jes'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Aldoni al kampanjo'
   CMSLoadingScreen_ss:
     LOADING: Ŝargas...
     REQUIREJS: 'La CMS bezonas ke vi enŝaltis Ĝavaskripton.'
@@ -94,12 +102,34 @@ eo:
     SUCCESSCONTENT: '<p>Ensaluto suksesis. Se vi ne aŭtomate alidirektiĝos, <a target="_top" href="{link}">alklaku ĉi tie</a></p>'
     TimedOutTitleAnonymous: 'Via seanco eltempiĝis.'
     TimedOutTitleMember: 'He, {name}!<br />Via seanco eltempiĝis.'
+  CampaignAdmin:
+    MENUTITLE: Kampanjoj
+  Campaigns:
+    AddToCampaign: 'Aldoni al kampanjo'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'La pasvorto por la konto kun retadreso {email} estas ŝanĝita. Se vi ne ŝanĝis vian pasvorton, bonvolu ŝanĝi ĝin per la jena ligilo'
     CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
     CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
+    CHANGEPASSWORDTEXT3: 'Ŝangi pasvorton'
     EMAIL: Retpoŝto
     HELLO: Saluton
     PASSWORD: Pasvorto
+  ChangeSet:
+    DESCRIPTION_AND: '{first} kaj {second}'
+    DESCRIPTION_ITEM: elemento
+    DESCRIPTION_ITEMS: elementoj
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, kaj {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'alia elemento'
+    DESCRIPTION_OTHER_ITEMS: 'aliaj elementoj'
+    NAME: Nomo
+    PLURALNAME: Kampanjoj
+    SINGULARNAME: Kampanjo
+    STATE: Stato
+  ChangeSetItem:
+    PLURALNAME: 'Ŝanĝi agorditajn elementojn'
+    SINGULARNAME: 'Ŝanĝi agorditan elementon'
   CheckboxField:
     NOANSWER: 'Ne'
     YESANSWER: 'Jes'
@@ -110,6 +140,9 @@ eo:
   ConfirmedPasswordField:
     ATLEAST: 'Pasvorto devas esti almenaŭ {min} signojn longa.'
     BETWEEN: 'Pasvorto devas esti inter {min} kaj {max} signojn longa.'
+    CURRENT_PASSWORD_ERROR: 'Malpravas la pasvorto enigita de vi.'
+    CURRENT_PASSWORD_MISSING: 'Vi devas enigi vian aktualan pasvorton.'
+    LOGGED_IN_ERROR: 'Vi devas ensaluti por ŝanĝi vian pasvorton.'
     MAXIMUM: 'Pasvorto devas esti ne pli ol {min} signojn longa.'
     SHOWONCLICKTITLE: 'Ŝangi Pasvorton'
   ContentController:
@@ -177,15 +210,12 @@ eo:
     JsType: 'Ĝavaskripta dosiero'
     Mp3Type: 'MP3-sondosiero'
     MpgType: 'AVI-videa dosiero'
-    NOFILESIZE: 'Dosiero havas nul bajtojn'
     NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
     Name: Nomo
     PLURALNAME: Dosieroj
     PdfType: 'Dosiero de Adobe Acrobat PDF'
     PngType: 'PNG-bildo - ĝeneralcela formato'
     SINGULARNAME: Dosiero
-    TOOLARGE: 'Dosiero estas tro granda; maksimumo estas {size}'
-    TOOLARGESHORT: 'Grando de dosiero superas je {size}'
     TiffType: 'Markita bildoformato'
     Title: Titolo
     WavType: 'WAV-sondosiero'
@@ -273,6 +303,53 @@ eo:
     ResultCreated: 'Kreiĝis {count} grupoj'
     ResultDeleted: 'Forigis %d grupojn'
     ResultUpdated: 'Aktualigis %d grupojn'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'Vi ne rajtas aliri la enhavon de la cela paĝo.'
+    ANCHORSPAGENOTFOUND: 'Ne trovis la celan paĝon.'
+    ANCHORVALUE: Ankri
+    BUTTONADDURL: 'Aldoni je url'
+    CAPTIONTEXT: 'Teksto de apudskribo'
+    CSSCLASS: 'Ĝisrandigo / stilo'
+    CSSCLASSCENTER: 'Centrita, sola.'
+    CSSCLASSLEFT: 'Maldekstre, kaj teksto ĉirkaŭfluas.'
+    CSSCLASSLEFTALONE: 'Maldekstre sola.'
+    CSSCLASSRIGHT: 'Dekstre, kaj teksto ĉirkaŭfluas.'
+    DETAILS: Detaloj
+    EMAIL: 'Retpoŝta adreso'
+    FILE: Dosiero
+    FOLDER: Dosierujo
+    IMAGEALT: 'Alternativa teksto (alt)'
+    IMAGEALTTEXT: 'Alternativa teksto (alt) - vidiĝas se ne eblas vidigi bildon'
+    IMAGEALTTEXTDESC: 'Vidigita al ekranlegiloj aŭ se ne eblas vidigi bildon'
+    IMAGEDIMENSIONS: Dimensioj
+    IMAGEHEIGHTPX: Alto
+    IMAGETITLE: 'Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo'
+    IMAGETITLETEXT: 'Teksto de titolo (ŝpruchelpilo)'
+    IMAGETITLETEXTDESC: 'Por plua informo pri la bildo'
+    IMAGEWIDTHPX: Larĝo
+    INSERTMEDIA: 'Enigi registraĵojn el'
+    LINK: 'Almeti ligilon'
+    LINKANCHOR: 'Ankri al ĉi tiu paĝo'
+    LINKDESCR: 'Ligila priskribo'
+    LINKEMAIL: 'Retpoŝta adreso'
+    LINKEXTERNAL: 'Alia retejo'
+    LINKFILE: 'Elŝuti dosieron'
+    LINKINTERNAL: 'Paĝo en la retejo'
+    LINKOPENNEWWIN: 'Ĉu malfermi ligilon en nova fenestro?'
+    LINKTO: 'Ligilo al'
+    PAGE: Paĝo
+    SUBJECT: 'Temo de retpoŝto'
+    URL: URL
+    URLDESCRIPTION: 'Enigu videojn kaj bildojn el la TTT en vian paĝon simple enigante la URL de la dosiero. Certigu ke vi havas permesojn antaŭ ol kunhavigi registraĵojn rekte el la TTT.<br /><br />Bonvolu noti ke dosieroj ne aldoniĝas al la konservejo de dosieroj de la CMS sed dosieroj enkorpiĝas el ties origina loko. Se ial la dosiero ne plu haveblas en ĝia origina loko, ĝi ne plu estos videbla en ĉi tiu paĝo.'
+    URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ne estas konvertebla al registraĵo.'
+    UpdateMEDIA: 'Ĝisdatigi registraĵon'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Eblas enkorpigi nur absolutajn URL-ojn'
+    ERROR_HOSTNAME: 'Ĉi tiu nomo de gastiga komputilo ne troviĝas en la blanka listo'
+    ERROR_ID: 'Bezoniĝas parametro aŭ "ID" aŭ "FileURL" por identigi la dosieron'
+    ERROR_NOTFOUND: 'Ne eblas trovi vidigotan dosieron'
+    ERROR_OEMBED_REMOTE: 'Oembed kongruas nur kun foraj dosieroj'
+    ERROR_SCHEME: 'Ĉi tiu dosiera skemo ne troviĝas en la blanka listo'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Senfina iteracio troviĝis en la "{type}"-hierarkio. Bonvole ŝanĝu la patron por solvi tion.'
   HtmlEditorField:
@@ -332,6 +409,7 @@ eo:
   Image_iframe_ss:
     TITLE: 'Iframe por alŝuti bildon'
   LeftAndMain:
+    CANCEL: Rezigni
     CANT_REORGANISE: 'Vi ne rajtas ŝanĝi supronivelajn paĝojn. Via ŝanĝo ne konserviĝis.'
     DELETED: Forigita.
     HELP: Helpo
@@ -365,9 +443,11 @@ eo:
     CANTEDIT: 'Vi ne rajtas fari tion'
     CONFIRMNEWPASSWORD: 'Konfirmu novan pasvorton'
     CONFIRMPASSWORD: 'Konfirmu pasvorton'
+    CURRENT_PASSWORD: 'Aktuala pasvorto'
     DATEFORMAT: 'Formato de dato'
     DefaultAdminFirstname: 'Defaŭlta Administranto'
     DefaultDateTime: apriora
+    EDIT_PASSWORD: 'Nova pasvorto'
     EMAIL: Retpoŝto
     EMPTYNEWPASSWORD: 'La nova pasvorto ne povas esti nula, bonvole refaru'
     ENTEREMAIL: 'Bonvolu enigi retadreson por atingi ligilon por reagordi pasvorton.'
@@ -378,19 +458,19 @@ eo:
     FIRSTNAME: 'Antaŭnomo'
     INTERFACELANG: 'Interfaca Lingvo'
     INVALIDNEWPASSWORD: 'Ni ne povis akcepti tiun pasvorton: {password}'
+    KEEPMESIGNEDIN: 'Konservi mian ensaluton'
     LOGGEDINAS: 'Vi ensalutis kiel {name}.'
     NEWPASSWORD: 'Novan pasvorton'
     NoPassword: 'Mankas pasvorto por ĉi tiu membro.'
     PASSWORD: Pasvorto
     PASSWORDEXPIRED: 'Via pasvorto finiĝis. Bonvolu elekti novan.'
     PLURALNAME: Membroj
-    REMEMBERME: 'Memoru min je la sekva fojo?'
+    REMEMBERME: 'Ĉu memoru min je la sekva fojo?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: Familia nomo
     TIMEFORMAT: 'Formato de horo'
-    VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama %s'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'
@@ -460,6 +540,8 @@ eo:
   MoneyField:
     FIELDLABELAMOUNT: Kvanto
     FIELDLABELCURRENCY: Kurzo
+  MultiSelectField:
+    SOURCE_VALIDATION: 'Bonvolu elekti valorojn el la listo donita. {value} ne estas valida agordo'
   NullableField:
     IsNullLabel: 'Estas senvalora'
   NumericField:
@@ -497,6 +579,9 @@ eo:
     UserPermissionsIntro: 'Atribui grupojn al la uzanto modifos iliajn permesojn. Vidu la grupan sekcion por detaloj de permesoj pri unuopa grupo.'
   PhoneNumberField:
     VALIDATION: 'Bonvolu enigi validan telefonnumeron'
+  RememberLoginHash:
+    PLURALNAME: 'Memori ensalutajn haketaĵojn'
+    SINGULARNAME: 'Memori ensalutan haketaĵon'
   Security:
     ALREADYLOGGEDIN: 'Vi ne rajtas aliri ĉi tiun paĝon. Se vi havas alian konton kiu rajtas aliri tiun paĝon, vi povas ensaluti denove.'
     BUTTONSEND: 'Sendu al mi la ligilon reagordi pasvorton'
@@ -592,3 +677,14 @@ eo:
     UPLOADSINTO: 'konservas en /{path}'
   Versioned:
     has_many_Versions: Versioj
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Arkivo
+    Archived: 'Enarkivigis %s %s'
+    BUTTONARCHIVEDESC: 'Malpublikigi kaj sendi al arkivo'
+    BUTTONPUBLISH: Publikigi
+    BUTTONUNPUBLISH: Malpublikigi
+    BUTTONUNPUBLISHDESC: 'Forigi ĉi tiun paĝon de la publikigita retejo'
+    Published: 'Publikigita {name} {link}'
+    Unpublished: 'Malpublikigita %s %s'
+  i18n:
+    PLURAL: '{number} {form}'

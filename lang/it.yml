@@ -1,5 +1,12 @@
 it:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'Sembra tu non abbia i permessi necessari per aggiungere {ObjectTitle} a {CampaignTitle}'
+    ErrorGeneral: 'Spiacente, ma c''è stato un errore'
+    ErrorItemPermissionDenied: 'Sembra tu non abbia i permessi necessari per aggiungere {ObjectTitle} alla campagna'
+    ErrorNotFound: 'Non è stato possibile trovare {Type}'
+    Success: '{ObjectTitle} aggiunto a {CampaignTitle} con successo'
   AssetAdmin:
+    ALLOWEDEXTS: 'Estensioni consentite per l''upload'
     HIDEALLOWEDEXTS: 'Nascondi estensioni permesse'
     NEWFOLDER: NuovaCartella
     SHOWALLOWEDEXTS: 'Mostra le estensioni consentite'
@@ -29,7 +36,7 @@ it:
     INSERTURL: 'Inserisci da URL'
     REMOVEINFO: 'Rimuovi questo file da questo campo'
     TOTAL: Totale
-    TOUPLOAD: 'Scegli file da caricare...'
+    TOUPLOAD: 'Scegli i file da caricare...'
     UPLOADINPROGRESS: 'Attendere prego... caricamento in corso'
     UPLOADOR: O
   BBCodeParser:
@@ -67,6 +74,8 @@ it:
     ANY: Qualsiasi
     NOANSWER: 'No'
     YESANSWER: 'Sì'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Aggiungere alla campagna'
   CMSLoadingScreen_ss:
     LOADING: Caricamento in corso...
     REQUIREJS: 'Il CMS richiede JavaScript abilitato.'
@@ -93,12 +102,34 @@ it:
     SUCCESSCONTENT: '<p>Accesso eseguito. Se non sarai ridirezionato automaticamente, <a target="_top" href="{link}">cliccare qui</a></p>'
     TimedOutTitleAnonymous: 'La tua sessione è scaduta.'
     TimedOutTitleMember: 'Ciao {name}!<br />La tua sessione è scaduta.'
+  CampaignAdmin:
+    MENUTITLE: Campagne
+  Campaigns:
+    AddToCampaign: 'Aggiungere Alla Campagna'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'La password per l''account con l''email {email} è cambiata. Se non l\''hai ancora fatto, prego cambiare la password usando il link sottostante'
     CHANGEPASSWORDTEXT1: 'Hai cambiato la password per'
     CHANGEPASSWORDTEXT2: 'Ora puoi utilizzare le seguenti credenziali per accedere:'
+    CHANGEPASSWORDTEXT3: 'Cambia password'
     EMAIL: Email
     HELLO: Ciao
     PASSWORD: Password
+  ChangeSet:
+    DESCRIPTION_AND: '{first} e {second}'
+    DESCRIPTION_ITEM: elemento
+    DESCRIPTION_ITEMS: elementi
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, e {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'altro elemento'
+    DESCRIPTION_OTHER_ITEMS: 'altri elementi'
+    NAME: Nome
+    PLURALNAME: Campagne
+    SINGULARNAME: Campagna
+    STATE: Stato
+  ChangeSetItem:
+    PLURALNAME: 'Cambiare gli elementi del set'
+    SINGULARNAME: 'Cambiare l''elemento del set'
   CheckboxField:
     NOANSWER: 'No'
     YESANSWER: 'Sì'
@@ -109,6 +140,9 @@ it:
   ConfirmedPasswordField:
     ATLEAST: 'La password deve essere lunga almeno {min} caratteri.'
     BETWEEN: 'La password deve essere lunga da {min} a {max} caratteri.'
+    CURRENT_PASSWORD_ERROR: 'La password che hai inserito non è corretta.'
+    CURRENT_PASSWORD_MISSING: 'Devi inserire la tua password attuale.'
+    LOGGED_IN_ERROR: 'Devi essere autenticato per poter cambiare la tua password.'
     MAXIMUM: 'La password deve essere lunga almeno {max} caratteri.'
     SHOWONCLICKTITLE: 'Cambia password'
   ContentController:
@@ -152,7 +186,7 @@ it:
     INVALID_REQUEST: 'Richiesta non valida'
   DropdownField:
     CHOOSE: (Scegli)
-    CHOOSESEARCH: '(Scegli o Cerca)'
+    CHOOSESEARCH: '(Scegliere o Cercare)'
     SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. {value} non è un''opzione valida'
   EmailField:
     VALIDATION: 'Inserisci un indirizzo e-mail'
@@ -176,15 +210,12 @@ it:
     JsType: 'File Javascript'
     Mp3Type: 'File audio MP3'
     MpgType: 'File video MPEG'
-    NOFILESIZE: 'La dimensione del file è zero byte.'
     NOVALIDUPLOAD: 'Il file caricato non è valido'
     Name: Nome
     PLURALNAME: File
     PdfType: 'File Adobe Acrobat PDF'
     PngType: 'Immagine PNG - consigliata per utilizzo generico'
     SINGULARNAME: File
-    TOOLARGE: 'La dimensione del file è troppo grande, massimo consentito {size}'
-    TOOLARGESHORT: 'La dimensione del file eccede {size}'
     TiffType: 'Immagine TIFF'
     Title: Titolo
     WavType: 'File audio WAV'
@@ -268,9 +299,73 @@ it:
     many_many_Members: Membri
   GroupImportForm:
     Help1: '<p>Importa gruppi in formato <em>CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
+    Help2: '<div class="advanced">
+
+      <h4>Utilizzo avanzato</h4>
+
+      <ul>
+
+      <li>Colonne consentite: <em>%s</em></li>
+
+      <li>Gruppi esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>
+
+      <li>Possono essere create gerarchie usando la colonna <em>ParentCode</em></li>
+
+      <li>Codici di autorizzazione possono essere assegnati con la colonna <em>PermissionCode</em>. I codici di autorizzazione preesistenti non saranno cancellati.</li>
+
+      </ul>
+
+      </div>'
     ResultCreated: 'Creati {count} gruppi'
     ResultDeleted: 'Eliminati %d gruppi'
     ResultUpdated: 'Aggiornati %d gruppi'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'Non ti è consentito accedere al contenuto della pagina di destinazione.'
+    ANCHORSPAGENOTFOUND: 'Pagina di destinazione non trovata.'
+    ANCHORVALUE: Ancora
+    BUTTONADDURL: 'Aggiungi url'
+    CAPTIONTEXT: 'Didascalia di testo'
+    CSSCLASS: 'Allineamento / stile'
+    CSSCLASSCENTER: 'Centrato, su se stesso.'
+    CSSCLASSLEFT: 'Sulla sinistra, con il testo attorno.'
+    CSSCLASSLEFTALONE: 'Sulla sinistra, da sola.'
+    CSSCLASSRIGHT: 'Sulla destra, con il testo attorno.'
+    DETAILS: Dettagli
+    EMAIL: 'Indirizzo email'
+    FILE: File
+    FOLDER: Cartella
+    IMAGEALT: 'Testo alternativo (alt)'
+    IMAGEALTTEXT: 'Testo alternativo (alt) - mostrato nel caso l''immagine non possa essere visualizzata'
+    IMAGEALTTEXTDESC: 'Mostrato agli screen reader o se l''immagine non può essere visualizzata'
+    IMAGEDIMENSIONS: Dimensioni
+    IMAGEHEIGHTPX: Altezza
+    IMAGETITLE: 'Titolo (tooltip) - per informazioni aggiuntive sull''immagine.'
+    IMAGETITLETEXT: 'Titolo (tooltip)'
+    IMAGETITLETEXTDESC: 'Per informazioni aggiuntive sull''immagine'
+    IMAGEWIDTHPX: Larghezza
+    INSERTMEDIA: 'Inserisci media da'
+    LINK: 'Inserisci Link'
+    LINKANCHOR: 'Ancora su questa pagina'
+    LINKDESCR: 'Descrizione del link'
+    LINKEMAIL: 'Indirizzo email'
+    LINKEXTERNAL: 'Un altro sito web'
+    LINKFILE: 'Scarica un file'
+    LINKINTERNAL: 'Pagina su questo sito'
+    LINKOPENNEWWIN: 'Apri il link in una nuova finestra?'
+    LINKTO: 'Collega a'
+    PAGE: Pagina
+    SUBJECT: 'Oggetto email'
+    URL: URL
+    URLDESCRIPTION: 'Inserisci video e immagini dal Web nella tua pagina semplicemente inserendo l''URL del file. Si sicuro di avere i diritti o i permessi prima di condividere media direttamente dal Web.<br /><br />NB : i file non sono aggiunti allo storage file del CMS, ma incorpora il file dalla sua location principale, se per un qualsiasi motivo il file non e'' più raggiungibile nella sua location principale, non sara'' più visibile su questa pagina.'
+    URLNOTANOEMBEDRESOURCE: 'L''URL ''{url}'' non può essere convertito in una risorsa media.'
+    UpdateMEDIA: 'Aggiorna media'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Possono essere incorporati solo URL assoluti'
+    ERROR_HOSTNAME: 'L''hostname di questo file non è incluso nella whitelist'
+    ERROR_ID: 'Sono necessari entrambi i parametri "ID" e "FileURL" per identificare il file'
+    ERROR_NOTFOUND: 'Impossibile trovare il file da visualizzare'
+    ERROR_OEMBED_REMOTE: 'Oembed è compatibile solo con file remoti'
+    ERROR_SCHEME: 'Lo schema di questo file non è incluso nella whitelist'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Trovato loop infinito nella gerarchia di "{type}". Cambia il padre per risolvere il problema'
   HtmlEditorField:
@@ -330,6 +425,7 @@ it:
   Image_iframe_ss:
     TITLE: 'Iframe per l''inserimento dell''immagine'
   LeftAndMain:
+    CANCEL: Annulla
     CANT_REORGANISE: 'Non hai i permessi per modificare le pagine di primo livello. Le modifiche non sono state salvate.'
     DELETED: Eliminato.
     HELP: Aiuto
@@ -363,9 +459,11 @@ it:
     CANTEDIT: 'Non hai i permessi per fare questo'
     CONFIRMNEWPASSWORD: 'Conferma nuova password'
     CONFIRMPASSWORD: 'Conferma password'
+    CURRENT_PASSWORD: 'Password Attuale'
     DATEFORMAT: 'Formato della data'
     DefaultAdminFirstname: 'Amministratore Predefinito'
     DefaultDateTime: predefinito
+    EDIT_PASSWORD: 'Nuova password'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'La nuova password non può essere vuota, riprova'
     ENTEREMAIL: 'Inserisci un indirizzo e-mail per ricevere il link di azzeramento della password'
@@ -376,6 +474,7 @@ it:
     FIRSTNAME: 'Nome'
     INTERFACELANG: 'Lingua dell''interfaccia'
     INVALIDNEWPASSWORD: 'Non possiamo accettare questa password: {password}'
+    KEEPMESIGNEDIN: 'Resta autenticato'
     LOGGEDINAS: 'Sei collegato come {name}.'
     NEWPASSWORD: 'Nuova password'
     NoPassword: 'Manca la password per questo utente.'
@@ -388,7 +487,6 @@ it:
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
     SURNAME: Cognome
     TIMEFORMAT: 'Formato dell''ora'
-    VALIDATIONMEMBEREXISTS: 'Esiste già un utente con l''e-mail %s'
     ValidationIdentifierFailed: 'Non posso sovrascrivere l''utente esistente #{id} con identificatore identico ({name} = {value}))'
     WELCOMEBACK: 'Bentornato, {firstname}'
     YOUROLDPASSWORD: 'La tua vecchia password'
@@ -423,6 +521,17 @@ it:
     Toggle: 'Mostra aiuto per la formattazione'
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
+    Help2: '<div class="advanced">
+
+      <h4>Utilizzo avanzato</h4>
+
+      <ul>
+
+      <li>Colonne consentite: <em>%s</em></li>
+
+      <li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>
+
+      <li>Possono essere assegnati gruppi usando la colonna <em>Groups</em>. I gruppi sono identificati dalla proprietà <em>Code</em>, possono essere specificati più gruppi separandoli con la virgola. I gruppi preesistenti non saranno cancellati.</li></ul></div>'
     ResultCreated: 'Creati {count} utenti'
     ResultDeleted: 'Eliminati %d utenti'
     ResultNone: 'Nessun cambiamento'
@@ -457,6 +566,8 @@ it:
   MoneyField:
     FIELDLABELAMOUNT: Importo
     FIELDLABELCURRENCY: Valuta
+  MultiSelectField:
+    SOURCE_VALIDATION: 'Per favore selezionare un valore tra quelli forniti. È stata fornita l''opzione non valida {value}'
   NullableField:
     IsNullLabel: 'è nullo.'
   NumericField:
@@ -494,6 +605,9 @@ it:
     UserPermissionsIntro: 'Assegnando gruppi a questo utente modificherà i suoi permessi. Vedi la sezione gruppi per dettagli sui permessi dei singoli gruppi.'
   PhoneNumberField:
     VALIDATION: 'Per favore inserisci un numero di telefono valido'
+  RememberLoginHash:
+    PLURALNAME: 'Ricordare gli Hash di Login'
+    SINGULARNAME: 'Ricordare l''Hash di Login'
   Security:
     ALREADYLOGGEDIN: 'Non hai accesso a questa pagina. Se hai un altro account che può accederci, puoi autenticarti qui sotto.'
     BUTTONSEND: 'Inviami il link per azzerare la password'
@@ -589,3 +703,14 @@ it:
     UPLOADSINTO: 'salva in /{path}'
   Versioned:
     has_many_Versions: Versioni
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Archiviare
+    Archived: '%s %s archiviata'
+    BUTTONARCHIVEDESC: 'Nascondere e mettere in archivio'
+    BUTTONPUBLISH: Pubblicare
+    BUTTONUNPUBLISH: Nascondere
+    BUTTONUNPUBLISHDESC: 'Rimuovere questo record dal sito pubblicato'
+    Published: 'Pubblicato {name} {link}'
+    Unpublished: 'Nascosto %s %s'
+  i18n:
+    PLURAL: '{number} {form}'
