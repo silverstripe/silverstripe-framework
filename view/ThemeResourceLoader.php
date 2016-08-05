@@ -132,7 +132,7 @@ class ThemeResourceLoader {
 	 * @param string|array $template Template name, or template spec in array format with the keys
 	 * 'type' (type string) and 'templates' (template hierarchy in order of precedence).
 	 * If 'templates' is ommitted then any other item in the array will be treated as the template
-	 * list.
+	 * list, or list of templates each in the array spec given.
 	 * Templates with an .ss extension will be treated as file paths, and will bypass
 	 * theme-coupled resolution.
 	 * @param array $themes List of themes to use to resolve themes. In most cases
@@ -158,11 +158,21 @@ class ThemeResourceLoader {
 		// If we have an .ss extension, this is a path, not a template name. We should
 		// pass in templates without extensions in order for template manifest to find
 		// files dynamically.
-		if(count($templateList) == 1 && substr($templateList[0], -3) == '.ss') {
+		if(count($templateList) == 1 && is_string($templateList[0]) && substr($templateList[0], -3) == '.ss') {
 			return $templateList[0];
 		}
 
 		foreach($templateList as $i => $template) {
+			// Check if passed list of templates in array format
+			if (is_array($template)) {
+				$path = $this->findTemplate($template, $themes);
+				if ($path) {
+					return $path;
+				}
+				continue;
+			}
+
+			// Check string template identifier
 			$template = str_replace('\\', '/', $template);
 			$parts = explode('/', $template);
 

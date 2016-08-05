@@ -880,8 +880,8 @@ class SSViewer implements Flushable {
 			$template = $class . $suffix;
 			if(SSViewer::hasTemplate($template)) {
 				$templates[] = $template;
-			} elseif(SSViewer::hasTemplate('Includes/'.$template)) {
-				$templates[] = 'Includes/'.$template;
+			} elseif(SSViewer::hasTemplate($template = ['type' => 'Includes', $template])) {
+				$templates[] = $template;
 			}
 
 			// If the class is "Page_Controller", look for Page.ss
@@ -1038,7 +1038,7 @@ class SSViewer implements Flushable {
 	 *
 	 * @return string Full system path to a template file
 	 */
-	public static function getTemplateFileByType($identifier, $type) {
+	public static function getTemplateFileByType($identifier, $type = null) {
 		return ThemeResourceLoader::instance()->findTemplate(['type' => $type, $identifier], self::get_themes());
 	}
 
