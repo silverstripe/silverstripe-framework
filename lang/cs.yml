@@ -210,15 +210,12 @@ cs:
     JsType: 'Javascript soubor'
     Mp3Type: 'MP3 audio soubor'
     MpgType: 'MPEG video soubor'
-    NOFILESIZE: 'Velikost souboru je 0 bajtů.'
     NOVALIDUPLOAD: 'Soubor není validní pro nahrání'
     Name: Jméno
     PLURALNAME: Soubory
     PdfType: 'Adobe Acrobat PDF soubor'
     PngType: 'PNG obrázek - vhodný jako univerzálmí formát'
     SINGULARNAME: Soubor
-    TOOLARGE: 'Velikost souboru je příliš velká, povolené maximum {size}'
-    TOOLARGESHORT: 'Velikost souboru překračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Titulek
     WavType: 'WAV audo soubor'
@@ -381,8 +378,6 @@ cs:
     FROMWEB: 'Z webu'
     FindInFolder: 'Hledat ve složce'
     IMAGEALT: 'Alternativní text (alt)'
-    IMAGEALTTEXT: 'Alternativní text (alt) - bude ukázán, když obrázek nemúže být zobrazen'
-    IMAGEALTTEXTDESC: 'Zobrazeno na obrazovce, když obrázek nemůže být zobrazen'
     IMAGEDIMENSIONS: Rozměry
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Titul text (tooltip) - další informace o obrázku'
@@ -417,13 +412,10 @@ cs:
     CANCEL: Storno
     CANT_REORGANISE: 'Nemáte oprávnění měnit stránky nejvyšší úrovně. Vaše změna nebyla uložena.'
     DELETED: Smazáno.
-    DropdownBatchActionsDefault: 'Vyberte akci...'
     HELP: Nápověda
-    PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
     PERMALREADY: 'Omlouvám se, ale nemůžete vstoupit do této části CMS. Pokud se chcete přihlásit jako někdo jiný, udělejte tak níže.'
     PERMDEFAULT: 'Musíte být přihlášen/a k přístup do oblasti administrace, níže zadejte vaše přihlašovací údaje, prosím.'
-    PLEASESAVE: 'Prosím uložte stránku: Tato stránka nemohla být aktualizována, protože ještě nebyla uložena.'
     PreviewButton: Náhled
     REORGANISATIONSUCCESSFUL: 'Strom webu reorganizován úspěšně.'
     SAVEDUP: Uloženo.
@@ -479,7 +471,6 @@ cs:
     SUBJECTPASSWORDRESET: 'Nulovací odkaz pro Vaše heslo'
     SURNAME: Příjmení
     TIMEFORMAT: 'Formát času'
-    VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejným {identifier}'
     ValidationIdentifierFailed: 'Nemůžete přepsat existujícího člena #{id} s identickým identifikátorem ({name} = {value}))'
     WELCOMEBACK: 'Vítejte zpět, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'

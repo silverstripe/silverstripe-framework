@@ -407,6 +407,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			}
 		}
 
+		// this pushes the current page ID in as a hidden field
+		// this means the request will have the current page ID in it
+		// rather than relying on session which can have been rewritten
+		// by the user having another tab open
+		// see LeftAndMain::currentPageID
+		if($this->controller->hasMethod('currentPageID') && $this->controller->currentPageID()) {
+			$fields->push(new HiddenField('CMSMainCurrentPageID', null, $this->controller->currentPageID()));
+		}
 		// Caution: API violation. Form expects a Controller, but we are giving it a RequestHandler instead.
 		// Thanks to this however, we are able to nest GridFields, and also access the initial Controller by
 		// dereferencing GridFieldDetailForm_ItemRequest->getController() multiple times. See getToplevelController
@@ -598,6 +606,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 	public function doDelete($data, $form) {
 		$title = $this->record->Title;
+		$backLink = $this->getBacklink();
 		try {
 			if (!$this->record->canDelete()) {
 				throw new ValidationException(
@@ -628,7 +637,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$controller = $this->getToplevelController();
 		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
 
-		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
+		return $controller->redirect($backLink, 302); //redirect back to admin section
 	}
 
 	/**

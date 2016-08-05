@@ -911,6 +911,7 @@ class Config_ForClass {
 
 	/**
 	 * @param string $name
+	 * @return mixed
 	 */
 	public function __get($name) {
 		return Config::inst()->get($this->class, $name);
@@ -922,6 +923,16 @@ class Config_ForClass {
 	 */
 	public function __set($name, $val) {
 		return Config::inst()->update($this->class, $name, $val);
+	}
+
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function __isset($name)
+	{
+		$val = $this->__get($name);
+		return isset($val);
 	}
 
 	/**

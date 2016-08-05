@@ -5,14 +5,14 @@ hr:
   AssetTableField:
     CREATED: 'Uploadano'
     DIM: Dimenzije
-    FILENAME: Ime datoteke
-    FOLDER: Mapa
+    FILENAME: Naziv datoteke
+    FOLDER: Direktorij
     LASTEDIT: 'Zadnja promjena'
     OWNER: Vlasnik
-    SIZE: 'Veličina'
+    SIZE: 'Veličina datoteke'
     TITLE: Naslov
-    TYPE: 'Tip'
-    URL: URL
+    TYPE: 'Tip datoteke'
+    URL: Link
   AssetUploadField:
     ChooseFiles: 'Odaberite datoteke'
     DRAGFILESHERE: 'Povucite datoteke ovdje'
