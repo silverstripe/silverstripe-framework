@@ -39,12 +39,21 @@ abstract class SelectField extends FormField {
 		parent::__construct($name, $title, $value);
 	}
 
-	public function getSchemaStateDefaults() {
-		$data = parent::getSchemaStateDefaults();
+	public function getSchemaDataDefaults() {
+		$data = parent::getSchemaDataDefaults();
 
 		// Add options to 'data'
-		$data['data']['source'] = $this->getSource();
+		$source = $this->getSource();
+		$data['source'] = (is_array($source))
+			? array_map(function ($value, $title) {
+				return [
+					'value' => $value,
+					'title' => $title,
+				];
+			}, array_keys($source), $source)
+			: [];
 		$data['data']['disabled'] = $this->getDisabledItems();
+
 		return $data;
 	}
 

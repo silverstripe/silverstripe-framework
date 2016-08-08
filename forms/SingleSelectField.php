@@ -29,9 +29,26 @@ abstract class SingleSelectField extends SelectField {
 		$data = parent::getSchemaStateDefaults();
 
 		// Add options to 'data'
-		$data['data']['has_empty_default'] = $this->getHasEmptyDefault();
-		$data['data']['empty_string'] = $this->getHasEmptyDefault() ? $this->getEmptyString() : null;
+		$data['data']['hasEmptyDefault'] = $this->getHasEmptyDefault();
+		$data['data']['emptyString'] = $this->getHasEmptyDefault() ? $this->getEmptyString() : null;
+
+		$data['value'] = $this->getDefaultValue();
+
 		return $data;
+	}
+
+	public function getDefaultValue() {
+		$value = $this->Value();
+		// assign value to field, such as first option available
+		if ($value === null) {
+			if ($this->getHasEmptyDefault()) {
+				$value = '';
+			} else {
+				$values = $this->getValidValues();
+				$value = array_shift($values);
+			}
+		}
+		return $value;
 	}
 
 	/**
