@@ -12,6 +12,7 @@ import RecordsReducer from 'state/records/RecordsReducer';
 import CampaignReducer from 'state/campaign/CampaignReducer';
 import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
 import TextField from 'components/TextField/TextField';
+import SingleSelectField from 'components/SingleSelectField/SingleSelectField';
 import HiddenField from 'components/HiddenField/HiddenField';
 import GridField from 'components/GridField/GridField';
 import FormAction from 'components/FormAction/FormAction';
@@ -37,6 +38,7 @@ function appBoot() {
   injector.register('TextField', TextField);
   injector.register('HiddenField', HiddenField);
   injector.register('GridField', GridField);
+  injector.register('SingleSelectField', SingleSelectField);
   injector.register('PopoverField', PopoverField);
   injector.register('HeaderField', HeaderField);
   injector.register('LiteralField', LiteralField);

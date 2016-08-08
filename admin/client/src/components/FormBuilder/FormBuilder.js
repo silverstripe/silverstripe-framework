@@ -205,9 +205,13 @@ export class FormBuilderComponent extends SilverStripeComponent {
   handleSubmit(event) {
     const schemaFields = this.props.schemas[this.props.schemaUrl].schema.fields;
     const fieldValues = this.props.form[this.getFormId()].fields
-      .reduce((prev, curr) => Object.assign({}, prev, {
-        [schemaFields.find(schemaField => schemaField.id === curr.id).name]: curr.value,
-      }), {});
+      .reduce((prev, curr) => {
+        const fieldName = schemaFields.find(schemaField => schemaField.id === curr.id).name;
+
+        return Object.assign({}, prev, {
+          [fieldName]: curr.value,
+        });
+      }, {});
 
     const submitFn = () => this.props.formActions.submitForm(
       this.submitApi,

@@ -16,6 +16,7 @@ function formReducer(state = initialState, action) {
 
     case ACTION_TYPES.SUBMIT_FORM_REQUEST:
       return deepFreeze(updateForm(action.payload.formId, {
+        error: false,
         submitting: true,
       }));
 
@@ -33,6 +34,7 @@ function formReducer(state = initialState, action) {
       return deepFreeze(Object.assign({}, state, {
         [action.payload.formState.id]: {
           fields: action.payload.formState.fields,
+          error: false,
           submitting: false,
         },
       }));
@@ -50,12 +52,15 @@ function formReducer(state = initialState, action) {
     case ACTION_TYPES.SUBMIT_FORM_SUCCESS:
       return deepFreeze(updateForm(action.payload.response.id, {
         fields: action.payload.response.state.fields,
+        error: false,
         messages: action.payload.response.state.messages,
         submitting: false,
       }));
 
     case ACTION_TYPES.SUBMIT_FORM_FAILURE:
       return deepFreeze(updateForm(action.payload.formId, {
+        error: true,
+        messages: action.payload.error,
         submitting: false,
       }));
 

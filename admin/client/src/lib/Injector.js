@@ -32,6 +32,8 @@ class Injector {
         return this.components.TextField;
       case 'Hidden':
         return this.components.HiddenField;
+      case 'SingleSelect':
+        return this.components.SingleSelectField;
       case 'Custom':
         return this.components.GridField;
       default:

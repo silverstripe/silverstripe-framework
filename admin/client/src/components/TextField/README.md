@@ -16,7 +16,7 @@ Addition CSS classes to apply to the `<input>` element.
 
 Used for the field's `name` attribute.
 
-### handleFieldUpdate
+### onChange
 
 Handler function called when the field's value changes.
 

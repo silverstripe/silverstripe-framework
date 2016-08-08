@@ -22,13 +22,18 @@ class TextField extends SilverStripeComponent {
     return field;
   }
 
+  /**
+   * Fetches the properties for the text field
+   *
+   * @returns Object properties
+   */
   getInputProps() {
     // @todo Merge with 'attributes' from formfield schema
     return {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
       className: ['form-control', this.props.extraClass].join(' '),
-      id: `gallery_${this.props.name}`,
+      id: this.props.id,
       name: this.props.name,
       onChange: this.handleChange,
       type: 'text',
@@ -54,6 +59,7 @@ TextField.propTypes = {
   leftTitle: React.PropTypes.string,
   title: React.PropTypes.string,
   extraClass: React.PropTypes.string,
+  id: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func,
   value: React.PropTypes.string,
