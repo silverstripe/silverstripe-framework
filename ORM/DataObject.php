@@ -725,7 +725,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string User friendly translated singular name of this DataObject
 	 */
 	public function i18n_singular_name() {
-		return _t($this->class.'.SINGULARNAME', $this->singular_name());
+		// @todo Update localisation to FQN for all classes
+		$reflection = new \ReflectionClass($this);
+		return _t($reflection->getShortName().'.SINGULARNAME', $this->singular_name());
 	}
 
 	/**
@@ -760,8 +762,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function i18n_plural_name()
 	{
+		// @todo Update localisation to FQN for all classes
 		$name = $this->plural_name();
-		return _t($this->class.'.PLURALNAME', $name);
+		$reflection = new \ReflectionClass($this);
+		return _t($reflection->getShortName().'.PLURALNAME', $name);
 	}
 
 	/**
