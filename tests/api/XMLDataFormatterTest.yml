@@ -1,5 +1,0 @@
-XMLDataFormatterTest_DataObject:
-   test-do:
-      Name: Test DataObject
-      Company: Test Company
-      Content: <a href="http://mysite.com">mysite.com</a> is a link in this HTML content.
