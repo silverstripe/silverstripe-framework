@@ -45,6 +45,18 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		CMSMenu::clear_menu();
 	}
 
+	public function testRemove() {
+		CMSMenu::clear_menu();
+		CMSMenu::add_menu_item('custom', 'Custom Title', 'custom');
+		CMSMenu::add_menu_item('other', 'Other Section', 'other', 'CMSMenuTest_LeftAndMainController');
+		$this->assertNotEmpty(CMSMenu::get_menu_items());
+
+		CMSMenu::remove_menu_class('CMSMenuTest_LeftAndMainController');
+		CMSMenu::remove_menu_item('custom');
+
+		$this->assertEmpty(CMSMenu::get_menu_items());
+	}
+
 	public function testLinkWithExternalAttributes() {
 		CMSMenu::clear_menu();
 
