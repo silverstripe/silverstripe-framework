@@ -75,6 +75,54 @@ class ThemeResourceLoaderTest extends SapphireTest {
 		);
 	}
 
+	public function testFindTemplateByType() {
+		// Test that "type" is respected properly
+		$this->assertEquals(
+			"{$this->base}/module/templates/MyNamespace/Layout/MyClass.ss",
+			$this->loader->findTemplate(
+				[
+					[
+						'type' => 'Layout',
+						'MyNamespace/NonExistantTemplate'
+					],
+					[
+						'type' => 'Layout',
+						'MyNamespace/MyClass'
+					],
+					'MyNamespace/MyClass'
+				],
+				[
+					'silverstripe/module:subtheme',
+					'theme',
+					'$default',
+				]
+			)
+		);
+
+		// Non-typed template can be found even if looking for typed theme at a lower priority
+		$this->assertEquals(
+			"{$this->base}/module/templates/MyNamespace/MyClass.ss",
+			$this->loader->findTemplate(
+				[
+					[
+						'type' => 'Layout',
+						'MyNamespace/NonExistantTemplate'
+					],
+					'MyNamespace/MyClass',
+					[
+						'type' => 'Layout',
+						'MyNamespace/MyClass'
+					]
+				],
+				[
+					'silverstripe/module',
+					'theme',
+					'$default',
+				]
+			)
+		);
+	}
+
 	/**
 	 * Test that 'main' and 'Layout' templates are loaded from set theme
 	 */
