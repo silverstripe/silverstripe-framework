@@ -1705,6 +1705,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$owner->invokeWithExtensions('onBeforeVersionedPublish', $fromStage, $toStage, $createNewVersion);
 
 		$baseClass = $owner->baseClass();
+		$baseTable = $owner->baseTable();
 
 		/** @var Versioned|DataObject $from */
 		if(is_numeric($fromStage)) {
@@ -1712,7 +1713,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		} else {
 			$owner->flushCache();
 			$from = Versioned::get_one_by_stage($baseClass, $fromStage, array(
-				"\"{$baseClass}\".\"ID\" = ?" => $owner->ID
+				"\"{$baseTable}\".\"ID\" = ?" => $owner->ID
 			));
 		}
 		if(!$from) {
@@ -1728,7 +1729,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 			// Mark this version as having been published at some stage
 			$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
-			$extTable = $this->extendWithSuffix($baseClass);
+			$extTable = $this->extendWithSuffix($baseTable);
 			DB::prepared_query("UPDATE \"{$extTable}_versions\"
 				SET \"WasPublished\" = ?, \"PublisherID\" = ?
 				WHERE \"RecordID\" = ? AND \"Version\" = ?",
@@ -1746,9 +1747,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		$conn = DB::get_conn();
 		if(method_exists($conn, 'allowPrimaryKeyEditing')) {
-			$conn->allowPrimaryKeyEditing($baseClass, true);
+			$conn->allowPrimaryKeyEditing($baseTable, true);
 			$from->write();
-			$conn->allowPrimaryKeyEditing($baseClass, false);
+			$conn->allowPrimaryKeyEditing($baseTable, false);
 		} else {
 			$from->write();
 		}

@@ -1,6 +1,5 @@
 <?php
 
-
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
@@ -25,6 +24,7 @@ class VersionedTest extends SapphireTest {
 		'VersionedTest_WithIndexes',
 		'VersionedTest_PublicStage',
 		'VersionedTest_PublicViaExtension',
+		'VersionedTest_CustomTable',
 	);
 
 	protected $requiredExtensions = array(
@@ -108,6 +108,22 @@ class VersionedTest extends SapphireTest {
 			. " WHERE \"RecordID\" = '$obj->ID'")->value();
 
 		$this->assertEquals($count, $count2);
+	}
+
+	public function testCustomTable() {
+		$obj = new VersionedTest_CustomTable();
+		$obj->Title = 'my object';
+		$obj->write();
+		$id = $obj->ID;
+		$obj->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
+		$obj->Title = 'new title';
+		$obj->write();
+
+		$liveRecord = Versioned::get_by_stage('VersionedTest_CustomTable', Versioned::LIVE)->byID($id);
+		$draftRecord = Versioned::get_by_stage('VersionedTest_CustomTable', Versioned::DRAFT)->byID($id);
+
+		$this->assertEquals('my object', $liveRecord->Title);
+		$this->assertEquals('new title', $draftRecord->Title);
 	}
 
 	/**
@@ -1241,4 +1257,19 @@ class VersionedTest_PublicExtension extends DataExtension implements TestOnly {
 	public function canViewNonLive($member = null) {
 		return true;
 	}
+}
+
+/**
+ * @mixin Versioned
+ */
+class VersionedTest_CustomTable extends DataObject implements TestOnly {
+	private static $db = [
+		'Title' => 'Varchar'
+	];
+
+	private static $table_name = 'VTCustomTable';
+
+	private static $extensions = [
+		"SilverStripe\\ORM\\Versioning\\Versioned",
+	];
 }
