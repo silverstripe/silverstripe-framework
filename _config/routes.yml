@@ -32,4 +32,4 @@ After:
 ---
 Director:
   rules:
-    'admin': 'AdminRootController'
+    'admin': 'SilverStripe\Admin\AdminRootController'

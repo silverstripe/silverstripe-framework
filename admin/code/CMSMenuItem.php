@@ -5,6 +5,7 @@ namespace SilverStripe\Admin;
 use SilverStripe\ORM\FieldType\DBField;
 use Object;
 use Convert;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 
 /**
@@ -77,21 +78,26 @@ class CMSMenuItem extends Object {
 	}
 
 	/**
-	 * @param array
-	 *
-	 * @return HTML
+	 * @param array $attrs
+	 * @return DBHTMLText
 	 */
 	public function getAttributesHTML($attrs = null) {
-		$exclude = (is_string($attrs)) ? func_get_args() : null;
+		$excludeKeys = (is_string($attrs)) ? func_get_args() : null;
 
 		if(!$attrs || is_string($attrs)) {
 			$attrs = $this->attributes;
 		}
 
-		// Remove empty
-		$attrs = array_filter((array)$attrs, function($v) {
-			return ($v || $v === 0 || $v === '0');
-		});
+		// Remove empty or excluded values
+		foreach ($attrs as $key => $value) {
+			if (
+				($excludeKeys && in_array($key, $excludeKeys))
+				|| (!$value && $value !== 0 && $value !== '0')
+			) {
+				unset($attrs[$key]);
+				continue;
+			}
+		}
 
 		// Create markkup
 		$parts = array();

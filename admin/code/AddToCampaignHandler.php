@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Admin;
 
-
 use SilverStripe\Framework\Core\Injectable;
-
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
@@ -19,9 +19,7 @@ use LiteralField;
 use Director;
 use SS_HTTPResponse;
 use FormAction;
-
-
-
+use SS_HTTPResponse_Exception;
 
 /**
  * Class AddToCampaignHandler - handle the AddToCampaign action.
@@ -249,20 +247,5 @@ class AddToCampaignHandler {
 		} else {
 			return $this->editForm->getController()->redirectBack();
 		}
-	}
-}
-
-/**
- * A form action to return from geCMSActions or otherwise include in a CMS Edit Form that
- * has the right action name and CSS classes to trigger the AddToCampaignHandler.
- *
- * See SiteTree.php and CMSMain.php for an example of it's use
- */
-class AddToCampaignHandler_FormAction extends FormAction {
-
-	function __construct() {
-		parent::__construct('addtocampaign', _t('CAMPAIGNS.ADDTOCAMPAIGN', 'Add to campaign'));
-		$this->addExtraClass('add-to-campaign-action');
-		$this->setValidationExempt(true);
 	}
 }

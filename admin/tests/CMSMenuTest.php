@@ -1,7 +1,10 @@
 <?php
 
 use SilverStripe\Admin\CMSMenu;
+use SilverStripe\Admin\CMSMenuItem;
 use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\Admin\SecurityAdmin;
+
 /**
  * @package framework
  * @subpackage tests
@@ -68,6 +71,7 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		));
 
 		$menuItems = CMSMenu::get_menu_items();
+		/** @var CMSMenuItem $menuItem */
 		$menuItem = $menuItems['LinkCode'];
 
 		$this->assertEquals('target="_blank"', $menuItem->getAttributesHTML());
@@ -92,13 +96,13 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		// Populate from CMS Classes, check for existance of SecurityAdmin
 		CMSMenu::clear_menu();
 		CMSMenu::populate_menu();
-		$menuItem = CMSMenu::get_menu_item('SilverStripe\\Admin\\SecurityAdmin');
+		$menuItem = CMSMenu::get_menu_item('SilverStripe-Admin-SecurityAdmin');
 		$this->assertInstanceOf('SilverStripe\\Admin\\CMSMenuItem', $menuItem, 'SecurityAdmin menu item exists');
-		$this->assertContains($menuItem->url, singleton('SilverStripe\\Admin\\SecurityAdmin')->Link(), 'Menu item has the correct link');
+		$this->assertContains($menuItem->url, SecurityAdmin::singleton()->Link(), 'Menu item has the correct link');
 		$this->assertEquals($menuItem->controller, 'SilverStripe\\Admin\\SecurityAdmin', 'Menu item has the correct controller class');
 		$this->assertEquals(
 			$menuItem->priority,
-			singleton('SilverStripe\\Admin\\SecurityAdmin')->stat('menu_priority'),
+			SecurityAdmin::singleton()->stat('menu_priority'),
 			'Menu item has the correct priority'
 		);
 

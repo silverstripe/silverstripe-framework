@@ -13,7 +13,7 @@ class RequestHandlingTest extends FunctionalTest {
 		// Suppress CMS error page handling
 		'Controller' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
 		'Form' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
-		'LeftAndMain' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
+		'SilverStripe\\Admin\\LeftAndMain' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
 	);
 
 	public function setUp() {

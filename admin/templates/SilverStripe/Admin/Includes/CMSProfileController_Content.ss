@@ -4,7 +4,7 @@
 		<% with $EditForm %>
 			<div class="cms-content-header-info">
 				<% with $Controller %>
-					<% include CMSBreadcrumbs %>
+					<% include SilverStripe\\Admin\\CMSBreadcrumbs %>
 				<% end_with %>
 			</div>
 			<% if $Fields.hasTabset %>

@@ -2,14 +2,12 @@
 
 namespace SilverStripe\Admin;
 
-
 use SilverStripe\ORM\DataModel;
 use Controller;
 use TemplateGlobalProvider;
 use Config;
 use SS_HTTPRequest;
 use Injector;
-
 
 /**
  * @package framework

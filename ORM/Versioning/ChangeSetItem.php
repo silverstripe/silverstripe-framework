@@ -4,9 +4,6 @@ namespace SilverStripe\ORM\Versioning;
 
 use Exception;
 use BadMethodCallException;
-
-
-
 use Controller;
 use SilverStripe\Filesystem\Thumbnail;
 use SilverStripe\ORM\DataList;

@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Admin;
 
-
 /**
  * @package framework
  * @subpackage admin
@@ -11,6 +10,7 @@ namespace SilverStripe\Admin;
 use SilverStripe\CMS\Controllers\CMSPageEditController;
 use SilverStripe\CMS\Controllers\CMSPagesController;
 use SilverStripe\Forms\Schema\FormSchema;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataModel;
@@ -19,13 +19,11 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\PermissionProvider;
-use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\CMS\Model\VirtualPage;
 use SilverStripe\CMS\Controllers\SilverStripeNavigator;
@@ -178,12 +176,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	];
 
 	/**
-	 * @config
-	 * @var Array Codes which are required from the current user to view this controller.
+	 * Codes which are required from the current user to view this controller.
 	 * If multiple codes are provided, all of them are required.
 	 * All CMS controllers require "CMS_ACCESS_LeftAndMain" as a baseline check,
 	 * and fall back to "CMS_ACCESS_<class>" if no permissions are defined here.
 	 * See {@link canView()} for more details on permission checks.
+	 *
+	 * @config
+	 * @var array
 	 */
 	private static $required_permission_codes;
 
@@ -401,22 +401,45 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// alternative extended checks
 		if($this->hasMethod('alternateAccessCheck')) {
 			$alternateAllowed = $this->alternateAccessCheck();
-			if($alternateAllowed === FALSE) return false;
+			if($alternateAllowed === false) {
+				return false;
+			}
 		}
 
 		// Check for "CMS admin" permission
-		if(Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) return true;
+		if(Permission::checkMember($member, "CMS_ACCESS_LeftAndMain")) {
+			return true;
+		}
 
 		// Check for LeftAndMain sub-class permissions
-		$codes = array();
-		$extraCodes = $this->stat('required_permission_codes');
-		if($extraCodes !== false) { // allow explicit FALSE to disable subclass check
-			if($extraCodes) $codes = array_merge($codes, (array)$extraCodes);
-			else $codes[] = "CMS_ACCESS_$this->class";
+		$codes = $this->getRequiredPermissions();
+		if($codes === false) { // allow explicit FALSE to disable subclass check
+			return true;
 		}
-		foreach($codes as $code) if(!Permission::checkMember($member, $code)) return false;
+		foreach((array)$codes as $code) {
+			if(!Permission::checkMember($member, $code)) {
+				return false;
+			}
+		}
 
 		return true;
+	}
+
+	/**
+	 * Get list of required permissions
+	 *
+	 * @return array|string|bool Code, array of codes, or false if no permission required
+	 */
+	public static function getRequiredPermissions() {
+		$class = get_called_class();
+		$code = Config::inst()->get($class, 'required_permission_codes', Config::FIRST_SET);
+		if ($code === false) {
+			return false;
+		}
+		if ($code) {
+			return $code;
+		}
+		return "CMS_ACCESS_" . $class;
 	}
 
 	/**
@@ -665,6 +688,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * In isolation, that's not a problem - but combined with history.pushState()
 	 * it means we would request the same redirection URL twice if we want to update the URL as well.
 	 * See LeftAndMain.js for the required jQuery ajaxComplete handlers.
+	 *
+	 * @param string $url
+	 * @param int $code
+	 * @return SS_HTTPResponse|string
 	 */
 	public function redirect($url, $code=302) {
 		if($this->getRequest()->isAjax()) {
@@ -689,6 +716,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 	}
 
+	/**
+	 * @param SS_HTTPRequest $request
+	 * @return SS_HTTPResponse
+	 */
 	public function index($request) {
 		return $this->getResponseNegotiator()->respond($request);
 	}
@@ -813,7 +844,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 						return $controller->renderWith($controller->getTemplatesWithSuffix('_Content'));
 					},
 					'Breadcrumbs' => function() use (&$controller) {
-						return $controller->renderWith('Includes/CMSBreadcrumbs');
+						return $controller->renderWith([
+							'type' => 'Includes',
+							'SilverStripe\\Admin\\CMSBreadcrumbs'
+						]);
 					},
 					'default' => function() use(&$controller) {
 						return $controller->renderWith($controller->getViewer('show'));
@@ -893,14 +927,17 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					// the CMS right pane for the specified class as well...
 					if($menuItem->controller) {
 						$menuIcon = LeftAndMain::menu_icon_for_class($menuItem->controller);
-						if (!empty($menuIcon)) $menuIconStyling .= $menuIcon;
+						if (!empty($menuIcon)) {
+							$menuIconStyling .= $menuIcon;
+						}
 					}
 
 					$menu->push(new ArrayData(array(
 						"MenuItem" => $menuItem,
 						"AttributesHTML" => $menuItem->getAttributesHTML(),
 						"Title" => Convert::raw2xml($title),
-						"Code" => DBField::create_field('Text', $code),
+						"Code" => $code,
+						"Icon" => strtolower($code),
 						"Link" => $menuItem->url,
 						"LinkingMode" => $linkingmode
 					)));
@@ -1455,7 +1492,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * The form usually construct itself from {@link DataObject->getCMSFields()}
 	 * for the specific managed subclass defined in {@link LeftAndMain::$tree_class}.
 	 *
-	 * @param HTTPRequest $request Optionally contains an identifier for the
+	 * @param SS_HTTPRequest $request Optionally contains an identifier for the
 	 *  record to load into the form.
 	 * @return Form Should return a form regardless wether a record has been found.
 	 *  Form might be readonly if the current user doesn't have the permission to edit
@@ -1522,7 +1559,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			} else {
 				$actions = $record->getCMSActions();
 				// add default actions if none are defined
-				if(!$actions || !$actions->Count()) {
+				if(!$actions || !$actions->count()) {
 					if($record->hasMethod('canEdit') && $record->canEdit()) {
 						$actions->push(
 							FormAction::create('save',_t('CMSMain.SAVE','Save'))
@@ -1540,7 +1577,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 			// Use <button> to allow full jQuery UI styling
 			$actionsFlattened = $actions->dataFields();
-			if($actionsFlattened) foreach($actionsFlattened as $action) $action->setUseButtonTag(true);
+			if($actionsFlattened) {
+				/** @var FormAction $action */
+				foreach($actionsFlattened as $action) {
+					$action->setUseButtonTag(true);
+				}
+			}
 
 			$negotiator = $this->getResponseNegotiator();
 			$form = Form::create(
@@ -1565,7 +1607,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			});
 
 			// Announce the capability so the frontend can decide whether to allow preview or not.
-			if(in_array('SilverStripe\\Admin\\CMSPreviewable', class_implements($record))) {
+			if ($record instanceof CMSPreviewable) {
 				$form->addExtraClass('cms-previewable');
 			}
 
@@ -1747,11 +1789,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	/**
 	 * Used for preview controls, mainly links which switch between different states of the page.
 	 *
-	 * @return ArrayData
+	 * @return DBHTMLText
 	 */
 	public function getSilverStripeNavigator() {
 		$page = $this->currentPage();
-		if($page) {
+		if ($page instanceof CMSPreviewable) {
 			$navigator = new SilverStripeNavigator($page);
 			return $navigator->renderWith($this->getTemplatesWithSuffix('_SilverStripeNavigator'));
 		}
@@ -1807,7 +1849,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Compares a given record to the currently selected one (if any).
 	 * Used for marking the current tree node.
 	 *
-	 * @return boolean
+	 * @param DataObject $record
+	 * @return bool
 	 */
 	public function isCurrentPage(DataObject $record) {
 		return ($record->ID == $this->currentPageID());
@@ -1928,18 +1971,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	private static $application_link = '//www.silverstripe.org/';
 
 	/**
-	 * Sets the href for the anchor on the Silverstripe logo in the menu
-	 *
-	 * @deprecated since version 4.0
-	 *
-	 * @param String $link
-	 */
-	public static function set_application_link($link) {
-		Deprecation::notice('4.0', 'Use the "LeftAndMain.application_link" config setting instead');
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'application_link', $link);
-	}
-
-	/**
 	 * @return String
 	 */
 	public function ApplicationLink() {
@@ -1954,15 +1985,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @var String
 	 */
 	private static $application_name = 'SilverStripe';
-
-	/**
-	 * @param String $name
-	 * @deprecated since version 4.0
-	 */
-	public static function setApplicationName($name) {
-		Deprecation::notice('4.0', 'Use the "LeftAndMain.application_name" config setting instead');
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'application_name', $name);
-	}
 
 	/**
 	 * Get the application name.
@@ -2032,11 +2054,26 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Add any custom ModelAdmin subclasses. Can't put this on ModelAdmin itself
 		// since its marked abstract, and needs to be singleton instanciated.
 		foreach(ClassInfo::subclassesFor('SilverStripe\\Admin\\ModelAdmin') as $i => $class) {
-			if($class == 'SilverStripe\\Admin\\ModelAdmin') continue;
-			if(ClassInfo::classImplements($class, 'TestOnly')) continue;
+			if ($class == 'SilverStripe\\Admin\\ModelAdmin') {
+				continue;
+			}
+			if (ClassInfo::classImplements($class, 'TestOnly')) {
+				continue;
+			}
 
+			// Check if modeladmin has explicit required_permission_codes option.
+			// If a modeladmin is namespaced you can apply this config to override
+			// the default permission generation based on fully qualified class name.
+			$code = $this->getRequiredPermissions();
+			if (!$code) {
+				continue;
+			}
+			// Get first permission if multiple specified
+			if (is_array($code)) {
+				$code = reset($code);
+			}
 			$title = LeftAndMain::menu_title($class);
-			$perms["CMS_ACCESS_" . $class] = array(
+			$perms[$code] = array(
 				'name' => _t(
 					'CMSMain.ACCESS',
 					"Access to '{title}' section",
@@ -2050,318 +2087,4 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		return $perms;
 	}
 
-	/**
-	 * Register the given javascript file as required in the CMS.
-	 * Filenames should be relative to the base, eg, FRAMEWORK_DIR . '/client/dist/js/loader.js'
-	 *
-	 * @deprecated since version 4.0
-	 */
-	public static function require_javascript($file) {
-		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_javascript" config setting instead');
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_javascript', array($file => array()));
-	}
-
-	/**
-	 * Register the given stylesheet file as required.
-	 * @deprecated since version 4.0
-	 *
-	 * @param $file String Filenames should be relative to the base, eg, THIRDPARTY_DIR . '/tree/tree.css'
-	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector")
-	 * @see http://www.w3.org/TR/REC-CSS2/media.html
-	 */
-	public static function require_css($file, $media = null) {
-		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_css" config setting instead');
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_css', array($file => array('media' => $media)));
-	}
-
-	/**
-	 * Register the given "themeable stylesheet" as required.
-	 * Themeable stylesheets have globally unique names, just like templates and PHP files.
-	 * Because of this, they can be replaced by similarly named CSS files in the theme directory.
-	 *
-	 * @deprecated since version 4.0
-	 *
-	 * @param $name String The identifier of the file.  For example, css/MyFile.css would have the identifier "MyFile"
-	 * @param $media String Comma-separated list of media-types (e.g. "screen,projector")
-	 */
-	public static function require_themed_css($name, $media = null) {
-		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_themedCss" config setting instead');
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_themedCss', array($name => array('media' => $media)));
-	}
-
-}
-
-/**
- * @package cms
- * @subpackage core
- */
-class LeftAndMainMarkingFilter {
-
-	/**
-	 * @var array Request params (unsanitized)
-	 */
-	protected $params = array();
-
-	/**
-	 * @param array $params Request params (unsanitized)
-	 */
-	public function __construct($params = null) {
-		$this->ids = array();
-		$this->expanded = array();
-		$parents = array();
-
-		$q = $this->getQuery($params);
-		$res = $q->execute();
-		if (!$res) return;
-
-		// And keep a record of parents we don't need to get parents
-		// of themselves, as well as IDs to mark
-		foreach($res as $row) {
-			if ($row['ParentID']) $parents[$row['ParentID']] = true;
-			$this->ids[$row['ID']] = true;
-		}
-
-		// We need to recurse up the tree,
-		// finding ParentIDs for each ID until we run out of parents
-		while (!empty($parents)) {
-			$parentsClause = DB::placeholders($parents);
-			$res = DB::prepared_query(
-				"SELECT \"ParentID\", \"ID\" FROM \"SiteTree\" WHERE \"ID\" in ($parentsClause)",
-				array_keys($parents)
-			);
-			$parents = array();
-
-			foreach($res as $row) {
-				if ($row['ParentID']) $parents[$row['ParentID']] = true;
-				$this->ids[$row['ID']] = true;
-				$this->expanded[$row['ID']] = true;
-			}
-		}
-	}
-
-	protected function getQuery($params) {
-		$where = array();
-
-		if(isset($params['ID'])) unset($params['ID']);
-		if($treeClass = static::config()->tree_class) foreach($params as $name => $val) {
-			// Partial string match against a variety of fields
-			if(!empty($val) && singleton($treeClass)->hasDatabaseField($name)) {
-				$predicate = sprintf('"%s" LIKE ?', $name);
-				$where[$predicate] = "%$val%";
-			}
-		}
-
-		return new SQLSelect(
-			array("ParentID", "ID"),
-			'SilverStripe\\CMS\\Model\\SiteTree',
-			$where
-		);
-	}
-
-	public function mark($node) {
-		$id = $node->ID;
-		if(array_key_exists((int) $id, $this->expanded)) $node->markOpened();
-		return array_key_exists((int) $id, $this->ids) ? $this->ids[$id] : false;
-	}
-}
-
-/**
- * Allow overriding finished state for faux redirects.
- *
- * @package framework
- * @subpackage admin
- */
-class LeftAndMain_HTTPResponse extends SS_HTTPResponse {
-
-	protected $isFinished = false;
-
-	public function isFinished() {
-		return (parent::isFinished() || $this->isFinished);
-	}
-
-	public function setIsFinished($bool) {
-		$this->isFinished = $bool;
-	}
-
-}
-
-/**
- * Wrapper around objects being displayed in a tree.
- * Caution: Volatile API.
- *
- * @todo Implement recursive tree node rendering.
- *
- * @package framework
- * @subpackage admin
- */
-class LeftAndMain_TreeNode extends ViewableData {
-
-	/**
-	 * Object represented by this node
-	 *
-	 * @var Object
-	 */
-	protected $obj;
-
-	/**
-	 * Edit link to the current record in the CMS
-	 *
-	 * @var string
-	 */
-	protected $link;
-
-	/**
-	 * True if this is the currently selected node in the tree
-	 *
-	 * @var bool
-	 */
-	protected $isCurrent;
-
-	/**
-	 * Name of method to count the number of children
-	 *
-	 * @var string
-	 */
-	protected $numChildrenMethod;
-
-
-	/**
-	 *
-	 * @var LeftAndMain_SearchFilter
-	 */
-	protected $filter;
-
-	/**
-	 * @param Object $obj
-	 * @param string $link
-	 * @param bool $isCurrent
-	 * @param string $numChildrenMethod
-	 * @param LeftAndMain_SearchFilter $filter
-	 */
-	public function __construct($obj, $link = null, $isCurrent = false,
-		$numChildrenMethod = 'numChildren', $filter = null
-	) {
-		parent::__construct();
-		$this->obj = $obj;
-		$this->link = $link;
-		$this->isCurrent = $isCurrent;
-		$this->numChildrenMethod = $numChildrenMethod;
-		$this->filter = $filter;
-	}
-
-	/**
-	 * Returns template, for further processing by {@link Hierarchy->getChildrenAsUL()}.
-	 * Does not include closing tag to allow this method to inject its own children.
-	 *
-	 * @todo Remove hardcoded assumptions around returning an <li>, by implementing recursive tree node rendering
-	 *
-	 * @return String
-	 */
-	public function forTemplate() {
-		$obj = $this->obj;
-		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\""
-			. $this->getClasses() . "\">" . "<ins class=\"jstree-icon\">&nbsp;</ins>"
-			. "<a href=\"" . $this->getLink() . "\" title=\"("
-			. trim(_t('LeftAndMain.PAGETYPE','Page type'), " :") // account for inconsistencies in translations
-			. ": " . $obj->i18n_singular_name() . ") $obj->Title\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle)
-			. "</span></a>";
-	}
-
-	/**
-	 * Determine the CSS classes to apply to this node
-	 *
-	 * @return string
-	 */
-	public function getClasses() {
-		// Get classes from object
-		$classes = $this->obj->CMSTreeClasses($this->numChildrenMethod);
-		if($this->isCurrent) {
-			$classes .= ' current';
-		}
-		// Get status flag classes
-		$flags = $this->obj->hasMethod('getStatusFlags')
-			? $this->obj->getStatusFlags()
-			: false;
-		if ($flags) {
-			$statuses = array_keys($flags);
-			foreach ($statuses as $s) {
-				$classes .= ' status-' . $s;
-			}
-		}
-		// Get additional filter classes
-		if($this->filter && ($filterClasses = $this->filter->getPageClasses($this->obj))) {
-			if(is_array($filterClasses)) {
-				$filterClasses = implode(' ' . $filterClasses);
-			}
-			$classes .= ' ' . $filterClasses;
-		}
-		return $classes;
-	}
-
-	public function getObj() {
-		return $this->obj;
-	}
-
-	public function setObj($obj) {
-		$this->obj = $obj;
-		return $this;
-	}
-
-	public function getLink() {
-		return $this->link;
-	}
-
-	public function setLink($link) {
-		$this->link = $link;
-		return $this;
-	}
-
-	public function getIsCurrent() {
-		return $this->isCurrent;
-	}
-
-	public function setIsCurrent($bool) {
-		$this->isCurrent = $bool;
-		return $this;
-	}
-
-}
-
-/**
- * Abstract interface for a class which may be used to filter the results displayed
- * in a nested tree
- */
-interface LeftAndMain_SearchFilter {
-
-	/**
-	 * Method on {@link Hierarchy} objects which is used to traverse into children relationships.
-	 *
-	 * @return string
-	 */
-	public function getChildrenMethod();
-
-	/**
-	 * Method on {@link Hierarchy} objects which is used find the number of children for a parent page
-	 *
-	 * @return string
-	 */
-	public function getNumChildrenMethod();
-
-
-	/**
-	 * Returns TRUE if the given page should be included in the tree.
-	 * Caution: Does NOT check view permissions on the page.
-	 *
-	 * @param DataObject $page
-	 * @return bool
-	 */
-	public function isPageIncluded($page);
-
-	/**
-	 * Given a page, determine any additional CSS classes to apply to the tree node
-	 *
-	 * @param DataObject $page
-	 * @return array|string
-	 */
-	public function getPageClasses($page);
 }

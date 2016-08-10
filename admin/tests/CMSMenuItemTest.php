@@ -13,7 +13,7 @@ class CMSMenuItemTest extends SapphireTest {
 
 		$this->assertEquals(
 			'title="foo bar" disabled="disabled" data-foo="&lt;something&gt;"',
-			$menuItem->getAttributesHTML($exampleAttributes),
+			(string)$menuItem->getAttributesHTML($exampleAttributes),
 			'Attributes appear correctly when passed as an argument'
 		);
 
@@ -25,7 +25,7 @@ class CMSMenuItemTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			'',
-			$menuItem->getAttributesHTML('some string'),
+			(string)$menuItem->getAttributesHTML('some string'),
 			'getAttributesHTML() ignores a string argument'
 		);
 
@@ -33,12 +33,12 @@ class CMSMenuItemTest extends SapphireTest {
 		$menuItem->setAttributes($exampleAttributes);
 		$this->assertEquals(
 			'title="foo bar" disabled="disabled" data-foo="&lt;something&gt;"',
-			$menuItem->getAttributesHTML(),
+			(string)$menuItem->getAttributesHTML(),
 			'Attributes appear correctly when using setAttributes()'
 		);
 		$this->assertEquals(
-			'title="foo bar" disabled="disabled" data-foo="&lt;something&gt;"',
-			$menuItem->getAttributesHTML('foo bar'),
+			'title="foo bar" disabled="disabled"',
+			(string)$menuItem->getAttributesHTML('data-foo'),
 			'getAttributesHTML() ignores a string argument and falls back to class property'
 		);
 	}

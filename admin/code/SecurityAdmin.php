@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Admin;
 
-
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Group;
@@ -44,6 +43,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	private static $tree_class = 'SilverStripe\\Security\\Group';
 
 	private static $subitem_class = 'SilverStripe\\Security\\Member';
+
+	private static $required_permission_codes = 'CMS_ACCESS_SecurityAdmin';
 
 	private static $allowed_actions = array(
 		'EditForm',
@@ -130,7 +131,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		);
 		$columns = $groupList->getConfig()->getComponentByType('GridFieldDataColumns');
 		$columns->setDisplayFields(array(
-			'Breadcrumbs' => singleton('SilverStripe\\Security\\Group')->fieldLabel('Title')
+			'Breadcrumbs' => Group::singleton()->fieldLabel('Title')
 		));
 		$columns->setFieldFormatting(array(
 			'Breadcrumbs' => function($val, $item) {
@@ -254,9 +255,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		if(!Permission::check('ADMIN')) return false;
 
 		$group = $this->currentPage();
+		/** @skipUpgrade */
 		$form = new MemberImportForm(
 			$this,
-			'SilverStripe\\Admin\\MemberImportForm'
+			'MemberImportForm'
 		);
 		$form->setGroup($group);
 
@@ -359,47 +361,5 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 				'sort' => 0
 			)
 		);
-	}
-
-	/**
-	 * The permissions represented in the $codes will not appearing in the form
-	 * containing {@link PermissionCheckboxSetField} so as not to be checked / unchecked.
-	 *
-	 * @deprecated 4.0 Use "Permission.hidden_permissions" config setting instead
-	 * @param $codes String|Array
-	 */
-	public static function add_hidden_permission($codes){
-		if(is_string($codes)) $codes = array($codes);
-		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
-		Config::inst()->update('SilverStripe\\Security\\Permission', 'hidden_permissions', $codes);
-	}
-
-	/**
-	 * @deprecated 4.0 Use "Permission.hidden_permissions" config setting instead
-	 * @param $codes String|Array
-	 */
-	public static function remove_hidden_permission($codes){
-		if(is_string($codes)) $codes = array($codes);
-		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
-		Config::inst()->remove('SilverStripe\\Security\\Permission', 'hidden_permissions', $codes);
-	}
-
-	/**
-	 * @deprecated 4.0 Use "Permission.hidden_permissions" config setting instead
-	 * @return Array
-	 */
-	public static function get_hidden_permissions(){
-		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
-		Config::inst()->get('SilverStripe\\Security\\Permission', 'hidden_permissions', Config::FIRST_SET);
-	}
-
-	/**
-	 * Clear all permissions previously hidden with {@link add_hidden_permission}
-	 *
-	 * @deprecated 4.0 Use "Permission.hidden_permissions" config setting instead
-	 */
-	public static function clear_hidden_permissions(){
-		Deprecation::notice('4.0', 'Use "Permission.hidden_permissions" config setting instead');
-		Config::inst()->remove('SilverStripe\\Security\\Permission', 'hidden_permissions', Config::anything());
 	}
 }

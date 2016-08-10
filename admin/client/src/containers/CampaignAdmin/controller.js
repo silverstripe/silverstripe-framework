@@ -4,7 +4,7 @@ import reactRouteRegister from 'lib/ReactRouteRegister';
 import CampaignAdmin from './CampaignAdmin';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const sectionConfig = ConfigHelpers.getSection('CampaignAdmin');
+  const sectionConfig = ConfigHelpers.getSection('SilverStripe\\Admin\\CampaignAdmin');
 
   reactRouteRegister.add({
     path: sectionConfig.url,

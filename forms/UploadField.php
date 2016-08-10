@@ -1572,7 +1572,7 @@ class UploadField_SelectHandler extends RequestHandler {
 	public function index() {
 		// Requires a separate JS file, because we can't reach into the iframe with entwine.
 		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/UploadField_select.js');
-		return $this->renderWith('CMSDialog');
+		return $this->renderWith('SilverStripe\\Admin\\CMSDialog');
 	}
 
 	/**

@@ -201,7 +201,7 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 					break;
 
 				default:
-					user_error("Bad menu item change type {$change[type]}", E_USER_WARNING);
+					user_error("Bad menu item change type {$change['type']}", E_USER_WARNING);
 			}
 		}
 

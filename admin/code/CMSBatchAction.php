@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Admin;
 
-
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\Versioned;

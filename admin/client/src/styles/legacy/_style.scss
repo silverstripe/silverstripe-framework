@@ -1562,7 +1562,7 @@ form.member-profile-form {
 	.cms-panel-content-collapsed {
 		width: 60px;
 		display: none; // Avoids FOUC
-		height: calc(100% - $toolbar-height);
+		height: calc(100% - #{$toolbar-height});
 		overflow: hidden;
 
 		h2,

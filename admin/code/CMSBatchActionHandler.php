@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Admin;
 
-
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
@@ -12,12 +11,11 @@ use SilverStripe\Security\SecurityToken;
 use RequestHandler;
 use Config;
 use Controller;
+use SS_HTTPRequest;
 use SS_HTTPResponse;
 use InvalidArgumentException;
 use ArrayData;
 use Translatable;
-
-
 
 /**
  * Special request handler for admin/batchaction

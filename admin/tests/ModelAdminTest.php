@@ -24,13 +24,16 @@ class ModelAdminTest extends FunctionalTest {
 
 	public function testExportFieldsDefaultIsSummaryFields() {
 		$admin = new ModelAdminTest_Admin();
-		$admin->modelClass = 'ModelAdminTest_Contact';
-		$this->assertEquals($admin->getExportFields(), singleton('ModelAdminTest_Contact')->summaryFields());
+		$admin->doInit();
+		$this->assertEquals(
+			$admin->getExportFields(),
+			ModelAdminTest_Contact::singleton()->summaryFields()
+		);
 	}
 
 	public function testExportFieldsOverloadedMethod() {
 		$admin = new ModelAdminTest_PlayerAdmin();
-		$admin->modelClass = 'ModelAdminTest_Player';
+		$admin->doInit();
 		$this->assertEquals($admin->getExportFields(), array(
 			'Name' => 'Name',
 			'Position' => 'Position'

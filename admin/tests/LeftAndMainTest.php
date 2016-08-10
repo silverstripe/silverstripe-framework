@@ -82,7 +82,7 @@ class LeftAndMainTest extends FunctionalTest {
 	 * LeftAndMain_Controller and LeftAndMain_Object here to remove this dependency.
 	 */
 	public function testSaveTreeNodeSorting() {
-		$this->loginWithPermission('ADMIN');
+		$this->logInWithPermission('ADMIN');
 
 		// forcing sorting for non-MySQL
 		$rootPages = LeftAndMainTest_Object::get()
@@ -114,9 +114,8 @@ class LeftAndMainTest extends FunctionalTest {
 	}
 
 	public function testSaveTreeNodeParentID() {
-		$this->loginWithPermission('ADMIN');
+		$this->logInWithPermission('ADMIN');
 
-		$page1 = $this->objFromFixture('LeftAndMainTest_Object', 'page1');
 		$page2 = $this->objFromFixture('LeftAndMainTest_Object', 'page2');
 		$page3 = $this->objFromFixture('LeftAndMainTest_Object', 'page3');
 		$page31 = $this->objFromFixture('LeftAndMainTest_Object', 'page31');
@@ -153,7 +152,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $adminuser->ID);
 
 		$this->resetMenu();
-		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
+		$menuItems = LeftAndMain::singleton()->MainMenu(false);
 		foreach($menuItems as $menuItem) {
 			$link = $menuItem->Link;
 
@@ -178,14 +177,13 @@ class LeftAndMainTest extends FunctionalTest {
 		$adminuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 		$securityonlyuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'securityonlyuser');
 		$allcmssectionsuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'allcmssectionsuser');
-		$allValsFn = create_function('$obj', 'return $obj->getValue();');
 
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);
 		$this->resetMenu();
-		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
+		$menuItems = LeftAndMain::singleton()->MainMenu(false);
 		$this->assertEquals(
-			array_map($allValsFn, $menuItems->column('Code')),
+			$menuItems->column('Code'),
 			array(),
 			'Without valid login, members cant access any menu entries'
 		);
@@ -193,39 +191,47 @@ class LeftAndMainTest extends FunctionalTest {
 		// restricted cms user
 		$this->logInAs($securityonlyuser);
 		$this->resetMenu();
-		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
-		$menuItems = array_map($allValsFn, $menuItems->column('Code'));
+		$menuItems = LeftAndMain::singleton()->MainMenu(false);
+		$menuItems = $menuItems->column('Code');
 		sort($menuItems);
+
 		$this->assertEquals(
+			array(
+				'Help',
+				'SilverStripe-Admin-CMSProfileController',
+				'SilverStripe-Admin-SecurityAdmin'
+			),
 			$menuItems,
-			array('SilverStripe\\Admin\\CMSProfileController', 'Help', 'SilverStripe\\Admin\\SecurityAdmin'),
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
 
 		// all cms sections user
 		$this->logInAs($allcmssectionsuser);
 		$this->resetMenu();
-		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
-		$this->assertContains('SilverStripe\\Admin\\CMSProfileController',
-			array_map($allValsFn, $menuItems->column('Code')),
-			'Group with CMS_ACCESS_LeftAndMain permission can edit own profile'
+		$menuItems = LeftAndMain::singleton()->MainMenu(false);
+		$this->assertContains(
+			'SilverStripe-Admin-CMSProfileController',
+			$menuItems->column('Code'),
+			'Group with CMS_ACCESS_SilverStripe\\Admin\\LeftAndMain permission can edit own profile'
 		);
-		$this->assertContains('SilverStripe\\Admin\\SecurityAdmin',
-			array_map($allValsFn, $menuItems->column('Code')),
-			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
+		$this->assertContains(
+			'SilverStripe-Admin-SecurityAdmin',
+			$menuItems->column('Code'),
+			'Group with CMS_ACCESS_SilverStripe\\Admin\\LeftAndMain permission can access all sections'
 		);
-		$this->assertContains('Help',
-			array_map($allValsFn, $menuItems->column('Code')),
-			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
+		$this->assertContains(
+			'Help',
+			$menuItems->column('Code'),
+			'Group with CMS_ACCESS_SilverStripe\\Admin\\LeftAndMain permission can access all sections'
 		);
 
 		// admin
 		$this->logInAs($adminuser);
 		$this->resetMenu();
-		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
+		$menuItems = LeftAndMain::singleton()->MainMenu(false);
 		$this->assertContains(
-			'SilverStripe\\Admin\\SecurityAdmin',
-			array_map($allValsFn, $menuItems->column('Code')),
+			'SilverStripe-Admin-SecurityAdmin',
+			$menuItems->column('Code'),
 			'Administrators can access Security Admin'
 		);
 

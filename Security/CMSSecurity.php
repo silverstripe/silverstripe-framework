@@ -7,11 +7,8 @@ use Controller;
 use Director;
 use Convert;
 use Session;
-
 use SS_HTTPResponse;
 use SilverStripe\Admin\AdminRootController;
-
-
 
 /**
  * Provides a security interface functionality within the cms
@@ -25,7 +22,7 @@ class CMSSecurity extends Security {
 	);
 
 	private static $allowed_actions = array(
-		'SilverStripe\\Security\\LoginForm',
+		'LoginForm',
 		'success'
 	);
 
@@ -184,16 +181,6 @@ PHP
 			return $authenticator::get_cms_login_form($this);
 		}
 		user_error('Passed invalid authentication method', E_USER_ERROR);
-	}
-
-	public function getTemplatesFor($action) {
-		return array("CMSSecurity_{$action}", "SilverStripe\\Security\\CMSSecurity")
-			+ parent::getTemplatesFor($action);
-	}
-
-	public function getIncludeTemplate($name) {
-		return array("CMSSecurity_{$name}")
-			+ parent::getIncludeTemplate($name);
 	}
 
 	/**

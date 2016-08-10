@@ -2,15 +2,12 @@
 
 namespace SilverStripe\Admin;
 
-
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SS_HTTPResponse;
 use HiddenField;
 use FormAction;
-
-
 
 /**
  * @package framework
@@ -52,7 +49,7 @@ class CMSProfileController extends LeftAndMain {
 			$form->setValidator(Member::singleton()->getValidator());
 		}
 
-		if($form->Fields()->hasTabset()) {
+		if($form->Fields()->hasTabSet()) {
 			$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
 		}
 

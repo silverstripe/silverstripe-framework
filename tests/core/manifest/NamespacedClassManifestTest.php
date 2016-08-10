@@ -34,7 +34,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 		/** @skipUpgrade */
 		$expectedItems = array(
-			array('ModelAdmin'),
+			array('SilverStripe', '\\', 'Admin', '\\', 'ModelAdmin'),
 			array('Controller', '  ', 'as', '  ', 'Cont'),
 			array(
 				'SS_HTTPRequest', ' ', 'as', ' ', 'Request', ',',

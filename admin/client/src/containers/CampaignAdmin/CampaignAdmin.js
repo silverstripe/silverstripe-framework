@@ -326,7 +326,7 @@ function mapStateToProps(state) {
     campaignId: state.campaign.campaignId,
     view: state.campaign.view,
     breadcrumbs: state.breadcrumbs,
-    sectionConfig: state.config.sections.CampaignAdmin,
+    sectionConfig: state.config.sections['SilverStripe\\Admin\\CampaignAdmin'],
     securityId: state.config.SecurityID,
   };
 }
