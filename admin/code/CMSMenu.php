@@ -1,6 +1,20 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\Security\Member;
+use Object;
+use IteratorAggregate;
+use i18nEntityProvider;
+use Config;
+use Controller;
+use Convert;
+use ClassInfo;
+use ReflectionClass;
+use ArrayIterator;
+use i18n;
+
 /**
  * The object manages the main CMS menu. See {@link LeftAndMain::init()} for
  * example usage.
@@ -321,10 +335,10 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 */
 	public static function get_cms_classes($root = null, $recursive = true, $sort = self::MENU_PRIORITY) {
 		if(!$root) {
-			$root = 'LeftAndMain';
+			$root = 'SilverStripe\\Admin\\LeftAndMain';
 		}
 		/** @todo Make these actual abstract classes */
-		$abstractClasses = ['LeftAndMain', 'SilverStripe\\CMS\\Controllers\\CMSMain'];
+		$abstractClasses = ['SilverStripe\\Admin\\LeftAndMain', 'SilverStripe\\CMS\\Controllers\\CMSMain'];
 		$subClasses = array_values(ClassInfo::subclassesFor($root));
 		foreach($subClasses as $className) {
 			if($recursive && $className != $root) {

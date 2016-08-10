@@ -1,11 +1,22 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\SecurityToken;
+use RequestHandler;
+use Config;
+use Controller;
+use SS_HTTPResponse;
+use InvalidArgumentException;
+use ArrayData;
+use Translatable;
+
 
 
 /**
@@ -73,9 +84,9 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * @param string $recordClass
 	 */
 	public static function register($urlSegment, $batchActionClass, $recordClass = 'SilverStripe\\CMS\\Model\\SiteTree') {
-		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {
+		if(is_subclass_of($batchActionClass, 'SilverStripe\\Admin\\CMSBatchAction')) {
 			Config::inst()->update(
-				'CMSBatchActionHandler',
+				'SilverStripe\\Admin\\CMSBatchActionHandler',
 				'batch_actions',
 				array(
 					$urlSegment => array(
@@ -230,7 +241,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * @throws InvalidArgumentException if invalid action class is passed.
 	 */
 	protected function buildAction($class) {
-		if(!is_subclass_of($class, 'CMSBatchAction')) {
+		if(!is_subclass_of($class, 'SilverStripe\\Admin\\CMSBatchAction')) {
 			throw new InvalidArgumentException("{$class} is not a valid subclass of CMSBatchAction");
 		}
 		return $class::singleton();

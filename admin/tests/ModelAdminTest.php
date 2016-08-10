@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
+use SilverStripe\Admin\ModelAdmin;
+
 
 
 class ModelAdminTest extends FunctionalTest {

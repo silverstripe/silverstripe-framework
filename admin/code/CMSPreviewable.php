@@ -1,4 +1,9 @@
 <?php
+
+namespace SilverStripe\Admin;
+
+
+
 /**
  * Interface to provide enough information about a record to make it previewable
  * through the CMS. It uses the record database ID, its "frontend" and "backend"

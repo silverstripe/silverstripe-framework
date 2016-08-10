@@ -1,6 +1,17 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\Security\MemberCsvBulkLoader;
+use Form;
+use FieldList;
+use LiteralField;
+use FileField;
+use FormAction;
+use RequiredFields;
+use Requirements;
+
 
 /**
  * Imports {@link Member} records by CSV upload, as defined in

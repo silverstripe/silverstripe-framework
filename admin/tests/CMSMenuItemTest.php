@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Admin\CMSMenuItem;
 /**
  * @package framework
  * @subpackage tests

@@ -1,8 +1,31 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Member;
+use Requirements;
+use GridFieldExportButton;
+use GridField;
+use GridFieldConfig_RecordEditor;
+use GridFieldPrintButton;
+use Form;
+use FieldList;
+use Controller;
+use Object;
+use RequiredFields;
+use ArrayLib;
+use ArrayData;
+use HiddenField;
+use FileField;
+use Convert;
+use LiteralField;
+use CheckboxField;
+use FormAction;
+use Deprecation;
+
 
 /**
  * Generates a three-pane UI for editing model classes, with an

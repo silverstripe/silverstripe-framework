@@ -1351,7 +1351,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			if(class_exists('SilverStripe\\CMS\\Controllers\\CMSMain')) {
 				$cmsPerms = CMSMain::singleton()->providePermissions();
 			} else {
-				$cmsPerms = singleton('LeftAndMain')->providePermissions();
+				$cmsPerms = singleton('SilverStripe\\Admin\\LeftAndMain')->providePermissions();
 			}
 
 			if(!empty($cmsPerms)) {

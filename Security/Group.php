@@ -135,7 +135,7 @@ class Group extends DataObject {
 
 		// Filter permissions
 		// TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldDetailForm
-		$permissionsField->setHiddenPermissions((array)Config::inst()->get('SecurityAdmin', 'hidden_permissions'));
+		$permissionsField->setHiddenPermissions((array)Config::inst()->get('SilverStripe\\Admin\\SecurityAdmin', 'hidden_permissions'));
 
 		if($this->ID) {
 			$group = $this;
@@ -203,7 +203,7 @@ class Group extends DataObject {
 					) . '<br />' .
 					sprintf(
 						'<a href="%s" class="add-role">%s</a>',
-						singleton('SecurityAdmin')->Link('show/root#Root_Roles'),
+						singleton('SilverStripe\\Admin\\SecurityAdmin')->Link('show/root#Root_Roles'),
 						// TODO This should include #Root_Roles to switch directly to the tab,
 						// but tabstrip.js doesn't display tabs when directly adressed through a URL pragma
 						_t('Group.RolesAddEditLink', 'Manage roles')

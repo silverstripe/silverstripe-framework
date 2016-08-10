@@ -1,6 +1,15 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\ORM\DataModel;
+use Controller;
+use TemplateGlobalProvider;
+use Config;
+use SS_HTTPRequest;
+use Injector;
+
 
 /**
  * @package framework
@@ -43,7 +52,7 @@ class AdminRootController extends Controller implements TemplateGlobalProvider {
 	 * The LeftAndMain child that will be used as the initial panel to display if none is selected (i.e. if you
 	 * visit /admin)
 	 */
-	private static $default_panel = 'SecurityAdmin';
+	private static $default_panel = 'SilverStripe\\Admin\\SecurityAdmin';
 
 	/**
 	 * @var array

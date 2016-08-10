@@ -1,11 +1,31 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionRole;
 use SilverStripe\Security\PermissionProvider;
+use Requirements;
+use GridField;
+use GridFieldConfig_RecordEditor;
+use GridFieldButtonRow;
+use GridFieldExportButton;
+use Convert;
+use FieldList;
+use TabSet;
+use Tab;
+use LiteralField;
+use HiddenField;
+use HeaderField;
+use Form;
+use ArrayData;
+use Deprecation;
+use Config;
+
 
 /**
  * Security section of the CMS
@@ -236,7 +256,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$group = $this->currentPage();
 		$form = new MemberImportForm(
 			$this,
-			'MemberImportForm'
+			'SilverStripe\\Admin\\MemberImportForm'
 		);
 		$form->setGroup($group);
 
@@ -265,7 +285,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 		$form = new GroupImportForm(
 			$this,
-			'GroupImportForm'
+			'SilverStripe\\Admin\\GroupImportForm'
 		);
 
 		return $form;

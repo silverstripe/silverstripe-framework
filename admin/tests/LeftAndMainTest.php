@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Admin\CMSMenu;
+use SilverStripe\Admin\LeftAndMain;
+
 
 /**
  * @package framework
@@ -21,15 +24,15 @@ class LeftAndMainTest extends FunctionalTest {
 		//$this->autoFollowRedirection = false;
 		$this->resetMenu();
 
-		$this->backupCss = Config::inst()->get('LeftAndMain', 'extra_requirements_css');
-		$this->backupJs = Config::inst()->get('LeftAndMain', 'extra_requirements_javascript');
+		$this->backupCss = Config::inst()->get('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_css');
+		$this->backupJs = Config::inst()->get('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_javascript');
 		$this->backupCombined = Requirements::get_combined_files_enabled();
 
-		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array(
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_css', array(
 			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.css'
 		));
 
-		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', array(
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_javascript', array(
 			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.js'
 		));
 
@@ -56,8 +59,8 @@ class LeftAndMainTest extends FunctionalTest {
 	public function tearDown() {
 		parent::tearDown();
 
-		Config::inst()->update('LeftAndMain', 'extra_requirements_css', $this->backupCss);
-		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', $this->backupJs);
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_css', $this->backupCss);
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_javascript', $this->backupJs);
 
 		Requirements::set_combined_files_enabled($this->backupCombined);
 	}
@@ -150,7 +153,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->session()->inst_set('loggedInAs', $adminuser->ID);
 
 		$this->resetMenu();
-		$menuItems = singleton('LeftAndMain')->MainMenu(false);
+		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
 		foreach($menuItems as $menuItem) {
 			$link = $menuItem->Link;
 
@@ -180,7 +183,7 @@ class LeftAndMainTest extends FunctionalTest {
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);
 		$this->resetMenu();
-		$menuItems = singleton('LeftAndMain')->MainMenu(false);
+		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
 		$this->assertEquals(
 			array_map($allValsFn, $menuItems->column('Code')),
 			array(),
@@ -190,24 +193,24 @@ class LeftAndMainTest extends FunctionalTest {
 		// restricted cms user
 		$this->logInAs($securityonlyuser);
 		$this->resetMenu();
-		$menuItems = singleton('LeftAndMain')->MainMenu(false);
+		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
 		$menuItems = array_map($allValsFn, $menuItems->column('Code'));
 		sort($menuItems);
 		$this->assertEquals(
 			$menuItems,
-			array('CMSProfileController', 'Help', 'SecurityAdmin'),
+			array('SilverStripe\\Admin\\CMSProfileController', 'Help', 'SilverStripe\\Admin\\SecurityAdmin'),
 			'Groups with limited access can only access the interfaces they have permissions for'
 		);
 
 		// all cms sections user
 		$this->logInAs($allcmssectionsuser);
 		$this->resetMenu();
-		$menuItems = singleton('LeftAndMain')->MainMenu(false);
-		$this->assertContains('CMSProfileController',
+		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
+		$this->assertContains('SilverStripe\\Admin\\CMSProfileController',
 			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can edit own profile'
 		);
-		$this->assertContains('SecurityAdmin',
+		$this->assertContains('SilverStripe\\Admin\\SecurityAdmin',
 			array_map($allValsFn, $menuItems->column('Code')),
 			'Group with CMS_ACCESS_LeftAndMain permission can access all sections'
 		);
@@ -219,9 +222,9 @@ class LeftAndMainTest extends FunctionalTest {
 		// admin
 		$this->logInAs($adminuser);
 		$this->resetMenu();
-		$menuItems = singleton('LeftAndMain')->MainMenu(false);
+		$menuItems = singleton('SilverStripe\\Admin\\LeftAndMain')->MainMenu(false);
 		$this->assertContains(
-			'SecurityAdmin',
+			'SilverStripe\\Admin\\SecurityAdmin',
 			array_map($allValsFn, $menuItems->column('Code')),
 			'Administrators can access Security Admin'
 		);

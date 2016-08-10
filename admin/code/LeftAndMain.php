@@ -1,5 +1,8 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 /**
  * @package framework
  * @subpackage admin
@@ -26,6 +29,37 @@ use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\CMS\Model\VirtualPage;
 use SilverStripe\CMS\Controllers\SilverStripeNavigator;
+use Controller;
+use SSViewer;
+use Injector;
+use Director;
+use Convert;
+use SS_HTTPResponse;
+use Form;
+use Config;
+use i18n;
+use Session;
+use HTMLEditorConfig;
+use Requirements;
+use SS_HTTPRequest;
+use SS_HTTPResponse_Exception;
+use Deprecation;
+use PjaxResponseNegotiator;
+use ArrayData;
+use ReflectionClass;
+use InvalidArgumentException;
+use SiteConfig;
+use HiddenField;
+use LiteralField;
+use FormAction;
+use FieldList;
+use HTMLEditorField_Toolbar;
+use DropdownField;
+use PrintableTransformation;
+use SS_Cache;
+use ClassInfo;
+use ViewableData;
+
 
 
 
@@ -230,7 +264,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public function getCombinedClientConfig() {
 		$combinedClientConfig = ['sections' => []];
-		$cmsClassNames = CMSMenu::get_cms_classes('LeftAndMain', true, CMSMenu::URL_PRIORITY);
+		$cmsClassNames = CMSMenu::get_cms_classes('SilverStripe\\Admin\\LeftAndMain', true, CMSMenu::URL_PRIORITY);
 
 		foreach ($cmsClassNames as $className) {
 			$combinedClientConfig['sections'][$className] =  Injector::inst()->get($className)->getClientConfig();
@@ -901,7 +935,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return array
 	 */
 	public function getTemplatesWithSuffix($suffix) {
-		return SSViewer::get_templates_by_class(get_class($this), $suffix, 'LeftAndMain');
+		return SSViewer::get_templates_by_class(get_class($this), $suffix, 'SilverStripe\\Admin\\LeftAndMain');
 	}
 
 	public function Content() {
@@ -980,7 +1014,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Validate classname
 		$filterClass = $params['FilterClass'];
 		$filterInfo = new ReflectionClass($filterClass);
-		if(!$filterInfo->implementsInterface('LeftAndMain_SearchFilter')) {
+		if(!$filterInfo->implementsInterface('SilverStripe\\Admin\\LeftAndMain_SearchFilter')) {
 			throw new InvalidArgumentException(sprintf('Invalid filter class passed: %s', $filterClass));
 		}
 
@@ -1073,21 +1107,21 @@ class LeftAndMain extends Controller implements PermissionProvider {
 				) {
 					return null;
 				}
-				return sprintf(
-					'<ul><li class="readonly"><span class="item">'
-						. '%s (<a href="%s" class="cms-panel-link" data-pjax-target="Content">%s</a>)'
-						. '</span></li></ul>',
-					_t('LeftAndMain.TooManyPages', 'Too many pages'),
-					Controller::join_links(
-						$controller->LinkWithSearch($controller->Link()), '
-						?view=list&ParentID=' . $parent->ID
-					),
-					_t(
-						'LeftAndMain.ShowAsList',
-						'show as list',
-						'Show large amount of pages in list instead of tree view'
-					)
-				);
+					return sprintf(
+						'<ul><li class="readonly"><span class="item">'
+							. '%s (<a href="%s" class="cms-panel-link" data-pjax-target="Content">%s</a>)'
+							. '</span></li></ul>',
+						_t('LeftAndMain.TooManyPages', 'Too many pages'),
+						Controller::join_links(
+							$controller->LinkWithSearch($controller->Link()), '
+							?view=list&ParentID=' . $parent->ID
+						),
+						_t(
+							'LeftAndMain.ShowAsList',
+							'show as list',
+							'Show large amount of pages in list instead of tree view'
+						)
+					);
 			};
 		} else {
 			$nodeCountCallback = null;
@@ -1476,7 +1510,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			}
 
 			// Added in-line to the form, but plucked into different view by frontend scripts.
-			if(in_array('CMSPreviewable', class_implements($record))) {
+			if ($record instanceof CMSPreviewable) {
 				/** @skipUpgrade */
 				$navField = new LiteralField('SilverStripeNavigator', $this->getSilverStripeNavigator());
 				$navField->setAllowHTML(true);
@@ -1531,7 +1565,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			});
 
 			// Announce the capability so the frontend can decide whether to allow preview or not.
-			if(in_array('CMSPreviewable', class_implements($record))) {
+			if(in_array('SilverStripe\\Admin\\CMSPreviewable', class_implements($record))) {
 				$form->addExtraClass('cms-previewable');
 			}
 
@@ -1902,7 +1936,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public static function set_application_link($link) {
 		Deprecation::notice('4.0', 'Use the "LeftAndMain.application_link" config setting instead');
-		Config::inst()->update('LeftAndMain', 'application_link', $link);
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'application_link', $link);
 	}
 
 	/**
@@ -1927,7 +1961,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public static function setApplicationName($name) {
 		Deprecation::notice('4.0', 'Use the "LeftAndMain.application_name" config setting instead');
-		Config::inst()->update('LeftAndMain', 'application_name', $name);
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'application_name', $name);
 	}
 
 	/**
@@ -1997,8 +2031,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		// Add any custom ModelAdmin subclasses. Can't put this on ModelAdmin itself
 		// since its marked abstract, and needs to be singleton instanciated.
-		foreach(ClassInfo::subclassesFor('ModelAdmin') as $i => $class) {
-			if($class == 'ModelAdmin') continue;
+		foreach(ClassInfo::subclassesFor('SilverStripe\\Admin\\ModelAdmin') as $i => $class) {
+			if($class == 'SilverStripe\\Admin\\ModelAdmin') continue;
 			if(ClassInfo::classImplements($class, 'TestOnly')) continue;
 
 			$title = LeftAndMain::menu_title($class);
@@ -2024,7 +2058,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public static function require_javascript($file) {
 		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_javascript" config setting instead');
-		Config::inst()->update('LeftAndMain', 'extra_requirements_javascript', array($file => array()));
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_javascript', array($file => array()));
 	}
 
 	/**
@@ -2037,7 +2071,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public static function require_css($file, $media = null) {
 		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_css" config setting instead');
-		Config::inst()->update('LeftAndMain', 'extra_requirements_css', array($file => array('media' => $media)));
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_css', array($file => array('media' => $media)));
 	}
 
 	/**
@@ -2052,7 +2086,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 */
 	public static function require_themed_css($name, $media = null) {
 		Deprecation::notice('4.0', 'Use "LeftAndMain.extra_requirements_themedCss" config setting instead');
-		Config::inst()->update('LeftAndMain', 'extra_requirements_themedCss', array($name => array('media' => $media)));
+		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_themedCss', array($name => array('media' => $media)));
 	}
 
 }

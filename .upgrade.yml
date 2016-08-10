@@ -154,6 +154,26 @@ mappings:
   Security: SilverStripe\Security\Security
   SecurityToken: SilverStripe\Security\SecurityToken
   NullSecurityToken: SilverStripe\Security\NullSecurityToken
+  AddToCampaignHandler: SilverStripe\Admin\AddToCampaignHandler
+  AddToCampaignHandler_FormAction: SilverStripe\Admin\AddToCampaignHandler_FormAction
+  AdminRootController: SilverStripe\Admin\AdminRootController
+  CampaignAdmin: SilverStripe\Admin\CampaignAdmin
+  CMSBatchAction: SilverStripe\Admin\CMSBatchAction
+  CMSBatchActionHandler: SilverStripe\Admin\CMSBatchActionHandler
+  CMSMenu: SilverStripe\Admin\CMSMenu
+  CMSMenuItem: SilverStripe\Admin\CMSMenuItem
+  CMSPreviewable: SilverStripe\Admin\CMSPreviewable
+  CMSProfileController: SilverStripe\Admin\CMSProfileController
+  GroupImportForm: SilverStripe\Admin\GroupImportForm
+  LeftAndMain: SilverStripe\Admin\LeftAndMain
+  LeftAndMainMarkingFilter: SilverStripe\Admin\LeftAndMainMarkingFilter
+  LeftAndMain_HTTPResponse: SilverStripe\Admin\LeftAndMain_HTTPResponse
+  LeftAndMain_TreeNode: SilverStripe\Admin\LeftAndMain_TreeNode
+  LeftAndMain_SearchFilter: SilverStripe\Admin\LeftAndMain_SearchFilter
+  LeftAndMainExtension: SilverStripe\Admin\LeftAndMainExtension
+  MemberImportForm: SilverStripe\Admin\MemberImportForm
+  ModelAdmin: SilverStripe\Admin\ModelAdmin
+  SecurityAdmin: SilverStripe\Admin\SecurityAdmin
 skipConfigs:
   - db
   - casting

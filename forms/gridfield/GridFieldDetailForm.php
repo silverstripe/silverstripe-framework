@@ -6,6 +6,8 @@ use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\Admin\LeftAndMain;
+
 
 /**
  * Provides view and edit forms at GridField-specific URLs.

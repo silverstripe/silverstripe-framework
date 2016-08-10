@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Admin\CMSMenu;
+use SilverStripe\Admin\LeftAndMain;
 /**
  * @package framework
  * @subpackage tests
@@ -16,7 +19,7 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		CMSMenu::add_controller('CMSMenuTest_LeftAndMainController');
 		$menuItems = CMSMenu::get_menu_items();
 		$menuItem = $menuItems['CMSMenuTest_LeftAndMainController'];
-		$this->assertInstanceOf('CMSMenuItem', $menuItem, 'Controller menu item is of class CMSMenuItem');
+		$this->assertInstanceOf('SilverStripe\\Admin\\CMSMenuItem', $menuItem, 'Controller menu item is of class CMSMenuItem');
 		$this->assertContains($menuItem->url, singleton('CMSMenuTest_LeftAndMainController')->Link(),
 			'Controller menu item has the correct link');
 		$this->assertEquals($menuItem->controller, 'CMSMenuTest_LeftAndMainController',
@@ -29,7 +32,7 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		CMSMenu::add_controller('CMSMenuTest_CustomTitle');
 		$menuItems = CMSMenu::get_menu_items();
 		$menuItem = $menuItems['CMSMenuTest_CustomTitle'];
-		$this->assertInstanceOf('CMSMenuItem', $menuItem, 'Controller menu item is of class CMSMenuItem');
+		$this->assertInstanceOf('SilverStripe\\Admin\\CMSMenuItem', $menuItem, 'Controller menu item is of class CMSMenuItem');
 		$this->assertEquals('CMSMenuTest_CustomTitle (localised)', $menuItem->title);
 		CMSMenu::clear_menu();
 
@@ -37,7 +40,7 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		CMSMenu::add_link('LinkCode', 'link title', 'http://www.example.com');
 		$menuItems = CMSMenu::get_menu_items();
 		$menuItem = $menuItems['LinkCode'];
-		$this->assertInstanceOf('CMSMenuItem', $menuItem, 'Link menu item is of class CMSMenuItem');
+		$this->assertInstanceOf('SilverStripe\\Admin\\CMSMenuItem', $menuItem, 'Link menu item is of class CMSMenuItem');
 		$this->assertEquals($menuItem->title, 'link title', 'Link menu item has the correct title');
 		$this->assertEquals($menuItem->url,'http://www.example.com', 'Link menu item has the correct link');
 		$this->assertNull($menuItem->controller, 'Link menu item has no controller class');
@@ -78,9 +81,9 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		//	1.) SecurityAdmin is included
 		//	2.) LeftAndMain & ModelAdmin are excluded
 		$cmsClasses = CMSMenu::get_cms_classes();
-		$this->assertContains('SecurityAdmin', $cmsClasses, 'SecurityAdmin included in valid CMS Classes');
-		$this->assertNotContains('LeftAndMain', $cmsClasses, 'LeftAndMain not included in valid CMS Classes');
-		$this->assertNotContains('ModelAdmin', $cmsClasses, 'LeftAndMain not included in valid CMS Classes');
+		$this->assertContains('SilverStripe\\Admin\\SecurityAdmin', $cmsClasses, 'SecurityAdmin included in valid CMS Classes');
+		$this->assertNotContains('SilverStripe\\Admin\\LeftAndMain', $cmsClasses, 'LeftAndMain not included in valid CMS Classes');
+		$this->assertNotContains('SilverStripe\\Admin\\ModelAdmin', $cmsClasses, 'LeftAndMain not included in valid CMS Classes');
 
 	}
 
@@ -89,13 +92,13 @@ class CMSMenuTest extends SapphireTest implements TestOnly {
 		// Populate from CMS Classes, check for existance of SecurityAdmin
 		CMSMenu::clear_menu();
 		CMSMenu::populate_menu();
-		$menuItem = CMSMenu::get_menu_item('SecurityAdmin');
-		$this->assertInstanceOf('CMSMenuItem', $menuItem, 'SecurityAdmin menu item exists');
-		$this->assertContains($menuItem->url, singleton('SecurityAdmin')->Link(), 'Menu item has the correct link');
-		$this->assertEquals($menuItem->controller, 'SecurityAdmin', 'Menu item has the correct controller class');
+		$menuItem = CMSMenu::get_menu_item('SilverStripe\\Admin\\SecurityAdmin');
+		$this->assertInstanceOf('SilverStripe\\Admin\\CMSMenuItem', $menuItem, 'SecurityAdmin menu item exists');
+		$this->assertContains($menuItem->url, singleton('SilverStripe\\Admin\\SecurityAdmin')->Link(), 'Menu item has the correct link');
+		$this->assertEquals($menuItem->controller, 'SilverStripe\\Admin\\SecurityAdmin', 'Menu item has the correct controller class');
 		$this->assertEquals(
 			$menuItem->priority,
-			singleton('SecurityAdmin')->stat('menu_priority'),
+			singleton('SilverStripe\\Admin\\SecurityAdmin')->stat('menu_priority'),
 			'Menu item has the correct priority'
 		);
 

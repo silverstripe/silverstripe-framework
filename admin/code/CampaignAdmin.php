@@ -1,11 +1,24 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\PermissionProvider;
+use Convert;
+use SS_HTTPResponse;
+use SS_HTTPRequest;
+use LogicException;
+use HiddenField;
+use Form;
+use FieldList;
+use FormAction;
+use Controller;
+
 
 
 /**

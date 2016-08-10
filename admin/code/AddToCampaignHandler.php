@@ -1,10 +1,25 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\Framework\Core\Injectable;
 
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
+use ClassInfo;
+use Object;
+use DropdownField;
+use FieldList;
+use HiddenField;
+use Form;
+use CompositeField;
+use LiteralField;
+use Director;
+use SS_HTTPResponse;
+use FormAction;
+
 
 
 

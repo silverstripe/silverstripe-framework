@@ -1,5 +1,11 @@
 <?php
+
+namespace SilverStripe\Admin;
+
 use SilverStripe\ORM\FieldType\DBField;
+use Object;
+use Convert;
+
 
 /**
  * A simple CMS menu item.

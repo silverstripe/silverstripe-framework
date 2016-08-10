@@ -11,6 +11,9 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Admin\CMSPreviewable;
+
 
 
 

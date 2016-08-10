@@ -1,8 +1,15 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
+use SS_HTTPResponse;
+use HiddenField;
+use FormAction;
+
 
 
 /**
