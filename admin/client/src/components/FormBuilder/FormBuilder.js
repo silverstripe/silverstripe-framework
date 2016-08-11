@@ -56,6 +56,12 @@ export class FormBuilderComponent extends SilverStripeComponent {
     this.fetch();
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.schemaUrl !== prevProps.schemaUrl) {
+      this.fetch();
+    }
+  }
+
   /**
    * Fetches data used to generate a form. This can be form schema and or form state data.
    * When the response comes back the data is saved to state.
@@ -203,13 +209,11 @@ export class FormBuilderComponent extends SilverStripeComponent {
         [schemaFields.find(schemaField => schemaField.id === curr.id).name]: curr.value,
       }), {});
 
-    const submitFn = () => {
-      this.props.formActions.submitForm(
-        this.submitApi,
-        this.getFormId(),
-        fieldValues
-      );
-    };
+    const submitFn = () => this.props.formActions.submitForm(
+      this.submitApi,
+      this.getFormId(),
+      fieldValues
+    );
 
     if (typeof this.props.handleSubmit !== 'undefined') {
       this.props.handleSubmit(event, fieldValues, submitFn);
@@ -284,6 +288,10 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @return {object}
    */
   mergeFieldData(structure, state) {
+    // could be a dataless field
+    if (typeof state === 'undefined') {
+      return structure;
+    }
     return merge.recursive(true, structure, {
       data: state.data,
       messages: state.messages,
@@ -327,7 +335,11 @@ export class FormBuilderComponent extends SilverStripeComponent {
     // If there is structural and state data availabe merge those data for each field.
     // Otherwise just use the structural data.
     const fieldData = formSchema.schema && formState && formState.fields
-      ? formSchema.schema.fields.map((f, i) => this.mergeFieldData(f, formState.fields[i]))
+      ? formSchema.schema.fields.map((field) => {
+        const state = formState.fields.find((item) => item.id === field.id);
+
+        return this.mergeFieldData(field, state);
+      })
       : formSchema.schema.fields;
 
     const formProps = {

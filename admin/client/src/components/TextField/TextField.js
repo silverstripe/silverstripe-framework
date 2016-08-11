@@ -40,6 +40,7 @@ class TextField extends SilverStripeComponent {
   }
 
   getInputProps() {
+    // @todo Merge with 'attributes' from formfield schema
     return {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
