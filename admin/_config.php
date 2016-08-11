@@ -35,4 +35,4 @@ HTMLEditorConfig::get('cms')
 		'ssbuttons' => FRAMEWORK_DIR . '/client/dist/js/TinyMCE_SSPlugin.js'
 	));
 
-CMSMenu::remove_menu_item('CMSProfileController');
+CMSMenu::remove_menu_class('CMSProfileController');

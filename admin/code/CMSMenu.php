@@ -77,7 +77,9 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		$menuPriority = Config::inst()->get($controllerClass, 'menu_priority', Config::FIRST_SET);
 
 		// Don't add menu items defined the old way
-		if($urlSegment === null && $controllerClass != "CMSMain") return;
+		if (!$urlSegment) {
+			return null;
+		}
 
 		$link = Controller::join_links($urlBase, $urlSegment) . '/';
 
@@ -126,7 +128,7 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 											$attributes = null) {
 		// If a class is defined, then force the use of that as a code.  This helps prevent menu item duplication
 		if($controllerClass) {
-			$code = $controllerClass;
+			$code = self::get_menu_code($controllerClass);
 		}
 
 		return self::replace_menu_item($code, $menuTitle, $url, $controllerClass, $priority, $attributes);
@@ -144,6 +146,16 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	}
 
 	/**
+	 * Get menu code for class
+	 *
+	 * @param string $cmsClass Controller class name
+	 * @return string
+	 */
+	public static function get_menu_code($cmsClass) {
+		return Convert::raw2htmlname(str_replace('\\', '-', $cmsClass));
+	}
+
+	/**
 	 * Get all menu entries.
 	 *
 	 * @return array
@@ -156,7 +168,10 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 			$cmsClasses = self::get_cms_classes();
 			foreach($cmsClasses as $cmsClass) {
 				$menuItem = self::menuitem_for_controller($cmsClass);
-				if($menuItem) $menuItems[Convert::raw2htmlname(str_replace('\\', '-', $cmsClass))] = $menuItem;
+				$menuCode = self::get_menu_code($cmsClass);
+				if($menuItem) {
+					$menuItems[$menuCode] = $menuItem;
+				}
 			}
 		}
 
@@ -228,6 +243,16 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 */
 	public static function remove_menu_item($code) {
 		self::$menu_item_changes[] = array('type' => 'remove', 'code' => $code);
+	}
+
+	/**
+	 * Remove menu item by class name.
+	 *
+	 * @param string $className Name of class
+	 */
+	public static function remove_menu_class($className) {
+		$code = self::get_menu_code($className);
+		self::remove_menu_item($code);
 	}
 
 	/**
