@@ -40,7 +40,23 @@ $.entwine('ss.tree', function($){
         this.serializeFromTree();
       }
     },
-    
+
+    onmatch: function () {
+      var self = this;
+
+      self.getTree()
+      .bind('load_node.jstree', function (e, data) {
+        self.refreshSelected();
+      });
+    },
+
+    onunmatch: function () {
+      var self = this;
+
+      self.getTree()
+        .unbind('load_node.jstree');
+    },
+
     /**
      * @func registerDefault
      * @desc Register default bulk confirmation dialogs
