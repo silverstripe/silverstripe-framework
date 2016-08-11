@@ -63,7 +63,9 @@ class FormSchema {
 			'messages' => []
 		];
 
-		foreach ($form->Fields()->dataFields() as $field) {
+		// @todo - Flatten all nested fields for returning state. At the moment, only top
+		// level fields are returned.
+		foreach ($form->Fields() as $field) {
 			$state['fields'][] = $field->getSchemaState();
 		}
 

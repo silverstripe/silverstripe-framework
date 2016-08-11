@@ -24,6 +24,10 @@ class LiteralField extends DatalessField {
 	 */
 	protected $content;
 
+	protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
+
+	protected $schemaComponent = 'LiteralField';
+
 	/**
 	 * @param string $name
 	 * @param string|FormField $content
@@ -104,5 +108,18 @@ class LiteralField extends DatalessField {
 		$clone->setReadonly(true);
 
 		return $clone;
+	}
+
+	/**
+	 * Header fields support dynamic titles via schema state
+	 *
+	 * @return array
+	 */
+	public function getSchemaStateDefaults() {
+		$state = parent::getSchemaStateDefaults();
+
+		$state['data']['content'] = $this->FieldHolder();
+
+		return $state;
 	}
 }
