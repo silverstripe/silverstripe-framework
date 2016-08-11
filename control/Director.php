@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\Versioning\Versioned;
 /**
@@ -467,7 +468,7 @@ class Director implements TemplateGlobalProvider {
 	 * Return the {@link SiteTree} object that is currently being viewed. If there is no SiteTree
 	 * object to return, then this will return the current controller.
 	 *
-	 * @return SiteTree
+	 * @return SiteTree|Controller
 	 */
 	public static function get_current_page() {
 		return self::$current_page ? self::$current_page : Controller::curr();

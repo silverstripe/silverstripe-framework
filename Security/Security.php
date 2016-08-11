@@ -485,7 +485,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * @return Controller
 	 */
 	protected function getResponseController($title) {
-		if(!class_exists('SiteTree')) return $this;
+		if (!class_exists('SilverStripe\\CMS\\Model\\SiteTree')) {
+			return $this;
+		}
 
 		// Use sitetree pages to render the security page
 		$tmpPage = new Page();

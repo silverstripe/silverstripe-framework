@@ -68,12 +68,16 @@ class ClassInfo {
 	 * types that don't exist as implemented classes. By default these are excluded.
 	 * @return array List of subclasses
 	 */
-	public static function getValidSubClasses($class = 'SiteTree', $includeUnbacked = false) {
+	public static function getValidSubClasses($class = 'SilverStripe\\CMS\\Model\\SiteTree', $includeUnbacked = false) {
 		if(is_string($class) && !class_exists($class)) return array();
 
 		$class = self::class_name($class);
-		$classes = DB::get_schema()->enumValuesForField($class, 'ClassName');
-		if (!$includeUnbacked) $classes = array_filter($classes, array('ClassInfo', 'exists'));
+		if ($includeUnbacked) {
+			$table = DataObject::getSchema()->tableName($class);
+			$classes = DB::get_schema()->enumValuesForField($table, 'ClassName');
+		} else {
+			$classes = static::subclassesFor($class);
+		}
 		return $classes;
 	}
 

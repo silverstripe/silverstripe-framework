@@ -46,7 +46,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * by any batch changes. Needs to be set in the actual {@link CMSBatchAction}
 	 * implementations as well.
 	 */
-	protected $recordClass = 'SiteTree';
+	protected $recordClass = 'SilverStripe\\CMS\\Model\\SiteTree';
 
 	/**
 	 * @param Controller $parentController
@@ -72,7 +72,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * @param string $batchActionClass The name of the CMSBatchAction subclass to register
 	 * @param string $recordClass
 	 */
-	public static function register($urlSegment, $batchActionClass, $recordClass = 'SiteTree') {
+	public static function register($urlSegment, $batchActionClass, $recordClass = 'SilverStripe\\CMS\\Model\\SiteTree') {
 		if(is_subclass_of($batchActionClass, 'CMSBatchAction')) {
 			Config::inst()->update(
 				'CMSBatchActionHandler',

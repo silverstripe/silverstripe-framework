@@ -1,6 +1,7 @@
 <?php
 
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * A ViewableData object is any object that can be rendered into a template/view.
@@ -540,6 +541,9 @@ class ViewableData extends Object implements IteratorAggregate {
 		if(isset($this->template) && !in_array($this->template, $classes)) {
 			$classes[] = $this->template;
 		}
+
+		// Strip out namespaces
+		$classes = preg_replace('#.*\\\\#', '', $classes);
 
 		return Convert::raw2att(implode(' ', $classes));
 	}

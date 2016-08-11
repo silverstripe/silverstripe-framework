@@ -15,6 +15,9 @@ use SilverStripe\Security\Group;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
+use SilverStripe\CMS\Controllers\RootURLController;
+use SilverStripe\CMS\Model\SiteTree;
+
 
 /**
  * Test case class for the Sapphire framework.
@@ -218,11 +221,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Member::set_password_validator(null);
 		Config::inst()->update('Cookie', 'report_errors', false);
 
-		if(class_exists('RootURLController')) RootURLController::reset();
+		if(class_exists('SilverStripe\\CMS\\Controllers\\RootURLController')) RootURLController::reset();
 		if(class_exists('Translatable')) Translatable::reset();
 		Versioned::reset();
 		DataObject::reset();
-		if(class_exists('SiteTree')) SiteTree::reset();
+		if(class_exists('SilverStripe\\CMS\\Model\\SiteTree')) SiteTree::reset();
 		Hierarchy::reset();
 		if(Controller::has_curr()) Controller::curr()->setSession(Injector::inst()->create('Session', array()));
 		Security::$database_is_ready = null;

@@ -3,11 +3,14 @@
 namespace SilverStripe\ORM\Connect;
 
 use Config;
+use Convert;
 use Exception;
 use PaginatedList;
 use SilverStripe\Framework\Core\Configurable;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
  * MySQL connector class.
@@ -101,39 +104,60 @@ class MySQLDatabase extends SS_Database {
 	 * The core search engine, used by this class and its subclasses to do fun stuff.
 	 * Searches both SiteTree and File.
 	 *
+	 * @param array $classesToSearch
 	 * @param string $keywords Keywords as a string.
+	 * @param int $start
+	 * @param int $pageLength
+	 * @param string $sortBy
+	 * @param string $extraFilter
+	 * @param bool $booleanSearch
+	 * @param string $alternativeFileFilter
+	 * @param bool $invertedMatch
+	 * @return PaginatedList
+	 * @throws Exception
 	 */
 	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC",
 		$extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false
 	) {
-		if (!class_exists('SiteTree'))
-				throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
-		if (!class_exists('File'))
-				throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
+		$pageClass = 'SilverStripe\\CMS\\Model\\SiteTree';
+		$fileClass = 'File';
+		$pageTable = DataObject::getSchema()->tableName($pageClass);
+		$fileTable = DataObject::getSchema()->tableName($fileClass);
+		if (!class_exists($pageClass)) {
+			throw new Exception('MySQLDatabase->searchEngine() requires "SiteTree" class');
+		}
+		if (!class_exists($fileClass)) {
+			throw new Exception('MySQLDatabase->searchEngine() requires "File" class');
+		}
 
 		$keywords = $this->escapeString($keywords);
 		$htmlEntityKeywords = htmlentities($keywords, ENT_NOQUOTES, 'UTF-8');
 
-		$extraFilters = array('SiteTree' => '', 'File' => '');
+		$extraFilters = array($pageClass => '', $fileClass => '');
 
-		if ($booleanSearch) $boolean = "IN BOOLEAN MODE";
+		if ($booleanSearch) {
+			$boolean = "IN BOOLEAN MODE";
+		}
 
 		if ($extraFilter) {
-			$extraFilters['SiteTree'] = " AND $extraFilter";
+			$extraFilters[$pageClass] = " AND $extraFilter";
 
-			if ($alternativeFileFilter)
-					$extraFilters['File'] = " AND $alternativeFileFilter";
-			else $extraFilters['File'] = $extraFilters['SiteTree'];
+			if ($alternativeFileFilter) {
+				$extraFilters[$fileClass] = " AND $alternativeFileFilter";
+			} else {
+				$extraFilters[$fileClass] = $extraFilters[$pageClass];
+			}
 		}
 
 		// Always ensure that only pages with ShowInSearch = 1 can be searched
-		$extraFilters['SiteTree'] .= " AND ShowInSearch <> 0";
+		$extraFilters[$pageClass] .= " AND ShowInSearch <> 0";
 
 		// File.ShowInSearch was added later, keep the database driver backwards compatible
 		// by checking for its existence first
-		$fields = $this->fieldList('File');
-		if (array_key_exists('ShowInSearch', $fields))
-				$extraFilters['File'] .= " AND ShowInSearch <> 0";
+		$fields = $this->getSchemaManager()->fieldList($fileTable);
+		if (array_key_exists('ShowInSearch', $fields)) {
+			$extraFilters[$fileClass] .= " AND ShowInSearch <> 0";
+		}
 
 		$limit = $start . ", " . (int) $pageLength;
 
@@ -141,27 +165,28 @@ class MySQLDatabase extends SS_Database {
 				? "NOT "
 				: "";
 		if ($keywords) {
-			$match['SiteTree'] = "
+			$match[$pageClass] = "
 				MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$keywords' $boolean)
 				+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityKeywords' $boolean)
 			";
-			$match['File'] = "MATCH (Name, Title) AGAINST ('$keywords' $boolean) AND ClassName = 'File'";
+			$fileClassSQL = Convert::raw2sql($fileClass);
+			$match[$fileClass] = "MATCH (Name, Title) AGAINST ('$keywords' $boolean) AND ClassName = '$fileClassSQL'";
 
 			// We make the relevance search by converting a boolean mode search into a normal one
 			$relevanceKeywords = str_replace(array('*', '+', '-'), '', $keywords);
 			$htmlEntityRelevanceKeywords = str_replace(array('*', '+', '-'), '', $htmlEntityKeywords);
-			$relevance['SiteTree'] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
+			$relevance[$pageClass] = "MATCH (Title, MenuTitle, Content, MetaDescription) "
 					. "AGAINST ('$relevanceKeywords') "
 					. "+ MATCH (Title, MenuTitle, Content, MetaDescription) AGAINST ('$htmlEntityRelevanceKeywords')";
-			$relevance['File'] = "MATCH (Name, Title) AGAINST ('$relevanceKeywords')";
+			$relevance[$fileClass] = "MATCH (Name, Title) AGAINST ('$relevanceKeywords')";
 		} else {
-			$relevance['SiteTree'] = $relevance['File'] = 1;
-			$match['SiteTree'] = $match['File'] = "1 = 1";
+			$relevance[$pageClass] = $relevance[$fileClass] = 1;
+			$match[$pageClass] = $match[$fileClass] = "1 = 1";
 		}
 
 		// Generate initial DataLists and base table names
 		$lists = array();
-		$baseClasses = array('SiteTree' => '', 'File' => '');
+		$baseClasses = array($pageClass => '', $fileClass => '');
 		foreach ($classesToSearch as $class) {
 			$lists[$class] = DataList::create($class)->where($notMatch . $match[$class] . $extraFilters[$class], "");
 			$baseClasses[$class] = '"' . $class . '"';
@@ -171,19 +196,19 @@ class MySQLDatabase extends SS_Database {
 
 		// Make column selection lists
 		$select = array(
-			'SiteTree' => array(
-				"ClassName", "$baseClasses[SiteTree].\"ID\"", "ParentID",
+			$pageClass => array(
+				"ClassName", "{$pageTable}.\"ID\"", "ParentID",
 				"Title", "MenuTitle", "URLSegment", "Content",
 				"LastEdited", "Created",
 				"Name" => "_{$charset}''",
-				"Relevance" => $relevance['SiteTree'], "CanViewType"
+				"Relevance" => $relevance[$pageClass], "CanViewType"
 			),
-			'File' => array(
-				"ClassName", "$baseClasses[File].\"ID\"", "ParentID",
+			$fileClass => array(
+				"ClassName", "{$fileTable}.\"ID\"", "ParentID",
 				"Title", "MenuTitle" => "_{$charset}''", "URLSegment" => "_{$charset}''", "Content" => "_{$charset}''",
 				"LastEdited", "Created",
 				"Name",
-				"Relevance" => $relevance['File'], "CanViewType" => "NULL"
+				"Relevance" => $relevance[$fileClass], "CanViewType" => "NULL"
 			),
 		);
 
@@ -192,10 +217,12 @@ class MySQLDatabase extends SS_Database {
 		$queryParameters = array();
 		$totalCount = 0;
 		foreach ($lists as $class => $list) {
+			$table = DataObject::getSchema()->tableName($class);
+			/** @var SQLSelect $query */
 			$query = $list->dataQuery()->query();
 
 			// There's no need to do all that joining
-			$query->setFrom(array(str_replace(array('"', '`'), '', $baseClasses[$class]) => $baseClasses[$class]));
+			$query->setFrom($table);
 			$query->setSelect($select[$class]);
 			$query->setOrderBy(array());
 

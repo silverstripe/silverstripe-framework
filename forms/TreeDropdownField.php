@@ -354,7 +354,7 @@ class TreeDropdownField extends FormField {
 		if($nodeThresholdLeaf && !$this->filterCallback && !$this->search) {
 			$className = $this->sourceObject;
 			$nodeCountCallback = function($parent, $numChildren) use($className, $nodeThresholdLeaf) {
-				if($className == 'SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
+				if($className == 'SilverStripe\\CMS\\Model\\SiteTree' && $parent->ID && $numChildren > $nodeThresholdLeaf) {
 					return sprintf(
 						'<ul><li><span class="item">%s</span></li></ul>',
 						_t('LeftAndMain.TooManyPages', 'Too many pages')
