@@ -282,7 +282,7 @@ class DB {
 	 *
 	 * @param array|integer $input An array of items needing placeholders, or a
 	 * number to specify the number of placeholders
-	 * @param string The string to join each placeholder together with
+	 * @param string $join The string to join each placeholder together with
 	 * @return string|null Either a list of placeholders, or null
 	 */
 	public static function placeholders($input, $join = ', ') {
@@ -295,6 +295,60 @@ class DB {
 		}
 		if($number === 0) return null;
 		return implode($join, array_fill(0, $number, '?'));
+	}
+
+	/**
+	 * @param string $sql The parameterised query
+	 * @param array $parameters The parameters to inject into the query
+	 *
+	 * @return string
+	 */
+	public static function inline_parameters($sql, $parameters) {
+		$segments = preg_split('/\?/', $sql);
+		$joined = '';
+		$inString = false;
+		$numSegments = count($segments);
+		for($i = 0; $i < $numSegments; $i++) {
+			$input = $segments[$i];
+			// Append next segment
+			$joined .= $segments[$i];
+			// Don't add placeholder after last segment
+			if($i === $numSegments - 1) {
+				break;
+			}
+			// check string escape on previous fragment
+			// Remove escaped backslashes, count them!
+			$input = preg_replace('/\\\\\\\\/', '', $input);
+			// Count quotes
+			$totalQuotes = substr_count($input, "'"); // Includes double quote escaped quotes
+			$escapedQuotes = substr_count($input, "\\'");
+			if((($totalQuotes - $escapedQuotes) % 2) !== 0) {
+				$inString = !$inString;
+			}
+			// Append placeholder replacement
+			if($inString) {
+				// Literal question mark
+				$joined .= '?';
+				continue;
+			}
+
+			// Encode and insert next parameter
+			$next = array_shift($parameters);
+			if(is_array($next) && isset($next['value'])) {
+				$next = $next['value'];
+			}
+			if (is_bool($next)) {
+				$value = $next ? '1' : '0';
+			}
+			elseif (is_int($next)) {
+				$value = $next;
+			}
+			else {
+				$value = DB::is_active() ? Convert::raw2sql($next, true) : $next;
+			}
+			$joined .= $value;
+		}
+		return $joined;
 	}
 
 	/**

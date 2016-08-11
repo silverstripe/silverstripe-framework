@@ -141,7 +141,8 @@ abstract class SS_Database {
 			$sql,
 			function($sql) use($connector, $parameters, $errorLevel) {
 				return $connector->preparedQuery($sql, $parameters, $errorLevel);
-			}
+			},
+			$parameters
 		);
 	}
 
@@ -174,13 +175,18 @@ abstract class SS_Database {
 	 *
 	 * @param string $sql Query to run, and single parameter to callback
 	 * @param callable $callback Callback to execute code
+	 * @param array $parameters Parameters for any parameterised query
 	 * @return mixed Result of query
 	 */
-	protected function benchmarkQuery($sql, $callback) {
+	protected function benchmarkQuery($sql, $callback, $parameters = array()) {
 		if (isset($_REQUEST['showqueries']) && Director::isDev()) {
 			$starttime = microtime(true);
 			$result = $callback($sql);
 			$endtime = round(microtime(true) - $starttime, 4);
+			// replace parameters as closely as possible to what we'd expect the DB to put in
+			if (strtolower($_REQUEST['showqueries']) == 'inline') {
+				$sql = DB::inline_parameters($sql, $parameters);
+			}
 			Debug::message("\n$sql\n{$endtime}s\n", false);
 			return $result;
 		} else {
