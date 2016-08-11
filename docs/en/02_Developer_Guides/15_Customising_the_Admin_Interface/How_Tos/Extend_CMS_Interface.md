@@ -13,6 +13,16 @@ simple checkbox.
 For a deeper introduction to the inner workings of the CMS, please refer to our
 guide on [CMS Architecture](/developer_guides/customising_the_admin_interface/cms_architecture).
 
+## Redux Devtools
+
+It's important to be able to view the state of the React application when you're debugging and
+building the interface.
+
+To be able to view the state, you'll need to be in a dev environment 
+and have the [Redux Devtools](https://github.com/zalmoxisus/redux-devtools-extension)
+installed on Google Chrome or Firefox, which can be found by searching with your favourite search
+engine.
+
 ## Overload a CMS template ##
 
 If you place a template with an identical name into your application template
