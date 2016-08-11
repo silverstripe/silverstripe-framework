@@ -57,17 +57,19 @@ export function addForm(formState) {
  */
 export function submitForm(submitApi, formId, fieldValues) {
   return (dispatch) => {
+    const header = { 'X-Formschema-Request': 'state' };
     dispatch({
       type: ACTION_TYPES.SUBMIT_FORM_REQUEST,
       payload: { formId },
     });
 
-    submitApi(Object.assign({ ID: formId }, fieldValues), { 'X-Formschema-Request': 'state' })
+    return submitApi(Object.assign({ ID: formId }, fieldValues), header)
       .then((response) => {
         dispatch({
           type: ACTION_TYPES.SUBMIT_FORM_SUCCESS,
           payload: { response },
         });
+        return response;
       })
       .catch((error) => {
         dispatch({

@@ -286,6 +286,9 @@ class Form extends RequestHandler {
 		$this->securityToken = ($securityEnabled) ? new SecurityToken() : new NullSecurityToken();
 
 		$this->setupDefaultClasses();
+
+		// ensure security token is included in the field list
+		$this->ensureSecurityIDField();
 	}
 
 	/**
@@ -778,16 +781,10 @@ class Form extends RequestHandler {
 	 * @return FieldList
 	 */
 	public function getExtraFields() {
-		$extraFields = new FieldList();
-
-		$token = $this->getSecurityToken();
-		if ($token) {
-			$tokenField = $token->updateFieldSet($this->fields);
-			if($tokenField) $tokenField->setForm($this);
-		}
-		$this->securityTokenAdded = true;
+		$this->ensureSecurityIDField();
 
 		// add the "real" HTTP method if necessary (for PUT, DELETE and HEAD)
+		$extraFields = new FieldList();
 		if (strtoupper($this->FormMethod()) != $this->FormHttpMethod()) {
 			$methodField = new HiddenField('_method', '', $this->FormHttpMethod());
 			$methodField->setForm($this);
@@ -1742,7 +1739,7 @@ class Form extends RequestHandler {
 
 	/**
 	 * Get a list of all actions, including those in the main "fields" FieldList
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function getAllActions() {
@@ -1916,6 +1913,20 @@ class Form extends RequestHandler {
 		return $result;
 	}
 
+
+	/**
+	 * Ensure that $fields contains the SecurityID field
+	 */
+	protected function ensureSecurityIDField() {
+		$token = $this->getSecurityToken();
+		if ($token) {
+			$tokenField = $token->updateFieldSet($this->fields);
+			if ($tokenField) {
+				$tokenField->setForm($this);
+			}
+		}
+		$this->securityTokenAdded = true;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// TESTING HELPERS
