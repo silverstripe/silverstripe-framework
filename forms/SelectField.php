@@ -39,6 +39,24 @@ abstract class SelectField extends FormField {
 		parent::__construct($name, $title, $value);
 	}
 
+	public function getSchemaDataDefaults() {
+		$data = parent::getSchemaDataDefaults();
+
+		// Add options to 'data'
+		$source = $this->getSource();
+		$data['source'] = (is_array($source))
+			? array_map(function ($value, $title) {
+				return [
+					'value' => $value,
+					'title' => $title,
+				];
+			}, array_keys($source), $source)
+			: [];
+		$data['data']['disabled'] = $this->getDisabledItems();
+
+		return $data;
+	}
+
 	/**
 	 * Mark certain elements as disabled,
 	 * regardless of the {@link setDisabled()} settings.
@@ -46,6 +64,7 @@ abstract class SelectField extends FormField {
 	 * These should be items that appear in the source list, not in addition to them.
 	 *
 	 * @param array|SS_List $items Collection of values or items
+	 * @return $this
 	 */
 	public function setDisabledItems($items){
 		$this->disabledItems = $this->getListValues($items);
@@ -202,6 +221,7 @@ abstract class SelectField extends FormField {
 	}
 
 	public function performReadonlyTransformation() {
+		/** @var LookupField $field */
 		$field = $this->castedCopy('LookupField');
 		$field->setSource($this->getSource());
 		$field->setReadonly(true);
