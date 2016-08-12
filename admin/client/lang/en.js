@@ -6,6 +6,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   }
 } else {
   ss.i18n.addDictionary('en', {
+    "Boolean.ANY": "Any",
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "You have {num} page(s) selected.\n\nAre you sure you want to archive these pages?\n\nThese pages and all of their children pages will be unpublished and sent to the archive.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete these pages from live?",
     "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",

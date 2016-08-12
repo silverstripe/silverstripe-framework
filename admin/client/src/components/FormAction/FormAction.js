@@ -131,17 +131,17 @@ class FormAction extends SilverStripeComponent {
    * @return undefined
    */
   handleClick(event) {
-    if (typeof this.props.handleClick === 'undefined') {
-      return;
+    if (typeof this.props.handleClick === 'function') {
+      this.props.handleClick(event, this.props.name || this.props.id);
     }
 
-    this.props.handleClick(event);
   }
 
 }
 
 FormAction.propTypes = {
   id: React.PropTypes.string,
+  name: React.PropTypes.string,
   handleClick: React.PropTypes.func,
   title: React.PropTypes.string,
   type: React.PropTypes.string,

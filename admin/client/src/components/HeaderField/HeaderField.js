@@ -28,7 +28,7 @@ HeaderField.propTypes = {
     React.PropTypes.array,
     React.PropTypes.shape({
       headingLevel: React.PropTypes.number.isRequired,
-      title: React.PropTypes.string.isRequired,
+      title: React.PropTypes.string,
     }),
   ]).isRequired,
 };

@@ -79,6 +79,7 @@ export function submitForm(submitApi, formId, fieldValues) {
           type: ACTION_TYPES.SUBMIT_FORM_FAILURE,
           payload: { formId, error },
         });
+        return error;
       });
   };
 }

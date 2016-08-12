@@ -8,7 +8,7 @@ class PopoverField extends SilverStripeComponent {
     const placement = this.getPlacement();
     const overlay = (
       <Popover id={`${this.props.id}_Popover`} className={`fade in popover-${placement}`}
-        title={this.getPopoverTitle()}
+        title={this.props.data.popoverTitle}
       >
         {this.props.children}
       </Popover>
@@ -35,52 +35,21 @@ class PopoverField extends SilverStripeComponent {
    * @returns {String}
    */
   getPlacement() {
-    const placement = this.getDataProperty('placement');
+    const placement = this.props.data.placement;
     return placement || 'bottom';
-  }
-
-  /**
-   * Gets title of popup box
-   *
-   * @return {String} Return the string to use.
-   */
-  getPopoverTitle() {
-    const title = this.getDataProperty('popoverTitle');
-    return title || '';
-  }
-
-  /**
-   * Search for a given property either passed in to data or as a direct prop
-   *
-   * @param {String} name
-   * @returns {String}
-   */
-  getDataProperty(name) {
-    if (typeof this.props[name] !== 'undefined') {
-      return this.props[name];
-    }
-
-    // In case this is nested in the form schema data prop
-    if (
-      typeof this.props.data !== 'undefined'
-      && typeof this.props.data[name] !== 'undefined'
-    ) {
-      return this.props.data[name];
-    }
-
-    return null;
   }
 }
 
 PopoverField.propTypes = {
   id: React.PropTypes.string,
-  title: React.PropTypes.string,
-  popoverTitle: React.PropTypes.string,
-  placement: React.PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
-  data: React.PropTypes.shape({
-    popoverTitle: React.PropTypes.string,
-    placement: React.PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
-  }),
+  title: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
+  data: React.PropTypes.oneOfType([
+    React.PropTypes.array,
+    React.PropTypes.shape({
+      popoverTitle: React.PropTypes.string,
+      placement: React.PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
+    }),
+  ]),
 };
 
 export default PopoverField;

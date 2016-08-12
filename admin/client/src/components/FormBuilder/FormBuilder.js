@@ -25,6 +25,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
     this.mapFieldsToComponents = this.mapFieldsToComponents.bind(this);
     this.handleFieldUpdate = this.handleFieldUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleAction = this.handleAction.bind(this);
     this.removeForm = this.removeForm.bind(this);
     this.getFormId = this.getFormId.bind(this);
     this.getFormSchema = this.getFormSchema.bind(this);
@@ -171,6 +172,12 @@ export class FormBuilderComponent extends SilverStripeComponent {
     }
   }
 
+  handleAction(event, name) {
+    if (typeof this.props.handleAction === 'function') {
+      this.props.handleAction(event, name);
+    }
+  }
+
   /**
    * Form submission handler passed to the Form Component as a prop.
    * Provides a hook for controllers to access for state and provide custom functionality.
@@ -228,6 +235,30 @@ export class FormBuilderComponent extends SilverStripeComponent {
     submitFn();
   }
 
+  buildComponent(field, extraProps = {}) {
+    const Component = field.component !== null
+      ? injector.getComponentByName(field.component)
+      : injector.getComponentByDataType(field.type);
+
+    if (Component === null) {
+      return null;
+    }
+
+    // Props which every form field receives.
+    // Leave it up to the schema and component to determine
+    // which props are required.
+    const props = Object.assign({}, field, extraProps);
+
+    // Provides container components a place to hook in
+    // and apply customisations to scaffolded components.
+    const createFn = this.props.createFn;
+    if (typeof createFn === 'function') {
+      return createFn(Component, props);
+    }
+
+    return <Component key={props.id} {...props} />;
+  }
+
   /**
    * Maps a list of schema fields to their React Component.
    * Only top level form fields are handled here, composite fields (TabSets etc),
@@ -237,38 +268,16 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @return {Array}
    */
   mapFieldsToComponents(fields) {
-    const createFn = this.props.createFn;
-    const handleFieldUpdate = this.handleFieldUpdate;
-
     return fields.map((field) => {
-      const Component = field.component !== null
-        ? injector.getComponentByName(field.component)
-        : injector.getComponentByDataType(field.type);
-
-      if (Component === null) {
-        return null;
-      }
-
       // Events
-      const extraProps = { onChange: handleFieldUpdate };
+      const extraProps = { onChange: this.handleFieldUpdate };
 
       // Build child nodes
       if (field.children) {
         extraProps.children = this.mapFieldsToComponents(field.children);
       }
 
-      // Props which every form field receives.
-      // Leave it up to the schema and component to determine
-      // which props are required.
-      const props = Object.assign({}, field, extraProps);
-
-      // Provides container components a place to hook in
-      // and apply customisations to scaffolded components.
-      if (typeof createFn === 'function') {
-        return createFn(Component, props);
-      }
-
-      return <Component key={props.id} {...props} />;
+      return this.buildComponent(field, extraProps);
     });
   }
 
@@ -279,7 +288,17 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @return {Array}
    */
   mapActionsToComponents(actions) {
-    return this.mapFieldsToComponents(actions);
+    return actions.map((action) => {
+      // Events
+      const extraProps = { handleClick: this.handleAction };
+
+      // Build child nodes
+      if (action.children) {
+        extraProps.children = this.mapActionsToComponents(action.children);
+      }
+
+      return this.buildComponent(action, extraProps);
+    });
   }
 
   /**
@@ -297,7 +316,8 @@ export class FormBuilderComponent extends SilverStripeComponent {
       return structure;
     }
     return merge.recursive(true, structure, {
-      data: state.data,
+      data: Object.assign({}, structure.data, state.data),
+      source: state.source,
       messages: state.messages,
       valid: state.valid,
       value: state.value,
@@ -368,6 +388,7 @@ FormBuilderComponent.propTypes = {
   form: React.PropTypes.object.isRequired,
   formActions: React.PropTypes.object.isRequired,
   handleSubmit: React.PropTypes.func,
+  handleAction: React.PropTypes.func,
   schemas: React.PropTypes.object.isRequired,
   schemaActions: React.PropTypes.object.isRequired,
   schemaUrl: React.PropTypes.string.isRequired,

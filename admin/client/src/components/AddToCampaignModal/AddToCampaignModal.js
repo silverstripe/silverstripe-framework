@@ -13,11 +13,6 @@ class AddToCampaignModal extends SilverStripeComponent {
 
   handleSubmit(event, fieldValues, submitFn) {
 
-    if (!fieldValues.Campaign && fieldValues.Campaign !== 0) {
-      event.preventDefault();
-      return;
-    }
-
     if (typeof this.props.handleSubmit === 'function') {
       this.props.handleSubmit(event, fieldValues, submitFn);
       return;

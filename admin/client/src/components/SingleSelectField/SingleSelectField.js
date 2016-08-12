@@ -60,12 +60,7 @@ class SingleSelectField extends SilverStripeComponent {
    * @returns ReactComponent
    */
   getSelectField() {
-    const options = this.props.source.map((item) => {
-      return Object.assign({},
-        item,
-        {disabled: this.props.data.disabled.indexOf(item.value) > -1}
-      );
-    });
+    const options = this.props.source || [];
 
     if (this.props.hasEmptyDefault) {
       options.unshift({
@@ -124,21 +119,15 @@ SingleSelectField.propTypes = {
   source:          React.PropTypes.arrayOf(React.PropTypes.shape({
     value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
     title: React.PropTypes.string,
-  })).isRequired,
-  data:            React.PropTypes.shape({
-    disabled: React.PropTypes.arrayOf(
-      React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
-    ),
-  }),
+    disabled: React.PropTypes.bool,
+  })),
   hasEmptyDefault: React.PropTypes.bool,
   emptyString:     React.PropTypes.string,
 };
 
 SingleSelectField.defaultProps = {
-  data: {
-    disabled: [],
-  },
-  emptyString: '',
+  source: [],
+  emptyString: i18n._t('Boolean.ANY', 'Any'),
 };
 
 export default SingleSelectField;
