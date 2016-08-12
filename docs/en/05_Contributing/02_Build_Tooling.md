@@ -253,5 +253,5 @@ bundle at runtime.
 The advantage of using externals is a reduced file size. The browser only needs to download
 `jQuery` once (inside `bundle-a.js`) rather than it being included in multiple bundles.
 
-Core dependencies are are bundled and exposed in the `bundle-lib.js` file. Most of the libraries
+Core dependencies are bundled and exposed in the `bundle-lib.js` file. Most of the libraries
 a CMS developer requires are available a externals in that bundle.

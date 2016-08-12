@@ -1,7 +1,6 @@
 import BootRoutes from './BootRoutes';
-import { combineReducers, createStore, applyMiddleware } from 'redux';
+import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import createLogger from 'redux-logger';
 import Config from 'lib/Config';
 import reducerRegister from 'lib/ReducerRegister';
 import injector from 'lib/Injector';
@@ -44,11 +43,14 @@ function appBoot() {
 
   const env = Config.get('environment');
   const debugging = Config.get('debugging');
-  if (env === 'dev' && debugging) {
-    middleware.push(createLogger());
+  let runMiddleware = applyMiddleware(...middleware);
+  const devTools = window.devToolsExtension;
+
+  if (env === 'dev' && debugging && typeof devTools === 'function') {
+    runMiddleware = compose(applyMiddleware(...middleware), devTools());
   }
 
-  const createStoreWithMiddleware = applyMiddleware(...middleware)(createStore);
+  const createStoreWithMiddleware = runMiddleware(createStore);
   const store = createStoreWithMiddleware(rootReducer, initialState);
 
   // Set the initial config state.
