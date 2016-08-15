@@ -44,9 +44,9 @@ class FormAction extends SilverStripeComponent {
     const buttonClasses = ['btn'];
 
     // Add 'type' class
-    const bootstrapStyle = this.getBootstrapButtonStyle();
-    if (bootstrapStyle) {
-      buttonClasses.push(`btn-${bootstrapStyle}`);
+    const style = this.getButtonStyle();
+    if (style) {
+      buttonClasses.push(`btn-${style}`);
     }
 
     // If there is no text
@@ -82,13 +82,22 @@ class FormAction extends SilverStripeComponent {
    *
    * @return {String}
    */
-  getBootstrapButtonStyle() {
+  getButtonStyle() {
     // Add 'type' class
-    if (typeof this.props.bootstrapButtonStyle !== 'undefined') {
-      return this.props.bootstrapButtonStyle;
+    if (typeof this.props.data.buttonStyle !== 'undefined') {
+      return this.props.data.buttonStyle;
     }
 
-    if (this.props.name === 'action_save') {
+    const extraClasses = this.props.extraClass.split(' ');
+
+    // defined their own `btn-${something}` class
+    if (extraClasses.find((className) => className.indexOf('btn-') > -1)) {
+      return null;
+    }
+
+    if (this.props.name === 'action_save' ||
+        extraClasses.find((className) => className === 'ss-ui-action-constructive')
+    ) {
       return 'primary';
     }
 
@@ -134,9 +143,7 @@ class FormAction extends SilverStripeComponent {
     if (typeof this.props.handleClick === 'function') {
       this.props.handleClick(event, this.props.name || this.props.id);
     }
-
   }
-
 }
 
 FormAction.propTypes = {
@@ -148,7 +155,12 @@ FormAction.propTypes = {
   loading: React.PropTypes.bool,
   icon: React.PropTypes.string,
   disabled: React.PropTypes.bool,
-  bootstrapButtonStyle: React.PropTypes.string,
+  data: React.PropTypes.oneOfType([
+    React.PropTypes.array,
+    React.PropTypes.shape({
+      buttonStyle: React.PropTypes.string,
+    }),
+  ]),
   extraClass: React.PropTypes.string,
   attributes: React.PropTypes.object,
 };
@@ -156,6 +168,7 @@ FormAction.propTypes = {
 FormAction.defaultProps = {
   title: '',
   icon: '',
+  extraClass: '',
   attributes: {},
   data: {},
   disabled: false,

@@ -28,7 +28,7 @@ class TextField extends SilverStripeComponent {
    * @returns Object properties
    */
   getInputProps() {
-    // @todo Merge with 'attributes' from formfield schema
+    // TODO Merge with 'attributes' from formfield schema
     return {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
@@ -56,8 +56,6 @@ class TextField extends SilverStripeComponent {
 }
 
 TextField.propTypes = {
-  leftTitle: React.PropTypes.string,
-  title: React.PropTypes.string,
   extraClass: React.PropTypes.string,
   id: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,

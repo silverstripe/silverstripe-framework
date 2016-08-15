@@ -1,63 +1,65 @@
 import jQuery from 'jQuery';
 
 jQuery.entwine('ss', ($) => {
-  $('#add-to-campaign__dialog .add-to-campaign-action, .cms-content-actions .add-to-campaign-action, #add-to-campaign__action').entwine({
-    onclick() {
-      let dialog = $('#add-to-campaign__dialog');
+  $('#add-to-campaign__dialog .add-to-campaign-action,' +
+    '.cms-content-actions .add-to-campaign-action,' +
+    '#add-to-campaign__action').entwine({
+      onclick() {
+        let dialog = $('#add-to-campaign__dialog');
 
-      if (dialog.length) {
-        dialog.open();
-      } else {
-        dialog = $('<div id="add-to-campaign__dialog" class="add-to-campaign__dialog" />');
-        $('body').append(dialog);
-      }
+        if (dialog.length) {
+          dialog.open();
+        } else {
+          dialog = $('<div id="add-to-campaign__dialog" class="add-to-campaign__dialog" />');
+          $('body').append(dialog);
+        }
 
-      if (dialog.children().length === 0) dialog.addClass('loading');
+        if (dialog.children().length === 0) dialog.addClass('loading');
 
-      const form = this.closest('form');
-      const button = this;
+        const form = this.closest('form');
+        const button = this;
 
-      const formData = form.serializeArray();
-      formData.push({
-        name: button.attr('name'),
-        value: '1',
-      });
+        const formData = form.serializeArray();
+        formData.push({
+          name: button.attr('name'),
+          value: '1',
+        });
 
-      $.ajax({
-        url: form.attr('action'),
-        data: formData,
-        type: 'POST',
-        global: false,
-        complete() {
-          dialog.removeClass('loading');
-        },
-        success(data, status, xhr) {
-          if (xhr.getResponseHeader('Content-Type').indexOf('text/plain') === 0) {
+        $.ajax({
+          url: form.attr('action'),
+          data: formData,
+          type: 'POST',
+          global: false,
+          complete() {
+            dialog.removeClass('loading');
+          },
+          success(data, status, xhr) {
+            if (xhr.getResponseHeader('Content-Type').indexOf('text/plain') === 0) {
+              const container = $(
+                '<div class="add-to-campaign__response add-to-campaign__response--good">' +
+                '<span></span></div>'
+              );
+              container.find('span').text(data);
+              dialog.append(container);
+            } else {
+              dialog.html(data);
+            }
+          },
+          error(xhr) {
+            const error = xhr.responseText
+              || 'Something went wrong. Please try again in a few minutes.';
             const container = $(
-              '<div class="add-to-campaign__response add-to-campaign__response--good">' +
+              '<div class="add-to-campaign__response add-to-campaign__response--error">' +
               '<span></span></div>'
             );
-            container.find('span').text(data);
+            container.find('span').text(error);
             dialog.append(container);
-          } else {
-            dialog.html(data);
-          }
-        },
-        error(xhr) {
-          const error = xhr.responseText
-            || 'Something went wrong. Please try again in a few minutes.';
-          const container = $(
-            '<div class="add-to-campaign__response add-to-campaign__response--error">' +
-            '<span></span></div>'
-          );
-          container.find('span').text(error);
-          dialog.append(container);
-        },
-      });
+          },
+        });
 
-      return false;
-    },
-  });
+        return false;
+      },
+    });
 
   $('#add-to-campaign__dialog').entwine({
     onadd() {

@@ -22,7 +22,7 @@
   }
 
   _jQuery2.default.entwine('ss', function ($) {
-    $('.add-to-campaign-action, #add-to-campaign__action').entwine({
+    $('#add-to-campaign__dialog .add-to-campaign-action,' + '.cms-content-actions .add-to-campaign-action,' + '#add-to-campaign__action').entwine({
       onclick: function onclick() {
         var dialog = $('#add-to-campaign__dialog');
 

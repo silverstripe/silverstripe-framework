@@ -4,10 +4,6 @@ Generates a `<select><option></option></select>`
 
 ## Props
 
-### leftTitle
-
-The label text to display with the field.
-
 ### extraClass
 
 Addition CSS classes to apply to the `<select>` element.
@@ -22,20 +18,32 @@ Handler function called when the field's value changes.
 
 ### value
 
-The field's value.
+The field's selected value.
 
 ### source (required)
 
 The list of possible values that could be selected
 
-### disabled
+#### value
 
-A list of values within `source` that can be seen but not selected
+The value for this option.
 
-### hasEmptyDefault
+#### title
+
+The title or label displayed for users.
+
+#### disabled
+
+This option is shown but disabled from being selected.
+
+### data
+
+Additional field specific data
+
+#### hasEmptyDefault
 
 If true, create an empty value option first
 
-### emptyString
+#### emptyString
 
 When `hasEmptyDefault` is true, this sets the label for the option

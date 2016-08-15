@@ -172,9 +172,10 @@ export class FormBuilderComponent extends SilverStripeComponent {
     }
   }
 
-  handleAction(event, name) {
+  handleAction(event, submitAction) {
+    this.props.formActions.setSubmitAction(this.getFormId(), submitAction);
     if (typeof this.props.handleAction === 'function') {
-      this.props.handleAction(event, name);
+      this.props.handleAction(event, submitAction);
     }
   }
 
@@ -227,12 +228,11 @@ export class FormBuilderComponent extends SilverStripeComponent {
     );
 
     if (typeof this.props.handleSubmit !== 'undefined') {
-      this.props.handleSubmit(event, fieldValues, submitFn);
-      return;
+      return this.props.handleSubmit(event, fieldValues, submitFn);
     }
 
     event.preventDefault();
-    submitFn();
+    return submitFn();
   }
 
   buildComponent(field, extraProps = {}) {
@@ -288,9 +288,16 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @return {Array}
    */
   mapActionsToComponents(actions) {
+    const form = this.props.form[this.getFormId()];
+
     return actions.map((action) => {
+      const loading = (form && form.submitting && form.submitAction === action.name);
       // Events
-      const extraProps = { handleClick: this.handleAction };
+      const extraProps = {
+        handleClick: this.handleAction,
+        loading,
+        disabled: loading || action.disabled,
+      };
 
       // Build child nodes
       if (action.children) {

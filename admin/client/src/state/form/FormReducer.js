@@ -64,6 +64,11 @@ function formReducer(state = initialState, action) {
         submitting: false,
       }));
 
+    case ACTION_TYPES.SET_SUBMIT_ACTION:
+      return deepFreeze(updateForm(action.payload.formId, {
+        submitAction: action.payload.submitAction,
+      }));
+
     default:
       return state;
 

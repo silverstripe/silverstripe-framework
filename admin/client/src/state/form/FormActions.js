@@ -83,3 +83,12 @@ export function submitForm(submitApi, formId, fieldValues) {
       });
   };
 }
+
+export function setSubmitAction(formId, submitAction) {
+  return (dispatch) => {
+    dispatch({
+      type: ACTION_TYPES.SET_SUBMIT_ACTION,
+      payload: { formId, submitAction },
+    });
+  };
+}

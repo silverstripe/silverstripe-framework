@@ -45,7 +45,7 @@ class FormAction extends FormField {
 
 	/**
 	 * Enables the use of <button> instead of <input>
-	 * in {@link Field()} - for more customizeable styling.
+	 * in {@link Field()} - for more customisable styling.
 	 *
 	 * @var boolean
 	 */

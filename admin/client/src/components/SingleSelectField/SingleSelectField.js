@@ -1,5 +1,7 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+//import fieldHolder from 'components/FieldHolder/FieldHolder';
+import i18n from 'i18n';
 
 class SingleSelectField extends SilverStripeComponent {
 
@@ -10,10 +12,6 @@ class SingleSelectField extends SilverStripeComponent {
   }
 
   render() {
-    const labelText = this.props.leftTitle !== null
-      ? this.props.leftTitle
-      : this.props.title;
-
     let field = null;
     if (this.props.readOnly) {
       field = this.getReadonlyField;
@@ -21,22 +19,7 @@ class SingleSelectField extends SilverStripeComponent {
       field = this.getSelectField();
     }
 
-    // The extraClass property is defined on both the holder and element
-    // for legacy reasons (same behaviour as PHP rendering)
-    const classNames = ['form-group', this.props.extraClass].join(' ');
-
-    return (
-      <div className={classNames}>
-        {labelText &&
-        <label className="form__field-label" htmlFor={`gallery_${this.props.name}`}>
-          {labelText}
-        </label>
-        }
-        <div className="form__field-holder">
-          {field}
-        </div>
-      </div>
-    );
+    return field;
   }
 
   /**
@@ -45,9 +28,9 @@ class SingleSelectField extends SilverStripeComponent {
    * @returns ReactComponent
    */
   getReadonlyField() {
-    let label = this.props.source[this.props.value];
+    let label = this.props.source.find((item) => item.value === this.props.value);
 
-    label = label !== null
+    label = label !== undefined
       ? label
       : this.props.value;
 
@@ -65,16 +48,23 @@ class SingleSelectField extends SilverStripeComponent {
     if (this.props.hasEmptyDefault) {
       options.unshift({
         value: '',
-        title: this.props.emptyString
+        title: this.props.emptyString,
+        disabled: false,
       });
     }
-    return <select {...this.getInputProps()}>
-      { options.map((item) => {
-        const key = `${this.props.name}-${item.value || 'null'}`;
+    return (
+      <select {...this.getInputProps()}>
+        { options.map((item) => {
+          const key = `${this.props.name}-${item.value || 'null'}`;
 
-        return <option key={key} value={item.value} disabled={item.disabled}>{item.title}</option>;
-      }) }
-    </select>;
+          return (
+            <option key={key} value={item.value} disabled={item.disabled}>
+              {item.title}
+            </option>
+          );
+        }) }
+      </select>
+    );
   }
 
   /**
@@ -87,10 +77,10 @@ class SingleSelectField extends SilverStripeComponent {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
       className: ['form-control', this.props.extraClass].join(' '),
-      id:        this.props.id,
-      name:      this.props.name,
-      onChange:  this.handleChange,
-      value:     this.props.value,
+      id: this.props.id,
+      name: this.props.name,
+      onChange: this.handleChange,
+      value: this.props.value,
     };
   }
 
@@ -104,25 +94,23 @@ class SingleSelectField extends SilverStripeComponent {
       return;
     }
 
-    this.props.onChange(event, {id: this.props.id, value: event.target.value});
+    this.props.onChange(event, { id: this.props.id, value: event.target.value });
   }
 }
 
 SingleSelectField.propTypes = {
-  leftTitle:       React.PropTypes.string,
-  extraClass:      React.PropTypes.string,
-  id:              React.PropTypes.string,
-  name:            React.PropTypes.string.isRequired,
-  onChange:        React.PropTypes.func,
-  value:           React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-  readOnly:        React.PropTypes.bool,
-  source:          React.PropTypes.arrayOf(React.PropTypes.shape({
+  id: React.PropTypes.string,
+  name: React.PropTypes.string.isRequired,
+  onChange: React.PropTypes.func,
+  value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+  readOnly: React.PropTypes.bool,
+  source: React.PropTypes.arrayOf(React.PropTypes.shape({
     value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
     title: React.PropTypes.string,
     disabled: React.PropTypes.bool,
   })),
   hasEmptyDefault: React.PropTypes.bool,
-  emptyString:     React.PropTypes.string,
+  emptyString: React.PropTypes.string,
 };
 
 SingleSelectField.defaultProps = {
