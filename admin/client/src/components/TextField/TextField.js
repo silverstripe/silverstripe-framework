@@ -28,7 +28,7 @@ class TextField extends SilverStripeComponent {
     return (
       <div className={classNames}>
         {labelText &&
-          <label className="form__field-label" htmlFor={`gallery_${this.props.name}`}>
+          <label className="form__field-label" htmlFor={`${this.props.id}`}>
             {labelText}
           </label>
         }
@@ -69,6 +69,7 @@ class TextField extends SilverStripeComponent {
 
 TextField.propTypes = {
   leftTitle: React.PropTypes.string,
+  title: React.PropTypes.string,
   extraClass: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func,
