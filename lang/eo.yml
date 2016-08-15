@@ -210,15 +210,12 @@ eo:
     JsType: 'Ĝavaskripta dosiero'
     Mp3Type: 'MP3-sondosiero'
     MpgType: 'AVI-videa dosiero'
-    NOFILESIZE: 'Dosiero havas neniom da bajtoj.'
     NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
     Name: Nomo
     PLURALNAME: Dosieroj
     PdfType: 'Dosiero de Adobe Acrobat PDF'
     PngType: 'PNG-bildo - ĝeneralcela formato'
     SINGULARNAME: Dosiero
-    TOOLARGE: 'Dosiero estas tro granda, maksimumo permesita {size}'
-    TOOLARGESHORT: 'Dosiero estas pli ol {size}'
     TiffType: 'Markita bildoformato'
     Title: Titolo
     WavType: 'WAV-sondosiero'
@@ -381,8 +378,6 @@ eo:
     FROMWEB: 'El la TTT'
     FindInFolder: 'Serĉi en dosierujo'
     IMAGEALT: 'Alternativa teksto (alt)'
-    IMAGEALTTEXT: 'Alternativa teksto (alt) - vidigota se bildo ne estas vidigebla'
-    IMAGEALTTEXTDESC: 'Vidigota al ekranlegantoj aŭ se bildo ne estas vidigebla'
     IMAGEDIMENSIONS: Dimensioj
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo'
@@ -417,13 +412,10 @@ eo:
     CANCEL: Rezigni
     CANT_REORGANISE: 'Vi ne rajtas ŝanĝi supronivelajn paĝojn. Via ŝanĝo ne konserviĝis.'
     DELETED: Forigita.
-    DropdownBatchActionsDefault: 'Elekti agon...'
     HELP: Helpo
-    PAGETYPE: 'Tipo de paĝo'
     PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
     PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas ensaluti kiel aliulo, faru tion sube.'
     PERMDEFAULT: 'Necesas ensaluti por aliri la administran zonon; bonvolu enigi viajn akreditaĵoj sube.'
-    PLEASESAVE: 'Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita.'
     PreviewButton: Antaŭvido
     REORGANISATIONSUCCESSFUL: 'Sukcese reorganizis la retejan arbon.'
     SAVEDUP: Konservita.
@@ -479,7 +471,6 @@ eo:
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: Familia nomo
     TIMEFORMAT: 'Formato de horo'
-    VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama {identifier}'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'

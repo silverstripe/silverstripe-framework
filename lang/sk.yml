@@ -210,15 +210,12 @@ sk:
     JsType: 'Javascript súbor'
     Mp3Type: 'MP3 audio súbor'
     MpgType: 'MPEG video súbor'
-    NOFILESIZE: 'Veľkosť súboru je nula bajtov.'
     NOVALIDUPLOAD: 'Subor nie je povolený pre nahratie'
     Name: Meno
     PLURALNAME: Súbory
     PdfType: 'Adobe Acrobat PDF súbor'
     PngType: 'PNG obrázok - vhodný univerzálny formát'
     SINGULARNAME: Súbor
-    TOOLARGE: 'Veľkosť súboru je príliš veľká, maximum {size} je povolené'
-    TOOLARGESHORT: 'Veľkosť súboru prekračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Názov
     WavType: 'WAV audo súbor'
@@ -381,8 +378,6 @@ sk:
     FROMWEB: 'Z webu'
     FindInFolder: 'Vyhľadať v priečinku'
     IMAGEALT: 'Atlernatívny text (alt)'
-    IMAGEALTTEXT: 'Atlernatívny text (alt) - zobrazí sa, ak nemože byť zobrazený obrázok'
-    IMAGEALTTEXTDESC: 'Zobrazí sa na obrazovke alebo ak obrázok nemôže byť zobrazený'
     IMAGEDIMENSIONS: Rozmery
     IMAGEHEIGHTPX: Výška
     IMAGETITLE: 'Text titulky (tooltip) - pre doplňujúce informácie o obrázku'
@@ -417,13 +412,10 @@ sk:
     CANCEL: Zrušiť
     CANT_REORGANISE: 'Nemáte oprávnenie meniť stránky najvyššej úrovne. Vaša zmena nebola uložená.'
     DELETED: Zmazané.
-    DropdownBatchActionsDefault: 'Vyberte akciu...'
     HELP: Pomoc
-    PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Boli ste odhlásený'
     PERMALREADY: 'Je nám ľúto, ale k tejto časti CMS nemáte prístup . Ak sa chcete prihlásiť ako niekto iný, urobte tak nižšie.'
     PERMDEFAULT: 'Musíte byť prihlásený/á k prístupu do oblasti administrácie, zadajte vaše prihlasovacie údaje dole, prosím.'
-    PLEASESAVE: 'Prosím uložte stránku: Táto stránka nemôže byť aktualizovaná, lebo ešte nebola uložená.'
     PreviewButton: Náhľad
     REORGANISATIONSUCCESSFUL: 'Strom webu bol reorganizovaný úspešne.'
     SAVEDUP: Uložené.
@@ -479,7 +471,6 @@ sk:
     SUBJECTPASSWORDRESET: 'Odkaz na resetovanie hesla'
     SURNAME: Priezvisko
     TIMEFORMAT: 'Formát času'
-    VALIDATIONMEMBEREXISTS: 'Člen už existuje s rovnakým {identifier}'
     ValidationIdentifierFailed: 'Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorm ({name} = {value})'
     WELCOMEBACK: 'Vitajte späť, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'

@@ -147,14 +147,11 @@ hr:
     JsType: 'Javascript datoteka'
     Mp3Type: 'MP3 zvuk datoteka'
     MpgType: 'MPEG video datoteka'
-    NOFILESIZE: 'Veličina datoteke je nula bajtova.'
     NOVALIDUPLOAD: 'Datoteka nije valjan upload'
     Name: Naziv
     PLURALNAME: Datoteke
     PngType: 'PNG slika - dobar generalan format'
     SINGULARNAME: Datoteka
-    TOOLARGE: 'Veličina datoteke je prevelika, maksimalna veličina je {size}'
-    TOOLARGESHORT: 'Veličina datoteke premašuje {size}'
     Title: Naslov
     WavType: 'WAV zvuk datoteka'
     XlsType: 'Excel tablica'
@@ -261,9 +258,7 @@ hr:
   LeftAndMain:
     CANCEL: Odustani
     DELETED: Obrisano.
-    DropdownBatchActionsDefault: 'Odaberite akciju...'
     HELP: Pomoć
-    PAGETYPE: 'Tip stranice'
     PERMAGAIN: 'Odjavili ste se sa sustava. Želite li se ponovno prijaviti upišite korisničko ime i lozinku.'
     PreviewButton: Pregled
     SAVEDUP: Spremljeno
