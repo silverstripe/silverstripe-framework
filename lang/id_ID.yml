@@ -1,5 +1,12 @@
 id_ID:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'Sepertinya Anda tidak memiliki ijin yang diperlukan untuk menambahkan {ObjectTitle} ke {CampaignTitle}'
+    ErrorGeneral: 'Mohon maaf, ada kesalahan'
+    ErrorNotFound: '{Type} tidak ditemukan'
+    Success: 'Berhasil menambahkan {ObjectTitle} ke {CampaignTitle}'
   AssetAdmin:
+    ALLOWEDEXTS: 'Ekstensi berkas yang diperbolehkan'
+    HIDEALLOWEDEXTS: 'Sembunyikan ekstensi berkas yang diperbolehkan'
     NEWFOLDER: FolderBaru
     SHOWALLOWEDEXTS: 'Tampilkan ekstensi yang dibolehkan'
   AssetTableField:
@@ -13,6 +20,7 @@ id_ID:
     TITLE: Judul
     TYPE: 'Jenis berkas'
     URL: URL
+    WIDTH: Lebar
   AssetUploadField:
     ChooseFiles: 'Pilih berkas'
     DRAGFILESHERE: 'Tarik berkas ke sini'
@@ -564,3 +572,6 @@ id_ID:
     UPLOADSINTO: 'disimpan ke /{path}'
   Versioned:
     has_many_Versions: Versi
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Arsip
+    Archived: '%s %s diarsipkan'
