@@ -206,6 +206,27 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);
 	}
 
+	public function testSafelyCast() {
+		$member = new Member();
+		$member->FirstName = '<firstname>';
+		$member->Surname = '<surname>';
+		$member->write();
+		$field1 = new CheckboxSetField('Options', 'Options', array(
+			'one' => 'One',
+			'two' => 'Two & Three',
+			'three' => DBField::create_field('HTMLText', 'Four &amp; Five &amp; Six'),
+			$member
+		));
+		$fieldHTML = (string)$field1->Field();
+		$this->assertContains('One', $fieldHTML);
+		$this->assertContains('Two &amp; Three', $fieldHTML);
+		$this->assertNotContains('Two & Three', $fieldHTML);
+		$this->assertContains('Four &amp; Five &amp; Six', $fieldHTML);
+		$this->assertNotContains('Four & Five & Six', $fieldHTML);
+		$this->assertContains('&lt;firstname&gt;', $fieldHTML);
+		$this->assertNotContains('<firstname>', $fieldHTML);
+	}
+
 }
 
 /**

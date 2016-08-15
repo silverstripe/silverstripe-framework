@@ -62,6 +62,11 @@ class OptionsetField extends DropdownField {
 
 		if($source) {
 			foreach($source as $value => $title) {
+				// Ensure $title is safely cast
+				if ( !($title instanceof DBField) ) {
+					$title = DBField::create_field('Text', $title);
+				}
+
 				$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]/', '', $value);
 				$odd = ($odd + 1) % 2;
 				$extraClass = $odd ? 'odd' : 'even';
