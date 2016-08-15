@@ -11,6 +11,10 @@ class HTMLReadonlyField extends ReadonlyField {
 		'ValueEntities' => 'HTMLFragment',
 	];
 
+	protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
+
+	protected $schemaComponent = 'HtmlReadonlyField';
+
 	public function Field($properties = array()) {
 		return $this->renderWith($this->getTemplates());
 	}

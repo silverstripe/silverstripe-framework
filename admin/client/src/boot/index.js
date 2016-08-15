@@ -18,6 +18,7 @@ import FormAction from 'components/FormAction/FormAction';
 import PopoverField from 'components/PopoverField/PopoverField';
 import HeaderField from 'components/HeaderField/HeaderField';
 import LiteralField from 'components/LiteralField/LiteralField';
+import HtmlReadonlyField from 'components/HtmlReadonlyField/HtmlReadonlyField';
 import { routerReducer } from 'react-router-redux';
 
 // Sections
@@ -39,6 +40,7 @@ function appBoot() {
   injector.register('PopoverField', PopoverField);
   injector.register('HeaderField', HeaderField);
   injector.register('LiteralField', LiteralField);
+  injector.register('HtmlReadonlyField', HtmlReadonlyField);
   injector.register('FormAction', FormAction);
 
   const initialState = {};
