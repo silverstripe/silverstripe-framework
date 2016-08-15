@@ -233,12 +233,24 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
+	 * Returns true if this DataList can be filtered by the given field.
 	 *
-	 * @param string $fieldName
+	 * @param string $fieldName (May be a related field in dot notation like Member.FirstName)
 	 * @return boolean
 	 */
 	public function canFilterBy($fieldName) {
-		if($t = singleton($this->dataClass)->hasDatabaseField($fieldName)){
+		$model = singleton($this->dataClass);
+		$relations = explode(".", $fieldName);
+		// First validate the relationships
+		$fieldName = array_pop($relations);
+		foreach ($relations as $r) {
+			$relationClass = $model->getRelationClass($r);
+			if (!$relationClass) return false;
+			$model = singleton($relationClass);
+			if (!$model) return false;
+		}
+		// Then check field
+		if ($model->hasDatabaseField($fieldName)){
 			return true;
 		}
 		return false;

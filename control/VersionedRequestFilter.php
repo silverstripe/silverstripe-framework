@@ -23,7 +23,7 @@ class VersionedRequestFilter implements RequestFilter {
 					'You must log in with your CMS password in order to view the draft or archived content. '.
 					'<a href="%s">Click here to go back to the published site.</a>'
 				),
-				Controller::join_links(Director::baseURL(), $request->getURL(), "?stage=Live")
+				Convert::raw2xml(Controller::join_links(Director::baseURL(), $request->getURL(), "?stage=Live"))
 			);
 
 			// Force output since RequestFilter::preRequest doesn't support response overriding
