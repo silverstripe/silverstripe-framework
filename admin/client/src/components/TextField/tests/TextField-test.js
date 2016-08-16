@@ -2,6 +2,7 @@
 
 jest.unmock('react');
 jest.unmock('react-addons-test-utils');
+jest.unmock('components/FieldHolder/FieldHolder');
 jest.unmock('../TextField');
 
 import React from 'react';
@@ -22,16 +23,17 @@ describe('TextField', () => {
 
   describe('onChange()', () => {
     let textField;
+    let inputField;
 
     beforeEach(() => {
       textField = ReactTestUtils.renderIntoDocument(
         <TextField {...props} />
       );
+      inputField = ReactTestUtils.findRenderedDOMComponentWithTag(textField, 'input');
     });
 
     it('should call the onChange function on props', () => {
-      textField.handleChange({ target: { value: '' } });
-
+      ReactTestUtils.Simulate.change(inputField);
       expect(textField.props.onChange).toBeCalled();
     });
   });

@@ -1,5 +1,6 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+import fieldHolder from 'components/FieldHolder/FieldHolder';
 
 class TextField extends SilverStripeComponent {
 
@@ -10,33 +11,15 @@ class TextField extends SilverStripeComponent {
   }
 
   render() {
-    const labelText = this.props.leftTitle !== null
-      ? this.props.leftTitle
-      : this.props.title;
-
     let field = null;
+
     if (this.props.readOnly) {
       field = <div><i>{this.props.value}</i></div>;
     } else {
       field = <input {...this.getInputProps()} />;
     }
 
-    // The extraClass property is defined on both the holder and element
-    // for legacy reasons (same behaviour as PHP rendering)
-    const classNames = ['form-group', this.props.extraClass].join(' ');
-
-    return (
-      <div className={classNames}>
-        {labelText &&
-          <label className="form__field-label" htmlFor={`${this.props.id}`}>
-            {labelText}
-          </label>
-        }
-        <div className="form__field-holder">
-        {field}
-        </div>
-      </div>
-    );
+    return field;
   }
 
   getInputProps() {
@@ -77,4 +60,4 @@ TextField.propTypes = {
   readOnly: React.PropTypes.bool,
 };
 
-export default TextField;
+export default fieldHolder(TextField);
