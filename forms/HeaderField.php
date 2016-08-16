@@ -17,31 +17,17 @@ class HeaderField extends DatalessField {
 	 */
 	protected $headingLevel = 2;
 
+	protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
+
+	protected $schemaComponent = 'HeaderField';
+
 	/**
 	 * @param string $name
-	 * @param null|string $title
+	 * @param string $title
 	 * @param int $headingLevel
 	 */
-	public function __construct($name, $title = null, $headingLevel = 2) {
-		// legacy handling:
-		// $title, $headingLevel...
-		$args = func_get_args();
-
-		if(!isset($args[1]) || is_numeric($args[1])) {
-			if(isset($args[0])) {
-				$title = $args[0];
-			}
-
-			// Prefix name to avoid collisions.
-			$name = 'HeaderField' . $title;
-
-			if(isset($args[1])) {
-				$headingLevel = $args[1];
-			}
-		}
-
+	public function __construct($name, $title, $headingLevel = 2) {
 		$this->setHeadingLevel($headingLevel);
-
 		parent::__construct($name, $title);
 	}
 
@@ -83,5 +69,31 @@ class HeaderField extends DatalessField {
 	 */
 	public function Type() {
 		return null;
+	}
+
+	/**
+	 * Header fields support dynamic titles via schema state
+	 *
+	 * @return array
+	 */
+	public function getSchemaStateDefaults() {
+		$state = parent::getSchemaStateDefaults();
+
+		$state['data']['title'] = $this->Title();
+
+		return $state;
+	}
+
+	/**
+	 * Header fields heading level to be set
+	 *
+	 * @return array
+	 */
+	public function getSchemaDataDefaults() {
+		$data = parent::getSchemaDataDefaults();
+
+		$data['data']['headingLevel'] = $this->headingLevel;
+
+		return $data;
 	}
 }
