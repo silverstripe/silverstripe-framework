@@ -152,21 +152,6 @@ class DatabaseAdmin extends Controller {
 	}
 
 	/**
-	 * Check if database needs to be built, and build it if it does.
-	 */
-	public static function autoBuild() {
-		$dataClasses = ClassInfo::subclassesFor('SilverStripe\ORM\DataObject');
-		$lastBuilt = self::lastBuilt();
-		foreach($dataClasses as $class) {
-			if(filemtime(getClassFile($class)) > $lastBuilt) {
-				$da = new DatabaseAdmin();
-				$da->doBuild(true);
-				return;
-			}
-		}
-	}
-
-	/**
 	 * Build the default data, calling requireDefaultRecords on all
 	 * DataObject classes
 	 */
