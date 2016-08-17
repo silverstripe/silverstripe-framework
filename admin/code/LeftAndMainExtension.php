@@ -1,5 +1,10 @@
 <?php
 
+namespace SilverStripe\Admin;
+
+use Extension;
+
+
 /**
  * Plug-ins for additional functionality in your LeftAndMain classes.
  *

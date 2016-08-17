@@ -379,7 +379,7 @@ in a single Ajax request.
 
 	:::js
 	// MyAdmin.ss
-	<% include CMSBreadcrumbs %>
+	<% include SilverStripe\\Admin\\CMSBreadcrumbs %>
 	<div>Static content (not affected by update)</div>
 	<% include MyRecordInfo %>
 	<a href="{$AdminURL}myadmin" class="cms-panel-link" data-pjax-target="MyRecordInfo,Breadcrumbs">

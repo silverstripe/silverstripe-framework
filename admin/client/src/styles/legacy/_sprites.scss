@@ -168,23 +168,23 @@
     height: 24px;
     @extend .icon-menu-icons-24x24;
 
-    &.icon-campaignadmin {
+    &.icon-silverstripe-admin-campaignadmin {
       @include sprite($menu-icons-24x24-collection, inline-block);
     }
-    &.icon-assetadmin,
+    &.icon-silverstripe-cms-controllers-assetadmin,
     &.icon-silverstripe-assetadmin-controller-assetadmin {
       @include sprite($menu-icons-24x24-picture, inline-block);
     }
-    &.icon-cmsmain {
+    &.icon-silverstripe-cms-controllers-cmsmain {
       @include sprite($menu-icons-24x24-pencil, inline-block);
     }
-    &.icon-cmspagescontroller {
+    &.icon-silverstripe-cms-controllers-cmspagescontroller {
       @include sprite($menu-icons-24x24-network, inline-block);
     }
-    &.icon-cmssettingscontroller {
+    &.icon-siteconfigleftandmain {
       @include sprite($menu-icons-24x24-gears, inline-block);
     }
-    &.icon-securityadmin {
+    &.icon-silverstripe-admin-securityadmin {
       @include sprite($menu-icons-24x24-community, inline-block);
     }
     &.icon-reportadmin {
@@ -203,23 +203,23 @@
     height: 16px;
     @extend .icon-menu-icons-16x16;
 
-    &.icon-campaignadmin {
+    &.icon-silverstripe-admin-campaignadmin {
       @include sprite($menu-icons-16x16-collection, inline-block);
     }
-    &.icon-assetadmin,
+    &.icon-silverstripe-cms-controllers-assetadmin,
     &.icon-silverstripe-assetadmin-controller-assetadmin {
       @include sprite($menu-icons-16x16-picture, inline-block);
     }
-    &.icon-cmsmain {
+    &.icon-silverstripe-cms-controllers-cmsmain {
       @include sprite($menu-icons-16x16-pencil, inline-block);
     }
-    &.icon-cmspagescontroller {
+    &.icon-silverstripe-cms-controllers-cmspagescontroller {
       @include sprite($menu-icons-16x16-network, inline-block);
     }
-    &.icon-cmssettingscontroller {
+    &.icon-siteconfigleftandmain {
       @include sprite($menu-icons-16x16-gears, inline-block);
     }
-    &.icon-securityadmin {
+    &.icon-silverstripe-admin-securityadmin {
       @include sprite($menu-icons-16x16-community, inline-block);
     }
     &.icon-reportadmin {

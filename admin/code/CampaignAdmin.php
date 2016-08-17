@@ -1,12 +1,22 @@
 <?php
 
+namespace SilverStripe\Admin;
+
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\PermissionProvider;
-
+use Convert;
+use SS_HTTPResponse;
+use SS_HTTPRequest;
+use LogicException;
+use HiddenField;
+use Form;
+use FieldList;
+use FormAction;
+use Controller;
 
 /**
  * Campaign section of the CMS
@@ -57,6 +67,8 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 	 * @var int
 	 */
 	private static $thumbnail_height = 64;
+
+	private static $required_permission_codes = 'CMS_ACCESS_CampaignAdmin';
 
 	public function getClientConfig() {
 		return array_merge(parent::getClientConfig(), [
@@ -548,6 +560,19 @@ JSON;
 		return Controller::join_links(
 			$this->Link('item'),
 			$itemID
+		);
+	}
+
+	public function providePermissions() {
+		return array(
+			"CMS_ACCESS_CampaignAdmin" => array(
+				'name' => _t('CMSMain.ACCESS', "Access to '{title}' section", array('title' => static::menu_title())),
+				'category' => _t('Permission.CMS_ACCESS_CATEGORY', 'CMS Access'),
+				'help' => _t(
+					'CampaignAdmin.ACCESS_HELP',
+					'Allow viewing of the campaign publishing section.'
+				)
+			)
 		);
 	}
 

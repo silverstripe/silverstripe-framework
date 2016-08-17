@@ -5,13 +5,15 @@ namespace SilverStripe\ORM\Hierarchy;
 use Config;
 use Exception;
 use Controller;
-use LeftAndMain;
-use ClassInfo;
+use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Admin\LeftAndMain;
+use SiteTree;
+
 
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents. The most

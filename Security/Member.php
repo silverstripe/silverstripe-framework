@@ -3,6 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\CMS\Controllers\CMSMain;
+use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\ORM\SS_Map;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -1348,10 +1349,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if(!$groups || $groups->Count() == 0) {
 			$perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
 
-			if(class_exists('SilverStripe\\CMS\\Controllers\\CMSMain')) {
+			if (class_exists('SilverStripe\\CMS\\Controllers\\CMSMain')) {
 				$cmsPerms = CMSMain::singleton()->providePermissions();
 			} else {
-				$cmsPerms = singleton('LeftAndMain')->providePermissions();
+				$cmsPerms = LeftAndMain::singleton()->providePermissions();
 			}
 
 			if(!empty($cmsPerms)) {

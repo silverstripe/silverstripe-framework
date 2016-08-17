@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Admin\CMSMenu;
+
 // Default CMS HTMLEditorConfig
 HTMLEditorConfig::get('cms')->setOptions(array(
 	'friendly_name' => 'Default CMS',
@@ -35,4 +37,4 @@ HTMLEditorConfig::get('cms')
 		'ssbuttons' => FRAMEWORK_DIR . '/client/dist/js/TinyMCE_SSPlugin.js'
 	));
 
-CMSMenu::remove_menu_class('CMSProfileController');
+CMSMenu::remove_menu_class('SilverStripe\\Admin\\CMSProfileController');

@@ -9,7 +9,7 @@
 <body class="loading cms" lang="$Locale.RFC1766" data-frameworkpath="$ModulePath(framework)"
 	data-member-tempid="$CurrentMember.TempIDHash.ATT"
 >
-	<% include CMSLoadingScreen %>
+	<% include SilverStripe\\Admin\\CMSLoadingScreen %>
 
 	<div class="cms-container center" data-layout-type="custom">
 		$Menu

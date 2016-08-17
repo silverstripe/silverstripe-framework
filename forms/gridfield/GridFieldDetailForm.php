@@ -2,10 +2,13 @@
 
 use SilverStripe\Framework\Core\Extensible;
 use SilverStripe\ORM\DataModel;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\Admin\LeftAndMain;
 
 /**
  * Provides view and edit forms at GridField-specific URLs.
@@ -93,7 +96,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		$requestHandler = $gridField->getForm()->getController();
 
 		if(is_numeric($request->param('ID'))) {
-			$record = $gridField->getList()->byId($request->param("ID"));
+			$record = $gridField->getList()->byID($request->param("ID"));
 		} else {
 			$record = Object::create($gridField->getModelClass());
 		}
@@ -130,7 +133,8 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	}
 
 	/**
-	 * @param String
+	 * @param string $template
+	 * @return $this
 	 */
 	public function setTemplate($template) {
 		$this->template = $template;
@@ -145,7 +149,8 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	}
 
 	/**
-	 * @param String
+	 * @param string $name
+	 * @return $this
 	 */
 	public function setName($name) {
 		$this->name = $name;
@@ -161,6 +166,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 
 	/**
 	 * @param Validator $validator
+	 * @return $this
 	 */
 	public function setValidator(Validator $validator) {
 		$this->validator = $validator;
@@ -176,6 +182,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 
 	/**
 	 * @param FieldList $fields
+	 * @return $this
 	 */
 	public function setFields(FieldList $fields) {
 		$this->fields = $fields;
@@ -190,7 +197,8 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	}
 
 	/**
-	 * @param String
+	 * @param string $class
+	 * @return $this
 	 */
 	public function setItemRequestClass($class) {
 		$this->itemRequestClass = $class;
@@ -212,6 +220,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 
 	/**
 	 * @param Closure $cb Make changes on the edit form after constructing it.
+	 * @return $this
 	 */
 	public function setItemEditFormCallback(Closure $cb) {
 		$this->itemEditFormCallback = $cb;
@@ -402,6 +411,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			}
 		}
 
+
 		// Caution: API violation. Form expects a Controller, but we are giving it a RequestHandler instead.
 		// Thanks to this however, we are able to nest GridFields, and also access the initial Controller by
 		// dereferencing GridFieldDetailForm_ItemRequest->getController() multiple times. See getToplevelController
@@ -441,7 +451,10 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 			// Always show with base template (full width, no other panels),
 			// regardless of overloaded CMS controller templates.
 			// TODO Allow customization, e.g. to display an edit form alongside a search form from the CMS controller
-			$form->setTemplate('Includes/LeftAndMain_EditForm');
+			$form->setTemplate([
+				'type' => 'Includes',
+				'SilverStripe\\Admin\\LeftAndMain_EditForm',
+			]);
 			$form->addExtraClass('cms-content cms-edit-form center');
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
 			if($form->Fields()->hasTabset()) {
@@ -610,7 +623,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 		$controller = $this->getToplevelController();
 		if($isNewRecord) {
 			return $controller->redirect($this->Link());
-		} elseif($this->gridField->getList()->byId($this->record->ID)) {
+		} elseif($this->gridField->getList()->byID($this->record->ID)) {
 			// Return new view, as we can't do a "virtual redirect" via the CMS Ajax
 			// to the same URL (it assumes that its content is already current, and doesn't reload)
 			return $this->edit($controller->getRequest());
@@ -723,7 +736,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	}
 
 	/**
-	 * @param String
+	 * @param string $template
+	 * @return $this
 	 */
 	public function setTemplate($template) {
 		$this->template = $template;

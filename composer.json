@@ -1,41 +1,42 @@
 {
-	"name": "silverstripe/framework",
-	"type": "silverstripe-module",
-	"description": "The SilverStripe framework",
-	"homepage": "http://silverstripe.org",
-	"license": "BSD-3-Clause",
-	"keywords": ["silverstripe", "framework"],
-	"authors": [
-		{
-			"name": "SilverStripe",
-			"homepage": "http://silverstripe.com"
-		},
-		{
-			"name": "The SilverStripe Community",
-			"homepage": "http://silverstripe.org"
-		}
-	],
-	"require": {
-		"php": ">=5.5.0",
-		"composer/installers": "~1.0",
-		"monolog/monolog": "~1.11",
-		"league/flysystem": "~1.0.12",
-		"symfony/yaml": "~2.7",
+  "name": "silverstripe/framework",
+  "type": "silverstripe-module",
+  "description": "The SilverStripe framework",
+  "homepage": "http://silverstripe.org",
+  "license": "BSD-3-Clause",
+  "keywords": ["silverstripe", "framework"],
+  "authors": [
+    {
+      "name": "SilverStripe",
+      "homepage": "http://silverstripe.com"
+    },
+    {
+      "name": "The SilverStripe Community",
+      "homepage": "http://silverstripe.org"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "composer/installers": "~1.0",
+    "monolog/monolog": "~1.11",
+    "league/flysystem": "~1.0.12",
+    "symfony/yaml": "~2.7",
     "embed/embed": "^2.6"
   },
-	"require-dev": {
-		"phpunit/PHPUnit": "~4.8"
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "4.0.x-dev"
-		}
-	},
-	"autoload": {
-		"psr-4": {
-			"SilverStripe\\": ""
-		},
-		"files": ["core/Constants.php"],
-		"classmap": ["tests/behat/features/bootstrap"]
-	}
+  "require-dev": {
+    "phpunit/PHPUnit": "~4.8"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "4.0.x-dev"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "SilverStripe\\Admin\\": "admin/code/",
+      "SilverStripe\\": ""
+    },
+    "files": ["core/Constants.php"],
+    "classmap": ["tests/behat/features/bootstrap"]
+  }
 }

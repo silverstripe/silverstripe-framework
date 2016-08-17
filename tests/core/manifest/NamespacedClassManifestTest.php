@@ -34,7 +34,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 		/** @skipUpgrade */
 		$expectedItems = array(
-			array('ModelAdmin'),
+			array('SilverStripe', '\\', 'Admin', '\\', 'ModelAdmin'),
 			array('Controller', '  ', 'as', '  ', 'Cont'),
 			array(
 				'SS_HTTPRequest', ' ', 'as', ' ', 'Request', ',',
@@ -60,7 +60,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 		$method->setAccessible(true);
 
 		$expectedImports = array(
-			'ModelAdmin',
+			'SilverStripe\\Admin\\ModelAdmin',
 			'Cont' => 'Controller',
 			'Request' => 'SS_HTTPRequest',
 			'Response' => 'SS_HTTPResponse',
@@ -83,9 +83,9 @@ class NamespacedClassManifestTest extends SapphireTest {
 		// including all core classes
 		$method = new ReflectionMethod($this->manifest, 'coalesceDescendants');
 		$method->setAccessible(true);
-		$method->invoke($this->manifest, 'ModelAdmin');
+		$method->invoke($this->manifest, 'SilverStripe\\Admin\\ModelAdmin');
 
-		$this->assertContains('SilverStripe\Framework\Tests\ClassI', ClassInfo::subclassesFor('ModelAdmin'));
+		$this->assertContains('SilverStripe\Framework\Tests\ClassI', ClassInfo::subclassesFor('SilverStripe\\Admin\\ModelAdmin'));
 	}
 
 	/**

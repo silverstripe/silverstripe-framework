@@ -9,6 +9,7 @@ use SilverStripe\ORM\DB;
 use Controller;
 use SilverStripe\ORM\FieldType\DBField;
 use SS_HTTPRequest;
+use SSViewer;
 use TemplateGlobalProvider;
 use Deprecation;
 use Director;
@@ -504,17 +505,6 @@ class Security extends Controller implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Determine the list of templates to use for rendering the given action
-	 *
-	 * @param string $action
-	 * @return array Template list
-	 */
-	public function getTemplatesFor($action) {
-		/** @skipUpgrade */
-		return array("Security_{$action}", 'Security', $this->stat('template_main'), 'BlankPage');
-	}
-
-	/**
 	 * Combine the given forms into a formset with a tabbed interface
 	 *
 	 * @param array $forms List of LoginForm instances
@@ -525,7 +515,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 			'Forms' => new ArrayList($forms),
 		));
 		return $viewData->renderWith(
-			$this->getIncludeTemplate('MultiAuthenticatorLogin')
+			$this->getTemplatesFor('MultiAuthenticatorLogin')
 		);
 	}
 
@@ -802,14 +792,23 @@ class Security extends Controller implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Gets the template for an include used for security.
-	 * For use in any subclass.
+	 * Determine the list of templates to use for rendering the given action.
 	 *
-	 * @param string $name
-	 * @return array Returns the template(s) for rendering
+	 * @skipUpgrade
+	 * @param string $action
+	 * @return array Template list
 	 */
-	public function getIncludeTemplate($name) {
-		return array('Security_' . $name);
+	public function getTemplatesFor($action)
+	{
+		$templates = SSViewer::get_templates_by_class(get_class($this), "_{$action}", __CLASS__);
+		return array_merge($templates,
+			[
+				"Security_{$action}",
+				"Security",
+				$this->stat("template_main"),
+				"BlankPage"
+			]
+		);
 	}
 
 	/**

@@ -2,6 +2,7 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataList;
+
 /**
 * Manages searching of properties on one or more {@link DataObject}
 * types, based on a given set of input parameters.
@@ -122,6 +123,7 @@ class SearchContext extends Object {
 	 * @throws Exception
 	 */
 	public function getQuery($searchParams, $sort = false, $limit = false, $existingQuery = null) {
+		/** DataList $query */
 		if($existingQuery) {
 			if(!($existingQuery instanceof DataList)) {
 				throw new InvalidArgumentException("existingQuery must be DataList");
@@ -147,7 +149,7 @@ class SearchContext extends Object {
 		$query = $query->sort($sort);
 
 		// hack to work with $searchParems when it's an Object
-		if (is_object($searchParams)) {
+		if ($searchParams instanceof SS_HTTPRequest) {
 			$searchParamArray = $searchParams->getVars();
 		} else {
 			$searchParamArray = $searchParams;
@@ -179,7 +181,7 @@ class SearchContext extends Object {
 	 * @param array $searchParams
 	 * @param array|bool|string $sort
 	 * @param array|bool|string $limit
-	 * @return SS_List
+	 * @return DataList
 	 * @throws Exception
 	 */
 	public function getResults($searchParams, $sort = false, $limit = false) {

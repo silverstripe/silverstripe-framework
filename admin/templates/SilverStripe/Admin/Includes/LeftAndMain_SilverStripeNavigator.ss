@@ -1,6 +1,6 @@
 <div class="cms-navigator">
 
-	<% include LeftAndMain_ViewModeSelector SelectID="preview-mode-dropdown-in-preview" %>
+	<% include SilverStripe\\Admin\\LeftAndMain_ViewModeSelector SelectID="preview-mode-dropdown-in-preview" %>
 
     <span id="preview-size-dropdown" class="preview-size-selector preview-selector field dropdown">
 		<select title="<%t SilverStripeNavigator.ViewDeviceWidth 'Select a preview width' %>" id="preview-size-dropdown-select" class="preview-dropdown dropdown form-group--no-label" autocomplete="off" name="Action">
@@ -21,7 +21,7 @@
 
 	<% if $Items %>
 		<% if $Items.Count < 5 %>
-			<div id="preview-states" class="cms-preview-states switch-states size_{$Items.Count}"> 			
+			<div id="preview-states" class="cms-preview-states switch-states size_{$Items.Count}">
 				<div class="switch">
 					<% loop $Items %>
 						<a  href="$Link" id="$Title" data-name="$Name" class="state-name $FirstLast<% if $isActive %> active<% end_if %>">
