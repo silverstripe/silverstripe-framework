@@ -1,6 +1,6 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
-//import fieldHolder from 'components/FieldHolder/FieldHolder';
+import fieldHolder from 'components/FieldHolder/FieldHolder';
 import i18n from 'i18n';
 
 class SingleSelectField extends SilverStripeComponent {
@@ -45,10 +45,10 @@ class SingleSelectField extends SilverStripeComponent {
   getSelectField() {
     const options = this.props.source || [];
 
-    if (this.props.hasEmptyDefault) {
+    if (this.props.data.hasEmptyDefault) {
       options.unshift({
         value: '',
-        title: this.props.emptyString,
+        title: this.props.data.emptyString,
         disabled: false,
       });
     }
@@ -109,13 +109,20 @@ SingleSelectField.propTypes = {
     title: React.PropTypes.string,
     disabled: React.PropTypes.bool,
   })),
-  hasEmptyDefault: React.PropTypes.bool,
-  emptyString: React.PropTypes.string,
+  data: React.PropTypes.oneOfType([
+    React.PropTypes.array,
+    React.PropTypes.shape({
+      hasEmptyDefault: React.PropTypes.bool,
+      emptyString: React.PropTypes.string,
+    }),
+  ]),
 };
 
 SingleSelectField.defaultProps = {
   source: [],
-  emptyString: i18n._t('Boolean.ANY', 'Any'),
+  data: {
+    emptyString: i18n._t('Boolean.ANY', 'Any'),
+  },
 };
 
-export default SingleSelectField;
+export default fieldHolder(SingleSelectField);

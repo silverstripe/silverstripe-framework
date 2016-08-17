@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal } from 'react-bootstrap-4';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormBuilder from 'components/FormBuilder/FormBuilder';
+import i18n from 'i18n';
 
 class AddToCampaignModal extends SilverStripeComponent {
   constructor(props) {
@@ -46,9 +47,17 @@ class AddToCampaignModal extends SilverStripeComponent {
   }
 
   getBody() {
-    const schemaUrl = `${this.props.schemaUrl}/${this.props.fileId}`;
-
-    return <FormBuilder schemaUrl={schemaUrl} handleSubmit={this.handleSubmit} />;
+    // if no schema defined, then lets use existing children instead
+    if (!this.props.schemaUrl) {
+      return this.props.children;
+    }
+    return (
+      <FormBuilder
+        schemaUrl={this.props.schemaUrl}
+        handleSubmit={this.handleSubmit}
+        handleAction={this.props.handleAction}
+      />
+    );
   }
 
   getResponse() {
@@ -86,7 +95,6 @@ class AddToCampaignModal extends SilverStripeComponent {
       <Modal
         show={this.props.show}
         onHide={this.props.handleHide}
-        container={document.getElementsByClassName('cms-container')[0]}
       >
         <Modal.Header closeButton>
           <Modal.Title>{this.props.title}</Modal.Title>
@@ -101,11 +109,16 @@ class AddToCampaignModal extends SilverStripeComponent {
 }
 
 AddToCampaignModal.propTypes = {
-  show: React.PropTypes.bool.isRequired,
+  show: React.PropTypes.bool,
   title: React.PropTypes.string,
   handleHide: React.PropTypes.func,
   schemaUrl: React.PropTypes.string,
   handleSubmit: React.PropTypes.func,
+};
+
+AddToCampaignModal.defaultProps = {
+  show: false,
+  title: i18n._t('Campaigns.AddToCampaign', 'Add to campaign'),
 };
 
 export default AddToCampaignModal;

@@ -1,7 +1,7 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
-function fieldHolderWrapper(Field) {
+function fieldHolder(Field) {
   class FieldHolder extends SilverStripeComponent {
 
     render() {
@@ -39,4 +39,4 @@ function fieldHolderWrapper(Field) {
   return FieldHolder;
 }
 
-export default fieldHolderWrapper;
+export default fieldHolder;
