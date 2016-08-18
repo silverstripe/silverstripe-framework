@@ -2,19 +2,17 @@
 
 namespace SilverStripe\ORM\Versioning;
 
-use Exception;
-use BadMethodCallException;
-use Controller;
-use SilverStripe\Filesystem\Thumbnail;
+use SilverStripe\Admin\CMSPreviewable;
+use SilverStripe\Assets\Thumbnail;
+use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-use SilverStripe\Admin\CMSPreviewable;
-
-
+use BadMethodCallException;
+use Exception;
 
 /**
  * A single line in a changeset

@@ -2,13 +2,11 @@
 
 namespace SilverStripe\ORM;
 
-use Object;
+use SilverStripe\Core\Object;
 
 /**
  * A class that combined as a boolean result with an optional list of error messages.
  * This is used for returning validation results from validators
- * @package framework
- * @subpackage orm
  */
 class ValidationResult extends Object {
 	/**
@@ -24,7 +22,10 @@ class ValidationResult extends Object {
 
 	/**
 	 * Create a new ValidationResult.
-	 * By default, it is a successful result.	Call $this->error() to record errors.
+	 * By default, it is a successful result.    Call $this->error() to record errors.
+	 *
+	 * @param bool $valid
+	 * @param string $message
 	 */
 	public function __construct($valid = true, $message = null) {
 		$this->isValid = $valid;
@@ -103,8 +104,8 @@ class ValidationResult extends Object {
 	 * It will be valid if both this and the other result are valid.
 	 * This object will be modified to contain the new validation information.
 	 *
-	 * @param ValidationResult the validation result object to combine
-	 * @return ValidationResult this
+	 * @param ValidationResult $other the validation result object to combine
+	 * @return $this
 	 */
 	public function combineAnd(ValidationResult $other) {
 		$this->isValid = $this->isValid && $other->valid();

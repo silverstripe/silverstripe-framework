@@ -1,4 +1,14 @@
 <?php
+
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Extension;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -130,7 +140,7 @@ class ObjectTest extends SapphireTest {
 	 */
 	public function testSingleton() {
 		$inst = Controller::singleton();
-		$this->assertInstanceOf('Controller', $inst);
+		$this->assertInstanceOf('SilverStripe\\Control\\Controller', $inst);
 		$inst2 = Controller::singleton();
 		$this->assertSame($inst2, $inst);
 	}
@@ -304,7 +314,7 @@ class ObjectTest extends SapphireTest {
 	}
 
 	public function testParentClass() {
-		$this->assertEquals(ObjectTest_MyObject::create()->parentClass(), 'Object');
+		$this->assertEquals(ObjectTest_MyObject::create()->parentClass(), 'SilverStripe\\Core\\Object');
 	}
 
 	public function testIsA() {

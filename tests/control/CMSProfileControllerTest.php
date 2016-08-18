@@ -1,6 +1,10 @@
 <?php
 
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Security\Member;
+
 
 /**
  * @package framework
@@ -54,8 +58,8 @@ class CMSProfileControllerTest extends FunctionalTest {
 	}
 
 	public function testExtendedPermissionsStopEditingOwnProfile() {
-		$existingExtensions = Config::inst()->get('SilverStripe\\Security\\Member', 'extensions');
-		Config::inst()->update('SilverStripe\\Security\\Member', 'extensions', array('CMSProfileControllerTestExtension'));
+		$existingExtensions = Member::config()->get('extensions');
+		Member::config()->update('extensions', array('CMSProfileControllerTestExtension'));
 
 		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'user1');
 		$this->session()->inst_set('loggedInAs', $member->ID);
@@ -76,8 +80,9 @@ class CMSProfileControllerTest extends FunctionalTest {
 		$this->assertNotEquals($member->FirstName, 'JoeEdited',
 			'FirstName field was NOT changed because we modified canEdit');
 
-		Config::inst()->remove('SilverStripe\\Security\\Member', 'extensions');
-		Config::inst()->update('SilverStripe\\Security\\Member', 'extensions', $existingExtensions);
+		Member::config()
+			->remove('extensions')
+			->update('extensions', $existingExtensions);
 	}
 
 }

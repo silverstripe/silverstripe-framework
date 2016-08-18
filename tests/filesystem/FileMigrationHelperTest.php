@@ -1,7 +1,13 @@
 <?php
 
-use Filesystem as SS_Filesystem;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Assets\FileMigrationHelper;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 
 
 /**
@@ -12,7 +18,7 @@ class FileMigrationHelperTest extends SapphireTest {
 	protected static $fixture_file = 'FileMigrationHelperTest.yml';
 
 	protected $requiredExtensions = array(
-		"File" => array(
+		"SilverStripe\\Assets\\File" => array(
 			"FileMigrationHelperTest_Extension"
 		)
 	);
@@ -30,7 +36,7 @@ class FileMigrationHelperTest extends SapphireTest {
 
 	public function setUp() {
 		Config::nest(); // additional nesting here necessary
-		Config::inst()->update('File', 'migrate_legacy_file', false);
+		Config::inst()->update('SilverStripe\\Assets\\File', 'migrate_legacy_file', false);
 		parent::setUp();
 
 		// Set backend root to /FileMigrationHelperTest/assets
@@ -38,16 +44,16 @@ class FileMigrationHelperTest extends SapphireTest {
 
 		// Ensure that each file has a local record file in this new assets base
 		$from = FRAMEWORK_PATH . '/tests/model/testimages/test-image-low-quality.jpg';
-		foreach(File::get()->exclude('ClassName', 'Folder') as $file) {
+		foreach(File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder') as $file) {
 			$dest = AssetStoreTest_SpyStore::base_path() . '/' . $file->generateFilename();
-			SS_Filesystem::makeFolder(dirname($dest));
+			Filesystem::makeFolder(dirname($dest));
 			copy($from, $dest);
 		}
 	}
 
 	public function tearDown() {
 		AssetStoreTest_SpyStore::reset();
-		SS_Filesystem::removeFolder($this->getBasePath());
+		Filesystem::removeFolder($this->getBasePath());
 		parent::tearDown();
 		Config::unnest();
 	}
@@ -57,7 +63,7 @@ class FileMigrationHelperTest extends SapphireTest {
 	 */
 	public function testMigration() {
 		// Prior to migration, check that each file has empty Filename / Hash properties
-		foreach(File::get()->exclude('ClassName', 'Folder') as $file) {
+		foreach(File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder') as $file) {
 			$filename = $file->generateFilename();
 			$this->assertNotEmpty($filename, "File {$file->Name} has a filename");
 			$this->assertEmpty($file->File->getFilename(), "File {$file->Name} has no DBFile filename");
@@ -72,7 +78,7 @@ class FileMigrationHelperTest extends SapphireTest {
 		$this->assertEquals(5, $result);
 
 		// Test that each file exists
-		foreach(File::get()->exclude('ClassName', 'Folder') as $file) {
+		foreach(File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder') as $file) {
 			$expectedFilename = $file->generateFilename();
 			$filename = $file->File->getFilename();
 			$this->assertTrue($file->exists(), "File with name {$filename} exists");

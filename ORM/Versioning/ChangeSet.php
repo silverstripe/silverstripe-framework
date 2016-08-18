@@ -2,22 +2,19 @@
 
 namespace SilverStripe\ORM\Versioning;
 
-
-
-use Exception;
-use FieldList;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\HasManyList;
-use TextField;
-use ReadonlyField;
-use i18n;
-use BadMethodCallException;
-use LogicException;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-
+use BadMethodCallException;
+use Exception;
+use LogicException;
 
 /**
  * The ChangeSet model tracks several VersionedAndStaged objects for later publication as a single
@@ -27,9 +24,6 @@ use SilverStripe\Security\Permission;
  * @method Member Owner()
  * @property string $Name
  * @property string $State
- *
- * @package framework
- * @subpackage orm
  */
 class ChangeSet extends DataObject {
 
@@ -77,7 +71,7 @@ class ChangeSet extends DataObject {
 	 */
 	private static $important_classes = array(
 		'SilverStripe\\CMS\\Model\\SiteTree',
-		'File',
+		'SilverStripe\\Assets\\File',
 	);
 
 	/**

@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\Core\Injector\AopProxyService;
+use SilverStripe\Core\Injector\BeforeCallAspect;
+use SilverStripe\Core\Injector\AfterCallAspect;
+use SilverStripe\Dev\SapphireTest;
+
+
 /**
  *
  *

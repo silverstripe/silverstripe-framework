@@ -1,19 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dmooyman
- * Date: 12/08/16
- * Time: 12:13 PM
- */
+
 namespace SilverStripe\Admin;
 
-use SS_HTTPResponse;
+use SilverStripe\Control\SS_HTTPResponse;
 
 /**
  * Allow overriding finished state for faux redirects.
- *
- * @package framework
- * @subpackage admin
  */
 class LeftAndMain_HTTPResponse extends SS_HTTPResponse
 {

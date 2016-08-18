@@ -1,11 +1,11 @@
 <?php
+
+namespace SilverStripe\i18n;
+
+use Translate_Adapter_RailsYaml;
+
 require_once 'Zend/Translate.php';
 require_once 'zend_translate_railsyaml/library/Translate/Adapter/RailsYAML.php';
-
-/**
- * @package framework
- * @subpackage i18n
- */
 
 class i18nRailsYamlAdapter extends Translate_Adapter_RailsYaml implements i18nTranslateAdapterInterface {
 

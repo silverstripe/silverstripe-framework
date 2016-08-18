@@ -1,9 +1,15 @@
 <?php
 
-use Filesystem as SS_Filesystem;
+use SilverStripe\Assets\Image;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\Versioning\DataDifferencer;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\ListboxField;
+
 
 
 /**
@@ -29,11 +35,11 @@ class DataDifferencerTest extends SapphireTest {
 		AssetStoreTest_SpyStore::activate('DataDifferencerTest');
 
 		// Create a test files for each of the fixture references
-		$files = File::get()->exclude('ClassName', 'Folder');
+		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
 		foreach($files as $file) {
 			$fromPath = BASE_PATH . '/framework/tests/model/testimages/' . $file->Name;
 			$destPath = AssetStoreTest_SpyStore::getLocalPath($file); // Only correct for test asset store
-			SS_Filesystem::makeFolder(dirname($destPath));
+			Filesystem::makeFolder(dirname($destPath));
 			copy($fromPath, $destPath);
 		}
 	}
@@ -62,9 +68,8 @@ class DataDifferencerTest extends SapphireTest {
 	public function testHasOnes() {
 		/** @var DataDifferencerTest_Object $obj1 */
 		$obj1 = $this->objFromFixture('DataDifferencerTest_Object', 'obj1');
-		$image1 = $this->objFromFixture('Image', 'image1');
-		$image2 = $this->objFromFixture('Image', 'image2');
-		$relobj1 = $this->objFromFixture('DataDifferencerTest_HasOneRelationObject', 'relobj1');
+		$image1 = $this->objFromFixture('SilverStripe\\Assets\\Image', 'image1');
+		$image2 = $this->objFromFixture('SilverStripe\\Assets\\Image', 'image2');
 		$relobj2 = $this->objFromFixture('DataDifferencerTest_HasOneRelationObject', 'relobj2');
 
 		// create a new version
@@ -81,7 +86,9 @@ class DataDifferencerTest extends SapphireTest {
 		$differ = new DataDifferencer($obj1v1, $obj1v2);
 		$obj1Diff = $differ->diffedData();
 
+		/** @skipUpgrade */
 		$this->assertContains($image1->Name, $obj1Diff->getField('Image'));
+		/** @skipUpgrade */
 		$this->assertContains($image2->Name, $obj1Diff->getField('Image'));
 		$this->assertContains(
 			'<ins>obj2</ins><del>obj1</del>',
@@ -106,7 +113,7 @@ class DataDifferencerTest_Object extends DataObject implements TestOnly {
 	);
 
 	private static $has_one = array(
-		'Image' => 'Image',
+		'Image' => 'SilverStripe\\Assets\\Image',
 		'HasOneRelation' => 'DataDifferencerTest_HasOneRelationObject'
 	);
 

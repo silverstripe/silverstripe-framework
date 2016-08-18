@@ -3,6 +3,8 @@
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Member;
+use SilverStripe\Dev\SapphireTest;
+
 class SecurityDefaultAdminTest extends SapphireTest {
 
 	protected $usesDatabase = true;

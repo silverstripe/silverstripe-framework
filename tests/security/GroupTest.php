@@ -3,6 +3,17 @@
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Member;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Session;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\Form;
+
+
+
 
 /**
  * @package framework
@@ -38,6 +49,7 @@ class GroupTest extends FunctionalTest {
 		$childGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'childgroup');
 
 		// Test single group relation through checkboxsetfield
+		/** @skipUpgrade */
 		$form = new GroupTest_MemberForm($this, 'Form');
 		$member = $this->objFromFixture('GroupTest_Member', 'admin');
 		$form->loadDataFrom($member);

@@ -1,0 +1,14 @@
+TODO
+- fix bugs reported through http://pear.php.net/bugs/ (373, 512)
+- think about custom runtime tag loading (Stan Lemon was busy with this)
+- make sure <li> is embedded in <ul> of <ol>
+- add a nl2br option
+- maybe add default value for attributes (target in url)
+- try to fix recursive lists (only occurs with [*] shorthand)
+- make it possible to use spaces in argument values with quotes
+
+DONE
+- fix urls with strange characters (#, &, spaces)
+- add more advanced text filter (color, size, quote, code, etc)
+- check for notice errors (undefined offset)
+- fixed bugs 484, 486, 518, 508, 462

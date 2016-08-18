@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\Parsers\Diff;
+
 /**
  * @package cms
  * @subpackage tests

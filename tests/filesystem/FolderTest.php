@@ -1,8 +1,13 @@
 <?php
 
-use Filesystem as SS_Filesystem;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Assets\Folder;
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Assets\File;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+
 
 
 /**
@@ -25,7 +30,7 @@ class FolderTest extends SapphireTest {
 		AssetStoreTest_SpyStore::activate('FolderTest');
 
 		// Set the File Name Filter replacements so files have the expected names
-        Config::inst()->update('FileNameFilter', 'default_replacements', array(
+        Config::inst()->update('SilverStripe\\Assets\\FileNameFilter', 'default_replacements', array(
             '/\s/' => '-', // remove whitespace
             '/_/' => '-', // underscores to dashes
             '/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
@@ -36,14 +41,14 @@ class FolderTest extends SapphireTest {
 		// Create a test folders for each of the fixture references
 		foreach(Folder::get() as $folder) {
 			$path = AssetStoreTest_SpyStore::getLocalPath($folder);
-			SS_Filesystem::makeFolder($path);
+			Filesystem::makeFolder($path);
 		}
 
 		// Create a test files for each of the fixture references
-		$files = File::get()->exclude('ClassName', 'Folder');
+		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
 		foreach($files as $file) {
 			$path = AssetStoreTest_SpyStore::getLocalPath($file);
-			SS_Filesystem::makeFolder(dirname($path));
+			Filesystem::makeFolder(dirname($path));
 			$fh = fopen($path, "w+");
 			fwrite($fh, str_repeat('x', 1000000));
 			fclose($fh);
@@ -56,7 +61,7 @@ class FolderTest extends SapphireTest {
 	}
 
 	public function testCreateFromNameAndParentIDSetsFilename() {
-		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		$folder1 = $this->objFromFixture('SilverStripe\\Assets\\Folder', 'folder1');
 		$newFolder = new Folder();
 		$newFolder->Name = 'CreateFromNameAndParentID';
 		$newFolder->ParentID = $folder1->ID;
@@ -66,9 +71,9 @@ class FolderTest extends SapphireTest {
 	}
 
 	public function testAllChildrenIncludesFolders() {
-		$folder1 = $this->objFromFixture('Folder', 'folder1');
-		$subfolder1 = $this->objFromFixture('Folder', 'folder1-subfolder1');
-		$file1 = $this->objFromFixture('File', 'file1-folder1');
+		$folder1 = $this->objFromFixture('SilverStripe\\Assets\\Folder', 'folder1');
+		$subfolder1 = $this->objFromFixture('SilverStripe\\Assets\\Folder', 'folder1-subfolder1');
+		$file1 = $this->objFromFixture('SilverStripe\\Assets\\File', 'file1-folder1');
 
 		$children = $folder1->allChildren();
 		$this->assertEquals(2, $children->Count());
@@ -91,7 +96,7 @@ class FolderTest extends SapphireTest {
 			'Empty folder does not have a filesystem record automatically'
 		);
 
-		$parentFolder = DataObject::get_one('Folder', array(
+		$parentFolder = DataObject::get_one('SilverStripe\\Assets\\Folder', array(
 			'"File"."Name"' => 'parent'
 		));
 		$this->assertNotNull($parentFolder);
@@ -118,13 +123,13 @@ class FolderTest extends SapphireTest {
 	 * Tests for the bug #5994 - Moving folder after executing Folder::findOrMake will not set the Filenames properly
 	 */
 	public function testFindOrMakeFolderThenMove() {
-		$folder1 = $this->objFromFixture('Folder', 'folder1');
+		$folder1 = $this->objFromFixture('SilverStripe\\Assets\\Folder', 'folder1');
 		Folder::find_or_make($folder1->Filename);
-		$folder2 = $this->objFromFixture('Folder', 'folder2');
+		$folder2 = $this->objFromFixture('SilverStripe\\Assets\\Folder', 'folder2');
 
 		// Publish file1
 		/** @var File $file1 */
-		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
+		$file1 = DataObject::get_by_id('SilverStripe\\Assets\\File', $this->idFromFixture('SilverStripe\\Assets\\File', 'file1-folder1'), false);
 		$file1->publishRecursive();
 
 		// set ParentID. This should cause updateFilesystem to be called on all children
@@ -133,7 +138,7 @@ class FolderTest extends SapphireTest {
 
 		// Check if the file in the folder moved along
 		/** @var File $file1Draft */
-		$file1Draft = Versioned::get_by_stage('File', Versioned::DRAFT)->byID($file1->ID);
+		$file1Draft = Versioned::get_by_stage('SilverStripe\\Assets\\File', Versioned::DRAFT)->byID($file1->ID);
 		$this->assertFileExists(AssetStoreTest_SpyStore::getLocalPath($file1Draft));
 
 		$this->assertEquals(
@@ -150,7 +155,7 @@ class FolderTest extends SapphireTest {
 
 		// Published (live) version remains in the old location
 		/** @var File $file1Live */
-		$file1Live = Versioned::get_by_stage('File', Versioned::LIVE)->byID($file1->ID);
+		$file1Live = Versioned::get_by_stage('SilverStripe\\Assets\\File', Versioned::LIVE)->byID($file1->ID);
 		$this->assertEquals(
 			ASSETS_PATH . '/FolderTest/FileTest-folder1/55b443b601/File1.txt',
 			AssetStoreTest_SpyStore::getLocalPath($file1Live)
@@ -170,15 +175,15 @@ class FolderTest extends SapphireTest {
 	 */
 	public function testRenameFolderAndCheckTheFile() {
 		// ID is prefixed in case Folder is subclassed by project/other module.
-		$folder1 = DataObject::get_one('Folder', array(
-			'"File"."ID"' => $this->idFromFixture('Folder', 'folder1')
+		$folder1 = DataObject::get_one('SilverStripe\\Assets\\Folder', array(
+			'"File"."ID"' => $this->idFromFixture('SilverStripe\\Assets\\Folder', 'folder1')
 		));
 
 		$folder1->Name = 'FileTest-folder1-changed';
 		$folder1->write();
 
 		// Check if the file in the folder moved along
-		$file1 = DataObject::get_by_id('File', $this->idFromFixture('File', 'file1-folder1'), false);
+		$file1 = DataObject::get_by_id('SilverStripe\\Assets\\File', $this->idFromFixture('SilverStripe\\Assets\\File', 'file1-folder1'), false);
 		$this->assertFileExists(
 			AssetStoreTest_SpyStore::getLocalPath($file1)
 		);
@@ -199,7 +204,7 @@ class FolderTest extends SapphireTest {
 	 * URL and Link are undefined for folder dataobjects
 	 */
 	public function testLinkAndRelativeLink() {
-		$folder = $this->objFromFixture('Folder', 'folder1');
+		$folder = $this->objFromFixture('SilverStripe\\Assets\\Folder', 'folder1');
 		$this->assertEmpty($folder->getURL());
 		$this->assertEmpty($folder->Link());
 	}

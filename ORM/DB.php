@@ -2,25 +2,22 @@
 
 namespace SilverStripe\ORM;
 
-use Deprecation;
-use Director;
-use InvalidArgumentException;
-use Config;
-use LogicException;
-use Cookie;
-use Injector;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Cookie;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Connect\DBConnector;
 use SilverStripe\ORM\Connect\DBSchemaManager;
 use SilverStripe\ORM\Connect\SS_Query;
 use SilverStripe\ORM\Queries\SQLExpression;
 use SilverStripe\ORM\Connect\SS_Database;
+use InvalidArgumentException;
+use LogicException;
 
 /**
  * Global database interface, complete with static methods.
  * Use this class for interacting with the database.
- *
- * @package framework
- * @subpackage orm
  */
 class DB {
 
@@ -81,6 +78,7 @@ class DB {
 
 	/**
 	 * @deprecated since version 4.0 Use DB::get_conn instead
+	 * @todo PSR-2 standardisation will probably un-deprecate this
 	 */
 	public static function getConn($name = 'default') {
 		Deprecation::notice('4.0', 'Use DB::get_conn instead');

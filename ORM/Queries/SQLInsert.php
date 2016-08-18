@@ -2,14 +2,11 @@
 
 namespace SilverStripe\ORM\Queries;
 
-use Injector;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Object representing a SQL INSERT query.
  * The various parts of the SQL query can be manipulated individually.
- *
- * @package framework
- * @subpackage orm
  */
 class SQLInsert extends SQLExpression implements SQLWriteExpression {
 
@@ -55,7 +52,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 * Sets the table name to insert into
 	 *
 	 * @param string $into Single table name (ANSI quoted)
-	 * @return self The self reference to this query
+	 * @return $this The self reference to this query
 	 */
 	public function setInto($into) {
 		$this->into = $into;
@@ -79,7 +76,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 * Appends a new row to insert
 	 *
 	 * @param array|SQLAssignmentRow $data A list of data to include for this row
-	 * @return self The self reference to this query
+	 * @return $this The self reference to this query
 	 */
 	public function addRow($data = null) {
 		// Clear existing empty row
@@ -99,7 +96,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	/**
 	 * Returns the current list of rows
 	 *
-	 * @return array[SQLAssignmentRow]
+	 * @return SQLAssignmentRow[]
 	 */
 	public function getRows() {
 		return $this->rows;
@@ -122,7 +119,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 * Sets all rows to the given array
 	 *
 	 * @param array $rows the list of rows
-	 * @return self The self reference to this query
+	 * @return $this The self reference to this query
 	 */
 	public function setRows(array $rows) {
 		return $this->clear()->addRows($rows);
@@ -132,7 +129,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	 * Adds the list of rows to the array
 	 *
 	 * @param array $rows the list of rows
-	 * @return self The self reference to this query
+	 * @return $this The self reference to this query
 	 */
 	public function addRows(array $rows) {
 		foreach($rows as $row) $this->addRow($row);
@@ -180,7 +177,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	/**
 	 * Clears all currently set assigment values on the current row
 	 *
-	 * @return self The self reference to this query
+	 * @return $this The self reference to this query
 	 */
 	public function clearRow() {
 		$this->currentRow(true)->clear();
@@ -190,7 +187,7 @@ class SQLInsert extends SQLExpression implements SQLWriteExpression {
 	/**
 	 * Clears all rows
 	 *
-	 * @return self The self reference to this query
+	 * @return $this The self reference to this query
 	 */
 	public function clear() {
 		$this->rows = array();

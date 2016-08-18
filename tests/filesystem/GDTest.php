@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\Assets\GDBackend;
+use SilverStripe\Core\SS_Cache;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
+
+
 /**
  * Tests for the {@link GD} class.
  *
@@ -58,7 +65,7 @@ class GDTest extends SapphireTest {
 		for($y = 0; $y < $vertical; $y++) {
 			for($x = 0; $x < $horizontal; $x++) {
 				$colour = imagecolorat($gd->getImageResource(), $x * 5, $y * 5);
-				$samples[] = ImageColorsforIndex($gd->getImageResource(), $colour);
+				$samples[] = imagecolorsforindex($gd->getImageResource(), $colour);
 			}
 		}
 		return $samples;
@@ -199,7 +206,7 @@ class GDTest extends SapphireTest {
 
 class GDBackend_ImageUnavailable extends GDBackend implements TestOnly {
 
-	public function failedResample() {
+	public function failedResample($arg = null) {
 		return true;
 	}
 

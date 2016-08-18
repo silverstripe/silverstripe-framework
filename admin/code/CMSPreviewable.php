@@ -2,8 +2,6 @@
 
 namespace SilverStripe\Admin;
 
-
-
 /**
  * Interface to provide enough information about a record to make it previewable
  * through the CMS. It uses the record database ID, its "frontend" and "backend"
@@ -12,9 +10,6 @@ namespace SilverStripe\Admin;
  * Also used by {@link SilverStripeNavigator} to generate links -  both within
  * the CMS preview, and as a frontend utility for logged-in CMS authors in
  * custom themes (with the $SilverStripeNavigator template marker).
- *
- * @package framework
- * @subpackage admin
  */
 interface CMSPreviewable {
 

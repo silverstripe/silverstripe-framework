@@ -1,4 +1,13 @@
 <?php
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -26,7 +35,7 @@ class HTMLEditorConfigTest extends SapphireTest {
 	}
 
 	public function testEnablePluginsByArrayWithPaths() {
-		Config::inst()->update('Director', 'alternate_base_url', 'http://mysite.com/subdir');
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', 'http://mysite.com/subdir');
 		$c = new TinyMCEConfig();
 		$c->setTheme('modern');
 		$c->setOption('language', 'es');
@@ -75,14 +84,14 @@ class HTMLEditorConfigTest extends SapphireTest {
 		$this->assertEquals(['plugin4', 'plugin5'], $c->getInternalPlugins());
 
 		// Test plugins included via gzip compresser
-		Config::inst()->update('HTMLEditorField', 'use_gzip', true);
+		HTMLEditorField::config()->update('use_gzip', true);
 		$this->assertEquals(
 			'framework/thirdparty/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
 			$c->getScriptURL()
 		);
 
 		// If gzip is disabled only the core plugin is loaded
-		Config::inst()->remove('HTMLEditorField', 'use_gzip');
+		HTMLEditorField::config()->remove('use_gzip');
 		$this->assertEquals(
 			'framework/thirdparty/tinymce/tinymce.min.js',
 			$c->getScriptURL()

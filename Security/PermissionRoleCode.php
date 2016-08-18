@@ -7,13 +7,8 @@ use SilverStripe\ORM\DataObject;
 /**
  * A PermissionRoleCode represents a single permission code assigned to a {@link PermissionRole}.
  *
- * @package framework
- * @subpackage security
- *
  * @property string Code
- *
  * @property int RoleID
- *
  * @method PermissionRole Role()
  */
 class PermissionRoleCode extends DataObject {

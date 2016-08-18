@@ -2,14 +2,14 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use mysqli_result;
+use mysqli_stmt;
+
 /**
  * Provides a record-view for mysqli statements
  *
  * By default streams unbuffered data, but seek(), rewind(), or numRecords() will force the statement to
  * buffer itself and sacrifice any potential performance benefit.
- *
- * @package framework
- * @subpackage orm
  */
 class MySQLStatement extends SS_Query {
 
@@ -87,7 +87,6 @@ class MySQLStatement extends SS_Query {
 
 	public function __destruct() {
 		$this->statement->close();
-		$this->closed = true;
 		$this->currentRecord = false;
 	}
 

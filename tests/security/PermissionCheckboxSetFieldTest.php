@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\PermissionCheckboxSetField;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * @package framework

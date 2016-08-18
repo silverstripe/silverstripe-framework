@@ -2,14 +2,12 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use CheckboxSetField;
-use Config;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DB;
+use SilverStripe\Forms\CheckboxSetField;
 
 /**
  * Represents an multi-select enumeration field.
- * @package framework
- * @subpackage orm
  */
 class DBMultiEnum extends DBEnum {
 	public function __construct($name, $enum = NULL, $default = NULL) {

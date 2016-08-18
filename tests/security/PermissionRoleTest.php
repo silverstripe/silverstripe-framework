@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\PermissionRoleCode;
+use SilverStripe\Dev\FunctionalTest;
+
 
 /**
  * @package framework

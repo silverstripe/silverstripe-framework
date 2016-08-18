@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Startup\ErrorControlChain;
+use SilverStripe\Dev\SapphireTest;
+
+
+
 /**
  * An extension of ErrorControlChain that runs the chain in a subprocess.
  *
@@ -39,14 +45,15 @@ class ErrorControlChainTest_Chain extends ErrorControlChain {
 
 	function executeInSubprocess($includeStderr = false) {
 		// Get the path to the ErrorControlChain class
-		$classpath = SS_ClassLoader::instance()->getItemPath('ErrorControlChain');
+		$erroControlClass = 'SilverStripe\\Core\\Startup\\ErrorControlChain';
+		$classpath = SS_ClassLoader::instance()->getItemPath($erroControlClass);
 		$suppression = $this->suppression ? 'true' : 'false';
 
 		// Start building a PHP file that will execute the chain
 		$src = '<'."?php
 require_once '$classpath';
 
-\$chain = new ErrorControlChain();
+\$chain = new $erroControlClass();
 
 \$chain->setSuppression($suppression);
 

@@ -2,13 +2,12 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Object;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\Versioned;
-use Object;
-use Controller;
-use Convert;
-
 
 /**
  * A class representing back actions.
@@ -19,9 +18,6 @@ use Convert;
  * CMSMain::register_batch_action('publishitems', new CMSBatchAction('doPublish',
  * 	_t('CMSBatchActions.PUBLISHED_PAGES', 'published %d pages')));
  * </code>
- *
- * @package framework
- * @subpackage admin
  */
 abstract class CMSBatchAction extends Object {
 

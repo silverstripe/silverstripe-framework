@@ -1,6 +1,18 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridField;
+
+
+
+
 
 
 class GridFieldPrintButtonTest extends SapphireTest {
@@ -32,6 +44,7 @@ class GridFieldPrintButtonTest extends SapphireTest {
 			->addComponent($button);
 		$gridField = new GridField('testfield', 'testfield', $list, $config);
 		$controller = new Controller();
+		/** @skipUpgrade */
 		$form = new Form($controller, 'Form', new FieldList($gridField), new FieldList());
 
 		// Printed data should ignore pagination limit

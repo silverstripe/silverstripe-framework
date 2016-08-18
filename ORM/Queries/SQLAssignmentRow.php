@@ -2,11 +2,10 @@
 
 namespace SilverStripe\ORM\Queries;
 
+use InvalidArgumentException;
+
 /**
  * Represents a list of updates / inserts made to a single row in a table
- *
- * @package framework
- * @subpackage orm
  */
 class SQLAssignmentRow {
 
@@ -68,15 +67,17 @@ class SQLAssignmentRow {
 			}
 		}
 
-		user_error("Nested field assignments should be given as a single parameterised item array in "
-				.  "array('?' => array('value')) format)", E_USER_ERROR);
+		throw new InvalidArgumentException(
+			"Nested field assignments should be given as a single parameterised item array in "
+			.  "array('?' => array('value')) format)"
+		);
 	}
 
 	/**
 	 * Given a list of assignments in any user-acceptible format, normalise the
 	 * value to a common array('SQL' => array(parameters)) format
 	 *
-	 * @param array $predicates List of assignments.
+	 * @param array $assignments List of assignments.
 	 * The key of this array should be the field name, and the value the assigned
 	 * literal value, or an array with parameterised information.
 	 * @return array List of normalised assignments
@@ -123,7 +124,7 @@ class SQLAssignmentRow {
 	 * </code>
 	 *
 	 * @param array $assignments The list of fields to assign
-	 * @return self The self reference to this row
+	 * @return $this The self reference to this row
 	 */
 	public function addAssignments(array $assignments) {
 		$assignments = $this->normaliseAssignments($assignments);
@@ -137,7 +138,7 @@ class SQLAssignmentRow {
 	 * @see SQLWriteExpression::addAssignments() for syntax examples
 	 *
 	 * @param array $assignments
-	 * @return self The self reference to this row
+	 * @return $this The self reference to this row
 	 */
 	public function setAssignments(array $assignments) {
 		return $this->clear()->addAssignments($assignments);
@@ -174,7 +175,7 @@ class SQLAssignmentRow {
 	 * @param mixed $value The value to assign to this field. This could be an
 	 * array containing a parameterised SQL query of any number of parameters,
 	 * or a single literal value.
-	 * @return self The self reference to this row
+	 * @return $this The self reference to this row
 	 */
 	public function assign($field, $value) {
 		return $this->addAssignments(array($field => $value));
@@ -186,7 +187,7 @@ class SQLAssignmentRow {
 	 *
 	 * @param string $field The field name to update
 	 * @param string $sql The SQL to use for this update. E.g. "NOW()"
-	 * @return self The self reference to this row
+	 * @return $this The self reference to this row
 	 */
 	public function assignSQL($field, $sql) {
 		return $this->assign($field, array($sql => array()));
@@ -213,7 +214,7 @@ class SQLAssignmentRow {
 	/**
 	 * Clears all assignment values
 	 *
-	 * @return self The self reference to this row
+	 * @return $this The self reference to this row
 	 */
 	public function clear() {
 		$this->assignments = array();

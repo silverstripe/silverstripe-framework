@@ -2,16 +2,12 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use CheckboxField;
-use DropdownField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\DB;
-
 
 /**
  * Represents a boolean field.
- *
- * @package framework
- * @subpackage orm
  */
 class DBBoolean extends DBField {
 

@@ -1,6 +1,12 @@
 <?php
 
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridField_URLHandler;
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -40,7 +46,7 @@ class GridFieldConfigTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			new ArrayList(array($c1, $c2, $c3)),
-			$config->getComponentsByType('GridField_URLHandler')
+			$config->getComponentsByType('SilverStripe\\Forms\\GridField\\GridField_URLHandler')
 		);
 		$this->assertEquals(
 			new ArrayList(),

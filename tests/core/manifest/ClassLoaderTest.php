@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Core\Manifest\SS_ClassManifest;
+use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * Tests for the {@link SS_ClassManifest} class.
  *

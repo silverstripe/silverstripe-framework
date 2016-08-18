@@ -2,6 +2,8 @@
 
 
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Dev\SapphireTest;
+
 
 
 /**

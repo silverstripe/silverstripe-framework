@@ -3,6 +3,15 @@
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Security\Member;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\TextField;
+
+
+
 
 
 /**
@@ -94,7 +103,7 @@ class FormScaffolderTest extends SapphireTest {
 		$article1 = $this->objFromFixture('FormScaffolderTest_Article', 'article1');
 
 		$fields = $article1->scaffoldFormFields(array(
-			'fieldClasses' => array('Title' => 'HTMLEditorField')
+			'fieldClasses' => array('Title' => 'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField')
 		));
 		$form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
 		$form->loadDataFrom($article1);
@@ -104,7 +113,7 @@ class FormScaffolderTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			get_class($fields->dataFieldByName('Title')),
-			'HTMLEditorField',
+			'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField',
 			'getCMSFields() doesnt include fields left out in a "restrictFields" definition'
 		);
 	}
@@ -137,7 +146,7 @@ class FormScaffolderTest_Article extends DataObject implements TestOnly {
 
 class FormScaffolderTest_Author extends Member implements TestOnly {
 	private static $has_one = array(
-		'ProfileImage' => 'Image'
+		'ProfileImage' => 'SilverStripe\\Assets\\Image'
 	);
 	private static $has_many = array(
 		'Articles' => 'FormScaffolderTest_Article.Author',

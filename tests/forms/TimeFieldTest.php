@@ -1,4 +1,13 @@
 <?php
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\TimeField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\i18n\i18n;
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -10,16 +19,16 @@ class TimeFieldTest extends SapphireTest {
 
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
-		$this->origTimeConfig = Config::inst()->get('TimeField', 'default_config');
-		Config::inst()->update('TimeField', 'default_config', array('timeformat' => 'HH:mm:ss'));
+		$this->origTimeConfig = Config::inst()->get('SilverStripe\\Forms\\TimeField', 'default_config');
+		Config::inst()->update('SilverStripe\\Forms\\TimeField', 'default_config', array('timeformat' => 'HH:mm:ss'));
 	}
 
 	public function tearDown() {
 		parent::tearDown();
 
 		i18n::set_locale($this->originalLocale);
-		Config::inst()->remove('TimeField', 'default_config');
-		Config::inst()->update('TimeField', 'default_config', $this->origTimeConfig);
+		Config::inst()->remove('SilverStripe\\Forms\\TimeField', 'default_config');
+		Config::inst()->update('SilverStripe\\Forms\\TimeField', 'default_config', $this->origTimeConfig);
 	}
 
 	public function testConstructorWithoutArgs() {

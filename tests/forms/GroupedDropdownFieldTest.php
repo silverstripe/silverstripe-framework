@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\GroupedDropdownField;
+use SilverStripe\Forms\RequiredFields;
+
+
 /**
  * @package framework
  * @subpackage tests

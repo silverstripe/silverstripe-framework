@@ -3,6 +3,10 @@
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_Filterable;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\ArrayData;
+
+
 /**
  * @package framework
  * @subpackage tests

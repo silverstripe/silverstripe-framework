@@ -1,5 +1,15 @@
 <?php
 
+use SilverStripe\Core\Object;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Cookie;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\Form;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -13,7 +23,6 @@ use SilverStripe\Security\PasswordEncryptor_Blowfish;
 use SilverStripe\Security\RememberLoginHash;
 use SilverStripe\Security\Member_Validator;
 use SilverStripe\Security\PasswordValidator;
-
 
 /**
  * @package framework
@@ -40,14 +49,17 @@ class MemberTest extends FunctionalTest {
 		//Setting the locale has to happen in the constructor (using the setUp and tearDown methods doesn't work)
 		//This is because the test relies on the yaml file being interpreted according to a particular date format
 		//and this setup occurs before the setUp method is run
-		$this->local = i18n::default_locale();
-		i18n::set_default_locale('en_US');
+		$this->local = i18n::config()->get('default_locale');
+		i18n::config()->update('default_locale', 'en_US');
 	}
 
 	public function __destruct() {
-		i18n::set_default_locale($this->local);
+		i18n::config()->update('default_locale', $this->local);
 	}
 
+	/**
+	 * @skipUpgrade
+	 */
 	public function setUp() {
 		parent::setUp();
 
@@ -201,7 +213,7 @@ class MemberTest extends FunctionalTest {
 	 * Test that changed passwords will send an email
 	 */
 	public function testChangedPasswordEmaling() {
-		Config::inst()->update('SilverStripe\\Security\\Member', 'notify_password_change', true);
+		Member::config()->update('notify_password_change', true);
 
 		$this->clearEmails();
 
@@ -369,8 +381,9 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat() {
-		Config::inst()->update('i18n', 'date_format', 'yyyy-MM-dd');
-		Config::inst()->update('i18n', 'time_format', 'H:mm');
+		i18n::config()
+			->update('date_format', 'yyyy-MM-dd')
+			->update('time_format', 'H:mm');
 		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember');
 		$this->assertEquals('yyyy-MM-dd', $member->DateFormat);
 		$this->assertEquals('H:mm', $member->TimeFormat);
@@ -736,9 +749,10 @@ class MemberTest extends FunctionalTest {
 	public function testUpdateCMSFields() {
 		Member::add_extension('MemberTest_FieldsExtension');
 
-		$member = singleton('SilverStripe\\Security\\Member');
+		$member = Member::singleton();
 		$fields = $member->getCMSFields();
 
+		/** @skipUpgrade */
 		$this->assertNotNull($fields->dataFieldByName('Email'), 'Scaffolded fields are retained');
 		$this->assertNull($fields->dataFieldByName('Salt'), 'Field modifications run correctly');
 		$this->assertNotNull($fields->dataFieldByName('TestMemberField'), 'Extension is applied correctly');
@@ -1032,10 +1046,8 @@ class MemberTest extends FunctionalTest {
 		);
 		$this->assertContains($message, $response->getBody());
 
-		$logout_across_devices = Config::inst()->get('SilverStripe\\Security\\RememberLoginHash', 'logout_across_devices');
-
 		// Logging out from the second device - only one device being logged out
-		Config::inst()->update('SilverStripe\\Security\\RememberLoginHash', 'logout_across_devices', false);
+		RememberLoginHash::config()->update('logout_across_devices', false);
 		$response = $this->get(
 			'Security/logout',
 			$this->session(),
@@ -1051,15 +1063,13 @@ class MemberTest extends FunctionalTest {
 		);
 
 		// Logging out from any device when all login hashes should be removed
-		Config::inst()->update('SilverStripe\\Security\\RememberLoginHash', 'logout_across_devices', true);
+		RememberLoginHash::config()->update('logout_across_devices', true);
 		$m1->login(true);
 		$response = $this->get('Security/logout', $this->session());
 		$this->assertEquals(
 			RememberLoginHash::get()->filter('MemberID', $m1->ID)->Count(),
 			0
 		);
-
-		Config::inst()->update('SilverStripe\\Security\\RememberLoginHash', 'logout_across_devices', $logout_across_devices);
 	}
 
 	public function testCanDelete() {
@@ -1093,8 +1103,7 @@ class MemberTest extends FunctionalTest {
 	public function testFailedLoginCount() {
 		$maxFailedLoginsAllowed = 3;
 		//set up the config variables to enable login lockouts
-		Config::nest();
-		Config::inst()->update('SilverStripe\\Security\\Member', 'lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
+		Member::config()->update('lock_out_after_incorrect_logins', $maxFailedLoginsAllowed);
 
 		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 		$failedLoginCount = $member->FailedLoginCount;
@@ -1118,7 +1127,7 @@ class MemberTest extends FunctionalTest {
 	public function testMemberValidator()
 	{
 		// clear custom requirements for this test
-		Config::inst()->update('SilverStripe\\Security\\Member_Validator', 'customRequired', null);
+		Member_Validator::config()->update('customRequired', null);
 		$memberA = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 		$memberB = $this->objFromFixture('SilverStripe\\Security\\Member', 'test');
 
@@ -1184,7 +1193,7 @@ class MemberTest extends FunctionalTest {
 	public function testMemberValidatorWithExtensions()
 	{
 		// clear custom requirements for this test
-		Config::inst()->update('SilverStripe\\Security\\Member_Validator', 'customRequired', null);
+		Member_Validator::config()->update('customRequired', null);
 
 		// create a blank form
 		$form = new MemberTest_ValidatorForm();
@@ -1242,7 +1251,7 @@ class MemberTest extends FunctionalTest {
 	public function testCustomMemberValidator()
 	{
 		// clear custom requirements for this test
-		Config::inst()->update('SilverStripe\\Security\\Member_Validator', 'customRequired', null);
+		Member_Validator::config()->update('customRequired', null);
 
 		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
 
@@ -1291,6 +1300,7 @@ class MemberTest extends FunctionalTest {
 }
 
 /**
+ * @skipUpgrade
  * @package framework
  * @subpackage tests
  */

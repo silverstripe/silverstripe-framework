@@ -2,14 +2,11 @@
 
 namespace SilverStripe\ORM\Queries;
 
-use Injector;
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Object representing a SQL DELETE query.
  * The various parts of the SQL query can be manipulated individually.
- *
- * @package framework
- * @subpackage orm
  */
 class SQLDelete extends SQLConditionalExpression {
 
@@ -30,7 +27,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 * Each should be ANSI quoted.
 	 * @param array $where An array of WHERE clauses.
 	 * @param array|string $delete The table(s) to delete, if multiple tables are queried from
-	 * @return self Self reference
+	 * @return static
 	 */
 	public static function create($from = array(), $where = array(), $delete = array()) {
 		return Injector::inst()->createWithArgs(__CLASS__, func_get_args());
@@ -64,7 +61,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 * are specified in the condition clause
 	 *
 	 * @param string|array $tables Escaped SQL statement, usually an unquoted table name
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setDelete($tables) {
 		$this->delete = array();
@@ -76,7 +73,7 @@ class SQLDelete extends SQLConditionalExpression {
 	 * are specified in the condition clause
 	 *
 	 * @param string|array $tables Escaped SQL statement, usually an unquoted table name
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addDelete($tables) {
 		if(is_array($tables)) {
@@ -84,5 +81,6 @@ class SQLDelete extends SQLConditionalExpression {
 		} elseif(!empty($tables)) {
 			$this->delete[str_replace(array('"','`'), '', $tables)] = $tables;
 		}
+		return $this;
 	}
 }

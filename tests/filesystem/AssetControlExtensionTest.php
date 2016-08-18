@@ -1,8 +1,13 @@
 <?php
-use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
+
 
 
 

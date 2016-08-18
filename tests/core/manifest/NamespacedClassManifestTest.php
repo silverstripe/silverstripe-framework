@@ -1,4 +1,11 @@
 <?php
+
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Manifest\SS_ClassManifest;
+use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Dev\SapphireTest;
+
+
 /**
  * Tests for the {@link SS_ClassManifest} class.
  *
@@ -35,14 +42,14 @@ class NamespacedClassManifestTest extends SapphireTest {
 		/** @skipUpgrade */
 		$expectedItems = array(
 			array('SilverStripe', '\\', 'Admin', '\\', 'ModelAdmin'),
-			array('Controller', '  ', 'as', '  ', 'Cont'),
+			array('SilverStripe', '\\', 'Control', '\\', 'Controller', '  ', 'as', '  ', 'Cont'),
 			array(
-				'SS_HTTPRequest', ' ', 'as', ' ', 'Request', ',',
-				'SS_HTTPResponse', ' ', 'as', ' ', 'Response', ',',
+				'SilverStripe', '\\', 'Control', '\\', 'SS_HTTPRequest', ' ', 'as', ' ', 'Request', ',',
+				'SilverStripe', '\\', 'Control', '\\', 'SS_HTTPResponse', ' ', 'as', ' ', 'Response', ',',
 				'SilverStripe', '\\', 'Security', '\\', 'PermissionProvider', ' ', 'as', ' ', 'P',
 			),
 			array('silverstripe', '\\', 'test', '\\', 'ClassA'),
-			array('\\', 'Object'),
+			array('\\', 'SilverStripe', '\\', 'Core', '\\', 'Object'),
 		);
 
 		$this->assertEquals(count($expectedItems), count($parsedTokens));
@@ -61,12 +68,12 @@ class NamespacedClassManifestTest extends SapphireTest {
 
 		$expectedImports = array(
 			'SilverStripe\\Admin\\ModelAdmin',
-			'Cont' => 'Controller',
-			'Request' => 'SS_HTTPRequest',
-			'Response' => 'SS_HTTPResponse',
+			'Cont' => 'SilverStripe\\Control\\Controller',
+			'Request' => 'SilverStripe\\Control\\SS_HTTPRequest',
+			'Response' => 'SilverStripe\\Control\\SS_HTTPResponse',
 			'P' => 'SilverStripe\\Security\\PermissionProvider',
-			'silverstripe\test\ClassA',
-			'\Object',
+			'silverstripe\\test\\ClassA',
+			'\\SilverStripe\\Core\\Object',
 		);
 
 		$imports = $method->invoke($this->manifest, $tokens);
@@ -199,8 +206,8 @@ class NamespacedClassManifestTest extends SapphireTest {
 			'silverstripe\test\classf' => "{$this->base}/module/classes/ClassF.php",
 			'silverstripe\test\classg' => "{$this->base}/module/classes/ClassG.php",
 			'silverstripe\test\classh' => "{$this->base}/module/classes/ClassH.php",
-			'sstemplateparser'         => FRAMEWORK_PATH."/view/SSTemplateParser.php",
-			'sstemplateparseexception' => FRAMEWORK_PATH."/view/SSTemplateParser.php",
+			'sstemplateparser'         => FRAMEWORK_PATH."/View/SSTemplateParser.php",
+			'sstemplateparseexception' => FRAMEWORK_PATH."/View/SSTemplateParseException.php",
 			'silverstripe\framework\tests\classi' => "{$this->base}/module/classes/ClassI.php",
 		);
 

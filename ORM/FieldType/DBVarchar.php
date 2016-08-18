@@ -2,10 +2,10 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use NullableField;
-use TextField;
-use Config;
 use SilverStripe\ORM\DB;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\NullableField;
 
 /**
  * Class Varchar represents a variable-length string of up to 255 characters, designed to store raw text
@@ -13,9 +13,6 @@ use SilverStripe\ORM\DB;
  * @see DBHTMLText
  * @see DBHTMLVarchar
  * @see DBText
- *
- * @package framework
- * @subpackage orm
  */
 class DBVarchar extends DBString {
 
@@ -111,7 +108,7 @@ class DBVarchar extends DBString {
 		return str_replace("\n", '\par ', $this->RAW());
 	}
 
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		if(!$this->nullifyEmpty) {
 			// Allow the user to select if it's null instead of automatically assuming empty string is
 			return new NullableField(new TextField($this->name, $title));

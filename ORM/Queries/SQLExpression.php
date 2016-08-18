@@ -2,17 +2,14 @@
 
 namespace SilverStripe\ORM\Queries;
 
-use Exception;
-use Convert;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\Connect\SS_Query;
 use SilverStripe\ORM\DB;
+use Exception;
 
 /**
  * Abstract base class for an object representing an SQL query.
  * The various parts of the SQL query can be manipulated individually.
- *
- * @package framework
- * @subpackage orm
  */
 abstract class SQLExpression {
 

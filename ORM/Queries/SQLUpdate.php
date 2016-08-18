@@ -2,14 +2,12 @@
 
 namespace SilverStripe\ORM\Queries;
 
-use Injector;
+
+use SilverStripe\Core\Injector\Injector;
 
 /**
  * Object representing a SQL UPDATE query.
  * The various parts of the SQL query can be manipulated individually.
- *
- * @package framework
- * @subpackage orm
  */
 class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression {
 
@@ -50,7 +48,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression {
 	 * Sets the table name to update
 	 *
 	 * @param string $table
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setTable($table) {
 		return $this->setFrom($table);
@@ -92,7 +90,7 @@ class SQLUpdate extends SQLConditionalExpression implements SQLWriteExpression {
 	/**
 	 * Clears all currently set assigment values
 	 *
-	 * @return self The self reference to this query
+	 * @return $this The self reference to this query
 	 */
 	public function clear() {
 		$this->assignment->clear();

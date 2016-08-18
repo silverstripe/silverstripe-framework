@@ -2,11 +2,10 @@
 
 namespace SilverStripe\ORM;
 
+use SilverStripe\ORM\FieldType\DBField;
+
 /**
  * Abstract representation of a DB relation field, either saved or in memory
- *
- * @package framework
- * @subpackage orm
  */
 interface Relation extends SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
 

@@ -2,6 +2,10 @@
 
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\GroupedList;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\ArrayData;
+
+
 /**
  * Tests for the {@link GroupedList} list decorator.
  *

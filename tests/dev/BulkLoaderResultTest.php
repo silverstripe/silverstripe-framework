@@ -1,6 +1,10 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\BulkLoader_Result;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 /**
  * @package framework
  * @subpackage tests

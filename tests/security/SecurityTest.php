@@ -10,6 +10,19 @@ use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+use SilverStripe\i18n\i18n;
+
+
+
+
 
 
 
@@ -46,6 +59,7 @@ class SecurityTest extends FunctionalTest {
 		// And that the unique identified field is 'Email'
 		$this->priorUniqueIdentifierField = Member::config()->unique_identifier_field;
 		$this->priorRememberUsername = Security::config()->remember_username;
+		/** @skipUpgrade */
 		Member::config()->unique_identifier_field = 'Email';
 
 		parent::setUp();

@@ -1,6 +1,15 @@
 <?php
 
 use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Assets\Upload;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Upload_Validator;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
+
+
 
 /**
  * @package framework
@@ -153,7 +162,7 @@ class UploadTest extends SapphireTest {
 			'[image]' => '1k',
 			'txt' => 1000
 		);
-		Config::inst()->update('Upload_Validator', 'default_max_file_size', $configMaxFileSizes);
+		Config::inst()->update('SilverStripe\\Assets\\Upload_Validator', 'default_max_file_size', $configMaxFileSizes);
 		$v = new UploadTest_Validator();
 
 		$retrievedSize = $v->getAllowedMaxFileSize('[image]');
@@ -652,7 +661,7 @@ class UploadTest extends SapphireTest {
 		};
 
 		// test empty file version prefix
-		Config::inst()->update('SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator', 'version_prefix', '');
+		Config::inst()->update('SilverStripe\\Assets\\Storage\\DefaultAssetNameGenerator', 'version_prefix', '');
 
 		$file1 = $upload('UploadTest-IMG001.jpg');
 		$this->assertEquals(
@@ -688,7 +697,7 @@ class UploadTest extends SapphireTest {
 		$file4->delete();
 
 		// test '-v' file version prefix
-		Config::inst()->update('SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator', 'version_prefix', '-v');
+		Config::inst()->update('SilverStripe\\Assets\\Storage\\DefaultAssetNameGenerator', 'version_prefix', '-v');
 
 		$file1 = $upload('UploadTest2-IMG001.jpg');
 		$this->assertEquals(

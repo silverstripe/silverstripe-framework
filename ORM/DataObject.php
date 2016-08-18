@@ -2,27 +2,20 @@
 
 namespace SilverStripe\ORM;
 
-use ViewableData;
-use i18nEntityProvider;
-use Injector;
-use HTTP;
-use ClassInfo;
-use i18n;
-use Deprecation;
-use Config;
-use Debug;
-use LogicException;
-use InvalidArgumentException;
-use BadMethodCallException;
-use Exception;
-use SearchContext;
-use FieldList;
-use FormField;
-use FormScaffolder;
-
-
-use Object;
-use SearchFilter;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\Debug;
+use SilverStripe\Control\HTTP;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\FormScaffolder;
+use SilverStripe\i18n\i18n;
+use SilverStripe\i18n\i18nEntityProvider;
+use SilverStripe\ORM\Filters\SearchFilter;
+use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\Queries\SQLSelect;
@@ -32,7 +25,11 @@ use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-
+use SilverStripe\View\ViewableData;
+use LogicException;
+use InvalidArgumentException;
+use BadMethodCallException;
+use Exception;
 
 /**
  * A single database record & abstract class for the data-access-model.
@@ -97,9 +94,6 @@ use SilverStripe\Security\Permission;
  *
  * @todo Add instance specific removeExtension() which undos loadExtraStatics()
  *  and defineMethods()
- *
- * @package framework
- * @subpackage orm
  *
  * @property integer ID ID of the DataObject, 0 if the DataObject doesn't exist in database.
  * @property string ClassName Class name of the DataObject
@@ -244,7 +238,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @var array
 	 */
 	private static $extensions = array(
-		'AssetControl' => '\\SilverStripe\\Filesystem\\AssetControlExtension'
+		'AssetControl' => 'SilverStripe\\Assets\\AssetControlExtension'
 	);
 
 	/**
@@ -258,11 +252,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 	/**
 	 * Non-static relationship cache, indexed by component name.
+	 *
+	 * @var DataObject[]
 	 */
 	protected $components;
 
 	/**
 	 * Non-static cache of has_many and many_many relations that can't be written until this object is saved.
+	 *
+	 * @var UnsavedRelationList[]
 	 */
 	protected $unsavedRelations;
 
@@ -382,8 +380,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		if(!is_array($record) && !is_a($record, "stdClass")) {
-			if(is_object($record)) $passed = "an object of type '$record->class'";
-			else $passed = "The value '$record'";
+			if(is_object($record)) {
+				$passed = "an object of type '".get_class($record)."'";
+			} else {
+				$passed = "The value '$record'";
+			}
 
 			user_error("DataObject::__construct passed $passed.  It's supposed to be passed an array,"
 				. " taken straight from the database.  Perhaps you should use DataList::create()->First(); instead?",
@@ -469,8 +470,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject A duplicate of this node. The exact type will be the type of this node.
 	 */
 	public function duplicate($doWrite = true) {
-		$className = $this->class;
-		$clone = new $className( $this->toMap(), false, $this->model );
+		/** @var static $clone */
+		$clone = Injector::inst()->create(get_class($this), $this->toMap(), false, $this->model );
 		$clone->ID = 0;
 
 		$clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite);
@@ -534,14 +535,29 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 	}
 
+	/**
+	 * Return obsolete class name, if this is no longer a valid class
+	 *
+	 * @return string
+	 */
 	public function getObsoleteClassName() {
 		$className = $this->getField("ClassName");
-		if (!ClassInfo::exists($className)) return $className;
+		if (!ClassInfo::exists($className)) {
+			return $className;
+		}
+		return null;
 	}
 
+	/**
+	 * Gets name of this class
+	 *
+	 * @return string
+	 */
 	public function getClassName() {
 		$className = $this->getField("ClassName");
-		if (!ClassInfo::exists($className)) return get_class($this);
+		if (!ClassInfo::exists($className)) {
+			return get_class($this);
+		}
 		return $className;
 	}
 
@@ -557,7 +573,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function setClassName($className) {
 		$className = trim($className);
-		if(!$className || !is_subclass_of($className, 'SilverStripe\ORM\DataObject')) {
+		if(!$className || !is_subclass_of($className, __CLASS__)) {
 			return $this;
 		}
 
@@ -847,6 +863,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				$relations = explode('.', $k);
 				$fieldName = array_pop($relations);
 				$relObj = $this;
+				$relation = null;
 				foreach($relations as $i=>$relation) {
 					// no support for has_many or many_many relationships,
 					// as the updater wouldn't know which object to write to (or create)
@@ -867,7 +884,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 							E_USER_NOTICE
 						);
 						// unset relation object so we don't write properties to the wrong object
-						unset($relObj);
+						$relObj = null;
 						break;
 					}
 				}
@@ -942,7 +959,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		// makes sure we don't merge data like ID or ClassName
-		$leftData = $leftObj->db();
 		$rightData = $rightObj->db();
 
 		foreach($rightData as $key=>$rightSpec) {
@@ -1132,8 +1148,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 				// Set many-many defaults with an array of ids
 				if(is_array($fieldValue) && $this->manyManyComponent($fieldName)) {
+					/** @var ManyManyList $manyManyJoin */
 					$manyManyJoin = $this->$fieldName();
-					$manyManyJoin->setByIdList($fieldValue);
+					$manyManyJoin->setByIDList($fieldValue);
 				}
 			}
 			if($class == 'SilverStripe\ORM\DataObject') {
@@ -1169,6 +1186,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				);
 			}
 		}
+		return null;
 	}
 
 	/**
@@ -1404,7 +1422,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject $this
 	 */
 	public function writeComponents($recursive = false) {
-		if(!$this->components) return $this;
+		if(!$this->components) {
+			return $this;
+		}
 
 		foreach($this->components as $component) {
 			$component->write(false, false, false, $recursive);
@@ -1493,7 +1513,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$joinID    = $this->getField($joinField);
 
 			// Extract class name for polymorphic relations
-			if($class === 'SilverStripe\ORM\DataObject') {
+			if($class === 'SilverStripe\\ORM\\DataObject') {
 				$class = $this->getField($componentName . 'Class');
 				if(empty($class)) return null;
 			}
@@ -1556,7 +1576,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Returns a one-to-many relation as a HasManyList
 	 *
 	 * @param string $componentName Name of the component
-	 * @return HasManyList The components of the one-to-many relationship.
+	 * @return HasManyList|UnsavedRelationList The components of the one-to-many relationship.
 	 */
 	public function getComponents($componentName) {
 		$result = null;
@@ -1845,7 +1865,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Returns a many-to-many component, as a ManyManyList.
 	 * @param string $componentName Name of the many-many component
-	 * @return ManyManyList The set of components
+	 * @return ManyManyList|UnsavedRelationList The set of components
 	 */
 	public function getManyManyComponents($componentName) {
 		$manyManyComponent = $this->manyManyComponent($componentName);
@@ -1875,6 +1895,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		// Store component data in query meta-data
 		$result = $result->alterDataQuery(function($query) use ($extraFields) {
+			/** @var DataQuery $query */
 			$query->setQueryParam('Component.ExtraFields', $extraFields);
 		});
 
@@ -1916,6 +1937,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				return $hasOnes[$component];
 			}
 		}
+		return null;
 	}
 
 	/**
@@ -2198,6 +2220,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 			return array($class, $candidate, $parentField, $childField, $joinTable);
 		}
+		return null;
 	}
 
 	/**
@@ -2205,8 +2228,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 *
 	 * This is experimental, and is currently only a Postgres-specific enhancement.
 	 *
-	 * @param $class
-	 * @return array or false
+	 * @param string $class
+	 * @return array|false
 	 */
 	public function database_extensions($class){
 		$extensions = Config::inst()->get($class, 'database_extensions', Config::UNINHERITED);
@@ -2257,9 +2280,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		);
 		$fields = new FieldList();
 		foreach($this->searchableFields() as $fieldName => $spec) {
-			if($params['restrictFields'] && !in_array($fieldName, $params['restrictFields'])) continue;
+			if($params['restrictFields'] && !in_array($fieldName, $params['restrictFields'])) {
+				continue;
+			}
 
 			// If a custom fieldclass is provided as a string, use it
+			$field = null;
 			if($params['fieldClasses'] && isset($params['fieldClasses'][$fieldName])) {
 				$fieldClass = $params['fieldClasses'][$fieldName];
 				$field = new $fieldClass($fieldName);
@@ -2766,6 +2792,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				return $spec['type'];
 			}
 		}
+		return null;
 	}
 
 	/**
@@ -2979,6 +3006,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		list($table, $spec) = explode('.', $helper);
+		/** @var DBField $obj */
 		$obj = Object::create_from_string($spec, $fieldName);
 		$obj->setTable($table);
 		$obj->setValue($value, $this, false);
@@ -3174,9 +3202,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 			self::$_cache_get_one[$callerClass][$cacheKey] = false;
 		}
+		$item = null;
 		if(!$cache || !isset(self::$_cache_get_one[$callerClass][$cacheKey])) {
 			$dl = DataObject::get($callerClass)->where($filter)->sort($orderby);
-			$item = $dl->First();
+			$item = $dl->first();
 
 			if($cache) {
 				self::$_cache_get_one[$callerClass][$cacheKey] = $item;
@@ -3197,14 +3226,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject $this
 	 */
 	public function flushCache($persistent = true) {
-		if($this->class == 'SilverStripe\ORM\DataObject') {
+		if($this->class == __CLASS__) {
 			self::$_cache_get_one = array();
 			return $this;
 		}
 
 		$classes = ClassInfo::ancestry($this->class);
 		foreach($classes as $class) {
-			if(isset(self::$_cache_get_one[$class])) unset(self::$_cache_get_one[$class]);
+			if(isset(self::$_cache_get_one[$class])) {
+				unset(self::$_cache_get_one[$class]);
+			}
 		}
 
 		$this->extend('flushCache');
@@ -3553,6 +3584,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 					? $labels[$identifer] : FormField::name_to_label($identifer);
 			}
 			if(!isset($rewrite[$identifer]['filter'])) {
+				/** @skipUpgrade */
 				$rewrite[$identifer]['filter'] = 'PartialMatchFilter';
 			}
 		}
@@ -3598,7 +3630,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$ancestry = ClassInfo::ancestry($this->class);
 			$ancestry = array_reverse($ancestry);
 			if($ancestry) foreach($ancestry as $ancestorClass) {
-				if($ancestorClass == 'ViewableData') break;
+				if($ancestorClass == 'SilverStripe\\View\\ViewableData') break;
 				$types = array(
 					'db'        => (array)Config::inst()->get($ancestorClass, 'db', Config::UNINHERITED)
 				);
@@ -3694,16 +3726,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		$filters = array();
 
 		foreach($this->searchableFields() as $name => $spec) {
-			if($spec['filter'] instanceof SearchFilter) {
+			if (empty($spec['filter'])) {
+				/** @skipUpgrade */
+				$filters[$name] = 'PartialMatchFilter';
+			} elseif($spec['filter'] instanceof SearchFilter) {
 				$filters[$name] = $spec['filter'];
 			} else {
-				$class = $spec['filter'];
-
-				if(!is_subclass_of($spec['filter'], 'SearchFilter')) {
-					$class = 'PartialMatchFilter';
-				}
-
-				$filters[$name] = new $class($name);
+				$filters[$name] = Injector::inst()->create($spec['filter'], $name);
 			}
 		}
 

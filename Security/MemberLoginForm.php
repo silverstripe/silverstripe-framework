@@ -2,22 +2,21 @@
 
 namespace SilverStripe\Security;
 
-use Director;
-use Requirements;
-use Session;
-use FieldList;
-use HiddenField;
-use FormAction;
-use SS_HTTPResponse;
-use TextField;
-use PasswordField;
-use CheckboxField;
-use Config;
-use LiteralField;
-use RequiredFields;
-use Controller;
-use Convert;
-use Email;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\View\Requirements;
 
 /**
  * Log-in form for the "member" authentication method.
@@ -28,9 +27,6 @@ use Email;
  * - "forgotPassword": Called before forgot password logic kicks in,
  *    allowing extensions to "veto" execution by returning FALSE.
  *    Arguments: $member containing the detected Member record
- *
- * @package framework
- * @subpackage security
  */
 class MemberLoginForm extends LoginForm {
 
@@ -54,6 +50,7 @@ class MemberLoginForm extends LoginForm {
 	/**
 	 * Constructor
 	 *
+	 * @skipUpgrade
 	 * @param Controller $controller The parent controller, necessary to
 	 *                               create the appropriate form action tag.
 	 * @param string $name The method on the controller that will return this
@@ -94,7 +91,7 @@ class MemberLoginForm extends LoginForm {
 			);
 		} else {
 			if(!$fields) {
-				$label=singleton('SilverStripe\\Security\\Member')->fieldLabel(Member::config()->unique_identifier_field);
+				$label = Member::singleton()->fieldLabel(Member::config()->unique_identifier_field);
 				$fields = FieldList::create(
 					HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
 					// Regardless of what the unique identifer field is (usually 'Email'), it will be held in the
@@ -118,7 +115,7 @@ class MemberLoginForm extends LoginForm {
 							'title',
 							sprintf(
 								_t('Member.REMEMBERME', "Remember me next time? (for %d days on this device)"),
-								Config::inst()->get('SilverStripe\\Security\\RememberLoginHash', 'token_expiry_days')
+								RememberLoginHash::config()->get('token_expiry_days')
 							)
 						)
 					);
@@ -191,6 +188,7 @@ JS;
 		if($this->performLogin($data)) {
 			$this->logInUserAndRedirect($data);
 		} else {
+			/** @skipUpgrade */
 			if(array_key_exists('Email', $data)){
 				Session::set('SessionForms.MemberLoginForm.Email', $data['Email']);
 				Session::set('SessionForms.MemberLoginForm.Remember', isset($data['Remember']));
@@ -231,7 +229,8 @@ JS;
 			if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
 				Session::set('BackURL', $backURL);
 			}
-			$cp = ChangePasswordForm::create($this->controller, 'SilverStripe\\Security\\ChangePasswordForm');
+			/** @skipUpgrade */
+			$cp = ChangePasswordForm::create($this->controller, 'ChangePasswordForm');
 			$cp->sessionMessage(
 				_t('Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
 				'good'
@@ -273,7 +272,7 @@ JS;
 			);
 			Session::set("Security.Message.type", "good");
 		}
-		Controller::curr()->redirectBack();
+		return Controller::curr()->redirectBack();
 	}
 
 
@@ -318,6 +317,7 @@ JS;
 	 * to the form without further action. It is recommended to set a message
 	 * in the form detailing why the action was denied.
 	 *
+	 * @skipUpgrade
 	 * @param array $data Submitted data
 	 * @return SS_HTTPResponse
 	 */
@@ -329,11 +329,11 @@ JS;
 				'bad'
 			);
 
-			$this->controller->redirect('Security/lostpassword');
-			return;
+			return $this->controller->redirect('Security/lostpassword');
 		}
 
 		// Find existing member
+		/** @var Member $member */
 		$member = Member::get()->filter("Email", $data['Email'])->first();
 
 		// Allow vetoing forgot password requests
@@ -356,18 +356,18 @@ JS;
 			$e->setTo($member->Email);
 			$e->send();
 
-			$this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
+			return $this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
 		} elseif($data['Email']) {
 			// Avoid information disclosure by displaying the same status,
 			// regardless wether the email address actually exists
-			$this->controller->redirect('Security/passwordsent/' . rawurlencode($data['Email']));
+			return $this->controller->redirect('Security/passwordsent/' . rawurlencode($data['Email']));
 		} else {
 			$this->sessionMessage(
 				_t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
 				'bad'
 			);
 
-			$this->controller->redirect('Security/lostpassword');
+			return $this->controller->redirect('Security/lostpassword');
 		}
 	}
 

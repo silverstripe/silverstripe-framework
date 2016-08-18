@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Core\Manifest\SS_ClassManifest;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * Tests for the {@link SS_ClassManifest} class.
  *
@@ -38,13 +42,12 @@ class ClassManifestTest extends SapphireTest {
 
 	public function testGetClasses() {
 		$expect = array(
-			'classb'                   => "{$this->base}/module/classes/ClassB.php",
 			'classa'                   => "{$this->base}/module/classes/ClassA.php",
 			'classb'                   => "{$this->base}/module/classes/ClassB.php",
 			'classc'                   => "{$this->base}/module/classes/ClassC.php",
 			'classd'                   => "{$this->base}/module/classes/ClassD.php",
-			'sstemplateparser'         => FRAMEWORK_PATH."/view/SSTemplateParser.php",
-			'sstemplateparseexception' => FRAMEWORK_PATH."/view/SSTemplateParser.php"
+			'sstemplateparser'         => FRAMEWORK_PATH."/View/SSTemplateParser.php",
+			'sstemplateparseexception' => FRAMEWORK_PATH."/View/SSTemplateParseException.php"
 		);
 		$this->assertEquals($expect, $this->manifest->getClasses());
 	}

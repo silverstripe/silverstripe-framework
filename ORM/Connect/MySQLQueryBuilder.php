@@ -2,14 +2,11 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use InvalidArgumentException;
 use SilverStripe\ORM\Queries\SQLSelect;
+use InvalidArgumentException;
 
 /**
  * Builds a SQL query string from a SQLExpression object
- *
- * @package framework
- * @subpackage orm
  */
 class MySQLQueryBuilder extends DBQueryBuilder {
 

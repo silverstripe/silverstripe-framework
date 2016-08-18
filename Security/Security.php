@@ -2,35 +2,34 @@
 
 namespace SilverStripe\Security;
 
-use Form;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
-use Controller;
 use SilverStripe\ORM\FieldType\DBField;
-use SS_HTTPRequest;
-use SSViewer;
-use TemplateGlobalProvider;
-use Deprecation;
-use Director;
-use SS_HTTPResponse;
-use Session;
-use Config;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\SSViewer;
+use SilverStripe\View\TemplateGlobalProvider;
 use Exception;
 use Page;
 use Page_Controller;
-use ArrayData;
-use FieldList;
-use EmailField;
-use FormAction;
-use Convert;
-use Object;
-use ClassInfo;
+use Subsite;
 
 /**
  * Implements a basic security model
- * @package framework
- * @subpackage security
  */
 class Security extends Controller implements TemplateGlobalProvider {
 
@@ -369,7 +368,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		$authenticator = $this->getRequest()->requestVar('AuthenticationMethod');
 		if($authenticator) {
 			$authenticators = Authenticator::get_authenticators();
-			if(in_array($authenticator, $authenticators)) {
+			if (in_array($authenticator, $authenticators)) {
 				return $authenticator;
 			}
 		}
@@ -475,6 +474,8 @@ class Security extends Controller implements TemplateGlobalProvider {
 		) {
 			return $this->redirectBack();
 		}
+
+		return null;
 	}
 
 	/**
@@ -625,6 +626,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Factory method for the lost password form
 	 *
+	 * @skipUpgrade
 	 * @return Form Returns the lost password form
 	 */
 	public function LostPasswordForm() {
@@ -692,6 +694,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	public static function getPasswordResetLink($member, $autologinToken) {
 		$autologinToken = urldecode($autologinToken);
 		$selfControllerClass = __CLASS__;
+		/** @var static $selfController */
 		$selfController = new $selfControllerClass();
 		return $selfController->Link('changepassword') . "?m={$member->ID}&t=$autologinToken";
 	}
@@ -706,7 +709,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *
 	 * @see ChangePasswordForm
 	 *
-	 * @return string Returns the "change password" page as HTML code.
+	 * @return string|SS_HTTPRequest Returns the "change password" page as HTML code, or a redirect response
 	 */
 	public function changepassword() {
 		$controller = $this->getResponseController(_t('Security.CHANGEPASSWORDHEADER', 'Change your password'));
@@ -715,6 +718,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		if(($response = $controller->getResponse()) && $response->isFinished()) return $response;
 
 		// Extract the member from the URL.
+		/** @var Member $member */
 		$member = null;
 		if (isset($_REQUEST['m'])) {
 			$member = Member::get()->filter('ID', (int)$_REQUEST['m'])->first();
@@ -759,16 +763,15 @@ class Security extends Controller implements TemplateGlobalProvider {
 							'<p>The password reset link is invalid or expired.</p>'
 							. '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
 							. ' you <a href="{link2}">logged in</a>.</p>',
-							array('link1' => $this->Link('lostpassword'), 'link2' => $this->link('login'))
+							array('link1' => $this->Link('lostpassword'), 'link2' => $this->Link('login'))
 						)
 					)
 				);
 			} else {
-				self::permissionFailure(
+				return self::permissionFailure(
 					$this,
 					_t('Security.ERRORPASSWORDPERMISSION', 'You must be logged in in order to change your password!')
 				);
-				return;
 			}
 		}
 
@@ -783,7 +786,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	public function ChangePasswordForm() {
 		/** @skipUpgrade */
 		$formName = 'ChangePasswordForm';
-		return \Injector::inst()->createWithArgs(
+		return Injector::inst()->createWithArgs(
 			'SilverStripe\\Security\\ChangePasswordForm',
 			[ $this,  $formName]
 		);
@@ -826,17 +829,18 @@ class Security extends Controller implements TemplateGlobalProvider {
 		// coupling to subsites module
 		$origSubsite = null;
 		if(is_callable('Subsite::changeSubsite')) {
-			$origSubsite = \Subsite::currentSubsiteID();
-			\Subsite::changeSubsite(0);
+			$origSubsite = Subsite::currentSubsiteID();
+			Subsite::changeSubsite(0);
 		}
 
+		/** @var Member $member */
 		$member = null;
 
 		// find a group with ADMIN permission
 		$adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
 
 		if(is_callable('Subsite::changeSubsite')) {
-			\Subsite::changeSubsite($origSubsite);
+			Subsite::changeSubsite($origSubsite);
 		}
 
 		if ($adminGroup) {
@@ -891,7 +895,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *
 	 * @param string $username The user name
 	 * @param string $password The password (in cleartext)
-	 * @return bool
+	 * @return bool True if successfully set
 	 */
 	public static function setDefaultAdmin($username, $password) {
 		// don't overwrite if already set
@@ -901,6 +905,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		self::$default_username = $username;
 		self::$default_password = $password;
+		return true;
 	}
 
 	/**
@@ -942,57 +947,6 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 */
 	public static function default_admin_password() {
 		return self::$default_password;
-	}
-
-	/**
-	 * Set strict path checking
-	 *
-	 * This prevents sharing of the session across several sites in the
-	 * domain.
-	 *
-	 * @deprecated 4.0 Use the "Security.strict_path_checking" config setting instead
-	 * @param boolean $strictPathChecking To enable or disable strict patch
-	 *                                    checking.
-	 */
-	public static function setStrictPathChecking($strictPathChecking) {
-		Deprecation::notice('4.0', 'Use the "Security.strict_path_checking" config setting instead');
-		self::config()->strict_path_checking = $strictPathChecking;
-	}
-
-
-	/**
-	 * Get strict path checking
-	 *
-	 * @deprecated 4.0 Use the "Security.strict_path_checking" config setting instead
-	 * @return boolean Status of strict path checking
-	 */
-	public static function getStrictPathChecking() {
-		Deprecation::notice('4.0', 'Use the "Security.strict_path_checking" config setting instead');
-		return self::config()->strict_path_checking;
-	}
-
-
-	/**
-	 * Set the password encryption algorithm
-	 *
-	 * @deprecated 4.0 Use the "Security.password_encryption_algorithm" config setting instead
-	 * @param string $algorithm One of the available password encryption
-	 *  algorithms determined by {@link Security::get_encryption_algorithms()}
-	 * @return bool Returns TRUE if the passed algorithm was valid, otherwise FALSE.
-	 */
-	public static function set_password_encryption_algorithm($algorithm) {
-		Deprecation::notice('4.0', 'Use the "Security.password_encryption_algorithm" config setting instead');
-
-		self::config()->password_encryption_algorithm = $algorithm;
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "Security.password_encryption_algorithm" config setting instead
-	 * @return String
-	 */
-	public static function get_password_encryption_algorithm() {
-		Deprecation::notice('4.0', 'Use the "Security.password_encryption_algorithm" config setting instead');
-		return self::config()->password_encryption_algorithm;
 	}
 
 	/**
@@ -1061,7 +1015,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		foreach($requiredClasses as $class) {
 			// Skip test classes, as not all test classes are scaffolded at once
-			if(is_subclass_of($class, 'TestOnly')) {
+			if(is_subclass_of($class, 'SilverStripe\\Dev\\TestOnly')) {
 				continue;
 			}
 
@@ -1123,24 +1077,6 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 */
 	private static $default_login_dest = "";
 
-	/**
-	 * @deprecated 4.0 Use the "Security.default_login_dest" config setting instead
-	 */
-	public static function set_default_login_dest($dest) {
-		Deprecation::notice('4.0', 'Use the "Security.default_login_dest" config setting instead');
-		self::config()->default_login_dest = $dest;
-	}
-
-	/**
-	 * Get the default login dest.
-	 *
-	 * @deprecated 4.0 Use the "Security.default_login_dest" config setting instead
-	 */
-	public static function default_login_dest() {
-		Deprecation::notice('4.0', 'Use the "Security.default_login_dest" config setting instead');
-		return self::config()->default_login_dest;
-	}
-
 	protected static $ignore_disallowed_actions = false;
 
 	/**
@@ -1155,18 +1091,6 @@ class Security extends Controller implements TemplateGlobalProvider {
 	public static function ignore_disallowed_actions() {
 		return self::$ignore_disallowed_actions;
 	}
-
-
-	/**
-	 * Set a custom log-in URL if you have built your own log-in page.
-	 *
-	 * @deprecated 4.0 Use the "Security.login_url" config setting instead.
-	 */
-	public static function set_login_url($loginUrl) {
-		Deprecation::notice('4.0', 'Use the "Security.login_url" config setting instead');
-		self::config()->update("login_url", $loginUrl);
-	}
-
 
 	/**
 	 * Get the URL of the log-in page.

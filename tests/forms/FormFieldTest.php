@@ -1,4 +1,19 @@
 <?php
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Extension;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -6,13 +21,13 @@
 class FormFieldTest extends SapphireTest {
 
 	protected $requiredExtensions = array(
-		'FormField' => array('FormFieldTest_Extension')
+		'SilverStripe\\Forms\\FormField' => array('FormFieldTest_Extension')
 	);
 
 	public function testDefaultClasses() {
 		Config::nest();
 
-		Config::inst()->update('FormField', 'default_classes', array(
+		FormField::config()->update('default_classes', array(
 			'class1',
 		));
 
@@ -20,7 +35,7 @@ class FormFieldTest extends SapphireTest {
 
 		$this->assertContains('class1', $field->extraClass(), 'Class list does not contain expected class');
 
-		Config::inst()->update('FormField', 'default_classes', array(
+		FormField::config()->update('default_classes', array(
 			'class1',
 			'class2',
 		));
@@ -29,7 +44,7 @@ class FormFieldTest extends SapphireTest {
 
 		$this->assertContains('class1 class2', $field->extraClass(), 'Class list does not contain expected class');
 
-		Config::inst()->update('FormField', 'default_classes', array(
+		FormField::config()->update('default_classes', array(
 			'class3',
 		));
 
@@ -41,7 +56,7 @@ class FormFieldTest extends SapphireTest {
 
 		$this->assertNotContains('class3', $field->extraClass(), 'Class list contains unexpected class');
 
-		Config::inst()->update('TextField', 'default_classes', array(
+		TextField::config()->update('default_classes', array(
 			'textfield-class',
 		));
 
@@ -170,18 +185,25 @@ class FormFieldTest extends SapphireTest {
 	}
 
 	public function testEveryFieldTransformsReadonlyAsClone() {
-		$fieldClasses = ClassInfo::subclassesFor('FormField');
+		$fieldClasses = ClassInfo::subclassesFor('SilverStripe\\Forms\\FormField');
 		foreach($fieldClasses as $fieldClass) {
 			$reflectionClass = new ReflectionClass($fieldClass);
-			if(!$reflectionClass->isInstantiable()) continue;
+			if(!$reflectionClass->isInstantiable()) {
+				continue;
+			}
 			$constructor = $reflectionClass->getMethod('__construct');
-			if($constructor->getNumberOfRequiredParameters() > 1) continue;
-			if($fieldClass == 'CompositeField' || is_subclass_of($fieldClass, 'CompositeField')) continue;
+			if($constructor->getNumberOfRequiredParameters() > 1) {
+				continue;
+			}
+			if( is_a($fieldClass, 'SilverStripe\\Forms\\CompositeField', true) ) {
+				continue;
+			}
 
-			if ( $fieldClass = 'NullableField' ) {
-				$instance = new $fieldClass(new TextField("{$fieldClass}_instance"));
+			$fieldName = $reflectionClass->getShortName() . '_instance';
+			if ( $fieldClass = 'SilverStripe\\Forms\\NullableField' ) {
+				$instance = new $fieldClass(new TextField($fieldName));
 			} else {
-				$instance = new $fieldClass("{$fieldClass}_instance");
+				$instance = new $fieldClass($fieldName);
 			}
 			$isReadonlyBefore = $instance->isReadonly();
 			$readonlyInstance = $instance->performReadonlyTransformation();
@@ -203,18 +225,25 @@ class FormFieldTest extends SapphireTest {
 	}
 
 	public function testEveryFieldTransformsDisabledAsClone() {
-		$fieldClasses = ClassInfo::subclassesFor('FormField');
+		$fieldClasses = ClassInfo::subclassesFor('SilverStripe\\Forms\\FormField');
 		foreach($fieldClasses as $fieldClass) {
 			$reflectionClass = new ReflectionClass($fieldClass);
-			if(!$reflectionClass->isInstantiable()) continue;
+			if(!$reflectionClass->isInstantiable()) {
+				continue;
+			}
 			$constructor = $reflectionClass->getMethod('__construct');
-			if($constructor->getNumberOfRequiredParameters() > 1) continue;
-			if($fieldClass == 'CompositeField' || is_subclass_of($fieldClass, 'CompositeField')) continue;
+			if($constructor->getNumberOfRequiredParameters() > 1) {
+				continue;
+			}
+			if(is_a($fieldClass, 'SilverStripe\\Forms\\CompositeField', true)) {
+				continue;
+			}
 
-			if ( $fieldClass = 'NullableField' ) {
-				$instance = new $fieldClass(new TextField("{$fieldClass}_instance"));
+			$fieldName = $reflectionClass->getShortName() . '_instance';
+			if ( $fieldClass = 'SilverStripe\\Forms\\NullableField' ) {
+				$instance = new $fieldClass(new TextField($fieldName));
 			} else {
-				$instance = new $fieldClass("{$fieldClass}_instance");
+				$instance = new $fieldClass($fieldName);
 			}
 
 			$isDisabledBefore = $instance->isDisabled();

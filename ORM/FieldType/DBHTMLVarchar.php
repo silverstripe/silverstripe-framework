@@ -2,16 +2,15 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use ShortcodeParser;
-use HTMLEditorField;
-use TextField;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\View\Parsers\ShortcodeParser;
 
 /**
  * Represents a short text field that is intended to contain HTML content.
  *
  * This behaves similarly to Varchar, but the template processor won't escape any HTML content within it.
- * @package framework
- * @subpackage orm
  */
 class DBHTMLVarchar extends DBVarchar {
 
@@ -112,10 +111,10 @@ class DBHTMLVarchar extends DBVarchar {
 		$text = strip_tags($this->RAW());
 
 		// Convert back to plain text
-		return trim(\Convert::xml2raw($text));
+		return trim(Convert::xml2raw($text));
 	}
 
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return new HTMLEditorField($this->name, $title, 1);
 	}
 

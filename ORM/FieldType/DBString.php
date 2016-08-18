@@ -4,9 +4,6 @@ namespace SilverStripe\ORM\FieldType;
 
 /**
  * An abstract base class for the string field types (i.e. Varchar and Text)
- *
- * @package framework
- * @subpackage orm
  */
 abstract class DBString extends DBField {
 

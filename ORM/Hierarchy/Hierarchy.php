@@ -2,29 +2,25 @@
 
 namespace SilverStripe\ORM\Hierarchy;
 
-use Config;
-use Exception;
-use Controller;
+use SilverStripe\Admin\LeftAndMain;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\Versioning\Versioned;
-use SilverStripe\Admin\LeftAndMain;
-use SiteTree;
-
+use Exception;
 
 /**
  * DataObjects that use the Hierarchy extension can be be organised as a hierarchy, with children and parents. The most
  * obvious example of this is SiteTree.
  *
- * @package framework
- * @subpackage orm
- *
- * @property int        ParentID
- * @property DataObject owner
- * @method   DataObject Parent
+ * @property int $ParentID
+ * @property DataObject $owner
+ * @method DataObject Parent()
  */
 class Hierarchy extends DataExtension {
 
@@ -128,28 +124,32 @@ class Hierarchy extends DataExtension {
 	 * Returns the children of this DataObject as an XHTML UL. This will be called recursively on each child, so if they
 	 * have children they will be displayed as a UL inside a LI.
 	 *
-	 * @param string          $attributes         Attributes to add to the UL
-	 * @param string|callable $titleEval          PHP code to evaluate to start each child - this should include '<li>'
-	 * @param string          $extraArg           Extra arguments that will be passed on to children, for if they
-	 *                                            overload this function
-	 * @param bool            $limitToMarked      Display only marked children
-	 * @param string          $childrenMethod     The name of the method used to get children from each object
-	 * @param bool            $rootCall           Set to true for this first call, and then to false for calls inside
-	 *                                            the recursion. You should not change this.
-	 * @param int             $nodeCountThreshold See {@link self::$node_threshold_total}
-	 * @param callable        $nodeCountCallback  Called with the node count, which gives the callback an opportunity to
-	 *                                            intercept the query. Useful e.g. to avoid excessive children listings
-	 *                                            (Arguments: $parent, $numChildren)
-	 *
+	 * @param string $attributes Attributes to add to the UL
+	 * @param string|callable $titleEval PHP code to evaluate to start each child - this should include '<li>'
+	 * @param string $extraArg Extra arguments that will be passed on to children, for if they overload this function
+	 * @param bool $limitToMarked Display only marked children
+	 * @param string $childrenMethod The name of the method used to get children from each object
+	 * @param string $numChildrenMethod
+	 * @param bool $rootCall Set to true for this first call, and then to false for calls inside the recursion.
+	 * You should not change this.
+	 * @param int $nodeCountThreshold See {@link self::$node_threshold_total}
+	 * @param callable $nodeCountCallback Called with the node count, which gives the callback an opportunity to
+	 * intercept the query. Useful e.g. to avoid excessive children listings (Arguments: $parent, $numChildren)
 	 * @return string
 	 */
-	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null,
-			$limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted",
-			$numChildrenMethod = "numChildren", $rootCall = true,
-			$nodeCountThreshold = null, $nodeCountCallback = null) {
-
+	public function getChildrenAsUL(
+			$attributes = "",
+			$titleEval = '"<li>" . $child->Title',
+			$extraArg = null,
+			$limitToMarked = false,
+			$childrenMethod = "AllChildrenIncludingDeleted",
+			$numChildrenMethod = "numChildren",
+			$rootCall = true,
+			$nodeCountThreshold = null,
+			$nodeCountCallback = null
+	) {
 		if(!is_numeric($nodeCountThreshold)) {
-			$nodeCountThreshold = Config::inst()->get('SilverStripe\ORM\Hierarchy\Hierarchy', 'node_threshold_total');
+			$nodeCountThreshold = Config::inst()->get(__CLASS__, 'node_threshold_total');
 		}
 
 		if($limitToMarked && $rootCall) {
@@ -166,10 +166,12 @@ class Hierarchy extends DataExtension {
 		if($this->owner->hasMethod($childrenMethod)) {
 			$children = $this->owner->$childrenMethod($extraArg);
 		} else {
+			$children = null;
 			user_error(sprintf("Can't find the method '%s' on class '%s' for getting tree children",
 				$childrenMethod, get_class($this->owner)), E_USER_ERROR);
 		}
 
+		$output = null;
 		if($children) {
 
 			if($attributes) {
@@ -220,6 +222,7 @@ class Hierarchy extends DataExtension {
 		if(isset($foundAChild) && $foundAChild) {
 			return $output;
 		}
+		return null;
 	}
 
 	/**
@@ -232,11 +235,17 @@ class Hierarchy extends DataExtension {
 	 * {@link isExpanded()} and {@link isMarked()} on individual nodes.
 	 *
 	 * @param int $nodeCountThreshold See {@link getChildrenAsUL()}
+	 * @param mixed $context
+	 * @param string $childrenMethod
+	 * @param string $numChildrenMethod
 	 * @return int The actual number of nodes marked.
 	 */
-	public function markPartialTree($nodeCountThreshold = 30, $context = null,
-			$childrenMethod = "AllChildrenIncludingDeleted", $numChildrenMethod = "numChildren") {
-
+	public function markPartialTree(
+		$nodeCountThreshold = 30,
+		$context = null,
+		$childrenMethod = "AllChildrenIncludingDeleted",
+		$numChildrenMethod = "numChildren"
+	) {
 		if(!is_numeric($nodeCountThreshold)) $nodeCountThreshold = 30;
 
 		$this->markedNodes = array($this->owner->ID => $this->owner);
@@ -317,11 +326,16 @@ class Hierarchy extends DataExtension {
 	 * @param string     $numChildrenMethod The name of the instance method to call to count the object's children
 	 * @return DataList
 	 */
-	public function markChildren($node, $context = null, $childrenMethod = "AllChildrenIncludingDeleted",
-			$numChildrenMethod = "numChildren") {
+	public function markChildren(
+		$node,
+		$context = null,
+		$childrenMethod = "AllChildrenIncludingDeleted",
+		$numChildrenMethod = "numChildren"
+	) {
 		if($node->hasMethod($childrenMethod)) {
 			$children = $node->$childrenMethod($context);
 		} else {
+			$children = null;
 			user_error(sprintf("Can't find the method '%s' on class '%s' for getting tree children",
 				$childrenMethod, get_class($node)), E_USER_ERROR);
 		}
@@ -551,6 +565,7 @@ class Hierarchy extends DataExtension {
 					continue;
 				}
 				$idList[] = $child->ID;
+				/** @var Hierarchy $ext */
 				$ext = $child->getExtensionInstance('SilverStripe\ORM\Hierarchy\Hierarchy');
 				$ext->setOwner($child);
 				$ext->loadDescendantIDListInto($idList);

@@ -1,4 +1,4 @@
-Folder:
+SilverStripe\Assets\Folder:
   subfolder:
     Name: FileTest-subfolder
   folder1:
@@ -7,19 +7,19 @@ Folder:
     Name: FileTest-folder2
   folder1-subfolder1:
     Name: FileTest-folder1-subfolder1
-    ParentID: =>Folder.folder1
-File:
+    ParentID: =>SilverStripe\Assets\Folder.folder1
+SilverStripe\Assets\File:
   asdf:
     Filename: assets/FileTest.txt
   subfolderfile1:
     Filename: assets/FileTest-subfolder/TestFile1InSubfolder.txt
     Name: TestFile1InSubfolder
-    ParentID: =>Folder.subfolder
+    ParentID: =>SilverStripe\Assets\Folder.subfolder
   subfolderfile2:
     Filename: assets/FileTest-subfolder/TestFile2InSubfolder.txt
     Name: TestFile2InSubfolder
-    ParentID: =>Folder.subfolder
+    ParentID: =>SilverStripe\Assets\Folder.subfolder
   file1-folder1:
     Filename: assets/FileTest-folder1/File1.txt
     Name: File1.txt
-    ParentID: =>Folder.folder1
+    ParentID: =>SilverStripe\Assets\Folder.folder1

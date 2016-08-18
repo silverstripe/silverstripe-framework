@@ -2,33 +2,28 @@
 
 namespace SilverStripe\ORM\Versioning;
 
-use SS_HTTPRequest;
-use TemplateGlobalProvider;
-use Session;
-use Deprecation;
-use InvalidArgumentException;
-use Config;
-use LogicException;
-
-use ClassInfo;
-use Object;
-
-use Director;
-use Cookie;
-use FieldList;
-use ViewableData;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Cookie;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Object;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataExtension;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-
+use SilverStripe\View\TemplateGlobalProvider;
+use InvalidArgumentException;
+use LogicException;
 
 /**
  * The Versioned extension allows your DataObjects to have several versions,
@@ -37,9 +32,6 @@ use SilverStripe\Security\Permission;
  *
  * @property int $Version
  * @property DataObject|Versioned $owner
- *
- * @package framework
- * @subpackage orm
  */
 class Versioned extends DataExtension implements TemplateGlobalProvider {
 
@@ -1041,8 +1033,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				continue;
 			}
 
-			/** @var DataObject $instance */
-			$instance = $class::singleton();
+			$instance = DataObject::singleton($class);
 			foreach($owns as $owned) {
 				// Find owned class
 				$ownedClass = $instance->getRelationClass($owned);
@@ -1311,6 +1302,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if ($this->owner->canViewVersioned($member) === false) {
 			return false;
 		}
+		return null;
 	}
 
 	/**
@@ -1442,7 +1434,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Is the latest version of the object published?
+	 * Determines if the current draft version is the same as live
 	 *
 	 * @return bool
 	 */
@@ -1820,8 +1812,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param  string $filter
 	 * @param  string $sort
 	 * @param  string $limit
-	 * @param  string $join   Deprecated, use leftJoin($table, $joinClause) instead
-	 * @param  string $having
+	 * @param  string $join @deprecated use leftJoin($table, $joinClause) instead
+	 * @param  string $having @deprecated
 	 * @return ArrayList
 	 */
 	public function allVersions($filter = "", $sort = "", $limit = "", $join = "", $having = "") {
@@ -1832,11 +1824,13 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$owner = $this->owner;
 		$list = DataObject::get(get_class($owner), $filter, $sort, $join, $limit);
 		if($having) {
+			// @todo - This method doesn't exist on DataList
 			$list->having($having);
 		}
 
 		$query = $list->dataQuery()->query();
 
+		$baseTable = null;
 		foreach($query->getFrom() as $table => $tableJoin) {
 			if(is_string($tableJoin) && $tableJoin[0] == '"') {
 				$baseTable = str_replace('"','',$tableJoin);
@@ -2026,6 +2020,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if($parts[0] == 'Stage') {
 			return $parts[1];
 		}
+		return null;
 	}
 
 	/**
@@ -2038,6 +2033,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		if($parts[0] == 'Archive') {
 			return $parts[1];
 		}
+		return null;
 	}
 
 	/**
@@ -2078,7 +2074,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// TODO: No identity cache operating
 		$items = static::get_by_stage($class, $stage, $filter, $sort, null, 1);
 
-		return $items->First();
+		return $items->first();
 	}
 
 	/**
@@ -2460,124 +2456,5 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function hasStages() {
 		return $this->mode === static::STAGEDVERSIONED;
-	}
-}
-
-/**
- * Represents a single version of a record.
- *
- * @package framework
- * @subpackage orm
- *
- * @see Versioned
- */
-class Versioned_Version extends ViewableData {
-	/**
-	 * @var array
-	 */
-	protected $record;
-
-	/**
-	 * @var DataObject
-	 */
-	protected $object;
-
-	/**
-	 * Create a new version from a database row
-	 *
-	 * @param array $record
-	 */
-	public function __construct($record) {
-		$this->record = $record;
-		$record['ID'] = $record['RecordID'];
-		$className = $record['ClassName'];
-
-		$this->object = ClassInfo::exists($className) ? new $className($record) : new DataObject($record);
-		$this->failover = $this->object;
-
-		parent::__construct();
-	}
-
-	/**
-	 * Either 'published' if published, or 'internal' if not.
-	 *
-	 * @return string
-	 */
-	public function PublishedClass() {
-		return $this->record['WasPublished'] ? 'published' : 'internal';
-	}
-
-	/**
-	 * Author of this DataObject
-	 *
-	 * @return Member
-	 */
-	public function Author() {
-		return Member::get()->byId($this->record['AuthorID']);
-	}
-
-	/**
-	 * Member object of the person who last published this record
-	 *
-	 * @return Member
-	 */
-	public function Publisher() {
-		if (!$this->record['WasPublished']) {
-			return null;
-		}
-
-		return Member::get()->byId($this->record['PublisherID']);
-	}
-
-	/**
-	 * True if this record is published via publish() method
-	 *
-	 * @return boolean
-	 */
-	public function Published() {
-		return !empty($this->record['WasPublished']);
-	}
-
-	/**
-	 * Traverses to a field referenced by relationships between data objects, returning the value
-	 * The path to the related field is specified with dot separated syntax (eg: Parent.Child.Child.FieldName)
-	 *
-	 * @param $fieldName string
-	 * @return string | null - will return null on a missing value
-	 */
-	public function relField($fieldName) {
-		$component = $this;
-
-		// We're dealing with relations here so we traverse the dot syntax
-		if(strpos($fieldName, '.') !== false) {
-			$relations = explode('.', $fieldName);
-			$fieldName = array_pop($relations);
-			foreach($relations as $relation) {
-				// Inspect $component for element $relation
-				if($component->hasMethod($relation)) {
-					// Check nested method
-						$component = $component->$relation();
-				} elseif($component instanceof SS_List) {
-					// Select adjacent relation from DataList
-						$component = $component->relation($relation);
-				} elseif($component instanceof DataObject
-					&& ($dbObject = $component->dbObject($relation))
-				) {
-					// Select db object
-					$component = $dbObject;
-				} else {
-					user_error("$relation is not a relation/field on ".get_class($component), E_USER_ERROR);
-				}
-			}
-		}
-
-		// Bail if the component is null
-		if(!$component) {
-			return null;
-		}
-		if ($component->hasMethod($fieldName)) {
-			return $component->$fieldName();
-		}
-		return $component->$fieldName;
 	}
 }

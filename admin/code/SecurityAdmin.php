@@ -2,35 +2,33 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldButtonRow;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionRole;
 use SilverStripe\Security\PermissionProvider;
-use Requirements;
-use GridField;
-use GridFieldConfig_RecordEditor;
-use GridFieldButtonRow;
-use GridFieldExportButton;
-use Convert;
-use FieldList;
-use TabSet;
-use Tab;
-use LiteralField;
-use HiddenField;
-use HeaderField;
-use Form;
-use ArrayData;
-use Deprecation;
-use Config;
-
+use SilverStripe\View\Requirements;
+use SilverStripe\View\ArrayData;
 
 /**
  * Security section of the CMS
- *
- * @package framework
- * @subpackage admin
  */
 class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
@@ -119,8 +117,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$validator = Member::singleton()->getValidator();
 		}
 
-		$memberListConfig
-			->getComponentByType('GridFieldDetailForm')
+		/** @var GridFieldDetailForm $detailForm */
+		$detailForm = $memberListConfig->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDetailForm');
+		$detailForm
 			->setValidator($validator);
 
 		$groupList = GridField::create(
@@ -129,12 +128,14 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			Group::get(),
 			GridFieldConfig_RecordEditor::create()
 		);
-		$columns = $groupList->getConfig()->getComponentByType('GridFieldDataColumns');
+		/** @var GridFieldDataColumns $columns */
+		$columns = $groupList->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDataColumns');
 		$columns->setDisplayFields(array(
 			'Breadcrumbs' => Group::singleton()->fieldLabel('Title')
 		));
 		$columns->setFieldFormatting(array(
 			'Breadcrumbs' => function($val, $item) {
+				/** @var Group $item */
 				return Convert::raw2xml($item->getBreadcrumbs(' > '));
 			}
 		));
@@ -189,9 +190,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		}
 
 		// Tab nav in CMS is rendered through separate template
-		$root->setTemplate('CMSTabSet');
+		$root->setTemplate('SilverStripe\\Forms\\CMSTabSet');
 
 		// Add roles editing interface
+		$rolesTab = null;
 		if(Permission::check('APPLY_ROLES')) {
 			$rolesField = GridField::create('Roles',
 				false,
@@ -208,7 +210,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$groupsTab->addExtraClass('ui-state-active');
 		} elseif($actionParam == 'users') {
 			$usersTab->addExtraClass('ui-state-active');
-		} elseif($actionParam == 'roles') {
+		} elseif($actionParam == 'roles' && $rolesTab) {
 			$rolesTab->addExtraClass('ui-state-active');
 		}
 
@@ -223,8 +225,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		$form->addExtraClass('cms-edit-form');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		// Tab nav in CMS is rendered through separate template
-		if($form->Fields()->hasTabset()) {
-			$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+		if($form->Fields()->hasTabSet()) {
+			$form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');
 		}
 		$form->addExtraClass('center ss-tabset cms-tabset ' . $this->BaseCSSClasses());
 		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
@@ -252,8 +254,11 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	 * @return Form
 	 */
 	public function MemberImportForm() {
-		if(!Permission::check('ADMIN')) return false;
+		if(!Permission::check('ADMIN')) {
+			return null;
+		}
 
+		/** @var Group $group */
 		$group = $this->currentPage();
 		/** @skipUpgrade */
 		$form = new MemberImportForm(
@@ -280,16 +285,15 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	/**
 	 * @see SecurityAdmin_MemberImportForm
 	 *
+	 * @skipUpgrade
 	 * @return Form
 	 */
 	public function GroupImportForm() {
-		if(!Permission::check('ADMIN')) return false;
+		if(!Permission::check('ADMIN')) {
+			return null;
+		}
 
-		$form = new GroupImportForm(
-			$this,
-			'SilverStripe\\Admin\\GroupImportForm'
-		);
-
+		$form = new GroupImportForm($this, 'GroupImportForm');
 		return $form;
 	}
 
@@ -314,7 +318,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$firstCrumb = $crumbs->shift();
 			if($params['FieldName'] == 'Groups') {
 				$crumbs->unshift(new ArrayData(array(
-					'Title' => singleton('SilverStripe\\Security\\Group')->i18n_plural_name(),
+					'Title' => Group::singleton()->i18n_plural_name(),
 					'Link' => $this->Link('groups')
 				)));
 			} elseif($params['FieldName'] == 'Users') {

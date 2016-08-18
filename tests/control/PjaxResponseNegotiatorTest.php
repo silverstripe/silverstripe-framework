@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\PjaxResponseNegotiator;
+use SilverStripe\Control\SS_HTTPRequest;
+
 class PjaxResponseNegotiatorTest extends SapphireTest {
 
 	public function testDefaultCallbacks() {

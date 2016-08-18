@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\SS_Cache;
+
 class GDImageTest extends ImageTest {
 
 	public function setUp() {
@@ -10,7 +13,12 @@ class GDImageTest extends ImageTest {
 			return;
 		}
 
-		Config::inst()->update('Injector', 'Image_Backend', 'GDBackend');
+		/** @skipUpgrade */
+		Config::inst()->update(
+			'SilverStripe\\Core\\Injector\\Injector',
+			'Image_Backend',
+			'SilverStripe\\Assets\\GDBackend'
+		);
 	}
 
 	public function tearDown() {

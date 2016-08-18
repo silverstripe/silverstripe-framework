@@ -1,7 +1,13 @@
 <?php
 
 
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBVarchar;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\ArrayData;
+
+
 
 
 class ArrayDataTest extends SapphireTest {
@@ -13,7 +19,7 @@ class ArrayDataTest extends SapphireTest {
 			"B" => new stdClass(),
 		));
 		$this->assertEquals('SilverStripe\\ORM\\FieldType\\DBVarchar', get_class($arrayData->A));
-		$this->assertEquals("ArrayData", get_class($arrayData->B));
+		$this->assertEquals("SilverStripe\\View\\ArrayData", get_class($arrayData->B));
 	}
 
 	public function testWrappingANonEmptyObjectWorks() {

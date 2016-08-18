@@ -9,8 +9,6 @@ namespace SilverStripe\ORM;
  * applied, rather than applying the filter in place
  *
  * @see SS_List, SS_Sortable, SS_Limitable
- * @package framework
- * @subpackage orm
  */
 interface SS_Filterable extends SS_List {
 
@@ -55,7 +53,7 @@ interface SS_Filterable extends SS_List {
 	 *          // SQL: WHERE (("Name" IN ('bob', 'phil')) OR ("Age" IN ('21', '43'))
 	 *
 	 * @param string|array See {@link filter()}
-	 * @return DataList
+	 * @return static
 	 */
 	public function filterAny();
 
@@ -78,6 +76,7 @@ interface SS_Filterable extends SS_List {
 	 * and must return true for the record to be included. Returns the filtered list.
 	 *
 	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
+	 * @param callable $callback
 	 * @return SS_Filterable
 	 */
 	public function filterByCallback($callback);

@@ -2,11 +2,10 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use Object;
+use SilverStripe\Core\Object;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Queries\SQLSelect;
-
 
 /**
  * Apply this interface to any {@link DBField} that doesn't have a 1-1 mapping with a database field.
@@ -23,9 +22,6 @@ use SilverStripe\ORM\Queries\SQLSelect;
 * 	);
 * }
  * </code>
- *
- * @package framework
- * @subpackage orm
  */
 abstract class DBComposite extends DBField {
 
@@ -244,7 +240,7 @@ abstract class DBComposite extends DBField {
 		if($this->record instanceof DataObject) {
 			$key = $this->getName() . $field;
 			$this->record->setField($key, $value);
-			return;
+			return $this;
 		}
 
 		// Set local record
@@ -267,6 +263,7 @@ abstract class DBComposite extends DBField {
 		// Build nested field
 		$key = $this->getName() . $field;
 		$spec = $fields[$field];
+		/** @var DBField $fieldObject */
 		$fieldObject = Object::create_from_string($spec, $key);
 		$fieldObject->setValue($this->getField($field), null, false);
 		return $fieldObject;

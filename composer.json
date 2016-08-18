@@ -34,9 +34,25 @@
   "autoload": {
     "psr-4": {
       "SilverStripe\\Admin\\": "admin/code/",
-      "SilverStripe\\": ""
+      "SilverStripe\\Assets\\": "Assets/",
+      "SilverStripe\\Control\\": "Control/",
+      "SilverStripe\\Core\\": "Core/",
+      "SilverStripe\\Dev\\": "Dev/",
+      "SilverStripe\\Forms\\": "Forms/",
+      "SilverStripe\\i18n\\": "i18n/",
+      "SilverStripe\\Logging\\": "Logging/",
+      "SilverStripe\\ORM\\": "ORM/",
+      "SilverStripe\\Security\\": "Security/",
+      "SilverStripe\\View\\": "View/"
     },
-    "files": ["core/Constants.php"],
+    "psr-0": {
+      "HTML_": "thirdparty/HTML_BBCodeParser2"
+    },
+    "files": ["Core/Constants.php"],
     "classmap": ["tests/behat/features/bootstrap"]
-  }
+  },
+  "include-path": [
+      "thirdparty/",
+      "thirdparty/HTML_BBCodeParser2/"
+  ]
 }

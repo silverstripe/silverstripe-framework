@@ -7,6 +7,8 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Dev\SapphireTest;
+
 
 
 /**

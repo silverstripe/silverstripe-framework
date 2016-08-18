@@ -2,15 +2,11 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use NumericField;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\Forms\NumericField;
 
 /**
  * Represents a Decimal field.
- *
- * @package framework
- * @subpackage orm
  */
 class DBDecimal extends DBField {
 

@@ -2,6 +2,8 @@
 
 
 use SilverStripe\ORM\FieldType\DBCurrency;
+use SilverStripe\Dev\SapphireTest;
+
 
 
 /**

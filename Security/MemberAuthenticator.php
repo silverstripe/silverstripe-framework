@@ -2,19 +2,16 @@
 
 namespace SilverStripe\Security;
 
-
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Session;
+use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ValidationResult;
 use InvalidArgumentException;
-use Controller;
-use Form;
-use Session;
 
 /**
  * Authenticator for the default "member" method
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- * @package framework
- * @subpackage security
  */
 class MemberAuthenticator extends Authenticator {
 
@@ -52,6 +49,7 @@ class MemberAuthenticator extends Authenticator {
 		}
 
 		// Otherwise, get email from posted value instead
+		/** @skipUpgrade */
 		if(!$member && !empty($data['Email'])) {
 			$email = $data['Email'];
 		}
@@ -107,6 +105,7 @@ class MemberAuthenticator extends Authenticator {
 		if(!Security::config()->login_recording) return;
 
 		// Check email is valid
+		/** @skipUpgrade */
 		$email = isset($data['Email']) ? $data['Email'] : null;
 		if(is_array($email)) {
 			throw new InvalidArgumentException("Bad email passed to MemberAuthenticator::authenticate(): $email");
@@ -188,7 +187,7 @@ class MemberAuthenticator extends Authenticator {
 		return MemberLoginForm::create($controller, "LoginForm");
 	}
 
-	public static function get_cms_login_form(\Controller $controller) {
+	public static function get_cms_login_form(Controller $controller) {
 		/** @skipUpgrade */
 		return CMSMemberLoginForm::create($controller, "LoginForm");
 	}

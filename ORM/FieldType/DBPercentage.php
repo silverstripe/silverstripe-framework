@@ -12,9 +12,6 @@ namespace SilverStripe\ORM\FieldType;
  * 	"ReallyAccurate" => "Percentage(6)",
  * );
  * </code>
- *
- * @package framework
- * @subpackage orm
  */
 class DBPercentage extends DBDecimal {
 

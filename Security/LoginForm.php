@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Security;
 
-use Form;
-use Injector;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\Form;
 
 /**
  * Abstract base class for a login form
@@ -12,8 +12,6 @@ use Injector;
  * {@link MemberLoginForm} or {@link OpenIDLoginForm}.
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- * @package framework
- * @subpackage security
  */
 abstract class LoginForm extends Form {
 
@@ -36,7 +34,7 @@ abstract class LoginForm extends Form {
 		if(!class_exists($this->authenticator_class) || !is_subclass_of($this->authenticator_class, 'SilverStripe\\Security\\Authenticator')) {
 			user_error("The form uses an invalid authenticator class! '{$this->authenticator_class}'"
 				. " is not a subclass of 'Authenticator'", E_USER_ERROR);
-			return;
+			return null;
 		}
 		return Injector::inst()->get($this->authenticator_class);
 	}

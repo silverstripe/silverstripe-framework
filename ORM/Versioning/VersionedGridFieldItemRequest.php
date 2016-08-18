@@ -2,9 +2,12 @@
 
 namespace SilverStripe\ORM\Versioning;
 
-use GridFieldDetailForm_ItemRequest;
-use FormAction;
-use Convert;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ValidationException;
 
 /**
@@ -18,6 +21,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
         $actions = parent::getFormActions();
 
 		// Check if record is versionable
+		/** @var Versioned|DataObject $record */
 		$record = $this->getRecord();
         if(!$record || !$record->has_extension('SilverStripe\ORM\Versioning\Versioned')) {
             return $actions;
@@ -85,6 +89,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
 	 * @return SS_HTTPResponse
      */
 	public function doArchive($data, $form) {
+		/** @var Versioned|DataObject $record */
 		$record = $this->getRecord();
 		if (!$record->canArchive()) {
 			return $this->httpError(403);
@@ -110,7 +115,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
 		$controller = $this->getToplevelController();
 		$controller->getRequest()->addHeader('X-Pjax', 'Content'); // Force a content refresh
 
-		return $controller->redirect($this->getBacklink(), 302); //redirect back to admin section
+		return $controller->redirect($this->getBackLink(), 302); //redirect back to admin section
     }
 
     /**
@@ -164,6 +169,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
 	 * @return SS_HTTPResponse
      */
     public function doUnpublish($data, $form) {
+		/** @var Versioned|DataObject $record */
 		$record = $this->getRecord();
 		if (!$record->canUnpublish()) {
 			return $this->httpError(403);

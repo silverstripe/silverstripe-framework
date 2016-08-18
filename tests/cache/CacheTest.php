@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\Core\SS_Cache;
+use SilverStripe\Dev\SapphireTest;
+
+
 class CacheTest extends SapphireTest {
 
 	public function testCacheBasics() {

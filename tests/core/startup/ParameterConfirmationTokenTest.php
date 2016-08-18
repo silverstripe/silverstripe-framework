@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\Core\Startup\ParameterConfirmationToken;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Dev\SapphireTest;
+
+
 /**
  * Dummy parameter token
  */

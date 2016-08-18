@@ -2,11 +2,11 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use File;
-use Image;
-use UploadField;
-use DropdownField;
-use NumericField;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Image;
+use SilverStripe\Forms\UploadField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 
@@ -19,9 +19,6 @@ use SilverStripe\ORM\DataObject;
  *
  * @param string $name
  * @param DataObject $object The object that the foreign key is stored on (should have a relation with $name)
- *
- * @package framework
- * @subpackage orm
  */
 class DBForeignKey extends DBInt {
 

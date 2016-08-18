@@ -5,6 +5,11 @@ use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
+
 
 
 class DataObjectSchemaGenerationTest extends SapphireTest {

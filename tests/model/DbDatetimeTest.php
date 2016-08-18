@@ -5,6 +5,8 @@
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\SapphireTest;
+
 
 
 /**

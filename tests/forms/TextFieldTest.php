@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\RequiredFields;
+
 /**
  * @package framework
  * @subpackage tests

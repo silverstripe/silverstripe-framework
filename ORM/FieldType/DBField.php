@@ -2,14 +2,15 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use FormField;
-use SearchFilter;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLSelect;
-use ViewableData;
-use Convert;
-use Object;
-use TextField;
+use SilverStripe\View\ViewableData;
 
 /**
  * Single field in the database.
@@ -42,9 +43,6 @@ use TextField;
  * </code>
  *
  * @todo remove MySQL specific code from subclasses
- *
- * @package framework
- * @subpackage orm
  */
 abstract class DBField extends ViewableData {
 
@@ -413,9 +411,10 @@ abstract class DBField extends ViewableData {
 	 * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
 	 *
 	 * @param string $title Optional. Localized title of the generated instance
+	 * @param array $params
 	 * @return FormField
 	 */
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		$field = new TextField($this->name, $title);
 
 		return $field;
@@ -447,7 +446,7 @@ abstract class DBField extends ViewableData {
 	public function defaultSearchFilter($name = null) {
 		$name = ($name) ? $name : $this->name;
 		$filterClass = $this->stat('default_search_filter_class');
-		return new $filterClass($name);
+		return Injector::inst()->create($filterClass, $name);
 	}
 
 	/**

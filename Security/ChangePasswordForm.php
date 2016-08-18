@@ -2,35 +2,32 @@
 
 namespace SilverStripe\Security;
 
-use Form;
-use Session;
-use FieldList;
-use PasswordField;
-use FormAction;
-use HiddenField;
-use Director;
-use HTTP;
-use Convert;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTP;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\Form;
 
 /**
  * Standard Change Password Form
- * @package framework
- * @subpackage security
  */
 class ChangePasswordForm extends Form {
 
 	/**
 	 * Constructor
 	 *
-	 * @param Controller $controller The parent controller, necessary to
-	 *                               create the appropriate form action tag.
-	 * @param string $name The method on the controller that will return this
-	 *                     form object.
-	 * @param FieldList|FormField $fields All of the fields in the form - a
-	 *                                   {@link FieldList} of {@link FormField}
-	 *                                   objects.
-	 * @param FieldList|FormAction $actions All of the action buttons in the
-	 *                                     form - a {@link FieldList} of
+	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
+	 * @param string $name The method on the controller that will return this form object.
+	 * @param FieldList|FormField $fields All of the fields in the form - a {@link FieldList} of
+	 * {@link FormField} objects.
+	 * @param FieldList|FormAction $actions All of the action buttons in the form - a {@link FieldList} of
 	 */
 	public function __construct($controller, $name, $fields = null, $actions = null) {
 		if(isset($_REQUEST['BackURL'])) {

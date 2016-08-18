@@ -1,4 +1,12 @@
 <?php
+
+use SilverStripe\Assets\FileNameFilter;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\Parsers\SS_Transliterator;
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -8,7 +16,7 @@ class FileNameFilterTest extends SapphireTest {
     public function setUp() {
         parent::setUp();
 
-        Config::inst()->update('FileNameFilter', 'default_replacements', array(
+        Config::inst()->update('SilverStripe\\Assets\\FileNameFilter', 'default_replacements', array(
             '/\s/' => '-', // remove whitespace
             '/_/' => '-', // underscores to dashes
             '/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot

@@ -8,9 +8,6 @@ use IteratorAggregate;
 
 /**
  * An interface that a class can implement to be treated as a list container.
- *
- * @package framework
- * @subpackage orm
  */
 interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 
@@ -89,7 +86,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 * Walks the list using the specified callback
 	 *
 	 * @param callable $callback
-	 * @return mixed
+	 * @return $this
 	 */
 	public function each($callback);
 }

@@ -1,6 +1,14 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\FixtureFactory;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Director;
+
+
+
 
 class YamlFixtureTest extends SapphireTest {
 
@@ -11,14 +19,14 @@ class YamlFixtureTest extends SapphireTest {
 
 	public function testAbsoluteFixturePath() {
 		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
-		$obj = Injector::inst()->create('YamlFixture', $absPath);
+		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $absPath);
 		$this->assertEquals($absPath, $obj->getFixtureFile());
 		$this->assertNull($obj->getFixtureString());
 	}
 
 	public function testRelativeFixturePath() {
 		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
-		$obj = Injector::inst()->create('YamlFixture', $relPath);
+		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
 		$this->assertEquals(Director::baseFolder() . '/' . $relPath, $obj->getFixtureFile());
 		$this->assertNull($obj->getFixtureString());
 	}
@@ -26,7 +34,7 @@ class YamlFixtureTest extends SapphireTest {
 	public function testStringFixture() {
 		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
 		$string = file_get_contents($absPath);
-		$obj = Injector::inst()->create('YamlFixture', $string);
+		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $string);
 		$this->assertEquals($string, $obj->getFixtureString());
 		$this->assertNull($obj->getFixtureFile());
 	}
@@ -36,13 +44,13 @@ class YamlFixtureTest extends SapphireTest {
 	 */
 	public function testFailsWithInvalidFixturePath() {
 		$invalidPath = FRAMEWORK_DIR . '/tests/testing/invalid.yml';
-		$obj = Injector::inst()->create('YamlFixture', $invalidPath);
+		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $invalidPath);
 	}
 
 	public function testSQLInsert() {
 		$factory = new FixtureFactory();
 		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
-		$fixture = Injector::inst()->create('YamlFixture', $relPath);
+		$fixture = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
 		$fixture->writeInto($factory);
 
 		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject1"));
@@ -66,10 +74,10 @@ class YamlFixtureTest extends SapphireTest {
 	}
 
 	public function testWriteInto() {
-		$factory = Injector::inst()->create('FixtureFactory');
+		$factory = Injector::inst()->create('SilverStripe\\Dev\\FixtureFactory');
 
 		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
-		$fixture = Injector::inst()->create('YamlFixture', $relPath);
+		$fixture = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
 		$fixture->writeInto($factory);
 
 		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject1"));

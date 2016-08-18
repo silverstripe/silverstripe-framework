@@ -2,6 +2,8 @@
 
 
 use SilverStripe\ORM\FieldType\DBPercentage;
+use SilverStripe\Dev\SapphireTest;
+
 
 
 /**

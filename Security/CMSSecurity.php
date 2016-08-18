@@ -2,18 +2,17 @@
 
 namespace SilverStripe\Security;
 
-use Requirements;
-use Controller;
-use Director;
-use Convert;
-use Session;
-use SS_HTTPResponse;
 use SilverStripe\Admin\AdminRootController;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Session;
+use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\Requirements;
 
 /**
  * Provides a security interface functionality within the cms
- * @package framework
- * @subpackage security
  */
 class CMSSecurity extends Security {
 
@@ -66,6 +65,7 @@ class CMSSecurity extends Security {
 		if($tempid = $this->getRequest()->requestVar('tempid')) {
 			return Member::member_from_tempid($tempid);
 		}
+		return null;
 	}
 
 	public function getResponseController($title) {
@@ -186,7 +186,7 @@ PHP
 	/**
 	 * Given a successful login, tell the parent frame to close the dialog
 	 *
-	 * @return SS_HTTPResponse
+	 * @return SS_HTTPResponse|DBField
 	 */
 	public function success() {
 		// Ensure member is properly logged in
@@ -201,6 +201,7 @@ PHP
 			Session::get('BackURL'),
 			Director::absoluteURL(AdminRootController::config()->url_base, true),
 		);
+		$backURL = null;
 		foreach ($backURLs as $backURL) {
 			if ($backURL && Director::is_site_url($backURL)) {
 				break;

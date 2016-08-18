@@ -2,19 +2,20 @@
 
 namespace SilverStripe\ORM;
 
-use InvalidArgumentException;
-use ClassInfo;
-use LogicException;
-use Config;
-use Object;
-use SilverStripe\Framework\Core\Configurable;
-use SilverStripe\Framework\Core\Injectable;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\FieldType\DBComposite;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Object;
+use InvalidArgumentException;
+use LogicException;
 
 /**
  * Provides dataobject and database schema mapping functionality
  */
 class DataObjectSchema {
+
 	use Injectable;
 	use Configurable;
 
@@ -346,7 +347,7 @@ class DataObjectSchema {
 	public function classForField($candidateClass, $fieldName)  {
 		// normalise class name
 		$candidateClass = ClassInfo::class_name($candidateClass);
-		if($candidateClass === 'SilverStripe\ORM\DataObject') {
+		if($candidateClass === 'SilverStripe\\ORM\\DataObject') {
 			return null;
 		}
 

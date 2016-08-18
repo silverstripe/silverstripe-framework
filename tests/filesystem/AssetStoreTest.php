@@ -3,14 +3,24 @@
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
-use SilverStripe\Filesystem\Flysystem\FlysystemAssetStore;
-use SilverStripe\Filesystem\Flysystem\FlysystemUrlPlugin;
-use SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter;
-use SilverStripe\Filesystem\Flysystem\PublicAssetAdapter;
-use SilverStripe\Filesystem\Storage\AssetContainer;
-use SilverStripe\Filesystem\Storage\AssetStore;
-use SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler;
-use SilverStripe\Filesystem\Storage\DBFile;
+use SilverStripe\Assets\Filesystem as SSFilesystem;
+use SilverStripe\Assets\Flysystem\FlysystemAssetStore;
+use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
+use SilverStripe\Assets\Flysystem\PublicAssetAdapter;
+use SilverStripe\Assets\Storage\AssetContainer;
+use SilverStripe\Assets\Storage\AssetStore;
+use SilverStripe\Assets\Flysystem\GeneratedAssetHandler;
+use SilverStripe\Assets\Storage\DBFile;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Folder;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\Requirements;
+
+
+
+
 
 class AssetStoreTest extends SapphireTest {
 
@@ -117,7 +127,8 @@ class AssetStoreTest extends SapphireTest {
 				array('conflict' => AssetStore::CONFLICT_EXCEPTION)
 			);
 		} catch(Exception $ex) {
-			return $this->fail('Writing file with different sha to same location failed with exception');
+			$this->fail('Writing file with different sha to same location failed with exception');
+			return;
 		}
 		$this->assertEquals(
 			array(
@@ -352,7 +363,8 @@ class AssetStoreTest extends SapphireTest {
 				null,
 				array('conflict' => AssetStore::CONFLICT_EXCEPTION)
 			);
-			return $this->fail('Writing file with different sha to same location should throw exception');
+			$this->fail('Writing file with different sha to same location should throw exception');
+			return;
 		} catch(Exception $ex) {
 			// Success
 		}
@@ -556,21 +568,21 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		Injector::inst()->registerService($backend, 'AssetStore');
 
 		// Assign flysystem backend to generated asset handler at the same time
-		$generated = new FlysystemGeneratedAssetHandler();
+		$generated = new GeneratedAssetHandler();
 		$generated->setFilesystem($publicFilesystem);
 		Injector::inst()->registerService($generated, 'GeneratedAssetHandler');
 		Requirements::backend()->setAssetHandler($generated);
 
 		// Disable legacy and set defaults
 		Config::inst()->remove(get_class(new FlysystemAssetStore()), 'legacy_filenames');
-		Config::inst()->update('Director', 'alternate_base_url', '/');
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
 		DBFile::config()->force_resample = false;
 		File::config()->force_resample = false;
 		self::reset();
 		self::$basedir = $basedir;
 
 		// Ensure basedir exists
-		\Filesystem::makeFolder(self::base_path());
+		SSFilesystem::makeFolder(self::base_path());
 	}
 
 	/**
@@ -579,9 +591,10 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 	 * @return string
 	 */
 	public static function base_path() {
-		if(self::$basedir) {
-			return ASSETS_PATH . '/' . self::$basedir;
+		if(!self::$basedir) {
+			return null;
 		}
+		return ASSETS_PATH . '/' . self::$basedir;
 	}
 
 	/**
@@ -592,7 +605,7 @@ class AssetStoreTest_SpyStore extends FlysystemAssetStore {
 		if(self::$basedir) {
 			$path = self::base_path();
 			if(file_exists($path)) {
-				\Filesystem::removeFolder($path);
+				SSFilesystem::removeFolder($path);
 			}
 		}
 		self::$seekable_override = null;

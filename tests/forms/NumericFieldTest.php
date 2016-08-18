@@ -1,6 +1,18 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\i18n\i18n;
+
+
+
+
 
 /**
  * @package framework
@@ -73,6 +85,7 @@ class NumericFieldTest extends SapphireTest {
 	public function checkDataFormatting($locale, $tests) {
 		i18n::set_locale($locale);
 		$field = new NumericField('Number');
+		/** @skipUpgrade */
 		$form = new Form(new Controller(), 'Form', new FieldList($field), new FieldList());
 		$dataObject = new NumericFieldTest_Object();
 

@@ -2,14 +2,11 @@
 
 namespace SilverStripe\ORM\Queries;
 
-use Deprecation;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * Represents a SQL query for an expression which interacts with existing rows
  * (SELECT / DELETE / UPDATE) with a WHERE clause
- *
- * @package framework
- * @subpackage orm
  */
 abstract class SQLConditionalExpression extends SQLExpression {
 
@@ -61,7 +58,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 * @example $query->setFrom('"MyTable"'); // SELECT * FROM "MyTable"
 	 *
 	 * @param string|array $from Single, or list of, ANSI quoted table names
-	 * @return self
+	 * @return $this
 	 */
 	public function setFrom($from) {
 		$this->from = array();
@@ -74,7 +71,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 * @example $query->addFrom('"MyTable"'); // SELECT * FROM "MyTable"
 	 *
 	 * @param string|array $from Single, or list of, ANSI quoted table names
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addFrom($from) {
 		if(is_array($from)) {
@@ -129,7 +126,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *                   will cause the query to appear first. The default is 20, and joins created automatically by the
 	 *                   ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addLeftJoin($table, $onPredicate, $tableAlias = '', $order = 20, $parameters = array()) {
 		if(!$tableAlias) {
@@ -156,7 +153,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 * values will cause the query to appear first. The default is 20, and joins created automatically by the
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addInnerJoin($table, $onPredicate, $tableAlias = null, $order = 20, $parameters = array()) {
 		if(!$tableAlias) $tableAlias = $table;
@@ -175,7 +172,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *
 	 * @param string $table Table to join on from the original join (unquoted)
 	 * @param string $filter The "ON" SQL fragment (escaped)
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addFilterToJoin($table, $filter) {
 		$this->from[$table]['filter'][] = $filter;
@@ -187,7 +184,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *
 	 * @param string $table Table to join on from the original join (unquoted)
 	 * @param string $filter The "ON" SQL fragment (escaped)
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setJoinFilter($table, $filter) {
 		$this->from[$table]['filter'] = array($filter);
@@ -326,8 +323,8 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *
 	 * @see http://stackoverflow.com/q/4353739/139301
 	 *
-	 * @param array &$array - the array to sort
-	 * @param callable $cmpFunction - the function to use for comparison
+	 * @param array &$array The array to sort
+	 * @param callable|string $cmpFunction The function to use for comparison
 	 */
 	protected function mergesort(&$array, $cmpFunction = 'strcmp') {
 		// Arrays of size < 2 require no action.
@@ -379,7 +376,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *
 	 * @param mixed $where Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $where,... Unlimited additional predicates
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setWhere($where) {
 		$where = func_num_args() > 1 ? func_get_args() : $where;
@@ -465,7 +462,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *
 	 * @param mixed $where Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $where,... Unlimited additional predicates
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addWhere($where) {
 		$where = $this->normalisePredicates(func_get_args());
@@ -481,7 +478,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *
 	 * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $filters,... Unlimited additional predicates
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setWhereAny($filters) {
 		$filters = func_num_args() > 1 ? func_get_args() : $filters;
@@ -495,7 +492,7 @@ abstract class SQLConditionalExpression extends SQLExpression {
 	 *
 	 * @param mixed $filters Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $filters,... Unlimited additional predicates
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addWhereAny($filters) {
 		// Parse and split predicates along with any parameters
@@ -570,8 +567,8 @@ abstract class SQLConditionalExpression extends SQLExpression {
 				user_error('Nested predicates should be given as a single item array in '
 						.  'array($predicate => array($prameters)) format)', E_USER_ERROR);
 			}
-			foreach($value as $key => $value) {
-				return $this->parsePredicate($key, $value);
+			foreach($value as $key => $pairValue) {
+				return $this->parsePredicate($key, $pairValue);
 			}
 		} else {
 			// Non-paramaterised condition

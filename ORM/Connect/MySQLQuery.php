@@ -4,9 +4,6 @@ namespace SilverStripe\ORM\Connect;
 
 /**
  * A result-set from a MySQL database (using MySQLiConnector)
- *
- * @package framework
- * @subpackage orm
  */
 class MySQLQuery extends SS_Query {
 
@@ -35,11 +32,17 @@ class MySQLQuery extends SS_Query {
 	}
 
 	public function seek($row) {
-		if (is_object($this->handle)) return $this->handle->data_seek($row);
+		if (is_object($this->handle)) {
+			return $this->handle->data_seek($row);
+		}
+		return null;
 	}
 
 	public function numRecords() {
-		if (is_object($this->handle)) return $this->handle->num_rows;
+		if (is_object($this->handle)) {
+			return $this->handle->num_rows;
+		}
+		return null;
 	}
 
 	public function nextRecord() {

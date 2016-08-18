@@ -2,15 +2,12 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use i18n;
+use SilverStripe\i18n\i18n;
 
 /**
  * Locale database field, mainly used in {@link Translatable} extension.
  *
  * @todo Allowing showing locale values in different languages through Nice()
- *
- * @package framework
- * @subpackage orm
  */
 class DBLocale extends DBVarchar {
 

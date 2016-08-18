@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\Parsers\HTMLCleaner;
+
 /**
  * @package framework
  * @subpackage tests

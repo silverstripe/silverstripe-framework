@@ -2,18 +2,15 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use ArrayLib;
-use DropdownField;
-use Config;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DB;
 
 /**
  * Class Enum represents an enumeration of a set of strings.
  *
  * See {@link DropdownField} for a {@link FormField} to select enum values.
- *
- * @package framework
- * @subpackage orm
  */
 class DBEnum extends DBString {
 
@@ -129,7 +126,7 @@ class DBEnum extends DBString {
 		return $field;
 	}
 
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return $this->formField($title);
 	}
 

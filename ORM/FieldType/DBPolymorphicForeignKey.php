@@ -6,9 +6,6 @@ use SilverStripe\ORM\DataObject;
 
 /**
  * A special ForeignKey class that handles relations with arbitrary class types
- *
- * @package framework
- * @subpackage orm
  */
 class DBPolymorphicForeignKey extends DBComposite {
 

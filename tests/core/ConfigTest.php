@@ -1,5 +1,13 @@
 <?php
 
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Config_MemCache;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\SapphireTest;
+
+
 class ConfigTest_DefinesFoo extends Object implements TestOnly {
 	protected static $foo = 1;
 
@@ -309,41 +317,6 @@ class ConfigTest extends SapphireTest {
 		$this->assertFalse($cache->get(1), 'Clean items with any single matching tag');
 	}
 
-	public function testLRUDiscarding() {
-		$cache = new Config_LRU();
-		for ($i = 0; $i < Config_LRU::SIZE*2; $i++) $cache->set($i, $i);
-		$this->assertEquals(
-			Config_LRU::SIZE, $cache->getIndexCount(),
-			'Homogenous usage gives exact discarding'
-		);
-		$cache = new Config_LRU();
-		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set($i, $i);
-		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set(-1, -1);
-		$this->assertLessThan(
-			Config_LRU::SIZE, $cache->getIndexCount(),
-			'Heterogenous usage gives sufficient discarding'
-		);
-	}
-
-
-	public function testLRUCleaning() {
-		$cache = new Config_LRU();
-		for ($i = 0; $i < Config_LRU::SIZE; $i++) $cache->set($i, $i);
-		$this->assertEquals(Config_LRU::SIZE, $cache->getIndexCount());
-		$cache->clean();
-		$this->assertEquals(0, $cache->getIndexCount(), 'Clean clears all items');
-		$this->assertFalse($cache->get(1), 'Clean clears all items');
-		$cache->set(1, 1, array('Foo'));
-		$this->assertEquals(1, $cache->getIndexCount());
-		$cache->clean('Foo');
-		$this->assertEquals(0, $cache->getIndexCount(), 'Clean items with matching tag');
-		$this->assertFalse($cache->get(1), 'Clean items with matching tag');
-		$cache->set(1, 1, array('Foo', 'Bar'));
-		$this->assertEquals(1, $cache->getIndexCount());
-		$cache->clean('Bar');
-		$this->assertEquals(0, $cache->getIndexCount(), 'Clean items with any single matching tag');
-		$this->assertFalse($cache->get(1), 'Clean items with any single matching tag');
-	}
 }
 
 class ConfigTest_Config_MemCache extends Config_MemCache implements TestOnly {

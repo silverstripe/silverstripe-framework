@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Security;
 
-use Object;
-use Form;
-use Controller;
+use SilverStripe\Core\Object;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\Form;
 
 /**
  * Abstract base class for an authentication method
@@ -13,8 +13,6 @@ use Controller;
  * methods like {@link MemberAuthenticator} or {@link OpenIDAuthenticator}.
  *
  * @author Markus Lanthaler <markus@silverstripe.com>
- * @package framework
- * @subpackage security
  */
 abstract class Authenticator extends Object {
 

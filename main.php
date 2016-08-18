@@ -4,6 +4,12 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
+use SilverStripe\Core\Startup\ParameterConfirmationToken;
+use SilverStripe\Core\Startup\ErrorControlChain;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\Director;
+
+
 
 
 /************************************************************************************
@@ -14,11 +20,6 @@ use SilverStripe\Security\Permission;
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
-
-/**
- * @package framework
- * @subpackage core
- */
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
 	header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
@@ -53,8 +54,6 @@ if (version_compare(phpversion(), '5.5.0', '<')) {
  *
  * On Apache, RewriteEngine can be used to do this.
  *
- * @package framework
- * @subpackage core
  * @see Director::direct()
  */
 

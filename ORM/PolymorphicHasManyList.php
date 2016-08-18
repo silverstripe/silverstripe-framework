@@ -2,15 +2,12 @@
 
 namespace SilverStripe\ORM;
 
-use Convert;
-use ClassInfo;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
 use InvalidArgumentException;
 
 /**
  * Represents a has_many list linked against a polymorphic relationship
- *
- * @package framework
- * @subpackage orm
  */
 class PolymorphicHasManyList extends HasManyList {
 
@@ -61,7 +58,7 @@ class PolymorphicHasManyList extends HasManyList {
 	 *
 	 * It does so by setting the relationFilters.
 	 *
-	 * @param $item The DataObject to be added, or its ID
+	 * @param DataObject|int $item The DataObject to be added, or its ID
 	 */
 	public function add($item) {
 		if(is_numeric($item)) {
@@ -103,7 +100,7 @@ class PolymorphicHasManyList extends HasManyList {
 	 * Remove an item from this relation.
 	 * Doesn't actually remove the item, it just clears the foreign key value.
 	 *
-	 * @param $item The DataObject to be removed
+	 * @param DataObject $item The DataObject to be removed
 	 * @todo Maybe we should delete the object instead?
 	 */
 	public function remove($item) {

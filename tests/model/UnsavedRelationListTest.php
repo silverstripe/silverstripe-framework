@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 
 class UnsavedRelationListTest extends SapphireTest {
 	protected static $fixture_file = 'UnsavedRelationListTest.yml';

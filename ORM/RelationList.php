@@ -8,9 +8,6 @@ use Exception;
  * A DataList that represents a relation.
  *
  * Adds the notion of a foreign ID that can be optionally set.
- *
- * @package framework
- * @subpackage orm
  */
 abstract class RelationList extends DataList implements Relation {
 
@@ -53,6 +50,7 @@ abstract class RelationList extends DataList implements Relation {
 		$list = $this->alterDataQuery(function($query) use ($id, $filter){
 			/** @var DataQuery $query */
 			// Check if there is an existing filter, remove if there is
+			/** @var DataQuery $query */
 			$currentFilter = $query->getQueryParam('Foreign.Filter');
 			if($currentFilter) {
 				try {

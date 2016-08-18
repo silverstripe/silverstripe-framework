@@ -1,0 +1,33 @@
+{
+    "authors": [
+        {
+            "email": "sjr@gmx.co.uk",
+            "name": "Stijn de Reede",
+            "role": "Lead"
+        },
+        {
+            "email": "clockwerx@php.net",
+            "name": "Daniel O'Connor",
+            "role": "Lead"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "HTML": "./"
+        }
+    },
+    "description": "A PHP5 replacement for HTML_BBCodeParser",
+    "include-path": [
+        "./"
+    ],
+    "license": "PHP License",
+    "name": "pear/html_bbcodeparser2",
+    "support": {
+        "issues": "http://pear.php.net/bugs/search.php?cmd=display&package_name[]=HTML_BBCodeParser2",
+        "source": "https://github.com/pear/HTML_BBCodeParser2"
+    },
+    "type": "library",
+    "require-dev": {
+        "phpunit/phpunit": "*"
+    }
+}

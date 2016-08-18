@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\Parsers\URLSegmentFilter;
+
 /**
  * @package framework
  * @subpackage tests

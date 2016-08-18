@@ -2,18 +2,10 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use FormField;
-use i18n;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\MoneyField;
+use SilverStripe\i18n\i18n;
 use Zend_Currency;
-use MoneyField;
-
-/**
- * Partially based on Zend_Currency.
- *
- * @copyright Copyright (c) 2005-2008 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd	 New BSD License
- * @version   $Id: Currency.php 6137 2007-08-19 14:55:27Z shreef $
- */
 
 require_once 'Zend/Currency.php';
 
@@ -26,9 +18,6 @@ require_once 'Zend/Currency.php';
  * @todo Equality operators
  * @todo Addition, substraction and allocation of values
  * @todo Model validation for $allowedCurrencies
- *
- * @package framework
- * @subpackage orm
  */
 class DBMoney extends DBComposite {
 
@@ -212,9 +201,10 @@ class DBMoney extends DBComposite {
 	 * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
 	 *
 	 * @param string $title Optional. Localized title of the generated instance
+	 * @param array $params
 	 * @return FormField
 	 */
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		$field = new MoneyField($this->getName());
 		$field->setAllowedCurrencies($this->getAllowedCurrencies());
 		$field->setLocale($this->getLocale());

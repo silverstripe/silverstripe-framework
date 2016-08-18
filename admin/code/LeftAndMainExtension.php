@@ -2,14 +2,10 @@
 
 namespace SilverStripe\Admin;
 
-use Extension;
-
+use SilverStripe\Core\Extension;
 
 /**
  * Plug-ins for additional functionality in your LeftAndMain classes.
- *
- * @package framework
- * @subpackage admin
  */
 abstract class LeftAndMainExtension extends Extension {
 

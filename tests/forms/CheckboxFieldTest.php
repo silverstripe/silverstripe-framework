@@ -2,6 +2,12 @@
 
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\RequiredFields;
+
+
 /**
  * @package framework
  * @subpackage tests

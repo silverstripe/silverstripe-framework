@@ -1,5 +1,15 @@
 <?php
 
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Manifest\SS_ClassManifest;
+use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\i18n\i18n;
+use SilverStripe\i18n\i18nTextCollector;
+use SilverStripe\i18n\i18nTextCollector_Writer_RailsYaml;
 use SilverStripe\View\ThemeResourceLoader;
 
 /**
@@ -27,7 +37,7 @@ class i18nTextCollectorTest extends SapphireTest {
 		parent::setUp();
 
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
-		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_folder', $this->alternateBasePath);
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		Filesystem::makeFolder($this->alternateBaseSavePath);
 
@@ -367,57 +377,6 @@ PHP;
 	}
 
 	/**
-	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
-	 * into single-quoted strings, so needs to be escaped already.
-	 */
-	public function testPhpWriterLangArrayCodeForEntity() {
-		$c = new i18nTextCollector_Writer_Php();
-
-		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.SIMPLE', array('Simple Value'), 'en_US'),
-			"\$lang['en_US']['Test']['SIMPLE'] = 'Simple Value';" . PHP_EOL
-		);
-
-		$this->assertEquals(
-			// single quotes should be properly escaped by the parser already
-			$c->langArrayCodeForEntitySpec('Test.ESCAPEDSINGLEQUOTES',
-				array("Value with 'Escaped Single Quotes'"), 'en_US'),
-			"\$lang['en_US']['Test']['ESCAPEDSINGLEQUOTES'] = 'Value with \'Escaped Single Quotes\'';" . PHP_EOL
-		);
-
-		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.DOUBLEQUOTES', array('Value with "Double Quotes"'), 'en_US'),
-			"\$lang['en_US']['Test']['DOUBLEQUOTES'] = 'Value with \"Double Quotes\"';" . PHP_EOL
-		);
-
-		$php = <<<PHP
-\$lang['en_US']['Test']['PRIOANDCOMMENT'] = array (
-  0 => 'Value with \'Single Quotes\'',
-  1 => 'Comment with \'Single Quotes\'',
-);
-
-PHP;
-		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT',
-				array("Value with 'Single Quotes'","Comment with 'Single Quotes'"), 'en_US'),
-			$php
-		);
-
-		$php = <<<PHP
-\$lang['en_US']['Test']['PRIOANDCOMMENT'] = array (
-  0 => 'Value with "Double Quotes"',
-  1 => 'Comment with "Double Quotes"',
-);
-
-PHP;
-		$this->assertEquals(
-			$c->langArrayCodeForEntitySpec('Test.PRIOANDCOMMENT',
-				array('Value with "Double Quotes"','Comment with "Double Quotes"'), 'en_US'),
-			$php
-		);
-	}
-
-	/**
 	 * @todo Should be in a separate test suite, but don't want to duplicate setup logic
 	 */
 	public function testYamlWriter() {
@@ -480,7 +439,7 @@ YAML;
 
 	public function testCollectFromThemesTemplates() {
 		$c = new i18nTextCollector();
-		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
+		Config::inst()->update('SilverStripe\\View\\SSViewer', 'theme', 'testtheme1');
 
 		// Collect from layout
 		$layoutFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss';
@@ -524,15 +483,13 @@ YAML;
 	}
 
 	public function testCollectMergesWithExisting() {
-		$defaultlocal = i18n::default_locale();
-		$local = i18n::get_locale();
 		i18n::set_locale('en_US');
-		i18n::set_default_locale('en_US');
+		i18n::config()->update('default_locale', 'en_US');
 		i18n::include_by_locale('en');
 		i18n::include_by_locale('en_US');
 
 		$c = new i18nTextCollector();
-		$c->setWriter(new i18nTextCollector_Writer_Php());
+		$c->setWriter(new i18nTextCollector_Writer_RailsYaml());
 		$c->basePath = $this->alternateBasePath;
 		$c->baseSavePath = $this->alternateBaseSavePath;
 
@@ -550,20 +507,19 @@ YAML;
 	}
 
 	public function testCollectFromFilesystemAndWriteMasterTables() {
-		$defaultlocal = i18n::default_locale();
 		$local = i18n::get_locale();
 		i18n::set_locale('en_US');  //set the locale to the US locale expected in the asserts
-		i18n::set_default_locale('en_US');
+		i18n::config()->update('default_locale', 'en_US');
 
 		$c = new i18nTextCollector();
-		$c->setWriter(new i18nTextCollector_Writer_Php());
+		$c->setWriter(new i18nTextCollector_Writer_RailsYaml());
 		$c->basePath = $this->alternateBasePath;
 		$c->baseSavePath = $this->alternateBaseSavePath;
 
 		$c->run();
 
 		// i18ntestmodule
-		$moduleLangFile = "{$this->alternateBaseSavePath}/i18ntestmodule/lang/" . $c->getDefaultLocale() . '.php';
+		$moduleLangFile = "{$this->alternateBaseSavePath}/i18ntestmodule/lang/" . $c->getDefaultLocale() . '.yml';
 		$this->assertTrue(
 			file_exists($moduleLangFile),
 			'Master language file can be written to modules /lang folder'
@@ -571,109 +527,104 @@ YAML;
 
 		$moduleLangFileContent = file_get_contents($moduleLangFile);
 		$this->assertContains(
-			"\$lang['en']['i18nTestModule']['ADDITION'] = 'Addition';",
+			"    ADDITION: Addition\n",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestModule']['ENTITY'] = array (
-  0 => 'Entity with \"Double Quotes\"',
-  1 => 'Comment for entity',
-);",
+			"    ENTITY: 'Entity with \"Double Quotes\"'\n",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestModule']['MAINTEMPLATE'] = 'Main Template';",
+			"    MAINTEMPLATE: 'Main Template'\n",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestModule']['OTHERENTITY'] = 'Other Entity';",
+			"    OTHERENTITY: 'Other Entity'\n",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestModule']['WITHNAMESPACE'] = 'Include Entity with Namespace';",
+			"    WITHNAMESPACE: 'Include Entity with Namespace'\n",
 			$moduleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestModuleInclude.ss']['NONAMESPACE'] = 'Include Entity without Namespace';",
+			"    NONAMESPACE: 'Include Entity without Namespace'\n",
 			$moduleLangFileContent
 		);
 
 		// i18nothermodule
-		$otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.php';
+		$otherModuleLangFile = "{$this->alternateBaseSavePath}/i18nothermodule/lang/" . $c->getDefaultLocale() . '.yml';
 		$this->assertTrue(
 			file_exists($otherModuleLangFile),
 			'Master language file can be written to modules /lang folder'
 		);
 		$otherModuleLangFileContent = file_get_contents($otherModuleLangFile);
 		$this->assertContains(
-			"\$lang['en']['i18nOtherModule']['ENTITY'] = 'Other Module Entity';",
+			"    ENTITY: 'Other Module Entity'\n",
 			$otherModuleLangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nOtherModule']['MAINTEMPLATE'] = 'Main Template Other Module';",
+			"    MAINTEMPLATE: 'Main Template Other Module'\n",
 			$otherModuleLangFileContent
 		);
 
 		// testtheme1
-		$theme1LangFile = "{$this->alternateBaseSavePath}/themes/testtheme1/lang/" . $c->getDefaultLocale() . '.php';
+		$theme1LangFile = "{$this->alternateBaseSavePath}/themes/testtheme1/lang/" . $c->getDefaultLocale() . '.yml';
 		$this->assertTrue(
 			file_exists($theme1LangFile),
 			'Master theme language file can be written to themes/testtheme1 /lang folder'
 		);
 		$theme1LangFileContent = file_get_contents($theme1LangFile);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1']['MAINTEMPLATE'] = 'Theme1 Main Template';",
+			"    MAINTEMPLATE: 'Theme1 Main Template'\n",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1']['LAYOUTTEMPLATE'] = 'Theme1 Layout Template';",
+			"    LAYOUTTEMPLATE: 'Theme1 Layout Template'\n",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1']['SPRINTFNAMESPACE'] = 'Theme1 My replacement: %s';",
+			"    SPRINTFNAMESPACE: 'Theme1 My replacement: %s'\n",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1.ss']['LAYOUTTEMPLATENONAMESPACE'] = 'Theme1 Layout Template no namespace';",
+			"    LAYOUTTEMPLATENONAMESPACE: 'Theme1 Layout Template no namespace'\n",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1.ss']['SPRINTFNONAMESPACE'] = 'Theme1 My replacement no namespace: %s';",
+			"    SPRINTFNONAMESPACE: 'Theme1 My replacement no namespace: %s'\n",
 			$theme1LangFileContent
 		);
 
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1Include']['SPRINTFINCLUDENAMESPACE'] = 'Theme1 My include replacement: %s';",
+			"    SPRINTFINCLUDENAMESPACE: 'Theme1 My include replacement: %s'\n",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1Include']['WITHNAMESPACE'] = 'Theme1 Include Entity with Namespace';",
+			"    WITHNAMESPACE: 'Theme1 Include Entity with Namespace'\n",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1Include.ss']['NONAMESPACE'] = 'Theme1 Include Entity without Namespace';",
+			"    NONAMESPACE: 'Theme1 Include Entity without Namespace'\n",
 			$theme1LangFileContent
 		);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme1Include.ss']['SPRINTFINCLUDENONAMESPACE'] ="
-				. " 'Theme1 My include replacement no namespace: %s';",
+			"    SPRINTFINCLUDENONAMESPACE: 'Theme1 My include replacement no namespace: %s'\n",
 			$theme1LangFileContent
 		);
 
 		// testtheme2
-		$theme2LangFile = "{$this->alternateBaseSavePath}/themes/testtheme2/lang/" . $c->getDefaultLocale() . '.php';
+		$theme2LangFile = "{$this->alternateBaseSavePath}/themes/testtheme2/lang/" . $c->getDefaultLocale() . '.yml';
 		$this->assertTrue(
 			file_exists($theme2LangFile),
 			'Master theme language file can be written to themes/testtheme2 /lang folder'
 		);
 		$theme2LangFileContent = file_get_contents($theme2LangFile);
 		$this->assertContains(
-			"\$lang['en']['i18nTestTheme2']['MAINTEMPLATE'] = 'Theme2 Main Template';",
+			"    MAINTEMPLATE: 'Theme2 Main Template'\n",
 			$theme2LangFileContent
 		);
 
 		i18n::set_locale($local);  //set the locale to the US locale expected in the asserts
-		i18n::set_default_locale($defaultlocal);
 	}
 
 	public function testCollectFromEntityProvidersInCustomObject() {

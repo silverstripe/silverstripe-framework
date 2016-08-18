@@ -1,7 +1,15 @@
 <?php
+
+use SilverStripe\Control\Director;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTP;
+
+
 /**
  * Tests the {@link HTTP} class
  *
+ * @skipUpgrade
  * @package framework
  * @subpackage tests
  */
@@ -18,13 +26,13 @@ class HTTPTest extends FunctionalTest {
 		$this->assertNotEmpty($response->getHeader('Cache-Control'));
 
 		// Ensure max-age is zero for development.
-		Config::inst()->update('Director', 'environment_type', 'dev');
+		Director::config()->update('environment_type', 'dev');
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 		$this->assertContains('max-age=0', $response->getHeader('Cache-Control'));
 
 		// Ensure max-age setting is respected in production.
-		Config::inst()->update('Director', 'environment_type', 'live');
+		Director::config()->update('environment_type', 'live');
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 		$this->assertContains('max-age=30', explode(', ', $response->getHeader('Cache-Control')));
@@ -46,11 +54,10 @@ class HTTPTest extends FunctionalTest {
 		}
 	}
 
-
     public function testConfigVary() {
 		$body = "<html><head></head><body><h1>Mysite</h1></body></html>";
 		$response = new SS_HTTPResponse($body, 200);
-		Config::inst()->update('Director', 'environment_type', 'live');
+		Director::config()->update('environment_type', 'live');
 		HTTP::set_cache_age(30);
 		HTTP::add_cache_headers($response);
 
@@ -62,7 +69,7 @@ class HTTPTest extends FunctionalTest {
 		$this->assertContains("User-Agent", $v);
 		$this->assertContains("Accept", $v);
 
-		Config::inst()->update('HTTP', 'vary', '');
+		HTTP::config()->update('vary', '');
 
 		$response = new SS_HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
@@ -314,6 +321,15 @@ class HTTPTest extends FunctionalTest {
 				'<a href="callto:12345678" />',
 				HTTP::absoluteURLs('<a href="callto:12345678" />'),
 				'Call to links are not rewritten'
+			);
+		});
+	}
+
+	public function testFilename2url() {
+		$this->withBaseURL('http://www.silverstripe.org/', function($test) {
+			$test->assertEquals(
+				'http://www.silverstripe.org/framework/tests/control/HTTPTest.php',
+				HTTP::filename2url(__FILE__)
 			);
 		});
 	}

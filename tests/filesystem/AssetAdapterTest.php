@@ -1,7 +1,11 @@
 <?php
 
-use SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter;
-use SilverStripe\Filesystem\Flysystem\PublicAssetAdapter;
+use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
+use SilverStripe\Assets\Flysystem\PublicAssetAdapter;
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Assets\File;
+use SilverStripe\Dev\SapphireTest;
+
 
 class AssetAdapterTest extends SapphireTest {
 

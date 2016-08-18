@@ -2,11 +2,10 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Object;
 use SilverStripe\ORM\FieldType\DBField;
-use Object;
-use Convert;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-
 
 /**
  * A simple CMS menu item.
@@ -15,9 +14,6 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
  * classes and {@link CMSMenu}.
  *
  * @see CMSMenu
- *
- * @package framework
- * @subpackage admin
  */
 class CMSMenuItem extends Object {
 

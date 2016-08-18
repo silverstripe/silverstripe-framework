@@ -1,13 +1,19 @@
 <?php
+/** @skipUpgrade */
 namespace SilverStripe\Framework\Tests;
 
 //whitespace here is important for tests, please don't change it
+/** @skipUpgrade */
 use SilverStripe\Admin\ModelAdmin;
-use Controller  as  Cont ;
-use SS_HTTPRequest as Request, SS_HTTPResponse as Response, SilverStripe\Security\PermissionProvider as P;
+/** @skipUpgrade */
+use SilverStripe\Control\Controller  as  Cont ;
+/** @skipUpgrade */
+use SilverStripe\Control\SS_HTTPRequest as Request, SilverStripe\Control\SS_HTTPResponse as Response, SilverStripe\Security\PermissionProvider as P;
+/** @skipUpgrade */
 use silverstripe\test\ClassA;
-use \Object;
+/** @skipUpgrade */
+use \SilverStripe\Core\Object;
 
-
+/** @skipUpgrade */
 class ClassI extends ModelAdmin implements P {
 }

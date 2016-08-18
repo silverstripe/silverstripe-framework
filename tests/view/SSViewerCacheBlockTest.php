@@ -2,6 +2,15 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Core\SS_Cache;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Director;
+use SilverStripe\View\SSViewer;
+
+
+
+
 
 // Not actually a data object, we just want a ViewableData object that's just for us
 class SSViewerCacheBlockTest_Model extends DataObject implements TestOnly {
@@ -321,7 +330,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException SSTemplateParseException
+     * @expectedException SilverStripe\View\SSTemplateParseException
      */
 	public function testErrorMessageForCachedWithinControlWithinCached() {
 		$this->_reset(true);
@@ -336,7 +345,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException SSTemplateParseException
+     * @expectedException SilverStripe\View\SSTemplateParseException
      */
 	public function testErrorMessageForCachedWithinIf() {
 		$this->_reset(true);
@@ -344,7 +353,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException SSTemplateParseException
+     * @expectedException SilverStripe\View\SSTemplateParseException
      */
 	public function testErrorMessageForInvalidConditional() {
 		$this->_reset(true);

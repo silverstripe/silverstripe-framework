@@ -1,4 +1,4 @@
-Image:
+SilverStripe\Assets\Image:
   image1:
     FileFilename: test-image.png
     FileHash: 444065542b5dd5187166d8e1cd684e0d724c5a97
@@ -15,5 +15,5 @@ DataDifferencerTest_HasOneRelationObject:
 DataDifferencerTest_Object:
   obj1:
     Choices: a,b
-    Image: =>Image.image1
+    Image: =>SilverStripe\Assets\Image.image1
     HasOneRelation: =>DataDifferencerTest_HasOneRelationObject.relobj1

@@ -7,6 +7,13 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator;
 use SilverStripe\Security\MemberLoginForm;
 use SilverStripe\Security\CMSMemberLoginForm;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+
+
+
 
 /**
  * @package framework
@@ -118,6 +125,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 
 		// Make form
 		$controller = new Security();
+		/** @skipUpgrade */
 		$form = new Form($controller, 'Form', new FieldList(), new FieldList());
 
 		// If the user has never logged in, then the tempid should be empty
@@ -155,6 +163,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 	public function testDefaultAdmin() {
 		// Make form
 		$controller = new Security();
+		/** @skipUpgrade */
 		$form = new Form($controller, 'Form', new FieldList(), new FieldList());
 
 		// Test correct login
@@ -183,6 +192,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		Config::inst()->update('SilverStripe\\Security\\Member', 'lock_out_delay_mins', 10);
 		DBDatetime::set_mock_now('2016-04-18 00:00:00');
 		$controller = new Security();
+		/** @skipUpgrade */
 		$form = new Form($controller, 'Form', new FieldList(), new FieldList());
 
 		// Test correct login

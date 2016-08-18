@@ -7,8 +7,6 @@ use PDO;
 
 /**
  * A result-set from a PDO database.
- * @package framework
- * @subpackage orm
  */
 class PDOQuery extends SS_Query {
 	/**

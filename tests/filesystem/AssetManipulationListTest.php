@@ -1,5 +1,7 @@
 <?php
-use SilverStripe\Filesystem\AssetManipulationList;
+use SilverStripe\Assets\AssetManipulationList;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * Tests set manipulations of groups of assets of differing visibilities

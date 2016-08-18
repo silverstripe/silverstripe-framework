@@ -1,4 +1,7 @@
 <?php
+
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
 /**
  * @package framework
  * @subpackage tests

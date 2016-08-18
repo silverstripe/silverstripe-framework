@@ -1,6 +1,17 @@
 <?php
 
 use SilverStripe\Forms\Schema\FormSchema;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\PopoverField;
+
+
+
 
 class FormSchemaTest extends SapphireTest {
 
@@ -157,6 +168,7 @@ class FormSchemaTest extends SapphireTest {
 			)
 		);
 		$formSchema = new FormSchema();
+		/** @skipUpgrade */
 		$expected = [
 			'name' => 'TestForm',
 			'id' => 'Form_TestForm',

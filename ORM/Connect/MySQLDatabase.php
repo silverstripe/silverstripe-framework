@@ -2,25 +2,25 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use Config;
-use Convert;
-use Exception;
-use PaginatedList;
-use SilverStripe\Framework\Core\Configurable;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Convert;
+use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Queries\SQLSelect;
+use Exception;
 
 /**
  * MySQL connector class.
  *
- * Supported indexes for {@link requireTable()}:
+ * Supported indexes for {@link requireTable()}
  *
- * @package framework
- * @subpackage orm
+ * You are advised to backup your tables if changing settings on an existing database
+ * `connection_charset` and `charset` should be equal, similarly so should `connection_collation` and `collation`
  */
 class MySQLDatabase extends SS_Database {
+	use Configurable;
 
 	/**
 	 * Default connection charset (may be overridden in $databaseConfig)
@@ -28,7 +28,31 @@ class MySQLDatabase extends SS_Database {
 	 * @config
 	 * @var String
 	 */
-	private static $connection_charset = null;
+	private static $connection_charset = 'utf8';
+
+	/**
+	 * Default connection collation
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $connection_collation = 'utf8_general_ci';
+
+	/**
+	 * Default charset
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $charset = 'utf8';
+
+	/**
+	 * Default collation
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $collation = 'utf8_general_ci';
 
 	public function connect($parameters) {
 		// Ensure that driver is available (required by PDO)
@@ -37,16 +61,12 @@ class MySQLDatabase extends SS_Database {
 		}
 
 		// Set charset
-		if( empty($parameters['charset'])
-			&& ($charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_charset'))
-		) {
+		if( empty($parameters['charset']) && ($charset = static::config()->get('connection_charset'))) {
 			$parameters['charset'] = $charset;
 		}
 
 		// Set collation
-		if( empty($parameters['collation'])
-			&& ($collation = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'connection_collation'))
-		) {
+		if( empty($parameters['collation']) && ($collation = static::config()->get('connection_collation'))) {
 			$parameters['collation'] = $collation;
 		}
 
@@ -113,14 +133,14 @@ class MySQLDatabase extends SS_Database {
 	 * @param bool $booleanSearch
 	 * @param string $alternativeFileFilter
 	 * @param bool $invertedMatch
-	 * @return PaginatedList
+	 * @return \SilverStripe\ORM\PaginatedList
 	 * @throws Exception
 	 */
 	public function searchEngine($classesToSearch, $keywords, $start, $pageLength, $sortBy = "Relevance DESC",
 		$extraFilter = "", $booleanSearch = false, $alternativeFileFilter = "", $invertedMatch = false
 	) {
 		$pageClass = 'SilverStripe\\CMS\\Model\\SiteTree';
-		$fileClass = 'File';
+		$fileClass = 'SilverStripe\\Assets\\File';
 		$pageTable = DataObject::getSchema()->tableName($pageClass);
 		$fileTable = DataObject::getSchema()->tableName($fileClass);
 		if (!class_exists($pageClass)) {
@@ -135,6 +155,7 @@ class MySQLDatabase extends SS_Database {
 
 		$extraFilters = array($pageClass => '', $fileClass => '');
 
+		$boolean = '';
 		if ($booleanSearch) {
 			$boolean = "IN BOOLEAN MODE";
 		}
@@ -188,11 +209,11 @@ class MySQLDatabase extends SS_Database {
 		$lists = array();
 		$baseClasses = array($pageClass => '', $fileClass => '');
 		foreach ($classesToSearch as $class) {
-			$lists[$class] = DataList::create($class)->where($notMatch . $match[$class] . $extraFilters[$class], "");
+			$lists[$class] = DataList::create($class)->where($notMatch . $match[$class] . $extraFilters[$class]);
 			$baseClasses[$class] = '"' . $class . '"';
 		}
 
-		$charset = Config::inst()->get('SilverStripe\ORM\Connect\MySQLDatabase', 'charset');
+		$charset = static::config()->get('charset');
 
 		// Make column selection lists
 		$select = array(

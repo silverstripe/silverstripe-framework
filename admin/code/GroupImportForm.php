@@ -2,23 +2,18 @@
 
 namespace SilverStripe\Admin;
 
-
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\FileField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Form;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\GroupCsvBulkLoader;
-use Form;
-use FieldList;
-use LiteralField;
-use FileField;
-use FormAction;
-use RequiredFields;
-
 
 /**
  * Imports {@link Group} records by CSV upload, as defined in
  * {@link GroupCsvBulkLoader}.
- *
- * @package framework
- * @subpackage admin
  */
 class GroupImportForm extends Form {
 

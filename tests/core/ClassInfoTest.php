@@ -1,6 +1,12 @@
 <?php
 
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
+
 
 /**
  * @package framework
@@ -25,8 +31,8 @@ class ClassInfoTest extends SapphireTest {
 	}
 
 	public function testExists() {
-		$this->assertTrue(ClassInfo::exists('Object'));
-		$this->assertTrue(ClassInfo::exists('object'));
+		$this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\Object'));
+		$this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\object'));
 		$this->assertTrue(ClassInfo::exists('ClassInfoTest'));
 		$this->assertTrue(ClassInfo::exists('CLASSINFOTEST'));
 		$this->assertTrue(ClassInfo::exists('stdClass'));
@@ -91,8 +97,8 @@ class ClassInfoTest extends SapphireTest {
 	public function testAncestry() {
 		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass');
 		$expect = ArrayLib::valuekey(array(
-			'Object',
-			'ViewableData',
+			'SilverStripe\\Core\\Object',
+			'SilverStripe\\View\\ViewableData',
 			'SilverStripe\\ORM\\DataObject',
 			'ClassInfoTest_BaseClass',
 			'ClassInfoTest_ChildClass',

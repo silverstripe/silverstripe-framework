@@ -2,9 +2,7 @@
 
 namespace SilverStripe\Security;
 
-
 use SilverStripe\ORM\DataObject;
-
 
 /**
  * Record all login attempts through the {@link LoginForm} object.
@@ -15,9 +13,6 @@ use SilverStripe\ORM\DataObject;
  * Caution: Please make sure that enabling logging
  * complies with your privacy standards. We're logging
  * username and IP.
- *
- * @package framework
- * @subpackage security
  *
  * @property string Email Email address used for login attempt
  * @property string Status Status of the login attempt, either 'Success' or 'Failure'
@@ -47,6 +42,7 @@ class LoginAttempt extends DataObject {
 	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);
+		/** @skipUpgrade */
 		$labels['Email'] = _t('LoginAttempt.Email', 'Email Address');
 		$labels['Status'] = _t('LoginAttempt.Status', 'Status');
 		$labels['IP'] = _t('LoginAttempt.IP', 'IP Address');

@@ -3,7 +3,10 @@
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\Admin\LeftAndMain;
-
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\View\Requirements;
 
 /**
  * @package framework
@@ -15,7 +18,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 	protected $extraDataObjects = array('LeftAndMainTest_Object');
 
-	protected $backupCss, $backupJs, $backupCombined;
+	protected $backupCombined;
 
 	public function setUp() {
 		parent::setUp();
@@ -23,18 +26,15 @@ class LeftAndMainTest extends FunctionalTest {
 		// @todo fix controller stack problems and re-activate
 		//$this->autoFollowRedirection = false;
 		$this->resetMenu();
-
-		$this->backupCss = Config::inst()->get('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_css');
-		$this->backupJs = Config::inst()->get('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_javascript');
 		$this->backupCombined = Requirements::get_combined_files_enabled();
 
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_css', array(
-			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.css'
-		));
-
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_javascript', array(
-			FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.js'
-		));
+		LeftAndMain::config()
+			->update('extra_requirements_css', array(
+				FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.css'
+			))
+			->update('extra_requirements_javascript', array(
+				FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.js'
+			));
 
 		Requirements::set_combined_files_enabled(false);
 	}
@@ -58,10 +58,6 @@ class LeftAndMainTest extends FunctionalTest {
 
 	public function tearDown() {
 		parent::tearDown();
-
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_css', $this->backupCss);
-		Config::inst()->update('SilverStripe\\Admin\\LeftAndMain', 'extra_requirements_javascript', $this->backupJs);
-
 		Requirements::set_combined_files_enabled($this->backupCombined);
 	}
 
@@ -161,7 +157,7 @@ class LeftAndMainTest extends FunctionalTest {
 
 			$response = $this->get($link);
 
-			$this->assertInstanceOf('SS_HTTPResponse', $response, "$link should return a response object");
+			$this->assertInstanceOf('SilverStripe\\Control\\SS_HTTPResponse', $response, "$link should return a response object");
 			$this->assertEquals(200, $response->getStatusCode(), "$link should return 200 status code");
 			// Check that a HTML page has been returned
 			$this->assertRegExp('/<html[^>]*>/i', $response->getBody(), "$link should contain <html> tag");

@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\SapphireTest;
+
 class DeprecationTest_Deprecation extends Deprecation {
 	public static function get_module() {
 		return self::get_calling_module_from_trace(debug_backtrace(0));

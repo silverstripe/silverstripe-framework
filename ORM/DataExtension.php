@@ -2,19 +2,16 @@
 
 namespace SilverStripe\ORM;
 
-use Extension;
-use Exception;
-use FieldList;
-use Config;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\Queries\SQLSelect;
+use Exception;
 
 /**
  * An extension that adds additional functionality to a {@link DataObject}.
  *
  * @property DataObject $owner
- *
- * @package framework
- * @subpackage orm
  */
 abstract class DataExtension extends Extension {
 
@@ -25,7 +22,7 @@ abstract class DataExtension extends Extension {
 	/**
 	 * Hook for extension-specific validation.
 	 *
-	 * @param $validationResult Local validation result
+	 * @param ValidationResult $validationResult Local validation result
 	 * @throws ValidationException
 	 */
 	public function validate(ValidationResult $validationResult) {
@@ -93,9 +90,8 @@ abstract class DataExtension extends Extension {
 	 * Return a map where the keys are db, has_one, etc, and the values are
 	 * additional fields/relations to be defined.
 	 *
-	 * @param $class since this method might be called on the class directly
-	 * @param $extension since this can help to extract parameters to help set indexes
-	 *
+	 * @param string $class since this method might be called on the class directly
+	 * @param string $extension since this can help to extract parameters to help set indexes
 	 * @return array Returns a map where the keys are db, has_one, etc, and
 	 *               the values are additional fields/relations to be defined.
 	 */

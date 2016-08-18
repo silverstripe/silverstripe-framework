@@ -1,6 +1,11 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\FixtureBlueprint;
+use SilverStripe\Dev\FixtureFactory;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 /**
  * @package framework
  * @subpackage tests

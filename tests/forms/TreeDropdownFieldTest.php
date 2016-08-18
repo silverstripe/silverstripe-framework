@@ -1,4 +1,11 @@
 <?php
+
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Forms\TreeDropdownField;
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -9,14 +16,14 @@ class TreeDropdownFieldTest extends SapphireTest {
 
 	public function testTreeSearch(){
 
-		$field = new TreeDropdownField('TestTree', 'Test tree', 'Folder');
+		$field = new TreeDropdownField('TestTree', 'Test tree', 'SilverStripe\\Assets\\Folder');
 
 		// case insensitive search against keyword 'sub' for folders
 		$request = new SS_HTTPRequest('GET','url',array('search'=>'sub'));
 		$tree = $field->tree($request);
 
-		$folder1 = $this->objFromFixture('Folder','folder1');
-		$folder1Subfolder1 = $this->objFromFixture('Folder','folder1-subfolder1');
+		$folder1 = $this->objFromFixture('SilverStripe\\Assets\\Folder','folder1');
+		$folder1Subfolder1 = $this->objFromFixture('SilverStripe\\Assets\\Folder','folder1-subfolder1');
 
 		$parser = new CSSContentParser($tree);
 		$cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.$folder1Subfolder1->ID.' a span.item';
@@ -27,7 +34,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 			$folder1Subfolder1->Name.' is found, nested under '.$folder1->Name
 		);
 
-		$subfolder = $this->objFromFixture('Folder','subfolder');
+		$subfolder = $this->objFromFixture('SilverStripe\\Assets\\Folder','subfolder');
 		$cssPath = 'ul.tree li#selector-TestTree-'.$subfolder->ID.' a span.item';
 		$secondResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
@@ -37,7 +44,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		);
 
 		// other folders which don't contain the keyword 'sub' are not returned in search results
-		$folder2 = $this->objFromFixture('Folder','folder2');
+		$folder2 = $this->objFromFixture('SilverStripe\\Assets\\Folder','folder2');
 		$cssPath = 'ul.tree li#selector-TestTree-'.$folder2->ID.' a span.item';
 		$noResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
@@ -46,7 +53,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 			$folder2.' is not found'
 		);
 
-		$field = new TreeDropdownField('TestTree', 'Test tree', 'File');
+		$field = new TreeDropdownField('TestTree', 'Test tree', 'SilverStripe\\Assets\\File');
 
 		// case insensitive search against keyword 'sub' for files
 		$request = new SS_HTTPRequest('GET','url',array('search'=>'sub'));
@@ -64,8 +71,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		);
 
 		// Looking for two files with 'sub' in their name, both under the same folder
-		$file1 = $this->objFromFixture('File','subfolderfile1');
-		$file2 = $this->objFromFixture('File','subfolderfile2');
+		$file1 = $this->objFromFixture('SilverStripe\\Assets\\File','subfolderfile1');
+		$file2 = $this->objFromFixture('SilverStripe\\Assets\\File','subfolderfile2');
 		$cssPath = 'ul.tree li#selector-TestTree-'.$subfolder->ID.' li#selector-TestTree-'.$file1->ID.' a';
 		$firstResult = $parser->getBySelector($cssPath);
 		$this->assertGreaterThan(
@@ -93,7 +100,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		);
 
 		// other files which don't include 'sub' are not returned in search results
-		$file3 = $this->objFromFixture('File','asdf');
+		$file3 = $this->objFromFixture('SilverStripe\\Assets\\File','asdf');
 		$cssPath = 'ul.tree li#selector-TestTree-'.$file3->ID;
 		$noResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(

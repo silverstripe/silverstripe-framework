@@ -5,6 +5,19 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\View\ArrayData;
+
+
+
+
 
 /**
  * @package framework
@@ -147,6 +160,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
 
 		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		/** @skipUpgrade */
 		$form = new Form(
 			new Controller(),
 			'Form',

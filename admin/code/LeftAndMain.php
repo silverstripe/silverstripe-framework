@@ -2,14 +2,36 @@
 
 namespace SilverStripe\Admin;
 
-/**
- * @package framework
- * @subpackage admin
- */
-
 use SilverStripe\CMS\Controllers\CMSPageEditController;
 use SilverStripe\CMS\Controllers\CMSPagesController;
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\CMS\Model\VirtualPage;
+use SilverStripe\CMS\Controllers\SilverStripeNavigator;
+use SilverStripe\Control\ContentNegotiator;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\PjaxResponseNegotiator;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\PrintableTransformation;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar;
 use SilverStripe\Forms\Schema\FormSchema;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
@@ -24,41 +46,13 @@ use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\PermissionProvider;
-use SilverStripe\CMS\Model\SiteTree;
-use SilverStripe\CMS\Model\VirtualPage;
-use SilverStripe\CMS\Controllers\SilverStripeNavigator;
-use Controller;
-use SSViewer;
-use Injector;
-use Director;
-use Convert;
-use SS_HTTPResponse;
-use Form;
-use Config;
-use i18n;
-use Session;
-use HTMLEditorConfig;
-use Requirements;
-use SS_HTTPRequest;
-use SS_HTTPResponse_Exception;
-use Deprecation;
-use PjaxResponseNegotiator;
-use ArrayData;
+use SilverStripe\View\SSViewer;
+use SilverStripe\View\Requirements;
+use SilverStripe\View\ArrayData;
 use ReflectionClass;
 use InvalidArgumentException;
-use SiteConfig;
-use HiddenField;
-use LiteralField;
-use FormAction;
-use FieldList;
-use HTMLEditorField_Toolbar;
-use DropdownField;
-use PrintableTransformation;
-use SS_Cache;
-use ClassInfo;
-use ViewableData;
 
-
+use SilverStripe\SiteConfig\SiteConfig;
 
 
 /**
@@ -450,14 +444,20 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	protected function init() {
 		parent::init();
 
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', false);
-		Config::inst()->update('ContentNegotiator', 'enabled', false);
+		SSViewer::config()->update('rewrite_hash_links', false);
+		ContentNegotiator::config()->update('enabled', false);
 
 		// set language
 		$member = Member::currentUser();
-		if(!empty($member->Locale)) i18n::set_locale($member->Locale);
-		if(!empty($member->DateFormat)) i18n::config()->date_format = $member->DateFormat;
-		if(!empty($member->TimeFormat)) i18n::config()->time_format = $member->TimeFormat;
+		if(!empty($member->Locale)) {
+			i18n::set_locale($member->Locale);
+		}
+		if(!empty($member->DateFormat)) {
+			i18n::config()->date_format = $member->DateFormat;
+		}
+		if(!empty($member->TimeFormat)) {
+			i18n::config()->time_format = $member->TimeFormat;
+		}
 
 		// can't be done in cms/_config.php as locale is not set yet
 		CMSMenu::add_link(
@@ -882,9 +882,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$menuIconStyling = '';
 
 			if($menuItems) {
+				/** @var CMSMenuItem $menuItem */
 				foreach($menuItems as $code => $menuItem) {
 					// alternate permission checks (in addition to LeftAndMain->canView())
-
 					if(
 						isset($menuItem->controller)
 						&& $this->hasMethod('alternateMenuDisplayCheck')
@@ -1192,7 +1192,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			// This lets us override the tree title with an extension
 			if($this->hasMethod('getCMSTreeTitle') && $customTreeTitle = $this->getCMSTreeTitle()) {
 				$treeTitle = $customTreeTitle;
-			} elseif(class_exists('SiteConfig')) {
+			} elseif(class_exists('SilverStripe\\SiteConfig\\SiteConfig')) {
 				$siteConfig = SiteConfig::current_site_config();
 				$treeTitle =  Convert::raw2xml($siteConfig->Title);
 			} else {
@@ -1614,7 +1614,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 			// Set this if you want to split up tabs into a separate header row
 			// if($form->Fields()->hasTabset()) {
-			// 	$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			// 	$form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');
 			// }
 
 			// Add a default or custom validator.
@@ -1962,7 +1962,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return SiteConfig
 	 */
 	public function SiteConfig() {
-		return (class_exists('SiteConfig')) ? SiteConfig::current_site_config() : null;
+		return (class_exists('SilverStripe\\SiteConfig\\SiteConfig')) ? SiteConfig::current_site_config() : null;
 	}
 
 	/**
@@ -2035,7 +2035,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return String
 	 */
 	public function BaseCSSClasses() {
-		return $this->CSSClasses('Controller');
+		return $this->CSSClasses('SilverStripe\\Control\\Controller');
 	}
 
 	/**
@@ -2061,7 +2061,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if ($class == 'SilverStripe\\Admin\\ModelAdmin') {
 				continue;
 			}
-			if (ClassInfo::classImplements($class, 'TestOnly')) {
+			if (ClassInfo::classImplements($class, 'SilverStripe\\Dev\\TestOnly')) {
 				continue;
 			}
 

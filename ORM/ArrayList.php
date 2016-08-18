@@ -2,10 +2,10 @@
 
 namespace SilverStripe\ORM;
 
-use ViewableData;
-use ArrayData;
+use SilverStripe\Dev\Debug;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\ViewableData;
 use ArrayIterator;
-use Debug;
 use InvalidArgumentException;
 use LogicException;
 
@@ -22,9 +22,6 @@ use LogicException;
  *   - sort
  *   - filter
  *   - exclude
- *
- * @package framework
- * @subpackage orm
  */
 class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
 
@@ -46,9 +43,14 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 
 	/**
 	 * Return the class of items in this list, by looking at the first item inside it.
+	 *
+	 * @return string
 	 */
 	public function dataClass() {
-		if(count($this->items) > 0) return get_class($this->items[0]);
+		if(count($this->items) > 0) {
+			return get_class($this->items[0]);
+		}
+		return null;
 	}
 
 	/**
@@ -95,12 +97,13 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * Walks the list using the specified callback
 	 *
 	 * @param callable $callback
-	 * @return DataList
+	 * @return $this
 	 */
 	public function each($callback) {
 		foreach($this as $item) {
 			$callback($item);
 		}
+		return $this;
 	}
 
 	public function debug() {
@@ -140,7 +143,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 *
 	 * @param int $offset
 	 * @param int $length
-	 * @return ArrayList
+	 * @return static
 	 */
 	public function limit($length, $offset = 0) {
 		if(!$length) {
@@ -307,6 +310,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 				return $item;
 			}
 		}
+		return null;
 	}
 
 	/**
@@ -350,8 +354,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Parses a specified column into a sort field and direction
 	 *
-	 * @param type $column String to parse containing the column name
-	 * @param type $direction Optional Additional argument which may contain the direction
+	 * @param string $column String to parse containing the column name
+	 * @param mixed $direction Optional Additional argument which may contain the direction
 	 * @return array Sort specification in the form array("Column", SORT_ASC).
 	 */
 	protected function parseSortColumn($column, $direction = null) {
@@ -390,7 +394,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 *
 	 * Note that columns may be double quoted as per ANSI sql standard
 	 *
-	 * @return DataList
+	 * @return static
 	 * @see SS_List::sort()
 	 * @example $list->sort('Name'); // default ASC sorting
 	 * @example $list->sort('Name DESC'); // DESC sorting
@@ -406,6 +410,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 		if(count($args)>2){
 			throw new InvalidArgumentException('This method takes zero, one or two arguments');
 		}
+		$columnsToSort = [];
 
 		// One argument and it's a string
 		if(count($args)==1 && is_string($args[0])){
@@ -468,6 +473,9 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * Returns true if the given column can be used to filter the records.
 	 *
 	 * It works by checking the fields available in the first record of the list.
+	 *
+	 * @param string $by
+	 * @return bool
 	 */
 	public function canFilterBy($by) {
 		$firstRecord = $this->first();
@@ -531,7 +539,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 *          $list = $list->filterAny(array('Name'=>array('bob','phil'), 'Age'=>array(21, 43)));
 	 *
 	 * @param string|array See {@link filter()}
-	 * @return DataList
+	 * @return static
 	 */
 	public function filterAny() {
 		$keepUs = call_user_func_array(array($this, 'normaliseFilterArgs'), func_get_args());
@@ -682,7 +690,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Returns whether an item with $key exists
 	 *
-	 * @param mixed $key
+	 * @param mixed $offset
 	 * @return bool
 	 */
 	public function offsetExists($offset) {
@@ -692,17 +700,20 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Returns item stored in list with index $key
 	 *
-	 * @param mixed $key
+	 * @param mixed $offset
 	 * @return DataObject
 	 */
 	public function offsetGet($offset) {
-		if ($this->offsetExists($offset)) return $this->items[$offset];
+		if ($this->offsetExists($offset)) {
+			return $this->items[$offset];
+		}
+		return null;
 	}
 
 	/**
 	 * Set an item with the key in $key
 	 *
-	 * @param mixed $key
+	 * @param mixed $offset
 	 * @param mixed $value
 	 */
 	public function offsetSet($offset, $value) {
@@ -716,7 +727,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	/**
 	 * Unset an item with the key in $key
 	 *
-	 * @param mixed $key
+	 * @param mixed $offset
 	 */
 	public function offsetUnset($offset) {
 		unset($this->items[$offset]);
@@ -726,8 +737,8 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 * Extracts a value from an item in the list, where the item is either an
 	 * object or array.
 	 *
-	 * @param  array|object $item
-	 * @param  string $key
+	 * @param array|object $item
+	 * @param string $key
 	 * @return mixed
 	 */
 	protected function extractValue($item, $key) {
@@ -741,6 +752,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 				return $item[$key];
 			}
 		}
+		return null;
 	}
 
 }

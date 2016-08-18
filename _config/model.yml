@@ -1,7 +1,7 @@
 ---
 Name: corefieldtypes
 ---
-Injector:
+SilverStripe\Core\Injector\Injector:
   Boolean:
     class: SilverStripe\ORM\FieldType\DBBoolean
   Currency:
@@ -21,7 +21,7 @@ Injector:
   Enum:
     class: SilverStripe\ORM\FieldType\DBEnum
   DBFile:
-    class: SilverStripe\Filesystem\Storage\DBFile
+    class: SilverStripe\Assets\Storage\DBFile
   Float:
     class: SilverStripe\ORM\FieldType\DBFloat
   ForeignKey:
@@ -61,25 +61,39 @@ Injector:
 ---
 Name: coresearchfilters
 ---
-Injector:
+SilverStripe\Core\Injector\Injector:
   DataListFilter.default: %$DataListFilter.ExactMatch
   DataListFilter.EndsWith:
-    class: EndsWithFilter
+    class: SilverStripe\ORM\Filters\EndsWithFilter
   DataListFilter.ExactMatch:
-    class: ExactMatchFilter
+    class: SilverStripe\ORM\Filters\ExactMatchFilter
   DataListFilter.Fulltext:
-    class: FulltextFilter
+    class: SilverStripe\ORM\Filters\FulltextFilter
   DataListFilter.GreaterThan:
-    class: GreaterThanFilter
+    class: SilverStripe\ORM\Filters\GreaterThanFilter
   DataListFilter.GreaterThanOrEqual:
-    class: GreaterThanOrEqualFilter
+    class: SilverStripe\ORM\Filters\GreaterThanOrEqualFilter
   DataListFilter.LessThan:
-    class: LessThanFilter
+    class: SilverStripe\ORM\Filters\LessThanFilter
   DataListFilter.LessThanOrEqual:
-    class: LessThanOrEqualFilter
+    class: SilverStripe\ORM\Filters\LessThanOrEqualFilter
   DataListFilter.PartialMatch:
-    class: PartialMatchFilter
+    class: SilverStripe\ORM\Filters\PartialMatchFilter
   DataListFilter.StartsWith:
-    class: StartsWithFilter
+    class: SilverStripe\ORM\Filters\StartsWithFilter
   DataListFilter.WithinRange:
-    class: WithinRangeFilter
+    class: SilverStripe\ORM\Filters\WithinRangeFilter
+---
+Name: coresearchaliases
+---
+SilverStripe\Core\Injector\Injector:
+  EndsWithFilter: %$DataListFilter.EndsWith
+  ExactMatchFilter: %$DataListFilter.ExactMatch
+  FulltextFilter: %$DataListFilter.Fulltext
+  GreaterThanFilter: $&DataListFilter.GreaterThan
+  GreaterThanOrEqualFilter: %$DataListFilter.GreaterThanOrEqual
+  LessThanFilter: %$DataListFilter.LessThan
+  LessThanOrEqualFilter: %$DataListFilter.LessThanOrEqual
+  PartialMatchFilter: %$DataListFilter.PartialMatch
+  StartsWithFilter: %$DataListFilter.StartsWith
+  WithinRangeFilter: %$DataListFilter.WithinRange

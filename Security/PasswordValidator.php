@@ -2,10 +2,8 @@
 
 namespace SilverStripe\Security;
 
-
+use SilverStripe\Core\Object;
 use SilverStripe\ORM\ValidationResult;
-use Object;
-
 
 /**
  * This class represents a validator for member passwords.
@@ -18,9 +16,6 @@ use Object;
  *
  * Member::set_password_validator($pwdValidator);
  * </code>
- *
- * @package framework
- * @subpackage security
  */
 class PasswordValidator extends Object {
 
@@ -35,6 +30,9 @@ class PasswordValidator extends Object {
 
 	/**
 	 * Minimum password length
+	 *
+	 * @param int $minLength
+	 * @return $this
 	 */
 	public function minLength($minLength) {
 		$this->minLength = $minLength;
@@ -46,8 +44,9 @@ class PasswordValidator extends Object {
 	 *
 	 * Eg: $this->characterStrength(3, array("lowercase", "uppercase", "digits", "punctuation"))
 	 *
-	 * @param $minScore The minimum number of character tests that must pass
-	 * @param $testNames The names of the tests to perform
+	 * @param int $minScore The minimum number of character tests that must pass
+	 * @param array $testNames The names of the tests to perform
+	 * @return $this
 	 */
 	public function characterStrength($minScore, $testNames) {
 		$this->minScore = $minScore;
@@ -57,6 +56,9 @@ class PasswordValidator extends Object {
 
 	/**
 	 * Check a number of previous passwords that the user has used, and don't let them change to that.
+	 *
+	 * @param int $count
+	 * @return $this
 	 */
 	public function checkHistoricalPasswords($count) {
 		$this->historicalPasswordCount = $count;
@@ -120,8 +122,9 @@ class PasswordValidator extends Object {
 				->where(array('"MemberPassword"."MemberID"' => $member->ID))
 				->sort('"Created" DESC, "ID" DESC')
 				->limit($this->historicalPasswordCount);
-			if($previousPasswords) foreach($previousPasswords as $previousPasswords) {
-				if($previousPasswords->checkPassword($password)) {
+			/** @var MemberPassword $previousPassword */
+			foreach($previousPasswords as $previousPassword) {
+				if($previousPassword->checkPassword($password)) {
 					$valid->error(
 						_t(
 							'PasswordValidator.PREVPASSWORD',

@@ -1,22 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dmooyman
- * Date: 12/08/16
- * Time: 12:15 PM
- */
+
 namespace SilverStripe\Admin;
 
-use ViewableData;
+use SilverStripe\View\ViewableData;
 
 /**
  * Wrapper around objects being displayed in a tree.
  * Caution: Volatile API.
  *
  * @todo Implement recursive tree node rendering.
- *
- * @package framework
- * @subpackage admin
  */
 class LeftAndMain_TreeNode extends ViewableData
 {

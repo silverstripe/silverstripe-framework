@@ -2,18 +2,17 @@
 
 namespace SilverStripe\Admin;
 
-
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Object;
+use SilverStripe\Control\Controller;
+use SilverStripe\i18n\i18n;
+use SilverStripe\i18n\i18nEntityProvider;
 use SilverStripe\Security\Member;
-use Object;
 use IteratorAggregate;
-use i18nEntityProvider;
-use Config;
-use Controller;
-use Convert;
-use ClassInfo;
 use ReflectionClass;
 use ArrayIterator;
-use i18n;
 
 /**
  * The object manages the main CMS menu. See {@link LeftAndMain::init()} for
@@ -27,12 +26,8 @@ use i18n;
  *
  * Additional CMSMenu items can be added through {@link LeftAndMainExtension::init()}
  * extensions added to {@link LeftAndMain}.
- *
- * @package framework
- * @subpackage admin
  */
-class
-CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
+class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 
 	/**
 	 * Sort by menu priority, highest to lowest
@@ -348,7 +343,7 @@ CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 		$subClasses = array_unique($subClasses);
 		foreach($subClasses as $key => $className) {
 			// Remove abstract classes and LeftAndMain
-			if(in_array($className, $abstractClasses) || ClassInfo::classImplements($className, 'TestOnly')) {
+			if(in_array($className, $abstractClasses) || ClassInfo::classImplements($className, 'SilverStripe\\Dev\\TestOnly')) {
 				unset($subClasses[$key]);
 			} else {
 				// Separate conditional to avoid autoloading the class

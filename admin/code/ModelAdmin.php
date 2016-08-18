@@ -2,30 +2,33 @@
 
 namespace SilverStripe\Admin;
 
-
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\BulkLoader;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\ResetFormAction;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\FileField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Member;
-use Requirements;
-use GridFieldExportButton;
-use GridField;
-use GridFieldConfig_RecordEditor;
-use GridFieldPrintButton;
-use Form;
-use FieldList;
-use Controller;
-use Object;
-use RequiredFields;
-use ArrayLib;
-use ArrayData;
-use HiddenField;
-use FileField;
-use Convert;
-use LiteralField;
-use CheckboxField;
-use FormAction;
-use Deprecation;
-
+use SilverStripe\View\Requirements;
+use SilverStripe\View\ArrayData;
 
 /**
  * Generates a three-pane UI for editing model classes, with an
@@ -36,9 +39,6 @@ use Deprecation;
  * flexibility to customize the default output.
  *
  * @uses SearchContext
- *
- * @package framework
- * @subpackage admin
  */
 abstract class ModelAdmin extends LeftAndMain {
 
@@ -156,14 +156,16 @@ abstract class ModelAdmin extends LeftAndMain {
 			$list,
 			$fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
 				->addComponent($exportButton)
-				->removeComponentsByType('GridFieldFilterHeader')
+				->removeComponentsByType('SilverStripe\\Forms\\GridField\\GridFieldFilterHeader')
 				->addComponents(new GridFieldPrintButton('buttons-before-left'))
 		);
 
 		// Validation
 		if(singleton($this->modelClass)->hasMethod('getCMSValidator')) {
 			$detailValidator = singleton($this->modelClass)->getCMSValidator();
-			$listField->getConfig()->getComponentByType('GridFieldDetailForm')->setValidator($detailValidator);
+			/** @var GridFieldDetailForm $detailform */
+			$detailform = $listField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDetailForm');
+			$detailform->setValidator($detailValidator);
 		}
 
 		$form = Form::create(
@@ -197,11 +199,15 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @return SearchContext
 	 */
 	public function getSearchContext() {
-		$context = singleton($this->modelClass)->getDefaultSearchContext();
+		$context = DataObject::singleton($this->modelClass)->getDefaultSearchContext();
 
 		// Namespace fields, for easier detection if a search is present
-		foreach($context->getFields() as $field) $field->setName(sprintf('q[%s]', $field->getName()));
-		foreach($context->getFilters() as $filter) $filter->setFullName(sprintf('q[%s]', $filter->getFullName()));
+		foreach($context->getFields() as $field) {
+			$field->setName(sprintf('q[%s]', $field->getName()));
+		}
+		foreach($context->getFilters() as $filter) {
+			$filter->setFullName(sprintf('q[%s]', $filter->getFullName()));
+		}
 
 		$this->extend('updateSearchContext', $context);
 
@@ -217,9 +223,9 @@ abstract class ModelAdmin extends LeftAndMain {
 		$form = new Form($this, "SearchForm",
 			$context->getSearchFields(),
 			new FieldList(
-				Object::create('FormAction', 'search', _t('MemberTableField.APPLY_FILTER', 'Apply Filter'))
-				->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive'),
-				Object::create('ResetFormAction','clearsearch', _t('ModelAdmin.RESET','Reset'))
+				FormAction::create('search', _t('MemberTableField.APPLY_FILTER', 'Apply Filter'))
+					->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive'),
+				ResetFormAction::create('clearsearch', _t('ModelAdmin.RESET','Reset'))
 					->setUseButtonTag(true)
 			),
 			new RequiredFields()
@@ -336,7 +342,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		if(is_null($importerClasses)) {
 			$models = $this->getManagedModels();
 			foreach($models as $modelName => $options) {
-				$importerClasses[$modelName] = 'CsvBulkLoader';
+				$importerClasses[$modelName] = 'SilverStripe\\Dev\\CsvBulkLoader';
 			}
 		}
 
@@ -351,7 +357,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	/**
 	 * Generate a CSV import form for a single {@link DataObject} subclass.
 	 *
-	 * @return Form
+	 * @return Form|false
 	 */
 	public function ImportForm() {
 		$modelSNG = singleton($this->modelClass);
@@ -375,6 +381,7 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		// get HTML specification for each import (column names etc.)
 		$importerClass = $importers[$this->modelClass];
+		/** @var BulkLoader $importer */
 		$importer = new $importerClass($this->modelClass);
 		$spec = $importer->getImportSpec();
 		$specFields = new ArrayList();
@@ -427,6 +434,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @param array $data
 	 * @param Form $form
 	 * @param SS_HTTPRequest $request
+	 * @return bool|SS_HTTPResponse
 	 */
 	public function import($data, $form, $request) {
 		if(!$this->showImportForm || (is_array($this->showImportForm)
@@ -436,6 +444,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		}
 
 		$importers = $this->getModelImporters();
+		/** @var BulkLoader $loader */
 		$loader = $importers[$this->modelClass];
 
 		// File wasn't properly uploaded, show a reminder to the user
@@ -471,7 +480,7 @@ abstract class ModelAdmin extends LeftAndMain {
 		}
 
 		$form->sessionMessage($message, 'good');
-		$this->redirectBack();
+		return $this->redirectBack();
 	}
 
 	/**
@@ -493,27 +502,6 @@ abstract class ModelAdmin extends LeftAndMain {
 		);
 
 		return $items;
-	}
-
-	/**
-	 * overwrite the static page_length of the admin panel,
-	 * should be called in the project _config file.
-	 *
-	 * @deprecated 4.0 Use "ModelAdmin.page_length" config setting
-	 */
-	public static function set_page_length($length){
-		Deprecation::notice('4.0', 'Use "ModelAdmin.page_length" config setting');
-		self::config()->page_length = $length;
-	}
-
-	/**
-	 * Return the static page_length of the admin, default as 30
-	 *
-	 * @deprecated 4.0 Use "ModelAdmin.page_length" config setting
-	 */
-	public static function get_page_length(){
-		Deprecation::notice('4.0', 'Use "ModelAdmin.page_length" config setting');
-		return self::config()->page_length;
 	}
 
 }

@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Admin\CMSMenu;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+
 
 // Default CMS HTMLEditorConfig
 HTMLEditorConfig::get('cms')->setOptions(array(

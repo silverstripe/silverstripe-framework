@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\Parsers\URLSegmentFilter;
+
+
 /**
  * Test various functions on the {@link Convert} class.
  *
@@ -186,13 +192,11 @@ PHP
 	 * @todo test toASCII()
 	 */
 	public function testRaw2URL() {
-		$orig = Config::inst()->get('URLSegmentFilter', 'default_allow_multibyte');
-		Config::inst()->update('URLSegmentFilter', 'default_allow_multibyte', false);
+		URLSegmentFilter::config()->update('default_allow_multibyte', false);
 		$this->assertEquals('foo', Convert::raw2url('foo'));
 		$this->assertEquals('foo-and-bar', Convert::raw2url('foo & bar'));
 		$this->assertEquals('foo-and-bar', Convert::raw2url('foo &amp; bar!'));
 		$this->assertEquals('foos-bar-2', Convert::raw2url('foo\'s [bar] (2)'));
-		Config::inst()->update('URLSegmentFilter', 'default_allow_multibyte', $orig);
 	}
 
 	/**

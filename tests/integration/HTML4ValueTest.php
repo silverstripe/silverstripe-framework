@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\Parsers\SS_HTML4Value;
+
 /**
  * @package framework
  * @subpackage tests

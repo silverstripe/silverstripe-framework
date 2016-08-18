@@ -1,7 +1,26 @@
 <?php
+
+namespace SilverStripe\i18n;
+
+use SilverStripe\Control\Director;
+use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\ORM\ArrayLib;
+use SilverStripe\View\TemplateGlobalProvider;
+use Zend_Cache_Backend_ExtendedInterface;
+use Zend_Cache;
+use Zend_Cache_Core;
+use Zend_Translate_Adapter;
+use Zend_Translate;
+use Zend_Locale_Data;
+use Zend_Locale_Exception;
+use InvalidArgumentException;
+
 require_once 'Zend/Translate.php';
-require_once 'i18nRailsYamlAdapter.php';
-require_once 'i18nSSLegacyAdapter.php';
 
 /**
  * Base-class for storage and retrieval of translated entities.
@@ -59,8 +78,6 @@ require_once 'i18nSSLegacyAdapter.php';
  * @see http://www.w3.org/TR/i18n-html-tech-lang
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
- * @package framework
- * @subpackage misc
  */
 class i18n extends Object implements TemplateGlobalProvider, Flushable {
 
@@ -118,77 +135,12 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 
 	/**
 	 * Return an instance of the cache used for i18n data.
-	 * @return Zend_Cache
+	 *
+	 * @skipUpgrade
+	 * @return Zend_Cache_Core
 	 */
 	public static function get_cache() {
 		return SS_Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true));
-	}
-
-	/**
-	 * Use javascript i18n through the ss.i18n class (enabled by default).
-	 * If set to TRUE, includes javascript requirements for the base library
-	 * (framework/client/dist/js/i18n.js) and all necessary lang files (e.g. framework/lang/de_DE.js)
-	 * plus fallbacks to the default locale (e.g. framework/lang/en_US.js).
-	 * If set to FALSE, only includes a stub implementation
-	 * which is necessary. Mainly disabled to save bandwidth
-	 * in a frontend context when website is in single language.
-	 *
-	 * Caution: This flag gets overwritten in {@link LeftAndMain::init()} to enforce javascript
-	 * i18n for the CMS interfaces.
-	 *
-	 * @see Requirements::process_i18n_javascript()
-	 *
-	 * @deprecated 4.0 Use the "i18n.js_i18n" config setting instead
-	 * @param bool $bool
-	 */
-	public static function set_js_i18n($bool) {
-		Deprecation::notice('4.0', 'Use the "i18n.js_i18n" config setting instead');
-		Config::inst()->update('i18n', 'js_i18n', $bool);
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "i18n.js_i18n" config setting instead
-	 * @return bool
-	 */
-	public static function get_js_i18n() {
-		Deprecation::notice('4.0', 'Use the "i18n.js_i18n" config setting instead');
-		return Config::inst()->get('i18n', 'js_i18n');
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "i18n.date_format" config setting instead
-	 * @param string ISO date format
-	 */
-	public static function set_date_format($format) {
-		Deprecation::notice('4.0', 'Use the "i18n.date_format" config setting instead');
-		Config::inst()->update('i18n', 'date_format', $format);
-	}
-
-	/**
-	 * @deprecated since version 4.0
-	 * @return string ISO date format
-	 */
-	public static function get_date_format() {
-		Deprecation::notice('4.0', 'Use the "i18n.date_format" config setting instead');
-		return Config::inst()->get('i18n', 'date_format');
-	}
-
-	/**
-	 * @deprecated 4.0 Use the "i18n.time_format" config setting instead
-	 * @param string ISO time format
-	 */
-	public static function set_time_format($format) {
-		Deprecation::notice('4.0', 'Use the "i18n.time_format" config setting instead');
-		Config::inst()->update('i18n', 'time_format', $format);
-	}
-
-	/**
-	 * @deprecated since version 4.0
-	 * @return string ISO time format
-	 */
-	public static function get_time_format() {
-		Deprecation::notice('4.0', 'Use the "i18n.time_format" config setting instead');
-		return Config::inst()->get('i18n', 'time_format');
 	}
 
 	/**
@@ -521,7 +473,6 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		'nl_NL' => 'Dutch (Netherlands)',
 		'nl_SR' => 'Dutch (Suriname)',
 		'nn_NO' => 'Norwegian Nynorsk (Norway)',
-		'nb_NO' => 'Norwegian',
 		'nod_TH' => 'Thai, Northern (Thailand)',
 		'noe_IN' => 'Nimadi (India)',
 		'nso_ZA' => 'Northern Sotho (South Africa)',
@@ -2028,20 +1979,12 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 *                       with the same class and entity), you can omit it.
 	 * @param string $context (optional) If the string can be difficult to translate by any reason, you can help
 	 *                        translators with some more info using this param
-	 * @param string injectionArray (optional) array of key value pairs that are used to replace corresponding
+	 * @param array $injection (optional) array of key value pairs that are used to replace corresponding
 	 *                              expressions in {curly brackets} in the $string. The injection array can also be
 	 *                              used as the their argument to the _t() function
 	 * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
 	 */
-	public static function _t($entity, $string = "", $context = "", $injection = "") {
-		if(is_numeric($context) && in_array($context, array(PR_LOW, PR_MEDIUM, PR_HIGH))) {
-			Deprecation::notice(
-				'3.0',
-				'The $priority argument to _t() is deprecated, please use module inclusion priorities instead',
-				Deprecation::SCOPE_GLOBAL
-			);
-		}
-
+	public static function _t($entity, $string = "", $context = "", $injection = null) {
 		//fetch the injection array out of the parameters (if it is present)
 		$argList = func_get_args();
 		$argNum = func_num_args();
@@ -2089,7 +2032,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 				// but parameters are passed without names, replace them in fixed order.
 				$returnValue = preg_replace_callback(
 					$regex,
-					function($matches) use(&$injectionArray) {
+					function() use(&$injectionArray) {
 						return $injectionArray ? array_shift($injectionArray) : '';
 					},
 					$returnValue
@@ -2203,8 +2146,8 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 			$defaultPriority = 10;
 			self::$translators[$defaultPriority] = array(
 				'core' => new Zend_Translate(array(
-					'adapter' => 'i18nRailsYamlAdapter',
-					'locale' => Config::inst()->get('i18n', 'default_locale'),
+					'adapter' => 'SilverStripe\\i18n\\i18nRailsYamlAdapter',
+					'locale' => i18n::config()->get('default_locale'),
 					'disableNotices' => true,
 				))
 			);
@@ -2222,24 +2165,30 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 */
 	public static function get_translator($name) {
 		foreach(self::get_translators() as $priority => $translators) {
-			if(isset($translators[$name])) return $translators[$name];
+			if(isset($translators[$name])) {
+				return $translators[$name];
+			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
-	 * @param Zend_Translate Needs to implement {@link i18nTranslateAdapterInterface}
-	 * @param String If left blank will override the default translator.
-	 * @param Int
+	 * @param Zend_Translate $translator Needs to implement {@link i18nTranslateAdapterInterface}
+	 * @param string $name If left blank will override the default translator.
+	 * @param int $priority
 	 */
 	public static function register_translator($translator, $name, $priority = 10) {
-		if (!is_int($priority)) throw new InvalidArgumentException("register_translator expects an int priority");
+		if (!is_int($priority)) {
+			throw new InvalidArgumentException("register_translator expects an int priority");
+		}
 
 		// Ensure it's not there. If it is, we're replacing it. It may exist in a different priority.
 		self::unregister_translator($name);
 
 		// Add our new translator
-		if(!isset(self::$translators[$priority])) self::$translators[$priority] = array();
+		if(!isset(self::$translators[$priority])) {
+			self::$translators[$priority] = array();
+		}
 		self::$translators[$priority][$name] = $translator;
 
 		// Resort array, ensuring highest priority comes first
@@ -2261,12 +2210,12 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	/**
 	 * Get a list of commonly used languages
 	 *
-	 * @param boolean $native Use native names for languages instead of English ones
-	 * @return list of languages in the form 'code' => 'name'
+	 * @param bool $native Use native names for languages instead of English ones
+	 * @return array list of languages in the form 'code' => 'name'
 	 */
 	public static function get_common_languages($native = false) {
 		$languages = array();
-		foreach (Config::inst()->get('i18n', 'common_languages') as $code => $name) {
+		foreach (i18n::config()->get('common_languages') as $code => $name) {
 			$languages[$code] = ($native ? $name['native'] : $name['name']);
 		}
 		return $languages;
@@ -2275,26 +2224,15 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	/**
 	 * Get a list of commonly used locales
 	 *
-	 * @param boolean $native Use native names for locale instead of English ones
-	 * @return list of languages in the form 'code' => 'name'
+	 * @param bool $native Use native names for locale instead of English ones
+	 * @return array list of languages in the form 'code' => 'name'
 	 */
 	public static function get_common_locales($native = false) {
 		$languages = array();
-		foreach (Config::inst()->get('i18n', 'common_locales') as $code => $name) {
+		foreach (i18n::config()->get('common_locales') as $code => $name) {
 			$languages[$code] = ($native ? $name['native'] : $name['name']);
 		}
 		return $languages;
-	}
-
-	/**
-	 * Get a list of locales (code => language and country)
-	 *
-	 * @deprecated since version 4.0
-	 * @return list of languages in the form 'code' => 'name'
-	 */
-	public static function get_locale_list() {
-		Deprecation::notice('4.0', 'Use the "i18n.all_locales" config setting instead');
-		return (array)Config::inst()->get('i18n', 'all_locales');
 	}
 
 	/**
@@ -2304,15 +2242,19 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * @return string Locale of closest available translation, if available
 	 */
 	public static function get_closest_translation($locale) {
-
 		// Check if exact match
 		$pool = self::get_existing_translations();
-		if(isset($pool[$locale])) return $locale;
+		if(isset($pool[$locale])) {
+			return $locale;
+		}
 
 		// Fallback to best locale for common language
 		$lang = self::get_lang_from_locale($locale);
 		$candidate = self::get_locale_from_lang($lang);
-		if(isset($pool[$candidate])) return $candidate;
+		if(isset($pool[$candidate])) {
+			return $candidate;
+		}
+		return null;
 	}
 
 	/**
@@ -2331,7 +2273,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		foreach($modules as $module) {
 			if(!file_exists("{$module}/lang/")) continue;
 
-			$allLocales = Config::inst()->get('i18n', 'all_locales');
+			$allLocales = i18n::config()->get('all_locales');
 			$moduleLocales = scandir("{$module}/lang/");
 			foreach($moduleLocales as $moduleLocale) {
 				$locale = pathinfo($moduleLocale, PATHINFO_FILENAME);
@@ -2362,10 +2304,10 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 *
 	 * @param mixed $code Language code
 	 * @param boolean $native If true, the native name will be returned
-	 * @return Name of the language
+	 * @return string Name of the language
 	 */
 	public static function get_language_name($code, $native = false) {
-		$langs = Config::inst()->get('i18n', 'common_languages');
+		$langs = i18n::config()->get('common_languages');
 		if($native) {
 			return (isset($langs[$code]['native'])) ? $langs[$code]['native'] : false;
 		} else {
@@ -2378,8 +2320,8 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 *
 	 * @see get_language_name()
 	 *
-	 * @param mixed $code locale code
-	 * @return Name of the locale
+	 * @param string $code locale code
+	 * @return string Name of the locale
 	 */
 	public static function get_locale_name($code) {
 		$langs = self::config()->all_locales;
@@ -2389,8 +2331,8 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	/**
 	 * Get a code from an English language name
 	 *
-	 * @param mixed $name Name of the language
-	 * @return Language code (if the name is not found, it'll return the passed name)
+	 * @param string $name Name of the language
+	 * @return string Language code (if the name is not found, it'll return the passed name)
 	 */
 	public static function get_language_code($name) {
 		$code = array_search($name,self::get_common_languages());
@@ -2400,41 +2342,15 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	/**
 	 * Get the current tinyMCE language
 	 *
-	 * @return Language
+	 * @return string Language
 	 */
 	public static function get_tinymce_lang() {
-		$lang = Config::inst()->get('i18n', 'tinymce_lang');
+		$lang = i18n::config()->get('tinymce_lang');
 		if(isset($lang[self::get_locale()])) {
 			return $lang[self::get_locale()];
 		}
 
 		return 'en';
-	}
-
-	/**
-	 * Searches the root-directory for module-directories
-	 * (identified by having a _config.php on their first directory-level
-	 * and a language-file with the default locale in the /lang-subdirectory).
-	 *
-	 * @return array
-	 */
-	public static function get_translatable_modules() {
-		$translatableModules = array();
-
-		$baseDir = Director::baseFolder();
-		$modules = scandir($baseDir);
-		foreach($modules as $module) {
-			$moduleDir = $baseDir . DIRECTORY_SEPARATOR . $module;
-			if(
-				is_dir($moduleDir)
-				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "_config.php")
-				&& is_file($moduleDir . DIRECTORY_SEPARATOR . "lang" . DIRECTORY_SEPARATOR
-					. Config::inst()->get('i18n', 'default_locale') . ".php")
-			) {
-				$translatableModules[] = $module;
-			}
-		}
-		return $translatableModules;
 	}
 
 	/**
@@ -2460,7 +2376,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * @return string Long locale, e.g. "en_US"
 	 */
 	public static function get_locale_from_lang($lang) {
-		$subtags = Config::inst()->get('i18n', 'likely_subtags');
+		$subtags = i18n::config()->get('likely_subtags');
 		if(preg_match('/\-|_/', $lang)) {
 			return str_replace('-', '_', $lang);
 		} else if(isset($subtags[$lang])) {
@@ -2517,12 +2433,13 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 *
 	 * Note: Does not check for {@link $allowed_locales}.
 	 *
-	 * @return boolean
+	 * @param string $locale
+	 * @return bool
 	 */
 	public static function validate_locale($locale) {
 		// Convert en-US to en_US
 		$locale = str_replace('-', '_', $locale);
-		return (array_key_exists($locale, Config::inst()->get('i18n', 'all_locales')));
+		return array_key_exists($locale, i18n::config()->get('all_locales'));
 	}
 
 	/**
@@ -2537,7 +2454,9 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 *                       of possible locales.
 	 */
 	public static function set_locale($locale) {
-		if ($locale) self::$current_locale = $locale;
+		if ($locale) {
+			self::$current_locale = $locale;
+		}
 	}
 
 	/**
@@ -2547,36 +2466,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * @return string Current locale in the system
 	 */
 	public static function get_locale() {
-		return (!empty(self::$current_locale)) ? self::$current_locale : Config::inst()->get('i18n', 'default_locale');
-	}
-
-	/**
-	 * This is the "fallback locale", in case resources with the "current locale"
-	 * (set through {@link set_locale()}) can't be found.
-	 *
-	 * If you just want to globally read/write a different locale (e.g. in a CMS interface),
-	 * please use {@link get_locale()} and {@link set_locale()} instead.
-	 *
-	 * For example, {@link Requirements::add_i18n_javascript()} and {@link i18n::include_by_class()}
-	 * use this "fallback locale" value to include fallback language files.
-	 *
-	 * @deprecated since version 4.0; Use the "i18n.default_locale" config setting instead
-	 * @return String
-	 */
-	public static function default_locale() {
-		Deprecation::notice('4.0', 'Use the "i18n.default_locale" config setting instead');
-		return Config::inst()->get('i18n', 'default_locale');
-	}
-
-	/**
-	 * See {@link default_locale()} for usage.
-	 *
-	 * @deprecated since version 4.0; Use the "i18n.default_locale" config setting instead
-	 * @param String $locale
-	 */
-	public static function set_default_locale($locale) {
-		Deprecation::notice('4.0', 'Use the "i18n.default_locale" config setting instead');
-		Config::inst()->update('i18n', 'default_locale', $locale);
+		return self::$current_locale ?: i18n::config()->get('default_locale');
 	}
 
 	/**
@@ -2615,32 +2505,43 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 
 		// Remove the "project" module from the list - we'll add it back specially later if needed
 		global $project;
-		if (($idx = array_search($project, $moduleNames)) !== false) array_splice($moduleNames, $idx, 1);
+		if (($idx = array_search($project, $moduleNames)) !== false) {
+			array_splice($moduleNames, $idx, 1);
+		}
 
 		// Get the order from the config syste,
-		$order = Config::inst()->get('i18n', 'module_priority');
+		$order = i18n::config()->get('module_priority');
 
 		// Find all modules that don't have their order specified by the config system
 		$unspecified = array_diff($moduleNames, $order);
 
 		// If the placeholder "other_modules" exists in the order array, replace it by the unspecified modules
-		if (($idx = array_search('other_modules', $order)) !== false) array_splice($order, $idx,  1, $unspecified);
-		// Otherwise just jam them on the front
-		else array_splice($order, 0, 0, $unspecified);
+		if (($idx = array_search('other_modules', $order)) !== false) {
+			array_splice($order, $idx,  1, $unspecified);
+		} else {
+			// Otherwise just jam them on the front
+			array_splice($order, 0, 0, $unspecified);
+		}
 
 		// Put the project module back in at the begining if it wasn't specified by the config system
-		if (!in_array($project, $order)) array_unshift($order, $project);
+		if (!in_array($project, $order)) {
+			array_unshift($order, $project);
+		}
 
 		$sortedModules = array();
 		foreach ($order as $module) {
-			if (isset($modules[$module])) $sortedModules[$module] = $modules[$module];
+			if (isset($modules[$module])) {
+				$sortedModules[$module] = $modules[$module];
+			}
 		}
 		$sortedModules = array_reverse($sortedModules, true);
 
 		// Loop in reverse order, meaning the translator with the highest priority goes first
-		$translators = array_reverse(self::get_translators(), true);
-		foreach($translators as $priority => $translators) {
+		$translatorsByPrio = array_reverse(self::get_translators(), true);
+		foreach($translatorsByPrio as $priority => $translators) {
+			/** @var Zend_Translate $translator */
 			foreach($translators as $name => $translator) {
+				/** @var i18nTranslateAdapterInterface|Zend_Translate_Adapter $adapter */
 				$adapter = $translator->getAdapter();
 
 				// Load translations from modules
@@ -2660,7 +2561,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 				if(is_dir($themesBase)) {
 					foreach(scandir($themesBase) as $theme) {
 						if(
-							strpos($theme, Config::inst()->get('SSViewer', 'theme')) === 0
+							strpos($theme, Config::inst()->get('SilverStripe\\View\\SSViewer', 'theme')) === 0
 							&& file_exists("{$themesBase}/{$theme}/lang/")
 						) {
 							$filename = $adapter->getFilenameForLocale($locale);
@@ -2697,9 +2598,11 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	public static function include_by_class($class) {
 		$module = self::get_owner_module($class);
 
-		$translators = array_reverse(self::get_translators(), true);
-		foreach($translators as $priority => $translators) {
+		$translatorsByPrior = array_reverse(self::get_translators(), true);
+		foreach($translatorsByPrior as $priority => $translators) {
+			/** @var Zend_Translate $translator */
 			foreach($translators as $name => $translator) {
+				/** @var i18nTranslateAdapterInterface|Zend_Translate_Adapter $adapter */
 				$adapter = $translator->getAdapter();
 				$filename = $adapter->getFilenameForLocale(self::get_locale());
 				$filepath = "{$module}/lang/" . $filename;

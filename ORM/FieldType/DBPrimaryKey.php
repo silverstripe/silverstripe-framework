@@ -9,9 +9,6 @@ use SilverStripe\ORM\DataObject;
  * A special type Int field used for primary keys.
  *
  * @todo Allow for custom limiting/filtering of scaffoldFormField dropdown
- *
- * @package framework
- * @subpackage orm
  */
 class DBPrimaryKey extends DBInt {
 	/**

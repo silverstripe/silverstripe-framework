@@ -2,14 +2,14 @@
 
 namespace SilverStripe\ORM;
 
-use InvalidArgumentException;
-use Injector;
-use ClassInfo;
-use Convert;
-use Object;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Connect\SS_Query;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\ORM\Queries\SQLSelect;
+use InvalidArgumentException;
 
 /**
  * An object representing a query of data from the DataObject's supporting database.
@@ -18,9 +18,6 @@ use SilverStripe\ORM\Queries\SQLSelect;
  *
  * Unlike DataList, modifiers on DataQuery modify the object rather than returning a clone.
  * DataList is immutable, DataQuery is mutable.
- *
- * @subpackage orm
- * @package framework
  */
 class DataQuery {
 
@@ -321,7 +318,6 @@ class DataQuery {
 	 *
 	 * @param SQLSelect $query
 	 * @param array $originalSelect
-	 * @return null
 	 */
 	protected function ensureSelectContainsOrderbyColumns($query, $originalSelect = array()) {
 		if($orderby = $query->getOrderBy()) {
@@ -1020,62 +1016,5 @@ class DataQuery {
 	 */
 	public function getQueryParams() {
 		return $this->queryParams;
-	}
-}
-
-/**
- * Represents a subgroup inside a WHERE clause in a {@link DataQuery}
- *
- * Stores the clauses for the subgroup inside a specific {@link SQLSelect} object.
- * All non-where methods call their DataQuery versions, which uses the base
- * query object.
- *
- * @package framework
- */
-class DataQuery_SubGroup extends DataQuery implements SQLConditionGroup {
-
-	/**
-	 *
-	 * @var SQLSelect
-	 */
-	protected $whereQuery;
-
-	public function __construct(DataQuery $base, $connective) {
-		parent::__construct($base->dataClass);
-		$this->query = $base->query;
-		$this->whereQuery = new SQLSelect();
-		$this->whereQuery->setConnective($connective);
-
-		$base->where($this);
-	}
-
-	public function where($filter) {
-		if($filter) {
-			$this->whereQuery->addWhere($filter);
-		}
-
-		return $this;
-	}
-
-	public function whereAny($filter) {
-		if($filter) {
-			$this->whereQuery->addWhereAny($filter);
-		}
-
-		return $this;
-	}
-
-	public function conditionSQL(&$parameters) {
-		$parameters = array();
-
-		// Ignore empty conditions
-		$where = $this->whereQuery->getWhere();
-		if(empty($where)) {
-			return null;
-		}
-
-		// Allow database to manage joining of conditions
-		$sql = DB::get_conn()->getQueryBuilder()->buildWhereFragment($this->whereQuery, $parameters);
-		return preg_replace('/^\s*WHERE\s*/i', '', $sql);
 	}
 }

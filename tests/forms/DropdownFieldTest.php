@@ -1,6 +1,16 @@
 <?php
 
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\View\ArrayData;
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -376,6 +386,7 @@ class DropdownFieldTest extends SapphireTest {
 			"Five" => "Five"
 		));
 		$validator = new RequiredFields();
+		/** @skipUpgrade */
 		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
 		$field->setValue("One");
 		$this->assertTrue($field->validate($validator));

@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\i18n;
+
 /**
  * Dynamically provide translatable entites for the {@link i18n} logic.
  * This is particularly handy for natural language strings in static variables
@@ -13,8 +16,6 @@
  * Classes must be able to be constructed without mandatory arguments, otherwise
  * this interface will have no effect.
  *
- * @package framework
- * @subpackage i18n
  * @uses i18nTextCollector->collectFromEntityProviders()
  */
 interface i18nEntityProvider {

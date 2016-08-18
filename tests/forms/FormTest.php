@@ -1,12 +1,33 @@
 <?php
 
+use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\RandomGenerator;
-
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\LookupField;
+use SilverStripe\Forms\FileField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\CheckboxSetField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\View\SSViewer;
 
 /**
+ * @skipUpgrade
  * @package framework
  * @subpackage tests
  */
@@ -22,12 +43,12 @@ class FormTest extends FunctionalTest {
 	public function setUp() {
 		parent::setUp();
 
-		Config::inst()->update('Director', 'rules', array(
+		Director::config()->update('rules', array(
 			'FormTest_Controller' => 'FormTest_Controller'
 		));
 
 		// Suppress themes
-		Config::inst()->remove('SSViewer', 'theme');
+		SSViewer::config()->remove('theme');
 	}
 
 	public function testLoadDataFromRequest() {
@@ -405,7 +426,7 @@ class FormTest extends FunctionalTest {
 
 		$formWithToken = $this->getStubForm();
 		$this->assertInstanceOf(
-			'HiddenField',
+			'SilverStripe\\Forms\\HiddenField',
 			$formWithToken->Fields()->fieldByName(SecurityToken::get_default_name()),
 			'Token field added by default'
 		);
@@ -591,9 +612,7 @@ class FormTest extends FunctionalTest {
 	}
 
 	public function testDefaultClasses() {
-		Config::nest();
-
-		Config::inst()->update('Form', 'default_classes', array(
+		Form::config()->update('default_classes', array(
 			'class1',
 		));
 
@@ -601,7 +620,7 @@ class FormTest extends FunctionalTest {
 
 		$this->assertContains('class1', $form->extraClass(), 'Class list does not contain expected class');
 
-		Config::inst()->update('Form', 'default_classes', array(
+		Form::config()->update('default_classes', array(
 			'class1',
 			'class2',
 		));
@@ -610,7 +629,7 @@ class FormTest extends FunctionalTest {
 
 		$this->assertContains('class1 class2', $form->extraClass(), 'Class list does not contain expected class');
 
-		Config::inst()->update('Form', 'default_classes', array(
+		Form::config()->update('default_classes', array(
 			'class3',
 		));
 
@@ -621,8 +640,6 @@ class FormTest extends FunctionalTest {
 		$form->removeExtraClass('class3');
 
 		$this->assertNotContains('class3', $form->extraClass(), 'Class list contains unexpected class');
-
-		Config::unnest();
 	}
 
 	public function testAttributes() {
@@ -649,9 +666,9 @@ class FormTest extends FunctionalTest {
 
 		$form->httpSubmission($request);
 		$button = $form->buttonClicked();
-		$this->assertInstanceOf('FormAction', $button);
+		$this->assertInstanceOf('SilverStripe\\Forms\\FormAction', $button);
 		$this->assertEquals('doSubmit', $button->actionName());
-
+		/** @skipUpgrade */
 		$form = new Form(
 			$controller,
 			'Form',
@@ -665,7 +682,7 @@ class FormTest extends FunctionalTest {
 
 		$form->httpSubmission($request);
 		$button = $form->buttonClicked();
-		$this->assertInstanceOf('FormAction', $button);
+		$this->assertInstanceOf('SilverStripe\\Forms\\FormAction', $button);
 		$this->assertEquals('doSubmit', $button->actionName());
 	}
 
@@ -710,7 +727,7 @@ class FormTest extends FunctionalTest {
 
 	function testMessageEscapeHtml() {
 		$form = $this->getStubForm();
-		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->getController()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->sessionMessage('<em>Escaped HTML</em>', 'good', true);
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('.message');
@@ -720,7 +737,7 @@ class FormTest extends FunctionalTest {
 		);
 
 		$form = $this->getStubForm();
-		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->getController()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->sessionMessage('<em>Unescaped HTML</em>', 'good', false);
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('.message');
@@ -732,7 +749,7 @@ class FormTest extends FunctionalTest {
 
 	function testFieldMessageEscapeHtml() {
 		$form = $this->getStubForm();
-		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->getController()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->addErrorMessage('key1', '<em>Escaped HTML</em>', 'good', true);
 		$form->setupFormErrors();
 		$parser = new CSSContentParser($result = $form->forTemplate());
@@ -743,7 +760,7 @@ class FormTest extends FunctionalTest {
 		);
 
 		$form = $this->getStubForm();
-		$form->Controller()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->getController()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->addErrorMessage('key1', '<em>Unescaped HTML</em>', 'good', false);
 		$form->setupFormErrors();
 		$parser = new CSSContentParser($form->forTemplate());
@@ -786,6 +803,7 @@ class FormTest extends FunctionalTest {
 }
 
 /**
+ * @skipUpgrade
  * @package framework
  * @subpackage tests
  */
@@ -811,6 +829,7 @@ class FormTest_Player extends DataObject implements TestOnly {
 }
 
 /**
+ * @skipUpgrade
  * @package framework
  * @subpackage tests
  */
@@ -826,6 +845,7 @@ class FormTest_Team extends DataObject implements TestOnly {
 }
 
 /**
+ * @skipUpgrade
  * @package framework
  * @subpackage tests
  */
@@ -893,6 +913,7 @@ class FormTest_Controller extends Controller implements TestOnly {
 }
 
 /**
+ * @skipUpgrade
  * @package framework
  * @subpackage tests
  */
@@ -933,6 +954,9 @@ class FormTest_ControllerWithSecurityToken extends Controller implements TestOnl
 
 }
 
+/**
+ * @skipUpgrade
+ */
 class FormTest_ControllerWithStrictPostCheck extends Controller implements TestOnly
 {
 
@@ -976,6 +1000,9 @@ class FormTest_ControllerWithStrictPostCheck extends Controller implements TestO
     }
 }
 
+/**
+ * @skipUpgrade
+ */
 class FormTest_ExtraFieldsForm extends Form implements TestOnly {
 
     public function getExtraFields() {

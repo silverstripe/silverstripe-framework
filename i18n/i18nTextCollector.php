@@ -1,6 +1,14 @@
 <?php
 
-use Symfony\Component\Yaml\Dumper;
+namespace SilverStripe\i18n;
+
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Dev\Debug;
+use SilverStripe\Control\Director;
+use ReflectionClass;
 
 /**
  * SilverStripe-variant of the "gettext" tool:
@@ -23,8 +31,6 @@ use Symfony\Component\Yaml\Dumper;
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  * @author Ingo Schommer <FIRSTNAME@silverstripe.com>
- * @package framework
- * @subpackage i18n
  * @uses i18nEntityProvider
  * @uses i18n
  */
@@ -72,7 +78,7 @@ class i18nTextCollector extends Object {
 	public function __construct($locale = null) {
 		$this->defaultLocale = $locale
 			? $locale
-			: i18n::get_lang_from_locale(i18n::default_locale());
+			: i18n::get_lang_from_locale(i18n::config()->get('default_locale'));
 		$this->basePath = Director::baseFolder();
 		$this->baseSavePath = Director::baseFolder();
 
@@ -95,7 +101,7 @@ class i18nTextCollector extends Object {
 	 */
 	public function getWriter() {
 		if(!$this->writer) {
-			$this->setWriter(Injector::inst()->get('i18nTextCollector_Writer'));
+			$this->setWriter(Injector::inst()->get('SilverStripe\\i18n\\i18nTextCollector_Writer'));
 		}
 		return $this->writer;
 	}
@@ -333,7 +339,7 @@ class i18nTextCollector extends Object {
 		//      Currently not possible because adapter instances can't be fully reset through the Zend API,
 		//      meaning master strings accumulate across modules
 		foreach($entitiesByModule as $module => $entities) {
-			$adapter = Injector::inst()->create('i18nRailsYamlAdapter');
+			$adapter = Injector::inst()->create('SilverStripe\\i18n\\i18nRailsYamlAdapter');
 			$fileName = $adapter->getFilenameForLocale($this->defaultLocale);
 			$masterFile = "{$this->basePath}/{$module}/lang/{$fileName}";
 			if(!file_exists($masterFile)) {
@@ -438,7 +444,7 @@ class i18nTextCollector extends Object {
 	/**
 	 * Retrieves the list of files for this module
 	 *
-	 * @param type $module
+	 * @param string $module
 	 * @return array List of files to parse
 	 */
 	protected function getFileListForModule($module) {
@@ -552,8 +558,9 @@ class i18nTextCollector extends Object {
 	 * Extracts translatables from .ss templates (Self referencing)
 	 *
 	 * @param string $content The text content of a parsed template-file
-	 * @param string $module Module's name or 'themes'
 	 * @param string $fileName The name of a template file when method is used in self-referencing mode
+	 * @param string $module Module's name or 'themes'
+	 * @param array $parsedFiles
 	 * @return array $entities An array of entities representing the extracted template function calls
 	 */
 	public function collectFromTemplate($content, $fileName, $module, &$parsedFiles = array()) {
@@ -594,7 +601,7 @@ class i18nTextCollector extends Object {
 		$classes = ClassInfo::classes_for_file($filePath);
 		foreach($classes as $class) {
 			// Skip non-implementing classes
-			if(!class_exists($class) || !in_array('i18nEntityProvider', class_implements($class))) {
+			if(!class_exists($class) || !is_a($class, 'SilverStripe\\i18n\\i18nEntityProvider', true)) {
 				continue;
 			}
 
@@ -689,219 +696,5 @@ class i18nTextCollector extends Object {
 
 	public function setDefaultLocale($locale) {
 		$this->defaultLocale = $locale;
-	}
-}
-
-/**
- * Allows serialization of entity definitions collected through {@link i18nTextCollector}
- * into a persistent format, usually on the filesystem.
- *
- * @package framework
- * @subpackage i18n
- */
-interface i18nTextCollector_Writer {
-	/**
-	 * @param Array $entities Map of entity names (incl. namespace) to an numeric array, with at least one element,
-	 *                        the original string, and an optional second element, the context.
-	 * @param String $locale
-	 * @param String $path The directory base on which the collector should create new lang folders and files.
-	 *                     Usually the webroot set through {@link Director::baseFolder()}. Can be overwritten for
-	 *                     testing or export purposes.
-	 * @return Boolean success
-	 */
-	public function write($entities, $locale, $path);
-}
-
-/**
- * Legacy writer for 2.x style persistence.
- *
- * @package framework
- * @subpackage i18n
- */
-class i18nTextCollector_Writer_Php implements i18nTextCollector_Writer {
-
-	public function write($entities, $locale, $path) {
-		$php = '';
-		$eol = PHP_EOL;
-
-		// Create folder for lang files
-		$langFolder = $path . '/lang';
-		if(!file_exists($langFolder)) {
-			Filesystem::makeFolder($langFolder);
-			touch($langFolder . '/_manifest_exclude');
-		}
-
-		// Open the English file and write the Master String Table
-		$langFile = $langFolder . '/' . $locale . '.php';
-		if($fh = fopen($langFile, "w")) {
-			if($entities) foreach($entities as $fullName => $spec) {
-				$php .= $this->langArrayCodeForEntitySpec($fullName, $spec, $locale);
-			}
-			// test for valid PHP syntax by eval'ing it
-			try{
-				eval($php);
-			} catch(Exception $e) {
-				throw new LogicException(
-					'i18nTextCollector->writeMasterStringFile(): Invalid PHP language file. Error: ' . $e->toString());
-			}
-
-			fwrite($fh, "<"."?php{$eol}{$eol}global \$lang;{$eol}{$eol}" . $php . "{$eol}");
-			fclose($fh);
-
-		} else {
-			throw new LogicException("Cannot write language file! Please check permissions of $langFolder/"
-				. $locale . ".php");
-		}
-
-		return true;
-	}
-
-	/**
-	 * Input for langArrayCodeForEntitySpec() should be suitable for insertion
-	 * into single-quoted strings, so needs to be escaped already.
-	 *
-	 * @param string $entity The entity name, e.g. CMSMain.BUTTONSAVE
-	 */
-	public function langArrayCodeForEntitySpec($entityFullName, $entitySpec, $locale) {
-		$php = '';
-		$eol = PHP_EOL;
-
-		$entityParts = explode('.', $entityFullName);
-		if(count($entityParts) > 1) {
-			// templates don't have a custom namespace
-			$entity = array_pop($entityParts);
-			// namespace might contain dots, so we implode back
-			$namespace = implode('.',$entityParts);
-		} else {
-			user_error(
-				"i18nTextCollector::langArrayCodeForEntitySpec(): Wrong entity format for $entityFullName with values "
-				. var_export($entitySpec, true),
-				E_USER_WARNING
-			);
-			return false;
-		}
-
-		$value = $entitySpec[0];
-		$comment = (isset($entitySpec[1])) ? addcslashes($entitySpec[1],'\'') : null;
-
-		$php .= '$lang[\'' . $locale . '\'][\'' . $namespace . '\'][\'' . $entity . '\'] = ';
-		$php .= (count($entitySpec) == 1) ? var_export($entitySpec[0], true) : var_export($entitySpec, true);
-		$php .= ";$eol";
-
-		// Normalise linebreaks due to fix var_export output
-		return Convert::nl2os($php, $eol);
-	}
-}
-
-/**
- * Writes files compatible with {@link i18nRailsYamlAdapter}.
- *
- * @package framework
- * @subpackage i18n
- */
-class i18nTextCollector_Writer_RailsYaml implements i18nTextCollector_Writer {
-
-	public function write($entities, $locale, $path) {
-		$content = '';
-
-		// Create folder for lang files
-		$langFolder = $path . '/lang';
-		if(!file_exists($langFolder)) {
-			Filesystem::makeFolder($langFolder);
-			touch($langFolder . '/_manifest_exclude');
-		}
-
-		// Open the English file and write the Master String Table
-		$langFile = $langFolder . '/' . $locale . '.yml';
-		if($fh = fopen($langFile, "w")) {
-			fwrite($fh, $this->getYaml($entities,$locale));
-			fclose($fh);
-		} else {
-			throw new LogicException("Cannot write language file! Please check permissions of $langFile");
-		}
-
-		return true;
-	}
-
-	public function getYaml($entities, $locale) {
-		// Unflatten array
-		$entitiesNested = array();
-		foreach($entities as $entity => $spec) {
-			// Legacy support: Don't count *.ss as namespace
-			$entity = preg_replace('/\.ss\./', '___ss.', $entity);
-			$parts = explode('.', $entity);
-			$currLevel = &$entitiesNested;
-			while($part = array_shift($parts)) {
-				$part = str_replace('___ss', '.ss', $part);
-				if(!isset($currLevel[$part])) $currLevel[$part] = array();
-				$currLevel = &$currLevel[$part];
-			}
-			$currLevel = $spec[0];
-		}
-
-		// Write YAML
-		$dumper = new Dumper();
-		$dumper->setIndentation(2);
-		// TODO Dumper can't handle YAML comments, so the context information is currently discarded
-		$result = $dumper->dump(array($locale => $entitiesNested), 99);
-		return $result;
-	}
-}
-
-/**
- * Parser that scans through a template and extracts the parameters to the _t and <%t calls
- *
- * @package framework
- * @subpackage i18n
- */
-class i18nTextCollector_Parser extends SSTemplateParser {
-
-	private static $entities = array();
-
-	private static $currentEntity = array();
-
-	public function __construct($string) {
-		$this->string = $string;
-		$this->pos = 0;
-		$this->depth = 0;
-		$this->regexps = array();
-	}
-
-	public function Translate__construct(&$res) {
-		self::$currentEntity = array(null,null,null); //start with empty array
-	}
-
-	public function Translate_Entity(&$res, $sub) {
-		self::$currentEntity[0] = $sub['text']; //entity
-	}
-
-	public function Translate_Default(&$res, $sub) {
-		self::$currentEntity[1] = $sub['String']['text']; //value
-	}
-
-	public function Translate_Context(&$res, $sub) {
-		self::$currentEntity[2] = $sub['String']['text']; //comment
-	}
-
-	public function Translate__finalise(&$res) {
-		// set the entity name and the value (default), as well as the context (comment)
-		// priority is no longer used, so that is blank
-		self::$entities[self::$currentEntity[0]] = array(self::$currentEntity[1],null,self::$currentEntity[2]);
-	}
-
-	/**
-	 * Parses a template and returns any translatable entities
-	 */
-	public static function GetTranslatables($template) {
-		self::$entities = array();
-
-		// Run the parser and throw away the result
-		$parser = new i18nTextCollector_Parser($template);
-		if(substr($template, 0,3) == pack("CCC", 0xef, 0xbb, 0xbf)) {
-			$parser->pos = 3;
-		}
-		$parser->match_TopTemplate();
-
-		return self::$entities;
 	}
 }

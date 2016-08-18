@@ -2,6 +2,21 @@
 
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Assets\File;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\AssetField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\RequiredFields;
+
+
+
 
 /**
  * @package framework
@@ -37,7 +52,7 @@ class AssetFieldTest extends FunctionalTest {
 		}
 
 		// Create a test files for each of the fixture references
-		$files = File::get()->exclude('ClassName', 'Folder');
+		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
 		foreach($files as $file) {
 			$path = AssetStoreTest_SpyStore::getLocalPath($file);
 			$create($path);
@@ -53,7 +68,7 @@ class AssetFieldTest extends FunctionalTest {
 	 * Test that files can be uploaded against an object with no relation
 	 */
 	public function testUploadNoRelation() {
-		$this->loginWithPermission('ADMIN');
+		$this->logInWithPermission('ADMIN');
 
 		$tmpFileName = 'testUploadBasic.txt';
 		$response = $this->mockFileUpload('NoRelationField', $tmpFileName);
@@ -69,9 +84,11 @@ class AssetFieldTest extends FunctionalTest {
 
 	/**
 	 * Test that an object can be uploaded against a DBFile field
+	 *
+	 * @skipUpgrade
 	 */
 	public function testUploadDBFile() {
-		$this->loginWithPermission('ADMIN');
+		$this->logInWithPermission('ADMIN');
 
 		// Unset existing has_one relation before re-uploading
 		$record = $this->objFromFixture('AssetFieldTest_Object', 'object1');
@@ -111,9 +128,11 @@ class AssetFieldTest extends FunctionalTest {
 	 * Partially covered by {@link UploadTest->testUploadAcceptsAllowedExtension()},
 	 * but this test additionally verifies that those constraints are actually enforced
 	 * in this controller method.
+	 *
+	 * @skipUpgrade
 	 */
 	public function testAllowedExtensions() {
-		$this->loginWithPermission('ADMIN');
+		$this->logInWithPermission('ADMIN');
 
 		// Test invalid file
 		// Relies on Upload_Validator failing to allow this extension
@@ -146,7 +165,7 @@ class AssetFieldTest extends FunctionalTest {
 		$this->assertFileExists($filePath);
 
 		// Remove from record
-		$response = $this->mockUploadFileSave('File', null, null, null);
+		$response = $this->mockUploadFileSave('SilverStripe\\Assets\\File', null, null, null);
 		$this->assertEmpty($response['errors']);
 
 		// Check file is removed
@@ -161,7 +180,7 @@ class AssetFieldTest extends FunctionalTest {
 	 * Test control output html
 	 */
 	public function testView() {
-		$this->loginWithPermission('ADMIN');
+		$this->logInWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('AssetFieldTest_Object', 'object1');
 
@@ -222,6 +241,8 @@ class AssetFieldTest extends FunctionalTest {
 
 	/**
 	 * Test that getValue() / Value() methods work
+	 *
+	 * @skipUpgrade
 	 */
 	public function testValue() {
 		$record = $this->objFromFixture('AssetFieldTest_Object', 'object1');
@@ -243,7 +264,7 @@ class AssetFieldTest extends FunctionalTest {
 		$this->assertEmpty($field->Value());
 
 		// Set via file (copies only tuple not the actual file reference)
-		$file = $this->objFromFixture('File', 'file1');
+		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'file1');
 		$field->setValue($file);
 		$this->assertEquals(array(
 			'Filename' => 'MyAssets/file1.txt',
@@ -265,7 +286,7 @@ class AssetFieldTest extends FunctionalTest {
 		$field->setCanUpload('ADMIN');
 		$this->assertFalse($field->canUpload());
 
-		$this->loginWithPermission('ADMIN');
+		$this->logInWithPermission('ADMIN');
 
 		$field->setCanUpload(false);
 		$this->assertFalse($field->canUpload());
@@ -276,11 +297,13 @@ class AssetFieldTest extends FunctionalTest {
 
 
 	protected function getMockForm() {
+		/** @skipUpgrade */
 		return new Form(new Controller(), 'Form', new FieldList(), new FieldList());
 	}
 
 	/**
-	 * @return Array Emulating an entry in the $_FILES superglobal
+	 * @param string $tmpFileName
+	 * @return array Emulating an entry in the $_FILES superglobal
 	 */
 	protected function getUploadFile($tmpFileName = 'AssetFieldTest-testUpload.txt') {
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
@@ -304,8 +327,10 @@ class AssetFieldTest extends FunctionalTest {
 	 * Simulates a form post to the test controller with the specified file tuple (Filename, Hash, Variant)
 	 *
 	 * @param string $fileField Name of field to assign ids to
-	 * @param array $ids list of file IDs
-	 * @return boolean Array with key 'errors'
+	 * @param string $filename
+	 * @param string $hash
+	 * @param string $variant
+	 * @return array Array with key 'errors'
 	 */
 	protected function mockUploadFileSave($fileField, $filename, $hash, $variant = null) {
 		// collate file ids
@@ -366,6 +391,7 @@ class AssetFieldTest_Form extends Form implements TestOnly {
 		return $this->record;
 	}
 
+	/** @skipUpgrade */
 	function __construct($controller = null, $name = 'Form') {
 		if(empty($controller)) {
 			$controller = new AssetFieldTest_Controller();
@@ -398,6 +424,9 @@ class AssetFieldTest_Form extends Form implements TestOnly {
 	}
 }
 
+/**
+ * @skipUpgrade
+ */
 class AssetFieldTest_Controller extends Controller implements TestOnly {
 
 	protected $template = 'BlankPage';

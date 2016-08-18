@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\Dev\CSVParser;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * @package framework
  * @package tests

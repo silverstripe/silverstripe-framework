@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\NullHTTPRequest;
+
 /**
  * @package framework
  * @subpackage tests

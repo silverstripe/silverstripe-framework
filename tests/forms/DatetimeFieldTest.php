@@ -1,6 +1,23 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\DatetimeField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\TimeField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\Form;
+use SilverStripe\i18n\i18n;
+
+
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -12,20 +29,20 @@ class DatetimeFieldTest extends SapphireTest {
 
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
-		$this->origDateConfig = Config::inst()->get('DateField', 'default_config');
-		$this->origTimeConfig = Config::inst()->get('TimeField', 'default_config');
-		Config::inst()->update('DateField', 'default_config', array('dateformat' => 'dd/MM/yyyy'));
-		Config::inst()->update('TimeField', 'default_config', array('timeformat' => 'HH:mm:ss'));
+		$this->origDateConfig = Config::inst()->get('SilverStripe\\Forms\\DateField', 'default_config');
+		$this->origTimeConfig = Config::inst()->get('SilverStripe\\Forms\\TimeField', 'default_config');
+		Config::inst()->update('SilverStripe\\Forms\\DateField', 'default_config', array('dateformat' => 'dd/MM/yyyy'));
+		Config::inst()->update('SilverStripe\\Forms\\TimeField', 'default_config', array('timeformat' => 'HH:mm:ss'));
 	}
 
 	public function tearDown() {
 		parent::tearDown();
 
 		i18n::set_locale($this->originalLocale);
-		Config::inst()->remove('DateField', 'default_config');
-		Config::inst()->update('DateField', 'default_config', $this->origDateConfig);
-		Config::inst()->remove('TimeField', 'default_config');
-		Config::inst()->update('TimeField', 'default_config', $this->origTimeConfig);
+		Config::inst()->remove('SilverStripe\\Forms\\DateField', 'default_config');
+		Config::inst()->update('SilverStripe\\Forms\\DateField', 'default_config', $this->origDateConfig);
+		Config::inst()->remove('SilverStripe\\Forms\\TimeField', 'default_config');
+		Config::inst()->update('SilverStripe\\Forms\\TimeField', 'default_config', $this->origTimeConfig);
 	}
 
 	public function testFormSaveInto() {
@@ -235,6 +252,7 @@ class DatetimeFieldTest extends SapphireTest {
 	}
 
 	protected function getMockForm() {
+		/** @skipUpgrade */
 		return new Form(
 			new Controller(),
 			'Form',

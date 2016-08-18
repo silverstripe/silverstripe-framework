@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dmooyman
- * Date: 12/08/16
- * Time: 12:15 PM
- */
+
 namespace SilverStripe\Admin;
 
-use FormAction;
+use SilverStripe\Forms\FormAction;
 
 /**
  * A form action to return from geCMSActions or otherwise include in a CMS Edit Form that

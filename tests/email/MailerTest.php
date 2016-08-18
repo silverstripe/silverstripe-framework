@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Email\Mailer;
+
+
+
 /**
  * @package framework
  * @subpackage tests

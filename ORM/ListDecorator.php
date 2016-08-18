@@ -2,16 +2,13 @@
 
 namespace SilverStripe\ORM;
 
-use ViewableData;
+use SilverStripe\View\ViewableData;
 use LogicException;
 
 /**
  * A base class for decorators that wrap around a list to provide additional
  * functionality. It passes through list methods to the underlying list
  * implementation.
- *
- * @package framework
- * @subpackage orm
  */
 abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sortable, SS_Filterable, SS_Limitable {
 
@@ -54,12 +51,12 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 		$this->list->offsetUnset($key);
 	}
 
-	public function toArray($index = null) {
-		return $this->list->toArray($index);
+	public function toArray() {
+		return $this->list->toArray();
 	}
 
-	public function toNestedArray($index = null){
-		return $this->list->toNestedArray($index);
+	public function toNestedArray(){
+		return $this->list->toNestedArray();
 	}
 
 	public function add($item) {
@@ -78,28 +75,28 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 		return $this->list->exists();
 	}
 
-	public function First() {
-		return $this->list->First();
+	public function first() {
+		return $this->list->first();
 	}
 
-	public function Last() {
-		return $this->list->Last();
+	public function last() {
+		return $this->list->last();
 	}
 
 	public function TotalItems() {
-		return $this->list->Count();
+		return $this->list->count();
 	}
 
 	public function Count() {
-		return $this->list->Count();
+		return $this->list->count();
 	}
 
 	public function forTemplate() {
 		return $this->list->forTemplate();
 	}
 
-	public function map($index = 'ID', $titleField = 'Title', $emptyString = null, $sort = false) {
-		return $this->list->map($index, $titleField, $emptyString, $sort);
+	public function map($index = 'ID', $titleField = 'Title') {
+		return $this->list->map($index, $titleField);
 	}
 
 	public function find($key, $value) {

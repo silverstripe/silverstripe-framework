@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Manifest\SS_ConfigManifest;
+use SilverStripe\Dev\SapphireTest;
+
+
+
 class ConfigManifestTest_ConfigManifestAccess extends SS_ConfigManifest {
 	public function relativeOrder($a, $b) {
 		return parent::relativeOrder($a, $b);
@@ -46,7 +52,7 @@ class ConfigManifestTest extends SapphireTest {
 	 */
 	protected function getManifestMock($methods) {
 		return $this->getMock(
-			'SS_ConfigManifest',
+			'SilverStripe\\Core\\Manifest\\SS_ConfigManifest',
 			$methods,
 			array(), // no constructor arguments
 			'', // default
@@ -173,7 +179,7 @@ class ConfigManifestTest extends SapphireTest {
 		);
 
 		// There is no getter for yamlConfigFragments
-		$property = new ReflectionProperty('SS_ConfigManifest', 'yamlConfigFragments');
+		$property = new ReflectionProperty('SilverStripe\\Core\\Manifest\\SS_ConfigManifest', 'yamlConfigFragments');
 		$property->setAccessible(true);
 
 		// Get the result back from the parsing
@@ -393,7 +399,7 @@ class ConfigManifestTest extends SapphireTest {
 		foreach (array('dev', 'test', 'live') as $env) {
 			Config::nest();
 
-			Config::inst()->update('Director', 'environment_type', $env);
+			Config::inst()->update('SilverStripe\\Control\\Director', 'environment_type', $env);
 			$config = $this->getConfigFixtureValue('Environment');
 
 			foreach (array('dev', 'test', 'live') as $check) {
@@ -409,15 +415,15 @@ class ConfigManifestTest extends SapphireTest {
 
 	public function testDynamicEnvironmentRules() {
 		// First, make sure environment_type is live
-		Config::inst()->update('Director', 'environment_type', 'live');
-		$this->assertEquals('live', Config::inst()->get('Director', 'environment_type'));
+		Config::inst()->update('SilverStripe\\Control\\Director', 'environment_type', 'live');
+		$this->assertEquals('live', Config::inst()->get('SilverStripe\\Control\\Director', 'environment_type'));
 
 		// Then, load in a new manifest, which includes a _config.php that sets environment_type to dev
 		$manifest = new SS_ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest_dynamicenv', true, true);
 		Config::inst()->pushConfigYamlManifest($manifest);
 
 		// Make sure that stuck
-		$this->assertEquals('dev', Config::inst()->get('Director', 'environment_type'));
+		$this->assertEquals('dev', Config::inst()->get('SilverStripe\\Control\\Director', 'environment_type'));
 
 		// And that the dynamic rule was calculated correctly
 		$this->assertEquals('dev', Config::inst()->get('ConfigManifestTest', 'DynamicEnvironment'));

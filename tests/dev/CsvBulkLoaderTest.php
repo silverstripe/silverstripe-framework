@@ -3,6 +3,12 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\CsvBulkLoader;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
+
 
 
 /**
@@ -235,7 +241,7 @@ class CsvBulkLoaderTest extends SapphireTest {
 	}
 
 	public function testLargeFileSplitIntoSmallerFiles() {
-		Config::inst()->update('CsvBulkLoader', 'lines', 3);
+		Config::inst()->update('SilverStripe\\Dev\\CsvBulkLoader', 'lines', 3);
 
 		$loader = new CsvBulkLoader('CsvBulkLoaderTest_Player');
 		$path = $this->getCurrentAbsolutePath() . '/CsvBulkLoaderTest_LargeListOfPlayers.csv';

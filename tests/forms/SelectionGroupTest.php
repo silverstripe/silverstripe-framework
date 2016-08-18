@@ -1,4 +1,11 @@
 <?php
+
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\SelectionGroup_Item;
+use SilverStripe\Forms\SelectionGroup;
+
 class SelectionGroupTest extends SapphireTest {
 
 	function testFieldHolder() {

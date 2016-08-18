@@ -2,17 +2,13 @@
 
 namespace SilverStripe\Security;
 
-
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\CsvBulkLoader;
 use SilverStripe\ORM\DataObject;
-use CsvBulkLoader;
-use Convert;
 
 /**
  * Imports member records, and checks/updates duplicates based on their
  * 'Email' property.
- *
- * @package framework
- * @subpackage security
  */
 class MemberCsvBulkLoader extends CsvBulkLoader {
 
@@ -28,6 +24,10 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 		parent::__construct($objectClass);
 	}
 
+	/**
+	 * @skipUpgrade
+	 * @var array
+	 */
 	public $duplicateChecks = array(
 		'Email' => 'Email',
 	);
@@ -38,6 +38,7 @@ class MemberCsvBulkLoader extends CsvBulkLoader {
 		$_cache_groupByCode = array();
 
 		// Add to predefined groups
+		/** @var Member $member */
 		$member = DataObject::get_by_id($this->objectClass, $objID);
 		foreach($this->groups as $group) {
 			// TODO This isnt the most memory effective way to add members to a group

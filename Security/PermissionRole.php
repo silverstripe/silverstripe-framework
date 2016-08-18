@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Security;
 
-
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
@@ -17,9 +16,6 @@ use SilverStripe\ORM\ManyManyList;
  * to new groups by a user with ADMIN privileges. This is a simple way to prevent users
  * with access to {@link SecurityAdmin} (but no ADMIN privileges) to get themselves ADMIN access
  * (which might be implied by certain roles).
- *
- * @package framework
- * @subpackage security
  *
  * @property string Title
  * @property string OnlyAdminCanApply

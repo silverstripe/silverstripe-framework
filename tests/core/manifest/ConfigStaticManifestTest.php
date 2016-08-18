@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\Core\Manifest\SS_ConfigStaticManifest;
+use SilverStripe\Dev\SapphireTest;
+
+
 class ConfigStaticManifestTest extends SapphireTest {
 
 	private static $testString = 'string';

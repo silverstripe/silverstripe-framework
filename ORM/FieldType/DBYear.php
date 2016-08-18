@@ -2,19 +2,11 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use DropdownField;
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\DB;
 
 /**
- * @package framework
- * @subpackage orm
- */
-
-/**
  * Represents a single year field.
- *
- * @package framework
- * @subpackage orm
  */
 class DBYear extends DBField {
 

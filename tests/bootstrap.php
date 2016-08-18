@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\DB;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * This bootstraps the SilverStripe system so that phpunit can be run directly on SilverStripe tests.
@@ -39,7 +41,7 @@ if(isset($_SERVER['argv'][2])) {
 }
 
 // Connect to database
-require_once $frameworkPath . '/core/Core.php';
+require_once $frameworkPath . '/Core/Core.php';
 require_once $frameworkPath . '/tests/FakeController.php';
 
 global $databaseConfig;

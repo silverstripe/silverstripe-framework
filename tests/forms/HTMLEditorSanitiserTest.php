@@ -1,4 +1,10 @@
 <?php
+
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorSanitiser;
+
 /**
  * @package framework
  * @subpackage tests

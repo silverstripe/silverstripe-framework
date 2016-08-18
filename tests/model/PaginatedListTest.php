@@ -2,8 +2,14 @@
 
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\PaginatedList;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\ArrayData;
+
+
+
 /**
- * Tests for the {@link PaginatedList} class.
+ * Tests for the {@link SilverStripe\ORM\PaginatedList} class.
  *
  * @package framework
  * @subpackage tests

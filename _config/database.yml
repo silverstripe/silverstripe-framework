@@ -1,7 +1,7 @@
 ---
 name: databaseconnectors
 ---
-Injector:
+SilverStripe\Core\Injector\Injector:
   MySQLPDODatabase:
     class: 'SilverStripe\ORM\Connect\MySQLDatabase'
     properties:

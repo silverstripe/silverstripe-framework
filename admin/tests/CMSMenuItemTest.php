@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Admin\CMSMenuItem;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * @package framework
  * @subpackage tests

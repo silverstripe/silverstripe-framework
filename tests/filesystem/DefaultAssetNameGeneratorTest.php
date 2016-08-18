@@ -1,6 +1,10 @@
 <?php
 
-use SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator;
+use SilverStripe\Assets\Storage\DefaultAssetNameGenerator;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+
+
 
 /**
  * covers {@see DefaultAssetNameGenerator}
@@ -11,7 +15,7 @@ class DefaultAssetNameGeneratorTest extends SapphireTest {
 	 * Test non-prefix behaviour
 	 */
 	public function testWithoutPrefix() {
-		Config::inst()->update('SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator', 'version_prefix', '');
+		Config::inst()->update('SilverStripe\\Assets\\Storage\\DefaultAssetNameGenerator', 'version_prefix', '');
 		$generator = new DefaultAssetNameGenerator('folder/MyFile-001.jpg');
 		$suggestions = iterator_to_array($generator);
 
@@ -60,7 +64,7 @@ class DefaultAssetNameGeneratorTest extends SapphireTest {
 	 * Test with default -v prefix
 	 */
 	public function testWithDefaultPrefix() {
-		Config::inst()->update('SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator', 'version_prefix', '-v');
+		Config::inst()->update('SilverStripe\\Assets\\Storage\\DefaultAssetNameGenerator', 'version_prefix', '-v');
 
 		// Test with item that doesn't contain the prefix
 		$generator = new DefaultAssetNameGenerator('folder/MyFile-001.jpg');

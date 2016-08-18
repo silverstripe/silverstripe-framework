@@ -2,14 +2,15 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use Convert;
-use NullableField;
-use TextareaField;
-use TextField;
-use Config;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\NullableField;
+use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DB;
+use SilverStripe\View\Parsers\TextParser;
 use InvalidArgumentException;
-use TextParser;
 
 /**
  * Represents a variable-length string of up to 2 megabytes, designed to store raw text
@@ -24,9 +25,6 @@ use TextParser;
  * @see DBHTMLText
  * @see DBHTMLVarchar
  * @see Varchar
- *
- * @package framework
- * @subpackage orm
  */
 class DBText extends DBString {
 
@@ -244,16 +242,16 @@ class DBText extends DBString {
 	 */
 	public function Parse($parser) {
 		$reflection = new \ReflectionClass($parser);
-		if($reflection->isAbstract() || !$reflection->isSubclassOf('TextParser')) {
+		if($reflection->isAbstract() || !$reflection->isSubclassOf('SilverStripe\\View\\Parsers\\TextParser')) {
 			throw new InvalidArgumentException("Invalid parser {$parser}");
 		}
 
 		/** @var TextParser $obj */
-		$obj = \Injector::inst()->createWithArgs($parser, [$this->forTemplate()]);
+		$obj = Injector::inst()->createWithArgs($parser, [$this->forTemplate()]);
 		return $obj->parse();
 	}
 
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		if(!$this->nullifyEmpty) {
 			// Allow the user to select if it's null instead of automatically assuming empty string is
 			return new NullableField(new TextareaField($this->name, $title));

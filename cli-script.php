@@ -2,15 +2,14 @@
 
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataModel;
+use SilverStripe\Control\Director;
+
 
 /**
  * File similar to main.php designed for command-line scripts
  *
  * This file lets you execute SilverStripe requests from the command-line.  The URL is passed as the first argument to
  * the scripts.
- *
- * @package framework
- * @subpackage core
  */
 
 /**

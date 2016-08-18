@@ -3,6 +3,10 @@
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 
 class HierarchyTest extends SapphireTest {
 

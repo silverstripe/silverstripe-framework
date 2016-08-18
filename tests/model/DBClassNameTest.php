@@ -3,6 +3,9 @@
 
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 
 
 class DBClassNameTest extends SapphireTest {
