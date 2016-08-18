@@ -254,6 +254,10 @@ EOT
 			if(!headers_sent($file, $line)) {
 				header($_SERVER['SERVER_PROTOCOL'] . " $this->statusCode " . $this->getStatusDescription());
 				foreach($this->headers as $header => $value) {
+					//etags need to be quoted
+					if (strcasecmp('etag', $header) === 0 && 0 !== strpos($value, '"')) {
+						$value = sprintf('"%s"', $value);
+					}
 					header("$header: $value", true, $this->statusCode);
 				}
 			} else {
