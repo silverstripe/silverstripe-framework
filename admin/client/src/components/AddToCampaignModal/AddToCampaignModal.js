@@ -2,7 +2,6 @@ import React from 'react';
 import { Modal } from 'react-bootstrap-4';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormBuilder from 'components/FormBuilder/FormBuilder';
-import i18n from 'i18n';
 
 class AddToCampaignModal extends SilverStripeComponent {
   constructor(props) {
@@ -96,9 +95,9 @@ class AddToCampaignModal extends SilverStripeComponent {
         show={this.props.show}
         onHide={this.props.handleHide}
       >
-        <Modal.Header closeButton>
-          <Modal.Title>{this.props.title}</Modal.Title>
-        </Modal.Header>
+        {this.props.title !== false &&
+          <Modal.Header closeButton><Modal.Title>{this.props.title}</Modal.Title></Modal.Header>
+        }
         <Modal.Body>
           {body}
           {response}
@@ -118,7 +117,7 @@ AddToCampaignModal.propTypes = {
 
 AddToCampaignModal.defaultProps = {
   show: false,
-  title: i18n._t('Campaigns.AddToCampaign', 'Add to campaign'),
+  title: null,
 };
 
 export default AddToCampaignModal;

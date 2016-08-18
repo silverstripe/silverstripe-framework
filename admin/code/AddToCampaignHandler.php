@@ -176,8 +176,8 @@ class AddToCampaignHandler {
 		$inChangeSets = array_unique(ChangeSetItem::get_for_object($object)->column('ChangeSetID'));
 		$changeSets = $this->getAvailableChangeSets()->map();
 
-		$campaignDropdown = DropdownField::create('Campaign', _t('Campaigns.CampaignTitle', 'Campaigns'), $changeSets);
-		$campaignDropdown->setEmptyString(_t('Campaigns.AddToCampaign', 'Select a Campaign'));
+		$campaignDropdown = DropdownField::create('Campaign', '', $changeSets);
+		$campaignDropdown->setEmptyString(_t('Campaigns.AddToCampaignFormFieldLabel', 'Select a Campaign'));
 		$campaignDropdown->addExtraClass('noborder');
 		$campaignDropdown->setDisabledItems($inChangeSets);
 
@@ -216,7 +216,7 @@ class AddToCampaignHandler {
 
 		$form->unsetValidator();
 		$form->loadDataFrom($this->data);
-		$form->addExtraClass('add-to-campaign__form');
+		$form->addExtraClass('form--no-dividers add-to-campaign__form');
 
 		return $form;
 	}
