@@ -22,7 +22,7 @@ class Form extends SilverStripeComponent {
       className: 'form',
       onSubmit: this.handleSubmit,
     };
-    const formProps = Object.assign({}, this.props.attributes, defaultFormProps);
+    const formProps = Object.assign({}, defaultFormProps, this.props.attributes);
     const fields = this.props.mapFieldsToComponents(this.props.fields);
     const actions = this.props.mapActionsToComponents(this.props.actions);
 
