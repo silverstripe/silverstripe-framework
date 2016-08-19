@@ -16,12 +16,7 @@
   }
 }
 
-.popover-title {
-  // display: none;
-}
-
 .popover-content {
-  padding: calc(#{$popover-padding} - 1px);
 
   // Unable to use classes within the popover, so we use elements to style
   ul {
@@ -29,14 +24,14 @@
     padding-left: 0 !important; // TODO remove important by removing nesting of lists
     // scss-lint:enable ImportantRule
     list-style-type: none;
-    margin-left: -$spacer-x;
-    margin-right: -$spacer-x;
+    margin-left: -#{$popover-padding} + 1px; // minus border
+    margin-right: -#{$popover-padding} + 1px;
     margin-bottom: 0;
   }
 
   a {
     display: block;
-    padding: #{$spacer-y / 4} $spacer-x;
+    padding: #{$spacer-y / 4} $popover-padding;
     color: $dropdown-link-color;
 
     &:hover {
@@ -47,12 +42,12 @@
   }
 
   .btn {
-    padding-left: $popover-padding;
-    padding-right: $popover-padding;
-    margin-left: -$popover-padding;
-    margin-right: -$popover-padding;
+    padding-left: calc(#{$popover-padding} - 1px); // minus border
+    padding-right: calc(#{$popover-padding} - 1px);
+    margin-left: calc(-#{$popover-padding} + 1px);
+    margin-right: calc(-#{$popover-padding} + 1px);
     display: block;
-    width: calc(100% + #{$popover-padding * 2});
+    width: calc(100% + #{$popover-padding * 2} - 2px);
     text-align: left;
     border-radius: 0;
 

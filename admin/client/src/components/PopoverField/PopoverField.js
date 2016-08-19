@@ -13,10 +13,10 @@ class PopoverField extends SilverStripeComponent {
         {this.props.children}
       </Popover>
     );
-    // If no text is specified, use ... with xl icon style
+
     const buttonClasses = ['btn', 'btn-secondary', 'btn--no-focus'];
     if (!this.props.title) {
-      buttonClasses.push('font-icon-dot-3 btn--icon-xl');
+      buttonClasses.push('font-icon-dot-3 btn--no-text btn--icon-xl');
     }
     return (
       <OverlayTrigger rootClose trigger="click" container={this}
