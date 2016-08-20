@@ -291,7 +291,7 @@ class Session {
 	 * Set a key/value pair in the session
 	 *
 	 * @param string $name Key
-	 * @param string $val Value
+	 * @param mixed $val Value
 	 */
 	public static function set($name, $val) {
 		return self::current_session()->inst_set($name, $val);
@@ -313,6 +313,23 @@ class Session {
 	 */
 	public static function get_all() {
 		return self::current_session()->inst_getAll();
+	}
+	
+	/**
+	 * Get or return variables, depending on method signature:
+	 *
+	 * Session::data()              returns Session::get_all()
+	 * Session::data($name)         returns Session::get($name)
+	 * Session::data($name, $value) returns Session::set($name, $value)
+	 */
+	public static function data() {
+		$args = func_get_args();
+		$num_args = count($args);
+
+		if(!$num_args) return self::get_all();
+		if($num_args == 1) return self::get($args[0]);
+		if($num_args == 2) return self::set($args[0], $args[1]);
+		return null;
 	}
 
 	/**
