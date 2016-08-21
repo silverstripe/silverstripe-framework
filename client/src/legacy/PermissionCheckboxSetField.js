@@ -1,5 +1,7 @@
 import $ from 'jQuery';
 
+require('../styles/legacy/CheckboxSetField.scss');
+
 $.entwine('ss', function($){
 	/**
 	 * Automatically check and disable all checkboxes if ADMIN permissions are selected.

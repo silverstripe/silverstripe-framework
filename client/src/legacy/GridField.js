@@ -1,6 +1,11 @@
 import $ from 'jQuery';
 import i18n from 'i18n';
 
+require('../../../thirdparty/jquery-ui/jquery-ui.js');
+require('../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+
+require('../styles/legacy/GridField.scss');
+
 $.entwine('ss', function($) {
 	$('.grid-field').entwine({
 		/**

@@ -1,4 +1,4 @@
-window.tmpl.cache['ss-uploadfield-downloadtemplate'] = tmpl(
+tmpl.cache['ss-uploadfield-downloadtemplate'] = tmpl(
 	'{% for (var i=0, files=o.files, l=files.length, file=files[0]; i<l; file=files[++i]) { %}' +
 		'<li class="ss-uploadfield-item template-download{% if (file.error) { %} ui-state-error{% } %}" data-fileid="{%=file.id%}">' + 
 			'{% if (file.thumbnail_url) { %}' +

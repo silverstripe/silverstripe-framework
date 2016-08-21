@@ -1,4 +1,4 @@
-window.tmpl.cache['ss-uploadfield-uploadtemplate'] = tmpl(
+window.tmpl.cache['ss-uploadfield-uploadtemplate'] = window.tmpl(
 	'{% for (var i=0, files=o.files, l=files.length, file=files[0]; i<l; file=files[++i]) { %}' +
 		'<li class="ss-uploadfield-item template-upload{% if (file.error) { %} ui-state-error{% } %}">' +
 			'<div class="ss-uploadfield-item-preview preview"><span></span></div>' +

@@ -536,52 +536,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			window.ss.config = " . $this->getCombinedClientConfig() . ";
 		");
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js', [
-			'provides' => [
-				THIRDPARTY_DIR . '/jquery/jquery.js',
-				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
-				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
-				THIRDPARTY_DIR . '/jquery-cookie/jquery.cookie.js',
-				THIRDPARTY_DIR . '/jquery-query/jquery.query.js',
-				THIRDPARTY_DIR . '/jquery-form/jquery.form.js',
-				THIRDPARTY_DIR . '/jquery-ondemand/jquery.ondemand.js',
-				THIRDPARTY_DIR . '/jquery-changetracker/lib/jquery.changetracker.js',
-				THIRDPARTY_DIR . '/jstree/jquery.jstree.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/jsizes/lib/jquery.sizes.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jlayout.border.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/jlayout/lib/jquery.jlayout.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/chosen/chosen/chosen.jquery.js',
-				FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-hoverIntent/jquery.hoverIntent.js',
-				FRAMEWORK_DIR . '/client/dist/js/TreeDropdownField.js',
-				FRAMEWORK_DIR . '/client/dist/js/DateField.js',
-				FRAMEWORK_DIR . '/client/dist/js/HtmlEditorField.js',
-				FRAMEWORK_DIR . '/client/dist/js/TabSet.js',
-				FRAMEWORK_DIR . '/client/dist/js/GridField.js',
-				FRAMEWORK_DIR . '/client/dist/js/i18n.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/sspath.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/ssui.core.js'
-			]
-		]);
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/style/bundle.css');
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-legacy.js', [
-			'provides' => [
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Layout.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.ActionTabSet.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Panel.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Tree.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Content.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.EditForm.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Menu.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Preview.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.BatchActions.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.FieldHelp.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.FieldDescriptionToggle.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.TreeDropdownField.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/AddToCampaignForm.js'
-			]
-		]);
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-legacy.js');
 
 		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang', false, true);
 		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/client/lang', false, true);
@@ -597,13 +555,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-framework.js');
-
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/thirdparty/jquery-notice/jquery.notice.css');
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(THIRDPARTY_DIR . '/jstree/themes/apple/style.css');
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/TreeDropdownField.css');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/GridField.css');
 
 		// Custom requirements
 		$extraJs = $this->stat('extra_requirements_javascript');

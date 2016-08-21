@@ -35,13 +35,14 @@ If you have the `cms`  module installed, there's additional files in `cms/client
 
 All build commands are run through `npm`. You can check the module's
 `package.json` for available commands.
-Under the hood, files are built through [Gulp](http://gulpjs.com/)
-and associated tooling.
+Under the hood, files are built through [Webpack](https://webpack.github.io/).
+You'll need to run at least the `build` and `css` commands.
+Check our [build tooling](/contributing/build_tooling) docs for more details. 
+
 
 ```
-(cd framework && npm run build --development)
+(cd framework && npm run build && npm run css)
 ```
-Please make sure you build all files before submitting a pull request!
 
 ## Coding Conventions
 
@@ -52,7 +53,7 @@ coding conventions.
 ## Sprites
 
 We use sprites to handle various icons and images throughout the CMS. These are automatically generated
-by running `npm run sprites` and can be found at `/admin/client/src/sprites/dist`. To add new
+by running `npm run build` and can be found at `/admin/client/src/sprites/dist`. To add new
 images to the sprites, simply add the image to the folder matching the image's size in
 `/admin/client/sprites` then run `npm run sprites` to generate the sprite containing your image.
 Along with the new sprite containing your image, there will also be a new variable in

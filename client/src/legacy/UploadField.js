@@ -1,6 +1,21 @@
 import $ from 'jQuery';
 import i18n from 'i18n';
 
+// entwine also required, but can't be included more than once without error
+require('../../../thirdparty/jquery-ui/jquery-ui.js');
+require('../../../admin/client/src/legacy/ssui.core.js');
+
+window.tmpl = require('../../../thirdparty/javascript-templates/tmpl.js');
+require('../../../thirdparty/javascript-loadimage/load-image.js');
+require('../../../thirdparty/jquery-fileupload/jquery.iframe-transport.js');
+require('../../../thirdparty/jquery-fileupload/cors/jquery.xdr-transport.js');
+require('../../../thirdparty/jquery-fileupload/jquery.fileupload.js');
+require('../../../thirdparty/jquery-fileupload/jquery.fileupload-ui.js');
+require('./UploadField_uploadtemplate.js');
+require('./UploadField_downloadtemplate.js');
+
+require('../styles/legacy/UploadField.scss');
+
 $.widget('blueimpUIX.fileupload', $.blueimpUI.fileupload, {
 	_initTemplates: function() {
 		this.options.templateContainer = document.createElement(

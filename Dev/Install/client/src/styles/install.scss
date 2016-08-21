@@ -106,7 +106,7 @@ body {
 		letter-spacing: -0.5px;
 	}
 	h1 {
-		background: transparent url(../../../admin/images/logo.gif) no-repeat left top;
+		background: transparent url(../images/logo.gif) no-repeat left top;
 		text-indent: -9999px;
 		height: 164px;
 		width: 161px;
@@ -173,7 +173,7 @@ body {
 		padding-left: 20px;
 		color: #666;
 		margin-top: 0;
-		background: transparent url(../../../admin/images/question.png) no-repeat left 1px;
+		background: transparent url(../images/question.png) no-repeat left 1px;
 		&.requirementsHelpText {
 			margin-top: 17px;
 		}
@@ -410,9 +410,9 @@ body {
 			text-decoration: none;
 			font-weight: normal;
 			padding-right: 21px;
-			background: transparent url(../../../admin/images/arrows.png) no-repeat right top;
+			background: transparent url(../images/arrows.png) no-repeat right top;
 			&:hover {
-				background: transparent url(../../../admin/images/arrows.png) no-repeat right -40px;
+				background: transparent url(../images/arrows.png) no-repeat right -40px;
 			}
 		}
 	}

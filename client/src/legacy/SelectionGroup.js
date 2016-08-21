@@ -1,5 +1,8 @@
 import $ from 'jQuery';
 
+require('../styles/legacy/SelectionGroup.scss');
+
+
 $(document).ready(function() {
   // Support both bootstrap / legacy selectors
 	$('ul.SelectionGroup input.selector, ul.selection-group input.selector')

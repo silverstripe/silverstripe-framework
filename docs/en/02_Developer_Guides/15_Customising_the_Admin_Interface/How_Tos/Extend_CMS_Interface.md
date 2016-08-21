@@ -206,32 +206,6 @@ how-to.
 
 ## ReactJS in SilverStripe
 
-### Requiring React
-
-If you want to use React in a module, you can do so with browserify by simply setting it as external during your build chain. For example, with gulp it would look something like this:
-
-```javascript
-gulp.task('build', function () {
-	browserify({
-		// Browserify options...
-	})
-	.external('react')
-	.external('silverstripe-component')
-	.external('react-dom')
-	.external('react-addons-test-utils')
-	.external('react-redux')
-	.external('redux')
-	.external('redux-thunk')
-	.pipe(gulp.dest('path/to/dist'));
-})
-```
-
-Then you can require React in the normal way.
-
-```javascript
-import React from 'react';
-```
-
 ### SilverStripeComponent
 
 The base class for SilverStripe React components. If you're building React components for the CMS, this is the class you want to extend. `SilverStripeComponent` extends `React.Component` and adds some handy CMS specific behaviour.

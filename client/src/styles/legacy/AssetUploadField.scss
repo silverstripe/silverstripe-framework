@@ -89,7 +89,7 @@ body.cms.ss-uploadfield-edit-iframe {
 	}
 
   > fieldset {
-    @extend .clearfix;
+    @include clearfix;
   }
 
   &::after {

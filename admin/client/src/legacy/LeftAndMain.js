@@ -3,6 +3,8 @@
  */
 import $ from 'jQuery';
 
+require('../../../../admin/client/src/legacy/ssui.core.js');
+
 var windowWidth, windowHeight;
 
 $.noConflict();

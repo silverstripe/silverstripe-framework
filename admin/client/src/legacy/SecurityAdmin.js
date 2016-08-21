@@ -3,6 +3,8 @@
  */
 import $ from 'jQuery';
 
+require('../../../../client/src/legacy/PermissionCheckboxSetField.js');
+
 var refreshAfterImport = function(e) {
   // Check for a message <div>, an indication that the form has been submitted.
   var existingFormMessage = $($(this).contents()).find('.message');
