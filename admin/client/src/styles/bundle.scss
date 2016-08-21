@@ -1,6 +1,9 @@
 // Variables
 @import "variables";
 
+// Compatibilty with compass
+@import "../../../../client/src/styles/_compasscompat";
+
 // Thirdparty
 @import "chosen";
 @import "../../../../node_modules/bootstrap/scss/bootstrap";

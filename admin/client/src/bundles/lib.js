@@ -56,6 +56,7 @@ require('../../../../client/src/legacy/TabSet.js');
 require('../legacy/ssui.core.js');
 require('../../../../client/src/legacy/GridField.js');
 require('json-js');
+require('chosen-js');
 
 require('expose?SilverStripeComponent!lib/SilverStripeComponent');
 require('expose?Backend!lib/Backend');
@@ -80,13 +81,6 @@ require('expose?ReducerRegister!lib/ReducerRegister');
 require('expose?ReactRouteRegister!lib/ReactRouteRegister');
 require('expose?Injector!lib/Injector');
 require('expose?Router!lib/Router');
-
-// Chosen is manually compiled from its support files
-// Loaded into global state as I don't know how to chain the exports loader into the argument
-// of the imports loader
-require('expose?AbstractChosen!exports?AbstractChosen!chosen/coffee/lib/abstract-chosen.coffee');
-require('expose?SelectParser!exports?SelectParser!chosen/coffee/lib/select-parser.coffee');
-require('chosen/coffee/chosen.jquery.coffee');
 
 // Ensure that styles are built as part of this webpack bundle
 require('../styles/bundle.scss');
