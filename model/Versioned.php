@@ -896,9 +896,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Get the latest published version of this object.
+	 * Is this version of the object the latest published?
 	 *
-	 * @return DataObject
+	 * @return boolean
 	 */
 	public function latestPublished() {
 		// Get the root data object class - this will have the version field
