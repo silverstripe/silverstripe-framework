@@ -2,6 +2,8 @@
 
 class ConfigTest_DefinesFoo extends Object implements TestOnly {
 	protected static $foo = 1;
+
+	private static $not_foo = 1;
 }
 
 class ConfigTest_DefinesBar extends ConfigTest_DefinesFoo {
@@ -260,6 +262,19 @@ class ConfigTest extends SapphireTest {
 
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'foo'), 4);
 		$this->assertEquals(Object::static_lookup('ConfigTest_DefinesFooDoesntExtendObject', 'bar'), null);
+	}
+
+	public function testForClass() {
+		$config = ConfigTest_DefinesFoo::config();
+		// Set values
+		$this->assertTrue(isset($config->not_foo));
+		$this->assertFalse(empty($config->not_foo));
+		$this->assertEquals(1, $config->not_foo);
+
+		// Unset values
+		$this->assertFalse(isset($config->bar));
+		$this->assertTrue(empty($config->bar));
+		$this->assertNull($config->bar);
 	}
 
 	public function testFragmentOrder() {

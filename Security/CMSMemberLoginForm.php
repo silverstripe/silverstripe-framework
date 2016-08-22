@@ -51,7 +51,7 @@ class CMSMemberLoginForm extends LoginForm {
 		);
 
 		if(Security::config()->autologin_enabled) {
-			$fields->push(new CheckboxField(
+			$fields->push(CheckboxField::create(
 				"Remember",
 				_t('Member.REMEMBERME', "Remember me next time?")
 			));

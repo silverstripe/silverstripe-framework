@@ -66,12 +66,12 @@ class CheckboxSetField extends MultiSelectField {
 		$defaultItems = $this->getDefaultItems();
 
 		// Generate list of options to display
-		$odd = 0;
+		$odd = false;
 		$formID = $this->ID();
 		$options = new ArrayList();
 		foreach($this->getSource() as $itemValue => $title) {
 			$itemID = Convert::raw2htmlid("{$formID}_{$itemValue}");
-			$odd = ($odd + 1) % 2;
+			$odd = !$odd;
 			$extraClass = $odd ? 'odd' : 'even';
 			$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $itemValue);
 

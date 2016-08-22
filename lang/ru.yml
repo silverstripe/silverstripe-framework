@@ -1,5 +1,13 @@
 ru:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'У вас не достаточно прав доступа для добавления {ObjectTitle} в {CampaignTitle}'
+    ErrorGeneral: 'Произошла ошибка'
+    ErrorItemPermissionDenied: 'У вас не достаточно прав доступа для добавления {ObjectTitle} к кампании'
+    ErrorNotFound: '{Type} не обнаружен'
+    Success: '{ObjectTitle} добавлен в {CampaignTitle}'
   AssetAdmin:
+    ALLOWEDEXTS: 'Разрешённые расширения файлов для загрузки'
+    HIDEALLOWEDEXTS: 'Скрыть разрешенные расширения'
     NEWFOLDER: Новая папка
     SHOWALLOWEDEXTS: 'Показать допустимые расширения'
   AssetTableField:
@@ -7,12 +15,14 @@ ru:
     DIM: Размеры
     FILENAME: Имя файла
     FOLDER: Папка
+    HEIGHT: Высота
     LASTEDIT: 'Последнее изменение'
     OWNER: Владелец
     SIZE: 'Размер'
     TITLE: Название
     TYPE: 'Тип'
     URL: URL
+    WIDTH: Ширина
   AssetUploadField:
     ChooseFiles: 'Выберите файлы'
     DRAGFILESHERE: 'Перетащите файлы сюда'
@@ -23,7 +33,10 @@ ru:
     FILES: Файлы
     FROMCOMPUTER: 'Выберите файлы с диска вашего компьютера'
     FROMCOMPUTERINFO: 'Загрузить с диска вашего компьютера'
+    INSERTURL: 'Вставить ссылку'
+    REMOVEINFO: 'Удалить этот файл из поля'
     TOTAL: Всего
+    TOUPLOAD: 'Выберите файлы для загрузки ...'
     UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
     UPLOADOR: ИЛИ
   BBCodeParser:
@@ -59,6 +72,10 @@ ru:
     ERRORNOTREC: 'Такое имя пользователя или пароль не существует'
   Boolean:
     ANY: Все
+    NOANSWER: 'Нет'
+    YESANSWER: 'Да'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Добавить в кампанию'
   CMSLoadingScreen_ss:
     LOADING: Идет загрузка...
     REQUIREJS: 'Для работы с CMS у вас должен быть включен JavaScript.'
@@ -67,22 +84,69 @@ ru:
     ACCESSALLINTERFACES: 'Доступ ко всему интерфейсу CMS'
     ACCESSALLINTERFACESHELP: 'Отменяет индивидуальные настройки прав доступа.'
     SAVE: Сохранить
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Забыли пароль?'
+    BUTTONLOGIN: 'Вход'
+    BUTTONLOGOUT: 'Выход'
+    PASSWORDEXPIRED: '<p>Время действия вашего пароля истекло. <a target="_top" href="{link}">Установите новый пароль.</a></p>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 'Предварительный просмотр сайта'
+  CMSPagesController_Tools_ss:
+    FILTER: Фильтр
   CMSProfileController:
     MENUTITLE: 'Мой профиль'
+  CMSSecurity:
+    INVALIDUSER: '<p>Неправильный пользователь. <a target="_top" href="{link}">Войдите заново в систему</a> чтобы продолжить.</p>'
+    LoginMessage: '<p>Если у вас есть что-либо несохраненное вы можете вернуться к этому войдя в систему заново с помощью формы ниже.</p>'
+    SUCCESS: Готово
+    SUCCESSCONTENT: '<p>Вы вошли в систему. Если вы не были автоматически перенаправлены <a target="_top" href="{link}">нажмите здесь</a></p>'
+    TimedOutTitleAnonymous: 'Время вашего сеанса истекло.'
+    TimedOutTitleMember: '{name}!<br />Время вашего сеанса истекло.'
+  CampaignAdmin:
+    MENUTITLE: Кампании
+  Campaigns:
+    AddToCampaign: 'Добавить в кампанию'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Пароль для регистрации с Email адресом {email} был изменён. Если вы его не меняли установите новый перейдя по ссылке ниже'
     CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
     CHANGEPASSWORDTEXT2: 'Для того, чтобы войти, используйте сейчас следующие учетные данные:'
+    CHANGEPASSWORDTEXT3: 'Изменить пароль'
     EMAIL: Email
     HELLO: Здравствуйте
     PASSWORD: Пароль
+  ChangeSet:
+    DESCRIPTION_AND: '{first} и {second}'
+    DESCRIPTION_ITEM: элемент
+    DESCRIPTION_ITEMS: элементы
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, и {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'другой элемент'
+    DESCRIPTION_OTHER_ITEMS: 'другие элементы'
+    NAME: Название
+    PLURALNAME: Кампании
+    SINGULARNAME: Кампания
+    STATE: Статус
+  ChangeSetItem:
+    PLURALNAME: 'Изменить набор элементов'
+    SINGULARNAME: 'Изменить элемент'
+  CheckboxField:
+    NOANSWER: 'Нет'
+    YESANSWER: 'Да'
+  CheckboxFieldSetField:
+    SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение: {value}'
+  CheckboxSetField:
+    SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение: ''{value}'''
   ConfirmedPasswordField:
     ATLEAST: 'Пароль должен быть не короче {min} символов.'
     BETWEEN: 'Пароль должен иметь длину от {min} до {max} символов.'
+    CURRENT_PASSWORD_ERROR: 'Неправильно введён текущий пароль.'
+    CURRENT_PASSWORD_MISSING: 'Вы должны указать Ваш текущий пароль.'
+    LOGGED_IN_ERROR: 'Вы должны войти в систему, чтобы изменить Ваш пароль.'
     MAXIMUM: 'Пароль должен быть не длиннее {max} символов.'
     SHOWONCLICKTITLE: 'Изменить пароль'
   ContentController:
+    DRAFT_SITE_ACCESS_RESTRICTION: 'Для просмотра чернового или архивного содержимого вам необходимо войти в систему со своим именем пользователя и паролем. <a href="%s">Щелкните здесь, чтобы вернуться на опубликованный сайт.</a>'
     NOTLOGGEDIN: 'Не выполнен вход в систему'
   CreditCardField:
     FIRST: первая
@@ -122,6 +186,8 @@ ru:
     INVALID_REQUEST: 'Неверный запрос'
   DropdownField:
     CHOOSE: (Выберите)
+    CHOOSESEARCH: '(Выбрать или найти)'
+    SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение: {value}'
   EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'
   Enum:
@@ -169,6 +235,7 @@ ru:
     TEXT3: для
   Form:
     CSRF_EXPIRED_MESSAGE: 'Срок действия сеанса истек. Пожалуйста, отправьте данные формы еще раз.'
+    CSRF_FAILED_MESSAGE: 'Произошла техническая ошибка. Нажмите кнопку "Назад", обновите страницу в браузере и повторите попытку.'
     FIELDISREQUIRED: 'Поле {$name} является обязательным'
     SubmitBtnLabel: Выбрать
     VALIDATIONCREDITNUMBER: 'Пожалуйста, убедитесь, что номер кредитной карты {number} задан правильно'
@@ -222,6 +289,7 @@ ru:
     DefaultGroupTitleContentAuthors: 'Авторы содержимого'
     Description: Описание
     GroupReminder: 'При назначении группы верхнего уровня все роли будут переняты из нее'
+    HierarchyPermsError: 'У Вас недостаточно прав для назначения родительской группы "%s" (необходимы права администратора)'
     Locked: 'Блокировано?'
     NoRoles: 'Ролей не найдено'
     PLURALNAME: Группы
@@ -233,14 +301,64 @@ ru:
     many_many_Members: Члены группы
   GroupImportForm:
     Help1: '<p>Импорт одной или нескольких групп в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Подробные сведения</a></small></p>'
+    Help2: "<div class=\"advanced\">\n<h4>Расширенное использование</h4>\n<ul>\n<li>Разрешенные столбцы: <em>%s</em></li>\n<li>Существующие пользователи сверяются c уникальным атрибутом <em>Code</em>, после чего в записи вносятся новые значения из \nимпортированного файла.</li>\n<li>Назначение групп производится с помощью столбца <em>Groups</em>. Группы идентифицируются по атрибуту <em>Code</em>, \nотдельные группы разделяются запятой. Если участник входит в какую-либо группу, это свойство не обнуляется.</li>\n</ul>\n</div>"
     ResultCreated: 'Создано {count} групп'
     ResultDeleted: 'Удалено %d групп'
     ResultUpdated: 'Обновлено %d групп'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'У Вас недостаточно прав для доступа к содержимому данной страницы.'
+    ANCHORSPAGENOTFOUND: 'Страница не найдена.'
+    ANCHORVALUE: Якорь
+    BUTTONADDURL: 'Добавить ссылку'
+    CAPTIONTEXT: 'Текст подписи'
+    CSSCLASS: 'Выравнивание/Стиль'
+    CSSCLASSCENTER: 'По центру без текста по бокам'
+    CSSCLASSLEFT: 'Слева с обтеканием текста'
+    CSSCLASSLEFTALONE: 'Независимо слева.'
+    CSSCLASSRIGHT: 'Справа с обтеканием текста'
+    DETAILS: Подробности
+    EMAIL: 'Email'
+    FILE: Файл
+    FOLDER: Папка
+    IMAGEALT: 'Альтернативный текст (alt)'
+    IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
+    IMAGEALTTEXTDESC: 'Отображается если в браузере отключены изображения или если изображение недоступно'
+    IMAGEDIMENSIONS: Размеры
+    IMAGEHEIGHTPX: Высота
+    IMAGETITLE: 'Текст (всплывающая подсказка) - для дополнительной информации об изображении'
+    IMAGETITLETEXT: 'Текст (всплывающая подсказка)'
+    IMAGETITLETEXTDESC: 'Для дополнительных сведений об изображении'
+    IMAGEWIDTHPX: Ширина
+    INSERTMEDIA: 'Вставить медиафайл'
+    LINK: 'Вставить ссылку'
+    LINKANCHOR: 'Якорь на этой странице'
+    LINKDESCR: 'Описание ссылки'
+    LINKEMAIL: 'Email'
+    LINKEXTERNAL: 'Другой сайт'
+    LINKFILE: 'Скачивание файла'
+    LINKINTERNAL: 'Страницу данного сайта'
+    LINKOPENNEWWIN: 'Открыть ссылку в новом окне?'
+    LINKTO: 'Ссылка на'
+    PAGE: Страница
+    SUBJECT: 'Тема Email письма'
+    URL: Ссылка
+    URLDESCRIPTION: 'Добавляйте видео и изображения из интернета просто введя нужный адрес. Убедитесь что у вас есть права на размещение данных файлов.<br /><br />Внимание: файлы не будут загружены на ваш сервер и если файл будет не доступен по указанному адресу то он так же будет не доступен на вашей странице.'
+    URLNOTANOEMBEDRESOURCE: 'Данная ссылка ''{url}'' не может быть использована для добавления медиа.'
+    UpdateMEDIA: 'Обновить медиа'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Только абсолютные (http://,https://) ссылки могут быть использованы'
+    ERROR_HOSTNAME: 'Данный адрес недоступен'
+    ERROR_ID: 'Необходимо указать "ID" или "FileURL" - ссылку на файл для идентификации файла'
+    ERROR_NOTFOUND: 'Файл не обнаружен'
+    ERROR_OEMBED_REMOTE: 'Доступны только файлы по ссылке'
+    ERROR_SCHEME: 'Данный тип файла не поддерживается'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Обнаружен бесконечный цикл в иерархической структуре "{type}". Для исправления ошибки измените страницу, находящуюся уровнем выше'
   HtmlEditorField:
     ADDURL: 'Добавить URL'
     ADJUSTDETAILSDIMENSIONS: 'Дополнительные сведения и размеры'
+    ANCHORSCANNOTACCESSPAGE: 'У Вас недостаточно прав для доступа к содержимому данной страницы.'
+    ANCHORSPAGENOTFOUND: 'Страница не найдена.'
     ANCHORVALUE: Якорь
     BUTTONADDURL: 'Добавить URL'
     BUTTONINSERT: Вставить
@@ -268,6 +386,7 @@ ru:
     IMAGETITLETEXT: 'Текст (всплывающая подсказка)'
     IMAGETITLETEXTDESC: 'Для дополнительных сведений об изображении'
     IMAGEWIDTHPX: Ширина
+    INSERTMEDIA: 'Вставить медиафайл'
     LINK: 'Ссылка'
     LINKANCHOR: 'Якорь на этой странице'
     LINKDESCR: 'Описание ссылки'
@@ -278,8 +397,11 @@ ru:
     LINKOPENNEWWIN: 'Открыть ссылку в новом окне?'
     LINKTO: 'Ссылка на'
     PAGE: Страница
+    SUBJECT: 'Тема Email письма'
     URL: URL
+    URLDESCRIPTION: 'Добавляйте видео и изображения из интернета просто введя нужный адрес. Убедитесь что у вас есть права на размещение данных файлов.<br /><br />Внимание: файлы не будут загружены на ваш сервер и если файл будет не доступен по указанному адресу то он так же будет не доступен на вашей странице.'
     URLNOTANOEMBEDRESOURCE: 'Не удалось преобразовать ссылку ''{url}'' в медиа-ресурс.'
+    UpdateMEDIA: 'Обновить медиафайл'
   Image:
     PLURALNAME: Файлы
     SINGULARNAME: Файл
@@ -289,19 +411,25 @@ ru:
   Image_iframe_ss:
     TITLE: 'Iframe загрузки изображений'
   LeftAndMain:
+    CANCEL: Отмена
     CANT_REORGANISE: 'У вас нет права редактировать страницы верхнего уровня. Изменения не были сохранены.'
     DELETED: Удалено.
     HELP: Помощь
     PERMAGAIN: 'Вы вышли из Системы Управления Сайтом. Если Вы хотите войти снова, введите внизу имя пользователя и пароль.'
+    PERMALREADY: 'Извините, у вас нет доступа к этому разделу Системы Управления. Если Вы хотите войти под другой учетной записью, сделайте это ниже.'
+    PERMDEFAULT: 'Вы должны войти в систему для доступа к панели управления сайтом. Введите ваши данные ниже.'
     PreviewButton: Просмотр
     REORGANISATIONSUCCESSFUL: 'Древесная структура сайта успешно реорганизована.'
     SAVEDUP: Сохранено.
     ShowAsList: 'в виде списка'
     TooManyPages: 'Слишком много страниц'
     ValidationError: 'Ошибка проверки'
+    VersionUnknown: неизвестно
   LeftAndMain_Menu_ss:
     Hello: Здравствуйте
     LOGOUT: 'Выход'
+  ListboxField:
+    SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение: %s'
   LoginAttempt:
     Email: 'Email'
     IP: 'IP-адрес'
@@ -317,9 +445,11 @@ ru:
     CANTEDIT: 'У вас недостаточно прав'
     CONFIRMNEWPASSWORD: 'Подтвердить новый пароль'
     CONFIRMPASSWORD: 'Подтвердить пароль'
+    CURRENT_PASSWORD: 'Текущий пароль'
     DATEFORMAT: 'Формат даты'
     DefaultAdminFirstname: 'Администратор по умолчанию '
     DefaultDateTime: по умолч.
+    EDIT_PASSWORD: 'Новый пароль'
     EMAIL: Email
     EMPTYNEWPASSWORD: 'Поле нового пароля не может быть пустым; пожалуйста, повторите попытку'
     ENTEREMAIL: 'Введите email, чтобы получить ссылку на сброс пароля.'
@@ -330,11 +460,14 @@ ru:
     FIRSTNAME: 'Имя'
     INTERFACELANG: 'Язык интерфейса'
     INVALIDNEWPASSWORD: 'Недопустимый пароль: {password}'
+    KEEPMESIGNEDIN: 'Запомните меня'
     LOGGEDINAS: 'Вы вошли в систему как {name}.'
     NEWPASSWORD: 'Новый пароль'
     NoPassword: 'Для этого пользователя не задан пароль.'
     PASSWORD: Пароль
+    PASSWORDEXPIRED: 'Срок действия Вашего пароля истек. Пожалуйста установите новый.'
     PLURALNAME: Члены группы
+    REMEMBERME: 'Запомнить меня?'
     SINGULARNAME: Член группы
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
@@ -374,6 +507,7 @@ ru:
     Toggle: 'Отобразить справку по форматированию'
   MemberImportForm:
     Help1: '<p>Импорт пользователей в формате <em>CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Подробные сведения</a></small></p>'
+    Help2: "<div class=\"advanced\">\n<h4>Расширенное использование</h4>\n<ul>\n<li>Разрешенные столбцы: <em>%s</em></li>\n<li>Существующие пользователи сверяются c уникальным атрибутом <em>Code</em>, после чего в записи вносятся новые значения из \nимпортированного файла.</li>\n<li>Назначение групп производится с помощью столбца <em>Groups</em>. Группы идентифицируются по атрибуту <em>Code</em>, \nотдельные группы разделяются запятой. Если участник входит в какую-либо группу, это свойство не обнуляется.</li>\n</ul>\n</div>"
     ResultCreated: 'Создано {count} участников'
     ResultDeleted: 'Удалено %d участников'
     ResultNone: 'Изменений нет'
@@ -408,6 +542,8 @@ ru:
   MoneyField:
     FIELDLABELAMOUNT: Сумма
     FIELDLABELCURRENCY: Валюта
+  MultiSelectField:
+    SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение(я): {value}'
   NullableField:
     IsNullLabel: 'Недействительно'
   NumericField:
@@ -437,12 +573,17 @@ ru:
     SINGULARNAME: Роль
     Title: Название
   PermissionRoleCode:
+    PLURALNAME: 'Код роли доступа'
+    PermsError: 'У Вас недостаточно прав для назначения родительской группы "%s" (необходимы права администратора)'
     SINGULARNAME: 'Код роли доступа'
   Permissions:
     PERMISSIONS_CATEGORY: 'Роли и права доступа'
     UserPermissionsIntro: 'При включении этого пользователя в определенную группу его права доступа будут изменены соответствующим образом. Более подробные сведения о правах доступа для отдельных групп содержатся в разделе "Группы".'
   PhoneNumberField:
     VALIDATION: 'Пожалуйста, введите верный номер телефона'
+  RememberLoginHash:
+    PLURALNAME: 'Сохраненные хэши входов'
+    SINGULARNAME: 'Сохраненный хэш входа'
   Security:
     ALREADYLOGGEDIN: 'У Вас нет доступа к этой странице. Если у вас имеется другая учетная запись, имеющая доступ к этой странице, введите ее данные ниже.'
     BUTTONSEND: 'Отправить мне ссылку переустановки пароля'
@@ -501,6 +642,8 @@ ru:
     Print: Печать
   TableListField_PageControls_ss:
     OF: из
+  TextField:
+    VALIDATEMAXLENGTH: 'Значение для {name} не должно превышать {maxLength} символов'
   TimeField:
     VALIDATEFORMAT: 'Пожалуйста, задайте верный формат времени {format})'
   ToggleField:
@@ -533,5 +676,17 @@ ru:
     REMOVEINFO: 'Удалить файл отсюда, но не удалять с сервера'
     STARTALL: 'Стартовать все'
     Saved: Сохранено
+    UPLOADSINTO: 'загрузка в /{path}'
   Versioned:
     has_many_Versions: Версии
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Архив
+    Archived: 'Зархивировано %s %s'
+    BUTTONARCHIVEDESC: 'Отменить публикацию и отправить в архив'
+    BUTTONPUBLISH: Опубликовать
+    BUTTONUNPUBLISH: Отмена публикации
+    BUTTONUNPUBLISHDESC: 'Удалить эту страницу с опубликованного сайта'
+    Published: 'Опубликована {name} {link}'
+    Unpublished: 'Публикация отменена  %s %s'
+  i18n:
+    PLURAL: '{number} {form}'

@@ -123,7 +123,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * alterDataQuery
 	 *
 	 * @param callable $callback
-	 * @return DataList
+	 * @return static
 	 * @throws Exception
 	 */
 	public function alterDataQuery($callback) {
@@ -157,7 +157,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new DataList instance with the underlying {@link DataQuery} object changed
 	 *
 	 * @param DataQuery $dataQuery
-	 * @return DataList
+	 * @return static
 	 */
 	public function setDataQuery(DataQuery $dataQuery) {
 		$clone = clone $this;
@@ -206,7 +206,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
-	 * @return DataList
+	 * @return static
 	 */
 	public function where($filter) {
 		return $this->alterDataQuery(function(DataQuery $query) use ($filter){
@@ -224,7 +224,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param string|array|SQLConditionGroup $filter Predicate(s) to set, as escaped SQL statements or
 	 * paramaterised queries
-	 * @return DataList
+	 * @return static
 	 */
 	public function whereAny($filter) {
 		return $this->alterDataQuery(function(DataQuery $query) use ($filter){
@@ -245,12 +245,24 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
+	 * Returns true if this DataList can be filtered by the given field.
 	 *
-	 * @param string $fieldName
+	 * @param string $fieldName (May be a related field in dot notation like Member.FirstName)
 	 * @return boolean
 	 */
 	public function canFilterBy($fieldName) {
-		if($t = singleton($this->dataClass)->hasDatabaseField($fieldName)){
+		$model = singleton($this->dataClass);
+		$relations = explode(".", $fieldName);
+		// First validate the relationships
+		$fieldName = array_pop($relations);
+		foreach ($relations as $r) {
+			$relationClass = $model->getRelationClass($r);
+			if (!$relationClass) return false;
+			$model = singleton($relationClass);
+			if (!$model) return false;
+		}
+		// Then check field
+		if ($model->hasDatabaseField($fieldName)){
 			return true;
 		}
 		return false;
@@ -262,7 +274,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param int $limit
 	 * @param int $offset
-	 * @return DataList
+	 * @return static
 	 */
 	public function limit($limit, $offset = 0) {
 		return $this->alterDataQuery(function(DataQuery $query) use ($limit, $offset){
@@ -274,7 +286,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new DataList instance with distinct records or not
 	 *
 	 * @param bool $value
-	 * @return DataList
+	 * @return static
 	 */
 	public function distinct($value) {
 		return $this->alterDataQuery(function(DataQuery $query) use ($value){
@@ -294,7 +306,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @example $list = $list->sort(array('Name'=>'ASC', 'Age'=>'DESC'));
 	 *
 	 * @param String|array Escaped SQL statement. If passed as array, all keys and values are assumed to be escaped.
-	 * @return DataList
+	 * @return static
 	 */
 	public function sort() {
 		$count = func_num_args();
@@ -367,7 +379,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @todo extract the sql from $customQuery into a SQLGenerator class
 	 *
 	 * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
-	 * @return DataList
+	 * @return $this
 	 */
 	public function filter() {
 		// Validate and process arguments
@@ -386,7 +398,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Return a new instance of the list with an added filter
 	 *
 	 * @param array $filterArray
-	 * @return DataList
+	 * @return $this
 	 */
 	public function addFilter($filterArray) {
 		$list = $this;
@@ -424,7 +436,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @todo extract the sql from this method into a SQLGenerator class
 	 *
 	 * @param string|array See {@link filter()}
-	 * @return DataList
+	 * @return static
 	 */
 	public function filterAny() {
 		$numberFuncArgs = count(func_get_args());
@@ -498,7 +510,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param string &$columnName Quoted column name
 	 * @param bool $linearOnly Set to true to restrict to linear relations only. Set this
 	 * if this relation will be used for sorting, and should not include duplicate rows.
-	 * @return DataList DataList with this relation applied
+	 * @return $this DataList with this relation applied
 	 */
 	public function applyRelation($field, &$columnName = null, $linearOnly = false) {
 		// If field is invalid, return it without modification
@@ -544,7 +556,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @param string $filter - example StartsWith, relates to a filtercontext
 	 * @param array $modifiers - Modifiers to pass to the filter, ie not,nocase
 	 * @param string $value - the value that the filtercontext will use for matching
-	 * @return DataList
+	 * @return static
 	 */
 	private function applyFilterContext($field, $filter, $modifiers, $value) {
 		if($filter) {
@@ -578,7 +590,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * @todo extract the sql from this method into a SQLGenerator class
 	 *
 	 * @param string|array Escaped SQL statement. If passed as array, all keys and values will be escaped internally
-	 * @return DataList
+	 * @return $this
 	 */
 	public function exclude() {
 		$numberFuncArgs = count(func_get_args());
@@ -622,7 +634,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * The $list passed needs to contain the same dataclass as $this
 	 *
 	 * @param DataList $list
-	 * @return DataList
+	 * @return static
 	 * @throws BadMethodCallException
 	 */
 	public function subtract(DataList $list) {
@@ -645,7 +657,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * will cause the query to appear first. The default is 20, and joins created automatically by the
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
-	 * @return DataList
+	 * @return static
 	 */
 	public function innerJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
 		return $this->alterDataQuery(function(DataQuery $query) use ($table, $onClause, $alias, $order, $parameters){
@@ -663,7 +675,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * will cause the query to appear first. The default is 20, and joins created automatically by the
 	 * ORM have a value of 10.
 	 * @param array $parameters Any additional parameters if the join is a parameterised subquery
-	 * @return DataList
+	 * @return static
 	 */
 	public function leftJoin($table, $onClause, $alias = null, $order = 20, $parameters = array()) {
 		return $this->alterDataQuery(function(DataQuery $query) use ($table, $onClause, $alias, $order, $parameters){
@@ -708,7 +720,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Walks the list using the specified callback
 	 *
 	 * @param callable $callback
-	 * @return DataList
+	 * @return $this
 	 */
 	public function each($callback) {
 		foreach($this as $row) {
@@ -881,7 +893,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Restrict the columns to fetch into this DataList
 	 *
 	 * @param array $queriedColumns
-	 * @return DataList
+	 * @return static
 	 */
 	public function setQueriedColumns($queriedColumns) {
 		return $this->alterDataQuery(function(DataQuery $query) use ($queriedColumns){
@@ -893,7 +905,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Filter this list to only contain the given Primary IDs
 	 *
 	 * @param array $ids Array of integers
-	 * @return DataList
+	 * @return $this
 	 */
 	public function byIDs($ids) {
 		return $this->filter('ID', $ids);
@@ -987,7 +999,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Add a number of items to the component set.
 	 *
 	 * @param array $items Items to add, as either DataObjects or IDs.
-	 * @return DataList
+	 * @return $this
 	 */
 	public function addMany($items) {
 		foreach($items as $item) {
@@ -1000,7 +1012,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Remove the items from this list with the given IDs
 	 *
 	 * @param array $idList
-	 * @return DataList
+	 * @return $this
 	 */
 	public function removeMany($idList) {
 		foreach($idList as $id) {
@@ -1013,7 +1025,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 * Remove every element in this DataList matching the given $filter.
 	 *
 	 * @param string $filter - a sql type where filter
-	 * @return DataList
+	 * @return $this
 	 */
 	public function removeByFilter($filter) {
 		foreach($this->where($filter) as $item) {
@@ -1025,7 +1037,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Remove every element in this DataList.
 	 *
-	 * @return DataList
+	 * @return $this
 	 */
 	public function removeAll() {
 		foreach($this as $item) {
@@ -1085,7 +1097,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Reverses a list of items.
 	 *
-	 * @return DataList
+	 * @return static
 	 */
 	public function reverse() {
 		return $this->alterDataQuery(function(DataQuery $query){

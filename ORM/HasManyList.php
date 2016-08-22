@@ -12,6 +12,9 @@ use InvalidArgumentException;
  */
 class HasManyList extends RelationList {
 
+	/**
+	 * @var string
+	 */
 	protected $foreignKey;
 
 	/**
@@ -38,6 +41,10 @@ class HasManyList extends RelationList {
 		return $this->foreignKey;
 	}
 
+	/**
+	 * @param null|int $id
+	 * @return array
+	 */
 	protected function foreignIDFilter($id = null) {
 		if ($id === null) {
 			$id = $this->getForeignID();

@@ -111,15 +111,18 @@ class ChangePasswordForm extends Form {
 		else if($data['NewPassword1'] == $data['NewPassword2']) {
 			$isValid = $member->changePassword($data['NewPassword1']);
 			if($isValid->valid()) {
-				$member->logIn();
-
-				// TODO Add confirmation message to login redirect
-				Session::clear('AutoLoginHash');
 
 				// Clear locked out status
 				$member->LockedOutUntil = null;
 				$member->FailedLoginCount = null;
 				$member->write();
+
+				if ($member->canLogIn()->valid()) {
+					$member->logIn();
+				}
+
+				// TODO Add confirmation message to login redirect
+				Session::clear('AutoLoginHash');
 
 				if (!empty($_REQUEST['BackURL'])
 					// absolute redirection URLs may cause spoofing

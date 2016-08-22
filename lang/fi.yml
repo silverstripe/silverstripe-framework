@@ -175,7 +175,6 @@ fi:
     JsType: 'Javascript-tiedosto'
     Mp3Type: 'MP3-äänitiedosto'
     MpgType: 'MPEG-videotiedosto'
-    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot

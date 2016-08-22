@@ -131,10 +131,22 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		'Email',
 	);
 
+	/**
+	 * @config
+	 * @var array
+	 */
 	private static $summary_fields = array(
 		'FirstName',
 		'Surname',
 		'Email',
+	);
+
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $casting = array(
+		'Name' => 'Varchar',
 	);
 
 	/**
@@ -505,24 +517,39 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// This lets apache rules detect whether the user has logged in
 		if(Member::config()->login_marker_cookie) Cookie::set(Member::config()->login_marker_cookie, 1, 0);
 
-		// Cleans up any potential previous hash for this member on this device
-		if ($alcDevice = Cookie::get('alc_device')) {
-			RememberLoginHash::get()->filter('DeviceID', $alcDevice)->removeAll();
+		if (Security::config()->autologin_enabled) {
+			// Cleans up any potential previous hash for this member on this device
+			if ($alcDevice = Cookie::get('alc_device')) {
+				RememberLoginHash::get()->filter('DeviceID', $alcDevice)->removeAll();
+			}
+			if ($remember) {
+				$rememberLoginHash = RememberLoginHash::generate($this);
+				$tokenExpiryDays = Config::inst()->get(
+					'SilverStripe\\Security\\RememberLoginHash',
+					'token_expiry_days'
+				);
+				$deviceExpiryDays = Config::inst()->get(
+					'SilverStripe\\Security\\RememberLoginHash',
+					'device_expiry_days'
+				);
+				Cookie::set(
+					'alc_enc',
+					$this->ID . ':' . $rememberLoginHash->getToken(),
+					$tokenExpiryDays,
+					null,
+					null,
+					null,
+					true
+				);
+				Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
+			}
+			else {
+				Cookie::set('alc_enc', null);
+				Cookie::set('alc_device', null);
+				Cookie::force_expiry('alc_enc');
+				Cookie::force_expiry('alc_device');
+			}
 		}
-		if($remember) {
-			$rememberLoginHash = RememberLoginHash::generate($this);
-			$tokenExpiryDays = Config::inst()->get('SilverStripe\\Security\\RememberLoginHash', 'token_expiry_days');
-			$deviceExpiryDays = Config::inst()->get('SilverStripe\\Security\\RememberLoginHash', 'device_expiry_days');
-			Cookie::set('alc_enc', $this->ID . ':' . $rememberLoginHash->getToken(),
-				$tokenExpiryDays, null, null, null, true);
-			Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
-		} else {
-			Cookie::set('alc_enc', null);
-			Cookie::set('alc_device', null);
-			Cookie::force_expiry('alc_enc');
-			Cookie::force_expiry('alc_device');
-		}
-
 		// Clear the incorrect log-in count
 		$this->registerSuccessfulLogin();
 
@@ -580,7 +607,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			self::$_already_tried_to_auto_log_in = true;
 		}
 
-		if(strpos(Cookie::get('alc_enc'), ':') === false
+		if(!Security::config()->autologin_enabled
+			|| strpos(Cookie::get('alc_enc'), ':') === false
 			|| Session::get("loggedInAs")
 			|| !Security::database_is_ready()
 		) {
@@ -905,7 +933,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		} else {
 			$random = rand();
 			$string = md5($random);
-			$output = substr($string, 0, 6);
+			$output = substr($string, 0, 8);
 			return $output;
 		}
 	}
@@ -964,6 +992,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		// Note that this only works with cleartext passwords, as we can't rehash
 		// existing passwords.
 		if((!$this->ID && $this->Password) || $this->isChanged('Password')) {
+			//reset salt so that it gets regenerated - this will invalidate any persistant login cookies
+			// or other information encrypted with this Member's settings (see self::encryptWithUserSettings)
+			$this->Salt = '';
 			// Password was changed: encrypt the password according the settings
 			$encryption_details = Security::encrypt_password(
 				$this->Password, // this is assumed to be cleartext

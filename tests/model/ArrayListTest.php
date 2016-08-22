@@ -253,65 +253,62 @@ class ArrayListTest extends SapphireTest {
 
 	public function testSortSimpleDefaultIsSortedASC() {
 		$list = new ArrayList(array(
-			array('Name' => 'Steve'),
+		array('Name' => 'Steve'),
 			(object) array('Name' => 'Bob'),
-			array('Name' => 'John')
+			array('Name' => 'John'),
+			array('Name' => 'bonny'),
+			array('Name' => 'bonny1'),
+			array('Name' => 'bonny10'),
+			array('Name' => 'bonny2'),
 		));
 
 		// Unquoted name
 		$list1 = $list->sort('Name');
-		$this->assertEquals($list1->toArray(), array(
-			(object) array('Name' => 'Bob'),
-			array('Name' => 'John'),
-			array('Name' => 'Steve')
-		));
+		$this->assertEquals(array(
+            (object) array('Name' => 'Bob'),
+            array('Name' => 'bonny'),
+            array('Name' => 'bonny1'),
+            array('Name' => 'bonny2'),
+            array('Name' => 'bonny10'),
+            array('Name' => 'John'),
+            array('Name' => 'Steve'),
+        ), $list1->toArray());
 
 		// Quoted name name
 		$list2 = $list->sort('"Name"');
-		$this->assertEquals($list2->toArray(), array(
-			(object) array('Name' => 'Bob'),
-			array('Name' => 'John'),
-			array('Name' => 'Steve')
-		));
+		$this->assertEquals(array(
+            (object) array('Name' => 'Bob'),
+            array('Name' => 'bonny'),
+            array('Name' => 'bonny1'),
+            array('Name' => 'bonny2'),
+            array('Name' => 'bonny10'),
+            array('Name' => 'John'),
+            array('Name' => 'Steve'),
+        ), $list2->toArray());
 
 		// Array (non-associative)
 		$list3 = $list->sort(array('"Name"'));
-		$this->assertEquals($list3->toArray(), array(
-			(object) array('Name' => 'Bob'),
-			array('Name' => 'John'),
-			array('Name' => 'Steve')
-		));
-
-		// Quoted name name with table
-		$list4 = $list->sort('"Record"."Name"');
-		$this->assertEquals($list4->toArray(), array(
-			(object) array('Name' => 'Bob'),
-			array('Name' => 'John'),
-			array('Name' => 'Steve')
-		));
-
-		// Quoted name name with table (desc)
-		$list5 = $list->sort('"Record"."Name" DESC');
-		$this->assertEquals($list5->toArray(), array(
-			array('Name' => 'Steve'),
-			array('Name' => 'John'),
-			(object) array('Name' => 'Bob')
-		));
-
-		// Table without quotes
-		$list6 = $list->sort('Record.Name');
-		$this->assertEquals($list6->toArray(), array(
-			(object) array('Name' => 'Bob'),
-			array('Name' => 'John'),
-			array('Name' => 'Steve')
-		));
+		$this->assertEquals(array(
+	        (object) array('Name' => 'Bob'),
+	        array('Name' => 'bonny'),
+	        array('Name' => 'bonny1'),
+	        array('Name' => 'bonny2'),
+	        array('Name' => 'bonny10'),
+	        array('Name' => 'John'),
+	        array('Name' => 'Steve'),
+	    ), $list3->toArray());
 
 		// Check original list isn't altered
-		$this->assertEquals($list->toArray(), array(
-			array('Name' => 'Steve'),
-			(object) array('Name' => 'Bob'),
-			array('Name' => 'John')
-		));
+		$this->assertEquals(array(
+            array('Name' => 'Steve'),
+            (object) array('Name' => 'Bob'),
+            array('Name' => 'John'),
+            array('Name' => 'bonny'),
+            array('Name' => 'bonny1'),
+            array('Name' => 'bonny10'),
+            array('Name' => 'bonny2'),
+        ), $list->toArray());
+
 	}
 
 	public function testSortSimpleASCOrder() {

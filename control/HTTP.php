@@ -335,6 +335,9 @@ class HTTP {
 	 * @param string $etag
 	 */
 	public static function register_etag($etag) {
+		if (0 !== strpos('"')) {
+			$etag = sprintf('"%s"', $etag);
+		}
 		self::$etag = $etag;
 	}
 
@@ -484,6 +487,11 @@ class HTTP {
 
 		if(self::$etag) {
 			$responseHeaders['ETag'] = self::$etag;
+		}
+
+		// etag needs to be a quoted string according to HTTP spec
+		if (!empty($responseHeaders['ETag']) && 0 !== strpos($responseHeaders['ETag'], '"')) {
+			$responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
 		}
 
 		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate

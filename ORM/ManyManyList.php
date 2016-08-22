@@ -158,6 +158,14 @@ class ManyManyList extends RelationList {
 		return $dataObject;
 	}
 
+	/**
+	 * Return a filter expression for when getting the contents of the
+	 * relationship for some foreign ID
+	 *
+	 * @param int|null $id
+	 *
+	 * @return array
+	 */
 	protected function foreignIDFilter($id = null) {
 		if ($id === null) {
 			$id = $this->getForeignID();
@@ -179,7 +187,7 @@ class ManyManyList extends RelationList {
 	 * entries. However some subclasses of ManyManyList (Member_GroupSet) modify foreignIDFilter to
 	 * include additional calculated entries, so we need different filters when reading and when writing
 	 *
-	 * @param array|integer $id (optional) An ID or an array of IDs - if not provided, will use the current ids
+	 * @param array|int|null $id (optional) An ID or an array of IDs - if not provided, will use the current ids
 	 * as per getForeignID
 	 * @return array Condition In array(SQL => parameters format)
 	 */
@@ -191,7 +199,10 @@ class ManyManyList extends RelationList {
 	 * Add an item to this many_many relationship
 	 * Does so by adding an entry to the joinTable.
 	 *
-	 * @param mixed $item
+	 * @throws InvalidArgumentException
+	 * @throws Exception
+	 *
+	 * @param DataObject|int $item
 	 * @param array $extraFields A map of additional columns to insert into the joinTable.
 	 * Column names should be ANSI quoted.
 	 * @throws Exception

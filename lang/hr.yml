@@ -5,40 +5,98 @@ hr:
   AssetTableField:
     CREATED: 'Uploadano'
     DIM: Dimenzije
-    FILENAME: Ime datoteke
-    FOLDER: Mapa
+    FILENAME: Naziv datoteke
+    FOLDER: Direktorij
+    HEIGHT: Visina
     LASTEDIT: 'Zadnja promjena'
     OWNER: Vlasnik
-    SIZE: 'Veličina'
+    SIZE: 'Veličina datoteke'
     TITLE: Naslov
-    TYPE: 'Tip'
-    URL: URL
+    TYPE: 'Tip datoteke'
+    URL: Link
+    WIDTH: Širina
   AssetUploadField:
     ChooseFiles: 'Odaberite datoteke'
     DRAGFILESHERE: 'Povucite datoteke ovdje'
+    DROPAREA: 'Područje ubacivanja'
     EDITALL: 'Uredi sve'
     EDITANDORGANIZE: 'Uredi i organiziraj'
     EDITINFO: 'Uredi datoteke'
     FILES: Datoteke
     FROMCOMPUTER: 'Odaberite datoteke sa svog računala'
     FROMCOMPUTERINFO: 'Uploadajte sa svog računala'
+    INSERTURL: 'Ubaci sa linka'
+    REMOVEINFO: 'Izbrišite ovu datoteku s ovog polja'
     TOTAL: Ukupno
+    TOUPLOAD: 'Odaberite datoteke za upload...'
     UPLOADINPROGRESS: 'Molim pričekajte... upload u tijeku'
     UPLOADOR: ILI
   BBCodeParser:
     ALIGNEMENT: Poravnanje
+    BOLD: 'Bold Text'
+    BOLDEXAMPLE: Bold
+  BackLink_Button_ss:
+    Back: Nazad
   BasicAuth:
     ENTERINFO: 'Unesite korisničko ime i lozinu'
     ERRORNOTADMIN: 'Korisnik nije administrator'
     ERRORNOTREC: 'Korisničko ime / lozinka nije prepoznata'
+  Boolean:
+    ANY: Bilo koji
+    NOANSWER: 'Ne'
+    YESANSWER: 'Da'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Dodaj kampanji'
+  CMSLoadingScreen_ss:
+    LOADING: učitavam...
   CMSMain:
     SAVE: Snimi
+  CMSMemberLoginForm:
+    BUTTONFORGOTPASSWORD: 'Zaboravljena lozinka?'
+  CMSPagesController_Tools_ss:
+    FILTER: Filter
+  CMSProfileController:
+    MENUTITLE: 'Moj profil'
+  CMSSecurity:
+    SUCCESS: Uspjeh
+    TimedOutTitleAnonymous: 'Vaša sesija je istekla.'
+    TimedOutTitleMember: 'Bok {name}!<br />Vaša sesija je istekla.'
+  CampaignAdmin:
+    MENUTITLE: Kampanje
+  Campaigns:
+    AddToCampaign: 'Dodaj kampanji'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Promjenili ste lozinku za '
     CHANGEPASSWORDTEXT2: 'Za prijavu koristite slijedeće podatke'
+    CHANGEPASSWORDTEXT3: 'Promjeni lozinku'
+    EMAIL: Email
     HELLO: Pozdrav
+    PASSWORD: Lozinka
+  ChangeSet:
+    DESCRIPTION_AND: '{first} i {second}'
+    DESCRIPTION_ITEM: stavka
+    DESCRIPTION_ITEMS: stavke
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, i {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'ostala stavka'
+    DESCRIPTION_OTHER_ITEMS: 'ostale stavke'
+    NAME: Naziv
+    PLURALNAME: Kampanje
+    SINGULARNAME: Kampanja
+    STATE: Stanje
+  CheckboxField:
+    NOANSWER: 'Ne'
+    YESANSWER: 'Da'
   ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Promjenite lozinku'
+  CreditCardField:
+    FIRST: prvi
+    FOURTH: četvrti
+    SECOND: drugi
+    THIRD: treći
+  CurrencyField:
+    CURRENCYSYMBOL: $
   DataObject:
     PLURALNAME: 'Podatkovni objekti'
     SINGULARNAME: 'Podatkovni objekt'
@@ -70,9 +128,37 @@ hr:
     CHOOSE: (Odaberite)
   EmailField:
     VALIDATION: 'Molimo unesite email adresu'
+  Enum:
+    ANY: bilo koji
   File:
+    AviType: 'AVI video datoteka'
+    Content: Sadržaj
+    CssType: 'CSS datoteka'
+    DocType: 'Word dokument'
+    Filename: Naziv datoteke
+    GifType: 'GIF slika - dobra za dijagrame'
+    GzType: 'GZIP komprimirana datoteka'
+    HtlType: 'HTML datoteka'
+    HtmlType: 'HTML datoteka'
+    INVALIDEXTENSION: 'Ekstenzija nije dozvoljena (valjane: {extensions}) '
+    INVALIDEXTENSIONSHORT: 'Ekstenzija nije dozvoljena'
+    IcoType: 'Slika ikone'
+    JpgType: 'JPEG slika - dobra za fotografije'
+    JsType: 'Javascript datoteka'
+    Mp3Type: 'MP3 zvuk datoteka'
+    MpgType: 'MPEG video datoteka'
+    NOVALIDUPLOAD: 'Datoteka nije valjan upload'
+    Name: Naziv
     PLURALNAME: Datoteke
+    PngType: 'PNG slika - dobar generalan format'
     SINGULARNAME: Datoteka
+    Title: Naslov
+    WavType: 'WAV zvuk datoteka'
+    XlsType: 'Excel tablica'
+    ZipType: 'ZIP komprimirana datoteka'
+  Folder:
+    PLURALNAME: Direktoriji
+    SINGULARNAME: Direktorij
   ForgotPasswordEmail_ss:
     HELLO: Pozdrav
     TEXT1: 'Ovdje je Vaš'
@@ -83,22 +169,72 @@ hr:
     VALIDATIONNOTUNIQUE: 'Unešena vrijednost nije unikatna'
     VALIDATIONPASSWORDSDONTMATCH: 'Lozinke se ne slažu'
     VALIDATIONPASSWORDSNOTEMPTY: 'Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak'
+  FormField:
+    NONE: nijedan
+  GridAction:
+    DELETE_DESCRIPTION: Obriši
+    Delete: Obriši
+  GridField:
+    Add: 'Dodaj {name}'
+    Filter: Filter
+    FilterBy: 'Filtriraj po'
+    Find: Pronađi
+  GridFieldDetailForm:
+    CancelBtn: Odustani
+    Create: Kreiraj
+    Delete: Obriši
+    DeletePermissionsFailure: 'Nema dozvole brisanja'
+    Deleted: 'Obrisano %s %s'
+    Save: Spremi
+    Saved: 'Spremljeno {name} {link}'
+  GridFieldEditButton_ss:
+    EDIT: Uredi
+  GridFieldItemEditView:
+    Go_back: 'Idi nazad'
   Group:
     Code: 'Krupni kod'
+    DefaultGroupTitleAdministrators: Administratori
+    DefaultGroupTitleContentAuthors: 'Autori sadržaja'
+    Description: Opis
     Locked: 'Zaključano?'
+    PLURALNAME: Grupe
     Parent: 'Roditeljska grupa'
+    SINGULARNAME: Grupa
     has_many_Permissions: Dozvole
     many_many_Members: Članovi
+  HTMLEditorField:
+    ANCHORVALUE: Sidro
+    FILE: Datoteka
+    FOLDER: Direktorij
+    IMAGEDIMENSIONS: Dimenzije
+    IMAGEHEIGHTPX: Visina
+    IMAGEWIDTHPX: Širina
+    LINK: 'Ubaci vezu'
+    LINKFILE: 'Preuzmi datoteku'
+    LINKINTERNAL: 'Stranica na ovom webu'
+    LINKOPENNEWWIN: 'Otvori link u novom prozoru?'
+    LINKTO: 'Poveži na'
+    PAGE: Stranica
+    URL: Link
   HtmlEditorField:
+    ANCHORVALUE: Sidro
+    BUTTONADDURL: 'Dodaj link'
+    BUTTONINSERT: Ubaci
     BUTTONINSERTLINK: 'Ubaci vezu'
     BUTTONREMOVELINK: 'Obriši vezu'
+    BUTTONUpdate: Ažuriraj
     CSSCLASS: 'Poravnanje / Stil'
     CSSCLASSCENTER: 'Centralno'
     CSSCLASSLEFT: 'Lijevo, sa okruženjem teksta.'
     CSSCLASSRIGHT: 'Desno, sa okruženjem teksta'
+    DETAILS: Detalji
     EMAIL: 'Email adresa'
     FILE: Datoteka
     FOLDER: Direktorij
+    FROMCOMPUTER: 'Sa računala'
+    FROMWEB: 'Sa weba'
+    FindInFolder: 'Pronađi u direktoriju'
+    IMAGEALT: 'Alternativni tekst (alt)'
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Visina
     IMAGEWIDTHPX: Širina
@@ -111,18 +247,45 @@ hr:
     LINKOPENNEWWIN: 'Otvori vezu (link) u novom prozoru?'
     LINKTO: 'Poveži na'
     PAGE: Stranica
+  Image:
+    PLURALNAME: Datoteke
+    SINGULARNAME: Datoteka
+  Image_Cached:
+    PLURALNAME: Datoteke
+    SINGULARNAME: Datoteka
   Image_iframe_ss:
     TITLE: 'Iframe za upload slike'
   LeftAndMain:
+    CANCEL: Odustani
+    DELETED: Obrisano.
     HELP: Pomoć
     PERMAGAIN: 'Odjavili ste se sa sustava. Želite li se ponovno prijaviti upišite korisničko ime i lozinku.'
+    PreviewButton: Pregled
+    SAVEDUP: Spremljeno
+    ValidationError: 'Greška validacije'
+    VersionUnknown: nepoznato
+  LeftAndMain_Menu_ss:
+    Hello: Pozdrav
+    LOGOUT: 'Odjava'
+  LoginAttempt:
+    Email: 'Email adresa'
+    IP: 'IP adresa'
+    Status: Status
   Member:
+    ADDGROUP: 'Dodaj grupu'
     BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
     BUTTONLOGIN: 'Prijava'
     BUTTONLOGINOTHER: 'Prijavite se kao netko drugi'
     BUTTONLOSTPASSWORD: 'Zaboravljena lozinka?'
+    CANTEDIT: 'Nema prava za to'
     CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
     CONFIRMPASSWORD: 'Potvrdi lozinku'
+    CURRENT_PASSWORD: 'Trenutna lozinka'
+    DATEFORMAT: 'Format datuma'
+    DefaultAdminFirstname: 'Zadani administrator'
+    DefaultDateTime: zadano
+    EDIT_PASSWORD: 'Nova lozinka'
+    EMAIL: Email
     ERRORNEWPASSWORD: 'Pogrešno ste upisali novu lozinku, pokušajte ponovno.'
     ERRORPASSWORDNOTMATCH: 'Vaša trenutna lozinka se ne podudara, probajte ponovno'
     FIRSTNAME: 'Ime'
@@ -136,10 +299,43 @@ hr:
     SURNAME: Prezime
     YOUROLDPASSWORD: 'Stara lozinka'
     belongs_many_many_Groups: Grupe
+    db_LastVisited: 'Datum zadnje posjete'
     db_LockedOutUntil: 'Zaključano do'
+    db_Password: Lozinka
     db_PasswordExpiry: 'Lozinka ističe'
   MemberAuthenticator:
     TITLE: 'E-mail &amp; Lozinka'
+  MemberDatetimeOptionsetField:
+    Preview: Pregled
+  ModelAdmin:
+    IMPORT: 'Uvezi iz CSV'
+    IMPORTEDRECORDS: 'Uveženo {count} zapisa.'
+    NOCSVFILE: 'Molimo pretražite CSV datoteku za uvoz'
+    NOIMPORT: 'Ništa za uvoz'
+    RESET: Resetiraj
+    Title: 'Klasa podataka'
+    UPDATEDRECORDS: 'Osvježeno {count} zapisa.'
+  ModelAdmin_Tools_ss:
+    FILTER: Filter
+    IMPORT: Uvoz
+  ModelSidebar_ss:
+    IMPORT_TAB_HEADER: Uvoz
+    SEARCHLISTINGS: Traži
+  MoneyField:
+    FIELDLABELCURRENCY: Valuta
+  Pagination:
+    Page: Stranica
+    View: Pregled
+  Permission:
+    AdminGroup: Administrator
+    CMS_ACCESS_CATEGORY: 'CMS pristup'
+    FULLADMINRIGHTS: 'Puna administrativna prava'
+    PLURALNAME: Dozvole
+    SINGULARNAME: Dozvola
+  PermissionRole:
+    PLURALNAME: Uloge
+    SINGULARNAME: Uloga
+    Title: Naslov
   PhoneNumberField:
     VALIDATION: 'Molim unesite ispravan telefonski broj'
   Security:
@@ -154,11 +350,37 @@ hr:
     NOTEPAGESECURED: 'Ova stranica je zaštićena. Prijavite se na sustav sa svojim pristupnim podatcima i odmah ćemo vas preusmjeriti.'
     NOTERESETPASSWORD: 'Unesite svoju e-mail adresu, a mi ćemo Vam poslati link putem kojega možete resetirati Vašu lozinku.'
   SecurityAdmin:
+    MEMBERS: Članovi
+    MENUTITLE: Sigurnost
     NEWGROUP: 'Nova Grupa'
+    PERMISSIONS: Dozvole
+    ROLES: Uloge
+    TABROLES: Uloge
+    Users: Korisnici
+  SilverStripeNavigator:
+    Auto: Aut
+    Edit: Uredi
+    EditView: 'Mod uređivanja'
+    Width: širina
   SiteTree:
     TABMAIN: Osnovno
+  TableListField:
+    Print: Ispiši
+  TableListField_PageControls_ss:
+    OF: od
   ToggleField:
     LESS: manje
     MORE: više
+  UploadField:
+    ATTACHFILE: 'Dodaj datoteku'
+    ATTACHFILES: 'Dodaj datoteke'
+    AttachFile: 'Dodaj datoteku(e)'
+    CHOOSEANOTHERFILE: 'Odaberi drugu datoteku'
+    DELETE: 'Obriši iz datoteka'
+    DOEDIT: Snimi
+    EDIT: Uredi
+    EDITINFO: 'Uredi ovu datoteku'
+    FROMCOMPUTER: 'Sa računala'
+    REMOVE: Ukloni
   Versioned:
     has_many_Versions: Verzije

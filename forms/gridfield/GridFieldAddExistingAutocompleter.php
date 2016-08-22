@@ -63,7 +63,7 @@ class GridFieldAddExistingAutocompleter
 	 *  	'Team.Name'
 	 *  )
 	 *
-	 * @var Array
+	 * @var array
 	 */
 	protected $searchFields = array();
 
@@ -73,7 +73,7 @@ class GridFieldAddExistingAutocompleter
 	protected $resultsFormat = '$Title';
 
 	/**
-	 * @var String Text shown on the search field, instructing what to search for.
+	 * @var string Text shown on the search field, instructing what to search for.
 	 */
 	protected $placeholderText;
 
@@ -94,7 +94,7 @@ class GridFieldAddExistingAutocompleter
 	/**
 	 *
 	 * @param GridField $gridField
-	 * @return string - HTML
+	 * @return string[] - HTML
 	 */
 	public function getHTMLFragments($gridField) {
 		$dataClass = $gridField->getList()->dataClass();
@@ -224,22 +224,24 @@ class GridFieldAddExistingAutocompleter
 			->limit($this->getResultsLimit());
 
 		$json = array();
-		$originalSourceFileComments = Config::inst()->get('SSViewer', 'source_file_comments');
+		Config::nest();
 		Config::inst()->update('SSViewer', 'source_file_comments', false);
+		$viewer = SSViewer::fromString($this->resultsFormat);
 		foreach($results as $result) {
-			$title = html_entity_decode(SSViewer::fromString($this->resultsFormat)->process($result));
+			$title = html_entity_decode($viewer->process($result));
 			$json[] = array(
 				'label' => $title,
 				'value' => $title,
 				'id' => $result->ID,
 			);
 		}
-		Config::inst()->update('SSViewer', 'source_file_comments', $originalSourceFileComments);
+		Config::unnest();
 		return Convert::array2json($json);
 	}
 
 	/**
 	 * @param string $format
+	 *
 	 * @return $this
 	 */
 	public function setResultsFormat($format) {
@@ -248,7 +250,7 @@ class GridFieldAddExistingAutocompleter
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getResultsFormat() {
 		return $this->resultsFormat;
@@ -262,10 +264,11 @@ class GridFieldAddExistingAutocompleter
 	 */
 	public function setSearchList(SS_List $list) {
 		$this->searchList = $list;
+		return $this;
 	}
 
 	/**
-	 * @param Array
+	 * @param array $fields
 	 */
 	public function setSearchFields($fields) {
 		$this->searchFields = $fields;
@@ -273,7 +276,7 @@ class GridFieldAddExistingAutocompleter
 	}
 
 	/**
-	 * @return Array
+	 * @return array
 	 */
 	public function getSearchFields() {
 		return $this->searchFields;
@@ -284,8 +287,8 @@ class GridFieldAddExistingAutocompleter
 	 * Falls back to {@link DataObject->summaryFields()} if
 	 * no custom search fields are defined.
 	 *
-	 * @param  String the class name
-	 * @return Array|null names of the searchable fields
+	 * @param  string $dataClass the class name
+	 * @return array|null names of the searchable fields
 	 */
 	public function scaffoldSearchFields($dataClass) {
 		$obj = singleton($dataClass);
@@ -321,8 +324,9 @@ class GridFieldAddExistingAutocompleter
 	}
 
 	/**
-	 * @param String The class of the object being searched for
-	 * @return String
+	 * @param string $dataClass The class of the object being searched for
+	 *
+	 * @return string
 	 */
 	public function getPlaceholderText($dataClass) {
 		$searchFields = ($this->getSearchFields())
@@ -354,10 +358,13 @@ class GridFieldAddExistingAutocompleter
 	}
 
 	/**
-	 * @param String
+	 * @param string $text
+	 *
+	 * @return $this
 	 */
 	public function setPlaceholderText($text) {
 		$this->placeholderText = $text;
+		return $this;
 	}
 
 	/**
@@ -371,8 +378,11 @@ class GridFieldAddExistingAutocompleter
 
 	/**
 	 * @param int $limit
+	 *
+	 * @return $this
 	 */
 	public function setResultsLimit($limit) {
 		$this->resultsLimit = $limit;
+		return $this;
 	}
 }

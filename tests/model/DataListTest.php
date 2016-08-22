@@ -543,6 +543,38 @@ class DataListTest extends SapphireTest {
 
 
 	/**
+	 * Test DataList->canFilterBy()
+	 */
+	public function testCanFilterBy() {
+		// Basic check
+		$team = DataObjectTest_Team::get();
+		$this->assertTrue($team->canFilterBy("Title"));
+		$this->assertFalse($team->canFilterBy("SomethingElse"));
+
+		// Has one
+		$this->assertTrue($team->canFilterBy("CaptainID"));
+		$this->assertTrue($team->canFilterBy("Captain.ShirtNumber"));
+		$this->assertFalse($team->canFilterBy("SomethingElse.ShirtNumber"));
+		$this->assertFalse($team->canFilterBy("Captain.SomethingElse"));
+		$this->assertTrue($team->canFilterBy("Captain.FavouriteTeam.Captain.ShirtNumber"));
+
+		// Has many
+		$this->assertTrue($team->canFilterBy("Fans.Name"));
+		$this->assertFalse($team->canFilterBy("SomethingElse.Name"));
+		$this->assertFalse($team->canFilterBy("Fans.SomethingElse"));
+
+		// Many many
+		$this->assertTrue($team->canFilterBy("Players.FirstName"));
+		$this->assertFalse($team->canFilterBy("SomethingElse.FirstName"));
+		$this->assertFalse($team->canFilterBy("Players.SomethingElse"));
+
+		// Subclasses
+		$subteam = DataObjectTest_SubTeam::get();
+		$this->assertTrue($subteam->canFilterBy("Title"));
+		$this->assertTrue($subteam->canFilterBy("SubclassDatabaseField"));
+	}
+
+	/**
 	 * $list->filter('Name', 'bob'); // only bob in the list
 	 */
 	public function testSimpleFilter() {

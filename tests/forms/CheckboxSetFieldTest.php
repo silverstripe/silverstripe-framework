@@ -3,6 +3,8 @@
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\Security\Member;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * @package framework
@@ -246,6 +248,27 @@ class CheckboxSetFieldTest extends SapphireTest {
 			$field->validate($validator),
 			'Field does not validate when presented with mixed valid and invalid values'
 		);
+	}
+
+	public function testSafelyCast() {
+		$member = new Member();
+		$member->FirstName = '<firstname>';
+		$member->Surname = '<surname>';
+		$member->write();
+		$field1 = new CheckboxSetField('Options', 'Options', array(
+			'one' => 'One',
+			'two' => 'Two & Three',
+			'three' => DBField::create_field('HTMLText', 'Four &amp; Five &amp; Six'),
+			'four' => $member->FirstName,
+		));
+		$fieldHTML = (string)$field1->Field();
+		$this->assertContains('One', $fieldHTML);
+		$this->assertContains('Two &amp; Three', $fieldHTML);
+		$this->assertNotContains('Two & Three', $fieldHTML);
+		$this->assertContains('Four &amp; Five &amp; Six', $fieldHTML);
+		$this->assertNotContains('Four & Five & Six', $fieldHTML);
+		$this->assertContains('&lt;firstname&gt;', $fieldHTML);
+		$this->assertNotContains('<firstname>', $fieldHTML);
 	}
 
 }
