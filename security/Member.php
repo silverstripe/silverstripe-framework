@@ -1378,7 +1378,12 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			));
 
 			$mainFields->removeByName($self->config()->hidden_fields);
-			$mainFields->makeFieldReadonly('LastVisited');
+
+			// make sure that the "LastVisited" field exists
+			// it may have been removed using $self->config()->hidden_fields
+			if($mainFields->fieldByName("LastVisited")){
+				$mainFields->makeFieldReadonly('LastVisited');
+			}
 
 			if( ! $self->config()->lock_out_after_incorrect_logins) {
 				$mainFields->removeByName('FailedLoginCount');
