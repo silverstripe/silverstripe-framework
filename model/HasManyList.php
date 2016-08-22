@@ -8,6 +8,9 @@
  */
 class HasManyList extends RelationList {
 
+	/**
+	 * @var string
+	 */
 	protected $foreignKey;
 
 	/**
@@ -34,6 +37,10 @@ class HasManyList extends RelationList {
 		return $this->foreignKey;
 	}
 
+	/**
+	 * @param null|int $id
+	 * @return array
+	 */
 	protected function foreignIDFilter($id = null) {
 		if ($id === null) $id = $this->getForeignID();
 
@@ -51,7 +58,7 @@ class HasManyList extends RelationList {
 	 *
 	 * It does so by setting the relationFilters.
 	 *
-	 * @param $item The DataObject to be added, or its ID
+	 * @param DataObject|int $item The DataObject to be added, or its ID
 	 */
 	public function add($item) {
 		if(is_numeric($item)) {
@@ -83,7 +90,7 @@ class HasManyList extends RelationList {
 	 *
 	 * Doesn't actually remove the item, it just clears the foreign key value.
 	 *
-	 * @param $itemID The ID of the item to be removed.
+	 * @param int $itemID The ID of the item to be removed.
 	 */
 	public function removeByID($itemID) {
 		$item = $this->byID($itemID);
@@ -95,7 +102,7 @@ class HasManyList extends RelationList {
 	 * Remove an item from this relation.
 	 * Doesn't actually remove the item, it just clears the foreign key value.
 	 *
-	 * @param $item The DataObject to be removed
+	 * @param DataObject $item The DataObject to be removed
 	 * @todo Maybe we should delete the object instead?
 	 */
 	public function remove($item) {
