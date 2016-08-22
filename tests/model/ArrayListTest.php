@@ -247,39 +247,108 @@ class ArrayListTest extends SapphireTest {
 		$list = new ArrayList(array(
 			array('Name' => 'Steve'),
 			(object) array('Name' => 'Bob'),
-			array('Name' => 'John')
+			array('Name' => 'John'),
+			array('Name' => 'bonny'),
 		));
 
 		// Unquoted name
 		$list1 = $list->sort('Name');
-		$this->assertEquals($list1->toArray(), array(
+		$this->assertEquals(array(
 			(object) array('Name' => 'Bob'),
+			array('Name' => 'bonny'),
 			array('Name' => 'John'),
-			array('Name' => 'Steve')
-		));
+			array('Name' => 'Steve'),
+		), $list1->toArray());
 
 		// Quoted name name
 		$list2 = $list->sort('"Name"');
-		$this->assertEquals($list2->toArray(), array(
+		$this->assertEquals(array(
 			(object) array('Name' => 'Bob'),
+			array('Name' => 'bonny'),
 			array('Name' => 'John'),
-			array('Name' => 'Steve')
-		));
+			array('Name' => 'Steve'),
+		), $list2->toArray());
 
 		// Array (non-associative)
 		$list3 = $list->sort(array('"Name"'));
-		$this->assertEquals($list3->toArray(), array(
+		$this->assertEquals(array(
 			(object) array('Name' => 'Bob'),
+			array('Name' => 'bonny'),
 			array('Name' => 'John'),
-			array('Name' => 'Steve')
-		));
+			array('Name' => 'Steve'),
+		), $list3->toArray());
 
 		// Check original list isn't altered
-		$this->assertEquals($list->toArray(), array(
+		$this->assertEquals(array(
 			array('Name' => 'Steve'),
 			(object) array('Name' => 'Bob'),
-			array('Name' => 'John')
+			array('Name' => 'John'),
+			array('Name' => 'bonny'),
+		), $list->toArray());
+	}
+
+	public function testNaturalSort() {
+		//natural sort is only available in 5.4+
+		if (version_compare(phpversion(), '5.4.0', '<')) {
+			$this->markTestSkipped();
+		}
+		$list = new ArrayList(array(
+		array('Name' => 'Steve'),
+			(object) array('Name' => 'Bob'),
+			array('Name' => 'John'),
+			array('Name' => 'bonny'),
+			array('Name' => 'bonny1'),
+			array('Name' => 'bonny10'),
+			array('Name' => 'bonny2'),
 		));
+
+		// Unquoted name
+		$list1 = $list->sort('Name');
+		$this->assertEquals(array(
+            (object) array('Name' => 'Bob'),
+            array('Name' => 'bonny'),
+            array('Name' => 'bonny1'),
+            array('Name' => 'bonny2'),
+            array('Name' => 'bonny10'),
+            array('Name' => 'John'),
+            array('Name' => 'Steve'),
+        ), $list1->toArray());
+
+		// Quoted name name
+		$list2 = $list->sort('"Name"');
+		$this->assertEquals(array(
+            (object) array('Name' => 'Bob'),
+            array('Name' => 'bonny'),
+            array('Name' => 'bonny1'),
+            array('Name' => 'bonny2'),
+            array('Name' => 'bonny10'),
+            array('Name' => 'John'),
+            array('Name' => 'Steve'),
+        ), $list2->toArray());
+
+		// Array (non-associative)
+		$list3 = $list->sort(array('"Name"'));
+		$this->assertEquals(array(
+	        (object) array('Name' => 'Bob'),
+	        array('Name' => 'bonny'),
+	        array('Name' => 'bonny1'),
+	        array('Name' => 'bonny2'),
+	        array('Name' => 'bonny10'),
+	        array('Name' => 'John'),
+	        array('Name' => 'Steve'),
+	    ), $list3->toArray());
+
+		// Check original list isn't altered
+		$this->assertEquals(array(
+            array('Name' => 'Steve'),
+            (object) array('Name' => 'Bob'),
+            array('Name' => 'John'),
+            array('Name' => 'bonny'),
+            array('Name' => 'bonny1'),
+            array('Name' => 'bonny10'),
+            array('Name' => 'bonny2'),
+        ), $list->toArray());
+
 	}
 
 	public function testSortSimpleASCOrder() {
