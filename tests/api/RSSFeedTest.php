@@ -76,7 +76,7 @@ class RSSFeedTest extends SapphireTest {
 		$content = $rssFeed->outputToBrowser();
 		$this->assertContains('<title>Test Custom Template</title>', $content);
 
-		$rssFeed->setTemplate('RSSFeed');
+		$rssFeed->setTemplate(null);
 		$content = $rssFeed->outputToBrowser();
 		$this->assertNotContains('<title>Test Custom Template</title>', $content);
 	}

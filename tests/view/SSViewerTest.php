@@ -1154,22 +1154,57 @@ after')
 		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
 			// Test passing a string
 			$templates = SSViewer::get_templates_by_class(
-				'TestNamespace\SSViewerTestModel_Controller',
+				'TestNamespace\\SSViewerTestModel_Controller',
 				'',
 				'Controller'
 			);
 			$self->assertEquals([
-				'TestNamespace\SSViewerTestModel_Controller',
+				'TestNamespace\\SSViewerTestModel_Controller',
+				[
+					'type' => 'Includes',
+					'TestNamespace\\SSViewerTestModel_Controller',
+				],
+				'TestNamespace\\SSViewerTestModel',
     			'Controller',
+				[
+					'type' => 'Includes',
+    				'Controller',
+				],
 			], $templates);
 
 			// Test to ensure we're stopping at the base class.
-			$templates = SSViewer::get_templates_by_class('TestNamespace\SSViewerTestModel_Controller', '', 'TestNamespace\SSViewerTestModel_Controller');
-			$self->assertCount(1, $templates);
+			$templates = SSViewer::get_templates_by_class(
+				'TestNamespace\SSViewerTestModel_Controller',
+				'',
+				'TestNamespace\SSViewerTestModel_Controller'
+			);
+			$self->assertEquals([
+				'TestNamespace\\SSViewerTestModel_Controller',
+				[
+					'type' => 'Includes',
+					'TestNamespace\\SSViewerTestModel_Controller',
+				],
+				'TestNamespace\\SSViewerTestModel',
+			], $templates);
 
-			// Make sure we can filter our templates by suffix.
-			$templates = SSViewer::get_templates_by_class('TestNamespace\SSViewerTestModel', '_Controller');
-			$self->assertCount(1, $templates);
+			// Make sure we can search templates by suffix.
+			$templates = SSViewer::get_templates_by_class(
+				'TestNamespace\\SSViewerTestModel',
+				'_Controller',
+				'SilverStripe\\ORM\\DataObject'
+			);
+			$self->assertEquals([
+				'TestNamespace\\SSViewerTestModel_Controller',
+				[
+					'type' => 'Includes',
+					'TestNamespace\\SSViewerTestModel_Controller',
+				],
+				'SilverStripe\\ORM\\DataObject_Controller',
+				[
+					'type' => 'Includes',
+					'SilverStripe\\ORM\\DataObject_Controller',
+				],
+			], $templates);
 
 			// Let's throw something random in there.
 			$self->setExpectedException('InvalidArgumentException');

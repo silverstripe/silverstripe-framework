@@ -1,11 +1,9 @@
 <?php
 
-
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-
 
 /**
  * RSSFeed class
@@ -91,9 +89,11 @@ class RSSFeed extends ViewableData {
 	protected $etag;
 
 	/**
+	 * Custom template
+	 *
 	 * @var string
 	 */
-	protected $template = 'RSSFeed';
+	protected $template = null;
 
 	/**
 	 * Constructor
@@ -219,7 +219,7 @@ class RSSFeed extends ViewableData {
 
 		Config::inst()->update('SSViewer', 'source_file_comments', $prevState);
 
-		return $this->renderWith($this->getTemplate());
+		return $this->renderWith($this->getTemplates());
 	}
 
 	/**
@@ -239,6 +239,21 @@ class RSSFeed extends ViewableData {
 	 */
 	public function getTemplate() {
 		return $this->template;
+	}
+
+	/**
+	 * Returns the ordered list of preferred templates for rendering this object.
+	 * Will prioritise any custom template first, and then templates based on class hiearchy next.
+	 *
+	 * @return array
+	 */
+	public function getTemplates() {
+		$templates = SSViewer::get_templates_by_class(get_class($this), '', __CLASS__);
+		// Prefer any custom template
+		if($this->getTemplate()) {
+			array_unshift($templates, $this->getTemplate());
+		}
+		return $templates;
 	}
 }
 

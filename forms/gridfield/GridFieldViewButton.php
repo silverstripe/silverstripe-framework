@@ -10,7 +10,9 @@
 class GridFieldViewButton implements GridField_ColumnProvider {
 
 	public function augmentColumns($field, &$cols) {
-		if(!in_array('Actions', $cols)) $cols[] = 'Actions';
+		if(!in_array('Actions', $cols)) {
+			$cols[] = 'Actions';
+		}
 	}
 
 	public function getColumnsHandled($field) {
@@ -18,12 +20,14 @@ class GridFieldViewButton implements GridField_ColumnProvider {
 	}
 
 	public function getColumnContent($field, $record, $col) {
-		if($record->canView()) {
-			$data = new ArrayData(array(
-				'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view')
-			));
-			return $data->renderWith('Includes/GridFieldViewButton');
+		if(!$record->canView()) {
+			return null;
 		}
+		$data = new ArrayData(array(
+			'Link' => Controller::join_links($field->Link('item'), $record->ID, 'view')
+		));
+		$template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+		return $data->renderWith($template);
 	}
 
 	public function getColumnAttributes($field, $record, $col) {

@@ -972,7 +972,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return array
 	 */
 	public function getTemplatesWithSuffix($suffix) {
-		return SSViewer::get_templates_by_class(get_class($this), $suffix, 'SilverStripe\\Admin\\LeftAndMain');
+		$templates = SSViewer::get_templates_by_class(get_class($this), $suffix, __CLASS__);
+		return SSViewer::chooseTemplate($templates);
 	}
 
 	public function Content() {

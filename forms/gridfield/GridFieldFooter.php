@@ -25,7 +25,8 @@ class GridFieldFooter implements GridField_HTMLProvider {
 
 	/**
 	 *
-	 * @param string $message - a message to display in the footer
+	 * @param string $message A message to display in the footer
+	 * @param bool $showrecordcount
 	 */
 	public function __construct($message = null, $showrecordcount = true) {
 		if($message) {
@@ -46,9 +47,10 @@ class GridFieldFooter implements GridField_HTMLProvider {
 			'NumRecords' => $count
 		));
 
+		$template = SSViewer::get_templates_by_class($this, '', __CLASS__);
 		return array(
 			'footer' => $forTemplate->renderWith(
-				'Includes/GridFieldFooter',
+				$template,
 				array(
 					'Colspan' => count($gridField->getColumns())
 				)

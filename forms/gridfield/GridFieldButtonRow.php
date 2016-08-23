@@ -26,8 +26,9 @@ class GridFieldButtonRow implements GridField_HTMLProvider {
 			"RightFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
 		));
 
+		$templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
 		return array(
-			$this->targetFragment => $data->renderWith('Includes/GridFieldButtonRow')
+			$this->targetFragment => $data->renderWith($templates)
 		);
 	}
 }

@@ -49,6 +49,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 		if($columnName == 'Actions') {
 			return array('title' => '');
 		}
+		return [];
 	}
 
 	/**
@@ -75,8 +76,7 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 	 * @param GridField $gridField
 	 * @param DataObject $record
 	 * @param string $columnName
-	 *
-	 * @return string - the HTML for the column
+	 * @return string The HTML for the column
 	 */
 	public function getColumnContent($gridField, $record, $columnName) {
 		// No permission checks, handled through GridFieldDetailForm,
@@ -86,7 +86,8 @@ class GridFieldEditButton implements GridField_ColumnProvider {
 			'Link' => Controller::join_links($gridField->Link('item'), $record->ID, 'edit')
 		));
 
-		return $data->renderWith('Includes/GridFieldEditButton');
+		$template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+		return $data->renderWith($template);
 	}
 
 	/**

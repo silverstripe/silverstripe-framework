@@ -26,13 +26,6 @@ class GridFieldAddExistingAutocompleter
 	implements GridField_HTMLProvider, GridField_ActionProvider, GridField_DataManipulator, GridField_URLHandler {
 
 	/**
-	 * Which template to use for rendering
-	 *
-	 * @var string $itemClass
-	 */
-	protected $itemClass = 'GridFieldAddExistingAutocompleter';
-
-	/**
 	 * The HTML fragment to write this component into
 	 */
 	protected $targetFragment;
@@ -84,6 +77,7 @@ class GridFieldAddExistingAutocompleter
 
 	/**
 	 *
+	 * @param string $targetFragment
 	 * @param array $searchFields Which fields on the object in the list should be searched
 	 */
 	public function __construct($targetFragment = 'before', $searchFields = null) {
@@ -97,7 +91,7 @@ class GridFieldAddExistingAutocompleter
 	 * @return string[] - HTML
 	 */
 	public function getHTMLFragments($gridField) {
-		$dataClass = $gridField->getList()->dataClass();
+		$dataClass = $gridField->getModelClass();
 
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new FieldList();
@@ -130,8 +124,9 @@ class GridFieldAddExistingAutocompleter
 			$forTemplate->Fields->setForm($form);
 		}
 
+		$template = SSViewer::get_templates_by_class($this, '', __CLASS__);
 		return array(
-			$this->targetFragment => $forTemplate->renderWith('Includes/'.$this->itemClass)
+			$this->targetFragment => $forTemplate->renderWith($template)
 		);
 	}
 
@@ -174,7 +169,7 @@ class GridFieldAddExistingAutocompleter
 		if(empty($objectID)) {
 			return $dataList;
 		}
-		$object = DataObject::get_by_id($dataList->dataclass(), $objectID);
+		$object = DataObject::get_by_id($gridField->getModelClass(), $objectID);
 		if($object) {
 			$dataList->add($object);
 		}
@@ -198,9 +193,10 @@ class GridFieldAddExistingAutocompleter
 	 *
 	 * @param GridField $gridField
 	 * @param SS_HTTPRequest $request
+	 * @return string
 	 */
 	public function doSearch($gridField, $request) {
-		$dataClass = $gridField->getList()->dataClass();
+		$dataClass = $gridField->getModelClass();
 		$allList = $this->searchList ? $this->searchList : DataList::create($dataClass);
 
 		$searchFields = ($this->getSearchFields())
@@ -269,6 +265,7 @@ class GridFieldAddExistingAutocompleter
 
 	/**
 	 * @param array $fields
+	 * @return $this
 	 */
 	public function setSearchFields($fields) {
 		$this->searchFields = $fields;

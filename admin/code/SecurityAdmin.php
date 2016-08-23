@@ -165,7 +165,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		// Add import capabilities. Limit to admin since the import logic can affect assigned permissions
 		if(Permission::check('ADMIN')) {
 			$fields->addFieldsToTab('Root.Users', array(
-				new HeaderField(_t('SecurityAdmin.IMPORTUSERS', 'Import users'), 3),
+				new HeaderField('ImportUsersHeader', _t('SecurityAdmin.IMPORTUSERS', 'Import users'), 3),
 				new LiteralField(
 					'MemberImportFormIframe',
 					sprintf(
@@ -176,7 +176,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 				)
 			));
 			$fields->addFieldsToTab('Root.Groups', array(
-				new HeaderField(_t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
+				new HeaderField('ImportGroupsHeader', _t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
 				new LiteralField(
 					'GroupImportFormIframe',
 					sprintf(

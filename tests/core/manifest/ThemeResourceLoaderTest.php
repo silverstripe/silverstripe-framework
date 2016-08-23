@@ -123,6 +123,31 @@ class ThemeResourceLoaderTest extends SapphireTest {
 		);
 	}
 
+	public function testFindTemplatesByPath() {
+		// Items given as full paths are returned directly
+		$this->assertEquals(
+			"$this->base/themes/theme/templates/Page.ss",
+			$this->loader->findTemplate("$this->base/themes/theme/templates/Page.ss", ['theme'])
+		);
+
+		$this->assertEquals(
+			"$this->base/themes/theme/templates/Page.ss",
+			$this->loader->findTemplate([
+				"$this->base/themes/theme/templates/Page.ss",
+				"Page"
+			], ['theme'])
+		);
+
+		// Ensure checks for file_exists
+		$this->assertEquals(
+			"$this->base/themes/theme/templates/Page.ss",
+			$this->loader->findTemplate([
+				"$this->base/themes/theme/templates/NotAPage.ss",
+				"$this->base/themes/theme/templates/Page.ss",
+			], ['theme'])
+		);
+	}
+
 	/**
 	 * Test that 'main' and 'Layout' templates are loaded from set theme
 	 */

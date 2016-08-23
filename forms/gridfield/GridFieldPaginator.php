@@ -26,13 +26,6 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	protected $itemsPerPage;
 
 	/**
-	 * Which template to use for rendering
-	 *
-	 * @var string
-	 */
-	protected $itemClass = 'GridFieldPaginator_Row';
-
-	/**
 	 * See {@link setThrowExceptionOnBadDataType()}
 	 */
 	protected $throwExceptionOnBadDataType = true;
@@ -255,18 +248,22 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return array
 	 */
 	public function getHTMLFragments($gridField) {
-
 		$forTemplate = $this->getTemplateParameters($gridField);
-		if($forTemplate) {
-			return array(
-				'footer' => $forTemplate->renderWith('Includes/'.$this->itemClass,
-					array('Colspan'=>count($gridField->getColumns())))
-			);
+		if(!$forTemplate) {
+			return null;
 		}
+		$template = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
+		return array(
+			'footer' => $forTemplate->renderWith(
+				$template,
+				array('Colspan' => count($gridField->getColumns()))
+			)
+		);
 	}
 
 	/**
-	 * @param Int
+	 * @param int $num
+	 * @return $this
 	 */
 	public function setItemsPerPage($num) {
 		$this->itemsPerPage = $num;

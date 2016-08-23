@@ -155,13 +155,6 @@ class ThemeResourceLoader {
 			$templateList = array($template);
 		}
 
-		// If we have an .ss extension, this is a path, not a template name. We should
-		// pass in templates without extensions in order for template manifest to find
-		// files dynamically.
-		if(count($templateList) == 1 && is_string($templateList[0]) && substr($templateList[0], -3) == '.ss') {
-			return $templateList[0];
-		}
-
 		foreach($templateList as $i => $template) {
 			// Check if passed list of templates in array format
 			if (is_array($template)) {
@@ -170,6 +163,13 @@ class ThemeResourceLoader {
 					return $path;
 				}
 				continue;
+			}
+
+			// If we have an .ss extension, this is a path, not a template name. We should
+			// pass in templates without extensions in order for template manifest to find
+			// files dynamically.
+			if(substr($template, -3) == '.ss' && file_exists($template)) {
+				return $template;
 			}
 
 			// Check string template identifier

@@ -163,8 +163,9 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			$forTemplate->Fields->push($field);
 		}
 
+		$template = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
 		return array(
-			'header' => $forTemplate->renderWith('Includes/GridFieldSortableHeader_Row'),
+			'header' => $forTemplate->renderWith($template),
 		);
 	}
 

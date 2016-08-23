@@ -15,6 +15,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\MSSQL\MSSQLDatabase;
+use SSViewer;
 use TemplateGlobalProvider;
 use Deprecation;
 use i18n;
@@ -1541,8 +1542,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 					$dateFormatMap
 				)
 			);
+			$formatClass = get_class($dateFormatField);
 			$dateFormatField->setValue($self->DateFormat);
-			$dateFormatField->setDescriptionTemplate('forms/MemberDatetimeOptionsetField_description_date');
+			$dateTemplate = SSViewer::get_templates_by_class($formatClass, '_description_date', $formatClass);
+			$dateFormatField->setDescriptionTemplate($dateTemplate);
 
 			$defaultTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($self->Locale));
 			$timeFormatMap = array(
@@ -1559,7 +1562,8 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				)
 			);
 			$timeFormatField->setValue($self->TimeFormat);
-			$timeFormatField->setDescriptionTemplate('forms/MemberDatetimeOptionsetField_description_time');
+			$timeTemplate = SSViewer::get_templates_by_class($formatClass,'_description_time', $formatClass);
+			$timeFormatField->setDescriptionTemplate($timeTemplate);
 		});
 
 		return parent::getCMSFields();
