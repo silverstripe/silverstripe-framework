@@ -464,16 +464,7 @@ class TinyMCEConfig extends HTMLEditorConfig {
 	}
 
 	public function init() {
-		// These should be 'provides' by bundle-dist.js
-		Requirements::javascript(FRAMEWORK_DIR . "/thirdparty/jquery/jquery.js");
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/ssui.core.js');
-
 		// include TinyMCE Javascript
 		Requirements::javascript($this->getScriptURL());
-		Requirements::javascript(FRAMEWORK_DIR ."/client/dist/js/HtmlEditorField.js");
-
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
 	}
 }

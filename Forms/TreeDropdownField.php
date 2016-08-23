@@ -224,16 +224,6 @@ class TreeDropdownField extends FormField {
 	 * @return string
 	 */
 	public function Field($properties = array()) {
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang');
-
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jstree/jquery.jstree.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/TreeDropdownField.js');
-
-		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/TreeDropdownField.css');
-
 		$item = DataObject::singleton($this->sourceObject);
 		$emptyTitle = _t(
 			'DropdownField.CHOOSE_MODEL',

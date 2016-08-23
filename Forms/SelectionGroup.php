@@ -118,10 +118,6 @@ class SelectionGroup extends CompositeField {
 	}
 
 	public function FieldHolder($properties = array()) {
-		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR   . '/client/dist/js/SelectionGroup.js');
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/SelectionGroup.css');
-
 		return parent::FieldHolder($properties);
 	}
 }

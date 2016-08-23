@@ -172,10 +172,6 @@ class ConfirmedPasswordField extends FormField {
 	 * @return string
 	 */
 	public function Field($properties = array()) {
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/ConfirmedPasswordField.js');
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/ConfirmedPasswordField.css');
-
 		$content = '';
 
 		if($this->showOnClick) {

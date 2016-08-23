@@ -25,7 +25,6 @@ class MemberDatetimeOptionsetField extends OptionsetField {
 	private $descriptionTemplate = '';
 
 	public function Field($properties = array()) {
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberDatetimeOptionsetField.js');
 		$options = array();
 		$odd = false;
 

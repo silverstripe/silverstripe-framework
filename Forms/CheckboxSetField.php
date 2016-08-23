@@ -54,8 +54,6 @@ class CheckboxSetField extends MultiSelectField {
 	 * @return DBHTMLText
 	 */
 	public function Field($properties = array()) {
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/CheckboxSetField.css');
-
 		$properties = array_merge($properties, array(
 			'Options' => $this->getOptions()
 		));

@@ -38,13 +38,6 @@ class ToggleCompositeField extends CompositeField {
 	 * @return string
 	 */
 	public function FieldHolder($properties = array()) {
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/ToggleCompositeField.js');
-
-		Requirements::css(FRAMEWORK_DIR . '/thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-
 		$context = $this;
 
 		if(count($properties)) {

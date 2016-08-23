@@ -306,16 +306,6 @@ class GridField extends FormField {
 	 * @return string
 	 */
 	public function FieldHolder($properties = array()) {
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/GridField.css');
-
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/i18n.js');
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/client/dist/js/GridField.js');
-
 		$columns = $this->getColumns();
 
 		$list = $this->getManipulatedList();

@@ -956,27 +956,6 @@ class UploadField extends FileField {
 	}
 
 	public function Field($properties = array()) {
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/ssui.core.js');
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang');
-
-		Requirements::combine_files('uploadfield.js', array(
-			// @todo jquery templates is a project no longer maintained and should be retired at some point.
-			THIRDPARTY_DIR . '/javascript-templates/tmpl.js',
-			THIRDPARTY_DIR . '/javascript-loadimage/load-image.js',
-			THIRDPARTY_DIR . '/jquery-fileupload/jquery.iframe-transport.js',
-			THIRDPARTY_DIR . '/jquery-fileupload/cors/jquery.xdr-transport.js',
-			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload.js',
-			THIRDPARTY_DIR . '/jquery-fileupload/jquery.fileupload-ui.js',
-			FRAMEWORK_DIR . '/client/dist/js/UploadField_uploadtemplate.js',
-			FRAMEWORK_DIR . '/client/dist/js/UploadField_downloadtemplate.js',
-			FRAMEWORK_DIR . '/client/dist/js/UploadField.js',
-		));
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css'); // TODO hmmm, remove it?
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/UploadField.css');
-
 		// Calculated config as per jquery.fileupload-ui.js
 		$allowedMaxFileNumber = $this->getAllowedMaxFileNumber();
 		$config = array(

@@ -85,16 +85,10 @@ class DateField_View_JQuery extends Object
 	public function onAfterRender($html)
 	{
 		if ($this->getField()->getConfig('showcalendar')) {
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-			Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-			Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-ui/jquery-ui.js');
-
 			// Include language files (if required)
 			if ($this->jqueryLocaleFile) {
 				Requirements::javascript($this->jqueryLocaleFile);
 			}
-
-			Requirements::javascript(FRAMEWORK_DIR . "/client/dist/js/DateField.js");
 		}
 
 		return $html;
