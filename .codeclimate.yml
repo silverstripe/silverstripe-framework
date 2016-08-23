@@ -1,6 +1,7 @@
 engines:
   eslint:
     enabled: true
+    channel: "eslint-2"
   scss-lint:
     enabled: true
   duplication:
@@ -19,3 +20,4 @@ exclude_paths:
 - "templates/"
 - "tests/"
 - "thirdparty/"
+- "admin/thirdparty/"
