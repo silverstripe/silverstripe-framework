@@ -318,8 +318,8 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/components/SingleSelectField/SingleSelectField`,
       { expose: 'components/SingleSelectField/SingleSelectField' }
     )
-    .require(`${PATHS.ADMIN_JS_SRC}/components/AddToCampaignModal/AddToCampaignModal`,
-      { expose: 'components/AddToCampaignModal/AddToCampaignModal' }
+    .require(`${PATHS.ADMIN_JS_SRC}/components/FormBuilderModal/FormBuilderModal`,
+      { expose: 'components/FormBuilderModal/FormBuilderModal' }
     )
     .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }

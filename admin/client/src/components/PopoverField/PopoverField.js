@@ -3,6 +3,28 @@ import { Popover, OverlayTrigger } from 'react-bootstrap-4';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
 class PopoverField extends SilverStripeComponent {
+  constructor(props) {
+    super(props);
+
+    this.handleShow = this.handleShow.bind(this);
+    this.handleHide = this.handleHide.bind(this);
+
+    this.state = {
+      showing: false,
+    };
+  }
+
+  handleShow() {
+    this.setState({
+      showing: true,
+    });
+  }
+
+  handleHide() {
+    this.setState({
+      showing: false,
+    });
+  }
 
   render() {
     const placement = this.getPlacement();
@@ -14,13 +36,19 @@ class PopoverField extends SilverStripeComponent {
       </Popover>
     );
 
-    const buttonClasses = ['btn', 'btn-secondary', 'btn--no-focus'];
+    const buttonClasses = ['btn', 'btn-secondary'];
+    if (this.state.showing) {
+      buttonClasses.push('btn--no-focus');
+    }
+
     if (!this.props.title) {
       buttonClasses.push('font-icon-dot-3 btn--no-text btn--icon-xl');
     }
     return (
       <OverlayTrigger rootClose trigger="click" container={this}
         placement={placement} overlay={overlay}
+        onEnter={this.handleShow}
+        onExited={this.handleHide}
       >
         <button id={this.props.id} type="button" className={buttonClasses.join(' ')}>
           {this.props.title}

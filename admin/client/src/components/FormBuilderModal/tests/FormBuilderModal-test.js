@@ -2,13 +2,13 @@
 
 jest.unmock('react');
 jest.unmock('react-addons-test-utils');
-jest.unmock('../AddToCampaignModal');
+jest.unmock('../FormBuilderModal');
 
 import React from 'react';
 import ReactTestUtils from 'react-addons-test-utils';
-import AddToCampaignModal from '../AddToCampaignModal';
+import FormBuilderModal from '../FormBuilderModal';
 
-describe('AddToCampaignModal', () => {
+describe('FormBuilderModal', () => {
   let props;
 
   beforeEach(() => {
@@ -20,15 +20,15 @@ describe('AddToCampaignModal', () => {
   });
 
   describe('getResponse()', () => {
-    let addToCampaignModal;
+    let formModal;
     let response;
     let message;
 
     beforeEach(() => {
-      addToCampaignModal = ReactTestUtils.renderIntoDocument(
-        <AddToCampaignModal {...props} />
+      formModal = ReactTestUtils.renderIntoDocument(
+        <FormBuilderModal {...props} />
       );
-      response = addToCampaignModal.getResponse();
+      response = formModal.getResponse();
       message = 'My message';
     });
 
@@ -39,24 +39,24 @@ describe('AddToCampaignModal', () => {
     it('should show error message', () => {
       message = 'This is an error';
 
-      addToCampaignModal.state = {
+      formModal.state = {
         response: message,
         error: true,
       };
-      const responseDom = ReactTestUtils.renderIntoDocument(addToCampaignModal.getResponse());
-      expect(responseDom.classList.contains('add-to-campaign__response--error')).toBe(true);
+      const responseDom = ReactTestUtils.renderIntoDocument(formModal.getResponse());
+      expect(responseDom.classList.contains('error')).toBe(true);
       expect(responseDom.textContent).toBe(message);
     });
 
     it('should show success message', () => {
       message = 'This is a success';
 
-      addToCampaignModal.state = {
+      formModal.state = {
         response: message,
         error: false,
       };
-      const responseDom = ReactTestUtils.renderIntoDocument(addToCampaignModal.getResponse());
-      expect(responseDom.classList.contains('add-to-campaign__response--good')).toBe(true);
+      const responseDom = ReactTestUtils.renderIntoDocument(formModal.getResponse());
+      expect(responseDom.classList.contains('good')).toBe(true);
       expect(responseDom.textContent).toBe(message);
     });
   });

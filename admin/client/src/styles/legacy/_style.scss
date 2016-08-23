@@ -1969,9 +1969,18 @@ body.cms-dialog {
  * Add to campaign dialog
  * -------------------------------------------- */
 
+.ui-dialog .ui-dialog-content.add-to-campaign__dialog {
+	padding-right: 0;
+	padding-left: 0;
+}
+
 .add-to-campaign__dialog {
-	padding: 0;
 	overflow: hidden;
+	padding: 12px 16px;
+	margin: 0;
+	border: 0;
+	min-height: 150px;
+	/* no max-height due to overflow: hidden */
 
 	.add-to-campaign__header {
 		@extend .cms-content-header;
@@ -1986,12 +1995,6 @@ body.cms-dialog {
 			margin: 0;
 			line-height: 28px;
 		}
-	}
-
-	.add-to-campaign__content {
-		padding: 12px 16px;
-		margin: 0;
-		border: 0;
 	}
 
 	.add-to-campaign__action {
@@ -2036,6 +2039,7 @@ body.cms-dialog {
 		animation:add-to-campaign--slideup 2s 1;
 		background: $white;
 		display: table;
+		z-index: 1;
 
 		span {
 			display: table-cell;
@@ -2045,7 +2049,7 @@ body.cms-dialog {
 
 			&::before {
 				font-size: 48px;
-        line-height: 40px;
+				line-height: 40px;
 				display: block;
 				padding-bottom: $spacer-y;
 			}

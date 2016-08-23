@@ -1,12 +1,12 @@
-# AddToCampaignModal
+# FormModal
 
-This is a Modal component to help Add a target object to Campaigns (ChangeSets)
+This is a Modal component to help display a form within a Modal/Dialog box
 
 ## Props
 
 ### title (string)
 
-The title that will appear for the Modal, defaults to "Add to campaign".
+The title that will appear for the Modal.
 
 ### show (bool)
 

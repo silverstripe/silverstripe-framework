@@ -20,6 +20,7 @@ use Director;
 use SS_HTTPResponse;
 use FormAction;
 use SS_HTTPResponse_Exception;
+use HeaderField;
 
 /**
  * Class AddToCampaignHandler - handle the AddToCampaign action.
@@ -189,12 +190,7 @@ class AddToCampaignHandler {
 
 		if ($this->showTitle) {
 			$fields = new FieldList(
-				$header = new CompositeField(
-					new LiteralField(
-						'Heading',
-						sprintf('<h3>%s</h3>', _t('Campaigns.AddToCampaign', 'Add To Campaign'))
-					)
-				),
+				$header = new HeaderField('Heading', _t('Campaigns.AddToCampaign', 'Add To Campaign'), 3),
 				$content = new CompositeField($fields)
 			);
 			$header->addExtraClass('add-to-campaign__header');
@@ -255,13 +251,17 @@ class AddToCampaignHandler {
 
 		$changeSet->addObject($object);
 
-		if (Director::is_ajax()) {
-			$response = new SS_HTTPResponse(_t(
-				'AddToCampaign.Success',
-				'Successfully added {ObjectTitle} to {CampaignTitle}',
-				'',
-				['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
-			), 200);
+		$request = $this->controller->getRequest();
+		$message = _t(
+			'AddToCampaign.Success',
+			'Successfully added {ObjectTitle} to {CampaignTitle}',
+			'',
+			['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
+		);
+		if ($request->getHeader('X-Formschema-Request')) {
+			return $message;
+		} elseif (Director::is_ajax()) {
+			$response = new SS_HTTPResponse($message, 200);
 
 			$response->addHeader('Content-Type', 'text/plain; charset=utf-8');
 			return $response;

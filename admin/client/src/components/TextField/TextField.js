@@ -47,11 +47,9 @@ class TextField extends SilverStripeComponent {
    * @param object event
    */
   handleChange(event) {
-    if (typeof this.props.onChange === 'undefined') {
-      return;
+    if (typeof this.props.onChange === 'function') {
+      this.props.onChange(event, { id: this.props.id, value: event.target.value });
     }
-
-    this.props.onChange(event, { id: this.props.id, value: event.target.value });
   }
 }
 

@@ -75,11 +75,13 @@ export function submitForm(submitApi, formId, fieldValues) {
         return response;
       })
       .catch((error) => {
-        dispatch({
-          type: ACTION_TYPES.SUBMIT_FORM_FAILURE,
-          payload: { formId, error },
+        throw error.response.text().then((errorText) => {
+          dispatch({
+            type: ACTION_TYPES.SUBMIT_FORM_FAILURE,
+            payload: { formId, error: errorText },
+          });
+          return errorText;
         });
-        return error;
       });
   };
 }

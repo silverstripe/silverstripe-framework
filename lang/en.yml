@@ -4,6 +4,7 @@ en:
     ErrorGeneral: 'We apologise, but there was an error'
     ErrorItemPermissionDenied: 'It seems you don''t have the necessary permissions to add {ObjectTitle} to a campaign'
     ErrorNotFound: 'That {Type} couldn''t be found'
+    ErrorCampaignNotSelected: 'There was no campaign selected to be added to'
     Success: 'Successfully added {ObjectTitle} to {CampaignTitle}'
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed file upload extensions'
