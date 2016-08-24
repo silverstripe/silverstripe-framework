@@ -64,6 +64,10 @@ function appBoot() {
   // Set the initial config state.
   store.dispatch(configActions.setConfig(Config.getAll()));
 
+  // Expose store for legacy use
+  window.ss = window.ss || {};
+  window.ss.store = store;
+
   // Bootstrap routing
   const routes = new BootRoutes(store);
   routes.start(window.location.pathname);

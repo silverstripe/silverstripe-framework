@@ -1,104 +1,90 @@
 import jQuery from 'jQuery';
+import i18n from 'i18n';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import FormBuilderModal from 'components/FormBuilderModal/FormBuilderModal';
 
 jQuery.entwine('ss', ($) => {
-  $('#add-to-campaign__dialog .add-to-campaign-action,' +
+	/**
+   * Kick off an "add to campaign" dialog from the CMS actions.
+   */
+  $(
     '.cms-content-actions .add-to-campaign-action,' +
-    '#add-to-campaign__action').entwine({
-      onclick() {
-        let dialog = $('#add-to-campaign__dialog');
+    '#add-to-campaign__action'
+  ).entwine({
+    onclick() {
+      let dialog = $('#add-to-campaign__dialog-wrapper');
 
-        if (dialog.length) {
-          dialog.open();
-        } else {
-          dialog = $('<div id="add-to-campaign__dialog" class="add-to-campaign__dialog" />');
-          $('body').append(dialog);
-        }
-
-        if (dialog.children().length === 0) dialog.addClass('loading');
-
-        const form = this.closest('form');
-        const button = this;
-
-        const formData = form.serializeArray();
-        formData.push({
-          name: button.attr('name'),
-          value: '1',
-        });
-
-        $.ajax({
-          url: form.attr('action'),
-          data: formData,
-          type: 'POST',
-          global: false,
-          complete() {
-            dialog.removeClass('loading');
-          },
-          success(data, status, xhr) {
-            if (xhr.getResponseHeader('Content-Type').indexOf('text/plain') === 0) {
-              const container = $(
-                '<div class="add-to-campaign__response add-to-campaign__response--good">' +
-                '<span></span></div>'
-              );
-              container.find('span').text(data);
-              dialog.append(container);
-            } else {
-              dialog.html(data);
-            }
-          },
-          error(xhr) {
-            const error = xhr.responseText
-              || 'Something went wrong. Please try again in a few minutes.';
-            const container = $(
-              '<div class="add-to-campaign__response add-to-campaign__response--error">' +
-              '<span></span></div>'
-            );
-            container.find('span').text(error);
-            dialog.append(container);
-          },
-        });
-
-        return false;
-      },
-    });
-
-  $('#add-to-campaign__dialog').entwine({
-    onadd() {
-      // Create jQuery dialog
-      if (!this.is('.ui-dialog-content')) {
-        this.ssdialog({
-          autoOpen: true,
-          minHeight: 200,
-          maxHeight: 200,
-          minWidth: 200,
-          maxWidth: 500,
-        });
+      if (!dialog.length) {
+        dialog = $('<div id="add-to-campaign__dialog-wrapper" />');
+        $('body').append(dialog);
       }
 
-      this._super();
+      dialog.open();
+
+      return false;
     },
+  });
+
+	/**
+   * Uses React-Bootstrap in order to replicate the bootstrap styling and JavaScript behaviour.
+   * The "add to campaign" dialog is used in a similar fashion in AssetAdmin.
+   */
+  $('#add-to-campaign__dialog-wrapper').entwine({
 
     open() {
-      this.ssdialog('open');
+      this._renderModal();
     },
 
     close() {
-      this.ssdialog('close');
+      this._clearModal();
     },
 
-    onssdialogclose() {
-      this.empty();
+    _renderModal() {
+      const handleHide = () => this._clearModal();
+      const handleSubmit = (...args) => this._handleSubmitModal(...args);
+      const id = $('form.cms-edit-form :input[name=ID]').val();
+      const store = window.ss.store;
+      const sectionConfig = store.getState()
+        .config.sections['SilverStripe\\CMS\\Controllers\\CMSPageEditController'];
+      const modalSchemaUrl = `${sectionConfig.form.AddToCampaignForm.schemaUrl}/${id}`;
+
+      ReactDOM.render(
+        <Provider store={store}>
+          <FormBuilderModal
+            show
+            handleSubmit={handleSubmit}
+            handleHide={handleHide}
+            schemaUrl={modalSchemaUrl}
+            bodyClassName="add-to-campaign__dialog"
+            responseClassBad="add-to-campaign__response add-to-campaign__response--error"
+            responseClassGood="add-to-campaign__response add-to-campaign__response--good"
+          />
+        </Provider>,
+        this[0]
+      );
     },
 
-    'onchosen:showing_dropdown': function () {  // eslint-disable-line
-      this.css({
-        overflow: 'visible',
-      });
+    _clearModal() {
+      ReactDOM.unmountComponentAtNode(this[0]);
+      // this.empty();
     },
 
-    'onchosen:hiding_dropdown': function () {  // eslint-disable-line
-      this.css({
-        overflow: '',
-      });
+    _handleSubmitModal(event, fieldValues, submitFn) {
+      event.preventDefault();
+
+      if (!fieldValues.Campaign) {
+        // TODO invisible submit disable, remove this when validation is implemented
+        // eslint-disable-next-line no-alert
+        alert(i18n._t(
+          'AddToCampaigns.ErrorCampaignNotSelected',
+          'There was no campaign selected to be added to'
+        ));
+        return null;
+      }
+      return submitFn();
     },
+
   });
 });

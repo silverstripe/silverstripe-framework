@@ -1969,11 +1969,6 @@ body.cms-dialog {
  * Add to campaign dialog
  * -------------------------------------------- */
 
-.ui-dialog .ui-dialog-content.add-to-campaign__dialog {
-	padding-right: 0;
-	padding-left: 0;
-}
-
 .add-to-campaign__dialog {
 	overflow: hidden;
 	padding: 12px 16px;
@@ -1981,29 +1976,6 @@ body.cms-dialog {
 	border: 0;
 	min-height: 150px;
 	/* no max-height due to overflow: hidden */
-
-	.add-to-campaign__header {
-		@extend .cms-content-header;
-
-		padding: 12px 16px;
-		width: 100%;
-		height: $toolbar-total-height;
-		margin: 0;
-		border: 0;
-
-		h3 {
-			margin: 0;
-			line-height: 28px;
-		}
-	}
-
-	.add-to-campaign__action {
-		@extend .ss-ui-action-constructive;
-	}
-
-	.btn-toolbar {
-		padding: 0 20px;
-	}
 
 	.chosen-results > li {
 		padding: $spacer-y/1.5 $spacer-x;

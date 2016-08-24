@@ -25,6 +25,7 @@ class AddToCampaignHandler_FormAction extends FormAction
 		$this->setUseButtonTag(false);
 		$this->addExtraClass('add-to-campaign-action');
 		$this->setValidationExempt(true);
+		$this->addExtraClass('btn');
 		$this->addExtraClass('btn-primary');
 	}
 }

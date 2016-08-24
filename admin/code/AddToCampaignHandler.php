@@ -180,6 +180,7 @@ class AddToCampaignHandler {
 		$campaignDropdown = DropdownField::create('Campaign', '', $changeSets);
 		$campaignDropdown->setEmptyString(_t('Campaigns.AddToCampaignFormFieldLabel', 'Select a Campaign'));
 		$campaignDropdown->addExtraClass('noborder');
+		$campaignDropdown->addExtraClass('no-chosen');
 		$campaignDropdown->setDisabledItems($inChangeSets);
 
 		$fields = new FieldList([
