@@ -73,7 +73,7 @@ class MemberImportForm extends Form {
 
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/style/bundle.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
 
 		$this->addExtraClass('cms');
 		$this->addExtraClass('import-form');

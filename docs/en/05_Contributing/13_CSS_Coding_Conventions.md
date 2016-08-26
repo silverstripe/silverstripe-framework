@@ -51,6 +51,13 @@ which highlight any linting errors right in your code.
   Naming and conventions in this folder follow
   [ITCSS](https://www.xfive.co/blog/itcss-scalable-maintainable-css-architecture/).
 
+## Icons and Graphics
+
+Most graphics used in the CMS are vector based, and stored as generated
+webfonts in `admin/client/src/font`, which also contains a HTML reference. 
+The webfonts are generated through the [Fontastic](http://app.fontastic.me) service.
+If you need new icons to be added, please ping us on Github.  
+
 ## Legacy conventions
 
 CSS written prior to SilverStripe 4.0 is not following the conventions outlined above.

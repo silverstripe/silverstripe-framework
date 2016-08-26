@@ -44,6 +44,8 @@ const config = [
       'bundle-framework': `${PATHS.ADMIN_JS_SRC}/boot/index.js`,
       'bundle-legacy': `${PATHS.ADMIN_JS_SRC}/bundles/legacy.js`,
       'bundle-lib': `${PATHS.ADMIN_JS_SRC}/bundles/lib.js`,
+      'LeftAndMain.Ping': `${PATHS.ADMIN_JS_SRC}/legacy/LeftAndMain.Ping.js`,
+      leaktools: `${PATHS.ADMIN_JS_SRC}/legacy/leaktools.js`,
       MemberImportForm: `${PATHS.ADMIN_JS_SRC}/legacy/MemberImportForm.js`,
       ModelAdmin: `${PATHS.ADMIN_JS_SRC}/legacy/ModelAdmin.js`,
       SecurityAdmin: `${PATHS.ADMIN_JS_SRC}/legacy/SecurityAdmin.js`,
@@ -95,7 +97,7 @@ const config = [
         {
           test: /\.js$/,
           exclude: /(node_modules|thirdparty)/,
-          loader: 'babel-loader',
+          loader: 'babel',
           query: {
             presets: ['es2015', 'react'],
             plugins: ['transform-object-assign', 'transform-object-rest-spread'],
@@ -104,29 +106,35 @@ const config = [
         },
         {
           test: /\.scss$/,
-          // We disable url handling because the SCSS files directly reference the
-          // compiled sprite files
-          loader: ExtractTextPlugin.extract(
-            'css?-url&minimize&sourceMap!postcss?sourceMap!sass?sourceMap'
-          ),
-          // loaders: ['style', 'css?-url&minimize', 'postcss', 'sass'],
+          loader: ExtractTextPlugin.extract([
+            'css?sourceMap&minimize',
+            'postcss?sourceMap',
+            'resolve-url',
+            'sass?sourceMap',
+          ], {
+            publicPath: '../', // needed because bundle.css is in a subfolder
+          }),
         },
         {
           test: /\.css$/,
-          // We disable url handling because the SCSS files directly reference the
-          // compiled sprite files
-          loader: ExtractTextPlugin.extract(
-            'css?-url&minimize&sourceMap!postcss?sourceMap'
-          ),
-          // loaders: ['style', 'css?-url&minimize', 'postcss'],
-        },
-        {
-          test: /\.coffee$/,
-          loader: 'coffee-loader',
+          loader: ExtractTextPlugin.extract([
+            'css?sourceMap&minimize',
+            'postcss?sourceMap',
+          ], {
+            publicPath: '../', // needed because bundle.css is in a subfolder
+          }),
         },
         {
           test: '/i18n.js/',
           loader: 'script-loader',
+        },
+        {
+          test: /\.(png|gif|jpg|svg)$/,
+          loader: 'url?limit=10000&name=images/[name].[ext]',
+        },
+        {
+          test: /\.(woff|eot|ttf)$/,
+          loader: 'file?name=fonts/[name].[ext]',
         },
       ],
     },
@@ -138,7 +146,6 @@ const config = [
         jQuery: 'jQuery',
         $: 'jQuery',
       }),
-      /*
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           unused: false,
@@ -146,12 +153,11 @@ const config = [
         },
         mangle: false,
       }),
-      */
       new ExtractTextPlugin('styles/bundle.css', { allChunks: true }),
     ],
   },
 
-  // Much of the CSS is included in the javascript confiugration (bundle.scss)
+  // Much of the CSS is included in the javascript configuration (bundle.scss)
   // These CSS files have not yet been inlined into the javascript include chain
   {
     name: 'css',
@@ -177,13 +183,20 @@ const config = [
       loaders: [
         {
           test: /\.scss$/,
-          // We disable url handling because the SCSS files directly reference the
-          // compiled sprite files
           loader: ExtractTextPlugin.extract([
-            'css-loader?-url&minimize',
-            'postcss-loader',
-            'sass-loader',
+            'css?sourceMap&minimize',
+            'postcss?sourceMap',
+            'resolve-url',
+            'sass?sourceMap',
           ]),
+        },
+        {
+          test: /\.(png|gif|jpg|svg)$/,
+          loader: 'url?limit=10000&name=client/dist/styles/images/[name].[ext]',
+        },
+        {
+          test: /\.(woff|eot|ttf)$/,
+          loader: 'file?name=fonts/[name].[ext]',
         },
       ],
     },
@@ -191,16 +204,7 @@ const config = [
       autoprefixer({ browsers: SUPPORTED_BROWSERS }),
     ],
     plugins: [
-      new ExtractTextPlugin('[name].css', {allChunks: true}),
-      // new SprityWebpackPlugin({
-      //   src: `${PATHS.ADMIN_SPRITES_SRC}/**/*.{png,jpg}`,
-      //   out: PATHS.ADMIN_SPRITES_DIST,
-      //   cssPath: '../images/sprites',
-      //   style: './_sprity.scss',
-      //   processor: 'sass',
-      //   split: true,
-      //   margin: 0,
-      // }),
+      new ExtractTextPlugin('[name].css', { allChunks: true }),
     ],
   },
 ];

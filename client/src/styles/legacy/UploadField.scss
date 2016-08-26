@@ -214,7 +214,7 @@
 		.ss-uploadfield-item-progressbarvalue {
 			border: 0;
 			width: 0%;
-			background: #60b3dd url(../images/progressbar_blue.gif) repeat-x left center;
+			background: #60b3dd url(../../images/progressbar_blue.gif) repeat-x left center;
 		}
 		.ss-uploadfield-item-cancel,
 		.ss-uploadfield-item-start {
@@ -264,7 +264,7 @@
 				width: 100%;
 				height: 22px;
 				margin: 15px 0 0;
-				background: url(../admin/client/dist/images/spinner.gif) no-repeat 50% 0;
+				background: url(../../../../admin/client/src/images/spinner.gif) no-repeat 50% 0;
 
 				iframe {
 					/* Old IE needs this or it'll give the iframe a white background, covering the spinner */
@@ -310,7 +310,7 @@
 
 	.loader {
 		height: 94px; // Approxmiately matches the height of the field once a file is attached, avoids a 'jump' in size
-		background: transparent url(../admin/client/dist/images/spinner.gif) no-repeat 50% 50%;
+		background: transparent url(../../../../admin/client/src/images/spinner.gif) no-repeat 50% 50%;
 	}
 }
 
@@ -330,7 +330,7 @@
 		.ss-uploadfield-files {
 			.ss-uploadfield-item-editform {
 				&.loading {
-					background-image: url(../admin/client/dist/images/spinner@2x.gif);
+					background-image: url("../../../../admin/client/src/images/spinner@2x.gif");
 					background-size: 43px 43px;
 				}
 			}
@@ -339,7 +339,7 @@
 
 	.ss-upload {
 		.loader {
-			background-image: url(../admin/client/dist/images/spinner@2x.gif);
+			background-image: url("../../../../admin/client/src/images/spinner@2x.gif");
 			background-size: 43px 43px;
 		}
 	}

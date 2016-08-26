@@ -702,7 +702,7 @@ body.cms {
 	width: 100%;
 	height: 100%;
 	z-index: 9999;
-	background: url(../images/spinner.gif) no-repeat 50% 50%;
+	background: url("../../images/spinner.gif") no-repeat 50% 50%;
 }
 
 /** -----------------------------------------------
@@ -1626,7 +1626,7 @@ form.member-profile-form {
 		overflow: auto; // TODO Replace with proper $.layout grid
 
 		&.loading {
-			background-image: url(../images/spinner.gif);
+			background-image: url("../../images/spinner.gif");
 			background-position: 50% 50%;
 			background-repeat: no-repeat;
 		}
@@ -1668,7 +1668,7 @@ form.member-profile-form {
 	}
 
 	&.loading {
-		background-image: url(../images/spinner.gif);
+		background-image: url("../../images/spinner.gif");
 		background-position: 50% 50%;
 		background-repeat: no-repeat;
 	}

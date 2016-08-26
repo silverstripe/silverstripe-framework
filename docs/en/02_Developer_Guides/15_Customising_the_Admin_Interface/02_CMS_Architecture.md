@@ -50,17 +50,6 @@ Please follow our [CSS](/contributing/css_coding_conventions)
 and [JavaScript](/contributing/javascript_coding_conventions)
 coding conventions.
 
-## Sprites
-
-We use sprites to handle various icons and images throughout the CMS. These are automatically generated
-by running `npm run build` and can be found at `/admin/client/src/sprites/dist`. To add new
-images to the sprites, simply add the image to the folder matching the image's size in
-`/admin/client/sprites` then run `npm run sprites` to generate the sprite containing your image.
-Along with the new sprite containing your image, there will also be a new variable in
-`/admin/client/styles/legacy/_sprites.scss` which you can use in your .scss file by first extending the class matching
-the sprite (eg `@extend .icon-sprites-32x32;`), and then including your image using the variable
-matching your image (eg `@include sprite($sprites-32x32-my-image);`).
-
 ## The Admin URL
 
 The CMS interface can be accessed by default through the `admin/` URL. You can change this by setting your own [Director routing rule](director#routing-rules) to the `[api:AdminRootController]` and clear the old rule like in the example below.

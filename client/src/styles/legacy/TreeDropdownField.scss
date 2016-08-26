@@ -25,10 +25,10 @@ div.TreeDropdownField {
 	.treedropdownfield-search {
 		@extend .treedropdownfield-title;
 
-		// Style search box to match chosen search
-		background: url('../../../admin/client/dist/images/chosen-sprite.png') no-repeat 100% -22px; // For browsers that only support 1 background
+		//Style search box to match chosen search
+		background:url('../../../../admin/client/src/images/chosen-sprite.png') no-repeat 100% -22px; //For browers that only support 1 background
 		background:
-			url('../../../admin/client/dist/images/chosen-sprite.png') no-repeat 100% -22px,
+			url('../../../../admin/client/src/images/chosen-sprite.png') no-repeat 100% -22px,
 			linear-gradient(to bottom, #eeeeee 1%, #ffffff 15%);
 		box-sizing: border-box;
 		position: relative;
@@ -69,8 +69,8 @@ div.TreeDropdownField {
     border-bottom-right-radius: 3px;
 
 		&.loading {
-			min-height: 16px + 14px; // icon + padding. Ensure there's room for loading indicator
-			background: #fff url("../images/network-save.gif") 98% 7px no-repeat;
+			min-height: 16px /* icon */ + 14px /* padding */; // Ensure there's room for loading indicator
+			background: #fff url("../../images/network-save.gif") 98% 7px no-repeat;
 		}
 
     .tree-holder {
@@ -137,6 +137,6 @@ div.TreeDropdownField {
 
 	a.jstree-loading .jstree-pageicon {
 		// Apply to .jstree-pageicon since .jstree-icon is hidden
-		background: #fff url("../images/network-save.gif") center center no-repeat;
+		background: #fff url("../../images/network-save.gif") center center no-repeat;
 	}
 }
