@@ -26,7 +26,8 @@ class PopoverField extends FieldGroup
 	protected $popoverTitle = null;
 
 	/**
-	 * Placement of the popup box
+	 * Placement of the popup box, relative to the element triggering it.
+	 * Valid values: bottom, top, left, right.
 	 *
 	 * @var string
 	 */
@@ -68,9 +69,14 @@ class PopoverField extends FieldGroup
 	{
 		$valid = ['top', 'right', 'bottom', 'left'];
 
-		if (in_array($placement, $valid)) {
-			$this->placement = $placement;
+		if (!in_array($placement, $valid)) {
+			throw new InvalidArgumentException(
+				'Invalid placement value. Valid: top, left, bottom, right'
+			);
 		}
+
+		$this->placement = $placement;
+
 		return $this;
 	}
 
