@@ -11,7 +11,7 @@ function fieldHolder(Field) {
 
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
-      const classNames = ['form-group', this.props.extraClass].join(' ');
+      const classNames = ['form-group field', this.props.extraClass].join(' ');
 
       return (
         <div className={classNames}>
