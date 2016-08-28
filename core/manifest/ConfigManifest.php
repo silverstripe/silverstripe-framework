@@ -147,8 +147,8 @@ class SS_ConfigManifest {
 	/**
 	 * Gets the (merged) config value for the given class and config property name
 	 *
-	 * @param string $class - The class to get the config property value for
-	 * @param string $name - The config property to get the value for
+	 * @param string $class - The class to get the config property value for; lowercase
+	 * @param string $name - The config property to get the value for; case sensitive
 	 * @param any $default - What to return if no value was contained in any YAML file for the passed $class and $name
 	 * @return any - The merged set of all values contained in all the YAML configuration files for the passed
 	 * $class and $name, or $default if there are none
@@ -647,13 +647,14 @@ class SS_ConfigManifest {
 
 	/**
 	 * Recursively merge a yaml fragment's configuration array into the primary merged configuration array.
+	 * Also makes the top-level keys lowercase, so that class comparisons can be case-insensitive
 	 * @param  $into
 	 * @param  $fragment
 	 * @return void
 	 */
 	public function mergeInYamlFragment(&$into, $fragment) {
 		foreach ($fragment as $k => $v) {
-			Config::merge_high_into_low($into[$k], $v);
+			Config::merge_high_into_low($into[strtolower($k)], $v);
 		}
 	}
 
