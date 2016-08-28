@@ -2010,8 +2010,14 @@ body.cms-dialog {
 		width: 100%;
 		animation:add-to-campaign--slideup 2s 1;
 		background: $white;
-		display: table;
+		display: block;
 		z-index: 1;
+	}
+
+	.response-wrapper {
+		display: table;
+		height: 100%;
+		width: 100%;
 
 		span {
 			display: table-cell;
