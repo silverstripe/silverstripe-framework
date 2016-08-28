@@ -54,7 +54,11 @@ form.nostyle {
 		margin-left: 0;
 	}
 
-	input.text,
+  select:not([size]):not([multiple]) {
+    height: 2.5rem;
+  }
+
+  input.text,
   input.creditcard,
 	textarea,
 	select,
