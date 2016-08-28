@@ -69,8 +69,6 @@ class AddToCampaignHandler {
 	 */
 	protected $name;
 
-	protected $showTitle = true;
-
 	/**
 	 * AddToCampaignHandler constructor.
 	 *
@@ -85,10 +83,6 @@ class AddToCampaignHandler {
 		}
 		$this->data = $data;
 		$this->name = $name;
-	}
-
-	public function setShowTitle($show) {
-		$this->showTitle = $show;
 	}
 
 	/**
@@ -189,14 +183,6 @@ class AddToCampaignHandler {
 			HiddenField::create('ClassName', null, $this->data['ClassName'])
 		]);
 
-		if ($this->showTitle) {
-			$fields = new FieldList(
-				$header = new HeaderField('Heading', _t('Campaigns.AddToCampaign', 'Add To Campaign'), 3),
-				$content = new CompositeField($fields)
-			);
-			$header->addExtraClass('add-to-campaign__header');
-			$content->addExtraClass('add-to-campaign__content');
-		}
 
 		$form = new Form(
 			$this->controller,
