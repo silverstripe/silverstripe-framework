@@ -1,7 +1,7 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
-function fieldHolderWrapper(Field) {
+function fieldHolder(Field) {
   class FieldHolder extends SilverStripeComponent {
 
     render() {
@@ -11,7 +11,7 @@ function fieldHolderWrapper(Field) {
 
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
-      const classNames = ['form-group', this.props.extraClass].join(' ');
+      const classNames = ['form-group field', this.props.extraClass].join(' ');
 
       return (
         <div className={classNames}>
@@ -39,4 +39,4 @@ function fieldHolderWrapper(Field) {
   return FieldHolder;
 }
 
-export default fieldHolderWrapper;
+export default fieldHolder;

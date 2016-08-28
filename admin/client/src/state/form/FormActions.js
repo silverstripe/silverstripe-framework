@@ -57,13 +57,16 @@ export function addForm(formState) {
  */
 export function submitForm(submitApi, formId, fieldValues) {
   return (dispatch) => {
-    const header = { 'X-Formschema-Request': 'state' };
+    const headers = {
+      'X-Formschema-Request': 'state',
+      'X-Requested-With': 'XMLHttpRequest',
+    };
     dispatch({
       type: ACTION_TYPES.SUBMIT_FORM_REQUEST,
       payload: { formId },
     });
 
-    return submitApi(Object.assign({ ID: formId }, fieldValues), header)
+    return submitApi(Object.assign({ ID: formId }, fieldValues), headers)
       .then((response) => {
         dispatch({
           type: ACTION_TYPES.SUBMIT_FORM_SUCCESS,
@@ -72,10 +75,22 @@ export function submitForm(submitApi, formId, fieldValues) {
         return response;
       })
       .catch((error) => {
-        dispatch({
-          type: ACTION_TYPES.SUBMIT_FORM_FAILURE,
-          payload: { formId, error },
+        throw error.response.text().then((errorText) => {
+          dispatch({
+            type: ACTION_TYPES.SUBMIT_FORM_FAILURE,
+            payload: { formId, error: errorText },
+          });
+          return errorText;
         });
       });
+  };
+}
+
+export function setSubmitAction(formId, submitAction) {
+  return (dispatch) => {
+    dispatch({
+      type: ACTION_TYPES.SET_SUBMIT_ACTION,
+      payload: { formId, submitAction },
+    });
   };
 }

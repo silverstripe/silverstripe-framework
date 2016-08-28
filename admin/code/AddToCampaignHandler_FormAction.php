@@ -20,8 +20,12 @@ class AddToCampaignHandler_FormAction extends FormAction
 
 	function __construct()
 	{
-		parent::__construct('addtocampaign', _t('CAMPAIGNS.ADDTOCAMPAIGN', 'Add to campaign'));
+		parent::__construct('addtocampaign', _t('CAMPAIGNS.ADDTOCAMPAIGN', 'Add to Campaign'));
+
+		$this->setUseButtonTag(false);
 		$this->addExtraClass('add-to-campaign-action');
 		$this->setValidationExempt(true);
+		$this->addExtraClass('btn');
+		$this->addExtraClass('btn-primary');
 	}
 }

@@ -26,6 +26,14 @@ class PopoverField extends FieldGroup
 	protected $popoverTitle = null;
 
 	/**
+	 * Placement of the popup box, relative to the element triggering it.
+	 * Valid values: bottom, top, left, right.
+	 *
+	 * @var string
+	 */
+	protected $placement = 'bottom';
+
+	/**
 	 * Get popup title
 	 *
 	 * @return string
@@ -47,19 +55,38 @@ class PopoverField extends FieldGroup
 		return $this;
 	}
 
+	/**
+	 * Get popup placement
+	 *
+	 * @return string
+	 */
+	public function getPlacement()
+	{
+		return $this->placement;
+	}
+
+	public function setPlacement($placement)
+	{
+		$valid = ['top', 'right', 'bottom', 'left'];
+
+		if (!in_array($placement, $valid)) {
+			throw new InvalidArgumentException(
+				'Invalid placement value. Valid: top, left, bottom, right'
+			);
+		}
+
+		$this->placement = $placement;
+
+		return $this;
+	}
+
 	public function getSchemaDataDefaults()
 	{
 		$schema = parent::getSchemaDataDefaults();
-		if($this->getPopoverTitle()) {
-			$data = [
-				'popoverTitle' => $this->getPopoverTitle()
-			];
-			if(isset($schema['data'])) {
-				$schema['data'] = array_merge($schema['data'], $data);
-			} else {
-				$schema['data'] = $data;
-			}
-		}
+
+		$schema['data']['popoverTitle'] = $this->getPopoverTitle();
+		$schema['data']['placement'] = $this->getPlacement();
+
 		return $schema;
 	}
 }

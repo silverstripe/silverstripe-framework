@@ -25,6 +25,32 @@ abstract class SingleSelectField extends SelectField {
 
 	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_SINGLESELECT;
 
+	public function getSchemaStateDefaults() {
+		$data = parent::getSchemaStateDefaults();
+
+		// Add options to 'data'
+		$data['data']['hasEmptyDefault'] = $this->getHasEmptyDefault();
+		$data['data']['emptyString'] = $this->getHasEmptyDefault() ? $this->getEmptyString() : null;
+
+		$data['value'] = $this->getDefaultValue();
+
+		return $data;
+	}
+
+	public function getDefaultValue() {
+		$value = $this->Value();
+		// assign value to field, such as first option available
+		if ($value === null) {
+			if ($this->getHasEmptyDefault()) {
+				$value = '';
+			} else {
+				$values = $this->getValidValues();
+				$value = array_shift($values);
+			}
+		}
+		return $value;
+	}
+
 	/**
 	 * @param boolean $bool
 	 * @return self Self reference
@@ -47,6 +73,7 @@ abstract class SingleSelectField extends SelectField {
 	 * {@link $hasEmptyDefault} to true.
 	 *
 	 * @param string $string
+	 * @return $this
 	 */
 	public function setEmptyString($string) {
 		$this->setHasEmptyDefault(true);

@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Schema;
 
 use Form;
 use FormField;
+use CompositeField;
 
 /**
  * Class FormSchema
@@ -63,11 +64,8 @@ class FormSchema {
 			'messages' => []
 		];
 
-		// @todo - Flatten all nested fields for returning state. At the moment, only top
-		// level fields are returned.
-		foreach ($form->Fields() as $field) {
-			$state['fields'][] = $field->getSchemaState();
-		}
+		// flattened nested fields are returned, rather than only top level fields.
+		$state['fields'] = $this->getFieldStates($form->Fields());
 
 		if($form->Message()) {
 			$state['messages'][] = [
@@ -77,5 +75,18 @@ class FormSchema {
 		}
 
 		return $state;
+	}
+
+	protected function getFieldStates($fields) {
+		$states = [];
+		foreach ($fields as $field) {
+			$states[] = $field->getSchemaState();
+
+			if ($field instanceof CompositeField) {
+				$subFields = $field->FieldList();
+				array_merge($states, $this->getFieldStates($subFields));
+			}
+		}
+		return $states;
 	}
 }

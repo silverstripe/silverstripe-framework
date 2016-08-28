@@ -271,7 +271,10 @@ class FormSchemaTest extends SapphireTest {
 					'disabled' => false,
 					'customValidationMessage' => '',
 					'attributes' => [],
-					'data' => [],
+					'data' => [
+						'popoverTitle' => null,
+						'placement' => 'bottom',
+					],
 					'children' => [
 						[
 							'id' => 'Form_TestForm_action_publish',

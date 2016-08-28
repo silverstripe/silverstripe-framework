@@ -4,6 +4,7 @@ en:
     ErrorGeneral: 'We apologise, but there was an error'
     ErrorItemPermissionDenied: 'It seems you don''t have the necessary permissions to add {ObjectTitle} to a campaign'
     ErrorNotFound: 'That {Type} couldn''t be found'
+    ErrorCampaignNotSelected: 'There was no campaign selected to be added to'
     Success: 'Successfully added {ObjectTitle} to {CampaignTitle}'
   AssetAdmin:
     ALLOWEDEXTS: 'Allowed file upload extensions'
@@ -75,7 +76,7 @@ en:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
   CAMPAIGNS:
-    ADDTOCAMPAIGN: 'Add to campaign'
+    ADDTOCAMPAIGN: 'Add to Campaign'
   CMSLoadingScreen_ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -106,6 +107,8 @@ en:
     MENUTITLE: Campaigns
   Campaigns:
     AddToCampaign: 'Add To Campaign'
+    AddToCampaignFormFieldLabel: 'Select a Campaign'
+    CampaignTitle: 'Campaign'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'

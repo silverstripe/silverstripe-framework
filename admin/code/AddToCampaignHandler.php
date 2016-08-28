@@ -20,6 +20,7 @@ use Director;
 use SS_HTTPResponse;
 use FormAction;
 use SS_HTTPResponse_Exception;
+use HeaderField;
 
 /**
  * Class AddToCampaignHandler - handle the AddToCampaign action.
@@ -48,11 +49,11 @@ class AddToCampaignHandler {
 	use Injectable;
 
 	/**
-	 * The EditForm that contains the action we're being delegated to from
+	 * Parent controller for this form
 	 *
-	 * @var Form
+	 * @var Controller
 	 */
-	protected $editForm;
+	protected $controller;
 
 	/**
 	 * The submitted form data
@@ -62,14 +63,26 @@ class AddToCampaignHandler {
 	protected $data;
 
 	/**
+	 * Form name to use
+	 *
+	 * @var string
+	 */
+	protected $name;
+
+	/**
 	 * AddToCampaignHandler constructor.
 	 *
-	 * @param Form $editForm The parent form that triggered this action
-	 * @param array $data The data submitted as part of that form
+	 * @param Controller $parentController Controller for this form
+	 * @param array|DataObject $data The data submitted as part of that form
+	 * @param string $name Form name
 	 */
-	public function __construct($editForm, $data) {
-		$this->editForm = $editForm;
+	public function __construct($controller = null, $data = [], $name = 'AddToCampaignForm') {
+		$this->controller = $controller;
+		if ($data instanceof DataObject) {
+			$data = $data->toMap();
+		}
 		$this->data = $data;
+		$this->name = $name;
 	}
 
 	/**
@@ -115,7 +128,7 @@ class AddToCampaignHandler {
 		$class = ClassInfo::class_name($class);
 
 		if (!$class || !is_subclass_of($class, 'SilverStripe\\ORM\\DataObject') || !Object::has_extension($class, 'SilverStripe\\ORM\\Versioning\\Versioned')) {
-			$this->editForm->httpError(400, _t(
+			$this->controller->httpError(400, _t(
 				'AddToCampaign.ErrorGeneral',
 				'We apologise, but there was an error'
 			));
@@ -125,7 +138,7 @@ class AddToCampaignHandler {
 		$object = DataObject::get($class)->byID($id);
 
 		if (!$object) {
-			$this->editForm->httpError(404, _t(
+			$this->controller->httpError(404, _t(
 				'AddToCampaign.ErrorNotFound',
 				'That {Type} couldn\'t be found',
 				'',
@@ -135,7 +148,7 @@ class AddToCampaignHandler {
 		}
 
 		if (!$object->canView()) {
-			$this->editForm->httpError(403, _t(
+			$this->controller->httpError(403, _t(
 					'AddToCampaign.ErrorItemPermissionDenied',
 					'It seems you don\'t have the necessary permissions to add {ObjectTitle} to a campaign',
 					'',
@@ -159,8 +172,9 @@ class AddToCampaignHandler {
 		$changeSets = $this->getAvailableChangeSets()->map();
 
 		$campaignDropdown = DropdownField::create('Campaign', '', $changeSets);
-		$campaignDropdown->setEmptyString(_t('Campaigns.AddToCampaign', 'Select a Campaign'));
+		$campaignDropdown->setEmptyString(_t('Campaigns.AddToCampaignFormFieldLabel', 'Select a Campaign'));
 		$campaignDropdown->addExtraClass('noborder');
+		$campaignDropdown->addExtraClass('no-chosen');
 		$campaignDropdown->setDisabledItems($inChangeSets);
 
 		$fields = new FieldList([
@@ -169,33 +183,23 @@ class AddToCampaignHandler {
 			HiddenField::create('ClassName', null, $this->data['ClassName'])
 		]);
 
-		$form = new Form(
-			$this->editForm->getController(),
-			$this->editForm->getName(),
-			new FieldList(
-				$header = new CompositeField(
-					new LiteralField(
-						'Heading',
-						sprintf('<h3>%s</h3>', _t('Campaigns.AddToCampaign', 'Add To Campaign'))
-					)
-				),
 
-				$content = new CompositeField($fields)
-			),
+		$form = new Form(
+			$this->controller,
+			$this->name,
+			$fields,
 			new FieldList(
 				$action = AddToCampaignHandler_FormAction::create()
 			)
 		);
 
-		$header->addExtraClass('add-to-campaign__header');
-		$content->addExtraClass('add-to-campaign__content');
 		$action->addExtraClass('add-to-campaign__action');
 
 		$form->setHTMLID('Form_EditForm_AddToCampaign');
 
 		$form->unsetValidator();
 		$form->loadDataFrom($this->data);
-		$form->addExtraClass('add-to-campaign__form');
+		$form->addExtraClass('form--no-dividers add-to-campaign__form');
 
 		return $form;
 	}
@@ -213,7 +217,7 @@ class AddToCampaignHandler {
 		$changeSet = ChangeSet::get()->byID($campaignID);
 
 		if (!$changeSet) {
-			$this->editForm->httpError(404, _t(
+			$this->controller->httpError(404, _t(
 				'AddToCampaign.ErrorNotFound',
 				'That {Type} couldn\'t be found',
 				'',
@@ -223,7 +227,7 @@ class AddToCampaignHandler {
 		}
 
 		if (!$changeSet->canEdit()) {
-			$this->editForm->httpError(403, _t(
+			$this->controller->httpError(403, _t(
 				'AddToCampaign.ErrorCampaignPermissionDenied',
 				'It seems you don\'t have the necessary permissions to add {ObjectTitle} to {CampaignTitle}',
 				'',
@@ -234,18 +238,22 @@ class AddToCampaignHandler {
 
 		$changeSet->addObject($object);
 
-		if (Director::is_ajax()) {
-			$response = new SS_HTTPResponse(_t(
-				'AddToCampaign.Success',
-				'Successfully added {ObjectTitle} to {CampaignTitle}',
-				'',
-				['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
-			), 200);
+		$request = $this->controller->getRequest();
+		$message = _t(
+			'AddToCampaign.Success',
+			'Successfully added {ObjectTitle} to {CampaignTitle}',
+			'',
+			['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
+		);
+		if ($request->getHeader('X-Formschema-Request')) {
+			return $message;
+		} elseif (Director::is_ajax()) {
+			$response = new SS_HTTPResponse($message, 200);
 
 			$response->addHeader('Content-Type', 'text/plain; charset=utf-8');
 			return $response;
 		} else {
-			return $this->editForm->getController()->redirectBack();
+			return $this->controller->getController()->redirectBack();
 		}
 	}
 }

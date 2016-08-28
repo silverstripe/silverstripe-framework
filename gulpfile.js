@@ -312,6 +312,15 @@ gulp.task('bundle-lib', function bundleLib() {
     .require(`${PATHS.ADMIN_JS_SRC}/state/breadcrumbs/BreadcrumbsActions`,
       { expose: 'state/breadcrumbs/BreadcrumbsActions' }
     )
+    .require(`${PATHS.ADMIN_JS_SRC}/components/PopoverField/PopoverField`,
+      { expose: 'components/PopoverField/PopoverField' }
+    )
+    .require(`${PATHS.ADMIN_JS_SRC}/components/SingleSelectField/SingleSelectField`,
+      { expose: 'components/SingleSelectField/SingleSelectField' }
+    )
+    .require(`${PATHS.ADMIN_JS_SRC}/components/FormBuilderModal/FormBuilderModal`,
+      { expose: 'components/FormBuilderModal/FormBuilderModal' }
+    )
     .require(`${PATHS.FRAMEWORK_JS_SRC}/i18n.js`,
       { expose: 'i18n' }
     )
@@ -379,6 +388,9 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .external('i18n')
     .external('i18nx')
     .external('lib/Router')
+    .external('react-dom')
+    .external('react-bootstrap-4')
+    .external('components/FormBuilderModal/FormBuilderModal')
     .bundle()
     .on('update', bundleLeftAndMain)
     .on('error', notify.onError({ message: `${bundleFileName}: <%= error.message %>` }))
