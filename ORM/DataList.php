@@ -2,6 +2,9 @@
 
 namespace SilverStripe\ORM;
 
+use BadMethodCallException;
+use SearchFilter;
+use SilverStripe\ORM\Queries\SQLConditionGroup;
 use ViewableData;
 use Exception;
 use InvalidArgumentException;
@@ -34,6 +37,7 @@ use ArrayIterator;
  * @subpackage orm
  */
 class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
+
 	/**
 	 * The DataObject class name that this data list is querying
 	 *
@@ -403,12 +407,9 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	public function addFilter($filterArray) {
 		$list = $this;
 
-		foreach($filterArray as $field => $value) {
-			$fieldArgs = explode(':', $field);
-			$field = array_shift($fieldArgs);
-			$filterType = array_shift($fieldArgs);
-			$modifiers = $fieldArgs;
-			$list = $list->applyFilterContext($field, $filterType, $modifiers, $value);
+		foreach($filterArray as $expression => $value) {
+			$filter = $this->createSearchFilter($expression, $value);
+			$list = $list->alterDataQuery(array($filter, 'apply'));
 		}
 
 		return $list;
@@ -454,21 +455,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			$subquery = $query->disjunctiveGroup();
 
 			foreach($whereArguments as $field => $value) {
-				$fieldArgs = explode(':',$field);
-				$field = array_shift($fieldArgs);
-				$filterType = array_shift($fieldArgs);
-				$modifiers = $fieldArgs;
-
-				if($filterType) {
-					$className = "{$filterType}Filter";
-				} else {
-					$className = 'ExactMatchFilter';
-				}
-				if(!class_exists($className)){
-					$className = 'ExactMatchFilter';
-					array_unshift($modifiers, $filterType);
-				}
-				$filter = Injector::inst()->create($className, $field, $value, $modifiers);
+				$filter = $this->createSearchFilter($field, $value);
 				$filter->apply($subquery);
 			}
 		});
@@ -550,30 +537,40 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	}
 
 	/**
-	 * Translates a filter type to a SQL query.
+	 * Given a filter expression and value construct a {@see SearchFilter} instance
 	 *
-	 * @param string $field - the fieldname in the db
-	 * @param string $filter - example StartsWith, relates to a filtercontext
-	 * @param array $modifiers - Modifiers to pass to the filter, ie not,nocase
-	 * @param string $value - the value that the filtercontext will use for matching
-	 * @return static
+	 * @param string $filter E.g. `Name:ExactMatch:not`, `Name:ExactMatch`, `Name:not`, `Name`
+	 * @param mixed $value Value of the filter
+	 * @return SearchFilter
 	 */
-	private function applyFilterContext($field, $filter, $modifiers, $value) {
-		if($filter) {
-			$className = "{$filter}Filter";
+	protected function createSearchFilter($filter, $value) {
+		// Field name is always the first component
+		$fieldArgs = explode(':', $filter);
+		$fieldName = array_shift($fieldArgs);
+
+		// Inspect type of second argument to determine context
+		$secondArg = array_shift($fieldArgs);
+		$modifiers = $fieldArgs;
+		if(!$secondArg) {
+			// Use default filter if none specified. E.g. `->filter(['Name' => $myname])`
+			$filterServiceName = 'DataListFilter.default';
 		} else {
-			$className = 'ExactMatchFilter';
+			// The presence of a second argument is by default ambiguous; We need to query
+			// Whether this is a valid modifier on the default filter, or a filter itself.
+			/** @var SearchFilter $defaultFilterInstance */
+			$defaultFilterInstance = Injector::inst()->get('DataListFilter.default');
+			if (in_array(strtolower($secondArg), $defaultFilterInstance->getSupportedModifiers())) {
+				// Treat second (and any subsequent) argument as modifiers, using default filter
+				$filterServiceName = 'DataListFilter.default';
+				array_unshift($modifiers, $secondArg);
+			} else {
+				// Second argument isn't a valid modifier, so assume is filter identifier
+				$filterServiceName = "DataListFilter.{$secondArg}";
+			}
 		}
 
-		if(!class_exists($className)) {
-			$className = 'ExactMatchFilter';
-
-			array_unshift($modifiers, $filter);
-		}
-
-		$t = new $className($field, $value, $modifiers);
-
-		return $this->alterDataQuery(array($t, 'apply'));
+		// Build instance
+		return Injector::inst()->create($filterServiceName, $fieldName, $value, $modifiers);
 	}
 
 	/**
@@ -608,21 +605,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			$subquery = $query->disjunctiveGroup();
 
 			foreach($whereArguments as $field => $value) {
-				$fieldArgs = explode(':', $field);
-				$field = array_shift($fieldArgs);
-				$filterType = array_shift($fieldArgs);
-				$modifiers = $fieldArgs;
-
-				if($filterType) {
-					$className = "{$filterType}Filter";
-				} else {
-					$className = 'ExactMatchFilter';
-				}
-				if(!class_exists($className)){
-					$className = 'ExactMatchFilter';
-					array_unshift($modifiers, $filterType);
-				}
-				$filter = Injector::inst()->create($className, $field, $value, $modifiers);
+				$filter = $this->createSearchFilter($field, $value);
 				$filter->exclude($subquery);
 			}
 		});

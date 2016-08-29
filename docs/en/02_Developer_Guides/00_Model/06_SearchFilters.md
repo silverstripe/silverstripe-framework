@@ -36,6 +36,17 @@ These suffixes can also take modifiers themselves. The modifiers currently suppo
 comparison uses the database's default. For MySQL and MSSQL, this is case-insensitive. For PostgreSQL, this is 
 case-sensitive.
 
+Note that all search filters (e.g. `:PartialMatch`) refer to services registered with [api:Injector]
+within the `DataListFilter.` prefixed namespace. New filters can be registered using the below yml
+config:
+
+
+	:::yaml
+	Injector:
+	  DataListFilter.CustomMatch:
+	    class: MyVendor/Search/CustomMatchFilter
+
+
 The following is a query which will return everyone whose first name starts with "S", either lowercase or uppercase:
 
 	:::php

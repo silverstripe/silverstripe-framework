@@ -15,13 +15,9 @@ use SilverStripe\ORM\DB;
  */
 class PartialMatchFilter extends SearchFilter {
 
-	public function setModifiers(array $modifiers) {
-		if(($extras = array_diff($modifiers, array('not', 'nocase', 'case'))) != array()) {
-			throw new InvalidArgumentException(
-				get_class($this) . ' does not accept ' . implode(', ', $extras) . ' as modifiers');
-		}
-
-		parent::setModifiers($modifiers);
+	public function getSupportedModifiers()
+	{
+		return ['not', 'nocase', 'case'];
 	}
 
 	/**

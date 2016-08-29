@@ -71,7 +71,7 @@ Example DataObject:
 Performing the search:
 
 	:::php
-	SearchableDataObject::get()->filter('SearchFields:fulltext', 'search term');
+	SearchableDataObject::get()->filter('SearchFields:Fulltext', 'search term');
 
 If your search index is a single field size, then you may also specify the search filter by the name of the
 field instead of the index.

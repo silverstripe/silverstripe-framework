@@ -1,3 +1,6 @@
+---
+Name: corefieldtypes
+---
 Injector:
   Boolean:
     class: SilverStripe\ORM\FieldType\DBBoolean
@@ -55,3 +58,28 @@ Injector:
     class: SilverStripe\ORM\FieldType\DBVarchar
   Year:
     class: SilverStripe\ORM\FieldType\DBYear
+---
+Name: coresearchfilters
+---
+Injector:
+  DataListFilter.default: %$DataListFilter.ExactMatch
+  DataListFilter.EndsWith:
+    class: EndsWithFilter
+  DataListFilter.ExactMatch:
+    class: ExactMatchFilter
+  DataListFilter.Fulltext:
+    class: FulltextFilter
+  DataListFilter.GreaterThan:
+    class: GreaterThanFilter
+  DataListFilter.GreaterThanOrEqual:
+    class: GreaterThanOrEqualFilter
+  DataListFilter.LessThan:
+    class: LessThanFilter
+  DataListFilter.LessThanOrEqual:
+    class: LessThanOrEqualFilter
+  DataListFilter.PartialMatch:
+    class: PartialMatchFilter
+  DataListFilter.StartsWith:
+    class: StartsWithFilter
+  DataListFilter.WithinRange:
+    class: WithinRangeFilter
