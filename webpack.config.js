@@ -153,7 +153,6 @@ const config = [
           unused: false,
           warnings: false,
         },
-        mangle: false,
       }),
       new ExtractTextPlugin('styles/bundle.css', { allChunks: true }),
     ],
