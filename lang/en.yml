@@ -19,6 +19,7 @@ en:
     HEIGHT: Height
     LASTEDIT: 'Last changed'
     OWNER: Owner
+    PATH: 'Path'
     SIZE: 'File size'
     TITLE: Title
     TYPE: 'File type'

@@ -20,6 +20,12 @@
   font-weight: normal;
   line-height: 24px;
   @include text-truncate;
+
+  .icon {
+    margin-left: 0.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
 }
 
 // If only the title is shown

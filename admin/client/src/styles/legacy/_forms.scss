@@ -505,6 +505,11 @@ button.loading {
 		font-weight: normal;
 		color: $color-text;
 
+    &:disabled {
+      cursor: not-allowed;
+      opacity: .65;
+    }
+
 		&:hover {
 			box-shadow: none;
 			background: #dee3e8;

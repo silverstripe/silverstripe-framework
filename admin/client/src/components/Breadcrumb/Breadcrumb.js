@@ -27,6 +27,9 @@ class Breadcrumb extends SilverStripeComponent {
          <li className="breadcrumb__item breadcrumb__item--last">
            <h2 className="breadcrumb__item-title breadcrumb__item-title--last" key={index}>
              {crumb.text}
+             {crumb.icon &&
+               <span className={crumb.icon.className} onClick={crumb.icon.action}></span>
+             }
            </h2>
          </li>,
        ])
