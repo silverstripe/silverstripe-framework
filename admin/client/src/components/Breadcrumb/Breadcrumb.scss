@@ -20,15 +20,16 @@
   font-weight: normal;
   line-height: 24px;
   @include text-truncate;
-
-  .icon {
-    margin-left: 0.5rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-  }
 }
 
 // If only the title is shown
 .breadcrumb__item:only-child {
   margin-top: 6px;
+}
+
+.breadcrumb__icon::before {
+  margin-left: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  vertical-align: middle;
 }

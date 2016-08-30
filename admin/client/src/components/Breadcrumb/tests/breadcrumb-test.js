@@ -36,8 +36,8 @@ describe('BreadcrumbsComponent', () => {
       expect(listEls[0][0].props.children.props.children).toBe('breadcrumb1');
       expect(listEls[1][0].props.children.props.children).toBe('breadcrumb2');
       expect(listEls[2][0].props.children.props.children[0]).toBe('breadcrumb3');
-      expect(listEls[2][0].props.children.props.children[1].props.className)
-        .toBe('breadcrumb3icon');
+      expect(listEls[2][0].props.children.props.children[1].props.className.split(' '))
+        .toContain('breadcrumb3icon');
     });
 
     it('should return null if props.crumbs is not set', () => {
