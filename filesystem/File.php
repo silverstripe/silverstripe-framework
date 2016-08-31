@@ -447,50 +447,46 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	/**
 	 * Returns the fields to power the edit screen of files in the CMS.
 	 * You can modify this FieldList by subclassing folder, or by creating a {@link DataExtension}
-	 * and implemeting updateCMSFields(FieldList $fields) on that extension.
+	 * and implementing updateCMSFields(FieldList $fields) on that extension.
 	 *
 	 * @return FieldList
 	 */
 	public function getCMSFields() {
-		// Preview
-		$filePreview = CompositeField::create(
-			CompositeField::create(new LiteralField("ImageFull", $this->PreviewThumbnail()))
-				->setName("FilePreviewImage")
-				->addExtraClass('cms-file-info-preview'),
-			CompositeField::create(
-				CompositeField::create(
-					new ReadonlyField("FileType", _t('AssetTableField.TYPE','File type') . ':'),
-					new ReadonlyField("Size", _t('AssetTableField.SIZE','File size') . ':', $this->getSize()),
-					HTMLReadonlyField::create(
-						'ClickableURL',
-						_t('AssetTableField.URL','URL'),
-						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->Link())
-					),
-					new DateField_Disabled("Created", _t('AssetTableField.CREATED','First uploaded') . ':'),
-					new DateField_Disabled("LastEdited", _t('AssetTableField.LASTEDIT','Last changed') . ':')
-				)
-			)
-				->setName("FilePreviewData")
-				->addExtraClass('cms-file-info-data')
-		)
-			->setName("FilePreview")
-			->addExtraClass('cms-file-info');
+		$path = '/' . dirname($this->getFilename());
 
-		//get a tree listing with only folder, no files
-		$fields = new FieldList(
-			new TabSet('Root',
-				new Tab('Main',
-					$filePreview,
-					new TextField("Title", _t('AssetTableField.TITLE','Title')),
-					new TextField("Name", _t('AssetTableField.FILENAME','Filename')),
-					DropdownField::create("OwnerID", _t('AssetTableField.OWNER','Owner'), Member::mapInCMSGroups())
-						->setHasEmptyDefault(true),
-					new TreeDropdownField("ParentID", _t('AssetTableField.FOLDER','Folder'), 'Folder')
-				)
+		$fields = FieldList::create([
+			HeaderField::create('TitleHeader', $this->Title, 1),
+			LiteralField::create("ImageFull", $this->PreviewThumbnail()),
+			TextField::create("Name", $this->fieldLabel('Filename')),
+			ReadonlyField::create(
+				"Path",
+				_t('AssetTableField.PATH', 'Path'),
+				(($path !== '/.') ? $path : '') . '/'
 			)
-		);
+		]);
+
+		if ($this->getIsImage()) {
+			$fields->push(ReadonlyField::create(
+				"DisplaySize",
+				_t('AssetTableField.SIZE', "File size"),
+				sprintf('%spx, %s', $this->getDimensions(), $this->getSize())
+			));
+			$fields->push(HTMLReadonlyField::create(
+				'ClickableURL',
+				_t('AssetTableField.URL','URL'),
+				sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->Link())
+			));
+		}
+		$fields->push(HiddenField::create('ID', $this->ID));
+
+		$fields->insertBefore(TextField::create("Title", $this->fieldLabel('Title')), 'Name');
+		$fields->push(DatetimeField::create(
+			"LastEdited",
+			_t('AssetTableField.LASTEDIT', 'Last changed')
+		)->setReadonly(true));
 
 		$this->extend('updateCMSFields', $fields);
+
 		return $fields;
 	}
 
