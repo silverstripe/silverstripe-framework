@@ -181,17 +181,16 @@ class Folder extends File {
 	 * @return FieldList
 	 */
 	public function getCMSFields() {
-		// Hide field on root level, which can't be renamed
-		if(!$this->ID || $this->ID === "root") {
-			$titleField = new HiddenField("Name");
-		} else {
-			$titleField = new TextField("Name", $this->fieldLabel('Name'));
-		}
+		// Don't show readonly path until we can implement parent folder selection,
+		// it's too confusing when readonly (makes sense for files only).
 
-		$fields = new FieldList(
-			$titleField,
-			new HiddenField('ParentID')
-		);
+		$fields = FieldList::create([
+			HeaderField::create('TitleHeader', $this->Title, 1),
+			LiteralField::create("ImageFull", $this->PreviewThumbnail()),
+			TextField::create("Name", $this->fieldLabel('Filename')),
+			HiddenField::create('ID', $this->ID)
+		]);
+
 		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
