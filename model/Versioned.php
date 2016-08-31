@@ -896,7 +896,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Is this version of the object the latest published?
+	 * Is the latest version of the object published?
 	 *
 	 * @return bool
 	 */
