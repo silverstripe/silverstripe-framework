@@ -175,7 +175,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
   handleAction(event, submitAction) {
     this.props.formActions.setSubmitAction(this.getFormId(), submitAction);
     if (typeof this.props.handleAction === 'function') {
-      this.props.handleAction(event, submitAction);
+      this.props.handleAction(event, submitAction, this.getFieldValues());
     }
   }
 
@@ -209,17 +209,10 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * ```
    *
    * @param {Object} event
+   * @return {Promise|null}
    */
   handleSubmit(event) {
-    const schemaFields = this.props.schemas[this.props.schemaUrl].schema.fields;
-    const fieldValues = this.props.form[this.getFormId()].fields
-      .reduce((prev, curr) => {
-        const fieldName = schemaFields.find(schemaField => schemaField.id === curr.id).name;
-
-        return Object.assign({}, prev, {
-          [fieldName]: curr.value,
-        });
-      }, {});
+    const fieldValues = this.getFieldValues();
 
     const submitFn = () => this.props.formActions.submitForm(
       this.submitApi,
@@ -233,6 +226,26 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
     event.preventDefault();
     return submitFn();
+  }
+
+  /**
+   * Gets all field values based on the assigned form schema, from prop state.
+   *
+   * @returns {Object}
+   */
+  getFieldValues() {
+    const schemaFields = this.props.schemas[this.props.schemaUrl].schema.fields;
+    return this.props.form[this.getFormId()].fields
+      .reduce((prev, curr) => {
+        const match = schemaFields.find(schemaField => schemaField.id === curr.id);
+        if (!match) {
+          return prev;
+        }
+
+        return Object.assign({}, prev, {
+          [match.name]: curr.value,
+        });
+      }, {});
   }
 
   buildComponent(field, extraProps = {}) {

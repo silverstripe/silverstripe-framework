@@ -22,7 +22,7 @@ describe('FormBuilderComponent', () => {
       formBuilder = new FormBuilderComponent(props);
     });
 
-    it('should deep merge properties on the origional object', () => {
+    it('should deep merge properties on the originalobject', () => {
       const fieldStructure = {
         component: 'TextField',
         data: {
@@ -51,6 +51,47 @@ describe('FormBuilderComponent', () => {
       expect(field.messages[0].type).toBe('good');
       expect(field.valid).toBe(true);
       expect(field.value).toBe('My test field');
+    });
+  });
+
+  describe('getFieldValues()', () => {
+    let formBuilder;
+    let fieldValues;
+    let props;
+
+    it('should retrieve field values based on schema', () => {
+      props = {
+        form: {
+          MyForm: {
+            fields: [
+              { id: 'fieldOne', value: 'valOne' },
+              { id: 'fieldTwo', value: null },
+              { id: 'notInSchema', value: 'invalid' },
+            ],
+          },
+        },
+        formActions: {},
+        schemas: {
+          'admin/assets/schema/1': {
+            id: 'MyForm',
+            schema: {
+              fields: [
+                { id: 'fieldOne', name: 'fieldOne' },
+                { id: 'fieldTwo', name: 'fieldTwo' },
+              ],
+            },
+          },
+        },
+        schemaActions: {},
+        schemaUrl: 'admin/assets/schema/1',
+      };
+      formBuilder = new FormBuilderComponent(props);
+
+      fieldValues = formBuilder.getFieldValues();
+      expect(fieldValues).toEqual({
+        fieldOne: 'valOne',
+        fieldTwo: null,
+      });
     });
   });
 });
