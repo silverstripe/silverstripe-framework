@@ -111,6 +111,26 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->assertEquals(2, $obj->ManyManyRelation()->Count());
 		$this->assertNotNull($obj->ManyManyRelation()->find('ID', $relation1->ID));
 		$this->assertNotNull($obj->ManyManyRelation()->find('ID', $relation2->ID));
+
+		$obj2 = $blueprint->createObject(
+			'two',
+			array(
+				// Note; using array format here, not comma separated
+				'HasManyRelation' => array(
+					'=>FixtureFactoryTest_DataObjectRelation.relation1',
+					'=>FixtureFactoryTest_DataObjectRelation.relation2'
+				)
+			),
+			array(
+				'FixtureFactoryTest_DataObjectRelation' => array(
+					'relation1' => $relation1->ID,
+					'relation2' => $relation2->ID
+				)
+			)
+		);
+		$this->assertEquals(2, $obj2->HasManyRelation()->Count());
+		$this->assertNotNull($obj2->HasManyRelation()->find('ID', $relation1->ID));
+		$this->assertNotNull($obj2->HasManyRelation()->find('ID', $relation2->ID));
 	}
 
 	/**
