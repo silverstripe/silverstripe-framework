@@ -385,6 +385,16 @@ class Form extends RequestHandler {
 				// Clear invalid token on refresh
 				$data = $this->getData();
 				unset($data[$securityID]);
+
+				// Ensure we don't send passwords back in clear-text
+				/** @var FormField $f */
+				foreach($this->Fields()->dataFields() as $f) {
+
+					if(get_class($f) === 'PasswordField' && isset($data[$f->getName()])) {
+						unset($data[$f->getName()]);
+					}
+				}
+
 				Session::set("FormInfo.{$this->FormName()}.data", $data);
 				Session::set("FormInfo.{$this->FormName()}.errors", array());
 				$this->sessionMessage(
