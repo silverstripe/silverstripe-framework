@@ -16,7 +16,8 @@ Check our [requirements](/getting_started/server_requirements) documentation.
 
 ## Conventions
 
-We follow the [AirBnB JavaScript Conventions](https://github.com/airbnb/javascript).
+We follow the [AirBnB JavaScript Conventions](https://github.com/airbnb/javascript),
+as well as the [AirBnB React Conventions](https://github.com/airbnb/javascript/tree/master/react).
 A lot of their rules can be validated via [ESLint](http://eslint.org/),
 and can be checked locally via `npm run lint`.
 
