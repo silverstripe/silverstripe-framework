@@ -340,7 +340,14 @@ class DateField extends TextField {
 		$valid = true;
 
 		// Don't validate empty fields
-		if(empty($this->value)) return true;
+		if ($this->getConfig('dmyfields')) {
+			if (empty($this->value['day']) && empty($this->value['month']) && empty($this->value['year'])) {
+				return $valid;
+			}
+		}
+		elseif (empty($this->value)) {
+			return $valid;
+		}
 
 		// date format
 		if($this->getConfig('dmyfields')) {
