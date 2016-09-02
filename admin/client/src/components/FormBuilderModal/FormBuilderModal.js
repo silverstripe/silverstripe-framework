@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'react-bootstrap-4';
+import { Modal } from 'react-bootstrap-ss';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormBuilder from 'components/FormBuilder/FormBuilder';
 

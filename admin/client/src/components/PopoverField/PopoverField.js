@@ -1,5 +1,5 @@
 import React from 'react';
-import { Popover, OverlayTrigger } from 'react-bootstrap-4';
+import { Popover, OverlayTrigger } from 'react-bootstrap-ss';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
 class PopoverField extends SilverStripeComponent {
