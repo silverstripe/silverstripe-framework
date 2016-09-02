@@ -336,14 +336,16 @@ en:
     IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert media from'
     LINK: 'Insert Link'
-    LINKANCHOR: 'Anchor on this page'
+    LINKANCHOR: 'Link to an anchor on this page'
     LINKDESCR: 'Link description'
-    LINKEMAIL: 'Email address'
-    LINKEXTERNAL: 'Another website'
-    LINKFILE: 'Download a file'
-    LINKINTERNAL: 'Page on the site'
+    LINKEMAIL: 'Link to an email address'
+    LINKEXTERNAL: 'Link to another website'
+    LINKFILE: 'Link to download a file'
+    LINKINTERNAL: 'Link to a page on this site'
     LINKOPENNEWWIN: 'Open link in a new window?'
     LINKTO: 'Link to'
+    LINKTYPE: 'Link type'
+    LINKDETAILS: 'Link details'
     PAGE: Page
     SUBJECT: 'Email subject'
     URL: URL

@@ -224,8 +224,8 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 		// mimic the SiteTree::getMenuTitle(), which is bypassed when the search is performed
 		$siteTree->setSearchFunction(array($this, 'siteTreeSearchCallback'));
 
-		$numericLabelTmpl = '<span class="step-label"><span class="flyout">%d</span><span class="arrow"></span>'
-			. '<strong class="title">%s</strong></span>';
+		$numericLabelTmpl = '<span class="step-label"><span class="flyout">Step %d.</span>'
+			. '<span class="title">%s</span></span>';
 		$form = new Form(
 			$this->controller,
 			"{$this->name}/LinkForm",
@@ -242,20 +242,20 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 						'LinkType',
 						DBField::create_field(
 							'HTMLFragment',
-							sprintf($numericLabelTmpl, '1', _t('HTMLEditorField.LINKTO', 'Link to'))
+							sprintf($numericLabelTmpl, '1', _t('HTMLEditorField.LINKTYPE', 'Link type'))
 						),
 						array(
-							'internal' => _t('HTMLEditorField.LINKINTERNAL', 'Page on the site'),
-							'external' => _t('HTMLEditorField.LINKEXTERNAL', 'Another website'),
-							'anchor' => _t('HTMLEditorField.LINKANCHOR', 'Anchor on this page'),
-							'email' => _t('HTMLEditorField.LINKEMAIL', 'Email address'),
-							'file' => _t('HTMLEditorField.LINKFILE', 'Download a file'),
+							'internal' => _t('HTMLEditorField.LINKINTERNAL', 'Link to a page on this site'),
+							'external' => _t('HTMLEditorField.LINKEXTERNAL', 'Link to another website'),
+							'anchor' => _t('HTMLEditorField.LINKANCHOR', 'Link to an anchor on this page'),
+							'email' => _t('HTMLEditorField.LINKEMAIL', 'Link to an email address'),
+							'file' => _t('HTMLEditorField.LINKFILE', 'Link to download a file'),
 						),
 						'internal'
 					),
 					LiteralField::create('Step2',
 						'<div class="step2">'
-						. sprintf($numericLabelTmpl, '2', _t('HTMLEditorField.DETAILS', 'Details')) . '</div>'
+						. sprintf($numericLabelTmpl, '2', _t('HTMLEditorField.LINKDETAILS', 'Link details')) . '</div>'
 					),
 					$siteTree,
 					TextField::create('external', _t('HTMLEditorField.URL', 'URL'), 'http://'),
