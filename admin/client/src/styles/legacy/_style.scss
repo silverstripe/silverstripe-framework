@@ -1808,8 +1808,13 @@ body.cms-dialog {
 		width:100%;
 		height: 53px;
 
+		// remove extra border on headers
+		&::after {
+			display: none;
+		}
+
 		h3{
-			padding: $grid-y*1.5 0 $grid-y*1.5 $grid-x*2;
+			padding: $grid-y*1.5 0 $grid-y*1.5 $grid-gutter-width-half;
 			margin: 0;
 			line-height: 28px;
 			display: inline-block;
@@ -1831,12 +1836,20 @@ body.cms-dialog {
 		}
 	}
 
-	.ss-insert-media,
-  .ss-insert-link {
+	.ss-insert-media {
 		padding: $grid-y*1.5 $grid-x*2;
 
 		.ui-tabs-panel {
 			padding: 0;
+		}
+	}
+
+  .ss-insert-link {
+		padding-left: $grid-gutter-width-half;
+		padding-right: $grid-gutter-width-half;
+
+		&::after {
+			display: none;
 		}
 	}
 
