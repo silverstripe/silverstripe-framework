@@ -242,7 +242,7 @@ class HTMLEditorField_Toolbar extends RequestHandler {
 						'LinkType',
 						DBField::create_field(
 							'HTMLFragment',
-							sprintf($numericLabelTmpl, '1', _t('HTMLEditorField.LINKTYPE', 'Link type'))
+							sprintf($numericLabelTmpl, '1', _t('HTMLEditorField.LINKTO', 'Link type'))
 						),
 						array(
 							'internal' => _t('HTMLEditorField.LINKINTERNAL', 'Link to a page on this site'),

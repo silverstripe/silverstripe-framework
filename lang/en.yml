@@ -310,48 +310,6 @@ en:
     ResultCreated: 'Created {count} groups'
     ResultDeleted: 'Deleted %d groups'
     ResultUpdated: 'Updated %d groups'
-  HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'You are not permitted to access the content of the target page.'
-    ANCHORSPAGENOTFOUND: 'Target page not found.'
-    ANCHORVALUE: Anchor
-    BUTTONADDURL: 'Add url'
-    CAPTIONTEXT: 'Caption text'
-    CSSCLASS: 'Alignment / style'
-    CSSCLASSCENTER: 'Centered, on its own.'
-    CSSCLASSLEFT: 'On the left, with text wrapping around.'
-    CSSCLASSLEFTALONE: 'On the left, on its own.'
-    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
-    DETAILS: Details
-    EMAIL: 'Email address'
-    FILE: File
-    FOLDER: Folder
-    IMAGEALT: 'Alternative text (alt)'
-    IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
-    IMAGEALTTEXTDESC: 'Shown to screen readers or if image can''t be displayed'
-    IMAGEDIMENSIONS: Dimensions
-    IMAGEHEIGHTPX: Height
-    IMAGETITLE: 'Title text (tooltip) - for additional information about the image'
-    IMAGETITLETEXT: 'Title text (tooltip)'
-    IMAGETITLETEXTDESC: 'For additional information about the image'
-    IMAGEWIDTHPX: Width
-    INSERTMEDIA: 'Insert media from'
-    LINK: 'Insert Link'
-    LINKANCHOR: 'Link to an anchor on this page'
-    LINKDESCR: 'Link description'
-    LINKEMAIL: 'Link to an email address'
-    LINKEXTERNAL: 'Link to another website'
-    LINKFILE: 'Link to download a file'
-    LINKINTERNAL: 'Link to a page on this site'
-    LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link to'
-    LINKTYPE: 'Link type'
-    LINKDETAILS: 'Link details'
-    PAGE: Page
-    SUBJECT: 'Email subject'
-    URL: URL
-    URLDESCRIPTION: 'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.'
-    URLNOTANOEMBEDRESOURCE: 'The URL ''{url}'' could not be turned into a media resource.'
-    UpdateMEDIA: 'Update media'
   HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Only absolute urls can be embedded'
     ERROR_HOSTNAME: 'This file hostname is not included in the whitelist'
@@ -395,16 +353,17 @@ en:
     IMAGETITLETEXT: 'Title text (tooltip)'
     IMAGETITLETEXTDESC: 'For additional information about the image'
     IMAGEWIDTHPX: Width
-    INSERTMEDIA: 'Insert Media'
+    INSERTMEDIA: 'Insert media from'
     LINK: 'Insert Link'
-    LINKANCHOR: 'Anchor on this page'
+    LINKANCHOR: 'Link to an anchor on this page'
     LINKDESCR: 'Link description'
-    LINKEMAIL: 'Email address'
-    LINKEXTERNAL: 'Another website'
-    LINKFILE: 'Download a file'
-    LINKINTERNAL: 'Page on the site'
+    LINKDETAILS: 'Link details'
+    LINKEMAIL: 'Link to an email address'
+    LINKEXTERNAL: 'Link to another website'
+    LINKFILE: 'Link to download a file'
+    LINKINTERNAL: 'Link to a page on this site'
     LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link to'
+    LINKTO: 'Link type'
     PAGE: Page
     SUBJECT: 'Email subject'
     URL: URL
