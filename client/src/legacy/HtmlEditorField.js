@@ -533,23 +533,23 @@ $.entwine('ss', function($) {
 
 			// Toggle field visibility depending on the link type.
 			this.find('.step2').nextAll('.field').not('.field[id$="' + linkType +'_Holder"]').hide();
-			this.find('.field[id$="LinkType_Holder"]').show();
-			this.find('.field[id$="' + linkType +'_Holder"]').show();
+			this.find('.field[id$="LinkType_Holder"]').attr('style', 'display: -webkit-flex; display: flex');
+			this.find('.field[id$="' + linkType +'_Holder"]').attr('style', 'display: -webkit-flex; display: flex');
 
 			if(linkType == 'internal' || linkType == 'anchor') {
-				this.find('.field[id$="Anchor_Holder"]').show();
+				this.find('.field[id$="Anchor_Holder"]').attr('style', 'display: -webkit-flex; display: flex');
 			}
 
 			if(linkType == 'email') {
-				this.find('.field[id$="Subject_Holder"]').show();
+				this.find('.field[id$="Subject_Holder"]').attr('style', 'display: -webkit-flex; display: flex');
 			} else {
-				this.find('.field[id$="TargetBlank_Holder"]').show();
+				this.find('.field[id$="TargetBlank_Holder"]').attr('style', 'display: -webkit-flex; display: flex');
 			}
 
 			if(linkType == 'anchor') {
-				this.find('.field[id$="AnchorSelector_Holder"]').show();
+				this.find('.field[id$="AnchorSelector_Holder"]').attr('style', 'display: -webkit-flex; display: flex');
 			}
-			this.find('.field[id$="Description_Holder"]').show();
+			this.find('.field[id$="Description_Holder"]').attr('style', 'display: -webkit-flex; display: flex');
 		},
 		/**
 		 * @return Object Keys: 'href', 'target', 'title'

@@ -5,8 +5,7 @@
 	<$Tag id="$ID" <% include AriaAttributes %>
 		class="form__fieldgroup form__field-holder
 			<% if not $Title %> form__field-holder--no-label<% end_if %>
-			<% if $Zebra %> form__fieldgroup-zebra<% end_if %>
-			<% if $extraClass %> $extraClass<% end_if %>"
+			<% if $Zebra %> form__fieldgroup-zebra<% end_if %>"
 	>
 		$Field
         <%-- TODO: change $MessageType to match Bootstraps alert types, e.g. alert-info, alert-danger etc --%>
