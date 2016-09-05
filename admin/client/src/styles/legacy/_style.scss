@@ -1576,21 +1576,29 @@ form.member-profile-form {
 }
 
 .cms .cms-panel-padded {
-    &.ReportAdmin {
-      .ss-gridfield-buttonrow {
-        margin-left: -20px;
-        margin-right: -20px;
-      }
+  &.ReportAdmin {
+    padding: $grid-gutter-width-half;
+    width: 100% !important;
 
-      > fieldset {
-          padding: 0 $panel-padding-x;
-      }
+    > .message {
+      margin-bottom: $grid-gutter-width-half;
     }
 
-    .cms-content-view {
-      padding: 0 $panel-padding-x $grid-y*1.5;
+    > fieldset {
+      margin-top: -$grid-gutter-width-half; // to check
+			padding: 0 $panel-padding-x;  // to check
+    }
+
+    .ss-gridfield-buttonrow {
+      margin-left: -20px;
+      margin-right: -20px;
     }
   }
+
+	.cms-content-view {
+		padding: 0 $panel-padding-x $grid-y*1.5;
+	}
+}
 
 .CMSPageAddController .cms-panel-padded {
   padding: $panel-padding-y $panel-padding-x;
