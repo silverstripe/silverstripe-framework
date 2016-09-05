@@ -32,7 +32,7 @@
 
 		$('.memberdatetimeoptionset .toggle').entwine({
 			onclick: function onclick(e) {
-				jQuery(this).closest('.description').parent().find('.toggle-content').toggle();
+				jQuery(this).closest('.form__field-description').parent().find('.toggle-content').toggle();
 				return false;
 			}
 		});
