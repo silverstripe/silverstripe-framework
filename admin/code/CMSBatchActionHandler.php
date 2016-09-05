@@ -179,7 +179,12 @@ class CMSBatchActionHandler extends RequestHandler {
 		// Find the action handler
 		$actions = $this->batchActions();
 		if(!isset($actions[$name]['class'])) {
-			throw new InvalidArgumentException("Invalid batch action: {$name}");
+			/** @var Closure $message */
+			$message = require __DIR__ . '/messages/InvalidBatchAction.php';
+
+			throw new InvalidArgumentException(
+				$message($actions[$name])
+			);
 		}
 		return $this->buildAction($actions[$name]['class']);
 	}
@@ -248,6 +253,15 @@ class CMSBatchActionHandler extends RequestHandler {
 		$actions = $this->config()->batch_actions;
 		$recordClass = $this->recordClass;
 		$actions = array_filter($actions, function($action) use ($recordClass) {
+			if (!isset($action['recordClass'])) {
+				/** @var Closure $message */
+				$message = require __DIR__ . '/messages/InvalidBatchAction.php';
+
+				throw new InvalidArgumentException(
+					$message($action)
+				);
+			}
+
 			return $action['recordClass'] === $recordClass;
 		});
 		return $actions;
