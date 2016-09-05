@@ -553,14 +553,17 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * or destroy and reinstanciate the record.
 	 *
 	 * @param string $className The new ClassName attribute (a subclass of {@link DataObject})
-	 * @return DataObject $this
+	 * @return $this
 	 */
 	public function setClassName($className) {
 		$className = trim($className);
-		if(!$className || !is_subclass_of($className, 'SilverStripe\ORM\DataObject')) return;
+		if(!$className || !is_subclass_of($className, 'SilverStripe\ORM\DataObject')) {
+			return $this;
+		}
 
 		$this->class = $className;
 		$this->setField("ClassName", $className);
+		$this->setField('RecordClassName', $className);
 		return $this;
 	}
 
@@ -581,15 +584,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject The new instance of the new class, The exact type will be of the class name provided.
 	 */
 	public function newClassInstance($newClassName) {
-		$originalClass = $this->ClassName;
-		$newInstance = new $newClassName(array_merge(
-			$this->record,
-			array(
-				'ClassName' => $originalClass,
-				'RecordClassName' => $originalClass,
-			)
-		), false, $this->model);
+		if (!is_subclass_of($newClassName, __CLASS__)) {
+			throw new InvalidArgumentException("$newClassName is not a valid subclass of DataObject");
+		}
 
+		$originalClass = $this->ClassName;
+
+		/** @var DataObject $newInstance */
+		$newInstance = Injector::inst()->create($newClassName, $this->record, false, $this->model);
+
+		// Modify ClassName
 		if($newClassName != $originalClass) {
 			$newInstance->setClassName($newClassName);
 			$newInstance->populateDefaults();
