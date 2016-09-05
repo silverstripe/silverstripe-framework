@@ -108,6 +108,10 @@ This describes the process of converting from one character set to another
 while keeping characters recognizeable. For example, vowels with french accents
 are replaced with their base characters, `pâté` becomes `pate`.
 
+It is advisable to set the `SS_Transliterator.use_iconv` setting to true via config for systems
+which have `iconv` extension enabled and configured.
+See [the php documentation on iconv](http://php.net/manual/en/book.iconv.php) for more information.
+
 In order to allow for so called "multibyte" characters outside of the ASCII subset,
 limit the character filtering in the underlying configuration setting,
 by setting `URLSegmentFilter.default_use_transliterator` to `false` in your YAML configuration.
