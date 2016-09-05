@@ -494,8 +494,8 @@ button.loading {
 	&[class*="font-icon-"],
 	&[class^="font-icon-"],
 	&.ss-ui-button-constructive[class*="font-icon-"] {
-		padding: 5px 8px;
-		margin-bottom: $grid-y*1.5;
+		padding: 6px 8px;
+		margin-bottom: 10px;
 		vertical-align: middle;
 		box-shadow: none;
 		border: 0;
@@ -529,6 +529,7 @@ button.loading {
 			margin-right: 5px;
 			margin-top: 0;
 			vertical-align: top;
+			line-height: 20px;
 		}
 
 		&.ui-state-focus {
