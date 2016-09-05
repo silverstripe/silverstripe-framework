@@ -428,7 +428,7 @@ class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly
 	);
 
 	private static $belongs_many_many = array(
-		'People' => 'GridFieldDetailFormTest_Person'
+		'FavouritePeople' => 'GridFieldDetailFormTest_Person'
 	);
 
 	private static $default_sort = '"Name"';

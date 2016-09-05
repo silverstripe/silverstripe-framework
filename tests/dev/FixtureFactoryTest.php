@@ -164,6 +164,10 @@ class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
 		"Name" => "Varchar"
 	);
 
+	private static $has_many = array(
+		"HasManyRelation" => "FixtureFactoryTest_DataObjectRelation"
+	);
+
 	private static $many_many = array(
 		"ManyManyRelation" => "FixtureFactoryTest_DataObjectRelation"
 	);
@@ -187,5 +191,9 @@ class FixtureFactoryTest_DataObjectRelation extends DataObject implements TestOn
 
 	private static $belongs_many_many = array(
 		"TestParent" => "FixtureFactoryTest_DataObject"
+	);
+
+	private static $has_one = array(
+		'MyParent' => 'FixtureFactoryTest_DataObject'
 	);
 }
