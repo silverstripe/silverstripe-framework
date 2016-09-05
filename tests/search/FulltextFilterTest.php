@@ -19,25 +19,25 @@ class FulltextFilterTest extends SapphireTest {
 			$this->assertEquals(3, $baseQuery->count(), "FulltextFilterTest_DataObject count does not match.");
 
 			// First we'll text the 'SearchFields' which has been set using an array
-			$search = $baseQuery->filter("SearchFields:fulltext", 'SilverStripe');
+			$search = $baseQuery->filter("SearchFields:Fulltext", 'SilverStripe');
 			$this->assertEquals(1, $search->count());
 
-			$search = $baseQuery->exclude("SearchFields:fulltext", "SilverStripe");
+			$search = $baseQuery->exclude("SearchFields:Fulltext", "SilverStripe");
 			$this->assertEquals(2, $search->count());
 
 			// Now we'll run the same tests on 'OtherSearchFields' which should yield the same resutls
 			// but has been set using a string.
-			$search = $baseQuery->filter("OtherSearchFields:fulltext", 'SilverStripe');
+			$search = $baseQuery->filter("OtherSearchFields:Fulltext", 'SilverStripe');
 			$this->assertEquals(1, $search->count());
 
-			$search = $baseQuery->exclude("OtherSearchFields:fulltext", "SilverStripe");
+			$search = $baseQuery->exclude("OtherSearchFields:Fulltext", "SilverStripe");
 			$this->assertEquals(2, $search->count());
 
 			// Search on a single field
-			$search = $baseQuery->filter("ColumnE:fulltext", 'Dragons');
+			$search = $baseQuery->filter("ColumnE:Fulltext", 'Dragons');
 			$this->assertEquals(1, $search->count());
 
-			$search = $baseQuery->exclude("ColumnE:fulltext", "Dragons");
+			$search = $baseQuery->exclude("ColumnE:Fulltext", "Dragons");
 			$this->assertEquals(2, $search->count());
 		} else {
 			$this->markTestSkipped("FulltextFilter only supports MySQL syntax.");

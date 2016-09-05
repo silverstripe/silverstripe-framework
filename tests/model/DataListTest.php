@@ -649,9 +649,22 @@ class DataListTest extends SapphireTest {
 	}
 
 	public function testSimpleFilterWithNonExistingComparisator() {
-		$this->setExpectedException('InvalidArgumentException');
+		$this->setExpectedException(
+			'ReflectionException',
+			'Class DataListFilter.Bogus does not exist'
+		);
 		$list = DataObjectTest_TeamComment::get();
-		$list = $list->filter('Comment:Bogus', 'team comment');
+		$list->filter('Comment:Bogus', 'team comment');
+	}
+
+	public function testInvalidModifier() {
+		// Invalid modifiers are treated as failed filter construction
+		$this->setExpectedException(
+			'ReflectionException',
+			'Class DataListFilter.invalidmodifier does not exist'
+		);
+		$list = DataObjectTest_TeamComment::get();
+		$list->filter('Comment:invalidmodifier', 'team comment');
 	}
 
 	/**

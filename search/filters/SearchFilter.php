@@ -2,11 +2,21 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataQuery;
+
 /**
  * Base class for filtering implementations,
  * which work together with {@link SearchContext}
  * to create or amend a query for {@link DataObject} instances.
  * See {@link SearchContext} for more information.
+ *
+ * Each search filter must be registered in config as an "Injector" service with
+ * the "DataListFilter." prefix. E.g.
+ *
+ * <code>
+ * Injector:
+ *   DataListFilter.EndsWith:
+ *     class: EndsWithFilter
+ * </code>
  *
  * @package framework
  * @subpackage search
@@ -53,7 +63,8 @@ abstract class SearchFilter extends Object {
 	 * @param mixed $value
 	 * @param array $modifiers
 	 */
-	public function __construct($fullName, $value = false, array $modifiers = array()) {
+	public function __construct($fullName = null, $value = false, array $modifiers = array()) {
+		parent::__construct();
 		$this->fullName = $fullName;
 
 		// sets $this->name and $this->relation
@@ -112,7 +123,29 @@ abstract class SearchFilter extends Object {
 	 * @param array $modifiers
 	 */
 	public function setModifiers(array $modifiers) {
-		$this->modifiers = array_map('strtolower', $modifiers);
+		$modifiers = array_map('strtolower', $modifiers);
+
+		// Validate modifiers are supported
+		$allowed = $this->getSupportedModifiers();
+		$unsupported = array_diff($modifiers, $allowed);
+		if ($unsupported) {
+			throw new InvalidArgumentException(
+				get_class($this) . ' does not accept ' . implode(', ', $unsupported) . ' as modifiers'
+			);
+		}
+
+		$this->modifiers = $modifiers;
+	}
+
+	/**
+	 * Gets supported modifiers for this filter
+	 *
+	 * @return array
+	 */
+	public function getSupportedModifiers()
+	{
+		// By default support 'not' as a modifier for all filters
+		return ['not'];
 	}
 
 	/**
