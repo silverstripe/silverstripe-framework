@@ -1575,29 +1575,38 @@ form.member-profile-form {
   }
 }
 
-.cms .cms-panel-padded {
-  &.ReportAdmin {
-    padding: $grid-gutter-width-half;
-    width: 100% !important;
+// Custom styles for ReportAdmin
+.ReportAdmin {
 
-    > .message {
-      margin-bottom: $grid-gutter-width-half;
-    }
+  > fieldset {
+    margin-top: -$grid-gutter-width-half;
+		padding: 0 $panel-padding-x;  // to check
 
-    > fieldset {
-      margin-top: -$grid-gutter-width-half; // to check
-			padding: 0 $panel-padding-x;  // to check
-    }
-
-    .ss-gridfield-buttonrow {
-      margin-left: -20px;
-      margin-right: -20px;
-    }
+    // If form fields are at the top (typically .grid-field) then add additional space
+    // > .form-group:first-child {
+    //   margin-top: $grid-gutter-width-half;
+    // }
   }
 
-	.cms-content-view {
-		padding: 0 $panel-padding-x $grid-y*1.5;
-	}
+  > .message {
+    margin-bottom: $grid-gutter-width-half;
+  }
+
+  .toolbar--content {
+    margin-left: -$grid-gutter-width-half;
+    margin-right: -$grid-gutter-width-half;
+  }
+
+  &.cms-panel-padded {
+    // scss-lint:disable ImportantRule
+    padding: $grid-gutter-width-half !important; // Override JLayout
+    width: 100% !important; // Override JLayout
+    // scss-lint:enable ImportantRule
+  }
+}
+
+.cms .cms-panel-padded .cms-content-view {
+	padding: 0 $panel-padding-x $grid-y*1.5;
 }
 
 .CMSPageAddController .cms-panel-padded {
