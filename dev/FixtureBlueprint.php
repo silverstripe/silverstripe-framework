@@ -131,29 +131,48 @@ class FixtureBlueprint {
 
 			// Populate all relations
 			if($data) foreach($data as $fieldName => $fieldVal) {
-				if($obj->manyManyComponent($fieldName) || $obj->hasManyComponent($fieldName)) {
+				$isManyMany = $obj->manyManyComponent($fieldName);
+				$isHasMany = $obj->hasManyComponent($fieldName);
+				if ($isManyMany && $isHasMany) {
+					throw new InvalidArgumentException("$fieldName is both many_many and has_many");
+				}
+				if($isManyMany || $isHasMany) {
 					$obj->write();
 
-					$parsedItems = array();
-
-					if(is_array($fieldVal)) {
+					// Many many components need a little extra work to extract extrafields
+					if(is_array($fieldVal) && $isManyMany) {
 						// handle lists of many_many relations. Each item can
 						// specify the many_many_extraFields against each
 						// related item.
 						foreach($fieldVal as $relVal) {
-							$item = key($relVal);
+							// Check for many_many_extrafields
+							$extrafields = array();
+							if (is_array($relVal)) {
+								// Item is either first row, or key in yet another nested array
+								$item = key($relVal);
+								if (is_array($relVal[$item]) && count($relVal) === 1) {
+									// Extra fields from nested array
+									$extrafields = $relVal[$item];
+								} else {
+									// Extra fields from subsequent items
+									array_shift($relVal);
+									$extrafields = $relVal;
+								}
+							} else {
+								$item = $relVal;
+							}
 							$id = $this->parseValue($item, $fixtures);
-							$parsedItems[] = $id;
-
-							array_shift($relVal);
 
 							$obj->getManyManyComponents($fieldName)->add(
-								$id, $relVal
+								$id, $extrafields
 							);
 						}
 					} else {
-						$items = preg_split('/ *, */',trim($fieldVal));
+						$items = is_array($fieldVal)
+							? $fieldVal
+							: preg_split('/ *, */',trim($fieldVal));
 
+						$parsedItems = array();
 						foreach($items as $item) {
 							// Check for correct format: =><relationname>.<identifier>.
 							// Ignore if the item has already been replaced with a numeric DB identifier
@@ -169,9 +188,9 @@ class FixtureBlueprint {
 							$parsedItems[] = $this->parseValue($item, $fixtures);
 						}
 
-						if($obj->hasManyComponent($fieldName)) {
+						if($isHasMany) {
 							$obj->getComponents($fieldName)->setByIDList($parsedItems);
-						} elseif($obj->manyManyComponent($fieldName)) {
+						} elseif($isManyMany) {
 							$obj->getManyManyComponents($fieldName)->setByIDList($parsedItems);
 						}
 					}
