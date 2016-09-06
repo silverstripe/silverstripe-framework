@@ -14,7 +14,7 @@ class SingleSelectField extends SilverStripeComponent {
   render() {
     let field = null;
     if (this.props.readOnly) {
-      field = this.getReadonlyField;
+      field = this.getReadonlyField();
     } else {
       field = this.getSelectField();
     }
@@ -28,9 +28,10 @@ class SingleSelectField extends SilverStripeComponent {
    * @returns ReactComponent
    */
   getReadonlyField() {
-    let label = this.props.source.find((item) => item.value === this.props.value);
+    let label = this.props.source
+      && this.props.source.find((item) => item.value === this.props.value);
 
-    label = label !== undefined
+    label = typeof label === 'string'
       ? label
       : this.props.value;
 
