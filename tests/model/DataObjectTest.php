@@ -1264,14 +1264,21 @@ class DataObjectTest extends SapphireTest {
 		// Don't write the record, it will reset changed fields
 		$this->assertInstanceOf('DataObjectTest_SubTeam', $changedDO);
 		$this->assertEquals($changedDO->ClassName, 'DataObjectTest_SubTeam');
+		$this->assertEquals($changedDO->RecordClassName, 'DataObjectTest_SubTeam');
 		$this->assertContains('ClassName', array_keys($changedFields));
 		$this->assertEquals($changedFields['ClassName']['before'], 'DataObjectTest_Team');
 		$this->assertEquals($changedFields['ClassName']['after'], 'DataObjectTest_SubTeam');
+		$this->assertEquals($changedFields['RecordClassName']['before'], 'DataObjectTest_Team');
+		$this->assertEquals($changedFields['RecordClassName']['after'], 'DataObjectTest_SubTeam');
 
 		$changedDO->write();
 
 		$this->assertInstanceOf('DataObjectTest_SubTeam', $changedDO);
 		$this->assertEquals($changedDO->ClassName, 'DataObjectTest_SubTeam');
+
+		// Test invalid classes fail
+		$this->setExpectedException('InvalidArgumentException', "Controller is not a valid subclass of DataObject");
+		$dataObject->newClassInstance('Controller');
 	}
 
 	public function testMultipleManyManyWithSameClass() {
