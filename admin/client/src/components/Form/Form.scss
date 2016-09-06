@@ -117,7 +117,7 @@ input.radio {
 
 // Grouped/Nested form fields
 // Nested as only as a fix for date fields within the filter panel
-.form__fieldgroup .form__fieldgroup-item {
+.form__fieldgroup > .form__fieldgroup-item {
   display: inline-block;
   margin-right: $spacer-x / 2;
   margin-top: 8px;
