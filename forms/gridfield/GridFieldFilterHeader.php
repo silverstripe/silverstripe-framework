@@ -161,8 +161,9 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 			$forTemplate->Fields->push($fields);
 		}
 
+		$templates = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);
 		return array(
-			'header' => $forTemplate->renderWith('Includes/GridFieldFilterHeader_Row'),
+			'header' => $forTemplate->renderWith($templates),
 		);
 	}
 }

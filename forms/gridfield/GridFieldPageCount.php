@@ -16,14 +16,7 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 	protected $targetFragment;
 
 	/**
-	 * Which template to use for rendering
-	 *
-	 * @var string
-	 */
-	protected $itemClass = 'GridFieldPageCount';
-
-	/**
-	 * @param string $targetFrament The fragment indicating the placement of this page count
+	 * @param string $targetFragment The fragment indicating the placement of this page count
 	 */
 	public function __construct($targetFragment = 'before') {
 		$this->targetFragment = $targetFragment;
@@ -62,14 +55,16 @@ class GridFieldPageCount implements GridField_HTMLProvider {
 	 * @return array
 	 */
 	public function getHTMLFragments($gridField) {
-
 		// Retrieve paging parameters from the directing paginator component
 		$paginator = $this->getPaginator($gridField);
 		if ($paginator && ($forTemplate = $paginator->getTemplateParameters($gridField))) {
+			$template = SSViewer::get_templates_by_class($this, '', __CLASS__);
 			return array(
-				$this->targetFragment => $forTemplate->renderWith('Includes/'.$this->itemClass)
+				$this->targetFragment => $forTemplate->renderWith($template)
 			);
 		}
+
+		return null;
 	}
 
 }

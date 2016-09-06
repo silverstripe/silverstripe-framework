@@ -201,11 +201,13 @@ You can use inequalities like `<`, `<=`, `>`, `>=` to compare numbers.
 ## Includes
 
 Within SilverStripe templates we have the ability to include other templates using the `<% include %>` tag. The includes
-will be searched for using the same filename look-up rules as a regular template, so this will include 
-`templates/Includes/Sidebar.ss`
+will be searched for using the same filename look-up rules as a regular template. However in the case of the include tag
+an additional `Includes` directory will be inserted into the resolved path just prior to the filename.
 
-	:::ss
-	<% include Includes\SideBar %>
+ E.g.
+  
+  * `<% include SideBar %>` will include `templates/Includes/Sidebar.ss`
+  * `<% include MyNamespace/SideBar %>` will include `templates/MyNamespace/Includes/Sidebar.ss`
 
 Note that in SilverStripe 3, you didn't have to specify a namespace in your `include` tag, as the template engine didn't
 use namespaces. As of SilverStripe 4, the template namespaces need to match the folder structure of your template files.

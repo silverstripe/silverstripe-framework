@@ -479,9 +479,11 @@ class Email extends ViewableData {
 			if($this->ss_template && !$isPlain) {
 				// Requery data so that updated versions of To, From, Subject, etc are included
 				$data = $this->templateData();
-
-				$template = new SSViewer('email/'.$this->ss_template);
-
+				$candidateTemplates = [
+					$this->ss_template,
+					[ 'type' => 'email', $this->ss_template ]
+				];
+				$template = new SSViewer($candidateTemplates);
 				if($template->exists()) {
 					$fullBody = $template->process($data);
 				}

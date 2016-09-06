@@ -35,40 +35,48 @@ class GridFieldLevelup extends Object implements GridField_HTMLProvider {
 	 * @param integer $currentID - The ID of the current item; this button will find that item's parent
 	 */
 	public function __construct($currentID) {
-		if($currentID && is_numeric($currentID)) $this->currentID = $currentID;
+		parent::__construct();
+		if($currentID && is_numeric($currentID)) {
+			$this->currentID = $currentID;
+		}
 	}
 
 	public function getHTMLFragments($gridField) {
 		$modelClass = $gridField->getModelClass();
 		$parentID = 0;
 
-		if($this->currentID) {
-			$modelObj = DataObject::get_by_id($modelClass, $this->currentID);
-
-			if($modelObj->hasMethod('getParent')) {
-				$parent = $modelObj->getParent();
-			} elseif($modelObj->ParentID) {
-				$parent = $modelObj->Parent();
-			}
-
-			if($parent) $parentID = $parent->ID;
-
-			// Attributes
-			$attrs = array_merge($this->attributes, array(
-				'href' => sprintf($this->linkSpec, $parentID),
-				'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup'
-			));
-			$attrsStr = '';
-			foreach($attrs as $k => $v) $attrsStr .= " $k=\"" . Convert::raw2att($v) . "\"";
-
-			$forTemplate = new ArrayData(array(
-				'UpLink' => DBField::create_field('HTMLFragment', sprintf('<a%s></a>', $attrsStr))
-			));
-
-			return array(
-				'before' => $forTemplate->renderWith('Includes/GridFieldLevelup'),
-			);
+		if(!$this->currentID) {
+			return null;
 		}
+
+		$modelObj = DataObject::get_by_id($modelClass, $this->currentID);
+
+		$parent = null;
+		if($modelObj->hasMethod('getParent')) {
+			$parent = $modelObj->getParent();
+		} elseif($modelObj->ParentID) {
+			$parent = $modelObj->Parent();
+		}
+
+		if ($parent) {
+			$parentID = $parent->ID;
+		}
+
+		// Attributes
+		$attrs = array_merge($this->attributes, array(
+			'href' => sprintf($this->linkSpec, $parentID),
+			'class' => 'cms-panel-link ss-ui-button font-icon-level-up no-text grid-levelup'
+		));
+		$linkTag = FormField::create_tag('a', $attrs);
+
+		$forTemplate = new ArrayData(array(
+			'UpLink' => DBField::create_field('HTMLFragment', $linkTag)
+		));
+
+		$template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+			return array(
+			'before' => $forTemplate->renderWith($template),
+		);
 	}
 
 	public function setAttributes($attrs) {

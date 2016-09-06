@@ -761,7 +761,6 @@ class FormField extends RequestHandler {
 	 *
 	 * @param mixed $value
 	 * @param null|array|DataObject $data {@see Form::loadDataFrom}
-	 *
 	 * @return $this
 	 */
 	public function setValue($value) {
@@ -1048,22 +1047,14 @@ class FormField extends RequestHandler {
 	 *
 	 * @return array
 	 */
-	private function _templates($customTemplate = null, $customTemplateSuffix = null) {
-		$matches = array();
-
-		foreach(array_reverse(ClassInfo::ancestry($this)) as $className) {
-			$matches[] = 'forms/'. $className . $customTemplateSuffix;
-
-			if($className == "FormField") {
-				break;
-			}
-		}
-
+	protected function _templates($customTemplate = null, $customTemplateSuffix = null) {
+		$templates = SSViewer::get_templates_by_class(get_class($this), $customTemplateSuffix, __CLASS__);
+		// Prefer any custom template
 		if($customTemplate) {
-			array_unshift($matches, 'forms/'.$customTemplate);
+			// Prioritise direct template
+			array_unshift($templates, $customTemplate);
 		}
-
-		return $matches;
+		return $templates;
 	}
 
 	/**

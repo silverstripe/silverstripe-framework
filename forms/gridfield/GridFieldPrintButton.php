@@ -121,8 +121,10 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/GridField_print.css');
 
 		if($data = $this->generatePrintData($gridField)){
-			return $data->renderWith("GridField_print");
+			return $data->renderWith(get_class($gridField)."_print");
 		}
+
+		return null;
 	}
 
 	/**

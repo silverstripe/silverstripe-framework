@@ -1025,14 +1025,27 @@ class Form extends RequestHandler {
 
 	/**
 	 * Return the template to render this form with.
-	 * If the template isn't set, then default to the
-	 * form class name e.g "Form".
 	 *
 	 * @return string
 	 */
 	public function getTemplate() {
-		if($this->template) return $this->template;
-		else return $this->class;
+		return $this->template;
+	}
+
+	/**
+	 * Returs the ordered list of preferred templates for rendering this form
+	 * If the template isn't set, then default to the
+	 * form class name e.g "Form".
+	 *
+	 * @return array
+	 */
+	public function getTemplates() {
+		$templates = SSViewer::get_templates_by_class(get_class($this), '', __CLASS__);
+		// Prefer any custom template
+		if($this->getTemplate()) {
+			array_unshift($templates, $this->getTemplate());
+		}
+		return $templates;
 	}
 
 	/**
@@ -1639,10 +1652,7 @@ class Form extends RequestHandler {
 	 * @return DBHTMLText
 	 */
 	public function forTemplate() {
-		$return = $this->renderWith(array_merge(
-			(array)$this->getTemplate(),
-			array('Includes/Form')
-		));
+		$return = $this->renderWith($this->getTemplates());
 
 		// Now that we're rendered, clear message
 		$this->clearMessage();
@@ -1742,7 +1752,7 @@ class Form extends RequestHandler {
 
 	/**
 	 * Get a list of all actions, including those in the main "fields" FieldList
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function getAllActions() {

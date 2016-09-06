@@ -87,15 +87,17 @@ class ClassInfo {
 	 *
 	 * @todo Move this into {@see DataObjectSchema}
 	 *
-	 * @param string|object $class
+	 * @param string|object $nameOrObject Class or object instance
 	 * @return array
 	 */
-	public static function dataClassesFor($class) {
-		if(is_string($class) && !class_exists($class)) return array();
+	public static function dataClassesFor($nameOrObject) {
+		if(is_string($nameOrObject) && !class_exists($nameOrObject)) {
+			return array();
+		}
 
 		$result = array();
 
-		$class = self::class_name($class);
+		$class = self::class_name($nameOrObject);
 
 		$classes = array_merge(
 			self::ancestry($class),
@@ -134,17 +136,17 @@ class ClassInfo {
 	 * )
 	 * </code>
 	 *
-	 * @param mixed $class string of the classname or instance of the class
+	 * @param string|object $nameOrObject The classname or object
 	 * @return array Names of all subclasses as an associative array.
 	 */
-	public static function subclassesFor($class) {
-		if(is_string($class) && !class_exists($class)) {
+	public static function subclassesFor($nameOrObject) {
+		if(is_string($nameOrObject) && !class_exists($nameOrObject)) {
 			return [];
 		}
 
 		//normalise class case
-		$className = self::class_name($class);
-		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($class);
+		$className = self::class_name($nameOrObject);
+		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($className);
 		$result      = array($className => $className);
 
 		if ($descendants) {
@@ -174,14 +176,16 @@ class ClassInfo {
 	 * Returns the passed class name along with all its parent class names in an
 	 * array, sorted with the root class first.
 	 *
-	 * @param  string $class
-	 * @param  bool $tablesOnly Only return classes that have a table in the db.
+	 * @param string|object $nameOrObject Class or object instance
+	 * @param bool $tablesOnly Only return classes that have a table in the db.
 	 * @return array
 	 */
-	public static function ancestry($class, $tablesOnly = false) {
-		if(is_string($class) && !class_exists($class)) return array();
+	public static function ancestry($nameOrObject, $tablesOnly = false) {
+		if(is_string($nameOrObject) && !class_exists($nameOrObject)) {
+			return array();
+		}
 
-		$class = self::class_name($class);
+		$class = self::class_name($nameOrObject);
 
 		$lClass = strtolower($class);
 

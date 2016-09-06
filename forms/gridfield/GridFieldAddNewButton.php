@@ -43,8 +43,9 @@ class GridFieldAddNewButton implements GridField_HTMLProvider {
 			'ButtonName' => $this->buttonName,
 		));
 
+		$templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
 		return array(
-			$this->targetFragment => $data->renderWith('Includes/GridFieldAddNewButton'),
+			$this->targetFragment => $data->renderWith($templates),
 		);
 	}
 

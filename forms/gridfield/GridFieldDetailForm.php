@@ -127,7 +127,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 			$class,
 			array($gridField, $this, $record, $requestHandler, $this->name)
 		);
-		$handler->setTemplate($this->template);
+		$handler->setTemplate($this->getTemplate());
 		$this->extend('updateItemRequestHandler', $handler);
 		return $handler;
 	}
@@ -214,7 +214,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 		} else if(ClassInfo::exists(get_class($this) . "_ItemRequest")) {
 			return get_class($this) . "_ItemRequest";
 		} else {
-			return 'GridFieldDetailForm_ItemRequest';
+			return __CLASS__ . '_ItemRequest';
 		}
 	}
 
@@ -256,7 +256,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 	/**
 	 *
-	 * @var GridField_URLHandler
+	 * @var GridFieldDetailForm
 	 */
 	protected $component;
 
@@ -283,7 +283,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	/**
 	 * @var String
 	 */
-	protected $template = 'GridFieldItemEditView';
+	protected $template = null;
 
 	private static $url_handlers = array(
 		'$Action!' => '$Action',
@@ -293,7 +293,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	/**
 	 *
 	 * @param GridFIeld $gridField
-	 * @param GridField_URLHandler $component
+	 * @param GridFieldDetailForm $component
 	 * @param DataObject $record
 	 * @param RequestHandler $requestHandler
 	 * @param string $popupFormName
@@ -319,14 +319,14 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 		$controller = $this->getToplevelController();
 
-		$form = $this->ItemEditForm($this->gridField, $request);
+		$form = $this->ItemEditForm();
 		$form->makeReadonly();
 
 		$data = new ArrayData(array(
 			'Backlink'     => $controller->Link(),
 			'ItemEditForm' => $form
 		));
-		$return = $data->renderWith($this->template);
+		$return = $data->renderWith($this->getTemplates());
 
 		if($request->isAjax()) {
 			return $return;
@@ -337,12 +337,12 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 
 	public function edit($request) {
 		$controller = $this->getToplevelController();
-		$form = $this->ItemEditForm($this->gridField, $request);
+		$form = $this->ItemEditForm();
 
 		$return = $this->customise(array(
 			'Backlink' => $controller->hasMethod('Backlink') ? $controller->Backlink() : $controller->Link(),
 			'ItemEditForm' => $form,
-		))->renderWith($this->template);
+		))->renderWith($this->getTemplates());
 
 		if($request->isAjax()) {
 			return $return;
@@ -749,6 +749,21 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler {
 	 */
 	public function getTemplate() {
 		return $this->template;
+	}
+
+	/**
+	 * Get list of templates to use
+	 *
+	 * @return array
+	 */
+	public function getTemplates()
+	{
+		$templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
+		// Prefer any custom template
+		if($this->getTemplate()) {
+			array_unshift($templates, $this->getTemplate());
+		}
+		return $templates;
 	}
 
 	/**

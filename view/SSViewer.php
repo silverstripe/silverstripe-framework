@@ -859,51 +859,52 @@ class SSViewer implements Flushable {
 	}
 
 	/**
-	 * Traverses the given the given class context looking for templates with the relevant name.
+	 * Traverses the given the given class context looking for candidate template names
+	 * which match each item in the class hierarchy. The resulting list of template candidates
+	 * may or may not exist, but you can invoke {@see SSViewer::chooseTemplate} on any list
+	 * to determine the best candidate based on the current themes.
 	 *
-	 * @param $className string - valid class name
-	 * @param $suffix string
-	 * @param $baseClass string
-	 *
+	 * @param string|object $classOrObject Valid class name, or object
+	 * @param string $suffix
+	 * @param string $baseClass Class to halt ancestry search at
 	 * @return array
 	 */
-	public static function get_templates_by_class($className, $suffix = '', $baseClass = null) {
+	public static function get_templates_by_class($classOrObject, $suffix = '', $baseClass = null) {
 		// Figure out the class name from the supplied context.
-		if(!is_string($className) || !class_exists($className)) {
+		if (!is_object($classOrObject) && !(
+			is_string($classOrObject) && class_exists($classOrObject)
+		)) {
 			throw new InvalidArgumentException(
 				'SSViewer::get_templates_by_class() expects a valid class name as its first parameter.'
 			);
 		}
 		$templates = array();
-		$classes = array_reverse(ClassInfo::ancestry($className));
+		$classes = array_reverse(ClassInfo::ancestry($classOrObject));
 		foreach($classes as $class) {
 			$template = $class . $suffix;
-			if(SSViewer::hasTemplate($template)) {
-				$templates[] = $template;
-			} elseif(SSViewer::hasTemplate($template = ['type' => 'Includes', $template])) {
-				$templates[] = $template;
-			}
+			$templates[] = $template;
+			$templates[] = ['type' => 'Includes', $template];
 
 			// If the class is "Page_Controller", look for Page.ss
-			if(stripos($class,'_controller') !== false) {
-				$template = str_ireplace('_controller','',$class) . $suffix;
-				if(SSViewer::hasTemplate($template)) {
-					$templates[] = $template;
-				}
+			if (stripos($class, '_controller') !== false) {
+				$templates[] = str_ireplace('_controller', '', $class) . $suffix;
 			}
 
-			if($baseClass && $class == $baseClass) break;
+			if($baseClass && $class == $baseClass) {
+				break;
+			}
 		}
 		return $templates;
 	}
 
 	/**
-	 * @param string|array $templateList If passed as a string with .ss extension, used as the "main" template.
+	 * @param string|array $templates If passed as a string with .ss extension, used as the "main" template.
 	 *  If passed as an array, it can be used for template inheritance (first found template "wins").
 	 *  Usually the array values are PHP class names, which directly correlate to template names.
 	 *  <code>
 	 *  array('MySpecificPage', 'MyPage', 'Page')
 	 *  </code>
+	 * @param TemplateParser $parser
 	 */
 	public function __construct($templates, TemplateParser $parser = null) {
 		if ($parser) {
@@ -929,8 +930,18 @@ class SSViewer implements Flushable {
 
 	public function setTemplate($templates) {
 		$this->templates = $templates;
-		$this->chosen = ThemeResourceLoader::instance()->findTemplate($templates, self::get_themes());
+		$this->chosen = $this->chooseTemplate($templates);
 		$this->subTemplates = [];
+	}
+
+	/**
+	 * Find the template to use for a given list
+	 *
+	 * @param array|string $templates
+	 * @return string
+	 */
+	public static function chooseTemplate($templates) {
+		return ThemeResourceLoader::instance()->findTemplate($templates, self::get_themes());
 	}
 
 	/**
