@@ -12,7 +12,7 @@ class FormAction extends SilverStripeComponent {
     return (
       <button {...this.getButtonProps()}>
         {this.getLoadingIcon()}
-        {this.props.title}
+        <span>{this.props.title}</span>
       </button>
     );
   }
@@ -50,7 +50,7 @@ class FormAction extends SilverStripeComponent {
     }
 
     // If there is no text
-    if (typeof this.props.title === 'undefined') {
+    if (typeof this.props.title !== 'string') {
       buttonClasses.push('btn--no-text');
     }
 
@@ -61,16 +61,16 @@ class FormAction extends SilverStripeComponent {
     }
 
     // Add loading class
-    if (this.props.loading === true) {
+    if (this.props.loading) {
       buttonClasses.push('btn--loading');
     }
 
     // Add disabled class
-    if (this.props.disabled === true) {
+    if (this.props.disabled) {
       buttonClasses.push('disabled');
     }
 
-    if (typeof this.props.extraClass !== 'undefined') {
+    if (typeof this.props.extraClass === 'string') {
       buttonClasses.push(this.props.extraClass);
     }
 
@@ -120,7 +120,7 @@ class FormAction extends SilverStripeComponent {
    * @returns object|null
    */
   getLoadingIcon() {
-    if (this.props.loading === true) {
+    if (this.props.loading) {
       return (
         <div className="btn__loading-icon" >
           <span className="btn__circle btn__circle--1" />
