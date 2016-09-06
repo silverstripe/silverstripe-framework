@@ -16,7 +16,7 @@ Position to place this popover compared to the activation button. Options are:
 
 Can be provided within a `data` object passed to this component.
 
-## popoverTitle
+### popoverTitle
 
 This title will be used as the header in the popup.
 
