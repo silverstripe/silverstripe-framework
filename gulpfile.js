@@ -234,8 +234,8 @@ gulp.task('bundle-lib', function bundleLib() {
     .require('tether',
       { expose: 'tether' }
     )
-    .require('react-bootstrap-4',
-      { expose: 'react-bootstrap-4' }
+    .require('react-bootstrap-ss',
+      { expose: 'react-bootstrap-ss' }
     )
     .require('react-addons-css-transition-group',
       { expose: 'react-addons-css-transition-group' }
@@ -389,7 +389,7 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .external('i18nx')
     .external('lib/Router')
     .external('react-dom')
-    .external('react-bootstrap-4')
+    .external('react-bootstrap-ss')
     .external('components/FormBuilderModal/FormBuilderModal')
     .bundle()
     .on('update', bundleLeftAndMain)
@@ -432,7 +432,7 @@ gulp.task('bundle-framework', function bundleBoot() {
     .external('react-addons-test-utils')
     .external('react-dom')
     .external('tether')
-    .external('react-bootstrap-4')
+    .external('react-bootstrap-ss')
     .external('react-redux')
     .external('react-router-redux')
     .external('react-router')
