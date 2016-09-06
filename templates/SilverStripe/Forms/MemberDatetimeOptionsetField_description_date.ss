@@ -1,7 +1,7 @@
 <a href="#" class="toggle">
 	<% _t('MemberDatetimeOptionsetField.Toggle', 'Show formatting help') %>
 </a>
-<ul class="toggle-content">
+<ul class="toggle-content list-unstyled">
 	<li>YYYY = <% _t('MemberDatetimeOptionsetField.FOURDIGITYEAR', 'Four-digit year',
 			40, 'Help text describing what "YYYY" means in ISO date formatting') %></li>
 	<li>YY = <% _t('MemberDatetimeOptionsetField.TWODIGITYEAR', 'Two-digit year',
