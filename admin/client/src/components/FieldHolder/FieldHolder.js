@@ -11,10 +11,16 @@ function fieldHolder(Field) {
 
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
-      const classNames = ['form-group field', this.props.extraClass].join(' ');
+      const classNames = [
+        'form-group field',
+        this.props.extraClass,
+      ];
+      if (this.props.readOnly) {
+        classNames.push('readonly');
+      }
 
       return (
-        <div className={classNames}>
+        <div className={classNames.join(' ')} id={this.props.holder_id}>
           {labelText &&
             <label className="form__field-label" htmlFor={`${this.props.id}`}>
               {labelText}
