@@ -5,12 +5,13 @@ import i18n from 'i18n';
 require('../../../thirdparty/jquery-ui/jquery-ui.js');
 require('../../../admin/client/src/legacy/ssui.core.js');
 
-window.tmpl = require('../../../thirdparty/javascript-templates/tmpl.js');
-require('../../../thirdparty/javascript-loadimage/load-image.js');
-require('../../../thirdparty/jquery-fileupload/jquery.iframe-transport.js');
-require('../../../thirdparty/jquery-fileupload/cors/jquery.xdr-transport.js');
-require('../../../thirdparty/jquery-fileupload/jquery.fileupload.js');
-require('../../../thirdparty/jquery-fileupload/jquery.fileupload-ui.js');
+window.tmpl = require('blueimp-tmpl/tmpl.js');
+require('imports?define=>false&this=>window!blueimp-load-image/load-image.js');
+require('blueimp-file-upload/jquery.iframe-transport.js');
+require('blueimp-file-upload/cors/jquery.xdr-transport.js');
+require('blueimp-file-upload/jquery.fileupload.js');
+require('blueimp-file-upload/jquery.fileupload-ui.js');
+
 require('./UploadField_uploadtemplate.js');
 require('./UploadField_downloadtemplate.js');
 

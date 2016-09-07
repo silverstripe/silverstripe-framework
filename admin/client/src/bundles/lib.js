@@ -39,7 +39,7 @@ require('../../../../thirdparty/jquery-form/jquery.form.js');
 require('../../../thirdparty/jquery-notice/jquery.notice.js');
 require('../../../thirdparty/jquery-notice/jquery.notice.css');
 
-require('../../../thirdparty/jsizes/lib/jquery.sizes.js');
+require('jquery-sizes/lib/jquery.sizes.js');
 require('../../../thirdparty/jlayout/lib/jlayout.border.js');
 require('../../../thirdparty/jlayout/lib/jquery.jlayout.js');
 
@@ -51,6 +51,7 @@ require('../../../../thirdparty/jquery-changetracker/lib/jquery.changetracker.js
 require('../../../../client/src/legacy/TreeDropdownField.js');
 
 require('../../../../client/src/legacy/DateField.js');
+require('../../../../client/src/legacy/UploadField.js');
 require('../../../../client/src/legacy/HtmlEditorField.js');
 require('../../../../client/src/legacy/TabSet.js');
 require('../legacy/ssui.core.js');
