@@ -43,6 +43,13 @@ We can represent multiple instances of them in `YAML` as follows:
 **mysite/tests/fixtures.yml**
 
 	:::yml
+	Team:
+		hurricanes:
+			Name: The Hurricanes
+			Origin: Wellington
+		crusaders:
+			Name: The Crusaders
+			Origin: Canterbury
 	Player:
 		john:
 			Name: John
@@ -53,13 +60,6 @@ We can represent multiple instances of them in `YAML` as follows:
 		jack:
 			Name: Jack
 			Team: =>Team.crusaders
-	Team:
-		hurricanes:
-			Name: The Hurricanes
-			Origin: Wellington
-		crusaders:
-			Name: The Crusaders
-			Origin: Canterbury
 
 This `YAML` is broken up into three levels, signified by the indentation of each line. In the first level of 
 indentation, `Player` and `Team`, represent the class names of the objects we want to be created.
@@ -86,6 +86,10 @@ sets the `has_one` relationship for John with with the `Team` object `hurricanes
 <div class="hint" markdown='1'>
 Note that we use the name of the relationship (Team), and not the name of the 
 database field (TeamID).
+</div>
+
+<div class="hint" markdown='1'>
+Also be aware the target of a relationship must be defined before it is referenced, for example the `hurricanes` team must appear in the fixture file before the line `Team: =>Team.hurricanes`.
 </div>
 
 This style of relationship declaration can be used for any type of relationship (i.e `has_one`, `has_many`, `many_many`).
