@@ -302,7 +302,7 @@ class HTTP {
 	}
 
 	public static function register_etag($etag) {
-		if (0 !== strpos('"')) {
+		if (0 !== strpos($etag, '"')) {
 			$etag = sprintf('"%s"', $etag);
 		}
 		self::$etag = $etag;
