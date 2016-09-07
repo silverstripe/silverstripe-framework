@@ -73,7 +73,10 @@ class CMSBatchActionHandler extends RequestHandler {
 				)
 			);
 		} else {
-			user_error("CMSBatchActionHandler::register() - Bad class '$batchActionClass'", E_USER_ERROR);
+			/** @var Closure $message */
+			$message = require __DIR__ . '/messages/InvalidCMSBatchActionSubclass.php';
+
+			user_error($message($batchActionClass), E_USER_ERROR);
 		}
 	}
 
@@ -219,8 +222,14 @@ class CMSBatchActionHandler extends RequestHandler {
 	 */
 	protected function buildAction($class) {
 		if(!is_subclass_of($class, 'CMSBatchAction')) {
-			throw new InvalidArgumentException("{$class} is not a valid subclass of CMSBatchAction");
+			/** @var Closure $message */
+			$message = require __DIR__ . '/messages/InvalidCMSBatchActionSubclass.php';
+
+			throw new InvalidArgumentException(
+				$message($class)
+			);
 		}
+
 		return $class::singleton();
 	}
 
