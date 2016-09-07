@@ -10,6 +10,9 @@
  */
 abstract class RelationList extends DataList {
 
+	/**
+	 * @return string|null
+	 */
 	public function getForeignID() {
 		return $this->dataQuery->getQueryParam('Foreign.ID');
 	}
@@ -19,6 +22,8 @@ abstract class RelationList extends DataList {
 	 * the given foreign ID.
 	 *
 	 * @param int|array $id An ID or an array of IDs.
+	 *
+	 * @return DataList
 	 */
 	public function forForeignID($id) {
 		// Turn a 1-element array into a simple value
@@ -27,7 +32,8 @@ abstract class RelationList extends DataList {
 		// Calculate the new filter
 		$filter = $this->foreignIDFilter($id);
 
-		$list = $this->alterDataQuery(function($query, $list) use ($id, $filter){
+		$list = $this->alterDataQuery(function($query) use ($id, $filter){
+			/** @var DataQuery $query */
 			// Check if there is an existing filter, remove if there is
 			$currentFilter = $query->getQueryParam('Foreign.Filter');
 			if($currentFilter) {
