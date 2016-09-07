@@ -159,7 +159,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		),
 		'document' => array(
 			'css', 'csv', 'doc', 'docx', 'dotm', 'dotx', 'htm', 'html', 'gpx', 'js', 'kml', 'pages', 'pdf',
-			'potm', 'potx', 'pps', 'ppt', 'pptx', 'rtf', 'txt', 'xhtml', 'xls', 'xlsx', 'xltm', 'xltx', 'xml',
+			'potm', 'potx', 'pps', 'ppt', 'pptx', 'rtf', 'svg', 'txt', 'xhtml', 'xls', 'xlsx', 'xltm', 'xltx',
+			'xml',
 		),
 		'image' => array(
 			'alpha', 'als', 'bmp', 'cel', 'gif', 'ico', 'icon', 'jpeg', 'jpg', 'pcx', 'png', 'ps', 'tif', 'tiff',
