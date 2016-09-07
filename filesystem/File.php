@@ -140,8 +140,8 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		'docx', 'dotx', 'dotm', 'flv', 'gif', 'gpx', 'gz', 'hqx', 'ico', 'jar', 'jpeg', 'jpg', 'js', 'kml',
 		'm4a', 'm4v', 'mid', 'midi', 'mkv', 'mov', 'mp3', 'mp4', 'mpa', 'mpeg', 'mpg', 'ogg', 'ogv', 'pages',
 		'pcx', 'pdf', 'png', 'pps', 'ppt', 'pptx', 'potx', 'potm', 'ra', 'ram', 'rm', 'rtf', 'sit', 'sitx',
-		'tar', 'tgz', 'tif', 'tiff', 'txt', 'wav', 'webm', 'wma', 'wmv', 'xls', 'xlsx', 'xltx', 'xltm', 'zip',
-		'zipx',
+		'svg', 'tar', 'tgz', 'tif', 'tiff', 'txt', 'wav', 'webm', 'wma', 'wmv', 'xls', 'xlsx', 'xltx', 'xltm',
+		'zip', 'zipx',
 	);
 
 	/**
