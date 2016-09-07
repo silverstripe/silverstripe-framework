@@ -388,6 +388,7 @@ gulp.task('bundle-legacy', function bundleLeftAndMain() {
     .external('i18n')
     .external('i18nx')
     .external('lib/Router')
+    .external('react')
     .external('react-dom')
     .external('react-bootstrap-ss')
     .external('components/FormBuilderModal/FormBuilderModal')

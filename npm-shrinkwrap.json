@@ -6902,7 +6902,6 @@
     },
     "chosen": {
       "version": "1.5.1",
-      "from": "chosen@git://github.com/harvesthq/chosen.git#66ee36dc4b3e4faf01f24ab2908e2d1aba771b53",
       "resolved": "git://github.com/harvesthq/chosen.git#66ee36dc4b3e4faf01f24ab2908e2d1aba771b53"
     },
     "deep-equal": {

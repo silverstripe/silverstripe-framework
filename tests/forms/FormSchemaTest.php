@@ -286,6 +286,8 @@ class FormSchemaTest extends SapphireTest {
 					'data' => [
 						'popoverTitle' => null,
 						'placement' => 'bottom',
+						'tag' => 'div',
+						'legend' => null,
 					],
 					'children' => [
 						[

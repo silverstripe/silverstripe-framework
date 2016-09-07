@@ -103,6 +103,9 @@ class FieldGroup extends CompositeField {
 	 * Returns the name (ID) for the element.
 	 * In some cases the FieldGroup doesn't have a title, but we still want
 	 * the ID / name to be set. This code, generates the ID from the nested children
+	 *
+	 * TODO this is temporary, and should be removed when FormTemplateHelper is updated to handle ID
+	 *  for CompositeFields with no name
 	 */
 	public function getName(){
 		if($this->name) {
@@ -110,17 +113,7 @@ class FieldGroup extends CompositeField {
 		}
 
 		if(!$this->title) {
-			$fs = $this->FieldList();
-			$compositeTitle = '';
-			$count = 0;
-			foreach($fs as $subfield){
-				/** @var FormField $subfield */
-				$compositeTitle .= $subfield->getName();
-				if($subfield->getName()) $count++;
-			}
-			/** @skipUpgrade */
-			if($count == 1) $compositeTitle .= 'Group';
-			return preg_replace("/[^a-zA-Z0-9]+/", "", $compositeTitle);
+			return parent::getName();
 		}
 
 		return preg_replace("/[^a-zA-Z0-9]+/", "", $this->title);

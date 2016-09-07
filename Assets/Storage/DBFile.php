@@ -12,6 +12,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\Security\Permission;
+use SilverStripe\Core\Convert;
 
 /**
  * Represents a file reference stored in a database
@@ -527,5 +528,28 @@ class DBFile extends DBComposite implements AssetContainer, Thumbnail {
 			&& $this
 				->getStore()
 				->canView($this->Filename, $this->Hash);
+	}
+
+	/**
+	 * Generates the URL for this DBFile preview, this is particularly important for images that
+	 * have been manipulated e.g. by {@link ImageManipulation}
+	 * Use the 'updatePreviewLink' extension point to customise the link.
+	 *
+	 * @param null $action
+	 * @return bool|string
+	 */
+	public function PreviewLink($action = null) {
+		// Since AbsoluteURL can whitelist protected assets,
+		// do permission check first
+		if (!$this->failover->canView()) {
+			return false;
+		}
+		if ($this->getIsImage()) {
+			$link = $this->getAbsoluteURL();
+		} else {
+			$link = Convert::raw2att($this->failover->getIcon());
+		}
+		$this->extend('updatePreviewLink', $link, $action);
+		return $link;
 	}
 }

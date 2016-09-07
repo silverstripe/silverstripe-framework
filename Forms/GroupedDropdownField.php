@@ -53,6 +53,9 @@ use SilverStripe\View\ArrayData;
  */
 class GroupedDropdownField extends DropdownField {
 
+	// TODO remove this when GroupedDropdownField is implemented
+	protected $schemaDataType = 'GroupedDropdownField';
+
 	/**
 	 * Build a potentially nested fieldgroup
 	 *

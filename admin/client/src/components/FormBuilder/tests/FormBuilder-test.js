@@ -94,4 +94,60 @@ describe('FormBuilderComponent', () => {
       });
     });
   });
+
+  describe('findField()', () => {
+    let formBuilder = null;
+    let fields = null;
+    const props = {
+      form: {
+        myForm: {},
+        formActions: {},
+        schemas: {
+          'admin/assets/schema/1': {
+            id: 'myForm',
+            schema: {},
+          },
+        },
+        schemaActions: {},
+        schemaUrl: 'admin/assets/schema/1',
+      },
+    };
+
+    beforeEach(() => {
+      formBuilder = new FormBuilderComponent(props);
+    });
+
+    it('should retrieve the field in the shallow fields list', () => {
+      fields = [
+        { id: 'fieldOne' },
+        { id: 'fieldTwo' },
+        { id: 'fieldThree' },
+        { id: 'fieldFour' },
+      ];
+      const field = formBuilder.findField(fields, 'fieldThree');
+
+      expect(field).toBeTruthy();
+      expect(field.id).toBe('fieldThree');
+    });
+
+    it('should retrieve the field that is a grandchild in the fields list', () => {
+      fields = [
+        { id: 'fieldOne' },
+        { id: 'fieldTwo', children: [
+          { id: 'fieldTwoOne' },
+          { id: 'fieldTwoTwo', children: [
+            { id: 'fieldTwoOne' },
+            { id: 'fieldTwoTwo' },
+            { id: 'fieldTwoThree' },
+          ] },
+        ] },
+        { id: 'fieldThree' },
+        { id: 'fieldFour' },
+      ];
+      const field = formBuilder.findField(fields, 'fieldTwoThree');
+
+      expect(field).toBeTruthy();
+      expect(field.id).toBe('fieldTwoThree');
+    });
+  });
 });
