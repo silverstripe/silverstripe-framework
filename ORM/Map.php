@@ -9,19 +9,19 @@ use IteratorAggregate;
 /**
  * Creates a map from an SS_List by defining a key column and a value column.
  */
-class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
+class Map implements ArrayAccess, Countable, IteratorAggregate {
 
 	protected $list, $keyField, $valueField;
 
 	/**
-	 * @see SS_Map::unshift()
+	 * @see Map::unshift()
 	 *
 	 * @var array $firstItems
 	 */
 	protected $firstItems = array();
 
 	/**
-	 * @see SS_Map::push()
+	 * @see Map::push()
 	 *
 	 * @var array $lastItems
 	 */
@@ -182,10 +182,10 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 
 	/**
 	 * Sets a value in the map by a given key that has been set via
-	 * {@link SS_Map::push()} or {@link SS_Map::unshift()}
+	 * {@link Map::push()} or {@link Map::unshift()}
 	 *
 	 * Keys in the map cannot be set since these values are derived from a
-	 * {@link DataQuery} instance. In this case, use {@link SS_Map::toArray()}
+	 * {@link DataQuery} instance. In this case, use {@link Map::toArray()}
 	 * and manipulate the resulting array.
 	 *
 	 * @var string $key
@@ -201,17 +201,17 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		}
 
 		user_error(
-			'SS_Map is read-only. Please use $map->push($key, $value) to append values',
+			'Map is read-only. Please use $map->push($key, $value) to append values',
 			E_USER_ERROR
 		);
 	}
 
 	/**
 	 * Removes a value in the map by a given key which has been added to the map
-	 * via {@link SS_Map::push()} or {@link SS_Map::unshift()}
+	 * via {@link Map::push()} or {@link Map::unshift()}
 	 *
 	 * Keys in the map cannot be unset since these values are derived from a
-	 * {@link DataQuery} instance. In this case, use {@link SS_Map::toArray()}
+	 * {@link DataQuery} instance. In this case, use {@link Map::toArray()}
 	 * and manipulate the resulting array.
 	 *
 	 * @var string $key
@@ -231,21 +231,21 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		}
 
 		user_error(
-			"SS_Map is read-only. Unset cannot be called on keys derived from the DataQuery",
+			"Map is read-only. Unset cannot be called on keys derived from the DataQuery",
 			E_USER_ERROR
 		);
 	}
 
 	/**
-	 * Returns an SS_Map_Iterator instance for iterating over the complete set
+	 * Returns an Map_Iterator instance for iterating over the complete set
 	 * of items in the map.
 	 *
 	 * Satisfies the IteratorAggreagte interface.
 	 *
-	 * @return SS_Map_Iterator
+	 * @return Map_Iterator
 	 */
 	public function getIterator() {
-		return new SS_Map_Iterator(
+		return new Map_Iterator(
 			$this->list->getIterator(),
 			$this->keyField,
 			$this->valueField,
@@ -256,7 +256,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 
 	/**
 	 * Returns the count of items in the list including the additional items set
-	 * through {@link SS_Map::push()} and {@link SS_Map::unshift}.
+	 * through {@link Map::push()} and {@link Map::unshift}.
 	 *
 	 * @return int
 	 */

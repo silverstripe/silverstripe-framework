@@ -14,20 +14,20 @@ implementors of [api:Flushable].
 To use this API, you need to make your class implement [api:Flushable], and define a `flush()` static function,
 this defines the actions that need to be executed on a flush request.
 
-### Using with SS_Cache
+### Using with Cache
 
-This example uses [api:SS_Cache] in some custom code, and the same cache is cleaned on flush:
+This example uses [api:Cache] in some custom code, and the same cache is cleaned on flush:
 
 	:::php
 	<?php
 	class MyClass extends DataObject implements Flushable {
 	
 		public static function flush() {
-			SS_Cache::factory('mycache')->clean(Zend_Cache::CLEANING_MODE_ALL);
+			Cache::factory('mycache')->clean(Zend_Cache::CLEANING_MODE_ALL);
 		}
 	
 		public function MyCachedContent() {
-			$cache = SS_Cache::factory('mycache')
+			$cache = Cache::factory('mycache')
 			$something = $cache->load('mykey');
 			if(!$something) {
 				$something = 'value to be cached';

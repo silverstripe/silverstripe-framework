@@ -3,7 +3,7 @@
 namespace SilverStripe\Core;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DB;
@@ -25,7 +25,7 @@ class ClassInfo {
 	 * @return array
 	 */
 	public static function allClasses() {
-		return SS_ClassLoader::instance()->getManifest()->getClasses();
+		return ClassLoader::instance()->getManifest()->getClasses();
 	}
 
 	/**
@@ -35,7 +35,7 @@ class ClassInfo {
 	 * @return bool
 	 */
 	public static function exists($class) {
-		return class_exists($class, false) || interface_exists($class, false) || SS_ClassLoader::instance()->getItemPath($class);
+		return class_exists($class, false) || interface_exists($class, false) || ClassLoader::instance()->getItemPath($class);
 	}
 
 	/**
@@ -153,7 +153,7 @@ class ClassInfo {
 
 		//normalise class case
 		$className = self::class_name($nameOrObject);
-		$descendants = SS_ClassLoader::instance()->getManifest()->getDescendantsOf($className);
+		$descendants = ClassLoader::instance()->getManifest()->getDescendantsOf($className);
 		$result      = array($className => $className);
 
 		if ($descendants) {
@@ -217,7 +217,7 @@ class ClassInfo {
 	 * classes and not built-in PHP classes.
 	 */
 	public static function implementorsOf($interfaceName) {
-		return SS_ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName);
+		return ClassLoader::instance()->getManifest()->getImplementorsOf($interfaceName);
 	}
 
 	/**
@@ -244,7 +244,7 @@ class ClassInfo {
 	public static function classes_for_file($filePath) {
 		$absFilePath    = Director::getAbsFile($filePath);
 		$matchedClasses = array();
-		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
+		$manifest       = ClassLoader::instance()->getManifest()->getClasses();
 
 		foreach($manifest as $class => $compareFilePath) {
 			if($absFilePath == $compareFilePath) $matchedClasses[] = $class;
@@ -265,7 +265,7 @@ class ClassInfo {
 	public static function classes_for_folder($folderPath) {
 		$absFolderPath  = Director::getAbsFile($folderPath);
 		$matchedClasses = array();
-		$manifest       = SS_ClassLoader::instance()->getManifest()->getClasses();
+		$manifest       = ClassLoader::instance()->getManifest()->getClasses();
 
 		foreach($manifest as $class => $compareFilePath) {
 			if(stripos($compareFilePath, $absFolderPath) === 0) $matchedClasses[] = $class;

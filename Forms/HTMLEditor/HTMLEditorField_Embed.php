@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\HTMLEditor;
 
 use SilverStripe\Assets\File;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\TextField;
 use Embed\Adapters\AdapterInterface;
@@ -46,7 +46,7 @@ class HTMLEditorField_Embed extends HTMLEditorField_File
 				)));
 			$response->setStatusCode(404);
 
-			throw new SS_HTTPResponse_Exception($response);
+			throw new HTTPResponse_Exception($response);
 		}
 	}
 

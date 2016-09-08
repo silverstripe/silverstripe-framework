@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Versioning;
 
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -86,7 +86,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
      *
      * @param array $data
      * @param Form $form
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
      */
 	public function doArchive($data, $form) {
 		/** @var Versioned|DataObject $record */
@@ -123,7 +123,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
      *
      * @param array $data
      * @param Form $form
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
      */
     public function doPublish($data, $form) {
 		/** @var Versioned|DataObject $record */
@@ -166,7 +166,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest {
      *
      * @param array $data
      * @param Form $form
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
      */
     public function doUnpublish($data, $form) {
 		/** @var Versioned|DataObject $record */

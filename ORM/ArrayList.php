@@ -23,7 +23,7 @@ use LogicException;
  *   - filter
  *   - exclude
  */
-class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
+class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, Limitable {
 
 	/**
 	 * Holds the items in the list
@@ -290,11 +290,11 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	 *
 	 * @param string $keyfield The 'key' field of the result array
 	 * @param string $titlefield The value field of the result array
-	 * @return SS_Map
+	 * @return Map
 	 */
 	public function map($keyfield = 'ID', $titlefield = 'Title') {
 		$list = clone $this;
-		return new SS_Map($list, $keyfield, $titlefield);
+		return new Map($list, $keyfield, $titlefield);
 	}
 
 	/**
@@ -617,7 +617,7 @@ class ArrayList extends ViewableData implements SS_List, SS_Filterable, SS_Sorta
 	}
 
 	/**
-	 * @see SS_Filterable::filterByCallback()
+	 * @see Filterable::filterByCallback()
 	 *
 	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
 	 * @param callable $callback

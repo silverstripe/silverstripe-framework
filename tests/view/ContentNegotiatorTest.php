@@ -2,7 +2,7 @@
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\ContentNegotiator;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\View\SSViewer;
 
 
@@ -48,7 +48,7 @@ class ContentNegotiatorTest extends SapphireTest {
 		// Check that the content negotiator converts to the equally legal formats
 		$negotiator = new ContentNegotiator();
 
-		$response = new SS_HTTPResponse($this->render($tmpl1));
+		$response = new HTTPResponse($this->render($tmpl1));
 		$negotiator->xhtml($response);
 
 		////////////////////////

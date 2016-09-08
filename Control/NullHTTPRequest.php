@@ -7,7 +7,7 @@ namespace SilverStripe\Control;
  * Set on controllers on construction time, typically overwritten
  * by {@link Controller->handleRequest()} and {@link Controller->handleAction()} later on.
  */
-class NullHTTPRequest extends SS_HTTPRequest {
+class NullHTTPRequest extends HTTPRequest {
 
 	public function __construct() {
 		parent::__construct(null, null);

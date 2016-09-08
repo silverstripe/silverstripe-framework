@@ -207,7 +207,7 @@ By default, TinyMCE and SilverStripe will generate valid HTML5 markup, but it wi
 `<article>` or `<figure>`. If you plan to use those, add them to the 
 [valid_elements](http://www.tinymce.com/wiki.php/Configuration:valid_elements) configuration setting.
 
-Also, the [api:SS_HTMLValue] API underpinning the HTML processing parses the markup into a temporary object tree 
+Also, the [api:HTMLValue] API underpinning the HTML processing parses the markup into a temporary object tree 
 which can be traversed and modified before saving. The built-in parser only supports HTML4 and XHTML syntax. In order 
 to successfully process HTML5 tags, please use the 
 ['silverstripe/html5' module](https://github.com/silverstripe/silverstripe-html5).

@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Admin;
 
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
@@ -63,8 +63,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	/**
 	 * Shortcut action for setting the correct active tab.
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function users($request) {
 		return $this->index($request);
@@ -73,8 +73,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	/**
 	 * Shortcut action for setting the correct active tab.
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function groups($request) {
 		return $this->index($request);
@@ -83,8 +83,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 	/**
 	 * Shortcut action for setting the correct active tab.
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function roles($request) {
 		return $this->index($request);

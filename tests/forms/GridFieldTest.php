@@ -366,7 +366,7 @@ class GridFieldTest extends SapphireTest {
 		// $id = 'testGridStateActionField';
 		// Session::set($id, array('grid'=>'', 'actionName'=>'jump'));
 		// $form = new Form(new Controller(), 'mockform', new FieldList(array($obj)), new FieldList());
-		// $request = new SS_HTTPRequest('POST', 'url');
+		// $request = new HTTPRequest('POST', 'url');
 		// $obj->gridFieldAlterAction(array('StateID'=>$id), $form, $request);
 	}
 

@@ -103,7 +103,7 @@ and [datamodel](/developer_guides/model) for ways to parameterise, cast, and con
 *  `DB::prepared_query()`
 *  `Director::urlParams()`
 *  `Controller->requestParams`, `Controller->urlParams`
-*  `SS_HTTPRequest` data
+*  `HTTPRequest` data
 *  GET/POST data passed to a form method
 
 Example:

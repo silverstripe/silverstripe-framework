@@ -866,7 +866,7 @@ class VersionedTest extends SapphireTest {
 	 * Test that stage parameter is blocked by non-administrative users
 	 */
 	public function testReadingModeSecurity() {
-		$this->setExpectedException('SilverStripe\\Control\\SS_HTTPResponse_Exception');
+		$this->setExpectedException('SilverStripe\\Control\\HTTPResponse_Exception');
 		$session = Injector::inst()->create('SilverStripe\\Control\\Session', array());
 		$result = Director::test('/?stage=Stage', null, $session);
 	}

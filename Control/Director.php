@@ -118,7 +118,7 @@ class Director implements TemplateGlobalProvider {
 	 * Process the given URL, creating the appropriate controller and executing it.
 	 *
 	 * Request processing is handled as follows:
-	 * - Director::direct() creates a new SS_HTTPResponse object and passes this to
+	 * - Director::direct() creates a new HTTPResponse object and passes this to
 	 *   Director::handleRequest().
 	 * - Director::handleRequest($request) checks each of the Director rules and identifies a controller
 	 *   to handle this request.
@@ -134,7 +134,7 @@ class Director implements TemplateGlobalProvider {
 	 * @uses Controller::handleRequest() This handles the page logic for a Director::direct() call.
 	 * @param string $url
 	 * @param DataModel $model
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 */
 	public static function direct($url, DataModel $model) {
 		// Validate $_FILES array before merging it with $_POST
@@ -153,7 +153,7 @@ class Director implements TemplateGlobalProvider {
 			}
 		}
 
-		$req = new SS_HTTPRequest(
+		$req = new HTTPRequest(
 			(isset($_SERVER['X-HTTP-Method-Override']))
 				? $_SERVER['X-HTTP-Method-Override']
 				: $_SERVER['REQUEST_METHOD'],
@@ -180,7 +180,7 @@ class Director implements TemplateGlobalProvider {
 
 		if ($output === false) {
 			// @TODO Need to NOT proceed with the request in an elegant manner
-			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
+			throw new HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
 		}
 
 		$result = Director::handleRequest($req, $session, $model);
@@ -200,7 +200,7 @@ class Director implements TemplateGlobalProvider {
 				);
 				return;
 			} else {
-				$response = new SS_HTTPResponse();
+				$response = new HTTPResponse();
 				$response->redirect($url);
 				$res = RequestProcessor::singleton()->postRequest($req, $response, $model);
 
@@ -210,11 +210,11 @@ class Director implements TemplateGlobalProvider {
 			}
 		// Handle a controller
 		} elseif ($result) {
-			if ($result instanceof SS_HTTPResponse) {
+			if ($result instanceof HTTPResponse) {
 				$response = $result;
 
 			} else {
-				$response = new SS_HTTPResponse();
+				$response = new HTTPResponse();
 				$response->setBody($result);
 			}
 
@@ -223,7 +223,7 @@ class Director implements TemplateGlobalProvider {
 				$response->output();
 			} else {
 				// @TODO Proper response here.
-				throw new SS_HTTPResponse_Exception("Invalid response");
+				throw new HTTPResponse_Exception("Invalid response");
 			}
 
 
@@ -234,7 +234,7 @@ class Director implements TemplateGlobalProvider {
 	/**
 	 * Test a URL request, returning a response object. This method is the counterpart of
 	 * Director::direct() that is used in functional testing. It will execute the URL given, and
-	 * return the result as an SS_HTTPResponse object.
+	 * return the result as an HTTPResponse object.
 	 *
 	 * @uses Controller::handleRequest() Handles the page logic for a Director::direct() call.
 	 *
@@ -248,11 +248,11 @@ class Director implements TemplateGlobalProvider {
 	 * @param string $body The HTTP body.
 	 * @param array $headers HTTP headers with key-value pairs.
 	 * @param array|Cookie_Backend $cookies to populate $_COOKIE.
-	 * @param SS_HTTPRequest $request The {@see SS_HTTP_Request} object generated as a part of this request.
+	 * @param HTTPRequest $request The {@see SS_HTTP_Request} object generated as a part of this request.
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 *
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 */
 	public static function test($url, $postVars = null, $session = array(), $httpMethod = null, $body = null,
 			$headers = array(), $cookies = array(), &$request = null) {
@@ -342,7 +342,7 @@ class Director implements TemplateGlobalProvider {
 		Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\Cookie_Backend');
 		$_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
-		$request = new SS_HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
+		$request = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
 		if ($headers) {
 			foreach($headers as $k => $v) {
 				$request->addHeader($k, $v);
@@ -355,27 +355,27 @@ class Director implements TemplateGlobalProvider {
 		$output = Injector::inst()->get('SilverStripe\\Control\\RequestProcessor')->preRequest($request, $session, $model);
 		if ($output === false) {
 			$onCleanup();
-			throw new SS_HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
+			throw new HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
 		}
 
 		// TODO: Pass in the DataModel
 		$result = Director::handleRequest($request, $session, $model);
 
-		// Ensure that the result is an SS_HTTPResponse object
+		// Ensure that the result is an HTTPResponse object
 		if (is_string($result)) {
 			if (substr($result, 0, 9) == 'redirect:') {
-				$response = new SS_HTTPResponse();
+				$response = new HTTPResponse();
 				$response->redirect(substr($result, 9));
 				$result = $response;
 			} else {
-				$result = new SS_HTTPResponse($result);
+				$result = new HTTPResponse($result);
 			}
 		}
 
 		$output = Injector::inst()->get('SilverStripe\\Control\\RequestProcessor')->postRequest($request, $result, $model);
 		if ($output === false) {
 			$onCleanup();
-			throw new SS_HTTPResponse_Exception("Invalid response");
+			throw new HTTPResponse_Exception("Invalid response");
 		}
 
 		// Return valid response
@@ -384,15 +384,15 @@ class Director implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Handle an HTTP request, defined with a SS_HTTPRequest object.
+	 * Handle an HTTP request, defined with a HTTPRequest object.
 	 *
 	 * @skipUpgrade
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @param Session $session
 	 * @param DataModel $model
-	 * @return SS_HTTPResponse|string
+	 * @return HTTPResponse|string
 	 */
-	protected static function handleRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
+	protected static function handleRequest(HTTPRequest $request, Session $session, DataModel $model) {
 		$rules = Director::config()->get('rules');
 
 		if (isset($_REQUEST['debug'])) {
@@ -431,10 +431,10 @@ class Director implements TemplateGlobalProvider {
 
 					try {
 						$result = $controllerObj->handleRequest($request, $model);
-					} catch(SS_HTTPResponse_Exception $responseException) {
+					} catch(HTTPResponse_Exception $responseException) {
 						$result = $responseException->getResponse();
 					}
-					if (!is_object($result) || $result instanceof SS_HTTPResponse) {
+					if (!is_object($result) || $result instanceof HTTPResponse) {
 						return $result;
 					}
 
@@ -445,7 +445,7 @@ class Director implements TemplateGlobalProvider {
 		}
 
 		// No URL rules matched, so return a 404 error.
-		return new SS_HTTPResponse('No URL rule was matched', 404);
+		return new HTTPResponse('No URL rule was matched', 404);
 	}
 
 	/**
@@ -912,7 +912,7 @@ class Director implements TemplateGlobalProvider {
 	 * @param string $destURL
 	 */
 	protected static function force_redirect($destURL) {
-		$response = new SS_HTTPResponse();
+		$response = new HTTPResponse();
 		$response->redirect($destURL, 301);
 
 		HTTP::add_cache_headers($response);

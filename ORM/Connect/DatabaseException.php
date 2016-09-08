@@ -7,7 +7,7 @@ use Exception;
 /**
  * Error class for database exceptions
  */
-class SS_DatabaseException extends Exception {
+class DatabaseException extends Exception {
 
 	/**
 	 * The SQL that generated this error

@@ -2,7 +2,7 @@
 
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\SS_Filterable;
+use SilverStripe\ORM\Filterable;
 use SilverStripe\Dev\SapphireTest;
 
 
@@ -1086,7 +1086,7 @@ class DataListTest extends SapphireTest {
 
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals($expected, $result, 'List should only contain comments from Team 1 (Joe and Bob)');
-		$this->assertTrue($list instanceof SS_Filterable, 'The List should be of type SS_Filterable');
+		$this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
 	}
 
 	/**

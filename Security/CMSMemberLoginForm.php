@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Session;
@@ -101,7 +101,7 @@ class CMSMemberLoginForm extends LoginForm {
 	 * This method is called when the user clicks on "Log in"
 	 *
 	 * @param array $data Submitted data
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function dologin($data) {
 		if($this->performLogin($data)) {
@@ -119,7 +119,7 @@ class CMSMemberLoginForm extends LoginForm {
 	/**
 	 * Redirect the user to the change password form.
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function redirectToChangePassword() {
 		// Since this form is loaded via an iframe, this redirect must be performed via javascript
@@ -163,7 +163,7 @@ PHP
 	 * Send user to the right location after login
 	 *
 	 * @param array $data
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function logInUserAndRedirect($data) {
 		// Check password expiry

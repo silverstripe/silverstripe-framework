@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
@@ -276,11 +276,11 @@ class TreeDropdownField extends FormField {
 	/**
 	 * Get the whole tree of a part of the tree via an AJAX request.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return string
 	 * @throws Exception
 	 */
-	public function tree(SS_HTTPRequest $request) {
+	public function tree(HTTPRequest $request) {
 		// Array sourceObject is an explicit list of values - construct a "flat tree"
 		if(is_array($this->sourceObject)) {
 			$output = "<ul class=\"tree\">\n";

@@ -4,11 +4,13 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Configurable;
 
 /**
  * Backtrace helper
  */
-class SS_Backtrace {
+class Backtrace {
+	use Configurable;
 
 	/**
 	 * @var array Replaces all arguments with a '<filtered>' string,
@@ -66,9 +68,9 @@ class SS_Backtrace {
 	 */
 	public static function filter_backtrace($bt, $ignoredFunctions = null) {
 		$defaultIgnoredFunctions = array(
-			'SilverStripe\\Logging\\SS_Log::log',
-			'SilverStripe\\Dev\\SS_Backtrace::backtrace',
-			'SilverStripe\\Dev\\SS_Backtrace::filtered_backtrace',
+			'SilverStripe\\Logging\\Log::log',
+			'SilverStripe\\Dev\\Backtrace::backtrace',
+			'SilverStripe\\Dev\\Backtrace::filtered_backtrace',
 			'Zend_Log_Writer_Abstract->write',
 			'Zend_Log->log',
 			'Zend_Log->__call',
@@ -93,7 +95,7 @@ class SS_Backtrace {
 			array_shift($bt);
 		}
 
-		$ignoredArgs = Config::inst()->get('SilverStripe\\Dev\\SS_Backtrace', 'ignore_function_args');
+		$ignoredArgs = static::config()->get('ignore_function_args');
 
 		// Filter out arguments
 		foreach($bt as $i => $frame) {

@@ -3,7 +3,7 @@
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\View\Parsers\SS_Transliterator;
+use SilverStripe\View\Parsers\Transliterator;
 
 
 
@@ -38,7 +38,7 @@ class FileNameFilterTest extends SapphireTest {
 	public function testFilterWithTransliterator() {
 		$name = 'Brötchen  für allë-mit_Unterstrich!.jpg';
 		$filter = new FileNameFilter();
-		$filter->setTransliterator(new SS_Transliterator());
+		$filter->setTransliterator(new Transliterator());
 		$this->assertEquals(
 			'Broetchen-fuer-alle-mit-Unterstrich.jpg',
 			$filter->filter($name)
@@ -59,7 +59,7 @@ class FileNameFilterTest extends SapphireTest {
 	public function testFilterWithEmptyString() {
 		$name = 'ö ö ö.jpg';
 		$filter = new FileNameFilter();
-		$filter->setTransliterator(new SS_Transliterator());
+		$filter->setTransliterator(new Transliterator());
 		$result = $filter->filter($name);
 		$this->assertFalse(
 			empty($result)

@@ -8,7 +8,7 @@ use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -66,7 +66,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 	public function testActionsRequireCSRF() {
 		$this->logInWithPermission('ADMIN');
 		$this->setExpectedException(
-			'SilverStripe\\Control\\SS_HTTPResponse_Exception',
+			'SilverStripe\\Control\\HTTPResponse_Exception',
 			_t("Form.CSRF_FAILED_MESSAGE",
 				"There seems to have been a technical problem. Please click the back button, ".
 				"refresh your browser, and try again."
@@ -74,7 +74,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 			400
 		);
 		$stateID = 'testGridStateActionField';
-		$request = new SS_HTTPRequest(
+		$request = new HTTPRequest(
 			'POST',
 			'url',
 			array(),
@@ -102,7 +102,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 			)
 		);
 		$token = SecurityToken::inst();
-		$request = new SS_HTTPRequest(
+		$request = new HTTPRequest(
 			'POST',
 			'url',
 			array(),
@@ -130,7 +130,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 			)
 		);
 		$token = SecurityToken::inst();
-		$request = new SS_HTTPRequest(
+		$request = new HTTPRequest(
 			'POST',
 			'url',
 			array(),
@@ -163,7 +163,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 			)
 		);
 		$token = SecurityToken::inst();
-		$request = new SS_HTTPRequest(
+		$request = new HTTPRequest(
 			'POST',
 			'url',
 			array(),

@@ -60,7 +60,7 @@ interface SS_List extends ArrayAccess, Countable, IteratorAggregate {
 	 *
 	 * @param  string $keyfield
 	 * @param  string $titlefield
-	 * @return SS_Map
+	 * @return Map
 	 */
 	public function map($keyfield = 'ID', $titlefield = 'Title');
 

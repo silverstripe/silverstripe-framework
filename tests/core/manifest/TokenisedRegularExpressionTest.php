@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\Core\Manifest\SS_ClassManifest;
+use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Dev\SapphireTest;
 
 /**
@@ -96,7 +96,7 @@ PHP
 	}
 
 	public function testClassDefParser() {
-		$parser = SS_ClassManifest::get_class_parser();
+		$parser = ClassManifest::get_class_parser();
 
 		$tokens = $this->getTokens();
 
@@ -126,7 +126,7 @@ PHP
 	}
 
 	public function testNamesapcedClassDefParser() {
-		$parser = SS_ClassManifest::get_namespaced_class_parser();
+		$parser = ClassManifest::get_namespaced_class_parser();
 
 		$tokens = $this->getNamespaceTokens();
 
@@ -153,7 +153,7 @@ PHP
 	}
 
 	public function testInterfaceDefParser() {
-		$parser = SS_ClassManifest::get_interface_parser();
+		$parser = ClassManifest::get_interface_parser();
 
 		$tokens = $this->getTokens();
 
@@ -168,7 +168,7 @@ PHP
 	}
 
 	public function testNamespaceDefParser() {
-		$parser = SS_ClassManifest::get_namespace_parser();
+		$parser = ClassManifest::get_namespace_parser();
 
 		$namespacedTokens = $this->getNamespaceTokens();
 		$tokens = $this->getTokens();

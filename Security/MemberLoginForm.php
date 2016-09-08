@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
@@ -219,7 +219,7 @@ JS;
 	 * )
 	 *
 	 * @param array $data
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function logInUserAndRedirect($data) {
 		Session::clear('SessionForms.MemberLoginForm.Email');
@@ -319,7 +319,7 @@ JS;
 	 *
 	 * @skipUpgrade
 	 * @param array $data Submitted data
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function forgotPassword($data) {
 		// Ensure password is given

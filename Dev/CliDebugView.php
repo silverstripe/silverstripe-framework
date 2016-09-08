@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 
 /**
  * A basic HTML wrapper for stylish rendering of a developement info view.
@@ -16,7 +16,7 @@ class CliDebugView extends DebugView
 	/**
 	 * Render HTML header for development views
 	 *
-	 * @param SS_HTTPRequest $httpRequest
+	 * @param HTTPRequest $httpRequest
 	 * @return string
 	 */
 	public function renderHeader($httpRequest = null) {
@@ -45,8 +45,8 @@ class CliDebugView extends DebugView
 		} else {
 			$errorTypeTitle = self::$error_types[$errno]['title'];
 		}
-		$output = SS_Cli::text("ERROR [" . $errorTypeTitle . "]: $errstr\nIN $httpRequest\n", "red", null, true);
-		$output .= SS_Cli::text("Line $errline in $errfile\n\n", "red");
+		$output = CLI::text("ERROR [" . $errorTypeTitle . "]: $errstr\nIN $httpRequest\n", "red", null, true);
+		$output .= CLI::text("Line $errline in $errfile\n\n", "red");
 
 		return $output;
 	}
@@ -78,7 +78,7 @@ class CliDebugView extends DebugView
 	 */
 	public function renderTrace($trace = null) {
 		$output = "Trace\n=====\n";
-		$output .= SS_Backtrace::get_rendered_backtrace($trace ? $trace : debug_backtrace(), true);
+		$output .= Backtrace::get_rendered_backtrace($trace ? $trace : debug_backtrace(), true);
 
 		return $output;
 	}
@@ -102,9 +102,9 @@ class CliDebugView extends DebugView
 
 	public function renderVariable($val, $caller) {
 		$output = PHP_EOL;
-		$output .= SS_Cli::text(str_repeat('=', self::config()->columns), 'green');
+		$output .= CLI::text(str_repeat('=', self::config()->columns), 'green');
 		$output .= PHP_EOL;
-		$output .= SS_Cli::text($this->formatCaller($caller), 'blue', null, true);
+		$output .= CLI::text($this->formatCaller($caller), 'blue', null, true);
 		$output .= PHP_EOL.PHP_EOL;
 		if (is_string($val)) {
 			$output .= wordwrap($val, self::config()->columns);
@@ -112,7 +112,7 @@ class CliDebugView extends DebugView
 			$output .= var_export($val, true);
 		}
 		$output .= PHP_EOL;
-		$output .= SS_Cli::text(str_repeat('=', self::config()->columns), 'green');
+		$output .= CLI::text(str_repeat('=', self::config()->columns), 'green');
 		$output .= PHP_EOL;
 
 		return $output;

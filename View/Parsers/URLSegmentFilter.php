@@ -6,7 +6,7 @@ use SilverStripe\Core\Object;
 
 /**
  * Filter certain characters from "URL segments" (also called "slugs"), for nicer (more SEO-friendly) URLs.
- * Uses {@link SS_Transliterator} to convert non-ASCII characters to meaningful ASCII representations.
+ * Uses {@link Transliterator} to convert non-ASCII characters to meaningful ASCII representations.
  * Use {@link $default_allow_multibyte} to allow a broader range of characters without transliteration.
  *
  * Caution: Should not be used on full URIs with domains or query parameters.
@@ -101,22 +101,22 @@ class URLSegmentFilter extends Object {
 	}
 
 	/**
-	 * @var SS_Transliterator
+	 * @var Transliterator
 	 */
 	protected $transliterator;
 
 	/**
-	 * @return SS_Transliterator|NULL
+	 * @return Transliterator
 	 */
 	public function getTransliterator() {
 		if($this->transliterator === null && $this->config()->default_use_transliterator) {
-			$this->transliterator = SS_Transliterator::create();
+			$this->transliterator = Transliterator::create();
 		}
 		return $this->transliterator;
 	}
 
 	/**
-	 * @param SS_Transliterator|FALSE
+	 * @param Transliterator $t
 	 */
 	public function setTransliterator($t) {
 		$this->transliterator = $t;

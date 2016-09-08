@@ -65,7 +65,7 @@ You need to be logged in as an administrator to perform this command, unless you
 or the command is run through [CLI](../cli).
 </div>
 
-When rebuilding the database schema through the [api:SS_ClassLoader] the following additional properties are 
+When rebuilding the database schema through the [api:ClassLoader] the following additional properties are 
 automatically set on the `DataObject`.
 
 *  ID: Primary Key. When a new record is created, SilverStripe does not use the database's built-in auto-numbering 

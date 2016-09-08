@@ -3,12 +3,12 @@
 namespace SilverStripe\i18n;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\Cache;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Object;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\View\TemplateGlobalProvider;
 use Zend_Cache_Backend_ExtendedInterface;
@@ -140,7 +140,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * @return Zend_Cache_Core
 	 */
 	public static function get_cache() {
-		return SS_Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true));
+		return Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true));
 	}
 
 	/**
@@ -2268,7 +2268,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		$locales = array();
 
 		// TODO Inspect themes
-		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
+		$modules = ClassLoader::instance()->getManifest()->getModules();
 
 		foreach($modules as $module) {
 			if(!file_exists("{$module}/lang/")) continue;
@@ -2407,7 +2407,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 	 * @return string
 	 */
 	public static function get_owner_module($name) {
-		$manifest = SS_ClassLoader::instance()->getManifest();
+		$manifest = ClassLoader::instance()->getManifest();
 		$path     = $manifest->getItemPath($name);
 
 		if (!$path) {
@@ -2500,7 +2500,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable {
 		}
 
 		// Get list of module => path pairs, and then just the names
-		$modules = SS_ClassLoader::instance()->getManifest()->getModules();
+		$modules = ClassLoader::instance()->getManifest()->getModules();
 		$moduleNames = array_keys($modules);
 
 		// Remove the "project" module from the list - we'll add it back specially later if needed

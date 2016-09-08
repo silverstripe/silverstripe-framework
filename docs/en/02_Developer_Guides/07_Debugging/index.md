@@ -24,11 +24,11 @@ The [api:Debug] class contains a number of static utility methods for more advan
 	Debug::message("Wow, that's great");
 	// prints a short debugging message.
 
-	SS_Backtrace::backtrace();
+	Backtrace::backtrace();
 	// prints a calls-stack
 
 ## API Documentation
 
 * [api:SS_Log]
-* [api:SS_Backtrace]
+* [api:Backtrace]
 * [api:Debug]

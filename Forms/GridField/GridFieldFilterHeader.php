@@ -4,7 +4,7 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Forms\FieldGroup;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\SS_Filterable;
+use SilverStripe\ORM\Filterable;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
@@ -56,7 +56,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 	 * @return bool
 	 */
 	protected function checkDataType($dataList) {
-		if($dataList instanceof SS_Filterable) {
+		if($dataList instanceof Filterable) {
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {
@@ -107,7 +107,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 			return $dataList;
 		}
 
-		/** @var SS_Filterable $dataList */
+		/** @var Filterable $dataList */
 		/** @var GridState_Data $columns */
 		$columns = $gridField->State->GridFieldFilterHeader->Columns(null);
 		if(empty($columns)) {
@@ -130,7 +130,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 			return null;
 		}
 
-		/** @var SS_Filterable $list */
+		/** @var Filterable $list */
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList;
 		$columns = $gridField->getColumns();

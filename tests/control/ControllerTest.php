@@ -8,7 +8,7 @@ use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 
 
 
@@ -63,7 +63,7 @@ class ControllerTest extends FunctionalTest {
 
 	public function testUndefinedActions() {
 		$response = $this->get('ControllerTest_IndexSecuredController/undefinedaction');
-		$this->assertInstanceOf('SilverStripe\\Control\\SS_HTTPResponse', $response);
+		$this->assertInstanceOf('SilverStripe\\Control\\HTTPResponse', $response);
 		$this->assertEquals(404, $response->getStatusCode(), 'Undefined actions return a not found response.');
 	}
 
@@ -416,7 +416,7 @@ class ControllerTest extends FunctionalTest {
 		$response = $this->get("ControllerTest_ContainerController/subcontroller/subaction");
 		$this->assertEquals('subaction', $response->getBody());
 
-		$request = new SS_HTTPRequest(
+		$request = new HTTPRequest(
 			'GET',
 			'ControllerTest_ContainerController/subcontroller/substring/subvieweraction'
 		);

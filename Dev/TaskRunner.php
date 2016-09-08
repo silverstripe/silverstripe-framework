@@ -4,7 +4,7 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -71,7 +71,7 @@ class TaskRunner extends Controller {
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 */
 	public function runTask($request) {
 		$name = $request->param('TaskName');

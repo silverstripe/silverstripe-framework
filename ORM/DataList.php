@@ -32,7 +32,7 @@ use LogicException;
  *
  * Subclasses of DataList may add other methods that have the same effect.
  */
-class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
+class DataList extends ViewableData implements SS_List, Filterable, Sortable, Limitable {
 
 	/**
 	 * The DataObject class name that this data list is querying
@@ -460,7 +460,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	/**
 	 * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
 	 * future implementation.
-	 * @see SS_Filterable::filterByCallback()
+	 * @see Filterable::filterByCallback()
 	 *
 	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
 	 * @param callable $callback
@@ -724,10 +724,10 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param string $keyField - the 'key' field of the result array
 	 * @param string $titleField - the value field of the result array
-	 * @return SS_Map
+	 * @return Map
 	 */
 	public function map($keyField = 'ID', $titleField = 'Title') {
-		return new SS_Map($this, $keyField, $titleField);
+		return new Map($this, $keyField, $titleField);
 	}
 
 	/**

@@ -5,7 +5,7 @@ namespace SilverStripe\ORM\Connect;
 /**
  * A result-set from a MySQL database (using MySQLiConnector)
  */
-class MySQLQuery extends SS_Query {
+class MySQLQuery extends Query {
 
 	/**
 	 * The internal MySQL handle that points to the result set.

@@ -4,7 +4,7 @@ namespace SilverStripe\Core\Config;
 
 use Iterator;
 
-class SS_DAG_Iterator implements Iterator
+class DAG_Iterator implements Iterator
 {
 
 	protected $data;

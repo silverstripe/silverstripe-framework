@@ -8,7 +8,7 @@ use SilverStripe\View\ArrayData;
  * A list decorator that allows a list to be grouped into sub-lists by common
  * values of a field.
  */
-class GroupedList extends SS_ListDecorator {
+class GroupedList extends ListDecorator {
 
 	/**
 	 * @param  string $index

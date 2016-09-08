@@ -6,8 +6,8 @@ use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Assets\Folder;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Object;
 use SilverStripe\ORM\SS_List;
@@ -1093,10 +1093,10 @@ class UploadField extends FileField {
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return UploadField_ItemHandler
 	 */
-	public function handleItem(SS_HTTPRequest $request) {
+	public function handleItem(HTTPRequest $request) {
 		return $this->getItemHandler($request->param('ID'));
 	}
 
@@ -1109,10 +1109,10 @@ class UploadField extends FileField {
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return UploadField_SelectHandler
 	 */
-	public function handleSelect(SS_HTTPRequest $request) {
+	public function handleSelect(HTTPRequest $request) {
 		if(!$this->canAttachExisting()) {
 			return $this->httpError(403);
 		}
@@ -1234,11 +1234,11 @@ class UploadField extends FileField {
 	/**
 	 * Action to handle upload of a single file
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
+	 * @return HTTPResponse
 	 */
-	public function upload(SS_HTTPRequest $request) {
+	public function upload(HTTPRequest $request) {
 		if($this->isDisabled() || $this->isReadonly() || !$this->canUpload()) {
 			return $this->httpError(403);
 		}
@@ -1268,7 +1268,7 @@ class UploadField extends FileField {
 		}
 
 		// Format response with json
-		$response = new SS_HTTPResponse(Convert::raw2json($return));
+		$response = new HTTPResponse(Convert::raw2json($return));
 		$response->addHeader('Content-Type', 'text/plain');
 		return $response;
 	}
@@ -1277,10 +1277,10 @@ class UploadField extends FileField {
 	 * Retrieves details for files that this field wishes to attache to the
 	 * client-side form
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
-	public function attach(SS_HTTPRequest $request) {
+	public function attach(HTTPRequest $request) {
 		if(!$request->isPOST()) return $this->httpError(403);
 		if(!$this->canAttachExisting()) return $this->httpError(403);
 
@@ -1290,7 +1290,7 @@ class UploadField extends FileField {
 		foreach($files as $file) {
 			$return[] = $this->encodeFileAttributes($file);
 		}
-		$response = new SS_HTTPResponse(Convert::raw2json($return));
+		$response = new HTTPResponse(Convert::raw2json($return));
 		$response->addHeader('Content-Type', 'application/json');
 		return $response;
 	}
@@ -1319,10 +1319,10 @@ class UploadField extends FileField {
 	/**
 	 * Determines if a specified file exists
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
-	public function fileexists(SS_HTTPRequest $request) {
+	public function fileexists(HTTPRequest $request) {
 		// Assert that requested filename doesn't attempt to escape the directory
 		$originalFile = $request->requestVar('filename');
 		if($originalFile !== basename($originalFile)) {
@@ -1336,7 +1336,7 @@ class UploadField extends FileField {
 		}
 
 		// Encode and present response
-		$response = new SS_HTTPResponse(Convert::raw2json($return));
+		$response = new HTTPResponse(Convert::raw2json($return));
 		$response->addHeader('Content-Type', 'application/json');
 		if (!empty($return['error'])) $response->setStatusCode(400);
 		return $response;

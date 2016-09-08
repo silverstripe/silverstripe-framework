@@ -29,7 +29,7 @@ abstract class DBSchemaManager {
 	/**
 	 * Instance of the database controller this schema belongs to
 	 *
-	 * @var SS_Database
+	 * @var Database
 	 */
 	protected $database = null;
 
@@ -44,9 +44,9 @@ abstract class DBSchemaManager {
 	/**
 	 * Injector injection point for database controller
 	 *
-	 * @param SS_Database $database
+	 * @param Database $database
 	 */
-	public function setDatabase(SS_Database $database) {
+	public function setDatabase(Database $database) {
 		$this->database = $database;
 	}
 
@@ -86,7 +86,7 @@ abstract class DBSchemaManager {
 	 *
 	 * @param string $sql The SQL query to execute
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return SS_Query
+	 * @return Query
 	 */
 	public function query($sql, $errorLevel = E_USER_ERROR) {
 		return $this->database->query($sql, $errorLevel);
@@ -99,7 +99,7 @@ abstract class DBSchemaManager {
 	 * @param string $sql The SQL query to execute. The ? character will denote parameters.
 	 * @param array $parameters An ordered list of arguments.
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return SS_Query
+	 * @return Query
 	 */
 	public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR) {
 		return $this->database->preparedQuery($sql, $parameters, $errorLevel);

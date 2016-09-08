@@ -11,7 +11,7 @@ use mysqli_stmt;
  * By default streams unbuffered data, but seek(), rewind(), or numRecords() will force the statement to
  * buffer itself and sacrifice any potential performance benefit.
  */
-class MySQLStatement extends SS_Query {
+class MySQLStatement extends Query {
 
 	/**
 	 * The related mysqli statement object if generated using a prepared query

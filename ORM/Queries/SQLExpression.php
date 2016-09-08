@@ -3,7 +3,7 @@
 namespace SilverStripe\ORM\Queries;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\ORM\Connect\SS_Query;
+use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\DB;
 use Exception;
 
@@ -100,7 +100,7 @@ abstract class SQLExpression {
 	/**
 	 * Execute this query.
 	 *
-	 * @return SS_Query
+	 * @return Query
 	 */
 	public function execute() {
 		$sql = $this->sql($parameters);

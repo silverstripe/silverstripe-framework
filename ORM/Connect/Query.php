@@ -2,10 +2,8 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use Iterator;
-
 use SilverStripe\Core\Convert;
-
+use Iterator;
 
 /**
  * Abstract query-result class.
@@ -17,7 +15,7 @@ use SilverStripe\Core\Convert;
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
  */
-abstract class SS_Query implements Iterator {
+abstract class Query implements Iterator {
 
 	/**
 	 * The current record in the interator.

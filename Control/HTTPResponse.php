@@ -10,7 +10,7 @@ use SilverStripe\View\Requirements;
 /**
  * Represents a response returned by a controller.
  */
-class SS_HTTPResponse {
+class HTTPResponse {
 
 	/**
 	 * @var array

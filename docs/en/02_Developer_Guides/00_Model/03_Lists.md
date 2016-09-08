@@ -50,11 +50,11 @@ A map is an array where the array indexes contain data as well as the values. Yo
 	//	3 => 'Will'
 	// );
 	
-This functionality is provided by the [api:SS_Map] class, which can be used to build a map around any `SS_List`.
+This functionality is provided by the [api:Map] class, which can be used to build a map around any `SS_List`.
 
 	:::php
 	$members = Member::get();
-	$map = new SS_Map($members, 'ID', 'FirstName');
+	$map = new Map($members, 'ID', 'FirstName');
 
 ## Column
 
@@ -91,4 +91,4 @@ This functionality is provided by the [api:SS_Map] class, which can be used to b
 * [api:RelationList]
 * [api:DataList]
 * [api:ArrayList]
-* [api:SS_Map]
+* [api:Map]

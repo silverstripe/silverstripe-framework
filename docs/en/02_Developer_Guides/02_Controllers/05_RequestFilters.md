@@ -14,7 +14,7 @@ perform operations wrapped around responses and request objects. A `RequestFilte
 
 	class CustomRequestFilter implements RequestFilter {
 
-		public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
+		public function preRequest(HTTPRequest $request, Session $session, DataModel $model) {
 			
 			// if(!something) {
 			// 	By returning 'false' from the preRequest method, request execution will be stopped from continuing.
@@ -28,7 +28,7 @@ perform operations wrapped around responses and request objects. A `RequestFilte
 			return true;
 		}
 
-		public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
+		public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model) {
 			// response is about to be sent.
 			// any modifications or tracking to be done?
 			// Foo::unbar();

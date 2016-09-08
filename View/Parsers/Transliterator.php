@@ -10,11 +10,11 @@ use SilverStripe\Core\Object;
  * Usage:
  *
  * <code>
- * $tr = new SS_Transliterator();
+ * $tr = new Transliterator();
  * $ascii = $tr->toASCII($unicode);
  * </code>
  */
-class SS_Transliterator extends Object {
+class Transliterator extends Object {
 	/**
 	 * @config
 	 * @var boolean Allow the use of iconv() to perform transliteration.  Set to false to disable.

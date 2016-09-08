@@ -4,7 +4,7 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Object;
 
@@ -192,7 +192,7 @@ class DebugView extends Object
 	/**
 	 * Render HTML header for development views
 	 *
-	 * @param SS_HTTPRequest $httpRequest
+	 * @param HTTPRequest $httpRequest
 	 * @return string
 	 */
 	public function renderHeader($httpRequest = null) {
@@ -304,7 +304,7 @@ class DebugView extends Object
 	 */
 	public function renderTrace($trace) {
 		$output = '<h3>Trace</h3>';
-		$output .= SS_Backtrace::get_rendered_backtrace($trace);
+		$output .= Backtrace::get_rendered_backtrace($trace);
 		$output .= '</div>';
 
 		return $output;

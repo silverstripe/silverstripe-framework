@@ -1,7 +1,7 @@
 <?php
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\Cache;
 
 class GDImageTest extends ImageTest {
 
@@ -22,7 +22,7 @@ class GDImageTest extends ImageTest {
 	}
 
 	public function tearDown() {
-		$cache = SS_Cache::factory('GDBackend_Manipulations');
+		$cache = Cache::factory('GDBackend_Manipulations');
 		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 		parent::tearDown();
 	}

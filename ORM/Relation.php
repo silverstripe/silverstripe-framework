@@ -7,7 +7,7 @@ use SilverStripe\ORM\FieldType\DBField;
 /**
  * Abstract representation of a DB relation field, either saved or in memory
  */
-interface Relation extends SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
+interface Relation extends SS_List, Filterable, Sortable, Limitable {
 
 	/**
 	 * Sets the ComponentSet to be the given ID list.

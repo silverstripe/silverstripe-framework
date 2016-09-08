@@ -1,7 +1,7 @@
 <?php
 
 use SilverStripe\Assets\GDBackend;
-use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\Cache;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 
@@ -178,7 +178,7 @@ class GDTest extends SapphireTest {
 		$gd->loadFrom($fullPath);
 
 		// Cache should refer to this file
-		$cache = SS_Cache::factory('GDBackend_Manipulations');
+		$cache = Cache::factory('GDBackend_Manipulations');
 		$key = sha1(implode('|', array($fullPath, filemtime($fullPath))));
 		$data = $cache->load($key);
 		$this->assertEquals('1', $data);

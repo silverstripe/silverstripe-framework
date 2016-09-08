@@ -4,9 +4,9 @@ namespace SilverStripe\Dev;
 
 use PHPUnit_Framework_TestListener;
 use PHPUnit_Framework_Test;
-use Exception;
 use PHPUnit_Framework_AssertionFailedError;
 use PHPUnit_Framework_TestSuite;
+use Exception;
 
 /**
  * Necessary to call setUpOnce() and tearDownOnce() on {@link SapphireTest}
@@ -15,7 +15,7 @@ use PHPUnit_Framework_TestSuite;
  *
  * @see http://www.phpunit.de/manual/3.5/en/extending-phpunit.html#extending-phpunit.PHPUnit_Framework_TestListener
  */
-class SS_TestListener implements PHPUnit_Framework_TestListener {
+class TestListener implements PHPUnit_Framework_TestListener {
 
 	/**
 	 * @var SapphireTest

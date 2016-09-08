@@ -1,12 +1,12 @@
 <?php
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Manifest\SS_ConfigManifest;
+use SilverStripe\Core\Manifest\ConfigManifest;
 use SilverStripe\Dev\SapphireTest;
 
 
 
-class ConfigManifestTest_ConfigManifestAccess extends SS_ConfigManifest {
+class ConfigManifestTest_ConfigManifestAccess extends ConfigManifest {
 	public function relativeOrder($a, $b) {
 		return parent::relativeOrder($a, $b);
 	}
@@ -20,7 +20,7 @@ class ConfigManifestTest extends SapphireTest {
 	 * @return any
 	 */
 	protected function getConfigFixtureValue($name) {
-		$manifest = new SS_ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest', true, true);
+		$manifest = new ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest', true, true);
 		return $manifest->get('ConfigManifestTest', $name);
 	}
 
@@ -48,11 +48,11 @@ class ConfigManifestTest extends SapphireTest {
 	/**
 	 * A helper method to return a mock of the manifest in order to test expectations and reduce dependency
 	 * @param $methods
-	 * @return SS_ConfigManifest
+	 * @return ConfigManifest
 	 */
 	protected function getManifestMock($methods) {
 		return $this->getMock(
-			'SilverStripe\\Core\\Manifest\\SS_ConfigManifest',
+			'SilverStripe\\Core\\Manifest\\ConfigManifest',
 			$methods,
 			array(), // no constructor arguments
 			'', // default
@@ -179,7 +179,7 @@ class ConfigManifestTest extends SapphireTest {
 		);
 
 		// There is no getter for yamlConfigFragments
-		$property = new ReflectionProperty('SilverStripe\\Core\\Manifest\\SS_ConfigManifest', 'yamlConfigFragments');
+		$property = new ReflectionProperty('SilverStripe\\Core\\Manifest\\ConfigManifest', 'yamlConfigFragments');
 		$property->setAccessible(true);
 
 		// Get the result back from the parsing
@@ -419,7 +419,7 @@ class ConfigManifestTest extends SapphireTest {
 		$this->assertEquals('live', Config::inst()->get('SilverStripe\\Control\\Director', 'environment_type'));
 
 		// Then, load in a new manifest, which includes a _config.php that sets environment_type to dev
-		$manifest = new SS_ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest_dynamicenv', true, true);
+		$manifest = new ConfigManifest(dirname(__FILE__).'/fixtures/configmanifest_dynamicenv', true, true);
 		Config::inst()->pushConfigYamlManifest($manifest);
 
 		// Make sure that stuck

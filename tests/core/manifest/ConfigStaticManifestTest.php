@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\Core\Manifest\SS_ConfigStaticManifest;
+use SilverStripe\Core\Manifest\ConfigStaticManifest;
 use SilverStripe\Dev\SapphireTest;
 
 
@@ -13,7 +13,7 @@ class ConfigStaticManifestTest extends SapphireTest {
 	protected static $ignored = true;
 
 	public function testGet() {
-		$manifest = new SS_ConfigStaticManifest();
+		$manifest = new ConfigStaticManifest();
 
 		// Test madeup value
 		$this->assertNull($manifest->get(__CLASS__, 'madeup', null));

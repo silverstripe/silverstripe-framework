@@ -3,8 +3,8 @@
 namespace SilverStripe\Core\Config;
 
 use SilverStripe\Core\Object;
-use SilverStripe\Core\Manifest\SS_ConfigStaticManifest;
-use SilverStripe\Core\Manifest\SS_ConfigManifest;
+use SilverStripe\Core\Manifest\ConfigStaticManifest;
+use SilverStripe\Core\Manifest\ConfigManifest;
 use UnexpectedValueException;
 use stdClass;
 
@@ -304,9 +304,9 @@ class Config {
 	protected $staticManifests = array();
 
 	/**
-	 * @param SS_ConfigStaticManifest $manifest
+	 * @param ConfigStaticManifest $manifest
 	 */
-	public function pushConfigStaticManifest(SS_ConfigStaticManifest $manifest) {
+	public function pushConfigStaticManifest(ConfigStaticManifest $manifest) {
 		array_unshift($this->staticManifests, $manifest);
 
 		$this->cache->clean();
@@ -320,9 +320,9 @@ class Config {
 	 *
 	 * WARNING: Config manifests to not merge entries, and do not solve before/after rules inter-manifest -
 	 * instead, the last manifest to be added always wins
-	 * @param SS_ConfigManifest $manifest
+	 * @param ConfigManifest $manifest
 	 */
-	public function pushConfigYamlManifest(SS_ConfigManifest $manifest) {
+	public function pushConfigYamlManifest(ConfigManifest $manifest) {
 		array_unshift($this->manifests, $manifest);
 
 		// Now that we've got another yaml config manifest we need to clean the cache

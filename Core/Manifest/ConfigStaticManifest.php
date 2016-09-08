@@ -7,7 +7,7 @@ use ReflectionClass;
 /**
  * Allows access to config values set on classes using private statics.
  */
-class SS_ConfigStaticManifest {
+class ConfigStaticManifest {
 
 	/**
 	 * @param string $class

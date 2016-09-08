@@ -3,9 +3,9 @@
 namespace SilverStripe\Assets\Storage;
 
 use SilverStripe\Assets\File;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 
 /**
  * Provides routing for session-whitelisted protected files
@@ -46,10 +46,10 @@ class ProtectedFileController extends Controller {
 	/**
 	 * Provide a response for the given file request
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
-	public function handleFile(SS_HTTPRequest $request) {
+	public function handleFile(HTTPRequest $request) {
 		$filename = $this->parseFilename($request);
 
 		// Deny requests to private file
@@ -76,10 +76,10 @@ class ProtectedFileController extends Controller {
 	/**
 	 * Get the file component from the request
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return string
 	 */
-	protected function parseFilename(SS_HTTPRequest $request) {
+	protected function parseFilename(HTTPRequest $request) {
 		$filename = '';
 		$next = $request->param('Filename');
 		while($next) {

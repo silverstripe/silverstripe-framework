@@ -13,7 +13,7 @@ use SilverStripe\Security\Security;
  */
 class VersionedRequestFilter implements RequestFilter {
 
-	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
+	public function preRequest(HTTPRequest $request, Session $session, DataModel $model) {
 		// Bootstrap session so that Session::get() accesses the right instance
 		$dummyController = new Controller();
 		$dummyController->setSession($session);
@@ -37,7 +37,7 @@ class VersionedRequestFilter implements RequestFilter {
 			$dummyController->popCurrent();
 			// Prevent output in testing
 			if(class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test()) {
-				throw new SS_HTTPResponse_Exception($response);
+				throw new HTTPResponse_Exception($response);
 			}
 			$response->output();
 			die;
@@ -48,7 +48,7 @@ class VersionedRequestFilter implements RequestFilter {
 		return true;
 	}
 
-	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
+	public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model) {
 		return true;
 	}
 

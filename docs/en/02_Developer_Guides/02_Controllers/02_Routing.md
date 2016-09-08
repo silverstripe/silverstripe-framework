@@ -40,7 +40,7 @@ To understand the syntax for the `routes.yml` file better, read the [Configurati
 This route has defined that any URL beginning with `team` should create, and be handled by a `TeamController` instance.
 
 It also contains 3 `parameters` or `params` for short. `$Action`, `$ID` and `$Name`. These variables are placeholders 
-which will be filled when the user makes their request. Request parameters are available on the `SS_HTTPRequest` object 
+which will be filled when the user makes their request. Request parameters are available on the `HTTPRequest` object 
 and able to be pulled out from a controller using `$this->getRequest()->param($name)`.
 
 <div class="info" markdown="1">

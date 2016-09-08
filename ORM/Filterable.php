@@ -8,9 +8,9 @@ namespace SilverStripe\ORM;
  * All methods in this interface are immutable - they should return new instances with the filter
  * applied, rather than applying the filter in place
  *
- * @see SS_List, SS_Sortable, SS_Limitable
+ * @see SS_List, Sortable, Limitable
  */
-interface SS_Filterable extends SS_List {
+interface Filterable extends SS_List {
 
 	/**
 	 * Returns TRUE if the list can be filtered by a given field expression.
@@ -23,7 +23,7 @@ interface SS_Filterable extends SS_List {
 	/**
 	 * Return a new instance of this list that only includes items with these charactaristics
 	 *
-	 * @return SS_Filterable
+	 * @return Filterable
 	 * @example $list = $list->filter('Name', 'bob'); // only bob in the list
 	 * @example $list = $list->filter('Name', array('aziz', 'bob'); // aziz and bob in list
 	 * @example $list = $list->filter(array('Name'=>'bob, 'Age'=>21)); // bob with the age 21
@@ -60,7 +60,7 @@ interface SS_Filterable extends SS_List {
 	/**
 	 * Return a new instance of this list that excludes any items with these charactaristics
 	 *
-	 * @return SS_Filterable
+	 * @return Filterable
 	 * @example $list = $list->exclude('Name', 'bob'); // exclude bob from list
 	 * @example $list = $list->exclude('Name', array('aziz', 'bob'); // exclude aziz and bob from list
 	 * @example $list = $list->exclude(array('Name'=>'bob, 'Age'=>21)); // exclude bob that has Age 21
@@ -77,7 +77,7 @@ interface SS_Filterable extends SS_List {
 	 *
 	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
 	 * @param callable $callback
-	 * @return SS_Filterable
+	 * @return Filterable
 	 */
 	public function filterByCallback($callback);
 

@@ -3,8 +3,8 @@
 namespace SilverStripe\Admin;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPResponse;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\FormAction;
@@ -211,10 +211,10 @@ JSON;
 	/**
 	 * REST endpoint to get a list of campaigns.
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function readCampaigns() {
-		$response = new SS_HTTPResponse();
+		$response = new HTTPResponse();
 		$response->addHeader('Content-Type', 'application/json');
 		$hal = $this->getListResource();
 		$response->setBody(Convert::array2json($hal));
@@ -368,31 +368,31 @@ JSON;
 	/**
 	 * REST endpoint to get a campaign.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
-	public function readCampaign(SS_HTTPRequest $request) {
-		$response = new SS_HTTPResponse();
+	public function readCampaign(HTTPRequest $request) {
+		$response = new HTTPResponse();
 
 		if ($request->getHeader('Accept') == 'text/json') {
 			$response->addHeader('Content-Type', 'application/json');
 			if (!$request->param('Name')) {
-				return (new SS_HTTPResponse(null, 400));
+				return (new HTTPResponse(null, 400));
 			}
 
 			/** @var ChangeSet $changeSet */
 			$changeSet = ChangeSet::get()->byID($request->param('ID'));
 			if(!$changeSet) {
-				return (new SS_HTTPResponse(null, 404));
+				return (new HTTPResponse(null, 404));
 			}
 
 			if(!$changeSet->canView()) {
-				return (new SS_HTTPResponse(null, 403));
+				return (new HTTPResponse(null, 403));
 			}
 
 			$body = Convert::raw2json($this->getChangeSetResource($changeSet));
-			return (new SS_HTTPResponse($body, 200))
+			return (new HTTPResponse($body, 200))
 				->addHeader('Content-Type', 'application/json');
 		} else {
 			return $this->index($request);
@@ -402,71 +402,71 @@ JSON;
 	/**
 	 * REST endpoint to delete a campaign.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
-	public function deleteCampaign(SS_HTTPRequest $request) {
+	public function deleteCampaign(HTTPRequest $request) {
 		// Check security ID
 		if (!SecurityToken::inst()->checkRequest($request)) {
-			return new SS_HTTPResponse(null, 400);
+			return new HTTPResponse(null, 400);
 		}
 
 		$id = $request->param('ID');
 		if (!$id || !is_numeric($id)) {
-			return (new SS_HTTPResponse(null, 400));
+			return (new HTTPResponse(null, 400));
 		}
 
 		$record = ChangeSet::get()->byID($id);
 		if(!$record) {
-			return (new SS_HTTPResponse(null, 404));
+			return (new HTTPResponse(null, 404));
 		}
 
 		if(!$record->canDelete()) {
-			return (new SS_HTTPResponse(null, 403));
+			return (new HTTPResponse(null, 403));
 		}
 
 		$record->delete();
 
-		return (new SS_HTTPResponse(null, 204));
+		return (new HTTPResponse(null, 204));
 	}
 
 	/**
 	 * REST endpoint to publish a {@link ChangeSet} and all of its items.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
-	public function publishCampaign(SS_HTTPRequest $request) {
+	public function publishCampaign(HTTPRequest $request) {
 		// Protect against CSRF on destructive action
 		if(!SecurityToken::inst()->checkRequest($request)) {
-			return (new SS_HTTPResponse(null, 400));
+			return (new HTTPResponse(null, 400));
 		}
 
 		$id = $request->param('ID');
 		if(!$id || !is_numeric($id)) {
-			return (new SS_HTTPResponse(null, 400));
+			return (new HTTPResponse(null, 400));
 		}
 
 		/** @var ChangeSet $record */
 		$record = ChangeSet::get()->byID($id);
 		if(!$record) {
-			return (new SS_HTTPResponse(null, 404));
+			return (new HTTPResponse(null, 404));
 		}
 
 		if(!$record->canPublish()) {
-			return (new SS_HTTPResponse(null, 403));
+			return (new HTTPResponse(null, 403));
 		}
 
 		try {
 			$record->publish();
 		} catch(LogicException $e) {
-			return (new SS_HTTPResponse(json_encode(['status' => 'error', 'message' => $e->getMessage()]), 401))
+			return (new HTTPResponse(json_encode(['status' => 'error', 'message' => $e->getMessage()]), 401))
 				->addHeader('Content-Type', 'application/json');
 		}
 
-		return (new SS_HTTPResponse(
+		return (new HTTPResponse(
 			Convert::raw2json($this->getChangeSetResource($record)),
 			200
 		))->addHeader('Content-Type', 'application/json');
@@ -475,7 +475,7 @@ JSON;
 	/**
 	 * Url handler for edit form
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return Form
 	 */
 	public function DetailEditForm($request) {

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Versioning;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Cookie;
@@ -1918,7 +1918,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	/**
 	 * Determine if the current user is able to set the given site stage / archive
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return bool
 	 */
 	public static function can_choose_site_stage($request) {

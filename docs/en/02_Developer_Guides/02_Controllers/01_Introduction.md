@@ -18,11 +18,11 @@ subclass the base `Controller` class.
 			'index'
 		);
 		
-		public function index(SS_HTTPRequest $request) {
+		public function index(HTTPRequest $request) {
 			// ..
 		}
 
-		public function players(SS_HTTPRequest $request) {
+		public function players(HTTPRequest $request) {
 			print_r($request->allParams());
 		}
 	}
@@ -67,10 +67,10 @@ It is standard in SilverStripe for your controller actions to be `lowercasewithn
 
 Action methods can return one of four main things:
 
-* an array. In this case the values in the array are available in the templates and the controller completes as usual by returning a [api:SS_HTTPResponse] with the body set to the current template.
-* `HTML`. SilverStripe will wrap the `HTML` into a `SS_HTTPResponse` and set the status code to 200.
-* an [api:SS_HTTPResponse] containing a manually defined `status code` and `body`.
-* an [api:SS_HTTPResponse_Exception]. A special type of response which indicates an error. By returning the exception, the execution pipeline can adapt and display any error handlers.
+* an array. In this case the values in the array are available in the templates and the controller completes as usual by returning a [api:HTTPResponse] with the body set to the current template.
+* `HTML`. SilverStripe will wrap the `HTML` into a `HTTPResponse` and set the status code to 200.
+* an [api:HTTPResponse] containing a manually defined `status code` and `body`.
+* an [api:HTTPResponse_Exception]. A special type of response which indicates an error. By returning the exception, the execution pipeline can adapt and display any error handlers.
 
 **mysite/code/controllers/TeamController.php**
 
@@ -79,7 +79,7 @@ Action methods can return one of four main things:
 	 * Return some additional data to the current response that is waiting to go out, this makes $Title set to 
 	 * 'MyTeamName' and continues on with generating the response.
 	 */
-	public function index(SS_HTTPRequest $request) {
+	public function index(HTTPRequest $request) {
 		return array(
 			'Title' => 'My Team Name'
 		);
@@ -88,8 +88,8 @@ Action methods can return one of four main things:
 	/**
 	 * We can manually create a response and return that to ignore any previous data.
 	 */
-	public function someaction(SS_HTTPRequest $request) {
-		$this->setResponse(new SS_HTTPResponse());
+	public function someaction(HTTPRequest $request) {
+		$this->setResponse(new HTTPResponse());
 		$this->getResponse()->setStatusCode(400);
 		$this->getResponse()->setBody('invalid');
 
@@ -99,7 +99,7 @@ Action methods can return one of four main things:
 	/**
 	 * Or, we can modify the response that is waiting to go out.
 	 */
-	public function anotheraction(SS_HTTPRequest $request) {
+	public function anotheraction(HTTPRequest $request) {
 		$this->getResponse()->setStatusCode(400);
 
 		return $this->getResponse();

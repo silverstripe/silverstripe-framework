@@ -1,15 +1,15 @@
 <?php
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\View\Parsers\SS_HTML4Value;
+use SilverStripe\View\Parsers\HTML4Value;
 
 /**
  * @package framework
  * @subpackage tests
  */
-class SS_HTML4ValueTest extends SapphireTest {
+class HTML4ValueTest extends SapphireTest {
 	public function testInvalidHTMLSaving() {
-		$value = new SS_HTML4Value();
+		$value = new HTML4Value();
 
 		$invalid = array (
 			'<p>Enclosed Value</p></p>'                              => '<p>Enclosed Value</p>',
@@ -26,14 +26,14 @@ class SS_HTML4ValueTest extends SapphireTest {
 	}
 
 	public function testUtf8Saving() {
-		$value = new SS_HTML4Value();
+		$value = new HTML4Value();
 
 		$value->setContent('<p>ö ß ā い 家</p>');
 		$this->assertEquals('<p>ö ß ā い 家</p>', $value->getContent());
 	}
 
 	public function testInvalidHTMLTagNames() {
-		$value = new SS_HTML4Value();
+		$value = new HTML4Value();
 
 		$invalid = array(
 			'<p><div><a href="test-link"></p></div>',
@@ -52,7 +52,7 @@ class SS_HTML4ValueTest extends SapphireTest {
 	}
 
 	public function testMixedNewlines() {
-		$value = new SS_HTML4Value();
+		$value = new HTML4Value();
 
 		$value->setContent("<p>paragraph</p>\n<ul><li>1</li>\r\n</ul>");
 		$this->assertEquals(
@@ -63,7 +63,7 @@ class SS_HTML4ValueTest extends SapphireTest {
 	}
 
 	public function testAttributeEscaping() {
-		$value = new SS_HTML4Value();
+		$value = new HTML4Value();
 
 		$value->setContent('<a href="[]"></a>');
 		$this->assertEquals('<a href="[]"></a>', $value->getContent(), "'[' character isn't escaped");

@@ -3,7 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Director;
@@ -67,7 +67,7 @@ class ChangePasswordForm extends Form {
 	 * Change the password
 	 *
 	 * @param array $data The user submitted data
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function doChangePassword(array $data) {
 		if($member = Member::currentUser()) {

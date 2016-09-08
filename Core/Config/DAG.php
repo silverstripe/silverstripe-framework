@@ -9,7 +9,7 @@ use IteratorAggregate;
  * A Directed Acyclic Graph - used for doing topological sorts on dependencies, such as the before/after conditions
  * in config yaml fragments
  */
-class SS_DAG implements IteratorAggregate
+class DAG implements IteratorAggregate
 {
 	/**
 	 * The nodes/vertices in the graph. Should be a numeric sequence of items (no string keys, no gaps).
@@ -101,15 +101,15 @@ class SS_DAG implements IteratorAggregate
 		}
 
 		if ($dag) {
-			$remainder = new SS_DAG($data);
+			$remainder = new DAG($data);
 			$remainder->dag = $dag;
-			throw new SS_DAG_CyclicException("DAG has cyclic requirements", $remainder);
+			throw new DAG_CyclicException("DAG has cyclic requirements", $remainder);
 		}
 		return $sorted;
 	}
 
 	public function getIterator()
 	{
-		return new SS_DAG_Iterator($this->data, $this->dag);
+		return new DAG_Iterator($this->data, $this->dag);
 	}
 }

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Object;
 
 /**
@@ -44,7 +44,7 @@ abstract class BuildTask extends Object {
 	 * Implement this method in the task subclass to
 	 * execute via the TaskRunner
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return
 	 */
 	abstract public function run($request);

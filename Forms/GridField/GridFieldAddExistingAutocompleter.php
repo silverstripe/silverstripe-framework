@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
@@ -201,7 +201,7 @@ class GridFieldAddExistingAutocompleter
 	 * Returns a json array of a search results that can be used by for example Jquery.ui.autosuggestion
 	 *
 	 * @param GridField $gridField
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return string
 	 */
 	public function doSearch($gridField, $request) {

@@ -2,7 +2,7 @@
 
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\TreeDropdownField;
 
 
@@ -19,7 +19,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$field = new TreeDropdownField('TestTree', 'Test tree', 'SilverStripe\\Assets\\Folder');
 
 		// case insensitive search against keyword 'sub' for folders
-		$request = new SS_HTTPRequest('GET','url',array('search'=>'sub'));
+		$request = new HTTPRequest('GET','url',array('search'=>'sub'));
 		$tree = $field->tree($request);
 
 		$folder1 = $this->objFromFixture('SilverStripe\\Assets\\Folder','folder1');
@@ -56,7 +56,7 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$field = new TreeDropdownField('TestTree', 'Test tree', 'SilverStripe\\Assets\\File');
 
 		// case insensitive search against keyword 'sub' for files
-		$request = new SS_HTTPRequest('GET','url',array('search'=>'sub'));
+		$request = new HTTPRequest('GET','url',array('search'=>'sub'));
 		$tree = $field->tree($request);
 
 		$parser = new CSSContentParser($tree);

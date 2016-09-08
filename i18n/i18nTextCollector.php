@@ -5,7 +5,7 @@ namespace SilverStripe\i18n;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Object;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use ReflectionClass;
@@ -312,7 +312,7 @@ class i18nTextCollector extends Object {
 		// Find FQN that ends with $class
 		$classes = preg_grep(
 			'/'.preg_quote("\\{$class}", '\/').'$/i',
-			SS_ClassLoader::instance()->getManifest()->getClassNames()
+			ClassLoader::instance()->getManifest()->getClassNames()
 		);
 
 		// Find all modules for candidate classes

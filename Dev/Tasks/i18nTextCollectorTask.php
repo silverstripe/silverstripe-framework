@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Dev\Tasks;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\BuildTask;
@@ -35,7 +35,7 @@ class i18nTextCollectorTask extends BuildTask {
 	 *
 	 * @uses DataObject->collectI18nStatics()
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 */
 	public function run($request) {
 		increase_time_limit_to();
@@ -63,7 +63,7 @@ class i18nTextCollectorTask extends BuildTask {
 	/**
 	 * Check if we should merge
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return bool
 	 */
 	protected function getIsMerge($request) {

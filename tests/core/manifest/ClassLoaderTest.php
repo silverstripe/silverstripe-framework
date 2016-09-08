@@ -1,11 +1,11 @@
 <?php
 
-use SilverStripe\Core\Manifest\SS_ClassManifest;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassManifest;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
 
 /**
- * Tests for the {@link SS_ClassManifest} class.
+ * Tests for the {@link ClassManifest} class.
  *
  * @package    framework
  * @subpackage tests
@@ -20,12 +20,12 @@ class ClassLoaderTest extends SapphireTest {
 
 		$this->baseManifest1 = dirname(__FILE__) . '/fixtures/classmanifest';
 		$this->baseManifest2 = dirname(__FILE__) . '/fixtures/classmanifest_other';
-		$this->testManifest1 = new SS_ClassManifest($this->baseManifest1, false, true, false);
-		$this->testManifest2 = new SS_ClassManifest($this->baseManifest2, false, true, false);
+		$this->testManifest1 = new ClassManifest($this->baseManifest1, false, true, false);
+		$this->testManifest2 = new ClassManifest($this->baseManifest2, false, true, false);
 	}
 
 	public function testExclusive() {
-		$loader = new SS_ClassLoader();
+		$loader = new ClassLoader();
 
 		$loader->pushManifest($this->testManifest1);
 		$this->assertTrue((bool)$loader->getItemPath('ClassA'));
@@ -42,7 +42,7 @@ class ClassLoaderTest extends SapphireTest {
 	}
 
 	public function testGetItemPath() {
-		$loader = new SS_ClassLoader();
+		$loader = new ClassLoader();
 
 		$loader->pushManifest($this->testManifest1);
 		$this->assertEquals(

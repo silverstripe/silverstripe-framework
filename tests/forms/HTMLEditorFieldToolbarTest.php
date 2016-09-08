@@ -2,7 +2,7 @@
 
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar;
 
@@ -69,7 +69,7 @@ class HTMLEditorFieldToolbarTest extends SapphireTest {
 		$this->assertEquals($url, 'http://example.com/test.pdf');
 	}
 
-	/** @expectedException SilverStripe\Control\SS_HTTPResponse_Exception */
+	/** @expectedException SilverStripe\Control\HTTPResponse_Exception */
 	public function testInvalidScheme() {
 		list($file, $url) = $this->getToolbar()->viewfile_getRemoteFileByURL('nosuchscheme://example.com/test.pdf');
 	}
@@ -79,7 +79,7 @@ class HTMLEditorFieldToolbarTest extends SapphireTest {
 		$this->assertEquals($url, 'http://example.com/test.pdf');
 	}
 
-	/** @expectedException SilverStripe\Control\SS_HTTPResponse_Exception */
+	/** @expectedException SilverStripe\Control\HTTPResponse_Exception */
 	public function testInvalidDomain() {
 		list($file, $url) = $this->getToolbar()->viewfile_getRemoteFileByURL('http://evil.com/test.pdf');
 	}

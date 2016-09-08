@@ -3,7 +3,7 @@
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Dev\CSSContentParser;
@@ -170,7 +170,7 @@ EOS
 		$page->write();
 		$this->useDraftSite(true);
 
-		$request = new SS_HTTPRequest('GET', '/', array(
+		$request = new HTTPRequest('GET', '/', array(
 			'PageID' => $page->ID,
 		));
 

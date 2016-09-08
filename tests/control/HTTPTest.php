@@ -2,7 +2,7 @@
 
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTP;
 
 
@@ -17,7 +17,7 @@ class HTTPTest extends FunctionalTest {
 
 	public function testAddCacheHeaders() {
 		$body = "<html><head></head><body><h1>Mysite</h1></body></html>";
-		$response = new SS_HTTPResponse($body, 200);
+		$response = new HTTPResponse($body, 200);
 		$this->assertEmpty($response->getHeader('Cache-Control'));
 
 		HTTP::set_cache_age(30);
@@ -27,13 +27,13 @@ class HTTPTest extends FunctionalTest {
 
 		// Ensure max-age is zero for development.
 		Director::config()->update('environment_type', 'dev');
-		$response = new SS_HTTPResponse($body, 200);
+		$response = new HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 		$this->assertContains('max-age=0', $response->getHeader('Cache-Control'));
 
 		// Ensure max-age setting is respected in production.
 		Director::config()->update('environment_type', 'live');
-		$response = new SS_HTTPResponse($body, 200);
+		$response = new HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 		$this->assertContains('max-age=30', explode(', ', $response->getHeader('Cache-Control')));
 		$this->assertNotContains('max-age=0', $response->getHeader('Cache-Control'));
@@ -44,7 +44,7 @@ class HTTPTest extends FunctionalTest {
 			'Pragma' => 'no-cache',
 			'Cache-Control' => 'max-age=0, no-cache, no-store',
 		);
-		$response = new SS_HTTPResponse($body, 200);
+		$response = new HTTPResponse($body, 200);
 		foreach($headers as $name => $value) {
 			$response->addHeader($name, $value);
 		}
@@ -56,7 +56,7 @@ class HTTPTest extends FunctionalTest {
 
     public function testConfigVary() {
 		$body = "<html><head></head><body><h1>Mysite</h1></body></html>";
-		$response = new SS_HTTPResponse($body, 200);
+		$response = new HTTPResponse($body, 200);
 		Director::config()->update('environment_type', 'live');
 		HTTP::set_cache_age(30);
 		HTTP::add_cache_headers($response);
@@ -71,7 +71,7 @@ class HTTPTest extends FunctionalTest {
 
 		HTTP::config()->update('vary', '');
 
-		$response = new SS_HTTPResponse($body, 200);
+		$response = new HTTPResponse($body, 200);
 		HTTP::add_cache_headers($response);
 
 		$v = $response->getHeader('Vary');

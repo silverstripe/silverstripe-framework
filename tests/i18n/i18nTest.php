@@ -4,8 +4,8 @@ use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Object;
-use SilverStripe\Core\Manifest\SS_ClassManifest;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassManifest;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18n;
@@ -437,8 +437,8 @@ class i18nTest extends SapphireTest {
 	public function testIncludeByLocale() {
 		// Looping through modules, so we can test the translation autoloading
 		// Load non-exclusive to retain core class autoloading
-		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
-		SS_ClassLoader::instance()->pushManifest($classManifest);
+		$classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
+		ClassLoader::instance()->pushManifest($classManifest);
 
 		$adapter = i18n::get_translator('core')->getAdapter();
 		$this->assertTrue($adapter->isAvailable('en'));
@@ -466,12 +466,12 @@ class i18nTest extends SapphireTest {
 			'High Module Priority (de)'
 		);
 
-		SS_ClassLoader::instance()->popManifest();
+		ClassLoader::instance()->popManifest();
 	}
 
 	public function testIncludeByLocaleWithoutFallbackLanguage() {
-		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
-		SS_ClassLoader::instance()->pushManifest($classManifest);
+		$classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
+		ClassLoader::instance()->pushManifest($classManifest);
 
 		$adapter = i18n::get_translator('core')->getAdapter();
 		$this->assertTrue($adapter->isAvailable('en'));
@@ -490,7 +490,7 @@ class i18nTest extends SapphireTest {
 		$this->assertTrue($adapter->isAvailable('mi_NZ'));
 		$this->assertTrue($adapter->isTranslated('i18nTestModule.ENTITY', null, 'mi_NZ'), 'Includes module files');
 
-		SS_ClassLoader::instance()->popManifest();
+		ClassLoader::instance()->popManifest();
 	}
 
 	public function testRegisterTranslator() {
@@ -513,8 +513,8 @@ class i18nTest extends SapphireTest {
 	public function testMultipleTranslators() {
 		// Looping through modules, so we can test the translation autoloading
 		// Load non-exclusive to retain core class autoloading
-		$classManifest = new SS_ClassManifest($this->alternateBasePath, true, true, false);
-		SS_ClassLoader::instance()->pushManifest($classManifest);
+		$classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
+		ClassLoader::instance()->pushManifest($classManifest);
 
 		// Changed manifest, so we also need to unset all previously collected messages.
 		// The easiest way to do this it to register a new adapter.
@@ -584,7 +584,7 @@ class i18nTest extends SapphireTest {
 		i18n::unregister_translator('othercustom_lower_prio');
 		i18n::unregister_translator('othercustom_higher_prio');
 
-		SS_ClassLoader::instance()->popManifest();
+		ClassLoader::instance()->popManifest();
 	}
 
 	public function testGetLanguageName() {

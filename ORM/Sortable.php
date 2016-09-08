@@ -8,9 +8,9 @@ namespace SilverStripe\ORM;
  * All methods in this interface are immutable - they should return new instances with the sort
  * applied, rather than applying the sort in place
  *
- * @see SS_List, SS_Filterable, SS_Limitable
+ * @see SS_List, Filterable, Limitable
  */
-interface SS_Sortable extends SS_List {
+interface Sortable extends SS_List {
 
 	/**
 	 * Returns TRUE if the list can be sorted by a field.
@@ -36,7 +36,7 @@ interface SS_Sortable extends SS_List {
 	/**
 	 * Return a new instance of this list based on reversing the current sort.
 	 *
-	 * @return SS_Sortable
+	 * @return Sortable
 	 * @example $list = $list->reverse();
 	 */
 	public function reverse();

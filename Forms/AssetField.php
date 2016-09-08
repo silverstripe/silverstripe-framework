@@ -12,8 +12,8 @@ use SilverStripe\Security\Permission;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\View\Requirements;
 use Exception;
 
@@ -708,10 +708,10 @@ class AssetField extends FileField {
 	/**
 	 * Action to handle upload of a single file
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
-	public function upload(SS_HTTPRequest $request) {
+	public function upload(HTTPRequest $request) {
 		if($this->isDisabled() || $this->isReadonly() || !$this->canUpload()) {
 			return $this->httpError(403);
 		}
@@ -747,7 +747,7 @@ class AssetField extends FileField {
 			->clearErrors();
 
 		// Format response with json
-		$response = new SS_HTTPResponse(Convert::raw2json(array($return)));
+		$response = new HTTPResponse(Convert::raw2json(array($return)));
 		$response->addHeader('Content-Type', 'text/plain');
 		return $response;
 	}

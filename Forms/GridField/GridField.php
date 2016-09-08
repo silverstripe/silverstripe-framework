@@ -9,10 +9,10 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\Form;
@@ -135,7 +135,7 @@ class GridField extends FormField {
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 *
 	 * @return string
 	 */
@@ -852,11 +852,11 @@ class GridField extends FormField {
 	 *
 	 * @param array $data
 	 * @param Form $form
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 *
 	 * @return string
 	 */
-	public function gridFieldAlterAction($data, $form, SS_HTTPRequest $request) {
+	public function gridFieldAlterAction($data, $form, HTTPRequest $request) {
 		$data = $request->requestVars();
 
 		// Protection against CSRF attacks
@@ -947,14 +947,14 @@ class GridField extends FormField {
 	 *
 	 * @todo copy less code from RequestHandler.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @param DataModel $model
 	 *
-	 * @return array|RequestHandler|SS_HTTPResponse|string|void
+	 * @return array|RequestHandler|HTTPResponse|string|void
 	 *
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 */
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(HTTPRequest $request, DataModel $model) {
 		if($this->brokenOnConstruct) {
 			user_error(
 				sprintf(
@@ -1000,11 +1000,11 @@ class GridField extends FormField {
 
 							try {
 								$result = $component->$action($this, $request);
-							} catch(SS_HTTPResponse_Exception $responseException) {
+							} catch(HTTPResponse_Exception $responseException) {
 								$result = $responseException->getResponse();
 							}
 
-							if($result instanceof SS_HTTPResponse && $result->isError()) {
+							if($result instanceof HTTPResponse && $result->isError()) {
 								return $result;
 							}
 

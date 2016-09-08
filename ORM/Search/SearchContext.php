@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Search;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Object;
 use SilverStripe\Forms\FieldList;
@@ -156,7 +156,7 @@ class SearchContext extends Object {
 		$query = $query->sort($sort);
 
 		// hack to work with $searchParems when it's an Object
-		if ($searchParams instanceof SS_HTTPRequest) {
+		if ($searchParams instanceof HTTPRequest) {
 			$searchParamArray = $searchParams->getVars();
 		} else {
 			$searchParamArray = $searchParams;

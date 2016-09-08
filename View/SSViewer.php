@@ -4,7 +4,7 @@ namespace SilverStripe\View;
 
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\Cache;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
@@ -34,7 +34,7 @@ use Zend_Cache_Core;
  *
  * <b>Caching</b>
  *
- * Compiled templates are cached via {@link SS_Cache}, usually on the filesystem.
+ * Compiled templates are cached via {@link Cache}, usually on the filesystem.
  * If you put ?flush=1 on your URL, it will force the template to be recompiled.
  *
  * @see http://doc.silverstripe.org/themes
@@ -442,7 +442,7 @@ class SSViewer implements Flushable {
 	 */
 	public static function flush_cacheblock_cache($force = false) {
 		if (!self::$cacheblock_cache_flushed || $force) {
-			$cache = SS_Cache::factory('cacheblock');
+			$cache = Cache::factory('cacheblock');
 			$backend = $cache->getBackend();
 
 			if(
@@ -480,7 +480,7 @@ class SSViewer implements Flushable {
 	 * @return Zend_Cache_Core
 	 */
 	public function getPartialCacheStore() {
-		return $this->partialCacheStore ? $this->partialCacheStore : SS_Cache::factory('cacheblock');
+		return $this->partialCacheStore ? $this->partialCacheStore : Cache::factory('cacheblock');
 	}
 
 	/**
@@ -528,7 +528,7 @@ class SSViewer implements Flushable {
 	/**
 	 * The process() method handles the "meat" of the template processing.
 	 *
-	 * It takes care of caching the output (via {@link SS_Cache}), as well as
+	 * It takes care of caching the output (via {@link Cache}), as well as
 	 * replacing the special "$Content" and "$Layout" placeholders with their
 	 * respective subtemplates.
 	 *

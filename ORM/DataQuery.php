@@ -6,7 +6,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Object;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\Connect\SS_Query;
+use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
 use SilverStripe\ORM\Queries\SQLSelect;
 use InvalidArgumentException;
@@ -384,7 +384,7 @@ class DataQuery {
 	/**
 	 * Execute the query and return the result as {@link SS_Query} object.
 	 *
-	 * @return SS_Query
+	 * @return Query
 	 */
 	public function execute() {
 		return $this->getFinalisedQuery()->execute();

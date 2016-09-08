@@ -5,14 +5,14 @@ summary: Test controllers, forms and HTTP responses.
 
 [api:FunctionalTest] test your applications `Controller` logic and anything else which requires a web request. The 
 core idea of these tests is the same as `SapphireTest` unit tests but `FunctionalTest` adds several methods for 
-creating [api:SS_HTTPRequest], receiving [api:SS_HTTPResponse] objects and modifying the current user session.
+creating [api:HTTPRequest], receiving [api:HTTPResponse] objects and modifying the current user session.
 
 ## Get
 	
 	:::php
 	$page = $this->get($url);
 	
-Performs a GET request on $url and retrieves the [api:SS_HTTPResponse]. This also changes the current page to the value
+Performs a GET request on $url and retrieves the [api:HTTPResponse]. This also changes the current page to the value
 of the response.
 
 ## Post
@@ -20,7 +20,7 @@ of the response.
 	:::php
 	$page = $this->post($url);
 	
-Performs a POST request on $url and retrieves the [api:SS_HTTPResponse]. This also changes the current page to the value
+Performs a POST request on $url and retrieves the [api:HTTPResponse]. This also changes the current page to the value
 of the response.
 
 ## Submit
@@ -28,7 +28,7 @@ of the response.
 	:::php
 	$submit = $this->submitForm($formID, $button = null, $data = array());
 
-Submits the given form (`#ContactForm`) on the current page and returns the [api:SS_HTTPResponse].
+Submits the given form (`#ContactForm`) on the current page and returns the [api:HTTPResponse].
 
 ## LogInAs
 

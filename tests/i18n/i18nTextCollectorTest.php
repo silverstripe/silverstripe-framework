@@ -3,8 +3,8 @@
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Manifest\SS_ClassManifest;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassManifest;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18n;
@@ -43,7 +43,7 @@ class i18nTextCollectorTest extends SapphireTest {
 
 		// Push a class and template loader running from the fake webroot onto
 		// the stack.
-		$this->manifest = new SS_ClassManifest(
+		$this->manifest = new ClassManifest(
 			$this->alternateBasePath, false, true, false
 		);
 
@@ -55,8 +55,8 @@ class i18nTextCollectorTest extends SapphireTest {
 	public function tearDown() {
 		ThemeResourceLoader::set_instance($this->_oldLoader);
 		// Pop if added during testing
-		if(SS_ClassLoader::instance()->getManifest() === $this->manifest) {
-			SS_ClassLoader::instance()->popManifest();
+		if(ClassLoader::instance()->getManifest() === $this->manifest) {
+			ClassLoader::instance()->popManifest();
 		}
 		parent::tearDown();
 	}
@@ -649,7 +649,7 @@ YAML;
 	 * Test that duplicate keys are resolved to the appropriate modules
 	 */
 	public function testResolveDuplicates() {
-		SS_ClassLoader::instance()->pushManifest($this->manifest);
+		ClassLoader::instance()->pushManifest($this->manifest);
 		$collector = new i18nTextCollectorTest_Collector();
 
 		// Dummy data as collected
@@ -712,7 +712,7 @@ YAML;
 	 * Test ability for textcollector to detect modules
 	 */
 	public function testModuleDetection() {
-		SS_ClassLoader::instance()->pushManifest($this->manifest);
+		ClassLoader::instance()->pushManifest($this->manifest);
 		$collector = new i18nTextCollectorTest_Collector();
 		$modules = $collector->getModules_Test($this->alternateBasePath);
 		$this->assertEquals(

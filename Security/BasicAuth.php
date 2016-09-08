@@ -3,8 +3,8 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPResponse;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Dev\SapphireTest;
@@ -47,7 +47,7 @@ class BasicAuth {
 	 *
 	 * Used by {@link Controller::init()}.
 	 *
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 *
 	 * @param string $realm
 	 * @param string|array $permissionCode Optional
@@ -90,7 +90,7 @@ class BasicAuth {
 
 		// If we've failed the authentication mechanism, then show the login form
 		if(!$member) {
-			$response = new SS_HTTPResponse(null, 401);
+			$response = new HTTPResponse(null, 401);
 			$response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
@@ -100,13 +100,13 @@ class BasicAuth {
 			}
 
 			// Exception is caught by RequestHandler->handleRequest() and will halt further execution
-			$e = new SS_HTTPResponse_Exception(null, 401);
+			$e = new HTTPResponse_Exception(null, 401);
 			$e->setResponse($response);
 			throw $e;
 		}
 
 		if($permissionCode && !Permission::checkMember($member->ID, $permissionCode)) {
-			$response = new SS_HTTPResponse(null, 401);
+			$response = new HTTPResponse(null, 401);
 			$response->addHeader('WWW-Authenticate', "Basic realm=\"$realm\"");
 
 			if(isset($_SERVER['PHP_AUTH_USER'])) {
@@ -114,7 +114,7 @@ class BasicAuth {
 			}
 
 			// Exception is caught by RequestHandler->handleRequest() and will halt further execution
-			$e = new SS_HTTPResponse_Exception(null, 401);
+			$e = new HTTPResponse_Exception(null, 401);
 			$e->setResponse($response);
 			throw $e;
 		}

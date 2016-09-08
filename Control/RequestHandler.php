@@ -21,7 +21,7 @@ use BadMethodCallException;
  * Any RequestHandler object can be made responsible for handling its own segment of the URL namespace.
  * The {@link Director} begins the URL parsing process; it will parse the beginning of the URL to identify which
  * controller is being used.  It will then call {@link handleRequest()} on that Controller, passing it the parameters
- * that it parsed from the URL, and the {@link SS_HTTPRequest} that contains the remainder of the URL to be parsed.
+ * that it parsed from the URL, and the {@link HTTPRequest} that contains the remainder of the URL to be parsed.
  *
  * You can use ?debug_request=1 to view information about the different components and rule matches for a specific URL.
  *
@@ -48,7 +48,7 @@ use BadMethodCallException;
 class RequestHandler extends ViewableData {
 
 	/**
-	 * @var SS_HTTPRequest $request The request object that the controller was called with.
+	 * @var HTTPRequest $request The request object that the controller was called with.
 	 * Set in {@link handleRequest()}. Useful to generate the {}
 	 */
 	protected $request = null;
@@ -71,7 +71,7 @@ class RequestHandler extends ViewableData {
 	 * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
 	 * be called on this RequestHandlingData object.
 	 *
-	 * The keys of this array are parse rules.  See {@link SS_HTTPRequest::match()} for a description of the rules
+	 * The keys of this array are parse rules.  See {@link HTTPRequest::match()} for a description of the rules
 	 * available.
 	 *
 	 * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
@@ -155,11 +155,11 @@ class RequestHandler extends ViewableData {
 	 * action will return an array of data with which to
 	 * customise the controller.
 	 *
-	 * @param SS_HTTPRequest $request The object that is reponsible for distributing URL parsing
+	 * @param HTTPRequest $request The object that is reponsible for distributing URL parsing
 	 * @param DataModel $model
-	 * @return SS_HTTPResponse|RequestHandler|string|array
+	 * @return HTTPResponse|RequestHandler|string|array
 	 */
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(HTTPRequest $request, DataModel $model) {
 		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
 		if($this->brokenOnConstruct) {
 			$handlerClass = get_class($this);
@@ -214,14 +214,14 @@ class RequestHandler extends ViewableData {
 			}
 			$result = $this->handleAction($request, $action);
 		}
-		catch (SS_HTTPResponse_Exception $e) {
+		catch (HTTPResponse_Exception $e) {
 			return $e->getResponse();
 		}
 		catch(PermissionFailureException $e) {
 			$result = Security::permissionFailure(null, $e->getMessage());
 		}
 
-		if($result instanceof SS_HTTPResponse && $result->isError()) {
+		if($result instanceof HTTPResponse && $result->isError()) {
 			if(isset($_REQUEST['debug_request'])) Debug::message("Rule resulted in HTTP error; breaking");
 			return $result;
 		}
@@ -252,7 +252,7 @@ class RequestHandler extends ViewableData {
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return array
      */
 	protected function findAction($request) {
@@ -287,17 +287,17 @@ class RequestHandler extends ViewableData {
 	/**
 	 * Given a request, and an action name, call that action name on this RequestHandler
 	 *
-	 * Must not raise SS_HTTPResponse_Exceptions - instead it should return
+	 * Must not raise HTTPResponse_Exceptions - instead it should return
 	 *
 	 * @param $request
 	 * @param $action
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function handleAction($request, $action) {
 		$classMessage = Director::isLive() ? 'on this handler' : 'on class '.get_class($this);
 
 		if(!$this->hasMethod($action)) {
-			return new SS_HTTPResponse("Action '$action' isn't available $classMessage.", 404);
+			return new HTTPResponse("Action '$action' isn't available $classMessage.", 404);
 		}
 
 		$res = $this->extend('beforeCallActionHandler', $request, $action);
@@ -480,13 +480,13 @@ class RequestHandler extends ViewableData {
 	}
 
 	/**
-	 * Throws a HTTP error response encased in a {@link SS_HTTPResponse_Exception}, which is later caught in
+	 * Throws a HTTP error response encased in a {@link HTTPResponse_Exception}, which is later caught in
 	 * {@link RequestHandler::handleAction()} and returned to the user.
 	 *
 	 * @param int $errorCode
 	 * @param string $errorMessage Plaintext error message
-	 * @uses SS_HTTPResponse_Exception
-	 * @throws SS_HTTPResponse_Exception
+	 * @uses HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 */
 	public function httpError($errorCode, $errorMessage = null) {
 
@@ -499,16 +499,16 @@ class RequestHandler extends ViewableData {
 		$this->extend('onBeforeHTTPError', $errorCode, $request);
 
 		// Throw a new exception
-		throw new SS_HTTPResponse_Exception($errorMessage, $errorCode);
+		throw new HTTPResponse_Exception($errorMessage, $errorCode);
 	}
 
 	/**
-	 * Returns the SS_HTTPRequest object that this controller is using.
+	 * Returns the HTTPRequest object that this controller is using.
 	 * Returns a placeholder {@link NullHTTPRequest} object unless
 	 * {@link handleAction()} or {@link handleRequest()} have been called,
-	 * which adds a reference to an actual {@link SS_HTTPRequest} object.
+	 * which adds a reference to an actual {@link HTTPRequest} object.
 	 *
-	 * @return SS_HTTPRequest|NullHTTPRequest
+	 * @return HTTPRequest|NullHTTPRequest
 	 */
 	public function getRequest() {
 		return $this->request;
@@ -518,7 +518,7 @@ class RequestHandler extends ViewableData {
 	 * Typically the request is set through {@link handleAction()}
 	 * or {@link handleRequest()}, but in some based we want to set it manually.
 	 *
-	 * @param SS_HTTPRequest
+	 * @param HTTPRequest $request
 	 * @return $this
 	 */
 	public function setRequest($request) {

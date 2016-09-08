@@ -6,7 +6,7 @@ use SilverStripe\Control\Cookie_Backend;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Injector\Injector;
 use SimpleByName;
 use Exception;
@@ -30,7 +30,7 @@ class TestSession {
 	private $cookies;
 
 	/**
-	 * @var SS_HTTPResponse
+	 * @var HTTPResponse
 	 */
 	private $lastResponse;
 
@@ -74,7 +74,7 @@ class TestSession {
 	 * @param Session $session
 	 * @param array $headers
 	 * @param array $cookies
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function get($url, $session = null, $headers = null, $cookies = null) {
 		$headers = (array) $headers;
@@ -103,7 +103,7 @@ class TestSession {
 	 * @param Session $session
 	 * @param string $body
 	 * @param array $cookies
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
 		$headers = (array) $headers;
@@ -139,7 +139,7 @@ class TestSession {
 	 * @param string $formID HTML 'id' attribute of a form (loaded through a previous response)
 	 * @param string $button HTML 'name' attribute of the button (NOT the 'id' attribute)
 	 * @param array $data Map of GET/POST data.
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 * @throws Exception
 	 */
 	public function submitForm($formID, $button = null, $data = array()) {
@@ -176,7 +176,7 @@ class TestSession {
 	/**
 	 * If the last request was a 3xx response, then follow the redirection
 	 *
-	 * @return SS_HTTPResponse The response given, or null if no redirect occurred
+	 * @return HTTPResponse The response given, or null if no redirect occurred
 	 */
 	public function followRedirection() {
 		if($this->lastResponse->getHeader('Location')) {
@@ -199,7 +199,7 @@ class TestSession {
 	/**
 	 * Get the most recent response
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function lastResponse() {
 		return $this->lastResponse;

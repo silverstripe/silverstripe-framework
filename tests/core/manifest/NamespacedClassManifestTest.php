@@ -1,13 +1,13 @@
 <?php
 
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Manifest\SS_ClassManifest;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassManifest;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
 
 
 /**
- * Tests for the {@link SS_ClassManifest} class.
+ * Tests for the {@link ClassManifest} class.
  *
  * @package framework
  * @subpackage tests
@@ -17,7 +17,7 @@ class NamespacedClassManifestTest extends SapphireTest {
 	protected $base;
 
 	/**
-	 * @var SS_ClassManifest
+	 * @var ClassManifest
 	 */
 	protected $manifest;
 
@@ -25,27 +25,27 @@ class NamespacedClassManifestTest extends SapphireTest {
 		parent::setUp();
 
 		$this->base = dirname(__FILE__) . '/fixtures/namespaced_classmanifest';
-		$this->manifest      = new SS_ClassManifest($this->base, false, true, false);
-		SS_ClassLoader::instance()->pushManifest($this->manifest, false);
+		$this->manifest      = new ClassManifest($this->base, false, true, false);
+		ClassLoader::instance()->pushManifest($this->manifest, false);
 	}
 
 	public function tearDown() {
 		parent::tearDown();
-		SS_ClassLoader::instance()->popManifest();
+		ClassLoader::instance()->popManifest();
 	}
 
 	public function testGetImportedNamespaceParser() {
 		$file = file_get_contents($this->base . DIRECTORY_SEPARATOR . 'module/classes/ClassI.php');
 		$tokens = token_get_all($file);
-		$parsedTokens = SS_ClassManifest::get_imported_namespace_parser()->findAll($tokens);
+		$parsedTokens = ClassManifest::get_imported_namespace_parser()->findAll($tokens);
 
 		/** @skipUpgrade */
 		$expectedItems = array(
 			array('SilverStripe', '\\', 'Admin', '\\', 'ModelAdmin'),
 			array('SilverStripe', '\\', 'Control', '\\', 'Controller', '  ', 'as', '  ', 'Cont'),
 			array(
-				'SilverStripe', '\\', 'Control', '\\', 'SS_HTTPRequest', ' ', 'as', ' ', 'Request', ',',
-				'SilverStripe', '\\', 'Control', '\\', 'SS_HTTPResponse', ' ', 'as', ' ', 'Response', ',',
+				'SilverStripe', '\\', 'Control', '\\', 'HTTPRequest', ' ', 'as', ' ', 'Request', ',',
+				'SilverStripe', '\\', 'Control', '\\', 'HTTPResponse', ' ', 'as', ' ', 'Response', ',',
 				'SilverStripe', '\\', 'Security', '\\', 'PermissionProvider', ' ', 'as', ' ', 'P',
 			),
 			array('silverstripe', '\\', 'test', '\\', 'ClassA'),
@@ -69,8 +69,8 @@ class NamespacedClassManifestTest extends SapphireTest {
 		$expectedImports = array(
 			'SilverStripe\\Admin\\ModelAdmin',
 			'Cont' => 'SilverStripe\\Control\\Controller',
-			'Request' => 'SilverStripe\\Control\\SS_HTTPRequest',
-			'Response' => 'SilverStripe\\Control\\SS_HTTPResponse',
+			'Request' => 'SilverStripe\\Control\\HTTPRequest',
+			'Response' => 'SilverStripe\\Control\\HTTPResponse',
 			'P' => 'SilverStripe\\Security\\PermissionProvider',
 			'silverstripe\\test\\ClassA',
 			'\\SilverStripe\\Core\\Object',

@@ -7,7 +7,7 @@ use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 
 
 
@@ -195,9 +195,9 @@ class ProtectedFileControllerTest extends FunctionalTest {
 	 *
 	 * @param int $code HTTP code
 	 * @param string $body Body expected for 200 responses
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPResponse $response
 	 */
-	protected function assertResponseEquals($code, $body, SS_HTTPResponse $response) {
+	protected function assertResponseEquals($code, $body, HTTPResponse $response) {
 		$this->assertEquals($code, $response->getStatusCode());
 		if($code === 200) {
 			$this->assertFalse($response->isError());

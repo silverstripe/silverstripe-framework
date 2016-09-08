@@ -6,12 +6,12 @@ use Zend_Cache;
 use Zend_Cache_Core;
 
 /**
- * The `[api:SS_Cache]` class provides a bunch of static functions wrapping the Zend_Cache system
+ * The `[api:Cache]` class provides a bunch of static functions wrapping the Zend_Cache system
  * in something a little more easy to use with the SilverStripe config system.
  *
  * @see https://docs.silverstripe.org/en/3.4/developer_guides/performance/caching/
  */
-class SS_Cache {
+class Cache {
 
 	/**
 	 * @var array $backends

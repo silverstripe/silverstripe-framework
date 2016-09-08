@@ -417,7 +417,7 @@ class ShortcodeParser extends Object {
 	 * We don't use markers with attributes because there's no point, it's easier to do all the matching
 	 * in-DOM after the XML parse
 	 *
-	 * @param SS_HTMLValue $htmlvalue
+	 * @param HTMLValue $htmlvalue
 	 */
 	protected function replaceAttributeTagsWithContent($htmlvalue) {
 		$attributes = $htmlvalue->query('//@*[contains(.,"[")][contains(.,"]")]');
@@ -570,7 +570,7 @@ class ShortcodeParser extends Object {
 		$content = $this->getShortcodeReplacementText($tag);
 
 		if ($content) {
-			/** @var SS_HTMLValue $parsed */
+			/** @var HTMLValue $parsed */
 			$parsed = Injector::inst()->create('HTMLValue', $content);
 			$body = $parsed->getBody();
 			if ($body) $this->insertListAfter($body->childNodes, $node);
@@ -599,7 +599,7 @@ class ShortcodeParser extends Object {
 		// use a proper DOM
 		list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
-		/** @var SS_HTMLValue $htmlvalue */
+		/** @var HTMLValue $htmlvalue */
 		$htmlvalue = Injector::inst()->create('HTMLValue', $content);
 
 		// Now parse the result into a DOM

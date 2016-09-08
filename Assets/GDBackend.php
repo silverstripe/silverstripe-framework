@@ -4,7 +4,7 @@ namespace SilverStripe\Assets;
 
 use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\Assets\Storage\AssetStore;
-use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\Cache;
 use SilverStripe\Core\Object;
 use SilverStripe\Core\Flushable;
 use InvalidArgumentException;
@@ -64,7 +64,7 @@ class GDBackend extends Object implements Image_Backend, Flushable {
 
 	public function __construct(AssetContainer $assetContainer = null) {
 		parent::__construct();
-		$this->cache = SS_Cache::factory('GDBackend_Manipulations');
+		$this->cache = Cache::factory('GDBackend_Manipulations');
 
 		if($assetContainer) {
 			$this->loadFromContainer($assetContainer);
@@ -661,7 +661,7 @@ class GDBackend extends Object implements Image_Backend, Flushable {
 
 	public static function flush() {
 		// Clear factory
-		$cache = SS_Cache::factory('GDBackend_Manipulations');
+		$cache = Cache::factory('GDBackend_Manipulations');
 		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 	}
 
