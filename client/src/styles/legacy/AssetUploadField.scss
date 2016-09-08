@@ -72,9 +72,10 @@ body.cms.ss-uploadfield-edit-iframe {
 }
 
 .ss-assetuploadfield {
-	margin-top: -$grid-gutter-width-half;
-	margin-left: -$grid-gutter-width-half;
-	margin-right: -$grid-gutter-width-half;
+	margin-top: -$panel-padding-y;
+	margin-right: -$panel-padding-x;
+	margin-left: -$panel-padding-x;
+	margin-bottom: 0;
 
   > fieldset {
     @extend .clearfix;
