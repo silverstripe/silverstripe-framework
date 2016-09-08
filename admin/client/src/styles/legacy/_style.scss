@@ -69,8 +69,8 @@ body.cms {
 }
 
 .cms-content-header { // Todo: should add .container-fluid to markup or extend .container-fluid
-  padding-left: $grid-gutter-width / 2;
-  padding-right: $grid-gutter-width / 2;
+  padding-left: $panel-padding-x;
+  padding-right: $panel-padding-x;
   min-width: 100%;
   z-index: 60;
   min-height: $toolbar-total-height;
@@ -157,7 +157,7 @@ body.cms {
 .has-panel {
 	.cms-tree-view-sidebar,
 	.cms-versions-form {
-		padding: $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half;
+		padding: $panel-padding-y $panel-padding-x;
 	}
 
 	.cms-content-header.north {
@@ -464,7 +464,7 @@ body.cms {
 	}
 
 	.ui-tabs-panel {
-		padding: 0 $grid-gutter-width-half;
+		padding: 0 $panel-padding-x;
 		background: transparent; // default it's white
 		border: 0; // suppress default borders
 
@@ -475,8 +475,8 @@ body.cms {
     .ui-tabs {
 
       .ui-tabs-nav {
-        margin-left: $grid-gutter-width-half;
-        margin-right: $grid-gutter-width-half;
+        margin-left: $panel-padding-x;
+        margin-right: $panel-padding-x;
         float: none;
         border-bottom: 1px solid $nav-tabs-link-hover-border-color;
         margin-bottom: $spacer-y;
@@ -975,10 +975,10 @@ body.cms {
   }
 
   .radio {
-    margin-left: -$grid-gutter-width-half;
-    margin-right: -$grid-gutter-width-half;
+    margin-left: -$panel-padding-x;
+    margin-right: -$panel-padding-x;
     margin-bottom: 0;
-    padding: #{$spacer-y * .625} $grid-gutter-width-half #{$spacer-y * .75};
+    padding: #{$spacer-y * .625} $panel-padding-x #{$spacer-y * .75};
     border-radius: $border-radius;
 
     &:hover,
@@ -1130,8 +1130,8 @@ body.cms {
 	}
 
 	table {
-		margin: 8px #{-$grid-gutter-width-half};
-		width: calc(100% + #{$grid-gutter-width-half * 2});
+		margin: 8px #{-$panel-padding-x};
+		width: calc(100% + #{$panel-padding-x * 2});
 
 		tr {
 			&.active {
@@ -1157,10 +1157,10 @@ body.cms {
 		vertical-align: top;
 
 		&.first-column {
-			padding-left: $grid-gutter-width-half;
+			padding-left: $panel-padding-x;
 	}
 		&.last-column {
-			padding-right: $grid-gutter-width-half;
+			padding-right: $panel-padding-x;
 		}
 }
 }
@@ -1506,7 +1506,7 @@ form.member-profile-form {
 			text-decoration: none;
 			line-height: 20px;
 			height: 52px;
-			margin: -#{$spacer-y * .625} #{0 - $grid-gutter-width-half};
+			margin: -#{$spacer-y * .625} #{0 - $panel-padding-x};
 
 			span {
 				display: inline-block;
@@ -1593,17 +1593,17 @@ form.member-profile-form {
       }
 
       > fieldset {
-  				padding: 0 $grid-gutter-width-half;
+  				padding: 0 $panel-padding-x;
   		}
     }
 
 		.cms-content-view {
-			padding: 0 $grid-gutter-width-half $grid-y*1.5;
+			padding: 0 $panel-padding-x $grid-y*1.5;
 		}
 	}
 
 .CMSPageAddController .cms-panel-padded {
-	padding: $grid-gutter-width-half;
+	padding: $panel-padding-y $panel-padding-x;
 }
 
 /** ------------------------------------------------------------------
@@ -1731,7 +1731,7 @@ body.cms-dialog {
 	}
 
 	.htmleditorfield-from-web {
-		text-align: center;
+		text-align: left;
 		margin-bottom: $grid-y;
 
 		&.CompositeField{
@@ -1744,33 +1744,21 @@ body.cms-dialog {
 		}
 
 		div.remoteurl{
-			border:none;
-			@include box-shadow-none;
-			width: 80%; //Fallback for IE 8
-			width: calc(100% - 80px);
+			width: calc(100% - 84px);
 			position: relative;
 			display: inline-block;
-			padding: 0;
-			margin: 0;
 
 			label {
 				position: absolute;
-				left: 8px;
+				left: 0;
 				top: 0;
-				font-weight: normal;
-				color: #888;
-				width: 35px;
-				padding-right: 0;
-				z-index: 1;
-			}
-
-			.middleColumn {
-				margin-left: 0;
-				max-width: none;
+				margin-bottom: 0;
+				line-height: $line-height;
+				@extend .input-group-addon;
 			}
 
 			input.remoteurl {
-				padding-left: 44px;
+				padding-left: 60px;
 				max-width: none;
 			}
 		}
@@ -1803,10 +1791,11 @@ body.cms-dialog {
 		}
 	}
 
-	.cms-content-header{
-		padding:0;
-		width:100%;
+	.cms-content-header {
+		padding: 0;
+		width: 100%;
 		height: 53px;
+		margin-bottom: 0;
 
 		// remove extra border on headers
 		&::after {
@@ -1814,7 +1803,7 @@ body.cms-dialog {
 		}
 
 		h3{
-			padding: $grid-y*1.5 0 $grid-y*1.5 $grid-gutter-width-half;
+			padding: $grid-y*1.5 0 $grid-y*1.5 $panel-padding-y;
 			margin: 0;
 			line-height: 28px;
 			display: inline-block;
@@ -1837,7 +1826,7 @@ body.cms-dialog {
 	}
 
 	.ss-insert-media {
-		padding: $grid-y*1.5 $grid-x*2;
+		padding: $panel-padding-y $panel-padding-x;
 
 		.ui-tabs-panel {
 			padding: 0;
@@ -1845,8 +1834,8 @@ body.cms-dialog {
 	}
 
   .ss-insert-link {
-		padding-left: $grid-gutter-width-half;
-		padding-right: $grid-gutter-width-half;
+		padding-left: $panel-padding-x;
+		padding-right: $panel-padding-x;
 
 		&::after {
 			display: none;
@@ -1874,17 +1863,6 @@ body.cms-dialog {
 				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 			}
 		}
-
-		.field {
-			border-bottom: 1px solid $color-shadow-light;
-    		box-shadow: 0 1px 0 lighten($color-shadow-light, 95%);
-
-    		&.last{
-				border-bottom: 0;
-				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-				margin-bottom:0;
-			}
-		}
 	}
 
 	.CompositeField .text select {
@@ -1897,29 +1875,13 @@ body.cms-dialog {
     margin-bottom: $grid-x*2;
     line-height: 18px;
   }
-
-	.ss-uploadfield {
-		.middleColumn {
-			width: auto;
-		}
-	}
 }
 
 .htmleditorfield-mediaform {
 	.grid-field .gridfield-button-delete {
-			// TODO Remove from PHP instead of hiding
-			display: none; // delete action shouldn't be allowed here
-		}
-
-	.htmleditorfield-from-web,
-  .htmleditorfield-from-cms {
-		&.ss-uploadfield .middleColumn {
-				width:auto;
-				background:none;
-			border: 0;
-				min-width: 0;
-			}
-		}
+		// TODO Remove from PHP instead of hiding
+		display: none; // delete action shouldn't be allowed here
+	}
 
 	.htmleditorfield-from-cms {
 		&.ss-uploadfield {
@@ -1939,35 +1901,36 @@ body.cms-dialog {
 				padding: 0;
 				position: absolute;
 				margin: 0;
-				top: 12px;
+				top: 6px;
 				left: 160px;
 				width: auto;
 				min-width: 200px;
+
+				> .form__field-holder {
+					margin-left: -15px;
+				}
 			}
 
 			.treedropdownfield-title {
-				width: auto;
-				padding: 5px 2px 5px 4px;
-				max-width: 200px;
-				font-size: 14px;
 				font-weight: bold;
 			}
 
 			.treedropdownfield-toggle-panel-link {
 				padding: 5px 4px 5px 0;
+				height: 30px; // Fix to hold dropdown search field
 
 				a {
 					background: url(../images/sitetree_ss_default_icons.png);
 					background-position: -18px -4px;
 					height: 14px;
 					opacity: .8;
-		}
-	}
+				}
+			}
 
-			.TreeDropdownField {
+			.TreeDropdownField:not(.treedropdownfield-open-tree) {
 				background: 0;
 				box-shadow: none;
-				border: 0;
+				border-color: transparent;
 			}
 		}
 	}
