@@ -9,6 +9,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\Versioning\Versioned;
 
 /**
@@ -324,5 +325,11 @@ class Folder extends File {
 
 	public function StripThumbnail() {
 		return null;
+	}
+
+	public function validate() {
+		$result = ValidationResult::create();
+		$this->extend('validate', $result);
+		return $result;
 	}
 }

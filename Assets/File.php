@@ -997,7 +997,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		}
 
 	public function validate() {
-		$result = new ValidationResult();
+		$result = ValidationResult::create();
 		$this->File->validate($result, $this->Name);
 		$this->extend('validate', $result);
 		return $result;
