@@ -1,5 +1,11 @@
 <?php
 
+use SilverStripe\Core\SS_Cache;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\View\Parsers\ShortcodeParser;
+
+
+
 /**
  * Framework configuration file
  *
@@ -12,19 +18,16 @@
  * <code>
  * Authenticator::register_authenticator('OpenIDAuthenticator');
  * </code>
- *
- * @package framework
- * @subpackage core
  */
 
 ShortcodeParser::get('default')
-	->register('file_link', array('File', 'handle_shortcode'))
-	->register('embed', array('SilverStripe\Forms\HtmlEditor\EmbedShortcodeProvider', 'handle_shortcode'))
-	->register('image', array('Image', 'handle_shortcode'));
+	->register('file_link', array('SilverStripe\\Assets\\File', 'handle_shortcode'))
+	->register('embed', array('SilverStripe\\Forms\\HtmlEditor\\EmbedShortcodeProvider', 'handle_shortcode'))
+	->register('image', array('SilverStripe\\Assets\\Image', 'handle_shortcode'));
 
 // Shortcode parser which only regenerates shortcodes
 ShortcodeParser::get('regenerator')
-	->register('image', array('Image', 'regenerate_shortcode'));
+	->register('image', array('SilverStripe\\Assets\\Image', 'regenerate_shortcode'));
 
 // @todo
 //	->register('dbfile_link', array('DBFile', 'handle_shortcode'))

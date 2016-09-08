@@ -2,6 +2,22 @@
 
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridField;
+
+
+
+
+
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GridFieldTest.yml';
@@ -10,7 +26,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 	function testScaffoldSearchFields() {
 		$autoCompleter = new GridFieldAddExistingAutocompleter($targetFragment = 'before', array('Test'));
-		$gridFieldTest_Team = singleton('GridFieldTest_Team');
+		$gridFieldTest_Team = GridFieldTest_Team::singleton();
 		$this->assertEquals(
 			$autoCompleter->scaffoldSearchFields('GridFieldTest_Team'),
 			array(
@@ -102,6 +118,9 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 }
 
+/**
+ * @skipUpgrade
+ */
 class GridFieldAddExistingAutocompleterTest_Controller extends Controller implements TestOnly {
 
 	private static $allowed_actions = array('Form');
@@ -109,7 +128,7 @@ class GridFieldAddExistingAutocompleterTest_Controller extends Controller implem
 	protected $template = 'BlankPage';
 
 	public function Form() {
-		$player = DataObject::get('GridFieldTest_Player')->find('Email', 'player1@test.com');
+		$player = GridFieldTest_Player::get()->find('Email', 'player1@test.com');
 		$config = GridFieldConfig::create()->addComponents(
 			$relationComponent = new GridFieldAddExistingAutocompleter('before'),
 			new GridFieldDataColumns()

@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\View\Parsers\ShortcodeParser;
+
 /**
  * @package framework
  * @subpackage tests
@@ -267,7 +271,7 @@ class ShortcodeParserTest extends SapphireTest {
 	}
 
 	public function testNoParseAttemptIfNoCode() {
-		$stub = $this->getMock('ShortcodeParser', array('replaceElementTagsWithMarkers'));
+		$stub = $this->getMock('SilverStripe\\View\\Parsers\\ShortcodeParser', array('replaceElementTagsWithMarkers'));
 		$stub->register('test', function() {
 			return '';
 		});

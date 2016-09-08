@@ -4,6 +4,21 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\Session;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldDeleteAction;
+use SilverStripe\Forms\GridField\GridField;
+
+
+
+
 
 
 class GridFieldDeleteActionTest extends SapphireTest {
@@ -51,7 +66,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 	public function testActionsRequireCSRF() {
 		$this->logInWithPermission('ADMIN');
 		$this->setExpectedException(
-			'SS_HTTPResponse_Exception',
+			'SilverStripe\\Control\\SS_HTTPResponse_Exception',
 			_t("Form.CSRF_FAILED_MESSAGE",
 				"There seems to have been a technical problem. Please click the back button, ".
 				"refresh your browser, and try again."

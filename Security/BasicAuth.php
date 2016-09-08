@@ -2,11 +2,12 @@
 
 namespace SilverStripe\Security;
 
-use SapphireTest;
-use Director;
-use SS_HTTPResponse;
-use SS_HTTPResponse_Exception;
-use Config;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Dev\SapphireTest;
 
 /**
  * Provides an interface to HTTP basic authentication.
@@ -16,11 +17,10 @@ use Config;
  *
  * It also has a function to protect your entire site.  See {@link BasicAuth::protect_entire_site()}
  * for more information. You can control this setting on controller-level by using {@link Controller->basicAuthEnabled}.
- *
- * @package framework
- * @subpackage security
  */
 class BasicAuth {
+	use Configurable;
+
 	/**
 	 * @config
 	 * @var Boolean Flag set by {@link self::protect_entire_site()}
@@ -53,25 +53,26 @@ class BasicAuth {
 	 * @param string|array $permissionCode Optional
 	 * @param boolean $tryUsingSessionLogin If true, then the method with authenticate against the
 	 *  session log-in if those credentials are disabled.
-	 * @return Member $member
+	 * @return Member|bool $member
 	 */
 	public static function requireLogin($realm, $permissionCode = null, $tryUsingSessionLogin = true) {
-		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
-		if(!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) return true;
+		$isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
+		if(!Security::database_is_ready() || (Director::is_cli() && !$isRunningTests)) {
+			return true;
+		}
 
-                /*
-                 * Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
-                 * Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
-                 * REDIRECT_HTTP_AUTHORIZATION
-                 *
-                 * The follow rewrite rule must be in the sites .htaccess file to enable this workaround
-                 * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-                 */
+		/*
+		 * Enable HTTP Basic authentication workaround for PHP running in CGI mode with Apache
+		 * Depending on server configuration the auth header may be in HTTP_AUTHORIZATION or
+		 * REDIRECT_HTTP_AUTHORIZATION
+		 *
+		 * The follow rewrite rule must be in the sites .htaccess file to enable this workaround
+		 * RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+		 */
 		$authHeader = (isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] :
 			      (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] : null));
 		$matches = array();
-		if ($authHeader &&
-                        preg_match('/Basic\s+(.*)$/i', $authHeader, $matches)) {
+		if ($authHeader && preg_match('/Basic\s+(.*)$/i', $authHeader, $matches)) {
 			list($name, $password) = explode(':', base64_decode($matches[1]));
 			$_SERVER['PHP_AUTH_USER'] = strip_tags($name);
 			$_SERVER['PHP_AUTH_PW'] = strip_tags($password);

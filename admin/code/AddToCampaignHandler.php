@@ -2,25 +2,22 @@
 
 namespace SilverStripe\Admin;
 
-use SilverStripe\Framework\Core\Injectable;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Core\Object;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\Versioning\ChangeSet;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
-use ClassInfo;
-use Object;
-use DropdownField;
-use FieldList;
-use HiddenField;
-use Form;
-use CompositeField;
-use LiteralField;
-use Director;
-use SS_HTTPResponse;
-use FormAction;
-use SS_HTTPResponse_Exception;
-use HeaderField;
 
 /**
  * Class AddToCampaignHandler - handle the AddToCampaign action.
@@ -72,7 +69,7 @@ class AddToCampaignHandler {
 	/**
 	 * AddToCampaignHandler constructor.
 	 *
-	 * @param Controller $parentController Controller for this form
+	 * @param Controller $controller Controller for this form
 	 * @param array|DataObject $data The data submitted as part of that form
 	 * @param string $name Form name
 	 */
@@ -240,10 +237,10 @@ class AddToCampaignHandler {
 
 		$request = $this->controller->getRequest();
 		$message = _t(
-			'AddToCampaign.Success',
-			'Successfully added {ObjectTitle} to {CampaignTitle}',
-			'',
-			['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
+				'AddToCampaign.Success',
+				'Successfully added {ObjectTitle} to {CampaignTitle}',
+				'',
+				['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
 		);
 		if ($request->getHeader('X-Formschema-Request')) {
 			return $message;

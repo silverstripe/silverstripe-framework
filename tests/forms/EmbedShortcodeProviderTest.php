@@ -4,6 +4,8 @@
 use Embed\Adapters\Webpage;
 use Embed\Embed;
 use SilverStripe\Forms\HtmlEditor\EmbedShortcodeProvider;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * Class EmbedShortcodeProviderTest

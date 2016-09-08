@@ -2,6 +2,19 @@
 
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\GridField\GridField;
+
+
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -27,10 +40,11 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		// Generate sortable header and extract HTML
 		$list = new DataList('GridFieldSortableHeaderTest_Team');
 		$config = new GridFieldConfig_RecordEditor();
+		/** @skipUpgrade */
 		$form = new Form(Controller::curr(), 'Form', new FieldList(), new FieldList());
 		$gridField = new GridField('testfield', 'testfield', $list, $config);
 		$gridField->setForm($form);
-		$compontent = $gridField->getConfig()->getComponentByType('GridFieldSortableHeader');
+		$compontent = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldSortableHeader');
 		$htmlFragment = $compontent->getHTMLFragments($gridField);
 
 		// Check that the output shows name and hat as sortable fields, but not city
@@ -58,7 +72,7 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		$state->SortColumn = 'City';
 		$state->SortDirection = 'asc';
 
-		$compontent = $gridField->getConfig()->getComponentByType('GridFieldSortableHeader');
+		$compontent = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldSortableHeader');
 		$listA = $compontent->getManipulatedData($gridField, $list);
 
 		$state->SortDirection = 'desc';
@@ -116,7 +130,7 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		$config = new GridFieldConfig_RecordEditor();
 		$gridField = new GridField('testfield', 'testfield', $list, $config);
 		$state = $gridField->State->GridFieldSortableHeader;
-		$compontent = $gridField->getConfig()->getComponentByType('GridFieldSortableHeader');
+		$compontent = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldSortableHeader');
 
 		// Test that inherited dataobjects will work correctly
 		$state->SortColumn = 'Cheerleader.Hat.Colour';

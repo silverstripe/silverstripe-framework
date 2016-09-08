@@ -1,6 +1,23 @@
 <?php
 
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\RequestHandler;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridField_URLHandler;
+use SilverStripe\View\SSViewer;
+
+
+
+
+
 
 /**
  * Test the API for creating GridField_URLHandler compeonnts
@@ -42,6 +59,7 @@ class GridField_URLHandlerTest_Controller extends Controller implements TestOnly
 		$gridData = new ArrayList();
 		$gridField = new GridField('Grid', 'My grid', $gridData, $gridConfig);
 
+		/** @skipUpgrade */
 		return new Form($this, 'Form', new FieldList(
 			$gridField
 		), new FieldList());
@@ -59,6 +77,7 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 	protected $gridField;
 
 	public function getURLHandlers($gridField) {
+		/** @skipUpgrade */
 		return array(
 			'showform' => 'showform',
 			'testpage' => 'testpage',
@@ -84,6 +103,7 @@ class GridField_URLHandlerTest_Component extends RequestHandler implements GridF
 
 	public function Form($gridField, $request) {
 		$this->gridField = $gridField;
+		/** @skipUpgrade */
 		return new Form($this, 'Form', new FieldList(
 			new TextField("Test")
 		), new FieldList(
@@ -126,6 +146,7 @@ class GridField_URLHandlerTest_Component_ItemRequest extends RequestHandler {
 	}
 
 	public function Form() {
+		/** @skipUpgrade */
 		return new Form($this, 'Form', new FieldList(
 			new TextField("Test")
 		), new FieldList(

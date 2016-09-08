@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: dmooyman
- * Date: 12/08/16
- * Time: 12:14 PM
- */
+
 namespace SilverStripe\Admin;
 
 use SilverStripe\ORM\DataObject;

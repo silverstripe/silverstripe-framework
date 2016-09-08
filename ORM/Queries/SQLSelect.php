@@ -2,17 +2,14 @@
 
 namespace SilverStripe\ORM\Queries;
 
-use Injector;
-use Deprecation;
-use InvalidArgumentException;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DB;
+use InvalidArgumentException;
 
 /**
  * Object representing a SQL SELECT query.
  * The various parts of the SQL query can be manipulated individually.
- *
- * @package framework
- * @subpackage orm
  */
 class SQLSelect extends SQLConditionalExpression {
 
@@ -52,7 +49,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 *
 	 * May be used on SELECT or single table DELETE queries in some adapters
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected $orderby = array();
 
@@ -86,7 +83,7 @@ class SQLSelect extends SQLConditionalExpression {
 	/**
 	 * Construct a new SQLSelect.
 	 *
-	 * @param array $select An array of SELECT fields.
+	 * @param array|string $select An array of SELECT fields.
 	 * @param array|string $from An array of FROM clauses. The first one should be just the table name.
 	 * Each should be ANSI quoted.
 	 * @param array $where An array of WHERE clauses.
@@ -122,7 +119,6 @@ class SQLSelect extends SQLConditionalExpression {
 	 * </code>
 	 *
 	 * @param string|array $fields Field names should be ANSI SQL quoted. Array keys should be unquoted.
-	 * @param boolean $clear Clear existing select fields?
 	 * @return $this Self reference
 	 */
 	public function setSelect($fields) {
@@ -194,7 +190,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 * Set distinct property.
 	 *
 	 * @param bool $value
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setDistinct($value) {
 		$this->distinct = $value;
@@ -226,7 +222,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 * Only applies for positive values, or if an $offset is set as well.
 	 * @param int $offset
 	 * @throws InvalidArgumentException
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setLimit($limit, $offset = 0) {
 		if((is_numeric($limit) && $limit < 0) || (is_numeric($offset) && $offset < 0)) {
@@ -407,7 +403,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 * Reverses the order by clause by replacing ASC or DESC references in the
 	 * current order by with it's corollary.
 	 *
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function reverseOrderBy() {
 		$order = $this->getOrderBy();
@@ -425,7 +421,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 * Set a GROUP BY clause.
 	 *
 	 * @param string|array $groupby Escaped SQL statement
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setGroupBy($groupby) {
 		$this->groupby = array();
@@ -436,7 +432,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 * Add a GROUP BY clause.
 	 *
 	 * @param string|array $groupby Escaped SQL statement
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addGroupBy($groupby) {
 		if(is_array($groupby)) {
@@ -455,7 +451,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 *
 	 * @param mixed $having Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $having,... Unlimited additional predicates
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setHaving($having) {
 		$having = func_num_args() > 1 ? func_get_args() : $having;
@@ -470,7 +466,7 @@ class SQLSelect extends SQLConditionalExpression {
 	 *
 	 * @param mixed $having Predicate(s) to set, as escaped SQL statements or paramaterised queries
 	 * @param mixed $having,... Unlimited additional predicates
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addHaving($having) {
 		$having = $this->normalisePredicates(func_get_args());

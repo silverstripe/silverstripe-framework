@@ -1,6 +1,28 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
+use SilverStripe\Forms\GridField\GridFieldViewButton;
+use SilverStripe\Forms\GridField\GridFieldEditButton;
+
+
+
+
 
 /**
  * @package framework
@@ -306,7 +328,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		$this->logInWithPermission('ADMIN');
 
 		$component = new GridFieldDetailForm();
-		$this->assertEquals('GridFieldDetailForm_ItemRequest', $component->getItemRequestClass());
+		$this->assertEquals('SilverStripe\\Forms\\GridField\\GridFieldDetailForm_ItemRequest', $component->getItemRequestClass());
 		$component->setItemRequestClass('GridFieldDetailFormTest_ItemRequest');
 		$this->assertEquals('GridFieldDetailFormTest_ItemRequest', $component->getItemRequestClass());
 	}
@@ -321,6 +343,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		});
 		// Note: A lot of scaffolding to execute the tested logic,
 		// due to the coupling of form creation with request handling (and its context)
+		/** @skipUpgrade */
 		$request = new GridFieldDetailForm_ItemRequest(
 			GridField::create('Categories', 'Categories'),
 			$component,
@@ -498,8 +521,10 @@ class GridFieldDetailFormTest_Controller extends Controller implements TestOnly 
 		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
 		$field->getConfig()->addComponent(new GridFieldViewButton());
 		$field->getConfig()->addComponent(new GridFieldEditButton());
+		/** @skipUpgrade */
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldEditButton());
+		/** @skipUpgrade */
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
 }
@@ -517,10 +542,12 @@ class GridFieldDetailFormTest_GroupController extends Controller implements Test
 
 	public function Form() {
 		$field = new GridField('testfield', 'testfield', GridFieldDetailFormTest_PeopleGroup::get()->sort('Name'));
+		/** @skipUpgrade */
 		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
 		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
 		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
 		$field->getConfig()->addComponent(new GridFieldEditButton());
+		/** @skipUpgrade */
 		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
 }
@@ -545,20 +572,21 @@ class GridFieldDetailFormTest_CategoryController extends Controller implements T
 			new TextField('ManyMany[PublishedBy]'))
 		);
 		$categoriesField = new GridField('testfield', 'testfield', $person->Categories());
-		$categoriesField->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+		$categoriesField->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'SilverStripe\\Forms\\Form'));
 		$gridFieldForm->setFields($detailFields);
 		$categoriesField->getConfig()->addComponent(new GridFieldToolbarHeader());
 		$categoriesField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
 		$categoriesField->getConfig()->addComponent(new GridFieldEditButton());
 
 		$favGroupsField = new GridField('testgroupsfield', 'testgroupsfield', $person->FavouriteGroups());
+		/** @skipUpgrade */
 		$favGroupsField->getConfig()->addComponent(new GridFieldDetailForm($this, 'Form'));
 		$favGroupsField->getConfig()->addComponent(new GridFieldToolbarHeader());
 		$favGroupsField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
 		$favGroupsField->getConfig()->addComponent(new GridFieldEditButton());
 
 		$fields = new FieldList($categoriesField, $favGroupsField);
-
+		/** @skipUpgrade */
 		return new Form($this, 'Form', $fields, new FieldList());
 	}
 }

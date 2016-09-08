@@ -4,6 +4,16 @@
 
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\View\Parsers\ShortcodeParser;
+use SilverStripe\View\Parsers\ShortcodeHandler;
+
+
+
 
 
 /**
@@ -412,7 +422,7 @@ class DBHTMLTextTest extends SapphireTest {
 		// BBCode strips HTML and applies own formatting
 		$this->assertEquals(
 			'<strong>Some content</strong> shortcode content with shortcode',
-			$obj->Parse('BBCodeParser')->forTemplate()
+			$obj->Parse('SilverStripe\\View\\Parsers\\BBCodeParser')->forTemplate()
 		);
 	}
 
@@ -528,7 +538,7 @@ class DBHTMLTextTest extends SapphireTest {
 			$field->Plain()
 		);
 		Config::nest();
-		Config::inst()->update('Director', 'alternate_base_url', 'http://example.com/');
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', 'http://example.com/');
 		$this->assertEquals(
 			'<p>Replaced short code with this. <a href="http://example.com/home">home</a></p>',
 			$field->AbsoluteLinks()

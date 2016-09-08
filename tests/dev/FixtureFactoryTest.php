@@ -1,6 +1,10 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\FixtureFactory;
+use SilverStripe\Dev\FixtureBlueprint;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
 
 /**
  * @package framework
@@ -59,7 +63,7 @@ class FixtureFactoryTest extends SapphireTest {
 		$this->assertFalse($factory->getBlueprint('FixtureFactoryTest_DataObject'));
 		$factory->define('FixtureFactoryTest_DataObject');
 		$this->assertInstanceOf(
-			'FixtureBluePrint',
+			'SilverStripe\\Dev\\FixtureBluePrint',
 			$factory->getBlueprint('FixtureFactoryTest_DataObject')
 		);
 	}
@@ -70,7 +74,7 @@ class FixtureFactoryTest extends SapphireTest {
 		$this->assertFalse($factory->getBlueprint('FixtureFactoryTest_DataObject'));
 		$factory->define('FixtureFactoryTest_DataObject', $blueprint);
 		$this->assertInstanceOf(
-			'FixtureBluePrint',
+			'SilverStripe\\Dev\\FixtureBluePrint',
 			$factory->getBlueprint('FixtureFactoryTest_DataObject')
 		);
 		$this->assertEquals(

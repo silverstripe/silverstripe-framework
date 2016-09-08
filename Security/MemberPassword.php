@@ -2,21 +2,15 @@
 
 namespace SilverStripe\Security;
 
-
 use SilverStripe\ORM\DataObject;
-
 
 /**
  * Keep track of users' previous passwords, so that we can check that new passwords aren't changed back to old ones.
- * @package framework
- * @subpackage security
  *
  * @property string Password
  * @property string Salt
  * @property string PasswordEncryption
- *
  * @property int MemberID ID of the Member
- *
  * @method Member Member() Owner of the password
  */
 class MemberPassword extends DataObject {
@@ -29,7 +23,7 @@ class MemberPassword extends DataObject {
 	private static $has_one = array(
 		'Member' => 'SilverStripe\\Security\\Member'
 	);
-	
+
 	private static $table_name = "MemberPassword";
 
 	/**

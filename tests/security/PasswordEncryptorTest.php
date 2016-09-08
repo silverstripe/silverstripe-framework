@@ -2,6 +2,11 @@
 
 use SilverStripe\Security\PasswordEncryptor_Blowfish;
 use SilverStripe\Security\PasswordEncryptor;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
+
 
 class PasswordEncryptorTest extends SapphireTest {
 

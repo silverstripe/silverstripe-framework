@@ -3,6 +3,8 @@
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_Filterable;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * @package framework
@@ -892,6 +894,9 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals(0, $list->exclude('ID', $obj->ID)->count());
 	}
 
+	/**
+	 * @skipUpgrade
+	 */
 	public function testFilterByNull() {
 		$list = DataObjectTest_Fan::get();
 		// Force DataObjectTest_Fan/fan5::Email to empty string

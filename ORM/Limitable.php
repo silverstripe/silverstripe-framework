@@ -9,8 +9,6 @@ namespace SilverStripe\ORM;
  * applied, rather than applying the limit in place
  *
  * @see SS_List, SS_Sortable, SS_Filterable
- * @package framework
- * @subpackage orm
  */
 interface SS_Limitable extends SS_List {
 
@@ -19,7 +17,9 @@ interface SS_Limitable extends SS_List {
 	 * If $offset is specified, then that many records at the beginning of the list will be skipped.
 	 * This matches the behaviour of the SQL LIMIT clause.
 	 *
-	 * @return SS_Limitable
+	 * @param int $limit
+	 * @param int $offset
+	 * @return static
 	 */
 	public function limit($limit, $offset = 0);
 

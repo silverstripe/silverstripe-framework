@@ -11,9 +11,6 @@ namespace SilverStripe\ORM;
  * $model = new DataModel;
  * $mainMenu = $model->SiteTree->where('"ParentID" = 0 AND "ShowInMenus" = 1');
  * </code>
- *
- * @package framework
- * @subpackage orm
  */
 class DataModel {
 
@@ -44,7 +41,7 @@ class DataModel {
 	 * Set the global DataModel, used when data is requested from static
 	 * methods.
 	 *
-	 * @return DataModel
+	 * @param DataModel $inst
 	 */
 	public static function set_inst(DataModel $inst) {
 		self::$inst = $inst;
@@ -67,8 +64,8 @@ class DataModel {
 	}
 
 	/**
-	 * @param string
-	 * @param DataList
+	 * @param string $class
+	 * @param DataList $item
 	 */
 	public function __set($class, $item) {
 		$item = clone $item;

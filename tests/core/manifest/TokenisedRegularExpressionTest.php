@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Core\Manifest\SS_ClassManifest;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * @package framework
  * @subpackage tests

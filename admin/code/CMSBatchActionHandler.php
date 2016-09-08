@@ -2,26 +2,23 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\SecurityToken;
-use RequestHandler;
-use Config;
-use Controller;
-use SS_HTTPRequest;
-use SS_HTTPResponse;
+use SilverStripe\View\ArrayData;
 use InvalidArgumentException;
-use ArrayData;
 use Translatable;
 
 /**
  * Special request handler for admin/batchaction
- *
- * @package framework
- * @subpackage admin
  */
 class CMSBatchActionHandler extends RequestHandler {
 
@@ -242,7 +239,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		if(!is_subclass_of($class, 'SilverStripe\\Admin\\CMSBatchAction')) {
 			throw new InvalidArgumentException("{$class} is not a valid subclass of CMSBatchAction");
 		}
-		return $class::singleton();
+		return CMSBatchAction::singleton($class);
 	}
 
 	/**

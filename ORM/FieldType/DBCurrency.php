@@ -14,9 +14,6 @@ namespace SilverStripe\ORM\FieldType;
  * 	"Tax" => "Currency(5)",
  * );
  * </code>
- *
- * @package framework
- * @subpackage orm
  */
 class DBCurrency extends DBDecimal {
 

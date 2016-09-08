@@ -2,9 +2,9 @@
 Name: rootroutes
 Before: '*'
 ---
-Director:
+SilverStripe\Control\Director:
   rules:
-    '': 'Controller'
+    '': SilverStripe\Control\Controller
 ---
 Name: coreroutes
 Before: '*'
@@ -12,16 +12,15 @@ After:
   - '#rootroutes'
   - '#modelascontrollerroutes'
 ---
-Director:
+SilverStripe\Control\Director:
   rules:
-    'Security//$Action/$ID/$OtherID': 'SilverStripe\Security\Security'
-    'CMSSecurity//$Action/$ID/$OtherID': 'SilverStripe\Security\CMSSecurity'
-    'dev': 'DevelopmentAdmin'
-    'interactive': 'SapphireREPL'
-    'InstallerTest//$Action/$ID/$OtherID': 'InstallerTest'
-    'JSTestRunner//$Action/$ID/$OtherID': 'JSTestRunner'
-    'SapphireInfo//$Action/$ID/$OtherID': 'SapphireInfo'
-    'SapphireREPL//$Action/$ID/$OtherID': 'SapphireREPL'
+    'Security//$Action/$ID/$OtherID': SilverStripe\Security\Security
+    'CMSSecurity//$Action/$ID/$OtherID': SilverStripe\Security\CMSSecurity
+    'dev': SilverStripe\Dev\DevelopmentAdmin
+    'interactive': SilverStripe\Dev\SapphireREPL
+    'InstallerTest//$Action/$ID/$OtherID': SilverStripe\Dev\InstallerTest
+    'SapphireInfo//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireInfo
+    'SapphireREPL//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireREPL
 ---
 Name: adminroutes
 Before: '*'
@@ -30,6 +29,6 @@ After:
   - '#coreroutes'
   - '#modelascontrollerroutes'
 ---
-Director:
+SilverStripe\Control\Director:
   rules:
     'admin': 'SilverStripe\Admin\AdminRootController'

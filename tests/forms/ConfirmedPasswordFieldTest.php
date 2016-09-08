@@ -1,6 +1,15 @@
 <?php
 
 use SilverStripe\Security\Member;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\ConfirmedPasswordField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\RequiredFields;
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -30,6 +39,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 		$member->Password = "valueB";
 		$member->write();
 
+		/** @skipUpgrade */
 		$form = new Form($this, 'Form', new FieldList($field), new FieldList());
 		$form->loadDataFrom($member);
 
@@ -62,6 +72,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 			"_ConfirmPassword" => "abc123"
 		));
 		$validator = new RequiredFields();
+		/** @skipUpgrade */
 		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
 		$this->assertTrue(
 			$field->validate($validator),
@@ -84,6 +95,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 	}
 
     public function testFormValidation() {
+    	/** @skipUpgrade */
         $form = new Form(
             new Controller(),
             'Form',

@@ -2,26 +2,21 @@
 
 namespace SilverStripe\Security;
 
-
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\SS_List;
-use TemplateGlobalProvider;
-use ClassInfo;
-use TestOnly;
+use SilverStripe\View\TemplateGlobalProvider;
 
 /**
  * Represents a permission assigned to a group.
- * @package framework
- * @subpackage security
  *
  * @property string Code
  * @property int Arg
  * @property int Type
- *
  * @property int GroupID
- *
  * @method Group Group()
  */
 class Permission extends DataObject implements TemplateGlobalProvider {
@@ -367,6 +362,7 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 
 			return isset($groupList) ? $groupList : null;
 		}
+		return null;
 	}
 
 
@@ -664,72 +660,6 @@ class Permission extends DataObject implements TemplateGlobalProvider {
 		return array(
 			'HasPerm' => 'check'
 		);
-	}
-}
-
-
-/**
- * Permission_Group class
- *
- * This class is used to group permissions together for showing on an
- * interface.
- * @package framework
- * @subpackage security
- */
-class Permission_Group {
-
-	/**
-	 * Name of the permission group (can be used as label in an interface)
-	 * @var string
-	 */
-	protected $name;
-
-	/**
-	 * Associative array of permissions in this permission group. The array
-	 * indicies are the permission codes as used in
-	 * {@link Permission::check()}. The value is suitable for using in an
-	 * interface.
-	 * @var string
-	 */
-	protected $permissions = array();
-
-
-	/**
-	 * Constructor
-	 *
-	 * @param string $name Text that could be used as label used in an
-	 *                     interface
-	 * @param array $permissions Associative array of permissions in this
-	 *                           permission group. The array indicies are the
-	 *                           permission codes as used in
-	 *                           {@link Permission::check()}. The value is
-	 *                           suitable for using in an interface.
-	 */
-	public function __construct($name, $permissions) {
-		$this->name = $name;
-		$this->permissions = $permissions;
-	}
-
-	/**
-	 * Get the name of the permission group
-	 *
-	 * @return string Name (label) of the permission group
-	 */
-	public function getName() {
-		return $this->name;
-	}
-
-
-	/**
-	 * Get permissions
-	 *
-	 * @return array Associative array of permissions in this permission
-	 *               group. The array indicies are the permission codes as
-	 *               used in {@link Permission::check()}. The value is
-	 *               suitable for using in an interface.
-	 */
-	public function getPermissions() {
-		return $this->permissions;
 	}
 }
 

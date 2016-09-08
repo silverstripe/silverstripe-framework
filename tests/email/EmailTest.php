@@ -1,4 +1,11 @@
 <?php
+
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Control\Email\Mailer;
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -100,7 +107,7 @@ class EmailTest extends SapphireTest {
 		$oldProject = $project;
 		$project = 'emailtest';
 
-		Injector::inst()->registerService(new EmailTest_Mailer(), 'Mailer');
+		Injector::inst()->registerService(new EmailTest_Mailer(), 'SilverStripe\\Control\\Email\\Mailer');
 		$email = new Email(
 			'from@example.com',
 			'to@example.com',
@@ -149,7 +156,7 @@ class EmailTest extends SapphireTest {
 		$oldProject = $project;
 		$project = 'emailtest';
 
-		Injector::inst()->registerService(new EmailTest_Mailer(), 'Mailer');
+		Injector::inst()->registerService(new EmailTest_Mailer(), 'SilverStripe\\Control\\Email\\Mailer');
 		$email = new Email(
 			'from@example.com',
 			'to@example.com',

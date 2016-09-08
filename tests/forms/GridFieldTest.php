@@ -4,6 +4,31 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Member;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
+use SilverStripe\Forms\GridField\GridFieldDataColumns;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridState_Component;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridState_Data;
+use SilverStripe\Forms\GridField\GridState;
+use SilverStripe\Forms\GridField\GridField_ColumnProvider;
+use SilverStripe\Forms\GridField\GridField_ActionProvider;
+use SilverStripe\Forms\GridField\GridField_DataManipulator;
+use SilverStripe\Forms\GridField\GridField_HTMLProvider;
+
+
+
+
 
 class GridFieldTest extends SapphireTest {
 
@@ -156,13 +181,14 @@ class GridFieldTest extends SapphireTest {
 		$this->assertFalse($obj->State->Falsey2);
 
 		// Check nested values
-		$this->assertInstanceOf('GridState_Data', $obj->State->Nested);
-		$this->assertInstanceOf('GridState_Data', $obj->State->Nested->DeeperNested());
+		$this->assertInstanceOf('SilverStripe\\Forms\\GridField\\GridState_Data', $obj->State->Nested);
+		$this->assertInstanceOf('SilverStripe\\Forms\\GridField\\GridState_Data', $obj->State->Nested->DeeperNested());
 		$this->assertEquals(3, $obj->State->Nested->DataValue(3));
 		$this->assertEquals(10, $obj->State->Nested->DeeperNested->DataValue(10));
 	}
 
 	/**
+	 * @skipUpgrade
 	 * @covers GridField::getColumns
 	 */
 	public function testGetColumns(){
@@ -184,6 +210,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
+	 * @skipUpgrade
 	 * @covers GridField::getColumnContent
 	 */
 	public function testGetColumnContent() {
@@ -195,6 +222,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
+	 * @skipUpgrade
 	 * @covers GridField::getColumnContent
 	 */
 	public function testGetColumnContentBadArguments() {
@@ -207,6 +235,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
+	 * @skipUpgrade
 	 * @covers GridField::getColumnAttributes
 	 */
 	public function testGetColumnAttributesEmptyArray() {
@@ -218,6 +247,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
+	 * @skipUpgrade
 	 * @covers GridField::getColumnAttributes
 	 */
 	public function testGetColumnAttributes() {
@@ -253,6 +283,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
+	 * @skipUpgrade
 	 * @covers GridField::getColumnMetadata
 	 */
 	public function testGetColumnMetadata() {
@@ -497,6 +528,12 @@ class GridFieldTest_Component implements GridField_ColumnProvider, GridField_Act
 		}
 		return array('metadata'=>'istrue');
 	}
+
+	/**
+	 * @skipUpgrade
+	 * @param GridField $gridField
+	 * @return array
+	 */
 	public function getColumnsHandled($gridField) {
 		return array('Email', 'Surname', 'FirstName');
 	}

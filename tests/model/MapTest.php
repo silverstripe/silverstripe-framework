@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\SS_Map;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * @package framework

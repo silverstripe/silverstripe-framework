@@ -4,6 +4,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\MemberCsvBulkLoader;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * @package framework

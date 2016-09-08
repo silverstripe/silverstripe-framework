@@ -1,6 +1,15 @@
 <?php
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\RSS\RSSFeed;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayList;
+use SilverStripe\View\ViewableData;
+use SilverStripe\View\Parsers\ShortcodeParser;
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -83,7 +92,7 @@ class RSSFeedTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		Config::inst()->update('Director', 'alternate_base_url', '/');
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
 		if(!self::$original_host) self::$original_host = $_SERVER['HTTP_HOST'];
 		$_SERVER['HTTP_HOST'] = 'www.example.org';
 
@@ -94,7 +103,7 @@ class RSSFeedTest extends SapphireTest {
 
 	public function tearDown() {
 		parent::tearDown();
-		Config::inst()->update('Director', 'alternate_base_url', null);
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', null);
 		$_SERVER['HTTP_HOST'] = self::$original_host;
 	}
 }

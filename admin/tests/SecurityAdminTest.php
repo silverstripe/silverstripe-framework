@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\FunctionalTest;
+
 /**
  * @package cms
  * @subpackage tests

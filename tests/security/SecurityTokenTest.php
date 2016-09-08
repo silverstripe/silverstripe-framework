@@ -1,6 +1,12 @@
 <?php
 
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Forms\FieldList;
+
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -131,7 +137,7 @@ class SecurityTokenTest extends SapphireTest {
 		$t->updateFieldSet($fs);
 		$f = $fs->dataFieldByName($t->getName());
 
-		$this->assertInstanceOf('HiddenField', $f);
+		$this->assertInstanceOf('SilverStripe\\Forms\\HiddenField', $f);
 		$this->assertEquals($f->getName(), $t->getName(), 'Name matches');
 		$this->assertEquals($f->Value(), $t->getValue(), 'Value matches');
 	}
@@ -143,7 +149,7 @@ class SecurityTokenTest extends SapphireTest {
 		$t->updateFieldSet($fs); // second
 		$f = $fs->dataFieldByName($t->getName());
 
-		$this->assertInstanceOf('HiddenField', $f);
+		$this->assertInstanceOf('SilverStripe\\Forms\\HiddenField', $f);
 		$this->assertEquals(1, $fs->Count());
 	}
 

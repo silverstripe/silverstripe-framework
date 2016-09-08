@@ -5,9 +5,6 @@ namespace SilverStripe\ORM\Queries;
 /**
  * Represents a SQL expression which may have field values assigned
  * (UPDATE/INSERT Expressions)
- *
- * @package framework
- * @subpackage orm
  */
 interface SQLWriteExpression {
 
@@ -47,7 +44,7 @@ interface SQLWriteExpression {
 	 * </code>
 	 *
 	 * @param array $assignments The list of fields to assign
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function addAssignments(array $assignments);
 
@@ -59,7 +56,7 @@ interface SQLWriteExpression {
 	 * @see SQLWriteExpression::addAssignments() for syntax examples
 	 *
 	 * @param array $assignments
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function setAssignments(array $assignments);
 
@@ -96,7 +93,7 @@ interface SQLWriteExpression {
 	 * @param mixed $value The value to assign to this field. This could be an
 	 * array containing a parameterised SQL query of any number of parameters,
 	 * or a single literal value.
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function assign($field, $value);
 
@@ -108,7 +105,7 @@ interface SQLWriteExpression {
 	 *
 	 * @param string $field The field name to update
 	 * @param string $sql The SQL to use for this update. E.g. "NOW()"
-	 * @return self Self reference
+	 * @return $this Self reference
 	 */
 	public function assignSQL($field, $sql);
 }

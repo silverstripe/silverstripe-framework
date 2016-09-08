@@ -1,6 +1,11 @@
 <?php
-use SilverStripe\Filesystem\Storage\AssetStore;
+use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
+
 
 
 /**
@@ -22,7 +27,7 @@ class DBFileTest extends SapphireTest {
 
 		// Set backend
 		AssetStoreTest_SpyStore::activate('DBFileTest');
-		Config::inst()->update('Director', 'alternate_base_url', '/mysite/');
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/mysite/');
 	}
 
 	public function tearDown() {

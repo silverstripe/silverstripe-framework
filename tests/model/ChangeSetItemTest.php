@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
+use SilverStripe\Dev\SapphireTest;
+
 
 class ChangeSetItemTest_Versioned extends DataObject {
 	private static $db = [

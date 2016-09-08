@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\TextareaField;
+
+
 class TextareaFieldTest extends SapphireTest {
 
 	/**

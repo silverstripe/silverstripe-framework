@@ -2,14 +2,11 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use Config;
-use Convert;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 
 /**
  * Represents schema management object for MySQL
- *
- * @package framework
- * @subpackage orm
  */
 class MySQLSchemaManager extends DBSchemaManager {
 
@@ -153,7 +150,8 @@ class MySQLSchemaManager extends DBSchemaManager {
 					"Table $tableName: renamed from lowercase",
 					"repaired"
 				);
-				return $this->renameTable(strtolower($tableName), $tableName);
+				$this->renameTable(strtolower($tableName), $tableName);
+				return true;
 			}
 
 			$this->alterationMessage(

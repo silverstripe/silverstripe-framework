@@ -2,14 +2,11 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use NumericField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DB;
 
 /**
  * Represents a floating point field.
- *
- * @package framework
- * @subpackage orm
  */
 class DBFloat extends DBField {
 
@@ -47,7 +44,7 @@ class DBFloat extends DBField {
 		return number_format(round($this->value, $precision), $precision);
 	}
 
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return new NumericField($this->name, $title);
 	}
 

@@ -2,18 +2,13 @@
 
 namespace SilverStripe\Security;
 
-use FieldList;
-use Object;
-use SS_HTTPRequest;
-use TemplateGlobalProvider;
-use Session;
-use HiddenField;
-use Controller;
-
-/**
- * @package framework
- * @subpackage security
- */
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Core\Object;
+use SilverStripe\Control\Session;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\View\TemplateGlobalProvider;
 
 /**
  * Cross Site Request Forgery (CSRF) protection for the {@link Form} class and other GET links.
@@ -42,7 +37,7 @@ use Controller;
 class SecurityToken extends Object implements TemplateGlobalProvider {
 
 	/**
-	 * @var String
+	 * @var string
 	 */
 	protected static $default_name = 'SecurityID';
 
@@ -122,7 +117,6 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 
 	/**
 	 * @param string $name
-	 * @return string
 	 */
 	public function setName($name) {
 		$val = $this->getValue();
@@ -131,7 +125,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function getName() {
 		return $this->name;
@@ -265,68 +259,5 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 			'getSecurityID',
 			'SecurityID' => 'getSecurityID'
 		);
-	}
-}
-
-/**
- * Specialized subclass for disabled security tokens - always returns
- * TRUE for token checks. Use through {@link SecurityToken::disable()}.
- */
-class NullSecurityToken extends SecurityToken {
-
-	/**
-	 * @param String
-	 * @return boolean
-	 */
-	public function check($compare) {
-		return true;
-	}
-
-	/**
-	 * @param SS_HTTPRequest $request
-	 * @return Boolean
-	 */
-	public function checkRequest($request) {
-		return true;
-	}
-
-	/**
-	 * @param FieldList $fieldset
-	 * @return false
-	 */
-	public function updateFieldSet(&$fieldset) {
-		// Remove, in case it was added beforehand
-		$fieldset->removeByName($this->getName());
-
-		return false;
-	}
-
-	/**
-	 * @param String $url
-	 * @return String
-	 */
-	public function addToUrl($url) {
-		return $url;
-	}
-
-	/**
-	 * @return String
-	 */
-	public function getValue() {
-		return null;
-	}
-
-	/**
-	 * @param String $val
-	 */
-	public function setValue($val) {
-		// no-op
-	}
-
-	/**
-	 * @return String
-	 */
-	public function generate() {
-		return null;
 	}
 }

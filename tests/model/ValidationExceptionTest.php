@@ -2,6 +2,8 @@
 
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * @package framework

@@ -1,11 +1,27 @@
 <?php
 
+use SilverStripe\Control\Director;
+use SilverStripe\Control\ContentNegotiator;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\Permission;
-use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\SSViewer;
+use SilverStripe\View\Requirements;
+use SilverStripe\View\ViewableData;
+use SilverStripe\View\SSViewer_FromString;
+use SilverStripe\View\SSTemplateParser;
+use SilverStripe\View\TemplateGlobalProvider;
 
 class SSViewerTest extends SapphireTest {
 
@@ -22,8 +38,8 @@ class SSViewerTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
-		Config::inst()->update('SSViewer', 'source_file_comments', false);
-		Config::inst()->update('SSViewer_FromString', 'cache_template', false);
+		SSViewer::config()->update('source_file_comments', false);
+		SSViewer_FromString::config()->update('cache_template', false);
 		AssetStoreTest_SpyStore::activate('SSViewerTest');
 		$this->oldServer = $_SERVER;
 	}
@@ -41,9 +57,12 @@ class SSViewerTest extends SapphireTest {
 	 */
 	public function testCurrentTheme() {
 		//TODO: SiteConfig moved to CMS
-		Config::inst()->update('SSViewer', 'theme', 'mytheme');
-		$this->assertEquals('mytheme', Config::inst()->get('SSViewer', 'theme'),
-			'Current theme is the default - user has not defined one');
+		SSViewer::config()->update('theme', 'mytheme');
+		$this->assertEquals(
+			'mytheme',
+			SSViewer::config()->get('theme'),
+			'Current theme is the default - user has not defined one'
+		);
 	}
 
 	/**
@@ -147,7 +166,7 @@ class SSViewerTest extends SapphireTest {
 	}
 
 	public function testRequirements() {
-		$requirements = $this->getMock("Requirements_Backend", array("javascript", "css"));
+		$requirements = $this->getMock("SilverStripe\\View\\Requirements_Backend", array("javascript", "css"));
 		$jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 		$cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 
@@ -164,7 +183,7 @@ class SSViewerTest extends SapphireTest {
 	}
 
 	public function testRequirementsCombine(){
-		$testBackend = Injector::inst()->create('Requirements_Backend');
+		$testBackend = Injector::inst()->create('SilverStripe\\View\\Requirements_Backend');
 		$testBackend->setSuffixRequirements(false);
 		//$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
 
@@ -787,8 +806,8 @@ after')
 		$this->assertEquals('A A1 A1 i A1 ii A2 A3', $rationalisedResult);
 	}
 
-	public function assertEqualIgnoringWhitespace($a, $b) {
-		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b));
+	public function assertEqualIgnoringWhitespace($a, $b, $message = '') {
+		$this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b), $message);
 	}
 
 	/**
@@ -1156,7 +1175,7 @@ after')
 			$templates = SSViewer::get_templates_by_class(
 				'TestNamespace\\SSViewerTestModel_Controller',
 				'',
-				'Controller'
+				'SilverStripe\\Control\\Controller'
 			);
 			$self->assertEquals([
 				'TestNamespace\\SSViewerTestModel_Controller',
@@ -1165,10 +1184,10 @@ after')
 					'TestNamespace\\SSViewerTestModel_Controller',
 				],
 				'TestNamespace\\SSViewerTestModel',
-    			'Controller',
+    			'SilverStripe\\Control\\Controller',
 				[
 					'type' => 'Includes',
-    				'Controller',
+    				'SilverStripe\\Control\\Controller',
 				],
 			], $templates);
 
@@ -1208,13 +1227,12 @@ after')
 
 			// Let's throw something random in there.
 			$self->setExpectedException('InvalidArgumentException');
-			$templates = SSViewer::get_templates_by_class(array());
+			SSViewer::get_templates_by_class(array());
 		});
 	}
 
 	public function testRewriteHashlinks() {
-		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links');
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', true);
+		SSViewer::config()->update('rewrite_hash_links', true);
 
 		$_SERVER['HTTP_HOST'] = 'www.mysite.com';
 		$_SERVER['REQUEST_URI'] = '//file.com?foo"onclick="alert(\'xss\')""';
@@ -1272,13 +1290,10 @@ after')
 		);
 
 		unlink($tmplFile);
-
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig);
 	}
 
 	public function testRewriteHashlinksInPhpMode() {
-		$orig = Config::inst()->get('SSViewer', 'rewrite_hash_links');
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', 'php');
+		SSViewer::config()->update('rewrite_hash_links', 'php');
 
 		$tmplFile = TEMP_FOLDER . '/SSViewerTest_testRewriteHashlinksInPhpMode_' . sha1(rand()) . '.ss';
 
@@ -1301,7 +1316,7 @@ after')
 		$result = $tmpl->process($obj);
 
 		$code = <<<'EOC'
-<a class="inserted" href="<?php echo Convert::raw2att(preg_replace("/^(\/)+/", "/", $_SERVER['REQUEST_URI'])); ?>#anchor">InsertedLink</a>
+<a class="inserted" href="<?php echo \SilverStripe\Core\Convert::raw2att(preg_replace("/^(\/)+/", "/", $_SERVER['REQUEST_URI'])); ?>#anchor">InsertedLink</a>
 EOC;
 		$this->assertContains($code, $result);
 		// TODO Fix inline links in PHP mode
@@ -1316,14 +1331,11 @@ EOC;
 		);
 
 		unlink($tmplFile);
-
-		Config::inst()->update('SSViewer', 'rewrite_hash_links', $orig);
 	}
 
 	public function testRenderWithSourceFileComments() {
-		$origEnv = Config::inst()->get('Director', 'environment_type');
-		Config::inst()->update('Director', 'environment_type', 'dev');
-		Config::inst()->update('SSViewer', 'source_file_comments', true);
+		Director::config()->update('environment_type', 'dev');
+		SSViewer::config()->update('source_file_comments', true);
 		$i = FRAMEWORK_PATH . '/tests/templates/Includes';
 		$f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
 		$templates = array(
@@ -1407,8 +1419,6 @@ EOC;
 		foreach ($templates as $template) {
 			$this->_renderWithSourceFileComments('SSViewerTestComments/'.$template['name'], $template['expected']);
 		}
-		Config::inst()->update('SSViewer', 'source_file_comments', false);
-		Config::inst()->update('Director', 'environment_type', $origEnv);
 	}
 	private function _renderWithSourceFileComments($name, $expected) {
 		$viewer = new SSViewer(array($name));
@@ -1430,7 +1440,7 @@ EOC;
 		$template = new SSViewer(array('SSViewerTestProcess'));
 		$basePath = dirname($this->getCurrentRelativePath()) . '/forms';
 
-		$backend = Injector::inst()->create('Requirements_Backend');
+		$backend = Injector::inst()->create('SilverStripe\\View\\Requirements_Backend');
 		$backend->setCombinedFilesEnabled(false);
 		$backend->combineFiles(
 			'RequirementsTest_ab.css',
@@ -1554,7 +1564,7 @@ EOC;
 		$this->render($content, null, null);
 		$this->assertFalse(file_exists($cacheFile), 'Cache file was created when caching was off');
 
-		Config::inst()->update('SSViewer_FromString', 'cache_template', true);
+		SSViewer_FromString::config()->update('cache_template', true);
 		$this->render($content, null, null);
 		$this->assertTrue(file_exists($cacheFile), 'Cache file wasn\'t created when it was meant to');
 		unlink($cacheFile);

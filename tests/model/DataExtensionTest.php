@@ -2,6 +2,14 @@
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\FieldList;
+
+
+
 
 class DataExtensionTest extends SapphireTest {
 	protected static $fixture_file = 'DataExtensionTest.yml';
@@ -17,7 +25,7 @@ class DataExtensionTest extends SapphireTest {
 	);
 
 	protected $requiredExtensions = array(
-		'\SilverStripe\ORM\DataObject' => array( 'DataExtensionTest_AppliedToDO' ),
+		'SilverStripe\\ORM\\DataObject' => array( 'DataExtensionTest_AppliedToDO' ),
 	);
 
 	public function testOneToManyAssociationWithExtension() {

@@ -1,8 +1,6 @@
 <?php
-/**
- * @package framework
- * @subpackage i18n
- */
+
+namespace SilverStripe\i18n;
 
 /**
  * Makes the {@link Zend_Translate_Adapter} base class aware of file naming conventions within SilverStripe.
@@ -16,8 +14,8 @@
  */
 interface i18nTranslateAdapterInterface {
 	/**
-	 * @param String
-	 * @return String
+	 * @param string $locale
+	 * @return string
 	 */
 	public function getFilenameForLocale($locale);
 }

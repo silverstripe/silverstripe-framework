@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Security;
 
-
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\DataObject;
 use DateTime;
@@ -16,13 +15,10 @@ use DateInterval;
  * and chose to get the login state remembered on this device. When logging out, the ID
  * is discarded as well.
  *
- * @package framework
- * @subpackage security
- *
  * @property string $DeviceID
  * @property string $RememberLoginHash
+ * @method Member Member()
  */
-
 class RememberLoginHash extends DataObject {
 
 	private static $db = array (
@@ -127,6 +123,7 @@ class RememberLoginHash extends DataObject {
 		if (static::config()->force_single_token) {
 			RememberLoginHash::get()->filter('MemberID', $member->ID)->removeAll();
 		}
+		/** @var RememberLoginHash $rememberLoginHash */
 		$rememberLoginHash = RememberLoginHash::create();
 		do {
 			$deviceID = $rememberLoginHash->getNewDeviceID();

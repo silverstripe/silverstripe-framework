@@ -7,8 +7,6 @@ namespace SilverStripe\ORM;
  * a manner similar to DataObject.
  *
  * In addition to the methods defined below, the data of the object should be directly accessible as fields.
- * @package framework
- * @subpackage orm
  */
 interface DataObjectInterface {
 	/**
@@ -33,12 +31,19 @@ interface DataObjectInterface {
 	 * Get the named field.
 	 * This function is sometimes called explicitly by the form system, so you need to define it, even if you use the
 	 * default field system.
+	 *
+	 * @param string $fieldName
+	 * @return mixed
 	 */
 	public function __get($fieldName);
 
 	/**
 	 * Save content from a form into a field on this data object.
 	 * Since the data comes straight from a form it can't be trusted and will need to be validated / escaped.'
+	 *
+	 * @param string $fieldName
+	 * @param mixed $val
+	 * @return $this
 	 */
 	public function setCastedField($fieldName, $val);
 

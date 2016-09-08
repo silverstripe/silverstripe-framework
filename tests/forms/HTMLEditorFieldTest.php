@@ -1,9 +1,21 @@
 <?php
 
-use Filesystem as SS_Filesystem;
+use SilverStripe\Assets\File;
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image;
+use SilverStripe\Forms\HTMLReadonlyField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-
 
 /**
  * @package framework
@@ -16,7 +28,9 @@ class HTMLEditorFieldTest extends FunctionalTest {
 	protected static $use_draft_site = true;
 
 	protected $requiredExtensions = array(
-		'HTMLEditorField_Toolbar' => array('HTMLEditorFieldTest_DummyMediaFormFieldExtension')
+		'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Toolbar' => array(
+			'HTMLEditorFieldTest_DummyMediaFormFieldExtension'
+		)
 	);
 
 	protected $extraDataObjects = array('HTMLEditorFieldTest_Object');
@@ -28,7 +42,7 @@ class HTMLEditorFieldTest extends FunctionalTest {
 		AssetStoreTest_SpyStore::activate('HTMLEditorFieldTest');
 
 		// Set the File Name Filter replacements so files have the expected names
-        Config::inst()->update('FileNameFilter', 'default_replacements', array(
+        Config::inst()->update('SilverStripe\\Assets\\FileNameFilter', 'default_replacements', array(
             '/\s/' => '-', // remove whitespace
             '/_/' => '-', // underscores to dashes
             '/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
@@ -37,11 +51,11 @@ class HTMLEditorFieldTest extends FunctionalTest {
         ));
 
 		// Create a test files for each of the fixture references
-		$files = File::get()->exclude('ClassName', 'Folder');
+		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
 		foreach($files as $file) {
 			$fromPath = BASE_PATH . '/framework/tests/forms/images/' . $file->Name;
 			$destPath = AssetStoreTest_SpyStore::getLocalPath($file); // Only correct for test asset store
-			SS_Filesystem::makeFolder(dirname($destPath));
+			Filesystem::makeFolder(dirname($destPath));
 			copy($fromPath, $destPath);
 		}
 	}
@@ -77,7 +91,7 @@ class HTMLEditorFieldTest extends FunctionalTest {
 		$obj = new HTMLEditorFieldTest_Object();
 		$editor = new HTMLEditorField('Content');
 
-		$fileID = $this->idFromFixture('Image', 'example_image');
+		$fileID = $this->idFromFixture('SilverStripe\\Assets\\Image', 'example_image');
 		$editor->setValue(sprintf(
 			'[image src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" id="%d"]',
 			$fileID
@@ -185,7 +199,7 @@ EOS
 
 	public function testReadonlyField() {
 		$editor = new HTMLEditorField('Content');
-		$fileID = $this->idFromFixture('Image', 'example_image');
+		$fileID = $this->idFromFixture('SilverStripe\\Assets\\Image', 'example_image');
 		$editor->setValue(sprintf(
 			'[image src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" id="%d"]',
 			$fileID
@@ -234,6 +248,9 @@ class HTMLEditorFieldTest_DummyMediaFormFieldExtension extends Extension impleme
 	public static $fields = null;
 	public static $update_called = false;
 
+	/**
+	 * @param Form $form
+	 */
 	public function updateImageForm($form) {
 		self::$update_called = true;
 		self::$fields = $form->Fields();

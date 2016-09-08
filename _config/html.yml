@@ -1,5 +1,8 @@
-Injector:
+---
+Name: corehtml
+---
+SilverStripe\Core\Injector\Injector:
   HTMLValue:
-    class: SS_HTML4Value
-  HTMLEditorConfig:
-    class: TinyMCEConfig
+    class: SilverStripe\View\Parsers\SS_HTML4Value
+  SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
+    class: SilverStripe\Forms\HTMLEditor\TinyMCEConfig

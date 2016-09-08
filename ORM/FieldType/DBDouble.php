@@ -6,9 +6,7 @@ use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 
 /**
- *
- * @package framework
- * @subpackage orm
+ * Supports double precision DB types
  */
 class DBDouble extends DBFloat {
 

@@ -1,4 +1,13 @@
 <?php
+
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FileField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\RequiredFields;
+
+
 /**
  * @package framework
  * @subpackage tests
@@ -9,6 +18,7 @@ class FileFieldTest extends FunctionalTest {
 	 * Test a valid upload of a required file in a form. Error is set to 0, as the upload went well
 	 */
 	public function testUploadRequiredFile() {
+		/** @skipUpgrade */
 		$form = new Form(
 			new Controller(),
 			'Form',
@@ -35,6 +45,7 @@ class FileFieldTest extends FunctionalTest {
 	 * Test different scenarii for a failed upload : an error occured, no files where provided
 	 */
 	public function testUploadMissingRequiredFile() {
+		/** @skipUpgrade */
 		$form = new Form(
 			new Controller(),
 			'Form',

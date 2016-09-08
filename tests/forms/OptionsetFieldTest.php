@@ -2,6 +2,13 @@
 
 use SilverStripe\ORM\FieldType\DBField;
 
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+
 /**
  * @package framework
  * @subpackage tests
@@ -35,6 +42,7 @@ class OptionsetFieldTest extends SapphireTest {
 			"Five" => "Five"
 		));
 		$validator = new RequiredFields('Test');
+		/** @skipUpgrade */
 		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
 
 		$field->setValue("One");

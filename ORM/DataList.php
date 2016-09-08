@@ -2,16 +2,15 @@
 
 namespace SilverStripe\ORM;
 
-use BadMethodCallException;
-use SearchFilter;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Debug;
+use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Queries\SQLConditionGroup;
-use ViewableData;
+use SilverStripe\View\ViewableData;
+use ArrayIterator;
 use Exception;
 use InvalidArgumentException;
-use Injector;
 use LogicException;
-use Debug;
-use ArrayIterator;
 
 /**
  * Implements a "lazy loading" DataObjectSet.
@@ -32,9 +31,6 @@ use ArrayIterator;
  *   - removeAll
  *
  * Subclasses of DataList may add other methods that have the same effect.
- *
- * @package framework
- * @subpackage orm
  */
 class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortable, SS_Limitable {
 
@@ -562,8 +558,8 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 			if (in_array(strtolower($secondArg), $defaultFilterInstance->getSupportedModifiers())) {
 				// Treat second (and any subsequent) argument as modifiers, using default filter
 				$filterServiceName = 'DataListFilter.default';
-				array_unshift($modifiers, $secondArg);
-			} else {
+			array_unshift($modifiers, $secondArg);
+		} else {
 				// Second argument isn't a valid modifier, so assume is filter identifier
 				$filterServiceName = "DataListFilter.{$secondArg}";
 			}
@@ -618,7 +614,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 	 *
 	 * @param DataList $list
 	 * @return static
-	 * @throws BadMethodCallException
+	 * @throws InvalidArgumentException
 	 */
 	public function subtract(DataList $list) {
 		if($this->dataClass() != $list->dataClass()) {

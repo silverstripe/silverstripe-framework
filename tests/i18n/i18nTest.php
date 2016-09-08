@@ -1,6 +1,19 @@
 <?php
 
+use SilverStripe\Assets\Filesystem;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Manifest\SS_ClassManifest;
+use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\i18n\i18n;
+use SilverStripe\i18n\i18nEntityProvider;
+use SilverStripe\i18n\i18nTranslateAdapterInterface;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 
@@ -35,8 +48,8 @@ class i18nTest extends SapphireTest {
 
 		$this->alternateBasePath = $this->getCurrentAbsolutePath() . DIRECTORY_SEPARATOR . "_fakewebroot";
 		$this->alternateBaseSavePath = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'i18nTextCollectorTest_webroot';
-		FileSystem::makeFolder($this->alternateBaseSavePath);
-		Config::inst()->update('Director', 'alternate_base_folder', $this->alternateBasePath);
+		Filesystem::makeFolder($this->alternateBaseSavePath);
+		Director::config()->update('alternate_base_folder', $this->alternateBasePath);
 
 		// Replace old template loader with new one with alternate base path
 		$this->_oldLoader = ThemeResourceLoader::instance();
@@ -45,8 +58,7 @@ class i18nTest extends SapphireTest {
 			$this->alternateBasePath, project(), false, true
 		));
 
-		$this->_oldTheme = Config::inst()->get('SSViewer', 'theme');
-		Config::inst()->update('SSViewer', 'theme', 'testtheme1');
+		SSViewer::config()->update('theme', 'testtheme1');
 
 		$this->originalLocale = i18n::get_locale();
 
@@ -54,8 +66,8 @@ class i18nTest extends SapphireTest {
 		// Emulates behaviour in i18n::get_translators()
 		$this->origAdapter = i18n::get_translator('core');
 		$adapter = new Zend_Translate(array(
-			'adapter' => 'i18nRailsYamlAdapter',
-			'locale' => i18n::default_locale(),
+			'adapter' => 'SilverStripe\\i18n\\i18nRailsYamlAdapter',
+			'locale' => i18n::config()->get('default_locale'),
 			'disableNotices' => true,
 		));
 		i18n::register_translator($adapter, 'core');
@@ -66,8 +78,6 @@ class i18nTest extends SapphireTest {
 	public function tearDown() {
 		ThemeResourceLoader::set_instance($this->_oldLoader);
 		i18n::set_locale($this->originalLocale);
-		Config::inst()->update('Director', 'alternate_base_folder', null);
-		Config::inst()->update('SSViewer', 'theme', $this->_oldTheme);
 		i18n::register_translator($this->origAdapter, 'core');
 
 		parent::tearDown();
@@ -441,7 +451,7 @@ class i18nTest extends SapphireTest {
 		);
 
 		// set _fakewebroot module priority
-		Config::inst()->update('i18n', 'module_priority', array('subfolder','i18ntestmodule'));
+		i18n::config()->update('module_priority', array('subfolder','i18ntestmodule'));
 
 		i18n::include_by_locale('de');
 
@@ -509,8 +519,8 @@ class i18nTest extends SapphireTest {
 		// Changed manifest, so we also need to unset all previously collected messages.
 		// The easiest way to do this it to register a new adapter.
 		$adapter = new Zend_Translate(array(
-			'adapter' => 'i18nRailsYamlAdapter',
-			'locale' => i18n::default_locale(),
+			'adapter' => 'SilverStripe\\i18n\\i18nRailsYamlAdapter',
+			'locale' => i18n::config()->get('default_locale'),
 			'disableNotices' => true,
 		));
 		i18n::register_translator($adapter, 'core');
@@ -578,8 +588,7 @@ class i18nTest extends SapphireTest {
 	}
 
 	public function testGetLanguageName() {
-		Config::inst()->update(
-			'i18n',
+		i18n::config()->update(
 			'common_languages',
 			array('de_CGN' => array('name' => 'German (Cologne)', 'native' => 'K&ouml;lsch'))
 		);
@@ -608,9 +617,8 @@ class i18nTest_DataObject extends DataObject implements TestOnly {
 	);
 
 	/**
-	 *
-	 * @param boolean $includerelations a boolean value to indicate if the labels returned include relation fields
-	 *
+	 * @param bool $includerelations a boolean value to indicate if the labels returned include relation fields
+	 * @return array
 	 */
 	public function fieldLabels($includerelations = true) {
 		$labels = parent::fieldLabels($includerelations);

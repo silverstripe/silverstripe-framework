@@ -2,17 +2,14 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\Control\Director;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DataModel;
-use Controller;
-use TemplateGlobalProvider;
-use Config;
-use SS_HTTPRequest;
-use Injector;
+use SilverStripe\View\TemplateGlobalProvider;
 
-/**
- * @package framework
- * @subpackage admin
- */
 class AdminRootController extends Controller implements TemplateGlobalProvider {
 
 	/**
@@ -30,7 +27,7 @@ class AdminRootController extends Controller implements TemplateGlobalProvider {
 	 * @return string
 	 */
 	public static function get_admin_route() {
-		$rules = Config::inst()->get('Director', 'rules');
+		$rules = Director::config()->rules;
 		$adminRoute = array_search(__CLASS__, $rules);
 		return $adminRoute ?: static::config()->url_base;
 	}

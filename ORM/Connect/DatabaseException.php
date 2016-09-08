@@ -6,9 +6,6 @@ use Exception;
 
 /**
  * Error class for database exceptions
- *
- * @package framework
- * @subpackage orm
  */
 class SS_DatabaseException extends Exception {
 

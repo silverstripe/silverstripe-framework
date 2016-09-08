@@ -2,6 +2,8 @@
 
 use SilverStripe\Security\PasswordValidator;
 use SilverStripe\Security\Member;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * @package framework
  * @subpackage tests

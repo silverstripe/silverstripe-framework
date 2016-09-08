@@ -2,18 +2,15 @@
 
 namespace SilverStripe\ORM;
 
-use Controller;
-use SapphireTest;
-use Director;
-
-
-use SS_ClassLoader;
-use ClassInfo;
-use TestOnly;
-use Deprecation;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
-
 
 // Include the DB class
 require_once("DB.php");
@@ -23,9 +20,6 @@ require_once("DB.php");
  *
  * Utility functions for administrating the database. These can be accessed
  * via URL, e.g. http://www.yourdomain.com/db/build.
- *
- * @package framework
- * @subpackage orm
  */
 class DatabaseAdmin extends Controller {
 
@@ -41,6 +35,9 @@ class DatabaseAdmin extends Controller {
 	 * Obsolete classname values that should be remapped in dev/build
 	 */
 	private static $classname_value_remapping = [
+		'File' => 'SilverStripe\\Assets\\File',
+		'Image' => 'SilverStripe\\Assets\\Image',
+		'Folder' => 'SilverStripe\\Assets\\Folder',
 		'Group' => 'SilverStripe\\Security\\Group',
 		'LoginAttempt' => 'SilverStripe\\Security\\LoginAttempt',
 		'Member' => 'SilverStripe\\Security\\Member',
@@ -58,7 +55,7 @@ class DatabaseAdmin extends Controller {
 		// if on CLI or with the database not ready. The latter makes it less errorprone to do an
 		// initial schema build without requiring a default-admin login.
 		// Access to this controller is always allowed in "dev-mode", or of the user is ADMIN.
-		$isRunningTests = (class_exists('SapphireTest', false) && SapphireTest::is_running_test());
+		$isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
 		$canAccess = (
 			Director::isDev()
 			|| !Security::database_is_ready()
@@ -68,7 +65,7 @@ class DatabaseAdmin extends Controller {
 			|| Permission::check("ADMIN")
 		);
 		if(!$canAccess) {
-			return Security::permissionFailure($this,
+			Security::permissionFailure($this,
 				"This page is secured and you need administrator rights to access it. " .
 				"Enter your credentials below and we will send you right along.");
 		}
@@ -82,9 +79,11 @@ class DatabaseAdmin extends Controller {
 	public function groupedDataClasses() {
 		// Get all root data objects
 		$allClasses = get_declared_classes();
+		$rootClasses = [];
 		foreach($allClasses as $class) {
-			if(get_parent_class($class) == 'SilverStripe\ORM\DataObject')
+			if(get_parent_class($class) == 'SilverStripe\ORM\DataObject') {
 				$rootClasses[$class] = array();
+			}
 		}
 
 		// Assign every other data object one of those
@@ -171,12 +170,14 @@ class DatabaseAdmin extends Controller {
 	 *                last built
 	 */
 	public static function lastBuilt() {
-		$file = TEMP_FOLDER . '/database-last-generated-' .
-			str_replace(array('\\','/',':'), '.' , Director::baseFolder());
+		$file = TEMP_FOLDER
+			. '/database-last-generated-'
+			. str_replace(array('\\','/',':'), '.' , Director::baseFolder());
 
 		if(file_exists($file)) {
 			return filemtime($file);
 		}
+		return null;
 	}
 
 
@@ -284,12 +285,21 @@ class DatabaseAdmin extends Controller {
 			// Remap obsolete class names
 			$schema = DataObject::getSchema();
 			foreach ($this->config()->classname_value_remapping as $oldClassName => $newClassName) {
-				$badRecordCount = $newClassName::get()->filter(["ClassName" => $oldClassName ])->count();
+				$baseDataClass = $schema->baseDataClass($newClassName);
+				$badRecordCount = DataObject::get($baseDataClass)
+					->filter(["ClassName" => $oldClassName ])
+					->count();
 				if($badRecordCount > 0) {
-					if(Director::is_cli()) echo " * Correcting $badRecordCount obsolete classname values for $newClassName\n";
-					else echo "<li>Correcting $badRecordCount obsolete classname values for $newClassName</li>\n";
-					$table = $schema->baseDataTable($newClassName);
-					DB::prepared_query("UPDATE \"$table\" SET \"ClassName\" = ? WHERE \"ClassName\" = ?", [ $newClassName, $oldClassName ]);
+					if(Director::is_cli()) {
+						echo " * Correcting $badRecordCount obsolete classname values for $newClassName\n";
+					} else {
+						echo "<li>Correcting $badRecordCount obsolete classname values for $newClassName</li>\n";
+					}
+					$table = $schema->baseDataTable($baseDataClass);
+					DB::prepared_query(
+						"UPDATE \"$table\" SET \"ClassName\" = ? WHERE \"ClassName\" = ?",
+						[ $newClassName, $oldClassName ]
+					);
 				}
 			}
 
@@ -327,6 +337,7 @@ class DatabaseAdmin extends Controller {
 	 */
 	public function cleanup() {
 		$allClasses = get_declared_classes();
+		$baseClasses = [];
 		foreach($allClasses as $class) {
 			if(get_parent_class($class) == 'SilverStripe\ORM\DataObject') {
 				$baseClasses[] = $class;

@@ -2,14 +2,14 @@
 
 namespace SilverStripe\ORM\Versioning;
 
-use ViewableData;
-use Diff;
-use Image;
-use Convert;
-use ArrayData;
+use SilverStripe\Assets\Image;
+use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\Parsers\Diff;
+use SilverStripe\View\ViewableData;
 
 /**
  * Utility class to render views of the differences between two data objects (or two versions of the
@@ -43,9 +43,6 @@ use SilverStripe\ORM\FieldType\DBField;
  * <code>
  * $diff->ignoreFields('AuthorID', 'Status');
  * </code>
- *
- * @package framework
- * @subpackage orm
  */
 class DataDifferencer extends ViewableData {
 	protected $fromRecord;
@@ -57,11 +54,10 @@ class DataDifferencer extends ViewableData {
 	 * Construct a DataDifferencer to show the changes between $fromRecord and $toRecord.
 	 * If $fromRecord is null, this will represent a "creation".
 	 *
-	 * @param DataObject (Optional)
-	 * @param DataObject
+	 * @param DataObject $fromRecord
+	 * @param DataObject $toRecord
 	 */
-	public function __construct($fromRecord, DataObject $toRecord) {
-		if(!$toRecord) user_error("DataDifferencer constructed without a toRecord", E_USER_WARNING);
+	public function __construct(DataObject $fromRecord = null, DataObject $toRecord = null) {
 		$this->fromRecord = $fromRecord;
 		$this->toRecord = $toRecord;
 		parent::__construct();
@@ -69,11 +65,14 @@ class DataDifferencer extends ViewableData {
 
 	/**
 	 * Specify some fields to ignore changes from.  Repeated calls are cumulative.
-	 * @param $ignoredFields An array of field names to ignore.  Alternatively, pass the field names as
+	 * @param array $ignoredFields An array of field names to ignore.  Alternatively, pass the field names as
 	 * separate args.
+	 * @return $this
 	 */
 	public function ignoreFields($ignoredFields) {
-		if(!is_array($ignoredFields)) $ignoredFields = func_get_args();
+		if(!is_array($ignoredFields)) {
+			$ignoredFields = func_get_args();
+		}
 		$this->ignoredFields = array_merge($this->ignoredFields, $ignoredFields);
 
 		return $this;

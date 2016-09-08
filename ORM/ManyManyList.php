@@ -2,18 +2,15 @@
 
 namespace SilverStripe\ORM;
 
-use Object;
-use InvalidArgumentException;
-use Exception;
+use SilverStripe\Core\Object;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Queries\SQLDelete;
 use SilverStripe\ORM\FieldType\DBComposite;
+use InvalidArgumentException;
+use Exception;
 
 /**
  * Subclass of {@link DataList} representing a many_many relation.
- *
- * @package framework
- * @subpackage orm
  */
 class ManyManyList extends RelationList {
 
@@ -178,6 +175,7 @@ class ManyManyList extends RelationList {
 		} else if($id !== null){
 			return array($key => $id);
 		}
+		return null;
 	}
 
 	/**

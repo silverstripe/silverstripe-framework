@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\RequiredFields;
+
+
+
 /**
  * @package framework
  * @subpackage tests

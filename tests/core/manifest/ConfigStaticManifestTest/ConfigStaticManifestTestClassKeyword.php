@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\TestOnly;
+
+
 class ConfigStaticManifestTestClassKeyword implements TestOnly {
 
 	private static $foo = 'bar';

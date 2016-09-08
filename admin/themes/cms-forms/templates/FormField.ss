@@ -1,1 +1,0 @@
-<input $AttributesHTML <% include AriaAttributes %> />%>

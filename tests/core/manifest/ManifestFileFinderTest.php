@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Core\Manifest\ManifestFileFinder;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * Tests for the {@link ManifestFileFinder} class.
  *

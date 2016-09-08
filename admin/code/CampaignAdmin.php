@@ -2,27 +2,24 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\PermissionProvider;
-use Convert;
-use SS_HTTPResponse;
-use SS_HTTPRequest;
 use LogicException;
-use HiddenField;
-use Form;
-use FieldList;
-use FormAction;
-use Controller;
 
 /**
  * Campaign section of the CMS
- *
- * @package framework
- * @subpackage admin
  */
 class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 

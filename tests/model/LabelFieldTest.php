@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\LabelField;
+
 /**
  * @package framework
  * @subpackage tests

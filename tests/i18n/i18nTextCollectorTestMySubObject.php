@@ -1,4 +1,6 @@
 <?php
+
+use SilverStripe\Dev\TestOnly;
 /**
  * @package framework
  * @subpackage tests

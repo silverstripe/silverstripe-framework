@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+
+
+
 /**
  * Note: the running of this test is handled by the thing it's testing (DevelopmentAdmin controller).
  *
@@ -11,7 +18,7 @@ class DevAdminControllerTest extends FunctionalTest {
 	public function setUp(){
 		parent::setUp();
 
-		Config::inst()->update('DevelopmentAdmin', 'registered_controllers', array(
+		Config::inst()->update('SilverStripe\\Dev\\DevelopmentAdmin', 'registered_controllers', array(
 			'x1' => array(
 				'controller' => 'DevAdminControllerTest_Controller1',
 				'links' => array(

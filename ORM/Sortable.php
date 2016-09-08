@@ -9,8 +9,6 @@ namespace SilverStripe\ORM;
  * applied, rather than applying the sort in place
  *
  * @see SS_List, SS_Filterable, SS_Limitable
- * @package framework
- * @subpackage orm
  */
 interface SS_Sortable extends SS_List {
 
@@ -26,7 +24,7 @@ interface SS_Sortable extends SS_List {
 	 * Return a new instance of this list that is sorted by one or more fields. You can either pass in a single
 	 * field name and direction, or a map of field names to sort directions.
 	 *
-	 * @return SS_Sortable
+	 * @return static
 	 * @example $list = $list->sort('Name'); // default ASC sorting
 	 * @example $list = $list->sort('Name DESC'); // DESC sorting
 	 * @example $list = $list->sort('Name', 'ASC');

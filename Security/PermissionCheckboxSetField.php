@@ -2,19 +2,13 @@
 
 namespace SilverStripe\Security;
 
-
-
-use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObjectInterface;
-use FormField;
+use SilverStripe\View\Requirements;
 use InvalidArgumentException;
-use Requirements;
-use Config;
-
-
 
 /**
  * Shows a categorized list of available permissions (through {@link Permission::get_codes()}).
@@ -23,9 +17,6 @@ use Config;
  * will be checked automatically. All checkboxes for "inherited" permissions will be readonly.
  *
  * The field can gets its assignment data either from {@link Group} or {@link PermissionRole} records.
- *
- * @package framework
- * @subpackage security
  */
 class PermissionCheckboxSetField extends FormField {
 
@@ -126,10 +117,11 @@ class PermissionCheckboxSetField extends FormField {
 
 			// Special case for Group records (not PermissionRole):
 			// Determine inherited assignments
-			if(is_a($record, 'SilverStripe\\Security\\Group')) {
+			if ($record instanceof Group) {
 				// Get all permissions from roles
-				if ($record->Roles()->Count()) {
+				if ($record->Roles()->count()) {
 					foreach($record->Roles() as $role) {
+						/** @var PermissionRole $role */
 						foreach($role->Codes() as $code) {
 							if (!isset($inheritedCodes[$code->Code])) $inheritedCodes[$code->Code] = array();
 							$inheritedCodes[$code->Code][] = _t(
@@ -198,7 +190,7 @@ class PermissionCheckboxSetField extends FormField {
 					$extraClass = $odd ? 'odd' : 'even';
 					$extraClass .= ' val' . str_replace(' ', '', $code);
 					$itemID = $this->ID() . '_' . preg_replace('/[^a-zA-Z0-9]+/', '', $code);
-					$checked = $disabled = $inheritMessage = '';
+					$disabled = $inheritMessage = '';
 					$checked = (isset($uninheritedCodes[$code]) || isset($inheritedCodes[$code]))
 						? ' checked="checked"'
 						: '';
@@ -296,13 +288,14 @@ class PermissionCheckboxSetField extends FormField {
 
 			if(!$record->ID) $record->write(); // We need a record ID to write permissions
 
-			$idList = array();
-			if($this->value) foreach($this->value as $id => $bool) {
-				if($bool) {
-					$perm = new $managedClass();
-					$perm->{$this->filterField} = $record->ID;
-					$perm->Code = $id;
-					$perm->write();
+			if($this->value) {
+				foreach($this->value as $id => $bool) {
+					if($bool) {
+						$perm = new $managedClass();
+						$perm->{$this->filterField} = $record->ID;
+						$perm->Code = $id;
+						$perm->write();
+					}
 				}
 			}
 		}
@@ -321,34 +314,5 @@ class PermissionCheckboxSetField extends FormField {
 		);
 
 		return $readonly;
-	}
-
-	/**
-	 * Retrieves all permission codes for the currently set records
-	 *
-	 * @return array
-	 */
-	public function getAssignedPermissionCodes() {
-		if(!$this->records) return false;
-
-		// TODO
-
-		return $codes;
-	}
-}
-
-/**
- * Readonly version of a {@link PermissionCheckboxSetField} -
- * uses the same structure, but has all checkboxes disabled.
- *
- * @package framework
- * @subpackage security
- */
-class PermissionCheckboxSetField_Readonly extends PermissionCheckboxSetField {
-
-	protected $readonly = true;
-
-	public function saveInto(DataObjectInterface $record) {
-		return false;
 	}
 }

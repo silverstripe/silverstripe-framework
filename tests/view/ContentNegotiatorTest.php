@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\ContentNegotiator;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\View\SSViewer;
+
+
+
 class ContentNegotiatorTest extends SapphireTest {
 
 	/**

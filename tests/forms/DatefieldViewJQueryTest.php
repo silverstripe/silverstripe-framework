@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\DateField_View_JQuery;
+
 /**
  * @package framework
  * @subpackage tests

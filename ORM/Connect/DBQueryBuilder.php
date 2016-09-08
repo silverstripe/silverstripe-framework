@@ -12,9 +12,6 @@ use SilverStripe\ORM\Queries\SQLConditionalExpression;
 
 /**
  * Builds a SQL query string from a SQLExpression object
- *
- * @package framework
- * @subpackage orm
  */
 class DBQueryBuilder {
 
@@ -50,7 +47,9 @@ class DBQueryBuilder {
 		} elseif($query instanceof SQLUpdate) {
 			$sql = $this->buildUpdateQuery($query, $parameters);
 		} else {
-			user_error("Not implemented: query generation for type " . $query->getType());
+			throw new InvalidArgumentException(
+				"Not implemented: query generation for type " . get_class($query)
+			);
 		}
 		return $sql;
 	}
@@ -170,14 +169,16 @@ class DBQueryBuilder {
 		}
 
 		$text = 'SELECT ';
-		if ($distinct) $text .= 'DISTINCT ';
-		return $text .= implode(', ', $clauses);
+		if ($distinct) {
+			$text .= 'DISTINCT ';
+		}
+		return $text . implode(', ', $clauses);
 	}
 
 	/**
 	 * Return the DELETE clause ready for inserting into a query.
 	 *
-	 * @param SQLExpression $query The expression object to build from
+	 * @param SQLDelete $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed delete part of statement
 	 */
@@ -196,7 +197,7 @@ class DBQueryBuilder {
 	/**
 	 * Return the UPDATE clause ready for inserting into a query.
 	 *
-	 * @param SQLExpression $query The expression object to build from
+	 * @param SQLUpdate $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed from part of statement
 	 */
@@ -222,7 +223,7 @@ class DBQueryBuilder {
 	/**
 	 * Return the FROM clause ready for inserting into a query.
 	 *
-	 * @param SQLExpression $query The expression object to build from
+	 * @param SQLConditionalExpression $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed from part of statement
 	 */
@@ -236,7 +237,7 @@ class DBQueryBuilder {
 	/**
 	 * Returns the WHERE clauses ready for inserting into a query.
 	 *
-	 * @param SQLExpression $query The expression object to build from
+	 * @param SQLConditionalExpression $query The expression object to build from
 	 * @param array $parameters Out parameter for the resulting query parameters
 	 * @return string Completed where condition
 	 */

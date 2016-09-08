@@ -3,11 +3,16 @@
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\BasicAuth;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Controller;
+
 /**
+ * @skipUpgrade
  * @package framework
  * @subpackage tests
  */
-
 class BasicAuthTest extends FunctionalTest {
 
 	static $original_unique_identifier_field;

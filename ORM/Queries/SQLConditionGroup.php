@@ -6,9 +6,6 @@ namespace SilverStripe\ORM\Queries;
  * Represents a where condition that is dynamically generated. Maybe be stored
  * within a list of conditions, altered, and be allowed to affect the result
  * of the parent sql query during future execution.
- *
- * @package framework
- * @subpackage orm
  */
 interface SQLConditionGroup {
 

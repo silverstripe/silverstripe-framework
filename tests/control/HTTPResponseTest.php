@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\SS_HTTPResponse_Exception;
+
 /**
  * @package framework
  * @subpackage tests

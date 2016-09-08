@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Dev\SapphireTest;
+
 class HasManyListTest extends SapphireTest {
 
 	// Borrow the model from DataObjectTest

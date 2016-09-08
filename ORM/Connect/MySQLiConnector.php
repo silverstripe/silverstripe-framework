@@ -2,21 +2,19 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use Config;
-use MySQLi;
+use SilverStripe\Core\Config\Config;
+use mysqli;
 use mysqli_stmt;
 
 /**
  * Connector for MySQL using the MySQLi method
- * @package framework
- * @subpackage orm
  */
 class MySQLiConnector extends DBConnector {
 
 	/**
 	 * Connection to the MySQL database
 	 *
-	 * @var MySQLi
+	 * @var mysqli
 	 */
 	protected $dbConn = null;
 
@@ -214,6 +212,7 @@ class MySQLiConnector extends DBConnector {
 	public function bindParameters(mysqli_stmt $statement, array $parameters) {
 		// Because mysqli_stmt::bind_param arguments must be passed by reference
 		// we need to do a bit of hackery
+		$boundNames = [];
 		for ($i = 0; $i < count($parameters); $i++)
 		{
 			$boundName = "param$i";

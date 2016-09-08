@@ -1,6 +1,28 @@
 <?php
 
+use SilverStripe\Dev\Debug;
 use SilverStripe\Security\SecurityToken;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\RequestHandler;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormField;
+use SilverStripe\View\SSViewer;
+use SilverStripe\View\ViewableData;
+
+
+
+
+
 
 /**
  * Tests for RequestHandler and SS_HTTPRequest.
@@ -11,15 +33,21 @@ class RequestHandlingTest extends FunctionalTest {
 
 	protected $illegalExtensions = array(
 		// Suppress CMS error page handling
-		'Controller' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
-		'Form' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
-		'SilverStripe\\Admin\\LeftAndMain' => array('SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'),
+		'SilverStripe\\Control\\Controller' => array(
+			'SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'
+		),
+		'SilverStripe\\Forms\\Form' => array(
+			'SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'
+		),
+		'SilverStripe\\Admin\\LeftAndMain' => array(
+			'SilverStripe\\CMS\\Controllers\\ErrorPageControllerExtension'
+		),
 	);
 
 	public function setUp() {
 		parent::setUp();
 
-		Config::inst()->update('Director', 'rules', array(
+		Director::config()->update('rules', array(
 			// If we don't request any variables, then the whole URL will get shifted off.
 			// This is fine, but it means that the controller will have to parse the Action from the URL itself.
 			'testGoodBase1' => "RequestHandlingTest_Controller",
@@ -58,7 +86,7 @@ class RequestHandlingTest extends FunctionalTest {
 
 	public function testConstructedWithNullRequest() {
 		$r = new RequestHandler();
-		$this->assertInstanceOf('NullHTTPRequest', $r->getRequest());
+		$this->assertInstanceOf('SilverStripe\\Control\\NullHTTPRequest', $r->getRequest());
 	}
 
 	public function testRequestHandlerChainingAllParams() {
@@ -405,6 +433,7 @@ class RequestHandlingTest_FormActionController extends Controller implements Tes
 		return 'disallowedcontrollermethod';
 	}
 
+	/** @skipUpgrade */
 	public function Form() {
 		return new Form(
 			$this,
@@ -564,6 +593,7 @@ class RequestHandlingTest_ControllerFormWithAllowedActions extends Controller im
 
 	private static $allowed_actions = array('Form');
 
+	/** @skipUpgrade */
 	public function Form() {
 		return new RequestHandlingTest_FormWithAllowedActions(
 			$this,

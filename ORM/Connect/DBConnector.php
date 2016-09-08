@@ -2,14 +2,11 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use SQLFormatter;
-use Config;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\View\Parsers\SQLFormatter;
 
 /**
  * Represents an object responsible for wrapping DB connector api
- *
- * @package framework
- * @subpackage orm
  */
 abstract class DBConnector {
 
@@ -105,6 +102,7 @@ abstract class DBConnector {
 	 *
 	 * @param string $sql Raw SQL
 	 * @param string|array $type Type or list of types (first word in the query). Must be lowercase
+	 * @return bool
 	 */
 	protected function isQueryType($sql, $type) {
 		if(!preg_match('/^(?<operation>\w+)\b/', $sql, $matches)) {

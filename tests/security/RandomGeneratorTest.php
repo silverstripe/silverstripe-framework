@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\Security\RandomGenerator;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * @package framework
  * @subpackage tests

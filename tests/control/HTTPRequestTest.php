@@ -1,5 +1,9 @@
 <?php
 
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\SS_HTTPRequest;
+
+
 class HTTPRequestTest extends SapphireTest {
 	protected static $fixture_file = null;
 

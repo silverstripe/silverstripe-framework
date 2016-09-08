@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Configure SilverStripe from the _ss_environment.php file.
  * Usage: Put "require_once('conf/ConfigureFromEnv.php');" into your _config.php file.
@@ -45,15 +44,16 @@
  * Email:
  *  - SS_SEND_ALL_EMAILS_TO: If you set this define, all emails will be redirected to this address.
  *  - SS_SEND_ALL_EMAILS_FROM: If you set this define, all emails will be send from this address.
- *
- * @package framework
- * @subpackage core
  */
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Email\Email;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
+use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Security;
-
 
 /*
  * _ss_environment.php handler
@@ -74,7 +74,7 @@ if(defined('SS_ENVIRONMENT_FILE')) {
 }
 
 if(defined('SS_ENVIRONMENT_TYPE')) {
-	Config::inst()->update('Director', 'environment_type', SS_ENVIRONMENT_TYPE);
+	Director::config()->environment_type = SS_ENVIRONMENT_TYPE;
 }
 
 global $database;
@@ -125,10 +125,10 @@ if(defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
 }
 
 if(defined('SS_SEND_ALL_EMAILS_TO')) {
-	Config::inst()->update("Email","send_all_emails_to", SS_SEND_ALL_EMAILS_TO);
+	Email::config()->send_all_emails_to = SS_SEND_ALL_EMAILS_TO;
 }
 if(defined('SS_SEND_ALL_EMAILS_FROM')) {
-	Config::inst()->update("Email","send_all_emails_from", SS_SEND_ALL_EMAILS_FROM);
+	Email::config()->send_all_emails_from = SS_SEND_ALL_EMAILS_FROM;
 }
 
 if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
@@ -137,11 +137,12 @@ if(defined('SS_DEFAULT_ADMIN_USERNAME')) {
 			. "if SS_DEFAULT_ADMIN_USERNAME is defined.  See "
 			. "http://doc.silverstripe.org/framework/en/topics/environment-management for more information",
 			E_USER_ERROR);
+	} else {
+		Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
 	}
-	Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
 }
 if(defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
-	Config::inst()->update('SilverStripe\\Security\\BasicAuth', 'entire_site_protected', SS_USE_BASIC_AUTH);
+	BasicAuth::config()->entire_site_protected = SS_USE_BASIC_AUTH;
 }
 
 if(defined('SS_ERROR_LOG')) {

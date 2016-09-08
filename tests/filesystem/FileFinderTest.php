@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Assets\SS_FileFinder;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * Tests for the {@link SS_FileFinder} class.
  *
@@ -98,7 +102,7 @@ class FileFinderTest extends SapphireTest {
 			'The finder respects the max depth setting.');
 	}
 
-	public function assertFinderFinds($finder, $expect, $message = null) {
+	public function assertFinderFinds(SS_FileFinder $finder, $expect, $message = null) {
 		$found = $finder->find($this->base);
 
 		foreach ($expect as $k => $file) {

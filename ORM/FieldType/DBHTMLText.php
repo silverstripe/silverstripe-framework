@@ -2,11 +2,12 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use Injector;
-use HTTP;
-use HTMLEditorField;
-use ShortcodeParser;
-use TextField;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Control\HTTP;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\View\Parsers\ShortcodeParser;
 
 /**
  * Represents a large text field that contains HTML content.
@@ -21,9 +22,6 @@ use TextField;
  * @see HTMLVarchar
  * @see Text
  * @see Varchar
- *
- * @package framework
- * @subpackage orm
  */
 class DBHTMLText extends DBText {
 	private static $escape_type = 'xml';
@@ -189,7 +187,7 @@ class DBHTMLText extends DBText {
 		return $value;
 	}
 
-	public function scaffoldFormField($title = null) {
+	public function scaffoldFormField($title = null, $params = null) {
 		return new HTMLEditorField($this->name, $title);
 	}
 
@@ -216,7 +214,7 @@ class DBHTMLText extends DBText {
 		$text = preg_replace('~(\R){2,}~', "\n\n", $text);
 
 		// Decode HTML entities back to plain text
-		return trim(\Convert::xml2raw($text));
+		return trim(Convert::xml2raw($text));
 	}
 
 }

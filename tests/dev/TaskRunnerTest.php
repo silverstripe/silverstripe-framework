@@ -1,4 +1,8 @@
 <?php
+
+use SilverStripe\Dev\TaskRunner;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\BuildTask;
 /**
  * @package framework
  * @subpackage tests

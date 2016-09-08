@@ -12,6 +12,8 @@ use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext as MinkContext;
 use Symfony\Component\DomCrawler\Crawler;
+use SilverStripe\SiteConfig\SiteConfig;
+
 
 /**
  * CmsFormsContext
@@ -286,7 +288,7 @@ JS;
 	 */
 	public function theCmsSettingsHasData(TableNode $fieldsTable) {
 		$fields = $fieldsTable->getRowsHash();
-		$siteConfig = \SiteConfig::get()->first();
+		$siteConfig = SiteConfig::get()->first();
 		foreach($fields as $field => $value) {
 			$siteConfig->$field = $value;
 		}

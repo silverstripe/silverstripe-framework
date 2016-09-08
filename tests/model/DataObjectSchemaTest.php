@@ -1,6 +1,9 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 
 /**
  * Tests schema inspection of DataObjects
@@ -179,8 +182,9 @@ class DataObjectSchemaTest extends SapphireTest
 			$schema->tableForField('DataObjectSchemaTest_BaseClass', 'Nonexist')
 		);
 
+		/** @skipUpgrade */
 		$this->assertNull(
-			$schema->tableForField('Object', 'Title')
+			$schema->tableForField('SilverSTripe\\Core\\Object', 'Title')
 		);
 
 		// Test fixed fields

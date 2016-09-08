@@ -5,6 +5,18 @@ use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\Session;
+
+
+
+
 
 
 /**
@@ -796,7 +808,7 @@ class VersionedTest extends SapphireTest {
 	 * Tests that reading mode persists between requests
 	 */
 	public function testReadingPersistent() {
-		$session = Injector::inst()->create('Session', array());
+		$session = Injector::inst()->create('SilverStripe\\Control\\Session', array());
 		$adminID = $this->logInWithPermission('ADMIN');
 		$session->inst_set('loggedInAs', $adminID);
 
@@ -829,7 +841,7 @@ class VersionedTest extends SapphireTest {
 		);
 
 		// Test that session doesn't redundantly store the default stage if it doesn't need to
-		$session2 = Injector::inst()->create('Session', array());
+		$session2 = Injector::inst()->create('SilverStripe\\Control\\Session', array());
 		$session2->inst_set('loggedInAs', $adminID);
 		Director::test('/', null, $session2);
 		$this->assertArrayNotHasKey('readingMode', $session2->inst_changedData());
@@ -854,8 +866,8 @@ class VersionedTest extends SapphireTest {
 	 * Test that stage parameter is blocked by non-administrative users
 	 */
 	public function testReadingModeSecurity() {
-		$this->setExpectedException('SS_HTTPResponse_Exception');
-		$session = Injector::inst()->create('Session', array());
+		$this->setExpectedException('SilverStripe\\Control\\SS_HTTPResponse_Exception');
+		$session = Injector::inst()->create('SilverStripe\\Control\\Session', array());
 		$result = Director::test('/?stage=Stage', null, $session);
 	}
 

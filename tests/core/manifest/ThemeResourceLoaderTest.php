@@ -2,6 +2,8 @@
 
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
+use SilverStripe\Dev\SapphireTest;
+
 
 /**
  * Tests for the {@link TemplateLoader} class.

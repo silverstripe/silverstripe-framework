@@ -1,6 +1,17 @@
 <?php
 
 use SilverStripe\ORM\DataModel;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Director;
+use SilverStripe\Control\SS_HTTPRequest;
+
+
+
 
 class ControllerTest extends FunctionalTest {
 
@@ -52,7 +63,7 @@ class ControllerTest extends FunctionalTest {
 
 	public function testUndefinedActions() {
 		$response = $this->get('ControllerTest_IndexSecuredController/undefinedaction');
-		$this->assertInstanceOf('SS_HTTPResponse', $response);
+		$this->assertInstanceOf('SilverStripe\\Control\\SS_HTTPResponse', $response);
 		$this->assertEquals(404, $response->getStatusCode(), 'Undefined actions return a not found response.');
 	}
 
@@ -71,13 +82,13 @@ class ControllerTest extends FunctionalTest {
 			'when called with an action in the URL'
 		);
 
-		Config::inst()->update('RequestHandler', 'require_allowed_actions', false);
+		Config::inst()->update('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions', false);
 		$response = $this->get("ControllerTest_UnsecuredController/index");
 		$this->assertEquals(200, $response->getStatusCode(),
 			'Access granted on index action without $allowed_actions on defining controller, ' .
 			'when called with an action in the URL, and explicitly allowed through config'
 		);
-		Config::inst()->update('RequestHandler', 'require_allowed_actions', true);
+		Config::inst()->update('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions', true);
 
 		$response = $this->get("ControllerTest_UnsecuredController/method1");
 		$this->assertEquals(403, $response->getStatusCode(),
@@ -85,13 +96,13 @@ class ControllerTest extends FunctionalTest {
 			'when called without an action in the URL'
 		);
 
-		Config::inst()->update('RequestHandler', 'require_allowed_actions', false);
+		Config::inst()->update('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions', false);
 		$response = $this->get("ControllerTest_UnsecuredController/method1");
 		$this->assertEquals(200, $response->getStatusCode(),
 			'Access granted on action without $allowed_actions on defining controller, ' .
 			'when called without an action in the URL, and explicitly allowed through config'
 		);
-		Config::inst()->update('RequestHandler', 'require_allowed_actions', true);
+		Config::inst()->update('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions', true);
 
 		$response = $this->get("ControllerTest_AccessBaseController/");
 		$this->assertEquals(200, $response->getStatusCode(),

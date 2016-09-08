@@ -1,21 +1,21 @@
-Folder:
+SilverStripe\Assets\Folder:
   parent:
     Name: ParentFolder
   subfolder:
     Name: SubFolder
-    Parent: =>Folder.parent
-Image:
+    Parent: =>SilverStripe\Assets\Folder.parent
+SilverStripe\Assets\Image:
   image1:
     Name: myimage.jpg
   image2:
     Name: myimage.jpg
-    ParentID: =>Folder.subfolder
-File:
+    ParentID: =>SilverStripe\Assets\Folder.subfolder
+SilverStripe\Assets\File:
   file1:
     Name: anotherfile.jpg
   file2:
     Name: file.jpg
-    ParentID: =>Folder.parent
+    ParentID: =>SilverStripe\Assets\Folder.parent
   file3:
     Name: picture.jpg
-    ParentID: =>Folder.subfolder
+    ParentID: =>SilverStripe\Assets\Folder.subfolder

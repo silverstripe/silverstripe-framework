@@ -4,6 +4,7 @@ namespace SilverStripe\ORM;
 
 use InvalidArgumentException;
 use ArrayIterator;
+use SilverStripe\ORM\FieldType\DBField;
 
 /**
  * An {@link ArrayList} that represents an unsaved relation.
@@ -15,9 +16,6 @@ use ArrayIterator;
  * It can store both saved objects (as IDs) or unsaved objects (as instances
  * of $dataClass). Unsaved objects are then written when the list is saved
  * into an instance of {@link RelationList}.
- *
- * @package framework
- * @subpackage orm
  */
 class UnsavedRelationList extends ArrayList implements Relation {
 
@@ -81,6 +79,7 @@ class UnsavedRelationList extends ArrayList implements Relation {
 	public function changeToList(RelationList $list) {
 		foreach($this->items as $key => $item) {
 			if(is_object($item)) {
+				/** @var DataObject $item */
 				$item->write();
 			}
 			$list->add($item, $this->extraFields[$key]);
@@ -149,7 +148,7 @@ class UnsavedRelationList extends ArrayList implements Relation {
 	 * Add a number of items to the relation.
 	 *
 	 * @param array $items Items to add, as either DataObjects or IDs.
-	 * @return DataList
+	 * @return $this
 	 */
 	public function addMany($items) {
 		foreach($items as $item) {
@@ -263,6 +262,7 @@ class UnsavedRelationList extends ArrayList implements Relation {
 	/**
 	 * Returns a copy of this list with the relationship linked to the given foreign ID.
 	 * @param int|array $id An ID or an array of IDs.
+	 * @return static
 	 */
 	public function forForeignID($id) {
 		$class = singleton($this->baseClass);

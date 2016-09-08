@@ -6,6 +6,10 @@ use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\PostgreSQL\PostgreSQLDatabase;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+
 
 
 /**

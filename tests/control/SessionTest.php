@@ -1,5 +1,13 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Control\Session;
+
+
+
+
 /**
  * Tests to cover the {@link Session} class
  *
@@ -47,7 +55,7 @@ class SessionTest extends SapphireTest {
 	}
 
 	public function testSettingExistingDoesntClear() {
-		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('SilverStripe\\Control\\Session', array('something' => array('does' => 'exist')));
 
 		$s->inst_set('something.does', 'exist');
 		$result = $s->inst_changedData();
@@ -59,7 +67,7 @@ class SessionTest extends SapphireTest {
 	 * Check that changedData isn't populated with junk when clearing non-existent entries.
 	 */
 	public function testClearElementThatDoesntExist() {
-		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('SilverStripe\\Control\\Session', array('something' => array('does' => 'exist')));
 
 		$s->inst_clear('something.doesnt.exist');
 		$result = $s->inst_changedData();
@@ -77,7 +85,7 @@ class SessionTest extends SapphireTest {
 	 * Check that changedData is populated with clearing data.
 	 */
 	public function testClearElementThatDoesExist() {
-		$s = Injector::inst()->create('Session', array('something' => array('does' => 'exist')));
+		$s = Injector::inst()->create('SilverStripe\\Control\\Session', array('something' => array('does' => 'exist')));
 
 		$s->inst_clear('something.does');
 		$result = $s->inst_changedData();
@@ -86,10 +94,10 @@ class SessionTest extends SapphireTest {
 	}
 
 	public function testNonStandardPath(){
-		Config::inst()->update('Session', 'store_path', (realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session')));
+		Config::inst()->update('SilverStripe\\Control\\Session', 'store_path', (realpath(dirname($_SERVER['DOCUMENT_ROOT']) . '/../session')));
 		Session::start();
 
-		$this->assertEquals(Config::inst()->get('Session', 'store_path'), '');
+		$this->assertEquals(Config::inst()->get('SilverStripe\\Control\\Session', 'store_path'), '');
 	}
 
 	public function testUserAgentLockout() {
@@ -97,7 +105,7 @@ class SessionTest extends SapphireTest {
 		$_SERVER['HTTP_USER_AGENT'] = 'Test Agent';
 
 		// Generate our session
-		$s = Injector::inst()->create('Session', array());
+		$s = Injector::inst()->create('SilverStripe\\Control\\Session', array());
 		$s->inst_set('val', 123);
 		$s->inst_finalize();
 
@@ -105,7 +113,7 @@ class SessionTest extends SapphireTest {
 		$_SERVER['HTTP_USER_AGENT'] = 'Fake Agent';
 
 		// Verify the new session reset our values
-		$s2 = Injector::inst()->create('Session', $s);
+		$s2 = Injector::inst()->create('SilverStripe\\Control\\Session', $s);
 		$this->assertNotEquals($s2->inst_get('val'), 123);
 	}
 }

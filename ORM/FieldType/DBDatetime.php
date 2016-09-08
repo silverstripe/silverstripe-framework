@@ -2,16 +2,15 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use Convert;
-use Exception;
-use DatetimeField;
-use InvalidArgumentException;
-use Zend_Date;
-use TemplateGlobalProvider;
-use DateTime;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\DatetimeField;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
-
+use SilverStripe\View\TemplateGlobalProvider;
+use DateTime;
+use Exception;
+use InvalidArgumentException;
+use Zend_Date;
 
 /**
  * Represents a date-time field.
@@ -33,9 +32,6 @@ use SilverStripe\Security\Member;
  * </code>
  *
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
- *
- * @package framework
- * @subpackage orm
  */
 class DBDatetime extends DBDate implements TemplateGlobalProvider {
 

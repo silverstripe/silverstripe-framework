@@ -1,6 +1,6 @@
 ---
 Only:
-  ClassExists: Director
+  ClassExists: SilverStripe\Control\Director
 ---
 ConfigManifestTest:
   Class:
@@ -14,7 +14,7 @@ ConfigManifestTest:
     NoSuchClassExists: Yes
 ---
 Except:
-  ClassExists: Director
+  ClassExists: SilverStripe\Control\Director
 ---
 ConfigManifestTest:
   Class:

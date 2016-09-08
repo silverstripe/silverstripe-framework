@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+ <name>HTML_BBCodeParser2</name>
+ <channel>pear.php.net</channel>
+ <summary>This is a parser to replace UBB style tags with their html equivalents.</summary>
+ <description>This is a parser to replace UBB style tags with their html equivalents.
+ It does not simply do some regex calls, but is complete stack based parse engine. This ensures that all tags are properly nested, if not, extra tags are added to maintain the nesting. This parser should only produce xhtml 1.0 compliant code. All tags are validated and so are all their attributes. It should be easy to extend this parser with your own tags.</description>
+ <lead>
+  <name>Stijn de Reede</name>
+  <user>sjr</user>
+  <email>sjr@gmx.co.uk</email>
+  <active>no</active>
+ </lead>
+ <lead>
+  <name>Daniel O'Connor</name>
+  <user>doconnor</user>
+  <email>clockwerx@php.net</email>
+  <active>yes</active>
+ </lead>
+ <date>2012-11-03</date>
+ <time>14:00:34</time>
+ <version>
+  <release>0.1.0</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="http://www.php.net/license">PHP License</license>
+ <notes>
+Forked from HTML_BBCodeParser
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="4b21a26a5458a24d954318736ff557dc" name="example/BBCodeParser2.ini" role="data" />
+   <file baseinstalldir="/" md5sum="cae173b47c741333a07f2d719ffb733a" name="example/parser.php" role="php" />
+   <file baseinstalldir="/" md5sum="1b10fb033f10f196a93eace0b62b0ec0" name="HTML/BBCodeParser2.php" role="php" />
+   <file baseinstalldir="/" md5sum="b9768d4b7d62c9ac8850e440263557b4" name="HTML/BBCodeParser2/Filter.php" role="php" />
+   <file baseinstalldir="/" md5sum="a0180072b1ab1d5305e45740cbb1d5a2" name="HTML/BBCodeParser2/Filter/Basic.php" role="php" />
+   <file baseinstalldir="/" md5sum="97067ea67ae9aba7aa2c844b101b3c68" name="HTML/BBCodeParser2/Filter/Email.php" role="php" />
+   <file baseinstalldir="/" md5sum="e7dbe406fc7a7a9e7b2cd82d9e6a573e" name="HTML/BBCodeParser2/Filter/Extended.php" role="php" />
+   <file baseinstalldir="/" md5sum="a5d20d794e183cdd12282894a5e62aee" name="HTML/BBCodeParser2/Filter/Images.php" role="php" />
+   <file baseinstalldir="/" md5sum="c17ce7ba2f009e6760e701e0bcd03433" name="HTML/BBCodeParser2/Filter/Links.php" role="php" />
+   <file baseinstalldir="/" md5sum="6f70562067180a891e2c61425b6cdb15" name="HTML/BBCodeParser2/Filter/Lists.php" role="php" />
+   <file baseinstalldir="/" md5sum="d65933ef1613c22ddfc5276a5200236d" name="tests/HTML_BBCodeParser2Test.php" role="test" />
+   <file baseinstalldir="/" md5sum="53595c19c98669add7fdf564a3216b85" name="README" role="data" />
+   <file baseinstalldir="/" md5sum="a5a36f5ec0b094c93b39cf3bae5b51ca" name="TODO" role="data" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.0.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.5.4</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+  <release>
+   <version>
+    <release>0.1.0</release>
+    <api>0.1.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2012-11-03</date>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+Forked from HTML_BBCodeParser
+   </notes>
+  </release>
+ </changelog>
+</package>

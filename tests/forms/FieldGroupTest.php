@@ -1,5 +1,12 @@
 <?php
 
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\FieldGroup;
+
+
 class FieldGroupTest extends SapphireTest {
 
 	public function testMessagesInsideNestedCompositeFields() {

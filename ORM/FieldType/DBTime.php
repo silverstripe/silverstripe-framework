@@ -2,10 +2,10 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use Convert;
-use Zend_Date;
-use TimeField;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\TimeField;
 use SilverStripe\ORM\DB;
+use Zend_Date;
 
 /**
  * Represents a column in the database with the type 'Time'.
@@ -18,9 +18,6 @@ use SilverStripe\ORM\DB;
  * </code>
  *
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
- *
- * @package framework
- * @subpackage orm
  */
 class DBTime extends DBField {
 

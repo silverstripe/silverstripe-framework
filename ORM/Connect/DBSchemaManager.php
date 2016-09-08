@@ -2,19 +2,15 @@
 
 namespace SilverStripe\ORM\Connect;
 
-use Exception;
-use Config;
-use Object;
-use Director;
+use SilverStripe\Control\Director;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Object;
 use SilverStripe\ORM\FieldType\DBPrimaryKey;
 use SilverStripe\ORM\FieldType\DBField;
-
+use Exception;
 
 /**
  * Represents and handles all schema management for a database
- *
- * @package framework
- * @subpackage orm
  */
 abstract class DBSchemaManager {
 

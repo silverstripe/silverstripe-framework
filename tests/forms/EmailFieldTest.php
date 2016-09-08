@@ -1,5 +1,22 @@
 <?php
 
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Control\Controller;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\Validator;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Form;
+use SilverStripe\View\SSViewer;
+
+
+
+
+/**
+ * @skipUpgrade
+ */
 class EmailFieldTest extends FunctionalTest {
 
 	/**
@@ -71,6 +88,9 @@ class EmailFieldTest_Validator extends Validator {
 	}
 }
 
+/**
+ * @skipUpgrade
+ */
 class EmailFieldTest_Controller extends Controller implements TestOnly {
 
 	private static $allowed_actions = array('Form');

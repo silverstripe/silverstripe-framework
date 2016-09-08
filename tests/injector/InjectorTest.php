@@ -1,5 +1,17 @@
 <?php
 
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
+use SilverStripe\Core\Injector\InjectionCreator;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\View\ViewableData;
+
+
+
+
 define('TEST_SERVICES', dirname(__FILE__) . '/testservices');
 
 /**
@@ -488,8 +500,8 @@ class InjectorTest extends SapphireTest {
 	public function testInheritedConfig() {
 
 		// Test that child class does not automatically inherit config
-		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
-		Config::inst()->update('Injector', 'MyParentClass', [
+		$injector = new Injector(array('locator' => 'SilverStripe\\Core\\Injector\\SilverStripeServiceConfigurationLocator'));
+		Config::inst()->update('SilverStripe\\Core\\Injector\\Injector', 'MyParentClass', [
 			'properties' => ['one' => 'the one'],
 			'class' => 'MyParentClass',
 		]);
@@ -503,8 +515,8 @@ class InjectorTest extends SapphireTest {
 		$this->assertNotEquals($obj->one, 'the one');
 
 		// Set child class as alias
-		$injector = new Injector(array('locator' => 'SilverStripeServiceConfigurationLocator'));
-		Config::inst()->update('Injector', 'MyChildClass', '%$MyParentClass');
+		$injector = new Injector(array('locator' => 'SilverStripe\\Core\\Injector\\SilverStripeServiceConfigurationLocator'));
+		Config::inst()->update('SilverStripe\\Core\\Injector\\Injector', 'MyChildClass', '%$MyParentClass');
 
 		// Class isn't inherited and parent properties are ignored
 		$obj = $injector->get('MyChildClass');
@@ -597,7 +609,7 @@ class InjectorTest extends SapphireTest {
 			'service' => array('factory' => 'factory', 'constructor' => array(1, 2, 3))
 		));
 
-		$factory = $this->getMock('SilverStripe\\Framework\\Injector\\Factory');
+		$factory = $this->getMock('SilverStripe\\Core\\Injector\\Factory');
 		$factory
 			->expects($this->once())
 			->method('create')

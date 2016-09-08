@@ -1,13 +1,13 @@
 ---
 Name: coreflysystem
 ---
-Injector:
+SilverStripe\Core\Injector\Injector:
   # Define the default adapter for this filesystem
   FlysystemPublicAdapter:
-    class: 'SilverStripe\Filesystem\Flysystem\PublicAssetAdapter'
+    class: 'SilverStripe\Assets\Flysystem\PublicAssetAdapter'
   # Define the secondary adapter for protected assets
   FlysystemProtectedAdapter:
-    class: 'SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter'
+    class: 'SilverStripe\Assets\Flysystem\ProtectedAssetAdapter'
   # Define the default filesystem
   FlysystemPublicBackend:
     class: 'League\Flysystem\Filesystem'
@@ -27,28 +27,28 @@ Name: coreassets
 After:
   - '#coreflysystem'
 ---
-Injector:
+SilverStripe\Core\Injector\Injector:
   # Define our SS asset backend
   AssetStore:
-    class: 'SilverStripe\Filesystem\Flysystem\FlysystemAssetStore'
+    class: 'SilverStripe\Assets\Flysystem\FlysystemAssetStore'
     properties:
       PublicFilesystem: '%$FlysystemPublicBackend'
       ProtectedFilesystem: '%$FlysystemProtectedBackend'
   ProtectedFileController:
-    class: SilverStripe\Filesystem\Storage\ProtectedFileController
+    class: SilverStripe\Assets\Storage\ProtectedFileController
     properties:
       RouteHandler: '%$AssetStore'
   AssetNameGenerator:
-    class: SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator
+    class: SilverStripe\Assets\Storage\DefaultAssetNameGenerator
     type: prototype
   # Requirements config
   GeneratedAssetHandler:
-    class: SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler
+    class: SilverStripe\Assets\Flysystem\GeneratedAssetHandler
     properties:
       Filesystem: '%$FlysystemPublicBackend'
-  Requirements_Minifier:
+  SilverStripe\View\Requirements_Minifier:
     class: SilverStripe\View\JSMinifier
-  Requirements_Backend:
+  SilverStripe\View\Requirements_Backend:
     properties:
       AssetHandler: '%$GeneratedAssetHandler'
 ---
@@ -56,11 +56,13 @@ Name: coreassetroutes
 After:
   - '#coreassets'
 ---
-Director:
+SilverStripe\Control\Director:
   rules:
-    'assets': 'ProtectedFileController'
+    'assets': ProtectedFileController
 ---
 Name: imageconfig
 ---
-Injector:
-  Image_Backend: GDBackend
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Assets\Image_Backend:
+    class: SilverStripe\Assets\GDBackend
+  Image_Backend: '%$SilverStripe\Assets\Image_Backend'

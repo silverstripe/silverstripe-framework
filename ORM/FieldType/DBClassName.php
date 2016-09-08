@@ -2,17 +2,13 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use ClassInfo;
-use Config;
-use SilverStripe\ORM\DB;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
-
+use SilverStripe\ORM\DB;
 
 /**
  * Represents a classname selector, which respects obsolete clasess.
- *
- * @package framework
- * @subpackage orm
  */
 class DBClassName extends DBEnum {
 

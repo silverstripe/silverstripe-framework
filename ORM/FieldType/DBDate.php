@@ -2,15 +2,13 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-
-use Zend_Date;
-use DateTime;
-use DateField;
-use Convert;
-use Exception;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\DateField;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
-
+use DateTime;
+use Exception;
+use Zend_Date;
 
 /**
  * Represents a date field.
@@ -27,9 +25,6 @@ use SilverStripe\Security\Member;
  * </code>
  *
  * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
- *
- * @package framework
- * @subpackage orm
  */
 class DBDate extends DBField {
 
@@ -39,7 +34,7 @@ class DBDate extends DBField {
 	 * @see DBTime::nice_format
 	 */
 	private static $nice_format = 'd/m/Y';
-	
+
 	public function setValue($value, $record = null, $markChanged = true) {
 		if($value === false || $value === null || (is_string($value) && !strlen($value))) {
 			// don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
@@ -82,7 +77,7 @@ class DBDate extends DBField {
 	 * Returns the date in the format specified by the config value nice_format, or dd/mm/yy by default
 	 *
 	 * @return string
-	 */	 
+	 */
 	public function Nice() {
 		return $this->Format($this->config()->nice_format);
 	}

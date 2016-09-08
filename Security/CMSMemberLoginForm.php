@@ -2,23 +2,19 @@
 
 namespace SilverStripe\Security;
 
-use Controller;
-use FieldList;
-use HiddenField;
-use PasswordField;
-use LiteralField;
-use CheckboxField;
-use FormAction;
-use Session;
-use Convert;
-use SS_HTTPResponse;
-
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Core\Convert;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\Session;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\PasswordField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\FormAction;
 
 /**
  * Provides the in-cms session re-authentication form for the "member" authenticator
- *
- * @package framework
- * @subpackage security
  */
 class CMSMemberLoginForm extends LoginForm {
 
@@ -88,13 +84,15 @@ class CMSMemberLoginForm extends LoginForm {
 	 */
 	public function performLogin($data) {
 		$authenticator = $this->authenticator_class;
+		/** @var Member $member */
 		$member = $authenticator::authenticate($data, $this);
 		if($member) {
-			$member->LogIn(isset($data['Remember']));
+			$member->logIn(isset($data['Remember']));
 			return $member;
 		}
 
 		$this->extend('authenticationFailed', $data);
+		return null;
 	}
 
 	/**
@@ -103,11 +101,11 @@ class CMSMemberLoginForm extends LoginForm {
 	 * This method is called when the user clicks on "Log in"
 	 *
 	 * @param array $data Submitted data
-	 * @return \SS_HTTPResponse
+	 * @return SS_HTTPResponse
 	 */
 	public function dologin($data) {
 		if($this->performLogin($data)) {
-			$this->logInUserAndRedirect($data);
+			return $this->logInUserAndRedirect($data);
 		} else {
 			// Find best url to redirect back to
 			$request = $this->controller->getRequest();

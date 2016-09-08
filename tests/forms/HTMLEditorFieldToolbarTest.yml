@@ -1,18 +1,18 @@
-Folder:
+SilverStripe\Assets\Folder:
   folder1:
     Name: folder
     Title: folder
   folder2:
     Name: subfolder
     Title: subfolder
-    Parent: =>Folder.folder1
+    Parent: =>SilverStripe\Assets\Folder.folder1
 
-File:
+SilverStripe\Assets\File:
   example_file:
     Name: example.pdf
-    Parent: =>Folder.folder2
+    Parent: =>SilverStripe\Assets\Folder.folder2
 
-Image:
+SilverStripe\Assets\Image:
   example_image:
     Name: HTMLEditorFieldTest_example.jpg
-    Parent: =>Folder.folder2
+    Parent: =>SilverStripe\Assets\Folder.folder2

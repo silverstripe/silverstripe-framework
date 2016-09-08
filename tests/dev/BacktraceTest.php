@@ -1,4 +1,9 @@
 <?php
+
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SS_Backtrace;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * @package framework
  * @subpackage tests
@@ -49,8 +54,8 @@ class BacktraceTest extends SapphireTest {
 				'args' => array('myarg' => 'myval')
 			)
 		);
-		$orig = Config::inst()->get('SS_Backtrace', 'ignore_function_args');
-		Config::inst()->update('SS_Backtrace', 'ignore_function_args',
+		$orig = Config::inst()->get('SilverStripe\\Dev\\SS_Backtrace', 'ignore_function_args');
+		Config::inst()->update('SilverStripe\\Dev\\SS_Backtrace', 'ignore_function_args',
 			array(
 				array('MyClass', 'myIgnoredClassFunction'),
 				'myIgnoredGlobalFunction'
@@ -63,8 +68,8 @@ class BacktraceTest extends SapphireTest {
 		$this->assertEquals('<filtered>', $filtered[1]['args']['password'], 'Filters class functions');
 		$this->assertEquals('myval', $filtered[2]['args']['myarg'], 'Doesnt filter other functions');
 
-		Config::inst()->remove('SS_Backtrace', 'ignore_function_args');
-		Config::inst()->update('SS_Backtrace', 'ignore_function_args', $orig);
+		Config::inst()->remove('SilverStripe\\Dev\\SS_Backtrace', 'ignore_function_args');
+		Config::inst()->update('SilverStripe\\Dev\\SS_Backtrace', 'ignore_function_args', $orig);
 	}
 
 }

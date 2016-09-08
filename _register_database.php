@@ -1,6 +1,8 @@
 <?php
 
 // Register the SilverStripe provided databases
+use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
+
 $frameworkPath = defined('FRAMEWORK_PATH') ? FRAMEWORK_PATH : FRAMEWORK_NAME;
 
 // Use MySQLi as default

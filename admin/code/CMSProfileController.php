@@ -2,17 +2,13 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
-use SS_HTTPResponse;
-use HiddenField;
-use FormAction;
 
-/**
- * @package framework
- * @subpackage admin
- */
 class CMSProfileController extends LeftAndMain {
 
 	private static $url_segment = 'myprofile';
@@ -50,7 +46,7 @@ class CMSProfileController extends LeftAndMain {
 		}
 
 		if($form->Fields()->hasTabSet()) {
-			$form->Fields()->findOrMakeTab('Root')->setTemplate('CMSTabSet');
+			$form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');
 		}
 
 		$form->addExtraClass('member-profile-form root-form cms-edit-form center');

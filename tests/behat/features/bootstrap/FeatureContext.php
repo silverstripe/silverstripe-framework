@@ -7,6 +7,8 @@ use SilverStripe\BehatExtension\Context\BasicContext;
 use SilverStripe\BehatExtension\Context\LoginContext;
 use SilverStripe\BehatExtension\Context\FixtureContext;
 use SilverStripe\BehatExtension\Context\EmailContext;
+use SilverStripe\Core\Injector\Injector;
+
 
 /**
  * Features context
@@ -42,7 +44,7 @@ class FeatureContext extends SilverStripeContext {
 
 		// Use blueprints to set user name from identifier
 		$factory = $fixtureContext->getFixtureFactory();
-		$blueprint = \Injector::inst()->create('FixtureBlueprint', 'SilverStripe\\Security\\Member');
+		$blueprint = Injector::inst()->create('SilverStripe\\Dev\\FixtureBlueprint', 'SilverStripe\\Security\\Member');
 		$blueprint->addCallback('beforeCreate', function($identifier, &$data, &$fixtures) {
 			if(!isset($data['FirstName'])) $data['FirstName'] = $identifier;
 		});
@@ -62,7 +64,7 @@ class FeatureContext extends SilverStripeContext {
 	 */
 	public function getFixtureFactory() {
 		if(!$this->fixtureFactory) {
-			$this->fixtureFactory = \Injector::inst()->create('BehatFixtureFactory');
+			$this->fixtureFactory = Injector::inst()->create('SilverStripe\\Dev\\BehatFixtureFactory');
 		}
 		return $this->fixtureFactory;
 	}

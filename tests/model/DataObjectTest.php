@@ -1,6 +1,8 @@
 <?php
 
-
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -8,8 +10,6 @@ use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Member;
-
-
 
 /**
  * @package framework
@@ -629,6 +629,9 @@ class DataObjectTest extends SapphireTest {
 		);
 	}
 
+	/**
+	 * @skipUpgrade
+	 */
 	public function testIsChanged() {
 		$obj = $this->objFromFixture('DataObjectTest_Player', 'captain1');
 		$obj->NonDBField = 'bob';
@@ -1112,7 +1115,7 @@ class DataObjectTest extends SapphireTest {
 
 		/* Return false if you don't pass it a subclass of DataObject */
 		$this->assertFalse(DataObject::has_own_table("SilverStripe\\ORM\\DataObject"));
-		$this->assertFalse(DataObject::has_own_table("ViewableData"));
+		$this->assertFalse(DataObject::has_own_table("SilverStripe\\View\\ViewableData"));
 		$this->assertFalse(DataObject::has_own_table("ThisIsntADataObject"));
 	}
 

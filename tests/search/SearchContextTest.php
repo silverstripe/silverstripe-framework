@@ -1,6 +1,16 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\NumericField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\ORM\Filters\PartialMatchFilter;
+
+
+
 
 class SearchContextTest extends SapphireTest {
 
@@ -204,10 +214,10 @@ class SearchContextTest_Company extends DataObject implements TestOnly {
 	private static $searchable_fields = array(
 		"Name" => "PartialMatchFilter",
 		"Industry" => array(
-			'field' => "TextareaField"
+			'field' => "SilverStripe\\Forms\\TextareaField"
 		),
 		"AnnualProfit" => array(
-			'field' => "NumericField",
+			'field' => "SilverStripe\\Forms\\NumericField",
 			'filter' => "PartialMatchFilter",
 			'title' => 'The Almighty Annual Profit'
 		)

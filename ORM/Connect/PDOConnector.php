@@ -2,14 +2,13 @@
 
 namespace SilverStripe\ORM\Connect;
 
+use SilverStripe\Core\Config\Config;
 use PDO;
-use Config;
 use PDOStatement;
+use InvalidArgumentException;
 
 /**
  * PDO driver database connector
- * @package framework
- * @subpackage orm
  */
 class PDOConnector extends DBConnector {
 
@@ -269,7 +268,7 @@ class PDOConnector extends DBConnector {
 			case 'array':
 			case 'unknown type':
 			default:
-				user_error("Cannot bind parameter as it is an unsupported type ($phpType)", E_USER_ERROR);
+				throw new InvalidArgumentException("Cannot bind parameter as it is an unsupported type ($phpType)");
 		}
 	}
 
@@ -324,7 +323,7 @@ class PDOConnector extends DBConnector {
 	 * @param int $errorLevel
 	 * @param string $sql
 	 * @param array $parameters
-	 * @return \PDOQuery
+	 * @return PDOQuery
 	 */
 	protected function prepareResults($statement, $errorLevel, $sql, $parameters = array()) {
 
@@ -384,6 +383,7 @@ class PDOConnector extends DBConnector {
 		if ($error) {
 			return sprintf("%s-%s: %s", $error[0], $error[1], $error[2]);
 		}
+		return null;
 	}
 
 	public function getGeneratedID($table) {

@@ -3,6 +3,8 @@
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\PDOConnector;
 use SilverStripe\ORM\Queries\SQLUpdate;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * @package framework
  * @subpackage testing

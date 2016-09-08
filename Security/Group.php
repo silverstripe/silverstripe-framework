@@ -2,38 +2,38 @@
 
 namespace SilverStripe\Security;
 
-
 use SilverStripe\Admin\SecurityAdmin;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
+use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\TextareaField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\ListboxField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
+use SilverStripe\Forms\GridField\GridFieldButtonRow;
+use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldPrintButton;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\HasManyList;
+use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\UnsavedRelationList;
-use Requirements;
-use FieldList;
-use TabSet;
-use Tab;
-use TextField;
-use DropdownField;
-use TextareaField;
-use Config;
-use GridFieldConfig_RelationEditor;
-use GridFieldButtonRow;
-use GridFieldExportButton;
-use GridFieldPrintButton;
-use GridField;
-use HTMLEditorConfig;
-use LiteralField;
-use ListboxField;
-use HiddenField;
-use InvalidArgumentException;
-use Convert;
+use SilverStripe\View\Requirements;
 
 /**
  * A security group.
- *
- * @package framework
- * @subpackage security
  *
  * @property string Title Name of the group
  * @property string Description Description of the group
@@ -48,6 +48,7 @@ use Convert;
  * @method HasManyList Permissions() List of group permissions
  * @method HasManyList Groups() List of child groups
  * @method ManyManyList Roles() List of PermissionRoles
+ * @mixin Hierarchy
  */
 class Group extends DataObject {
 
@@ -144,11 +145,18 @@ class Group extends DataObject {
 			$config->addComponent(new GridFieldButtonRow('after'));
 			$config->addComponents(new GridFieldExportButton('buttons-after-left'));
 			$config->addComponents(new GridFieldPrintButton('buttons-after-left'));
-			$config->getComponentByType('GridFieldAddExistingAutocompleter')
-				->setResultsFormat('$Title ($Email)')->setSearchFields(array('FirstName', 'Surname', 'Email'));
-			$config->getComponentByType('GridFieldDetailForm')
+			/** @var GridFieldAddExistingAutocompleter $autocompleter */
+			$autocompleter = $config->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldAddExistingAutocompleter');
+			/** @skipUpgrade */
+			$autocompleter
+				->setResultsFormat('$Title ($Email)')
+				->setSearchFields(array('FirstName', 'Surname', 'Email'));
+			/** @var GridFieldDetailForm $detailForm */
+			$detailForm = $config->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDetailForm');
+			$detailForm
 				->setValidator(Member_Validator::create())
 				->setItemEditFormCallback(function($form, $component) use($group) {
+					/** @var Form $form */
 					$record = $form->getRecord();
 					$groupsField = $form->Fields()->dataFieldByName('DirectGroups');
 					if($groupsField) {
@@ -237,7 +245,7 @@ class Group extends DataObject {
 					->setDefaultItems($groupRoleIDs)
 					->setAttribute('data-placeholder', _t('Group.AddRole', 'Add a role for this group'))
 					->setDisabledItems($inheritedRoleIDs);
-			if(!$allRoles->Count()) {
+			if(!$allRoles->count()) {
 				$rolesField->setAttribute('data-placeholder', _t('Group.NoRoles', 'No roles found'));
 			}
 			$fields->addFieldToTab('Root.Roles', $rolesField);
@@ -290,6 +298,7 @@ class Group extends DataObject {
 		// ones.
 		if(!($result instanceof UnsavedRelationList)) {
 			$result = $result->alterDataQuery(function($query){
+				/** @var DataQuery $query */
 				$query->removeFilterOn('Group_Members');
 			});
 		}
@@ -334,9 +343,12 @@ class Group extends DataObject {
 
 	/**
 	 * Returns an array of the IDs of this group and all its parents
+	 *
+	 * @return array
 	 */
 	public function collateAncestorIDs() {
 		$parent = $this;
+		$items = [];
 		while(isset($parent) && $parent instanceof Group) {
 			$items[] = $parent->ID;
 			$parent = $parent->Parent;
@@ -362,8 +374,10 @@ class Group extends DataObject {
 	}
 
 	public function getTreeTitle() {
-		if($this->hasMethod('alternateTreeTitle')) return $this->alternateTreeTitle();
-		else return htmlspecialchars($this->Title, ENT_QUOTES);
+		if($this->hasMethod('alternateTreeTitle')) {
+			return $this->alternateTreeTitle();
+		}
+		return htmlspecialchars($this->Title, ENT_QUOTES);
 	}
 
 	/**
@@ -490,6 +504,7 @@ class Group extends DataObject {
 	 * Filters to only those groups that the current user can edit
 	 */
 	public function AllChildrenIncludingDeleted() {
+		/** @var Hierarchy $extInstance */
 		$extInstance = $this->getExtensionInstance('SilverStripe\\ORM\\Hierarchy\\Hierarchy');
 		$extInstance->setOwner($this);
 		$children = $extInstance->AllChildrenIncludingDeleted();

@@ -4,6 +4,8 @@ use SilverStripe\Admin\CMSMenu;
 use SilverStripe\Admin\CMSMenuItem;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\SecurityAdmin;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\TestOnly;
 
 /**
  * @package framework

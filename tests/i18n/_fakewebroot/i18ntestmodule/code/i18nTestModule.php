@@ -1,6 +1,10 @@
 <?php
 
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Core\Object;
+use SilverStripe\Dev\TestOnly;
+
+
 class i18nTestModule extends DataObject implements TestOnly {
 
 	static $db = array(

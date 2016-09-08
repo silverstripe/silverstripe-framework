@@ -1,5 +1,10 @@
 <?php
 
+use SilverStripe\Core\Flushable;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Dev\TestOnly;
+
+
 class FlushRequestFilterTest extends FunctionalTest {
 
 	/**

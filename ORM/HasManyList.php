@@ -6,9 +6,6 @@ use InvalidArgumentException;
 
 /**
  * Subclass of {@link DataList} representing a has_many relation.
- *
- * @package framework
- * @subpackage orm
  */
 class HasManyList extends RelationList {
 

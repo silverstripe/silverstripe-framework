@@ -2,6 +2,8 @@
 
 use SilverStripe\Security\GroupCsvBulkLoader;
 use SilverStripe\Security\Group;
+use SilverStripe\Dev\SapphireTest;
+
 /**
  * @package framework
  * @subpackage tests

@@ -2,15 +2,12 @@
 
 namespace SilverStripe\Security;
 
-
 use SilverStripe\ORM\DataObject;
-use CsvBulkLoader;
+use SilverStripe\Dev\CsvBulkLoader;
+
 
 /**
  * @todo Migrate Permission->Arg and Permission->Type values
- *
- * @package framework
- * @subpackage security
  */
 class GroupCsvBulkLoader extends CsvBulkLoader {
 
@@ -30,6 +27,7 @@ class GroupCsvBulkLoader extends CsvBulkLoader {
 
 		$objID = parent::processRecord($record, $columnMap, $results, $preview);
 
+		/** @var Group $group */
 		$group = DataObject::get_by_id($this->objectClass, $objID);
 		// set group hierarchies - we need to do this after all records
 		// are imported to avoid missing "early" references to parents
