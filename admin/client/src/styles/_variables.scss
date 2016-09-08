@@ -157,7 +157,7 @@ $container-max-widths: (
 
 $grid-columns: 12;
 $grid-gutter-width: $spacer * 2.5; // 40px
-$grid-gutter-width-half: $grid-gutter-width / 2;
+$grid-gutter-width-half: $grid-gutter-width / 2; // TODO: Deprecate this, replacing with $panel-padding-x and $panel-padding-y
 
 
 // Typography
@@ -715,6 +715,11 @@ $cms-panel-xs: 60px;
 $cms-panel-sm: 300px;
 $cms-panel-md: 448px;
 $cms-panel-lg: 638px;
+
+// Panel padding
+$panel-padding-x: #{$grid-gutter-width / 2};
+$panel-padding-y: #{$grid-gutter-width / 2};
+
 
 // Shadows
 $shadow-level-1: rgba(0, 0, 0, .1);
