@@ -302,9 +302,10 @@
 
     // Thumbnails e.g. in File admin, UploadField and HtmlEditorField file selection
     td.col-StripThumbnail {
-      padding: 2px 4px;
+      padding: 0 4px;
       width: 32px;
       height: 32px;
+      vertical-align: middle;
 
       img {
         width: 32px;
