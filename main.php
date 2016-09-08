@@ -143,7 +143,7 @@ $chain
 		if (!$reloadToken) $chain->setSuppression(false);
 
 		// Load in core
-		require_once('core/Core.php');
+		require_once('Core/Core.php');
 
 		// Connect to database
 		global $databaseConfig;
