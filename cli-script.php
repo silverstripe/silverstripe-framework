@@ -72,7 +72,7 @@ else  {
 /**
  * Include SilverStripe's core code
  */
-require_once("core/Core.php");
+require_once("Core/Core.php");
 
 global $databaseConfig;
 

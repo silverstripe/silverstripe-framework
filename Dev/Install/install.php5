@@ -1432,7 +1432,7 @@ PHP
 
 		$this->statusMessage("Building database schema...");
 
-		require_once 'core/Core.php';
+		require_once 'Core/Core.php';
 
 		// Build database
 		$con = new Controller();
