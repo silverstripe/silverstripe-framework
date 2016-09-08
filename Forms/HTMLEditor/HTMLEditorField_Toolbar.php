@@ -201,8 +201,8 @@ class HTMLEditorField_Toolbar extends RequestHandler
 		$parentID = $this->getAttachParentID();
 
 		$fileFieldConfig = GridFieldConfig::create()->addComponents(
-			new GridFieldFilterHeader(),
 			new GridFieldSortableHeader(),
+			new GridFieldFilterHeader(),
 			new GridFieldDataColumns(),
 			new GridFieldPaginator(7),
 			// TODO Shouldn't allow delete here, its too confusing with a "remove from editor view" action.
