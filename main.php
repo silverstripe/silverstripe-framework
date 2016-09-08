@@ -23,7 +23,7 @@ use SilverStripe\Control\Director;
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
 	header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
-	echo str_replace('$PHPVersion', phpversion(), file_get_contents("dev/install/php5-required.html"));
+	echo str_replace('$PHPVersion', phpversion(), file_get_contents("Dev/Install/php5-required.html"));
 	die();
 }
 
@@ -131,8 +131,8 @@ if (substr(strtolower($url), 0, strlen(BASE_URL)) == strtolower(BASE_URL)) $url 
 /**
  * Include SilverStripe's core code
  */
-require_once('core/startup/ErrorControlChain.php');
-require_once('core/startup/ParameterConfirmationToken.php');
+require_once('Core/Startup/ErrorControlChain.php');
+require_once('Core/Startup/ParameterConfirmationToken.php');
 
 // Prepare tokens and execute chain
 $reloadToken = ParameterConfirmationToken::prepare_tokens(array('isTest', 'isDev', 'flush'));
