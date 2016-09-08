@@ -6,10 +6,10 @@ div.TreeDropdownField {
 	border: 1px solid #aaa;
 	cursor: pointer;
 	overflow: visible;
-	position:relative;
+	position: relative;
 
 	input {
-		border: none;
+		border: 0;
 		background: none;
 		padding: 0;
 		margin: 0;
@@ -22,29 +22,29 @@ div.TreeDropdownField {
 		@include hide-text-overflow;
 	}
 
-	.treedropdownfield-search{
+	.treedropdownfield-search {
 		@extend .treedropdownfield-title;
 
-		//Style search box to match chosen search
-		background:url('../../../admin/client/dist/images/chosen-sprite.png') no-repeat 100% -22px; //For browers that only support 1 background
+		// Style search box to match chosen search
+		background: url('../../../admin/client/dist/images/chosen-sprite.png') no-repeat 100% -22px; // For browsers that only support 1 background
 		background:
 			url('../../../admin/client/dist/images/chosen-sprite.png') no-repeat 100% -22px,
 			linear-gradient(to bottom, #eeeeee 1%, #ffffff 15%);
 		box-sizing: border-box;
-		position:relative;
-		z-index:1100; //Needed to work within modales in chrome
+		position: relative;
+		z-index: 1100; // Needed to work within modals in chrome
 		border: 1px solid #aaa;
-		display:inline-block;
+		display: inline-block;
 		font-family: sans-serif;
 		font-size: 1em;
-		margin:1.5%;
+		margin: 1.5%;
 		outline: 0;
 		padding: 4px 20px 4px 5px;
-		width:97%; //optimized for most common tree width
+		width: 97%; // optimized for most common tree width
 	}
 
-	&.searchable .treedropdownfield-panel.loading{
-		min-height: 16px /* icon */ + 14px /* padding */ + 34px /* approx height search input */; // Ensure there's room for loading indicator
+	&.searchable .treedropdownfield-panel.loading {
+		min-height: 16px + 14px + 34px; // icon + padding + approx. height search input. Ensure there's room for loading indicator
 		background-position: 98% 39px;
 	}
 
@@ -55,7 +55,7 @@ div.TreeDropdownField {
 		cursor: default;
 		border: 1px solid #66afe9;
 		border-top: 0;
-		margin: -1px 0 0 -1px; /* account for border on container div */
+		margin: -1px 0 0 -1px; // account for border on container div
 		background-color: #fff;
 		z-index: 70;
 		-webkit-box-shadow: 0 4px 5px rgba(0,0,0,.15);
@@ -69,7 +69,7 @@ div.TreeDropdownField {
     border-bottom-right-radius: 3px;
 
 		&.loading {
-			min-height: 16px /* icon */ + 14px /* padding */; // Ensure there's room for loading indicator
+			min-height: 16px + 14px; // icon + padding. Ensure there's room for loading indicator
 			background: #fff url("../images/network-save.gif") 98% 7px no-repeat;
 		}
 
@@ -85,20 +85,23 @@ div.TreeDropdownField {
       }
     }
 
-		ul{
-			overflow-x:hidden;
-			float:left;
-			width:100%;
-			.jstree-icon{
-				margin-left:5px; //move to align with possible search box
+		ul {
+			overflow-x: hidden;
+			float: left;
+			width: 100%;
+
+			.jstree-icon {
+				margin-left: 5px; // move to align with possible search box
 			}
-			.jstree-open > ins{
-				background-position:-18px 0; //move to align with possible search box
+
+			.jstree-open > ins {
+				background-position: -18px 0; // move to align with possible search box
 			}
 		}
 
 		ul.tree {
 			margin: 0;
+
 			a {
 				font-size: 12px;
 			}
@@ -106,7 +109,7 @@ div.TreeDropdownField {
 	}
 
 	.treedropdownfield-toggle-panel-link {
-		border: none;
+		border: 0;
 		margin: 0;
 		z-index: 0;
 		padding: 7px 3px;
@@ -120,7 +123,7 @@ div.TreeDropdownField {
 
 		&.treedropdownfield-open-tree {
 			background: transparent;
-			border: none;
+			border: 0;
 		}
 
 		a {
