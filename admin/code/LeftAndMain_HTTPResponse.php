@@ -2,12 +2,12 @@
 
 namespace SilverStripe\Admin;
 
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 
 /**
  * Allow overriding finished state for faux redirects.
  */
-class LeftAndMain_HTTPResponse extends SS_HTTPResponse
+class LeftAndMain_HTTPResponse extends HTTPResponse
 {
 
 	protected $isFinished = false;

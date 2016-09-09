@@ -348,14 +348,14 @@ class HTTP {
 	 * Omitting the $body argument or passing a string is deprecated; in these cases, the headers are
 	 * output directly.
 	 *
-	 * @param SS_HTTPResponse $body
+	 * @param HTTPResponse $body
 	 */
 	public static function add_cache_headers($body = null) {
 		$cacheAge = self::$cache_age;
 
 		// Validate argument
-		if($body && !($body instanceof SS_HTTPResponse)) {
-			user_error("HTTP::add_cache_headers() must be passed an SS_HTTPResponse object", E_USER_WARNING);
+		if($body && !($body instanceof HTTPResponse)) {
+			user_error("HTTP::add_cache_headers() must be passed an HTTPResponse object", E_USER_WARNING);
 			$body = null;
 		}
 
@@ -365,7 +365,7 @@ class HTTP {
 			$cacheAge = 0;
 		}
 
-		// The headers have been sent and we don't have an SS_HTTPResponse object to attach things to; no point in
+		// The headers have been sent and we don't have an HTTPResponse object to attach things to; no point in
 		// us trying.
 		if(headers_sent() && !$body) {
 			return;
@@ -503,7 +503,7 @@ class HTTP {
 			$responseHeaders['ETag'] = sprintf('"%s"', $responseHeaders['ETag']);
 		}
 
-		// Now that we've generated them, either output them or attach them to the SS_HTTPResponse as appropriate
+		// Now that we've generated them, either output them or attach them to the HTTPResponse as appropriate
 		foreach($responseHeaders as $k => $v) {
 			if($body) {
 				// Set the header now if it's not already set.

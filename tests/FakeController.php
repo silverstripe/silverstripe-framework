@@ -1,8 +1,8 @@
 <?php
 
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Controller;
 
 // Fake a current controller. Way harder than it should be
@@ -16,7 +16,7 @@ class FakeController extends Controller {
 
 		$this->pushCurrent();
 
-		$request = new SS_HTTPRequest(
+		$request = new HTTPRequest(
 			(isset($_SERVER['X-HTTP-Method-Override']))
 				? $_SERVER['X-HTTP-Method-Override']
 				: $_SERVER['REQUEST_METHOD'],
@@ -24,7 +24,7 @@ class FakeController extends Controller {
 		);
 		$this->setRequest($request);
 
-		$this->setResponse(new SS_HTTPResponse());
+		$this->setResponse(new HTTPResponse());
 
 		$this->doInit();
 	}

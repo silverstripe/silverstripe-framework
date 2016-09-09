@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Assets\Storage;
 
-use SilverStripe\Control\SS_HTTPResponse;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 
 /**
  * Represents a store usable with ProtectedFileController to serve up non-direct file requests
@@ -15,8 +15,8 @@ interface AssetStoreRouter {
      *
      *
      * @param string $asset Asset path name, omitting any leading 'assets'
-     * @return SS_HTTPResponse
-     * @throws SS_HTTPResponse_Exception
+     * @return HTTPResponse
+     * @throws HTTPResponse_Exception
      */
     public function getResponseFor($asset);
 }

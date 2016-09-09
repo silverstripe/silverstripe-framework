@@ -26,7 +26,7 @@ You can write your own adapters by implementing the `ManifestCache` interface.
 ## Traversing the Filesystem
 
 Since manifests usually extract their information from files in the webroot,
-they require a powerful traversal tool: [api:SS_FileFinder].
+they require a powerful traversal tool: [api:FileFinder].
 The class provides filtering abilities for files and folders, as well as
 callbacks for recursive traversal. Each manifest has its own implementation,
 for example [api:ManifestFileFinder], adding more domain specific filtering
@@ -44,7 +44,7 @@ It finds the following information:
  * All implementors of an interface
  * All module configuration files
 
-The gathered information can be accessed through [api:SS_ClassLoader::instance()],
+The gathered information can be accessed through [api:ClassLoader::instance()],
 as well as [api:ClassInfo]. Some useful commands of the `ClassInfo` API:
 
  * `ClassInfo::subclassesFor($class)`: Returns a list of classes that inherit from the given class
@@ -69,7 +69,7 @@ on its operation.
 
 ## Config Manifest
 
-The [api:SS_ConfigManifest] loads builds a manifest of configuration items,
+The [api:ConfigManifest] loads builds a manifest of configuration items,
 for both PHP and YAML. It also takes care of ordering and merging configuration fragments.
 The chapter on [configuration](../configuration) has more details.
 

@@ -3,8 +3,8 @@
 namespace SilverStripe\Admin;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\ArrayList;
@@ -102,8 +102,8 @@ class CMSBatchActionHandler extends RequestHandler {
 	/**
 	 * Invoke a batch action
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function handleBatchAction($request) {
 		// This method can't be called without ajax.
@@ -136,8 +136,8 @@ class CMSBatchActionHandler extends RequestHandler {
 	/**
 	 * Respond with the list of applicable pages for a given filter
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function handleApplicablePages($request) {
 		// Find the action handler
@@ -155,7 +155,7 @@ class CMSBatchActionHandler extends RequestHandler {
 			$applicableIDs = array();
 		}
 
-		$response = new SS_HTTPResponse(json_encode($applicableIDs));
+		$response = new HTTPResponse(json_encode($applicableIDs));
 		$response->addHeader("Content-type", "application/json");
 		return $response;
 	}
@@ -163,8 +163,8 @@ class CMSBatchActionHandler extends RequestHandler {
 	/**
 	 * Check if this action has a confirmation step
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function handleConfirmation($request) {
 		// Find the action handler
@@ -177,9 +177,9 @@ class CMSBatchActionHandler extends RequestHandler {
 
 		// Check dialog
 		if($actionHandler->hasMethod('confirmationDialog')) {
-			$response = new SS_HTTPResponse(json_encode($actionHandler->confirmationDialog($ids)));
+			$response = new HTTPResponse(json_encode($actionHandler->confirmationDialog($ids)));
 		} else {
-			$response = new SS_HTTPResponse(json_encode(array('alert' => false)));
+			$response = new HTTPResponse(json_encode(array('alert' => false)));
 		}
 
 		$response->addHeader("Content-type", "application/json");

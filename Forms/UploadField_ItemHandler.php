@@ -6,8 +6,8 @@ use SilverStripe\Assets\File;
 use SilverStripe\Assets\Folder;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\View\Requirements;
@@ -90,10 +90,10 @@ class UploadField_ItemHandler extends RequestHandler
 	/**
 	 * Action to handle deleting of a single file
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
-	public function delete(SS_HTTPRequest $request)
+	public function delete(HTTPRequest $request)
 	{
 		// Check form field state
 		if ($this->parent->isDisabled() || $this->parent->isReadonly()) {
@@ -125,10 +125,10 @@ class UploadField_ItemHandler extends RequestHandler
 	/**
 	 * Action to handle editing of a single file
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return DBHTMLText
 	 */
-	public function edit(SS_HTTPRequest $request)
+	public function edit(HTTPRequest $request)
 	{
 		// Check form field state
 		if ($this->parent->isDisabled() || $this->parent->isReadonly()) {
@@ -190,10 +190,10 @@ class UploadField_ItemHandler extends RequestHandler
 	/**
 	 * @param array $data
 	 * @param Form $form
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return DBHTMLText
 	 */
-	public function doEdit(array $data, Form $form, SS_HTTPRequest $request)
+	public function doEdit(array $data, Form $form, HTTPRequest $request)
 	{
 		// Check form field state
 		if ($this->parent->isDisabled() || $this->parent->isReadonly()) {

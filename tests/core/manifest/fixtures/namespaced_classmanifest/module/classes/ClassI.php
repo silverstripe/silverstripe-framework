@@ -8,7 +8,7 @@ use SilverStripe\Admin\ModelAdmin;
 /** @skipUpgrade */
 use SilverStripe\Control\Controller  as  Cont ;
 /** @skipUpgrade */
-use SilverStripe\Control\SS_HTTPRequest as Request, SilverStripe\Control\SS_HTTPResponse as Response, SilverStripe\Security\PermissionProvider as P;
+use SilverStripe\Control\HTTPRequest as Request, SilverStripe\Control\HTTPResponse as Response, SilverStripe\Security\PermissionProvider as P;
 /** @skipUpgrade */
 use silverstripe\test\ClassA;
 /** @skipUpgrade */

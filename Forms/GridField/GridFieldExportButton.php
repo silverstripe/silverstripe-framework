@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\DataObject;
 
 /**
@@ -101,15 +101,15 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 	 * Handle the export, for both the action button and the URL
 	 *
 	 * @param GridField $gridField
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function handleExport($gridField, $request = null) {
 		$now = date("d-m-Y-H-i");
 		$fileName = "export-$now.csv";
 
 		if($fileData = $this->generateExportFileData($gridField)){
-			return SS_HTTPRequest::send_file($fileData, $fileName, 'text/csv');
+			return HTTPRequest::send_file($fileData, $fileName, 'text/csv');
 		}
 		return null;
 	}

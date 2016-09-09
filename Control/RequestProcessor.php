@@ -31,7 +31,7 @@ class RequestProcessor implements RequestFilter {
 		$this->filters = $filters;
 	}
 
-	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
+	public function preRequest(HTTPRequest $request, Session $session, DataModel $model) {
 		foreach ($this->filters as $filter) {
 			$res = $filter->preRequest($request, $session, $model);
 			if ($res === false) {
@@ -41,7 +41,7 @@ class RequestProcessor implements RequestFilter {
 		return null;
 	}
 
-	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
+	public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model) {
 		foreach ($this->filters as $filter) {
 			$res = $filter->postRequest($request, $response, $model);
 			if ($res === false) {

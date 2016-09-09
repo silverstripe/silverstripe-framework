@@ -10,7 +10,7 @@ use LogicException;
  * functionality. It passes through list methods to the underlying list
  * implementation.
  */
-abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sortable, SS_Filterable, SS_Limitable {
+abstract class ListDecorator extends ViewableData implements SS_List, Sortable, Filterable, Limitable {
 
 	/**
 	 * @var SS_List
@@ -179,7 +179,7 @@ abstract class SS_ListDecorator extends ViewableData implements SS_List, SS_Sort
 	/**
 	 * Note that, in the current implementation, the filtered list will be an ArrayList, but this may change in a
 	 * future implementation.
-	 * @see SS_Filterable::filterByCallback()
+	 * @see Filterable::filterByCallback()
 	 *
 	 * @example $list = $list->filterByCallback(function($item, $list) { return $item->Age == 9; })
 	 * @param callable $callback

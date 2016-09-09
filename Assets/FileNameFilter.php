@@ -3,7 +3,7 @@
 namespace SilverStripe\Assets;
 
 use SilverStripe\Core\Object;
-use SilverStripe\View\Parsers\SS_Transliterator;
+use SilverStripe\View\Parsers\Transliterator;
 
 /**
  * Filter certain characters from file name, for nicer (more SEO-friendly) URLs
@@ -95,22 +95,22 @@ class FileNameFilter extends Object {
 	}
 
 	/**
-	 * @var SS_Transliterator
+	 * @var Transliterator
 	 */
 	protected $transliterator;
 
 	/**
-	 * @return SS_Transliterator|NULL
+	 * @return Transliterator
 	 */
 	public function getTransliterator() {
 		if($this->transliterator === null && $this->config()->default_use_transliterator) {
-			$this->transliterator = SS_Transliterator::create();
+			$this->transliterator = Transliterator::create();
 		}
 		return $this->transliterator;
 	}
 
 	/**
-	 * @param SS_Transliterator|FALSE
+	 * @param Transliterator $t
 	 */
 	public function setTransliterator($t) {
 		$this->transliterator = $t;

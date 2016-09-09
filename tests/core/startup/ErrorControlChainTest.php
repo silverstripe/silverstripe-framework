@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Startup\ErrorControlChain;
 use SilverStripe\Dev\SapphireTest;
 
@@ -46,7 +46,7 @@ class ErrorControlChainTest_Chain extends ErrorControlChain {
 	function executeInSubprocess($includeStderr = false) {
 		// Get the path to the ErrorControlChain class
 		$erroControlClass = 'SilverStripe\\Core\\Startup\\ErrorControlChain';
-		$classpath = SS_ClassLoader::instance()->getItemPath($erroControlClass);
+		$classpath = ClassLoader::instance()->getItemPath($erroControlClass);
 		$suppression = $this->suppression ? 'true' : 'false';
 
 		// Start building a PHP file that will execute the chain

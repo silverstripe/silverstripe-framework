@@ -3,7 +3,7 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassLoader;
 
 /**
  * Handles raising an notice when accessing a deprecated method
@@ -104,7 +104,7 @@ class Deprecation {
 
 		$callingfile = realpath($backtrace[1]['file']);
 
-		$manifest = SS_ClassLoader::instance()->getManifest();
+		$manifest = ClassLoader::instance()->getManifest();
 		foreach ($manifest->getModules() as $name => $path) {
 			if (strpos($callingfile, realpath($path)) === 0) {
 				return $name;

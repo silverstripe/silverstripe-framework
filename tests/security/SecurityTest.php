@@ -14,7 +14,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
@@ -107,7 +107,7 @@ class SecurityTest extends FunctionalTest {
 
 		// Controller that doesn't attempt redirections
 		$controller = new SecurityTest_NullController();
-		$controller->setResponse(new SS_HTTPResponse());
+		$controller->setResponse(new HTTPResponse());
 
 		Security::permissionFailure($controller, array('default' => 'Oops, not allowed'));
 		$this->assertEquals('Oops, not allowed', Session::get('Security.Message.message'));
@@ -148,12 +148,12 @@ class SecurityTest extends FunctionalTest {
 	 *
 	 * @param string $url
 	 * @param int $limit Max number of requests
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function getRecursive($url, $limit = 10) {
 		$this->cssParser = null;
 		$response = $this->mainSession->get($url);
-		while(--$limit > 0 && $response instanceof SS_HTTPResponse && $response->getHeader('Location')) {
+		while(--$limit > 0 && $response instanceof HTTPResponse && $response->getHeader('Location')) {
 			$response = $this->mainSession->followRedirection();
 		}
 		return $response;

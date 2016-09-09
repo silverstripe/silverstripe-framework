@@ -3,7 +3,7 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Session;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Member;
@@ -143,7 +143,7 @@ class FunctionalTest extends SapphireTest {
 	 * @param Session $session
 	 * @param array $headers
 	 * @param array $cookies
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function get($url, $session = null, $headers = null, $cookies = null) {
 		$this->cssParser = null;
@@ -164,7 +164,7 @@ class FunctionalTest extends SapphireTest {
 	 * @param Session $session
 	 * @param string $body
 	 * @param array $cookies
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function post($url, $data, $headers = null, $session = null, $body = null, $cookies = null) {
 		$this->cssParser = null;
@@ -192,7 +192,7 @@ class FunctionalTest extends SapphireTest {
 	 * @param string $formID HTML 'id' attribute of a form (loaded through a previous response)
 	 * @param string $button HTML 'name' attribute of the button (NOT the 'id' attribute)
 	 * @param array $data Map of GET/POST data.
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function submitForm($formID, $button = null, $data = array()) {
 		$this->cssParser = null;

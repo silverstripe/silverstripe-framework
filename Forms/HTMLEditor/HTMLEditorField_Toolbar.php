@@ -8,8 +8,8 @@ use SilverStripe\Assets\Upload;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
@@ -355,7 +355,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 	 *
 	 * @param string $fileUrl Absolute URL
 	 * @return array
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 */
 	protected function viewfile_getRemoteFileByURL($fileUrl)
 	{
@@ -389,11 +389,11 @@ class HTMLEditorField_Toolbar extends RequestHandler
 	 *
 	 * @param string $message
 	 * @param int $code
-	 * @return SS_HTTPResponse_Exception
+	 * @return HTTPResponse_Exception
 	 */
 	protected function getErrorFor($message, $code = 400)
 	{
-		$exception = new SS_HTTPResponse_Exception($message, $code);
+		$exception = new HTTPResponse_Exception($message, $code);
 		$exception->getResponse()->addHeader('X-Status', $message);
 		return $exception;
 	}
@@ -401,8 +401,8 @@ class HTMLEditorField_Toolbar extends RequestHandler
 	/**
 	 * View of a single file, either on the filesystem or on the web.
 	 *
-	 * @throws SS_HTTPResponse_Exception
-	 * @param SS_HTTPRequest $request
+	 * @throws HTTPResponse_Exception
+	 * @param HTTPRequest $request
 	 * @return string
 	 */
 	public function viewfile($request)
@@ -488,7 +488,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 	 * Find all anchors available on the given page.
 	 *
 	 * @return array
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 */
 	public function getanchors()
 	{
@@ -497,7 +497,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
 		if (($page = Page::get()->byID($id)) && !empty($page)) {
 			if (!$page->canView()) {
-				throw new SS_HTTPResponse_Exception(
+				throw new HTTPResponse_Exception(
 					_t(
 						'HTMLEditorField.ANCHORSCANNOTACCESSPAGE',
 						'You are not permitted to access the content of the target page.'
@@ -521,7 +521,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 			}
 
 		} else {
-			throw new SS_HTTPResponse_Exception(
+			throw new HTTPResponse_Exception(
 				_t('HTMLEditorField.ANCHORSPAGENOTFOUND', 'Target page not found.'),
 				404
 			);

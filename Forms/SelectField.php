@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms;
 
 use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\SS_Map;
+use SilverStripe\ORM\Map;
 use ArrayAccess;
 
 /**
@@ -157,7 +157,7 @@ abstract class SelectField extends FormField {
 		if($source instanceof SS_List) {
 			$source = $source->map();
 		}
-		if($source instanceof SS_Map) {
+		if($source instanceof Map) {
 			$source = $source->toArray();
 		}
 		if(!is_array($source) && !($source instanceof ArrayAccess)) {

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\View\Parsers;
 
-class SS_HTML4Value extends SS_HTMLValue
+class HTML4Value extends HTMLValue
 {
 
 	/**

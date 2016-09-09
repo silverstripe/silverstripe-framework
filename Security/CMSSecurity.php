@@ -3,7 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Admin\AdminRootController;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
@@ -108,7 +108,7 @@ class CMSSecurity extends Security {
 	/**
 	 * Redirects the user to the external login page
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function redirectToExternalLogin() {
 		$loginURL = Security::create()->Link('login');
@@ -186,7 +186,7 @@ PHP
 	/**
 	 * Given a successful login, tell the parent frame to close the dialog
 	 *
-	 * @return SS_HTTPResponse|DBField
+	 * @return HTTPResponse|DBField
 	 */
 	public function success() {
 		// Ensure member is properly logged in

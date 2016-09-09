@@ -15,7 +15,7 @@ use Exception;
  * Abstract database connectivity class.
  * Sub-classes of this implement the actual database connection libraries
  */
-abstract class SS_Database {
+abstract class Database {
 
 	/**
 	 * Database connector object
@@ -117,7 +117,7 @@ abstract class SS_Database {
 	 *
 	 * @param string $sql The SQL query to execute
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return SS_Query
+	 * @return Query
 	 */
 	public function query($sql, $errorLevel = E_USER_ERROR) {
 		// Check if we should only preview this query
@@ -142,7 +142,7 @@ abstract class SS_Database {
 	 * @param string $sql The SQL query to execute. The ? character will denote parameters.
 	 * @param array $parameters An ordered list of arguments.
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return SS_Query
+	 * @return Query
 	 */
 	public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR) {
 		// Check if we should only preview this query

@@ -30,7 +30,7 @@ use InvalidArgumentException;
  *   - max_depth (int): The maxmium depth to traverse down the folder tree,
  *     default to unlimited.
  */
-class SS_FileFinder {
+class FileFinder {
 
 	/**
 	 * @var array

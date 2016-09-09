@@ -15,7 +15,7 @@ use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\Assets\Storage\AssetStoreRouter;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
@@ -804,17 +804,17 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	}
 
 	/**
-	 * Generate an {@see SS_HTTPResponse} for the given file from the source filesystem
+	 * Generate an {@see HTTPResponse} for the given file from the source filesystem
 	 * @param FilesystemInterface $flysystem
 	 * @param string $fileID
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function createResponseFor(FilesystemInterface $flysystem, $fileID) {
 		// Build response body
 		// @todo: gzip / buffer response?
 		$body = $flysystem->read($fileID);
 		$mime = $flysystem->getMimetype($fileID);
-		$response = new SS_HTTPResponse($body, 200);
+		$response = new HTTPResponse($body, 200);
 
 		// Add headers
 		$response->addHeader('Content-Type', $mime);
@@ -828,7 +828,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	/**
 	 * Generate a response for requests to a denied protected file
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function createDeniedResponse() {
 		$code = (int)Config::inst()->get(get_class($this), 'denied_response_code');
@@ -838,7 +838,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	/**
 	 * Generate a response for missing file requests
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function createMissingResponse() {
 		$code = (int)Config::inst()->get(get_class($this), 'missing_response_code');
@@ -849,10 +849,10 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable {
 	 * Create a response with the given error code
 	 *
 	 * @param int $code
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function createErrorResponse($code) {
-		$response = new SS_HTTPResponse('', $code);
+		$response = new HTTPResponse('', $code);
 
 		// Show message in dev
 		if(!Director::isLive()) {

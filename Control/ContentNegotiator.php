@@ -65,7 +65,7 @@ class ContentNegotiator extends Object {
 	 * Returns true if negotiation is enabled for the given response. By default, negotiation is only
 	 * enabled for pages that have the xml header.
 	 *
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPResponse $response
 	 * @return bool
 	 */
 	public static function enabled_for($response) {
@@ -87,9 +87,9 @@ class ContentNegotiator extends Object {
 	}
 
 	/**
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPResponse $response
 	 */
-	public static function process(SS_HTTPResponse $response) {
+	public static function process(HTTPResponse $response) {
 		if(!self::enabled_for($response)) return;
 
 		$mimes = array(
@@ -137,11 +137,11 @@ class ContentNegotiator extends Object {
 	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;
 	 * <input>, checked, selected).
 	 *
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPResponse $response
 	 *
 	 * @todo Search for more xhtml replacement
 	 */
-	public function xhtml(SS_HTTPResponse $response) {
+	public function xhtml(HTTPResponse $response) {
 		$content = $response->getBody();
 		$encoding = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'encoding');
 
@@ -177,9 +177,9 @@ class ContentNegotiator extends Object {
 	 * - Replaces all occurrences of "application/xhtml+xml" with "text/html" in the template.
 	 * - Removes "xmlns" attributes and any <?xml> Pragmas.
 	 *
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPResponse $response
 	 */
-	public function html(SS_HTTPResponse $response) {
+	public function html(HTTPResponse $response) {
 		$encoding = $this->config()->get('encoding');
 		$contentType = $this->config()->get('content_type');
 		if (empty($contentType)) {

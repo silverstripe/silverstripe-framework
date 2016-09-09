@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Core\Manifest;
 
-use SilverStripe\Assets\SS_FileFinder;
+use SilverStripe\Assets\FileFinder;
 
 /**
  * An extension to the default file finder with some extra filters to faciliate
@@ -13,7 +13,7 @@ use SilverStripe\Assets\SS_FileFinder;
  *   - Module tests directories are skipped if the ignore_tests option is not
  *     set to false.
  */
-class ManifestFileFinder extends SS_FileFinder {
+class ManifestFileFinder extends FileFinder {
 
 	const CONFIG_FILE  = '_config.php';
 	const CONFIG_DIR  = '_config';

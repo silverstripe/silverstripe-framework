@@ -6,7 +6,7 @@ use DOMAttr;
 use DOMElement;
 use DOMNode;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\View\Parsers\SS_HTMLValue;
+use SilverStripe\View\Parsers\HTMLValue;
 use stdClass;
 
 /**
@@ -268,9 +268,9 @@ class HTMLEditorSanitiser {
 	 * Given an SS_HTMLValue instance, will remove and elements and attributes that are
 	 * not explicitly included in the whitelist passed to __construct on instance creation
 	 *
-	 * @param SS_HTMLValue $html - The HTMLValue to remove any non-whitelisted elements & attributes from
+	 * @param HTMLValue $html - The HTMLValue to remove any non-whitelisted elements & attributes from
 	 */
-	public function sanitise (SS_HTMLValue $html) {
+	public function sanitise (HTMLValue $html) {
 		if(!$this->elements && !$this->elementPatterns) return;
 
 		$doc = $html->getDocument();

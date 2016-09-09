@@ -28,7 +28,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\SS_Map;
+use SilverStripe\ORM\Map;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\SSViewer;
@@ -1261,7 +1261,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * If no $groups is passed, all members will be returned
 	 *
 	 * @param mixed $groups - takes a SS_List, an array or a single Group.ID
-	 * @return SS_Map Returns an SS_Map that returns all Member data.
+	 * @return Map Returns an Map that returns all Member data.
 	 */
 	public static function map_in_groups($groups = null) {
 		$groupIDList = array();
@@ -1299,7 +1299,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 *
 	 * @param array $groups Groups to consider or NULL to use all groups with
 	 *                      CMS permissions.
-	 * @return SS_Map Returns a map of all members in the groups given that
+	 * @return Map Returns a map of all members in the groups given that
 	 *                have CMS permissions.
 	 */
 	public static function mapInCMSGroups($groups = null) {

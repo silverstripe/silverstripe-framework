@@ -14,7 +14,7 @@ use Exception;
  *   - All implementors of an interface.
  *   - All module configuration files.
  */
-class SS_ClassManifest {
+class ClassManifest {
 
 	const CONF_FILE = '_config.php';
 	const CONF_DIR = '_config';

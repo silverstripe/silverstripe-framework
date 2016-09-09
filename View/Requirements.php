@@ -6,7 +6,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use InvalidArgumentException;
 
 /**
@@ -292,9 +292,9 @@ class Requirements implements Flushable {
 	 * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the given
 	 * HTTP Response
 	 *
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPResponse $response
 	 */
-	public static function include_in_response(SS_HTTPResponse $response) {
+	public static function include_in_response(HTTPResponse $response) {
 		self::backend()->includeInResponse($response);
 	}
 

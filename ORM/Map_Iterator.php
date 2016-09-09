@@ -5,9 +5,9 @@ namespace SilverStripe\ORM;
 use Iterator;
 
 /**
- * Builds a map iterator around an Iterator.  Called by SS_Map
+ * Builds a map iterator around an Iterator.  Called by Map
  */
-class SS_Map_Iterator implements Iterator
+class Map_Iterator implements Iterator
 {
 
 	/**

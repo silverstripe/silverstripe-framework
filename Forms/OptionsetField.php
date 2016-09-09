@@ -35,7 +35,7 @@ use SilverStripe\View\ArrayData;
  * <code>
  * //Database request for the object
  * $map = FooBar::get()->map();
- *  // returns an SS_Map object containing an array of ID => Title
+ *  // returns a Map object containing an array of ID => Title
  *
  * // Instantiate the OptionsetField
  * $FieldList = new FieldList(

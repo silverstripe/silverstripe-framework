@@ -3,13 +3,13 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Control\RequestHandler;
@@ -359,8 +359,8 @@ class Form extends RequestHandler {
 	 * and only triggers the requested form action/method
 	 * if the form is valid.
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @throws SS_HTTPResponse_Exception
+	 * @param HTTPRequest $request
+	 * @throws HTTPResponse_Exception
 	 */
 	public function httpSubmission($request) {
 		// Strict method check
@@ -550,7 +550,7 @@ class Form extends RequestHandler {
 	 * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError},
 	 * and can be overruled by setting {@link $validationResponseCallback}.
 	 *
-	 * @return SS_HTTPResponse|string
+	 * @return HTTPResponse|string
 	 */
 	protected function getValidationErrorResponse() {
 		$callback = $this->getValidationResponseCallback();
@@ -565,12 +565,12 @@ class Form extends RequestHandler {
 				$acceptType = $request->getHeader('Accept');
 				if(strpos($acceptType, 'application/json') !== FALSE) {
 					// Send validation errors back as JSON with a flag at the start
-					$response = new SS_HTTPResponse(Convert::array2json($this->validator->getErrors()));
+					$response = new HTTPResponse(Convert::array2json($this->validator->getErrors()));
 					$response->addHeader('Content-Type', 'application/json');
 				} else {
 					$this->setupFormErrors();
 					// Send the newly rendered form tag as HTML
-					$response = new SS_HTTPResponse($this->forTemplate());
+					$response = new HTTPResponse($this->forTemplate());
 					$response->addHeader('Content-Type', 'text/html');
 				}
 
@@ -619,7 +619,7 @@ class Form extends RequestHandler {
 	 * formfield with the same name, this method gives priority
 	 * to the formfield.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return FormField
 	 */
 	public function handleField($request) {
@@ -1863,9 +1863,9 @@ class Form extends RequestHandler {
 	 * Test a submission of this form.
 	 * @param string $action
 	 * @param array $data
-	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in
+	 * @return HTTPResponse the response object that the handling controller produces.  You can interrogate this in
 	 * your unit test.
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 */
 	public function testSubmission($action, $data) {
 		$data['action_' . $action] = true;
@@ -1878,7 +1878,7 @@ class Form extends RequestHandler {
 	 *
 	 * @param string $action
 	 * @param array $data
-	 * @return SS_HTTPResponse the response object that the handling controller produces.  You can interrogate this in
+	 * @return HTTPResponse the response object that the handling controller produces.  You can interrogate this in
 	 * your unit test.
 	 */
 	public function testAjaxSubmission($action, $data) {

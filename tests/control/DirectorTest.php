@@ -7,9 +7,9 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestProcessor;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestFilter;
 use SilverStripe\Control\Controller;
 
@@ -367,7 +367,7 @@ class DirectorTest extends SapphireTest {
 					Injector::inst()->createWithArgs('SilverStripe\\Control\\Cookie_Backend', array($fixture))
 				);
 
-				$this->assertInstanceOf('SilverStripe\\Control\\SS_HTTPResponse', $getresponse, 'Director::test() returns SS_HTTPResponse');
+				$this->assertInstanceOf('SilverStripe\\Control\\HTTPResponse', $getresponse, 'Director::test() returns HTTPResponse');
 				$this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
 			}
 		}
@@ -558,7 +558,7 @@ class DirectorTest extends SapphireTest {
 
 		$filter->failPost = true;
 
-		$this->setExpectedException('SilverStripe\\Control\\SS_HTTPResponse_Exception');
+		$this->setExpectedException('SilverStripe\\Control\\HTTPResponse_Exception');
 
 		$response = Director::test('some-dummy-url');
 
@@ -583,7 +583,7 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 	public $failPre = false;
 	public $failPost = false;
 
-	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
+	public function preRequest(HTTPRequest $request, Session $session, DataModel $model) {
 		++$this->preCalls;
 
 		if ($this->failPre) {
@@ -591,7 +591,7 @@ class TestRequestFilter implements RequestFilter, TestOnly {
 		}
 	}
 
-	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
+	public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model) {
 		++$this->postCalls;
 
 		if ($this->failPost) {

@@ -5,8 +5,8 @@ namespace SilverStripe\Dev;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DatabaseAdmin;
@@ -123,7 +123,7 @@ class DevelopmentAdmin extends Controller {
 		}
 	}
 
-	public function runRegisteredController(SS_HTTPRequest $request){
+	public function runRegisteredController(HTTPRequest $request){
 		$controllerClass = null;
 
 		$baseUrlPart = $request->param('Action');
@@ -224,7 +224,7 @@ Security:
   token: $token
 
 TXT;
-		$response = new SS_HTTPResponse($body);
+		$response = new HTTPResponse($body);
 		return $response->addHeader('Content-Type', 'text/plain');
 	}
 

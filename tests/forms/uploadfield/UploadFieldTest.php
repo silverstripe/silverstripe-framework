@@ -947,7 +947,7 @@ class UploadFieldTest extends FunctionalTest {
 	 *
 	 * @param string $fileField Name of the field to mock upload for
 	 * @param array $tmpFileName Name of temporary file to upload
-	 * @return SS_HTTPResponse form response
+	 * @return HTTPResponse form response
 	 */
 	protected function mockFileUpload($fileField, $tmpFileName) {
 		$upload = $this->getUploadFile($tmpFileName);
@@ -969,7 +969,7 @@ class UploadFieldTest extends FunctionalTest {
 	 *
 	 * @param string $fileField Name of the field
 	 * @param integer $fileID ID of the file to delete
-	 * @return SS_HTTPResponse form response
+	 * @return HTTPResponse form response
 	 */
 	protected function mockFileEditForm($fileField, $fileID) {
 		return $this->get(
@@ -983,7 +983,7 @@ class UploadFieldTest extends FunctionalTest {
 	 * @param string $fileField Name of the field
 	 * @param integer $fileID ID of the file to delete
 	 * @param array $fields Fields to update
-	 * @return SS_HTTPResponse form response
+	 * @return HTTPResponse form response
 	 */
 	protected function mockFileEdit($fileField, $fileID, $fields = array()) {
 		return $this->post(
@@ -997,7 +997,7 @@ class UploadFieldTest extends FunctionalTest {
 	 *
 	 * @param string $fileField Name of the field
 	 * @param integer $fileID ID of the file to delete
-	 * @return SS_HTTPResponse form response
+	 * @return HTTPResponse form response
 	 */
 	protected function mockFileDelete($fileField, $fileID) {
 		return $this->post(

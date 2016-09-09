@@ -9,20 +9,20 @@ use SilverStripe\Dev\Deprecation;
  * A class that handles loading classes and interfaces from a class manifest
  * instance.
  */
-class SS_ClassLoader {
+class ClassLoader {
 
 	/**
-	 * @var SS_ClassLoader
+	 * @var ClassLoader
 	 */
 	private static $instance;
 
 	/**
-	 * @var array Map of 'instance' (SS_ClassManifest) and other options.
+	 * @var array Map of 'instance' (ClassManifest) and other options.
 	 */
 	protected $manifests = array();
 
 	/**
-	 * @return SS_ClassLoader
+	 * @return ClassLoader
 	 */
 	public static function instance() {
 		return self::$instance ? self::$instance : self::$instance = new self();
@@ -32,7 +32,7 @@ class SS_ClassLoader {
 	 * Returns the currently active class manifest instance that is used for
 	 * loading classes.
 	 *
-	 * @return SS_ClassManifest
+	 * @return ClassManifest
 	 */
 	public function getManifest() {
 		return $this->manifests[count($this->manifests) - 1]['instance'];
@@ -48,16 +48,16 @@ class SS_ClassLoader {
 	/**
 	 * Pushes a class manifest instance onto the top of the stack.
 	 *
-	 * @param SS_ClassManifest $manifest
+	 * @param ClassManifest $manifest
 	 * @param bool $exclusive Marks the manifest as exclusive. If set to FALSE, will
 	 * look for classes in earlier manifests as well.
 	 */
-	public function pushManifest(SS_ClassManifest $manifest, $exclusive = true) {
+	public function pushManifest(ClassManifest $manifest, $exclusive = true) {
 		$this->manifests[] = array('exclusive' => $exclusive, 'instance' => $manifest);
 	}
 
 	/**
-	 * @return SS_ClassManifest
+	 * @return ClassManifest
 	 */
 	public function popManifest() {
 		$manifest = array_pop($this->manifests);
@@ -91,7 +91,7 @@ class SS_ClassLoader {
 	 */
 	public function getItemPath($class) {
 		foreach(array_reverse($this->manifests) as $manifest) {
-			/** @var SS_ClassManifest $manifestInst */
+			/** @var ClassManifest $manifestInst */
 			$manifestInst = $manifest['instance'];
 			if ($path = $manifestInst->getItemPath($class)) {
 				return $path;

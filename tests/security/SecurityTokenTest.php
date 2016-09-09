@@ -2,7 +2,7 @@
 
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\FieldList;
 
 
@@ -87,28 +87,28 @@ class SecurityTokenTest extends SapphireTest {
 		$n = $t->getName();
 
 		$t->setValue(null);
-		$r = new SS_HTTPRequest('GET', 'dummy', array($n => 'invalidtoken'));
+		$r = new HTTPRequest('GET', 'dummy', array($n => 'invalidtoken'));
 		$this->assertFalse($t->checkRequest($r), 'Any token is invalid if no token is stored');
 
 		$t->setValue(null);
-		$r = new SS_HTTPRequest('GET', 'dummy', array($n => null));
+		$r = new HTTPRequest('GET', 'dummy', array($n => null));
 		$this->assertFalse($t->checkRequest($r), 'NULL token is invalid if no token is stored');
 
 		$t->setValue('mytoken');
-		$r = new SS_HTTPRequest('GET', 'dummy', array($n => 'invalidtoken'));
+		$r = new HTTPRequest('GET', 'dummy', array($n => 'invalidtoken'));
 		$this->assertFalse($t->checkRequest($r), 'Invalid token returns false');
 
 		$t->setValue('mytoken');
-		$r = new SS_HTTPRequest('GET', 'dummy', array($n => 'mytoken'));
+		$r = new HTTPRequest('GET', 'dummy', array($n => 'mytoken'));
 		$this->assertTrue($t->checkRequest($r), 'Valid token returns true');
 
 		$t->setValue('mytoken');
-		$r = new SS_HTTPRequest('GET', 'dummy');
+		$r = new HTTPRequest('GET', 'dummy');
 		$r->addHeader('X-Securityid', 'mytoken');
 		$this->assertTrue($t->checkRequest($r), 'Valid token returns true');
 
 		$t->setValue('mytoken');
-		$r = new SS_HTTPRequest('GET', 'dummy');
+		$r = new HTTPRequest('GET', 'dummy');
 		$r->addHeader('X-Securityid', 'wrongtoken');
 		$this->assertFalse($t->checkRequest($r), 'Valid token returns true');
 	}

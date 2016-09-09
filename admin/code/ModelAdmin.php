@@ -3,8 +3,8 @@
 namespace SilverStripe\Admin;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\BulkLoader;
 use SilverStripe\Forms\FieldList;
@@ -433,8 +433,8 @@ abstract class ModelAdmin extends LeftAndMain {
 	 *
 	 * @param array $data
 	 * @param Form $form
-	 * @param SS_HTTPRequest $request
-	 * @return bool|SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return bool|HTTPResponse
 	 */
 	public function import($data, $form, $request) {
 		if(!$this->showImportForm || (is_array($this->showImportForm)

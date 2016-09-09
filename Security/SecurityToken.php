@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Object;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
@@ -179,7 +179,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * See {@link check()}.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return bool
 	 */
 	public function checkRequest($request) {
@@ -190,7 +190,7 @@ class SecurityToken extends Object implements TemplateGlobalProvider {
 	/**
 	 * Get security token from request
 	 *
-	 * @param SS_HTTPREquest $request
+	 * @param HTTPRequest $request
 	 * @return string
 	 */
 	protected function getRequestToken($request) {

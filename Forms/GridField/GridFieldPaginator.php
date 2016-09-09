@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Core\Config\Configurable;
-use SilverStripe\ORM\SS_Limitable;
+use SilverStripe\ORM\Limitable;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\UnsavedRelationList;
 use SilverStripe\View\ArrayData;
@@ -77,7 +77,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 	 * @return bool
 	 */
 	protected function checkDataType($dataList) {
-		if($dataList instanceof SS_Limitable) {
+		if($dataList instanceof Limitable) {
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {
@@ -158,7 +158,7 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 			$startRow = 0;
 		}
 
-		if(!($dataList instanceof SS_Limitable) || ($dataList instanceof UnsavedRelationList)) {
+		if(!($dataList instanceof Limitable) || ($dataList instanceof UnsavedRelationList)) {
 			return $dataList;
 		}
 

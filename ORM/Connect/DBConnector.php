@@ -38,7 +38,7 @@ abstract class DBConnector {
 	 * @param integer $errorLevel The level of the error to throw.
 	 * @param string $sql The SQL related to this query
 	 * @param array $parameters Parameters passed to the query
-	 * @throws SS_DatabaseException
+	 * @throws DatabaseException
 	 */
 	protected function databaseError($msg, $errorLevel = E_USER_ERROR, $sql = null, $parameters = array()) {
 		// Prevent errors when error checking is set at zero level
@@ -54,7 +54,7 @@ abstract class DBConnector {
 		if($errorLevel === E_USER_ERROR) {
 			// Treating errors as exceptions better allows for responding to errors
 			// in code, such as credential checking during installation
-			throw new SS_DatabaseException($msg, 0, null, $sql, $parameters);
+			throw new DatabaseException($msg, 0, null, $sql, $parameters);
 		} else {
 			user_error($msg, $errorLevel);
 		}
@@ -194,7 +194,7 @@ abstract class DBConnector {
 	 * @param string $sql The SQL query to execute. The ? character will denote parameters.
 	 * @param array $parameters An ordered list of arguments.
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return SS_Query
+	 * @return Query
 	 */
 	abstract public function preparedQuery($sql, $parameters, $errorLevel = E_USER_ERROR);
 

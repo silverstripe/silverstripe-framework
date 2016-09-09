@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
@@ -113,7 +113,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	 * Handle the print, for both the action button and the URL
 	 *
 	 * @param GridField $gridField
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return DBHTMLText
 	 */
 	public function handlePrint($gridField, $request = null) {

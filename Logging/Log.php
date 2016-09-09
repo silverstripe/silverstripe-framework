@@ -13,42 +13,42 @@ use SilverStripe\Dev\Deprecation;
  * subclasses for output.
  *
  * These priorities are currently supported:
- *  - SS_Log::ERR
- *  - SS_Log::WARN
- *  - SS_Log::NOTICE
- *  - SS_Log::INFO
- *  - SS_Log::DEBUG
+ *  - Log::ERR
+ *  - Log::WARN
+ *  - Log::NOTICE
+ *  - Log::INFO
+ *  - Log::DEBUG
  *
- * You can add an error writer by calling {@link SS_Log::add_writer()}
+ * You can add an error writer by calling {@link Log::add_writer()}
  *
  * Example usage of logging errors by email notification:
  * <code>
- * SS_Log::add_writer(new SS_LogEmailWriter('my@email.com'), SS_Log::ERR);
+ * Log::add_writer(new LogEmailWriter('my@email.com'), Log::ERR);
  * </code>
  *
  * Example usage of logging errors by file:
  * <code>
- *	SS_Log::add_writer(new SS_LogFileWriter('/var/log/silverstripe/errors.log'), SS_Log::ERR);
+ *	Log::add_writer(new LogFileWriter('/var/log/silverstripe/errors.log'), Log::ERR);
  * </code>
  *
  * Example usage of logging at warnings and errors by setting the priority to '<=':
  * <code>
- * SS_Log::add_writer(new SS_LogEmailWriter('my@email.com'), SS_Log::WARN, '<=');
+ * Log::add_writer(new LogEmailWriter('my@email.com'), Log::WARN, '<=');
  * </code>
  *
  * Each writer object can be assigned a formatter. The formatter is
  * responsible for formatting the message before giving it to the writer.
- * {@link SS_LogErrorEmailFormatter} is such an example that formats errors
+ * {@link LogErrorEmailFormatter} is such an example that formats errors
  * into HTML for human readability in an email client.
  *
  * Formatters are added to writers like this:
  * <code>
- * $logEmailWriter = new SS_LogEmailWriter('my@email.com');
+ * $logEmailWriter = new LogEmailWriter('my@email.com');
  * $myEmailFormatter = new MyLogEmailFormatter();
  * $logEmailWriter->setFormatter($myEmailFormatter);
  * </code>
  */
-class SS_Log
+class Log
 {
 
 	const ERR = 'error';
@@ -77,7 +77,7 @@ class SS_Log
 	 * error code, error line, error context (backtrace).
 	 *
 	 * @param mixed $message Exception object or array of error context variables
-	 * @param string $priority Priority. Possible values: SS_Log::ERR, SS_Log::WARN, SS_Log::NOTICE, SS_Log::INFO or SS_Log::DEBUG
+	 * @param string $priority Priority. Possible values: Log::ERR, Log::WARN, Log::NOTICE, Log::INFO or Log::DEBUG
 	 *
 	 * @deprecated 4.0.0:5.0.0 Use Injector::inst()->get('Logger')->log($priority, $message) instead
 	 */

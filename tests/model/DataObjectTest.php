@@ -1281,6 +1281,7 @@ class DataObjectTest extends SapphireTest {
 
 		// Test invalid classes fail
 		$this->setExpectedException('InvalidArgumentException', "Controller is not a valid subclass of DataObject");
+		/** @skipUpgrade */
 		$dataObject->newClassInstance('Controller');
 	}
 

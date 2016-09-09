@@ -2,7 +2,7 @@
 
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\SS_Filterable;
+use SilverStripe\ORM\Filterable;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
 
@@ -225,7 +225,7 @@ class ArrayListTest extends SapphireTest {
 		$map = $list->map('ID', 'Name');
 		// Items added after calling map should not be included retroactively
 		$list->add(array('ID' => 7, 'Name' => 'Andrew'));
-		$this->assertInstanceOf('SilverStripe\\ORM\\SS_Map', $map);
+		$this->assertInstanceOf('SilverStripe\\ORM\\Map', $map);
 		$this->assertEquals(array(
 			1 => 'Steve',
 			3 => 'Bob',
@@ -686,7 +686,7 @@ class ArrayListTest extends SapphireTest {
 
 		$this->assertEquals(2, $list->count());
 		$this->assertEquals($expected, $list->toArray(), 'List should only contain Steve and Clair');
-		$this->assertTrue($list instanceof SS_Filterable, 'The List should be of type SS_Filterable');
+		$this->assertTrue($list instanceof Filterable, 'The List should be of type SS_Filterable');
 	}
 
 	/**

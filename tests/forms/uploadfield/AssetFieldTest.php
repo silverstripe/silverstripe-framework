@@ -15,9 +15,6 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\RequiredFields;
 
-
-
-
 /**
  * @package framework
  * @subpackage tests
@@ -360,7 +357,7 @@ class AssetFieldTest extends FunctionalTest {
 	 *
 	 * @param string $fileField Name of the field to mock upload for
 	 * @param array $tmpFileName Name of temporary file to upload
-	 * @return SS_HTTPResponse form response
+	 * @return HTTPResponse form response
 	 */
 	protected function mockFileUpload($fileField, $tmpFileName) {
 		$upload = $this->getUploadFile($tmpFileName);

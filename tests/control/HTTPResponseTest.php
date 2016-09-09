@@ -1,8 +1,8 @@
 <?php
 
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\SS_HTTPResponse;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 
 /**
  * @package framework
@@ -11,7 +11,7 @@ use SilverStripe\Control\SS_HTTPResponse_Exception;
 class HTTPResponseTest extends SapphireTest {
 
 	public function testStatusDescriptionStripsNewlines() {
-		$r = new SS_HTTPResponse('my body', 200, "my description \nwith newlines \rand carriage returns");
+		$r = new HTTPResponse('my body', 200, "my description \nwith newlines \rand carriage returns");
 		$this->assertEquals(
 			"my description with newlines and carriage returns",
 			$r->getStatusDescription()
@@ -19,13 +19,13 @@ class HTTPResponseTest extends SapphireTest {
 	}
 
 	public function testHTTPResponseException() {
-		$response = new SS_HTTPResponse("Test", 200, 'OK');
+		$response = new HTTPResponse("Test", 200, 'OK');
 
 		// Confirm that the exception's statusCode and statusDescription take precedence
 		try {
-			throw new SS_HTTPResponse_Exception($response, 404, 'not even found');
+			throw new HTTPResponse_Exception($response, 404, 'not even found');
 
-		} catch(SS_HTTPResponse_Exception $e) {
+		} catch(HTTPResponse_Exception $e) {
 			$this->assertEquals(404, $e->getResponse()->getStatusCode());
 			$this->assertEquals('not even found', $e->getResponse()->getStatusDescription());
 			return;
@@ -39,9 +39,9 @@ class HTTPResponseTest extends SapphireTest {
 
 		// Confirm that the exception's statusCode and statusDescription take precedence
 		try {
-			throw new SS_HTTPResponse_Exception("Some content that may be from a hacker", 404, 'not even found');
+			throw new HTTPResponse_Exception("Some content that may be from a hacker", 404, 'not even found');
 
-		} catch(SS_HTTPResponse_Exception $e) {
+		} catch(HTTPResponse_Exception $e) {
 			$this->assertEquals("text/plain", $e->getResponse()->getHeader("Content-Type"));
 			return;
 		}

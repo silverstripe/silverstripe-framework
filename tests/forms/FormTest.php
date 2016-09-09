@@ -9,7 +9,7 @@ use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -658,7 +658,7 @@ class FormTest extends FunctionalTest {
 
 		$controller = new FormTest_Controller();
 		$form = $controller->Form();
-		$request = new SS_HTTPRequest('POST', 'FormTest_Controller/Form', array(), array(
+		$request = new HTTPRequest('POST', 'FormTest_Controller/Form', array(), array(
 			'Email' => 'test@test.com',
 			'SomeRequiredField' => 1,
 			'action_doSubmit' => 1
@@ -676,7 +676,7 @@ class FormTest extends FunctionalTest {
 			new FieldList()
 		);
 		$form->disableSecurityToken();
-		$request = new SS_HTTPRequest('POST', 'FormTest_Controller/Form', array(), array(
+		$request = new HTTPRequest('POST', 'FormTest_Controller/Form', array(), array(
 			'action_doSubmit' => 1
 		));
 
@@ -727,7 +727,7 @@ class FormTest extends FunctionalTest {
 
 	function testMessageEscapeHtml() {
 		$form = $this->getStubForm();
-		$form->getController()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->sessionMessage('<em>Escaped HTML</em>', 'good', true);
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('.message');
@@ -737,7 +737,7 @@ class FormTest extends FunctionalTest {
 		);
 
 		$form = $this->getStubForm();
-		$form->getController()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->sessionMessage('<em>Unescaped HTML</em>', 'good', false);
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('.message');
@@ -749,7 +749,7 @@ class FormTest extends FunctionalTest {
 
 	function testFieldMessageEscapeHtml() {
 		$form = $this->getStubForm();
-		$form->getController()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->addErrorMessage('key1', '<em>Escaped HTML</em>', 'good', true);
 		$form->setupFormErrors();
 		$parser = new CSSContentParser($result = $form->forTemplate());
@@ -760,7 +760,7 @@ class FormTest extends FunctionalTest {
 		);
 
 		$form = $this->getStubForm();
-		$form->getController()->handleRequest(new SS_HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
+		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->addErrorMessage('key1', '<em>Unescaped HTML</em>', 'good', false);
 		$form->setupFormErrors();
 		$parser = new CSSContentParser($form->forTemplate());

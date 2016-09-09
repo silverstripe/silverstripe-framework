@@ -5,7 +5,7 @@ namespace SilverStripe\ORM;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Dev\Deprecation;
@@ -117,7 +117,7 @@ class DatabaseAdmin extends Controller {
 		increase_time_limit_to(600);
 
 		// Get all our classes
-		SS_ClassLoader::instance()->getManifest()->regenerate();
+		ClassLoader::instance()->getManifest()->regenerate();
 
 		$url = $this->getReturnURL();
 		if($url) {

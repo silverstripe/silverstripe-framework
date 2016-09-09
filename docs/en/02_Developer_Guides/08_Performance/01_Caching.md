@@ -4,13 +4,13 @@
 
 The framework uses caches to store infrequently changing values.
 By default, the storage mechanism is simply the filesystem, although
-other cache backends can be configured. All caches use the [api:SS_Cache] API.
+other cache backends can be configured. All caches use the [api:Cache] API.
 
 The most common caches are manifests of various resources: 
 
- * PHP class locations ([api:SS_ClassManifest])
+ * PHP class locations ([api:ClassManifest])
  * Template file locations and compiled templates ([api:SS_TemplateManifest])
- * Configuration settings from YAML files ([api:SS_ConfigManifest])
+ * Configuration settings from YAML files ([api:ConfigManifest])
  * Language files ([api:i18n])
 
 Flushing the various manifests is performed through a GET
@@ -23,7 +23,7 @@ executing the action is limited to the following cases when performed via a web 
 
 ## The Cache API
 
-The [api:SS_Cache] class provides a bunch of static functions wrapping the Zend_Cache system 
+The [api:Cache] class provides a bunch of static functions wrapping the Zend_Cache system 
 in something a little more easy to use with the SilverStripe config system.
 
 A `Zend_Cache` has both a frontend (determines how to get the value to cache, 
@@ -42,13 +42,13 @@ backend for each named cache. There is a default File cache set up as the
 
 ## Using Caches
 
-Caches can be created and retrieved through the `SS_Cache::factory()` method.
+Caches can be created and retrieved through the `Cache::factory()` method.
 The returned object is of type `Zend_Cache`.
 
 	:::php
 	// foo is any name (try to be specific), and is used to get configuration 
 	// & storage info
-	$cache = SS_Cache::factory('foo'); 
+	$cache = Cache::factory('foo'); 
 	if (!($result = $cache->load($cachekey))) {
 		$result = caluate some how;
 		$cache->save($result, $cachekey);
@@ -63,20 +63,20 @@ e.g. in development mode.
 
 	:::php
 	// Disables all caches
-	SS_Cache::set_cache_lifetime('any', -1, 100);
+	Cache::set_cache_lifetime('any', -1, 100);
 
 You can also specifically clean a cache.
 Keep in mind that `Zend_Cache::CLEANING_MODE_ALL` deletes all cache
 entries across all caches, not just for the 'foo' cache in the example below.
 
 	:::php
-	$cache = SS_Cache::factory('foo'); 
+	$cache = Cache::factory('foo'); 
 	$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
 
 A single element can be invalidated through its cache key.
 
 	:::php
-	$cache = SS_Cache::factory('foo');  
+	$cache = Cache::factory('foo');  
 	$cache->remove($cachekey);
 
 In order to increase the chance of your cache actually being hit,
@@ -88,7 +88,7 @@ e.g. by including the `LastEdited` value when caching `DataObject` results.
 
 	:::php
 	// set all caches to 3 hours
-	SS_Cache::set_cache_lifetime('any', 60*60*3);
+	Cache::set_cache_lifetime('any', 60*60*3);
 
 ## Alternative Cache Backends
 
@@ -113,7 +113,7 @@ To use this backend, you need a memcached daemon and the memcache PECL extension
 
  	:::php
 	// _config.php 
-	SS_Cache::add_backend(
+	Cache::add_backend(
 		'primary_memcached', 
 		'Memcached',
 		array(
@@ -129,7 +129,7 @@ To use this backend, you need a memcached daemon and the memcache PECL extension
 			)
 		)
 	);
-	SS_Cache::pick_backend('primary_memcached', 'any', 10);
+	Cache::pick_backend('primary_memcached', 'any', 10);
 
 ### APC
 
@@ -137,8 +137,8 @@ This backends stores cache records in shared memory through the [APC](http://pec
  (Alternative PHP Cache) extension (which is of course need for using this backend).
 
 	:::php
-	SS_Cache::add_backend('primary_apc', 'APC');
-	SS_Cache::pick_backend('primary_apc', 'any', 10);
+	Cache::add_backend('primary_apc', 'APC');
+	Cache::pick_backend('primary_apc', 'any', 10);
 
 ### Two-Levels
 
@@ -146,11 +146,11 @@ This backend is an hybrid one. It stores cache records in two other backends:
 a fast one (but limited) like Apc, Memcache... and a "slow" one like File or Sqlite.
 
 	:::php
-	SS_Cache::add_backend('two_level', 'Two-Levels', array(
+	Cache::add_backend('two_level', 'Two-Levels', array(
 		'slow_backend' => 'File',
 		'fast_backend' => 'APC',
 		'slow_backend_options' => array(
 				'cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache'
 		)
 	));
-	SS_Cache::pick_backend('two_level', 'any', 10); 
+	Cache::pick_backend('two_level', 'any', 10); 

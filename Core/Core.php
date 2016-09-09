@@ -2,10 +2,10 @@
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\SS_ClassManifest;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
-use SilverStripe\Core\Manifest\SS_ConfigStaticManifest;
-use SilverStripe\Core\Manifest\SS_ConfigManifest;
+use SilverStripe\Core\Manifest\ClassManifest;
+use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\ConfigStaticManifest;
+use SilverStripe\Core\Manifest\ConfigManifest;
 use SilverStripe\Control\Director;
 use SilverStripe\i18n\i18n;
 
@@ -55,16 +55,16 @@ gc_enable();
 
 // Include the files needed the initial manifest building, as well as any files
 // that are needed for the boostrap process on every request.
-require_once 'Core/SS_Cache.php';
+require_once 'Core/Cache.php';
 require_once 'Core/CustomMethods.php';
 require_once 'Core/Extensible.php';
 require_once 'Core/Injector/Injectable.php';
 require_once 'Core/Config/Configurable.php';
 require_once 'Core/Object.php';
 require_once 'Core/ClassInfo.php';
-require_once 'Core/Config/SS_DAG.php';
-require_once 'Core/Config/SS_DAG_CyclicException.php';
-require_once 'Core/Config/SS_DAG_Iterator.php';
+require_once 'Core/Config/DAG.php';
+require_once 'Core/Config/DAG_CyclicException.php';
+require_once 'Core/Config/DAG_Iterator.php';
 require_once 'Core/Config/Config.php';
 require_once 'View/TemplateGlobalProvider.php';
 require_once 'Control/Director.php';
@@ -98,19 +98,19 @@ $requestURL = isset($_REQUEST['url']) ? trim($_REQUEST['url'], '/') : false;
 $flush = (isset($_GET['flush']) || $requestURL === trim(BASE_URL . '/dev/build', '/'));
 
 global $manifest;
-$manifest = new SS_ClassManifest(BASE_PATH, false, $flush);
+$manifest = new ClassManifest(BASE_PATH, false, $flush);
 
 // Register SilverStripe's class map autoload
-$loader = SS_ClassLoader::instance();
+$loader = ClassLoader::instance();
 $loader->registerAutoloader();
 $loader->pushManifest($manifest);
 
 // Now that the class manifest is up, load the static configuration
-$configManifest = new SS_ConfigStaticManifest();
+$configManifest = new ConfigStaticManifest();
 Config::inst()->pushConfigStaticManifest($configManifest);
 
 // And then the yaml configuration
-$configManifest = new SS_ConfigManifest(BASE_PATH, false, $flush);
+$configManifest = new ConfigManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigYamlManifest($configManifest);
 
 // Load template manifest

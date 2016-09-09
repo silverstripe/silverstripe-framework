@@ -9,9 +9,9 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\Connect\DBConnector;
 use SilverStripe\ORM\Connect\DBSchemaManager;
-use SilverStripe\ORM\Connect\SS_Query;
+use SilverStripe\ORM\Connect\Query;
 use SilverStripe\ORM\Queries\SQLExpression;
-use SilverStripe\ORM\Connect\SS_Database;
+use SilverStripe\ORM\Connect\Database;
 use InvalidArgumentException;
 use LogicException;
 
@@ -32,7 +32,7 @@ class DB {
 
 	/**
 	 * The global database connection.
-	 * @var SS_Database
+	 * @var Database
 	 */
 	private static $connections = array();
 
@@ -52,13 +52,13 @@ class DB {
 	 * Pass an object that's a subclass of SS_Database.  This object will be used when {@link DB::query()}
 	 * is called.
 	 *
-	 * @param SS_Database $connection The connecton object to set as the connection.
+	 * @param Database $connection The connecton object to set as the connection.
 	 * @param string $name The name to give to this connection.  If you omit this argument, the connection
 	 * will be the default one used by the ORM.  However, you can store other named connections to
 	 * be accessed through DB::get_conn($name).  This is useful when you have an application that
 	 * needs to connect to more than one database.
 	 */
-	public static function set_conn(SS_Database $connection, $name = 'default') {
+	public static function set_conn(Database $connection, $name = 'default') {
 		self::$connections[$name] = $connection;
 	}
 
@@ -67,7 +67,7 @@ class DB {
 	 *
 	 * @param string $name An optional name given to a connection in the DB::setConn() call.  If omitted,
 	 * the default connection is returned.
-	 * @return SS_Database
+	 * @return Database
 	 */
 	public static function get_conn($name = 'default') {
 		if(isset(self::$connections[$name])) {
@@ -234,7 +234,7 @@ class DB {
 	 * @param array $databaseConfig A map of options. The 'type' is the name of the
 	 * subclass of SS_Database to use. For the rest of the options, see the specific class.
 	 * @param string $label identifier for the connection
-	 * @return SS_Database
+	 * @return Database
 	 */
 	public static function connect($databaseConfig, $label = 'default') {
 
@@ -274,7 +274,7 @@ class DB {
 	 * Execute the given SQL query.
 	 * @param string $sql The SQL query to execute
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return SS_Query
+	 * @return Query
 	 */
 	public static function query($sql, $errorLevel = E_USER_ERROR) {
 		self::$lastQuery = $sql;
@@ -309,7 +309,7 @@ class DB {
 	 * @param string $sql The SQL query to execute. The ? character will denote parameters.
 	 * @param array $parameters An ordered list of arguments.
 	 * @param int $errorLevel The level of error reporting to enable for the query
-	 * @return SS_Query
+	 * @return Query
 	 */
 	public static function prepared_query($sql, $parameters, $errorLevel = E_USER_ERROR) {
 		self::$lastQuery = $sql;

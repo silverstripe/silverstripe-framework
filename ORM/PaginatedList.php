@@ -12,7 +12,7 @@ use IteratorIterator;
 /**
  * A decorator that wraps around a data list in order to provide pagination.
  */
-class PaginatedList extends SS_ListDecorator
+class PaginatedList extends ListDecorator
 {
 
 	protected $request;
@@ -486,7 +486,7 @@ class PaginatedList extends SS_ListDecorator
 	/**
 	 * Set the request object for this list
 	 *
-	 * @param SS_HTTPRequest
+	 * @param HTTPRequest
 	 */
 	public function setRequest($request)
 	{

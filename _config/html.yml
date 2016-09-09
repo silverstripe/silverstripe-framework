@@ -3,6 +3,6 @@ Name: corehtml
 ---
 SilverStripe\Core\Injector\Injector:
   HTMLValue:
-    class: SilverStripe\View\Parsers\SS_HTML4Value
+    class: SilverStripe\View\Parsers\HTML4Value
   SilverStripe\Forms\HTMLEditor\HTMLEditorConfig:
     class: SilverStripe\Forms\HTMLEditor\TinyMCEConfig

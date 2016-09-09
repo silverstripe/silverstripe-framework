@@ -9,15 +9,15 @@ use SilverStripe\CMS\Model\VirtualPage;
 use SilverStripe\CMS\Controllers\SilverStripeNavigator;
 use SilverStripe\Control\ContentNegotiator;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\Cache;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
@@ -300,8 +300,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *
 	 * WARNING: Experimental API.
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function schema($request) {
 		$response = $this->getResponse();
@@ -309,15 +309,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$itemID = $request->param('ItemID');
 
 		if (!$formName) {
-			return (new SS_HTTPResponse('Missing request params', 400));
+			return (new HTTPResponse('Missing request params', 400));
 		}
 
 		if(!$this->hasMethod("get{$formName}")) {
-			return (new SS_HTTPResponse('Form not found', 404));
+			return (new HTTPResponse('Form not found', 404));
 		}
 
 		if(!$this->hasAction($formName)) {
-			return (new SS_HTTPResponse('Form not accessible', 401));
+			return (new HTTPResponse('Form not accessible', 401));
 		}
 
 		$form = $this->{"get{$formName}"}($itemID);
@@ -333,13 +333,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * schema if X-Formschema-Request header is set.
 	 *
 	 * @param Form $form
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	protected function getSchemaResponse($form) {
 		$request = $this->getRequest();
 		if($request->getHeader('X-Formschema-Request')) {
 			$data = $this->getSchemaForForm($form);
-			$response = new SS_HTTPResponse(Convert::raw2json($data));
+			$response = new HTTPResponse(Convert::raw2json($data));
 			$response->addHeader('Content-Type', 'application/json');
 			return $response;
 		}
@@ -654,14 +654,14 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		Versioned::set_stage(Versioned::DRAFT);
 	}
 
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model = null) {
+	public function handleRequest(HTTPRequest $request, DataModel $model = null) {
 		try {
 			$response = parent::handleRequest($request, $model);
 		} catch(ValidationException $e) {
 			// Nicer presentation of model-level validation errors
 			$msgs = _t('LeftAndMain.ValidationError', 'Validation error') . ': '
 				. $e->getMessage();
-			$e = new SS_HTTPResponse_Exception($msgs, 403);
+			$e = new HTTPResponse_Exception($msgs, 403);
 			$errorResponse = $e->getResponse();
 			$errorResponse->addHeader('Content-Type', 'text/plain');
 			$errorResponse->addHeader('X-Status', rawurlencode($msgs));
@@ -691,7 +691,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *
 	 * @param string $url
 	 * @param int $code
-	 * @return SS_HTTPResponse|string
+	 * @return HTTPResponse|string
 	 */
 	public function redirect($url, $code=302) {
 		if($this->getRequest()->isAjax()) {
@@ -717,8 +717,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
 	 */
 	public function index($request) {
 		return $this->getResponseNegotiator()->respond($request);
@@ -817,9 +817,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse
-	 * @throws SS_HTTPResponse_Exception
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse
+	 * @throws HTTPResponse_Exception
      */
 	public function show($request) {
 		// TODO Necessary for TableListField URLs to work properly
@@ -1210,7 +1210,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * Get a subtree underneath the request param 'ID'.
 	 * If ID = 0, then get the whole tree.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return string
 	 */
 	public function getsubtree($request) {
@@ -1236,7 +1236,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * all children with the node. Useful to refresh views after
 	 * state modifications, e.g. saving a form.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return string JSON
 	 */
 	public function updatetreenodes($request) {
@@ -1289,7 +1289,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 *
 	 * @param array $data
 	 * @param Form $form
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function save($data, $form) {
 		$request = $this->getRequest();
@@ -1324,7 +1324,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$form->loadDataFrom($record);
 			$form->setMessage($message, 'good');
 			$data = $this->getSchemaForForm($form);
-			$response = new SS_HTTPResponse(Convert::raw2json($data));
+			$response = new HTTPResponse(Convert::raw2json($data));
 			$response->addHeader('Content-Type', 'application/json');
 		} else {
 			$response = $this->getResponseNegotiator()->respond($request);
@@ -1377,9 +1377,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * - 'SiblingIDs': Array of all sibling nodes to the moved node (incl. the node itself).
 	 *   In case of a 'ParentID' change, relates to the new siblings under the new parent.
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @return SS_HTTPResponse JSON string with a
-	 * @throws SS_HTTPResponse_Exception
+	 * @param HTTPRequest $request
+	 * @return HTTPResponse JSON string with a
+	 * @throws HTTPResponse_Exception
 	 */
 	public function savetreenode($request) {
 		if (!SecurityToken::inst()->checkRequest($request)) {
@@ -1493,7 +1493,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * The form usually construct itself from {@link DataObject->getCMSFields()}
 	 * for the specific managed subclass defined in {@link LeftAndMain::$tree_class}.
 	 *
-	 * @param SS_HTTPRequest $request Optionally contains an identifier for the
+	 * @param HTTPRequest $request Optionally contains an identifier for the
 	 *  record to load into the form.
 	 * @return Form Should return a form regardless wether a record has been found.
 	 *  Form might be readonly if the current user doesn't have the permission to edit
@@ -1906,7 +1906,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Tries to obtain version number from composer.lock if it exists
 		$composerLockPath = BASE_PATH . '/composer.lock';
 		if (file_exists($composerLockPath)) {
-			$cache = SS_Cache::factory('LeftAndMain_CMSVersion');
+			$cache = Cache::factory('LeftAndMain_CMSVersion');
 			$cacheKey = filemtime($composerLockPath);
 			$versions = $cache->load($cacheKey);
 			if($versions) {

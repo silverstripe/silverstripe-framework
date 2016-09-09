@@ -112,7 +112,7 @@ the `$fields` constructor parameter.
 For pagination records on multiple pages, you need to wrap the results in a
 `PaginatedList` object. This object is also passed the generated `SQLSelect`
 in order to read page limit information. It is also passed the current
-`SS_HTTPRequest` object so it can read the current page from a GET var.
+`HTTPRequest` object so it can read the current page from a GET var.
 
 	:::php
 	public function getResults($searchCriteria = array()) {

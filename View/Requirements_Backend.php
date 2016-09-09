@@ -6,7 +6,7 @@ use InvalidArgumentException;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Storage\GeneratedAssetHandler;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
@@ -890,9 +890,9 @@ class Requirements_Backend
 	 * Attach requirements inclusion to X-Include-JS and X-Include-CSS headers on the given
 	 * HTTP Response
 	 *
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPResponse $response
 	 */
-	public function includeInResponse(SS_HTTPResponse $response)
+	public function includeInResponse(HTTPResponse $response)
 	{
 		$this->processCombinedFiles();
 		$jsRequirements = array();

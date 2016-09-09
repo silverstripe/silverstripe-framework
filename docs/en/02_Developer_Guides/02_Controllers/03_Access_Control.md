@@ -172,7 +172,7 @@ replacement.
 ## Controller Level Checks
 
 After checking for allowed_actions, each controller invokes its `init()` method, which is typically used to set up 
-common state, If an `init()` method returns a `SS_HTTPResponse` with either a 3xx or 4xx HTTP status code, it'll abort 
+common state, If an `init()` method returns a `HTTPResponse` with either a 3xx or 4xx HTTP status code, it'll abort 
 execution. This behavior can be used to implement permission checks.
 
 <div class="info" markdown="1">

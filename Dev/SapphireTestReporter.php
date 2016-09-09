@@ -378,7 +378,7 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener {
 	protected function writeResultError($name, $message, $trace) {
 		echo "<div class=\"failure\"><h2 class=\"test-case\">&otimes; ". $this->testNameToPhrase($name) ."</h2>";
 		echo "<pre>".htmlentities($message, ENT_COMPAT, 'UTF-8')."</pre>";
-		echo SS_Backtrace::get_rendered_backtrace($trace);
+		echo Backtrace::get_rendered_backtrace($trace);
 		echo "</div>";
 	}
 

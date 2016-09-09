@@ -4,8 +4,8 @@ namespace SilverStripe\Admin;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Object;
@@ -85,7 +85,7 @@ class AddToCampaignHandler {
 	/**
 	 * Perform the action. Either returns a Form or performs the action, as per the class doc
 	 *
-	 * @return DBHTMLText|SS_HTTPResponse
+	 * @return DBHTMLText|HTTPResponse
 	 */
 	public function handle() {
 		$object = $this->getObject($this->data['ID'], $this->data['ClassName']);
@@ -118,7 +118,7 @@ class AddToCampaignHandler {
 	 * @param int $id The ID of the DataObject
 	 * @param string $class The Class of the DataObject
 	 * @return DataObject The referenced DataObject
-	 * @throws SS_HTTPResponse_Exception
+	 * @throws HTTPResponse_Exception
 	 */
 	protected function getObject($id, $class) {
 		$id = (int)$id;
@@ -206,8 +206,8 @@ class AddToCampaignHandler {
 	 *
 	 * @param DataObject $object The object to add to the ChangeSet
 	 * @param int $campaignID The ID of the ChangeSet to add $object to
-	 * @return SS_HTTPResponse
-	 * @throws SS_HTTPResponse_Exception
+	 * @return HTTPResponse
+	 * @throws HTTPResponse_Exception
 	 */
 	public function addToCampaign($object, $campaignID) {
 		/** @var ChangeSet $changeSet */
@@ -245,7 +245,7 @@ class AddToCampaignHandler {
 		if ($request->getHeader('X-Formschema-Request')) {
 			return $message;
 		} elseif (Director::is_ajax()) {
-			$response = new SS_HTTPResponse($message, 200);
+			$response = new HTTPResponse($message, 200);
 
 			$response->addHeader('Content-Type', 'text/plain; charset=utf-8');
 			return $response;

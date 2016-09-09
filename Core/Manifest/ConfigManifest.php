@@ -4,10 +4,10 @@ namespace SilverStripe\Core\Manifest;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\SS_DAG;
-use SilverStripe\Core\Config\SS_DAG_CyclicException;
+use SilverStripe\Core\Config\DAG;
+use SilverStripe\Core\Config\DAG_CyclicException;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\SS_Cache;
+use SilverStripe\Core\Cache;
 use Symfony\Component\Yaml\Parser;
 use Traversable;
 use Zend_Cache_Core;
@@ -15,7 +15,7 @@ use Zend_Cache_Core;
 /**
  * A utility class which builds a manifest of configuration items
  */
-class SS_ConfigManifest {
+class ConfigManifest {
 
 	/** @var string - The base path used when building the manifest */
 	protected $base;
@@ -136,7 +136,7 @@ class SS_ConfigManifest {
 	 */
 	protected function getCache()
 	{
-		return SS_Cache::factory('SS_Configuration', 'Core', array(
+		return Cache::factory('SS_Configuration', 'Core', array(
 			'automatic_serialization' => true,
 			'lifetime' => null
 		));
@@ -365,7 +365,7 @@ class SS_ConfigManifest {
 		$frags = $this->yamlConfigFragments;
 
 		// Build a directed graph
-		$dag = new SS_DAG($frags);
+		$dag = new DAG($frags);
 
 		foreach ($frags as $i => $frag) {
 			foreach ($frags as $j => $otherfrag) {
@@ -381,7 +381,7 @@ class SS_ConfigManifest {
 		try {
 			$this->yamlConfigFragments = $dag->sort();
 		}
-		catch (SS_DAG_CyclicException $e) {
+		catch (DAG_CyclicException $e) {
 
 			if (!Director::isLive() && isset($_REQUEST['debug'])) {
 				$res = '<h1>Remaining config fragment graph</h1>';

@@ -50,15 +50,15 @@ class CliTestReporter extends SapphireTestReporter {
 		echo "\n\n";
 		$breakages = $errorCount + $failCount;
 		if ($breakages == 0 && $incompleteCount > 0) {
-			echo SS_Cli::text(" OK, BUT INCOMPLETE TESTS! ", "black", "yellow");
+			echo CLI::text(" OK, BUT INCOMPLETE TESTS! ", "black", "yellow");
 		} elseif ($breakages == 0) {
-			echo SS_Cli::text(" ALL TESTS PASS ", "black", "green");
+			echo CLI::text(" ALL TESTS PASS ", "black", "green");
 		}  else {
-			echo SS_Cli::text(" AT LEAST ONE FAILURE ", "black", "red");
+			echo CLI::text(" AT LEAST ONE FAILURE ", "black", "red");
 		}
 
-		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, SS_Cli::text("$passCount passes"),
-			SS_Cli::text("$breakages failures"), SS_Cli::text("$incompleteCount incomplete"));
+		echo sprintf("\n\n%d tests run: %s, %s, and %s\n", $testCount, CLI::text("$passCount passes"),
+			CLI::text("$breakages failures"), CLI::text("$incompleteCount incomplete"));
 
 		echo "Maximum memory usage: " . number_format(memory_get_peak_usage()/(1024*1024), 1) . "M\n\n";
 
@@ -83,11 +83,11 @@ class CliTestReporter extends SapphireTestReporter {
 	public function endTest( PHPUnit_Framework_Test $test, $time) {
 		// Status indicator, a la PHPUnit
 		switch($this->currentTest['status']) {
-			case TEST_FAILURE: echo SS_Cli::text("F","red", null, true); break;
-			case TEST_ERROR: echo SS_Cli::text("E","red", null, true); break;
-			case TEST_INCOMPLETE: echo SS_Cli::text("I","yellow"); break;
-			case TEST_SUCCESS: echo SS_Cli::text(".","green"); break;
-			default: echo SS_Cli::text("?", "yellow"); break;
+			case TEST_FAILURE: echo CLI::text("F","red", null, true); break;
+			case TEST_ERROR: echo CLI::text("E","red", null, true); break;
+			case TEST_INCOMPLETE: echo CLI::text("I","yellow"); break;
+			case TEST_SUCCESS: echo CLI::text(".","green"); break;
+			default: echo CLI::text("?", "yellow"); break;
 		}
 
 		static $colCount = 0;
@@ -130,8 +130,8 @@ class CliTestReporter extends SapphireTestReporter {
 			}
 
 			$color = ($test['status'] == 2) ? 'yellow' : 'red';
-			echo "\n" . SS_Cli::text($test['name'] . "\n". $test['message'] . "\n", $color, null);
-			echo SS_Backtrace::get_rendered_backtrace($filteredTrace, true);
+			echo "\n" . CLI::text($test['name'] . "\n". $test['message'] . "\n", $color, null);
+			echo Backtrace::get_rendered_backtrace($filteredTrace, true);
 			echo "--------------------\n";
 		}
 	}

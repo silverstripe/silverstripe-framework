@@ -3,7 +3,7 @@
 namespace SilverStripe\Admin;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -92,7 +92,7 @@ class AdminRootController extends Controller implements TemplateGlobalProvider {
 		}
 	}
 
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(HTTPRequest $request, DataModel $model) {
 		// If this is the final portion of the request (i.e. the URL is just /admin), direct to the default panel
 		if ($request->allParsed()) {
 			$segment = Config::inst()->get($this->config()->default_panel, 'url_segment');

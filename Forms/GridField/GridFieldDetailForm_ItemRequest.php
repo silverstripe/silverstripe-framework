@@ -6,9 +6,9 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Control\RequestHandler;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -99,7 +99,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return mixed
 	 */
 	public function view($request)
@@ -127,7 +127,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return mixed
 	 */
 	public function edit($request)
@@ -425,7 +425,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 	 * Response object for this request after a successful save
 	 *
 	 * @param bool $isNewRecord True if this record was just created
-	 * @return SS_HTTPResponse|DBHTMLText
+	 * @return HTTPResponse|DBHTMLText
 	 */
 	protected function redirectAfterSave($isNewRecord)
 	{
@@ -489,8 +489,8 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 	 *
 	 * @param Form $form The source form
 	 * @param ValidationException $e The validation error message
-	 * @return SS_HTTPResponse
-	 * @throws SS_HTTPResponse_Exception
+	 * @return HTTPResponse
+	 * @throws HTTPResponse_Exception
 	 */
 	protected function generateValidationResponse($form, $e)
 	{
@@ -514,7 +514,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 	/**
 	 * @param array $data
 	 * @param Form $form
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function doDelete($data, $form)
 	{

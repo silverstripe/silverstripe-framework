@@ -1,31 +1,24 @@
 <?php
 
-use SilverStripe\Dev\Debug;
-use SilverStripe\Security\SecurityToken;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Extension;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPResponse_Exception;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
 
-
-
-
-
-
 /**
- * Tests for RequestHandler and SS_HTTPRequest.
+ * Tests for RequestHandler and HTTPRequest.
  * We've set up a simple URL handling model based on
  */
 class RequestHandlingTest extends FunctionalTest {
@@ -74,7 +67,7 @@ class RequestHandlingTest extends FunctionalTest {
 	// public function testRequestHandlerChainingLatestParams() {
 	// 	$c = new RequestHandlingTest_Controller();
 	// 	$c->init();
-	// 	$response = $c->handleRequest(new SS_HTTPRequest('GET', 'testGoodBase1/TestForm/fields/MyField'));
+	// 	$response = $c->handleRequest(new HTTPRequest('GET', 'testGoodBase1/TestForm/fields/MyField'));
 	// 	$this->assertEquals(
 	// 		$c->getRequest()->latestParams(),
 	// 		array(
@@ -394,11 +387,11 @@ class RequestHandlingTest_Controller extends Controller implements TestOnly {
 	}
 
 	public function throwexception() {
-		throw new SS_HTTPResponse_Exception('This request was invalid.', 400);
+		throw new HTTPResponse_Exception('This request was invalid.', 400);
 	}
 
 	public function throwresponseexception() {
-		throw new SS_HTTPResponse_Exception(new SS_HTTPResponse('There was an internal server error.', 500));
+		throw new HTTPResponse_Exception(new HTTPResponse('There was an internal server error.', 500));
 	}
 
 	public function throwhttperror() {

@@ -55,10 +55,10 @@ class SapphireREPL extends Controller {
 
 			echo "SilverStripe Interactive Command-line (REPL interface). Type help for hints.\n\n";
 			while(true) {
-				echo SS_Cli::text("?> ", "cyan");
-				echo SS_Cli::start_colour("yellow");
+				echo CLI::text("?> ", "cyan");
+				echo CLI::start_colour("yellow");
 				$command = trim(fgets(STDIN, 4096));
-				echo SS_Cli::end_colour();
+				echo CLI::end_colour();
 
 				if ( $command == 'help' || $command == '?' ) {
 					print "help or ? to exit\n" ;
@@ -83,7 +83,7 @@ class SapphireREPL extends Controller {
 					echo "\n";
 				}
 				catch( Exception $__repl_exception ) {
-					echo SS_Cli::start_colour("red");
+					echo CLI::start_colour("red");
 					printf( '%s (code: %d) got thrown'.PHP_EOL,
 						get_class($__repl_exception),
 						$__repl_exception->getCode() );

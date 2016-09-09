@@ -2,7 +2,7 @@
 
 use SilverStripe\Control\Director;
 use SilverStripe\Control\ContentNegotiator;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
@@ -674,12 +674,12 @@ after')
 		// Check that the content negotiator converts to the equally legal formats
 		$negotiator = new ContentNegotiator();
 
-		$response = new SS_HTTPResponse($this->render($tmpl1));
+		$response = new HTTPResponse($this->render($tmpl1));
 		$negotiator->html($response);
 		$this->assertRegExp('/<head><base href=".*"><!--\[if lte IE 6\]><\/base><!\[endif\]--><\/head>/',
 			$response->getBody());
 
-		$response = new SS_HTTPResponse($this->render($tmpl1));
+		$response = new HTTPResponse($this->render($tmpl1));
 		$negotiator->xhtml($response);
 		$this->assertRegExp('/<head><base href=".*" \/><\/head>/', $response->getBody());
 	}

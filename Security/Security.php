@@ -4,8 +4,8 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\SS_HTTPRequest;
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
@@ -252,7 +252,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *
 	 * The alreadyLoggedIn value can contain a '%s' placeholder that will be replaced with a link
 	 * to log in.
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public static function permissionFailure($controller = null, $messageSet = null) {
 		self::set_ignore_disallowed_actions(true);
@@ -260,7 +260,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 		if(!$controller) $controller = Controller::curr();
 
 		if(Director::is_ajax()) {
-			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
+			$response = ($controller) ? $controller->getResponse() : new HTTPResponse();
 			$response->setStatusCode(403);
 			if(!Member::currentUser()) {
 				$response->setBody(_t('ContentController.NOTLOGGEDIN','Not logged in'));
@@ -303,7 +303,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 
 		// Work out the right message to show
 		if($member && $member->exists()) {
-			$response = ($controller) ? $controller->getResponse() : new SS_HTTPResponse();
+			$response = ($controller) ? $controller->getResponse() : new HTTPResponse();
 			$response->setStatusCode(403);
 
 			//If 'alreadyLoggedIn' is not specified in the array, then use the default
@@ -320,7 +320,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 			$form->sessionMessage($message, 'warning');
 			Session::set('MemberLoginForm.force_message',1);
 			$loginResponse = $me->login();
-			if($loginResponse instanceof SS_HTTPResponse) {
+			if($loginResponse instanceof HTTPResponse) {
 				return $loginResponse;
 			}
 
@@ -446,7 +446,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	/**
 	 * Perform pre-login checking and prepare a response if available prior to login
 	 *
-	 * @return SS_HTTPResponse Substitute response object if the login process should be curcumvented.
+	 * @return HTTPResponse Substitute response object if the login process should be curcumvented.
 	 * Returns null if should proceed as normal.
 	 */
 	protected function preLogin() {
@@ -454,10 +454,10 @@ class Security extends Controller implements TemplateGlobalProvider {
 		$eventResults = $this->extend('onBeforeSecurityLogin');
 		// If there was a redirection, return
 		if($this->redirectedTo()) return $this->getResponse();
-		// If there was an SS_HTTPResponse object returned, then return that
+		// If there was an HTTPResponse object returned, then return that
 		if($eventResults) {
 			foreach($eventResults as $result) {
-				if($result instanceof SS_HTTPResponse) return $result;
+				if($result instanceof HTTPResponse) return $result;
 			}
 		}
 
@@ -544,7 +544,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * For multiple authenticators, Security_MultiAuthenticatorLogin is used.
 	 * See getTemplatesFor and getIncludeTemplate for how to override template logic
 	 *
-	 * @return string|SS_HTTPResponse Returns the "login" page as HTML code.
+	 * @return string|HTTPResponse Returns the "login" page as HTML code.
 	 */
 	public function login() {
 		// Check pre-login process
@@ -651,7 +651,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 * Show the "password sent" page, after a user has requested
 	 * to reset their password.
 	 *
-	 * @param SS_HTTPRequest $request The SS_HTTPRequest for this action.
+	 * @param HTTPRequest $request The HTTPRequest for this action.
 	 * @return string Returns the "password sent" page as HTML code.
 	 */
 	public function passwordsent($request) {
@@ -709,7 +709,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 	 *
 	 * @see ChangePasswordForm
 	 *
-	 * @return string|SS_HTTPRequest Returns the "change password" page as HTML code, or a redirect response
+	 * @return string|HTTPRequest Returns the "change password" page as HTML code, or a redirect response
 	 */
 	public function changepassword() {
 		$controller = $this->getResponseController(_t('Security.CHANGEPASSWORDHEADER', 'Change your password'));

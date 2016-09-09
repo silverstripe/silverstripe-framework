@@ -4,7 +4,7 @@ title: How to Create a Paginated List
 
 In order to create a paginated list, create a method on your controller that first creates a `SS_List` that contains
 all your record, then wraps it in a [api:PaginatedList] object. The `PaginatedList` object should also passed the 
-[api:SS_HTTPRequest] object so it can read the current page information from the "?start=" GET var.
+[api:HTTPRequest] object so it can read the current page information from the "?start=" GET var.
 
 The `PaginatedList` will automatically set up query limits and read the request for information.
 

@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Admin;
 
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\ArrayList;
@@ -24,7 +24,7 @@ class CMSProfileController extends LeftAndMain {
 
 		$form = parent::getEditForm($id, $fields);
 
-		if($form instanceof SS_HTTPResponse) {
+		if($form instanceof HTTPResponse) {
 			return $form;
 		}
 

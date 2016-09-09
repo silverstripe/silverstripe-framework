@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObject;
@@ -87,7 +87,7 @@ class GridFieldDetailForm implements GridField_URLHandler {
 	/**
 	 *
 	 * @param GridField $gridField
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return GridFieldDetailForm_ItemRequest
 	 */
 	public function handleItem($gridField, $request) {

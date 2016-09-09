@@ -13,13 +13,13 @@ class FlushRequestFilter implements RequestFilter {
 	/**
 	 * @inheritdoc
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @param Session $session
 	 * @param DataModel $model
 	 *
 	 * @return bool
 	 */
-	public function preRequest(SS_HTTPRequest $request, Session $session, DataModel $model) {
+	public function preRequest(HTTPRequest $request, Session $session, DataModel $model) {
 		if(array_key_exists('flush', $request->getVars())) {
 			foreach(ClassInfo::implementorsOf('SilverStripe\\Core\\Flushable') as $class) {
 				$class::flush();
@@ -32,13 +32,13 @@ class FlushRequestFilter implements RequestFilter {
 	/**
 	 * @inheritdoc
 	 *
-	 * @param SS_HTTPRequest $request
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPRequest $request
+	 * @param HTTPResponse $response
 	 * @param DataModel $model
 	 *
 	 * @return bool
 	 */
-	public function postRequest(SS_HTTPRequest $request, SS_HTTPResponse $response, DataModel $model) {
+	public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model) {
 		return true;
 	}
 

@@ -2,20 +2,20 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Control\SS_HTTPResponse;
+use SilverStripe\Control\HTTPResponse;
 
 /**
- * Wrapper around SS_HTTPResponse to make it look like a SimpleHTTPResposne
+ * Wrapper around HTTPResponse to make it look like a SimpleHTTPResposne
  */
 class TestSession_STResponseWrapper
 {
 
 	/**
-	 * @var SS_HTTPResponse
+	 * @var HTTPResponse
 	 */
 	private $response;
 
-	public function __construct(SS_HTTPResponse $response)
+	public function __construct(HTTPResponse $response)
 	{
 		$this->response = $response;
 	}

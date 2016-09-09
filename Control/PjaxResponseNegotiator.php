@@ -38,7 +38,7 @@ class PjaxResponseNegotiator {
 
 	/**
 	 * @param array $callbacks
-	 * @param SS_HTTPResponse $response An existing response to reuse (optional)
+	 * @param HTTPResponse $response An existing response to reuse (optional)
 	 */
 	public function __construct($callbacks = array(), $response = null) {
 		$this->callbacks = $callbacks;
@@ -47,7 +47,7 @@ class PjaxResponseNegotiator {
 
 	public function getResponse() {
 		if(!$this->response) {
-			$this->response = new SS_HTTPResponse();
+			$this->response = new HTTPResponse();
 		}
 		return $this->response;
 	}
@@ -60,14 +60,14 @@ class PjaxResponseNegotiator {
 	 * Out of the box, the handler "CurrentForm" value, which will return the rendered form.
 	 * Non-Ajax calls will redirect back.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @param array $extraCallbacks List of anonymous functions or callables returning either a string
-	 * or SS_HTTPResponse, keyed by their fragment identifier. The 'default' key can
+	 * or HTTPResponse, keyed by their fragment identifier. The 'default' key can
 	 * be used as a fallback for non-ajax responses.
-	 * @return SS_HTTPResponse
-	 * @throws SS_HTTPResponse_Exception
+	 * @return HTTPResponse
+	 * @throws HTTPResponse_Exception
 	 */
-	public function respond(SS_HTTPRequest $request, $extraCallbacks = array()) {
+	public function respond(HTTPRequest $request, $extraCallbacks = array()) {
 		// Prepare the default options and combine with the others
 		$callbacks = array_merge($this->callbacks, $extraCallbacks);
 		$response = $this->getResponse();
@@ -80,9 +80,9 @@ class PjaxResponseNegotiator {
 			$fragments = explode(',', $fragmentStr);
 		} else {
 			if($request->isAjax()) {
-				throw new SS_HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
+				throw new HTTPResponse_Exception("Ajax requests to this URL require an X-Pjax header.", 400);
 			} elseif (empty($callbacks['default'])) {
-				throw new SS_HTTPResponse_Exception("Missing default response handler for this URL", 400);
+				throw new HTTPResponse_Exception("Missing default response handler for this URL", 400);
 			}
 			$response->setBody(call_user_func($callbacks['default']));
 			return $response;
@@ -94,7 +94,7 @@ class PjaxResponseNegotiator {
 				$res = call_user_func($callbacks[$fragment]);
 				$responseParts[$fragment] = $res ? (string) $res : $res;
 			} else {
-				throw new SS_HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
+				throw new HTTPResponse_Exception("X-Pjax = '$fragment' not supported for this URL.", 400);
 			}
 		}
 		$response->setBody(Convert::raw2json($responseParts));

@@ -3,7 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Forms\LiteralField;
-use SilverStripe\ORM\SS_Sortable;
+use SilverStripe\ORM\Sortable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataObject;
@@ -65,7 +65,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 	 * @return bool
 	 */
 	protected function checkDataType($dataList) {
-		if($dataList instanceof SS_Sortable) {
+		if($dataList instanceof Sortable) {
 			return true;
 		} else {
 			if($this->throwExceptionOnBadDataType) {
@@ -106,7 +106,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 		if(!$this->checkDataType($list)) {
 			return null;
 		}
-		/** @var SS_Sortable $list */
+		/** @var Sortable $list */
 		$forTemplate = new ArrayData(array());
 		$forTemplate->Fields = new ArrayList;
 
@@ -237,7 +237,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 			return $dataList;
 		}
 
-		/** @var SS_Sortable $dataList */
+		/** @var Sortable $dataList */
 		$state = $gridField->State->GridFieldSortableHeader;
 		if ($state->SortColumn == "") {
 			return $dataList;

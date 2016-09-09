@@ -8,7 +8,7 @@ use SilverStripe\Core\Object;
  * Class to facilitate command-line output.
  * Support less-trivial output stuff such as colours (on xterm-color)
  */
-class SS_Cli extends Object {
+class CLI extends Object {
 	/**
 	 * Returns true if the current STDOUT supports the use of colour control codes.
 	 */

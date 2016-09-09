@@ -13,14 +13,14 @@ use ArrayAccess;
  * Caution: objects of this class are immutable, e.g. echo $request['a']; works as expected,
  * but $request['a'] = '1'; has no effect.
  *
- * The intention is that a single SS_HTTPRequest object can be passed from one object to another, each object calling
+ * The intention is that a single HTTPRequest object can be passed from one object to another, each object calling
  * match() to get the information that they need out of the URL.  This is generally handled by
  * {@link RequestHandler::handleRequest()}.
  *
  * @todo Accept X_HTTP_METHOD_OVERRIDE http header and $_REQUEST['_method'] to override request types (useful for
  *       webclients not supporting PUT and DELETE)
  */
-class SS_HTTPRequest implements ArrayAccess {
+class HTTPRequest implements ArrayAccess {
 
 	/**
 	 * @var string
@@ -125,7 +125,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	protected $unshiftedButParsedParts = 0;
 
 	/**
-	 * Construct a SS_HTTPRequest from a URL relative to the site root.
+	 * Construct a HTTPRequest from a URL relative to the site root.
 	 *
 	 * @param string $httpMethod
 	 * @param string $url
@@ -149,7 +149,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * without us loosing all the other info attached (like headers)
 	 *
 	 * @param string $url The new URL
-	 * @return SS_HTTPRequest The updated request
+	 * @return HTTPRequest The updated request
 	 */
 	public function setUrl($url) {
 		$this->url = $url;
@@ -208,7 +208,7 @@ class SS_HTTPRequest implements ArrayAccess {
 
 	/**
 	 * @param string $body
-	 * @return SS_HTTPRequest $this
+	 * @return HTTPRequest $this
 	 */
 	public function setBody($body) {
 		$this->body = $body;
@@ -296,7 +296,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	}
 
 	/**
-	 * Checks if the {@link SS_HTTPRequest->getExtension()} on this request matches one of the more common media types
+	 * Checks if the {@link HTTPRequest->getExtension()} on this request matches one of the more common media types
 	 * embedded into a webpage - e.g. css, png.
 	 *
 	 * This is useful for things like determining wether to display a fully rendered error page or not. Note that the
@@ -340,7 +340,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * e.g. "Content-Type".
 	 *
 	 * @param string $header
-	 * @return SS_HTTPRequest $this
+	 * @return HTTPRequest $this
 	 */
 	public function removeHeader($header) {
 		if(isset($this->headers[$header])) unset($this->headers[$header]);
@@ -422,7 +422,7 @@ class SS_HTTPRequest implements ArrayAccess {
 	public function offsetUnset($offset) {}
 
 	/**
-	 * Construct an SS_HTTPResponse that will deliver a file to the client.
+	 * Construct an HTTPResponse that will deliver a file to the client.
 	 * Caution: Since it requires $fileData to be passed as binary data (no stream support),
 	 * it's only advisable to send small files through this method.
 	 *
@@ -430,13 +430,13 @@ class SS_HTTPRequest implements ArrayAccess {
 	 * @param $fileData
 	 * @param $fileName
 	 * @param null $mimeType
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public static function send_file($fileData, $fileName, $mimeType = null) {
 		if(!$mimeType) {
 			$mimeType = HTTP::get_mime_type($fileName);
 		}
-		$response = new SS_HTTPResponse($fileData);
+		$response = new HTTPResponse($fileData);
 		$response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
 		// Note a IE-only fix that inspects this header in HTTP::add_cache_headers().
 		$response->addHeader("Content-Disposition", "attachment; filename=" . addslashes($fileName));
@@ -610,7 +610,7 @@ class SS_HTTPRequest implements ArrayAccess {
 
 	/**
 	 * @param $params
-	 * @return SS_HTTPRequest $this
+	 * @return HTTPRequest $this
 	 */
 	public function setRouteParams($params) {
 		$this->routeParams = $params;

@@ -8,7 +8,7 @@ use PDO;
 /**
  * A result-set from a PDO database.
  */
-class PDOQuery extends SS_Query {
+class PDOQuery extends Query {
 	/**
 	 * The internal MySQL handle that points to the result set.
 	 * @var PDOStatement

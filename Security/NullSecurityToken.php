@@ -2,7 +2,7 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Control\SS_HTTPRequest;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\FieldList;
 
 /**
@@ -22,7 +22,7 @@ class NullSecurityToken extends SecurityToken
 	}
 
 	/**
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @return Boolean
 	 */
 	public function checkRequest($request)

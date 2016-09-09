@@ -30,7 +30,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	protected $urlParams;
 
 	/**
-	 * Contains all GET and POST parameters passed to the current {@link SS_HTTPRequest}.
+	 * Contains all GET and POST parameters passed to the current {@link HTTPRequest}.
 	 *
 	 * @var array
 	 */
@@ -70,7 +70,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 *
 	 * Set in {@link handleRequest()}.
 	 *
-	 * @var SS_HTTPResponse
+	 * @var HTTPResponse
 	 */
 	protected $response;
 
@@ -155,15 +155,15 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 *
 	 * @todo setDataModel and setRequest are redundantly called in parent::handleRequest() - sort this out
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @param DataModel $model
 	 */
-	protected function beforeHandleRequest(SS_HTTPRequest $request, DataModel $model) {
+	protected function beforeHandleRequest(HTTPRequest $request, DataModel $model) {
 		//Push the current controller to protect against weird session issues
 		$this->pushCurrent();
 		//Set up the internal dependencies (request, response, datamodel)
 		$this->setRequest($request);
-		$this->setResponse(new SS_HTTPResponse());
+		$this->setResponse(new HTTPResponse());
 		$this->setDataModel($model);
 		//kick off the init functionality
 		$this->doInit();
@@ -179,7 +179,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Executes this controller, and return an {@link SS_HTTPResponse} object with the result.
+	 * Executes this controller, and return an {@link HTTPResponse} object with the result.
 	 *
 	 * This method defers to {@link RequestHandler->handleRequest()} to determine which action
 	 *    should be executed
@@ -194,12 +194,12 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * make sure that you start the method with $this->beforeHandleRequest()
 	 * and end the method with $this->afterHandleRequest()
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @param DataModel $model
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
-	public function handleRequest(SS_HTTPRequest $request, DataModel $model) {
+	public function handleRequest(HTTPRequest $request, DataModel $model) {
 		if (!$request) {
 			user_error("Controller::handleRequest() not passed a request!", E_USER_ERROR);
 		}
@@ -229,13 +229,13 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Prepare the response (we can receive an assortment of response types (strings/objects/HTTPResponses) and
 	 * changes the controller response object appropriately
 	 *
-	 * @param SS_HTTPResponse|Object $response
+	 * @param HTTPResponse|Object $response
 	 */
 	protected function prepareResponse($response) {
-		if ($response instanceof SS_HTTPResponse) {
+		if ($response instanceof HTTPResponse) {
 			if (isset($_REQUEST['debug_request'])) {
 				Debug::message(
-					"Request handler returned SS_HTTPResponse object to $this->class controller;"
+					"Request handler returned HTTPResponse object to $this->class controller;"
 					. "returning it without modification."
 				);
 			}
@@ -267,10 +267,10 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 * Controller's default action handler.  It will call the method named in "$Action", if that method
 	 * exists. If "$Action" isn't given, it will use "index" as a default.
 	 *
-	 * @param SS_HTTPRequest $request
+	 * @param HTTPRequest $request
 	 * @param string $action
 	 *
-	 * @return DBHTMLText|SS_HTTPResponse
+	 * @return DBHTMLText|HTTPResponse
 	 */
 	protected function handleAction($request, $action) {
 		foreach($request->latestParams() as $k => $v) {
@@ -326,26 +326,26 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Returns the SS_HTTPResponse object that this controller is building up. Can be used to set the
+	 * Returns the HTTPResponse object that this controller is building up. Can be used to set the
 	 * status code and headers.
 	 *
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function getResponse() {
 		if (!$this->response) {
-			$this->setResponse(new SS_HTTPResponse());
+			$this->setResponse(new HTTPResponse());
 		}
 		return $this->response;
 	}
 
 	/**
-	 * Sets the SS_HTTPResponse object that this controller is building up.
+	 * Sets the HTTPResponse object that this controller is building up.
 	 *
-	 * @param SS_HTTPResponse $response
+	 * @param HTTPResponse $response
 	 *
 	 * @return $this
 	 */
-	public function setResponse(SS_HTTPResponse $response) {
+	public function setResponse(HTTPResponse $response) {
 		$this->response = $response;
 		return $this;
 	}
@@ -602,7 +602,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 *
 	 * @param string $url
 	 * @param int $code
-	 * @return SS_HTTPResponse
+	 * @return HTTPResponse
 	 */
 	public function redirect($url, $code = 302) {
 		if($this->getResponse()->getHeader('Location') && $this->getResponse()->getHeader('Location') != $url) {
@@ -627,7 +627,7 @@ class Controller extends RequestHandler implements TemplateGlobalProvider {
 	 *
 	 * @uses redirect()
 	 *
-	 * @return bool|SS_HTTPResponse
+	 * @return bool|HTTPResponse
 	 */
 	public function redirectBack() {
 		// Don't cache the redirect back ever

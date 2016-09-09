@@ -12,9 +12,9 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Core\Manifest\SS_ClassManifest;
-use SilverStripe\Core\Manifest\SS_ClassLoader;
-use SilverStripe\Core\Manifest\SS_ConfigStaticManifest;
+use SilverStripe\Core\Manifest\ClassManifest;
+use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\ConfigStaticManifest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
@@ -100,7 +100,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected static $is_running_test = false;
 
 	/**
-	 * @var SS_ClassManifest
+	 * @var ClassManifest
 	 */
 	protected static $test_class_manifest;
 
@@ -178,7 +178,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Set the manifest to be used to look up test classes by helper functions
 	 *
-	 * @param SS_ClassManifest $manifest
+	 * @param ClassManifest $manifest
 	 */
 	public static function set_test_class_manifest($manifest) {
 		self::$test_class_manifest = $manifest;
@@ -187,7 +187,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Return the manifest being used to look up test classes by helper functions
 	 *
-	 * @return SS_ClassManifest
+	 * @return ClassManifest
 	 */
 	public static function get_test_class_manifest() {
 		return self::$test_class_manifest;
@@ -886,18 +886,18 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			$flush = false;
 		}
 
-		$classManifest = new SS_ClassManifest(
+		$classManifest = new ClassManifest(
 			BASE_PATH, true, $flush
 		);
 
-		SS_ClassLoader::instance()->pushManifest($classManifest, false);
+		ClassLoader::instance()->pushManifest($classManifest, false);
 		SapphireTest::set_test_class_manifest($classManifest);
 
 		ThemeResourceLoader::instance()->addSet('$default', new ThemeManifest(
 			BASE_PATH, project(), true, $flush
 		));
 
-		Config::inst()->pushConfigStaticManifest(new SS_ConfigStaticManifest(
+		Config::inst()->pushConfigStaticManifest(new ConfigStaticManifest(
 			BASE_PATH, true, $flush
 		));
 
