@@ -146,7 +146,7 @@ class CampaignAdminList extends SilverStripeComponent {
         </div>
       );
     const bodyClass = [
-      'container-fluid', 'campaign-items', 'panel-scrollable', 'panel-scrollable--double-toolbar',
+      'container-fluid', 'campaign-items', 'panel--scrollable', 'panel--double-toolbar',
     ];
 
     return (

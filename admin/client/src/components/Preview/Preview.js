@@ -52,7 +52,7 @@ class Preview extends SilverStripeComponent {
       );
     } else if (previewType && previewType.indexOf('image/') === 0) {
       body = (
-        <div className="preview__file-container panel-scrollable">
+        <div className="preview__file-container panel--scrollable">
           <img alt={previewUrl} className="preview__file--fits-space" src={previewUrl} />
         </div>
       );

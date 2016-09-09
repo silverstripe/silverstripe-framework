@@ -277,7 +277,7 @@
 			width: 50px;
 		}
 	}
-	.panel-scrollable {
+	.panel--scrollable {
 		position: relative;
 
 		.preview-device-outer {
@@ -299,7 +299,7 @@
 		}
 	}
 	&.mobile, &.mobileLandscape, &.tablet, &.tabletLandscape, &.desktop {
-		.panel-scrollable {
+		.panel--scrollable {
 			background-color: $tab-panel-texture-color; /* cover website preview icon */
 			.preview-device-outer {
 				border-radius: 7px;
@@ -319,7 +319,7 @@
 	}
 
 	&.mobile {
-		.panel-scrollable .preview-device-outer {
+		.panel--scrollable .preview-device-outer {
 			transform: rotate(0deg);
 			transition: all .3s ease-in 1s;
 			margin: 20px auto 20px;
@@ -345,7 +345,7 @@
 			}
 		}
 	}
-	&.mobileLandscape .panel-scrollable .preview-device-outer {
+	&.mobileLandscape .panel--scrollable .preview-device-outer {
 		transition: all .3s ease-out 1s;
 		margin: 12% auto;
 		padding-top: 16px;
@@ -353,21 +353,21 @@
 			transition: all .3s ease-out 1s;
 		}
 	}
-	&.tablet .panel-scrollable .preview-device-outer {
+	&.tablet .panel--scrollable .preview-device-outer {
 		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 		.preview-device-inner {
 			transition: all .3s ease-out 1s;
 		}
 	}
-	&.tabletLandscape .panel-scrollable .preview-device-outer {
+	&.tabletLandscape .panel--scrollable .preview-device-outer {
 		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 		.preview-device-inner {
 			transition: all .3s ease-out 1s;
 		}
 	}
-	&.desktop .panel-scrollable .preview-device-outer {
+	&.desktop .panel--scrollable .preview-device-outer {
 		transition: all .3s ease-out 1s;
 		margin: 0 auto;
 	}
