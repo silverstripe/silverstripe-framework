@@ -38,6 +38,9 @@
 
 // Secondary content actions eg. Add page button
 .toolbar--content {
+  margin-top: -20px;
+  margin-left: -20px;
+  margin-right: -20px;
   padding: $spacer-y * .625 $spacer-x * .625;
 
   @include media-breakpoint-down(md) {
