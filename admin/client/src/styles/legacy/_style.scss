@@ -160,12 +160,6 @@ body.cms {
 		padding: $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half;
 	}
 
-	.cms-tree-view-sidebar {
-		> .cms-content-toolbar {
-			margin-top: -$grid-gutter-width-half / 2;
-		}
-	}
-
 	.cms-content-header.north {
 		&.collapsed {
 			.cms-content-header-info {
@@ -1010,31 +1004,24 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-toolbar {
-	min-height: 29px;
-	display: block;
-	margin-top: $spacer-y * .625;
-	margin-left: -$grid-gutter-width-half / 2;
-	margin-right: -$grid-gutter-width-half / 2;
-	margin-bottom: 0;
-	padding-bottom: 0;
-	@include legacy-pie-clearfix();
-	border-bottom: 0;
-	box-shadow: none;
 
-  .cms-tree-view-modes {
-    float:right;
-    padding-top:$grid-y - 3;
-    * {
-      display: inline-block;
-      label {
-        color:$color-text-blue-link;
-      }
-    }
-  }
+	.cms-tree-view-modes {
+		float: right;
+		padding-top: $grid-y - 3;
 
-  .cms-actions-tools-row {
-    clear: both;
-  }
+		* {
+			display: inline-block;
+
+			label {
+				color: $color-text-blue-link;
+			}
+		}
+	}
+
+	.cms-actions-tools-row {
+		clear: both;
+		margin-top: $spacer-y * .625;
+	}
 
   .tool-action {
     display: none;
@@ -1578,15 +1565,15 @@ form.member-profile-form {
 // Custom overrides for ReportAdmin
 .ReportAdmin {
 
-  > fieldset {
-    margin-top: -$grid-gutter-width-half;
-		padding: 0 $panel-padding-x;  // to check
+  //> fieldset {
+    // margin-top: -$grid-gutter-width-half;
+		// padding: 0 $panel-padding-x;  // to check
 
     // If form fields are at the top (typically .grid-field) then add additional space
     // > .form-group:first-child {
     //   margin-top: $grid-gutter-width-half;
     // }
-  }
+  //}
 
   > .message {
     margin-bottom: $grid-gutter-width-half;
