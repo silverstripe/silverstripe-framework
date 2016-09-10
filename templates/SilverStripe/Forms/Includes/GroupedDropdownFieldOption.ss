@@ -1,7 +1,7 @@
 <% if $Options %>
 	<optgroup label="$Title.ATT">
 		<% loop $Options %>
-			<% include GroupedDropdownFieldOption %>
+			<% include SilverStripe/Forms/GroupedDropdownFieldOption %>
 		<% end_loop %>
 	</optgroup>
 <% else %>
