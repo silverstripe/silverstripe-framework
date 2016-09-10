@@ -53,36 +53,6 @@ mb_regex_encoding('UTF-8');
  */
 gc_enable();
 
-// Include the files needed the initial manifest building, as well as any files
-// that are needed for the boostrap process on every request.
-require_once 'Core/Cache.php';
-require_once 'Core/CustomMethods.php';
-require_once 'Core/Extensible.php';
-require_once 'Core/Injector/Injectable.php';
-require_once 'Core/Config/Configurable.php';
-require_once 'Core/Object.php';
-require_once 'Core/ClassInfo.php';
-require_once 'Core/Config/DAG.php';
-require_once 'Core/Config/DAG_CyclicException.php';
-require_once 'Core/Config/DAG_Iterator.php';
-require_once 'Core/Config/Config.php';
-require_once 'View/TemplateGlobalProvider.php';
-require_once 'Control/Director.php';
-require_once 'Dev/Debug.php';
-require_once 'Dev/DebugView.php';
-require_once 'Dev/CliDebugView.php';
-require_once 'Dev/Backtrace.php';
-require_once 'Assets/FileFinder.php';
-require_once 'Core/Manifest/ManifestCache.php';
-require_once 'Core/Manifest/ClassLoader.php';
-require_once 'Core/Manifest/ConfigManifest.php';
-require_once 'Core/Manifest/ConfigStaticManifest.php';
-require_once 'Core/Manifest/ClassManifest.php';
-require_once 'Core/Manifest/ManifestFileFinder.php';
-require_once 'View/ThemeResourceLoader.php';
-require_once 'Core/Manifest/TokenisedRegularExpression.php';
-require_once 'Core/Injector/Injector.php';
-
 // Initialise the dependency injector as soon as possible, as it is
 // subsequently used by some of the following code
 $injector = new Injector(array('locator' => 'SilverStripe\\Core\\Injector\\SilverStripeServiceConfigurationLocator'));
