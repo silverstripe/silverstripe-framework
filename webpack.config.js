@@ -148,6 +148,12 @@ const config = [
         jQuery: 'jQuery',
         $: 'jQuery',
       }),
+      new webpack.DefinePlugin({
+        'process.env':{
+          // Builds React in production mode, avoiding console warnings
+          'NODE_ENV': JSON.stringify('production')
+        }
+      }),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
           unused: false,
