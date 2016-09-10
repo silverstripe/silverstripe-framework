@@ -47,8 +47,6 @@ const config = [
       'LeftAndMain.Ping': `${PATHS.ADMIN_JS_SRC}/legacy/LeftAndMain.Ping.js`,
       leaktools: `${PATHS.ADMIN_JS_SRC}/legacy/leaktools.js`,
       MemberImportForm: `${PATHS.ADMIN_JS_SRC}/legacy/MemberImportForm.js`,
-      ModelAdmin: `${PATHS.ADMIN_JS_SRC}/legacy/ModelAdmin.js`,
-      SecurityAdmin: `${PATHS.ADMIN_JS_SRC}/legacy/SecurityAdmin.js`,
       CMSSecurity: `${PATHS.ADMIN_JS_SRC}/legacy/CMSSecurity.js`,
     },
     resolve: {

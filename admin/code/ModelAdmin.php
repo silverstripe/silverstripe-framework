@@ -137,8 +137,6 @@ abstract class ModelAdmin extends LeftAndMain {
 		if(!array_key_exists($this->modelClass, $models)) {
 			user_error('ModelAdmin::init(): Invalid Model class', E_USER_ERROR);
 		}
-
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/ModelAdmin.js');
 	}
 
 	public function Link($action = null) {

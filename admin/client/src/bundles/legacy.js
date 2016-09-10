@@ -13,6 +13,7 @@ require('../legacy/LeftAndMain.FieldDescriptionToggle.js');
 require('../legacy/LeftAndMain.TreeDropdownField.js');
 require('../legacy/AddToCampaignForm.js');
 require('../legacy/SecurityAdmin.js');
+require('../legacy/ModelAdmin.js');
 
 // Fields used by core legacy UIs, or available to users
 // To do: determine better way of using webpack to pull in optional javascript

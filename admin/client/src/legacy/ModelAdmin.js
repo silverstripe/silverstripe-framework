@@ -3,6 +3,8 @@
  */
 import $ from 'jQuery';
 
+require('./LeftAndMain.js');
+
 $.entwine('ss', function($){
   $('.cms-content-tools #Form_SearchForm').entwine({
     onsubmit: function(e) {
@@ -14,7 +16,7 @@ $.entwine('ss', function($){
 
   /**
    * Class: .importSpec
-   * 
+   *
    * Toggle import specifications
    */
   $('.importSpec').entwine({
@@ -24,7 +26,7 @@ $.entwine('ss', function($){
         $('#' + $(this).attr('href').replace(/.*#/,'')).slideToggle();
         return false;
       });
-      
+
       this._super();
     },
     onunmatch: function() {

@@ -55,11 +55,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		'roles'
 	);
 
-	protected function init() {
-		parent::init();
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/SecurityAdmin.js');
-	}
-
 	/**
 	 * Shortcut action for setting the correct active tab.
 	 *

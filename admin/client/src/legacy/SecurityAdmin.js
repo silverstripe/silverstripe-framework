@@ -3,6 +3,7 @@
  */
 import $ from 'jQuery';
 
+require('./LeftAndMain.js');
 require('../../../../client/src/legacy/PermissionCheckboxSetField.js');
 
 var refreshAfterImport = function(e) {
@@ -12,7 +13,7 @@ var refreshAfterImport = function(e) {
     // Refresh member listing
     var memberTableField = $(window.parent.document).find('#Form_EditForm_Members').get(0);
     if(memberTableField) memberTableField.refresh();
-    
+
     // Refresh tree
     var tree = $(window.parent.document).find('.cms-tree').get(0);
     if(tree) tree.reload();
@@ -34,7 +35,7 @@ $('#MemberImportFormIframe, #GroupImportFormIframe').entwine({
 $.entwine('ss', function($){
   /**
    * Class: #Permissions .checkbox[value=ADMIN]
-   * 
+   *
    * Automatically check and disable all checkboxes if ADMIN permissions are selected.
    * As they're disabled, any changes won't be submitted (which is intended behaviour),
    * checking all boxes is purely presentational.
@@ -60,7 +61,7 @@ $.entwine('ss', function($){
     toggleCheckboxes: function() {
       var self = this,
         checkboxes = this.parents('.field:eq(0)').find('.checkbox').not(this);
-      
+
       if(this.is(':checked')) {
         checkboxes.each(function() {
           $(this).data('SecurityAdmin.oldChecked', $(this).is(':checked'));
