@@ -1,16 +1,9 @@
 import $ from 'jQuery';
 import i18n from 'i18n';
 
-// entwine also required, but can't be included more than once without error
-require('../../../thirdparty/jquery-ui/jquery-ui.js');
-require('../../../admin/client/src/legacy/ssui.core.js');
+// TODO Move deps from lib.js into the file once figuring out why uploads fail then
 
 window.tmpl = require('blueimp-tmpl/tmpl.js');
-require('imports?define=>false&this=>window!blueimp-load-image/load-image.js');
-require('blueimp-file-upload/jquery.iframe-transport.js');
-require('blueimp-file-upload/cors/jquery.xdr-transport.js');
-require('blueimp-file-upload/jquery.fileupload.js');
-require('blueimp-file-upload/jquery.fileupload-ui.js');
 
 require('./UploadField_uploadtemplate.js');
 require('./UploadField_downloadtemplate.js');

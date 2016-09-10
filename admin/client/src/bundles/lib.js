@@ -51,7 +51,18 @@ require('../../../../thirdparty/jquery-changetracker/lib/jquery.changetracker.js
 require('../../../../client/src/legacy/TreeDropdownField.js');
 
 require('../../../../client/src/legacy/DateField.js');
+
+
+// TODO Move UploadField.js deps into the file once figuring out why uploads fail then
+require('../../../../thirdparty/jquery-ui/jquery-ui.js');
+require('../../../../admin/client/src/legacy/ssui.core.js');
+require('imports?define=>false&this=>window!blueimp-load-image/load-image.js');
+require('blueimp-file-upload/jquery.iframe-transport.js');
+require('blueimp-file-upload/cors/jquery.xdr-transport.js');
+require('blueimp-file-upload/jquery.fileupload.js');
+require('blueimp-file-upload/jquery.fileupload-ui.js');
 require('../../../../client/src/legacy/UploadField.js');
+
 require('../../../../client/src/legacy/HtmlEditorField.js');
 require('../../../../client/src/legacy/TabSet.js');
 require('../legacy/ssui.core.js');
