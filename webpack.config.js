@@ -48,6 +48,7 @@ const config = [
       leaktools: `${PATHS.ADMIN_JS_SRC}/legacy/leaktools.js`,
       MemberImportForm: `${PATHS.ADMIN_JS_SRC}/legacy/MemberImportForm.js`,
       CMSSecurity: `${PATHS.ADMIN_JS_SRC}/legacy/CMSSecurity.js`,
+      UploadField_select: `${PATHS.FRAMEWORK_JS_SRC}/legacy/UploadField_select.js`,
     },
     resolve: {
       modulesDirectories: [PATHS.ADMIN_JS_SRC, PATHS.FRAMEWORK_JS_SRC, PATHS.MODULES],
