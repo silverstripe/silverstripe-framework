@@ -37,6 +37,7 @@
     }
 
     &[data-selectable] {
+
       tr.ui-selected,
       tr.ui-selecting {
         background: $table-bg-accent !important;
