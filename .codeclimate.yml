@@ -14,9 +14,6 @@ ratings:
   - client/src/**
   - admin/client/src/**
 exclude_paths:
-- "client/dist/**"
-- "admin/client/dist/**"
-- "admin/thirdparty/**"
-- "templates/"
-- "tests/"
-- "thirdparty/"
+- "**/*"
+- "!client/src/**"
+- "!admin/client/src/**"
