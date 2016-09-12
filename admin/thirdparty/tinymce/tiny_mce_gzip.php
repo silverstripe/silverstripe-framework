@@ -9,8 +9,8 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
-$frameworkPath = rtrim(dirname(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
-$basePath = rtrim(dirname($frameworkPath), DIRECTORY_SEPARATOR);
+$frameworkPath = defined('FRAMEWORK_PATH') ? FRAMEWORK_PATH : rtrim(dirname(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
+$basePath = defined('BASE_PATH') ? BASE_PATH : rtrim(dirname($frameworkPath), DIRECTORY_SEPARATOR);
 
 // require composers autoloader
 if(file_exists($basePath . '/vendor/autoload.php')) {

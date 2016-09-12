@@ -63,6 +63,8 @@ class DirectorTest extends SapphireTest {
 				$this->originalProtocolHeaders[$header] = $_SERVER[$header];
 			}
 		}
+
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
 	}
 
 	public function tearDown() {
@@ -196,16 +198,6 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals(
 			'http://www.example.org/subfolder/test',
 			Director::absoluteURL('subfolder/test', Director::BASE)
-		);
-
-		// Setting it to false restores functionality
-		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', false);
-		$_SERVER['REQUEST_URI'] = $rootURL;
-		$this->assertEquals(BASE_URL.'/', Director::baseURL());
-		$this->assertEquals($rootURL.BASE_URL.'/', Director::absoluteBaseURL(BASE_URL));
-		$this->assertEquals(
-			$rootURL.BASE_URL . '/subfolder/test',
-			Director::absoluteURL('subfolder/test')
 		);
 	}
 
@@ -393,7 +385,7 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testForceSSLProtectsEntireSite() {
-		$_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
+		$_SERVER['REQUEST_URI'] = '/admin';
 		$output = Director::forceSSL();
 		$this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 

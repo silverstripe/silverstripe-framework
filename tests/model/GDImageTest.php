@@ -1,5 +1,7 @@
 <?php
 
+require_once(__DIR__  . "/ImageTest.php");
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Cache;
 

@@ -40,7 +40,7 @@ class ImageTest extends SapphireTest {
 		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
 		foreach($files as $image) {
 			$filePath = AssetStoreTest_SpyStore::getLocalPath($image); // Only correct for test asset store
-			$sourcePath = BASE_PATH . '/framework/tests/model/testimages/' . $image->Name;
+			$sourcePath = FRAMEWORK_PATH . '/tests/model/testimages/' . $image->Name;
 			if(!file_exists($filePath)) {
 				SSFilesystem::makeFolder(dirname($filePath));
 				if (!copy($sourcePath, $filePath)) {
