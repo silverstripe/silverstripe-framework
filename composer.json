@@ -54,5 +54,7 @@
   "include-path": [
       "thirdparty/",
       "thirdparty/HTML_BBCodeParser2/"
-  ]
+  ],
+  "min-stability": "dev",
+  "prefer-stable": true
 }

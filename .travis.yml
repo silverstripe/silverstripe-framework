@@ -10,8 +10,6 @@ addons:
 env:
   global:
     - TRAVIS_NODE_VERSION="4"
-    - CORE_RELEASE=master
-    - CORE_RELEASE_VERSION=4.0
     - ARTIFACTS_REGION=us-east-1
     - ARTIFACTS_BUCKET=silverstripe-travis-artifacts
     - secure: "jVR0iLTuvVfA6jKX5+A3AdUEs8Ps+r3SbL0zGR687K8IoSp3a/+JLH12zFCEexOuxwCtOhlMq8zoZsptCEduCDq+0payk5k6GjNVywFaWjJCV573JScdaHAtoumoHMUvua+Pxds0qKAD2XEYAcOR4Qu7S4HLJV6E1QqHg9PRW5s=" # Encrypted ARTIFACTS_KEY
@@ -44,21 +42,16 @@ before_script:
  - composer self-update || true
  - phpenv rehash
  - phpenv config-rm xdebug.ini
- - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
- - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss --require silverstripe/behat-extension; fi"
- - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss --require silverstripe/cms:$CORE_RELEASE_VERSION.x-dev; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup.php --source `pwd` --target ~/builds/ss --require silverstripe/behat-extension,silverstripe/cms:$CORE_RELEASE_VERSION.x-dev; fi"
+ - "if [ \"$PHPUNIT_TEST\" = \"1\" ]; then composer install; fi"
+ - "if [ \"$DB\" = \"PGSQL\" ]; then composer require silverstripe/postgresql:^2.0; fi"
+ - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:^2.0; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install; fi"
- - "if [ \"$NPM_TEST\" = \"\" ]; then cd ~/builds/ss; fi"
- - "if [ \"$NPM_TEST\" = \"\" ] && [ \"$BEHAT_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup_selenium.php; fi"
- - "if [ \"$NPM_TEST\" = \"\" ] && [ \"$BEHAT_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup_php54_webserver.php; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ]; then php ~/travis-support/travis_setup_selenium.php; fi"
 
 script:
- - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit framework/tests; fi"
- - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit framework/admin/tests; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat @framework; fi"
+ - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit; fi"
  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/phpunit cms/tests; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat @framework; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
 
