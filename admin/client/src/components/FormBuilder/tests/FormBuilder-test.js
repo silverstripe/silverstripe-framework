@@ -8,7 +8,7 @@ import { FormBuilderComponent } from '../FormBuilder';
 
 describe('FormBuilderComponent', () => {
   describe('mergeFieldData()', () => {
-    let formBuilder;
+    let formBuilder = null;
 
     beforeEach(() => {
       const props = {
@@ -55,9 +55,9 @@ describe('FormBuilderComponent', () => {
   });
 
   describe('getFieldValues()', () => {
-    let formBuilder;
-    let fieldValues;
-    let props;
+    let formBuilder = null;
+    let fieldValues = null;
+    let props = null;
 
     it('should retrieve field values based on schema', () => {
       props = {

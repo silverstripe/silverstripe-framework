@@ -10,7 +10,7 @@ import ReactTestUtils from 'react-addons-test-utils';
 import TextField from '../TextField';
 
 describe('TextField', () => {
-  let props;
+  let props = null;
 
   beforeEach(() => {
     props = {
@@ -22,8 +22,8 @@ describe('TextField', () => {
   });
 
   describe('onChange()', () => {
-    let textField;
-    let inputField;
+    let textField = null;
+    let inputField = null;
 
     beforeEach(() => {
       textField = ReactTestUtils.renderIntoDocument(

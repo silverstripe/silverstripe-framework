@@ -8,14 +8,14 @@ const ReactTestUtils = require('react-addons-test-utils');
 const BreadcrumbsComponent = require('../Breadcrumb').default;
 
 describe('BreadcrumbsComponent', () => {
-  let props;
+  let props = null;
 
   beforeEach(() => {
     props = {};
   });
 
   describe('getBreadcrumbs()', () => {
-    let breadcrumbs;
+    let breadcrumbs = null;
 
     it('should convert the props.crumbs array into jsx to be rendered', () => {
       props.crumbs = [
