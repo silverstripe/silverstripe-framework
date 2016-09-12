@@ -1952,6 +1952,15 @@ body.cms-dialog {
 	padding-left: 10px;
 	padding-right: 10px;
 	margin-top: $panel-padding-y;
+
+	.ss-uploadfield-item {
+		min-height: 32px;
+	}
+
+	.ss-uploadfield-item-info {
+		position: absolute;
+		top: 0;
+	}
 }
 
 /** --------------------------------------------
