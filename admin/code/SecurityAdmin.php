@@ -233,9 +233,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function memberimport() {
 		Requirements::clear();
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
+		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js', '/'));
+		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js', '/'));
+		Requirements::css(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css', '/'));
 
 		return $this->renderWith('BlankPage', array(
 			'Form' => $this->MemberImportForm()->forTemplate(),
@@ -267,9 +267,9 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function groupimport() {
 		Requirements::clear();
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js');
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
+		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js', '/'));
+		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js', '/'));
+		Requirements::css(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css', '/'));
 
 		return $this->renderWith('BlankPage', array(
 			'Content' => ' ',

@@ -327,8 +327,9 @@ class HTTPTest extends FunctionalTest {
 
 	public function testFilename2url() {
 		$this->withBaseURL('http://www.silverstripe.org/', function($test) {
+			$frameworkTests = ltrim(FRAMEWORK_DIR . '/tests', '/');
 			$test->assertEquals(
-				'http://www.silverstripe.org/framework/tests/control/HTTPTest.php',
+				"http://www.silverstripe.org/$frameworkTests/control/HTTPTest.php",
 				HTTP::filename2url(__FILE__)
 			);
 		});

@@ -78,7 +78,7 @@ class ClassInfoTest extends SapphireTest {
 		//$baseFolder = Director::baseFolder() . '/' . FRAMEWORK_DIR . '/tests/_ClassInfoTest';
 		//$manifestInfo = ManifestBuilder::get_manifest_info($baseFolder);
 
-		$classes = ClassInfo::classes_for_folder(FRAMEWORK_DIR . '/tests');
+		$classes = ClassInfo::classes_for_folder(ltrim(FRAMEWORK_DIR . '/tests', '/'));
 		$this->assertContains(
 			'classinfotest',
 			$classes,
