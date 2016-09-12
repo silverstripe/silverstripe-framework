@@ -125,9 +125,9 @@ To log to a file, you can use Monolog's [StreamHandler](https://github.com/Selda
 	      LogFileHandler: [ pushHandler, [ %$LogFileHandler ] ]
 	  LogFileHandler:
 	    class: Monolog\Handler\StreamHandler
-	      constructor:
-	       - "../silverstripe.log"
-	       - "info"
+	    constructor:
+	      - "../silverstripe.log"
+	      - "info"
 
 The log file will be relative to the framework/ path, so "../silverstripe.log" will create a file in your project root.
 
