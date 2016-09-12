@@ -9,8 +9,8 @@ es6promise.polyfill();
  * @see https://github.com/github/fetch#handling-http-error-statuses
  */
 function checkStatus(response) {
-  let ret;
-  let error;
+  let ret = null;
+  let error = null;
   if (response.status >= 200 && response.status < 300) {
     ret = response;
   } else {

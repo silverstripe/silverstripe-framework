@@ -9,7 +9,7 @@ import ReactTestUtils from 'react-addons-test-utils';
 import FormBuilderModal from '../FormBuilderModal';
 
 describe('FormBuilderModal', () => {
-  let props;
+  let props = null;
 
   beforeEach(() => {
     props = {
@@ -20,9 +20,9 @@ describe('FormBuilderModal', () => {
   });
 
   describe('getResponse()', () => {
-    let formModal;
-    let response;
-    let message;
+    let formModal = null;
+    let response = null;
+    let message = null;
 
     beforeEach(() => {
       formModal = ReactTestUtils.renderIntoDocument(

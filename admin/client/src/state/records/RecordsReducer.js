@@ -4,9 +4,9 @@ import ACTION_TYPES from './RecordsActionTypes';
 const initialState = {};
 
 function recordsReducer(state = initialState, action) {
-  let records;
-  let recordType;
-  let record;
+  let records = null;
+  let recordType = null;
+  let record = null;
 
   switch (action.type) {
 

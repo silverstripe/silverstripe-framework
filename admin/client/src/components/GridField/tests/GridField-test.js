@@ -10,7 +10,7 @@ const ReactTestUtils = require('react-addons-test-utils');
 const GridFieldTable = require('../GridFieldTable').default;
 
 describe('GridFieldTable', () => {
-  let props;
+  let props = null;
 
   beforeEach(() => {
     props = {
@@ -18,7 +18,7 @@ describe('GridFieldTable', () => {
   });
 
   describe('generateHeader()', () => {
-    let gridfield;
+    let gridfield = null;
 
     it('should return props.header if it is set', () => {
       props.header = <tr className="header"></tr>;
@@ -44,7 +44,7 @@ describe('GridFieldTable', () => {
   });
 
   describe('generateRows()', () => {
-    let gridfield;
+    let gridfield = null;
 
     it('should return props.rows if it is set', () => {
       props.rows = [<tr className="row" key="row1"><td>row1</td></tr>];
