@@ -154,7 +154,7 @@ class ThemeManifest implements ThemeList {
 		$path = '/'.implode('/', $themeParts);
 
 		// If this is in the project, add to beginning of list. Else add to end.
-		if ($themeParts[0] == $this->project) {
+		if ($themeParts && $themeParts[0] == $this->project) {
 			array_unshift($this->themes, $path);
 		}
 		else {
