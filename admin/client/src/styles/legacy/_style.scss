@@ -1833,6 +1833,13 @@ body.cms-dialog {
 		}
 	}
 
+	.toolbar--content {
+		margin-top: -$panel-padding-y;
+		margin-left: -$panel-padding-x;
+		margin-right: -$panel-padding-x;
+		height: auto; // acount for uploading new files
+	}
+
   .ss-insert-link {
 		padding-left: $panel-padding-x;
 		padding-right: $panel-padding-x;
@@ -1936,10 +1943,15 @@ body.cms-dialog {
 	}
 
 	.ss-assetuploadfield .ss-uploadfield-editandorganize .ss-uploadfield-files .ss-uploadfield-item-info {
-				background-color: grayscale(#5db4df);
-				background-image: linear-gradient(to bottom,  grayscale(#5db4df) 0%, grayscale(#5db1dd) 8%, grayscale(#439bcb) 50%, grayscale(#3f99cd) 54%, grayscale(#207db6) 96%, grayscale(#1e7cba) 100%);
-			}
-		}
+		background-color: grayscale(#5db4df);
+		background-image: linear-gradient(to bottom,  grayscale(#5db4df) 0%, grayscale(#5db1dd) 8%, grayscale(#439bcb) 50%, grayscale(#3f99cd) 54%, grayscale(#207db6) 96%, grayscale(#1e7cba) 100%);
+	}
+}
+
+.ss-uploadfield-editandorganize {
+	padding-left: 10px;
+	padding-right: 10px;
+}
 
 /** --------------------------------------------
  * Add to campaign dialog
