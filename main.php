@@ -57,17 +57,19 @@ if (version_compare(phpversion(), '5.5.0', '<')) {
  * @see Director::direct()
  */
 
-// require composers autoloader
-if (file_exists($autoloadPath = dirname(__DIR__) . '/vendor/autoload.php')) {
-	require_once $autoloadPath;
-}
-else {
-	if (!headers_sent()) {
-		header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
-		header('Content-Type: text/plain');
+// require composers autoloader, unless it is already installed
+if(!class_exists('Composer\\Autoload\\ClassLoader', false)) {
+	if (file_exists($autoloadPath = dirname(__DIR__) . '/vendor/autoload.php')) {
+		require_once $autoloadPath;
 	}
-	echo "Failed to include composer's autoloader, unable to continue\n";
-	exit(1);
+	else {
+		if (!headers_sent()) {
+			header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+			header('Content-Type: text/plain');
+		}
+		echo "Failed to include composer's autoloader, unable to continue\n";
+		exit(1);
+	}
 }
 
 // IIS will sometimes generate this.
