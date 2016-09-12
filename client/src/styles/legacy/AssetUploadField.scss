@@ -67,15 +67,26 @@ body.cms.ss-uploadfield-edit-iframe {
 
 .composite.ss-assetuploadfield .details fieldset {
 	@extend body.cms.ss-uploadfield-edit-iframe;
-	padding: $grid-x*2;
+	padding: $panel-padding-y $panel-padding-x;
 	background-color: $background-main;
 }
 
 .ss-assetuploadfield {
-	margin-top: -$panel-padding-y;
-	margin-right: -$panel-padding-x;
-	margin-left: -$panel-padding-x;
-	margin-bottom: 0;
+
+	.CompositeField {
+		padding: $panel-padding-y $panel-padding-x;
+		margin: #{-$panel-padding-y} #{-$panel-padding-x};
+
+		&.dimensions.form-group {
+			margin: 0;
+			padding: 0;
+
+			> .dimensions {
+				padding-left: 0;
+				padding-right: 0;
+			}
+		}
+	}
 
   > fieldset {
     @extend .clearfix;
@@ -143,8 +154,21 @@ body.cms.ss-uploadfield-edit-iframe {
 			background-clip: padding-box;
 			margin: 0 0 5px;
 			padding: 0;
-			overflow: hidden;
 			position: relative;
+			margin-left: -$panel-padding-x;
+			margin-right: -$panel-padding-x;
+
+			&.ui-state-error {
+				height: 32px; // limit height to only errored upload
+
+				.ss-uploadfield-item-info {
+					height: 30px;
+				}
+
+				.ss-uploadfield-item-name {
+					position: absolute;
+				}
+			}
 
 			.info {
 				position: relative;
@@ -161,6 +185,7 @@ body.cms.ss-uploadfield-edit-iframe {
 			width: 40px;
 			overflow: hidden;
 			z-index: 1;
+			top: 0;
 			// Prevent icons touching edge
 
  			img[src$="_32.png"] {
@@ -171,7 +196,8 @@ body.cms.ss-uploadfield-edit-iframe {
 		}
 
 		.ss-uploadfield-item-info {
-			position: relative;
+			position: absolute;
+			top: 0;
 			overflow: hidden;
 			background-color: #5db4df;
 			background-image: linear-gradient(to bottom,  #5db4df 0%,#5db1dd 8%,#439bcb 50%,#3f99cd 54%,#207db6 96%,#1e7cba 100%);
@@ -181,9 +207,9 @@ body.cms.ss-uploadfield-edit-iframe {
 			background-color: #c11f1d;
 			padding-right: 130px;
 			background-image: linear-gradient(to bottom,  #c11f1d 0%,#bf1d1b 4%,#b71b1c 8%,#b61e1d 15%,#b11d1d 27%,#ab1d1c 31%,#a51b1b 42%,#9f1b19 46%,#9f1b19 50%,#991c1a 54%,#971a18 58%,#911b1b 62%,#911b1b 65%,#7e1816 88%,#771919 92%,#731817 100%);
+			width: 100%;
 
 			.ss-uploadfield-item-name {
-				width: 100%;
 				cursor: default;
 				background: darken($color-button-disabled,20%); //for browsers that don't support rgba
 				background: rgba(darken($color-button-disabled, 15%),0.9);
@@ -267,7 +293,6 @@ body.cms.ss-uploadfield-edit-iframe {
 			width: 100%;
 
 			div {
-				border-radius: 5px;
 				height: 30px;
 				padding: 0;
 				margin: 0;

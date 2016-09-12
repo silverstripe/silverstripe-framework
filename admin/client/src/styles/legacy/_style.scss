@@ -1697,7 +1697,6 @@ form.member-profile-form {
 		.clear {
 			clear: both;
 		}
-
 	}
 
 	&.loading {
@@ -1712,7 +1711,7 @@ form.member-profile-form {
 		border-top: 1px solid $color-light-separator;
 		border-bottom-left-radius: 8px;
 		border-bottom-right-radius: 8px;
-}
+	}
 }
 
 body.cms-dialog {
@@ -1728,6 +1727,7 @@ body.cms-dialog {
 	&.ui-dialog-content{
 		padding:0;
 		position:relative;
+		border-radius: 8px 8px 0 0;
 	}
 
 	.htmleditorfield-from-web {
@@ -1951,6 +1951,7 @@ body.cms-dialog {
 .ss-uploadfield-editandorganize {
 	padding-left: 10px;
 	padding-right: 10px;
+	margin-top: $panel-padding-y;
 }
 
 /** --------------------------------------------
