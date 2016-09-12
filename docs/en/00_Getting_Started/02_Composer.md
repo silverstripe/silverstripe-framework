@@ -11,15 +11,7 @@ We also have separate instructions for [installing modules with Composer](/devel
 
 Before installing Composer you should ensure your system has the version control system, [Git installed](http://git-scm.com/book/en/v2/Getting-Started-Installing-Git). Composer uses Git to check out the code dependancies you need to run your SilverStripe CMS website from the code repositories maintained on GitHub.
 
-Next, to install Composer, run the following commands from your command-line.
-
-	# Download composer.phar
-	curl -s https://getcomposer.org/installer | php
-
-	# Move to your path
-	sudo mv composer.phar /usr/local/bin/composer
-
-Or [download composer.phar](http://getcomposer.org/composer.phar) manually, and rename `composer.phar` as `composer`, and put it in your path.  On Windows, you should call the file `composer.bat`.
+Next, [install composer](https://getcomposer.org/download/). For our documentation we assume composer is installed globally.
 
 You can then run Composer commands by calling `composer`.  For example:
 
