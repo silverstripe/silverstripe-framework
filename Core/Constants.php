@@ -175,8 +175,19 @@ if (defined('SS_ALLOWED_HOSTS') && php_sapi_name() !== "cli") {
 /**
  * Define system paths
  */
+// Determine BASE_PATH based on the composer autoloader
 if(!defined('BASE_PATH')) {
-	// Assuming that this file is framework/core/Core.php we can then determine the base path
+	foreach(debug_backtrace() as $backtraceItem) {
+		if(preg_match('#^(.*)\/vendor/composer/autoload_real.php#', $backtraceItem['file'], $matches)) {
+			define('BASE_PATH', $matches[1]);
+			break;
+		}
+	}
+}
+
+// Determine BASE_PATH by assuming that this file is framework/core/Core.php
+if(!defined('BASE_PATH')) {
+	//  we can then determine the base path
 	$candidateBasePath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
 	// We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
 	// This likely only happens on chrooted environemnts
@@ -209,21 +220,20 @@ define('THEMES_DIR', 'themes');
 define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
 // Relies on this being in a subdir of the framework.
 // If it isn't, or is symlinked to a folder with a different name, you must define FRAMEWORK_DIR
-if(!defined('FRAMEWORK_DIR')) {
-	define('FRAMEWORK_DIR', basename(dirname(dirname(__FILE__))));
+
+define('FRAMEWORK_PATH', realpath(__DIR__ . '/../'));
+if(strpos(FRAMEWORK_PATH, BASE_PATH) === 0) {
+	define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), '/'));
+	$frameworkDirSlashSuffix = FRAMEWORK_DIR ? FRAMEWORK_DIR . '/' : '';
+} else {
+	throw new Exception("Path error: FRAMEWORK_PATH " . FRAMEWORK_PATH . " not within BASE_PATH " . BASE_PATH);
 }
-define('FRAMEWORK_PATH', BASE_PATH . '/' . FRAMEWORK_DIR);
-define('FRAMEWORK_ADMIN_DIR', FRAMEWORK_DIR . '/admin');
-define('FRAMEWORK_ADMIN_PATH', BASE_PATH . '/' . FRAMEWORK_ADMIN_DIR);
 
-// These are all deprecated. Use the FRAMEWORK_ versions instead.
-define('SAPPHIRE_DIR', FRAMEWORK_DIR);
-define('SAPPHIRE_PATH', FRAMEWORK_PATH);
-define('SAPPHIRE_ADMIN_DIR', FRAMEWORK_ADMIN_DIR);
-define('SAPPHIRE_ADMIN_PATH', FRAMEWORK_ADMIN_PATH);
+define('FRAMEWORK_ADMIN_DIR', $frameworkDirSlashSuffix . 'admin');
+define('FRAMEWORK_ADMIN_PATH', FRAMEWORK_PATH . '/admin');
 
-define('THIRDPARTY_DIR', FRAMEWORK_DIR . '/thirdparty');
-define('THIRDPARTY_PATH', BASE_PATH . '/' . THIRDPARTY_DIR);
+define('THIRDPARTY_DIR', $frameworkDirSlashSuffix . 'thirdparty');
+define('THIRDPARTY_PATH', FRAMEWORK_PATH . '/thirdparty');
 
 define('ADMIN_THIRDPARTY_DIR', FRAMEWORK_ADMIN_DIR . '/thirdparty');
 define('ADMIN_THIRDPARTY_PATH', BASE_PATH . '/' . ADMIN_THIRDPARTY_DIR);
