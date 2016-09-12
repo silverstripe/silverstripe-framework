@@ -254,7 +254,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 		$computerUploadField = UploadField::create('AssetUploadField', '');
 		$computerUploadField->setConfig('previewMaxWidth', 40);
 		$computerUploadField->setConfig('previewMaxHeight', 30);
-		$computerUploadField->addExtraClass('ss-assetuploadfield htmleditorfield-from-computer');
+		$computerUploadField->addExtraClass('toolbar toolbar--content ss-assetuploadfield htmleditorfield-from-computer');
 		$computerUploadField->removeExtraClass('ss-uploadfield');
 		$computerUploadField->setTemplate('SilverStripe\\Forms\\HTMLEditorField_UploadField');
 		$computerUploadField->setFolderName(Upload::config()->get('uploads_folder'));
