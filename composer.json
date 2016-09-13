@@ -45,14 +45,10 @@
       "SilverStripe\\Security\\": "Security/",
       "SilverStripe\\View\\": "View/"
     },
-    "psr-0": {
-      "HTML_": "thirdparty/HTML_BBCodeParser2"
-    },
     "files": ["Core/Constants.php"],
     "classmap": ["tests/behat/features/bootstrap"]
   },
   "include-path": [
-      "thirdparty/",
-      "thirdparty/HTML_BBCodeParser2/"
+      "thirdparty/"
   ]
 }
