@@ -123,6 +123,12 @@ class PDOConnector extends DBConnector {
 				$server .= ",{$parameters['port']}";
 			}
 			$dsn[] = "Server=$server";
+		} elseif ($parameters['driver'] === 'dblib') {
+			$server = $parameters['server'];
+			if (!empty($parameters['port'])) {
+				$server .= ":{$parameters['port']}";
+			}
+			$dsn[] = "host={$server}";
 		} else {
 			if (!empty($parameters['server'])) {
 				// Use Server instead of host for sqlsrv
