@@ -76,6 +76,11 @@ if (empty($_SERVER['HTTP_HOST'])) {
 	$_SERVER['HTTP_HOST'] = 'localhost';
 }
 
+// Asset folder
+if(!file_exists(BASE_PATH . '/assets')) {
+	mkdir(BASE_PATH . '/assets', 02775);
+}
+
 // Default database settings
 global $project;
 $project = 'mysite';
