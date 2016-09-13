@@ -15,13 +15,9 @@ const PATHS = {
   ADMIN_SPRITES_SRC: './admin/client/src/sprites',
   ADMIN_SPRITES_DIST: './admin/client/dist/images/sprites',
   FRAMEWORK: '.',
-  FRAMEWORK_CSS_SRC: './client/src/styles',
-  FRAMEWORK_CSS_DIST: './client/dist/styles',
   FRAMEWORK_THIRDPARTY: './thirdparty',
   INSTALL_CSS_SRC: './dev/install/client/src/styles',
   INSTALL_CSS_DIST: './dev/install/client/dist/styles',
-  FRAMEWORK_JS_SRC: './client/src',
-  FRAMEWORK_JS_DIST: './client/dist/js',
 };
 
 // Used for autoprefixing css properties (same as Bootstrap Aplha.2 defaults)
@@ -48,10 +44,11 @@ const config = [
       leaktools: `${PATHS.ADMIN_JS_SRC}/legacy/leaktools.js`,
       MemberImportForm: `${PATHS.ADMIN_JS_SRC}/legacy/MemberImportForm.js`,
       CMSSecurity: `${PATHS.ADMIN_JS_SRC}/legacy/CMSSecurity.js`,
-      UploadField_select: `${PATHS.FRAMEWORK_JS_SRC}/legacy/UploadField_select.js`,
+      UploadField_select: `${PATHS.ADMIN_JS_SRC}/legacy/UploadField_select.js`,
+      TinyMCE_SSPlugin: `${PATHS.ADMIN_JS_SRC}/legacy/TinyMCE_SSPlugin.js`,
     },
     resolve: {
-      modulesDirectories: [PATHS.ADMIN_JS_SRC, PATHS.FRAMEWORK_JS_SRC, PATHS.MODULES],
+      modulesDirectories: [PATHS.ADMIN_JS_SRC, PATHS.MODULES],
     },
     output: {
       path: 'admin/client/dist',
@@ -168,16 +165,16 @@ const config = [
   {
     name: 'css',
     entry: {
-      'admin/client/dist/styles/editor':
+      [`${PATHS.ADMIN_CSS_DIST}/editor`]:
         `${PATHS.ADMIN_CSS_SRC}/editor.scss`,
-      'client/dist/styles/GridField_print':
-        `${PATHS.FRAMEWORK_CSS_SRC}/legacy/GridField_print.scss`,
-      'client/dist/styles/debug':
-        `${PATHS.FRAMEWORK_CSS_SRC}/legacy/debug.scss`,
-      'client/dist/styles/AssetUploadField':
-        `${PATHS.FRAMEWORK_CSS_SRC}/legacy/AssetUploadField.scss`,
-      'client/dist/styles/UploadField':
-        `${PATHS.FRAMEWORK_CSS_SRC}/legacy/UploadField.scss`,
+      [`${PATHS.ADMIN_CSS_DIST}/GridField_print`]:
+        `${PATHS.ADMIN_CSS_SRC}/legacy/GridField_print.scss`,
+      [`${PATHS.ADMIN_CSS_DIST}/debug`]:
+        `${PATHS.ADMIN_CSS_SRC}/legacy/debug.scss`,
+      [`${PATHS.ADMIN_CSS_DIST}/AssetUploadField`]:
+        `${PATHS.ADMIN_CSS_SRC}/legacy/AssetUploadField.scss`,
+      [`${PATHS.ADMIN_CSS_DIST}/UploadField`]:
+        `${PATHS.ADMIN_CSS_SRC}/legacy/UploadField.scss`,
       [`${PATHS.INSTALL_CSS_DIST}/install`]:
         `${PATHS.INSTALL_CSS_SRC}/install.scss`,
     },
@@ -198,7 +195,7 @@ const config = [
         },
         {
           test: /\.(png|gif|jpg|svg)$/,
-          loader: 'url?limit=10000&name=client/dist/styles/images/[name].[ext]',
+          loader: `url?limit=10000&name=${PATHS.ADMIN_CSS_DIST}/images/[name].[ext]`,
         },
         {
           test: /\.(woff|eot|ttf)$/,

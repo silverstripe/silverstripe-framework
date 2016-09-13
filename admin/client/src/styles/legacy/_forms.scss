@@ -369,7 +369,7 @@ form.small .field, .field.small {
 			border: none;
 		}
 		&.loading {
-			background: transparent url("../../../../client/src/images/network-save.gif") no-repeat $grid-x center;
+			background: transparent url("../../images/network-save.gif") no-repeat $grid-x center;
 			.ui-button-text {
 				padding-left: 16px /* icon */ + ($grid-x/2);
 			}
@@ -392,7 +392,7 @@ input.loading, button.loading,
 input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loading,
 .ui-widget-header input.ui-state-default.loading {
 	.ui-icon {
-		background: transparent url("../../../../client/src/images/network-save.gif") no-repeat 0 0;
+		background: transparent url("../../images/network-save.gif") no-repeat 0 0;
 	}
 
 	color: lighten($color-text-dark, 20%);
@@ -403,7 +403,7 @@ input.ui-state-default.loading, .ui-widget-content input.ui-state-default.loadin
 input.loading,
 button.loading {
 	&.ss-ui-action-constructive .ui-icon {
-		background: transparent url("../../../../client/src/images/network-save-constructive.gif") no-repeat 0 0;
+		background: transparent url("../../images/network-save-constructive.gif") no-repeat 0 0;
 	}
 }
 
@@ -580,7 +580,7 @@ button.loading {
 }
 
 .ss-ui-loading-icon {
-	background: url("../../../../client/src/images/network-save.gif") no-repeat;
+	background: url("../../images/network-save.gif") no-repeat;
 	display: block;
 	width: 16px;
 	height: 16px;

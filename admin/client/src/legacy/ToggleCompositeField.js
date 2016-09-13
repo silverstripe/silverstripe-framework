@@ -1,9 +1,9 @@
 import $ from 'jQuery';
 
 // entwine also required, but can't be included more than once without error
-require('../../../thirdparty/jquery-ui/jquery-ui.js');
+require('../../../../thirdparty/jquery-ui/jquery-ui.js');
 
-require('../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+require('../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 
 $.entwine('ss', function($){
 	$('.ss-toggle').entwine({

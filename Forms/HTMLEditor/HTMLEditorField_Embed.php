@@ -106,7 +106,7 @@ class HTMLEditorField_Embed extends HTMLEditorField_File
 		}
 
 		// Default media
-		return FRAMEWORK_DIR . '/client/dist/images/src/default_media.png';
+		return FRAMEWORK_ADMIN_DIR . '/client/dist/images/src/default_media.png';
 	}
 
 	public function getName()

@@ -1,4 +1,4 @@
-@import "../../../../admin/client/src/styles/legacy/_mixins.scss";
+@import "_mixins.scss";
 
 div.TreeDropdownField {
 	width: 400px;
@@ -26,9 +26,9 @@ div.TreeDropdownField {
 		@extend .treedropdownfield-title;
 
 		//Style search box to match chosen search
-		background:url('../../../../admin/client/src/images/chosen-sprite.png') no-repeat 100% -22px; //For browers that only support 1 background
+		background:url('../../images/chosen-sprite.png') no-repeat 100% -22px; //For browers that only support 1 background
 		background:
-			url('../../../../admin/client/src/images/chosen-sprite.png') no-repeat 100% -22px,
+			url('../../images/chosen-sprite.png') no-repeat 100% -22px,
 			linear-gradient(to bottom, #eeeeee 1%, #ffffff 15%);
 		box-sizing: border-box;
 		position: relative;

@@ -1,6 +1,6 @@
 // TODO we need a seperated file for styles that are used in both cms and front end (such as buttons)
-@import "../../../../admin/client/src/styles/legacy/themes/default.scss";
-@import "../../../../admin/client/src/styles/legacy/_mixins.scss";
+@import "themes/default.scss";
+@import "_mixins.scss";
 
 .ss-uploadfield,
 .ss-insert-media {
@@ -264,7 +264,7 @@
 				width: 100%;
 				height: 22px;
 				margin: 15px 0 0;
-				background: url(../../../../admin/client/src/images/spinner.gif) no-repeat 50% 0;
+				background: url(../../images/spinner.gif) no-repeat 50% 0;
 
 				iframe {
 					/* Old IE needs this or it'll give the iframe a white background, covering the spinner */
@@ -310,7 +310,7 @@
 
 	.loader {
 		height: 94px; // Approxmiately matches the height of the field once a file is attached, avoids a 'jump' in size
-		background: transparent url(../../../../admin/client/src/images/spinner.gif) no-repeat 50% 50%;
+		background: transparent url(../../images/spinner.gif) no-repeat 50% 50%;
 	}
 }
 
@@ -330,7 +330,7 @@
 		.ss-uploadfield-files {
 			.ss-uploadfield-item-editform {
 				&.loading {
-					background-image: url("../../../../admin/client/src/images/spinner@2x.gif");
+					background-image: url("../../images/spinner@2x.gif");
 					background-size: 43px 43px;
 				}
 			}
@@ -339,7 +339,7 @@
 
 	.ss-upload {
 		.loader {
-			background-image: url("../../../../admin/client/src/images/spinner@2x.gif");
+			background-image: url("../../images/spinner@2x.gif");
 			background-size: 43px 43px;
 		}
 	}

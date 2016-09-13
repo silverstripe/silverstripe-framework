@@ -3,7 +3,7 @@
  */
 import $ from 'jQuery';
 
-require('../../../../admin/client/src/legacy/ssui.core.js');
+require('../legacy/ssui.core.js');
 
 var windowWidth, windowHeight;
 

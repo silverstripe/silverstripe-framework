@@ -36,7 +36,7 @@ HTMLEditorConfig::get('cms')
 	->enablePlugins(array(
 		'contextmenu' => null,
 		'image' => null,
-		'ssbuttons' => FRAMEWORK_DIR . '/client/dist/js/TinyMCE_SSPlugin.js'
+		'ssbuttons' => FRAMEWORK_ADMIN_DIR . '/client/dist/js/TinyMCE_SSPlugin.js'
 	));
 
 CMSMenu::remove_menu_class('SilverStripe\\Admin\\CMSProfileController');

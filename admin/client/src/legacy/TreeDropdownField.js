@@ -1,10 +1,10 @@
 import $ from 'jQuery';
 import i18n from 'i18n';
 
-require('../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
-require('../../../thirdparty/jstree/jquery.jstree.js');
+require('../../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+require('../../../../thirdparty/jstree/jquery.jstree.js');
 
-require('../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+require('../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 require('../styles/legacy/TreeDropdownField.scss');
 
 $.entwine('ss', function($){

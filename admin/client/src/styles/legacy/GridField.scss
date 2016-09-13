@@ -6,9 +6,9 @@
  * @todo Add radial gradient to default delete button state
  * @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins?
  */
-@import "../../../../admin/client/src/styles/legacy/themes/default";
-@import "../../../../admin/client/src/styles/legacy/mixins";
-@import "../elementMixins";
+@import "themes/default";
+@import "mixins";
+@import "elementMixins";
 
 
 // Extends basic table styles, requires .table .table-hover
@@ -197,7 +197,7 @@
         }
 
         a.view-link {
-          background: url(../../../../admin/client/src/sprites/btn-icon/magnifier.png) no-repeat 0 1px;
+          background: url(../../sprites/btn-icon/magnifier.png) no-repeat 0 1px;
         }
       }
     }

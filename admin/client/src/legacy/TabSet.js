@@ -1,10 +1,10 @@
 import $ from 'jQuery';
 
-require('../../../thirdparty/jquery-ui/jquery-ui.js');
-require('../../../thirdparty/jquery-cookie/jquery.cookie.js');
-require('../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+require('../../../../thirdparty/jquery-ui/jquery-ui.js');
+require('../../../../thirdparty/jquery-cookie/jquery.cookie.js');
+require('../../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 
-require('../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+require('../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 
 $.entwine('ss', function($){
 	/**
