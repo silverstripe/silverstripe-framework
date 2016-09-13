@@ -21,7 +21,6 @@ require('expose?ReactAddonsTestUtils!react-addons-test-utils');
 require('expose?Page!page.js');
 require('expose?BootstrapCollapse!bootstrap/dist/js/umd/collapse.js');
 require('i18n.js');
-require('expose?i18nx!i18nx.js');
 
 require('babel-polyfill');
 require('../../../../thirdparty/jquery-ondemand/jquery.ondemand.js');

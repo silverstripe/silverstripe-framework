@@ -68,7 +68,6 @@ const config = [
       'components/Toolbar/Toolbar': 'Toolbar',
       'deep-freeze-strict': 'DeepFreezeStrict',
       i18n: 'i18n',
-      i18nx: 'i18nx',
       jQuery: 'jQuery',
       'lib/Backend': 'Backend',
       'lib/ReducerRegister': 'ReducerRegister',
