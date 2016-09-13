@@ -612,34 +612,6 @@ body.cms {
 	}
 }
 
-/**
- * SilverStripe 4 tabs.
- * Tab styles built on top of Bootstrap 4 tab functionality
- */
-
-.nav-tabs {
-	margin-bottom: 20px;
-
-	.nav-item {
-
-	}
-
-	.nav-link {
-		margin-right: 4px;
-		color: $body-color-light;
-
-		&:hover {
-			text-decoration: none;
-			background: transparent;
-		}
-
-		&.active,
-		&.active:hover {
-			border-bottom: 2px solid $body-color;
-			color: $body-color;
-		}
-	}
-}
 
 /**
  * Primary styles which sit on top of screen, with different tab colors.
