@@ -5,7 +5,7 @@
 			<%t AssetUploadField.TOUPLOAD 'Upload files' %>
 			<input id="$id" name="$getName" class="$extraClass ss-uploadfield-fromcomputer-fileinput" data-config="$configString" type="file"<% if $multiple %> multiple="multiple"<% end_if %> title="<%t AssetUploadField.FROMCOMPUTER 'Choose files from your computer' %>" />
 		</label>
-		<a class="btn btn-secondary font-icon-link btn--icon-large upload-url"><%t AssetUploadField.INSERTURL 'Insert from URL' %></a>
+		<a class="btn btn-secondary font-icon-link btn--icon-large ss-ui-button upload-url"><%t AssetUploadField.INSERTURL 'Insert from URL' %></a>
 	</div>
 </div>
 
