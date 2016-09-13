@@ -240,17 +240,6 @@ $.entwine('ss', function($) {
     },
 
     /**
-     * Ensure the user can see the requested section - restore the default view.
-     */
-    'from .cms-menu-list li a': {
-      onclick: function(e) {
-        var href = $(e.target).attr('href');
-        if(e.which > 1 || href == this._tabStateUrl()) return;
-        this.splitViewMode();
-      }
-    },
-
-    /**
      * Change the options of the threeColumnCompressor layout, and trigger layouting if needed.
      * You can provide any or all options. The remaining options will not be changed.
      */

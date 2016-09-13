@@ -980,6 +980,19 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		return $this->renderWith($this->getTemplatesWithSuffix('_Content'));
 	}
 
+	/**
+	 * Render $PreviewPanel content
+	 *
+	 * @return DBHTMLText
+	 */
+	public function PreviewPanel() {
+		$template = $this->getTemplatesWithSuffix('_PreviewPanel');
+		// Only render sections with preview panel
+		if ($template) {
+			return $this->renderWith($template);
+		}
+	}
+
 	public function getRecord($id) {
 		$className = $this->stat('tree_class');
 		if($className && $id instanceof $className) {
