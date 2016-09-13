@@ -219,24 +219,19 @@ class ThemeResourceLoader {
 	 * @param array $themes List of themes
 	 * @return string Path to resolved CSS file (relative to base dir)
 	 */
-	public function findThemedCSS($name, $themes)
-	{
-		$css = "/css/$name.css";
-		$paths = $this->getThemePaths($themes);
-		foreach ($paths as $themePath) {
-			$abspath = $this->base . '/' . $themePath;
+	public function findThemedCSS($name, $themes) {
+		if(substr($name, -4) !== '.css') $name .= '.css';
 
-			if (file_exists($abspath . $css)) {
-				return $themePath . $css;
-			}
+		$filename = $this->findThemedResource("css/$name", $themes);
+		if($filename === null) {
+			$filename = $this->findThemedResource($name, $themes);
 		}
 
-		// CSS exists in no context
-		return null;
+		return $filename;
 	}
 
 	/**
-	 * Registers the given themeable javascript as required.
+	 * Resolve themed javascript path
 	 *
 	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
 	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
@@ -247,17 +242,40 @@ class ThemeResourceLoader {
 	 * @return string Path to resolved javascript file (relative to base dir)
 	 */
 	public function findThemedJavascript($name, $themes) {
-        $js = "/javascript/$name.js";
+		if(substr($name, -3) !== '.js') $name .= '.js';
+
+		$filename = $this->findThemedResource("javascript/$name", $themes);
+		if($filename === null) {
+			$filename = $this->findThemedResource($name, $themes);
+		}
+
+		return $filename;
+	}
+
+	/**
+	 * Resolve a themed resource
+	 *
+	 * A themed resource and be any file that resides in a theme folder.
+	 *
+	 * @param string $resource A file path relative to the root folder of a theme
+	 * @param array $themes An order listed of themes to search
+	 */
+	public function findThemedResource($resource, $themes)
+	{
+		if($resource[0] !== '/') {
+			$resource = '/' . $resource;
+		}
+
 		$paths = $this->getThemePaths($themes);
+
 		foreach ($paths as $themePath) {
 			$abspath = $this->base . '/' . $themePath;
-
-			if (file_exists($abspath . $js)) {
-				return $themePath . $js;
+			if (file_exists($abspath . $resource)) {
+				return $themePath . $resource;
 			}
 		}
 
-		// js exists in no context
+		// Resource exists in no context
 		return null;
 	}
 
