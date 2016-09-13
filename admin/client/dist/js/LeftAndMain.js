@@ -193,14 +193,6 @@
         }
       },
 
-      'from .cms-menu-list li a': {
-        onclick: function onclick(e) {
-          var href = $(e.target).attr('href');
-          if (e.which > 1 || href == this._tabStateUrl()) return;
-          this.splitViewMode();
-        }
-      },
-
       updateLayoutOptions: function updateLayoutOptions(newSpec) {
         var spec = this.getLayoutOptions();
 
