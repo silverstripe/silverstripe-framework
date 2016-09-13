@@ -486,7 +486,7 @@ trait ImageManipulation {
 	 */
 	public function PreviewThumbnail() {
 		$width = (int)Config::inst()->get(get_class($this), 'asset_preview_width');
-		return $this->ScaleWidth($width)  ?: $this->IconTag();
+		return $this->ScaleMaxWidth($width)  ?: $this->IconTag();
 	}
 
 	/**
