@@ -17,7 +17,6 @@ class TabItem extends SilverStripeComponent {
       onExiting,
       onExited,
       animation,
-      id,
       unmountOnExit,
       } = this.props;
 
@@ -33,9 +32,7 @@ class TabItem extends SilverStripeComponent {
       onExiting,
       onExited,
       animation,
-      id,
       unmountOnExit,
-      'aria-labelledby': this.props['aria-labelledby'],
     };
   }
 
