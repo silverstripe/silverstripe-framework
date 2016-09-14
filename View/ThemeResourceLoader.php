@@ -95,19 +95,42 @@ class ThemeResourceLoader {
 			// <module> is always the name of the install directory, not necessarily the composer name.
 			$parts = explode(':', $identifier, 2);
 
-			list($vendor, $module) = explode('/', $parts[0], 2);
-			$theme = count($parts) > 1 ? $parts[1] : '';
+			if(count($parts) > 1) {
+				$theme = $parts[1];
+				// "module/vendor:/sub/path"
+				if($theme[0] === '/') {
+					$subpath = $theme;
 
-			$path = $module . ($theme ? '/themes/'.$theme : '');
+				// "module/vendor:subtheme"
+				} else {
+					$subpath = '/themes/' . $theme;
+				}
 
-			// Right now we require $module to be a silverstripe module (in root) or theme (in themes dir)
-			// If both exist, we prefer theme
-			if (is_dir(THEMES_PATH . '/' .$path)) {
-				return THEMES_DIR . '/' . $path;
+			// "module/vendor"
+			} else {
+				$subpath = '';
 			}
-			else {
-				return $path;
+
+			// To do: implement more flexible module path lookup
+			$package = $parts[0];
+			switch($package) {
+			case 'silverstripe/framework':
+				$modulePath = FRAMEWORK_DIR;
+				break;
+
+			case 'silverstripe/cms':
+				$modulePath = CMS_DIR;
+				break;
+
+			default:
+				list($vendor, $modulePath) = explode('/', $parts[0], 2);
+				// If the module is in the themes/<module>/ prefer that
+				if (is_dir(THEMES_PATH . '/' .$modulePath)) {
+					$modulePath = THEMES_DIR . '/' . $$modulePath;
+				}
 			}
+
+			return ltrim($modulePath . $subpath, '/');
 		}
 		// Otherwise it's a (deprecated) old-style "theme" identifier
 		else {
