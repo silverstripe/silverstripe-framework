@@ -834,10 +834,16 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * @return Member|null
 	 */
 	public static function currentUser() {
+		static $cache = array();
+		
 		$id = Member::currentUserID();
 
 		if($id) {
-			return Member::get()->byId($id);
+			if(!empty($cache[$id])) {
+				return $cache[$id];
+			}
+			$cache[$id] = Member::get()->byId($id);
+			return $cache[$id];
 		}
 	}
 
