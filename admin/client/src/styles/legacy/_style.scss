@@ -377,9 +377,13 @@ body.cms {
 	}
 }
 
+
+.cms-content-header-tabs .icon-button-group > .ui-tabs-nav.cms-tabset-nav-primary {
+	margin-top: 0;
+}
+
 .icon-button-group {
 	display: inline-block;
-	margin-top: 1px;
 	vertical-align: middle;
 	border: 1px solid #CDCCD0;
 	border-radius: 4px;
@@ -472,20 +476,12 @@ body.cms {
 			padding: 0;
 		}
 
-    .ui-tabs {
-
-      .ui-tabs-nav {
-        margin-left: $panel-padding-x;
-        margin-right: $panel-padding-x;
-        float: none;
-        border-bottom: 1px solid $nav-tabs-link-hover-border-color;
-        margin-bottom: $spacer-y;
-      }
-
-      .first .ui-tabs-anchor {
-        margin-left: 0;
-        padding-left: 0;
-      }
+    .ui-tabs .ui-tabs-nav {
+      margin-left: $panel-padding-x;
+      margin-right: $panel-padding-x;
+      float: none;
+      border-bottom: 1px solid $nav-tabs-link-hover-border-color;
+      margin-bottom: $spacer-y;
     }
 	}
 
@@ -493,7 +489,6 @@ body.cms {
     margin-left: -20px;
     margin-right: -20px;
   }
-
 
 	.ui-widget-header {
 		border: 0;
@@ -525,8 +520,8 @@ body.cms {
 				float: none;
 				font-weight: normal;
 				color: $color-text;
-				line-height: $grid-y * 4;
-				padding: 0 $grid-x*1.5 0;
+				padding: $nav-link-padding;
+				line-height: $line-height-base;
 
 				&.icon-button {
 					@extend a.icon-button;
@@ -536,6 +531,10 @@ body.cms {
 			&:last-child {
 				// correctly right-align last tab
 				margin-right: 0;
+			}
+
+			&+li {
+				margin-left: $spacer-x / 2;
 			}
 		}
 
@@ -552,11 +551,8 @@ body.cms {
 			background: transparent;
 
 			a {
-				line-height: 28px;
-				padding-top: 12px;
-				padding-bottom: 5px;
 				color: lighten($color-text, 10%);
-        border-bottom: 3px solid transparent;
+        border-bottom: $nav-tabs-link-border-width solid transparent;
 
 				&:hover {
 					color: $color-text;
@@ -570,9 +566,8 @@ body.cms {
 
 			a {
 				border-color: #66727d;
-				padding-left: 0;
-				padding-right: 0;
-				margin: 0 12px 0;
+				padding-left: $spacer-x / 4;
+				padding-right: $spacer-x / 4;
 				color: $color-text;
 			}
 		}
@@ -620,19 +615,17 @@ body.cms {
 .ui-tabs.cms-tabset-primary .ui-tabs-nav,
 .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary,
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
-	margin-top: 0;
+	margin-top: -$spacer-y * .625; // Same as toolbar padding
 	float: none; // parent container is already right floated
 
 	li {
 		margin-right: 0; // tabs are directly adjacent
 		margin-top: 0;
-			a {
+
+		a {
 			margin: 0;
-			line-height: 41px;
-			padding-top: 0;
-			padding-bottom: 0;
-			}
 		}
+	}
 
 	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
 		border-radius:0;
@@ -640,28 +633,27 @@ body.cms {
 
 	.ui-state-default {
 		background: none;
-		border-top: none;
-		border: none;
+		border-top: 0;
+		border: 0;
 	}
 
 	.ui-state-active {
 		box-shadow: none;
 		background: transparent;
-		border-top: none;
-		border: none;
-		z-index:2;
+		border: 0;
+		z-index: 2;
 
-		a {
-			border-bottom: 3px solid #66727d;
-			padding: 0;
-			margin: 0 12px 0;
+		a,
+		.nav-link {
+			border-bottom: $nav-tabs-link-border-width solid $nav-tabs-active-link-hover-color;
+			padding: $nav-link-padding;
 		}
 	}
 }
 
 .cms-content-header-tabs {
 	float: right;
-	margin-top: 9px;
+	margin-top: $spacer-y * .625; // Same as toolbar padding
 
 	&.icon-button-group-tabs {
 		margin-top: 12px;
@@ -673,15 +665,19 @@ body.cms {
 	float: none;
 	padding: 0;
 	border-bottom: 1px solid $color-button-generic-border;
-	margin: 0 16px;
+	margin: 0 $grid-gutter-width-half;
 
 	li {
 		// Align tab content with gutter (supports multiple rows of tabs)
-		margin: 0 ($grid-x * .5) -1px ($grid-x * -1.5);
+		margin: 0 0 -1px;
 
-		&:first-child {
-			margin-left: 0;
+		&+li {
+			margin-left: $spacer-x / 2;
 		}
+	}
+
+	.nav-link {
+		padding: $nav-link-padding;
 	}
 }
 
