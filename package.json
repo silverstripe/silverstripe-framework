@@ -79,7 +79,7 @@
     "browserify": "^13.0.0",
     "eslint": "^2.5.3",
     "eslint-config-airbnb": "^6.2.0",
-    "eslint-plugin-react": "^4.2.3",
+    "eslint-plugin-react": "^6.2.2",
     "event-stream": "^3.3.2",
     "glob": "^6.0.4",
     "gulp": "^3.9.0",
