@@ -37,6 +37,7 @@
     }
 
     &[data-selectable] {
+
       tr.ui-selected,
       tr.ui-selecting {
         background: $table-bg-accent !important;
@@ -302,9 +303,10 @@
 
     // Thumbnails e.g. in File admin, UploadField and HtmlEditorField file selection
     td.col-StripThumbnail {
-      padding: 2px 4px;
+      padding: 0 4px;
       width: 32px;
       height: 32px;
+      vertical-align: middle;
 
       img {
         width: 32px;
@@ -330,9 +332,9 @@
   top: 50%;
   left: 50%;
   margin-top: -18px;
-  margin-left: -116px; // half the width of .datagrid-pagination - centers pagination
+  margin-left: -125px; // half the width of .datagrid-pagination - centers pagination
   z-index: 5;
-  width: 232px;
+  width: 250px;
   text-align: center;
 
   .pagination-page-number {

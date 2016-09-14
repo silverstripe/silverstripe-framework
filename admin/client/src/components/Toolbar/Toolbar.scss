@@ -23,6 +23,19 @@
   position: relative;
 }
 
+// TEMP overrides color of links in JqueryUI widgets
+// required in modal toolbar eg. insert from URL link)
+.toolbar {
+
+  a.btn {
+    color: $body-color-light;
+  }
+
+  .btn {
+    margin-bottom: 0;
+  }
+}
+
 // Secondary content actions eg. Add page button
 .toolbar--content {
   padding: $spacer-y * .625 $spacer-x * .625;

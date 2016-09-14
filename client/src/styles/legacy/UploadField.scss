@@ -2,6 +2,13 @@
 @import "../../../../admin/client/src/styles/legacy/themes/default.scss";
 @import "../../../../admin/client/src/styles/legacy/_mixins.scss";
 
+.ss-uploadfield,
+.ss-insert-media {
+	&.form-group::after {
+		visibility: hidden;
+	}
+}
+
 .ss-uploadfield {
 
 	.clear {
@@ -159,16 +166,7 @@
 			}
 		}
 	}
-	.ss-ui-button {
-		display: block;
-		float: left;
-		margin: 0 10px 6px 0;
 
-		&.ss-uploadfield-fromcomputer {
-			position: relative;
-			overflow: hidden;
-		}
-	}
 	.ss-uploadfield-files {
 		margin: 0;
 		padding: 0;
@@ -291,26 +289,25 @@
 }
 
 .ss-upload {
+
 	.clear {
 		clear: both;
 	}
-	.ss-uploadfield-fromcomputer {
-		input {
-			/* since we can't really style the file input, we use this hack to make it as big as the button and hide it */
-			position: absolute;
-			top: 0;
-			right: 0;
-			margin: 0;
-			opacity: 0;
-			filter: alpha(opacity=0);
-			transform: translate(-300px, 0) scale(4);
-			font-size: 23px;
-			direction: ltr;
-			cursor: pointer;
-			height: 30px;
-			line-height: 30px;
-		}
+
+	.ss-uploadfield-fromcomputer input {
+		// since we can't really style the file input, we use this hack to make it as big as the button and hide it
+		position: absolute;
+		top: 0;
+		margin: 0;
+		filter: alpha(opacity = 0);
+		transform: translate(-200%, 0);
+		direction: ltr;
+		cursor: pointer;
+		left: 0;
+		width: 100%;
+		height: 100%;
 	}
+
 	.loader {
 		height: 94px; // Approxmiately matches the height of the field once a file is attached, avoids a 'jump' in size
 		background: transparent url(../admin/client/dist/images/spinner.gif) no-repeat 50% 50%;
