@@ -33,6 +33,13 @@ use InvalidArgumentException;
 class TabSet extends CompositeField {
 
 	/**
+	 * Use custom react component
+	 *
+	 * @var string
+	 */
+	protected $schemaComponent = 'Tabs';
+
+	/**
 	 * @var TabSet
 	 */
 	protected $tabSet;

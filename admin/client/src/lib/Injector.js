@@ -37,6 +37,8 @@ class Injector {
         return this.components.SingleSelectField;
       case 'Custom':
         return this.components.GridField;
+      case 'Structural':
+        return this.components.CompositeField;
       default:
         return null;
     }

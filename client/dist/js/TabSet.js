@@ -76,5 +76,14 @@
 				});
 			}
 		});
+
+		$('.ui-tabs-active .ui-tabs-anchor').entwine({
+			onmatch: function onmatch() {
+				this.addClass('nav-link active');
+			},
+			onunmatch: function onunmatch() {
+				this.removeClass('active');
+			}
+		});
 	});
 });

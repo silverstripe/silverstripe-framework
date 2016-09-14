@@ -29,6 +29,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
     this.removeForm = this.removeForm.bind(this);
     this.getFormId = this.getFormId.bind(this);
     this.getFormSchema = this.getFormSchema.bind(this);
+    this.findField = this.findField.bind(this);
   }
 
   /**
@@ -172,6 +173,13 @@ export class FormBuilderComponent extends SilverStripeComponent {
     }
   }
 
+  /**
+   * When the action is clicked on, records which action was clicked on
+   * This can allow for preventing the submit action, such as a custom action for the button
+   *
+   * @param event
+   * @param submitAction
+   */
   handleAction(event, submitAction) {
     this.props.formActions.setSubmitAction(this.getFormId(), submitAction);
     if (typeof this.props.handleAction === 'function') {
@@ -234,10 +242,15 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @returns {Object}
    */
   getFieldValues() {
-    const schemaFields = this.props.schemas[this.props.schemaUrl].schema.fields;
+    const schema = this.props.schemas[this.props.schemaUrl];
+    // using state is more efficient and has the same fields, fallback to nested schema
+    const fields = (schema.state)
+      ? schema.state.fields
+      : schema.schema.fields;
+
     return this.props.form[this.getFormId()].fields
       .reduce((prev, curr) => {
-        const match = schemaFields.find(schemaField => schemaField.id === curr.id);
+        const match = this.findField(fields, curr.id);
         if (!match) {
           return prev;
         }
@@ -248,6 +261,38 @@ export class FormBuilderComponent extends SilverStripeComponent {
       }, {});
   }
 
+  /**
+   * Finds the field with matching id from the schema or state, this is mainly for dealing with
+   * schema's deep nesting of fields.
+   *
+   * @param fields
+   * @param id
+   * @returns {object|undefined}
+   */
+  findField(fields, id) {
+    let result = null;
+    if (!fields) {
+      return result;
+    }
+
+    result = fields.find(field => field.id === id);
+
+    for (const field of fields) {
+      if (result) {
+        break;
+      }
+      result = this.findField(field.children, id);
+    }
+    return result;
+  }
+
+  /**
+   * Common functionality for building a Field or Action from schema.
+   *
+   * @param field
+   * @param extraProps
+   * @returns {*}
+   */
   buildComponent(field, extraProps = {}) {
     const Component = field.component !== null
       ? injector.getComponentByName(field.component)
@@ -255,6 +300,8 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
     if (Component === null) {
       return null;
+    } else if (field.component !== null && Component === undefined) {
+      throw Error(`Component not found in injector: ${field.component}`);
     }
 
     // Props which every form field receives.
@@ -336,7 +383,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
       return structure;
     }
     return merge.recursive(true, structure, {
-      data: Object.assign({}, structure.data, state.data),
+      data: state.data,
       source: state.source,
       messages: state.messages,
       valid: state.valid,
@@ -353,6 +400,27 @@ export class FormBuilderComponent extends SilverStripeComponent {
     this.props.formActions.removeForm(formId);
   }
 
+  /**
+   * If there is structural and state data availabe merge those data for each field.
+   * Otherwise just use the structural data.
+   */
+  getFieldData(formFields, formState) {
+    if (!formFields || !formState || !formState.fields) {
+      return formFields;
+    }
+
+    return formFields.map((field) => {
+      const state = formState.fields.find((item) => item.id === field.id);
+      const data = this.mergeFieldData(field, state);
+
+      if (field.children) {
+        data.children = this.getFieldData(field.children, formState);
+      }
+
+      return data;
+    });
+  }
+
   render() {
     const formId = this.getFormId();
     if (!formId) {
@@ -363,7 +431,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
 
     // If the response from fetching the initial data
     // hasn't come back yet, don't render anything.
-    if (!formSchema) {
+    if (!formSchema || !formSchema.schema) {
       return null;
     }
 
@@ -376,15 +444,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
       encType: formSchema.schema.attributes.enctype,
     });
 
-    // If there is structural and state data availabe merge those data for each field.
-    // Otherwise just use the structural data.
-    const fieldData = formSchema.schema && formState && formState.fields
-      ? formSchema.schema.fields.map((field) => {
-        const state = formState.fields.find((item) => item.id === field.id);
-
-        return this.mergeFieldData(field, state);
-      })
-      : formSchema.schema.fields;
+    const fieldData = this.getFieldData(formSchema.schema.fields, formState);
 
     const formProps = {
       actions: formSchema.schema.actions,

@@ -76,6 +76,10 @@ class CompositeField extends FormField {
 			}
 			$defaults['children'] = $childSchema;
 		}
+
+		$defaults['data']['tag'] = $this->getTag();
+		$defaults['data']['legend'] = $this->getLegend();
+
 		return $defaults;
 	}
 
@@ -95,6 +99,35 @@ class CompositeField extends FormField {
 	 */
 	public function getChildren() {
 		return $this->children;
+	}
+
+	/**
+	 * Returns the name (ID) for the element.
+	 * If the CompositeField doesn't have a name, but we still want the ID/name to be set.
+	 * This code generates the ID from the nested children.
+	 *
+	 * @todo this is temporary, and should be removed when FormTemplateHelper is updated to handle ID for CompositeFields with no name
+	 *
+	 * @return String $name
+	 */
+	public function getName(){
+		if($this->name) {
+			return $this->name;
+		}
+
+		$fieldList = $this->FieldList();
+		$compositeTitle = '';
+		$count = 0;
+		/** @var FormField $subfield */
+		foreach($fieldList as $subfield){
+			$compositeTitle .= $subfield->getName();
+			if($subfield->getName()) $count++;
+		}
+		/** @skipUpgrade */
+		if($count === 1) {
+			$compositeTitle .= 'Group';
+		}
+		return preg_replace("/[^a-zA-Z0-9]+/", "", $compositeTitle);
 	}
 
 	/**

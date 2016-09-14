@@ -156,12 +156,18 @@ trait ImageManipulation {
 	/**
 	 * The width of an image preview in the Asset section
 	 *
-	 * This thumbnail is only sized to width.
-	 *
 	 * @config
 	 * @var int
 	 */
 	private static $asset_preview_width = 400;
+
+	/**
+	 * The height of an image preview in the Asset section
+	 *
+	 * @config
+	 * @var int
+	 */
+	private static $asset_preview_height = 336;
 
 	/**
 	 * Fit image to specified dimensions and fill leftover space with a solid colour (default white). Use in templates with $Pad.
@@ -480,7 +486,7 @@ trait ImageManipulation {
 	 */
 	public function PreviewThumbnail() {
 		$width = (int)Config::inst()->get(get_class($this), 'asset_preview_width');
-		return $this->ScaleWidth($width)  ?: $this->IconTag();
+		return $this->ScaleMaxWidth($width)  ?: $this->IconTag();
 	}
 
 	/**

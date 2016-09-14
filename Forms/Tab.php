@@ -22,6 +22,13 @@ use InvalidArgumentException;
 class Tab extends CompositeField {
 
 	/**
+	 * Use custom react component
+	 *
+	 * @var string
+	 */
+	protected $schemaComponent = 'TabItem';
+
+	/**
 	 * @var TabSet
 	 */
 	protected $tabSet;
@@ -115,7 +122,9 @@ class Tab extends CompositeField {
 	}
 
 	public function extraClass() {
-		return implode(' ', (array)$this->extraClasses);
+		$classes = (array)$this->extraClasses;
+
+		return implode(' ', $classes);
 	}
 
 	public function getAttributes() {

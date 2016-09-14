@@ -72,4 +72,14 @@ $.entwine('ss', function($){
 			});
 		}
 	});
+
+  // adding bootstrap theme classes to corresponding jQueryUI elements
+  $('.ui-tabs-active .ui-tabs-anchor').entwine({
+    onmatch: function() {
+      this.addClass('nav-link active');
+    },
+    onunmatch: function() {
+      this.removeClass('active');
+    }
+  });
 });

@@ -16,7 +16,8 @@ use SilverStripe\ORM\DataObjectInterface;
  */
 class MoneyField extends FormField {
 
-	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_TEXT;
+	// TODO replace with `FormField::SCHEMA_DATA_TYPE_TEXT` when MoneyField is implemented
+	protected $schemaDataType = 'MoneyField';
 
 	/**
 	 * @var string $_locale

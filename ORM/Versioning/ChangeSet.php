@@ -369,11 +369,13 @@ class ChangeSet extends DataObject {
 	}
 
 	public function getCMSFields() {
-		$fields = new FieldList();
-		$fields->push(TextField::create('Name', $this->fieldLabel('Name')));
-		if($this->isInDB()) {
-			$fields->push(ReadonlyField::create('State', $this->fieldLabel('State')));
-		}
+		$fields = parent::getCMSFields();
+
+		$fields->removeByName('OwnerID');
+		$fields->removeByName('Changes');
+
+		$fields->dataFieldByName('State')->setReadonly(true);
+
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}

@@ -3,9 +3,18 @@
 namespace SilverStripe\Assets;
 
 use SilverStripe\Core\Convert;
-use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\HTMLReadonlyField;
+use SilverStripe\Forms\LiteralField;
 use SilverStripe\View\Parsers\ShortcodeParser;
 use SilverStripe\View\Parsers\ShortcodeHandler;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\HeaderField;
+use SilverStripe\Forms\TabSet;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\DatetimeField;
+use SilverStripe\Forms\ReadonlyField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\FieldList;
 
 /**
  * Represents an Image
@@ -36,11 +45,64 @@ class Image extends File implements ShortcodeHandler {
 	}
 
 	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		$fields->insertAfter(
-			'LastEdited',
-			new ReadonlyField("Dimensions", _t('AssetTableField.DIM','Dimensions') . ':')
+		$path = '/' . dirname($this->getFilename());
+
+		$width = (int)Image::config()->get('asset_preview_width');
+		$height = (int)Image::config()->get('asset_preview_height');
+		$previewLink = Convert::raw2att($this
+			->FitMax($width, $height)
+			->PreviewLink()
 		);
+		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
+
+		$link = $this->Link();
+
+		$content = Tab::create('Main',
+			HeaderField::create('TitleHeader', $this->Title, 1)
+				->addExtraClass('editor__heading'),
+			LiteralField::create("ImageFull", $image)
+				->addExtraClass('editor__file-preview'),
+			TabSet::create('Editor',
+				Tab::create('Details',
+					TextField::create("Title", $this->fieldLabel('Title')),
+					TextField::create("Name", $this->fieldLabel('Filename')),
+					ReadonlyField::create(
+						"Path",
+						_t('AssetTableField.PATH', 'Path'),
+						(($path !== '/.') ? $path : '') . '/'
+					),
+					HTMLReadonlyField::create(
+						'ClickableURL',
+						_t('AssetTableField.URL','URL'),
+						sprintf('<i class="%s"></i><a href="%s" target="_blank">%s</a>',
+							'icon font-icon-link editor__url-icon', $link, $link)
+					)
+				),
+				Tab::create('Usage',
+					DatetimeField::create(
+						"LastEdited",
+						_t('AssetTableField.LASTEDIT', 'Last changed')
+					)->setReadonly(true)
+				)
+			),
+			HiddenField::create('ID', $this->ID)
+		);
+
+		if ($dimensions = $this->getDimensions()) {
+			$content->insertAfter(
+				'TitleHeader',
+				LiteralField::create(
+					"DisplaySize",
+					sprintf('<div><i>%spx, %s</i></div>',
+						$dimensions, $this->getSize())
+				)
+			);
+		}
+
+		$fields = FieldList::create(TabSet::create('Root', $content));
+
+		$this->extend('updateCMSFields', $fields);
+
 		return $fields;
 	}
 

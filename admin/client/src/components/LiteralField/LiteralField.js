@@ -8,13 +8,19 @@ class LiteralField extends SilverStripeComponent {
 
   render() {
     return (
-      <div id={this.props.id} dangerouslySetInnerHTML={this.getContent()}></div>
+      <div
+        id={this.props.id}
+        className={this.props.extraClass}
+        dangerouslySetInnerHTML={this.getContent()}
+      >
+      </div>
     );
   }
 }
 
 LiteralField.propTypes = {
   id: React.PropTypes.string,
+  extraClass: React.PropTypes.string,
   data: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.shape({

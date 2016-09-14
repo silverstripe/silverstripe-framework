@@ -11,6 +11,8 @@ use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
 
 /**
  * Represents a logical folder, which may be used to organise assets
@@ -194,12 +196,24 @@ class Folder extends File {
 		// Don't show readonly path until we can implement parent folder selection,
 		// it's too confusing when readonly (makes sense for files only).
 
-		$fields = FieldList::create([
-			HeaderField::create('TitleHeader', $this->Title, 1),
-			LiteralField::create("ImageFull", $this->PreviewThumbnail()),
-			TextField::create("Name", $this->fieldLabel('Filename')),
+		$width = (int)Image::config()->get('asset_preview_width');
+		$previewLink = Convert::raw2att($this->ScaleMaxWidth($width)->getIcon());
+		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
+
+		$content = Tab::create('Main',
+			HeaderField::create('TitleHeader', $this->Title, 1)
+				->addExtraClass('editor__heading'),
+			LiteralField::create("IconFull", $image)
+				->addExtraClass('editor__file-preview'),
+			TabSet::create('Editor',
+				Tab::create('Details',
+					TextField::create("Name", $this->fieldLabel('Filename'))
+				)
+			),
 			HiddenField::create('ID', $this->ID)
-		]);
+		);
+
+		$fields = FieldList::create(TabSet::create('Root', $content));
 
 		$this->extend('updateCMSFields', $fields);
 

@@ -46,7 +46,7 @@ class SingleSelectField extends SilverStripeComponent {
   getSelectField() {
     const options = this.props.source || [];
 
-    if (this.props.data.hasEmptyDefault) {
+    if (this.props.data.hasEmptyDefault && !options.find((item) => !item.value)) {
       options.unshift({
         value: '',
         title: this.props.data.emptyString,
@@ -55,8 +55,8 @@ class SingleSelectField extends SilverStripeComponent {
     }
     return (
       <select {...this.getInputProps()}>
-        { options.map((item) => {
-          const key = `${this.props.name}-${item.value || 'null'}`;
+        { options.map((item, index) => {
+          const key = `${this.props.name}-${item.value || `empty${index}`}`;
 
           return (
             <option key={key} value={item.value} disabled={item.disabled}>
@@ -105,7 +105,7 @@ SingleSelectField.propTypes = {
   readOnly: React.PropTypes.bool,
   source: React.PropTypes.arrayOf(React.PropTypes.shape({
     value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
-    title: React.PropTypes.string,
+    title: React.PropTypes.any,
     disabled: React.PropTypes.bool,
   })),
   data: React.PropTypes.oneOfType([

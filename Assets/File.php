@@ -15,7 +15,8 @@ use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\HTMLReadonlyField;
+use SilverStripe\Forms\Tab;
+use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\Forms\TextField;
@@ -472,36 +473,36 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	public function getCMSFields() {
 		$path = '/' . dirname($this->getFilename());
 
-		$fields = FieldList::create([
-			HeaderField::create('TitleHeader', $this->Title, 1),
-			LiteralField::create("ImageFull", $this->PreviewThumbnail()),
-			TextField::create("Name", $this->fieldLabel('Filename')),
-			ReadonlyField::create(
-				"Path",
-				_t('AssetTableField.PATH', 'Path'),
-				(($path !== '/.') ? $path : '') . '/'
-			)
-		]);
+		$width = (int)Image::config()->get('asset_preview_width');
+		$previewLink = Convert::raw2att($this->ScaleMaxWidth($width)->getIcon());
+		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
 
-		if ($this->getIsImage()) {
-			$fields->push(ReadonlyField::create(
-				"DisplaySize",
-				_t('AssetTableField.SIZE', "File size"),
-				sprintf('%spx, %s', $this->getDimensions(), $this->getSize())
-			));
-			$fields->push(HTMLReadonlyField::create(
-						'ClickableURL',
-						_t('AssetTableField.URL','URL'),
-						sprintf('<a href="%s" target="_blank">%s</a>', $this->Link(), $this->Link())
-			));
-		}
-		$fields->push(HiddenField::create('ID', $this->ID));
+		$content = Tab::create('Main',
+			HeaderField::create('TitleHeader', $this->Title, 1)
+				->addExtraClass('editor__heading'),
+			LiteralField::create("IconFull", $image)
+				->addExtraClass('editor__file-preview'),
+			TabSet::create('Editor',
+				Tab::create('Details',
+					TextField::create("Title", $this->fieldLabel('Title')),
+					TextField::create("Name", $this->fieldLabel('Filename')),
+					ReadonlyField::create(
+						"Path",
+						_t('AssetTableField.PATH', 'Path'),
+						(($path !== '/.') ? $path : '') . '/'
+					)
+				),
+				Tab::create('Usage',
+					DatetimeField::create(
+						"LastEdited",
+						_t('AssetTableField.LASTEDIT', 'Last changed')
+					)->setReadonly(true)
+				)
+			),
+			HiddenField::create('ID', $this->ID)
+		);
 
-		$fields->insertBefore('Name', TextField::create("Title", $this->fieldLabel('Title')));
-		$fields->push(DatetimeField::create(
-			"LastEdited",
-			_t('AssetTableField.LASTEDIT', 'Last changed')
-		)->setReadonly(true));
+		$fields = FieldList::create(TabSet::create('Root', $content));
 
 		$this->extend('updateCMSFields', $fields);
 

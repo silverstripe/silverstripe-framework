@@ -16,7 +16,10 @@ The schema URL where the form will be scaffolded from e.g. '/admin/pages/schema/
 
 ### handleSubmit (func)
 
-Event handler passed to the Form Component as a prop.
+Event handler passed to the Form Component as a prop. Parameters received are:
+ * event (Event) - The submit event, it is strongly recommended to call `preventDefault()`
+ * fieldValues (object) - An object containing the field values captured by the Submit handler
+ * submitFn (func) - A callback for when the submission was successful, if submission fails, this function should not be called. (e.g. validation error)
 
 ### handleAction (func)
 

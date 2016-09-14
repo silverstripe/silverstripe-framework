@@ -22,7 +22,7 @@ function fieldHolder(Field) {
       return (
         <div className={classNames.join(' ')} id={this.props.holder_id}>
           {labelText &&
-            <label className="form__field-label" htmlFor={`${this.props.id}`}>
+            <label className="form__field-label" htmlFor={this.props.id}>
               {labelText}
             </label>
           }
@@ -36,9 +36,10 @@ function fieldHolder(Field) {
   }
 
   FieldHolder.propTypes = {
-    leftTitle: React.PropTypes.string,
-    title: React.PropTypes.string,
+    leftTitle: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
+    title: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
     extraClass: React.PropTypes.string,
+    holder_id: React.PropTypes.string,
     id: React.PropTypes.string,
   };
 
