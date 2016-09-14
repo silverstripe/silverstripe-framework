@@ -10,7 +10,7 @@
     "node": "^4.2.0"
   },
   "scripts": {
-    "build": "WEBPACK_CHILD=js webpack",
+    "build": "webpack",
     "css": "WEBPACK_CHILD=css webpack",
     "lock": "npm-shrinkwrap --dev",
     "test": "NODE_PATH=\"./client/src:./admin/client/src\" jest",

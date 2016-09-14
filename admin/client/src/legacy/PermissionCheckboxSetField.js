@@ -1,6 +1,7 @@
 import $ from 'jQuery';
 
-require('../styles/legacy/CheckboxSetField.scss');
+// TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
+// require('../styles/legacy/CheckboxSetField.scss');
 
 $.entwine('ss', function($){
 	/**

@@ -8,7 +8,8 @@ window.tmpl = require('blueimp-tmpl/tmpl.js');
 require('./UploadField_uploadtemplate.js');
 require('./UploadField_downloadtemplate.js');
 
-require('../styles/legacy/UploadField.scss');
+// TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
+// require('../styles/legacy/UploadField.scss');
 
 $.widget('blueimpUIX.fileupload', $.blueimpUI.fileupload, {
 	_initTemplates: function() {

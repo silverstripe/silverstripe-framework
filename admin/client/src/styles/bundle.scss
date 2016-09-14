@@ -6,7 +6,10 @@
 
 // Thirdparty
 @import "chosen";
-@import "../../../../node_modules/bootstrap/scss/bootstrap";
+@import "../../../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css";
+@import "../../../../thirdparty/jstree/themes/apple/style.css";
+@import "../../../thirdparty/jquery-notice/jquery.notice.css";
 
 // Base
 @import "typography";
@@ -28,6 +31,14 @@
 @import "legacy/SecurityAdmin";
 @import "legacy/CMSSecurity";
 @import "legacy/retina";
+
+@import "legacy/CheckboxSetField";
+@import "legacy/ConfirmedPasswordField";
+@import "legacy/DatetimeField";
+@import "legacy/GridField";
+@import "legacy/SelectionGroup";
+@import "legacy/TreeDropdownField";
+@import "legacy/UploadField";
 
 // Components
 @import "../components/Accordion/Accordion";

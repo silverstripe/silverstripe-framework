@@ -28,22 +28,24 @@ require('../../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 require('../legacy/sspath.js');
 
 require('../../../../thirdparty/jquery-ui/jquery-ui.js');
-require('../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-
+// TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
+// require('../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 
 require('../../../../thirdparty/jquery-cookie/jquery.cookie.js');
 require('../../../../thirdparty/jquery-query/jquery.query.js');
 require('../../../../thirdparty/jquery-form/jquery.form.js');
 
 require('../../../thirdparty/jquery-notice/jquery.notice.js');
-require('../../../thirdparty/jquery-notice/jquery.notice.css');
+// TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
+// require('../../../thirdparty/jquery-notice/jquery.notice.css');
 
 require('jquery-sizes/lib/jquery.sizes.js');
 require('../../../thirdparty/jlayout/lib/jlayout.border.js');
 require('../../../thirdparty/jlayout/lib/jquery.jlayout.js');
 
 require('../../../../thirdparty/jstree/jquery.jstree.js');
-require('../../../../thirdparty//jstree/themes/apple/style.css');
+// TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
+// require('../../../../thirdparty//jstree/themes/apple/style.css');
 
 require('../../../thirdparty/jquery-hoverIntent/jquery.hoverIntent.js');
 require('../../../../thirdparty/jquery-changetracker/lib/jquery.changetracker.js');
@@ -92,6 +94,3 @@ require('expose?ReducerRegister!lib/ReducerRegister');
 require('expose?ReactRouteRegister!lib/ReactRouteRegister');
 require('expose?Injector!lib/Injector');
 require('expose?Router!lib/Router');
-
-// Ensure that styles are built as part of this webpack bundle
-require('../styles/bundle.scss');

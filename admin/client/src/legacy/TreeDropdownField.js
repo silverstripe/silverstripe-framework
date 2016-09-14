@@ -4,8 +4,9 @@ import i18n from 'i18n';
 require('../../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 require('../../../../thirdparty/jstree/jquery.jstree.js');
 
-require('../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
-require('../styles/legacy/TreeDropdownField.scss');
+// TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
+// require('../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+// require('../styles/legacy/TreeDropdownField.scss');
 
 $.entwine('ss', function($){
 	/**

@@ -12,10 +12,10 @@ const PATHS = {
   ADMIN_THIRDPARTY: './admin/thirdparty',
   ADMIN_JS_SRC: './admin/client/src',
   ADMIN_JS_DIST: './admin/client/dist/js',
-  ADMIN_SPRITES_SRC: './admin/client/src/sprites',
-  ADMIN_SPRITES_DIST: './admin/client/dist/images/sprites',
   FRAMEWORK: '.',
   FRAMEWORK_THIRDPARTY: './thirdparty',
+  FRAMEWORK_CSS_SRC: './client/src/styles',
+  FRAMEWORK_CSS_DIST: './client/dist/styles',
   INSTALL_CSS_SRC: './dev/install/client/src/styles',
   INSTALL_CSS_DIST: './dev/install/client/dist/styles',
 };
@@ -35,6 +35,7 @@ const SUPPORTED_BROWSERS = [
 
 const config = [
   {
+    // TODO Split out with new 'admin' module
     name: 'js',
     entry: {
       'bundle-framework': `${PATHS.ADMIN_JS_SRC}/boot/index.js`,
@@ -102,6 +103,48 @@ const config = [
           },
         },
         {
+          test: '/i18n.js/',
+          loader: 'script-loader',
+        },
+      ],
+    },
+    plugins: [
+      new webpack.ProvidePlugin({
+        jQuery: 'jQuery',
+        $: 'jQuery',
+      }),
+      new webpack.DefinePlugin({
+        'process.env':{
+          // Builds React in production mode, avoiding console warnings
+          'NODE_ENV': JSON.stringify('production')
+        }
+      }),
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          unused: false,
+          warnings: false,
+        },
+      }),
+    ],
+  },
+  {
+    // TODO Split out with new 'admin' module
+    name: 'css',
+    entry: {
+      'bundle': `${PATHS.ADMIN_CSS_SRC}/bundle.scss`,
+      'editor': `${PATHS.ADMIN_CSS_SRC}/editor.scss`,
+      'GridField_print': `${PATHS.ADMIN_CSS_SRC}/legacy/GridField_print.scss`,
+      'AssetUploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/AssetUploadField.scss`,
+      'UploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/UploadField.scss`,
+    },
+    output: {
+      path: 'admin/client/dist',
+      filename: '[name].css',
+    },
+    devtool: 'source-map',
+    module: {
+      loaders: [
+        {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract([
             'css?sourceMap&minimize',
@@ -122,16 +165,12 @@ const config = [
           }),
         },
         {
-          test: '/i18n.js/',
-          loader: 'script-loader',
-        },
-        {
           test: /\.(png|gif|jpg|svg)$/,
-          loader: 'url?limit=10000&name=images/[name].[ext]',
+          loader: `url?limit=10000&name=images/[name].[ext]`,
         },
         {
           test: /\.(woff|eot|ttf)$/,
-          loader: 'file?name=fonts/[name].[ext]',
+          loader: `file?name=fonts/[name].[ext]`,
         },
       ],
     },
@@ -139,48 +178,20 @@ const config = [
       autoprefixer({ browsers: SUPPORTED_BROWSERS }),
     ],
     plugins: [
-      new webpack.ProvidePlugin({
-        jQuery: 'jQuery',
-        $: 'jQuery',
-      }),
-      new webpack.DefinePlugin({
-        'process.env':{
-          // Builds React in production mode, avoiding console warnings
-          'NODE_ENV': JSON.stringify('production')
-        }
-      }),
-      new webpack.optimize.UglifyJsPlugin({
-        compress: {
-          unused: false,
-          warnings: false,
-        },
-      }),
-      new ExtractTextPlugin('styles/bundle.css', { allChunks: true }),
+      new ExtractTextPlugin('styles/[name].css', { allChunks: true }),
     ],
   },
-
-  // Much of the CSS is included in the javascript configuration (bundle.scss)
-  // These CSS files have not yet been inlined into the javascript include chain
   {
-    name: 'css',
+    name: 'framework-css',
     entry: {
-      [`${PATHS.ADMIN_CSS_DIST}/editor`]:
-        `${PATHS.ADMIN_CSS_SRC}/editor.scss`,
-      [`${PATHS.ADMIN_CSS_DIST}/GridField_print`]:
-        `${PATHS.ADMIN_CSS_SRC}/legacy/GridField_print.scss`,
-      [`${PATHS.ADMIN_CSS_DIST}/debug`]:
-        `${PATHS.ADMIN_CSS_SRC}/legacy/debug.scss`,
-      [`${PATHS.ADMIN_CSS_DIST}/AssetUploadField`]:
-        `${PATHS.ADMIN_CSS_SRC}/legacy/AssetUploadField.scss`,
-      [`${PATHS.ADMIN_CSS_DIST}/UploadField`]:
-        `${PATHS.ADMIN_CSS_SRC}/legacy/UploadField.scss`,
-      [`${PATHS.INSTALL_CSS_DIST}/install`]:
-        `${PATHS.INSTALL_CSS_SRC}/install.scss`,
+      [`${PATHS.INSTALL_CSS_DIST}/install`]: `${PATHS.INSTALL_CSS_SRC}/install.scss`,
+      [`${PATHS.FRAMEWORK_CSS_DIST}/debug`]: `${PATHS.FRAMEWORK_CSS_SRC}/debug.scss`,
     },
     output: {
       path: './',
       filename: '[name].css',
     },
+    devtool: 'source-map',
     module: {
       loaders: [
         {
@@ -190,15 +201,26 @@ const config = [
             'postcss?sourceMap',
             'resolve-url',
             'sass?sourceMap',
-          ]),
+          ], {
+            publicPath: '../', // needed because bundle.css is in a subfolder
+          }),
+        },
+        {
+          test: /\.css$/,
+          loader: ExtractTextPlugin.extract([
+            'css?sourceMap&minimize',
+            'postcss?sourceMap',
+          ], {
+            publicPath: '../', // needed because bundle.css is in a subfolder
+          }),
         },
         {
           test: /\.(png|gif|jpg|svg)$/,
-          loader: `url?limit=10000&name=${PATHS.ADMIN_CSS_DIST}/images/[name].[ext]`,
+          loader: `url?limit=10000&name=images/[name].[ext]`,
         },
         {
           test: /\.(woff|eot|ttf)$/,
-          loader: 'file?name=fonts/[name].[ext]',
+          loader: `file?name=fonts/[name].[ext]`,
         },
       ],
     },

@@ -24,6 +24,3 @@ require('../legacy/SelectionGroup.js');
 require('../legacy/DateField.js');
 require('../legacy/ToggleCompositeField.js');
 require('../legacy/MemberDatetimeOptionsetField.js');
-
-require('../styles/legacy/CheckboxSetField.scss');
-require('../styles/legacy/DatetimeField.scss');
