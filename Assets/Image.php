@@ -75,7 +75,7 @@ class Image extends File implements ShortcodeHandler {
 						'ClickableURL',
 						_t('AssetTableField.URL','URL'),
 						sprintf('<i class="%s"></i><a href="%s" target="_blank">%s</a>',
-							'icon font-icon-link editor__url-icon', $link, $link)
+							'font-icon-link btn--icon-large form-control-static__icon', $link, $link)
 					)
 				),
 				Tab::create('Usage',
