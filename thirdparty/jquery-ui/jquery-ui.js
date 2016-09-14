@@ -3,6 +3,12 @@
 * Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.position.js, jquery.ui.accordion.js, jquery.ui.autocomplete.js, jquery.ui.button.js, jquery.ui.datepicker.js, jquery.ui.dialog.js, jquery.ui.draggable.js, jquery.ui.droppable.js, jquery.ui.effect.js, jquery.ui.effect-blind.js, jquery.ui.effect-bounce.js, jquery.ui.effect-clip.js, jquery.ui.effect-drop.js, jquery.ui.effect-explode.js, jquery.ui.effect-fade.js, jquery.ui.effect-fold.js, jquery.ui.effect-highlight.js, jquery.ui.effect-pulsate.js, jquery.ui.effect-scale.js, jquery.ui.effect-shake.js, jquery.ui.effect-slide.js, jquery.ui.effect-transfer.js, jquery.ui.menu.js, jquery.ui.progressbar.js, jquery.ui.resizable.js, jquery.ui.selectable.js, jquery.ui.slider.js, jquery.ui.sortable.js, jquery.ui.spinner.js, jquery.ui.tabs.js, jquery.ui.tooltip.js
 * Copyright (c) 2012 jQuery Foundation and other contributors Licensed MIT */
 
+/*!
+ * Contains fix for 1.10 back ported manually
+ * https://github.com/jquery/jquery-ui/commit/c241313f1d31b18751a81c1321662512d8086cbc
+ * plus a fix to ui.selectable widgetEventPrefix being incorrect
+ */
+
 (function( $, undefined ) {
 
 var uuid = 0,
@@ -442,7 +448,7 @@ $.widget = function( name, base, prototype ) {
 		// TODO: remove support for widgetEventPrefix
 		// always use the name + a colon as the prefix, e.g., draggable:start
 		// don't prefix for widgets that aren't DOM-based
-		widgetEventPrefix: existingConstructor ? basePrototype.widgetEventPrefix : name
+		widgetEventPrefix: existingConstructor ? (basePrototype.widgetEventPrefix || name) : name
 	}, prototype, {
 		constructor: constructor,
 		namespace: namespace,
@@ -10727,6 +10733,7 @@ var isNumber = function(value) {
 
 $.widget("ui.selectable", $.ui.mouse, {
 	version: "1.9.2",
+  widgetEventPrefix: 'selectable',
 	options: {
 		appendTo: 'body',
 		autoRefresh: true,
