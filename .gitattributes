@@ -1,4 +1,7 @@
-docs/                 export-ignore
+docs/ export-ignore
+
+# Line endings
+sake text eol=lf
 
 # Hide diffs
 admin/client/dist/js/ -diff
