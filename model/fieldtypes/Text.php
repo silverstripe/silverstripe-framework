@@ -96,7 +96,7 @@ class Text extends StringField {
 
 		$words = preg_split('/\s+/', $paragraph);
 		foreach ($words as $i => $word) {
-			if (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/(Dr|Mr|Mrs|Ms|Miss|Sr|Jr|No)\.$/i', $word)) {
+			if (self::is_sentence_end($word)) {
 				return implode(' ', array_slice($words, 0, $i+1));
 			}
 		}
@@ -105,6 +105,13 @@ class Text extends StringField {
 		 * Summary will limit the result this time */
 		return $this->Summary(20);
 	}
+	
+    /**
+	 * Caution: Not XML/HTML-safe - does not respect closing tags.
+	 */
+	protected static function is_sentence_end($word) {
+	    return (preg_match('/(!|\?|\.)$/', $word) && !preg_match('/^(Dr|Mr|Mrs|Ms|Sr|Jr|No)\.$/i', $word));
+	} 
 
 	/**
 	 * Caution: Not XML/HTML-safe - does not respect closing tags.
