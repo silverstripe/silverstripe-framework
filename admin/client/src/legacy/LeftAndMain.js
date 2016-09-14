@@ -1011,7 +1011,7 @@ $.entwine('ss', function($) {
       this._super();
     },
     onremove: function() {
-      if(this.data('button')) this.button('destroy');
+      if(!this.data('button')) this.button('destroy');
       this._super();
     }
   });
