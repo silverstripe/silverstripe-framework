@@ -92,6 +92,13 @@
   }
 }
 
+// Icons used in readonly fields (eg URL field in assetAdmin)
+.form-control-static__icon::before {
+  color: lighten($text-muted, 20%);
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
 
 // Readonlys should be converted to an input
 // scss-lint:disable all
