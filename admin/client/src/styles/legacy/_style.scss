@@ -155,7 +155,6 @@ body.cms {
 // We have a faux three column layout when displaying Page content in the CMS.
 .has-panel {
 
-	.cms-tree-view-sidebar,
 	.cms-versions-form {
 		padding: $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half;
 	}
@@ -468,12 +467,8 @@ body.cms {
   padding: 0;
   background: none;
 
-  .ui-tabs {
-    position: static;
-  }
-
 	.ui-tabs-panel {
-		padding: $panel-padding-y $panel-padding-x;
+		padding: 0;
 		background: transparent; // default it's white
 		border: 0; // suppress default borders
 
@@ -481,14 +476,16 @@ body.cms {
       padding: 0;
     }
 
-    .ui-tabs .ui-tabs-nav {
-      margin-left: $panel-padding-x;
-      margin-right: $panel-padding-x;
-      float: none;
-      border-bottom: 1px solid $nav-tabs-link-hover-border-color;
-      margin-bottom: $spacer-y;
-    }
-  }
+		.ui-tabs .ui-tabs-nav {
+			float: none;
+			border-bottom: 1px solid $nav-tabs-link-hover-border-color;
+			margin-bottom: $panel-padding-y;
+		}
+	}
+
+	.ui-tabs {
+		position: static;
+	}
 
   .ui-tabs-panel {
 		.toolbar--content {
@@ -501,7 +498,7 @@ body.cms {
 		}
 
 		.alert + .grid-field {
-			margin-top: -$spacer-y;
+			margin-top: $panel-padding-y;
 		}
 	}
 
@@ -618,23 +615,25 @@ body.cms {
 
 
 /**
- * Primary styles which sit on top of screen, with different tab colors.
+ * Primary styles which sit on top right of screen.
  * TODO Only use one "primary" selector and fix HTMLEditorField TabSet addExtraClass()
  */
 .ui-tabs.cms-tabset-primary .ui-tabs-nav,
 .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary,
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
-  margin-top: -$spacer-y * .625; // Same as toolbar padding
-  float: none; // parent container is already right floated
+	margin-top: 0;
+	float: none; // parent container is already right floated
+	// scss-lint:disable ImportantRule
+	margin-bottom: 0 !important; // Override JQueryUI (should normally be -1px)
+	// scss-lint:enable ImportantRule
 
   li {
     margin-right: 0; // tabs are directly adjacent
     margin-top: 0;
 
-    a {
-      margin: 0;
-    }
-  }
+	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
+		border-radius: 0;
+	}
 
   .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
     border-radius:0;
@@ -670,11 +669,11 @@ body.cms {
   }
 }
 
-.cms-content-fields .ui-tabs-nav {
-  float: none;
-  padding: 0;
-  border-bottom: 1px solid $color-button-generic-border;
-  margin: 0 $grid-gutter-width-half;
+.panel--padded .ui-tabs-nav {
+	float: none;
+	padding: 0;
+	border-bottom: 1px solid $color-button-generic-border;
+	margin-top: -$panel-padding-y;
 
   li {
     // Align tab content with gutter (supports multiple rows of tabs)
@@ -688,10 +687,6 @@ body.cms {
   .nav-link {
     padding: $nav-link-padding;
   }
-}
-
-.cms-content-fields > .message {
-	margin: $grid-gutter-width-half $grid-gutter-width-half 0;
 }
 
 /** -------------------------------------------------------
@@ -827,22 +822,26 @@ body.cms {
   text-shadow: none;
   border-radius: 3px;
 
-  &.notice {
-    background-color: lighten($color-notice,22%); // Blue
-    border-color: $color-notice;
-  }
-  &.warning {                     // Yellow
-    background-color: lighten($color-warning,47%);
-    border-color: $color-warning;
-  }
-  &.error, &.bad, &.required, &.validation {      // Red
-    background-color: lighten($color-error,24%);
-    border-color: $color-error;
-  }
-  &.good {                      // Green
-    background-color: lighten($color-good,40%);
-    border-color: $color-good;
-  }
+	.panel--padded > & {
+		margin-bottom: $grid-gutter-width-half;
+	}
+
+	&.notice {
+		background-color: lighten($color-notice,22%);	// Blue
+		border-color: $color-notice;
+	}
+	&.warning {											// Yellow
+		background-color: lighten($color-warning,47%);
+		border-color: $color-warning;
+	}
+	&.error, &.bad, &.required, &.validation {			// Red
+		background-color: lighten($color-error,24%);
+		border-color: $color-error;
+	}
+	&.good {											// Green
+		background-color: lighten($color-good,40%);
+		border-color: $color-good;
+	}
 
   p {
     margin: 0;
@@ -1041,13 +1040,13 @@ body.cms {
  * panel
  */
 .cms-content-tools {
-  background: $tab-panel-texture-color;
-  width: $grid-x * 36;
-  z-index: 70;
-  box-shadow: 1px 0 0 0 $border-color-dark;
-  z-index: 1000;
-  float: left;
-  position: relative;
+	background: $tab-panel-texture-color;
+	width: $cms-panel-sm;
+	z-index: 70;
+	box-shadow: 1px 0 0 0 $border-color-dark;
+	z-index: 1000;
+	float: left;
+	position: relative;
 
   .cms-panel-header {
     clear: both;
@@ -1562,38 +1561,8 @@ form.member-profile-form {
   }
 }
 
-// Custom overrides for ReportAdmin
-.ReportAdmin {
-
-  //> fieldset {
-    // margin-top: -$grid-gutter-width-half;
-		// padding: 0 $panel-padding-x;  // to check
-
-    // If form fields are at the top (typically .grid-field) then add additional space
-    // > .form-group:first-child {
-    //   margin-top: $grid-gutter-width-half;
-    // }
-  //}
-
-  > .message {
-    margin-bottom: $grid-gutter-width-half;
-  }
-
-  .toolbar--content {
-    margin-left: -$grid-gutter-width-half;
-    margin-right: -$grid-gutter-width-half;
-  }
-
-  &.cms-panel-padded {
-    // scss-lint:disable ImportantRule
-    padding: $grid-gutter-width-half !important; // Override JLayout
-    width: 100% !important; // Override JLayout
-    // scss-lint:enable ImportantRule
-  }
-}
-
 .cms .cms-panel-padded .cms-content-view {
-	padding: 0 $panel-padding-x $grid-y*1.5;
+	padding: $panel-padding-y $panel-padding-x;
 }
 
 .CMSPageAddController .cms-panel-padded {
