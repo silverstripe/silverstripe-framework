@@ -94,6 +94,9 @@
 
 .panel--padded {
   padding: $panel-padding-y $panel-padding-x;
+  // scss-lint:disable ImportantRule
+  width: 100% !important; // Override JLayout in some instances
+  // scss-lint:enable ImportantRule
 }
 
 // Scrolling panels
