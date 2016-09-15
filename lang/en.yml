@@ -17,6 +17,7 @@ en:
     FILENAME: Filename
     FOLDER: Folder
     HEIGHT: Height
+    CREATED: 'First uploaded'
     LASTEDIT: 'Last changed'
     OWNER: Owner
     PATH: 'Path'

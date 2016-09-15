@@ -494,6 +494,10 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 				),
 				Tab::create('Usage',
 					DatetimeField::create(
+						"Created",
+						_t('AssetTableField.CREATED', 'First uploaded')
+					)->setReadonly(true),
+					DatetimeField::create(
 						"LastEdited",
 						_t('AssetTableField.LASTEDIT', 'Last changed')
 					)->setReadonly(true)
