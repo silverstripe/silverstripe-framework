@@ -837,7 +837,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		$id = Member::currentUserID();
 
 		if($id) {
-			DataObject::get_by_id('Member', $id);
+			return DataObject::get_by_id('Member', $id);
 		}
 		return null;
 	}
