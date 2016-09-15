@@ -1,11 +1,11 @@
 /*
  * Lightweight clientside i18n implementation.
  * Caution: Only available after DOM loaded because we need to detect the language
- * 
+ *
  * For non-i18n stub implementation, see framework/javascript/src/i18nx.js
- * 
+ *
  * Based on jQuery i18n plugin: 1.0.0  Feb-10-2008
- * 
+ *
  * Dual licensed under the MIT and GPL licenses:
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
@@ -16,8 +16,8 @@
 
 class i18n {
 	constructor() {
-		this.currentLocale = null;
 		this.defaultLocale = 'en_US';
+		this.currentLocale = this.detectLocale();
 		this.lang = {};
 	}
 
@@ -40,8 +40,8 @@ class i18n {
 	}
 
 	/**
-	 * The actual translation function. Looks the given string up in the 
-	 * dictionary and returns the translation if one exists. If a translation 
+	 * The actual translation function. Looks the given string up in the
+	 * dictionary and returns the translation if one exists. If a translation
 	 * is not found, returns the original word.
 	 *
 	 * @param string entity - A "long" locale format, e.g. "de_DE" (Required)
@@ -61,7 +61,7 @@ class i18n {
 		} else if (this.lang && this.lang[this.defaultLocale] && this.lang[this.defaultLocale][entity]) {
 			return this.lang[this.defaultLocale][entity];
 		} else if (this.lang && this.lang[defaultlangName] && this.lang[defaultlangName][entity]) {
-			return this.lang[defaultlangName][entity]; 
+			return this.lang[defaultlangName][entity];
 		} else if(fallbackString) {
 			return fallbackString;
 		} else {
@@ -73,7 +73,7 @@ class i18n {
 	 * Add entities to a dictionary. If a dictionary doesn't
 	 * exist for this locale, its automatically created.
 	 * Existing entities are overwritten.
-	 * 
+	 *
 	 * @param string locale
 	 * @param Object dict
 	 */
@@ -89,7 +89,7 @@ class i18n {
 
 	/**
 	 * Get dictionary for a specific locale.
-	 * 
+	 *
 	 * @param string locale
 	 */
 	getDictionary(locale) {
@@ -127,7 +127,7 @@ class i18n {
 	/**
 	 * Substitutes %s with parameters
  	 * given in list. %%s is used to escape %s.
- 	 * 
+ 	 *
 	 * @param string s - The string to perform the substitutions on.
 	 * @return string - The new string with substitutions made.
 	 */
@@ -143,7 +143,7 @@ class i18n {
 		return s.replace(regx, function (match, subMatch1, subMatch2, offset, string) {
 			// skip %%s
 			if (subMatch1 === '%') {
-				return match; 
+				return match;
 			}
 
 			return subMatch1 + params[i++];
@@ -151,8 +151,8 @@ class i18n {
 	}
 
 	/**
-	 * Substitutes variables with a list of injections. 
- 	 * 
+	 * Substitutes variables with a list of injections.
+ 	 *
 	 * @param string s - The string to perform the substitutions on.
 	 * @param object map - An object with the substitions map e.g. {var: value}.
 	 * @return string - The new string with substitutions made.
@@ -168,9 +168,9 @@ class i18n {
 	/**
 	 * Detect document language settings by looking at <meta> tags.
 	 * If no match is found, returns this.defaultLocale.
-	 * 
+	 *
 	 * @todo get by <html lang=''> - needs modification of SSViewer
-	 * 
+	 *
 	 * @return string - Locale in mixed lowercase/uppercase format suitable
 	 * for usage in i18n.lang arrays (e.g. 'en_US').
 	 */
