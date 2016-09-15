@@ -1,6 +1,6 @@
 import $ from 'jQuery';
 
-require('../../../../thirdparty/jquery-ui/jquery-ui.js');
+require('../../../thirdparty/jquery-ui/jquery-ui.js');
 
 /**
  * Allows icon definition via HTML5 data attrs for easier handling in PHP.

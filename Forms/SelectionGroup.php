@@ -27,6 +27,9 @@ use SilverStripe\View\Requirements;
  * );
  * $field = new SelectionGroup('MyGroup', $items);
  * </code>
+ *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
  */
 class SelectionGroup extends CompositeField {
 

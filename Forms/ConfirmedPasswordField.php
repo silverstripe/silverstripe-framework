@@ -12,6 +12,9 @@ use SilverStripe\View\Requirements;
  *
  * Optionally hides the fields by default and shows a link to toggle their
  * visibility.
+ *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
  */
 class ConfirmedPasswordField extends FormField {
 
@@ -53,6 +56,9 @@ class ConfirmedPasswordField extends FormField {
 	 *
 	 * This behaviour works unobtrusively, without JavaScript enabled
 	 * the fields show, validate and save by default.
+	 *
+	 * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+	 * since the required frontend dependencies are included through CMS bundling.
 	 *
 	 * @param boolean $showOnClick
 	 */

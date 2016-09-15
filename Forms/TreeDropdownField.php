@@ -44,6 +44,9 @@ use InvalidArgumentException;
  * This will generate a tree allowing the user to expand and contract subsections
  * to find the appropriate page to save to the field.
  *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
+ *
  * @see TreeMultiselectField for the same implementation allowing multiple selections
  * @see DropdownField for a simple dropdown field.
  * @see CheckboxSetField for multiple selections through checkboxes.

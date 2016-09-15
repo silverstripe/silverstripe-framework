@@ -7,6 +7,9 @@ use SilverStripe\View\Requirements;
 /**
  * Render a button that will submit the form its contained in through ajax.
  *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
+ *
  * @see framework/client/dist/js/InlineFormAction.js
  */
 class InlineFormAction extends FormField {

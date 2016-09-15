@@ -9,7 +9,7 @@
  * Contributing: http://tinymce.moxiecode.com/contributing
  */
 
-$frameworkPath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+$frameworkPath = rtrim(dirname(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
 $basePath = rtrim(dirname($frameworkPath), DIRECTORY_SEPARATOR);
 
 // require composers autoloader

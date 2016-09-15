@@ -33,6 +33,9 @@ use SilverStripe\View\Requirements;
  * $gridField = new GridField('ExampleGrid', 'Example grid', new DataList('Page'));
  * </code>
  *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
+ *
  * @see SS_List
  *
  * @property GridState_Data $State The gridstate of this object

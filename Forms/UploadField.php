@@ -46,7 +46,8 @@ use Exception;
  * $UploadField->setAllowedMaxFileNumber(5);
  * </code>
  *
- * @author Zauberfisch
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
  */
 class UploadField extends FileField {
 

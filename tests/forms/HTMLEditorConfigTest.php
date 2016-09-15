@@ -76,7 +76,7 @@ class HTMLEditorConfigTest extends SapphireTest {
 		// Plugin specified with standard location
 		$this->assertContains('plugin4', array_keys($plugins));
 		$this->assertEquals(
-			'http://mysite.com/subdir/framework/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
+			'http://mysite.com/subdir/framework/admin/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
 			$plugins['plugin4']
 		);
 
@@ -86,14 +86,14 @@ class HTMLEditorConfigTest extends SapphireTest {
 		// Test plugins included via gzip compresser
 		HTMLEditorField::config()->update('use_gzip', true);
 		$this->assertEquals(
-			'framework/thirdparty/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
+			'framework/admin/thirdparty/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
 			$c->getScriptURL()
 		);
 
 		// If gzip is disabled only the core plugin is loaded
 		HTMLEditorField::config()->remove('use_gzip');
 		$this->assertEquals(
-			'framework/thirdparty/tinymce/tinymce.min.js',
+			'framework/admin/thirdparty/tinymce/tinymce.min.js',
 			$c->getScriptURL()
 		);
 	}

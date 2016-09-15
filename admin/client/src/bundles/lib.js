@@ -12,7 +12,7 @@ require('expose?ReactRouterRedux!react-router-redux');
 
 // jQuery plugins require that the jQuery object is exposed as a global
 // webpack.ProvidePlugin is used to ensure that jQuery and $ are provided to all includes
-require('script!../../../../thirdparty/jquery/jquery.js');
+require('script!../../../thirdparty/jquery/jquery.js');
 require('expose?jQuery!jQuery');
 
 require('expose?ReactBootstrap!react-bootstrap-ss');
@@ -23,17 +23,17 @@ require('expose?BootstrapCollapse!bootstrap/dist/js/umd/collapse.js');
 require('i18n.js');
 
 require('babel-polyfill');
-require('../../../../thirdparty/jquery-ondemand/jquery.ondemand.js');
-require('../../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+require('../../../thirdparty/jquery-ondemand/jquery.ondemand.js');
+require('../../../thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
 require('../legacy/sspath.js');
 
-require('../../../../thirdparty/jquery-ui/jquery-ui.js');
+require('../../../thirdparty/jquery-ui/jquery-ui.js');
 // TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
-// require('../../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
+// require('../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css');
 
-require('../../../../thirdparty/jquery-cookie/jquery.cookie.js');
-require('../../../../thirdparty/jquery-query/jquery.query.js');
-require('../../../../thirdparty/jquery-form/jquery.form.js');
+require('../../../thirdparty/jquery-cookie/jquery.cookie.js');
+require('../../../thirdparty/jquery-query/jquery.query.js');
+require('../../../thirdparty/jquery-form/jquery.form.js');
 
 require('../../../thirdparty/jquery-notice/jquery.notice.js');
 // TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
@@ -43,19 +43,19 @@ require('jquery-sizes/lib/jquery.sizes.js');
 require('../../../thirdparty/jlayout/lib/jlayout.border.js');
 require('../../../thirdparty/jlayout/lib/jquery.jlayout.js');
 
-require('../../../../thirdparty/jstree/jquery.jstree.js');
+require('../../../thirdparty/jstree/jquery.jstree.js');
 // TODO Enable once https://github.com/webpack/extract-text-webpack-plugin/issues/179 is resolved. Included in bundle.scss for now.
-// require('../../../../thirdparty//jstree/themes/apple/style.css');
+// require('../../../thirdparty//jstree/themes/apple/style.css');
 
 require('../../../thirdparty/jquery-hoverIntent/jquery.hoverIntent.js');
-require('../../../../thirdparty/jquery-changetracker/lib/jquery.changetracker.js');
+require('../../../thirdparty/jquery-changetracker/lib/jquery.changetracker.js');
 require('../legacy/TreeDropdownField.js');
 
 require('../legacy/DateField.js');
 
 
 // TODO Move UploadField.js deps into the file once figuring out why uploads fail then
-require('../../../../thirdparty/jquery-ui/jquery-ui.js');
+require('../../../thirdparty/jquery-ui/jquery-ui.js');
 require('../legacy/ssui.core.js');
 require('imports?define=>false&this=>window!blueimp-load-image/load-image.js');
 require('blueimp-file-upload/jquery.iframe-transport.js');

@@ -29,6 +29,9 @@ use InvalidArgumentException;
  * 	)
  * )
  * </code>
+ *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
  */
 class TabSet extends CompositeField {
 

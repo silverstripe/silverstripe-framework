@@ -24,7 +24,7 @@ class TinyMCEConfig extends HTMLEditorConfig {
 	 * @config
 	 * @var string
 	 */
-	private static $base_dir = 'framework/thirdparty/tinymce';
+	private static $base_dir = 'framework/admin/thirdparty/tinymce';
 
 	/**
 	 * TinyMCE JS settings
@@ -448,13 +448,13 @@ class TinyMCEConfig extends HTMLEditorConfig {
 		// If gzip is disabled just return core script url
 		$useGzip = HTMLEditorField::config()->get('use_gzip');
 		if(!$useGzip) {
-			return THIRDPARTY_DIR . '/tinymce/tinymce.min.js';
+			return ADMIN_THIRDPARTY_DIR . '/tinymce/tinymce.min.js';
 		}
 
 		// tinyMCE JS requirement
-		require_once THIRDPARTY_PATH . '/tinymce/tiny_mce_gzip.php';
+		require_once ADMIN_THIRDPARTY_PATH . '/tinymce/tiny_mce_gzip.php';
 		$tag = TinyMCE_Compressor::renderTag(array(
-			'url' => THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
+			'url' => ADMIN_THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php',
 			'plugins' => implode(',', $this->getInternalPlugins()),
 			'themes' => $this->getTheme(),
 			'languages' => $this->getOption('language')

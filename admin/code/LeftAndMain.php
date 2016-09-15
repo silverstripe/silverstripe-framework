@@ -550,7 +550,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		if (Director::isDev()) {
 			// TODO Confuses jQuery.ondemand through document.write()
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
+			Requirements::javascript(ADMIN_THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
 			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/leaktools.js');
 		}
 
