@@ -407,11 +407,12 @@ button.loading {
 }
 
 .btn-toolbar .ss-ui-action-constructive:first-child {
-	margin-left: 15px;
+	margin-left: 5px;
 
 	.toolbar--south &,
+	.toolbar--content &,
 	.toolbar & {
-		margin-left: 5px;
+		margin-left: 15px;
 	}
 }
 
