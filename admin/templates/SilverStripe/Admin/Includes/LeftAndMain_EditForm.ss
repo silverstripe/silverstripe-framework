@@ -1,7 +1,7 @@
 <% if $IncludeFormTag %>
 <form $FormAttributes data-layout-type="border">
 <% end_if %>
-	<div class="cms-content-header north">
+	<div class="toolbar toolbar--north cms-content-header">
 		<div class="cms-content-header-info">
 			<% include SilverStripe\\Admin\\BackLink_Button %>
 			<% with $Controller %>
@@ -27,7 +27,7 @@
 		$EditFormTools
 	<% end_with %>
 
-	<div class="cms-content-fields center <% if not $Fields.hasTabset %>cms-panel-padded<% end_if %>">
+	<div class="panel panel--padded cms-content-fields panel--double-toolbar <% if not $Fields.hasTabset %>cms-panel-padded<% end_if %>">
 		<% if $Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>
