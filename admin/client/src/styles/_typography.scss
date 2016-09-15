@@ -54,9 +54,11 @@ h1 {
       background: $table-bg-hover;
     }
 
+    // scss-lint:disable SelectorDepth
     tr:first-child td {
       border-top: $table-border-width solid $border-color-light;
     }
+    // scss-lint:enable SelectorDepth
   }
 
   tfoot {
