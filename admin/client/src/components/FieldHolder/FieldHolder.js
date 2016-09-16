@@ -3,6 +3,9 @@ import SilverStripeComponent from 'lib/SilverStripeComponent';
 
 function fieldHolder(Field) {
   class FieldHolder extends SilverStripeComponent {
+    getDescription() {
+      return { __html: this.props.description };
+    }
 
     render() {
       const labelText = this.props.leftTitle !== null
@@ -29,6 +32,11 @@ function fieldHolder(Field) {
           <div className="form__field-holder">
               <Field {...this.props} />
           </div>
+          <div
+            className="form__field-description"
+            dangerouslySetInnerHTML={this.getDescription()}
+          >
+          </div>
         </div>
       );
     }
@@ -41,6 +49,7 @@ function fieldHolder(Field) {
     extraClass: React.PropTypes.string,
     holder_id: React.PropTypes.string,
     id: React.PropTypes.string,
+    description: React.PropTypes.string,
   };
 
   return FieldHolder;

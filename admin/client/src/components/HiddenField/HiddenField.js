@@ -44,4 +44,8 @@ HiddenField.propTypes = {
   value: React.PropTypes.any,
 };
 
+HiddenField.defaultProps = {
+  value: null,
+};
+
 export default HiddenField;

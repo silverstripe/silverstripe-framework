@@ -62,4 +62,9 @@ TextField.propTypes = {
   readOnly: React.PropTypes.bool,
 };
 
+TextField.defaultProps = {
+  // React considers "undefined" as an uncontrolled component.
+  value: null,
+};
+
 export default fieldHolder(TextField);

@@ -438,11 +438,12 @@ export class FormBuilderComponent extends SilverStripeComponent {
     // Map form schema to React component attribute names,
     // which requires renaming some of them (by unsetting the original keys)
     const attributes = Object.assign({}, formSchema.schema.attributes, {
-      class: null,
       className: formSchema.schema.attributes.class,
-      enctype: null,
       encType: formSchema.schema.attributes.enctype,
     });
+    // these two still cause silent errors
+    delete attributes.class;
+    delete attributes.enctype;
 
     const fieldData = this.getFieldData(formSchema.schema.fields, formState);
 
