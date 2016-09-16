@@ -265,7 +265,7 @@ One common example is to block the core `jquery.js` added by various form fields
 version in a custom location. This assumes you have tested your application with the newer version.
 
 	:::php
-	Requirements::block(THIRDPARTY_DIR . '/jquery/jquery.js');
+	Requirements::block(ADMIN_THIRDPARTY_DIR . '/jquery/jquery.js');
 
 <div class="alert" markdown="1">
 The CMS also uses the `Requirements` system, and its operation can be affected by `block()` calls. Avoid this by 

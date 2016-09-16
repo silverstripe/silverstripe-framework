@@ -118,7 +118,6 @@ class DatetimeField extends FormField {
 	 * @return string
 	 */
 	public function Field($properties = array()) {
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/DatetimeField.css');
 		return parent::Field($properties);
 	}
 

@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: a195997fcc216fffc9265fd6e2f71197725d907c
-  branch: master
-lock: false
-repository_class: Piston::Git::Repository
-repository_url: https://github.com/jeffwatkins/jasmine-dom.git

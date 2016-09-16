@@ -147,7 +147,7 @@ class UploadField_ItemHandler extends RequestHandler
 			return $this->httpError(403);
 		}
 
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/UploadField.css');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/UploadField.css');
 
 		return $this->customise(array(
 			'Form' => $this->EditForm()

@@ -27,6 +27,9 @@ use SilverStripe\View\Requirements;
  * );
  * $field = new SelectionGroup('MyGroup', $items);
  * </code>
+ *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
  */
 class SelectionGroup extends CompositeField {
 
@@ -118,10 +121,6 @@ class SelectionGroup extends CompositeField {
 	}
 
 	public function FieldHolder($properties = array()) {
-		Requirements::javascript(THIRDPARTY_DIR .'/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR   . '/client/dist/js/SelectionGroup.js');
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/SelectionGroup.css');
-
 		return parent::FieldHolder($properties);
 	}
 }

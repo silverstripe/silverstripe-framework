@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: 5b5b87daeaedc64070098ac83facbf7cd2268f05
-  branch: master
-lock: false
-repository_class: Piston::Git::Repository
-repository_url: https://github.com/pivotal/jasmine-ajax.git

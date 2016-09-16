@@ -931,43 +931,29 @@ class Requirements_Backend
 	 *                         'framework/javascript/lang'
 	 * @param bool $return Return all relative file paths rather than including them in
 	 *                         requirements
-	 * @param bool $langOnly Only include language files, not the base libraries
 	 *
 	 * @return array|null All relative files if $return is true, or null otherwise
 	 */
-	public function add_i18n_javascript($langDir, $return = false, $langOnly = false)
+	public function add_i18n_javascript($langDir, $return = false)
 	{
 		$files = array();
 		$base = Director::baseFolder() . '/';
-		if (i18n::config()->js_i18n) {
-			// Include i18n.js even if no languages are found.  The fact that
-			// add_i18n_javascript() was called indicates that the methods in
-			// here are needed.
-			if (!$langOnly) {
-				$files[] = FRAMEWORK_DIR . '/client/dist/js/i18n.js';
-			}
 
-			if (substr($langDir, -1) != '/') {
-				$langDir .= '/';
-			}
+		if (substr($langDir, -1) != '/') {
+			$langDir .= '/';
+		}
 
-			$candidates = array(
-				'en.js',
-				'en_US.js',
-				i18n::get_lang_from_locale(i18n::config()->default_locale) . '.js',
-				i18n::config()->default_locale . '.js',
-				i18n::get_lang_from_locale(i18n::get_locale()) . '.js',
-				i18n::get_locale() . '.js',
-			);
-			foreach ($candidates as $candidate) {
-				if (file_exists($base . DIRECTORY_SEPARATOR . $langDir . $candidate)) {
-					$files[] = $langDir . $candidate;
-				}
-			}
-		} else {
-			// Stub i18n implementation for when i18n is disabled.
-			if (!$langOnly) {
-				$files[] = FRAMEWORK_DIR . '/client/dist/js/i18nx.js';
+		$candidates = array(
+			'en.js',
+			'en_US.js',
+			i18n::get_lang_from_locale(i18n::config()->default_locale) . '.js',
+			i18n::config()->default_locale . '.js',
+			i18n::get_lang_from_locale(i18n::get_locale()) . '.js',
+			i18n::get_locale() . '.js',
+		);
+		foreach ($candidates as $candidate) {
+			if (file_exists($base . DIRECTORY_SEPARATOR . $langDir . $candidate)) {
+				$files[] = $langDir . $candidate;
 			}
 		}
 

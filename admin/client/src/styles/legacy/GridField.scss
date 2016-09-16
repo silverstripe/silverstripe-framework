@@ -1,0 +1,373 @@
+/**
+ * Core styles for the basic GridField form field without any specific style.
+ *
+ * @package framework
+ * @subpackage scss
+ * @todo Add radial gradient to default delete button state
+ * @todo Create SASS mixin-function to simply swap the from/to, to to/from colours in grsdient mixins?
+ */
+@import "themes/default";
+@import "mixins";
+@import "elementMixins";
+
+
+// Extends basic table styles, requires .table .table-hover
+.grid-field__row--drillable {
+  cursor: pointer;
+}
+
+.grid-field__cell--actions {
+  white-space: nowrap;
+  width: 1px;
+}
+
+.filter-buttons {
+  min-width: 68px;
+}
+
+
+.cms {
+  .grid-field {
+    > .addNewGridFieldButton {
+      margin-bottom: 0;
+
+      .action {
+        margin-bottom: $spacer-y * .75;
+      }
+    }
+
+    &[data-selectable] {
+
+      tr.ui-selected,
+      tr.ui-selecting {
+        background: $table-bg-accent !important;
+      }
+
+      td {
+        cursor: pointer;
+      }
+    }
+
+    span button.action_gridfield_relationfind {
+      display: none; //hides find button - redundant functionality
+    }
+
+    p button.action_export span.btn-icon-download-csv {
+      height: 17px; //exact height of icon
+    }
+
+    .pull-xs-right > * {
+      float: right;
+      margin-left: $spacer-x / 2;
+    }
+
+    .pull-xs-left > * {
+      margin-right: $spacer-x / 2;
+      float: left;
+    }
+
+    .add-existing-autocompleter {
+      span {
+        float: left;
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      input.relation-search {
+        width: 270px;
+        height: 32px;
+        margin-bottom: $spacer-y * .75;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      button.action_gridfield_relationadd {
+        height: 32px;
+        margin-left: 0; // Webkit needs this
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-left: 0;
+      }
+    }
+
+    .grid-csv-button,
+    .grid-print-button {
+      margin-bottom: 0;
+      display: inline-block;
+    }
+  }
+
+  .grid-field__table {
+    .filter-header {
+      .fieldholder-small {
+        padding-bottom: 0;
+      }
+
+      .fieldgroup .fieldgroup-field {
+        padding: 0;
+      }
+    }
+
+    tbody {
+      td {
+        &.col-listChildrenLink {
+          width: 26px;
+          border-right: 0;
+          padding-right: 0;
+
+          .list-children-link {
+            margin-top: -$table-cell-padding;
+            margin-right: -$table-cell-padding / 2;
+            margin-bottom: -$table-cell-padding;
+            margin-left: -$grid-gutter-width-half;
+            padding-top: $table-cell-padding;
+            padding-right: 0;
+            padding-bottom: $table-cell-padding;
+            padding-left: $grid-gutter-width-half;
+            height: calc(#{$table-cell-padding * 2} + #{$line-height-base});
+            line-height: $line-height-base;
+            border-radius: 0;
+            display: block;
+
+            &:before {
+              margin-top: -2px;
+            }
+
+            &:hover {
+              background-color: darken($table-bg-hover, 4%);
+            }
+          }
+        }
+
+        &.col-getTreeTitle {
+          span.item {
+            color: $color-text-blue-link;
+          }
+
+          span.badge {
+            clear: both;
+            text-transform: uppercase;
+            display: inline-block;
+            padding: 0 3px;
+            font-size: 0.75em;
+            line-height: 1em;
+            margin-left: 10px;
+            margin-right: 6px;
+            margin-top: -1px;
+            border-radius: 2px, 2px;
+          }
+
+          span.badge.status-modified {
+            color: #7E7470;
+            border: 1px solid #C9B800;
+            background-color: #FFF0BC;
+          }
+
+          span.badge.status-addedtodraft {
+            color: #7E7470;
+            border: 1px solid #C9B800;
+            background-color: #FFF0BC;
+          }
+
+          span.badge.status-deletedonlive {
+            color: #636363;
+            border: 1px solid #E49393;
+            background-color: #F2DADB;
+          }
+
+          span.badge.status-removedfromdraft {
+            color: #636363;
+            border: 1px solid #E49393;
+            background-color: #F2DADB;
+          }
+
+          span.badge.status-workflow-approval {
+            color: #56660C;
+            border: 1px solid #7C8816;
+            background-color: #DAE79A;
+          }
+        }
+
+        button.gridfield-button-delete span.btn-icon-decline {
+          left: 2px;
+        }
+
+        a.view-link {
+          display: inline-block;
+        }
+
+        a.view-link {
+          background: url(../../sprites/btn-icon/magnifier.png) no-repeat 0 1px;
+        }
+      }
+    }
+
+    .filter-buttons .fieldgroup-field {
+      width: auto;
+    }
+
+    tr {
+      th {
+        &.main {
+          white-space: nowrap;
+
+          > * {
+            vertical-align: bottom;
+          }
+
+          span {
+            @include hide-text-overflow; // Add ellipses to overflowing text
+          }
+
+          &.col-listChildrenLink {
+            border-right: 0;
+          }
+        }
+
+        &.extra,
+        &.action {
+          cursor: default;
+        }
+
+        &.extra {
+          position: relative;
+          background: $table-bg-tools;
+          padding-top: $table-sm-cell-padding;
+          padding-bottom: $table-sm-cell-padding;
+
+          &:last-child {
+            width: 1%;
+            min-width: 1%;
+            white-space: nowrap;
+
+            > .form__fieldgroup-item {
+              display: inline-block;
+            }
+          }
+
+          select {
+            margin: 0;
+          }
+        }
+
+        button {
+          &.ss-gridfield-button-filter:not(.trigger) {
+            color: $white;
+          }
+
+          &.ss-gridfield-button-filter:not(.trigger),
+          &.grid-field__filter-clear {
+            margin-top: 3px;
+            margin-bottom: 3px;
+          }
+
+          &.action_gridfield_relationadd:hover {
+            color: #444 !important; /* Not sure why IE think it needs this */
+          }
+
+          &.ss-ui-button {
+            &.ss-gridfield-button-close,
+            &.ss-gridfield-button-filter:not(.trigger) {
+              &.hover-alike:active,
+              &:active,
+              &.hover-alike,
+              &:hover {
+                color: $white;
+              }
+            }
+
+            &.ss-gridfield-button-reset {
+              margin: 0;
+              display: none;
+
+              &:hover,
+              &:active {
+                opacity: 1;
+                background: transparent;
+              }
+
+              &.filtered {
+                display: block;
+                opacity: 0.8;
+              }
+            }
+          }
+        }
+      }
+
+      td.bottom-all .datagrid-footer-message {
+        text-align: center;
+        padding-top: 6px;
+      }
+    }
+
+    // Thumbnails e.g. in File admin, UploadField and HtmlEditorField file selection
+    td.col-StripThumbnail {
+      padding: 0 4px;
+      width: 32px;
+      height: 32px;
+      vertical-align: middle;
+
+      img {
+        width: 32px;
+        height: 32px;
+        display: block;
+      }
+    }
+  }
+}
+
+.grid-field__paginator {
+  position: relative;
+}
+
+// TODO create pagination component
+.grid-field__paginator_numbers  {
+  float: right;
+}
+
+.grid-field__paginator__controls {
+  position: absolute;
+  height: 36px;
+  top: 50%;
+  left: 50%;
+  margin-top: -18px;
+  margin-left: -125px; // half the width of .datagrid-pagination - centers pagination
+  z-index: 5;
+  width: 250px;
+  text-align: center;
+
+  .pagination-page-number {
+    text-align: center;
+
+    input {
+      width: 35px; // exact width so that a four digit number can be entered
+      padding-left: 0;
+      padding-right: 0;
+      text-align: center;
+      border-color: darken($background-darker, 5%);
+      background-color: $white;
+      background-image: none;
+      display: inline;
+
+      &:focus {
+        border-color: $input-border-focus;
+        box-shadow: $input-box-shadow-focus;
+      }
+    }
+  }
+
+  button,
+  button[class*="font-icon-"] {
+    margin: 0;
+    margin-top: -2px;
+
+    .ui-button-text {
+      text-indent: -9999em;
+    }
+
+    &.ssui-button-disabled {
+      opacity: 0;
+    }
+  }
+}

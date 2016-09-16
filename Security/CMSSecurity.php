@@ -36,19 +36,8 @@ class CMSSecurity extends Security {
 	protected function init() {
 		parent::init();
 
-		// Include CMS styles and js
-		Requirements::css(THIRDPARTY_DIR . '/jquery-ui-themes/smoothness/jquery-ui.css');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
-		Requirements::combine_files(
-			'cmssecurity.js',
-			array(
-				THIRDPARTY_DIR . '/jquery/jquery.js',
-				THIRDPARTY_DIR . '/jquery-ui/jquery-ui.js',
-				THIRDPARTY_DIR . '/jquery-entwine/dist/jquery.entwine-dist.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/sspath.js',
-				FRAMEWORK_ADMIN_DIR . '/client/dist/js/CMSSecurity.js'
-			)
-		);
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/CMSSecurity.js');
 	}
 
 	public function Link($action = null) {

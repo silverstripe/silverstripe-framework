@@ -55,11 +55,6 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		'roles'
 	);
 
-	protected function init() {
-		parent::init();
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/SecurityAdmin.js');
-	}
-
 	/**
 	 * Shortcut action for setting the correct active tab.
 	 *
@@ -238,10 +233,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function memberimport() {
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
+
 		return $this->renderWith('BlankPage', array(
 			'Form' => $this->MemberImportForm()->forTemplate(),
 			'Content' => ' '
@@ -272,10 +267,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 	public function groupimport() {
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
-		Requirements::javascript(THIRDPARTY_DIR . '/jquery/jquery.js');
-		Requirements::javascript(FRAMEWORK_DIR . '/thirdparty/jquery-entwine/dist/jquery.entwine-dist.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
+		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
+
 		return $this->renderWith('BlankPage', array(
 			'Content' => ' ',
 			'Form' => $this->GroupImportForm()->forTemplate()

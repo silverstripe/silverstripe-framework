@@ -6,13 +6,13 @@ use SilverStripe\View\Requirements;
 
 /**
  * Render a button that will submit the form its contained in through ajax.
- * If you want to add custom behaviour, please set {@link includeDefaultJS()} to FALSE
+ *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
  *
  * @see framework/client/dist/js/InlineFormAction.js
  */
 class InlineFormAction extends FormField {
-
-	protected $includeDefaultJS = true;
 
 	/**
 	 * Create a new action button.
@@ -35,13 +35,6 @@ class InlineFormAction extends FormField {
 	 * @return string
 	 */
 	public function Field($properties = array()) {
-		if($this->includeDefaultJS) {
-			Requirements::javascriptTemplate(
-				FRAMEWORK_DIR . '/client/dist/js/InlineFormAction.js',
-				array('ID'=>$this->ID())
-			);
-		}
-
 		return FormField::create_tag('input', array(
 				'type' => 'submit',
 				'name' => sprintf('action_%s', $this->getName()),
@@ -53,15 +46,5 @@ class InlineFormAction extends FormField {
 
 	public function Title() {
 		return false;
-	}
-
-	/**
-	 * Optionally disable the default javascript include (framework/client/dist/js/InlineFormAction.js),
-	 * which routes to an "admin-custom"-URL.
-	 *
-	 * @param $bool boolean
-	 */
-	public function includeDefaultJS($bool) {
-		$this->includeDefaultJS = (bool)$bool;
 	}
 }

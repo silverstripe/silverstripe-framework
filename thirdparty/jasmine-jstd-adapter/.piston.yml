@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: 9113b5e33765d4ccc7cfbbebe29b52d38c296b76
-  branch: master
-lock: false
-repository_class: Piston::Git::Repository
-repository_url: git://github.com/ibolmo/jasmine-jstd-adapter.git

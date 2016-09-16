@@ -8,6 +8,8 @@ scss_files: '**/client/src/**/*.scss'
 exclude:
   - 'client/src/styles/legacy/*'
   - 'admin/client/src/styles/legacy/*'
+  - 'admin/client/src/font/styles.css'
+
 
 severity: error
 

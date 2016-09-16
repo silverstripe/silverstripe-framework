@@ -41,6 +41,9 @@ require_once 'Zend/Date.php';
  * Example: <code>$myDateField->setConfig('jQueryUI.showWeek', true);</code>
  * See http://docs.jquery.com/UI/Datepicker for details.
  *
+ * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
+ * since the required frontend dependencies are included through CMS bundling.
+ *
  * # Localization
  *
  * The field will get its default locale from {@link i18n::get_locale()}, and set the `dateformat`
