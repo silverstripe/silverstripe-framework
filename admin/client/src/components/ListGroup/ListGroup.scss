@@ -8,9 +8,9 @@
 }
 
 .list-group-item {
-  padding-top: $spacer-y * .625;
+  padding-top: $spacer-xs;
   padding-right: $grid-gutter-width / 2;
-  padding-bottom: $spacer-y * .625;
+  padding-bottom: $spacer-xs;
   padding-left: $grid-gutter-width / 2;
   min-height: 65px; // img height plus border
   cursor: pointer;

@@ -210,10 +210,10 @@ body.cms {
     font-weight: normal;
   }
 
-  .breadcrumbs-wrapper {
-    float: left;
-    padding-top: $grid-y - 1;
-  }
+	.breadcrumbs-wrapper {
+		float: left;
+		padding-top: $spacer-xs / 2;
+	}
 
   .view-controls {
     float: right;
@@ -261,20 +261,24 @@ body.cms {
  * CMS Breadcrumbs
  * ----------------------------------------------------------------- */
 .breadcrumbs-wrapper {
-  .crumb,
-  .sep {
-    font-size: .8em;
-    line-height: 1.2em;
-    font-weight: normal;
-  }
+	.crumb,
+	.sep {
+		font-size: $font-size-xs;
+		line-height: 18px;
+		font-weight: normal;
+	}
 
-  .crumb {
-    &.last {
-      display: block;
-      padding: 8px 0;
-      font-size: 1.2em;
-    }
-  }
+	.crumb {
+		&.last {
+			display: block;
+			padding: 10px 0;
+			font-size: 1.2em;
+		}
+		.sep + {
+			padding-top: 8px;
+			padding-bottom: 8px;
+		}
+	}
 
   .sep {
     + .crumb.last {
@@ -621,7 +625,7 @@ body.cms {
 .ui-tabs.cms-tabset-primary .ui-tabs-nav,
 .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary,
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
-	margin-top: 0;
+	margin-top: -$spacer-xs; // Same as toolbar padding
 	float: none; // parent container is already right floated
 	// scss-lint:disable ImportantRule
 	margin-bottom: 0 !important; // Override JQueryUI (should normally be -1px)
@@ -660,8 +664,8 @@ body.cms {
 }
 
 .cms-content-header-tabs {
-  float: right;
-  margin-top: $spacer-y * .625; // Same as toolbar padding
+	float: right;
+	margin-top: $spacer-xs; // Same as toolbar padding
 
   &.icon-button-group-tabs {
     margin-top: 12px;
@@ -770,14 +774,14 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-actions, .cms-preview-controls {
-  margin: 0;
-  z-index: 999;
-  border-top: 1px solid $border-color;
-  height: $toolbar-total-height;
-  min-height: $toolbar-total-height;
-  max-height: $toolbar-total-height;
-  background-color: $tab-panel-texture-color;
-  padding: $spacer-y * .625 0;
+	margin: 0;
+	z-index: 999;
+	border-top: 1px solid $border-color;
+	height: $toolbar-total-height;
+	min-height: $toolbar-total-height;
+	max-height: $toolbar-total-height;
+	background-color: $tab-panel-texture-color;
+  padding: $spacer-xs 0;
 
   &.south .btn-toolbar {
     margin-top: 0;
@@ -958,7 +962,7 @@ body.cms {
     margin-left: -$panel-padding-x;
     margin-right: -$panel-padding-x;
     margin-bottom: 0;
-    padding: #{$spacer-y * .625} $panel-padding-x #{$spacer-y * .75};
+    padding: $spacer-xs $panel-padding-x #{$spacer-y * .75};
     border-radius: $border-radius;
 
     &:hover,
@@ -1019,7 +1023,7 @@ body.cms {
 
 	.cms-actions-tools-row {
 		clear: both;
-		margin-top: $spacer-y * .625;
+		margin-top: $spacer-xs;
 	}
 
   .tool-action {
@@ -1471,17 +1475,17 @@ form.member-profile-form {
 .cms-panel {
   .cms-panel-toggle {
 
-    .toggle-collapse,
-    .toggle-expand {
-      display: block;
-      position: absolute;
-      text-align: right;
-      padding: 14px 0;
-      width: 100%;
-      text-decoration: none;
-      line-height: 20px;
-      height: 52px;
-      margin: -#{$spacer-y * .625} #{0 - $panel-padding-x};
+		.toggle-collapse,
+		.toggle-expand {
+			display: block;
+			position: absolute;
+			text-align: right;
+			padding: 14px 0;
+			width: 100%;
+			text-decoration: none;
+			line-height: 20px;
+			height: 52px;
+			margin: -#{$spacer-xs} #{0 - $panel-padding-x};
 
       span {
         display: inline-block;
