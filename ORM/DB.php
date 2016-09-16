@@ -304,6 +304,60 @@ class DB {
 	}
 
 	/**
+	 * @param string $sql The parameterised query
+	 * @param array $parameters The parameters to inject into the query
+	 *
+	 * @return string
+	 */
+	public static function inline_parameters($sql, $parameters) {
+		$segments = preg_split('/\?/', $sql);
+		$joined = '';
+		$inString = false;
+		$numSegments = count($segments);
+		for($i = 0; $i < $numSegments; $i++) {
+			$input = $segments[$i];
+			// Append next segment
+			$joined .= $segments[$i];
+			// Don't add placeholder after last segment
+			if($i === $numSegments - 1) {
+				break;
+			}
+			// check string escape on previous fragment
+			// Remove escaped backslashes, count them!
+			$input = preg_replace('/\\\\\\\\/', '', $input);
+			// Count quotes
+			$totalQuotes = substr_count($input, "'"); // Includes double quote escaped quotes
+			$escapedQuotes = substr_count($input, "\\'");
+			if((($totalQuotes - $escapedQuotes) % 2) !== 0) {
+				$inString = !$inString;
+			}
+			// Append placeholder replacement
+			if($inString) {
+				// Literal question mark
+				$joined .= '?';
+				continue;
+			}
+
+			// Encode and insert next parameter
+			$next = array_shift($parameters);
+			if(is_array($next) && isset($next['value'])) {
+				$next = $next['value'];
+			}
+			if (is_bool($next)) {
+				$value = $next ? '1' : '0';
+			}
+			elseif (is_int($next)) {
+				$value = $next;
+			}
+			else {
+				$value = DB::is_active() ? Convert::raw2sql($next, true) : $next;
+			}
+			$joined .= $value;
+		}
+		return $joined;
+	}
+
+	/**
 	 * Execute the given SQL parameterised query with the specified arguments
 	 *
 	 * @param string $sql The SQL query to execute. The ? character will denote parameters.

@@ -38,8 +38,8 @@ Append the option and corresponding value to your URL in your browser's address 
 ## Database
 
  | URL Variable | | Values | | Description                                                                                  | 
- | ------------ | | ------ | | -----------                                                                                  | 
- | showqueries  | | 1      | | List all SQL queries executed                                                                | 
+ | ------------ | | --------- | | -----------                                                                                  | 
+ | showqueries  | | 1\|inline | | List all SQL queries executed, the `inline` option will do a fudge replacement of parameterised queries          | 
  | previewwrite | | 1      | | List all insert / update SQL queries, and **don't** execute them.  Useful for previewing writes to the database. | 
 
 ## Security Redirects

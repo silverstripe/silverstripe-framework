@@ -190,21 +190,20 @@ abstract class Database {
 	 *
 	 * @param string $sql Query to run, and single parameter to callback
 	 * @param callable $callback Callback to execute code
-	 * @param array $parameters Parameters to display
+	 * @param array $parameters Parameters for any parameterised query
 	 * @return mixed Result of query
 	 */
-	protected function benchmarkQuery($sql, $callback, $parameters = null) {
+	protected function benchmarkQuery($sql, $callback, $parameters = array()) {
 		if (isset($_REQUEST['showqueries']) && Director::isDev()) {
 			$this->queryCount++;
 			$starttime = microtime(true);
 			$result = $callback($sql);
 			$endtime = round(microtime(true) - $starttime, 4);
-			$message = $sql;
-			if($parameters) {
-				$message .= "\nparams: \"" . implode('", "', $parameters) . '"';
+			// replace parameters as closely as possible to what we'd expect the DB to put in
+			if (strtolower($_REQUEST['showqueries']) == 'inline') {
+				$sql = DB::inline_parameters($sql, $parameters);
 			}
-			Debug::message("\n$this->queryCount: {$message}\n{$endtime}s\n", false);
-
+			Debug::message("\n$sql\n{$endtime}s\n", false);
 			return $result;
 		} else {
 			return $callback($sql);
