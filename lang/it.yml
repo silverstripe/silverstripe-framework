@@ -301,22 +301,15 @@ it:
     many_many_Members: Membri
   GroupImportForm:
     Help1: '<p>Importa gruppi in formato <em>CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
-    Help2: '<div class="advanced">
-
+    Help2: >
+      <div class="advanced">
       <h4>Utilizzo avanzato</h4>
-
       <ul>
-
       <li>Colonne consentite: <em>%s</em></li>
-
       <li>Gruppi esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>
-
       <li>Possono essere create gerarchie usando la colonna <em>ParentCode</em></li>
-
       <li>Codici di autorizzazione possono essere assegnati con la colonna <em>PermissionCode</em>. I codici di autorizzazione preesistenti non saranno cancellati.</li>
-
       </ul>
-
       </div>'
     ResultCreated: 'Creati {count} gruppi'
     ResultDeleted: 'Eliminati %d gruppi'
@@ -523,16 +516,12 @@ it:
     Toggle: 'Mostra aiuto per la formattazione'
   MemberImportForm:
     Help1: '<p>Importa utenti in <em>formato CSV</em> (valori separati da virgole). <small><a href="#" class="toggle-advanced">Mostra utilizzo avanzato</a></small></p>'
-    Help2: '<div class="advanced">
-
+    Help2: >
+      <div class="advanced">
       <h4>Utilizzo avanzato</h4>
-
       <ul>
-
       <li>Colonne consentite: <em>%s</em></li>
-
       <li>Utenti esistenti sono individuati attraverso la proprietà univoca <em>Code</em> e aggiornati con i nuovi valori dal file importato.</li>
-
       <li>Possono essere assegnati gruppi usando la colonna <em>Groups</em>. I gruppi sono identificati dalla proprietà <em>Code</em>, possono essere specificati più gruppi separandoli con la virgola. I gruppi preesistenti non saranno cancellati.</li></ul></div>'
     ResultCreated: 'Creati {count} utenti'
     ResultDeleted: 'Eliminati %d utenti'
