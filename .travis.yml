@@ -60,7 +60,6 @@ script:
  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat @framework; fi"
  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/phpunit cms/tests; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms; fi"
- - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run sanity; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
 
 after_failure:
