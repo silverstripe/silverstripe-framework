@@ -48,6 +48,7 @@ before_script:
  - "if [ \"$DB\" = \"PGSQL\" ]; then composer require silverstripe/postgresql:2.0.x-dev --prefer-dist; fi"
  - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
  - "if [ \"$CMS_TEST\" = \"1\" ]; then COMPOSER_ROOT_VERSION=4.0.x-dev composer require silverstripe/cms:4.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi"
+ - "if [ \"$NPM_TEST\" = \"1\" ] && [ `git log --format=format:%aE -1` = \"support@greenkeeper.io\" ]; then echo \"Removing npm-shrinkwrap.json\"; rm npm-shrinkwrap.json; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sh -e /etc/init.d/xvfb start; sleep 3; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then (vendor/bin/selenium-server-standalone > selenium.log 2>&1 &); fi"
