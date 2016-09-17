@@ -24,7 +24,11 @@
     "embed/embed": "^2.6"
   },
   "require-dev": {
-    "phpunit/PHPUnit": "~4.8"
+    "phpunit/PHPUnit": "~4.8",
+    "silverstripe/behat-extension": "^2.1.0",
+    "silverstripe/serve": "dev-master",
+    "silverstripe/testsession": "^2.0.0-alpha3",
+    "se/selenium-server-standalone": "2.41.0"
   },
   "extra": {
     "branch-alias": {
@@ -54,5 +58,7 @@
   "include-path": [
       "thirdparty/",
       "thirdparty/HTML_BBCodeParser2/"
-  ]
+  ],
+  "min-stability": "dev",
+  "prefer-stable": true
 }

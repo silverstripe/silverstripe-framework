@@ -226,6 +226,7 @@ class ConfigManifest {
 
 		$finder = new ManifestFileFinder();
 		$finder->setOptions(array(
+			'min_depth' => 0,
 			'name_regex'    => '/(^|[\/\\\\])_config.php$/',
 			'ignore_tests'  => !$includeTests,
 			'file_callback' => array($this, 'addSourceConfigFile')

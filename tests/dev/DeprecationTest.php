@@ -105,7 +105,7 @@ class DeprecationTest extends SapphireTest {
 	}
 
 	protected function callThatOriginatesFromFramework() {
-		$this->assertEquals(DeprecationTest_Deprecation::get_module(), FRAMEWORK_DIR);
+		$this->assertEquals(DeprecationTest_Deprecation::get_module(), basename(FRAMEWORK_PATH));
 		$this->assertNull(Deprecation::notice('2.0', 'Deprecation test passed'));
 	}
 

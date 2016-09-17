@@ -29,6 +29,7 @@ class ControllerTest extends FunctionalTest {
 
 	public function setUp() {
 		parent::setUp();
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
 		$this->depSettings = Deprecation::dump_settings();
 	}
 

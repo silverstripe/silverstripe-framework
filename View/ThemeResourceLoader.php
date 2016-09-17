@@ -95,19 +95,42 @@ class ThemeResourceLoader {
 			// <module> is always the name of the install directory, not necessarily the composer name.
 			$parts = explode(':', $identifier, 2);
 
-			list($vendor, $module) = explode('/', $parts[0], 2);
-			$theme = count($parts) > 1 ? $parts[1] : '';
+			if(count($parts) > 1) {
+				$theme = $parts[1];
+				// "module/vendor:/sub/path"
+				if($theme[0] === '/') {
+					$subpath = $theme;
 
-			$path = $module . ($theme ? '/themes/'.$theme : '');
+				// "module/vendor:subtheme"
+				} else {
+					$subpath = '/themes/' . $theme;
+				}
 
-			// Right now we require $module to be a silverstripe module (in root) or theme (in themes dir)
-			// If both exist, we prefer theme
-			if (is_dir(THEMES_PATH . '/' .$path)) {
-				return THEMES_DIR . '/' . $path;
+			// "module/vendor"
+			} else {
+				$subpath = '';
 			}
-			else {
-				return $path;
+
+			// To do: implement more flexible module path lookup
+			$package = $parts[0];
+			switch($package) {
+			case 'silverstripe/framework':
+				$modulePath = FRAMEWORK_DIR;
+				break;
+
+			case 'silverstripe/cms':
+				$modulePath = CMS_DIR;
+				break;
+
+			default:
+				list($vendor, $modulePath) = explode('/', $parts[0], 2);
+				// If the module is in the themes/<module>/ prefer that
+				if (is_dir(THEMES_PATH . '/' .$modulePath)) {
+					$modulePath = THEMES_DIR . '/' . $$modulePath;
+				}
 			}
+
+			return ltrim($modulePath . $subpath, '/');
 		}
 		// Otherwise it's a (deprecated) old-style "theme" identifier
 		else {
@@ -196,24 +219,19 @@ class ThemeResourceLoader {
 	 * @param array $themes List of themes
 	 * @return string Path to resolved CSS file (relative to base dir)
 	 */
-	public function findThemedCSS($name, $themes)
-	{
-		$css = "/css/$name.css";
-		$paths = $this->getThemePaths($themes);
-		foreach ($paths as $themePath) {
-			$abspath = $this->base . '/' . $themePath;
+	public function findThemedCSS($name, $themes) {
+		if(substr($name, -4) !== '.css') $name .= '.css';
 
-			if (file_exists($abspath . $css)) {
-				return $themePath . $css;
-			}
+		$filename = $this->findThemedResource("css/$name", $themes);
+		if($filename === null) {
+			$filename = $this->findThemedResource($name, $themes);
 		}
 
-		// CSS exists in no context
-		return null;
+		return $filename;
 	}
 
 	/**
-	 * Registers the given themeable javascript as required.
+	 * Resolve themed javascript path
 	 *
 	 * A javascript file in the current theme path name 'themename/javascript/$name.js' is first searched for,
 	 * and it that doesn't exist and the module parameter is set then a javascript file with that name in
@@ -224,17 +242,40 @@ class ThemeResourceLoader {
 	 * @return string Path to resolved javascript file (relative to base dir)
 	 */
 	public function findThemedJavascript($name, $themes) {
-        $js = "/javascript/$name.js";
+		if(substr($name, -3) !== '.js') $name .= '.js';
+
+		$filename = $this->findThemedResource("javascript/$name", $themes);
+		if($filename === null) {
+			$filename = $this->findThemedResource($name, $themes);
+		}
+
+		return $filename;
+	}
+
+	/**
+	 * Resolve a themed resource
+	 *
+	 * A themed resource and be any file that resides in a theme folder.
+	 *
+	 * @param string $resource A file path relative to the root folder of a theme
+	 * @param array $themes An order listed of themes to search
+	 */
+	public function findThemedResource($resource, $themes)
+	{
+		if($resource[0] !== '/') {
+			$resource = '/' . $resource;
+		}
+
 		$paths = $this->getThemePaths($themes);
+
 		foreach ($paths as $themePath) {
 			$abspath = $this->base . '/' . $themePath;
-
-			if (file_exists($abspath . $js)) {
-				return $themePath . $js;
+			if (file_exists($abspath . $resource)) {
+				return $themePath . $resource;
 			}
 		}
 
-		// js exists in no context
+		// Resource exists in no context
 		return null;
 	}
 

@@ -53,7 +53,7 @@ class HTMLEditorFieldTest extends FunctionalTest {
 		// Create a test files for each of the fixture references
 		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
 		foreach($files as $file) {
-			$fromPath = BASE_PATH . '/framework/tests/forms/images/' . $file->Name;
+			$fromPath = FRAMEWORK_PATH . '/tests/forms/images/' . $file->Name;
 			$destPath = AssetStoreTest_SpyStore::getLocalPath($file); // Only correct for test asset store
 			Filesystem::makeFolder(dirname($destPath));
 			copy($fromPath, $destPath);

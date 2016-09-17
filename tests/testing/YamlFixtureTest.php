@@ -25,7 +25,7 @@ class YamlFixtureTest extends SapphireTest {
 	}
 
 	public function testRelativeFixturePath() {
-		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
+		$relPath = ltrim(FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml', '/');
 		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
 		$this->assertEquals(Director::baseFolder() . '/' . $relPath, $obj->getFixtureFile());
 		$this->assertNull($obj->getFixtureString());
@@ -43,13 +43,13 @@ class YamlFixtureTest extends SapphireTest {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testFailsWithInvalidFixturePath() {
-		$invalidPath = FRAMEWORK_DIR . '/tests/testing/invalid.yml';
+		$invalidPath = ltrim(FRAMEWORK_DIR . '/tests/testing/invalid.yml', '/');
 		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $invalidPath);
 	}
 
 	public function testSQLInsert() {
 		$factory = new FixtureFactory();
-		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
+		$relPath = ltrim(FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml', '/');
 		$fixture = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
 		$fixture->writeInto($factory);
 
@@ -76,7 +76,7 @@ class YamlFixtureTest extends SapphireTest {
 	public function testWriteInto() {
 		$factory = Injector::inst()->create('SilverStripe\\Dev\\FixtureFactory');
 
-		$relPath = FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml';
+		$relPath = ltrim(FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml', '/');
 		$fixture = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
 		$fixture->writeInto($factory);
 

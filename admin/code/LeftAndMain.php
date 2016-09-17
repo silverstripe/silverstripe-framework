@@ -165,7 +165,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @var array
 	 */
 	private static $admin_themes = [
-		'/framework/admin/themes/cms-forms',
+		'silverstripe/framework:/admin/themes/cms-forms',
 		SSViewer::DEFAULT_THEME,
 	];
 
@@ -536,12 +536,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			window.ss.config = " . $this->getCombinedClientConfig() . ";
 		");
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js');
-		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
+		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js', '/'));
+		Requirements::css(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css', '/'));
 
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-legacy.js');
+		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-legacy.js', '/'));
 
-		Requirements::add_i18n_javascript(FRAMEWORK_DIR . '/client/lang', false, true);
+		Requirements::add_i18n_javascript(ltrim(FRAMEWORK_DIR . '/client/lang', '/'), false, true);
 		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/client/lang', false, true);
 
 		if ($this->config()->session_keepalive_ping) {

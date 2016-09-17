@@ -39,6 +39,11 @@ class ManifestFileFinder extends FileFinder {
 			return false;
 		}
 
+		// Skip over the vendor directories
+		if (($depth == 1 || $depth == 2) && $basename == 'vendor') {
+			return false;
+		}
+
 		// If we're not in testing mode, then skip over any tests directories.
 		if ($this->getOption('ignore_tests') && $basename == self::TESTS_DIR) {
 			return false;
@@ -57,6 +62,8 @@ class ManifestFileFinder extends FileFinder {
 			&& !($this->getOption('include_themes') && $basename == THEMES_DIR)
 			&& !file_exists($pathname . '/' . self::CONFIG_FILE)
 			&& !file_exists($pathname . '/' . self::CONFIG_DIR)
+			&& $basename !== self::CONFIG_DIR // include a root config dir
+			&& !file_exists("$pathname/../" . self::CONFIG_DIR) // include all paths if a root config dir exists
 		);
 
 		if ($lackingConfig) {

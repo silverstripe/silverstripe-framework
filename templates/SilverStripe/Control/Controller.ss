@@ -6,7 +6,7 @@
 
 		$MetaTags
 
-		<% require css('framework/client/dist/styles/debug.css') %>
+		<% require themedCSS('client/dist/styles/debug') %>
 	</head>
 	<body>
 		<div class="info">

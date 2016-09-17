@@ -162,12 +162,12 @@ class RequirementsTest extends SapphireTest {
 		]);
 		$backend->javascript($basePath . '/RequirementsTest_b.js');
 		$result = $backend->includeInHTML(self::$html_template);
-		$this->assertContains(
-			'<script type="application/json" src="/framework/tests/forms/RequirementsTest_a.js',
+		$this->assertRegexp(
+			'#<script type="application/json" src=".*/tests/forms/RequirementsTest_a.js#',
 			$result
 		);
-		$this->assertContains(
-			'<script type="application/javascript" src="/framework/tests/forms/RequirementsTest_b.js',
+		$this->assertRegexp(
+			'#<script type="application/javascript" src=".*/tests/forms/RequirementsTest_b.js#',
 			$result
 		);
 	}
@@ -582,10 +582,7 @@ class RequirementsTest extends SapphireTest {
 	}
 
 	public function testConditionalTemplateRequire() {
-		$basePath = $this->getCurrentRelativePath();
-		// we're asserting "framework", so set the relative path accordingly in case FRAMEWORK_DIR was changed
-		// to something else
-		$basePath = 'framework' . substr($basePath, strlen(FRAMEWORK_DIR));
+		$testPath = ltrim(preg_replace('#^' . BASE_PATH . '#', '', dirname(__DIR__)), '/');
 
 		/** @var Requirements_Backend $backend */
 		$backend = Injector::inst()->create('SilverStripe\\View\\Requirements_Backend');
@@ -596,23 +593,39 @@ class RequirementsTest extends SapphireTest {
 			'FailTest' => true,
 		));
 		$data->renderWith('RequirementsTest_Conditionals');
-		$this->assertFileIncluded($backend, 'css', $basePath .'/RequirementsTest_a.css');
+		$this->assertFileIncluded($backend, 'css', $testPath .'/css/forms/RequirementsTest_a.css');
 		$this->assertFileIncluded($backend, 'js',
-			array($basePath .'/RequirementsTest_b.js', $basePath .'/RequirementsTest_c.js'));
-		$this->assertFileNotIncluded($backend, 'js', $basePath .'/RequirementsTest_a.js');
+			array(
+				$testPath .'/javascript/forms/RequirementsTest_b.js',
+				$testPath .'/javascript/forms/RequirementsTest_c.js'
+			)
+		);
+		$this->assertFileNotIncluded($backend, 'js', $testPath .'/javascript/forms/RequirementsTest_a.js');
 		$this->assertFileNotIncluded($backend, 'css',
-			array($basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css'));
+			array(
+				$testPath .'/css/forms/RequirementsTest_b.css',
+				$testPath .'/css/forms/RequirementsTest_c.css'
+			)
+		);
 		$backend->clear();
 		$data = new ArrayData(array(
 			'FailTest' => false,
 		));
 		$data->renderWith('RequirementsTest_Conditionals');
-		$this->assertFileNotIncluded($backend, 'css', $basePath .'/RequirementsTest_a.css');
+		$this->assertFileNotIncluded($backend, 'css', $testPath .'/css/forms/RequirementsTest_a.css');
 		$this->assertFileNotIncluded($backend, 'js',
-			array($basePath .'/RequirementsTest_b.js', $basePath .'/RequirementsTest_c.js'));
-		$this->assertFileIncluded($backend, 'js', $basePath .'/RequirementsTest_a.js');
+			array(
+				$testPath .'/javascript/forms/RequirementsTest_b.js',
+				$testPath .'/javascript/forms/RequirementsTest_c.js'
+			)
+		);
+		$this->assertFileIncluded($backend, 'js', $testPath .'/javascript/forms/RequirementsTest_a.js');
 		$this->assertFileIncluded($backend, 'css',
-			array($basePath .'/RequirementsTest_b.css', $basePath .'/RequirementsTest_c.css'));
+			array(
+				$testPath .'/css/forms/RequirementsTest_b.css',
+				$testPath .'/css/forms/RequirementsTest_c.css'
+			)
+		);
 		Requirements::set_backend($holder);
 	}
 

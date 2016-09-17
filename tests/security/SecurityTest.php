@@ -63,6 +63,8 @@ class SecurityTest extends FunctionalTest {
 		Member::config()->unique_identifier_field = 'Email';
 
 		parent::setUp();
+
+		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
 	}
 
 	public function tearDown() {
@@ -347,7 +349,7 @@ class SecurityTest extends FunctionalTest {
 		$expiredResponse = $this->doTestLoginForm('expired@silverstripe.com' , '1nitialPassword');
 		$this->assertEquals(302, $expiredResponse->getStatusCode());
 		$this->assertEquals(
-			Controller::join_links(Director::baseURL(), 'Security/changepassword'),
+			'/Security/changepassword',
 			$expiredResponse->getHeader('Location')
 		);
 		$this->assertEquals($this->idFromFixture('SilverStripe\\Security\\Member', 'expiredpassword'),

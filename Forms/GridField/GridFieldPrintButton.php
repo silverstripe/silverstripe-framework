@@ -119,7 +119,7 @@ class GridFieldPrintButton implements GridField_HTMLProvider, GridField_ActionPr
 	public function handlePrint($gridField, $request = null) {
 		set_time_limit(60);
 		Requirements::clear();
-		Requirements::css(FRAMEWORK_DIR . '/client/dist/styles/GridField_print.css');
+		Requirements::css(ltrim(FRAMEWORK_DIR . '/client/dist/styles/GridField_print.css', '/'));
 
 		if($data = $this->generatePrintData($gridField)){
 			return $data->renderWith(get_class($gridField)."_print");

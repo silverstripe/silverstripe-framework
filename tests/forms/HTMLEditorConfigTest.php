@@ -86,14 +86,14 @@ class HTMLEditorConfigTest extends SapphireTest {
 		// Test plugins included via gzip compresser
 		HTMLEditorField::config()->update('use_gzip', true);
 		$this->assertEquals(
-			'framework/admin/thirdparty/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
+			ADMIN_THIRDPARTY_DIR . '/tinymce/tiny_mce_gzip.php?js=1&plugins=plugin4,plugin5&themes=modern&languages=es&diskcache=true&src=true',
 			$c->getScriptURL()
 		);
 
 		// If gzip is disabled only the core plugin is loaded
 		HTMLEditorField::config()->remove('use_gzip');
 		$this->assertEquals(
-			'framework/admin/thirdparty/tinymce/tinymce.min.js',
+			ADMIN_THIRDPARTY_DIR . '/tinymce/tinymce.min.js',
 			$c->getScriptURL()
 		);
 	}

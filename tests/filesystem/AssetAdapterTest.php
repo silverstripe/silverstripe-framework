@@ -5,6 +5,7 @@ use SilverStripe\Assets\Flysystem\PublicAssetAdapter;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\File;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Core\Config\Config;
 
 
 class AssetAdapterTest extends SapphireTest {
@@ -18,6 +19,7 @@ class AssetAdapterTest extends SapphireTest {
 
         $this->rootDir = ASSETS_PATH . '/AssetAdapterTest';
         Filesystem::makeFolder($this->rootDir);
+        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
         $this->originalServer = $_SERVER;
     }
 
