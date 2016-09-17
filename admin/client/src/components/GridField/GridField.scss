@@ -132,7 +132,7 @@
   &:active,
   &[class*="font-icon-"]:active,
   &:focus,
-  &[class*="font-icon-"]:focus, {
+  &[class*="font-icon-"]:focus {
     background-color: darken($table-bg-tools, 6%);
 
     &::before {

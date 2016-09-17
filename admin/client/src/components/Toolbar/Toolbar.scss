@@ -72,7 +72,7 @@
 }
 
 .toolbar__back-button,
-.cms_backlink .toolbar__back-button { // TEMP: Needed for anchor buttons to override legacy styles
+.cms-backlink .toolbar__back-button { // TEMP: Needed for anchor buttons to override legacy styles
   float: left;
   margin: $spacer-y * .625 $spacer-x / 2 $spacer-y * .625 #{-$spacer-x * .625};
   padding-left: $spacer-x / 4;

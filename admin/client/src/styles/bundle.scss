@@ -2,11 +2,11 @@
 @import "variables";
 
 // Compatibilty with compass
-@import "legacy/_compasscompat";
+@import "legacy/compasscompat";
 
 // Thirdparty
 @import "chosen";
-@import "../../../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../../../../node_modules/bootstrap/scss/bootstrap";
 @import "../../../thirdparty/jquery-ui-themes/smoothness/jquery-ui.css";
 @import "../../../thirdparty/jstree/themes/apple/style.css";
 @import "../../../thirdparty/jquery-notice/jquery.notice.css";

@@ -15,15 +15,15 @@
  * Core Styles.
  * ---------------------------------------------------- */
 
-html,body {
-	width: 100%;
-	height: 100%;
-	/* Removes RHS whitespace on iPad */
-	overflow-x: hidden;
+html, body {
+  width: 100%;
+  height: 100%;
+  /* Removes RHS whitespace on iPad */
+  overflow-x: hidden;
 }
 
 body.cms {
-	overflow: hidden;
+  overflow: hidden;
 }
 
 
@@ -33,12 +33,12 @@ body.cms {
  * -------------------------------------------- */
 
 .hide {
-	display: none;
+  display: none;
 }
 
 .cms-helper-hide-actions .btn-toolbar {
-		@extend .hide;
-	}
+  @extend .hide;
+}
 
 
 
@@ -46,8 +46,8 @@ body.cms {
  * Panels Styles
  * -------------------------------------------- */
 .cms-container {
-	height: 100%;
-	background: $tab-panel-texture-color;
+  height: 100%;
+  background: $tab-panel-texture-color;
 }
 
 .cms-preview,
@@ -63,9 +63,8 @@ body.cms {
 .cms-content-fields,
 .cms-preview,
 .cms-preview iframe,
-.cms-preview-controls
- {
-	display: inline-block;
+.cms-preview-controls {
+  display: inline-block;
 }
 
 .cms-content-header { // Todo: should add .container-fluid to markup or extend .container-fluid
@@ -75,171 +74,171 @@ body.cms {
   z-index: 60;
   min-height: $toolbar-total-height;
   background: {
-    image: url(../images/textures/cms_content_header.png);
+    image: url("../images/textures/cms_content_header.png");
     repeat: repeat;
     position: left bottom;
     color: $color-darker-bg;
   }
 
-	a {
-		color: $color-text-blue-link;
-	}
+  a {
+    color: $color-text-blue-link;
+  }
 
-	.backlink {
-		span.btn-icon-back {
-			height:16px;
-		}
-	}
+  .backlink {
+    span.btn-icon-back {
+      height: 16px;
+    }
+  }
 
-	h2 {
-		font-size: $font-size-h4;
-		font-weight: bold;
-		margin: 0;
-		margin-bottom: $grid-x;
+  h2 {
+    font-size: $font-size-h4;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: $grid-x;
 
-		* {
-			vertical-align: middle;
-		}
-	}
+    * {
+      vertical-align: middle;
+    }
+  }
 
-	.cms-content-header-info {
-		float:left;
-		padding-top: 5px;
+  .cms-content-header-info {
+    float: left;
+    padding-top: 5px;
 
-		& * {
-			display: inline-block; // align back button and breadcrumbs
-		}
+    & * {
+      display: inline-block; // align back button and breadcrumbs
+    }
 
-		.section-icon {
-			opacity: 0.2;
-			margin-right: 4px;
-			background-repeat: no-repeat;
-		}
+    .section-icon {
+      opacity: 0.2;
+      margin-right: 4px;
+      background-repeat: no-repeat;
+    }
 
-		.cms_backlink {
-			margin-top: -7px;
-			float: left;
-		}
-	}
+    .cms-backlink {
+      margin-top: -7px;
+      float: left;
+    }
+  }
 
-	// Reset to default styles
-	.ss-ui-button {
-		line-height: $grid-x*3;
+  // Reset to default styles
+  .ss-ui-button {
+    line-height: $grid-x*3;
 
-		.ui-button-text {
-			line-height: 1.4;
-		}
-	}
+    .ui-button-text {
+      line-height: 1.4;
+    }
+  }
 }
 
 .cms-edit-form.CMSMain {
-	padding: 0;
+  padding: 0;
 }
 
 // Hide threeColumnCompressor column.
 .cms-container {
-	.column-hidden {
-		display: none;
+  .column-hidden {
+    display: none;
 
-		&+ .cms-preview {
-			border-left: 0;
-		}
-	}
+    &+ .cms-preview {
+      border-left: 0;
+    }
+  }
 }
 
 .cms-content-header-top {
-	display: inline-block;
-	width: 100%;
+  display: inline-block;
+  width: 100%;
 }
 
 
 // We have a faux three column layout when displaying Page content in the CMS.
 .has-panel {
-	.cms-tree-view-sidebar,
-	.cms-versions-form {
-		padding: $panel-padding-y $panel-padding-x;
-	}
+  .cms-tree-view-sidebar,
+  .cms-versions-form {
+    padding: $panel-padding-y $panel-padding-x;
+  }
 
-	.cms-content-header.north {
-		&.collapsed {
-			.cms-content-header-info {
-				width: 60px;
-				text-align: center;
-				padding-left: 8px;
-				padding-right: 8px;
-			}
+  .cms-content-header.north {
+    &.collapsed {
+      .cms-content-header-info {
+        width: 60px;
+        text-align: center;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
 
-			.view-controls,
-			.section-label {
-				display: none;
-			}
+      .view-controls,
+      .section-label {
+        display: none;
+      }
 
-			.cms-content-header-nav {
-				margin-left: 61px;
-			}
-		}
-	}
+      .cms-content-header-nav {
+        margin-left: 61px;
+      }
+    }
+  }
 
-	.cms-content-header-info {
-		position: absolute;
-		top: 0;
-		left: 0;
-		bottom: 1px;
-		width: $cms-panel-sm;
-		padding-bottom: $grid-y;
-		padding-left: $grid-x * 2;
-		padding-right: $grid-x*2;
-		box-shadow: 1px 0 0 0 $border-color-dark;
-	}
+  .cms-content-header-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 1px;
+    width: $cms-panel-sm;
+    padding-bottom: $grid-y;
+    padding-left: $grid-x * 2;
+    padding-right: $grid-x*2;
+    box-shadow: 1px 0 0 0 $border-color-dark;
+  }
 
-	.cms-content-header-nav {
-		margin-left: $cms-panel-sm;
-	}
+  .cms-content-header-nav {
+    margin-left: $cms-panel-sm;
+  }
 
-	.section-heading {
-		margin-top: 8px;
-		padding-left: 4px;
-	}
+  .section-heading {
+    margin-top: 8px;
+    padding-left: 4px;
+  }
 
-	.section-icon {
-		vertical-align: middle;
-	}
+  .section-icon {
+    vertical-align: middle;
+  }
 
-	.section-label {
-		vertical-align: middle;
-		font-size: 1.2em;
-		font-weight: normal;
-	}
+  .section-label {
+    vertical-align: middle;
+    font-size: 1.2em;
+    font-weight: normal;
+  }
 
-	.breadcrumbs-wrapper {
-		float: left;
-		padding-top: $grid-y - 1;
-	}
+  .breadcrumbs-wrapper {
+    float: left;
+    padding-top: $grid-y - 1;
+  }
 
-	.view-controls {
-		float: right;
-		margin-top: 4px;
+  .view-controls {
+    float: right;
+    margin-top: 4px;
 
-		.icon-button-group {
-			.icon-button {
-				padding: 6px 8px;
-				height: 26px;
-			}
-		}
-	}
+    .icon-button-group {
+      .icon-button {
+        padding: 6px 8px;
+        height: 26px;
+      }
+    }
+  }
 
-	.cms-content-tools {
+  .cms-content-tools {
     position: relative !important; // TEMP until JS is removed
 
-		.cms-panel-content {
-			height: calc(100% - 53px) !important; // TEMP until JS is removed
-		}
+    .cms-panel-content {
+      height: calc(100% - 53px) !important; // TEMP until JS is removed
+    }
 
     // History panel
     .cms-helper-hide-actions {
       height: 100% !important;
     }
-	}
+  }
 }
 
 // History checkboxes
@@ -251,44 +250,44 @@ body.cms {
 
   .checkbox {
     margin-bottom: 0;
-	}
+  }
 }
 
 #page-title-heading {
-	line-height: 1.2em;
+  line-height: 1.2em;
 }
 
 /** ------------------------------------------------------------------
  * CMS Breadcrumbs
  * ----------------------------------------------------------------- */
 .breadcrumbs-wrapper {
-	.crumb,
-	.sep {
-		font-size: .8em;
-		line-height: 1.2em;
-		font-weight: normal;
-	}
+  .crumb,
+  .sep {
+    font-size: .8em;
+    line-height: 1.2em;
+    font-weight: normal;
+  }
 
-	.crumb {
-		&.last {
-			display: block;
-			padding: 8px 0;
-			font-size: 1.2em;
-		}
-	}
+  .crumb {
+    &.last {
+      display: block;
+      padding: 8px 0;
+      font-size: 1.2em;
+    }
+  }
 
-	.sep {
-		+ .crumb.last {
-			padding-top: 0;
-			padding-bottom: 0;
-		}
-	}
+  .sep {
+    + .crumb.last {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
 }
 
 
 .cms-tabset-nav-primary {
-	display: inline-block;
-	vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /** ------------------------------------------------------------------
@@ -300,159 +299,159 @@ body.cms {
  * Tabs should be refactored to use weaker selectors.
  * ----------------------------------------------------------------- */
 .cms {
-	a.icon-button,
-	button.ss-ui-button.icon-button {
-		vertical-align: middle;
-		margin: 0 2px 0 0;
-		padding: 5px 8px;
-		font-size: 14px;
-		text-indent: 0;
-		text-shadow: none;
-		line-height: 1em;
-		color: $color-text;
-		background-color: transparent;
-		background-image: none;
-		border: 0;
+  a.icon-button,
+  button.ss-ui-button.icon-button {
+    vertical-align: middle;
+    margin: 0 2px 0 0;
+    padding: 5px 8px;
+    font-size: 14px;
+    text-indent: 0;
+    text-shadow: none;
+    line-height: 1em;
+    color: $color-text;
+    background-color: transparent;
+    background-image: none;
+    border: 0;
 
-		&:hover,
-		&:active,
-		&:focus {
-			border: 0;
-			box-shadow: none;
-			background-image: none;
-			text-decoration: none;
-		}
+    &:hover,
+    &:active,
+    &:focus {
+      border: 0;
+      box-shadow: none;
+      background-image: none;
+      text-decoration: none;
+    }
 
-		&:hover {
-			background-color: #d4dbe1;
-		}
+    &:hover {
+      background-color: #d4dbe1;
+    }
 
-		&.active,
-		&:active {
-			background-color: #d4dbe1;
-		}
+    &.active,
+    &:active {
+      background-color: #d4dbe1;
+    }
 
-		&.font-icon-search {
-			padding: 5px 6px;
-			color:lighten($color-text, 10%);
+    &.font-icon-search {
+      padding: 5px 6px;
+      color:lighten($color-text, 10%);
 
-			&.active,
-			&:active,
-			&:focus,
-			&:hover {
-				background: none;
-				box-shadow: none;
-				color: darken($color-text, 10%);
-			}
+      &.active,
+      &:active,
+      &:focus,
+      &:hover {
+        background: none;
+        box-shadow: none;
+        color: darken($color-text, 10%);
+      }
 
 
-			&:before {
-				font-size: 18px;
-				margin-left: 1px;
-				margin-right: 0;
-			}
-		}
+      &:before {
+        font-size: 18px;
+        margin-left: 1px;
+        margin-right: 0;
+      }
+    }
 
-		.ui-button-text {
-			display: none;
-		}
+    .ui-button-text {
+      display: none;
+    }
 
-		.ModelAdmin & {
-			margin-top: -11px;
-		}
-	}
+    .ModelAdmin & {
+      margin-top: -11px;
+    }
+  }
 }
 
 // Context specific overrides for Tabs.
 .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-active a.icon-button.cms-panel-link,
 .ui-tabs.ui-tabs-nav li.cms-tabset-icon.ui-corner-top.ui-state-default a.icon-button.cms-panel-link {
-	padding: 5px 8px 6px;
-	line-height: 1em;
-	background-color: transparent;
-	background-image: none;
-	border: 0;
+  padding: 5px 8px 6px;
+  line-height: 1em;
+  background-color: transparent;
+  background-image: none;
+  border: 0;
 
-	&:before {
-		vertical-align: middle;
-	}
+  &:before {
+    vertical-align: middle;
+  }
 }
 
 
 .cms-content-header-tabs .icon-button-group > .ui-tabs-nav.cms-tabset-nav-primary {
-	margin-top: 0;
+  margin-top: 0;
 }
 
 .icon-button-group {
-	display: inline-block;
-	vertical-align: middle;
-	border: 1px solid #CDCCD0;
-	border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+  border: 1px solid #CDCCD0;
+  border-radius: 4px;
 
-	a.icon-button,
-	button.ss-ui-button.icon-button {
-		margin-right: 0;
-		line-height: 13px;
-		border-radius: 0;
+  a.icon-button,
+  button.ss-ui-button.icon-button {
+    margin-right: 0;
+    line-height: 13px;
+    border-radius: 0;
 
-		&:first-child {
-			border-radius: 3px 0 0 3px;
-		}
+    &:first-child {
+      border-radius: 3px 0 0 3px;
+    }
 
-		&:last-child {
-			border-radius: 0 3px 3px 0;
-		}
+    &:last-child {
+      border-radius: 0 3px 3px 0;
+    }
 
-		&:hover {
-			background: $tab-panel-texture-color;
-		}
+    &:hover {
+      background: $tab-panel-texture-color;
+    }
 
-		&.active:hover {
-			background: #d4dbe1;
-		}
+    &.active:hover {
+      background: #d4dbe1;
+    }
 
-		+ a.icon-button,
-		+ button.ss-ui-button.icon-button {
-			border-left: 1px solid #CDCCD0;
-		}
-	}
+    + a.icon-button,
+    + button.ss-ui-button.icon-button {
+      border-left: 1px solid #CDCCD0;
+    }
+  }
 
-	// Context specific overrides for Tabs.
-	.ui-tabs.ui-tabs-nav {
-		border-left: 0 !important;
-		padding-right: 0 !important;
-		margin-bottom: 0;
-		overflow: hidden;
+  // Context specific overrides for Tabs.
+  .ui-tabs.ui-tabs-nav {
+    border-left: 0 !important;
+    padding-right: 0 !important;
+    margin-bottom: 0;
+    overflow: hidden;
 
-		.cms-tabset-icon.ui-state-default {
-			background-color: transparent;
-			background-image: none;
-			margin: 0;
-			padding: 0;
-			border-left: 0;
-			border-right: 0;
-			box-shadow: none;
+    .cms-tabset-icon.ui-state-default {
+      background-color: transparent;
+      background-image: none;
+      margin: 0;
+      padding: 0;
+      border-left: 0;
+      border-right: 0;
+      box-shadow: none;
 
-			+ .cms-tabset-icon.ui-state-default {
-				border-left: 1px solid #CDCCD0;
-			}
+      + .cms-tabset-icon.ui-state-default {
+        border-left: 1px solid #CDCCD0;
+      }
 
-			&:hover {
-				background: $tab-panel-texture-color;
-			}
+      &:hover {
+        background: $tab-panel-texture-color;
+      }
 
-			&.ui-state-active:hover {
-				background: #d4dbe1;
-			}
-		}
+      &.ui-state-active:hover {
+        background: #d4dbe1;
+      }
+    }
 
-		.cms-tabset-icon.ui-state-active {
-			background-color: #d4dbe1;
-		}
-	}
+    .cms-tabset-icon.ui-state-active {
+      background-color: #d4dbe1;
+    }
+  }
 
-	.cms-content-header-tabs & {
-		overflow: hidden;
-	}
+  .cms-content-header-tabs & {
+    overflow: hidden;
+  }
 }
 
 /** --------------------------------------------
@@ -460,21 +459,21 @@ body.cms {
  * -------------------------------------------- */
 
 .ui-tabs {
-	padding: 0;
-	background: none;
+  padding: 0;
+  background: none;
 
-	.ui-tabs {
-		position: static;
-	}
+  .ui-tabs {
+    position: static;
+  }
 
-	.ui-tabs-panel {
-		padding: 0 $panel-padding-x;
-		background: transparent; // default it's white
-		border: 0; // suppress default borders
+  .ui-tabs-panel {
+    padding: 0 $panel-padding-x;
+    background: transparent; // default it's white
+    border: 0; // suppress default borders
 
-		&.cms-edit-form {
-			padding: 0;
-		}
+    &.cms-edit-form {
+      padding: 0;
+    }
 
     .ui-tabs .ui-tabs-nav {
       margin-left: $panel-padding-x;
@@ -483,60 +482,60 @@ body.cms {
       border-bottom: 1px solid $nav-tabs-link-hover-border-color;
       margin-bottom: $spacer-y;
     }
-	}
+  }
 
   .ui-tabs-panel .toolbar--content {
     margin-left: -20px;
     margin-right: -20px;
   }
 
-	.ui-widget-header {
-		border: 0;
-		background: none;
-	}
+  .ui-widget-header {
+    border: 0;
+    background: none;
+  }
 
-	.ui-tabs-nav {
-		float: right;
-		margin: $grid-x*2 0 -1px 0;
-		padding: 0;
-		border-bottom: 0;
+  .ui-tabs-nav {
+    float: right;
+    margin: $grid-x*2 0 -1px 0;
+    padding: 0;
+    border-bottom: 0;
 
-		~ .ui-tabs-panel {
-			clear: both;
-		}
+    ~ .ui-tabs-panel {
+      clear: both;
+    }
 
-		li {
-			top: 0;
-			float: left;
-			margin-top: 0;
+    li {
+      top: 0;
+      float: left;
+      margin-top: 0;
 
-			&:active {
-				outline: none;
-			}
+      &:active {
+        outline: none;
+      }
 
-			a {
-				display: inline-block;
-				outline: none;
-				float: none;
-				font-weight: normal;
-				color: $color-text;
-				padding: $nav-link-padding;
-				line-height: $line-height-base;
+      a {
+        display: inline-block;
+        outline: none;
+        float: none;
+        font-weight: normal;
+        color: $color-text;
+        padding: $nav-link-padding;
+        line-height: $line-height-base;
 
-				&.icon-button {
-					@extend a.icon-button;
-				}
-			}
+        &.icon-button {
+          @extend a.icon-button;
+        }
+      }
 
-			&:last-child {
-				// correctly right-align last tab
-				margin-right: 0;
-			}
+      &:last-child {
+        // correctly right-align last tab
+        margin-right: 0;
+      }
 
-			&+li {
-				margin-left: $spacer-x / 2;
-			}
-		}
+      &+li {
+        margin-left: $spacer-x / 2;
+      }
+    }
 
     //jquery UI override
     li.ui-tabs-active,
@@ -546,65 +545,65 @@ body.cms {
       padding-bottom: 0;
     }
 
-		.ui-state-default {
-			border: 0;
-			background: transparent;
+    .ui-state-default {
+      border: 0;
+      background: transparent;
 
-			a {
-				color: lighten($color-text, 10%);
+      a {
+        color: lighten($color-text, 10%);
         border-bottom: $nav-tabs-link-border-width solid transparent;
 
-				&:hover {
-					color: $color-text;
-				}
-			}
-		}
+        &:hover {
+          color: $color-text;
+        }
+      }
+    }
 
-		.ui-state-active {
-			background-color: transparent;
-			cursor: text;
+    .ui-state-active {
+      background-color: transparent;
+      cursor: text;
 
-			a {
-				border-color: #66727d;
-				padding-left: $spacer-x / 4;
-				padding-right: $spacer-x / 4;
-				color: $color-text;
-			}
-		}
+      a {
+        border-color: #66727d;
+        padding-left: $spacer-x / 4;
+        padding-right: $spacer-x / 4;
+        color: $color-text;
+      }
+    }
 
-		&.ui-state-active {
-			border-color: $color-medium-separator;
-		}
+    &.ui-state-active {
+      border-color: $color-medium-separator;
+    }
 
-		li.cms-tabset-icon.ui-corner-top {
-			text-indent:-9999em;
+    li.cms-tabset-icon.ui-corner-top {
+      text-indent:-9999em;
 
-			a {
-				display: block;
-				padding-left: 40px; // icon width
-				padding-right: 0;
-				margin: 0;
-			}
-		}
-	}
+      a {
+        display: block;
+        padding-left: 40px; // icon width
+        padding-right: 0;
+        margin: 0;
+      }
+    }
+  }
 
-	.cms-panel-padded {
-		.ui-tabs-panel {
-			padding: 0; // Avoid double padding with parent
+  .cms-panel-padded {
+    .ui-tabs-panel {
+      padding: 0; // Avoid double padding with parent
 
-			.ui-tabs-panel {
-				padding: $grid-x 0 0 0;
-			}
-		}
+      .ui-tabs-panel {
+        padding: $grid-x 0 0 0;
+      }
+    }
 
-		.btn-toolbar {
-			padding: 0; // Avoid double padding with parent
-		}
-	}
+    .btn-toolbar {
+      padding: 0; // Avoid double padding with parent
+    }
+  }
 
-	&.ss-tabset-tabshidden .ui-tabs-panel {
-		border-top: none;
-	}
+  &.ss-tabset-tabshidden .ui-tabs-panel {
+    border-top: none;
+  }
 }
 
 
@@ -615,70 +614,70 @@ body.cms {
 .ui-tabs.cms-tabset-primary .ui-tabs-nav,
 .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary,
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
-	margin-top: -$spacer-y * .625; // Same as toolbar padding
-	float: none; // parent container is already right floated
+  margin-top: -$spacer-y * .625; // Same as toolbar padding
+  float: none; // parent container is already right floated
 
-	li {
-		margin-right: 0; // tabs are directly adjacent
-		margin-top: 0;
+  li {
+    margin-right: 0; // tabs are directly adjacent
+    margin-top: 0;
 
-		a {
-			margin: 0;
-		}
-	}
+    a {
+      margin: 0;
+    }
+  }
 
-	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
-		border-radius:0;
-	}
+  .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
+    border-radius:0;
+  }
 
-	.ui-state-default {
-		background: none;
-		border-top: 0;
-		border: 0;
-	}
+  .ui-state-default {
+    background: none;
+    border-top: 0;
+    border: 0;
+  }
 
-	.ui-state-active {
-		box-shadow: none;
-		background: transparent;
-		border: 0;
-		z-index: 2;
+  .ui-state-active {
+    box-shadow: none;
+    background: transparent;
+    border: 0;
+    z-index: 2;
 
-		a,
-		.nav-link {
-			border-bottom: $nav-tabs-link-border-width solid $nav-tabs-active-link-hover-color;
-			padding: $nav-link-padding;
-		}
-	}
+    a,
+    .nav-link {
+      border-bottom: $nav-tabs-link-border-width solid $nav-tabs-active-link-hover-color;
+      padding: $nav-link-padding;
+    }
+  }
 }
 
 .cms-content-header-tabs {
-	float: right;
-	margin-top: $spacer-y * .625; // Same as toolbar padding
+  float: right;
+  margin-top: $spacer-y * .625; // Same as toolbar padding
 
-	&.icon-button-group-tabs {
-		margin-top: 12px;
-		margin-bottom: 13px;
-	}
+  &.icon-button-group-tabs {
+    margin-top: 12px;
+    margin-bottom: 13px;
+  }
 }
 
 .cms-content-fields .ui-tabs-nav {
-	float: none;
-	padding: 0;
-	border-bottom: 1px solid $color-button-generic-border;
-	margin: 0 $grid-gutter-width-half;
+  float: none;
+  padding: 0;
+  border-bottom: 1px solid $color-button-generic-border;
+  margin: 0 $grid-gutter-width-half;
 
-	li {
-		// Align tab content with gutter (supports multiple rows of tabs)
-		margin: 0 0 -1px;
+  li {
+    // Align tab content with gutter (supports multiple rows of tabs)
+    margin: 0 0 -1px;
 
-		&+li {
-			margin-left: $spacer-x / 2;
-		}
-	}
+    &+li {
+      margin-left: $spacer-x / 2;
+    }
+  }
 
-	.nav-link {
-		padding: $nav-link-padding;
-	}
+  .nav-link {
+    padding: $nav-link-padding;
+  }
 }
 
 /** -------------------------------------------------------
@@ -686,75 +685,75 @@ body.cms {
  * ------------------------------------------------------- */
 
 .cms-content-loading-overlay {
-	position: absolute; // z-index doesn't apply properly without that
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 9998;
-	// Further styling by .ui-widget-overlay-light which is usually applied at the same time
+  position: absolute; // z-index doesn't apply properly without that
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9998;
+  // Further styling by .ui-widget-overlay-light which is usually applied at the same time
 }
 
 .cms-content-loading-spinner {
-	position: absolute; // z-index doesn't apply properly without that
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 9999;
-	background: url("../../images/spinner.gif") no-repeat 50% 50%;
+  position: absolute; // z-index doesn't apply properly without that
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: url("../../images/spinner.gif") no-repeat 50% 50%;
 }
 
 /** -----------------------------------------------
  * Loading Screen
  * ------------------------------------------------ */
 .ss-loading-screen {
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	position: absolute;
-	z-index: 100000;
-	// TODO Convert to compass gradient include
-	background: #fff;
-	background: -moz-radial-gradient(50% 50% 180deg, circle cover, #FFFFFF, #EFEFEF, #C7C7C7 100%);
-	background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#E3E3E3), to(white));
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  z-index: 100000;
+  // TODO Convert to compass gradient include
+  background: #fff;
+  background: -moz-radial-gradient(50% 50% 180deg, circle cover, #FFFFFF, #EFEFEF, #C7C7C7 100%);
+  background: -webkit-gradient(radial, 50% 50%, 350, 50% 50%, 0, from(#E3E3E3), to(white));
 
-	.loading-logo {
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-		position: absolute;
-		background: transparent url(../images/silverstripe_logo.png) no-repeat 50% 50%;
-	}
+  .loading-logo {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    background: transparent url(../images/silverstripe_logo.png) no-repeat 50% 50%;
+  }
 
-	p {
-		width: 100%;
-		text-align: center;
-		position: absolute;
-		bottom: 80px;
-		z-index: 100001;
+  p {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 80px;
+    z-index: 100001;
 
-		span.notice {
-			width: $cms-panel-sm;
-			font-size: 14px;
-			padding: 10px 20px;
-			color: #dc7f00;
-			border: none;
-			background: none;
-			border-radius: 5px;
-			display: inline-block;
-			zoom: 1;
-      		*display: inline;
-		}
-	}
+    span.notice {
+      width: $cms-panel-sm;
+      font-size: 14px;
+      padding: 10px 20px;
+      color: #dc7f00;
+      border: none;
+      background: none;
+      border-radius: 5px;
+      display: inline-block;
+      zoom: 1;
+          *display: inline;
+    }
+  }
 
-	.loading-animation {
-		display: none;
-		position: absolute;
-		left: 50%;
-		margin-left: -21.5px; // Half of spinner size
-		top: 80%;
-	}
+  .loading-animation {
+    display: none;
+    position: absolute;
+    left: 50%;
+    margin-left: -21.5px; // Half of spinner size
+    top: 80%;
+  }
 }
 
 /** --------------------------------------------
@@ -762,19 +761,19 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-actions, .cms-preview-controls {
-	margin: 0;
-	z-index: 999;
-	border-top: 1px solid $border-color;
-	height: $toolbar-total-height;
-	min-height: $toolbar-total-height;
-	max-height: $toolbar-total-height;
-	background-color: $tab-panel-texture-color;
+  margin: 0;
+  z-index: 999;
+  border-top: 1px solid $border-color;
+  height: $toolbar-total-height;
+  min-height: $toolbar-total-height;
+  max-height: $toolbar-total-height;
+  background-color: $tab-panel-texture-color;
   padding: $spacer-y * .625 0;
 
-	&.south .btn-toolbar {
+  &.south .btn-toolbar {
     margin-top: 0;
     margin-bottom: 0;
-	}
+  }
 }
 
 
@@ -802,103 +801,103 @@ body.cms {
   }
 }
 
-.message {												// White
-	display: block;
-	clear: both;
-	margin: 0 0 $spacer-y;
-	padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
-	font-weight: normal;
-	border: 1px #ccc solid;
-	background: #fff;									// for browsers that don't understand rgba
-	background: rgba(#fff,0.5);
-	text-shadow: none;
-	border-radius: 3px;
+.message {                        // White
+  display: block;
+  clear: both;
+  margin: 0 0 $spacer-y;
+  padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
+  font-weight: normal;
+  border: 1px #ccc solid;
+  background: #fff;                 // for browsers that don't understand rgba
+  background: rgba(#fff,0.5);
+  text-shadow: none;
+  border-radius: 3px;
 
-	&.notice {
-		background-color: lighten($color-notice,22%);	// Blue
-		border-color: $color-notice;
-	}
-	&.warning {											// Yellow
-		background-color: lighten($color-warning,47%);
-		border-color: $color-warning;
-	}
-	&.error, &.bad, &.required, &.validation {			// Red
-		background-color: lighten($color-error,24%);
-		border-color: $color-error;
-	}
-	&.good {											// Green
-		background-color: lighten($color-good,40%);
-		border-color: $color-good;
-	}
+  &.notice {
+    background-color: lighten($color-notice,22%); // Blue
+    border-color: $color-notice;
+  }
+  &.warning {                     // Yellow
+    background-color: lighten($color-warning,47%);
+    border-color: $color-warning;
+  }
+  &.error, &.bad, &.required, &.validation {      // Red
+    background-color: lighten($color-error,24%);
+    border-color: $color-error;
+  }
+  &.good {                      // Green
+    background-color: lighten($color-good,40%);
+    border-color: $color-good;
+  }
 
-	p {
-		margin: 0;
-	}
+  p {
+    margin: 0;
+  }
 }
 
 .cms-edit-form .ui-tabs-panel .message {
-			margin: $grid-x*2 0; // gets padding from tab panel
-		}
+      margin: $grid-x*2 0; // gets padding from tab panel
+    }
 
 .notice-item {
-	border-radius: 3px;
-	font-family: inherit;
-	font-size: inherit;
-	padding: 6px 24px 8px 10px;
-	word-wrap: break-word;
-	min-height: 60px;
-	height: auto;
-	border: 0;
-	border-left: 3px solid;
-	color: #666;
-	left: 300px;
-	background: #fff;
+  border-radius: 3px;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 6px 24px 8px 10px;
+  word-wrap: break-word;
+  min-height: 60px;
+  height: auto;
+  border: 0;
+  border-left: 3px solid;
+  color: #666;
+  left: 300px;
+  background: #fff;
 
-	&.success,
-	&.good,
-	&.green {
-		border-color: $color-good;
-	}
+  &.success,
+  &.good,
+  &.green {
+    border-color: $color-good;
+  }
 
-	&.notice,
-	&.info,
-	&.blue {
-		border-color: $color-notice;
-	}
+  &.notice,
+  &.info,
+  &.blue {
+    border-color: $color-notice;
+  }
 
-	&.warning,
-	&.caution,
-	&.yellow {
-		border-color: $color-warning;
-	}
+  &.warning,
+  &.caution,
+  &.yellow {
+    border-color: $color-warning;
+  }
 
-	&.bad,
-	&.error,
-	&.red {
-		border-color: $color-error;
-	}
+  &.bad,
+  &.error,
+  &.red {
+    border-color: $color-error;
+  }
 
-	p {
-		margin-bottom: 0;
-	}
+  p {
+    margin-bottom: 0;
+  }
 }
 
 .notice-item-close {
-	font-size: 0; // hide the textNode "x" that jquery.notice.js inserts
-	opacity: .8;
+  font-size: 0; // hide the textNode "x" that jquery.notice.js inserts
+  opacity: .8;
 
-	&:hover {
-		opacity: 1;
-	}
+  &:hover {
+    opacity: 1;
+  }
 
-	// apply relevant styles from .font-icon-cancel
-	&::before {
-		content: "\44";
-		font-size: 15px;
-		font-family: silverstripe, sans-serif;
-		font-weight: normal;
-		-webkit-font-smoothing: antialiased;
-	}
+  // apply relevant styles from .font-icon-cancel
+  &::before {
+    content: "\44";
+    font-size: 15px;
+    font-family: silverstripe, sans-serif;
+    font-weight: normal;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
 
@@ -908,25 +907,25 @@ body.cms {
  * -------------------------------------------- */
 
 .page-icon, a .jstree-pageicon {
-	display: block;
-	width: 16px;
-	height: 16px;
-	background: transparent url(../images/sitetree_ss_pageclass_icons_default.png) no-repeat;
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: transparent url(../images/sitetree_ss_pageclass_icons_default.png) no-repeat;
 }
 
 .page-icon {
-	&.class-HomePage {
-		background-position: 0 -48px;
-	}
-	&.class-RedirectorPage {
-		background-position: 0 -16px;
-	}
-	&.class-VirtualPage {
-		background-position: 0 -32px;
-	}
-	&.class-ErrorPage {
-		background-position: 0 -112px;
-	}
+  &.class-HomePage {
+    background-position: 0 -48px;
+  }
+  &.class-RedirectorPage {
+    background-position: 0 -16px;
+  }
+  &.class-VirtualPage {
+    background-position: 0 -32px;
+  }
+  &.class-ErrorPage {
+    background-position: 0 -112px;
+  }
 }
 
 /** --------------------------------------------
@@ -934,7 +933,7 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-page-add-form-dialog {
-	display: none;
+  display: none;
 }
 
 .cms-add-form {
@@ -953,21 +952,21 @@ body.cms {
     &.selected {
       background-color: $background-darker;
       cursor: pointer;
-			}
+      }
 
-			&.disabled {
-				color: $color-text-disabled;
+      &.disabled {
+        color: $color-text-disabled;
       opacity: 0.6;
     }
 
     &.disabled:hover {
-					background: none;
-				}
-			}
+          background: none;
+        }
+      }
 
   input[type="radio"] {
     position: static;
-			}
+      }
 
   .page-icon {
     display: inline-block;
@@ -978,12 +977,12 @@ body.cms {
     + .title {
       margin-right: 6px;
       font-weight: 500;
-			}
-			}
+      }
+      }
 
   .form__field-description {
-				font-style: italic;
-	}
+        font-style: italic;
+  }
 }
 
 /** --------------------------------------------
@@ -991,36 +990,36 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-toolbar {
-	min-height: 29px;
-	display: block;
-	margin: $spacer-y * .625 0 0;
-	padding-bottom: 0;
-	@include legacy-pie-clearfix();
-	border-bottom: 0;
-	box-shadow: none;
+  min-height: 29px;
+  display: block;
+  margin: $spacer-y * .625 0 0;
+  padding-bottom: 0;
+  @include legacy-pie-clearfix();
+  border-bottom: 0;
+  box-shadow: none;
 
-	.cms-tree-view-modes {
-		float:right;
-		padding-top:$grid-y - 3;
-		* {
-			display: inline-block;
-			label {
-				color:$color-text-blue-link;
-			}
-		}
-	}
+  .cms-tree-view-modes {
+    float:right;
+    padding-top:$grid-y - 3;
+    * {
+      display: inline-block;
+      label {
+        color:$color-text-blue-link;
+      }
+    }
+  }
 
-	.cms-actions-tools-row {
-		clear: both;
-	}
+  .cms-actions-tools-row {
+    clear: both;
+  }
 
-	.tool-action {
-		display: none;
-	}
+  .tool-action {
+    display: none;
+  }
 }
 
 .ui-widget-content a {
-	color: $link-color;
+  color: $link-color;
 }
 
 /**
@@ -1032,104 +1031,104 @@ body.cms {
  * panel
  */
 .cms-content-tools {
-	background: $tab-panel-texture-color;
-	width: $grid-x * 36;
-	z-index: 70;
-	box-shadow: 1px 0 0 0 $border-color-dark;
-	z-index: 1000;
-	float: left;
-	position: relative;
+  background: $tab-panel-texture-color;
+  width: $grid-x * 36;
+  z-index: 70;
+  box-shadow: 1px 0 0 0 $border-color-dark;
+  z-index: 1000;
+  float: left;
+  position: relative;
 
-	.cms-panel-header {
-		clear: both;
-		margin: 10px 0 $grid-y - 1;
-		padding-bottom: 2px;
-		line-height: $grid-y * 3;
-		border-bottom: 1px solid $color-light-separator;
-	}
+  .cms-panel-header {
+    clear: both;
+    margin: 10px 0 $grid-y - 1;
+    padding-bottom: 2px;
+    line-height: $grid-y * 3;
+    border-bottom: 1px solid $color-light-separator;
+  }
 
-	.cms-panel-content {
-		width: 300px;
-		overflow: auto;
-		height:100%;
+  .cms-panel-content {
+    width: 300px;
+    overflow: auto;
+    height:100%;
 
-		.btn-toolbar .ss-ui-action-constructive {
-			margin-right:5px; //accounts for the scrollbar in the filter - keeps the actions on one line instead of wrapping onto two.
-		}
-	}
+    .btn-toolbar .ss-ui-action-constructive {
+      margin-right:5px; //accounts for the scrollbar in the filter - keeps the actions on one line instead of wrapping onto two.
+    }
+  }
 
-	.cms-content-header {
-		background-color: darken($color-widget-bg, 40%);
-		background-image: linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%));
+  .cms-content-header {
+    background-color: darken($color-widget-bg, 40%);
+    background-image: linear-gradient(darken($color-widget-bg, 20%), darken($color-widget-bg, 40%));
 
-		h2 {
-			text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
-			width: $grid-x * 22 /* 24 - (padding on each side + margin) */;
-			color: lighten($color-widget-bg, 60%);
-			@include hide-text-overflow();
-		}
-	}
+    h2 {
+      text-shadow: darken($color-widget-bg, 50%) -1px -1px 0;
+      width: $grid-x * 22 /* 24 - (padding on each side + margin) */;
+      color: lighten($color-widget-bg, 60%);
+      @include hide-text-overflow();
+    }
+  }
 
-	h3,h4,h5 {
-		font-weight: bold;
-		line-height: $grid-y * 2;
-	}
-	h3 {
-		font-size: $font-size-h5;
-	}
+  h3,h4,h5 {
+    font-weight: bold;
+    line-height: $grid-y * 2;
+  }
+  h3 {
+    font-size: $font-size-h5;
+  }
 
-	h4 {
-		font-size: $font-size-h5;
-		margin:5px 0;
-	}
+  h4 {
+    font-size: $font-size-h5;
+    margin:5px 0;
+  }
 
-	.ui-widget-content {
-		background: none;
-	}
+  .ui-widget-content {
+    background: none;
+  }
 
-	.field {
-		&.checkbox {
-			padding: 0 0 8px;
-		}
+  .field {
+    &.checkbox {
+      padding: 0 0 8px;
+    }
 
-		.description {
-			margin-left: 0;
-		}
-	}
+    .description {
+      margin-left: 0;
+    }
+  }
 
-	table {
-		margin: 8px #{-$panel-padding-x};
-		width: calc(100% + #{$panel-padding-x * 2});
+  table {
+    margin: 8px #{-$panel-padding-x};
+    width: calc(100% + #{$panel-padding-x * 2});
 
-		tr {
-			&.active {
-				background-color: $component-active-bg;
-				color: $color-text-light;
-				border-top: 2px solid $component-active-bg;
-				}
-			+ .active td {
-				border-color: $component-active-bg;
-			}
-		}
+    tr {
+      &.active {
+        background-color: $component-active-bg;
+        color: $color-text-light;
+        border-top: 2px solid $component-active-bg;
+        }
+      + .active td {
+        border-color: $component-active-bg;
+      }
+    }
 
-		th {
-			font-weight: bold;
-		}
-	}
+    th {
+      font-weight: bold;
+    }
+  }
 
-	td,
-	th {
-		border-bottom: 1px solid darken($color-widget-bg, 10%);
-		padding: $grid-y - 1 2px;
-		font-size: 11px;
-		vertical-align: top;
+  td,
+  th {
+    border-bottom: 1px solid darken($color-widget-bg, 10%);
+    padding: $grid-y - 1 2px;
+    font-size: 11px;
+    vertical-align: top;
 
-		&.first-column {
-			padding-left: $panel-padding-x;
-	}
-		&.last-column {
-			padding-right: $panel-padding-x;
-		}
+    &.first-column {
+      padding-left: $panel-padding-x;
+  }
+    &.last-column {
+      padding-right: $panel-padding-x;
+    }
 }
 }
 
@@ -1138,130 +1137,130 @@ body.cms {
 * ----------------------------------------------------------------- */
 
 .cms-notice {
-	display: block;
-	margin: 0 0 8px;
-	padding: 10px 12px;
-	font-weight: normal;
-	border: 1px $color-light-separator solid;
-	background: #fff; //for browsers that don't understand rgba
-	background: rgba(#fff,0.5);
-	text-shadow: none;
+  display: block;
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  font-weight: normal;
+  border: 1px $color-light-separator solid;
+  background: #fff; //for browsers that don't understand rgba
+  background: rgba(#fff,0.5);
+  text-shadow: none;
 }
 
 .cms-tree-filtered {
-	position: absolute;
-	margin: 0;
-	width: 100%;
-	box-sizing: border-box;
-	margin-left: -$grid-x*2;
-	padding: $grid-y*2 $grid-x*2;
-	background: #D4E2EC;
-	text-shadow: none;
-	border: 0;
+  position: absolute;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin-left: -$grid-x*2;
+  padding: $grid-y*2 $grid-x*2;
+  background: #D4E2EC;
+  text-shadow: none;
+  border: 0;
 
-	> strong,
-	> a {
-		font-size: 14px;
-	}
+  > strong,
+  > a {
+    font-size: 14px;
+  }
 }
 
 /**
  * CMS Batch actions
  */
 .cms-content-batchactions-button {
-	display: inline-block;
-	padding: 4px 6px;
-	vertical-align: middle;
-	background-image: linear-gradient(to bottom, #fff, #D9D9D9);
-	border: 1px solid #aaa;
-	border-radius: 4px;
+  display: inline-block;
+  padding: 4px 6px;
+  vertical-align: middle;
+  background-image: linear-gradient(to bottom, #fff, #D9D9D9);
+  border: 1px solid #aaa;
+  border-radius: 4px;
 }
 
 .cms-content-batchactions {
-	float: left;
-	position:  relative;
-	display: block;
+  float: left;
+  position:  relative;
+  display: block;
 
-	.view-mode-batchactions-wrapper {
-		height: 18px;
-		float: left;
-		padding: 4px 6px;
-		border: 1px solid #aaa;
-		margin-bottom: 8px;
-		margin-right:-1px;
-		background-color: #D9D9D9;
-		background-image: linear-gradient(to bottom, #fff, #D9D9D9);
-		border-top-left-radius: 4px;
-		border-bottom-left-radius: 4px;
+  .view-mode-batchactions-wrapper {
+    height: 18px;
+    float: left;
+    padding: 4px 6px;
+    border: 1px solid #aaa;
+    margin-bottom: 8px;
+    margin-right:-1px;
+    background-color: #D9D9D9;
+    background-image: linear-gradient(to bottom, #fff, #D9D9D9);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
 
-		input {
-			vertical-align: middle;
-		}
+    input {
+      vertical-align: middle;
+    }
 
-		.view-mode-batchactions-label {
-			vertical-align: middle;
-			display: none;
-		}
-	}
+    .view-mode-batchactions-label {
+      vertical-align: middle;
+      display: none;
+    }
+  }
 
-	.checkbox {
-		margin-top: 2px;
-		vertical-align: middle;
-	}
+  .checkbox {
+    margin-top: 2px;
+    vertical-align: middle;
+  }
 }
 
 // Tree batch actions
 .cms-batch-actions {
-	position: relative;
-	max-width: 400px;
+  position: relative;
+  max-width: 400px;
 
-	fieldset {
-		width: 100%;
-		float: left;
-	}
+  fieldset {
+    width: 100%;
+    float: left;
+  }
 
-	.form__field-holder--no-label {
-		margin-left: 0 !important;
-		flex-basis: 100% !important;
-		padding-right: 40px;
-	}
+  .form__field-holder--no-label {
+    margin-left: 0 !important;
+    flex-basis: 100% !important;
+    padding-right: 40px;
+  }
 
-	.dropdown { // The 'select' element
-		width: 100%;
-		height: 32px;
-	}
+  .dropdown { // The 'select' element
+    width: 100%;
+    height: 32px;
+  }
 
-	.chosen-container-single .chosen-single {
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
-	}
+  .chosen-container-single .chosen-single {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 
-	.field .chosen-container-active.chosen-with-drop .chosen-single {
-		border-top-right-radius: 0;
-	}
+  .field .chosen-container-active.chosen-with-drop .chosen-single {
+    border-top-right-radius: 0;
+  }
 
-	.btn-toolbar {
-		position: absolute;
-		right: 0;
-	}
+  .btn-toolbar {
+    position: absolute;
+    right: 0;
+  }
 
-	.action,
+  .action,
   .btn {
-		padding-top: 7px;
-		padding-bottom: 7px;
-		border-top-left-radius: 0;
-		border-bottom-left-radius: 0;
-		width: calc(#{$grid-gutter-width} + 1px); // gutters + 1px border
-	}
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    width: calc(#{$grid-gutter-width} + 1px); // gutters + 1px border
+  }
 }
 
 /** --------------------------------------------
  * Preview
  * -------------------------------------------- */
 .cms-switch-view {
-	a {
-		padding-right: 1em;
-	}
+  a {
+    padding-right: 1em;
+  }
 }
 
 /** --------------------------------------------
@@ -1269,102 +1268,102 @@ body.cms {
  * -------------------------------------------- */
 
 form.member-profile-form {
-	padding: 0 $grid-x*2 0 0;
+  padding: 0 $grid-x*2 0 0;
 
-	#Root_Permissions {
-		clear:both;
-		border-top: 1px solid darken($color-tab, 20%);
-	}
+  #Root_Permissions {
+    clear:both;
+    border-top: 1px solid darken($color-tab, 20%);
+  }
 
-	#Root_Main {
-		clear:both;
-		border-top: 1px solid darken($color-tab, 20%);
-		.cms-help-toggle {
-			text-indent: -9999em;
-			display: inline-block;
-			width: 20px;
-			background:url(../images/question.png) no-repeat 0px 0px;
-		}
-	}
+  #Root_Main {
+    clear:both;
+    border-top: 1px solid darken($color-tab, 20%);
+    .cms-help-toggle {
+      text-indent: -9999em;
+      display: inline-block;
+      width: 20px;
+      background:url(../images/question.png) no-repeat 0px 0px;
+    }
+  }
 
-	#FavouritePageID {
-		margin-top:$grid-y;
-	}
+  #FavouritePageID {
+    margin-top:$grid-y;
+  }
 
-	#CsvFile .middleColumn {
-		background: none !important;
-	}
+  #CsvFile .middleColumn {
+    background: none !important;
+  }
 
-	.advanced h4 {
-		margin-bottom: .5em;
-	}
+  .advanced h4 {
+    margin-bottom: .5em;
+  }
 
-	.btn-toolbar {
-		text-align: left;
-		border: 0;
-	}
+  .btn-toolbar {
+    text-align: left;
+    border: 0;
+  }
 
-	input.customFormat {
-		width: $grid-x * 10;
-		border: 1px solid #ccc !important;
-		padding: 3px;
-		display: inline-block;
-		margin-left: 1em;
-	}
+  input.customFormat {
+    width: $grid-x * 10;
+    border: 1px solid #ccc !important;
+    padding: 3px;
+    display: inline-block;
+    margin-left: 1em;
+  }
 
-	.formattingHelpToggle {
-		display: block;
-		font-size: 11px;
-	}
+  .formattingHelpToggle {
+    display: block;
+    font-size: 11px;
+  }
 
-	.formattingHelpText {
-		margin: 5px 0 0 -5px;
-		color: #333;
-		padding: 5px 10px;
-		background: #fff;
-		border: 1px solid #ccc;
-	}
+  .formattingHelpText {
+    margin: 5px 0 0 -5px;
+    color: #333;
+    padding: 5px 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+  }
 
-	.formattingHelpText ul {
-		padding: 0;
-	}
+  .formattingHelpText ul {
+    padding: 0;
+  }
 
-	.formattingHelpText li {
-		font-size: 11px;
-		color: #333;
-		margin-bottom: 2px;
-		padding-bottom: 0;
-		float: none;
-		width: auto;
-	}
+  .formattingHelpText li {
+    font-size: 11px;
+    color: #333;
+    margin-bottom: 2px;
+    padding-bottom: 0;
+    float: none;
+    width: auto;
+  }
 
-	#Groups .middleColumn {
-		margin-left: 0;
-		width: 100%;
+  #Groups .middleColumn {
+    margin-left: 0;
+    width: 100%;
 
-		.TreeDropdownField {
-			width: 90%;
-			max-width: 90%;
-		}
-	}
+    .TreeDropdownField {
+      width: 90%;
+      max-width: 90%;
+    }
+  }
 
-	// Same rules in .SecurityAdmin
-	#Permissions .optionset li {
-				float: none;
-				width: auto;
-			}
-		}
+  // Same rules in .SecurityAdmin
+  #Permissions .optionset li {
+        float: none;
+        width: auto;
+      }
+    }
 
 .memberdatetimeoptionset {
   @extend .form-inline;
 
-	.description {
-		font-style: normal;
-	}
+  .description {
+    font-style: normal;
+  }
 
-	.toggle {
-		font-size: $font-size-sm;
-	}
+  .toggle {
+    font-size: $font-size-sm;
+  }
   .toggle-content {
     padding-left: 0;
     li {
@@ -1381,56 +1380,56 @@ form.member-profile-form {
 }
 
 .cms {
-	.cms-content {
-		border-radius: 0;
-		background: $tab-panel-texture-color;
-		width: 800px;
-		z-index: 40;
-		overflow: hidden !important; // TEMP until JS is removed
-	}
+  .cms-content {
+    border-radius: 0;
+    background: $tab-panel-texture-color;
+    width: 800px;
+    z-index: 40;
+    overflow: hidden !important; // TEMP until JS is removed
+  }
 
-	.cms-content-fields {
-		// always show a y scroll bar as popups like TreeDropdowns
-		// can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
-		overflow-y: auto;
-		overflow-x: auto;
-		background: $tab-panel-texture-color;
-		width: 100%;
+  .cms-content-fields {
+    // always show a y scroll bar as popups like TreeDropdowns
+    // can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
+    overflow-y: auto;
+    overflow-x: auto;
+    background: $tab-panel-texture-color;
+    width: 100%;
 
-		#Root_Main {
-			.confirmedpassword {
-				border-bottom:none;
-				box-shadow:none;
-			}
+    #Root_Main {
+      .confirmedpassword {
+        border-bottom:none;
+        box-shadow:none;
+      }
 
-			.customFormat {
-				max-width: 100px;
+      .customFormat {
+        max-width: 100px;
         padding-top: 0;
         padding-bottom: 0;
-			}
+      }
 
-			.cms-help-toggle {
-				text-indent: -9999em;
-				display: inline-block;
-				width: 20px;
-				background:url(../images/question.png) no-repeat 0px 0px;
-			}
-		}
+      .cms-help-toggle {
+        text-indent: -9999em;
+        display: inline-block;
+        width: 20px;
+        background:url(../images/question.png) no-repeat 0px 0px;
+      }
+    }
 
-		#Root_Permissions ul.optionset li {
-				float:none;
-			}
-		}
+    #Root_Permissions ul.optionset li {
+        float:none;
+      }
+    }
 
-	form.member-profile-form {
-		#Root .ui-tabs-nav {
-			display: none;
-		}
+  form.member-profile-form {
+    #Root .ui-tabs-nav {
+      display: none;
+    }
 
-	#Root_Main, #Root_Permissions {
-		border: none;
-		}
-	}
+  #Root_Main, #Root_Permissions {
+    border: none;
+    }
+  }
 }
 
 
@@ -1439,22 +1438,22 @@ form.member-profile-form {
  * "Settings" Form
  * -------------------------------------------- */
 #CanViewType, #CanEditType, #CanCreateTopLevelType {
-	.optionset li {
-		// All options on their own line
-		float: none;
-		width: auto;
-		white-space: nowrap;
-	}
+  .optionset li {
+    // All options on their own line
+    float: none;
+    width: auto;
+    white-space: nowrap;
+  }
 }
 
 #ViewerGroups,
 #EditorGroups,
 #CreateTopLevelGroups {
-	select {
-		// Fix for chosen.js width detection on hidden elements.
-		// TODO Remove once .field styling in _form.scss is refactored to allow flexible field widths
-		width: $grid-x * 64;
-	}
+  select {
+    // Fix for chosen.js width detection on hidden elements.
+    // TODO Remove once .field styling in _form.scss is refactored to allow flexible field widths
+    width: $grid-x * 64;
+  }
 }
 
 /** --------------------------------------------
@@ -1462,116 +1461,116 @@ form.member-profile-form {
  * -------------------------------------------- */
 
 .cms-panel {
-	.cms-panel-toggle {
+  .cms-panel-toggle {
 
-		.toggle-collapse,
-		.toggle-expand {
-			display: block;
-			position: absolute;
-			text-align: right;
-			padding: 14px 0;
-			width: 100%;
-			text-decoration: none;
-			line-height: 20px;
-			height: 52px;
-			margin: -#{$spacer-y * .625} #{0 - $panel-padding-x};
+    .toggle-collapse,
+    .toggle-expand {
+      display: block;
+      position: absolute;
+      text-align: right;
+      padding: 14px 0;
+      width: 100%;
+      text-decoration: none;
+      line-height: 20px;
+      height: 52px;
+      margin: -#{$spacer-y * .625} #{0 - $panel-padding-x};
 
-			span {
-				display: inline-block;
-				margin: 0 8px;
-				color: #555d60;
-				font-size: 16px;
-			}
+      span {
+        display: inline-block;
+        margin: 0 8px;
+        color: #555d60;
+        font-size: 16px;
+      }
 
-			&.toggle-expand {
-				width: 60px; // will set the collapsed width
-				display: none;
-			}
-		}
-	}
+      &.toggle-expand {
+        width: 60px; // will set the collapsed width
+        display: none;
+      }
+    }
+  }
 
-	&.collapsed {
-		cursor: pointer;
+  &.collapsed {
+    cursor: pointer;
 
-		.cms-panel-header *,
-		.cms-panel-content,
-		.cms-panel-toggle a.toggle-collapse{
-			display:none;
-		}
+    .cms-panel-header *,
+    .cms-panel-content,
+    .cms-panel-toggle a.toggle-collapse{
+      display:none;
+    }
 
-		.cms-panel-toggle a.toggle-expand {
-			display: block;
-		}
-	}
+    .cms-panel-toggle a.toggle-expand {
+      display: block;
+    }
+  }
 
-	.cms-panel-header {
-		width: 100%;
-	}
+  .cms-panel-header {
+    width: 100%;
+  }
 
-	&#cms-content-tools-CMSPageEditController .cms-panel-content-collapsed {
-			width: $cms-panel-xs;
-			display: none; // Avoids FOUC
+  &#cms-content-tools-CMSPageEditController .cms-panel-content-collapsed {
+      width: $cms-panel-xs;
+      display: none; // Avoids FOUC
 
-			h2, h3 {
-				border-bottom: 0;
-				margin-left: $grid-y;
-				transform-origin: bottom, right;
-				transform: rotate(270deg);
-			}
-			.cms-panel-header {
-				width: 600px;
-				position: relative;
-				top: 24px;
-				right: 577px;
-				text-align: right;
-			}
-		}
+      h2, h3 {
+        border-bottom: 0;
+        margin-left: $grid-y;
+        transform-origin: bottom, right;
+        transform: rotate(270deg);
+      }
+      .cms-panel-header {
+        width: 600px;
+        position: relative;
+        top: 24px;
+        right: 577px;
+        text-align: right;
+      }
+    }
 
-	.cms-panel-content-collapsed {
-		width: 60px;
-		display: none; // Avoids FOUC
-		height: calc(100% - #{$toolbar-height});
-		overflow: hidden;
+  .cms-panel-content-collapsed {
+    width: 60px;
+    display: none; // Avoids FOUC
+    height: calc(100% - #{$toolbar-height});
+    overflow: hidden;
 
-		h2,
+    h2,
     h3 {
-			border-bottom: 0;
-			margin-left: 18px;
-			transform-origin: bottom right;
-			transform: rotate(270deg);
-		}
+      border-bottom: 0;
+      margin-left: 18px;
+      transform-origin: bottom right;
+      transform: rotate(270deg);
+    }
 
-		.cms-panel-header {
-			width: 600px;
-			position: relative;
-			right: 574px;
-			text-align: right;
-			border-bottom: 0;
-			box-shadow: none;
-			margin-top: -5px;
-		}
-	}
+    .cms-panel-header {
+      width: 600px;
+      position: relative;
+      right: 574px;
+      text-align: right;
+      border-bottom: 0;
+      box-shadow: none;
+      margin-top: -5px;
+    }
+  }
 }
 
 .cms .cms-panel-padded {
-		&.ReportAdmin {
+    &.ReportAdmin {
       .ss-gridfield-buttonrow {
         margin-left: -20px;
         margin-right: -20px;
       }
 
       > fieldset {
-  				padding: 0 $panel-padding-x;
-  		}
+          padding: 0 $panel-padding-x;
+      }
     }
 
-		.cms-content-view {
-			padding: 0 $panel-padding-x $grid-y*1.5;
-		}
-	}
+    .cms-content-view {
+      padding: 0 $panel-padding-x $grid-y*1.5;
+    }
+  }
 
 .CMSPageAddController .cms-panel-padded {
-	padding: $panel-padding-y $panel-padding-x;
+  padding: $panel-padding-y $panel-padding-x;
 }
 
 /** ------------------------------------------------------------------
@@ -1583,267 +1582,267 @@ form.member-profile-form {
 
 // overlay for switching between CMS panes
 .cms .ui-widget-overlay-light {
-	background: #aaaaaa url(../../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
-	opacity: 0.3;
+  background: #aaaaaa url(../../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
+  opacity: 0.3;
 }
 
 // Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI)
 .cms .ui-widget-overlay {
-	background-color: #000;
-	background-image: none;
+  background-color: #000;
+  background-image: none;
 }
 
 .cms .ui-dialog .ss-ui-dialog.ui-dialog-content {
-		padding-top: 0px; //removes padding so that tabs are flush with header
-	}
+    padding-top: 0px; //removes padding so that tabs are flush with header
+  }
 
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
 .ui-dialog {
-	background: $tab-panel-texture-color;
-	background-clip: content-box;
-	border: 1px solid #666 !important;
-	border-radius: $grid-y;
-	overflow: visible;
-	padding: 0;
-	box-shadow: 0px 0px 30px 10px rgba(0,0,0,.3);
+  background: $tab-panel-texture-color;
+  background-clip: content-box;
+  border: 1px solid #666 !important;
+  border-radius: $grid-y;
+  overflow: visible;
+  padding: 0;
+  box-shadow: 0px 0px 30px 10px rgba(0,0,0,.3);
 
-  	// Titlebar for pop-up dialog.
-	.ui-dialog-titlebar.ui-widget-header {
-	  	font-size: $font-size-root +1;
-		padding: 0;
-		border: 0;
-		background: transparent url(../images/textures/cms_content_header.png) repeat;
-		box-shadow: $color-shadow-dark 0 0 ($grid-x / 2) inset;
+    // Titlebar for pop-up dialog.
+  .ui-dialog-titlebar.ui-widget-header {
+      font-size: $font-size-root +1;
+    padding: 0;
+    border: 0;
+    background: transparent url(../images/textures/cms_content_header.png) repeat;
+    box-shadow: $color-shadow-dark 0 0 ($grid-x / 2) inset;
 
-		.ui-dialog-title {
-			position:absolute;
-		}
-	}
+    .ui-dialog-title {
+      position:absolute;
+    }
+  }
 
-	.ui-dialog-content {
-		border-radius: $grid-y;
-		overflow: auto; // TODO Replace with proper $.layout grid
+  .ui-dialog-content {
+    border-radius: $grid-y;
+    overflow: auto; // TODO Replace with proper $.layout grid
 
-		&.loading {
-			background-image: url("../../images/spinner.gif");
-			background-position: 50% 50%;
-			background-repeat: no-repeat;
-		}
-	}
+    &.loading {
+      background-image: url("../../images/spinner.gif");
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+    }
+  }
 
-	.cms-dialog-content {
-		background: $tab-panel-texture-color;
-		padding-bottom: $grid-y;
-		padding-top: 0;
+  .cms-dialog-content {
+    background: $tab-panel-texture-color;
+    padding-bottom: $grid-y;
+    padding-top: 0;
 
-		.btn-toolbar {
-			overflow: auto;
-			padding-bottom: $grid-y;
-			float: right;
-		}
+    .btn-toolbar {
+      overflow: auto;
+      padding-bottom: $grid-y;
+      float: right;
+    }
 
-		.ui-tabs{
-			position:static;
-			// Shift navigation upwards to be horizontally centered with dialog title.
-			// Can't use floats since this title is in a different DOM parent sibling
-			// Note: Does NOT apply to member profile form (unnecessary, since it doesn't have a dialog title)
-			.ui-tabs-nav {
-				position:absolute;
-				top: 9px;
-				// Tabs nav is included in scollbar. By absolutely positioning it off the edge,
-				// we avoid tabs shifting position when scrollbar toggles
-				right: 40px;
-			}
+    .ui-tabs{
+      position:static;
+      // Shift navigation upwards to be horizontally centered with dialog title.
+      // Can't use floats since this title is in a different DOM parent sibling
+      // Note: Does NOT apply to member profile form (unnecessary, since it doesn't have a dialog title)
+      .ui-tabs-nav {
+        position:absolute;
+        top: 9px;
+        // Tabs nav is included in scollbar. By absolutely positioning it off the edge,
+        // we avoid tabs shifting position when scrollbar toggles
+        right: 40px;
+      }
 
-			// Don't show top border, since these styles already have a title bar
-			.ui-tabs-panel {
-				border: 0;
-			}
-		}
+      // Don't show top border, since these styles already have a title bar
+      .ui-tabs-panel {
+        border: 0;
+      }
+    }
 
-		.clear {
-			clear: both;
-		}
-	}
+    .clear {
+      clear: both;
+    }
+  }
 
-	&.loading {
-		background-image: url("../../images/spinner.gif");
-		background-position: 50% 50%;
-		background-repeat: no-repeat;
-	}
+  &.loading {
+    background-image: url("../../images/spinner.gif");
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+  }
 
-	.ui-dialog-buttonpane {
-		margin: 0;
-		background: $color-darker-bg;
-		border-top: 1px solid $color-light-separator;
-		border-bottom-left-radius: 8px;
-		border-bottom-right-radius: 8px;
-	}
+  .ui-dialog-buttonpane {
+    margin: 0;
+    background: $color-darker-bg;
+    border-top: 1px solid $color-light-separator;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
 }
 
 body.cms-dialog {
-	overflow: auto;
-	background: $tab-panel-texture-color;
-	position:relative;
+  overflow: auto;
+  background: $tab-panel-texture-color;
+  position:relative;
 }
 
 /** --------------------------------------------
  * "Insert X" forms
  * -------------------------------------------- */
 .htmleditorfield-dialog{
-	&.ui-dialog-content{
-		padding:0;
-		position:relative;
-		border-radius: 8px 8px 0 0;
-	}
+  &.ui-dialog-content{
+    padding:0;
+    position:relative;
+    border-radius: 8px 8px 0 0;
+  }
 
-	.htmleditorfield-from-web {
-		text-align: left;
-		margin-bottom: $grid-y;
+  .htmleditorfield-from-web {
+    text-align: left;
+    margin-bottom: $grid-y;
 
-		&.CompositeField{
-			@include clearfix;
-		}
+    &.CompositeField{
+      @include clearfix;
+    }
 
-		.url-description {
-			text-align: left;
-			margin-bottom: $grid-y*1.5;
-		}
+    .url-description {
+      text-align: left;
+      margin-bottom: $grid-y*1.5;
+    }
 
-		div.remoteurl{
-			width: calc(100% - 84px);
-			position: relative;
-			display: inline-block;
+    div.remoteurl{
+      width: calc(100% - 84px);
+      position: relative;
+      display: inline-block;
 
-			label {
-				position: absolute;
-				left: 0;
-				top: 0;
-				margin-bottom: 0;
-				line-height: $line-height;
-				@extend .input-group-addon;
-			}
+      label {
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin-bottom: 0;
+        line-height: $line-height;
+        @extend .input-group-addon;
+      }
 
-			input.remoteurl {
-				padding-left: 60px;
-				max-width: none;
-			}
-		}
+      input.remoteurl {
+        padding-left: 60px;
+        max-width: none;
+      }
+    }
 
-		button.add-url{
-			display: inline-block;;
-			float: none;
-			margin: 2px 0 0;
-			vertical-align: top;
+    button.add-url{
+      display: inline-block;;
+      float: none;
+      margin: 2px 0 0;
+      vertical-align: top;
 
-			&:hover,
+      &:hover,
       &:active {
-				opacity:1;
-			}
+        opacity:1;
+      }
 
-			&.ui-state-disabled {
-				&,
+      &.ui-state-disabled {
+        &,
         &:hover,
         &:active {
-					opacity: 0.35;
-					filter: Alpha(Opacity=35);
-				}
-			}
-		}
+          opacity: 0.35;
+          filter: Alpha(Opacity=35);
+        }
+      }
+    }
 
-		&.loading button.add-url::before {
-			content: "";
-			background: url(../images/throbber.gif) no-repeat center center;
-			padding: 8px;
-		}
-	}
+    &.loading button.add-url::before {
+      content: "";
+      background: url(../images/throbber.gif) no-repeat center center;
+      padding: 8px;
+    }
+  }
 
-	.cms-content-header {
-		padding: 0;
-		width: 100%;
-		height: 53px;
-		margin-bottom: 0;
+  .cms-content-header {
+    padding: 0;
+    width: 100%;
+    height: 53px;
+    margin-bottom: 0;
 
-		// remove extra border on headers
-		&::after {
-			display: none;
-		}
+    // remove extra border on headers
+    &::after {
+      display: none;
+    }
 
-		h3{
-			padding: $grid-y*1.5 0 $grid-y*1.5 $panel-padding-y;
-			margin: 0;
-			line-height: 28px;
-			display: inline-block;
-			font-weight: normal;
+    h3{
+      padding: $grid-y*1.5 0 $grid-y*1.5 $panel-padding-y;
+      margin: 0;
+      line-height: 28px;
+      display: inline-block;
+      font-weight: normal;
 
-			&.insert {
-				.back-button {
-					margin: 0;
-					padding: 0;
-					cursor: pointer;
+      &.insert {
+        .back-button {
+          margin: 0;
+          padding: 0;
+          cursor: pointer;
 
-					&::before {
-						margin-right: 4px;
-						font-size: 18px;
-						vertical-align: text-bottom;
-					}
-		}
-	}
-		}
-	}
+          &::before {
+            margin-right: 4px;
+            font-size: 18px;
+            vertical-align: text-bottom;
+          }
+    }
+  }
+    }
+  }
 
-	.ss-insert-media {
-		padding: $panel-padding-y $panel-padding-x;
+  .ss-insert-media {
+    padding: $panel-padding-y $panel-padding-x;
 
-		.ui-tabs-panel {
-			padding: 0;
-		}
-	}
+    .ui-tabs-panel {
+      padding: 0;
+    }
+  }
 
-	.toolbar--content {
-		margin-top: -$panel-padding-y;
-		margin-left: -$panel-padding-x;
-		margin-right: -$panel-padding-x;
-		height: auto; // acount for uploading new files
-	}
+  .toolbar--content {
+    margin-top: -$panel-padding-y;
+    margin-left: -$panel-padding-x;
+    margin-right: -$panel-padding-x;
+    height: auto; // acount for uploading new files
+  }
 
   .ss-insert-link {
-		padding-left: $panel-padding-x;
-		padding-right: $panel-padding-x;
+    padding-left: $panel-padding-x;
+    padding-right: $panel-padding-x;
 
-		&::after {
-			display: none;
-		}
-	}
+    &::after {
+      display: none;
+    }
+  }
 
-	.btn-toolbar {
-		padding:$grid-y $grid-x*2 ;
+  .btn-toolbar {
+    padding:$grid-y $grid-x*2 ;
 
-		.ui-tabs-panel {
-			padding: 0;
-		}
-	}
+    .ui-tabs-panel {
+      padding: 0;
+    }
+  }
 
-	.details{
-		.file-url{
-			display:block;
-			width:300px;
-			@include hide-text-overflow;
-		}
+  .details{
+    .file-url{
+      display:block;
+      width:300px;
+      @include hide-text-overflow;
+    }
 
-		.cms-file-info {
-		.field{
-				border: none;
-				box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-			}
-		}
-	}
+    .cms-file-info {
+    .field{
+        border: none;
+        box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+      }
+    }
+  }
 
-	.CompositeField .text select {
-				margin: 5px 0 0 0;
-			}
-		}
+  .CompositeField .text select {
+        margin: 5px 0 0 0;
+      }
+    }
 
 .htmleditorfield-linkform {
   .step2 {
@@ -1853,82 +1852,82 @@ body.cms-dialog {
 }
 
 .htmleditorfield-mediaform {
-	.grid-field .gridfield-button-delete {
-		// TODO Remove from PHP instead of hiding
-		display: none; // delete action shouldn't be allowed here
-	}
+  .grid-field .gridfield-button-delete {
+    // TODO Remove from PHP instead of hiding
+    display: none; // delete action shouldn't be allowed here
+  }
 
-	.htmleditorfield-from-cms {
-		&.ss-uploadfield {
-			h4 {
-				float: left; // headline and dropdown on same line
-				margin-top: $grid-y/2; // bring to same baseline as dropdown
-				margin-bottom: 0;
-			}
+  .htmleditorfield-from-cms {
+    &.ss-uploadfield {
+      h4 {
+        float: left; // headline and dropdown on same line
+        margin-top: $grid-y/2; // bring to same baseline as dropdown
+        margin-bottom: 0;
+      }
 
-			.middleColumn {
-				min-width: 0; // fit within available space
-				clear: none; // headline and dropdown on same line
-			}
+      .middleColumn {
+        min-width: 0; // fit within available space
+        clear: none; // headline and dropdown on same line
+      }
 
-			.field.treedropdown {
-				border-bottom: 0; // don't show border, dropdown and gridfield visually belong together
-				padding: 0;
-				position: absolute;
-				margin: 0;
-				top: 6px;
-				left: 160px;
-				width: auto;
-				min-width: 200px;
+      .field.treedropdown {
+        border-bottom: 0; // don't show border, dropdown and gridfield visually belong together
+        padding: 0;
+        position: absolute;
+        margin: 0;
+        top: 6px;
+        left: 160px;
+        width: auto;
+        min-width: 200px;
 
-				> .form__field-holder {
-					margin-left: -15px;
-				}
-			}
+        > .form__field-holder {
+          margin-left: -15px;
+        }
+      }
 
-			.treedropdownfield-title {
-				font-weight: bold;
-			}
+      .treedropdownfield-title {
+        font-weight: bold;
+      }
 
-			.treedropdownfield-toggle-panel-link {
-				padding: 5px 4px 5px 0;
-				height: 30px; // Fix to hold dropdown search field
+      .treedropdownfield-toggle-panel-link {
+        padding: 5px 4px 5px 0;
+        height: 30px; // Fix to hold dropdown search field
 
-				a {
-					background: url(../images/sitetree_ss_default_icons.png);
-					background-position: -18px -4px;
-					height: 14px;
-					opacity: .8;
-				}
-			}
+        a {
+          background: url(../images/sitetree_ss_default_icons.png);
+          background-position: -18px -4px;
+          height: 14px;
+          opacity: .8;
+        }
+      }
 
-			.TreeDropdownField:not(.treedropdownfield-open-tree) {
-				background: 0;
-				box-shadow: none;
-				border-color: transparent;
-			}
-		}
-	}
+      .TreeDropdownField:not(.treedropdownfield-open-tree) {
+        background: 0;
+        box-shadow: none;
+        border-color: transparent;
+      }
+    }
+  }
 
-	.ss-assetuploadfield .ss-uploadfield-editandorganize .ss-uploadfield-files .ss-uploadfield-item-info {
-		background-color: grayscale(#5db4df);
-		background-image: linear-gradient(to bottom,  grayscale(#5db4df) 0%, grayscale(#5db1dd) 8%, grayscale(#439bcb) 50%, grayscale(#3f99cd) 54%, grayscale(#207db6) 96%, grayscale(#1e7cba) 100%);
-	}
+  .ss-assetuploadfield .ss-uploadfield-editandorganize .ss-uploadfield-files .ss-uploadfield-item-info {
+    background-color: grayscale(#5db4df);
+    background-image: linear-gradient(to bottom,  grayscale(#5db4df) 0%, grayscale(#5db1dd) 8%, grayscale(#439bcb) 50%, grayscale(#3f99cd) 54%, grayscale(#207db6) 96%, grayscale(#1e7cba) 100%);
+  }
 }
 
 .ss-uploadfield-editandorganize {
-	padding-left: 10px;
-	padding-right: 10px;
-	margin-top: $panel-padding-y;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: $panel-padding-y;
 
-	.ss-uploadfield-item {
-		min-height: 32px;
-	}
+  .ss-uploadfield-item {
+    min-height: 32px;
+  }
 
-	.ss-uploadfield-item-info {
-		position: absolute;
-		top: 0;
-	}
+  .ss-uploadfield-item-info {
+    position: absolute;
+    top: 0;
+  }
 }
 
 /** --------------------------------------------
@@ -1936,93 +1935,93 @@ body.cms-dialog {
  * -------------------------------------------- */
 
 .add-to-campaign__dialog {
-	overflow: hidden;
-	padding: 12px 16px;
-	margin: 0;
-	border: 0;
-	min-height: 150px;
-	/* no max-height due to overflow: hidden */
+  overflow: hidden;
+  padding: 12px 16px;
+  margin: 0;
+  border: 0;
+  min-height: 150px;
+  /* no max-height due to overflow: hidden */
 
-	.chosen-results > li {
-		padding: $spacer-y/1.5 $spacer-x;
-	}
+  .chosen-results > li {
+    padding: $spacer-y/1.5 $spacer-x;
+  }
 
-	.disabled-result {
-		font-style: italic;
+  .disabled-result {
+    font-style: italic;
 
-		&::after {
-			font-style: normal;
-			content: "Already contains item";
-			color: $color-text-blue-link;
-			margin-left: $spacer-x;
-			float: right;
-		}
-	}
+    &::after {
+      font-style: normal;
+      content: "Already contains item";
+      color: $color-text-blue-link;
+      margin-left: $spacer-x;
+      float: right;
+    }
+  }
 
-	@keyframes add-to-campaign--slideup {
-		from {
-			bottom: -100%
-		}
-		to {
-			bottom: 0
-		}
-	}
+  @keyframes add-to-campaign--slideup {
+    from {
+      bottom: -100%
+    }
+    to {
+      bottom: 0
+    }
+  }
 
-	.add-to-campaign__response {
-		position: absolute;
-		bottom: 0;
-		height: 100%;
-		left: 0;
-		width: 100%;
-		animation:add-to-campaign--slideup 2s 1;
-		background: $white;
-		display: block;
-		z-index: 1;
-	}
+  .add-to-campaign__response {
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    width: 100%;
+    animation:add-to-campaign--slideup 2s 1;
+    background: $white;
+    display: block;
+    z-index: 1;
+  }
 
-	.response-wrapper {
-		display: table;
-		height: 100%;
-		width: 100%;
+  .response-wrapper {
+    display: table;
+    height: 100%;
+    width: 100%;
 
-		span {
-			display: table-cell;
-			text-align: center;
-			vertical-align: middle;
-			padding-bottom: $spacer-y;
+    span {
+      display: table-cell;
+      text-align: center;
+      vertical-align: middle;
+      padding-bottom: $spacer-y;
 
-			&::before {
-				font-size: 48px;
-				line-height: 40px;
-				display: block;
-				padding-bottom: $spacer-y;
-			}
-		}
-	}
+      &::before {
+        font-size: 48px;
+        line-height: 40px;
+        display: block;
+        padding-bottom: $spacer-y;
+      }
+    }
+  }
 
-	.add-to-campaign__response--good {
-		span::before {
-			content: "☺";
-			color: $brand-success;
-		}
-	}
+  .add-to-campaign__response--good {
+    span::before {
+      content: "☺";
+      color: $brand-success;
+    }
+  }
 
-	.add-to-campaign__response--error span::before {
-			/* This is a sad face emoticon. Some fonts don't carry it. @todo: replace or test in all browsers */
-			content: "☹";
-			color: $brand-danger;
-		}
-	}
+  .add-to-campaign__response--error span::before {
+      /* This is a sad face emoticon. Some fonts don't carry it. @todo: replace or test in all browsers */
+      content: "☹";
+      color: $brand-danger;
+    }
+  }
 
 
 /** --------------------------------------------
  * Search forms (used in AssetAdmin, ModelAdmin, etc)
  * -------------------------------------------- */
 .cms-search-form {
-	margin-bottom: $grid-y * 2;
+  margin-bottom: $grid-y * 2;
 
-	.filter & {
-		margin-bottom: 0;
+  .filter & {
+    margin-bottom: 0;
 }
 }
 
@@ -2031,7 +2030,7 @@ body.cms-dialog {
  * -------------------------------------------- */
 .step-label > * {
   display: block;
-	}
+  }
 
 .step-label .flyout {
   color: $brand-secondary;
@@ -2046,40 +2045,40 @@ body.cms-dialog {
 
 .cms-file-info {
 
-	// Preview might not always be available
-	.cms-file-info-preview img {
-			max-width: $grid-x * 22; // Same as ".field label"
-			max-height: $grid-x * 16; // Fitting typical info displayed (~5 rows)
-			margin-bottom: $spacer-y;
-	}
+  // Preview might not always be available
+  .cms-file-info-preview img {
+      max-width: $grid-x * 22; // Same as ".field label"
+      max-height: $grid-x * 16; // Fitting typical info displayed (~5 rows)
+      margin-bottom: $spacer-y;
+  }
 }
 
 form.small {
-	.cms-file-info-preview {
-		width: $grid-x*14;
+  .cms-file-info-preview {
+    width: $grid-x*14;
 
-		img {
-			max-width: $grid-x*14;
-		}
-	}
+    img {
+      max-width: $grid-x*14;
+    }
+  }
 
-	.cms-file-info-data {
-		// Ensure it fits beside the image preview, increased size for long url
-		max-width: 550px;
+  .cms-file-info-data {
+    // Ensure it fits beside the image preview, increased size for long url
+    max-width: 550px;
 
-		// Reduced label widths to fit everything in smaller space
-		.field {
-			padding-bottom: 0;
+    // Reduced label widths to fit everything in smaller space
+    .field {
+      padding-bottom: 0;
 
-			label {
-				width: $grid-x*14;
-			}
+      label {
+        width: $grid-x*14;
+      }
 
-			.middleColumn {
-				margin-left: $grid-x*15;
-			}
-		}
-	}
+      .middleColumn {
+        margin-left: $grid-x*15;
+      }
+    }
+  }
 }
 
 /** --------------------------------------------
@@ -2087,14 +2086,14 @@ form.small {
  * -------------------------------------------- */
 
  .members_grid {
- 	span button#action_gridfield_relationfind {
- 		display:none; //hides find button - redundant functionality
- 	}
- 	p button#action_export {
-		span.btn-icon-download-csv {
-			height:17px; //exact height of icon
-		}
- 	}
+  span button#action_gridfield_relationfind {
+    display:none; //hides find button - redundant functionality
+  }
+  p button#action_export {
+    span.btn-icon-download-csv {
+      height:17px; //exact height of icon
+    }
+  }
 }
 
 /** --------------------------------------------
@@ -2102,10 +2101,10 @@ form.small {
  * -------------------------------------------- */
 
 /*.cms-container {
-	.CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
-		// Fix pixel gap between nav tree and main page header
-		 margin-left: -1px; // Removed to close gap far right of right tabs?
-		}
+  .CMSPageEditController, .CMSPageSettingsController, .CMSPageHistoryController {
+    // Fix pixel gap between nav tree and main page header
+     margin-left: -1px; // Removed to close gap far right of right tabs?
+    }
 }*/
 
 /** --------------------------------------------
@@ -2113,52 +2112,52 @@ form.small {
  * -------------------------------------------- */
 
 .cms-container .CMSMain.CMSPageSettingsController .tab#Root_Settings {
-	.optionset li {
-		white-space: nowrap;
+  .optionset li {
+    white-space: nowrap;
 
-		label {
-			padding-left: 2px;
-	}
-	}
+    label {
+      padding-left: 2px;
+  }
+  }
 
-	.fieldgroup .fieldgroup-field {
-		width: $grid-x * 27;
-		padding-left: 0;
-	}
+  .fieldgroup .fieldgroup-field {
+    width: $grid-x * 27;
+    padding-left: 0;
+  }
 }
 
 /** --------------------------------------------
  * Buttons for FileUpload
  * -------------------------------------------- */
 .ss-uploadfield-item-edit-all .ui-button-text{
-	padding-right:0;
+  padding-right:0;
 }
 
 .toggle-details-icon {
-	@extend .icon-sprites-32x32;
-	@include sprite($sprites-32x32-menu-arrow-down);
+  @extend .icon-sprites-32x32;
+  @include sprite($sprites-32x32-menu-arrow-down);
 
-	.ss-uploadfield-item-edit-all & {
-		@extend .icon-sprites-32x32;
-		@include sprite($sprites-32x32-menu-arrow-deselected-down);
+  .ss-uploadfield-item-edit-all & {
+    @extend .icon-sprites-32x32;
+    @include sprite($sprites-32x32-menu-arrow-deselected-down);
 
-		display:inline-block;
-		width:8px;
-		height:8px;
-		padding-left:5px;
-	}
+    display:inline-block;
+    width:8px;
+    height:8px;
+    padding-left:5px;
+  }
 
-	&.opened {
-		@extend .icon-sprites-32x32;
-		@include sprite($sprites-32x32-menu-arrow-up);
+  &.opened {
+    @extend .icon-sprites-32x32;
+    @include sprite($sprites-32x32-menu-arrow-up);
 
-		.ss-uploadfield-item-edit-all &{
-			@extend .icon-sprites-32x32;
-			@include sprite($sprites-32x32-menu-arrow-deselected-up);
+    .ss-uploadfield-item-edit-all &{
+      @extend .icon-sprites-32x32;
+      @include sprite($sprites-32x32-menu-arrow-deselected-up);
 
-			display:inline-block;
-		}
-	}
+      display:inline-block;
+    }
+  }
 }
 
 /** --------------------------------------------
@@ -2167,5 +2166,5 @@ form.small {
  * -------------------------------------------- */
 .cms .btn-toolbar > .cms-preview-toggle-link,
 .cms .cms-navigator > .cms-preview-toggle-link{
-	display:none;
+  display:none;
 }
