@@ -101,14 +101,12 @@
 
 
 // Readonlys should be converted to an input
-// scss-lint:disable all
 .form__field-holder p.readonly,
 .form__field-holder input.readonly,
 .form__field-holder span.readonly,
 .readonly .form__field-holder > div {
   @extend .form-control-static;
 }
-// scss-lint:enable all
 
 
 // Radio / Checkbox
@@ -149,7 +147,6 @@ input.radio {
   }
 }
 
-
 @mixin form-responsive($breakpoint-inline, $breakpoint-inline-limit-width, $breakpoint-inline-limit-width-max) {
   @include media-breakpoint-up($breakpoint-inline) {
     .form-group {
@@ -157,7 +154,6 @@ input.radio {
 
       // Composite fields
       // TODO reduce nesting
-      // scss-lint:disable SelectorDepth
       .form__field-holder .form-group {
         .form__field-holder,
         .form__field-label {
@@ -176,7 +172,6 @@ input.radio {
           @include make-col-offset(0);
         }
       }
-      // scss-lint:enable SelectorDepth
 
       &::after {
         margin: $spacer-y $grid-gutter-width-half #{-$spacer-y};

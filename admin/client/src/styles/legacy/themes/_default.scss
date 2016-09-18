@@ -1,14 +1,13 @@
-/**
- * This file contains the default theme definitions for the admin interface.
- * Please put mostly SCSS variable definitions in here,
- * and leave the actual styling to _style.scss and auxilliary files.
- */
+// This file contains the default theme definitions for the admin interface.
+// Please put mostly SCSS variable definitions in here,
+// and leave the actual styling to _style.scss and auxilliary files.
 
-@import "../../variables.scss";
+@import "../../variables";
 
-/** -----------------------------------------------
- * Colours
- * ------------------------------------------------ */
+//--------------------------------------------------
+// Colours
+//--------------------------------------------------
+
 $color-base: #b0bec7 !default;
 $color-widget-bg: lighten($color-base, 20%) !default;
 
@@ -21,14 +20,14 @@ $color-theme-active: $color-theme-base;
 
 // CMS 4 menu
 $base-menu: #d8e4eb;
-$base-menu-bg: lighten($base-menu,5%);
+$base-menu-bg: lighten($base-menu, 5%);
 $base-menu-icon: darken($base-menu, 26%);
 
-//offical silverstripe brand color
+// offical silverstripe brand color
 $color-brand-bg: #005a93 !default;
 $color-brand: #43c7f4 !default;
 
-/* Keep as solid colours transparent borders wont work in ie */
+// Keep as solid colours transparent borders wont work in i
 $color-darker-bg: #f0f2f4 !default;
 $color-dark-bg: #142136 !default;
 $color-dark-separator: #19435c !default;
@@ -39,7 +38,7 @@ $color-light-separator: #D2D5D8 !default; // Horiontal dividers
 $color-tab: #d9d9d9 !default;
 $color-dark-grey: #7B8C91 !default;
 
-/* Only for use as shadows as they wont work in older browsers */
+// Only for use as shadows as they wont work in older browsers
 $color-shadow-light: rgba(201, 205, 206, 0.8) !default;
 $color-shadow-dark: rgba(107, 120, 123, 0.5) !default;
 $color-shadow-black: rgba(0, 0, 0, 0.6) !default;
@@ -55,7 +54,8 @@ $color-menu-background: #c6d7df !default;
 $color-menu-border: #8c99a1 !default;
 $color-panel-background: #c6d7df !default;
 
-$color-text-default: #4f5861 !default; /* new in SilverStripe 4 */
+// new in SilverStripe 4
+$color-text-default: #4f5861 !default;
 $color-text: #66727d !default;
 $color-text-light: white !default;
 $color-text-light-link: white !default;
@@ -83,30 +83,30 @@ $color-notice: #93CDE8 !default;		// blue
 $color-warning: #E9D104 !default;		// yellow
 $color-error: #e68288 !default;			// red
 $color-good: #72c34b !default;			// green
-/*$color-optional: #a1d2eb !default; */	// orange
+// $color-optional: #a1d2eb !default; // orange
 
 $color-cms-batchactions-menu-background: #f5f5f5 !default;
 $color-cms-batchactions-menu-selected-background: #fffcdc !default;
 
-/** -----------------------------------------------
- * Textures
- * ----------------------------------------------- */
+//--------------------------------------------------
+// Textures
+//--------------------------------------------------
 $tab-panel-texture-color: #f6f7f8 !default;
-$tab-panel-texture-background: $tab-panel-texture-color url(../images/textures/bg_cms_main_content.png) repeat top left !default;
+$tab-panel-texture-background: $tab-panel-texture-color url("../images/textures/bg_cms_main_content.png") repeat top left !default;
 
 
-/** -----------------------------------------------
- * Grid Units (px)
- *
- * We have a vertical rhythm that the grid is based off
- * both x (=horizontal) and y (=vertical). All internal padding and
- * margins are scaled to this and accounting for paragraphs
- * ------------------------------------------------ */
+//--------------------------------------------------
+// Grid Units (px)
+//
+// We have a vertical rhythm that the grid is based off
+// both x (=horizontal) and y (=vertical). All internal padding and
+// margins are scaled to this and accounting for paragraphs
+//--------------------------------------------------
 $grid-y: 8px !default;
 $grid-x: 8px !default;
 
-/** -----------------------------------------------
- * Application Logo (CMS Logo) Must be 24px x 24px
- * ------------------------------------------------ */
+//--------------------------------------------------
+// Application Logo (CMS Logo) Must be 24px x 24px
+//--------------------------------------------------
 $application-logo-small: url("../images/logo_small.png") !default;
 $application-logo-small-2x: url("../images/logo_small@2x.png") !default;

@@ -10,9 +10,7 @@
   }
 
   .arrow {
-    // scss-lint:disable all
     @extend .popover-arrow; // Temp uses Bootstrap 3 class name, until React Bootstrap has been updated to Bootstrap 4
-    // scss-lint:enable all
   }
 }
 
@@ -20,9 +18,7 @@
 
   // Unable to use classes within the popover, so we use elements to style
   ul {
-    // scss-lint:disable ImportantRule
     padding-left: 0 !important; // TODO remove important by removing nesting of lists
-    // scss-lint:enable ImportantRule
     list-style-type: none;
     margin-left: -#{$popover-padding} + 1px; // minus border
     margin-right: -#{$popover-padding} + 1px;

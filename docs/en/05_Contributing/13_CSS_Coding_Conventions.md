@@ -27,11 +27,14 @@ File naming and style include ordering is inspired by
 
 ## Linting
 
-We use [SCSSLint](https://github.com/brigade/scss-lint) to ensure all new SCSS
-written complies with the rules below. Please consider installing it
-in your development environment (you'll need Ruby). There's also
-quite a few [SCSSLint IDE integrations](https://github.com/brigade/scss-lint#editor-integration)
+We use [sass-lint](hhttps://github.com/sasstools/sass-lint) to ensure all new SCSS
+written complies with the rules below. It will be provided as an npm dev dependency.
+Ther eare also quite a few [sass-lint IDE integrations]https://github.com/sasstools/sass-lint#ide-integration) 
 which highlight any linting errors right in your code.
+
+We strongly recommend installing one of these into the editor of your choice, to
+avoid the frustration of failed pull requests. You can run the checks on console
+via `npm run lint`.
 
 ## File and Folder Naming
 

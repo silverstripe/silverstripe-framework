@@ -15,7 +15,7 @@
     "lock": "npm-shrinkwrap --dev",
     "test": "NODE_PATH=\"./client/src:./admin/client/src\" jest",
     "coverage": "NODE_PATH=\"./client/src:./admin/client/src\" jest --coverage",
-    "lint": "eslint client/src & eslint admin/client/src"
+    "lint": "eslint client/src & eslint admin/client/src & sass-lint -v"
   },
   "repository": {
     "type": "git",
@@ -86,6 +86,7 @@
     "react-addons-test-utils": "^15.3.1",
     "redux-logger": "^2.6.1",
     "resolve-url-loader": "^1.6.0",
+    "sass-lint": "^1.9.1",
     "sass-loader": "^4.0.0",
     "script-loader": "^0.7.0",
     "semver": "^5.1.0",

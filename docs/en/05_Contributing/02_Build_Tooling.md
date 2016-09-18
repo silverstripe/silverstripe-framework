@@ -99,7 +99,9 @@ $ npm run css -- --watch
 $ npm run lint
 ```
 
-Run `eslint` over JavaScript files reports errors.
+Run linters (`eslint` and `sass-lint`) linters to enforce
+our [JavaScript](/contributing/javascript_coding_conventions) and 
+[CSS](/contributing/css_coding_conventions) coding conventions.
 
 ### test
 
