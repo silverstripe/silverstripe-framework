@@ -341,6 +341,10 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$data = $this->getSchemaForForm($form);
 			$response = new HTTPResponse(Convert::raw2json($data));
 			$response->addHeader('Content-Type', 'application/json');
+
+			// Clear non-schema form validation / data / message
+			// since it does not need to be redirected
+			$form->clearMessage();
 			return $response;
 		}
 		return null;
