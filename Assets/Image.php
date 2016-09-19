@@ -53,6 +53,9 @@ class Image extends File implements ShortcodeHandler {
 			->FitMax($width, $height)
 			->PreviewLink()
 		);
+		if (!$previewLink) {
+			$previewLink = $this->getIcon();
+		}
 		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
 
 		$link = $this->Link();
