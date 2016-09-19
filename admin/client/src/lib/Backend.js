@@ -22,6 +22,28 @@ function checkStatus(response) {
   return ret;
 }
 
+/**
+ * Encodes the body data given to a valid value for posting
+ *
+ * References:
+ * https://github.com/github/fetch - API for fetch
+ * https://github.com/facebook/react-native/issues/2538 - IE10 bug
+ *
+ * @param data
+ * @returns {FormData|string}
+ */
+function encodeBody(data) {
+  let encodedData = null;
+  if (data instanceof FormData || typeof data === 'string') {
+    encodedData = data;
+  } else if (data && typeof data === 'object') {
+    encodedData = JSON.stringify(data);
+  } else {
+    throw new Error('Invalid body type');
+  }
+  return encodedData;
+}
+
 class Backend {
 
   constructor() {
@@ -344,9 +366,9 @@ class Backend {
     const defaultHeaders = { 'Content-Type': 'application/x-www-form-urlencoded' };
     return this.fetch(url, {
       method: 'post',
-      headers: Object.assign({}, defaultHeaders, headers),
       credentials: 'same-origin',
-      body: data,
+      body: encodeBody(data),
+      headers: Object.assign({}, defaultHeaders, headers),
     })
     .then(checkStatus);
   }
@@ -360,7 +382,12 @@ class Backend {
    * @return object - Promise
    */
   put(url, data = {}, headers = {}) {
-    return this.fetch(url, { method: 'put', credentials: 'same-origin', body: data, headers })
+    return this.fetch(url, {
+      method: 'put',
+      credentials: 'same-origin',
+      body: encodeBody(data),
+      headers,
+    })
       .then(checkStatus);
   }
 
@@ -373,7 +400,12 @@ class Backend {
    * @return object - Promise
    */
   delete(url, data = {}, headers = {}) {
-    return this.fetch(url, { method: 'delete', credentials: 'same-origin', body: data, headers })
+    return this.fetch(url, {
+      method: 'delete',
+      credentials: 'same-origin',
+      body: encodeBody(data),
+      headers,
+    })
       .then(checkStatus);
   }
 

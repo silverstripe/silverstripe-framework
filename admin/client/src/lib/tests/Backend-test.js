@@ -64,7 +64,7 @@ describe('Backend', () => {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: postData,
+          body: JSON.stringify(postData),
         }
       );
     });
@@ -87,7 +87,7 @@ describe('Backend', () => {
           method: 'put',
           credentials: 'same-origin',
           headers: {},
-          body: putData,
+          body: JSON.stringify(putData),
         }
       );
     });
@@ -110,7 +110,7 @@ describe('Backend', () => {
           method: 'delete',
           credentials: 'same-origin',
           headers: {},
-          body: deleteData,
+          body: JSON.stringify(deleteData),
         }
       );
     });
