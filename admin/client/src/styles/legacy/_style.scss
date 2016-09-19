@@ -463,9 +463,9 @@ body.cms {
   }
 }
 
-/** --------------------------------------------
- * Tabs
- * -------------------------------------------- */
+// --------------------------------------------
+// Tabs
+// -------------------------------------------- */
 
 .ui-tabs {
   padding: 0;
@@ -510,6 +510,12 @@ body.cms {
 		border: 0;
 		background: none;
 	}
+
+  .ui-tabs-nav {
+    float: right;
+    margin: $grid-x*2 0 -1px 0;
+    padding: 0;
+    border-bottom: 0;
 
     ~ .ui-tabs-panel {
       clear: both;
@@ -587,7 +593,7 @@ body.cms {
     }
 
     li.cms-tabset-icon.ui-corner-top {
-      text-indent:-9999em;
+      text-indent: -9999em;
 
       a {
         display: block;
@@ -596,24 +602,24 @@ body.cms {
         margin: 0;
       }
     }
-  }
 
-  .cms-panel-padded {
-    .ui-tabs-panel {
-      padding: 0; // Avoid double padding with parent
-
+    .cms-panel-padded {
       .ui-tabs-panel {
-        padding: $grid-x 0 0 0;
+        padding: 0; // Avoid double padding with parent
+
+        .ui-tabs-panel {
+          padding: $grid-x 0 0 0;
+        }
+      }
+
+      .btn-toolbar {
+        padding: 0; // Avoid double padding with parent
       }
     }
 
-    .btn-toolbar {
-      padding: 0; // Avoid double padding with parent
+    &.ss-tabset-tabshidden .ui-tabs-panel {
+      border-top: 0;
     }
-  }
-
-  &.ss-tabset-tabshidden .ui-tabs-panel {
-    border-top: none;
   }
 }
 
@@ -634,10 +640,11 @@ body.cms {
   li {
     margin-right: 0; // tabs are directly adjacent
     margin-top: 0;
+  }
 
-	.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
-		border-radius: 0;
-	}
+  .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
+    border-radius: 0;
+  }
 
   .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
     border-radius:0;
@@ -969,21 +976,21 @@ body.cms {
     &.selected {
       background-color: $background-darker;
       cursor: pointer;
-      }
+    }
 
-      &.disabled {
-        color: $color-text-disabled;
+    &.disabled {
+      color: $color-text-disabled;
       opacity: 0.6;
     }
 
     &.disabled:hover {
-          background: none;
-        }
+        background: none;
       }
+    }
 
   input[type="radio"] {
     position: static;
-      }
+  }
 
   .page-icon {
     display: inline-block;
@@ -994,8 +1001,8 @@ body.cms {
     + .title {
       margin-right: 6px;
       font-weight: 500;
-      }
-      }
+    }
+  }
 
   .form__field-description {
         font-style: italic;
@@ -1138,11 +1145,11 @@ body.cms {
 
     &.first-column {
       padding-left: $panel-padding-x;
-  }
+    }
     &.last-column {
       padding-right: $panel-padding-x;
     }
-}
+  }
 }
 
 /** ------------------------------------------------------------------
@@ -1361,10 +1368,10 @@ form.member-profile-form {
 
   // Same rules in .SecurityAdmin
   #Permissions .optionset li {
-        float: none;
-        width: auto;
-      }
-    }
+    float: none;
+    width: auto;
+  }
+}
 
 .memberdatetimeoptionset {
   @extend .form-inline;
@@ -1520,23 +1527,23 @@ form.member-profile-form {
   }
 
   &#cms-content-tools-CMSPageEditController .cms-panel-content-collapsed {
-      width: $cms-panel-xs;
-      display: none; // Avoids FOUC
+    width: $cms-panel-xs;
+    display: none; // Avoids FOUC
 
-      h2, h3 {
-        border-bottom: 0;
-        margin-left: $grid-y;
-        transform-origin: bottom, right;
-        transform: rotate(270deg);
-      }
-      .cms-panel-header {
-        width: 600px;
-        position: relative;
-        top: 24px;
-        right: 577px;
-        text-align: right;
-      }
+    h2, h3 {
+      border-bottom: 0;
+      margin-left: $grid-y;
+      transform-origin: bottom, right;
+      transform: rotate(270deg);
     }
+    .cms-panel-header {
+      width: 600px;
+      position: relative;
+      top: 24px;
+      right: 577px;
+      text-align: right;
+    }
+  }
 
   .cms-panel-content-collapsed {
     width: 60px;
@@ -1592,8 +1599,8 @@ form.member-profile-form {
 }
 
 .cms .ui-dialog .ss-ui-dialog.ui-dialog-content {
-    padding-top: 0px; //removes padding so that tabs are flush with header
-  }
+  padding-top: 0px; //removes padding so that tabs are flush with header
+}
 
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
@@ -1768,7 +1775,7 @@ body.cms-dialog {
       display: none;
     }
 
-    h3{
+    h3 {
       padding: $grid-y*1.5 0 $grid-y*1.5 $panel-padding-y;
       margin: 0;
       line-height: 28px;
@@ -1786,8 +1793,8 @@ body.cms-dialog {
             font-size: 18px;
             vertical-align: text-bottom;
           }
-    }
-  }
+        }
+      }
     }
   }
 
@@ -1831,7 +1838,7 @@ body.cms-dialog {
     }
 
     .cms-file-info {
-    .field{
+      .field{
         border: none;
         box-shadow: 0 0 0 rgba(0, 0, 0, 0);
       }
@@ -1839,9 +1846,9 @@ body.cms-dialog {
   }
 
   .CompositeField .text select {
-        margin: 5px 0 0 0;
-      }
-    }
+    margin: 5px 0 0 0;
+  }
+}
 
 .htmleditorfield-linkform {
   .step2 {
@@ -2006,11 +2013,11 @@ body.cms-dialog {
   }
 
   .add-to-campaign__response--error span::before {
-      /* This is a sad face emoticon. Some fonts don't carry it. @todo: replace or test in all browsers */
-      content: "☹";
-      color: $brand-danger;
-    }
+    /* This is a sad face emoticon. Some fonts don't carry it. @todo: replace or test in all browsers */
+    content: "☹";
+    color: $brand-danger;
   }
+}
 
 
 /** --------------------------------------------
@@ -2021,7 +2028,7 @@ body.cms-dialog {
 
   .filter & {
     margin-bottom: 0;
-}
+  }
 }
 
 /** --------------------------------------------
@@ -2029,7 +2036,7 @@ body.cms-dialog {
  * -------------------------------------------- */
 .step-label > * {
   display: block;
-  }
+}
 
 .step-label .flyout {
   color: $brand-secondary;
