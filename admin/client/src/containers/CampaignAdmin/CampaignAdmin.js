@@ -206,7 +206,9 @@ class CampaignAdmin extends SilverStripeComponent {
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
         <div className="panel panel--padded panel--scrollable panel--single-toolbar">
-          <FormBuilder {...formBuilderProps} />
+          <div className="form--inline">
+            <FormBuilder {...formBuilderProps} />
+          </div>
         </div>
       </div>
     );
