@@ -629,7 +629,7 @@ body.cms {
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
 	margin-top: -$spacer-xs; // Same as toolbar padding
 	float: none; // parent container is already right floated
-	margin-bottom: 0 !important; // Override JQueryUI (should normally be -1px)
+	margin-bottom: 0;
 
   li {
     margin-right: 0; // tabs are directly adjacent

@@ -1,6 +1,6 @@
 // Tabs, styles built on top of Bootstrap 4 tab functionality
 .nav-tabs {
-  margin-bottom: $panel-padding-y !important; // Override JQueryUI
+  margin-bottom: $panel-padding-y;
 
   //Spacing between items
   .nav-item+.nav-item {
