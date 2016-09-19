@@ -1,24 +1,24 @@
- /**
- * This file defines most styles of the CMS: Colors, fonts, backgrounds,
- * alignments, dimensions.
- *
- * Use SCSS variable definitions in screen.css to avoid repeating styles
- * like background colours or padding dimensions. See themes/_default.scss
- * to get started.
- *
- * To avoid this file getting too large and complicated, it is encouraged to
- * create new SCSS files for larger components like the CMS menu or tree
- * (see _tree.scss and _menu.scss).
- */
+//
+// This file defines most styles of the CMS: Colors, fonts, backgrounds,
+// alignments, dimensions.
+//
+// Use SCSS variable definitions in screen.css to avoid repeating styles
+// like background colours or padding dimensions. See themes/_default.scss
+// to get started.
+//
+// To avoid this file getting too large and complicated, it is encouraged to
+// create new SCSS files for larger components like the CMS menu or tree
+// (see _tree.scss and _menu.scss).
 
-/** ----------------------------------------------------
- * Core Styles.
- * ---------------------------------------------------- */
+
+// ----------------------------------------------------
+// Core Styles.
+// ---------------------------------------------------- */
 
 html, body {
   width: 100%;
   height: 100%;
-  /* Removes RHS whitespace on iPad */
+  // Removes RHS whitespace on iPad
   overflow-x: hidden;
 }
 
@@ -27,10 +27,9 @@ body.cms {
 }
 
 
-
-/** --------------------------------------------
- * Helpers
- * -------------------------------------------- */
+// --------------------------------------------
+// Helpers
+// --------------------------------------------
 
 .hide {
   display: none;
@@ -41,10 +40,9 @@ body.cms {
 }
 
 
-
-/** --------------------------------------------
- * Panels Styles
- * -------------------------------------------- */
+// --------------------------------------------
+// Panels Styles
+// --------------------------------------------
 .cms-container {
   height: 100%;
   background: $tab-panel-texture-color;
@@ -54,11 +52,9 @@ body.cms {
 .cms-menu,
 .cms-content,
 .cms-content-header,
-/**
- * DEPRECATED:
- * .cms-content-tools will be removed in 4.0
- * Use .cms-content-filters instead (TODO rename to BEM).
- */
+// DEPRECATED:
+// .cms-content-tools will be removed in 4.0
+// Use .cms-content-filters instead (TODO rename to BEM).
 .cms-content-tools,
 .cms-content-fields,
 .cms-preview,
@@ -123,7 +119,7 @@ body.cms {
 
   // Reset to default styles
   .ss-ui-button {
-    line-height: $grid-x*3;
+    line-height: $grid-x * 3;
 
     .ui-button-text {
       line-height: 1.4;
@@ -633,21 +629,19 @@ body.cms {
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
 	margin-top: -$spacer-xs; // Same as toolbar padding
 	float: none; // parent container is already right floated
-	// scss-lint:disable ImportantRule
 	margin-bottom: 0 !important; // Override JQueryUI (should normally be -1px)
-	// scss-lint:enable ImportantRule
 
   li {
     margin-right: 0; // tabs are directly adjacent
     margin-top: 0;
   }
 
-  .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
+  .ui-corner-all,
+  .ui-corner-top,
+  .ui-corner-right,
+  .ui-corner-tr,
+  .ui-corner-tl {
     border-radius: 0;
-  }
-
-  .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
-    border-radius:0;
   }
 
   .ui-state-default {
@@ -671,8 +665,8 @@ body.cms {
 }
 
 .cms-content-header-tabs {
-	float: right;
-	margin-top: $spacer-xs; // Same as toolbar padding
+  float: right;
+  margin-top: $spacer-xs; // Same as toolbar padding
 
   &.icon-button-group-tabs {
     margin-top: 12px;
@@ -681,10 +675,10 @@ body.cms {
 }
 
 .panel--padded .ui-tabs-nav {
-	float: none;
-	padding: 0;
-	border-bottom: 1px solid $color-button-generic-border;
-	margin-top: -$panel-padding-y;
+  float: none;
+  padding: 0;
+  border-bottom: 1px solid $color-button-generic-border;
+  margin-top: -$panel-padding-y;
 
   li {
     // Align tab content with gutter (supports multiple rows of tabs)
@@ -700,9 +694,9 @@ body.cms {
   }
 }
 
-/** -------------------------------------------------------
- * Loading Interface
- * ------------------------------------------------------- */
+// -------------------------------------------------------
+// Loading Interface
+// ------------------------------------------------------- */
 
 .cms-content-loading-overlay {
   position: absolute; // z-index doesn't apply properly without that
@@ -724,9 +718,9 @@ body.cms {
   background: url("../../images/spinner.gif") no-repeat 50% 50%;
 }
 
-/** -----------------------------------------------
- * Loading Screen
- * ------------------------------------------------ */
+// -----------------------------------------------
+// Loading Screen
+// ------------------------------------------------ */
 .ss-loading-screen {
   width: 100%;
   height: 100%;
