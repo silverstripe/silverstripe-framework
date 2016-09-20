@@ -83,7 +83,7 @@
     "node-sass": "^3.8.0",
     "npm-shrinkwrap": "^6.0.1",
     "postcss-loader": "^0.10.1",
-    "react-addons-test-utils": "^15.3.1",
+    "react-addons-test-utils": "^15.3.2",
     "redux-logger": "^2.6.1",
     "resolve-url-loader": "^1.6.0",
     "sass-lint": "^1.9.1",
