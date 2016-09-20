@@ -122,4 +122,13 @@ class DBHTMLVarchar extends DBVarchar {
 		return new TextField($this->name, $title);
 	}
 
+	public function getSchemaValue()
+	{
+		// Form schema format as HTML
+		$value = $this->RAW();
+		if($value) {
+			return [ 'html' => $this->RAW() ];
+		}
+		return null;
+	}
 }
