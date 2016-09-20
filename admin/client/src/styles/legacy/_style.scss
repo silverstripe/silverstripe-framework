@@ -1392,6 +1392,19 @@ form.member-profile-form {
   }
 }
 
+// Remove border after import form
+// Could be replaced with .form--no-dividers
+.import-form .form-group {
+  padding-bottom: 0;
+
+  &::after {
+    visibility: hidden;
+    content: "";
+    display: none;
+  }
+}
+
+
 .cms {
   .cms-content {
     border-radius: 0;
