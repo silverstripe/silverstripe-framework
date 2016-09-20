@@ -85,23 +85,36 @@
 }
 
 
+// Panels, basic holder for CMS content areas
+// Use .container-fluid if you want only padding left and right
+.panel {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.panel--padded {
+  padding: $panel-padding-y $panel-padding-x;
+}
+
 // Scrolling panels
-.panel-scrollable {
+.panel--scrollable {
   overflow-y: auto;
   height: 100%;
 }
 
-.panel-scrollable--single-toolbar {
+// Panel height adjustments for scrolling
+.panel--single-toolbar {
   height: calc(100% - #{$toolbar-total-height});
 }
 
-.panel-scrollable--double-toolbar {
+.panel--double-toolbar {
   height: calc(100% - #{$toolbar-total-height * 2});
 }
 
-.panel-scrollable--triple-toolbar {
+.panel--triple-toolbar {
   height: calc(100% - #{$toolbar-total-height * 3});
 }
+
 
 
 // Component helpers

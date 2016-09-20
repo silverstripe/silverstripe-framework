@@ -4,7 +4,7 @@
 		<% include SilverStripe\\Admin\\LeftAndMain_MenuStatus %>
 	</div>
 
-	<div class="panel-scrollable panel-scrollable--triple-toolbar cms-panel-content">
+	<div class="panel panel--scrollable panel--triple-toolbar cms-panel-content">
 		<% include SilverStripe\\Admin\\LeftAndMain_MenuList %>
 	</div>
 

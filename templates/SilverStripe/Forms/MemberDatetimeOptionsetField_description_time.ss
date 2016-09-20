@@ -1,7 +1,7 @@
 <a href="#" class="toggle">
 	<% _t('MemberDatetimeOptionsetField.Toggle', 'Show formatting help') %>
 </a>
-<ul class="toggle-content">
+<ul class="toggle-content list-unstyled">
 	<li>HH = <% _t('MemberDatetimeOptionsetField.TWODIGITHOUR24', 'Two digits of hour, 24 hour format (00 through 23)',
 			40, 'Help text describing what "hh" means in ISO date formatting') %></li>
 	<li>H = <% _t('MemberDatetimeOptionsetField.HOURNOLEADING24', 'Hour without leading zero, 24 hour format',

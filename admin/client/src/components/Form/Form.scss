@@ -22,15 +22,13 @@
 
 // Remove underline and column offset
 // Used on places like tree batch actions
-.form--no-dividers {
-  .form-group {
-    padding-bottom: 0;
+.form--no-dividers .form-group {
+  padding-bottom: 0;
 
-    &::after {
-      visibility: hidden;
-      content: "";
-      display: none;
-    }
+  &::after {
+    visibility: hidden;
+    content: "";
+    display: none;
   }
 }
 
@@ -45,6 +43,15 @@
       margin: 0;
       visibility: hidden;
     }
+  }
+
+  // Reset .file bootstrap overrides to default styles
+  // TODO rename .file to a different class name as it conflicts with default bootstrap
+  &.file {
+    height: auto;
+    display: block;
+    cursor: auto;
+    position: static;
   }
 
   // TODO Fix for when the .form-group--no-label class is used but there is actually a label

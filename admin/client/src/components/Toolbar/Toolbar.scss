@@ -38,7 +38,10 @@
 
 // Secondary content actions eg. Add page button
 .toolbar--content {
-  padding: $spacer-y * .625 $spacer-x * .625;
+  margin-top: -$panel-padding-y;
+  margin-left: -$panel-padding-x;
+  margin-right: -$panel-padding-x;
+  padding: $spacer-xs;
 
   @include media-breakpoint-down(md) {
 
@@ -63,8 +66,8 @@
 
 // Primary content actions
 .toolbar--south {
-  padding-top: $spacer-y * .625;
-  padding-bottom: $spacer-y * .625;
+  padding-top: $spacer-xs;
+  padding-bottom: $spacer-xs;
   position: absolute;
   bottom: 0;
   border-top: 1px solid $border-color;
@@ -74,7 +77,7 @@
 .toolbar__back-button,
 .cms-backlink .toolbar__back-button { // TEMP: Needed for anchor buttons to override legacy styles
   float: left;
-  margin: $spacer-y * .625 $spacer-x / 2 $spacer-y * .625 #{-$spacer-x * .625};
+  margin: $spacer-xs $spacer-x / 2 $spacer-xs #{-$spacer-xs};
   padding-left: $spacer-x / 4;
   padding-right: $spacer-x / 4;
   border: 0;

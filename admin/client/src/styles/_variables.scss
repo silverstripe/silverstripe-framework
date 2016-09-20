@@ -73,8 +73,12 @@ $enable-transitions: true;
 // variables. Mostly focused on spacing.
 
 $spacer: 1.2308rem; // $font-size-root (13px) * $spacer = 16px
+$spacer-sm: $spacer * .75; // 12px
+$spacer-xs: $spacer * .625; // 10px
+
 $spacer-x: $spacer;
 $spacer-y: $spacer;
+
 
 $spacers: (
   0: (
@@ -175,8 +179,8 @@ $font-size-root: 13px;
 $font-size-base: 1rem;
 $font-size-lg: 1.23rem; // 16px
 $font-size-sm: .923rem; // 12px
-$font-size-xs: .847rem; // 11px
-$font-size-xxs: .77rem; // 10px
+$font-size-xs: .846rem; // 11px
+$font-size-xxs: .769rem; // 10px
 
 $font-size-h1: 1.693rem; // 22px
 $font-size-h2: 18px; // 2rem;
@@ -250,7 +254,7 @@ $caret-width-lg: $caret-width;
 // Customizes the `.table` component with basic values, each used across all table variations.
 
 $table-cell-padding: $spacer;
-$table-sm-cell-padding: $spacer * .75;
+$table-sm-cell-padding: $spacer-sm;
 
 $table-bg: transparent;
 $table-bg-accent: $white; // lighten(#f0f4f7, 1%) #F0F4F7 #e9f0f4
@@ -268,7 +272,7 @@ $table-border-color: $gray-lighter;
 // For each of Bootstrap's buttons, define text, background and border color.
 
 $btn-padding-x: .7692rem; // 10px
-$btn-padding-y: .3846rem; // 5px
+$btn-padding-y: .4615rem; // 6px
 $btn-font-weight: normal;
 
 $btn-primary-color: $white;

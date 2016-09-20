@@ -1,6 +1,6 @@
 // Tabs, styles built on top of Bootstrap 4 tab functionality
 .nav-tabs {
-  margin-bottom: $grid-gutter-width-half; // TODO Change to $panel-padding-y; variable when merged
+  margin-bottom: $panel-padding-y;
 
   //Spacing between items
   .nav-item+.nav-item {

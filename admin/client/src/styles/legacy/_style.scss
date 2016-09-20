@@ -1,24 +1,24 @@
- /**
- * This file defines most styles of the CMS: Colors, fonts, backgrounds,
- * alignments, dimensions.
- *
- * Use SCSS variable definitions in screen.css to avoid repeating styles
- * like background colours or padding dimensions. See themes/_default.scss
- * to get started.
- *
- * To avoid this file getting too large and complicated, it is encouraged to
- * create new SCSS files for larger components like the CMS menu or tree
- * (see _tree.scss and _menu.scss).
- */
+//
+// This file defines most styles of the CMS: Colors, fonts, backgrounds,
+// alignments, dimensions.
+//
+// Use SCSS variable definitions in screen.css to avoid repeating styles
+// like background colours or padding dimensions. See themes/_default.scss
+// to get started.
+//
+// To avoid this file getting too large and complicated, it is encouraged to
+// create new SCSS files for larger components like the CMS menu or tree
+// (see _tree.scss and _menu.scss).
 
-/** ----------------------------------------------------
- * Core Styles.
- * ---------------------------------------------------- */
+
+// ----------------------------------------------------
+// Core Styles.
+// ---------------------------------------------------- */
 
 html, body {
   width: 100%;
   height: 100%;
-  /* Removes RHS whitespace on iPad */
+  // Removes RHS whitespace on iPad
   overflow-x: hidden;
 }
 
@@ -27,10 +27,9 @@ body.cms {
 }
 
 
-
-/** --------------------------------------------
- * Helpers
- * -------------------------------------------- */
+// --------------------------------------------
+// Helpers
+// --------------------------------------------
 
 .hide {
   display: none;
@@ -41,10 +40,9 @@ body.cms {
 }
 
 
-
-/** --------------------------------------------
- * Panels Styles
- * -------------------------------------------- */
+// --------------------------------------------
+// Panels Styles
+// --------------------------------------------
 .cms-container {
   height: 100%;
   background: $tab-panel-texture-color;
@@ -54,11 +52,9 @@ body.cms {
 .cms-menu,
 .cms-content,
 .cms-content-header,
-/**
- * DEPRECATED:
- * .cms-content-tools will be removed in 4.0
- * Use .cms-content-filters instead (TODO rename to BEM).
- */
+// DEPRECATED:
+// .cms-content-tools will be removed in 4.0
+// Use .cms-content-filters instead (TODO rename to BEM).
 .cms-content-tools,
 .cms-content-fields,
 .cms-preview,
@@ -123,7 +119,7 @@ body.cms {
 
   // Reset to default styles
   .ss-ui-button {
-    line-height: $grid-x*3;
+    line-height: $grid-x * 3;
 
     .ui-button-text {
       line-height: 1.4;
@@ -154,19 +150,19 @@ body.cms {
 
 // We have a faux three column layout when displaying Page content in the CMS.
 .has-panel {
-  .cms-tree-view-sidebar,
-  .cms-versions-form {
-    padding: $panel-padding-y $panel-padding-x;
-  }
 
-  .cms-content-header.north {
-    &.collapsed {
-      .cms-content-header-info {
-        width: 60px;
-        text-align: center;
-        padding-left: 8px;
-        padding-right: 8px;
-      }
+	.cms-versions-form {
+		padding: $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half $grid-gutter-width-half;
+	}
+
+	.cms-content-header.north {
+		&.collapsed {
+			.cms-content-header-info {
+				width: 60px;
+				text-align: center;
+				padding-left: 8px;
+				padding-right: 8px;
+			}
 
       .view-controls,
       .section-label {
@@ -210,10 +206,10 @@ body.cms {
     font-weight: normal;
   }
 
-  .breadcrumbs-wrapper {
-    float: left;
-    padding-top: $grid-y - 1;
-  }
+	.breadcrumbs-wrapper {
+		float: left;
+		padding-top: $spacer-xs / 2;
+	}
 
   .view-controls {
     float: right;
@@ -261,20 +257,24 @@ body.cms {
  * CMS Breadcrumbs
  * ----------------------------------------------------------------- */
 .breadcrumbs-wrapper {
-  .crumb,
-  .sep {
-    font-size: .8em;
-    line-height: 1.2em;
-    font-weight: normal;
-  }
+	.crumb,
+	.sep {
+		font-size: $font-size-xs;
+		line-height: 18px;
+		font-weight: normal;
+	}
 
-  .crumb {
-    &.last {
-      display: block;
-      padding: 8px 0;
-      font-size: 1.2em;
-    }
-  }
+	.crumb {
+		&.last {
+			display: block;
+			padding: 10px 0;
+			font-size: 1.2em;
+		}
+		.sep + {
+			padding-top: 8px;
+			padding-bottom: 8px;
+		}
+	}
 
   .sep {
     + .crumb.last {
@@ -298,20 +298,25 @@ body.cms {
  * Icon buttons styles should always take presedence over Tab styles.
  * Tabs should be refactored to use weaker selectors.
  * ----------------------------------------------------------------- */
+
+.ui-button .ui-button-text {
+	line-height: $line-height;
+}
+
 .cms {
-  a.icon-button,
-  button.ss-ui-button.icon-button {
-    vertical-align: middle;
-    margin: 0 2px 0 0;
-    padding: 5px 8px;
-    font-size: 14px;
-    text-indent: 0;
-    text-shadow: none;
-    line-height: 1em;
-    color: $color-text;
-    background-color: transparent;
-    background-image: none;
-    border: 0;
+	a.icon-button,
+	button.ss-ui-button.icon-button {
+		vertical-align: middle;
+		margin: 0 2px 0 0;
+		padding: 6px 8px;
+		font-size: 14px;
+		text-indent: 0;
+		text-shadow: none;
+		line-height: 1em;
+		color: $color-text;
+		background-color: transparent;
+		background-image: none;
+		border: 0;
 
     &:hover,
     &:active,
@@ -454,45 +459,53 @@ body.cms {
   }
 }
 
-/** --------------------------------------------
- * Tabs
- * -------------------------------------------- */
+// --------------------------------------------
+// Tabs
+// -------------------------------------------- */
 
 .ui-tabs {
   padding: 0;
   background: none;
 
-  .ui-tabs {
-    position: static;
-  }
-
-  .ui-tabs-panel {
-    padding: 0 $panel-padding-x;
-    background: transparent; // default it's white
-    border: 0; // suppress default borders
+	.ui-tabs-panel {
+		padding: 0;
+		background: transparent; // default it's white
+		border: 0; // suppress default borders
 
     &.cms-edit-form {
       padding: 0;
     }
 
-    .ui-tabs .ui-tabs-nav {
-      margin-left: $panel-padding-x;
-      margin-right: $panel-padding-x;
-      float: none;
-      border-bottom: 1px solid $nav-tabs-link-hover-border-color;
-      margin-bottom: $spacer-y;
-    }
-  }
+		.ui-tabs .ui-tabs-nav {
+			float: none;
+			border-bottom: 1px solid $nav-tabs-link-hover-border-color;
+			margin-bottom: $panel-padding-y;
+		}
+	}
 
-  .ui-tabs-panel .toolbar--content {
-    margin-left: -20px;
-    margin-right: -20px;
-  }
+	.ui-tabs {
+		position: static;
+	}
 
-  .ui-widget-header {
-    border: 0;
-    background: none;
-  }
+  .ui-tabs-panel {
+		.toolbar--content {
+			margin-left: -20px;
+			margin-right: -20px;
+		}
+
+		> .grid-field:first-child > .toolbar--content {
+			margin-top: -$grid-gutter-width-half;
+		}
+
+		.alert + .grid-field {
+			margin-top: $panel-padding-y;
+		}
+	}
+
+	.ui-widget-header {
+		border: 0;
+		background: none;
+	}
 
   .ui-tabs-nav {
     float: right;
@@ -576,7 +589,7 @@ body.cms {
     }
 
     li.cms-tabset-icon.ui-corner-top {
-      text-indent:-9999em;
+      text-indent: -9999em;
 
       a {
         display: block;
@@ -585,49 +598,50 @@ body.cms {
         margin: 0;
       }
     }
-  }
 
-  .cms-panel-padded {
-    .ui-tabs-panel {
-      padding: 0; // Avoid double padding with parent
-
+    .cms-panel-padded {
       .ui-tabs-panel {
-        padding: $grid-x 0 0 0;
+        padding: 0; // Avoid double padding with parent
+
+        .ui-tabs-panel {
+          padding: $grid-x 0 0 0;
+        }
+      }
+
+      .btn-toolbar {
+        padding: 0; // Avoid double padding with parent
       }
     }
 
-    .btn-toolbar {
-      padding: 0; // Avoid double padding with parent
+    &.ss-tabset-tabshidden .ui-tabs-panel {
+      border-top: 0;
     }
-  }
-
-  &.ss-tabset-tabshidden .ui-tabs-panel {
-    border-top: none;
   }
 }
 
 
 /**
- * Primary styles which sit on top of screen, with different tab colors.
+ * Primary styles which sit on top right of screen.
  * TODO Only use one "primary" selector and fix HTMLEditorField TabSet addExtraClass()
  */
 .ui-tabs.cms-tabset-primary .ui-tabs-nav,
 .ui-tabs .ui-tabs-nav.cms-tabset-nav-primary,
 .ui-tabs .cms-content-header-tabs .ui-tabs-nav {
-  margin-top: -$spacer-y * .625; // Same as toolbar padding
-  float: none; // parent container is already right floated
+	margin-top: -$spacer-xs; // Same as toolbar padding
+	float: none; // parent container is already right floated
+	margin-bottom: 0;
 
   li {
     margin-right: 0; // tabs are directly adjacent
     margin-top: 0;
-
-    a {
-      margin: 0;
-    }
   }
 
-  .ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr, .ui-corner-tl {
-    border-radius:0;
+  .ui-corner-all,
+  .ui-corner-top,
+  .ui-corner-right,
+  .ui-corner-tr,
+  .ui-corner-tl {
+    border-radius: 0;
   }
 
   .ui-state-default {
@@ -652,7 +666,7 @@ body.cms {
 
 .cms-content-header-tabs {
   float: right;
-  margin-top: $spacer-y * .625; // Same as toolbar padding
+  margin-top: $spacer-xs; // Same as toolbar padding
 
   &.icon-button-group-tabs {
     margin-top: 12px;
@@ -660,11 +674,11 @@ body.cms {
   }
 }
 
-.cms-content-fields .ui-tabs-nav {
+.panel--padded .ui-tabs-nav {
   float: none;
   padding: 0;
   border-bottom: 1px solid $color-button-generic-border;
-  margin: 0 $grid-gutter-width-half;
+  margin-top: -$panel-padding-y;
 
   li {
     // Align tab content with gutter (supports multiple rows of tabs)
@@ -680,9 +694,9 @@ body.cms {
   }
 }
 
-/** -------------------------------------------------------
- * Loading Interface
- * ------------------------------------------------------- */
+// -------------------------------------------------------
+// Loading Interface
+// ------------------------------------------------------- */
 
 .cms-content-loading-overlay {
   position: absolute; // z-index doesn't apply properly without that
@@ -704,9 +718,9 @@ body.cms {
   background: url("../../images/spinner.gif") no-repeat 50% 50%;
 }
 
-/** -----------------------------------------------
- * Loading Screen
- * ------------------------------------------------ */
+// -----------------------------------------------
+// Loading Screen
+// ------------------------------------------------ */
 .ss-loading-screen {
   width: 100%;
   height: 100%;
@@ -761,14 +775,14 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-actions, .cms-preview-controls {
-  margin: 0;
-  z-index: 999;
-  border-top: 1px solid $border-color;
-  height: $toolbar-total-height;
-  min-height: $toolbar-total-height;
-  max-height: $toolbar-total-height;
-  background-color: $tab-panel-texture-color;
-  padding: $spacer-y * .625 0;
+	margin: 0;
+	z-index: 999;
+	border-top: 1px solid $border-color;
+	height: $toolbar-total-height;
+	min-height: $toolbar-total-height;
+	max-height: $toolbar-total-height;
+	background-color: $tab-panel-texture-color;
+  padding: $spacer-xs 0;
 
   &.south .btn-toolbar {
     margin-top: 0;
@@ -813,22 +827,26 @@ body.cms {
   text-shadow: none;
   border-radius: 3px;
 
-  &.notice {
-    background-color: lighten($color-notice,22%); // Blue
-    border-color: $color-notice;
-  }
-  &.warning {                     // Yellow
-    background-color: lighten($color-warning,47%);
-    border-color: $color-warning;
-  }
-  &.error, &.bad, &.required, &.validation {      // Red
-    background-color: lighten($color-error,24%);
-    border-color: $color-error;
-  }
-  &.good {                      // Green
-    background-color: lighten($color-good,40%);
-    border-color: $color-good;
-  }
+	.panel--padded > & {
+		margin-bottom: $grid-gutter-width-half;
+	}
+
+	&.notice {
+		background-color: lighten($color-notice,22%);	// Blue
+		border-color: $color-notice;
+	}
+	&.warning {											// Yellow
+		background-color: lighten($color-warning,47%);
+		border-color: $color-warning;
+	}
+	&.error, &.bad, &.required, &.validation {			// Red
+		background-color: lighten($color-error,24%);
+		border-color: $color-error;
+	}
+	&.good {											// Green
+		background-color: lighten($color-good,40%);
+		border-color: $color-good;
+	}
 
   p {
     margin: 0;
@@ -836,8 +854,8 @@ body.cms {
 }
 
 .cms-edit-form .ui-tabs-panel .message {
-      margin: $grid-x*2 0; // gets padding from tab panel
-    }
+	margin: 0 0 $grid-x*2; // gets padding from tab panel
+}
 
 .notice-item {
   border-radius: 3px;
@@ -945,28 +963,28 @@ body.cms {
     margin-left: -$panel-padding-x;
     margin-right: -$panel-padding-x;
     margin-bottom: 0;
-    padding: #{$spacer-y * .625} $panel-padding-x #{$spacer-y * .75};
+    padding: $spacer-xs $panel-padding-x #{$spacer-y * .75};
     border-radius: $border-radius;
 
     &:hover,
     &.selected {
       background-color: $background-darker;
       cursor: pointer;
-      }
+    }
 
-      &.disabled {
-        color: $color-text-disabled;
+    &.disabled {
+      color: $color-text-disabled;
       opacity: 0.6;
     }
 
     &.disabled:hover {
-          background: none;
-        }
+        background: none;
       }
+    }
 
   input[type="radio"] {
     position: static;
-      }
+  }
 
   .page-icon {
     display: inline-block;
@@ -977,8 +995,8 @@ body.cms {
     + .title {
       margin-right: 6px;
       font-weight: 500;
-      }
-      }
+    }
+  }
 
   .form__field-description {
         font-style: italic;
@@ -990,28 +1008,24 @@ body.cms {
  * -------------------------------------------- */
 
 .cms-content-toolbar {
-  min-height: 29px;
-  display: block;
-  margin: $spacer-y * .625 0 0;
-  padding-bottom: 0;
-  @include legacy-pie-clearfix();
-  border-bottom: 0;
-  box-shadow: none;
 
-  .cms-tree-view-modes {
-    float:right;
-    padding-top:$grid-y - 3;
-    * {
-      display: inline-block;
-      label {
-        color:$color-text-blue-link;
-      }
-    }
-  }
+	.cms-tree-view-modes {
+		float: right;
+		padding-top: $grid-y - 3;
 
-  .cms-actions-tools-row {
-    clear: both;
-  }
+		* {
+			display: inline-block;
+
+			label {
+				color: $color-text-blue-link;
+			}
+		}
+	}
+
+	.cms-actions-tools-row {
+		clear: both;
+		margin-top: $spacer-xs;
+	}
 
   .tool-action {
     display: none;
@@ -1031,13 +1045,13 @@ body.cms {
  * panel
  */
 .cms-content-tools {
-  background: $tab-panel-texture-color;
-  width: $grid-x * 36;
-  z-index: 70;
-  box-shadow: 1px 0 0 0 $border-color-dark;
-  z-index: 1000;
-  float: left;
-  position: relative;
+	background: $tab-panel-texture-color;
+	width: $cms-panel-sm;
+	z-index: 70;
+	box-shadow: 1px 0 0 0 $border-color-dark;
+	z-index: 1000;
+	float: left;
+	position: relative;
 
   .cms-panel-header {
     clear: both;
@@ -1125,11 +1139,11 @@ body.cms {
 
     &.first-column {
       padding-left: $panel-padding-x;
-  }
+    }
     &.last-column {
       padding-right: $panel-padding-x;
     }
-}
+  }
 }
 
 /** ------------------------------------------------------------------
@@ -1268,7 +1282,6 @@ body.cms {
  * -------------------------------------------- */
 
 form.member-profile-form {
-  padding: 0 $grid-x*2 0 0;
 
   #Root_Permissions {
     clear:both;
@@ -1349,10 +1362,10 @@ form.member-profile-form {
 
   // Same rules in .SecurityAdmin
   #Permissions .optionset li {
-        float: none;
-        width: auto;
-      }
-    }
+    float: none;
+    width: auto;
+  }
+}
 
 .memberdatetimeoptionset {
   @extend .form-inline;
@@ -1378,6 +1391,19 @@ form.member-profile-form {
     vertical-align: top;
   }
 }
+
+// Remove border after import form
+// Could be replaced with .form--no-dividers
+.import-form .form-group {
+  padding-bottom: 0;
+
+  &::after {
+    visibility: hidden;
+    content: "";
+    display: none;
+  }
+}
+
 
 .cms {
   .cms-content {
@@ -1463,17 +1489,17 @@ form.member-profile-form {
 .cms-panel {
   .cms-panel-toggle {
 
-    .toggle-collapse,
-    .toggle-expand {
-      display: block;
-      position: absolute;
-      text-align: right;
-      padding: 14px 0;
-      width: 100%;
-      text-decoration: none;
-      line-height: 20px;
-      height: 52px;
-      margin: -#{$spacer-y * .625} #{0 - $panel-padding-x};
+		.toggle-collapse,
+		.toggle-expand {
+			display: block;
+			position: absolute;
+			text-align: right;
+			padding: 14px 0;
+			width: 100%;
+			text-decoration: none;
+			line-height: 20px;
+			height: 52px;
+			margin: -#{$spacer-xs} #{0 - $panel-padding-x};
 
       span {
         display: inline-block;
@@ -1508,23 +1534,23 @@ form.member-profile-form {
   }
 
   &#cms-content-tools-CMSPageEditController .cms-panel-content-collapsed {
-      width: $cms-panel-xs;
-      display: none; // Avoids FOUC
+    width: $cms-panel-xs;
+    display: none; // Avoids FOUC
 
-      h2, h3 {
-        border-bottom: 0;
-        margin-left: $grid-y;
-        transform-origin: bottom, right;
-        transform: rotate(270deg);
-      }
-      .cms-panel-header {
-        width: 600px;
-        position: relative;
-        top: 24px;
-        right: 577px;
-        text-align: right;
-      }
+    h2, h3 {
+      border-bottom: 0;
+      margin-left: $grid-y;
+      transform-origin: bottom, right;
+      transform: rotate(270deg);
     }
+    .cms-panel-header {
+      width: 600px;
+      position: relative;
+      top: 24px;
+      right: 577px;
+      text-align: right;
+    }
+  }
 
   .cms-panel-content-collapsed {
     width: 60px;
@@ -1552,22 +1578,9 @@ form.member-profile-form {
   }
 }
 
-.cms .cms-panel-padded {
-    &.ReportAdmin {
-      .ss-gridfield-buttonrow {
-        margin-left: -20px;
-        margin-right: -20px;
-      }
-
-      > fieldset {
-          padding: 0 $panel-padding-x;
-      }
-    }
-
-    .cms-content-view {
-      padding: 0 $panel-padding-x $grid-y*1.5;
-    }
-  }
+.cms .cms-panel-padded .cms-content-view {
+	padding: $panel-padding-y $panel-padding-x;
+}
 
 .CMSPageAddController .cms-panel-padded {
   padding: $panel-padding-y $panel-padding-x;
@@ -1593,8 +1606,8 @@ form.member-profile-form {
 }
 
 .cms .ui-dialog .ss-ui-dialog.ui-dialog-content {
-    padding-top: 0px; //removes padding so that tabs are flush with header
-  }
+  padding-top: 0px; //removes padding so that tabs are flush with header
+}
 
 // Elements with this class can either frame inline markup or an iframe,
 // most styles should be applied to .cms-dialog instead (which declares the content in the frame)
@@ -1769,7 +1782,7 @@ body.cms-dialog {
       display: none;
     }
 
-    h3{
+    h3 {
       padding: $grid-y*1.5 0 $grid-y*1.5 $panel-padding-y;
       margin: 0;
       line-height: 28px;
@@ -1787,8 +1800,8 @@ body.cms-dialog {
             font-size: 18px;
             vertical-align: text-bottom;
           }
-    }
-  }
+        }
+      }
     }
   }
 
@@ -1832,7 +1845,7 @@ body.cms-dialog {
     }
 
     .cms-file-info {
-    .field{
+      .field{
         border: none;
         box-shadow: 0 0 0 rgba(0, 0, 0, 0);
       }
@@ -1840,9 +1853,9 @@ body.cms-dialog {
   }
 
   .CompositeField .text select {
-        margin: 5px 0 0 0;
-      }
-    }
+    margin: 5px 0 0 0;
+  }
+}
 
 .htmleditorfield-linkform {
   .step2 {
@@ -2007,11 +2020,11 @@ body.cms-dialog {
   }
 
   .add-to-campaign__response--error span::before {
-      /* This is a sad face emoticon. Some fonts don't carry it. @todo: replace or test in all browsers */
-      content: "☹";
-      color: $brand-danger;
-    }
+    /* This is a sad face emoticon. Some fonts don't carry it. @todo: replace or test in all browsers */
+    content: "☹";
+    color: $brand-danger;
   }
+}
 
 
 /** --------------------------------------------
@@ -2022,7 +2035,7 @@ body.cms-dialog {
 
   .filter & {
     margin-bottom: 0;
-}
+  }
 }
 
 /** --------------------------------------------
@@ -2030,7 +2043,7 @@ body.cms-dialog {
  * -------------------------------------------- */
 .step-label > * {
   display: block;
-  }
+}
 
 .step-label .flyout {
   color: $brand-secondary;
