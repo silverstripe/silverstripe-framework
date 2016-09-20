@@ -4,11 +4,73 @@ import SilverStripeComponent from 'lib/SilverStripeComponent';
 function fieldHolder(Field) {
   class FieldHolder extends SilverStripeComponent {
 
-    render() {
+    /**
+     * Safely cast string to container element. Supports custom HTML values.
+     *
+     * See DBField::getSchemaValue()
+     *
+     * @param {*} value Form schema value
+     * @param {String} Container Container type
+     * @param {object} props container props
+     * @returns {XML}
+     */
+    castStringToElement(value, Container, props) {
+      // HTML value
+      if (value && typeof value.html !== 'undefined') {
+        const html = { __html: value.html };
+        return <Container {...props} dangerouslySetInnerHTML={html} />;
+      }
+
+      // Plain value
+      let body = null;
+      if (value && typeof value.text !== 'undefined') {
+        body = value.text;
+      } else {
+        body = value;
+      }
+
+      if (body && typeof body === 'object') {
+        throw new Error(`Unsupported string value ${JSON.stringify(body)}`);
+      }
+
+      return <Container {...props}>{body}</Container>;
+    }
+
+    /**
+     * Build description
+     *
+     * @returns {XML}
+     */
+    getDescription() {
+      return this.castStringToElement(
+        this.props.description,
+        'div',
+        { className: 'form__field-description' }
+      );
+    }
+
+    /**
+     * Build title label
+     *
+     * @returns {XML}
+     */
+    getTitle() {
       const labelText = this.props.leftTitle !== null
         ? this.props.leftTitle
         : this.props.title;
 
+      if (!labelText) {
+        return null;
+      }
+
+      return this.castStringToElement(
+        labelText,
+        'label',
+        { className: 'form__field-label', htmlFor: this.props.id }
+      );
+    }
+
+    render() {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
       const classNames = [
@@ -21,14 +83,11 @@ function fieldHolder(Field) {
 
       return (
         <div className={classNames.join(' ')} id={this.props.holder_id}>
-          {labelText &&
-            <label className="form__field-label" htmlFor={this.props.id}>
-              {labelText}
-            </label>
-          }
+          {this.getTitle()}
           <div className="form__field-holder">
               <Field {...this.props} />
           </div>
+          {this.getDescription()}
         </div>
       );
     }
@@ -41,6 +100,7 @@ function fieldHolder(Field) {
     extraClass: React.PropTypes.string,
     holder_id: React.PropTypes.string,
     id: React.PropTypes.string,
+    description: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]),
   };
 
   return FieldHolder;

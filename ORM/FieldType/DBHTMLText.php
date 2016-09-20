@@ -217,4 +217,14 @@ class DBHTMLText extends DBText {
 		return trim(Convert::xml2raw($text));
 	}
 
+	public function getSchemaValue()
+	{
+		// Form schema format as HTML
+		$value = $this->RAW();
+		if($value) {
+			return [ 'html' => $this->RAW() ];
+		}
+		return null;
+	}
+
 }

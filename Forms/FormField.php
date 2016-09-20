@@ -1453,7 +1453,7 @@ class FormField extends RequestHandler {
 			'title' => $this->Title(),
 			'source' => null,
 			'extraClass' => $this->extraClass(),
-			'description' => $this->getDescription(),
+			'description' => $this->obj('Description')->getSchemaValue(),
 			'rightTitle' => $this->RightTitle(),
 			'leftTitle' => $this->LeftTitle(),
 			'readOnly' => $this->isReadonly(),

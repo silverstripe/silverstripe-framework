@@ -483,4 +483,13 @@ DBG;
 		$this->arrayValue = $value;
 		return $this;
 	}
+
+	/**
+	 * Get formfield schema value
+	 *
+	 * @return string|array Encoded string for use in formschema response
+	 */
+	public function getSchemaValue() {
+		return $this->RAW();
+	}
 }
