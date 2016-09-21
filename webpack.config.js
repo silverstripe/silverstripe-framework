@@ -38,9 +38,8 @@ const config = [
     // TODO Split out with new 'admin' module
     name: 'js',
     entry: {
-      'bundle-framework': `${PATHS.ADMIN_JS_SRC}/boot/index.js`,
-      'bundle-legacy': `${PATHS.ADMIN_JS_SRC}/bundles/legacy.js`,
-      'bundle-lib': `${PATHS.ADMIN_JS_SRC}/bundles/lib.js`,
+      vendor: `${PATHS.ADMIN_JS_SRC}/bundles/vendor.js`,
+      bundle: `${PATHS.ADMIN_JS_SRC}/bundles/bundle.js`,
       'LeftAndMain.Ping': `${PATHS.ADMIN_JS_SRC}/legacy/LeftAndMain.Ping.js`,
       leaktools: `${PATHS.ADMIN_JS_SRC}/legacy/leaktools.js`,
       MemberImportForm: `${PATHS.ADMIN_JS_SRC}/legacy/MemberImportForm.js`,
@@ -124,6 +123,12 @@ const config = [
           unused: false,
           warnings: false,
         },
+      }),
+      // Most vendor libs are loaded directly into the 'vendor' bundle (through require() calls in vendor.js).
+      // This ensures that any further require() calls in other bundles aren't duplicating libs.
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks: Infinity,
       }),
     ],
   },
