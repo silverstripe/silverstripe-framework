@@ -29,6 +29,12 @@ matrix:
       env: DB=MYSQL BEHAT_TEST=1
     - php: 5.6
       env: NPM_TEST=1
+    - php: 5.6
+      env: DB=MYSQL CMS_TEST=1 PHPUNIT_TEST=1
+    - php: 5.6
+      env: DB=MYSQL CMS_TEST=1 BEHAT_TEST=1
+    - php: 7.0
+      env: DB=MYSQL PDO=1 PHPUNIT_TEST=1
   allow_failures:
     - php: 5.6
       env: DB=MYSQL CMS_TEST=1 PHPUNIT_TEST=1
