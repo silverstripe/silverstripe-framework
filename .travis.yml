@@ -44,6 +44,7 @@ before_script:
  - phpenv config-rm xdebug.ini
  - "export DISPLAY=\":99\""
  - "export XVFBARGS=\":99 -ac -screen 0 1024x768x16\""
+ - "export COMPOSER_ROOT_VERSION=4.0.x-dev"
  - "if [ \"$na\" = \"\" ]; then composer install --prefer-dist; fi"
  - "if [ \"$DB\" = \"PGSQL\" ]; then composer require silverstripe/postgresql:2.0.x-dev --prefer-dist; fi"
  - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
