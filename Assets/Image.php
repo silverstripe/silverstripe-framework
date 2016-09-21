@@ -47,12 +47,7 @@ class Image extends File implements ShortcodeHandler {
 	public function getCMSFields() {
 		$path = '/' . dirname($this->getFilename());
 
-		$width = (int)Image::config()->get('asset_preview_width');
-		$height = (int)Image::config()->get('asset_preview_height');
-		$previewLink = Convert::raw2att($this
-			->FitMax($width, $height)
-			->PreviewLink()
-		);
+		$previewLink = Convert::raw2att($this->PreviewLink());
 		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
 
 		$link = $this->Link();
@@ -215,7 +210,16 @@ class Image extends File implements ShortcodeHandler {
 		if(!$this->canView()) {
 			return false;
 		}
-		$link = $this->AbsoluteLink();
+
+		// Size to width / height
+		$width = (int)$this->config()->get('asset_preview_width');
+		$height = (int)$this->config()->get('asset_preview_height');
+		$resized = $this->FitMax($width, $height);
+		if ($resized && $resized->exists()) {
+			$link = $resized->getAbsoluteURL();
+		} else {
+			$link = $this->getIcon();
+		}
 		$this->extend('updatePreviewLink', $link, $action);
 		return $link;
 	}

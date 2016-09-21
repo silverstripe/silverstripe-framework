@@ -473,8 +473,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	public function getCMSFields() {
 		$path = '/' . dirname($this->getFilename());
 
-		$width = (int)Image::config()->get('asset_preview_width');
-		$previewLink = Convert::raw2att($this->ScaleMaxWidth($width)->getIcon());
+		$previewLink = Convert::raw2att($this->PreviewLink());
 		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
 
 		$content = Tab::create('Main',
@@ -1219,8 +1218,12 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	}
 
 	public function PreviewLink($action = null) {
-		// No preview for non-images by default
-		$link = null;
+		// Since AbsoluteURL can whitelist protected assets,
+		// do permission check first
+		if (!$this->canView()) {
+			return null;
+		}
+		$link = $this->getIcon();
 		$this->extend('updatePreviewLink', $link, $action);
 		return $link;
 	}
