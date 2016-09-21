@@ -52,6 +52,7 @@ export function fetchRecords(recordType, method, url) {
           type: ACTION_TYPES.FETCH_RECORDS_FAILURE,
           payload: { error: err, recordType },
         });
+        throw err;
       });
   };
 }
@@ -92,6 +93,7 @@ export function fetchRecord(recordType, method, url) {
           type: ACTION_TYPES.FETCH_RECORD_FAILURE,
           payload: { error: err, recordType },
         });
+        throw err;
       });
   };
 }
@@ -129,6 +131,7 @@ export function deleteRecord(recordType, id, method, url, headers = {}) {
           type: ACTION_TYPES.DELETE_RECORD_FAILURE,
           payload: { error: err, recordType, id },
         });
+        throw err;
       });
   };
 }

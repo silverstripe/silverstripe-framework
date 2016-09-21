@@ -22,6 +22,183 @@ function checkStatus(response) {
   return ret;
 }
 
+/**
+ * Encodes the body data given to a valid value for posting
+ *
+ * References:
+ * https://github.com/github/fetch - API for fetch
+ * https://github.com/facebook/react-native/issues/2538 - IE10 bug
+ *
+ * @param data
+ * @returns {FormData|string}
+ */
+function encodeBody(data) {
+  let encodedData = null;
+  if (data instanceof FormData || typeof data === 'string') {
+    encodedData = data;
+  } else if (data && typeof data === 'object') {
+    encodedData = JSON.stringify(data);
+  } else {
+    throw new Error('Invalid body type');
+  }
+  return encodedData;
+}
+
+/**
+ * Encode a payload based on the given contentType
+ *
+ * @param  {string} contentType
+ * @param  {Object} data
+ * @return {string}
+ */
+function encode(contentType, data) {
+  switch (contentType) {
+    case 'application/x-www-form-urlencoded':
+      return qs.stringify(data);
+
+    case 'application/json':
+    case 'application/x-json':
+    case 'application/x-javascript':
+    case 'text/javascript':
+    case 'text/x-javascript':
+    case 'text/x-json':
+      return JSON.stringify(data);
+
+    default:
+      throw new Error(`Can\'t encode format: ${contentType}`);
+  }
+}
+
+/**
+ * Decode a payload based on the given contentType
+ *
+ * @param  {string} contentType
+ * @param  {string} text
+ * @return {Object}
+ */
+function decode(contentType, text) {
+  switch (contentType) {
+    case 'application/x-www-form-urlencoded':
+      return qs.parse(text);
+
+    case 'application/json':
+    case 'application/x-json':
+    case 'application/x-javascript':
+    case 'text/javascript':
+    case 'text/x-javascript':
+    case 'text/x-json':
+      return JSON.parse(text);
+
+    default:
+      throw new Error(`Can\'t decode format: ${contentType}`);
+  }
+}
+
+/**
+ * Add a querystring to a url
+ *
+ * @param {string} url
+ * @param {string} querystring
+ * @return {string}
+ */
+function addQuerystring(url, querystring) {
+  if (querystring === '') {
+    return url;
+  }
+
+  if (url.match(/\?/)) {
+    return `${url}&${querystring}`;
+  }
+
+  return `${url}?${querystring}`;
+}
+
+/**
+ * Parse the response based on the content type returned
+ *
+ * @param  {Promise} response
+ * @return {Promise}
+ */
+function parseResponse(response) {
+  return response.text().then(
+    body => decode(response.headers.get('Content-Type'), body)
+  );
+}
+
+/**
+ * Apply the payload schema rules to the passed-in payload,
+ * returning the transformed payload.
+ *
+ * @param  {Object} payloadSchema
+ * @param  {Object} data
+ * @return {Object}
+ */
+function applySchemaToData(payloadSchema, data) {
+  return Object.keys(data).reduce((prev, key) => {
+    const schema = payloadSchema[key];
+
+    // Remove key if schema requires it.
+    // Usually set because the specific payload key
+    // is used to populate a url placeholder instead.
+    if (schema && (schema.remove === true || schema.querystring === true)) {
+      return prev;
+    }
+
+    // TODO Support for nested keys
+    return Object.assign(prev, { [key]: data[key] });
+  }, {});
+}
+
+/**
+ * Applies URL templating and query parameter transformation based on the payloadSchema.
+ *
+ * @param  {Object} payloadSchema
+ * @param  {string} url
+ * @param  {Object} data
+ * @param  {Object} opts
+ * @return {string}               New URL
+ */
+function applySchemaToUrl(payloadSchema, url, data, opts = { setFromData: false }) {
+  let newUrl = url;
+
+  // Set query parameters
+  const queryData = Object.keys(data).reduce((prev, key) => {
+    const schema = payloadSchema[key];
+    const includeThroughSetFromData = (
+      opts.setFromData === true
+      && !(schema && schema.remove === true)
+    );
+    const includeThroughSpec = (
+      schema
+      && schema.querystring === true
+      && schema.remove !== true
+    );
+    if (includeThroughSetFromData || includeThroughSpec) {
+      return Object.assign(prev, { [key]: data[key] });
+    }
+
+    return prev;
+  }, {});
+  const encodedQuery = encode('application/x-www-form-urlencoded', queryData);
+
+  newUrl = addQuerystring(
+    newUrl,
+    encodedQuery
+  );
+
+  // Template placeholders
+  newUrl = Object.keys(payloadSchema).reduce((prev, key) => {
+    const replacement = payloadSchema[key].urlReplacement;
+    if (replacement) {
+      return prev.replace(replacement, data[key]);
+    }
+
+    return prev;
+  }, newUrl);
+
+  return newUrl;
+}
+
 class Backend {
 
   constructor() {
@@ -103,160 +280,6 @@ class Backend {
    *                    and returns a promise.
    */
   createEndpointFetcher(endpointSpec) {
-    /**
-     * Encode a payload based on the given contentType
-     *
-     * @param  {string} contentType
-     * @param  {Object} data
-     * @return {string}
-     */
-    function encode(contentType, data) {
-      switch (contentType) {
-        case 'application/x-www-form-urlencoded':
-          return qs.stringify(data);
-
-        case 'application/json':
-        case 'application/x-json':
-        case 'application/x-javascript':
-        case 'text/javascript':
-        case 'text/x-javascript':
-        case 'text/x-json':
-          return JSON.stringify(data);
-
-        default:
-          throw new Error(`Can\'t encode format: ${contentType}`);
-      }
-    }
-
-    /**
-     * Decode a payload based on the given contentType
-     *
-     * @param  {string} contentType
-     * @param  {string} text
-     * @return {Object}
-     */
-    function decode(contentType, text) {
-      switch (contentType) {
-        case 'application/x-www-form-urlencoded':
-          return qs.parse(text);
-
-        case 'application/json':
-        case 'application/x-json':
-        case 'application/x-javascript':
-        case 'text/javascript':
-        case 'text/x-javascript':
-        case 'text/x-json':
-          return JSON.parse(text);
-
-        default:
-          throw new Error(`Can\'t decode format: ${contentType}`);
-      }
-    }
-
-    /**
-     * Add a querystring to a url
-     *
-     * @param {string} url
-     * @param {string} querystring
-     * @return {string}
-     */
-    function addQuerystring(url, querystring) {
-      if (querystring === '') {
-        return url;
-      }
-
-      if (url.match(/\?/)) {
-        return `${url}&${querystring}`;
-      }
-
-      return `${url}?${querystring}`;
-    }
-
-    /**
-     * Parse the response based on the content type returned
-     *
-     * @param  {Promise} response
-     * @return {Promise}
-     */
-    function parseResponse(response) {
-      return response.text().then(
-        body => decode(response.headers.get('Content-Type'), body)
-      );
-    }
-
-    /**
-     * Apply the payload schema rules to the passed-in payload,
-     * returning the transformed payload.
-     *
-     * @param  {Object} payloadSchema
-     * @param  {Object} data
-     * @return {Object}
-     */
-    function applySchemaToData(payloadSchema, data) {
-      return Object.keys(data).reduce((prev, key) => {
-        const schema = payloadSchema[key];
-
-        // Remove key if schema requires it.
-        // Usually set because the specific payload key
-        // is used to populate a url placeholder instead.
-        if (schema && (schema.remove === true || schema.querystring === true)) {
-          return prev;
-        }
-
-        // TODO Support for nested keys
-        return Object.assign(prev, { [key]: data[key] });
-      }, {});
-    }
-
-    /**
-     * Applies URL templating and query parameter transformation based on the payloadSchema.
-     *
-     * @param  {Object} payloadSchema
-     * @param  {string} url
-     * @param  {Object} data
-     * @param  {Object} opts
-     * @return {string}               New URL
-     */
-    function applySchemaToUrl(payloadSchema, url, data, opts = { setFromData: false }) {
-      let newUrl = url;
-
-      // Set query parameters
-      const queryData = Object.keys(data).reduce((prev, key) => {
-        const schema = payloadSchema[key];
-        const includeThroughSetFromData = (
-          opts.setFromData === true
-          && !(schema && schema.remove === true)
-        );
-        const includeThroughSpec = (
-          schema
-          && schema.querystring === true
-          && schema.remove !== true
-        );
-        if (includeThroughSetFromData || includeThroughSpec) {
-          return Object.assign(prev, { [key]: data[key] });
-        }
-
-        return prev;
-      }, {});
-
-      newUrl = addQuerystring(
-        newUrl,
-        encode('application/x-www-form-urlencoded', queryData)
-      );
-
-      // Template placeholders
-      newUrl = Object.keys(payloadSchema).reduce((prev, key) => {
-        const replacement = payloadSchema[key].urlReplacement;
-        if (replacement) {
-          return prev.replace(replacement, data[key]);
-        }
-
-        return prev;
-      }, newUrl);
-
-      return newUrl;
-    }
-
     // Parameter defaults
     const refinedSpec = Object.assign({
       method: 'get',
@@ -344,9 +367,9 @@ class Backend {
     const defaultHeaders = { 'Content-Type': 'application/x-www-form-urlencoded' };
     return this.fetch(url, {
       method: 'post',
-      headers: Object.assign({}, defaultHeaders, headers),
       credentials: 'same-origin',
-      body: data,
+      body: encodeBody(data),
+      headers: Object.assign({}, defaultHeaders, headers),
     })
     .then(checkStatus);
   }
@@ -360,7 +383,12 @@ class Backend {
    * @return object - Promise
    */
   put(url, data = {}, headers = {}) {
-    return this.fetch(url, { method: 'put', credentials: 'same-origin', body: data, headers })
+    return this.fetch(url, {
+      method: 'put',
+      credentials: 'same-origin',
+      body: encodeBody(data),
+      headers,
+    })
       .then(checkStatus);
   }
 
@@ -373,7 +401,12 @@ class Backend {
    * @return object - Promise
    */
   delete(url, data = {}, headers = {}) {
-    return this.fetch(url, { method: 'delete', credentials: 'same-origin', body: data, headers })
+    return this.fetch(url, {
+      method: 'delete',
+      credentials: 'same-origin',
+      body: encodeBody(data),
+      headers,
+    })
       .then(checkStatus);
   }
 
