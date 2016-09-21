@@ -92,7 +92,7 @@ class Image extends File implements ShortcodeHandler {
 				'TitleHeader',
 				LiteralField::create(
 					"DisplaySize",
-					sprintf('<div><i>%spx, %s</i></div>',
+					sprintf('<div class="editor__specs">%spx, %s</div>',
 						$dimensions, $this->getSize())
 				)
 			);
