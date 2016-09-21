@@ -110,7 +110,7 @@ class Folder extends File {
  	 * @return string
  	 */
  	public function getIcon() {
- 		return FRAMEWORK_DIR . "/client/dist/images/app_icons/folder_32.png";
+ 		return FRAMEWORK_DIR . "/client/dist/images/app_icons/folder_icon_large.png";
  	}
 
 	/**
