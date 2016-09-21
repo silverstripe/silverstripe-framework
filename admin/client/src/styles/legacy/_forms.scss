@@ -707,15 +707,15 @@ button.loading {
 /***************************************************************
 * On/Off Switch.
 * Example html set-up:
-*  <fieldset class="switch-states">
+*  <div class="switch-states">
 *		<div class="switch">
 *      <a href="my-page/?stage=Draft" class="first active"><span>Draft</span></a>
 *      <a href="my-page/?stage=Live" class="last"><span>Live</span></a>
 *		</div>
-*	</fieldset>
+*	</div>
 ****************************************************************/
-fieldset.switch-states{
-  padding:0 20px 0 0;
+div.switch-states{
+  padding: 0 20px 0 0;
   margin-right: 5px;
 
 	.switch{
