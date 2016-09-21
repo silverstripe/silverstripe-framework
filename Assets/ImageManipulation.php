@@ -159,7 +159,7 @@ trait ImageManipulation {
 	 * @config
 	 * @var int
 	 */
-	private static $asset_preview_width = 400;
+	private static $asset_preview_width = 930; // max for mobile full-width
 
 	/**
 	 * The height of an image preview in the Asset section
