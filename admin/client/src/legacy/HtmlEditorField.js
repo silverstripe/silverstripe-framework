@@ -10,7 +10,7 @@ import $ from 'jQuery';
 import i18n from 'i18n';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import { ApolloProvider } from 'react-apollo';
 
 var ss = typeof window.ss !== 'undefined' ? window.ss : {};
 
@@ -1621,6 +1621,7 @@ $.entwine('ss', function($) {
       const handleHide = () => this.close();
       const handleInsert = (...args) => this._handleInsert(...args);
       const store = window.ss.store;
+      const client = window.ss.apolloClient;
       const attrs = this.getOriginalAttributes();
       const InsertMediaModal = window.InsertMediaModal.default;
 
@@ -1632,7 +1633,7 @@ $.entwine('ss', function($) {
 
       // create/update the react component
       ReactDOM.render(
-        <Provider store={store}>
+        <ApolloProvider store={store} client={client}>
           <InsertMediaModal
             title={false}
             show={show}
@@ -1642,7 +1643,7 @@ $.entwine('ss', function($) {
             className="insert-media-react__dialog-wrapper"
             fileAttributes={attrs}
           />
-        </Provider>,
+        </ApolloProvider>,
         this[0]
       );
     },

@@ -60,6 +60,7 @@ const config = [
     // lib.js provies these globals and more. These references allow the framework bundle
     // to access them.
     externals: {
+      'apollo-client': 'ApolloClient',
       'bootstrap-collapse': 'BootstrapCollapse',
       'components/Breadcrumb/Breadcrumb': 'Breadcrumb',
       'state/breadcrumbs/BreadcrumbsActions': 'BreadcrumbsActions',
@@ -72,6 +73,8 @@ const config = [
       'components/Toolbar/Toolbar': 'Toolbar',
       'containers/FormBuilderLoader/FormBuilderLoader': 'FormBuilderLoader',
       'deep-freeze-strict': 'DeepFreezeStrict',
+      'graphql-fragments': 'GraphQLFragments',
+      'graphql-tag': 'GraphQLTag',
       i18n: 'i18n',
       jQuery: 'jQuery',
       'lib/Backend': 'Backend',
@@ -82,6 +85,7 @@ const config = [
       'react-addons-test-utils': 'ReactAddonsTestUtils',
       'react-dom': 'ReactDom',
       tether: 'Tether',
+      'react-apollo': 'ReactApollo',
       'react-bootstrap-ss': 'ReactBootstrap',
       'react-redux': 'ReactRedux',
       'react-router-redux': 'ReactRouterRedux',
@@ -134,6 +138,12 @@ const config = [
           comments: false,
           max_line_len: 200,
         },
+      }),
+      // Most vendor libs are loaded directly into the 'vendor' bundle (through require() calls in vendor.js).
+      // This ensures that any further require() calls in other bundles aren't duplicating libs.
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks: Infinity,
       }),
       // Most vendor libs are loaded directly into the 'vendor' bundle (through require() calls in vendor.js).
       // This ensures that any further require() calls in other bundles aren't duplicating libs.
