@@ -49,11 +49,16 @@ text-based format.
 SilverStripe templates are plain text files that have `.ss` extension and located within the `templates` directory of
 a module, theme, or your `mysite` folder.
 
-By default, templates will have the same name as the class they are used to render. So, your Page class will
+By default, templates will have the same name as the class they are used to render. So, your `Page` class will
 be rendered with the `templates/Page.ss` template.
 
-When the class has a namespace, the namespace will be interpreted as subfolder within the `templates` path. For, example, the class `SilverStripe\Control\Controller` will be rendered with the
+When the class has a namespace, the namespace will be interpreted as a subfolder within the `templates` path. 
+For example, the class `SilverStripe\Control\Controller` will be rendered with the
 `templates/SilverStripe/Control/Controller.ss` template.
+
+If you are using template "types" like `Layout` or `Includes`, these are just folders which you need
+to append to your template file location. One exception is the `<% include %>` template tag,
+where you need to leave out the `Includes/` folder.
 
 ## Variables
 
@@ -204,13 +209,15 @@ Within SilverStripe templates we have the ability to include other templates usi
 will be searched for using the same filename look-up rules as a regular template. However in the case of the include tag
 an additional `Includes` directory will be inserted into the resolved path just prior to the filename.
 
- E.g.
-  
-  * `<% include SideBar %>` will include `templates/Includes/Sidebar.ss`
-  * `<% include MyNamespace/SideBar %>` will include `templates/MyNamespace/Includes/Sidebar.ss`
+	:::ss
+	<% include SideBar %> <!-- chooses templates/Includes/Sidebar.ss -->
+	<% include MyNamespace/SideBar %> <!-- chooses templates/MyNamespace/Includes/Sidebar.ss -->
 
-Note that in SilverStripe 3, you didn't have to specify a namespace in your `include` tag, as the template engine didn't
-use namespaces. As of SilverStripe 4, the template namespaces need to match the folder structure of your template files.
+When using subfolders in your template structure
+(e.g. to fit with namespaces in your PHP class structure), the `Includes/` folder needs to be innermost.
+
+	:::ss
+	<% include MyNamespace/SideBar %> <!-- chooses templates/MyNamespace/Includes/Sidebar.ss -->
 
 The `include` tag can be particularly helpful for nested functionality and breaking large templates up. In this example, 
 the include only happens if the user is logged in.
