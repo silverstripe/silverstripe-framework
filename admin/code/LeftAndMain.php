@@ -536,10 +536,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			window.ss.config = " . $this->getCombinedClientConfig() . ";
 		");
 
-		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js', '/'));
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/vendor.js');
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle.js');
 		Requirements::css(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css', '/'));
-
-		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-legacy.js', '/'));
 
 		Requirements::add_i18n_javascript(ltrim(FRAMEWORK_DIR . '/client/lang', '/'), false, true);
 		Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/client/lang', false, true);
@@ -553,8 +552,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			Requirements::javascript(ADMIN_THIRDPARTY_DIR . '/jquery-entwine/src/jquery.entwine.inspector.js');
 			Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/leaktools.js');
 		}
-
-		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-framework.js');
 
 		// Custom requirements
 		$extraJs = $this->stat('extra_requirements_javascript');
