@@ -155,9 +155,6 @@
 .font-icon-tablet:before {
   content: "\4b";
 }
-.font-icon-resize:before {
-  content: "\4c";
-}
 .font-icon-pencil:before {
   content: "\6d";
 }
@@ -262,4 +259,22 @@
 }
 .font-icon-link-broken:before {
   content: "\2d";
+}
+.font-icon-switch:before {
+  content: "\2e";
+}
+.font-icon-resize:before {
+  content: "\4c";
+}
+.font-icon-menu:before {
+  content: "\2f";
+}
+.font-icon-edit-list:before {
+  content: "\3a";
+}
+.font-icon-help-circled:before {
+  content: "\3b";
+}
+.font-icon-block:before {
+  content: "\3c";
 }
