@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM\Versioning;
 
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\ReadonlyField;
 use SilverStripe\i18n\i18n;
@@ -369,13 +370,11 @@ class ChangeSet extends DataObject {
 	}
 
 	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-
-		$fields->removeByName('OwnerID');
-		$fields->removeByName('Changes');
-
-		$fields->dataFieldByName('State')->setReadonly(true);
-
+		$fields = new FieldList(new TabSet('Root'));
+		$fields->addFieldToTab('Root.Main', TextField::create('Name', $this->fieldLabel('Name')));
+		if ($this->isInDB()) {
+			$fields->addFieldToTab('Root.Main', ReadonlyField::create('State', $this->fieldLabel('State')));
+		}
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
