@@ -178,6 +178,23 @@ form.small .field, .field.small {
 	}
 }
 
+/* Chosen override */
+.chosen-container {
+	width: 100%;
+	max-width: $input-max-width !important;
+	vertical-align: bottom;
+
+	.chosen-results {
+		padding-top: 4px;
+
+		li {
+			font-size: 11px;
+			line-height: $grid-y * 2;
+			padding: $grid-y / 2 $grid-x / 2;
+		}
+	}
+}
+
 .field {
 
   // TreeDropdowns
@@ -215,23 +232,6 @@ form.small .field, .field.small {
 	/* dropdowns */
 	.dropdown select {
 		margin-top: $grid-y;
-	}
-
-  /* Chosen override */
-  .chosen-container {
-    width: 100%;
-    max-width: $input-max-width !important;
-    vertical-align: bottom;
-
-		.chosen-results {
-			padding-top: 4px;
-
-			li {
-				font-size: 11px;
-				line-height: $grid-y * 2;
-				padding: $grid-y / 2 $grid-x / 2;
-			}
-		}
 	}
 
 	.chosen-container-active .chosen-single {
