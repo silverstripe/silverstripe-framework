@@ -123,6 +123,12 @@ const config = [
           unused: false,
           warnings: false,
         },
+        output: {
+          beautify: false,
+          semicolons: false,
+          comments: false,
+          max_line_len: 200,
+        },
       }),
       // Most vendor libs are loaded directly into the 'vendor' bundle (through require() calls in vendor.js).
       // This ensures that any further require() calls in other bundles aren't duplicating libs.
@@ -152,7 +158,7 @@ const config = [
         {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract([
-            'css?sourceMap&minimize',
+            'css?sourceMap&minimize&-core&discardComments',
             'postcss?sourceMap',
             'resolve-url',
             'sass?sourceMap',
@@ -163,7 +169,7 @@ const config = [
         {
           test: /\.css$/,
           loader: ExtractTextPlugin.extract([
-            'css?sourceMap&minimize',
+            'css?sourceMap&minimize&-core&discardComments',
             'postcss?sourceMap',
           ], {
             publicPath: '../', // needed because bundle.css is in a subfolder
@@ -202,7 +208,7 @@ const config = [
         {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract([
-            'css?sourceMap&minimize',
+            'css?sourceMap&minimize&-core&discardComments',
             'postcss?sourceMap',
             'resolve-url',
             'sass?sourceMap',
@@ -213,7 +219,7 @@ const config = [
         {
           test: /\.css$/,
           loader: ExtractTextPlugin.extract([
-            'css?sourceMap&minimize',
+            'css?sourceMap&minimize&-core&discardComments',
             'postcss?sourceMap',
           ], {
             publicPath: '../', // needed because bundle.css is in a subfolder
