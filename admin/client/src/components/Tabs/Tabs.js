@@ -14,6 +14,7 @@ class Tabs extends SilverStripeComponent {
       onSelect,
       className,
       extraClass,
+      id,
       } = this.props;
     const combinedClassName = `${className} ${extraClass}`;
 
@@ -22,6 +23,7 @@ class Tabs extends SilverStripeComponent {
       className: combinedClassName,
       defaultActiveKey: this.getDefaultActiveKey(),
       onSelect,
+      id,
     };
   }
 

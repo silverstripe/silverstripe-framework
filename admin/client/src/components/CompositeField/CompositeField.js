@@ -12,7 +12,7 @@ class CompositeField extends SilverStripeComponent {
 
   render() {
     const legend = this.getLegend();
-    const Tag = this.props.data.tag;
+    const Tag = this.props.data.tag || 'div';
 
     return (
       <Tag className={this.props.extraClass}>
@@ -24,13 +24,11 @@ class CompositeField extends SilverStripeComponent {
 }
 
 CompositeField.propTypes = {
-  tag: React.PropTypes.string,
-  legend: React.PropTypes.string,
+  data: React.PropTypes.shape({
+    tag: React.PropTypes.string,
+    legend: React.PropTypes.string,
+  }),
   extraClass: React.PropTypes.string,
-};
-
-CompositeField.defaultProps = {
-  tag: 'div',
 };
 
 export default CompositeField;
