@@ -2197,9 +2197,11 @@ var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),d=n(20),c=i(d),f=function(e){
 function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return a(t,e),s(t,[{key:"getLegend",value:function n(){return"fieldset"===this.props.data.tag&&this.props.data.legend&&u["default"].createElement("legend",null,this.props.data.legend)
 
-}},{key:"render",value:function i(){var e=this.getLegend(),t=this.props.data.tag
+}},{key:"render",value:function i(){var e=this.getLegend(),t=this.props.data.tag||"div"
 return u["default"].createElement(t,{className:this.props.extraClass},e,this.props.children)}}]),t}(c["default"])
-f.propTypes={tag:u["default"].PropTypes.string,legend:u["default"].PropTypes.string,extraClass:u["default"].PropTypes.string},f.defaultProps={tag:"div"},t["default"]=f},function(e,t,n){"use strict"
+f.propTypes={data:u["default"].PropTypes.shape({tag:u["default"].PropTypes.string,legend:u["default"].PropTypes.string}),extraClass:u["default"].PropTypes.string},t["default"]=f},function(e,t,n){"use strict"
+
+
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function o(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called")
 
 
@@ -2208,10 +2210,10 @@ e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,wri
 value:!0})
 var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),d=n(20),c=i(d),f=n(37),p=function(e){
-function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return a(t,e),s(t,[{key:"getContainerProps",value:function n(){var e=this.props,t=e.activeKey,n=e.onSelect,i=e.className,r=e.extraClass,o=i+" "+r
+function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return a(t,e),s(t,[{key:"getContainerProps",value:function n(){var e=this.props,t=e.activeKey,n=e.onSelect,i=e.className,r=e.extraClass,o=e.id,a=i+" "+r
 
 
-return{activeKey:t,className:o,defaultActiveKey:this.getDefaultActiveKey(),onSelect:n}}},{key:"getDefaultActiveKey",value:function i(){var e=this,t=null
+return{activeKey:t,className:a,defaultActiveKey:this.getDefaultActiveKey(),onSelect:n,id:o}}},{key:"getDefaultActiveKey",value:function i(){var e=this,t=null
 if("string"==typeof this.props.defaultActiveKey){var n=u["default"].Children.toArray(this.props.children).find(function(t){return t.props.name===e.props.defaultActiveKey})
 n&&(t=n.props.name)}return"string"!=typeof t&&u["default"].Children.forEach(this.props.children,function(e){"string"!=typeof t&&(t=e.props.name)}),t}},{key:"renderTab",value:function l(e){return null===e.props.title?null:u["default"].createElement(f.NavItem,{
 eventKey:e.props.name,disabled:e.props.disabled,className:e.props.tabClassName},e.props.title)}},{key:"renderNav",value:function d(){var e=u["default"].Children.map(this.props.children,this.renderTab)
@@ -2229,11 +2231,12 @@ e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,wri
 value:!0})
 var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),d=n(20),c=i(d),f=n(37),p=function(e){
-function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return a(t,e),s(t,[{key:"getTabProps",value:function n(){var e=this.props,t=e.name,n=e.className,i=e.extraClass,r=e.disabled,o=e.bsClass,a=e.onEnter,s=e.onEntering,l=e.onEntered,u=e.onExit,d=e.onExiting,c=e.onExited,f=e.animation,p=e.id,h=e.unmountOnExit
+function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return a(t,e),s(t,[{key:"getTabProps",value:function n(){var e=this.props,t=e.name,n=e.className,i=e.extraClass,r=e.disabled,o=e.bsClass,a=e.onEnter,s=e.onEntering,l=e.onEntered,u=e.onExit,d=e.onExiting,c=e.onExited,f=e.animation,p=e.unmountOnExit
 
 
-return{eventKey:t,className:n+" "+i,disabled:r,bsClass:o,onEnter:a,onEntering:s,onEntered:l,onExit:u,onExiting:d,onExited:c,animation:f,id:p,unmountOnExit:h,"aria-labelledby":this.props["aria-labelledby"]
-}}},{key:"render",value:function i(){var e=this.getTabProps()
+return{eventKey:t,className:n+" "+i,disabled:r,bsClass:o,onEnter:a,onEntering:s,onEntered:l,onExit:u,onExiting:d,onExited:c,animation:f,unmountOnExit:p}}},{key:"render",value:function i(){var e=this.getTabProps()
+
+
 return u["default"].createElement(f.Tab.Pane,e,this.props.children)}}]),t}(c["default"])
 p.propTypes={name:u["default"].PropTypes.string.isRequired,extraClass:u["default"].PropTypes.string},p.defaultProps={className:"",extraClass:""},t["default"]=p},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(63),o=n(68),a=i(o),s=n(144),l=i(s),u=n(170),d=i(u)
