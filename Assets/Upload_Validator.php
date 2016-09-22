@@ -89,7 +89,7 @@ class Upload_Validator
 		if (empty($this->allowedMaxFileSize)) {
 			// Set default max file sizes if there isn't
 			$fileSize = Config::inst()->get('SilverStripe\\Assets\\Upload_Validator', 'default_max_file_size');
-			if (isset($fileSize)) {
+			if ($fileSize) {
 				$this->setAllowedMaxFileSize($fileSize);
 			} else {
 				// When no default is present, use maximum set by PHP
@@ -191,10 +191,29 @@ class Upload_Validator
 	 */
 	public function isValidSize()
 	{
+		// If file was blocked via PHP for being excessive size, shortcut here
+		switch ($this->tmpFile['error']) {
+			case UPLOAD_ERR_INI_SIZE:
+			case UPLOAD_ERR_FORM_SIZE:
+				return false;
+		}
 		$pathInfo = pathinfo($this->tmpFile['name']);
 		$extension = isset($pathInfo['extension']) ? strtolower($pathInfo['extension']) : null;
 		$maxSize = $this->getAllowedMaxFileSize($extension);
 		return (!$this->tmpFile['size'] || !$maxSize || (int)$this->tmpFile['size'] < $maxSize);
+	}
+
+	/**
+	 * Determine if this file is valid but empty
+	 *
+	 * @return bool
+	 */
+	public function isFileEmpty() {
+		// Don't check file size for errors
+		if ($this->tmpFile['error'] !== UPLOAD_ERR_OK) {
+			return false;
+		}
+		return empty($this->tmpFile['size']);
 	}
 
 	/**
@@ -225,25 +244,25 @@ class Upload_Validator
 	public function validate()
 	{
 		// we don't validate for empty upload fields yet
-		if (empty($this->tmpFile['name']) || empty($this->tmpFile['tmp_name'])) {
+		if (empty($this->tmpFile['name'])) {
 			return true;
 		}
 
-		$isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
-		if (isset($this->tmpFile['tmp_name']) && !is_uploaded_file($this->tmpFile['tmp_name']) && !$isRunningTests) {
+		// Check file upload
+		if (!$this->isValidUpload()) {
 			$this->errors[] = _t('File.NOVALIDUPLOAD', 'File is not a valid upload');
 			return false;
 		}
 
 		// Check file isn't empty
-		if (empty($this->tmpFile['size']) || !filesize($this->tmpFile['tmp_name'])) {
+		if ($this->isFileEmpty()) {
 			$this->errors[] = _t('File.NOFILESIZE', 'Filesize is zero bytes.');
 			return false;
 		}
 
-		$pathInfo = pathinfo($this->tmpFile['name']);
 		// filesize validation
 		if (!$this->isValidSize()) {
+			$pathInfo = pathinfo($this->tmpFile['name']);
 			$ext = (isset($pathInfo['extension'])) ? $pathInfo['extension'] : '';
 			$arg = File::format_size($this->getAllowedMaxFileSize($ext));
 			$this->errors[] = _t(
@@ -263,6 +282,27 @@ class Upload_Validator
 				'Argument 1: Comma-separated list of valid extensions',
 				array('extensions' => wordwrap(implode(', ', $this->allowedExtensions)))
 			);
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check that a valid file was given for upload (ignores file size)
+	 *
+	 * @return bool
+	 */
+	public function isValidUpload() {
+		// Check file upload
+		if ($this->tmpFile['error'] === UPLOAD_ERR_NO_FILE) {
+			return false;
+		}
+
+		// Check if file is valid uploaded (with exception for unit testing)
+		// Note that some "max file size" errors leave "temp_name" empty, so don't fail on this.
+		$isRunningTests = (class_exists('SilverStripe\\Dev\\SapphireTest', false) && SapphireTest::is_running_test());
+		if (!empty($this->tmpFile['tmp_name']) && !is_uploaded_file($this->tmpFile['tmp_name']) && !$isRunningTests) {
 			return false;
 		}
 
