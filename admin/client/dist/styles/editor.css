@@ -1,2 +1,10 @@
-body.mceContentBody a.ss-broken{background-color:#f2dede;border:1px solid #ebcccc;color:#fff;padding:1px;text-decoration:underline}
+body.mceContentBody a.ss-broken{
+  background-color:#f2dede;
+  border:1px solid #ebcccc;
+  color:#fff;
+  padding:1px;
+  text-decoration:underline;
+}
+
+
 /*# sourceMappingURL=editor.css.map*/
