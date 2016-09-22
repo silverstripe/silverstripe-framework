@@ -1470,7 +1470,7 @@ EOC;
 
 			$this->assertEquals(1, substr_count(
 				$template->process(array()),
-				"tests/forms/RequirementsTest_a.js"
+				"tests/javascript/forms/RequirementsTest_a.js"
 			));
 		}
 		else {
