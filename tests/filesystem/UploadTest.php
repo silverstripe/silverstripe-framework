@@ -154,6 +154,80 @@ class UploadTest extends SapphireTest {
 		$this->assertFalse($result, 'Load failed because size was too big');
 	}
 
+	public function testPHPUploadErrors() {
+		$configMaxFileSizes = ['*' => '1k'];
+		Config::inst()->update(
+			'SilverStripe\\Assets\\Upload_Validator',
+			'default_max_file_size',
+			$configMaxFileSizes
+		);
+		// create tmp file
+		$tmpFileName = 'myfile.jpg';
+		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
+		$tmpFileContent = '';
+		for($i=0; $i<100; $i++) $tmpFileContent .= '0';
+		file_put_contents($tmpFilePath, $tmpFileContent);
+
+		// Build file
+		$upload = new Upload();
+		$tmpFile = array(
+			'name' => $tmpFileName,
+			'type' => '',
+			'tmp_name' => $tmpFilePath,
+			'size' => filesize($tmpFilePath),
+			'error' => UPLOAD_ERR_OK,
+		);
+
+		// Test ok
+		$this->assertTrue($upload->validate($tmpFile));
+
+		// Test zero size file
+		$upload->clearErrors();
+		$tmpFile['size'] = 0;
+		$this->assertFalse($upload->validate($tmpFile));
+		$this->assertContains(
+			_t('File.NOFILESIZE', 'Filesize is zero bytes.'),
+			$upload->getErrors()
+		);
+
+		// Test file too large
+		$upload->clearErrors();
+		$tmpFile['error'] = UPLOAD_ERR_INI_SIZE;
+		$this->assertFalse($upload->validate($tmpFile));
+		$this->assertContains(
+			_t(
+				'File.TOOLARGE',
+				'Filesize is too large, maximum {size} allowed',
+				'Argument 1: Filesize (e.g. 1MB)',
+				array('size' => '1 KB')
+			),
+			$upload->getErrors()
+		);
+
+		// Test form size
+		$upload->clearErrors();
+		$tmpFile['error'] = UPLOAD_ERR_FORM_SIZE;
+		$this->assertFalse($upload->validate($tmpFile));
+		$this->assertContains(
+			_t(
+				'File.TOOLARGE',
+				'Filesize is too large, maximum {size} allowed',
+				'Argument 1: Filesize (e.g. 1MB)',
+				array('size' => '1 KB')
+			),
+			$upload->getErrors()
+		);
+
+		// Test no file
+		$upload->clearErrors();
+		$tmpFile['error'] = UPLOAD_ERR_NO_FILE;
+		$this->assertFalse($upload->validate($tmpFile));
+		$this->assertContains(
+			_t('File.NOVALIDUPLOAD', 'File is not a valid upload'),
+			$upload->getErrors()
+		);
+	}
+
 	public function testGetAllowedMaxFileSize() {
 		Config::nest();
 
