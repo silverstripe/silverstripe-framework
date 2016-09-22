@@ -9,6 +9,7 @@ use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\UnexpectedDataException;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use BadMethodCallException;
@@ -112,6 +113,10 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	 * @return string
 	 */
 	public function getChangeType() {
+		if(!class_exists($this->ObjectClass)) {
+			throw new UnexpectedDataException("Invalid Class '{$this->ObjectClass}' in ChangeSetItem #{$this->ID}");
+		}
+
 		// Get change versions
 		if($this->VersionBefore || $this->VersionAfter) {
 			$draftVersion = $this->VersionAfter; // After publishing draft was written to stage
@@ -144,6 +149,10 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	 * @return Versioned|DataObject
 	 */
 	protected function getObjectInStage($stage) {
+		if(!class_exists($this->ObjectClass)) {
+			throw new UnexpectedDataException("Invalid Class '{$this->ObjectClass}' in ChangeSetItem #{$this->ID}");
+		}
+
 		return Versioned::get_by_stage($this->ObjectClass, $stage)->byID($this->ObjectID);
 	}
 
@@ -153,6 +162,10 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	 * @return Versioned|DataObject
 	 */
 	protected function getObjectLatestVersion() {
+		if(!class_exists($this->ObjectClass)) {
+			throw new UnexpectedDataException("Invalid Class '{$this->ObjectClass}' in ChangeSetItem #{$this->ID}");
+		}
+
 		return Versioned::get_latest_version($this->ObjectClass, $this->ObjectID);
 	}
 
@@ -180,6 +193,10 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	 * Note: Unlike Versioned::doPublish() and Versioned::doUnpublish, this action is not recursive.
 	 */
 	public function publish() {
+		if(!class_exists($this->ObjectClass)) {
+			throw new UnexpectedDataException("Invalid Class '{$this->ObjectClass}' in ChangeSetItem #{$this->ID}");
+		}
+
 		// Logical checks prior to publish
 		if(!$this->canPublish()) {
 			throw new Exception("The current member does not have permission to publish this ChangeSetItem.");

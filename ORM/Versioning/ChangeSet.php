@@ -11,6 +11,7 @@ use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\UnexpectedDataException;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Permission;
 use BadMethodCallException;
@@ -202,15 +203,20 @@ class ChangeSet extends DataObject {
 			$explicit[$explicitKey] = true;
 
 			foreach ($item->findReferenced() as $referee) {
-				/** @var DataObject $referee */
-				$key = $this->implicitKey($referee);
+				try {
+					/** @var DataObject $referee */
+					$key = $this->implicitKey($referee);
 
-				$referenced[$key] = [
-					'ObjectID' => $referee->ID,
-					'ObjectClass' => $referee->baseClass(),
-				];
+					$referenced[$key] = [
+						'ObjectID' => $referee->ID,
+						'ObjectClass' => $referee->baseClass(),
+					];
 
-				$references[$key][] = $item->ID;
+					$references[$key][] = $item->ID;
+
+				// Skip any bad records
+				} catch(UnexpectedDataException $e) {
+				}
 			}
 		}
 
