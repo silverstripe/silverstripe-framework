@@ -1,7 +1,7 @@
 <?php
 
 
-
+use SilverStripe\Core\Object;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBString;
 use SilverStripe\Dev\SapphireTest;
@@ -23,6 +23,18 @@ class DBStringTest extends SapphireTest {
 		$this->assertEquals(
 			"this is<br />\na test!",
 			DBField::create_field('StringFieldTest_MyStringField', "this is\na test!")->forTemplate()
+		);
+	}
+
+	public function testDefault() {
+		/** @var DBString $dbField */
+		$dbField = Object::create_from_string(
+			"StringFieldTest_MyStringField(['default' => 'Here is my default text'])",
+			'Myfield'
+		);
+		$this->assertEquals(
+			"Here is my default text",
+			$dbField->getDefaultValue()
 		);
 	}
 

@@ -73,7 +73,13 @@ When adding a new `$db` field to a DataObject you can specify a default value
 to be applied to all existing records when the column is added in the database
 for the first time. This will also be applied to any newly created objects
 going forward. You do this be passing an argument for the default value in your 
-`$db` items. For example:
+`$db` items. 
+
+For integer values, the default is the first parameter in the field specification.
+For string values, you will need to declare this default using the options array.
+For enum values, it's the second parameter.
+
+For example:
 
 	:::php
 	<?php
@@ -82,7 +88,8 @@ going forward. You do this be passing an argument for the default value in your
 		
 		private static $db = array(
 			'Wheels' => 'Int(4)',
-			'Condition' => 'Enum(array("New","Fair","Junk"), "New")'
+			'Condition' => 'Enum(array("New","Fair","Junk"), "New")',
+			'Make' => 'Varchar(["default" => "Honda"]),
 		);
 	}
 

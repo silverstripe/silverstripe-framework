@@ -58,6 +58,9 @@ abstract class DBString extends DBField {
 		if(array_key_exists("nullifyEmpty", $options)) {
 			$this->nullifyEmpty = $options["nullifyEmpty"] ? true : false;
 		}
+		if(array_key_exists("default", $options)) {
+			$this->setDefaultValue($options["default"]);
+		}
 		return $this;
 	}
 

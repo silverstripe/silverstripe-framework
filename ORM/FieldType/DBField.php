@@ -195,6 +195,26 @@ abstract class DBField extends ViewableData {
 		$this->value = $value;
 	}
 
+	/**
+	 * Get default value assigned at the DB level
+	 *
+	 * @return mixed
+	 */
+	public function getDefaultValue() {
+		return $this->defaultVal;
+	}
+
+	/**
+	 * Set default value to use at the DB level
+	 *
+	 * @param mixed $defaultValue
+	 * @return $this
+	 */
+	public function setDefaultValue($defaultValue) {
+		$this->defaultVal = $defaultValue;
+		return $this;
+	}
+
 
 	/**
 	 * Determines if the field has a value which is not considered to be 'null'
