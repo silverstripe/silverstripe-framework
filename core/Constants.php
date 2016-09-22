@@ -105,7 +105,10 @@ if(!defined('TRUSTED_PROXY')) {
 			if(SS_TRUSTED_PROXY_IPS === '*') {
 				$trusted = true;
 			} elseif(isset($_SERVER['REMOTE_ADDR'])) {
-				$trusted = in_array($_SERVER['REMOTE_ADDR'], explode(',', SS_TRUSTED_PROXY_IPS));
+				if(!class_exists('SilverStripe\\Control\\Util\\IPUtils')) {
+					require_once FRAMEWORK_PATH . '/control/IPUtils.php';
+				};
+				$trusted = IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', SS_TRUSTED_PROXY_IPS));
 			}
 		}
 	}
@@ -122,7 +125,7 @@ if(!defined('TRUSTED_PROXY')) {
  */
 if(!isset($_SERVER['HTTP_HOST'])) {
 	// HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
-	global $_FILE_TO_URL_MAPPING;	
+	global $_FILE_TO_URL_MAPPING;
 	if(isset($_FILE_TO_URL_MAPPING)) {
 		$fullPath = $testPath = realpath($_SERVER['SCRIPT_FILENAME']);
 		while($testPath && $testPath != '/' && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
@@ -182,7 +185,7 @@ if(!isset($_SERVER['HTTP_HOST'])) {
 	$trustedProxyHeader = (defined('SS_TRUSTED_PROXY_HOST_HEADER'))
 		? SS_TRUSTED_PROXY_HOST_HEADER
 		: 'HTTP_X_FORWARDED_HOST';
-		
+
 	if (TRUSTED_PROXY && !empty($_SERVER[$trustedProxyHeader])) {
 		// Get the first host, in case there's multiple separated through commas
 		$_SERVER['HTTP_HOST'] = strtok($_SERVER[$trustedProxyHeader], ',');
