@@ -144,14 +144,12 @@ mi:
     JsType: 'kōnae Javascript'
     Mp3Type: 'kōnae ororongo MP3'
     MpgType: 'kōnae ataata MPEG'
-    NOFILESIZE: 'He kore ngā paita kei te kōnae'
     NOVALIDUPLOAD: 'Ehara te kōnae i te tukuatu pono'
     Name: Ingoa
     PLURALNAME: Ngā Kōnae
     PdfType: 'kōnae Adobe Acrobat PDF'
     PngType: 'atahanga PNG - he hōputu pai hei whakamahi whānui noa'
     SINGULARNAME: Kōnae
-    TOOLARGE: 'He rahi rawa te rahi kōnae, he {size} te rahi mōrahi ka taea'
     TiffType: 'Hōputu atatahanga tūtohu '
     Title: Taitara
     WavType: 'kōnae ororongo WAV'
@@ -359,7 +357,6 @@ mi:
     DIGITSDECFRACTIONSECOND: 'Kotahi neke atu ngā mati e tohu ana i te hautau ā-ira o te hēkona'
     FOURDIGITYEAR: 'Tau matiwhā'
     FULLNAMEMONTH: 'Ingoa marama katoa (hei tauira, Pipiri)'
-    HOURNOLEADING: 'Haora, kāore he kore i mua'
     MINUTENOLEADING: 'Meneti, kāore he kore i mua'
     MONTHNOLEADING: 'Mati marama kāore he kore i mua'
     Preview: Arokite

@@ -147,14 +147,12 @@ fr:
     JsType: 'Fichier JavaScript'
     Mp3Type: 'Fichier audio MP3'
     MpgType: 'Fichier vidéo MPEG'
-    NOFILESIZE: 'La taille du fichier est de zéro bytes.'
     NOVALIDUPLOAD: 'Le fichier n’est pas valide pour le téléversement'
     Name: Nom
     PLURALNAME: Fichiers
     PdfType: 'Fichier PDF Adobe Acrobat'
     PngType: 'Image PNG (adaptée à tous les usages)'
     SINGULARNAME: Fichier
-    TOOLARGE: 'La taille du fichier dépasse la limite de {size}'
     TiffType: 'Image TIFF'
     Title: Titre
     WavType: 'Fichier audio WAV'
@@ -363,7 +361,6 @@ fr:
     DIGITSDECFRACTIONSECOND: 'Un ou plusieurs chiffres représentant la fraction décimale d’une seconde'
     FOURDIGITYEAR: 'L’année sur 4 chiffres'
     FULLNAMEMONTH: 'Le nom complet du mois (p. ex. janvier)'
-    HOURNOLEADING: 'L’heure sans zéro initial'
     MINUTENOLEADING: 'La minute sans zéro initial'
     MONTHNOLEADING: 'Le chiffre du mois sans zéro initial'
     Preview: Aperçu

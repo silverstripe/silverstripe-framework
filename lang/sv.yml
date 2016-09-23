@@ -169,14 +169,12 @@ sv:
     JsType: 'Javascript-fil'
     Mp3Type: 'MP3-ljudfil'
     MpgType: 'MPEG-videofil'
-    NOFILESIZE: 'Filstorleken är noll bytes'
     NOVALIDUPLOAD: 'Filen är inte giltig för uppladdning'
     Name: Namn
     PLURALNAME: Filer
     PdfType: 'Adobe Acrobat PDF-fil'
     PngType: 'PNG-bild - bra allmänt format'
     SINGULARNAME: Fil
-    TOOLARGE: 'Filen är för stor, max {size} tillåts'
     TiffType: 'Tiff bildformat'
     Title: Titel
     WavType: 'WAV-ljudfil'
@@ -332,7 +330,6 @@ sv:
     ShowAsList: 'visa som lista'
     TooManyPages: 'För många sidor'
     ValidationError: 'Valideringsfel'
-    VersionUnknown: Okänd
   LeftAndMain_Menu_ss:
     Hello: Hej
     LOGOUT: 'Logga ut'
@@ -397,7 +394,6 @@ sv:
     DIGITSDECFRACTIONSECOND: 'En eller fler delar som representerar en decimaldel av en sekund.'
     FOURDIGITYEAR: 'Fyrsiffrigt år'
     FULLNAMEMONTH: 'Helt namn för månad (t ex juni)'
-    HOURNOLEADING: 'Timme utan inledande nolla'
     MINUTENOLEADING: 'Minut utan inledande nolla'
     MONTHNOLEADING: 'Dag i månad utan inledande nolla'
     Preview: Förhandsgranska

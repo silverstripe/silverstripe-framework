@@ -147,12 +147,10 @@ bg:
     Filename: Име на файл
     INVALIDEXTENSION: 'Това разширение не е разрешено (разрешени са: {extensions})'
     INVALIDEXTENSIONSHORT: 'Това разширение не е разрешено'
-    NOFILESIZE: 'Размер на файла е нула байта.'
     NOVALIDUPLOAD: 'Невалиден файл за качване'
     Name: Име
     PLURALNAME: Файлове
     SINGULARNAME: Файл
-    TOOLARGE: 'Много голям файл, разрешено е до {size}'
     Title: Заглавие
   Filesystem:
     SYNCRESULTS: 'Синхронизацията завърши: бяха създадени {createdcount} елемента, бяха изтрити {deletedcount} елемента'
@@ -314,7 +312,6 @@ bg:
     DIGITSDECFRACTIONSECOND: 'Една или повече цифри, представляващи десетичната част на секундата'
     FOURDIGITYEAR: 'Четирицифрена година'
     FULLNAMEMONTH: 'Пълно наименование на месец (напр. Януари)'
-    HOURNOLEADING: 'Час без водеща нула'
     MINUTENOLEADING: 'Минути без водеща нула'
     MONTHNOLEADING: 'Месец без водеща нула'
     Preview: Преглед

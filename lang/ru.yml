@@ -36,7 +36,6 @@ ru:
     INSERTURL: 'Вставить ссылку'
     REMOVEINFO: 'Удалить этот файл из поля'
     TOTAL: Всего
-    TOUPLOAD: 'Выберите файлы для загрузки ...'
     UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
     UPLOADOR: ИЛИ
   BBCodeParser:
@@ -74,8 +73,6 @@ ru:
     ANY: Все
     NOANSWER: 'Нет'
     YESANSWER: 'Да'
-  CAMPAIGNS:
-    ADDTOCAMPAIGN: 'Добавить в кампанию'
   CMSLoadingScreen_ss:
     LOADING: Идет загрузка...
     REQUIREJS: 'Для работы с CMS у вас должен быть включен JavaScript.'
@@ -210,14 +207,12 @@ ru:
     JsType: 'Файл Javascript'
     Mp3Type: 'Аудиофайл MP3'
     MpgType: 'Видеофайл MPEG'
-    NOFILESIZE: 'Размер файла 0 байт.'
     NOVALIDUPLOAD: 'Недействительный файл для загрузки'
     Name: Название
     PLURALNAME: Файлы
     PdfType: 'Файл Adobe Acrobat PDF'
     PngType: 'Изображение PNG - универсальный графический формат'
     SINGULARNAME: Файл
-    TOOLARGE: 'Превышен допустимый размер файла (максимально {size})'
     TiffType: 'Изображение TIFF'
     Title: Заголовок
     WavType: 'Аудиофайл WAV'
@@ -318,7 +313,6 @@ ru:
     CSSCLASSRIGHT: 'Справа с обтеканием текста'
     DETAILS: Подробности
     EMAIL: 'Email'
-    FILE: Файл
     FOLDER: Папка
     IMAGEALT: 'Альтернативный текст (alt)'
     IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
@@ -331,14 +325,8 @@ ru:
     IMAGEWIDTHPX: Ширина
     INSERTMEDIA: 'Вставить медиафайл'
     LINK: 'Вставить ссылку'
-    LINKANCHOR: 'Якорь на этой странице'
     LINKDESCR: 'Описание ссылки'
-    LINKEMAIL: 'Email'
-    LINKEXTERNAL: 'Другой сайт'
-    LINKFILE: 'Скачивание файла'
-    LINKINTERNAL: 'Страницу данного сайта'
     LINKOPENNEWWIN: 'Открыть ссылку в новом окне?'
-    LINKTO: 'Ссылка на'
     PAGE: Страница
     SUBJECT: 'Тема Email письма'
     URL: Ссылка
@@ -350,7 +338,6 @@ ru:
     ERROR_HOSTNAME: 'Данный адрес недоступен'
     ERROR_ID: 'Необходимо указать "ID" или "FileURL" - ссылку на файл для идентификации файла'
     ERROR_NOTFOUND: 'Файл не обнаружен'
-    ERROR_OEMBED_REMOTE: 'Доступны только файлы по ссылке'
     ERROR_SCHEME: 'Данный тип файла не поддерживается'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Обнаружен бесконечный цикл в иерархической структуре "{type}". Для исправления ошибки измените страницу, находящуюся уровнем выше'
@@ -424,7 +411,6 @@ ru:
     ShowAsList: 'в виде списка'
     TooManyPages: 'Слишком много страниц'
     ValidationError: 'Ошибка проверки'
-    VersionUnknown: неизвестно
   LeftAndMain_Menu_ss:
     Hello: Здравствуйте
     LOGOUT: 'Выход'
@@ -467,7 +453,6 @@ ru:
     PASSWORD: Пароль
     PASSWORDEXPIRED: 'Срок действия Вашего пароля истек. Пожалуйста установите новый.'
     PLURALNAME: Члены группы
-    REMEMBERME: 'Запомнить меня?'
     SINGULARNAME: Член группы
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
@@ -493,7 +478,6 @@ ru:
     DIGITSDECFRACTIONSECOND: 'Одна или более цифр для обозначения десятых долей секунды'
     FOURDIGITYEAR: 'Год: четырьмя цифрами'
     FULLNAMEMONTH: 'Название месяца полностью (июнь)'
-    HOURNOLEADING: 'Часы без ведущего нуля'
     MINUTENOLEADING: 'Минуты без ведущего нуля'
     MONTHNOLEADING: 'Месяц без ведущего нуля'
     Preview: Просмотр

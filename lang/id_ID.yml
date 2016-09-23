@@ -174,14 +174,12 @@ id_ID:
     JsType: 'Berkas Javascript'
     Mp3Type: 'Berkas audio MP3'
     MpgType: 'Berkas video MPEG'
-    NOFILESIZE: 'Ukuran berkas nol byte.'
     NOVALIDUPLOAD: 'Berkas tidak diunggah dengan benar'
     Name: Nama
     PLURALNAME: Berkas
     PdfType: 'Berkas PDF Adobe Acrobat'
     PngType: 'Gambar PNG - bagus untuk format serba-bisa'
     SINGULARNAME: Berkas
-    TOOLARGE: 'Ukuran berkas terlalu besar, maksimal {size} dibolehkan'
     TiffType: 'Format gambar tertanda'
     Title: Judul
     WavType: 'Berkas audio WAV'
@@ -396,7 +394,6 @@ id_ID:
     DIGITSDECFRACTIONSECOND: 'Satu atau lebih angka merepresentasikan pecahan desimal dari detik'
     FOURDIGITYEAR: 'Tahun empat angka'
     FULLNAMEMONTH: 'Nama lengkap bulan (misalnya Juni)'
-    HOURNOLEADING: 'Angka jam tanpa nol di depan'
     MINUTENOLEADING: 'Angka menit tanpa nol di depan'
     MONTHNOLEADING: 'Angka bulan tanpa nol di depan'
     Preview: Pratinjau

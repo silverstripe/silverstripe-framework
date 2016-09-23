@@ -175,14 +175,12 @@ lt:
     JsType: 'Javascript byla'
     Mp3Type: 'MP3 garso byla'
     MpgType: 'MPEG video byla'
-    NOFILESIZE: 'Bylos dydis 0 baitų.'
     NOVALIDUPLOAD: 'Byla netinkama įkėlimui'
     Name: Pavadinimas
     PLURALNAME: Bylos
     PdfType: 'Adome Acrobat PDF byla'
     PngType: 'PNG paveikslėlis - geras bendro tipo formatas'
     SINGULARNAME: Byla
-    TOOLARGE: 'Byla per didelė, didžiausias galimas dydis yra {size}'
     TiffType: 'Tagged paveikslėlių formatas'
     Title: Pavadinimas
     WavType: 'WAV garso byla'
@@ -341,7 +339,6 @@ lt:
     ShowAsList: 'rodyti kaip sąrašą'
     TooManyPages: 'Per daug puslapių'
     ValidationError: 'Tikrinimo klaida'
-    VersionUnknown: nežinoma
   LeftAndMain_Menu_ss:
     Hello: Sveiki
     LOGOUT: 'Atsijungti'
@@ -406,7 +403,6 @@ lt:
     DIGITSDECFRACTIONSECOND: 'Vienas ar daugiau skaitmenų, rodančių trupmeninę sekundės dalį'
     FOURDIGITYEAR: 'Metai iš keturių skaitmenų'
     FULLNAMEMONTH: 'Pilnas mėnesio pavadinimas (pvz. Liepa)'
-    HOURNOLEADING: 'Valanda be nulio pradžioje'
     MINUTENOLEADING: 'Minutė be nulio pradžioje'
     MONTHNOLEADING: 'Mėnesis be nulio pradžioje'
     Preview: Peržiūra

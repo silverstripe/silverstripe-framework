@@ -142,14 +142,12 @@ ar:
     JsType: 'ملف جافا سكريبت'
     Mp3Type: 'ملف صوتي بصيغة MP3'
     MpgType: 'مقطع ملف فيديو بصيغة MPEG'
-    NOFILESIZE: 'حجم الملف 0 بايت'
     NOVALIDUPLOAD: 'نوع الملف غير قابل للرفع'
     Name: الاسم
     PLURALNAME: الملفات
     PdfType: 'ملف بصيغة أدوب أكروبات بي دي إف'
     PngType: 'الصورة بصيغة PNG - و هي صيغة جيدة للأغراض العامة'
     SINGULARNAME: الملف
-    TOOLARGE: 'حجم الملف كبير جدا، الحد الأقصى {حجم} المسموح به'
     TiffType: 'تنسيق الصورة ذات الكلمات الدلالية'
     Title: العنوان
     WavType: 'ملف صوتي بصيغة WAV'
@@ -358,7 +356,6 @@ ar:
     DIGITSDECFRACTIONSECOND: 'واحد أو أكثر من الأرقام تمثل جزء عشري من الثانية'
     FOURDIGITYEAR: 'سنة بأربع - أرقام'
     FULLNAMEMONTH: 'الاسم الكامل للشهر (على سبيل المثال يونيو)'
-    HOURNOLEADING: 'ساعة دون أن تصبح صفراً'
     MINUTENOLEADING: 'دقيقة دون أن تصبح صفراً'
     MONTHNOLEADING: 'أرقام شهر دون أن تصبح بقيمة صفر'
     Preview: معاينة

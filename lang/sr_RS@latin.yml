@@ -144,14 +144,12 @@ sr_RS@latin:
     JsType: 'Javascript datoteka'
     Mp3Type: 'MP3 audio datoteka'
     MpgType: 'MPEG video datoteka'
-    NOFILESIZE: 'Datoteka je veličine 0 B.'
     NOVALIDUPLOAD: 'Datoteka za prenos nije valjana'
     Name: Ime
     PLURALNAME: Datoteke
     PdfType: 'Adobe Acrobat PDF datoteka'
     PngType: 'PNG slika - dobar format opšte namene'
     SINGULARNAME: Datoteka
-    TOOLARGE: 'Datoteka je prevelika; maksimalna dozvoljena veličina je {size}'
     TiffType: 'Označeni format slike'
     Title: Naslov
     WavType: 'WAV audio datoteka'
@@ -360,7 +358,6 @@ sr_RS@latin:
     DIGITSDECFRACTIONSECOND: 'Jedna ili više cifara koje predstaljaju deseti deo sekunde'
     FOURDIGITYEAR: 'Četvorocifrena godina'
     FULLNAMEMONTH: 'Puno ime meseca (npr. Jun)'
-    HOURNOLEADING: 'Sati bez vodeće nule'
     MINUTENOLEADING: 'Minute bez vodeće nule'
     MONTHNOLEADING: 'Mesec bez vodeće nule'
     Preview: Prethodni pregled

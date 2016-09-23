@@ -144,14 +144,12 @@ sr_RS:
     JsType: 'Javascript датотека'
     Mp3Type: 'MP3 аудио датотека'
     MpgType: 'MPEG видео датотека'
-    NOFILESIZE: 'Датотека је величине 0 B.'
     NOVALIDUPLOAD: 'Датотека за пренос није ваљана'
     Name: Име
     PLURALNAME: Датотеке
     PdfType: 'Adobe Acrobat PDF датотека'
     PngType: 'PNG слика - добар формат опште намене'
     SINGULARNAME: Датотека
-    TOOLARGE: 'Датотека је превелика; максимална дозвољена величина је {size}'
     TiffType: 'Означени формат слике'
     Title: Наслов
     WavType: 'WAV аудио датотека'
@@ -360,7 +358,6 @@ sr_RS:
     DIGITSDECFRACTIONSECOND: 'Једна или више цифара које предстаљају десети део секунде'
     FOURDIGITYEAR: 'Четвороцифрена година'
     FULLNAMEMONTH: 'Пуно име месеца (нпр. Јун)'
-    HOURNOLEADING: 'Сати без водеће нуле'
     MINUTENOLEADING: 'Минуте без водеће нуле'
     MONTHNOLEADING: 'Месец без водеће нуле'
     Preview: Претходни преглед

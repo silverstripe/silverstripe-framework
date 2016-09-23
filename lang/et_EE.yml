@@ -141,14 +141,12 @@ et_EE:
     JsType: 'Javascripti fail'
     Mp3Type: 'MP3-helifail'
     MpgType: 'MPEG-videofail'
-    NOFILESIZE: 'Faili suurus on null baiti.'
     NOVALIDUPLOAD: 'Fail ei ole üleslaadimiseks sobiv'
     Name: Nimi
     PLURALNAME: Failid
     PdfType: 'Adobe Acrobati PDF-fail'
     PngType: 'PNG-kujutis – hea üldotstarbelise vormingu jaoks'
     SINGULARNAME: Fail
-    TOOLARGE: 'Fail on liiga suur, lubatud on maksimaalselt {size}'
     Title: Pealkiri
     WavType: 'WAV-helifail'
     XlsType: 'Exceli arvutustabel'
@@ -339,7 +337,6 @@ et_EE:
     DAYNOLEADING: 'Kuupäev ilma nullita'
     FOURDIGITYEAR: 'Aasta nelja numbrina'
     FULLNAMEMONTH: 'Kuu täisnimetus (nt august)'
-    HOURNOLEADING: 'Tunnid ilma nullita'
     MINUTENOLEADING: 'Minutid ilma nullita'
     MONTHNOLEADING: 'Kuu ilma nullita'
     Preview: Eelvaade

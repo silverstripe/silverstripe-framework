@@ -231,7 +231,6 @@ es_MX:
     DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
     FOURDIGITYEAR: 'Año de 4 dígitos'
     FULLNAMEMONTH: 'Nombre completo del mes (ej: Junio)'
-    HOURNOLEADING: 'Hora sin cero a la izquierda'
     MINUTENOLEADING: 'Minuto sin cero a la izquierda'
     MONTHNOLEADING: 'Dígito del mes  sin cero'
     Preview: Previo

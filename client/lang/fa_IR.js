@@ -31,7 +31,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
     "UploadField.Editing": "ویراستن ...",
     "UploadField.HTML_MAXFILESIZE": "فایل از MAX_FILE_SIZE تجاوز می‌کند (اچ‌تی‌ام‌ال از متضمن دستور)",
     "UploadField.INVALIDEXTENSION": "قالب مجاز نیست",
-    "UploadField.LOADING": "بارگذاری...",
+    "UploadField.LOADING": "بارگذاری ...",
     "UploadField.MAXNUMBEROFFILESSIMPLE": "از حداکثر تعداد فایل تجاوز کرد",
     "UploadField.NOFILEUPLOADED": "هیچ فایلی آپلود نشد",
     "UploadField.NOTMPFOLDER": "پوشه‌ی موقت پیدا نشد",

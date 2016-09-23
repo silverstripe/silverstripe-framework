@@ -175,14 +175,12 @@ es:
     JsType: 'Archivo Javascript'
     Mp3Type: 'Archivo de audio MP3'
     MpgType: 'Archivo de video MPEG'
-    NOFILESIZE: 'El tamaño del fichero es de cero bytes.'
     NOVALIDUPLOAD: 'El archivo no es válido para cargarlo'
     Name: Nombre
     PLURALNAME: Archivos
     PdfType: 'Archivo PDF de Adobe Acrobat'
     PngType: 'Imagen PNG - buen formato de propósito general'
     SINGULARNAME: Archivo
-    TOOLARGE: 'El tamaño del archivo es demasiado grande, máximo permitido {size}'
     TiffType: 'Formato de imagen etiquetada'
     Title: Título
     WavType: 'Archivo de audio WAV'
@@ -341,7 +339,6 @@ es:
     ShowAsList: 'Mostrar como lista'
     TooManyPages: 'Muchas páginas'
     ValidationError: 'Error de validación'
-    VersionUnknown: desconocido
   LeftAndMain_Menu_ss:
     Hello: Hola
     LOGOUT: 'Finalizar la sesión'
@@ -406,7 +403,6 @@ es:
     DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
     FOURDIGITYEAR: 'Año de cuatro dígitos'
     FULLNAMEMONTH: 'Nombre completo del mes (ej.Junio)'
-    HOURNOLEADING: 'Hora sin ceros a la izquierda'
     MINUTENOLEADING: 'Minutos sin cero inicial'
     MONTHNOLEADING: 'Dígitos mes sin cero inicial'
     Preview: Vista previa

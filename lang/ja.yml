@@ -142,14 +142,12 @@ ja:
     JsType: 'Javascriptのファイル'
     Mp3Type: 'MP3 オーディオファイル'
     MpgType: 'MPEG ビデオファイル'
-    NOFILESIZE: 'ファイルサイズが0バイトです。'
     NOVALIDUPLOAD: 'ファイルが有効なアップロードではありません'
     Name: 名前
     PLURALNAME: ファイル
     PdfType: 'Adobe AcrobatのPDFファイル'
     PngType: 'PNG イメージ - 最適な汎用形式'
     SINGULARNAME: ファイル
-    TOOLARGE: 'ファイルサイズが大きすぎます。許可されている最大サイズは{size}です。'
     TiffType: 'タグ付けされたイメージ形式'
     Title: タイトル
     WavType: 'WAV オーディオファイル'
@@ -357,7 +355,6 @@ ja:
     DIGITSDECFRACTIONSECOND: '秒の小数を表す1つ以上の数字'
     FOURDIGITYEAR: '四桁の年'
     FULLNAMEMONTH: '月の完全な名前（例えば6月）'
-    HOURNOLEADING: '先行ゼロなしの時間'
     MINUTENOLEADING: '先行ゼロなしの分'
     MONTHNOLEADING: '先行ゼロなしの月の桁'
     Preview: プレビュー

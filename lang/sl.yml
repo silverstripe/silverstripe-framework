@@ -140,14 +140,12 @@ sl:
     JsType: 'Javascript datoteka'
     Mp3Type: 'MP3 avdio datoteka'
     MpgType: 'MPEG video datoteka'
-    NOFILESIZE: 'Velikost datoteke je 0 bajtov.'
     NOVALIDUPLOAD: 'Datoteke ni možno naložiti.'
     Name: Ime
     PLURALNAME: Datoteke
     PdfType: 'Adobe Acrobat PDF datoteka'
     PngType: 'PNG slika - večstransko uporabna oblika'
     SINGULARNAME: Datoteka
-    TOOLARGE: 'Datoteka je prevelika. Največja dovoljena velikost je {size} '
     Title: Naslov
     WavType: 'WAV avdio datoteka'
     XlsType: 'Excel preglednica'
@@ -346,7 +344,6 @@ sl:
     DIGITSDECFRACTIONSECOND: 'Ena ali več decimalk, ki predstavljajo sekunde'
     FOURDIGITYEAR: 'Štirimesten zapis letnice'
     FULLNAMEMONTH: 'Celoten zapis meseca (npr: junij)'
-    HOURNOLEADING: 'Ura brez zapisa sprednje ničle'
     MINUTENOLEADING: 'Minute brez zapisa sprednje ničle'
     MONTHNOLEADING: 'Mesec brez zapisa sprednje ničle'
     Preview: Predogled

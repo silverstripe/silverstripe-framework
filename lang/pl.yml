@@ -144,14 +144,12 @@ pl:
     JsType: 'Plik JavaScript'
     Mp3Type: 'Plik MP3'
     MpgType: 'MPEG plik wideo'
-    NOFILESIZE: 'Rozmiar pliku to zero bajtów.'
     NOVALIDUPLOAD: 'Plik nie został poprawnie przesłany'
     Name: Nazwa
     PLURALNAME: Pliki
     PdfType: 'Plik Adobe Acrobat PDF'
     PngType: 'Plik PNG, dobry do zastosowania w większości przypadków'
     SINGULARNAME: Plik
-    TOOLARGE: 'Plik jest za duży, maksymalnie dozwolone jest {size}'
     TiffType: 'Plik TIFF'
     Title: Tytuł
     WavType: 'WAV plik audio'
@@ -360,7 +358,6 @@ pl:
     DIGITSDECFRACTIONSECOND: 'Jedna lub więcej cyfr reprezentujących ułamek sekundy'
     FOURDIGITYEAR: 'Czterocyfrowy rok'
     FULLNAMEMONTH: 'Pełna nazwa miesiąca (np. Czerwiec)'
-    HOURNOLEADING: 'Godzina bez wiodącego zera'
     MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
     Preview: Podgląd

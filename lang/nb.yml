@@ -144,14 +144,12 @@ nb:
     JsType: 'Javascript-fil'
     Mp3Type: 'MP3 lydfil'
     MpgType: 'MPEG videofil'
-    NOFILESIZE: 'Filstørrelsen var 0 bytes.'
     NOVALIDUPLOAD: 'Filen er ikke en gyldig opplasting'
     Name: Navn
     PLURALNAME: Filer
     PdfType: 'Adobe Acrobat PDF-fil'
     PngType: 'PNG-bilde - bra til de fleste formål'
     SINGULARNAME: Fil
-    TOOLARGE: 'Filstørrelse for stor, maksimum {size} tillatt '
     TiffType: 'Tagged image format'
     Title: Tittel
     WavType: 'WAV lydfil'
@@ -360,7 +358,6 @@ nb:
     DIGITSDECFRACTIONSECOND: 'Ett eller flere siffer som representerer en desimlbrøkdel av et sekund'
     FOURDIGITYEAR: 'Firesifret årstall'
     FULLNAMEMONTH: 'Fullt navn på måned (eks. juni)'
-    HOURNOLEADING: 'Time uten ledende null'
     MINUTENOLEADING: 'Minutt uten ledende null'
     MONTHNOLEADING: 'Månedssiffer uten ledende null'
     Preview: Forhåndsvisning

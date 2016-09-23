@@ -166,14 +166,12 @@ zh:
     JsType: 'Javascript 文件'
     Mp3Type: 'MP3 音频文件'
     MpgType: 'MPEG 视频文件'
-    NOFILESIZE: '文件尺寸为零字节。'
     NOVALIDUPLOAD: '该文件不是有效上传的'
     Name: 名称
     PLURALNAME: 文件
     PdfType: 'Adobe Acrobat PDF 文件'
     PngType: 'PNG 图片 - 良好的通用格式'
     SINGULARNAME: 文件
-    TOOLARGE: '文件尺寸过大，最大允许 {size}'
     TiffType: '标记图片格式'
     Title: 标题
     WavType: 'WAV 音频文件'
@@ -326,7 +324,6 @@ zh:
     ShowAsList: '以列表方式展示'
     TooManyPages: '页面数目过多'
     ValidationError: '验证错误'
-    VersionUnknown: 未知
   LeftAndMain_Menu_ss:
     Hello: 您好
     LOGOUT: '退出'
@@ -391,7 +388,6 @@ zh:
     DIGITSDECFRACTIONSECOND: '一个或多个代表秒的小数数字'
     FOURDIGITYEAR: '四位数年份'
     FULLNAMEMONTH: '月份全名（例如六月）'
-    HOURNOLEADING: '起首不为零的小时'
     MINUTENOLEADING: '起首不为零的分钟'
     MONTHNOLEADING: '起首不为零的月份数字'
     Preview: 预览
