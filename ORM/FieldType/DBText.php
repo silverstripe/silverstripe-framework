@@ -9,7 +9,6 @@ use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\NullableField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DB;
-use SilverStripe\View\Parsers\TextParser;
 use InvalidArgumentException;
 
 /**
@@ -231,24 +230,6 @@ class DBText extends DBString {
 		}
 
 		return $summary;
-	}
-
-	/**
-	 * Allows a sub-class of TextParser to be rendered.
-	 *
-	 * @see TextParser for implementation details.
-	 * @param string $parser Class name of parser (Must extend {@see TextParser})
-	 * @return DBField Parsed value in the appropriate type
-	 */
-	public function Parse($parser) {
-		$reflection = new \ReflectionClass($parser);
-		if($reflection->isAbstract() || !$reflection->isSubclassOf('SilverStripe\\View\\Parsers\\TextParser')) {
-			throw new InvalidArgumentException("Invalid parser {$parser}");
-		}
-
-		/** @var TextParser $obj */
-		$obj = Injector::inst()->createWithArgs($parser, [$this->forTemplate()]);
-		return $obj->parse();
 	}
 
 	public function scaffoldFormField($title = null, $params = null) {
