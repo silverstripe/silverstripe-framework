@@ -40,6 +40,3 @@ Cache::set_cache_lifetime('GDBackend_Manipulations', null, 100);
 
 // If you don't want to see deprecation errors for the new APIs, change this to 3.2.0-dev.
 Deprecation::notification_version('3.2.0');
-
-// TODO Remove once new ManifestBuilder with submodule support is in place
-require_once('admin/_config.php');

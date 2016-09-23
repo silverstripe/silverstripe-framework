@@ -35,7 +35,7 @@ class GenericTemplateGlobalProvider implements TemplateGlobalProvider {
 			return self::$modules[$name];
 		} else {
 			throw new InvalidArgumentException(sprintf('%s is not a supported argument. Possible values: %s', $name,
-				implode(', ', self::$modules)));
+				implode(', ', array_keys(self::$modules))));
 		}
 	}
 

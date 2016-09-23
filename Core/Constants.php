@@ -229,8 +229,8 @@ if(strpos(FRAMEWORK_PATH, BASE_PATH) === 0) {
 	throw new Exception("Path error: FRAMEWORK_PATH " . FRAMEWORK_PATH . " not within BASE_PATH " . BASE_PATH);
 }
 
-define('FRAMEWORK_ADMIN_DIR', $frameworkDirSlashSuffix . 'admin');
-define('FRAMEWORK_ADMIN_PATH', FRAMEWORK_PATH . '/admin');
+define('FRAMEWORK_ADMIN_DIR', 'admin');
+define('FRAMEWORK_ADMIN_PATH', BASE_PATH . '/admin');
 
 define('THIRDPARTY_DIR', $frameworkDirSlashSuffix . 'thirdparty');
 define('THIRDPARTY_PATH', FRAMEWORK_PATH . '/thirdparty');

@@ -24,7 +24,7 @@ class TinyMCEConfig extends HTMLEditorConfig {
 	 * @config
 	 * @var string
 	 */
-	private static $base_dir = 'framework/admin/thirdparty/tinymce';
+	private static $base_dir = 'admin/thirdparty/tinymce';
 
 	/**
 	 * TinyMCE JS settings

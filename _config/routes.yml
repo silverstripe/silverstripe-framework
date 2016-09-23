@@ -21,14 +21,3 @@ SilverStripe\Control\Director:
     'InstallerTest//$Action/$ID/$OtherID': SilverStripe\Dev\InstallerTest
     'SapphireInfo//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireInfo
     'SapphireREPL//$Action/$ID/$OtherID': SilverStripe\Dev\SapphireREPL
----
-Name: adminroutes
-Before: '*'
-After:
-  - '#rootroutes'
-  - '#coreroutes'
-  - '#modelascontrollerroutes'
----
-SilverStripe\Control\Director:
-  rules:
-    'admin': 'SilverStripe\Admin\AdminRootController'
