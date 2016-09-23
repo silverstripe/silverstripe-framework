@@ -1526,97 +1526,97 @@ function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),o=i(r);(0,o["def
 t.toggleClass("active"),t.find(".toggle-content").css("minHeight",n)}})},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),o=i(r);(0,o["default"])(document).on("click",".confirmedpassword .showOnClick a",function(){var e=(0,o["default"])(".showOnClickContainer",(0,
 o["default"])(this).parent())
-return e.toggle("fast",function(){e.find('input[type="hidden"]').val(e.is(":visible")?1:0)}),!1})},function(e,t,n){(function(e){"use strict"
-function t(e){return e&&e.__esModule?e:{"default":e}}var i=n(1),r=t(i),o=n(94),a=t(o)
-window.tmpl=n(110),n(111),n(112),r["default"].widget("blueimpUIX.fileupload",r["default"].blueimpUI.fileupload,{_initTemplates:function s(){this.options.templateContainer=document.createElement(this._files.prop("nodeName")),
-this.options.uploadTemplate=window.tmpl(this.options.uploadTemplateName),this.options.downloadTemplate=window.tmpl(this.options.downloadTemplateName)},_enableFileInputButton:function l(){r["default"].blueimpUI.fileupload.prototype._enableFileInputButton.call(this),
-this.element.find(".ss-uploadfield-addfile").show()},_disableFileInputButton:function u(){r["default"].blueimpUI.fileupload.prototype._disableFileInputButton.call(this),this.element.find(".ss-uploadfield-addfile").hide()
+return e.toggle("fast",function(){e.find('input[type="hidden"]').val(e.is(":visible")?1:0)}),!1})},function(e,t,n){"use strict"
+function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),o=i(r),a=n(94),s=i(a)
+window.tmpl=n(110),n(111),n(112),o["default"].widget("blueimpUIX.fileupload",o["default"].blueimpUI.fileupload,{_initTemplates:function l(){this.options.templateContainer=document.createElement(this._files.prop("nodeName")),
+this.options.uploadTemplate=window.tmpl(this.options.uploadTemplateName),this.options.downloadTemplate=window.tmpl(this.options.downloadTemplateName)},_enableFileInputButton:function u(){o["default"].blueimpUI.fileupload.prototype._enableFileInputButton.call(this),
+this.element.find(".ss-uploadfield-addfile").show()},_disableFileInputButton:function d(){o["default"].blueimpUI.fileupload.prototype._disableFileInputButton.call(this),this.element.find(".ss-uploadfield-addfile").hide()
 
-},_onAdd:function d(e,t){var n=r["default"].blueimpUI.fileupload.prototype._onAdd.call(this,e,t),i=this._files.find(".ss-uploadfield-item").slice(t.files.length*-1).first(),o="+="+(i.position().top-parseInt(i.css("marginTop"),10)||0-parseInt(i.css("borderTopWidth"),10)||0)
+},_onAdd:function c(e,t){var n=o["default"].blueimpUI.fileupload.prototype._onAdd.call(this,e,t),i=this._files.find(".ss-uploadfield-item").slice(t.files.length*-1).first(),r="+="+(i.position().top-parseInt(i.css("marginTop"),10)||0-parseInt(i.css("borderTopWidth"),10)||0)
 
 
-i.offsetParent().animate({scrollTop:o},1e3)
-for(var s=0,l=0;l<t.files.length;l++)"number"==typeof t.files[l].size&&(s+=t.files[l].size)
-return(0,r["default"])(".fileOverview .uploadStatus .details .total").text(t.files.length),"number"==typeof s&&s>0&&(s=this._formatFileSize(s),(0,r["default"])(".fileOverview .uploadStatus .details .fileSize").text(s)),
-1==t.files.length&&null!==t.files[0].error?((0,r["default"])(".fileOverview .uploadStatus .state").text(a["default"]._t("AssetUploadField.UploadField.UPLOADFAIL","Sorry your upload failed")),(0,r["default"])(".fileOverview .uploadStatus").addClass("bad").removeClass("good").removeClass("notice")):((0,
-r["default"])(".fileOverview .uploadStatus .state").text(a["default"]._t("AssetUploadField.UPLOADINPROGRESS","Please wait… upload in progress")),(0,r["default"])(".ss-uploadfield-item-edit-all").hide(),
-(0,r["default"])(".fileOverview .uploadStatus").addClass("notice").removeClass("good").removeClass("bad")),n},_onDone:function c(e,t,n,i){this.options.changeDetection&&this.element.closest("form").trigger("dirty"),
-r["default"].blueimpUI.fileupload.prototype._onDone.call(this,e,t,n,i)},_onSend:function f(e,t){var n=this,i=this.options
-return i.overwriteWarning&&i.replaceFile?void r["default"].get(i.urlFileExists,{filename:t.files[0].name},function(o,a,s){return o.exists?(t.context.find(".ss-uploadfield-item-status").text(i.errorMessages.overwriteWarning).addClass("ui-state-warning-text"),
+i.offsetParent().animate({scrollTop:r},1e3)
+for(var a=0,l=0;l<t.files.length;l++)"number"==typeof t.files[l].size&&(a+=t.files[l].size)
+return(0,o["default"])(".fileOverview .uploadStatus .details .total").text(t.files.length),"number"==typeof a&&a>0&&(a=this._formatFileSize(a),(0,o["default"])(".fileOverview .uploadStatus .details .fileSize").text(a)),
+1==t.files.length&&null!==t.files[0].error?((0,o["default"])(".fileOverview .uploadStatus .state").text(s["default"]._t("AssetUploadField.UploadField.UPLOADFAIL","Sorry your upload failed")),(0,o["default"])(".fileOverview .uploadStatus").addClass("bad").removeClass("good").removeClass("notice")):((0,
+o["default"])(".fileOverview .uploadStatus .state").text(s["default"]._t("AssetUploadField.UPLOADINPROGRESS","Please wait… upload in progress")),(0,o["default"])(".ss-uploadfield-item-edit-all").hide(),
+(0,o["default"])(".fileOverview .uploadStatus").addClass("notice").removeClass("good").removeClass("bad")),n},_onDone:function f(e,t,n,i){this.options.changeDetection&&this.element.closest("form").trigger("dirty"),
+o["default"].blueimpUI.fileupload.prototype._onDone.call(this,e,t,n,i)},_onSend:function p(e,t){var n=this,i=this.options
+return i.overwriteWarning&&i.replaceFile?void o["default"].get(i.urlFileExists,{filename:t.files[0].name},function(r,a,s){return r.exists?(t.context.find(".ss-uploadfield-item-status").text(i.errorMessages.overwriteWarning).addClass("ui-state-warning-text"),
 t.context.find(".ss-uploadfield-item-progress").hide(),t.context.find(".ss-uploadfield-item-overwrite").show(),t.context.find(".ss-uploadfield-item-overwrite-warning").on("click",function(e){return t.context.find(".ss-uploadfield-item-progress").show(),
-t.context.find(".ss-uploadfield-item-overwrite").hide(),t.context.find(".ss-uploadfield-item-status").removeClass("ui-state-warning-text"),r["default"].blueimpUI.fileupload.prototype._onSend.call(n,e,t),
-e.preventDefault(),!1}),void 0):r["default"].blueimpUI.fileupload.prototype._onSend.call(n,e,t)}):r["default"].blueimpUI.fileupload.prototype._onSend.call(n,e,t)},_onAlways:function p(e,t,n,i){r["default"].blueimpUI.fileupload.prototype._onAlways.call(this,e,t,n,i),
-"string"==typeof n?((0,r["default"])(".fileOverview .uploadStatus .state").text(a["default"]._t("AssetUploadField.UploadField.UPLOADFAIL","Sorry your upload failed")),(0,r["default"])(".fileOverview .uploadStatus").addClass("bad").removeClass("good").removeClass("notice")):200===n.status&&((0,
-r["default"])(".fileOverview .uploadStatus .state").text(a["default"]._t("AssetUploadField.FILEUPLOADCOMPLETED","File upload completed!")),(0,r["default"])(".ss-uploadfield-item-edit-all").show(),(0,r["default"])(".fileOverview .uploadStatus").addClass("good").removeClass("notice").removeClass("bad"))
+t.context.find(".ss-uploadfield-item-overwrite").hide(),t.context.find(".ss-uploadfield-item-status").removeClass("ui-state-warning-text"),o["default"].blueimpUI.fileupload.prototype._onSend.call(n,e,t),
+e.preventDefault(),!1}),void 0):o["default"].blueimpUI.fileupload.prototype._onSend.call(n,e,t)}):o["default"].blueimpUI.fileupload.prototype._onSend.call(n,e,t)},_onAlways:function h(e,t,n,i){o["default"].blueimpUI.fileupload.prototype._onAlways.call(this,e,t,n,i),
+"string"==typeof n?((0,o["default"])(".fileOverview .uploadStatus .state").text(s["default"]._t("AssetUploadField.UploadField.UPLOADFAIL","Sorry your upload failed")),(0,o["default"])(".fileOverview .uploadStatus").addClass("bad").removeClass("good").removeClass("notice")):200===n.status&&((0,
+o["default"])(".fileOverview .uploadStatus .state").text(s["default"]._t("AssetUploadField.FILEUPLOADCOMPLETED","File upload completed!")),(0,o["default"])(".ss-uploadfield-item-edit-all").show(),(0,o["default"])(".fileOverview .uploadStatus").addClass("good").removeClass("notice").removeClass("bad"))
 
-},_create:function h(){r["default"].blueimpUI.fileupload.prototype._create.call(this),this._adjustMaxNumberOfFiles(0)},attach:function m(e){this.options.changeDetection&&this.element.closest("form").trigger("dirty")
+},_create:function m(){o["default"].blueimpUI.fileupload.prototype._create.call(this),this._adjustMaxNumberOfFiles(0)},attach:function g(e){this.options.changeDetection&&this.element.closest("form").trigger("dirty")
 
 
-var t=this,n=e.files,i=e.replaceFileID,o=!0,a=null
-i&&(a=(0,r["default"])(".ss-uploadfield-item[data-fileid='"+i+"']"),0===a.length?a=null:t._adjustMaxNumberOfFiles(1)),r["default"].each(n,function(e,n){t._adjustMaxNumberOfFiles(-1),o=t._validate([n])&&o
+var t=this,n=e.files,i=e.replaceFileID,r=!0,a=null
+i&&(a=(0,o["default"])(".ss-uploadfield-item[data-fileid='"+i+"']"),0===a.length?a=null:t._adjustMaxNumberOfFiles(1)),o["default"].each(n,function(e,n){t._adjustMaxNumberOfFiles(-1),r=t._validate([n])&&r
 
-}),e.isAdjusted=!0,e.files.valid=e.isValidated=o,e.context=this._renderDownload(n),a?a.replaceWith(e.context):e.context.appendTo(this._files),e.context.data("data",e),this._reflow=this._transition&&e.context[0].offsetWidth,
-e.context.addClass("in")}}),r["default"].entwine("ss",function(t){t("div.ss-upload").entwine({Config:null,onmatch:function n(){if(!this.is(".readonly,.disabled")){var e=this.find(".ss-uploadfield-fromcomputer-fileinput"),n=t(".ss-uploadfield-dropzone"),i=e.data("config")
+}),e.isAdjusted=!0,e.files.valid=e.isValidated=r,e.context=this._renderDownload(n),a?a.replaceWith(e.context):e.context.appendTo(this._files),e.context.data("data",e),this._reflow=this._transition&&e.context[0].offsetWidth,
+e.context.addClass("in")}}),o["default"].entwine("ss",function(e){e("div.ss-upload").entwine({Config:null,onmatch:function t(){if(!this.is(".readonly,.disabled")){var t=this.find(".ss-uploadfield-fromcomputer-fileinput"),n=e(".ss-uploadfield-dropzone"),i=t.data("config")
 
 
 n.on("dragover",function(e){e.preventDefault()}),n.on("dragenter",function(e){n.addClass("hover active")}),n.on("dragleave",function(e){e.target===n[0]&&n.removeClass("hover active")}),n.on("drop",function(e){
-if(n.removeClass("hover active"),e.target!==n[0])return!1}),this.setConfig(i),this.fileupload(t.extend(!0,{formData:function r(e){var n=t(e).find(":input[name=ID]").val(),i=[{name:"SecurityID",value:t(e).find(":input[name=SecurityID]").val()
+if(n.removeClass("hover active"),e.target!==n[0])return!1}),this.setConfig(i),this.fileupload(e.extend(!0,{formData:function r(t){var n=e(t).find(":input[name=ID]").val(),i=[{name:"SecurityID",value:e(t).find(":input[name=SecurityID]").val()
 }]
-return n&&i.push({name:"ID",value:n}),i},errorMessages:{1:a["default"]._t("UploadField.PHP_MAXFILESIZE"),2:a["default"]._t("UploadField.HTML_MAXFILESIZE"),3:a["default"]._t("UploadField.ONLYPARTIALUPLOADED"),
-4:a["default"]._t("UploadField.NOFILEUPLOADED"),5:a["default"]._t("UploadField.NOTMPFOLDER"),6:a["default"]._t("UploadField.WRITEFAILED"),7:a["default"]._t("UploadField.STOPEDBYEXTENSION"),maxFileSize:a["default"]._t("UploadField.TOOLARGESHORT"),
-minFileSize:a["default"]._t("UploadField.TOOSMALL"),acceptFileTypes:a["default"]._t("UploadField.INVALIDEXTENSIONSHORT"),maxNumberOfFiles:a["default"]._t("UploadField.MAXNUMBEROFFILESSHORT"),uploadedBytes:a["default"]._t("UploadField.UPLOADEDBYTES"),
-emptyResult:a["default"]._t("UploadField.EMPTYRESULT")},send:function o(e,n){n.context&&n.dataType&&"iframe"===n.dataType.substr(0,6)&&(n.total=1,n.loaded=1,t(this).data("fileupload").options.progress(e,n))
+return n&&i.push({name:"ID",value:n}),i},errorMessages:{1:s["default"]._t("UploadField.PHP_MAXFILESIZE"),2:s["default"]._t("UploadField.HTML_MAXFILESIZE"),3:s["default"]._t("UploadField.ONLYPARTIALUPLOADED"),
+4:s["default"]._t("UploadField.NOFILEUPLOADED"),5:s["default"]._t("UploadField.NOTMPFOLDER"),6:s["default"]._t("UploadField.WRITEFAILED"),7:s["default"]._t("UploadField.STOPEDBYEXTENSION"),maxFileSize:s["default"]._t("UploadField.TOOLARGESHORT"),
+minFileSize:s["default"]._t("UploadField.TOOSMALL"),acceptFileTypes:s["default"]._t("UploadField.INVALIDEXTENSIONSHORT"),maxNumberOfFiles:s["default"]._t("UploadField.MAXNUMBEROFFILESSHORT"),uploadedBytes:s["default"]._t("UploadField.UPLOADEDBYTES"),
+emptyResult:s["default"]._t("UploadField.EMPTYRESULT")},send:function o(t,n){n.context&&n.dataType&&"iframe"===n.dataType.substr(0,6)&&(n.total=1,n.loaded=1,e(this).data("fileupload").options.progress(t,n))
 
-},progress:function s(e,t){if(t.context){var n=parseInt(t.loaded/t.total*100,10)+"%"
-t.context.find(".ss-uploadfield-item-status").html(1==t.total?a["default"]._t("UploadField.LOADING"):n),t.context.find(".ss-uploadfield-item-progressbarvalue").css("width",n)}}},i,{fileInput:e,dropZone:n,
-form:e.closest("form"),previewAsCanvas:!1,acceptFileTypes:new RegExp(i.acceptFileTypes,"i")})),this.data("fileupload")._isXHRUpload({multipart:!0})&&t(".ss-uploadfield-item-uploador").hide().show(),this._super()
+},progress:function a(e,t){if(t.context){var n=parseInt(t.loaded/t.total*100,10)+"%"
+t.context.find(".ss-uploadfield-item-status").html(1==t.total?s["default"]._t("UploadField.LOADING"):n),t.context.find(".ss-uploadfield-item-progressbarvalue").css("width",n)}}},i,{fileInput:t,dropZone:n,
+form:t.closest("form"),previewAsCanvas:!1,acceptFileTypes:new RegExp(i.acceptFileTypes,"i")})),this.data("fileupload")._isXHRUpload({multipart:!0})&&e(".ss-uploadfield-item-uploador").hide().show(),this._super()
 
-}},onunmatch:function i(){t(".ss-uploadfield-dropzone").off("dragover dragenter dragleave drop"),this._super()},openSelectDialog:function r(n){var i=this,r=this.getConfig(),o="ss-uploadfield-dialog-"+this.attr("id"),a=e("#"+o)
-
-
-a.length||(a=e('<div class="ss-uploadfield-dialog" id="'+o+'" />'))
-var s=r.urlSelectDialog,l=null
-n&&n.attr("data-fileid")>0&&(l=n.attr("data-fileid")),a.ssdialog({iframeUrl:s,height:550}),a.find("iframe").bind("load",function(e){var n=t(this).contents(),r=n.find(".grid-field")
-n.find("table.grid-field").css("margin-top",0),n.find("input[name=action_doAttach]").unbind("click.openSelectDialog").bind("click.openSelectDialog",function(){var e=t.map(r.find(".ss-gridfield-item.ui-selected"),function(e){
-return t(e).data("id")})
-return e&&e.length&&i.attachFiles(e,l),a.ssdialog("close"),!1})}),a.ssdialog("open")},attachFiles:function o(e,n){var i=this,r=this.getConfig(),o=t('<div class="loader" />'),a=n?this.find(".ss-uploadfield-item[data-fileid='"+n+"']"):this.find(".ss-uploadfield-addfile")
+}},onunmatch:function n(){e(".ss-uploadfield-dropzone").off("dragover dragenter dragleave drop"),this._super()},openSelectDialog:function i(t){var n=this,i=this.getConfig(),r="ss-uploadfield-dialog-"+this.attr("id"),o=e("#"+r)
 
 
-a.children().hide(),a.append(o),t.ajax({type:"POST",url:r.urlAttach,data:{ids:e},complete:function s(e,t){a.children().show(),o.remove()},success:function l(e,r,o){e&&!t.isEmptyObject(e)&&i.fileupload("attach",{
-files:e,options:i.fileupload("option"),replaceFileID:n})}})}}),t("div.ss-upload *").entwine({getUploadField:function s(){return this.parents("div.ss-upload:first")}}),t("div.ss-upload .ss-uploadfield-files .ss-uploadfield-item").entwine({
-onadd:function l(){this._super(),this.closest(".ss-upload").find(".ss-uploadfield-addfile").addClass("borderTop")},onremove:function u(){t(".ss-uploadfield-files:not(:has(.ss-uploadfield-item))").closest(".ss-upload").find(".ss-uploadfield-addfile").removeClass("borderTop"),
-this._super()}}),t("div.ss-upload .ss-uploadfield-startall").entwine({onclick:function d(e){return this.closest(".ss-upload").find(".ss-uploadfield-item-start button").click(),e.preventDefault(),!1}}),
-t("div.ss-upload .ss-uploadfield-item-cancelfailed").entwine({onclick:function c(e){return this.closest(".ss-uploadfield-item").remove(),e.preventDefault(),!1}}),t("div.ss-upload .ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)").entwine({
-onclick:function f(e){var t=this.closest("div.ss-upload"),n=t.getConfig("changeDetection"),i=t.data("fileupload"),r=this.closest(".ss-uploadfield-item"),o=""
-return this.is(".ss-uploadfield-item-delete")?confirm(a["default"]._t("UploadField.ConfirmDelete"))&&(n.changeDetection&&this.closest("form").trigger("dirty"),i&&i._trigger("destroy",e,{context:r,url:this.data("href"),
-type:"get",dataType:i.options.dataType})):(n.changeDetection&&this.closest("form").trigger("dirty"),i&&i._trigger("destroy",e,{context:r})),e.preventDefault(),!1}}),t("div.ss-upload .ss-uploadfield-item-edit-all").entwine({
-onclick:function p(e){return t(this).hasClass("opened")?(t(".ss-uploadfield-item .ss-uploadfield-item-edit .toggle-details-icon.opened").each(function(e){t(this).closest(".ss-uploadfield-item-edit").click()
+o.length||(o=e('<div class="ss-uploadfield-dialog" id="'+r+'" />'))
+var a=i.urlSelectDialog,s=null
+t&&t.attr("data-fileid")>0&&(s=t.attr("data-fileid")),o.ssdialog({iframeUrl:a,height:550}),o.find("iframe").bind("load",function(t){var i=e(this).contents(),r=i.find(".grid-field")
+i.find("table.grid-field").css("margin-top",0),i.find("input[name=action_doAttach]").unbind("click.openSelectDialog").bind("click.openSelectDialog",function(){var t=e.map(r.find(".ss-gridfield-item.ui-selected"),function(t){
+return e(t).data("id")})
+return t&&t.length&&n.attachFiles(t,s),o.ssdialog("close"),!1})}),o.ssdialog("open")},attachFiles:function r(t,n){var i=this,r=this.getConfig(),o=e('<div class="loader" />'),a=n?this.find(".ss-uploadfield-item[data-fileid='"+n+"']"):this.find(".ss-uploadfield-addfile")
 
-}),t(this).removeClass("opened").find(".toggle-details-icon").removeClass("opened")):(t(".ss-uploadfield-item .ss-uploadfield-item-edit .toggle-details-icon").each(function(e){t(this).hasClass("opened")||t(this).closest(".ss-uploadfield-item-edit").click()
 
-}),t(this).addClass("opened").find(".toggle-details-icon").addClass("opened")),e.preventDefault(),!1}}),t("div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit").entwine({onclick:function h(e){
+a.children().hide(),a.append(o),e.ajax({type:"POST",url:r.urlAttach,data:{ids:t},complete:function s(e,t){a.children().show(),o.remove()},success:function l(t,r,o){t&&!e.isEmptyObject(t)&&i.fileupload("attach",{
+files:t,options:i.fileupload("option"),replaceFileID:n})}})}}),e("div.ss-upload *").entwine({getUploadField:function o(){return this.parents("div.ss-upload:first")}}),e("div.ss-upload .ss-uploadfield-files .ss-uploadfield-item").entwine({
+onadd:function a(){this._super(),this.closest(".ss-upload").find(".ss-uploadfield-addfile").addClass("borderTop")},onremove:function l(){e(".ss-uploadfield-files:not(:has(.ss-uploadfield-item))").closest(".ss-upload").find(".ss-uploadfield-addfile").removeClass("borderTop"),
+this._super()}}),e("div.ss-upload .ss-uploadfield-startall").entwine({onclick:function u(e){return this.closest(".ss-upload").find(".ss-uploadfield-item-start button").click(),e.preventDefault(),!1}}),
+e("div.ss-upload .ss-uploadfield-item-cancelfailed").entwine({onclick:function d(e){return this.closest(".ss-uploadfield-item").remove(),e.preventDefault(),!1}}),e("div.ss-upload .ss-uploadfield-item-remove:not(.ui-state-disabled), .ss-uploadfield-item-delete:not(.ui-state-disabled)").entwine({
+onclick:function c(e){var t=this.closest("div.ss-upload"),n=t.getConfig("changeDetection"),i=t.data("fileupload"),r=this.closest(".ss-uploadfield-item"),o=""
+return this.is(".ss-uploadfield-item-delete")?confirm(s["default"]._t("UploadField.ConfirmDelete"))&&(n.changeDetection&&this.closest("form").trigger("dirty"),i&&i._trigger("destroy",e,{context:r,url:this.data("href"),
+type:"get",dataType:i.options.dataType})):(n.changeDetection&&this.closest("form").trigger("dirty"),i&&i._trigger("destroy",e,{context:r})),e.preventDefault(),!1}}),e("div.ss-upload .ss-uploadfield-item-edit-all").entwine({
+onclick:function f(t){return e(this).hasClass("opened")?(e(".ss-uploadfield-item .ss-uploadfield-item-edit .toggle-details-icon.opened").each(function(t){e(this).closest(".ss-uploadfield-item-edit").click()
+
+}),e(this).removeClass("opened").find(".toggle-details-icon").removeClass("opened")):(e(".ss-uploadfield-item .ss-uploadfield-item-edit .toggle-details-icon").each(function(t){e(this).hasClass("opened")||e(this).closest(".ss-uploadfield-item-edit").click()
+
+}),e(this).addClass("opened").find(".toggle-details-icon").addClass("opened")),t.preventDefault(),!1}}),e("div.ss-upload:not(.disabled):not(.readonly) .ss-uploadfield-item-edit").entwine({onclick:function p(e){
 var t=this,n=t.closest(".ss-uploadfield-item").find(".ss-uploadfield-item-editform"),i=n.prev(".ss-uploadfield-item-info"),r=n.find("iframe")
 if(r.parent().hasClass("loading"))return e.preventDefault(),!1
 if("about:blank"==r.attr("src")){var o=this.siblings()
 r.attr("src",r.data("src")),r.parent().addClass("loading"),o.addClass("ui-state-disabled"),o.attr("disabled","disabled"),r.on("load",function(){r.parent().removeClass("loading"),r.data("src")&&(t._prepareIframe(r,n,i),
 r.data("src",""))})}else t._prepareIframe(r,n,i)
-return e.preventDefault(),!1},_prepareIframe:function m(e,t,n){var i
+return e.preventDefault(),!1},_prepareIframe:function h(e,t,n){var i
 e.contents().ready(function(){var n=e.get(0).contentWindow.jQuery
 n(n.find(":input")).bind("change",function(e){t.removeClass("edited"),t.addClass("edited")})}),t.hasClass("loading")||(i=this.hasClass("ss-uploadfield-item-edit")?this.siblings():this.find("ss-uploadfield-item-edit").siblings(),
 t.parent(".ss-uploadfield-item").removeClass("ui-state-warning"),t.toggleEditForm(),n.find(".toggle-details-icon").hasClass("opened")?(i.addClass("ui-state-disabled"),i.attr("disabled","disabled")):(i.removeClass("ui-state-disabled"),
-i.removeAttr("disabled")))}}),t("div.ss-upload .ss-uploadfield-item-editform").entwine({fitHeight:function g(){var e=this.find("iframe"),n=e.contents().find("body"),i=n.find("form").outerHeight(!0),r=i+(e.outerHeight(!0)-e.height()),o=r+(this.outerHeight(!0)-this.height())
+i.removeAttr("disabled")))}}),e("div.ss-upload .ss-uploadfield-item-editform").entwine({fitHeight:function m(){var t=this.find("iframe"),n=t.contents().find("body"),i=n.find("form").outerHeight(!0),r=i+(t.outerHeight(!0)-t.height()),o=r+(this.outerHeight(!0)-this.height())
 
 
-t.browser.msie||"8.0"==t.browser.version.slice(0,3)||n.find("body").css({height:i}),e.height(r),this.animate({height:o},500)},toggleEditForm:function v(){var e=this.prev(".ss-uploadfield-item-info"),n=e.find(".ss-uploadfield-item-status"),i=this.find("iframe").contents(),r=i.find("#Form_EditForm_error"),o=""
+e.browser.msie||"8.0"==e.browser.version.slice(0,3)||n.find("body").css({height:i}),t.height(r),this.animate({height:o},500)},toggleEditForm:function g(){var t=this.prev(".ss-uploadfield-item-info"),n=t.find(".ss-uploadfield-item-status"),i=this.find("iframe").contents(),r=i.find("#Form_EditForm_error"),o=""
 
 
-0===this.height()?(o=a["default"]._t("UploadField.Editing","Editing ..."),this.fitHeight(),this.addClass("opened"),e.find(".toggle-details-icon").addClass("opened"),n.removeClass("ui-state-success-text").removeClass("ui-state-warning-text"),
-i.find("#Form_EditForm_action_doEdit").click(function(){e.find("label .name").text(i.find("#Name input").val())}),t("div.ss-upload  .ss-uploadfield-files .ss-uploadfield-item-actions .toggle-details-icon:not(.opened)").index()<0&&t("div.ss-upload .ss-uploadfield-item-edit-all").addClass("opened").find(".toggle-details-icon").addClass("opened")):(this.animate({
-height:0},500),this.removeClass("opened"),e.find(".toggle-details-icon").removeClass("opened"),t("div.ss-upload .ss-uploadfield-item-edit-all").removeClass("opened").find(".toggle-details-icon").removeClass("opened"),
-this.hasClass("edited")?r.hasClass("good")?(o=a["default"]._t("UploadField.CHANGESSAVED","Changes Saved"),this.removeClass("edited").parent(".ss-uploadfield-item").removeClass("ui-state-warning"),n.addClass("ui-state-success-text")):(o=a["default"]._t("UploadField.UNSAVEDCHANGES","Unsaved Changes"),
-this.parent(".ss-uploadfield-item").addClass("ui-state-warning"),n.addClass("ui-state-warning-text")):(o=a["default"]._t("UploadField.NOCHANGES","No Changes"),n.addClass("ui-state-success-text")),r.removeClass("good").hide()),
-n.attr("title",o).text(o)}}),t("div.ss-upload .ss-uploadfield-fromfiles").entwine({onclick:function b(e){return this.getUploadField().openSelectDialog(this.closest(".ss-uploadfield-item")),e.preventDefault(),
-!1}})})}).call(t,n(1))},function(e,t,n){var i
+0===this.height()?(o=s["default"]._t("UploadField.Editing","Editing ..."),this.fitHeight(),this.addClass("opened"),t.find(".toggle-details-icon").addClass("opened"),n.removeClass("ui-state-success-text").removeClass("ui-state-warning-text"),
+i.find("#Form_EditForm_action_doEdit").click(function(){t.find("label .name").text(i.find("#Name input").val())}),e("div.ss-upload  .ss-uploadfield-files .ss-uploadfield-item-actions .toggle-details-icon:not(.opened)").index()<0&&e("div.ss-upload .ss-uploadfield-item-edit-all").addClass("opened").find(".toggle-details-icon").addClass("opened")):(this.animate({
+height:0},500),this.removeClass("opened"),t.find(".toggle-details-icon").removeClass("opened"),e("div.ss-upload .ss-uploadfield-item-edit-all").removeClass("opened").find(".toggle-details-icon").removeClass("opened"),
+this.hasClass("edited")?r.hasClass("good")?(o=s["default"]._t("UploadField.CHANGESSAVED","Changes Saved"),this.removeClass("edited").parent(".ss-uploadfield-item").removeClass("ui-state-warning"),n.addClass("ui-state-success-text")):(o=s["default"]._t("UploadField.UNSAVEDCHANGES","Unsaved Changes"),
+this.parent(".ss-uploadfield-item").addClass("ui-state-warning"),n.addClass("ui-state-warning-text")):(o=s["default"]._t("UploadField.NOCHANGES","No Changes"),n.addClass("ui-state-success-text")),r.removeClass("good").hide()),
+n.attr("title",o).text(o)}}),e("div.ss-upload .ss-uploadfield-fromfiles").entwine({onclick:function v(e){return this.getUploadField().openSelectDialog(this.closest(".ss-uploadfield-item")),e.preventDefault(),
+!1}})})},function(e,t,n){var i
 !function(r){"use strict"
 var o=function(e,t){var n=/[^\-\w]/.test(e)?new Function(o.arg,("var _s=''"+o.helper+";_s+='"+e.replace(o.regexp,o.func)+"';return _s;").split("_s+='';").join("")):o.cache[e]=o.cache[e]||o(o.load(e))
 return n.tmpl=n.tmpl||o,t?n(t):n}

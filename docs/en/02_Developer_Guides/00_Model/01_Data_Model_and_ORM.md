@@ -268,10 +268,11 @@ However you might have several entries with the same `FirstName` and would like 
 		'LastName'=>'ASC'
 	));
 
-You can also sort randomly.
+You can also sort randomly. Using the `DB` class, you can get the random sort method per database type.
 
 	:::php
-	$players = Player::get()->sort('RAND()')
+	$random = DB::get_conn()->random(); 
+	$players = Player::get()->sort($random)
 	
 
 ## Filtering Results

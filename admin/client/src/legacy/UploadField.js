@@ -272,8 +272,8 @@ $.entwine('ss', function($) {
 		},
 		openSelectDialog: function(uploadedFile) {
 			// Create dialog and load iframe
-			var self = this, config = this.getConfig(), dialogId = 'ss-uploadfield-dialog-' + this.attr('id'), dialog = jQuery('#' + dialogId);
-			if(!dialog.length) dialog = jQuery('<div class="ss-uploadfield-dialog" id="' + dialogId + '" />');
+			var self = this, config = this.getConfig(), dialogId = 'ss-uploadfield-dialog-' + this.attr('id'), dialog = $('#' + dialogId);
+			if(!dialog.length) dialog = $('<div class="ss-uploadfield-dialog" id="' + dialogId + '" />');
 
 			// If user selected 'Choose another file', we need the ID of the file to replace
 			var iframeUrl = config['urlSelectDialog'];
