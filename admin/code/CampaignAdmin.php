@@ -14,6 +14,7 @@ use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\UnexpectedDataException;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\PermissionProvider;
 use LogicException;
@@ -256,9 +257,6 @@ JSON;
 	 * @return array
 	 */
 	protected function getChangeSetResource(ChangeSet $changeSet) {
-		// Before presenting the changeset to the client,
-		// synchronise it with new changes.
-		$changeSet->sync();
 		$hal = [
 			'_links' => [
 				'self' => [
@@ -267,24 +265,37 @@ JSON;
 			],
 			'ID' => $changeSet->ID,
 			'Name' => $changeSet->Name,
-			'Description' => $changeSet->getDescription(),
 			'Created' => $changeSet->Created,
 			'LastEdited' => $changeSet->LastEdited,
 			'State' => $changeSet->State,
 			'canEdit' => $changeSet->canEdit(),
-			'canPublish' => $changeSet->canPublish(),
+			'canPublish' => false,
 			'_embedded' => ['items' => []]
 		];
-		foreach($changeSet->Changes() as $changeSetItem) {
-			if(!$changeSetItem) {
-				continue;
-			}
 
-			/** @var ChangesetItem $changeSetItem */
-			$resource = $this->getChangeSetItemResource($changeSetItem);
-			$hal['_embedded']['items'][] = $resource;
+		// Before presenting the changeset to the client,
+		// synchronise it with new changes.
+		try {
+			$changeSet->sync();
+			$hal['Description'] = $changeSet->getDescription();
+			$hal['canPublish'] = $changeSet->canPublish();
+
+			foreach($changeSet->Changes() as $changeSetItem) {
+				if(!$changeSetItem) {
+					continue;
+				}
+
+				/** @var ChangesetItem $changeSetItem */
+				$resource = $this->getChangeSetItemResource($changeSetItem);
+				$hal['_embedded']['items'][] = $resource;
+			}
+			$hal['ChangesCount'] = count($hal['_embedded']['items']);
+
+		// An unexpected data exception means that the database is corrupt
+		} catch(UnexpectedDataException $e) {
+			$hal['Description'] = 'Corrupt database! ' . $e->getMessage();
+			$hal['ChangesCount'] = '-';
 		}
-		$hal['ChangesCount'] = count($hal['_embedded']['items']);
 		return $hal;
 	}
 
