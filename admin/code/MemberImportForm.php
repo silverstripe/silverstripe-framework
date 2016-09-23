@@ -71,7 +71,7 @@ class MemberImportForm extends Form {
 
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 
-		Requirements::javascript(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle-lib.js', '/'));
+		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/vendor.js');
 		Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/MemberImportForm.js');
 		Requirements::css(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/bundle.css');
 
