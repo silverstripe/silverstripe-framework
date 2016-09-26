@@ -1041,7 +1041,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				if(!$ownedClass) {
 					continue;
 				}
-				if($ownedClass === 'SilverStripe\ORM\DataObject') {
+				if($ownedClass === DataObject::class) {
 					throw new LogicException(sprintf(
 						"Relation %s on class %s cannot be owned as it is polymorphic",
 						$owned, $class
@@ -1131,17 +1131,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		/** @var Versioned|DataObject $item */
 		foreach($items as $item) {
-			// Identify item
-			$itemKey = $item->class . '/' . $item->ID;
-
-			// Skip unsaved, unversioned, or already checked objects
-			if(!$item->isInDB() || !$item->has_extension('SilverStripe\ORM\Versioning\Versioned') || isset($list[$itemKey])) {
-				continue;
-			}
-
-			// Save record
-			$list[$itemKey] = $item;
-			$added[$itemKey] = $item;
+			$this->mergeRelatedObject($list, $added, $item);
 		}
 		return $added;
 	}
@@ -2493,5 +2483,31 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function hasStages() {
 		return $this->mode === static::STAGEDVERSIONED;
+	}
+
+	/**
+	 * Merge single object into a list
+	 *
+	 * @param ArrayList $list Global list. Object will not be added if already added to this list.
+	 * @param ArrayList $added Additional list to insert into
+	 * @param DataObject $item Item to add
+	 * @return mixed
+	 */
+	protected function mergeRelatedObject($list, $added, $item)
+	{
+		// Identify item
+		$itemKey = get_class($item) . '/' . $item->ID;
+
+		// Write if saved, versioned, and not already added
+		if ($item->isInDB() && $item->has_extension('SilverStripe\ORM\Versioning\Versioned') && !isset($list[$itemKey])) {
+			$list[$itemKey] = $item;
+			$added[$itemKey] = $item;
+		}
+
+		// Add joined record (from many_many through) automatically
+		$joined = $item->getJoin();
+		if ($joined) {
+			$this->mergeRelatedObject($list, $added, $joined);
+		}
 	}
 }

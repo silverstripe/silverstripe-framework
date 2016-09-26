@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use Exception;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\FieldType\DBComposite;
@@ -118,7 +119,7 @@ class DataObjectSchema {
 		$class = ClassInfo::class_name($class);
 		$current = $class;
 		while ($next = get_parent_class($current)) {
-			if ($next === 'SilverStripe\ORM\DataObject') {
+			if ($next === DataObject::class) {
 				return $current;
 			}
 			$current = $next;
@@ -169,8 +170,8 @@ class DataObjectSchema {
 			return;
 		}
 		$this->tableNames = [];
-		foreach(ClassInfo::subclassesFor('SilverStripe\ORM\DataObject') as $class) {
-			if($class === 'SilverStripe\ORM\DataObject') {
+		foreach(ClassInfo::subclassesFor(DataObject::class) as $class) {
+			if($class === DataObject::class) {
 				continue;
 			}
 			$table = $this->buildTableName($class);
@@ -216,7 +217,7 @@ class DataObjectSchema {
 	 */
 	public function databaseFields($class) {
 		$class = ClassInfo::class_name($class);
-		if($class === 'SilverStripe\ORM\DataObject') {
+		if($class === DataObject::class) {
 			return [];
 		}
 		$this->cacheDatabaseFields($class);
@@ -238,7 +239,7 @@ class DataObjectSchema {
 	 */
 	public function compositeFields($class, $aggregated = true) {
 		$class = ClassInfo::class_name($class);
-		if($class === 'SilverStripe\ORM\DataObject') {
+		if($class === DataObject::class) {
 			return [];
 		}
 		$this->cacheDatabaseFields($class);
@@ -270,7 +271,7 @@ class DataObjectSchema {
 
 		// Ensure fixed fields appear at the start
 		$fixedFields = DataObject::config()->fixed_fields;
-		if(get_parent_class($class) === 'SilverStripe\ORM\DataObject') {
+		if(get_parent_class($class) === DataObject::class) {
 			// Merge fixed with ClassName spec and custom db fields
 			$dbFields = $fixedFields;
 		} else {
@@ -291,7 +292,7 @@ class DataObjectSchema {
 		// Add in all has_ones
 		$hasOne = Config::inst()->get($class, 'has_one', Config::UNINHERITED) ?: array();
 		foreach($hasOne as $fieldName => $hasOneClass) {
-			if($hasOneClass === 'SilverStripe\ORM\DataObject') {
+			if($hasOneClass === DataObject::class) {
 				$compositeFields[$fieldName] = 'PolymorphicForeignKey';
 			} else {
 				$dbFields["{$fieldName}ID"] = 'ForeignKey';
@@ -347,7 +348,7 @@ class DataObjectSchema {
 	public function classForField($candidateClass, $fieldName)  {
 		// normalise class name
 		$candidateClass = ClassInfo::class_name($candidateClass);
-		if($candidateClass === 'SilverStripe\\ORM\\DataObject') {
+		if($candidateClass === DataObject::class) {
 			return null;
 		}
 
@@ -366,5 +367,397 @@ class DataObjectSchema {
 			$candidateClass = get_parent_class($candidateClass);
 		}
 		return null;
+	}
+
+	/**
+	 * Return information about a specific many_many component. Returns a numeric array.
+	 * The first item in the array will be the class name of the relation: either
+	 * RELATION_MANY_MANY or RELATION_MANY_MANY_THROUGH constant value.
+	 *
+	 * Standard many_many return type is:
+	 *
+	 * array(
+	 *  <manyManyClass>,		Name of class for relation
+	 * 	<classname>,			The class that relation is defined in e.g. "Product"
+	 * 	<candidateName>,		The target class of the relation e.g. "Category"
+	 * 	<parentField>,			The field name pointing to <classname>'s table e.g. "ProductID".
+	 * 	<childField>,			The field name pointing to <candidatename>'s table e.g. "CategoryID".
+	 * 	<joinTableOrRelation>	The join table between the two classes e.g. "Product_Categories".
+	 *							If the class name is 'ManyManyThroughList' then this is the name of the
+	 * 							has_many relation.
+	 * )
+	 * @param string $class Name of class to get component for
+	 * @param string $component The component name
+	 * @return array|null
+	 */
+	public function manyManyComponent($class, $component) {
+		$classes = ClassInfo::ancestry($class);
+		foreach($classes as $parentClass) {
+			// Check if the component is defined in many_many on this class
+			$manyMany = Config::inst()->get($parentClass, 'many_many', Config::UNINHERITED);
+			if(isset($manyMany[$component])) {
+				return $this->parseManyManyComponent($parentClass, $component, $manyMany[$component]);
+			}
+
+			// Check if the component is defined in belongs_many_many on this class
+			$belongsManyMany = Config::inst()->get($parentClass, 'belongs_many_many', Config::UNINHERITED);
+			if(!isset($belongsManyMany[$component])) {
+				continue;
+			}
+
+			// Extract class and relation name from dot-notation
+			$childClass = $belongsManyMany[$component];
+			$relationName = null;
+			if(strpos($childClass, '.') !== false) {
+				list($childClass, $relationName) = explode('.', $childClass, 2);
+			}
+
+			// We need to find the inverse component name, if not explicitly given
+			if (!$relationName) {
+				$relationName = $this->getManyManyInverseRelationship($childClass, $parentClass);
+			}
+
+			// Check valid relation found
+			if (!$relationName) {
+				throw new LogicException("Inverse component of $childClass not found ({$class})");
+			}
+
+			// Build inverse relationship from other many_many, and swap parent/child
+			list($relationClass, $childClass, $parentClass, $childField, $parentField, $joinTable)
+				= $this->parseManyManyComponent($childClass, $relationName, $parentClass);
+			return [$relationClass, $parentClass, $childClass, $parentField, $childField, $joinTable];
+		}
+		return null;
+	}
+
+	/**
+	 * Return data for a specific has_many component.
+	 *
+	 * @param string $class Parent class
+	 * @param string $component
+	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form
+	 * "ClassName.Field" will have the field data stripped off. It defaults to TRUE.
+	 * @return string|null
+	 */
+	public function hasManyComponent($class, $component, $classOnly = true) {
+		$hasMany = (array)Config::inst()->get($class, 'has_many');
+		if(!isset($hasMany[$component])) {
+			return null;
+		}
+
+		// Remove has_one specifier if given
+		$hasMany = $hasMany[$component];
+		$hasManyClass = strtok($hasMany, '.');
+
+		// Validate
+		$this->checkRelationClass($class, $component, $hasManyClass, 'has_many');
+		return $classOnly ? $hasManyClass : $hasMany;
+	}
+
+	/**
+	 * Return data for a specific has_one component.
+	 *
+	 * @param string $class
+	 * @param string $component
+	 * @return string|null
+	 */
+	public function hasOneComponent($class, $component) {
+		$hasOnes = Config::inst()->get($class, 'has_one');
+		if(!isset($hasOnes[$component])) {
+			return null;
+		}
+
+		// Validate
+		$relationClass = $hasOnes[$component];
+		$this->checkRelationClass($class, $component, $relationClass, 'has_one');
+		return $relationClass;
+	}
+
+	/**
+	 * Return data for a specific belongs_to component.
+	 *
+	 * @param string $class
+	 * @param string $component
+	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the
+	 * form "ClassName.Field" will have the field data stripped off. It defaults to TRUE.
+	 * @return string|null
+	 */
+	public function belongsToComponent($class, $component, $classOnly = true) {
+		$belongsTo = (array)Config::inst()->get($class, 'belongs_to');
+		if(!isset($belongsTo[$component])) {
+			return null;
+		}
+
+		// Remove has_one specifier if given
+		$belongsTo = $belongsTo[$component];
+		$belongsToClass = strtok($belongsTo, '.');
+
+		// Validate
+		$this->checkRelationClass($class, $component, $belongsToClass, 'belongs_to');
+		return $classOnly ? $belongsToClass : $belongsTo;
+	}
+
+	/**
+	 *
+	 * @param string $parentClass Parent class name
+	 * @param string $component ManyMany name
+	 * @param string|array $specification Declaration of many_many relation type
+	 * @return array
+	 */
+	protected function parseManyManyComponent($parentClass, $component, $specification)
+	{
+		// Check if this is many_many_through
+		if (is_array($specification)) {
+			// Validate join, parent and child classes
+			$joinClass = $this->checkManyManyJoinClass($parentClass, $component, $specification);
+			$parentClass = $this->checkManyManyFieldClass($parentClass, $component, $joinClass, $specification, 'from');
+			$joinChildClass = $this->checkManyManyFieldClass($parentClass, $component, $joinClass, $specification, 'to');
+			return [
+				ManyManyThroughList::class,
+				$parentClass,
+				$joinChildClass,
+				$specification['from'] . 'ID',
+				$specification['to'] . 'ID',
+				$joinClass,
+			];
+		}
+
+		// Validate $specification class is valid
+		$this->checkRelationClass($parentClass, $component, $specification, 'many_many');
+
+		// automatic scaffolded many_many table
+		$classTable = $this->tableName($parentClass);
+		$parentField = "{$classTable}ID";
+		if ($parentClass === $specification) {
+			$childField = "ChildID";
+		} else {
+			$candidateTable = $this->tableName($specification);
+			$childField = "{$candidateTable}ID";
+		}
+		$joinTable = "{$classTable}_{$component}";
+		return [
+			ManyManyList::class,
+			$parentClass,
+			$specification,
+			$parentField,
+			$childField,
+			$joinTable,
+		];
+	}
+
+	/**
+	 * Find a many_many on the child class that points back to this many_many
+	 *
+	 * @param string $childClass
+	 * @param string $parentClass
+	 * @return string|null
+	 */
+	protected function getManyManyInverseRelationship($childClass, $parentClass)
+	{
+		$otherManyMany = Config::inst()->get($childClass, 'many_many', Config::UNINHERITED);
+		if (!$otherManyMany) {
+			return null;
+		}
+		foreach ($otherManyMany as $inverseComponentName => $nextClass) {
+			if ($nextClass === $parentClass) {
+				return $inverseComponentName;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Tries to find the database key on another object that is used to store a
+	 * relationship to this class. If no join field can be found it defaults to 'ParentID'.
+	 *
+	 * If the remote field is polymorphic then $polymorphic is set to true, and the return value
+	 * is in the form 'Relation' instead of 'RelationID', referencing the composite DBField.
+	 *
+	 * @param string $class
+	 * @param string $component Name of the relation on the current object pointing to the
+	 * remote object.
+	 * @param string $type the join type - either 'has_many' or 'belongs_to'
+	 * @param boolean $polymorphic Flag set to true if the remote join field is polymorphic.
+	 * @return string
+	 * @throws Exception
+	 */
+	public function getRemoteJoinField($class, $component, $type = 'has_many', &$polymorphic = false) {
+		// Extract relation from current object
+		if($type === 'has_many') {
+			$remoteClass = $this->hasManyComponent($class, $component, false);
+		} else {
+			$remoteClass = $this->belongsToComponent($class, $component, false);
+		}
+
+		if(empty($remoteClass)) {
+			throw new Exception("Unknown $type component '$component' on class '$class'");
+		}
+		if(!ClassInfo::exists(strtok($remoteClass, '.'))) {
+			throw new Exception(
+				"Class '$remoteClass' not found, but used in $type component '$component' on class '$class'"
+			);
+		}
+
+		// If presented with an explicit field name (using dot notation) then extract field name
+		$remoteField = null;
+		if(strpos($remoteClass, '.') !== false) {
+			list($remoteClass, $remoteField) = explode('.', $remoteClass);
+		}
+
+		// Reference remote has_one to check against
+		$remoteRelations = Config::inst()->get($remoteClass, 'has_one');
+
+		// Without an explicit field name, attempt to match the first remote field
+		// with the same type as the current class
+		if(empty($remoteField)) {
+			// look for remote has_one joins on this class or any parent classes
+			$remoteRelationsMap = array_flip($remoteRelations);
+			foreach(array_reverse(ClassInfo::ancestry($class)) as $class) {
+				if(array_key_exists($class, $remoteRelationsMap)) {
+					$remoteField = $remoteRelationsMap[$class];
+					break;
+				}
+			}
+		}
+
+		// In case of an indeterminate remote field show an error
+		if(empty($remoteField)) {
+			$polymorphic = false;
+			$message = "No has_one found on class '$remoteClass'";
+			if($type == 'has_many') {
+				// include a hint for has_many that is missing a has_one
+				$message .= ", the has_many relation from '$class' to '$remoteClass'";
+				$message .= " requires a has_one on '$remoteClass'";
+			}
+			throw new Exception($message);
+		}
+
+		// If given an explicit field name ensure the related class specifies this
+		if(empty($remoteRelations[$remoteField])) {
+			throw new Exception("Missing expected has_one named '$remoteField'
+				on class '$remoteClass' referenced by $type named '$component'
+				on class {$class}"
+			);
+		}
+
+		// Inspect resulting found relation
+		if($remoteRelations[$remoteField] === DataObject::class) {
+			$polymorphic = true;
+			return $remoteField; // Composite polymorphic field does not include 'ID' suffix
+		} else {
+			$polymorphic = false;
+			return $remoteField . 'ID';
+		}
+	}
+
+	/**
+	 * Validate the to or from field on a has_many mapping class
+	 *
+	 * @param string $parentClass Name of parent class
+	 * @param string $component Name of many_many component
+	 * @param string $joinClass Class for the joined table
+	 * @param array $specification Complete many_many specification
+	 * @param string $key Name of key to check ('from' or 'to')
+	 * @return string Class that matches the given relation
+	 * @throws InvalidArgumentException
+	 */
+	protected function checkManyManyFieldClass($parentClass, $component, $joinClass, $specification, $key)
+	{
+		// Ensure value for this key exists
+		if (empty($specification[$key])) {
+			throw new InvalidArgumentException(
+				"many_many relation {$parentClass}.{$component} has missing {$key} which "
+				. "should be a has_one on class {$joinClass}"
+			);
+		}
+
+		// Check that the field exists on the given object
+		$relation = $specification[$key];
+		$relationClass = $this->hasOneComponent($joinClass, $relation);
+		if (empty($relationClass)) {
+			throw new InvalidArgumentException(
+				"many_many through relation {$parentClass}.{$component} {$key} references a field name "
+				. "{$joinClass}::{$relation} which is not a has_one"
+			);
+		}
+
+		// Check for polymorphic
+		if ($relationClass === DataObject::class) {
+			throw new InvalidArgumentException(
+				"many_many through relation {$parentClass}.{$component} {$key} references a polymorphic field "
+				. "{$joinClass}::{$relation} which is not supported"
+			);
+		}
+
+		// Validate bad types on parent relation
+		if ($key === 'from' && $relationClass !== $parentClass) {
+			throw new InvalidArgumentException(
+				"many_many through relation {$parentClass}.{$component} {$key} references a field name "
+				. "{$joinClass}::{$relation} of type {$relationClass}; {$parentClass} expected"
+			);
+		}
+		return $relationClass;
+	}
+
+	/**
+	 * @param string $parentClass Name of parent class
+	 * @param string $component Name of many_many component
+	 * @param array $specification Complete many_many specification
+	 * @return string Name of join class
+	 */
+	protected function checkManyManyJoinClass($parentClass, $component, $specification)
+	{
+		if (empty($specification['through'])) {
+			throw new InvalidArgumentException(
+				"many_many relation {$parentClass}.{$component} has missing through which should be "
+				. "a DataObject class name to be used as a join table"
+			);
+		}
+		$joinClass = $specification['through'];
+		if (!class_exists($joinClass)) {
+			throw new InvalidArgumentException(
+				"many_many relation {$parentClass}.{$component} has through class \"{$joinClass}\" which does not exist"
+			);
+		}
+		return $joinClass;
+	}
+
+	/**
+	 * Validate a given class is valid for a relation
+	 *
+	 * @param string $class Parent class
+	 * @param string $component Component name
+	 * @param string $relationClass Candidate class to check
+	 * @param string $type Relation type (e.g. has_one)
+	 */
+	protected function checkRelationClass($class, $component, $relationClass, $type)
+	{
+		if (!is_string($component) || is_numeric($component)) {
+			throw new InvalidArgumentException(
+				"{$class} has invalid {$type} relation name"
+			);
+		}
+		if (!is_string($relationClass)) {
+			throw new InvalidArgumentException(
+				"{$type} relation {$class}.{$component} is not a class name"
+			);
+		}
+		if (!class_exists($relationClass)) {
+			throw new InvalidArgumentException(
+				"{$type} relation {$class}.{$component} references class {$relationClass} which doesn't exist"
+			);
+		}
+		// Support polymorphic has_one
+		if ($type === 'has_one') {
+			$valid = is_a($relationClass, DataObject::class, true);
+		} else {
+			$valid = is_subclass_of($relationClass, DataObject::class, true);
+		}
+		if (!$valid) {
+			throw new InvalidArgumentException(
+				"{$type} relation {$class}.{$component} references class {$relationClass} "
+				. " which is not a subclass of " . DataObject::class
+			);
+		}
 	}
 }

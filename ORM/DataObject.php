@@ -154,6 +154,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	protected $record;
 
 	/**
+	 * If selected through a many_many through relation, this is the instance of the through record
+	 *
+	 * @var DataObject
+	 */
+	protected $joinRecord;
+
+	/**
 	 * Represents a field that hasn't changed (before === after, thus before == after)
 	 */
 	const CHANGE_NONE = 0;
@@ -1422,13 +1429,16 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return DataObject $this
 	 */
 	public function writeComponents($recursive = false) {
-		if(!$this->components) {
-			return $this;
+		if($this->components) {
+			foreach ($this->components as $component) {
+				$component->write(false, false, false, $recursive);
+			}
 		}
 
-		foreach($this->components as $component) {
-			$component->write(false, false, false, $recursive);
+		if ($join = $this->getJoin()) {
+			$join->write(false, false, false, $recursive);
 		}
+
 		return $this;
 	}
 
@@ -1513,7 +1523,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			$joinID    = $this->getField($joinField);
 
 			// Extract class name for polymorphic relations
-			if($class === 'SilverStripe\\ORM\\DataObject') {
+			if($class === __CLASS__) {
 				$class = $this->getField($componentName . 'Class');
 				if(empty($class)) return null;
 			}
@@ -1624,12 +1634,20 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string Class name, or null if not found.
 	 */
 	public function getRelationClass($relationName) {
+		// Parse many_many
+		$manyManyComponent = $this->manyManyComponent($relationName);
+		if ($manyManyComponent) {
+			list(
+				$relationClass, $parentClass, $componentClass,
+				$parentField, $childField, $tableOrClass
+			) = $manyManyComponent;
+			return $componentClass;
+		}
+
 		// Go through all relationship configuration fields.
 		$candidates = array_merge(
 			($relations = Config::inst()->get($this->class, 'has_one')) ? $relations : array(),
 			($relations = Config::inst()->get($this->class, 'has_many')) ? $relations : array(),
-			($relations = Config::inst()->get($this->class, 'many_many')) ? $relations : array(),
-			($relations = Config::inst()->get($this->class, 'belongs_many_many')) ? $relations : array(),
 			($relations = Config::inst()->get($this->class, 'belongs_to')) ? $relations : array()
 		);
 
@@ -1682,8 +1700,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @throws InvalidArgumentException
 	 */
 	public function inferReciprocalComponent($remoteClass, $remoteRelation) {
-		/** @var DataObject $remote */
-		$remote = $remoteClass::singleton();
+		$remote = DataObject::singleton($remoteClass);
 		$class = $remote->getRelationClass($remoteRelation);
 
 		// Validate arguments
@@ -1755,13 +1772,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			case 'many_many':
 			case 'belongs_many_many': {
 				// Get components and extra fields from parent
-				list($componentClass, $parentClass, $componentField, $parentField, $table)
+				list($relationClass, $componentClass, $parentClass, $componentField, $parentField, $table)
 					= $remote->manyManyComponent($remoteRelation);
 				$extraFields = $remote->manyManyExtraFieldsForComponent($remoteRelation) ?: array();
 
 				// Reverse parent and component fields and create an inverse ManyManyList
-				/** @var ManyManyList $result */
-				$result = ManyManyList::create($componentClass, $table, $componentField, $parentField, $extraFields);
+				/** @var RelationList $result */
+				$result = Injector::inst()->create(
+					$relationClass, $componentClass, $table, $componentField, $parentField, $extraFields
+				);
 				if($this->model) {
 					$result->setDataModel($this->model);
 				}
@@ -1794,78 +1813,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @throws Exception
 	 */
 	public function getRemoteJoinField($component, $type = 'has_many', &$polymorphic = false) {
-		// Extract relation from current object
-		if($type === 'has_many') {
-			$remoteClass = $this->hasManyComponent($component, false);
-		} else {
-			$remoteClass = $this->belongsToComponent($component, false);
-		}
-
-		if(empty($remoteClass)) {
-			throw new Exception("Unknown $type component '$component' on class '$this->class'");
-		}
-		if(!ClassInfo::exists(strtok($remoteClass, '.'))) {
-			throw new Exception(
-				"Class '$remoteClass' not found, but used in $type component '$component' on class '$this->class'"
-			);
-		}
-
-		// If presented with an explicit field name (using dot notation) then extract field name
-		$remoteField = null;
-		if(strpos($remoteClass, '.') !== false) {
-			list($remoteClass, $remoteField) = explode('.', $remoteClass);
-		}
-
-		// Reference remote has_one to check against
-		$remoteRelations = Config::inst()->get($remoteClass, 'has_one');
-
-		// Without an explicit field name, attempt to match the first remote field
-		// with the same type as the current class
-		if(empty($remoteField)) {
-			// look for remote has_one joins on this class or any parent classes
-			$remoteRelationsMap = array_flip($remoteRelations);
-			foreach(array_reverse(ClassInfo::ancestry($this)) as $class) {
-				if(array_key_exists($class, $remoteRelationsMap)) {
-					$remoteField = $remoteRelationsMap[$class];
-					break;
-				}
-			}
-		}
-
-		// In case of an indeterminate remote field show an error
-		if(empty($remoteField)) {
-			$polymorphic = false;
-			$message = "No has_one found on class '$remoteClass'";
-			if($type == 'has_many') {
-				// include a hint for has_many that is missing a has_one
-				$message .= ", the has_many relation from '$this->class' to '$remoteClass'";
-				$message .= " requires a has_one on '$remoteClass'";
-			}
-			throw new Exception($message);
-		}
-
-		// If given an explicit field name ensure the related class specifies this
-		if(empty($remoteRelations[$remoteField])) {
-			throw new Exception("Missing expected has_one named '$remoteField'
-				on class '$remoteClass' referenced by $type named '$component'
-				on class {$this->class}"
-			);
-		}
-
-		// Inspect resulting found relation
-		if($remoteRelations[$remoteField] === 'SilverStripe\ORM\DataObject') {
-			$polymorphic = true;
-			return $remoteField; // Composite polymorphic field does not include 'ID' suffix
-		} else {
-			$polymorphic = false;
-			return $remoteField . 'ID';
-		}
+		return $this
+			->getSchema()
+			->getRemoteJoinField(get_class($this), $component, $type, $polymorphic);
 	}
 
 	/**
 	 * Returns a many-to-many component, as a ManyManyList.
 	 * @param string $componentName Name of the many-many component
-	 * @return ManyManyList|UnsavedRelationList The set of components
+	 * @return RelationList|UnsavedRelationList The set of components
 	 */
 	public function getManyManyComponents($componentName) {
 		$manyManyComponent = $this->manyManyComponent($componentName);
@@ -1877,7 +1833,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			));
 		}
 
-		list($parentClass, $componentClass, $parentField, $componentField, $table) = $manyManyComponent;
+		list($relationClass, $parentClass, $componentClass, $parentField, $componentField, $tableOrClass)
+			= $manyManyComponent;
 
 		// If we haven't been written yet, we can't save these relations, so use a list that handles this case
 		if(!$this->ID) {
@@ -1889,8 +1846,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		}
 
 		$extraFields = $this->manyManyExtraFieldsForComponent($componentName) ?: array();
-		/** @var ManyManyList $result */
-		$result = ManyManyList::create($componentClass, $table, $componentField, $parentField, $extraFields);
+		/** @var RelationList $result */
+		$result = Injector::inst()->create(
+			$relationClass,
+			$componentClass,
+			$tableOrClass,
+			$componentField,
+			$parentField,
+			$extraFields
+		);
 
 
 		// Store component data in query meta-data
@@ -1929,36 +1893,18 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string|null
 	 */
 	public function hasOneComponent($component) {
-		$classes = ClassInfo::ancestry($this, true);
-
-		foreach(array_reverse($classes) as $class) {
-			$hasOnes = Config::inst()->get($class, 'has_one', Config::UNINHERITED);
-			if(isset($hasOnes[$component])) {
-				return $hasOnes[$component];
-			}
-		}
-		return null;
+		return $this->getSchema()->hasOneComponent(get_class($this), $component);
 	}
 
 	/**
 	 * Returns the class of a remote belongs_to relationship. If no component is specified a map of all components and
 	 * their class name will be returned.
 	 *
-	 * @param string $component - Name of component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
 	 * @return string|array
 	 */
-	public function belongsTo($component = null, $classOnly = true) {
-		if($component) {
-			Deprecation::notice(
-				'4.0',
-				'Please use DataObject::belongsToComponent() instead of passing a component name to belongsTo()',
-				Deprecation::SCOPE_GLOBAL
-			);
-			return $this->belongsToComponent($component, $classOnly);
-		}
-
+	public function belongsTo($classOnly = true) {
 		$belongsTo = (array)Config::inst()->get($this->class, 'belongs_to', Config::INHERITED);
 		if($belongsTo && $classOnly) {
 			return preg_replace('/(.+)?\..+/', '$1', $belongsTo);
@@ -1975,15 +1921,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string|null
 	 */
 	public function belongsToComponent($component, $classOnly = true) {
-		$belongsTo = (array)Config::inst()->get($this->class, 'belongs_to', Config::INHERITED);
-
-		if($belongsTo && array_key_exists($component, $belongsTo)) {
-			$belongsTo = $belongsTo[$component];
-		} else {
-			return null;
-		}
-
-		return ($classOnly) ? preg_replace('/(.+)?\..+/', '$1', $belongsTo) : $belongsTo;
+		return $this->getSchema()->belongsToComponent(get_class($this), $component, $classOnly);
 	}
 
 	/**
@@ -2033,21 +1971,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Gets the class of a one-to-many relationship. If no $component is specified then an array of all the one-to-many
 	 * relationships and their classes will be returned.
 	 *
-	 * @param string $component Deprecated - Name of component
 	 * @param bool $classOnly If this is TRUE, than any has_many relationships in the form "ClassName.Field" will have
 	 *        the field data stripped off. It defaults to TRUE.
 	 * @return string|array|false
 	 */
-	public function hasMany($component = null, $classOnly = true) {
-		if($component) {
-			Deprecation::notice(
-				'4.0',
-				'Please use DataObject::hasManyComponent() instead of passing a component name to hasMany()',
-				Deprecation::SCOPE_GLOBAL
-			);
-			return $this->hasManyComponent($component, $classOnly);
-		}
-
+	public function hasMany($classOnly = true) {
 		$hasMany = (array)Config::inst()->get($this->class, 'has_many', Config::INHERITED);
 		if($hasMany && $classOnly) {
 			return preg_replace('/(.+)?\..+/', '$1', $hasMany);
@@ -2064,15 +1992,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return string|null
 	 */
 	public function hasManyComponent($component, $classOnly = true) {
-		$hasMany = (array)Config::inst()->get($this->class, 'has_many', Config::INHERITED);
-
-		if($hasMany && array_key_exists($component, $hasMany)) {
-			$hasMany = $hasMany[$component];
-		} else {
-			return null;
-		}
-
-		return ($classOnly) ? preg_replace('/(.+)?\..+/', '$1', $hasMany) : $hasMany;
+		return $this->getSchema()->hasManyComponent(get_class($this), $component, $classOnly);
 	}
 
 	/**
@@ -2149,78 +2069,27 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	}
 
 	/**
-	 * Return information about a specific many_many component. Returns a numeric array of:
+	 * Return information about a specific many_many component. Returns a numeric array.
+	 * The first item in the array will be the class name of the relation: either
+	 * RELATION_MANY_MANY or RELATION_MANY_MANY_THROUGH constant value.
+	 *
+	 * Standard many_many return type is:
+	 *
 	 * array(
-	 * 	<classname>,		The class that relation is defined in e.g. "Product"
-	 * 	<candidateName>,	The target class of the relation e.g. "Category"
-	 * 	<parentField>,		The field name pointing to <classname>'s table e.g. "ProductID"
-	 * 	<childField>,		The field name pointing to <candidatename>'s table e.g. "CategoryID"
-	 * 	<joinTable>			The join table between the two classes e.g. "Product_Categories"
+	 *  <manyManyClass>,		Name of class for relation
+	 * 	<classname>,			The class that relation is defined in e.g. "Product"
+	 * 	<candidateName>,		The target class of the relation e.g. "Category"
+	 * 	<parentField>,			The field name pointing to <classname>'s table e.g. "ProductID"
+	 * 	<childField>,			The field name pointing to <candidatename>'s table e.g. "CategoryID"
+	 * 	<joinTableOrRelation>	The join table between the two classes e.g. "Product_Categories".
+	 *							If the class name is 'ManyManyThroughList' then this is the name of the
+	 * 							has_many relation.
 	 * )
 	 * @param string $component The component name
 	 * @return array|null
 	 */
 	public function manyManyComponent($component) {
-		$classes = $this->getClassAncestry();
-		foreach($classes as $class) {
-			$manyMany = Config::inst()->get($class, 'many_many', Config::UNINHERITED);
-			// Check if the component is defined in many_many on this class
-			if(isset($manyMany[$component])) {
-				$candidate = $manyMany[$component];
-				$classTable = static::getSchema()->tableName($class);
-				$candidateTable = static::getSchema()->tableName($candidate);
-				$parentField = "{$classTable}ID";
-				$childField = $class === $candidate ? "ChildID" : "{$candidateTable}ID";
-				$joinTable = "{$classTable}_{$component}";
-				return array($class, $candidate, $parentField, $childField, $joinTable);
-			}
-
-			// Check if the component is defined in belongs_many_many on this class
-			$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
-			if(!isset($belongsManyMany[$component])) {
-				continue;
-			}
-
-			// Extract class and relation name from dot-notation
-			$candidate = $belongsManyMany[$component];
-			$relationName = null;
-			if(strpos($candidate, '.') !== false) {
-				list($candidate, $relationName) = explode('.', $candidate, 2);
-			}
-			$candidateTable = static::getSchema()->tableName($candidate);
-			$childField = $candidateTable . "ID";
-
-			// We need to find the inverse component name, if not explicitly given
-			$otherManyMany = Config::inst()->get($candidate, 'many_many', Config::UNINHERITED);
-			if(!$relationName && $otherManyMany) {
-				foreach($otherManyMany as $inverseComponentName => $childClass) {
-					if($childClass === $class || is_subclass_of($class, $childClass)) {
-						$relationName = $inverseComponentName;
-						break;
-					}
-				}
-			}
-
-			// Check valid relation found
-			if(!$relationName || !$otherManyMany || !isset($otherManyMany[$relationName])) {
-				throw new LogicException("Inverse component of $candidate not found ({$this->class})");
-			}
-
-			// If we've got a relation name (extracted from dot-notation), we can already work out
-			// the join table and candidate class name...
-			$childClass = $otherManyMany[$relationName];
-			$joinTable = "{$candidateTable}_{$relationName}";
-
-			// If we could work out the join table, we've got all the info we need
-			if ($childClass === $candidate) {
-				$parentField = "ChildID";
-			} else {
-				$childTable = static::getSchema()->tableName($childClass);
-				$parentField = "{$childTable}ID";
-			}
-			return array($class, $candidate, $parentField, $childField, $joinTable);
-		}
-		return null;
+		return $this->getSchema()->manyManyComponent(get_class($this), $component);
 	}
 
 	/**
@@ -3407,10 +3276,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$indexes = $this->databaseIndexes();
 
-		// Validate relationship configuration
-		$this->validateModelDefinitions();
 		if($fields) {
-			$hasAutoIncPK = get_parent_class($this) === 'SilverStripe\ORM\DataObject';
+			$hasAutoIncPK = get_parent_class($this) === __CLASS__;
 			DB::require_table(
 				$table, $fields, $indexes, $hasAutoIncPK, $this->stat('create_table_options'), $extensions
 			);
@@ -3421,70 +3288,39 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Build any child tables for many_many items
 		if($manyMany = $this->uninherited('many_many')) {
 			$extras = $this->uninherited('many_many_extraFields');
-			foreach($manyMany as $relationship => $childClass) {
-				// Build field list
-				if($this->class === $childClass) {
-					$childField = "ChildID";
-				} else {
-					$childTable = $this->getSchema()->tableName($childClass);
-					$childField = "{$childTable}ID";
+			foreach($manyMany as $component => $spec) {
+				// Get many_many spec
+				$manyManyComponent = $this->getSchema()->manyManyComponent(get_class($this), $component);
+				list(
+					$relationClass, $parentClass, $componentClass,
+					$parentField, $childField, $tableOrClass
+				) = $manyManyComponent;
+
+				// Skip if backed by actual class
+				if (class_exists($tableOrClass)) {
+					continue;
 				}
+
+				// Build fields
 				$manymanyFields = array(
-					"{$table}ID" => "Int",
+					$parentField => "Int",
 					$childField => "Int",
 				);
-				if(isset($extras[$relationship])) {
-					$manymanyFields = array_merge($manymanyFields, $extras[$relationship]);
+				if(isset($extras[$component])) {
+					$manymanyFields = array_merge($manymanyFields, $extras[$component]);
 				}
 
 				// Build index list
 				$manymanyIndexes = array(
-					"{$table}ID" => true,
+					$parentField => true,
 					$childField => true,
 				);
-				$manyManyTable = "{$table}_$relationship";
-				DB::require_table($manyManyTable, $manymanyFields, $manymanyIndexes, true, null, $extensions);
+				DB::require_table($tableOrClass, $manymanyFields, $manymanyIndexes, true, null, $extensions);
 			}
 		}
 
 		// Let any extentions make their own database fields
 		$this->extend('augmentDatabase', $dummy);
-	}
-
-	/**
-	 * Validate that the configured relations for this class use the correct syntaxes
-	 * @throws LogicException
-	 */
-	protected function validateModelDefinitions() {
-		$modelDefinitions = array(
-			'db' => Config::inst()->get($this->class, 'db', Config::UNINHERITED),
-			'has_one' => Config::inst()->get($this->class, 'has_one', Config::UNINHERITED),
-			'has_many' => Config::inst()->get($this->class, 'has_many', Config::UNINHERITED),
-			'belongs_to' => Config::inst()->get($this->class, 'belongs_to', Config::UNINHERITED),
-			'many_many' => Config::inst()->get($this->class, 'many_many', Config::UNINHERITED),
-			'belongs_many_many' => Config::inst()->get($this->class, 'belongs_many_many', Config::UNINHERITED),
-			'many_many_extraFields' => Config::inst()->get($this->class, 'many_many_extraFields', Config::UNINHERITED)
-		);
-
-		foreach($modelDefinitions as $defType => $relations) {
-			if( ! $relations) continue;
-
-			foreach($relations as $k => $v) {
-				if($defType === 'many_many_extraFields') {
-					if(!is_array($v)) {
-						throw new LogicException("$this->class::\$many_many_extraFields has a bad entry: "
-							. var_export($k, true) . " => " . var_export($v, true)
-							. ". Each many_many_extraFields entry should map to a field specification array.");
-					}
-				} else {
-					if(!is_string($k) || is_numeric($k) || !is_string($v)) {
-						throw new LogicException("$this->class::$defType has a bad entry: "
-							. var_export($k, true). " => " . var_export($v, true) . ".  Each map key should be a
-							 relationship name, and the map value should be the data class to join to.");
-					}
-				}
-			}
-		}
 	}
 
 	/**
@@ -4019,6 +3855,26 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		} else {
 			return parent::hasValue($field, $arguments, $cache);
 		}
+	}
+
+	/**
+	 * If selected through a many_many through relation, this is the instance of the joined record
+	 *
+	 * @return DataObject
+	 */
+	public function getJoin() {
+		return $this->joinRecord;
+	}
+
+	/**
+	 * Set joining object
+	 *
+	 * @param DataObject $object
+	 * @return $this
+	 */
+	public function setJoin(DataObject $object) {
+		$this->joinRecord = $object;
+		return $this;
 	}
 
 }

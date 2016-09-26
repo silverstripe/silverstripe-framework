@@ -3,11 +3,13 @@
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Member;
 
@@ -1186,77 +1188,24 @@ class DataObjectTest extends SapphireTest {
 	}
 
 	public function testValidateModelDefinitionsFailsWithArray() {
-		Config::nest();
-
-		$object = new DataObjectTest_Team;
-		$method = $this->makeAccessible($object, 'validateModelDefinitions');
-
 		Config::inst()->update('DataObjectTest_Team', 'has_one', array('NotValid' => array('NoArraysAllowed')));
-		$this->setExpectedException('LogicException');
-
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
+		$this->setExpectedException(InvalidArgumentException::class);
+		$object = new DataObjectTest_Team();
+		$object->hasOneComponent('NotValid');
 	}
 
 	public function testValidateModelDefinitionsFailsWithIntKey() {
-		Config::nest();
-
-		$object = new DataObjectTest_Team;
-		$method = $this->makeAccessible($object, 'validateModelDefinitions');
-
 		Config::inst()->update('DataObjectTest_Team', 'has_many', array(12 => 'DataObjectTest_Player'));
-		$this->setExpectedException('LogicException');
-
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
+		$this->setExpectedException(InvalidArgumentException::class);
+		$object = new DataObjectTest_Team();
+		$object->hasManyComponent(12);
 	}
 
 	public function testValidateModelDefinitionsFailsWithIntValue() {
-		Config::nest();
-
-		$object = new DataObjectTest_Team;
-		$method = $this->makeAccessible($object, 'validateModelDefinitions');
-
 		Config::inst()->update('DataObjectTest_Team', 'many_many', array('Players' => 12));
-		$this->setExpectedException('LogicException');
-
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
-	}
-
-	/**
-	 * many_many_extraFields is allowed to have an array value, so shouldn't throw an exception
-	 */
-	public function testValidateModelDefinitionsPassesWithExtraFields() {
-		Config::nest();
-
-		$object = new DataObjectTest_Team;
-		$method = $this->makeAccessible($object, 'validateModelDefinitions');
-
-		Config::inst()->update('DataObjectTest_Team', 'many_many_extraFields',
-			array('Relations' => array('Price' => 'Int')));
-
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest();
-			$this->fail('Exception should not be thrown');
-			throw $e;
-		}
-
-		Config::unnest();
+		$this->setExpectedException(InvalidArgumentException::class);
+		$object = new DataObjectTest_Team();
+		$object->manyManyComponent('Players');
 	}
 
 	public function testNewClassInstance() {
@@ -1292,13 +1241,16 @@ class DataObjectTest extends SapphireTest {
 		$equipmentSuppliers = $team->EquipmentSuppliers();
 
 		// Check that DataObject::many_many() works as expected
-		list($class, $targetClass, $parentField, $childField, $joinTable) = $team->manyManyComponent('Sponsors');
+		list($relationClass, $class, $targetClass, $parentField, $childField, $joinTable) = $team->manyManyComponent('Sponsors');
+		$this->assertEquals(ManyManyList::class, $relationClass);
 		$this->assertEquals('DataObjectTest_Team', $class,
 			'DataObject::many_many() didn\'t find the correct base class');
 		$this->assertEquals('DataObjectTest_EquipmentCompany', $targetClass,
 			'DataObject::many_many() didn\'t find the correct target class for the relation');
 		$this->assertEquals('DataObjectTest_EquipmentCompany_SponsoredTeams', $joinTable,
 			'DataObject::many_many() didn\'t find the correct relation table');
+		$this->assertEquals('DataObjectTest_TeamID', $parentField);
+		$this->assertEquals('DataObjectTest_EquipmentCompanyID', $childField);
 
 		// Check that ManyManyList still works
 		$this->assertEquals(2, $sponsors->count(), 'Rows are missing from relation');
@@ -1579,7 +1531,7 @@ class DataObjectTest extends SapphireTest {
 				'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 				'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
 			),
-			$company->hasMany(null, false),
+			$company->hasMany(false),
 			'has_many returns field name data when $classOnly is false.'
 		);
 

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use BadMethodCallException;
 use SilverStripe\Core\Object;
 use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\Queries\SQLDelete;
@@ -122,7 +123,7 @@ class ManyManyList extends RelationList {
 	 * @param array $row
 	 * @return DataObject
 	 */
-	protected function createDataObject($row) {
+	public function createDataObject($row) {
 		// remove any composed fields
 		$add = array();
 
@@ -210,23 +211,30 @@ class ManyManyList extends RelationList {
 		if(empty($extraFields)) $extraFields = array();
 
 		// Determine ID of new record
+		$itemID = null;
 		if(is_numeric($item)) {
 			$itemID = $item;
 		} elseif($item instanceof $this->dataClass) {
 			$itemID = $item->ID;
 		} else {
-			throw new InvalidArgumentException("ManyManyList::add() expecting a $this->dataClass object, or ID value",
-				E_USER_ERROR);
+			throw new InvalidArgumentException(
+				"ManyManyList::add() expecting a $this->dataClass object, or ID value"
+			);
+		}
+		if (empty($itemID)) {
+			throw new InvalidArgumentException("ManyManyList::add() doesn't accept unsaved records");
 		}
 
 		// Validate foreignID
 		$foreignIDs = $this->getForeignID();
 		if(empty($foreignIDs)) {
-			throw new Exception("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
+			throw new BadMethodCallException("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
 		}
 
 		// Apply this item to each given foreign ID record
-		if(!is_array($foreignIDs)) $foreignIDs = array($foreignIDs);
+		if(!is_array($foreignIDs)) {
+			$foreignIDs = array($foreignIDs);
+		}
 		foreach($foreignIDs as $foreignID) {
 			// Check for existing records for this item
 			if($foreignFilter = $this->foreignIDWriteFilter($foreignID)) {
