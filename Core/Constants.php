@@ -226,7 +226,7 @@ define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
 
 define('FRAMEWORK_PATH', realpath(__DIR__ . '/../'));
 if(strpos(FRAMEWORK_PATH, BASE_PATH) === 0) {
-	define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), '/'));
+	define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), DIRECTORY_SEPARATOR));
 	$frameworkDirSlashSuffix = FRAMEWORK_DIR ? FRAMEWORK_DIR . '/' : '';
 } else {
 	throw new Exception("Path error: FRAMEWORK_PATH " . FRAMEWORK_PATH . " not within BASE_PATH " . BASE_PATH);
