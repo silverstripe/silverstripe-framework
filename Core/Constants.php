@@ -91,7 +91,10 @@ if(!defined('TRUSTED_PROXY')) {
 			if(SS_TRUSTED_PROXY_IPS === '*') {
 				$trusted = true;
 			} elseif(isset($_SERVER['REMOTE_ADDR'])) {
-				$trusted = in_array($_SERVER['REMOTE_ADDR'], explode(',', SS_TRUSTED_PROXY_IPS));
+				if(!class_exists('SilverStripe\\Control\\Util\\IPUtils')) {
+					require_once FRAMEWORK_PATH . '/control/IPUtils.php';
+				};
+				$trusted = IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', SS_TRUSTED_PROXY_IPS));
 			}
 		}
 	}

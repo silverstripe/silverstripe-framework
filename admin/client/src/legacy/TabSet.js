@@ -46,7 +46,7 @@ $.entwine('ss', function($){
 			var $trigger;
 
 			// Make sure the hash relates to a valid tab.
-			$.each(this.find('.cms-panel-link'), function () {
+			$.each(this.find('.ui-tabs-anchor'), function () {
 				// The hash in in the button's href and there is exactly one tab with that id.
 				if (this.href.indexOf(hash) !== -1 && $(hash).length === 1) {
 					$trigger = $(this);
@@ -60,7 +60,7 @@ $.entwine('ss', function($){
 			}
 
 			// Switch to the correct tab when AJAX loading completes.
-			$(window).one('ajaxComplete', function () {
+			$(document).ready('ajaxComplete', function () {
 				$trigger.click();
 			});
 		},
