@@ -329,6 +329,18 @@ Statements with `if` can be written without braces on a single line as the block
 	if($a == $b) doThis();
 	else doThat();
 
+#### Prefer identical (===) comparisons over equality (==)
+
+Where possible, use type-strict identical comparisons instead of loosely typed equality comparisons.
+Read more in the PHP documentation for [comparison operators](http://php.net/manual/en/language.operators.comparison.php) and [object comparison](http://php.net/manual/en/language.oop5.object-comparison.php).
+
+	:::php
+	// good - only need to cast to (int) if $a might not already be an int
+	if((int)$a === 100) doThis();
+	
+	// bad
+	if($a == 100) doThis();
+
 #### switch
 
 All content within the "switch" statement must be indented using tabs.
