@@ -8,7 +8,7 @@ use SilverStripe\Forms\GridField\GridField;
 class GridFieldDataColumnsTest extends SapphireTest {
 
 	/**
-	 * @covers GridFieldDataColumns::getDisplayFields
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
 	 */
 	public function testGridFieldGetDefaultDisplayFields() {
 		$obj = new GridField('testfield', 'testfield', Member::get());
@@ -18,8 +18,8 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridFieldDataColumns::setDisplayFields
-	 * @covers GridFieldDataColumns::getDisplayFields
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::setDisplayFields
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
 	 */
 	public function testGridFieldCustomDisplayFields() {
 		$obj = new GridField('testfield', 'testfield', Member::get());
@@ -31,8 +31,8 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridFieldDataColumns::setDisplayFields
-	 * @covers GridFieldDataColumns::getDisplayFields
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::setDisplayFields
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::getDisplayFields
 	 */
 	public function testGridFieldDisplayFieldsWithBadArguments() {
 		$this->setExpectedException('InvalidArgumentException');
@@ -42,8 +42,8 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridFieldDataColumns::getFieldCasting
-	 * @covers GridFieldDataColumns::setFieldCasting
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::getFieldCasting
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::setFieldCasting
 	 */
 	public function testFieldCasting() {
 		$obj = new GridField('testfield', 'testfield');
@@ -54,8 +54,8 @@ class GridFieldDataColumnsTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridFieldDataColumns::getFieldFormatting
-	 * @covers GridFieldDataColumns::setFieldFormatting
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::getFieldFormatting
+	 * @covers SilverStripe\Forms\GridField\GridFieldDataColumns::setFieldFormatting
 	 */
 	public function testFieldFormatting() {
 		$obj = new GridField('testfield', 'testfield');

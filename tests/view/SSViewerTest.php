@@ -1166,7 +1166,7 @@ after')
 	}
 
 	/**
-	 * @covers SSViewer::get_templates_by_class()
+	 * @covers SilverStripe\View\SSViewer::get_templates_by_class()
 	 */
 	public function testGetTemplatesByClass() {
 		$self = $this;

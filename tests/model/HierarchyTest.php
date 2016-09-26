@@ -191,7 +191,7 @@ class HierarchyTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers Hierarchy::markChildren()
+	 * @covers SilverStripe\ORM\Hierarchy\Hierarchy::markChildren()
 	 */
 	public function testMarkChildrenDoesntUnmarkPreviouslyMarked() {
 		$obj3 = $this->objFromFixture('HierarchyTest_Object', 'obj3');

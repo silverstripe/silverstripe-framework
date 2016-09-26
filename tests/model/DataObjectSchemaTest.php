@@ -297,7 +297,7 @@ class DataObjectSchemaTest extends SapphireTest
 
 
 	/**
-	 * @covers DataObjectSchema::baseDataClass()
+	 * @covers SilverStripe\ORM\DataObjectSchema::baseDataClass()
 	 */
 	public function testBaseDataClass() {
 		$schema = DataObject::getSchema();

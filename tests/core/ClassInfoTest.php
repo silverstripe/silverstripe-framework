@@ -92,7 +92,7 @@ class ClassInfoTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers ClassInfo::ancestry()
+	 * @covers SilverStripe\Core\ClassInfo::ancestry()
 	 */
 	public function testAncestry() {
 		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass');
@@ -119,7 +119,7 @@ class ClassInfoTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers ClassInfo::dataClassesFor()
+	 * @covers SilverStripe\Core\ClassInfo::dataClassesFor()
 	 */
 	public function testDataClassesFor() {
 		$expect = array(
