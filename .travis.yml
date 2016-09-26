@@ -16,6 +16,7 @@ env:
     - secure: "SDGv49c2Ee2YBz7dATE3WnHSVSvJiRJ2BVtRasVshdNDNz3NBRzh13C2fDwTGBU1J6PxiQaGTXBy/BGsvbYk2BvdzHVwozkBpHVSaCNdarpCJ5yZZTqKC3mpA1S5353r5tqronwFuMDpftzXnRMfLZGGQ4kYb9hjV55+FPUTFPk=" # Encrypted ARTIFACTS_SECRET
 
 matrix:
+  fast_finish: true
   include:
     - php: 5.5
       env: DB=MYSQL PHPUNIT_TEST=1
