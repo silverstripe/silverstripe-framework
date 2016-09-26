@@ -424,7 +424,7 @@ class DirectorTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers Director::extract_request_headers()
+	 * @covers SilverStripe\Control\Director::extract_request_headers()
 	 */
 	public function testExtractRequestHeaders() {
 		$request = array(

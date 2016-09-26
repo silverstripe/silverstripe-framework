@@ -17,7 +17,7 @@ use SilverStripe\Dev\TestOnly;
 class DBStringTest extends SapphireTest {
 
 	/**
-	 * @covers SilverStripe\Model\FieldType\DBField::forTemplate()
+	 * @covers SilverStripe\ORM\FieldType\DBField::forTemplate()
 	 */
 	public function testForTemplate() {
 		$this->assertEquals(
@@ -39,7 +39,7 @@ class DBStringTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers SilverStripe\Model\FieldType\DBString::LowerCase()
+	 * @covers SilverStripe\ORM\FieldType\DBString::LowerCase()
 	 */
 	public function testLowerCase() {
 		$this->assertEquals(
@@ -49,7 +49,7 @@ class DBStringTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers SilverStripe\Model\FieldType\DBString::UpperCase()
+	 * @covers SilverStripe\ORM\FieldType\DBString::UpperCase()
 	 */
 	public function testUpperCase() {
 		$this->assertEquals(

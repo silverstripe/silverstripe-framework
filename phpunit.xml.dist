@@ -32,4 +32,17 @@
 			<group>sanitychecks</group>
 		</exclude>
 	</groups>
+
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">.</directory>
+			<exclude>
+				<directory suffix=".php">thirdparty/</directory>
+				<directory suffix=".php">admin/thirdparty/</directory>
+				<directory suffix=".php">tests/</directory>
+				<directory suffix=".php">admin/tests/</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+
 </phpunit>

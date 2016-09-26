@@ -33,7 +33,7 @@ use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 class GridFieldTest extends SapphireTest {
 
 	/**
-	 * @covers GridField::__construct
+	 * @covers SilverStripe\Forms\GridField\GridField::__construct
 	 */
 	public function testGridField() {
 		$obj = new GridField('testfield', 'testfield');
@@ -41,8 +41,8 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::__construct
-	 * @covers GridField::getList
+	 * @covers SilverStripe\Forms\GridField\GridField::__construct
+	 * @covers SilverStripe\Forms\GridField\GridField::getList
 	 */
 	public function testGridFieldSetList() {
 		$list = ArrayList::create(array(1=>'hello', 2=>'goodbye'));
@@ -51,10 +51,10 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::__construct
-	 * @covers GridField::getConfig
-	 * @covers GridFieldConfig_Base::__construct
-	 * @covers GridFieldConfig::addComponent
+	 * @covers SilverStripe\Forms\GridField\GridField::__construct
+	 * @covers SilverStripe\Forms\GridField\GridField::getConfig
+	 * @covers SilverStripe\Forms\GridField\GridFieldConfig_Base::__construct
+	 * @covers SilverStripe\Forms\GridField\GridFieldConfig::addComponent
 	 */
 	public function testGridFieldDefaultConfig() {
 		$obj = new GridField('testfield', 'testfield');
@@ -76,8 +76,8 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridFieldConfig::__construct
-	 * @covers GridFieldConfig::addComponent
+	 * @covers SilverStripe\Forms\GridField\GridFieldConfig::__construct
+	 * @covers SilverStripe\Forms\GridField\GridFieldConfig::addComponent
 	 */
 	public function testGridFieldSetCustomConfig() {
 
@@ -97,8 +97,8 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getModelClass
-	 * @covers GridField::setModelClass
+	 * @covers SilverStripe\Forms\GridField\GridField::getModelClass
+	 * @covers SilverStripe\Forms\GridField\GridField::setModelClass
 	 */
 	public function testGridFieldModelClass() {
 		$obj = new GridField('testfield', 'testfield', Member::get());
@@ -108,7 +108,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getModelClass
+	 * @covers SilverStripe\Forms\GridField\GridField::getModelClass
 	 */
 	public function testGridFieldModelClassThrowsException() {
 		$this->setExpectedException('LogicException');
@@ -117,8 +117,8 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::setList
-	 * @covers GridField::getList
+	 * @covers SilverStripe\Forms\GridField\GridField::setList
+	 * @covers SilverStripe\Forms\GridField\GridField::getList
 	 */
 	public function testSetAndGetList() {
 		$list = Member::get();
@@ -130,7 +130,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getState
+	 * @covers SilverStripe\Forms\GridField\GridField::getState
 	 */
 	public function testGetState() {
 		$obj = new GridField('testfield', 'testfield');
@@ -141,9 +141,9 @@ class GridFieldTest extends SapphireTest {
 	/**
 	 * Tests usage of nested GridState values
 	 *
-	 * @covers GridState_Data::__get
-	 * @covers GridState_Data::__call
-	 * @covers GridState_Data::getData
+	 * @covers SilverStripe\Forms\GridField\GridState_Data::__get
+	 * @covers SilverStripe\Forms\GridField\GridState_Data::__call
+	 * @covers SilverStripe\Forms\GridField\GridState_Data::getData
 	 */
 	public function testGetStateData() {
 		$obj = new GridField('testfield', 'testfield');
@@ -189,7 +189,7 @@ class GridFieldTest extends SapphireTest {
 
 	/**
 	 * @skipUpgrade
-	 * @covers GridField::getColumns
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumns
 	 */
 	public function testGetColumns(){
 		$obj = new GridField('testfield', 'testfield', Member::get());
@@ -202,7 +202,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getColumnCount
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnCount
 	 */
 	public function testGetColumnCount() {
 		$obj = new GridField('testfield', 'testfield', Member::get());
@@ -211,7 +211,7 @@ class GridFieldTest extends SapphireTest {
 
 	/**
 	 * @skipUpgrade
-	 * @covers GridField::getColumnContent
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnContent
 	 */
 	public function testGetColumnContent() {
 		$list = new ArrayList(array(
@@ -223,7 +223,7 @@ class GridFieldTest extends SapphireTest {
 
 	/**
 	 * @skipUpgrade
-	 * @covers GridField::getColumnContent
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnContent
 	 */
 	public function testGetColumnContentBadArguments() {
 		$this->setExpectedException('InvalidArgumentException');
@@ -236,7 +236,7 @@ class GridFieldTest extends SapphireTest {
 
 	/**
 	 * @skipUpgrade
-	 * @covers GridField::getColumnAttributes
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnAttributes
 	 */
 	public function testGetColumnAttributesEmptyArray() {
 		$list = new ArrayList(array(
@@ -248,7 +248,7 @@ class GridFieldTest extends SapphireTest {
 
 	/**
 	 * @skipUpgrade
-	 * @covers GridField::getColumnAttributes
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnAttributes
 	 */
 	public function testGetColumnAttributes() {
 		$list = new ArrayList(array(
@@ -260,7 +260,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getColumnAttributes
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnAttributes
 	 */
 	public function testGetColumnAttributesBadArguments() {
 		$this->setExpectedException('InvalidArgumentException');
@@ -284,7 +284,7 @@ class GridFieldTest extends SapphireTest {
 
 	/**
 	 * @skipUpgrade
-	 * @covers GridField::getColumnMetadata
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnMetadata
 	 */
 	public function testGetColumnMetadata() {
 		$list = new ArrayList(array(
@@ -296,7 +296,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getColumnMetadata
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnMetadata
 	 */
 	public function testGetColumnMetadataBadResponseFromComponent() {
 		$this->setExpectedException('LogicException');
@@ -309,7 +309,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getColumnMetadata
+	 * @covers SilverStripe\Forms\GridField\GridField::getColumnMetadata
 	 */
 	public function testGetColumnMetadataBadArguments() {
 		$this->setExpectedException('InvalidArgumentException');
@@ -320,7 +320,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::handleAction
+	 * @covers SilverStripe\Forms\GridField\GridField::handleAction
 	 */
 	public function testHandleActionBadArgument() {
 		$this->setExpectedException('InvalidArgumentException');
@@ -329,7 +329,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::handleAction
+	 * @covers SilverStripe\Forms\GridField\GridField::handleAction
 	 */
 	public function testHandleAction() {
 		$config = GridFieldConfig::create()->addComponent(new GridFieldTest_Component);
@@ -338,7 +338,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getCastedValue
+	 * @covers SilverStripe\Forms\GridField\GridField::getCastedValue
 	 */
 	public function testGetCastedValue() {
 		$obj = new GridField('testfield', 'testfield');
@@ -347,7 +347,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::getCastedValue
+	 * @covers SilverStripe\Forms\GridField\GridField::getCastedValue
 	 */
 	public function testGetCastedValueObject() {
 		$obj = new GridField('testfield', 'testfield');
@@ -356,7 +356,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers GridField::gridFieldAlterAction
+	 * @covers SilverStripe\Forms\GridField\GridField::gridFieldAlterAction
 	 */
 	public function testGridFieldAlterAction() {
 		$this->markTestIncomplete();
@@ -456,7 +456,7 @@ class GridFieldTest extends SapphireTest {
 	}
 
 	/**
-	 *  @covers GridField::FieldHolder
+	 *  @covers SilverStripe\Forms\GridField\GridField::FieldHolder
 	 */
 	public function testCanViewOnlyOddIDs() {
 		$this->logInWithPermission();

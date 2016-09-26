@@ -294,7 +294,7 @@ class ControllerTest extends FunctionalTest {
 	}
 
 	/**
-	 * @covers Controller::hasAction
+	 * @covers SilverStripe\Control\Controller::hasAction
 	 */
 	public function testHasAction() {
 		$controller = new ControllerTest_HasAction();

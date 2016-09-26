@@ -3,6 +3,7 @@
 [![Build Status](https://api.travis-ci.org/silverstripe/silverstripe-framework.svg?branch=master)](https://travis-ci.org/silverstripe/silverstripe-framework)
 [![Latest Stable Version](https://poser.pugx.org/silverstripe/framework/version.svg)](http://www.silverstripe.org/stable-download/)
 [![Latest Unstable Version](https://poser.pugx.org/silverstripe/framework/v/unstable.svg)](https://packagist.org/packages/silverstripe/framework)
+[![codecov](https://codecov.io/gh/silverstripe/silverstripe-framework/branch/master/graph/badge.svg)](https://codecov.io/gh/silverstripe/silverstripe-framework)
 [![Total Downloads](https://poser.pugx.org/silverstripe/framework/downloads.svg)](https://packagist.org/packages/silverstripe/framework)
 [![License](https://poser.pugx.org/silverstripe/framework/license.svg)](https://github.com/silverstripe/silverstripe-framework#license)
 [![Dependency Status](https://www.versioneye.com/php/silverstripe:framework/badge.svg)](https://www.versioneye.com/php/silverstripe:framework)
