@@ -1070,7 +1070,7 @@ class UploadField extends FileField {
 		// Note: Format of posted file parameters in php is a feature of using
 		// <input name='{$Name}[Uploads][]' /> for multiple file uploads
 		$tmpFiles = array();
-		if(	!empty($postVars['tmp_name'])
+		if( !empty($postVars['tmp_name'])
 			&& is_array($postVars['tmp_name'])
 			&& !empty($postVars['tmp_name']['Uploads'])
 		) {
@@ -1430,6 +1430,16 @@ class UploadField_ItemHandler extends RequestHandler {
 	}
 
 	/**
+	 * In place to handle inline UploadForm fields with Form validation errors
+	 *
+	 * @return ViewableData_Customised
+	 */
+	public function redirect()
+	{
+		return $this->edit($this->getRequest());
+	}
+
+	/**
 	 * @return Form
 	 */
 	public function EditForm() {
@@ -1451,6 +1461,7 @@ class UploadField_ItemHandler extends RequestHandler {
 		);
 		$form->loadDataFrom($file);
 		$form->addExtraClass('small');
+		$form->setRedirectToFormOnValidationError(true);
 
 		return $form;
 	}
