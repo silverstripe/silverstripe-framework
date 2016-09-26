@@ -31,8 +31,8 @@ class DBVarchar extends DBString {
  	 * @param array $options Optional parameters, e.g. array("nullifyEmpty"=>false).
  	 *                       See {@link StringField::setOptions()} for information on the available options
  	 */
-	public function __construct($name = null, $size = 50, $options = array()) {
-		$this->size = $size ? $size : 50;
+	public function __construct($name = null, $size = 255, $options = array()) {
+		$this->size = $size ? $size : 255;
 		parent::__construct($name, $options);
 	}
 
