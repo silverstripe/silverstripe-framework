@@ -95,7 +95,7 @@ Similarly, to change an existing language label, you can overwrite one of these 
 
 	:::yml
 	i18n:
-	  common_locales:
+	  common_languages:
 	    en_NZ:
 	      native: Niu Zillund
 
