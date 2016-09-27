@@ -455,12 +455,11 @@ class GDBackend extends Object implements Image_Backend {
 		$this->makeDir(dirname($filename));
 		
 		if($filename) {
-			if(file_exists($filename)) list($width, $height, $type, $attr) = getimagesize($filename);
+			if(file_exists($filename) && is_file($filename) && filesize($filename) > 1) list($width, $height, $type, $attr) = getimagesize($filename);
 			
 			if(file_exists($filename)) unlink($filename);
-
-			$ext = strtolower(substr($filename, strrpos($filename,'.')+1));
-			if(!isset($type)) switch($ext) {
+			$fileInfo = pathinfo($filename, PATHINFO_EXTENSION);
+			if(!isset($type)) switch(strtolower($fileInfo['extension'])) {
 				case "gif": $type = IMAGETYPE_GIF; break;
 				case "jpeg": case "jpg": case "jpe": $type = IMAGETYPE_JPEG; break;
 				default: $type = IMAGETYPE_PNG; break;
