@@ -8,7 +8,12 @@
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
-use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
+	use SilverStripe\Control\Controller;
+	use SilverStripe\Core\Startup\ParameterConfirmationToken;
+	use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
+	use SilverStripe\ORM\DatabaseAdmin;
+	use SilverStripe\ORM\DB;
+	use SilverStripe\Security\Security;
 
 /**
  * SilverStripe CMS Installer
@@ -1047,7 +1052,7 @@ class InstallRequirements {
 		$adapters = DatabaseAdapterRegistry::get_adapters();
 		if(isset($adapters[$databaseClass])) {
 			$helperPath = $adapters[$databaseClass]['helperPath'];
-			$class = str_replace('.php', '', basename($helperPath));
+			$class = '\SilverStripe\Dev\Install\\' . str_replace('.php', '', basename($helperPath));
 		}
 		return (class_exists($class)) ? new $class() : false;
 	}
@@ -1337,6 +1342,8 @@ class Installer extends InstallRequirements {
 			$this->writeToFile("mysite/_config.php", <<<PHP
 <?php
 
+use SilverStripe\\i18n\\i18n;
+
 global \$project;
 \$project = 'mysite';
 
@@ -1363,6 +1370,8 @@ PHP
 			$databaseConfigContent = implode(",\n", $lines);
 			$this->writeToFile("mysite/_config.php", <<<PHP
 <?php
+
+use SilverStripe\\i18n\\i18n;
 
 global \$project;
 \$project = 'mysite';
