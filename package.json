@@ -11,6 +11,7 @@
   },
   "scripts": {
     "build": "webpack",
+    "watch": "webpack --config ./webpack-dev.config.js --watch",
     "css": "WEBPACK_CHILD=css webpack",
     "lock": "npm-shrinkwrap --dev",
     "test": "NODE_PATH=\"./client/src:./admin/client/src\" jest",

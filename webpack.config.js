@@ -88,7 +88,6 @@ const config = [
       config: 'Config',
       'lib/Router': 'Router',
     },
-    devtool: 'source-map',
     module: {
       loaders: [
         {
@@ -152,7 +151,6 @@ const config = [
       path: 'admin/client/dist',
       filename: '[name].css',
     },
-    devtool: 'source-map',
     module: {
       loaders: [
         {
@@ -202,7 +200,6 @@ const config = [
       path: './',
       filename: '[name].css',
     },
-    devtool: 'source-map',
     module: {
       loaders: [
         {
