@@ -8,6 +8,18 @@ jest.unmock('merge');
 
 import backend from '../Backend';
 
+// Mock out the get/post/put/delete methods in the backend
+// So that we can isolate our test to the behaviour of createEndpointFetcher()
+// The mocked getters will pass returnValue to the resulting promise's then() call
+function getBackendMock(returnValue) {
+  return Object.assign(backend, {
+    get: getMockPromise(returnValue),
+    post: getMockPromise(returnValue),
+    put: getMockPromise(returnValue),
+    delete: getMockPromise(returnValue),
+  });
+}
+
 /**
  * Return a mock function that returns a promise
  */
@@ -117,26 +129,19 @@ describe('Backend', () => {
   });
 
   describe('createEndpointFetcher()', () => {
-    // Mock out the get/post/put/delete methods in the backend
-    // So that we can isolate our test to the behaviour of createEndpointFetcher()
-    // The mocked getters will pass returnValue to the resulting promise's then() call
-    function getBackendMock(returnValue) {
-      return Object.assign(backend, {
-        get: getMockPromise(returnValue),
-        post: getMockPromise(returnValue),
-        put: getMockPromise(returnValue),
-        delete: getMockPromise(returnValue),
+    let mock = null;
+
+    beforeEach(() => {
+      mock = getBackendMock({
+        // mock response body and headers
+        text: () => Promise.resolve('{"status":"ok"}'),
+        headers: {
+          get: () => 'application/json',
+        },
       });
-    }
+    });
 
     it('should add querystring to the URL for GET requests', (done) => {
-      const mock = getBackendMock({
-        text: () => Promise.resolve('{"status":"ok","message":"happy"}'),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        }),
-      });
-
       const endpoint = mock.createEndpointFetcher({
         url: 'http://example.org',
         method: 'get',
@@ -145,25 +150,21 @@ describe('Backend', () => {
 
       const promise = endpoint({ id: 1, values: { a: 'aye', b: 'bee' } });
 
-      return promise.then(() => {
-        expect(mock.get.mock.calls[0][0])
-          .toEqual('http://example.org?id=1&values%5Ba%5D=aye&values%5Bb%5D=bee');
-        expect(mock.get.mock.calls[0][1])
-          .toEqual({
+      expect(mock.get)
+        .toBeCalledWith(
+          'http://example.org?id=1&values%5Ba%5D=aye&values%5Bb%5D=bee',
+          {
             Accept: 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded',
-          });
-        done();
-      });
+          }
+        );
+
+      return promise
+        .catch((e) => expect(e).toBeFalsy())
+        .then(done);
     });
 
     it('should pass a JSON payload', (done) => {
-      const mock = getBackendMock({
-        text: () => Promise.resolve('{"status":"ok","message":"happy"}'),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        }),
-      });
       const endpoint = mock.createEndpointFetcher({
         url: 'http://example.org',
         method: 'post',
@@ -173,25 +174,22 @@ describe('Backend', () => {
 
       const promise = endpoint({ id: 1, values: { a: 'aye', b: 'bee' } });
 
-      return promise.then((result) => {
-        expect(mock.post.mock.calls[0][0]).toEqual('http://example.org');
-        expect(mock.post.mock.calls[0][1]).toEqual('{"id":1,"values":{"a":"aye","b":"bee"}}');
-        expect(mock.post.mock.calls[0][2]).toEqual({
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        });
-        expect(result).toEqual({ status: 'ok', message: 'happy' });
-        done();
-      });
+      expect(mock.post)
+        .toBeCalledWith(
+          'http://example.org',
+          '{"id":1,"values":{"a":"aye","b":"bee"}}',
+          {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          }
+        );
+
+      return promise
+        .catch((e) => expect(e).toBeFalsy())
+        .then(done);
     });
 
     it('should replace url template parameters', (done) => {
-      const mock = getBackendMock({
-        text: () => Promise.resolve('{"status":"ok"}'),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        }),
-      });
       const endpoint = mock.createEndpointFetcher({
         url: 'http://example.com/:one/:two/?foo=bar',
         method: 'post',
@@ -206,20 +204,22 @@ describe('Backend', () => {
         three: 3,
       });
 
-      return promise.then(() => {
-        expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar');
-        expect(mock.post.mock.calls[0][1]).toEqual('two=2&three=3');
-        done();
-      });
+      expect(mock.post)
+        .toBeCalledWith(
+          'http://example.com/1/2/?foo=bar',
+          'two=2&three=3',
+          {
+            Accept: 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }
+        );
+
+      return promise
+        .catch((e) => expect(e).toBeFalsy())
+        .then(done);
     });
 
     it('should add query parameters from spec for non-GET data', (done) => {
-      const mock = getBackendMock({
-        text: () => Promise.resolve('{"status":"ok"}'),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        }),
-      });
       const endpoint = mock.createEndpointFetcher({
         url: 'http://example.com/:one/:two/?foo=bar',
         method: 'post',
@@ -236,20 +236,22 @@ describe('Backend', () => {
         three: 3,
       });
 
-      return promise.then(() => {
-        expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar&three=3');
-        expect(mock.post.mock.calls[0][1]).toEqual('{"two":2}');
-        done();
-      });
+      expect(mock.post)
+        .toBeCalledWith(
+          'http://example.com/1/2/?foo=bar&three=3',
+          '{"two":2}',
+          {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          }
+        );
+
+      return promise
+        .catch((e) => expect(e).toBeFalsy())
+        .then(done);
     });
 
     it('should add query parameters from payload for GET data', (done) => {
-      const mock = getBackendMock({
-        text: () => Promise.resolve('{"status":"ok"}'),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        }),
-      });
       const endpoint = mock.createEndpointFetcher({
         url: 'http://example.com/:one/:two/?foo=bar',
         method: 'get',
@@ -265,23 +267,21 @@ describe('Backend', () => {
         three: 3,
       });
 
-      return promise.then(() => {
-        expect(mock.get.mock.calls[0][0]).toEqual('http://example.com/1/2/?foo=bar&two=2&three=3');
-        expect(mock.get.mock.calls[0][1]).toEqual({
-          Accept: 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded',
-        });
-        done();
-      });
+      expect(mock.get)
+        .toBeCalledWith(
+          'http://example.com/1/2/?foo=bar&two=2&three=3',
+          {
+            Accept: 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          }
+        );
+
+      return promise
+        .catch((e) => expect(e).toBeFalsy())
+        .then(done);
     });
 
     it('should merge defaultData into data argument', (done) => {
-      const mock = getBackendMock({
-        text: () => Promise.resolve('{"status":"ok"}'),
-        headers: new Headers({
-          'Content-Type': 'application/json',
-        }),
-      });
       const endpoint = mock.createEndpointFetcher({
         url: 'http://example.com/',
         method: 'post',
@@ -294,16 +294,24 @@ describe('Backend', () => {
         four: { fourTwo: true },
       });
 
-      return promise.then(() => {
-        expect(mock.post.mock.calls[0][0]).toEqual('http://example.com/');
-        expect(mock.post.mock.calls[0][1]).toEqual(JSON.stringify({
-          one: 1,
-          two: 'updated',
-          four: { fourOne: true, fourTwo: true },
-          three: 3,
-        }));
-        done();
-      });
+      expect(mock.post)
+        .toBeCalledWith(
+          'http://example.com/',
+          JSON.stringify({
+            one: 1,
+            two: 'updated',
+            four: { fourOne: true, fourTwo: true },
+            three: 3,
+          }),
+          {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          }
+        );
+
+      return promise
+        .catch((e) => expect(e).toBeFalsy())
+        .then(done);
     });
   });
 });
