@@ -166,7 +166,7 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @param {function} [fn] - Optional function for custom behaviour. See example in description.
    */
   handleFieldUpdate(event, updates, fn) {
-    if (typeof fn !== 'undefined') {
+    if (typeof fn === 'function') {
       fn(this.getFormId(), this.props.formActions.updateField);
     } else {
       this.props.formActions.updateField(this.getFormId(), updates);
@@ -308,6 +308,11 @@ export class FormBuilderComponent extends SilverStripeComponent {
     // Leave it up to the schema and component to determine
     // which props are required.
     const props = Object.assign({}, field, extraProps);
+
+    // if no value, it is better to unset it
+    if (props.value === null) {
+      delete props.value;
+    }
 
     // Provides container components a place to hook in
     // and apply customisations to scaffolded components.

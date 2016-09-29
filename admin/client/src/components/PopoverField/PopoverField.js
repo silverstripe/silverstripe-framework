@@ -70,7 +70,7 @@ class PopoverField extends SilverStripeComponent {
 
 PopoverField.propTypes = {
   id: React.PropTypes.string,
-  title: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
+  title: React.PropTypes.any,
   data: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.shape({

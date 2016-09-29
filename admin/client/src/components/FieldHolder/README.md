@@ -1,29 +1,29 @@
-# FieldHolder
+# FieldHolder Higher-order Component
 
-This is a higher order component which can be used to wrap 
-a [form group](http://v4-alpha.getbootstrap.com/components/forms/#form-groups)
-around a React component (usually a form field). It also add a `<label>`
-and visually groups the two elements.
+This is a higher order component.
+It adds `ControlLabel` and other necessary components around a Component (normally `FormField`).
 
-## Props
+## Example
 
-### title (string)
+```js
+fieldHolder(TextField)
+```
 
-HTML value passed through to the `<label>` element
+## Properties
 
-### leftTitle (string)
+ * `leftTitle` (any): Title to display to the left (if inline) or above the field, check below NOTE about handling raw html.
+ * `rightTitle` (any): Title to display to the right (if inline) or below the field, check below NOTE about handling raw html.
+ * `title` (any): Title to display if leftTitle is not defined, check below NOTE about handling raw html.
+ * `description` (any): For any extra information you'd like to display with the field.
+ * `extraClass` (string): Extra classes the component should have.
+ * `holderId` (string): An ID for the wrapping element.
+ * `id` (string): ID to be used for the `ControlLabels` to link them with the Field.
+ * `hideLabels` (boolean): Defines whether to show labels for this holder, handy for if the Field already handles its own label but still need other features like the `description`.
 
-Same as `title` (legacy use)
-
-### extraClass (string)
-
-A `class` which is added to both the container and the wrapped React component.
-
-### id (string)
-
-The HTML `id` for the form field. Important to associate the `<label>`
-the the actual field.
-
-### Other
-
-All other props are passed through to the wrapped React component.
+ _NOTE:_ For using titles or descriptions with raw HTML, pass in an object with the following structure:
+ ```json
+ {
+   "html": "<span>My html</span>"
+ }
+ ```
+ _NOTE2:_ For other properties, please refer to the [react-bootstrap FormGroup](https://react-bootstrap.github.io/components.html#forms-props-form-group) documentation.

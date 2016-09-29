@@ -1,33 +1,24 @@
-# Popover Field Component
+# PopoverField Component
 
 Creates a popup box that may contain other nested fields. The activator for this popup
 is represented by a button.
 
-## Props
+## Example
+```js
+<PopoverField>
+  <button>My first button</button>
+  <button>My other button</button>
+</PopoverField>
+```
 
-### placement
+## Properties
 
-Position to place this popover compared to the activation button. Options are:
-
-* left
-* right
-* top
-* bottom
-
-Can be provided within a `data` object passed to this component.
-
-### popoverTitle
-
-This title will be used as the header in the popup.
-
-Can be provided within a `data` object passed to this component.
-
-### title
-
-This will be used as the label for the button. If left blank, `...` (elipses) will be
-used in place as a default.
-
-### id (required)
-
-Used for the field's `id` attribute.
-
+ * `id` (string): The ID for the component.
+ * `title` (any): The title to display on the button to open the popover, if left blank it will display an ellipsis icon.
+ * `data` (object) (required): Extra data that helps define this field uniquely.
+   * `popoverTitle` (string): The title to appear for the popover.
+   * `placement` (string): Where the popover will appear in relation to the button, options available are:
+     * top
+     * right
+     * bottom
+     * left

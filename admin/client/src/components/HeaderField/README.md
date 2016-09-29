@@ -1,21 +1,16 @@
-# Header Field Component
+# HeaderField Component
 
-Generates a header field, displaying a title
+Generates a header field for displaying as a title.
 
-## Props
+## Example
+```js
+<HeaderField id="my-hidden" data={{ title: 'My heading' }} />
+```
 
-### headingLevel (required)
+## Properties
 
-The level of heading this component should be.
-
-### extraClass
-
-Addition CSS classes to apply to the heading element.
-
-### id
-
-Used for the component's `id` attribute.
-
-### data.title (required)
-
-Object for dynamic data, would require containing the property `title` which is what is displayed
+ * `id` (string): The ID for the component.
+ * `extraClass` (string): Extra classes the component should have.
+ * `data` (string) (required): Extra data that helps define this field uniquely.
+   * headingLevel (number): The level depth for heading.
+   * title (string) (required): Title to display.

@@ -12,6 +12,11 @@ class FormBuilderModal extends SilverStripeComponent {
     this.clearResponse = this.clearResponse.bind(this);
   }
 
+  /**
+   * Defines the form part of the Modal
+   *
+   * @returns {Component}
+   */
   getForm() {
     return (
       <FormBuilder
@@ -22,6 +27,11 @@ class FormBuilderModal extends SilverStripeComponent {
     );
   }
 
+  /**
+   * Generates the response part of the Modal
+   *
+   * @returns {Component}
+   */
   getResponse() {
     if (!this.state || !this.state.response) {
       return null;
@@ -42,12 +52,18 @@ class FormBuilderModal extends SilverStripeComponent {
     );
   }
 
+  /**
+   * Removes the response from the state
+   */
   clearResponse() {
     this.setState({
       response: null,
     });
   }
 
+  /**
+   * Call the callback for hiding this Modal
+   */
   handleHide() {
     this.clearResponse();
     if (typeof this.props.handleHide === 'function') {
@@ -55,6 +71,14 @@ class FormBuilderModal extends SilverStripeComponent {
     }
   }
 
+  /**
+   * Handle submitting the form in the Modal
+   *
+   * @param {Event} event
+   * @param {object} fieldValues
+   * @param {function} submitFn
+   * @returns {Promise}
+   */
   handleSubmit(event, fieldValues, submitFn) {
     let promise = null;
     if (typeof this.props.handleSubmit === 'function') {

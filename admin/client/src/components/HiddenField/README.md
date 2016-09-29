@@ -1,21 +1,17 @@
-# Hidden Field
+# HiddenField Component
 
-Generates an `<input type="hidden" />`
+Generates a hidden input type field.
 
-## Props
+## Example
+```js
+<HiddenField name="my-hidden" value="semi-secret" />
+```
 
-### extraClass
+## Properties
 
-Addition CSS classes to apply to the `<input>` element.
-
-### name (required)
-
-Used for the field's `name` attribute.
-
-### onChange
-
-Handler function called when the field's value changes.
-
-### value
-
-The field's value.
+ * `id` (string): The ID for the component.
+ * `extraClass` (string): Extra classes the component should have.
+ * `name` (string) (required): The name for the component.
+ * `value` (string): The value the input should hold.
+ 
+ _NOTE:_ For other properties, please refer to the [react-bootstrap FormControl](https://react-bootstrap.github.io/components.html#forms-props-form-control) documentation.

@@ -1,31 +1,30 @@
-# SingleSelectField Component
+# CheckboxSetField Component
 
-Generates a select/dropdown field.
+Generates a checkbox button group.
 
 ## Example
 ```js
-<SingleSelectField name="my-select" source={[
+<CheckSetField name="my-select" source={[
 	{ value: 'one', title: '1' },
 	{ value: 'two', title: '2', disabled: true },
+	{ value: 'three', title: '3' },
 	{ value: 'four', title: '4' }
-]} value="one" />
+]} value={['one', 'four']} />
 ```
 
 ## Properties
 
  * `id` (string): The ID for the component.
  * `extraClass` (string): Extra classes the component should have.
+ * `itemClass` (string): Classes applicable to each item in the group.
  * `name` (string) (required): The name for the component.
  * `onChange` (function): Event handler for when the component changes.
- * `value` (string|number): The value to display for the field, can use `defaultValue` for uncontrollable component.
+ * `value` (string|number): The value that matches one or more of the source items value.
  * `readOnly` (boolean): Whether this field is read only.
  * `disabled` (boolean): Whether this field is disabled.
  * `source` (array): Array of items to appear in the list with the following properties excepted.
    * `value` (string|number): The value for item.
-   * `title` (string|number): The displayed value for item.
+   * `title` (any): The displayed value for item.
    * `disabled` (boolean): Tells if item is disabled from selecting.
- * `data` (object): Extra data that helps define this field uniquely.
-   * `hasEmptyDefault` (boolean): Defines if this has a "blank" option.
-   * `emptyString` (string): The title for the "blank" option.
 
- _NOTE:_ For other properties, please refer to the [react-bootstrap FormControl](https://react-bootstrap.github.io/components.html#forms-props-form-control) documentation.
+ _NOTE:_ For other properties, please refer to the [react-bootstrap Radio/Checkbox](https://react-bootstrap.github.io/components.html#forms-props-checkbox) documentation.

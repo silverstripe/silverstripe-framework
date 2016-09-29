@@ -4,7 +4,7 @@ import SilverStripeComponent from 'lib/SilverStripeComponent';
 class HeaderField extends SilverStripeComponent {
 
   render() {
-    const Heading = `h${this.props.data.headingLevel}`;
+    const Heading = `h${this.props.data.headingLevel || 3}`;
 
     return (
       <div className="field">
@@ -13,9 +13,14 @@ class HeaderField extends SilverStripeComponent {
     );
   }
 
+  /**
+   * Fetches the properties for the field
+   *
+   * @returns {object} properties
+   */
   getInputProps() {
     return {
-      className: [this.props.extraClass].join(' '),
+      className: `${this.props.className} ${this.props.extraClass}`,
       id: this.props.id,
     };
   }
@@ -27,10 +32,15 @@ HeaderField.propTypes = {
   data: React.PropTypes.oneOfType([
     React.PropTypes.array,
     React.PropTypes.shape({
-      headingLevel: React.PropTypes.number.isRequired,
-      title: React.PropTypes.string,
+      headingLevel: React.PropTypes.number,
+      title: React.PropTypes.string.isRequired,
     }),
   ]).isRequired,
+};
+
+HeaderField.defaultProps = {
+  className: '',
+  extraClass: '',
 };
 
 export default HeaderField;
