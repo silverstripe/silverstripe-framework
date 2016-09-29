@@ -404,94 +404,32 @@ class Email extends ViewableData {
 		}
 	}
 
-	/**
-	 * Send the email in plaintext.
-	 * 
-	 * @see send() for sending emails with HTML content.
-	 * @uses Mailer->sendPlain()
-	 * 
-	 * @param string $messageID Optional message ID so the message can be identified in bounces etc.
-	 * @return bool Success of the sending operation from an MTA perspective. 
-	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
-	 */
-	public function sendPlain($messageID = null) {
-		Requirements::clear();
-		
-		$this->parseVariables(true);
-		
-		if(empty($this->from)) $this->from = Email::config()->admin_email;
-						
-		$headers = $this->customHeaders;
-		
-		if($messageID) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
-						
-		if(project()) $headers['X-SilverStripeSite'] = project();
 
-		$to = $this->to;
-		$from = $this->from;
-		$subject = $this->subject;
-		if($sendAllTo = $this->config()->send_all_emails_to) {
-			$subject .= " [addressed to $to";
-			$to = $sendAllTo;
-			if($this->cc) $subject .= ", cc to $this->cc";
-			if($this->bcc) $subject .= ", bcc to $this->bcc";
-			$subject .= ']';
-			unset($headers['Cc']);
-			unset($headers['Bcc']);
-		} else {
-			if($this->cc) $headers['Cc'] = $this->cc;
-			if($this->bcc) $headers['Bcc'] = $this->bcc;
-		}
-	
-		if($ccAllTo = $this->config()->cc_all_emails_to) {
-			if(!empty($headers['Cc']) && trim($headers['Cc'])) {
-				$headers['Cc'] .= ', ' . $ccAllTo;
-			} else {
-				$headers['Cc'] = $ccAllTo;
-			}
-		}
-
-		if($bccAllTo = $this->config()->bcc_all_emails_to) {
-			if(!empty($headers['Bcc']) && trim($headers['Bcc'])) {
-				$headers['Bcc'] .= ', ' . $bccAllTo;
-			} else {
-				$headers['Bcc'] = $bccAllTo;
-			}
-		}
-
-		if($sendAllfrom = $this->config()->send_all_emails_from) {
-			if($from) $subject .= " [from $from]";
-			$from = $sendAllfrom;
-		}
-
-		Requirements::restore();
-		
-		return self::mailer()->sendPlain($to, $from, $subject, $this->body, $this->attachments, $headers);
-	}
-	
 	/**
 	 * Send an email with HTML content.
 	 *
 	 * @see sendPlain() for sending plaintext emails only.
 	 * @uses Mailer->sendHTML()
-	 * 
+	 *
 	 * @param string $messageID Optional message ID so the message can be identified in bounces etc.
-	 * @return bool Success of the sending operation from an MTA perspective. 
+	 * @return bool Success of the sending operation from an MTA perspective.
 	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
 	 */
-	public function send($messageID = null) {
+	public function send($messageID = null, $plaintext = false) {
+
 		Requirements::clear();
-	
-		$this->parseVariables();
+
+		$this->parseVariables($plaintext);
 
 		if(empty($this->from)) $this->from = Email::config()->admin_email;
+
+		$this->extend('onBeforeSend');
 
 		$headers = $this->customHeaders;
 
 		if($messageID) $headers['X-SilverStripeMessageID'] = project() . '.' . $messageID;
 
 		if(project()) $headers['X-SilverStripeSite'] = project();
-
 
 		$to = $this->to;
 		$from = $this->from;
@@ -510,7 +448,6 @@ class Email extends ViewableData {
 			if($this->bcc) $headers['Bcc'] = $this->bcc;
 		}
 
-	
 		if($ccAllTo = $this->config()->cc_all_emails_to) {
 			if(!empty($headers['Cc']) && trim($headers['Cc'])) {
 				$headers['Cc'] .= ', ' . $ccAllTo;
@@ -533,11 +470,33 @@ class Email extends ViewableData {
 		}
 
 		Requirements::restore();
-		
-		return self::mailer()->sendHTML($to, $from, $subject, $this->body, $this->attachments, $headers,
-			$this->plaintext_body);
+
+
+		if ($plaintext) {
+			$sentMail = self::mailer()->sendPlain($to, $from, $subject, $this->body, $this->attachments, $headers);
+		} else {
+			$sentMail = self::mailer()->sendHTML($to, $from, $subject, $this->body, $this->attachments, $headers, $this->plaintext_body);
+		}
+
+		$this->extend('onAfterSend');
+
+		return $sentMail;
 	}
 
+	/**
+	 * Send the email in plaintext.
+	 *
+	 * @see send() for sending emails with HTML content.
+	 * @uses Mailer->sendPlain()
+	 *
+	 * @param string $messageID Optional message ID so the message can be identified in bounces etc.
+	 * @return bool Success of the sending operation from an MTA perspective.
+	 * Doesn't actually give any indication if the mail has been delivered to the recipient properly)
+	 */
+	public function sendPlain($messageID = null) {
+		return $this->send($messageID, true);
+	}
+	
 	/**
 	 * Used as a default sender address in the {@link Email} class
 	 * unless overwritten. Also shown to users on live environments
