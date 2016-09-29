@@ -1,0 +1,112 @@
+// Based on bootstrap modal
+.modal-content {
+  overflow: hidden;
+  border: 0;
+}
+
+
+// Modal header
+// Top section of the modal w/ title and dismiss
+.modal-header {
+  height: $toolbar-total-height;
+
+  // Close icon
+  .close {
+    top: $spacer-sm;
+    right: $spacer-sm;
+    position: absolute;
+    z-index: 2;
+    margin-right: 0;
+    height: 32px;
+
+    span {
+      overflow: hidden;
+      display: block;
+      margin-top: -7px;
+    }
+  }
+}
+
+.modal-body {
+  min-height: 200px;
+}
+
+
+// Modal slide up response
+@keyframes modal--slideup {
+  from {
+    bottom: -100%;
+    opacity: .5;
+  }
+
+  to {
+    bottom: 0;
+    opacity: 1;
+  }
+}
+
+.modal__response {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: calc(100% + #{$toolbar-total-height});
+  width: 100%;
+  animation: modal--slideup .6s 1;
+  background: $background-main;
+  display: block;
+  border-radius: $border-radius-lg;
+  z-index: 1;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $panel-padding-y $panel-padding-x;
+}
+
+// Response messages
+.modal__response--good,
+.modal__response--error {
+  font-size: $font-size-lg;
+  font-weight: 300;
+
+  span::before {
+    font-family: silverstripe;
+    margin-bottom: $spacer-y;
+    font-size: 48px;
+    line-height: 40px;
+    display: block;
+    padding-bottom: $spacer-y;
+  }
+}
+
+.modal__response--good span::before {
+  content: "O";
+  color: $brand-success;
+}
+
+.modal__response--error span::before {
+  content: "#";
+  color: $brand-danger;
+}
+
+
+// This code doesn't do anything
+// TODO check whether or why this (chosen) isn't being used?
+.modal__dialog {
+
+  .chosen-results > li {
+    padding: $spacer-y/1.5 $spacer-x;
+  }
+
+  .disabled-result {
+    font-style: italic;
+
+    &::after {
+      font-style: normal;
+      content: "Already contains item";
+      color: $color-text-blue-link;
+      margin-left: $spacer-x;
+      float: right;
+    }
+  }
+}

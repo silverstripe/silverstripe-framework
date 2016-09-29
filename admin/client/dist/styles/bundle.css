@@ -6112,7 +6112,7 @@ a.list-group-item-danger.active,a.list-group-item-danger.active:focus,a.list-gro
 .close{
   float:right;
   font-size:1.5rem;
-  font-weight:700;
+  font-weight:300;
   line-height:1;
   color:#000;
   text-shadow:0 1px 0 #fff;
@@ -6177,7 +6177,7 @@ button.close{
 
 .modal-content{
   position:relative;
-  background-color:#fff;
+  background-color:#f6f7f8;
   background-clip:padding-box;
   border:1px solid rgba(0,0,0,.2);
   border-radius:.3rem;
@@ -6204,7 +6204,7 @@ button.close{
 }
 
 .modal-header{
-  padding:15px;
+  padding:.76925rem 1.5385rem;
   border-bottom:1px solid #e5e5e5;
 }
 
@@ -6225,11 +6225,11 @@ button.close{
 
 .modal-body{
   position:relative;
-  padding:15px;
+  padding:1.5385rem;
 }
 
 .modal-footer{
-  padding:15px;
+  padding:1.5385rem;
   text-align:right;
   border-top:1px solid #e5e5e5;
 }
@@ -8655,7 +8655,7 @@ form.nostyle .TreeDropdownField,form.nostyle input.text,form.nostyle select,form
 }
 
 .field select:not([size]):not([multiple]){
-  height:2.5rem;
+  height:2.924rem;
 }
 
 .field input.creditcard,.field input.phonenumber-field__area,.field input.phonenumber-field__country,.field input.phonenumber-field__extension,.field input.phonenumber-field__number{
@@ -10976,93 +10976,6 @@ body.cms-dialog{
 .ss-uploadfield-editandorganize .ss-uploadfield-item-info{
   position:absolute;
   top:0;
-}
-
-.add-to-campaign__dialog{
-  overflow:hidden;
-  padding:12px 16px;
-  margin:0;
-  border:0;
-  min-height:150px;
-}
-
-.add-to-campaign__dialog .chosen-results>li{
-  padding:.82053rem 1.2308rem;
-}
-
-.add-to-campaign__dialog .disabled-result{
-  font-style:italic;
-}
-
-.add-to-campaign__dialog .disabled-result:after{
-  font-style:normal;
-  content:"Already contains item";
-  color:#0071c4;
-  margin-left:1.2308rem;
-  float:right;
-}
-
-@-webkit-keyframes add-to-campaign--slideup{
-  0%{
-    bottom:-100%;
-  }
-
-  to{
-    bottom:0;
-  }
-}
-
-@keyframes add-to-campaign--slideup{
-  0%{
-    bottom:-100%;
-  }
-
-  to{
-    bottom:0;
-  }
-}
-
-.add-to-campaign__dialog .add-to-campaign__response{
-  position:absolute;
-  bottom:0;
-  height:100%;
-  left:0;
-  width:100%;
-  -webkit-animation:add-to-campaign--slideup 2s 1;
-          animation:add-to-campaign--slideup 2s 1;
-  background:#fff;
-  display:block;
-  z-index:1;
-}
-
-.add-to-campaign__dialog .response-wrapper{
-  display:table;
-  height:100%;
-  width:100%;
-}
-
-.add-to-campaign__dialog .response-wrapper span{
-  display:table-cell;
-  text-align:center;
-  vertical-align:middle;
-  padding-bottom:1.2308rem;
-}
-
-.add-to-campaign__dialog .response-wrapper span:before{
-  font-size:48px;
-  line-height:40px;
-  display:block;
-  padding-bottom:1.2308rem;
-}
-
-.add-to-campaign__dialog .add-to-campaign__response--good span:before{
-  content:"\263A";
-  color:#3fa142;
-}
-
-.add-to-campaign__dialog .add-to-campaign__response--error span:before{
-  content:"\2639";
-  color:#d40404;
 }
 
 .cms-search-form{
@@ -15645,6 +15558,10 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   font-size:.923rem;
 }
 
+.form__field-description:empty,.form__field-extra-label:empty{
+  display:none;
+}
+
 .form__field-extra-label{
   font-style:italic;
 }
@@ -15873,6 +15790,123 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
         -ms-flex:0 0 8.33333%;
             flex:0 0 8.33333%;
   }
+}
+
+.modal-content{
+  overflow:hidden;
+  border:0;
+}
+
+.modal-header{
+  height:53px;
+}
+
+.modal-header .close{
+  top:.9231rem;
+  right:.9231rem;
+  position:absolute;
+  z-index:2;
+  margin-right:0;
+  height:32px;
+}
+
+.modal-header .close span{
+  overflow:hidden;
+  display:block;
+  margin-top:-7px;
+}
+
+.modal-body{
+  min-height:200px;
+}
+
+@-webkit-keyframes modal--slideup{
+  0%{
+    bottom:-100%;
+    opacity:.5;
+  }
+
+  to{
+    bottom:0;
+    opacity:1;
+  }
+}
+
+@keyframes modal--slideup{
+  0%{
+    bottom:-100%;
+    opacity:.5;
+  }
+
+  to{
+    bottom:0;
+    opacity:1;
+  }
+}
+
+.modal__response{
+  position:absolute;
+  bottom:0;
+  left:0;
+  height:calc(100% + 53px);
+  width:100%;
+  -webkit-animation:modal--slideup .6s 1;
+          animation:modal--slideup .6s 1;
+  background:#f6f7f8;
+  display:block;
+  border-radius:.3rem;
+  z-index:1;
+  text-align:center;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-pack:center;
+      -ms-flex-pack:center;
+          justify-content:center;
+  -webkit-box-align:center;
+      -ms-flex-align:center;
+          align-items:center;
+  padding:1.5385rem;
+}
+
+.modal__response--error,.modal__response--good{
+  font-size:1.23rem;
+  font-weight:300;
+}
+
+.modal__response--error span:before,.modal__response--good span:before{
+  font-family:silverstripe;
+  margin-bottom:1.2308rem;
+  font-size:48px;
+  line-height:40px;
+  display:block;
+  padding-bottom:1.2308rem;
+}
+
+.modal__response--good span:before{
+  content:"O";
+  color:#3fa142;
+}
+
+.modal__response--error span:before{
+  content:"#";
+  color:#d40404;
+}
+
+.modal__dialog .chosen-results>li{
+  padding:.82053rem 1.2308rem;
+}
+
+.modal__dialog .disabled-result{
+  font-style:italic;
+}
+
+.modal__dialog .disabled-result:after{
+  font-style:normal;
+  content:"Already contains item";
+  color:#0071c4;
+  margin-left:1.2308rem;
+  float:right;
 }
 
 .cms-content__inner{

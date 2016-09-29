@@ -37,9 +37,7 @@ class FormBuilderModal extends SilverStripeComponent {
 
     return (
       <div className={className}>
-        <div className="response-wrapper">
-          <span>{this.state.response}</span>
-        </div>
+        <span>{this.state.response}</span>
       </div>
     );
   }
