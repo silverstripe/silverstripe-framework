@@ -164,6 +164,11 @@ $grid-gutter-width: $spacer * 2.5; // 40px
 $grid-gutter-width-half: $grid-gutter-width / 2; // TODO: Deprecate this, replacing with $panel-padding-x and $panel-padding-y
 
 
+// Panel padding
+$panel-padding-x: $grid-gutter-width / 2;
+$panel-padding-y: $grid-gutter-width / 2;
+
+
 // Typography
 //
 // Font, line-height, and color for body text, headings, and more.
@@ -577,22 +582,22 @@ $popover-padding: $spacer-x;
 // Modals
 
 // Padding applied to the modal body
-// $modal-inner-padding: 15px;
-//
-// $modal-title-padding: 15px;
-// $modal-title-line-height: $line-height;
-//
-// $modal-content-bg: #fff;
-// $modal-content-border-color: rgba(0,0,0,.2);
-//
-// $modal-backdrop-bg: #000;
-// $modal-backdrop-opacity: .5;
-// $modal-header-border-color: #e5e5e5;
-// $modal-footer-border-color: $modal-header-border-color;
-//
-// $modal-lg: 900px;
-// $modal-md: 600px;
-// $modal-sm: 300px;
+$modal-inner-padding: $panel-padding-y $panel-padding-x;
+
+$modal-title-padding: $spacer-xs $panel-padding-x;
+$modal-title-line-height: $line-height;
+
+$modal-content-bg: $background-main;
+$modal-content-border-color: rgba(0,0,0,.2);
+
+$modal-backdrop-bg: #000;
+$modal-backdrop-opacity: .5;
+$modal-header-border-color: #e5e5e5;
+$modal-footer-border-color: $modal-header-border-color;
+
+$modal-lg: 900px;
+$modal-md: 600px;
+$modal-sm: 300px;
 
 
 // Alerts
@@ -692,9 +697,9 @@ $breadcrumb-divider: "/";
 
 // Close
 
-// $close-font-weight: bold;
-// $close-color: #000;
-// $close-text-shadow: 0 1px 0 #fff;
+$close-font-weight: 300;
+$close-color: #000;
+$close-text-shadow: 0 1px 0 #fff;
 
 
 // Code
@@ -715,10 +720,6 @@ $cms-panel-xs: 60px;
 $cms-panel-sm: 300px;
 $cms-panel-md: 448px;
 $cms-panel-lg: 638px;
-
-// Panel padding
-$panel-padding-x: $grid-gutter-width / 2;
-$panel-padding-y: $grid-gutter-width / 2;
 
 
 // Shadows
