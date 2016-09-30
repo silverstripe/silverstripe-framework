@@ -1363,12 +1363,20 @@ $.entwine('ss', function($) {
 
       var id = this.attr('id'), activeTab = this.find('ul:first .ui-tabs-active');
 
-      if(!this.data('uiTabs')) this.tabs({
+      if(!this.data('tabs')) this.tabs({
         active: (activeTab.index() != -1) ? activeTab.index() : 0,
         beforeLoad: function(e, ui) {
           // Disable automatic ajax loading of tabs without matching DOM elements,
           // determining if the current URL differs from the tab URL is too error prone.
           return false;
+        },
+        beforeActivate: function (e, ui) {
+          var link = ui.oldTab.find('.cms-panel-link');
+
+          // do not activate for panel link tabs
+          if (link && link.length === 1) {
+            return false;
+          }
         },
         activate: function(e, ui) {
           // Usability: Hide actions for "readonly" tabs (which don't contain any editable fields)
