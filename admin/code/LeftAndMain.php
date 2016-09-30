@@ -372,7 +372,8 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$return = ['id' => $form->FormName()];
 
 		if (in_array('schema', $schemaParts)) {
-			$return['schema'] = $this->schema->getSchema($form);
+			$schemaLink = $this->getSchemaLinkForForm($form);
+			$return['schema'] = $this->schema->getSchema($form, $schemaLink);
 		}
 
 		if (in_array('state', $schemaParts)) {
@@ -380,6 +381,22 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Get link to schema url for a given form
+	 *
+	 * @param Form $form
+	 * @return string
+	 */
+	protected function getSchemaLinkForForm(Form $form) {
+		$parts = [$this->Link('schema'), $form->getName()];
+		if (($record = $form->getRecord()) && $record->isInDB()) {
+			$parts[] = $record->ID;
+		} elseif (($data = $form->getData()) && !empty($data['ID'])) {
+			$parts[] = $data['ID'];
+		}
+		return Controller::join_links($parts);
 	}
 
 	/**

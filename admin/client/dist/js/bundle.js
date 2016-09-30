@@ -331,24 +331,25 @@ return e?e.id:null}},{key:"componentDidMount",value:function r(){this.fetch()}},
 var e=this,t=arguments.length<=0||void 0===arguments[0]||arguments[0],n=arguments.length<=1||void 0===arguments[1]||arguments[1],i=[]
 return this.state.isFetching===!0?this.formSchemaPromise:(t===!0&&i.push("schema"),n===!0&&i.push("state"),this.formSchemaPromise=(0,O["default"])(this.props.schemaUrl,{headers:{"X-FormSchema-Request":i.join()
 },credentials:"same-origin"}).then(function(e){return e.json()}).then(function(t){var n=c({},{id:t.id,schema:t.schema}),i=c({},t.state)
-if("undefined"!=typeof n.id){var r={SecurityID:e.props.config.SecurityID}
-n.schema.actions.length>0&&(r[n.schema.actions[0].name]=1),e.submitApi=k["default"].createEndpointFetcher({url:n.schema.attributes.action,method:n.schema.attributes.method,defaultData:r}),e.props.schemaActions.setSchema(n)
+"undefined"!=typeof n.id&&!function(){var t={SecurityID:e.props.config.SecurityID}
+e.submitApi=function(){var i=k["default"].createEndpointFetcher({url:n.schema.attributes.action,method:n.schema.attributes.method,defaultData:t})
+return i.apply(void 0,arguments).then(function(t){if(t.schema){var n=c({},{id:t.id,schema:t.schema})
+e.props.schemaActions.setSchema(n)}return t})},e.props.schemaActions.setSchema(n)}(),"undefined"!=typeof i.id&&e.props.formActions.addForm(i)}),this.formSchemaPromise)}},{key:"handleFieldUpdate",value:function p(e,t,n){
+"function"==typeof n?n(this.getFormId(),this.props.formActions.updateField):this.props.formActions.updateField(this.getFormId(),t)}},{key:"handleAction",value:function m(e,t){this.props.formActions.setSubmitAction(this.getFormId(),t),
+"function"==typeof this.props.handleAction&&this.props.handleAction(e,t,this.getFieldValues())}},{key:"handleSubmit",value:function g(e){var t=this,n=this.getFieldValues(),i=function r(){return t.props.formActions.submitForm(t.submitApi,t.getFormId(),n)
 
-}"undefined"!=typeof i.id&&e.props.formActions.addForm(i)}),this.formSchemaPromise)}},{key:"handleFieldUpdate",value:function p(e,t,n){"function"==typeof n?n(this.getFormId(),this.props.formActions.updateField):this.props.formActions.updateField(this.getFormId(),t)
-
-}},{key:"handleAction",value:function m(e,t){this.props.formActions.setSubmitAction(this.getFormId(),t),"function"==typeof this.props.handleAction&&this.props.handleAction(e,t,this.getFieldValues())}},{
-key:"handleSubmit",value:function g(e){var t=this,n=this.getFieldValues(),i=function r(){return t.props.formActions.submitForm(t.submitApi,t.getFormId(),n)}
-return"undefined"!=typeof this.props.handleSubmit?this.props.handleSubmit(e,n,i):(e.preventDefault(),i())}},{key:"getFieldValues",value:function v(){var e=this,t=this.props.schemas[this.props.schemaUrl],n=t.state?t.state.fields:t.schema.fields
+}
+return"undefined"!=typeof this.props.handleSubmit?this.props.handleSubmit(e,n,i):(e.preventDefault(),i())}},{key:"getFieldValues",value:function v(){var e=this,t=this.props.schemas[this.props.schemaUrl],n=t.state?t.state.fields:t.schema.fields,i=this.getSubmitAction(),r={}
 
 
-return this.props.form[this.getFormId()].fields.reduce(function(t,i){var r=e.findField(n,i.id)
-return r?c({},t,o({},r.name,i.value)):t},{})}},{key:"findField",value:function y(e,t){var n=null
+return i&&(r[i]=1),this.props.form[this.getFormId()].fields.reduce(function(t,i){var r=e.findField(n,i.id)
+return r?c({},t,o({},r.name,i.value)):t},r)}},{key:"getSubmitAction",value:function y(){return this.props.form[this.getFormId()].submitAction}},{key:"findField",value:function b(e,t){var n=null
 if(!e)return n
 n=e.find(function(e){return e.id===t})
 var i=!0,r=!1,o=void 0
 try{for(var a=e[Symbol.iterator](),s;!(i=(s=a.next()).done);i=!0){var l=s.value
 if(n)break
-n=this.findField(l.children,t)}}catch(u){r=!0,o=u}finally{try{!i&&a["return"]&&a["return"]()}finally{if(r)throw o}}return n}},{key:"buildComponent",value:function b(e){var t=arguments.length<=1||void 0===arguments[1]?{}:arguments[1],n=null!==e.component?x["default"].getComponentByName(e.component):x["default"].getComponentByDataType(e.type)
+n=this.findField(l.children,t)}}catch(u){r=!0,o=u}finally{try{!i&&a["return"]&&a["return"]()}finally{if(r)throw o}}return n}},{key:"buildComponent",value:function w(e){var t=arguments.length<=1||void 0===arguments[1]?{}:arguments[1],n=null!==e.component?x["default"].getComponentByName(e.component):x["default"].getComponentByDataType(e.type)
 
 
 if(null===n)return null
@@ -356,27 +357,27 @@ if(null!==e.component&&void 0===n)throw Error("Component not found in injector: 
 var i=c({},e,t)
 null===i.value&&delete i.value
 var r=this.props.createFn
-return"function"==typeof r?r(n,i):h["default"].createElement(n,c({key:i.id},i))}},{key:"mapFieldsToComponents",value:function w(e){var t=this
+return"function"==typeof r?r(n,i):h["default"].createElement(n,c({key:i.id},i))}},{key:"mapFieldsToComponents",value:function _(e){var t=this
 return e.map(function(e){var n={onChange:t.handleFieldUpdate}
-return e.children&&(n.children=t.mapFieldsToComponents(e.children)),t.buildComponent(e,n)})}},{key:"mapActionsToComponents",value:function _(e){var t=this,n=this.props.form[this.getFormId()]
+return e.children&&(n.children=t.mapFieldsToComponents(e.children)),t.buildComponent(e,n)})}},{key:"mapActionsToComponents",value:function C(e){var t=this,n=this.props.form[this.getFormId()]
 return e.map(function(e){var i=n&&n.submitting&&n.submitAction===e.name,r={handleClick:t.handleAction,loading:i,disabled:i||e.disabled}
-return e.children&&(r.children=t.mapActionsToComponents(e.children)),t.buildComponent(e,r)})}},{key:"mergeFieldData",value:function C(e,t){return"undefined"==typeof t?e:I["default"].recursive(!0,e,{data:t.data,
-source:t.source,messages:t.messages,valid:t.valid,value:t.value})}},{key:"removeForm",value:function T(e){this.props.formActions.removeForm(e)}},{key:"getFieldData",value:function P(e,t){var n=this
+return e.children&&(r.children=t.mapActionsToComponents(e.children)),t.buildComponent(e,r)})}},{key:"mergeFieldData",value:function T(e,t){return"undefined"==typeof t?e:I["default"].recursive(!0,e,{data:t.data,
+source:t.source,messages:t.messages,valid:t.valid,value:t.value})}},{key:"removeForm",value:function P(e){this.props.formActions.removeForm(e)}},{key:"getFieldData",value:function S(e,t){var n=this
 return e&&t&&t.fields?e.map(function(e){var i=t.fields.find(function(t){return t.id===e.id}),r=n.mergeFieldData(e,i)
-return e.children&&(r.children=n.getFieldData(e.children,t)),r}):e}},{key:"render",value:function S(){var e=this.getFormId()
+return e.children?c({},r,{children:n.getFieldData(e.children,t)}):r}):e}},{key:"render",value:function j(){var e=this.getFormId()
 if(!e)return null
 var t=this.getFormSchema(),n=this.props.form[e]
 if(!t||!t.schema)return null
 var i=c({},t.schema.attributes,{className:t.schema.attributes["class"],encType:t.schema.attributes.enctype})
 delete i["class"],delete i.enctype
-var r=this.getFieldData(t.schema.fields,n),o={actions:t.schema.actions,attributes:i,componentWillUnmount:this.removeForm,data:t.schema.data,fields:r,formId:e,handleSubmit:this.handleSubmit,mapActionsToComponents:this.mapActionsToComponents,
-mapFieldsToComponents:this.mapFieldsToComponents}
-return h["default"].createElement(E["default"],o)}}]),t}(C["default"])
+var r=this.getFieldData(t.schema.fields,n),o=this.getFieldData(t.schema.actions,n),a={actions:o,attributes:i,componentWillUnmount:this.removeForm,data:t.schema.data,fields:r,formId:e,handleSubmit:this.handleSubmit,
+mapActionsToComponents:this.mapActionsToComponents,mapFieldsToComponents:this.mapFieldsToComponents}
+return h["default"].createElement(E["default"],a)}}]),t}(C["default"])
 D.propTypes={config:h["default"].PropTypes.object,createFn:h["default"].PropTypes.func,form:h["default"].PropTypes.object.isRequired,formActions:h["default"].PropTypes.object.isRequired,handleSubmit:h["default"].PropTypes.func,
 handleAction:h["default"].PropTypes.func,schemas:h["default"].PropTypes.object.isRequired,schemaActions:h["default"].PropTypes.object.isRequired,schemaUrl:h["default"].PropTypes.string.isRequired},t["default"]=(0,
 m.connect)(u,d)(D)},function(e,t){e.exports=ReactRedux},,function(e,t,n){"use strict"
 function i(e){return function(t){t({type:u.ACTION_TYPES.REMOVE_FORM,payload:{formId:e}})}}function r(e,t){return function(n){n({type:u.ACTION_TYPES.UPDATE_FIELD,payload:{formId:e,updates:t}})}}function o(e){
-return function(t){t({type:u.ACTION_TYPES.ADD_FORM,payload:{formState:e}})}}function a(e,t,n){return function(i){var r={"X-Formschema-Request":"state","X-Requested-With":"XMLHttpRequest"}
+return function(t){t({type:u.ACTION_TYPES.ADD_FORM,payload:{formState:e}})}}function a(e,t,n){return function(i){var r={"X-Formschema-Request":"schema,state","X-Requested-With":"XMLHttpRequest"}
 return i({type:u.ACTION_TYPES.SUBMIT_FORM_REQUEST,payload:{formId:t}}),e(l({ID:t},n),r).then(function(e){return i({type:u.ACTION_TYPES.SUBMIT_FORM_SUCCESS,payload:{response:e}}),e})["catch"](function(e){
 throw e.response.text().then(function(e){return i({type:u.ACTION_TYPES.SUBMIT_FORM_FAILURE,payload:{formId:t,error:e}}),e})})}}function s(e,t){return function(n){n({type:u.ACTION_TYPES.SET_SUBMIT_ACTION,
 payload:{formId:e,submitAction:t}})}}Object.defineProperty(t,"__esModule",{value:!0})
@@ -2408,15 +2409,17 @@ multiline:!0,crumbs:this.props.breadcrumbs})),p["default"].createElement("div",{
 
 }},{key:"renderItemListView",value:function h(){var e={sectionConfig:this.props.sectionConfig,campaignId:this.props.params.id,itemListViewEndpoint:this.props.sectionConfig.itemListViewEndpoint,publishApi:this.publishApi,
 handleBackButtonClick:this.handleBackButtonClick.bind(this)}
-return p["default"].createElement(A["default"],e)}},{key:"renderDetailEditView",value:function m(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t={createFn:this.campaignEditCreateFn.bind(this),
-schemaUrl:e+"/"+this.props.params.id}
+return p["default"].createElement(A["default"],e)}},{key:"renderDetailEditView",value:function m(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t=e
+this.props.params.id>0&&(t=e+"/"+this.props.params.id)
+var n={createFn:this.campaignEditCreateFn.bind(this),schemaUrl:t}
 return p["default"].createElement("div",{className:"cms-content__inner"},p["default"].createElement(x["default"],{showBackButton:!0,handleBackButtonClick:this.handleBackButtonClick},p["default"].createElement(C["default"],{
 multiline:!0,crumbs:this.props.breadcrumbs})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable panel--single-toolbar"},p["default"].createElement("div",{className:"form--inline"
-},p["default"].createElement(I["default"],t))))}},{key:"renderCreateView",value:function g(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t={createFn:this.campaignAddCreateFn.bind(this),
-schemaUrl:e+"/"+this.props.params.id}
+},p["default"].createElement(I["default"],n))))}},{key:"renderCreateView",value:function g(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t=e
+this.props.params.id>0&&(t=e+"/"+this.props.params.id)
+var n={createFn:this.campaignAddCreateFn.bind(this),schemaUrl:t}
 return p["default"].createElement("div",{className:"cms-content__inner"},p["default"].createElement(x["default"],{showBackButton:!0,handleBackButtonClick:this.handleBackButtonClick},p["default"].createElement(C["default"],{
 multiline:!0,crumbs:this.props.breadcrumbs})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable panel--single-toolbar"},p["default"].createElement("div",{className:"form--inline"
-},p["default"].createElement(I["default"],t))))}},{key:"campaignEditCreateFn",value:function v(e,t){var n=this,i=this.props.sectionConfig.url
+},p["default"].createElement(I["default"],n))))}},{key:"campaignEditCreateFn",value:function v(e,t){var n=this,i=this.props.sectionConfig.url
 if("action_cancel"===t.name){var r=d({},t,{handleClick:function o(e){e.preventDefault(),n.props.router.push(i)}})
 return p["default"].createElement(e,d({key:t.id},r))}return p["default"].createElement(e,d({key:t.id},t))}},{key:"campaignAddCreateFn",value:function b(e,t){var n=this,i=this.props.sectionConfig.url
 if("action_cancel"===t.name){var r=d({},t,{handleClick:function o(e){e.preventDefault(),n.props.router.push(i)}})

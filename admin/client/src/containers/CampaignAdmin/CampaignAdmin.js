@@ -170,9 +170,13 @@ class CampaignAdmin extends SilverStripeComponent {
    */
   renderDetailEditView() {
     const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
+    let schemaUrl = baseSchemaUrl;
+    if (this.props.params.id > 0) {
+      schemaUrl = `${baseSchemaUrl}/${this.props.params.id}`;
+    }
     const formBuilderProps = {
       createFn: this.campaignEditCreateFn.bind(this),
-      schemaUrl: `${baseSchemaUrl}/${this.props.params.id}`,
+      schemaUrl,
     };
 
     return (
@@ -195,9 +199,13 @@ class CampaignAdmin extends SilverStripeComponent {
    */
   renderCreateView() {
     const baseSchemaUrl = this.props.sectionConfig.form.DetailEditForm.schemaUrl;
+    let schemaUrl = baseSchemaUrl;
+    if (this.props.params.id > 0) {
+      schemaUrl = `${baseSchemaUrl}/${this.props.params.id}`;
+    }
     const formBuilderProps = {
       createFn: this.campaignAddCreateFn.bind(this),
-      schemaUrl: `${baseSchemaUrl}/${this.props.params.id}`,
+      schemaUrl,
     };
 
     return (

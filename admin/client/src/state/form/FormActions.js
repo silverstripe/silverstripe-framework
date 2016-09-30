@@ -58,7 +58,7 @@ export function addForm(formState) {
 export function submitForm(submitApi, formId, fieldValues) {
   return (dispatch) => {
     const headers = {
-      'X-Formschema-Request': 'state',
+      'X-Formschema-Request': 'schema,state',
       'X-Requested-With': 'XMLHttpRequest',
     };
     dispatch({

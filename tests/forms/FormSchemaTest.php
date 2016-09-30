@@ -10,9 +10,6 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\PopoverField;
 
-
-
-
 class FormSchemaTest extends SapphireTest {
 
 	public function testGetSchema() {
@@ -23,7 +20,7 @@ class FormSchemaTest extends SapphireTest {
 			'id' => 'Form_TestForm',
 			'action' => 'Controller/TestForm',
 			'method' => 'POST',
-			'schema_url' => '',
+			'schema_url' => 'admin/mysection/schema',
 			'attributes' => [
 				'id' => 'Form_TestForm',
 				'action' => 'Controller/TestForm',
@@ -56,7 +53,7 @@ class FormSchemaTest extends SapphireTest {
 			'actions' => []
 		];
 
-		$schema = $formSchema->getSchema($form);
+		$schema = $formSchema->getSchema($form, 'admin/mysection/schema');
 		$this->assertInternalType('array', $schema);
 		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($schema));
 	}
@@ -174,7 +171,7 @@ class FormSchemaTest extends SapphireTest {
 			'id' => 'Form_TestForm',
 			'action' => 'Controller/TestForm',
 			'method' => 'POST',
-			'schema_url' => '',
+			'schema_url' => 'admin/mysection/schema',
 			'attributes' => [
 				'id' => 'Form_TestForm',
 				'action' => 'Controller/TestForm',
@@ -339,9 +336,27 @@ class FormSchemaTest extends SapphireTest {
 			]
 		];
 
-		$schema = $formSchema->getSchema($form);
+		$schema = $formSchema->getSchema($form, 'admin/mysection/schema');
 
 		$this->assertInternalType('array', $schema);
 		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($schema));
+	}
+
+	/**
+	 * Test that schema is merged correctly
+	 */
+	public function testMergeSchema() {
+		$publishAction = FormAction::create('publish', 'Publish');
+		$publishAction->setIcon('save');
+		$publishAction->setSchemaData(['data' => ['buttonStyle' => 'primary']]);
+		$schema = $publishAction->getSchemaData();
+		$this->assertEquals(
+			[
+				'icon' => 'save',
+				'buttonStyle' => 'primary',
+			],
+			$schema['data']
+		);
+
 	}
 }
