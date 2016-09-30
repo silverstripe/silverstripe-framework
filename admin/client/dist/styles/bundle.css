@@ -15904,22 +15904,6 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
   color:#d40404;
 }
 
-.modal__dialog .chosen-results>li{
-  padding:.82053rem 1.2308rem;
-}
-
-.modal__dialog .disabled-result{
-  font-style:italic;
-}
-
-.modal__dialog .disabled-result:after{
-  font-style:normal;
-  content:"Already contains item";
-  color:#0071c4;
-  margin-left:1.2308rem;
-  float:right;
-}
-
 .cms-content__inner{
   height:100%;
 }

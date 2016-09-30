@@ -88,25 +88,3 @@
   content: "#";
   color: $brand-danger;
 }
-
-
-// This code doesn't do anything
-// TODO check whether or why this (chosen) isn't being used?
-.modal__dialog {
-
-  .chosen-results > li {
-    padding: $spacer-y/1.5 $spacer-x;
-  }
-
-  .disabled-result {
-    font-style: italic;
-
-    &::after {
-      font-style: normal;
-      content: "Already contains item";
-      color: $color-text-blue-link;
-      margin-left: $spacer-x;
-      float: right;
-    }
-  }
-}
