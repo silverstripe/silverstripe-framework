@@ -283,6 +283,11 @@ class ControllerTest extends FunctionalTest {
 
 		/* Does type-safe checks for zero value */
 		$this->assertEquals("my-page/0", Controller::join_links("my-page", 0));
+
+		// Test array args
+		$this->assertEquals("admin/crm/MyForm?a=1&b=2&c=3",
+			Controller::join_links(["?a=1", "admin/crm", "?b=2", "MyForm?c=3"])
+		);
 	}
 
 	public function testLink() {
