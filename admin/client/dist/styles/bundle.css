@@ -15048,18 +15048,6 @@ fieldset+.btn-toolbar{
   background:#0071c4;
 }
 
-.btn--top-right{
-  float:right;
-  right:0;
-  margin-right:5px;
-  margin-top:-2px;
-  position:absolute;
-}
-
-.btn--top-right:before{
-  color:#66727d;
-}
-
 .btn-group{
   margin-right:.9231rem;
 }
@@ -15078,6 +15066,29 @@ fieldset+.btn-toolbar{
 
 .btn--no-focus:focus{
   outline:none;
+}
+
+.close{
+  font-size:1.8rem;
+  opacity:.3;
+  line-height:20px;
+  display:block;
+}
+
+button.close{
+  padding:.4615rem .7692rem;
+}
+
+.btn--top-right{
+  float:right;
+  right:0;
+  margin-right:5px;
+  margin-top:-2px;
+  position:absolute;
+}
+
+.btn--top-right:before{
+  color:#66727d;
 }
 
 .popover{
