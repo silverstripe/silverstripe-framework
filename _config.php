@@ -21,13 +21,13 @@ use SilverStripe\View\Parsers\ShortcodeParser;
  */
 
 ShortcodeParser::get('default')
-	->register('file_link', array('SilverStripe\\Assets\\File', 'handle_shortcode'))
-	->register('embed', array('SilverStripe\\Forms\\HtmlEditor\\EmbedShortcodeProvider', 'handle_shortcode'))
-	->register('image', array('SilverStripe\\Assets\\Image', 'handle_shortcode'));
+	->register('file_link', array('SilverStripe\\Assets\\ViewSupport\\FileShortcodeProvider', 'handle_shortcode'))
+	->register('embed', array('SilverStripe\\View\\ViewSupport\\EmbedShortcodeProvider', 'handle_shortcode'))
+	->register('image', array('SilverStripe\\Assets\\ViewSupport\\ImageShortcodeProvider', 'handle_shortcode'));
 
 // Shortcode parser which only regenerates shortcodes
 ShortcodeParser::get('regenerator')
-	->register('image', array('SilverStripe\\Assets\\Image', 'regenerate_shortcode'));
+	->register('image', array('SilverStripe\\Assets\\ViewSupport\\ImageShortcodeProvider', 'regenerate_shortcode'));
 
 // @todo
 //	->register('dbfile_link', array('DBFile', 'handle_shortcode'))

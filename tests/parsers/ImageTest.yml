@@ -1,0 +1,15 @@
+SilverStripe\Assets\Folder:
+  folder1:
+    Name: folder
+SilverStripe\Assets\Image:
+  imageWithTitle:
+    Title: This is a image Title
+    FileFilename: folder/test-image.png
+    FileHash: 444065542b5dd5187166d8e1cd684e0d724c5a97
+    Parent: =>SilverStripe\Assets\Folder.folder1
+    Name: test-image.png
+  imageWithoutTitle:
+    FileFilename: folder/test-image.png
+    FileHash: 444065542b5dd5187166d8e1cd684e0d724c5a97
+    Parent: =>SilverStripe\Assets\Folder.folder1
+    Name: test-image.png
