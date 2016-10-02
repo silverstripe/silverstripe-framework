@@ -57,9 +57,9 @@ jQuery.entwine('ss', ($) => {
             handleSubmit={handleSubmit}
             handleHide={handleHide}
             schemaUrl={modalSchemaUrl}
-            bodyClassName="add-to-campaign__dialog"
-            responseClassBad="add-to-campaign__response add-to-campaign__response--error"
-            responseClassGood="add-to-campaign__response add-to-campaign__response--good"
+            bodyClassName="modal__dialog"
+            responseClassBad="modal__response modal__response--error"
+            responseClassGood="modal__response modal__response--good"
           />
         </Provider>,
         this[0]

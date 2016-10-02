@@ -76,6 +76,10 @@
   padding-bottom: $input-padding-y;
   margin-bottom: 0;
   font-size: $font-size-sm;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .form__field-extra-label {

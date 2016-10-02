@@ -180,19 +180,6 @@
   }
 }
 
-// Apply to things like panel close btn
-.btn--top-right {
-  float: right;
-  right: 0;
-  margin-right: 5px;
-  margin-top: -2px;
-  position: absolute;
-
-  // Temp override JQueryUI color
-  &::before {
-    color: $body-color-light;
-  }
-}
 
 // Grouped buttons
 .btn-group {
@@ -215,4 +202,32 @@
 // For things like popovers which have other indications they are focused
 .btn--no-focus:focus {
   outline: none;
+}
+
+
+// Close buttons
+// Bootstrap close button customizations
+.close {
+  font-size: ($font-size-base * 1.8);
+  opacity: .3;
+  line-height: 20px;
+  display: block;
+}
+
+button.close {
+  padding: $btn-padding-y $btn-padding-x;
+}
+
+// Apply to things like panel close btn
+.btn--top-right {
+  float: right;
+  right: 0;
+  margin-right: 5px;
+  margin-top: -2px;
+  position: absolute;
+
+  // Temp override JQueryUI color
+  &::before {
+    color: $body-color-light;
+  }
 }
