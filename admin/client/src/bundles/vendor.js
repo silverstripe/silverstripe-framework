@@ -36,8 +36,6 @@ require('../../../thirdparty/jquery-form/jquery.form.js');
 require('../../../thirdparty/jquery-notice/jquery.notice.js');
 // require('../../../thirdparty/jquery-notice/jquery.notice.css');
 require('jquery-sizes/lib/jquery.sizes.js');
-require('../../../thirdparty/jlayout/lib/jlayout.border.js');
-require('../../../thirdparty/jlayout/lib/jquery.jlayout.js');
 require('../../../thirdparty/jstree/jquery.jstree.js');
 // require('../../../thirdparty/stree/themes/apple/style.css');
 require('../../../thirdparty/jquery-hoverIntent/jquery.hoverIntent.js');

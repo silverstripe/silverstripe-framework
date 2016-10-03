@@ -294,20 +294,6 @@ $.entwine('ss', function($) {
 
       if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
-      // Reset the algorithm.
-      this.data('jlayout', jLayout.threeColumnCompressor(
-        {
-          menu: this.children('.cms-menu'),
-          content: this.children('.cms-content'),
-          preview: this.children('.cms-preview')
-        },
-        this.getLayoutOptions()
-      ));
-
-      // Trigger layout algorithm once at the top. This also lays out children - we move from outside to
-      // inside, resizing to fit the parent.
-      this.layout();
-
       // Redraw on all the children that need it
       this.find('.cms-panel-layout').redraw();
       this.find('.cms-content-fields[data-layout-type]').redraw();
@@ -717,7 +703,6 @@ $.entwine('ss', function($) {
           // Set loading state and store element state
           var origStyle = contentEl.attr('style');
           var origParent = contentEl.parent();
-          var origParentLayoutApplied = (typeof origParent.data('jlayout')!=='undefined');
           var layoutClasses = ['east', 'west', 'center', 'north', 'south', 'column-hidden'];
           var elemClasses = contentEl.attr('class');
           var origLayoutClasses = [];
@@ -741,12 +726,6 @@ $.entwine('ss', function($) {
           // Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
           contentEl.replaceWith(newContentEl);
 
-          // Force jlayout to rebuild internal hierarchy to point to the new elements.
-          // This is only necessary for elements that are at least 3 levels deep. 2nd level elements will
-          // be taken care of when we lay out the top level element (.cms-container).
-          if (!origParent.is('.cms-container') && origParentLayoutApplied) {
-            origParent.layout();
-          }
         });
 
         // Re-init tabs (in case the form tag itself is a tabset)
