@@ -11,7 +11,7 @@
 >
 	<% include SilverStripe\\Admin\\CMSLoadingScreen %>
 
-	<div class="cms-container center" data-layout-type="custom">
+	<div class="cms-container center fill-width" data-layout-type="custom">
 		$Menu
 		$Content
 		$PreviewPanel

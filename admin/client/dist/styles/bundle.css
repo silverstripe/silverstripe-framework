@@ -10512,9 +10512,7 @@ form.member-profile-form #Permissions .optionset li{
 .cms .cms-content{
   border-radius:0;
   background:#f6f7f8;
-  width:800px;
   z-index:40;
-  overflow:hidden !important;
 }
 
 .cms .cms-content-fields{
@@ -16032,6 +16030,72 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
 
 .z-depth-4{
   box-shadow:0 16px 28px 0 rgba(0,0,0,.3),0 25px 55px 0 rgba(0,0,0,.3);
+}
+
+*,:after,:before{
+  box-sizing:border-box;
+}
+
+body,html{
+  width:100%;
+  height:100%;
+  padding:0;
+  font-size:13px;
+  display:-ms-flexbox;
+  display:-webkit-box;
+  display:flex;
+}
+
+body,h1,html{
+  margin:0;
+  line-height:20px;
+}
+
+h1{
+  font-size:18px;
+}
+
+.cms-menu{
+  position:relative;
+}
+
+.cms-preview{
+  display:none;
+}
+
+.toolbar--north,.toolbar--south{
+  height:52px;
+}
+
+.panel--scrollable{
+  overflow:auto;
+}
+
+.fill-height{
+  height:100%;
+  -ms-flex-direction:column;
+  -webkit-box-orient:vertical;
+          flex-direction:column;
+}
+
+.fill-height,.fill-width{
+  display:-ms-flexbox;
+  display:-webkit-box;
+  display:flex;
+  -webkit-box-direction:normal;
+}
+
+.fill-width{
+  width:100%;
+  -ms-flex-direction:row;
+  -webkit-box-orient:horizontal;
+          flex-direction:row;
+}
+
+.flexbox-area-grow{
+  -ms-flex:1;
+  -webkit-box-flex:1;
+          flex:1;
 }
 
 .campaign-admin__item-links--has-links,.campaign-admin__item-links--is-linked{

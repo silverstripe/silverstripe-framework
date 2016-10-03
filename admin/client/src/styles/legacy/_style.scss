@@ -1409,9 +1409,7 @@ form.member-profile-form {
   .cms-content {
     border-radius: 0;
     background: $tab-panel-texture-color;
-    width: 800px;
     z-index: 40;
-    overflow: hidden !important; // TEMP until JS is removed
   }
 
   .cms-content-fields {

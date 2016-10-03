@@ -135,3 +135,80 @@
 .z-depth-4 {
   box-shadow: $z-depth-4;
 }
+
+
+// TEST FLEXBOX
+// Reference https://css-tricks.com/boxes-fill-height-dont-squish/
+// Tested in IE10 & IE11
+
+*, *:before, *:after {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  line-height: 20px;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+h1 {
+  font-size: 18px;
+  line-height: 20px;
+  margin: 0;
+}
+
+.cms-menu {
+  // width: 150px;
+  position: relative;
+}
+
+.cms-content { }
+
+
+.cms-preview {
+    display: none;
+  // width: 150px;
+}
+
+.toolbar--north,
+.toolbar--south {
+  height: 52px;
+}
+
+// Scrollable area
+.panel--scrollable {
+  overflow: auto;
+}
+
+// Flex magic
+
+// Nested items take up height
+.fill-height {
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+// Nested items take up width
+.fill-width {
+  width: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row; // Default
+}
+
+// Item to take up available space
+.flexbox-area-grow {
+  -ms-flex: 1;
+  flex: 1;
+}
