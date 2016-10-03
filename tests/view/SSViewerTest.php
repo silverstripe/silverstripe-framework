@@ -1518,6 +1518,34 @@ EOC;
 		}
 	}
 
+	public function testRepeatedCallsAreCached() {
+		$data = new SSViewerTest_CacheTestData();
+		$template = '
+			<% if $TestWithCall %>
+				<% with $TestWithCall %>
+					{$Message}
+				<% end_with %>
+
+				{$TestWithCall.Message}
+			<% end_if %>';
+
+		$this->assertEquals('HiHi', preg_replace('/\s+/', '', $this->render($template, $data)));
+		$this->assertEquals(1, $data->testWithCalls,
+			'SSViewerTest_CacheTestData::TestWithCall() should only be called once. Subsequent calls should be cached');
+
+		$data = new SSViewerTest_CacheTestData();
+		$template = '
+			<% if $TestLoopCall %>
+				<% loop $TestLoopCall %>
+					{$Message}
+				<% end_loop %>
+			<% end_if %>';
+
+		$this->assertEquals('OneTwo', preg_replace('/\s+/', '', $this->render($template, $data)));
+		$this->assertEquals(1, $data->testLoopCalls,
+			'SSViewerTest_CacheTestData::TestLoopCall() should only be called once. Subsequent calls should be cached');
+	}
+
 	public function testClosedBlockExtension() {
 		$count = 0;
 		$parser = new SSTemplateParser();
@@ -1645,6 +1673,26 @@ class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
 	public function methodWithTwoArguments($arg1, $arg2) {
 		return "arg1:{$arg1},arg2:{$arg2}";
 	}
+}
+
+class SSViewerTest_CacheTestData extends ViewableData implements TestOnly {
+
+	public $testWithCalls = 0;
+	public $testLoopCalls = 0;
+
+	public function TestWithCall() {
+		$this->testWithCalls++;
+		return ArrayData::create(array('Message' => 'Hi'));
+	}
+
+	public function TestLoopCall() {
+		$this->testLoopCalls++;
+		return ArrayList::create(array(
+			ArrayData::create(array('Message' => 'One')),
+			ArrayData::create(array('Message' => 'Two'))
+		));
+	}
+
 }
 
 class SSViewerTest_Object extends DataObject implements TestOnly {
