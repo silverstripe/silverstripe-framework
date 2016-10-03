@@ -439,7 +439,7 @@ class HTTPRequest implements ArrayAccess {
 		$response = new HTTPResponse($fileData);
 		$response->addHeader("Content-Type", "$mimeType; name=\"" . addslashes($fileName) . "\"");
 		// Note a IE-only fix that inspects this header in HTTP::add_cache_headers().
-		$response->addHeader("Content-Disposition", "attachment; filename=" . addslashes($fileName));
+		$response->addHeader("Content-Disposition", "attachment; filename=\"" . addslashes($fileName) . "\"");
 		$response->addHeader("Content-Length", strlen($fileData));
 
 		return $response;

@@ -17,6 +17,7 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
@@ -245,6 +246,13 @@ abstract class ModelAdmin extends LeftAndMain {
 
 		if(is_array($params)) {
 			$params = ArrayLib::array_map_recursive('trim', $params);
+		}
+
+		// Parse all DateFields to handle user input non ISO 8601 dates
+		foreach($context->getFields() as $field) {
+			if($field instanceof DatetimeField) {
+				$params[$field->getName()] = date('Y-m-d', strtotime($params[$field->getName()]));
+			}
 		}
 
 		$list = $context->getResults($params);
