@@ -1935,35 +1935,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * format, or RecordClass.FieldClass(args) format if $includeClass is true
 	 */
 	public function db($fieldName = null, $includeClass = false) {
-		$classes = ClassInfo::ancestry($this, true);
-
-		// If we're looking for a specific field, we want to hit subclasses first as they may override field types
-		if($fieldName) {
-			$classes = array_reverse($classes);
-		}
-
-		$db = array();
-		foreach($classes as $class) {
-			// Merge fields with new fields and composite fields
-			$fields = self::database_fields($class);
-			$compositeFields = self::composite_fields($class, false);
-			$db = array_merge($db, $fields, $compositeFields);
-
-			// Check for search field
-			if($fieldName && isset($db[$fieldName])) {
-				// Return found field
-				if(!$includeClass) {
-					return $db[$fieldName];
-				}
-				return $class . "." . $db[$fieldName];
-			}
-		}
-
-		// At end of search complete
-		if($fieldName) {
-			return null;
+		if ($fieldName) {
+			return static::getSchema()->fieldSpecification(static::class, $fieldName, $includeClass);
 		} else {
-			return $db;
+			return static::getSchema()->fieldSpecifications(static::class);
 		}
 	}
 
@@ -2071,7 +2046,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	/**
 	 * Return information about a specific many_many component. Returns a numeric array.
 	 * The first item in the array will be the class name of the relation: either
-	 * RELATION_MANY_MANY or RELATION_MANY_MANY_THROUGH constant value.
+	 * ManyManyList or ManyManyThroughList.
 	 *
 	 * Standard many_many return type is:
 	 *
@@ -3870,10 +3845,19 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * Set joining object
 	 *
 	 * @param DataObject $object
+	 * @param string $alias Alias
 	 * @return $this
 	 */
-	public function setJoin(DataObject $object) {
+	public function setJoin(DataObject $object, $alias = null) {
 		$this->joinRecord = $object;
+		if ($alias) {
+			if ($this->db($alias)) {
+				throw new InvalidArgumentException(
+					"Joined record $alias cannot also be a db field"
+				);
+			}
+			$this->record[$alias] = $object;
+		}
 		return $this;
 	}
 

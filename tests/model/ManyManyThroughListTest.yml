@@ -9,10 +9,12 @@ ManyManyThroughListTest_Item:
 ManyManyThroughListTest_JoinObject:
   join1:
     Title: 'join 1'
+    Sort: 4
     Parent: =>ManyManyThroughListTest_Object.parent1
     Child: =>ManyManyThroughListTest_Item.child1
   join2:
     Title: 'join 2'
+    Sort: 2
     Parent: =>ManyManyThroughListTest_Object.parent1
     Child: =>ManyManyThroughListTest_Item.child2
 ManyManyThroughListTest_VersionedObject:

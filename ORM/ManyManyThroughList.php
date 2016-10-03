@@ -50,7 +50,8 @@ class ManyManyThroughList extends RelationList
 	public function createDataObject($row) {
 		// Add joined record
 		$joinRow = [];
-		$prefix = ManyManyThroughQueryManipulator::JOIN_TABLE_ALIAS . '_';
+		$joinAlias = $this->manipulator->getJoinAlias();
+		$prefix = $joinAlias . '_';
 		foreach ($row as $key => $value) {
 			if (strpos($key, $prefix) === 0) {
 				$joinKey = substr($key, strlen($prefix));
@@ -67,7 +68,7 @@ class ManyManyThroughList extends RelationList
 			$joinClass = $this->manipulator->getJoinClass();
 			$joinQueryParams = $this->manipulator->extractInheritableQueryParameters($this->dataQuery);
 			$joinRecord = Injector::inst()->create($joinClass, $joinRow, false, $this->model, $joinQueryParams);
-			$record->setJoin($joinRecord);
+			$record->setJoin($joinRecord, $joinAlias);
 		}
 
 		return $record;
@@ -151,7 +152,7 @@ class ManyManyThroughList extends RelationList
 		// Validate foreignID
 		$foreignIDs = $this->getForeignID();
 		if (empty($foreignIDs)) {
-			throw new BadMethodCallException("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
+			throw new BadMethodCallException("ManyManyList::add() can't be called until a foreign ID is set");
 		}
 
 		// Apply this item to each given foreign ID record

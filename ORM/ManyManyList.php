@@ -228,7 +228,7 @@ class ManyManyList extends RelationList {
 		// Validate foreignID
 		$foreignIDs = $this->getForeignID();
 		if(empty($foreignIDs)) {
-			throw new BadMethodCallException("ManyManyList::add() can't be called until a foreign ID is set", E_USER_WARNING);
+			throw new BadMethodCallException("ManyManyList::add() can't be called until a foreign ID is set");
 		}
 
 		// Apply this item to each given foreign ID record
@@ -317,7 +317,7 @@ class ManyManyList extends RelationList {
 		if($filter = $this->foreignIDWriteFilter($this->getForeignID())) {
 			$query->setWhere($filter);
 		} else {
-			user_error("Can't call ManyManyList::remove() until a foreign ID is set", E_USER_WARNING);
+			user_error("Can't call ManyManyList::remove() until a foreign ID is set");
 		}
 
 		$query->addWhere(array(
@@ -380,7 +380,7 @@ class ManyManyList extends RelationList {
 		}
 
 		if(!is_numeric($itemID)) {
-			user_error('ComponentSet::getExtraData() passed a non-numeric child ID', E_USER_ERROR);
+			throw new InvalidArgumentException('ManyManyList::getExtraData() passed a non-numeric child ID');
 		}
 
 		$cleanExtraFields = array();
@@ -392,7 +392,7 @@ class ManyManyList extends RelationList {
 		if($filter) {
 			$query->setWhere($filter);
 		} else {
-			user_error("Can't call ManyManyList::getExtraData() until a foreign ID is set", E_USER_WARNING);
+			throw new BadMethodCallException("Can't call ManyManyList::getExtraData() until a foreign ID is set");
 		}
 		$query->addWhere(array(
 			"\"{$this->joinTable}\".\"{$this->localKey}\"" => $itemID

@@ -5,7 +5,6 @@ namespace SilverStripe\ORM;
 
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\Queries\SQLSelect;
 
 /**
@@ -13,10 +12,6 @@ use SilverStripe\ORM\Queries\SQLSelect;
  */
 class ManyManyThroughQueryManipulator implements DataQueryManipulator
 {
-	/**
-	 * Alias to use for sql join table
-	 */
-	const JOIN_TABLE_ALIAS = 'Join';
 
 	use Injectable;
 
@@ -153,6 +148,15 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
 	}
 
 	/**
+	 * Get name of join table alias for use in queries.
+	 *
+	 * @return string
+	 */
+	public function getJoinAlias() {
+		return $this->getJoinClass();
+	}
+
+	/**
 	 * Invoked prior to getFinalisedQuery()
 	 *
 	 * @param DataQuery $dataQuery
@@ -166,7 +170,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
 		$joinTableSQLSelect = $hasManyRelation->dataQuery()->query();
 		$joinTableSQL = $joinTableSQLSelect->sql($joinTableParameters);
 		$joinTableColumns = array_keys($joinTableSQLSelect->getSelect()); // Get aliases (keys) only
-		$joinTableAlias = static::JOIN_TABLE_ALIAS;
+		$joinTableAlias = $this->getJoinAlias();
 
 		// Get fields to join on
 		$localKey = $this->getLocalKey();

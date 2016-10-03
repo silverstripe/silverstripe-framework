@@ -281,6 +281,9 @@ This is declared via array syntax, with the following keys on the many_many:
  - `through` Class name of the mapping table
  - `from` Name of the has_one relationship pointing back at the object declaring many_many
  - `to` Name of the has_one relationship pointing to the object declaring belongs_many_many.
+ 
+Note: The `through` class must not also be the name of any field or relation on the parent
+or child record.
 
 The syntax for `belongs_many_many` is unchanged.
 
@@ -314,29 +317,34 @@ The syntax for `belongs_many_many` is unchanged.
 	  ];
 	}
 
-In order to filter on the join table during queries, you can use the "Join" table alias
+In order to filter on the join table during queries, you can use the class name of the joining table
 for any sql conditions.
 
 
 	:::php
 	$team = Team::get()->byId(1);
-	$supporters = $team->Supporters()->where(['"Join"."Ranking"' => 1]);
+	$supporters = $team->Supporters()->where(['"TeamSupporter"."Ranking"' => 1]);
 
 
-Note: ->filter() currently does not support joined fields natively.
-  
+Note: ->filter() currently does not support joined fields natively due to the fact that the
+query for the join table is isolated from the outer query controlled by DataList.
+
 
 ### Using many_many in templates
 
 The relationship can also be navigated in [templates](../templates).
-The joined record can be accessed via getJoin() (many_many through only)
+The joined record can be accessed via `Join` or `TeamSupporter` property (many_many through only)
 	
 	:::ss
 	<% with $Supporter %>
 		<% loop $Supports %>
-			Supports $Title <% if $Join %>(rank $Join.Ranking)<% end_if %>
+			Supports $Title <% if $TeamSupporter %>(rank $TeamSupporter.Ranking)<% end_if %>
 		<% end_if %>
 	<% end_with %>
+
+
+You can also use `$Join` in place of the join class alias (`$TeamSupporter`), if your template
+is class-agnostic and doesn't know the type of the join table. 
 
 ## belongs_many_many
 

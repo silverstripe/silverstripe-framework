@@ -138,6 +138,54 @@ class DataObjectSchema {
 	}
 
 	/**
+	 * Get all DB field specifications for a class, including ancestors and composite fields.
+	 *
+	 * @param string $class
+	 * @return array
+	 */
+	public function fieldSpecifications($class) {
+		$classes = ClassInfo::ancestry($class, true);
+		$db = [];
+		foreach($classes as $tableClass) {
+			// Merge fields with new fields and composite fields
+			$fields = $this->databaseFields($tableClass);
+			$compositeFields = $this->compositeFields($tableClass, false);
+			$db = array_merge($db, $fields, $compositeFields);
+		}
+		return $db;
+	}
+
+
+	/**
+	 * Get specifications for a single class field
+	 *
+	 * @param string $class
+	 * @param string $fieldName
+	 * @param bool $includeClass If returning a single column, prefix the column with the class name
+	 * in RecordClass.Column(spec) format
+	 * @return string|null Field will be a string in FieldClass(args) format, or
+	 * RecordClass.FieldClass(args) format if $includeClass is true. Will be null if no field is found.
+	 */
+	public function fieldSpecification($class, $fieldName, $includeClass = false) {
+		$classes = array_reverse(ClassInfo::ancestry($class, true));
+		foreach($classes as $tableClass) {
+			// Merge fields with new fields and composite fields
+			$fields = $this->databaseFields($tableClass);
+			$compositeFields = $this->compositeFields($tableClass, false);
+			$db = array_merge($fields, $compositeFields);
+
+			// Check for search field
+			if(isset($db[$fieldName])) {
+				$prefix = $includeClass ? "{$tableClass}." : "";
+				return $prefix . $db[$fieldName];
+			}
+		}
+
+		// At end of search complete
+		return null;
+	}
+
+	/**
 	 * Find the class for the given table
 	 *
 	 * @param string $table
@@ -686,6 +734,16 @@ class DataObjectSchema {
 			throw new InvalidArgumentException(
 				"many_many through relation {$parentClass}.{$component} {$key} references a polymorphic field "
 				. "{$joinClass}::{$relation} which is not supported"
+			);
+		}
+
+		// Validate the join class isn't also the name of a field or relation on either side
+		// of the relation
+		$field = $this->fieldSpecification($relationClass, $joinClass);
+		if ($field) {
+			throw new InvalidArgumentException(
+				"many_many through relation {$parentClass}.{$component} {$key} class {$relationClass} "
+				. " cannot have a db field of the same name of the join class {$joinClass}"
 			);
 		}
 
