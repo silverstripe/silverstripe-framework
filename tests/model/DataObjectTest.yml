@@ -1,3 +1,25 @@
+DataObjectTest_Numeric:
+  numeric1:
+    Sort: 0
+    Name: Steve
+  numeric2:
+    Sort: -1
+    Name: Bob
+  numeric3:
+    Sort: 1
+    Name: John
+  numeric4:
+    Sort: -2
+    Name: bonny
+  numeric5:
+    Sort: 2
+    Name: bonny1
+  numeric6:
+    Sort: -10
+    Name: bonny10
+  numeric7:
+    Sort: 10
+    Name: bonny2
 DataObjectTest_EquipmentCompany:
   equipmentcompany1:
     Name: Company corp
