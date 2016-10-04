@@ -99,7 +99,6 @@
 // Scrolling panels
 .panel--scrollable {
   overflow-y: auto;
-  height: 100%;
 }
 
 // Panel height adjustments for scrolling
@@ -177,10 +176,6 @@ h1 {
   // width: 150px;
 }
 
-.toolbar--north,
-.toolbar--south {
-  height: 52px;
-}
 
 // Scrollable area
 .panel--scrollable {
@@ -211,4 +206,5 @@ h1 {
 .flexbox-area-grow {
   -ms-flex: 1;
   flex: 1;
+  display: flex; // Only required for divs already positioned block as override
 }

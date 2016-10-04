@@ -45,6 +45,7 @@ body.cms {
 // --------------------------------------------
 .cms-container {
   height: 100%;
+  width: 100%;
   background: $tab-panel-texture-color;
 }
 
@@ -220,19 +221,6 @@ body.cms {
         padding: 6px 8px;
         height: 26px;
       }
-    }
-  }
-
-  .cms-content-tools {
-    position: relative !important; // TEMP until JS is removed
-
-    .cms-panel-content {
-      height: calc(100% - 53px) !important; // TEMP until JS is removed
-    }
-
-    // History panel
-    .cms-helper-hide-actions {
-      height: 100% !important;
     }
   }
 }
@@ -1050,7 +1038,6 @@ body.cms {
 	z-index: 70;
 	box-shadow: 1px 0 0 0 $border-color-dark;
 	z-index: 1000;
-	float: left;
 	position: relative;
 
   .cms-panel-header {
@@ -1063,8 +1050,6 @@ body.cms {
 
   .cms-panel-content {
     width: 300px;
-    overflow: auto;
-    height:100%;
 
     .btn-toolbar .ss-ui-action-constructive {
       margin-right:5px; //accounts for the scrollbar in the filter - keeps the actions on one line instead of wrapping onto two.
@@ -1517,9 +1502,12 @@ form.member-profile-form {
     cursor: pointer;
 
     .cms-panel-header *,
-    .cms-panel-content,
-    .cms-panel-toggle a.toggle-collapse{
-      display:none;
+    .cms-panel-toggle a.toggle-collapse {
+      display: none;
+    }
+
+    .cms-panel-content > * {
+      display: none;
     }
 
     .cms-panel-toggle a.toggle-expand {

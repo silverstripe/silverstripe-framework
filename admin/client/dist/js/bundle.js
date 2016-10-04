@@ -1169,7 +1169,7 @@ path:"/",expires:31})},clearPersistedCollapsedState:function r(){this.canSetCook
 
 return void 0===e&&(e=this.hasClass("collapsed")),e},onadd:function a(){var t,n
 if(!this.find(".cms-panel-content").length)throw new Exception('Content panel for ".cms-panel" not found')
-this.find(".cms-panel-toggle").length||(n=e("<div class='cms-panel-toggle south'></div>").append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>').append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>'),
+this.find(".cms-panel-toggle").length||(n=e("<div class='toolbar toolbar--south cms-panel-toggle'></div>").append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>').append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>'),
 this.append(n)),this.setWidthExpanded(this.find(".cms-panel-content").innerWidth()),t=this.find(".cms-panel-content-collapsed"),this.setWidthCollapsed(t.length?t.innerWidth():this.find(".toggle-expand").innerWidth()),
 this.togglePanel(!this.getInitialCollapsedState(),!0,!1),this._super()},togglePanel:function s(e,t,n){var i,r
 t||(this.trigger("beforetoggle.sspanel",e),this.trigger(e?"beforeexpand":"beforecollapse")),this.toggleClass("collapsed",!e),i=e?this.getWidthExpanded():this.getWidthCollapsed(),this.width(i),r=this.find(".cms-panel-content-collapsed"),

@@ -1,4 +1,4 @@
-<div id="settings-controller-cms-content" class="cms-content center cms-tabset flexbox-area-grow fill-height $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content">
+<div id="settings-controller-cms-content" class="cms-content cms-tabset flexbox-area-grow fill-height $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content">
 
 	<div class="cms-content-header north">
 		<% with $EditForm %>

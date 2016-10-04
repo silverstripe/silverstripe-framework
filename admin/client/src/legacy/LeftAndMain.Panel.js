@@ -7,13 +7,13 @@ $.entwine('ss', function($) {
 
   /**
    * Horizontal collapsible panel. Generic enough to work with CMS menu as well as various "filter" panels.
-   * 
+   *
    * A panel consists of the following parts:
    * - Container div: The outer element, with class ".cms-panel"
    * - Header (optional)
    * - Content
    * - Expand and collapse toggle anchors (optional)
-   * 
+   *
    * Sample HTML:
    * <div class="cms-panel">
    *  <div class="cms-panel-header">your header</div>
@@ -25,9 +25,9 @@ $.entwine('ss', function($) {
    * </div>
    */
   $('.cms-panel').entwine({
-    
+
     WidthExpanded: null,
-    
+
     WidthCollapsed: null,
 
     /**
@@ -99,26 +99,26 @@ $.entwine('ss', function($) {
       var collapsedContent, container;
 
       if(!this.find('.cms-panel-content').length) throw new Exception('Content panel for ".cms-panel" not found');
-      
+
       // Create default controls unless they already exist.
       if(!this.find('.cms-panel-toggle').length) {
-        container = $("<div class='cms-panel-toggle south'></div>")
+        container = $("<div class='toolbar toolbar--south cms-panel-toggle'></div>")
           .append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>')
           .append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>');
-          
+
         this.append(container);
       }
-      
+
       // Set panel width same as the content panel it contains. Assumes the panel has overflow: hidden.
       this.setWidthExpanded(this.find('.cms-panel-content').innerWidth());
-      
+
       // Assumes the collapsed width is indicated by the toggle, or by an optionally collapsed view
       collapsedContent = this.find('.cms-panel-content-collapsed');
       this.setWidthCollapsed(collapsedContent.length ? collapsedContent.innerWidth() : this.find('.toggle-expand').innerWidth());
 
       // Toggle visibility
       this.togglePanel(!this.getInitialCollapsedState(), true, false);
-      
+
       this._super();
     },
 
@@ -139,9 +139,9 @@ $.entwine('ss', function($) {
 
       this.toggleClass('collapsed', !doExpand);
       newWidth = doExpand ? this.getWidthExpanded() : this.getWidthCollapsed();
-      
+
       this.width(newWidth); // the content panel width always stays in "expanded state" to avoid floating elements
-      
+
       // If an alternative collapsed view exists, toggle it as well
       collapsedContent = this.find('.cms-panel-content-collapsed');
       if(collapsedContent.length) {
@@ -160,13 +160,13 @@ $.entwine('ss', function($) {
         this.trigger(doExpand ? 'expand' : 'collapse');
       // }
     },
-    
+
     expandPanel: function(force) {
       if(!force && !this.hasClass('collapsed')) return;
 
       this.togglePanel(true);
     },
-    
+
     collapsePanel: function(force) {
       if(!force && this.hasClass('collapsed')) return;
 
@@ -180,13 +180,13 @@ $.entwine('ss', function($) {
       e.preventDefault();
     }
   });
-  
+
   $('.cms-panel *').entwine({
     getPanel: function() {
       return this.parents('.cms-panel:first');
     }
   });
-      
+
   $('.cms-panel .toggle-expand').entwine({
     onclick: function(e) {
       e.preventDefault();
@@ -197,7 +197,7 @@ $.entwine('ss', function($) {
       this._super(e);
     }
   });
-  
+
   $('.cms-panel .toggle-collapse').entwine({
     onclick: function(e) {
       e.preventDefault();

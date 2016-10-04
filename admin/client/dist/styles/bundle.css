@@ -9328,10 +9328,6 @@ div.switch-states .switch a.active span{
   margin-left:5px;
 }
 
-.toolbar--south.cms-content-actions{
-  width:100% !important;
-}
-
 .file input.file{
   opacity:1;
 }
@@ -9352,6 +9348,7 @@ body.cms{
 
 .cms-container{
   height:100%;
+  width:100%;
   background:#f6f7f8;
 }
 
@@ -9498,18 +9495,6 @@ body.cms{
 .has-panel .view-controls .icon-button-group .icon-button{
   padding:6px 8px;
   height:26px;
-}
-
-.has-panel .cms-content-tools{
-  position:relative !important;
-}
-
-.has-panel .cms-content-tools .cms-panel-content{
-  height:calc(100% - 53px) !important;
-}
-
-.has-panel .cms-content-tools .cms-helper-hide-actions{
-  height:100% !important;
 }
 
 .cms-versions-form .form-group:after{
@@ -9705,6 +9690,9 @@ body.cms{
 
 .ui-tabs .ui-tabs-panel.cms-edit-form{
   padding:0;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
 }
 
 .ui-tabs .ui-tabs-panel .ui-tabs .ui-tabs-nav{
@@ -10176,7 +10164,6 @@ body.cms{
   z-index:70;
   box-shadow:1px 0 0 0 #ced3d9;
   z-index:1000;
-  float:left;
   position:relative;
 }
 
@@ -10190,8 +10177,6 @@ body.cms{
 
 .cms-content-tools .cms-panel-content{
   width:300px;
-  overflow:auto;
-  height:100%;
 }
 
 .cms-content-tools .cms-panel-content .btn-toolbar .ss-ui-action-constructive{
@@ -10590,7 +10575,7 @@ form.member-profile-form #Permissions .optionset li{
   cursor:pointer;
 }
 
-.cms-panel.collapsed .cms-panel-content,.cms-panel.collapsed .cms-panel-header *,.cms-panel.collapsed .cms-panel-toggle a.toggle-collapse{
+.cms-panel.collapsed .cms-panel-content>*,.cms-panel.collapsed .cms-panel-header *,.cms-panel.collapsed .cms-panel-toggle a.toggle-collapse{
   display:none;
 }
 
@@ -15454,7 +15439,6 @@ div.grid-field__sort-field+.form__fieldgroup-item{
 .toolbar--south{
   padding-top:.76925rem;
   padding-bottom:.76925rem;
-  position:absolute;
   bottom:0;
   border-top:1px solid #d9dee2;
   width:100%;
@@ -16001,7 +15985,6 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
 
 .panel--scrollable{
   overflow-y:auto;
-  height:100%;
 }
 
 .panel--single-toolbar{
@@ -16063,10 +16046,6 @@ h1{
   display:none;
 }
 
-.toolbar--north,.toolbar--south{
-  height:52px;
-}
-
 .panel--scrollable{
   overflow:auto;
 }
@@ -16096,6 +16075,9 @@ h1{
   -ms-flex:1;
   -webkit-box-flex:1;
           flex:1;
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
 }
 
 .campaign-admin__item-links--has-links,.campaign-admin__item-links--is-linked{
