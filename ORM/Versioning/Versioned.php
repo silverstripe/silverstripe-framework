@@ -2328,8 +2328,56 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		);
 		return (bool)$result->value();
 	}
+    
+    /**
+     * Compares current draft with live version, and returns true if no draft version of this page exists  but the page
+     * is still published (eg, after triggering "Delete from draft site" in the CMS).
+     *
+     * @return bool
+     */
+    public function getIsDeletedFromStage() {
+        if(!$this->owner->ID) return true;
+        
+        $stageVersion = Versioned::get_versionnumber_by_stage($this->owner->class, Versioned::DRAFT, $this->owner->ID);
+        
+        // Return true for both completely deleted pages and for pages just deleted from stage
+        return !($stageVersion);
+    }
+    
+    /**
+     * Compares current draft with live version, and returns true if these versions differ, meaning there have been
+     * unpublished changes to the draft site.
+     *
+     * @return bool
+     */
+    public function getIsModifiedOnStage() {
+        // New unsaved pages could be never be published
+        if(!$this->owner->ID) return false;
 
-
+        $stageVersion = Versioned::get_versionnumber_by_stage($this->owner->class, 'Stage', $this->owner->ID);
+        $liveVersion =	Versioned::get_versionnumber_by_stage($this->owner->class, 'Live', $this->owner->ID);
+        
+        $isModified = ($stageVersion && $stageVersion != $liveVersion);
+        $this->owner->extend('updateIsModifiedOnStage', $isModified);
+        
+        return $isModified;
+    }
+    
+    /**
+     * Compares current draft with live version, and returns true if no live version exists, meaning the page was never
+     * published.
+     *
+     * @return bool
+     */
+    public function getIsAddedToStage() {
+        // New unsaved pages could be never be published
+        if(!$this->owner->ID) return false;
+        
+        $stageVersion = Versioned::get_versionnumber_by_stage($this->owner->class, 'Stage', $this->owner->ID);
+        $liveVersion =	Versioned::get_versionnumber_by_stage($this->owner->class, 'Live', $this->owner->ID);
+        
+        return ($stageVersion && !$liveVersion);
+    }
 
 	/**
 	 * Return the equivalent of a DataList::create() call, querying the latest

@@ -51,6 +51,9 @@ class Image extends File implements ShortcodeHandler {
 		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
 
 		$link = $this->Link();
+		
+        $statusTitle = $this->getStatusTitle();
+        $statusFlag = "<span class=\"editor__status-flag\">{$statusTitle}</span>";
 
 		$content = Tab::create('Main',
 			HeaderField::create('TitleHeader', $this->Title, 1)
@@ -92,9 +95,14 @@ class Image extends File implements ShortcodeHandler {
 				'TitleHeader',
 				LiteralField::create(
 					"DisplaySize",
-					sprintf('<div class="editor__specs">%spx, %s</div>',
-						$dimensions, $this->getSize())
+					sprintf('<div class="editor__specs">%spx, %s %s</div>',
+						$dimensions, $this->getSize(), $statusFlag)
 				)
+			);
+		} else {
+			$content->insertAfter(
+				'TitleHeader',
+				LiteralField::create('StatusFlag', $statusFlag)
 			);
 		}
 

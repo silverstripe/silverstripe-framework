@@ -475,10 +475,14 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 
 		$previewLink = Convert::raw2att($this->PreviewLink());
 		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
+        
+		$statusTitle = $this->getStatusTitle();
+        $statusFlag = ($statusTitle) ? "<span class=\"editor__status-flag\">{$statusTitle}</span>" : '';
 
 		$content = Tab::create('Main',
 			HeaderField::create('TitleHeader', $this->Title, 1)
 				->addExtraClass('editor__heading'),
+            LiteralField::create('StatusFlag', $statusFlag),
 			LiteralField::create("IconFull", $image)
 				->addExtraClass('editor__file-preview'),
 			TabSet::create('Editor',
@@ -511,7 +515,18 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 
 		return $fields;
 	}
-
+	
+	protected function getStatusTitle() {
+        $statusTitle = '';
+        if ($this->getIsAddedToStage()) {
+            $statusTitle = _t('File.DRAFT', 'Draft');
+        } elseif ($this->getIsModifiedOnStage()) {
+            $statusTitle = _t('File.MODIFIED', 'Modified');
+        }
+        
+        return $statusTitle;
+	}
+	
 	/**
 	 * Returns a category based on the file extension.
 	 * This can be useful when grouping files by type,
