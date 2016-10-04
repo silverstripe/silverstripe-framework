@@ -550,7 +550,12 @@ class FieldList extends ArrayList {
 	public function makeFieldReadonly($field) {
 		$fieldName = ($field instanceof FormField) ? $field->getName() : $field;
 		$srcField = $this->dataFieldByName($fieldName);
-		$this->replaceField($fieldName, $srcField->performReadonlyTransformation());
+        if($srcField) {
+        	$this->replaceField($fieldName, $srcField->performReadonlyTransformation());
+        }
+        else {
+        	user_error("Trying to make field '$fieldName' readonly, but it does not exist in the list",E_USER_WARNING);
+        }
 	}
 
 	/**
