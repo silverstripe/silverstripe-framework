@@ -359,6 +359,15 @@ class Session {
 		$path = Config::inst()->get('Session', 'cookie_path');
 		if(!$path) $path = Director::baseURL();
 		$domain = Config::inst()->get('Session', 'cookie_domain');
+		// Director::baseURL can return absolute domain names - this extracts the relevant parts
+		// for the session otherwise we can get broken session cookies
+		if (Director::is_absolute_url($path)) {
+			$urlParts = parse_url($path);
+			$path = $urlParts['path'];
+			if (!$domain) {
+				$domain = $urlParts['host'];
+			}
+		}
 		$secure = Director::is_https() && Config::inst()->get('Session', 'cookie_secure');
 		$session_path = Config::inst()->get('Session', 'session_store_path');
 		$timeout = Config::inst()->get('Session', 'timeout');
