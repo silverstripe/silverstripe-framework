@@ -23,6 +23,7 @@ class DataListTest extends SapphireTest {
 		'DataObjectTest_EquipmentCompany',
 		'DataObjectTest_SubEquipmentCompany',
 		'DataObjectTest\NamespacedClass',
+		'DataObjectTest_Numeric',
 		'DataObjectTest_Company',
 		'DataObjectTest_Fan',
 		'ManyManyListTest_Product',
@@ -531,6 +532,33 @@ class DataListTest extends SapphireTest {
 		$list = $list->sort(array('TeamID'=>'asc','Name'=>'desc'));
 		$this->assertEquals('Joe', $list->first()->Name, 'First comment should be from Bob');
 		$this->assertEquals('Phil', $list->last()->Name, 'Last comment should be from Phil');
+	}
+
+	public function testSortNumeric() {
+		$list = DataObjectTest_Numeric::get();
+
+		// Test numeric sort
+		$list1 = $list->sort('Sort', 'ASC');
+		$this->assertEquals(array(
+			-10,
+			-2,
+			-1,
+			0,
+			1,
+			2,
+			10
+		), $list1->column('Sort'));
+		// Test natural sort
+		$list1 = $list->sort('Name', 'ASC');
+		$this->assertEquals(array(
+            'Bob',
+            'bonny',
+            'bonny1',
+            'bonny2',
+            'bonny10',
+            'John',
+            'Steve'
+		), $list1->column('Name'));
 	}
 
 	/**
