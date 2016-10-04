@@ -314,67 +314,46 @@ class ArrayListTest extends SapphireTest {
 		), $list->toArray());
 	}
 
-	public function testNaturalSort() {
-		//natural sort is only available in 5.4+
-		if (version_compare(phpversion(), '5.4.0', '<')) {
-			$this->markTestSkipped();
-		}
-		$list = new ArrayList(array(
-		array('Name' => 'Steve'),
+	public function testMixedCaseSort() {
+		// Note: Natural sorting is not expected, so if 'bonny10' were included
+		// below we would expect it to appear between bonny1 and bonny2. That's
+		// undesirable though so we're not enforcing it in tests.
+		$original = array(
+			array('Name' => 'Steve'),
 			(object) array('Name' => 'Bob'),
 			array('Name' => 'John'),
 			array('Name' => 'bonny'),
 			array('Name' => 'bonny1'),
-			array('Name' => 'bonny10'),
+			//array('Name' => 'bonny10'),
 			array('Name' => 'bonny2'),
-		));
+		);
+
+		$list = new ArrayList($original);
+
+		$expected = array(
+            (object) array('Name' => 'Bob'),
+            array('Name' => 'bonny'),
+            array('Name' => 'bonny1'),
+            //array('Name' => 'bonny10'),
+            array('Name' => 'bonny2'),
+            array('Name' => 'John'),
+            array('Name' => 'Steve'),
+        );
 
 		// Unquoted name
 		$list1 = $list->sort('Name');
-		$this->assertEquals(array(
-            (object) array('Name' => 'Bob'),
-            array('Name' => 'bonny'),
-            array('Name' => 'bonny1'),
-            array('Name' => 'bonny2'),
-            array('Name' => 'bonny10'),
-            array('Name' => 'John'),
-            array('Name' => 'Steve'),
-        ), $list1->toArray());
+		$this->assertEquals($expected, $list1->toArray());
 
 		// Quoted name name
 		$list2 = $list->sort('"Name"');
-		$this->assertEquals(array(
-            (object) array('Name' => 'Bob'),
-            array('Name' => 'bonny'),
-            array('Name' => 'bonny1'),
-            array('Name' => 'bonny2'),
-            array('Name' => 'bonny10'),
-            array('Name' => 'John'),
-            array('Name' => 'Steve'),
-        ), $list2->toArray());
+		$this->assertEquals($expected, $list2->toArray());
 
 		// Array (non-associative)
 		$list3 = $list->sort(array('"Name"'));
-		$this->assertEquals(array(
-	        (object) array('Name' => 'Bob'),
-	        array('Name' => 'bonny'),
-	        array('Name' => 'bonny1'),
-	        array('Name' => 'bonny2'),
-	        array('Name' => 'bonny10'),
-	        array('Name' => 'John'),
-	        array('Name' => 'Steve'),
-	    ), $list3->toArray());
+		$this->assertEquals($expected, $list3->toArray());
 
 		// Check original list isn't altered
-		$this->assertEquals(array(
-            array('Name' => 'Steve'),
-            (object) array('Name' => 'Bob'),
-            array('Name' => 'John'),
-            array('Name' => 'bonny'),
-            array('Name' => 'bonny1'),
-            array('Name' => 'bonny10'),
-            array('Name' => 'bonny2'),
-        ), $list->toArray());
+		$this->assertEquals($original, $list->toArray());
 
 	}
 
@@ -470,6 +449,42 @@ class ArrayListTest extends SapphireTest {
 			(object) array('Name' => 'Bob'),
 			array('Name' => 'John')
 		));
+	}
+
+	public function testSortNumeric() {
+		$list = new ArrayList(array(
+			array('Sort' => 0),
+			array('Sort' => -1),
+			array('Sort' => 1),
+			array('Sort' => -2),
+			array('Sort' => 2),
+			array('Sort' => -10),
+			array('Sort' => 10)
+		));
+
+		// Sort descending
+		$list1 = $list->sort('Sort', 'DESC');
+		$this->assertEquals(array(
+			array('Sort' => 10),
+			array('Sort' => 2),
+			array('Sort' => 1),
+			array('Sort' => 0),
+			array('Sort' => -1),
+			array('Sort' => -2),
+			array('Sort' => -10)
+		), $list1->toArray());
+
+		// Sort ascending
+		$list1 = $list->sort('Sort', 'ASC');
+		$this->assertEquals(array(
+			array('Sort' => -10),
+			array('Sort' => -2),
+			array('Sort' => -1),
+			array('Sort' => 0),
+			array('Sort' => 1),
+			array('Sort' => 2),
+			array('Sort' => 10)
+		), $list1->toArray());
 	}
 
 	public function testReverse() {
