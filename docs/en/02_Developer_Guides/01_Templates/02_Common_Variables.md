@@ -8,7 +8,9 @@ exhaustive list. From your template you can call any method, database field, or 
 currently in scope as well as its' subclasses or extensions. 
 
 Knowing what methods you can call can be tricky, but the first step is to understand the scope you're in. Scope is 
-explained in more detail on the [syntax](syntax#scope) page.
+explained in more detail on the [syntax](syntax#scope) page. Many of the methods listed below can be called from any 
+scope, and you can specify additional static methods to be available globally in templates by implementing the 
+[api:TemplateGlobalProvider] interface.
 
 <div class="notice" markdown="1">
 Want a quick way of knowing what scope you're in? Try putting `$ClassName` in your template. You should see a string 
