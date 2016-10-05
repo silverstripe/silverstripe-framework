@@ -1449,7 +1449,7 @@ class FormField extends RequestHandler {
 			'id' => $this->ID(),
 			'type' => $this->getSchemaDataType(),
 			'component' => $this->getSchemaComponent(),
-			'holder_id' => $this->HolderID(),
+			'holderId' => $this->HolderID(),
 			'title' => $this->Title(),
 			'source' => null,
 			'extraClass' => $this->extraClass(),

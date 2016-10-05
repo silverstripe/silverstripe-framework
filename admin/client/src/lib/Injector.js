@@ -39,6 +39,10 @@ class Injector {
         return this.components.GridField;
       case 'Structural':
         return this.components.CompositeField;
+      case 'Boolean':
+        return this.components.CheckboxField;
+      case 'MultiSelect':
+        return this.components.CheckboxSetField;
       default:
         return null;
     }

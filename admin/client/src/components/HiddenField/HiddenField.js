@@ -1,51 +1,43 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+import { FormControl } from 'react-bootstrap-ss';
 
 class HiddenField extends SilverStripeComponent {
-
-  constructor(props) {
-    super(props);
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  render() {
-    return (
-      <div className="field hidden">
-        <input {...this.getInputProps()} />
-      </div>
-    );
-  }
-
+  /**
+   * Fetches the properties for the field
+   *
+   * @returns {object} properties
+   */
   getInputProps() {
     return {
-      className: ['hidden', this.props.extraClass].join(' '),
+      bsClass: this.props.bsClass,
+      componentClass: 'input',
+      className: `${this.props.className} ${this.props.extraClass}`,
       id: this.props.id,
       name: this.props.name,
-      onChange: this.props.onChange,
       type: 'hidden',
       value: this.props.value,
     };
   }
 
-  handleChange() {
-    if (typeof this.props.onChange === 'undefined') {
-      return;
-    }
-
-    this.props.onChange();
+  render() {
+    return (
+      <FormControl {...this.getInputProps()} />
+    );
   }
 }
 
 HiddenField.propTypes = {
+  id: React.PropTypes.string,
   extraClass: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
-  onChange: React.PropTypes.func,
   value: React.PropTypes.any,
 };
 
 HiddenField.defaultProps = {
-  value: null,
+  className: '',
+  extraClass: '',
+  value: '',
 };
 
 export default HiddenField;

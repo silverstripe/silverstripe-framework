@@ -1,8 +1,8 @@
-# Breadcrumb
+# Breadcrumb Component
 
 The breadcrumbs for the current section of the CMS.
 
-## Props
+## Properties
 
 ### Crumbs (array)
 
@@ -20,7 +20,5 @@ let breadcrumbs = [
     }
 ];
 <BreadcrumbComponent crumbs={breadcrumbs} />
-}
 
-...
 ```

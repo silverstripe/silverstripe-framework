@@ -1,25 +1,23 @@
-# Text Field Component
+# TextField Component
 
 Generates an editable text field.
 
-## Props
+## Example
 
-### leftTitle
+```js
+<TextField name="my-text" />
+```
 
-The label text to display with the field.
 
-### extraClass
+## Properties
 
-Addition CSS classes to apply to the `<input>` element.
+ * `id` (string): The ID for the component.
+ * `extraClass` (string): Extra classes the component should have.
+ * `name` (string) (required): The name for the component.
+ * `onChange` (function): Event handler for when the component changes.
+ * `value` (string|number): The value to display for the field, can use `defaultValue` for uncontrollable component.
+ * `readOnly` (boolean): Whether this field is read only.
+ * `disabled` (boolean): Whether this field is disabled.
+ * `type` (string): Defines the type this component will have, e.g. `email`, `tel`.
 
-### name (required)
-
-Used for the field's `name` attribute.
-
-### onChange
-
-Handler function called when the field's value changes.
-
-### value
-
-The field's value.
+ _NOTE:_ For other properties, please refer to the [react-bootstrap FormControl](https://react-bootstrap.github.io/components.html#forms-props-form-control) documentation.

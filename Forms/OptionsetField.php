@@ -55,6 +55,8 @@ use SilverStripe\View\ArrayData;
  * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
  */
 class OptionsetField extends SingleSelectField {
+	
+	protected $schemaComponent = 'OptionsetField';
 
 	/**
 	 * Build a field option for template rendering

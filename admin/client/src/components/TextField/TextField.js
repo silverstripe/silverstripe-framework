@@ -1,6 +1,7 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import fieldHolder from 'components/FieldHolder/FieldHolder';
+import { FormControl } from 'react-bootstrap-ss';
 
 class TextField extends SilverStripeComponent {
 
@@ -14,9 +15,9 @@ class TextField extends SilverStripeComponent {
     let field = null;
 
     if (this.props.readOnly) {
-      field = <div><i>{this.props.value}</i></div>;
+      field = <FormControl.Static {...this.getInputProps()}>{this.props.value}</FormControl.Static>;
     } else {
-      field = <input {...this.getInputProps()} />;
+      field = <FormControl {...this.getInputProps()} />;
     }
 
     return field;
@@ -25,26 +26,55 @@ class TextField extends SilverStripeComponent {
   /**
    * Fetches the properties for the text field
    *
-   * @returns Object properties
+   * @returns {object} properties
    */
   getInputProps() {
-    // TODO Merge with 'attributes' from formfield schema
-    return {
-      // The extraClass property is defined on both the holder and element
-      // for legacy reasons (same behaviour as PHP rendering)
-      className: ['form-control', this.props.extraClass].join(' '),
+    const props = {
+      bsClass: this.props.bsClass,
+      className: `${this.props.className} ${this.props.extraClass}`,
       id: this.props.id,
       name: this.props.name,
-      onChange: this.handleChange,
-      type: 'text',
-      value: this.props.value,
+      disabled: this.props.disabled,
+      readOnly: this.props.readOnly,
     };
+
+    if (!this.props.readOnly) {
+      Object.assign(props, {
+        placeholder: this.props.placeholder,
+        onChange: this.handleChange,
+        value: this.props.value,
+      });
+
+      if (this.isMultiline()) {
+        Object.assign(props, {
+          componentClass: 'textarea',
+          rows: this.props.data.rows,
+          cols: this.props.data.columns,
+        });
+      } else {
+        Object.assign(props, {
+          componentClass: 'input',
+          type: this.props.type,
+        });
+      }
+    }
+
+    return props;
+  }
+
+  /**
+   * Determines whether this text field is a multi-line textarea or not
+   *
+   * @returns {boolean}
+   */
+  isMultiline() {
+    return this.props.data && this.props.data.rows > 1;
   }
 
   /**
    * Handles changes to the text field's value.
    *
-   * @param object event
+   * @param {Event} event
    */
   handleChange(event) {
     if (typeof this.props.onChange === 'function') {
@@ -58,13 +88,21 @@ TextField.propTypes = {
   id: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
   onChange: React.PropTypes.func,
-  value: React.PropTypes.string,
+  value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
   readOnly: React.PropTypes.bool,
+  disabled: React.PropTypes.bool,
+  placeholder: React.PropTypes.string,
+  type: React.PropTypes.string,
 };
 
 TextField.defaultProps = {
   // React considers "undefined" as an uncontrolled component.
-  value: null,
+  value: '',
+  extraClass: '',
+  className: '',
+  type: 'text',
 };
+
+export { TextField };
 
 export default fieldHolder(TextField);

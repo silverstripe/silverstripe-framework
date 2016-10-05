@@ -320,12 +320,14 @@ class Backend {
         { setFromData: (refinedSpec.method.toLowerCase() === 'get') }
       );
 
-      const encodedData = encode(
-        refinedSpec.payloadFormat,
-        // Filter raw data through the defined schema,
-        // potentially removing keys because they're
-        applySchemaToData(refinedSpec.payloadSchema, mergedData)
-      );
+      const encodedData = (refinedSpec.method.toLowerCase() !== 'get')
+        ? encode(
+          refinedSpec.payloadFormat,
+          // Filter raw data through the defined schema,
+          // potentially removing keys because they're
+          applySchemaToData(refinedSpec.payloadSchema, mergedData)
+        )
+        : '';
 
       const args = refinedSpec.method.toLowerCase() === 'get'
         ? [url, mergedHeaders]

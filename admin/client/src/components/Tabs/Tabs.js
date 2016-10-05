@@ -31,7 +31,7 @@ class Tabs extends SilverStripeComponent {
    * Determines a default tab to be opened and validates the given default tab.
    * Replaces the given default tab if it is invalid with a valid tab.
    *
-   * @returns {string|undefined}
+   * @returns {string}
    */
   getDefaultActiveKey() {
     let active = null;
@@ -59,8 +59,8 @@ class Tabs extends SilverStripeComponent {
   /**
    * Render an individual link for the tabset
    *
-   * @param child
-   * @returns {ReactElement}
+   * @param {object} child
+   * @returns {Component}
    */
   renderTab(child) {
     if (child.props.title === null) {
@@ -79,7 +79,7 @@ class Tabs extends SilverStripeComponent {
   /**
    * Builds the tabset navigation links, will hide the links if there is only one child
    *
-   * @returns {ReactElement|null}
+   * @returns {Component}
    */
   renderNav() {
     const tabs = React.Children

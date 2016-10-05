@@ -2,15 +2,34 @@ import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 
 class LiteralField extends SilverStripeComponent {
+  /**
+   * Sets the content into a dangerouslySetInnerHTML object
+   *
+   * @returns {object} innerHtml
+   */
   getContent() {
     return { __html: this.props.data.content };
+  }
+
+  /**
+   * Fetches the properties for the text field
+   *
+   * @returns {object} properties
+   */
+  getInputProps() {
+    return {
+      // The extraClass property is defined on both the holder and element
+      // for legacy reasons (same behaviour as PHP rendering)
+      className: `${this.props.className} ${this.props.extraClass}`,
+      id: this.props.id,
+      name: this.props.name,
+    };
   }
 
   render() {
     return (
       <div
-        id={this.props.id}
-        className={this.props.extraClass}
+        {...this.getInputProps()}
         dangerouslySetInnerHTML={this.getContent()}
       >
       </div>
@@ -20,6 +39,7 @@ class LiteralField extends SilverStripeComponent {
 
 LiteralField.propTypes = {
   id: React.PropTypes.string,
+  name: React.PropTypes.string.isRequired,
   extraClass: React.PropTypes.string,
   data: React.PropTypes.oneOfType([
     React.PropTypes.array,
@@ -27,6 +47,12 @@ LiteralField.propTypes = {
       content: React.PropTypes.string.isRequired,
     }),
   ]).isRequired,
+};
+
+LiteralField.defaultProps = {
+  // React considers "undefined" as an uncontrolled component.
+  extraClass: '',
+  className: '',
 };
 
 export default LiteralField;
