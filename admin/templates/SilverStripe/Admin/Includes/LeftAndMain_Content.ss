@@ -1,4 +1,4 @@
-<div class="cms-content $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content">
+<div class="cms-content flexbox-area-grow $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content">
 
 	$Tools
 

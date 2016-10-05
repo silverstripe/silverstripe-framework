@@ -217,13 +217,13 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			$fields,
 			$actions
 		)->setHTMLID('Form_EditForm');
-		$form->addExtraClass('cms-edit-form');
+		$form->addExtraClass('cms-edit-form fill-height');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		// Tab nav in CMS is rendered through separate template
 		if($form->Fields()->hasTabSet()) {
 			$form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');
 		}
-		$form->addExtraClass('center ss-tabset cms-tabset ' . $this->BaseCSSClasses());
+		$form->addExtraClass('ss-tabset cms-tabset ' . $this->BaseCSSClasses());
 		$form->setAttribute('data-pjax-fragment', 'CurrentForm');
 
 		$this->extend('updateEditForm', $form);

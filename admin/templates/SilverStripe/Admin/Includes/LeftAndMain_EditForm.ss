@@ -27,7 +27,7 @@
 		$EditFormTools
 	<% end_with %>
 
-	<div class="panel panel--padded cms-content-fields panel--double-toolbar <% if not $Fields.hasTabset %>cms-panel-padded<% end_if %>">
+	<div class="panel panel--padded panel--scrollable flexbox-area-grow <% if not $Fields.hasTabset %>cms-panel-padded<% end_if %>">
 		<% if $Message %>
 		<p id="{$FormName}_error" class="message $MessageType">$Message</p>
 		<% else %>

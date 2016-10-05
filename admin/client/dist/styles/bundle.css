@@ -7457,6 +7457,7 @@ h1{
 
 .table thead th{
   border:0;
+  background-color:transparent;
 }
 
 .table td,.table th{
@@ -15381,7 +15382,6 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   padding-left:1.5385rem;
   padding-right:1.5385rem;
   height:53px;
-  background-color:#f6f7f8;
   width:100%;
 }
 

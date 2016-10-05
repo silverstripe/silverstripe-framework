@@ -4,7 +4,6 @@
 .toolbar--south {
   @include make-container();
   height: $toolbar-total-height;
-  background-color: $body-bg;
   width: 100%;
 
   .btn-toolbar {
@@ -43,6 +42,7 @@
   margin-left: -$panel-padding-x;
   margin-right: -$panel-padding-x;
   padding: $spacer-xs;
+
 
   @include media-breakpoint-down(md) {
 
