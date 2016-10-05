@@ -14,6 +14,8 @@ use SilverStripe\Core\Convert;
  * value.
  */
 class LookupField extends MultiSelectField {
+	
+    protected $schemaComponent = 'LookupField';
 
 	/**
 	 * @var boolean $readonly

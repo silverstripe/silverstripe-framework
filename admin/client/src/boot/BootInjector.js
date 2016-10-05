@@ -10,6 +10,7 @@ import PopoverField from 'components/PopoverField/PopoverField';
 import HeaderField from 'components/HeaderField/HeaderField';
 import LiteralField from 'components/LiteralField/LiteralField';
 import HtmlReadonlyField from 'components/HtmlReadonlyField/HtmlReadonlyField';
+import LookupField from 'components/LookupField/LookupField';
 import CompositeField from 'components/CompositeField/CompositeField';
 import Tabs from 'components/Tabs/Tabs';
 import TabItem from 'components/Tabs/TabItem';
@@ -33,6 +34,7 @@ class BootInjector {
     injector.register('HeaderField', HeaderField);
     injector.register('LiteralField', LiteralField);
     injector.register('HtmlReadonlyField', HtmlReadonlyField);
+    injector.register('LookupField', LookupField);
     injector.register('CompositeField', CompositeField);
     injector.register('Tabs', Tabs);
     injector.register('TabItem', TabItem);

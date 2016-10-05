@@ -1,4 +1,5 @@
 {
+  "FormField.NONE": "None",
     "FILEIFRAMEFIELD.CONFIRMDELETE": "Are you sure you want to delete this file?",
     "FILEIFRAMEFIELD.DELETEFILE": "Delete File",
     "FILEIFRAMEFIELD.DELETEIMAGE": "Delete Image",

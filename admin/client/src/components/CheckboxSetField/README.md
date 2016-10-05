@@ -22,7 +22,7 @@ Generates a checkbox button group.
  * `value` (string|number): The value that matches one or more of the source items value.
  * `readOnly` (boolean): Whether this field is read only.
  * `disabled` (boolean): Whether this field is disabled.
- * `source` (array): Array of items to appear in the list with the following properties excepted.
+ * `source` (array): Array of items to appear in the list with the following properties.
    * `value` (string|number): The value for item.
    * `title` (any): The displayed value for item.
    * `disabled` (boolean): Tells if item is disabled from selecting.

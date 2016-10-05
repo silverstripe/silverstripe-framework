@@ -208,21 +208,9 @@ abstract class MultiSelectField extends SelectField {
 	 * @return ReadonlyField
 	 */
 	public function performReadonlyTransformation() {
-		$source = $this->getSource();
-
-		// Map selected values to titles
-		$data = array();
-		foreach($this->getValueArray() as $value) {
-			if(array_key_exists($value, $source)) {
-				$data[] = $source[$value];
-			} else {
-				$data[] = $value;
-			}
-		}
-		$values = implode(', ', $data);
-
-		$field = $this->castedCopy('SilverStripe\\Forms\\ReadonlyField');
-		$field->setValue($values);
+        $field = $this->castedCopy('SilverStripe\\Forms\\LookupField');
+        $field->setSource($this->getSource());
+        $field->setReadonly(true);
 
 		return $field;
 	}
