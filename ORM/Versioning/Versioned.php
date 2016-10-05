@@ -1774,9 +1774,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public function stagesDiffer($stage1, $stage2) {
 		$table1 = $this->baseTable($stage1);
 		$table2 = $this->baseTable($stage2);
-
-		$owner = $this->owner;
-		if(!is_numeric($owner->ID)) {
+		$id = $this->owner->ID ?: $this->owner->OldID;
+		if (!$id) {
 			return true;
 		}
 
@@ -1788,7 +1787,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			"SELECT CASE WHEN \"$table1\".\"Version\"=\"$table2\".\"Version\" THEN 1 ELSE 0 END
 			 FROM \"$table1\" INNER JOIN \"$table2\" ON \"$table1\".\"ID\" = \"$table2\".\"ID\"
 			 AND \"$table1\".\"ID\" = ?",
-			array($owner->ID)
+			array($id)
 		)->value();
 
 		return !$stagesAreEqual;
@@ -2292,8 +2291,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return bool
 	 */
 	public function isPublished() {
-		$owner = $this->owner;
-		if(!$owner->isInDB()) {
+		$id = $this->owner->ID ?: $this->owner->OldID;
+		if(!$id) {
 			return false;
 		}
 
@@ -2305,9 +2304,19 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$table = $this->baseTable(static::LIVE);
 		$result = DB::prepared_query(
 			"SELECT COUNT(*) FROM \"{$table}\" WHERE \"{$table}\".\"ID\" = ?",
-			array($owner->ID)
+			array($id)
 		);
 		return (bool)$result->value();
+	}
+
+	/**
+	 * Check if page doesn't exist on any stage, but used to be
+	 *
+	 * @return bool
+	 */
+	public function isArchived() {
+		$id = $this->owner->ID ?: $this->owner->OldID;
+		return $id && !$this->isOnDraft() && !$this->isPublished();
 	}
 
 	/**
@@ -2316,67 +2325,47 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @return bool
 	 */
 	public function isOnDraft() {
-		$owner = $this->owner;
-		if(!$owner->isInDB()) {
+		$id = $this->owner->ID ?: $this->owner->OldID;
+		if(!$id) {
 			return false;
 		}
 
 		$table = $this->baseTable();
 		$result = DB::prepared_query(
 			"SELECT COUNT(*) FROM \"{$table}\" WHERE \"{$table}\".\"ID\" = ?",
-			array($owner->ID)
+			array($id)
 		);
 		return (bool)$result->value();
 	}
-    
+
     /**
      * Compares current draft with live version, and returns true if no draft version of this page exists  but the page
      * is still published (eg, after triggering "Delete from draft site" in the CMS).
      *
      * @return bool
      */
-    public function getIsDeletedFromStage() {
-        if(!$this->owner->ID) return true;
-        
-        $stageVersion = Versioned::get_versionnumber_by_stage($this->owner->class, Versioned::DRAFT, $this->owner->ID);
-        
-        // Return true for both completely deleted pages and for pages just deleted from stage
-        return !($stageVersion);
+    public function isOnLiveOnly() {
+        return $this->isPublished() && !$this->isOnDraft();
     }
-    
-    /**
-     * Compares current draft with live version, and returns true if these versions differ, meaning there have been
-     * unpublished changes to the draft site.
-     *
-     * @return bool
-     */
-    public function getIsModifiedOnStage() {
-        // New unsaved pages could be never be published
-        if(!$this->owner->ID) return false;
 
-        $stageVersion = Versioned::get_versionnumber_by_stage($this->owner->class, 'Stage', $this->owner->ID);
-        $liveVersion =	Versioned::get_versionnumber_by_stage($this->owner->class, 'Live', $this->owner->ID);
-        
-        $isModified = ($stageVersion && $stageVersion != $liveVersion);
-        $this->owner->extend('updateIsModifiedOnStage', $isModified);
-        
-        return $isModified;
-    }
-    
     /**
      * Compares current draft with live version, and returns true if no live version exists, meaning the page was never
      * published.
      *
      * @return bool
      */
-    public function getIsAddedToStage() {
-        // New unsaved pages could be never be published
-        if(!$this->owner->ID) return false;
-        
-        $stageVersion = Versioned::get_versionnumber_by_stage($this->owner->class, 'Stage', $this->owner->ID);
-        $liveVersion =	Versioned::get_versionnumber_by_stage($this->owner->class, 'Live', $this->owner->ID);
-        
-        return ($stageVersion && !$liveVersion);
+    public function isOnDraftOnly() {
+        return $this->isOnDraft() && !$this->isPublished();
+    }
+
+    /**
+     * Compares current draft with live version, and returns true if these versions differ, meaning there have been
+     * unpublished changes to the draft site.
+     *
+     * @return bool
+     */
+    public function isModifiedOnDraft() {
+        return $this->isOnDraft() && $this->stagesDiffer(Versioned::DRAFT, Versioned::LIVE);
     }
 
 	/**

@@ -1,6 +1,8 @@
 <?php
 
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\HasManyList;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -1086,6 +1088,77 @@ class VersionedTest extends SapphireTest {
 
 		$this->assertEquals(2, $version->Version);
 		$this->assertEquals($record->Title, $version->Title);
+	}
+
+
+
+	public function testStageStates() {
+		// newly created page
+		$createdPage = new VersionedTest_DataObject();
+		$createdPage->write();
+		$this->assertTrue($createdPage->isOnDraft());
+		$this->assertFalse($createdPage->isPublished());
+		$this->assertTrue($createdPage->isOnDraftOnly());
+		$this->assertTrue($createdPage->isModifiedOnDraft());
+
+		// published page
+		$publishedPage = new VersionedTest_DataObject();
+		$publishedPage->write();
+		$publishedPage->copyVersionToStage('Stage','Live');
+		$this->assertTrue($publishedPage->isOnDraft());
+		$this->assertTrue($publishedPage->isPublished());
+		$this->assertFalse($publishedPage->isOnDraftOnly());
+		$this->assertFalse($publishedPage->isOnLiveOnly());
+		$this->assertFalse($publishedPage->isModifiedOnDraft());
+
+		// published page, deleted from stage
+		$deletedFromDraftPage = new VersionedTest_DataObject();
+		$deletedFromDraftPage->write();
+		$deletedFromDraftPage->copyVersionToStage('Stage','Live');
+		$deletedFromDraftPage->deleteFromStage('Stage');
+		$this->assertFalse($deletedFromDraftPage->isArchived());
+		$this->assertFalse($deletedFromDraftPage->isOnDraft());
+		$this->assertTrue($deletedFromDraftPage->isPublished());
+		$this->assertFalse($deletedFromDraftPage->isOnDraftOnly());
+		$this->assertTrue($deletedFromDraftPage->isOnLiveOnly());
+		$this->assertFalse($deletedFromDraftPage->isModifiedOnDraft());
+
+		// published page, deleted from live
+		$deletedFromLivePage = new VersionedTest_DataObject();
+		$deletedFromLivePage->write();
+		$deletedFromLivePage->copyVersionToStage('Stage','Live');
+		$deletedFromLivePage->deleteFromStage('Live');
+		$this->assertFalse($deletedFromLivePage->isArchived());
+		$this->assertTrue($deletedFromLivePage->isOnDraft());
+		$this->assertFalse($deletedFromLivePage->isPublished());
+		$this->assertTrue($deletedFromLivePage->isOnDraftOnly());
+		$this->assertFalse($deletedFromLivePage->isOnLiveOnly());
+		$this->assertTrue($deletedFromLivePage->isModifiedOnDraft());
+
+		// published page, deleted from both stages
+		$deletedFromAllStagesPage = new VersionedTest_DataObject();
+		$deletedFromAllStagesPage->write();
+		$deletedFromAllStagesPage->copyVersionToStage('Stage','Live');
+		$deletedFromAllStagesPage->doArchive();
+		$this->assertTrue($deletedFromAllStagesPage->isArchived());
+		$this->assertFalse($deletedFromAllStagesPage->isOnDraft());
+		$this->assertFalse($deletedFromAllStagesPage->isPublished());
+		$this->assertFalse($deletedFromAllStagesPage->isOnDraftOnly());
+		$this->assertFalse($deletedFromAllStagesPage->isOnLiveOnly());
+		$this->assertFalse($deletedFromAllStagesPage->isModifiedOnDraft());
+
+		// published page, modified
+		$modifiedOnDraftPage = new VersionedTest_DataObject();
+		$modifiedOnDraftPage->write();
+		$modifiedOnDraftPage->copyVersionToStage('Stage','Live');
+		$modifiedOnDraftPage->Content = 'modified';
+		$modifiedOnDraftPage->write();
+		$this->assertFalse($modifiedOnDraftPage->isArchived());
+		$this->assertTrue($modifiedOnDraftPage->isOnDraft());
+		$this->assertTrue($modifiedOnDraftPage->isPublished());
+		$this->assertFalse($modifiedOnDraftPage->isOnDraftOnly());
+		$this->assertFalse($modifiedOnDraftPage->isOnLiveOnly());
+		$this->assertTrue($modifiedOnDraftPage->isModifiedOnDraft());
 	}
 }
 
