@@ -12543,10 +12543,6 @@ li.class-ErrorPage>a .jstree-pageicon{
   border-left:1px solid #ced3d9;
 }
 
-.cms-preview.blocked{
-  display:none;
-}
-
 .cms-preview .cms-preview-overlay{
   width:100%;
   height:100%;
