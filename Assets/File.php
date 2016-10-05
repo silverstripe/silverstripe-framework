@@ -476,9 +476,13 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		$previewLink = Convert::raw2att($this->PreviewLink());
 		$image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
 
+		$statusTitle = $this->getStatusTitle();
+		$statusFlag = ($statusTitle) ? "<span class=\"editor__status-flag\">{$statusTitle}</span>" : '';
+
 		$content = Tab::create('Main',
 			HeaderField::create('TitleHeader', $this->Title, 1)
 				->addExtraClass('editor__heading'),
+            LiteralField::create('StatusFlag', $statusFlag),
 			LiteralField::create("IconFull", $image)
 				->addExtraClass('editor__file-preview'),
 			TabSet::create('Editor',
@@ -510,6 +514,21 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 		$this->extend('updateCMSFields', $fields);
 
 		return $fields;
+	}
+
+	/**
+	 * Get title for current file status
+	 *
+	 * @return string
+	 */
+	public function getStatusTitle() {
+        $statusTitle = '';
+        if ($this->isOnDraftOnly()) {
+            $statusTitle = _t('File.DRAFT', 'Draft');
+        } elseif ($this->isModifiedOnDraft()) {
+            $statusTitle = _t('File.MODIFIED', 'Modified');
+        }
+        return $statusTitle;
 	}
 
 	/**

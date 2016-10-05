@@ -1,5 +1,8 @@
 {
-  "FormField.NONE": "None",
+    "FormField.NONE": "None",
+    "File.DRAFT": "Draft",
+    "File.MODIFIED": "Modified",
+    "File.PUBLISHED": "Published",
     "FILEIFRAMEFIELD.CONFIRMDELETE": "Are you sure you want to delete this file?",
     "FILEIFRAMEFIELD.DELETEFILE": "Delete File",
     "FILEIFRAMEFIELD.DELETEIMAGE": "Delete Image",
