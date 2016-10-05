@@ -3,12 +3,6 @@
 .cms-content-controls,
 .toolbar--south {
 
-	/* Styling the background, controls sit on */
-	&.cms-preview-controls {
-		z-index: 1;
-		background: $tab-panel-texture-color;
-	}
-
 	/* Styling for icons in controls */
 	.icon-view, .preview-selector.dropdown a.chosen-single {
 		white-space: nowrap;
@@ -19,12 +13,6 @@
 			overflow: hidden;
 			color: $color-text-dark;
 		}
-	}
-
-	.cms-navigator{
-		width: 100%;
-		padding: 1px $grid-y*1.5;
-		height: 52px; /* should be set in js Layout to match page actions */
 	}
 
 	/* Preview selectors. Overrides default chosen styles and applies its own */
@@ -245,8 +233,6 @@
 .cms-preview {
 	background-color: $tab-panel-texture-color;
 	border-left: 1px solid $border-color-dark;
-	height: 100%;
-	width: 100%;
 
 	.cms-preview-overlay {
 		width: 100%;

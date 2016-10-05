@@ -1,6 +1,6 @@
 <div id="settings-controller-cms-content" class="cms-content cms-tabset flexbox-area-grow fill-height $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content">
 
-	<div class="cms-content-header north">
+	<div class="cms-content-header">
 		<% with $EditForm %>
 			<div class="cms-content-header-info">
 				<% with $Controller %>

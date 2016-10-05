@@ -225,6 +225,10 @@ body.cms {
   }
 }
 
+.cms-content-tools.collapsed .cms-panel-content > * {
+  display: none;
+}
+
 // History checkboxes
 .cms-versions-form {
   .form-group::after {
@@ -462,6 +466,7 @@ body.cms {
 
     &.cms-edit-form {
       padding: 0;
+      display: flex; // TODO remove once JQueryUI is removed
     }
 
 		.ui-tabs .ui-tabs-nav {
@@ -762,7 +767,7 @@ body.cms {
  * Actions
  * -------------------------------------------- */
 
-.cms-content-actions, .cms-preview-controls {
+.cms-content-actions {
 	margin: 0;
 	z-index: 999;
 	border-top: 1px solid $border-color;
@@ -1401,9 +1406,6 @@ form.member-profile-form {
     // always show a y scroll bar as popups like TreeDropdowns
     // can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
     overflow-y: auto;
-    overflow-x: auto;
-    background: $tab-panel-texture-color;
-    width: 100%;
 
     #Root_Main {
       .confirmedpassword {
@@ -1472,17 +1474,13 @@ form.member-profile-form {
 .cms-panel {
   .cms-panel-toggle {
 
-		.toggle-collapse,
-		.toggle-expand {
-			display: block;
-			position: absolute;
-			text-align: right;
-			padding: 14px 0;
-			width: 100%;
-			text-decoration: none;
-			line-height: 20px;
-			height: 52px;
-			margin: -#{$spacer-xs} #{0 - $panel-padding-x};
+    .toggle-collapse,
+    .toggle-expand {
+      text-align: right;
+      padding: 14px 0;
+      text-decoration: none;
+      line-height: 20px;
+      margin: -#{$spacer-xs} #{0 - $panel-padding-x};
 
       span {
         display: inline-block;
@@ -1490,11 +1488,15 @@ form.member-profile-form {
         color: #555d60;
         font-size: 16px;
       }
+    }
 
-      &.toggle-expand {
-        width: 60px; // will set the collapsed width
-        display: none;
-      }
+    .toggle-collapse {
+      display: block;
+    }
+
+    .toggle-expand {
+      width: 60px; // will set the collapsed width
+      display: none;
     }
   }
 
@@ -1506,12 +1508,9 @@ form.member-profile-form {
       display: none;
     }
 
-    .cms-panel-content > * {
-      display: none;
-    }
-
     .cms-panel-toggle a.toggle-expand {
       display: block;
+      width: auto;
     }
   }
 
@@ -1583,6 +1582,9 @@ form.member-profile-form {
 .cms .ui-widget-overlay-light {
   background: #aaaaaa url(../../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
   opacity: 0.3;
+  position: absolute;
+  z-index: 2;
+  display: none;
 }
 
 // Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI)

@@ -14,6 +14,10 @@ form.nostyle {
 	@include clear-form-field-styles();
 }
 
+// fieldset {
+// 	width: 100%;
+// }
+
 .field { // TODO convert to .form-group
 
 	&.ui-tabs {

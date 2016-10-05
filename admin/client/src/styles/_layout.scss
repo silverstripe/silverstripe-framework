@@ -90,6 +90,7 @@
 .panel {
   margin-left: auto;
   margin-right: auto;
+  width: 100%;
 }
 
 .panel--padded {
@@ -136,9 +137,9 @@
 }
 
 
-// TEST FLEXBOX
+// TEMPORY FLEXBOX STYLES
 // Reference https://css-tricks.com/boxes-fill-height-dont-squish/
-// Tested in IE10 & IE11
+// Reference http://codepen.io/clarkepaul/pen/qaNWAY
 
 *, *:before, *:after {
 	-moz-box-sizing: border-box;
@@ -151,39 +152,11 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-size: 13px;
-  line-height: 20px;
   display: -ms-flexbox;
   display: flex;
 }
 
-h1 {
-  font-size: 18px;
-  line-height: 20px;
-  margin: 0;
-}
-
-.cms-menu {
-  // width: 150px;
-  position: relative;
-}
-
-.cms-content { }
-
-
-.cms-preview {
-    display: none;
-  // width: 150px;
-}
-
-
-// Scrollable area
-.panel--scrollable {
-  overflow: auto;
-}
-
 // Flex magic
-
 // Nested items take up height
 .fill-height {
   height: 100%;
@@ -206,5 +179,4 @@ h1 {
 .flexbox-area-grow {
   -ms-flex: 1;
   flex: 1;
-  display: flex; // Only required for divs already positioned block as override
 }

@@ -5,6 +5,7 @@
   @include make-container();
   height: $toolbar-total-height;
   background-color: $body-bg;
+  width: 100%;
 
   .btn-toolbar {
     // TODO Remove '.cms .btn-toolbar' override
@@ -68,7 +69,6 @@
 .toolbar--south {
   padding-top: $spacer-xs;
   padding-bottom: $spacer-xs;
-  bottom: 0;
   border-top: 1px solid $border-color;
   width: 100%;
 }
