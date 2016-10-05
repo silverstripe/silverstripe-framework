@@ -234,6 +234,10 @@
 	background-color: $tab-panel-texture-color;
 	border-left: 1px solid $border-color-dark;
 
+	&.blocked {
+		display: none;
+	}
+
 	.cms-preview-overlay {
 		width: 100%;
 		height: 100%;
