@@ -3,13 +3,16 @@
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\DataExtension;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Member;
+use SilverStripe\View\ViewableData;
 
 /**
  * @package framework
@@ -58,8 +61,8 @@ class DataObjectTest extends SapphireTest {
 	}
 
 	public function testDb() {
-		$obj = new DataObjectTest_TeamComment();
-		$dbFields = $obj->db();
+		$schema = DataObject::getSchema();
+		$dbFields = $schema->fieldSpecs(DataObjectTest_TeamComment::class);
 
 		// Assert fields are included
 		$this->assertArrayHasKey('Name', $dbFields);
@@ -71,15 +74,20 @@ class DataObjectTest extends SapphireTest {
 		$this->assertArrayHasKey('ID', $dbFields);
 
 		// Assert that the correct field type is returned when passing a field
-		$this->assertEquals('Varchar', $obj->db('Name'));
-		$this->assertEquals('Text', $obj->db('Comment'));
+		$this->assertEquals('Varchar', $schema->fieldSpec(DataObjectTest_TeamComment::class, 'Name'));
+		$this->assertEquals('Text', $schema->fieldSpec(DataObjectTest_TeamComment::class, 'Comment'));
 
 		// Test with table required
-		$this->assertEquals('DataObjectTest_TeamComment.Varchar', $obj->db('Name', true));
-		$this->assertEquals('DataObjectTest_TeamComment.Text', $obj->db('Comment', true));
-
+		$this->assertEquals(
+			'DataObjectTest_TeamComment.Varchar',
+			$schema->fieldSpec(DataObjectTest_TeamComment::class, 'Name', ['includeClass'])
+		);
+		$this->assertEquals(
+			'DataObjectTest_TeamComment.Text',
+			$schema->fieldSpec(DataObjectTest_TeamComment::class, 'Comment', ['includeClass'])
+		);
 		$obj = new DataObjectTest_ExtendedTeamComment();
-		$dbFields = $obj->db();
+		$dbFields = $schema->fieldSpecs(DataObjectTest_ExtendedTeamComment::class);
 
 		// fixed fields are still included in extended classes
 		$this->assertArrayHasKey('Created', $dbFields);
@@ -88,7 +96,7 @@ class DataObjectTest extends SapphireTest {
 		$this->assertArrayHasKey('ID', $dbFields);
 
 		// Assert overloaded fields have correct data type
-		$this->assertEquals('HTMLText', $obj->db('Comment'));
+		$this->assertEquals('HTMLText', $schema->fieldSpec(DataObjectTest_ExtendedTeamComment::class, 'Comment'));
 		$this->assertEquals('HTMLText', $dbFields['Comment'],
 			'Calls to DataObject::db without a field specified return correct data types');
 
@@ -784,7 +792,7 @@ class DataObjectTest extends SapphireTest {
 		$teamSingleton = singleton('DataObjectTest_Team');
 
 		$subteamInstance = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
-		$subteamSingleton = singleton('DataObjectTest_SubTeam');
+		$schema = DataObject::getSchema();
 
 		/* hasField() singleton checks */
 		$this->assertTrue($teamSingleton->hasField('ID'),
@@ -835,35 +843,35 @@ class DataObjectTest extends SapphireTest {
 		/* hasDatabaseField() singleton checks */
 		//$this->assertTrue($teamSingleton->hasDatabaseField('ID'),
 		//'hasDatabaseField() finds built-in fields in singletons');
-		$this->assertTrue($teamSingleton->hasDatabaseField('Title'),
+		$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_Team::class, 'Title'),
 			'hasDatabaseField() finds custom fields in singletons');
 
 		/* hasDatabaseField() instance checks */
-		$this->assertFalse($teamInstance->hasDatabaseField('NonExistingField'),
+		$this->assertNull($schema->fieldSpec(DataObjectTest_Team::class, 'NonExistingField'),
 			'hasDatabaseField() doesnt find non-existing fields in instances');
-		//$this->assertTrue($teamInstance->hasDatabaseField('ID'),
+		//$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_Team::class, 'ID'),
 		//'hasDatabaseField() finds built-in fields in instances');
-		$this->assertTrue($teamInstance->hasDatabaseField('Created'),
+		$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_Team::class, 'Created'),
 			'hasDatabaseField() finds built-in fields in instances');
-		$this->assertTrue($teamInstance->hasDatabaseField('DatabaseField'),
+		$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_Team::class, 'DatabaseField'),
 			'hasDatabaseField() finds custom fields in instances');
-		$this->assertFalse($teamInstance->hasDatabaseField('SubclassDatabaseField'),
+		$this->assertNull($schema->fieldSpec(DataObjectTest_Team::class, 'SubclassDatabaseField'),
 			'hasDatabaseField() doesnt find subclass fields in parentclass instances');
-		//$this->assertFalse($teamInstance->hasDatabaseField('DynamicField'),
+		//$this->assertNull($schema->fieldSpec(DataObjectTest_Team::class, 'DynamicField'),
 		//'hasDatabaseField() doesnt dynamic getters in instances');
-		$this->assertTrue($teamInstance->hasDatabaseField('HasOneRelationshipID'),
+		$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_Team::class, 'HasOneRelationshipID'),
 			'hasDatabaseField() finds foreign keys in instances');
-		$this->assertTrue($teamInstance->hasDatabaseField('ExtendedDatabaseField'),
+		$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_Team::class, 'ExtendedDatabaseField'),
 			'hasDatabaseField() finds extended fields in instances');
-		$this->assertTrue($teamInstance->hasDatabaseField('ExtendedHasOneRelationshipID'),
+		$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_Team::class, 'ExtendedHasOneRelationshipID'),
 			'hasDatabaseField() finds extended foreign keys in instances');
-		$this->assertFalse($teamInstance->hasDatabaseField('ExtendedDynamicField'),
+		$this->assertNull($schema->fieldSpec(DataObjectTest_Team::class, 'ExtendedDynamicField'),
 			'hasDatabaseField() doesnt include extended dynamic getters in instances');
 
 		/* hasDatabaseField() subclass checks */
-		$this->assertTrue($subteamInstance->hasDatabaseField('DatabaseField'),
+		$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_SubTeam::class, 'DatabaseField'),
 			'hasField() finds custom fields in subclass instances');
-		$this->assertTrue($subteamInstance->hasDatabaseField('SubclassDatabaseField'),
+		$this->assertNotEmpty($schema->fieldSpec(DataObjectTest_SubTeam::class, 'SubclassDatabaseField'),
 			'hasField() finds custom fields in subclass instances');
 
 	}
@@ -872,9 +880,10 @@ class DataObjectTest extends SapphireTest {
 	 * @todo Re-enable all test cases for field inheritance aggregation after behaviour has been fixed
 	 */
 	public function testFieldInheritance() {
-		$teamInstance = $this->objFromFixture('DataObjectTest_Team', 'team1');
-		$subteamInstance = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$schema = DataObject::getSchema();
 
+		// Test logical fields (including composite)
+		$teamSpecifications = $schema->fieldSpecs(DataObjectTest_Team::class);
 		$this->assertEquals(
 			array(
 				'ID',
@@ -889,10 +898,11 @@ class DataObjectTest extends SapphireTest {
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
-			array_keys($teamInstance->db()),
-			'inheritedDatabaseFields() contains all fields defined on instance: base, extended and foreign keys'
+			array_keys($teamSpecifications),
+			'fieldSpecifications() contains all fields defined on instance: base, extended and foreign keys'
 		);
 
+		$teamFields = $schema->databaseFields(DataObjectTest_Team::class, false);
 		$this->assertEquals(
 			array(
 				'ID',
@@ -907,10 +917,11 @@ class DataObjectTest extends SapphireTest {
 				'HasOneRelationshipID',
 				'ExtendedHasOneRelationshipID'
 			),
-			array_keys(DataObject::database_fields('DataObjectTest_Team', false)),
+			array_keys($teamFields),
 			'databaseFields() contains only fields defined on instance, including base, extended and foreign keys'
 		);
 
+		$subteamSpecifications = $schema->fieldSpecs(DataObjectTest_SubTeam::class);
 		$this->assertEquals(
 			array(
 				'ID',
@@ -927,17 +938,18 @@ class DataObjectTest extends SapphireTest {
 				'SubclassDatabaseField',
 				'ParentTeamID',
 			),
-			array_keys($subteamInstance->db()),
-			'inheritedDatabaseFields() on subclass contains all fields, including base, extended  and foreign keys'
+			array_keys($subteamSpecifications),
+			'fieldSpecifications() on subclass contains all fields, including base, extended  and foreign keys'
 		);
 
+		$subteamFields = $schema->databaseFields(DataObjectTest_SubTeam::class, false);
 		$this->assertEquals(
 			array(
 				'ID',
 				'SubclassDatabaseField',
 				'ParentTeamID',
 			),
-			array_keys(DataObject::database_fields('DataObjectTest_SubTeam')),
+			array_keys($subteamFields),
 			'databaseFields() on subclass contains only fields defined on instance'
 		);
 	}
@@ -1101,22 +1113,26 @@ class DataObjectTest extends SapphireTest {
 			DB::query("SELECT \"ID\" FROM \"DataObjectTest_Team\" WHERE \"Title\" = 'asdfasdf'")->value());
 	}
 
-	public function TestHasOwnTable() {
+	public function testHasOwnTable() {
+		$schema = DataObject::getSchema();
 		/* Test DataObject::has_own_table() returns true if the object has $has_one or $db values */
-		$this->assertTrue(DataObject::has_own_table("DataObjectTest_Player"));
-		$this->assertTrue(DataObject::has_own_table("DataObjectTest_Team"));
-		$this->assertTrue(DataObject::has_own_table("DataObjectTest_Fixture"));
+		$this->assertTrue($schema->classHasTable(DataObjectTest_Player::class));
+		$this->assertTrue($schema->classHasTable(DataObjectTest_Team::class));
+		$this->assertTrue($schema->classHasTable(DataObjectTest_Fixture::class));
 
 		/* Root DataObject that always have a table, even if they lack both $db and $has_one */
-		$this->assertTrue(DataObject::has_own_table("DataObjectTest_FieldlessTable"));
+		$this->assertTrue($schema->classHasTable(DataObjectTest_FieldlessTable::class));
 
 		/* Subclasses without $db or $has_one don't have a table */
-		$this->assertFalse(DataObject::has_own_table("DataObjectTest_FieldlessSubTable"));
+		$this->assertFalse($schema->classHasTable(DataObjectTest_FieldlessSubTable::class));
 
 		/* Return false if you don't pass it a subclass of DataObject */
-		$this->assertFalse(DataObject::has_own_table("SilverStripe\\ORM\\DataObject"));
-		$this->assertFalse(DataObject::has_own_table("SilverStripe\\View\\ViewableData"));
-		$this->assertFalse(DataObject::has_own_table("ThisIsntADataObject"));
+		$this->assertFalse($schema->classHasTable(DataObject::class));
+		$this->assertFalse($schema->classHasTable(ViewableData::class));
+
+		// Invalid class
+		$this->setExpectedException(ReflectionException::class, 'Class ThisIsntADataObject does not exist');
+		$this->assertFalse($schema->classHasTable("ThisIsntADataObject"));
 	}
 
 	public function testMerge() {
@@ -1186,77 +1202,21 @@ class DataObjectTest extends SapphireTest {
 	}
 
 	public function testValidateModelDefinitionsFailsWithArray() {
-		Config::nest();
-
-		$object = new DataObjectTest_Team;
-		$method = $this->makeAccessible($object, 'validateModelDefinitions');
-
 		Config::inst()->update('DataObjectTest_Team', 'has_one', array('NotValid' => array('NoArraysAllowed')));
-		$this->setExpectedException('LogicException');
-
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
+		$this->setExpectedException(InvalidArgumentException::class);
+		DataObject::getSchema()->hasOneComponent(DataObjectTest_Team::class, 'NotValid');
 	}
 
 	public function testValidateModelDefinitionsFailsWithIntKey() {
-		Config::nest();
-
-		$object = new DataObjectTest_Team;
-		$method = $this->makeAccessible($object, 'validateModelDefinitions');
-
 		Config::inst()->update('DataObjectTest_Team', 'has_many', array(12 => 'DataObjectTest_Player'));
-		$this->setExpectedException('LogicException');
-
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
+		$this->setExpectedException(InvalidArgumentException::class);
+		DataObject::getSchema()->hasManyComponent(DataObjectTest_Team::class, 12);
 	}
 
 	public function testValidateModelDefinitionsFailsWithIntValue() {
-		Config::nest();
-
-		$object = new DataObjectTest_Team;
-		$method = $this->makeAccessible($object, 'validateModelDefinitions');
-
 		Config::inst()->update('DataObjectTest_Team', 'many_many', array('Players' => 12));
-		$this->setExpectedException('LogicException');
-
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest(); // Catch the exception so we can unnest config before failing the test
-			throw $e;
-		}
-	}
-
-	/**
-	 * many_many_extraFields is allowed to have an array value, so shouldn't throw an exception
-	 */
-	public function testValidateModelDefinitionsPassesWithExtraFields() {
-		Config::nest();
-
-		$object = new DataObjectTest_Team;
-		$method = $this->makeAccessible($object, 'validateModelDefinitions');
-
-		Config::inst()->update('DataObjectTest_Team', 'many_many_extraFields',
-			array('Relations' => array('Price' => 'Int')));
-
-		try {
-			$method->invoke($object);
-		} catch(Exception $e) {
-			Config::unnest();
-			$this->fail('Exception should not be thrown');
-			throw $e;
-		}
-
-		Config::unnest();
+		$this->setExpectedException(InvalidArgumentException::class);
+		DataObject::getSchema()->manyManyComponent(DataObjectTest_Team::class, 'Players');
 	}
 
 	public function testNewClassInstance() {
@@ -1292,13 +1252,17 @@ class DataObjectTest extends SapphireTest {
 		$equipmentSuppliers = $team->EquipmentSuppliers();
 
 		// Check that DataObject::many_many() works as expected
-		list($class, $targetClass, $parentField, $childField, $joinTable) = $team->manyManyComponent('Sponsors');
+		list($relationClass, $class, $targetClass, $parentField, $childField, $joinTable)
+			= DataObject::getSchema()->manyManyComponent(DataObjectTest_Team::class, 'Sponsors');
+		$this->assertEquals(ManyManyList::class, $relationClass);
 		$this->assertEquals('DataObjectTest_Team', $class,
 			'DataObject::many_many() didn\'t find the correct base class');
 		$this->assertEquals('DataObjectTest_EquipmentCompany', $targetClass,
 			'DataObject::many_many() didn\'t find the correct target class for the relation');
 		$this->assertEquals('DataObjectTest_EquipmentCompany_SponsoredTeams', $joinTable,
 			'DataObject::many_many() didn\'t find the correct relation table');
+		$this->assertEquals('DataObjectTest_TeamID', $parentField);
+		$this->assertEquals('DataObjectTest_EquipmentCompanyID', $childField);
 
 		// Check that ManyManyList still works
 		$this->assertEquals(2, $sponsors->count(), 'Rows are missing from relation');
@@ -1360,8 +1324,8 @@ class DataObjectTest extends SapphireTest {
 	}
 
 	public function testManyManyExtraFields() {
-		$player = $this->objFromFixture('DataObjectTest_Player', 'player1');
 		$team = $this->objFromFixture('DataObjectTest_Team', 'team1');
+		$schema = DataObject::getSchema();
 
 		// Get all extra fields
 		$teamExtraFields = $team->manyManyExtraFields();
@@ -1378,13 +1342,13 @@ class DataObjectTest extends SapphireTest {
 		), $teamExtraFields);
 
 		// Extra fields are immediately available on the Team class (defined in $many_many_extraFields)
-		$teamExtraFields = $team->manyManyExtraFieldsForComponent('Players');
+		$teamExtraFields = $schema->manyManyExtraFieldsForComponent(DataObjectTest_Team::class, 'Players');
 		$this->assertEquals($teamExtraFields, array(
 			'Position' => 'Varchar(100)'
 		));
 
 		// We'll have to go through the relation to get the extra fields on Player
-		$playerExtraFields = $player->manyManyExtraFieldsForComponent('Teams');
+		$playerExtraFields = $schema->manyManyExtraFieldsForComponent(DataObjectTest_Player::class, 'Teams');
 		$this->assertEquals($playerExtraFields, array(
 			'Position' => 'Varchar(100)'
 		));
@@ -1570,7 +1534,7 @@ class DataObjectTest extends SapphireTest {
 
 		$this->assertEquals (
 			'DataObjectTest_Staff',
-			$company->hasManyComponent('CurrentStaff'),
+			DataObject::getSchema()->hasManyComponent(DataObjectTest_Company::class, 'CurrentStaff'),
 			'has_many strips field name data by default on single relationships.'
 		);
 
@@ -1579,39 +1543,50 @@ class DataObjectTest extends SapphireTest {
 				'CurrentStaff'     => 'DataObjectTest_Staff.CurrentCompany',
 				'PreviousStaff'    => 'DataObjectTest_Staff.PreviousCompany'
 			),
-			$company->hasMany(null, false),
+			$company->hasMany(false),
 			'has_many returns field name data when $classOnly is false.'
 		);
 
 		$this->assertEquals (
 			'DataObjectTest_Staff.CurrentCompany',
-			$company->hasManyComponent('CurrentStaff', false),
+			DataObject::getSchema()->hasManyComponent(DataObjectTest_Company::class, 'CurrentStaff', false),
 			'has_many returns field name data on single records when $classOnly is false.'
 		);
 	}
 
 	public function testGetRemoteJoinField() {
-		$company = new DataObjectTest_Company();
+		$schema = DataObject::getSchema();
 
-		$staffJoinField = $company->getRemoteJoinField('CurrentStaff', 'has_many', $polymorphic);
+		// Company schema
+		$staffJoinField = $schema->getRemoteJoinField(
+			DataObjectTest_Company::class, 'CurrentStaff', 'has_many', $polymorphic
+		);
 		$this->assertEquals('CurrentCompanyID', $staffJoinField);
 		$this->assertFalse($polymorphic, 'DataObjectTest_Company->CurrentStaff is not polymorphic');
-		$previousStaffJoinField = $company->getRemoteJoinField('PreviousStaff', 'has_many', $polymorphic);
+		$previousStaffJoinField = $schema->getRemoteJoinField(
+			DataObjectTest_Company::class, 'PreviousStaff', 'has_many', $polymorphic
+		);
 		$this->assertEquals('PreviousCompanyID', $previousStaffJoinField);
 		$this->assertFalse($polymorphic, 'DataObjectTest_Company->PreviousStaff is not polymorphic');
 
-		$ceo = new DataObjectTest_CEO();
-
-		$this->assertEquals('CEOID', $ceo->getRemoteJoinField('Company', 'belongs_to', $polymorphic));
+		// CEO Schema
+		$this->assertEquals('CEOID', $schema->getRemoteJoinField(
+			DataObjectTest_CEO::class, 'Company', 'belongs_to', $polymorphic
+		));
 		$this->assertFalse($polymorphic, 'DataObjectTest_CEO->Company is not polymorphic');
-		$this->assertEquals('PreviousCEOID', $ceo->getRemoteJoinField('PreviousCompany', 'belongs_to', $polymorphic));
+		$this->assertEquals('PreviousCEOID', $schema->getRemoteJoinField(
+			DataObjectTest_CEO::class, 'PreviousCompany', 'belongs_to', $polymorphic
+		));
 		$this->assertFalse($polymorphic, 'DataObjectTest_CEO->PreviousCompany is not polymorphic');
 
-		$team = new DataObjectTest_Team();
-
-		$this->assertEquals('Favourite', $team->getRemoteJoinField('Fans', 'has_many', $polymorphic));
+		// Team schema
+		$this->assertEquals('Favourite', $schema->getRemoteJoinField(
+			DataObjectTest_Team::class, 'Fans', 'has_many', $polymorphic
+		));
 		$this->assertTrue($polymorphic, 'DataObjectTest_Team->Fans is polymorphic');
-		$this->assertEquals('TeamID', $team->getRemoteJoinField('Comments', 'has_many', $polymorphic));
+		$this->assertEquals('TeamID', $schema->getRemoteJoinField(
+			DataObjectTest_Team::class, 'Comments', 'has_many', $polymorphic
+		));
 		$this->assertFalse($polymorphic, 'DataObjectTest_Team->Comments is not polymorphic');
 	}
 

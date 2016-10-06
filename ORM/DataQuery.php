@@ -46,6 +46,13 @@ class DataQuery {
 	 */
 	protected $collidingFields = array();
 
+	/**
+	 * Allows custom callback to be registered before getFinalisedQuery is called.
+	 *
+	 * @var DataQueryManipulator[]
+	 */
+	protected $dataQueryManipulators = [];
+
 	private $queriedColumns = null;
 
 	/**
@@ -187,9 +194,14 @@ class DataQuery {
 		if($queriedColumns) {
 			$queriedColumns = array_merge($queriedColumns, array('Created', 'LastEdited', 'ClassName'));
 		}
+		$query = clone $this->query;
+
+		// Apply manipulators before finalising query
+		foreach($this->getDataQueryManipulators() as $manipulator) {
+			$manipulator->beforeGetFinalisedQuery($this, $queriedColumns, $query);
+		}
 
 		$schema = DataObject::getSchema();
-		$query = clone $this->query;
 		$baseDataClass = $schema->baseDataClass($this->dataClass());
 		$baseIDColumn = $schema->sqlColumnForField($baseDataClass, 'ID');
 		$ancestorClasses = ClassInfo::ancestry($this->dataClass(), true);
@@ -228,7 +240,7 @@ class DataQuery {
 			$selectColumns = null;
 			if ($queriedColumns) {
 				// Restrict queried columns to that on the selected table
-				$tableFields = DataObject::database_fields($tableClass);
+				$tableFields = $schema->databaseFields($tableClass, false);
 				unset($tableFields['ID']);
 				$selectColumns = array_intersect($queriedColumns, array_keys($tableFields));
 			}
@@ -309,6 +321,11 @@ class DataQuery {
 		$obj->extend('augmentSQL', $query, $this);
 
 		$this->ensureSelectContainsOrderbyColumns($query);
+
+		// Apply post-finalisation manipulations
+		foreach($this->getDataQueryManipulators() as $manipulator) {
+			$manipulator->afterGetFinalisedQuery($this, $queriedColumns, $query);
+		}
 
 		return $query;
 	}
@@ -491,14 +508,15 @@ class DataQuery {
 	 */
 	protected function selectColumnsFromTable(SQLSelect &$query, $tableClass, $columns = null) {
 		// Add SQL for multi-value fields
-		$databaseFields = DataObject::database_fields($tableClass);
-		$compositeFields = DataObject::composite_fields($tableClass, false);
+		$schema = DataObject::getSchema();
+		$databaseFields = $schema->databaseFields($tableClass, false);
+		$compositeFields = $schema->compositeFields($tableClass, false);
 		unset($databaseFields['ID']);
 		foreach($databaseFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && !isset($compositeFields[$k])) {
 				// Update $collidingFields if necessary
 				$expressionForField = $query->expressionForField($k);
-				$quotedField = DataObject::getSchema()->sqlColumnForField($tableClass, $k);
+				$quotedField = $schema->sqlColumnForField($tableClass, $k);
 				if($expressionForField) {
 					if(!isset($this->collidingFields[$k])) {
 						$this->collidingFields[$k] = array($expressionForField);
@@ -511,7 +529,7 @@ class DataQuery {
 		}
 		foreach($compositeFields as $k => $v) {
 			if((is_null($columns) || in_array($k, $columns)) && $v) {
-				$tableName = DataObject::getSchema()->tableName($tableClass);
+				$tableName = $schema->tableName($tableClass);
 				$dbO = Object::create_from_string($v, $k);
 				$dbO->setTable($tableName);
 				$dbO->addToQuery($query);
@@ -710,14 +728,14 @@ class DataQuery {
 
 		$modelClass = $this->dataClass;
 
+		$schema = DataObject::getSchema();
 		foreach($relation as $rel) {
-			$model = singleton($modelClass);
-			if ($component = $model->hasOneComponent($rel)) {
+			if ($component = $schema->hasOneComponent($modelClass, $rel)) {
 				// Join via has_one
 				$this->joinHasOneRelation($modelClass, $rel, $component);
 				$modelClass = $component;
 
-			} elseif ($component = $model->hasManyComponent($rel)) {
+			} elseif ($component = $schema->hasManyComponent($modelClass, $rel)) {
 				// Fail on non-linear relations
 				if($linearOnly) {
 					throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
@@ -726,15 +744,16 @@ class DataQuery {
 				$this->joinHasManyRelation($modelClass, $rel, $component);
 				$modelClass = $component;
 
-			} elseif ($component = $model->manyManyComponent($rel)) {
+			} elseif ($component = $schema->manyManyComponent($modelClass, $rel)) {
 				// Fail on non-linear relations
 				if($linearOnly) {
 					throw new InvalidArgumentException("$rel is not a linear relation on model $modelClass");
 				}
 				// Join via many_many
-				list($parentClass, $componentClass, $parentField, $componentField, $relationTable) = $component;
+				list($relationClass, $parentClass, $componentClass, $parentField, $componentField, $relationTable)
+					= $component;
 				$this->joinManyManyRelationship(
-					$parentClass, $componentClass, $parentField, $componentField, $relationTable
+					$relationClass, $parentClass, $componentClass, $parentField, $componentField, $relationTable
 				);
 				$modelClass = $componentClass;
 
@@ -778,10 +797,8 @@ class DataQuery {
 		$localColumn = $schema->sqlColumnForField($localClass, "{$localField}ID");
 		$this->query->addLeftJoin($foreignBaseTable, "{$foreignIDColumn} = {$localColumn}");
 
-		/**
-		 * add join clause to the component's ancestry classes so that the search filter could search on
-		 * its ancestor fields.
-		 */
+		// Add join clause to the component's ancestry classes so that the search filter could search on
+		// its ancestor fields.
 		$ancestry = ClassInfo::ancestry($foreignClass, true);
 		if(!empty($ancestry)){
 			$ancestry = array_reverse($ancestry);
@@ -817,8 +834,7 @@ class DataQuery {
 
 		// Join table with associated has_one
 		/** @var DataObject $model */
-		$model = singleton($localClass);
-		$foreignKey = $model->getRemoteJoinField($localField, 'has_many', $polymorphic);
+		$foreignKey = $schema->getRemoteJoinField($localClass, $localField, 'has_many', $polymorphic);
 		$localIDColumn = $schema->sqlColumnForField($localClass, 'ID');
 		if($polymorphic) {
 			$foreignKeyIDColumn = $schema->sqlColumnForField($foreignClass, "{$foreignKey}ID");
@@ -833,10 +849,8 @@ class DataQuery {
 			$this->query->addLeftJoin($foreignTable, "{$foreignKeyIDColumn} = {$localIDColumn}");
 		}
 
-		/**
-		 * add join clause to the component's ancestry classes so that the search filter could search on
-		 * its ancestor fields.
-		 */
+		// Add join clause to the component's ancestry classes so that the search filter could search on
+		// its ancestor fields.
 		$ancestry = ClassInfo::ancestry($foreignClass, true);
 		$ancestry = array_reverse($ancestry);
 		foreach($ancestry as $ancestor) {
@@ -850,20 +864,27 @@ class DataQuery {
 	/**
 	 * Join table via many_many relationship
 	 *
+	 * @param string $relationClass
 	 * @param string $parentClass
 	 * @param string $componentClass
 	 * @param string $parentField
 	 * @param string $componentField
-	 * @param string $relationTable Name of relation table
+	 * @param string $relationClassOrTable Name of relation table
 	 */
-	protected function joinManyManyRelationship($parentClass, $componentClass, $parentField, $componentField, $relationTable) {
+	protected function joinManyManyRelationship(
+		$relationClass, $parentClass, $componentClass, $parentField, $componentField, $relationClassOrTable
+	) {
 		$schema = DataObject::getSchema();
+
+		if (class_exists($relationClassOrTable)) {
+			$relationClassOrTable = $schema->tableName($relationClassOrTable);
+		}
 
 		// Join on parent table
 		$parentIDColumn = $schema->sqlColumnForField($parentClass, 'ID');
 		$this->query->addLeftJoin(
-			$relationTable,
-			"\"$relationTable\".\"$parentField\" = {$parentIDColumn}"
+			$relationClassOrTable,
+			"\"$relationClassOrTable\".\"$parentField\" = {$parentIDColumn}"
 		);
 
 		// Join on base table of component class
@@ -873,14 +894,12 @@ class DataQuery {
 		if (!$this->query->isJoinedTo($componentBaseTable)) {
 			$this->query->addLeftJoin(
 				$componentBaseTable,
-				"\"$relationTable\".\"$componentField\" = {$componentIDColumn}"
+				"\"$relationClassOrTable\".\"$componentField\" = {$componentIDColumn}"
 			);
 		}
 
-		/**
-		 * add join clause to the component's ancestry classes so that the search filter could search on
-		 * its ancestor fields.
-		 */
+		// Add join clause to the component's ancestry classes so that the search filter could search on
+		// its ancestor fields.
 		$ancestry = ClassInfo::ancestry($componentClass, true);
 		$ancestry = array_reverse($ancestry);
 		foreach($ancestry as $ancestor) {
@@ -1016,5 +1035,27 @@ class DataQuery {
 	 */
 	public function getQueryParams() {
 		return $this->queryParams;
+	}
+
+	/**
+	 * Get query manipulators
+	 *
+	 * @return DataQueryManipulator[]
+	 */
+	public function getDataQueryManipulators()
+	{
+		return $this->dataQueryManipulators;
+	}
+
+	/**
+	 * Assign callback to be invoked in getFinalisedQuery()
+	 *
+	 * @param DataQueryManipulator $manipulator
+	 * @return $this
+	 */
+	public function pushQueryManipulator(DataQueryManipulator $manipulator)
+	{
+		$this->dataQueryManipulators[] = $manipulator;
+		return $this;
 	}
 }

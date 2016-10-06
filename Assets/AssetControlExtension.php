@@ -212,10 +212,11 @@ class AssetControlExtension extends DataExtension
 	{
 		// Search for dbfile instances
 		$files = array();
-		foreach ($record->db() as $field => $db) {
+		$fields = DataObject::getSchema()->fieldSpecs($record);
+		foreach ($fields as $field => $db) {
 			$fieldObj = $record->$field;
-			if(!is_object($fieldObj) || !($record->$field instanceof DBFile)) {
-							continue;
+			if (!($fieldObj instanceof DBFile)) {
+				continue;
 			}
 
 			// Omit variant and merge with set

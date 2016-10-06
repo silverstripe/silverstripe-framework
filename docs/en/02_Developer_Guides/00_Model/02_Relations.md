@@ -213,32 +213,18 @@ This is not mandatory unless the relationship would be otherwise ambiguous.
 
 ## many_many
 
-Defines many-to-many joins. A new table, (this-class)_(relationship-name), will be created with a pair of ID fields.
+Defines many-to-many joins, which uses a third table created between the two to join pairs.
+There are two ways in which this can be declared, which are described below, depending on
+how the developer wishes to manage this join table.
 
 <div class="warning" markdown='1'>
-Please specify a $belongs_many_many-relationship on the related class as well, in order to have the necessary accessors 
-available on both ends.
+Please specify a $belongs_many_many-relationship on the related class as well, in order
+to have the necessary accessors available on both ends.
 </div>
 
-	:::php
-	<?php
-
-	class Team extends DataObject {
-
-	  private static $many_many = array(
-	    "Supporters" => "Supporter",
-	  );
-	}
-
-	class Supporter extends DataObject {
-
-	  private static $belongs_many_many = array(
-	    "Supports" => "Team",
-	  );
-	}
-
-Much like the `has_one` relationship, `many_many` can be navigated through the `ORM` as well. The only difference being
-you will get an instance of [api:ManyManyList] rather than the object.
+Much like the `has_one` relationship, `many_many` can be navigated through the `ORM` as well.
+The only difference being you will get an instance of [api:SilverStripe\ORM\ManyManyList] or
+[api:SilverStripe\ORM\ManyManyThroughList] rather than the object.
 
 	:::php
 	$team = Team::get()->byId(1);
@@ -247,16 +233,127 @@ you will get an instance of [api:ManyManyList] rather than the object.
 	// returns a 'ManyManyList' instance.
 
 
+### Automatic many_many table
+
+If you specify only a single class as the other side of the many-many relationship, then a
+table will be automatically created between the two (this-class)_(relationship-name), will
+be created with a pair of ID fields.
+
+Extra fields on the mapping table can be created by declaring a `many_many_extraFields`
+config to add extra columns.
+
+
+	:::php
+	<?php
+
+	class Team extends DataObject {
+	  private static $many_many = [
+	    "Supporters" => "Supporter",
+	  ];
+	  private static $many_many_extraFields = [
+	    'Supporters' => [
+	      'Ranking' => 'Int' 
+	    ]
+	  ];
+	}
+
+	class Supporter extends DataObject {
+
+	  private static $belongs_many_many = [
+	    "Supports" => "Team",
+	  ];
+	}
+
+
+### many_many through relationship joined on a separate DataObject
+
+If necessary, a third DataObject class can instead be specified as the joining table,
+rather than having the ORM generate an automatically scaffolded table. This has the following
+advantages:
+
+ - Allows versioning of the mapping table, including support for the
+   [ownership api](/developer_guides/model/versioning).
+ - Allows support of other extensions on the mapping table (e.g. subsites).
+ - Extra fields can be managed separately to the joined dataobject, even via a separate
+   GridField or form.
+
+This is declared via array syntax, with the following keys on the many_many:
+ - `through` Class name of the mapping table
+ - `from` Name of the has_one relationship pointing back at the object declaring many_many
+ - `to` Name of the has_one relationship pointing to the object declaring belongs_many_many.
+ 
+Note: The `through` class must not also be the name of any field or relation on the parent
+or child record.
+
+The syntax for `belongs_many_many` is unchanged.
+
+	:::php
+	<?php
+
+	class Team extends DataObject {
+	  private static $many_many = [
+	    "Supporters" => [
+	      'through' => 'TeamSupporter',
+	      'from' => 'Team',
+	      'to' => 'Supporter',
+	    ]
+	  ];
+	}
+
+	class Supporter extends DataObject {
+	  private static $belongs_many_many = [
+	    "Supports" => "Team",
+	  ];
+	}
+	
+	class TeamSupporter extends DataObject {
+	  private static $db = [
+	    'Ranking' => 'Int',
+	  ];
+	  
+	  private static $has_one = [
+	    'Team' => 'Team',
+	    'Supporter' => 'Supporter'
+	  ];
+	}
+
+In order to filter on the join table during queries, you can use the class name of the joining table
+for any sql conditions.
+
+
+	:::php
+	$team = Team::get()->byId(1);
+	$supporters = $team->Supporters()->where(['"TeamSupporter"."Ranking"' => 1]);
+
+
+Note: ->filter() currently does not support joined fields natively due to the fact that the
+query for the join table is isolated from the outer query controlled by DataList.
+
+
+### Using many_many in templates
+
 The relationship can also be navigated in [templates](../templates).
+The joined record can be accessed via `Join` or `TeamSupporter` property (many_many through only)
 	
 	:::ss
 	<% with $Supporter %>
 		<% loop $Supports %>
-			Supports $Title
+			Supports $Title <% if $TeamSupporter %>(rank $TeamSupporter.Ranking)<% end_if %>
 		<% end_if %>
 	<% end_with %>
 
-To specify multiple $many_manys between the same classes, use the dot notation to distinguish them like below:
+
+You can also use `$Join` in place of the join class alias (`$TeamSupporter`), if your template
+is class-agnostic and doesn't know the type of the join table. 
+
+## belongs_many_many
+
+The belongs_many_many represents the other side of the relationship on the target data class.
+When using either a basic many_many or a many_many through, the syntax for belongs_many_many is the same.
+
+To specify multiple $many_manys between the same classes, specify use the dot notation to
+distinguish them like below:
+
 
 	:::php
 	<?php
@@ -277,10 +374,12 @@ To specify multiple $many_manys between the same classes, use the dot notation t
 		);
 	}
 
-## many_many or belongs_many_many?
 
-If you're unsure about whether an object should take on `many_many` or `belongs_many_many`, the best way to think about it is that the object where the relationship will be edited (i.e. via checkboxes) should contain the `many_many`. For instance, in a `many_many` of Product => Categories, the `Product` should contain the `many_many`, because it is much more likely that the user will select Categories for a Product than vice-versa.
-
+If you're unsure about whether an object should take on `many_many` or `belongs_many_many`,
+the best way to think about it is that the object where the relationship will be edited
+(i.e. via checkboxes) should contain the `many_many`. For instance, in a `many_many` of
+Product => Categories, the `Product` should contain the `many_many`, because it is much
+more likely that the user will select Categories for a Product than vice-versa.
 
 ## Adding relations
 

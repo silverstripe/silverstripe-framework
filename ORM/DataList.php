@@ -736,8 +736,12 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
 	 * @param array $row
 	 * @return DataObject
 	 */
-	protected function createDataObject($row) {
+	public function createDataObject($row) {
 		$class = $this->dataClass;
+
+		if (empty($row['ClassName'])) {
+			$row['ClassName'] = $class;
+		}
 
 		// Failover from RecordClassName to ClassName
 		if(empty($row['RecordClassName'])) {

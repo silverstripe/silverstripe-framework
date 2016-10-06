@@ -12,6 +12,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
@@ -1009,18 +1010,18 @@ class Security extends Controller implements TemplateGlobalProvider {
 			return self::$database_is_ready;
 		}
 
-		$requiredClasses = ClassInfo::dataClassesFor('SilverStripe\\Security\\Member');
-		$requiredClasses[] = 'SilverStripe\\Security\\Group';
-		$requiredClasses[] = 'SilverStripe\\Security\\Permission';
-
+		$requiredClasses = ClassInfo::dataClassesFor(Member::class);
+		$requiredClasses[] = Group::class;
+		$requiredClasses[] = Permission::class;
+		$schema = DataObject::getSchema();
 		foreach($requiredClasses as $class) {
 			// Skip test classes, as not all test classes are scaffolded at once
-			if(is_subclass_of($class, 'SilverStripe\\Dev\\TestOnly')) {
+			if(is_a($class, TestOnly::class, true)) {
 				continue;
 			}
 
 			// if any of the tables aren't created in the database
-			$table = DataObject::getSchema()->tableName($class);
+			$table = $schema->tableName($class);
 			if(!ClassInfo::hasTable($table)) {
 				return false;
 			}
@@ -1035,7 +1036,7 @@ class Security extends Controller implements TemplateGlobalProvider {
 				return false;
 			}
 
-			$objFields = DataObject::database_fields($class);
+			$objFields = $schema->databaseFields($class, false);
 			$missingFields = array_diff_key($objFields, $dbFields);
 
 			if($missingFields) {

@@ -26,11 +26,14 @@ use SilverStripe\Forms\GridField\GridField_ActionProvider;
 use SilverStripe\Forms\GridField\GridField_DataManipulator;
 use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 
-
-
-
-
 class GridFieldTest extends SapphireTest {
+
+	protected $extraDataObjects = [
+		GridFieldTest_Permissions::class,
+		GridFieldTest_Cheerleader::class,
+		GridFieldTest_Player::class,
+		GridFieldTest_Team::class,
+	];
 
 	/**
 	 * @covers SilverStripe\Forms\GridField\GridField::__construct

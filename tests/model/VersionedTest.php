@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
@@ -405,32 +406,28 @@ class VersionedTest extends SapphireTest {
 	 * Tests DataObject::hasOwnTableDatabaseField
 	 */
 	public function testHasOwnTableDatabaseFieldWithVersioned() {
-		$noversion    = new DataObject();
-		$versioned    = new VersionedTest_DataObject();
-		$versionedSub = new VersionedTest_Subclass();
-		$versionedAno = new VersionedTest_AnotherSubclass();
-		$versionField = new VersionedTest_UnversionedWithField();
+		$schema = DataObject::getSchema();
 
-		$this->assertFalse(
-			(bool) $noversion->hasOwnTableDatabaseField('Version'),
+		$this->assertNull(
+			$schema->fieldSpec(DataObject::class, 'Version', ['uninherited']),
 			'Plain models have no version field.'
 		);
 		$this->assertEquals(
-			'Int', $versioned->hasOwnTableDatabaseField('Version'),
+			'Int',
+			$schema->fieldSpec(VersionedTest_DataObject::class, 'Version', ['uninherited']),
 			'The versioned ext adds an Int version field.'
 		);
-		$this->assertEquals(
-			null,
-			$versionedSub->hasOwnTableDatabaseField('Version'),
+		$this->assertNull(
+			$schema->fieldSpec(VersionedTest_Subclass::class, 'Version', ['uninherited']),
+			'Sub-classes of a versioned model don\'t have a Version field.'
+		);
+		$this->assertNull(
+			$schema->fieldSpec(VersionedTest_AnotherSubclass::class, 'Version', ['uninherited']),
 			'Sub-classes of a versioned model don\'t have a Version field.'
 		);
 		$this->assertEquals(
-			null,
-			$versionedAno->hasOwnTableDatabaseField('Version'),
-			'Sub-classes of a versioned model don\'t have a Version field.'
-		);
-		$this->assertEquals(
-			'Varchar', $versionField->hasOwnTableDatabaseField('Version'),
+			'Varchar(255)',
+			$schema->fieldSpec(VersionedTest_UnversionedWithField::class, 'Version', ['uninherited']),
 			'Models w/o Versioned can have their own Version field.'
 		);
 	}

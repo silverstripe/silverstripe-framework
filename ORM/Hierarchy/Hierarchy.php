@@ -736,7 +736,7 @@ class Hierarchy extends DataExtension {
 		if ($hide_from_cms_tree && $this->showingCMSTree()) {
 			$staged = $staged->exclude('ClassName', $hide_from_cms_tree);
 		}
-		if (!$showAll && $this->owner->db('ShowInMenus')) {
+		if (!$showAll && DataObject::getSchema()->fieldSpec($this->owner, 'ShowInMenus')) {
 			$staged = $staged->filter('ShowInMenus', 1);
 		}
 		$this->owner->extend("augmentStageChildren", $staged, $showAll);
@@ -753,7 +753,7 @@ class Hierarchy extends DataExtension {
 	 * @throws Exception
 	 */
 	public function liveChildren($showAll = false, $onlyDeletedFromStage = false) {
-		if(!$this->owner->hasExtension('SilverStripe\ORM\Versioning\Versioned')) {
+		if(!$this->owner->hasExtension(Versioned::class)) {
 			throw new Exception('Hierarchy->liveChildren() only works with Versioned extension applied');
 		}
 
@@ -773,7 +773,9 @@ class Hierarchy extends DataExtension {
 		if ($hide_from_cms_tree && $this->showingCMSTree()) {
 			$children = $children->exclude('ClassName', $hide_from_cms_tree);
 		}
-		if(!$showAll && $this->owner->db('ShowInMenus')) $children = $children->filter('ShowInMenus', 1);
+		if(!$showAll && DataObject::getSchema()->fieldSpec($this->owner, 'ShowInMenus')) {
+			$children = $children->filter('ShowInMenus', 1);
+		}
 
 		return $children;
 	}

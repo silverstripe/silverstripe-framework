@@ -336,42 +336,46 @@ class DatabaseAdmin extends Controller {
 	 * corresponding records in their parent class tables.
 	 */
 	public function cleanup() {
-		$allClasses = get_declared_classes();
 		$baseClasses = [];
-		foreach($allClasses as $class) {
-			if(get_parent_class($class) == 'SilverStripe\ORM\DataObject') {
+		foreach(ClassInfo::subclassesFor(DataObject::class) as $class) {
+			if(get_parent_class($class) == DataObject::class) {
 				$baseClasses[] = $class;
 			}
 		}
 
+		$schema = DataObject::getSchema();
 		foreach($baseClasses as $baseClass) {
 			// Get data classes
+			$baseTable = $schema->baseDataTable($baseClass);
 			$subclasses = ClassInfo::subclassesFor($baseClass);
 			unset($subclasses[0]);
 			foreach($subclasses as $k => $subclass) {
-				if(DataObject::has_own_table($subclass)) {
+				if(!DataObject::getSchema()->classHasTable($subclass)) {
 					unset($subclasses[$k]);
 				}
 			}
 
 			if($subclasses) {
-				$records = DB::query("SELECT * FROM \"$baseClass\"");
+				$records = DB::query("SELECT * FROM \"$baseTable\"");
 
 
 				foreach($subclasses as $subclass) {
+					$subclassTable = $schema->tableName($subclass);
 					$recordExists[$subclass] =
-						DB::query("SELECT \"ID\" FROM \"$subclass\"")->keyedColumn();
+						DB::query("SELECT \"ID\" FROM \"$subclassTable\"")->keyedColumn();
 				}
 
 				foreach($records as $record) {
 					foreach($subclasses as $subclass) {
+						$subclassTable = $schema->tableName($subclass);
 						$id = $record['ID'];
-						if(($record['ClassName'] != $subclass) &&
-							(!is_subclass_of($record['ClassName'], $subclass)) &&
-								(isset($recordExists[$subclass][$id]))) {
-							$sql = "DELETE FROM \"$subclass\" WHERE \"ID\" = $record[ID]";
-							echo "<li>$sql";
-							DB::query($sql);
+						if (($record['ClassName'] != $subclass)
+							&& (!is_subclass_of($record['ClassName'], $subclass))
+							&& isset($recordExists[$subclass][$id])
+						) {
+							$sql = "DELETE FROM \"$subclassTable\" WHERE \"ID\" = ?";
+							echo "<li>$sql [{$id}]</li>";
+							DB::prepared_query($sql, [$id]);
 						}
 					}
 				}

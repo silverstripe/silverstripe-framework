@@ -123,8 +123,8 @@ class FileField extends FormField {
 		/** @var File $file */
 		if($this->relationAutoSetting) {
 			// assume that the file is connected via a has-one
-			$objectClass = $record->hasOneComponent($this->name);
-			if($objectClass === 'SilverStripe\\Assets\\File' || empty($objectClass)) {
+			$objectClass = DataObject::getSchema()->hasOneComponent(get_class($record), $this->name);
+			if($objectClass === File::class || empty($objectClass)) {
 				// Create object of the appropriate file class
 				$file = Object::create($fileClass);
 			} else {

@@ -112,7 +112,7 @@ class ClassInfo {
 		);
 
 		foreach ($classes as $class) {
-			if (DataObject::has_own_table($class)) {
+			if (DataObject::getSchema()->classHasTable($class)) {
 				$result[$class] = $class;
 			}
 		}
@@ -201,7 +201,7 @@ class ClassInfo {
 		if(!isset(self::$_cache_ancestry[$cacheKey])) {
 			$ancestry = array();
 			do {
-				if (!$tablesOnly || DataObject::has_own_table($parent)) {
+				if (!$tablesOnly || DataObject::getSchema()->classHasTable($parent)) {
 					$ancestry[$parent] = $parent;
 				}
 			} while ($parent = get_parent_class($parent));

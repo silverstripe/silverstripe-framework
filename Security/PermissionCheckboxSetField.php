@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Forms\FormField;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObjectInterface;
@@ -281,7 +282,11 @@ class PermissionCheckboxSetField extends FormField {
 			$permission->delete();
 		}
 
-		if($fieldname && $record && ($record->hasManyComponent($fieldname) || $record->manyManyComponent($fieldname))) {
+		$schema = DataObject::getSchema();
+		if($fieldname && $record && (
+			$schema->hasManyComponent(get_class($record), $fieldname)
+			|| $schema->manyManyComponent(get_class($record), $fieldname)
+		)) {
 
 			if(!$record->ID) $record->write(); // We need a record ID to write permissions
 

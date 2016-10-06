@@ -146,12 +146,7 @@ class SQLSelect extends SQLConditionalExpression {
 			$fields = array($fields);
 		}
 		foreach($fields as $idx => $field) {
-			if(preg_match('/^(.*) +AS +"([^"]*)"/i', $field, $matches)) {
-				Deprecation::notice("3.0", "Use selectField() to specify column aliases");
-				$this->selectField($matches[1], $matches[2]);
-			} else {
-				$this->selectField($field, is_numeric($idx) ? null : $idx);
-			}
+			$this->selectField($field, is_numeric($idx) ? null : $idx);
 		}
 
 		return $this;
@@ -167,8 +162,11 @@ class SQLSelect extends SQLConditionalExpression {
 	 */
 	public function selectField($field, $alias = null) {
 		if(!$alias) {
-			if(preg_match('/"([^"]+)"$/', $field, $matches)) $alias = $matches[1];
-			else $alias = $field;
+			if(preg_match('/"([^"]+)"$/', $field, $matches)) {
+				$alias = $matches[1];
+			} else {
+				$alias = $field;
+			}
 		}
 		$this->select[$alias] = $field;
 		return $this;

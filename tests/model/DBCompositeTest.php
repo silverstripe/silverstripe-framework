@@ -48,28 +48,29 @@ class DBCompositeTest extends SapphireTest {
 	 * Test DataObject::composite_fields() and DataObject::is_composite_field()
 	 */
 	public function testCompositeFieldMetaDataFunctions() {
-		$this->assertEquals('Money', DataObject::is_composite_field('DBCompositeTest_DataObject', 'MyMoney'));
-		$this->assertFalse(DataObject::is_composite_field('DBCompositeTest_DataObject', 'Title'));
+		$schema = DataObject::getSchema();
+		$this->assertEquals('Money', $schema->compositeField(DBCompositeTest_DataObject::class, 'MyMoney'));
+		$this->assertNull($schema->compositeField(DBCompositeTest_DataObject::class, 'Title'));
 		$this->assertEquals(
 			array(
 				'MyMoney' => 'Money',
 				'OverriddenMoney' => 'Money'
 			),
-			DataObject::composite_fields('DBCompositeTest_DataObject')
+			$schema->compositeFields(DBCompositeTest_DataObject::class)
 		);
 
 
-		$this->assertEquals('Money', DataObject::is_composite_field('SubclassedDBFieldObject', 'MyMoney'));
-		$this->assertEquals('Money', DataObject::is_composite_field('SubclassedDBFieldObject', 'OtherMoney'));
-		$this->assertFalse(DataObject::is_composite_field('SubclassedDBFieldObject', 'Title'));
-		$this->assertFalse(DataObject::is_composite_field('SubclassedDBFieldObject', 'OtherField'));
+		$this->assertEquals('Money', $schema->compositeField(SubclassedDBFieldObject::class, 'MyMoney'));
+		$this->assertEquals('Money', $schema->compositeField(SubclassedDBFieldObject::class, 'OtherMoney'));
+		$this->assertNull($schema->compositeField(SubclassedDBFieldObject::class, 'Title'));
+		$this->assertNull($schema->compositeField(SubclassedDBFieldObject::class, 'OtherField'));
 		$this->assertEquals(
 			array(
 				'MyMoney' => 'Money',
 				'OtherMoney' => 'Money',
 				'OverriddenMoney' => 'Money',
 			),
-			DataObject::composite_fields('SubclassedDBFieldObject')
+			$schema->compositeFields(SubclassedDBFieldObject::class)
 		);
 	}
 

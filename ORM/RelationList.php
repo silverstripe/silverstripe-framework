@@ -12,7 +12,9 @@ use Exception;
 abstract class RelationList extends DataList implements Relation {
 
 	/**
-	 * @return string|null
+	 * Any number of foreign keys to apply to this list
+	 *
+	 * @return string|array|null
 	 */
 	public function getForeignID() {
 		return $this->dataQuery->getQueryParam('Foreign.ID');
@@ -47,10 +49,8 @@ abstract class RelationList extends DataList implements Relation {
 		// Calculate the new filter
 		$filter = $this->foreignIDFilter($id);
 
-		$list = $this->alterDataQuery(function($query) use ($id, $filter){
-			/** @var DataQuery $query */
+		$list = $this->alterDataQuery(function(DataQuery $query) use ($id, $filter){
 			// Check if there is an existing filter, remove if there is
-			/** @var DataQuery $query */
 			$currentFilter = $query->getQueryParam('Foreign.Filter');
 			if($currentFilter) {
 				try {
