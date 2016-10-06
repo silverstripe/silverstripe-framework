@@ -153,7 +153,7 @@ class ManyManyThroughQueryManipulator implements DataQueryManipulator
 	 * @return string
 	 */
 	public function getJoinAlias() {
-		return $this->getJoinClass();
+		return DataObject::getSchema()->tableName($this->getJoinClass());
 	}
 
 	/**

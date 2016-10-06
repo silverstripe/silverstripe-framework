@@ -575,8 +575,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	public function augmentDatabase() {
 		$owner = $this->owner;
 		$class = get_class($owner);
+		$schema = $owner->getSchema();
 		$baseTable = $this->baseTable();
-		$classTable = $owner->getSchema()->tableName($owner);
+		$classTable = $schema->tableName($owner);
 
 		$isRootClass = $class === $owner->baseClass();
 
@@ -606,10 +607,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				$suffixTable = $classTable;
 			}
 
-			$fields = DataObject::database_fields($owner->class);
+			$fields = $schema->databaseFields($class, false);
 			unset($fields['ID']);
 			if($fields) {
-				$options = Config::inst()->get($owner->class, 'create_table_options', Config::FIRST_SET);
+				$options = Config::inst()->get($class, 'create_table_options', Config::FIRST_SET);
 				$indexes = $owner->databaseIndexes();
 				$extensionClass = $allSuffixes[$suffix];
 				if ($suffix && ($extension = $owner->getExtensionInstance($extensionClass))) {
@@ -760,8 +761,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param int $recordID ID of record to version
 	 */
 	protected function augmentWriteVersioned(&$manipulation, $class, $table, $recordID) {
-		$baseDataClass = DataObject::getSchema()->baseDataClass($class);
-		$baseDataTable = DataObject::getSchema()->tableName($baseDataClass);
+		$schema = DataObject::getSchema();
+		$baseDataClass = $schema->baseDataClass($class);
+		$baseDataTable = $schema->tableName($baseDataClass);
 
 		// Set up a new entry in (table)_versions
 		$newManipulation = array(
@@ -774,8 +776,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$data = DB::prepared_query("SELECT * FROM \"{$table}\" WHERE \"ID\" = ?", array($recordID))->record();
 
 		if ($data) {
-			$fields = DataObject::database_fields($class);
-
+			$fields = $schema->databaseFields($class, false);
 			if (is_array($fields)) {
 				$data = array_intersect_key($data, $fields);
 
@@ -1383,8 +1384,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 */
 	public function canBeVersioned($class) {
 		return ClassInfo::exists($class)
-			&& is_subclass_of($class, 'SilverStripe\ORM\DataObject')
-			&& DataObject::has_own_table($class);
+			&& is_subclass_of($class, DataObject::class)
+			&& DataObject::getSchema()->classHasTable($class);
 	}
 
 	/**
@@ -1514,11 +1515,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			return;
 		}
 
+		$schema = DataObject::getSchema();
 		$ownedHasMany = array_intersect($owns, array_keys($hasMany));
 		foreach($ownedHasMany as $relationship) {
 			// Find metadata on relationship
-			$joinClass = $owner->hasManyComponent($relationship);
-			$joinField = $owner->getRemoteJoinField($relationship, 'has_many', $polymorphic);
+			$joinClass = $schema->hasManyComponent(get_class($owner), $relationship);
+			$joinField = $schema->getRemoteJoinField(get_class($owner), $relationship, 'has_many', $polymorphic);
 			$idField = $polymorphic ? "{$joinField}ID" : $joinField;
 			$joinTable = DataObject::getSchema()->tableForField($joinClass, $idField);
 

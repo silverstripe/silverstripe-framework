@@ -139,11 +139,12 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 	 * by the order of classnames of existing records
 	 */
 	public function testClassNameSpecGeneration() {
+		$schema = DataObject::getSchema();
 
 		// Test with blank entries
 		DBClassName::clear_classname_cache();
 		$do1 = new DataObjectSchemaGenerationTest_DO();
-		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
+		$fields = $schema->databaseFields(DataObjectSchemaGenerationTest_DO::class, false);
 		/** @skipUpgrade */
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
@@ -159,9 +160,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item1 = new DataObjectSchemaGenerationTest_IndexDO();
 		$item1->write();
 		DBClassName::clear_classname_cache();
-		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
-		/** @skipUpgrade */
-		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
 			array(
 				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
@@ -175,9 +173,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item2 = new DataObjectSchemaGenerationTest_DO();
 		$item2->write();
 		DBClassName::clear_classname_cache();
-		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
-		/** @skipUpgrade */
-		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
 			array(
 				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
@@ -193,9 +188,6 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		$item2 = new DataObjectSchemaGenerationTest_DO();
 		$item2->write();
 		DBClassName::clear_classname_cache();
-		$fields = DataObject::database_fields('DataObjectSchemaGenerationTest_DO');
-		/** @skipUpgrade */
-		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
 			array(
 				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',

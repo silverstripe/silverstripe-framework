@@ -140,17 +140,37 @@ class DataObjectSchema {
 	/**
 	 * Get all DB field specifications for a class, including ancestors and composite fields.
 	 *
-	 * @param string $class
+	 * @param string|DataObject $classOrInstance
+	 * @param array $options Array of options. Specify any number of the below:
+	 *  - `uninherited`: Set to true to limit to only this table
+	 *  - `dbOnly`: Exclude virtual fields (such as composite fields), and only include fields with a db column.
+	 *  - `includeClass`: If true prefix the field specification with the class name in RecordClass.Column(spec) format.
 	 * @return array
 	 */
-	public function fieldSpecifications($class) {
-		$classes = ClassInfo::ancestry($class, true);
+	public function fieldSpecs($classOrInstance, $options = []) {
+		$class = ClassInfo::class_name($classOrInstance);
+		$uninherited = !empty($options['uninherited']) || in_array('uninherited', $options);
+		$dbOnly = !empty($options['dbOnly']) || in_array('dbOnly', $options);
+		$includeClass = !empty($options['includeClass']) || in_array('includeClass', $options);
+
+		// Walk class hierarchy
 		$db = [];
+		$classes = $uninherited ? [$class] : ClassInfo::ancestry($class);
 		foreach($classes as $tableClass) {
-			// Merge fields with new fields and composite fields
-			$fields = $this->databaseFields($tableClass);
-			$compositeFields = $this->compositeFields($tableClass, false);
-			$db = array_merge($db, $fields, $compositeFields);
+			// Find all fields on this class
+			$fields = $this->databaseFields($tableClass, false);
+
+			// Merge with composite fields
+			if (!$dbOnly) {
+				$compositeFields = $this->compositeFields($tableClass, false);
+				$fields = array_merge($fields, $compositeFields);
+			}
+
+			// Record specification
+			foreach ($fields as $name => $specification) {
+				$prefix = $includeClass ? "{$tableClass}." : "";
+				$db[$name] =  $prefix . $specification;
+			}
 		}
 		return $db;
 	}
@@ -159,30 +179,18 @@ class DataObjectSchema {
 	/**
 	 * Get specifications for a single class field
 	 *
-	 * @param string $class
+	 * @param string|DataObject $classOrInstance Name or instance of class
 	 * @param string $fieldName
-	 * @param bool $includeClass If returning a single column, prefix the column with the class name
-	 * in RecordClass.Column(spec) format
+	 * @param array $options Array of options. Specify any number of the below:
+	 *  - `uninherited`: Set to true to limit to only this table
+	 *  - `dbOnly`: Exclude virtual fields (such as composite fields), and only include fields with a db column.
+	 *  - `includeClass`: If true prefix the field specification with the class name in RecordClass.Column(spec) format.
 	 * @return string|null Field will be a string in FieldClass(args) format, or
 	 * RecordClass.FieldClass(args) format if $includeClass is true. Will be null if no field is found.
 	 */
-	public function fieldSpecification($class, $fieldName, $includeClass = false) {
-		$classes = array_reverse(ClassInfo::ancestry($class, true));
-		foreach($classes as $tableClass) {
-			// Merge fields with new fields and composite fields
-			$fields = $this->databaseFields($tableClass);
-			$compositeFields = $this->compositeFields($tableClass, false);
-			$db = array_merge($fields, $compositeFields);
-
-			// Check for search field
-			if(isset($db[$fieldName])) {
-				$prefix = $includeClass ? "{$tableClass}." : "";
-				return $prefix . $db[$fieldName];
-			}
-		}
-
-		// At end of search complete
-		return null;
+	public function fieldSpec($classOrInstance, $fieldName, $options = []) {
+		$specs = $this->fieldSpecs($classOrInstance, $options);
+		return isset($specs[$fieldName]) ? $specs[$fieldName] : null;
 	}
 
 	/**
@@ -249,7 +257,7 @@ class DataObjectSchema {
 
 		// Generate default table name
 		if(!$table) {
-			$separator = $this->config()->table_namespace_separator;
+			$separator = $this->config()->get('table_namespace_separator');
 			$table = str_replace('\\', $separator, trim($class, '\\'));
 		}
 
@@ -261,15 +269,48 @@ class DataObjectSchema {
 	 * "ID" will be included on every table.
 	 *
 	 * @param string $class Class name to query from
+	 * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
 	 * @return array Map of fieldname to specification, similiar to {@link DataObject::$db}.
 	 */
-	public function databaseFields($class) {
+	public function databaseFields($class, $aggregated = true) {
 		$class = ClassInfo::class_name($class);
 		if($class === DataObject::class) {
 			return [];
 		}
 		$this->cacheDatabaseFields($class);
-		return $this->databaseFields[$class];
+		$fields = $this->databaseFields[$class];
+
+		if (!$aggregated) {
+			return $fields;
+		}
+
+		// Recursively merge
+		$parentFields = $this->databaseFields(get_parent_class($class));
+		return array_merge($fields, array_diff_key($parentFields, $fields));
+	}
+
+	/**
+	 * Gets a single database field.
+	 *
+	 * @param string $class Class name to query from
+	 * @param string $field Field name
+	 * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
+	 * @return string|null Field specification, or null if not a field
+	 */
+	public function databaseField($class, $field, $aggregated = true) {
+		$fields = $this->databaseFields($class, $aggregated);
+		return isset($fields[$field]) ? $fields[$field] : null;
+	}
+
+	/**
+	 * Check if the given class has a table
+	 *
+	 * @param string $class
+	 * @return bool
+	 */
+	public function classHasTable($class) {
+		$fields = $this->databaseFields($class, false);
+		return !empty($fields);
 	}
 
 	/**
@@ -300,7 +341,20 @@ class DataObjectSchema {
 
 		// Recursively merge
 		$parentFields = $this->compositeFields(get_parent_class($class));
-		return array_merge($compositeFields, $parentFields);
+		return array_merge($compositeFields, array_diff_key($parentFields, $compositeFields));
+	}
+
+	/**
+	 * Get a composite field for a class
+	 *
+	 * @param string $class Class name to query from
+	 * @param string $field Field name
+	 * @param bool $aggregated Include fields in entire hierarchy, rather than just on this table
+	 * @return string|null Field specification, or null if not a field
+	 */
+	public function compositeField($class, $field, $aggregated = true) {
+		$fields = $this->compositeFields($class, $aggregated);
+		return isset($fields[$field]) ? $fields[$field] : null;
 	}
 
 	/**
@@ -318,7 +372,7 @@ class DataObjectSchema {
 		$dbFields = array();
 
 		// Ensure fixed fields appear at the start
-		$fixedFields = DataObject::config()->fixed_fields;
+		$fixedFields = DataObject::config()->get('fixed_fields');
 		if(get_parent_class($class) === DataObject::class) {
 			// Merge fixed with ClassName spec and custom db fields
 			$dbFields = $fixedFields;
@@ -357,7 +411,7 @@ class DataObjectSchema {
 			}
 		}
 
-		// Prevent field-less tables
+		// Prevent field-less tables with only 'ID'
 		if(count($dbFields) < 2) {
 			$dbFields = [];
 		}
@@ -401,14 +455,14 @@ class DataObjectSchema {
 		}
 
 		// Short circuit for fixed fields
-		$fixed = DataObject::config()->fixed_fields;
+		$fixed = DataObject::config()->get('fixed_fields');
 		if(isset($fixed[$fieldName])) {
 			return $this->baseDataClass($candidateClass);
 		}
 
 		// Find regular field
 		while($candidateClass) {
-			$fields = $this->databaseFields($candidateClass);
+			$fields = $this->databaseFields($candidateClass, false);
 			if(isset($fields[$fieldName])) {
 				return $candidateClass;
 			}
@@ -425,7 +479,7 @@ class DataObjectSchema {
 	 * Standard many_many return type is:
 	 *
 	 * array(
-	 *  <manyManyClass>,		Name of class for relation
+	 *  <manyManyClass>,		Name of class for relation. E.g. "Categories"
 	 * 	<classname>,			The class that relation is defined in e.g. "Product"
 	 * 	<candidateName>,		The target class of the relation e.g. "Category"
 	 * 	<parentField>,			The field name pointing to <classname>'s table e.g. "ProductID".
@@ -449,31 +503,81 @@ class DataObjectSchema {
 
 			// Check if the component is defined in belongs_many_many on this class
 			$belongsManyMany = Config::inst()->get($parentClass, 'belongs_many_many', Config::UNINHERITED);
-			if(!isset($belongsManyMany[$component])) {
+			if (!isset($belongsManyMany[$component])) {
 				continue;
 			}
 
 			// Extract class and relation name from dot-notation
-			$childClass = $belongsManyMany[$component];
-			$relationName = null;
-			if(strpos($childClass, '.') !== false) {
-				list($childClass, $relationName) = explode('.', $childClass, 2);
-			}
-
-			// We need to find the inverse component name, if not explicitly given
-			if (!$relationName) {
-				$relationName = $this->getManyManyInverseRelationship($childClass, $parentClass);
-			}
-
-			// Check valid relation found
-			if (!$relationName) {
-				throw new LogicException("Inverse component of $childClass not found ({$class})");
-			}
+			list($childClass, $relationName)
+				= $this->parseBelongsManyManyComponent($parentClass, $component, $belongsManyMany[$component]);
 
 			// Build inverse relationship from other many_many, and swap parent/child
 			list($relationClass, $childClass, $parentClass, $childField, $parentField, $joinTable)
-				= $this->parseManyManyComponent($childClass, $relationName, $parentClass);
+				= $this->manyManyComponent($childClass, $relationName);
 			return [$relationClass, $parentClass, $childClass, $parentField, $childField, $joinTable];
+		}
+		return null;
+	}
+
+
+
+	/**
+	 * Parse a belongs_many_many component to extract class and relationship name
+	 *
+	 * @param string $parentClass Name of class
+	 * @param string $component Name of relation on class
+	 * @param string $specification specification for this belongs_many_many
+	 * @return array Array with child class and relation name
+	 */
+	protected function parseBelongsManyManyComponent($parentClass, $component, $specification)
+	{
+		$childClass = $specification;
+		$relationName = null;
+		if (strpos($specification, '.') !== false) {
+			list($childClass, $relationName) = explode('.', $specification, 2);
+		}
+
+		// We need to find the inverse component name, if not explicitly given
+		if (!$relationName) {
+			$relationName = $this->getManyManyInverseRelationship($childClass, $parentClass);
+		}
+
+		// Check valid relation found
+		if (!$relationName) {
+			throw new LogicException(
+				"belongs_many_many relation {$parentClass}.{$component} points to "
+				. "{$specification} without matching many_many"
+			);
+		}
+
+		// Return relatios
+		return array($childClass, $relationName);
+	}
+
+	/**
+	 * Return the many-to-many extra fields specification for a specific component.
+	 *
+	 * @param string $class
+	 * @param string $component
+	 * @return array|null
+	 */
+	public function manyManyExtraFieldsForComponent($class, $component) {
+		// Get directly declared many_many_extraFields
+		$extraFields = Config::inst()->get($class, 'many_many_extraFields');
+		if (isset($extraFields[$component])) {
+			return $extraFields[$component];
+		}
+
+		// If not belongs_many_many then there are no components
+		while ($class && ($class !== DataObject::class)) {
+			$belongsManyMany = Config::inst()->get($class, 'belongs_many_many', Config::UNINHERITED);
+			if (isset($belongsManyMany[$component])) {
+				// Reverse relationship and find extrafields from child class
+				list($childClass, $relationName) = $this->parseBelongsManyManyComponent($class, $component,
+					$belongsManyMany[$component]);
+				return $this->manyManyExtraFieldsForComponent($childClass, $relationName);
+			}
+			$class = get_parent_class($class);
 		}
 		return null;
 	}
@@ -739,7 +843,7 @@ class DataObjectSchema {
 
 		// Validate the join class isn't also the name of a field or relation on either side
 		// of the relation
-		$field = $this->fieldSpecification($relationClass, $joinClass);
+		$field = $this->fieldSpec($relationClass, $joinClass);
 		if ($field) {
 			throw new InvalidArgumentException(
 				"many_many through relation {$parentClass}.{$component} {$key} class {$relationClass} "

@@ -87,6 +87,7 @@ class FixtureBlueprint {
 
 		try {
 			$class = $this->class;
+			$schema = DataObject::getSchema();
 			$obj = DataModel::inst()->$class->newObject();
 
 			// If an ID is explicitly passed, then we'll sort out the initial write straight away
@@ -120,11 +121,10 @@ class FixtureBlueprint {
 
 			// Populate overrides
 			if($data) foreach($data as $fieldName => $fieldVal) {
-				// Defer relationship processing
 				if(
-					$obj->manyManyComponent($fieldName)
-					|| $obj->hasManyComponent($fieldName)
-					|| $obj->hasOneComponent($fieldName)
+					$schema->manyManyComponent($class, $fieldName)
+					|| $schema->hasManyComponent($class, $fieldName)
+					|| $schema->hasOneComponent($class, $fieldName)
 				) {
 					continue;
 				}
@@ -142,8 +142,8 @@ class FixtureBlueprint {
 
 			// Populate all relations
 			if($data) foreach($data as $fieldName => $fieldVal) {
-				$isManyMany = $obj->manyManyComponent($fieldName);
-				$isHasMany = $obj->hasManyComponent($fieldName);
+				$isManyMany = $schema->manyManyComponent($class, $fieldName);
+				$isHasMany = $schema->hasManyComponent($class, $fieldName);
 				if ($isManyMany && $isHasMany) {
 					throw new InvalidArgumentException("$fieldName is both many_many and has_many");
 				}
@@ -207,7 +207,7 @@ class FixtureBlueprint {
 					}
 				} else {
 					$hasOneField = preg_replace('/ID$/', '', $fieldName);
-					if($className = $obj->hasOneComponent($hasOneField)) {
+					if($className = $schema->hasOneComponent($class, $hasOneField)) {
 						$obj->{$hasOneField.'ID'} = $this->parseValue($fieldVal, $fixtures, $fieldClass);
 						// Inject class for polymorphic relation
 						if($className === 'SilverStripe\\ORM\\DataObject') {

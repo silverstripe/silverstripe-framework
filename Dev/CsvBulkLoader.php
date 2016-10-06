@@ -222,7 +222,9 @@ class CsvBulkLoader extends BulkLoader {
 
 		// find existing object, or create new one
 		$existingObj = $this->findExistingObject($record, $columnMap);
+		/** @var DataObject $obj */
 		$obj = ($existingObj) ? $existingObj : new $class();
+		$schema = DataObject::getSchema();
 
 		// first run: find/create any relations and store them on the object
 		// we can't combine runs, as other columns might rely on the relation being present
@@ -243,7 +245,7 @@ class CsvBulkLoader extends BulkLoader {
 					$relationObj = $obj->{$this->relationCallbacks[$fieldName]['callback']}($val, $record);
 				}
 				if(!$relationObj || !$relationObj->exists()) {
-					$relationClass = $obj->hasOneComponent($relationName);
+					$relationClass = $schema->hasOneComponent(get_class($obj), $relationName);
 					$relationObj = new $relationClass();
 					//write if we aren't previewing
 					if (!$preview) $relationObj->write();
@@ -327,7 +329,7 @@ class CsvBulkLoader extends BulkLoader {
 	 *
 	 * @param array $record CSV data column
 	 * @param array $columnMap
-	 * @return mixed
+	 * @return DataObject
 	 */
 	public function findExistingObject($record, $columnMap = []) {
 		$SNG_objectClass = singleton($this->objectClass);

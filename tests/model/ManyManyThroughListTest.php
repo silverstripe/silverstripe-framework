@@ -206,8 +206,37 @@ class ManyManyThroughListTest extends SapphireTest
 			'ManyManyThroughListTest_JoinObject' => 'Text'
 		]);
 		$this->setExpectedException(InvalidArgumentException::class);
-		$object = new ManyManyThroughListTest_Object();
-		$object->manyManyComponent('Items');
+		DataObject::getSchema()->manyManyComponent(ManyManyThroughListTest_Object::class, 'Items');
+	}
+
+	public function testRelationParsing() {
+		$schema = DataObject::getSchema();
+
+		// Parent components
+		$this->assertEquals(
+			[
+				ManyManyThroughList::class,
+				ManyManyThroughListTest_Object::class,
+				ManyManyThroughListTest_Item::class,
+				'ParentID',
+				'ChildID',
+				ManyManyThroughListTest_JoinObject::class
+			],
+			$schema->manyManyComponent(ManyManyThroughListTest_Object::class, 'Items')
+		);
+
+		// Belongs_many_many is the same, but with parent/child substituted
+		$this->assertEquals(
+			[
+				ManyManyThroughList::class,
+				ManyManyThroughListTest_Item::class,
+				ManyManyThroughListTest_Object::class,
+				'ChildID',
+				'ParentID',
+				ManyManyThroughListTest_JoinObject::class
+			],
+			$schema->manyManyComponent(ManyManyThroughListTest_Item::class, 'Objects')
+		);
 	}
 }
 

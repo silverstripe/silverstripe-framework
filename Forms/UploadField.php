@@ -543,7 +543,7 @@ class UploadField extends FileField {
 		if($relation && ($relation instanceof RelationList || $relation instanceof UnsavedRelationList)) {
 			// has_many or many_many
 			$relation->setByIDList($idList);
-		} elseif($record->hasOneComponent($fieldname)) {
+		} elseif(DataObject::getSchema()->hasOneComponent(get_class($record), $fieldname)) {
 			// has_one
 			$record->{"{$fieldname}ID"} = $idList ? reset($idList) : 0;
 		}
@@ -631,7 +631,7 @@ class UploadField extends FileField {
 		if(empty($allowedMaxFileNumber)) {
 			$record = $this->getRecord();
 			$name = $this->getName();
-			if($record && $record->hasOneComponent($name)) {
+			if($record && DataObject::getSchema()->hasOneComponent(get_class($record), $name)) {
 				return 1; // Default for has_one
 			} else {
 				return null; // Default for has_many and many_many
