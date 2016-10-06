@@ -146,19 +146,19 @@ class CampaignAdminList extends SilverStripeComponent {
         </div>
       );
     const bodyClass = [
-      'panel', 'panel--padded', 'panel--scrollable', 'panel--double-toolbar', 'campaign-items',
+      'panel', 'panel--padded', 'panel--scrollable', 'flexbox-area-grow', 'campaign-items',
     ];
 
     return (
-      <div className="cms-content__split cms-content__split--left-sm">
-        <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
+      <div className="fill-width cms-content__split--left-sm">
+        <div className="fill-height cms-content__left cms-campaigns" aria-expanded="true">
           <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
             <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
           <div className={bodyClass.join(' ')}>
             {body}
           </div>
-          <div className="toolbar--south">
+          <div className="toolbar toolbar--south">
             {this.renderButtonToolbar()}
           </div>
         </div>

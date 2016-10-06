@@ -18,14 +18,13 @@
 
 .cms-content__split--left-sm {
   .cms-content__right {
-    position: relative;
     display: none;
   }
 
   .cms-content__left {
     width: 100%;
-    position: absolute;
-    left: 0;
+    // position: absolute;
+    // left: 0;
   }
 
   // Overlay preview if there isn't enough space for both items and preview
@@ -59,7 +58,7 @@
   }
 
   @include media-breakpoint-up(lg) {
-    padding-left: $cms-panel-sm;
+    // padding-left: $cms-panel-sm;
 
     .cms-content__left {
       width: $cms-panel-sm;
@@ -76,7 +75,7 @@
   }
 
   @include media-breakpoint-up(xl) {
-    padding-left: $cms-panel-md;
+    // padding-left: $cms-panel-md;
 
     .cms-content__left {
       width: $cms-panel-md;

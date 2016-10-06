@@ -26,7 +26,7 @@ class Toolbar extends SilverStripeComponent {
     };
 
     return (
-      <div className="toolbar--north container-fluid">
+      <div className="toolbar toolbar--north">
         <div className="toolbar__navigation">
           {this.props.showBackButton &&
             <button {...backButtonProps}></button>

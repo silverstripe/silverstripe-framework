@@ -49,20 +49,20 @@ body.cms {
   background: $tab-panel-texture-color;
 }
 
-.cms-preview,
-.cms-menu,
-.cms-content,
-.cms-content-header,
-// DEPRECATED:
-// .cms-content-tools will be removed in 4.0
-// Use .cms-content-filters instead (TODO rename to BEM).
-.cms-content-tools,
-.cms-content-fields,
-.cms-preview,
-.cms-preview iframe,
-.cms-preview-controls {
-  display: inline-block;
-}
+// .cms-preview,
+// .cms-menu,
+// .cms-content,
+// .cms-content-header,
+// // DEPRECATED:
+// // .cms-content-tools will be removed in 4.0
+// // Use .cms-content-filters instead (TODO rename to BEM).
+// .cms-content-tools,
+// .cms-content-fields,
+// .cms-preview,
+// .cms-preview iframe,
+// .cms-preview-controls {
+//   display: inline-block;
+// }
 
 .cms-content-header { // Todo: should add .container-fluid to markup or extend .container-fluid
   padding-left: $panel-padding-x;
@@ -1397,9 +1397,7 @@ form.member-profile-form {
 
 .cms {
   .cms-content {
-    border-radius: 0;
     background: $tab-panel-texture-color;
-    z-index: 40;
   }
 
   .cms-content-fields {
