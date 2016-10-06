@@ -138,20 +138,40 @@ class DataObjectSchema {
 	}
 
 	/**
+	 * fieldSpec should exclude virtual fields (such as composite fields), and only include fields with a db column.
+	 */
+	const DB_ONLY = 1;
+
+	/**
+	 * fieldSpec should only return fields that belong to this table, and not any ancestors
+	 */
+	const UNINHERITED = 2;
+
+	/**
+	 * fieldSpec should prefix all field specifications with the class name in RecordClass.Column(spec) format.
+	 */
+	const INCLUDE_CLASS = 4;
+
+	/**
 	 * Get all DB field specifications for a class, including ancestors and composite fields.
 	 *
 	 * @param string|DataObject $classOrInstance
-	 * @param array $options Array of options. Specify any number of the below:
-	 *  - `uninherited`: Set to true to limit to only this table
-	 *  - `dbOnly`: Exclude virtual fields (such as composite fields), and only include fields with a db column.
-	 *  - `includeClass`: If true prefix the field specification with the class name in RecordClass.Column(spec) format.
-	 * @return array
+	 * @param int $options Bitmask of options
+	 *  - UNINHERITED Limit to only this table
+	 *  - DB_ONLY Exclude virtual fields (such as composite fields), and only include fields with a db column.
+	 *  - INCLUDE_CLASS Prefix the field specification with the class name in RecordClass.Column(spec) format.
+	 * @return array List of fields, where the key is the field name and the value is the field specification.
 	 */
-	public function fieldSpecs($classOrInstance, $options = []) {
+	public function fieldSpecs($classOrInstance, $options = 0) {
 		$class = ClassInfo::class_name($classOrInstance);
-		$uninherited = !empty($options['uninherited']) || in_array('uninherited', $options);
-		$dbOnly = !empty($options['dbOnly']) || in_array('dbOnly', $options);
-		$includeClass = !empty($options['includeClass']) || in_array('includeClass', $options);
+
+		// Validate options
+		if (!is_int($options)) {
+			throw new InvalidArgumentException("Invalid options " . var_export($options, true));
+		}
+		$uninherited = ($options & self::UNINHERITED) === self::UNINHERITED;
+		$dbOnly = ($options & self::DB_ONLY) === self::DB_ONLY;
+		$includeClass = ($options & self::INCLUDE_CLASS) === self::INCLUDE_CLASS;
 
 		// Walk class hierarchy
 		$db = [];
@@ -180,15 +200,15 @@ class DataObjectSchema {
 	 * Get specifications for a single class field
 	 *
 	 * @param string|DataObject $classOrInstance Name or instance of class
-	 * @param string $fieldName
-	 * @param array $options Array of options. Specify any number of the below:
-	 *  - `uninherited`: Set to true to limit to only this table
-	 *  - `dbOnly`: Exclude virtual fields (such as composite fields), and only include fields with a db column.
-	 *  - `includeClass`: If true prefix the field specification with the class name in RecordClass.Column(spec) format.
+	 * @param string $fieldName Name of field to retrieve
+	 * @param int $options Bitmask of options
+	 *  - UNINHERITED Limit to only this table
+	 *  - DB_ONLY Exclude virtual fields (such as composite fields), and only include fields with a db column.
+	 *  - INCLUDE_CLASS Prefix the field specification with the class name in RecordClass.Column(spec) format.
 	 * @return string|null Field will be a string in FieldClass(args) format, or
-	 * RecordClass.FieldClass(args) format if $includeClass is true. Will be null if no field is found.
+	 * RecordClass.FieldClass(args) format if using INCLUDE_CLASS. Will be null if no field is found.
 	 */
-	public function fieldSpec($classOrInstance, $fieldName, $options = []) {
+	public function fieldSpec($classOrInstance, $fieldName, $options = 0) {
 		$specs = $this->fieldSpecs($classOrInstance, $options);
 		return isset($specs[$fieldName]) ? $specs[$fieldName] : null;
 	}
@@ -473,8 +493,7 @@ class DataObjectSchema {
 
 	/**
 	 * Return information about a specific many_many component. Returns a numeric array.
-	 * The first item in the array will be the class name of the relation: either
-	 * RELATION_MANY_MANY or RELATION_MANY_MANY_THROUGH constant value.
+	 * The first item in the array will be the class name of the relation.
 	 *
 	 * Standard many_many return type is:
 	 *

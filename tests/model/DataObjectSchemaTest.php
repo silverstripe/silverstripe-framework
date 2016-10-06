@@ -3,7 +3,7 @@
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
-
+use SilverStripe\ORM\DataObjectSchema;
 
 /**
  * Tests schema inspection of DataObjects
@@ -295,6 +295,68 @@ class DataObjectSchemaTest extends SapphireTest
 
 	}
 
+	public function testFieldSpec() {
+		$schema = DataObject::getSchema();
+		$this->assertEquals(
+			[
+				'ID' => 'PrimaryKey',
+				'ClassName' => 'DBClassName',
+				'LastEdited' => 'DBDatetime',
+				'Created' => 'DBDatetime',
+				'Title' => 'Varchar',
+				'Description' => 'Varchar',
+				'MoneyFieldCurrency' => 'Varchar(3)',
+				'MoneyFieldAmount' => 'Decimal(19,4)',
+				'MoneyField' => 'Money',
+			],
+			$schema->fieldSpecs(DataObjectSchemaTest_HasFields::class)
+		);
+		$this->assertEquals(
+			[
+				'ID' => 'DataObjectSchemaTest_HasFields.PrimaryKey',
+				'ClassName' => 'DataObjectSchemaTest_BaseDataClass.DBClassName',
+				'LastEdited' => 'DataObjectSchemaTest_BaseDataClass.DBDatetime',
+				'Created' => 'DataObjectSchemaTest_BaseDataClass.DBDatetime',
+				'Title' => 'DataObjectSchemaTest_BaseDataClass.Varchar',
+				'Description' => 'DataObjectSchemaTest_HasFields.Varchar',
+				'MoneyFieldCurrency' => 'DataObjectSchemaTest_HasFields.Varchar(3)',
+				'MoneyFieldAmount' => 'DataObjectSchemaTest_HasFields.Decimal(19,4)',
+				'MoneyField' => 'DataObjectSchemaTest_HasFields.Money',
+			],
+			$schema->fieldSpecs(DataObjectSchemaTest_HasFields::class, DataObjectSchema::INCLUDE_CLASS)
+		);
+		// DB_ONLY excludes composite field MoneyField
+		$this->assertEquals(
+			[
+				'ID' => 'DataObjectSchemaTest_HasFields.PrimaryKey',
+				'ClassName' => 'DataObjectSchemaTest_BaseDataClass.DBClassName',
+				'LastEdited' => 'DataObjectSchemaTest_BaseDataClass.DBDatetime',
+				'Created' => 'DataObjectSchemaTest_BaseDataClass.DBDatetime',
+				'Title' => 'DataObjectSchemaTest_BaseDataClass.Varchar',
+				'Description' => 'DataObjectSchemaTest_HasFields.Varchar',
+				'MoneyFieldCurrency' => 'DataObjectSchemaTest_HasFields.Varchar(3)',
+				'MoneyFieldAmount' => 'DataObjectSchemaTest_HasFields.Decimal(19,4)'
+			],
+			$schema->fieldSpecs(
+				DataObjectSchemaTest_HasFields::class,
+				DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
+			)
+		);
+
+		// Use all options at once
+		$this->assertEquals(
+			[
+				'ID' => 'DataObjectSchemaTest_HasFields.PrimaryKey',
+				'Description' => 'DataObjectSchemaTest_HasFields.Varchar',
+				'MoneyFieldCurrency' => 'DataObjectSchemaTest_HasFields.Varchar(3)',
+				'MoneyFieldAmount' => 'DataObjectSchemaTest_HasFields.Decimal(19,4)',
+			],
+			$schema->fieldSpecs(
+				DataObjectSchemaTest_HasFields::class,
+				DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY | DataObjectSchema::UNINHERITED
+			)
+		);
+	}
 
 	/**
 	 * @covers SilverStripe\ORM\DataObjectSchema::baseDataClass()
@@ -315,7 +377,9 @@ class DataObjectSchemaTest extends SapphireTest
 }
 
 class DataObjectSchemaTest_BaseClass extends DataObject implements TestOnly {
-
+	private static $db = [
+		'Title' => 'Varchar',
+	];
 }
 
 class DataObjectSchemaTest_ChildClass extends DataObjectSchemaTest_BaseClass {
@@ -341,7 +405,8 @@ class DataObjectSchemaTest_NoFields extends DataObjectSchemaTest_BaseDataClass {
 class DataObjectSchemaTest_HasFields extends DataObjectSchemaTest_NoFields {
 
 	private static $db = array(
-		'Description' => 'Varchar'
+		'Description' => 'Varchar',
+		'MoneyField' => 'Money',
 	);
 }
 
