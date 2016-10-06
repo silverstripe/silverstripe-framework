@@ -15998,12 +15998,9 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
 
 body,html{
   width:100%;
+  height:100%;
   margin:0;
   padding:0;
-}
-
-.fill-height,body,html{
-  height:100%;
   display:-ms-flexbox;
   display:-webkit-box;
   display:flex;
@@ -16016,14 +16013,15 @@ body,html{
 }
 
 .fill-height,.fill-width{
+  height:100%;
+  display:-ms-flexbox;
+  display:-webkit-box;
+  display:flex;
   -webkit-box-direction:normal;
 }
 
 .fill-width{
   width:100%;
-  display:-ms-flexbox;
-  display:-webkit-box;
-  display:flex;
   -ms-flex-direction:row;
   -webkit-box-orient:horizontal;
           flex-direction:row;
