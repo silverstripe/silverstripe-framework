@@ -1,6 +1,7 @@
 const webpack = require('webpack');
 const autoprefixer = require('autoprefixer');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
 // const SprityWebpackPlugin = require('sprity-webpack-plugin');
 
 const PATHS = {
@@ -48,7 +49,8 @@ const config = [
       TinyMCE_SSPlugin: `${PATHS.ADMIN_JS_SRC}/legacy/TinyMCE_SSPlugin.js`,
     },
     resolve: {
-      modulesDirectories: [PATHS.ADMIN_JS_SRC, PATHS.MODULES],
+      root: [__dirname, path.resolve(__dirname, PATHS.ADMIN_JS_SRC)],
+      modulesDirectories: [PATHS.MODULES],
     },
     output: {
       path: 'admin/client/dist',
