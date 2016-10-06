@@ -343,7 +343,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 		// Identify fields that should be lazy loaded, but only on existing records
 		if(!empty($record['ID'])) {
 			// Get all field specs scoped to class for later lazy loading
-			$fields = static::getSchema()->fieldSpecs(static::class, ['includeClass', 'dbOnly']);
+			$fields = static::getSchema()->fieldSpecs(
+				static::class,
+				DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
+			);
 			foreach($fields as $field => $fieldSpec) {
 				$fieldClass = strtok($fieldSpec, ".");
 				if(!array_key_exists($field, $record)) {
@@ -1194,7 +1197,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			}
 
 			// Ensure this field pertains to this table
-			$specification = $schema->fieldSpec($class, $fieldName, ['dbOnly', 'uninherited']);
+			$specification = $schema->fieldSpec($class, $fieldName, DataObjectSchema::DB_ONLY | DataObjectSchema::UNINHERITED);
 			if (!$specification) {
 				continue;
 			}
@@ -2403,7 +2406,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 * @return boolean
 	 */
 	public function hasDatabaseField($field) {
-		$spec = static::getSchema()->fieldSpec(static::class, $field, ['dbOnly']);
+		$spec = static::getSchema()->fieldSpec(static::class, $field, DataObjectSchema::DB_ONLY);
 		return !empty($spec);
 	}
 
@@ -2587,7 +2590,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function dbObject($fieldName) {
 		// Check for field in DB
-		$helper = static::getSchema()->fieldSpec(static::class, $fieldName, ['includeClass']);
+		$helper = static::getSchema()->fieldSpec(static::class, $fieldName, DataObjectSchema::INCLUDE_CLASS);
 		if(!$helper) {
 			return null;
 		}

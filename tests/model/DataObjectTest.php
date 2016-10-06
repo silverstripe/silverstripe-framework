@@ -80,13 +80,12 @@ class DataObjectTest extends SapphireTest {
 		// Test with table required
 		$this->assertEquals(
 			'DataObjectTest_TeamComment.Varchar',
-			$schema->fieldSpec(DataObjectTest_TeamComment::class, 'Name', ['includeClass'])
+			$schema->fieldSpec(DataObjectTest_TeamComment::class, 'Name', DataObjectSchema::INCLUDE_CLASS)
 		);
 		$this->assertEquals(
 			'DataObjectTest_TeamComment.Text',
-			$schema->fieldSpec(DataObjectTest_TeamComment::class, 'Comment', ['includeClass'])
+			$schema->fieldSpec(DataObjectTest_TeamComment::class, 'Comment', DataObjectSchema::INCLUDE_CLASS)
 		);
-		$obj = new DataObjectTest_ExtendedTeamComment();
 		$dbFields = $schema->fieldSpecs(DataObjectTest_ExtendedTeamComment::class);
 
 		// fixed fields are still included in extended classes

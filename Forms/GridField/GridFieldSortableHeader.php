@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Forms\LiteralField;
+use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\Sortable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\SS_List;
@@ -140,7 +141,10 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					} elseif(method_exists($tmpItem, 'hasMethod') && $tmpItem->hasMethod($methodName)) {
 						// The part is a relation name, so get the object/list from it
 						$tmpItem = $tmpItem->$methodName();
-					} elseif ($tmpItem instanceof DataObject && $schema->fieldSpec($tmpItem, $methodName, ['dbOnly'])) {
+					} elseif (
+						$tmpItem instanceof DataObject
+						&& $schema->fieldSpec($tmpItem, $methodName, DataObjectSchema::DB_ONLY)
+					) {
 						// Else, if we've found a database field at the end of the chain, we can sort on it.
 						// If a method is applied further to this field (E.g. 'Cost.Currency') then don't try to sort.
 						$allowSort = $idx === sizeof($parts) - 1;
