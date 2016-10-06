@@ -8386,11 +8386,8 @@ h1{
   height:24px;
 }
 
-.icon.icon-24.icon-siteconfigleftandmain{
+.icon.icon-24.icon-silverstripe-reports-reportadmin{
   background-position:0 -120px;
-}
-
-.icon.icon-24.icon-silverstripe-admin-securityadmin,.icon.icon-24.icon-siteconfigleftandmain{
   background-repeat:no-repeat;
   overflow:hidden;
   display:inline-block;
@@ -8400,13 +8397,18 @@ h1{
 
 .icon.icon-24.icon-silverstripe-admin-securityadmin{
   background-position:0 -48px;
+  background-repeat:no-repeat;
+  overflow:hidden;
+  display:inline-block;
+  width:24px;
+  height:24px;
 }
 
-.icon.icon-24.icon-reportadmin{
+.icon.icon-24.icon-silverstripe-reports-reportadmin{
   background-position:0 -264px;
 }
 
-.icon.icon-24.icon-commentadmin,.icon.icon-24.icon-reportadmin{
+.icon.icon-24.icon-commentadmin,.icon.icon-24.icon-silverstripe-reports-reportadmin{
   background-repeat:no-repeat;
   overflow:hidden;
   display:inline-block;
@@ -8468,11 +8470,8 @@ h1{
   height:16px;
 }
 
-.icon.icon-16.icon-siteconfigleftandmain{
+.icon.icon-16.icon-silverstripe-siteconfig-siteconfigleftandmain{
   background-position:0 -80px;
-}
-
-.icon.icon-16.icon-silverstripe-admin-securityadmin,.icon.icon-16.icon-siteconfigleftandmain{
   background-repeat:no-repeat;
   overflow:hidden;
   display:inline-block;
@@ -8482,13 +8481,18 @@ h1{
 
 .icon.icon-16.icon-silverstripe-admin-securityadmin{
   background-position:0 -32px;
+  background-repeat:no-repeat;
+  overflow:hidden;
+  display:inline-block;
+  width:16px;
+  height:16px;
 }
 
-.icon.icon-16.icon-reportadmin{
+.icon.icon-16.icon-silverstripe-reports-reportadmin{
   background-position:0 -176px;
 }
 
-.icon.icon-16.icon-commentadmin,.icon.icon-16.icon-reportadmin{
+.icon.icon-16.icon-commentadmin,.icon.icon-16.icon-silverstripe-reports-reportadmin{
   background-repeat:no-repeat;
   overflow:hidden;
   display:inline-block;
