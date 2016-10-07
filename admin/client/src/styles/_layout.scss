@@ -16,16 +16,16 @@
   height: 100%;
 }
 
-.cms-content__split--left-sm {
-  .cms-content__right {
-    display: none;
-  }
-
-  .cms-content__left {
+.campaign-items {
+  @include media-breakpoint-down(md) {
     width: 100%;
-    // position: absolute;
-    // left: 0;
+    z-index: 1;
   }
+}
+
+.campaigns {
+  position: relative;
+  height: 100%;
 
   // Overlay preview if there isn't enough space for both items and preview
   .cms-content--selected {
@@ -168,7 +168,7 @@ html, body {
 // Nested items take up width
 .fill-width {
   width: 100%;
-  height: 100%;
+  // height: 100%;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: row;

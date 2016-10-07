@@ -15333,10 +15333,30 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   top:1px;
 }
 
+.preview{
+  position:relative;
+}
+
+@media (max-width:991px){
+  .preview{
+    position:absolute;
+    right:0;
+    z-index:2;
+    width:100%;
+  }
+}
+
 .preview__iframe{
-  width:100%;
   height:calc(100% - 53px);
+  width:100%;
   border:0;
+  display:block;
+}
+
+@media (max-width:991px){
+  .preview__iframe{
+    width:100%;
+  }
 }
 
 .preview__file-container{
@@ -15429,6 +15449,7 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   padding-bottom:.76925rem;
   border-top:1px solid #d9dee2;
   width:100%;
+  background-color:#f6f7f8;
 }
 
 .cms-backlink .toolbar__back-button,.toolbar__back-button{
@@ -15893,19 +15914,23 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
   height:100%;
 }
 
-.cms-content__split--left-sm .cms-content__right{
-  display:none;
+@media (max-width:991px){
+  .campaign-items{
+    width:100%;
+    z-index:1;
+  }
 }
 
-.cms-content__split--left-sm .cms-content__left{
-  width:100%;
+.campaigns{
+  position:relative;
+  height:100%;
 }
 
-.cms-content__split--left-sm .cms-content--selected{
+.campaigns .cms-content--selected{
   display:block;
 }
 
-.cms-content__split--left-sm .cms-content__back-btn{
+.campaigns .cms-content__back-btn{
   width:36px;
   height:36px;
   background-color:rgba(79,88,97,.8);
@@ -15924,28 +15949,28 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
   cursor:pointer;
 }
 
-.cms-content__split--left-sm .cms-content__back-btn:hover{
+.campaigns .cms-content__back-btn:hover{
   background-color:#4f5861;
   text-decoration:none;
 }
 
 @media (min-width:992px){
-  .cms-content__split--left-sm .cms-content__left{
+  .campaigns .cms-content__left{
     width:300px;
   }
 
-  .cms-content__split--left-sm .cms-content__right{
+  .campaigns .cms-content__right{
     display:block;
     border-left:1px solid #d9dee2;
   }
 
-  .cms-content__split--left-sm .cms-content__back-btn{
+  .campaigns .cms-content__back-btn{
     display:none;
   }
 }
 
 @media (min-width:1200px){
-  .cms-content__split--left-sm .cms-content__left{
+  .campaigns .cms-content__left{
     width:448px;
   }
 }
@@ -15998,9 +16023,12 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
 
 body,html{
   width:100%;
-  height:100%;
   margin:0;
   padding:0;
+}
+
+.fill-height,body,html{
+  height:100%;
   display:-ms-flexbox;
   display:-webkit-box;
   display:flex;
@@ -16013,15 +16041,14 @@ body,html{
 }
 
 .fill-height,.fill-width{
-  height:100%;
-  display:-ms-flexbox;
-  display:-webkit-box;
-  display:flex;
   -webkit-box-direction:normal;
 }
 
 .fill-width{
   width:100%;
+  display:-ms-flexbox;
+  display:-webkit-box;
+  display:flex;
   -ms-flex-direction:row;
   -webkit-box-orient:horizontal;
           flex-direction:row;
