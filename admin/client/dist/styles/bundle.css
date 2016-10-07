@@ -9353,6 +9353,10 @@ body.cms{
   background:#f6f7f8;
 }
 
+.cms-container--content-mode .cms-preview,.cms-container--preview-mode .cms-content,.cms-container--split-mode .cms-content .preview-mode-selector{
+  display:none;
+}
+
 .cms-content-header{
   padding-left:1.5385rem;
   padding-right:1.5385rem;
@@ -12536,6 +12540,7 @@ li.class-ErrorPage>a .jstree-pageicon{
 .cms-preview{
   background-color:#f6f7f8;
   border-left:1px solid #ced3d9;
+  position:relative;
 }
 
 .cms-preview .cms-preview-overlay{

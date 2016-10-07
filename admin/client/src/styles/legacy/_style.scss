@@ -49,6 +49,24 @@ body.cms {
   background: $tab-panel-texture-color;
 }
 
+.cms-container--content-mode {
+  .cms-preview {
+    display: none;
+  }
+}
+
+.cms-container--split-mode {
+  .cms-content .preview-mode-selector {
+    display: none;
+  }
+}
+
+.cms-container--preview-mode {
+  .cms-content {
+    display: none;
+  }
+}
+
 // .cms-preview,
 // .cms-menu,
 // .cms-content,

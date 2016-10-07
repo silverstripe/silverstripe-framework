@@ -233,6 +233,7 @@
 .cms-preview {
 	background-color: $tab-panel-texture-color;
 	border-left: 1px solid $border-color-dark;
+  position: relative;
 
 	.cms-preview-overlay {
 		width: 100%;

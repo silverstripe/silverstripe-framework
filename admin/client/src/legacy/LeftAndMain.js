@@ -260,6 +260,12 @@ $.entwine('ss', function($) {
       if (dirty) this.redraw();
     },
 
+    clearViewMode: function () {
+      this.removeClass('cms-container--split-mode');
+      this.removeClass('cms-container--preview-mode');
+      this.removeClass('cms-container--content-mode');
+    },
+
     /**
      * Enable the split view - with content on the left and preview on the right.
      */
@@ -294,12 +300,53 @@ $.entwine('ss', function($) {
 
       if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
-      // Redraw on all the children that need it
-      this.find('.cms-panel-layout').redraw();
-      this.find('.cms-content-fields[data-layout-type]').redraw();
-      this.find('.cms-edit-form[data-layout-type]').redraw();
-      this.find('.cms-preview').redraw();
-      this.find('.cms-content').redraw();
+      // disable split mode if screen is too small
+      var changed = this.setProperMode();
+
+      // if changed, then the changing would trigger a redraw, so we don't want to redraw twice
+      if (!changed) {
+        // Redraw on all the children that need it
+        this.find('.cms-panel-layout').redraw();
+        this.find('.cms-content-fields[data-layout-type]').redraw();
+        this.find('.cms-edit-form[data-layout-type]').redraw();
+        this.find('.cms-preview').redraw();
+        this.find('.cms-content').redraw();
+      }
+    },
+
+    /**
+     * Changes the viewing mode if the screen is too small, disables split mode.
+     *
+     * @returns {boolean} changedMode - so redraw is not called twice
+     */
+    setProperMode: function () {
+      var options = this.getLayoutOptions();
+      var mode = options.mode;
+      this.clearViewMode();
+
+      var content = this.find('.cms-content');
+      var preview = this.find('.cms-preview');
+
+      content.css('min-width', '');
+      preview.css('min-width', '');
+
+      if (content.width() + preview.width() >= options.minContentWidth + options.minPreviewWidth) {
+        if (content.width() < options.minContentWidth) {
+          content.css('min-width', options.minContentWidth);
+        } else {
+          preview.css('min-width', options.minPreviewWidth);
+        }
+        $('.cms-preview').trigger('enable');
+      } else {
+        $('.cms-preview').trigger('disable');
+        if (mode == 'split') {
+          // force change mode and leave it redraw after
+          this.contentViewMode();
+          return true;
+        }
+      }
+      this.addClass('cms-container--' + mode + '-mode');
+      return false;
     },
 
     /**

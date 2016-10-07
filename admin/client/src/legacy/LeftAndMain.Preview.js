@@ -99,18 +99,18 @@ $.entwine('ss.preview', function($){
      * modeName can be: split, content, preview.
      */
     changeMode: function(modeName, save) {
-      var container = $('.cms-container');
+      var container = $('.cms-container').entwine('.ss');
 
       if (modeName == 'split') {
-        container.entwine('.ss').splitViewMode();
+        container.splitViewMode();
         this.setIsPreviewEnabled(true);
         this._loadCurrentState();
       } else if (modeName == 'content') {
-        container.entwine('.ss').contentViewMode();
+        container.contentViewMode();
         this.setIsPreviewEnabled(false);
         // Do not load content as the preview is not visible.
       } else if (modeName == 'preview') {
-        container.entwine('.ss').previewMode();
+        container.previewMode();
         this.setIsPreviewEnabled(true);
         this._loadCurrentState();
       } else {
@@ -118,8 +118,6 @@ $.entwine('ss.preview', function($){
       }
 
       if(save !== false) this.saveState('mode', modeName);
-
-      this.redraw();
 
       return this;
     },
@@ -242,7 +240,7 @@ $.entwine('ss.preview', function($){
      * Initialise the preview element.
      */
     onadd: function() {
-      var self = this, layoutContainer = this.parent(), iframe = this.find('iframe');
+      var self = this, iframe = this.find('iframe');
 
       // Create layout and controls
       iframe.addClass('center');
@@ -267,8 +265,7 @@ $.entwine('ss.preview', function($){
       }
 
       // Preview might not be available in all admin interfaces - block/disable when necessary
-      this.append('<div class="cms-preview-overlay ui-widget-overlay-light"></div>');
-      this.find('.cms-preview-overlay').hide();
+      this._unblock();
 
       this.disablePreview();
 
@@ -310,7 +307,7 @@ $.entwine('ss.preview', function($){
      * Set the preview to unavailable - could be still visible. This is purely visual.
      */
     _block: function() {
-      this.addClass('blocked');
+      this.find('.preview-note').show();
       this.find('.cms-preview-overlay').show();
       return this;
     },
@@ -319,7 +316,7 @@ $.entwine('ss.preview', function($){
      * Set the preview to available (remove the overlay);
      */
     _unblock: function() {
-      this.removeClass('blocked');
+      this.find('.preview-note').hide();
       this.find('.cms-preview-overlay').hide();
       return this;
     },
@@ -640,9 +637,8 @@ $.entwine('ss.preview', function($){
   /**
    * Adjust the visibility of the preview-mode selector in the CMS part (hidden if preview is visible).
    */
-  $('.cms-preview.column-hidden').entwine({
+  $('.cms-container--content-mode').entwine({
     onmatch: function() {
-      $('#preview-mode-dropdown-in-content').show();
       // Alert the user as to why the preview is hidden
       if ($('.cms-preview .result-selected').hasClass('font-icon-columns')) {
         statusMessage(i18n._t(
@@ -650,29 +646,6 @@ $.entwine('ss.preview', function($){
           "Screen too small to show site preview in split mode"),
         "error");
       }
-      this._super();
-    },
-
-    onunmatch: function() {
-      $('#preview-mode-dropdown-in-content').hide();
-      this._super();
-    }
-  });
-
-  /**
-   * Initialise the preview-mode selector in the CMS part (could be hidden if preview is visible).
-   */
-  $('#preview-mode-dropdown-in-content').entwine({
-    onmatch: function() {
-      if ($('.cms-preview').is('.column-hidden')) {
-        this.show();
-      }
-      else {
-        this.hide();
-      }
-      this._super();
-    },
-    onunmatch: function() {
       this._super();
     }
   });
@@ -751,7 +724,7 @@ $.entwine('ss.preview', function($){
     }
   });
 
-  
+
 
   /**
    * Rotate preview to landscape
