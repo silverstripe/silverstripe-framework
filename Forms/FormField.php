@@ -1424,7 +1424,7 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	public function getSchemaData() {
-		return array_merge($this->getSchemaDataDefaults(), $this->schemaData);
+		return array_replace_recursive($this->getSchemaDataDefaults(), $this->schemaData);
 	}
 
 	/**

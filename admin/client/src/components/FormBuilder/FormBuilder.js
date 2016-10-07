@@ -105,15 +105,23 @@ export class FormBuilderComponent extends SilverStripeComponent {
             SecurityID: this.props.config.SecurityID,
           };
 
-          if (formSchema.schema.actions.length > 0) {
-            defaultData[formSchema.schema.actions[0].name] = 1;
-          }
+          this.submitApi = (...args) => {
+            const endPoint = backend.createEndpointFetcher({
+              url: formSchema.schema.attributes.action,
+              method: formSchema.schema.attributes.method,
+              defaultData,
+            });
 
-          this.submitApi = backend.createEndpointFetcher({
-            url: formSchema.schema.attributes.action,
-            method: formSchema.schema.attributes.method,
-            defaultData,
-          });
+            // Ensure that schema changes are handled prior to updating state
+            return endPoint(...args)
+              .then((response) => {
+                if (response.schema) {
+                  const newSchema = Object.assign({}, { id: response.id, schema: response.schema });
+                  this.props.schemaActions.setSchema(newSchema);
+                }
+                return response;
+              });
+          };
 
           this.props.schemaActions.setSchema(formSchema);
         }
@@ -248,6 +256,14 @@ export class FormBuilderComponent extends SilverStripeComponent {
       ? schema.state.fields
       : schema.schema.fields;
 
+    // Set action
+    const action = this.getSubmitAction();
+    const values = {};
+    if (action) {
+      values[action] = 1;
+    }
+
+    // Reduce all other fields
     return this.props.form[this.getFormId()].fields
       .reduce((prev, curr) => {
         const match = this.findField(fields, curr.id);
@@ -258,7 +274,11 @@ export class FormBuilderComponent extends SilverStripeComponent {
         return Object.assign({}, prev, {
           [match.name]: curr.value,
         });
-      }, {});
+      }, values);
+  }
+
+  getSubmitAction() {
+    return this.props.form[this.getFormId()].submitAction;
   }
 
   /**
@@ -419,7 +439,9 @@ export class FormBuilderComponent extends SilverStripeComponent {
       const data = this.mergeFieldData(field, state);
 
       if (field.children) {
-        data.children = this.getFieldData(field.children, formState);
+        return Object.assign({}, data, {
+          children: this.getFieldData(field.children, formState),
+        });
       }
 
       return data;
@@ -451,9 +473,10 @@ export class FormBuilderComponent extends SilverStripeComponent {
     delete attributes.enctype;
 
     const fieldData = this.getFieldData(formSchema.schema.fields, formState);
+    const actionData = this.getFieldData(formSchema.schema.actions, formState);
 
     const formProps = {
-      actions: formSchema.schema.actions,
+      actions: actionData,
       attributes,
       componentWillUnmount: this.removeForm,
       data: formSchema.schema.data,

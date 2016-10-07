@@ -63,6 +63,7 @@ describe('FormBuilderComponent', () => {
       props = {
         form: {
           MyForm: {
+            submitAction: 'action_save',
             fields: [
               { id: 'fieldOne', value: 'valOne' },
               { id: 'fieldTwo', value: null },
@@ -89,6 +90,7 @@ describe('FormBuilderComponent', () => {
 
       fieldValues = formBuilder.getFieldValues();
       expect(fieldValues).toEqual({
+        action_save: 1,
         fieldOne: 'valOne',
         fieldTwo: null,
       });

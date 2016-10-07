@@ -17,18 +17,16 @@ class FormSchema {
 	 * Gets the schema for this form as a nested array.
 	 *
 	 * @param Form $form
+	 * @param string $schemaLink Link to get this schema
 	 * @return array
 	 */
-	public function getSchema(Form $form) {
-		$request = $form->getController()->getRequest();
-
+	public function getSchema(Form $form, $schemaLink) {
 		$schema = [
 			'name' => $form->getName(),
 			'id' => $form->FormName(),
 			'action' => $form->FormAction(),
 			'method' => $form->FormMethod(),
-			// @todo Not really reliable. Refactor into action on $this->Link('schema')
-			'schema_url' => $request->getURL(),
+			'schema_url' => $schemaLink,
 			'attributes' => $form->getAttributes(),
 			'data' => [],
 			'fields' => [],
@@ -62,7 +60,10 @@ class FormSchema {
 		];
 
 		// flattened nested fields are returned, rather than only top level fields.
-		$state['fields'] = $this->getFieldStates($form->Fields());
+		$state['fields'] = array_merge(
+			$this->getFieldStates($form->Fields()),
+			$this->getFieldStates($form->Actions())
+		);
 
 		if($form->Message()) {
 			$state['messages'][] = [
@@ -76,6 +77,7 @@ class FormSchema {
 
 	protected function getFieldStates($fields) {
 		$states = [];
+		/** @var FormField $field */
 		foreach ($fields as $field) {
 			$states[] = $field->getSchemaState();
 

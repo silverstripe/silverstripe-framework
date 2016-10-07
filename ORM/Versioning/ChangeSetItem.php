@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Versioning;
 use SilverStripe\Admin\CMSPreviewable;
 use SilverStripe\Assets\Thumbnail;
 use SilverStripe\Control\Controller;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyList;
@@ -109,8 +110,8 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 
 	/**
 	 * Get the type of change: none, created, deleted, modified, manymany
-	 *
 	 * @return string
+	 * @throws UnexpectedDataException
 	 */
 	public function getChangeType() {
 		if(!class_exists($this->ObjectClass)) {
@@ -146,7 +147,8 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	 * Find version of this object in the given stage
 	 *
 	 * @param string $stage
-	 * @return Versioned|DataObject
+	 * @return DataObject|Versioned
+	 * @throws UnexpectedDataException
 	 */
 	protected function getObjectInStage($stage) {
 		if(!class_exists($this->ObjectClass)) {
@@ -158,8 +160,8 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 
 	/**
 	 * Find latest version of this object
-	 *
-	 * @return Versioned|DataObject
+	 * @return DataObject|Versioned
+	 * @throws UnexpectedDataException
 	 */
 	protected function getObjectLatestVersion() {
 		if(!class_exists($this->ObjectClass)) {
@@ -177,14 +179,22 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 	public function findReferenced() {
 		if($this->getChangeType() === ChangeSetItem::CHANGE_DELETED) {
 			// If deleted from stage, need to look at live record
-			return $this->getObjectInStage(Versioned::LIVE)->findOwners(false);
+			$record = $this->getObjectInStage(Versioned::LIVE);
+			if ($record) {
+				return $record->findOwners(false);
+			}
 		} else {
 			// If changed on stage, look at owned objects there
-			return $this->getObjectInStage(Versioned::DRAFT)->findOwned()->filterByCallback(function ($owned) {
-				/** @var Versioned|DataObject $owned */
-				return $owned->stagesDiffer(Versioned::DRAFT, Versioned::LIVE);
-			});
+			$record = $this->getObjectInStage(Versioned::DRAFT);
+			if ($record) {
+				return $record->findOwned()->filterByCallback(function ($owned) {
+					/** @var Versioned|DataObject $owned */
+					return $owned->stagesDiffer(Versioned::DRAFT, Versioned::LIVE);
+				});
+			}
 		}
+		// Empty set
+		return new ArrayList();
 	}
 
 	/**
