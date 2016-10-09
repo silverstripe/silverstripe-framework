@@ -333,12 +333,13 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * schema if X-Formschema-Request header is set.
 	 *
 	 * @param Form $form
+	 * @param String $id Optional, will default to the current request URL
 	 * @return HTTPResponse
 	 */
-	protected function getSchemaResponse($form) {
+	protected function getSchemaResponse($form, $id = null) {
 		$request = $this->getRequest();
 		if($request->getHeader('X-Formschema-Request')) {
-			$data = $this->getSchemaForForm($form);
+			$data = $this->getSchemaForForm($form, $id);
 			$response = new HTTPResponse(Convert::raw2json($data));
 			$response->addHeader('Content-Type', 'application/json');
 
@@ -355,10 +356,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * based on the request data.
 	 *
 	 * @param Form $form
+	 * @param String $id Optional, will default to the current request URL
 	 * @return array
 	 */
-	protected function getSchemaForForm(Form $form) {
+	protected function getSchemaForForm(Form $form, $id = null) {
 		$request = $this->getRequest();
+		$id = $id ? $id : $request->getURL();
 		$return = null;
 
 		// Valid values for the "X-Formschema-Request" header are "schema" and "state".
@@ -373,7 +376,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$schemaParts = ['schema'];
 		}
 
-		$return = ['id' => $form->FormName()];
+		$return = ['id' => $id];
 
 		if (in_array('schema', $schemaParts)) {
 			$schemaLink = $this->getSchemaLinkForForm($form);
@@ -1302,10 +1305,11 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 		$message = _t('LeftAndMain.SAVEDUP', 'Saved.');
 		if($request->getHeader('X-Formschema-Request')) {
+			$schemaId = Controller::join_links($this->Link('schema/DetailEditForm'), $id);
 			// Ensure that newly created records have all their data loaded back into the form.
 			$form->loadDataFrom($record);
 			$form->setMessage($message, 'good');
-			$data = $this->getSchemaForForm($form);
+			$data = $this->getSchemaForForm($form, $schemaId);
 			$response = new HTTPResponse(Convert::raw2json($data));
 			$response->addHeader('Content-Type', 'application/json');
 		} else {

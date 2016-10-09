@@ -20,7 +20,6 @@ class FormSchemaTest extends SapphireTest {
 			'id' => 'Form_TestForm',
 			'action' => 'Controller/TestForm',
 			'method' => 'POST',
-			'schema_url' => 'admin/mysection/schema',
 			'attributes' => [
 				'id' => 'Form_TestForm',
 				'action' => 'Controller/TestForm',
@@ -171,7 +170,6 @@ class FormSchemaTest extends SapphireTest {
 			'id' => 'Form_TestForm',
 			'action' => 'Controller/TestForm',
 			'method' => 'POST',
-			'schema_url' => 'admin/mysection/schema',
 			'attributes' => [
 				'id' => 'Form_TestForm',
 				'action' => 'Controller/TestForm',

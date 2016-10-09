@@ -26,7 +26,6 @@ class FormSchema {
 			'id' => $form->FormName(),
 			'action' => $form->FormAction(),
 			'method' => $form->FormMethod(),
-			'schema_url' => $schemaLink,
 			'attributes' => $form->getAttributes(),
 			'data' => [],
 			'fields' => [],
