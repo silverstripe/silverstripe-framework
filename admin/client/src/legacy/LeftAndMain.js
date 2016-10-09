@@ -336,15 +336,16 @@ $.entwine('ss', function($) {
         } else {
           preview.css('min-width', options.minPreviewWidth);
         }
-        $('.cms-preview').trigger('enable');
+        preview.trigger('enable');
       } else {
-        $('.cms-preview').trigger('disable');
+        preview.trigger('disable');
         if (mode == 'split') {
           // force change mode and leave it redraw after
-          this.contentViewMode();
+          preview.trigger('forcecontent');
           return true;
         }
       }
+
       this.addClass('cms-container--' + mode + '-mode');
       return false;
     },

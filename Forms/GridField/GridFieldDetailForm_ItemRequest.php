@@ -254,7 +254,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
 				'type' => 'Includes',
 				'SilverStripe\\Admin\\LeftAndMain_EditForm',
 			]);
-			$form->addExtraClass('cms-content cms-edit-form center');
+			$form->addExtraClass('cms-content cms-edit-form center flexbox-area-grow');
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm Content');
 			if ($form->Fields()->hasTabSet()) {
 				$form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');

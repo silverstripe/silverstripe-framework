@@ -119,6 +119,8 @@ $.entwine('ss.preview', function($){
 
       if(save !== false) this.saveState('mode', modeName);
 
+      this.redraw();
+
       return this;
     },
 
@@ -287,6 +289,10 @@ $.entwine('ss.preview', function($){
       } catch (exception) {
         console.warn('localStorge is not available due to current browser / system settings.');
       }
+    },
+
+    onforcecontent: function () {
+      this.changeMode('content', false);
     },
 
     onenable: function () {

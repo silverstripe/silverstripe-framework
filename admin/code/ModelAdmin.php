@@ -173,7 +173,7 @@ abstract class ModelAdmin extends LeftAndMain {
 			new FieldList($listField),
 			new FieldList()
 		)->setHTMLID('Form_EditForm');
-		$form->addExtraClass('cms-edit-form cms-panel-padded center');
+		$form->addExtraClass('cms-edit-form cms-panel-padded center flexbox-area-grow');
 		$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 		$editFormAction = Controller::join_links($this->Link($this->sanitiseClassName($this->modelClass)), 'EditForm');
 		$form->setFormAction($editFormAction);

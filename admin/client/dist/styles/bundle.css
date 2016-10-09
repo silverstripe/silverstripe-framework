@@ -8623,6 +8623,10 @@ form.nostyle .TreeDropdownField,form.nostyle input.text,form.nostyle select,form
   max-width:auto;
 }
 
+fieldset{
+  width:100%;
+}
+
 .field.ui-tabs{
   border-bottom:0;
 }
