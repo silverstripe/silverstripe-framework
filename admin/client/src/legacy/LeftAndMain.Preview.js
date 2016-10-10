@@ -298,12 +298,16 @@ $.entwine('ss.preview', function($){
     onenable: function () {
       var $viewModeSelector = $('.preview-mode-selector');
 
+      $viewModeSelector.find('option[value="split"]').prop('disabled', false);
+
       $viewModeSelector.removeClass('split-disabled');
       $viewModeSelector.find('.disabled-tooltip').hide();
     },
 
     ondisable: function () {
       var $viewModeSelector = $('.preview-mode-selector');
+
+      $viewModeSelector.find('option[value="split"]').prop('disabled', true);
 
       $viewModeSelector.addClass('split-disabled');
       $viewModeSelector.find('.disabled-tooltip').show();
