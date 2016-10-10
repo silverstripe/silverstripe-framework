@@ -329,7 +329,7 @@ $.entwine('ss', function($) {
 
       content.css({'min-width': ''});
       preview.css({'min-width': ''});
-      
+
       if (content.width() + preview.width() >= options.minContentWidth + options.minPreviewWidth) {
         content.css({'min-width': options.minContentWidth});
         preview.css({'min-width': options.minPreviewWidth});
@@ -1447,22 +1447,15 @@ $.entwine('ss', function($) {
         $filters = $('.cms-content-filters').first(),
         collapsed = this.data('collapsed');
 
-      // Prevent the user from spamming the UI with animation requests.
-      if (this.data('animating')) {
-        return;
+      // previously using "slideDown"/"slideUp" jQuery, but it was causing issues
+      if (collapsed) {
+        this.addClass('active');
+        $filters.css('display', 'block');
+      } else {
+        this.removeClass('active');
+        $filters.css('display', '');
       }
-
-      this.toggleClass('active');
-      this.data('animating', true);
-
-      // Slide the element down / up based on it's current collapsed state.
-      $filters[collapsed ? 'slideDown' : 'slideUp']({
-        complete: function () {
-          // Update the element's state.
-          self.data('collapsed', !collapsed);
-          self.data('animating', false);
-        }
-      });
+      self.data('collapsed', !collapsed);
     },
     onclick: function () {
       this.showHide();

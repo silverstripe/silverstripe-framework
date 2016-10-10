@@ -27,7 +27,7 @@
 		</div>
 	</div>
 
-	<div class="cms-content-fields center ui-widget-content cms-panel-padded" data-layout-type="border">
+	<div class="cms-content-fields center ui-widget-content cms-panel-padded fill-height" data-layout-type="border">
 		$Tools
 
 		<div class="cms-content-view">
