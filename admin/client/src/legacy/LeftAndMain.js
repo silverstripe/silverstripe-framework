@@ -102,7 +102,8 @@ $.entwine('ss', function($) {
       el.addClass('has-chosen').chosen({
         allow_single_deselect: true,
         disable_search_threshold: 20,
-        display_disabled_options: true
+        display_disabled_options: true,
+        width: '100%'
       });
     } else {
       setTimeout(function() {
