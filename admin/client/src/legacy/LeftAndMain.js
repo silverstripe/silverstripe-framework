@@ -327,15 +327,12 @@ $.entwine('ss', function($) {
       var content = this.find('.cms-content');
       var preview = this.find('.cms-preview');
 
-      content.css('min-width', '');
-      preview.css('min-width', '');
-
+      content.css({'min-width': ''});
+      preview.css({'min-width': ''});
+      
       if (content.width() + preview.width() >= options.minContentWidth + options.minPreviewWidth) {
-        if (content.width() < options.minContentWidth) {
-          content.css('min-width', options.minContentWidth);
-        } else {
-          preview.css('min-width', options.minPreviewWidth);
-        }
+        content.css({'min-width': options.minContentWidth});
+        preview.css({'min-width': options.minPreviewWidth});
         preview.trigger('enable');
       } else {
         preview.trigger('disable');

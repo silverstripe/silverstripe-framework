@@ -685,6 +685,10 @@ body.cms {
   }
 }
 
+.panel {
+  overflow: hidden;
+}
+
 .panel--padded .ui-tabs-nav {
   float: none;
   padding: 0;
