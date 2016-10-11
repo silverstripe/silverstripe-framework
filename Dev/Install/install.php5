@@ -8,7 +8,13 @@
  **                                                                                **
  ************************************************************************************
  ************************************************************************************/
+use SilverStripe\Control\Controller;
+use SilverStripe\Core\Startup\ParameterConfirmationToken;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
+use SilverStripe\Dev\Install\DatabaseConfigurationHelper;
+use SilverStripe\ORM\DatabaseAdmin;
+use SilverStripe\ORM\DB;
+use SilverStripe\Security\Security;
 
 /**
  * SilverStripe CMS Installer
@@ -116,14 +122,10 @@ $locales = array(
 DatabaseAdapterRegistry::autodiscover();
 
 // Determine which external database modules are USABLE
-foreach(DatabaseAdapterRegistry::get_adapters() as $class => $details) {
-	$databaseClasses[$class] = $details;
-	if(file_exists($details['helperPath'])) {
-		$databaseClasses[$class]['hasModule'] = true;
-		include_once($details['helperPath']);
-	} else {
-		$databaseClasses[$class]['hasModule'] = false;
-	}
+$databaseClasses = DatabaseAdapterRegistry::get_adapters();
+foreach($databaseClasses as $class => $details) {
+	$helper = DatabaseAdapterRegistry::getDatabaseConfigurationHelper($class);
+	$databaseClasses[$class]['hasModule'] = !empty($helper);
 }
 
 // Load database config
@@ -182,7 +184,9 @@ if(file_exists('mysite/_config.php')) {
 	// Find the $database variable in the relevant config file without having to execute the config file
 	if(preg_match("/\\\$database\s*=\s*[^\n\r]+[\n\r]/", file_get_contents("mysite/_config.php"), $parts)) {
 		eval($parts[0]);
-		if($database) $alreadyInstalled = true;
+		if(!empty($database)) {
+			$alreadyInstalled = true;
+		}
 		// Assume that if $databaseConfig is defined in mysite/_config.php, then a non-environment-based installation has
 		// already gone ahead
 	} else if(preg_match("/\\\$databaseConfig\s*=\s*[^\n\r]+[\n\r]/", file_get_contents("mysite/_config.php"), $parts)) {
@@ -290,7 +294,9 @@ class InstallRequirements {
 			array(
 				"Database Configuration",
 				"Database server",
-				$usePath ? "I couldn't write to path '$databaseConfig[path]'" : "I couldn't find a database server on '$databaseConfig[server]'",
+				$usePath
+					? "I couldn't write to path '$databaseConfig[path]'"
+					: "I couldn't find a database server on '$databaseConfig[server]'",
 				$usePath ? $databaseConfig['path'] : $databaseConfig['server']
 			)
 		)) return false;
@@ -351,7 +357,9 @@ class InstallRequirements {
 
 	/**
 	 * Check if the web server is IIS and version greater than the given version.
-	 * @return boolean
+	 *
+	 * @param int $fromVersion
+	 * @return bool
 	 */
 	public function isIIS($fromVersion = 7) {
 		if(strpos($this->findWebserver(), 'IIS/') === false) {
@@ -656,8 +664,7 @@ class InstallRequirements {
 		}
 
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
-			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
-			$this->warning($testDetails);
+			$this->warning($testDetails, "$settingName is set to '$val' in php.ini.  $testDetails[2]");
 		}
 	}
 
@@ -666,8 +673,7 @@ class InstallRequirements {
 
 		$val = ini_get($settingName);
 		if(!in_array($val, $settingValues) && $val != $settingValues) {
-			$testDetails[2] = "$settingName is set to '$val' in php.ini.  $testDetails[2]";
-			$this->error($testDetails);
+			$this->error($testDetails, "$settingName is set to '$val' in php.ini.  $testDetails[2]");
 		}
 	}
 
@@ -709,16 +715,20 @@ class InstallRequirements {
 		$this->testing($testDetails);
 
 		if($mem < $min && $mem > 0) {
-			$testDetails[2] .= " You only have " . ini_get("memory_limit") . " allocated";
-			$this->error($testDetails);
+			$message = $testDetails[2] . " You only have " . ini_get("memory_limit") . " allocated";
+			$this->error($testDetails, $message);
+			return false;
 		} else if($mem < $recommended && $mem > 0) {
-			$testDetails[2] .= " You only have " . ini_get("memory_limit") . " allocated";
-			$this->warning($testDetails);
+			$message = $testDetails[2] . " You only have " . ini_get("memory_limit") . " allocated";
+			$this->warning($testDetails, $message);
+			return false;
 		} elseif($mem == 0) {
-			$testDetails[2] .= " We can't determine how much memory you have allocated. "
+			$message = $testDetails[2] . " We can't determine how much memory you have allocated. "
 				. "Install only if you're sure you've allocated at least 20 MB.";
-			$this->warning($testDetails);
+			$this->warning($testDetails, $message);
+			return false;
 		}
+		return true;
 	}
 
 	public function getPHPMemory() {
@@ -807,35 +817,41 @@ class InstallRequirements {
 
 		if(!function_exists($funcName)) {
 			$this->error($testDetails);
-		} else {
-			return true;
+			return false;
 		}
+		return true;
 	}
 
 	public function requireClass($className, $testDetails) {
 		$this->testing($testDetails);
 		if(!class_exists($className)) {
 			$this->error($testDetails);
-		} else {
 			return false;
 		}
+		return true;
 	}
 
 	/**
 	 * Require that the given class doesn't exist
+	 *
+	 * @param array $classNames
+	 * @param array $testDetails
+	 * @return bool
 	 */
 	public function requireNoClasses($classNames, $testDetails) {
 		$this->testing($testDetails);
 		$badClasses = array();
 		foreach($classNames as $className) {
-			if(class_exists($className)) $badClasses[] = $className;
+			if(class_exists($className)) {
+				$badClasses[] = $className;
+			}
 		}
 		if($badClasses) {
-			$testDetails[2] .= ".  The following classes are at fault: " . implode(', ', $badClasses);
-			$this->error($testDetails);
-		} else {
-			return true;
+			$message = $testDetails[2] . ".  The following classes are at fault: " . implode(', ', $badClasses);
+			$this->error($testDetails, $message);
+			return false;
 		}
+		return true;
 	}
 
 	public function checkApacheVersion($testDetails) {
@@ -855,20 +871,20 @@ class InstallRequirements {
 		$installedVersion = phpversion();
 
 		if(version_compare($installedVersion, $requiredVersion, '<')) {
-			$testDetails[2] = "SilverStripe requires PHP version $requiredVersion or later.\n
+			$message = "SilverStripe requires PHP version $requiredVersion or later.\n
 				PHP version $installedVersion is currently installed.\n
 				While SilverStripe requires at least PHP version $requiredVersion, upgrading to $recommendedVersion or later is recommended.\n
 				If you are installing SilverStripe on a shared web server, please ask your web hosting provider to upgrade PHP for you.";
-			$this->error($testDetails);
-			return;
+			$this->error($testDetails, $message);
+			return false;
 		}
 
 		if(version_compare($installedVersion, $recommendedVersion, '<')) {
-			$testDetails[2] = "PHP version $installedVersion is currently installed.\n
+			$message = "PHP version $installedVersion is currently installed.\n
 				Upgrading to at least PHP version $recommendedVersion is recommended.\n
 				SilverStripe should run, but you may run into issues. Future releases may require a later version of PHP.\n";
-			$this->warning($testDetails);
-			return;
+			$this->warning($testDetails, $message);
+			return false;
 		}
 
 		return true;
@@ -876,6 +892,9 @@ class InstallRequirements {
 
 	/**
 	 * Check that a module exists
+	 *
+	 * @param string $dirname
+	 * @return bool
 	 */
 	public function checkModuleExists($dirname) {
 		$path = $this->getBaseDir() . $dirname;
@@ -885,6 +904,9 @@ class InstallRequirements {
 	/**
 	 * The same as {@link requireFile()} but does additional checks
 	 * to ensure the module directory is intact.
+	 *
+	 * @param string $dirname
+	 * @param array $testDetails
 	 */
 	public function requireModule($dirname, $testDetails) {
 		$this->testing($testDetails);
@@ -1041,22 +1063,19 @@ class InstallRequirements {
 
 	/**
 	 * Get an instance of a helper class for the specific database.
+	 *
 	 * @param string $databaseClass e.g. MySQLDatabase or MSSQLDatabase
+	 * @return DatabaseConfigurationHelper
 	 */
 	public function getDatabaseConfigurationHelper($databaseClass) {
-		$adapters = DatabaseAdapterRegistry::get_adapters();
-		if(isset($adapters[$databaseClass])) {
-			$helperPath = $adapters[$databaseClass]['helperPath'];
-			$class = str_replace('.php', '', basename($helperPath));
-		}
-		return (class_exists($class)) ? new $class() : false;
+		return DatabaseAdapterRegistry::getDatabaseConfigurationHelper($databaseClass);
 	}
 
 	public function requireDatabaseFunctions($databaseConfig, $testDetails) {
 		$this->testing($testDetails);
 		$helper = $this->getDatabaseConfigurationHelper($databaseConfig['type']);
 		if (!$helper) {
-			$this->error("Couldn't load database helper code for ". $databaseConfig['type']);
+			$this->error($testDetails, "Couldn't load database helper code for ". $databaseConfig['type']);
 			return false;
 		}
 		$result = $helper->requireDatabaseFunctions($databaseConfig);
@@ -1105,8 +1124,8 @@ class InstallRequirements {
 		if($result['success']) {
 			return true;
 		} else {
-			$testDetails[2] .= ": " . $result['error'];
-			$this->error($testDetails);
+			$message = $testDetails[2] . ": " . $result['error'];
+			$this->error($testDetails, $message);
 			return false;
 		}
 	}
@@ -1116,18 +1135,21 @@ class InstallRequirements {
 		$helper = $this->getDatabaseConfigurationHelper($databaseConfig['type']);
 		$result = $helper->requireDatabaseOrCreatePermissions($databaseConfig);
 		if($result['success']) {
-			if($result['alreadyExists']) $testDetails[3] = "Database $databaseConfig[database]";
-			else $testDetails[3] = "Able to create a new database";
+			if($result['alreadyExists']) {
+				$testDetails[3] = "Database $databaseConfig[database]";
+			} else {
+				$testDetails[3] = "Able to create a new database";
+			}
 			$this->testing($testDetails);
 			return true;
 		} else {
 			if(empty($result['cannotCreate'])) {
-				$testDetails[2] .= ". Please create the database manually.";
+				$message = $testDetails[2] . ". Please create the database manually.";
 			} else {
-				$testDetails[2] .= " (user '$databaseConfig[username]' doesn't have CREATE DATABASE permissions.)";
+				$message = $testDetails[2] . " (user '$databaseConfig[username]' doesn't have CREATE DATABASE permissions.)";
 			}
 
-			$this->error($testDetails);
+			$this->error($testDetails, $message);
 			return false;
 		}
 	}
@@ -1139,10 +1161,10 @@ class InstallRequirements {
 		if ($result['success']) {
 			return true;
 		} else {
-			$testDetails[2] = "Silverstripe cannot alter tables. This won't prevent installation, however it may "
+			$message = "Silverstripe cannot alter tables. This won't prevent installation, however it may "
 					. "cause issues if you try to run a /dev/build once installed.";
-			$this->warning($testDetails);
-			return;
+			$this->warning($testDetails, $message);
+			return false;
 		}
 	}
 
@@ -1158,10 +1180,11 @@ class InstallRequirements {
 
 		if(!$missing) {
 			return true;
-		} else {
-			$testDetails[2] .= " (the following PHP variables are missing: " . implode(", ", $missing) . ")";
-			$this->error($testDetails);
 		}
+
+		$message = $testDetails[2] . " (the following PHP variables are missing: " . implode(", ", $missing) . ")";
+		$this->error($testDetails, $message);
+		return false;
 	}
 
 
@@ -1209,19 +1232,31 @@ class InstallRequirements {
 		$this->tests[$section][$test] = array("good", $message);
 	}
 
-	public function error($testDetails) {
+	public function error($testDetails, $message = null) {
+		if (!is_array($testDetails)) {
+			throw new InvalidArgumentException("Invalid error");
+		}
 		$section = $testDetails[0];
 		$test = $testDetails[1];
+		if (!$message && isset($testDetails[2])) {
+			$message = $testDetails[2];
+		}
 
-		$this->tests[$section][$test] = array("error", isset($testDetails[2]) ? $testDetails[2] : null);
+		$this->tests[$section][$test] = array("error", $message);
 		$this->errors[] = $testDetails;
 	}
 
-	public function warning($testDetails) {
+	public function warning($testDetails, $message = null) {
+		if (!is_array($testDetails)) {
+			throw new InvalidArgumentException("Invalid warning");
+		}
 		$section = $testDetails[0];
 		$test = $testDetails[1];
+		if (!$message && isset($testDetails[2])) {
+			$message = $testDetails[2];
+		}
 
-		$this->tests[$section][$test] = array("warning", isset($testDetails[2]) ? $testDetails[2] : null);
+		$this->tests[$section][$test] = array("warning", $message);
 		$this->warnings[] = $testDetails;
 	}
 
@@ -1345,9 +1380,6 @@ global \$database;
 
 require_once('conf/ConfigureFromEnv.php');
 
-// Set the site locale
-i18n::set_locale('$locale');
-
 PHP
 			);
 
@@ -1372,9 +1404,6 @@ global \$databaseConfig;
 {$databaseConfigContent}
 );
 
-// Set the site locale
-i18n::set_locale('$locale');
-
 PHP
 			);
 		}
@@ -1390,14 +1419,20 @@ After:
 # YAML configuration for SilverStripe
 # See http://doc.silverstripe.org/framework/en/topics/configuration
 # Caution: Indentation through two spaces, not tabs
-SSViewer:
-  theme: '$theme'
+SilverStripe\\View\\SSViewer:
+  themes:
+    - '$theme'
+    - '\$default'
+SilverStripe\\i18n\\i18n:
+  default_locale: '$locale'
 YML
 		);
 
 		if(!$this->checkModuleExists('cms')) {
 			$this->writeToFile("mysite/code/RootURLController.php", <<<PHP
 <?php
+
+use SilverStripe\\Control\\Controller;
 
 class RootURLController extends Controller {
 
@@ -1442,7 +1477,7 @@ PHP
 		DB::connect($databaseConfig);
 
 		$dbAdmin = new DatabaseAdmin();
-		$dbAdmin->init();
+		$dbAdmin->doInit();
 
 		$dbAdmin->doBuild(true);
 
@@ -1500,9 +1535,9 @@ HTML;
 
 		if((@$fh = fopen($base . $filename, 'wb')) && fwrite($fh, $content) && fclose($fh)) {
 			return true;
-		} else {
-			$this->error("Couldn't write to file $base$filename");
 		}
+		$this->error("Couldn't write to file $base$filename");
+		return false;
 	}
 
 	public function createHtaccess() {
@@ -1684,6 +1719,8 @@ HTML;
 	/**
 	 * Show an installation status message.
 	 * The output differs depending on whether this is CLI or web based
+	 *
+	 * @param string $msg
 	 */
 	public function statusMessage($msg) {
 		echo "<li>$msg</li>\n";
