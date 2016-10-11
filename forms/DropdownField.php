@@ -318,13 +318,22 @@ class DropdownField extends FormField {
 	public function getSourceAsArray()
 	{
 		$source = $this->getSource();
+
+		// Simplify source if presented as dataobject list
+		if ($source instanceof SS_List) {
+			$source = $source->map();
+		}
+		if ($source instanceof SS_Map) {
+			$source = $source->toArray();
+		}
+
 		if (is_array($source)) {
 			return $source;
-		} else {
-			$sourceArray = array();
-			foreach ($source as $key => $value) {
-				$sourceArray[$key] = $value;
-			}
+		}
+
+		$sourceArray = array();
+		foreach ($source as $key => $value) {
+			$sourceArray[$key] = $value;
 		}
 		return $sourceArray;
 	}
