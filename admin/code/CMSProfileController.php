@@ -49,7 +49,7 @@ class CMSProfileController extends LeftAndMain {
 			$form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');
 		}
 
-		$form->addExtraClass('member-profile-form root-form cms-edit-form center');
+		$form->addExtraClass('member-profile-form root-form cms-edit-form center fill-height');
 
 		return $form;
 	}
