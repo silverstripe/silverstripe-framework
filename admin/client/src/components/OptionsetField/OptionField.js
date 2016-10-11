@@ -55,7 +55,7 @@ class OptionField extends SilverStripeComponent {
       : this.props.title;
 
     // default and fallback to a Radio button
-    let Option;
+    let Option = null;
 
     switch (this.props.type) {
       case 'checkbox':

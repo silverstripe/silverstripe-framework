@@ -102,7 +102,8 @@ $.entwine('ss', function($) {
       el.addClass('has-chosen').chosen({
         allow_single_deselect: true,
         disable_search_threshold: 20,
-        display_disabled_options: true
+        display_disabled_options: true,
+        width: '100%'
       });
     } else {
       setTimeout(function() {
@@ -260,6 +261,12 @@ $.entwine('ss', function($) {
       if (dirty) this.redraw();
     },
 
+    clearViewMode: function () {
+      this.removeClass('cms-container--split-mode');
+      this.removeClass('cms-container--preview-mode');
+      this.removeClass('cms-container--content-mode');
+    },
+
     /**
      * Enable the split view - with content on the left and preview on the right.
      */
@@ -294,26 +301,51 @@ $.entwine('ss', function($) {
 
       if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
 
-      // Reset the algorithm.
-      this.data('jlayout', jLayout.threeColumnCompressor(
-        {
-          menu: this.children('.cms-menu'),
-          content: this.children('.cms-content'),
-          preview: this.children('.cms-preview')
-        },
-        this.getLayoutOptions()
-      ));
+      // disable split mode if screen is too small
+      var changed = this.setProperMode();
 
-      // Trigger layout algorithm once at the top. This also lays out children - we move from outside to
-      // inside, resizing to fit the parent.
-      this.layout();
+      // if changed, then the changing would trigger a redraw, so we don't want to redraw twice
+      if (!changed) {
+        // Redraw on all the children that need it
+        this.find('.cms-panel-layout').redraw();
+        this.find('.cms-content-fields[data-layout-type]').redraw();
+        this.find('.cms-edit-form[data-layout-type]').redraw();
+        this.find('.cms-preview').redraw();
+        this.find('.cms-content').redraw();
+      }
+    },
 
-      // Redraw on all the children that need it
-      this.find('.cms-panel-layout').redraw();
-      this.find('.cms-content-fields[data-layout-type]').redraw();
-      this.find('.cms-edit-form[data-layout-type]').redraw();
-      this.find('.cms-preview').redraw();
-      this.find('.cms-content').redraw();
+    /**
+     * Changes the viewing mode if the screen is too small, disables split mode.
+     *
+     * @returns {boolean} changedMode - so redraw is not called twice
+     */
+    setProperMode: function () {
+      var options = this.getLayoutOptions();
+      var mode = options.mode;
+      this.clearViewMode();
+
+      var content = this.find('.cms-content');
+      var preview = this.find('.cms-preview');
+
+      content.css({'min-width': 0});
+      preview.css({'min-width': 0});
+
+      if (content.width() + preview.width() >= options.minContentWidth + options.minPreviewWidth) {
+        content.css({'min-width': options.minContentWidth});
+        preview.css({'min-width': options.minPreviewWidth});
+        preview.trigger('enable');
+      } else {
+        preview.trigger('disable');
+        if (mode == 'split') {
+          // force change mode and leave it redraw after
+          preview.trigger('forcecontent');
+          return true;
+        }
+      }
+
+      this.addClass('cms-container--' + mode + '-mode');
+      return false;
     },
 
     /**
@@ -717,7 +749,6 @@ $.entwine('ss', function($) {
           // Set loading state and store element state
           var origStyle = contentEl.attr('style');
           var origParent = contentEl.parent();
-          var origParentLayoutApplied = (typeof origParent.data('jlayout')!=='undefined');
           var layoutClasses = ['east', 'west', 'center', 'north', 'south', 'column-hidden'];
           var elemClasses = contentEl.attr('class');
           var origLayoutClasses = [];
@@ -741,12 +772,6 @@ $.entwine('ss', function($) {
           // Replace panel completely (we need to override the "layout" attribute, so can't replace the child instead)
           contentEl.replaceWith(newContentEl);
 
-          // Force jlayout to rebuild internal hierarchy to point to the new elements.
-          // This is only necessary for elements that are at least 3 levels deep. 2nd level elements will
-          // be taken care of when we lay out the top level element (.cms-container).
-          if (!origParent.is('.cms-container') && origParentLayoutApplied) {
-            origParent.layout();
-          }
         });
 
         // Re-init tabs (in case the form tag itself is a tabset)
@@ -1423,22 +1448,15 @@ $.entwine('ss', function($) {
         $filters = $('.cms-content-filters').first(),
         collapsed = this.data('collapsed');
 
-      // Prevent the user from spamming the UI with animation requests.
-      if (this.data('animating')) {
-        return;
+      // previously using "slideDown"/"slideUp" jQuery, but it was causing issues
+      if (collapsed) {
+        this.addClass('active');
+        $filters.css('display', 'block');
+      } else {
+        this.removeClass('active');
+        $filters.css('display', '');
       }
-
-      this.toggleClass('active');
-      this.data('animating', true);
-
-      // Slide the element down / up based on it's current collapsed state.
-      $filters[collapsed ? 'slideDown' : 'slideUp']({
-        complete: function () {
-          // Update the element's state.
-          self.data('collapsed', !collapsed);
-          self.data('animating', false);
-        }
-      });
+      self.data('collapsed', !collapsed);
     },
     onclick: function () {
       this.showHide();

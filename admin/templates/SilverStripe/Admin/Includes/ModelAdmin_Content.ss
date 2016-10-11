@@ -1,4 +1,4 @@
-<div class="cms-content cms-tabset center $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content">
+<div class="cms-content flexbox-area-grow cms-tabset center $BaseCSSClasses" data-layout-type="border" data-pjax-fragment="Content">
 
 	<div class="cms-content-header north">
 		<div class="cms-content-header-info">
@@ -27,7 +27,7 @@
 		</div>
 	</div>
 
-	<div class="cms-content-fields center ui-widget-content cms-panel-padded" data-layout-type="border">
+	<div class="cms-content-fields center ui-widget-content cms-panel-padded fill-height" data-layout-type="border">
 		$Tools
 
 		<div class="cms-content-view">

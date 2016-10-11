@@ -126,20 +126,18 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div className="cms-content__inner no-preview">
-        <div className="cms-content__left cms-campaigns collapse in" aria-expanded="true">
-          <Toolbar>
-            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
-          </Toolbar>
-          <div className="panel--padded panel--scrollable panel--single-toolbar">
-            <div className="toolbar--content">
-              <div className="btn-toolbar">
-                <FormAction {...formActionProps} />
-              </div>
+      <div className="fill-height cms-campaigns" aria-expanded="true">
+        <Toolbar>
+          <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
+        </Toolbar>
+        <div className="panel panel--padded panel--scrollable flexbox-area-grow">
+          <div className="toolbar toolbar--content">
+            <div className="btn-toolbar">
+              <FormAction {...formActionProps} />
             </div>
-            <div className="campaign-admin">
-              <FormBuilder {...formBuilderProps} />
-            </div>
+          </div>
+          <div className="campaign-admin">
+            <FormBuilder {...formBuilderProps} />
           </div>
         </div>
       </div>
@@ -180,15 +178,13 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div className="cms-content__inner">
+      <div>
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
 
-        <div className="panel panel--padded panel--scrollable panel--single-toolbar">
-          <div className="form--inline">
-            <FormBuilder {...formBuilderProps} />
-          </div>
+        <div className="panel panel--padded panel--scrollable flexbox-area-grow form--inline">
+          <FormBuilder {...formBuilderProps} />
         </div>
       </div>
     );
@@ -209,14 +205,12 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div className="cms-content__inner">
+      <div>
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
-        <div className="panel panel--padded panel--scrollable panel--single-toolbar">
-          <div className="form--inline">
-            <FormBuilder {...formBuilderProps} />
-          </div>
+        <div className="panel panel--padded panel--scrollable flexbox-area-grow form--inline">
+          <FormBuilder {...formBuilderProps} />
         </div>
       </div>
     );

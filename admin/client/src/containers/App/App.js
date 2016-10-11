@@ -7,7 +7,9 @@ import SilverStripeComponent from 'lib/SilverStripeComponent';
  */
 class App extends SilverStripeComponent {
   render() {
-    return (<div className="app">{this.props.children}</div>);
+    // TODO re-add <div className="app"> wrapper when applying to document.body
+    const Child = React.Children.only(this.props.children);
+    return (Child);
   }
 }
 

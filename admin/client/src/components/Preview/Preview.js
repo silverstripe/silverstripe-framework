@@ -57,15 +57,15 @@ class Preview extends SilverStripeComponent {
         </div>
       );
     } else {
-      body = <iframe className="preview__iframe" src={previewUrl}></iframe>;
+      body = <iframe className="flexbox-area-grow preview__iframe" src={previewUrl}></iframe>;
     }
 
     // Combine elements
     return (
-      <div className="cms-content__right preview">
+      <div className="flexbox-area-grow fill-height cms-content__right preview">
         {body}
         <a href="" className="cms-content__back-btn font-icon-left-open-big" />
-        <div className="toolbar--south">
+        <div className="toolbar toolbar--south">
           <div className="btn-toolbar">
             {toolbarButtons}
           </div>

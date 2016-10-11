@@ -5,7 +5,7 @@ jest.unmock('react-addons-test-utils');
 jest.unmock('../CheckboxSetField');
 
 import React from 'react';
-import ReactTestUtils from'react-addons-test-utils';
+import ReactTestUtils from 'react-addons-test-utils';
 // get non-default because it uses FieldHolder by default
 import { CheckboxSetField } from '../CheckboxSetField';
 
@@ -68,7 +68,7 @@ describe('CheckboxSetField', () => {
     });
 
     it('should generate a key for field', () => {
-      const key = checkboxSetField.getItemKey({value: 'two'});
+      const key = checkboxSetField.getItemKey({ value: 'two' });
 
       expect(key).toEqual('checkbox-two');
     });
@@ -87,7 +87,7 @@ describe('CheckboxSetField', () => {
     it('should add the selected value', () => {
       const event = new Event('click');
 
-      checkboxSetField.handleChange(event, {id: 'checkbox-two', value: 1});
+      checkboxSetField.handleChange(event, { id: 'checkbox-two', value: 1 });
 
       expect(checkboxSetField.props.onChange).toBeCalledWith(
         event,
@@ -98,7 +98,7 @@ describe('CheckboxSetField', () => {
     it('should remove the unselected value', () => {
       const event = new Event('click');
 
-      checkboxSetField.handleChange(event, {id: 'checkbox-one', value: 0});
+      checkboxSetField.handleChange(event, { id: 'checkbox-one', value: 0 });
 
       expect(checkboxSetField.props.onChange).toBeCalledWith(
         event,

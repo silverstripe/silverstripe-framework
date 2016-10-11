@@ -60,7 +60,7 @@ function fieldHolder(Field) {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
       const classNames = [
-        'field form__field-holder',
+        'field',
         this.props.extraClass,
       ];
       if (this.props.readOnly) {
@@ -81,7 +81,9 @@ function fieldHolder(Field) {
       return (
         <FormGroup {...this.getHolderProps()}>
           {this.getLeftTitle()}
-          <Field {...this.props} />
+          <div className="form__field-holder">
+            <Field {...this.props} />
+          </div>
           {this.getRightTitle()}
           {this.getDescription()}
         </FormGroup>

@@ -1589,6 +1589,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			if ($record instanceof CMSPreviewable) {
 				$form->addExtraClass('cms-previewable');
 			}
+			$form->addExtraClass('fill-height');
 
 			// Set this if you want to split up tabs into a separate header row
 			// if($form->Fields()->hasTabset()) {

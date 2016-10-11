@@ -4,7 +4,7 @@
 .toolbar--south {
   @include make-container();
   height: $toolbar-total-height;
-  background-color: $body-bg;
+  width: 100%;
 
   .btn-toolbar {
     // TODO Remove '.cms .btn-toolbar' override
@@ -15,7 +15,7 @@
 
 // Northern bar containing breadcrumb, tabs etc.
 .toolbar--north {
-  display: block;
+  // display: block;
   background-image: none;
   background-color: $background-darker;
   border-bottom: 1px solid $border-color;
@@ -43,6 +43,7 @@
   margin-right: -$panel-padding-x;
   padding: $spacer-xs;
 
+
   @include media-breakpoint-down(md) {
 
     // If toolbar has too many items for smaller screens
@@ -68,10 +69,9 @@
 .toolbar--south {
   padding-top: $spacer-xs;
   padding-bottom: $spacer-xs;
-  position: absolute;
-  bottom: 0;
   border-top: 1px solid $border-color;
   width: 100%;
+  background-color: $background-main;
 }
 
 .toolbar__back-button,

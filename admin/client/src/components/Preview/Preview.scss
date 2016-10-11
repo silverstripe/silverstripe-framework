@@ -1,7 +1,24 @@
+.preview {
+  position: relative;
+
+  // Overlay preview at smaller sizes
+  @include media-breakpoint-down(md) {
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    width: 100%;
+  }
+}
+
 .preview__iframe {
-  width: 100%;
   height: calc(100% - #{$toolbar-total-height});
+  width: 100%;
   border: 0;
+  display: block;
+
+  @include media-breakpoint-down(md) {
+    width: 100%;
+  }
 }
 
 .preview__file-container {

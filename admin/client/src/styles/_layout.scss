@@ -16,17 +16,16 @@
   height: 100%;
 }
 
-.cms-content__split--left-sm {
-  .cms-content__right {
-    position: relative;
-    display: none;
-  }
-
-  .cms-content__left {
+.campaign-items {
+  @include media-breakpoint-down(md) {
     width: 100%;
-    position: absolute;
-    left: 0;
+    z-index: 1;
   }
+}
+
+.campaigns {
+  position: relative;
+  height: 100%;
 
   // Overlay preview if there isn't enough space for both items and preview
   .cms-content--selected {
@@ -59,7 +58,7 @@
   }
 
   @include media-breakpoint-up(lg) {
-    padding-left: $cms-panel-sm;
+    // padding-left: $cms-panel-sm;
 
     .cms-content__left {
       width: $cms-panel-sm;
@@ -76,7 +75,7 @@
   }
 
   @include media-breakpoint-up(xl) {
-    padding-left: $cms-panel-md;
+    // padding-left: $cms-panel-md;
 
     .cms-content__left {
       width: $cms-panel-md;
@@ -90,6 +89,7 @@
 .panel {
   margin-left: auto;
   margin-right: auto;
+  width: 100%;
 }
 
 .panel--padded {
@@ -99,7 +99,6 @@
 // Scrolling panels
 .panel--scrollable {
   overflow-y: auto;
-  height: 100%;
 }
 
 // Panel height adjustments for scrolling
@@ -134,4 +133,53 @@
 
 .z-depth-4 {
   box-shadow: $z-depth-4;
+}
+
+
+// TEMPORY FLEXBOX STYLES
+// Reference https://css-tricks.com/boxes-fill-height-dont-squish/
+// Reference http://codepen.io/clarkepaul/pen/qaNWAY
+
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+// Flex magic
+// Nested items take up height
+.fill-height {
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+// Nested items take up width
+.fill-width {
+  width: 100%;
+  // height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+  flex-direction: row; // Default
+}
+
+// Item to take up available space
+.flexbox-area-grow {
+  -ms-flex: 1;
+  flex: 1;
 }

@@ -27,7 +27,6 @@ require('expose?Router!lib/Router');
 require('i18n.js');
 require('../legacy/sspath.js');
 require('../legacy/ssui.core.js');
-require('../legacy/LeftAndMain.Layout.js');
 require('../legacy/LeftAndMain.js');
 require('../legacy/LeftAndMain.ActionTabSet.js');
 require('../legacy/LeftAndMain.Panel.js');

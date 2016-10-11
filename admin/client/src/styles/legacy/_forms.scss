@@ -14,6 +14,11 @@ form.nostyle {
 	@include clear-form-field-styles();
 }
 
+// need this for consistent <fieldset> behaviour
+fieldset {
+	width: 100%;
+}
+
 .field { // TODO convert to .form-group
 
 	&.ui-tabs {
@@ -844,10 +849,6 @@ div.switch-states{
 
 .btn-toolbar .ss-ui-button {
 	margin-left: 5px;
-}
-
-.toolbar--south.cms-content-actions {
-	width: 100% !important;
 }
 
 // Override Bootstrap hidden file upload until they have a good way of showing uploaded file names
