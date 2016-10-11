@@ -6,12 +6,37 @@
 class DropdownFieldTest extends SapphireTest {
 
 	public function testGetSource() {
-		$source = array(1=>'one');
+		$source = array(1=>'one', 2 => 'two');
 		$field = new DropdownField('Field', null, $source);
 		$this->assertEquals(
-			$field->getSource(),
+			$source,
+			$field->getSource()
+		);
+		$this->assertEquals(
+			$source,
+			$field->getSourceAsArray()
+		);
+
+		$items = new ArrayList([
+			[ 'ID' => 1, 'Title' => 'ichi', 'OtherField' => 'notone' ],
+			[ 'ID' => 2, 'Title' => 'ni', 'OtherField' => 'nottwo' ],
+		]);
+		$field->setSource($items);
+		$this->assertEquals(
+			$field->getSourceAsArray(),
 			array(
-				1 => 'one'
+				1 => 'ichi',
+				2 => 'ni',
+			)
+		);
+
+		$map = new SS_Map($items, 'ID', 'OtherField');
+		$field->setSource($map);
+		$this->assertEquals(
+			$field->getSourceAsArray(),
+			array(
+				1 => 'notone',
+				2 => 'nottwo',
 			)
 		);
 	}
