@@ -1426,6 +1426,7 @@ form.member-profile-form {
     // always show a y scroll bar as popups like TreeDropdowns
     // can trigger longer pages and the extra scroll bar doesn't fire our sizing bar
     overflow-y: auto;
+    background: transparent;
 
     #Root_Main {
       .confirmedpassword {

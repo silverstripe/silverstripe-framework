@@ -10513,6 +10513,7 @@ form.member-profile-form #Permissions .optionset li{
 
 .cms .cms-content-fields{
   overflow-y:auto;
+  background:transparent;
 }
 
 .cms .cms-content-fields #Root_Main .confirmedpassword{
