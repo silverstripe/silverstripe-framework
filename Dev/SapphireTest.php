@@ -689,6 +689,49 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			);
 		}
 	}
+	/**
+	 * Asserts that no items in a given list appear in the given dataobject list
+	 *
+	 * @param SS_List|array $matches The patterns to match.  Each pattern is a map of key-value pairs.  You can
+	 * either pass a single pattern or an array of patterns.
+	 * @param SS_List $dataObjectSet The {@link SS_List} to test.
+	 *
+	 * Examples
+	 * --------
+	 * Check that $members doesn't have an entry with Email = sam@example.com:
+	 *      $this->assertNotDOSContains(array('Email' => '...@example.com'), $members);
+	 *
+	 * Check that $members doesn't have entries with Email = sam@example.com and with
+	 * Email = ingo@example.com:
+	 *      $this->assertNotDOSContains(array(
+	 *         array('Email' => '...@example.com'),
+	 *         array('Email' => 'i...@example.com'),
+	 *      ), $members);
+	 */
+	public function assertNotDOSContains($matches, $dataObjectSet) {
+		$extracted = array();
+		foreach($dataObjectSet as $object) {
+			/** @var DataObject $object */
+			$extracted[] = $object->toMap();
+		}
+
+		$matched = [];
+		foreach($matches as $match) {
+			foreach($extracted as $i => $item) {
+				if($this->dataObjectArrayMatch($item, $match)) {
+					$matched[] = $extracted[$i];
+					break;
+				}
+			}
+
+			// We couldn't find a match - assertion failed
+			$this->assertEmpty(
+				$matched,
+				"Failed asserting that the SS_List dosn't contain a set of objects. "
+				. "Found objects were: " . var_export($matched, true)
+			);
+		}
+	}
 
 	/**
 	 * Assert that the given {@link SS_List} includes only DataObjects matching the given

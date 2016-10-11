@@ -61,6 +61,13 @@ class ReadonlyField extends FormField {
 		return parent::castingHelper($field);
 	}
 
+	public function getSchemaStateDefaults() {
+		$values = parent::getSchemaStateDefaults();
+		// Suppress `<i>('none')</i>` from appearing in react as a literal
+		$values['value'] = $this->dataValue();
+		return $values;
+	}
+
 
 	/**
 	 * If $dontEscape is true the returned value will be plain text

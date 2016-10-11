@@ -3,15 +3,18 @@
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Versioning\Versioned;
 
-
+/**
+ * @mixin Versioned
+ */
 class ChangeSetItemTest_Versioned extends DataObject {
 	private static $db = [
 		'Foo' => 'Int'
 	];
 
 	private static $extensions = [
-		"SilverStripe\\ORM\\Versioning\\Versioned"
+		Versioned::class
 	];
 
 	function canEdit($member = null) { return true; }
@@ -24,10 +27,11 @@ class ChangeSetItemTest_Versioned extends DataObject {
 class ChangeSetItemTest extends SapphireTest {
 
 	protected $extraDataObjects = [
-		'ChangeSetItemTest_Versioned'
+		ChangeSetItemTest_Versioned::class
 	];
 
-	function testChangeType() {
+	public function testChangeType() {
+		$this->logInWithPermission('ADMIN');
 		$object = new ChangeSetItemTest_Versioned(['Foo' => 1]);
 		$object->write();
 
@@ -79,7 +83,8 @@ class ChangeSetItemTest extends SapphireTest {
 		);
 	}
 
-	function testGetForObject() {
+	public function testGetForObject() {
+		$this->logInWithPermission('ADMIN');
 		$object = new ChangeSetItemTest_Versioned(['Foo' => 1]);
 		$object->write();
 
