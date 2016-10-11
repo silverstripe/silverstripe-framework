@@ -140,13 +140,16 @@
 // Reference https://css-tricks.com/boxes-fill-height-dont-squish/
 // Reference http://codepen.io/clarkepaul/pen/qaNWAY
 
-*, *:before, *:after {
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   width: 100%;
   height: 100%;
   margin: 0;

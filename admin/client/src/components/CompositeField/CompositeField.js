@@ -14,9 +14,8 @@ class CompositeField extends SilverStripeComponent {
         'legend',
         this.props.data.legend
       );
-    } else {
-      return null;
     }
+    return null;
   }
 
   render() {

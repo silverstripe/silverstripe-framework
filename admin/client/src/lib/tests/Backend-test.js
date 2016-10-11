@@ -8,6 +8,15 @@ jest.unmock('merge');
 
 import backend from '../Backend';
 
+/**
+ * Return a mock function that returns a promise
+ */
+function getMockPromise(data) {
+  const mock = jest.genMockFunction();
+  mock.mockImplementation(() => Promise.resolve(data));
+  return mock;
+}
+
 // Mock out the get/post/put/delete methods in the backend
 // So that we can isolate our test to the behaviour of createEndpointFetcher()
 // The mocked getters will pass returnValue to the resulting promise's then() call
@@ -18,15 +27,6 @@ function getBackendMock(returnValue) {
     put: getMockPromise(returnValue),
     delete: getMockPromise(returnValue),
   });
-}
-
-/**
- * Return a mock function that returns a promise
- */
-function getMockPromise(data) {
-  const mock = jest.genMockFunction();
-  mock.mockImplementation(() => Promise.resolve(data));
-  return mock;
 }
 
 describe('Backend', () => {
@@ -151,13 +151,10 @@ describe('Backend', () => {
       const promise = endpoint({ id: 1, values: { a: 'aye', b: 'bee' } });
 
       expect(mock.get)
-        .toBeCalledWith(
-          'http://example.org?id=1&values%5Ba%5D=aye&values%5Bb%5D=bee',
-          {
-            Accept: 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-          }
-        );
+        .toBeCalledWith('http://example.org?id=1&values%5Ba%5D=aye&values%5Bb%5D=bee', {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        });
 
       return promise
         .catch((e) => expect(e).toBeFalsy())
@@ -177,8 +174,7 @@ describe('Backend', () => {
       expect(mock.post)
         .toBeCalledWith(
           'http://example.org',
-          '{"id":1,"values":{"a":"aye","b":"bee"}}',
-          {
+          '{"id":1,"values":{"a":"aye","b":"bee"}}', {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           }
@@ -207,8 +203,7 @@ describe('Backend', () => {
       expect(mock.post)
         .toBeCalledWith(
           'http://example.com/1/2/?foo=bar',
-          'two=2&three=3',
-          {
+          'two=2&three=3', {
             Accept: 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded',
           }
@@ -239,8 +234,7 @@ describe('Backend', () => {
       expect(mock.post)
         .toBeCalledWith(
           'http://example.com/1/2/?foo=bar&three=3',
-          '{"two":2}',
-          {
+          '{"two":2}', {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           }
@@ -268,13 +262,10 @@ describe('Backend', () => {
       });
 
       expect(mock.get)
-        .toBeCalledWith(
-          'http://example.com/1/2/?foo=bar&two=2&three=3',
-          {
-            Accept: 'application/json',
-            'Content-Type': 'application/x-www-form-urlencoded',
-          }
-        );
+        .toBeCalledWith('http://example.com/1/2/?foo=bar&two=2&three=3', {
+          Accept: 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        });
 
       return promise
         .catch((e) => expect(e).toBeFalsy())
@@ -302,8 +293,7 @@ describe('Backend', () => {
             two: 'updated',
             four: { fourOne: true, fourTwo: true },
             three: 3,
-          }),
-          {
+          }), {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           }

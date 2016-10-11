@@ -17,11 +17,11 @@ class LookupField extends SilverStripeComponent {
    * @returns {string} csv
    */
   getValueCSV() {
-    let values = this.props.value;
+    const values = this.props.value;
 
     if (!Array.isArray(values) &&
       (values || typeof values === 'string' || typeof values === 'number')) {
-      const item = this.props.source.find((item) => item.value === values);
+      const item = this.props.source.find((next) => next.value === values);
       if (item) {
         return item.title;
       }
@@ -33,7 +33,7 @@ class LookupField extends SilverStripeComponent {
     }
     return values
       .map((value) => {
-        const item = this.props.source.find((item) => item.value === value);
+        const item = this.props.source.find((next) => next.value === value);
         return item && item.title;
       })
       .filter((value) => `${value}`.length)
@@ -46,7 +46,6 @@ class LookupField extends SilverStripeComponent {
    * @returns {object} properties
    */
   getFieldProps() {
-
     return {
       id: this.props.id,
       name: this.props.name,

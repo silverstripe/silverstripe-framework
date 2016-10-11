@@ -34,7 +34,7 @@ describe('OptionsetField', () => {
 
   describe('getItemKey()', () => {
     it('should generate a key for field', () => {
-      const key = setField.getItemKey({value: 'two'});
+      const key = setField.getItemKey({ value: 'two' });
 
       expect(key).toEqual('set-two');
     });
@@ -44,7 +44,7 @@ describe('OptionsetField', () => {
     it('should set the selected value', () => {
       const event = new Event('click');
 
-      setField.handleChange(event, {id: 'set-one', value: 1});
+      setField.handleChange(event, { id: 'set-one', value: 1 });
 
       expect(setField.props.onChange).toBeCalledWith(
         event,

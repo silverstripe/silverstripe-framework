@@ -2137,7 +2137,7 @@ function t(e){r(this,t)
 var n=o(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.handleChange=n.handleChange.bind(n),n}return a(t,e),s(t,[{key:"handleChange",value:function n(e){"function"==typeof this.props.onChange?this.props.onChange(e,{id:this.props.id,value:e.target.checked?1:0
 }):"function"==typeof this.props.onClick&&this.props.onClick(e,{id:this.props.id,value:e.target.checked?1:0})}},{key:"getInputProps",value:function i(){return{id:this.props.id,name:this.props.name,disabled:this.props.disabled,
-readOnly:this.props.readOnly,className:this.props.className+" "+this.props.extraClass,onChange:this.handleChange,checked:!!this.props.value,value:1}}},{key:"render",value:function l(){var e=null!==this.props.leftTitle?this.props.leftTitle:this.props.title,t=void 0
+readOnly:this.props.readOnly,className:this.props.className+" "+this.props.extraClass,onChange:this.handleChange,checked:!!this.props.value,value:1}}},{key:"render",value:function l(){var e=null!==this.props.leftTitle?this.props.leftTitle:this.props.title,t=null
 
 
 switch(this.props.type){case"checkbox":t=h.Checkbox

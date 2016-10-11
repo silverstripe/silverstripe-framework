@@ -151,7 +151,9 @@ class CampaignAdminList extends SilverStripeComponent {
 
     return (
       <div className="fill-width campaigns">
-        <div className="fill-height campaign-items cms-content__left cms-campaigns" aria-expanded="true">
+        <div className="fill-height campaign-items cms-content__left cms-campaigns"
+          aria-expanded="true"
+        >
           <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
             <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
