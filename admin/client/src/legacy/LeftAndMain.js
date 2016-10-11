@@ -328,8 +328,8 @@ $.entwine('ss', function($) {
       var content = this.find('.cms-content');
       var preview = this.find('.cms-preview');
 
-      content.css({'min-width': ''});
-      preview.css({'min-width': ''});
+      content.css({'min-width': 0});
+      preview.css({'min-width': 0});
 
       if (content.width() + preview.width() >= options.minContentWidth + options.minPreviewWidth) {
         content.css({'min-width': options.minContentWidth});

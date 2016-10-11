@@ -984,7 +984,7 @@ e||(this.find(".cms-panel-layout").redraw(),this.find(".cms-content-fields[data-
 }},setProperMode:function p(){var e=this.getLayoutOptions(),t=e.mode
 this.clearViewMode()
 var n=this.find(".cms-content"),i=this.find(".cms-preview")
-if(n.css({"min-width":""}),i.css({"min-width":""}),n.width()+i.width()>=e.minContentWidth+e.minPreviewWidth)n.css({"min-width":e.minContentWidth}),i.css({"min-width":e.minPreviewWidth}),i.trigger("enable")
+if(n.css({"min-width":0}),i.css({"min-width":0}),n.width()+i.width()>=e.minContentWidth+e.minPreviewWidth)n.css({"min-width":e.minContentWidth}),i.css({"min-width":e.minPreviewWidth}),i.trigger("enable")
 else if(i.trigger("disable"),"split"==t)return i.trigger("forcecontent"),!0
 return this.addClass("cms-container--"+t+"-mode"),!1},checkCanNavigate:function h(e){var t=this._findFragments(e||["Content"]),n=t.find(":data(changetracker)").add(t.filter(":data(changetracker)")),i=!0
 
@@ -1359,9 +1359,9 @@ n.addClass("center"),n.bind("load",function(){t._adjustIframeForPreview(),t._loa
 this._super()},_supportsLocalStorage:function f(){var e=new Date,t,n
 try{return(t=window.localStorage).setItem(e,e),n=t.getItem(e)==e,t.removeItem(e),n&&t}catch(i){console.warn("localStorge is not available due to current browser / system settings.")}},onforcecontent:function p(){
 this.changeMode("content",!1)},onenable:function h(){var t=e(".preview-mode-selector")
-t.find('option[value="split"]').prop("disabled",!1),t.removeClass("split-disabled"),t.find(".disabled-tooltip").hide()},ondisable:function m(){var t=e(".preview-mode-selector")
-t.find('option[value="split"]').prop("disabled",!0),t.addClass("split-disabled"),t.find(".disabled-tooltip").show()},_block:function g(){return this.find(".preview-note").show(),this.find(".cms-preview-overlay").show(),
-this},_unblock:function v(){return this.find(".preview-note").hide(),this.find(".cms-preview-overlay").hide(),this},_initialiseFromContent:function y(){var t,n
+t.removeClass("split-disabled"),t.find(".disabled-tooltip").hide()},ondisable:function m(){var t=e(".preview-mode-selector")
+t.addClass("split-disabled"),t.find(".disabled-tooltip").show()},_block:function g(){return this.find(".preview-note").show(),this.find(".cms-preview-overlay").show(),this},_unblock:function v(){return this.find(".preview-note").hide(),
+this.find(".cms-preview-overlay").hide(),this},_initialiseFromContent:function y(){var t,n
 return e(".cms-previewable").length?(t=this.loadState("mode"),n=this.loadState("size"),this._moveNavigator(),t&&"content"==t||(this.enablePreview(),this._loadCurrentState()),this.redraw(),t&&this.changeMode(t),
 n&&this.changeSize(n)):this.disablePreview(),this},"from .cms-container":{onafterstatechange:function b(e,t){t.xhr.getResponseHeader("X-ControllerURL")||this._initialiseFromContent()}},PendingURL:null,
 oncolumnvisibilitychanged:function _(){var e=this.getPendingURL()
