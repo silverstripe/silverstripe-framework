@@ -233,9 +233,12 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					// been aliased. In that event, assume what the user has
 					// provided is the correct value
 					if(!$joinClass) $joinClass = $lastAlias;
+					
+					// Check on which table is the sort column
+					$table = ClassInfo::table_for_object_field($tmpItem->class, $parts[sizeof($parts)-1]);
 
 					$dataList = $dataList->leftJoin(
-						$tmpItem->class,
+						$table,
 						'"' . $methodName . '"."ID" = "' . $joinClass . '"."' . $methodName . 'ID"',
 						$methodName
 					);
