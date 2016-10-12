@@ -236,7 +236,11 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
 					
 					// Check on which table is the sort column
 					$table = ClassInfo::table_for_object_field($tmpItem->class, $parts[sizeof($parts)-1]);
-
+					// In case the method doesn't return any proper table, use item class as before
+					if(!$table || $table == 'DataObject') {
+						$table = $tmpItem->class;
+					}
+					
 					$dataList = $dataList->leftJoin(
 						$table,
 						'"' . $methodName . '"."ID" = "' . $joinClass . '"."' . $methodName . 'ID"',
