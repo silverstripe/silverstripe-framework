@@ -8388,6 +8388,76 @@
       "version": "3.0.5",
       "resolved": "https://registry.npmjs.org/redux/-/redux-3.0.5.tgz"
     },
+    "redux-form": {
+      "version": "6.0.5",
+      "resolved": "https://registry.npmjs.org/redux-form/-/redux-form-6.0.5.tgz",
+      "dependencies": {
+        "array-findindex-polyfill": {
+          "version": "0.1.0",
+          "resolved": "https://registry.npmjs.org/array-findindex-polyfill/-/array-findindex-polyfill-0.1.0.tgz"
+        },
+        "es6-error": {
+          "version": "3.1.0",
+          "resolved": "https://registry.npmjs.org/es6-error/-/es6-error-3.1.0.tgz"
+        },
+        "hoist-non-react-statics": {
+          "version": "1.2.0",
+          "resolved": "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-1.2.0.tgz"
+        },
+        "invariant": {
+          "version": "2.2.1",
+          "resolved": "https://registry.npmjs.org/invariant/-/invariant-2.2.1.tgz",
+          "dependencies": {
+            "loose-envify": {
+              "version": "1.2.0",
+              "resolved": "https://registry.npmjs.org/loose-envify/-/loose-envify-1.2.0.tgz",
+              "dependencies": {
+                "js-tokens": {
+                  "version": "1.0.3",
+                  "resolved": "https://registry.npmjs.org/js-tokens/-/js-tokens-1.0.3.tgz"
+                }
+              }
+            }
+          }
+        },
+        "is-promise": {
+          "version": "2.1.0",
+          "resolved": "https://registry.npmjs.org/is-promise/-/is-promise-2.1.0.tgz"
+        },
+        "lodash": {
+          "version": "4.16.0",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.16.0.tgz"
+        },
+        "lodash-es": {
+          "version": "4.16.0",
+          "resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.16.0.tgz"
+        },
+        "shallowequal": {
+          "version": "0.2.2",
+          "resolved": "https://registry.npmjs.org/shallowequal/-/shallowequal-0.2.2.tgz",
+          "dependencies": {
+            "lodash.keys": {
+              "version": "3.1.2",
+              "resolved": "https://registry.npmjs.org/lodash.keys/-/lodash.keys-3.1.2.tgz",
+              "dependencies": {
+                "lodash._getnative": {
+                  "version": "3.9.1",
+                  "resolved": "https://registry.npmjs.org/lodash._getnative/-/lodash._getnative-3.9.1.tgz"
+                },
+                "lodash.isarguments": {
+                  "version": "3.1.0",
+                  "resolved": "https://registry.npmjs.org/lodash.isarguments/-/lodash.isarguments-3.1.0.tgz"
+                },
+                "lodash.isarray": {
+                  "version": "3.0.4",
+                  "resolved": "https://registry.npmjs.org/lodash.isarray/-/lodash.isarray-3.0.4.tgz"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "redux-logger": {
       "version": "2.6.1",
       "resolved": "https://registry.npmjs.org/redux-logger/-/redux-logger-2.6.1.tgz"

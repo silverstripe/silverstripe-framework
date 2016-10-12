@@ -28,6 +28,7 @@ class FormAction extends SilverStripeComponent {
       typeof this.props.attributes === 'undefined' ? {} : this.props.attributes,
       {
         id: this.props.id,
+        name: this.props.name,
         className: this.getButtonClasses(),
         disabled: this.props.disabled,
         onClick: this.handleClick,

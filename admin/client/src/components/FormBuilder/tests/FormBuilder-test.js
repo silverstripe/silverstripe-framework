@@ -3,23 +3,39 @@
 jest.unmock('merge');
 jest.unmock('lib/SilverStripeComponent');
 jest.unmock('../FormBuilder');
+jest.unmock('redux-form');
 
-import { FormBuilderComponent } from '../FormBuilder';
+const React = require('react');
+import ReactTestUtils from 'react-addons-test-utils';
+import FormBuilder from '../FormBuilder';
 
-describe('FormBuilderComponent', () => {
+describe('FormBuilder', () => {
+  const baseProps = {
+    form: 'MyForm',
+    baseFormComponent: () => <form />,
+    baseFieldComponent: (props) => {
+      // eslint-disable-next-line react/prop-types
+      const Component = props.component;
+      return <Component {...props} />;
+    },
+    schema: {
+      id: 'MyForm',
+      schema: {
+        attributes: {},
+        fields: [],
+        actions: [],
+      },
+      state: {
+        fields: [],
+      },
+    },
+  };
+
   describe('mergeFieldData()', () => {
     let formBuilder = null;
 
     beforeEach(() => {
-      const props = {
-        form: {},
-        formActions: {},
-        schemas: {},
-        schemaActions: {},
-        schemaUrl: 'admin/assets/schema/1',
-      };
-
-      formBuilder = new FormBuilderComponent(props);
+      formBuilder = new FormBuilder(baseProps);
     });
 
     it('should deep merge properties on the originalobject', () => {
@@ -57,40 +73,22 @@ describe('FormBuilderComponent', () => {
   describe('getFieldValues()', () => {
     let formBuilder = null;
     let fieldValues = null;
-    let props = null;
+    const props = Object.assign({}, baseProps);
 
     it('should retrieve field values based on schema', () => {
-      props = {
-        form: {
-          MyForm: {
-            submitAction: 'action_save',
-            fields: [
-              { id: 'fieldOne', value: 'valOne' },
-              { id: 'fieldTwo', value: null },
-              { id: 'notInSchema', value: 'invalid' },
-            ],
-          },
-        },
-        formActions: {},
-        schemas: {
-          'admin/assets/schema/1': {
-            id: 'MyForm',
-            schema: {
-              fields: [
-                { id: 'fieldOne', name: 'fieldOne' },
-                { id: 'fieldTwo', name: 'fieldTwo' },
-              ],
-            },
-          },
-        },
-        schemaActions: {},
-        schemaUrl: 'admin/assets/schema/1',
-      };
-      formBuilder = new FormBuilderComponent(props);
+      props.schema.schema.fields = [
+        { id: 'fieldOne', name: 'fieldOne' },
+        { id: 'fieldTwo', name: 'fieldTwo' },
+      ];
+      props.schema.state.fields = [
+        { id: 'fieldOne', value: 'valOne' },
+        { id: 'fieldTwo', value: null },
+        { id: 'notInSchema', value: 'invalid' },
+      ];
+      formBuilder = new FormBuilder(baseProps);
 
       fieldValues = formBuilder.getFieldValues();
       expect(fieldValues).toEqual({
-        action_save: 1,
         fieldOne: 'valOne',
         fieldTwo: null,
       });
@@ -100,23 +98,9 @@ describe('FormBuilderComponent', () => {
   describe('findField()', () => {
     let formBuilder = null;
     let fields = null;
-    const props = {
-      form: {
-        myForm: {},
-        formActions: {},
-        schemas: {
-          'admin/assets/schema/1': {
-            id: 'myForm',
-            schema: {},
-          },
-        },
-        schemaActions: {},
-        schemaUrl: 'admin/assets/schema/1',
-      },
-    };
 
     beforeEach(() => {
-      formBuilder = new FormBuilderComponent(props);
+      formBuilder = new FormBuilder(baseProps);
     });
 
     it('should retrieve the field in the shallow fields list', () => {
@@ -150,6 +134,63 @@ describe('FormBuilderComponent', () => {
 
       expect(field).toBeTruthy();
       expect(field.id).toBe('fieldTwoThree');
+    });
+  });
+
+  describe('handleSubmit', () => {
+    let formBuilder = null;
+    const props = baseProps;
+
+    beforeEach(() => {
+      formBuilder = ReactTestUtils.renderIntoDocument(<FormBuilder {...props} />);
+
+      props.schema.schema.fields = [
+        { id: 'fieldOne', name: 'fieldOne' },
+        { id: 'fieldTwo', name: 'fieldTwo' },
+      ];
+      props.schema.schema.actions = [
+        { id: 'actionOne', name: 'actionOne' },
+        { id: 'actionTwo', name: 'actionTwo' },
+      ];
+      props.schema.state.fields = [
+        { id: 'fieldOne', value: 'valOne' },
+        { id: 'fieldTwo', value: null },
+        { id: 'notInSchema', value: 'invalid' },
+      ];
+    });
+
+    it('should include submitted action from schema', () => {
+      formBuilder.setState({ submittingAction: 'actionTwo' });
+
+      const submitApiMock = jest.genMockFunction();
+      submitApiMock.mockImplementation(() => Promise.resolve({}));
+      formBuilder.submitApi = submitApiMock;
+
+      formBuilder.handleSubmit(formBuilder.getFieldValues());
+
+      expect(formBuilder.submitApi.mock.calls[0][0]).toEqual(
+        {
+          fieldOne: 'valOne',
+          fieldTwo: null,
+          actionTwo: 1,
+        }
+      );
+    });
+
+    it('should default to first button when none is specified', () => {
+      const submitApiMock = jest.genMockFunction();
+      submitApiMock.mockImplementation(() => Promise.resolve({}));
+      formBuilder.submitApi = submitApiMock;
+
+      formBuilder.handleSubmit(formBuilder.getFieldValues());
+
+      expect(formBuilder.submitApi.mock.calls[0][0]).toEqual(
+        {
+          fieldOne: 'valOne',
+          fieldTwo: null,
+          actionOne: 1,
+        }
+      );
     });
   });
 });

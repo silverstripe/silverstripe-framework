@@ -5,6 +5,7 @@ require('expose?Form!components/Form/Form');
 require('expose?FormConstants!components/Form/FormConstants');
 require('expose?FormAction!components/FormAction/FormAction');
 require('expose?FormBuilder!components/FormBuilder/FormBuilder');
+require('expose?FormBuilderLoader!containers/FormBuilderLoader/FormBuilderLoader');
 require('expose?FormBuilderModal!components/FormBuilderModal/FormBuilderModal');
 require('expose?GridField!components/GridField/GridField');
 require('expose?GridFieldCell!components/GridField/GridFieldCell');

@@ -65,7 +65,7 @@ class CheckboxSetField extends SilverStripeComponent {
         })
         .map((item) => `${item.value}`);
 
-      this.props.onChange(event, { id: this.props.id, value: newValue });
+      this.props.onChange(newValue);
     }
   }
 
