@@ -20,7 +20,6 @@ attributes = {
 ```
 
  * `componentWillUnmount` (func): Optional function which will be called in the component's 'native' `componentWillUnmount` method. This can be used to tidy up Redux state that's no longer required.
- * `data` (object) (required): Extra data that helps define this field uniquely.
  * `fields` (required): A list of field objects to display in the form. These objects should be transformed to Components using the `this.props.mapFieldsToComponents` method.
  * `mapFieldsToComponents` (required): A function that maps each schema field (`this.props.fields`) to the component responsibe for render it.
  * `handleSubmit` (func): Called then the form is submitted.
