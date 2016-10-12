@@ -201,7 +201,7 @@ JS;
 		Session::clear('SessionForms.MemberLoginForm.Remember');
 
 		if(Member::currentUser()->isPasswordExpired()) {
-			if(isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
+			if(isset($data['BackURL']) && $backURL = $data['BackURL']) {
 				Session::set('BackURL', $backURL);
 			}
 			$cp = ChangePasswordForm::create($this->controller, 'ChangePasswordForm');
@@ -213,8 +213,8 @@ JS;
 		}
 
 		// Absolute redirection URLs may cause spoofing
-		if(!empty($_REQUEST['BackURL'])) {
-			$url = $_REQUEST['BackURL'];
+		if(!empty($data['BackURL'])) {
+			$url = $data['BackURL'];
 			if(Director::is_site_url($url) ) {
 				$url = Director::absoluteURL($url);
 			} else {
