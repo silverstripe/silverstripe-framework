@@ -74,34 +74,36 @@ Note the use of both `.max('LastEdited')` and `.count()` - this takes care of bo
 edited since the cache was last built, and also when an object has been deleted since the cache was last built.
 </div>
 
-We can also calculate aggregates on relationships. A block that shows the current member's favorites needs to update
-whenever the relationship `Member::$has_many = array('Favourites' => Favourite')` changes.
-
-	:::ss
-	<% cached 'favourites', $CurrentMember.ID, $CurrentMember.Favourites.max('LastEdited') %>
+We can also calculate aggregates on relationships. The logic for that can get a bit complex, so we can extract that on 
+to the controller so it's not cluttering up our template.
 
 ## Cache key calculated in controller
 
-In the previous example the cache key is getting a bit large, and is complicating our template up. Better would be to 
-extract that logic into the controller.
+If your caching logic is complex or re-usable, you can define a method on your controller to generate a cache key 
+fragment.
+
+For example, a block that shows a collection of rotating slides needs to update whenever the relationship 
+`Page::$many_many = array('Slides' => 'Slide')` changes. In Page_Controller:
 
 	:::php
 
-	public function FavouriteCacheKey() {
-	    $member = Member::currentUser();
-	
-	    return implode('_', array(
-	        'favourites',
-	        $member->ID,
-	        $member->Favourites()->max('LastEdited')
-	    ));
+	public function SliderCacheKey() {
+		$fragments = array(
+			'Page-Slides',
+			$this->ID,
+			// identify which objects are in the list and their sort order
+			implode('-', $this->Slides()->Column('ID')),
+			$this->Slides()->max('LastEdited')
+		);
+		return implode('-_-', $fragments);
 	}
 
-Then using that function in the cache key:
+Then reference that function in the cache key:
 
 	:::ss
-	<% cached $FavouriteCacheKey %>
+	<% cached $SliderCacheKey %>
 
+The example above would work for both a has_many and many_many relationship.
 
 ## Cache blocks and template changes
 
