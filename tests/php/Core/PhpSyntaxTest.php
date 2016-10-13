@@ -21,7 +21,10 @@ class PhpSyntaxTest extends SapphireTest {
 		$returnCode = 0;
 		$output = array();
 		exec("which find && which grep && which php", $output, $returnCode);
-		if($returnCode != 0) return;
+		if($returnCode != 0) {
+			$this->markTestSkipped("Only works on *nix based systems");
+			return;
+		}
 
 		$settingTests = array('short_open_tag=Off','short_open_tag=On -d asp_tags=On');
 
