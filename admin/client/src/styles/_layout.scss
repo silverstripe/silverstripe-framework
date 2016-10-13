@@ -162,6 +162,7 @@ body {
 // Nested items take up height
 .fill-height {
   height: 100%;
+  min-height: 0; // See https://www.fxsitecompat.com/en-GB/docs/2014/initial-value-of-min-width-height-on-flex-items-has-been-reverted-to-auto/
   display: -ms-flexbox;
   display: flex;
   -ms-flex-direction: column;
