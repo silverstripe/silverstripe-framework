@@ -236,3 +236,16 @@ Can be re-written as:
 	  <% end_cached %>
 	
 	<% end_cached %>
+
+## Cache expiry
+
+The default expiry for partial caches is 10 minutes. The advantage of a short cache expiry is that if you have a problem
+with your caching logic, the window in which stale content may be shown is short. The disadvantage, particularly for 
+low-traffic sites, is that cache blocks may expire before they can be utilised. If you're confident that you're caching
+logic is sound, you could increase the expiry dramatically.
+
+**mysite/_config.php**
+
+	:::php
+	// Set partial cache expiry to 7 days
+	SS_Cache::set_cache_lifetime('cacheblock', 60 * 60 * 24 * 7);
