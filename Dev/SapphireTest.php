@@ -263,13 +263,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			'$Controller//$Action/$ID/$OtherID' => '*'
 		));
 
-		$fixtureFile = static::get_fixture_file();
+		$fixtureFiles = $this->getFixturePaths();
 
 		// Todo: this could be a special test model
 		$this->model = DataModel::inst();
 
 		// Set up fixture
-		if($fixtureFile || $this->usesDatabase) {
+		if($fixtureFiles || $this->usesDatabase) {
 			if (!self::using_temp_db()) {
 				self::create_temp_db();
 			}
@@ -284,28 +284,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 				if (method_exists($instance, 'augmentDefaultRecords')) $instance->augmentDefaultRecords();
 			}
 
-			if($fixtureFile) {
-				$pathForClass = $this->getCurrentAbsolutePath();
-				$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : array($fixtureFile);
-
-				$i = 0;
-				foreach($fixtureFiles as $fixtureFilePath) {
-					// Support fixture paths relative to the test class, rather than relative to webroot
-					// String checking is faster than file_exists() calls.
-					$isRelativeToFile = (strpos('/', $fixtureFilePath) === false
-						|| preg_match('/^\.\./', $fixtureFilePath));
-
-					if($isRelativeToFile) {
-						$resolvedPath = realpath($pathForClass . '/' . $fixtureFilePath);
-						if($resolvedPath) {
-							$fixtureFilePath = $resolvedPath;
-						}
-					}
-
-					$fixture = YamlFixture::create($fixtureFilePath);
-					$fixture->writeInto($this->getFixtureFactory());
-					$i++;
-				}
+			foreach($fixtureFiles as $fixtureFilePath) {
+				$fixture = YamlFixture::create($fixtureFilePath);
+				$fixture->writeInto($this->getFixtureFactory());
 			}
 
 			$this->logInWithPermission("ADMIN");
@@ -1118,6 +1099,55 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		if ($e) {
 			throw $e;
 		}
+	}
+
+	/**
+	 * Get fixture paths for this test
+	 *
+	 * @return array List of paths
+	 */
+	protected function getFixturePaths()
+	{
+		$fixtureFile = static::get_fixture_file();
+		if (empty($fixtureFile)) {
+			return [];
+		}
+
+		$fixtureFiles = (is_array($fixtureFile)) ? $fixtureFile : [$fixtureFile];
+
+		return array_map(function($fixtureFilePath) {
+			return $this->resolveFixturePath($fixtureFilePath);
+		}, $fixtureFiles);
+	}
+
+	/**
+	 * Map a fixture path to a physical file
+	 *
+	 * @param string $fixtureFilePath
+	 * @return string
+	 */
+	protected function resolveFixturePath($fixtureFilePath)
+	{
+		// Support fixture paths relative to the test class, rather than relative to webroot
+		// String checking is faster than file_exists() calls.
+		$isRelativeToFile
+			= (strpos('/', $fixtureFilePath) === false)
+			|| preg_match('/^(\.){1,2}/', $fixtureFilePath);
+
+		if ($isRelativeToFile) {
+			$resolvedPath = realpath($this->getCurrentAbsolutePath() . '/' . $fixtureFilePath);
+			if ($resolvedPath) {
+				return $resolvedPath;
+			}
+		}
+
+		// Check if file exists relative to base dir
+		$resolvedPath = realpath(Director::baseFolder() . '/' . $fixtureFilePath);
+		if ($resolvedPath) {
+			return $resolvedPath;
+		}
+
+		return $fixtureFilePath;
 	}
 
 }
