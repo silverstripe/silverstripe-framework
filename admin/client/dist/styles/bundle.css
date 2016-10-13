@@ -16049,6 +16049,7 @@ body,html{
 }
 
 .fill-height{
+  min-height:0;
   -ms-flex-direction:column;
   -webkit-box-orient:vertical;
           flex-direction:column;
@@ -16093,6 +16094,3 @@ body,html{
 .app{
   height:100%;
 }
-
-
-/*# sourceMappingURL=bundle.css.map*/
