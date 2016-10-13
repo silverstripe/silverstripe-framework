@@ -209,8 +209,8 @@ could also write the last example as:
 	<% end_cached %>
 
 <div class="warning" markdown="1">
-Currently cached blocks can not be contained within if or loop blocks. The template engine will throw an error
-letting you know if you've done this. You can often get around this using aggregates.
+Currently a nested cache block can not be contained within an if or loop block. The template engine will throw an error
+letting you know if you've done this. You can often get around this using aggregates or by un-nesting the block.
 </div>
 
 Failing example:
@@ -219,7 +219,7 @@ Failing example:
 	<% cached $LastEdited %>
 	
 	  <% loop $Children %>
-	    <% cached LastEdited %>
+	    <% cached $LastEdited %>
 	      $Name
 	    <% end_cached %>
 	  <% end_loop %>
@@ -238,6 +238,19 @@ Can be re-written as:
 	  <% end_cached %>
 	
 	<% end_cached %>
+
+Or:
+
+	:::ss
+	<% cached $LastEdited %>
+		(other code)
+	<% end_cached %>
+	
+	<% loop $Children %>
+		<% cached $LastEdited %>
+		  $Name
+		<% end_cached %>
+	<% end_loop %>
 
 ## Cache expiry
 
