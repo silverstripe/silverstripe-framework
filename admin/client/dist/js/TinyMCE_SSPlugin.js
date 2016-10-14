@@ -16,5 +16,3 @@ return r.attr("data-"+t,c[t])}),i=i.replace(n[0],t("<div/>").append(r).html())}f
 alt:c.alt,title:c.title,"data-id":c.id})
 i=i.replace(n[0],t("<div/>").append(r).html())}e.content=i})}}
 tinymce.PluginManager.add("ssbuttons",function(t){e.init(t)})}()}).call(e,n(1))}])
-
-//# sourceMappingURL=TinyMCE_SSPlugin.js.map

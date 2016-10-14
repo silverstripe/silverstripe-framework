@@ -59,64 +59,69 @@ return this.fetch(e,{method:"put",credentials:"same-origin",body:s(t),headers:n}
 return this.fetch(e,{method:"delete",credentials:"same-origin",body:s(t),headers:n}).then(a)}}]),e}(),O=new P
 t["default"]=O},function(e,t,n){n(8),e.exports=self.fetch.bind(self)},function(e,t){!function(e){"use strict"
 function t(e){if("string"!=typeof e&&(e=String(e)),/[^a-z0-9\-#$%&'*+.\^_`|~]/i.test(e))throw new TypeError("Invalid character in header field name")
-return e.toLowerCase()}function n(e){return"string"!=typeof e&&(e=String(e)),e}function i(e){this.map={},e instanceof i?e.forEach(function(e,t){this.append(t,e)},this):e&&Object.getOwnPropertyNames(e).forEach(function(t){
-this.append(t,e[t])},this)}function r(e){return e.bodyUsed?Promise.reject(new TypeError("Already read")):void(e.bodyUsed=!0)}function o(e){return new Promise(function(t,n){e.onload=function(){t(e.result)
+return e.toLowerCase()}function n(e){return"string"!=typeof e&&(e=String(e)),e}function i(e){var t={next:function(){var t=e.shift()
+return{done:void 0===t,value:t}}}
+return m.iterable&&(t[Symbol.iterator]=function(){return t}),t}function r(e){this.map={},e instanceof r?e.forEach(function(e,t){this.append(t,e)},this):e&&Object.getOwnPropertyNames(e).forEach(function(t){
+this.append(t,e[t])},this)}function o(e){return e.bodyUsed?Promise.reject(new TypeError("Already read")):void(e.bodyUsed=!0)}function a(e){return new Promise(function(t,n){e.onload=function(){t(e.result)
 
-},e.onerror=function(){n(e.error)}})}function a(e){var t=new FileReader
-return t.readAsArrayBuffer(e),o(t)}function s(e){var t=new FileReader
-return t.readAsText(e),o(t)}function l(){return this.bodyUsed=!1,this._initBody=function(e){if(this._bodyInit=e,"string"==typeof e)this._bodyText=e
-else if(h.blob&&Blob.prototype.isPrototypeOf(e))this._bodyBlob=e
-else if(h.formData&&FormData.prototype.isPrototypeOf(e))this._bodyFormData=e
-else if(e){if(!h.arrayBuffer||!ArrayBuffer.prototype.isPrototypeOf(e))throw new Error("unsupported BodyInit type")}else this._bodyText=""
-this.headers.get("content-type")||("string"==typeof e?this.headers.set("content-type","text/plain;charset=UTF-8"):this._bodyBlob&&this._bodyBlob.type&&this.headers.set("content-type",this._bodyBlob.type))
+},e.onerror=function(){n(e.error)}})}function s(e){var t=new FileReader
+return t.readAsArrayBuffer(e),a(t)}function l(e){var t=new FileReader
+return t.readAsText(e),a(t)}function u(){return this.bodyUsed=!1,this._initBody=function(e){if(this._bodyInit=e,"string"==typeof e)this._bodyText=e
+else if(m.blob&&Blob.prototype.isPrototypeOf(e))this._bodyBlob=e
+else if(m.formData&&FormData.prototype.isPrototypeOf(e))this._bodyFormData=e
+else if(m.searchParams&&URLSearchParams.prototype.isPrototypeOf(e))this._bodyText=e.toString()
+else if(e){if(!m.arrayBuffer||!ArrayBuffer.prototype.isPrototypeOf(e))throw new Error("unsupported BodyInit type")}else this._bodyText=""
+this.headers.get("content-type")||("string"==typeof e?this.headers.set("content-type","text/plain;charset=UTF-8"):this._bodyBlob&&this._bodyBlob.type?this.headers.set("content-type",this._bodyBlob.type):m.searchParams&&URLSearchParams.prototype.isPrototypeOf(e)&&this.headers.set("content-type","application/x-www-form-urlencoded;charset=UTF-8"))
 
-},h.blob?(this.blob=function(){var e=r(this)
+},m.blob?(this.blob=function(){var e=o(this)
 if(e)return e
 if(this._bodyBlob)return Promise.resolve(this._bodyBlob)
 if(this._bodyFormData)throw new Error("could not read FormData body as blob")
-return Promise.resolve(new Blob([this._bodyText]))},this.arrayBuffer=function(){return this.blob().then(a)},this.text=function(){var e=r(this)
+return Promise.resolve(new Blob([this._bodyText]))},this.arrayBuffer=function(){return this.blob().then(s)},this.text=function(){var e=o(this)
 if(e)return e
-if(this._bodyBlob)return s(this._bodyBlob)
+if(this._bodyBlob)return l(this._bodyBlob)
 if(this._bodyFormData)throw new Error("could not read FormData body as text")
-return Promise.resolve(this._bodyText)}):this.text=function(){var e=r(this)
-return e?e:Promise.resolve(this._bodyText)},h.formData&&(this.formData=function(){return this.text().then(c)}),this.json=function(){return this.text().then(JSON.parse)},this}function u(e){var t=e.toUpperCase()
+return Promise.resolve(this._bodyText)}):this.text=function(){var e=o(this)
+return e?e:Promise.resolve(this._bodyText)},m.formData&&(this.formData=function(){return this.text().then(f)}),this.json=function(){return this.text().then(JSON.parse)},this}function d(e){var t=e.toUpperCase()
 
 
-return m.indexOf(t)>-1?t:e}function d(e,t){t=t||{}
+return g.indexOf(t)>-1?t:e}function c(e,t){t=t||{}
 var n=t.body
-if(d.prototype.isPrototypeOf(e)){if(e.bodyUsed)throw new TypeError("Already read")
-this.url=e.url,this.credentials=e.credentials,t.headers||(this.headers=new i(e.headers)),this.method=e.method,this.mode=e.mode,n||(n=e._bodyInit,e.bodyUsed=!0)}else this.url=e
-if(this.credentials=t.credentials||this.credentials||"omit",!t.headers&&this.headers||(this.headers=new i(t.headers)),this.method=u(t.method||this.method||"GET"),this.mode=t.mode||this.mode||null,this.referrer=null,
+if(c.prototype.isPrototypeOf(e)){if(e.bodyUsed)throw new TypeError("Already read")
+this.url=e.url,this.credentials=e.credentials,t.headers||(this.headers=new r(e.headers)),this.method=e.method,this.mode=e.mode,n||(n=e._bodyInit,e.bodyUsed=!0)}else this.url=e
+if(this.credentials=t.credentials||this.credentials||"omit",!t.headers&&this.headers||(this.headers=new r(t.headers)),this.method=d(t.method||this.method||"GET"),this.mode=t.mode||this.mode||null,this.referrer=null,
 ("GET"===this.method||"HEAD"===this.method)&&n)throw new TypeError("Body not allowed for GET or HEAD requests")
-this._initBody(n)}function c(e){var t=new FormData
+this._initBody(n)}function f(e){var t=new FormData
 return e.trim().split("&").forEach(function(e){if(e){var n=e.split("="),i=n.shift().replace(/\+/g," "),r=n.join("=").replace(/\+/g," ")
-t.append(decodeURIComponent(i),decodeURIComponent(r))}}),t}function f(e){var t=new i,n=e.getAllResponseHeaders().trim().split("\n")
+t.append(decodeURIComponent(i),decodeURIComponent(r))}}),t}function p(e){var t=new r,n=(e.getAllResponseHeaders()||"").trim().split("\n")
 return n.forEach(function(e){var n=e.trim().split(":"),i=n.shift().trim(),r=n.join(":").trim()
-t.append(i,r)}),t}function p(e,t){t||(t={}),this.type="default",this.status=t.status,this.ok=this.status>=200&&this.status<300,this.statusText=t.statusText,this.headers=t.headers instanceof i?t.headers:new i(t.headers),
-this.url=t.url||"",this._initBody(e)}if(!e.fetch){i.prototype.append=function(e,i){e=t(e),i=n(i)
+t.append(i,r)}),t}function h(e,t){t||(t={}),this.type="default",this.status=t.status,this.ok=this.status>=200&&this.status<300,this.statusText=t.statusText,this.headers=t.headers instanceof r?t.headers:new r(t.headers),
+this.url=t.url||"",this._initBody(e)}if(!e.fetch){var m={searchParams:"URLSearchParams"in e,iterable:"Symbol"in e&&"iterator"in Symbol,blob:"FileReader"in e&&"Blob"in e&&function(){try{return new Blob,
+!0}catch(e){return!1}}(),formData:"FormData"in e,arrayBuffer:"ArrayBuffer"in e}
+r.prototype.append=function(e,i){e=t(e),i=n(i)
 var r=this.map[e]
-r||(r=[],this.map[e]=r),r.push(i)},i.prototype["delete"]=function(e){delete this.map[t(e)]},i.prototype.get=function(e){var n=this.map[t(e)]
-return n?n[0]:null},i.prototype.getAll=function(e){return this.map[t(e)]||[]},i.prototype.has=function(e){return this.map.hasOwnProperty(t(e))},i.prototype.set=function(e,i){this.map[t(e)]=[n(i)]},i.prototype.forEach=function(e,t){
-Object.getOwnPropertyNames(this.map).forEach(function(n){this.map[n].forEach(function(i){e.call(t,i,n,this)},this)},this)}
-var h={blob:"FileReader"in e&&"Blob"in e&&function(){try{return new Blob,!0}catch(e){return!1}}(),formData:"FormData"in e,arrayBuffer:"ArrayBuffer"in e},m=["DELETE","GET","HEAD","OPTIONS","POST","PUT"]
-
-
-d.prototype.clone=function(){return new d(this)},l.call(d.prototype),l.call(p.prototype),p.prototype.clone=function(){return new p(this._bodyInit,{status:this.status,statusText:this.statusText,headers:new i(this.headers),
-url:this.url})},p.error=function(){var e=new p(null,{status:0,statusText:""})
+r||(r=[],this.map[e]=r),r.push(i)},r.prototype["delete"]=function(e){delete this.map[t(e)]},r.prototype.get=function(e){var n=this.map[t(e)]
+return n?n[0]:null},r.prototype.getAll=function(e){return this.map[t(e)]||[]},r.prototype.has=function(e){return this.map.hasOwnProperty(t(e))},r.prototype.set=function(e,i){this.map[t(e)]=[n(i)]},r.prototype.forEach=function(e,t){
+Object.getOwnPropertyNames(this.map).forEach(function(n){this.map[n].forEach(function(i){e.call(t,i,n,this)},this)},this)},r.prototype.keys=function(){var e=[]
+return this.forEach(function(t,n){e.push(n)}),i(e)},r.prototype.values=function(){var e=[]
+return this.forEach(function(t){e.push(t)}),i(e)},r.prototype.entries=function(){var e=[]
+return this.forEach(function(t,n){e.push([n,t])}),i(e)},m.iterable&&(r.prototype[Symbol.iterator]=r.prototype.entries)
+var g=["DELETE","GET","HEAD","OPTIONS","POST","PUT"]
+c.prototype.clone=function(){return new c(this)},u.call(c.prototype),u.call(h.prototype),h.prototype.clone=function(){return new h(this._bodyInit,{status:this.status,statusText:this.statusText,headers:new r(this.headers),
+url:this.url})},h.error=function(){var e=new h(null,{status:0,statusText:""})
 return e.type="error",e}
-var g=[301,302,303,307,308]
-p.redirect=function(e,t){if(g.indexOf(t)===-1)throw new RangeError("Invalid status code")
-return new p(null,{status:t,headers:{location:e}})},e.Headers=i,e.Request=d,e.Response=p,e.fetch=function(e,t){return new Promise(function(n,i){function r(){return"responseURL"in a?a.responseURL:/^X-Request-URL:/m.test(a.getAllResponseHeaders())?a.getResponseHeader("X-Request-URL"):void 0
+var v=[301,302,303,307,308]
+h.redirect=function(e,t){if(v.indexOf(t)===-1)throw new RangeError("Invalid status code")
+return new h(null,{status:t,headers:{location:e}})},e.Headers=r,e.Request=c,e.Response=h,e.fetch=function(e,t){return new Promise(function(n,i){function r(){return"responseURL"in a?a.responseURL:/^X-Request-URL:/m.test(a.getAllResponseHeaders())?a.getResponseHeader("X-Request-URL"):void 0
 
 }var o
-o=d.prototype.isPrototypeOf(e)&&!t?e:new d(e,t)
+o=c.prototype.isPrototypeOf(e)&&!t?e:new c(e,t)
 var a=new XMLHttpRequest
-a.onload=function(){var e=1223===a.status?204:a.status
-if(e<100||e>599)return void i(new TypeError("Network request failed"))
-var t={status:e,statusText:a.statusText,headers:f(a),url:r()},o="response"in a?a.response:a.responseText
-n(new p(o,t))},a.onerror=function(){i(new TypeError("Network request failed"))},a.open(o.method,o.url,!0),"include"===o.credentials&&(a.withCredentials=!0),"responseType"in a&&h.blob&&(a.responseType="blob"),
-o.headers.forEach(function(e,t){a.setRequestHeader(t,e)}),a.send("undefined"==typeof o._bodyInit?null:o._bodyInit)})},e.fetch.polyfill=!0}}("undefined"!=typeof self?self:this)},function(e,t,n){var i;(function(t,r){
-!function(t,n){e.exports=n()}(this,function(){"use strict"
+a.onload=function(){var e={status:a.status,statusText:a.statusText,headers:p(a),url:r()},t="response"in a?a.response:a.responseText
+n(new h(t,e))},a.onerror=function(){i(new TypeError("Network request failed"))},a.ontimeout=function(){i(new TypeError("Network request failed"))},a.open(o.method,o.url,!0),"include"===o.credentials&&(a.withCredentials=!0),
+"responseType"in a&&m.blob&&(a.responseType="blob"),o.headers.forEach(function(e,t){a.setRequestHeader(t,e)}),a.send("undefined"==typeof o._bodyInit?null:o._bodyInit)})},e.fetch.polyfill=!0}}("undefined"!=typeof self?self:this)
+
+},function(e,t,n){var i;(function(t,r){!function(t,n){e.exports=n()}(this,function(){"use strict"
 function e(e){return"function"==typeof e||"object"==typeof e&&null!==e}function o(e){return"function"==typeof e}function a(e){K=e}function s(e){Y=e}function l(){return function(){return t.nextTick(p)}}
 function u(){return function(){Q(p)}}function d(){var e=0,t=new ee(p),n=document.createTextNode("")
 return t.observe(n,{characterData:!0}),function(){n.data=e=++e%2}}function c(){var e=new MessageChannel
@@ -2578,5 +2583,3 @@ href:"",className:"cms-content__back-btn font-icon-left-open-big"}),u["default"]
 
 }}]),t}(p["default"])
 h.propTypes={itemLinks:u["default"].PropTypes.object,itemId:u["default"].PropTypes.number},t["default"]=h}])
-
-//# sourceMappingURL=bundle.js.map

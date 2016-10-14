@@ -6,5 +6,3 @@ e.each(function(o,t){e.not(t).each(function(e,o){c(t)==c(o)&&(n=!0,console.log(t
 var n=this.handle&&this.handle.elem
 if(n){for(var o=n;o&&1==o.nodeType;)o=o.parentNode
 o?o!==document&&console.log("Attached, but to",o,"not our document",n):(console.log("Unattached",n),console.log(this.events),e&&(0,a["default"])(n).unbind().remove())}})}}}])
-
-//# sourceMappingURL=leaktools.js.map
