@@ -4,5 +4,3 @@ r["default"].entwine("ss",function(e){e("form.uploadfield-form .TreeDropdownFiel
 var e=this
 this.bind("change",function(){var n=e.closest("form").find(".grid-field")
 n.setState("ParentID",e.getValue()),n.reload()})},onunmatch:function t(){this._super()}})})}])
-
-//# sourceMappingURL=UploadField_select.js.map

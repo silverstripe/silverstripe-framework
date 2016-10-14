@@ -9133,5 +9133,3 @@ l=0,u=a.length;l<u;l++)r=a[l],o+=r+":"+this.search_field.css(r)+";"
 return t=e("<div />",{style:o}),t.text(this.search_field.val()),e("body").append(t),s=t.width()+25,t.remove(),n=this.container.outerWidth(),s>n-10&&(s=n-10),this.search_field.css({width:s+"px"})}},n}(n)
 
 }).call(this)}).call(e,n(1))}])
-
-//# sourceMappingURL=vendor.js.map
