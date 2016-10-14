@@ -1,35 +1,32 @@
 <?php
 
+namespace SilverStripe\Forms\Tests\GridField;
+
+use SilverStripe\Forms\GridField\GridFieldSortableHeader;
+use SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Cheerleader;
+use SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\CheerleaderHat;
+use SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Team;
+use SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\TeamGroup;
+use SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Mom;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridField;
 
-
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
-
 class GridFieldSortableHeaderTest extends SapphireTest {
 
 	protected static $fixture_file = 'GridFieldSortableHeaderTest.yml';
 
 	protected $extraDataObjects = array(
-		'GridFieldSortableHeaderTest_Team',
-		'GridFieldSortableHeaderTest_TeamGroup',
-		'GridFieldSortableHeaderTest_Cheerleader',
-		'GridFieldSortableHeaderTest_CheerleaderHat',
-		'GridFieldSortableHeaderTest_Mom'
+		Team::class,
+		TeamGroup::class,
+		Cheerleader::class,
+		CheerleaderHat::class,
+		Mom::class
 	);
 
 	/**
@@ -38,13 +35,13 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 	public function testRenderHeaders() {
 
 		// Generate sortable header and extract HTML
-		$list = new DataList('GridFieldSortableHeaderTest_Team');
+		$list = new DataList(Team::class);
 		$config = new GridFieldConfig_RecordEditor();
 		/** @skipUpgrade */
 		$form = new Form(Controller::curr(), 'Form', new FieldList(), new FieldList());
 		$gridField = new GridField('testfield', 'testfield', $list, $config);
 		$gridField->setForm($form);
-		$compontent = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldSortableHeader');
+		$compontent = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
 		$htmlFragment = $compontent->getHTMLFragments($gridField);
 
 		// Check that the output shows name and hat as sortable fields, but not city
@@ -63,7 +60,7 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 	}
 
 	public function testGetManipulatedData() {
-		$list = new DataList('GridFieldSortableHeaderTest_Team');
+		$list = new DataList(Team::class);
 		$config = new GridFieldConfig_RecordEditor();
 		$gridField = new GridField('testfield', 'testfield', $list, $config);
 
@@ -72,7 +69,7 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 		$state->SortColumn = 'City';
 		$state->SortDirection = 'asc';
 
-		$compontent = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldSortableHeader');
+		$compontent = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
 		$listA = $compontent->getManipulatedData($gridField, $list);
 
 		$state->SortDirection = 'desc';
@@ -126,11 +123,11 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 	 * Test getManipulatedData on subclassed dataobjects
 	 */
 	public function testInheritedGetManiplatedData() {
-		$list = GridFieldSortableHeaderTest_TeamGroup::get();
+		$list = TeamGroup::get();
 		$config = new GridFieldConfig_RecordEditor();
 		$gridField = new GridField('testfield', 'testfield', $list, $config);
 		$state = $gridField->State->GridFieldSortableHeader;
-		$compontent = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldSortableHeader');
+		$compontent = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);
 
 		// Test that inherited dataobjects will work correctly
 		$state->SortColumn = 'Cheerleader.Hat.Colour';
@@ -210,65 +207,5 @@ class GridFieldSortableHeaderTest extends SapphireTest {
 			$relationListBdesc->column('City')
 		);
 	}
-
-}
-
-class GridFieldSortableHeaderTest_Team extends DataObject implements TestOnly {
-
-	private static $summary_fields = array(
-		'Name' => 'Name',
-		'City.Initial' => 'City',
-		'Cheerleader.Hat.Colour' => 'Cheerleader Hat'
-	);
-
-	private static $db = array(
-		'Name' => 'Varchar',
-		'City' => 'Varchar'
-	);
-
-	private static $has_one = array(
-		'Cheerleader' => 'GridFieldSortableHeaderTest_Cheerleader',
-		'CheerleadersMom' => 'GridFieldSortableHeaderTest_Mom'
-	);
-
-}
-
-class GridFieldSortableHeaderTest_TeamGroup extends GridFieldSortableHeaderTest_Team implements TestOnly {
-	private static $db = array(
-		'GroupName' => 'Varchar'
-	);
-}
-
-class GridFieldSortableHeaderTest_Cheerleader extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Name' => 'Varchar'
-	);
-
-	private static $has_one = array(
-		'Team' => 'GridFieldSortableHeaderTest_Team',
-		'Hat' => 'GridFieldSortableHeaderTest_CheerleaderHat'
-	);
-
-}
-
-/**
- * Should have access to same properties as cheerleader
- */
-class GridFieldSortableHeaderTest_Mom extends GridFieldSortableHeaderTest_Cheerleader implements TestOnly {
-	private static $db = array(
-		'NumberOfCookiesBaked' => 'Int'
-	);
-}
-
-class GridFieldSortableHeaderTest_CheerleaderHat extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Colour' => 'Varchar'
-	);
-
-	private static $has_one = array(
-		'Cheerleader' => 'GridFieldSortableHeaderTest_Cheerleader'
-	);
 
 }

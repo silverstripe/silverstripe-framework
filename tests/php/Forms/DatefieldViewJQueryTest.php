@@ -1,12 +1,10 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField_View_JQuery;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class DateFieldViewJQueryTest extends SapphireTest {
 
 	public function testConvert() {

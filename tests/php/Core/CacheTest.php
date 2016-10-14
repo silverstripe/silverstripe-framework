@@ -1,8 +1,9 @@
 <?php
 
+namespace SilverStripe\Core\Tests;
+
 use SilverStripe\Core\Cache;
 use SilverStripe\Dev\SapphireTest;
-
 
 class CacheTest extends SapphireTest {
 

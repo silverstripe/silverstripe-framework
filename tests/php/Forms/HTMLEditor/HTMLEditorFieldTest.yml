@@ -1,10 +1,10 @@
 SilverStripe\Assets\Image:
   example_image:
-    FileFilename: HTMLEditorFieldTest-example.jpg
+    FileFilename: example.jpg
     FileHash: f5c7c2f814b0f20ceb30b72edbac220d6eff65ed
-    Name: HTMLEditorFieldTest_example.jpg
+    Name: example.jpg
 
-HTMLEditorFieldTest_Object:
+SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\TestObject:
   home:
     Title: Home Page
   about:

@@ -1,27 +1,36 @@
 <?php
 
+namespace SilverStripe\View\Tests;
+
+
+use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\ContentNegotiator;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\Permission;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\Requirements;
+use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
+use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel_Controller;
 use SilverStripe\View\ViewableData;
 use SilverStripe\View\SSViewer_FromString;
 use SilverStripe\View\SSTemplateParser;
-use SilverStripe\View\TemplateGlobalProvider;
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
+use JSMin;
+use Exception;
 
 class SSViewerTest extends SapphireTest {
 
@@ -33,20 +42,20 @@ class SSViewerTest extends SapphireTest {
 	protected $oldServer = array();
 
 	protected $extraDataObjects = array(
-		'SSViewerTest_Object',
+		SSViewerTest\TestObject::class,
 	);
 
 	public function setUp() {
 		parent::setUp();
 		SSViewer::config()->update('source_file_comments', false);
 		SSViewer_FromString::config()->update('cache_template', false);
-		AssetStoreTest_SpyStore::activate('SSViewerTest');
+		TestAssetStore::activate('SSViewerTest');
 		$this->oldServer = $_SERVER;
 	}
 
 	public function tearDown() {
 		$_SERVER = $this->oldServer;
-		AssetStoreTest_SpyStore::reset();
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
@@ -158,10 +167,15 @@ class SSViewerTest extends SapphireTest {
 
 	/**
 	 * Small helper to render templates from strings
+	 *
+	 * @param string $templateString
+	 * @param null $data
+	 * @param bool $cacheTemplate
+	 * @return string
 	 */
 	public function render($templateString, $data = null, $cacheTemplate = false) {
 		$t = SSViewer::fromString($templateString, $cacheTemplate);
-		if(!$data) $data = new SSViewerTestFixture();
+		if(!$data) $data = new SSViewerTest\TestFixture();
 		return trim(''.$t->process($data));
 	}
 
@@ -183,11 +197,11 @@ class SSViewerTest extends SapphireTest {
 	}
 
 	public function testRequirementsCombine(){
-		$testBackend = Injector::inst()->create('SilverStripe\\View\\Requirements_Backend');
+		$testBackend = Injector::inst()->create(Requirements_Backend::class);
 		$testBackend->setSuffixRequirements(false);
 		//$combinedTestFilePath = BASE_PATH . '/' . $testBackend->getCombinedFilesFolder() . '/testRequirementsCombine.js';
 
-		$jsFile = FRAMEWORK_DIR . '/tests/view/themes/javascript/bad.js';
+		$jsFile = $this->getCurrentRelativePath() . '/SSViewerTest/javascript/bad.js';
 		$jsFileContents = file_get_contents(BASE_PATH . '/' . $jsFile);
 		$testBackend->combineFiles('testRequirementsCombine.js', array($jsFile));
 
@@ -329,18 +343,18 @@ SS;
 	public function testNonFieldCastingHelpersNotUsedInHasValue() {
 		// check if Link without $ in front of variable
 		$result = $this->render(
-			'A<% if Link %>$Link<% end_if %>B', new SSViewerTest_Object());
+			'A<% if Link %>$Link<% end_if %>B', new SSViewerTest\TestObject());
 		$this->assertEquals('Asome/url.htmlB', $result, 'casting helper not used for <% if Link %>');
 
 		// check if Link with $ in front of variable
 		$result = $this->render(
-			'A<% if $Link %>$Link<% end_if %>B', new SSViewerTest_Object());
+			'A<% if $Link %>$Link<% end_if %>B', new SSViewerTest\TestObject());
 		$this->assertEquals('Asome/url.htmlB', $result, 'casting helper not used for <% if $Link %>');
 	}
 
 	public function testLocalFunctionsTakePriorityOverGlobals() {
 		$data = new ArrayData(array(
-			'Page' => new SSViewerTest_Object()
+			'Page' => new SSViewerTest\TestObject()
 		));
 
 		//call method with lots of arguments
@@ -379,7 +393,7 @@ SS;
 						'Name' => 'SubKid2'
 					))
 				)),
-				new SSViewerTest_Object('Number6')
+				new SSViewerTest\TestObject('Number6')
 			))
 		));
 
@@ -815,7 +829,7 @@ after')
 	 * this test just ensures that basic casting is correctly applied during template parsing.
 	 */
 	public function testCastingHelpers() {
-		$vd = new SSViewerTest_ViewableData();
+		$vd = new SSViewerTest\TestViewableData();
 		$vd->TextValue = '<b>html</b>';
 		$vd->HTMLValue = '<b>html</b>';
 		$vd->UncastedValue = '<b>html</b>';
@@ -849,7 +863,7 @@ after')
 		);
 
 		// Uncasted value (falls back to ViewableData::$default_cast="Text")
-		$vd = new SSViewerTest_ViewableData();
+		$vd = new SSViewerTest\TestViewableData();
 		$vd->UncastedValue = '<b>html</b>';
 		$this->assertEquals(
 			'&lt;b&gt;html&lt;/b&gt;',
@@ -868,16 +882,16 @@ after')
 	public function testSSViewerBasicIteratorSupport() {
 		$data = new ArrayData(array(
 			'Set' => new ArrayList(array(
-				new SSViewerTest_Object("1"),
-				new SSViewerTest_Object("2"),
-				new SSViewerTest_Object("3"),
-				new SSViewerTest_Object("4"),
-				new SSViewerTest_Object("5"),
-				new SSViewerTest_Object("6"),
-				new SSViewerTest_Object("7"),
-				new SSViewerTest_Object("8"),
-				new SSViewerTest_Object("9"),
-				new SSViewerTest_Object("10"),
+				new SSViewerTest\TestObject("1"),
+				new SSViewerTest\TestObject("2"),
+				new SSViewerTest\TestObject("3"),
+				new SSViewerTest\TestObject("4"),
+				new SSViewerTest\TestObject("5"),
+				new SSViewerTest\TestObject("6"),
+				new SSViewerTest\TestObject("7"),
+				new SSViewerTest\TestObject("8"),
+				new SSViewerTest\TestObject("9"),
+				new SSViewerTest\TestObject("10"),
 			))
 		));
 
@@ -1156,7 +1170,7 @@ after')
 	public function testLayout() {
 		$self = $this;
 
-		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
+		$this->useTestTheme(__DIR__.'/SSViewerTest', 'layouttest', function() use ($self) {
 			$template = new SSViewer(array('Page'));
 			$self->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
 
@@ -1166,62 +1180,62 @@ after')
 	}
 
 	/**
-	 * @covers SilverStripe\View\SSViewer::get_templates_by_class()
+	 * @covers \SilverStripe\View\SSViewer::get_templates_by_class()
 	 */
 	public function testGetTemplatesByClass() {
 		$self = $this;
-		$this->useTestTheme(dirname(__FILE__), 'layouttest', function() use ($self) {
+		$this->useTestTheme(__DIR__.'/SSViewerTest', 'layouttest', function() use ($self) {
 			// Test passing a string
 			$templates = SSViewer::get_templates_by_class(
-				'TestNamespace\\SSViewerTestModel_Controller',
+				SSViewerTestModel_Controller::class,
 				'',
-				'SilverStripe\\Control\\Controller'
+				Controller::class
 			);
 			$self->assertEquals([
-				'TestNamespace\\SSViewerTestModel_Controller',
+				SSViewerTestModel_Controller::class,
 				[
 					'type' => 'Includes',
-					'TestNamespace\\SSViewerTestModel_Controller',
+					SSViewerTestModel_Controller::class,
 				],
-				'TestNamespace\\SSViewerTestModel',
-    			'SilverStripe\\Control\\Controller',
+				SSViewerTestModel::class,
+    			Controller::class,
 				[
 					'type' => 'Includes',
-    				'SilverStripe\\Control\\Controller',
+    				Controller::class,
 				],
 			], $templates);
 
 			// Test to ensure we're stopping at the base class.
 			$templates = SSViewer::get_templates_by_class(
-				'TestNamespace\SSViewerTestModel_Controller',
+				SSViewerTestModel_Controller::class,
 				'',
-				'TestNamespace\SSViewerTestModel_Controller'
+				SSViewerTestModel_Controller::class
 			);
 			$self->assertEquals([
-				'TestNamespace\\SSViewerTestModel_Controller',
+				SSViewerTestModel_Controller::class,
 				[
 					'type' => 'Includes',
-					'TestNamespace\\SSViewerTestModel_Controller',
+					SSViewerTestModel_Controller::class,
 				],
-				'TestNamespace\\SSViewerTestModel',
+				SSViewerTestModel::class,
 			], $templates);
 
 			// Make sure we can search templates by suffix.
 			$templates = SSViewer::get_templates_by_class(
-				'TestNamespace\\SSViewerTestModel',
+				SSViewerTestModel::class,
 				'_Controller',
-				'SilverStripe\\ORM\\DataObject'
+				DataObject::class
 			);
 			$self->assertEquals([
-				'TestNamespace\\SSViewerTestModel_Controller',
+				SSViewerTestModel_Controller::class,
 				[
 					'type' => 'Includes',
-					'TestNamespace\\SSViewerTestModel_Controller',
+					SSViewerTestModel_Controller::class,
 				],
-				'SilverStripe\\ORM\\DataObject_Controller',
+				DataObject::class.'_Controller',
 				[
 					'type' => 'Includes',
-					'SilverStripe\\ORM\\DataObject_Controller',
+					DataObject::class.'_Controller',
 				],
 			], $templates);
 
@@ -1336,8 +1350,8 @@ EOC;
 	public function testRenderWithSourceFileComments() {
 		Director::config()->update('environment_type', 'dev');
 		SSViewer::config()->update('source_file_comments', true);
-		$i = FRAMEWORK_PATH . '/tests/templates/Includes';
-		$f = FRAMEWORK_PATH . '/tests/templates/SSViewerTestComments';
+		$i = __DIR__ . '/SSViewerTest/templates/Includes';
+		$f = __DIR__ . '/SSViewerTest/templates/SSViewerTestComments';
 		$templates = array(
 			array(
 				'name' => 'SSViewerTestCommentsFullSource',
@@ -1438,15 +1452,15 @@ EOC;
 
 	public function testProcessOnlyIncludesRequirementsOnce() {
 		$template = new SSViewer(array('SSViewerTestProcess'));
-		$basePath = dirname($this->getCurrentRelativePath()) . '/forms';
+		$basePath = $this->getCurrentRelativePath() . '/SSViewerTest';
 
-		$backend = Injector::inst()->create('SilverStripe\\View\\Requirements_Backend');
+		$backend = Injector::inst()->create(Requirements_Backend::class);
 		$backend->setCombinedFilesEnabled(false);
 		$backend->combineFiles(
 			'RequirementsTest_ab.css',
 			array(
-				$basePath . '/RequirementsTest_a.css',
-				$basePath . '/RequirementsTest_b.css'
+				$basePath . '/css/RequirementsTest_a.css',
+				$basePath . '/css/RequirementsTest_b.css'
 			)
 		);
 
@@ -1470,7 +1484,7 @@ EOC;
 
 			$this->assertEquals(1, substr_count(
 				$template->process(array()),
-				"tests/javascript/forms/RequirementsTest_a.js"
+				"tests/php/View/SSViewerTest/javascript/RequirementsTest_a.js"
 			));
 		}
 		else {
@@ -1482,15 +1496,15 @@ EOC;
 	public function testCallsWithArguments() {
 		$data = new ArrayData(array(
 			'Set' => new ArrayList(array(
-				new SSViewerTest_Object("1"),
-				new SSViewerTest_Object("2"),
-				new SSViewerTest_Object("3"),
-				new SSViewerTest_Object("4"),
-				new SSViewerTest_Object("5"),
+				new SSViewerTest\TestObject("1"),
+				new SSViewerTest\TestObject("2"),
+				new SSViewerTest\TestObject("3"),
+				new SSViewerTest\TestObject("4"),
+				new SSViewerTest\TestObject("5"),
 			)),
-			'Level' => new SSViewerTest_LevelTest(1),
+			'Level' => new SSViewerTest\LevelTestData(1),
 			'Nest' => array(
-				'Level' => new SSViewerTest_LevelTest(2),
+				'Level' => new SSViewerTest\LevelTestData(2),
 			),
 		));
 
@@ -1519,7 +1533,7 @@ EOC;
 	}
 
 	public function testRepeatedCallsAreCached() {
-		$data = new SSViewerTest_CacheTestData();
+		$data = new SSViewerTest\CacheTestData();
 		$template = '
 			<% if $TestWithCall %>
 				<% with $TestWithCall %>
@@ -1533,7 +1547,7 @@ EOC;
 		$this->assertEquals(1, $data->testWithCalls,
 			'SSViewerTest_CacheTestData::TestWithCall() should only be called once. Subsequent calls should be cached');
 
-		$data = new SSViewerTest_CacheTestData();
+		$data = new SSViewerTest\CacheTestData();
 		$template = '
 			<% if $TestLoopCall %>
 				<% loop $TestLoopCall %>
@@ -1557,7 +1571,7 @@ EOC;
 		);
 
 		$template = new SSViewer_FromString("<% test %><% end_test %>", $parser);
-		$template->process(new SSViewerTestFixture());
+		$template->process(new SSViewerTest\TestFixture());
 
 		$this->assertEquals(1, $count);
 	}
@@ -1573,7 +1587,7 @@ EOC;
 		);
 
 		$template = new SSViewer_FromString("<% test %>", $parser);
-		$template->process(new SSViewerTestFixture());
+		$template->process(new SSViewerTest\TestFixture());
 
 		$this->assertEquals(1, $count);
 	}
@@ -1604,183 +1618,5 @@ EOC;
 		$this->render($content, null, true);
 		$this->assertTrue(file_exists($cacheFile), 'Cache file wasn\'t created when it was meant to');
 		unlink($cacheFile);
-	}
-}
-
-/**
- * A test fixture that will echo back the template item
- */
-class SSViewerTestFixture extends ViewableData {
-	protected $name;
-
-	public function __construct($name = null) {
-		$this->name = $name;
-		parent::__construct();
-	}
-
-
-	private function argedName($fieldName, $arguments) {
-		$childName = $this->name ? "$this->name.$fieldName" : $fieldName;
-		if($arguments) return $childName . '(' . implode(',', $arguments) . ')';
-		else return $childName;
-	}
-	public function obj($fieldName, $arguments=null, $cache=false, $cacheName=null) {
-		$childName = $this->argedName($fieldName, $arguments);
-
-		// Special field name Loop### to create a list
-		if(preg_match('/^Loop([0-9]+)$/', $fieldName, $matches)) {
-			$output = new ArrayList();
-			for($i=0;$i<$matches[1];$i++) $output->push(new SSViewerTestFixture($childName));
-			return $output;
-
-		} else if(preg_match('/NotSet/i', $fieldName)) {
-			return new ViewableData();
-
-		} else {
-			return new SSViewerTestFixture($childName);
-		}
-	}
-
-
-	public function XML_val($fieldName, $arguments = null, $cache = false) {
-		if(preg_match('/NotSet/i', $fieldName)) {
-			return '';
-		} else if(preg_match('/Raw/i', $fieldName)) {
-			return $fieldName;
-		} else {
-			return '[out:' . $this->argedName($fieldName, $arguments) . ']';
-		}
-	}
-
-	public function hasValue($fieldName, $arguments = null, $cache = true) {
-		return (bool)$this->XML_val($fieldName, $arguments);
-	}
-}
-
-class SSViewerTest_ViewableData extends ViewableData implements TestOnly {
-
-	private static $default_cast = 'Text';
-
-	private static $casting = array(
-		'TextValue' => 'Text',
-		'HTMLValue' => 'HTMLFragment'
-	);
-
-	public function methodWithOneArgument($arg1) {
-		return "arg1:{$arg1}";
-	}
-
-	public function methodWithTwoArguments($arg1, $arg2) {
-		return "arg1:{$arg1},arg2:{$arg2}";
-	}
-}
-
-class SSViewerTest_CacheTestData extends ViewableData implements TestOnly {
-
-	public $testWithCalls = 0;
-	public $testLoopCalls = 0;
-
-	public function TestWithCall() {
-		$this->testWithCalls++;
-		return ArrayData::create(array('Message' => 'Hi'));
-	}
-
-	public function TestLoopCall() {
-		$this->testLoopCalls++;
-		return ArrayList::create(array(
-			ArrayData::create(array('Message' => 'One')),
-			ArrayData::create(array('Message' => 'Two'))
-		));
-	}
-
-}
-
-class SSViewerTest_Object extends DataObject implements TestOnly {
-
-	public $number = null;
-
-	private static $casting = array(
-		'Link' => 'Text',
-	);
-
-
-	public function __construct($number = null) {
-		parent::__construct();
-		$this->number = $number;
-	}
-
-	public function Number() {
-		return $this->number;
-	}
-
-	public function absoluteBaseURL() {
-		return "testLocalFunctionPriorityCalled";
-	}
-
-	public function lotsOfArguments11($a, $b, $c, $d, $e, $f, $g, $h, $i, $j, $k) {
-		return $a. $b. $c. $d. $e. $f. $g. $h. $i. $j. $k;
-	}
-
-	public function Link() {
-		return 'some/url.html';
-	}
-}
-
-class SSViewerTest_GlobalProvider implements TemplateGlobalProvider, TestOnly {
-
-	public static function get_template_global_variables() {
-		return array(
-			'SSViewerTest_GlobalHTMLFragment' => array('method' => 'get_html', 'casting' => 'HTMLFragment'),
-			'SSViewerTest_GlobalHTMLEscaped' => array('method' => 'get_html'),
-
-			'SSViewerTest_GlobalAutomatic',
-			'SSViewerTest_GlobalReferencedByString' => 'get_reference',
-			'SSViewerTest_GlobalReferencedInArray' => array('method' => 'get_reference'),
-
-			'SSViewerTest_GlobalThatTakesArguments' => array('method' => 'get_argmix', 'casting' => 'HTMLFragment')
-
-		);
-	}
-
-	public static function get_html() {
-		return '<div></div>';
-	}
-
-	public static function SSViewerTest_GlobalAutomatic() {
-		return 'automatic';
-	}
-
-	public static function get_reference() {
-		return 'reference';
-	}
-
-	public static function get_argmix() {
-		$args = func_get_args();
-		return 'z' . implode(':', $args) . 'z';
-	}
-
-}
-
-class SSViewerTest_LevelTest extends ViewableData implements TestOnly {
-	protected $depth;
-
-	public function __construct($depth = 1) {
-		$this->depth = $depth;
-	}
-
-	public function output($val) {
-		return "$this->depth-$val";
-	}
-
-	public function forLoop($number) {
-		$ret = array();
-		for($i = 0; $i < (int)$number; ++$i) {
-			$ret[] = new SSViewerTest_Object("!$i");
-		}
-		return new ArrayList($ret);
-	}
-
-	public function forWith($number) {
-		return new self($number);
 	}
 }

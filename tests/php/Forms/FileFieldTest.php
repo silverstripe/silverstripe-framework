@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FileField;
@@ -7,11 +9,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class FileFieldTest extends FunctionalTest {
 
 	/**

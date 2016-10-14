@@ -1,9 +1,10 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
+namespace SilverStripe\Dev\Tests;
+
 use SilverStripe\Dev\BulkLoader_Result;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
+use SilverStripe\Dev\Tests\BulkLoaderResultTest\Player;
 
 /**
  * @package framework
@@ -11,18 +12,18 @@ use SilverStripe\Dev\TestOnly;
  */
 class BulkLoaderResultTest extends SapphireTest
 {
-    protected $extraDataObjects = array('BulkLoaderTestPlayer');
+    protected $extraDataObjects = array(Player::class);
 
     public function setUp()
     {
         parent::setUp();
-        BulkLoaderTestPlayer::create(array('Name' => 'Vincent', 'Status' => 'Available'))->write();
+        Player::create(array('Name' => 'Vincent', 'Status' => 'Available'))->write();
     }
 
     public function testBulkLoaderResultCreated()
     {
         $results = BulkLoader_Result::create();
-        $player = BulkLoaderTestPlayer::create(array('Name' => 'Rangi', 'Status' => 'Possible'));
+        $player = Player::create(array('Name' => 'Rangi', 'Status' => 'Possible'));
         $player->write();
         $results->addCreated($player, 'Speedster');
 
@@ -47,7 +48,7 @@ class BulkLoaderResultTest extends SapphireTest
     public function testBulkLoaderResultDeleted()
     {
         $results = BulkLoader_Result::create();
-        $player = BulkLoaderTestPlayer::get()->find('Name', 'Vincent');
+        $player = Player::get()->find('Name', 'Vincent');
         $results->addDeleted($player, 'Retired');
         $player->delete();
 
@@ -67,7 +68,7 @@ class BulkLoaderResultTest extends SapphireTest
     public function testBulkLoaderResultUpdated()
     {
         $results = BulkLoader_Result::create();
-        $player = BulkLoaderTestPlayer::get()->find('Name', 'Vincent');
+        $player = Player::get()->find('Name', 'Vincent');
         $player->Status = 'Unavailable';
         $player->write();
         $results->addUpdated($player, 'Injured');
@@ -89,12 +90,4 @@ class BulkLoaderResultTest extends SapphireTest
             'Vincent is injured'
         );
     }
-}
-
-class BulkLoaderTestPlayer extends DataObject implements TestOnly
-{
-    private static $db = array(
-        'Name' => 'Varchar',
-        'Status' => 'Varchar',
-    );
 }

@@ -1,5 +1,9 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
+use SilverStripe\Forms\Tests\CheckboxSetFieldTest\Article;
+use SilverStripe\Forms\Tests\CheckboxSetFieldTest\Tag;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
@@ -7,7 +11,6 @@ use SilverStripe\Security\Member;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\CheckboxSetField;
 use SilverStripe\Forms\FieldList;
@@ -15,17 +18,13 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\View\ArrayData;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class CheckboxSetFieldTest extends SapphireTest {
 
 	protected static $fixture_file = 'CheckboxSetFieldTest.yml';
 
 	protected $extraDataObjects = array(
-		'CheckboxSetFieldTest_Article',
-		'CheckboxSetFieldTest_Tag',
+		Article::class,
+		Tag::class,
 	);
 
 	public function testSetDefaultItems() {
@@ -64,8 +63,6 @@ class CheckboxSetFieldTest extends SapphireTest {
 		);
 	}
 
-
-
 	/**
 	 * Test different data sources
 	 */
@@ -98,10 +95,10 @@ class CheckboxSetFieldTest extends SapphireTest {
 	}
 
 	public function testSaveWithNothingSelected() {
-		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
+		$article = $this->objFromFixture(Article::class, 'articlewithouttags');
 
 		/* Create a CheckboxSetField with nothing selected */
-		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		$field = new CheckboxSetField("Tags", "Test field", DataObject::get(Tag::class)->map());
 
 		/* Saving should work */
 		$field->saveInto($article);
@@ -116,13 +113,13 @@ class CheckboxSetFieldTest extends SapphireTest {
 	}
 
 	public function testSaveWithArrayValueSet() {
-		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
-		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
-		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
-		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
+		$article = $this->objFromFixture(Article::class, 'articlewithouttags');
+		$articleWithTags = $this->objFromFixture(Article::class, 'articlewithtags');
+		$tag1 = $this->objFromFixture(Tag::class, 'tag1');
+		$tag2 = $this->objFromFixture(Tag::class, 'tag2');
 
 		/* Create a CheckboxSetField with 2 items selected.  Note that the array is a list of values */
-		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		$field = new CheckboxSetField("Tags", "Test field", DataObject::get(Tag::class)->map());
 		$field->setValue(array(
 			$tag1->ID,
 			$tag2->ID
@@ -150,12 +147,12 @@ class CheckboxSetFieldTest extends SapphireTest {
 	}
 
 	public function testLoadDataFromObject() {
-		$article = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithouttags');
-		$articleWithTags = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
-		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
-		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
+		$article = $this->objFromFixture(Article::class, 'articlewithouttags');
+		$articleWithTags = $this->objFromFixture(Article::class, 'articlewithtags');
+		$tag1 = $this->objFromFixture(Tag::class, 'tag1');
+		$tag2 = $this->objFromFixture(Tag::class, 'tag2');
 
-		$field = new CheckboxSetField("Tags", "Test field", DataObject::get("CheckboxSetFieldTest_Tag")->map());
+		$field = new CheckboxSetField("Tags", "Test field", DataObject::get(Tag::class)->map());
 		/** @skipUpgrade */
 		$form = new Form(
 			new Controller(),
@@ -182,7 +179,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 			'Another' => 'Another',
 			'Something' => 'Something'
 		));
-		$article = new CheckboxSetFieldTest_Article();
+		$article = new CheckboxSetFieldTest\Article();
 		$field->setValue(array('Test' => 'Test', 'Another' => 'Another'));
 		$field->saveInto($article);
 		$article->write();
@@ -227,10 +224,10 @@ class CheckboxSetFieldTest extends SapphireTest {
 
 	public function testValidationWithDataList() {
 		//test with datalist input
-		$checkboxTestArticle = $this->objFromFixture('CheckboxSetFieldTest_Article', 'articlewithtags');
-		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
-		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
-		$tag3 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag3');
+		$checkboxTestArticle = $this->objFromFixture(Article::class, 'articlewithtags');
+		$tag1 = $this->objFromFixture(Tag::class, 'tag1');
+		$tag2 = $this->objFromFixture(Tag::class, 'tag2');
+		$tag3 = $this->objFromFixture(Tag::class, 'tag3');
 		$field = CheckboxSetField::create('Test', 'Testing', $checkboxTestArticle->Tags());
 		$validator = new RequiredFields();
 		$field->setValue(array( $tag1->ID, $tag2->ID ));
@@ -261,7 +258,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 
 		// Multiple invalid values should fail
 		$validator = new RequiredFields();
-		$fakeID = CheckboxSetFieldTest_Tag::get()->max('ID') + 1;
+		$fakeID = Tag::get()->max('ID') + 1;
 		$field->setValue(array($fakeID, $tag3->ID));
 		$this->assertFalse(
 			$field->validate($validator),
@@ -296,7 +293,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 			$error['message']
 		);
 
-		// non valid value included with valid options should succeed
+		//non valid value included with valid options should succeed
 		$validator = new RequiredFields();
 		$field->setValue(array(
 			$tag1->ID,
@@ -330,32 +327,4 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$this->assertNotContains('<firstname>', $fieldHTML);
 	}
 
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class CheckboxSetFieldTest_Article extends DataObject implements TestOnly {
-
-	private static $db = array(
-		"Content" => "Text",
-	);
-
-	private static $many_many = array(
-		"Tags" => "CheckboxSetFieldTest_Tag",
-	);
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class CheckboxSetFieldTest_Tag extends DataObject implements TestOnly {
-
-	private static $belongs_many_many = array(
-		'Articles' => 'CheckboxSetFieldTest_Article'
-	);
 }

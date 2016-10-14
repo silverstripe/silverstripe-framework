@@ -1,33 +1,29 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
 
 class HierarchyTest extends SapphireTest {
 
 	protected static $fixture_file = 'HierarchyTest.yml';
 
-	protected $requiredExtensions = array(
-		'HierarchyTest_Object' => array('SilverStripe\\ORM\\Hierarchy\\Hierarchy', 'SilverStripe\\ORM\\Versioning\\Versioned'),
-		'HierarchyHideTest_Object' => array('SilverStripe\\ORM\\Hierarchy\\Hierarchy', 'SilverStripe\\ORM\\Versioning\\Versioned'),
-	);
-
 	protected $extraDataObjects = array(
-		'HierarchyTest_Object',
-		'HierarchyHideTest_Object'
+		HierarchyTest\TestObject::class,
+		HierarchyTest\HideTestObject::class,
+		HierarchyTest\HideTestSubObject::class,
 	);
 
 	/**
 	 * Test the Hierarchy prevents infinite loops.
 	 */
 	public function testPreventLoop() {
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
 
 		$obj2->ParentID = $obj2aa->ID;
 		try {
@@ -46,19 +42,19 @@ class HierarchyTest extends SapphireTest {
 	 */
 	public function testAllHistoricalChildren() {
 		// Delete some objs
-		$this->objFromFixture('HierarchyTest_Object', 'obj2b')->delete();
-		$this->objFromFixture('HierarchyTest_Object', 'obj3a')->delete();
-		$this->objFromFixture('HierarchyTest_Object', 'obj3')->delete();
+		$this->objFromFixture(HierarchyTest\TestObject::class, 'obj2b')->delete();
+		$this->objFromFixture(HierarchyTest\TestObject::class, 'obj3a')->delete();
+		$this->objFromFixture(HierarchyTest\TestObject::class, 'obj3')->delete();
 
 		// Check that obj1-3 appear at the top level of the AllHistoricalChildren tree
 		$this->assertEquals(array("Obj 1", "Obj 2", "Obj 3"),
-			singleton('HierarchyTest_Object')->AllHistoricalChildren()->column('Title'));
+			singleton(HierarchyTest\TestObject::class)->AllHistoricalChildren()->column('Title'));
 
 		// Check numHistoricalChildren
-		$this->assertEquals(3, singleton('HierarchyTest_Object')->numHistoricalChildren());
+		$this->assertEquals(3, singleton(HierarchyTest\TestObject::class)->numHistoricalChildren());
 
 		// Check that both obj 2 children are returned
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
 		$this->assertEquals(array("Obj 2a", "Obj 2b"),
 			$obj2->AllHistoricalChildren()->column('Title'));
 
@@ -84,10 +80,10 @@ class HierarchyTest extends SapphireTest {
 	 */
 	public function testItemMarkingIsntRestrictedToSpecificInstance() {
 		// Mark a few objs
-		$this->objFromFixture('HierarchyTest_Object', 'obj2')->markExpanded();
-		$this->objFromFixture('HierarchyTest_Object', 'obj2a')->markExpanded();
-		$this->objFromFixture('HierarchyTest_Object', 'obj2b')->markExpanded();
-		$this->objFromFixture('HierarchyTest_Object', 'obj3')->markUnexpanded();
+		$this->objFromFixture(HierarchyTest\TestObject::class, 'obj2')->markExpanded();
+		$this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a')->markExpanded();
+		$this->objFromFixture(HierarchyTest\TestObject::class, 'obj2b')->markExpanded();
+		$this->objFromFixture(HierarchyTest\TestObject::class, 'obj3')->markUnexpanded();
 
 		// Query some objs in a different context and check their m
 		$objs = DataObject::get("HierarchyTest_Object", '', '"ID" ASC');
@@ -102,23 +98,23 @@ class HierarchyTest extends SapphireTest {
 	}
 
 	public function testNumChildren() {
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj1')->numChildren(), 0);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3')->numChildren(), 4);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2a')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj2b')->numChildren(), 0);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3a')->numChildren(), 2);
-		$this->assertEquals($this->objFromFixture('HierarchyTest_Object', 'obj3d')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture(HierarchyTest\TestObject::class, 'obj1')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture(HierarchyTest\TestObject::class, 'obj2')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture(HierarchyTest\TestObject::class, 'obj3')->numChildren(), 4);
+		$this->assertEquals($this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture(HierarchyTest\TestObject::class, 'obj2b')->numChildren(), 0);
+		$this->assertEquals($this->objFromFixture(HierarchyTest\TestObject::class, 'obj3a')->numChildren(), 2);
+		$this->assertEquals($this->objFromFixture(HierarchyTest\TestObject::class, 'obj3d')->numChildren(), 0);
 
-		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
+		$obj1 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj1');
 		$this->assertEquals($obj1->numChildren(), 0);
-		$obj1Child1 = new HierarchyTest_Object();
+		$obj1Child1 = new HierarchyTest\TestObject();
 		$obj1Child1->ParentID = $obj1->ID;
 		$obj1Child1->write();
 		$this->assertEquals($obj1->numChildren(false), 1,
 			'numChildren() caching can be disabled through method parameter'
 		);
-		$obj1Child2 = new HierarchyTest_Object();
+		$obj1Child2 = new HierarchyTest\TestObject();
 		$obj1Child2->ParentID = $obj1->ID;
 		$obj1Child2->write();
 		$obj1->flushCache();
@@ -128,11 +124,11 @@ class HierarchyTest extends SapphireTest {
 	}
 
 	public function testLoadDescendantIDListIntoArray() {
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2b = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
-		$obj2ab = $this->objFromFixture('HierarchyTest_Object', 'obj2ab');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2b = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2b');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
+		$obj2ab = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2ab');
 
 		$obj2IdList = $obj2->getDescendantIDList();
 		$obj2aIdList = $obj2a->getDescendantIDList();
@@ -153,10 +149,10 @@ class HierarchyTest extends SapphireTest {
 	 * any page that has been moved to another location on the stage site
 	 */
 	public function testLiveChildrenOnlyDeletedFromStage() {
-		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2b = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
+		$obj1 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj1');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2b = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2b');
 
 		// Get a published set of objects for our fixture
 		$obj1->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
@@ -180,10 +176,10 @@ class HierarchyTest extends SapphireTest {
 	}
 
 	public function testBreadcrumbs() {
-		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj1 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj1');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
 
 		$this->assertEquals('Obj 1', $obj1->getBreadcrumbs());
 		$this->assertEquals('Obj 2 &raquo; Obj 2a', $obj2a->getBreadcrumbs());
@@ -194,10 +190,10 @@ class HierarchyTest extends SapphireTest {
 	 * @covers SilverStripe\ORM\Hierarchy\Hierarchy::markChildren()
 	 */
 	public function testMarkChildrenDoesntUnmarkPreviouslyMarked() {
-		$obj3 = $this->objFromFixture('HierarchyTest_Object', 'obj3');
-		$obj3aa = $this->objFromFixture('HierarchyTest_Object', 'obj3aa');
-		$obj3ba = $this->objFromFixture('HierarchyTest_Object', 'obj3ba');
-		$obj3ca = $this->objFromFixture('HierarchyTest_Object', 'obj3ca');
+		$obj3 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3');
+		$obj3aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3aa');
+		$obj3ba = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3ba');
+		$obj3ca = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3ca');
 
 		$obj3->markPartialTree();
 		$obj3->markToExpose($obj3aa);
@@ -238,14 +234,14 @@ EOT;
 	}
 
 	public function testGetChildrenAsUL() {
-		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj1 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj1');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
 
 		$nodeCountThreshold = 30;
 
-		$root = new HierarchyTest_Object();
+		$root = new HierarchyTest\TestObject();
 		$root->markPartialTree($nodeCountThreshold);
 		$html = $root->getChildrenAsUL(
 			"",
@@ -269,14 +265,14 @@ EOT;
 	}
 
 	public function testGetChildrenAsULMinNodeCount() {
-		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
+		$obj1 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj1');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
 
 		// Set low enough that it should be fulfilled by root only elements
 		$nodeCountThreshold = 3;
 
-		$root = new HierarchyTest_Object();
+		$root = new HierarchyTest\TestObject();
 		$root->markPartialTree($nodeCountThreshold);
 		$html = $root->getChildrenAsUL(
 			"",
@@ -300,14 +296,14 @@ EOT;
 	}
 
 	public function testGetChildrenAsULMinNodeCountWithMarkToExpose() {
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
 
 		// Set low enough that it should be fulfilled by root only elements
 		$nodeCountThreshold = 3;
 
-		$root = new HierarchyTest_Object();
+		$root = new HierarchyTest\TestObject();
 		$root->markPartialTree($nodeCountThreshold);
 
 		// Mark certain node which should be included regardless of minNodeCount restrictions
@@ -332,15 +328,15 @@ EOT;
 	}
 
 	public function testGetChildrenAsULMinNodeCountWithFilters() {
-		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj1 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj1');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
 
 		// Set low enough that it should fit all search matches without lazy loading
 		$nodeCountThreshold = 3;
 
-		$root = new HierarchyTest_Object();
+		$root = new HierarchyTest\TestObject();
 
 		// Includes nodes by filter regardless of minNodeCount restrictions
 		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
@@ -369,15 +365,15 @@ EOT;
 	}
 
 	public function testGetChildrenAsULHardLimitsNodes() {
-		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
+		$obj1 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj1');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
 
 		// Set low enough that it should fit all search matches without lazy loading
 		$nodeCountThreshold = 3;
 
-		$root = new HierarchyTest_Object();
+		$root = new HierarchyTest\TestObject();
 
 		// Includes nodes by filter regardless of minNodeCount restrictions
 		$root->setMarkingFilterFunction(function($record) use($obj2, $obj2a, $obj2aa) {
@@ -406,15 +402,15 @@ EOT;
 	}
 
 	public function testGetChildrenAsULNodeThresholdLeaf() {
-		$obj1 = $this->objFromFixture('HierarchyTest_Object', 'obj1');
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj3 = $this->objFromFixture('HierarchyTest_Object', 'obj3');
-		$obj3a = $this->objFromFixture('HierarchyTest_Object', 'obj3a');
+		$obj1 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj1');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj3 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3');
+		$obj3a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3a');
 
 		$nodeCountThreshold = 99;
 
-		$root = new HierarchyTest_Object();
+		$root = new HierarchyTest\TestObject();
 		$root->markPartialTree($nodeCountThreshold);
 		$nodeCountCallback = function($parent, $numChildren) {
 			// Set low enough that it the fixture structure should exceed it
@@ -453,10 +449,10 @@ EOT;
 	 * node that makes it look like it has children
 	 */
 	public function testGetChildrenAsULNodeDeletedOnLive() {
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
-		$obj2ab = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
+		$obj2ab = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2b');
 
 		// delete all children under obj2
 		$obj2a->delete();
@@ -468,7 +464,7 @@ EOT;
 		$childrenMethod = 'AllChildren';
 		$numChildrenMethod = 'numChildren';
 
-		$root = new HierarchyTest_Object();
+		$root = new HierarchyTest\TestObject();
 		$root->markPartialTree($nodeCountThreshold, null, $childrenMethod, $numChildrenMethod);
 
 		// As in LeftAndMain::getSiteTreeFor() but simpler and more to the point for testing purposes
@@ -498,10 +494,10 @@ EOT;
 	 * node that makes it look like it has children when getting all children including deleted
 	 */
 	public function testGetChildrenAsULNodeDeletedOnStage() {
-		$obj2 = $this->objFromFixture('HierarchyTest_Object', 'obj2');
-		$obj2a = $this->objFromFixture('HierarchyTest_Object', 'obj2a');
-		$obj2aa = $this->objFromFixture('HierarchyTest_Object', 'obj2aa');
-		$obj2ab = $this->objFromFixture('HierarchyTest_Object', 'obj2b');
+		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
+		$obj2a = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2a');
+		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
+		$obj2ab = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2b');
 
 		// delete all children under obj2
 		$obj2a->delete();
@@ -513,7 +509,7 @@ EOT;
 		$childrenMethod = 'AllChildrenIncludingDeleted';
 		$numChildrenMethod = 'numHistoricalChildren';
 
-		$root = new HierarchyTest_Object();
+		$root = new HierarchyTest\TestObject();
 		$root->markPartialTree($nodeCountThreshold, null, $childrenMethod, $numChildrenMethod);
 
 		// As in LeftAndMain::getSiteTreeFor() but simpler and more to the point for testing purposes
@@ -540,29 +536,29 @@ EOT;
 	}
 
 	public function testNoHideFromHeirarchy() {
-		$obj4 = $this->objFromFixture('HierarchyHideTest_Object', 'obj4');
-		$obj4->publish("Stage", "Live");
+		$obj4 = $this->objFromFixture(HierarchyTest\HideTestObject::class, 'obj4');
+		$obj4->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 
 		foreach($obj4->stageChildren() as $child) {
-			$child->publish("Stage", "Live");
+			$child->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 		}
 		$this->assertEquals($obj4->stageChildren()->Count(), 2);
 		$this->assertEquals($obj4->liveChildren()->Count(), 2);
 	}
 
 	public function testHideFromHeirarchy() {
-		HierarchyHideTest_Object::config()->hide_from_hierarchy = array('HierarchyHideTest_SubObject');
-		$obj4 = $this->objFromFixture('HierarchyHideTest_Object', 'obj4');
-		$obj4->publish("Stage", "Live");
+		HierarchyTest\HideTestObject::config()->hide_from_hierarchy = array('HierarchyHideTest_SubObject');
+		$obj4 = $this->objFromFixture(HierarchyTest\HideTestObject::class, 'obj4');
+		$obj4->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 
 		// load without using stage children otherwise it'll bbe filtered before it's publish
 		// we need to publish all of them, and expect liveChildren to return some.
-		$children = HierarchyHideTest_Object::get()
+		$children = HierarchyTest\HideTestObject::get()
 			->filter('ParentID', (int)$obj4->ID)
 			->exclude('ID', (int)$obj4->ID);
 
 		foreach($children as $child) {
-			$child->publish("Stage", "Live");
+			$child->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 		}
 		$this->assertEquals($obj4->stageChildren()->Count(), 1);
 		$this->assertEquals($obj4->liveChildren()->Count(), 1);
@@ -613,40 +609,4 @@ EOT;
 		}
 		return '';
 	}
-}
-
-class HierarchyTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
-
-	private static $extensions = array(
-		'SilverStripe\\ORM\\Hierarchy\\Hierarchy',
-		'SilverStripe\\ORM\\Versioning\\Versioned',
-	);
-
-	private static $default_sort = 'Title ASC';
-
-	public function cmstreeclasses() {
-		return $this->markingClasses();
-	}
-}
-
-class HierarchyHideTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
-
-	private static $extensions = array(
-		'SilverStripe\\ORM\\Hierarchy\\Hierarchy',
-		"SilverStripe\\ORM\\Versioning\\Versioned('Stage', 'Live')",
-	);
-
-	public function cmstreeclasses() {
-		return $this->markingClasses();
-	}
-}
-
-class HierarchyHideTest_SubObject extends HierarchyHideTest_Object {
-
 }

@@ -1,4 +1,4 @@
-VersionedOwnershipTest_Attachment:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\Attachment:
   attachment1:
     Title: 'Attachment 1'
   attachment2:
@@ -10,66 +10,74 @@ VersionedOwnershipTest_Attachment:
   attachment5_published:
     Title: 'Attachment 5'
 
-VersionedOwnershipTest_Related:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\Related:
   related1:
     Title: 'Related 1'
-    Attachments: =>VersionedOwnershipTest_Attachment.attachment1,=>VersionedOwnershipTest_Attachment.attachment2,=>VersionedOwnershipTest_Attachment.attachment5_published
+    Attachments:
+      - =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Attachment.attachment1
+      - =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Attachment.attachment2
+      - =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Attachment.attachment5_published
   related2_published:
     Title: 'Related 2'
-    Attachments: =>VersionedOwnershipTest_Attachment.attachment3_published,=>VersionedOwnershipTest_Attachment.attachment4_published,=>VersionedOwnershipTest_Attachment.attachment5_published
+    Attachments:
+      - =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Attachment.attachment3_published
+      - =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Attachment.attachment4_published
+      - =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Attachment.attachment5_published
 
-VersionedOwnershipTest_Subclass:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\Subclass:
   subclass1_published:
     Title: 'Subclass 1'
-    Related: =>VersionedOwnershipTest_Related.related1
+    Related: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Related.related1
   subclass2_published:
     Title: 'Subclass 2'
-    Related: =>VersionedOwnershipTest_Related.related2_published
+    Related: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Related.related2_published
 
-VersionedOwnershipTest_RelatedMany:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\RelatedMany:
   relatedmany1_published:
     Title: 'Related Many 1'
-    Page: =>VersionedOwnershipTest_Subclass.subclass1_published
+    Page: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Subclass.subclass1_published
   relatedmany2_published:
     Title: 'Related Many 2'
-    Page: =>VersionedOwnershipTest_Subclass.subclass1_published
+    Page: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Subclass.subclass1_published
   relatedmany3:
     Title: 'Related Many 3'
-    Page: =>VersionedOwnershipTest_Subclass.subclass1_published
+    Page: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Subclass.subclass1_published
   relatedmany4_published:
     Title: 'Related Many 4'
-    Page: =>VersionedOwnershipTest_Subclass.subclass2_published
+    Page: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Subclass.subclass2_published
 
-VersionedOwnershipTest_Object:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\TestObject:
   object1:
     Title: 'Object 1'
 
-VersionedOwnershipTest_Image:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\Image:
   image1_published:
     Title: 'Image 1'
   image2_published:
     Title: 'Image 2'
 
-VersionedOwnershipTest_Banner:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\Banner:
   banner1_published:
     Title: 'Banner 1'
-    Image: =>VersionedOwnershipTest_Image.image1_published
+    Image: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Image.image1_published
   banner2_published:
     Title: 'Banner 2'
-    Image: =>VersionedOwnershipTest_Image.image1_published
+    Image: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Image.image1_published
   banner3_published:
     Title: 'Banner 3'
-    Image: =>VersionedOwnershipTest_Image.image2_published
+    Image: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Image.image2_published
 
-VersionedOwnershipTest_Page:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\TestPage:
   page1_published:
     Title: 'Page 1'
-    Banners: =>VersionedOwnershipTest_Banner.banner1_published
+    Banners: =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Banner.banner1_published
   page2_published:
     Title: 'Page 2'
-    Banners: =>VersionedOwnershipTest_Banner.banner2_published,=>VersionedOwnershipTest_Banner.banner3_published
+    Banners:
+      - =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Banner.banner2_published
+      - =>SilverStripe\ORM\Tests\VersionedOwnershipTest\Banner.banner3_published
 
-VersionedOwnershipTest_CustomRelation:
+SilverStripe\ORM\Tests\VersionedOwnershipTest\CustomRelation:
   custom1_published:
     Title: 'Custom 1'
   custom2_published:

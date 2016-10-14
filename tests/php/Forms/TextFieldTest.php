@@ -1,13 +1,11 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\RequiredFields;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class TextFieldTest extends SapphireTest {
 
 	/**

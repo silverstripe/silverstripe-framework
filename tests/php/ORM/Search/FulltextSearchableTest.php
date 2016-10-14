@@ -1,24 +1,19 @@
 <?php
 
+namespace SilverStripe\ORM\Tests\Search;
+
 use SilverStripe\Assets\File;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Search\FulltextSearchable;
 
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class FulltextSearchableTest extends SapphireTest {
 
 	public function setUp() {
 		parent::setUp();
 
-		FulltextSearchable::enable('SilverStripe\\Assets\\File');
+		FulltextSearchable::enable(File::class);
 	}
 
 	/**
@@ -29,22 +24,22 @@ class FulltextSearchableTest extends SapphireTest {
 	public function tearDown() {
 		parent::tearDown();
 
-		File::remove_extension('SilverStripe\\ORM\\Search\\FulltextSearchable');
-		Config::inst()->update('SilverStripe\\Assets\\File', 'create_table_options', array(
+		File::remove_extension(FulltextSearchable::class);
+		Config::inst()->update(File::class, 'create_table_options', array(
 			MySQLSchemaManager::ID => 'ENGINE=InnoDB')
 		);
 	}
 
 	public function testEnable() {
-		$this->assertTrue(File::has_extension('SilverStripe\\ORM\\Search\\FulltextSearchable'));
+		$this->assertTrue(File::has_extension(FulltextSearchable::class));
 	}
 
 	public function testEnableWithCustomClasses() {
-		FulltextSearchable::enable(array('SilverStripe\\Assets\\File'));
-		$this->assertTrue(File::has_extension('SilverStripe\\ORM\\Search\\FulltextSearchable'));
+		FulltextSearchable::enable(array(File::class));
+		$this->assertTrue(File::has_extension(FulltextSearchable::class));
 
-		File::remove_extension('SilverStripe\\ORM\\Search\\FulltextSearchable');
-		$this->assertFalse(File::has_extension('SilverStripe\\ORM\\Search\\FulltextSearchable'));
+		File::remove_extension(FulltextSearchable::class);
+		$this->assertFalse(File::has_extension(FulltextSearchable::class));
 	}
 
 }

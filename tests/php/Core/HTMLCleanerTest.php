@@ -1,12 +1,9 @@
 <?php
 
+namespace SilverStripe\Core\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\HTMLCleaner;
-
-/**
- * @package framework
- * @subpackage tests
- */
 
 class HTMLCleanerTest extends SapphireTest {
 

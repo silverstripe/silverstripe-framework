@@ -1,49 +1,28 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectTest\Player;
 use SilverStripe\View\ArrayData;
-
-
 
 /**
  * Tests for the {@link SilverStripe\ORM\PaginatedList} class.
- *
- * @package framework
- * @subpackage tests
  */
 class PaginatedListTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	protected $extraDataObjects = array(
-		// From DataObjectTest
-		'DataObjectTest_Team',
-		'DataObjectTest_Fixture',
-		'DataObjectTest_SubTeam',
-		'OtherSubclassWithSameField',
-		'DataObjectTest_FieldlessTable',
-		'DataObjectTest_FieldlessSubTable',
-		'DataObjectTest_ValidatedObject',
-		'DataObjectTest_Player',
-		'DataObjectTest_TeamComment',
-		'DataObjectTest_EquipmentCompany',
-		'DataObjectTest_SubEquipmentCompany',
-		'DataObjectTest\NamespacedClass',
-		'DataObjectTest\RelationClass',
-		'DataObjectTest_ExtendedTeamComment',
-		'DataObjectTest_Company',
-		'DataObjectTest_Staff',
-		'DataObjectTest_CEO',
-		'DataObjectTest_Fan',
-		'DataObjectTest_Play',
-		'DataObjectTest_Ploy',
-		'DataObjectTest_Bogey',
-		'ManyManyListTest_Product',
-		'ManyManyListTest_Category',
-	);
+	public function setUpOnce() {
+		$this->extraDataObjects = array_merge(
+			DataObjectTest::$extra_data_objects,
+			ManyManyListTest::$extra_data_objects
+		);
+		parent::setUpOnce();
+	}
 
 	public function testPageStart() {
 		$list = new PaginatedList(new ArrayList());
@@ -141,7 +120,7 @@ class PaginatedListTest extends SapphireTest {
 		);
 
 		// Test with dataobjectset
-		$players = DataObjectTest_Player::get();
+		$players = Player::get();
 		$list = new PaginatedList($players);
 		$list->setPageLength(1);
 		$list->getIterator();

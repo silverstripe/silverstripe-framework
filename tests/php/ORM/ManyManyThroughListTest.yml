@@ -1,36 +1,36 @@
-ManyManyThroughListTest_Object:
+SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject:
   parent1:
     Title: 'my object'
-ManyManyThroughListTest_Item:
+SilverStripe\ORM\Tests\ManyManyThroughListTest\Item:
   child1:
     Title: 'item 1'
   child2:
     Title: 'item 2'
-ManyManyThroughListTest_JoinObject:
+SilverStripe\ORM\Tests\ManyManyThroughListTest\JoinObject:
   join1:
     Title: 'join 1'
     Sort: 4
-    Parent: =>ManyManyThroughListTest_Object.parent1
-    Child: =>ManyManyThroughListTest_Item.child1
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject.parent1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child1
   join2:
     Title: 'join 2'
     Sort: 2
-    Parent: =>ManyManyThroughListTest_Object.parent1
-    Child: =>ManyManyThroughListTest_Item.child2
-ManyManyThroughListTest_VersionedObject:
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject.parent1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child2
+SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedObject:
   parent1:
     Title: 'versioned object'
-ManyManyThroughListTest_VersionedItem:
+SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedItem:
   child1:
     Title: 'versioned item 1'
   child2:
     Title: 'versioned item 2'
-ManyManyThroughListTest_VersionedJoinObject:
+SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedJoinObject:
   join1:
     Title: 'versioned join 1'
-    Parent: =>ManyManyThroughListTest_VersionedObject.parent1
-    Child: =>ManyManyThroughListTest_VersionedItem.child1
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedObject.parent1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedItem.child1
   join2:
     Title: 'versioned join 2'
-    Parent: =>ManyManyThroughListTest_VersionedObject.parent1
-    Child: =>ManyManyThroughListTest_VersionedItem.child2
+    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedObject.parent1
+    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedItem.child2

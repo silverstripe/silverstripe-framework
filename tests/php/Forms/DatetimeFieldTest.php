@@ -1,48 +1,35 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Config\Config;
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\Tests\DatetimeFieldTest\Model;
 use SilverStripe\Forms\TimeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\Form;
 use SilverStripe\i18n\i18n;
 
-
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DatetimeFieldTest extends SapphireTest {
+
+	protected $originalLocale = null;
 
 	public function setUp() {
 		parent::setUp();
 
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
-		$this->origDateConfig = Config::inst()->get('SilverStripe\\Forms\\DateField', 'default_config');
-		$this->origTimeConfig = Config::inst()->get('SilverStripe\\Forms\\TimeField', 'default_config');
-		Config::inst()->update('SilverStripe\\Forms\\DateField', 'default_config', array('dateformat' => 'dd/MM/yyyy'));
-		Config::inst()->update('SilverStripe\\Forms\\TimeField', 'default_config', array('timeformat' => 'HH:mm:ss'));
+		DateField::config()->update('default_config', array('dateformat' => 'dd/MM/yyyy'));
+		TimeField::config()->update('default_config', array('timeformat' => 'HH:mm:ss'));
 	}
 
 	public function tearDown() {
-		parent::tearDown();
-
 		i18n::set_locale($this->originalLocale);
-		Config::inst()->remove('SilverStripe\\Forms\\DateField', 'default_config');
-		Config::inst()->update('SilverStripe\\Forms\\DateField', 'default_config', $this->origDateConfig);
-		Config::inst()->remove('SilverStripe\\Forms\\TimeField', 'default_config');
-		Config::inst()->update('SilverStripe\\Forms\\TimeField', 'default_config', $this->origTimeConfig);
+		parent::tearDown();
 	}
 
 	public function testFormSaveInto() {
@@ -53,7 +40,7 @@ class DatetimeFieldTest extends SapphireTest {
 			'date' => '29/03/2003',
 			'time' => '23:59:38'
 		));
-		$m = new DatetimeFieldTest_Model();
+		$m = new Model();
 		$form->saveInto($m);
 		$this->assertEquals('2003-03-29 23:59:38', $m->MyDatetime);
 	}
@@ -262,16 +249,4 @@ class DatetimeFieldTest extends SapphireTest {
 			)
 		);
 	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class DatetimeFieldTest_Model extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'MyDatetime' => 'Datetime'
-	);
-
 }

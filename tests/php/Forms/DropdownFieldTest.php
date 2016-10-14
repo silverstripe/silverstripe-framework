@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
@@ -9,12 +11,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\View\ArrayData;
 use SilverStripe\ORM\Map;
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DropdownFieldTest extends SapphireTest {
 
 	public function testGetSource() {

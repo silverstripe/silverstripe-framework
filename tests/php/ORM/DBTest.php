@@ -1,31 +1,28 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+use SilverStripe\Control\Director;
 use SilverStripe\ORM\DB;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DBTest extends SapphireTest {
 
-	function testValidAlternativeDatabaseName() {
+	public function testValidAlternativeDatabaseName() {
 
 		$prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
 
-		Config::inst()->update('SilverStripe\\Control\\Director', 'environment_type', 'dev');
+		Director::config()->update('environment_type', 'dev');
 		$this->assertTrue(DB::valid_alternative_database_name($prefix.'tmpdb1234567'));
 		$this->assertFalse(DB::valid_alternative_database_name($prefix.'tmpdb12345678'));
 		$this->assertFalse(DB::valid_alternative_database_name('tmpdb1234567'));
 		$this->assertFalse(DB::valid_alternative_database_name('random'));
 		$this->assertFalse(DB::valid_alternative_database_name(''));
 
-		Config::inst()->update('SilverStripe\\Control\\Director', 'environment_type', 'live');
+		Director::config()->update('environment_type', 'live');
 		$this->assertFalse(DB::valid_alternative_database_name($prefix.'tmpdb1234567'));
 
-		Config::inst()->update('SilverStripe\\Control\\Director', 'environment_type', 'dev');
+		Director::config()->update('environment_type', 'dev');
 	}
 
 }

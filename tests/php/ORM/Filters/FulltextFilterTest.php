@@ -1,26 +1,26 @@
 <?php
 
+namespace SilverStripe\ORM\Tests\Filters;
+
+
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\Filters\FulltextFilter;
-
+use SilverStripe\ORM\Tests\Filters\FulltextFilterTest\TestObject;
 
 
 class FulltextFilterTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'FulltextFilterTest_DataObject'
+		TestObject::class
 	);
 
 	protected static $fixture_file = "FulltextFilterTest.yml";
 
 	public function testFilter() {
 		if(DB::get_conn() instanceof MySQLDatabase) {
-			$baseQuery = FulltextFilterTest_DataObject::get();
+			$baseQuery = FulltextFilterTest\TestObject::get();
 			$this->assertEquals(3, $baseQuery->count(), "FulltextFilterTest_DataObject count does not match.");
 
 			// First we'll text the 'SearchFields' which has been set using an array
@@ -52,8 +52,8 @@ class FulltextFilterTest extends SapphireTest {
 	public function testGenerateQuery() {
 		// Test if columns have table identifier
 		$filter1 = new FulltextFilter('SearchFields', 'SilverStripe');
-		$filter1->setModel('FulltextFilterTest_DataObject');
-		$query1 = FulltextFilterTest_DataObject::get()->dataQuery();
+		$filter1->setModel(TestObject::class);
+		$query1 = FulltextFilterTest\TestObject::get()->dataQuery();
 		$filter1->apply($query1);
 		$this->assertNotEquals('"ColumnA","ColumnB"', $filter1->getDbName());
 		$this->assertNotEquals(
@@ -63,8 +63,8 @@ class FulltextFilterTest extends SapphireTest {
 
 		// Test SearchFields
 		$filter1 = new FulltextFilter('SearchFields', 'SilverStripe');
-		$filter1->setModel('FulltextFilterTest_DataObject');
-		$query1 = FulltextFilterTest_DataObject::get()->dataQuery();
+		$filter1->setModel(TestObject::class);
+		$query1 = FulltextFilterTest\TestObject::get()->dataQuery();
 		$filter1->apply($query1);
 		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA","FulltextFilterTest_DataObject"."ColumnB"', $filter1->getDbName());
 		$this->assertEquals(
@@ -76,8 +76,8 @@ class FulltextFilterTest extends SapphireTest {
 
 		// Test Other searchfields
 		$filter2 = new FulltextFilter('OtherSearchFields', 'SilverStripe');
-		$filter2->setModel('FulltextFilterTest_DataObject');
-		$query2 = FulltextFilterTest_DataObject::get()->dataQuery();
+		$filter2->setModel(TestObject::class);
+		$query2 = FulltextFilterTest\TestObject::get()->dataQuery();
 		$filter2->apply($query2);
 		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnC","FulltextFilterTest_DataObject"."ColumnD"', $filter2->getDbName());
 		$this->assertEquals(
@@ -89,8 +89,8 @@ class FulltextFilterTest extends SapphireTest {
 
 		// Test fallback to single field
 		$filter3 = new FulltextFilter('ColumnA', 'SilverStripe');
-		$filter3->setModel('FulltextFilterTest_DataObject');
-		$query3 = FulltextFilterTest_DataObject::get()->dataQuery();
+		$filter3->setModel(TestObject::class);
+		$query3 = FulltextFilterTest\TestObject::get()->dataQuery();
 		$filter3->apply($query3);
 		$this->assertEquals('"FulltextFilterTest_DataObject"."ColumnA"', $filter3->getDbName());
 		$this->assertEquals(
@@ -100,32 +100,5 @@ class FulltextFilterTest extends SapphireTest {
 			$query3->query()->getWhere()
 		);
 	}
-
-}
-
-
-class FulltextFilterTest_DataObject extends DataObject implements TestOnly {
-
-	private static $db = array(
-		"ColumnA" => "Varchar(255)",
-		"ColumnB" => "HTMLText",
-		"ColumnC" => "Varchar(255)",
-		"ColumnD" => "HTMLText",
-		"ColumnE" => 'Varchar(255)'
-	);
-
-	private static $indexes = array(
-		'SearchFields' => array(
-			'type' => 'fulltext',
-			'name' => 'SearchFields',
-			'value' => '"ColumnA", "ColumnB"',
-		),
-		'OtherSearchFields' => 'fulltext ("ColumnC", "ColumnD")',
-		'SingleIndex' => 'fulltext ("ColumnE")'
-	);
-
-	private static $create_table_options = array(
-		MySQLSchemaManager::ID => "ENGINE=MyISAM",
-	);
 
 }

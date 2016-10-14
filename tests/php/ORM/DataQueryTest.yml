@@ -1,4 +1,4 @@
-DataQueryTest_E:
+SilverStripe\ORM\Tests\DataQueryTest\ObjectE:
   query1:
     Title: 'Last'
     SortOrder: 3

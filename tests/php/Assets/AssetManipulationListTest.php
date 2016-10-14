@@ -1,7 +1,9 @@
 <?php
+
+namespace SilverStripe\Assets\Tests;
+
 use SilverStripe\Assets\AssetManipulationList;
 use SilverStripe\Dev\SapphireTest;
-
 
 /**
  * Tests set manipulations of groups of assets of differing visibilities

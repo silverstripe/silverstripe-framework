@@ -1,4 +1,4 @@
-MySQLDatabaseTest_Data:
+SilverStripe\ORM\Tests\MySQLDatabaseTest\Data:
   data1:
     Title: 'First Item'
     Description: 'The content'

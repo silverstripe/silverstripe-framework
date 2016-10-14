@@ -1,22 +1,19 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
-use SilverStripe\ORM\Connect\MySQLSchemaManager;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\MSSQL\MSSQLDatabase;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
+use Exception;
+use SilverStripe\ORM\Tests\DatabaseTest\MyObject;
 
-
-/**
- * @package framework
- * @subpackage Testing
- */
+/** @skipUpgrade */
 class DatabaseTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'DatabaseTest_MyObject',
+		MyObject::class,
 	);
 
 	protected $usesDatabase = true;
@@ -169,7 +166,7 @@ class DatabaseTest extends SapphireTest {
 		}
 
 		// Test that successful transactions are comitted
-		$obj = new DatabaseTest_MyObject();
+		$obj = new DatabaseTest\MyObject();
 		$failed = false;
 		$conn->withTransaction(function() use (&$obj) {
 			$obj->MyField = 'Save 1';
@@ -177,7 +174,7 @@ class DatabaseTest extends SapphireTest {
 		}, function() use (&$failed) {
 			$failed = true;
 		});
-		$this->assertEquals('Save 1', DatabaseTest_MyObject::get()->first()->MyField);
+		$this->assertEquals('Save 1', DatabaseTest\MyObject::get()->first()->MyField);
 		$this->assertFalse($failed);
 
 		// Test failed transactions are rolled back
@@ -193,19 +190,10 @@ class DatabaseTest extends SapphireTest {
 			});
 		} catch ( Exception $ex) {}
 		$this->assertTrue($failed);
-		$this->assertEquals('Save 1', DatabaseTest_MyObject::get()->first()->MyField);
+		$this->assertEquals('Save 1', DatabaseTest\MyObject::get()->first()->MyField);
 		$this->assertInstanceOf('Exception', $ex);
 		$this->assertEquals('error', $ex->getMessage());
 	}
 
 
-}
-
-class DatabaseTest_MyObject extends DataObject implements TestOnly {
-
-	private static $create_table_options = array(MySQLSchemaManager::ID => 'ENGINE=InnoDB');
-
-	private static $db = array(
-		'MyField' => 'Varchar'
-	);
 }

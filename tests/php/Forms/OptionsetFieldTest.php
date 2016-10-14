@@ -1,7 +1,8 @@
 <?php
 
-use SilverStripe\ORM\FieldType\DBField;
+namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\OptionsetField;
@@ -9,10 +10,6 @@ use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class OptionsetFieldTest extends SapphireTest {
 	public function testSetDisabledItems() {
 		$f = new OptionsetField(
@@ -71,7 +68,7 @@ class OptionsetFieldTest extends SapphireTest {
 		$field->setEmptyString('(Select one)');
 		$field->setValue(1);
 		$readonlyField = $field->performReadonlyTransformation();
-		preg_match('/Yes/', $field->Field(), $matches);
+		preg_match('/Yes/', $readonlyField->Field(), $matches);
 		$this->assertEquals($matches[0], 'Yes');
 	}
 

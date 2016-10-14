@@ -1,8 +1,8 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
@@ -10,14 +10,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\i18n\i18n;
 
-
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class NumericFieldTest extends SapphireTest {
 
 	protected $usesDatabase = false;
@@ -87,7 +79,7 @@ class NumericFieldTest extends SapphireTest {
 		$field = new NumericField('Number');
 		/** @skipUpgrade */
 		$form = new Form(new Controller(), 'Form', new FieldList($field), new FieldList());
-		$dataObject = new NumericFieldTest_Object();
+		$dataObject = new NumericFieldTest\TestObject();
 
 		foreach($tests as $input => $output) {
 			// Given a dataobject as a context, the field should assume the field value is not localised
@@ -208,11 +200,4 @@ class NumericFieldTest extends SapphireTest {
 		$this->assertContains('type="text"', $html, 'number type not set');
 	}
 
-}
-
-class NumericFieldTest_Object extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Number' => 'Float'
-	);
 }

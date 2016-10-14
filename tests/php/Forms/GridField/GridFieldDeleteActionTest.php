@@ -1,12 +1,19 @@
 <?php
 
+namespace SilverStripe\Forms\Tests\GridField;
+
+use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\Session;
@@ -15,11 +22,6 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldDeleteAction;
 use SilverStripe\Forms\GridField\GridField;
-
-
-
-
-
 
 class GridFieldDeleteActionTest extends SapphireTest {
 
@@ -36,11 +38,16 @@ class GridFieldDeleteActionTest extends SapphireTest {
 	protected static $fixture_file = 'GridFieldActionTest.yml';
 
 	/** @var array */
-	protected $extraDataObjects = array('GridFieldAction_Delete_Team', 'GridFieldAction_Edit_Team');
+	protected $extraDataObjects = [
+		Team::class,
+		Cheerleader::class,
+		Player::class,
+		Permissions::class
+	];
 
 	public function setUp() {
 		parent::setUp();
-		$this->list = new DataList('GridFieldAction_Delete_Team');
+		$this->list = new DataList(Team::class);
 		$config = GridFieldConfig::create()->addComponent(new GridFieldDeleteAction());
 		$this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
 		$this->form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
@@ -66,7 +73,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 	public function testActionsRequireCSRF() {
 		$this->logInWithPermission('ADMIN');
 		$this->setExpectedException(
-			'SilverStripe\\Control\\HTTPResponse_Exception',
+			HTTPResponse_Exception::class,
 			_t("Form.CSRF_FAILED_MESSAGE",
 				"There seems to have been a technical problem. Please click the back button, ".
 				"refresh your browser, and try again."
@@ -87,8 +94,10 @@ class GridFieldDeleteActionTest extends SapphireTest {
 	}
 
 	public function testDeleteActionWithoutCorrectPermission() {
-		if(Member::currentUser()) { Member::currentUser()->logOut(); }
-		$this->setExpectedException('SilverStripe\\ORM\\ValidationException');
+		if(Member::currentUser()) {
+			Member::currentUser()->logOut();
+		}
+		$this->setExpectedException(ValidationException::class);
 
 		$stateID = 'testGridStateActionField';
 		Session::set(
@@ -97,7 +106,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 				'grid' => '',
 				'actionName' => 'deleterecord',
 				'args' => array(
-					'RecordID' => $this->idFromFixture('GridFieldAction_Delete_Team', 'team1')
+					'RecordID' => $this->idFromFixture(Team::class, 'team1')
 				)
 			)
 		);
@@ -125,7 +134,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 				'grid'=>'',
 				'actionName'=>'deleterecord',
 				'args' => array(
-					'RecordID' => $this->idFromFixture('GridFieldAction_Delete_Team', 'team1')
+					'RecordID' => $this->idFromFixture(Team::class, 'team1')
 				)
 			)
 		);
@@ -158,7 +167,7 @@ class GridFieldDeleteActionTest extends SapphireTest {
 				'grid'=>'',
 				'actionName'=>'deleterecord',
 				'args' => array(
-					'RecordID' => $this->idFromFixture('GridFieldAction_Delete_Team', 'team1')
+					'RecordID' => $this->idFromFixture(Team::class, 'team1')
 				)
 			)
 		);
@@ -175,20 +184,5 @@ class GridFieldDeleteActionTest extends SapphireTest {
 		$this->gridField->gridFieldAlterAction(array('StateID'=>$stateID), $this->form, $request);
 		$this->assertEquals(2, $this->list->count(), 'User should be able to delete records with ADMIN permission.');
 
-	}
-}
-
-class GridFieldAction_Delete_Team extends DataObject implements TestOnly {
-	private static $db = array(
-		'Name' => 'Varchar',
-		'City' => 'Varchar'
-	);
-
-	public function canView($member = null) {
-		return true;
-	}
-
-	public function canDelete($member = null) {
-		return parent::canDelete($member);
 	}
 }

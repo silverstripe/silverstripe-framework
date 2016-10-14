@@ -1,11 +1,11 @@
 <?php
 
+namespace SilverStripe\Control\Tests;
+
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\CookieJar;
 use SilverStripe\Control\Cookie;
-
-
 
 class CookieTest extends SapphireTest {
 

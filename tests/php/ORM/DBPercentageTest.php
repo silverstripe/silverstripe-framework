@@ -1,15 +1,10 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\FieldType\DBPercentage;
 use SilverStripe\Dev\SapphireTest;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DBPercentageTest extends SapphireTest {
 
 	public function testNice() {

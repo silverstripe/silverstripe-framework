@@ -1,17 +1,13 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\TimeField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class TimeFieldTest extends SapphireTest {
 
 	public function setUp() {

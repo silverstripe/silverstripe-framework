@@ -1,17 +1,14 @@
 <?php
 
+namespace SilverStripe\Security\Tests;
+
+
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\PermissionCheckboxSetField;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class PermissionTest extends SapphireTest {
 
 	protected static $fixture_file = 'PermissionTest.yml';
@@ -27,12 +24,12 @@ class PermissionTest extends SapphireTest {
 	}
 
 	public function testDirectlyAppliedPermissions() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'author');
+		$member = $this->objFromFixture(Member::class, 'author');
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_VIEW_ALL"));
 	}
 
 	public function testCMSAccess() {
-		$members = Member::get()->byIDs($this->allFixtureIDs('SilverStripe\\Security\\Member'));
+		$members = Member::get()->byIDs($this->allFixtureIDs(Member::class));
 		foreach ($members as $member) {
 			$this->assertTrue(Permission::checkMember($member, 'CMS_ACCESS'));
 			$this->assertTrue(Permission::checkMember($member, array('CMS_ACCESS', 'CMS_ACCESS_Security')));
@@ -53,7 +50,7 @@ class PermissionTest extends SapphireTest {
 
 	public function testLeftAndMainAccessAll() {
 		//add user and group
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'leftandmain');
+		$member = $this->objFromFixture(Member::class, 'leftandmain');
 
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
@@ -61,14 +58,14 @@ class PermissionTest extends SapphireTest {
 	}
 
 	public function testPermissionAreInheritedFromOneRole() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'author');
+		$member = $this->objFromFixture(Member::class, 'author');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertFalse(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
 	}
 
 	public function testPermissionAreInheritedFromMultipleRoles() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'access');
+		$member = $this->objFromFixture(Member::class, 'access');
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_MyAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_AssetAdmin"));
 		$this->assertTrue(Permission::checkMember($member, "CMS_ACCESS_SecurityAdmin"));
@@ -77,7 +74,7 @@ class PermissionTest extends SapphireTest {
 	}
 
 	public function testPermissionsForMember() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'access');
+		$member = $this->objFromFixture(Member::class, 'access');
 		$permissions = Permission::permissions_for_member($member->ID);
 		$this->assertEquals(4, count($permissions));
 		$this->assertTrue(in_array('CMS_ACCESS_MyAdmin', $permissions));
@@ -94,7 +91,7 @@ class PermissionTest extends SapphireTest {
 	}
 
 	public function testRolesAndPermissionsFromParentGroupsAreInherited() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'globalauthor');
+		$member = $this->objFromFixture(Member::class, 'globalauthor');
 
 		// Check that permissions applied to the group are there
 		$this->assertTrue(Permission::checkMember($member, "SITETREE_EDIT_ALL"));
@@ -113,8 +110,8 @@ class PermissionTest extends SapphireTest {
 	 * Ensure the the get_*_by_permission functions are permission role aware
 	 */
 	public function testGettingMembersByPermission() {
-		$accessMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'access');
-		$accessAuthor = $this->objFromFixture('SilverStripe\\Security\\Member', 'author');
+		$accessMember = $this->objFromFixture(Member::class, 'access');
+		$accessAuthor = $this->objFromFixture(Member::class, 'author');
 
 		$result = Permission::get_members_by_permission(array('CMS_ACCESS_SecurityAdmin'));
 		$resultIDs = $result ? $result->column() : array();

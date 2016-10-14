@@ -1,9 +1,14 @@
 <?php
 
+namespace SilverStripe\Admin\Tests;
+
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Admin\CampaignAdmin;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\UnexpectedDataException;
+use ReflectionClass;
+
 
 class CampaignAdminTest extends SapphireTest
 {

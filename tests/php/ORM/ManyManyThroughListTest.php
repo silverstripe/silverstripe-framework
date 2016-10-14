@@ -1,23 +1,24 @@
 <?php
 
-use SilverStripe\Dev\Debug;
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
 use SilverStripe\ORM\Versioning\Versioned;
+use InvalidArgumentException;
 
 class ManyManyThroughListTest extends SapphireTest
 {
 	protected static $fixture_file = 'ManyManyThroughListTest.yml';
 
 	protected $extraDataObjects = [
-		ManyManyThroughListTest_Item::class,
-		ManyManyThroughListTest_JoinObject::class,
-		ManyManyThroughListTest_Object::class,
-		ManyManyThroughListTest_VersionedItem::class,
-		ManyManyThroughListTest_VersionedJoinObject::class,
-		ManyManyThroughListTest_VersionedObject::class,
+		ManyManyThroughListTest\Item::class,
+		ManyManyThroughListTest\JoinObject::class,
+		ManyManyThroughListTest\TestObject::class,
+		ManyManyThroughListTest\VersionedItem::class,
+		ManyManyThroughListTest\VersionedJoinObject::class,
+		ManyManyThroughListTest\VersionedObject::class,
 	];
 
 	public function setUp() {
@@ -31,8 +32,8 @@ class ManyManyThroughListTest extends SapphireTest
 	}
 
 	public function testSelectJoin() {
-		/** @var ManyManyThroughListTest_Object $parent */
-		$parent = $this->objFromFixture(ManyManyThroughListTest_Object::class, 'parent1');
+		/** @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_Object $parent */
+		$parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
 		$this->assertDOSEquals(
 			[
 				['Title' => 'item 1'],
@@ -46,7 +47,7 @@ class ManyManyThroughListTest extends SapphireTest
 		$this->assertNotNull($item1->getJoin());
 		$this->assertEquals('join 1', $item1->getJoin()->Title);
 		$this->assertInstanceOf(
-			ManyManyThroughListTest_JoinObject::class,
+			ManyManyThroughListTest\JoinObject::class,
 			$item1->ManyManyThroughListTest_JoinObject
 		);
 		$this->assertEquals('join 1', $item1->ManyManyThroughListTest_JoinObject->Title);
@@ -95,9 +96,9 @@ class ManyManyThroughListTest extends SapphireTest
 	}
 
 	public function testAdd() {
-		/** @var ManyManyThroughListTest_Object $parent */
-		$parent = $this->objFromFixture(ManyManyThroughListTest_Object::class, 'parent1');
-		$newItem = new ManyManyThroughListTest_Item();
+		/** @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_Object $parent */
+		$parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
+		$newItem = new ManyManyThroughListTest\Item();
 		$newItem->Title = 'my new item';
 		$newItem->write();
 		$parent->Items()->add($newItem, ['Title' => 'new join record']);
@@ -107,19 +108,19 @@ class ManyManyThroughListTest extends SapphireTest
 		$this->assertNotNull($newItem);
 		$this->assertEquals('my new item', $newItem->Title);
 		$this->assertInstanceOf(
-			ManyManyThroughListTest_JoinObject::class,
+			ManyManyThroughListTest\JoinObject::class,
 			$newItem->getJoin()
 		);
 		$this->assertInstanceOf(
-			ManyManyThroughListTest_JoinObject::class,
+			ManyManyThroughListTest\JoinObject::class,
 			$newItem->ManyManyThroughListTest_JoinObject
 		);
 		$this->assertEquals('new join record', $newItem->ManyManyThroughListTest_JoinObject->Title);
 	}
 
 	public function testRemove() {
-		/** @var ManyManyThroughListTest_Object $parent */
-		$parent = $this->objFromFixture(ManyManyThroughListTest_Object::class, 'parent1');
+		/** @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_Object $parent */
+		$parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
 		$this->assertDOSEquals(
 			[
 				['Title' => 'item 1'],
@@ -136,8 +137,8 @@ class ManyManyThroughListTest extends SapphireTest
 	}
 
 	public function testPublishing() {
-		/** @var ManyManyThroughListTest_VersionedObject $draftParent */
-		$draftParent = $this->objFromFixture(ManyManyThroughListTest_VersionedObject::class, 'parent1');
+		/** @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_VersionedObject $draftParent */
+		$draftParent = $this->objFromFixture(ManyManyThroughListTest\VersionedObject::class, 'parent1');
 		$draftParent->publishRecursive();
 
 		// Modify draft stage
@@ -163,9 +164,9 @@ class ManyManyThroughListTest extends SapphireTest
 		// Check live record is still old values
 		// This tests that both the join table and many_many tables
 		// inherit the necessary query parameters from the parent object.
-		/** @var ManyManyThroughListTest_VersionedObject $liveParent */
+		/** @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_VersionedObject $liveParent */
 		$liveParent = Versioned::get_by_stage(
-			ManyManyThroughListTest_VersionedObject::class,
+			ManyManyThroughListTest\VersionedObject::class,
 			Versioned::LIVE
 		)->byID($draftParent->ID);
 		$liveOwnedObjects = $liveParent->findOwned(true);
@@ -182,7 +183,7 @@ class ManyManyThroughListTest extends SapphireTest
 		// Publish draft changes
 		$draftParent->publishRecursive();
 		$liveParent = Versioned::get_by_stage(
-			ManyManyThroughListTest_VersionedObject::class,
+			ManyManyThroughListTest\VersionedObject::class,
 			Versioned::LIVE
 		)->byID($draftParent->ID);
 		$liveOwnedObjects = $liveParent->findOwned(true);
@@ -202,11 +203,11 @@ class ManyManyThroughListTest extends SapphireTest
 	 */
 	public function testValidateModelValidatesJoinType() {
 		DataObject::reset();
-		ManyManyThroughListTest_Item::config()->update('db', [
-			'ManyManyThroughListTest_JoinObject' => 'Text'
+		ManyManyThroughListTest\Item::config()->update('db', [
+			ManyManyThroughListTest\JoinObject::class => 'Text'
 		]);
 		$this->setExpectedException(InvalidArgumentException::class);
-		DataObject::getSchema()->manyManyComponent(ManyManyThroughListTest_Object::class, 'Items');
+		DataObject::getSchema()->manyManyComponent(ManyManyThroughListTest\TestObject::class, 'Items');
 	}
 
 	public function testRelationParsing() {
@@ -216,153 +217,27 @@ class ManyManyThroughListTest extends SapphireTest
 		$this->assertEquals(
 			[
 				ManyManyThroughList::class,
-				ManyManyThroughListTest_Object::class,
-				ManyManyThroughListTest_Item::class,
+				ManyManyThroughListTest\TestObject::class,
+				ManyManyThroughListTest\Item::class,
 				'ParentID',
 				'ChildID',
-				ManyManyThroughListTest_JoinObject::class
+				ManyManyThroughListTest\JoinObject::class
 			],
-			$schema->manyManyComponent(ManyManyThroughListTest_Object::class, 'Items')
+			$schema->manyManyComponent(ManyManyThroughListTest\TestObject::class, 'Items')
 		);
 
 		// Belongs_many_many is the same, but with parent/child substituted
 		$this->assertEquals(
 			[
 				ManyManyThroughList::class,
-				ManyManyThroughListTest_Item::class,
-				ManyManyThroughListTest_Object::class,
+				ManyManyThroughListTest\Item::class,
+				ManyManyThroughListTest\TestObject::class,
 				'ChildID',
 				'ParentID',
-				ManyManyThroughListTest_JoinObject::class
+				ManyManyThroughListTest\JoinObject::class
 			],
-			$schema->manyManyComponent(ManyManyThroughListTest_Item::class, 'Objects')
+			$schema->manyManyComponent(ManyManyThroughListTest\Item::class, 'Objects')
 		);
 	}
-}
-
-/**
- * Basic parent object
- *
- * @property string $Title
- * @method ManyManyThroughList Items()
- */
-class ManyManyThroughListTest_Object extends DataObject implements TestOnly
-{
-	private static $db = [
-		'Title' => 'Varchar'
-	];
-
-	private static $many_many = [
-		'Items' => [
-			'through' => ManyManyThroughListTest_JoinObject::class,
-			'from' => 'Parent',
-			'to' => 'Child',
-		]
-	];
-}
-
-/**
- * @property string $Title
- * @method ManyManyThroughListTest_Object Parent()
- * @method ManyManyThroughListTest_Item Child()
- */
-class ManyManyThroughListTest_JoinObject extends DataObject implements TestOnly
-{
-	private static $db = [
-		'Title' => 'Varchar',
-		'Sort' => 'Int',
-	];
-
-	private static $has_one = [
-		'Parent' => ManyManyThroughListTest_Object::class,
-		'Child' => ManyManyThroughListTest_Item::class,
-	];
-}
-
-/**
- * @property string $Title
- * @method ManyManyThroughList Objects()
- */
-class ManyManyThroughListTest_Item extends DataObject implements TestOnly
-{
-	private static $db = [
-		'Title' => 'Varchar'
-	];
-
-	private static $belongs_many_many = [
-		'Objects' => 'ManyManyThroughListTest_Object.Items'
-	];
-}
-
-/**
- * Basic parent object
- *
- * @property string $Title
- * @method ManyManyThroughList Items()
- * @mixin Versioned
- */
-class ManyManyThroughListTest_VersionedObject extends DataObject implements TestOnly
-{
-	private static $db = [
-		'Title' => 'Varchar'
-	];
-
-	private static $extensions = [
-		Versioned::class
-	];
-
-	private static $owns = [
-		'Items' // Should automatically own both mapping and child records
-	];
-
-	private static $many_many = [
-		'Items' => [
-			'through' => ManyManyThroughListTest_VersionedJoinObject::class,
-			'from' => 'Parent',
-			'to' => 'Child',
-		]
-	];
-}
-
-/**
- * @property string $Title
- * @method ManyManyThroughListTest_VersionedObject Parent()
- * @method ManyManyThroughListTest_VersionedItem Child()
- * @mixin Versioned
- */
-class ManyManyThroughListTest_VersionedJoinObject extends DataObject implements TestOnly
-{
-	private static $db = [
-		'Title' => 'Varchar'
-	];
-
-	private static $extensions = [
-		Versioned::class
-	];
-
-	private static $has_one = [
-		'Parent' => ManyManyThroughListTest_VersionedObject::class,
-		'Child' => ManyManyThroughListTest_VersionedItem::class,
-	];
-}
-
-/**
- * @property string $Title
- * @method ManyManyThroughList Objects()
- * @mixin Versioned
- */
-class ManyManyThroughListTest_VersionedItem extends DataObject implements TestOnly
-{
-	private static $db = [
-		'Title' => 'Varchar'
-	];
-
-	private static $extensions = [
-		Versioned::class
-	];
-
-	private static $belongs_many_many = [
-		'Objects' => 'ManyManyThroughListTest_VersionedObject.Items'
-	];
 }
 

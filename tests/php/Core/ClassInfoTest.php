@@ -1,28 +1,33 @@
 <?php
 
+namespace SilverStripe\Core\Tests;
+
+use SilverStripe\Core\Object;
+use SilverStripe\Core\Tests\ClassInfoTest\BaseClass;
+use SilverStripe\Core\Tests\ClassInfoTest\BaseDataClass;
+use SilverStripe\Core\Tests\ClassInfoTest\ChildClass;
+use SilverStripe\Core\Tests\ClassInfoTest\GrandChildClass;
+use SilverStripe\Core\Tests\ClassInfoTest\HasFields;
+use SilverStripe\Core\Tests\ClassInfoTest\NoFields;
+use SilverStripe\Core\Tests\ClassInfoTest\WithCustomTable;
+use SilverStripe\Core\Tests\ClassInfoTest\WithRelation;
 use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\View\ViewableData;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class ClassInfoTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'ClassInfoTest_BaseClass',
-		'ClassInfoTest_BaseDataClass',
-		'ClassInfoTest_ChildClass',
-		'ClassInfoTest_GrandChildClass',
-		'ClassInfoTest_HasFields',
-		'ClassInfoTest_NoFields',
-		'ClassInfoTest_WithCustomTable',
-		'ClassInfoTest_WithRelation',
+		BaseClass::class,
+		BaseDataClass::class,
+		ChildClass::class,
+		GrandChildClass::class,
+		HasFields::class,
+		NoFields::class,
+		WithCustomTable::class,
+		WithRelation::class,
 	);
 
 	public function setUp() {
@@ -33,8 +38,8 @@ class ClassInfoTest extends SapphireTest {
 	public function testExists() {
 		$this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\Object'));
 		$this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\object'));
-		$this->assertTrue(ClassInfo::exists('ClassInfoTest'));
-		$this->assertTrue(ClassInfo::exists('CLASSINFOTEST'));
+		$this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\Tests\\ClassInfoTest'));
+		$this->assertTrue(ClassInfo::exists('SilverStripe\\Core\\Tests\\CLASSINFOTEST'));
 		$this->assertTrue(ClassInfo::exists('stdClass'));
 		$this->assertTrue(ClassInfo::exists('stdCLASS'));
 		$this->assertFalse(ClassInfo::exists('SomeNonExistantClass'));
@@ -42,31 +47,40 @@ class ClassInfoTest extends SapphireTest {
 
 	public function testSubclassesFor() {
 		$this->assertEquals(
-			ClassInfo::subclassesFor('ClassInfoTest_BaseClass'),
 			array(
-				'ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass',
-				'ClassInfoTest_ChildClass' => 'ClassInfoTest_ChildClass',
-				'ClassInfoTest_GrandChildClass' => 'ClassInfoTest_GrandChildClass'
+				BaseClass::class => BaseClass::class,
+				ChildClass::class => ChildClass::class,
+				GrandChildClass::class => GrandChildClass::class
 			),
+			ClassInfo::subclassesFor(BaseClass::class),
 			'ClassInfo::subclassesFor() returns only direct subclasses and doesnt include base class'
 		);
 		ClassInfo::reset_db_cache();
 		$this->assertEquals(
-			ClassInfo::subclassesFor('classinfotest_baseclass'),
 			array(
-				'ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass',
-				'ClassInfoTest_ChildClass' => 'ClassInfoTest_ChildClass',
-				'ClassInfoTest_GrandChildClass' => 'ClassInfoTest_GrandChildClass'
+				BaseClass::class => BaseClass::class,
+				ChildClass::class => ChildClass::class,
+				GrandChildClass::class => GrandChildClass::class
 			),
+			ClassInfo::subclassesFor('silverstripe\\core\\tests\\classinfotest\\baseclass'),
 			'ClassInfo::subclassesFor() is acting in a case sensitive way when it should not'
 		);
 	}
 
 	public function testClassName()
 	{
-		$this->assertEquals('ClassInfoTest', ClassInfo::class_name($this));
-		$this->assertEquals('ClassInfoTest', ClassInfo::class_name('ClassInfoTest'));
-		$this->assertEquals('ClassInfoTest', ClassInfo::class_name('CLaSsInfOTEsT'));
+		$this->assertEquals(
+			ClassInfoTest::class,
+			ClassInfo::class_name($this)
+		);
+		$this->assertEquals(
+			ClassInfoTest::class,
+			ClassInfo::class_name('SilverStripe\\Core\\Tests\\ClassInfoTest')
+		);
+		$this->assertEquals(
+			ClassInfoTest::class,
+			ClassInfo::class_name('SilverStripe\\Core\\TESTS\\CLaSsInfOTEsT')
+		);
 	}
 
 	public function testNonClassName() {
@@ -80,59 +94,59 @@ class ClassInfoTest extends SapphireTest {
 
 		$classes = ClassInfo::classes_for_folder(ltrim(FRAMEWORK_DIR . '/tests', '/'));
 		$this->assertContains(
-			'classinfotest',
+			'silverstripe\\core\\tests\\classinfotest',
 			$classes,
 			'ClassInfo::classes_for_folder() returns classes matching the filename'
 		);
 		$this->assertContains(
-			'classinfotest_baseclass',
+			'silverstripe\\core\\tests\\classinfotest\\baseclass',
 			$classes,
 			'ClassInfo::classes_for_folder() returns additional classes not matching the filename'
 		);
 	}
 
 	/**
-	 * @covers SilverStripe\Core\ClassInfo::ancestry()
+	 * @covers \SilverStripe\Core\ClassInfo::ancestry()
 	 */
 	public function testAncestry() {
-		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass');
+		$ancestry = ClassInfo::ancestry(ChildClass::class);
 		$expect = ArrayLib::valuekey(array(
-			'SilverStripe\\Core\\Object',
-			'SilverStripe\\View\\ViewableData',
-			'SilverStripe\\ORM\\DataObject',
-			'ClassInfoTest_BaseClass',
-			'ClassInfoTest_ChildClass',
+			Object::class,
+			ViewableData::class,
+			DataObject::class,
+			BaseClass::class,
+			ChildClass::class,
 		));
 		$this->assertEquals($expect, $ancestry);
 
 		ClassInfo::reset_db_cache();
-		$this->assertEquals($expect, ClassInfo::ancestry('classINFOTest_Childclass'));
+		$this->assertEquals(
+			$expect,
+			ClassInfo::ancestry('silverstripe\\core\\tests\\classINFOtest\\Childclass')
+		);
 
 		ClassInfo::reset_db_cache();
-		$this->assertEquals($expect, ClassInfo::ancestry('classINFOTest_Childclass'));
-
-		ClassInfo::reset_db_cache();
-		$ancestry = ClassInfo::ancestry('ClassInfoTest_ChildClass', true);
-		$this->assertEquals(array('ClassInfoTest_BaseClass' => 'ClassInfoTest_BaseClass'), $ancestry,
+		$ancestry = ClassInfo::ancestry(ChildClass::class, true);
+		$this->assertEquals(array(BaseClass::class => BaseClass::class), $ancestry,
 			'$tablesOnly option excludes memory-only inheritance classes'
 		);
 	}
 
 	/**
-	 * @covers SilverStripe\Core\ClassInfo::dataClassesFor()
+	 * @covers \SilverStripe\Core\ClassInfo::dataClassesFor()
 	 */
 	public function testDataClassesFor() {
 		$expect = array(
-			'ClassInfoTest_BaseDataClass' => 'ClassInfoTest_BaseDataClass',
-			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields',
-			'ClassInfoTest_WithRelation' => 'ClassInfoTest_WithRelation',
-			'ClassInfoTest_WithCustomTable' => 'ClassInfoTest_WithCustomTable',
+			BaseDataClass::class => BaseDataClass::class,
+			HasFields::class     => HasFields::class,
+			WithRelation::class => WithRelation::class,
+			WithCustomTable::class => WithCustomTable::class,
 		);
 
 		$classes = array(
-			'ClassInfoTest_BaseDataClass',
-			'ClassInfoTest_NoFields',
-			'ClassInfoTest_HasFields',
+			BaseDataClass::class,
+			NoFields::class,
+			HasFields::class,
 		);
 
 		ClassInfo::reset_db_cache();
@@ -143,8 +157,8 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertEquals($expect, ClassInfo::dataClassesFor($classes[1]));
 
 		$expect = array(
-			'ClassInfoTest_BaseDataClass' => 'ClassInfoTest_BaseDataClass',
-			'ClassInfoTest_HasFields'     => 'ClassInfoTest_HasFields',
+			BaseDataClass::class => BaseDataClass::class,
+			HasFields::class     => HasFields::class,
 		);
 
 		ClassInfo::reset_db_cache();
@@ -153,83 +167,4 @@ class ClassInfoTest extends SapphireTest {
 		$this->assertEquals($expect, ClassInfo::dataClassesFor(strtolower($classes[2])));
 	}
 
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class ClassInfoTest_BaseClass extends DataObject implements TestOnly {
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class ClassInfoTest_ChildClass extends ClassInfoTest_BaseClass {
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class ClassInfoTest_GrandChildClass extends ClassInfoTest_ChildClass {
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class ClassInfoTest_BaseDataClass extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class ClassInfoTest_NoFields extends ClassInfoTest_BaseDataClass {
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class ClassInfoTest_HasFields extends ClassInfoTest_NoFields {
-
-	private static $db = array(
-		'Description' => 'Varchar'
-	);
-}
-
-class ClassInfoTest_WithCustomTable extends ClassInfoTest_NoFields {
-	private static $table_name = 'CITWithCustomTable';
-	private static $db = array(
-		'Description' => 'Text'
-	);
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class ClassInfoTest_WithRelation extends ClassInfoTest_NoFields {
-
-	private static $has_one = array(
-		'Relation' => 'ClassInfoTest_HasFields'
-	);
 }

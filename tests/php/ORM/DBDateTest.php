@@ -1,20 +1,14 @@
 <?php
 
-
+namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Security\Member;
 
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DBDateTest extends SapphireTest {
 
 	protected $originalTZ;
@@ -257,7 +251,7 @@ class DBDateTest extends SapphireTest {
 	public function testFormatFromSettings() {
 
 		$memberID = $this->logInWithPermission();
-		$member = DataObject::get_by_id('SilverStripe\\Security\\Member', $memberID);
+		$member = DataObject::get_by_id(Member::class, $memberID);
 		$member->DateFormat = 'dd/MM/YYYY';
 		$member->write();
 

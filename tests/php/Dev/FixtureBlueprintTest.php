@@ -1,32 +1,34 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
+namespace SilverStripe\Dev\Tests;
+
+use InvalidArgumentException;
 use SilverStripe\Dev\FixtureBlueprint;
 use SilverStripe\Dev\FixtureFactory;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
+use SilverStripe\Dev\Tests\FixtureBlueprintTest\Article;
+use SilverStripe\Dev\Tests\FixtureBlueprintTest\TestPage;
+use SilverStripe\Dev\Tests\FixtureBlueprintTest\TestSiteTree;
+use SilverStripe\Dev\Tests\FixtureFactoryTest\DataObjectRelation;
+use SilverStripe\Dev\Tests\FixtureFactoryTest\TestDataObject;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class FixtureBlueprintTest extends SapphireTest {
 
 	protected $usesDatabase = true;
 
 	protected $extraDataObjects = array(
-		'FixtureFactoryTest_DataObject',
-		'FixtureFactoryTest_DataObjectRelation',
-		'FixtureBlueprintTest_SiteTree',
-		'FixtureBlueprintTest_Page'
+		TestDataObject::class,
+		DataObjectRelation::class,
+		TestSiteTree::class,
+		TestPage::class,
 	);
 
 	public function testCreateWithRelationshipExtraFields() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 
-		$relation1 = new FixtureFactoryTest_DataObjectRelation();
+		$relation1 = new DataObjectRelation();
 		$relation1->write();
-		$relation2 = new FixtureFactoryTest_DataObjectRelation();
+		$relation2 = new DataObjectRelation();
 		$relation2->write();
 
 		// in YAML these look like
@@ -40,17 +42,17 @@ class FixtureBlueprintTest extends SapphireTest {
 				'ManyManyRelation' =>
 					array(
 						array(
-							"=>FixtureFactoryTest_DataObjectRelation.relation1" => array(),
+							"=>".DataObjectRelation::class.".relation1" => array(),
 							"Label" => 'This is a label for relation 1'
 						),
 						array(
-							"=>FixtureFactoryTest_DataObjectRelation.relation2" => array(),
+							"=>".DataObjectRelation::class.".relation2" => array(),
 							"Label" => 'This is a label for relation 2'
 						)
 					)
 			),
 			array(
-				'FixtureFactoryTest_DataObjectRelation' => array(
+				DataObjectRelation::class => array(
 					'relation1' => $relation1->ID,
 					'relation2' => $relation2->ID
 				)
@@ -74,7 +76,7 @@ class FixtureBlueprintTest extends SapphireTest {
 
 
 	public function testCreateWithoutData() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 		$obj = $blueprint->createObject('one');
 		$this->assertNotNull($obj);
 		$this->assertGreaterThan(0, $obj->ID);
@@ -82,7 +84,7 @@ class FixtureBlueprintTest extends SapphireTest {
 	}
 
 	public function testCreateWithData() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 		$obj = $blueprint->createObject('one', array('Name' => 'My Name'));
 		$this->assertNotNull($obj);
 		$this->assertGreaterThan(0, $obj->ID);
@@ -91,22 +93,22 @@ class FixtureBlueprintTest extends SapphireTest {
 
 
 	public function testCreateWithRelationship() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 
-		$relation1 = new FixtureFactoryTest_DataObjectRelation();
+		$relation1 = new DataObjectRelation();
 		$relation1->write();
-		$relation2 = new FixtureFactoryTest_DataObjectRelation();
+		$relation2 = new DataObjectRelation();
 		$relation2->write();
 
 		$obj = $blueprint->createObject(
 			'one',
 			array(
 				'ManyManyRelation' =>
-					'=>FixtureFactoryTest_DataObjectRelation.relation1,' .
-					'=>FixtureFactoryTest_DataObjectRelation.relation2'
+					'=>'.DataObjectRelation::class.'.relation1,' .
+					'=>'.DataObjectRelation::class.'.relation2'
 			),
 			array(
-				'FixtureFactoryTest_DataObjectRelation' => array(
+				DataObjectRelation::class => array(
 					'relation1' => $relation1->ID,
 					'relation2' => $relation2->ID
 				)
@@ -122,12 +124,12 @@ class FixtureBlueprintTest extends SapphireTest {
 			array(
 				// Note; using array format here, not comma separated
 				'HasManyRelation' => array(
-					'=>FixtureFactoryTest_DataObjectRelation.relation1',
-					'=>FixtureFactoryTest_DataObjectRelation.relation2'
+					'=>'.DataObjectRelation::class.'.relation1',
+					'=>'.DataObjectRelation::class.'.relation2'
 				)
 			),
 			array(
-				'FixtureFactoryTest_DataObjectRelation' => array(
+				DataObjectRelation::class => array(
 					'relation1' => $relation1->ID,
 					'relation2' => $relation2->ID
 				)
@@ -143,7 +145,7 @@ class FixtureBlueprintTest extends SapphireTest {
 	 * @expectedExceptionMessage No fixture definitions found
 	 */
 	public function testCreateWithInvalidRelationName() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 
 		$obj = $blueprint->createObject(
 			'one',
@@ -151,7 +153,7 @@ class FixtureBlueprintTest extends SapphireTest {
 				'ManyManyRelation' => '=>UnknownClass.relation1'
 			),
 			array(
-				'FixtureFactoryTest_DataObjectRelation' => array(
+				DataObjectRelation::class => array(
 					'relation1' => 99
 				)
 			)
@@ -163,15 +165,15 @@ class FixtureBlueprintTest extends SapphireTest {
 	 * @expectedExceptionMessage No fixture definitions found
 	 */
 	public function testCreateWithInvalidRelationIdentifier() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 
 		$obj = $blueprint->createObject(
 			'one',
 			array(
-				'ManyManyRelation' => '=>FixtureFactoryTest_DataObjectRelation.unknown_identifier'
+				'ManyManyRelation' => '=>'.DataObjectRelation::class.'.unknown_identifier'
 			),
 			array(
-				'FixtureFactoryTest_DataObjectRelation' => array(
+				DataObjectRelation::class => array(
 					'relation1' => 99
 				)
 			)
@@ -184,18 +186,18 @@ class FixtureBlueprintTest extends SapphireTest {
 	 */
 	public function testCreateWithInvalidRelationFormat() {
 		$factory = new FixtureFactory();
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 
-		$relation1 = new FixtureFactoryTest_DataObjectRelation();
+		$relation1 = new DataObjectRelation();
 		$relation1->write();
 
 		$obj = $blueprint->createObject(
 			'one',
 			array(
-				'ManyManyRelation' => 'FixtureFactoryTest_DataObjectRelation.relation1'
+				'ManyManyRelation' => DataObjectRelation::class.'.relation1'
 			),
 			array(
-				'FixtureFactoryTest_DataObjectRelation' => array(
+				DataObjectRelation::class => array(
 					'relation1' => $relation1->ID
 				)
 			)
@@ -203,7 +205,7 @@ class FixtureBlueprintTest extends SapphireTest {
 	}
 
 	public function testCreateWithId() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 		$obj = $blueprint->createObject('ninetynine', array('ID' => 99));
 		$this->assertNotNull($obj);
 		$this->assertEquals(99, $obj->ID);
@@ -211,12 +213,12 @@ class FixtureBlueprintTest extends SapphireTest {
 
 	public function testCreateWithLastEdited() {
 		$extpectedDate = '2010-12-14 16:18:20';
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 		$obj = $blueprint->createObject('lastedited', array('LastEdited' => $extpectedDate));
 		$this->assertNotNull($obj);
 		$this->assertEquals($extpectedDate, $obj->LastEdited);
 
-		$obj = FixtureFactoryTest_DataObject::get()->byID($obj->ID);
+		$obj = TestDataObject::get()->byID($obj->ID);
 		$this->assertEquals($extpectedDate, $obj->LastEdited);
 	}
 
@@ -227,7 +229,7 @@ class FixtureBlueprintTest extends SapphireTest {
 			'LastEdited' => '2010-12-14 16:18:20',
 			'PublishDate' => '2015-12-09 06:03:00'
 		);
-		$blueprint = new FixtureBlueprint('FixtureBlueprintTest_Article');
+		$blueprint = new FixtureBlueprint(Article::class);
 		$obj = $blueprint->createObject('home', $data);
 		$this->assertNotNull($obj);
 		$this->assertEquals($data['Title'], $obj->Title);
@@ -235,7 +237,7 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->assertEquals($data['LastEdited'], $obj->LastEdited);
 		$this->assertEquals($data['PublishDate'], $obj->PublishDate);
 
-		$obj = FixtureBlueprintTest_Article::get()->byID($obj->ID);
+		$obj = Article::get()->byID($obj->ID);
 		$this->assertNotNull($obj);
 		$this->assertEquals($data['Title'], $obj->Title);
 		$this->assertEquals($data['Created'], $obj->Created);
@@ -244,7 +246,7 @@ class FixtureBlueprintTest extends SapphireTest {
 	}
 
 	public function testCallbackOnBeforeCreate() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 		$this->_called = 0;
 		$self = $this;
 		$cb = function($identifier, $data, $fixtures) use($self) {
@@ -261,7 +263,7 @@ class FixtureBlueprintTest extends SapphireTest {
 	}
 
 	public function testCallbackOnAfterCreate() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 		$this->_called = 0;
 		$self = $this;
 		$cb = function($obj, $identifier, $data, $fixtures) use($self) {
@@ -279,7 +281,7 @@ class FixtureBlueprintTest extends SapphireTest {
 
 	public function testDefineWithDefaultCustomSetters() {
 		$blueprint = new FixtureBlueprint(
-			'FixtureFactoryTest_DataObject',
+			TestDataObject::class,
 			null,
 			array(
 			'Name' => function($obj, $data, $fixtures) {
@@ -294,33 +296,4 @@ class FixtureBlueprintTest extends SapphireTest {
 		$this->assertEquals('Override Name', $obj2->Name);
 	}
 
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class FixtureBlueprintTest_SiteTree extends DataObject implements TestOnly {
-
-	private static $db = array(
-		"Title" => "Varchar"
-	);
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class FixtureBlueprintTest_Page extends FixtureBlueprintTest_SiteTree {
-
-	private static $db = array(
-		'PublishDate' => 'Datetime'
-	);
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class FixtureBlueprintTest_Article extends FixtureBlueprintTest_Page {
 }

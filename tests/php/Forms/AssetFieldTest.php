@@ -1,31 +1,35 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
+use SilverStripe\Assets\Folder;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\ORM\Versioning\Versioned;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\File;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\AssetField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\Tests\AssetFieldTest\TestForm;
+use SilverStripe\Forms\Tests\AssetFieldTest\TestController;
+use SilverStripe\Forms\Tests\AssetFieldTest\TestObject;
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class AssetFieldTest extends FunctionalTest {
 
 	protected static $fixture_file = 'AssetFieldTest.yml';
 
 	protected $extraDataObjects = array(
-		'AssetFieldTest_Object'
+		TestObject::class
 	);
+
+	protected $extraControllers = [
+		TestController::class
+	];
 
 	public function setUp() {
 		parent::setUp();
@@ -34,7 +38,7 @@ class AssetFieldTest extends FunctionalTest {
 		Versioned::set_stage(Versioned::DRAFT);
 
 		// Set backend root to /AssetFieldTest
-		AssetStoreTest_SpyStore::activate('AssetFieldTest');
+		TestAssetStore::activate('AssetFieldTest');
 		$create = function($path) {
 			Filesystem::makeFolder(dirname($path));
 			$fh = fopen($path, "w+");
@@ -43,21 +47,21 @@ class AssetFieldTest extends FunctionalTest {
 		};
 
 		// Write all DBFile references
-		foreach(AssetFieldTest_Object::get() as $object) {
-			$path = AssetStoreTest_SpyStore::getLocalPath($object->File);
+		foreach(TestObject::get() as $object) {
+			$path = TestAssetStore::getLocalPath($object->File);
 			$create($path);
 		}
 
 		// Create a test files for each of the fixture references
-		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
+		$files = File::get()->exclude('ClassName', Folder::class);
 		foreach($files as $file) {
-			$path = AssetStoreTest_SpyStore::getLocalPath($file);
+			$path = TestAssetStore::getLocalPath($file);
 			$create($path);
 		}
 	}
 
 	public function tearDown() {
-		AssetStoreTest_SpyStore::reset();
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
@@ -88,7 +92,7 @@ class AssetFieldTest extends FunctionalTest {
 		$this->logInWithPermission('ADMIN');
 
 		// Unset existing has_one relation before re-uploading
-		$record = $this->objFromFixture('AssetFieldTest_Object', 'object1');
+		$record = $this->objFromFixture(TestObject::class, 'object1');
 		$record->FileFilename = null;
 		$record->FileHash = null;
 		$record->write();
@@ -103,7 +107,7 @@ class AssetFieldTest extends FunctionalTest {
 		);
 
 		// Secondly, ensure that simply uploading an object does not save the file against the relation
-		$record = AssetFieldTest_Object::get()->byID($record->ID);
+		$record = TestObject::get()->byID($record->ID);
 		$this->assertFalse($record->File->exists());
 
 		// Thirdly, test submitting the form with the encoded data
@@ -114,7 +118,7 @@ class AssetFieldTest extends FunctionalTest {
 			$responseJSON[0]['variant']
 		);
 		$this->assertEmpty($response['errors']);
-		$record = AssetFieldTest_Object::get()->byID($record->ID);
+		$record = TestObject::get()->byID($record->ID);
 		$this->assertTrue($record->File->exists());
 		$this->assertEquals('315ae4c3d44412baa0c81515b6fb35829a337a5a', $record->File->Hash);
 		$this->assertEquals('MyFiles/testUploadHasOneRelation.txt', $record->File->Filename);
@@ -154,19 +158,19 @@ class AssetFieldTest extends FunctionalTest {
 	 * Test that files can be removed from an existing field
 	 */
 	public function testRemoveFromHasOne() {
-		$record = $this->objFromFixture('AssetFieldTest_Object', 'object1');
+		$record = $this->objFromFixture(TestObject::class, 'object1');
 
 		// Check record exists
 		$this->assertTrue($record->File->exists());
-		$filePath = AssetStoreTest_SpyStore::getLocalPath($record->File);
+		$filePath = TestAssetStore::getLocalPath($record->File);
 		$this->assertFileExists($filePath);
 
 		// Remove from record
-		$response = $this->mockUploadFileSave('SilverStripe\\Assets\\File', null, null, null);
+		$response = $this->mockUploadFileSave(File::class, null, null, null);
 		$this->assertEmpty($response['errors']);
 
 		// Check file is removed
-		$record = AssetFieldTest_Object::get()->byID($record->ID);
+		$record = TestObject::get()->byID($record->ID);
 		$this->assertFalse($record->File->exists());
 
 		// Check file object itself exists
@@ -179,7 +183,7 @@ class AssetFieldTest extends FunctionalTest {
 	public function testView() {
 		$this->logInWithPermission('ADMIN');
 
-		$record = $this->objFromFixture('AssetFieldTest_Object', 'object1');
+		$record = $this->objFromFixture(TestObject::class, 'object1');
 
 		// Requesting form is not an error
 		$response = $this->get('AssetFieldTest_Controller');
@@ -189,7 +193,7 @@ class AssetFieldTest extends FunctionalTest {
 		$parser = new CSSContentParser($response->getBody());
 		$tuple = array();
 		$result = $parser->getBySelector(
-			"#AssetFieldTest_Form_Form_File_Holder .ss-uploadfield-files .ss-uploadfield-item input[type='hidden']"
+			"#TestForm_Form_File_Holder .ss-uploadfield-files .ss-uploadfield-item input[type='hidden']"
 		);
 		foreach($result as $part) {
 			$name = (string)$part['name'];
@@ -218,7 +222,7 @@ class AssetFieldTest extends FunctionalTest {
 	}
 
 	public function testGetRecord() {
-		$record = $this->objFromFixture('AssetFieldTest_Object', 'object1');
+		$record = $this->objFromFixture(TestObject::class, 'object1');
 		$form = $this->getMockForm();
 
 		$field = AssetField::create('MyField');
@@ -242,7 +246,7 @@ class AssetFieldTest extends FunctionalTest {
 	 * @skipUpgrade
 	 */
 	public function testValue() {
-		$record = $this->objFromFixture('AssetFieldTest_Object', 'object1');
+		$record = $this->objFromFixture(TestObject::class, 'object1');
 
 		// File field
 		$field = AssetField::create('File');
@@ -261,7 +265,7 @@ class AssetFieldTest extends FunctionalTest {
 		$this->assertEmpty($field->Value());
 
 		// Set via file (copies only tuple not the actual file reference)
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'file1');
+		$file = $this->objFromFixture(File::class, 'file1');
 		$field->setValue($file);
 		$this->assertEquals(array(
 			'Filename' => 'MyAssets/file1.txt',
@@ -340,7 +344,7 @@ class AssetFieldTest extends FunctionalTest {
 			)
 		);
 
-		$form = new AssetFieldTest_Form();
+		$form = new TestForm();
 		$form->loadDataFrom($data, true);
 		if($form->validate()) {
 			$record = $form->getRecord();
@@ -366,71 +370,5 @@ class AssetFieldTest extends FunctionalTest {
 			"AssetFieldTest_Controller/Form/field/{$fileField}/upload",
 			array($fileField => $upload)
 		);
-	}
-}
-
-class AssetFieldTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		"Title" => "Text",
-		"File" => "DBFile",
-		"Image" => "DBFile('image/supported')"
-	);
-}
-
-class AssetFieldTest_Form extends Form implements TestOnly {
-
-	public function getRecord() {
-		if(empty($this->record)) {
-			$this->record = AssetFieldTest_Object::get()
-				->filter('Title', 'Object1')
-				->first();
-		}
-		return $this->record;
-	}
-
-	/** @skipUpgrade */
-	function __construct($controller = null, $name = 'Form') {
-		if(empty($controller)) {
-			$controller = new AssetFieldTest_Controller();
-		}
-
-		$fields = new FieldList(
-			AssetField::create('File')
-				->setFolderName('MyFiles'),
-			AssetField::create('Image')
-				->setAllowedFileCategories('image/supported')
-				->setFolderName('MyImages'),
-			AssetField::create('NoRelationField')
-				->setFolderName('MyDocuments')
-		);
-		$actions = new FieldList(
-			new FormAction('submit')
-		);
-		$validator = new RequiredFields();
-
-		parent::__construct($controller, $name, $fields, $actions, $validator);
-
-		$this->loadDataFrom($this->getRecord());
-	}
-
-	public function submit($data, Form $form) {
-		$record = $this->getRecord();
-		$form->saveInto($record);
-		$record->write();
-		return json_encode($record->toMap());
-	}
-}
-
-/**
- * @skipUpgrade
- */
-class AssetFieldTest_Controller extends Controller implements TestOnly {
-
-	protected $template = 'BlankPage';
-
-	private static $allowed_actions = array('Form');
-
-	public function Form() {
-		return new AssetFieldTest_Form($this, 'Form');
 	}
 }

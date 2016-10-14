@@ -1,20 +1,15 @@
 <?php
 
+namespace SilverStripe\View\Tests;
+
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\ViewableData;
 
-
-
-
 /**
  * See {@link SSViewerTest->testCastingHelpers()} for more tests related to casting and ViewableData behaviour,
  * from a template-parsing perspective.
- *
- * @package framework
- * @subpackage tests
  */
 class ViewableDataTest extends SapphireTest {
 
@@ -47,26 +42,26 @@ class ViewableDataTest extends SapphireTest {
 	}
 
 	public function testRequiresCasting() {
-		$caster = new ViewableDataTest_Castable();
+		$caster = new ViewableDataTest\Castable();
 
-		$this->assertInstanceOf('ViewableDataTest_RequiresCasting', $caster->obj('alwaysCasted'));
-		$this->assertInstanceOf('ViewableData_Caster', $caster->obj('noCastingInformation'));
+		$this->assertInstanceOf(ViewableDataTest\RequiresCasting::class, $caster->obj('alwaysCasted'));
+		$this->assertInstanceOf(ViewableDataTest\Caster::class, $caster->obj('noCastingInformation'));
 	}
 
 	public function testFailoverRequiresCasting() {
-		$caster = new ViewableDataTest_Castable();
-		$container = new ViewableDataTest_Container();
+		$caster = new ViewableDataTest\Castable();
+		$container = new ViewableDataTest\Container();
 		$container->setFailover($caster);
 
-		$this->assertInstanceOf('ViewableDataTest_RequiresCasting', $container->obj('alwaysCasted'));
-		$this->assertInstanceOf('ViewableDataTest_RequiresCasting', $caster->obj('alwaysCasted'));
+		$this->assertInstanceOf(ViewableDataTest\RequiresCasting::class, $container->obj('alwaysCasted'));
+		$this->assertInstanceOf(ViewableDataTest\RequiresCasting::class, $caster->obj('alwaysCasted'));
 
-		$this->assertInstanceOf('ViewableData_Caster', $container->obj('noCastingInformation'));
-		$this->assertInstanceOf('ViewableData_Caster', $caster->obj('noCastingInformation'));
+		$this->assertInstanceOf(ViewableDataTest\Caster::class, $container->obj('noCastingInformation'));
+		$this->assertInstanceOf(ViewableDataTest\Caster::class, $caster->obj('noCastingInformation'));
 	}
 
 	public function testCastingXMLVal() {
-		$caster = new ViewableDataTest_Castable();
+		$caster = new ViewableDataTest\Castable();
 
 		$this->assertEquals('casted', $caster->XML_val('alwaysCasted'));
 		$this->assertEquals('casted', $caster->XML_val('noCastingInformation'));
@@ -77,7 +72,7 @@ class ViewableDataTest extends SapphireTest {
 	}
 
 	public function testArrayCustomise() {
-		$viewableData    = new ViewableDataTest_Castable();
+		$viewableData    = new ViewableDataTest\Castable();
 		$newViewableData = $viewableData->customise(array (
 			'test'         => 'overwritten',
 			'alwaysCasted' => 'overwritten'
@@ -94,8 +89,8 @@ class ViewableDataTest extends SapphireTest {
 	}
 
 	public function testObjectCustomise() {
-		$viewableData    = new ViewableDataTest_Castable();
-		$newViewableData = $viewableData->customise(new ViewableDataTest_RequiresCasting());
+		$viewableData    = new ViewableDataTest\Castable();
+		$newViewableData = $viewableData->customise(new ViewableDataTest\RequiresCasting());
 
 		$this->assertEquals('test', $viewableData->XML_val('test'));
 		$this->assertEquals('casted', $viewableData->XML_val('alwaysCasted'));
@@ -127,7 +122,7 @@ class ViewableDataTest extends SapphireTest {
 			'Argument'      => 'ArgumentType',
 			'ArrayArgument' => 'ArrayArgumentType'
 		);
-		$obj = new ViewableDataTest_CastingClass();
+		$obj = new ViewableDataTest\CastingClass();
 
 		foreach($expected as $field => $class) {
 			$this->assertEquals(
@@ -139,7 +134,7 @@ class ViewableDataTest extends SapphireTest {
 	}
 
 	public function testObjWithCachedStringValueReturnsValidObject() {
-		$obj = new ViewableDataTest_NoCastingInformation();
+		$obj = new ViewableDataTest\NoCastingInformation();
 
 		// Save a literal string into cache
 		$cache = true;
@@ -155,14 +150,14 @@ class ViewableDataTest extends SapphireTest {
 
 		// Casted data should be the string wrapped in a DBField-object.
 		$this->assertNotEmpty($castedData, 'Casted data was empty.');
-		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBField', $castedData, 'Casted data should be instance of DBField.');
+		$this->assertInstanceOf(DBField::class, $castedData, 'Casted data should be instance of DBField.');
 
 		$this->assertEquals($uncastedData, $castedData->getValue(), 'Casted and uncasted strings are not equal.');
 	}
 
 	public function testCaching() {
-		$objCached = new ViewableDataTest_Cached();
-		$objNotCached = new ViewableDataTest_NotCached();
+		$objCached = new ViewableDataTest\Cached();
+		$objNotCached = new ViewableDataTest\NotCached();
 
 		$objCached->Test = 'AAA';
 		$objNotCached->Test = 'AAA';
@@ -180,14 +175,14 @@ class ViewableDataTest extends SapphireTest {
 
 	public function testSetFailover() {
 		$failover = new ViewableData();
-		$container = new ViewableDataTest_Container();
+		$container = new ViewableDataTest\Container();
 		$container->setFailover($failover);
 
 		$this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
 		$this->assertFalse($container->hasMethod('testMethod'), 'testMethod() is already defined when it shouldn’t be');
 
 		// Ensure that defined methods detected from the failover aren't cached when setting a new failover
-		$container->setFailover(new ViewableDataTest_Failover);
+		$container->setFailover(new ViewableDataTest\Failover);
 		$this->assertTrue($container->hasMethod('testMethod'));
 
 		// Test the reverse - that defined methods previously detected in a failover are removed if they no longer exist
@@ -196,113 +191,4 @@ class ViewableDataTest extends SapphireTest {
 		$this->assertFalse($container->hasMethod('testMethod'), 'testMethod() incorrectly reported as existing');
 	}
 
-}
-
-/**#@+
- * @ignore
- */
-class ViewableDataTest_Castable extends ViewableData {
-
-	private static $default_cast = 'ViewableData_Caster';
-
-	private static $casting = array (
-		'alwaysCasted'    => 'ViewableDataTest_RequiresCasting',
-		'castedUnsafeXML' => 'ViewableData_UnescaptedCaster',
-		'test' => 'Text',
-	);
-
-	public $test = 'test';
-
-	public $uncastedZeroValue = 0;
-
-	public function alwaysCasted() {
-		return 'alwaysCasted';
-	}
-
-	public function noCastingInformation() {
-		return 'noCastingInformation';
-	}
-
-	public function unsafeXML() {
-		return '<foo>';
-	}
-
-	public function castedUnsafeXML() {
-		return $this->unsafeXML();
-	}
-
-	public function forTemplate() {
-		return 'castable';
-	}
-}
-
-class ViewableDataTest_RequiresCasting extends ViewableData {
-
-	public $test = 'overwritten';
-
-	public function forTemplate() {
-		return 'casted';
-	}
-
-	public function setValue() {}
-
-}
-
-class ViewableData_UnescaptedCaster extends ViewableData {
-
-	protected $value;
-
-	public function setValue($value) {
-		$this->value = $value;
-	}
-
-	public function forTemplate() {
-		return Convert::raw2xml($this->value);
-	}
-
-}
-
-class ViewableData_Caster extends ViewableData {
-
-	public function forTemplate() {
-		return 'casted';
-	}
-
-	public function setValue() {}
-
-}
-
-class ViewableDataTest_Container extends ViewableData {
-
-}
-
-class ViewableDataTest_CastingClass extends ViewableData {
-	private static $casting = array(
-		'Field'         => 'CastingType',
-		'Argument'      => 'ArgumentType(Argument)',
-		'ArrayArgument' => 'ArrayArgumentType(array(foo, bar))'
-	);
-}
-
-class ViewableDataTest_NoCastingInformation extends ViewableData {
-	public function noCastingInformation() {
-		return "No casting information";
-	}
-}
-
-class ViewableDataTest_Cached extends ViewableData {
-	public $Test;
-}
-
-class ViewableDataTest_NotCached extends ViewableData {
-	public $Test;
-
-	protected function objCacheGet($key) {
-		// Disable caching
-		return null;
-	}
-}
-
-class ViewableDataTest_Failover extends ViewableData {
-	public function testMethod() {}
 }

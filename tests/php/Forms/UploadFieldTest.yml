@@ -63,7 +63,7 @@ SilverStripe\Assets\File:
     FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
     Name: file-subfolder.txt
     Parent: =>SilverStripe\Assets\Folder.folder1-subfolder1
-UploadFieldTest_Record:
+SilverStripe\Forms\Tests\UploadFieldTest\TestRecord:
   record1:
     Title: Record 1
     HasOneFileID: =>SilverStripe\Assets\File.file1

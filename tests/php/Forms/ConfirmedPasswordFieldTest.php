@@ -1,5 +1,8 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
+use SilverStripe\Control\Tests\ControllerTest\TestController;
 use SilverStripe\Security\Member;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Controller;
@@ -8,12 +11,6 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class ConfirmedPasswordFieldTest extends SapphireTest {
 
 	public function testSetValue() {
@@ -40,7 +37,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 		$member->write();
 
 		/** @skipUpgrade */
-		$form = new Form($this, 'Form', new FieldList($field), new FieldList());
+		$form = new Form(new TestController(), 'Form', new FieldList($field), new FieldList());
 		$form->loadDataFrom($member);
 
 		$this->assertEquals('', $field->Value());
@@ -73,7 +70,7 @@ class ConfirmedPasswordFieldTest extends SapphireTest {
 		));
 		$validator = new RequiredFields();
 		/** @skipUpgrade */
-		$form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
+		$form = new Form(new TestController(), 'Form', new FieldList($field), new FieldList(), $validator);
 		$this->assertTrue(
 			$field->validate($validator),
 			"Validates when both passwords are the same"

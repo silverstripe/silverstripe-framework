@@ -1,14 +1,11 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\GroupedDropdownField;
 use SilverStripe\Forms\RequiredFields;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class GroupedDropdownFieldTest extends SapphireTest {
 
 	public function testValidation() {

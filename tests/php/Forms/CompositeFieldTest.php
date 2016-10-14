@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\TextField;
@@ -7,10 +9,6 @@ use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\RequiredFields;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class CompositeFieldTest extends SapphireTest {
 
 	public function testFieldPosition() {

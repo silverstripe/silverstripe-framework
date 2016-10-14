@@ -1,11 +1,10 @@
 <?php
 
+namespace SilverStripe\Dev\Tests;
+
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
-/**
- * @package framework
- * @subpackage tests
- */
+
 class CSSContentParserTest extends SapphireTest {
 	public function testSelector2xpath() {
 		$parser = new CSSContentParser("<html><head><title>test</title></head><body><p>test</p></body></html>");

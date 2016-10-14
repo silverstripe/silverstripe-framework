@@ -1,32 +1,36 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
-
-
+use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestIndexObject;
+use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestObject;
 
 class DataObjectSchemaGenerationTest extends SapphireTest {
+
 	protected $extraDataObjects = array(
-		'DataObjectSchemaGenerationTest_DO',
-		'DataObjectSchemaGenerationTest_IndexDO'
+		TestObject::class,
+		TestIndexObject::class
 	);
 
 	public function setUpOnce() {
 
 		// enable fulltext option on this table
-		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'create_table_options',
-			array(MySQLSchemaManager::ID => 'ENGINE=MyISAM'));
+		TestIndexObject::config()->update(
+			'create_table_options',
+			array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
+		);
 
 		parent::setUpOnce();
 	}
 
+	/**
+	 * @skipUpgrade
+	 */
 	public function testTableCaseFixed() {
 		DB::quiet();
 
@@ -49,7 +53,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 
 		// Rebuild table
 		DB::get_schema()->schemaUpdate(function() {
-			DataObjectSchemaGenerationTest_DO::singleton()->requireTable();
+			TestObject::singleton()->requireTable();
 		});
 
 		// Check table
@@ -72,7 +76,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 
 		// Verify that it doesn't need to be recreated
 		$schema->schemaUpdate(function() use ($test, $schema) {
-			$obj = new DataObjectSchemaGenerationTest_DO();
+			$obj = new TestObject();
 			$obj->requireTable();
 			$needsUpdating = $schema->doesSchemaNeedUpdating();
 			$schema->cancelSchemaUpdate();
@@ -91,13 +95,13 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Table will have been initially created by the $extraDataObjects setting
 
 		// Let's insert a new field here
-		Config::inst()->update('DataObjectSchemaGenerationTest_DO', 'db', array(
+		TestObject::config()->update('db', array(
 			'SecretField' => 'Varchar(100)'
 		));
 
 		// Verify that the above extra field triggered a schema update
 		$schema->schemaUpdate(function() use ($test, $schema) {
-			$obj = new DataObjectSchemaGenerationTest_DO();
+			$obj = new TestObject();
 			$obj->requireTable();
 			$needsUpdating = $schema->doesSchemaNeedUpdating();
 			$schema->cancelSchemaUpdate();
@@ -117,7 +121,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 
 		// Verify that it doesn't need to be recreated
 		$schema->schemaUpdate(function() use ($test, $schema) {
-			$obj = new DataObjectSchemaGenerationTest_IndexDO();
+			$obj = new TestIndexObject();
 			$obj->requireTable();
 			$needsUpdating = $schema->doesSchemaNeedUpdating();
 			$schema->cancelSchemaUpdate();
@@ -125,14 +129,14 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		});
 
 		// Test with alternate index format, although these indexes are the same
-		Config::inst()->remove('DataObjectSchemaGenerationTest_IndexDO', 'indexes');
-		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'indexes',
-			Config::inst()->get('DataObjectSchemaGenerationTest_IndexDO', 'indexes_alt')
-		);
+		$config = TestIndexObject::config();
+		$config
+			->remove('indexes')
+			->update('indexes', $config->get('indexes_alt'));
 
 		// Verify that it still doesn't need to be recreated
 		$schema->schemaUpdate(function() use ($test, $schema) {
-			$obj2 = new DataObjectSchemaGenerationTest_IndexDO();
+			$obj2 = new TestIndexObject();
 			$obj2->requireTable();
 			$needsUpdating = $schema->doesSchemaNeedUpdating();
 			$schema->cancelSchemaUpdate();
@@ -151,7 +155,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		// Table will have been initially created by the $extraDataObjects setting
 
 		// Update the SearchFields index here
-		Config::inst()->update('DataObjectSchemaGenerationTest_IndexDO', 'indexes', array(
+		TestIndexObject::config()->update('indexes', array(
 			'SearchFields' => array(
 				'value' => 'Title'
 			)
@@ -159,7 +163,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 
 		// Verify that the above index change triggered a schema update
 		$schema->schemaUpdate(function() use ($test, $schema) {
-			$obj = new DataObjectSchemaGenerationTest_IndexDO();
+			$obj = new TestIndexObject();
 			$obj->requireTable();
 			$needsUpdating = $schema->doesSchemaNeedUpdating();
 			$schema->cancelSchemaUpdate();
@@ -176,98 +180,59 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 
 		// Test with blank entries
 		DBClassName::clear_classname_cache();
-		$do1 = new DataObjectSchemaGenerationTest_DO();
-		$fields = $schema->databaseFields(DataObjectSchemaGenerationTest_DO::class, false);
+		$do1 = new TestObject();
+		$fields = $schema->databaseFields(TestObject::class, false);
 		/** @skipUpgrade */
 		$this->assertEquals("DBClassName", $fields['ClassName']);
 		$this->assertEquals(
 			array(
-				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
-				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+				TestObject::class => TestObject::class,
+				TestIndexObject::class => TestIndexObject::class
 			),
 			$do1->dbObject('ClassName')->getEnum()
 		);
 
 
 		// Test with instance of subclass
-		$item1 = new DataObjectSchemaGenerationTest_IndexDO();
+		$item1 = new TestIndexObject();
 		$item1->write();
 		DBClassName::clear_classname_cache();
 		$this->assertEquals(
 			array(
-				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
-				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+				TestObject::class => TestObject::class,
+				TestIndexObject::class => TestIndexObject::class
 			),
 			$item1->dbObject('ClassName')->getEnum()
 		);
 		$item1->delete();
 
 		// Test with instance of main class
-		$item2 = new DataObjectSchemaGenerationTest_DO();
+		$item2 = new TestObject();
 		$item2->write();
 		DBClassName::clear_classname_cache();
 		$this->assertEquals(
 			array(
-				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
-				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+				TestObject::class => TestObject::class,
+				TestIndexObject::class => TestIndexObject::class
 			),
 			$item2->dbObject('ClassName')->getEnum()
 		);
 		$item2->delete();
 
 		// Test with instances of both classes
-		$item1 = new DataObjectSchemaGenerationTest_IndexDO();
+		$item1 = new TestIndexObject();
 		$item1->write();
-		$item2 = new DataObjectSchemaGenerationTest_DO();
+		$item2 = new TestObject();
 		$item2->write();
 		DBClassName::clear_classname_cache();
 		$this->assertEquals(
 			array(
-				'DataObjectSchemaGenerationTest_DO' => 'DataObjectSchemaGenerationTest_DO',
-				'DataObjectSchemaGenerationTest_IndexDO' => 'DataObjectSchemaGenerationTest_IndexDO'
+				TestObject::class => TestObject::class,
+				TestIndexObject::class => TestIndexObject::class
 			),
 			$item1->dbObject('ClassName')->getEnum()
 		);
 		$item1->delete();
 		$item2->delete();
 	}
-}
-
-class DataObjectSchemaGenerationTest_DO extends DataObject implements TestOnly {
-	private static $db = array(
-		'Enum1' => 'Enum("A, B, C, D","")',
-		'Enum2' => 'Enum("A, B, C, D","A")',
-		'NumberField' => 'Decimal',
-		'FloatingField' => 'Decimal(10,3,1.1)',
-		'TextValue' => 'Varchar',
-		'Date' => 'Datetime',
-		'MyNumber' => 'Int'
-	);
-}
-
-
-class DataObjectSchemaGenerationTest_IndexDO extends DataObjectSchemaGenerationTest_DO implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-		'Content' => 'Text'
-	);
-
-	private static $indexes = array(
-		'NameIndex' => 'unique ("Title")',
-		'SearchFields' => array(
-			'type' => 'fulltext',
-			'name' => 'SearchFields',
-			'value' => '"Title","Content"'
-		)
-	);
-
-	/** @config */
-	private static $indexes_alt = array(
-		'NameIndex' => array(
-			'type' => 'unique',
-			'name' => 'NameIndex',
-			'value' => '"Title"'
-		),
-		'SearchFields' => 'fulltext ("Title","Content")'
-	);
 }

@@ -1,23 +1,21 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
-use SilverStripe\Control\Controller;
 use SilverStripe\Forms\EmailField;
-use SilverStripe\Forms\Validator;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Forms\Form;
-use SilverStripe\View\SSViewer;
-
-
-
+use Exception;
+use PHPUnit_Framework_AssertionFailedError;
+use SilverStripe\Forms\Tests\EmailFieldTest\TestValidator;
 
 /**
  * @skipUpgrade
  */
 class EmailFieldTest extends FunctionalTest {
+
+	protected $extraControllers = [
+		EmailFieldTest\TestController::class,
+	];
 
 	/**
 	 * Check the php validator for email addresses. We should be checking against RFC 5322 which defines email address
@@ -44,16 +42,19 @@ class EmailFieldTest extends FunctionalTest {
 		$field = new EmailField("MyEmail");
 		$field->setValue($email);
 
-		$val = new EmailFieldTest_Validator();
+		$val = new TestValidator();
 		try {
 			$field->validate($val);
 			// If we expect failure and processing gets here without an exception, the test failed
 			$this->assertTrue($expectSuccess,$checkText . " (/$email/ passed validation, but not expected to)");
 		} catch (Exception $e) {
-			if ($e instanceof PHPUnit_Framework_AssertionFailedError) throw $e; // re-throw assertion failure
-			else if ($expectSuccess) {
-				$this->assertTrue(false,
-					$checkText . ": " . $e->GetMessage() . " (/$email/ did not pass validation, but was expected to)");
+			if ($e instanceof PHPUnit_Framework_AssertionFailedError) {
+				 // re-throw assertion failure
+				throw $e;
+			} else if ($expectSuccess) {
+				$this->fail(
+					$checkText . ": " . $e->getMessage() . " (/$email/ did not pass validation, but was expected to)"
+				);
 			}
 		}
 	}
@@ -74,70 +75,4 @@ class EmailFieldTest extends FunctionalTest {
 			'Test save was successful'
 		));
 	}
-}
-
-class EmailFieldTest_Validator extends Validator {
-	public function validationError($fieldName, $message, $messageType='') {
-		throw new Exception($message);
-	}
-
-	public function javascript() {
-	}
-
-	public function php($data) {
-	}
-}
-
-/**
- * @skipUpgrade
- */
-class EmailFieldTest_Controller extends Controller implements TestOnly {
-
-	private static $allowed_actions = array('Form');
-
-	private static $url_handlers = array(
-		'$Action//$ID/$OtherID' => "handleAction",
-	);
-
-	protected $template = 'BlankPage';
-
-	function Link($action = null) {
-		return Controller::join_links(
-			'EmailFieldTest_Controller',
-			$this->getRequest()->latestParam('Action'),
-			$this->getRequest()->latestParam('ID'),
-			$action
-		);
-	}
-
-	function Form() {
-		$form = new Form(
-			$this,
-			'Form',
-			new FieldList(
-				new EmailField('Email')
-			),
-			new FieldList(
-				new FormAction('doSubmit')
-			),
-			new RequiredFields(
-				'Email'
-			)
-		);
-
-		// Disable CSRF protection for easier form submission handling
-		$form->disableSecurityToken();
-
-		return $form;
-	}
-
-	function doSubmit($data, $form, $request) {
-		$form->sessionMessage('Test save was successful', 'good');
-		return $this->redirectBack();
-	}
-
-	function getViewer($action = null) {
-		return new SSViewer('BlankPage');
-	}
-
 }

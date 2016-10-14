@@ -1,9 +1,10 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\PopoverField;
-
 
 class PopoverFieldTest extends SapphireTest
 {

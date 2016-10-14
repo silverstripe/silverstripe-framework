@@ -1,5 +1,10 @@
 <?php
 
+namespace SilverStripe\Forms\Tests\GridField;
+
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
@@ -11,9 +16,6 @@ use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridField;
-
-
-
 
 class GridFieldPaginatorTest extends FunctionalTest {
 	/** @var ArrayList */
@@ -29,11 +31,14 @@ class GridFieldPaginatorTest extends FunctionalTest {
 	protected $form;
 
 	/** @var array */
-	protected $extraDataObjects = array('GridFieldTest_Team', 'GridFieldTest_Player');
+	protected $extraDataObjects = array(
+		Team::class,
+		Player::class
+	);
 
 	public function setUp() {
 		parent::setUp();
-		$this->list = new DataList('GridFieldTest_Team');
+		$this->list = new DataList(Team::class);
 		$config = GridFieldConfig::create()->addComponents(
 			new GridFieldToolbarHeader(), // Required to support pagecount
 			new GridFieldPaginator(2),
@@ -57,7 +62,7 @@ class GridFieldPaginatorTest extends FunctionalTest {
 		// We set the itemsPerPage to an reasonably big number so as to avoid test broke from small changes
 		// on the fixture YML file
 		$total = $this->list->count();
-		$this->gridField->getConfig()->getComponentByType("SilverStripe\\Forms\\GridField\\GridFieldPaginator")->setItemsPerPage($total);
+		$this->gridField->getConfig()->getComponentByType(GridFieldPaginator::class)->setItemsPerPage($total);
 		$fieldHolder = $this->gridField->FieldHolder();
 		$content = new CSSContentParser($fieldHolder);
 
@@ -71,7 +76,7 @@ class GridFieldPaginatorTest extends FunctionalTest {
 	public function testPaginationAvoidsIllegalOffsets() {
 		$grid = $this->gridField;
 		$total = $this->list->count();
-		$perPage = $grid->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldPaginator')->getItemsPerPage();
+		$perPage = $grid->getConfig()->getComponentByType(GridFieldPaginator::class)->getItemsPerPage();
 		// Get the last page that will contain results
 		$lastPage = ceil($total / $perPage);
 		// Set the paginator state to point to an 'invalid' page

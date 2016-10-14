@@ -1,22 +1,20 @@
 <?php
 
+namespace SilverStripe\Security\Tests;
+
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Group;
 use SilverStripe\Security\MemberCsvBulkLoader;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
 use SilverStripe\Dev\SapphireTest;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class MemberCsvBulkLoaderTest extends SapphireTest {
 	protected static $fixture_file = 'MemberCsvBulkLoaderTest.yml';
 
 	public function testNewImport() {
 		$loader = new MemberCsvBulkLoader();
-		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest.csv');
+		$results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
 		$created = $results->Created()->toArray();
 		$this->assertEquals(count($created), 2);
 		$this->assertEquals($created[0]->Email, 'author1@test.com');
@@ -30,7 +28,7 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		$author1->write();
 
 		$loader = new MemberCsvBulkLoader();
-		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest.csv');
+		$results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
 		$created = $results->Created()->toArray();
 		$this->assertEquals(count($created), 1);
 		$updated = $results->Updated()->toArray();
@@ -41,12 +39,12 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 	}
 
 	public function testAddToPredefinedGroups() {
-		$existinggroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'existinggroup');
+		$existinggroup = $this->objFromFixture(Group::class, 'existinggroup');
 
 		$loader = new MemberCsvBulkLoader();
 		$loader->setGroups(array($existinggroup));
 
-		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest.csv');
+		$results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest.csv');
 
 		$created = $results->Created()->toArray();
 		$this->assertEquals(1, count($created[0]->Groups()->column('ID')));
@@ -57,12 +55,12 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 	}
 
 	public function testAddToCsvColumnGroupsByCode() {
-		$existinggroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'existinggroup');
+		$existinggroup = $this->objFromFixture(Group::class, 'existinggroup');
 
 		$loader = new MemberCsvBulkLoader();
-		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest_withGroups.csv');
+		$results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest_withGroups.csv');
 
-		$newgroup = DataObject::get_one('SilverStripe\\Security\\Group', array(
+		$newgroup = DataObject::get_one(Group::class, array(
 			'"Group"."Code"' => 'newgroup'
 		));
 		$this->assertEquals($newgroup->Title, 'newgroup');
@@ -79,12 +77,12 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 	public function testCleartextPasswordsAreHashedWithDefaultAlgo() {
 		$loader = new MemberCsvBulkLoader();
 
-		$results = $loader->load($this->getCurrentRelativePath() . '/MemberCsvBulkLoaderTest_cleartextpws.csv');
+		$results = $loader->load(__DIR__ . '/MemberCsvBulkLoaderTest/MemberCsvBulkLoaderTest_cleartextpws.csv');
 
 		$member = $results->Created()->First();
 		$memberID = $member->ID;
 		DataObject::flush_and_destroy_cache();
-		$member = DataObject::get_by_id('SilverStripe\\Security\\Member', $memberID);
+		$member = DataObject::get_by_id(Member::class, $memberID);
 
 		// TODO Direct getter doesn't work, wtf!
 		$this->assertEquals(Security::config()->password_encryption_algorithm, $member->getField('PasswordEncryption'));

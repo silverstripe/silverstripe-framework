@@ -1,14 +1,13 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\Map;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
+use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class MapTest extends SapphireTest {
 
 	// Borrow the model from DataObjectTest
@@ -19,9 +18,8 @@ class MapTest extends SapphireTest {
 		parent::setUpOnce();
 	}
 
-
 	public function testValues() {
-		$list = DataObjectTest_TeamComment::get()->sort('Name');
+		$list = TeamComment::get()->sort('Name');
 		$map = new Map($list, 'Name', 'Comment');
 
 		$this->assertEquals(array(
@@ -57,14 +55,14 @@ class MapTest extends SapphireTest {
 
 
 	public function testArrayAccess() {
-		$list = DataObjectTest_TeamComment::get();
+		$list = TeamComment::get();
 		$map = new Map($list, 'Name', 'Comment');
 		$this->assertEquals('This is a team comment by Joe', $map['Joe']);
 		$this->assertNull($map['DoesntExist']);
 	}
 
 	public function testIteration() {
-		$list = DataObjectTest_TeamComment::get()->sort('ID');
+		$list = TeamComment::get()->sort('ID');
 		$map = new Map($list, 'Name', 'Comment');
 		$text = "";
 		foreach($map as $k => $v) {
@@ -76,13 +74,13 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testDefaultConfigIsIDAndTitle() {
-		$list = DataObjectTest_Team::get();
+		$list = Team::get();
 		$map = new Map($list);
 		$this->assertEquals('Team 1', $map[$this->idFromFixture('DataObjectTest_Team', 'team1')]);
 	}
 
 	public function testSetKeyFieldAndValueField() {
-		$list = DataObjectTest_TeamComment::get();
+		$list = TeamComment::get();
 		$map = new Map($list);
 		$map->setKeyField('Name');
 		$map->setValueField('Comment');
@@ -90,7 +88,7 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testToArray() {
-		$list = DataObjectTest_TeamComment::get();
+		$list = TeamComment::get();
 		$map = new Map($list, 'Name', 'Comment');
 		$this->assertEquals(array("Joe" => "This is a team comment by Joe",
 			"Bob" => "This is a team comment by Bob",
@@ -98,7 +96,7 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testKeys() {
-		$list = DataObjectTest_TeamComment::get()->sort('Name');
+		$list = TeamComment::get()->sort('Name');
 		$map = new Map($list, 'Name', 'Comment');
 		$this->assertEquals(array(
 			'Bob',
@@ -141,7 +139,7 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testMethodAsValueField() {
-		$list = DataObjectTest_Team::get()->sort('Title');
+		$list = Team::get()->sort('Title');
 		$map = new Map($list, 'ID', 'MyTitle');
 		$this->assertEquals(array(
 			'Team Subteam 1',
@@ -154,7 +152,7 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testUnshift() {
-		$list = DataObjectTest_TeamComment::get();
+		$list = TeamComment::get();
 		$map = new Map($list, 'Name', 'Comment');
 
 		$map->unshift(-1, '(All)');
@@ -203,7 +201,7 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testPush() {
-		$list = DataObjectTest_TeamComment::get();
+		$list = TeamComment::get();
 		$map = new Map($list, 'Name', 'Comment');
 
 		$map->push(1, '(All)');
@@ -217,7 +215,7 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testCount() {
-		$list = DataObjectTest_TeamComment::get();
+		$list = TeamComment::get();
 		$map = new Map($list, 'Name', 'Comment');
 
 		$this->assertEquals(3, $map->count());
@@ -239,7 +237,7 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testIterationWithUnshift() {
-		$list = DataObjectTest_TeamComment::get()->sort('ID');
+		$list = TeamComment::get()->sort('ID');
 		$map = new Map($list, 'Name', 'Comment');
 		$map->unshift(1, 'Unshifted');
 
@@ -257,7 +255,7 @@ class MapTest extends SapphireTest {
 	}
 
 	public function testIterationWithPush() {
-		$list = DataObjectTest_TeamComment::get()->sort('ID');
+		$list = TeamComment::get()->sort('ID');
 		$map = new Map($list, 'Name', 'Comment');
 		$map->push(1, 'Pushed');
 

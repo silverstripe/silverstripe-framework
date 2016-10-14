@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\NumericField;
@@ -103,7 +105,7 @@ class FormSchemaTest extends SapphireTest {
 			],
 			'messages' => [[
 				'value' => ['html' => 'All saved'],
-				'type' => 'good'
+					'type' => 'good'
 			]],
 			'valid' => null,
 		];

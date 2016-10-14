@@ -1,13 +1,10 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FormAction;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class FormActionTest extends SapphireTest {
 
 	public function testGetField() {

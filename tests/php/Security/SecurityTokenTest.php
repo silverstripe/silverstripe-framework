@@ -1,16 +1,13 @@
 <?php
 
+namespace SilverStripe\Security\Tests;
+
+use SilverStripe\Forms\HiddenField;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\FieldList;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class SecurityTokenTest extends SapphireTest {
 
 	public function testIsEnabled() {
@@ -137,7 +134,7 @@ class SecurityTokenTest extends SapphireTest {
 		$t->updateFieldSet($fs);
 		$f = $fs->dataFieldByName($t->getName());
 
-		$this->assertInstanceOf('SilverStripe\\Forms\\HiddenField', $f);
+		$this->assertInstanceOf(HiddenField::class, $f);
 		$this->assertEquals($f->getName(), $t->getName(), 'Name matches');
 		$this->assertEquals($f->Value(), $t->getValue(), 'Value matches');
 	}
@@ -149,8 +146,8 @@ class SecurityTokenTest extends SapphireTest {
 		$t->updateFieldSet($fs); // second
 		$f = $fs->dataFieldByName($t->getName());
 
-		$this->assertInstanceOf('SilverStripe\\Forms\\HiddenField', $f);
-		$this->assertEquals(1, $fs->Count());
+		$this->assertInstanceOf(HiddenField::class, $f);
+		$this->assertEquals(1, $fs->count());
 	}
 
 	public function testUnnamedTokensCarrySameValue() {

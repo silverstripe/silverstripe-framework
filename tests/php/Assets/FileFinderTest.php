@@ -1,5 +1,8 @@
 <?php
 
+namespace SilverStripe\Assets\Tests;
+
+use InvalidArgumentException;
 use SilverStripe\Assets\FileFinder;
 use SilverStripe\Dev\SapphireTest;
 
@@ -14,7 +17,7 @@ class FileFinderTest extends SapphireTest {
 	protected $base;
 
 	public function __construct() {
-		$this->base = dirname(__FILE__) . '/fixtures/filefinder';
+		$this->base = __DIR__ . '/FileFinderTest';
 		parent::__construct();
 	}
 

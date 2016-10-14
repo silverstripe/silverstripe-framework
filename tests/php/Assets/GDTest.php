@@ -1,11 +1,10 @@
 <?php
 
+namespace SilverStripe\Assets\Tests;
+
 use SilverStripe\Assets\GDBackend;
 use SilverStripe\Core\Cache;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
-
 
 /**
  * Tests for the {@link GD} class.
@@ -41,7 +40,7 @@ class GDTest extends SapphireTest {
 	protected function applyToEachImage($callback = null) {
 		$gds = array();
 		foreach(self::$filenames as $type => $file) {
-			$fullPath = realpath(dirname(__FILE__) . '/gdtest/' . $file);
+			$fullPath = realpath(__DIR__ . '/GDTest/images/' . $file);
 			$gd = new GDBackend();
 			$gd->loadFrom($fullPath);
 			if($callback) {
@@ -159,8 +158,8 @@ class GDTest extends SapphireTest {
 	 * @return void
 	 */
 	public function testImageSkippedWhenUnavailable() {
-		$fullPath = realpath(dirname(__FILE__) . '/gdtest/test_jpg.jpg');
-		$gd = new GDBackend_ImageUnavailable();
+		$fullPath = realpath(__DIR__ . '/GDTest/images/test_jpg.jpg');
+		$gd = new GDTest\ImageUnavailable();
 		$gd->loadFrom($fullPath);
 
 		/* Ensure no image resource is created if the image is unavailable */
@@ -171,7 +170,7 @@ class GDTest extends SapphireTest {
 	 * Tests the integrity of the manipulation cache when an error occurs
 	 */
 	public function testCacheIntegrity() {
-		$fullPath = realpath(dirname(__FILE__) . '/gdtest/nonimagedata.jpg');
+		$fullPath = realpath(__DIR__ . '/GDTest/images/nonimagedata.jpg');
 
 		// Load invalid file
 		$gd = new GDBackend();
@@ -190,8 +189,8 @@ class GDTest extends SapphireTest {
 	 * @return void
 	 */
 	public function testFailedResample() {
-		$fullPath = realpath(dirname(__FILE__) . '/gdtest/nonimagedata.jpg');
-		$fullPath2 = realpath(dirname(__FILE__) . '/gdtest/test_gif.gif');
+		$fullPath = realpath(__DIR__ . '/GDTest/images/nonimagedata.jpg');
+		$fullPath2 = realpath(__DIR__ . '/GDTest/images/test_gif.gif');
 
 		// Load invalid file
 		$gd = new GDBackend();
@@ -201,17 +200,5 @@ class GDTest extends SapphireTest {
 		$this->assertTrue($gd->failedResample($fullPath, filemtime($fullPath)));
 		$this->assertFalse($gd->failedResample($fullPath2, filemtime($fullPath2)));
 	}
-
-}
-
-class GDBackend_ImageUnavailable extends GDBackend implements TestOnly {
-
-	public function failedResample($arg = null) {
-		return true;
-	}
-
-}
-
-class GDBackend_Failure_Exception extends Exception {
 
 }

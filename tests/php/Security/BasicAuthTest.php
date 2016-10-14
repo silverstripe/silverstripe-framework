@@ -1,23 +1,27 @@
 <?php
 
+namespace SilverStripe\Security\Tests;
+
 use SilverStripe\Security\Member;
 use SilverStripe\Security\Security;
-use SilverStripe\Security\BasicAuth;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
+use SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithoutPermission;
+use SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithPermission;
 
 /**
  * @skipUpgrade
- * @package framework
- * @subpackage tests
  */
 class BasicAuthTest extends FunctionalTest {
 
 	static $original_unique_identifier_field;
 
 	protected static $fixture_file = 'BasicAuthTest.yml';
+
+	protected $extraControllers = [
+		ControllerSecuredWithPermission::class,
+		ControllerSecuredWithoutPermission::class,
+	];
 
 	public function setUp() {
 		parent::setUp();
@@ -49,14 +53,14 @@ class BasicAuthTest extends FunctionalTest {
 		unset($_SERVER['PHP_AUTH_USER']);
 		unset($_SERVER['PHP_AUTH_PW']);
 		$response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
-		$this->assertFalse(BasicAuthTest_ControllerSecuredWithPermission::$index_called);
-		$this->assertFalse(BasicAuthTest_ControllerSecuredWithPermission::$post_init_called);
+		$this->assertFalse(BasicAuthTest\ControllerSecuredWithPermission::$index_called);
+		$this->assertFalse(BasicAuthTest\ControllerSecuredWithPermission::$post_init_called);
 
 		$_SERVER['PHP_AUTH_USER'] = 'user-in-mygroup@test.com';
 		$_SERVER['PHP_AUTH_PW'] = 'test';
 		$response = Director::test('BasicAuthTest_ControllerSecuredWithPermission');
-		$this->assertTrue(BasicAuthTest_ControllerSecuredWithPermission::$index_called);
-		$this->assertTrue(BasicAuthTest_ControllerSecuredWithPermission::$post_init_called);
+		$this->assertTrue(BasicAuthTest\ControllerSecuredWithPermission::$index_called);
+		$this->assertTrue(BasicAuthTest\ControllerSecuredWithPermission::$post_init_called);
 
 		$_SERVER['PHP_AUTH_USER'] = $origUser;
 		$_SERVER['PHP_AUTH_PW'] = $origPw;
@@ -132,41 +136,4 @@ class BasicAuthTest extends FunctionalTest {
 		$check = Member::get()->filter('Email', 'failedlogin@test.com')->first();
 		$this->assertEquals(0, $check->FailedLoginCount);
 	}
-}
-
-class BasicAuthTest_ControllerSecuredWithPermission extends Controller implements TestOnly {
-
-	static $post_init_called = false;
-
-	static $index_called = false;
-
-	protected $template = 'BlankPage';
-
-	protected function init() {
-		self::$post_init_called = false;
-		self::$index_called = false;
-
-		BasicAuth::protect_entire_site(true, 'MYCODE');
-		parent::init();
-
-		self::$post_init_called = true;
-	}
-
-	public function index() {
-		self::$index_called = true;
-	}
-
-
-
-}
-
-class BasicAuthTest_ControllerSecuredWithoutPermission extends Controller implements TestOnly {
-
-	protected $template = 'BlankPage';
-
-	protected function init() {
-		BasicAuth::protect_entire_site(true, null);
-		parent::init();
-	}
-
 }

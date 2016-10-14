@@ -13,7 +13,7 @@
     Title: Group 1
   group2:
     Title: Group 2
-GroupTest_Member:
+SilverStripe\Security\Tests\GroupTest\TestMember:
   admin:
     FirstName: Admin
     Groups: '=>SilverStripe\Security\Group.admingroup'
@@ -25,7 +25,10 @@ GroupTest_Member:
     Groups: '=>SilverStripe\Security\Group.childgroup'
   allgroupuser:
     FirstName: All Group User
-    Groups: '=>SilverStripe\Security\Group.admingroup,=>SilverStripe\Security\Group.parentgroup,=>SilverStripe\Security\Group.childgroup'
+    Groups:
+      - =>SilverStripe\Security\Group.admingroup
+      - =>SilverStripe\Security\Group.parentgroup
+      - =>SilverStripe\Security\Group.childgroup
 'SilverStripe\Security\Permission':
   admincode:
     Code: ADMIN

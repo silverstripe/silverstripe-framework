@@ -1,21 +1,21 @@
-ChangeSetTest_Base:
+SilverStripe\ORM\Tests\ChangeSetTest\BaseObject:
   base:
     Foo: 1
-ChangeSetTest_End:
+SilverStripe\ORM\Tests\ChangeSetTest\EndObject:
   end1:
     Baz: 1
   end2:
     Baz: 2
-ChangeSetTest_EndChild:
+SilverStripe\ORM\Tests\ChangeSetTest\EndObjectChild:
   endchild1:
     Baz: 3
     Qux: 3
-ChangeSetTest_Mid:
+SilverStripe\ORM\Tests\ChangeSetTest\MidObject:
   mid1:
     Bar: 1
-    Base: =>ChangeSetTest_Base.base
-    End: =>ChangeSetTest_End.end1
+    Base: =>SilverStripe\ORM\Tests\ChangeSetTest\BaseObject.base
+    End: =>SilverStripe\ORM\Tests\ChangeSetTest\EndObject.end1
   mid2:
     Bar: 2
-    Base: =>ChangeSetTest_Base.base
-    End: =>ChangeSetTest_End.end2
+    Base: =>SilverStripe\ORM\Tests\ChangeSetTest\BaseObject.base
+    End: =>SilverStripe\ORM\Tests\ChangeSetTest\EndObject.end2

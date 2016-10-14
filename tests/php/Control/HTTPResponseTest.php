@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Control\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;

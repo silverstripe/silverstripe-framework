@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Core\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
 

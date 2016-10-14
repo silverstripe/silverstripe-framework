@@ -1,13 +1,10 @@
 <?php
 
+namespace SilverStripe\Dev\Tests;
+
 use SilverStripe\Dev\Install\MySQLDatabaseConfigurationHelper;
 use SilverStripe\Dev\SapphireTest;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class MySQLDatabaseConfigurationHelperTest extends SapphireTest {
 
 	/**

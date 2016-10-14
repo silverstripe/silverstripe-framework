@@ -1,40 +1,40 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\DataQuery;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
+use SilverStripe\Security\Member;
 
 class DataQueryTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataQueryTest.yml';
 
 	protected $extraDataObjects = array(
-		'DataQueryTest_A',
-		'DataQueryTest_B',
-		'DataQueryTest_C',
-		'DataQueryTest_D',
-		'DataQueryTest_E',
-		'DataQueryTest_F',
-		'DataQueryTest_G',
+		DataQueryTest\ObjectA::class,
+		DataQueryTest\ObjectB::class,
+		DataQueryTest\ObjectC::class,
+		DataQueryTest\ObjectD::class,
+		DataQueryTest\ObjectE::class,
+		DataQueryTest\ObjectF::class,
+		DataQueryTest\ObjectG::class,
 	);
 
-
 	public function testSortByJoinedFieldRetainsSourceInformation() {
-		$bar = new DataQueryTest_C();
+		$bar = new DataQueryTest\ObjectC();
 		$bar->Title = "Bar";
 		$bar->write();
 
-		$foo = new DataQueryTest_B();
+		$foo = new DataQueryTest\ObjectB();
 		$foo->Title = "Foo";
 		$foo->TestC = $bar->ID;
 		$foo->write();
 
-		$query = new DataQuery('DataQueryTest_B');
+		$query = new DataQuery(DataQueryTest\ObjectB::class);
 		$result = $query->leftJoin(
-			'DataQueryTest_C',
+			DataQueryTest\ObjectC::class,
 			"\"DataQueryTest_B\".\"TestCID\" = \"DataQueryTest_B\".\"ID\""
 		)->sort('"DataQueryTest_B"."Title"', 'ASC');
 
@@ -46,12 +46,12 @@ class DataQueryTest extends SapphireTest {
 	 * Test the leftJoin() and innerJoin method of the DataQuery object
 	 */
 	public function testJoins() {
-		$dq = new DataQuery('SilverStripe\\Security\\Member');
+		$dq = new DataQuery(Member::class);
 		$dq->innerJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
 		$this->assertSQLContains("INNER JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
 			$dq->sql($parameters));
 
-		$dq = new DataQuery('SilverStripe\\Security\\Member');
+		$dq = new DataQuery(Member::class);
 		$dq->leftJoin("Group_Members", "\"Group_Members\".\"MemberID\" = \"Member\".\"ID\"");
 		$this->assertSQLContains("LEFT JOIN \"Group_Members\" ON \"Group_Members\".\"MemberID\" = \"Member\".\"ID\"",
 			$dq->sql($parameters));
@@ -59,30 +59,30 @@ class DataQueryTest extends SapphireTest {
 
 	public function testApplyRelation() {
 		// Test applyRelation with two has_ones pointing to the same class
-		$dq = new DataQuery('DataQueryTest_B');
+		$dq = new DataQuery(DataQueryTest\ObjectB::class);
 		$dq->applyRelation('TestC');
-		$this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertTrue($dq->query()->isJoinedTo(DataQueryTest\ObjectC::class));
 		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
 
-		$dq = new DataQuery('DataQueryTest_B');
+		$dq = new DataQuery(DataQueryTest\ObjectB::class);
 		$dq->applyRelation('TestCTwo');
-		$this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertTrue($dq->query()->isJoinedTo(DataQueryTest\ObjectC::class));
 		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
 	}
 
 	public function testApplyReplationDeepInheretence() {
 		//test has_one relation
-		$newDQ = new DataQuery('DataQueryTest_E');
+		$newDQ = new DataQuery(DataQueryTest\ObjectE::class);
 		//apply a relation to a relation from an ancestor class
 		$newDQ->applyRelation('TestA');
-		$this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
+		$this->assertTrue($newDQ->query()->isJoinedTo(DataQueryTest\ObjectC::class));
 		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
 
 		//test many_many relation
 
 		//test many_many with separate inheritance
-		$newDQ = new DataQuery('DataQueryTest_C');
-		$baseDBTable = DataObject::getSchema()->baseDataTable('DataQueryTest_C');
+		$newDQ = new DataQuery(DataQueryTest\ObjectC::class);
+		$baseDBTable = DataObject::getSchema()->baseDataTable(DataQueryTest\ObjectC::class);
 		$newDQ->applyRelation('ManyTestAs');
 		//check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
 		$this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
@@ -90,8 +90,8 @@ class DataQueryTest extends SapphireTest {
 		$this->assertContains("FROM \"$baseDBTable\"", $newDQ->sql());
 
 		//test many_many with shared inheritance
-		$newDQ = new DataQuery('DataQueryTest_E');
-		$baseDBTable = DataObject::getSchema()->baseDataTable('DataQueryTest_E');
+		$newDQ = new DataQuery(DataQueryTest\ObjectE::class);
+		$baseDBTable = DataObject::getSchema()->baseDataTable(DataQueryTest\ObjectE::class);
 		//check we are "joined" to the DataObject's table (there is no distinction between FROM or JOIN clauses)
 		$this->assertTrue($newDQ->query()->isJoinedTo($baseDBTable));
 		//check we are explicitly selecting "FROM" the DO's table
@@ -107,33 +107,33 @@ class DataQueryTest extends SapphireTest {
 	}
 
 	public function testRelationReturn() {
-		$dq = new DataQuery('DataQueryTest_C');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestA'),
+		$dq = new DataQuery(DataQueryTest\ObjectC::class);
+		$this->assertEquals(DataQueryTest\ObjectA::class, $dq->applyRelation('TestA'),
 			'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('TestAs'),
+		$this->assertEquals(DataQueryTest\ObjectA::class, $dq->applyRelation('TestAs'),
 			'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_A', $dq->applyRelation('ManyTestAs'),
+		$this->assertEquals(DataQueryTest\ObjectA::class, $dq->applyRelation('ManyTestAs'),
 			'DataQuery::applyRelation should return the name of the related object.');
 
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestB'),
+		$this->assertEquals(DataQueryTest\ObjectB::class, $dq->applyRelation('TestB'),
 			'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('TestBs'),
+		$this->assertEquals(DataQueryTest\ObjectB::class, $dq->applyRelation('TestBs'),
 			'DataQuery::applyRelation should return the name of the related object.');
-		$this->assertEquals('DataQueryTest_B', $dq->applyRelation('ManyTestBs'),
+		$this->assertEquals(DataQueryTest\ObjectB::class, $dq->applyRelation('ManyTestBs'),
 			'DataQuery::applyRelation should return the name of the related object.');
-		$newDQ = new DataQuery('DataQueryTest_E');
-		$this->assertEquals('DataQueryTest_A', $newDQ->applyRelation('TestA'),
+		$newDQ = new DataQuery(DataQueryTest\ObjectE::class);
+		$this->assertEquals(DataQueryTest\ObjectA::class, $newDQ->applyRelation('TestA'),
 			'DataQuery::applyRelation should return the name of the related object.');
 	}
 
 	public function testRelationOrderWithCustomJoin() {
-		$dataQuery = new DataQuery('DataQueryTest_B');
-		$dataQuery->innerJoin('DataQueryTest_D', '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
+		$dataQuery = new DataQuery(DataQueryTest\ObjectB::class);
+		$dataQuery->innerJoin(DataQueryTest\ObjectD::class, '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
 		$dataQuery->execute();
 	}
 
 	public function testDisjunctiveGroup() {
-		$dq = new DataQuery('DataQueryTest_A');
+		$dq = new DataQuery(DataQueryTest\ObjectA::class);
 
 		$dq->where('DataQueryTest_A.ID = 2');
 		$subDq = $dq->disjunctiveGroup();
@@ -147,7 +147,7 @@ class DataQueryTest extends SapphireTest {
 	}
 
 	public function testConjunctiveGroup() {
-		$dq = new DataQuery('DataQueryTest_A');
+		$dq = new DataQuery(DataQueryTest\ObjectA::class);
 
 		$dq->where('DataQueryTest_A.ID = 2');
 		$subDq = $dq->conjunctiveGroup();
@@ -164,7 +164,7 @@ class DataQueryTest extends SapphireTest {
 	 * @todo Test paramaterised
 	 */
 	public function testNestedGroups() {
-		$dq = new DataQuery('DataQueryTest_A');
+		$dq = new DataQuery(DataQueryTest\ObjectA::class);
 
 		$dq->where('DataQueryTest_A.ID = 2');
 		$subDq = $dq->disjunctiveGroup();
@@ -182,7 +182,7 @@ class DataQueryTest extends SapphireTest {
 	}
 
 	public function testEmptySubgroup() {
-		$dq = new DataQuery('DataQueryTest_A');
+		$dq = new DataQuery(DataQueryTest\ObjectA::class);
 		$dq->conjunctiveGroup();
 
 		// Empty groups should have no where condition at all
@@ -190,7 +190,7 @@ class DataQueryTest extends SapphireTest {
 	}
 
 	public function testSubgroupHandoff() {
-		$dq = new DataQuery('DataQueryTest_A');
+		$dq = new DataQuery(DataQueryTest\ObjectA::class);
 		$subDq = $dq->disjunctiveGroup();
 
 		$orgDq = clone $dq;
@@ -216,13 +216,13 @@ class DataQueryTest extends SapphireTest {
 	}
 
 	public function testDefaultSort() {
-		$query = new DataQuery('DataQueryTest_E');
+		$query = new DataQuery(DataQueryTest\ObjectE::class);
 		$result = $query->column('Title');
 		$this->assertEquals(array('First', 'Second', 'Last'), $result);
 	}
 
 	public function testDistinct() {
-		$query = new DataQuery('DataQueryTest_E');
+		$query = new DataQuery(DataQueryTest\ObjectE::class);
 		$this->assertContains('SELECT DISTINCT', $query->sql($params), 'Query is set as distinct by default');
 
 		$query = $query->distinct(false);
@@ -234,7 +234,7 @@ class DataQueryTest extends SapphireTest {
 
 	public function testComparisonClauseInt() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"SortOrder\") VALUES (2)");
-		$query = new DataQuery('DataQueryTest_F');
+		$query = new DataQuery(DataQueryTest\ObjectF::class);
 		$query->where(DB::get_conn()->comparisonClause('"SortOrder"', '2'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find SortOrder");
 		$this->resetDBSchema(true);
@@ -242,7 +242,7 @@ class DataQueryTest extends SapphireTest {
 
 	public function testComparisonClauseDateFull() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
-		$query = new DataQuery('DataQueryTest_F');
+		$query = new DataQuery(DataQueryTest\ObjectF::class);
 		$query->where(DB::get_conn()->comparisonClause('"MyDate"', '1988-03-04%'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
@@ -250,7 +250,7 @@ class DataQueryTest extends SapphireTest {
 
 	public function testComparisonClauseDateStartsWith() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
-		$query = new DataQuery('DataQueryTest_F');
+		$query = new DataQuery(DataQueryTest\ObjectF::class);
 		$query->where(DB::get_conn()->comparisonClause('"MyDate"', '1988%'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
@@ -258,7 +258,7 @@ class DataQueryTest extends SapphireTest {
 
 	public function testComparisonClauseDateStartsPartial() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyDate\") VALUES ('1988-03-04 06:30')");
-		$query = new DataQuery('DataQueryTest_F');
+		$query = new DataQuery(DataQueryTest\ObjectF::class);
 		$query->where(DB::get_conn()->comparisonClause('"MyDate"', '%03-04%'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
 		$this->resetDBSchema(true);
@@ -266,7 +266,7 @@ class DataQueryTest extends SapphireTest {
 
 	public function testComparisonClauseTextCaseInsensitive() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyString\") VALUES ('HelloWorld')");
-		$query = new DataQuery('DataQueryTest_F');
+		$query = new DataQuery(DataQueryTest\ObjectF::class);
 		$query->where(DB::get_conn()->comparisonClause('"MyString"', 'helloworld'));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
 		$this->resetDBSchema(true);
@@ -274,11 +274,11 @@ class DataQueryTest extends SapphireTest {
 
 	public function testComparisonClauseTextCaseSensitive() {
 		DB::query("INSERT INTO \"DataQueryTest_F\" (\"MyString\") VALUES ('HelloWorld')");
-		$query = new DataQuery('DataQueryTest_F');
+		$query = new DataQuery(DataQueryTest\ObjectF::class);
 		$query->where(DB::get_conn()->comparisonClause('"MyString"', 'HelloWorld', false, false, true));
 		$this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
 
-		$query2 = new DataQuery('DataQueryTest_F');
+		$query2 = new DataQuery(DataQueryTest\ObjectF::class);
 		$query2->where(DB::get_conn()->comparisonClause('"MyString"', 'helloworld', false, false, true));
 		$this->assertEquals(0, $query2->count(), "Found mystring. Shouldn't be able too.");
 		$this->resetDBSchema(true);
@@ -289,18 +289,18 @@ class DataQueryTest extends SapphireTest {
 	 */
 	public function testConditionsIncludeTables() {
 		// Including filter on parent table only doesn't pull in second
-		$query = new DataQuery('DataQueryTest_C');
+		$query = new DataQuery(DataQueryTest\ObjectC::class);
 		$query->sort('"SortOrder"');
 		$query->where(array(
 			'"DataQueryTest_C"."Title" = ?' => array('First')
 		));
 		$result = $query->getFinalisedQuery(array('Title'));
 		$from = $result->getFrom();
-		$this->assertContains('DataQueryTest_C', array_keys($from));
-		$this->assertNotContains('DataQueryTest_E', array_keys($from));
+		$this->assertContains(DataQueryTest\ObjectC::class, array_keys($from));
+		$this->assertNotContains(DataQueryTest\ObjectE::class, array_keys($from));
 
 		// Including filter on sub-table requires it
-		$query = new DataQuery('DataQueryTest_C');
+		$query = new DataQuery(DataQueryTest\ObjectC::class);
 		$query->sort('"SortOrder"');
 		$query->where(array(
 			'"DataQueryTest_C"."Title" = ? OR "DataQueryTest_E"."SortOrder" > ?' => array(
@@ -311,8 +311,8 @@ class DataQueryTest extends SapphireTest {
 		$from = $result->getFrom();
 
 		// Check that including "SortOrder" prompted inclusion of DataQueryTest_E table
-		$this->assertContains('DataQueryTest_C', array_keys($from));
-		$this->assertContains('DataQueryTest_E', array_keys($from));
+		$this->assertContains(DataQueryTest\ObjectC::class, array_keys($from));
+		$this->assertContains(DataQueryTest\ObjectE::class, array_keys($from));
 		$arrayResult = iterator_to_array($result->execute());
 		$first = array_shift($arrayResult);
 		$this->assertNotNull($first);
@@ -322,89 +322,5 @@ class DataQueryTest extends SapphireTest {
 		$this->assertEquals('Last', $second['Title']);
 		$this->assertEmpty(array_shift($arrayResult));
 	}
-
-}
-
-
-class DataQueryTest_A extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Name' => 'Varchar',
-	);
-
-	private static $has_one = array(
-		'TestC' => 'DataQueryTest_C',
-	);
-}
-
-class DataQueryTest_B extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Title' => 'Varchar',
-	);
-
-	private static $has_one = array(
-		'TestC' => 'DataQueryTest_C',
-		'TestCTwo' => 'DataQueryTest_C',
-	);
-}
-
-class DataQueryTest_C extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
-
-	private static $has_one = array(
-		'TestA' => 'DataQueryTest_A',
-		'TestB' => 'DataQueryTest_B',
-	);
-
-	private static $has_many = array(
-		'TestAs' => 'DataQueryTest_A',
-		'TestBs' => 'DataQueryTest_B.TestC',
-		'TestBsTwo' => 'DataQueryTest_B.TestCTwo',
-	);
-
-	private static $many_many = array(
-		'ManyTestAs' => 'DataQueryTest_A',
-		'ManyTestBs' => 'DataQueryTest_B',
-	);
-}
-
-class DataQueryTest_D extends DataObject implements TestOnly {
-
-	private static $has_one = array(
-		'Relation' => 'DataQueryTest_B',
-	);
-}
-
-class DataQueryTest_E extends DataQueryTest_C implements TestOnly {
-
-	private static $db = array(
-		'SortOrder' => 'Int'
-	);
-
-	private static $many_many = array(
-		'ManyTestGs' => 'DataQueryTest_G',
-	);
-
-	private static $default_sort = '"DataQueryTest_E"."SortOrder" ASC';
-}
-
-class DataQueryTest_F extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'SortOrder' => 'Int',
-		'MyDate' => 'Datetime',
-		'MyString' => 'Text'
-	);
-}
-
-class DataQueryTest_G extends DataQueryTest_C implements TestOnly {
-
-	private static $belongs_many_many = array(
-		'ManyTestEs' => 'DataQueryTest_E',
-	);
 
 }

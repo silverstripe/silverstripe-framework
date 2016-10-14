@@ -1,16 +1,16 @@
 <?php
 
+namespace SilverStripe\Core\Tests;
+
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\URLSegmentFilter;
-
+use stdClass;
+use Exception;
+use InvalidArgumentException;
 
 /**
  * Test various functions on the {@link Convert} class.
- *
- * @package framework
- * @subpackage tests
  */
 class ConvertTest extends SapphireTest {
 

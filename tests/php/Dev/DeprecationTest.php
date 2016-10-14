@@ -1,17 +1,11 @@
 <?php
 
+namespace SilverStripe\Dev\Tests;
+
+use PHPUnit_Framework_Error;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
-
-class DeprecationTest_Deprecation extends Deprecation {
-	public static function get_module() {
-		return self::get_calling_module_from_trace(debug_backtrace(0));
-	}
-
-	public static function get_method() {
-		return self::get_called_method_from_trace(debug_backtrace(0));
-	}
-}
+use SilverStripe\Dev\Tests\DeprecationTest\TestDeprecation;
 
 class DeprecationTest extends SapphireTest {
 
@@ -74,7 +68,10 @@ class DeprecationTest extends SapphireTest {
 	}
 
 	public function testMethodNameCalculation() {
-		$this->assertEquals(DeprecationTest_Deprecation::get_method(), 'DeprecationTest->testMethodNameCalculation');
+		$this->assertEquals(
+			TestDeprecation::get_method(),
+			static::class.'->testMethodNameCalculation'
+		);
 	}
 
 	/**
@@ -105,7 +102,7 @@ class DeprecationTest extends SapphireTest {
 	}
 
 	protected function callThatOriginatesFromFramework() {
-		$this->assertEquals(DeprecationTest_Deprecation::get_module(), basename(FRAMEWORK_PATH));
+		$this->assertEquals(TestDeprecation::get_module(), basename(FRAMEWORK_PATH));
 		$this->assertNull(Deprecation::notice('2.0', 'Deprecation test passed'));
 	}
 

@@ -131,7 +131,7 @@ class Director implements TemplateGlobalProvider {
 	 * the actual response to the browser.
 	 *
 	 * @uses handleRequest() rule-lookup logic is handled by this.
-	 * @uses Controller::handleRequest() This handles the page logic for a Director::direct() call.
+	 * @uses TestController::handleRequest() This handles the page logic for a Director::direct() call.
 	 * @param string $url
 	 * @param DataModel $model
 	 * @throws HTTPResponse_Exception
@@ -236,7 +236,7 @@ class Director implements TemplateGlobalProvider {
 	 * Director::direct() that is used in functional testing. It will execute the URL given, and
 	 * return the result as an HTTPResponse object.
 	 *
-	 * @uses Controller::handleRequest() Handles the page logic for a Director::direct() call.
+	 * @uses TestController::handleRequest() Handles the page logic for a Director::direct() call.
 	 *
 	 * @param string $url The URL to visit.
 	 * @param array $postVars The $_POST & $_FILES variables.

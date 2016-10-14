@@ -1,7 +1,12 @@
 <?php
 
+namespace SilverStripe\Admin\Tests;
+
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
+
+
 
 /**
  * @package cms

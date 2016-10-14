@@ -1,10 +1,8 @@
 <?php
 
+namespace SilverStripe\Core\Tests;
+
 use SilverStripe\Dev\SapphireTest;
-/**
- * @package framework
- * @subpackage tests
- */
 
 class MemoryLimitTest extends SapphireTest {
 

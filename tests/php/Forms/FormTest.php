@@ -1,13 +1,18 @@
 <?php
 
-use SilverStripe\Control\Director;
+namespace SilverStripe\Forms\Tests;
+
+use SilverStripe\Forms\Tests\FormTest\TestController;
+use SilverStripe\Forms\Tests\FormTest\ControllerWithSecurityToken;
+use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
+use SilverStripe\Forms\Tests\FormTest\Player;
+use SilverStripe\Forms\Tests\FormTest\Team;
 use SilverStripe\ORM\DataModel;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\TextField;
@@ -20,35 +25,34 @@ use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\LookupField;
 use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\EmailField;
-use SilverStripe\Forms\CheckboxSetField;
-use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Forms\CheckboxField;
 use SilverStripe\View\SSViewer;
+
 
 /**
  * @skipUpgrade
- * @package framework
- * @subpackage tests
  */
 class FormTest extends FunctionalTest {
 
 	protected static $fixture_file = 'FormTest.yml';
 
 	protected $extraDataObjects = array(
-		'FormTest_Player',
-		'FormTest_Team',
+		Player::class,
+		Team::class,
 	);
+
+	protected $extraControllers = [
+		TestController::class,
+		ControllerWithSecurityToken::class,
+		ControllerWithStrictPostCheck::class,
+	];
 
 	public function setUp() {
 		parent::setUp();
 
-		Director::config()->update('rules', array(
-			'FormTest_Controller' => 'FormTest_Controller'
-		));
-
 		// Suppress themes
-		SSViewer::config()->remove('theme');
+		SSViewer::set_themes([
+			SSViewer::DEFAULT_THEME
+		]);
 	}
 
 	public function testLoadDataFromRequest() {
@@ -130,7 +134,7 @@ class FormTest extends FunctionalTest {
 			new FieldList()
 		);
 
-		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainWithDetails');
+		$captainWithDetails = $this->objFromFixture(Player::class, 'captainWithDetails');
 		$form->loadDataFrom($captainWithDetails);
 		$this->assertEquals(
 			$form->getData(),
@@ -143,7 +147,7 @@ class FormTest extends FunctionalTest {
 			'LoadDataFrom() loads simple fields and dynamic getters'
 		);
 
-		$captainNoDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
+		$captainNoDetails = $this->objFromFixture(Player::class, 'captainNoDetails');
 		$form->loadDataFrom($captainNoDetails);
 		$this->assertEquals(
 			$form->getData(),
@@ -174,8 +178,7 @@ class FormTest extends FunctionalTest {
 		);
 		$unrelatedField->setValue("random value");
 
-		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainWithDetails');
-		$captainNoDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
+		$captainWithDetails = $this->objFromFixture(Player::class, 'captainWithDetails');
 		$form->loadDataFrom($captainWithDetails);
 		$this->assertEquals(
 			$form->getData(),
@@ -189,8 +192,8 @@ class FormTest extends FunctionalTest {
 			'LoadDataFrom() doesnt overwrite fields not found in the object'
 		);
 
-		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
-		$team2 = $this->objFromFixture('FormTest_Team', 'team2');
+		$captainWithDetails = $this->objFromFixture(Player::class, 'captainNoDetails');
+		$team2 = $this->objFromFixture(Team::class, 'team2');
 		$form->loadDataFrom($captainWithDetails);
 		$form->loadDataFrom($team2, Form::MERGE_CLEAR_MISSING);
 		$this->assertEquals(
@@ -207,7 +210,7 @@ class FormTest extends FunctionalTest {
 	}
 
 	public function testLookupFieldDisabledSaving() {
-		$object = new DataObjectTest_Team();
+		$object = new Team();
 		$form = new Form(
 			new Controller(),
 			'Form',
@@ -244,8 +247,8 @@ class FormTest extends FunctionalTest {
 			new FieldList()
 		);
 
-		$captainNoDetails = $this->objFromFixture('FormTest_Player', 'captainNoDetails');
-		$captainWithDetails = $this->objFromFixture('FormTest_Player', 'captainWithDetails');
+		$captainNoDetails = $this->objFromFixture(Player::class, 'captainNoDetails');
+		$captainWithDetails = $this->objFromFixture(Player::class, 'captainWithDetails');
 
 		$form->loadDataFrom($captainNoDetails, Form::MERGE_IGNORE_FALSEISH);
 		$this->assertEquals(
@@ -287,9 +290,9 @@ class FormTest extends FunctionalTest {
 	}
 
 	public function testValidationExemptActions() {
-		$response = $this->get('FormTest_Controller');
+		$this->get('FormTest_Controller');
 
-		$response = $this->submitForm(
+		$this->submitForm(
 			'Form_Form',
 			'action_doSubmit',
 			array(
@@ -305,7 +308,7 @@ class FormTest extends FunctionalTest {
 		);
 
 		// Re-submit the form using validation-exempt button
-		$response = $this->submitForm(
+		$this->submitForm(
 			'Form_Form',
 			'action_doSubmitValidationExempt',
 			array(
@@ -327,7 +330,7 @@ class FormTest extends FunctionalTest {
 		);
 
 		// Test this same behaviour, but with a form-action exempted via instance
-		$response = $this->submitForm(
+		$this->submitForm(
 			'Form_Form',
 			'action_doSubmitActionExempt',
 			array(
@@ -656,7 +659,7 @@ class FormTest extends FunctionalTest {
 		$action = $form->buttonClicked();
 		$this->assertNull($action);
 
-		$controller = new FormTest_Controller();
+		$controller = new FormTest\TestController();
 		$form = $controller->Form();
 		$request = new HTTPRequest('POST', 'FormTest_Controller/Form', array(), array(
 			'Email' => 'test@test.com',
@@ -687,7 +690,7 @@ class FormTest extends FunctionalTest {
 	}
 
 	public function testCheckAccessAction() {
-		$controller = new FormTest_Controller();
+		$controller = new FormTest\TestController();
 		$form = new Form(
 			$controller,
 			'Form',
@@ -773,8 +776,8 @@ class FormTest extends FunctionalTest {
 
     public function testGetExtraFields()
     {
-        $form = new FormTest_ExtraFieldsForm(
-            new FormTest_Controller(),
+        $form = new FormTest\ExtraFieldsForm(
+            new FormTest\TestController(),
             'Form',
             new FieldList(new TextField('key1')),
             new FieldList()
@@ -793,224 +796,11 @@ class FormTest extends FunctionalTest {
 
 	protected function getStubForm() {
 		return new Form(
-			new FormTest_Controller(),
+			new FormTest\TestController(),
 			'Form',
 			new FieldList(new TextField('key1')),
 			new FieldList()
 		);
 	}
-
-}
-
-/**
- * @skipUpgrade
- * @package framework
- * @subpackage tests
- */
-class FormTest_Player extends DataObject implements TestOnly {
-	private static $db = array(
-		'Name' => 'Varchar',
-		'Biography' => 'Text',
-		'Birthday' => 'Date'
-	);
-
-	private static $belongs_many_many = array(
-		'Teams' => 'FormTest_Team'
-	);
-
-	private static $has_one = array(
-		'FavouriteTeam' => 'FormTest_Team',
-	);
-
-	public function getBirthdayYear() {
-		return ($this->Birthday) ? date('Y', strtotime($this->Birthday)) : null;
-	}
-
-}
-
-/**
- * @skipUpgrade
- * @package framework
- * @subpackage tests
- */
-class FormTest_Team extends DataObject implements TestOnly {
-	private static $db = array(
-		'Name' => 'Varchar',
-		'Region' => 'Varchar',
-	);
-
-	private static $many_many = array(
-		'Players' => 'FormTest_Player'
-	);
-}
-
-/**
- * @skipUpgrade
- * @package framework
- * @subpackage tests
- */
-class FormTest_Controller extends Controller implements TestOnly {
-
-	private static $allowed_actions = array('Form');
-
-	private static $url_handlers = array(
-		'$Action//$ID/$OtherID' => "handleAction",
-	);
-
-	protected $template = 'BlankPage';
-
-	public function Link($action = null) {
-		return Controller::join_links('FormTest_Controller', $this->getRequest()->latestParam('Action'),
-			$this->getRequest()->latestParam('ID'), $action);
-	}
-
-	public function Form() {
-		$form = new Form(
-			$this,
-			'Form',
-			new FieldList(
-				new EmailField('Email'),
-				new TextField('SomeRequiredField'),
-				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two')),
-				new NumericField('Number')
-			),
-			new FieldList(
-				FormAction::create('doSubmit'),
-				FormAction::create('doSubmitValidationExempt'),
-				FormAction::create('doSubmitActionExempt')
-					->setValidationExempt(true)
-			),
-			new RequiredFields(
-				'Email',
-				'SomeRequiredField'
-			)
-		);
-		$form->setValidationExemptActions(array('doSubmitValidationExempt'));
-		$form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
-
-		return $form;
-	}
-
-	public function doSubmit($data, $form, $request) {
-		$form->sessionMessage('Test save was successful', 'good');
-		return $this->redirectBack();
-	}
-
-	public function doSubmitValidationExempt($data, $form, $request) {
-		$form->sessionMessage('Validation skipped', 'good');
-		return $this->redirectBack();
-	}
-
-	public function doSubmitActionExempt($data, $form, $request) {
-		$form->sessionMessage('Validation bypassed!', 'good');
-		return $this->redirectBack();
-	}
-
-	public function getViewer($action = null) {
-		return new SSViewer('BlankPage');
-	}
-
-}
-
-/**
- * @skipUpgrade
- * @package framework
- * @subpackage tests
- */
-class FormTest_ControllerWithSecurityToken extends Controller implements TestOnly {
-
-	private static $allowed_actions = array('Form');
-
-	private static $url_handlers = array(
-		'$Action//$ID/$OtherID' => "handleAction",
-	);
-
-	protected $template = 'BlankPage';
-
-	public function Link($action = null) {
-		return Controller::join_links('FormTest_ControllerWithSecurityToken', $this->getRequest()->latestParam('Action'),
-			$this->getRequest()->latestParam('ID'), $action);
-	}
-
-	public function Form() {
-		$form = new Form(
-			$this,
-			'Form',
-			new FieldList(
-				new EmailField('Email')
-			),
-			new FieldList(
-				new FormAction('doSubmit')
-			)
-		);
-
-		return $form;
-	}
-
-	public function doSubmit($data, $form, $request) {
-		$form->sessionMessage('Test save was successful', 'good');
-		return $this->redirectBack();
-	}
-
-}
-
-/**
- * @skipUpgrade
- */
-class FormTest_ControllerWithStrictPostCheck extends Controller implements TestOnly
-{
-
-    private static $allowed_actions = array('Form');
-
-    protected $template = 'BlankPage';
-
-    public function Link($action = null)
-    {
-        return Controller::join_links(
-            'FormTest_ControllerWithStrictPostCheck',
-            $this->request->latestParam('Action'),
-            $this->request->latestParam('ID'),
-            $action
-        );
-    }
-
-    public function Form()
-    {
-        $form = new Form(
-            $this,
-            'Form',
-            new FieldList(
-                new EmailField('Email')
-            ),
-            new FieldList(
-                new FormAction('doSubmit')
-            )
-        );
-        $form->setFormMethod('POST');
-        $form->setStrictFormMethodCheck(true);
-        $form->disableSecurityToken(); // Disable CSRF protection for easier form submission handling
-
-        return $form;
-    }
-
-    public function doSubmit($data, $form, $request)
-    {
-        $form->sessionMessage('Test save was successful', 'good');
-        return $this->redirectBack();
-    }
-}
-
-/**
- * @skipUpgrade
- */
-class FormTest_ExtraFieldsForm extends Form implements TestOnly {
-
-    public function getExtraFields() {
-        $fields = parent::getExtraFields();
-
-        $fields->push(new CheckboxField('ExtraFieldCheckbox', 'Extra Field Checkbox', 1));
-
-        return $fields;
-    }
 
 }

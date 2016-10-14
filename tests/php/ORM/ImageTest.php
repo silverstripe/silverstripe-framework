@@ -1,25 +1,17 @@
 <?php
 
-use League\Flysystem\Filesystem;
-use SilverStripe\Assets\Flysystem\AssetAdapter;
-use SilverStripe\Assets\Flysystem\FlysystemAssetStore;
-use SilverStripe\Assets\Flysystem\FlysystemUrlPlugin;
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Filesystem as SSFilesystem;
 use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\ShortcodeParser;
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
-
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class ImageTest extends SapphireTest {
 
 	protected static $fixture_file = 'ImageTest.yml';
@@ -34,12 +26,12 @@ class ImageTest extends SapphireTest {
 		}
 
 		// Set backend root to /ImageTest
-		AssetStoreTest_SpyStore::activate('ImageTest');
+		TestAssetStore::activate('ImageTest');
 
 		// Copy test images for each of the fixture references
-		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
+		$files = File::get()->exclude('ClassName', Folder::class);
 		foreach($files as $image) {
-			$filePath = AssetStoreTest_SpyStore::getLocalPath($image); // Only correct for test asset store
+			$filePath = TestAssetStore::getLocalPath($image); // Only correct for test asset store
 			$sourcePath = FRAMEWORK_PATH . '/tests/model/testimages/' . $image->Name;
 			if(!file_exists($filePath)) {
 				SSFilesystem::makeFolder(dirname($filePath));
@@ -51,14 +43,14 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function tearDown() {
-		AssetStoreTest_SpyStore::reset();
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
 	public function testGetTagWithTitle() {
-		Config::inst()->update('SilverStripe\\Assets\\Storage\\DBFile', 'force_resample', false);
+		Config::inst()->update(DBFile::class, 'force_resample', false);
 
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithTitle');
 		$expected = '<img src="/assets/ImageTest/folder/444065542b/test-image.png" alt="This is a image Title" />';
 		$actual = trim($image->getTag());
 
@@ -66,9 +58,9 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGetTagWithoutTitle() {
-		Config::inst()->update('SilverStripe\\Assets\\Storage\\DBFile', 'force_resample', false);
+		Config::inst()->update(DBFile::class, 'force_resample', false);
 
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithoutTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithoutTitle');
 		$expected = '<img src="/assets/ImageTest/folder/444065542b/test-image.png" alt="test image" />';
 		$actual = trim($image->getTag());
 
@@ -76,9 +68,9 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testGetTagWithoutTitleContainingDots() {
-		Config::inst()->update('SilverStripe\\Assets\\Storage\\DBFile', 'force_resample', false);
+		Config::inst()->update(DBFile::class, 'force_resample', false);
 
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithoutTitleContainingDots');
+		$image = $this->objFromFixture(Image::class, 'imageWithoutTitleContainingDots');
 		$expected = '<img src="/assets/ImageTest/folder/46affab704/test.image.with.dots.png" alt="test.image.with.dots" />';
 		$actual = trim($image->getTag());
 
@@ -89,7 +81,7 @@ class ImageTest extends SapphireTest {
 	 * Tests that multiple image manipulations may be performed on a single Image
 	 */
 	public function testMultipleGenerateManipulationCalls() {
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithoutTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithoutTitle');
 
 		$imageFirst = $image->ScaleWidth(200);
 		$this->assertNotNull($imageFirst);
@@ -110,7 +102,7 @@ class ImageTest extends SapphireTest {
 	 * of the output image do not resample the file.
 	 */
 	public function testReluctanceToResampling() {
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithoutTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithoutTitle');
 		$this->assertTrue($image->isSize(300, 300));
 
 		// Set width to 300 pixels
@@ -160,13 +152,13 @@ class ImageTest extends SapphireTest {
 	 * set to true, if the resampled file is smaller than the original.
 	 */
 	public function testForceResample() {
-		$imageHQ = $this->objFromFixture('SilverStripe\\Assets\\Image', 'highQualityJPEG');
+		$imageHQ = $this->objFromFixture(Image::class, 'highQualityJPEG');
 		$imageHQR = $imageHQ->Resampled();
-		$imageLQ = $this->objFromFixture('SilverStripe\\Assets\\Image', 'lowQualityJPEG');
+		$imageLQ = $this->objFromFixture(Image::class, 'lowQualityJPEG');
 		$imageLQR = $imageLQ->Resampled();
 
 		// Test resampled file is served when force_resample = true
-		Config::inst()->update('SilverStripe\\Assets\\Storage\\DBFile', 'force_resample', true);
+		Config::inst()->update(DBFile::class, 'force_resample', true);
 		$this->assertLessThan($imageHQ->getAbsoluteSize(), $imageHQR->getAbsoluteSize(), 'Resampled image is smaller than original');
 		$this->assertEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to a resampled image was returned by getURL()');
 
@@ -175,12 +167,12 @@ class ImageTest extends SapphireTest {
 		$this->assertNotEquals($imageLQ->getURL(), $imageLQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
 
 		// Test original file is served when force_resample = false
-		Config::inst()->update('SilverStripe\\Assets\\Storage\\DBFile', 'force_resample', false);
+		Config::inst()->update(DBFile::class, 'force_resample', false);
 		$this->assertNotEquals($imageHQ->getURL(), $imageHQR->getSourceURL(), 'Path to the original image file was returned by getURL()');
 	}
 
 	public function testImageResize() {
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithoutTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithoutTitle');
 		$this->assertTrue($image->isSize(300, 300));
 
 		// Test normal resize
@@ -236,13 +228,13 @@ class ImageTest extends SapphireTest {
 	 * @expectedException InvalidArgumentException
 	 */
 	public function testGenerateImageWithInvalidParameters() {
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithoutTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithoutTitle');
 		$image->ScaleHeight('String');
 		$image->Pad(600,600,'XXXXXX');
 	}
 
 	public function testCacheFilename() {
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithoutTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithoutTitle');
 		$imageFirst = $image->Pad(200,200,'CCCCCC');
 		$imageFilename = $imageFirst->getURL();
 			// Encoding of the arguments is duplicated from cacheFilename
@@ -255,7 +247,7 @@ class ImageTest extends SapphireTest {
 	 */
 	public function testPropertyInheritance() {
 		$testString = 'This is a test';
-		$origImage = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithTitle');
+		$origImage = $this->objFromFixture(Image::class, 'imageWithTitle');
 		$origImage->TestProperty = $testString;
 		$resampled = $origImage->ScaleWidth(10);
 		$this->assertEquals($resampled->TestProperty, $testString);
@@ -264,9 +256,9 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testShortcodeHandlerFallsBackToFileProperties() {
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithTitle');
 		$parser = new ShortcodeParser();
-		$parser->register('image', array('SilverStripe\\Assets\\Image', 'handle_shortcode'));
+		$parser->register('image', array(Image::class, 'handle_shortcode'));
 
 		$this->assertEquals(
 			sprintf(
@@ -279,9 +271,9 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testShortcodeHandlerUsesShortcodeProperties() {
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithTitle');
 		$parser = new ShortcodeParser();
-		$parser->register('image', array('SilverStripe\\Assets\\Image', 'handle_shortcode'));
+		$parser->register('image', array(Image::class, 'handle_shortcode'));
 
 		$this->assertEquals(
 			sprintf(
@@ -296,9 +288,9 @@ class ImageTest extends SapphireTest {
 	}
 
 	public function testShortcodeHandlerAddsDefaultAttributes() {
-		$image = $this->objFromFixture('SilverStripe\\Assets\\Image', 'imageWithoutTitle');
+		$image = $this->objFromFixture(Image::class, 'imageWithoutTitle');
 		$parser = new ShortcodeParser();
-		$parser->register('image', array('SilverStripe\\Assets\\Image', 'handle_shortcode'));
+		$parser->register('image', array(Image::class, 'handle_shortcode'));
 
 		$this->assertEquals(
 			sprintf(

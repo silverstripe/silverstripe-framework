@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Assets\Tests;
+
 use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\Assets\Storage\ProtectedFileController;
 use SilverStripe\Assets\Folder;
@@ -8,9 +10,7 @@ use SilverStripe\Assets\File;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\HTTPResponse;
-
-
-
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
 class ProtectedFileControllerTest extends FunctionalTest {
 
@@ -20,19 +20,19 @@ class ProtectedFileControllerTest extends FunctionalTest {
 		parent::setUp();
 
 		// Set backend root to /ImageTest
-		AssetStoreTest_SpyStore::activate('ProtectedFileControllerTest');
+		TestAssetStore::activate('ProtectedFileControllerTest');
 
 		// Create a test folders for each of the fixture references
 		foreach (Folder::get() as $folder) {
 			/** @var Folder $folder */
-			$filePath = AssetStoreTest_SpyStore::getLocalPath($folder);
+			$filePath = TestAssetStore::getLocalPath($folder);
 			Filesystem::makeFolder($filePath);
 		}
 
 		// Create a test files for each of the fixture references
-		foreach (File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder') as $file) {
+		foreach (File::get()->exclude('ClassName', Folder::class) as $file) {
 			/** @var File $file */
-			$path = AssetStoreTest_SpyStore::getLocalPath($file);
+			$path = TestAssetStore::getLocalPath($file);
 			Filesystem::makeFolder(dirname($path));
 			$fh = fopen($path, "w+");
 			fwrite($fh, str_repeat('x', 1000000));

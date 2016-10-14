@@ -1,9 +1,14 @@
 <?php
 
+namespace SilverStripe\Admin\Tests;
+
+
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
+
+
 
 
 /**

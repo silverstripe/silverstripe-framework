@@ -95,7 +95,10 @@ class FileNameFilter extends Object {
 	}
 
 	/**
-	 * @var Transliterator
+	 * Transliterator instance, or false to disable.
+	 * If null will use default.
+	 *
+	 * @var Transliterator|false
 	 */
 	protected $transliterator;
 
@@ -110,7 +113,7 @@ class FileNameFilter extends Object {
 	}
 
 	/**
-	 * @param Transliterator $t
+	 * @param Transliterator|false $t
 	 */
 	public function setTransliterator($t) {
 		$this->transliterator = $t;

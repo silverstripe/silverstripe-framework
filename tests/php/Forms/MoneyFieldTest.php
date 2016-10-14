@@ -1,28 +1,22 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetter_Object;
+use SilverStripe\Forms\Tests\MoneyFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBMoney;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\MoneyField;
 
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class MoneyFieldTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'MoneyFieldTest_Object',
-		'MoneyFieldTest_CustomSetter_Object',
+		TestObject::class,
+		CustomSetter_Object::class,
 	);
 
 	public function testSaveInto() {
-		$o = new MoneyFieldTest_Object();
+		$o = new TestObject();
 
 		$m = new DBMoney();
 		$m->setAmount(123456.78);
@@ -35,7 +29,7 @@ class MoneyFieldTest extends SapphireTest {
 	}
 
 	public function testSetValueAsMoney() {
-		$o = new MoneyFieldTest_Object();
+		$o = new TestObject();
 
 		$f = new MoneyField('MyMoney', 'MyMoney');
 
@@ -50,7 +44,7 @@ class MoneyFieldTest extends SapphireTest {
 	}
 
 	public function testSetValueAsArray() {
-		$o = new MoneyFieldTest_Object();
+		$o = new TestObject();
 
 		$f = new MoneyField('MyMoney', 'MyMoney');
 
@@ -67,7 +61,7 @@ class MoneyFieldTest extends SapphireTest {
 	 * setter method and double the value.
 	 */
 	public function testSetValueViaSetter() {
-		$o = new MoneyFieldTest_CustomSetter_Object();
+		$o = new CustomSetter_Object();
 
 		$f = new MoneyField('CustomMoney', 'Test Money Field');
 		$f->setValue(array('Currency'=>'EUR','Amount'=>123456.78));
@@ -77,34 +71,4 @@ class MoneyFieldTest extends SapphireTest {
 		$this->assertEquals('EUR', $o->MyMoney->getCurrency());
 	}
 
-}
-
-class MoneyFieldTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		'MyMoney' => 'Money',
-	);
-}
-
-/**
- * Customised class, implementing custom getter and setter methods for
- * MyMoney.
- */
-class MoneyFieldTest_CustomSetter_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		'MyMoney' => 'Money',
-	);
-
-	public function getCustomMoney() {
-		return $this->MyMoney->getValue();
-	}
-
-	public function setCustomMoney($value) {
-
-		$newAmount = $value->getAmount() * 2;
-		$this->MyMoney->setAmount($newAmount);
-
-		$newAmount = $value->getAmount() * 2;
-		$this->MyMoney->setCurrency($value->getCurrency());
-
-	}
 }

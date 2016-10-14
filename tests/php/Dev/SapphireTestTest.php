@@ -1,6 +1,11 @@
 <?php
 
+namespace SilverStripe\Dev\Tests;
+
+
 use SilverStripe\Dev\SapphireTest;
+
+
 
 class SapphireTestTest extends SapphireTest
 {
@@ -17,13 +22,13 @@ class SapphireTestTest extends SapphireTest
 		);
 		// Parent path
 		$this->assertEquals(
-			dirname(__DIR__) . '/model/DataObjectTest.yml',
-			$this->resolveFixturePath('../model/DataObjectTest.yml')
+			dirname(__DIR__) . '/ORM/DataObjectTest.yml',
+			$this->resolveFixturePath('../ORM/DataObjectTest.yml')
 		);
 		// Absolute path
 		$this->assertEquals(
-			dirname(__DIR__) . '/model/DataObjectTest.yml',
-			$this->resolveFixturePath(dirname(__DIR__) .'/model/DataObjectTest.yml')
+			dirname(__DIR__) . '/ORM/DataObjectTest.yml',
+			$this->resolveFixturePath(dirname(__DIR__) .'/ORM/DataObjectTest.yml')
 		);
 	}
 }

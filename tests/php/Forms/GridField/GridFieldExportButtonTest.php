@@ -1,21 +1,18 @@
 <?php
 
+namespace SilverStripe\Forms\Tests\GridField;
+
+use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\NoView;
+use SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\Team;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class GridFieldExportButtonTest extends SapphireTest {
 
 	protected $list;
@@ -27,21 +24,21 @@ class GridFieldExportButtonTest extends SapphireTest {
 	protected static $fixture_file = 'GridFieldExportButtonTest.yml';
 
 	protected $extraDataObjects = array(
-		'GridFieldExportButtonTest_Team',
-		'GridFieldExportButtonTest_NoView'
+		Team::class,
+		NoView::class
 	);
 
 	public function setUp() {
 		parent::setUp();
 
-		$this->list = new DataList('GridFieldExportButtonTest_Team');
+		$this->list = new DataList(Team::class);
 		$this->list = $this->list->sort('Name');
 		$config = GridFieldConfig::create()->addComponent(new GridFieldExportButton());
 		$this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
 	}
 
 	public function testCanView() {
-		$list = new DataList('GridFieldExportButtonTest_NoView');
+		$list = new DataList(NoView::class);
 
 		$button = new GridFieldExportButton();
 		$button->setExportColumns(array('Name' => 'My Name'));
@@ -161,41 +158,5 @@ class GridFieldExportButtonTest extends SapphireTest {
 			$button->generateExportFileData($this->gridField)
 		);
 	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class GridFieldExportButtonTest_Team extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Name' => 'Varchar',
-		'City' => 'Varchar',
-		'RugbyTeamNumber' => 'Int'
-	);
-
-	public function canView($member = null) {
-		return true;
-	}
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class GridFieldExportButtonTest_NoView extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Name' => 'Varchar',
-		'City' => 'Varchar',
-		'RugbyTeamNumber' => 'Int'
-	);
-
-	public function canView($member = null) {
-		return false;
-	}
-
 }
 

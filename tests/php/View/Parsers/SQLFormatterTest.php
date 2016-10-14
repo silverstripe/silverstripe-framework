@@ -1,12 +1,10 @@
 <?php
 
+namespace SilverStripe\View\Tests\Parsers;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\SQLFormatter;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class SQLFormatterTest extends SapphireTest {
 
 	public function testNewlineHanding() {
@@ -41,5 +39,4 @@ SQL;
 			'Leave existing newlines and indentation in place'
 		);
 	}
-
 }

@@ -1,5 +1,8 @@
 <?php
 
+namespace SilverStripe\Control\Tests;
+
+use SilverStripe\Control\Tests\DirectorTest\TestController;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
@@ -12,6 +15,8 @@ use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\RequestFilter;
 use SilverStripe\Control\Controller;
+
+
 
 
 
@@ -32,6 +37,10 @@ class DirectorTest extends SapphireTest {
 
 	protected $originalSession = array();
 
+	protected $extraControllers = [
+		TestController::class
+	];
+
 	public function setUp() {
 		parent::setUp();
 
@@ -47,9 +56,9 @@ class DirectorTest extends SapphireTest {
 		$_SESSION = array();
 
 		Config::inst()->update('SilverStripe\\Control\\Director', 'rules', array(
-			'DirectorTestRule/$Action/$ID/$OtherID' => 'DirectorTestRequest_Controller',
+			'DirectorTestRule/$Action/$ID/$OtherID' => TestController::class,
 			'en-nz/$Action/$ID/$OtherID' => array(
-				'Controller' => 'DirectorTestRequest_Controller',
+				'Controller' => TestController::class,
 				'Locale' => 'en_NZ'
 			)
 		));
@@ -346,7 +355,7 @@ class DirectorTest extends SapphireTest {
 		$fixture = array('somekey' => 'sometestvalue');
 		foreach(array('get', 'post') as $method) {
 			foreach(array('return%sValue', 'returnRequestValue', 'returnCookieValue') as $testfunction) {
-				$url = 'DirectorTestRequest_Controller/' . sprintf($testfunction, ucfirst($method))
+				$url = 'TestController/' . sprintf($testfunction, ucfirst($method))
 					. '?' . http_build_query($fixture);
 
 				$getresponse = Director::test(
@@ -374,7 +383,7 @@ class DirectorTest extends SapphireTest {
 
 		$this->assertEquals(
 			array(
-				'Controller' => 'DirectorTestRequest_Controller',
+				'Controller' => TestController::class,
 				'Action' => 'myaction',
 				'ID' => 'myid',
 				'OtherID' => 'myotherid',
@@ -521,7 +530,7 @@ class DirectorTest extends SapphireTest {
 
 	public function testTestIgnoresHashes() {
 		//test that hashes are ignored
-		$url = "DirectorTestRequest_Controller/returnGetValue?somekey=key";
+		$url = "TestController/returnGetValue?somekey=key";
 		$hash = "#test";
 		$response = Director::test($url . $hash, null, null, null, null, null, null, $request);
 		$this->assertFalse($response->isError());
@@ -529,7 +538,7 @@ class DirectorTest extends SapphireTest {
 		$this->assertEquals($request->getURL(true), $url);
 
 		//test encoded hashes are accepted
-		$url = "DirectorTestRequest_Controller/returnGetValue?somekey=test%23key";
+		$url = "TestController/returnGetValue?somekey=test%23key";
 		$response = Director::test($url, null, null, null, null, null, null, $request);
 		$this->assertFalse($response->isError());
 		$this->assertEquals('test#key', $response->getBody());
@@ -537,7 +546,7 @@ class DirectorTest extends SapphireTest {
 	}
 
 	public function testRequestFilterInDirectorTest() {
-		$filter = new TestRequestFilter;
+		$filter = new DirectorTest\TestRequestFilter;
 
 		$processor = new RequestProcessor(array($filter));
 
@@ -566,53 +575,4 @@ class DirectorTest extends SapphireTest {
 		// preCall 'false' will trigger an exception and prevent post call execution
 		$this->assertEquals(2, $filter->postCalls);
 	}
-}
-
-class TestRequestFilter implements RequestFilter, TestOnly {
-	public $preCalls = 0;
-	public $postCalls = 0;
-
-	public $failPre = false;
-	public $failPost = false;
-
-	public function preRequest(HTTPRequest $request, Session $session, DataModel $model) {
-		++$this->preCalls;
-
-		if ($this->failPre) {
-			return false;
-		}
-	}
-
-	public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model) {
-		++$this->postCalls;
-
-		if ($this->failPost) {
-			return false;
-		}
-	}
-
-	public function reset() {
-		$this->preCalls = 0;
-		$this->postCalls = 0;
-	}
-
-}
-
-class DirectorTestRequest_Controller extends Controller implements TestOnly {
-
-	private static $allowed_actions = array(
-		'returnGetValue',
-		'returnPostValue',
-		'returnRequestValue',
-		'returnCookieValue',
-	);
-
-	public function returnGetValue($request)		{ return $_GET['somekey']; }
-
-	public function returnPostValue($request)		{ return $_POST['somekey']; }
-
-	public function returnRequestValue($request)	{ return $_REQUEST['somekey']; }
-
-	public function returnCookieValue($request)		{ return $_COOKIE['somekey']; }
-
 }

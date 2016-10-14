@@ -1,111 +1,113 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Dev\FixtureFactory;
-use SilverStripe\Dev\FixtureBlueprint;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
+namespace SilverStripe\Dev\Tests;
 
-/**
- * @package framework
- * @subpackage tests
- */
+use SilverStripe\Dev\FixtureBlueprint;
+use SilverStripe\Dev\FixtureFactory;
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\Dev\Tests\FixtureFactoryTest\DataObjectRelation;
+use SilverStripe\Dev\Tests\FixtureFactoryTest\TestDataObject;
+
 class FixtureFactoryTest extends SapphireTest {
 
 	protected $usesDatabase = true;
 
 	protected $extraDataObjects = array(
-		'FixtureFactoryTest_DataObject',
-		'FixtureFactoryTest_DataObjectRelation'
+		TestDataObject::class,
+		DataObjectRelation::class
 	);
 
 	public function testCreateRaw() {
 		$factory = new FixtureFactory();
-		$id = $factory->createRaw('FixtureFactoryTest_DataObject', 'one', array('Name' => 'My Name'));
+		$id = $factory->createRaw(
+			TestDataObject::singleton()->baseTable(),
+			'one',
+			array('Name' => 'My Name')
+		);
 		$this->assertNotNull($id);
 		$this->assertGreaterThan(0, $id);
-		$obj = FixtureFactoryTest_DataObject::get()->find('ID', $id);
+		$obj = TestDataObject::get()->find('ID', $id);
 		$this->assertNotNull($obj);
 		$this->assertEquals('My Name', $obj->Name);
 	}
 
 	public function testSetId() {
 		$factory = new FixtureFactory();
-		$obj = new FixtureFactoryTest_DataObject();
+		$obj = new TestDataObject();
 		$obj->write();
-		$factory->setId('FixtureFactoryTest_DataObject', 'one', $obj->ID);
+		$factory->setId(TestDataObject::class, 'one', $obj->ID);
 		$this->assertEquals(
 			$obj->ID,
-			$factory->getId('FixtureFactoryTest_DataObject', 'one')
+			$factory->getId(TestDataObject::class, 'one')
 		);
 	}
 
 	public function testGetId() {
 		$factory = new FixtureFactory();
-		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
+		$obj = $factory->createObject(TestDataObject::class, 'one');
 		$this->assertEquals(
 			$obj->ID,
-			$factory->getId('FixtureFactoryTest_DataObject', 'one')
+			$factory->getId(TestDataObject::class, 'one')
 		);
 	}
 
 	public function testGetIds() {
 		$factory = new FixtureFactory();
-		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
+		$obj = $factory->createObject(TestDataObject::class, 'one');
 		$this->assertEquals(
 			array('one' => $obj->ID),
-			$factory->getIds('FixtureFactoryTest_DataObject')
+			$factory->getIds(TestDataObject::class)
 		);
 	}
 
 	public function testDefine() {
 		$factory = new FixtureFactory();
-		$this->assertFalse($factory->getBlueprint('FixtureFactoryTest_DataObject'));
-		$factory->define('FixtureFactoryTest_DataObject');
+		$this->assertFalse($factory->getBlueprint(TestDataObject::class));
+		$factory->define(TestDataObject::class);
 		$this->assertInstanceOf(
-			'SilverStripe\\Dev\\FixtureBluePrint',
-			$factory->getBlueprint('FixtureFactoryTest_DataObject')
+			FixtureBlueprint::class,
+			$factory->getBlueprint(TestDataObject::class)
 		);
 	}
 
 	public function testDefineWithCustomBlueprint() {
-		$blueprint = new FixtureBlueprint('FixtureFactoryTest_DataObject');
+		$blueprint = new FixtureBlueprint(TestDataObject::class);
 		$factory = new FixtureFactory();
-		$this->assertFalse($factory->getBlueprint('FixtureFactoryTest_DataObject'));
-		$factory->define('FixtureFactoryTest_DataObject', $blueprint);
+		$this->assertFalse($factory->getBlueprint(TestDataObject::class));
+		$factory->define(TestDataObject::class, $blueprint);
 		$this->assertInstanceOf(
-			'SilverStripe\\Dev\\FixtureBluePrint',
-			$factory->getBlueprint('FixtureFactoryTest_DataObject')
+			FixtureBlueprint::class,
+			$factory->getBlueprint(TestDataObject::class)
 		);
 		$this->assertEquals(
 			$blueprint,
-			$factory->getBlueprint('FixtureFactoryTest_DataObject')
+			$factory->getBlueprint(TestDataObject::class)
 		);
 	}
 
 	public function testDefineWithDefaults() {
 		$factory = new FixtureFactory();
-		$factory->define('FixtureFactoryTest_DataObject', array('Name' => 'Default'));
-		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
+		$factory->define(TestDataObject::class, array('Name' => 'Default'));
+		$obj = $factory->createObject(TestDataObject::class, 'one');
 		$this->assertEquals('Default', $obj->Name);
 	}
 
 	public function testDefineMultipleBlueprintsForClass() {
 		$factory = new FixtureFactory();
 		$factory->define(
-			'FixtureFactoryTest_DataObject',
-			new FixtureBlueprint('FixtureFactoryTest_DataObject')
+			TestDataObject::class,
+			new FixtureBlueprint(TestDataObject::class)
 		);
 		$factory->define(
 			'FixtureFactoryTest_DataObjectWithDefaults',
 			new FixtureBlueprint(
 				'FixtureFactoryTest_DataObjectWithDefaults',
-				'FixtureFactoryTest_DataObject',
+				TestDataObject::class,
 				array('Name' => 'Default')
 			)
 		);
 
-		$obj = $factory->createObject('FixtureFactoryTest_DataObject', 'one');
+		$obj = $factory->createObject(TestDataObject::class, 'one');
 		$this->assertNull($obj->Name);
 
 		$objWithDefaults = $factory->createObject('FixtureFactoryTest_DataObjectWithDefaults', 'two');
@@ -113,91 +115,52 @@ class FixtureFactoryTest extends SapphireTest {
 
 		$this->assertEquals(
 			$obj->ID,
-			$factory->getId('FixtureFactoryTest_DataObject', 'one')
+			$factory->getId(TestDataObject::class, 'one')
 		);
 		$this->assertEquals(
 			$objWithDefaults->ID,
-			$factory->getId('FixtureFactoryTest_DataObject', 'two'),
+			$factory->getId(TestDataObject::class, 'two'),
 			'Can access fixtures under class name, not blueprint name'
 		);
 	}
 
 	public function testClear() {
 		$factory = new FixtureFactory();
-		$obj1Id = $factory->createRaw('FixtureFactoryTest_DataObject', 'one', array('Name' => 'My Name'));
-		$obj2 = $factory->createObject('FixtureFactoryTest_DataObject', 'two');
+		$obj1Id = $factory->createRaw(
+			TestDataObject::singleton()->baseTable(),
+			'one',
+			array('Name' => 'My Name')
+		);
+		$obj2 = $factory->createObject(TestDataObject::class, 'two');
 
 		$factory->clear();
 
-		$this->assertFalse($factory->getId('FixtureFactoryTest_DataObject', 'one'));
-		$this->assertNull(FixtureFactoryTest_DataObject::get()->byId($obj1Id));
-		$this->assertFalse($factory->getId('FixtureFactoryTest_DataObject', 'two'));
-		$this->assertNull(FixtureFactoryTest_DataObject::get()->byId($obj2->ID));
+		$this->assertFalse($factory->getId(TestDataObject::class, 'one'));
+		$this->assertNull(TestDataObject::get()->byID($obj1Id));
+		$this->assertFalse($factory->getId(TestDataObject::class, 'two'));
+		$this->assertNull(TestDataObject::get()->byID($obj2->ID));
 	}
 
 	public function testClearWithClass() {
 		$factory = new FixtureFactory();
-		$obj1 = $factory->createObject('FixtureFactoryTest_DataObject', 'object-one');
-		$relation1 = $factory->createObject('FixtureFactoryTest_DataObjectRelation', 'relation-one');
+		$obj1 = $factory->createObject(TestDataObject::class, 'object-one');
+		$relation1 = $factory->createObject(DataObjectRelation::class, 'relation-one');
 
-		$factory->clear('FixtureFactoryTest_DataObject');
+		$factory->clear(TestDataObject::class);
 
 		$this->assertFalse(
-			$factory->getId('FixtureFactoryTest_DataObject', 'one')
+			$factory->getId(TestDataObject::class, 'one')
 		);
-		$this->assertNull(FixtureFactoryTest_DataObject::get()->byId($obj1->ID));
+		$this->assertNull(TestDataObject::get()->byID($obj1->ID));
 		$this->assertEquals(
 			$relation1->ID,
-			$factory->getId('FixtureFactoryTest_DataObjectRelation', 'relation-one')
+			$factory->getId(DataObjectRelation::class, 'relation-one')
 		);
 		$this->assertInstanceOf(
-			'FixtureFactoryTest_DataObjectRelation',
-			FixtureFactoryTest_DataObjectRelation::get()->byId($relation1->ID)
+			DataObjectRelation::class,
+			DataObjectRelation::get()->byID($relation1->ID)
 		);
 	}
 
 }
 
-/**
- * @package framework
- * @subpackage tests
- */
-class FixtureFactoryTest_DataObject extends DataObject implements TestOnly {
-
-	private static $db = array(
-		"Name" => "Varchar"
-	);
-
-	private static $has_many = array(
-		"HasManyRelation" => "FixtureFactoryTest_DataObjectRelation"
-	);
-
-	private static $many_many = array(
-		"ManyManyRelation" => "FixtureFactoryTest_DataObjectRelation"
-	);
-
-	private static $many_many_extraFields = array(
-		"ManyManyRelation" => array(
-			"Label" => "Varchar"
-		)
-	);
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class FixtureFactoryTest_DataObjectRelation extends DataObject implements TestOnly {
-
-	private static $db = array(
-		"Name" => "Varchar"
-	);
-
-	private static $belongs_many_many = array(
-		"TestParent" => "FixtureFactoryTest_DataObject"
-	);
-
-	private static $has_one = array(
-		'MyParent' => 'FixtureFactoryTest_DataObject'
-	);
-}

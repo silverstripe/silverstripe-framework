@@ -1,4 +1,4 @@
-SQLSelectTest_DO:
+SilverStripe\ORM\Tests\SQLSelectTest\TestObject:
   test1:
     Name: 'Object 1'
     Meta: 'Details 1'

@@ -1,12 +1,15 @@
 <?php
+
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Assets\Storage\AssetStore;
+use SilverStripe\Assets\Storage\DBFile;
+use SilverStripe\Control\Director;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
-
-
-
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
 /**
  * Description of DBFileTest
@@ -16,8 +19,8 @@ use SilverStripe\Dev\TestOnly;
 class DBFileTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'DBFileTest_Object',
-		'DBFileTest_Subclass'
+		DBFileTest\TestObject::class,
+		DBFileTest\Subclass::class,
 	);
 
 	protected $usesDatabase = true;
@@ -26,12 +29,12 @@ class DBFileTest extends SapphireTest {
 		parent::setUp();
 
 		// Set backend
-		AssetStoreTest_SpyStore::activate('DBFileTest');
-		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/mysite/');
+		TestAssetStore::activate('DBFileTest');
+		Director::config()->update('alternate_base_url', '/mysite/');
 	}
 
 	public function tearDown() {
-		AssetStoreTest_SpyStore::reset('DBFileTest');
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
@@ -39,10 +42,10 @@ class DBFileTest extends SapphireTest {
 	 * Test that images in a DBFile are rendered properly
 	 */
 	public function testRender() {
-		$obj = new DBFileTest_Object();
+		$obj = new DBFileTest\TestObject();
 
 		// Test image tag
-		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
 		$this->assertFileExists($fish);
 		$obj->MyFile->setFromLocalFile($fish, 'awesome-fish.jpg');
 		$this->assertEquals(
@@ -59,10 +62,10 @@ class DBFileTest extends SapphireTest {
 	}
 
 	public function testValidation() {
-		$obj = new DBFileTest_ImageOnly();
+		$obj = new DBFileTest\ImageOnly();
 
 		// Test from image
-		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
 		$this->assertFileExists($fish);
 		$obj->MyFile->setFromLocalFile($fish, 'awesome-fish.jpg');
 
@@ -72,10 +75,10 @@ class DBFileTest extends SapphireTest {
 	}
 
 	public function testPermission() {
-		$obj = new DBFileTest_Object();
+		$obj = new DBFileTest\TestObject();
 
 		// Test from image
-		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
 		$this->assertFileExists($fish);
 		$obj->MyFile->setFromLocalFile($fish, 'private/awesome-fish.jpg', null, null, array(
 			'visibility' => AssetStore::VISIBILITY_PROTECTED
@@ -94,31 +97,3 @@ class DBFileTest extends SapphireTest {
 	}
 
 }
-
-/**
- * @property DBFile $MyFile
- */
-class DBFileTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		"MyFile" => "DBFile"
-	);
-}
-
-/**
- * @property DBFile $AnotherFile
- */
-class DBFileTest_Subclass extends DBFileTest_Object implements TestOnly {
-	private static $db = array(
-		"AnotherFile" => "DBFile"
-	);
-}
-
-/**
- * @property DBFile $MyFile
- */
-class DBFileTest_ImageOnly extends DataObject implements TestOnly {
-	private static $db = array(
-		"MyFile" => "DBFile('image/supported')"
-	);
-}
-

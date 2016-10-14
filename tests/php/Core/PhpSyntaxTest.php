@@ -1,12 +1,10 @@
 <?php
 
+namespace SilverStripe\Core\Tests;
+
 use SilverStripe\Dev\SapphireTest;
+
 /**
- * @package framework
- * @subpackage tests
- *
- * @group sanitychecks
- *
  * Test the syntax of the PHP files with various settings
  */
 class PhpSyntaxTest extends SapphireTest {
@@ -50,7 +48,7 @@ class PhpSyntaxTest extends SapphireTest {
 		$cmd = sprintf(
 			'find %s | grep %s',
 			BASE_PATH,
-			escapeshellarg("\.$ext\$")
+			escapeshellarg(".{$ext}\$")
 		);
 		return explode("\n", trim(`$cmd`));
 	}

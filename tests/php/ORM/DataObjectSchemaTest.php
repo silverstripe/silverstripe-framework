@@ -1,34 +1,36 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+use SilverStripe\Core\Object;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObjectSchema;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseClass;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseDataClass;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\ChildClass;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\GrandChildClass;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\HasFields;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\NoFields;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithCustomTable;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithRelation;
 
 /**
  * Tests schema inspection of DataObjects
+ * @skipUpgrade
  */
 class DataObjectSchemaTest extends SapphireTest
 {
-	protected static $fixture_file = 'DataObjectSchemaTest.yml';
-
 	protected $extraDataObjects = array(
 		// Classes in base namespace
-		'DataObjectSchemaTest_BaseClass',
-		'DataObjectSchemaTest_BaseDataClass',
-		'DataObjectSchemaTest_ChildClass',
-		'DataObjectSchemaTest_GrandChildClass',
-		'DataObjectSchemaTest_HasFields',
-		'DataObjectSchemaTest_NoFields',
-		'DataObjectSchemaTest_WithCustomTable',
-		'DataObjectSchemaTest_WithRelation',
-		// Classes in sub-namespace (See DataObjectSchemaTest_Namespacejd.php)
-		'Namespaced\DOST\MyObject',
-		'Namespaced\DOST\MyObject_CustomTable',
-		'Namespaced\DOST\MyObject_NestedObject',
-		'Namespaced\DOST\MyObject_NamespacedTable',
-		'Namespaced\DOST\MyObject_Namespaced_Subclass',
-		'Namespaced\DOST\MyObject_NoFields',
+		BaseClass::class,
+		BaseDataClass::class,
+		ChildClass::class,
+		GrandChildClass::class,
+		HasFields::Class,
+		NoFields::class,
+		WithCustomTable::class,
+		WithRelation::class
 	);
 
 	/**
@@ -37,40 +39,13 @@ class DataObjectSchemaTest extends SapphireTest
 	public function testTableName() {
 		$schema = DataObject::getSchema();
 
-		// Non-namespaced tables
 		$this->assertEquals(
 			'DataObjectSchemaTest_WithRelation',
-			$schema->tableName('DataObjectSchemaTest_WithRelation')
+			$schema->tableName(WithRelation::class)
 		);
 		$this->assertEquals(
 			'DOSTWithCustomTable',
-			$schema->tableName('DataObjectSchemaTest_WithCustomTable')
-		);
-
-		// Namespaced tables
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject',
-			$schema->tableName('Namespaced\DOST\MyObject')
-		);
-		$this->assertEquals(
-			'CustomNamespacedTable',
-			$schema->tableName('Namespaced\DOST\MyObject_CustomTable')
-		);
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_NestedObject',
-			$schema->tableName('Namespaced\DOST\MyObject_NestedObject')
-		);
-		$this->assertEquals(
-			'Custom\NamespacedTable',
-			$schema->tableName('Namespaced\DOST\MyObject_NamespacedTable')
-		);
-		$this->assertEquals(
-			'Custom\SubclassedTable',
-			$schema->tableName('Namespaced\DOST\MyObject_Namespaced_Subclass')
-		);
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_NoFields',
-			$schema->tableName('Namespaced\DOST\MyObject_NoFields')
+			$schema->tableName(WithCustomTable::class)
 		);
 	}
 
@@ -83,216 +58,88 @@ class DataObjectSchemaTest extends SapphireTest
 		// Tables that aren't classes
 		$this->assertNull($schema->tableClass('NotARealTable'));
 
-
 		// Non-namespaced tables
 		$this->assertEquals(
-			'DataObjectSchemaTest_WithRelation',
+			WithRelation::class,
 			$schema->tableClass('DataObjectSchemaTest_WithRelation')
 		);
 		$this->assertEquals(
-			'DataObjectSchemaTest_WithCustomTable',
+			WithCustomTable::class,
 			$schema->tableClass('DOSTWithCustomTable')
-		);
-
-		// Namespaced tables
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject',
-			$schema->tableClass('Namespaced\DOST\MyObject')
-		);
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_CustomTable',
-			$schema->tableClass('CustomNamespacedTable')
-		);
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_NestedObject',
-			$schema->tableClass('Namespaced\DOST\MyObject_NestedObject')
-		);
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_NamespacedTable',
-			$schema->tableClass('Custom\NamespacedTable')
-		);
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_Namespaced_Subclass',
-			$schema->tableClass('Custom\SubclassedTable')
-		);
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_NoFields',
-			$schema->tableClass('Namespaced\DOST\MyObject_NoFields')
 		);
 	}
 
-	/**
-	 * Test non-namespaced tables
-	 */
 	public function testTableForObjectField() {
 		$schema = DataObject::getSchema();
 		$this->assertEquals(
 			'DataObjectSchemaTest_WithRelation',
-			$schema->tableForField('DataObjectSchemaTest_WithRelation', 'RelationID')
+			$schema->tableForField(WithRelation::class, 'RelationID')
 		);
 
 		$this->assertEquals(
 			'DataObjectSchemaTest_WithRelation',
-			$schema->tableForField('DataObjectSchemaTest_withrelation', 'RelationID')
+			$schema->tableForField(WithRelation::class, 'RelationID')
 		);
 
 		$this->assertEquals(
 			'DataObjectSchemaTest_BaseDataClass',
-			$schema->tableForField('DataObjectSchemaTest_BaseDataClass', 'Title')
+			$schema->tableForField(BaseDataClass::class, 'Title')
 		);
 
 		$this->assertEquals(
 			'DataObjectSchemaTest_BaseDataClass',
-			$schema->tableForField('DataObjectSchemaTest_HasFields', 'Title')
+			$schema->tableForField(HasFields::class, 'Title')
 		);
 
 		$this->assertEquals(
 			'DataObjectSchemaTest_BaseDataClass',
-			$schema->tableForField('DataObjectSchemaTest_NoFields', 'Title')
+			$schema->tableForField(NoFields::class, 'Title')
 		);
 
 		$this->assertEquals(
 			'DataObjectSchemaTest_BaseDataClass',
-			$schema->tableForField('DataObjectSchemaTest_nofields', 'Title')
+			$schema->tableForField(NoFields::class, 'Title')
 		);
 
 		$this->assertEquals(
 			'DataObjectSchemaTest_HasFields',
-			$schema->tableForField('DataObjectSchemaTest_HasFields', 'Description')
+			$schema->tableForField(HasFields::Class, 'Description')
 		);
 
 		// Class and table differ for this model
 		$this->assertEquals(
 			'DOSTWithCustomTable',
-			$schema->tableForField('DataObjectSchemaTest_WithCustomTable', 'Description')
+			$schema->tableForField(WithCustomTable::class, 'Description')
 		);
 		$this->assertEquals(
-			'DataObjectSchemaTest_WithCustomTable',
-			$schema->classForField('DataObjectSchemaTest_WithCustomTable', 'Description')
+			WithCustomTable::class,
+			$schema->classForField(WithCustomTable::class, 'Description')
 		);
 		$this->assertNull(
-			$schema->tableForField('DataObjectSchemaTest_WithCustomTable', 'NotAField')
+			$schema->tableForField(WithCustomTable::class, 'NotAField')
 		);
 		$this->assertNull(
-			$schema->classForField('DataObjectSchemaTest_WithCustomTable', 'NotAField')
+			$schema->classForField(WithCustomTable::class, 'NotAField')
 		);
 
 		// Non-existant fields shouldn't match any table
 		$this->assertNull(
-			$schema->tableForField('DataObjectSchemaTest_BaseClass', 'Nonexist')
+			$schema->tableForField(BaseClass::class, 'Nonexist')
 		);
 
-		/** @skipUpgrade */
 		$this->assertNull(
-			$schema->tableForField('SilverSTripe\\Core\\Object', 'Title')
+			$schema->tableForField(Object::class, 'Title')
 		);
 
 		// Test fixed fields
 		$this->assertEquals(
 			'DataObjectSchemaTest_BaseDataClass',
-			$schema->tableForField('DataObjectSchemaTest_HasFields', 'ID')
+			$schema->tableForField(HasFields::class, 'ID')
 		);
 		$this->assertEquals(
 			'DataObjectSchemaTest_BaseDataClass',
-			$schema->tableForField('DataObjectSchemaTest_NoFields', 'Created')
+			$schema->tableForField(NoFields::class, 'Created')
 		);
-	}
-
-	/**
-	 * Check table for fields with namespaced objects can be found
-	 */
-	public function testTableForNamespacedObjectField() {
-		$schema = DataObject::getSchema();
-
-		// MyObject
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject',
-			$schema->tableForField('Namespaced\DOST\MyObject', 'Title')
-		);
-
-		// MyObject_CustomTable
-		$this->assertEquals(
-			'CustomNamespacedTable',
-			$schema->tableForField('Namespaced\DOST\MyObject_CustomTable', 'Title')
-		);
-
-		// MyObject_NestedObject
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject',
-			$schema->tableForField('Namespaced\DOST\MyObject_NestedObject', 'Title')
-		);
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_NestedObject',
-			$schema->tableForField('Namespaced\DOST\MyObject_NestedObject', 'Content')
-		);
-
-		// MyObject_NamespacedTable
-		$this->assertEquals(
-			'Custom\NamespacedTable',
-			$schema->tableForField('Namespaced\DOST\MyObject_NamespacedTable', 'Description')
-		);
-		$this->assertEquals(
-			'Custom\NamespacedTable',
-			$schema->tableForField('Namespaced\DOST\MyObject_NamespacedTable', 'OwnerID')
-		);
-
-		// MyObject_Namespaced_Subclass
-		$this->assertEquals(
-			'Custom\NamespacedTable',
-			$schema->tableForField('Namespaced\DOST\MyObject_Namespaced_Subclass', 'OwnerID')
-		);
-		$this->assertEquals(
-			'Custom\NamespacedTable',
-			$schema->tableForField('Namespaced\DOST\MyObject_Namespaced_Subclass', 'Title')
-		);
-		$this->assertEquals(
-			'Custom\NamespacedTable',
-			$schema->tableForField('Namespaced\DOST\MyObject_Namespaced_Subclass', 'ID')
-		);
-		$this->assertEquals(
-			'Custom\SubclassedTable',
-			$schema->tableForField('Namespaced\DOST\MyObject_Namespaced_Subclass', 'Details')
-		);
-
-		// MyObject_NoFields
-		$this->assertEquals(
-			'Namespaced\DOST\MyObject_NoFields',
-			$schema->tableForField('Namespaced\DOST\MyObject_NoFields', 'Created')
-		);
-	}
-
-	/**
-	 * Test that relations join on the correct columns
-	 */
-	public function testRelationsQuery() {
-		$namespaced1 = $this->objFromFixture('Namespaced\DOST\MyObject_NamespacedTable', 'namespaced1');
-		$nofields = $this->objFromFixture('Namespaced\DOST\MyObject_NoFields', 'nofields1');
-		$subclass1 = $this->objFromFixture('Namespaced\DOST\MyObject_Namespaced_Subclass', 'subclass1');
-		$customtable1 = $this->objFromFixture('Namespaced\DOST\MyObject_CustomTable', 'customtable1');
-		$customtable3 = $this->objFromFixture('Namespaced\DOST\MyObject_CustomTable', 'customtable3');
-
-		// Check has_one / has_many
-		$this->assertEquals($nofields->ID, $namespaced1->Owner()->ID);
-		$this->assertDOSEquals([
-			['Title' => 'Namespaced 1'],
-		], $nofields->Owns());
-
-		// Check many_many / belongs_many_many
-		$this->assertDOSEquals(
-			[
-				['Title' => 'Custom Table 1'],
-				['Title' => 'Custom Table 2'],
-			],
-			$subclass1->Children()
-		);
-		$this->assertDOSEquals(
-			[
-				['Title' => 'Subclass 1', 'Details' => 'Oh, Hi!',]]
-			,
-			$customtable1->Parents()
-		);
-		$this->assertEmpty($customtable3->Parents()->count());
-
 	}
 
 	public function testFieldSpec() {
@@ -309,7 +156,7 @@ class DataObjectSchemaTest extends SapphireTest
 				'MoneyFieldAmount' => 'Decimal(19,4)',
 				'MoneyField' => 'Money',
 			],
-			$schema->fieldSpecs(DataObjectSchemaTest_HasFields::class)
+			$schema->fieldSpecs(HasFields::class)
 		);
 		$this->assertEquals(
 			[
@@ -323,7 +170,7 @@ class DataObjectSchemaTest extends SapphireTest
 				'MoneyFieldAmount' => 'DataObjectSchemaTest_HasFields.Decimal(19,4)',
 				'MoneyField' => 'DataObjectSchemaTest_HasFields.Money',
 			],
-			$schema->fieldSpecs(DataObjectSchemaTest_HasFields::class, DataObjectSchema::INCLUDE_CLASS)
+			$schema->fieldSpecs(HasFields::class, DataObjectSchema::INCLUDE_CLASS)
 		);
 		// DB_ONLY excludes composite field MoneyField
 		$this->assertEquals(
@@ -338,7 +185,7 @@ class DataObjectSchemaTest extends SapphireTest
 				'MoneyFieldAmount' => 'DataObjectSchemaTest_HasFields.Decimal(19,4)'
 			],
 			$schema->fieldSpecs(
-				DataObjectSchemaTest_HasFields::class,
+				HasFields::class,
 				DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY
 			)
 		);
@@ -352,74 +199,26 @@ class DataObjectSchemaTest extends SapphireTest
 				'MoneyFieldAmount' => 'DataObjectSchemaTest_HasFields.Decimal(19,4)',
 			],
 			$schema->fieldSpecs(
-				DataObjectSchemaTest_HasFields::class,
+				HasFields::class,
 				DataObjectSchema::INCLUDE_CLASS | DataObjectSchema::DB_ONLY | DataObjectSchema::UNINHERITED
 			)
 		);
 	}
 
 	/**
-	 * @covers SilverStripe\ORM\DataObjectSchema::baseDataClass()
+	 * @covers \SilverStripe\ORM\DataObjectSchema::baseDataClass()
 	 */
 	public function testBaseDataClass() {
 		$schema = DataObject::getSchema();
 
-		$this->assertEquals('DataObjectSchemaTest_BaseClass', $schema->baseDataClass('DataObjectSchemaTest_BaseClass'));
-		$this->assertEquals('DataObjectSchemaTest_BaseClass', $schema->baseDataClass('DataObjectSchemaTest_baseclass'));
-		$this->assertEquals('DataObjectSchemaTest_BaseClass', $schema->baseDataClass('DataObjectSchemaTest_ChildClass'));
-		$this->assertEquals('DataObjectSchemaTest_BaseClass', $schema->baseDataClass('DataObjectSchemaTest_CHILDCLASS'));
-		$this->assertEquals('DataObjectSchemaTest_BaseClass', $schema->baseDataClass('DataObjectSchemaTest_GrandChildClass'));
-		$this->assertEquals('DataObjectSchemaTest_BaseClass', $schema->baseDataClass('DataObjectSchemaTest_GRANDChildClass'));
+		$this->assertEquals(BaseClass::class, $schema->baseDataClass(BaseClass::class));
+		$this->assertEquals(BaseClass::class, $schema->baseDataClass(strtolower(BaseClass::class)));
+		$this->assertEquals(BaseClass::class, $schema->baseDataClass(ChildClass::class));
+		$this->assertEquals(BaseClass::class, $schema->baseDataClass(strtoupper(ChildClass::class)));
+		$this->assertEquals(BaseClass::class, $schema->baseDataClass(GrandChildClass::class));
+		$this->assertEquals(BaseClass::class, $schema->baseDataClass(ucfirst(GrandChildClass::class)));
 
 		$this->setExpectedException('InvalidArgumentException');
-		$schema->baseDataClass('SilverStripe\\ORM\\DataObject');
+		$schema->baseDataClass(DataObject::class);
 	}
-}
-
-class DataObjectSchemaTest_BaseClass extends DataObject implements TestOnly {
-	private static $db = [
-		'Title' => 'Varchar',
-	];
-}
-
-class DataObjectSchemaTest_ChildClass extends DataObjectSchemaTest_BaseClass {
-
-}
-
-class DataObjectSchemaTest_GrandChildClass extends DataObjectSchemaTest_ChildClass {
-
-}
-
-class DataObjectSchemaTest_BaseDataClass extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
-}
-
-
-class DataObjectSchemaTest_NoFields extends DataObjectSchemaTest_BaseDataClass {
-
-}
-
-class DataObjectSchemaTest_HasFields extends DataObjectSchemaTest_NoFields {
-
-	private static $db = array(
-		'Description' => 'Varchar',
-		'MoneyField' => 'Money',
-	);
-}
-
-class DataObjectSchemaTest_WithCustomTable extends DataObjectSchemaTest_NoFields {
-	private static $table_name = 'DOSTWithCustomTable';
-	private static $db = array(
-		'Description' => 'Text'
-	);
-}
-
-class DataObjectSchemaTest_WithRelation extends DataObjectSchemaTest_NoFields {
-
-	private static $has_one = array(
-		'Relation' => 'DataObjectSchemaTest_HasFields'
-	);
 }

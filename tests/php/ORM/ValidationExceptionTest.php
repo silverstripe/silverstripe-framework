@@ -1,14 +1,11 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\Dev\SapphireTest;
 
-
-/**
- * @package framework
- * @subpackage Testing
- */
 class ValidationExceptionTest extends SapphireTest
 {
 	/**

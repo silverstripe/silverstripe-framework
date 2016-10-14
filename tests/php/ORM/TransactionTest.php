@@ -1,40 +1,37 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class TransactionTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'TransactionTest_Object'
+		TransactionTest\TestObject::class
 	);
 
 	public function testCreateWithTransaction() {
 
 		if(DB::get_conn()->supportsTransactions()==true){
 			DB::get_conn()->transactionStart();
-			$obj=new TransactionTest_Object();
+			$obj=new TransactionTest\TestObject();
 			$obj->Title='First page';
 			$obj->write();
 
-			$obj=new TransactionTest_Object();
+			$obj=new TransactionTest\TestObject();
 			$obj->Title='Second page';
 			$obj->write();
 
 			//Create a savepoint here:
 			DB::get_conn()->transactionSavepoint('rollback');
 
-			$obj=new TransactionTest_Object();
+			$obj=new TransactionTest\TestObject();
 			$obj->Title='Third page';
 			$obj->write();
 
-			$obj=new TransactionTest_Object();
+			$obj=new TransactionTest\TestObject();
 			$obj->Title='Fourth page';
 			$obj->write();
 
@@ -43,10 +40,10 @@ class TransactionTest extends SapphireTest {
 
 			DB::get_conn()->transactionEnd();
 
-			$first=DataObject::get('TransactionTest_Object', "\"Title\"='First page'");
-			$second=DataObject::get('TransactionTest_Object', "\"Title\"='Second page'");
-			$third=DataObject::get('TransactionTest_Object', "\"Title\"='Third page'");
-			$fourth=DataObject::get('TransactionTest_Object', "\"Title\"='Fourth page'");
+			$first=DataObject::get(TransactionTest\TestObject::class, "\"Title\"='First page'");
+			$second=DataObject::get(TransactionTest\TestObject::class, "\"Title\"='Second page'");
+			$third=DataObject::get(TransactionTest\TestObject::class, "\"Title\"='Third page'");
+			$fourth=DataObject::get(TransactionTest\TestObject::class, "\"Title\"='Fourth page'");
 
 			//These pages should be in the system
 			$this->assertTrue(is_object($first) && $first->exists());
@@ -62,8 +59,3 @@ class TransactionTest extends SapphireTest {
 
 }
 
-class TransactionTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar(255)'
-	);
-}

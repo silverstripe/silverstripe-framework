@@ -1,21 +1,21 @@
 <?php
 
+namespace SilverStripe\i18n\Tests;
+
 use SilverStripe\Assets\Filesystem;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\i18nTextCollector;
 use SilverStripe\i18n\i18nTextCollector_Writer_RailsYaml;
+use SilverStripe\i18n\Tests\i18nTextCollectorTest\Collector;
 use SilverStripe\View\ThemeResourceLoader;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class i18nTextCollectorTest extends SapphireTest {
 
 	/**
@@ -36,8 +36,8 @@ class i18nTextCollectorTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 
-		$this->alternateBasePath = $this->getCurrentAbsolutePath() . "/_fakewebroot";
-		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_folder', $this->alternateBasePath);
+		$this->alternateBasePath = __DIR__ . "/i18nTest/_fakewebroot";
+		Config::inst()->update(Director::class, 'alternate_base_folder', $this->alternateBasePath);
 		$this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
 		Filesystem::makeFolder($this->alternateBaseSavePath);
 
@@ -630,18 +630,18 @@ YAML;
 	public function testCollectFromEntityProvidersInCustomObject() {
 		$c = new i18nTextCollector();
 
-		$filePath = $this->getCurrentAbsolutePath() . '/i18nTextCollectorTestMyObject.php';
+		$filePath = __DIR__ . '/i18nTest/MyObject.php';
 		$matches = $c->collectFromEntityProviders($filePath);
 		$this->assertEquals(
-			array_keys($matches),
 			array(
-				'i18nTextCollectorTestMyObject.PLURALNAME',
-				'i18nTextCollectorTestMyObject.SINGULARNAME',
-			)
+				'SilverStripe\i18n\Tests\i18nTest\MyObject.PLURALNAME',
+				'SilverStripe\i18n\Tests\i18nTest\MyObject.SINGULARNAME',
+			),
+			array_keys($matches)
 		);
 		$this->assertEquals(
 			'My Object',
-			$matches['i18nTextCollectorTestMyObject.SINGULARNAME'][0]
+			$matches['SilverStripe\i18n\Tests\i18nTest\MyObject.SINGULARNAME'][0]
 		);
 	}
 
@@ -649,8 +649,8 @@ YAML;
 	 * Test that duplicate keys are resolved to the appropriate modules
 	 */
 	public function testResolveDuplicates() {
+		$collector = new Collector();
 		ClassLoader::instance()->pushManifest($this->manifest);
-		$collector = new i18nTextCollectorTest_Collector();
 
 		// Dummy data as collected
 		$data1 = array(
@@ -712,8 +712,8 @@ YAML;
 	 * Test ability for textcollector to detect modules
 	 */
 	public function testModuleDetection() {
+		$collector = new Collector();
 		ClassLoader::instance()->pushManifest($this->manifest);
-		$collector = new i18nTextCollectorTest_Collector();
 		$modules = $collector->getModules_Test($this->alternateBasePath);
 		$this->assertEquals(
 			array(
@@ -738,7 +738,7 @@ YAML;
 	 * Test that text collector can detect module file lists properly
 	 */
 	public function testModuleFileList() {
-		$collector = new i18nTextCollectorTest_Collector();
+		$collector = new Collector();
 		$collector->basePath = $this->alternateBasePath;
 		$collector->baseSavePath = $this->alternateBaseSavePath;
 
@@ -790,31 +790,4 @@ YAML;
 			$theme2Files
 		);
 	}
-}
-
-
-/**
- * Assist with testing of specific protected methods
- */
-class i18nTextCollectorTest_Collector extends i18nTextCollector implements TestOnly {
-	public function getModules_Test($directory) {
-		return $this->getModules($directory);
-	}
-
-	public function resolveDuplicateConflicts_Test($entitiesByModule) {
-		return $this->resolveDuplicateConflicts($entitiesByModule);
-	}
-
-	public function getFileListForModule_Test($module) {
-		return $this->getFileListForModule($module);
-	}
-
-	public function getConflicts_Test($entitiesByModule) {
-		return $this->getConflicts($entitiesByModule);
-	}
-
-	public function findModuleForClass_Test($class) {
-		return $this->findModuleForClass($class);
-	}
-
 }

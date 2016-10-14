@@ -1,11 +1,11 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
 
 use Embed\Adapters\Webpage;
 use Embed\Embed;
 use SilverStripe\Forms\HtmlEditor\EmbedShortcodeProvider;
 use SilverStripe\Dev\SapphireTest;
-
 
 /**
  * Class EmbedShortcodeProviderTest
@@ -26,11 +26,6 @@ class EmbedShortcodeProviderTest extends SapphireTest
 	 * @var string test Soundcloud. One of my favorite bands, Delain, Suckerpunch.
 	 */
 	protected static $test_soundcloud = 'http://soundcloud.com/napalmrecords/delain-suckerpunch';
-
-	public function setUp()
-	{
-		return parent::setUp();
-	}
 
 	public function testYoutube()
 	{

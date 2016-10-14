@@ -1,27 +1,26 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Extension;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\Tests\FormFieldTest\TestExtension;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
+use ReflectionClass;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class FormFieldTest extends SapphireTest {
 
 	protected $requiredExtensions = array(
-		'SilverStripe\\Forms\\FormField' => array('FormFieldTest_Extension')
+		FormField::class => array(
+			TestExtension::class
+		)
 	);
 
 	public function testDefaultClasses() {
@@ -341,16 +340,4 @@ class FormFieldTest extends SapphireTest {
 			$schema['message']['value']
 		);
 	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class FormFieldTest_Extension extends Extension implements TestOnly {
-
-	public function updateAttributes(&$attrs) {
-		$attrs['extended'] = true;
-	}
-
 }

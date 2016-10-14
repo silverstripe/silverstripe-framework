@@ -1,12 +1,11 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\RequiredFields;
 
 /**
- * @package framework
- * @subpackage tests
- *
  * @todo Test the validation method php()
  * @skipUpgrade
  */

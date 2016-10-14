@@ -1,10 +1,15 @@
 <?php
 
+namespace SilverStripe\Admin\Tests;
+
+
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Permission;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Dev\TestOnly;
+
+
 
 class ModelAdminTest extends FunctionalTest {
 	protected static $fixture_file = 'ModelAdminTest.yml';

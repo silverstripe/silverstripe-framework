@@ -1,7 +1,6 @@
 <?php
 
-
-
+namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBVarchar;
@@ -9,14 +8,8 @@ use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 
-
-
 /**
- *
  * Tests for DBField objects.
- * @package framework
- * @subpackage tests
- *
  */
 class DBFieldTest extends SapphireTest {
 
@@ -33,8 +26,6 @@ class DBFieldTest extends SapphireTest {
 	 * Test the prepValueForDB() method on DBField.
 	 */
 	public function testPrepValueForDB() {
-		$db = DB::get_conn();
-
 		/* Float behaviour, asserting we have 0 */
 		$this->assertEquals(0, singleton('Float')->prepValueForDB(0));
 		$this->assertEquals(0, singleton('Float')->prepValueForDB(null));

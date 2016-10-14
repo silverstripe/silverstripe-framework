@@ -1,12 +1,10 @@
 <?php
+
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\Dev\SapphireTest;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class ArrayLibTest extends SapphireTest {
 
 	public function testInvert() {

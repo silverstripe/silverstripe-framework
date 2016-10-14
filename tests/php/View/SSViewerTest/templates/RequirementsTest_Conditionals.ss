@@ -1,9 +1,9 @@
 <% if $FailTest %>
-	<% require themedCss(forms/RequirementsTest_a) %>
-	<% require themedJavascript(forms/RequirementsTest_b) %>
-	<% require themedJavascript(forms/RequirementsTest_c) %>
+	<% require themedCss(RequirementsTest_a) %>
+	<% require themedJavascript(RequirementsTest_b) %>
+	<% require themedJavascript(RequirementsTest_c) %>
 <% else %>
-	<% require themedJavascript(forms/RequirementsTest_a) %>
-	<% require themedCss(forms/RequirementsTest_b) %>
-	<% require themedCss(forms/RequirementsTest_c) %>
+	<% require themedJavascript(RequirementsTest_a) %>
+	<% require themedCss(RequirementsTest_b) %>
+	<% require themedCss(RequirementsTest_c) %>
 <% end_if %>

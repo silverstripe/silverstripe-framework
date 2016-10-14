@@ -1,6 +1,11 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
+
 
 class HasManyListTest extends SapphireTest {
 
@@ -14,7 +19,7 @@ class HasManyListTest extends SapphireTest {
 
 	public function testRelationshipEmptyOnNewRecords() {
 		// Relies on the fact that (unrelated) comments exist in the fixture file already
-		$newTeam = new DataObjectTest_Team(); // has_many Comments
+		$newTeam = new Team(); // has_many Comments
 		$this->assertEquals(array(), $newTeam->Comments()->column('ID'));
 	}
 
@@ -24,7 +29,7 @@ class HasManyListTest extends SapphireTest {
 	public function testRemoveRelation() {
 
 		// Check that expected teams exist
-		$list = DataObjectTest_Team::get();
+		$list = Team::get();
 		$this->assertEquals(
 			array('Subteam 1', 'Subteam 2', 'Subteam 3', 'Team 1', 'Team 2', 'Team 3'),
 			$list->sort('Title')->column('Title')

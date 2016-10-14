@@ -3006,6 +3006,12 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
 		$indexes = $this->databaseIndexes();
 
+		if (empty($table)) {
+			throw new LogicException(
+				"Class " . static::class . " not loaded by manifest, or no database table configured"
+			);
+		}
+
 		if($fields) {
 			$hasAutoIncPK = get_parent_class($this) === self::class;
 			DB::require_table(

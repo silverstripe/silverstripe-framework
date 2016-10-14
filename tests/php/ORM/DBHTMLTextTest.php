@@ -1,6 +1,6 @@
 <?php
 
-
+namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\FieldType\DBField;
@@ -8,18 +8,9 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Object;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
+use SilverStripe\ORM\Tests\DBHTMLTextTest\TestShortcode;
 use SilverStripe\View\Parsers\ShortcodeParser;
-use SilverStripe\View\Parsers\ShortcodeHandler;
 
-
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DBHTMLTextTest extends SapphireTest {
 
 	public function setUp() {
@@ -27,7 +18,7 @@ class DBHTMLTextTest extends SapphireTest {
 
 		// Set test handler
 		ShortcodeParser::get('htmltest')
-			->register('test_shortcode', array('DBHTMLTextTest_Shortcode', 'handle_shortcode'));
+			->register('test_shortcode', array(TestShortcode::class, 'handle_shortcode'));
 		ShortcodeParser::set_active('htmltest');
 	}
 
@@ -551,17 +542,5 @@ class DBHTMLTextTest extends SapphireTest {
 		);
 
 		ShortcodeParser::set_active('default');
-	}
-}
-
-class DBHTMLTextTest_Shortcode implements ShortcodeHandler, TestOnly {
-	public static function get_shortcodes()
-	{
-		return 'test';
-	}
-
-	public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
-	{
-		return 'shortcode content';
 	}
 }

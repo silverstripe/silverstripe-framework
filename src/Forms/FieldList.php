@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\ArrayList;
 
 /**
@@ -388,6 +389,7 @@ class FieldList extends ArrayList {
 	public function insertBefore($name, $item) {
 		// Backwards compatibility for order of arguments
 		if($name instanceof FormField) {
+			Deprecation::notice('5.0', 'Incorrect order of arguments for insertBefore');
 			list($item, $name) = array($name, $item);
 		}
 		$this->onBeforeInsert($item);
@@ -418,6 +420,7 @@ class FieldList extends ArrayList {
 	public function insertAfter($name, $item) {
 		// Backwards compatibility for order of arguments
 		if($name instanceof FormField) {
+			Deprecation::notice('5.0', 'Incorrect order of arguments for insertAfter');
 			list($item, $name) = array($name, $item);
 		}
 		$this->onBeforeInsert($item);

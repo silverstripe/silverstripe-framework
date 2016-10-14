@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Tab;
@@ -13,12 +15,9 @@ use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 
-
 /**
  * Tests for FieldList
  *
- * @package framework
- * @subpackage tests
  * @skipUpgrade
  * @todo test for {@link FieldList->setValues()}. Need to check
  * 	that the values that were set are the correct ones given back.
@@ -60,7 +59,7 @@ class FieldListTest extends SapphireTest {
 		$this->assertSame($fields->dataFieldByName('Name'), $tab->fieldByName('Name'));
 
 		/* We'll have 3 fields inside the tab */
-		$this->assertEquals(3, $tab->Fields()->Count());
+		$this->assertEquals(3, $tab->Fields()->count());
 	}
 
 	/**
@@ -95,7 +94,7 @@ class FieldListTest extends SapphireTest {
 		$this->assertSame($fields->dataFieldByName('Address'), $group2->fieldByName('Address'));
 
 		/* We'll have 2 fields directly inside the tab */
-		$this->assertEquals(2, $tab->Fields()->Count());
+		$this->assertEquals(2, $tab->Fields()->count());
 
 
 	}
@@ -112,13 +111,13 @@ class FieldListTest extends SapphireTest {
 		$fields->addFieldToTab('Root', new TextField('Country'));
 
 		/* We have 1 field inside the tab, which is the field we just created */
-		$this->assertEquals(1, $tab->Fields()->Count());
+		$this->assertEquals(1, $tab->Fields()->count());
 
 		/* We remove the field from the tab */
 		$fields->removeFieldFromTab('Root', 'Country');
 
 		/* We'll have no fields in the tab now */
-		$this->assertEquals(0, $tab->Fields()->Count());
+		$this->assertEquals(0, $tab->Fields()->count());
 	}
 
 	public function testRemoveTab() {
@@ -165,7 +164,7 @@ class FieldListTest extends SapphireTest {
 		));
 
 		/* We have 3 fields inside the tab, which we just created */
-		$this->assertEquals(3, $tab->Fields()->Count());
+		$this->assertEquals(3, $tab->Fields()->count());
 
 		/* We remove the 3 fields from the tab */
 		$fields->removeFieldsFromTab('Root', array(
@@ -175,21 +174,21 @@ class FieldListTest extends SapphireTest {
 		));
 
 		/* We have no fields in the tab now */
-		$this->assertEquals(0, $tab->Fields()->Count());
+		$this->assertEquals(0, $tab->Fields()->count());
 	}
 
 	public function testRemoveFieldByName() {
 		$fields = new FieldList();
 		$fields->push(new TextField('Name', 'Your name'));
 
-		$this->assertEquals(1, $fields->Count());
+		$this->assertEquals(1, $fields->count());
 		$fields->removeByName('Name');
-		$this->assertEquals(0, $fields->Count());
+		$this->assertEquals(0, $fields->count());
 
 		$fields->push(new TextField('Name[Field]', 'Your name'));
-		$this->assertEquals(1, $fields->Count());
+		$this->assertEquals(1, $fields->count());
 		$fields->removeByName('Name[Field]');
-		$this->assertEquals(0, $fields->Count());
+		$this->assertEquals(0, $fields->count());
 	}
 
 	public function testDataFieldByName() {
@@ -212,13 +211,13 @@ class FieldListTest extends SapphireTest {
 		$fields->push(new TextField('Email', 'Your email'));
 
 		/* We have 2 fields in our set now */
-		$this->assertEquals(2, $fields->Count());
+		$this->assertEquals(2, $fields->count());
 
 		/* Then, we call up removeByName() to take it out again */
 		$fields->removeByName(array('Name', 'Email'));
 
 		/* We have 0 fields in our set now, as we've just removed the one we added */
-		$this->assertEquals(0, $fields->Count());
+		$this->assertEquals(0, $fields->count());
 	}
 
 	/**
@@ -235,14 +234,14 @@ class FieldListTest extends SapphireTest {
 		$this->assertSame($fields->dataFieldByName('Country'), $tab->fieldByName('Country'));
 
 		$fields->replaceField('Country', new EmailField('Email'));
-		$this->assertEquals(1, $tab->Fields()->Count());
+		$this->assertEquals(1, $tab->Fields()->count());
 
 		$fields = new FieldList();
 		$fields->push(new TextField('Name', 'Your name'));
 		$brack = new TextField('Name[Field]', 'Your name');
 
 		$fields->replaceField('Name', $brack);
-		$this->assertEquals(1, $fields->Count());
+		$this->assertEquals(1, $fields->count());
 
 		$this->assertEquals('Name[Field]', $fields->first()->getName());
 	}
@@ -282,8 +281,8 @@ class FieldListTest extends SapphireTest {
 
 		/* The field named "A" has been removed from the Main tab to make way for our new field named "A" in
 		 * Other tab. */
-		$this->assertEquals(1, $main->Fields()->Count());
-		$this->assertEquals(3, $other->Fields()->Count());
+		$this->assertEquals(1, $main->Fields()->count());
+		$this->assertEquals(3, $other->Fields()->count());
 	}
 
 	/**
@@ -314,8 +313,8 @@ class FieldListTest extends SapphireTest {
 		$this->assertNotNull($otherTab->fieldByName('Email'));
 
 		/* We have 1 field for each of the tabs */
-		$this->assertEquals(1, $mainTab->Fields()->Count());
-		$this->assertEquals(1, $otherTab->Fields()->Count());
+		$this->assertEquals(1, $mainTab->Fields()->count());
+		$this->assertEquals(1, $otherTab->Fields()->count());
 
 		$this->assertNotNull($fields->fieldByName('Root.MyContent'));
 		$this->assertNotNull($fields->fieldByName('Root.MyContent'));
@@ -371,13 +370,13 @@ class FieldListTest extends SapphireTest {
 		$fields->push(new TextField('Country'));
 
 		/* We only have 1 field in the set */
-		$this->assertEquals(1, $fields->Count());
+		$this->assertEquals(1, $fields->count());
 
 		/* Another field called Email is added to the set */
 		$fields->push(new EmailField('Email'));
 
 		/* There are now 2 fields in the set */
-		$this->assertEquals(2, $fields->Count());
+		$this->assertEquals(2, $fields->count());
 
 		// Test that pushing a composite field without a name onto the set works
 		// See ticket #2932
@@ -385,7 +384,7 @@ class FieldListTest extends SapphireTest {
 			new TextField('Test1'),
 			new TextField('Test2')
 		));
-		$this->assertEquals(3, $fields->Count());
+		$this->assertEquals(3, $fields->count());
 	}
 
 	/**
@@ -400,23 +399,23 @@ class FieldListTest extends SapphireTest {
 		$fields->unshift(new TextField('Country'));
 
 		/* We only have 1 field in the set */
-		$this->assertEquals(1, $fields->Count());
+		$this->assertEquals(1, $fields->count());
 
 		/* Another field called Email is added to the set */
 		$fields->unshift(new EmailField('Email'));
 
 		/* There are now 2 fields in the set */
-		$this->assertEquals(2, $fields->Count());
+		$this->assertEquals(2, $fields->count());
 
 		/* The most recently added field is at the beginning of the set */
-		$this->assertEquals('Email', $fields->First()->getName());
+		$this->assertEquals('Email', $fields->first()->getName());
 
 		// Test that pushing a composite field without a name onto the set works
 		$fields->unshift(new CompositeField(
 			new TextField('Test1'),
 			new TextField('Test2')
 		));
-		$this->assertEquals(3, $fields->Count());
+		$this->assertEquals(3, $fields->count());
 	}
 
 	/**
@@ -433,16 +432,16 @@ class FieldListTest extends SapphireTest {
 		$fields->push(new TextField('FirstName'));
 
 		/* We now have 3 fields in the set */
-		$this->assertEquals(3, $fields->Count());
+		$this->assertEquals(3, $fields->count());
 
 		/* We insert another field called Title before the FirstName field */
-		$fields->insertBefore(new TextField('Title'), 'FirstName');
+		$fields->insertBefore('FirstName', new TextField('Title'));
 
 		/* The field we just added actually exists in the set */
 		$this->assertNotNull($fields->dataFieldByName('Title'));
 
 		/* We now have 4 fields in the set */
-		$this->assertEquals(4, $fields->Count());
+		$this->assertEquals(4, $fields->count());
 
 		/* The position of the Title field is at number 3 */
 		$this->assertEquals('Title', $fields[2]->getName());
@@ -454,7 +453,7 @@ class FieldListTest extends SapphireTest {
 		$this->assertNotNull($fields->dataFieldByName('Surname'));
 
 		/* We now have 5 fields in the set */
-		$this->assertEquals(5, $fields->Count());
+		$this->assertEquals(5, $fields->count());
 
 		/* The position of the Surname field is at number 4 */
 		$this->assertEquals('Surname', $fields[3]->getName());
@@ -495,16 +494,16 @@ class FieldListTest extends SapphireTest {
 		$fields->push(new TextField('FirstName'));
 
 		/* We now have 3 fields in the set */
-		$this->assertEquals(3, $fields->Count());
+		$this->assertEquals(3, $fields->count());
 
 		/* A field called Title is inserted after the Country field */
-		$fields->insertAfter(new TextField('Title'), 'Country');
+		$fields->insertAfter('Country', new TextField('Title'));
 
 		/* The field we just added actually exists in the set */
 		$this->assertNotNull($fields->dataFieldByName('Title'));
 
 		/* We now have 4 fields in the FieldList */
-		$this->assertEquals(4, $fields->Count());
+		$this->assertEquals(4, $fields->count());
 
 		/* The position of the Title field should be at number 2 */
 		$this->assertEquals('Title', $fields[1]->getName());
@@ -516,7 +515,7 @@ class FieldListTest extends SapphireTest {
 		$this->assertNotNull($fields->dataFieldByName('Surname'));
 
 		/* We now have 5 fields in the set */
-		$this->assertEquals(5, $fields->Count());
+		$this->assertEquals(5, $fields->count());
 
 		/* The position of the Surname field is at number 5 */
 		$this->assertEquals('Surname', $fields[4]->getName());
@@ -571,7 +570,7 @@ class FieldListTest extends SapphireTest {
 
 		$this->assertSame($newA, $FieldList->dataFieldByName("A"));
 		$this->assertSame($newB, $FieldList->dataFieldByName("B"));
-		$this->assertEquals(1, $main->Fields()->Count());
+		$this->assertEquals(1, $main->Fields()->count());
 
 		/* Pushing fields on the end of the field set should remove them from the tab */
 		$thirdA = new TextField("A", "Third A");
@@ -582,7 +581,7 @@ class FieldListTest extends SapphireTest {
 		$this->assertSame($thirdA, $FieldList->fieldByName("A"));
 		$this->assertSame($thirdB, $FieldList->fieldByName("B"));
 
-		$this->assertEquals(0, $main->Fields()->Count());
+		$this->assertEquals(0, $main->Fields()->count());
 	}
 
 	public function testAddingFieldToNonExistentTabCreatesThatTab() {
@@ -597,7 +596,7 @@ class FieldListTest extends SapphireTest {
 		/* Add a field to a non-existent tab, and it will be created */
 		$FieldList->addFieldToTab("Root.Other", $b = new TextField("B"));
 		$this->assertNotNull($FieldList->fieldByName('Root')->fieldByName('Other'));
-		$this->assertSame($b, $FieldList->fieldByName('Root')->fieldByName('Other')->Fields()->First());
+		$this->assertSame($b, $FieldList->fieldByName('Root')->fieldByName('Other')->Fields()->first());
 	}
 
 	public function testAddingFieldToATabWithTheSameNameAsTheField() {
@@ -613,7 +612,7 @@ class FieldListTest extends SapphireTest {
 		 * allowed because tab isn't a data field.  Only duplicate data fields are problematic */
 		$FieldList->addFieldToTab("Root.MyName", $myName = new TextField("MyName"));
 		$this->assertNotNull($FieldList->fieldByName('Root')->fieldByName('MyName'));
-		$this->assertSame($myName, $FieldList->fieldByName('Root')->fieldByName('MyName')->Fields()->First());
+		$this->assertSame($myName, $FieldList->fieldByName('Root')->fieldByName('MyName')->Fields()->first());
 	}
 
 	public function testInsertBeforeWithNestedCompositeFields() {
@@ -634,8 +633,8 @@ class FieldListTest extends SapphireTest {
 		);
 
 		$FieldList->insertBefore(
-			$A_insertbefore = new TextField('A_insertbefore'),
-			'A'
+			'A',
+			$A_insertbefore = new TextField('A_insertbefore')
 		);
 		$this->assertSame(
 			$A_insertbefore,
@@ -644,8 +643,8 @@ class FieldListTest extends SapphireTest {
 		);
 
 		$FieldList->insertBefore(
-			$B_insertbefore = new TextField('B_insertbefore'),
-			'B'
+			'B',
+			$B_insertbefore = new TextField('B_insertbefore')
 		);
 		$this->assertSame(
 			$FieldList->dataFieldByName('B_insertbefore'),
@@ -654,8 +653,8 @@ class FieldListTest extends SapphireTest {
 		);
 
 		$FieldList->insertBefore(
-			$C_insertbefore = new TextField('C_insertbefore'),
-			'C'
+			'C',
+			$C_insertbefore = new TextField('C_insertbefore')
 		);
 		$this->assertSame(
 			$FieldList->dataFieldByName('C_insertbefore'),
@@ -681,8 +680,8 @@ class FieldListTest extends SapphireTest {
 			)
 		);
 		$tabSetA->insertBefore(
-			$A_insertbefore = new TextField('A_insertbefore'),
-			'A'
+			'A',
+			$A_insertbefore = new TextField('A_insertbefore')
 		);
 		$this->assertEquals(
 			$FieldListA->dataFieldByName('A_insertbefore'),
@@ -710,8 +709,8 @@ class FieldListTest extends SapphireTest {
 			)
 		);
 		$FieldListB->insertBefore(
-			$B_insertbefore = new TextField('B_insertbefore'),
-			'B'
+			'B',
+			$B_insertbefore = new TextField('B_insertbefore')
 		);
 		$this->assertSame(
 			$FieldListB->dataFieldByName('B_insertbefore'),
@@ -742,8 +741,8 @@ class FieldListTest extends SapphireTest {
 		);
 
 		$FieldList->insertAfter(
-			$A_insertafter = new TextField('A_insertafter'),
-			'A'
+			'A',
+			$A_insertafter = new TextField('A_insertafter')
 		);
 		$this->assertSame(
 			$A_insertafter,
@@ -752,8 +751,8 @@ class FieldListTest extends SapphireTest {
 		);
 
 		$FieldList->insertAfter(
-			$B_insertafter = new TextField('B_insertafter'),
-			'B'
+			'B',
+			$B_insertafter = new TextField('B_insertafter')
 		);
 		$this->assertSame(
 			$FieldList->dataFieldByName('B_insertafter'),
@@ -762,8 +761,8 @@ class FieldListTest extends SapphireTest {
 		);
 
 		$FieldList->insertAfter(
-			$C_insertafter = new TextField('C_insertafter'),
-			'C'
+			'C',
+			$C_insertafter = new TextField('C_insertafter')
 		);
 		$this->assertSame(
 			$FieldList->dataFieldByName('C_insertafter'),
@@ -789,8 +788,8 @@ class FieldListTest extends SapphireTest {
 			)
 		);
 		$tabSetA->insertAfter(
-			$A_insertafter = new TextField('A_insertafter'),
-			'A'
+			'A',
+			$A_insertafter = new TextField('A_insertafter')
 		);
 		$this->assertEquals(
 			$FieldListA->dataFieldByName('A_insertafter'),
@@ -817,8 +816,8 @@ class FieldListTest extends SapphireTest {
 			)
 		);
 		$FieldListB->insertAfter(
-			$B_insertafter = new TextField('B_insertafter'),
-			'B'
+			'B',
+			$B_insertafter = new TextField('B_insertafter')
 		);
 		$this->assertSame(
 			$FieldListB->dataFieldByName('B_insertafter'),
@@ -872,7 +871,7 @@ class FieldListTest extends SapphireTest {
 		$this->assertEquals(1, $set->fieldPosition('B'));
 		$this->assertEquals(2, $set->fieldPosition('C'));
 
-		$set->insertBefore(new TextField('AB'), 'B');
+		$set->insertBefore('B', new TextField('AB'));
 		$this->assertEquals(0, $set->fieldPosition('A'));
 		$this->assertEquals(1, $set->fieldPosition('AB'));
 		$this->assertEquals(2, $set->fieldPosition('B'));

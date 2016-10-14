@@ -1,10 +1,11 @@
 <?php
 
+namespace SilverStripe\Control\Tests;
+
 use SilverStripe\Control\Director;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTP;
-
 
 /**
  * Tests the {@link HTTP} class
@@ -329,7 +330,7 @@ class HTTPTest extends FunctionalTest {
 		$this->withBaseURL('http://www.silverstripe.org/', function($test) {
 			$frameworkTests = ltrim(FRAMEWORK_DIR . '/tests', '/');
 			$test->assertEquals(
-				"http://www.silverstripe.org/$frameworkTests/control/HTTPTest.php",
+				"http://www.silverstripe.org/$frameworkTests/php/Control/HTTPTest.php",
 				HTTP::filename2url(__FILE__)
 			);
 		});

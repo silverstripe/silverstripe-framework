@@ -1,40 +1,42 @@
 <?php
 
+namespace SilverStripe\Dev\Tests;
+
+use InvalidArgumentException;
+use SilverStripe\Dev\Tests\YamlFixtureTest\TestDataObject;
+use SilverStripe\Dev\Tests\YamlFixtureTest\DataObjectRelation;
+use SilverStripe\Dev\YamlFixture;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FixtureFactory;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Director;
-
-
-
 
 class YamlFixtureTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'YamlFixtureTest_DataObject',
-		'YamlFixtureTest_DataObjectRelation',
+		TestDataObject::class,
+		DataObjectRelation::class,
 	);
 
 	public function testAbsoluteFixturePath() {
-		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
-		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $absPath);
+		$absPath = __DIR__ . '/YamlFixtureTest.yml';
+		$obj = Injector::inst()->create(YamlFixture::class, $absPath);
 		$this->assertEquals($absPath, $obj->getFixtureFile());
 		$this->assertNull($obj->getFixtureString());
 	}
 
 	public function testRelativeFixturePath() {
-		$relPath = ltrim(FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml', '/');
-		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
+		$relPath = ltrim(FRAMEWORK_DIR . '/tests/php/Dev/YamlFixtureTest.yml', '/');
+		$obj = Injector::inst()->create(YamlFixture::class, $relPath);
 		$this->assertEquals(Director::baseFolder() . '/' . $relPath, $obj->getFixtureFile());
 		$this->assertNull($obj->getFixtureString());
 	}
 
 	public function testStringFixture() {
-		$absPath = FRAMEWORK_PATH . '/tests/testing/YamlFixtureTest.yml';
+		$absPath = __DIR__ . '/YamlFixtureTest.yml';
 		$string = file_get_contents($absPath);
-		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $string);
+		$obj = Injector::inst()->create(YamlFixture::class, $string);
 		$this->assertEquals($string, $obj->getFixtureString());
 		$this->assertNull($obj->getFixtureFile());
 	}
@@ -44,28 +46,28 @@ class YamlFixtureTest extends SapphireTest {
 	 */
 	public function testFailsWithInvalidFixturePath() {
 		$invalidPath = ltrim(FRAMEWORK_DIR . '/tests/testing/invalid.yml', '/');
-		$obj = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $invalidPath);
+		$obj = Injector::inst()->create(YamlFixture::class, $invalidPath);
 	}
 
 	public function testSQLInsert() {
 		$factory = new FixtureFactory();
-		$relPath = ltrim(FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml', '/');
-		$fixture = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
+		$absPath = __DIR__ . '/YamlFixtureTest.yml';
+		$fixture = Injector::inst()->create(YamlFixture::class, $absPath);
 		$fixture->writeInto($factory);
 
-		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject1"));
+		$this->assertGreaterThan(0, $factory->getId(TestDataObject::class, "testobject1"));
 		$object1 = DataObject::get_by_id(
-			"YamlFixtureTest_DataObject",
-			$factory->getId("YamlFixtureTest_DataObject", "testobject1")
+			TestDataObject::class,
+			$factory->getId(TestDataObject::class, "testobject1")
 		);
 		$this->assertTrue(
 			$object1->ManyManyRelation()->Count() == 2,
 			"Should be two items in this relationship"
 		);
-		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject2"));
+		$this->assertGreaterThan(0, $factory->getId(TestDataObject::class, "testobject2"));
 		$object2 = DataObject::get_by_id(
-			"YamlFixtureTest_DataObject",
-			$factory->getId("YamlFixtureTest_DataObject", "testobject2")
+			TestDataObject::class,
+			$factory->getId(TestDataObject::class, "testobject2")
 		);
 		$this->assertTrue(
 			$object2->ManyManyRelation()->Count() == 1,
@@ -74,30 +76,16 @@ class YamlFixtureTest extends SapphireTest {
 	}
 
 	public function testWriteInto() {
-		$factory = Injector::inst()->create('SilverStripe\\Dev\\FixtureFactory');
+		$factory = Injector::inst()->create(FixtureFactory::class);
 
-		$relPath = ltrim(FRAMEWORK_DIR . '/tests/testing/YamlFixtureTest.yml', '/');
-		$fixture = Injector::inst()->create('SilverStripe\\Dev\\YamlFixture', $relPath);
+		$absPath = __DIR__ . '/YamlFixtureTest.yml';
+		$fixture = Injector::inst()->create(YamlFixture::class, $absPath);
 		$fixture->writeInto($factory);
 
-		$this->assertGreaterThan(0, $factory->getId("YamlFixtureTest_DataObject", "testobject1"));
+		$this->assertGreaterThan(
+			0,
+			$factory->getId(TestDataObject::class, "testobject1")
+		);
 	}
 }
 
-class YamlFixtureTest_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
-		"Name" => "Varchar"
-	);
-	private static $many_many = array(
-		"ManyManyRelation" => "YamlFixtureTest_DataObjectRelation"
-	);
-}
-
-class YamlFixtureTest_DataObjectRelation extends DataObject implements TestOnly {
-	private static $db = array(
-		"Name" => "Varchar"
-	);
-	private static $belongs_many_many = array(
-		"TestParent" => "YamlFixtureTest_DataObject"
-	);
-}

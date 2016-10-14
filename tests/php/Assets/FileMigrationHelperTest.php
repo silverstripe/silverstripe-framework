@@ -1,14 +1,15 @@
 <?php
 
-use SilverStripe\ORM\DataExtension;
+namespace SilverStripe\Assets\Tests;
+
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Assets\FileMigrationHelper;
+use SilverStripe\Assets\Folder;
+use SilverStripe\Assets\Tests\FileMigrationHelperTest\Extension;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
-
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
 /**
  * Ensures that File dataobjects can be safely migrated from 3.x
@@ -18,8 +19,8 @@ class FileMigrationHelperTest extends SapphireTest {
 	protected static $fixture_file = 'FileMigrationHelperTest.yml';
 
 	protected $requiredExtensions = array(
-		"SilverStripe\\Assets\\File" => array(
-			"FileMigrationHelperTest_Extension"
+		File::class => array(
+			Extension::class
 		)
 	);
 
@@ -36,23 +37,23 @@ class FileMigrationHelperTest extends SapphireTest {
 
 	public function setUp() {
 		Config::nest(); // additional nesting here necessary
-		Config::inst()->update('SilverStripe\\Assets\\File', 'migrate_legacy_file', false);
+		Config::inst()->update(File::class, 'migrate_legacy_file', false);
 		parent::setUp();
 
 		// Set backend root to /FileMigrationHelperTest/assets
-		AssetStoreTest_SpyStore::activate('FileMigrationHelperTest/assets');
+		TestAssetStore::activate('FileMigrationHelperTest/assets');
 
 		// Ensure that each file has a local record file in this new assets base
-		$from = FRAMEWORK_PATH . '/tests/model/testimages/test-image-low-quality.jpg';
-		foreach(File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder') as $file) {
-			$dest = AssetStoreTest_SpyStore::base_path() . '/' . $file->generateFilename();
+		$from = FRAMEWORK_PATH . '/tests/php/ORM/testimages/test-image-low-quality.jpg';
+		foreach(File::get()->exclude('ClassName', Folder::class) as $file) {
+			$dest = TestAssetStore::base_path() . '/' . $file->generateFilename();
 			Filesystem::makeFolder(dirname($dest));
 			copy($from, $dest);
 		}
 	}
 
 	public function tearDown() {
-		AssetStoreTest_SpyStore::reset();
+		TestAssetStore::reset();
 		Filesystem::removeFolder($this->getBasePath());
 		parent::tearDown();
 		Config::unnest();
@@ -63,7 +64,7 @@ class FileMigrationHelperTest extends SapphireTest {
 	 */
 	public function testMigration() {
 		// Prior to migration, check that each file has empty Filename / Hash properties
-		foreach(File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder') as $file) {
+		foreach(File::get()->exclude('ClassName', Folder::class) as $file) {
 			$filename = $file->generateFilename();
 			$this->assertNotEmpty($filename, "File {$file->Name} has a filename");
 			$this->assertEmpty($file->File->getFilename(), "File {$file->Name} has no DBFile filename");
@@ -78,7 +79,7 @@ class FileMigrationHelperTest extends SapphireTest {
 		$this->assertEquals(5, $result);
 
 		// Test that each file exists
-		foreach(File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder') as $file) {
+		foreach(File::get()->exclude('ClassName', Folder::class) as $file) {
 			$expectedFilename = $file->generateFilename();
 			$filename = $file->File->getFilename();
 			$this->assertTrue($file->exists(), "File with name {$filename} exists");
@@ -93,21 +94,4 @@ class FileMigrationHelperTest extends SapphireTest {
 		}
 	}
 
-}
-
-/**
- * @property File $owner
- */
-class FileMigrationHelperTest_Extension extends DataExtension implements TestOnly {
-	/**
-	 * Ensure that File dataobject has the legacy "Filename" field
-	 */
-	private static $db = array(
-		"Filename" => "Text",
-	);
-
-	public function onBeforeWrite() {
-		// Ensure underlying filename field is written to the database
-		$this->owner->setField('Filename', 'assets/' . $this->owner->generateFilename());
-	}
 }

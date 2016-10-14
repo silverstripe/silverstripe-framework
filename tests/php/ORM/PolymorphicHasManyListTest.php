@@ -1,6 +1,12 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\Tests\DataObjectTest\Fan;
+use SilverStripe\ORM\Tests\DataObjectTest\Team;
+
 
 /**
  * Tests the PolymorphicHasManyList class
@@ -24,7 +30,7 @@ class PolymorphicHasManyListTest extends SapphireTest {
 
 	public function testRelationshipEmptyOnNewRecords() {
 		// Relies on the fact that (unrelated) comments exist in the fixture file already
-		$newTeam = new DataObjectTest_Team(); // has_many Comments
+		$newTeam = new Team(); // has_many Comments
 		$this->assertEquals(array(), $newTeam->Fans()->column('ID'));
 	}
 
@@ -34,7 +40,7 @@ class PolymorphicHasManyListTest extends SapphireTest {
 	public function testFilterRelation() {
 
 		// Check that expected teams exist
-		$list = DataObjectTest_Team::get();
+		$list = Team::get();
 		$this->assertEquals(
 			array('Subteam 1', 'Subteam 2', 'Subteam 3', 'Team 1', 'Team 2', 'Team 3'),
 			$list->sort('Title')->column('Title')
@@ -47,15 +53,15 @@ class PolymorphicHasManyListTest extends SapphireTest {
 		// Modify list of fans and retest
 		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
 		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
-		$newFan1 = DataObjectTest_Fan::create();
+		$newFan1 = Fan::create();
 		$newFan1->Name = 'Bobby';
 		$newFan1->write();
-		$newFan2 = DataObjectTest_Fan::create();
+		$newFan2 = Fan::create();
 		$newFan2->Name = 'Mindy';
 		$newFan2->write();
 		$team1->Fans()->add($newFan1);
 		$subteam1->Fans()->add($newFan2);
-		$fans = DataObjectTest_Team::get()->relation('Fans');
+		$fans = Team::get()->relation('Fans');
 		$this->assertEquals(array('Bobby', 'Damian', 'Richard'), $team1->Fans()->sort('Name')->column('Name'));
 		$this->assertEquals(array('Mindy', 'Mitch'), $subteam1->Fans()->sort('Name')->column('Name'));
 		$this->assertEquals(array('Bobby', 'Damian', 'Mindy', 'Mitch', 'Richard'), $fans->sort('Name')->column('Name'));
@@ -67,7 +73,7 @@ class PolymorphicHasManyListTest extends SapphireTest {
 	public function testRemoveRelation() {
 
 		// Check that expected teams exist
-		$list = DataObjectTest_Team::get();
+		$list = Team::get();
 		$this->assertEquals(
 			array('Subteam 1', 'Subteam 2', 'Subteam 3', 'Team 1', 'Team 2', 'Team 3'),
 			$list->sort('Title')->column('Title')

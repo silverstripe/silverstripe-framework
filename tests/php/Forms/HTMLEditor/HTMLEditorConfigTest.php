@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Forms\Tests\HTMLEditor;
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
@@ -7,34 +9,34 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 
+class HTMLEditorConfigTest extends SapphireTest
+{
 
-/**
- * @package framework
- * @subpackage tests
- */
-class HTMLEditorConfigTest extends SapphireTest {
-
-	public function testEnablePluginsByString() {
+	public function testEnablePluginsByString()
+	{
 		$c = new TinyMCEConfig();
 		$c->enablePlugins('plugin1');
 		$this->assertContains('plugin1', array_keys($c->getPlugins()));
 	}
 
-	public function testEnablePluginsByArray() {
+	public function testEnablePluginsByArray()
+	{
 		$c = new TinyMCEConfig();
 		$c->enablePlugins(array('plugin1', 'plugin2'));
 		$this->assertContains('plugin1', array_keys($c->getPlugins()));
 		$this->assertContains('plugin2', array_keys($c->getPlugins()));
 	}
 
-	public function testEnablePluginsByMultipleStringParameters() {
+	public function testEnablePluginsByMultipleStringParameters()
+	{
 		$c = new TinyMCEConfig();
 		$c->enablePlugins('plugin1', 'plugin2');
 		$this->assertContains('plugin1', array_keys($c->getPlugins()));
 		$this->assertContains('plugin2', array_keys($c->getPlugins()));
 	}
 
-	public function testEnablePluginsByArrayWithPaths() {
+	public function testEnablePluginsByArrayWithPaths()
+	{
 		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', 'http://mysite.com/subdir');
 		$c = new TinyMCEConfig();
 		$c->setTheme('modern');
@@ -98,14 +100,16 @@ class HTMLEditorConfigTest extends SapphireTest {
 		);
 	}
 
-	public function testDisablePluginsByString() {
+	public function testDisablePluginsByString()
+	{
 		$c = new TinyMCEConfig();
 		$c->enablePlugins('plugin1');
 		$c->disablePlugins('plugin1');
 		$this->assertNotContains('plugin1', array_keys($c->getPlugins()));
 	}
 
-	public function testDisablePluginsByArray() {
+	public function testDisablePluginsByArray()
+	{
 		$c = new TinyMCEConfig();
 		$c->enablePlugins(array('plugin1', 'plugin2'));
 		$c->disablePlugins(array('plugin1', 'plugin2'));
@@ -113,7 +117,8 @@ class HTMLEditorConfigTest extends SapphireTest {
 		$this->assertNotContains('plugin2', array_keys($c->getPlugins()));
 	}
 
-	public function testDisablePluginsByMultipleStringParameters() {
+	public function testDisablePluginsByMultipleStringParameters()
+	{
 		$c = new TinyMCEConfig();
 		$c->enablePlugins('plugin1', 'plugin2');
 		$c->disablePlugins('plugin1', 'plugin2');
@@ -121,7 +126,8 @@ class HTMLEditorConfigTest extends SapphireTest {
 		$this->assertNotContains('plugin2', array_keys($c->getPlugins()));
 	}
 
-	public function testDisablePluginsByArrayWithPaths() {
+	public function testDisablePluginsByArrayWithPaths()
+	{
 		$c = new TinyMCEConfig();
 		$c->enablePlugins(array('plugin1' => '/mypath/plugin1', 'plugin2' => '/mypath/plugin2'));
 		$c->disablePlugins(array('plugin1', 'plugin2'));
@@ -130,7 +136,8 @@ class HTMLEditorConfigTest extends SapphireTest {
 		$this->assertNotContains('plugin2', array_keys($plugins));
 	}
 
-	public function testRequireJSIncludesAllConfigs() {
+	public function testRequireJSIncludesAllConfigs()
+	{
 		$a = HTMLEditorConfig::get('configA');
 		$c = HTMLEditorConfig::get('configB');
 

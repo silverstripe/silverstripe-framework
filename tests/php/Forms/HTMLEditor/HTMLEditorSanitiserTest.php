@@ -1,17 +1,17 @@
 <?php
 
+namespace SilverStripe\Forms\Tests\HTMLEditor;
+
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorSanitiser;
 
-/**
- * @package framework
- * @subpackage tests
- */
-class HTMLEditorSanitiserTest extends FunctionalTest {
+class HTMLEditorSanitiserTest extends FunctionalTest
+{
 
-	public function testSanitisation() {
+	public function testSanitisation()
+	{
 		$tests = array(
 			array(
 				'p,strong',
@@ -47,7 +47,7 @@ class HTMLEditorSanitiserTest extends FunctionalTest {
 
 		$config = HTMLEditorConfig::get('htmleditorsanitisertest');
 
-		foreach($tests as $test) {
+		foreach ($tests as $test) {
 			list($validElements, $input, $output, $desc) = $test;
 
 			$config->setOptions(array('valid_elements' => $validElements));

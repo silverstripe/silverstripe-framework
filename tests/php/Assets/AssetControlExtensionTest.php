@@ -1,15 +1,15 @@
 <?php
+
+namespace SilverStripe\Assets\Tests;
+
 use SilverStripe\Assets\Storage\AssetStore;
+use SilverStripe\Assets\Tests\AssetControlExtensionTest\ArchivedObject;
+use SilverStripe\Assets\Tests\AssetControlExtensionTest\TestObject;
+use SilverStripe\Assets\Tests\AssetControlExtensionTest\VersionedObject;
 use SilverStripe\ORM\Versioning\Versioned;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
-
-
-
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
 /**
  * Tests {@see AssetControlExtension}
@@ -17,8 +17,8 @@ use SilverStripe\Dev\TestOnly;
 class AssetControlExtensionTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'AssetControlExtensionTest_VersionedObject',
-		'AssetControlExtensionTest_Object'
+		VersionedObject::class,
+		TestObject::class
 	);
 
 	public function setUp() {
@@ -26,24 +26,24 @@ class AssetControlExtensionTest extends SapphireTest {
 
 		// Set backend and base url
 		Versioned::set_stage(Versioned::DRAFT);
-		AssetStoreTest_SpyStore::activate('AssetControlExtensionTest');
+		TestAssetStore::activate('AssetControlExtensionTest');
 		$this->logInWithPermission('ADMIN');
 
 		// Setup fixture manually
-		$object1 = new AssetControlExtensionTest_VersionedObject();
+		$object1 = new AssetControlExtensionTest\VersionedObject();
 		$object1->Title = 'My object';
-		$fish1 = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish1 = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
 		$object1->Header->setFromLocalFile($fish1, 'Header/MyObjectHeader.jpg');
 		$object1->Download->setFromString('file content', 'Documents/File.txt');
 		$object1->write();
 		$object1->publishSingle();
 
-		$object2 = new AssetControlExtensionTest_Object();
+		$object2 = new AssetControlExtensionTest\TestObject();
 		$object2->Title = 'Unversioned';
 		$object2->Image->setFromLocalFile($fish1, 'Images/BeautifulFish.jpg');
 		$object2->write();
 
-		$object3 = new AssetControlExtensionTest_ArchivedObject();
+		$object3 = new AssetControlExtensionTest\ArchivedObject();
 		$object3->Title = 'Archived';
 		$object3->Header->setFromLocalFile($fish1, 'Archived/MyObjectHeader.jpg');
 		$object3->write();
@@ -51,24 +51,24 @@ class AssetControlExtensionTest extends SapphireTest {
 	}
 
 	public function tearDown() {
-		AssetStoreTest_SpyStore::reset();
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
 	public function testFileDelete() {
 		Versioned::set_stage(Versioned::DRAFT);
 
-		/** @var AssetControlExtensionTest_VersionedObject $object1 */
-		$object1 = AssetControlExtensionTest_VersionedObject::get()
+		/** @var \SilverStripe\Assets\Tests\AssetControlExtensionTest\VersionedObject $object1 */
+		$object1 = AssetControlExtensionTest\VersionedObject::get()
 				->filter('Title', 'My object')
 				->first();
-		/** @var AssetControlExtensionTest_Object $object2 */
-		$object2 = AssetControlExtensionTest_Object::get()
+		/** @var Object $object2 */
+		$object2 = AssetControlExtensionTest\TestObject::get()
 				->filter('Title', 'Unversioned')
 				->first();
 
-		/** @var AssetControlExtensionTest_ArchivedObject $object3 */
-		$object3 = AssetControlExtensionTest_ArchivedObject::get()
+		/** @var \SilverStripe\Assets\Tests\AssetControlExtensionTest\ArchivedObject $object3 */
+		$object3 = AssetControlExtensionTest\ArchivedObject::get()
 				->filter('Title', 'Archived')
 				->first();
 
@@ -82,10 +82,10 @@ class AssetControlExtensionTest extends SapphireTest {
 		$this->assertEquals(AssetStore::VISIBILITY_PUBLIC, $object3->Header->getVisibility());
 
 		// Check live stage for versioned objects
-		$object1Live = Versioned::get_one_by_stage('AssetControlExtensionTest_VersionedObject', 'Live',
+		$object1Live = Versioned::get_one_by_stage(VersionedObject::class, 'Live',
 			array('"ID"' => $object1->ID)
 		);
-		$object3Live = Versioned::get_one_by_stage('AssetControlExtensionTest_ArchivedObject', 'Live',
+		$object3Live = Versioned::get_one_by_stage(ArchivedObject::class, 'Live',
 			array('"ID"' => $object3->ID)
 		);
 		$this->assertTrue($object1Live->Download->exists());
@@ -132,17 +132,17 @@ class AssetControlExtensionTest extends SapphireTest {
 	public function testReplaceFile() {
 		Versioned::set_stage(Versioned::DRAFT);
 
-		/** @var AssetControlExtensionTest_VersionedObject $object1 */
-		$object1 = AssetControlExtensionTest_VersionedObject::get()
+		/** @var \SilverStripe\Assets\Tests\AssetControlExtensionTest\VersionedObject $object1 */
+		$object1 = AssetControlExtensionTest\VersionedObject::get()
 				->filter('Title', 'My object')
 				->first();
-		/** @var AssetControlExtensionTest_Object $object2 */
-		$object2 = AssetControlExtensionTest_Object::get()
+		/** @var Object $object2 */
+		$object2 = AssetControlExtensionTest\TestObject::get()
 				->filter('Title', 'Unversioned')
 				->first();
 
-		/** @var AssetControlExtensionTest_ArchivedObject $object3 */
-		$object3 = AssetControlExtensionTest_ArchivedObject::get()
+		/** @var \SilverStripe\Assets\Tests\AssetControlExtensionTest\ArchivedObject $object3 */
+		$object3 = AssetControlExtensionTest\ArchivedObject::get()
 				->filter('Title', 'Archived')
 				->first();
 
@@ -151,7 +151,7 @@ class AssetControlExtensionTest extends SapphireTest {
 		$object3TupleOld = $object3->Header->getValue();
 
 		// Replace image and write each to filesystem
-		$fish1 = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish1 = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
 		$object1->Header->setFromLocalFile($fish1, 'Header/Replaced_MyObjectHeader.jpg');
 		$object1->write();
 		$object2->Image->setFromLocalFile($fish1, 'Images/Replaced_BeautifulFish.jpg');
@@ -206,72 +206,4 @@ class AssetControlExtensionTest extends SapphireTest {
 		return Injector::inst()->get('AssetStore');
 	}
 
-}
-
-/**
- * Versioned object with attached assets
- *
- * @property string $Title
- * @property DBFile $Header
- * @property DBFile $Download
- * @mixin Versioned
- */
-class AssetControlExtensionTest_VersionedObject extends DataObject implements TestOnly {
-	private static $extensions = array(
-		'SilverStripe\\ORM\\Versioning\\Versioned'
-	);
-
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-		'Header' => "DBFile('image/supported')",
-		'Download' => 'DBFile'
-	);
-
-	/**
-	 * @param Member $member
-	 * @return bool
-	 */
-	public function canView($member = null) {
-		if(!$member) {
-			$member = Member::currentUser();
-		}
-
-		// Expectation that versioned::canView will hide this object in draft
-		$result = $this->extendedCan('canView', $member);
-		if($result !== null) {
-			return $result;
-		}
-
-		// Open to public
-		return true;
-	}
-}
-
-/**
- * A basic unversioned object
- *
- * @property string $Title
- * @property DBFile $Image
- */
-class AssetControlExtensionTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-		'Image' => "DBFile('image/supported')"
-	);
-
-
-	/**
-	 * @param Member $member
-	 * @return bool
-	 */
-	public function canView($member = null) {
-		return true;
-	}
-}
-
-/**
- * Versioned object that always archives its assets
- */
-class AssetControlExtensionTest_ArchivedObject extends AssetControlExtensionTest_VersionedObject {
-	private static $keep_archived_assets = true;
 }

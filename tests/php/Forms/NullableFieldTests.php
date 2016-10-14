@@ -1,15 +1,15 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\NullableField;
 
 /**
  * Tests the NullableField form field class.
- * @package framework
- * @subpackage tests
- * @author Pete Bacon Darwin
  *
+ * @author Pete Bacon Darwin
  */
 class NullableFieldTests extends SapphireTest {
 

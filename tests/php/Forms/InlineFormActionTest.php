@@ -1,8 +1,9 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\InlineFormAction;
-
 
 /**
  * Tests {@see InlineFormAction}

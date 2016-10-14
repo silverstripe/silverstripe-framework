@@ -1,6 +1,7 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
+namespace SilverStripe\Forms\Tests\GridField;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
@@ -9,16 +10,12 @@ use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridField;
-
-
-
-
-
+use SilverStripe\Forms\Tests\GridField\GridFieldPrintButtonTest\TestObject;
 
 class GridFieldPrintButtonTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'GridFieldPrintButtonTest_DO'
+		TestObject::class
 	);
 
 	public function setUp() {
@@ -26,14 +23,14 @@ class GridFieldPrintButtonTest extends SapphireTest {
 
 		// 42 items
 		for($i = 1; $i <= 42; $i++) {
-			$obj = new GridFieldPrintButtonTest_DO();
+			$obj = new TestObject();
 			$obj->Name = "Object {$i}";
 			$obj->write();
 		}
 	}
 
 	public function testLimit() {
-		$list = GridFieldPrintButtonTest_DO::get();
+		$list = TestObject::get();
 
 		$button = new GridFieldPrintButton();
 		$button->setPrintColumns(array('Name' => 'My Name'));
@@ -45,17 +42,11 @@ class GridFieldPrintButtonTest extends SapphireTest {
 		$gridField = new GridField('testfield', 'testfield', $list, $config);
 		$controller = new Controller();
 		/** @skipUpgrade */
-		$form = new Form($controller, 'Form', new FieldList($gridField), new FieldList());
+		new Form($controller, 'Form', new FieldList($gridField), new FieldList());
 
 		// Printed data should ignore pagination limit
 		$printData = $button->generatePrintData($gridField);
 		$rows = $printData->ItemRows;
 		$this->assertEquals(42, $rows->count());
 	}
-}
-
-class GridFieldPrintButtonTest_DO extends DataObject {
-	private static $db = array(
-		'Name' => 'Varchar'
-	);
 }

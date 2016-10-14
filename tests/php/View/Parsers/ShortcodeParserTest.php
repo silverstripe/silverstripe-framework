@@ -1,12 +1,10 @@
 <?php
 
+namespace SilverStripe\View\Tests\Parsers;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class ShortcodeParserTest extends SapphireTest {
 
 	protected $arguments, $contents, $tagName, $parser;

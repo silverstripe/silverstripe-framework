@@ -1,73 +1,41 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
+namespace SilverStripe\View\Tests;
+
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\Core\Cache;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
 use SilverStripe\View\SSViewer;
 
-
-
-
-
 // Not actually a data object, we just want a ViewableData object that's just for us
-class SSViewerCacheBlockTest_Model extends DataObject implements TestOnly {
-
-	public function Test($arg = null) {
-		return $this;
-	}
-
-	public function Foo() {
-		return 'Bar';
-	}
-
-	public function True() {
-		return true;
-	}
-
-	public function False() {
-		return false;
-	}
-}
-
-class SSViewerCacheBlockTest_VersionedModel extends DataObject implements TestOnly {
-
-	protected $entropy = 'default';
-
-	private static $extensions = array(
-		"SilverStripe\\ORM\\Versioning\\Versioned('Stage', 'Live')"
-	);
-
-	public function setEntropy($entropy) {
-		$this->entropy = $entropy;
-	}
-
-	public function Inspect() {
-		return $this->entropy . ' ' . Versioned::get_reading_mode();
-	}
-}
 
 class SSViewerCacheBlockTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'SSViewerCacheBlockTest_Model',
-		'SSViewerCacheBlockTest_VersionedModel'
+		SSViewerCacheBlockTest\TestModel::class,
+		SSViewerCacheBlockTest\VersionedModel::class
 	);
 
+	/**
+	 * @var SSViewerCacheBlockTest\TestModel
+	 */
 	protected $data = null;
 
 	protected function _reset($cacheOn = true) {
-		$this->data = new SSViewerCacheBlockTest_Model();
+		$this->data = new SSViewerCacheBlockTest\TestModel();
 
 		Cache::factory('cacheblock')->clean();
 		Cache::set_cache_lifetime('cacheblock', $cacheOn ? 600 : -1);
 	}
 
 	protected function _runtemplate($template, $data = null) {
-		if ($data === null) $data = $this->data;
-		if (is_array($data)) $data = $this->data->customise($data);
+		if ($data === null) {
+			$data = $this->data;
+		}
+		if (is_array($data)) {
+			$data = $this->data->customise($data);
+		}
 
 		return SSViewer::execute_string($template, $data);
 	}
@@ -161,13 +129,13 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		// Run without caching in stage to prove data is uncached
 		$this->_reset(false);
 		Versioned::set_stage(Versioned::DRAFT);
-		$data = new SSViewerCacheBlockTest_VersionedModel();
+		$data = new SSViewerCacheBlockTest\VersionedModel();
 		$data->setEntropy('default');
 		$this->assertEquals(
 			'default Stage.Stage',
 			SSViewer::execute_string('<% cached %>$Inspect<% end_cached %>', $data)
 		);
-		$data = new SSViewerCacheBlockTest_VersionedModel();
+		$data = new SSViewerCacheBlockTest\VersionedModel();
 		$data->setEntropy('first');
 		$this->assertEquals(
 			'first Stage.Stage',
@@ -177,13 +145,13 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		// Run without caching in live to prove data is uncached
 		$this->_reset(false);
 		Versioned::set_stage(Versioned::LIVE);
-		$data = new SSViewerCacheBlockTest_VersionedModel();
+		$data = new SSViewerCacheBlockTest\VersionedModel();
 		$data->setEntropy('default');
 		$this->assertEquals(
 			'default Stage.Live',
 			$this->_runtemplate('<% cached %>$Inspect<% end_cached %>', $data)
 		);
-		$data = new SSViewerCacheBlockTest_VersionedModel();
+		$data = new SSViewerCacheBlockTest\VersionedModel();
 		$data->setEntropy('first');
 		$this->assertEquals(
 			'first Stage.Live',
@@ -195,13 +163,13 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		// within them
 		$this->_reset(true);
 		Versioned::set_stage(Versioned::DRAFT);
-		$data = new SSViewerCacheBlockTest_VersionedModel();
+		$data = new SSViewerCacheBlockTest\VersionedModel();
 		$data->setEntropy('default');
 		$this->assertEquals(
 			'default Stage.Stage',
 			$this->_runtemplate('<% cached %>$Inspect<% end_cached %>', $data)
 		);
-		$data = new SSViewerCacheBlockTest_VersionedModel();
+		$data = new SSViewerCacheBlockTest\VersionedModel();
 		$data->setEntropy('first');
 		$this->assertEquals(
 			'default Stage.Stage', // entropy should be ignored due to caching
@@ -209,13 +177,13 @@ class SSViewerCacheBlockTest extends SapphireTest {
 		);
 
 		Versioned::set_stage(Versioned::LIVE);
-		$data = new SSViewerCacheBlockTest_VersionedModel();
+		$data = new SSViewerCacheBlockTest\VersionedModel();
 		$data->setEntropy('first');
 		$this->assertEquals(
 			'first Stage.Live', // First hit in live, so display current entropy
 			$this->_runtemplate('<% cached %>$Inspect<% end_cached %>', $data)
 		);
-		$data = new SSViewerCacheBlockTest_VersionedModel();
+		$data = new SSViewerCacheBlockTest\VersionedModel();
 		$data->setEntropy('second');
 		$this->assertEquals(
 			'first Stage.Live', // entropy should be ignored due to caching
@@ -330,7 +298,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException SilverStripe\View\SSTemplateParseException
+     * @expectedException \SilverStripe\View\SSTemplateParseException
      */
 	public function testErrorMessageForCachedWithinControlWithinCached() {
 		$this->_reset(true);
@@ -345,7 +313,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException SilverStripe\View\SSTemplateParseException
+     * @expectedException \SilverStripe\View\SSTemplateParseException
      */
 	public function testErrorMessageForCachedWithinIf() {
 		$this->_reset(true);
@@ -353,7 +321,7 @@ class SSViewerCacheBlockTest extends SapphireTest {
 	}
 
 	/**
-     * @expectedException SilverStripe\View\SSTemplateParseException
+     * @expectedException \SilverStripe\View\SSTemplateParseException
      */
 	public function testErrorMessageForInvalidConditional() {
 		$this->_reset(true);

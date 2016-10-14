@@ -1,34 +1,37 @@
 <?php
 
+namespace SilverStripe\Forms\Tests\GridField;
+
+use SilverStripe\Forms\Tests\GridField\GridFieldAddExistingAutocompleterTest\TestController;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
-use SilverStripe\Control\Controller;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldAddExistingAutocompleter;
-use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\Forms\GridField\GridField;
-
-
-
-
 
 class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GridFieldTest.yml';
 
-	protected $extraDataObjects = array('GridFieldTest_Team', 'GridFieldTest_Player', 'GridFieldTest_Cheerleader');
+	protected $extraDataObjects = [
+		Team::class,
+		Cheerleader::class,
+		Player::class,
+		Permissions::class
+	];
+
+	protected $extraControllers = [
+		TestController::class
+	];
 
 	function testScaffoldSearchFields() {
 		$autoCompleter = new GridFieldAddExistingAutocompleter($targetFragment = 'before', array('Test'));
-		$gridFieldTest_Team = GridFieldTest_Team::singleton();
 		$this->assertEquals(
-			$autoCompleter->scaffoldSearchFields('GridFieldTest_Team'),
+			$autoCompleter->scaffoldSearchFields(Team::class),
 			array(
 				'Name:PartialMatch',
 				'City:StartsWith',
@@ -36,7 +39,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 			)
 		);
 		$this->assertEquals(
-			$autoCompleter->scaffoldSearchFields('GridFieldTest_Cheerleader'),
+			$autoCompleter->scaffoldSearchFields(Cheerleader::class),
 			array(
 				'Name:StartsWith'
 			)
@@ -44,8 +47,7 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 	}
 
 	function testSearch() {
-		$team1 = $this->objFromFixture('GridFieldTest_Team', 'team1');
-		$team2 = $this->objFromFixture('GridFieldTest_Team', 'team2');
+		$team2 = $this->objFromFixture(Team::class, 'team2');
 
 		$response = $this->get('GridFieldAddExistingAutocompleterTest_Controller');
 		$this->assertFalse($response->isError());
@@ -87,8 +89,8 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 
 	public function testAdd() {
 		$this->logInWithPermission('ADMIN');
-		$team1 = $this->objFromFixture('GridFieldTest_Team', 'team1');
-		$team2 = $this->objFromFixture('GridFieldTest_Team', 'team2');
+		$team1 = $this->objFromFixture(Team::class, 'team1');
+		$team2 = $this->objFromFixture(Team::class, 'team2');
 
 		$response = $this->get('GridFieldAddExistingAutocompleterTest_Controller');
 		$this->assertFalse($response->isError());
@@ -114,26 +116,5 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest {
 			array('ID' => (int)$items[1]['data-id']),
 		), new ArrayList(array($team1, $team2)));
 
-	}
-
-}
-
-/**
- * @skipUpgrade
- */
-class GridFieldAddExistingAutocompleterTest_Controller extends Controller implements TestOnly {
-
-	private static $allowed_actions = array('Form');
-
-	protected $template = 'BlankPage';
-
-	public function Form() {
-		$player = GridFieldTest_Player::get()->find('Email', 'player1@test.com');
-		$config = GridFieldConfig::create()->addComponents(
-			$relationComponent = new GridFieldAddExistingAutocompleter('before'),
-			new GridFieldDataColumns()
-		);
-		$field = new GridField('testfield', 'testfield', $player->Teams(), $config);
-		return new Form($this, 'Form', new FieldList($field), new FieldList());
 	}
 }

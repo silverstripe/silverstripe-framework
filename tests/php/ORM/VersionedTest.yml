@@ -1,4 +1,4 @@
-VersionedTest_DataObject:
+SilverStripe\ORM\Tests\VersionedTest\TestObject:
   page1:
     Title: Page 1
   page2:
@@ -6,31 +6,31 @@ VersionedTest_DataObject:
   page3:
     Title: Page 3
   page2a:
-    Parent: =>VersionedTest_DataObject.page2
+    Parent: =>SilverStripe\ORM\Tests\VersionedTest\TestObject.page2
     Title: Page 2a
   page2b:
-    Parent: =>VersionedTest_DataObject.page2
+    Parent: =>SilverStripe\ORM\Tests\VersionedTest\TestObject.page2
     Title: Page 2b
   page3a:
-    Parent: =>VersionedTest_DataObject.page3
+    Parent: =>SilverStripe\ORM\Tests\VersionedTest\TestObject.page3
     Title: Page 3a
   page3b:
-    Parent: =>VersionedTest_DataObject.page3
+    Parent: =>SilverStripe\ORM\Tests\VersionedTest\TestObject.page3
     Title: Page 3b
 
-VersionedTest_PublicStage:
+SilverStripe\ORM\Tests\VersionedTest\PublicStage:
   public1:
     Title: 'Some page'
 
-VersionedTest_PublicViaExtension:
+SilverStripe\ORM\Tests\VersionedTest\PublicViaExtension:
   public2:
     Title: 'Another page'
 
-VersionedTest_AnotherSubclass:
+SilverStripe\ORM\Tests\VersionedTest\AnotherSubclass:
   subclass1:
     Title: 'Subclass Page 1'
     AnotherField: 'Bob'
 
-VersionedTest_SingleStage:
+SilverStripe\ORM\Tests\VersionedTest\SingleStage:
   single:
     Title: 'Singlestage Title'

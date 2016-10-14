@@ -1,42 +1,36 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
+namespace SilverStripe\Forms\Tests\GridField;
+
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\RequiredFields;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
-use SilverStripe\Forms\CheckboxField;
-use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
-use SilverStripe\Forms\GridField\GridFieldConfig_RelationEditor;
-use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\Forms\GridField\GridFieldAddNewButton;
-use SilverStripe\Forms\GridField\GridFieldViewButton;
-use SilverStripe\Forms\GridField\GridFieldEditButton;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\CategoryController;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\TestController;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\GroupController;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup;
+use SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person;
 
-
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class GridFieldDetailFormTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GridFieldDetailFormTest.yml';
 
 	protected $extraDataObjects = array(
-		'GridFieldDetailFormTest_Person',
-		'GridFieldDetailFormTest_PeopleGroup',
-		'GridFieldDetailFormTest_Category',
+		Person::class,
+		PeopleGroup::class,
+		Category::class,
 	);
+
+	protected $extraControllers = [
+		CategoryController::class,
+		TestController::class,
+		GroupController::class,
+	];
 
 	public function testValidator() {
 		$this->logInWithPermission('ADMIN');
@@ -82,7 +76,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 	public function testAddForm() {
 		$this->logInWithPermission('ADMIN');
-		$group = GridFieldDetailFormTest_PeopleGroup::get()
+		$group = PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -111,7 +105,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$group = GridFieldDetailFormTest_PeopleGroup::get()
+		$group = PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -140,7 +134,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 
 	public function testEditForm() {
 		$this->logInWithPermission('ADMIN');
-		$group = GridFieldDetailFormTest_PeopleGroup::get()
+		$group = PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -170,7 +164,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$group = GridFieldDetailFormTest_PeopleGroup::get()
+		$group = PeopleGroup::get()
 			->filter('Name', 'My Group')
 			->sort('Name')
 			->First();
@@ -203,10 +197,10 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$person = Person::get()->sort('FirstName')->First();
 		$favouriteGroup = $person->FavouriteGroups()->first();
 
-		$this->assertInstanceOf('GridFieldDetailFormTest_PeopleGroup', $favouriteGroup);
+		$this->assertInstanceOf(PeopleGroup::class, $favouriteGroup);
 	}
 
 	public function testEditFormWithManyManyExtraData() {
@@ -244,7 +238,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$person = Person::get()->sort('FirstName')->First();
 		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
 		$this->assertEquals(
 			array(
@@ -267,7 +261,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 		);
 		$this->assertFalse($response->isError());
 
-		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
+		$person = Person::get()->sort('FirstName')->First();
 		$category = $person->Categories()->filter(array('Name' => 'Updated Category'))->First();
 		$this->assertEquals(
 			array(
@@ -281,7 +275,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 	public function testNestedEditForm() {
 		$this->logInWithPermission('ADMIN');
 
-		$group = $this->objFromFixture('GridFieldDetailFormTest_PeopleGroup', 'group');
+		$group = $this->objFromFixture(PeopleGroup::class, 'group');
 		$person = $group->People()->First();
 		$category = $person->Categories()->First();
 
@@ -336,7 +330,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 	public function testItemEditFormCallback() {
 		$this->logInWithPermission('ADMIN');
 
-		$category = new GridFieldDetailFormTest_Category();
+		$category = new Category();
 		$component = new GridFieldDetailForm();
 		$component->setItemEditFormCallback(function($form, $component) {
 			$form->Fields()->push(new HiddenField('Callback'));
@@ -360,7 +354,7 @@ class GridFieldDetailFormTest extends FunctionalTest {
 	 */
 	public function testHasManyFormPrePopulated() {
 		$group = $this->objFromFixture(
-			'GridFieldDetailFormTest_PeopleGroup', 'group'
+			PeopleGroup::class, 'group'
 		);
 
 		$this->logInWithPermission('ADMIN');
@@ -380,219 +374,3 @@ class GridFieldDetailFormTest extends FunctionalTest {
 	}
 
 }
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class GridFieldDetailFormTest_Person extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'FirstName' => 'Varchar',
-		'Surname' => 'Varchar'
-	);
-
-	private static $has_one = array(
-		'Group' => 'GridFieldDetailFormTest_PeopleGroup'
-	);
-
-	private static $many_many = array(
-		'Categories' => 'GridFieldDetailFormTest_Category',
-		'FavouriteGroups' => 'GridFieldDetailFormTest_PeopleGroup'
-	);
-
-	private static $many_many_extraFields = array(
-		'Categories' => array(
-			'IsPublished' => 'Boolean',
-			'PublishedBy' => 'Varchar'
-		)
-	);
-
-	private static $default_sort = '"FirstName"';
-
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		// TODO No longer necessary once FormScaffolder uses GridField
-		$fields->replaceField('Categories',
-			GridField::create('Categories', 'Categories',
-				$this->Categories(),
-				GridFieldConfig_RelationEditor::create()
-			)
-		);
-		$fields->replaceField('FavouriteGroups',
-			GridField::create('FavouriteGroups', 'Favourite Groups',
-				$this->FavouriteGroups(),
-				GridFieldConfig_RelationEditor::create()
-			)
-		);
-		return $fields;
-	}
-
-	public function getCMSValidator() {
-		return new RequiredFields(array(
-			'FirstName', 'Surname'
-		));
-	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class GridFieldDetailFormTest_PeopleGroup extends DataObject implements TestOnly {
-	private static $db = array(
-		'Name' => 'Varchar'
-	);
-
-	private static $has_many = array(
-		'People' => 'GridFieldDetailFormTest_Person'
-	);
-
-	private static $belongs_many_many = array(
-		'FavouritePeople' => 'GridFieldDetailFormTest_Person'
-	);
-
-	private static $default_sort = '"Name"';
-
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		// TODO No longer necessary once FormScaffolder uses GridField
-		$fields->replaceField('People',
-			GridField::create('People', 'People',
-				$this->People(),
-				GridFieldConfig_RelationEditor::create()
-			)
-		);
-		return $fields;
-	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class GridFieldDetailFormTest_Category extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Name' => 'Varchar'
-	);
-
-	private static $belongs_many_many = array(
-		'People' => 'GridFieldDetailFormTest_Person'
-	);
-
-	private static $default_sort = '"Name"';
-
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
-		// TODO No longer necessary once FormScaffolder uses GridField
-		$fields->replaceField('People',
-			GridField::create('People', 'People',
-				$this->People(),
-				GridFieldConfig_RelationEditor::create()
-			)
-		);
-		return $fields;
-	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class GridFieldDetailFormTest_Controller extends Controller implements TestOnly {
-
-	private static $allowed_actions = array('Form');
-
-	protected $template = 'BlankPage';
-
-	public function Form() {
-		$group = GridFieldDetailFormTest_PeopleGroup::get()
-			->filter('Name', 'My Group')
-			->sort('Name')
-			->First();
-
-		$field = new GridField('testfield', 'testfield', $group->People());
-		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
-		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
-		$field->getConfig()->addComponent(new GridFieldViewButton());
-		$field->getConfig()->addComponent(new GridFieldEditButton());
-		/** @skipUpgrade */
-		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
-		$field->getConfig()->addComponent(new GridFieldEditButton());
-		/** @skipUpgrade */
-		return new Form($this, 'Form', new FieldList($field), new FieldList());
-	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class GridFieldDetailFormTest_GroupController extends Controller implements TestOnly {
-
-	private static $allowed_actions = array('Form');
-
-	protected $template = 'BlankPage';
-
-	public function Form() {
-		$field = new GridField('testfield', 'testfield', GridFieldDetailFormTest_PeopleGroup::get()->sort('Name'));
-		/** @skipUpgrade */
-		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
-		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
-		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
-		$field->getConfig()->addComponent(new GridFieldEditButton());
-		/** @skipUpgrade */
-		return new Form($this, 'Form', new FieldList($field), new FieldList());
-	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-
-class GridFieldDetailFormTest_CategoryController extends Controller implements TestOnly {
-
-	private static $allowed_actions = array('Form');
-
-	protected $template = 'BlankPage';
-
-	public function Form() {
-		// GridField lists categories for a specific person
-		$person = GridFieldDetailFormTest_Person::get()->sort('FirstName')->First();
-		$detailFields = singleton('GridFieldDetailFormTest_Category')->getCMSFields();
-		$detailFields->addFieldsToTab('Root.Main', array(
-			new CheckboxField('ManyMany[IsPublished]'),
-			new TextField('ManyMany[PublishedBy]'))
-		);
-		$categoriesField = new GridField('testfield', 'testfield', $person->Categories());
-		$categoriesField->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'SilverStripe\\Forms\\Form'));
-		$gridFieldForm->setFields($detailFields);
-		$categoriesField->getConfig()->addComponent(new GridFieldToolbarHeader());
-		$categoriesField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
-		$categoriesField->getConfig()->addComponent(new GridFieldEditButton());
-
-		$favGroupsField = new GridField('testgroupsfield', 'testgroupsfield', $person->FavouriteGroups());
-		/** @skipUpgrade */
-		$favGroupsField->getConfig()->addComponent(new GridFieldDetailForm($this, 'Form'));
-		$favGroupsField->getConfig()->addComponent(new GridFieldToolbarHeader());
-		$favGroupsField->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
-		$favGroupsField->getConfig()->addComponent(new GridFieldEditButton());
-
-		$fields = new FieldList($categoriesField, $favGroupsField);
-		/** @skipUpgrade */
-		return new Form($this, 'Form', $fields, new FieldList());
-	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class GridFieldDetailFormTest_ItemRequest extends GridFieldDetailForm_ItemRequest implements TestOnly { }

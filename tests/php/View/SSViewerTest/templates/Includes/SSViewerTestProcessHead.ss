@@ -1,3 +1,3 @@
 <head>
-	<% require themedJavascript(forms/RequirementsTest_a) %>
+	<% require themedJavascript(RequirementsTest_a) %>
 </head>

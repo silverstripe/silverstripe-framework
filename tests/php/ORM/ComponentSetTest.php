@@ -1,22 +1,19 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Security\Member;
+use SilverStripe\ORM\Tests\ComponentSetTest\Player;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class ComponentSetTest extends SapphireTest {
 
 	protected static $fixture_file = 'ComponentSetTest.yml';
 
 	protected $extraDataObjects = array(
-		'ComponentSetTest_Player',
-		'ComponentSetTest_Team'
+		Player::class,
+		ComponentSetTest\Team::class,
 	);
 
 	public function testSetByIDListManyMany() {
@@ -63,19 +60,3 @@ class ComponentSetTest extends SapphireTest {
 	}
 }
 
-class ComponentSetTest_Player extends Member implements TestOnly {
-	private static $belongs_many_many = array(
-		'Teams' => 'ComponentSetTest_Team'
-	);
-}
-
-class ComponentSetTest_Team extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Title' => 'Varchar',
-	);
-
-	private static $many_many = array(
-		'Players' => 'ComponentSetTest_Player'
-	);
-}

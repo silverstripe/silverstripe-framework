@@ -1,27 +1,21 @@
 <?php
 
+namespace SilverStripe\Security\Tests;
+
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
-use SilverStripe\Security\Member;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Session;
-use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\CheckboxSetField;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\Form;
+use SilverStripe\Security\Tests\GroupTest\TestMember;
+use ReflectionMethod;
 
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class GroupTest extends FunctionalTest {
 
 	protected static $fixture_file = 'GroupTest.yml';
+
+	protected $extraDataObjects = [
+		TestMember::class
+	];
 
 	public function testGroupCodeDefaultsToTitle() {
 		$g1 = new Group();
@@ -42,16 +36,16 @@ class GroupTest extends FunctionalTest {
 	}
 
 	public function testMemberGroupRelationForm() {
-		Session::set('loggedInAs', $this->idFromFixture('GroupTest_Member', 'admin'));
+		Session::set('loggedInAs', $this->idFromFixture(TestMember::class, 'admin'));
 
-		$adminGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'admingroup');
-		$parentGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'parentgroup');
-		$childGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'childgroup');
+		$adminGroup = $this->objFromFixture(Group::class, 'admingroup');
+		$parentGroup = $this->objFromFixture(Group::class, 'parentgroup');
+		$childGroup = $this->objFromFixture(Group::class, 'childgroup');
 
 		// Test single group relation through checkboxsetfield
 		/** @skipUpgrade */
-		$form = new GroupTest_MemberForm($this, 'Form');
-		$member = $this->objFromFixture('GroupTest_Member', 'admin');
+		$form = new GroupTest\MemberForm($this, 'Form');
+		$member = $this->objFromFixture(TestMember::class, 'admin');
 		$form->loadDataFrom($member);
 		$checkboxSetField = $form->Fields()->fieldByName('Groups');
 		$checkboxSetField->setValue(array(
@@ -87,7 +81,7 @@ class GroupTest extends FunctionalTest {
 	}
 
 	public function testUnsavedGroups() {
-		$member = $this->objFromFixture('GroupTest_Member', 'admin');
+		$member = $this->objFromFixture(TestMember::class, 'admin');
 		$group = new Group();
 
 		// Can save user to unsaved group
@@ -101,8 +95,8 @@ class GroupTest extends FunctionalTest {
 	}
 
 	public function testCollateAncestorIDs() {
-		$parentGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'parentgroup');
-		$childGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'childgroup');
+		$parentGroup = $this->objFromFixture(Group::class, 'parentgroup');
+		$childGroup = $this->objFromFixture(Group::class, 'childgroup');
 		$orphanGroup = new Group();
 		$orphanGroup->ParentID = 99999;
 		$orphanGroup->write();
@@ -125,26 +119,26 @@ class GroupTest extends FunctionalTest {
 	}
 
 	public function testDelete() {
-		$group = $this->objFromFixture('SilverStripe\\Security\\Group', 'parentgroup');
+		$group = $this->objFromFixture(Group::class, 'parentgroup');
 		$groupID = $group->ID;
-		$childGroupID = $this->idFromFixture('SilverStripe\\Security\\Group', 'childgroup');
+		$childGroupID = $this->idFromFixture(Group::class, 'childgroup');
 		$group->delete();
 
-		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Group', "\"ID\" = {$groupID}")->Count(),
+		$this->assertEquals(0, DataObject::get(Group::class, "\"ID\" = {$groupID}")->Count(),
 			'Group is removed');
 		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Permission', "\"GroupID\" = {$groupID}")->Count(),
 			'Permissions removed along with the group');
-		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Group', "\"ParentID\" = {$groupID}")->Count(),
+		$this->assertEquals(0, DataObject::get(Group::class, "\"ParentID\" = {$groupID}")->Count(),
 			'Child groups are removed');
-		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Group', "\"ParentID\" = {$childGroupID}")->Count(),
+		$this->assertEquals(0, DataObject::get(Group::class, "\"ParentID\" = {$childGroupID}")->Count(),
 			'Grandchild groups are removed');
 	}
 
 	public function testValidatesPrivilegeLevelOfParent() {
-		$nonAdminUser = $this->objFromFixture('GroupTest_Member', 'childgroupuser');
-		$adminUser = $this->objFromFixture('GroupTest_Member', 'admin');
-		$nonAdminGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'childgroup');
-		$adminGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'admingroup');
+		$nonAdminUser = $this->objFromFixture(TestMember::class, 'childgroupuser');
+		$adminUser = $this->objFromFixture(TestMember::class, 'admin');
+		$nonAdminGroup = $this->objFromFixture(Group::class, 'childgroup');
+		$adminGroup = $this->objFromFixture(Group::class, 'admingroup');
 
 		$nonAdminValidateMethod = new ReflectionMethod($nonAdminGroup, 'validate');
 		$nonAdminValidateMethod->setAccessible(true);
@@ -169,7 +163,7 @@ class GroupTest extends FunctionalTest {
 		$newlyAdminGroup = $nonAdminGroup;
 
 		$this->logInWithPermission('ADMIN');
-		$inheritedAdminGroup = $this->objFromFixture('SilverStripe\\Security\\Group', 'group1');
+		$inheritedAdminGroup = $this->objFromFixture(Group::class, 'group1');
 		$inheritedAdminMethod = new ReflectionMethod($inheritedAdminGroup, 'validate');
 		$inheritedAdminMethod->setAccessible(true);
 		$inheritedAdminGroup->ParentID = $adminGroup->ID;
@@ -181,42 +175,6 @@ class GroupTest extends FunctionalTest {
 			$result->valid(),
 			'Members with only APPLY_ROLES can\'t assign parent groups with inherited ADMIN permission'
 		);
-	}
-
-}
-
-class GroupTest_Member extends Member implements TestOnly {
-
-	public function getCMSFields() {
-		$groups = DataObject::get('SilverStripe\\Security\\Group');
-		$groupsMap = ($groups) ? $groups->map() : false;
-		$fields = new FieldList(
-			new HiddenField('ID', 'ID'),
-			new CheckboxSetField(
-				'Groups',
-				'Groups',
-				$groupsMap
-			)
-		);
-
-		return $fields;
-	}
-
-}
-
-class GroupTest_MemberForm extends Form {
-
-	public function __construct($controller, $name) {
-		$fields = singleton('GroupTest_Member')->getCMSFields();
-		$actions = new FieldList(
-			new FormAction('doSave','save')
-		);
-
-		parent::__construct($controller, $name, $fields, $actions);
-	}
-
-	public function doSave($data, $form) {
-		// done in testing methods
 	}
 
 }

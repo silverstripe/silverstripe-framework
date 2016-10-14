@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
@@ -8,13 +10,11 @@ use SilverStripe\Forms\MemberDatetimeOptionsetField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\i18n\i18n;
+use SilverStripe\Security\Member;
+use Zend_Locale_Format;
+use Zend_Date;
 
-
-
-/**
- * @package framework
- * @subpackage forms
- */
 class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 
 	protected static $fixture_file = 'MemberDatetimeOptionsetFieldTest.yml';
@@ -56,10 +56,10 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	public function testDateFormatDefaultCheckedInFormField() {
-		Config::inst()->update('SilverStripe\\i18n\\i18n', 'date_format', 'yyyy-MM-dd');
-		$field = $this->createDateFormatFieldForMember($this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember'));
+		Config::inst()->update(i18n::class, 'date_format', 'yyyy-MM-dd');
+		$field = $this->createDateFormatFieldForMember($this->objFromFixture(Member::class, 'noformatmember'));
 		/** @skipUpgrade */
-		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
+		$field->setForm(new Form(new Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
 		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_yyyy-MM-dd');
@@ -67,10 +67,10 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	public function testTimeFormatDefaultCheckedInFormField() {
-		Config::inst()->update('SilverStripe\\i18n\\i18n', 'time_format', 'h:mm:ss a');
-		$field = $this->createTimeFormatFieldForMember($this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember'));
+		Config::inst()->update(i18n::class, 'time_format', 'h:mm:ss a');
+		$field = $this->createTimeFormatFieldForMember($this->objFromFixture(Member::class, 'noformatmember'));
 		/** @skipUpgrade */
-		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
+		$field->setForm(new Form(new Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
 		$xmlArr = $parser->getBySelector('#Form_Form_TimeFormat_h:mm:ss_a');
@@ -78,11 +78,11 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	public function testDateFormatChosenIsCheckedInFormField() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember');
+		$member = $this->objFromFixture(Member::class, 'noformatmember');
 		$member->setField('DateFormat', 'MM/dd/yyyy');
 		$field = $this->createDateFormatFieldForMember($member);
 		/** @skipUpgrade */
-		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
+		$field->setForm(new Form(new Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
 		$xmlArr = $parser->getBySelector('#Form_Form_DateFormat_MM_dd_yyyy');
@@ -90,11 +90,11 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 	}
 
 	public function testDateFormatCustomFormatAppearsInCustomInputInField() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'noformatmember');
+		$member = $this->objFromFixture(Member::class, 'noformatmember');
 		$member->setField('DateFormat', 'dd MM yy');
 		$field = $this->createDateFormatFieldForMember($member);
 		/** @skipUpgrade */
-		$field->setForm(new Form(new MemberDatetimeOptionsetFieldTest_Controller(), 'Form', new FieldList(),
+		$field->setForm(new Form(new Controller(), 'Form', new FieldList(),
 			new FieldList())); // fake form
 		$parser = new CSSContentParser($field->Field());
 		$xmlInputArr = $parser->getBySelector('.valcustom input');
@@ -130,12 +130,4 @@ class MemberDatetimeOptionsetFieldTest extends SapphireTest {
 		$this->assertNotEmpty($field->getDescription());
 		$this->assertNotEquals('Test description', $field->getDescription());
 	}
-
-}
-class MemberDatetimeOptionsetFieldTest_Controller extends Controller {
-
-	public function Link($action = null) {
-		return Controller::join_links('test', $action, '/');
-	}
-
 }

@@ -1,34 +1,28 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DateFieldTest extends SapphireTest {
+
+	protected $originalLocale;
 
 	public function setUp() {
 		parent::setUp();
 
 		$this->originalLocale = i18n::get_locale();
 		i18n::set_locale('en_NZ');
-		$this->origConfig = Config::inst()->get('SilverStripe\\Forms\\DateField', 'default_config');
-		Config::inst()->update('SilverStripe\\Forms\\DateField', 'default_config', array('dateformat' => 'dd/MM/yyyy'));
+		Config::inst()->update(DateField::class, 'default_config', array('dateformat' => 'dd/MM/yyyy'));
 	}
 
 	public function tearDown() {
-		parent::tearDown();
-
 		i18n::set_locale($this->originalLocale);
-		Config::inst()->remove('SilverStripe\\Forms\\DateField', 'default_config');
-		Config::inst()->update('SilverStripe\\Forms\\DateField', 'default_config', $this->origConfig);
+		parent::tearDown();
 	}
 
 	public function testValidateMinDate() {

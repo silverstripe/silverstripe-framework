@@ -1,9 +1,14 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+
 require_once(__DIR__  . "/ImageTest.php");
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Cache;
+use Zend_Cache;
+
 
 class GDImageTest extends ImageTest {
 

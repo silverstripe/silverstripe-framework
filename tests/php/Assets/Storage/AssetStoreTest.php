@@ -1,59 +1,53 @@
 <?php
 
-use League\Flysystem\Adapter\Local;
-use League\Flysystem\AdapterInterface;
-use League\Flysystem\Filesystem;
-use SilverStripe\Assets\Filesystem as SSFilesystem;
+namespace SilverStripe\Assets\Tests\Storage;
+
+use Exception;
 use SilverStripe\Assets\Flysystem\FlysystemAssetStore;
-use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
-use SilverStripe\Assets\Flysystem\PublicAssetAdapter;
-use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\Assets\Storage\AssetStore;
-use SilverStripe\Assets\Flysystem\GeneratedAssetHandler;
-use SilverStripe\Assets\Storage\DBFile;
-use SilverStripe\Assets\File;
-use SilverStripe\Assets\Folder;
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\View\Requirements;
 
+class AssetStoreTest extends SapphireTest
+{
 
-
-
-
-class AssetStoreTest extends SapphireTest {
-
-	public function setUp() {
+	public function setUp()
+	{
 		parent::setUp();
 
 		// Set backend and base url
-		AssetStoreTest_SpyStore::activate('AssetStoreTest');
+		/** @skipUpgrade */
+		TestAssetStore::activate('AssetStoreTest');
 	}
 
-	public function tearDown() {
-		AssetStoreTest_SpyStore::reset();
+	public function tearDown()
+	{
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
 	/**
-	 * @return AssetStoreTest_SpyStore
+	 * @return TestAssetStore
 	 */
-	protected function getBackend() {
+	protected function getBackend()
+	{
 		return Injector::inst()->get('AssetStore');
 	}
 
 	/**
 	 * Test different storage methods
 	 */
-	public function testStorageMethods() {
+	public function testStorageMethods()
+	{
 		$backend = $this->getBackend();
 
 		// Test setFromContent
 		$puppies1 = 'puppies';
 		$puppies1Tuple = $backend->setFromString($puppies1, 'pets/my-puppy.txt');
 		$this->assertEquals(
-			array (
+			array(
 				'Hash' => '2a17a9cb4be918774e73ba83bd1c1e7d000fdd53',
 				'Filename' => 'pets/my-puppy.txt',
 				'Variant' => '',
@@ -62,12 +56,12 @@ class AssetStoreTest extends SapphireTest {
 		);
 
 		// Test setFromStream (seekable)
-		$fish1 = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish1 = realpath(__DIR__ . '/../../ORM/testimages/test-image-high-quality.jpg');
 		$fish1Stream = fopen($fish1, 'r');
 		$fish1Tuple = $backend->setFromStream($fish1Stream, 'parent/awesome-fish.jpg');
 		fclose($fish1Stream);
 		$this->assertEquals(
-			array (
+			array(
 				'Hash' => 'a870de278b475cb75f5d9f451439b2d378e13af1',
 				'Filename' => 'parent/awesome-fish.jpg',
 				'Variant' => '',
@@ -76,31 +70,32 @@ class AssetStoreTest extends SapphireTest {
 		);
 
 		// Test with non-seekable streams
-		AssetStoreTest_SpyStore::$seekable_override = false;
-		$fish2 = realpath(__DIR__ .'/../model/testimages/test-image-low-quality.jpg');
+		TestAssetStore::$seekable_override = false;
+		$fish2 = realpath(__DIR__ . '/../../ORM/testimages/test-image-low-quality.jpg');
 		$fish2Stream = fopen($fish2, 'r');
 		$fish2Tuple = $backend->setFromStream($fish2Stream, 'parent/mediocre-fish.jpg');
 		fclose($fish2Stream);
 
 		$this->assertEquals(
-			array (
+			array(
 				'Hash' => '33be1b95cba0358fe54e8b13532162d52f97421c',
 				'Filename' => 'parent/mediocre-fish.jpg',
 				'Variant' => '',
 			),
 			$fish2Tuple
 		);
-		AssetStoreTest_SpyStore::$seekable_override = null;
+		TestAssetStore::$seekable_override = null;
 	}
 
 	/**
 	 * Test that the backend correctly resolves conflicts
 	 */
-	public function testConflictResolution() {
+	public function testConflictResolution()
+	{
 		$backend = $this->getBackend();
 
 		// Put a file in
-		$fish1 = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish1 = realpath(__DIR__ . '/../../ORM/testimages/test-image-high-quality.jpg');
 		$this->assertFileExists($fish1);
 		$fish1Tuple = $backend->setFromLocalFile($fish1, 'directory/lovely-fish.jpg');
 		$this->assertEquals(
@@ -117,7 +112,7 @@ class AssetStoreTest extends SapphireTest {
 		);
 
 		// Write a different file with same name. Should not detect duplicates since sha are different
-		$fish2 = realpath(__DIR__ .'/../model/testimages/test-image-low-quality.jpg');
+		$fish2 = realpath(__DIR__ . '/../../ORM/testimages/test-image-low-quality.jpg');
 		try {
 			$fish2Tuple = $backend->setFromLocalFile(
 				$fish2,
@@ -126,7 +121,7 @@ class AssetStoreTest extends SapphireTest {
 				null,
 				array('conflict' => AssetStore::CONFLICT_EXCEPTION)
 			);
-		} catch(Exception $ex) {
+		} catch (Exception $ex) {
 			$this->fail('Writing file with different sha to same location failed with exception');
 			return;
 		}
@@ -232,8 +227,9 @@ class AssetStoreTest extends SapphireTest {
 	/**
 	 * Test that flysystem can regenerate the original filename from fileID
 	 */
-	public function testGetOriginalFilename() {
-		$store = new AssetStoreTest_SpyStore();
+	public function testGetOriginalFilename()
+	{
+		$store = new TestAssetStore();
 		$this->assertEquals(
 			'directory/lovely-fish.jpg',
 			$store->getOriginalFilename('directory/a870de278b/lovely-fish.jpg')
@@ -271,8 +267,9 @@ class AssetStoreTest extends SapphireTest {
 	/**
 	 * Test internal file Id generation
 	 */
-	public function testGetFileID() {
-		$store = new AssetStoreTest_SpyStore();
+	public function testGetFileID()
+	{
+		$store = new TestAssetStore();
 		$this->assertEquals(
 			'directory/2a17a9cb4b/file.jpg',
 			$store->getFileID('directory/file.jpg', sha1('puppies'))
@@ -299,11 +296,12 @@ class AssetStoreTest extends SapphireTest {
 		);
 	}
 
-	public function testGetMetadata() {
+	public function testGetMetadata()
+	{
 		$backend = $this->getBackend();
 
 		// jpg
-		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish = realpath(__DIR__ . '/../../ORM/testimages/test-image-high-quality.jpg');
 		$fishTuple = $backend->setFromLocalFile($fish, 'parent/awesome-fish.jpg');
 		$this->assertEquals(
 			'image/jpeg',
@@ -330,13 +328,14 @@ class AssetStoreTest extends SapphireTest {
 	/**
 	 * Test that legacy filenames work as expected
 	 */
-	public function testLegacyFilenames() {
+	public function testLegacyFilenames()
+	{
 		Config::inst()->update(get_class(new FlysystemAssetStore()), 'legacy_filenames', true);
 
 		$backend = $this->getBackend();
 
 		// Put a file in
-		$fish1 = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish1 = realpath(__DIR__ . '/../../ORM/testimages/test-image-high-quality.jpg');
 		$this->assertFileExists($fish1);
 		$fish1Tuple = $backend->setFromLocalFile($fish1, 'directory/lovely-fish.jpg');
 		$this->assertEquals(
@@ -354,7 +353,7 @@ class AssetStoreTest extends SapphireTest {
 
 		// Write a different file with same name.
 		// Since we are using legacy filenames, this should generate a new filename
-		$fish2 = realpath(__DIR__ .'/../model/testimages/test-image-low-quality.jpg');
+		$fish2 = realpath(__DIR__ . '/../../ORM/testimages/test-image-low-quality.jpg');
 		try {
 			$backend->setFromLocalFile(
 				$fish2,
@@ -365,7 +364,7 @@ class AssetStoreTest extends SapphireTest {
 			);
 			$this->fail('Writing file with different sha to same location should throw exception');
 			return;
-		} catch(Exception $ex) {
+		} catch (Exception $ex) {
 			// Success
 		}
 
@@ -436,7 +435,8 @@ class AssetStoreTest extends SapphireTest {
 	/**
 	 * Test default conflict resolution
 	 */
-	public function testDefaultConflictResolution() {
+	public function testDefaultConflictResolution()
+	{
 		$store = $this->getBackend();
 
 		// Disable legacy filenames
@@ -453,9 +453,10 @@ class AssetStoreTest extends SapphireTest {
 	/**
 	 * Test protect / publish mechanisms
 	 */
-	public function testProtect() {
+	public function testProtect()
+	{
 		$backend = $this->getBackend();
-		$fish = realpath(__DIR__ .'/../model/testimages/test-image-high-quality.jpg');
+		$fish = realpath(__DIR__ . '/../../ORM/testimages/test-image-high-quality.jpg');
 		$fishTuple = $backend->setFromLocalFile($fish, 'parent/lovely-fish.jpg');
 		$fishVariantTuple = $backend->setFromLocalFile($fish, $fishTuple['Filename'], $fishTuple['Hash'], 'copy');
 
@@ -516,153 +517,5 @@ class AssetStoreTest extends SapphireTest {
 			AssetStore::VISIBILITY_PUBLIC,
 			$backend->getVisibility($fishTuple['Filename'], $fishTuple['Hash'])
 		);
-	}
-}
-
-/**
- * Spy!
- */
-class AssetStoreTest_SpyStore extends FlysystemAssetStore {
-
-	/**
-	 * Enable disclosure of secure assets
-	 *
-	 * @config
-	 * @var int
-	 */
-	private static $denied_response_code = 403;
-
-	/**
-	 * Set to true|false to override all isSeekableStream calls
-	 *
-	 * @var null|bool
-	 */
-	public static $seekable_override = null;
-
-	/**
-	 * Base dir of current file
-	 *
-	 * @var string
-	 */
-	public static $basedir = null;
-
-	/**
-	 * Set this store as the new asset backend
-	 *
-	 * @param string $basedir Basedir to store assets, which will be placed beneath 'assets' folder
-	 */
-	public static function activate($basedir) {
-		// Assign this as the new store
-		$publicAdapter = new PublicAssetAdapter(ASSETS_PATH . '/' . $basedir);
-		$publicFilesystem = new Filesystem($publicAdapter, [
-			'visibility' => AdapterInterface::VISIBILITY_PUBLIC
-		]);
-		$protectedAdapter = new ProtectedAssetAdapter(ASSETS_PATH . '/' . $basedir . '/.protected');
-		$protectedFilesystem = new Filesystem($protectedAdapter, [
-			'visibility' => AdapterInterface::VISIBILITY_PRIVATE
-		]);
-
-		$backend = new AssetStoreTest_SpyStore();
-		$backend->setPublicFilesystem($publicFilesystem);
-		$backend->setProtectedFilesystem($protectedFilesystem);
-		Injector::inst()->registerService($backend, 'AssetStore');
-
-		// Assign flysystem backend to generated asset handler at the same time
-		$generated = new GeneratedAssetHandler();
-		$generated->setFilesystem($publicFilesystem);
-		Injector::inst()->registerService($generated, 'GeneratedAssetHandler');
-		Requirements::backend()->setAssetHandler($generated);
-
-		// Disable legacy and set defaults
-		Config::inst()->remove(get_class(new FlysystemAssetStore()), 'legacy_filenames');
-		Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
-		DBFile::config()->force_resample = false;
-		File::config()->force_resample = false;
-		self::reset();
-		self::$basedir = $basedir;
-
-		// Ensure basedir exists
-		SSFilesystem::makeFolder(self::base_path());
-	}
-
-	/**
-	 * Get absolute path to basedir
-	 *
-	 * @return string
-	 */
-	public static function base_path() {
-		if(!self::$basedir) {
-			return null;
-		}
-		return ASSETS_PATH . '/' . self::$basedir;
-	}
-
-	/**
-	 * Reset defaults for this store
-	 */
-	public static function reset() {
-		// Remove all files in this store
-		if(self::$basedir) {
-			$path = self::base_path();
-			if(file_exists($path)) {
-				SSFilesystem::removeFolder($path);
-			}
-		}
-		self::$seekable_override = null;
-		self::$basedir = null;
-	}
-
-	/**
-	 * Helper method to get local filesystem path for this file
-	 *
-	 * @param AssetContainer $asset
-	 * @return string
-	 */
-	public static function getLocalPath(AssetContainer $asset) {
-		if($asset instanceof Folder) {
-			return self::base_path() . '/' . $asset->getFilename();
-		}
-		if($asset instanceof File) {
-			$asset = $asset->File;
-		}
-		// Extract filesystem used to store this object
-		/** @var AssetStoreTest_SpyStore $assetStore */
-		$assetStore = Injector::inst()->get('AssetStore');
-		$fileID = $assetStore->getFileID($asset->Filename, $asset->Hash, $asset->Variant);
-		$filesystem = $assetStore->getProtectedFilesystem();
-		if(!$filesystem->has($fileID)) {
-			$filesystem = $assetStore->getPublicFilesystem();
-		}
-		/** @var Local $adapter */
-		$adapter = $filesystem->getAdapter();
-		return $adapter->applyPathPrefix($fileID);
-	}
-
-	public function cleanFilename($filename) {
-		return parent::cleanFilename($filename);
-	}
-
-	public function getFileID($filename, $hash, $variant = null) {
-		return parent::getFileID($filename, $hash, $variant);
-	}
-
-
-	public function getOriginalFilename($fileID) {
-		return parent::getOriginalFilename($fileID);
-	}
-
-	public function removeVariant($fileID) {
-		return parent::removeVariant($fileID);
-	}
-
-	public function getDefaultConflictResolution($variant) {
-		return parent::getDefaultConflictResolution($variant);
-	}
-
-	protected function isSeekableStream($stream) {
-		if(isset(self::$seekable_override)) {
-			return self::$seekable_override;
-		}
-		return parent::isSeekableStream($stream);
 	}
 }

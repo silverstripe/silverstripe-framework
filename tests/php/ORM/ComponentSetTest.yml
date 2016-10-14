@@ -1,4 +1,4 @@
-ComponentSetTest_Player:
+SilverStripe\ORM\Tests\ComponentSetTest\Player:
   player1_team1:
     Email: player1_team1@test.com
   player2:
@@ -6,4 +6,4 @@ ComponentSetTest_Player:
 ComponentSetTest_Team:
   team1:
     Title: team1
-    Players: =>ComponentSetTest_Player.player1_team1
+    Players: =>SilverStripe\ORM\Tests\ComponentSetTest\Player.player1_team1

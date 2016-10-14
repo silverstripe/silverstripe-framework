@@ -1,23 +1,19 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
+use SilverStripe\Forms\Tests\CheckboxFieldtest\Article;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\RequiredFields;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class CheckboxFieldTest extends SapphireTest {
 
 	protected $usesDatabase = true;
 
 	protected $extraDataObjects = array(
-		'CheckboxFieldTest_Article',
+		Article::class,
 	);
 
 	public function testFieldValueTrue() {
@@ -81,7 +77,7 @@ class CheckboxFieldTest extends SapphireTest {
 
 	public function testSavingChecked() {
 		/* Create a new test data record */
-		$article = new CheckboxFieldTest_Article();
+		$article = new Article();
 
 		/* Create a field, with a value of 1 */
 		$field = new CheckboxField('IsChecked', 'Checked', 1);
@@ -105,7 +101,7 @@ class CheckboxFieldTest extends SapphireTest {
 
 	public function testSavingUnchecked() {
 		/* Create a new test data record */
-		$article = new CheckboxFieldTest_Article();
+		$article = new Article();
 
 		/* Create a field, with no value */
 		$field = new CheckboxField('IsChecked', 'Checked');
@@ -131,7 +127,6 @@ class CheckboxFieldTest extends SapphireTest {
 		// Test 1: a checked checkbox goes to "Yes"
 		$field1 = new CheckboxField('IsChecked', 'Checked');
 		$field1->setValue('on');
-		$copy = $field1->performReadonlyTransformation();
 		$this->assertEquals(_t('CheckboxField.YESANSWER', 'Yes'),
 			trim(strip_tags($field1->performReadonlyTransformation()->Field())));
 
@@ -175,12 +170,5 @@ class CheckboxFieldTest extends SapphireTest {
 			'Field correct validates null as allowed'
 		);
 	}
-
-}
-class CheckboxFieldTest_Article extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'IsChecked' => 'Boolean'
-	);
 
 }

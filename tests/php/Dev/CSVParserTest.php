@@ -1,18 +1,28 @@
 <?php
 
+namespace SilverStripe\Dev\Tests;
+
 use SilverStripe\Dev\CSVParser;
 use SilverStripe\Dev\SapphireTest;
 
-/**
- * @package framework
- * @package tests
- */
 class CSVParserTest extends SapphireTest {
 
+	/**
+	 * Name of csv test dir
+	 *
+	 * @var string
+	 */
+	protected $csvPath = null;
+
+	public function setUp()
+	{
+		parent::setUp();
+		$this->csvPath = __DIR__ . '/CsvBulkLoaderTest/csv/';
+	}
 
 	public function testParsingWithHeaders() {
 		/* By default, a CSV file will be interpreted as having headers */
-		$csv = new CSVParser($this->getCurrentRelativePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv');
+		$csv = new CSVParser($this->csvPath . 'PlayersWithHeader.csv');
 
 		$firstNames = $birthdays = $biographies = $registered = array();
 		foreach($csv as $record) {
@@ -38,7 +48,7 @@ class CSVParserTest extends SapphireTest {
 
 	public function testParsingWithHeadersAndColumnMap() {
 		/* By default, a CSV file will be interpreted as having headers */
-		$csv = new CSVParser($this->getCurrentRelativePath() . '/CsvBulkLoaderTest_PlayersWithHeader.csv');
+		$csv = new CSVParser($this->csvPath . 'PlayersWithHeader.csv');
 
 		/* We can set up column remapping.  The keys are case-insensitive. */
 		$csv->mapColumns(array(
@@ -70,7 +80,7 @@ class CSVParserTest extends SapphireTest {
 
 	public function testParsingWithExplicitHeaderRow() {
 		/* If your CSV file doesn't have a header row */
-		$csv = new CSVParser($this->getCurrentRelativePath() .'/CsvBulkLoaderTest_PlayersWithHeader.csv');
+		$csv = new CSVParser($this->csvPath .'PlayersWithHeader.csv');
 
 		$csv->provideHeaderRow(array('__fn','__bio','__bd','__reg'));
 

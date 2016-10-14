@@ -145,6 +145,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected $extraDataObjects = array();
 
 	/**
+	 * List of class names of {@see Controller} objects to register routes for
+	 * Controllers must implement Link() method
+	 *
+	 * @var array
+	 */
+	protected $extraControllers = [];
+
+	/**
 	 * We need to disabling backing up of globals to avoid overriding
 	 * the few globals SilverStripe relies on, like $lang for the i18n subsystem.
 	 *
@@ -257,11 +265,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 		Security::$database_is_ready = null;
 
-		// Add controller-name auto-routing
-		// @todo Fix to work with namespaced controllers
-		Director::config()->update('rules', array(
-			'$Controller//$Action/$ID/$OtherID' => '*'
-		));
+		// Set up test routes
+		$this->setUpRoutes();
 
 		$fixtureFiles = $this->getFixturePaths();
 
@@ -352,6 +357,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// If we have made changes to the extensions present, then migrate the database schema.
 		if($isAltered || $this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
+			DataObject::reset();
 			if(!self::using_temp_db()) {
 				self::create_temp_db();
 			}
@@ -1191,6 +1197,23 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 
 		return $fixtureFilePath;
+	}
+
+	protected function setUpRoutes()
+	{
+		$rules = [];
+		foreach ($this->extraControllers as $class) {
+			$controllerInst = Controller::singleton($class);
+			$link = Director::makeRelative($controllerInst->Link());
+			$route = rtrim($link, '/') . '//$Action/$ID/$OtherID';
+			$rules[$route] = $class;
+		}
+
+		// Add default catch-all rule
+		$rules['$Controller//$Action/$ID/$OtherID'] = '*';
+
+		// Add controller-name auto-routing
+		Director::config()->update('rules', $rules);
 	}
 
 }

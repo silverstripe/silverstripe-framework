@@ -1,6 +1,11 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+use SilverStripe\Assets\ImagickBackend;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injector;
+
 class ImagickImageTest extends ImageTest {
 	public function setUp() {
 		parent::setUp();
@@ -11,10 +16,6 @@ class ImagickImageTest extends ImageTest {
 		}
 
 		/** @skipUpgrade */
-		Config::inst()->update(
-			'SilverStripe\\Core\\Injector\\Injector',
-			'Image_Backend',
-			'SilverStripe\\Assets\\ImagickBackend'
-		);
+		Config::inst()->update(Injector::class, 'Image_Backend', ImagickBackend::class);
 	}
 }

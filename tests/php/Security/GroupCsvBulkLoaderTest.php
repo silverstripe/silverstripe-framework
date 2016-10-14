@@ -1,5 +1,8 @@
 <?php
 
+namespace SilverStripe\Security\Tests;
+
+
 use SilverStripe\Security\GroupCsvBulkLoader;
 use SilverStripe\Security\Group;
 use SilverStripe\Dev\SapphireTest;
@@ -13,7 +16,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest {
 
 	public function testNewImport() {
 		$loader = new GroupCsvBulkLoader();
-		$results = $loader->load($this->getCurrentRelativePath() . '/GroupCsvBulkLoaderTest.csv');
+		$results = $loader->load(__DIR__ . '/GroupCsvBulkLoaderTest/GroupCsvBulkLoaderTest.csv');
 		$created = $results->Created()->toArray();
 		$this->assertEquals(count($created), 2);
 		$this->assertEquals($created[0]->Code, 'newgroup1');
@@ -29,7 +32,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest {
 		$existinggroup->write();
 
 		$loader = new GroupCsvBulkLoader();
-		$results = $loader->load($this->getCurrentRelativePath() . '/GroupCsvBulkLoaderTest.csv');
+		$results = $loader->load(__DIR__ . '/GroupCsvBulkLoaderTest/GroupCsvBulkLoaderTest.csv');
 
 		$created = $results->Created()->toArray();
 		$this->assertEquals(count($created), 1);
@@ -43,7 +46,7 @@ class GroupCsvBulkLoaderTest extends SapphireTest {
 
 	public function testImportPermissions() {
 		$loader = new GroupCsvBulkLoader();
-		$results = $loader->load($this->getCurrentRelativePath() . '/GroupCsvBulkLoaderTest_withExisting.csv');
+		$results = $loader->load(__DIR__ . '/GroupCsvBulkLoaderTest/GroupCsvBulkLoaderTest_withExisting.csv');
 
 		$created = $results->Created()->toArray();
 		$this->assertEquals(count($created), 1);

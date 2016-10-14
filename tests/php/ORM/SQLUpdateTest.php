@@ -1,26 +1,22 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
-
 
 /**
  * Tests for {@see SQLUpdate}
- *
- * @package framework
- * @subpackage tests
  */
 class SQLUpdateTest extends SapphireTest {
 
 	public static $fixture_file = 'SQLUpdateTest.yml';
 
 	protected $extraDataObjects = array(
-		'SQLUpdateTestBase',
-		'SQLUpdateChild'
+		SQLUpdateTest\TestBase::class,
+		SQLUpdateTest\TestChild::class
 	);
 
 	public function testEmptyQueryReturnsNothing() {
@@ -44,20 +40,7 @@ class SQLUpdateTest extends SapphireTest {
 		$this->assertEquals(1, DB::affected_rows());
 
 		// Check item updated
-		$item = DataObject::get_one('SQLUpdateTestBase', array('"Title"' => 'Object 1'));
+		$item = DataObject::get_one(SQLUpdateTest\TestBase::class, array('"Title"' => 'Object 1'));
 		$this->assertEquals('Description 1a', $item->Description);
 	}
-}
-
-class SQLUpdateTestBase extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-		'Description' => 'Text'
-	);
-}
-
-class SQLUpdateChild extends SQLUpdateTestBase {
-	private static $db = array(
-		'Details' => 'Varchar(255)'
-	);
 }

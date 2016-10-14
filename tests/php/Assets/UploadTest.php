@@ -1,15 +1,13 @@
 <?php
 
-use SilverStripe\ORM\Versioning\Versioned;
-use SilverStripe\Assets\Upload;
+namespace SilverStripe\Assets\Tests;
+
 use SilverStripe\Assets\File;
-use SilverStripe\Assets\Upload_Validator;
+use SilverStripe\Assets\Upload;
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
-
-
+use SilverStripe\ORM\Versioning\Versioned;
 
 /**
  * @package framework
@@ -22,11 +20,11 @@ class UploadTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 		Versioned::set_stage(Versioned::DRAFT);
-		AssetStoreTest_SpyStore::activate('UploadTest');
+		TestAssetStore::activate('UploadTest');
 	}
 
 	public function tearDown() {
-		AssetStoreTest_SpyStore::reset();
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
@@ -48,7 +46,7 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 
 		// test upload into default folder
 		$u1 = new Upload();
@@ -61,10 +59,10 @@ class UploadTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			BASE_PATH . '/assets/UploadTest/.protected/Uploads/315ae4c3d4/UploadTest-testUpload.txt',
-			AssetStoreTest_SpyStore::getLocalPath($file1)
+			TestAssetStore::getLocalPath($file1)
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file1),
+			TestAssetStore::getLocalPath($file1),
 			'File upload to standard directory in /assets'
 		);
 
@@ -79,10 +77,10 @@ class UploadTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			BASE_PATH . '/assets/UploadTest/.protected/UploadTest-testUpload/315ae4c3d4/UploadTest-testUpload.txt',
-			AssetStoreTest_SpyStore::getLocalPath($file2)
+			TestAssetStore::getLocalPath($file2)
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file2),
+			TestAssetStore::getLocalPath($file2),
 			'File upload to custom directory in /assets'
 		);
 	}
@@ -107,7 +105,7 @@ class UploadTest extends SapphireTest {
 
 		// test upload into default folder
 		$u1 = new Upload();
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 
 		$v->setAllowedMaxFileSize(array('txt' => 10));
 		$u1->setValidator($v);
@@ -237,7 +235,7 @@ class UploadTest extends SapphireTest {
 			'txt' => 1000
 		);
 		Config::inst()->update('SilverStripe\\Assets\\Upload_Validator', 'default_max_file_size', $configMaxFileSizes);
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 
 		$retrievedSize = $v->getAllowedMaxFileSize('[image]');
 		$this->assertEquals(1024, $retrievedSize, 'Max file size check on default values failed (config category set check)');
@@ -250,7 +248,7 @@ class UploadTest extends SapphireTest {
 			'[document]' => 2000,
 			'txt' => '4k'
 		);
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 		$v->setAllowedMaxFileSize($maxFileSizes);
 
 		$retrievedSize = $v->getAllowedMaxFileSize('[document]');
@@ -273,7 +271,7 @@ class UploadTest extends SapphireTest {
 		$this->assertEquals(4096, $retrievedSize, 'Max file size check on instance values failed (instance extension set check)');
 
 		// Check a wildcard max file size against a file with an extension
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 		$v->setAllowedMaxFileSize(2000);
 
 		$retrievedSize = $v->getAllowedMaxFileSize('.jpg');
@@ -300,7 +298,7 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 		$v->setAllowedMaxFileSize(array('' => 10));
 
 		// test upload into default folder
@@ -329,7 +327,7 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 		$v->setAllowedExtensions(array('txt'));
 
 		// test upload into default folder
@@ -358,7 +356,7 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 		$v->setAllowedExtensions(array('txt'));
 
 		// test upload into default folder
@@ -367,7 +365,7 @@ class UploadTest extends SapphireTest {
 		$u->loadIntoFile($tmpFile);
 		$file = $u->getFile();
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file),
+			TestAssetStore::getLocalPath($file),
 			'File upload to custom directory in /assets'
 		);
 	}
@@ -390,7 +388,7 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 		$v->setAllowedExtensions(array('txt'));
 
 		// test upload into default folder
@@ -429,7 +427,7 @@ class UploadTest extends SapphireTest {
 			'File has a name without a number because it\'s not a duplicate'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file),
+			TestAssetStore::getLocalPath($file),
 			'File exists'
 		);
 
@@ -442,7 +440,7 @@ class UploadTest extends SapphireTest {
 			'File receives a number attached to the end before the extension'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file2),
+			TestAssetStore::getLocalPath($file2),
 			'File exists'
 		);
 		$this->assertGreaterThan(
@@ -460,7 +458,7 @@ class UploadTest extends SapphireTest {
 			'File receives a number attached to the end before the extension'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file3),
+			TestAssetStore::getLocalPath($file3),
 			'File exists'
 		);
 		$this->assertGreaterThan(
@@ -488,7 +486,7 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 		$v->setAllowedExtensions(array(''));
 
 		// test upload into default folder
@@ -503,7 +501,7 @@ class UploadTest extends SapphireTest {
 			'File is uploaded without extension'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file),
+			TestAssetStore::getLocalPath($file),
 			'File exists'
 		);
 
@@ -517,7 +515,7 @@ class UploadTest extends SapphireTest {
 			'File receives a number attached to the end'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file2),
+			TestAssetStore::getLocalPath($file2),
 			'File exists'
 		);
 		$this->assertGreaterThan(
@@ -545,7 +543,7 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 		$v->setAllowedExtensions(array(''));
 
 		// test upload into default folder
@@ -560,7 +558,7 @@ class UploadTest extends SapphireTest {
 			'File is uploaded without extension'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file),
+			TestAssetStore::getLocalPath($file),
 			'File exists'
 		);
 
@@ -575,7 +573,7 @@ class UploadTest extends SapphireTest {
 			'File does not receive new name'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file2),
+			TestAssetStore::getLocalPath($file2),
 			'File exists'
 		);
 		$this->assertEquals(
@@ -604,7 +602,7 @@ class UploadTest extends SapphireTest {
 			'error' => UPLOAD_ERR_OK,
 		);
 
-		$v = new UploadTest_Validator();
+		$v = new UploadTest\Validator();
 
 		// test upload into default folder
 		$u = new Upload();
@@ -618,7 +616,7 @@ class UploadTest extends SapphireTest {
 			'File is uploaded without extension'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file),
+			TestAssetStore::getLocalPath($file),
 			'File exists'
 		);
 
@@ -634,7 +632,7 @@ class UploadTest extends SapphireTest {
 			'File does not receive new name'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file2),
+			TestAssetStore::getLocalPath($file2),
 			'File exists'
 		);
 		$this->assertEquals(
@@ -655,7 +653,7 @@ class UploadTest extends SapphireTest {
 			'File does receive new name'
 		);
 		$this->assertFileExists(
-			AssetStoreTest_SpyStore::getLocalPath($file3),
+			TestAssetStore::getLocalPath($file3),
 			'File exists'
 		);
 		$this->assertGreaterThan(
@@ -670,7 +668,7 @@ class UploadTest extends SapphireTest {
 		$tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
 
 		$uploadImage = function() use ($tmpFileName, $tmpFilePath) {
-			copy(__DIR__ . '/gdtest/test_jpg.jpg', $tmpFilePath);
+			copy(__DIR__ . '/GDTest/images/test_jpg.jpg', $tmpFilePath);
 
 			// emulates the $_FILES array
 			$tmpFile = array(
@@ -682,7 +680,7 @@ class UploadTest extends SapphireTest {
 				'error' => UPLOAD_ERR_OK,
 			);
 
-			$v = new UploadTest_Validator();
+			$v = new UploadTest\Validator();
 
 			// test upload into default folder
 			$u = new Upload();
@@ -695,7 +693,7 @@ class UploadTest extends SapphireTest {
 		// Image upload and generate a resampled image
 		$image = $uploadImage();
 		$resampled = $image->ResizedImage(123, 456);
-		$resampledPath = AssetStoreTest_SpyStore::getLocalPath($resampled);
+		$resampledPath = TestAssetStore::getLocalPath($resampled);
 		$this->assertFileExists($resampledPath);
 
 		// Re-upload the image, overwriting the original
@@ -724,7 +722,7 @@ class UploadTest extends SapphireTest {
 				'error' => UPLOAD_ERR_OK,
 			);
 
-			$v = new UploadTest_Validator();
+			$v = new UploadTest\Validator();
 
 			// test upload into default folder
 			$u = new Upload();
@@ -801,43 +799,4 @@ class UploadTest extends SapphireTest {
 			'File does receive new name'
 		);
 	}
-}
-
-class UploadTest_Validator extends Upload_Validator implements TestOnly {
-
-	/**
-	 * Looser check validation that doesn't do is_upload_file()
-	 * checks as we're faking a POST request that PHP didn't generate
-	 * itself.
-	 *
-	 * @return boolean
-	 */
-	public function validate() {
-		$pathInfo = pathinfo($this->tmpFile['name']);
-		// filesize validation
-
-		if(!$this->isValidSize()) {
-			$ext = (isset($pathInfo['extension'])) ? $pathInfo['extension'] : '';
-			$arg = File::format_size($this->getAllowedMaxFileSize($ext));
-			$this->errors[] = _t(
-				'File.TOOLARGE',
-				'File size is too large, maximum {size} allowed',
-				'Argument 1: File size (e.g. 1MB)',
-				array('size' => $arg)
-			);
-			return false;
-		}
-
-		// extension validation
-		if(!$this->isValidExtension()) {
-			$this->errors[] = _t(
-				'File.INVALIDEXTENSION_SHORT',
-				'Extension is not allowed'
-			);
-			return false;
-		}
-
-		return true;
-	}
-
 }

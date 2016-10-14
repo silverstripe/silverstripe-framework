@@ -1,122 +1,18 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+use SebastianBergmann\Comparator\ComparisonFailure;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\Tests\ChangeSetTest\BaseObject;
+use SilverStripe\ORM\Tests\ChangeSetTest\MidObject;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\ORM\Versioning\Versioned;
-use SilverStripe\Security\Permission;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Session;
+use PHPUnit_Framework_ExpectationFailedException;
 
-
-/**
- * Provides a set of targettable permissions for tested models
- *
- * @mixin Versioned
- * @mixin DataObject
- */
-trait ChangeSetTest_Permissions {
-	public function canEdit($member = null) {
-		return $this->can(__FUNCTION__, $member);
-	}
-
-	public function canDelete($member = null) {
-		return $this->can(__FUNCTION__, $member);
-	}
-
-	public function canCreate($member = null, $context = array()) {
-		return $this->can(__FUNCTION__, $member, $context);
-	}
-
-	public function canPublish($member = null, $context = array()) {
-		return $this->can(__FUNCTION__, $member, $context);
-	}
-
-	public function canUnpublish($member = null, $context = array()) {
-		return $this->can(__FUNCTION__, $member, $context);
-	}
-
-	public function can($perm, $member = null, $context = array()) {
-		$perms = [
-			"PERM_{$perm}",
-			'CAN_ALL',
-		];
-		return Permission::checkMember($member, $perms);
-	}
-}
-
-/**
- * @mixin Versioned
- */
-class ChangeSetTest_Base extends DataObject implements TestOnly {
-	use ChangeSetTest_Permissions;
-
-	private static $db = [
-		'Foo' => 'Int',
-	];
-
-	private static $has_many = [
-		'Mids' => ChangeSetTest_Mid::class,
-	];
-
-	private static $owns = [
-		'Mids',
-	];
-
-	private static $extensions = [
-		"SilverStripe\\ORM\\Versioning\\Versioned",
-	];
-}
-
-/**
- * @mixin Versioned
- */
-class ChangeSetTest_Mid extends DataObject implements TestOnly {
-	use ChangeSetTest_Permissions;
-
-	private static $db = [
-		'Bar' => 'Int',
-	];
-
-	private static $has_one = [
-		'Base' => ChangeSetTest_Base::class,
-		'End' => ChangeSetTest_End::class,
-	];
-
-	private static $owns = [
-		'End',
-	];
-
-	private static $extensions = [
-		"SilverStripe\\ORM\\Versioning\\Versioned",
-	];
-}
-
-/**
- * @mixin Versioned
- */
-class ChangeSetTest_End extends DataObject implements TestOnly {
-	use ChangeSetTest_Permissions;
-
-	private static $db = [
-		'Baz' => 'Int',
-	];
-
-	private static $extensions = [
-		"SilverStripe\\ORM\\Versioning\\Versioned",
-	];
-}
-
-/**
- * @mixin Versioned
- */
-class ChangeSetTest_EndChild extends ChangeSetTest_End implements TestOnly {
-
-	private static $db = [
-		'Qux' => 'Int',
-	];
-}
 
 /**
  * Test {@see ChangeSet} and {@see ChangeSetItem} models
@@ -126,10 +22,10 @@ class ChangeSetTest extends SapphireTest {
 	protected static $fixture_file = 'ChangeSetTest.yml';
 
 	protected $extraDataObjects = [
-		ChangeSetTest_Base::class,
-		ChangeSetTest_Mid::class,
-		ChangeSetTest_End::class,
-		ChangeSetTest_EndChild::class,
+		ChangeSetTest\BaseObject::class,
+		ChangeSetTest\MidObject::class,
+		ChangeSetTest\EndObject::class,
+		ChangeSetTest\EndObjectChild::class,
 	];
 
 	/**
@@ -171,7 +67,7 @@ class ChangeSetTest extends SapphireTest {
 
 			throw new PHPUnit_Framework_ExpectationFailedException(
 				'Change set didn\'t include expected item',
-				new \SebastianBergmann\Comparator\ComparisonFailure(array('Class' => $class, 'ID' => $object->ID, 'Added' => $mode), null, "$key => $mode", '')
+				new ComparisonFailure(array('Class' => $class, 'ID' => $object->ID, 'Added' => $mode), null, "$key => $mode", '')
 			);
 		}
 
@@ -180,7 +76,7 @@ class ChangeSetTest extends SapphireTest {
 			foreach ($items as $item) $extra[] = ['Class' => $item->ObjectClass, 'ID' => $item->ObjectID, 'Added' => $item->Added, 'ChangeType' => $item->getChangeType()];
 			throw new PHPUnit_Framework_ExpectationFailedException(
 				'Change set included items that weren\'t expected',
-				new \SebastianBergmann\Comparator\ComparisonFailure(array(), $extra, '', print_r($extra, true))
+				new ComparisonFailure(array(), $extra, '', print_r($extra, true))
 			);
 		}
 	}
@@ -189,8 +85,8 @@ class ChangeSetTest extends SapphireTest {
 		$cs = new ChangeSet();
 		$cs->write();
 
-		$cs->addObject($this->objFromFixture(ChangeSetTest_End::class, 'end1'));
-		$cs->addObject($this->objFromFixture(ChangeSetTest_EndChild::class, 'endchild1'));
+		$cs->addObject($this->objFromFixture(ChangeSetTest\EndObject::class, 'end1'));
+		$cs->addObject($this->objFromFixture(ChangeSetTest\EndObjectChild::class, 'endchild1'));
 
 		$this->assertChangeSetLooksLike($cs, [
 			'ChangeSetTest_End.end1' => ChangeSetItem::EXPLICITLY,
@@ -204,7 +100,7 @@ class ChangeSetTest extends SapphireTest {
 		$cs = new ChangeSet();
 		$cs->write();
 
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
 		$cs->addObject($base);
 
 		$cs->sync();
@@ -224,7 +120,7 @@ class ChangeSetTest extends SapphireTest {
 		$cs = new ChangeSet();
 		$cs->write();
 
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
 
 		$cs->addObject($base);
 		$cs->sync();
@@ -233,7 +129,7 @@ class ChangeSetTest extends SapphireTest {
 			'ChangeSetTest_Base.base' => ChangeSetItem::EXPLICITLY
 		]);
 
-		$end = $this->objFromFixture(ChangeSetTest_End::class, 'end1');
+		$end = $this->objFromFixture(ChangeSetTest\EndObject::class, 'end1');
 		$end->Baz = 3;
 		$end->write();
 
@@ -255,7 +151,7 @@ class ChangeSetTest extends SapphireTest {
 		$this->assertDOSEquals([
 			[
 				'Added' => ChangeSetItem::EXPLICITLY,
-				'ObjectClass' => ChangeSetTest_Base::class,
+				'ObjectClass' => ChangeSetTest\BaseObject::class,
 				'ObjectID' => $base->ID,
 				'ChangeSetID' => $cs->ID
 			]
@@ -271,7 +167,7 @@ class ChangeSetTest extends SapphireTest {
 		$cs = new ChangeSet();
 		$cs->write();
 
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
 		$cs->addObject($base);
 
 		$cs->sync();
@@ -280,7 +176,7 @@ class ChangeSetTest extends SapphireTest {
 		]);
 		$this->assertTrue($cs->isSynced());
 
-		$end = $this->objFromFixture(ChangeSetTest_End::class, 'end1');
+		$end = $this->objFromFixture(ChangeSetTest\EndObject::class, 'end1');
 		$end->Baz = 3;
 		$end->write();
 		$this->assertFalse($cs->isSynced());
@@ -299,7 +195,7 @@ class ChangeSetTest extends SapphireTest {
 		$this->logInWithPermission('ADMIN');
 		$changeSet = new ChangeSet();
 		$changeSet->write();
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
 		$changeSet->addObject($base);
 		$changeSet->sync();
 		$this->assertEquals(5, $changeSet->Changes()->count());
@@ -333,7 +229,7 @@ class ChangeSetTest extends SapphireTest {
 		$this->logInWithPermission('ADMIN');
 		$changeSet = new ChangeSet();
 		$changeSet->write();
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
 		$changeSet->addObject($base);
 		$changeSet->sync();
 		$this->assertEquals(5, $changeSet->Changes()->count());
@@ -362,7 +258,7 @@ class ChangeSetTest extends SapphireTest {
 		$this->logInWithPermission('ADMIN');
 		$changeSet = new ChangeSet();
 		$changeSet->write();
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
 		$changeSet->addObject($base);
 		$changeSet->sync();
 		$this->assertEquals(5, $changeSet->Changes()->count());
@@ -381,7 +277,7 @@ class ChangeSetTest extends SapphireTest {
 		$this->logInWithPermission('ADMIN');
 		$changeSet = new ChangeSet();
 		$changeSet->write();
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
 		$changeSet->addObject($base);
 		$changeSet->sync();
 		$this->assertEquals(5, $changeSet->Changes()->count());
@@ -398,10 +294,10 @@ class ChangeSetTest extends SapphireTest {
 	public function testPublish() {
 		$this->publishAllFixtures();
 
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
 		$baseID = $base->ID;
 		$baseBefore = $base->Version;
-		$end1 = $this->objFromFixture(ChangeSetTest_End::class, 'end1');
+		$end1 = $this->objFromFixture(ChangeSetTest\EndObject::class, 'end1');
 		$end1ID = $end1->ID;
 		$end1Before = $end1->Version;
 
@@ -418,7 +314,7 @@ class ChangeSetTest extends SapphireTest {
 		$base->Foo = 343;
 		$base->write();
 		$baseAfter = $base->Version;
-		$midNew = new ChangeSetTest_Mid();
+		$midNew = new ChangeSetTest\MidObject();
 		$midNew->Bar = 39;
 		$midNew->write();
 		$midNewID = $midNew->ID;
@@ -436,7 +332,7 @@ class ChangeSetTest extends SapphireTest {
 
 		// Check each item has the correct before/after version applied
 		$baseChange = $changeset->Changes()->filter([
-			'ObjectClass' => ChangeSetTest_Base::class,
+			'ObjectClass' => ChangeSetTest\BaseObject::class,
 			'ObjectID' => $baseID,
 		])->first();
 		$this->assertEquals((int)$baseBefore, (int)$baseChange->VersionBefore);
@@ -444,29 +340,29 @@ class ChangeSetTest extends SapphireTest {
 		$this->assertEquals((int)$baseChange->VersionBefore + 1, (int)$baseChange->VersionAfter);
 		$this->assertEquals(
 			(int)$baseChange->VersionAfter,
-			(int)Versioned::get_versionnumber_by_stage(ChangeSetTest_Base::class, Versioned::LIVE, $baseID)
+			(int)Versioned::get_versionnumber_by_stage(ChangeSetTest\BaseObject::class, Versioned::LIVE, $baseID)
 		);
 
 		$end1Change = $changeset->Changes()->filter([
-			'ObjectClass' => ChangeSetTest_End::class,
+			'ObjectClass' => ChangeSetTest\EndObject::class,
 			'ObjectID' => $end1ID,
 		])->first();
 		$this->assertEquals((int)$end1Before, (int)$end1Change->VersionBefore);
 		$this->assertEquals(0, (int)$end1Change->VersionAfter);
 		$this->assertEquals(
 			0,
-			(int)Versioned::get_versionnumber_by_stage(ChangeSetTest_End::class, Versioned::LIVE, $end1ID)
+			(int)Versioned::get_versionnumber_by_stage(ChangeSetTest\EndObject::class, Versioned::LIVE, $end1ID)
 		);
 
 		$midNewChange = $changeset->Changes()->filter([
-			'ObjectClass' => ChangeSetTest_Mid::class,
+			'ObjectClass' => ChangeSetTest\MidObject::class,
 			'ObjectID' => $midNewID,
 		])->first();
 		$this->assertEquals(0, (int)$midNewChange->VersionBefore);
 		$this->assertEquals((int)$midNewAfter, (int)$midNewChange->VersionAfter);
 		$this->assertEquals(
 			(int)$midNewAfter,
-			(int)Versioned::get_versionnumber_by_stage(ChangeSetTest_Mid::class, Versioned::LIVE, $midNewID)
+			(int)Versioned::get_versionnumber_by_stage(ChangeSetTest\MidObject::class, Versioned::LIVE, $midNewID)
 		);
 
 		// Test trying to re-publish is blocked
@@ -482,11 +378,11 @@ class ChangeSetTest extends SapphireTest {
 	 */
 	public function testUnlinkDisassociated() {
 		$this->publishAllFixtures();
-		/** @var ChangeSetTest_Base $base */
-		$base = $this->objFromFixture(ChangeSetTest_Base::class, 'base');
-		/** @var ChangeSetTest_Mid $mid1 $mid2 */
-		$mid1 = $this->objFromFixture(ChangeSetTest_Mid::class, 'mid1');
-		$mid2 = $this->objFromFixture(ChangeSetTest_Mid::class, 'mid2');
+		/** @var BaseObject $base */
+		$base = $this->objFromFixture(ChangeSetTest\BaseObject::class, 'base');
+		/** @var MidObject $mid1 $mid2 */
+		$mid1 = $this->objFromFixture(ChangeSetTest\MidObject::class, 'mid1');
+		$mid2 = $this->objFromFixture(ChangeSetTest\MidObject::class, 'mid2');
 
 		// Remove mid1 from stage
 		$this->assertEquals($base->ID, $mid1->BaseID);
@@ -506,14 +402,14 @@ class ChangeSetTest extends SapphireTest {
 		$changeset->publish();
 
 		// mid1 on live exists, but has BaseID set to zero
-		$mid1Live = Versioned::get_by_stage(ChangeSetTest_Mid::class, Versioned::LIVE)
+		$mid1Live = Versioned::get_by_stage(ChangeSetTest\MidObject::class, Versioned::LIVE)
 			->byID($mid1->ID);
 		$this->assertNotNull($mid1Live);
 		$this->assertEquals($mid1->ID, $mid1Live->ID);
 		$this->assertEquals(0, $mid1Live->BaseID);
 
 		// mid2 on live exists and retains BaseID
-		$mid2Live = Versioned::get_by_stage(ChangeSetTest_Mid::class, Versioned::LIVE)
+		$mid2Live = Versioned::get_by_stage(ChangeSetTest\MidObject::class, Versioned::LIVE)
 			->byID($mid2->ID);
 		$this->assertNotNull($mid2Live);
 		$this->assertEquals($mid2->ID, $mid2Live->ID);

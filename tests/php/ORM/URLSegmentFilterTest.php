@@ -1,12 +1,10 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\URLSegmentFilter;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class URLSegmentFilterTest extends SapphireTest {
 
 	protected $usesDatabase = false;

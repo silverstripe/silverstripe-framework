@@ -1,18 +1,12 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
 
-
-use SilverStripe\ORM\FieldType\DBText;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 
-
-
 /**
  * Tests parsing and summary methods on DBText
- *
- * @package framework
- * @subpackage tests
  */
 class DBTextTest extends SapphireTest {
 

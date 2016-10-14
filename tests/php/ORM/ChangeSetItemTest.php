@@ -1,38 +1,19 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Versioning\Versioned;
 
-/**
- * @mixin Versioned
- */
-class ChangeSetItemTest_Versioned extends DataObject {
-	private static $db = [
-		'Foo' => 'Int'
-	];
-
-	private static $extensions = [
-		Versioned::class
-	];
-
-	function canEdit($member = null) { return true; }
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
 class ChangeSetItemTest extends SapphireTest {
 
 	protected $extraDataObjects = [
-		ChangeSetItemTest_Versioned::class
+		ChangeSetItemTest\VersionedObject::class
 	];
 
 	public function testChangeType() {
 		$this->logInWithPermission('ADMIN');
-		$object = new ChangeSetItemTest_Versioned(['Foo' => 1]);
+		$object = new ChangeSetItemTest\VersionedObject(['Foo' => 1]);
 		$object->write();
 
 		$item = new ChangeSetItem([
@@ -85,7 +66,7 @@ class ChangeSetItemTest extends SapphireTest {
 
 	public function testGetForObject() {
 		$this->logInWithPermission('ADMIN');
-		$object = new ChangeSetItemTest_Versioned(['Foo' => 1]);
+		$object = new ChangeSetItemTest\VersionedObject(['Foo' => 1]);
 		$object->write();
 
 		$item = new ChangeSetItem([
@@ -95,12 +76,12 @@ class ChangeSetItemTest extends SapphireTest {
 		$item->write();
 
 		$this->assertEquals(
-			ChangeSetItemTest_Versioned::get()->byID($object->ID)->toMap(),
+			ChangeSetItemTest\VersionedObject::get()->byID($object->ID)->toMap(),
 			ChangeSetItem::get_for_object($object)->first()->Object()->toMap()
 		);
 
 		$this->assertEquals(
-			ChangeSetItemTest_Versioned::get()->byID($object->ID)->toMap(),
+			ChangeSetItemTest\VersionedObject::get()->byID($object->ID)->toMap(),
 			ChangeSetItem::get_for_object_by_id($object->ID, $object->ClassName)->first()->Object()->toMap()
 		);
 	}

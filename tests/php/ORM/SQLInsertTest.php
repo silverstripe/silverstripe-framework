@@ -1,23 +1,21 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+use SilverStripe\ORM\Connect\DBQueryBuilder;
 use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
-
+use SilverStripe\ORM\Tests\SQLInsertTest\SQLInsertTestBase;
 
 /**
  * Tests for {@see SQLInsert}
- *
- * @package framework
- * @subpackage tests
  */
 class SQLInsertTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
-		'SQLInsertTestBase'
+		SQLInsertTestBase::class
 	);
 
 	public function testEmptyQueryReturnsNothing() {
@@ -34,7 +32,7 @@ class SQLInsertTest extends SapphireTest {
 				->assign('"Description"', 'No description');
 		$sql = $query->sql($parameters);
 		// Only test this case if using the default query builder
-		if(get_class(DB::get_conn()->getQueryBuilder()) === 'SilverStripe\\ORM\\Connect\\DBQueryBuilder') {
+		if(get_class(DB::get_conn()->getQueryBuilder()) === DBQueryBuilder::class) {
 			$this->assertSQLEquals(
 				'INSERT INTO "SQLInsertTestBase" ("Title", "HasFun", "Age", "Description") VALUES (?, ?, ?, ?)',
 				$sql
@@ -45,7 +43,7 @@ class SQLInsertTest extends SapphireTest {
 		$this->assertEquals(1, DB::affected_rows());
 
 		// Check inserted object is correct
-		$firstObject = DataObject::get_one('SQLInsertTestBase', array('"Title"' => 'My Object'), false);
+		$firstObject = DataObject::get_one(SQLInsertTestBase::class, array('"Title"' => 'My Object'), false);
 		$this->assertNotEmpty($firstObject);
 		$this->assertEquals($firstObject->Title, 'My Object');
 		$this->assertNotEmpty($firstObject->HasFun);
@@ -66,7 +64,7 @@ class SQLInsertTest extends SapphireTest {
 		));
 		$sql = $query->sql($parameters);
 		// Only test this case if using the default query builder
-		if(get_class(DB::get_conn()->getQueryBuilder()) === 'SilverStripe\\ORM\\Connect\\DBQueryBuilder') {
+		if(get_class(DB::get_conn()->getQueryBuilder()) === DBQueryBuilder::class) {
 			$this->assertSQLEquals(
 				'INSERT INTO "SQLInsertTestBase" ("Title", "Age", "Description") VALUES (?, ?, ?), (?, ?, ?)',
 				$sql
@@ -77,25 +75,16 @@ class SQLInsertTest extends SapphireTest {
 		$this->assertEquals(2, DB::affected_rows());
 
 		// Check inserted objects are correct
-		$firstObject = DataObject::get_one('SQLInsertTestBase', array('"Title"' => 'First Object'), false);
+		$firstObject = DataObject::get_one(SQLInsertTestBase::class, array('"Title"' => 'First Object'), false);
 		$this->assertNotEmpty($firstObject);
 		$this->assertEquals($firstObject->Title, 'First Object');
 		$this->assertEquals($firstObject->Age, 10);
 		$this->assertEquals($firstObject->Description, 'First the worst');
 
-		$secondObject = DataObject::get_one('SQLInsertTestBase', array('"Title"' => 'Second object'), false);
+		$secondObject = DataObject::get_one(SQLInsertTestBase::class, array('"Title"' => 'Second object'), false);
 		$this->assertNotEmpty($secondObject);
 		$this->assertEquals($secondObject->Title, 'Second object');
 		$this->assertEquals($secondObject->Age, 12);
 		$this->assertEmpty($secondObject->Description);
 	}
-}
-
-class SQLInsertTestBase extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-		'HasFun' => 'Boolean',
-		'Age' => 'Int',
-		'Description' => 'Text',
-	);
 }

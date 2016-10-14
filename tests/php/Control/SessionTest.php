@@ -1,9 +1,14 @@
 <?php
 
+namespace SilverStripe\Control\Tests;
+
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Session;
+
+
 
 
 

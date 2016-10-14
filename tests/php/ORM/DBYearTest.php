@@ -1,15 +1,11 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\FieldType\DBYear;
 use SilverStripe\Dev\SapphireTest;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DBYearTest extends SapphireTest {
 
 	/**
@@ -18,7 +14,7 @@ class DBYearTest extends SapphireTest {
 	public function testScaffoldFormFieldFirst() {
 		$year = new DBYear();
 		$field = $year->scaffoldFormField("YearTest");
-		$this->assertEquals("SilverStripe\\Forms\\DropdownField", get_class($field));
+		$this->assertEquals(DropdownField::class, get_class($field));
 
 		//This should be a list of years from the current one, counting down to 1900
 		$source = $field->getSource();

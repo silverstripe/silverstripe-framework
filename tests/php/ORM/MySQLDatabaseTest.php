@@ -1,23 +1,20 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
+use SilverStripe\ORM\Connect\MySQLQuery;
+use SilverStripe\ORM\Connect\MySQLStatement;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLiConnector;
 use SilverStripe\ORM\Queries\SQLUpdate;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-
-/**
- * @package framework
- * @subpackage testing
- */
 
 class MySQLDatabaseTest extends SapphireTest {
 
 	protected static $fixture_file = 'MySQLDatabaseTest.yml';
 
 	protected $extraDataObjects = array(
-		'MySQLDatabaseTest_Data'
+		MySQLDatabaseTest\Data::class
 	);
 
 	public function testPreparedStatements() {
@@ -35,12 +32,12 @@ class MySQLDatabaseTest extends SapphireTest {
 			'SELECT "Sort", "Title" FROM "MySQLDatabaseTest_Data" WHERE "Sort" > ? ORDER BY "Sort"',
 			array(2)
 		);
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLStatement', $result1);
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLStatement', $result2);
+		$this->assertInstanceOf(MySQLStatement::class, $result1);
+		$this->assertInstanceOf(MySQLStatement::class, $result2);
 
 		// Also select non-prepared statement
 		$result3 = DB::get_connector()->query('SELECT "Sort", "Title" FROM "MySQLDatabaseTest_Data" ORDER BY "Sort"');
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLQuery', $result3);
+		$this->assertInstanceOf(MySQLQuery::class, $result3);
 
 		// Iterating one level should not buffer, but return the right result
 		$this->assertEquals(
@@ -109,24 +106,13 @@ class MySQLDatabaseTest extends SapphireTest {
 		// Test update which affects no rows
 		$query->setWhere(array('Title' => 'Bob'));
 		$result = $query->execute();
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLQuery', $result);
+		$this->assertInstanceOf(MySQLQuery::class, $result);
 		$this->assertEquals(0, DB::affected_rows());
 
 		// Test update which affects some rows
 		$query->setWhere(array('Title' => 'First Item'));
 		$result = $query->execute();
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\MySQLQuery', $result);
+		$this->assertInstanceOf(MySQLQuery::class, $result);
 		$this->assertEquals(1, DB::affected_rows());
 	}
-}
-
-class MySQLDatabaseTest_Data extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar',
-		'Description' => 'Text',
-		'Enabled' => 'Boolean',
-		'Sort' => 'Int'
-	);
-
-	private static $default_sort = '"Sort" ASC';
 }

@@ -1,17 +1,20 @@
 <?php
 
+namespace SilverStripe\i18n\Tests\i18nTest;
+
 use SilverStripe\Dev\TestOnly;
-/**
- * @package framework
- * @subpackage tests
- */
-class i18nTextCollectorTestMySubObject extends i18nTextCollectorTestMyObject implements TestOnly {
+use SilverStripe\Security\Group;
+
+class MySubObject extends MyObject implements TestOnly
+{
+	private static $table_name = 'i18nTest_MySubObject';
+
 	private static $db = array(
 		'SubProperty' => 'Varchar',
 	);
 
 	private static $has_many = array(
-		'SubRelation' => 'SilverStripe\\Security\\Group'
+		'SubRelation' => Group::class
 	);
 
 	private static $singular_name = "My Sub Object";

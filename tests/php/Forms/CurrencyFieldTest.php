@@ -1,16 +1,14 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
+
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\CurrencyField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\ORM\FieldType\DBCurrency;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class CurrencyFieldTest extends SapphireTest {
 
 	public function testValidate() {
@@ -67,7 +65,7 @@ class CurrencyFieldTest extends SapphireTest {
 		);
 
         //tests with updated currency symbol setting
-        Config::inst()->update('SilverStripe\\ORM\\FieldType\\DBCurrency', 'currency_symbol', '€');
+		DBCurrency::config()->update('currency_symbol', '€');
 
         $f->setValue('123.45');
         $this->assertTrue(
@@ -171,7 +169,7 @@ class CurrencyFieldTest extends SapphireTest {
 		);
 
         //update currency symbol via config
-        Config::inst()->update('SilverStripe\\ORM\\FieldType\\DBCurrency', 'currency_symbol', '€');
+		DBCurrency::config()->update('currency_symbol', '€');
 
         $f->setValue('123.45');
         $this->assertEquals(
@@ -242,7 +240,7 @@ class CurrencyFieldTest extends SapphireTest {
 		);
 
         //tests with updated currency symbol setting
-        Config::inst()->update('SilverStripe\\ORM\\FieldType\\DBCurrency', 'currency_symbol', '€');
+		DBCurrency::config()->update('currency_symbol', '€');
 
         $f->setValue('€123.45');
         $this->assertEquals(

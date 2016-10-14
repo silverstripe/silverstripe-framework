@@ -1,28 +1,29 @@
 <?php
 
+namespace SilverStripe\i18n\Tests;
+
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Object;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18n;
-use SilverStripe\i18n\i18nEntityProvider;
-use SilverStripe\i18n\i18nTranslateAdapterInterface;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\i18n\i18nRailsYamlAdapter;
+use SilverStripe\i18n\Tests\i18nTest\CustomTranslatorAdapter;
+use SilverStripe\i18n\Tests\i18nTest\MyObject;
+use SilverStripe\i18n\Tests\i18nTest\MySubObject;
+use SilverStripe\i18n\Tests\i18nTest\OtherCustomTranslatorAdapter;
+use SilverStripe\i18n\Tests\i18nTest\TestDataObject;
+use SilverStripe\i18n\Tests\i18nTest\TestObject;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
+use Zend_Translate;
 
 require_once 'Zend/Translate.php';
 
-/**
- * @package framework
- * @subpackage tests
- */
 class i18nTest extends SapphireTest {
 
 	/**
@@ -38,16 +39,32 @@ class i18nTest extends SapphireTest {
 	 */
 	protected $alternateBasePath;
 
-	protected $extraDataObjects = array(
-		'i18nTest_DataObject'
-	);
+	protected $extraDataObjects = [
+		TestDataObject::class
+	];
+
+	protected $preloadClasses = [
+		OtherCustomTranslatorAdapter::class,
+		CustomTranslatorAdapter::class,
+		TestObject::class,
+		MySubObject::class,
+		MyObject::class
+	];
 
 
 	public function setUp() {
 		parent::setUp();
 
-		$this->alternateBasePath = $this->getCurrentAbsolutePath() . DIRECTORY_SEPARATOR . "_fakewebroot";
-		$this->alternateBaseSavePath = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'i18nTextCollectorTest_webroot';
+		// Force loading of classes before manifests potentially break autoloading
+		foreach($this->preloadClasses as $class) {
+			if (!class_exists($class)) {
+				throw new \LogicException("Could not load class $class");
+			}
+		}
+
+		$s = DIRECTORY_SEPARATOR;
+		$this->alternateBasePath = __DIR__ . $s . 'i18nTest' . $s . "_fakewebroot";
+		$this->alternateBaseSavePath = TEMP_FOLDER . $s . 'i18nTextCollectorTest_webroot';
 		Filesystem::makeFolder($this->alternateBaseSavePath);
 		Director::config()->update('alternate_base_folder', $this->alternateBasePath);
 
@@ -66,7 +83,7 @@ class i18nTest extends SapphireTest {
 		// Emulates behaviour in i18n::get_translators()
 		$this->origAdapter = i18n::get_translator('core');
 		$adapter = new Zend_Translate(array(
-			'adapter' => 'SilverStripe\\i18n\\i18nRailsYamlAdapter',
+			'adapter' => i18nRailsYamlAdapter::class,
 			'locale' => i18n::config()->get('default_locale'),
 			'disableNotices' => true,
 		));
@@ -75,10 +92,33 @@ class i18nTest extends SapphireTest {
 		i18n::include_by_locale('en');
 	}
 
+	/**
+	 * Number of test manifests
+	 *
+	 * @var int
+	 */
+	protected $manifests = 0;
+
+	/**
+	 * Safely push a new class manifest.
+	 * These will be cleaned up on tearDown()
+	 *
+	 * @param ClassManifest $manifest
+	 */
+	protected function pushManifest(ClassManifest $manifest) {
+		$this->manifests++;
+		ClassLoader::instance()->pushManifest($manifest);
+	}
+
 	public function tearDown() {
 		ThemeResourceLoader::set_instance($this->_oldLoader);
 		i18n::set_locale($this->originalLocale);
 		i18n::register_translator($this->origAdapter, 'core');
+
+		while($this->manifests > 0) {
+			ClassLoader::instance()->popManifest();
+			$this->manifests--;
+		}
 
 		parent::tearDown();
 	}
@@ -119,7 +159,7 @@ class i18nTest extends SapphireTest {
 	public function testDataObjectFieldLabels() {
 		$oldLocale = i18n::get_locale();
 		i18n::set_locale('de_DE');
-		$obj = new i18nTest_DataObject();
+		$obj = new i18nTest\TestDataObject();
 
 		i18n::get_translator('core')->getAdapter()->addTranslation(array(
 			'i18nTest_DataObject.MyProperty' => 'MyProperty'
@@ -156,24 +196,24 @@ class i18nTest extends SapphireTest {
 		), 'de_DE');
 
 		$this->assertEquals(
-			i18nTest_Object::$my_translatable_property,
+			i18nTest\TestObject::$my_translatable_property,
 			'Untranslated'
 		);
 		$this->assertEquals(
-			i18nTest_Object::my_translatable_property(),
+			i18nTest\TestObject::my_translatable_property(),
 			'Untranslated'
 		);
 
 		i18n::set_locale('en_US');
 		$this->assertEquals(
-			i18nTest_Object::my_translatable_property(),
+			i18nTest\TestObject::my_translatable_property(),
 			'Untranslated',
 			'Getter returns original static value when called in default locale'
 		);
 
 		i18n::set_locale('de_DE');
 		$this->assertEquals(
-			i18nTest_Object::my_translatable_property(),
+			i18nTest\TestObject::my_translatable_property(),
 			'Übersetzt',
 			'Getter returns translated value when called in another locale'
 		);
@@ -438,7 +478,7 @@ class i18nTest extends SapphireTest {
 		// Looping through modules, so we can test the translation autoloading
 		// Load non-exclusive to retain core class autoloading
 		$classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
-		ClassLoader::instance()->pushManifest($classManifest);
+		$this->pushManifest($classManifest);
 
 		$adapter = i18n::get_translator('core')->getAdapter();
 		$this->assertTrue($adapter->isAvailable('en'));
@@ -465,13 +505,11 @@ class i18nTest extends SapphireTest {
 		$this->assertEquals($adapter->translate('i18nTestModule.PRIORITYNOTICE', 'de'),
 			'High Module Priority (de)'
 		);
-
-		ClassLoader::instance()->popManifest();
 	}
 
 	public function testIncludeByLocaleWithoutFallbackLanguage() {
 		$classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
-		ClassLoader::instance()->pushManifest($classManifest);
+		$this->pushManifest($classManifest);
 
 		$adapter = i18n::get_translator('core')->getAdapter();
 		$this->assertTrue($adapter->isAvailable('en'));
@@ -489,13 +527,11 @@ class i18nTest extends SapphireTest {
 		$this->assertFalse($adapter->isAvailable('mi'));
 		$this->assertTrue($adapter->isAvailable('mi_NZ'));
 		$this->assertTrue($adapter->isTranslated('i18nTestModule.ENTITY', null, 'mi_NZ'), 'Includes module files');
-
-		ClassLoader::instance()->popManifest();
 	}
 
 	public function testRegisterTranslator() {
 		$translator = new Zend_Translate(array(
-			'adapter' => 'i18nTest_CustomTranslatorAdapter',
+			'adapter' => CustomTranslatorAdapter::class,
 			'disableNotices' => true,
 		));
 
@@ -503,7 +539,7 @@ class i18nTest extends SapphireTest {
 		$translators = i18n::get_translators();
 		$this->assertArrayHasKey('custom', $translators[10]);
 		$this->assertInstanceOf('Zend_Translate', $translators[10]['custom']);
-		$this->assertInstanceOf('i18nTest_CustomTranslatorAdapter', $translators[10]['custom']->getAdapter());
+		$this->assertInstanceOf(CustomTranslatorAdapter::class, $translators[10]['custom']->getAdapter());
 
 		i18n::unregister_translator('custom');
 		$translators = i18n::get_translators();
@@ -514,12 +550,12 @@ class i18nTest extends SapphireTest {
 		// Looping through modules, so we can test the translation autoloading
 		// Load non-exclusive to retain core class autoloading
 		$classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
-		ClassLoader::instance()->pushManifest($classManifest);
+		$this->pushManifest($classManifest);
 
 		// Changed manifest, so we also need to unset all previously collected messages.
 		// The easiest way to do this it to register a new adapter.
 		$adapter = new Zend_Translate(array(
-			'adapter' => 'SilverStripe\\i18n\\i18nRailsYamlAdapter',
+			'adapter' => i18nRailsYamlAdapter::class,
 			'locale' => i18n::config()->get('default_locale'),
 			'disableNotices' => true,
 		));
@@ -539,7 +575,7 @@ class i18nTest extends SapphireTest {
 
 		// Add a new translator
 		$translator = new Zend_Translate(array(
-			'adapter' => 'i18nTest_CustomTranslatorAdapter',
+			'adapter' => CustomTranslatorAdapter::class,
 			'disableNotices' => true,
 		));
 		i18n::register_translator($translator, 'custom', 11);
@@ -556,7 +592,7 @@ class i18nTest extends SapphireTest {
 
 		// Add a second new translator to test priorities
 		$translator = new Zend_Translate(array(
-			'adapter' => 'i18nTest_OtherCustomTranslatorAdapter',
+			'adapter' => OtherCustomTranslatorAdapter::class,
 			'disableNotices' => true,
 		));
 		i18n::register_translator($translator, 'othercustom_lower_prio', 5);
@@ -568,7 +604,7 @@ class i18nTest extends SapphireTest {
 
 		// Add a third new translator to test priorities
 		$translator = new Zend_Translate(array(
-			'adapter' => 'i18nTest_OtherCustomTranslatorAdapter',
+			'adapter' => OtherCustomTranslatorAdapter::class,
 			'disableNotices' => true,
 		));
 
@@ -583,8 +619,6 @@ class i18nTest extends SapphireTest {
 		i18n::unregister_translator('custom');
 		i18n::unregister_translator('othercustom_lower_prio');
 		i18n::unregister_translator('othercustom_higher_prio');
-
-		ClassLoader::instance()->popManifest();
 	}
 
 	public function testGetLanguageName() {
@@ -594,92 +628,5 @@ class i18nTest extends SapphireTest {
 		);
 		$this->assertEquals('German (Cologne)', i18n::get_language_name('de_CGN'));
 		$this->assertEquals('K&ouml;lsch', i18n::get_language_name('de_CGN', true));
-	}
-}
-
-class i18nTest_DataObject extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'MyProperty' => 'Varchar',
-		'MyUntranslatedProperty' => 'Text'
-	);
-
-	private static $has_one = array(
-		'HasOneRelation' => 'SilverStripe\\Security\\Member'
-	);
-
-	private static $has_many = array(
-		'HasManyRelation' => 'SilverStripe\\Security\\Member'
-	);
-
-	private static $many_many = array(
-		'ManyManyRelation' => 'SilverStripe\\Security\\Member'
-	);
-
-	/**
-	 * @param bool $includerelations a boolean value to indicate if the labels returned include relation fields
-	 * @return array
-	 */
-	public function fieldLabels($includerelations = true) {
-		$labels = parent::fieldLabels($includerelations);
-		$labels['MyProperty'] = _t('i18nTest_DataObject.MyProperty', 'My Property');
-
-		return $labels;
-	}
-
-}
-
-class i18nTest_Object extends Object implements TestOnly, i18nEntityProvider {
-	static $my_translatable_property = "Untranslated";
-
-	public static function my_translatable_property() {
-		return _t("i18nTest_Object.my_translatable_property", self::$my_translatable_property);
-	}
-
-	public function provideI18nEntities() {
-		return array(
-			"i18nTest_Object.my_translatable_property" => array(
-				self::$my_translatable_property
-			)
-		);
-	}
-}
-
-class i18nTest_CustomTranslatorAdapter extends Zend_Translate_Adapter
-		implements TestOnly,i18nTranslateAdapterInterface {
-	protected function _loadTranslationData($filename, $locale, array $options = array()) {
-		return array(
-			$locale => array(
-				'AdapterEntity1' =>  'AdapterEntity1 CustomAdapter (' . $locale . ')',
-				'i18nTestModule.ENTITY' => 'i18nTestModule.ENTITY CustomAdapter (' . $locale . ')',
-			)
-		);
-	}
-
-	public function toString() {
-		return 'i18nTest_CustomTranslatorAdapter';
-	}
-
-	public function getFilenameForLocale($locale) {
-		return false; // not file based
-	}
-}
-
-class i18nTest_OtherCustomTranslatorAdapter extends Zend_Translate_Adapter
-		implements TestOnly,i18nTranslateAdapterInterface {
-	protected function _loadTranslationData($filename, $locale, array $options = array()) {
-		return array(
-			$locale => array(
-				'i18nTestModule.ENTITY' => 'i18nTestModule.ENTITY OtherCustomAdapter (' . $locale . ')',
-			)
-		);
-	}
-
-	public function toString() {
-		return 'i18nTest_OtherCustomTranslatorAdapter';
-	}
-
-	public function getFilenameForLocale($locale) {
-		return false; // not file based
 	}
 }

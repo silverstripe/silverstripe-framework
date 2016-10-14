@@ -1,4 +1,7 @@
 <?php
+
+namespace SilverStripe\Control\Tests;
+
 /**
  * These helpful tests were lifted from the Symfony library
  * https://github.com/symfony/http-foundation/blob/master/LICENSE

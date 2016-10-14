@@ -1,12 +1,9 @@
 <?php
 
+namespace SilverStripe\View\Tests\Parsers;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\Diff;
-
-/**
- * @package cms
- * @subpackage tests
- */
 
 class DiffTest extends SapphireTest {
 

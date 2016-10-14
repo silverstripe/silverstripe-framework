@@ -1,14 +1,13 @@
 <?php
 
+namespace SilverStripe\Security\Tests;
+
 use SilverStripe\ORM\DataObject;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Permission;
 use SilverStripe\Security\PermissionCheckboxSetField;
 use SilverStripe\Dev\SapphireTest;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class PermissionCheckboxSetFieldTest extends SapphireTest {
 	protected static $fixture_file = 'PermissionCheckboxSetFieldTest.yml';
 
@@ -16,7 +15,7 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$f = new PermissionCheckboxSetField(
 			'Permissions',
 			'Permissions',
-			'SilverStripe\\Security\\Permission',
+			Permission::class,
 			'GroupID'
 		);
 		$f->setHiddenPermissions(
@@ -31,31 +30,33 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 	}
 
 	public function testSaveInto() {
-		$group = $this->objFromFixture('SilverStripe\\Security\\Group', 'group');  // tested group
-		$untouchable = $this->objFromFixture('SilverStripe\\Security\\Group', 'untouchable');  // group that should not change
+		/** @var Group $group */
+		$group = $this->objFromFixture(Group::class, 'group');  // tested group
+		/** @var Group $untouchable */
+		$untouchable = $this->objFromFixture(Group::class, 'untouchable');  // group that should not change
 
 		$field = new PermissionCheckboxSetField(
 			'Permissions',
 			'Permissions',
-			'SilverStripe\\Security\\Permission',
+			Permission::class,
 			'GroupID',
 			$group
 		);
 
 		// get the number of permissions before we start
-		$baseCount = DataObject::get('SilverStripe\\Security\\Permission')->Count();
+		$baseCount = DataObject::get(Permission::class)->count();
 
 		// there are currently no permissions, save empty checkbox
 		$field->saveInto($group);
 		$group->flushCache();
 		$untouchable->flushCache();
-		$this->assertEquals($group->Permissions()->Count(), 0, 'The tested group has no permissions');
+		$this->assertEquals($group->Permissions()->count(), 0, 'The tested group has no permissions');
 
-		$this->assertEquals($untouchable->Permissions()->Count(), 1, 'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($untouchable->Permissions()->count(), 1, 'The other group has one permission');
+		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->count(), 1,
 			'The other group has ADMIN permission');
 
-		$this->assertEquals(DataObject::get('SilverStripe\\Security\\Permission')->Count(), $baseCount, 'There are no orphaned permissions');
+		$this->assertEquals(DataObject::get(Permission::class)->count(), $baseCount, 'There are no orphaned permissions');
 
 		// add some permissions
 		$field->setValue(array(
@@ -66,19 +67,19 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$field->saveInto($group);
 		$group->flushCache();
 		$untouchable->flushCache();
-		$this->assertEquals($group->Permissions()->Count(), 2,
+		$this->assertEquals($group->Permissions()->count(), 2,
 			'The tested group has two permissions permission');
-		$this->assertEquals($group->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($group->Permissions()->where("\"Code\"='ADMIN'")->count(), 1,
 			'The tested group has ADMIN permission');
-		$this->assertEquals($group->Permissions()->where("\"Code\"='NON-ADMIN'")->Count(), 1,
+		$this->assertEquals($group->Permissions()->where("\"Code\"='NON-ADMIN'")->count(), 1,
 			'The tested group has CMS_ACCESS_AssetAdmin permission');
 
-		$this->assertEquals($untouchable->Permissions()->Count(), 1,
+		$this->assertEquals($untouchable->Permissions()->count(), 1,
 			'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->count(), 1,
 			'The other group has ADMIN permission');
 
-		$this->assertEquals(DataObject::get('SilverStripe\\Security\\Permission')->Count(), $baseCount+2,
+		$this->assertEquals(DataObject::get(Permission::class)->count(), $baseCount+2,
 			'There are no orphaned permissions');
 
 		// remove permission
@@ -89,17 +90,17 @@ class PermissionCheckboxSetFieldTest extends SapphireTest {
 		$field->saveInto($group);
 		$group->flushCache();
 		$untouchable->flushCache();
-		$this->assertEquals($group->Permissions()->Count(), 1,
+		$this->assertEquals($group->Permissions()->count(), 1,
 			'The tested group has 1 permission');
-		$this->assertEquals($group->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($group->Permissions()->where("\"Code\"='ADMIN'")->count(), 1,
 			'The tested group has ADMIN permission');
 
-		$this->assertEquals($untouchable->Permissions()->Count(), 1,
+		$this->assertEquals($untouchable->Permissions()->count(), 1,
 			'The other group has one permission');
-		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->Count(), 1,
+		$this->assertEquals($untouchable->Permissions()->where("\"Code\"='ADMIN'")->count(), 1,
 			'The other group has ADMIN permission');
 
-		$this->assertEquals(DataObject::get('SilverStripe\\Security\\Permission')->Count(), $baseCount+1,
+		$this->assertEquals(DataObject::get(Permission::class)->count(), $baseCount+1,
 			'There are no orphaned permissions');
 	}
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Control\Tests;
+
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Control\HTTPRequest;

@@ -1,4 +1,4 @@
-FulltextFilterTest_DataObject:
+SilverStripe\ORM\Tests\Filters\FulltextFilterTest\TestObject:
   object1:
     ColumnA: 'SilverStripe'
     CluumnB: '<p>Some content about SilverStripe.</p>'

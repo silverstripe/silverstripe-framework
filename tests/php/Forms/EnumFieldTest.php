@@ -1,16 +1,11 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBEnum;
 use SilverStripe\Dev\SapphireTest;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class EnumFieldTest extends SapphireTest {
 	public function testAnyFieldIsPresentInSearchField() {
 		$values = array (

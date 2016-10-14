@@ -1,12 +1,10 @@
 <?php
 
+namespace SilverStripe\Dev\Tests;
+
 use SilverStripe\Dev\Backtrace;
 use SilverStripe\Dev\SapphireTest;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class BacktraceTest extends SapphireTest {
 
 	public function testFullFuncNameWithArgsAndCustomCharLimit() {

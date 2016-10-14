@@ -1,11 +1,11 @@
 <?php
 
+namespace SilverStripe\Assets\Tests;
+
 use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\Transliterator;
-
-
 
 /**
  * @package framework

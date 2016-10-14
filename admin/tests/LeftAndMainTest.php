@@ -1,5 +1,8 @@
 <?php
 
+namespace SilverStripe\Admin\Tests;
+
+
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\Admin\LeftAndMain;
@@ -7,6 +10,8 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\View\Requirements;
+
+
 
 /**
  * @package framework

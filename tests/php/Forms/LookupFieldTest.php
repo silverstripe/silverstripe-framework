@@ -1,15 +1,10 @@
 <?php
 
+namespace SilverStripe\Forms\Tests;
+
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\LookupField;
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 
 class LookupFieldTest extends SapphireTest {
 

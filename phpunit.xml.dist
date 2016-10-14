@@ -16,11 +16,11 @@
 
 	It is safe to remove this file for normal website operation.
 -->
-<phpunit bootstrap="tests/bootstrap.php" colors="true">
+<phpunit bootstrap="tests/php/bootstrap.php" colors="true">
 
 	<testsuite name="Default">
-		<directory>tests</directory>
-		<directory>admin/tests</directory>
+		<directory>tests/php</directory>
+		<directory>admin/tests/php</directory>
 	</testsuite>
 
 	<listeners>
@@ -39,8 +39,8 @@
 			<exclude>
 				<directory suffix=".php">thirdparty/</directory>
 				<directory suffix=".php">admin/thirdparty/</directory>
-				<directory suffix=".php">tests/</directory>
-				<directory suffix=".php">admin/tests/</directory>
+				<directory suffix=".php">tests/php/</directory>
+				<directory suffix=".php">admin/tests/php/</directory>
 			</exclude>
 		</whitelist>
 	</filter>

@@ -1,13 +1,9 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
+namespace SilverStripe\ORM\Tests;
 
-/**
- * @package framework
- * @subpackage tests
- */
+use SilverStripe\Dev\SapphireTest;
+
 class DecimalTest extends SapphireTest {
 
 	protected static $fixture_file = 'DecimalTest.yml';
@@ -15,12 +11,12 @@ class DecimalTest extends SapphireTest {
 	protected $testDataObject;
 
 	protected $extraDataObjects = array(
-		'DecimalTest_DataObject'
+		DecimalTest\TestObject::class
 	);
 
 	public function setUp() {
 		parent::setUp();
-		$this->testDataObject = $this->objFromFixture('DecimalTest_DataObject', 'test-dataobject');
+		$this->testDataObject = $this->objFromFixture(DecimalTest\TestObject::class, 'test-dataobject');
 	}
 
 	public function testDefaultValue() {
@@ -42,25 +38,5 @@ class DecimalTest extends SapphireTest {
 		$this->assertEquals($this->testDataObject->MyDecimal4, 4,
 			'Default value for Decimal type is set to 4');
 	}
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class DecimalTest_DataObject extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Name' => 'Varchar',
-		'MyDecimal1' => 'Decimal',
-		'MyDecimal2' => 'Decimal(5,3,2.5)',
-		'MyDecimal3' => 'Decimal(4,2,"Invalid default value")',
-		'MyDecimal4' => 'Decimal'
-	);
-
-	private static $defaults = array(
-		'MyDecimal4' => 4
-	);
 
 }

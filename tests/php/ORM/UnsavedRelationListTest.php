@@ -1,17 +1,19 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
+namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\RelationList;
 
 class UnsavedRelationListTest extends SapphireTest {
 	protected static $fixture_file = 'UnsavedRelationListTest.yml';
 
-	protected $extraDataObjects = array('UnsavedRelationListTest_DataObject');
+	protected $extraDataObjects = [
+		UnsavedRelationListTest\TestObject::class
+	];
 
 	public function testReturnedList() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 		$children = $object->Children();
 		$siblings = $object->Siblings();
 		$this->assertEquals($children, $object->Children(),
@@ -20,21 +22,21 @@ class UnsavedRelationListTest extends SapphireTest {
 			'Returned UnsavedRelationList should be the same.');
 
 		$object->write();
-		$this->assertInstanceOf('SilverStripe\\ORM\\RelationList', $object->Children());
+		$this->assertInstanceOf(RelationList::class, $object->Children());
 		$this->assertNotEquals($children, $object->Children(),
 			'Return should be a RelationList after first write');
-		$this->assertInstanceOf('SilverStripe\\ORM\\RelationList', $object->Siblings());
+		$this->assertInstanceOf(RelationList::class, $object->Siblings());
 		$this->assertNotEquals($siblings, $object->Siblings(),
 			'Return should be a RelationList after first write');
 	}
 
 	public function testHasManyExisting() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 
 		$children = $object->Children();
-		$children->add($this->objFromFixture('UnsavedRelationListTest_DataObject', 'ObjectA'));
-		$children->add($this->objFromFixture('UnsavedRelationListTest_DataObject', 'ObjectB'));
-		$children->add($this->objFromFixture('UnsavedRelationListTest_DataObject', 'ObjectC'));
+		$children->add($this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectA'));
+		$children->add($this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectB'));
+		$children->add($this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectC'));
 
 		$children = $object->Children();
 
@@ -56,12 +58,12 @@ class UnsavedRelationListTest extends SapphireTest {
 	}
 
 	public function testManyManyExisting() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 
 		$Siblings = $object->Siblings();
-		$Siblings->add($this->objFromFixture('UnsavedRelationListTest_DataObject', 'ObjectA'));
-		$Siblings->add($this->objFromFixture('UnsavedRelationListTest_DataObject', 'ObjectB'));
-		$Siblings->add($this->objFromFixture('UnsavedRelationListTest_DataObject', 'ObjectC'));
+		$Siblings->add($this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectA'));
+		$Siblings->add($this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectB'));
+		$Siblings->add($this->objFromFixture(UnsavedRelationListTest\TestObject::class, 'ObjectC'));
 
 		$siblings = $object->Siblings();
 
@@ -83,12 +85,12 @@ class UnsavedRelationListTest extends SapphireTest {
 	}
 
 	public function testHasManyNew() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 
 		$children = $object->Children();
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'A')));
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'B')));
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'C')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
 
 		$children = $object->Children();
 
@@ -110,12 +112,12 @@ class UnsavedRelationListTest extends SapphireTest {
 	}
 
 	public function testHasManyPolymorphic() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 
 		$children = $object->RelatedObjects();
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'A')));
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'B')));
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'C')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
 
 		$children = $object->RelatedObjects();
 
@@ -137,12 +139,12 @@ class UnsavedRelationListTest extends SapphireTest {
 	}
 
 	public function testManyManyNew() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 
 		$Siblings = $object->Siblings();
-		$Siblings->add(new UnsavedRelationListTest_DataObject(array('Name' => 'A')));
-		$Siblings->add(new UnsavedRelationListTest_DataObject(array('Name' => 'B')));
-		$Siblings->add(new UnsavedRelationListTest_DataObject(array('Name' => 'C')));
+		$Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
+		$Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
+		$Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
 
 		$siblings = $object->Siblings();
 
@@ -164,12 +166,12 @@ class UnsavedRelationListTest extends SapphireTest {
 	}
 
 	public function testManyManyExtraFields() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 
 		$Siblings = $object->Siblings();
-		$Siblings->add(new UnsavedRelationListTest_DataObject(array('Name' => 'A')), array('Number' => 1));
-		$Siblings->add(new UnsavedRelationListTest_DataObject(array('Name' => 'B')), array('Number' => 2));
-		$Siblings->add(new UnsavedRelationListTest_DataObject(array('Name' => 'C')), array('Number' => 3));
+		$Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')), array('Number' => 1));
+		$Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')), array('Number' => 2));
+		$Siblings->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')), array('Number' => 3));
 
 		$siblings = $object->Siblings();
 
@@ -191,13 +193,13 @@ class UnsavedRelationListTest extends SapphireTest {
 	}
 
 	public function testGetIDList() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 
 		$children = $object->Children();
 		$this->assertEquals($children->getIDList(), array());
-		$children->add($child1 = new UnsavedRelationListTest_DataObject(array('Name' => 'A')));
-		$children->add($child2 = new UnsavedRelationListTest_DataObject(array('Name' => 'B')));
-		$children->add($child3 = new UnsavedRelationListTest_DataObject(array('Name' => 'C')));
+		$children->add($child1 = new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
+		$children->add($child2 = new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
+		$children->add($child3 = new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
 		$children->add($child1);
 
 		$this->assertEquals($children->getIDList(), array());
@@ -217,12 +219,12 @@ class UnsavedRelationListTest extends SapphireTest {
 	}
 
 	public function testColumn() {
-		$object = new UnsavedRelationListTest_DataObject;
+		$object = new UnsavedRelationListTest\TestObject();
 
 		$children = $object->Children();
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'A')));
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'B')));
-		$children->add(new UnsavedRelationListTest_DataObject(array('Name' => 'C')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'A')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'B')));
+		$children->add(new UnsavedRelationListTest\TestObject(array('Name' => 'C')));
 
 		$children = $object->Children();
 
@@ -238,30 +240,4 @@ class UnsavedRelationListTest extends SapphireTest {
 			'C'
 		));
 	}
-}
-
-class UnsavedRelationListTest_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
-		'Name' => 'Varchar',
-	);
-
-	private static $has_one = array(
-		'Parent' => 'UnsavedRelationListTest_DataObject',
-		'RelatedObject' => 'SilverStripe\\ORM\\DataObject'
-	);
-
-	private static $has_many = array(
-		'Children' => 'UnsavedRelationListTest_DataObject.Parent',
-		'RelatedObjects' => 'UnsavedRelationListTest_DataObject.RelatedObject'
-	);
-
-	private static $many_many = array(
-		'Siblings' => 'UnsavedRelationListTest_DataObject',
-	);
-
-	private static $many_many_extraFields = array(
-		'Siblings' => array(
-			'Number' => 'Int',
-		),
-	);
 }

@@ -7,13 +7,13 @@ SilverStripe\Assets\Image:
     FileFilename: test.image.with.dots.png
     FileHash: 46affab7043cfd9f1ded919dd24affd08e926eca
     Name: test.image.with.dots.png
-DataDifferencerTest_HasOneRelationObject:
+SilverStripe\ORM\Tests\DataDifferencerTest\HasOneRelationObject:
   relobj1:
     Title: obj1
   relobj2:
     Title: obj2
-DataDifferencerTest_Object:
+SilverStripe\ORM\Tests\DataDifferencerTest\Object:
   obj1:
     Choices: a,b
     Image: =>SilverStripe\Assets\Image.image1
-    HasOneRelation: =>DataDifferencerTest_HasOneRelationObject.relobj1
+    HasOneRelation: =>SilverStripe\ORM\Tests\DataDifferencerTest\HasOneRelationObject.relobj1

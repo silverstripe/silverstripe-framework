@@ -1,29 +1,23 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\Queries\SQLSelect;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\SQLite\SQLite3Database;
 use SilverStripe\PostgreSQL\PostgreSQLDatabase;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class SQLSelectTest extends SapphireTest {
 
 	protected static $fixture_file = 'SQLSelectTest.yml';
 
 	protected $extraDataObjects = array(
-		'SQLSelectTest_DO',
-		'SQLSelectTestBase',
-		'SQLSelectTestChild'
+		SQLSelectTest\TestObject::class,
+		SQLSelectTest\TestBase::class,
+		SQLSelectTest\TestChild::class
 	);
 
 	protected $oldDeprecation = null;
@@ -41,9 +35,9 @@ class SQLSelectTest extends SapphireTest {
 	public function testCount() {
 
 		//basic counting
-		$qry = SQLSelectTest_DO::get()->dataQuery()->getFinalisedQuery();
+		$qry = SQLSelectTest\TestObject::get()->dataQuery()->getFinalisedQuery();
 		$qry->setGroupBy('"Common"');
-		$ids = $this->allFixtureIDs('SQLSelectTest_DO');
+		$ids = $this->allFixtureIDs(SQLSelectTest\TestObject::class);
 		$count = $qry->count('"SQLSelectTest_DO"."ID"');
 		$this->assertEquals(count($ids), $count);
 		$this->assertInternalType("int", $count);
@@ -57,8 +51,8 @@ class SQLSelectTest extends SapphireTest {
 	}
 	public function testUnlimitedRowCount() {
 		//basic counting
-		$qry = SQLSelectTest_DO::get()->dataQuery()->getFinalisedQuery();
-		$ids = $this->allFixtureIDs('SQLSelectTest_DO');
+		$qry = SQLSelectTest\TestObject::get()->dataQuery()->getFinalisedQuery();
+		$ids = $this->allFixtureIDs(SQLSelectTest\TestObject::class);
 		$qry->setLimit(1);
 		$count = $qry->unlimitedRowCount('"SQLSelectTest_DO"."ID"');
 		$this->assertEquals(count($ids), $count);
@@ -752,25 +746,4 @@ class SQLSelectTest extends SapphireTest {
 		$this->assertEquals(array('%MyName%', '2012-08-08 12:00'), $parameters);
 		$query->execute();
 	}
-}
-
-class SQLSelectTest_DO extends DataObject implements TestOnly {
-	private static $db = array(
-		"Name" => "Varchar",
-		"Meta" => "Varchar",
-		"Common" => "Varchar",
-		"Date" => "Datetime"
-	);
-}
-
-class SQLSelectTestBase extends DataObject implements TestOnly {
-	private static $db = array(
-		"Title" => "Varchar",
-	);
-}
-
-class SQLSelectTestChild extends SQLSelectTestBase {
-	private static $db = array(
-		"Name" => "Varchar",
-	);
 }

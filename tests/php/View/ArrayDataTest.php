@@ -1,14 +1,13 @@
 <?php
 
+namespace SilverStripe\View\Tests;
 
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
-
-
-
+use stdClass;
 
 class ArrayDataTest extends SapphireTest {
 
@@ -18,12 +17,12 @@ class ArrayDataTest extends SapphireTest {
 			"A" => new DBVarchar("A"),
 			"B" => new stdClass(),
 		));
-		$this->assertEquals('SilverStripe\\ORM\\FieldType\\DBVarchar', get_class($arrayData->A));
-		$this->assertEquals("SilverStripe\\View\\ArrayData", get_class($arrayData->B));
+		$this->assertEquals(DBVarchar::class, get_class($arrayData->A));
+		$this->assertEquals(ArrayData::class, get_class($arrayData->B));
 	}
 
 	public function testWrappingANonEmptyObjectWorks() {
-		$object = new ArrayDataTest_NonEmptyObject();
+		$object = new ArrayDataTest\NonEmptyObject();
 		$this->assertTrue(is_object($object));
 
 		$arrayData = new ArrayData($object);
@@ -90,17 +89,6 @@ class ArrayDataTest extends SapphireTest {
 		$objExpected->test1 = "result1";
 		$objExpected->test2 = "result2";
 		$this->assertEquals($obj,$objExpected, "Two objects match");
-	}
-
-}
-
-class ArrayDataTest_NonEmptyObject {
-
-	static $c = "Cucumber";
-
-	public function __construct() {
-		$this->a = "Apple";
-		$this->b = "Banana";
 	}
 
 }

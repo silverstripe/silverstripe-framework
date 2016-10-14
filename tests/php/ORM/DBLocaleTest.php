@@ -1,15 +1,10 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DBLocaleTest extends SapphireTest {
 	public function testNice() {
 		$l = DBField::create_field('Locale', 'de_DE');

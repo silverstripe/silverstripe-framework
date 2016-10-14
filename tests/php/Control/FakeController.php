@@ -1,5 +1,8 @@
 <?php
 
+namespace SilverStripe\Control\Tests;
+
+use SilverStripe\Control\Session;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -11,7 +14,7 @@ class FakeController extends Controller {
 	public function __construct() {
 		parent::__construct();
 
-		$session = Injector::inst()->create('SilverStripe\\Control\\Session', isset($_SESSION) ? $_SESSION : array());
+		$session = Injector::inst()->create(Session::class, isset($_SESSION) ? $_SESSION : array());
 		$this->setSession($session);
 
 		$this->pushCurrent();

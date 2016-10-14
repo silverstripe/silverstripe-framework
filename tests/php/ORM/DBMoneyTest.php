@@ -1,15 +1,13 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\i18n;
-
-
-
+use Exception;
 
 /**
  * Partially based on Zend_CurrencyTest.
@@ -18,36 +16,31 @@ use SilverStripe\i18n\i18n;
  * @license	http://framework.zend.com/license/new-bsd	 New BSD License
  * @version	$Id: CurrencyTest.php 14644 2009-04-04 18:59:08Z thomas $
  */
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DBMoneyTest extends SapphireTest {
 
 	protected static $fixture_file = 'MoneyTest.yml';
 
 	protected $extraDataObjects = array(
-		'MoneyTest_DataObject',
-		'MoneyTest_SubClass',
+		DBMoneyTest\TestObject::class,
+		DBMoneyTest\TestObjectSubclass::class,
 	);
 
 	public function testMoneyFieldsReturnedAsObjects() {
-		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
-		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $obj->MyMoney);
+		$obj = $this->objFromFixture(DBMoneyTest\TestObject::class, 'test1');
+		$this->assertInstanceOf(DBMoney::class, $obj->MyMoney);
 	}
 
 
 	public function testLoadFromFixture() {
-		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
+		$obj = $this->objFromFixture(DBMoneyTest\TestObject::class, 'test1');
 
-		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $obj->MyMoney);
+		$this->assertInstanceOf(DBMoney::class, $obj->MyMoney);
 		$this->assertEquals($obj->MyMoney->getCurrency(), 'EUR');
 		$this->assertEquals($obj->MyMoney->getAmount(), 1.23);
 	}
 
 	public function testDataObjectChangedFields() {
-		$obj = $this->objFromFixture('MoneyTest_DataObject', 'test1');
+		$obj = $this->objFromFixture(DBMoneyTest\TestObject::class, 'test1');
 
 		// Without changes
 		$curr = $obj->obj('MyMoney');
@@ -55,7 +48,7 @@ class DBMoneyTest extends SapphireTest {
 		$this->assertNotContains('MyMoney', array_keys($changed));
 
 		// With changes
-		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $obj->MyMoney);
+		$this->assertInstanceOf(DBMoney::class, $obj->MyMoney);
 		$obj->MyMoney->setAmount(99);
 		$changed = $obj->getChangedFields();
 		$this->assertContains('MyMoney', array_keys($changed), 'Field is detected as changed');
@@ -63,7 +56,7 @@ class DBMoneyTest extends SapphireTest {
 	}
 
 	public function testCanOverwriteSettersWithNull() {
-		$obj = new MoneyTest_DataObject();
+		$obj = new DBMoneyTest\TestObject();
 
 		$m1 = new DBMoney();
 		$m1->setAmount(987.65);
@@ -77,14 +70,14 @@ class DBMoneyTest extends SapphireTest {
 		$obj->MyMoney = $m2;
 		$obj->write();
 
-		$moneyTest = DataObject::get_by_id('MoneyTest_DataObject',$obj->ID);
-		$this->assertTrue($moneyTest instanceof MoneyTest_DataObject);
+		$moneyTest = DataObject::get_by_id(DBMoneyTest\TestObject::class,$obj->ID);
+		$this->assertTrue($moneyTest instanceof DBMoneyTest\TestObject);
 		$this->assertEquals('', $moneyTest->MyMoneyCurrency);
 		$this->assertEquals(0.0000, $moneyTest->MyMoneyAmount);
 	}
 
 	public function testIsChanged() {
-		$obj1 = $this->objFromFixture('MoneyTest_DataObject', 'test1');
+		$obj1 = $this->objFromFixture(DBMoneyTest\TestObject::class, 'test1');
 		$this->assertFalse($obj1->isChanged());
 		$this->assertFalse($obj1->isChanged('MyMoney'));
 
@@ -97,7 +90,7 @@ class DBMoneyTest extends SapphireTest {
 		$this->assertTrue($obj1->isChanged('NonDBMoneyField')); // Allow change detection to non-db fields explicitly named
 
 		// Modify db field
-		$obj2 = $this->objFromFixture('MoneyTest_DataObject', 'test2');
+		$obj2 = $this->objFromFixture(DBMoneyTest\TestObject::class, 'test2');
 		$m2 = new DBMoney();
 		$m2->setAmount(500);
 		$m2->setCurrency('NZD');
@@ -106,7 +99,7 @@ class DBMoneyTest extends SapphireTest {
 		$this->assertTrue($obj2->ischanged('MyMoney'));
 
 		// Modify sub-fields
-		$obj3 = $this->objFromFixture('MoneyTest_DataObject', 'test3');
+		$obj3 = $this->objFromFixture(DBMoneyTest\TestObject::class, 'test3');
 		$obj3->MyMoneyCurrency = 'USD';
 		$this->assertTrue($obj3->isChanged()); // Detects change to DB field
 		$this->assertTrue($obj3->ischanged('MyMoneyCurrency'));
@@ -121,7 +114,7 @@ class DBMoneyTest extends SapphireTest {
 		//make sure that the $ amount is not prefixed by US$, as it would be in non-US locale
 		i18n::set_locale('en_US');
 
-		$obj = new MoneyTest_DataObject();
+		$obj = new DBMoneyTest\TestObject();
 
 		$m = new DBMoney();
 		$m->setAmount(987.65);
@@ -133,8 +126,8 @@ class DBMoneyTest extends SapphireTest {
 
 		$objID = $obj->write();
 
-		$moneyTest = DataObject::get_by_id('MoneyTest_DataObject',$objID);
-		$this->assertTrue($moneyTest instanceof MoneyTest_DataObject);
+		$moneyTest = DataObject::get_by_id(DBMoneyTest\TestObject::class,$objID);
+		$this->assertTrue($moneyTest instanceof DBMoneyTest\TestObject);
 		$this->assertEquals('USD', $moneyTest->MyMoneyCurrency);
 		$this->assertEquals(987.65, $moneyTest->MyMoneyAmount);
 		$this->assertEquals("$987.65", $moneyTest->MyMoney->Nice(),
@@ -270,9 +263,9 @@ class DBMoneyTest extends SapphireTest {
 	}
 
 	public function testLoadIntoDataObject() {
-		$obj = new MoneyTest_DataObject();
+		$obj = new DBMoneyTest\TestObject();
 
-		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBMoney', $obj->obj('MyMoney'));
+		$this->assertInstanceOf(DBMoney::class, $obj->obj('MyMoney'));
 
 		$m = new DBMoney();
 		$m->setValue(array(
@@ -286,7 +279,7 @@ class DBMoneyTest extends SapphireTest {
 	}
 
 	public function testWriteToDataObject() {
-		$obj = new MoneyTest_DataObject();
+		$obj = new DBMoneyTest\TestObject();
 		$m = new DBMoney();
 		$m->setValue(array(
 			'Currency' => 'EUR',
@@ -313,14 +306,14 @@ class DBMoneyTest extends SapphireTest {
 
 	public function testMoneyLazyLoading() {
 		// Get the object, ensuring that MyOtherMoney will be lazy loaded
-		$id = $this->idFromFixture('MoneyTest_SubClass', 'test2');
-		$obj = MoneyTest_DataObject::get()->byID($id);
+		$id = $this->idFromFixture(DBMoneyTest\TestObjectSubclass::class, 'test2');
+		$obj = DBMoneyTest\TestObject::get()->byID($id);
 
 		$this->assertEquals('£2.46', $obj->obj('MyOtherMoney')->Nice());
 	}
 
 	public function testHasAmount() {
-		$obj = new MoneyTest_DataObject();
+		$obj = new DBMoneyTest\TestObject();
 		$m = new DBMoney();
 		$obj->MyMoney = $m;
 
@@ -348,28 +341,5 @@ class DBMoneyTest extends SapphireTest {
 		$m->setValue(array('Amount' => 0.00));
 		$this->assertFalse($obj->MyMoney->hasAmount());
 	}
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class MoneyTest_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
-		'MyMoney' => 'Money',
-		//'MyOtherMoney' => 'Money',
-	);
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class MoneyTest_SubClass extends MoneyTest_DataObject implements TestOnly {
-
-	private static $db = array(
-		'MyOtherMoney' => 'Money',
-	);
 
 }

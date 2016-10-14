@@ -1,12 +1,12 @@
-YamlFixtureTest_DataObjectRelation:
+SilverStripe\Dev\Tests\YamlFixtureTest\DataObjectRelation:
   relation1:
     Name: Relation1
   relation2:
     Name: Relation2
-YamlFixtureTest_DataObject:
+SilverStripe\Dev\Tests\YamlFixtureTest\TestDataObject:
   testobject1:
     Name: TestObject1
-    ManyManyRelation: =>YamlFixtureTest_DataObjectRelation.relation1,=>YamlFixtureTest_DataObjectRelation.relation2
+    ManyManyRelation: =>SilverStripe\Dev\Tests\YamlFixtureTest\DataObjectRelation.relation1,=>SilverStripe\Dev\Tests\YamlFixtureTest\DataObjectRelation.relation2
   testobject2:
     Name: TestObject2
-    ManyManyRelation: =>YamlFixtureTest_DataObjectRelation.relation1
+    ManyManyRelation: =>SilverStripe\Dev\Tests\YamlFixtureTest\DataObjectRelation.relation1

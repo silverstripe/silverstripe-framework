@@ -1,12 +1,11 @@
 <?php
 
+namespace SilverStripe\Dev\Tests;
+
 use SilverStripe\Dev\TaskRunner;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\BuildTask;
-/**
- * @package framework
- * @subpackage tests
- */
+use ReflectionMethod;
+
 class TaskRunnerTest extends SapphireTest {
 
 	public function testTaskEnabled() {
@@ -14,46 +13,14 @@ class TaskRunnerTest extends SapphireTest {
 		$method = new ReflectionMethod($runner, 'taskEnabled');
 		$method->setAccessible(true);
 
-		$this->assertTrue($method->invoke($runner, 'TaskRunnerTest_EnabledTask'),
+		$this->assertTrue($method->invoke($runner, TaskRunnerTest\TaskRunnerTest_EnabledTask::class),
 			'Enabled task incorrectly marked as disabled');
-		$this->assertFalse($method->invoke($runner, 'TaskRunnerTest_DisabledTask'),
+		$this->assertFalse($method->invoke($runner, TaskRunnerTest\TaskRunnerTest_DisabledTask::class),
 			'Disabled task incorrectly marked as enabled');
-		$this->assertFalse($method->invoke($runner, 'TaskRunnerTest_AbstractTask'),
+		$this->assertFalse($method->invoke($runner, TaskRunnerTest\TaskRunnerTest_AbstractTask::class),
 			'Disabled task incorrectly marked as enabled');
-		$this->assertTrue($method->invoke($runner, 'TaskRunnerTest_ChildOfAbstractTask'),
+		$this->assertTrue($method->invoke($runner, TaskRunnerTest\TaskRunnerTest_ChildOfAbstractTask::class),
 			'Enabled task incorrectly marked as disabled');
 	}
 
-}
-
-class TaskRunnerTest_EnabledTask extends BuildTask {
-	protected $enabled = true;
-
-	public function run($request) {
-		// NOOP
-	}
-}
-
-class TaskRunnerTest_DisabledTask extends BuildTask {
-	protected $enabled = false;
-
-	public function run($request) {
-		// NOOP
-	}
-}
-
-abstract class TaskRunnerTest_AbstractTask extends BuildTask {
-	protected $enabled = true;
-
-	public function run($request) {
-		// NOOP
-	}
-}
-
-class TaskRunnerTest_ChildOfAbstractTask extends TaskRunnerTest_AbstractTask {
-	protected $enabled = true;
-
-	public function run($request) {
-		// NOOP
-	}
 }

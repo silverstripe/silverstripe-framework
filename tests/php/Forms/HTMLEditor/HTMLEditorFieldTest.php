@@ -1,26 +1,27 @@
 <?php
 
+namespace SilverStripe\Forms\Tests\HTMLEditor;
+
+use Page;
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\FileNameFilter;
 use SilverStripe\Assets\Filesystem;
+use SilverStripe\Assets\Folder;
+use SilverStripe\Assets\Image;
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Extension;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
-use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Image;
 use SilverStripe\Forms\HTMLReadonlyField;
-use SilverStripe\ORM\DataObject;
+use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\DummyMediaFormFieldExtension;
+use SilverStripe\Forms\Tests\HTMLEditor\HTMLEditorFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class HTMLEditorFieldTest extends FunctionalTest {
 
 	protected static $fixture_file = 'HTMLEditorFieldTest.yml';
@@ -28,21 +29,21 @@ class HTMLEditorFieldTest extends FunctionalTest {
 	protected static $use_draft_site = true;
 
 	protected $requiredExtensions = array(
-		'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Toolbar' => array(
-			'HTMLEditorFieldTest_DummyMediaFormFieldExtension'
+		HTMLEditorField_Toolbar::class => array(
+			DummyMediaFormFieldExtension::class
 		)
 	);
 
-	protected $extraDataObjects = array('HTMLEditorFieldTest_Object');
+	protected $extraDataObjects = array(TestObject::class);
 
 	public function setUp() {
 		parent::setUp();
 
 		// Set backend root to /HTMLEditorFieldTest
-		AssetStoreTest_SpyStore::activate('HTMLEditorFieldTest');
+		TestAssetStore::activate('HTMLEditorFieldTest');
 
 		// Set the File Name Filter replacements so files have the expected names
-        Config::inst()->update('SilverStripe\\Assets\\FileNameFilter', 'default_replacements', array(
+        Config::inst()->update(FileNameFilter::class, 'default_replacements', array(
             '/\s/' => '-', // remove whitespace
             '/_/' => '-', // underscores to dashes
             '/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
@@ -51,22 +52,22 @@ class HTMLEditorFieldTest extends FunctionalTest {
         ));
 
 		// Create a test files for each of the fixture references
-		$files = File::get()->exclude('ClassName', 'SilverStripe\\Assets\\Folder');
+		$files = File::get()->exclude('ClassName', Folder::class);
 		foreach($files as $file) {
-			$fromPath = FRAMEWORK_PATH . '/tests/forms/images/' . $file->Name;
-			$destPath = AssetStoreTest_SpyStore::getLocalPath($file); // Only correct for test asset store
+			$fromPath = __DIR__ . '/HTMLEditorFieldTest/images/' . $file->Name;
+			$destPath = TestAssetStore::getLocalPath($file); // Only correct for test asset store
 			Filesystem::makeFolder(dirname($destPath));
 			copy($fromPath, $destPath);
 		}
 	}
 
 	public function tearDown() {
-		AssetStoreTest_SpyStore::reset();
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
 	public function testBasicSaving() {
-		$obj = new HTMLEditorFieldTest_Object();
+		$obj = new TestObject();
 		$editor   = new HTMLEditorField('Content');
 
 		$editor->setValue('<p class="foo">Simple Content</p>');
@@ -79,7 +80,7 @@ class HTMLEditorFieldTest extends FunctionalTest {
 	}
 
 	public function testNullSaving() {
-		$obj = new HTMLEditorFieldTest_Object();
+		$obj = new TestObject();
 		$editor = new HTMLEditorField('Content');
 
 		$editor->setValue(null);
@@ -88,12 +89,12 @@ class HTMLEditorFieldTest extends FunctionalTest {
 	}
 
 	public function testResizedImageInsertion() {
-		$obj = new HTMLEditorFieldTest_Object();
+		$obj = new TestObject();
 		$editor = new HTMLEditorField('Content');
 
-		$fileID = $this->idFromFixture('SilverStripe\\Assets\\Image', 'example_image');
+		$fileID = $this->idFromFixture(Image::class, 'example_image');
 		$editor->setValue(sprintf(
-			'[image src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" id="%d"]',
+			'[image src="assets/example.jpg" width="10" height="20" id="%d"]',
 			$fileID
 		));
 		$editor->saveInto($obj);
@@ -101,7 +102,7 @@ class HTMLEditorFieldTest extends FunctionalTest {
 		$parser = new CSSContentParser($obj->dbObject('Content')->forTemplate());
 		$xml = $parser->getByXpath('//img');
 		$this->assertEquals(
-			'HTMLEditorFieldTest example',
+			'example',
 			(string)$xml[0]['alt'],
 			'Alt tags are added by default based on filename'
 		);
@@ -110,7 +111,7 @@ class HTMLEditorFieldTest extends FunctionalTest {
 		$this->assertEquals(20, (int)$xml[0]['height'], 'Height tag of resized image is set.');
 
 		$neededFilename
-			= '/assets/HTMLEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example__ResizedImageWyIxMCIsIjIwIl0.jpg';
+			= '/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg';
 
 		$this->assertEquals($neededFilename, (string)$xml[0]['src'], 'Correct URL of resized image is set.');
 		$this->assertTrue(file_exists(BASE_PATH.DIRECTORY_SEPARATOR.$neededFilename), 'File for resized image exists');
@@ -118,7 +119,7 @@ class HTMLEditorFieldTest extends FunctionalTest {
 	}
 
 	public function testMultiLineSaving() {
-		$obj = $this->objFromFixture('HTMLEditorFieldTest_Object', 'home');
+		$obj = $this->objFromFixture(TestObject::class, 'home');
 		$editor   = new HTMLEditorField('Content');
 		$editor->setValue('<p>First Paragraph</p><p>Second Paragraph</p>');
 		$editor->saveInto($obj);
@@ -126,7 +127,7 @@ class HTMLEditorFieldTest extends FunctionalTest {
 	}
 
 	public function testSavingLinksWithoutHref() {
-		$obj = $this->objFromFixture('HTMLEditorFieldTest_Object', 'home');
+		$obj = $this->objFromFixture(TestObject::class, 'home');
 		$editor   = new HTMLEditorField('Content');
 
 		$editor->setValue('<p><a name="example-anchor"></a></p>');
@@ -199,9 +200,9 @@ EOS
 
 	public function testReadonlyField() {
 		$editor = new HTMLEditorField('Content');
-		$fileID = $this->idFromFixture('SilverStripe\\Assets\\Image', 'example_image');
+		$fileID = $this->idFromFixture(Image::class, 'example_image');
 		$editor->setValue(sprintf(
-			'[image src="assets/HTMLEditorFieldTest_example.jpg" width="10" height="20" id="%d"]',
+			'[image src="assets/example.jpg" width="10" height="20" id="%d"]',
 			$fileID
 		));
 		/** @var HTMLReadonlyField $readonly */
@@ -211,7 +212,7 @@ EOS
 
 		$this->assertEquals( <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="HTMLEditorFieldTest example" width="10" height="20">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="example" width="10" height="20">
 </span>
 
 
@@ -227,10 +228,10 @@ EOS
 		$readonlyContent = $readonly->Field();
 		$this->assertEquals( <<<EOS
 <span class="readonly typography" id="Content">
-	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="HTMLEditorFieldTest example" width="10" height="20">
+	<img src="/assets/HTMLEditorFieldTest/f5c7c2f814/example__ResizedImageWyIxMCIsIjIwIl0.jpg" alt="example" width="10" height="20">
 </span>
 
-	<input type="hidden" name="Content" value="[image src=&quot;/assets/HTMLEditorFieldTest/f5c7c2f814/HTMLEditorFieldTest-example.jpg&quot; width=&quot;10&quot; height=&quot;20&quot; id=&quot;{$fileID}&quot;]" />
+	<input type="hidden" name="Content" value="[image src=&quot;/assets/HTMLEditorFieldTest/f5c7c2f814/example.jpg&quot; width=&quot;10&quot; height=&quot;20&quot; id=&quot;{$fileID}&quot;]" />
 
 
 EOS
@@ -238,29 +239,4 @@ EOS
 			$readonlyContent->getValue()
 		);
 	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class HTMLEditorFieldTest_DummyMediaFormFieldExtension extends Extension implements TestOnly {
-	public static $fields = null;
-	public static $update_called = false;
-
-	/**
-	 * @param Form $form
-	 */
-	public function updateImageForm($form) {
-		self::$update_called = true;
-		self::$fields = $form->Fields();
-	}
-}
-
-class HTMLEditorFieldTest_Object extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar',
-		'Content' => 'HTMLText',
-		'HasBrokenFile' => 'Boolean'
-	);
 }

@@ -1,15 +1,10 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\FieldType\DBCurrency;
 use SilverStripe\Dev\SapphireTest;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class DBCurrencyTest extends SapphireTest {
 	public function testNiceFormatting() {
 		// Test a bunch of different data values and results in Nice() and Whole()

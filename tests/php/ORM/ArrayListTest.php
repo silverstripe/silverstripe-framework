@@ -1,16 +1,14 @@
 <?php
 
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Filterable;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
+use stdClass;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class ArrayListTest extends SapphireTest {
 
 	public function testPushOperator() {
@@ -73,7 +71,7 @@ class ArrayListTest extends SapphireTest {
 		$list = new ArrayList(array(
 			array('First' => 'FirstFirst', 'Second' => 'FirstSecond'),
 			(object) array('First' => 'SecondFirst', 'Second' => 'SecondSecond'),
-			new ArrayListTest_Object('ThirdFirst', 'ThirdSecond')
+			new ArrayListTest\TestObject('ThirdFirst', 'ThirdSecond')
 		));
 
 		$this->assertEquals($list->toNestedArray(), array(
@@ -996,23 +994,4 @@ class ArrayListTest extends SapphireTest {
 		$element = $list->byID(1);
 		$this->assertNull($element);
 	}
-}
-
-/**
- * @ignore
- */
-class ArrayListTest_Object {
-
-	public $First;
-	public $Second;
-
-	public function __construct($first, $second) {
-		$this->First  = $first;
-		$this->Second = $second;
-	}
-
-	public function toMap() {
-		return array('First' => $this->First, 'Second' => $this->Second);
-	}
-
 }

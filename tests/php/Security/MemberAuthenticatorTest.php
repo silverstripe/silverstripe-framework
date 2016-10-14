@@ -1,7 +1,11 @@
 <?php
 
+namespace SilverStripe\Security\Tests;
+
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\Security\PasswordEncryptor;
+use SilverStripe\Security\PasswordEncryptor_PHPHash;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
 use SilverStripe\Security\MemberAuthenticator;
@@ -12,13 +16,6 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class MemberAuthenticatorTest extends SapphireTest {
 
 	protected $usesDatabase = true;
@@ -56,7 +53,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		);
 		MemberAuthenticator::authenticate($data);
 
-		$member = DataObject::get_by_id('SilverStripe\\Security\\Member', $member->ID);
+		$member = DataObject::get_by_id(Member::class, $member->ID);
 		$this->assertEquals($member->PasswordEncryption, "sha1_v2.4");
 		$result = $member->checkPassword('mypassword');
 		$this->assertTrue($result->valid());
@@ -64,9 +61,9 @@ class MemberAuthenticatorTest extends SapphireTest {
 
 	public function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm() {
 		Config::inst()->update(
-			'SilverStripe\\Security\\PasswordEncryptor',
+			PasswordEncryptor::class,
 			'encryptors',
-			array('crc32' => array('SilverStripe\\Security\\PasswordEncryptor_PHPHash' => 'crc32'))
+			array('crc32' => array(PasswordEncryptor_PHPHash::class => 'crc32'))
 		);
 		$field=Member::config()->unique_identifier_field;
 
@@ -82,7 +79,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		);
 		MemberAuthenticator::authenticate($data);
 
-		$member = DataObject::get_by_id('SilverStripe\\Security\\Member', $member->ID);
+		$member = DataObject::get_by_id(Member::class, $member->ID);
 		$this->assertEquals($member->PasswordEncryption, "crc32");
 		$result = $member->checkPassword('mypassword');
 		$this->assertTrue($result->valid());
@@ -93,7 +90,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$origField = Member::config()->unique_identifier_field;
 		Member::config()->unique_identifier_field = 'Username';
 
-		$label=singleton('SilverStripe\\Security\\Member')->fieldLabel(Member::config()->unique_identifier_field);
+		$label=singleton(Member::class)->fieldLabel(Member::config()->unique_identifier_field);
 
 		$this->assertEquals($label, 'Username');
 
@@ -188,8 +185,8 @@ class MemberAuthenticatorTest extends SapphireTest {
 
 	public function testDefaultAdminLockOut()
 	{
-		Config::inst()->update('SilverStripe\\Security\\Member', 'lock_out_after_incorrect_logins', 1);
-		Config::inst()->update('SilverStripe\\Security\\Member', 'lock_out_delay_mins', 10);
+		Config::inst()->update(Member::class, 'lock_out_after_incorrect_logins', 1);
+		Config::inst()->update(Member::class, 'lock_out_delay_mins', 10);
 		DBDatetime::set_mock_now('2016-04-18 00:00:00');
 		$controller = new Security();
 		/** @skipUpgrade */

@@ -1,52 +1,42 @@
 <?php
 
-use SilverStripe\Dev\Debug;
+namespace SilverStripe\ORM\Tests;
+
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\DB;
-use SilverStripe\ORM\HasManyList;
-use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
+use DateTime;
 
-
-
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class VersionedTest extends SapphireTest {
 
 	protected static $fixture_file = 'VersionedTest.yml';
 
-	protected $extraDataObjects = array(
-		'VersionedTest_DataObject',
-		'VersionedTest_Subclass',
-		'VersionedTest_AnotherSubclass',
-		'VersionedTest_RelatedWithoutVersion',
-		'VersionedTest_SingleStage',
-		'VersionedTest_WithIndexes',
-		'VersionedTest_PublicStage',
-		'VersionedTest_PublicViaExtension',
-		'VersionedTest_CustomTable',
-	);
+	public static $extra_data_objects = [
+		VersionedTest\TestObject::class,
+		VersionedTest\Subclass::class,
+		VersionedTest\AnotherSubclass::class,
+		VersionedTest\RelatedWithoutversion::class,
+		VersionedTest\SingleStage::class,
+		VersionedTest\WithIndexes::class,
+		VersionedTest\PublicStage::class,
+		VersionedTest\PublicViaExtension::class,
+		VersionedTest\CustomTable::class,
+	];
 
-	protected $requiredExtensions = array(
-		"VersionedTest_DataObject" => array('SilverStripe\\ORM\\Versioning\\Versioned'),
-		"VersionedTest_WithIndexes" => array('SilverStripe\\ORM\\Versioning\\Versioned'),
-	);
+	public function setUpOnce()
+	{
+		$this->extraDataObjects = static::$extra_data_objects;
+		parent::setUpOnce();
+	}
 
 	public function testUniqueIndexes() {
 		$tableExpectations = array(
@@ -84,7 +74,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testDeletingOrphanedVersions() {
-		$obj = new VersionedTest_Subclass();
+		$obj = new VersionedTest\Subclass();
 		$obj->ExtraField = 'Foo'; // ensure that child version table gets written
 		$obj->write();
 		$obj->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
@@ -127,7 +117,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testCustomTable() {
-		$obj = new VersionedTest_CustomTable();
+		$obj = new VersionedTest\CustomTable();
 		$obj->Title = 'my object';
 		$obj->write();
 		$id = $obj->ID;
@@ -135,8 +125,8 @@ class VersionedTest extends SapphireTest {
 		$obj->Title = 'new title';
 		$obj->write();
 
-		$liveRecord = Versioned::get_by_stage('VersionedTest_CustomTable', Versioned::LIVE)->byID($id);
-		$draftRecord = Versioned::get_by_stage('VersionedTest_CustomTable', Versioned::DRAFT)->byID($id);
+		$liveRecord = Versioned::get_by_stage(VersionedTest\CustomTable::class, Versioned::LIVE)->byID($id);
+		$draftRecord = Versioned::get_by_stage(VersionedTest\CustomTable::class, Versioned::DRAFT)->byID($id);
 
 		$this->assertEquals('my object', $liveRecord->Title);
 		$this->assertEquals('new title', $draftRecord->Title);
@@ -146,7 +136,7 @@ class VersionedTest extends SapphireTest {
 	 * Test that publishing from invalid stage will throw exception
 	 */
 	public function testInvalidPublish() {
-		$obj = new VersionedTest_Subclass();
+		$obj = new VersionedTest\Subclass();
 		$obj->ExtraField = 'Foo'; // ensure that child version table gets written
 		$obj->write();
 		$this->setExpectedException(
@@ -159,7 +149,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testDuplicate() {
-		$obj1 = new VersionedTest_Subclass();
+		$obj1 = new VersionedTest\Subclass();
 		$obj1->ExtraField = 'Foo';
 		$obj1->write(); // version 1
 		$obj1->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
@@ -176,7 +166,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testForceChangeUpdatesVersion() {
-		$obj = new VersionedTest_DataObject();
+		$obj = new VersionedTest\TestObject();
 		$obj->Name = "test";
 		$obj->write();
 
@@ -196,13 +186,13 @@ class VersionedTest extends SapphireTest {
 	public function testGetIncludingDeleted() {
 		// Get all ids of pages
 		$allPageIDs = DataObject::get(
-			'VersionedTest_DataObject',
+			VersionedTest\TestObject::class,
 			"\"ParentID\" = 0", "\"VersionedTest_DataObject\".\"ID\" ASC"
 		)->column('ID');
 
 		// Modify a page, ensuring that the Version ID and Record ID will differ,
 		// and then subsequently delete it
-		$targetPage = $this->objFromFixture('VersionedTest_DataObject', 'page3');
+		$targetPage = $this->objFromFixture(VersionedTest\TestObject::class, 'page3');
 		$targetPage->Content = 'To be deleted';
 		$targetPage->write();
 		$targetPage->delete();
@@ -234,25 +224,25 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testVersionedFieldsAdded() {
-		$obj = new VersionedTest_DataObject();
+		$obj = new VersionedTest\TestObject();
 		// Check that the Version column is added as a full-fledged column
 		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBInt', $obj->dbObject('Version'));
 
-		$obj2 = new VersionedTest_Subclass();
+		$obj2 = new VersionedTest\Subclass();
 		// Check that the Version column is added as a full-fledged column
 		$this->assertInstanceOf('SilverStripe\\ORM\\FieldType\\DBInt', $obj2->dbObject('Version'));
 	}
 
 	public function testVersionedFieldsNotInCMS() {
-		$obj = new VersionedTest_DataObject();
+		$obj = new VersionedTest\TestObject();
 
 		// the version field in cms causes issues with Versioned::augmentWrite()
 		$this->assertNull($obj->getCMSFields()->dataFieldByName('Version'));
 	}
 
 	public function testPublishCreateNewVersion() {
-		/** @var VersionedTest_DataObject $page1 */
-		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
+		/** @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page1 */
+		$page1 = $this->objFromFixture(VersionedTest\TestObject::class, 'page1');
 		$page1->Content = 'orig';
 		$page1->write();
 		$firstVersion = $page1->Version;
@@ -269,9 +259,9 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($firstVersion < $secondVersion, 'write creates new version');
 
 		$page1->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE, true);
-		$thirdVersion = Versioned::get_latest_version('VersionedTest_DataObject', $page1->ID)->Version;
-		$liveVersion = Versioned::get_versionnumber_by_stage('VersionedTest_DataObject', 'Live', $page1->ID);
-		$stageVersion = Versioned::get_versionnumber_by_stage('VersionedTest_DataObject', 'Stage', $page1->ID);
+		$thirdVersion = Versioned::get_latest_version(VersionedTest\TestObject::class, $page1->ID)->Version;
+		$liveVersion = Versioned::get_versionnumber_by_stage(VersionedTest\TestObject::class, 'Live', $page1->ID);
+		$stageVersion = Versioned::get_versionnumber_by_stage(VersionedTest\TestObject::class, 'Stage', $page1->ID);
 		$this->assertTrue(
 			$secondVersion < $thirdVersion,
 			'publish() with $createNewVersion=TRUE creates a new version'
@@ -289,7 +279,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testRollbackTo() {
-		$page1 = $this->objFromFixture('VersionedTest_AnotherSubclass', 'subclass1');
+		$page1 = $this->objFromFixture(VersionedTest\AnotherSubclass::class, 'subclass1');
 		$page1->Content = 'orig';
 		$page1->write();
 		$page1->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
@@ -301,7 +291,7 @@ class VersionedTest extends SapphireTest {
 		$changedVersion = $page1->Version;
 
 		$page1->doRollbackTo($origVersion);
-		$page1 = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', array(
+		$page1 = Versioned::get_one_by_stage(VersionedTest\TestObject::class, 'Stage', array(
 			'"VersionedTest_DataObject"."ID" = ?' => $page1->ID
 		));
 
@@ -321,7 +311,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testDeleteFromStage() {
-		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
+		$page1 = $this->objFromFixture(VersionedTest\TestObject::class, 'page1');
 		$pageID = $page1->ID;
 
 		$page1->Content = 'orig';
@@ -356,17 +346,17 @@ class VersionedTest extends SapphireTest {
 		$origReadingMode = Versioned::get_reading_mode();
 
 		Versioned::set_stage(Versioned::DRAFT);
-		$page = new VersionedTest_DataObject();
+		$page = new VersionedTest\TestObject();
 		$page->Title = "testWritingNewToStage";
 		$page->URLSegment = "testWritingNewToStage";
 		$page->write();
 
-		$live = Versioned::get_by_stage('VersionedTest_DataObject', 'Live', array(
+		$live = Versioned::get_by_stage(VersionedTest\TestObject::class, 'Live', array(
 			'"VersionedTest_DataObject_Live"."ID"' => $page->ID
 		));
 		$this->assertEquals(0, $live->count());
 
-		$stage = Versioned::get_by_stage('VersionedTest_DataObject', 'Stage',array(
+		$stage = Versioned::get_by_stage(VersionedTest\TestObject::class, 'Stage',array(
 			'"VersionedTest_DataObject"."ID"' => $page->ID
 		));
 		$this->assertEquals(1, $stage->count());
@@ -382,19 +372,19 @@ class VersionedTest extends SapphireTest {
 		$origReadingMode = Versioned::get_reading_mode();
 
 		Versioned::set_stage(Versioned::LIVE);
-		$page = new VersionedTest_DataObject();
+		$page = new VersionedTest\TestObject();
 		$page->Title = "testWritingNewToLive";
 		$page->URLSegment = "testWritingNewToLive";
 		$page->write();
 
-		$live = Versioned::get_by_stage('VersionedTest_DataObject', 'Live',array(
+		$live = Versioned::get_by_stage(VersionedTest\TestObject::class, 'Live',array(
 			'"VersionedTest_DataObject_Live"."ID"' => $page->ID
 		));
 		$this->assertEquals(1, $live->count());
 		$liveRecord = $live->First();
 		$this->assertEquals($liveRecord->Title, 'testWritingNewToLive');
 
-		$stage = Versioned::get_by_stage('VersionedTest_DataObject', 'Stage',array(
+		$stage = Versioned::get_by_stage(VersionedTest\TestObject::class, 'Stage',array(
 			'"VersionedTest_DataObject"."ID"' => $page->ID
 		));
 		$this->assertEquals(1, $stage->count());
@@ -419,20 +409,20 @@ class VersionedTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			'Int',
-			$schema->fieldSpec(VersionedTest_DataObject::class, 'Version', DataObjectSchema::UNINHERITED),
+			$schema->fieldSpec(VersionedTest\TestObject::class, 'Version', DataObjectSchema::UNINHERITED),
 			'The versioned ext adds an Int version field.'
 		);
 		$this->assertNull(
-			$schema->fieldSpec(VersionedTest_Subclass::class, 'Version', DataObjectSchema::UNINHERITED),
+			$schema->fieldSpec(VersionedTest\Subclass::class, 'Version', DataObjectSchema::UNINHERITED),
 			'Sub-classes of a versioned model don\'t have a Version field.'
 		);
 		$this->assertNull(
-			$schema->fieldSpec(VersionedTest_AnotherSubclass::class, 'Version', DataObjectSchema::UNINHERITED),
+			$schema->fieldSpec(VersionedTest\AnotherSubclass::class, 'Version', DataObjectSchema::UNINHERITED),
 			'Sub-classes of a versioned model don\'t have a Version field.'
 		);
 		$this->assertEquals(
 			'Varchar(255)',
-			$schema->fieldSpec(VersionedTest_UnversionedWithField::class, 'Version', DataObjectSchema::UNINHERITED),
+			$schema->fieldSpec(VersionedTest\UnversionedWithField::class, 'Version', DataObjectSchema::UNINHERITED),
 			'Models w/o Versioned can have their own Version field.'
 		);
 	}
@@ -446,7 +436,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals(array(
 			'VersionedTest_DataObject_Live',
 			'VersionedTest_Subclass_Live',
-		), DataObject::get('VersionedTest_Subclass')->dataQuery()->query()->queriedTables());
+		), DataObject::get(VersionedTest\Subclass::class)->dataQuery()->query()->queriedTables());
 	}
 
 	/**
@@ -468,8 +458,8 @@ class VersionedTest extends SapphireTest {
 		// Create a few initial versions to ensure this version
 		// doesn't clash with child versions
 		$this->sleep(1);
-		/** @var VersionedTest_DataObject $page2 */
-		$page2 = $this->objFromFixture('VersionedTest_DataObject', 'page2');
+		/** @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page2 */
+		$page2 = $this->objFromFixture(VersionedTest\TestObject::class, 'page2');
 		$page2->Title = 'dummy1';
 		$page2->write();
 		$this->sleep(1);
@@ -484,8 +474,8 @@ class VersionedTest extends SapphireTest {
 		// Create another version where this object and some
 		// child records have been modified
 		$this->sleep(1);
-		/** @var VersionedTest_DataObject $page2a */
-		$page2a = $this->objFromFixture('VersionedTest_DataObject', 'page2a');
+		/** @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page2a */
+		$page2a = $this->objFromFixture(VersionedTest\TestObject::class, 'page2a');
 		$page2a->Title = 'Page 2a - v2';
 		$page2a->write();
 		$this->sleep(1);
@@ -503,8 +493,8 @@ class VersionedTest extends SapphireTest {
 		);
 
 		// test selecting v1
-		/** @var VersionedTest_DataObject $page2v1 */
-		$page2v1 = Versioned::get_version('VersionedTest_DataObject', $page2->ID, $version1);
+		/** @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page2v1 */
+		$page2v1 = Versioned::get_version(VersionedTest\TestObject::class, $page2->ID, $version1);
 		$this->assertEquals('Page 2 - v1', $page2v1->Title);
 
 		// When selecting v1, related records should by filtered by
@@ -524,8 +514,8 @@ class VersionedTest extends SapphireTest {
 		);
 
 		// When selecting v2, we get the same as on stage
-		/** @var VersionedTest_DataObject $page2v2 */
-		$page2v2 = Versioned::get_version('VersionedTest_DataObject', $page2->ID, $version2);
+		/** @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page2v2 */
+		$page2v2 = Versioned::get_version(VersionedTest\TestObject::class, $page2->ID, $version2);
 		$this->assertEquals('Page 2 - v2', $page2v2->Title);
 
 		// When selecting v2, related records should by filtered by
@@ -546,7 +536,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testGetVersionWhenClassnameChanged() {
-		$obj = new VersionedTest_DataObject;
+		$obj = new VersionedTest\TestObject;
 		$obj->Name = "test";
 		$obj->write();
 		$obj->Name = "test2";
@@ -573,7 +563,7 @@ class VersionedTest extends SapphireTest {
 
 		// In 2005 this file was created
 		DBDatetime::set_mock_now('2005-01-01 00:00:00');
-		$testPage = new VersionedTest_Subclass();
+		$testPage = new VersionedTest\Subclass();
 		$testPage->Title = 'Archived page';
 		$testPage->Content = 'This is the content from 2005';
 		$testPage->ExtraField = '2005';
@@ -595,25 +585,25 @@ class VersionedTest extends SapphireTest {
 		DBDatetime::clear_mock_now();
 
 		// Test 1 - 2006 Content
-		singleton('VersionedTest_Subclass')->flushCache(true);
+		singleton(VersionedTest\Subclass::class)->flushCache(true);
 		Versioned::set_reading_mode('Archive.2006-01-01 00:00:00');
-		$testPage2006 = DataObject::get('VersionedTest_Subclass')->filter(array('Title' => 'Archived page'))->first();
+		$testPage2006 = DataObject::get(VersionedTest\Subclass::class)->filter(array('Title' => 'Archived page'))->first();
 		$this->assertInstanceOf("VersionedTest_Subclass", $testPage2006);
 		$this->assertEquals("2005", $testPage2006->ExtraField);
 		$this->assertEquals("This is the content from 2005", $testPage2006->Content);
 
 		// Test 2 - 2008 Content
-		singleton('VersionedTest_Subclass')->flushCache(true);
+		singleton(VersionedTest\Subclass::class)->flushCache(true);
 		Versioned::set_reading_mode('Archive.2008-01-01 00:00:00');
-		$testPage2008 = DataObject::get('VersionedTest_Subclass')->filter(array('Title' => 'Archived page'))->first();
+		$testPage2008 = DataObject::get(VersionedTest\Subclass::class)->filter(array('Title' => 'Archived page'))->first();
 		$this->assertInstanceOf("VersionedTest_Subclass", $testPage2008);
 		$this->assertEquals("2007", $testPage2008->ExtraField);
 		$this->assertEquals("It's 2007 already!", $testPage2008->Content);
 
 		// Test 3 - Today
-		singleton('VersionedTest_Subclass')->flushCache(true);
+		singleton(VersionedTest\Subclass::class)->flushCache(true);
 		Versioned::set_reading_mode('Stage.Stage');
-		$testPageCurrent = DataObject::get('VersionedTest_Subclass')->filter(array('Title' => 'Archived page'))
+		$testPageCurrent = DataObject::get(VersionedTest\Subclass::class)->filter(array('Title' => 'Archived page'))
 			->first();
 		$this->assertInstanceOf("VersionedTest_Subclass", $testPageCurrent);
 		$this->assertEquals("2009", $testPageCurrent->ExtraField);
@@ -624,7 +614,7 @@ class VersionedTest extends SapphireTest {
 	{
 		// In 2005 this file was created
 		DBDatetime::set_mock_now('2005-01-01 00:00:00');
-		$testPage = new VersionedTest_Subclass();
+		$testPage = new VersionedTest\Subclass();
 		$testPage->Title = 'Archived page';
 		$testPage->Content = 'This is the content from 2005';
 		$testPage->ExtraField = '2005';
@@ -637,7 +627,7 @@ class VersionedTest extends SapphireTest {
 		$testPage->write();
 
 		// Check both versions are returned
-		$versions = Versioned::get_all_versions('VersionedTest_Subclass', $testPage->ID);
+		$versions = Versioned::get_all_versions(VersionedTest\Subclass::class, $testPage->ID);
 		$content = array();
 		$extraFields = array();
 		foreach($versions as $version)
@@ -660,7 +650,7 @@ class VersionedTest extends SapphireTest {
 		// End mock, back to the present day:)
 		DBDatetime::clear_mock_now();
 
-		$versions = Versioned::get_all_versions('VersionedTest_Subclass', $testPage->ID);
+		$versions = Versioned::get_all_versions(VersionedTest\Subclass::class, $testPage->ID);
 		$content = array();
 		$extraFields = array();
 		foreach($versions as $version)
@@ -679,11 +669,11 @@ class VersionedTest extends SapphireTest {
 	public function testArchiveRelatedDataWithoutVersioned() {
 		DBDatetime::set_mock_now('2009-01-01 00:00:00');
 
-		$relatedData = new VersionedTest_RelatedWithoutVersion();
+		$relatedData = new VersionedTest\RelatedWithoutversion();
 		$relatedData->Name = 'Related Data';
 		$relatedDataId = $relatedData->write();
 
-		$testData = new VersionedTest_DataObject();
+		$testData = new VersionedTest\TestObject();
 		$testData->Title = 'Test';
 		$testData->Content = 'Before Content';
 		$testData->Related()->add($relatedData);
@@ -695,10 +685,10 @@ class VersionedTest extends SapphireTest {
 
 		Versioned::reading_archived_date('2009-01-01 19:00:00');
 
-		$fetchedData = VersionedTest_DataObject::get()->byId($id);
+		$fetchedData = VersionedTest\TestObject::get()->byId($id);
 		$this->assertEquals('Before Content', $fetchedData->Content, 'We see the correct content of the older version');
 
-		$relatedData = VersionedTest_RelatedWithoutVersion::get()->byId($relatedDataId);
+		$relatedData = VersionedTest\RelatedWithoutversion::get()->byId($relatedDataId);
 		$this->assertEquals(
 			1,
 			$relatedData->Related()->count(),
@@ -730,18 +720,18 @@ class VersionedTest extends SapphireTest {
 		);
 
 		Versioned::set_stage(Versioned::DRAFT);
-		$obj = new VersionedTest_SingleStage(array('Name' => 'MyObj'));
+		$obj = new VersionedTest\SingleStage(array('Name' => 'MyObj'));
 		$obj->write();
 		$this->assertNotNull(
-			VersionedTest_SingleStage::get()->byID($obj->ID),
+			VersionedTest\SingleStage::get()->byID($obj->ID),
 			'Writes to and reads from default stage if its set explicitly'
 		);
 
 		Versioned::set_stage(Versioned::LIVE);
-		$obj = new VersionedTest_SingleStage(array('Name' => 'MyObj'));
+		$obj = new VersionedTest\SingleStage(array('Name' => 'MyObj'));
 		$obj->write();
 		$this->assertNotNull(
-			VersionedTest_SingleStage::get()->byID($obj->ID),
+			VersionedTest\SingleStage::get()->byID($obj->ID),
 			'Writes to and reads from default stage even if a non-matching stage is set'
 		);
 	}
@@ -754,7 +744,7 @@ class VersionedTest extends SapphireTest {
 
 		// Generate staging record and retrieve it from stage in live mode
 		Versioned::set_stage(Versioned::DRAFT);
-		$obj = new VersionedTest_Subclass();
+		$obj = new VersionedTest\Subclass();
 		$obj->Name = 'bob';
 		$obj->ExtraField = 'Field Value';
 		$obj->write();
@@ -763,23 +753,23 @@ class VersionedTest extends SapphireTest {
 		Versioned::set_stage(Versioned::LIVE);
 
 		// Check fields are unloaded prior to access
-		$objLazy = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', $filter, false);
+		$objLazy = Versioned::get_one_by_stage(VersionedTest\TestObject::class, 'Stage', $filter, false);
 		$lazyFields = $objLazy->getQueriedDatabaseFields();
 		$this->assertTrue(isset($lazyFields['ExtraField_Lazy']));
-		$this->assertEquals('VersionedTest_Subclass', $lazyFields['ExtraField_Lazy']);
+		$this->assertEquals(VersionedTest\Subclass::class, $lazyFields['ExtraField_Lazy']);
 
 		// Check lazy loading works when viewing a Stage object in Live mode
 		$this->assertEquals('Field Value', $objLazy->ExtraField);
 
 		// Test that writeToStage respects lazy loaded fields
-		$objLazy = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', $filter, false);
+		$objLazy = Versioned::get_one_by_stage(VersionedTest\TestObject::class, 'Stage', $filter, false);
 		$objLazy->writeToStage('Live');
-		$objLive = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Live', $filter, false);
+		$objLive = Versioned::get_one_by_stage(VersionedTest\TestObject::class, 'Live', $filter, false);
 		$liveLazyFields = $objLive->getQueriedDatabaseFields();
 
 		// Check fields are unloaded prior to access
 		$this->assertTrue(isset($liveLazyFields['ExtraField_Lazy']));
-		$this->assertEquals('VersionedTest_Subclass', $liveLazyFields['ExtraField_Lazy']);
+		$this->assertEquals(VersionedTest\Subclass::class, $liveLazyFields['ExtraField_Lazy']);
 
 		// Check that live record has original value
 		$this->assertEquals('Field Value', $objLive->ExtraField);
@@ -792,18 +782,18 @@ class VersionedTest extends SapphireTest {
 		Versioned::set_stage(Versioned::DRAFT);
 
 		// Create object only in reading stage
-		$original = new VersionedTest_Subclass();
+		$original = new VersionedTest\Subclass();
 		$original->ExtraField = 'Foo';
 		$original->write();
 
 		// Query for object using base class
-		$query = VersionedTest_DataObject::get()->filter('ID', $original->ID);
+		$query = VersionedTest\TestObject::get()->filter('ID', $original->ID);
 
 		// Set reading mode to Live
 		Versioned::set_stage(Versioned::LIVE);
 
 		$fetched = $query->first();
-		$this->assertTrue($fetched instanceof VersionedTest_Subclass);
+		$this->assertTrue($fetched instanceof VersionedTest\Subclass);
 		$this->assertEquals($original->ID, $fetched->ID); // Eager loaded
 		$this->assertEquals($original->ExtraField, $fetched->ExtraField); // Lazy loaded
 	}
@@ -896,7 +886,7 @@ class VersionedTest extends SapphireTest {
 	 */
 	public function testWriteToStage() {
 		// Test subclass with versioned extension directly added
-		$record = VersionedTest_Subclass::create();
+		$record = VersionedTest\Subclass::create();
 		$record->Title = "Test A";
 		$record->ExtraField = "Test A";
 		$record->writeToStage("Stage");
@@ -909,7 +899,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertRecordHasLatestVersion($record, 2);
 
 		// Test subclass without changes to base class
-		$record = VersionedTest_Subclass::create();
+		$record = VersionedTest\Subclass::create();
 		$record->ExtraField = "Test B";
 		$record->writeToStage("Stage");
 		$this->assertRecordHasLatestVersion($record, 1);
@@ -920,7 +910,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertRecordHasLatestVersion($record, 2);
 
 		// Test subclass without changes to sub class
-		$record = VersionedTest_Subclass::create();
+		$record = VersionedTest\Subclass::create();
 		$record->Title = "Test C";
 		$record->writeToStage("Stage");
 		$this->assertRecordHasLatestVersion($record, 1);
@@ -931,7 +921,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertRecordHasLatestVersion($record, 2);
 
 		// Test subclass with versioned extension only added to the base clases
-		$record = VersionedTest_AnotherSubclass::create();
+		$record = VersionedTest\AnotherSubclass::create();
 		$record->Title = "Test A";
 		$record->AnotherField = "Test A";
 		$record->writeToStage("Stage");
@@ -945,7 +935,7 @@ class VersionedTest extends SapphireTest {
 
 
 		// Test subclass without changes to base class
-		$record = VersionedTest_AnotherSubclass::create();
+		$record = VersionedTest\AnotherSubclass::create();
 		$record->AnotherField = "Test B";
 		$record->writeToStage("Stage");
 		$this->assertRecordHasLatestVersion($record, 1);
@@ -956,7 +946,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertRecordHasLatestVersion($record, 2);
 
 		// Test subclass without changes to sub class
-		$record = VersionedTest_AnotherSubclass::create();
+		$record = VersionedTest\AnotherSubclass::create();
 		$record->Title = "Test C";
 		$record->writeToStage("Stage");
 		$this->assertRecordHasLatestVersion($record, 1);
@@ -968,33 +958,33 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testVersionedHandlesRenamedDataObjectFields(){
-		Config::inst()->remove('VersionedTest_RelatedWithoutVersion','db','Name','Varchar');
+		Config::inst()->remove(VersionedTest\RelatedWithoutversion::class,'db','Name','Varchar');
 
-		Config::inst()->update('VersionedTest_RelatedWithoutVersion','db',array(
+		Config::inst()->update(VersionedTest\RelatedWithoutversion::class,'db',array(
 			"NewField" => "Varchar",
 		));
 
-		VersionedTest_RelatedWithoutVersion::add_extension("SilverStripe\\ORM\\Versioning\\Versioned");
+		VersionedTest\RelatedWithoutversion::add_extension(Versioned::class);
 		$this->resetDBSchema(true);
-		$testData = new VersionedTest_RelatedWithoutVersion();
+		$testData = new VersionedTest\RelatedWithoutversion();
 		$testData->NewField = 'Test';
 		$testData->write();
 	}
 
 	public function testCanView() {
-		$public1ID = $this->idFromFixture('VersionedTest_PublicStage', 'public1');
-		$public2ID = $this->idFromFixture('VersionedTest_PublicViaExtension', 'public2');
-		$privateID = $this->idFromFixture('VersionedTest_DataObject', 'page1');
-		$singleID = $this->idFromFixture('VersionedTest_SingleStage', 'single');
+		$public1ID = $this->idFromFixture(VersionedTest\PublicStage::class, 'public1');
+		$public2ID = $this->idFromFixture(VersionedTest\PublicViaExtension::class, 'public2');
+		$privateID = $this->idFromFixture(VersionedTest\TestObject::class, 'page1');
+		$singleID = $this->idFromFixture(VersionedTest\SingleStage::class, 'single');
 
 		// Test that all (and only) public pages are viewable in stage mode
 		Session::clear("loggedInAs");
 		Versioned::set_stage(Versioned::DRAFT);
-		$public1 = Versioned::get_one_by_stage('VersionedTest_PublicStage', 'Stage', array('"ID"' => $public1ID));
-		$public2 = Versioned::get_one_by_stage('VersionedTest_PublicViaExtension', 'Stage', array('"ID"' => $public2ID));
-		$private = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Stage', array('"ID"' => $privateID));
+		$public1 = Versioned::get_one_by_stage(VersionedTest\PublicStage::class, 'Stage', array('"ID"' => $public1ID));
+		$public2 = Versioned::get_one_by_stage(VersionedTest\PublicViaExtension::class, 'Stage', array('"ID"' => $public2ID));
+		$private = Versioned::get_one_by_stage(VersionedTest\TestObject::class, 'Stage', array('"ID"' => $privateID));
 		// Also test an object that has just a single-stage (eg. is only versioned)
-		$single = Versioned::get_one_by_stage('VersionedTest_SingleStage', 'Stage', array('"ID"' => $singleID));
+		$single = Versioned::get_one_by_stage(VersionedTest\SingleStage::class, 'Stage', array('"ID"' => $singleID));
 
 
 		$this->assertTrue($public1->canView());
@@ -1011,7 +1001,7 @@ class VersionedTest extends SapphireTest {
 
 		// Writing the private page to live should be fine though
 		$private->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
-		$privateLive = Versioned::get_one_by_stage('VersionedTest_DataObject', 'Live', array('"ID"' => $privateID));
+		$privateLive = Versioned::get_one_by_stage(VersionedTest\TestObject::class, 'Live', array('"ID"' => $privateID));
 		$this->assertTrue($private->canView());
 		$this->assertTrue($privateLive->canView());
 
@@ -1037,8 +1027,8 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testCanViewStage() {
-		$public = $this->objFromFixture('VersionedTest_PublicStage', 'public1');
-		$private = $this->objFromFixture('VersionedTest_DataObject', 'page1');
+		$public = $this->objFromFixture(VersionedTest\PublicStage::class, 'public1');
+		$private = $this->objFromFixture(VersionedTest\TestObject::class, 'page1');
 		Session::clear("loggedInAs");
 		Versioned::set_stage(Versioned::DRAFT);
 
@@ -1074,7 +1064,7 @@ class VersionedTest extends SapphireTest {
 	 */
 	public function testWriteNullValueToVersion()
 	{
-		$record = VersionedTest_Subclass::create();
+		$record = VersionedTest\Subclass::create();
 		$record->Title = "Test A";
 		$record->write();
 
@@ -1096,7 +1086,7 @@ class VersionedTest extends SapphireTest {
 
 	public function testStageStates() {
 		// newly created page
-		$createdPage = new VersionedTest_DataObject();
+		$createdPage = new VersionedTest\TestObject();
 		$createdPage->write();
 		$this->assertTrue($createdPage->isOnDraft());
 		$this->assertFalse($createdPage->isPublished());
@@ -1104,7 +1094,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($createdPage->isModifiedOnDraft());
 
 		// published page
-		$publishedPage = new VersionedTest_DataObject();
+		$publishedPage = new VersionedTest\TestObject();
 		$publishedPage->write();
 		$publishedPage->copyVersionToStage('Stage','Live');
 		$this->assertTrue($publishedPage->isOnDraft());
@@ -1114,7 +1104,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertFalse($publishedPage->isModifiedOnDraft());
 
 		// published page, deleted from stage
-		$deletedFromDraftPage = new VersionedTest_DataObject();
+		$deletedFromDraftPage = new VersionedTest\TestObject();
 		$deletedFromDraftPage->write();
 		$deletedFromDraftPage->copyVersionToStage('Stage','Live');
 		$deletedFromDraftPage->deleteFromStage('Stage');
@@ -1126,7 +1116,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertFalse($deletedFromDraftPage->isModifiedOnDraft());
 
 		// published page, deleted from live
-		$deletedFromLivePage = new VersionedTest_DataObject();
+		$deletedFromLivePage = new VersionedTest\TestObject();
 		$deletedFromLivePage->write();
 		$deletedFromLivePage->copyVersionToStage('Stage','Live');
 		$deletedFromLivePage->deleteFromStage('Live');
@@ -1138,7 +1128,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($deletedFromLivePage->isModifiedOnDraft());
 
 		// published page, deleted from both stages
-		$deletedFromAllStagesPage = new VersionedTest_DataObject();
+		$deletedFromAllStagesPage = new VersionedTest\TestObject();
 		$deletedFromAllStagesPage->write();
 		$deletedFromAllStagesPage->copyVersionToStage('Stage','Live');
 		$deletedFromAllStagesPage->doArchive();
@@ -1150,7 +1140,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertFalse($deletedFromAllStagesPage->isModifiedOnDraft());
 
 		// published page, modified
-		$modifiedOnDraftPage = new VersionedTest_DataObject();
+		$modifiedOnDraftPage = new VersionedTest\TestObject();
 		$modifiedOnDraftPage->write();
 		$modifiedOnDraftPage->copyVersionToStage('Stage','Live');
 		$modifiedOnDraftPage->Content = 'modified';
@@ -1162,201 +1152,4 @@ class VersionedTest extends SapphireTest {
 		$this->assertFalse($modifiedOnDraftPage->isOnLiveOnly());
 		$this->assertTrue($modifiedOnDraftPage->isModifiedOnDraft());
 	}
-}
-
-
-/**
- * @method VersionedTest_DataObject Parent()
- * @method HasManyList Children()
- * @method ManyManyList Related()
- *
- * @package framework
- * @subpackage tests
- * @mixin Versioned
- */
-class VersionedTest_DataObject extends DataObject implements TestOnly {
-	private static $db = array(
-		"Name" => "Varchar",
-		'Title' => 'Varchar',
-		'Content' => 'HTMLText',
-	);
-
-	private static $extensions = array(
-		"SilverStripe\\ORM\\Versioning\\Versioned",
-	);
-
-	private static $has_one = array(
-		'Parent' => 'VersionedTest_DataObject',
-	);
-
-	private static $has_many = array(
-		'Children' => 'VersionedTest_DataObject',
-	);
-
-	private static $many_many = array(
-		'Related' => 'VersionedTest_RelatedWithoutVersion',
-	);
-
-
-	public function canView($member = null) {
-		$extended = $this->extendedCan(__FUNCTION__, $member);
-		if($extended !== null) {
-			return $extended;
-		}
-		return true;
-	}
-}
-
-/**
- * @mixin Versioned
- */
-class VersionedTest_WithIndexes extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'UniqA' => 'Int',
-		'UniqS' => 'Int',
-	);
-	private static $extensions = array(
-		"SilverStripe\\ORM\\Versioning\\Versioned"
-	);
-	private static $indexes = array(
-		'UniqS_idx' => 'unique ("UniqS")',
-		'UniqA_idx' => array('type' => 'unique', 'name' => 'UniqA_idx', 'value' => '"UniqA"',),
-	);
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class VersionedTest_RelatedWithoutVersion extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Name' => 'Varchar'
-	);
-
-	private static $belongs_many_many = array(
-		'Related' => 'VersionedTest_DataObject'
-	);
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class VersionedTest_Subclass extends VersionedTest_DataObject implements TestOnly {
-	private static $db = array(
-		"ExtraField" => "Varchar",
-	);
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class VersionedTest_AnotherSubclass extends VersionedTest_DataObject implements TestOnly {
-	private static $db = array(
-		"AnotherField" => "Varchar"
-	);
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class VersionedTest_UnversionedWithField extends DataObject implements TestOnly {
-	private static $db = array('Version' => 'Varchar(255)');
-}
-
-/**
- * @mixin Versioned
- */
-class VersionedTest_SingleStage extends DataObject implements TestOnly {
-	private static $db = array(
-		'Name' => 'Varchar'
-	);
-
-	private static $extensions = array(
-		'SilverStripe\ORM\Versioning\Versioned("Versioned")'
-	);
-}
-
-/**
- * Versioned dataobject with public stage mode
- *
- * @mixin Versioned
- */
-class VersionedTest_PublicStage extends DataObject implements TestOnly {
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
-
-	private static $extensions = array(
-		"SilverStripe\\ORM\\Versioning\\Versioned"
-	);
-
-	public function canView($member = null) {
-		$extended = $this->extendedCan(__FUNCTION__, $member);
-		if($extended !== null) {
-			return $extended;
-		}
-		return true;
-	}
-
-	public function canViewVersioned($member = null) {
-		// All non-live modes are public
-		return true;
-	}
-}
-
-/**
- * Public access is provided via extension rather than overriding canViewVersioned
- *
- * @mixin Versioned
- * @mixin VersionedTest_PublicExtension
- */
-class VersionedTest_PublicViaExtension extends DataObject implements TestOnly {
-
-	public function canView($member = null) {
-		$extended = $this->extendedCan(__FUNCTION__, $member);
-		if($extended !== null) {
-			return $extended;
-		}
-		return true;
-	}
-
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
-
-	private static $extensions = array(
-		"SilverStripe\\ORM\\Versioning\\Versioned",
-		"VersionedTest_PublicExtension"
-	);
-}
-
-/**
- * Alters stage mode of extended object to be public
- */
-class VersionedTest_PublicExtension extends DataExtension implements TestOnly {
-	public function canViewNonLive($member = null) {
-		return true;
-	}
-}
-
-/**
- * @mixin Versioned
- */
-class VersionedTest_CustomTable extends DataObject implements TestOnly {
-	private static $db = [
-		'Title' => 'Varchar'
-	];
-
-	private static $table_name = 'VTCustomTable';
-
-	private static $extensions = [
-		"SilverStripe\\ORM\\Versioning\\Versioned",
-	];
 }

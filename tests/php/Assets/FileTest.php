@@ -1,9 +1,12 @@
 <?php
 
+namespace SilverStripe\Assets\Tests;
+
 use SilverStripe\Assets\Storage\AssetStore;
+use SilverStripe\Assets\Tests\FileTest\MyCustomFile;
+use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\ValidationException;
 use SilverStripe\Security\Member;
 use SilverStripe\CMS\Model\ErrorPage;
 use SilverStripe\Assets\Filesystem;
@@ -12,15 +15,10 @@ use SilverStripe\Assets\File;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Director;
 use SilverStripe\View\Parsers\ShortcodeParser;
-
-
-
-
-
+use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
 /**
  * Tests for the File class
@@ -29,7 +27,9 @@ class FileTest extends SapphireTest {
 
 	protected static $fixture_file = 'FileTest.yml';
 
-	protected $extraDataObjects = array('FileTest_MyCustomFile');
+	protected $extraDataObjects = array(
+		MyCustomFile::class
+	);
 
 	public function setUp() {
 		parent::setUp();
@@ -37,21 +37,21 @@ class FileTest extends SapphireTest {
 		Versioned::set_stage(Versioned::DRAFT);
 
 		// Set backend root to /ImageTest
-		AssetStoreTest_SpyStore::activate('FileTest');
+		TestAssetStore::activate('FileTest');
 
 		// Create a test folders for each of the fixture references
-		$folderIDs = $this->allFixtureIDs('SilverStripe\\Assets\\Folder');
+		$folderIDs = $this->allFixtureIDs(Folder::class);
 		foreach($folderIDs as $folderID) {
-			$folder = DataObject::get_by_id('SilverStripe\\Assets\\Folder', $folderID);
+			$folder = DataObject::get_by_id(Folder::class, $folderID);
 			$filePath = ASSETS_PATH . '/FileTest/' . $folder->getFilename();
 			Filesystem::makeFolder($filePath);
 		}
 
 		// Create a test files for each of the fixture references
-		$fileIDs = $this->allFixtureIDs('SilverStripe\\Assets\\File');
+		$fileIDs = $this->allFixtureIDs(File::class);
 		foreach($fileIDs as $fileID) {
 			/** @var File $file */
-			$file = DataObject::get_by_id('SilverStripe\\Assets\\File', $fileID);
+			$file = DataObject::get_by_id(File::class, $fileID);
 			$root = ASSETS_PATH . '/FileTest/';
 			if($folder = $file->Parent()) {
 				$root .= $folder->getFilename();
@@ -70,20 +70,20 @@ class FileTest extends SapphireTest {
 				'ErrorCode' => 404
 			));
 			$page->write();
-			$page->copyVersionToStage('Stage', 'Live');
+			$page->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 		}
 	}
 
 	public function tearDown() {
-		AssetStoreTest_SpyStore::reset();
+		TestAssetStore::reset();
 		parent::tearDown();
 	}
 
 	public function testLinkShortcodeHandler() {
-		$testFile = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$testFile = $this->objFromFixture(File::class, 'asdf');
 
 		$parser = new ShortcodeParser();
-		$parser->register('file_link', array('SilverStripe\\Assets\\File', 'handle_shortcode'));
+		$parser->register('file_link', array(File::class, 'handle_shortcode'));
 
 		$fileShortcode = sprintf('[file_link,id=%d]', $testFile->ID);
 		$fileEnclosed  = sprintf('[file_link,id=%d]Example Content[/file_link]', $testFile->ID);
@@ -105,7 +105,7 @@ class FileTest extends SapphireTest {
 		$this->assertEquals('', $parser->parse('[file_link]Example Content[/file_link]'));
 
 		if(class_exists('SilverStripe\\CMS\\Model\\ErrorPage')) {
-			$errorPage = ErrorPage::get()->filter('ErrorCode', 404)->First();
+			$errorPage = ErrorPage::get()->filter('ErrorCode', 404)->first();
 			$this->assertEquals(
 				$errorPage->Link(),
 				$parser->parse($fileShortcode),
@@ -170,11 +170,11 @@ class FileTest extends SapphireTest {
 	public function testValidateExtension() {
 		Session::set('loggedInAs', null);
 
-		$orig = Config::inst()->get('SilverStripe\\Assets\\File', 'allowed_extensions');
-		Config::inst()->remove('SilverStripe\\Assets\\File', 'allowed_extensions');
-		Config::inst()->update('SilverStripe\\Assets\\File', 'allowed_extensions', array('txt'));
+		$orig = Config::inst()->get(File::class, 'allowed_extensions');
+		Config::inst()->remove(File::class, 'allowed_extensions');
+		Config::inst()->update(File::class, 'allowed_extensions', array('txt'));
 
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$file = $this->objFromFixture(File::class, 'asdf');
 
 		// Invalid ext
 		$file->Name = 'asdf.php';
@@ -192,8 +192,8 @@ class FileTest extends SapphireTest {
 		$v = $file->validate();
 		$this->assertTrue($v->valid());
 
-		Config::inst()->remove('SilverStripe\\Assets\\File', 'allowed_extensions');
-		Config::inst()->update('SilverStripe\\Assets\\File', 'allowed_extensions', $orig);
+		Config::inst()->remove(File::class, 'allowed_extensions');
+		Config::inst()->update(File::class, 'allowed_extensions', $orig);
 	}
 
 	public function testAppCategory() {
@@ -255,7 +255,7 @@ class FileTest extends SapphireTest {
 
 	public function testSetNameChangesFilesystemOnWrite() {
 		/** @var File $file */
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$file = $this->objFromFixture(File::class, 'asdf');
 		$this->logInWithPermission('ADMIN');
 		$file->publishRecursive();
 		$oldTuple = $file->File->getValue();
@@ -299,10 +299,10 @@ class FileTest extends SapphireTest {
 	}
 
 	public function testSetParentIDChangesFilesystemOnWrite() {
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$file = $this->objFromFixture(File::class, 'asdf');
 		$this->logInWithPermission('ADMIN');
 		$file->publishRecursive();
-		$subfolder = $this->objFromFixture('SilverStripe\\Assets\\Folder', 'subfolder');
+		$subfolder = $this->objFromFixture(Folder::class, 'subfolder');
 		$oldTuple = $file->File->getValue();
 
 		// set ParentID
@@ -346,25 +346,24 @@ class FileTest extends SapphireTest {
 
 	/**
 	 * @see http://open.silverstripe.org/ticket/5693
-	 *
-	 * @expectedException SilverStripe\ORM\ValidationException
 	 */
 	public function testSetNameWithInvalidExtensionDoesntChangeFilesystem() {
-		Config::inst()->remove('SilverStripe\\Assets\\File', 'allowed_extensions');
-		Config::inst()->update('SilverStripe\\Assets\\File', 'allowed_extensions', array('txt'));
+		Config::inst()->remove(File::class, 'allowed_extensions');
+		Config::inst()->update(File::class, 'allowed_extensions', array('txt'));
+		$this->setExpectedException(ValidationException::class);
 
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$file = $this->objFromFixture(File::class, 'asdf');
 		$file->Name = 'renamed.php'; // evil extension
 		$file->write();
 	}
 
 	public function testGetURL() {
-		$rootfile = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$rootfile = $this->objFromFixture(File::class, 'asdf');
 		$this->assertEquals('/assets/FileTest/55b443b601/FileTest.txt', $rootfile->getURL());
 	}
 
 	public function testGetAbsoluteURL() {
-		$rootfile = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$rootfile = $this->objFromFixture(File::class, 'asdf');
 		$this->assertEquals(
 			Director::absoluteBaseURL() . 'assets/FileTest/55b443b601/FileTest.txt',
 			$rootfile->getAbsoluteURL()
@@ -378,7 +377,7 @@ class FileTest extends SapphireTest {
 	}
 
 	public function testSizeAndAbsoluteSizeParameters() {
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$file = $this->objFromFixture(File::class, 'asdf');
 
 		/* AbsoluteSize will give the integer number */
 		$this->assertEquals(1000000, $file->AbsoluteSize);
@@ -390,14 +389,14 @@ class FileTest extends SapphireTest {
 		$file = $this->objFromFixture('SilverStripe\\Assets\\Image', 'gif');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
 
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'pdf');
+		$file = $this->objFromFixture(File::class, 'pdf');
 		$this->assertEquals("Adobe Acrobat PDF file", $file->FileType);
 
 		$file = $this->objFromFixture('SilverStripe\\Assets\\Image', 'gifupper');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
 
 		/* Only a few file types are given special descriptions; the rest are unknown */
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$file = $this->objFromFixture(File::class, 'asdf');
 		$this->assertEquals("unknown", $file->FileType);
 	}
 
@@ -421,7 +420,7 @@ class FileTest extends SapphireTest {
 
 	public function testDeleteFile() {
 		/** @var File $file */
-		$file = $this->objFromFixture('SilverStripe\\Assets\\File', 'asdf');
+		$file = $this->objFromFixture(File::class, 'asdf');
 		$this->logInWithPermission('ADMIN');
 		$file->publishSingle();
 		$tuple = $file->File->getValue();
@@ -452,12 +451,12 @@ class FileTest extends SapphireTest {
 
 		//rename a folder's title
 		$folderID = $this->objFromFixture("SilverStripe\\Assets\\Folder","folder2")->ID;
-		$folder = DataObject::get_by_id('SilverStripe\\Assets\\Folder',$folderID);
+		$folder = DataObject::get_by_id(Folder::class,$folderID);
 		$folder->Title = $newTitle;
 		$folder->write();
 
 		//get folder again and see if the filename has changed
-		$folder = DataObject::get_by_id('SilverStripe\\Assets\\Folder',$folderID);
+		$folder = DataObject::get_by_id(Folder::class,$folderID);
 		$this->assertEquals(
 			$newTitle . "/",
 			$folder->Filename,
@@ -470,7 +469,7 @@ class FileTest extends SapphireTest {
 		$folder->write();
 
 		//get folder again and see if the Title has changed
-		$folder = DataObject::get_by_id('SilverStripe\\Assets\\Folder',$folderID);
+		$folder = DataObject::get_by_id(Folder::class,$folderID);
 		$this->assertEquals($folder->Title, $newTitle2,
 			"Folder Title updated after rename of Name");
 
@@ -481,7 +480,7 @@ class FileTest extends SapphireTest {
 		$folder->write();
 
 		//get folder again and see if the Title has changed
-		$folder = DataObject::get_by_id('SilverStripe\\Assets\\Folder',$folderID);
+		$folder = DataObject::get_by_id(Folder::class,$folderID);
 		$this->assertEquals($folder->Title, $newTitle3,
 			"Folder Title updated after rename of Filename");
 	}
@@ -552,9 +551,5 @@ class FileTest extends SapphireTest {
 	protected function getAssetStore() {
 		return Injector::inst()->get('AssetStore');
 	}
-
-}
-
-class FileTest_MyCustomFile extends File implements TestOnly {
 
 }

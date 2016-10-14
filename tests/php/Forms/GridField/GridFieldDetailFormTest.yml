@@ -1,4 +1,4 @@
-GridFieldDetailFormTest_Person:
+SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person:
   joe:
     FirstName: Joe
     Surname: Bloggs
@@ -6,12 +6,16 @@ GridFieldDetailFormTest_Person:
     FirstName: Jane
     Surname: Doe
 
-GridFieldDetailFormTest_PeopleGroup:
+SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\PeopleGroup:
   group:
     Name: My Group
-    People: =>GridFieldDetailFormTest_Person.joe,=>GridFieldDetailFormTest_Person.jane
+    People:
+      - =>SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person.joe
+      - =>SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person.jane
 
-GridFieldDetailFormTest_Category:
+SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Category:
   category1:
     Name: Category 1
-    People: =>GridFieldDetailFormTest_Person.joe,=>GridFieldDetailFormTest_Person.jane
+    People:
+      - =>SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person.joe
+      - =>SilverStripe\Forms\Tests\GridField\GridFieldDetailFormTest\Person.jane
