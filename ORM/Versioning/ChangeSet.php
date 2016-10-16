@@ -26,6 +26,7 @@ use LogicException;
  * @method Member Owner()
  * @property string $Name
  * @property string $State
+ * @property bool $IsInferred
  */
 class ChangeSet extends DataObject {
 
@@ -47,6 +48,7 @@ class ChangeSet extends DataObject {
 	private static $db = array(
 		'Name'  => 'Varchar',
 		'State' => "Enum('open,published,reverted','open')",
+		'IsInferred' => 'Boolean(0)' // True if created automatically
 	);
 
 	private static $has_many = array(
@@ -91,6 +93,7 @@ class ChangeSet extends DataObject {
 	 * Publish this changeset, then closes it.
 	 *
 	 * @throws Exception
+	 * @return bool True if successful
 	 */
 	public function publish() {
 		// Logical checks prior to publish
@@ -114,9 +117,19 @@ class ChangeSet extends DataObject {
 				$change->publish();
 			}
 
+			// Once this changeset is published, unlink any objects linking to
+			// records in this changeset as unlinked (set RelationID to 0).
+			// This is done as a safer alternative to deleting records on live that
+			// are deleted on stage.
+			foreach($this->Changes() as $change) {
+				/** @var ChangeSetItem $change */
+				$change->unlinkDisownedObjects();
+			}
+
 			$this->State = static::STATE_PUBLISHED;
 			$this->write();
 		});
+		return true;
 	}
 
 	/**
@@ -377,7 +390,11 @@ class ChangeSet extends DataObject {
 
 	public function getCMSFields() {
 		$fields = new FieldList(new TabSet('Root'));
-		$fields->addFieldToTab('Root.Main', TextField::create('Name', $this->fieldLabel('Name')));
+		if ($this->IsInferred) {
+			$fields->addFieldToTab('Root.Main', ReadonlyField::create('Name', $this->fieldLabel('Name')));
+		} else {
+			$fields->addFieldToTab('Root.Main', TextField::create('Name', $this->fieldLabel('Name')));
+		}
 		if ($this->isInDB()) {
 			$fields->addFieldToTab('Root.Main', ReadonlyField::create('State', $this->fieldLabel('State')));
 		}

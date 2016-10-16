@@ -815,10 +815,10 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	 * @todo Solve this via triggered publishing / ownership in the future
 	 */
 	public function onBeforePublish() {
-		// Relies on Parent() returning the stage record
-		$parent = $this->Parent();
-		if($parent && $parent->exists()) {
-			$parent->publishRecursive();
+		// Publish all parents from the root up
+		/** @var Folder $parent */
+		foreach($this->getAncestors()->reverse() as $parent) {
+			$parent->publishSingle();
 		}
 	}
 

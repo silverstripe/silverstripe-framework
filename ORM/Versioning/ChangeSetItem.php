@@ -245,6 +245,17 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 		$this->write();
 	}
 
+	/**
+	 * Once this item (and all owned objects) are published, unlink
+	 * all disowned objects
+	 */
+	public function unlinkDisownedObjects() {
+		$object = $this->getObjectInStage(Versioned::DRAFT);
+		if ($object) {
+			$object->unlinkDisownedObjects(Versioned::DRAFT, Versioned::LIVE);
+		}
+	}
+
 	/** Reverts this item, then close it. **/
 	public function revert() {
 		user_error('Not implemented', E_USER_ERROR);

@@ -268,6 +268,7 @@ JSON;
 			'Created' => $changeSet->Created,
 			'LastEdited' => $changeSet->LastEdited,
 			'State' => $changeSet->State,
+			'IsInferred' => $changeSet->IsInferred,
 			'canEdit' => $changeSet->canEdit(),
 			'canPublish' => false,
 			'_embedded' => ['items' => []]
