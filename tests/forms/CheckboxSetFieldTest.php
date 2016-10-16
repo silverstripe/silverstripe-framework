@@ -177,28 +177,65 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
 		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
 		$tag3 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag3');
-		$field = CheckboxSetField::create('Test', 'Testing', $checkboxTestArticle->Tags()	->map());
+		$field = CheckboxSetField::create('Test', 'Testing', $checkboxTestArticle->Tags());
 		$validator = new RequiredFields();
-		$field->setValue(array(
-			$tag1->ID => $tag1->ID,
-			$tag2->ID => $tag2->ID
-		));
+		$field->setValue(array( $tag1->ID, $tag2->ID ));
+		$isValid = $field->validate($validator);
 		$this->assertTrue(
-			$field->validate($validator),
+			$isValid,
 			'Validates values in source map'
 		);
-		//invalid value should fail
+
+		// Invalid value should fail
+		$validator = new RequiredFields();
 		$fakeID = CheckboxSetFieldTest_Tag::get()->max('ID') + 1;
-		$field->setValue(array($fakeID => $fakeID));
+		$field->setValue(array($fakeID));
 		$this->assertFalse(
 			$field->validate($validator),
 			'Field does not valid values outside of source map'
 		);
-		//non valid value included with valid options should succeed
+		$errors = $validator->getErrors();
+		$error = reset($errors);
+		$this->assertEquals(
+			"Please select a value within the list provided. '$fakeID' is not a valid option",
+			$error['message']
+		);
+
+		// Multiple invalid values should fail
+		$validator = new RequiredFields();
+		$fakeID = CheckboxSetFieldTest_Tag::get()->max('ID') + 1;
+		$field->setValue(array($fakeID, $tag3->ID));
+		$this->assertFalse(
+			$field->validate($validator),
+			'Field does not valid values outside of source map'
+		);
+		$errors = $validator->getErrors();
+		$error = reset($errors);
+		$this->assertEquals(
+			"Please select a value within the list provided. '{$fakeID} and {$tag3->ID}' is not a valid option",
+			$error['message']
+		);
+
+		// Invalid value with non-array value
+		$validator = new RequiredFields();
+		$field->setValue($fakeID);
+		$this->assertFalse(
+			$field->validate($validator),
+			'Field does not valid values outside of source map'
+		);
+		$errors = $validator->getErrors();
+		$error = reset($errors);
+		$this->assertEquals(
+			"Please select a value within the list provided. '{$fakeID}' is not a valid option",
+			$error['message']
+		);
+
+		// non valid value included with valid options should succeed
+		$validator = new RequiredFields();
 		$field->setValue(array(
-			$tag1->ID => $tag1->ID,
-			$tag2->ID => $tag2->ID,
-			$tag3->ID => $tag3->ID
+			$tag1->ID,
+			$tag2->ID,
+			$tag3->ID
 		));
 		$this->assertTrue(
 			$field->validate($validator),

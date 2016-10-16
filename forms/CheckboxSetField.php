@@ -333,21 +333,22 @@ class CheckboxSetField extends OptionsetField {
 			return true;
 		}
 		$sourceArray = $this->getSourceAsArray();
+		$validValues = array_keys($sourceArray);
 		if (is_array($values)) {
-			if (!array_intersect_key($sourceArray, $values)) {
+			if (!array_intersect($validValues, $values)) {
 				$validator->validationError(
 					$this->name,
 					_t(
 						'CheckboxSetField.SOURCE_VALIDATION',
 						"Please select a value within the list provided. '{value}' is not a valid option",
-						array('value' => implode(' and ', array_diff($sourceArray, $values)))
+						array('value' => implode(' and ', $values))
 					),
 					"validation"
 				);
 				return false;
 			}
 		} else {
-			if (!in_array($this->value, $sourceArray)) {
+			if (!in_array($this->value, $validValues)) {
 				$validator->validationError(
 					$this->name,
 					_t(

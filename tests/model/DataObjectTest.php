@@ -1709,6 +1709,13 @@ class DataObjectTest extends SapphireTest {
 
 }
 
+class DataObjectTest_Sortable extends DataObject implements TestOnly {
+	private static $db = array(
+		'Sort' => 'Int',
+		'Name' => 'Varchar',
+	);
+}
+
 class DataObjectTest_Player extends Member implements TestOnly {
 	private static $db = array(
 		'IsRetired' => 'Boolean',
