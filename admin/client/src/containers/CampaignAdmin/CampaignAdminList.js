@@ -133,9 +133,10 @@ class CampaignAdminList extends SilverStripeComponent {
 
     // Set body
     const pagesLink = [
-      this.props.config.baseUrl,
+      this.props.config.absoluteBaseUrl,
       this.props.config.sections['SilverStripe\\CMS\\Controllers\\CMSPagesController'].url,
-    ].join('/');
+    ].join('');
+
     const body = accordionBlocks.length
       ? (<Accordion>{accordionBlocks}</Accordion>)
       : (
