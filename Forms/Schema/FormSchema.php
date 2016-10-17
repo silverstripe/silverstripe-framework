@@ -51,9 +51,13 @@ class FormSchema {
 	 * @return array
 	 */
 	public function getState(Form $form) {
+		// Ensure that session errors are populated within form field messages
+		$form->setupFormErrors();
+
 		$state = [
 			'id' => $form->FormName(),
 			'fields' => [],
+			'valid' => $form->isValid(),
 			'messages' => []
 		];
 
@@ -65,7 +69,8 @@ class FormSchema {
 
 		if($form->Message()) {
 			$state['messages'][] = [
-				'value' => $form->Message(),
+				// @todo - Make form / field messages not always stored as html
+				'value' => ['html' => $form->Message()],
 				'type' => $form->MessageType(),
 			];
 		}

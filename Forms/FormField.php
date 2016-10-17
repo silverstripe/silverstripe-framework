@@ -1501,25 +1501,12 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	public function getSchemaStateDefaults() {
-		$field = $this;
-		$form = $this->getForm();
-		$validator = $form ? $form->getValidator() : null;
-		$errors = $validator ? (array)$validator->getErrors() : [];
-		$messages = array_filter(array_map(function($error) use ($field) {
-			if($error['fieldName'] === $field->getName()) {
-				return [
-					'value' => $error['message'],
-					'type' => $error['messageType']
-				];
-			}
-			return null;
-		}, $errors));
-
 		return [
 			'id' => $this->ID(),
 			'value' => $this->Value(),
-			'valid' => (count($messages) === 0),
-			'messages' => (array)$messages,
+			// @todo - Make form / field messages not always stored as html
+			'message' => ['html' => $this->Message()],
+			'messageType' => $this->MessageType(),
 			'data' => [],
 		];
 	}
