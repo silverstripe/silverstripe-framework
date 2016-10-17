@@ -1273,10 +1273,9 @@ if(s=e(o).closest(".ss-tabset").find(".ui-tabs-nav .ui-tabs-active .ui-tabs-anch
 u=e(o).closest(".togglecomposite"),u.length>0&&u.accordion("activate",u.find(".ui-accordion-header")),d=e(o).position().top,e(o).is(":visible")||(o="#"+e(o).closest(".field").attr("id"),d=e(o).position().top),
 e(o).focus(),d>e(window).height()/2&&t.find(".cms-content-fields").scrollTop(d)}else this.focusFirstInput()}},focusFirstInput:function w(){this.find(':input:not(:submit)[data-skip-autofocus!="true"]').filter(":visible:first").focus()
 
-}}),e(".cms-edit-form .btn-toolbar input.action[type=submit], .cms-edit-form .btn-toolbar button.action").entwine({onclick:function C(e){return this.hasClass("gridfield-button-delete")&&!confirm(a["default"]._t("TABLEFIELD.DELETECONFIRMMESSAGE"))?(e.preventDefault(),
-!1):(this.is(":disabled")||this.parents("form").trigger("submit",[this]),e.preventDefault(),!1)}}),e(".cms-edit-form .btn-toolbar input.action[type=submit].ss-ui-action-cancel, .cms-edit-form .btn-toolbar button.action.ss-ui-action-cancel").entwine({
-onclick:function T(e){window.history.length>1?window.history.back():this.parents("form").trigger("submit",[this]),e.preventDefault()}}),e(".cms-edit-form .ss-tabset").entwine({onmatch:function E(){if(!this.hasClass("ss-ui-action-tabset")){
-var e=this.find("> ul:first")
+}}),e(".cms-edit-form .btn-toolbar input.action[type=submit], .cms-edit-form .btn-toolbar button.action").entwine({onclick:function C(e){return this.is(":disabled")?(e.preventDefault(),!1):this._super(e)===!1||e.defaultPrevented||e.isDefaultPrevented()?void 0:(this.parents("form").trigger("submit",[this]),
+e.preventDefault(),!1)}}),e(".cms-edit-form .btn-toolbar input.action[type=submit].ss-ui-action-cancel, .cms-edit-form .btn-toolbar button.action.ss-ui-action-cancel").entwine({onclick:function T(e){window.history.length>1?window.history.back():this.parents("form").trigger("submit",[this]),
+e.preventDefault()}}),e(".cms-edit-form .ss-tabset").entwine({onmatch:function E(){if(!this.hasClass("ss-ui-action-tabset")){var e=this.find("> ul:first")
 1==e.children("li").length&&e.hide().parent().addClass("ss-tabset-tabshidden")}this._super()},onunmatch:function P(){this._super()}})})
 var s=function l(t){e.noticeAdd({text:t,type:"error",stayTime:5e3,inEffect:{left:"0",opacity:"show"}})}}).call(t,n(1))},function(e,t){e.exports=i18n},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),o=i(r)

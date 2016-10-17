@@ -394,20 +394,17 @@ $.entwine('ss', function($){
      * Function: onclick
      */
     onclick: function(e) {
-      // Confirmation on delete.
-      if(
-        this.hasClass('gridfield-button-delete')
-        && !confirm(i18n._t('TABLEFIELD.DELETECONFIRMMESSAGE'))
-      ) {
+      if(this.is(':disabled')) {
         e.preventDefault();
         return false;
       }
 
-      if(!this.is(':disabled')) {
+      // only run submit if other handlers didn't preventDefault
+      if (this._super(e) !== false && !e.defaultPrevented && !e.isDefaultPrevented()) {
         this.parents('form').trigger('submit', [this]);
+        e.preventDefault();
+        return false;
       }
-      e.preventDefault();
-      return false;
     }
   });
 
