@@ -334,15 +334,16 @@ class ChangeSet extends DataObject {
 	 */
 	public function canPublish($member = null) {
 		// All changes must be publishable
+		$atLeastOneChange = false;
 		foreach($this->Changes() as $change) {
+			$atLeastOneChange = true;
 			/** @var ChangeSetItem $change */
 			if(!$change->canPublish($member)) {
 				return false;
 			}
 		}
 
-		// Default permission
-		return $this->can(__FUNCTION__, $member);
+		return $atLeastOneChange;
 	}
 
 	/**

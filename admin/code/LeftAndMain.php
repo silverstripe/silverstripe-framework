@@ -33,6 +33,7 @@ use SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar;
 use SilverStripe\Forms\Schema\FormSchema;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataModel;
@@ -990,7 +991,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		));
 		$record = $this->currentPage();
 		if($record && $record->exists()) {
-			if($record->hasExtension('SilverStripe\\ORM\\Hierarchy\\Hierarchy')) {
+			if($record->hasExtension(Hierarchy::class)) {
 				$ancestors = $record->getAncestors();
 				$ancestors = new ArrayList(array_reverse($ancestors->toArray()));
 				$ancestors->push($record);
@@ -1120,7 +1121,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		// Limit the amount of nodes shown for performance reasons.
 		// Skip the check if we're filtering the tree, since its not clear how many children will
 		// match the filter criteria until they're queried (and matched up with previously marked nodes).
-		$nodeThresholdLeaf = Config::inst()->get('SilverStripe\\ORM\\Hierarchy\\Hierarchy', 'node_threshold_leaf');
+		$nodeThresholdLeaf = Config::inst()->get(Hierarchy::class, 'node_threshold_leaf');
 		if($nodeThresholdLeaf && !$filterFunction) {
 			$nodeCountCallback = function($parent, $numChildren) use(&$controller, $className, $nodeThresholdLeaf) {
 				if ($className !== 'SilverStripe\\CMS\\Model\\SiteTree'
@@ -1526,7 +1527,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 
 			$tree_class = $this->stat('tree_class');
 			if(
-				$tree_class::has_extension('SilverStripe\\ORM\\Hierarchy\\Hierarchy')
+				$tree_class::has_extension(Hierarchy::class)
 				&& !$fields->dataFieldByName('ParentID')
 			) {
 				$fields->push(new HiddenField('ParentID'));

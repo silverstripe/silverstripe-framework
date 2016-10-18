@@ -295,22 +295,13 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 		switch($this->getChangeType()) {
 			case static::CHANGE_CREATED: {
 				// Revert creation by deleting from stage
-				if(!$object->canDelete($member)) {
-					return false;
-				}
-				break;
+				return $object->canDelete($member);
 			}
 			default: {
 				// All other actions are typically editing draft stage
-				if(!$object->canEdit($member)) {
-					return false;
-				}
-				break;
+				return $object->canEdit($member);
 			}
 		}
-
-		// If object can be published/unpublished let extensions deny
-		return $this->can(__FUNCTION__, $member);
 	}
 
 	/**
@@ -325,23 +316,22 @@ class ChangeSetItem extends DataObject implements Thumbnail {
 			case static::CHANGE_DELETED: {
 				/** @var Versioned|DataObject $object */
 				$object = Versioned::get_by_stage($this->ObjectClass, Versioned::LIVE)->byID($this->ObjectID);
-				if(!$object || !$object->canUnpublish($member)) {
-					return false;
+				if ($object) {
+					return $object->canUnpublish($member);
 				}
 				break;
 			}
 			default: {
 				/** @var Versioned|DataObject $object */
 				$object = Versioned::get_by_stage($this->ObjectClass, Versioned::DRAFT)->byID($this->ObjectID);
-				if(!$object || !$object->canPublish($member)) {
-					return false;
+				if($object) {
+					return $object->canPublish($member);
 				}
 				break;
 			}
 		}
 
-		// If object can be published/unpublished let extensions deny
-		return $this->can(__FUNCTION__, $member);
+		return false;
 	}
 
 	/**

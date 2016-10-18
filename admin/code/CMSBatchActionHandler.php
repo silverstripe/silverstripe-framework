@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -52,7 +53,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * by any batch changes. Needs to be set in the actual {@link CMSBatchAction}
 	 * implementations as well.
 	 */
-	protected $recordClass = 'SilverStripe\\CMS\\Model\\SiteTree';
+	protected $recordClass = SiteTree::class;
 
 	/**
 	 * @param Controller $parentController
@@ -74,25 +75,27 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * of {@link CMSBatchAction}.
 	 *
 	 * @param string $urlSegment The URL Segment of the batch action - the URL used to process this
-	 * action will be admin/batchactions/(urlSegment)
+	 * action will be admin/pages/batchactions/(urlSegment)
 	 * @param string $batchActionClass The name of the CMSBatchAction subclass to register
 	 * @param string $recordClass
 	 */
-	public static function register($urlSegment, $batchActionClass, $recordClass = 'SilverStripe\\CMS\\Model\\SiteTree') {
-		if(is_subclass_of($batchActionClass, 'SilverStripe\\Admin\\CMSBatchAction')) {
-			Config::inst()->update(
-				'SilverStripe\\Admin\\CMSBatchActionHandler',
-				'batch_actions',
-				array(
-					$urlSegment => array(
-						'class' => $batchActionClass,
-						'recordClass' => $recordClass
-					)
-				)
+	public static function register($urlSegment, $batchActionClass, $recordClass = SiteTree::class) {
+		if(!is_subclass_of($batchActionClass, CMSBatchAction::class)) {
+			throw new InvalidArgumentException(
+				"CMSBatchActionHandler::register() - Bad class '$batchActionClass'"
 			);
-		} else {
-			user_error("CMSBatchActionHandler::register() - Bad class '$batchActionClass'", E_USER_ERROR);
 		}
+
+		Config::inst()->update(
+			CMSBatchActionHandler::class,
+			'batch_actions',
+			array(
+				$urlSegment => array(
+					'class' => $batchActionClass,
+					'recordClass' => $recordClass
+				)
+			)
+		);
 	}
 
 	public function Link() {
@@ -236,7 +239,7 @@ class CMSBatchActionHandler extends RequestHandler {
 	 * @throws InvalidArgumentException if invalid action class is passed.
 	 */
 	protected function buildAction($class) {
-		if(!is_subclass_of($class, 'SilverStripe\\Admin\\CMSBatchAction')) {
+		if(!is_subclass_of($class, CMSBatchAction::class)) {
 			throw new InvalidArgumentException("{$class} is not a valid subclass of CMSBatchAction");
 		}
 		return CMSBatchAction::singleton($class);
@@ -291,7 +294,7 @@ class CMSBatchActionHandler extends RequestHandler {
 		}
 
 		// Bypass versioned filter
-		if($recordClass::has_extension('SilverStripe\\ORM\\Versioning\\Versioned')) {
+		if($recordClass::has_extension(Versioned::class)) {
 			// Workaround for get_including_deleted not supporting byIDs filter very well
 			// Ensure we select both stage / live records
 			$pages = Versioned::get_including_deleted($recordClass, array(

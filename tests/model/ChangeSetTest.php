@@ -308,11 +308,13 @@ class ChangeSetTest extends SapphireTest {
 		Session::clear("loggedInAs");
 		$this->assertFalse($changeSet->canPublish());
 
-		// User with only one of the necessary permissions cannot publish
+		// campaign admin only permission doesn't grant publishing rights
 		$this->logInWithPermission('CMS_ACCESS_CampaignAdmin');
 		$this->assertFalse($changeSet->canPublish());
+
+		// With model publish permissions only publish is allowed
 		$this->logInWithPermission('PERM_canPublish');
-		$this->assertFalse($changeSet->canPublish());
+		$this->assertTrue($changeSet->canPublish());
 
 		// Test user with the necessary minimum permissions can login
 		$this->logInWithPermission([

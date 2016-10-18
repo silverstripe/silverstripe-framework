@@ -8,12 +8,12 @@ $.entwine('ss.tree', function($){
 
   /**
    * Class: #Form_BatchActionsForm
-   * 
+   *
    * Batch actions which take a bunch of selected pages,
    * usually from the CMS tree implementation, and perform serverside
    * callbacks on the whole set. We make the tree selectable when the jQuery.UI tab
    * enclosing this form is opened.
-   * 
+   *
    * Events:
    *  register - Called before an action is added.
    *  unregister - Called before an action is removed.
@@ -63,7 +63,7 @@ $.entwine('ss.tree', function($){
      */
     registerDefault: function() {
       // Publish selected pages action
-      this.register(ss.config.adminUrl + 'pages/batchactions/publish', function(ids) {
+      this.register('publish', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
@@ -77,7 +77,7 @@ $.entwine('ss.tree', function($){
       });
 
       // Unpublish selected pages action
-      this.register(ss.config.adminUrl + 'pages/batchactions/unpublish', function(ids) {
+      this.register('unpublish', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
@@ -90,28 +90,13 @@ $.entwine('ss.tree', function($){
         return (confirmed) ? ids : false;
       });
 
-      // Delete selected pages action
-      // @deprecated since 4.0 Use archive instead
-      this.register(ss.config.adminUrl + 'pages/batchactions/delete', function(ids) {
+      // Delete and archive selected pages action
+      this.register('delete', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
               "CMSMAIN.BATCH_DELETE_PROMPT",
-              "You have {num} page(s) selected.\n\nDo you really want to delete?"
-            ),
-            {'num': ids.length}
-          )
-        );
-        return (confirmed) ? ids : false;
-      });
-
-      // Delete selected pages action
-      this.register(ss.config.adminUrl + 'pages/batchactions/archive', function(ids) {
-        var confirmed = confirm(
-          i18n.inject(
-            i18n._t(
-              "CMSMAIN.BATCH_ARCHIVE_PROMPT",
-              "You have {num} page(s) selected.\n\nAre you sure you want to archive these pages?\n\nThese pages and all of their children pages will be unpublished and sent to the archive."
+              "You have {num} page(s) selected.\n\nAre you sure you want to delete these pages?\n\nThese pages and all of their children pages will be deleted and sent to the archive."
             ),
             {'num': ids.length}
           )
@@ -120,26 +105,12 @@ $.entwine('ss.tree', function($){
       });
 
       // Restore selected archived pages
-      this.register(ss.config.adminUrl + 'pages/batchactions/restore', function(ids) {
+      this.register('restore', function(ids) {
         var confirmed = confirm(
           i18n.inject(
             i18n._t(
               "CMSMAIN.BATCH_RESTORE_PROMPT",
               "You have {num} page(s) selected.\n\nDo you really want to restore to stage?\n\nChildren of archived pages will be restored to the root level, unless those pages are also being restored."
-            ),
-            {'num': ids.length}
-          )
-        );
-        return (confirmed) ? ids : false;
-      });
-
-      // Delete selected pages from live action
-      this.register(ss.config.adminUrl + 'pages/batchactions/deletefromlive', function(ids) {
-        var confirmed = confirm(
-          i18n.inject(
-            i18n._t(
-              "CMSMAIN.BATCH_DELETELIVE_PROMPT",
-              "You have {num} page(s) selected.\n\nDo you really want to delete these pages from live?"
             ),
             {'num': ids.length}
           )
@@ -190,7 +161,7 @@ $.entwine('ss.tree', function($){
         allIds = [],
         viewMode = $('.cms-content-batchactions-button'),
         actionUrl = this.find(':input[name=Action]').val();
-    
+
       // Default to refreshing the entire tree
       if(rootNode == null) rootNode = st;
 
@@ -211,7 +182,7 @@ $.entwine('ss.tree', function($){
         allIds.push($(this).data('id'));
         $(this).addClass('treeloading').setEnabled(false);
       });
-      
+
       // Post to the server to ask which pages can have this batch action applied
       // Retain existing query parameters in URL before appending path
       var actionUrlParts = $.path.parseUrl(actionUrl);
@@ -232,24 +203,24 @@ $.entwine('ss.tree', function($){
             $(this).prop('selected', false);
           }
         });
-        
+
         self.serializeFromTree();
       });
     },
-    
+
     /**
      * @func serializeFromTree
      * @return {boolean}
      */
     serializeFromTree: function() {
       var tree = this.getTree(), ids = tree.getSelectedIDs();
-      
+
       // write IDs to the hidden field
       this.setIDs(ids);
-      
+
       return true;
     },
-    
+
     /**
      * @func setIDS
      * @param {array} ids
@@ -257,7 +228,7 @@ $.entwine('ss.tree', function($){
     setIDs: function(ids) {
       this.find(':input[name=csvIDs]').val(ids ? ids.join(',') : null);
     },
-    
+
     /**
      * @func getIDS
      * @return {array}
@@ -271,39 +242,49 @@ $.entwine('ss.tree', function($){
     },
 
     onsubmit: function(e) {
-      var self = this, ids = this.getIDs(), tree = this.getTree(), actions = this.getActions();
-      
+      var self = this,
+        ids = this.getIDs(),
+        tree = this.getTree(),
+        actions = this.getActions();
+
       // if no nodes are selected, return with an error
       if(!ids || !ids.length) {
         alert(i18n._t('CMSMAIN.SELECTONEPAGE', 'Please select at least one page'));
         e.preventDefault();
         return false;
       }
-      
+
       // apply callback, which might modify the IDs
-      var type = this.find(':input[name=Action]').val();
-      if(actions[type]) {
-        ids = this.getActions()[type].apply(this, [ids]);
+      var actionURL = this.find(':input[name=Action]').val();
+      if (!actionURL) {
+        e.preventDefault();
+        return false;
       }
-      
+
+      // Validate action
+      var type = actionURL.split('/').filter(n => !!n).pop();
+      if(actions[type]) {
+        ids = actions[type].apply(this, [ids]);
+      }
+
       // Discontinue processing if there are no further items
       if(!ids || !ids.length) {
         e.preventDefault();
         return false;
       }
-    
+
       // write (possibly modified) IDs back into to the hidden field
       this.setIDs(ids);
-      
+
       // Reset failure states
       tree.find('li').removeClass('failed');
-    
+
       var button = this.find(':submit:first');
       button.addClass('loading');
-    
+
       jQuery.ajax({
         // don't use original form url
-        url: type,
+        url: actionURL,
         type: 'POST',
         data: this.serializeArray(),
         complete: function(xmlhttp, status) {
@@ -316,14 +297,14 @@ $.entwine('ss.tree', function($){
 
           // Reset action
           self.find(':input[name=Action]').val('').change();
-        
+
           // status message (decode into UTF-8, HTTP headers don't allow multibyte)
           var msg = xmlhttp.getResponseHeader('X-Status');
           if(msg) statusMessage(decodeURIComponent(msg), (status == 'success') ? 'good' : 'bad');
         },
         success: function(data, status) {
           var id, node;
-          
+
           if(data.modified) {
             var modifiedNodes = [];
             for(id in data.modified) {
@@ -348,12 +329,12 @@ $.entwine('ss.tree', function($){
         },
         dataType: 'json'
       });
-    
+
       // Never process this action; Only invoke via ajax
       e.preventDefault();
       return false;
     }
-  
+
   });
 
   $('.cms-content-batchactions-button').entwine({
@@ -381,7 +362,7 @@ $.entwine('ss.tree', function($){
         tree.removeClass('multiple');
         tree.addClass('draggable');
       }
-      
+
       $('#Form_BatchActionsForm').refreshSelected();
     }
   });
@@ -399,7 +380,7 @@ $.entwine('ss.tree', function($){
       } else {
         btn.removeAttr('disabled').button('refresh');
       }
-      
+
       // Refresh selected / enabled nodes
       $('#Form_BatchActionsForm').refreshSelected();
 

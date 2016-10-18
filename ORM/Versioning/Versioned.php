@@ -836,7 +836,6 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 		$newTable = $this->stageTable($table, Versioned::get_stage());
 		$manipulation[$newTable] = $manipulation[$table];
-		unset($manipulation[$table]);
 	}
 
 
@@ -892,7 +891,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				$thisVersion = $manipulation[$table]['fields']['Version'];
 			}
 
-			// If we're editing Live, then use (table)_Live instead of (table)
+			// If we're editing Live, then write to (table)_Live as well as (table)
 			if($this->hasStages() && static::get_stage() === static::LIVE) {
 				$this->augmentWriteStaged($manipulation, $table, $id);
 			}
@@ -1222,16 +1221,17 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
             $member = Member::currentUser();
         }
 
-		if(Permission::checkMember($member, "ADMIN")) {
-			return true;
-		}
-
 		// Standard mechanism for accepting permission changes from extensions
 		$owner = $this->owner;
 		$extended = $owner->extendedCan('canArchive', $member);
 		if($extended !== null) {
             return $extended;
         }
+
+        // Admin permissions allow
+		if(Permission::checkMember($member, "ADMIN")) {
+			return true;
+		}
 
 		// Check if this record can be deleted from stage
         if(!$owner->canDelete($member)) {
@@ -1681,7 +1681,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param int|string $fromStage Place to copy from.  Can be either a stage name or a version number.
 	 * @param string $toStage Place to copy to.  Must be a stage name.
 	 * @param bool $createNewVersion Set this to true to create a new version number.
-	 * By default, the existing version number will be copied over.
+	 * By default, the existing version number will be copied over. Note if copying
+	 * to the live stage, the draft stage will also be updated with the new version.
 	 */
 	public function copyVersionToStage($fromStage, $toStage, $createNewVersion = false) {
 		$owner = $this->owner;
@@ -2193,7 +2194,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Write the given record to the draft stage
+	 * Write the given record to the given stage.
+	 * Note: If writing to live, this will write to stage as well.
 	 *
 	 * @param string $stage
 	 * @param boolean $forceInsert

@@ -251,6 +251,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	public function testPublishCreateNewVersion() {
+		/** @var VersionedTest_DataObject $page1 */
 		$page1 = $this->objFromFixture('VersionedTest_DataObject', 'page1');
 		$page1->Content = 'orig';
 		$page1->write();
@@ -282,8 +283,8 @@ class VersionedTest extends SapphireTest {
 		);
 		$this->assertEquals(
 			$stageVersion,
-			$secondVersion,
-			'publish() with $createNewVersion=TRUE does not affect stage'
+			$thirdVersion,
+			'publish() with $createNewVersion=TRUE also updates draft'
 		);
 	}
 
@@ -375,10 +376,7 @@ class VersionedTest extends SapphireTest {
 	}
 
 	/**
-	 * This tests for the situation described in the ticket #5596.
-	 * Writing new Page to live first creates a row in VersionedTest_DataObject table (to get the new ID),
-	 * then "changes it's mind" in Versioned and writes VersionedTest_DataObject_Live. It does not remove
-	 * the VersionedTest_DataObject record though.
+	 * Writing a page to live should update both draft and live tables
 	 */
 	public function testWritingNewToLive() {
 		$origReadingMode = Versioned::get_reading_mode();
@@ -393,12 +391,18 @@ class VersionedTest extends SapphireTest {
 			'"VersionedTest_DataObject_Live"."ID"' => $page->ID
 		));
 		$this->assertEquals(1, $live->count());
-		$this->assertEquals($live->First()->Title, 'testWritingNewToLive');
+		$liveRecord = $live->First();
+		$this->assertEquals($liveRecord->Title, 'testWritingNewToLive');
 
 		$stage = Versioned::get_by_stage('VersionedTest_DataObject', 'Stage',array(
 			'"VersionedTest_DataObject"."ID"' => $page->ID
 		));
-		$this->assertEquals(0, $stage->count());
+		$this->assertEquals(1, $stage->count());
+		$stageRecord = $stage->first();
+		$this->assertEquals($stageRecord->Title, 'testWritingNewToLive');
+
+		// Both records have the same version
+		$this->assertEquals($liveRecord->Version, $stageRecord->Version);
 
 		Versioned::set_reading_mode($origReadingMode);
 	}

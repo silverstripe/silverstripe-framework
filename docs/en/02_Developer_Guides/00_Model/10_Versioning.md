@@ -112,8 +112,12 @@ a record was published.
 
 ### Writing Versions and Changing Stages
 
-The usual call to `DataObject->write()` will write to whatever stage is currently active, as defined by the 
-`Versioned::current_stage()` global setting. Each call will automatically create a new version in the 
+The usual call to `DataObject->write()` will write to the draft stage. If the current stage is set
+to `Versioned::LIVE` (as defined by `Versioned::current_stage()`) then the record will also be
+updated on the live stage. Through this mechanism the draft stage is the latest source of truth
+for any record.
+
+In addition, each call will automatically create a new version in the 
 `<class>_versions` table. To avoid this, use [api:Versioned::writeWithoutVersion()] instead.
 
 To move a saved version from one stage to another, call [writeToStage(<stage>)](api:Versioned->writeToStage()) on the 
