@@ -732,10 +732,11 @@ $.entwine('ss', function($) {
       this.setRedrawSuppression(true);
       try {
         // Replace each fragment individually
-        $.each(newFragments, function(newFragment, html) {
-          var contentEl = $('[data-pjax-fragment]').filter(function() {
-            return $.inArray(newFragment, $(this).data('pjaxFragment').split(' ')) != -1;
-          }), newContentEl = $(html);
+        $.each(newFragments, function (newFragment, html) {
+          var contentEl = $('[data-pjax-fragment]').filter(function () {
+              return $.inArray(newFragment, $(this).data('pjaxFragment').split(' ')) != -1;
+            }),
+            newContentEl = $(html);
 
           // Add to result collection
           if(newContentEls) newContentEls.add(newContentEl);

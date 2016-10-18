@@ -1,4 +1,4 @@
-<div class="breadcrumbs-wrapper" data-pjax-fragment="Breadcrumbs">
+<div class="breadcrumbs-wrapper flexbox-area-grow" data-pjax-fragment="Breadcrumbs">
 	<h2 id="page-title-heading">
 		<% loop $Breadcrumbs %>
 			<% if $Last %>
