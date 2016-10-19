@@ -9361,6 +9361,10 @@ body.cms{
   display:none;
 }
 
+.cms-container--preview-mode .cms-preview{
+  border-left:0;
+}
+
 .cms-content-header{
   padding-left:1.5385rem;
   padding-right:1.5385rem;
@@ -15416,7 +15420,6 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   padding-left:1.5385rem;
   padding-right:1.5385rem;
   height:53px;
-  width:100%;
 }
 
 .toolbar--content .btn-toolbar,.toolbar--north .btn-toolbar,.toolbar--south .btn-toolbar,.toolbar .btn-toolbar{
