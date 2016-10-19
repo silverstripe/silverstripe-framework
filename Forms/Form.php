@@ -254,13 +254,6 @@ class Form extends RequestHandler {
 	protected $securityTokenAdded = false;
 
 	/**
-	 * Set to the last result of ->validate(), or null if not called
-	 *
-	 * @var bool|null
-	 */
-	protected $valid = null;
-
-	/**
 	 * Create a new form, with the given fields an action buttons.
 	 *
 	 * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
@@ -1377,14 +1370,17 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * Returns last result of validation, or null if not validated.
-	 * Note: Does not persist between requests in session.
-	 * @todo Maybe it should?
+	 * Returns boolean if there are any errors set for this form, or null if not validated.
 	 *
 	 * @return bool|null
 	 */
 	public function isValid() {
-		return $this->valid;
+		$errors = Session::get("FormInfo.{$this->FormName()}.errors");
+		if (!isset($errors)) {
+			return null;
+		}
+		
+		return empty($errors);
 	}
 
 	/**
@@ -1404,7 +1400,6 @@ class Form extends RequestHandler {
 	public function validate(){
 		$action = $this->buttonClicked();
 		if($action && $this->actionIsValidationExempt($action)) {
-			$this->valid = true;
 			return true;
 		}
 
@@ -1430,12 +1425,10 @@ class Form extends RequestHandler {
 				Session::set("FormInfo.{$this->FormName()}.errors", $errors);
 				Session::set("FormInfo.{$this->FormName()}.data", $data);
 
-				$this->valid = false;
 				return false;
 			}
 		}
 
-		$this->valid = true;
 		return true;
 	}
 

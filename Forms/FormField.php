@@ -1505,8 +1505,10 @@ class FormField extends RequestHandler {
 			'id' => $this->ID(),
 			'value' => $this->Value(),
 			// @todo - Make form / field messages not always stored as html
-			'message' => ['html' => $this->Message()],
-			'messageType' => $this->MessageType(),
+			'message' => [
+				'value' => ['html' => $this->Message()],
+				'type' => $this->MessageType(),
+			],
 			'data' => [],
 		];
 	}

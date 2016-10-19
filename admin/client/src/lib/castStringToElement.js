@@ -13,8 +13,11 @@ import React from 'react';
 export default function castStringToElement(Container, value, props = {}) {
   // HTML value
   if (value && typeof value.html !== 'undefined') {
-    const html = { __html: value.html };
-    return <Container {...props} dangerouslySetInnerHTML={html} />;
+    if (value.html !== null) {
+      const html = { __html: value.html };
+      return <Container {...props} dangerouslySetInnerHTML={html} />;
+    }
+    return null;
   }
 
   // Plain value
@@ -29,5 +32,8 @@ export default function castStringToElement(Container, value, props = {}) {
     throw new Error(`Unsupported string value ${JSON.stringify(body)}`);
   }
 
-  return <Container {...props}>{body}</Container>;
+  if (body !== null && typeof body !== 'undefined') {
+    return <Container {...props}>{body}</Container>;
+  }
+  return null;
 }

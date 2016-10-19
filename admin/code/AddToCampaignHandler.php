@@ -194,8 +194,8 @@ class AddToCampaignHandler {
 
 		$form->setHTMLID('Form_EditForm_AddToCampaign');
 
-		$form->unsetValidator();
 		$form->loadDataFrom($this->data);
+        $form->getValidator()->addRequiredField('Campaign');
 		$form->addExtraClass('form--no-dividers add-to-campaign__form');
 
 		return $form;

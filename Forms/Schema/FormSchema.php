@@ -69,7 +69,7 @@ class FormSchema {
 
 		if($form->Message()) {
 			$state['messages'][] = [
-				// @todo - Make form / field messages not always stored as html
+				// TODO Make form / field messages not always stored as html
 				'value' => ['html' => $form->Message()],
 				'type' => $form->MessageType(),
 			];

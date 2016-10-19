@@ -2,6 +2,7 @@ import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import { FormGroup, ControlLabel } from 'react-bootstrap-ss';
 import castStringToElement from 'lib/castStringToElement';
+import MessageBox from 'components/MessageBox/MessageBox';
 
 function fieldHolder(Field) {
   class FieldHolder extends SilverStripeComponent {
@@ -9,7 +10,7 @@ function fieldHolder(Field) {
     /**
      * Build description
      *
-     * @returns {XML}
+     * @returns {Component}
      */
     getDescription() {
       if (this.props.description === null) {
@@ -20,6 +21,23 @@ function fieldHolder(Field) {
         'div',
         this.props.description,
         { className: 'form__field-description' }
+      );
+    }
+
+    /**
+     * Build a MessageBox
+     *
+     * @returns {Component}
+     */
+    getMessage() {
+      const message = this.props.message;
+
+      if (!message) {
+        return null;
+      }
+
+      return (
+        <MessageBox className="form__field-message" {...message} />
       );
     }
 
@@ -85,6 +103,7 @@ function fieldHolder(Field) {
             <Field {...this.props} />
           </div>
           {this.getRightTitle()}
+          {this.getMessage()}
           {this.getDescription()}
         </FormGroup>
       );
@@ -108,11 +127,6 @@ function fieldHolder(Field) {
     extraClass: '',
     leftTitle: null,
     rightTitle: null,
-  };
-
-  FieldHolder.defaultProps = {
-    className: '',
-    extraClass: '',
   };
 
   return FieldHolder;

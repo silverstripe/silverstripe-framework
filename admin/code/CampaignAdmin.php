@@ -535,7 +535,7 @@ JSON;
 		if($id && $record) {
 			$form->loadDataFrom($record);
 		}
-
+        $form->getValidator()->addRequiredField('Name');
 		// Configure form to respond to validation errors with form schema
 		// if requested via react.
 		$form->setValidationResponseCallback(function() use ($form, $record) {
