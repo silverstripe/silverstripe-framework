@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Forms;
 
+use InvalidArgumentException;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Extensible;
-use SilverStripe\ORM\DataObject;
 
 /**
  * Default form builder class.
@@ -20,44 +20,29 @@ use SilverStripe\ORM\DataObject;
 class DefaultFormFactory implements FormFactory {
 	use Extensible;
 
-	/**
-	 * @var Controller $controller
-	 */
-	protected $controller;
-
-	/**
-	 * @var DataObject $record
-	 */
-	protected $record;
-
-	/**
-	 * @param Controller $controller
-	 * @param DataObject $model
-	 */
-	public function __construct($controller, $model) {
-		$this->setController($controller);
-		$this->setRecord($model);
+	public function __construct() {
 		$this->constructExtensions();
 	}
 
-	/**
-	 * Generates a form using the stored controller and model.
-	 *
-	 * @param string $name
-	 * @return Form $form
-	 */
-	public function getForm($name = 'Form') {
-		$record = $this->getRecord();
-		$fields = $this->getFormFields();
-		$actions = $this->getFormActions();
-		$validator = $this->getFormValidator();
-		$form = Form::create($this->controller, $name, $fields, $actions, $validator);
+	public function getForm(Controller $controller, $name = FormFactory::DEFAULT_NAME, $context = [])
+	{
+		// Validate context
+		foreach($this->getRequiredContext() as $required) {
+			if (!isset($context[$required])) {
+				throw new InvalidArgumentException("Missing required context $required");
+			}
+		}
+
+		$fields = $this->getFormFields($controller, $name, $context);
+		$actions = $this->getFormActions($controller, $name, $context);
+		$validator = $this->getFormValidator($controller, $name, $context);
+		$form = Form::create($controller, $name, $fields, $actions, $validator);
 
 		// Extend form
-		$this->extendAll('updateForm', $form);
+		$this->invokeWithExtensions('updateForm', $form, $controller, $name, $context);
 
-		// Load into form
-		$form->loadDataFrom($record);
+		// Populate form from record
+		$form->loadDataFrom($context['Record']);
 
 		return $form;
 	}
@@ -65,94 +50,59 @@ class DefaultFormFactory implements FormFactory {
 	/**
 	 * Build field list for this form
 	 *
+	 * @param Controller $controller
+	 * @param string $name
+	 * @param array $context
 	 * @return FieldList
 	 */
-	protected function getFormFields() {
+	protected function getFormFields(Controller $controller, $name, $context = []) {
 		// Fall back to standard "getCMSFields" which itself uses the FormScaffolder as a fallback
-		$record = $this->getRecord();
 		// @todo Deprecate or formalise support for getCMSFields()
-		$fields = $record->getCMSFields();
-		$this->extendAll('updateFormFields', $fields);
+		$fields = $context['Record']->getCMSFields();
+		$this->invokeWithExtensions('updateFormFields', $fields, $controller, $name, $context);
 		return $fields;
 	}
 
 	/**
 	 * Build list of actions for this form
 	 *
+	 * @param Controller $controller
+	 * @param string $name
+	 * @param array $context
 	 * @return FieldList
 	 */
-	protected function getFormActions() {
-		// by default no actions, it's a bit unpredictable
-		$record = $this->getRecord();
-
-		// Support legacy behaviour
+	protected function getFormActions(Controller $controller, $name, $context = []) {
 		// @todo Deprecate or formalise support for getCMSActions()
-		$actions = $record->getCMSActions();
-
-		// Extend actions
-		$this->extendAll('updateFormActions', $actions);
+		$actions = $context['Record']->getCMSActions();
+		$this->invokeWithExtensions('updateFormActions', $actions, $controller, $name, $context);
 		return $actions;
 	}
 
 	/**
-	 * @return Controller
-	 */
-	public function getController() {
-		return $this->controller;
-	}
-
-	/**
 	 * @param Controller $controller
-	 * @return $this
+	 * @param string $name
+	 * @param array $context
+	 * @return null|Validator
 	 */
-	public function setController(Controller $controller) {
-		$this->controller = $controller;
-		return $this;
-	}
-
-	/**
-	 * @return DataObject
-	 */
-	public function getRecord() {
-		return $this->record;
-	}
-
-	/**
-	 * @param DataObject $record
-	 * @return $this
-	 */
-	public function setRecord(DataObject $record) {
-		$this->record = $record;
-		return $this;
-	}
-
-	/**
-	 * @return Validator|null
-	 */
-	protected function getFormValidator() {
+	protected function getFormValidator(Controller $controller, $name, $context = []) {
 		$validator = null;
-		$record = $this->getRecord();
-
-		// Support legacy behaviour
-		if ($record->hasMethod('getCMSValidator')) {
+		if ($context['Record']->hasMethod('getCMSValidator')) {
 			// @todo Deprecate or formalise support for getCMSValidator()
-			$validator = $record->getCMSValidator();
+			$validator = $context['Record']->getCMSValidator();
 		}
 
 		// Extend validator
-		$this->extendAll('updateFormValidator', $validator);
+		$this->invokeWithExtensions('updateFormValidator', $validator, $controller, $name, $context);
 		return $validator;
 	}
 
 	/**
-	 * Runs the given extension on the builder, record, and controller
+	 * Return list of mandatory context keys
 	 *
-	 * @param string $method name of extension method to call
-	 * @param mixed $object Object parameter
+	 * @return mixed
 	 */
-	protected function extendAll($method, &$object) {
-		$this->invokeWithExtensions($method, $object, $this);
-		$this->getRecord()->invokeWithExtensions($method, $object, $this);
-		$this->getController()->invokeWithExtensions($method, $object, $this);
+	public function getRequiredContext()
+	{
+		return ['Record'];
 	}
 }

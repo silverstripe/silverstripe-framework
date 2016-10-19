@@ -3,28 +3,33 @@
 namespace SilverStripe\Forms;
 
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\DataObject;
 
 /**
- * A service which can generate a form for a given record and controller
+ * A service which can generate a form
  */
 interface FormFactory {
 
 	/**
-	 * @return DataObject
+	 * Default form name.
 	 */
-	public function getRecord();
-
-	/**
-	 * @return Controller
-	 */
-	public function getController();
+	const DEFAULT_NAME = 'Form';
 
 	/**
 	 * Generates the form
 	 *
+	 * @param Controller $controller Parent controller
 	 * @param string $name
+	 * @param array $context List of properties which may influence form scaffolding.
+	 * E.g. 'Record' if building a form for a record.
+	 * Custom factories may support more advanced parameters.
 	 * @return Form
 	 */
-	public function getForm($name = 'Form');
+	public function getForm(Controller $controller, $name = self::DEFAULT_NAME, $context = []);
+
+	/**
+	 * Return list of mandatory context keys
+	 *
+	 * @return mixed
+	 */
+	public function getRequiredContext();
 }

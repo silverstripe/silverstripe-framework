@@ -3,13 +3,11 @@
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Extension;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DefaultFormFactory;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\FormFactory;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextField;
@@ -98,8 +96,8 @@ class FormFactoryTest_TestController extends Controller {
 	public function Form() {
 		// Simple example; Just get the first draft record
 		$record = $this->getRecord();
-		$factory = new FormFactoryTest_EditFactory($this, $record);
-		return $factory->getForm('Form');
+		$factory = new FormFactoryTest_EditFactory();
+		return $factory->getForm($this, 'Form', ['Record' => $record]);
 	}
 
 	public function save($data, Form $form) {
@@ -116,7 +114,7 @@ class FormFactoryTest_TestController extends Controller {
 }
 
 /**
- * Provides versionable extensions to a controller
+ * Provides versionable extensions to a controller / scaffolder
  */
 class FormFactoryTest_ControllerExtension extends Extension {
 
@@ -134,10 +132,16 @@ class FormFactoryTest_ControllerExtension extends Extension {
 	 * Adds additional form actions
 	 *
 	 * @param FieldList $actions
-	 * @param FormFactory $factory
+	 * @param Controller $controller
+	 * @param string $name
+	 * @param array $context
 	 */
-	public function updateFormActions(FieldList &$actions, FormFactory &$factory) {
-		$record = $factory->getRecord();
+	public function updateFormActions(FieldList &$actions, Controller $controller, $name, $context = []) {
+		// Add publish button if record is versioned
+		if (empty($context['Record'])) {
+			return;
+		}
+		$record = $context['Record'];
 		if ($record->hasExtension(Versioned::class)) {
 			$actions->push(new FormAction('publish', 'Publish'));
 		}
@@ -147,12 +151,18 @@ class FormFactoryTest_ControllerExtension extends Extension {
 	 * Adds extra fields to this form
 	 *
 	 * @param FieldList $fields
-	 * @param FormFactory $factory
+	 * @param Controller $controller
+	 * @param string $name
+	 * @param array $context
 	 */
-	public function updateFormFields(FieldList &$fields, FormFactory &$factory) {
+	public function updateFormFields(FieldList &$fields, Controller $controller, $name, $context = []) {
 		// Add preview link
-		if ($factory->getRecord()->hasExtension(Versioned::class)) {
-			$link = $factory->getController()->Link('preview');
+		if (empty($context['Record'])) {
+			return;
+		}
+		$record = $context['Record'];
+		if ($record->hasExtension(Versioned::class)) {
+			$link = $controller->Link('preview');
 			$fields->unshift(new LiteralField(
 				"PreviewLink",
 				sprintf('<a href="%s" rel="external" target="_blank">Preview</a>', Convert::raw2att($link))
@@ -174,22 +184,26 @@ class FormFactoryTest_ControllerExtension extends Extension {
  */
 class FormFactoryTest_EditFactory extends DefaultFormFactory  {
 
-	protected function getFormFields()
+	private static $extensions = [
+		FormFactoryTest_ControllerExtension::class
+	];
+
+	protected function getFormFields(Controller $controller, $name, $context = [])
 	{
 		$fields = new FieldList(
 			new HiddenField('ID'),
 			new TextField('Title')
 		);
-		$this->extendAll('updateFormFields', $fields);
+		$this->invokeWithExtensions('updateFormFields', $fields, $controller, $name, $context);
 		return $fields;
 	}
 
-	public function getFormActions()
+	protected function getFormActions(Controller $controller, $name, $context = [])
 	{
 		$actions = new FieldList(
 			new FormAction('save', 'Save')
 		);
-		$this->extendAll('updateFormActions', $actions);
+		$this->invokeWithExtensions('updateFormActions', $actions, $controller, $name, $context);
 		return $actions;
 	}
 }
