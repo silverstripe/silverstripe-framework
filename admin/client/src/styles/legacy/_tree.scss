@@ -164,11 +164,15 @@
 
 	li.jstree-open > ul {
 		display: block;
-		margin-left: -13px;
+		margin-left: -15px;
+		margin-right: -20px;
+
 		li ul {
-			margin-left:2px;
+			margin-left: 2px;
+			margin-right: 0;
 		}
 	}
+
 	li.jstree-closed > ul {
 		display: none;
 	}

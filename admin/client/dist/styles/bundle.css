@@ -11252,11 +11252,13 @@ form.small .cms-file-info-data .field .middleColumn{
 
 .cms li.jstree-open>ul,.TreeDropdownField .treedropdownfield-panel li.jstree-open>ul{
   display:block;
-  margin-left:-13px;
+  margin-left:-15px;
+  margin-right:-20px;
 }
 
 .cms li.jstree-open>ul li ul,.TreeDropdownField .treedropdownfield-panel li.jstree-open>ul li ul{
   margin-left:2px;
+  margin-right:0;
 }
 
 .cms li.jstree-closed>ul,.TreeDropdownField .treedropdownfield-panel li.jstree-closed>ul{
