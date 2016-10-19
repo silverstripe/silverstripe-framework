@@ -363,6 +363,17 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals($otherExpected, $otherMap);
 	}
 
+	public function testAmbiguousAggregate() {
+		// Test that we avoid ambiguity error when a field exists on two joined tables
+		// Fetch the sponsors in a round-about way to simulate this
+		$teamID = $this->idFromFixture('DataObjectTest_Team','team2');
+		$sponsors = DataObjectTest_EquipmentCompany::get()->filter('SponsoredTeams.ID', $teamID);
+		$this->assertNotNull($sponsors->Max('ID'));
+		$this->assertNotNull($sponsors->Min('ID'));
+		$this->assertNotNull($sponsors->Avg('ID'));
+		$this->assertNotNull($sponsors->Sum('ID'));
+	}
+
 	public function testEach() {
 		$list = DataObjectTest_TeamComment::get();
 
