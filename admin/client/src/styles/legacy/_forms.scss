@@ -540,7 +540,7 @@ button.loading {
 
 		&.active,
 		&:active {
-			box-shadow: 0 0 3px rgba(191, 194, 196, .9) inset;
+			box-shadow: 0 0 1px rgba(191, 194, 196, .9) inset;
 			background: #dee3e8;
 			color: darken($color-text, 10%);
 			border: 0;
@@ -832,6 +832,8 @@ div.switch-states{
 	padding-bottom: 0;
 	padding-right: 0;
 }
+
+.ui-button-text-only .ui-button-text { padding: 0; }
 
 // Align buttons with input
 .urlsegment .update,
