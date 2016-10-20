@@ -52,8 +52,8 @@ class VersionedTest extends SapphireTest {
 		$tableExpectations = array(
 			'VersionedTest_WithIndexes' =>
 				array('value' => true, 'message' => 'Unique indexes are unique in main table'),
-			'VersionedTest_WithIndexes_versions' =>
-				array('value' => false, 'message' => 'Unique indexes are no longer unique in _versions table'),
+			'VersionedTest_WithIndexes_Versions' =>
+				array('value' => false, 'message' => 'Unique indexes are no longer unique in _Versions table'),
 			'VersionedTest_WithIndexes_Live' =>
 				array('value' => true, 'message' => 'Unique indexes are unique in _Live table'),
 		);
@@ -93,22 +93,22 @@ class VersionedTest extends SapphireTest {
 		$obj->write();
 		$obj->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 
-		$versions = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_versions\""
+		$versions = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_Versions\""
 			. " WHERE \"RecordID\" = '$obj->ID'")->value();
 
 		$this->assertGreaterThan(0, $versions, 'At least 1 version exists in the history of the page');
 
 		// Force orphaning of all versions created earlier, only on parent record.
 		// The child versiones table should still have the correct relationship
-		DB::query("DELETE FROM \"VersionedTest_DataObject_versions\" WHERE \"RecordID\" = $obj->ID");
+		DB::query("DELETE FROM \"VersionedTest_DataObject_Versions\" WHERE \"RecordID\" = $obj->ID");
 
 		// insert a record with no primary key (ID)
-		DB::query("INSERT INTO \"VersionedTest_DataObject_versions\" (\"RecordID\") VALUES ($obj->ID)");
+		DB::query("INSERT INTO \"VersionedTest_DataObject_Versions\" (\"RecordID\") VALUES ($obj->ID)");
 
 		// run the script which should clean that up
 		$obj->augmentDatabase();
 
-		$versions = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_versions\""
+		$versions = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_Versions\""
 			. " WHERE \"RecordID\" = '$obj->ID'")->value();
 		$this->assertEquals(0, $versions, 'Orphaned versions on child tables are removed');
 
@@ -116,11 +116,11 @@ class VersionedTest extends SapphireTest {
 		$obj->write();
 		$obj->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 
-		$count = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_versions\""
+		$count = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_Versions\""
 			. " WHERE \"RecordID\" = '$obj->ID'")->value();
 		$obj->augmentDatabase();
 
-		$count2 = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_versions\""
+		$count2 = DB::query("SELECT COUNT(*) FROM \"VersionedTest_Subclass_Versions\""
 			. " WHERE \"RecordID\" = '$obj->ID'")->value();
 
 		$this->assertEquals($count, $count2);
@@ -309,15 +309,15 @@ class VersionedTest extends SapphireTest {
 		$this->assertEquals('orig', $page1->Content, 'Copies the content from the old version');
 
 		// check db entries
-		$version = DB::prepared_query("SELECT MAX(\"Version\") FROM \"VersionedTest_DataObject_versions\" WHERE \"RecordID\" = ?",
+		$version = DB::prepared_query("SELECT MAX(\"Version\") FROM \"VersionedTest_DataObject_Versions\" WHERE \"RecordID\" = ?",
 			array($page1->ID)
 		)->value();
-		$this->assertEquals($page1->Version, $version, 'Correct entry in VersionedTest_DataObject_versions');
+		$this->assertEquals($page1->Version, $version, 'Correct entry in VersionedTest_DataObject_Versions');
 
-		$version = DB::prepared_query("SELECT MAX(\"Version\") FROM \"VersionedTest_AnotherSubclass_versions\" WHERE \"RecordID\" = ?",
+		$version = DB::prepared_query("SELECT MAX(\"Version\") FROM \"VersionedTest_AnotherSubclass_Versions\" WHERE \"RecordID\" = ?",
 			array($page1->ID)
 		)->value();
-		$this->assertEquals($page1->Version, $version, 'Correct entry in VersionedTest_AnotherSubclass_versions');
+		$this->assertEquals($page1->Version, $version, 'Correct entry in VersionedTest_AnotherSubclass_Versions');
 	}
 
 	public function testDeleteFromStage() {
@@ -884,7 +884,7 @@ class VersionedTest extends SapphireTest {
 	protected function assertRecordHasLatestVersion($record, $version) {
 		foreach(ClassInfo::ancestry(get_class($record), true) as $table) {
 			$versionForClass = DB::prepared_query(
-				$sql = "SELECT MAX(\"Version\") FROM \"{$table}_versions\" WHERE \"RecordID\" = ?",
+				$sql = "SELECT MAX(\"Version\") FROM \"{$table}_Versions\" WHERE \"RecordID\" = ?",
 				array($record->ID)
 			)->value();
 			$this->assertEquals($version, $versionForClass, "That the table $table has the latest version $version");

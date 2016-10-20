@@ -119,7 +119,7 @@ class DBClassName extends DBEnum {
 	 */
 	public function getEnum() {
 		$classNames = ClassInfo::subclassesFor($this->getBaseClass());
-		unset($classNames['SilverStripe\ORM\DataObject']);
+		unset($classNames[DataObject::class]);
 		return $classNames;
 	}
 

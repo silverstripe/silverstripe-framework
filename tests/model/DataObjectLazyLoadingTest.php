@@ -376,12 +376,12 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 
 		// Force inconsistent state to test behaviour (shouldn't select from *_versions)
 		DB::query(sprintf(
-			"UPDATE \"VersionedLazy_DataObject_versions\" SET \"PageName\" = 'versioned-value' " .
+			"UPDATE \"VersionedLazy_DataObject_Versions\" SET \"PageName\" = 'versioned-value' " .
 			"WHERE \"RecordID\" = %d",
 			$obj1ID
 		));
 		DB::query(sprintf(
-			"UPDATE \"VersionedLazySub_DataObject_versions\" SET \"ExtraField\" = 'versioned-value' " .
+			"UPDATE \"VersionedLazySub_DataObject_Versions\" SET \"ExtraField\" = 'versioned-value' " .
 			"WHERE \"RecordID\" = %d",
 			$obj1ID
 		));

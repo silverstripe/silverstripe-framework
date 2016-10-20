@@ -27,6 +27,39 @@ class DataObjectSchemaGenerationTest extends SapphireTest {
 		parent::setUpOnce();
 	}
 
+	public function testTableCaseFixed() {
+		DB::quiet();
+
+		// Modify table case
+		DB::get_schema()->renameTable(
+			'DataObjectSchemaGenerationTest_DO',
+			'__TEMP__DataOBJECTSchemaGenerationTest_do'
+		);
+		DB::get_schema()->renameTable(
+			'__TEMP__DataOBJECTSchemaGenerationTest_do',
+			'DataOBJECTSchemaGenerationTest_do'
+		);
+
+		// Check table
+		$tables = DB::table_list();
+		$this->assertEquals(
+			'DataOBJECTSchemaGenerationTest_do',
+			$tables['dataobjectschemagenerationtest_do']
+		);
+
+		// Rebuild table
+		DB::get_schema()->schemaUpdate(function() {
+			DataObjectSchemaGenerationTest_DO::singleton()->requireTable();
+		});
+
+		// Check table
+		$tables = DB::table_list();
+		$this->assertEquals(
+			'DataObjectSchemaGenerationTest_DO',
+			$tables['dataobjectschemagenerationtest_do']
+		);
+	}
+
 	/**
 	 * Check that once a schema has been generated, then it doesn't need any more updating
 	 */

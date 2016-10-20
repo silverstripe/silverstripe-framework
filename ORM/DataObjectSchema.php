@@ -226,7 +226,7 @@ class DataObjectSchema {
 			return $class;
 		}
 
-		// If there is no class for this table, strip table modifiers (e.g. _Live / _versions)
+		// If there is no class for this table, strip table modifiers (e.g. _Live / _Versions)
 		// from the end and re-attempt a search.
 		if(preg_match('/^(?<class>.+)(_[^_]+)$/i', $table, $matches)) {
 			$table = $matches['class'];
