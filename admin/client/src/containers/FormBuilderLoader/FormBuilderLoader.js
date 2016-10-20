@@ -7,9 +7,6 @@ import * as schemaActions from 'state/schema/SchemaActions';
 import Form from 'components/Form/Form';
 import FormBuilder, { basePropTypes, schemaPropType } from 'components/FormBuilder/FormBuilder';
 
-import es6promise from 'es6-promise';
-es6promise.polyfill();
-
 class FormBuilderLoader extends Component {
 
   constructor(props) {

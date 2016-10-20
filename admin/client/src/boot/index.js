@@ -17,6 +17,9 @@ import bootInjector from 'boot/BootInjector';
 // eslint-disable-next-line no-unused-vars
 import CampaignAdmin from 'containers/CampaignAdmin/controller';
 
+import es6promise from 'es6-promise';
+es6promise.polyfill();
+
 function appBoot() {
   reducerRegister.add('config', ConfigReducer);
   reducerRegister.add('form', ReduxFormReducer);
