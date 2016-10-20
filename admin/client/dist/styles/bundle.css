@@ -9484,7 +9484,7 @@ body.cms{
 
 .view-controls{
   float:right;
-  margin-top:4px;
+  margin-top:5px;
 }
 
 .view-controls .icon-button-group .icon-button{
@@ -9575,8 +9575,6 @@ body.cms{
 }
 
 .cms a.icon-button.font-icon-search.active,.cms a.icon-button.font-icon-search:active,.cms a.icon-button.font-icon-search:focus,.cms a.icon-button.font-icon-search:hover,.cms button.ss-ui-button.icon-button.font-icon-search.active,.cms button.ss-ui-button.icon-button.font-icon-search:active,.cms button.ss-ui-button.icon-button.font-icon-search:focus,.cms button.ss-ui-button.icon-button.font-icon-search:hover{
-  background:none;
-  box-shadow:none;
   color:#4f5861;
 }
 
@@ -10644,7 +10642,12 @@ form.member-profile-form #Permissions .optionset li{
   margin-top:-5px;
 }
 
-.cms .cms-panel-padded .cms-content-view,.CMSPageAddController .cms-panel-padded{
+.cms .cms-panel-padded .cms-content-view{
+  padding:1.5385rem;
+  height:100%;
+}
+
+.CMSPageAddController .cms-panel-padded{
   padding:1.5385rem;
 }
 
@@ -11676,6 +11679,15 @@ form.small .cms-file-info-data .field .middleColumn{
 
 .cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-clicked .jstree-icon,.cms-tree.jstree.draggable .jstree-no-checkboxes li .jstree-hovered .jstree-icon,.cms-tree.jstree.draggable .jstree-no-checkboxes li a:focus .jstree-icon{
   display:block;
+}
+
+.cms-tree-holder{
+  overflow-x:auto;
+  height:calc(100% - 13px);
+  padding-left:20px;
+  padding-right:20px;
+  margin-left:-20px;
+  margin-right:-20px;
 }
 
 .jstree-apple a .jstree-icon,.jstree-classic a .jstree-icon,.jstree-default-rtl a .jstree-icon,.jstree-default a .jstree-icon{

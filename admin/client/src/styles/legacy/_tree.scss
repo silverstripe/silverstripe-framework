@@ -600,6 +600,18 @@
 	}
 }
 
+
+// Scroll horizontal for sitetree
+// so scrollbar is fixed to bottom of panel, and tree actions remain fixed at top
+.cms-tree-holder {
+	overflow-x: auto;
+	height: calc(100% - 13px); // Magic number, need to investigate why its needed (possibly scroll bar height)
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-left: -20px;
+	margin-right: -20px;
+}
+
 // Override thirdparty themes
 .jstree-default a .jstree-icon,
 .jstree-default-rtl a .jstree-icon,
