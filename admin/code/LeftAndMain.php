@@ -379,8 +379,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$return = ['id' => $id];
 
 		if (in_array('schema', $schemaParts)) {
-			$schemaLink = $this->getSchemaLinkForForm($form);
-			$return['schema'] = $this->schema->getSchema($form, $schemaLink);
+			$return['schema'] = $this->schema->getSchema($form);
 		}
 
 		if (in_array('state', $schemaParts)) {
