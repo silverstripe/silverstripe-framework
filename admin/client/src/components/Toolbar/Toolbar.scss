@@ -14,12 +14,12 @@
 
 // Northern bar containing breadcrumb, tabs etc.
 .toolbar--north {
-  // display: block;
   background-image: none;
   background-color: $background-darker;
   border-bottom: 1px solid $border-color;
   z-index: 60;
   position: relative;
+  width: 100%;
 }
 
 // TEMP overrides color of links in JqueryUI widgets
