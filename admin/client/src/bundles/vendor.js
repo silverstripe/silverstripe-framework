@@ -17,6 +17,7 @@ require('expose?Tether!tether');
 require('expose?ReactDom!react-dom');
 require('expose?Redux!redux');
 require('expose?ReactRedux!react-redux');
+require('expose?ReduxForm!redux-form');
 require('expose?ReduxThunk!redux-thunk');
 require('expose?ReactRouter!react-router');
 require('expose?ReactRouterRedux!react-router-redux');

@@ -90,8 +90,7 @@ describe('CheckboxSetField', () => {
       checkboxSetField.handleChange(event, { id: 'checkbox-two', value: 1 });
 
       expect(checkboxSetField.props.onChange).toBeCalledWith(
-        event,
-        { id: 'checkbox', value: ['one', 'two', 'four'] }
+        ['one', 'two', 'four']
       );
     });
 
@@ -101,8 +100,7 @@ describe('CheckboxSetField', () => {
       checkboxSetField.handleChange(event, { id: 'checkbox-one', value: 0 });
 
       expect(checkboxSetField.props.onChange).toBeCalledWith(
-        event,
-        { id: 'checkbox', value: ['four'] }
+        ['four']
       );
     });
   });

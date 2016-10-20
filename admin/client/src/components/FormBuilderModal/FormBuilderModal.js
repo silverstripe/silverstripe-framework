@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal } from 'react-bootstrap-ss';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
-import FormBuilder from 'components/FormBuilder/FormBuilder';
+import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
 
 class FormBuilderModal extends SilverStripeComponent {
   constructor(props) {
@@ -19,7 +19,7 @@ class FormBuilderModal extends SilverStripeComponent {
    */
   getForm() {
     return (
-      <FormBuilder
+      <FormBuilderLoader
         schemaUrl={this.props.schemaUrl}
         handleSubmit={this.handleSubmit}
         handleAction={this.props.handleAction}
@@ -74,17 +74,16 @@ class FormBuilderModal extends SilverStripeComponent {
   /**
    * Handle submitting the form in the Modal
    *
-   * @param {Event} event
-   * @param {object} fieldValues
-   * @param {function} submitFn
+   * @param {Object} data
+   * @param {String} action
+   * @param {Function} submitFn The original submit function
    * @returns {Promise}
    */
-  handleSubmit(event, fieldValues, submitFn) {
+  handleSubmit(data, action, submitFn) {
     let promise = null;
     if (typeof this.props.handleSubmit === 'function') {
-      promise = this.props.handleSubmit(event, fieldValues, submitFn);
+      promise = this.props.handleSubmit(data, action, submitFn);
     } else {
-      event.preventDefault();
       promise = submitFn();
     }
 
@@ -106,6 +105,7 @@ class FormBuilderModal extends SilverStripeComponent {
           });
         });
     }
+
     return promise;
   }
 

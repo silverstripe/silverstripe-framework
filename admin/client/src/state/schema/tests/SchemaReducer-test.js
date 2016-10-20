@@ -11,14 +11,17 @@ describe('schemaReducer', () => {
   describe('SET_SCHEMA', () => {
     it('should create a new form', () => {
       const initialState = { };
-      const serverResponse = { id: 'TestForm', schema_url: 'URL' };
+      const schema = {
+        id: 'MySchema',
+        schema: { id: 'TestForm' },
+      };
 
       const nextState = schemaReducer(initialState, {
         type: ACTION_TYPES.SET_SCHEMA,
-        payload: { schema: serverResponse },
+        payload: schema,
       });
 
-      expect(nextState.URL.schema.id).toBe('TestForm');
+      expect(nextState.MySchema).toBe(schema);
     });
   });
 });

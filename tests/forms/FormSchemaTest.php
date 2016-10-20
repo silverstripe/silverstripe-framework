@@ -20,7 +20,6 @@ class FormSchemaTest extends SapphireTest {
 			'id' => 'Form_TestForm',
 			'action' => 'Controller/TestForm',
 			'method' => 'POST',
-			'schema_url' => 'admin/mysection/schema',
 			'attributes' => [
 				'id' => 'Form_TestForm',
 				'action' => 'Controller/TestForm',
@@ -53,7 +52,7 @@ class FormSchemaTest extends SapphireTest {
 			'actions' => []
 		];
 
-		$schema = $formSchema->getSchema($form, 'admin/mysection/schema');
+		$schema = $formSchema->getSchema($form);
 		$this->assertInternalType('array', $schema);
 		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($schema));
 	}
@@ -171,7 +170,6 @@ class FormSchemaTest extends SapphireTest {
 			'id' => 'Form_TestForm',
 			'action' => 'Controller/TestForm',
 			'method' => 'POST',
-			'schema_url' => 'admin/mysection/schema',
 			'attributes' => [
 				'id' => 'Form_TestForm',
 				'action' => 'Controller/TestForm',
@@ -336,7 +334,7 @@ class FormSchemaTest extends SapphireTest {
 			]
 		];
 
-		$schema = $formSchema->getSchema($form, 'admin/mysection/schema');
+		$schema = $formSchema->getSchema($form);
 
 		$this->assertInternalType('array', $schema);
 		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($schema));

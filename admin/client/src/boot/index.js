@@ -1,25 +1,28 @@
 import BootRoutes from './BootRoutes';
 import { combineReducers, createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
+import { reducer as ReduxFormReducer } from 'redux-form';
+import { routerReducer } from 'react-router-redux';
 import Config from 'lib/Config';
 import reducerRegister from 'lib/ReducerRegister';
 import * as configActions from 'state/config/ConfigActions';
 import ConfigReducer from 'state/config/ConfigReducer';
-import FormReducer from 'state/form/FormReducer';
 import SchemaReducer from 'state/schema/SchemaReducer';
 import RecordsReducer from 'state/records/RecordsReducer';
 import CampaignReducer from 'state/campaign/CampaignReducer';
 import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
-import { routerReducer } from 'react-router-redux';
 import bootInjector from 'boot/BootInjector';
 
 // Sections
 // eslint-disable-next-line no-unused-vars
 import CampaignAdmin from 'containers/CampaignAdmin/controller';
 
+import es6promise from 'es6-promise';
+es6promise.polyfill();
+
 function appBoot() {
   reducerRegister.add('config', ConfigReducer);
-  reducerRegister.add('form', FormReducer);
+  reducerRegister.add('form', ReduxFormReducer);
   reducerRegister.add('schemas', SchemaReducer);
   reducerRegister.add('records', RecordsReducer);
   reducerRegister.add('campaign', CampaignReducer);

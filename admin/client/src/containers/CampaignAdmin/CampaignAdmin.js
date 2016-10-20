@@ -9,7 +9,7 @@ import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormAction from 'components/FormAction/FormAction';
 import i18n from 'i18n';
 import Toolbar from 'components/Toolbar/Toolbar';
-import FormBuilder from 'components/FormBuilder/FormBuilder';
+import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
 import CampaignAdminList from './CampaignAdminList';
 
 class CampaignAdmin extends SilverStripeComponent {
@@ -56,7 +56,7 @@ class CampaignAdmin extends SilverStripeComponent {
         // NOOP - Lazy loaded in CampaignAdminList.js
         break;
       case 'edit':
-        // @todo - Lazy load in FormBuilder / GridField
+        // @todo - Lazy load in FormBuilderLoader / GridField
         breadcrumbs.push({
           text: i18n._t('Campaigns.EDIT_CAMPAIGN', 'Editing Campaign'),
           href: this.getActionRoute(id, view),
@@ -137,7 +137,7 @@ class CampaignAdmin extends SilverStripeComponent {
             </div>
           </div>
           <div className="campaign-admin">
-            <FormBuilder {...formBuilderProps} />
+            <FormBuilderLoader {...formBuilderProps} />
           </div>
         </div>
       </div>
@@ -184,7 +184,7 @@ class CampaignAdmin extends SilverStripeComponent {
         </Toolbar>
 
         <div className="panel panel--padded panel--scrollable flexbox-area-grow form--inline">
-          <FormBuilder {...formBuilderProps} />
+          <FormBuilderLoader {...formBuilderProps} />
         </div>
       </div>
     );
@@ -210,7 +210,7 @@ class CampaignAdmin extends SilverStripeComponent {
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
         <div className="panel panel--padded panel--scrollable flexbox-area-grow form--inline">
-          <FormBuilder {...formBuilderProps} />
+          <FormBuilderLoader {...formBuilderProps} />
         </div>
       </div>
     );
@@ -218,10 +218,10 @@ class CampaignAdmin extends SilverStripeComponent {
 
   /**
    * Hook to allow customisation of components being constructed
-   * by the Campaign DetailEdit FormBuilder.
+   * by the Campaign DetailEdit FormBuilderLoader.
    *
    * @param {Object} Component - Component constructor.
-   * @param {Object} props - Props passed from FormBuilder.
+   * @param {Object} props - Props passed from FormBuilderLoader.
    *
    * @return {Object} - Instanciated React component
    */
@@ -245,10 +245,10 @@ class CampaignAdmin extends SilverStripeComponent {
 
   /**
    * Hook to allow customisation of components being constructed
-   * by the Campaign creation FormBuilder.
+   * by the Campaign creation FormBuilderLoader.
    *
    * @param {Object} Component - Component constructor.
-   * @param {Object} props - Props passed from FormBuilder.
+   * @param {Object} props - Props passed from FormBuilderLoader.
    *
    * @return {Object} - Instanciated React component
    */
@@ -272,10 +272,10 @@ class CampaignAdmin extends SilverStripeComponent {
 
   /**
    * Hook to allow customisation of components being constructed
-   * by the Campaign list FormBuilder.
+   * by the Campaign list FormBuilderLoader.
    *
    * @param object Component - Component constructor.
-   * @param object props - Props passed from FormBuilder.
+   * @param object props - Props passed from FormBuilderLoader.
    *
    * @return object - Instanciated React component
    */
@@ -283,7 +283,7 @@ class CampaignAdmin extends SilverStripeComponent {
     const sectionUrl = this.props.sectionConfig.url;
     const typeUrlParam = 'set';
 
-    if (props.component === 'GridField') {
+    if (props.schemaComponent === 'GridField') {
       const extendedProps = Object.assign({}, props, {
         data: Object.assign({}, props.data, {
           handleDrillDown: (event, record) => {

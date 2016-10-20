@@ -8,21 +8,15 @@ class Form extends SilverStripeComponent {
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
-  componentWillUnmount() {
-    if (typeof this.props.componentWillUnmount === 'undefined') {
-      return;
-    }
-
-    this.props.componentWillUnmount(this.props.formId);
-  }
-
   render() {
-    const defaultFormProps = {
-      className: 'form',
-      onSubmit: this.handleSubmit,
-    };
-    const formProps = Object.assign({}, defaultFormProps, this.props.attributes);
+    const formProps = Object.assign(
+      {},
+      {
+        className: 'form',
+        onSubmit: this.handleSubmit,
+      },
+      this.props.attributes
+    );
     const fields = this.props.mapFieldsToComponents(this.props.fields);
     const actions = this.props.mapActionsToComponents(this.props.actions);
 
@@ -62,10 +56,7 @@ Form.propTypes = {
     id: React.PropTypes.string,
     method: React.PropTypes.string.isRequired,
   }),
-  componentWillUnmount: React.PropTypes.func,
-  data: React.PropTypes.array,
   fields: React.PropTypes.array.isRequired,
-  formId: React.PropTypes.string.isRequired,
   handleSubmit: React.PropTypes.func,
   mapActionsToComponents: React.PropTypes.func.isRequired,
   mapFieldsToComponents: React.PropTypes.func.isRequired,

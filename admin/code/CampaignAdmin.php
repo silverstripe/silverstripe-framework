@@ -98,13 +98,12 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
         $adminURL = Convert::raw2js(AdminRootController::admin_url());
 		$json = <<<JSON
 {
-	"id": "Form_EditForm",
+	"id": "{$adminURL}campaigns\/schema\/EditForm",
 	"schema": {
 		"name": "EditForm",
 		"id": "Form_EditForm",
 		"action": "schema",
 		"method": "GET",
-		"schema_url": "{$adminURL}campaigns\/schema\/EditForm",
 		"attributes": {
 			"id": "Form_EditForm",
 			"action": "{$adminURL}campaigns\/EditForm",
@@ -539,8 +538,9 @@ JSON;
 
 		// Configure form to respond to validation errors with form schema
 		// if requested via react.
-		$form->setValidationResponseCallback(function() use ($form) {
-			return $this->getSchemaResponse($form);
+		$form->setValidationResponseCallback(function() use ($form, $record) {
+			$schemaId = Controller::join_links($this->Link('schema/DetailEditForm'), $record->exists() ? $record->ID : '');
+			return $this->getSchemaResponse($form, $schemaId);
 		});
 
 		return $form;

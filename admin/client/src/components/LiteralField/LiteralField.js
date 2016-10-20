@@ -8,7 +8,7 @@ class LiteralField extends SilverStripeComponent {
    * @returns {object} innerHtml
    */
   getContent() {
-    return { __html: this.props.data.content };
+    return { __html: this.props.value };
   }
 
   /**
@@ -41,12 +41,7 @@ LiteralField.propTypes = {
   id: React.PropTypes.string,
   name: React.PropTypes.string.isRequired,
   extraClass: React.PropTypes.string,
-  data: React.PropTypes.oneOfType([
-    React.PropTypes.array,
-    React.PropTypes.shape({
-      content: React.PropTypes.string.isRequired,
-    }),
-  ]).isRequired,
+  value: React.PropTypes.string,
 };
 
 LiteralField.defaultProps = {

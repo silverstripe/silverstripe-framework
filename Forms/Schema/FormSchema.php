@@ -17,16 +17,14 @@ class FormSchema {
 	 * Gets the schema for this form as a nested array.
 	 *
 	 * @param Form $form
-	 * @param string $schemaLink Link to get this schema
 	 * @return array
 	 */
-	public function getSchema(Form $form, $schemaLink) {
+	public function getSchema(Form $form) {
 		$schema = [
 			'name' => $form->getName(),
 			'id' => $form->FormName(),
 			'action' => $form->FormAction(),
 			'method' => $form->FormMethod(),
-			'schema_url' => $schemaLink,
 			'attributes' => $form->getAttributes(),
 			'data' => [],
 			'fields' => [],

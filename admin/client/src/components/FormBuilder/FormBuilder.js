@@ -1,197 +1,45 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import * as formActions from 'state/form/FormActions';
-import * as schemaActions from 'state/schema/SchemaActions';
+import React, { PropTypes } from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
-import Form from 'components/Form/Form';
-import fetch from 'isomorphic-fetch';
 import backend from 'lib/Backend';
 import injector from 'lib/Injector';
 import merge from 'merge';
 
-import es6promise from 'es6-promise';
-es6promise.polyfill();
-
-export class FormBuilderComponent extends SilverStripeComponent {
+class FormBuilder extends SilverStripeComponent {
 
   constructor(props) {
     super(props);
 
-    this.formSchemaPromise = null;
-    this.state = { isFetching: false };
-
+    const schemaStructure = props.schema.schema;
+    this.state = { submittingAction: null };
+    this.submitApi = backend.createEndpointFetcher({
+      url: schemaStructure.attributes.action,
+      method: schemaStructure.attributes.method,
+    });
     this.mapActionsToComponents = this.mapActionsToComponents.bind(this);
     this.mapFieldsToComponents = this.mapFieldsToComponents.bind(this);
-    this.handleFieldUpdate = this.handleFieldUpdate.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAction = this.handleAction.bind(this);
-    this.removeForm = this.removeForm.bind(this);
-    this.getFormId = this.getFormId.bind(this);
-    this.getFormSchema = this.getFormSchema.bind(this);
     this.findField = this.findField.bind(this);
-  }
-
-  /**
-   * Get the schema for this form
-   *
-   * @returns {array}
-   */
-  getFormSchema() {
-    return this.props.schemas[this.props.schemaUrl];
-  }
-
-  /**
-   * Gets the ID for this form
-   *
-   * @returns {String}
-   */
-  getFormId() {
-    const schema = this.getFormSchema();
-    if (schema) {
-      return schema.id;
-    }
-    return null;
-  }
-
-  componentDidMount() {
-    this.fetch();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.schemaUrl !== prevProps.schemaUrl) {
-      this.fetch();
-    }
-  }
-
-  /**
-   * Fetches data used to generate a form. This can be form schema and or form state data.
-   * When the response comes back the data is saved to state.
-   *
-   * @param {Boolean} schema If form schema data should be returned in the response.
-   * @param {Boolean} state If form state data should be returned in the response.
-   *
-   * @return {Object} Promise from the AJAX request.
-   */
-  fetch(schema = true, state = true) {
-    const headerValues = [];
-
-    if (this.state.isFetching === true) {
-      return this.formSchemaPromise;
-    }
-
-    if (schema === true) {
-      headerValues.push('schema');
-    }
-
-    if (state === true) {
-      headerValues.push('state');
-    }
-
-    this.formSchemaPromise = fetch(this.props.schemaUrl, {
-      headers: { 'X-FormSchema-Request': headerValues.join() },
-      credentials: 'same-origin',
-    })
-      .then(response => response.json())
-      .then(json => {
-        const formSchema = Object.assign({}, { id: json.id, schema: json.schema });
-        const formState = Object.assign({}, json.state);
-
-        // TODO See "Enable once <CampaignAdmin> ..." below
-        // this.setState({ isFetching: false });
-
-        if (typeof formSchema.id !== 'undefined') {
-          const defaultData = {
-            SecurityID: this.props.config.SecurityID,
-          };
-
-          this.submitApi = (...args) => {
-            const endPoint = backend.createEndpointFetcher({
-              url: formSchema.schema.attributes.action,
-              method: formSchema.schema.attributes.method,
-              defaultData,
-            });
-
-            // Ensure that schema changes are handled prior to updating state
-            return endPoint(...args)
-              .then((response) => {
-                if (response.schema) {
-                  const newSchema = Object.assign({}, { id: response.id, schema: response.schema });
-                  this.props.schemaActions.setSchema(newSchema);
-                }
-                return response;
-              });
-          };
-
-          this.props.schemaActions.setSchema(formSchema);
-        }
-
-        if (typeof formState.id !== 'undefined') {
-          this.props.formActions.addForm(formState);
-        }
-      });
-
-    // TODO Enable once <CampaignAdmin> is initialised via page.js route callbacks
-    // At the moment, it's running an Entwine onadd() rule which ends up
-    // rendering the index view, and only then calling route.start() to
-    // match the detail view (admin/campaigns/set/:id/show).
-    // This causes the form builder to be unmounted during a fetch() call.
-    // this.setState({ isFetching: true });
-
-    return this.formSchemaPromise;
-  }
-
-  /**
-   * Update handler passed down to each form field as a prop.
-   * Form fields call this method when their state changes.
-   *
-   * You can pass an optional callback as the third param. This can be used to
-   * implement custom behaviour. For example you can use `createFn` hook from
-   * your controller context like this.
-   *
-   * controller.js
-   * ...
-   * detailEditFormCreateFn(Component, props) {
-   *   const extendedProps = Object.assign({}, props, {
-   *     handleFieldUpdate: (event, updates) => {
-   *       props.handleFieldUpdate(event, updates, (formId, updateFieldAction) => {
-   *         const customUpdates = Object.assign({}, updates, {
-   *           value: someCustomParsing(updates.value),
-   *         };
-   *
-   *         updateFieldAction(formId, customUpdates);
-   *       });
-   *     },
-   *   });
-   *
-   *   return <Component {...extendedProps} />;
-   * }
-   * ...
-   *
-   * @param {object} event - Change event from the form field component.
-   * @param {object} updates - Values to set in state.
-   * @param {string} updates.id - Field ID. Required to identify the field in the store.
-   * @param {function} [fn] - Optional function for custom behaviour. See example in description.
-   */
-  handleFieldUpdate(event, updates, fn) {
-    if (typeof fn === 'function') {
-      fn(this.getFormId(), this.props.formActions.updateField);
-    } else {
-      this.props.formActions.updateField(this.getFormId(), updates);
-    }
+    this.buildComponent = this.buildComponent.bind(this);
   }
 
   /**
    * When the action is clicked on, records which action was clicked on
    * This can allow for preventing the submit action, such as a custom action for the button
    *
-   * @param event
-   * @param submitAction
+   * @param {Event} event
    */
-  handleAction(event, submitAction) {
-    this.props.formActions.setSubmitAction(this.getFormId(), submitAction);
+  handleAction(event) {
+    // Custom handlers
     if (typeof this.props.handleAction === 'function') {
-      this.props.handleAction(event, submitAction, this.getFieldValues());
+      this.props.handleAction(event, this.getFieldValues());
+    }
+
+    const name = event.currentTarget.name;
+
+    // Allow custom handlers to cancel event
+    if (!event.isPropagationStopped()) {
+      this.setState({ submittingAction: name });
     }
   }
 
@@ -199,48 +47,45 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * Form submission handler passed to the Form Component as a prop.
    * Provides a hook for controllers to access for state and provide custom functionality.
    *
-   * For example:
-   *
-   * controller.js
-   * ```
-   * constructor(props) {
-   *   super(props);
-   *   this.handleSubmit = this.handleSubmit.bind(this);
-   * }
-   *
-   * handleSubmit(event, fieldValues, submitFn) {
-   *   event.preventDefault();
-   *
-   *   // Apply custom validation.
-   *   if (!this.validate(fieldValues)) {
-   *     return;
-   *   }
-   *
-   *   submitFn();
-   * }
-   *
-   * render() {
-   *   return <FormBuilder handleSubmit={this.handleSubmit} />
-   * }
-   * ```
-   *
-   * @param {Object} event
+   * @param {Object} data Processed and validated data from redux-form
+   * (originally retrieved through getFieldValues())
    * @return {Promise|null}
    */
-  handleSubmit(event) {
-    const fieldValues = this.getFieldValues();
+  handleSubmit(data) {
+    // Add form action data (or default to first action, same as browser behaviour)
+    const action = this.state.submittingAction
+      ? this.state.submittingAction
+      : this.props.schema.schema.actions[0].name;
 
-    const submitFn = () => this.props.formActions.submitForm(
-      this.submitApi,
-      this.getFormId(),
-      fieldValues
-    );
+    const dataWithAction = Object.assign({}, data, {
+      [action]: 1,
+    });
+    const headers = {
+      'X-Formschema-Request': 'state,schema',
+      'X-Requested-With': 'XMLHttpRequest',
+    };
 
-    if (typeof this.props.handleSubmit !== 'undefined') {
-      return this.props.handleSubmit(event, fieldValues, submitFn);
+    const resetSubmittingFn = () => {
+      this.setState({ submittingAction: null });
+    };
+
+    const submitFn = (customData) =>
+      this.submitApi(customData || dataWithAction, headers)
+        .then(formSchema => {
+          resetSubmittingFn();
+          return formSchema;
+        })
+        .catch((reason) => {
+          // TODO Generic CMS error reporting
+          // TODO Handle validation errors
+          resetSubmittingFn();
+          return reason;
+        });
+
+    if (typeof this.props.handleSubmit === 'function') {
+      return this.props.handleSubmit(dataWithAction, action, submitFn);
     }
 
-    event.preventDefault();
     return submitFn();
   }
 
@@ -250,35 +95,31 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @returns {Object}
    */
   getFieldValues() {
-    const schema = this.props.schemas[this.props.schemaUrl];
     // using state is more efficient and has the same fields, fallback to nested schema
-    const fields = (schema.state)
-      ? schema.state.fields
-      : schema.schema.fields;
+    const schema = this.props.schema.schema;
+    const state = this.props.schema.state;
 
-    // Set action
-    const action = this.getSubmitAction();
-    const values = {};
-    if (action) {
-      values[action] = 1;
+    if (!state) {
+      return {};
     }
 
-    // Reduce all other fields
-    return this.props.form[this.getFormId()].fields
+    return state.fields
       .reduce((prev, curr) => {
-        const match = this.findField(fields, curr.id);
+        const match = this.findField(schema.fields, curr.id);
+
         if (!match) {
+          return prev;
+        }
+
+        // Skip non-data fields
+        if (match.type === 'Structural' || match.readOnly === true) {
           return prev;
         }
 
         return Object.assign({}, prev, {
           [match.name]: curr.value,
         });
-      }, values);
-  }
-
-  getSubmitAction() {
-    return this.props.form[this.getFormId()].submitAction;
+      }, {});
   }
 
   /**
@@ -309,39 +150,42 @@ export class FormBuilderComponent extends SilverStripeComponent {
   /**
    * Common functionality for building a Field or Action from schema.
    *
-   * @param field
-   * @param extraProps
+   * @param {Object} props Props which every form field receives. Leave it up to the
+   *        schema and component to determine which props are required.
    * @returns {*}
    */
-  buildComponent(field, extraProps = {}) {
-    const Component = field.component !== null
-      ? injector.getComponentByName(field.component)
-      : injector.getComponentByDataType(field.type);
+  buildComponent(props) {
+    let componentProps = props;
+    // 'component' key is renamed to 'schemaComponent' in normalize*() methods
+    const SchemaComponent = componentProps.schemaComponent !== null
+      ? injector.getComponentByName(componentProps.schemaComponent)
+      : injector.getComponentByDataType(componentProps.type);
 
-    if (Component === null) {
+    if (SchemaComponent === null) {
       return null;
-    } else if (field.component !== null && Component === undefined) {
-      throw Error(`Component not found in injector: ${field.component}`);
+    } else if (componentProps.schemaComponent !== null && SchemaComponent === undefined) {
+      throw Error(`Component not found in injector: ${componentProps.schemaComponent}`);
     }
-
-    // Props which every form field receives.
-    // Leave it up to the schema and component to determine
-    // which props are required.
-    const props = Object.assign({}, field, extraProps);
 
     // if no value, it is better to unset it
-    if (props.value === null) {
-      delete props.value;
+    if (componentProps.value === null) {
+      delete componentProps.value;
     }
+
+    // Inline `input` props into main field props
+    // (each component can pick and choose the props required for it's <input>
+    // See http://redux-form.com/6.0.5/docs/api/Field.md/#input-props
+    componentProps = Object.assign({}, componentProps, componentProps.input);
+    delete componentProps.input;
 
     // Provides container components a place to hook in
     // and apply customisations to scaffolded components.
     const createFn = this.props.createFn;
     if (typeof createFn === 'function') {
-      return createFn(Component, props);
+      return createFn(SchemaComponent, componentProps);
     }
 
-    return <Component key={props.id} {...props} />;
+    return <SchemaComponent key={componentProps.id} {...componentProps} />;
   }
 
   /**
@@ -353,16 +197,25 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @return {Array}
    */
   mapFieldsToComponents(fields) {
+    const FieldComponent = this.props.baseFieldComponent;
     return fields.map((field) => {
-      // Events
-      const extraProps = { onChange: this.handleFieldUpdate };
+      let props = field;
 
-      // Build child nodes
       if (field.children) {
-        extraProps.children = this.mapFieldsToComponents(field.children);
+        props = Object.assign(
+          {},
+          field,
+          { children: this.mapFieldsToComponents(field.children) }
+        );
       }
 
-      return this.buildComponent(field, extraProps);
+      // Don't wrap structural or readonly fields, since they don't need connected fields.
+      // The redux-form connected fields also messed up react-bootstrap's tab handling.
+      if (field.type === 'Structural' || field.readOnly === true) {
+        return this.buildComponent(props);
+      }
+
+      return <FieldComponent key={props.id} {...props} component={this.buildComponent} />;
     });
   }
 
@@ -373,23 +226,21 @@ export class FormBuilderComponent extends SilverStripeComponent {
    * @return {Array}
    */
   mapActionsToComponents(actions) {
-    const form = this.props.form[this.getFormId()];
-
     return actions.map((action) => {
-      const loading = (form && form.submitting && form.submitAction === action.name);
-      // Events
-      const extraProps = {
-        handleClick: this.handleAction,
-        loading,
-        disabled: loading || action.disabled,
-      };
+      const props = Object.assign({}, action);
 
-      // Build child nodes
       if (action.children) {
-        extraProps.children = this.mapActionsToComponents(action.children);
+        props.children = this.mapActionsToComponents(action.children);
+      } else {
+        props.handleClick = this.handleAction;
+
+        // Reset through componentWillReceiveProps()
+        if (this.state.submittingAction === action.name) {
+          props.loading = true;
+        }
       }
 
-      return this.buildComponent(action, extraProps);
+      return this.buildComponent(props);
     });
   }
 
@@ -416,32 +267,54 @@ export class FormBuilderComponent extends SilverStripeComponent {
     });
   }
 
+
   /**
-   * Cleans up Redux state used by the form when the Form component is unmonuted.
+   * If there is structural and state data available merge those data for each field.
+   * Otherwise just use the structural data. Ensure that keys don't conflict
+   * with redux-form expectations.
    *
-   * @param {string} formId - ID of the form to clean up.
+   * @param {array} fields
+   * @param {Object} state Optional
+   * @return {array}
    */
-  removeForm(formId) {
-    this.props.formActions.removeForm(formId);
+  normalizeFields(fields, state) {
+    return fields.map((field) => {
+      const fieldState = (state && state.fields)
+        ? state.fields.find((item) => item.id === field.id)
+        : {};
+
+      const data = merge.recursive(
+        true,
+        this.mergeFieldData(field, fieldState),
+        // Overlap with redux-form prop handling : createFieldProps filters out the 'component' key
+        { schemaComponent: field.component }
+      );
+
+      if (field.children) {
+        data.children = this.normalizeFields(field.children, state);
+      }
+
+      return data;
+    });
   }
 
   /**
-   * If there is structural and state data availabe merge those data for each field.
-   * Otherwise just use the structural data.
+   * Ensure that keys don't conflict with redux-form expectations.
+   *
+   * @param {array} actions
+   * @return {array}
    */
-  getFieldData(formFields, formState) {
-    if (!formFields || !formState || !formState.fields) {
-      return formFields;
-    }
+  normalizeActions(actions) {
+    return actions.map((action) => {
+      const data = merge.recursive(
+        true,
+        action,
+        // Overlap with redux-form prop handling : createFieldProps filters out the 'component' key
+        { schemaComponent: action.component }
+      );
 
-    return formFields.map((field) => {
-      const state = formState.fields.find((item) => item.id === field.id);
-      const data = this.mergeFieldData(field, state);
-
-      if (field.children) {
-        return Object.assign({}, data, {
-          children: this.getFieldData(field.children, formState),
-        });
+      if (action.children) {
+        data.children = this.normalizeActions(action.children);
       }
 
       return data;
@@ -449,73 +322,89 @@ export class FormBuilderComponent extends SilverStripeComponent {
   }
 
   render() {
-    const formId = this.getFormId();
-    if (!formId) {
-      return null;
-    }
-    const formSchema = this.getFormSchema();
-    const formState = this.props.form[formId];
-
-    // If the response from fetching the initial data
-    // hasn't come back yet, don't render anything.
-    if (!formSchema || !formSchema.schema) {
-      return null;
-    }
+    const schema = this.props.schema.schema;
+    const state = this.props.schema.state;
+    const BaseFormComponent = this.props.baseFormComponent;
 
     // Map form schema to React component attribute names,
     // which requires renaming some of them (by unsetting the original keys)
-    const attributes = Object.assign({}, formSchema.schema.attributes, {
-      className: formSchema.schema.attributes.class,
-      encType: formSchema.schema.attributes.enctype,
+    const attributes = Object.assign({}, schema.attributes, {
+      className: schema.attributes.class,
+      encType: schema.attributes.enctype,
     });
-    // these two still cause silent errors
     delete attributes.class;
     delete attributes.enctype;
 
-    const fieldData = this.getFieldData(formSchema.schema.fields, formState);
-    const actionData = this.getFieldData(formSchema.schema.actions, formState);
+    const {
+      asyncValidate,
+      onSubmitFail,
+      onSubmitSuccess,
+      shouldAsyncValidate,
+      touchOnBlur,
+      touchOnChange,
+      persistentSubmitErrors,
+      validate,
+      form,
+    } = this.props;
 
-    const formProps = {
-      actions: actionData,
+    const props = {
+      form, // required as redux-form identifier
+      fields: this.normalizeFields(schema.fields, state),
+      actions: this.normalizeActions(schema.actions),
       attributes,
-      componentWillUnmount: this.removeForm,
-      data: formSchema.schema.data,
-      fields: fieldData,
-      formId,
-      handleSubmit: this.handleSubmit,
+      data: schema.data,
+      initialValues: this.getFieldValues(),
+      onSubmit: this.handleSubmit,
       mapActionsToComponents: this.mapActionsToComponents,
       mapFieldsToComponents: this.mapFieldsToComponents,
+      asyncValidate,
+      onSubmitFail,
+      onSubmitSuccess,
+      shouldAsyncValidate,
+      touchOnBlur,
+      touchOnChange,
+      persistentSubmitErrors,
+      validate,
     };
 
-    return <Form {...formProps} />;
+    return <BaseFormComponent {...props} />;
   }
 }
 
-FormBuilderComponent.propTypes = {
-  config: React.PropTypes.object,
-  createFn: React.PropTypes.func,
-  form: React.PropTypes.object.isRequired,
-  formActions: React.PropTypes.object.isRequired,
-  handleSubmit: React.PropTypes.func,
-  handleAction: React.PropTypes.func,
-  schemas: React.PropTypes.object.isRequired,
-  schemaActions: React.PropTypes.object.isRequired,
-  schemaUrl: React.PropTypes.string.isRequired,
+const schemaPropType = PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  schema: PropTypes.shape({
+    attributes: PropTypes.shape({
+      class: PropTypes.string,
+      enctype: PropTypes.string,
+    }),
+    fields: PropTypes.array.isRequired,
+  }).isRequired,
+  state: PropTypes.shape({
+    fields: PropTypes.array,
+  }),
+});
+
+const basePropTypes = {
+  createFn: PropTypes.func,
+  handleSubmit: PropTypes.func,
+  handleAction: PropTypes.func,
+  asyncValidate: PropTypes.func,
+  onSubmitFail: PropTypes.func,
+  onSubmitSuccess: PropTypes.func,
+  shouldAsyncValidate: PropTypes.func,
+  touchOnBlur: PropTypes.bool,
+  touchOnChange: PropTypes.bool,
+  persistentSubmitErrors: PropTypes.bool,
+  validate: PropTypes.func,
+  baseFormComponent: PropTypes.func.isRequired,
+  baseFieldComponent: PropTypes.func.isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    config: state.config,
-    form: state.form,
-    schemas: state.schemas,
-  };
-}
+FormBuilder.propTypes = Object.assign({}, basePropTypes, {
+  form: PropTypes.string.isRequired,
+  schema: schemaPropType.isRequired,
+});
 
-function mapDispatchToProps(dispatch) {
-  return {
-    formActions: bindActionCreators(formActions, dispatch),
-    schemaActions: bindActionCreators(schemaActions, dispatch),
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(FormBuilderComponent);
+export { basePropTypes, schemaPropType };
+export default FormBuilder;
