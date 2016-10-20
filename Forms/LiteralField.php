@@ -122,8 +122,7 @@ class LiteralField extends DatalessField {
 	 */
 	public function getSchemaStateDefaults() {
 		$state = parent::getSchemaStateDefaults();
-
-		$state['data']['content'] = $this->FieldHolder();
+		$state['value'] = $this->FieldHolder();
 
 		return $state;
 	}

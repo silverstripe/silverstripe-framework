@@ -62,10 +62,10 @@ class ReadonlyField extends FormField {
 	}
 
 	public function getSchemaStateDefaults() {
-		$values = parent::getSchemaStateDefaults();
-		// Suppress `<i>('none')</i>` from appearing in react as a literal
-		$values['value'] = $this->dataValue();
-		return $values;
+		$state = parent::getSchemaStateDefaults();
+		$state['value'] = $this->dataValue();
+
+		return $state;
 	}
 
 
