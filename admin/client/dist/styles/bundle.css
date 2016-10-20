@@ -9536,6 +9536,10 @@ body.cms{
   line-height:1.539;
 }
 
+.ui-button-text-only .ui-button-text{
+  padding-left:0;
+}
+
 .cms .ui-tabs .ui-tabs-nav li a.icon-button,.cms a.icon-button,.cms button.ss-ui-button.icon-button,.ui-tabs .ui-tabs-nav li .cms a.icon-button{
   vertical-align:middle;
   margin:0 2px 0 0;
