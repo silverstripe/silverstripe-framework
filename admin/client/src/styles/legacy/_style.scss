@@ -506,9 +506,13 @@ body.cms {
 
   .ui-tabs-nav {
     float: right;
-    margin: $grid-x*2 0 -1px 0;
+    margin: $grid-x*2 0 $panel-padding-y 0;
     padding: 0;
     border-bottom: 0;
+
+    .toolbar & {
+      margin-bottom: -1px;
+    }
 
     ~ .ui-tabs-panel {
       clear: both;

@@ -9720,9 +9720,13 @@ body.cms{
 
 .ui-tabs .ui-tabs-nav{
   float:right;
-  margin:16px 0 -1px;
+  margin:16px 0 1.5385rem;
   padding:0;
   border-bottom:0;
+}
+
+.toolbar .ui-tabs .ui-tabs-nav{
+  margin-bottom:-1px;
 }
 
 .ui-tabs .ui-tabs-nav~.ui-tabs-panel{
