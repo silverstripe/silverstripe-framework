@@ -1,19 +1,28 @@
-.cms-content__inner {
-  height: 100%;
+// INITIATE FLEXBOX LAYOUT
+// TODO Convert layout to BEM
+
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-.cms-content__right,
-.cms-content__left {
+html,
+body {
+  width: 100%;
   height: 100%;
-  overflow: hidden;
-  background-color: $body-bg;
-  transition: width .2s;
+  margin: 0;
+  padding: 0;
+  display: -ms-flexbox;
+  display: flex;
 }
 
-// .cms-content can be split into different left/right zones
-// Exampale modifier: --left-sm = small left side panel with right panel width set to auto.
-.cms-content__split {
-  height: 100%;
+@include media-breakpoint-down(md) {
+  .cms-content.has-panel .cms-content-tools {
+    display: none;
+  }
 }
 
 .campaign-items {
@@ -23,7 +32,7 @@
   }
 }
 
-.campaigns {
+.campaigns { // TODO move to campaign container
   position: relative;
   height: 100%;
 
@@ -58,16 +67,16 @@
   }
 
   @include media-breakpoint-up(lg) {
-    // padding-left: $cms-panel-sm;
+    padding-left: $cms-panel-sm;
 
-    .cms-content__left {
-      width: $cms-panel-sm;
-    }
-
-    .cms-content__right {
-      display: block;
-      border-left: 1px solid $border-color;
-    }
+    // .cms-content__left {
+    //   width: $cms-panel-sm;
+    // }
+    //
+    // .cms-content__right {
+    //   display: block;
+    //   border-left: 1px solid $border-color;
+    // }
 
     .cms-content__back-btn {
       display: none;
@@ -75,11 +84,11 @@
   }
 
   @include media-breakpoint-up(xl) {
-    // padding-left: $cms-panel-md;
+    padding-left: $cms-panel-md;
 
-    .cms-content__left {
-      width: $cms-panel-md;
-    }
+    // .cms-content__left {
+    //   width: $cms-panel-md;
+    // }
   }
 }
 
@@ -135,28 +144,6 @@
   box-shadow: $z-depth-4;
 }
 
-
-// TEMPORY FLEXBOX STYLES
-// Reference https://css-tricks.com/boxes-fill-height-dont-squish/
-// Reference http://codepen.io/clarkepaul/pen/qaNWAY
-
-*,
-*:before,
-*:after {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: -ms-flexbox;
-  display: flex;
-}
 
 // Flex magic
 // Nested items take up height
