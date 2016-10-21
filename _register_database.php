@@ -2,16 +2,17 @@
 
 // Register the SilverStripe provided databases
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
-
-$frameworkPath = defined('FRAMEWORK_PATH') ? FRAMEWORK_PATH : FRAMEWORK_NAME;
+use SilverStripe\Dev\Install\MySQLDatabaseConfigurationHelper;
 
 // Use MySQLi as default
 DatabaseAdapterRegistry::register(
 	array(
 		/** @skipUpgrade */
 		'class' => 'MySQLDatabase',
+		'module' => 'framework',
 		'title' => 'MySQL 5.0+ (using MySQLi)',
-		'helperPath' => $frameworkPath . '/dev/install/MySQLDatabaseConfigurationHelper.php',
+		'helperPath' => __DIR__ . '/dev/install/MySQLDatabaseConfigurationHelper.php',
+		'helperClass' => MySQLDatabaseConfigurationHelper::class,
 		'supported' => class_exists('MySQLi'),
 		'missingExtensionText' =>
 			'The <a href="http://www.php.net/manual/en/book.mysqli.php">MySQLi</a>
@@ -24,8 +25,10 @@ DatabaseAdapterRegistry::register(
 	array(
 		/** @skipUpgrade */
 		'class' => 'MySQLPDODatabase',
+		'module' => 'framework',
 		'title' => 'MySQL 5.0+ (using PDO)',
-		'helperPath' => $frameworkPath . '/dev/install/MySQLDatabaseConfigurationHelper.php',
+		'helperPath' => __DIR__ . '/dev/install/MySQLDatabaseConfigurationHelper.php',
+		'helperClass' => MySQLDatabaseConfigurationHelper::class,
 		'supported' => (class_exists('PDO') && in_array('mysql', PDO::getAvailableDrivers())),
 		'missingExtensionText' =>
 			'Either the <a href="http://www.php.net/manual/en/book.pdo.php">PDO Extension</a> or

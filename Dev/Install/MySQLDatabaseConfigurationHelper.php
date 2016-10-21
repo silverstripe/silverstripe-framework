@@ -18,6 +18,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 	/**
 	 * Create a connection of the appropriate type
 	 *
+	 * @skipUpgrade
 	 * @param array $databaseConfig
 	 * @param string $error Error message passed by value
 	 * @return mixed|null Either the connection object, or null if error
@@ -26,7 +27,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 		$error = null;
 		try {
 			switch($databaseConfig['type']) {
-				case 'SilverStripe\\ORM\\Connect\\MySQLDatabase':
+				case 'MySQLDatabase':
 					$conn = @new MySQLi($databaseConfig['server'], $databaseConfig['username'],
 										$databaseConfig['password']);
 					if($conn && empty($conn->connect_errno)) {
@@ -50,7 +51,7 @@ class MySQLDatabaseConfigurationHelper implements DatabaseConfigurationHelper {
 						return null;
 					}
 				default:
-					$error = 'Invalid connection type';
+					$error = 'Invalid connection type: ' . $databaseConfig['type'];
 					return null;
 			}
 		} catch(Exception $ex) {

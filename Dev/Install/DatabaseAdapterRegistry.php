@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Dev\Install;
 
+use InvalidArgumentException;
+
 /**
  * This class keeps track of the available database adapters
  * and provides a meaning of registering community built
@@ -51,25 +53,46 @@ class DatabaseAdapterRegistry {
 	/**
 	 * Add new adapter to the registry
 	 *
-	 * @param array $config Associative array of configuration details
+	 * @param array $config Associative array of configuration details. This must include:
+	 *  - title
+	 *  - class
+	 *  - helperClass
+	 *  - supported
+	 * This SHOULD include:
+	 *  - fields
+	 *  - helperPath (if helperClass can't be autoloaded via psr-4/-0)
+	 *  - missingExtensionText
+	 *  - module OR missingModuleText
 	 */
 	public static function register($config) {
-		$missingExtensionText = isset($config['missingExtensionText'])
-			? $config['missingExtensionText']
-			: 'The PHP extension is missing, please enable or install it.';
+		// Validate config
+		$missing = array_diff(['title', 'class', 'helperClass', 'supported'], array_keys($config));
+		if($missing) {
+			throw new InvalidArgumentException(
+				"Missing database helper config keys: '" . implode("', '", $missing) . "'"
+			);
+		}
 
-		$path = explode('/', $config['helperPath']);
-		$moduleName = array_shift($path);
-		$missingModuleText = isset($config['missingModuleText'])
-			? $config['missingModuleText']
-			: 'The SilverStripe module, '.$moduleName.', is missing or incomplete.'
-				. ' Please <a href="http://silverstripe.org/modules">download it</a>.';
+		// Guess missing module text if not given
+		if (empty($config['missingModuleText'])) {
+			if (empty($config['module'])) {
+				$moduleText = 'Module for database connector ' . $config['title'] . 'is missing.';
+			} else {
+				$moduleText = "The SilverStripe module '" . $config['module'] . "' is missing.";
+			}
+			$config['missingModuleText'] = $moduleText
+				. ' Please install it via composer or from http://addons.silverstripe.org/.';
+		}
 
-		$config['missingModuleText'] = $missingModuleText;
-		$config['missingExtensionText'] = $missingExtensionText;
+		// Set missing text
+		if (empty($config['missingExtensionText'])) {
+			$config['missingExtensionText'] = 'The PHP extension is missing, please enable or install it.';
+		}
 
 		// set default fields if none are defined already
-		if(!isset($config['fields'])) $config['fields'] = self::$default_fields;
+		if(!isset($config['fields'])) {
+			$config['fields'] = self::$default_fields;
+		}
 
 		self::$adapters[$config['class']] = $config;
 	}
@@ -135,6 +158,28 @@ class DatabaseAdapterRegistry {
 	 */
 	public static function get_default_fields() {
 		return self::$default_fields;
+	}
+
+	/**
+	 * Build configuration helper for a given class
+	 *
+	 * @param string $databaseClass Name of class
+	 * @return DatabaseConfigurationHelper|null Instance of helper, or null if cannot be loaded
+	 */
+	public static function getDatabaseConfigurationHelper($databaseClass) {
+		$adapters = static::get_adapters();
+		if(empty($adapters[$databaseClass]) || empty($adapters[$databaseClass]['helperClass'])) {
+			return null;
+		}
+
+		// Load if path given
+		if (isset($adapters[$databaseClass]['helperPath'])) {
+			include_once $adapters[$databaseClass]['helperPath'];
+		}
+
+		// Construct
+		$class = $adapters[$databaseClass]['helperClass'];
+		return (class_exists($class)) ? new $class() : null;
 	}
 
 }
