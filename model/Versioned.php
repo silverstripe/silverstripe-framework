@@ -313,7 +313,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			// Ensure that any sort order referring to this ID is correctly aliased
 			$orders = $query->getOrderBy();
 			foreach($orders as $order => $dir) {
-				if($order === "\"$baseTable\".\"ID\"") {
+				if($order === "\"$baseTable\".\"ID\"" || trim($order, "'\"") === "ID") {
 					unset($orders[$order]);
 					$orders["\"{$baseTable}_versions\".\"RecordID\""] = $dir;
 				}
