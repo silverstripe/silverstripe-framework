@@ -202,7 +202,9 @@ class SS_ConfigManifest {
 		$finder->setOptions(array(
 			'name_regex'    => '/(^|[\/\\\\])_config.php$/',
 			'ignore_tests'  => !$includeTests,
-			'file_callback' => array($this, 'addSourceConfigFile')
+			'file_callback' => array($this, 'addSourceConfigFile'),
+			// Cannot be max_depth: 1 due to "/framework/admin/_config.php"
+			'max_depth'     => 2
 		));
 		$finder->find($this->base);
 
@@ -210,7 +212,8 @@ class SS_ConfigManifest {
 		$finder->setOptions(array(
 			'name_regex'    => '/\.ya?ml$/',
 			'ignore_tests'  => !$includeTests,
-			'file_callback' => array($this, 'addYAMLConfigFile')
+			'file_callback' => array($this, 'addYAMLConfigFile'),
+			'max_depth'     => 2
 		));
 		$finder->find($this->base);
 
