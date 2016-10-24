@@ -1,5 +1,7 @@
 .preview {
   position: relative;
+  background-color: $tab-panel-texture-color;
+  border-left: 1px solid $border-color-dark;
 
   // Overlay preview at smaller sizes
   @include media-breakpoint-down(md) {
@@ -7,6 +9,7 @@
     right: 0;
     z-index: 2;
     width: 100%;
+    border-left: 0;
   }
 }
 
