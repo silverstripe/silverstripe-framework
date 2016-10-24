@@ -261,7 +261,7 @@ class FormBuilder extends SilverStripeComponent {
     return merge.recursive(true, structure, {
       data: state.data,
       source: state.source,
-      messages: state.messages,
+      message: state.message,
       valid: state.valid,
       value: state.value,
     });
@@ -356,7 +356,7 @@ class FormBuilder extends SilverStripeComponent {
       initialValues: this.getFieldValues(),
       onSubmit: this.handleSubmit,
       valid: state && state.valid,
-      messages: (state && Array.isArray(state.messages)) ? state.messages : [],
+      message: (state && state.message) ? state.message : null,
       mapActionsToComponents: this.mapActionsToComponents,
       mapFieldsToComponents: this.mapFieldsToComponents,
       asyncValidate,

@@ -1501,16 +1501,22 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	public function getSchemaStateDefaults() {
-		return [
+		$state = [
 			'id' => $this->ID(),
 			'value' => $this->Value(),
-			// @todo - Make form / field messages not always stored as html
-			'message' => [
-				'value' => ['html' => $this->Message()],
-				'type' => $this->MessageType(),
-			],
+			'message' => null,
 			'data' => [],
 		];
+		
+		if ($message = $this->Message()) {
+			// @todo - Make form / field messages not always stored as html
+			$state['message'] = [
+				'value' => ['html' => $message],
+				'type' => $this->MessageType(),
+			];
+		}
+		
+		return $state;
 	}
 
 }

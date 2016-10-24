@@ -101,10 +101,10 @@ function fieldHolder(Field) {
           {this.getLeftTitle()}
           <div className="form__field-holder">
             <Field {...this.props} />
+            {this.getMessage()}
+            {this.getDescription()}
           </div>
           {this.getRightTitle()}
-          {this.getMessage()}
-          {this.getDescription()}
         </FormGroup>
       );
     }
@@ -120,6 +120,11 @@ function fieldHolder(Field) {
     id: React.PropTypes.string,
     description: React.PropTypes.any,
     hideLabels: React.PropTypes.bool,
+    message: React.PropTypes.shape({
+      extraClass: React.PropTypes.string,
+      value: React.PropTypes.any,
+      type: React.PropTypes.string,
+    }),
   };
 
   FieldHolder.defaultProps = {

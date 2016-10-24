@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import MessageBox from 'components/MessageBox/MessageBox';
 
@@ -15,16 +15,15 @@ class Form extends SilverStripeComponent {
    *
    * @returns {Array|null}
    */
-  getMessages() {
-    if (Array.isArray(this.props.messages)) {
-      return this.props.messages.map((message, index) => (
+  getMessage() {
+    if (this.props.message) {
+      return (
         <MessageBox
-          key={index}
-          className={!index ? 'message-box--panel-top' : ''}
+          className="message-box--panel-top"
           closeLabel="close"
-          {...message}
+          {...this.props.message}
         />
-      ));
+      );
     }
     return null;
   }
@@ -33,7 +32,7 @@ class Form extends SilverStripeComponent {
     const valid = this.props.valid !== false;
     const fields = this.props.mapFieldsToComponents(this.props.fields);
     const actions = this.props.mapActionsToComponents(this.props.actions);
-    const messages = this.getMessages();
+    const message = this.getMessage();
 
     const className = ['form'];
     if (valid === false) {
@@ -53,7 +52,7 @@ class Form extends SilverStripeComponent {
 
     return (
       <form {...formProps}>
-        {messages}
+        {message}
 
         {fields &&
           <fieldset>
@@ -79,18 +78,23 @@ class Form extends SilverStripeComponent {
 }
 
 Form.propTypes = {
-  actions: React.PropTypes.array,
-  attributes: React.PropTypes.shape({
-    action: React.PropTypes.string.isRequired,
-    className: React.PropTypes.string,
-    encType: React.PropTypes.string,
-    id: React.PropTypes.string,
-    method: React.PropTypes.string.isRequired,
+  actions: PropTypes.array,
+  attributes: PropTypes.shape({
+    action: PropTypes.string.isRequired,
+    className: PropTypes.string,
+    encType: PropTypes.string,
+    id: PropTypes.string,
+    method: PropTypes.string.isRequired,
   }),
-  fields: React.PropTypes.array.isRequired,
-  handleSubmit: React.PropTypes.func,
-  mapActionsToComponents: React.PropTypes.func.isRequired,
-  mapFieldsToComponents: React.PropTypes.func.isRequired,
+  fields: PropTypes.array.isRequired,
+  handleSubmit: PropTypes.func,
+  mapActionsToComponents: PropTypes.func.isRequired,
+  mapFieldsToComponents: PropTypes.func.isRequired,
+  message: PropTypes.shape({
+    extraClass: PropTypes.string,
+    value: PropTypes.any,
+    type: PropTypes.string,
+  }),
 };
 
 export default Form;
