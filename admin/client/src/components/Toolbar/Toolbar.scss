@@ -73,12 +73,18 @@
   background-color: $background-main;
 }
 
-.toolbar__back-button,
-.cms-backlink .toolbar__back-button { // TEMP: Needed for anchor buttons to override legacy styles
+.toolbar__back-button {
   float: left;
   margin: $spacer-xs $spacer-x / 2 $spacer-xs #{-$spacer-xs};
   padding-left: $spacer-x / 4;
-  padding-right: $spacer-x / 4;
-  border: 0;
   color: $body-color-light; // TEMP: Needed for anchor buttons to override legacy styles
+
+  .toolbar--south & {
+    margin-top: 0;
+    margin-right: 5px;
+  }
+
+  &.btn--no-text {
+    padding-right: $spacer-x / 4;
+  }
 }
