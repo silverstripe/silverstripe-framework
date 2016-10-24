@@ -64,8 +64,11 @@ class Preview extends SilverStripeComponent {
     return (
       <div className="flexbox-area-grow fill-height cms-content__right preview">
         {body}
-        <a href="" className="cms-content__back-btn font-icon-left-open-big" />
         <div className="toolbar toolbar--south">
+          <button
+            className="btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up"
+            type="button"
+          >Back</button>
           <div className="btn-toolbar">
             {toolbarButtons}
           </div>
