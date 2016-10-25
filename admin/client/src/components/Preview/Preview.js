@@ -62,7 +62,7 @@ class Preview extends SilverStripeComponent {
 
     // Combine elements
     return (
-      <div className="flexbox-area-grow fill-height cms-content__right preview">
+      <div className="flexbox-area-grow fill-height preview">
         {body}
         <div className="toolbar toolbar--south">
           <button
