@@ -9478,12 +9478,12 @@ body.cms{
   padding-top:.38462rem;
 }
 
-.has-panel .view-controls{
+.view-controls{
   float:right;
   margin-top:4px;
 }
 
-.has-panel .view-controls .icon-button-group .icon-button{
+.view-controls .icon-button-group .icon-button{
   padding:6px 8px;
   height:26px;
 }
