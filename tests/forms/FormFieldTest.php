@@ -330,13 +330,16 @@ class FormFieldTest extends SapphireTest {
 	}
 
 	public function testGetSchemaStateWithFormValidation() {
-		$field = new FormField('MyField');
+		$field = new FormField('MyField', 'My Field');
 		$validator = new RequiredFields('MyField');
 		$form = new Form(new Controller(), 'TestForm', new FieldList($field), new FieldList(), $validator);
-		$validator->validationError('MyField', 'Something is wrong', 'error');
+		$form->validate();
+		$form->setupFormErrors();
 		$schema = $field->getSchemaState();
-		$this->assertEquals(count($schema['messages']), 1);
-		$this->assertEquals('Something is wrong', $schema['messages'][0]['value']);
+		$this->assertEquals(
+			['html' => '&quot;My Field&quot; is required'],
+			$schema['message']['value']
+		);
 	}
 }
 
