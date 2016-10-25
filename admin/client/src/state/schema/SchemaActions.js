@@ -19,6 +19,7 @@ export function clearMessage(id) {
     return {
       type: ACTION_TYPES.CLEAR_MESSAGE,
       payload: { id },
-    }
+    };
   }
+  return null;
 }

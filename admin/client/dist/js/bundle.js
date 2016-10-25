@@ -266,8 +266,9 @@ for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),u=n(4),c=i(u),d=n(20),f=i(d),p=n(21),h=i(p),m=function(e){
 function t(e){r(this,t)
 var n=o(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
-return n.handleSubmit=n.handleSubmit.bind(n),n}return a(t,e),l(t,[{key:"getMessage",value:function n(){return this.props.message?c["default"].createElement(h["default"],s({className:"message-box--panel-top",
-closeLabel:"close",onDismiss:this.props.onHideMessage},this.props.message)):null}},{key:"render",value:function i(){var e=this.props.valid!==!1,t=this.props.mapFieldsToComponents(this.props.fields),n=this.props.mapActionsToComponents(this.props.actions),i=this.getMessage(),r=["form"]
+return n.handleSubmit=n.handleSubmit.bind(n),n}return a(t,e),l(t,[{key:"getMessages",value:function n(){var e=this
+return Array.isArray(this.props.messages)?this.props.messages.map(function(t,n){return c["default"].createElement(h["default"],s({key:n,className:n?"":"message-box--panel-top",closeLabel:"close",onDismiss:e.props.onHideMessage
+},t))}):null}},{key:"render",value:function i(){var e=this.props.valid!==!1,t=this.props.mapFieldsToComponents(this.props.fields),n=this.props.mapActionsToComponents(this.props.actions),i=this.getMessages(),r=["form"]
 
 
 e===!1&&r.push("form--invalid"),this.props.attributes&&this.props.attributes.className&&r.push(this.props.attributes.className)
@@ -275,8 +276,9 @@ var o=s({},this.props.attributes,{onSubmit:this.handleSubmit,className:r.join(" 
 return c["default"].createElement("form",o,i,t&&c["default"].createElement("fieldset",null,t),n&&c["default"].createElement("div",{className:"btn-toolbar",role:"group"},n))}},{key:"handleSubmit",value:function u(e){
 "function"==typeof this.props.handleSubmit&&this.props.handleSubmit(e)}}]),t}(f["default"])
 m.propTypes={actions:u.PropTypes.array,attributes:u.PropTypes.shape({action:u.PropTypes.string.isRequired,className:u.PropTypes.string,encType:u.PropTypes.string,id:u.PropTypes.string,method:u.PropTypes.string.isRequired
-}),fields:u.PropTypes.array.isRequired,handleSubmit:u.PropTypes.func,mapActionsToComponents:u.PropTypes.func.isRequired,mapFieldsToComponents:u.PropTypes.func.isRequired,message:u.PropTypes.shape({extraClass:u.PropTypes.string,
-value:u.PropTypes.any,type:u.PropTypes.string})},t["default"]=m},function(e,t){e.exports=SilverStripeComponent},function(e,t,n){"use strict"
+}),onHideMessage:u.PropTypes.func,fields:u.PropTypes.array.isRequired,handleSubmit:u.PropTypes.func,mapActionsToComponents:u.PropTypes.func.isRequired,mapFieldsToComponents:u.PropTypes.func.isRequired,
+messages:u.PropTypes.arrayOf(u.PropTypes.shape({extraClass:u.PropTypes.string,value:u.PropTypes.any,type:u.PropTypes.string}))},t["default"]=m},function(e,t){e.exports=SilverStripeComponent},function(e,t,n){
+"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function o(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called")
 
 
@@ -386,7 +388,7 @@ return e.children&&(n.children=t.normalizeActions(e.children)),n})}},{key:"rende
 className:e.attributes["class"],encType:e.attributes.enctype})
 delete i["class"],delete i.enctype
 var r=this.props,o=r.asyncValidate,a=r.onSubmitFail,s=r.onSubmitSuccess,u=r.shouldAsyncValidate,c=r.touchOnBlur,f=r.touchOnChange,p=r.persistentSubmitErrors,h=r.validate,m=r.form,g={form:m,fields:this.normalizeFields(e.fields,t),
-actions:this.normalizeActions(e.actions),attributes:i,data:e.data,initialValues:this.getFieldValues(),onSubmit:this.handleSubmit,valid:t&&t.valid,message:t&&t.message?t.message:null,mapActionsToComponents:this.mapActionsToComponents,
+actions:this.normalizeActions(e.actions),attributes:i,data:e.data,initialValues:this.getFieldValues(),onSubmit:this.handleSubmit,valid:t&&t.valid,messages:t&&Array.isArray(t.messages)?t.messages:[],mapActionsToComponents:this.mapActionsToComponents,
 mapFieldsToComponents:this.mapFieldsToComponents,onHideMessage:this.props.onHideMessage,asyncValidate:o,onSubmitFail:a,onSubmitSuccess:s,shouldAsyncValidate:u,touchOnBlur:c,touchOnChange:f,persistentSubmitErrors:p,
 validate:h}
 return d["default"].createElement(n,g)}}]),t}(p["default"]),_=c.PropTypes.shape({id:c.PropTypes.string.isRequired,schema:c.PropTypes.shape({attributes:c.PropTypes.shape({"class":c.PropTypes.string,enctype:c.PropTypes.string
@@ -436,7 +438,7 @@ return d["default"].createElement(C["default"],e)}}]),t}(c.Component)
 T.propTypes=l({},_.basePropTypes,{schemaActions:c.PropTypes.object.isRequired,schemaUrl:c.PropTypes.string.isRequired,schema:_.schemaPropType,form:c.PropTypes.string}),T.defaultProps={baseFormComponent:(0,
 g.reduxForm)()(w["default"]),baseFieldComponent:g.Field},t["default"]=(0,f.connect)(function(e,t){var n=e.schemas[t.schemaUrl],i=n?n.id:null
 return{schema:n,form:i}},function(e){return{schemaActions:(0,p.bindActionCreators)(y,e)}})(T)},,,function(e,t){e.exports=ReduxForm},function(e,t,n){"use strict"
-function i(e){return e&&e.__esModule?e:{"default":e}}function r(e){return{type:s["default"].SET_SCHEMA,payload:e}}function o(e){if(e)return{type:s["default"].CLEAR_MESSAGE,payload:{id:e}}}Object.defineProperty(t,"__esModule",{
+function i(e){return e&&e.__esModule?e:{"default":e}}function r(e){return{type:s["default"].SET_SCHEMA,payload:e}}function o(e){return e?{type:s["default"].CLEAR_MESSAGE,payload:{id:e}}:null}Object.defineProperty(t,"__esModule",{
 value:!0}),t.setSchema=r,t.clearMessage=o
 var a=n(38),s=i(a)},function(e,t){"use strict"
 Object.defineProperty(t,"__esModule",{value:!0})
@@ -2069,7 +2071,7 @@ function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t 
 
 
 switch(t.type){case c["default"].SET_SCHEMA:return(0,l["default"])(a({},e,r({},t.payload.id,t.payload)))
-case c["default"].CLEAR_MESSAGE:return(0,l["default"])(f["default"].recursive(!0,{},e,r({},t.payload.id,{state:{message:null}})))
+case c["default"].CLEAR_MESSAGE:return(0,l["default"])(f["default"].recursive(!0,{},e,r({},t.payload.id,{state:{messages:[]}})))
 default:return e}}Object.defineProperty(t,"__esModule",{value:!0})
 var a=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
 for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e}

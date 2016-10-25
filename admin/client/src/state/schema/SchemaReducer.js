@@ -15,9 +15,9 @@ export default function schemaReducer(state = initialState, action = null) {
       return deepFreeze(merge.recursive(true, {}, state, {
         [action.payload.id]: {
           state: {
-            message: null,
-          }
-        }
+            messages: [],
+          },
+        },
       }));
     }
 

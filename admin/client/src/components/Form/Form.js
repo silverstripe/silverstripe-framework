@@ -15,16 +15,17 @@ class Form extends SilverStripeComponent {
    *
    * @returns {Array|null}
    */
-  getMessage() {
-    if (this.props.message) {
-      return (
+  getMessages() {
+    if (Array.isArray(this.props.messages)) {
+      return this.props.messages.map((message, index) => (
         <MessageBox
-          className="message-box--panel-top"
+          key={index}
+          className={!index ? 'message-box--panel-top' : ''}
           closeLabel="close"
           onDismiss={this.props.onHideMessage}
-          {...this.props.message}
+          {...message}
         />
-      );
+      ));
     }
     return null;
   }
@@ -33,7 +34,7 @@ class Form extends SilverStripeComponent {
     const valid = this.props.valid !== false;
     const fields = this.props.mapFieldsToComponents(this.props.fields);
     const actions = this.props.mapActionsToComponents(this.props.actions);
-    const message = this.getMessage();
+    const messages = this.getMessages();
 
     const className = ['form'];
     if (valid === false) {
@@ -53,7 +54,7 @@ class Form extends SilverStripeComponent {
 
     return (
       <form {...formProps}>
-        {message}
+        {messages}
 
         {fields &&
           <fieldset>
@@ -87,15 +88,16 @@ Form.propTypes = {
     id: PropTypes.string,
     method: PropTypes.string.isRequired,
   }),
+  onHideMessage: PropTypes.func,
   fields: PropTypes.array.isRequired,
   handleSubmit: PropTypes.func,
   mapActionsToComponents: PropTypes.func.isRequired,
   mapFieldsToComponents: PropTypes.func.isRequired,
-  message: PropTypes.shape({
+  messages: PropTypes.arrayOf(PropTypes.shape({
     extraClass: PropTypes.string,
     value: PropTypes.any,
     type: PropTypes.string,
-  }),
+  })),
 };
 
 export default Form;

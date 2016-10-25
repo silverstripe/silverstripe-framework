@@ -356,7 +356,7 @@ class FormBuilder extends SilverStripeComponent {
       initialValues: this.getFieldValues(),
       onSubmit: this.handleSubmit,
       valid: state && state.valid,
-      message: (state && state.message) ? state.message : null,
+      messages: (state && Array.isArray(state.messages)) ? state.messages : [],
       mapActionsToComponents: this.mapActionsToComponents,
       mapFieldsToComponents: this.mapFieldsToComponents,
       onHideMessage: this.props.onHideMessage,

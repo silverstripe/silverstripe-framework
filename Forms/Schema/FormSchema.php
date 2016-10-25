@@ -58,7 +58,7 @@ class FormSchema {
 			'id' => $form->FormName(),
 			'fields' => [],
 			'valid' => $form->isValid(),
-			'message' => null,
+			'messages' => [],
 		];
 
 		// flattened nested fields are returned, rather than only top level fields.
@@ -68,7 +68,7 @@ class FormSchema {
 		);
 
 		if($message = $form->Message()) {
-			$state['message'] = [
+			$state['messages'][] = [
 				// TODO Make form / field messages not always stored as html
 				'value' => ['html' => $message],
 				'type' => $form->MessageType(),
