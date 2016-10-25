@@ -147,12 +147,12 @@ class CampaignAdminList extends SilverStripeComponent {
         </div>
       );
     const bodyClass = [
-      'panel', 'panel--padded', 'panel--scrollable', 'flexbox-area-grow', 'campaign-items',
+      'panel', 'panel--padded', 'panel--scrollable', 'flexbox-area-grow',
     ];
 
     return (
-      <div className="fill-width campaigns">
-        <div className="fill-height campaign-items cms-content__left cms-campaigns"
+      <div className="fill-width campaign-admin__campaign">
+        <div className="fill-height campaign-admin__campaign-items"
           aria-expanded="true"
         >
           <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
@@ -209,7 +209,7 @@ class CampaignAdminList extends SilverStripeComponent {
       // TODO Implement "revert" feature
       actionProps = Object.assign(actionProps, {
         title: i18n._t('Campaigns.REVERTCAMPAIGN'),
-        bootstrapButtonStyle: 'default',
+        bootstrapButtonStyle: 'secondary-outline',
         icon: 'back-in-time',
         disabled: true,
       });

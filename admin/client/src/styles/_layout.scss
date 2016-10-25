@@ -19,76 +19,11 @@ body {
   display: flex;
 }
 
+
+// TODO move out of layout
 @include media-breakpoint-down(md) {
   .cms-content.has-panel .cms-content-tools {
     display: none;
-  }
-}
-
-.campaign-items {
-  @include media-breakpoint-down(md) {
-    width: 100%;
-    z-index: 1;
-  }
-}
-
-.campaigns { // TODO move to campaign container
-  position: relative;
-  height: 100%;
-
-  // Overlay preview if there isn't enough space for both items and preview
-  .cms-content--selected {
-    display: block;
-  }
-
-  // Back button for smaller screens, closes preview
-  .cms-content__back-btn {
-    width: 36px;
-    height: 36px;
-    background-color: rgba($gray-dark, 0.8);
-    display: block;
-    position: absolute;
-    top: 8px;
-    left: 12px;
-    content: "5";
-    font-size: 16px;
-    line-height: 20px;
-    color: $white;
-    padding: 8px;
-    border-radius: 50%;
-    font-family: silverstripe;
-    z-index: 1;
-    cursor: pointer;
-
-    &:hover {
-      background-color: $gray-dark;
-      text-decoration: none;
-    }
-  }
-
-  @include media-breakpoint-up(lg) {
-    padding-left: $cms-panel-sm;
-
-    // .cms-content__left {
-    //   width: $cms-panel-sm;
-    // }
-    //
-    // .cms-content__right {
-    //   display: block;
-    //   border-left: 1px solid $border-color;
-    // }
-
-    .cms-content__back-btn {
-      display: none;
-    }
-  }
-
-  @include media-breakpoint-up(xl) {
-    padding-left: $cms-panel-md;
-
-    // .cms-content__left {
-    //   width: $cms-panel-md;
-    // }
   }
 }
 

@@ -1,3 +1,19 @@
+// Required for preview position
+.campaign-admin__campaign {
+  position: relative;
+  height: 100%;
+}
+
+.campaign-admin__campaign-items {
+  width: 100%;
+  z-index: 1;
+
+  @include media-breakpoint-up(lg) {
+    width: $cms-panel-sm;
+  }
+}
+
+
 // Campaign items which have linked associations
 .campaign-admin__item-links--has-links,
 .campaign-admin__item-links--is-linked {

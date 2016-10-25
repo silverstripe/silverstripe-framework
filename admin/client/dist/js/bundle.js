@@ -2414,12 +2414,10 @@ case"create":e=this.renderCreateView()
 break
 default:e=this.renderIndexView()}return e}},{key:"renderIndexView",value:function f(){var e=this.props.sectionConfig.form.EditForm.schemaUrl,t={title:S["default"]._t("Campaigns.ADDCAMPAIGN"),icon:"plus",
 handleClick:this.addCampaign.bind(this)},n={createFn:this.campaignListCreateFn.bind(this),schemaUrl:e}
-return p["default"].createElement("div",{className:"fill-height cms-campaigns","aria-expanded":"true"},p["default"].createElement(x["default"],null,p["default"].createElement(C["default"],{multiline:!0,
-crumbs:this.props.breadcrumbs})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow"},p["default"].createElement("div",{className:"toolbar toolbar--content"
-},p["default"].createElement("div",{className:"btn-toolbar"},p["default"].createElement(O["default"],t))),p["default"].createElement("div",{className:"campaign-admin"},p["default"].createElement(A["default"],n))))
-
-}},{key:"renderItemListView",value:function h(){var e={sectionConfig:this.props.sectionConfig,campaignId:this.props.params.id,itemListViewEndpoint:this.props.sectionConfig.itemListViewEndpoint,publishApi:this.publishApi,
-handleBackButtonClick:this.handleBackButtonClick.bind(this)}
+return p["default"].createElement("div",{className:"fill-height","aria-expanded":"true"},p["default"].createElement(x["default"],null,p["default"].createElement(C["default"],{multiline:!0,crumbs:this.props.breadcrumbs
+})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow"},p["default"].createElement("div",{className:"toolbar toolbar--content"},p["default"].createElement("div",{
+className:"btn-toolbar"},p["default"].createElement(O["default"],t))),p["default"].createElement(A["default"],n)))}},{key:"renderItemListView",value:function h(){var e={sectionConfig:this.props.sectionConfig,
+campaignId:this.props.params.id,itemListViewEndpoint:this.props.sectionConfig.itemListViewEndpoint,publishApi:this.publishApi,handleBackButtonClick:this.handleBackButtonClick.bind(this)}
 return p["default"].createElement(F["default"],e)}},{key:"renderDetailEditView",value:function m(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t=e
 this.props.params.id>0&&(t=e+"/"+this.props.params.id)
 var n={createFn:this.campaignEditCreateFn.bind(this),schemaUrl:t}
@@ -2487,17 +2485,17 @@ var a=[]
 handleClickArg:i.ID},h["default"].createElement(M["default"],{item:i,campaign:e.props.record})))}),a.push(h["default"].createElement(S["default"],{key:f,groupid:f,title:d},c))})
 var s=[this.props.config.absoluteBaseUrl,this.props.config.sections["SilverStripe\\CMS\\Controllers\\CMSPagesController"].url].join(""),l=a.length?h["default"].createElement(O["default"],null,a):h["default"].createElement("div",{
 className:"alert alert-warning",role:"alert"},h["default"].createElement("strong",null,"This campaign is empty.")," You can add pages by selecting"," ",h["default"].createElement("em",null,"Add to campaign")," from within the ",h["default"].createElement("em",null,"More Options")," popup on"," ","the ",h["default"].createElement("a",{
-href:s},"edit page screen"),"."),u=["panel","panel--padded","panel--scrollable","flexbox-area-grow","campaign-items"]
-return h["default"].createElement("div",{className:"fill-width campaigns"},h["default"].createElement("div",{className:"fill-height campaign-items cms-content__left cms-campaigns","aria-expanded":"true"
+href:s},"edit page screen"),"."),u=["panel","panel--padded","panel--scrollable","flexbox-area-grow"]
+return h["default"].createElement("div",{className:"fill-width campaign-admin__campaign"},h["default"].createElement("div",{className:"fill-height campaign-admin__campaign-items","aria-expanded":"true"
 },h["default"].createElement(A["default"],{showBackButton:!0,handleBackButtonClick:this.props.handleBackButtonClick},h["default"].createElement(U["default"],{multiline:!0,crumbs:this.props.breadcrumbs})),h["default"].createElement("div",{
 className:u.join(" ")},l),h["default"].createElement("div",{className:"toolbar toolbar--south"},this.renderButtonToolbar())),h["default"].createElement(B["default"],{itemLinks:n,itemId:t}))}},{key:"handleItemSelected",
 value:function l(e,t){this.props.campaignActions.selectChangeSetItem(t)}},{key:"renderButtonToolbar",value:function u(){var e=this.getItems()
 if(!e||!e.length)return h["default"].createElement("div",{className:"btn-toolbar"})
 var t={}
 return"open"===this.props.record.State?t=c(t,{title:$["default"]._t("Campaigns.PUBLISHCAMPAIGN"),bootstrapButtonStyle:"primary",loading:this.props.campaign.isPublishing,handleClick:this.handlePublish,icon:"rocket"
-}):"published"===this.props.record.State&&(t=c(t,{title:$["default"]._t("Campaigns.REVERTCAMPAIGN"),bootstrapButtonStyle:"default",icon:"back-in-time",disabled:!0})),h["default"].createElement("div",{className:"btn-toolbar"
-},h["default"].createElement(F["default"],t))}},{key:"getItems",value:function p(){return this.props.record&&this.props.record._embedded?this.props.record._embedded.items:null}},{key:"groupItemsForSet",
-value:function m(){var e={},t=this.getItems()
+}):"published"===this.props.record.State&&(t=c(t,{title:$["default"]._t("Campaigns.REVERTCAMPAIGN"),bootstrapButtonStyle:"secondary-outline",icon:"back-in-time",disabled:!0})),h["default"].createElement("div",{
+className:"btn-toolbar"},h["default"].createElement(F["default"],t))}},{key:"getItems",value:function p(){return this.props.record&&this.props.record._embedded?this.props.record._embedded.items:null}},{
+key:"groupItemsForSet",value:function m(){var e={},t=this.getItems()
 return t?(t.forEach(function(t){var n=t.BaseClass
 e[n]||(e[n]={singular:t.Singular,plural:t.Plural,items:[]}),e[n].items.push(t)}),e):e}},{key:"handlePublish",value:function g(e){e.preventDefault(),this.props.campaignActions.publishCampaign(this.props.publishApi,this.props.treeClass,this.props.campaignId)
 
@@ -2591,8 +2589,7 @@ return this.props.itemLinks&&this.props.itemLinks.edit&&(i=this.props.itemLinks.
 className:"btn__title"},d["default"]._t("Preview.EDIT","Edit"))))),e=this.props.itemId?t?n&&0===n.indexOf("image/")?u["default"].createElement("div",{className:"preview__file-container panel--scrollable"
 },u["default"].createElement("img",{alt:t,className:"preview__file--fits-space",src:t})):u["default"].createElement("iframe",{className:"flexbox-area-grow preview__iframe",src:t}):u["default"].createElement("div",{
 className:"preview__overlay"},u["default"].createElement("h3",{className:"preview__overlay-text"},"There is no preview available for this item.")):u["default"].createElement("div",{className:"preview__overlay"
-},u["default"].createElement("h3",{className:"preview__overlay-text"},"No preview available.")),u["default"].createElement("div",{className:"flexbox-area-grow fill-height cms-content__right preview"},e,u["default"].createElement("a",{
-href:"",className:"cms-content__back-btn font-icon-left-open-big"}),u["default"].createElement("div",{className:"toolbar toolbar--south"},u["default"].createElement("div",{className:"btn-toolbar"},o)))
-
-}}]),t}(p["default"])
+},u["default"].createElement("h3",{className:"preview__overlay-text"},"No preview available.")),u["default"].createElement("div",{className:"flexbox-area-grow fill-height preview"},e,u["default"].createElement("div",{
+className:"toolbar toolbar--south"},u["default"].createElement("button",{className:"btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up",type:"button"},"Back"),u["default"].createElement("div",{
+className:"btn-toolbar"},o)))}}]),t}(p["default"])
 h.propTypes={itemLinks:u["default"].PropTypes.object,itemId:u["default"].PropTypes.number},t["default"]=h}])
