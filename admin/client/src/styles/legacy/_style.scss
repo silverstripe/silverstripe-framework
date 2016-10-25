@@ -1167,7 +1167,7 @@ body.cms {
   box-sizing: border-box;
   margin-left: -$panel-padding-x;
   margin-right: -$panel-padding-x;
-  height: calc(100% + #{$panel-padding-y});
+  margin-bottom: -$panel-padding-y;
   padding: $panel-padding-y $panel-padding-x;
   background: lighten(#D4E2EC, 4);
   text-shadow: none;

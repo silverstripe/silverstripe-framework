@@ -10276,7 +10276,7 @@ body.cms{
   box-sizing:border-box;
   margin-left:-1.5385rem;
   margin-right:-1.5385rem;
-  height:calc(100% + 1.5385rem);
+  margin-bottom:-1.5385rem;
   padding:1.5385rem;
   background:#e2ecf2;
   text-shadow:none;
