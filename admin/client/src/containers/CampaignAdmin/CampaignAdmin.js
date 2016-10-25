@@ -126,7 +126,7 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div className="fill-height cms-campaigns" aria-expanded="true">
+      <div className="fill-height" aria-expanded="true">
         <Toolbar>
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
@@ -136,9 +136,7 @@ class CampaignAdmin extends SilverStripeComponent {
               <FormAction {...formActionProps} />
             </div>
           </div>
-          <div className="campaign-admin">
-            <FormBuilderLoader {...formBuilderProps} />
-          </div>
+          <FormBuilderLoader {...formBuilderProps} />
         </div>
       </div>
     );
