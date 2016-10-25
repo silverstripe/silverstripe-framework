@@ -71,7 +71,7 @@ class FormSchemaTest extends SapphireTest {
 				]
 			],
 			'valid' => null,
-			'message' => null,
+			'messages' => [],
 		];
 
 		$state = $formSchema->getState($form);
@@ -95,10 +95,10 @@ class FormSchemaTest extends SapphireTest {
 					'message' => null,
 				]
 			],
-			'message' => [
+			'messages' => [[
 				'value' => ['html' => 'All saved'],
 				'type' => 'good'
-			],
+			]],
 			'valid' => null,
 		];
 
@@ -137,7 +137,7 @@ class FormSchemaTest extends SapphireTest {
 				]
 			],
 			'valid' => false,
-			'message' => null
+			'messages' => []
 		];
 
 		$state = $formSchema->getState($form);

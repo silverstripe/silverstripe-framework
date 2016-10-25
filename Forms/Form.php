@@ -1370,20 +1370,6 @@ class Form extends RequestHandler {
 	}
 
 	/**
-	 * Returns boolean if there are any errors set for this form, or null if not validated.
-	 *
-	 * @return bool|null
-	 */
-	public function isValid() {
-		$errors = Session::get("FormInfo.{$this->FormName()}.errors");
-		if (!isset($errors)) {
-			return null;
-		}
-		
-		return empty($errors);
-	}
-
-	/**
 	 * Processing that occurs before a form is executed.
 	 *
 	 * This includes form validation, if it fails, we redirect back

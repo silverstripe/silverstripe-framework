@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Schema;
 
+use SilverStripe\Control\Session;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
@@ -54,10 +55,15 @@ class FormSchema {
 		// Ensure that session errors are populated within form field messages
 		$form->setupFormErrors();
 
+		// @todo - Replace with ValidationResult handling
+		// Currently tri-state; null (unsubmitted), true (submitted-valid), false (submitted-invalid)
+		$errors = Session::get("FormInfo.{$form->FormName()}.errors");
+		$valid = isset($errors) ? empty($errors) : null;
+
 		$state = [
 			'id' => $form->FormName(),
 			'fields' => [],
-			'valid' => $form->isValid(),
+			'valid' => $valid,
 			'messages' => [],
 		];
 
