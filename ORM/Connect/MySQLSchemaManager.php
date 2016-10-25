@@ -144,24 +144,14 @@ class MySQLSchemaManager extends DBSchemaManager {
 		}
 
 		// Perform check
-		if (!$this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
-			if ($this->runTableCheckCommand("CHECK TABLE \"" . strtolower($tableName) . "\"")) {
-				$this->alterationMessage(
-					"Table $tableName: renamed from lowercase",
-					"repaired"
-				);
-				$this->renameTable(strtolower($tableName), $tableName);
-				return true;
-			}
-
-			$this->alterationMessage(
-				"Table $tableName: repaired",
-				"repaired"
-			);
-			return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\" USE_FRM");
-		} else {
+		if ($this->runTableCheckCommand("CHECK TABLE \"$tableName\"")) {
 			return true;
 		}
+		$this->alterationMessage(
+			"Table $tableName: repaired",
+			"repaired"
+		);
+		return $this->runTableCheckCommand("REPAIR TABLE \"$tableName\" USE_FRM");
 	}
 
 	/**

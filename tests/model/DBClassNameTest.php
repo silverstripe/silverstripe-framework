@@ -86,7 +86,7 @@ class DBClassNameTest extends SapphireTest {
 
 		// Implicit table
 		$field4 = new DBClassName('MyClass');
-		$field4->setTable('DBClassNameTest_ObjectSubClass_versions');
+		$field4->setTable('DBClassNameTest_ObjectSubClass_Versions');
 		$this->assertEquals('DBClassNameTest_Object', $field4->getBaseClass());
 		$this->assertEquals('DBClassNameTest_Object', $field4->getDefault());
 

@@ -103,7 +103,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 	/**
 	 * Additional database columns for the new
-	 * "_versions" table. Used in {@link augmentDatabase()}
+	 * "_Versions" table. Used in {@link augmentDatabase()}
 	 * and all Versioned calls extending or creating
 	 * SELECT statements.
 	 *
@@ -135,7 +135,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 	/**
 	 * Additional database indexes for the new
-	 * "_versions" table. Used in {@link augmentDatabase()}.
+	 * "_Versions" table. Used in {@link augmentDatabase()}.
 	 *
 	 * @var array $indexes_for_versions_table
 	 */
@@ -298,7 +298,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		}
 
 		// Build query
-		$table = "\"{$baseTable}_versions\"";
+		$table = "\"{$baseTable}_Versions\"";
 		$query = SQLSelect::create('"LastEdited"', $table)
 			->addWhere([
 				"{$table}.\"RecordID\"" => $id,
@@ -428,26 +428,26 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					// Make sure join includes version as well
 					$query->setJoinFilter(
 						$alias,
-						"\"{$alias}_versions\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\""
-						. " AND \"{$alias}_versions\".\"Version\" = \"{$baseTable}_versions\".\"Version\""
+						"\"{$alias}_Versions\".\"RecordID\" = \"{$baseTable}_Versions\".\"RecordID\""
+						. " AND \"{$alias}_Versions\".\"Version\" = \"{$baseTable}_Versions\".\"Version\""
 					);
 				}
-				$query->renameTable($alias, $alias . '_versions');
+				$query->renameTable($alias, $alias . '_Versions');
 			}
 
-			// Add all <basetable>_versions columns
-			foreach(Config::inst()->get('SilverStripe\ORM\Versioning\Versioned', 'db_for_versions_table') as $name => $type) {
-				$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
+			// Add all <basetable>_Versions columns
+			foreach(Config::inst()->get(static::class, 'db_for_versions_table') as $name => $type) {
+				$query->selectField(sprintf('"%s_Versions"."%s"', $baseTable, $name), $name);
 			}
 
 			// Alias the record ID as the row ID, and ensure ID filters are aliased correctly
-			$query->selectField("\"{$baseTable}_versions\".\"RecordID\"", "ID");
-			$query->replaceText("\"{$baseTable}_versions\".\"ID\"", "\"{$baseTable}_versions\".\"RecordID\"");
+			$query->selectField("\"{$baseTable}_Versions\".\"RecordID\"", "ID");
+			$query->replaceText("\"{$baseTable}_Versions\".\"ID\"", "\"{$baseTable}_Versions\".\"RecordID\"");
 
 			// However, if doing count, undo rewrite of "ID" column
 			$query->replaceText(
-				"count(DISTINCT \"{$baseTable}_versions\".\"RecordID\")",
-				"count(DISTINCT \"{$baseTable}_versions\".\"ID\")"
+				"count(DISTINCT \"{$baseTable}_Versions\".\"RecordID\")",
+				"count(DISTINCT \"{$baseTable}_Versions\".\"ID\")"
 			);
 
 			// Add additional versioning filters
@@ -459,16 +459,16 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					}
 					// Link to the version archived on that date
 					$query->addWhere([
-						"\"{$baseTable}_versions\".\"Version\" IN
+						"\"{$baseTable}_Versions\".\"Version\" IN
 						(SELECT LatestVersion FROM
 							(SELECT
-								\"{$baseTable}_versions\".\"RecordID\",
-								MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
-								FROM \"{$baseTable}_versions\"
-								WHERE \"{$baseTable}_versions\".\"LastEdited\" <= ?
-								GROUP BY \"{$baseTable}_versions\".\"RecordID\"
-							) AS \"{$baseTable}_versions_latest\"
-							WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
+								\"{$baseTable}_Versions\".\"RecordID\",
+								MAX(\"{$baseTable}_Versions\".\"Version\") AS LatestVersion
+								FROM \"{$baseTable}_Versions\"
+								WHERE \"{$baseTable}_Versions\".\"LastEdited\" <= ?
+								GROUP BY \"{$baseTable}_Versions\".\"RecordID\"
+							) AS \"{$baseTable}_Versions_Latest\"
+							WHERE \"{$baseTable}_Versions_Latest\".\"RecordID\" = \"{$baseTable}_Versions\".\"RecordID\"
 						)" => $date
 					]);
 					break;
@@ -477,15 +477,15 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					// Return latest version instances, regardless of whether they are on a particular stage
 					// This provides "show all, including deleted" functonality
 					$query->addWhere(
-						"\"{$baseTable}_versions\".\"Version\" IN
+						"\"{$baseTable}_Versions\".\"Version\" IN
 						(SELECT LatestVersion FROM
 							(SELECT
-								\"{$baseTable}_versions\".\"RecordID\",
-								MAX(\"{$baseTable}_versions\".\"Version\") AS LatestVersion
-								FROM \"{$baseTable}_versions\"
-								GROUP BY \"{$baseTable}_versions\".\"RecordID\"
-							) AS \"{$baseTable}_versions_latest\"
-							WHERE \"{$baseTable}_versions_latest\".\"RecordID\" = \"{$baseTable}_versions\".\"RecordID\"
+								\"{$baseTable}_Versions\".\"RecordID\",
+								MAX(\"{$baseTable}_Versions\".\"Version\") AS LatestVersion
+								FROM \"{$baseTable}_Versions\"
+								GROUP BY \"{$baseTable}_Versions\".\"RecordID\"
+							) AS \"{$baseTable}_Versions_Latest\"
+							WHERE \"{$baseTable}_Versions_Latest\".\"RecordID\" = \"{$baseTable}_Versions\".\"RecordID\"
 						)"
 					);
 					break;
@@ -497,14 +497,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 						throw new InvalidArgumentException("Invalid version");
 					}
 					$query->addWhere([
-						"\"{$baseTable}_versions\".\"Version\"" => $version
+						"\"{$baseTable}_Versions\".\"Version\"" => $version
 					]);
 					break;
 				}
 				case 'all_versions':
 				default: {
 					// If all versions are requested, ensure that records are sorted by this field
-					$query->addOrderBy(sprintf('"%s_versions"."%s"', $baseTable, 'Version'));
+					$query->addOrderBy(sprintf('"%s_Versions"."%s"', $baseTable, 'Version'));
 					break;
 				}
 			}
@@ -556,7 +556,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		// The VersionedMode local variable ensures that this decorator only applies to
 		// queries that have originated from the Versioned object, and have the Versioned
 		// metadata set on the query object. This prevents regular queries from
-		// accidentally querying the *_versions tables.
+		// accidentally querying the *_Versions tables.
 		$versionedMode = $dataObject->getSourceQueryParam('Versioned.mode');
 		$modesToAllowVersioning = array('all_versions', 'latest_versions', 'archive', 'version');
 		if(
@@ -634,17 +634,17 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 					DB::require_table($liveTable, $fields, $indexes, false, $options);
 				}
 
-				// Build _versions table
+				// Build _Versions table
 				//Unique indexes will not work on versioned tables, so we'll convert them to standard indexes:
 				$nonUniqueIndexes = $this->uniqueToIndex($indexes);
 				if($isRootClass) {
 					// Create table for all versions
 					$versionFields = array_merge(
-						Config::inst()->get('SilverStripe\ORM\Versioning\Versioned', 'db_for_versions_table'),
+						Config::inst()->get(static::class, 'db_for_versions_table'),
 						(array)$fields
 					);
 					$versionIndexes = array_merge(
-						Config::inst()->get('SilverStripe\ORM\Versioning\Versioned', 'indexes_for_versions_table'),
+						Config::inst()->get(static::class, 'indexes_for_versions_table'),
 						(array)$nonUniqueIndexes
 					);
 				} else {
@@ -667,12 +667,12 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				}
 
 				// Cleanup any orphans
-				$this->cleanupVersionedOrphans("{$suffixBaseTable}_versions", "{$suffixTable}_versions");
+				$this->cleanupVersionedOrphans("{$suffixBaseTable}_Versions", "{$suffixTable}_Versions");
 
 				// Build versions table
-				DB::require_table("{$suffixTable}_versions", $versionFields, $versionIndexes, true, $options);
+				DB::require_table("{$suffixTable}_Versions", $versionFields, $versionIndexes, true, $options);
 			} else {
-				DB::dont_require_table("{$suffixTable}_versions");
+				DB::dont_require_table("{$suffixTable}_Versions");
 				if($this->hasStages()) {
 					$liveTable = $this->stageTable($suffixTable, static::LIVE);
 					DB::dont_require_table($liveTable);
@@ -682,7 +682,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Cleanup orphaned records in the _versions table
+	 * Cleanup orphaned records in the _Versions table
 	 *
 	 * @param string $baseTable base table to use as authoritative source of records
 	 * @param string $childTable Sub-table to clean orphans from
@@ -766,7 +766,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$baseDataClass = $schema->baseDataClass($class);
 		$baseDataTable = $schema->tableName($baseDataClass);
 
-		// Set up a new entry in (table)_versions
+		// Set up a new entry in (table)_Versions
 		$newManipulation = array(
 			"command" => "insert",
 			"fields" => isset($manipulation[$table]['fields']) ? $manipulation[$table]['fields'] : [],
@@ -798,7 +798,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$nextVersion = 0;
 		if($recordID) {
 			$nextVersion = DB::prepared_query("SELECT MAX(\"Version\") + 1
-				FROM \"{$baseDataTable}_versions\" WHERE \"RecordID\" = ?",
+				FROM \"{$baseDataTable}_Versions\" WHERE \"RecordID\" = ?",
 				array($recordID)
 			)->value();
 		}
@@ -813,9 +813,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			$manipulation[$table]['fields']['Version'] = $nextVersion;
 		}
 
-		// Update _versions table manipulation
+		// Update _Versions table manipulation
 		$newManipulation['fields']['Version'] = $nextVersion;
-		$manipulation["{$table}_versions"] = $newManipulation;
+		$manipulation["{$table}_Versions"] = $newManipulation;
 	}
 
 	/**
@@ -1024,7 +1024,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$lookup = array();
 		foreach(ClassInfo::subclassesFor('SilverStripe\ORM\DataObject') as $class) {
 			// Ensure this class is versioned
-			if(!Object::has_extension($class, 'SilverStripe\ORM\Versioning\Versioned')) {
+			if(!Object::has_extension($class, static::class)) {
 				continue;
 			}
 
@@ -1378,7 +1378,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 	/**
 	 * Determine if a class is supporting the Versioned extensions (e.g.
-	 * $table_versions does exists).
+	 * $table_Versions does exists).
 	 *
 	 * @param string $class Class name
 	 * @return boolean
@@ -1714,7 +1714,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 			// Mark this version as having been published at some stage
 			$publisherID = isset(Member::currentUser()->ID) ? Member::currentUser()->ID : 0;
 			$extTable = $this->extendWithSuffix($baseTable);
-			DB::prepared_query("UPDATE \"{$extTable}_versions\"
+			DB::prepared_query("UPDATE \"{$extTable}_Versions\"
 				SET \"WasPublished\" = ?, \"PublisherID\" = ?
 				WHERE \"RecordID\" = ? AND \"Version\" = ?",
 				array(1, $publisherID, $from->ID, $from->Version)
@@ -1827,23 +1827,23 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				$baseTable = str_replace('"','',$tableJoin);
 			} elseif(is_string($tableJoin) && substr($tableJoin,0,5) != 'INNER') {
 				$query->setFrom(array(
-					$table => "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\"=\"{$baseTable}_versions\".\"RecordID\""
-						. " AND \"$table\".\"Version\" = \"{$baseTable}_versions\".\"Version\""
+					$table => "LEFT JOIN \"$table\" ON \"$table\".\"RecordID\"=\"{$baseTable}_Versions\".\"RecordID\""
+						. " AND \"$table\".\"Version\" = \"{$baseTable}_Versions\".\"Version\""
 				));
 			}
-			$query->renameTable($table, $table . '_versions');
+			$query->renameTable($table, $table . '_Versions');
 		}
 
-		// Add all <basetable>_versions columns
-		foreach(Config::inst()->get('SilverStripe\ORM\Versioning\Versioned', 'db_for_versions_table') as $name => $type) {
-			$query->selectField(sprintf('"%s_versions"."%s"', $baseTable, $name), $name);
+		// Add all <basetable>_Versions columns
+		foreach(Config::inst()->get(static::class, 'db_for_versions_table') as $name => $type) {
+			$query->selectField(sprintf('"%s_Versions"."%s"', $baseTable, $name), $name);
 		}
 
 		$query->addWhere(array(
-			"\"{$baseTable}_versions\".\"RecordID\" = ?" => $owner->ID
+			"\"{$baseTable}_Versions\".\"RecordID\" = ?" => $owner->ID
 		));
 		$query->setOrderBy(($sort) ? $sort
-			: "\"{$baseTable}_versions\".\"LastEdited\" DESC, \"{$baseTable}_versions\".\"Version\" DESC");
+			: "\"{$baseTable}_Versions\".\"LastEdited\" DESC, \"{$baseTable}_Versions\".\"Version\" DESC");
 
 		$records = $query->execute();
 		$versions = new ArrayList();
@@ -2122,7 +2122,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * @param array $idList
 	 */
 	public static function prepopulate_versionnumber_cache($class, $stage, $idList = null) {
-		if (!Config::inst()->get('SilverStripe\ORM\Versioning\Versioned', 'prepopulate_versionnumber_cache')) {
+		if (!Config::inst()->get(static::class, 'prepopulate_versionnumber_cache')) {
 			return;
 		}
 		$filter = "";
@@ -2363,7 +2363,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 	/**
 	 * Return the equivalent of a DataList::create() call, querying the latest
-	 * version of each record stored in the (class)_versions tables.
+	 * version of each record stored in the (class)_Versions tables.
 	 *
 	 * In particular, this will query deleted records as well as active ones.
 	 *
@@ -2502,7 +2502,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$itemKey = get_class($item) . '/' . $item->ID;
 
 		// Write if saved, versioned, and not already added
-		if ($item->isInDB() && $item->has_extension('SilverStripe\ORM\Versioning\Versioned') && !isset($list[$itemKey])) {
+		if ($item->isInDB() && $item->has_extension(static::class) && !isset($list[$itemKey])) {
 			$list[$itemKey] = $item;
 			$added[$itemKey] = $item;
 		}

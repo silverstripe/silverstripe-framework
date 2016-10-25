@@ -22,9 +22,17 @@ abstract class DBSchemaManager {
 	 * data corruption in tables, you can disable this behaviour and handle it
 	 * outside of this class, e.g. through a nightly system task with extended logging capabilities.
 	 *
-	 * @var boolean
+	 * @var bool
 	 */
 	private static $check_and_repair_on_build = true;
+
+	/**
+	 * Check if tables should be renamed in a case-sensitive fashion.
+	 * Note: This should still work even on case-insensitive databases.
+	 *
+	 * @var bool
+	 */
+	private static $fix_table_case_on_build = true;
 
 	/**
 	 * Instance of the database controller this schema belongs to
@@ -151,8 +159,8 @@ abstract class DBSchemaManager {
 				}
 			}
 		} finally {
-		$this->schemaUpdateTransaction = null;
-		$this->schemaIsUpdating = false;
+			$this->schemaUpdateTransaction = null;
+			$this->schemaIsUpdating = false;
 		}
 	}
 
@@ -305,7 +313,10 @@ abstract class DBSchemaManager {
 			$this->transCreateTable($table, $options, $extensions);
 			$this->alterationMessage("Table $table: created", "created");
 		} else {
-			if (Config::inst()->get('SilverStripe\ORM\Connect\DBSchemaManager', 'check_and_repair_on_build')) {
+			if (Config::inst()->get(static::class, 'fix_table_case_on_build')) {
+				$this->fixTableCase($table);
+			}
+			if (Config::inst()->get(static::class, 'check_and_repair_on_build')) {
 				$this->checkAndRepairTable($table);
 			}
 
@@ -777,6 +788,37 @@ abstract class DBSchemaManager {
 	 * @return boolean Return true if the table has integrity after the method is complete.
 	 */
 	abstract public function checkAndRepairTable($tableName);
+
+
+	/**
+	 * Ensure the given table has the correct case
+	 *
+	 * @param string $tableName Name of table in desired case
+	 */
+	public function fixTableCase($tableName)
+	{
+		// Check if table exists
+		$tables = $this->tableList();
+		if (!array_key_exists(strtolower($tableName), $tables)) {
+			return;
+		}
+
+		// Check if case differs
+		$currentName = $tables[strtolower($tableName)];
+		if ($currentName === $tableName) {
+			return;
+		}
+
+		$this->alterationMessage(
+			"Table $tableName: renamed from $currentName",
+			"repaired"
+		);
+
+		// Rename via temp table to avoid case-sensitivity issues
+		$tempTable = "__TEMP__{$tableName}";
+		$this->renameTable($currentName, $tempTable);
+		$this->renameTable($tempTable, $tableName);
+	}
 
 	/**
 	 * Returns the values of the given enum field
