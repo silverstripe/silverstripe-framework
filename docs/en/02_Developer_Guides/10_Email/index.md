@@ -9,7 +9,7 @@ covers how to create an `Email` instance, customise it with a HTML template, the
 
 Out of the box, SilverStripe will use the built-in PHP `mail()` command. If you are not running an SMTP server, you 
 will need to either configure PHP's SMTP settings (see [PHP documentation](http://php.net/mail) to include your mail 
-server configuration or use one of the third party SMTP services like [Mandrill](https://github.com/lekoala/silverstripe-mandrill) 
+server configuration or use one of the third party SMTP services like [SparkPost](https://github.com/lekoala/silverstripe-sparkpost) 
 and [Postmark](https://github.com/fullscreeninteractive/silverstripe-postmarkmailer).
 
 ## Usage
