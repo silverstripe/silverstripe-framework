@@ -13,6 +13,7 @@ class FormBuilderLoader extends Component {
     super(props);
 
     this.handleSubmitSuccess = this.handleSubmitSuccess.bind(this);
+    this.handleHideMessage = this.handleHideMessage.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +65,10 @@ class FormBuilderLoader extends Component {
       });
   }
 
+  handleHideMessage() {
+    this.props.schemaActions.clearMessage(this.props.form);
+  }
+
   render() {
     // If the response from fetching the initial data
     // hasn't come back yet, don't render anything.
@@ -73,6 +78,7 @@ class FormBuilderLoader extends Component {
 
     const props = Object.assign({}, this.props, {
       onSubmitSuccess: this.handleSubmitSuccess,
+      onHideMessage: this.handleHideMessage,
     });
     return <FormBuilder {...props} />;
   }

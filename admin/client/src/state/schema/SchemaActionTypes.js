@@ -1,5 +1,6 @@
 const ACTION_TYPES = {
   SET_SCHEMA: 'SET_SCHEMA',
+  CLEAR_MESSAGE: 'CLEAR_MESSAGE',
 };
 
 export default ACTION_TYPES;

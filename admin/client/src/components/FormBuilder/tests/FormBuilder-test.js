@@ -54,7 +54,7 @@ describe('FormBuilder', () => {
             y: 2,
           },
         },
-        messages: [{ type: 'good' }],
+        message: { type: 'good' },
         valid: true,
         value: 'My test field',
       };
@@ -64,7 +64,7 @@ describe('FormBuilder', () => {
       expect(field.component).toBe('TextField');
       expect(field.data.someCustomData.x).toBe(1);
       expect(field.data.someCustomData.y).toBe(2);
-      expect(field.messages[0].type).toBe('good');
+      expect(field.message.type).toBe('good');
       expect(field.valid).toBe(true);
       expect(field.value).toBe('My test field');
     });

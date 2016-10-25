@@ -21,6 +21,7 @@ class Form extends SilverStripeComponent {
         <MessageBox
           className="message-box--panel-top"
           closeLabel="close"
+          onDismiss={this.props.onHideMessage}
           {...this.props.message}
         />
       );
