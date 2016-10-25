@@ -239,7 +239,7 @@ class CmsUiContext extends BehatContext {
 
 		$filterButtonCssClass = $filterButton->getAttribute('class');
 
-		if($action == 'expand') {
+		if($action === 'expand') {
 			if(strpos($filterButtonCssClass, 'active') === false) {
 				$filterButton->click();
 			}
@@ -250,6 +250,17 @@ class CmsUiContext extends BehatContext {
 		}
 
 		$this->getSession()->wait(2000, 'window.jQuery(".cms-content-filters:animated").length === 0');
+
+		// If activating, wait until chosen is activated
+		if ($action === 'expand') {
+			$this->getSession()->wait(
+				2000,
+				<<<'SCRIPT'
+(window.jQuery(".cms-content-filters select").length === 0) ||
+(window.jQuery(".cms-content-filters select:visible.has-chosen").length > 0)
+SCRIPT
+			);
+		}
 	}
 
 	/**
