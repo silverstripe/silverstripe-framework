@@ -81,12 +81,25 @@ class ViewableData extends Object implements IteratorAggregate {
 
 	/**
 	 * Check if a field exists on this object or its failover.
+	 * Note that, unlike the core isset() implementation, this will return true if the property is defined
+	 * and set to null.
 	 *
 	 * @param string $property
 	 * @return bool
 	 */
 	public function __isset($property) {
-		return $this->hasField($property) || ($this->failover && $this->failover->hasField($property));
+		// getField() isn't a field-specific getter and shouldn't be treated as such
+		if(strtolower($property) !== 'field' && $this->hasMethod($method = "get$property")) {
+			return true;
+
+		} elseif($this->hasField($property)) {
+			return true;
+
+		} elseif($this->failover) {
+			return isset($this->failover->$property);
+		}
+
+		return false;
 	}
 
 	/**
@@ -97,13 +110,17 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return mixed
 	 */
 	public function __get($property) {
-		if($this->hasMethod($method = "get$property")) {
+		// getField() isn't a field-specific getter and shouldn't be treated as such
+		if(strtolower($property) !== 'field' && $this->hasMethod($method = "get$property")) {
 			return $this->$method();
+
 		} elseif($this->hasField($property)) {
 			return $this->getField($property);
+
 		} elseif($this->failover) {
 			return $this->failover->$property;
 		}
+
 		return null;
 	}
 
