@@ -14169,6 +14169,7 @@ li.class-ErrorPage>a .jstree-pageicon{
 
 .grid-field__paginator{
   position:relative;
+  white-space:nowrap;
 }
 
 .grid-field__paginator_numbers{
@@ -14176,14 +14177,15 @@ li.class-ErrorPage>a .jstree-pageicon{
 }
 
 .grid-field__paginator__controls{
+  white-space:nowrap;
   position:absolute;
   height:36px;
   top:50%;
   left:50%;
   margin-top:-18px;
-  margin-left:-125px;
+  margin-left:-130px;
   z-index:5;
-  width:250px;
+  width:260px;
   text-align:center;
 }
 
