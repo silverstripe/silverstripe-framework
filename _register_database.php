@@ -11,7 +11,7 @@ DatabaseAdapterRegistry::register(
 		'class' => 'MySQLDatabase',
 		'module' => 'framework',
 		'title' => 'MySQL 5.0+ (using MySQLi)',
-		'helperPath' => __DIR__ . '/dev/install/MySQLDatabaseConfigurationHelper.php',
+		'helperPath' => __DIR__ . '/Dev/Install/MySQLDatabaseConfigurationHelper.php',
 		'helperClass' => MySQLDatabaseConfigurationHelper::class,
 		'supported' => class_exists('MySQLi'),
 		'missingExtensionText' =>
@@ -27,7 +27,7 @@ DatabaseAdapterRegistry::register(
 		'class' => 'MySQLPDODatabase',
 		'module' => 'framework',
 		'title' => 'MySQL 5.0+ (using PDO)',
-		'helperPath' => __DIR__ . '/dev/install/MySQLDatabaseConfigurationHelper.php',
+		'helperPath' => __DIR__ . '/Dev/Install/MySQLDatabaseConfigurationHelper.php',
 		'helperClass' => MySQLDatabaseConfigurationHelper::class,
 		'supported' => (class_exists('PDO') && in_array('mysql', PDO::getAvailableDrivers())),
 		'missingExtensionText' =>
