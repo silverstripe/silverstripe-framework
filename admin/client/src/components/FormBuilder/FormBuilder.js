@@ -65,21 +65,17 @@ class FormBuilder extends SilverStripeComponent {
       'X-Requested-With': 'XMLHttpRequest',
     };
 
-    const resetSubmittingFn = () => {
-      this.setState({ submittingAction: null });
-    };
-
     const submitFn = (customData) =>
       this.submitApi(customData || dataWithAction, headers)
         .then(formSchema => {
-          resetSubmittingFn();
+          this.setState({ submittingAction: null });
           return formSchema;
         })
         .catch((reason) => {
           // TODO Generic CMS error reporting
           // TODO Handle validation errors
-          resetSubmittingFn();
-          return reason;
+          this.setState({ submittingAction: null });
+          throw reason;
         });
 
     if (typeof this.props.handleSubmit === 'function') {
@@ -359,7 +355,6 @@ class FormBuilder extends SilverStripeComponent {
       messages: (state && Array.isArray(state.messages)) ? state.messages : [],
       mapActionsToComponents: this.mapActionsToComponents,
       mapFieldsToComponents: this.mapFieldsToComponents,
-      onHideMessage: this.props.onHideMessage,
       asyncValidate,
       onSubmitFail,
       onSubmitSuccess,

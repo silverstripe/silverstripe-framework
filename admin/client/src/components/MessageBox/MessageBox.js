@@ -18,8 +18,15 @@ class MessageBox extends SilverStripeComponent {
     };
   }
 
+  /**
+   * Handler for when the message box is dismissed and hidden
+   */
   handleDismiss() {
-    this.setState({ visible: false });
+    if (typeof this.props.onDismiss === 'function') {
+      this.props.onDismiss();
+    } else {
+      this.setState({ visible: false });
+    }
   }
 
   /**
@@ -48,15 +55,6 @@ class MessageBox extends SilverStripeComponent {
    * @returns {object} properties
    */
   getMessageProps() {
-    let dismiss = null;
-    if (this.props.closeLabel) {
-      if (typeof this.props.onDismiss === 'function') {
-        dismiss = this.props.onDismiss;
-      } else {
-        dismiss = this.handleDismiss;
-      }
-    }
-
     const type = this.props.type || 'no-type';
 
     return {
@@ -68,7 +66,7 @@ class MessageBox extends SilverStripeComponent {
       ].join(' '),
       bsStyle: this.props.bsStyle || this.getMessageStyle(),
       bsClass: this.props.bsClass,
-      onDismiss: dismiss,
+      onDismiss: this.handleDismiss,
       closeLabel: this.props.closeLabel,
     };
   }

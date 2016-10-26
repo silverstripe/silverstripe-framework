@@ -13,13 +13,3 @@ export function setSchema(schema) {
     payload: schema,
   };
 }
-
-export function clearMessage(id) {
-  if (id) {
-    return {
-      type: ACTION_TYPES.CLEAR_MESSAGE,
-      payload: { id },
-    };
-  }
-  return null;
-}

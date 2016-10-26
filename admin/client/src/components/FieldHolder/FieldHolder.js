@@ -30,7 +30,7 @@ function fieldHolder(Field) {
      * @returns {Component}
      */
     getMessage() {
-      const message = this.props.message;
+      const message = (this.props.meta) ? this.props.meta.error : null;
 
       if (!message) {
         return null;
@@ -44,7 +44,7 @@ function fieldHolder(Field) {
     /**
      * Build title label
      *
-     * @returns {XML}
+     * @returns {Component}
      */
     getLeftTitle() {
       const labelText = this.props.leftTitle !== null
@@ -62,6 +62,11 @@ function fieldHolder(Field) {
       );
     }
 
+    /**
+     * Build title label
+     *
+     * @returns {Component}
+     */
     getRightTitle() {
       if (!this.props.rightTitle || this.props.hideLabels) {
         return null;
@@ -74,6 +79,11 @@ function fieldHolder(Field) {
       );
     }
 
+    /**
+     * Generates the properties for the field holder
+     *
+     * @returns {object}
+     */
     getHolderProps() {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)

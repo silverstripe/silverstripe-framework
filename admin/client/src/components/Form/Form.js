@@ -21,8 +21,6 @@ class Form extends SilverStripeComponent {
         <MessageBox
           key={index}
           className={!index ? 'message-box--panel-top' : ''}
-          closeLabel="close"
-          onDismiss={this.props.onHideMessage}
           {...message}
         />
       ));
@@ -88,7 +86,6 @@ Form.propTypes = {
     id: PropTypes.string,
     method: PropTypes.string.isRequired,
   }),
-  onHideMessage: PropTypes.func,
   fields: PropTypes.array.isRequired,
   handleSubmit: PropTypes.func,
   mapActionsToComponents: PropTypes.func.isRequired,

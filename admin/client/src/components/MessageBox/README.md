@@ -9,9 +9,7 @@ Generates a bootstrap alert box, with state closing handled optionally.
 
 ## Properties
 
- * `id` (string): The ID for the component.
  * `extraClass` (string): Extra classes the component should have.
- * `name` (string) (required): The name for the component.
  * `value` (any): The content to show.
  * `type` (string): The kind of alert box to show, defines appearance, accepts the following:
    * success
@@ -21,6 +19,5 @@ Generates a bootstrap alert box, with state closing handled optionally.
  * `onDismiss` (function): For manual handling of showing and hiding the message, used in conjunction with `visible`.
  * `visible` (boolean): Manual set whether the message is hidden or shown.
  * `closeLabel` (string): The label for the screen reader close button.
-  visible: PropTypes.bool,
 
  _NOTE:_ For other properties, please refer to the [react-bootstrap Alert](https://react-bootstrap.github.io/components.html#alert-props) documentation.

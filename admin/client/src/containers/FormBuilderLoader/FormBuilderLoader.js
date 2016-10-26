@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import fetch from 'isomorphic-fetch';
-import { Field as ReduxFormField, reduxForm } from 'redux-form';
+import { Field as ReduxFormField, reduxForm, SubmissionError } from 'redux-form';
 import * as schemaActions from 'state/schema/SchemaActions';
 import Form from 'components/Form/Form';
 import FormBuilder, { basePropTypes, schemaPropType } from 'components/FormBuilder/FormBuilder';
@@ -12,8 +12,7 @@ class FormBuilderLoader extends Component {
   constructor(props) {
     super(props);
 
-    this.handleSubmitSuccess = this.handleSubmitSuccess.bind(this);
-    this.handleHideMessage = this.handleHideMessage.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -26,12 +25,55 @@ class FormBuilderLoader extends Component {
     }
   }
 
-  handleSubmitSuccess(result) {
-    this.props.schemaActions.setSchema(result);
+  /**
+   * Get server-side validation messages returned and display them on the form.
+   *
+   * @param state
+   * @returns {object}
+   */
+  getMessages(state) {
+    const messages = {};
 
-    if (this.props.onSubmitSuccess) {
-      this.props.onSubmitSuccess(result);
+    // only error messages are collected
+    // TODO define message type as standard "success", "info", "warning" and "danger"
+    if (state && state.fields) {
+      state.fields.forEach((field) => {
+        if (field.message) {
+          messages[field.name] = field.message;
+        }
+      });
     }
+    return messages;
+  }
+
+  /**
+   * Handles updating the schema after response is received and gathering server-side validation
+   * messages.
+   *
+   * @param dataWithAction
+   * @param action
+   * @param submitFn
+   * @returns {Promise}
+   */
+  handleSubmit(dataWithAction, action, submitFn) {
+    return submitFn()
+      .then(formSchema => {
+        this.props.schemaActions.setSchema(formSchema);
+        return formSchema;
+      })
+      // TODO Suggest storing messages in a separate redux store rather than throw an error
+      // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
+      .then(formSchema => {
+        if (!formSchema.state) {
+          return formSchema;
+        }
+        const messages = this.getMessages(formSchema.state);
+
+        if (Object.keys(messages).length) {
+          throw new SubmissionError(messages);
+        }
+        return formSchema;
+      })
   }
 
   /**
@@ -62,11 +104,8 @@ class FormBuilderLoader extends Component {
         if (typeof formSchema.id !== 'undefined') {
           this.props.schemaActions.setSchema(formSchema);
         }
+        return formSchema;
       });
-  }
-
-  handleHideMessage() {
-    this.props.schemaActions.clearMessage(this.props.form);
   }
 
   render() {
@@ -77,8 +116,8 @@ class FormBuilderLoader extends Component {
     }
 
     const props = Object.assign({}, this.props, {
-      onSubmitSuccess: this.handleSubmitSuccess,
-      onHideMessage: this.handleHideMessage,
+      onSubmitSuccess: this.props.onSubmitSuccess,
+      handleSubmit: this.handleSubmit,
     });
     return <FormBuilder {...props} />;
   }

@@ -1502,6 +1502,7 @@ class FormField extends RequestHandler {
 	 */
 	public function getSchemaStateDefaults() {
 		$state = [
+            'name' => $this->getName(),
 			'id' => $this->ID(),
 			'value' => $this->Value(),
 			'message' => null,
