@@ -1171,13 +1171,13 @@ body.cms {
 }
 
 .cms-tree-filtered {
-  position: absolute;
   margin: 0;
-  width: 100%;
   box-sizing: border-box;
-  margin-left: -$grid-x*2;
-  padding: $grid-y*2 $grid-x*2;
-  background: #D4E2EC;
+  margin-left: -$panel-padding-x;
+  margin-right: -$panel-padding-x;
+  margin-bottom: -$panel-padding-y;
+  padding: $panel-padding-y $panel-padding-x;
+  background: lighten(#D4E2EC, 4);
   text-shadow: none;
   border: 0;
 

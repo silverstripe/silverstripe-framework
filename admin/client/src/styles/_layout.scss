@@ -184,3 +184,7 @@ body {
   -ms-flex: 1;
   flex: 1;
 }
+
+.cms .flexbox-display {
+  display: flex; // Override JQuery UI, useful to override .ui-tabs-panel
+}

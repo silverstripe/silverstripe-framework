@@ -10280,13 +10280,13 @@ body.cms{
 }
 
 .cms-tree-filtered{
-  position:absolute;
   margin:0;
-  width:100%;
   box-sizing:border-box;
-  margin-left:-16px;
-  padding:16px;
-  background:#d4e2ec;
+  margin-left:-1.5385rem;
+  margin-right:-1.5385rem;
+  margin-bottom:-1.5385rem;
+  padding:1.5385rem;
+  background:#e2ecf2;
   text-shadow:none;
   border:0;
 }
@@ -16068,6 +16068,12 @@ body,html{
   -ms-flex:1;
   -webkit-box-flex:1;
           flex:1;
+}
+
+.cms .flexbox-display{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
 }
 
 .campaign-admin__item-links--has-links,.campaign-admin__item-links--is-linked{
