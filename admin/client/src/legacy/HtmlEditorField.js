@@ -1082,8 +1082,16 @@ $.entwine('ss', function($) {
 
   $('form.htmleditorfield-mediaform .ss-gridfield-items').entwine({
     onselectableselected: function(e, ui) {
-			var form = this.closest('form'), item = $(ui.selected);
-			if(!item.is('.ss-gridfield-item')) return;
+      var
+        form = this.closest('form'),
+        item = $(ui.selected);
+
+      // Suppress selection of non-items or empty gridfield placeholder
+      if(!item.hasClass('ss-gridfield-item') || item.hasClass('ss-gridfield-no-items')) {
+        item.removeClass('ui-selected')
+        return false;
+      }
+
       form.closest('form').showFileView(item.data('id'));
       form.redraw();
 
