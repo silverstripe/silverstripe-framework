@@ -33,126 +33,133 @@
  * @license BSD License
  */
 (function($) {
-	$.fn.changetracker = function(_options) {
-		var self = this;
+  $.fn.changetracker = function(_options) {
+    var self = this;
 
-		if(this.length > 1){
-			this.each(function(i, item) {
-				this.changetracker(_options);
-			});
-			return this;
-		}
+    if(this.length > 1){
+      this.each(function(i, item) {
+        this.changetracker(_options);
+      });
+      return this;
+    }
 
-		this.defaults = {
-			fieldSelector: ':input:not(:submit)',
-			ignoreFieldSelector: "",
-			changedCssClass: 'changed'
-		};
+    this.defaults = {
+      fieldSelector: ':input:not(:submit)',
+      ignoreFieldSelector: "",
+      changedCssClass: 'changed'
+    };
 
-		var options = $.extend({}, this.defaults, _options);
+    var options = $.extend({}, this.defaults, _options);
 
-		this.initialize = function() {
-			// optional metadata plugin support
-			if ($.meta) options = $.extend({}, options, this.data());
+    this.initialize = function() {
+      // optional metadata plugin support
+      if ($.meta) options = $.extend({}, options, this.data());
 
-			// Flag indicating this form was dirtied by an external component
-			var dirty = false;
+      // Flag indicating this form was dirtied by an external component
+      var dirty = false;
+      
+      // Get value from field for purposes of change tracking
+      var fieldValue = function($field) {
+        // Get radio
+        if ($field.is(':radio')) {
+          var checkedItems = self.find(':input[name=' + $field.attr('name') + ']:checked');
+          return checkedItems.length ? checkedItems.val() : 0;
+        }
+        
+        if($field.is(':checkbox')) {
+          return $field.is(':checked') ? 1 : 0;
+        }
+        
+        return $field.val();
+      }
 
-			var onchange = function(e) {
-				var $field = $(e.target);
-				var origVal = $field.data('changetracker.origVal'), newVal;
+      var onchange = function(e) {
+        var $field = $(e.target);
+        var origVal = $field.data('changetracker.origVal'), newVal;
 
-				// Determine value based on field type
-				if($field.is(':checkbox')) {
-					newVal = $field.is(':checked') ? 1 : 0;
-				} else {
-					newVal = $field.val();
-				}
+        // Determine value based on field type
+        newVal = fieldValue($field);
 
-				// Determine changed state based on value comparisons
-				if(origVal === null || newVal != origVal) {
-					$field.addClass(options.changedCssClass);
-					self.addClass(options.changedCssClass);
-				} else {
-					$field.removeClass(options.changedCssClass);
-					// Unset changed state on all radio buttons of the same name
-					if($field.is(':radio')) {
-						self.find(':radio[name=' + $field.attr('name') + ']').removeClass(options.changedCssClass);
-					}
-					// Only unset form state if no other fields are changed as well and the form isn't explicitly dirty
-					if(!dirty && !self.getFields().filter('.' + options.changedCssClass).length) {
-						self.removeClass(options.changedCssClass);
-					}
-				}
-			};
+        // Determine changed state based on value comparisons
+        if(origVal === null || newVal != origVal) {
+          $field.addClass(options.changedCssClass);
+          self.addClass(options.changedCssClass);
+        } else {
+          $field.removeClass(options.changedCssClass);
+          // Unset changed state on all radio buttons of the same name
+          if($field.is(':radio')) {
+            self.find(':radio[name=' + $field.attr('name') + ']').removeClass(options.changedCssClass);
+          }
+          // Only unset form state if no other fields are changed as well and the form isn't explicitly dirty
+          if(!dirty && !self.getFields().filter('.' + options.changedCssClass).length) {
+            self.removeClass(options.changedCssClass);
+          }
+        }
+      };
 
-			// setup original values
-			var fields = this.getFields(), origVal;
-			fields.filter(':radio,:checkbox').bind('click.changetracker', onchange);
-			fields.not(':radio,:checkbox').bind('change.changetracker', onchange);
-			fields.each(function() {
-				if($(this).is(':radio,:checkbox')) {
-					origVal = self.find(':input[name=' + $(this).attr('name') + ']:checked').val();
-				} else {
-					origVal = $(this).val();
-				}
-				$(this).data('changetracker.origVal', origVal);
-			});
+      // setup original values
+      var fields = this.getFields(), origVal;
+      fields.filter(':radio,:checkbox').bind('click.changetracker', onchange);
+      fields.not(':radio,:checkbox').bind('change.changetracker', onchange);
+      fields.each(function() {
+        origVal = fieldValue($(this));
+        $(this).data('changetracker.origVal', origVal);
+      });
 
-			self.bind('dirty.changetracker', function() {
-				dirty = true;
-				self.addClass(options.changedCssClass);
-			});
+      self.bind('dirty.changetracker', function() {
+        dirty = true;
+        self.addClass(options.changedCssClass);
+      });
 
-			this.data('changetracker', true);
-		};
+      this.data('changetracker', true);
+    };
 
-		this.destroy = function() {
-			this.getFields()
-				.unbind('.changetracker')
-				.removeClass(options.changedCssClass)
-				.removeData('changetracker.origVal');
-			this.unbind('.changetracker')
-				.removeData('changetracker');
-		};
+    this.destroy = function() {
+      this.getFields()
+        .unbind('.changetracker')
+        .removeClass(options.changedCssClass)
+        .removeData('changetracker.origVal');
+      this.unbind('.changetracker')
+        .removeData('changetracker');
+    };
 
-		/**
-		 * Reset change state of all form fields and the form itself.
-		 */
-		this.reset = function() {
-			this.getFields().each(function() {
-				self.resetField(this);
-			});
+    /**
+     * Reset change state of all form fields and the form itself.
+     */
+    this.reset = function() {
+      this.getFields().each(function() {
+        self.resetField(this);
+      });
 
-			this.removeClass(options.changedCssClass);
-		};
+      this.removeClass(options.changedCssClass);
+    };
 
-		/**
-		 * Reset the change single form field.
-		 * Does not reset to the original value.
-		 *
-		 * @param DOMElement field
-		 */
-		this.resetField = function(field) {
-			return $(field).removeData('changetracker.origVal').removeClass('changed');
-		};
+    /**
+     * Reset the change single form field.
+     * Does not reset to the original value.
+     *
+     * @param DOMElement field
+     */
+    this.resetField = function(field) {
+      return $(field).removeData('changetracker.origVal').removeClass('changed');
+    };
 
-		/**
-		 * @return jQuery Collection of fields
-		 */
-		this.getFields = function() {
-			return this.find(options.fieldSelector).not(options.ignoreFieldSelector);
-		};
+    /**
+     * @return jQuery Collection of fields
+     */
+    this.getFields = function() {
+      return this.find(options.fieldSelector).not(options.ignoreFieldSelector);
+    };
 
-		// Support invoking "public" methods as string arguments
-		if (typeof arguments[0] === 'string') {
-			var property = arguments[1];
-			var args = Array.prototype.slice.call(arguments);
-			args.splice(0, 1);
-			return this[arguments[0]].apply(this, args);
-		} else {
-			return this.initialize();
-		}
+    // Support invoking "public" methods as string arguments
+    if (typeof arguments[0] === 'string') {
+      var property = arguments[1];
+      var args = Array.prototype.slice.call(arguments);
+      args.splice(0, 1);
+      return this[arguments[0]].apply(this, args);
+    } else {
+      return this.initialize();
+    }
 
-	};
+  };
 }(jQuery));

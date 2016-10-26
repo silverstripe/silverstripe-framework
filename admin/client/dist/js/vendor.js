@@ -9699,11 +9699,12 @@ if(this.length>1)return this.each(function(t,n){this.changetracker(e)}),this
 this.defaults={fieldSelector:":input:not(:submit)",ignoreFieldSelector:"",changedCssClass:"changed"}
 var r=t.extend({},this.defaults,e)
 if(this.initialize=function(){t.meta&&(r=t.extend({},r,this.data()))
-var e=!1,i=function(i){var o=t(i.target),a=o.data("changetracker.origVal"),s
-s=o.is(":checkbox")?o.is(":checked")?1:0:o.val(),null===a||s!=a?(o.addClass(r.changedCssClass),n.addClass(r.changedCssClass)):(o.removeClass(r.changedCssClass),o.is(":radio")&&n.find(":radio[name="+o.attr("name")+"]").removeClass(r.changedCssClass),
-e||n.getFields().filter("."+r.changedCssClass).length||n.removeClass(r.changedCssClass))},o=this.getFields(),a
-o.filter(":radio,:checkbox").bind("click.changetracker",i),o.not(":radio,:checkbox").bind("change.changetracker",i),o.each(function(){a=t(this).is(":radio,:checkbox")?n.find(":input[name="+t(this).attr("name")+"]:checked").val():t(this).val(),
-t(this).data("changetracker.origVal",a)}),n.bind("dirty.changetracker",function(){e=!0,n.addClass(r.changedCssClass)}),this.data("changetracker",!0)},this.destroy=function(){this.getFields().unbind(".changetracker").removeClass(r.changedCssClass).removeData("changetracker.origVal"),
+var e=!1,i=function(t){if(t.is(":radio")){var e=n.find(":input[name="+t.attr("name")+"]:checked")
+return e.length?e.val():0}return t.is(":checkbox")?t.is(":checked")?1:0:t.val()},o=function(o){var a=t(o.target),s=a.data("changetracker.origVal"),l
+l=i(a),null===s||l!=s?(a.addClass(r.changedCssClass),n.addClass(r.changedCssClass)):(a.removeClass(r.changedCssClass),a.is(":radio")&&n.find(":radio[name="+a.attr("name")+"]").removeClass(r.changedCssClass),
+e||n.getFields().filter("."+r.changedCssClass).length||n.removeClass(r.changedCssClass))},a=this.getFields(),s
+a.filter(":radio,:checkbox").bind("click.changetracker",o),a.not(":radio,:checkbox").bind("change.changetracker",o),a.each(function(){s=i(t(this)),t(this).data("changetracker.origVal",s)}),n.bind("dirty.changetracker",function(){
+e=!0,n.addClass(r.changedCssClass)}),this.data("changetracker",!0)},this.destroy=function(){this.getFields().unbind(".changetracker").removeClass(r.changedCssClass).removeData("changetracker.origVal"),
 this.unbind(".changetracker").removeData("changetracker")},this.reset=function(){this.getFields().each(function(){n.resetField(this)}),this.removeClass(r.changedCssClass)},this.resetField=function(e){return t(e).removeData("changetracker.origVal").removeClass("changed")
 
 },this.getFields=function(){return this.find(r.fieldSelector).not(r.ignoreFieldSelector)},"string"==typeof arguments[0]){var i=arguments[1],o=Array.prototype.slice.call(arguments)
