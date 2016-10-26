@@ -133,7 +133,7 @@ if(isset($_REQUEST['db'])) {
 	if(isset($_REQUEST['db']['type'])) {
 		$type = $_REQUEST['db']['type'];
 	} else {
-		$type = $_REQUEST['db']['type'] = defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLDatabase';
+		$type = $_REQUEST['db']['type'] = defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLPDODatabase';
 	}
 
 	// Disabled inputs don't submit anything - we need to use the environment (except the database name)
@@ -152,7 +152,7 @@ if(isset($_REQUEST['db'])) {
 		$databaseConfig['type'] = $type;
 	}
 } else {
-	$type = $_REQUEST['db']['type'] = defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLDatabase';
+	$type = $_REQUEST['db']['type'] = defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLPDODatabase';
 	$_REQUEST['db'][$type] = $databaseConfig = array(
 		"type" => $type,
 		"server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : "localhost",
@@ -1064,7 +1064,7 @@ class InstallRequirements {
 	/**
 	 * Get an instance of a helper class for the specific database.
 	 *
-	 * @param string $databaseClass e.g. MySQLDatabase or MSSQLDatabase
+	 * @param string $databaseClass e.g. MySQLPDODatabase or MySQLDatabase
 	 * @return DatabaseConfigurationHelper
 	 */
 	public function getDatabaseConfigurationHelper($databaseClass) {
