@@ -27,6 +27,7 @@ class CampaignAdminList extends SilverStripeComponent {
     this.handlePublish = this.handlePublish.bind(this);
     this.handleItemSelected = this.handleItemSelected.bind(this);
     this.setBreadcrumbs = this.setBreadcrumbs.bind(this);
+    this.handleCloseItem = this.handleCloseItem.bind(this);
   }
 
   componentDidMount() {
@@ -72,6 +73,7 @@ class CampaignAdminList extends SilverStripeComponent {
   render() {
     let itemId = this.props.campaign.changeSetItemId;
     let itemLinks = null;
+    const selectedClass = (!itemId) ? 'campaign-admin__campaign--no-selected-item' : '';
     const campaignId = this.props.campaignId;
     const campaign = this.props.record;
 
@@ -141,8 +143,8 @@ class CampaignAdminList extends SilverStripeComponent {
       ? (<Accordion>{accordionBlocks}</Accordion>)
       : (
         <div className="alert alert-warning" role="alert">
-          <strong>This campaign is empty.</strong> You can add pages by selecting{' '}
-          <em>Add to campaign</em> from within the <em>More Options</em> popup on{' '}
+          <strong>This campaign is empty.</strong> You can add pages by selecting
+          <em>Add to campaign</em> from within the <em>More Options</em> popup on
           the <a href={pagesLink}>edit page screen</a>.
         </div>
       );
@@ -151,10 +153,8 @@ class CampaignAdminList extends SilverStripeComponent {
     ];
 
     return (
-      <div className="fill-width campaign-admin__campaign">
-        <div className="fill-height campaign-admin__campaign-items"
-          aria-expanded="true"
-        >
+      <div className={`fill-width campaign-admin__campaign ${selectedClass}`}>
+        <div className="fill-height campaign-admin__campaign-items" aria-expanded="true">
           <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
             <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
           </Toolbar>
@@ -165,7 +165,7 @@ class CampaignAdminList extends SilverStripeComponent {
             {this.renderButtonToolbar()}
           </div>
         </div>
-        <Preview itemLinks={itemLinks} itemId={itemId} />
+        <Preview itemLinks={itemLinks} itemId={itemId} onBack={this.handleCloseItem} />
       </div>
     );
   }
@@ -178,6 +178,10 @@ class CampaignAdminList extends SilverStripeComponent {
    */
   handleItemSelected(event, itemId) {
     this.props.campaignActions.selectChangeSetItem(itemId);
+  }
+
+  handleCloseItem() {
+    this.props.campaignActions.selectChangeSetItem(null);
   }
 
   renderButtonToolbar() {
@@ -231,7 +235,7 @@ class CampaignAdminList extends SilverStripeComponent {
   }
 
   /**
-   * @return {Array}
+   * @return {array}
    */
   getItems() {
     if (this.props.record && this.props.record._embedded) {
@@ -244,7 +248,7 @@ class CampaignAdminList extends SilverStripeComponent {
   /**
    * Group items for changeset display
    *
-   * @return array
+   * @return {object}
    */
   groupItemsForSet() {
     const groups = {};

@@ -33,6 +33,11 @@ jQuery.entwine('ss', ($) => {
    */
   $('#add-to-campaign__dialog-wrapper').entwine({
 
+    onunmatch() {
+      // solves errors given by ReactDOM "no matched root found" error.
+      this.close();
+    },
+
     open() {
       this._renderModal();
     },
@@ -71,10 +76,10 @@ jQuery.entwine('ss', ($) => {
       // this.empty();
     },
 
-    _handleSubmitModal(event, fieldValues, submitFn) {
+    _handleSubmitModal(data, action, submitFn) {
       event.preventDefault();
 
-      if (!fieldValues.Campaign) {
+      if (!data.Campaign) {
         // TODO invisible submit disable, remove this when validation is implemented
         // eslint-disable-next-line no-alert
         alert(i18n._t(

@@ -16051,6 +16051,17 @@ body,html{
   height:100%;
 }
 
+@media (max-width:991px){
+  .campaign-admin__campaign--no-selected-item .preview{
+    display:none;
+  }
+
+  .campaign-admin__campaign--no-selected-item .list-group-item.active{
+    background-color:inherit;
+    color:inherit;
+  }
+}
+
 .campaign-admin__campaign-items{
   width:100%;
   z-index:1;

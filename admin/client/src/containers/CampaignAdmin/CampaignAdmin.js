@@ -83,7 +83,6 @@ class CampaignAdmin extends SilverStripeComponent {
       if (last && last.href) {
         event.preventDefault();
         this.props.router.push(last.href);
-        return;
       }
     }
   }

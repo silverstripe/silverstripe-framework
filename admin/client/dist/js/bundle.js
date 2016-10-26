@@ -127,7 +127,7 @@ return Q=t.runOnLoop||t.runOnContext,u()}catch(r){return f()}}function m(e,t){va
 void 0===r[oe]&&M(r)
 var o=i._state
 return o?!function(){var e=n[o-1]
-Y(function(){return I(o,r,e,i._result)})}():j(i,r,e,t),r}function g(e){var t=this
+Y(function(){return A(o,r,e,i._result)})}():j(i,r,e,t),r}function g(e){var t=this
 if(e&&"object"==typeof e&&e.constructor===t)return e
 var n=new t(v)
 return P(n,e),n}function v(){}function y(){return new TypeError("You cannot resolve a promise with itself")}function b(){return new TypeError("A promises callback cannot return that same promise.")}function w(e){
@@ -138,9 +138,9 @@ i||(i=!0,S(e,t))},"Settle: "+(e._label||" unknown promise"))
 }function P(t,n){t===n?S(t,y()):e(n)?E(t,n,w(n)):k(t,n)}function O(e){e._onerror&&e._onerror(e._result),x(e)}function k(e,t){e._state===ae&&(e._result=t,e._state=se,0!==e._subscribers.length&&Y(x,e))}function S(e,t){
 e._state===ae&&(e._state=le,e._result=t,Y(O,e))}function j(e,t,n,i){var r=e._subscribers,o=r.length
 e._onerror=null,r[o]=t,r[o+se]=n,r[o+le]=i,0===o&&e._state&&Y(x,e)}function x(e){var t=e._subscribers,n=e._state
-if(0!==t.length){for(var i=void 0,r=void 0,o=e._result,a=0;a<t.length;a+=3)i=t[a],r=t[a+n],i?I(n,i,r,o):r(o)
-e._subscribers.length=0}}function R(){this.error=null}function A(e,t){try{return e(t)}catch(n){return ce.error=n,ce}}function I(e,t,n,i){var r=o(n),a=void 0,s=void 0,l=void 0,u=void 0
-if(r){if(a=A(n,i),a===ce?(u=!0,s=a.error,a=null):l=!0,t===a)return void S(t,b())}else a=i,l=!0
+if(0!==t.length){for(var i=void 0,r=void 0,o=e._result,a=0;a<t.length;a+=3)i=t[a],r=t[a+n],i?A(n,i,r,o):r(o)
+e._subscribers.length=0}}function R(){this.error=null}function I(e,t){try{return e(t)}catch(n){return ce.error=n,ce}}function A(e,t,n,i){var r=o(n),a=void 0,s=void 0,l=void 0,u=void 0
+if(r){if(a=I(n,i),a===ce?(u=!0,s=a.error,a=null):l=!0,t===a)return void S(t,b())}else a=i,l=!0
 t._state!==ae||(r&&l?P(t,a):u?S(t,s):e===se?k(t,a):e===le&&S(t,a))}function F(e,t){try{t(function i(t){P(e,t)},function r(t){S(e,t)})}catch(n){S(e,n)}}function D(){return de++}function M(e){e[oe]=de++,
 e._state=void 0,e._result=void 0,e._subscribers=[]}function N(e,t){this._instanceConstructor=e,this.promise=new e(v),this.promise[oe]||M(this.promise),W(t)?(this._input=t,this.length=t.length,this._remaining=t.length,
 this._result=new Array(this.length),0===this.length?k(this.promise,this._result):(this.length=this.length||0,this._enumerate(),0===this._remaining&&k(this.promise,this._result))):S(this.promise,U())}function U(){
@@ -464,9 +464,13 @@ var e=""
 return e=this.state.error?this.props.responseClassBad||"response error":this.props.responseClassGood||"response good",u["default"].createElement("div",{className:e},u["default"].createElement("span",null,this.state.response))
 
 }},{key:"clearResponse",value:function l(){this.setState({response:null})}},{key:"handleHide",value:function d(){this.clearResponse(),"function"==typeof this.props.handleHide&&this.props.handleHide()}},{
-key:"handleSubmit",value:function f(e,t,n){var i=this,r=null
-return r="function"==typeof this.props.handleSubmit?this.props.handleSubmit(e,t,n):n(),r&&r.then(function(e){return i.setState({response:e.message,error:!1}),e})["catch"](function(e){e.then(function(e){
-i.setState({response:e,error:!0})})}),r}},{key:"render",value:function p(){var e=this.getForm(),t=this.getResponse()
+key:"handleSubmit",value:function f(e,t,n){var i=this
+console.log(e,t,n)
+var r=null
+if(r="function"==typeof this.props.handleSubmit?this.props.handleSubmit(e,t,n):n(),!r)throw new Error("Promise was not returned for submitting")
+return r.then(function(e){return i.setState({response:e.message,error:!1}),e})["catch"](function(e){e.then(function(e){i.setState({response:e,error:!0})})}),r}},{key:"render",value:function p(){var e=this.getForm(),t=this.getResponse()
+
+
 return u["default"].createElement(c.Modal,{show:this.props.show,onHide:this.handleHide,className:this.props.className},this.props.title!==!1&&u["default"].createElement(c.Modal.Header,{closeButton:!0},u["default"].createElement(c.Modal.Title,null,this.props.title)),u["default"].createElement(c.Modal.Body,{
 className:this.props.bodyClassName},t,e,this.props.children))}}]),t}(f["default"])
 m.propTypes={show:u["default"].PropTypes.bool,title:u["default"].PropTypes.string,className:u["default"].PropTypes.string,bodyClassName:u["default"].PropTypes.string,handleHide:u["default"].PropTypes.func,
@@ -483,7 +487,7 @@ return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function s(e,t){if("funct
 e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}function l(e,t){var n=t.data?t.data.recordType:null
 
 
-return{config:e.config,records:n&&e.records[n]?e.records[n]:F}}function u(e){return{actions:(0,h.bindActionCreators)(I,e)}}Object.defineProperty(t,"__esModule",{value:!0})
+return{config:e.config,records:n&&e.records[n]?e.records[n]:F}}function u(e){return{actions:(0,h.bindActionCreators)(A,e)}}Object.defineProperty(t,"__esModule",{value:!0})
 var c=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),d=function M(e,t,n){null===e&&(e=Function.prototype)
 
@@ -492,7 +496,7 @@ var i=Object.getOwnPropertyDescriptor(e,t)
 if(void 0===i){var r=Object.getPrototypeOf(e)
 return null===r?void 0:M(r,t,n)}if("value"in i)return i.value
 var o=i.get
-if(void 0!==o)return o.call(n)},f=n(4),p=r(f),h=n(36),m=n(35),g=n(20),v=r(g),y=n(46),b=r(y),w=n(47),_=r(w),C=n(49),T=r(C),E=n(48),P=r(E),O=n(50),k=r(O),S=n(51),j=r(S),x=n(25),R=r(x),A=n(52),I=i(A),F={},D=function(e){
+if(void 0!==o)return o.call(n)},f=n(4),p=r(f),h=n(36),m=n(35),g=n(20),v=r(g),y=n(46),b=r(y),w=n(47),_=r(w),C=n(49),T=r(C),E=n(48),P=r(E),O=n(50),k=r(O),S=n(51),j=r(S),x=n(25),R=r(x),I=n(52),A=i(I),F={},D=function(e){
 function t(e){o(this,t)
 var n=a(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.deleteRecord=n.deleteRecord.bind(n),n.editRecord=n.editRecord.bind(n),n}return s(t,e),c(t,[{key:"componentDidMount",value:function n(){d(t.prototype.__proto__||Object.getPrototypeOf(t.prototype),"componentDidMount",this).call(this)
@@ -790,13 +794,13 @@ x=O===-1?s.lastIndexOf("@"):s.lastIndexOf("@",O),x!==-1&&(j=s.slice(0,x),s=s.sli
 for(var k=0;k<g.length;k++){var S=s.indexOf(g[k])
 S!==-1&&(O===-1||S<O)&&(O=S)}O===-1&&(O=s.length),this.host=s.slice(0,O),s=s.slice(O),this.parseHost(),this.hostname=this.hostname||""
 var R="["===this.hostname[0]&&"]"===this.hostname[this.hostname.length-1]
-if(!R)for(var A=this.hostname.split(/\./),k=0,I=A.length;k<I;k++){var F=A[k]
+if(!R)for(var I=this.hostname.split(/\./),k=0,A=I.length;k<A;k++){var F=I[k]
 if(F&&!F.match(b)){for(var D="",M=0,N=F.length;M<N;M++)D+=F.charCodeAt(M)>127?"x":F[M]
-if(!D.match(b)){var U=A.slice(0,k),L=A.slice(k+1),B=F.match(w)
+if(!D.match(b)){var U=I.slice(0,k),L=I.slice(k+1),B=F.match(w)
 B&&(U.push(B[1]),L.unshift(B[2])),L.length&&(s="/"+L.join(".")+s),this.hostname=U.join(".")
 break}}}this.hostname.length>y?this.hostname="":this.hostname=this.hostname.toLowerCase(),R||(this.hostname=l.toASCII(this.hostname))
 var H=this.port?":"+this.port:"",$=this.hostname||""
-this.host=$+H,this.href+=this.host,R&&(this.hostname=this.hostname.substr(1,this.hostname.length-2),"/"!==s[0]&&(s="/"+s))}if(!_[h])for(var k=0,I=m.length;k<I;k++){var V=m[k]
+this.host=$+H,this.href+=this.host,R&&(this.hostname=this.hostname.substr(1,this.hostname.length-2),"/"!==s[0]&&(s="/"+s))}if(!_[h])for(var k=0,A=m.length;k<A;k++){var V=m[k]
 if(s.indexOf(V)!==-1){var q=encodeURIComponent(V)
 q===V&&(q=escape(V)),s=s.split(V).join(q)}}var G=s.indexOf("#")
 G!==-1&&(this.hash=s.substr(G),s=s.slice(0,G))
@@ -842,7 +846,7 @@ n.auth=e.auth||n.auth,n.slashes=n.slashes||e.slashes,n.href=n.format(),n},i.prot
 t&&(t=t[0],":"!==t&&(this.port=t.substr(1)),e=e.substr(0,e.length-t.length)),e&&(this.hostname=e)}},function(e,t,n){var i;(function(e,r){!function(o){function a(e){throw RangeError(F[e])}function s(e,t){
 for(var n=e.length,i=[];n--;)i[n]=t(e[n])
 return i}function l(e,t){var n=e.split("@"),i=""
-n.length>1&&(i=n[0]+"@",e=n[1]),e=e.replace(I,".")
+n.length>1&&(i=n[0]+"@",e=n[1]),e=e.replace(A,".")
 var r=e.split("."),o=s(r,t).join(".")
 return i+o}function u(e){for(var t=[],n=0,i=e.length,r,o;n<i;)r=e.charCodeAt(n++),r>=55296&&r<=56319&&n<i?(o=e.charCodeAt(n++),56320==(64512&o)?t.push(((1023&r)<<10)+(1023&o)+65536):(t.push(r),n--)):t.push(r)
 
@@ -858,11 +862,11 @@ i=t.length+1,s=p(r-h,i,0==h),M(r/i)>C-o&&a("overflow"),o+=M(r/i),r%=i,t.splice(r
 for(e=u(e),v=e.length,t=j,n=0,o=S,s=0;s<v;++s)m=e[s],m<128&&g.push(N(m))
 for(i=r=g.length,r&&g.push(x);i<v;){for(l=C,s=0;s<v;++s)m=e[s],m>=t&&m<l&&(l=m)
 for(y=i+1,l-t>M((C-n)/y)&&a("overflow"),n+=(l-t)*y,t=l,s=0;s<v;++s)if(m=e[s],m<t&&++n>C&&a("overflow"),m==t){for(c=n,d=T;h=d<=o?E:d>=o+P?P:d-o,!(c<h);d+=T)w=c-h,b=T-h,g.push(N(f(h+w%b,0))),c=M(w/b)
-g.push(N(f(c,0))),o=p(n,y,i==r),n=0,++i}++n,++t}return g.join("")}function g(e){return l(e,function(e){return R.test(e)?h(e.slice(4).toLowerCase()):e})}function v(e){return l(e,function(e){return A.test(e)?"xn--"+m(e):e
+g.push(N(f(c,0))),o=p(n,y,i==r),n=0,++i}++n,++t}return g.join("")}function g(e){return l(e,function(e){return R.test(e)?h(e.slice(4).toLowerCase()):e})}function v(e){return l(e,function(e){return I.test(e)?"xn--"+m(e):e
 
 })}var y="object"==typeof t&&t&&!t.nodeType&&t,b="object"==typeof e&&e&&!e.nodeType&&e,w="object"==typeof r&&r
 w.global!==w&&w.window!==w&&w.self!==w||(o=w)
-var _,C=2147483647,T=36,E=1,P=26,O=38,k=700,S=72,j=128,x="-",R=/^xn--/,A=/[^\x20-\x7E]/,I=/[\x2E\u3002\uFF0E\uFF61]/g,F={overflow:"Overflow: input needs wider integers to process","not-basic":"Illegal input >= 0x80 (not a basic code point)",
+var _,C=2147483647,T=36,E=1,P=26,O=38,k=700,S=72,j=128,x="-",R=/^xn--/,I=/[^\x20-\x7E]/,A=/[\x2E\u3002\uFF0E\uFF61]/g,F={overflow:"Overflow: input needs wider integers to process","not-basic":"Illegal input >= 0x80 (not a basic code point)",
 "invalid-input":"Invalid input"},D=T-E,M=Math.floor,N=String.fromCharCode,U
 _={version:"1.3.2",ucs2:{decode:u,encode:c},decode:h,encode:m,toASCII:v,toUnicode:g},i=function(){return _}.call(t,n,t,e),!(void 0!==i&&(e.exports=i))}(this)}).call(t,n(17)(e),function(){return this}())
 
@@ -1094,7 +1098,7 @@ t.length&&t.remove(),n=$.path.addSearchParams(n,{tempid:e,BackURL:window.locatio
 }}),$(".leftandmain-logindialog").entwine({onmatch:function j(){this._super(),this.ssdialog({iframeUrl:this.data("url"),dialogClass:"leftandmain-logindialog-dialog",autoOpen:!0,minWidth:500,maxWidth:500,
 minHeight:370,maxHeight:400,closeOnEscape:!1,open:function e(){$(".ui-widget-overlay").addClass("leftandmain-logindialog-overlay")},close:function t(){$(".ui-widget-overlay").removeClass("leftandmain-logindialog-overlay")
 
-}})},onunmatch:function x(){this._super()},open:function R(){this.ssdialog("open")},close:function A(){this.ssdialog("close")},toggle:function I(e){this.is(":visible")?this.close():this.open()},reauthenticate:function F(e){
+}})},onunmatch:function x(){this._super()},open:function R(){this.ssdialog("open")},close:function I(){this.ssdialog("close")},toggle:function A(e){this.is(":visible")?this.close():this.open()},reauthenticate:function F(e){
 "undefined"!=typeof e.SecurityID&&$(":input[name=SecurityID]").val(e.SecurityID),"undefined"!=typeof e.TempID&&$("body").data("member-tempid",e.TempID),this.close()}}),$("form.loading,.cms-content.loading,.cms-content-fields.loading,.cms-content-view.loading").entwine({
 onmatch:function D(){this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>'),this._super()},onunmatch:function M(){this.find(".cms-content-loading-overlay,.cms-content-loading-spinner").remove(),
 this._super()}}),$('.cms input[type="submit"], .cms button, .cms input[type="reset"], .cms .ss-ui-button').entwine({onadd:function N(){this.addClass("ss-ui-button"),this.data("button")||this.button(),this._super()
@@ -1355,9 +1359,9 @@ var o=i.find("li")
 o.length?o.first().find("a").click():document.location.href=r,i.select()}}}),e(".cms-menu-list li .toggle-children").entwine({onclick:function S(e){var t=this.closest("li")
 return t.toggle(),!1}}),e(".cms .profile-link").entwine({onclick:function j(){return e(".cms-container").loadPanel(this.attr("href")),e(".cms-menu-list li").removeClass("current").close(),!1}}),e(".cms-menu .sticky-toggle").entwine({
 onadd:function x(){var t=!!e(".cms-menu").getPersistedStickyState()
-this.toggleCSS(t),this.toggleIndicator(t),this._super()},toggleCSS:function R(e){this[e?"addClass":"removeClass"]("active")},toggleIndicator:function A(e){this.next(".sticky-status-indicator").text(e?"fixed":"auto")
+this.toggleCSS(t),this.toggleIndicator(t),this._super()},toggleCSS:function R(e){this[e?"addClass":"removeClass"]("active")},toggleIndicator:function I(e){this.next(".sticky-status-indicator").text(e?"fixed":"auto")
 
-},onclick:function I(){var e=this.closest(".cms-menu"),t=e.getPersistedCollapsedState(),n=e.getPersistedStickyState(),i=void 0===n?!this.hasClass("active"):!n
+},onclick:function A(){var e=this.closest(".cms-menu"),t=e.getPersistedCollapsedState(),n=e.getPersistedStickyState(),i=void 0===n?!this.hasClass("active"):!n
 void 0===t?e.setPersistedCollapsedState(e.hasClass("collapsed")):void 0!==t&&i===!1&&e.clearPersistedCollapsedState(),e.setPersistedStickyState(i),this.toggleCSS(i),this.toggleIndicator(i),this._super()
 
 }})})},function(e,t,n){"use strict"
@@ -1425,9 +1429,9 @@ changeVisibleState:function j(e){this.find('[data-name="'+e+'"]').addClass("acti
 var n=e(this).attr("data-name")
 this.addClass("active").siblings().removeClass("active"),e(".cms-preview").changeState(n),t.preventDefault()}}}),e(".preview-mode-selector").entwine({changeVisibleMode:function R(e){this.find("select").val(e).trigger("chosen:updated")._addIcon()
 
-}}),e(".preview-mode-selector select").entwine({onchange:function A(t){this._super(t),t.preventDefault()
+}}),e(".preview-mode-selector select").entwine({onchange:function I(t){this._super(t),t.preventDefault()
 var n=e(this).val()
-e(".cms-preview").changeMode(n)}}),e(".cms-container--content-mode").entwine({onmatch:function I(){e(".cms-preview .result-selected").hasClass("font-icon-columns")&&statusMessage(s["default"]._t("LeftAndMain.DISABLESPLITVIEW","Screen too small to show site preview in split mode"),"error"),
+e(".cms-preview").changeMode(n)}}),e(".cms-container--content-mode").entwine({onmatch:function A(){e(".cms-preview .result-selected").hasClass("font-icon-columns")&&statusMessage(s["default"]._t("LeftAndMain.DISABLESPLITVIEW","Screen too small to show site preview in split mode"),"error"),
 this._super()}}),e(".preview-size-selector").entwine({changeVisibleSize:function F(e){this.find("select").val(e).trigger("chosen:updated")._addIcon()}}),e(".preview-size-selector select").entwine({onchange:function D(t){
 t.preventDefault()
 var n=e(this).val()
@@ -1507,13 +1511,13 @@ o["default"].entwine("ss",function(e){e(".TreeDropdownField").entwine({"from .cm
 "use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),o=i(r),a=n(98),s=i(a),l=n(4),u=i(l),c=n(106),d=i(c),f=n(35),p=n(107),h=i(p)
 o["default"].entwine("ss",function(e){e(".cms-content-actions .add-to-campaign-action,#add-to-campaign__action").entwine({onclick:function t(){var t=e("#add-to-campaign__dialog-wrapper")
-return t.length||(t=e('<div id="add-to-campaign__dialog-wrapper" />'),e("body").append(t)),t.open(),!1}}),e("#add-to-campaign__dialog-wrapper").entwine({open:function n(){this._renderModal()},close:function i(){
-this._clearModal()},_renderModal:function r(){var t=this,n=function l(){return t._clearModal()},i=function c(){return t._handleSubmitModal.apply(t,arguments)},r=e("form.cms-edit-form :input[name=ID]").val(),o=window.ss.store,a=o.getState().config.sections["SilverStripe\\CMS\\Controllers\\CMSPageEditController"],s=a.form.AddToCampaignForm.schemaUrl+"/"+r
+return t.length||(t=e('<div id="add-to-campaign__dialog-wrapper" />'),e("body").append(t)),t.open(),!1}}),e("#add-to-campaign__dialog-wrapper").entwine({onunmatch:function n(){this.close()},open:function i(){
+this._renderModal()},close:function r(){this._clearModal()},_renderModal:function o(){var t=this,n=function l(){return t._clearModal()},i=function c(){return t._handleSubmitModal.apply(t,arguments)},r=e("form.cms-edit-form :input[name=ID]").val(),o=window.ss.store,a=o.getState().config.sections["SilverStripe\\CMS\\Controllers\\CMSPageEditController"],s=a.form.AddToCampaignForm.schemaUrl+"/"+r
 
 
 d["default"].render(u["default"].createElement(f.Provider,{store:o},u["default"].createElement(h["default"],{show:!0,handleSubmit:i,handleHide:n,schemaUrl:s,bodyClassName:"modal__dialog",responseClassBad:"modal__response modal__response--error",
-responseClassGood:"modal__response modal__response--good"})),this[0])},_clearModal:function o(){d["default"].unmountComponentAtNode(this[0])},_handleSubmitModal:function a(e,t,n){return e.preventDefault(),
-t.Campaign?n():(alert(s["default"]._t("AddToCampaigns.ErrorCampaignNotSelected","There was no campaign selected to be added to")),null)}})})},,function(e,t){e.exports=FormBuilderModal},function(e,t,n){
+responseClassGood:"modal__response modal__response--good"})),this[0])},_clearModal:function a(){d["default"].unmountComponentAtNode(this[0])},_handleSubmitModal:function l(e,t,n){return event.preventDefault(),
+e.Campaign?n():(alert(s["default"]._t("AddToCampaigns.ErrorCampaignNotSelected","There was no campaign selected to be added to")),null)}})})},,function(e,t){e.exports=FormBuilderModal},function(e,t,n){
 "use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),o=i(r)
 n(92),n(109)
@@ -1747,8 +1751,8 @@ var s=!0
 i.setCurrentXhr(null),o.jstree("destroy").bind("loaded.jstree",function(e,r){t.each(i.getValue(),function(e,t){r.inst.check_node(o.find("*[data-id="+t+"]"))}),s=!1,n&&n.apply(i)}).jstree(i.getTreeConfig()).bind("uncheck_node.jstree check_node.jstree",function(e,n){
 var r=n.inst.get_checked(null,!0)
 i.setValue(t.map(r,function(e,n){return t(e).data("id")})),i.setTitle(t.map(r,function(e,t){return n.inst.get_text(e)})),i.data("metadata",t.map(r,function(e,n){return{id:t(e).data("id"),metadata:t(e).getMetaData()
-}}))})}}),this.setCurrentXhr(a)},getValue:function A(){var e=this._super()
-return e.split(/ *, */)},setValue:function I(e){this._super(t.isArray(e)?e.join(","):e)},setTitle:function F(e){this._super(t.isArray(e)?e.join(", "):e)},updateTitle:function D(){}}),t(".TreeDropdownField input[type=hidden]").entwine({
+}}))})}}),this.setCurrentXhr(a)},getValue:function I(){var e=this._super()
+return e.split(/ *, */)},setValue:function A(e){this._super(t.isArray(e)?e.join(","):e)},setTitle:function F(e){this._super(t.isArray(e)?e.join(", "):e)},updateTitle:function D(){}}),t(".TreeDropdownField input[type=hidden]").entwine({
 onadd:function M(){this._super(),this.bind("change.TreeDropdownField",function(){t(this).getField().updateTitle()})},onremove:function N(){this._super(),this.unbind(".TreeDropdownField")}})})}).call(t,n(1))
 
 },,,function(module,exports,__webpack_require__){"use strict"
@@ -1824,7 +1828,7 @@ e.insertLink(this.getLinkAttributes())})},removeLink:function j(){this.modifySel
 n.length&&(t._trigger("destroy",null,{context:n}),e.find(".ss-uploadfield-addfile").removeClass("borderTop"))},addAnchorSelector:function R(){if(!this.find(":input[name=AnchorSelector]").length){var t=this,n=e('<select id="Form_EditorToolbarLinkForm_AnchorSelector" name="AnchorSelector"></select>')
 
 
-this.find(":input[name=Anchor]").parent().append(n),this.updateAnchorSelector(),n.change(function(n){t.find(':input[name="Anchor"]').val(e(this).val())})}},getAnchors:function A(){var t=this.find(":input[name=LinkType]:checked").val(),n=e.Deferred()
+this.find(":input[name=Anchor]").parent().append(n),this.updateAnchorSelector(),n.change(function(n){t.find(':input[name="Anchor"]').val(e(this).val())})}},getAnchors:function I(){var t=this.find(":input[name=LinkType]:checked").val(),n=e.Deferred()
 
 
 switch(t){case"anchor":var i=[],r=this.getEditor()
@@ -1837,7 +1841,7 @@ l?e.ajax({url:e.path.addSearchParams(this.attr("action").replace("LinkForm","get
 
 }}):n.resolve([])
 break
-default:n.reject(_i18n2["default"]._t("HtmlEditorField.ANCHORSNOTSUPPORTED","Anchors are not supported for this link type."))}return n.promise()},updateAnchorSelector:function I(){var t=this,n=this.find(":input[name=AnchorSelector]"),i=this.getAnchors()
+default:n.reject(_i18n2["default"]._t("HtmlEditorField.ANCHORSNOTSUPPORTED","Anchors are not supported for this link type."))}return n.promise()},updateAnchorSelector:function A(){var t=this,n=this.find(":input[name=AnchorSelector]"),i=this.getAnchors()
 
 
 n.empty(),n.append(e('<option value="" selected="1">'+_i18n2["default"]._t("HtmlEditorField.LOOKINGFORANCHORS","Looking for anchors...")+"</option>")),i.done(function(t){if(n.empty(),n.append(e('<option value="" selected="1">'+_i18n2["default"]._t("HtmlEditorField.SelectAnchor")+"</option>")),
@@ -2001,7 +2005,7 @@ this.val()&&(e.addClass("filtered"),t.addClass("filtered")),this._super()},onunm
 if("13"==e.keyCode){var i=this.closest(".filter-header").find(".ss-gridfield-button-filter"),r="show"
 return!this.hasClass("ss-gridfield-button-close")&&this.closest(".grid-field").hasClass("show-filter")||(r="hidden"),this.getGridField().reload({data:[{name:i.attr("name"),value:i.val(),filter:r}]}),!1
 
-}t.addClass("hover-alike"),n.addClass("hover-alike")}}}),e(".grid-field .relation-search").entwine({onfocusin:function A(t){this.autocomplete({source:function n(t,i){var r=e(this.element),o=e(this.element).closest("form")
+}t.addClass("hover-alike"),n.addClass("hover-alike")}}}),e(".grid-field .relation-search").entwine({onfocusin:function I(t){this.autocomplete({source:function n(t,i){var r=e(this.element),o=e(this.element).closest("form")
 
 
 e.ajax({headers:{"X-Pjax":"Partial"},dataType:"json",type:"GET",url:e(r).data("searchUrl"),data:encodeURIComponent(r.attr("name"))+"="+encodeURIComponent(r.val()),success:i,error:function a(e){alert(s["default"]._t("GRIDFIELD.ERRORINTRANSACTION","An error occured while fetching data from the server\n Please try again later."))
@@ -2009,7 +2013,7 @@ e.ajax({headers:{"X-Pjax":"Partial"},dataType:"json",type:"GET",url:e(r).data("s
 }})},select:function i(t,n){var i=e('<input type="hidden" name="relationID" class="action_gridfield_relationfind" />')
 i.val(n.item.id),e(this).closest(".grid-field").find(".action_gridfield_relationfind").replaceWith(i)
 var r=e(this).closest(".grid-field").find(".action_gridfield_relationadd")
-r.data("button")?r.button("enable"):r.removeAttr("disabled")}})}}),e(".grid-field .pagination-page-number input").entwine({onkeydown:function I(t){if(13==t.keyCode){var n=parseInt(e(this).val(),10),i=e(this).getGridField()
+r.data("button")?r.button("enable"):r.removeAttr("disabled")}})}}),e(".grid-field .pagination-page-number input").entwine({onkeydown:function A(t){if(13==t.keyCode){var n=parseInt(e(this).val(),10),i=e(this).getGridField()
 
 
 return i.setState("GridFieldPaginator",{currentPage:n}),i.reload(),!1}}})})},function(e,t,n){"use strict"
@@ -2025,7 +2029,7 @@ var e={},t=(0,l.combineReducers)(g["default"].getAll()),n=[c["default"]],i=h["de
 var u=o(l.createStore),p=u(t,e)
 p.dispatch(y.setConfig(h["default"].getAll())),window.ss=window.ss||{},window.ss.store=p
 var m=new s["default"](p)
-m.start(window.location.pathname)}var a=n(129),s=r(a),l=n(36),u=n(151),c=r(u),d=n(37),f=n(150),p=n(73),h=r(p),m=n(152),g=r(m),v=n(153),y=i(v),b=n(155),w=r(b),_=n(157),C=r(_),T=n(158),E=r(T),P=n(159),O=r(P),k=n(161),S=r(k),j=n(162),x=r(j),R=n(178),A=r(R),I=n(9),F=r(I)
+m.start(window.location.pathname)}var a=n(129),s=r(a),l=n(36),u=n(151),c=r(u),d=n(37),f=n(150),p=n(73),h=r(p),m=n(152),g=r(m),v=n(153),y=i(v),b=n(155),w=r(b),_=n(157),C=r(_),T=n(158),E=r(T),P=n(159),O=r(P),k=n(161),S=r(k),j=n(162),x=r(j),R=n(178),I=r(R),A=n(9),F=r(A)
 
 
 F["default"].polyfill(),window.onload=o},function(e,t,n){"use strict"
@@ -2123,11 +2127,11 @@ for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},
 t["default"]=r},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0})
 var o=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),a=n(32),s=i(a),l=n(62),u=i(l),c=n(60),d=i(c),f=n(163),p=i(f),h=n(165),m=i(h),g=n(166),v=i(g),y=n(167),b=i(y),w=n(168),_=i(w),C=n(169),T=i(C),E=n(170),P=i(E),O=n(171),k=i(O),S=n(172),j=i(S),x=n(173),R=i(x),A=n(174),I=i(A),F=n(175),D=i(F),M=n(176),N=i(M),U=n(177),L=i(U),B=function(){
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),a=n(32),s=i(a),l=n(62),u=i(l),c=n(60),d=i(c),f=n(163),p=i(f),h=n(165),m=i(h),g=n(166),v=i(g),y=n(167),b=i(y),w=n(168),_=i(w),C=n(169),T=i(C),E=n(170),P=i(E),O=n(171),k=i(O),S=n(172),j=i(S),x=n(173),R=i(x),I=n(174),A=i(I),F=n(175),D=i(F),M=n(176),N=i(M),U=n(177),L=i(U),B=function(){
 function e(){r(this,e)}return o(e,[{key:"start",value:function t(){s["default"].register("TextField",u["default"]),s["default"].register("HiddenField",d["default"]),s["default"].register("CheckboxField",p["default"]),
 s["default"].register("CheckboxSetField",m["default"]),s["default"].register("OptionsetField",v["default"]),s["default"].register("GridField",b["default"]),s["default"].register("SingleSelectField",_["default"]),
 s["default"].register("PopoverField",T["default"]),s["default"].register("HeaderField",P["default"]),s["default"].register("LiteralField",k["default"]),s["default"].register("HtmlReadonlyField",j["default"]),
-s["default"].register("LookupField",R["default"]),s["default"].register("CompositeField",I["default"]),s["default"].register("Tabs",D["default"]),s["default"].register("TabItem",N["default"]),s["default"].register("FormAction",L["default"])
+s["default"].register("LookupField",R["default"]),s["default"].register("CompositeField",A["default"]),s["default"].register("Tabs",D["default"]),s["default"].register("TabItem",N["default"]),s["default"].register("FormAction",L["default"])
 
 }}]),e}()
 t["default"]=new B},function(e,t,n){"use strict"
@@ -2392,7 +2396,7 @@ campaignId:e.campaign.campaignId,view:e.campaign.view,breadcrumbs:e.breadcrumbs,
 breadcrumbsActions:(0,m.bindActionCreators)(w,e)}}Object.defineProperty(t,"__esModule",{value:!0})
 var c=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
 for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e},d=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),f=n(4),p=r(f),h=n(35),m=n(36),g=n(68),v=n(31),y=r(v),b=n(180),w=i(b),_=n(181),C=r(_),T=n(20),E=r(T),P=n(177),O=r(P),k=n(98),S=r(k),j=n(182),x=r(j),R=n(43),A=r(R),I=n(183),F=r(I),D=function(e){
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),f=n(4),p=r(f),h=n(35),m=n(36),g=n(68),v=n(31),y=r(v),b=n(180),w=i(b),_=n(181),C=r(_),T=n(20),E=r(T),P=n(177),O=r(P),k=n(98),S=r(k),j=n(182),x=r(j),R=n(43),I=r(R),A=n(183),F=r(A),D=function(e){
 function t(e){o(this,t)
 var n=a(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.publishApi=y["default"].createEndpointFetcher({url:n.props.sectionConfig.publishEndpoint.url,method:n.props.sectionConfig.publishEndpoint.method,defaultData:{SecurityID:n.props.securityId},payloadSchema:{
@@ -2405,7 +2409,7 @@ case"edit":n.push({text:S["default"]._t("Campaigns.EDIT_CAMPAIGN","Editing Campa
 break
 case"create":n.push({text:S["default"]._t("Campaigns.ADD_CAMPAIGN","Add Campaign"),href:this.getActionRoute(t,e)})}this.props.breadcrumbsActions.setBreadcrumbs(n)}},{key:"handleBackButtonClick",value:function l(e){
 if(this.props.breadcrumbs.length>1){var t=this.props.breadcrumbs[this.props.breadcrumbs.length-2]
-if(t&&t.href)return e.preventDefault(),void this.props.router.push(t.href)}}},{key:"render",value:function u(){var e=null
+t&&t.href&&(e.preventDefault(),this.props.router.push(t.href))}}},{key:"render",value:function u(){var e=null
 switch(this.props.params.view){case"show":e=this.renderItemListView()
 break
 case"edit":e=this.renderDetailEditView()
@@ -2416,18 +2420,18 @@ default:e=this.renderIndexView()}return e}},{key:"renderIndexView",value:functio
 handleClick:this.addCampaign.bind(this)},n={createFn:this.campaignListCreateFn.bind(this),schemaUrl:e}
 return p["default"].createElement("div",{className:"fill-height","aria-expanded":"true"},p["default"].createElement(x["default"],null,p["default"].createElement(C["default"],{multiline:!0,crumbs:this.props.breadcrumbs
 })),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow"},p["default"].createElement("div",{className:"toolbar toolbar--content"},p["default"].createElement("div",{
-className:"btn-toolbar"},p["default"].createElement(O["default"],t))),p["default"].createElement(A["default"],n)))}},{key:"renderItemListView",value:function h(){var e={sectionConfig:this.props.sectionConfig,
+className:"btn-toolbar"},p["default"].createElement(O["default"],t))),p["default"].createElement(I["default"],n)))}},{key:"renderItemListView",value:function h(){var e={sectionConfig:this.props.sectionConfig,
 campaignId:this.props.params.id,itemListViewEndpoint:this.props.sectionConfig.itemListViewEndpoint,publishApi:this.publishApi,handleBackButtonClick:this.handleBackButtonClick.bind(this)}
 return p["default"].createElement(F["default"],e)}},{key:"renderDetailEditView",value:function m(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t=e
 this.props.params.id>0&&(t=e+"/"+this.props.params.id)
 var n={createFn:this.campaignEditCreateFn.bind(this),schemaUrl:t}
 return p["default"].createElement("div",null,p["default"].createElement(x["default"],{showBackButton:!0,handleBackButtonClick:this.handleBackButtonClick},p["default"].createElement(C["default"],{multiline:!0,
-crumbs:this.props.breadcrumbs})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow form--inline"},p["default"].createElement(A["default"],n)))}},{key:"renderCreateView",
+crumbs:this.props.breadcrumbs})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow form--inline"},p["default"].createElement(I["default"],n)))}},{key:"renderCreateView",
 value:function g(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t=e
 this.props.params.id>0&&(t=e+"/"+this.props.params.id)
 var n={createFn:this.campaignAddCreateFn.bind(this),schemaUrl:t}
 return p["default"].createElement("div",null,p["default"].createElement(x["default"],{showBackButton:!0,handleBackButtonClick:this.handleBackButtonClick},p["default"].createElement(C["default"],{multiline:!0,
-crumbs:this.props.breadcrumbs})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow form--inline"},p["default"].createElement(A["default"],n)))}},{key:"campaignEditCreateFn",
+crumbs:this.props.breadcrumbs})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow form--inline"},p["default"].createElement(I["default"],n)))}},{key:"campaignEditCreateFn",
 value:function v(e,t){var n=this,i=this.props.sectionConfig.url
 if("action_cancel"===t.name){var r=c({},t,{handleClick:function o(e){e.preventDefault(),n.props.router.push(i)}})
 return p["default"].createElement(e,c({key:t.id},r))}return p["default"].createElement(e,c({key:t.id},t))}},{key:"campaignAddCreateFn",value:function b(e,t){var n=this,i=this.props.sectionConfig.url
@@ -2465,39 +2469,40 @@ var i=Object.getOwnPropertyDescriptor(e,t)
 if(void 0===i){var r=Object.getPrototypeOf(e)
 return null===r?void 0:q(r,t,n)}if("value"in i)return i.value
 var o=i.get
-if(void 0!==o)return o.call(n)},p=n(4),h=r(p),m=n(36),g=n(35),v=n(180),y=i(v),b=n(52),w=i(b),_=n(184),C=i(_),T=n(20),E=r(T),P=n(185),O=r(P),k=n(186),S=r(k),j=n(188),x=r(j),R=n(182),A=r(R),I=n(177),F=r(I),D=n(189),M=r(D),N=n(181),U=r(N),L=n(190),B=r(L),H=n(98),$=r(H),V=function(e){
+if(void 0!==o)return o.call(n)},p=n(4),h=r(p),m=n(36),g=n(35),v=n(180),y=i(v),b=n(52),w=i(b),_=n(184),C=i(_),T=n(20),E=r(T),P=n(185),O=r(P),k=n(186),S=r(k),j=n(188),x=r(j),R=n(182),I=r(R),A=n(177),F=r(A),D=n(189),M=r(D),N=n(181),U=r(N),L=n(190),B=r(L),H=n(98),$=r(H),V=function(e){
 function t(e){o(this,t)
 var n=a(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
-return n.handlePublish=n.handlePublish.bind(n),n.handleItemSelected=n.handleItemSelected.bind(n),n.setBreadcrumbs=n.setBreadcrumbs.bind(n),n}return s(t,e),d(t,[{key:"componentDidMount",value:function n(){
-var e=this.props.itemListViewEndpoint.url.replace(/:id/,this.props.campaignId)
+return n.handlePublish=n.handlePublish.bind(n),n.handleItemSelected=n.handleItemSelected.bind(n),n.setBreadcrumbs=n.setBreadcrumbs.bind(n),n.handleCloseItem=n.handleCloseItem.bind(n),n}return s(t,e),d(t,[{
+key:"componentDidMount",value:function n(){var e=this.props.itemListViewEndpoint.url.replace(/:id/,this.props.campaignId)
 f(t.prototype.__proto__||Object.getPrototypeOf(t.prototype),"componentDidMount",this).call(this),this.setBreadcrumbs(),Object.keys(this.props.record).length||this.props.recordActions.fetchRecord(this.props.treeClass,"get",e).then(this.setBreadcrumbs)
 
 }},{key:"setBreadcrumbs",value:function i(){if(this.props.record){var e=[{text:$["default"]._t("Campaigns.CAMPAIGN","Campaigns"),href:this.props.sectionConfig.url}]
-e.push({text:this.props.record.Name,href:this.props.sectionConfig.url+"/set/"+this.props.campaignId+"/show"}),this.props.breadcrumbsActions.setBreadcrumbs(e)}}},{key:"render",value:function r(){var e=this,t=this.props.campaign.changeSetItemId,n=null,i=this.props.campaignId,r=this.props.record,o=this.groupItemsForSet(),a=[]
+e.push({text:this.props.record.Name,href:this.props.sectionConfig.url+"/set/"+this.props.campaignId+"/show"}),this.props.breadcrumbsActions.setBreadcrumbs(e)}}},{key:"render",value:function r(){var e=this,t=this.props.campaign.changeSetItemId,n=null,i=t?"":"campaign-admin__campaign--no-selected-item",r=this.props.campaignId,o=this.props.record,a=this.groupItemsForSet(),s=[]
 
 
-Object.keys(o).forEach(function(s){var l=o[s],u=l.items.length,c=[],d=u+" "+(1===u?l.singular:l.plural),f="Set_"+i+"_Group_"+s
+Object.keys(a).forEach(function(i){var l=a[i],u=l.items.length,c=[],d=u+" "+(1===u?l.singular:l.plural),f="Set_"+r+"_Group_"+i
 l.items.forEach(function(i){t||(t=i.ID)
-var o=t===i.ID
-o&&i._links&&(n=i._links)
+var r=t===i.ID
+r&&i._links&&(n=i._links)
 var a=[]
-"none"!==i.ChangeType&&"published"!==r.State||a.push("list-group-item--inactive"),o&&a.push("active"),c.push(h["default"].createElement(x["default"],{key:i.ID,className:a.join(" "),handleClick:e.handleItemSelected,
-handleClickArg:i.ID},h["default"].createElement(M["default"],{item:i,campaign:e.props.record})))}),a.push(h["default"].createElement(S["default"],{key:f,groupid:f,title:d},c))})
-var s=[this.props.config.absoluteBaseUrl,this.props.config.sections["SilverStripe\\CMS\\Controllers\\CMSPagesController"].url].join(""),l=a.length?h["default"].createElement(O["default"],null,a):h["default"].createElement("div",{
-className:"alert alert-warning",role:"alert"},h["default"].createElement("strong",null,"This campaign is empty.")," You can add pages by selecting"," ",h["default"].createElement("em",null,"Add to campaign")," from within the ",h["default"].createElement("em",null,"More Options")," popup on"," ","the ",h["default"].createElement("a",{
-href:s},"edit page screen"),"."),u=["panel","panel--padded","panel--scrollable","flexbox-area-grow"]
-return h["default"].createElement("div",{className:"fill-width campaign-admin__campaign"},h["default"].createElement("div",{className:"fill-height campaign-admin__campaign-items","aria-expanded":"true"
-},h["default"].createElement(A["default"],{showBackButton:!0,handleBackButtonClick:this.props.handleBackButtonClick},h["default"].createElement(U["default"],{multiline:!0,crumbs:this.props.breadcrumbs})),h["default"].createElement("div",{
-className:u.join(" ")},l),h["default"].createElement("div",{className:"toolbar toolbar--south"},this.renderButtonToolbar())),h["default"].createElement(B["default"],{itemLinks:n,itemId:t}))}},{key:"handleItemSelected",
-value:function l(e,t){this.props.campaignActions.selectChangeSetItem(t)}},{key:"renderButtonToolbar",value:function u(){var e=this.getItems()
+"none"!==i.ChangeType&&"published"!==o.State||a.push("list-group-item--inactive"),r&&a.push("active"),c.push(h["default"].createElement(x["default"],{key:i.ID,className:a.join(" "),handleClick:e.handleItemSelected,
+handleClickArg:i.ID},h["default"].createElement(M["default"],{item:i,campaign:e.props.record})))}),s.push(h["default"].createElement(S["default"],{key:f,groupid:f,title:d},c))})
+var l=[this.props.config.absoluteBaseUrl,this.props.config.sections["SilverStripe\\CMS\\Controllers\\CMSPagesController"].url].join(""),u=s.length?h["default"].createElement(O["default"],null,s):h["default"].createElement("div",{
+className:"alert alert-warning",role:"alert"},h["default"].createElement("strong",null,"This campaign is empty.")," You can add pages by selecting",h["default"].createElement("em",null,"Add to campaign")," from within the ",h["default"].createElement("em",null,"More Options")," popup on the ",h["default"].createElement("a",{
+href:l},"edit page screen"),"."),c=["panel","panel--padded","panel--scrollable","flexbox-area-grow"]
+return h["default"].createElement("div",{className:"fill-width campaign-admin__campaign "+i},h["default"].createElement("div",{className:"fill-height campaign-admin__campaign-items","aria-expanded":"true"
+},h["default"].createElement(I["default"],{showBackButton:!0,handleBackButtonClick:this.props.handleBackButtonClick},h["default"].createElement(U["default"],{multiline:!0,crumbs:this.props.breadcrumbs})),h["default"].createElement("div",{
+className:c.join(" ")},u),h["default"].createElement("div",{className:"toolbar toolbar--south"},this.renderButtonToolbar())),h["default"].createElement(B["default"],{itemLinks:n,itemId:t,onBack:this.handleCloseItem
+}))}},{key:"handleItemSelected",value:function l(e,t){this.props.campaignActions.selectChangeSetItem(t)}},{key:"handleCloseItem",value:function u(){this.props.campaignActions.selectChangeSetItem(null)}
+},{key:"renderButtonToolbar",value:function p(){var e=this.getItems()
 if(!e||!e.length)return h["default"].createElement("div",{className:"btn-toolbar"})
 var t={}
 return"open"===this.props.record.State?t=c(t,{title:$["default"]._t("Campaigns.PUBLISHCAMPAIGN"),bootstrapButtonStyle:"primary",loading:this.props.campaign.isPublishing,handleClick:this.handlePublish,icon:"rocket"
 }):"published"===this.props.record.State&&(t=c(t,{title:$["default"]._t("Campaigns.REVERTCAMPAIGN"),bootstrapButtonStyle:"secondary-outline",icon:"back-in-time",disabled:!0})),h["default"].createElement("div",{
-className:"btn-toolbar"},h["default"].createElement(F["default"],t))}},{key:"getItems",value:function p(){return this.props.record&&this.props.record._embedded?this.props.record._embedded.items:null}},{
-key:"groupItemsForSet",value:function m(){var e={},t=this.getItems()
+className:"btn-toolbar"},h["default"].createElement(F["default"],t))}},{key:"getItems",value:function m(){return this.props.record&&this.props.record._embedded?this.props.record._embedded.items:null}},{
+key:"groupItemsForSet",value:function g(){var e={},t=this.getItems()
 return t?(t.forEach(function(t){var n=t.BaseClass
-e[n]||(e[n]={singular:t.Singular,plural:t.Plural,items:[]}),e[n].items.push(t)}),e):e}},{key:"handlePublish",value:function g(e){e.preventDefault(),this.props.campaignActions.publishCampaign(this.props.publishApi,this.props.treeClass,this.props.campaignId)
+e[n]||(e[n]={singular:t.Singular,plural:t.Plural,items:[]}),e[n].items.push(t)}),e):e}},{key:"handlePublish",value:function v(e){e.preventDefault(),this.props.campaignActions.publishCampaign(this.props.publishApi,this.props.treeClass,this.props.campaignId)
 
 }}]),t}(E["default"])
 V.propTypes={campaign:h["default"].PropTypes.shape({isPublishing:h["default"].PropTypes.bool.isRequired,changeSetItemId:h["default"].PropTypes.number}),breadcrumbsActions:h["default"].PropTypes.object.isRequired,
@@ -2581,7 +2586,10 @@ e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,wri
 value:!0})
 var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(4),u=i(l),c=n(98),d=i(c),f=n(20),p=i(f),h=function(e){
-function t(){return r(this,t),o(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return a(t,e),s(t,[{key:"render",value:function n(){var e=null,t=null,n=""
+function t(e){r(this,t)
+var n=o(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
+return n.handleBackClick=n.handleBackClick.bind(n),n}return a(t,e),s(t,[{key:"handleBackClick",value:function n(e){"function"==typeof this.props.onBack&&(e.preventDefault(),this.props.onBack(e))}},{key:"render",
+value:function i(){var e=null,t=null,n=""
 this.props.itemLinks&&this.props.itemLinks.preview&&(this.props.itemLinks.preview.Stage?(t=this.props.itemLinks.preview.Stage.href,n=this.props.itemLinks.preview.Stage.type):this.props.itemLinks.preview.Live&&(t=this.props.itemLinks.preview.Live.href,
 n=this.props.itemLinks.preview.Live.type))
 var i=null,r="edit",o=[]
@@ -2590,6 +2598,6 @@ className:"btn__title"},d["default"]._t("Preview.EDIT","Edit"))))),e=this.props.
 },u["default"].createElement("img",{alt:t,className:"preview__file--fits-space",src:t})):u["default"].createElement("iframe",{className:"flexbox-area-grow preview__iframe",src:t}):u["default"].createElement("div",{
 className:"preview__overlay"},u["default"].createElement("h3",{className:"preview__overlay-text"},"There is no preview available for this item.")):u["default"].createElement("div",{className:"preview__overlay"
 },u["default"].createElement("h3",{className:"preview__overlay-text"},"No preview available.")),u["default"].createElement("div",{className:"flexbox-area-grow fill-height preview"},e,u["default"].createElement("div",{
-className:"toolbar toolbar--south"},u["default"].createElement("button",{className:"btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up",type:"button"},"Back"),u["default"].createElement("div",{
-className:"btn-toolbar"},o)))}}]),t}(p["default"])
-h.propTypes={itemLinks:u["default"].PropTypes.object,itemId:u["default"].PropTypes.number},t["default"]=h}])
+className:"toolbar toolbar--south"},u["default"].createElement("button",{className:"btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up",type:"button",onClick:this.handleBackClick
+},"Back"),u["default"].createElement("div",{className:"btn-toolbar"},o)))}}]),t}(p["default"])
+h.propTypes={itemLinks:u["default"].PropTypes.object,itemId:u["default"].PropTypes.number,onBack:u["default"].PropTypes.func},t["default"]=h}])

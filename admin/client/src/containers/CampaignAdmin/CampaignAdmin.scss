@@ -4,6 +4,17 @@
   height: 100%;
 }
 
+@include media-breakpoint-down(md) {
+  .campaign-admin__campaign--no-selected-item {
+    .preview {
+      display: none;
+    }
+    .list-group-item.active {
+      background-color: inherit;
+      color: inherit;
+    }
+  }
+}
 .campaign-admin__campaign-items {
   width: 100%;
   z-index: 1;

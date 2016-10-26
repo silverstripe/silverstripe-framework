@@ -7,6 +7,19 @@ import SilverStripeComponent from 'lib/SilverStripeComponent';
  */
 class Preview extends SilverStripeComponent {
 
+  constructor(props) {
+    super(props);
+
+    this.handleBackClick = this.handleBackClick.bind(this);
+  }
+
+  handleBackClick(event) {
+    if (typeof this.props.onBack === 'function') {
+      event.preventDefault();
+      this.props.onBack(event);
+    }
+  }
+
   render() {
     // @todo - Multiple preview views with toggle slider
     let body = null;
@@ -68,6 +81,7 @@ class Preview extends SilverStripeComponent {
           <button
             className="btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up"
             type="button"
+            onClick={this.handleBackClick}
           >Back</button>
           <div className="btn-toolbar">
             {toolbarButtons}
@@ -81,6 +95,7 @@ class Preview extends SilverStripeComponent {
 Preview.propTypes = {
   itemLinks: React.PropTypes.object,
   itemId: React.PropTypes.number,
+  onBack: React.PropTypes.func,
 };
 
 export default Preview;
