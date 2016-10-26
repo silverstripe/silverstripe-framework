@@ -1600,9 +1600,6 @@ form.member-profile-form {
 .cms .ui-widget-overlay-light {
   background: #aaaaaa url(../../../thirdparty/jquery-ui-themes/smoothness/images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x;
   opacity: 0.3;
-  position: absolute;
-  z-index: 2;
-  display: none;
 }
 
 // Adjusting the color of the background overlay to be darker for pop-up dialogs (created by jQuery-UI)
