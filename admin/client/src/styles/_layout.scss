@@ -22,8 +22,11 @@ body {
 
 // TODO move out of layout
 @include media-breakpoint-down(md) {
-  .cms-content.has-panel .cms-content-tools {
-    display: none;
+  .CMSPageEditController,
+  .CMSPageSettingsController {
+    &.has-panel .cms-content-tools {
+      display: none;
+    }
   }
 }
 
