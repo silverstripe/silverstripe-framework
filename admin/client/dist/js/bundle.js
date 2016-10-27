@@ -297,7 +297,7 @@ visible:!1})}},{key:"getMessageStyle",value:function i(){switch(this.props.type)
 case"info":return"info"
 case"warn":case"warning":return"warning"
 default:return"danger"}}},{key:"getMessageProps",value:function l(){var e=this.props.type||"no-type"
-return{className:["message-box","message-box--"+e,this.props.className,this.props.extraClass].join(" "),bsStyle:this.props.bsStyle||this.getMessageStyle(),bsClass:this.props.bsClass,onDismiss:this.handleDismiss,
+return{className:["message-box","message-box--"+e,this.props.className,this.props.extraClass].join(" "),bsStyle:this.props.bsStyle||this.getMessageStyle(),bsClass:this.props.bsClass,onDismiss:this.props.closeLabel?this.handleDismiss:null,
 closeLabel:this.props.closeLabel}}},{key:"render",value:function c(){if("boolean"!=typeof this.props.visible&&this.state.visible||this.props.visible){var e=(0,h["default"])("div",this.props.value)
 if(e)return u["default"].createElement(f.Alert,this.getMessageProps(),e)}return null}}]),t}(d["default"])
 m.propTypes={extraClass:l.PropTypes.string,value:l.PropTypes.any,type:l.PropTypes.string,onDismiss:l.PropTypes.func,closeLabel:l.PropTypes.string,visible:l.PropTypes.bool},m.defaultProps={extraClass:"",

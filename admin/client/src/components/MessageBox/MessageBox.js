@@ -66,7 +66,7 @@ class MessageBox extends SilverStripeComponent {
       ].join(' '),
       bsStyle: this.props.bsStyle || this.getMessageStyle(),
       bsClass: this.props.bsClass,
-      onDismiss: this.handleDismiss,
+      onDismiss: (this.props.closeLabel) ? this.handleDismiss : null,
       closeLabel: this.props.closeLabel,
     };
   }
