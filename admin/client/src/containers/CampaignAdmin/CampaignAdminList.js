@@ -143,9 +143,9 @@ class CampaignAdminList extends SilverStripeComponent {
       ? (<Accordion>{accordionBlocks}</Accordion>)
       : (
         <div className="alert alert-warning" role="alert">
-          <strong>This campaign is empty.</strong> You can add pages by selecting
-          <em>Add to campaign</em> from within the <em>More Options</em> popup on
-          the <a href={pagesLink}>edit page screen</a>.
+          <strong>This campaign is empty.</strong> You can add items to a campaign by
+          selecting <em>Add to campaign</em> from within the <em>More Options </em>
+          popup on <a href={pagesLink}>pages</a> and files.
         </div>
       );
     const bodyClass = [

@@ -464,9 +464,7 @@ var e=""
 return e=this.state.error?this.props.responseClassBad||"response error":this.props.responseClassGood||"response good",u["default"].createElement("div",{className:e},u["default"].createElement("span",null,this.state.response))
 
 }},{key:"clearResponse",value:function l(){this.setState({response:null})}},{key:"handleHide",value:function d(){this.clearResponse(),"function"==typeof this.props.handleHide&&this.props.handleHide()}},{
-key:"handleSubmit",value:function f(e,t,n){var i=this
-console.log(e,t,n)
-var r=null
+key:"handleSubmit",value:function f(e,t,n){var i=this,r=null
 if(r="function"==typeof this.props.handleSubmit?this.props.handleSubmit(e,t,n):n(),!r)throw new Error("Promise was not returned for submitting")
 return r.then(function(e){return i.setState({response:e.message,error:!1}),e})["catch"](function(e){e.then(function(e){i.setState({response:e,error:!0})})}),r}},{key:"render",value:function p(){var e=this.getForm(),t=this.getResponse()
 
@@ -2488,8 +2486,8 @@ var a=[]
 "none"!==i.ChangeType&&"published"!==o.State||a.push("list-group-item--inactive"),r&&a.push("active"),c.push(h["default"].createElement(x["default"],{key:i.ID,className:a.join(" "),handleClick:e.handleItemSelected,
 handleClickArg:i.ID},h["default"].createElement(M["default"],{item:i,campaign:e.props.record})))}),s.push(h["default"].createElement(S["default"],{key:f,groupid:f,title:d},c))})
 var l=[this.props.config.absoluteBaseUrl,this.props.config.sections["SilverStripe\\CMS\\Controllers\\CMSPagesController"].url].join(""),u=s.length?h["default"].createElement(O["default"],null,s):h["default"].createElement("div",{
-className:"alert alert-warning",role:"alert"},h["default"].createElement("strong",null,"This campaign is empty.")," You can add pages by selecting",h["default"].createElement("em",null,"Add to campaign")," from within the ",h["default"].createElement("em",null,"More Options")," popup on the ",h["default"].createElement("a",{
-href:l},"edit page screen"),"."),c=["panel","panel--padded","panel--scrollable","flexbox-area-grow"]
+className:"alert alert-warning",role:"alert"},h["default"].createElement("strong",null,"This campaign is empty.")," You can add items to a campaign by selecting ",h["default"].createElement("em",null,"Add to campaign")," from within the ",h["default"].createElement("em",null,"More Options "),"popup on ",h["default"].createElement("a",{
+href:l},"pages")," and files."),c=["panel","panel--padded","panel--scrollable","flexbox-area-grow"]
 return h["default"].createElement("div",{className:"fill-width campaign-admin__campaign "+i},h["default"].createElement("div",{className:"fill-height campaign-admin__campaign-items","aria-expanded":"true"
 },h["default"].createElement(I["default"],{showBackButton:!0,handleBackButtonClick:this.props.handleBackButtonClick},h["default"].createElement(U["default"],{multiline:!0,crumbs:this.props.breadcrumbs})),h["default"].createElement("div",{
 className:c.join(" ")},u),h["default"].createElement("div",{className:"toolbar toolbar--south"},this.renderButtonToolbar())),h["default"].createElement(B["default"],{itemLinks:n,itemId:t,onBack:this.handleCloseItem
