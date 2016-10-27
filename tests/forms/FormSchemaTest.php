@@ -67,7 +67,8 @@ class FormSchemaTest extends SapphireTest {
 					'id' => 'Form_TestForm_SecurityID',
 					'value' => $form->getSecurityToken()->getValue(),
 					'message' => null,
-					'data' => []
+					'data' => [],
+					'name' => 'SecurityID',
 				]
 			],
 			'valid' => null,
@@ -93,6 +94,7 @@ class FormSchemaTest extends SapphireTest {
 					'value' => $form->getSecurityToken()->getValue(),
 					'data' => [],
 					'message' => null,
+					'name' => 'SecurityID',
 				]
 			],
 			'messages' => [[
@@ -127,13 +129,15 @@ class FormSchemaTest extends SapphireTest {
 						'value' => ['html' => '&quot;Title&quot; is required'],
 						'type' => 'required'
 					],
-					'data' => []
+					'data' => [],
+					'name' => 'Title',
 				],
 				[
 					'id' => 'Form_TestForm_SecurityID',
 					'value' => $form->getSecurityToken()->getValue(),
 					'message' => null,
-					'data' => []
+					'data' => [],
+					'name' => 'SecurityID',
 				]
 			],
 			'valid' => false,
