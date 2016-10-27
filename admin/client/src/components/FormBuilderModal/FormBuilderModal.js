@@ -80,7 +80,6 @@ class FormBuilderModal extends SilverStripeComponent {
    * @returns {Promise}
    */
   handleSubmit(data, action, submitFn) {
-    console.log(data, action, submitFn);
     let promise = null;
     if (typeof this.props.handleSubmit === 'function') {
       promise = this.props.handleSubmit(data, action, submitFn);
