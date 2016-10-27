@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\CMS\Controllers\ContentController;
+
 // Asset folder
 if(!file_exists(BASE_PATH . '/assets')) {
 	mkdir(BASE_PATH . '/assets', 02775);
@@ -37,11 +40,35 @@ if (!defined('SS_DATABASE_CLASS') && !defined('SS_DATABASE_USERNAME')) {
 	define('SS_DATABASE_CHOOSE_NAME', true);
 }
 
+// Ensure Director::protocolAndHost() works
+if (empty($_SERVER['HTTP_HOST'])) {
+	$_SERVER['HTTP_HOST'] = 'localhost';
+}
+
+// Default database settings
+global $project;
+$project = 'mysite';
+
 // Default database settings
 global $database;
 $database = '';
 
-require_once(__DIR__ . '/../../conf/ConfigureFromEnv.php');
+// Mock installer 'mysite' ONLY if installed with 'cms'
+$projectPath = BASE_PATH.'/'.$project;
+if (is_dir(BASE_PATH .'/cms') && !is_dir($projectPath)) {
+	$pageBase = SiteTree::class;
+	$controllerBase = ContentController::class;
+	$pageDotPHP = <<<EOS
+<?php
+// Auto-generated via serve-bootstrap.php
 
-class Page extends SilverStripe\View\ViewableData {}
-class Page_Controller extends SilverStripe\Control\Controller {}
+class Page extends $pageBase {}
+class Page_Controller extends $controllerBase {}
+
+EOS;
+	mkdir($projectPath, 02775);
+	mkdir($projectPath.'/_config', 02775);
+	file_put_contents($projectPath .'/Page.php', $pageDotPHP);
+}
+
+require_once(__DIR__ . '/../../conf/ConfigureFromEnv.php');
