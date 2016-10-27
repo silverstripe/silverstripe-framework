@@ -2,7 +2,12 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import fetch from 'isomorphic-fetch';
-import { Field as ReduxFormField, reduxForm, SubmissionError } from 'redux-form';
+import {
+  Field as ReduxFormField,
+  reduxForm,
+  SubmissionError,
+  destroy as ReduxDestroyForm,
+} from 'redux-form';
 import * as schemaActions from 'state/schema/SchemaActions';
 import Form from 'components/Form/Form';
 import FormBuilder, { basePropTypes, schemaPropType } from 'components/FormBuilder/FormBuilder';
@@ -13,6 +18,19 @@ class FormBuilderLoader extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.state = {
+      fetching: false,
+    };
+  }
+
+  componentWillUnmount() {
+    // we will reload the schema any when we mount again, this is here so that redux-form doesn't
+    // preload previous data mistakenly. (since it only accepts initialised values)
+    ReduxDestroyForm(this.props.form);
+    if (this.props.form) {
+      this.props.schemaActions.destroySchema(this.props.form);
+    }
   }
 
   componentDidMount() {
@@ -95,6 +113,8 @@ class FormBuilderLoader extends Component {
       headerValues.push('state');
     }
 
+    this.setState({ fetching: true });
+
     return fetch(this.props.schemaUrl, {
       headers: { 'X-FormSchema-Request': headerValues.join() },
       credentials: 'same-origin',
@@ -104,6 +124,7 @@ class FormBuilderLoader extends Component {
         if (typeof formSchema.id !== 'undefined') {
           this.props.schemaActions.setSchema(formSchema);
         }
+        this.setState({ fetching: false });
         return formSchema;
       });
   }
@@ -111,7 +132,7 @@ class FormBuilderLoader extends Component {
   render() {
     // If the response from fetching the initial data
     // hasn't come back yet, don't render anything.
-    if (!this.props.schema) {
+    if (!this.props.schema || this.state.fetching) {
       return null;
     }
 

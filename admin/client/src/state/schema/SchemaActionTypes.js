@@ -1,5 +1,6 @@
 const ACTION_TYPES = {
   SET_SCHEMA: 'SET_SCHEMA',
+  DESTROY_SCHEMA: 'DESTROY_SCHEMA',
 };
 
 export default ACTION_TYPES;

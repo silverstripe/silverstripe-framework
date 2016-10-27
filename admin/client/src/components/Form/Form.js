@@ -4,12 +4,6 @@ import MessageBox from 'components/MessageBox/MessageBox';
 
 class Form extends SilverStripeComponent {
 
-  constructor(props) {
-    super(props);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
   /**
    * Generates a list of messages if any are available
    *
@@ -45,7 +39,7 @@ class Form extends SilverStripeComponent {
       {},
       this.props.attributes,
       {
-        onSubmit: this.handleSubmit,
+        onSubmit: this.props.handleSubmit,
         className: className.join(' '),
       }
     );
@@ -67,12 +61,6 @@ class Form extends SilverStripeComponent {
         }
       </form>
     );
-  }
-
-  handleSubmit(event) {
-    if (typeof this.props.handleSubmit === 'function') {
-      this.props.handleSubmit(event);
-    }
   }
 
 }
