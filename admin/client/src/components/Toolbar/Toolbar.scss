@@ -3,7 +3,6 @@
 .toolbar--content,
 .toolbar--south {
   @include make-container();
-  height: $toolbar-total-height;
 
   .btn-toolbar {
     // TODO Remove '.cms .btn-toolbar' override
