@@ -196,7 +196,7 @@ class SS_Map implements ArrayAccess, Countable, IteratorAggregate {
 		}
 
 		user_error(
-			"SS_Map is read-only. Please use $map->push($key, $value) to append values", 
+			'SS_Map is read-only. Please use $map->push($key, $value) to append values', 
 			E_USER_ERROR
 		);
 	}
