@@ -6,8 +6,8 @@
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DB;
 
-require_once '../../Core/Core.php';
-require_once '../FakeController.php';
+require_once __DIR__ . '/../../Core/Core.php';
+require_once __DIR__ . '/../FakeController.php';
 
 global $databaseConfig;
 DB::connect($databaseConfig);

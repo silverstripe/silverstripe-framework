@@ -1,5 +1,5 @@
 <?php
 
-require '../bootstrap/init.php';
-require '../bootstrap/environment.php';
-require '../bootstrap/mysite.php';
+require __DIR__ . '/../bootstrap/init.php';
+require __DIR__ . '/../bootstrap/environment.php';
+require __DIR__ . '/../bootstrap/mysite.php';
