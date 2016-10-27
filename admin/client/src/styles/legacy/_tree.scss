@@ -575,6 +575,8 @@
 
 // For drag and drop icons to not appear whilst in multi-selection
 .cms-tree {
+	padding-bottom: $panel-padding-y;
+
 	&.jstree.draggable {
 		.jstree-no-checkboxes {
 			li {

@@ -11673,6 +11673,10 @@ form.small .cms-file-info-data .field .middleColumn{
   color:#aaa;
 }
 
+.cms-tree{
+  padding-bottom:1.5385rem;
+}
+
 .cms-tree.jstree.draggable .jstree-no-checkboxes li a{
   padding-left:12px;
 }
