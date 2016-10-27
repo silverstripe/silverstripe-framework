@@ -75,7 +75,7 @@ class Preview extends SilverStripeComponent {
 
     // Combine elements
     return (
-      <div className="flexbox-area-grow fill-height preview">
+      <div className="flexbox-area-grow fill-height preview campaign-admin__campaign-preview">
         {body}
         <div className="toolbar toolbar--south">
           <button

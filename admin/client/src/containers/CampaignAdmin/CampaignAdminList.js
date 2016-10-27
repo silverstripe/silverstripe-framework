@@ -73,7 +73,7 @@ class CampaignAdminList extends SilverStripeComponent {
   render() {
     let itemId = this.props.campaign.changeSetItemId;
     let itemLinks = null;
-    const selectedClass = (!itemId) ? 'campaign-admin__campaign--no-selected-item' : '';
+    const selectedClass = (!itemId) ? 'campaign-admin__campaign--hide-preview' : '';
     const campaignId = this.props.campaignId;
     const campaign = this.props.record;
 

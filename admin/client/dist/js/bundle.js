@@ -2477,7 +2477,7 @@ key:"componentDidMount",value:function n(){var e=this.props.itemListViewEndpoint
 f(t.prototype.__proto__||Object.getPrototypeOf(t.prototype),"componentDidMount",this).call(this),this.setBreadcrumbs(),Object.keys(this.props.record).length||this.props.recordActions.fetchRecord(this.props.treeClass,"get",e).then(this.setBreadcrumbs)
 
 }},{key:"setBreadcrumbs",value:function i(){if(this.props.record){var e=[{text:$["default"]._t("Campaigns.CAMPAIGN","Campaigns"),href:this.props.sectionConfig.url}]
-e.push({text:this.props.record.Name,href:this.props.sectionConfig.url+"/set/"+this.props.campaignId+"/show"}),this.props.breadcrumbsActions.setBreadcrumbs(e)}}},{key:"render",value:function r(){var e=this,t=this.props.campaign.changeSetItemId,n=null,i=t?"":"campaign-admin__campaign--no-selected-item",r=this.props.campaignId,o=this.props.record,a=this.groupItemsForSet(),s=[]
+e.push({text:this.props.record.Name,href:this.props.sectionConfig.url+"/set/"+this.props.campaignId+"/show"}),this.props.breadcrumbsActions.setBreadcrumbs(e)}}},{key:"render",value:function r(){var e=this,t=this.props.campaign.changeSetItemId,n=null,i=t?"":"campaign-admin__campaign--hide-preview",r=this.props.campaignId,o=this.props.record,a=this.groupItemsForSet(),s=[]
 
 
 Object.keys(a).forEach(function(i){var l=a[i],u=l.items.length,c=[],d=u+" "+(1===u?l.singular:l.plural),f="Set_"+r+"_Group_"+i
@@ -2597,7 +2597,7 @@ return this.props.itemLinks&&this.props.itemLinks.edit&&(i=this.props.itemLinks.
 className:"btn__title"},d["default"]._t("Preview.EDIT","Edit"))))),e=this.props.itemId?t?n&&0===n.indexOf("image/")?u["default"].createElement("div",{className:"preview__file-container panel--scrollable"
 },u["default"].createElement("img",{alt:t,className:"preview__file--fits-space",src:t})):u["default"].createElement("iframe",{className:"flexbox-area-grow preview__iframe",src:t}):u["default"].createElement("div",{
 className:"preview__overlay"},u["default"].createElement("h3",{className:"preview__overlay-text"},"There is no preview available for this item.")):u["default"].createElement("div",{className:"preview__overlay"
-},u["default"].createElement("h3",{className:"preview__overlay-text"},"No preview available.")),u["default"].createElement("div",{className:"flexbox-area-grow fill-height preview"},e,u["default"].createElement("div",{
-className:"toolbar toolbar--south"},u["default"].createElement("button",{className:"btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up",type:"button",onClick:this.handleBackClick
-},"Back"),u["default"].createElement("div",{className:"btn-toolbar"},o)))}}]),t}(p["default"])
+},u["default"].createElement("h3",{className:"preview__overlay-text"},"No preview available.")),u["default"].createElement("div",{className:"flexbox-area-grow fill-height preview campaign-admin__campaign-preview"
+},e,u["default"].createElement("div",{className:"toolbar toolbar--south"},u["default"].createElement("button",{className:"btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up",type:"button",
+onClick:this.handleBackClick},"Back"),u["default"].createElement("div",{className:"btn-toolbar"},o)))}}]),t}(p["default"])
 h.propTypes={itemLinks:u["default"].PropTypes.object,itemId:u["default"].PropTypes.number,onBack:u["default"].PropTypes.func},t["default"]=h}])

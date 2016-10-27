@@ -15965,7 +15965,7 @@ body,html{
 }
 
 @media (max-width:991px){
-  .cms-content.has-panel .cms-content-tools{
+  .CMSPageEditController.has-panel .cms-content-tools,.CMSPageSettingsController.has-panel .cms-content-tools{
     display:none;
   }
 }
@@ -16052,13 +16052,20 @@ body,html{
 }
 
 @media (max-width:991px){
-  .campaign-admin__campaign--no-selected-item .preview{
+  .campaign-admin__campaign.campaign-admin__campaign--hide-preview .campaign-admin__campaign-preview{
     display:none;
   }
 
-  .campaign-admin__campaign--no-selected-item .list-group-item.active{
-    background-color:inherit;
-    color:inherit;
+  .campaign-admin__campaign .list-group-item.active{
+    background-color:#fff;
+    color:#4f5861;
+    z-index:0;
+  }
+
+  .campaign-admin__campaign .list-group-item.active:hover{
+    background-color:#f5f5f5;
+    color:#4f5861;
+    border-color:#ddd;
   }
 }
 
