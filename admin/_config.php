@@ -1,11 +1,11 @@
 <?php
 
 use SilverStripe\Admin\CMSMenu;
-use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
+use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 
 
 // Default CMS HTMLEditorConfig
-HTMLEditorConfig::get('cms')->setOptions(array(
+TinyMCEConfig::get('cms')->setOptions(array(
 	'friendly_name' => 'Default CMS',
 	'priority' => '50',
 
@@ -32,7 +32,7 @@ HTMLEditorConfig::get('cms')->setOptions(array(
 		. "object[width|height|data|type],param[name|value],map[class|name|id],area[shape|coords|href|target|alt]"
 ));
 
-HTMLEditorConfig::get('cms')
+TinyMCEConfig::get('cms')
 	->enablePlugins(array(
 		'contextmenu' => null,
 		'image' => null,
