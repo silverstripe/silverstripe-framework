@@ -277,10 +277,8 @@ class Upload_Validator
 		// extension validation
 		if (!$this->isValidExtension()) {
 			$this->errors[] = _t(
-				'File.INVALIDEXTENSION',
-				'Extension is not allowed (valid: {extensions})',
-				'Argument 1: Comma-separated list of valid extensions',
-				array('extensions' => wordwrap(implode(', ', $this->allowedExtensions)))
+				'File.INVALIDEXTENSION_SHORT',
+				'Extension is not allowed'
 			);
 			return false;
 		}
