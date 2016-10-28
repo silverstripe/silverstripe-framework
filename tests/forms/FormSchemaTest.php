@@ -66,12 +66,13 @@ class FormSchemaTest extends SapphireTest {
 				[
 					'id' => 'Form_TestForm_SecurityID',
 					'value' => $form->getSecurityToken()->getValue(),
-					'messages' => [],
-					'valid' => true,
-					'data' => []
+					'message' => null,
+					'data' => [],
+					'name' => 'SecurityID',
 				]
 			],
-			'messages' => []
+			'valid' => null,
+			'messages' => [],
 		];
 
 		$state = $formSchema->getState($form);
@@ -91,17 +92,16 @@ class FormSchemaTest extends SapphireTest {
 				[
 					'id' => 'Form_TestForm_SecurityID',
 					'value' => $form->getSecurityToken()->getValue(),
-					'messages' => [],
-					'valid' => true,
-					'data' => []
+					'data' => [],
+					'message' => null,
+					'name' => 'SecurityID',
 				]
 			],
-			'messages' => [
-				[
-					'value' => 'All saved',
-					'type' => 'good'
-				]
-			]
+			'messages' => [[
+				'value' => ['html' => 'All saved'],
+				'type' => 'good'
+			]],
+			'valid' => null,
 		];
 
 		$state = $formSchema->getState($form);
@@ -115,30 +115,32 @@ class FormSchemaTest extends SapphireTest {
 		$validator = new RequiredFields('Title');
 		$form = new Form(new Controller(), 'TestForm', $fields, $actions, $validator);
 		$form->loadDataFrom([
-			'Title' => 'My Title'
+			'Title' => null,
 		]);
-		$validator->validationError('Title', 'Title is invalid', 'error');
+		$this->assertFalse($form->validate());
 		$formSchema = new FormSchema();
 		$expected = [
 			'id' => 'Form_TestForm',
 			'fields' => [
 				[
 					'id' => 'Form_TestForm_Title',
-					'value' => 'My Title',
-					'messages' => [
-						['value' => 'Title is invalid', 'type' => 'error']
+					'value' => null,
+					'message' =>  [
+						'value' => ['html' => '&quot;Title&quot; is required'],
+						'type' => 'required'
 					],
-					'valid' => false,
-					'data' => []
+					'data' => [],
+					'name' => 'Title',
 				],
 				[
 					'id' => 'Form_TestForm_SecurityID',
 					'value' => $form->getSecurityToken()->getValue(),
-					'messages' => [],
-					'valid' => true,
-					'data' => []
+					'message' => null,
+					'data' => [],
+					'name' => 'SecurityID',
 				]
 			],
+			'valid' => false,
 			'messages' => []
 		];
 

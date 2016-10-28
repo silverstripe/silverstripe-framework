@@ -1498,30 +1498,26 @@ class FormField extends RequestHandler {
 	 * Includes validation data if the field is associated to a {@link Form},
 	 * and {@link Form->validate()} has been called.
 	 *
+	 * @todo Make form / field messages not always stored as html; Store value / casting as separate values.
 	 * @return array
 	 */
 	public function getSchemaStateDefaults() {
-		$field = $this;
-		$form = $this->getForm();
-		$validator = $form ? $form->getValidator() : null;
-		$errors = $validator ? (array)$validator->getErrors() : [];
-		$messages = array_filter(array_map(function($error) use ($field) {
-			if($error['fieldName'] === $field->getName()) {
-				return [
-					'value' => $error['message'],
-					'type' => $error['messageType']
-				];
-			}
-			return null;
-		}, $errors));
-
-		return [
+		$state = [
+            'name' => $this->getName(),
 			'id' => $this->ID(),
 			'value' => $this->Value(),
-			'valid' => (count($messages) === 0),
-			'messages' => (array)$messages,
+			'message' => null,
 			'data' => [],
 		];
+
+		if ($message = $this->Message()) {
+			$state['message'] = [
+				'value' => ['html' => $message],
+				'type' => $this->MessageType(),
+			];
+		}
+
+		return $state;
 	}
 
 }

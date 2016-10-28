@@ -13,3 +13,10 @@ export function setSchema(schema) {
     payload: schema,
   };
 }
+
+export function destroySchema(id) {
+  return {
+    type: ACTION_TYPES.DESTROY_SCHEMA,
+    payload: { id },
+  };
+}

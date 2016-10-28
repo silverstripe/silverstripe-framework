@@ -1,27 +1,53 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+import FormAlert from 'components/FormAlert/FormAlert';
 
 class Form extends SilverStripeComponent {
 
-  constructor(props) {
-    super(props);
-
-    this.handleSubmit = this.handleSubmit.bind(this);
+  /**
+   * Generates a list of messages if any are available
+   *
+   * @returns {Array|null}
+   */
+  renderMessages() {
+    if (Array.isArray(this.props.messages)) {
+      return this.props.messages.map((message, index) => (
+        <FormAlert
+          key={index}
+          className={!index ? 'message-box--panel-top' : ''}
+          {...message}
+        />
+      ));
+    }
+    return null;
   }
+
   render() {
-    const formProps = Object.assign(
-      {},
-      {
-        className: 'form',
-        onSubmit: this.handleSubmit,
-      },
-      this.props.attributes
-    );
+    const valid = this.props.valid !== false;
     const fields = this.props.mapFieldsToComponents(this.props.fields);
     const actions = this.props.mapActionsToComponents(this.props.actions);
+    const messages = this.renderMessages();
+
+    const className = ['form'];
+    if (valid === false) {
+      className.push('form--invalid');
+    }
+    if (this.props.attributes && this.props.attributes.className) {
+      className.push(this.props.attributes.className);
+    }
+    const formProps = Object.assign(
+      {},
+      this.props.attributes,
+      {
+        onSubmit: this.props.handleSubmit,
+        className: className.join(' '),
+      }
+    );
 
     return (
       <form {...formProps}>
+        {messages}
+
         {fields &&
           <fieldset>
             {fields}
@@ -37,29 +63,26 @@ class Form extends SilverStripeComponent {
     );
   }
 
-  handleSubmit(event) {
-    if (typeof this.props.handleSubmit === 'undefined') {
-      return;
-    }
-
-    this.props.handleSubmit(event);
-  }
-
 }
 
 Form.propTypes = {
-  actions: React.PropTypes.array,
-  attributes: React.PropTypes.shape({
-    action: React.PropTypes.string.isRequired,
-    className: React.PropTypes.string,
-    encType: React.PropTypes.string,
-    id: React.PropTypes.string,
-    method: React.PropTypes.string.isRequired,
+  actions: PropTypes.array,
+  attributes: PropTypes.shape({
+    action: PropTypes.string.isRequired,
+    className: PropTypes.string,
+    encType: PropTypes.string,
+    id: PropTypes.string,
+    method: PropTypes.string.isRequired,
   }),
-  fields: React.PropTypes.array.isRequired,
-  handleSubmit: React.PropTypes.func,
-  mapActionsToComponents: React.PropTypes.func.isRequired,
-  mapFieldsToComponents: React.PropTypes.func.isRequired,
+  fields: PropTypes.array.isRequired,
+  handleSubmit: PropTypes.func,
+  mapActionsToComponents: PropTypes.func.isRequired,
+  mapFieldsToComponents: PropTypes.func.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.shape({
+    extraClass: PropTypes.string,
+    value: PropTypes.any,
+    type: PropTypes.string,
+  })),
 };
 
 export default Form;

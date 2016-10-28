@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+import schemaFieldValues from 'lib/schemaFieldValues';
 import backend from 'lib/Backend';
 import injector from 'lib/Injector';
 import merge from 'merge';
@@ -19,7 +20,6 @@ class FormBuilder extends SilverStripeComponent {
     this.mapFieldsToComponents = this.mapFieldsToComponents.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAction = this.handleAction.bind(this);
-    this.findField = this.findField.bind(this);
     this.buildComponent = this.buildComponent.bind(this);
   }
 
@@ -32,7 +32,7 @@ class FormBuilder extends SilverStripeComponent {
   handleAction(event) {
     // Custom handlers
     if (typeof this.props.handleAction === 'function') {
-      this.props.handleAction(event, this.getFieldValues());
+      this.props.handleAction(event, schemaFieldValues());
     }
 
     const name = event.currentTarget.name;
@@ -48,7 +48,7 @@ class FormBuilder extends SilverStripeComponent {
    * Provides a hook for controllers to access for state and provide custom functionality.
    *
    * @param {Object} data Processed and validated data from redux-form
-   * (originally retrieved through getFieldValues())
+   * (originally retrieved through schemaFieldValues())
    * @return {Promise|null}
    */
   handleSubmit(data) {
@@ -65,21 +65,15 @@ class FormBuilder extends SilverStripeComponent {
       'X-Requested-With': 'XMLHttpRequest',
     };
 
-    const resetSubmittingFn = () => {
-      this.setState({ submittingAction: null });
-    };
-
     const submitFn = (customData) =>
       this.submitApi(customData || dataWithAction, headers)
         .then(formSchema => {
-          resetSubmittingFn();
+          this.setState({ submittingAction: null });
           return formSchema;
         })
         .catch((reason) => {
-          // TODO Generic CMS error reporting
-          // TODO Handle validation errors
-          resetSubmittingFn();
-          return reason;
+          this.setState({ submittingAction: null });
+          throw reason;
         });
 
     if (typeof this.props.handleSubmit === 'function') {
@@ -87,64 +81,6 @@ class FormBuilder extends SilverStripeComponent {
     }
 
     return submitFn();
-  }
-
-  /**
-   * Gets all field values based on the assigned form schema, from prop state.
-   *
-   * @returns {Object}
-   */
-  getFieldValues() {
-    // using state is more efficient and has the same fields, fallback to nested schema
-    const schema = this.props.schema.schema;
-    const state = this.props.schema.state;
-
-    if (!state) {
-      return {};
-    }
-
-    return state.fields
-      .reduce((prev, curr) => {
-        const match = this.findField(schema.fields, curr.id);
-
-        if (!match) {
-          return prev;
-        }
-
-        // Skip non-data fields
-        if (match.type === 'Structural' || match.readOnly === true) {
-          return prev;
-        }
-
-        return Object.assign({}, prev, {
-          [match.name]: curr.value,
-        });
-      }, {});
-  }
-
-  /**
-   * Finds the field with matching id from the schema or state, this is mainly for dealing with
-   * schema's deep nesting of fields.
-   *
-   * @param fields
-   * @param id
-   * @returns {object|undefined}
-   */
-  findField(fields, id) {
-    let result = null;
-    if (!fields) {
-      return result;
-    }
-
-    result = fields.find(field => field.id === id);
-
-    for (const field of fields) {
-      if (result) {
-        break;
-      }
-      result = this.findField(field.children, id);
-    }
-    return result;
   }
 
   /**
@@ -165,11 +101,6 @@ class FormBuilder extends SilverStripeComponent {
       return null;
     } else if (componentProps.schemaComponent !== null && SchemaComponent === undefined) {
       throw Error(`Component not found in injector: ${componentProps.schemaComponent}`);
-    }
-
-    // if no value, it is better to unset it
-    if (componentProps.value === null) {
-      delete componentProps.value;
     }
 
     // Inline `input` props into main field props
@@ -235,7 +166,7 @@ class FormBuilder extends SilverStripeComponent {
         props.handleClick = this.handleAction;
 
         // Reset through componentWillReceiveProps()
-        if (this.state.submittingAction === action.name) {
+        if (this.props.submitting && this.state.submittingAction === action.name) {
           props.loading = true;
         }
       }
@@ -261,7 +192,7 @@ class FormBuilder extends SilverStripeComponent {
     return merge.recursive(true, structure, {
       data: state.data,
       source: state.source,
-      messages: state.messages,
+      message: state.message,
       valid: state.valid,
       value: state.value,
     });
@@ -353,8 +284,10 @@ class FormBuilder extends SilverStripeComponent {
       actions: this.normalizeActions(schema.actions),
       attributes,
       data: schema.data,
-      initialValues: this.getFieldValues(),
+      initialValues: schemaFieldValues(schema, state),
       onSubmit: this.handleSubmit,
+      valid: state && state.valid,
+      messages: (state && Array.isArray(state.messages)) ? state.messages : [],
       mapActionsToComponents: this.mapActionsToComponents,
       mapFieldsToComponents: this.mapFieldsToComponents,
       asyncValidate,
@@ -404,6 +337,7 @@ const basePropTypes = {
 FormBuilder.propTypes = Object.assign({}, basePropTypes, {
   form: PropTypes.string.isRequired,
   schema: schemaPropType.isRequired,
+  submitting: PropTypes.bool,
 });
 
 export { basePropTypes, schemaPropType };

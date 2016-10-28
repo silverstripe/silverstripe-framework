@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Schema;
 
+use SilverStripe\Control\Session;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
@@ -51,10 +52,19 @@ class FormSchema {
 	 * @return array
 	 */
 	public function getState(Form $form) {
+		// Ensure that session errors are populated within form field messages
+		$form->setupFormErrors();
+
+		// @todo - Replace with ValidationResult handling
+		// Currently tri-state; null (unsubmitted), true (submitted-valid), false (submitted-invalid)
+		$errors = Session::get("FormInfo.{$form->FormName()}.errors");
+		$valid = isset($errors) ? empty($errors) : null;
+
 		$state = [
 			'id' => $form->FormName(),
 			'fields' => [],
-			'messages' => []
+			'valid' => $valid,
+			'messages' => [],
 		];
 
 		// flattened nested fields are returned, rather than only top level fields.
@@ -63,9 +73,10 @@ class FormSchema {
 			$this->getFieldStates($form->Actions())
 		);
 
-		if($form->Message()) {
+		if($message = $form->Message()) {
 			$state['messages'][] = [
-				'value' => $form->Message(),
+				// TODO Make form / field messages not always stored as html
+				'value' => ['html' => $message],
 				'type' => $form->MessageType(),
 			];
 		}

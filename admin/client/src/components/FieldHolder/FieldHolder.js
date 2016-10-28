@@ -2,6 +2,7 @@ import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import { FormGroup, ControlLabel } from 'react-bootstrap-ss';
 import castStringToElement from 'lib/castStringToElement';
+import FormAlert from 'components/FormAlert/FormAlert';
 
 function fieldHolder(Field) {
   class FieldHolder extends SilverStripeComponent {
@@ -9,7 +10,7 @@ function fieldHolder(Field) {
     /**
      * Build description
      *
-     * @returns {XML}
+     * @returns {Component}
      */
     getDescription() {
       if (this.props.description === null) {
@@ -24,9 +25,26 @@ function fieldHolder(Field) {
     }
 
     /**
+     * Build a FormAlert
+     *
+     * @returns {Component}
+     */
+    getMessage() {
+      const message = (this.props.meta) ? this.props.meta.error : null;
+
+      if (!message) {
+        return null;
+      }
+
+      return (
+        <FormAlert className="form__field-message" {...message} />
+      );
+    }
+
+    /**
      * Build title label
      *
-     * @returns {XML}
+     * @returns {Component}
      */
     getLeftTitle() {
       const labelText = this.props.leftTitle !== null
@@ -44,6 +62,11 @@ function fieldHolder(Field) {
       );
     }
 
+    /**
+     * Build title label
+     *
+     * @returns {Component}
+     */
     getRightTitle() {
       if (!this.props.rightTitle || this.props.hideLabels) {
         return null;
@@ -56,6 +79,11 @@ function fieldHolder(Field) {
       );
     }
 
+    /**
+     * Generates the properties for the field holder
+     *
+     * @returns {object}
+     */
     getHolderProps() {
       // The extraClass property is defined on both the holder and element
       // for legacy reasons (same behaviour as PHP rendering)
@@ -83,9 +111,10 @@ function fieldHolder(Field) {
           {this.getLeftTitle()}
           <div className="form__field-holder">
             <Field {...this.props} />
+            {this.getMessage()}
+            {this.getDescription()}
           </div>
           {this.getRightTitle()}
-          {this.getDescription()}
         </FormGroup>
       );
     }
@@ -101,6 +130,11 @@ function fieldHolder(Field) {
     id: React.PropTypes.string,
     description: React.PropTypes.any,
     hideLabels: React.PropTypes.bool,
+    message: React.PropTypes.shape({
+      extraClass: React.PropTypes.string,
+      value: React.PropTypes.any,
+      type: React.PropTypes.string,
+    }),
   };
 
   FieldHolder.defaultProps = {
@@ -108,11 +142,6 @@ function fieldHolder(Field) {
     extraClass: '',
     leftTitle: null,
     rightTitle: null,
-  };
-
-  FieldHolder.defaultProps = {
-    className: '',
-    extraClass: '',
   };
 
   return FieldHolder;

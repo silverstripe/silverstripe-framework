@@ -15344,6 +15344,15 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   top:1px;
 }
 
+.message-box .close{
+  padding:0;
+  margin-top:-1px;
+}
+
+.message-box--panel-top{
+  margin-right:1.8462rem;
+}
+
 .preview{
   position:relative;
 }

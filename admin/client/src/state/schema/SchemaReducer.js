@@ -10,6 +10,12 @@ export default function schemaReducer(state = initialState, action = null) {
       return deepFreeze(Object.assign({}, state, { [action.payload.id]: action.payload }));
     }
 
+    case ACTION_TYPES.DESTROY_SCHEMA: {
+      return deepFreeze(Object.assign({}, state, {
+        [action.payload.id]: undefined,
+      }));
+    }
+
     default:
       return state;
   }
