@@ -3,6 +3,7 @@
 .toolbar--content,
 .toolbar--south {
   @include make-container();
+  min-height: $toolbar-total-height;
 
   .btn-toolbar {
     // TODO Remove '.cms .btn-toolbar' override
@@ -40,6 +41,7 @@
   margin-left: -$panel-padding-x;
   margin-right: -$panel-padding-x;
   padding: $spacer-xs;
+  min-height: auto;
 
 
   @include media-breakpoint-down(md) {

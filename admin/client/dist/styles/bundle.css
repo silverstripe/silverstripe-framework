@@ -15444,6 +15444,7 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   margin-right:auto;
   padding-left:1.5385rem;
   padding-right:1.5385rem;
+  min-height:53px;
 }
 
 .toolbar--content .btn-toolbar,.toolbar--north .btn-toolbar,.toolbar--south .btn-toolbar,.toolbar .btn-toolbar{
@@ -15473,6 +15474,7 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   margin-left:-1.5385rem;
   margin-right:-1.5385rem;
   padding:.76925rem;
+  min-height:auto;
 }
 
 @media (max-width:991px){
