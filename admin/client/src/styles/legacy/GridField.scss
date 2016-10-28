@@ -319,6 +319,7 @@
 
 .grid-field__paginator {
   position: relative;
+  white-space: nowrap;
 }
 
 // TODO create pagination component
@@ -327,14 +328,15 @@
 }
 
 .grid-field__paginator__controls {
+  white-space: nowrap;
   position: absolute;
   height: 36px;
   top: 50%;
   left: 50%;
   margin-top: -18px;
-  margin-left: -125px; // half the width of .datagrid-pagination - centers pagination
+  margin-left: -130px; // half the width of .datagrid-pagination - centers pagination
   z-index: 5;
-  width: 250px;
+  width: 260px;
   text-align: center;
 
   .pagination-page-number {
