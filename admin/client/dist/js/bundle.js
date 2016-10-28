@@ -355,10 +355,11 @@ n.handleSubmit=n.handleSubmit.bind(n),n.handleAction=n.handleAction.bind(n),n.bu
 m["default"])())
 var t=e.currentTarget.name
 e.isPropagationStopped()||this.setState({submittingAction:t})}},{key:"handleSubmit",value:function i(e){var t=this,n=this.state.submittingAction?this.state.submittingAction:this.props.schema.schema.actions[0].name,i=l({},e,r({},n,1)),o={
-"X-Formschema-Request":"state,schema","X-Requested-With":"XMLHttpRequest"},a=function u(e){return t.submitApi(e||i,o).then(function(e){return t.setState({submittingAction:null}),e})["catch"](function(e){
+"X-Formschema-Request":"state,schema","X-Requested-With":"XMLHttpRequest"},a=function s(e){return t.submitApi(e||i,o).then(function(e){return t.setState({submittingAction:null}),e})["catch"](function(e){
 throw t.setState({submittingAction:null}),e})}
-if("function"==typeof this.props.handleSubmit){var s=this.props.handleSubmit(i,n,a)
-return s}return a()}},{key:"buildComponent",value:function c(e){var t=e,n=null!==t.schemaComponent?b["default"].getComponentByName(t.schemaComponent):b["default"].getComponentByDataType(t.type)
+return"function"==typeof this.props.handleSubmit?this.props.handleSubmit(i,n,a):a()}},{key:"buildComponent",value:function c(e){var t=e,n=null!==t.schemaComponent?b["default"].getComponentByName(t.schemaComponent):b["default"].getComponentByDataType(t.type)
+
+
 if(null===n)return null
 if(null!==t.schemaComponent&&void 0===n)throw Error("Component not found in injector: "+t.schemaComponent)
 t=l({},t,t.input),delete t.input
