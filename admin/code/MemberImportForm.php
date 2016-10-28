@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Admin;
 
+use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\MemberCsvBulkLoader;
 use SilverStripe\Forms\LiteralField;
@@ -52,10 +53,10 @@ class MemberImportForm extends Form {
 				new LiteralField('Help', $helpHtml),
 				$fileField = new FileField(
 					'CsvFile',
-					_t(
+					DBField::create_field('HTMLFragment', _t(
 						'SecurityAdmin_MemberImportForm.FileFieldLabel',
 						'CSV File <small>(Allowed extensions: *.csv)</small>'
-					)
+					))
 				)
 			);
 			$fileField->getValidator()->setAllowedExtensions(array('csv'));
