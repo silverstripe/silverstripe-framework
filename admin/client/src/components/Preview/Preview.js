@@ -73,16 +73,20 @@ class Preview extends SilverStripeComponent {
       body = <iframe className="flexbox-area-grow preview__iframe" src={previewUrl}></iframe>;
     }
 
+    const backButton = (typeof this.props.onBack === 'function') && (
+      <button
+        className="btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up"
+        type="button"
+        onClick={this.handleBackClick}
+      >Back</button>
+    );
+
     // Combine elements
     return (
       <div className="flexbox-area-grow fill-height preview campaign-admin__campaign-preview">
         {body}
         <div className="toolbar toolbar--south">
-          <button
-            className="btn btn-secondary font-icon-left-open-big toolbar__back-button hidden-lg-up"
-            type="button"
-            onClick={this.handleBackClick}
-          >Back</button>
+          { backButton }
           <div className="btn-toolbar">
             {toolbarButtons}
           </div>
