@@ -2,7 +2,7 @@ import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import { FormGroup, ControlLabel } from 'react-bootstrap-ss';
 import castStringToElement from 'lib/castStringToElement';
-import MessageBox from 'components/MessageBox/MessageBox';
+import FormAlert from 'components/FormAlert/FormAlert';
 
 function fieldHolder(Field) {
   class FieldHolder extends SilverStripeComponent {
@@ -25,7 +25,7 @@ function fieldHolder(Field) {
     }
 
     /**
-     * Build a MessageBox
+     * Build a FormAlert
      *
      * @returns {Component}
      */
@@ -37,7 +37,7 @@ function fieldHolder(Field) {
       }
 
       return (
-        <MessageBox className="form__field-message" {...message} />
+        <FormAlert className="form__field-message" {...message} />
       );
     }
 

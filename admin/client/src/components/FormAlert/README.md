@@ -1,10 +1,10 @@
-# MessageBox Component
+# FormAlert Component
 
 Generates a bootstrap alert box, with state closing handled optionally.
 
 ## Example
 ```js
-<MessageBox type="error" value="There was a problem" />
+<FormAlert type="error" value="There was a problem" />
 ```
 
 ## Properties

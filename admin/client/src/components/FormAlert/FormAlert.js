@@ -7,7 +7,7 @@ import castStringToElement from 'lib/castStringToElement';
  * A wrapper for Alert messages in react-bootstrap.
  * Displays a given message.
  */
-class MessageBox extends SilverStripeComponent {
+class FormAlert extends SilverStripeComponent {
   constructor(props) {
     super(props);
 
@@ -51,7 +51,7 @@ class MessageBox extends SilverStripeComponent {
   }
 
   /**
-   * Generate the properties for the MessageBox
+   * Generate the properties for the FormAlert
    * @returns {object} properties
    */
   getMessageProps() {
@@ -88,7 +88,7 @@ class MessageBox extends SilverStripeComponent {
   }
 }
 
-MessageBox.propTypes = {
+FormAlert.propTypes = {
   extraClass: PropTypes.string,
   value: PropTypes.any,
   type: PropTypes.string,
@@ -97,9 +97,9 @@ MessageBox.propTypes = {
   visible: PropTypes.bool,
 };
 
-MessageBox.defaultProps = {
+FormAlert.defaultProps = {
   extraClass: '',
   className: '',
 };
 
-export default MessageBox;
+export default FormAlert;

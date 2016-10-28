@@ -1,4 +1,29 @@
 /**
+ * Finds the field with matching id from the schema or state, this is mainly for dealing with
+ * schema's deep nesting of fields.
+ *
+ * @param fields
+ * @param id
+ * @returns {object|undefined}
+ */
+export function findField(fields, id) {
+  let result = null;
+  if (!fields) {
+    return result;
+  }
+
+  result = fields.find(field => field.id === id);
+
+  for (const field of fields) {
+    if (result) {
+      break;
+    }
+    result = findField(field.children, id);
+  }
+  return result;
+}
+
+/**
  * Gets all field values based on the assigned form schema, from prop state.
  *
  * @returns {Object}
@@ -26,29 +51,4 @@ export default function schemaFieldValues(schema, state) {
         [match.name]: curr.value,
       });
     }, {});
-}
-
-/**
- * Finds the field with matching id from the schema or state, this is mainly for dealing with
- * schema's deep nesting of fields.
- *
- * @param fields
- * @param id
- * @returns {object|undefined}
- */
-export function findField(fields, id) {
-  let result = null;
-  if (!fields) {
-    return result;
-  }
-
-  result = fields.find(field => field.id === id);
-
-  for (const field of fields) {
-    if (result) {
-      break;
-    }
-    result = findField(field.children, id);
-  }
-  return result;
 }

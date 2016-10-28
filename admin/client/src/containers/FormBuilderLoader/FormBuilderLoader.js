@@ -6,7 +6,7 @@ import {
   Field as ReduxFormField,
   reduxForm,
   SubmissionError,
-  destroy as ReduxDestroyForm,
+  destroy as reduxDestroyForm,
 } from 'redux-form';
 import * as schemaActions from 'state/schema/SchemaActions';
 import Form from 'components/Form/Form';
@@ -24,15 +24,6 @@ class FormBuilderLoader extends Component {
     };
   }
 
-  componentWillUnmount() {
-    // we will reload the schema any when we mount again, this is here so that redux-form doesn't
-    // preload previous data mistakenly. (since it only accepts initialised values)
-    ReduxDestroyForm(this.props.form);
-    if (this.props.form) {
-      this.props.schemaActions.destroySchema(this.props.form);
-    }
-  }
-
   componentDidMount() {
     this.fetch();
   }
@@ -40,6 +31,15 @@ class FormBuilderLoader extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.schemaUrl !== prevProps.schemaUrl) {
       this.fetch();
+    }
+  }
+
+  componentWillUnmount() {
+    // we will reload the schema any when we mount again, this is here so that redux-form doesn't
+    // preload previous data mistakenly. (since it only accepts initialised values)
+    reduxDestroyForm(this.props.form);
+    if (this.props.form) {
+      this.props.schemaActions.destroySchema(this.props.form);
     }
   }
 
@@ -91,7 +91,7 @@ class FormBuilderLoader extends Component {
           throw new SubmissionError(messages);
         }
         return formSchema;
-      })
+      });
   }
 
   /**
@@ -149,6 +149,7 @@ FormBuilderLoader.propTypes = Object.assign({}, basePropTypes, {
   schemaUrl: PropTypes.string.isRequired,
   schema: schemaPropType,
   form: PropTypes.string,
+  submitting: PropTypes.bool,
 });
 FormBuilderLoader.defaultProps = {
   // Perform this *outside* of render() to avoid re-rendering of the whole DOM structure
@@ -161,7 +162,10 @@ export default connect(
   (state, ownProps) => {
     const schema = state.schemas[ownProps.schemaUrl];
     const form = schema ? schema.id : null;
-    return { schema, form };
+    const submitting = state.form
+      && state.form[ownProps.schemaUrl]
+      && state.form[ownProps.schemaUrl].submitting;
+    return { schema, form, submitting };
   },
   (dispatch) => ({
     schemaActions: bindActionCreators(schemaActions, dispatch),

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
-import MessageBox from 'components/MessageBox/MessageBox';
+import FormAlert from 'components/FormAlert/FormAlert';
 
 class Form extends SilverStripeComponent {
 
@@ -9,10 +9,10 @@ class Form extends SilverStripeComponent {
    *
    * @returns {Array|null}
    */
-  getMessages() {
+  renderMessages() {
     if (Array.isArray(this.props.messages)) {
       return this.props.messages.map((message, index) => (
-        <MessageBox
+        <FormAlert
           key={index}
           className={!index ? 'message-box--panel-top' : ''}
           {...message}
@@ -26,7 +26,7 @@ class Form extends SilverStripeComponent {
     const valid = this.props.valid !== false;
     const fields = this.props.mapFieldsToComponents(this.props.fields);
     const actions = this.props.mapActionsToComponents(this.props.actions);
-    const messages = this.getMessages();
+    const messages = this.renderMessages();
 
     const className = ['form'];
     if (valid === false) {

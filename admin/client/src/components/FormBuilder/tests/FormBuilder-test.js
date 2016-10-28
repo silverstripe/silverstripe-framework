@@ -2,12 +2,14 @@
 
 jest.unmock('merge');
 jest.unmock('lib/SilverStripeComponent');
+jest.unmock('lib/schemaFieldValues');
 jest.unmock('../FormBuilder');
 jest.unmock('redux-form');
 
 const React = require('react');
 import ReactTestUtils from 'react-addons-test-utils';
 import FormBuilder from '../FormBuilder';
+import schemaFieldValues, { findField } from 'lib/schemaFieldValues';
 
 describe('FormBuilder', () => {
   const baseProps = {
@@ -54,7 +56,7 @@ describe('FormBuilder', () => {
             y: 2,
           },
         },
-        messages: [{ type: 'good' }],
+        message: { type: 'good' },
         valid: true,
         value: 'My test field',
       };
@@ -64,14 +66,13 @@ describe('FormBuilder', () => {
       expect(field.component).toBe('TextField');
       expect(field.data.someCustomData.x).toBe(1);
       expect(field.data.someCustomData.y).toBe(2);
-      expect(field.messages[0].type).toBe('good');
+      expect(field.message.type).toBe('good');
       expect(field.valid).toBe(true);
       expect(field.value).toBe('My test field');
     });
   });
 
   describe('getFieldValues()', () => {
-    let formBuilder = null;
     let fieldValues = null;
     const props = Object.assign({}, baseProps);
 
@@ -85,55 +86,11 @@ describe('FormBuilder', () => {
         { id: 'fieldTwo', value: null },
         { id: 'notInSchema', value: 'invalid' },
       ];
-      formBuilder = new FormBuilder(baseProps);
-
-      fieldValues = formBuilder.getFieldValues();
+      fieldValues = schemaFieldValues(props.schema.schema, props.schema.state);
       expect(fieldValues).toEqual({
         fieldOne: 'valOne',
         fieldTwo: null,
       });
-    });
-  });
-
-  describe('findField()', () => {
-    let formBuilder = null;
-    let fields = null;
-
-    beforeEach(() => {
-      formBuilder = new FormBuilder(baseProps);
-    });
-
-    it('should retrieve the field in the shallow fields list', () => {
-      fields = [
-        { id: 'fieldOne' },
-        { id: 'fieldTwo' },
-        { id: 'fieldThree' },
-        { id: 'fieldFour' },
-      ];
-      const field = formBuilder.findField(fields, 'fieldThree');
-
-      expect(field).toBeTruthy();
-      expect(field.id).toBe('fieldThree');
-    });
-
-    it('should retrieve the field that is a grandchild in the fields list', () => {
-      fields = [
-        { id: 'fieldOne' },
-        { id: 'fieldTwo', children: [
-          { id: 'fieldTwoOne' },
-          { id: 'fieldTwoTwo', children: [
-            { id: 'fieldTwoOne' },
-            { id: 'fieldTwoTwo' },
-            { id: 'fieldTwoThree' },
-          ] },
-        ] },
-        { id: 'fieldThree' },
-        { id: 'fieldFour' },
-      ];
-      const field = formBuilder.findField(fields, 'fieldTwoThree');
-
-      expect(field).toBeTruthy();
-      expect(field.id).toBe('fieldTwoThree');
     });
   });
 
@@ -166,7 +123,7 @@ describe('FormBuilder', () => {
       submitApiMock.mockImplementation(() => Promise.resolve({}));
       formBuilder.submitApi = submitApiMock;
 
-      formBuilder.handleSubmit(formBuilder.getFieldValues());
+      formBuilder.handleSubmit(schemaFieldValues(props.schema.schema, props.schema.state));
 
       expect(formBuilder.submitApi.mock.calls[0][0]).toEqual(
         {
@@ -182,7 +139,7 @@ describe('FormBuilder', () => {
       submitApiMock.mockImplementation(() => Promise.resolve({}));
       formBuilder.submitApi = submitApiMock;
 
-      formBuilder.handleSubmit(formBuilder.getFieldValues());
+      formBuilder.handleSubmit(schemaFieldValues(props.schema.schema, props.schema.state));
 
       expect(formBuilder.submitApi.mock.calls[0][0]).toEqual(
         {
@@ -191,6 +148,43 @@ describe('FormBuilder', () => {
           actionOne: 1,
         }
       );
+    });
+  });
+
+  describe('findField()', () => {
+    let fields = null;
+
+    it('should retrieve the field in the shallow fields list', () => {
+      fields = [
+        { id: 'fieldOne' },
+        { id: 'fieldTwo' },
+        { id: 'fieldThree' },
+        { id: 'fieldFour' },
+      ];
+      const field = findField(fields, 'fieldThree');
+
+      expect(field).toBeTruthy();
+      expect(field.id).toBe('fieldThree');
+    });
+
+    it('should retrieve the field that is a grandchild in the fields list', () => {
+      fields = [
+        { id: 'fieldOne' },
+        { id: 'fieldTwo', children: [
+          { id: 'fieldTwoOne' },
+          { id: 'fieldTwoTwo', children: [
+            { id: 'fieldTwoOne' },
+            { id: 'fieldTwoTwo' },
+            { id: 'fieldTwoThree' },
+          ] },
+        ] },
+        { id: 'fieldThree' },
+        { id: 'fieldFour' },
+      ];
+      const field = findField(fields, 'fieldTwoThree');
+
+      expect(field).toBeTruthy();
+      expect(field.id).toBe('fieldTwoThree');
     });
   });
 });

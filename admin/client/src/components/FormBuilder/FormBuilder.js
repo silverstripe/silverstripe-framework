@@ -72,8 +72,6 @@ class FormBuilder extends SilverStripeComponent {
           return formSchema;
         })
         .catch((reason) => {
-          // TODO Generic CMS error reporting
-          // TODO Handle validation errors
           this.setState({ submittingAction: null });
           throw reason;
         });
@@ -168,7 +166,7 @@ class FormBuilder extends SilverStripeComponent {
         props.handleClick = this.handleAction;
 
         // Reset through componentWillReceiveProps()
-        if (this.state.submittingAction === action.name) {
+        if (this.props.submitting && this.state.submittingAction === action.name) {
           props.loading = true;
         }
       }
@@ -339,6 +337,7 @@ const basePropTypes = {
 FormBuilder.propTypes = Object.assign({}, basePropTypes, {
   form: PropTypes.string.isRequired,
   schema: schemaPropType.isRequired,
+  submitting: PropTypes.bool,
 });
 
 export { basePropTypes, schemaPropType };
