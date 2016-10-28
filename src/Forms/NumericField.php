@@ -118,6 +118,12 @@ class NumericField extends TextField {
 		return false;
 	}
 
+	public function getSchemaValidation() {
+		$rules = parent::getSchemaValidation();
+		$rules['numeric'] = true;
+		return $rules;
+	}
+
 	/**
 	 * Extracts the number value from the localised string value.
 	 *

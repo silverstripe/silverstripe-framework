@@ -1459,6 +1459,7 @@ class FormField extends RequestHandler {
 			'readOnly' => $this->isReadonly(),
 			'disabled' => $this->isDisabled(),
 			'customValidationMessage' => $this->getCustomValidationMessage(),
+			'validation' => $this->getSchemaValidation(),
 			'attributes' => [],
 			'data' => [],
 		];
@@ -1518,6 +1519,20 @@ class FormField extends RequestHandler {
 		}
 
 		return $state;
+	}
+
+	/**
+	 * Return list of validation rules. Each rule is a key value pair.
+	 * The key is the rule name. The value is any information the frontend
+	 * validation handler can understand, or just `true` to enable.
+	 *
+	 * @return array
+	 */
+	public function getSchemaValidation() {
+		if ($this->Required()) {
+			return [ 'required' => true ];
+		}
+		return [];
 	}
 
 }

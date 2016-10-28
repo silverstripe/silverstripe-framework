@@ -55,4 +55,10 @@ class EmailField extends TextField {
 
 		return true;
 	}
+
+	public function getSchemaValidation() {
+		$rules = parent::getSchemaValidation();
+		$rules['email'] = true;
+		return $rules;
+	}
 }
