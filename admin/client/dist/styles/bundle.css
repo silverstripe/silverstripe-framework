@@ -16077,6 +16077,7 @@ body,html{
 .campaign-admin__campaign-items{
   width:100%;
   z-index:1;
+  position:relative;
 }
 
 @media (min-width:992px){

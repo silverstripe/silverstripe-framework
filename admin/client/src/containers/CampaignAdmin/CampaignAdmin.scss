@@ -26,6 +26,7 @@
 .campaign-admin__campaign-items {
   width: 100%;
   z-index: 1;
+  position: relative;
 
   @include media-breakpoint-up(lg) {
     width: $cms-panel-sm;
