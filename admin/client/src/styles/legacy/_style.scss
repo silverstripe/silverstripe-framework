@@ -215,16 +215,16 @@ body.cms {
 		float: left;
 		padding-top: $spacer-xs / 2;
 	}
+}
 
-  .view-controls {
-    float: right;
-    margin-top: 4px;
+.view-controls {
+  float: right;
+  margin-top: 4px;
 
-    .icon-button-group {
-      .icon-button {
-        padding: 6px 8px;
-        height: 26px;
-      }
+  .icon-button-group {
+    .icon-button {
+      padding: 6px 8px;
+      height: 26px;
     }
   }
 }
