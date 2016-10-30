@@ -15350,11 +15350,11 @@ div.grid-field__sort-field+.form__fieldgroup-item{
 }
 
 @media (max-width:767px){
-  .grid-field__table td,.grid-field__table th{
+  :not(div.cms-list) .grid-field__table td,:not(div.cms-list) .grid-field__table th{
     display:none;
   }
 
-  .grid-field__table td.grid-field__action-placeholder,.grid-field__table td.grid-field__cell--actions,.grid-field__table td:first-child,.grid-field__table th.grid-field__action-placeholder,.grid-field__table th.grid-field__cell--actions,.grid-field__table th:first-child{
+  :not(div.cms-list) .grid-field__table td.grid-field__action-placeholder,:not(div.cms-list) .grid-field__table td.grid-field__cell--actions,:not(div.cms-list) .grid-field__table td:first-child,:not(div.cms-list) .grid-field__table th.grid-field__action-placeholder,:not(div.cms-list) .grid-field__table th.grid-field__cell--actions,:not(div.cms-list) .grid-field__table th:first-child{
     display:table-cell;
   }
 }
@@ -15953,20 +15953,6 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
 .modal__response--error span:before{
   content:"#";
   color:#d40404;
-}
-
-*,:after,:before{
-  box-sizing:border-box;
-}
-
-body,html{
-  width:100%;
-  height:100%;
-  margin:0;
-  padding:0;
-  display:-ms-flexbox;
-  display:-webkit-box;
-  display:flex;
 }
 
 @media (max-width:991px){
