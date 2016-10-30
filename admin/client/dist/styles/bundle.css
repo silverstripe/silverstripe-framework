@@ -15424,7 +15424,6 @@ div.grid-field__sort-field+.form__fieldgroup-item{
 
 .preview__overlay{
   text-align:center;
-  position:absolute;
   top:0;
   width:100%;
   height:calc(100% - 53px);
@@ -15953,6 +15952,20 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
 .modal__response--error span:before{
   content:"#";
   color:#d40404;
+}
+
+*,:after,:before{
+  box-sizing:border-box;
+}
+
+body,html{
+  width:100%;
+  height:100%;
+  margin:0;
+  padding:0;
+  display:-ms-flexbox;
+  display:-webkit-box;
+  display:flex;
 }
 
 @media (max-width:991px){
