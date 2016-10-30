@@ -434,7 +434,7 @@ class DataList extends ViewableData implements SS_List, SS_Filterable, SS_Sortab
 		} elseif($numberFuncArgs == 2) {
 			$whereArguments[func_get_arg(0)] = func_get_arg(1);
 		} else {
-			throw new InvalidArgumentException('Incorrect number of arguments passed to exclude()');
+			throw new InvalidArgumentException('Incorrect number of arguments passed to filterAny()');
 		}
 
 		return $this->alterDataQuery(function($query, $list) use ($whereArguments) {
