@@ -32,11 +32,6 @@ matrix:
       env: DB=MYSQL CMS_TEST=1 PHPUNIT_TEST=1
     - php: 5.6
       env: DB=MYSQL CMS_TEST=1 BEHAT_TEST=1
-  allow_failures:
-    - php: 5.6
-      env: DB=MYSQL CMS_TEST=1 PHPUNIT_TEST=1
-    - php: 5.6
-      env: DB=MYSQL CMS_TEST=1 BEHAT_TEST=1
 
 before_script:
  - printf "\n" | pecl install imagick
@@ -50,6 +45,7 @@ before_script:
  - "if [ \"$DB\" = \"PGSQL\" ]; then composer require silverstripe/postgresql:2.0.x-dev --prefer-dist; fi"
  - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
  - "if [ \"$CMS_TEST\" = \"1\" ]; then COMPOSER_ROOT_VERSION=4.0.x-dev composer require silverstripe/cms:4.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi"
+ - "if [ \"$CMS_TEST\" = \"1\" ]; then php ./cms/tests/bootstrap/mysite.php; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ] && [ `git log --format=format:%aE -1` = \"support@greenkeeper.io\" ]; then echo \"Removing npm-shrinkwrap.json\"; rm npm-shrinkwrap.json; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sh -e /etc/init.d/xvfb start; sleep 3; fi"
@@ -60,7 +56,7 @@ script:
  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit; fi"
  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/phpunit cms/tests; fi"
  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat --config tests/behat/config.yml .; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config cms/tests/behat/behat.yml; fi"
+ - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config tests/behat/config.yml; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run lint; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run build; fi"
