@@ -8,19 +8,21 @@
  */
 class ValidationResult extends Object {
 	/**
-	 * Boolean - is the result valid or not
+	 * @var bool - is the result valid or not
 	 */
 	protected $isValid;
 
 
 	/**
-	 * Array of errors
+	 * @var array of errors
 	 */
 	protected $errorList = array();
 
 	/**
 	 * Create a new ValidationResult.
 	 * By default, it is a successful result.	Call $this->error() to record errors.
+	 * @param bool $valid
+	 * @param string|null $message
 	 */
 	public function __construct($valid = true, $message = null) {
 		$this->isValid = $valid;
@@ -30,8 +32,8 @@ class ValidationResult extends Object {
 
 	/**
 	 * Record an error against this validation result,
-	 * @param $message The validation error message
-	 * @param $code An optional error code string, that can be accessed with {@link $this->codeList()}.
+	 * @param string $message The validation error message
+	 * @param string $code An optional error code string, that can be accessed with {@link $this->codeList()}.
 	 * @return ValidationResult this
 	 */
 	public function error($message, $code = null) {
@@ -99,7 +101,7 @@ class ValidationResult extends Object {
 	 * It will be valid if both this and the other result are valid.
 	 * This object will be modified to contain the new validation information.
 	 *
-	 * @param ValidationResult the validation result object to combine
+	 * @param ValidationResult $other the validation result object to combine
 	 * @return ValidationResult this
 	 */
 	public function combineAnd(ValidationResult $other) {
