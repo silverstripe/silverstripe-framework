@@ -15350,11 +15350,11 @@ div.grid-field__sort-field+.form__fieldgroup-item{
 }
 
 @media (max-width:767px){
-  :not(div.cms-list) .grid-field__table td,:not(div.cms-list) .grid-field__table th{
+  .grid-field__table td,.grid-field__table th{
     display:none;
   }
 
-  :not(div.cms-list) .grid-field__table td.grid-field__action-placeholder,:not(div.cms-list) .grid-field__table td.grid-field__cell--actions,:not(div.cms-list) .grid-field__table td:first-child,:not(div.cms-list) .grid-field__table th.grid-field__action-placeholder,:not(div.cms-list) .grid-field__table th.grid-field__cell--actions,:not(div.cms-list) .grid-field__table th:first-child{
+  .cms-list .grid-field__table td,.cms-list .grid-field__table th,.grid-field__table td.grid-field__action-placeholder,.grid-field__table td.grid-field__cell--actions,.grid-field__table td:first-child,.grid-field__table th.grid-field__action-placeholder,.grid-field__table th.grid-field__cell--actions,.grid-field__table th:first-child{
     display:table-cell;
   }
 }

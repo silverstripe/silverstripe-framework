@@ -241,20 +241,19 @@ div.grid-field__sort-field + .form__fieldgroup-item {
 
 // Responsive grid-field
 // Todo: add .text-truncate for overflowing cells
-:not(div.cms-list) {
-  @include media-breakpoint-down(sm) {
-    .grid-field__table td,
-    .grid-field__table th {
-      display: none;
+@include media-breakpoint-down(sm) {
+  .grid-field__table td,
+  .grid-field__table th {
+    display: none;
 
-      &:first-child {
-        display: table-cell;
-      }
+    &:first-child,
+    .cms-list &  {
+      display: table-cell;
+    }
 
-      &.grid-field__cell--actions,
-      &.grid-field__action-placeholder {
-        display: table-cell;
-      }
+    &.grid-field__cell--actions,
+    &.grid-field__action-placeholder {
+      display: table-cell;
     }
   }
 }
