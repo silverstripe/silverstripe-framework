@@ -1661,7 +1661,7 @@ TEXT;
 	}
 
 	public function checkRewrite() {
-		require_once 'core/startup/ParameterConfirmationToken.php';
+		require_once 'Core/Startup/ParameterConfirmationToken.php';
 		$token = new ParameterConfirmationToken('flush');
 		$params = http_build_query($token->params());
 
