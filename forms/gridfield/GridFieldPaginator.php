@@ -179,15 +179,23 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
 		$totalRows = $this->totalItems;
 		if(!$totalRows) return null;
 
-		$totalPages = (int)ceil($totalRows/$this->itemsPerPage);
-		if($totalPages == 0)
-			$totalPages = 1;
-		$firstShownRecord = ($state->currentPage - 1) * $this->itemsPerPage + 1;
-		if($firstShownRecord > $totalRows)
-			$firstShownRecord = $totalRows;
-		$lastShownRecord = $state->currentPage * $this->itemsPerPage;
-		if($lastShownRecord > $totalRows)
-			$lastShownRecord = $totalRows;
+		$totalPages = 1;
+		$firstShownRecord = 1;
+		$lastShownRecord = $totalRows;
+		if ($itemsPerPage = $this->getItemsPerPage()) {
+			$totalPages = (int)ceil($totalRows / $itemsPerPage);
+			if ($totalPages == 0) {
+				$totalPages = 1;
+			}
+			$firstShownRecord = ($state->currentPage - 1) * $itemsPerPage + 1;
+			if ($firstShownRecord > $totalRows) {
+				$firstShownRecord = $totalRows;
+			}
+			$lastShownRecord = $state->currentPage * $itemsPerPage;
+			if ($lastShownRecord > $totalRows) {
+				$lastShownRecord = $totalRows;
+			}
+		}
 
 		// If there is only 1 page for all the records in list, we don't need to go further
 		// to sort out those first page, last page, pre and next pages, etc

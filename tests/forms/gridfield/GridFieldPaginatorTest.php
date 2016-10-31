@@ -52,6 +52,26 @@ class GridFieldPaginatorTest extends FunctionalTest {
 		$this->assertEquals(2, count($content->getBySelector('.pagination-records-number')));
 	}
 
+	public function testUnlimitedRowCount() {
+		$total = $this->list->count();
+		// set up the paginator
+		/** @var GridFieldPaginator $paginator */
+		$paginator = $this->gridField->getConfig()->getComponentByType("GridFieldPaginator");
+		$paginator->setThrowExceptionOnBadDataType(true);
+		$paginator->setItemsPerPage(1);
+		$paginator->getManipulatedData($this->gridField, $this->list);
+
+
+		$params = $paginator->getTemplateParameters($this->gridField)->toMap();
+		$this->assertFalse($params['OnlyOnePage']);
+		$this->assertEquals($total, $params['NumRecords']);
+
+		$paginator->setItemsPerPage(0);
+		$params = $paginator->getTemplateParameters($this->gridField)->toMap();
+		$this->assertTrue($params['OnlyOnePage']);
+		$this->assertEquals($total, $params['NumRecords']);
+	}
+
 	public function testPaginationAvoidsIllegalOffsets() {
 		$grid = $this->gridField;
 		$total = $this->list->count();
