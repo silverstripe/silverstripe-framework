@@ -152,7 +152,7 @@ const config = [
       'UploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/UploadField.scss`,
     },
     output: {
-      path: 'admin/client/dist',
+      path: 'admin/client/dist/styles',
       filename: '[name].css',
     },
     module: {
@@ -164,26 +164,22 @@ const config = [
             'postcss?sourceMap',
             'resolve-url',
             'sass?sourceMap',
-          ], {
-            publicPath: '../', // needed because bundle.css is in a subfolder
-          }),
+          ]),
         },
         {
           test: /\.css$/,
           loader: ExtractTextPlugin.extract([
             'css?sourceMap&minimize&-core&discardComments',
             'postcss?sourceMap',
-          ], {
-            publicPath: '../', // needed because bundle.css is in a subfolder
-          }),
+          ]),
         },
         {
           test: /\.(png|gif|jpg|svg)$/,
-          loader: `url?limit=10000&name=images/[name].[ext]`,
+          loader: `url?limit=10000&name=../images/[name].[ext]`,
         },
         {
           test: /\.(woff|eot|ttf)$/,
-          loader: `file?name=fonts/[name].[ext]`,
+          loader: `file?name=../fonts/[name].[ext]`,
         },
       ],
     },
@@ -191,7 +187,7 @@ const config = [
       autoprefixer({ browsers: SUPPORTED_BROWSERS }),
     ],
     plugins: [
-      new ExtractTextPlugin('styles/[name].css', { allChunks: true }),
+      new ExtractTextPlugin('[name].css', { allChunks: true }),
     ],
   },
   {
@@ -213,26 +209,22 @@ const config = [
             'postcss?sourceMap',
             'resolve-url',
             'sass?sourceMap',
-          ], {
-            publicPath: '../', // needed because bundle.css is in a subfolder
-          }),
+          ]),
         },
         {
           test: /\.css$/,
           loader: ExtractTextPlugin.extract([
             'css?sourceMap&minimize&-core&discardComments',
             'postcss?sourceMap',
-          ], {
-            publicPath: '../', // needed because bundle.css is in a subfolder
-          }),
+          ]),
         },
         {
           test: /\.(png|gif|jpg|svg)$/,
-          loader: `url?limit=10000&name=images/[name].[ext]`,
+          loader: `url?limit=10000&name=../images/[name].[ext]`,
         },
         {
           test: /\.(woff|eot|ttf)$/,
-          loader: `file?name=fonts/[name].[ext]`,
+          loader: `file?name=../fonts/[name].[ext]`,
         },
       ],
     },

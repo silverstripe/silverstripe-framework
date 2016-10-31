@@ -83,7 +83,6 @@ class CampaignAdmin extends SilverStripeComponent {
       if (last && last.href) {
         event.preventDefault();
         this.props.router.push(last.href);
-        return;
       }
     }
   }
@@ -126,7 +125,7 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div className="fill-height cms-campaigns" aria-expanded="true">
+      <div className="fill-height" aria-expanded="true">
         <Toolbar>
           <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
         </Toolbar>
@@ -136,9 +135,7 @@ class CampaignAdmin extends SilverStripeComponent {
               <FormAction {...formActionProps} />
             </div>
           </div>
-          <div className="campaign-admin">
-            <FormBuilderLoader {...formBuilderProps} />
-          </div>
+          <FormBuilderLoader {...formBuilderProps} />
         </div>
       </div>
     );

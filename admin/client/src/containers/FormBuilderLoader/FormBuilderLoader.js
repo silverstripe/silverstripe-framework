@@ -73,25 +73,38 @@ class FormBuilderLoader extends Component {
    * @param submitFn
    * @returns {Promise}
    */
-  handleSubmit(dataWithAction, action, submitFn) {
-    return submitFn()
-      .then(formSchema => {
-        this.props.schemaActions.setSchema(formSchema);
-        return formSchema;
-      })
-      // TODO Suggest storing messages in a separate redux store rather than throw an error
-      // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
-      .then(formSchema => {
-        if (!formSchema.state) {
-          return formSchema;
-        }
-        const messages = this.getMessages(formSchema.state);
+  handleSubmit(data, action, submitFn) {
+    let promise = null;
+    if (typeof this.props.handleSubmit === 'function') {
+      promise = this.props.handleSubmit(data, action, submitFn);
+    } else {
+      promise = submitFn();
+    }
 
-        if (Object.keys(messages).length) {
-          throw new SubmissionError(messages);
-        }
-        return formSchema;
-      });
+    if (promise) {
+      promise
+        .then(formSchema => {
+          this.props.schemaActions.setSchema(formSchema);
+          return formSchema;
+        })
+        // TODO Suggest storing messages in a separate redux store rather than throw an error
+        // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
+        .then(formSchema => {
+          if (!formSchema.state) {
+            return formSchema;
+          }
+          const messages = this.getMessages(formSchema.state);
+
+          if (Object.keys(messages).length) {
+            throw new SubmissionError(messages);
+          }
+          return formSchema;
+        });
+    } else {
+      throw new Error('Promise was not returned for submitting');
+    }
+
+    return promise;
   }
 
   /**

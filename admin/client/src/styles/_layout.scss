@@ -1,84 +1,31 @@
-.cms-content__inner {
-  height: 100%;
+// INITIATE FLEXBOX LAYOUT
+// TODO Convert layout to BEM
+
+*,
+*:before,
+*:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-.cms-content__right,
-.cms-content__left {
+html,
+body {
+  width: 100%;
   height: 100%;
-  overflow: hidden;
-  background-color: $body-bg;
-  transition: width .2s;
+  margin: 0;
+  padding: 0;
+  display: -ms-flexbox;
+  display: flex;
 }
 
-// .cms-content can be split into different left/right zones
-// Exampale modifier: --left-sm = small left side panel with right panel width set to auto.
-.cms-content__split {
-  height: 100%;
-}
 
-.campaign-items {
-  @include media-breakpoint-down(md) {
-    width: 100%;
-    z-index: 1;
-  }
-}
-
-.campaigns {
-  position: relative;
-  height: 100%;
-
-  // Overlay preview if there isn't enough space for both items and preview
-  .cms-content--selected {
-    display: block;
-  }
-
-  // Back button for smaller screens, closes preview
-  .cms-content__back-btn {
-    width: 36px;
-    height: 36px;
-    background-color: rgba($gray-dark, 0.8);
-    display: block;
-    position: absolute;
-    top: 8px;
-    left: 12px;
-    content: "5";
-    font-size: 16px;
-    line-height: 20px;
-    color: $white;
-    padding: 8px;
-    border-radius: 50%;
-    font-family: silverstripe;
-    z-index: 1;
-    cursor: pointer;
-
-    &:hover {
-      background-color: $gray-dark;
-      text-decoration: none;
-    }
-  }
-
-  @include media-breakpoint-up(lg) {
-    // padding-left: $cms-panel-sm;
-
-    .cms-content__left {
-      width: $cms-panel-sm;
-    }
-
-    .cms-content__right {
-      display: block;
-      border-left: 1px solid $border-color;
-    }
-
-    .cms-content__back-btn {
+// TODO move out of layout
+@include media-breakpoint-down(md) {
+  .CMSPageEditController,
+  .CMSPageSettingsController {
+    &.has-panel .cms-content-tools {
       display: none;
-    }
-  }
-
-  @include media-breakpoint-up(xl) {
-    // padding-left: $cms-panel-md;
-
-    .cms-content__left {
-      width: $cms-panel-md;
     }
   }
 }
@@ -135,28 +82,6 @@
   box-shadow: $z-depth-4;
 }
 
-
-// TEMPORY FLEXBOX STYLES
-// Reference https://css-tricks.com/boxes-fill-height-dont-squish/
-// Reference http://codepen.io/clarkepaul/pen/qaNWAY
-
-*,
-*:before,
-*:after {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  display: -ms-flexbox;
-  display: flex;
-}
 
 // Flex magic
 // Nested items take up height

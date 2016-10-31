@@ -1,5 +1,7 @@
 .preview {
   position: relative;
+  background-color: $tab-panel-texture-color;
+  border-left: 1px solid $border-color-dark;
 
   // Overlay preview at smaller sizes
   @include media-breakpoint-down(md) {
@@ -7,6 +9,7 @@
     right: 0;
     z-index: 2;
     width: 100%;
+    border-left: 0;
   }
 }
 
@@ -40,7 +43,6 @@
 
 .preview__overlay {
   text-align: center;
-  position: absolute;
   top: 0;
   width: 100%;
   height: calc(100% - #{$toolbar-total-height});

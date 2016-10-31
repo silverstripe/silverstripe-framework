@@ -104,6 +104,8 @@ class FormBuilderModal extends SilverStripeComponent {
             });
           });
         });
+    } else {
+      throw new Error('Promise was not returned for submitting');
     }
 
     return promise;

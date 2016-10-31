@@ -164,11 +164,15 @@
 
 	li.jstree-open > ul {
 		display: block;
-		margin-left: -13px;
+		margin-left: -15px;
+		margin-right: -20px;
+
 		li ul {
-			margin-left:2px;
+			margin-left: 2px;
+			margin-right: 0;
 		}
 	}
+
 	li.jstree-closed > ul {
 		display: none;
 	}
@@ -571,6 +575,8 @@
 
 // For drag and drop icons to not appear whilst in multi-selection
 .cms-tree {
+	padding-bottom: $panel-padding-y;
+
 	&.jstree.draggable {
 		.jstree-no-checkboxes {
 			li {
@@ -594,6 +600,18 @@
 			}
 		}
 	}
+}
+
+
+// Scroll horizontal for sitetree
+// so scrollbar is fixed to bottom of panel, and tree actions remain fixed at top
+.cms-tree-holder {
+	overflow-x: auto;
+	height: calc(100% - 13px); // Magic number, need to investigate why its needed (possibly scroll bar height)
+	padding-left: 20px;
+	padding-right: 20px;
+	margin-left: -20px;
+	margin-right: -20px;
 }
 
 // Override thirdparty themes

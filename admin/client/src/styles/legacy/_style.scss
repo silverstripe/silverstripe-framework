@@ -65,6 +65,10 @@ body.cms {
   .cms-content {
     display: none;
   }
+
+  .cms-preview {
+    border-left: 0;
+  }
 }
 
 // .cms-preview,
@@ -211,15 +215,15 @@ body.cms {
     font-weight: normal;
   }
 
-	.breadcrumbs-wrapper {
-		float: left;
-		padding-top: $spacer-xs / 2;
-	}
+  .breadcrumbs-wrapper {
+    float: left;
+    padding-top: $spacer-xs / 2;
+  }
 }
 
 .view-controls {
   float: right;
-  margin-top: 4px;
+  margin-top: 5px;
 
   .icon-button-group {
     .icon-button {
@@ -344,8 +348,6 @@ body.cms {
       &:active,
       &:focus,
       &:hover {
-        background: none;
-        box-shadow: none;
         color: darken($color-text, 10%);
       }
 
@@ -1582,7 +1584,8 @@ form.member-profile-form {
 }
 
 .cms .cms-panel-padded .cms-content-view {
-	padding: $panel-padding-y $panel-padding-x;
+  padding: $panel-padding-y $panel-padding-x;
+  height: 100%; // For horizontal scrollbar on Pages sitetree at smaller sizes
 }
 
 .CMSPageAddController .cms-panel-padded {

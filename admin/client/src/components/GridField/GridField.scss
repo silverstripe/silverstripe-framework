@@ -246,7 +246,8 @@ div.grid-field__sort-field + .form__fieldgroup-item {
   .grid-field__table th {
     display: none;
 
-    &:first-child {
+    &:first-child,
+    .cms-list &  {
       display: table-cell;
     }
 

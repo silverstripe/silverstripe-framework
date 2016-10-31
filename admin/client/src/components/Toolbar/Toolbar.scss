@@ -3,8 +3,7 @@
 .toolbar--content,
 .toolbar--south {
   @include make-container();
-  height: $toolbar-total-height;
-  width: 100%;
+  min-height: $toolbar-total-height;
 
   .btn-toolbar {
     // TODO Remove '.cms .btn-toolbar' override
@@ -15,12 +14,12 @@
 
 // Northern bar containing breadcrumb, tabs etc.
 .toolbar--north {
-  // display: block;
   background-image: none;
   background-color: $background-darker;
   border-bottom: 1px solid $border-color;
   z-index: 60;
   position: relative;
+  width: 100%;
 }
 
 // TEMP overrides color of links in JqueryUI widgets
@@ -42,6 +41,7 @@
   margin-left: -$panel-padding-x;
   margin-right: -$panel-padding-x;
   padding: $spacer-xs;
+  min-height: auto;
 
 
   @include media-breakpoint-down(md) {
@@ -74,12 +74,18 @@
   background-color: $background-main;
 }
 
-.toolbar__back-button,
-.cms-backlink .toolbar__back-button { // TEMP: Needed for anchor buttons to override legacy styles
+.toolbar__back-button {
   float: left;
   margin: $spacer-xs $spacer-x / 2 $spacer-xs #{-$spacer-xs};
   padding-left: $spacer-x / 4;
-  padding-right: $spacer-x / 4;
-  border: 0;
   color: $body-color-light; // TEMP: Needed for anchor buttons to override legacy styles
+
+  .toolbar--south & {
+    margin-top: 0;
+    margin-right: 5px;
+  }
+
+  &.btn--no-text {
+    padding-right: $spacer-x / 4;
+  }
 }
