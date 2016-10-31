@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/silverstripe/silverstripe-framework#readme",
   "dependencies": {
+    "approvejs": "^1.1.2",
     "babel-polyfill": "^6.7.4",
     "blueimp-file-upload": "6.0.3",
     "blueimp-load-image": "1.1.3",

@@ -3,22 +3,22 @@
  * schema's deep nesting of fields.
  *
  * @param fields
- * @param id
+ * @param name
  * @returns {object|undefined}
  */
-export function findField(fields, id) {
+export function findField(fields, name) {
   let result = null;
   if (!fields) {
     return result;
   }
 
-  result = fields.find(field => field.id === id);
+  result = fields.find(field => field.name === name);
 
   for (const field of fields) {
     if (result) {
       break;
     }
-    result = findField(field.children, id);
+    result = findField(field.children, name);
   }
   return result;
 }
@@ -36,7 +36,7 @@ export default function schemaFieldValues(schema, state) {
 
   return state.fields
     .reduce((prev, curr) => {
-      const match = findField(schema.fields, curr.id);
+      const match = findField(schema.fields, curr.name);
 
       if (!match) {
         return prev;

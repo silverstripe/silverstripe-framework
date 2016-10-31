@@ -174,11 +174,15 @@ FormBuilderLoader.defaultProps = {
 export default connect(
   (state, ownProps) => {
     const schema = state.schemas[ownProps.schemaUrl];
-    const form = schema ? schema.id : null;
-    const submitting = state.form
-      && state.form[ownProps.schemaUrl]
-      && state.form[ownProps.schemaUrl].submitting;
-    return { schema, form, submitting };
+    const form = schema && schema.id;
+    const reduxFormState = state.form
+      && state.form[ownProps.schemaUrl];
+    const submitting = reduxFormState
+      && reduxFormState.submitting;
+    const values = reduxFormState
+      && reduxFormState.values;
+
+    return { schema, form, submitting, values };
   },
   (dispatch) => ({
     schemaActions: bindActionCreators(schemaActions, dispatch),
