@@ -17,8 +17,8 @@ const PATHS = {
   FRAMEWORK_THIRDPARTY: './thirdparty',
   FRAMEWORK_CSS_SRC: './client/src/styles',
   FRAMEWORK_CSS_DIST: './client/dist/styles',
-  INSTALL_CSS_SRC: './dev/install/client/src/styles',
-  INSTALL_CSS_DIST: './dev/install/client/dist/styles',
+  INSTALL_CSS_SRC: './src/Dev/Install/client/src/styles',
+  INSTALL_CSS_DIST: './src/Dev/Install/client/dist/styles',
 };
 
 // Used for autoprefixing css properties (same as Bootstrap Aplha.2 defaults)

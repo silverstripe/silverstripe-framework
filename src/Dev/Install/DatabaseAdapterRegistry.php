@@ -110,7 +110,7 @@ class DatabaseAdapterRegistry {
 	 * Detects all _register_database.php files and invokes them
 	 */
 	public static function autodiscover() {
-		foreach(glob(dirname(__FILE__) . '/../../../*', GLOB_ONLYDIR) as $directory) {
+		foreach(glob(__DIR__ . '/../../../../*', GLOB_ONLYDIR) as $directory) {
 			if(file_exists($directory . '/_register_database.php')) {
 				include_once($directory . '/_register_database.php');
 			}
@@ -122,7 +122,7 @@ class DatabaseAdapterRegistry {
 	 * Called by ConfigureFromEnv.php
 	 */
 	public static function autoconfigure() {
-		foreach(glob(dirname(__FILE__) . '/../../../*', GLOB_ONLYDIR) as $directory) {
+		foreach(glob(__DIR__ . '/../../../../*', GLOB_ONLYDIR) as $directory) {
 			if(file_exists($directory . '/_configure_database.php')) {
 				include_once($directory . '/_configure_database.php');
 			}
