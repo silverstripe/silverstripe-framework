@@ -53,6 +53,7 @@
     "classmap": ["tests/behat/features/bootstrap"]
   },
   "include-path": [
+      "src/",
       "thirdparty/"
   ],
   "min-stability": "dev",

@@ -248,23 +248,10 @@ if(!defined('ASSETS_PATH')) {
 	define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// INCLUDES
-
+// Custom include path - deprecated
 if(defined('CUSTOM_INCLUDE_PATH')) {
-	$includePath = '.' . PATH_SEPARATOR . CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
-		. THIRDPARTY_PATH . PATH_SEPARATOR
-		. get_include_path();
-} else {
-	$includePath = '.' . PATH_SEPARATOR . FRAMEWORK_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
-		. THIRDPARTY_PATH . PATH_SEPARATOR
-		. get_include_path();
+	set_include_path(CUSTOM_INCLUDE_PATH . PATH_SEPARATOR	. get_include_path());
 }
-
-set_include_path($includePath);
 
 /**
  * Define the temporary folder if it wasn't defined yet
