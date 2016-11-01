@@ -11,7 +11,7 @@ default:
   extensions:
     SilverStripe\BehatExtension\MinkExtension:
       base_url: http://localhost:8080/
-      files_path: %behat.paths.base%/tests/behat/features/files/
+      files_path: %behat.paths.base%/features/files/
       default_session: selenium2
       javascript_session: selenium2
       selenium2:
