@@ -63,6 +63,7 @@ script:
  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config cms/tests/behat/behat.yml; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run lint; fi"
+ - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run build; fi"
  - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage.xml; fi"
  - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi"
 
