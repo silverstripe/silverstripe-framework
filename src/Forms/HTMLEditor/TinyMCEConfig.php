@@ -21,10 +21,12 @@ class TinyMCEConfig extends HTMLEditorConfig {
 	 * - themes
 	 * - skins
 	 *
+	 * If left blank defaults to ADMIN_THIRDPARTY_DIR . '/tinymce'
+	 *
 	 * @config
 	 * @var string
 	 */
-	private static $base_dir = 'framework/admin/thirdparty/tinymce';
+	private static $base_dir = null;
 
 	/**
 	 * TinyMCE JS settings
@@ -366,7 +368,7 @@ class TinyMCEConfig extends HTMLEditorConfig {
 		// https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
 		$tinyMCEBaseURL = Controller::join_links(
 			Director::absoluteBaseURL(),
-			$this->config()->base_dir
+			$this->config()->get('base_dir') ?: ADMIN_THIRDPARTY_DIR . '/tinymce'
 		);
 		$settings['baseURL'] = $tinyMCEBaseURL;
 

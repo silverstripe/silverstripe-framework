@@ -76,7 +76,7 @@ class HTMLEditorConfigTest extends SapphireTest {
 		// Plugin specified with standard location
 		$this->assertContains('plugin4', array_keys($plugins));
 		$this->assertEquals(
-			'http://mysite.com/subdir/framework/admin/thirdparty/tinymce/plugins/plugin4/plugin.min.js',
+			'http://mysite.com/subdir/'.ADMIN_THIRDPARTY_DIR.'/tinymce/plugins/plugin4/plugin.min.js',
 			$plugins['plugin4']
 		);
 

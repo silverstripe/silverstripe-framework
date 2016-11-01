@@ -1,8 +1,7 @@
+# Required to run cms tests as subdirectory within framework module
 default:
   context:
-    class: SilverStripe\Framework\Test\Behaviour\FeatureContext
-  filters:
-    tags: "~@todo"
+    class: SilverStripe\Cms\Test\Behaviour\FeatureContext
   formatter:
     name: pretty
     parameters:
@@ -20,4 +19,4 @@ default:
     SilverStripe\BehatExtension\Extension:
       screenshot_path: %behat.paths.base%/artifacts/screenshots
       framework_path: "../.."
-      bootstrap_file: "tests/behat/serve-bootstrap.php"
+      bootstrap_file: "cms/tests/behat/serve-bootstrap.php"

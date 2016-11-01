@@ -19,3 +19,7 @@ ini_set('display_errors', 1);
 if(!file_exists(BASE_PATH . '/assets')) {
 	mkdir(BASE_PATH . '/assets', 02775);
 }
+
+if (empty($_SERVER['HTTP_HOST'])) {
+	$_SERVER['HTTP_HOST'] = 'localhost';
+}
