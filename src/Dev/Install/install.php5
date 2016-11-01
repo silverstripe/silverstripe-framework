@@ -39,10 +39,19 @@ if(function_exists('session_start') && !session_id()) {
 }
 
 // require composers autoloader
-if (file_exists($autoloadPath = dirname(__DIR__) . '/../../vendor/autoload.php')) {
-	require_once $autoloadPath;
+$autoloadPaths = [
+	__DIR__ . '/../../../vendor/autoload.php', // framework/vendor
+	__DIR__ . '/../../../../vendor/autoload.php', // root vendor
+];
+$included = false;
+foreach($autoloadPaths as $path) {
+	if (file_exists($path)) {
+		$included = true;
+		require_once $path;
+		break;
+	}
 }
-else  {
+if (!$included) {
 	if (!headers_sent()) {
 		header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
 		header('Content-Type: text/plain');
@@ -54,8 +63,8 @@ else  {
 $envFileExists = defined('SS_ENVIRONMENT_FILE');
 $usingEnv = $envFileExists && !empty($_REQUEST['useEnv']);
 
-require_once FRAMEWORK_NAME . '/Dev/Install/DatabaseConfigurationHelper.php';
-require_once FRAMEWORK_NAME . '/Dev/Install/DatabaseAdapterRegistry.php';
+require_once __DIR__ . '/DatabaseConfigurationHelper.php';
+require_once __DIR__ . '/DatabaseAdapterRegistry.php';
 
 // Set default locale, but try and sniff from the user agent
 $defaultLocale = 'en_US';
@@ -240,7 +249,7 @@ if($installFromCli && ($req->hasErrors() || $dbReq->hasErrors())) {
 if((isset($_REQUEST['go']) || $installFromCli) && !$req->hasErrors() && !$dbReq->hasErrors() && $adminConfig['username'] && $adminConfig['password']) {
 	// Confirm before reinstalling
 	if(!$installFromCli && $alreadyInstalled) {
-		include(FRAMEWORK_NAME . '/Dev/Install/config-form.html');
+		include(__DIR__ . '/config-form.html');
 
 	} else {
 		$inst = new Installer();
@@ -253,7 +262,7 @@ if((isset($_REQUEST['go']) || $installFromCli) && !$req->hasErrors() && !$dbReq-
 
 // Show the config form
 } else {
-	include(FRAMEWORK_NAME . '/Dev/Install/config-form.html');
+	include(__DIR__ . '/config-form.html');
 }
 
 /**
@@ -410,7 +419,7 @@ class InstallRequirements {
 		));
 
 		// Check that we can identify the root folder successfully
-		$this->requireFile(FRAMEWORK_NAME . '/Dev/Install/config-form.html', array("File permissions",
+		$this->requireFile(FRAMEWORK_NAME . '/src/Dev/Install/config-form.html', array("File permissions",
 			"Does the webserver know where files are stored?",
 			"The webserver isn't letting me identify where files are stored.",
 			$this->getBaseDir()
@@ -1282,7 +1291,7 @@ class Installer extends InstallRequirements {
 		<head>
 			<meta charset="utf-8"/>
 			<title>Installing SilverStripe...</title>
-			<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/Dev/Install/client/dist/styles/install.css"/>
+			<link rel="stylesheet" type="text/css" href="<?php echo FRAMEWORK_NAME; ?>/src/Dev/Install/client/dist/styles/install.css"/>
 			<script src="//code.jquery.com/jquery-1.7.2.min.js"></script>
 		</head>
 		<body>
@@ -1505,7 +1514,7 @@ PHP
 				$this->statusMessage("Checking that friendly URLs work...");
 				$this->checkRewrite();
 			} else {
-				require_once 'core/startup/ParameterConfirmationToken.php';
+				require_once 'Core/Startup/ParameterConfirmationToken.php';
 				$token = new ParameterConfirmationToken('flush');
 				$params = http_build_query($token->params());
 
@@ -1661,7 +1670,7 @@ TEXT;
 	}
 
 	public function checkRewrite() {
-		require_once 'core/startup/ParameterConfirmationToken.php';
+		require_once 'Core/Startup/ParameterConfirmationToken.php';
 		$token = new ParameterConfirmationToken('flush');
 		$params = http_build_query($token->params());
 

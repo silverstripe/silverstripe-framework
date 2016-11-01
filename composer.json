@@ -38,21 +38,22 @@
   "autoload": {
     "psr-4": {
       "SilverStripe\\Admin\\": "admin/code/",
-      "SilverStripe\\Assets\\": "Assets/",
-      "SilverStripe\\Control\\": "Control/",
-      "SilverStripe\\Core\\": "Core/",
-      "SilverStripe\\Dev\\": "Dev/",
-      "SilverStripe\\Forms\\": "Forms/",
-      "SilverStripe\\i18n\\": "i18n/",
-      "SilverStripe\\Logging\\": "Logging/",
-      "SilverStripe\\ORM\\": "ORM/",
-      "SilverStripe\\Security\\": "Security/",
-      "SilverStripe\\View\\": "View/"
+      "SilverStripe\\Assets\\": "src/Assets/",
+      "SilverStripe\\Control\\": "src/Control/",
+      "SilverStripe\\Core\\": "src/Core/",
+      "SilverStripe\\Dev\\": "src/Dev/",
+      "SilverStripe\\Forms\\": "src/Forms/",
+      "SilverStripe\\i18n\\": "src/i18n/",
+      "SilverStripe\\Logging\\": "src/Logging/",
+      "SilverStripe\\ORM\\": "src/ORM/",
+      "SilverStripe\\Security\\": "src/Security/",
+      "SilverStripe\\View\\": "src/View/"
     },
-    "files": ["Core/Constants.php"],
+    "files": ["src/Core/Constants.php"],
     "classmap": ["tests/behat/features/bootstrap"]
   },
   "include-path": [
+      "src/",
       "thirdparty/"
   ],
   "min-stability": "dev",

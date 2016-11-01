@@ -19,8 +19,8 @@ if (version_compare(phpversion(), '5.5.0', '<')) {
 	echo str_replace(
 		array('$PHPVersion', 'sapphire'),
 		array(phpversion(), FRAMEWORK_NAME),
-		file_get_contents(FRAMEWORK_NAME . "/Dev/Install/php5-required.html"));
+		file_get_contents(__DIR__ . "/php5-required.html"));
 	die();
 }
 
-include(FRAMEWORK_NAME . '/Dev/Install/install.php5');
+include(__DIR__ . '/install.php5');

@@ -224,7 +224,7 @@ define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
 // Relies on this being in a subdir of the framework.
 // If it isn't, or is symlinked to a folder with a different name, you must define FRAMEWORK_DIR
 
-define('FRAMEWORK_PATH', realpath(__DIR__ . '/../'));
+define('FRAMEWORK_PATH', realpath(__DIR__ . '/../../'));
 if(strpos(FRAMEWORK_PATH, BASE_PATH) === 0) {
 	define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), DIRECTORY_SEPARATOR));
 	$frameworkDirSlashSuffix = FRAMEWORK_DIR ? FRAMEWORK_DIR . '/' : '';
@@ -248,23 +248,10 @@ if(!defined('ASSETS_PATH')) {
 	define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-// INCLUDES
-
+// Custom include path - deprecated
 if(defined('CUSTOM_INCLUDE_PATH')) {
-	$includePath = '.' . PATH_SEPARATOR . CUSTOM_INCLUDE_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
-		. THIRDPARTY_PATH . PATH_SEPARATOR
-		. get_include_path();
-} else {
-	$includePath = '.' . PATH_SEPARATOR . FRAMEWORK_PATH . PATH_SEPARATOR
-		. FRAMEWORK_PATH . '/parsers' . PATH_SEPARATOR
-		. THIRDPARTY_PATH . PATH_SEPARATOR
-		. get_include_path();
+	set_include_path(CUSTOM_INCLUDE_PATH . PATH_SEPARATOR	. get_include_path());
 }
-
-set_include_path($includePath);
 
 /**
  * Define the temporary folder if it wasn't defined yet
