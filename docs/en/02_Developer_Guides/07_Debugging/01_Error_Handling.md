@@ -156,11 +156,10 @@ non-dev.
 	  Logger:
 	    calls:
 	      - [ pushHandler, [ %$DisplayErrorHandler ]] 
-
 	  DisplayErrorHandler:
 	    class: SilverStripe\Framework\Logging\HTTPOutputHandler
-	      constructor:
-	        - "notice"
+	    constructor:
+	      - "notice"
 	    properties:
 	      Formatter: %$SilverStripe\Framework\Logging\DetailedErrorFormatter
 	---
@@ -173,15 +172,14 @@ non-dev.
 	    calls:
 	      - [ pushHandler, [ %$LogFileHandler ]] 
 	      - [ pushHandler, [ %$DisplayErrorHandler ]] 
-
 	  LogFileHander:
 	    class: Monolog\Handler\StreamHandler
-	      constructor:
-	       - "../silverstripe.log"
-	       - "notice"
-	      properties:
-	        Formatter: %$Monolog\Formatter\HtmlFormatter
-	        ContentType: text/html
+	    constructor:
+	      - "../silverstripe.log"
+	      - "notice"
+	    properties:
+	      Formatter: %$Monolog\Formatter\HtmlFormatter
+	      ContentType: text/html
 	  DisplayErrorHandler:
 	    class: SilverStripe\Framework\Logging\HTTPOutputHandler
 	    constructor:
