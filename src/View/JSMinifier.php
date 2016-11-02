@@ -15,7 +15,7 @@ class JSMinifier implements Requirements_Minifier {
 
 		// Combine JS
 		try {
-			require_once('thirdparty/jsmin/jsmin.php');
+			require_once(FRAMEWORK_DIR . '/thirdparty/jsmin/jsmin.php');
 			increase_time_limit_to();
 			$content = JSMin::minify($content);
 		} catch(Exception $e) {
