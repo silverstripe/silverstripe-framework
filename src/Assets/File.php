@@ -114,7 +114,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
 	private static $db = array(
 		"Name" => "Varchar(255)",
 		"Title" => "Varchar(255)",
-		"File" =>"DBFile",
+		"File" => "DBFile",
 		// Only applies to files, doesn't inherit for folder
 		'ShowInSearch' => 'Boolean(1)',
 	);

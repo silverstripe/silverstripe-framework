@@ -1412,9 +1412,7 @@ class FormField extends RequestHandler {
 	 * @todo Add deep merging of arrays like `data` and `attributes`.
 	 */
 	public function setSchemaData($schemaData = []) {
-		$current = $this->getSchemaData();
-
-		$this->schemaData = array_merge($current, array_intersect_key($schemaData, $current));
+		$this->schemaData = array_merge($this->schemaData, $schemaData);
 		return $this;
 	}
 
@@ -1424,7 +1422,8 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	public function getSchemaData() {
-		return array_replace_recursive($this->getSchemaDataDefaults(), $this->schemaData);
+		$defaults = $this->getSchemaDataDefaults();
+		return array_replace_recursive($defaults, array_intersect_key($this->schemaData, $defaults));
 	}
 
 	/**
@@ -1477,9 +1476,7 @@ class FormField extends RequestHandler {
 	 * @todo Add deep merging of arrays like `data` and `attributes`.
 	 */
 	public function setSchemaState($schemaState = []) {
-		$current = $this->getSchemaState();
-
-		$this->schemaState = array_merge($current, array_intersect_key($schemaState, $current));
+		$this->schemaState = array_merge($this->schemaState, array_intersect_key($schemaState, $this->schemaState));
 		return $this;
 	}
 
@@ -1489,7 +1486,8 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	public function getSchemaState() {
-		return array_merge($this->getSchemaStateDefaults(), $this->schemaState);
+		$defaults = $this->getSchemaStateDefaults();
+		return array_merge($defaults, array_intersect_key($this->schemaState, $defaults));
 	}
 
 	/**
