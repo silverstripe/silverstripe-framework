@@ -10,7 +10,6 @@
  * @subpackage model
  *
  * @property DataObject owner
- *
  * @property int  RecordID
  * @property int  Version
  * @property bool WasPublished
@@ -78,7 +77,10 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		"AuthorID" => "Int",
 		"PublisherID" => "Int"
 	);
-
+	/**
+	 * @var array
+	 * @config
+	 */
 	private static $db = array(
 		'Version' => 'Int'
 	);
@@ -583,6 +585,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * Generates a ($table)_version DB manipulation and injects it into the current $manipulation
 	 *
 	 * @param SQLQuery $manipulation The query to augment
+	 * @param string $table
+	 * @param string|int $recordID
 	 */
 	protected function augmentWriteVersioned(&$manipulation, $table, $recordID) {
 		$baseDataClass = ClassInfo::baseDataClass($table);
@@ -643,7 +647,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 *
 	 * @param array $manipulation Source manipulation data
 	 * @param string $table Name of table
-	 * @param int $recordID ID of record to version
+	 * @param string|int $recordID ID of record to version
 	 */
 	protected function augmentWriteStaged(&$manipulation, $table, $recordID) {
 		// If the record has already been inserted in the (table), get rid of it.
@@ -659,7 +663,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		unset($manipulation[$table]);
 	}
 
-
+	/**
+	 * @param array $manipulation
+	 */
 	public function augmentWrite(&$manipulation) {
 		// get Version number from base data table on write
 		$version = null;
@@ -1143,8 +1149,6 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * - If $_GET['stage'] is set, then it will use that stage, and store it in the session.
 	 * - If $_GET['archiveDate'] is set, it will use that date, and store it in the session.
 	 * - If neither of these are set, it checks the session, otherwise the stage is set to 'Live'.
-	 *
-	 * @param Session $session Optional session within which to store the resulting stage
 	 */
 	public static function choose_site_stage() {
 		// Check any pre-existing session mode
@@ -1521,6 +1525,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		$labels['Versions'] = _t('Versioned.has_many_Versions', 'Versions', 'Past Versions of this page');
 	}
 
+	/**
+	 * @param FieldList $fields
+	 */
 	public function updateCMSFields(FieldList $fields) {
 		// remove the version field from the CMS as this should be left
 		// entirely up to the extension (not the cms user).
@@ -1569,6 +1576,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 		return $this->defaultStage;
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function get_template_global_variables() {
 		return array(
 			'CurrentReadingMode' => 'get_reading_mode'
@@ -1592,6 +1602,9 @@ class Versioned_Version extends ViewableData {
 	/** @var DataObject */
 	protected $object;
 
+	/**
+	 * @param array $record
+	 */
 	public function __construct($record) {
 		$this->record = $record;
 		$record['ID'] = $record['RecordID'];
