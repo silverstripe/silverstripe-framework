@@ -1,5 +1,8 @@
 <?php
 
+use SilverStripe\Forms\CurrencyField;
+use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\Schema\FormSchema;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Controller;
@@ -46,7 +49,8 @@ class FormSchemaTest extends SapphireTest {
 					'disabled' => false,
 					'customValidationMessage' => '',
 					'attributes' => [],
-					'data' => []
+					'data' => [],
+					'validation' => [],
 				],
 			],
 			'actions' => []
@@ -199,6 +203,7 @@ class FormSchemaTest extends SapphireTest {
 					'customValidationMessage' => '',
 					'attributes' => [],
 					'data' => [],
+					'validation' => [],
 				],
 				[
 					'id' => 'Form_TestForm_SecurityID',
@@ -216,7 +221,8 @@ class FormSchemaTest extends SapphireTest {
 					'disabled' => false,
 					'customValidationMessage' => '',
 					'attributes' => [],
-					'data' => []
+					'data' => [],
+					'validation' => [],
 				],
 			],
 			'actions' => [
@@ -241,6 +247,7 @@ class FormSchemaTest extends SapphireTest {
 					'data' => [
 						'icon' => 'save',
 					],
+					'validation' => [],
 				],
 				[
 					'id' => 'Form_TestForm_action_cancel',
@@ -263,6 +270,7 @@ class FormSchemaTest extends SapphireTest {
 					'data' => [
 						'icon' => null
 					],
+					'validation' => [],
 				],
 				[
 					'id' => 'Form_TestForm_Moreoptions',
@@ -286,6 +294,7 @@ class FormSchemaTest extends SapphireTest {
 						'tag' => 'div',
 						'legend' => null,
 					],
+					'validation' => [],
 					'children' => [
 						[
 							'id' => 'Form_TestForm_action_publish',
@@ -308,6 +317,7 @@ class FormSchemaTest extends SapphireTest {
 							'data' => [
 								'icon' => null,
 							],
+							'validation' => [],
 						],
 						[
 							'id' => 'Form_TestForm_action_archive',
@@ -330,6 +340,7 @@ class FormSchemaTest extends SapphireTest {
 							'data' => [
 								'icon' => null,
 							],
+							'validation' => [],
 						],
 					]
 				]
@@ -358,5 +369,167 @@ class FormSchemaTest extends SapphireTest {
 			$schema['data']
 		);
 
+	}
+
+	public function testSchemaValidation() {
+		$form = new Form(
+			new Controller(),
+			'TestForm',
+			new FieldList(
+				TextField::create("Name")
+					->setMaxLength(40),
+				new DateField("Date"),
+				new NumericField("Number"),
+				new CurrencyField("Money")
+			),
+			new FieldList(),
+			new RequiredFields('Name')
+		);
+		$formSchema = new FormSchema();
+		$schema = $formSchema->getSchema($form);
+		$expected = [
+			'name' => 'TestForm',
+			'id' => 'Form_TestForm',
+			'action' => 'Controller/TestForm',
+			'method' => 'POST',
+			'attributes' =>
+				[
+					'id' => 'Form_TestForm',
+					'action' => 'Controller/TestForm',
+					'method' => 'POST',
+					'enctype' => 'application/x-www-form-urlencoded',
+					'target' => null,
+					'class' => '',
+				],
+			'data' =>
+				[],
+			'fields' =>
+				[
+					[
+						'name' => 'Name',
+						'id' => 'Form_TestForm_Name',
+						'type' => 'Text',
+						'component' => null,
+						'holderId' => 'Form_TestForm_Name_Holder',
+						'title' => 'Name',
+						'source' => null,
+						'extraClass' => 'text',
+						'description' => null,
+						'rightTitle' => null,
+						'leftTitle' => null,
+						'readOnly' => false,
+						'disabled' => false,
+						'customValidationMessage' => '',
+						'validation' =>
+							[
+								'required' => true,
+								'max' => 40,
+							],
+						'attributes' =>
+							[],
+						'data' =>
+							[],
+					],
+					[
+						'name' => 'Date',
+						'id' => 'Form_TestForm_Date',
+						'type' => 'Date',
+						'component' => null,
+						'holderId' => 'Form_TestForm_Date_Holder',
+						'title' => 'Date',
+						'source' => null,
+						'extraClass' => 'date text',
+						'description' => null,
+						'rightTitle' => null,
+						'leftTitle' => null,
+						'readOnly' => false,
+						'disabled' => false,
+						'customValidationMessage' => '',
+						'validation' =>
+							[
+								'date' => true,
+							],
+						'attributes' =>
+							[],
+						'data' =>
+							[],
+					],
+					[
+						'name' => 'Number',
+						'id' => 'Form_TestForm_Number',
+						'type' => 'Decimal',
+						'component' => null,
+						'holderId' => 'Form_TestForm_Number_Holder',
+						'title' => 'Number',
+						'source' => null,
+						'extraClass' => 'numeric text',
+						'description' => null,
+						'rightTitle' => null,
+						'leftTitle' => null,
+						'readOnly' => false,
+						'disabled' => false,
+						'customValidationMessage' => '',
+						'validation' =>
+							[
+								'numeric' => true,
+							],
+						'attributes' =>
+							[],
+						'data' =>
+							[],
+					],
+					[
+						'name' => 'Money',
+						'id' => 'Form_TestForm_Money',
+						'type' => 'Text',
+						'component' => null,
+						'holderId' => 'Form_TestForm_Money_Holder',
+						'title' => 'Money',
+						'source' => null,
+						'extraClass' => 'currency text',
+						'description' => null,
+						'rightTitle' => null,
+						'leftTitle' => null,
+						'readOnly' => false,
+						'disabled' => false,
+						'customValidationMessage' => '',
+						'validation' =>
+							[
+								'currency' => true,
+							],
+						'attributes' =>
+							[],
+						'data' =>
+							[],
+					],
+					[
+						'name' => 'SecurityID',
+						'id' => 'Form_TestForm_SecurityID',
+						'type' => 'Hidden',
+						'component' => null,
+						'holderId' => 'Form_TestForm_SecurityID_Holder',
+						'title' => 'Security ID',
+						'source' => null,
+						'extraClass' => 'hidden',
+						'description' => null,
+						'rightTitle' => null,
+						'leftTitle' => null,
+						'readOnly' => false,
+						'disabled' => false,
+						'customValidationMessage' => '',
+						'validation' =>
+							[],
+						'attributes' =>
+							[],
+						'data' =>
+							[],
+					],
+				],
+			'actions' =>
+				[],
+		];
+
+		$this->assertInternalType('array', $schema);
+		$this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($schema));
 	}
 }

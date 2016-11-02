@@ -1412,9 +1412,8 @@ class FormField extends RequestHandler {
 	 * @todo Add deep merging of arrays like `data` and `attributes`.
 	 */
 	public function setSchemaData($schemaData = []) {
-		$current = $this->getSchemaData();
-
-		$this->schemaData = array_merge($current, array_intersect_key($schemaData, $current));
+		$defaults = $this->getSchemaData();
+		$this->schemaData = array_merge($this->schemaData, array_intersect_key($schemaData, $defaults));
 		return $this;
 	}
 
@@ -1424,7 +1423,8 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	public function getSchemaData() {
-		return array_replace_recursive($this->getSchemaDataDefaults(), $this->schemaData);
+		$defaults = $this->getSchemaDataDefaults();
+		return array_replace_recursive($defaults, array_intersect_key($this->schemaData, $defaults));
 	}
 
 	/**
@@ -1459,6 +1459,7 @@ class FormField extends RequestHandler {
 			'readOnly' => $this->isReadonly(),
 			'disabled' => $this->isDisabled(),
 			'customValidationMessage' => $this->getCustomValidationMessage(),
+			'validation' => $this->getSchemaValidation(),
 			'attributes' => [],
 			'data' => [],
 		];
@@ -1466,8 +1467,8 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Sets the schema data used for rendering the field on the front-end.
-	 * Merges the passed array with the current `$schemaData` or {@link getSchemaDataDefaults()}.
-	 * Any passed keys that are not defined in {@link getSchemaDataDefaults()} are ignored.
+	 * Merges the passed array with the current `$schemaState` or {@link getSchemaStateDefaults()}.
+	 * Any passed keys that are not defined in {@link getSchemaStateDefaults()} are ignored.
 	 * If you want to pass around ad hoc data use the `data` array e.g. pass `['data' => ['myCustomKey' => 'yolo']]`.
 	 *
 	 * @param array $schemaState The data to be merged with $this->schemaData.
@@ -1476,9 +1477,8 @@ class FormField extends RequestHandler {
 	 * @todo Add deep merging of arrays like `data` and `attributes`.
 	 */
 	public function setSchemaState($schemaState = []) {
-		$current = $this->getSchemaState();
-
-		$this->schemaState = array_merge($current, array_intersect_key($schemaState, $current));
+		$defaults = $this->getSchemaState();
+		$this->schemaState = array_merge($this->schemaState, array_intersect_key($schemaState, $defaults));
 		return $this;
 	}
 
@@ -1488,7 +1488,8 @@ class FormField extends RequestHandler {
 	 * @return array
 	 */
 	public function getSchemaState() {
-		return array_merge($this->getSchemaStateDefaults(), $this->schemaState);
+		$defaults = $this->getSchemaStateDefaults();
+		return array_merge($defaults, array_intersect_key($this->schemaState, $defaults));
 	}
 
 	/**
@@ -1518,6 +1519,20 @@ class FormField extends RequestHandler {
 		}
 
 		return $state;
+	}
+
+	/**
+	 * Return list of validation rules. Each rule is a key value pair.
+	 * The key is the rule name. The value is any information the frontend
+	 * validation handler can understand, or just `true` to enable.
+	 *
+	 * @return array
+	 */
+	public function getSchemaValidation() {
+		if ($this->Required()) {
+			return [ 'required' => true ];
+		}
+		return [];
 	}
 
 }

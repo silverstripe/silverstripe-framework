@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
+import merge from 'merge';
+import schemaFieldValues, { findField } from 'lib/schemaFieldValues';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
-import schemaFieldValues from 'lib/schemaFieldValues';
+import Validator from 'lib/Validator';
 import backend from 'lib/Backend';
 import injector from 'lib/Injector';
-import merge from 'merge';
 
 class FormBuilder extends SilverStripeComponent {
 
@@ -21,6 +22,50 @@ class FormBuilder extends SilverStripeComponent {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleAction = this.handleAction.bind(this);
     this.buildComponent = this.buildComponent.bind(this);
+    this.validateForm = this.validateForm.bind(this);
+  }
+
+  /**
+   * Run validation for every field on the form and return an object which list issues while
+   * validating
+   *
+   * @param values
+   * @returns {*}
+   */
+  validateForm(values) {
+    if (typeof this.props.validate === 'function') {
+      return this.props.validate(values);
+    }
+
+    const schema = this.props.schema && this.props.schema.schema;
+    if (!schema) {
+      return {};
+    }
+
+    const validator = new Validator(values);
+
+    return Object.entries(values).reduce((prev, curr) => {
+      const [key] = curr;
+      const field = findField(this.props.schema.schema.fields, key);
+
+      const { valid, errors } = validator.validateFieldSchema(field);
+
+      if (valid) {
+        return prev;
+      }
+
+      // so if there are multiple errors, it will be listed in html spans
+      const errorHtml = errors.map((message, index) => (
+        <span key={index} className="form__validation-message">{message}</span>
+      ));
+
+      return Object.assign({}, prev, {
+        [key]: {
+          type: 'error',
+          value: { react: errorHtml },
+        },
+      });
+    }, {});
   }
 
   /**
@@ -32,14 +77,12 @@ class FormBuilder extends SilverStripeComponent {
   handleAction(event) {
     // Custom handlers
     if (typeof this.props.handleAction === 'function') {
-      this.props.handleAction(event, schemaFieldValues());
+      this.props.handleAction(event, this.props.values);
     }
-
-    const name = event.currentTarget.name;
 
     // Allow custom handlers to cancel event
     if (!event.isPropagationStopped()) {
-      this.setState({ submittingAction: name });
+      this.setState({ submittingAction: event.currentTarget.name });
     }
   }
 
@@ -72,6 +115,7 @@ class FormBuilder extends SilverStripeComponent {
           return formSchema;
         })
         .catch((reason) => {
+          // TODO Generic CMS error reporting
           this.setState({ submittingAction: null });
           throw reason;
         });
@@ -274,7 +318,6 @@ class FormBuilder extends SilverStripeComponent {
       touchOnBlur,
       touchOnChange,
       persistentSubmitErrors,
-      validate,
       form,
     } = this.props;
 
@@ -297,7 +340,7 @@ class FormBuilder extends SilverStripeComponent {
       touchOnBlur,
       touchOnChange,
       persistentSubmitErrors,
-      validate,
+      validate: this.validateForm,
     };
 
     return <BaseFormComponent {...props} />;
@@ -330,6 +373,8 @@ const basePropTypes = {
   touchOnChange: PropTypes.bool,
   persistentSubmitErrors: PropTypes.bool,
   validate: PropTypes.func,
+  values: PropTypes.object,
+  submitting: PropTypes.bool,
   baseFormComponent: PropTypes.func.isRequired,
   baseFieldComponent: PropTypes.func.isRequired,
 };
@@ -337,7 +382,6 @@ const basePropTypes = {
 FormBuilder.propTypes = Object.assign({}, basePropTypes, {
   form: PropTypes.string.isRequired,
   schema: schemaPropType.isRequired,
-  submitting: PropTypes.bool,
 });
 
 export { basePropTypes, schemaPropType };

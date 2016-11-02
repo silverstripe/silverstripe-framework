@@ -81,30 +81,27 @@ class FormBuilderLoader extends Component {
       promise = submitFn();
     }
 
-    if (promise) {
-      promise
-        .then(formSchema => {
-          this.props.schemaActions.setSchema(formSchema);
-          return formSchema;
-        })
-        // TODO Suggest storing messages in a separate redux store rather than throw an error
-        // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
-        .then(formSchema => {
-          if (!formSchema.state) {
-            return formSchema;
-          }
-          const messages = this.getMessages(formSchema.state);
-
-          if (Object.keys(messages).length) {
-            throw new SubmissionError(messages);
-          }
-          return formSchema;
-        });
-    } else {
+    if (!promise) {
       throw new Error('Promise was not returned for submitting');
     }
+    return promise
+      .then(formSchema => {
+        this.props.schemaActions.setSchema(formSchema);
+        return formSchema;
+      })
+      // TODO Suggest storing messages in a separate redux store rather than throw an error
+      // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
+      .then(formSchema => {
+        if (!formSchema.state) {
+          return formSchema;
+        }
+        const messages = this.getMessages(formSchema.state);
 
-    return promise;
+        if (Object.keys(messages).length) {
+          throw new SubmissionError(messages);
+        }
+        return formSchema;
+      });
   }
 
   /**
@@ -174,11 +171,15 @@ FormBuilderLoader.defaultProps = {
 export default connect(
   (state, ownProps) => {
     const schema = state.schemas[ownProps.schemaUrl];
-    const form = schema ? schema.id : null;
-    const submitting = state.form
-      && state.form[ownProps.schemaUrl]
-      && state.form[ownProps.schemaUrl].submitting;
-    return { schema, form, submitting };
+    const form = schema && schema.id;
+    const reduxFormState = state.form
+      && state.form[ownProps.schemaUrl];
+    const submitting = reduxFormState
+      && reduxFormState.submitting;
+    const values = reduxFormState
+      && reduxFormState.values;
+
+    return { schema, form, submitting, values };
   },
   (dispatch) => ({
     schemaActions: bindActionCreators(schemaActions, dispatch),

@@ -62,4 +62,10 @@ class CurrencyField extends TextField {
 		}
 		return true;
 	}
+
+	public function getSchemaValidation() {
+		$rules = parent::getSchemaValidation();
+		$rules['currency'] = true;
+		return $rules;
+	}
 }

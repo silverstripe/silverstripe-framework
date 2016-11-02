@@ -12,7 +12,7 @@ function fieldHolder(Field) {
      *
      * @returns {Component}
      */
-    getDescription() {
+    renderDescription() {
       if (this.props.description === null) {
         return null;
       }
@@ -29,10 +29,11 @@ function fieldHolder(Field) {
      *
      * @returns {Component}
      */
-    getMessage() {
-      const message = (this.props.meta) ? this.props.meta.error : null;
+    renderMessage() {
+      const meta = this.props.meta;
+      const message = (meta) ? meta.error : null;
 
-      if (!message) {
+      if (!message || (meta && !meta.touched)) {
         return null;
       }
 
@@ -46,7 +47,7 @@ function fieldHolder(Field) {
      *
      * @returns {Component}
      */
-    getLeftTitle() {
+    renderLeftTitle() {
       const labelText = this.props.leftTitle !== null
         ? this.props.leftTitle
         : this.props.title;
@@ -67,7 +68,7 @@ function fieldHolder(Field) {
      *
      * @returns {Component}
      */
-    getRightTitle() {
+    renderRightTitle() {
       if (!this.props.rightTitle || this.props.hideLabels) {
         return null;
       }
@@ -108,13 +109,13 @@ function fieldHolder(Field) {
     render() {
       return (
         <FormGroup {...this.getHolderProps()}>
-          {this.getLeftTitle()}
+          {this.renderLeftTitle()}
           <div className="form__field-holder">
             <Field {...this.props} />
-            {this.getMessage()}
-            {this.getDescription()}
+            {this.renderMessage()}
+            {this.renderDescription()}
           </div>
-          {this.getRightTitle()}
+          {this.renderRightTitle()}
         </FormGroup>
       );
     }

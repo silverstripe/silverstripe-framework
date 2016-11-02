@@ -14893,6 +14893,10 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   vertical-align:middle;
 }
 
+.form__field-message-item{
+  display:block;
+}
+
 .btn-toolbar{
   margin-top:1.2308rem;
   margin-bottom:1.2308rem;

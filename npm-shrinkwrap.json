@@ -8892,6 +8892,10 @@
         }
       }
     },
+    "validator": {
+      "version": "6.1.0",
+      "resolved": "https://registry.npmjs.org/validator/-/validator-6.1.0.tgz"
+    },
     "webpack": {
       "version": "1.13.2",
       "resolved": "https://registry.npmjs.org/webpack/-/webpack-1.13.2.tgz",

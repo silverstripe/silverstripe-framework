@@ -82,9 +82,9 @@ describe('FormBuilder', () => {
         { id: 'fieldTwo', name: 'fieldTwo' },
       ];
       props.schema.state.fields = [
-        { id: 'fieldOne', value: 'valOne' },
-        { id: 'fieldTwo', value: null },
-        { id: 'notInSchema', value: 'invalid' },
+        { id: 'fieldOne', name: 'fieldOne', value: 'valOne' },
+        { id: 'fieldTwo', name: 'fieldTwo', value: null },
+        { id: 'notInSchema', name: 'notInSchema', value: 'invalid' },
       ];
       fieldValues = schemaFieldValues(props.schema.schema, props.schema.state);
       expect(fieldValues).toEqual({
@@ -110,9 +110,9 @@ describe('FormBuilder', () => {
         { id: 'actionTwo', name: 'actionTwo' },
       ];
       props.schema.state.fields = [
-        { id: 'fieldOne', value: 'valOne' },
-        { id: 'fieldTwo', value: null },
-        { id: 'notInSchema', value: 'invalid' },
+        { id: 'fieldOne', name: 'fieldOne', value: 'valOne' },
+        { id: 'fieldTwo', name: 'fieldTwo', value: null },
+        { id: 'notInSchema', name: 'notInSchema', value: 'invalid' },
       ];
     });
 
@@ -156,35 +156,35 @@ describe('FormBuilder', () => {
 
     it('should retrieve the field in the shallow fields list', () => {
       fields = [
-        { id: 'fieldOne' },
-        { id: 'fieldTwo' },
-        { id: 'fieldThree' },
-        { id: 'fieldFour' },
+        { id: 'fieldOne', name: 'fieldOne' },
+        { id: 'fieldTwo', name: 'fieldTwo' },
+        { id: 'fieldThree', name: 'fieldThree' },
+        { id: 'fieldFour', name: 'fieldFour' },
       ];
       const field = findField(fields, 'fieldThree');
 
       expect(field).toBeTruthy();
-      expect(field.id).toBe('fieldThree');
+      expect(field.name).toBe('fieldThree');
     });
 
     it('should retrieve the field that is a grandchild in the fields list', () => {
       fields = [
-        { id: 'fieldOne' },
-        { id: 'fieldTwo', children: [
-          { id: 'fieldTwoOne' },
-          { id: 'fieldTwoTwo', children: [
-            { id: 'fieldTwoOne' },
-            { id: 'fieldTwoTwo' },
-            { id: 'fieldTwoThree' },
+        { id: 'fieldOne', name: 'fieldOne' },
+        { id: 'fieldTwo', name: 'fieldTwo', children: [
+          { id: 'fieldTwoOne', name: 'fieldTwoOne' },
+          { id: 'fieldTwoTwo', name: 'fieldTwoTwo', children: [
+            { id: 'fieldTwoOne', name: 'fieldTwoOne' },
+            { id: 'fieldTwoTwo', name: 'fieldTwoTwo' },
+            { id: 'fieldTwoThree', name: 'fieldTwoThree' },
           ] },
         ] },
-        { id: 'fieldThree' },
-        { id: 'fieldFour' },
+        { id: 'fieldThree', name: 'fieldThree' },
+        { id: 'fieldFour', name: 'fieldFour' },
       ];
       const field = findField(fields, 'fieldTwoThree');
 
       expect(field).toBeTruthy();
-      expect(field.id).toBe('fieldTwoThree');
+      expect(field.name).toBe('fieldTwoThree');
     });
   });
 });

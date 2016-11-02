@@ -474,4 +474,10 @@ class DateField extends TextField {
 			return $this->config;
 		}
 	}
+
+	public function getSchemaValidation() {
+		$rules = parent::getSchemaValidation();
+		$rules['date'] = true;
+		return $rules;
+	}
 }

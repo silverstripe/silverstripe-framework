@@ -399,6 +399,7 @@ class ChangeSet extends DataObject {
 		if ($this->isInDB()) {
 			$fields->addFieldToTab('Root.Main', ReadonlyField::create('State', $this->fieldLabel('State')));
 		}
+
 		$this->extend('updateCMSFields', $fields);
 		return $fields;
 	}
