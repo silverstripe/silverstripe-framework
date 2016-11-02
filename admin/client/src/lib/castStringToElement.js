@@ -11,6 +11,10 @@ import React from 'react';
  * @returns {Component}
  */
 export default function castStringToElement(Container, value, props = {}) {
+  if (value && typeof value.react !== 'undefined') {
+    return <Container {...props}>{value.react}</Container>;
+  }
+
   // HTML value
   if (value && typeof value.html !== 'undefined') {
     if (value.html !== null) {

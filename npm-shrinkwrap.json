@@ -4,10 +4,6 @@
   "npm-shrinkwrap-version": "6.0.1",
   "node-version": "v4.5.0",
   "dependencies": {
-    "approvejs": {
-      "version": "1.1.2",
-      "resolved": "https://registry.npmjs.org/approvejs/-/approvejs-1.1.2.tgz"
-    },
     "autoprefixer": {
       "version": "6.4.1",
       "resolved": "https://registry.npmjs.org/autoprefixer/-/autoprefixer-6.4.1.tgz",
@@ -8895,6 +8891,10 @@
           "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.11.tgz"
         }
       }
+    },
+    "validator": {
+      "version": "6.1.0",
+      "resolved": "https://registry.npmjs.org/validator/-/validator-6.1.0.tgz"
     },
     "webpack": {
       "version": "1.13.2",

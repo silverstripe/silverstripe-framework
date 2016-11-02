@@ -1,8 +1,8 @@
 import React, { PropTypes } from 'react';
-import approve from 'approvejs';
 import merge from 'merge';
 import schemaFieldValues, { findField } from 'lib/schemaFieldValues';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+import Validator from 'lib/Validator';
 import backend from 'lib/Backend';
 import injector from 'lib/Injector';
 
@@ -42,62 +42,30 @@ class FormBuilder extends SilverStripeComponent {
       return {};
     }
 
+    const validator = new Validator(values);
+
     return Object.entries(values).reduce((prev, curr) => {
-      const [key, value] = curr;
+      const [key] = curr;
       const field = findField(this.props.schema.schema.fields, key);
 
-      if (!field.validation) {
-        return prev;
-      }
+      const { valid, errors } = validator.validateFieldSchema(field);
 
-      const error = approve.value(value, this.getFieldValidationRules(field, values));
-
-      if (error.approved) {
+      if (valid) {
         return prev;
       }
 
       // so if there are multiple errors, it will be listed in html spans
-      const errorHtml = `<span>${error.errors.join('</span><span>')}</span>`;
+      const errorHtml = errors.map((message, index) => (
+        <span key={index} className="form__validation-message">{message}</span>
+      ));
 
       return Object.assign({}, prev, {
         [key]: {
           type: 'error',
-          value: { html: errorHtml },
+          value: { react: errorHtml },
         },
       });
     }, {});
-  }
-
-  /**
-   * Generates validation rules for a given field
-   *
-   * @param {object} field
-   * @param {object} otherValues
-   * @returns {object}
-   */
-  getFieldValidationRules(field, otherValues) {
-    if (!field.validation) {
-      return {};
-    }
-
-    const rules = Object.assign({},
-      field.validation,
-      {
-        title: (field.leftTitle !== null) ? field.leftTitle : field.title,
-      }
-    );
-
-    // mutate rules for equality check
-    // currently assumes server provides field name to check against
-    if (typeof rules.equal === 'string') {
-      const equalField = findField(this.props.schema.schema.fields, rules.equal);
-      rules.equal = {
-        value: otherValues[rules.equal],
-        field: (equalField.leftTitle !== null) ? equalField.leftTitle : equalField.title,
-      };
-    }
-
-    return rules;
   }
 
   /**

@@ -1412,7 +1412,8 @@ class FormField extends RequestHandler {
 	 * @todo Add deep merging of arrays like `data` and `attributes`.
 	 */
 	public function setSchemaData($schemaData = []) {
-		$this->schemaData = array_merge($this->schemaData, $schemaData);
+		$defaults = $this->getSchemaData();
+		$this->schemaData = array_merge($this->schemaData, array_intersect_key($schemaData, $defaults));
 		return $this;
 	}
 
@@ -1466,8 +1467,8 @@ class FormField extends RequestHandler {
 
 	/**
 	 * Sets the schema data used for rendering the field on the front-end.
-	 * Merges the passed array with the current `$schemaData` or {@link getSchemaDataDefaults()}.
-	 * Any passed keys that are not defined in {@link getSchemaDataDefaults()} are ignored.
+	 * Merges the passed array with the current `$schemaState` or {@link getSchemaStateDefaults()}.
+	 * Any passed keys that are not defined in {@link getSchemaStateDefaults()} are ignored.
 	 * If you want to pass around ad hoc data use the `data` array e.g. pass `['data' => ['myCustomKey' => 'yolo']]`.
 	 *
 	 * @param array $schemaState The data to be merged with $this->schemaData.
@@ -1476,7 +1477,8 @@ class FormField extends RequestHandler {
 	 * @todo Add deep merging of arrays like `data` and `attributes`.
 	 */
 	public function setSchemaState($schemaState = []) {
-		$this->schemaState = array_merge($this->schemaState, array_intersect_key($schemaState, $this->schemaState));
+		$defaults = $this->getSchemaState();
+		$this->schemaState = array_merge($this->schemaState, array_intersect_key($schemaState, $defaults));
 		return $this;
 	}
 
