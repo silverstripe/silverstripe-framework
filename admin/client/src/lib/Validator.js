@@ -142,7 +142,10 @@ class Validator {
 
     // no required rule given and no value, so skip all other validation
     if (value === '' && rules.required) {
-      const config = Object.assign({ title: name }, { title }, rules.required);
+      const config = Object.assign(
+        { title: (title !== '') ? title : name },
+        rules.required
+      );
       const message = overrideMessage || this.getMessage('required', config);
       return {
         valid: false,

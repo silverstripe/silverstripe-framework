@@ -444,7 +444,7 @@ break
 default:n="{name} is not a valid value."}return t.title&&(n=n.replace("{name}",t.title)),n}},{key:"validateField",value:function d(e,t,n,i){var r=this,s={valid:!0,errors:[]}
 if(!t)return s
 var l=this.getFieldValue(e)
-if(""===l&&t.required){var u=a({title:e},{title:n},t.required),c=i||this.getMessage("required",u)
+if(""===l&&t.required){var u=a({title:""!==n?n:e},t.required),c=i||this.getMessage("required",u)
 return{valid:!1,errors:[c]}}return Object.entries(t).forEach(function(t){var i=o(t,2),u=i[0],c=i[1],d=a({title:e},{title:n},c)
 if("required"!==u){var f=r.validateValue(l,u,d)
 if(!f){var p=r.getMessage(u,d)
@@ -1573,9 +1573,8 @@ this._renderModal()},close:function r(){this._clearModal()},_renderModal:functio
 
 
 d["default"].render(u["default"].createElement(f.Provider,{store:o},u["default"].createElement(h["default"],{show:!0,handleSubmit:i,handleHide:n,schemaUrl:s,bodyClassName:"modal__dialog",responseClassBad:"modal__response modal__response--error",
-responseClassGood:"modal__response modal__response--good"})),this[0])},_clearModal:function a(){d["default"].unmountComponentAtNode(this[0])},_handleSubmitModal:function l(e,t,n){return event.preventDefault(),
-e.Campaign?n():(alert(s["default"]._t("AddToCampaigns.ErrorCampaignNotSelected","There was no campaign selected to be added to")),null)}})})},,function(e,t){e.exports=FormBuilderModal},function(e,t,n){
-"use strict"
+responseClassGood:"modal__response modal__response--good"})),this[0])},_clearModal:function a(){d["default"].unmountComponentAtNode(this[0])},_handleSubmitModal:function s(e,t,n){return event.preventDefault(),
+n()}})})},,function(e,t){e.exports=FormBuilderModal},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),o=i(r)
 n(158),n(175)
 var a=function s(e){var t=(0,o["default"])((0,o["default"])(this).contents()).find(".message")
