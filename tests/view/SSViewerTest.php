@@ -193,7 +193,7 @@ class SSViewerTest extends SapphireTest {
 
 		// first make sure that our test js file causes an exception to be thrown
 		try{
-			require_once('thirdparty/jsmin/jsmin.php');
+			require_once(FRAMEWORK_DIR . '/thirdparty/jsmin/jsmin.php');
 			JSMin::minify($jsFileContents);
 			$this->fail('JSMin did not throw exception on minify bad file: ');
 		} catch(Exception $e) {
