@@ -81,30 +81,27 @@ class FormBuilderLoader extends Component {
       promise = submitFn();
     }
 
-    if (promise) {
-      promise
-        .then(formSchema => {
-          this.props.schemaActions.setSchema(formSchema);
-          return formSchema;
-        })
-        // TODO Suggest storing messages in a separate redux store rather than throw an error
-        // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
-        .then(formSchema => {
-          if (!formSchema.state) {
-            return formSchema;
-          }
-          const messages = this.getMessages(formSchema.state);
-
-          if (Object.keys(messages).length) {
-            throw new SubmissionError(messages);
-          }
-          return formSchema;
-        });
-    } else {
+    if (!promise) {
       throw new Error('Promise was not returned for submitting');
     }
+    return promise
+      .then(formSchema => {
+        this.props.schemaActions.setSchema(formSchema);
+        return formSchema;
+      })
+      // TODO Suggest storing messages in a separate redux store rather than throw an error
+      // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
+      .then(formSchema => {
+        if (!formSchema.state) {
+          return formSchema;
+        }
+        const messages = this.getMessages(formSchema.state);
 
-    return promise;
+        if (Object.keys(messages).length) {
+          throw new SubmissionError(messages);
+        }
+        return formSchema;
+      });
   }
 
   /**
