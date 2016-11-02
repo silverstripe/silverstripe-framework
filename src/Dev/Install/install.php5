@@ -142,8 +142,16 @@ if(isset($_REQUEST['db'])) {
 	if(isset($_REQUEST['db']['type'])) {
 		$type = $_REQUEST['db']['type'];
 	} else {
-		$type = $_REQUEST['db']['type'] = defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLDatabase';
-	}
+        if( defined('SS_DATABASE_CLASS') ){
+            $type = $_REQUEST['db']['type'] = SS_DATABASE_CLASS;
+        } elseif( $databaseClasses['MySQLPDODatabase']['supported'] ) {
+            $type = $_REQUEST['db']['type'] = 'MySQLPDODatabase';
+        } elseif( $databaseClasses['MySQLDatabase']['supported'] ) {
+            $type = $_REQUEST['db']['type'] = 'MySQLDatabase';
+        } else {
+            // handle error
+        }
+    }
 
 	// Disabled inputs don't submit anything - we need to use the environment (except the database name)
 	if($usingEnv) {
@@ -161,7 +169,15 @@ if(isset($_REQUEST['db'])) {
 		$databaseConfig['type'] = $type;
 	}
 } else {
-	$type = $_REQUEST['db']['type'] = defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLDatabase';
+    if( defined('SS_DATABASE_CLASS') ){
+        $type = $_REQUEST['db']['type'] = SS_DATABASE_CLASS;
+    } elseif( $databaseClasses['MySQLPDODatabase']['supported'] ) {
+        $type = $_REQUEST['db']['type'] = 'MySQLPDODatabase';
+    } elseif( $databaseClasses['MySQLDatabase']['supported'] ) {
+        $type = $_REQUEST['db']['type'] = 'MySQLDatabase';
+    } else {
+        // handle error
+    }
 	$_REQUEST['db'][$type] = $databaseConfig = array(
 		"type" => $type,
 		"server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : "localhost",
