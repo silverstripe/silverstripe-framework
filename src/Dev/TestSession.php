@@ -239,9 +239,9 @@ class TestSession {
 	 * @return SimplePage The response if available
 	 */
 	public function lastPage() {
-		require_once("thirdparty/simpletest/http.php");
-		require_once("thirdparty/simpletest/page.php");
-		require_once("thirdparty/simpletest/form.php");
+		require_once("simpletest/http.php");
+		require_once("simpletest/page.php");
+		require_once("simpletest/form.php");
 
 		$builder = new SimplePageBuilder();
 		if($this->lastResponse) {
