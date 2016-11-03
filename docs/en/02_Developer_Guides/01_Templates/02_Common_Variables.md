@@ -304,72 +304,7 @@ For example, imagine you're on the "bob marley" page, which is three levels in: 
 
 ## Navigating Scope
 
-### Me
-
-`$Me` outputs the current object in scope. This will call the `forTemplate` of the object.
-
-	:::ss
-	$Me
-
-
-### Up
-
-When in a particular scope, `$Up` takes the scope back to the previous level.
-
-	:::ss
-	<h1>Children of '$Title'</h1>
-
-	<% loop $Children %>
-		<p>Page '$Title' is a child of '$Up.Title'</p>
-	
-		<% loop $Children %>
-			<p>Page '$Title' is a grandchild of '$Up.Up.Title'</p>
-		<% end_loop %>
-	<% end_loop %>
-
-Given the following structure, it will output the text.
-
-	My Page
-	|
-	+-+ Child 1
- 	| 	|
- 	| 	+- Grandchild 1
- 	|
- 	+-+ Child 2
-
-	Children of 'My Page'
-
-	Page 'Child 1' is a child of 'My Page'
-	Page 'Grandchild 1' is a grandchild of 'My Page'
-	Page 'Child 2' is a child of 'MyPage'
-
-<div class="notice" markdown="1">
-Additional selectors implicitely change the scope so you need to put additional `$Up` to get what you expect.
-</div>
-
-	:::ss
-	<h1>Children of '$Title'</h1>
-	<% loop $Children.Sort('Title').First %>
-		<%-- We have two additional selectors in the loop expression so... --%> 
-		<p>Page '$Title' is a child of '$Up.Up.Up.Title'</p>
-	<% end_loop %>
-
-### Top
-
-While `$Up` provides us a way to go up one level of scope, `$Top` is a shortcut to jump to the top most scope of the 
-page. The  previous example could be rewritten to use the following syntax.
-
-	:::ss
-	<h1>Children of '$Title'</h1>
-
-	<% loop $Children %>
-		<p>Page '$Title' is a child of '$Top.Title'</p>
-	
-		<% loop $Children %>
-			<p>Page '$Title' is a grandchild of '$Top.Title'</p>
-		<% end_loop %>
-	<% end_loop %>
-
+See [scope](syntax#scope).
 
 ## Breadcrumbs
 
