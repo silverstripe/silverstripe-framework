@@ -1451,8 +1451,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					// Nodes that weren't "actually moved" shouldn't be registered as
 					// having been edited; do a direct SQL update instead
 					++$counter;
+					$table = DataObject::getSchema()->baseDataTable($className);
 					DB::prepared_query(
-						"UPDATE \"$className\" SET \"Sort\" = ? WHERE \"ID\" = ?",
+						"UPDATE \"$table\" SET \"Sort\" = ? WHERE \"ID\" = ?",
 						array($counter, $id)
 					);
 				}
