@@ -18,6 +18,7 @@ eo:
     HEIGHT: Alto
     LASTEDIT: 'Laste ŝanĝita'
     OWNER: Posedanto
+    PATH: Vojo
     SIZE: 'Grando'
     TITLE: Titolo
     TYPE: 'Tipo'
@@ -36,6 +37,7 @@ eo:
     INSERTURL: 'Enigi el URL'
     REMOVEINFO: 'Forigi ĉi tiun dosieron el ĉi tiu kampo'
     TOTAL: Totalo
+    TOUPLOAD: 'Alŝuti dosierojn'
     UPLOADINPROGRESS: 'Bonvolu atendi...alŝuto daŭras'
     UPLOADOR: AŬ
   BBCodeParser:
@@ -73,6 +75,8 @@ eo:
     ANY: Ajna
     NOANSWER: 'Ne'
     YESANSWER: 'Jes'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Aldoni al kampanjo'
   CMSLoadingScreen_ss:
     LOADING: Ŝargas...
     REQUIREJS: 'La CMS bezonas ke vi enŝaltis Ĝavaskripton.'
@@ -100,9 +104,11 @@ eo:
     TimedOutTitleAnonymous: 'Via seanco eltempiĝis.'
     TimedOutTitleMember: 'He, {name}!<br />Via seanco eltempiĝis.'
   CampaignAdmin:
+    ACCESS_HELP: 'Permesi vidi la kampanjan eldonan sekcion'
     MENUTITLE: Kampanjoj
   Campaigns:
     AddToCampaign: 'Aldoni al kampanjo'
+    AddToCampaignFormFieldLabel: 'Elekti kampanjon'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'La pasvorto por la konto kun retadreso {email} estas ŝanĝita. Se vi ne ŝanĝis vian pasvorton, bonvolu ŝanĝi ĝin per la jena ligilo'
     CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
@@ -184,6 +190,7 @@ eo:
   DropdownField:
     CHOOSE: (Elekti)
     CHOOSESEARCH: '(Elekti aŭ serĉi)'
+    CHOOSE_MODEL: '(Elekti {name})'
     SOURCE_VALIDATION: 'Bonvolu elekti valoron el la listo donita. {value} ne estas valida agordo'
   EmailField:
     VALIDATION: 'Bonvolu enigi readreson'
@@ -207,12 +214,14 @@ eo:
     JsType: 'Ĝavaskripta dosiero'
     Mp3Type: 'MP3-sondosiero'
     MpgType: 'AVI-videa dosiero'
+    NOFILESIZE: 'Dosiero havas nul bajtojn'
     NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
     Name: Nomo
     PLURALNAME: Dosieroj
     PdfType: 'Dosiero de Adobe Acrobat PDF'
     PngType: 'PNG-bildo - ĝeneralcela formato'
     SINGULARNAME: Dosiero
+    TOOLARGE: 'Dosiero estas tro granda, maksimumuo permesata {size}'
     TOOLARGESHORT: 'Dosiero pli grandas ol {size}'
     TiffType: 'Markita bildoformato'
     Title: Titolo
@@ -234,6 +243,7 @@ eo:
     CSRF_FAILED_MESSAGE: 'Ŝajne okazis teknika problemo. Bonvolu alklaki la retrobutonon, refreŝigi vian foliumilon, kaj reprovi.'
     FIELDISREQUIRED: '{name} estas bezonata'
     SubmitBtnLabel: Iri
+    VALIDATIONCREDIT: 'Bonvole certigu ke vi ĝuste enigis la kreditkartan numeron'
     VALIDATIONCREDITNUMBER: 'Bonvole certigu ke vi ĝuste enigis la kreditkarton {number}'
     VALIDATIONNOTUNIQUE: 'La enirita valoron ne unika'
     VALIDATIONPASSWORDSDONTMATCH: 'Pasvortoj ne matĉas'
@@ -314,6 +324,7 @@ eo:
     CSSCLASSRIGHT: 'Dekstre, kaj teksto ĉirkaŭfluas.'
     DETAILS: Detaloj
     EMAIL: 'Retpoŝta adreso'
+    FILE: SilverStripe\\havaĵo\\dosiero
     FOLDER: Dosierujo
     IMAGEALT: 'Alternativa teksto (alt)'
     IMAGEALTTEXT: 'Alternativa teksto (alt) - vidiĝas se ne eblas vidigi bildon'
@@ -326,8 +337,15 @@ eo:
     IMAGEWIDTHPX: Larĝo
     INSERTMEDIA: 'Enigi registraĵojn el'
     LINK: 'Almeti ligilon'
+    LINKANCHOR: 'Ligi al ankro en ĉi tiu paĝo'
     LINKDESCR: 'Ligila priskribo'
+    LINKDETAILS: 'Ligaj detaloj'
+    LINKEMAIL: 'Ligilo al retpoŝta adreso'
+    LINKEXTERNAL: 'Ligilo al alia retejo'
+    LINKFILE: 'Ligilo al elŝuti dosieron'
+    LINKINTERNAL: 'Ligilo al paĝo en ĉi tiu retejo'
     LINKOPENNEWWIN: 'Ĉu malfermi ligilon en nova fenestro?'
+    LINKTO: 'Ligila tipo'
     PAGE: Paĝo
     SUBJECT: 'Temo de retpoŝto'
     URL: URL
@@ -339,6 +357,7 @@ eo:
     ERROR_HOSTNAME: 'Ĉi tiu nomo de gastiga komputilo ne troviĝas en la blanka listo'
     ERROR_ID: 'Bezoniĝas parametro aŭ "ID" aŭ "FileURL" por identigi la dosieron'
     ERROR_NOTFOUND: 'Ne eblas trovi vidigotan dosieron'
+    ERROR_OEMBED_REMOTE: 'Enkorpigi kongruas nur kun foraj dosieroj'
     ERROR_SCHEME: 'Ĉi tiu dosiera skemo ne troviĝas en la blanka listo'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Senfina iteracio troviĝis en la "{type}"-hierarkio. Bonvole ŝanĝu la patron por solvi tion.'
@@ -417,6 +436,7 @@ eo:
     ShowAsList: 'vidigi kiel liston'
     TooManyPages: 'Tro da paĝoj'
     ValidationError: 'Validiga eraro'
+    VersionUnknown: Nekonata
   LeftAndMain_Menu_ss:
     Hello: Saluton
     LOGOUT: 'Elsaluti'
@@ -459,6 +479,7 @@ eo:
     PASSWORD: Pasvorto
     PASSWORDEXPIRED: 'Via pasvorto finiĝis. Bonvolu elekti novan.'
     PLURALNAME: Membroj
+    REMEMBERME: 'Memoru min je la sekva fojo? (por %d tagoj ĉe ĉi tiu aparato)'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
@@ -485,6 +506,8 @@ eo:
     DIGITSDECFRACTIONSECOND: 'Almenaŭ unu cifero indikanta dekuman frakcion de sekundo'
     FOURDIGITYEAR: 'Kvarcifera jaro'
     FULLNAMEMONTH: 'Tuta nomo de monato (ekz. junio)'
+    HOURNOLEADING: 'Horo sen antaŭira nulo, 12-hora formato'
+    HOURNOLEADING24: 'Horo sen antaŭira nulo, 24-hora formato'
     MINUTENOLEADING: 'Minuto sen antaŭira nulo'
     MONTHNOLEADING: 'Monato sen antaŭira nulo'
     Preview: Antaŭvido
@@ -626,6 +649,54 @@ eo:
     Tablet: Tabulkomputilo
     ViewDeviceWidth: 'Agordi antaŭvidan larĝon'
     Width: larĝo
+  SilverStripe\Admin\CMSProfileController:
+    MENUTITLE: 'Mia agordaro'
+  SilverStripe\Admin\CampaignAdmin:
+    MENUTITLE: Kampanjoj
+  SilverStripe\Admin\SecurityAdmin:
+    MENUTITLE: Sekureco
+  SilverStripe\Assets\File:
+    PLURALNAME: Dosieroj
+    SINGULARNAME: Dosiero
+  SilverStripe\Assets\Folder:
+    PLURALNAME: Dosierujoj
+    SINGULARNAME: Dosierujo
+  SilverStripe\Assets\Image:
+    PLURALNAME: Bildoj
+    SINGULARNAME: Bildo
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Datumaj Objektoj'
+    SINGULARNAME: 'Datuma Objekto'
+  SilverStripe\ORM\Versioning\ChangeSet:
+    PLURALNAME: Kampanjoj
+    SINGULARNAME: Kampanjo
+  SilverStripe\ORM\Versioning\ChangeSetItem:
+    PLURALNAME: 'Ŝanĝi agorditajn elementojn'
+    SINGULARNAME: 'Ŝanĝi agorditan elementon'
+  SilverStripe\Security\Group:
+    PLURALNAME: Grupoj
+    SINGULARNAME: Grupo
+  SilverStripe\Security\LoginAttempt:
+    PLURALNAME: 'Provoj ensaluti'
+    SINGULARNAME: 'Provo ensaluti'
+  SilverStripe\Security\Member:
+    PLURALNAME: Membroj
+    SINGULARNAME: Membro
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Membraj pasvortoj'
+    SINGULARNAME: 'Membra pasvorto'
+  SilverStripe\Security\Permission:
+    PLURALNAME: Permesoj
+    SINGULARNAME: Permeso
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Roloj
+    SINGULARNAME: Rolo
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Permesrolaj kodoj'
+    SINGULARNAME: 'Permesrola kodo'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Memori ensalutajn haketaĵojn'
+    SINGULARNAME: 'Memori ensalutan haketaĵon'
   SiteTree:
     TABMAIN: Ĉefaj
   TableListField:

@@ -6,14 +6,14 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   }
 } else {
   ss.i18n.addDictionary('en', {
-    "FormField.NONE": "None",
-    "File.DRAFT": "Draft",
-    "File.MODIFIED": "Modified",
-    "File.PUBLISHED": "Published",
     "FILEIFRAMEFIELD.CONFIRMDELETE": "Are you sure you want to delete this file?",
     "FILEIFRAMEFIELD.DELETEFILE": "Delete File",
     "FILEIFRAMEFIELD.DELETEIMAGE": "Delete Image",
     "FILEIFRAMEFIELD.UNATTACHFILE": "Un-Attach File",
+    "File.DRAFT": "Draft",
+    "File.MODIFIED": "Modified",
+    "File.PUBLISHED": "Published",
+    "FormField.NONE": "None",
     "GRIDFIELD.ERRORINTRANSACTION": "An error occured while fetching data from the server\n Please try again later.",
     "HASMANYFILEFIELD.UPLOADING": "Uploading... %s",
     "HtmlEditorField.SelectAnchor": "Select an anchor",

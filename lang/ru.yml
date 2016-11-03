@@ -18,6 +18,7 @@ ru:
     HEIGHT: Высота
     LASTEDIT: 'Последнее изменение'
     OWNER: Владелец
+    PATH: Путь
     SIZE: 'Размер'
     TITLE: Название
     TYPE: 'Тип'
@@ -36,6 +37,7 @@ ru:
     INSERTURL: 'Вставить ссылку'
     REMOVEINFO: 'Удалить этот файл из поля'
     TOTAL: Всего
+    TOUPLOAD: 'Загрузить файлы'
     UPLOADINPROGRESS: 'Идет загрузка... Пожалуйста, подождите'
     UPLOADOR: ИЛИ
   BBCodeParser:
@@ -73,6 +75,8 @@ ru:
     ANY: Все
     NOANSWER: 'Нет'
     YESANSWER: 'Да'
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Добавить в кампанию'
   CMSLoadingScreen_ss:
     LOADING: Идет загрузка...
     REQUIREJS: 'Для работы с CMS у вас должен быть включен JavaScript.'
@@ -100,9 +104,11 @@ ru:
     TimedOutTitleAnonymous: 'Время вашего сеанса истекло.'
     TimedOutTitleMember: '{name}!<br />Время вашего сеанса истекло.'
   CampaignAdmin:
+    ACCESS_HELP: 'Разрешить просмотр опубликованной части кампании.'
     MENUTITLE: Кампании
   Campaigns:
     AddToCampaign: 'Добавить в кампанию'
+    AddToCampaignFormFieldLabel: 'Выбрать Кампанию'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Пароль для регистрации с Email адресом {email} был изменён. Если вы его не меняли установите новый перейдя по ссылке ниже'
     CHANGEPASSWORDTEXT1: 'Вы изменили свой пароль на'
@@ -184,6 +190,7 @@ ru:
   DropdownField:
     CHOOSE: (Выберите)
     CHOOSESEARCH: '(Выбрать или найти)'
+    CHOOSE_MODEL: '(Выберите {name})'
     SOURCE_VALIDATION: 'Выберите значение из списка. Ошибочно указано значение: {value}'
   EmailField:
     VALIDATION: 'Пожалуйста, задайте адрес email.'
@@ -207,12 +214,15 @@ ru:
     JsType: 'Файл Javascript'
     Mp3Type: 'Аудиофайл MP3'
     MpgType: 'Видеофайл MPEG'
+    NOFILESIZE: 'Размер файла 0 байт.'
     NOVALIDUPLOAD: 'Недействительный файл для загрузки'
     Name: Название
     PLURALNAME: Файлы
     PdfType: 'Файл Adobe Acrobat PDF'
     PngType: 'Изображение PNG - универсальный графический формат'
     SINGULARNAME: Файл
+    TOOLARGE: 'Превышен допустимый размер файла (максимально {size})'
+    TOOLARGESHORT: 'Размер файла превышает {size}'
     TiffType: 'Изображение TIFF'
     Title: Заголовок
     WavType: 'Аудиофайл WAV'
@@ -233,6 +243,7 @@ ru:
     CSRF_FAILED_MESSAGE: 'Произошла техническая ошибка. Нажмите кнопку "Назад", обновите страницу в браузере и повторите попытку.'
     FIELDISREQUIRED: 'Поле {$name} является обязательным'
     SubmitBtnLabel: Выбрать
+    VALIDATIONCREDIT: 'Пожалуйста, убедитесь, что номер кредитной карты задан правильно'
     VALIDATIONCREDITNUMBER: 'Пожалуйста, убедитесь, что номер кредитной карты {number} задан правильно'
     VALIDATIONNOTUNIQUE: 'Введенное значение не уникально'
     VALIDATIONPASSWORDSDONTMATCH: 'Пароли не совпадают'
@@ -313,6 +324,7 @@ ru:
     CSSCLASSRIGHT: 'Справа с обтеканием текста'
     DETAILS: Подробности
     EMAIL: 'Email'
+    FILE: Файл
     FOLDER: Папка
     IMAGEALT: 'Альтернативный текст (alt)'
     IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
@@ -325,8 +337,15 @@ ru:
     IMAGEWIDTHPX: Ширина
     INSERTMEDIA: 'Вставить медиафайл'
     LINK: 'Вставить ссылку'
+    LINKANCHOR: 'Ссылка на область этой страницы'
     LINKDESCR: 'Описание ссылки'
+    LINKDETAILS: 'Дополнения к ссылке'
+    LINKEMAIL: 'Ссылка на email'
+    LINKEXTERNAL: 'Ссылка на другой сайт или URL'
+    LINKFILE: 'Ссылка на скачивание файла'
+    LINKINTERNAL: 'Ссылка на страницу этого сайта'
     LINKOPENNEWWIN: 'Открыть ссылку в новом окне?'
+    LINKTO: 'Тип ссылки'
     PAGE: Страница
     SUBJECT: 'Тема Email письма'
     URL: Ссылка
@@ -338,6 +357,7 @@ ru:
     ERROR_HOSTNAME: 'Данный адрес недоступен'
     ERROR_ID: 'Необходимо указать "ID" или "FileURL" - ссылку на файл для идентификации файла'
     ERROR_NOTFOUND: 'Файл не обнаружен'
+    ERROR_OEMBED_REMOTE: 'Встраивание доступно только для удалённых файлов'
     ERROR_SCHEME: 'Данный тип файла не поддерживается'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Обнаружен бесконечный цикл в иерархической структуре "{type}". Для исправления ошибки измените страницу, находящуюся уровнем выше'
@@ -367,6 +387,8 @@ ru:
     FROMWEB: 'Из интернета'
     FindInFolder: 'Найти в папке'
     IMAGEALT: 'Альтернативный текст (alt)'
+    IMAGEALTTEXT: 'Альтернативный текст (alt) - показывается, если изображение недоступно'
+    IMAGEALTTEXTDESC: 'Отображается если в браузере отключены изображения или если изображение недоступно'
     IMAGEDIMENSIONS: Размеры
     IMAGEHEIGHTPX: Высота
     IMAGETITLE: 'Текст (всплывающая подсказка) - для дополнительной информации об изображении'
@@ -401,16 +423,20 @@ ru:
     CANCEL: Отмена
     CANT_REORGANISE: 'У вас нет права редактировать страницы верхнего уровня. Изменения не были сохранены.'
     DELETED: Удалено.
+    DropdownBatchActionsDefault: 'Выберите операцию ...'
     HELP: Помощь
+    PAGETYPE: 'Тип страницы'
     PERMAGAIN: 'Вы вышли из Системы Управления Сайтом. Если Вы хотите войти снова, введите внизу имя пользователя и пароль.'
     PERMALREADY: 'Извините, у вас нет доступа к этому разделу Системы Управления. Если Вы хотите войти под другой учетной записью, сделайте это ниже.'
     PERMDEFAULT: 'Вы должны войти в систему для доступа к панели управления сайтом. Введите ваши данные ниже.'
+    PLEASESAVE: 'Пожалуйста, сохраните страницу: ее нельзя обновить, т.к. она еще не была сохранена.'
     PreviewButton: Просмотр
     REORGANISATIONSUCCESSFUL: 'Древесная структура сайта успешно реорганизована.'
     SAVEDUP: Сохранено.
     ShowAsList: 'в виде списка'
     TooManyPages: 'Слишком много страниц'
     ValidationError: 'Ошибка проверки'
+    VersionUnknown: Неизвестна
   LeftAndMain_Menu_ss:
     Hello: Здравствуйте
     LOGOUT: 'Выход'
@@ -453,11 +479,13 @@ ru:
     PASSWORD: Пароль
     PASSWORDEXPIRED: 'Срок действия Вашего пароля истек. Пожалуйста установите новый.'
     PLURALNAME: Члены группы
+    REMEMBERME: 'Запомнить меня? (на %d дней на этом устройстве)'
     SINGULARNAME: Член группы
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
     SURNAME: Фамилия
     TIMEFORMAT: 'Формат времени'
+    VALIDATIONMEMBEREXISTS: 'Пользователь с таким же {identifier} уже существует'
     ValidationIdentifierFailed: 'Невозможно заменить существующего участника #{id} c таким же идентификатором ({name} = {value}))'
     WELCOMEBACK: 'Добро пожаловать, {firstname}'
     YOUROLDPASSWORD: 'Ваш прежний пароль'
@@ -478,6 +506,8 @@ ru:
     DIGITSDECFRACTIONSECOND: 'Одна или более цифр для обозначения десятых долей секунды'
     FOURDIGITYEAR: 'Год: четырьмя цифрами'
     FULLNAMEMONTH: 'Название месяца полностью (июнь)'
+    HOURNOLEADING: 'Час без предшествующего нуля в 12 часовом формате'
+    HOURNOLEADING24: 'Час без предшествующего нуля в 24 часовом формате'
     MINUTENOLEADING: 'Минуты без ведущего нуля'
     MONTHNOLEADING: 'Месяц без ведущего нуля'
     Preview: Просмотр
@@ -619,6 +649,54 @@ ru:
     Tablet: Планшет
     ViewDeviceWidth: 'Выбрать ширину области просмотра'
     Width: ширина
+  SilverStripe\Admin\CMSProfileController:
+    MENUTITLE: 'Мой профиль'
+  SilverStripe\Admin\CampaignAdmin:
+    MENUTITLE: Кампании
+  SilverStripe\Admin\SecurityAdmin:
+    MENUTITLE: Безопасность
+  SilverStripe\Assets\File:
+    PLURALNAME: Файлы
+    SINGULARNAME: Файл
+  SilverStripe\Assets\Folder:
+    PLURALNAME: Папки
+    SINGULARNAME: Папка
+  SilverStripe\Assets\Image:
+    PLURALNAME: Изображения
+    SINGULARNAME: Изображение
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Объекты'
+    SINGULARNAME: 'Объект'
+  SilverStripe\ORM\Versioning\ChangeSet:
+    PLURALNAME: Кампании
+    SINGULARNAME: Кампания
+  SilverStripe\ORM\Versioning\ChangeSetItem:
+    PLURALNAME: 'Изменить набор элементов'
+    SINGULARNAME: 'Изменить элемент'
+  SilverStripe\Security\Group:
+    PLURALNAME: Группы
+    SINGULARNAME: Группа
+  SilverStripe\Security\LoginAttempt:
+    PLURALNAME: 'Попыток входа в систему'
+    SINGULARNAME: 'Попытка входа в систему'
+  SilverStripe\Security\Member:
+    PLURALNAME: Пользователи
+    SINGULARNAME: Пользователь
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Пароли'
+    SINGULARNAME: 'Пароль'
+  SilverStripe\Security\Permission:
+    PLURALNAME: Права доступа
+    SINGULARNAME: Право доступа
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Роли
+    SINGULARNAME: Роль
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Коды ролей доступа'
+    SINGULARNAME: 'Код роли доступа'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Запомнить хэши входов'
+    SINGULARNAME: 'Запомнить хэш входа'
   SiteTree:
     TABMAIN: Основное
   TableListField:
