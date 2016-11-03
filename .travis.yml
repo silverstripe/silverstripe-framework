@@ -9,7 +9,6 @@ addons:
 
 env:
   global:
-    - CORE_RELEASE=3.1
     - "ARTIFACTS_AWS_REGION=us-east-1"
     - "ARTIFACTS_S3_BUCKET=silverstripe-travis-artifacts"
     - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
@@ -29,6 +28,7 @@ matrix:
       env: DB=MYSQL BEHAT_TEST=1
 
 before_script:
+ - export CORE_RELEASE=$TRAVIS_BRANCH
  - composer self-update || true
  - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
