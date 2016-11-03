@@ -9,7 +9,6 @@ addons:
 
 env:
   global:
-    - CORE_RELEASE=3
     - "ARTIFACTS_AWS_REGION=us-east-1"
     - "ARTIFACTS_S3_BUCKET=silverstripe-travis-artifacts"
     - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
@@ -33,6 +32,7 @@ matrix:
       env: DB=MYSQL BEHAT_TEST=1 CMS_TEST=1
 
 before_script:
+ - export CORE_RELEASE=$TRAVIS_BRANCH
  - if ! [ $(phpenv version-name) = "5.3" ]; then printf "\n" | pecl install imagick; fi
  - if [ $(phpenv version-name) = "5.3" ]; then printf "\n" | pecl install imagick-3.3.0; fi
  - composer self-update || true
