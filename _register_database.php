@@ -1,26 +1,11 @@
 <?php
 
-// Register the SilverStripe provided databases
+// Register database adapters available in SilverStripe
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Dev\Install\MySQLDatabaseConfigurationHelper;
 
-// Use MySQLi as default
-DatabaseAdapterRegistry::register(
-	array(
-		/** @skipUpgrade */
-		'class' => 'MySQLDatabase',
-		'module' => 'framework',
-		'title' => 'MySQL 5.0+ (using MySQLi)',
-		'helperPath' => __DIR__ . '/src/Dev/Install/MySQLDatabaseConfigurationHelper.php',
-		'helperClass' => MySQLDatabaseConfigurationHelper::class,
-		'supported' => class_exists('MySQLi'),
-		'missingExtensionText' =>
-			'The <a href="http://www.php.net/manual/en/book.mysqli.php">MySQLi</a>
-			PHP extension is not available. Please install or enable it and refresh this page.'
-	)
-);
 
-// Setup MySQL PDO as alternate option
+// Register MySQL PDO as a database adapter (listed as first option in Dev/Install/config-form.html)
 DatabaseAdapterRegistry::register(
 	array(
 		/** @skipUpgrade */
@@ -35,4 +20,20 @@ DatabaseAdapterRegistry::register(
 			the <a href="http://www.php.net/manual/en/ref.pdo-mysql.php">MySQL PDO Driver</a>
 			are unavailable. Please install or enable these and refresh this page.'
 	)
+);
+
+// Register MySQLi as a database adapter (listed as second option in Dev/Install/config-form.html)
+DatabaseAdapterRegistry::register(
+    array(
+        /** @skipUpgrade */
+        'class' => 'MySQLDatabase',
+        'module' => 'framework',
+        'title' => 'MySQL 5.0+ (using MySQLi)',
+        'helperPath' => __DIR__ . '/src/Dev/Install/MySQLDatabaseConfigurationHelper.php',
+        'helperClass' => MySQLDatabaseConfigurationHelper::class,
+        'supported' => class_exists('MySQLi'),
+        'missingExtensionText' =>
+            'The <a href="http://www.php.net/manual/en/book.mysqli.php">MySQLi</a>
+			PHP extension is not available. Please install or enable it and refresh this page.'
+    )
 );
