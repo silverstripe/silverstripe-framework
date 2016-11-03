@@ -7,9 +7,15 @@ require_once 'Zend/Locale.php';
 require_once 'Zend/Translate/Adapter.php';
 
 // ischommer CUSTOM Check required because SS core also includes the lib, from a different location
-if(!class_exists('sfYaml')) require_once 'thirdparty/sfYaml/lib/sfYaml.php';
-if(!class_exists('sfYamlParser')) require_once 'thirdparty/sfYaml/lib/sfYamlParser.php';
-if(!class_exists('sfYamlDumper')) require_once 'thirdparty/sfYaml/lib/sfYamlDumper.php';
+if(!class_exists('sfYaml')) {
+	require_once __DIR__ .'/thirdparty/sfYaml/lib/sfYaml.php';
+}
+if(!class_exists('sfYamlParser')) {
+	require_once __DIR__ . '/thirdparty/sfYaml/lib/sfYamlParser.php';
+}
+if(!class_exists('sfYamlDumper')) {
+	require_once __DIR__ . '/thirdparty/sfYaml/lib/sfYamlDumper.php';
+}
 // ischommer END_CUSTOM
 
 class Translate_Adapter_RailsYaml extends Zend_Translate_Adapter {
