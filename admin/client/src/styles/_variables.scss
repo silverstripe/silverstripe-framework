@@ -43,6 +43,11 @@ $brand-success: #3fa142;
 // $brand-warning: #f0ad4e;
 $brand-danger: #d40404;
 
+$state-draft: #f46b00;
+$state-draft-bg: #fff2e8;
+$state-modified: $state-draft;
+$state-modified-bg: #ff7f22;
+
 // Backgrounds
 $background-main: #f6f7f8;
 $background-darker: darken($background-main, 2);
