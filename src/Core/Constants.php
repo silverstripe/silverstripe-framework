@@ -188,10 +188,10 @@ if(!defined('BASE_PATH')) {
 	}
 }
 
-// Determine BASE_PATH by assuming that this file is framework/core/Core.php
+// Determine BASE_PATH by assuming that this file is framework/src/Core/Constants.php
 if(!defined('BASE_PATH')) {
 	//  we can then determine the base path
-	$candidateBasePath = rtrim(dirname(dirname(dirname(__FILE__))), DIRECTORY_SEPARATOR);
+	$candidateBasePath = rtrim(dirname(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
 	// We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
 	// This likely only happens on chrooted environemnts
 	if($candidateBasePath == '') $candidateBasePath = DIRECTORY_SEPARATOR;
