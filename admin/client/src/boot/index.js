@@ -38,10 +38,21 @@ function appBoot() {
   const env = Config.get('environment');
   const debugging = Config.get('debugging');
   let runMiddleware = applyMiddleware(...middleware);
-  const devTools = window.devToolsExtension;
 
-  if (env === 'dev' && debugging && typeof devTools === 'function') {
-    runMiddleware = compose(applyMiddleware(...middleware), devTools());
+  // use browser extension `compose` function if it's available
+  const composeExtension = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+  // use browser extension devTools if it's available
+  // this is the old way: `devToolsExtension` is being deprecated
+  const devTools = window.__REDUX_DEVTOOLS_EXTENSION__ || window.devToolsExtension;
+
+  if (env === 'dev' && debugging) {
+    if (typeof composeExtension === 'function') {
+      // use compose from extension first
+      runMiddleware = composeExtension(applyMiddleware(...middleware));
+    } else if (typeof devTools === 'function') {
+      // fallback to old way
+      runMiddleware = compose(applyMiddleware(...middleware), devTools());
+    }
   }
 
   const createStoreWithMiddleware = runMiddleware(createStore);
