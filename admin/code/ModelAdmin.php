@@ -65,16 +65,9 @@ abstract class ModelAdmin extends LeftAndMain {
 	/**
 	 * Change this variable if you don't want the Import from CSV form to appear.
 	 * This variable can be a boolean or an array.
-	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClassTwo')
+	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClasstwo')
 	 */
 	public $showImportForm = true;
-
-	/**
-	 * Change this variable if you don't want the search form to appear.
-	 * This variable can be a boolean or an array.
-	 * If array, you can list className you want the form to appear on. i.e. array('myClassOne','myClassTwo')
-	 */
-	public $showSearchForm = true;
 
 	/**
 	 * List of all {@link DataObject}s which can be imported through
@@ -189,14 +182,9 @@ abstract class ModelAdmin extends LeftAndMain {
 	}
 
 	/**
-	 * @return Form|bool
+	 * @return Form
 	 */
 	public function SearchForm() {
-		if(!$this->showSearchForm ||
-			(is_array($this->showSearchForm) && !in_array($this->modelClass, $this->showSearchForm))
-		) {
-			return false;
-		}
 		$context = $this->getSearchContext();
 		$form = new Form($this, "SearchForm",
 			$context->getSearchFields(),
@@ -338,7 +326,7 @@ abstract class ModelAdmin extends LeftAndMain {
 	/**
 	 * Generate a CSV import form for a single {@link DataObject} subclass.
 	 *
-	 * @return Form|bool
+	 * @return Form
 	 */
 	public function ImportForm() {
 		$modelSNG = singleton($this->modelClass);
@@ -414,7 +402,6 @@ abstract class ModelAdmin extends LeftAndMain {
 	 * @param array $data
 	 * @param Form $form
 	 * @param SS_HTTPRequest $request
-	 * @return bool|null
 	 */
 	public function import($data, $form, $request) {
 		if(!$this->showImportForm || (is_array($this->showImportForm)
