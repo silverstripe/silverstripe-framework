@@ -149,10 +149,6 @@
 			}
 		}
 
-		&.cms-panel .cms-panel-content {
-			display: block; // override panel defaults
-		}
-
 		.cms-menu-list li a {
 			padding-left: 18px;
 			padding-right: 18px;
@@ -168,6 +164,7 @@
 		height: $toolbar-total-height;
 		background-color: $color-theme-bg;
 		box-shadow: inset $color-separator -1px 0 0;
+		position: relative;
 
 		a,
 		a.toggle-expand {

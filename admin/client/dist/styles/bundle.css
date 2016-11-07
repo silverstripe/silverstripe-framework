@@ -12044,10 +12044,6 @@ li.class-ErrorPage>a .jstree-pageicon{
   display:none;
 }
 
-.cms-menu.collapsed.cms-panel .cms-panel-content{
-  display:block;
-}
-
 .cms-menu.collapsed .cms-menu-list li a{
   padding-left:18px;
   padding-right:18px;
@@ -12062,6 +12058,7 @@ li.class-ErrorPage>a .jstree-pageicon{
   height:53px;
   background-color:#e9f0f4;
   box-shadow:inset -1px 0 0 #c1c7cc;
+  position:relative;
 }
 
 .cms-menu .cms-panel-toggle a,.cms-menu .cms-panel-toggle a.toggle-expand{
