@@ -166,6 +166,9 @@ class ConfirmedPasswordField extends FormField {
 			/** @var FormField $field */
 			$field->setDisabled($this->isDisabled());
 			$field->setReadonly($this->isReadonly());
+			if(!$this->canBeEmpty && $field->getAttribute('required') === null){
+				$field->setAttribute('required', true);
+			}
 
 			if(count($this->attributes)) {
 				foreach($this->attributes as $name => $value) {
