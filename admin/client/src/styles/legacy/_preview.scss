@@ -269,7 +269,7 @@
 		}
 	}
 
-	.panel--scrollable {
+	.panel {
 		position: relative;
 		height: calc(100vh - #{$toolbar-total-height});
 
@@ -296,9 +296,9 @@
 	&.mobile,
 	&.tablet,
 	&.desktop {
-		.panel--scrollable {
+		.panel {
 			background-color: $tab-panel-texture-color; /* cover website preview icon */
-			overflow-x: auto;
+			overflow: auto;
 		}
 
 		.preview__device {
