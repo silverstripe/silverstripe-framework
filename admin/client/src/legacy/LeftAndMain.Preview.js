@@ -134,11 +134,6 @@ $.entwine('ss.preview', function($){
 
       this.setCurrentSizeName(sizeName);
       this.removeClass('auto desktop tablet mobile').addClass(sizeName);
-      this.find('.preview-device-outer')
-        .width(sizes[sizeName].width)
-        .height(sizes[sizeName].height);
-      this.find('.preview-device-inner')
-        .width(sizes[sizeName].width);
 
       this.saveState('size', sizeName);
 
@@ -737,7 +732,7 @@ $.entwine('ss.preview', function($){
    */
   $('.preview-device-outer').entwine({
     onclick: function () {
-      this.toggleClass('rotate');
+      this.parent('.preview__device').toggleClass('rotate');
     }
   });
 });

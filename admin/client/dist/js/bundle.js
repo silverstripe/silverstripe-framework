@@ -1433,8 +1433,9 @@ if("split"==t)r.splitViewMode(),this.setIsPreviewEnabled(!0),this._loadCurrentSt
 else if("content"==t)r.contentViewMode(),this.setIsPreviewEnabled(!1)
 else{if("preview"!=t)throw"Invalid mode: "+t
 r.previewMode(),this.setIsPreviewEnabled(!0),this._loadCurrentState()}return i!==!1&&this.saveState("mode",t),this.redraw(),this},changeSize:function i(e){var t=this.getSizes()
-return this.setCurrentSizeName(e),this.removeClass("auto desktop tablet mobile").addClass(e),this.find(".preview-device-outer").width(t[e].width).height(t[e].height),this.find(".preview-device-inner").width(t[e].width),
-this.saveState("size",e),this.redraw(),this},redraw:function r(){window.debug&&console.log("redraw",this.attr("class"),this.get(0))
+return this.setCurrentSizeName(e),this.removeClass("auto desktop tablet mobile").addClass(e),this.saveState("size",e),this.redraw(),this},redraw:function r(){window.debug&&console.log("redraw",this.attr("class"),this.get(0))
+
+
 var t=this.getCurrentStateName()
 t&&this.find(".cms-preview-states").changeVisibleState(t)
 var n=e(".cms-container").entwine(".ss").getLayoutOptions()
@@ -1497,7 +1498,7 @@ e(".cms-preview").changeSize(n)}}),e(".preview-selector select.preview-dropdown"
 
 return"undefined"!=typeof i&&n.removeClass(i),n.addClass(t),n.attr("data-icon",t),this}}),e(".preview-mode-selector .chosen-drop li:last-child").entwine({onmatch:function U(){e(".preview-mode-selector").hasClass("split-disabled")?this.parent().append('<div class="disabled-tooltip"></div>'):this.parent().append('<div class="disabled-tooltip" style="display: none;"></div>')
 
-}}),e(".preview-device-outer").entwine({onclick:function L(){this.toggleClass("rotate")}})})},function(e,t,n){(function(e){"use strict"
+}}),e(".preview-device-outer").entwine({onclick:function L(){this.parent(".preview__device").toggleClass("rotate")}})})},function(e,t,n){(function(e){"use strict"
 function t(e){return e&&e.__esModule?e:{"default":e}}var i=n(1),r=t(i),o=n(164),a=t(o)
 r["default"].entwine("ss.tree",function(t){t("#Form_BatchActionsForm").entwine({Actions:[],getTree:function n(){return t(".cms-tree")},fromTree:{oncheck_node:function i(e,t){this.serializeFromTree()},onuncheck_node:function r(e,t){
 this.serializeFromTree()}},onmatch:function o(){var e=this
