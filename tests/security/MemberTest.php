@@ -1041,6 +1041,16 @@ class MemberTest extends FunctionalTest {
 		$this->assertTrue($fail, 'Passes with email and surname now (no firstname)');
 	}
 
+	public function testCurrentUser() {
+		$this->assertNull(Member::currentUser());
+
+		$adminMember = $this->objFromFixture('Member', 'admin');
+		$this->logInAs($adminMember);
+
+		$userFromSession = Member::currentUser();
+		$this->assertEquals($adminMember->ID, $userFromSession->ID);
+	}
+
 }
 
 /**
