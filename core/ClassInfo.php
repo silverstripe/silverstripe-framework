@@ -298,6 +298,9 @@ class ClassInfo {
 	 * field column for a {@link DataObject}. If the field does not exist, this
 	 * will return null.
 	 *
+	 * Note: In 3.x and below this method may return 'DataObject'. From 4.0 onwards
+	 * null will be returned if a field is not a member of the object.
+	 *
 	 * @param string $candidateClass
 	 * @param string $fieldName
 	 *
