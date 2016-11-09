@@ -249,7 +249,7 @@ abstract class ModelAdmin extends LeftAndMain {
 
 			// Parse all DateFields to handle user input non ISO 8601 dates
 			foreach($context->getFields() as $field) {
-				if($field instanceof DatetimeField) {
+				if($field instanceof DatetimeField && !empty($params[$field->getName()])) {
 					$params[$field->getName()] = date('Y-m-d', strtotime($params[$field->getName()]));
 				}
 			}

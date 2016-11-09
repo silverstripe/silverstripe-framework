@@ -1,5 +1,4 @@
 import jQuery from 'jQuery';
-import i18n from 'i18n';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';

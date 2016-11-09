@@ -216,11 +216,12 @@ ss.editorWrappers.tinyMCE = (function() {
      */
     cleanLink: function(href, node) {
       var settings = this.getConfig,
-        cb = settings['urlconverter_callback'];
+        cb = settings['urlconverter_callback'],
+        cu = tinyMCE.settings['convert_urls'];
       if(cb) href = eval(cb + "(href, node, true);");
 
-      // Turn into relative
-      if(href.match(new RegExp('^' + tinyMCE.settings['document_base_url'] + '(.*)$'))) {
+      // Turn into relative, if set in TinyMCE config
+      if(cu && href.match(new RegExp('^' + tinyMCE.settings['document_base_url'] + '(.*)$'))) {
         href = RegExp.$1;
       }
 

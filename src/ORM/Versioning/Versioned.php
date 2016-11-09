@@ -119,6 +119,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 
 	/**
 	 * @var array
+	 * @config
 	 */
 	private static $db = array(
 		'Version' => 'Int'
@@ -1426,7 +1427,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Determines if the current draft version is the same as live
+	 * Determines if the current draft version is the same as live or rather, that there are no outstanding draft changes
 	 *
 	 * @return bool
 	 */

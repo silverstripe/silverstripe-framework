@@ -171,6 +171,11 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals("00:00:00", $time->getValue());
 		$time->setValue('00:00:00');
 		$this->assertEquals("00:00:00", $time->getValue());
+
+		/* BigInt behaviour */
+		$bigInt = singleton('SilverStripe\\ORM\FieldType\\DBBigInt');
+		$bigInt->setValue(PHP_INT_MAX);
+		$this->assertEquals(PHP_INT_MAX, $bigInt->getValue());
 	}
 
 	public function testExists() {

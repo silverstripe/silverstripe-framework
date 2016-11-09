@@ -10,22 +10,21 @@ use SilverStripe\Core\Object;
  */
 class ValidationResult extends Object {
 	/**
-	 * Boolean - is the result valid or not
+	 * @var bool - is the result valid or not
 	 */
 	protected $isValid;
 
 
 	/**
-	 * Array of errors
+	 * @var array of errors
 	 */
 	protected $errorList = array();
 
 	/**
 	 * Create a new ValidationResult.
-	 * By default, it is a successful result.    Call $this->error() to record errors.
-	 *
+	 * By default, it is a successful result.	Call $this->error() to record errors.
 	 * @param bool $valid
-	 * @param string $message
+	 * @param string|null $message
 	 */
 	public function __construct($valid = true, $message = null) {
 		$this->isValid = $valid;
@@ -36,7 +35,7 @@ class ValidationResult extends Object {
 	/**
 	 * Record an error against this validation result,
 	 * @param string $message The validation error message
-	 * @param int $code An optional error code string, that can be accessed with {@link $this->codeList()}.
+	 * @param string $code An optional error code string, that can be accessed with {@link $this->codeList()}.
 	 * @return $this
 	 */
 	public function error($message, $code = null) {

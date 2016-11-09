@@ -436,7 +436,8 @@ class DataQuery {
 	 * @return string
 	 */
 	public function max($field) {
-		return $this->aggregate("MAX(\"$field\")");
+		$table = ClassInfo::table_for_object_field($this->dataClass, $field);
+		return $this->aggregate("MAX(\"$table\".\"$field\")");
 	}
 
 	/**
@@ -447,7 +448,8 @@ class DataQuery {
 	 * @return string
 	 */
 	public function min($field) {
-		return $this->aggregate("MIN(\"$field\")");
+		$table = ClassInfo::table_for_object_field($this->dataClass, $field);
+		return $this->aggregate("MIN(\"$table\".\"$field\")");
 	}
 
 	/**
@@ -458,7 +460,8 @@ class DataQuery {
 	 * @return string
 	 */
 	public function avg($field) {
-		return $this->aggregate("AVG(\"$field\")");
+		$table = ClassInfo::table_for_object_field($this->dataClass, $field);
+		return $this->aggregate("AVG(\"$table\".\"$field\")");
 	}
 
 	/**
@@ -469,7 +472,8 @@ class DataQuery {
 	 * @return string
 	 */
 	public function sum($field) {
-		return $this->aggregate("SUM(\"$field\")");
+		$table = ClassInfo::table_for_object_field($this->dataClass, $field);
+		return $this->aggregate("SUM(\"$table\".\"$field\")");
 	}
 
 	/**

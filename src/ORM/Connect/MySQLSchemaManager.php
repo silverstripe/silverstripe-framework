@@ -481,6 +481,22 @@ class MySQLSchemaManager extends DBSchemaManager {
 	}
 
 	/**
+	 * Return a bigint type-formatted string
+	 *
+	 * @param array $values Contains a tokenised list of info about this data type
+	 * @return string
+	 */
+	public function bigint($values) {
+		//For reference, this is what typically gets passed to this function:
+		//$parts=Array('datatype'=>'bigint', 'precision'=>20, 'null'=>'not null', 'default'=>$this->defaultVal,
+		//             'arrayValue'=>$this->arrayValue);
+		//$values=Array('type'=>'bigint', 'parts'=>$parts);
+		//DB::requireField($this->tableName, $this->name, $values);
+
+		return 'bigint(20) not null' . $this->defaultClause($values);
+	}
+
+	/**
 	 * Return a datetime type-formatted string
 	 * For MySQL, we simply return the word 'datetime', no other parameters are necessary
 	 *

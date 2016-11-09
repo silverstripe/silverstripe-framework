@@ -36,6 +36,8 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBHTMLVarchar
   Int:
     class: SilverStripe\ORM\FieldType\DBInt
+  BigInt:
+    class: SilverStripe\ORM\FieldType\DBBigInt
   Locale:
     class: SilverStripe\ORM\FieldType\DBLocale
   DBLocale:

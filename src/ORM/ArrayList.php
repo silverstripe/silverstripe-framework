@@ -455,7 +455,7 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
 			// First argument is the direction to be sorted,
 			$multisortArgs[] = &$sortDirection[$column];
 			if ($firstRun) {
-				$multisortArgs[] = defined('SORT_NATURAL') ? SORT_NATURAL : SORT_STRING;
+				$multisortArgs[] = SORT_REGULAR;
 			}
 			$firstRun = false;
 		}

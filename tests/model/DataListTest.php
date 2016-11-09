@@ -353,6 +353,17 @@ class DataListTest extends SapphireTest {
 		$this->assertEquals($otherExpected, $otherMap);
 	}
 
+	public function testAmbiguousAggregate() {
+		// Test that we avoid ambiguity error when a field exists on two joined tables
+		// Fetch the sponsors in a round-about way to simulate this
+		$teamID = $this->idFromFixture('DataObjectTest_Team','team2');
+		$sponsors = DataObjectTest_EquipmentCompany::get()->filter('SponsoredTeams.ID', $teamID);
+		$this->assertNotNull($sponsors->Max('ID'));
+		$this->assertNotNull($sponsors->Min('ID'));
+		$this->assertNotNull($sponsors->Avg('ID'));
+		$this->assertNotNull($sponsors->Sum('ID'));
+	}
+
 	public function testEach() {
 		$list = DataObjectTest_TeamComment::get();
 
@@ -543,6 +554,34 @@ class DataListTest extends SapphireTest {
 	}
 
 
+
+	public function testSortNumeric() {
+		$list = DataObjectTest_Sortable::get();
+		$list1 = $list->sort('Sort', 'ASC');
+		$this->assertEquals(array(
+			-10,
+			-2,
+			-1,
+			0,
+			1,
+			2,
+			10
+		), $list1->column('Sort'));
+	}
+
+	public function testSortMixedCase() {
+		$list = DataObjectTest_Sortable::get();
+		$list1 = $list->sort('Name', 'ASC');
+		$this->assertEquals(array(
+            'Bob',
+            'bonny',
+            'jane',
+            'John',
+            'sam',
+            'Steve',
+            'steven'
+		), $list1->column('Name'));
+	}
 
 	/**
 	 * Test DataList->canFilterBy()

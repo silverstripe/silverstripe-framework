@@ -15,10 +15,6 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\View\ArrayData;
 
-
-
-
-
 /**
  * @package framework
  * @subpackage tests
@@ -235,28 +231,77 @@ class CheckboxSetFieldTest extends SapphireTest {
 		$tag1 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag1');
 		$tag2 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag2');
 		$tag3 = $this->objFromFixture('CheckboxSetFieldTest_Tag', 'tag3');
-		$field = CheckboxSetField::create('Test', 'Testing', $checkboxTestArticle->Tags()	->map());
+		$field = CheckboxSetField::create('Test', 'Testing', $checkboxTestArticle->Tags());
 		$validator = new RequiredFields();
-		$field->setValue(array(
-			$tag1->ID => $tag1->ID,
-			$tag2->ID => $tag2->ID
-		));
+		$field->setValue(array( $tag1->ID, $tag2->ID ));
+		$isValid = $field->validate($validator);
 		$this->assertTrue(
-			$field->validate($validator),
+			$isValid,
 			'Validates values in source map'
 		);
-		//invalid value should fail
+
+		// Invalid value should fail
+		$validator = new RequiredFields();
 		$fakeID = CheckboxSetFieldTest_Tag::get()->max('ID') + 1;
-		$field->setValue(array($fakeID => $fakeID));
+		$field->setValue(array($fakeID));
 		$this->assertFalse(
 			$field->validate($validator),
 			'Field does not valid values outside of source map'
 		);
-		//non valid value included with valid options should succeed
+		$errors = $validator->getErrors();
+		$error = reset($errors);
+		$this->assertEquals(
+			_t(
+				'MultiSelectField.SOURCE_VALIDATION',
+				"Please select values within the list provided. Invalid option(s) {value} given",
+				array('value' => $fakeID)
+			),
+			$error['message']
+		);
+
+		// Multiple invalid values should fail
+		$validator = new RequiredFields();
+		$fakeID = CheckboxSetFieldTest_Tag::get()->max('ID') + 1;
+		$field->setValue(array($fakeID, $tag3->ID));
+		$this->assertFalse(
+			$field->validate($validator),
+			'Field does not valid values outside of source map'
+		);
+		$errors = $validator->getErrors();
+		$error = reset($errors);
+		$this->assertEquals(
+			_t(
+				'MultiSelectField.SOURCE_VALIDATION',
+				"Please select values within the list provided. Invalid option(s) {value} given",
+				array('value' => implode(',', [$fakeID, $tag3->ID]))
+			),
+			$error['message']
+		);
+
+		// Invalid value with non-array value
+		$validator = new RequiredFields();
+		$field->setValue($fakeID);
+		$this->assertFalse(
+			$field->validate($validator),
+			'Field does not valid values outside of source map'
+		);
+		$errors = $validator->getErrors();
+		$error = reset($errors);
+		$this->assertEquals(
+			_t(
+				'MultiSelectField.SOURCE_VALIDATION',
+				"Please select values within the list provided. Invalid option(s) {value} given",
+				array('value' => $fakeID)
+			),
+			$error['message']
+		);
+
+		// non valid value included with valid options should succeed
+		$validator = new RequiredFields();
 		$field->setValue(array(
-			$tag1->ID => $tag1->ID,
-			$tag2->ID => $tag2->ID,
-			$tag3->ID => $tag3->ID
+			$tag1->ID,
+			$tag2->ID,
+			$tag3->ID
 		));
 		$this->assertFalse(
 			$field->validate($validator),

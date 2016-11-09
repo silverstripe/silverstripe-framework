@@ -10,6 +10,11 @@ or even their own code to make it more reusable.
 Extensions are defined as subclasses of either [api:DataExtension] for extending a [api:DataObject] subclass or 
 the [api:Extension] class for non DataObject subclasses (such as [api:Controllers])
 
+<div class="info" markdown="1">
+For performance reasons a few classes are excluded from receiving extensions, including `Object`, `ViewableData` 
+and `RequestHandler`. You can still apply extensions to descendants of these classes.
+</div>
+
 **mysite/code/extensions/MyMemberExtension.php**
 
 	:::php

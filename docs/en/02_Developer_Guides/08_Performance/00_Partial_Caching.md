@@ -74,34 +74,36 @@ Note the use of both `.max('LastEdited')` and `.count()` - this takes care of bo
 edited since the cache was last built, and also when an object has been deleted since the cache was last built.
 </div>
 
-We can also calculate aggregates on relationships. A block that shows the current member's favorites needs to update
-whenever the relationship `Member::$has_many = array('Favourites' => Favourite')` changes.
-
-	:::ss
-	<% cached 'favourites', $CurrentMember.ID, $CurrentMember.Favourites.max('LastEdited') %>
+We can also calculate aggregates on relationships. The logic for that can get a bit complex, so we can extract that on 
+to the controller so it's not cluttering up our template.
 
 ## Cache key calculated in controller
 
-In the previous example the cache key is getting a bit large, and is complicating our template up. Better would be to 
-extract that logic into the controller.
+If your caching logic is complex or re-usable, you can define a method on your controller to generate a cache key 
+fragment.
+
+For example, a block that shows a collection of rotating slides needs to update whenever the relationship 
+`Page::$many_many = array('Slides' => 'Slide')` changes. In Page_Controller:
 
 	:::php
 
-	public function FavouriteCacheKey() {
-	    $member = Member::currentUser();
-	
-	    return implode('_', array(
-	        'favourites',
-	        $member->ID,
-	        $member->Favourites()->max('LastEdited')
-	    ));
+	public function SliderCacheKey() {
+		$fragments = array(
+			'Page-Slides',
+			$this->ID,
+			// identify which objects are in the list and their sort order
+			implode('-', $this->Slides()->Column('ID')),
+			$this->Slides()->max('LastEdited')
+		);
+		return implode('-_-', $fragments);
 	}
 
-Then using that function in the cache key:
+Then reference that function in the cache key:
 
 	:::ss
-	<% cached $FavouriteCacheKey %>
+	<% cached $SliderCacheKey %>
 
+The example above would work for both a has_many and many_many relationship.
 
 ## Cache blocks and template changes
 
@@ -207,8 +209,8 @@ could also write the last example as:
 	<% end_cached %>
 
 <div class="warning" markdown="1">
-Currently cached blocks can not be contained within if or loop blocks. The template engine will throw an error
-letting you know if you've done this. You can often get around this using aggregates.
+Currently a nested cache block can not be contained within an if or loop block. The template engine will throw an error
+letting you know if you've done this. You can often get around this using aggregates or by un-nesting the block.
 </div>
 
 Failing example:
@@ -217,7 +219,7 @@ Failing example:
 	<% cached $LastEdited %>
 	
 	  <% loop $Children %>
-	    <% cached LastEdited %>
+	    <% cached $LastEdited %>
 	      $Name
 	    <% end_cached %>
 	  <% end_loop %>
@@ -236,3 +238,29 @@ Can be re-written as:
 	  <% end_cached %>
 	
 	<% end_cached %>
+
+Or:
+
+	:::ss
+	<% cached $LastEdited %>
+		(other code)
+	<% end_cached %>
+	
+	<% loop $Children %>
+		<% cached $LastEdited %>
+		  $Name
+		<% end_cached %>
+	<% end_loop %>
+
+## Cache expiry
+
+The default expiry for partial caches is 10 minutes. The advantage of a short cache expiry is that if you have a problem
+with your caching logic, the window in which stale content may be shown is short. The disadvantage, particularly for 
+low-traffic sites, is that cache blocks may expire before they can be utilised. If you're confident that you're caching
+logic is sound, you could increase the expiry dramatically.
+
+**mysite/_config.php**
+
+	:::php
+	// Set partial cache expiry to 7 days
+	SS_Cache::set_cache_lifetime('cacheblock', 60 * 60 * 24 * 7);

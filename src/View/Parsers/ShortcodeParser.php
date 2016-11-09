@@ -28,6 +28,13 @@ class ShortcodeParser extends Object {
 
 	// --------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * Registered shortcodes. Items follow this structure:
+	 * [shortcode_name] => Array(
+	 *     [0] => class_containing_handler
+	 *     [1] => name_of_shortcode_handler_method
+	 * )
+	 */
 	protected $shortcodes = array();
 
 	// --------------------------------------------------------------------------------------------------------------
@@ -107,6 +114,15 @@ class ShortcodeParser extends Object {
 	 */
 	public function unregister($shortcode) {
 		if($this->registered($shortcode)) unset($this->shortcodes[$shortcode]);
+	}
+
+	/**
+	 * Get an array containing information about registered shortcodes
+	 *
+	 * @return array
+	 */
+	public function getRegisteredShortcodes() {
+		return $this->shortcodes;
 	}
 
 	/**
@@ -586,81 +602,92 @@ class ShortcodeParser extends Object {
 	 * @return string
 	 */
 	public function parse($content) {
+
+		$this->extend('onBeforeParse', $content);
+
+		$continue = true;
+
 		// If no shortcodes defined, don't try and parse any
-		if(!$this->shortcodes) return $content;
+		if(!$this->shortcodes) $continue = false;
 
 		// If no content, don't try and parse it
-		if (!trim($content)) return $content;
+		else if (!trim($content)) $continue = false;
 
 		// If no shortcode tag, don't try and parse it
-		if (strpos($content, '[') === false) return $content;
+		else if (strpos($content, '[') === false) $continue = false;
 
-		// First we operate in text mode, replacing any shortcodes with marker elements so that later we can
-		// use a proper DOM
-		list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
+		if ($continue) {
+			// First we operate in text mode, replacing any shortcodes with marker elements so that later we can
+			// use a proper DOM
+			list($content, $tags) = $this->replaceElementTagsWithMarkers($content);
 
 		/** @var HTMLValue $htmlvalue */
 		$htmlvalue = Injector::inst()->create('HTMLValue', $content);
 
-		// Now parse the result into a DOM
-		if (!$htmlvalue->isValid()){
-			if(self::$error_behavior == self::ERROR) {
-				user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERROR);
-			}
-			else {
-				return $content;
+			// Now parse the result into a DOM
+			if (!$htmlvalue->isValid()){
+				if(self::$error_behavior == self::ERROR) {
+					user_error('Couldn\'t decode HTML when processing short codes', E_USER_ERRROR);
+				}
+				else {
+					$continue = false;
+				}
 			}
 		}
 
-		// First, replace any shortcodes that are in attributes
-		$this->replaceAttributeTagsWithContent($htmlvalue);
+		if ($continue) {
+			// First, replace any shortcodes that are in attributes
+			$this->replaceAttributeTagsWithContent($htmlvalue);
 
-		// Find all the element scoped shortcode markers
-		$shortcodes = $htmlvalue->query('//img[@class="'.self::$marker_class.'"]');
+			// Find all the element scoped shortcode markers
+			$shortcodes = $htmlvalue->query('//img[@class="'.self::$marker_class.'"]');
 
-		// Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
-		$parents = $this->findParentsForMarkers($shortcodes);
+			// Find the parents. Do this before DOM modification, since SPLIT might cause parents to move otherwise
+			$parents = $this->findParentsForMarkers($shortcodes);
 
 		/** @var DOMElement $shortcode */
 		foreach($shortcodes as $shortcode) {
 			$tag = $tags[$shortcode->getAttribute('data-tagid')];
 			$parent = $parents[$shortcode->getAttribute('data-parentid')];
 
-			$class = null;
-			if(!empty($tag['attrs']['location'])) $class = $tag['attrs']['location'];
-			else if(!empty($tag['attrs']['class'])) $class = $tag['attrs']['class'];
+				$class = null;
+				if(!empty($tag['attrs']['location'])) $class = $tag['attrs']['location'];
+				else if(!empty($tag['attrs']['class'])) $class = $tag['attrs']['class'];
 
-			$location = self::INLINE;
-			if($class == 'left' || $class == 'right') $location = self::BEFORE;
-			if($class == 'center' || $class == 'leftALone') $location = self::SPLIT;
+				$location = self::INLINE;
+				if($class == 'left' || $class == 'right') $location = self::BEFORE;
+				if($class == 'center' || $class == 'leftALone') $location = self::SPLIT;
 
-			if(!$parent) {
-				if($location !== self::INLINE) {
-					user_error("Parent block for shortcode couldn't be found, but location wasn't INLINE",
-						E_USER_ERROR);
+				if(!$parent) {
+					if($location !== self::INLINE) {
+						user_error("Parent block for shortcode couldn't be found, but location wasn't INLINE",
+							E_USER_ERROR);
+					}
 				}
-			}
-			else {
-				$this->moveMarkerToCompliantHome($shortcode, $parent, $location);
+				else {
+					$this->moveMarkerToCompliantHome($shortcode, $parent, $location);
+				}
+
+				$this->replaceMarkerWithContent($shortcode, $tag);
 			}
 
-			$this->replaceMarkerWithContent($shortcode, $tag);
+			$content = $htmlvalue->getContent();
+
+			// Clean up any marker classes left over, for example, those injected into <script> tags
+			$parser = $this;
+			$content = preg_replace_callback(
+				// Not a general-case parser; assumes that the HTML generated in replaceElementTagsWithMarkers()
+				// hasn't been heavily modified
+				'/<img[^>]+class="'.preg_quote(self::$marker_class).'"[^>]+data-tagid="([^"]+)"[^>]+>/i',
+				function ($matches) use ($tags, $parser) {
+					$tag = $tags[$matches[1]];
+					return $parser->getShortcodeReplacementText($tag);
+				},
+				$content
+			);
 		}
 
-		$content = $htmlvalue->getContent();
-
-		// Clean up any marker classes left over, for example, those injected into <script> tags
-		$parser = $this;
-		$content = preg_replace_callback(
-			// Not a general-case parser; assumes that the HTML generated in replaceElementTagsWithMarkers()
-			// hasn't been heavily modified
-			'/<img[^>]+class="'.preg_quote(self::$marker_class).'"[^>]+data-tagid="([^"]+)"[^>]+>/i',
-			function ($matches) use ($tags, $parser) {
-				$tag = $tags[$matches[1]];
-				return $parser->getShortcodeReplacementText($tag);
-			},
-			$content
-		);
+		$this->extend('onAfterParse', $content);
 
 		return $content;
 	}

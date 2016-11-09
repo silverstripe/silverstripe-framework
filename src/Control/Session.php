@@ -250,6 +250,16 @@ class Session {
 		$session_path = Config::inst()->get('SilverStripe\\Control\\Session', 'session_store_path');
 		$timeout = Config::inst()->get('SilverStripe\\Control\\Session', 'timeout');
 
+		// Director::baseURL can return absolute domain names - this extracts the relevant parts
+		// for the session otherwise we can get broken session cookies
+		if (Director::is_absolute_url($path)) {
+			$urlParts = parse_url($path);
+			$path = $urlParts['path'];
+			if (!$domain) {
+				$domain = $urlParts['host'];
+			}
+		}
+
 		if(!session_id() && !headers_sent()) {
 			if($domain) {
 				session_set_cookie_params($timeout, $path, $domain, $secure, true);
