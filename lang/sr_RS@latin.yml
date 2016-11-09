@@ -358,7 +358,6 @@ sr_RS@latin:
     DIGITSDECFRACTIONSECOND: 'Jedna ili više cifara koje predstaljaju deseti deo sekunde'
     FOURDIGITYEAR: 'Četvorocifrena godina'
     FULLNAMEMONTH: 'Puno ime meseca (npr. Jun)'
-    HOURNOLEADING: 'Sati bez vodeće nule'
     MINUTENOLEADING: 'Minute bez vodeće nule'
     MONTHNOLEADING: 'Mesec bez vodeće nule'
     Preview: Prethodni pregled

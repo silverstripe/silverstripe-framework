@@ -339,7 +339,6 @@ lt:
     ShowAsList: 'rodyti kaip sąrašą'
     TooManyPages: 'Per daug puslapių'
     ValidationError: 'Tikrinimo klaida'
-    VersionUnknown: nežinoma
   LeftAndMain_Menu_ss:
     Hello: Sveiki
     LOGOUT: 'Atsijungti'
@@ -404,7 +403,6 @@ lt:
     DIGITSDECFRACTIONSECOND: 'Vienas ar daugiau skaitmenų, rodančių trupmeninę sekundės dalį'
     FOURDIGITYEAR: 'Metai iš keturių skaitmenų'
     FULLNAMEMONTH: 'Pilnas mėnesio pavadinimas (pvz. Liepa)'
-    HOURNOLEADING: 'Valanda be nulio pradžioje'
     MINUTENOLEADING: 'Minutė be nulio pradžioje'
     MONTHNOLEADING: 'Mėnesis be nulio pradžioje'
     Preview: Peržiūra

@@ -36,7 +36,6 @@ fi:
     INSERTURL: 'Lisää URL-osoitteesta'
     REMOVEINFO: 'Poista tämä tiedosto tästä kentästä'
     TOTAL: Yhteensä
-    TOUPLOAD: 'Valitse siirrettävät tiedostot...'
     UPLOADINPROGRESS: 'Ole hyvä ja odota... siirto käynnissä'
     UPLOADOR: TAI
   BBCodeParser:
@@ -74,8 +73,6 @@ fi:
     ANY: Yhtään
     NOANSWER: 'Ei'
     YESANSWER: 'Kyllä'
-  CAMPAIGNS:
-    ADDTOCAMPAIGN: 'Lisää kampanjaan'
   CMSLoadingScreen_ss:
     LOADING: Ladataan...
     REQUIREJS: 'CMS-järjestelmä vaatii, että selaimessasi on JavaScript päällä.'
@@ -316,7 +313,6 @@ fi:
     CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
     DETAILS: Tiedot
     EMAIL: 'Sähköposti'
-    FILE: Tiedosto
     FOLDER: Kansio
     IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
     IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
@@ -329,14 +325,8 @@ fi:
     IMAGEWIDTHPX: Leveys
     INSERTMEDIA: 'Liitä media kohteesta'
     LINK: 'Lisää linkki'
-    LINKANCHOR: 'Ankkuroi tähän sivuun'
     LINKDESCR: 'Linkin kuvaus'
-    LINKEMAIL: 'Sähköposti'
-    LINKEXTERNAL: 'Toinen verkkosivusto'
-    LINKFILE: 'Lataa tiedosto'
-    LINKINTERNAL: 'Sivu sivustolla'
     LINKOPENNEWWIN: 'Avataanko linkki uudessa ikkunassa?'
-    LINKTO: 'Linkitä'
     PAGE: Sivu
     SUBJECT: 'Sähköpostin aihe'
     URL: URL
@@ -348,7 +338,6 @@ fi:
     ERROR_HOSTNAME: 'Tämän tiedoston isäntänimi ei ole sallitujen listalla'
     ERROR_ID: '"ID" tai "FileURL" parametri on pakollinen tiedoston tunnistamiseksi'
     ERROR_NOTFOUND: 'Näytettävää tiedostoa ei löydy'
-    ERROR_OEMBED_REMOTE: 'Oembed on yhteensopiva vain ulkoisten tiedostojen kanssa'
     ERROR_SCHEME: 'Tämän tiedoston skeema ei ole sallittujen listalla'
   Hierarchy:
     InfiniteLoopNotAllowed: '"{type}" -hierarkiasta löytyi loputon silmukka. Ole hyvä ja muuta isäntää korjataksesi ongelman.'
@@ -422,7 +411,6 @@ fi:
     ShowAsList: 'näytä listana'
     TooManyPages: 'Liian monta sivua'
     ValidationError: 'Virhe vahvistuksessa'
-    VersionUnknown: tuntematon
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: 'Kirjaudu ulos'
@@ -465,7 +453,6 @@ fi:
     PASSWORD: Salasana
     PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Jäsenet
-    REMEMBERME: 'Muista minut seuraavalla kerralla?'
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
@@ -491,7 +478,6 @@ fi:
     DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
     FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
     FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
-    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
     MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
     MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
     Preview: Esikatselu

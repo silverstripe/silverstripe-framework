@@ -355,7 +355,6 @@ ja:
     DIGITSDECFRACTIONSECOND: '秒の小数を表す1つ以上の数字'
     FOURDIGITYEAR: '四桁の年'
     FULLNAMEMONTH: '月の完全な名前（例えば6月）'
-    HOURNOLEADING: '先行ゼロなしの時間'
     MINUTENOLEADING: '先行ゼロなしの分'
     MONTHNOLEADING: '先行ゼロなしの月の桁'
     Preview: プレビュー

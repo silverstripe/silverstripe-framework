@@ -29,7 +29,6 @@ sl_SI:
     INSERTURL: 'Vstavite iz URL naslova'
     REMOVEINFO: 'Odstranite datoteko iz tega polja'
     TOTAL: Skupaj
-    TOUPLOAD: 'Izberite datoteke, ki jih želite naložiti'
     UPLOADINPROGRESS: 'Prosimo počakajte... nalaganje datotek je v teku'
     UPLOADOR: ALI
   BBCodeParser:
@@ -58,8 +57,6 @@ sl_SI:
   Boolean:
     NOANSWER: 'Ne'
     YESANSWER: 'Da'
-  CAMPAIGNS:
-    ADDTOCAMPAIGN: 'Dodaj v kampanjo'
   CMSLoadingScreen_ss:
     LOADING: Nalagam...
     REQUIREJS: 'Zahteve CMS sistema so, da morate imeti omogočen JavaScript.'
@@ -200,6 +197,54 @@ sl_SI:
     Sort: 'Vrstni red sortiranja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Člani
+  GroupImportForm:
+    ResultDeleted: 'Izbrisane %d skupine'
+    ResultUpdated: 'Posodobljene %d skupine'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'Nimate dovoljenj za dostop do vsebin na izbrani strani.'
+    ANCHORSPAGENOTFOUND: 'Ciljne strani ni mogoče najti.'
+    ANCHORVALUE: Sidro
+    BUTTONADDURL: 'Dodaj url'
+    CAPTIONTEXT: 'Napis'
+    CSSCLASS: 'Poravnava / stil'
+    DETAILS: Podrobnosti
+    EMAIL: 'E-poštni naslov'
+    FOLDER: Mapa
+    IMAGEALT: 'Alternativni tekst (alt)'
+    IMAGEALTTEXT: 'Alternativni tekst (alt) - se pojavi, če fotografije ni mogoče prikazati'
+    IMAGEDIMENSIONS: Dimenzije
+    IMAGEHEIGHTPX: Višina
+    IMAGETITLETEXT: 'Naslov (namig)'
+    IMAGEWIDTHPX: Širina
+    LINKDESCR: 'Opis povezave'
+    LINKDETAILS: 'Podrobnosti povezave'
+    LINKEMAIL: 'Povezava na e-poštni naslov'
+    LINKEXTERNAL: 'Povezava na drugo spletno stran'
+    LINKFILE: 'Povezava za prenos datoteke'
+    LINKINTERNAL: 'Povezava na stran znotraj tega spletnega mesta'
+    LINKOPENNEWWIN: 'Odpri povezavo v novem oknu?'
+    LINKTO: 'Tip povezave'
+    PAGE: Stran
+    SUBJECT: 'Predmet e-pošte'
+    URL: URL
+  HtmlEditorField:
+    ANCHORVALUE: Sidro
+    BUTTONADDURL: 'Dodaj url'
+    BUTTONINSERT: Vstavi
+    BUTTONINSERTLINK: 'Vstavi povezavo'
+    BUTTONREMOVELINK: 'Odstrani povezavo'
+    BUTTONUpdate: Posodobi
+    DETAILS: Podrobnosti
+    EMAIL: 'E-poštni naslov'
+    FILE: Datoteka
+    FOLDER: Mapa
+    FROMCMS: 'Iz CMS urejevalnika'
+    FROMCOMPUTER: 'Iz vašega računalnika'
+    FROMWEB: 'Iz spleta'
+    FindInFolder: 'Iskanje po mapah'
+    IMAGEDIMENSIONS: Dimenzije
+    IMAGEHEIGHTPX: Višina
+    IMAGEWIDTHPX: Širina
   Member:
     EDIT_PASSWORD: 'Novo geslo'
     EMAIL: E-pošta
@@ -210,7 +255,6 @@ sl_SI:
     NoPassword: 'Uporabnik nima nastavljenega gesla.'
     PASSWORD: Geslo
     PLURALNAME: Uporabniki
-    REMEMBERME: 'Zapomni si me do naslednjič?'
     SINGULARNAME: Uporabnik
     SUBJECTPASSWORDCHANGED: 'Vaše geslo je bilo posodobljeno'
     SURNAME: Priimek

@@ -18,6 +18,7 @@ cs:
     HEIGHT: Výška
     LASTEDIT: 'Naposledy změněno'
     OWNER: Vlastník
+    PATH: Cesta
     SIZE: 'Velikost'
     TITLE: Titulek
     TYPE: 'Typ'
@@ -36,7 +37,6 @@ cs:
     INSERTURL: 'Vložit z URL'
     REMOVEINFO: 'Odstranit tento soubor z tohoto pole'
     TOTAL: Celkem
-    TOUPLOAD: 'Vyberte soubory pro nahrání...'
     UPLOADINPROGRESS: 'Prosím čekejte... probíhá nahrávání'
     UPLOADOR: NEBO
   BBCodeParser:
@@ -103,9 +103,11 @@ cs:
     TimedOutTitleAnonymous: 'Čas Vašeho sezení vypršel.'
     TimedOutTitleMember: 'Ahoj {name}!<br />Čas Vašeho sezení vypršel.'
   CampaignAdmin:
+    ACCESS_HELP: 'Povolit zobrazení kampaně zveřejněné sekce.'
     MENUTITLE: Kampaně
   Campaigns:
     AddToCampaign: 'Přidat do kampaně'
+    AddToCampaignFormFieldLabel: 'Vybrat kampaň'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Heslo pro účet s email adresou {email} byl změnen. Jestli jste vaše heslo neměnili, prosím změňte si vaše heslo použitím odkazu dole'
     CHANGEPASSWORDTEXT1: 'Vaše heslo bylo změněno pro'
@@ -187,6 +189,7 @@ cs:
   DropdownField:
     CHOOSE: (Vyberte)
     CHOOSESEARCH: '(Vybrat nebo Vyhledat)'
+    CHOOSE_MODEL: '(Vyberte {name})'
     SOURCE_VALIDATION: 'Prosím vyberte hodnotu v seznamu. {value} není platná volba'
   EmailField:
     VALIDATION: 'Prosím zadejte e-mailovou adresu'
@@ -210,14 +213,12 @@ cs:
     JsType: 'Javascript soubor'
     Mp3Type: 'MP3 audio soubor'
     MpgType: 'MPEG video soubor'
-    NOFILESIZE: 'Velikost souboru je 0 bajtů.'
     NOVALIDUPLOAD: 'Soubor není validní pro nahrání'
     Name: Jméno
     PLURALNAME: Soubory
     PdfType: 'Adobe Acrobat PDF soubor'
     PngType: 'PNG obrázek - vhodný jako univerzálmí formát'
     SINGULARNAME: Soubor
-    TOOLARGE: 'Velikost souboru je příliš velká, povolené maximum {size}'
     TOOLARGESHORT: 'Velikost souboru překračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Titulek
@@ -239,6 +240,7 @@ cs:
     CSRF_FAILED_MESSAGE: 'Vypadá to, že to musí být technický problém. Kliněte prosím na tlačítko zpět, obnovte váš prohlížeč a zkuste opět.'
     FIELDISREQUIRED: '{name} je požadováno'
     SubmitBtnLabel: Jdi
+    VALIDATIONCREDIT: 'Prosím ujistěte se, že jste zadal/a číslo kreditní karty správně'
     VALIDATIONCREDITNUMBER: 'Prosím ujistěte se, že jste zadal/a {number} číslo kreditní karty správně'
     VALIDATIONNOTUNIQUE: 'Zadaná hodnota není unikátní'
     VALIDATIONPASSWORDSDONTMATCH: 'Hesla se neshodují'
@@ -319,7 +321,7 @@ cs:
     CSSCLASSRIGHT: 'Vpravo, s obtékajícím textem.'
     DETAILS: Podrobnosti
     EMAIL: 'Emailová adresa'
-    FILE: Soubor
+    FILE: SilverStripe\\Assets\\File
     FOLDER: Složka
     IMAGEALT: 'Alternativní text (alt)'
     IMAGEALTTEXT: 'Alternativní text (alt) - ukáže se, když obrázek nemúže být zobrazen'
@@ -332,14 +334,15 @@ cs:
     IMAGEWIDTHPX: Šířka
     INSERTMEDIA: 'Vložit média z'
     LINK: 'Vložit odkaz'
-    LINKANCHOR: 'Kotva na této stránce'
+    LINKANCHOR: 'Odkaz na kotvu na této stránce'
     LINKDESCR: 'Popis odkazu'
-    LINKEMAIL: 'Emailová adresa'
-    LINKEXTERNAL: 'Jiná web stránka'
-    LINKFILE: 'Stáhnutí souboru'
-    LINKINTERNAL: 'Místní stránku'
+    LINKDETAILS: 'Popis odkazu'
+    LINKEMAIL: 'Odkaz na emailovou adresu'
+    LINKEXTERNAL: 'Odkaz na jiný web'
+    LINKFILE: 'Odkaz na stáhnutí souboru'
+    LINKINTERNAL: 'Odkaz na stránku tohoto webu'
     LINKOPENNEWWIN: 'Otevřít odkaz v novém okně?'
-    LINKTO: 'Odkaz na'
+    LINKTO: 'Typ odkazu'
     PAGE: Stránka
     SUBJECT: 'Předmět emailu'
     URL: URL
@@ -351,7 +354,7 @@ cs:
     ERROR_HOSTNAME: 'Tento soubor hostname není obsažen ve whitelist'
     ERROR_ID: 'Je potřeba buď "ID" nebo "FileURL" parametr pro identifikaci souboru'
     ERROR_NOTFOUND: 'Není možné najit soubor k náhledu'
-    ERROR_OEMBED_REMOTE: 'Oembed je kompatibilní pouze se vzdálenými soubory'
+    ERROR_OEMBED_REMOTE: 'Vestavěné je kompatibilní jen se vzdálenými soubory'
     ERROR_SCHEME: 'Tato schéma souborz není obsažena ve whitelist'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Nekonečná smyčka se nachází v "{type}" hierarchii. Prosím změňte rodiče pro vyřešení tohoto problému'
@@ -417,7 +420,7 @@ cs:
     CANCEL: Storno
     CANT_REORGANISE: 'Nemáte oprávnění měnit stránky nejvyšší úrovně. Vaše změna nebyla uložena.'
     DELETED: Smazáno.
-    DropdownBatchActionsDefault: Akce
+    DropdownBatchActionsDefault: 'Vyberte akci...'
     HELP: Nápověda
     PAGETYPE: 'Typ stránky'
     PERMAGAIN: 'Byli jste odhlášeni z CMS. Pokud se chcete znovu přihlásit, zadejte níže své uživatelské jméno a heslo.'
@@ -430,7 +433,6 @@ cs:
     ShowAsList: 'ukázat jako seznam'
     TooManyPages: 'Příliš mnoho stránek'
     ValidationError: 'Chyba platnosti'
-    VersionUnknown: neznámé
   LeftAndMain_Menu_ss:
     Hello: Ahoj
     LOGOUT: 'Odhlásit se'
@@ -473,13 +475,12 @@ cs:
     PASSWORD: Heslo
     PASSWORDEXPIRED: 'Vaše heslo expirovalo. Prosím, zvolte nové heslo.'
     PLURALNAME: Členové
-    REMEMBERME: 'Zapamatovat si mě pro příště?'
     SINGULARNAME: Člen
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bylo změněno'
     SUBJECTPASSWORDRESET: 'Nulovací odkaz pro Vaše heslo'
     SURNAME: Příjmení
     TIMEFORMAT: 'Formát času'
-    VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejnou %s'
+    VALIDATIONMEMBEREXISTS: 'Již existuje člen se stejným {identifier}'
     ValidationIdentifierFailed: 'Nemůžete přepsat existujícího člena #{id} s identickým identifikátorem ({name} = {value}))'
     WELCOMEBACK: 'Vítejte zpět, {firstname}'
     YOUROLDPASSWORD: 'Vaše staré heslo'
@@ -500,7 +501,7 @@ cs:
     DIGITSDECFRACTIONSECOND: 'Jedna nebo více číslic zastupující desetinný zlomek vteřiny'
     FOURDIGITYEAR: 'Čtyřčíslí roku'
     FULLNAMEMONTH: 'Celý název měsíce (např. Červen)'
-    HOURNOLEADING: 'Hodina bez úvodní nuly'
+    HOURNOLEADING24: 'Hodina bez úvodní nuly, 24 hodinový formát'
     MINUTENOLEADING: 'Minuta bez úvodní nuly'
     MONTHNOLEADING: 'Číslo měsíce bez úvodní nuly'
     Preview: Náhled
@@ -642,6 +643,54 @@ cs:
     Tablet: Tablet
     ViewDeviceWidth: 'Vyberte šířku náhledu'
     Width: šířka
+  SilverStripe\Admin\CMSProfileController:
+    MENUTITLE: 'Můj profil'
+  SilverStripe\Admin\CampaignAdmin:
+    MENUTITLE: Kampaň
+  SilverStripe\Admin\SecurityAdmin:
+    MENUTITLE: Bezpečnost
+  SilverStripe\Assets\File:
+    PLURALNAME: Soubory
+    SINGULARNAME: Soubor
+  SilverStripe\Assets\Folder:
+    PLURALNAME: Složky
+    SINGULARNAME: Složka
+  SilverStripe\Assets\Image:
+    PLURALNAME: Obrázky
+    SINGULARNAME: Obrázek
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Datové objekty'
+    SINGULARNAME: 'Datový objekt'
+  SilverStripe\ORM\Versioning\ChangeSet:
+    PLURALNAME: Kampaně
+    SINGULARNAME: Kampaň
+  SilverStripe\ORM\Versioning\ChangeSetItem:
+    PLURALNAME: 'Změnit položky'
+    SINGULARNAME: 'Změnit položku'
+  SilverStripe\Security\Group:
+    PLURALNAME: Skupiny
+    SINGULARNAME: Skupina
+  SilverStripe\Security\LoginAttempt:
+    PLURALNAME: 'Pokusy přihlášení'
+    SINGULARNAME: 'Pokus přihlášení'
+  SilverStripe\Security\Member:
+    PLURALNAME: Členové
+    SINGULARNAME: Člen
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Členská hesla'
+    SINGULARNAME: 'Členské heslo'
+  SilverStripe\Security\Permission:
+    PLURALNAME: Oprávnění
+    SINGULARNAME: Oprávnění
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Role
+    SINGULARNAME: Role
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Kódy role oprávnění'
+    SINGULARNAME: 'Kód role oprávnění'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Pamatovat si Hash-e přihlášení'
+    SINGULARNAME: 'Pamatovat si Hash přihlášení'
   SiteTree:
     TABMAIN: Hlavní
   TableListField:
