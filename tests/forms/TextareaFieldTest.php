@@ -3,16 +3,6 @@
 class TextareaFieldTest extends SapphireTest {
 
 	/**
-	 * Quick smoke test to ensure that text is being encoded properly.
-	 */
-	public function testTextEncoding() {
-		$inputText = "These are some unicodes: äöü";
-		$field = new TextareaField("Test", "Test");
-		$field->setValue($inputText);
-		$this->assertContains('These are some unicodes: &auml;&ouml;&uuml;', $field->Field());
-	}
-
-	/**
 	 * Quick smoke test to ensure that text with unicodes is being displayed properly in readonly fields.
 	 */
 	public function testReadonlyDisplayUnicodes() {

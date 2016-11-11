@@ -26,6 +26,14 @@ class HtmlEditorField extends TextareaField {
 	 */
 	private static $sanitise_server_side = false;
 
+	/**
+	 * @config
+	 * @var array
+	 */
+	private static $casting = array(
+		'Value' => 'HTMLText',
+	);
+
 	protected $rows = 30;
 	
 	/**

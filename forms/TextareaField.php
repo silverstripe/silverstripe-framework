@@ -85,11 +85,4 @@ class TextareaField extends FormField {
 
 		return $parent;
 	}
-
-	/**
-	 * @return string
-	 */
-	public function Value() {
-		return htmlentities($this->value, ENT_COMPAT, 'UTF-8');
-	}
 }
