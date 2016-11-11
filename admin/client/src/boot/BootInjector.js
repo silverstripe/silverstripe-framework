@@ -16,6 +16,7 @@ import Tabs from 'components/Tabs/Tabs';
 import TabItem from 'components/Tabs/TabItem';
 import FormAction from 'components/FormAction/FormAction';
 import FieldGroup from 'components/FieldGroup/FieldGroup';
+import HtmlEditorField from 'components/HtmlEditorField/HtmlEditorField';
 
 /**
  * TODO remove when dependency injector for javascript is incorporated
@@ -41,6 +42,7 @@ class BootInjector {
     injector.register('Tabs', Tabs);
     injector.register('TabItem', TabItem);
     injector.register('FormAction', FormAction);
+    injector.register('HtmlEditorField', HtmlEditorField);
   }
 }
 

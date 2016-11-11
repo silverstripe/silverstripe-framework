@@ -61,6 +61,32 @@ class HTMLEditorField extends TextareaField
     protected $editorConfig = null;
 
     /**
+     * The type of front-end component to render the FormField as.
+     *
+     * @skipUpgrade
+     * @var string
+     */
+    protected $schemaComponent = 'HtmlEditorField';
+
+    /**
+     * Set htmleditor specific schema data
+     */
+    public function getSchemaDataDefaults()
+    {
+        $data = parent::getSchemaDataDefaults();
+        
+        $config = $this->getEditorConfig();
+        $attributes = $config->getAttributes();
+        
+        $data['data']['editor'] = $attributes['data-editor'];
+        $data['data']['config'] = $config->getConfig();
+        
+        unset($data['data']['config']['external_plugins']['ssbuttons']);
+        
+        return $data;
+    }
+    
+    /**
      * Gets the HTMLEditorConfig instance
      *
      * @return HTMLEditorConfig
