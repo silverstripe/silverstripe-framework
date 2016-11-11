@@ -33,6 +33,7 @@ require('expose?ReactApollo!react-apollo');
 require('expose?GraphQLTag!graphql-tag');
 require('expose?GraphQLFragments!graphql-fragments');
 require('expose?qs!qs');
+require('expose?ReactTinyMCE!react-tinymce');
 
 require('../../../thirdparty/jquery-ondemand/jquery.ondemand.js');
 require('../../../thirdparty/jquery-ui/jquery-ui.js');

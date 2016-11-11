@@ -378,7 +378,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      *
      * @return array
      */
-    protected function getConfig()
+    public function getConfig()
     {
         $settings = $this->getSettings();
 

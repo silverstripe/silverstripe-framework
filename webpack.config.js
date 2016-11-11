@@ -161,7 +161,6 @@ const config = [
       'editor': `${PATHS.ADMIN_CSS_SRC}/editor.scss`,
       'GridField_print': `${PATHS.ADMIN_CSS_SRC}/legacy/GridField_print.scss`,
       'AssetUploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/AssetUploadField.scss`,
-      'UploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/UploadField.scss`,
     },
     output: {
       path: 'admin/client/dist/styles',
@@ -172,17 +171,17 @@ const config = [
         {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract([
-            'css?sourceMap&minimize&-core&discardComments',
-            'postcss?sourceMap',
+            'css?minimize&-core&discardComments',
+            'postcss',
             'resolve-url',
-            'sass?sourceMap',
+            'sass',
           ]),
         },
         {
           test: /\.css$/,
           loader: ExtractTextPlugin.extract([
-            'css?sourceMap&minimize&-core&discardComments',
-            'postcss?sourceMap',
+            'css?minimize&-core&discardComments',
+            'postcss',
           ]),
         },
         {
@@ -217,17 +216,17 @@ const config = [
         {
           test: /\.scss$/,
           loader: ExtractTextPlugin.extract([
-            'css?sourceMap&minimize&-core&discardComments',
-            'postcss?sourceMap',
+            'css?minimize&-core&discardComments',
+            'postcss',
             'resolve-url',
-            'sass?sourceMap',
+            'sass',
           ]),
         },
         {
           test: /\.css$/,
           loader: ExtractTextPlugin.extract([
-            'css?sourceMap&minimize&-core&discardComments',
-            'postcss?sourceMap',
+            'css?minimize&-core&discardComments',
+            'postcss',
           ]),
         },
         {
