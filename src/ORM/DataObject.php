@@ -2590,7 +2590,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 	 */
 	public function dbObject($fieldName) {
 		// Check for field in DB
-		$helper = static::getSchema()->fieldSpec(static::class, $fieldName, DataObjectSchema::INCLUDE_CLASS);
+		$schema = static::getSchema();
+		$helper = $schema->fieldSpec(static::class, $fieldName, DataObjectSchema::INCLUDE_CLASS);
 		if(!$helper) {
 			return null;
 		}
@@ -2604,8 +2605,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 			return $value;
 		}
 
-		list($table, $spec) = explode('.', $helper);
+		list($class, $spec) = explode('.', $helper);
 		/** @var DBField $obj */
+		$table = $schema->tableName($class);
 		$obj = Object::create_from_string($spec, $fieldName);
 		$obj->setTable($table);
 		$obj->setValue($value, $this, false);
