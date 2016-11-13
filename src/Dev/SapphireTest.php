@@ -356,7 +356,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		}
 
 		// If we have made changes to the extensions present, then migrate the database schema.
-		if($isAltered || $this->extensionsToReapply || $this->extensionsToRemove || $this->extraDataObjects) {
+		if($isAltered || $this->extensionsToReapply || $this->extensionsToRemove || $this->getExtraDataObjects()) {
 			DataObject::reset();
 			if(!self::using_temp_db()) {
 				self::create_temp_db();
@@ -401,7 +401,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 		Injector::unnest();
 		Config::unnest();
 
-		if(!empty($this->extensionsToReapply) || !empty($this->extensionsToRemove) || !empty($this->extraDataObjects)) {
+		$extraDataObjects = $this->getExtraDataObjects();
+		if(!empty($this->extensionsToReapply) || !empty($this->extensionsToRemove) || !empty($extraDataObjects)) {
 			$this->resetDBSchema();
 		}
 	}
@@ -1040,7 +1041,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 			DB::quiet();
 			$schema = DB::get_schema();
-			$extraDataObjects = $includeExtraDataObjects ? $this->extraDataObjects : null;
+			$extraDataObjects = $includeExtraDataObjects ? $this->getExtraDataObjects() : null;
 			$schema->schemaUpdate(function() use($dataClasses, $extraDataObjects){
 				foreach($dataClasses as $dataClass) {
 					// Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
@@ -1060,7 +1061,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 			});
 
 			ClassInfo::reset_db_cache();
-			singleton('SilverStripe\\ORM\\DataObject')->flushCache();
+			DataObject::singleton()->flushCache();
 		}
 	}
 
@@ -1170,6 +1171,24 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Return all extra objects to scaffold for this test
+	 *
+	 * @return array
+	 */
+	protected function getExtraDataObjects() {
+		return $this->extraDataObjects;
+	}
+
+	/**
+	 * Get additional controller classes to register routes for
+	 *
+	 * @return array
+	 */
+	protected function getExtraControllers() {
+		return $this->extraControllers;
+	}
+
+	/**
 	 * Map a fixture path to a physical file
 	 *
 	 * @param string $fixtureFilePath
@@ -1202,7 +1221,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 	protected function setUpRoutes()
 	{
 		$rules = [];
-		foreach ($this->extraControllers as $class) {
+		foreach ($this->getExtraControllers() as $class) {
 			$controllerInst = Controller::singleton($class);
 			$link = Director::makeRelative($controllerInst->Link());
 			$route = rtrim($link, '/') . '//$Action/$ID/$OtherID';
