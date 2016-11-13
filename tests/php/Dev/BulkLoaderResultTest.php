@@ -6,10 +6,6 @@ use SilverStripe\Dev\BulkLoader_Result;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\Tests\BulkLoaderResultTest\Player;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class BulkLoaderResultTest extends SapphireTest
 {
     protected $extraDataObjects = array(Player::class);

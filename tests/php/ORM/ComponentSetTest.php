@@ -2,24 +2,21 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Tests\ComponentSetTest\Player;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 
 class ComponentSetTest extends SapphireTest {
 
 	protected static $fixture_file = 'ComponentSetTest.yml';
 
 	protected $extraDataObjects = array(
-		Player::class,
+		ComponentSetTest\Player::class,
 		ComponentSetTest\Team::class,
 	);
 
 	public function testSetByIDListManyMany() {
-		$team1 = $this->objFromFixture('ComponentSetTest_Team', 'team1');
-		$player1_team1 = $this->objFromFixture('ComponentSetTest_Player', 'player1_team1');
-		$player2 = $this->objFromFixture('ComponentSetTest_Player', 'player2');
+		$team1 = $this->objFromFixture(ComponentSetTest\Team::class, 'team1');
+		$player1_team1 = $this->objFromFixture(ComponentSetTest\Player::class, 'player1_team1');
+		$player2 = $this->objFromFixture(ComponentSetTest\Player::class, 'player2');
 
 		$team1->Players()->setByIdList(array(
 			$player1_team1->ID,

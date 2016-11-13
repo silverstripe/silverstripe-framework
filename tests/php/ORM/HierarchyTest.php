@@ -22,19 +22,16 @@ class HierarchyTest extends SapphireTest {
 	 * Test the Hierarchy prevents infinite loops.
 	 */
 	public function testPreventLoop() {
+		$this->setExpectedException(
+			ValidationException::class,
+			sprintf('Infinite loop found within the "%s" hierarchy', HierarchyTest\TestObject::class)
+		);
+
 		$obj2 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2');
 		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
 
 		$obj2->ParentID = $obj2aa->ID;
-		try {
-			$obj2->write();
-		}
-		catch (ValidationException $e) {
-			$this->assertContains('Infinite loop found within the "HierarchyTest_Object" hierarchy', $e->getMessage());
-			return;
-		}
-
-		$this->fail('Failed to prevent infinite loop in hierarchy.');
+		$obj2->write();
 	}
 
 	/**
@@ -63,7 +60,7 @@ class HierarchyTest extends SapphireTest {
 
 
 		// Obj 3 has been deleted; let's bring it back from the grave
-		$obj3 = Versioned::get_including_deleted("HierarchyTest_Object", "\"Title\" = 'Obj 3'")->First();
+		$obj3 = Versioned::get_including_deleted(HierarchyTest\TestObject::class, "\"Title\" = 'Obj 3'")->First();
 
 		// Check that all obj 3 children are returned
 		$this->assertEquals(array("Obj 3a", "Obj 3b", "Obj 3c", "Obj 3d"),
@@ -86,7 +83,7 @@ class HierarchyTest extends SapphireTest {
 		$this->objFromFixture(HierarchyTest\TestObject::class, 'obj3')->markUnexpanded();
 
 		// Query some objs in a different context and check their m
-		$objs = DataObject::get("HierarchyTest_Object", '', '"ID" ASC');
+		$objs = DataObject::get(HierarchyTest\TestObject::class, '', '"ID" ASC');
 		$marked = $expanded = array();
 		foreach($objs as $obj) {
 			if($obj->isMarked()) $marked[] = $obj->Title;
@@ -547,7 +544,9 @@ EOT;
 	}
 
 	public function testHideFromHeirarchy() {
-		HierarchyTest\HideTestObject::config()->hide_from_hierarchy = array('HierarchyHideTest_SubObject');
+		HierarchyTest\HideTestObject::config()->update('hide_from_hierarchy', [
+			HierarchyTest\HideTestSubObject::class,
+		]);
 		$obj4 = $this->objFromFixture(HierarchyTest\HideTestObject::class, 'obj4');
 		$obj4->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
 

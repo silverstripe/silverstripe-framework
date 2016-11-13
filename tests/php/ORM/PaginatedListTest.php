@@ -16,12 +16,12 @@ class PaginatedListTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	public function setUpOnce() {
-		$this->extraDataObjects = array_merge(
+	protected function getExtraDataObjects()
+	{
+		return array_merge(
 			DataObjectTest::$extra_data_objects,
 			ManyManyListTest::$extra_data_objects
 		);
-		parent::setUpOnce();
 	}
 
 	public function testPageStart() {

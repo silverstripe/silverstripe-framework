@@ -8,9 +8,6 @@ use SilverStripe\Dev\SapphireTest;
 
 /**
  * Tests for the {@link ClassManifest} class.
- *
- * @package framework
- * @subpackage tests
  */
 class NamespacedClassManifestTest extends SapphireTest {
 

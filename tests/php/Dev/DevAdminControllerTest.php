@@ -2,19 +2,14 @@
 
 namespace SilverStripe\Dev\Tests;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\DevelopmentAdmin;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
 use Exception;
 use SilverStripe\Dev\Tests\DevAdminControllerTest\Controller1;
 
 /**
  * Note: the running of this test is handled by the thing it's testing (DevelopmentAdmin controller).
- *
- * @package framework
- * @package tests
  */
 class DevAdminControllerTest extends FunctionalTest {
 

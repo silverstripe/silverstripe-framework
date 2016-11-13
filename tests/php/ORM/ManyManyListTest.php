@@ -19,12 +19,12 @@ class ManyManyListTest extends SapphireTest {
 		ManyManyListTest\Product::class,
 	];
 
-	public function setUpOnce() {
-		$this->extraDataObjects = array_merge(
+	protected function getExtraDataObjects()
+	{
+		return array_merge(
 			DataObjectTest::$extra_data_objects,
-			static::$extra_data_objects
+			ManyManyListTest::$extra_data_objects
 		);
-		parent::setUpOnce();
 	}
 
 	public function testAddCompositedExtraFields() {

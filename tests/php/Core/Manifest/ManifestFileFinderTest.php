@@ -5,9 +5,6 @@ use SilverStripe\Dev\SapphireTest;
 
 /**
  * Tests for the {@link ManifestFileFinder} class.
- *
- * @package framework
- * @subpackage tests
  */
 class ManifestFileFinderTest extends SapphireTest {
 

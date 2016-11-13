@@ -2,30 +2,29 @@
 
 namespace SilverStripe\Admin\Tests;
 
-
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\CMSMenu;
 use SilverStripe\Admin\LeftAndMain;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Dev\TestOnly;
+use SilverStripe\Security\Member;
 use SilverStripe\View\Requirements;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class LeftAndMainTest extends FunctionalTest {
 
 	protected static $fixture_file = 'LeftAndMainTest.yml';
 
-	protected $extraDataObjects = array('LeftAndMainTest_Object');
+	protected $extraDataObjects = [
+		LeftAndMainTest\TestObject::class
+	];
+
+	protected $extraControllers = [
+		LeftAndMainTest\TestController::class,
+	];
 
 	protected $backupCombined;
 
-	public function setUp() {
+	public function setUp()
+	{
 		parent::setUp();
 
 		// @todo fix controller stack problems and re-activate
@@ -35,10 +34,10 @@ class LeftAndMainTest extends FunctionalTest {
 
 		LeftAndMain::config()
 			->update('extra_requirements_css', array(
-				FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.css'
+				FRAMEWORK_ADMIN_DIR . '/tests/assets/LeftAndMainTest.css'
 			))
 			->update('extra_requirements_javascript', array(
-				FRAMEWORK_DIR . '/tests/assets/LeftAndMainTest.js'
+				FRAMEWORK_ADMIN_DIR . '/tests/assets/LeftAndMainTest.js'
 			));
 
 		Requirements::set_combined_files_enabled(false);
@@ -66,9 +65,8 @@ class LeftAndMainTest extends FunctionalTest {
 		Requirements::set_combined_files_enabled($this->backupCombined);
 	}
 
-
 	public function testExtraCssAndJavascript() {
-		$admin = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
+		$admin = $this->objFromFixture(Member::class, 'admin');
 		$this->session()->inst_set('loggedInAs', $admin->ID);
 		$response = $this->get('LeftAndMainTest_Controller');
 
@@ -86,7 +84,7 @@ class LeftAndMainTest extends FunctionalTest {
 		$this->logInWithPermission('ADMIN');
 
 		// forcing sorting for non-MySQL
-		$rootPages = LeftAndMainTest_Object::get()
+		$rootPages = LeftAndMainTest\TestObject::get()
 			->filter("ParentID", 0)
 			->sort('"ID"');
 		$siblingIDs = $rootPages->column('ID');
@@ -105,9 +103,9 @@ class LeftAndMainTest extends FunctionalTest {
 
 		$response = $this->post('LeftAndMainTest_Controller/savetreenode', $data);
 		$this->assertEquals(200, $response->getStatusCode());
-		$page1 = DataObject::get_by_id('LeftAndMainTest_Object', $page1->ID, false);
-		$page2 = DataObject::get_by_id('LeftAndMainTest_Object', $page2->ID, false);
-		$page3 = DataObject::get_by_id('LeftAndMainTest_Object', $page3->ID, false);
+		$page1 = DataObject::get_by_id(LeftAndMainTest\TestObject::class, $page1->ID, false);
+		$page2 = DataObject::get_by_id(LeftAndMainTest\TestObject::class, $page2->ID, false);
+		$page3 = DataObject::get_by_id(LeftAndMainTest\TestObject::class, $page3->ID, false);
 
 		$this->assertEquals(2, $page1->Sort, 'Page1 is sorted after Page2');
 		$this->assertEquals(1, $page2->Sort, 'Page2 is sorted before Page1');
@@ -117,10 +115,10 @@ class LeftAndMainTest extends FunctionalTest {
 	public function testSaveTreeNodeParentID() {
 		$this->logInWithPermission('ADMIN');
 
-		$page2 = $this->objFromFixture('LeftAndMainTest_Object', 'page2');
-		$page3 = $this->objFromFixture('LeftAndMainTest_Object', 'page3');
-		$page31 = $this->objFromFixture('LeftAndMainTest_Object', 'page31');
-		$page32 = $this->objFromFixture('LeftAndMainTest_Object', 'page32');
+		$page2 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page2');
+		$page3 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page3');
+		$page31 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page31');
+		$page32 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page32');
 
 		// Move page2 into page3, between page3.1 and page 3.2
 		$siblingIDs = array(
@@ -135,9 +133,9 @@ class LeftAndMainTest extends FunctionalTest {
 		);
 		$response = $this->post('LeftAndMainTest_Controller/savetreenode', $data);
 		$this->assertEquals(200, $response->getStatusCode());
-		$page2 = DataObject::get_by_id('LeftAndMainTest_Object', $page2->ID, false);
-		$page31 = DataObject::get_by_id('LeftAndMainTest_Object', $page31->ID, false);
-		$page32 = DataObject::get_by_id('LeftAndMainTest_Object', $page32->ID, false);
+		$page2 = DataObject::get_by_id(LeftAndMainTest\TestObject::class, $page2->ID, false);
+		$page31 = DataObject::get_by_id(LeftAndMainTest\TestObject::class, $page31->ID, false);
+		$page32 = DataObject::get_by_id(LeftAndMainTest\TestObject::class, $page32->ID, false);
 
 		$this->assertEquals($page3->ID, $page2->ParentID, 'Moved page gets new parent');
 		$this->assertEquals(1, $page31->Sort, 'Children pages before insertaion are unaffected');
@@ -149,7 +147,7 @@ class LeftAndMainTest extends FunctionalTest {
 	 * Check that all subclasses of leftandmain can be accessed
 	 */
 	public function testLeftAndMainSubclasses() {
-		$adminuser = $this->objFromFixture('SilverStripe\\Security\\Member','admin');
+		$adminuser = $this->objFromFixture(Member::class,'admin');
 		$this->session()->inst_set('loggedInAs', $adminuser->ID);
 
 		$this->resetMenu();
@@ -175,9 +173,9 @@ class LeftAndMainTest extends FunctionalTest {
 	}
 
 	public function testCanView() {
-		$adminuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
-		$securityonlyuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'securityonlyuser');
-		$allcmssectionsuser = $this->objFromFixture('SilverStripe\\Security\\Member', 'allcmssectionsuser');
+		$adminuser = $this->objFromFixture(Member::class, 'admin');
+		$securityonlyuser = $this->objFromFixture(Member::class, 'securityonlyuser');
+		$allcmssectionsuser = $this->objFromFixture(Member::class, 'allcmssectionsuser');
 
 		// anonymous user
 		$this->session()->inst_set('loggedInAs', null);
@@ -243,11 +241,11 @@ class LeftAndMainTest extends FunctionalTest {
 	 * Test {@see LeftAndMain::updatetreenodes}
 	 */
 	public function testUpdateTreeNodes() {
-		$page1 = $this->objFromFixture('LeftAndMainTest_Object', 'page1');
-		$page2 = $this->objFromFixture('LeftAndMainTest_Object', 'page2');
-		$page3 = $this->objFromFixture('LeftAndMainTest_Object', 'page3');
-		$page31 = $this->objFromFixture('LeftAndMainTest_Object', 'page31');
-		$page32 = $this->objFromFixture('LeftAndMainTest_Object', 'page32');
+		$page1 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page1');
+		$page2 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page2');
+		$page3 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page3');
+		$page31 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page31');
+		$page32 = $this->objFromFixture(LeftAndMainTest\TestObject::class, 'page32');
 		$this->logInWithPermission('ADMIN');
 
 		// Check page
@@ -284,36 +282,4 @@ class LeftAndMainTest extends FunctionalTest {
 		$data = json_decode($result->getBody(), true);
 		$this->assertEquals(0, count($data));
 	}
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class LeftAndMainTest_Controller extends LeftAndMain implements TestOnly {
-	protected $template = 'BlankPage';
-
-	private static $tree_class = 'LeftAndMainTest_Object';
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class LeftAndMainTest_Object extends DataObject implements TestOnly {
-
-	private static $db = array(
-		'Title' => 'Varchar',
-		'URLSegment' => 'Varchar',
-		'Sort' => 'Int',
-	);
-
-	private static $default_sort = '"Sort"';
-
-	private static $extensions = array(
-		'SilverStripe\\ORM\\Hierarchy\\Hierarchy'
-	);
-
-	public function CMSTreeClasses() {}
-
 }

@@ -4,10 +4,6 @@ namespace SilverStripe\Security\Tests\MemberTest;
 
 use SilverStripe\Security\PasswordValidator;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class TestPasswordValidator extends PasswordValidator
 {
 	public function __construct()

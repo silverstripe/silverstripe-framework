@@ -21,9 +21,12 @@ class DataListTest extends SapphireTest {
 	// Borrow the model from DataObjectTest
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	public function setUpOnce() {
-		$this->extraDataObjects = DataObjectTest::$extra_data_objects;
-		parent::setUpOnce();
+	protected function getExtraDataObjects()
+	{
+		return array_merge(
+			DataObjectTest::$extra_data_objects,
+			ManyManyListTest::$extra_data_objects
+		);
 	}
 
 	public function testFilterDataObjectByCreatedDate() {

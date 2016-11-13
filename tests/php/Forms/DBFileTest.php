@@ -3,19 +3,10 @@
 namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Assets\Storage\AssetStore;
-use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Control\Director;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
-/**
- * Description of DBFileTest
- *
- * @author dmooyman
- */
 class DBFileTest extends SapphireTest {
 
 	protected $extraDataObjects = array(
@@ -45,7 +36,7 @@ class DBFileTest extends SapphireTest {
 		$obj = new DBFileTest\TestObject();
 
 		// Test image tag
-		$fish = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
+		$fish = realpath(__DIR__ .'/../ORM/ImageTest/test-image-high-quality.jpg');
 		$this->assertFileExists($fish);
 		$obj->MyFile->setFromLocalFile($fish, 'awesome-fish.jpg');
 		$this->assertEquals(
@@ -65,7 +56,7 @@ class DBFileTest extends SapphireTest {
 		$obj = new DBFileTest\ImageOnly();
 
 		// Test from image
-		$fish = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
+		$fish = realpath(__DIR__ .'/../ORM/ImageTest/test-image-high-quality.jpg');
 		$this->assertFileExists($fish);
 		$obj->MyFile->setFromLocalFile($fish, 'awesome-fish.jpg');
 
@@ -78,7 +69,7 @@ class DBFileTest extends SapphireTest {
 		$obj = new DBFileTest\TestObject();
 
 		// Test from image
-		$fish = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
+		$fish = realpath(__DIR__ .'/../ORM/ImageTest/test-image-high-quality.jpg');
 		$this->assertFileExists($fish);
 		$obj->MyFile->setFromLocalFile($fish, 'private/awesome-fish.jpg', null, null, array(
 			'visibility' => AssetStore::VISIBILITY_PROTECTED

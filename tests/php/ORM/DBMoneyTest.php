@@ -18,7 +18,7 @@ use Exception;
  */
 class DBMoneyTest extends SapphireTest {
 
-	protected static $fixture_file = 'MoneyTest.yml';
+	protected static $fixture_file = 'DBMoneyTest.yml';
 
 	protected $extraDataObjects = array(
 		DBMoneyTest\TestObject::class,

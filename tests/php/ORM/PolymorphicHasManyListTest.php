@@ -2,11 +2,9 @@
 
 namespace SilverStripe\ORM\Tests;
 
-
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
-
 
 /**
  * Tests the PolymorphicHasManyList class
@@ -14,18 +12,18 @@ use SilverStripe\ORM\Tests\DataObjectTest\Team;
  * @see PolymorphicHasManyList
  *
  * @todo Complete
- *
- * @package framework
- * @subpackage tests
  */
 class PolymorphicHasManyListTest extends SapphireTest {
 
 	// Borrow the model from DataObjectTest
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	public function setUpOnce() {
-		$this->extraDataObjects = DataObjectTest::$extra_data_objects;
-		parent::setUpOnce();
+	protected function getExtraDataObjects()
+	{
+		return array_merge(
+			DataObjectTest::$extra_data_objects,
+			ManyManyListTest::$extra_data_objects
+		);
 	}
 
 	public function testRelationshipEmptyOnNewRecords() {
@@ -38,7 +36,6 @@ class PolymorphicHasManyListTest extends SapphireTest {
 	 * Test that DataList::relation works with PolymorphicHasManyList
 	 */
 	public function testFilterRelation() {
-
 		// Check that expected teams exist
 		$list = Team::get();
 		$this->assertEquals(
@@ -51,8 +48,8 @@ class PolymorphicHasManyListTest extends SapphireTest {
 		$this->assertEquals(array('Damian', 'Mitch', 'Richard'), $fans->sort('Name')->column('Name'));
 
 		// Modify list of fans and retest
-		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
-		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$team1 = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
+		$subteam1 = $this->objFromFixture(DataObjectTest\SubTeam::class, 'subteam1');
 		$newFan1 = Fan::create();
 		$newFan1->Name = 'Bobby';
 		$newFan1->write();
@@ -80,26 +77,26 @@ class PolymorphicHasManyListTest extends SapphireTest {
 		);
 
 		// Test that each team has the correct fans
-		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
-		$subteam1 = $this->objFromFixture('DataObjectTest_SubTeam', 'subteam1');
+		$team1 = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
+		$subteam1 = $this->objFromFixture(DataObjectTest\SubTeam::class, 'subteam1');
 		$this->assertEquals(array('Damian', 'Richard'), $team1->Fans()->sort('Name')->column('Name'));
 		$this->assertEquals(array('Mitch'), $subteam1->Fans()->sort('Name')->column('Name'));
 
 		// Test that removing items from unrelated team has no effect
-		$team1fan = $this->objFromFixture('DataObjectTest_Fan', 'fan1');
-		$subteam1fan = $this->objFromFixture('DataObjectTest_Fan', 'fan4');
+		$team1fan = $this->objFromFixture(DataObjectTest\Fan::class, 'fan1');
+		$subteam1fan = $this->objFromFixture(DataObjectTest\Fan::class, 'fan4');
 		$team1->Fans()->remove($subteam1fan);
 		$subteam1->Fans()->remove($team1fan);
 		$this->assertEquals(array('Damian', 'Richard'), $team1->Fans()->sort('Name')->column('Name'));
 		$this->assertEquals(array('Mitch'), $subteam1->Fans()->sort('Name')->column('Name'));
 		$this->assertEquals($team1->ID, $team1fan->FavouriteID);
-		$this->assertEquals('DataObjectTest_Team', $team1fan->FavouriteClass);
+		$this->assertEquals(DataObjectTest\Team::class, $team1fan->FavouriteClass);
 		$this->assertEquals($subteam1->ID, $subteam1fan->FavouriteID);
-		$this->assertEquals('DataObjectTest_SubTeam', $subteam1fan->FavouriteClass);
+		$this->assertEquals(DataObjectTest\SubTeam::class, $subteam1fan->FavouriteClass);
 
 		// Test that removing items from the related team resets the has_one relations on the fan
-		$team1fan = $this->objFromFixture('DataObjectTest_Fan', 'fan1');
-		$subteam1fan = $this->objFromFixture('DataObjectTest_Fan', 'fan4');
+		$team1fan = $this->objFromFixture(DataObjectTest\Fan::class, 'fan1');
+		$subteam1fan = $this->objFromFixture(DataObjectTest\Fan::class, 'fan4');
 		$team1->Fans()->remove($team1fan);
 		$subteam1->Fans()->remove($subteam1fan);
 		$this->assertEquals(array('Richard'), $team1->Fans()->sort('Name')->column('Name'));

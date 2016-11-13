@@ -2,10 +2,6 @@
 
 namespace SilverStripe\Core\Tests\ClassInfoTest;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class WithRelation extends NoFields
 {
 	private static $table_name = 'ClassInfoTest_WithRelation';

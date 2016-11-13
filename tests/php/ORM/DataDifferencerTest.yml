@@ -12,7 +12,7 @@ SilverStripe\ORM\Tests\DataDifferencerTest\HasOneRelationObject:
     Title: obj1
   relobj2:
     Title: obj2
-SilverStripe\ORM\Tests\DataDifferencerTest\Object:
+SilverStripe\ORM\Tests\DataDifferencerTest\TestObject:
   obj1:
     Choices: a,b
     Image: =>SilverStripe\Assets\Image.image1

@@ -32,10 +32,9 @@ class VersionedTest extends SapphireTest {
 		VersionedTest\CustomTable::class,
 	];
 
-	public function setUpOnce()
+	protected function getExtraDataObjects()
 	{
-		$this->extraDataObjects = static::$extra_data_objects;
-		parent::setUpOnce();
+		return static::$extra_data_objects;
 	}
 
 	public function testUniqueIndexes() {
@@ -139,9 +138,10 @@ class VersionedTest extends SapphireTest {
 		$obj = new VersionedTest\Subclass();
 		$obj->ExtraField = 'Foo'; // ensure that child version table gets written
 		$obj->write();
+		$class = VersionedTest\TestObject::class;
 		$this->setExpectedException(
 			'InvalidArgumentException',
-			"Can't find VersionedTest_DataObject#{$obj->ID} in stage Live"
+			"Can't find {$class}#{$obj->ID} in stage Live"
 		);
 
 		// Fail publishing from live to stage
@@ -198,14 +198,14 @@ class VersionedTest extends SapphireTest {
 		$targetPage->delete();
 
 		// Get all items, ignoring deleted
-		$remainingPages = DataObject::get("VersionedTest_DataObject", "\"ParentID\" = 0",
+		$remainingPages = DataObject::get(VersionedTest\TestObject::class, "\"ParentID\" = 0",
 			"\"VersionedTest_DataObject\".\"ID\" ASC");
 		// Check that page 3 has gone
 		$this->assertNotNull($remainingPages);
 		$this->assertEquals(array("Page 1", "Page 2", "Subclass Page 1"), $remainingPages->column('Title'));
 
 		// Get all including deleted
-		$allPages = Versioned::get_including_deleted("VersionedTest_DataObject", "\"ParentID\" = 0",
+		$allPages = Versioned::get_including_deleted(VersionedTest\TestObject::class, "\"ParentID\" = 0",
 			"\"VersionedTest_DataObject\".\"ID\" ASC");
 		// Check that page 3 is still there
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3", "Subclass Page 1"), $allPages->column('Title'));
@@ -215,7 +215,7 @@ class VersionedTest extends SapphireTest {
 
 		// Check that this still works if we switch to reading the other stage
 		Versioned::set_stage(Versioned::LIVE);
-		$allPages = Versioned::get_including_deleted("VersionedTest_DataObject", "\"ParentID\" = 0",
+		$allPages = Versioned::get_including_deleted(VersionedTest\TestObject::class, "\"ParentID\" = 0",
 			"\"VersionedTest_DataObject\".\"ID\" ASC");
 		$this->assertEquals(array("Page 1", "Page 2", "Page 3", "Subclass Page 1"), $allPages->column('Title'));
 
@@ -540,22 +540,22 @@ class VersionedTest extends SapphireTest {
 		$obj->Name = "test";
 		$obj->write();
 		$obj->Name = "test2";
-		$obj->ClassName = "VersionedTest_Subclass";
+		$obj->ClassName = VersionedTest\Subclass::class;
 		$obj->write();
 		$subclassVersion = $obj->Version;
 
 		$obj->Name = "test3";
-		$obj->ClassName = "VersionedTest_DataObject";
+		$obj->ClassName = VersionedTest\TestObject::class;
 		$obj->write();
 
 		// We should be able to pass the subclass and still get the correct class back
-		$obj2 = Versioned::get_version("VersionedTest_Subclass", $obj->ID, $subclassVersion);
-		$this->assertInstanceOf("VersionedTest_Subclass", $obj2);
+		$obj2 = Versioned::get_version(VersionedTest\Subclass::class, $obj->ID, $subclassVersion);
+		$this->assertInstanceOf(VersionedTest\Subclass::class, $obj2);
 		$this->assertEquals("test2", $obj2->Name);
 
-		$obj3 = Versioned::get_latest_version("VersionedTest_Subclass", $obj->ID);
+		$obj3 = Versioned::get_latest_version(VersionedTest\Subclass::class, $obj->ID);
 		$this->assertEquals("test3", $obj3->Name);
-		$this->assertInstanceOf("VersionedTest_DataObject", $obj3);
+		$this->assertInstanceOf(VersionedTest\TestObject::class, $obj3);
 
 	}
 
@@ -588,7 +588,7 @@ class VersionedTest extends SapphireTest {
 		singleton(VersionedTest\Subclass::class)->flushCache(true);
 		Versioned::set_reading_mode('Archive.2006-01-01 00:00:00');
 		$testPage2006 = DataObject::get(VersionedTest\Subclass::class)->filter(array('Title' => 'Archived page'))->first();
-		$this->assertInstanceOf("VersionedTest_Subclass", $testPage2006);
+		$this->assertInstanceOf(VersionedTest\Subclass::class, $testPage2006);
 		$this->assertEquals("2005", $testPage2006->ExtraField);
 		$this->assertEquals("This is the content from 2005", $testPage2006->Content);
 
@@ -596,7 +596,7 @@ class VersionedTest extends SapphireTest {
 		singleton(VersionedTest\Subclass::class)->flushCache(true);
 		Versioned::set_reading_mode('Archive.2008-01-01 00:00:00');
 		$testPage2008 = DataObject::get(VersionedTest\Subclass::class)->filter(array('Title' => 'Archived page'))->first();
-		$this->assertInstanceOf("VersionedTest_Subclass", $testPage2008);
+		$this->assertInstanceOf(VersionedTest\Subclass::class, $testPage2008);
 		$this->assertEquals("2007", $testPage2008->ExtraField);
 		$this->assertEquals("It's 2007 already!", $testPage2008->Content);
 
@@ -605,7 +605,7 @@ class VersionedTest extends SapphireTest {
 		Versioned::set_reading_mode('Stage.Stage');
 		$testPageCurrent = DataObject::get(VersionedTest\Subclass::class)->filter(array('Title' => 'Archived page'))
 			->first();
-		$this->assertInstanceOf("VersionedTest_Subclass", $testPageCurrent);
+		$this->assertInstanceOf(VersionedTest\Subclass::class, $testPageCurrent);
 		$this->assertEquals("2009", $testPageCurrent->ExtraField);
 		$this->assertEquals("I'm enjoying 2009", $testPageCurrent->Content);
 	}
@@ -872,7 +872,9 @@ class VersionedTest extends SapphireTest {
 	 * @param int $version
 	 */
 	protected function assertRecordHasLatestVersion($record, $version) {
-		foreach(ClassInfo::ancestry(get_class($record), true) as $table) {
+		$schema = DataObject::getSchema();
+		foreach(ClassInfo::ancestry(get_class($record), true) as $class) {
+			$table = $schema->tableName($class);
 			$versionForClass = DB::prepared_query(
 				$sql = "SELECT MAX(\"Version\") FROM \"{$table}_Versions\" WHERE \"RecordID\" = ?",
 				array($record->ID)
@@ -957,7 +959,7 @@ class VersionedTest extends SapphireTest {
 		$this->assertRecordHasLatestVersion($record, 2);
 	}
 
-	public function testVersionedHandlesRenamedDataObjectFields(){
+	public function testVersionedHandlesRenamedDataObjectFields() {
 		Config::inst()->remove(VersionedTest\RelatedWithoutversion::class,'db','Name','Varchar');
 
 		Config::inst()->update(VersionedTest\RelatedWithoutversion::class,'db',array(

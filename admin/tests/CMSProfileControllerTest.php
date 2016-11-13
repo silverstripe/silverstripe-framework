@@ -2,19 +2,9 @@
 
 namespace SilverStripe\Admin\Tests;
 
-
-use SilverStripe\ORM\DataExtension;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
 
-
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class CMSProfileControllerTest extends FunctionalTest {
 
 	protected static $fixture_file = 'CMSProfileControllerTest.yml';
@@ -22,8 +12,8 @@ class CMSProfileControllerTest extends FunctionalTest {
 	public $autoFollowRedirection = false;
 
 	public function testMemberCantEditAnother() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'user1');
-		$anotherMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'user2');
+		$member = $this->objFromFixture(Member::class, 'user1');
+		$anotherMember = $this->objFromFixture(Member::class, 'user2');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
 		$response = $this->post('admin/myprofile/EditForm', array(
@@ -37,13 +27,13 @@ class CMSProfileControllerTest extends FunctionalTest {
 			'Password[_ConfirmPassword]' => 'password',
 		));
 
-		$anotherMember = $this->objFromFixture('SilverStripe\\Security\\Member', 'user2');
+		$anotherMember = $this->objFromFixture(Member::class, 'user2');
 
 		$this->assertNotEquals($anotherMember->FirstName, 'JoeEdited', 'FirstName field stays the same');
 	}
 
 	public function testMemberEditsOwnProfile() {
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'user3');
+		$member = $this->objFromFixture(Member::class, 'user3');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
 		$response = $this->post('admin/myprofile/EditForm', array(
@@ -57,16 +47,18 @@ class CMSProfileControllerTest extends FunctionalTest {
 			'Password[_ConfirmPassword]' => 'password',
 		));
 
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'user3');
+		$member = $this->objFromFixture(Member::class, 'user3');
 
 		$this->assertEquals('JoeEdited', $member->FirstName, 'FirstName field was changed');
 	}
 
 	public function testExtendedPermissionsStopEditingOwnProfile() {
 		$existingExtensions = Member::config()->get('extensions');
-		Member::config()->update('extensions', array('CMSProfileControllerTestExtension'));
+		Member::config()->update('extensions', [
+			CMSProfileControllerTest\TestExtension::class
+		]);
 
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'user1');
+		$member = $this->objFromFixture(Member::class, 'user1');
 		$this->session()->inst_set('loggedInAs', $member->ID);
 
 		$response = $this->post('admin/myprofile/EditForm', array(
@@ -80,7 +72,7 @@ class CMSProfileControllerTest extends FunctionalTest {
 			'Password[_ConfirmPassword]' => 'password',
 		));
 
-		$member = $this->objFromFixture('SilverStripe\\Security\\Member', 'user1');
+		$member = $this->objFromFixture(Member::class, 'user1');
 
 		$this->assertNotEquals($member->FirstName, 'JoeEdited',
 			'FirstName field was NOT changed because we modified canEdit');
@@ -88,18 +80,6 @@ class CMSProfileControllerTest extends FunctionalTest {
 		Member::config()
 			->remove('extensions')
 			->update('extensions', $existingExtensions);
-	}
-
-}
-
-/**
- * @package framework
- * @subpackage tests
- */
-class CMSProfileControllerTestExtension extends DataExtension {
-
-	public function canEdit($member = null) {
-		return false;
 	}
 
 }

@@ -44,7 +44,7 @@ class FileMigrationHelperTest extends SapphireTest {
 		TestAssetStore::activate('FileMigrationHelperTest/assets');
 
 		// Ensure that each file has a local record file in this new assets base
-		$from = FRAMEWORK_PATH . '/tests/php/ORM/testimages/test-image-low-quality.jpg';
+		$from = FRAMEWORK_PATH . '/tests/php/ORM/ImageTest/test-image-low-quality.jpg';
 		foreach(File::get()->exclude('ClassName', Folder::class) as $file) {
 			$dest = TestAssetStore::base_path() . '/' . $file->generateFilename();
 			Filesystem::makeFolder(dirname($dest));

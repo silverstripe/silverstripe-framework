@@ -81,18 +81,18 @@ class DataObjectDuplicationTest extends SapphireTest {
 		$one->twos()->add($two);
 		$one->threes()->add($three);
 
-		$one = DataObject::get_by_id("DataObjectDuplicateTestClass1", $one->ID);
-		$two = DataObject::get_by_id("DataObjectDuplicateTestClass2", $two->ID);
-		$three = DataObject::get_by_id("DataObjectDuplicateTestClass3", $three->ID);
+		$one = DataObject::get_by_id(DataObjectDuplicationTest\Class1::class, $one->ID);
+		$two = DataObject::get_by_id(DataObjectDuplicationTest\Class2::class, $two->ID);
+		$three = DataObject::get_by_id(DataObjectDuplicationTest\Class3::class, $three->ID);
 
 		//test duplication
 		$oneCopy = $one->duplicate();
 		$twoCopy = $two->duplicate();
 		$threeCopy = $three->duplicate();
 
-		$oneCopy = DataObject::get_by_id("DataObjectDuplicateTestClass1", $oneCopy->ID);
-		$twoCopy = DataObject::get_by_id("DataObjectDuplicateTestClass2", $twoCopy->ID);
-		$threeCopy = DataObject::get_by_id("DataObjectDuplicateTestClass3", $threeCopy->ID);
+		$oneCopy = DataObject::get_by_id(DataObjectDuplicationTest\Class1::class, $oneCopy->ID);
+		$twoCopy = DataObject::get_by_id(DataObjectDuplicationTest\Class2::class, $twoCopy->ID);
+		$threeCopy = DataObject::get_by_id(DataObjectDuplicationTest\Class3::class, $threeCopy->ID);
 
 		$this->assertNotNull($oneCopy, "Copy of 1 exists");
 		$this->assertNotNull($twoCopy, "Copy of 2 exists");

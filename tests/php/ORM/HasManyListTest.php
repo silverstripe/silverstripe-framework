@@ -12,9 +12,12 @@ class HasManyListTest extends SapphireTest {
 	// Borrow the model from DataObjectTest
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	public function setUpOnce() {
-		$this->extraDataObjects = DataObjectTest::$extra_data_objects;
-		parent::setUpOnce();
+	protected function getExtraDataObjects()
+	{
+		return array_merge(
+			DataObjectTest::$extra_data_objects,
+			ManyManyListTest::$extra_data_objects
+		);
 	}
 
 	public function testRelationshipEmptyOnNewRecords() {
@@ -36,14 +39,14 @@ class HasManyListTest extends SapphireTest {
 		);
 
 		// Test that each team has the correct fans
-		$team1 = $this->objFromFixture('DataObjectTest_Team', 'team1');
-		$team2 = $this->objFromFixture('DataObjectTest_Team', 'team2');
+		$team1 = $this->objFromFixture(DataObjectTest\Team::class, 'team1');
+		$team2 = $this->objFromFixture(DataObjectTest\Team::class, 'team2');
 		$this->assertEquals(array('Bob', 'Joe'), $team1->Comments()->sort('Name')->column('Name'));
 		$this->assertEquals(array('Phil'), $team2->Comments()->sort('Name')->column('Name'));
 
 		// Test that removing comments from unrelated team has no effect
-		$team1comment = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
-		$team2comment = $this->objFromFixture('DataObjectTest_TeamComment', 'comment3');
+		$team1comment = $this->objFromFixture(DataObjectTest\TeamComment::class, 'comment1');
+		$team2comment = $this->objFromFixture(DataObjectTest\TeamComment::class, 'comment3');
 		$team1->Comments()->remove($team2comment);
 		$team2->Comments()->remove($team1comment);
 		$this->assertEquals(array('Bob', 'Joe'), $team1->Comments()->sort('Name')->column('Name'));
@@ -52,8 +55,8 @@ class HasManyListTest extends SapphireTest {
 		$this->assertEquals($team2->ID, $team2comment->TeamID);
 
 		// Test that removing items from the related team resets the has_one relations on the fan
-		$team1comment = $this->objFromFixture('DataObjectTest_TeamComment', 'comment1');
-		$team2comment = $this->objFromFixture('DataObjectTest_TeamComment', 'comment3');
+		$team1comment = $this->objFromFixture(DataObjectTest\TeamComment::class, 'comment1');
+		$team2comment = $this->objFromFixture(DataObjectTest\TeamComment::class, 'comment3');
 		$team1->Comments()->remove($team1comment);
 		$team2->Comments()->remove($team2comment);
 		$this->assertEquals(array('Bob'), $team1->Comments()->sort('Name')->column('Name'));

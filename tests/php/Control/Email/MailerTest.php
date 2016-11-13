@@ -5,12 +5,6 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Email\Mailer;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class MailerTest extends SapphireTest {
 
 	/**

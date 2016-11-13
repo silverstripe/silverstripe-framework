@@ -8,6 +8,9 @@ use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
 
+/**
+ * @skipUpgrade
+ */
 class DataQueryTest extends SapphireTest {
 
 	protected static $fixture_file = 'DataQueryTest.yml';
@@ -20,6 +23,9 @@ class DataQueryTest extends SapphireTest {
 		DataQueryTest\ObjectE::class,
 		DataQueryTest\ObjectF::class,
 		DataQueryTest\ObjectG::class,
+		SQLSelectTest\TestObject::class,
+		SQLSelectTest\TestBase::class,
+		SQLSelectTest\TestChild::class,
 	);
 
 	public function testSortByJoinedFieldRetainsSourceInformation() {
@@ -34,7 +40,7 @@ class DataQueryTest extends SapphireTest {
 
 		$query = new DataQuery(DataQueryTest\ObjectB::class);
 		$result = $query->leftJoin(
-			DataQueryTest\ObjectC::class,
+			'DataQueryTest_C',
 			"\"DataQueryTest_B\".\"TestCID\" = \"DataQueryTest_B\".\"ID\""
 		)->sort('"DataQueryTest_B"."Title"', 'ASC');
 
@@ -61,12 +67,12 @@ class DataQueryTest extends SapphireTest {
 		// Test applyRelation with two has_ones pointing to the same class
 		$dq = new DataQuery(DataQueryTest\ObjectB::class);
 		$dq->applyRelation('TestC');
-		$this->assertTrue($dq->query()->isJoinedTo(DataQueryTest\ObjectC::class));
+		$this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
 		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCID"', $dq->sql());
 
 		$dq = new DataQuery(DataQueryTest\ObjectB::class);
 		$dq->applyRelation('TestCTwo');
-		$this->assertTrue($dq->query()->isJoinedTo(DataQueryTest\ObjectC::class));
+		$this->assertTrue($dq->query()->isJoinedTo('DataQueryTest_C'));
 		$this->assertContains('"DataQueryTest_C"."ID" = "DataQueryTest_B"."TestCTwoID"', $dq->sql());
 	}
 
@@ -75,7 +81,7 @@ class DataQueryTest extends SapphireTest {
 		$newDQ = new DataQuery(DataQueryTest\ObjectE::class);
 		//apply a relation to a relation from an ancestor class
 		$newDQ->applyRelation('TestA');
-		$this->assertTrue($newDQ->query()->isJoinedTo(DataQueryTest\ObjectC::class));
+		$this->assertTrue($newDQ->query()->isJoinedTo('DataQueryTest_C'));
 		$this->assertContains('"DataQueryTest_A"."ID" = "DataQueryTest_C"."TestAID"', $newDQ->sql($params));
 
 		//test many_many relation
@@ -128,7 +134,7 @@ class DataQueryTest extends SapphireTest {
 
 	public function testRelationOrderWithCustomJoin() {
 		$dataQuery = new DataQuery(DataQueryTest\ObjectB::class);
-		$dataQuery->innerJoin(DataQueryTest\ObjectD::class, '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
+		$dataQuery->innerJoin('DataQueryTest_D', '"DataQueryTest_D"."RelationID" = "DataQueryTest_B"."ID"');
 		$dataQuery->execute();
 	}
 
@@ -207,7 +213,7 @@ class DataQueryTest extends SapphireTest {
 	}
 
 	public function testOrderByMultiple() {
-		$dq = new DataQuery('SQLSelectTest_DO');
+		$dq = new DataQuery(SQLSelectTest\TestObject::class);
 		$dq = $dq->sort('"Name" ASC, MID("Name", 8, 1) DESC');
 		$this->assertContains(
 			'ORDER BY "SQLSelectTest_DO"."Name" ASC, "_SortColumn0" DESC',
@@ -296,8 +302,8 @@ class DataQueryTest extends SapphireTest {
 		));
 		$result = $query->getFinalisedQuery(array('Title'));
 		$from = $result->getFrom();
-		$this->assertContains(DataQueryTest\ObjectC::class, array_keys($from));
-		$this->assertNotContains(DataQueryTest\ObjectE::class, array_keys($from));
+		$this->assertContains('DataQueryTest_C', array_keys($from));
+		$this->assertNotContains('DataQueryTest_E', array_keys($from));
 
 		// Including filter on sub-table requires it
 		$query = new DataQuery(DataQueryTest\ObjectC::class);
@@ -311,8 +317,8 @@ class DataQueryTest extends SapphireTest {
 		$from = $result->getFrom();
 
 		// Check that including "SortOrder" prompted inclusion of DataQueryTest_E table
-		$this->assertContains(DataQueryTest\ObjectC::class, array_keys($from));
-		$this->assertContains(DataQueryTest\ObjectE::class, array_keys($from));
+		$this->assertContains('DataQueryTest_C', array_keys($from));
+		$this->assertContains('DataQueryTest_E', array_keys($from));
 		$arrayResult = iterator_to_array($result->execute());
 		$first = array_shift($arrayResult);
 		$this->assertNotNull($first);

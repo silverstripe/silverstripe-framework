@@ -10,14 +10,14 @@ class TestObject extends DataObject implements TestOnly
 	private static $table_name = 'SearchFilterApplyRelationTest_DO';
 
 	private static $has_one = array(
-		'SearchFilterApplyRelationTest_HasOneGrantChild' => HasOneGrandChild::class
+		'SearchFilterApplyRelationTest_HasOneGrandChild' => HasOneGrandChild::class
 	);
 
 	private static $has_many = array(
-		'SearchFilterApplyRelationTest_HasManyGrantChildren' => HasManyGrandChild::class
+		'SearchFilterApplyRelationTest_HasManyGrandChildren' => HasManyGrandChild::class
 	);
 
 	private static $many_many = array(
-		'ManyManyGrantChildren' => ManyManyGrandChild::class
+		'ManyManyGrandChildren' => ManyManyGrandChild::class
 	);
 }

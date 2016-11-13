@@ -8,9 +8,6 @@ use SilverStripe\Dev\SapphireTest;
 
 /**
  * Tests for the {@link SS_FileFinder} class.
- *
- * @package framework
- * @subpackage tests
  */
 class FileFinderTest extends SapphireTest {
 

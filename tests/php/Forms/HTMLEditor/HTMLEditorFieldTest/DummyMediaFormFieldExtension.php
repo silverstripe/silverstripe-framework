@@ -6,10 +6,6 @@ use SilverStripe\Core\Extension;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\Form;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class DummyMediaFormFieldExtension extends Extension implements TestOnly
 {
 	public static $fields = null;

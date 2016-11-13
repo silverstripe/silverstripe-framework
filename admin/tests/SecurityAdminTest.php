@@ -2,21 +2,19 @@
 
 namespace SilverStripe\Admin\Tests;
 
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Security\Group;
+use SilverStripe\Security\Member;
+use SilverStripe\Security\Permission;
 
-
-
-/**
- * @package cms
- * @subpackage tests
- */
 class SecurityAdminTest extends FunctionalTest {
 
 	protected static $fixture_file = 'LeftAndMainTest.yml';
 
-	protected $extraDataObjects = array('LeftAndMainTest_Object');
+	protected $extraDataObjects = [
+		LeftAndMainTest\TestObject::class,
+	];
 
 	// TODO Fix export feature (moved from MemberTableField to GridFieldExportButton)
 	// public function testGroupExport() {
@@ -55,11 +53,11 @@ class SecurityAdminTest extends FunctionalTest {
 	// }
 
 	public function testPermissionFieldRespectsHiddenPermissions() {
-		$this->session()->inst_set('loggedInAs', $this->idFromFixture('SilverStripe\\Security\\Member', 'admin'));
+		$this->session()->inst_set('loggedInAs', $this->idFromFixture(Member::class, 'admin'));
 
-		$group = $this->objFromFixture('SilverStripe\\Security\\Group', 'admin');
+		$group = $this->objFromFixture(Group::class, 'admin');
 
-		Config::inst()->update('SilverStripe\\Security\\Permission', 'hidden_permissions', array('CMS_ACCESS_ReportAdmin'));
+		Config::inst()->update(Permission::class, 'hidden_permissions', array('CMS_ACCESS_ReportAdmin'));
 		$response = $this->get(sprintf('admin/security/EditForm/field/Groups/item/%d/edit', $group->ID));
 
 		$this->assertContains(

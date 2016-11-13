@@ -8,9 +8,6 @@ use SilverStripe\Dev\SapphireTest;
 
 /**
  * Tests for the {@link GD} class.
- *
- * @package framework
- * @subpackage tests
  */
 class GDTest extends SapphireTest {
 

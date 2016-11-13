@@ -2,15 +2,10 @@
 
 namespace SilverStripe\Security\Tests;
 
-
 use SilverStripe\Security\GroupCsvBulkLoader;
 use SilverStripe\Security\Group;
 use SilverStripe\Dev\SapphireTest;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class GroupCsvBulkLoaderTest extends SapphireTest {
 	protected static $fixture_file = 'GroupCsvBulkLoaderTest.yml';
 

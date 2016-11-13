@@ -5,11 +5,6 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 
-
-/**
- * @package framework
- * @subpackage tests
- */
 class EmailTest extends SapphireTest {
 
 	public function testAttachFiles() {

@@ -23,7 +23,7 @@ class DBStringTest extends SapphireTest {
 	public function testDefault() {
 		/** @var DBString $dbField */
 		$dbField = Object::create_from_string(
-			"StringFieldTest_MyStringField(['default' => 'Here is my default text'])",
+			DBStringTest\MyStringField::class."(['default' => 'Here is my default text'])",
 			'Myfield'
 		);
 		$this->assertEquals(

@@ -4,7 +4,6 @@ namespace SilverStripe\ORM\Tests\DataQueryTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Tests\DataQueryTest;
 
 class ObjectC extends DataObject implements TestOnly
 {
@@ -15,18 +14,18 @@ class ObjectC extends DataObject implements TestOnly
 	);
 
 	private static $has_one = array(
-		'TestA' => DataQueryTest\ObjectA::class,
-		'TestB' => DataQueryTest\ObjectB::class,
+		'TestA' => ObjectA::class,
+		'TestB' => ObjectB::class,
 	);
 
 	private static $has_many = array(
-		'TestAs' => DataQueryTest\ObjectA::class,
+		'TestAs' => ObjectA::class,
 		'TestBs' => 'SilverStripe\\ORM\\Tests\\DataQueryTest\\ObjectB.TestC',
 		'TestBsTwo' => 'SilverStripe\\ORM\\Tests\\DataQueryTest\\ObjectB.TestCTwo',
 	);
 
 	private static $many_many = array(
-		'ManyTestAs' => DataQueryTest\ObjectA::class,
-		'ManyTestBs' => DataQueryTest\ObjectB::class,
+		'ManyTestAs' => ObjectA::class,
+		'ManyTestBs' => ObjectB::class,
 	);
 }

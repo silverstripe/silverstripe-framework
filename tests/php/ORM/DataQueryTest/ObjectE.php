@@ -3,9 +3,8 @@
 namespace SilverStripe\ORM\Tests\DataQueryTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\ORM\Tests\DataQueryTest;
 
-class ObjectE extends DataQueryTest\ObjectC implements TestOnly
+class ObjectE extends ObjectC implements TestOnly
 {
 	private static $table_name = 'DataQueryTest_E';
 

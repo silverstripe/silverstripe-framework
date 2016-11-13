@@ -7,10 +7,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\Transliterator;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class FileNameFilterTest extends SapphireTest {
 
     public function setUp() {

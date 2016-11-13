@@ -53,15 +53,14 @@ class DataObjectTest extends SapphireTest {
 		DataObjectTest\Ploy::class,
 		DataObjectTest\Bogey::class,
 		DataObjectTest\Sortable::class,
-		// From ManyManyListTest
-		ExtraFieldsObject::class,
-		Product::class,
-		Category::class,
 	);
 
-	public function setUpOnce() {
-		$this->extraDataObjects = static::$extra_data_objects;
-		parent::setUpOnce();
+	protected function getExtraDataObjects()
+	{
+		return array_merge(
+			DataObjectTest::$extra_data_objects,
+			ManyManyListTest::$extra_data_objects
+		);
 	}
 
 	public function testDb() {

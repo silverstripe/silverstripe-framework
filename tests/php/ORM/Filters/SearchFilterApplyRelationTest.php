@@ -34,7 +34,7 @@ class SearchFilterApplyRelationTest extends SapphireTest {
 		$all = SearchFilterApplyRelationTest\TestObject::singleton();
 		$context = $all->getDefaultSearchContext();
 
-		$filter = new ExactMatchFilter("SearchFilterApplyRelationTest_HasOneGrantChild.Title");
+		$filter = new ExactMatchFilter("SearchFilterApplyRelationTest_HasOneGrandChild.Title");
 		$context->setFilters(null);
 		$context->addFilter($filter);
 		$params = array(
@@ -51,31 +51,31 @@ class SearchFilterApplyRelationTest extends SapphireTest {
 		$all = SearchFilterApplyRelationTest\TestObject::singleton();
 		$context = $all->getDefaultSearchContext();
 
-		$filter = new PartialMatchFilter("SearchFilterApplyRelationTest_HasManyGrantChildren.Title");
+		$filter = new PartialMatchFilter("SearchFilterApplyRelationTest_HasManyGrandChildren.Title");
 		$context->setFilters(null);
 		$context->addFilter($filter);
 		$params = array(
-			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "I am has_many object1",
+			"SearchFilterApplyRelationTest_HasManyGrandChildren__Title" => "I am has_many object1",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->count());
 		$this->assertEquals(array($do1->ID), $results->column('ID'));
 
 		$params = array(
-			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "I am has_many object3",
+			"SearchFilterApplyRelationTest_HasManyGrandChildren__Title" => "I am has_many object3",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(1, $results->count());
 		$this->assertEquals(array($do2->ID), $results->column('ID'));
 
 		$params = array(
-			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "I am has_many object",
+			"SearchFilterApplyRelationTest_HasManyGrandChildren__Title" => "I am has_many object",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
 
 		$params = array(
-			"SearchFilterApplyRelationTest_HasManyGrantChildren__Title" => "not exist",
+			"SearchFilterApplyRelationTest_HasManyGrandChildren__Title" => "not exist",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(0, $results->count());
@@ -85,29 +85,29 @@ class SearchFilterApplyRelationTest extends SapphireTest {
 		$all = SearchFilterApplyRelationTest\TestObject::singleton();
 		$context = $all->getDefaultSearchContext();
 
-		$filter = new PartialMatchFilter("ManyManyGrantChildren.Title");
+		$filter = new PartialMatchFilter("ManyManyGrandChildren.Title");
 		$context->setFilters(null);
 		$context->addFilter($filter);
 		$params = array(
-			"ManyManyGrantChildren__Title" => "I am many_many object1",
+			"ManyManyGrandChildren__Title" => "I am many_many object1",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
 
 		$params = array(
-			"ManyManyGrantChildren__Title" => "I am many_many object2",
+			"ManyManyGrandChildren__Title" => "I am many_many object2",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
 
 		$params = array(
-			"ManyManyGrantChildren__Title" => "I am many_many object",
+			"ManyManyGrandChildren__Title" => "I am many_many object",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(2, $results->count());
 
 		$params = array(
-			"ManyManyGrantChildren__Title" => "not exist",
+			"ManyManyGrandChildren__Title" => "not exist",
 		);
 		$results = $context->getResults($params);
 		$this->assertEquals(0, $results->count());

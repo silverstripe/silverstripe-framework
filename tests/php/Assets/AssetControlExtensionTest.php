@@ -32,7 +32,7 @@ class AssetControlExtensionTest extends SapphireTest {
 		// Setup fixture manually
 		$object1 = new AssetControlExtensionTest\VersionedObject();
 		$object1->Title = 'My object';
-		$fish1 = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
+		$fish1 = realpath(__DIR__ .'/../ORM/ImageTest/test-image-high-quality.jpg');
 		$object1->Header->setFromLocalFile($fish1, 'Header/MyObjectHeader.jpg');
 		$object1->Download->setFromString('file content', 'Documents/File.txt');
 		$object1->write();
@@ -151,7 +151,7 @@ class AssetControlExtensionTest extends SapphireTest {
 		$object3TupleOld = $object3->Header->getValue();
 
 		// Replace image and write each to filesystem
-		$fish1 = realpath(__DIR__ .'/../ORM/testimages/test-image-high-quality.jpg');
+		$fish1 = realpath(__DIR__ .'/../ORM/ImageTest/test-image-high-quality.jpg');
 		$object1->Header->setFromLocalFile($fish1, 'Header/Replaced_MyObjectHeader.jpg');
 		$object1->write();
 		$object2->Image->setFromLocalFile($fish1, 'Images/Replaced_BeautifulFish.jpg');

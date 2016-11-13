@@ -11,8 +11,6 @@ use SilverStripe\Control\HTTP;
  * Tests the {@link HTTP} class
  *
  * @skipUpgrade
- * @package framework
- * @subpackage tests
  */
 class HTTPTest extends FunctionalTest {
 

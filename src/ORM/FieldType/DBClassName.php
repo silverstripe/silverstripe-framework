@@ -98,7 +98,7 @@ class DBClassName extends DBEnum {
 			return $baseClass;
 		}
 		// Fallback to global default
-		return 'SilverStripe\ORM\DataObject';
+		return DataObject::class;
 	}
 
 	/**

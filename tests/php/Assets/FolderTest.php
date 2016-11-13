@@ -13,9 +13,6 @@ use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
 /**
  * @author Ingo Schommer (ingo at silverstripe dot com)
- *
- * @package framework
- * @subpackage tests
  */
 class FolderTest extends SapphireTest {
 

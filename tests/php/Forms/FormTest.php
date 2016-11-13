@@ -8,7 +8,6 @@ use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
 use SilverStripe\Forms\Tests\FormTest\Player;
 use SilverStripe\Forms\Tests\FormTest\Team;
 use SilverStripe\ORM\DataModel;
-use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Dev\CSSContentParser;

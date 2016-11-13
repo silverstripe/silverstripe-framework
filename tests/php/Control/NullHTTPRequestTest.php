@@ -5,10 +5,6 @@ namespace SilverStripe\Control\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\NullHTTPRequest;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class NullHTTPRequestTest extends SapphireTest {
 
 	public function testAllHttpVerbsAreFalse() {

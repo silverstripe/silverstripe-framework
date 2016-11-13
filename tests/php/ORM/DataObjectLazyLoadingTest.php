@@ -20,9 +20,9 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 		'VersionedTest.yml'
 	);
 
-	public function setUpOnce()
+	protected function getExtraDataObjects()
 	{
-		$this->extraDataObjects = array_merge(
+		return array_merge(
 			DataObjectTest::$extra_data_objects,
 			ManyManyListTest::$extra_data_objects,
 			VersionedTest::$extra_data_objects,
@@ -31,7 +31,6 @@ class DataObjectLazyLoadingTest extends SapphireTest {
 				VersionedSubObject::class,
 			]
 		);
-		parent::setUpOnce();
 	}
 
 	public function testQueriedColumnsID() {

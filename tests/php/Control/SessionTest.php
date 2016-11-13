@@ -2,24 +2,14 @@
 
 namespace SilverStripe\Control\Tests;
 
-
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Session;
 
-
-
-
-
-
 /**
  * Tests to cover the {@link Session} class
- *
- * @package framework
- * @subpackage tests
  */
-
 class SessionTest extends SapphireTest {
 
 	public function testGetSetBasics() {

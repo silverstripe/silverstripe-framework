@@ -9,10 +9,6 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Versioning\Versioned;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class UploadTest extends SapphireTest {
 
 	protected $usesDatabase = true;

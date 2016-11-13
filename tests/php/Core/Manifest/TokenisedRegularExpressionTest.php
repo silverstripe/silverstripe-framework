@@ -3,10 +3,6 @@
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Dev\SapphireTest;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class TokenisedRegularExpressionTest extends SapphireTest {
 	public function getTokens() {
 		return token_get_all(<<<PHP

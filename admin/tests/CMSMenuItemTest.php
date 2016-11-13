@@ -2,16 +2,9 @@
 
 namespace SilverStripe\Admin\Tests;
 
-
 use SilverStripe\Admin\CMSMenuItem;
 use SilverStripe\Dev\SapphireTest;
 
-
-
-/**
- * @package framework
- * @subpackage tests
- */
 class CMSMenuItemTest extends SapphireTest {
 
 	public function testAttributes() {

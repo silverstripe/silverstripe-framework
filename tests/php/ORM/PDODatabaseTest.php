@@ -2,25 +2,18 @@
 
 namespace SilverStripe\ORM\Tests;
 
-
+use SilverStripe\ORM\Connect\PDOQuery;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Connect\PDOConnector;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\Dev\SapphireTest;
-
-
-
-/**
- * @package framework
- * @subpackage testing
- */
 
 class PDODatabaseTest extends SapphireTest {
 
 	protected static $fixture_file = 'MySQLDatabaseTest.yml';
 
 	protected $extraDataObjects = array(
-		'MySQLDatabaseTest_Data'
+		MySQLDatabaseTest\Data::class
 	);
 
 	public function testPreparedStatements() {
@@ -38,12 +31,12 @@ class PDODatabaseTest extends SapphireTest {
 			'SELECT "Sort", "Title" FROM "MySQLDatabaseTest_Data" WHERE "Sort" > ? ORDER BY "Sort"',
 			array(2)
 		);
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\PDOQuery', $result1);
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\PDOQuery', $result2);
+		$this->assertInstanceOf(PDOQuery::class, $result1);
+		$this->assertInstanceOf(PDOQuery::class, $result2);
 
 		// Also select non-prepared statement
 		$result3 = DB::get_connector()->query('SELECT "Sort", "Title" FROM "MySQLDatabaseTest_Data" ORDER BY "Sort"');
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\PDOQuery', $result3);
+		$this->assertInstanceOf(PDOQuery::class, $result3);
 
 		// Iterating one level should not buffer, but return the right result
 		$this->assertEquals(
@@ -112,13 +105,13 @@ class PDODatabaseTest extends SapphireTest {
 		// Test update which affects no rows
 		$query->setWhere(array('Title' => 'Bob'));
 		$result = $query->execute();
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\PDOQuery', $result);
+		$this->assertInstanceOf(PDOQuery::class, $result);
 		$this->assertEquals(0, DB::affected_rows());
 
 		// Test update which affects some rows
 		$query->setWhere(array('Title' => 'First Item'));
 		$result = $query->execute();
-		$this->assertInstanceOf('SilverStripe\\ORM\\Connect\\PDOQuery', $result);
+		$this->assertInstanceOf(PDOQuery::class, $result);
 		$this->assertEquals(1, DB::affected_rows());
 	}
 }

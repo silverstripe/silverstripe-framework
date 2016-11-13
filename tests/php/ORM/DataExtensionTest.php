@@ -92,7 +92,9 @@ class DataExtensionTest extends SapphireTest {
 	 */
 	public function testAddExtensionLoadsStatics() {
 		// Object::add_extension() will load DOD statics directly, so let's try adding a extension on the fly
-		DataExtensionTest\Player::add_extension('DataExtensionTest_PlayerExtension');
+		DataExtensionTest\Player::add_extension(
+			DataExtensionTest\PlayerExtension::class
+		);
 
 		// Now that we've just added the extension, we need to rebuild the database
 		$this->resetDBSchema(true);
@@ -177,10 +179,10 @@ class DataExtensionTest extends SapphireTest {
 	}
 
 	public function testExtensionAllMethodNamesHasOwner() {
-		/** @var \SilverStripe\ORM\Tests\DataExtensionTest\DataExtensionTest_MyObject $do */
+		/** @var DataExtensionTest\MyObject $do */
 		$do = DataExtensionTest\MyObject::create();
 
-		$this->assertTrue($do->hasMethod('getTestValueWithDataExtensionTest_MyObject'));
+		$this->assertTrue($do->hasMethod('getTestValueWith_MyObject'));
 	}
 
 	public function testPageFieldGeneration() {

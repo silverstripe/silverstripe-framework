@@ -7,7 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class CustomDefault extends DataObject implements TestOnly
 {
-	private static $default_classname = 'DBClassNameTest_CustomDefaultSubclass';
+	private static $table_name = 'DBClassNameTest_CustomDefault';
+
+	private static $default_classname = CustomDefaultSubclass::class;
 
 	private static $db = array(
 		'Title' => 'Varchar'

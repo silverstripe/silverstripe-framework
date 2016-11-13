@@ -239,7 +239,7 @@ class CheckboxSetFieldTest extends SapphireTest {
 
 		// Invalid value should fail
 		$validator = new RequiredFields();
-		$fakeID = CheckboxSetFieldTest_Tag::get()->max('ID') + 1;
+		$fakeID = CheckboxSetFieldTest\Tag::get()->max('ID') + 1;
 		$field->setValue(array($fakeID));
 		$this->assertFalse(
 			$field->validate($validator),

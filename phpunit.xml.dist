@@ -16,7 +16,7 @@
 
 	It is safe to remove this file for normal website operation.
 -->
-<phpunit bootstrap="tests/php/bootstrap.php" colors="true">
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
 
 	<testsuite name="Default">
 		<directory>tests/php</directory>

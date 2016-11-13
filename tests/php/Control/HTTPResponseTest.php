@@ -6,10 +6,6 @@ use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\HTTPResponse_Exception;
 
-/**
- * @package framework
- * @subpackage tests
- */
 class HTTPResponseTest extends SapphireTest {
 
 	public function testStatusDescriptionStripsNewlines() {

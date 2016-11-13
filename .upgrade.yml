@@ -514,21 +514,21 @@ mappings:
   SilverStripe\View\Parsers\SS_Transliterator: SilverStripe\View\Parsers\Transliterator
   URLSegmentFilter: SilverStripe\View\Parsers\URLSegmentFilter
   CampaignAdminTest: SilverStripe\Admin\Tests\CampaignAdminTest
-  CampaignAdminTest_InvalidChangeSet: SilverStripe\Admin\Tests\CampaignAdminTest_InvalidChangeSet
+  CampaignAdminTest_InvalidChangeSet: SilverStripe\Admin\Tests\CampaignAdminTest\CampaignAdminTest_InvalidChangeSet
   CMSMenuItemTest: SilverStripe\Admin\Tests\CMSMenuItemTest
   CMSMenuTest: SilverStripe\Admin\Tests\CMSMenuTest
-  CMSMenuTest_LeftAndMainController: SilverStripe\Admin\Tests\CMSMenuTest_LeftAndMainController
-  CMSMenuTest_CustomTitle: SilverStripe\Admin\Tests\CMSMenuTest_CustomTitle
+  CMSMenuTest_LeftAndMainController: SilverStripe\Admin\Tests\CMSMenuTest\CMSMenuTest_LeftAndMainController
+  CMSMenuTest_CustomTitle: SilverStripe\Admin\Tests\CMSMenuTest\CMSMenuTest_CustomTitle
   CMSProfileControllerTest: SilverStripe\Admin\Tests\CMSProfileControllerTest
-  CMSProfileControllerTestExtension: SilverStripe\Admin\Tests\CMSProfileControllerTestExtension
+  CMSProfileControllerTestExtension: SilverStripe\Admin\Tests\CMSProfileControllerTest\CMSProfileControllerTestExtension
   LeftAndMainTest: SilverStripe\Admin\Tests\LeftAndMainTest
-  LeftAndMainTest_Controller: SilverStripe\Admin\Tests\LeftAndMainTest_Controller
-  LeftAndMainTest_Object: SilverStripe\Admin\Tests\LeftAndMainTest_Object
+  LeftAndMainTest_Controller: SilverStripe\Admin\Tests\LeftAndMainTest\LeftAndMainTest_Controller
+  LeftAndMainTest_Object: SilverStripe\Admin\Tests\LeftAndMainTest\LeftAndMainTest_Object
   ModelAdminTest: SilverStripe\Admin\Tests\ModelAdminTest
-  ModelAdminTest_Admin: SilverStripe\Admin\Tests\ModelAdminTest_Admin
-  ModelAdminTest_PlayerAdmin: SilverStripe\Admin\Tests\ModelAdminTest_PlayerAdmin
-  ModelAdminTest_Contact: SilverStripe\Admin\Tests\ModelAdminTest_Contact
-  ModelAdminTest_Player: SilverStripe\Admin\Tests\ModelAdminTest_Player
+  ModelAdminTest_Admin: SilverStripe\Admin\Tests\ModelAdminTest\ModelAdminTest_Admin
+  ModelAdminTest_PlayerAdmin: SilverStripe\Admin\Tests\ModelAdminTest\ModelAdminTest_PlayerAdmin
+  ModelAdminTest_Contact: SilverStripe\Admin\Tests\ModelAdminTest\ModelAdminTest_Contact
+  ModelAdminTest_Player: SilverStripe\Admin\Tests\ModelAdminTest\ModelAdminTest_Player
   SecurityAdminTest: SilverStripe\Admin\Tests\SecurityAdminTest
   AssetControlExtensionTest: SilverStripe\Assets\Tests\AssetControlExtensionTest
   AssetControlExtensionTest_VersionedObject: SilverStripe\Assets\Tests\AssetControlExtensionTest_VersionedObject
@@ -989,7 +989,7 @@ mappings:
   ViewableDataTest_Cached: SilverStripe\View\Tests\ViewableDataTest\ViewableDataTest_Cached
   ViewableDataTest_NotCached: SilverStripe\View\Tests\ViewableDataTest\ViewableDataTest_NotCached
   ViewableDataTest_Failover: SilverStripe\View\Tests\ViewableDataTest\ViewableDataTest_Failover
-  AssetStoreTest_SpyStore: SilverStripe\Assets\Tests\Store\AssetStoreTest\TestAssetStore
+  AssetStoreTest_SpyStore: SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore
   GridField_URLHandlerTest: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest
   GridField_URLHandlerTest_Controller: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\GridField_URLHandlerTest_Controller
   GridField_URLHandlerTest_Component: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\GridField_URLHandlerTest_Component
@@ -1050,6 +1050,11 @@ mappings:
   SearchFilterApplyRelationTest_ManyManyParent: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\SearchFilterApplyRelationTest_ManyManyParent
   SearchFilterApplyRelationTest_ManyManyChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\SearchFilterApplyRelationTest_ManyManyChild
   SearchFilterApplyRelationTest_ManyManyGrantChild: SilverStripe\ORM\Tests\Filters\SearchFilterApplyRelationTest\SearchFilterApplyRelationTest_ManyManyGrantChild
+  RSSFeedTest: SilverStripe\Control\Tests\RSS\RSSFeedTest
+  RSSFeedTest_ItemA: SilverStripe\Control\Tests\RSS\RSSFeedTest\ItemA
+  RSSFeedTest_ItemB: SilverStripe\Control\Tests\RSS\RSSFeedTest\ItemB
+  RSSFeedTest_ItemC: SilverStripe\Control\Tests\RSS\RSSFeedTest\ItemC
+  RSSFeedTest_ItemD: SilverStripe\Control\Tests\RSS\RSSFeedTest\ItemD
 skipConfigs:
   - db
   - casting

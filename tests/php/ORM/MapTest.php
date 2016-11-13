@@ -13,9 +13,12 @@ class MapTest extends SapphireTest {
 	// Borrow the model from DataObjectTest
 	protected static $fixture_file = 'DataObjectTest.yml';
 
-	public function setUpOnce() {
-		$this->extraDataObjects = DataObjectTest::$extra_data_objects;
-		parent::setUpOnce();
+	protected function getExtraDataObjects()
+	{
+		return array_merge(
+			DataObjectTest::$extra_data_objects,
+			ManyManyListTest::$extra_data_objects
+		);
 	}
 
 	public function testValues() {
@@ -76,7 +79,7 @@ class MapTest extends SapphireTest {
 	public function testDefaultConfigIsIDAndTitle() {
 		$list = Team::get();
 		$map = new Map($list);
-		$this->assertEquals('Team 1', $map[$this->idFromFixture('DataObjectTest_Team', 'team1')]);
+		$this->assertEquals('Team 1', $map[$this->idFromFixture(DataObjectTest\Team::class, 'team1')]);
 	}
 
 	public function testSetKeyFieldAndValueField() {

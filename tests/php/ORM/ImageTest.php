@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Filesystem as SSFilesystem;
+use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Core\Config\Config;
@@ -32,7 +33,7 @@ class ImageTest extends SapphireTest {
 		$files = File::get()->exclude('ClassName', Folder::class);
 		foreach($files as $image) {
 			$filePath = TestAssetStore::getLocalPath($image); // Only correct for test asset store
-			$sourcePath = FRAMEWORK_PATH . '/tests/model/testimages/' . $image->Name;
+			$sourcePath = __DIR__ . '/ImageTest/' . $image->Name;
 			if(!file_exists($filePath)) {
 				SSFilesystem::makeFolder(dirname($filePath));
 				if (!copy($sourcePath, $filePath)) {

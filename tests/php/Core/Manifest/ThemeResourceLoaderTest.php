@@ -4,12 +4,8 @@ use SilverStripe\View\ThemeResourceLoader;
 use SilverStripe\View\ThemeManifest;
 use SilverStripe\Dev\SapphireTest;
 
-
 /**
  * Tests for the {@link TemplateLoader} class.
- *
- * @package framework
- * @subpackage tests
  */
 class ThemeResourceLoaderTest extends SapphireTest {
 

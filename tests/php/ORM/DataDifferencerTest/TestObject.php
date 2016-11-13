@@ -15,7 +15,6 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class TestObject extends DataObject implements TestOnly
 {
-
 	private static $table_name = 'DataDifferencerTest_Object';
 
 	private static $extensions = array(

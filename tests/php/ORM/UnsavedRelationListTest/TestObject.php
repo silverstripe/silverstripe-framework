@@ -14,6 +14,8 @@ use SilverStripe\ORM\ManyManyList;
  */
 class TestObject extends DataObject implements TestOnly
 {
+	private static $table_name = 'UnsavedRelationListTest_DataObject';
+
 	private static $db = array(
 		'Name' => 'Varchar',
 	);

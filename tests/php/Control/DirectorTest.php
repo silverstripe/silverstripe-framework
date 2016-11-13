@@ -3,28 +3,13 @@
 namespace SilverStripe\Control\Tests;
 
 use SilverStripe\Control\Tests\DirectorTest\TestController;
-use SilverStripe\ORM\DataModel;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestProcessor;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\Session;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\RequestFilter;
-use SilverStripe\Control\Controller;
-
-
-
-
-
 
 /**
- * @package framework
- * @subpackage tests
- *
  * @todo test Director::alternateBaseFolder()
  */
 class DirectorTest extends SapphireTest {
@@ -433,7 +418,7 @@ class DirectorTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers SilverStripe\Control\Director::extract_request_headers()
+	 * @covers \SilverStripe\Control\Director::extract_request_headers()
 	 */
 	public function testExtractRequestHeaders() {
 		$request = array(

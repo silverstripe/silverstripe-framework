@@ -2,15 +2,13 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Image;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\Versioning\DataDifferencer;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-use SilverStripe\Forms\ListboxField;
 use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
 class DataDifferencerTest extends SapphireTest {
@@ -33,7 +31,7 @@ class DataDifferencerTest extends SapphireTest {
 		// Create a test files for each of the fixture references
 		$files = File::get()->exclude('ClassName', Folder::class);
 		foreach($files as $file) {
-			$fromPath = FRAMEWORK_PATH . '/tests/model/testimages/' . $file->Name;
+			$fromPath = __DIR__ . '/ImageTest/' . $file->Name;
 			$destPath = TestAssetStore::getLocalPath($file); // Only correct for test asset store
 			Filesystem::makeFolder(dirname($destPath));
 			copy($fromPath, $destPath);
@@ -62,7 +60,7 @@ class DataDifferencerTest extends SapphireTest {
 	}
 
 	public function testHasOnes() {
-		/** @var \SilverStripe\ORM\Tests\DataDifferencerTest\DataDifferencerTest_Object $obj1 */
+		/** @var DataDifferencerTest\TestObject $obj1 */
 		$obj1 = $this->objFromFixture(DataDifferencerTest\TestObject::class, 'obj1');
 		$image1 = $this->objFromFixture(Image::class, 'image1');
 		$image2 = $this->objFromFixture(Image::class, 'image2');
@@ -75,9 +73,9 @@ class DataDifferencerTest extends SapphireTest {
 		$obj1->write();
 		$afterVersion = $obj1->Version;
 		$this->assertNotEquals($beforeVersion, $afterVersion);
-		/** @var \SilverStripe\ORM\Tests\DataDifferencerTest\DataDifferencerTest_Object $obj1v1 */
+		/** @var DataDifferencerTest\TestObject $obj1v1 */
 		$obj1v1 = Versioned::get_version(DataDifferencerTest\TestObject::class, $obj1->ID, $beforeVersion);
-		/** @var \SilverStripe\ORM\Tests\DataDifferencerTest\DataDifferencerTest_Object $obj1v2 */
+		/** @var DataDifferencerTest\TestObject $obj1v2 */
 		$obj1v2 = Versioned::get_version(DataDifferencerTest\TestObject::class, $obj1->ID, $afterVersion);
 		$differ = new DataDifferencer($obj1v1, $obj1v2);
 		$obj1Diff = $differ->diffedData();
