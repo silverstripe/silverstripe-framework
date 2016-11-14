@@ -18,6 +18,11 @@
  * @subpackage fields-basic
  */
 class TextareaField extends FormField {
+
+	private static $casting = array(
+		'Value' => 'HTMLText',
+	);
+
 	/**
 	 * Visible number of text lines.
 	 *
@@ -84,5 +89,12 @@ class TextareaField extends FormField {
 		}
 
 		return $parent;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function Value() {
+		return htmlentities($this->value, ENT_COMPAT, 'UTF-8');
 	}
 }

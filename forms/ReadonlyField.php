@@ -3,7 +3,7 @@
  * Read-only field to display a non-editable value with a label.
  * Consider using an {@link LabelField} if you just need a label-less
  * value display.
- * 
+ *
  * @package forms
  * @subpackage fields-basic
  */
@@ -19,13 +19,13 @@ class ReadonlyField extends FormField {
 
 	/**
 	 * If true, a hidden field will be included in the HTML for the readonly field.
-	 * 
+	 *
 	 * This can be useful if you need to pass the data through on the form submission, as
 	 * long as it's okay than an attacker could change the data before it's submitted.
 	 *
 	 * This is disabled by default as it can introduce security holes if the data is not
 	 * allowed to be modified by the user.
-	 * 
+	 *
 	 * @param boolean $includeHiddenField
 	 */
 	public function setIncludeHiddenField($includeHiddenField) {
@@ -61,7 +61,11 @@ class ReadonlyField extends FormField {
 	 * @return string
 	 */
 	public function castingHelper($field) {
-		if ($field == 'Value' && $this->dontEscape) {
+		if (
+			(strcasecmp($field, 'Value') === 0)
+			&& ($this->dontEscape || empty($this->value))
+		) {
+			// Value is either empty, or unescaped
 			return 'HTMLText';
 		}
 		return parent::castingHelper($field);
