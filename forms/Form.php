@@ -355,18 +355,8 @@ class Form extends RequestHandler {
 			$vars = $request->requestVars();
 		}
 
-		// construct an array of allowed fields that can be populated from request data.
-		// readonly or disabled fields should not be loading data from requests
-		$allowedFields = array();
-		$dataFields = $this->Fields()->dataFields();
-		if ($dataFields) {
-			/** @var FormField $field */
-			foreach ($this->Fields()->dataFields() as $name => $field) {
-				if (!$field->isReadonly() && !$field->isDisabled()) {
-					$allowedFields[] = $name;
-				}
-			}
-		}
+		// Ensure we only process saveable fields (non structural, readonly, or disabled)
+		$allowedFields = array_keys($this->Fields()->saveableFields());
 
 		// Populate the form
 		$this->loadDataFrom($vars, true, $allowedFields);
@@ -1392,7 +1382,7 @@ class Form extends RequestHandler {
 	 *  For backwards compatibility reasons, this parameter can also be set to === true, which is the same as passing
 	 *  CLEAR_MISSING
 	 *
-	 * @param FieldList $fieldList An optional list of fields to process.  This can be useful when you have a
+	 * @param array $fieldList An optional list of fields to process.  This can be useful when you have a
 	 * form that has some fields that save to one object, and some that save to another.
 	 * @return Form
 	 */
@@ -1669,7 +1659,7 @@ class Form extends RequestHandler {
 
 	/**
 	 * Get a list of all actions, including those in the main "fields" FieldList
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function getAllActions() {

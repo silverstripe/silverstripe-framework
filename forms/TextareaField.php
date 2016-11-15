@@ -19,8 +19,13 @@
  */
 class TextareaField extends FormField {
 
+	/**
+	 * Value should be XML
+	 *
+	 * @var array
+	 */
 	private static $casting = array(
-		'Value' => 'HTMLText',
+		'Value' => 'HTMLText(array(\'shortcodes\' => false))',
 	);
 
 	/**
@@ -93,7 +98,9 @@ class TextareaField extends FormField {
 	}
 
 	/**
-	 * @return string
+	 * Return value with all values encoded in html entities
+	 *
+	 * @return string Raw HTML
 	 */
 	public function Value() {
 		return htmlentities($this->value, ENT_COMPAT, 'UTF-8');
