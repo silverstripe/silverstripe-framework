@@ -355,8 +355,21 @@ class Form extends RequestHandler {
 			$vars = $request->requestVars();
 		}
 
+		// construct an array of allowed fields that can be populated from request data.
+		// readonly or disabled fields should not be loading data from requests
+		$allowedFields = array();
+		$dataFields = $this->Fields()->dataFields();
+		if ($dataFields) {
+			/** @var FormField $field */
+			foreach ($this->Fields()->dataFields() as $name => $field) {
+				if (!$field->isReadonly() && !$field->isDisabled()) {
+					$allowedFields[] = $name;
+				}
+			}
+		}
+
 		// Populate the form
-		$this->loadDataFrom($vars, true);
+		$this->loadDataFrom($vars, true, $allowedFields);
 
 		// Protection against CSRF attacks
 		$token = $this->getSecurityToken();
