@@ -328,40 +328,46 @@ class CheckboxSetField extends OptionsetField {
 	 * @return bool
 	 */
 	public function validate($validator) {
-		$values = $this->value;
-		if (!$values) {
-			return true;
-		}
-		$sourceArray = $this->getSourceAsArray();
-		$validValues = array_keys($sourceArray);
-		if (is_array($values)) {
-			if (!array_intersect($validValues, $values)) {
-				$validator->validationError(
-					$this->name,
-					_t(
-						'CheckboxSetField.SOURCE_VALIDATION',
-						"Please select a value within the list provided. '{value}' is not a valid option",
-						array('value' => implode(' and ', $values))
-					),
-					"validation"
-				);
-				return false;
-			}
-		} else {
-			if (!in_array($this->value, $validValues)) {
-				$validator->validationError(
-					$this->name,
-					_t(
-						'CheckboxSetField.SOURCE_VALIDATION',
-						"Please select a value within the list provided. '{value}' is not a valid option",
-						array('value' => $this->value)
-					),
-					"validation"
-				);
-				return false;
-			}
-		}
-		return true;
-	}
+        $values = $this->value;
+        if (!$values) {
+            return true;
+        }
+
+        $tempValues = explode(',', $values);
+        if(count($tempValues) > 1){
+            $values = $tempValues;
+        }
+
+        $sourceArray = $this->getSourceAsArray();
+        $validValues = array_keys($sourceArray);
+        if (is_array($values)) {
+            if (!array_intersect($validValues, $values)) {
+                $validator->validationError(
+                    $this->name,
+                    _t(
+                        'CheckboxSetField.SOURCE_VALIDATION',
+                        "Please select a value within the list provided. '{value}' is not a valid option",
+                        array('value' => implode(' and ', $values))
+                    ),
+                    "validation"
+                );
+                return false;
+            }
+        } else {
+            if (!in_array($this->value, $validValues)) {
+                $validator->validationError(
+                    $this->name,
+                    _t(
+                        'CheckboxSetField.SOURCE_VALIDATION',
+                        "Please select a value within the list provided. '{value}' is not a valid option",
+                        array('value' => $this->value)
+                    ),
+                    "validation"
+                );
+                return false;
+            }
+        }
+        return true;
+    }
 
 }
