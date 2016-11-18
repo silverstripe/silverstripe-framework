@@ -213,7 +213,7 @@ PHP
 				'<p>Login success. If you are not automatically redirected '.
 				'<a target="_top" href="{link}">click here</a></p>',
 				'Login message displayed in the cms popup once a user has re-authenticated themselves',
-				array('link' => $backURL)
+				array('link' => Convert::raw2att($backURL))
 			)
 		));
 
