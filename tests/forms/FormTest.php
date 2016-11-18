@@ -61,6 +61,33 @@ class FormTest extends FunctionalTest {
 		$this->assertEquals($fields->fieldByName('othernamespace[key5][key6][key7]')->Value(), 'val7');
 	}
 
+	public function testSubmitReadonlyFields() {
+		$this->get('FormTest_Controller');
+
+		// Submitting a value for a readonly field should be ignored
+		$response = $this->post(
+			'FormTest_Controller/Form',
+			array(
+				'Email' => 'invalid',
+				'Number' => '888',
+				'ReadonlyField' => '<script>alert("hacxzored")</script>'
+				// leaving out "Required" field
+			)
+		);
+
+		// Number field updates its value
+		$this->assertContains('<input type="text" name="Number" value="888"', $response->getBody());
+
+
+		// Readonly field remains
+		$this->assertContains(
+			'<input type="text" name="ReadonlyField" value="This value is readonly"',
+			$response->getBody()
+		);
+
+		$this->assertNotContains('hacxzored', $response->getBody());
+	}
+
 	public function testLoadDataFromUnchangedHandling() {
 		$form = new Form(
 			new Controller(),
@@ -321,7 +348,7 @@ class FormTest extends FunctionalTest {
 	public function testDisableSecurityTokenAcceptsSubmissionWithoutToken() {
 		SecurityToken::enable();
 		$expectedToken = SecurityToken::inst()->getValue();
-		
+
 		$response = $this->get('FormTest_ControllerWithSecurityToken');
 		// can't use submitForm() as it'll automatically insert SecurityID into the POST data
 		$response = $this->post(
@@ -619,7 +646,7 @@ class FormTest extends FunctionalTest {
         $formData = $form->getData();
         $this->assertEmpty($formData['ExtraFieldCheckbox']);
     }
-	
+
 	protected function getStubForm() {
 		return new Form(
 			new FormTest_Controller(),
@@ -698,7 +725,10 @@ class FormTest_Controller extends Controller implements TestOnly {
 				new EmailField('Email'),
 				new TextField('SomeRequiredField'),
 				new CheckboxSetField('Boxes', null, array('1'=>'one','2'=>'two')),
-				new NumericField('Number')
+				new NumericField('Number'),
+				TextField::create('ReadonlyField')
+					->setReadonly(true)
+					->setValue('This value is readonly')
 			),
 			new FieldList(
 				new FormAction('doSubmit')
