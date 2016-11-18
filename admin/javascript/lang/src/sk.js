@@ -1,7 +1,7 @@
 {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Vybrali ste {num} stránok.\n\nUrčite chcete archivovať tieto stránky?\n\nTieto stránky a jej všetky podstránky budú nezverejnené a odoslané do archívu.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Máte vybratých {num} stránok.\n\nSkutočne chcete tieto stránky vymazať z webu?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "Máte vybratých {num} stránok.\n\nSkutočne ich chcete vymazať?",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Máte vybratých {num} stránok.\n\nSkutočne ich chcete zverejniť?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Vybrali ste {num} stránok.\n\nSkutočne chcete obnoviť?\n\nPodstránky archivovaných stránok budú obnovené do najvyššej úrovne, pokiaľ tieto stránky budú tiež obnovené.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Máte vybratých {num} stránok.\n\nSkutočne ich chcete nezverejniť?",
