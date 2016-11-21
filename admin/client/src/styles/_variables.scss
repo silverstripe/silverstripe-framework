@@ -408,8 +408,8 @@ $zindex-popover: 1060;
 // $zindex-tooltip: 1070;
 // $zindex-navbar-fixed: 1030;
 // $zindex-navbar-sticky: 1030;
-// $zindex-modal-bg: 1040;
-// $zindex-modal: 1050;
+$zindex-modal-bg: 1040;
+$zindex-modal: 1050;
 
 
 // SS toolbars
@@ -600,6 +600,7 @@ $modal-backdrop-opacity: .5;
 $modal-header-border-color: #e5e5e5;
 $modal-footer-border-color: $modal-header-border-color;
 
+$modal-xl: calc(100% - #{$spacer-x * 4});
 $modal-lg: 900px;
 $modal-md: 600px;
 $modal-sm: 300px;

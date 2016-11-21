@@ -1,7 +1,12 @@
 // Based on bootstrap modal
+.modal-dialog {
+  height: calc(100% - #{$toolbar-total-height}); // IE10 fix
+}
+
 .modal-content {
   overflow: hidden;
   border: 0;
+  height: 100%; // IE10 fix
 }
 
 

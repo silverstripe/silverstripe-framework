@@ -8781,10 +8781,6 @@ fieldset{
   display:none;
 }
 
-.field .dropdown select{
-  margin-top:8px;
-}
-
 .field .chosen-container-active .chosen-single{
   border:1px solid #9a9a9a;
 }
@@ -9379,10 +9375,6 @@ body.cms{
   background-repeat:repeat;
   background-position:0 100%;
   background-color:#f0f2f4;
-}
-
-.cms-content-header a{
-  color:#0071c4;
 }
 
 .cms-content-header .backlink span.btn-icon-back{
@@ -15173,7 +15165,7 @@ button.close{
   padding:.3846rem .7692rem;
 }
 
-.btn--top-right{
+.btn--close-panel{
   float:right;
   right:0;
   margin-right:5px;
@@ -15181,7 +15173,7 @@ button.close{
   position:absolute;
 }
 
-.btn--top-right:before{
+.btn--close-panel:before{
   color:#66727d;
 }
 
@@ -15454,10 +15446,6 @@ div.grid-field__sort-field+.form__fieldgroup-item{
 .message-box .close{
   padding:0;
   margin-top:-1px;
-}
-
-.message-box--panel-top{
-  margin-right:1.8462rem;
 }
 
 .preview{
@@ -15934,9 +15922,14 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
   }
 }
 
+.modal-dialog{
+  height:calc(100% - 53px);
+}
+
 .modal-content{
   overflow:hidden;
   border:0;
+  height:100%;
 }
 
 .modal-header{
