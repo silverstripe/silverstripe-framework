@@ -2,67 +2,67 @@ tr:
   AssetAdmin:
     NEWFOLDER: YeniKlasör
   AssetTableField:
-    CREATED: 'Yüklenme tarihi'
+    CREATED: "Yüklenme tarihi"
     DIM: Boyutları
-    FILENAME: Dosya Adı
+    FILENAME: "Dosya Adı"
     FOLDER: Klasör
-    LASTEDIT: 'Güncellenme tarihi'
+    LASTEDIT: "Güncellenme tarihi"
     OWNER: Sahibi
-    SIZE: 'Boyutu'
+    SIZE: Boyutu
     TITLE: Başlık
-    TYPE: 'Türü'
+    TYPE: Türü
   AssetUploadField:
-    DRAGFILESHERE: 'Dosyaları buraya sürükle'
+    DRAGFILESHERE: "Dosyaları buraya sürükle"
     UPLOADOR: VEYA
   BBCodeParser:
     ALIGNEMENT: Hizalama
-    ALIGNEMENTEXAMPLE: 'sağa hizalı'
-    BOLD: 'Kalın Yazı'
+    ALIGNEMENTEXAMPLE: "sağa hizalı"
+    BOLD: "Kalın Yazı"
     BOLDEXAMPLE: Kalın
-    CODE: 'Kod Bloğu'
-    CODEDESCRIPTION: 'Düzenlenmemiş kod bloğu'
-    CODEEXAMPLE: 'Kod Bloğu'
-    COLORED: 'Renkli Yazı'
-    COLOREDEXAMPLE: 'mavi yazı'
-    EMAILLINK: 'E-posta linki'
-    EMAILLINKDESCRIPTION: 'E-posta adresine link oluştur'
+    CODE: "Kod Bloğu"
+    CODEDESCRIPTION: "Düzenlenmemiş kod bloğu"
+    CODEEXAMPLE: "Kod Bloğu"
+    COLORED: "Renkli Yazı"
+    COLOREDEXAMPLE: "mavi yazı"
+    EMAILLINK: "E-posta linki"
+    EMAILLINKDESCRIPTION: "E-posta adresine link oluştur"
     IMAGE: Resim
-    IMAGEDESCRIPTION: 'Girdinizde resim görüntüleyin'
-    ITALIC: 'Yatık Yazı'
+    IMAGEDESCRIPTION: "Girdinizde resim görüntüleyin"
+    ITALIC: "Yatık Yazı"
     ITALICEXAMPLE: Yatıklar
-    LINK: 'Web sitesi linki'
-    LINKDESCRIPTION: 'Başka bir web sitesine ya da URL e link'
-    STRUCK: 'Üzeri Çizili Yazı'
-    STRUCKEXAMPLE: Üzeri Çizili
-    UNDERLINE: 'Altı Çizili Yazı'
-    UNDERLINEEXAMPLE: Altı Çizili
-    UNORDERED: 'Sıralanmamış liste'
-    UNORDEREDDESCRIPTION: 'Sıralanmamış liste'
-    UNORDEREDEXAMPLE1: 'sıralanmamış madde 1'
+    LINK: "Web sitesi linki"
+    LINKDESCRIPTION: "Başka bir web sitesine ya da URL e link"
+    STRUCK: "Üzeri Çizili Yazı"
+    STRUCKEXAMPLE: "Üzeri Çizili"
+    UNDERLINE: "Altı Çizili Yazı"
+    UNDERLINEEXAMPLE: "Altı Çizili"
+    UNORDERED: "Sıralanmamış liste"
+    UNORDEREDDESCRIPTION: "Sıralanmamış liste"
+    UNORDEREDEXAMPLE1: "sıralanmamış madde 1"
   BackLink_Button_ss:
     Back: Geri
   BasicAuth:
-    ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
-    ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
-    ERRORNOTREC: 'Kullanıcı adı / şifre hatalı'
+    ENTERINFO: "Lütfen kullanıcı adı ve şifrenizi giriniz."
+    ERRORNOTADMIN: "O kullanıcı, yönetici değildir"
+    ERRORNOTREC: "Kullanıcı adı / şifre hatalı"
   Boolean:
     ANY: Herhangi
-    NOANSWER: 'Hayır'
-    YESANSWER: 'Evet'
+    NOANSWER: Hayır
+    YESANSWER: Evet
   CMSMain:
-    ACCESSALLINTERFACES: 'Tüm İYS arayüzlerine erişim'
+    ACCESSALLINTERFACES: "Tüm İYS arayüzlerine erişim"
     SAVE: Kaydet
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
-    CHANGEPASSWORDTEXT2: 'Sisteme giriş yapabilmek için aşağıdaki kullanıcı bilgilerinizi kullanabilirsiniz:'
+    CHANGEPASSWORDTEXT1: "Parolanız değiştirildi:"
+    CHANGEPASSWORDTEXT2: "Sisteme giriş yapabilmek için aşağıdaki kullanıcı bilgilerinizi kullanabilirsiniz:"
     EMAIL: E-Posta
     HELLO: Merhaba
     PASSWORD: Parola
   CheckboxField:
-    NOANSWER: 'Hayır'
-    YESANSWER: 'Evet'
+    NOANSWER: Hayır
+    YESANSWER: Evet
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Parola Değiştir'
+    SHOWONCLICKTITLE: "Parola Değiştir"
   CreditCardField:
     FIRST: ilk
     FOURTH: dördüncü
@@ -71,168 +71,168 @@ tr:
   CurrencyField:
     CURRENCYSYMBOL: USD
   DataObject:
-    PLURALNAME: 'Data Nesneleri'
-    SINGULARNAME: 'Data Nesnesi'
+    PLURALNAME: "Data Nesneleri"
+    SINGULARNAME: "Data Nesnesi"
   DateField:
-    NOTSET: 'ayarlanmamış'
+    NOTSET: ayarlanmamış
     TODAY: bugün
   DropdownField:
     CHOOSE: (Seçiniz)
   File:
     Content: İçerik
-    Filename: Dosya adı
+    Filename: "Dosya adı"
     Name: Ad
     PLURALNAME: Dosyalar
     SINGULARNAME: Dosya
     Title: Başlık
   ForgotPasswordEmail_ss:
     HELLO: Merhaba
-    TEXT1: 'Profilinize ait'
-    TEXT2: 'şifre sıfırlama linki'
+    TEXT1: "Profilinize ait"
+    TEXT2: "şifre sıfırlama linki"
     TEXT3: için
   Form:
     SubmitBtnLabel: Başla
-    VALIDATIONNOTUNIQUE: 'Girilen değer benzersiz olmalıdır'
-    VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Şifreler boş geçilemez'
-    VALIDATOR: Geçerlilik tespiti
+    VALIDATIONNOTUNIQUE: "Girilen değer benzersiz olmalıdır"
+    VALIDATIONPASSWORDSDONTMATCH: "Şifre tekrarı hatalı"
+    VALIDATIONPASSWORDSNOTEMPTY: "Şifreler boş geçilemez"
+    VALIDATOR: "Geçerlilik tespiti"
   FormField:
     NONE: hiç
   GridAction:
     Delete: Sil
   Group:
-    Code: 'Grup Kodu'
+    Code: "Grup Kodu"
     Description: Açıklama
-    Locked: 'Kilitli?'
-    Parent: 'Ana Grup'
-    Sort: 'Sırala'
+    Locked: Kilitli?
+    Parent: "Ana Grup"
+    Sort: Sırala
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
   HtmlEditorField:
     ANCHORVALUE: Çapa
-    BUTTONINSERTLINK: 'Bağlantı ekle'
-    BUTTONREMOVELINK: 'Bağlantıyı sil'
-    CSSCLASS: 'Hizalama / biçem'
-    CSSCLASSCENTER: 'Ortalanmış, kendi başına'
-    CSSCLASSLEFT: 'Sol tarafta, metin ile çevrili.'
-    CSSCLASSLEFTALONE: 'Solda, kendisinde.'
-    CSSCLASSRIGHT: 'Sağ tarafta, metin ile çevrili'
-    EMAIL: 'Eposta adresi'
+    BUTTONINSERTLINK: "Bağlantı ekle"
+    BUTTONREMOVELINK: "Bağlantıyı sil"
+    CSSCLASS: "Hizalama / biçem"
+    CSSCLASSCENTER: "Ortalanmış, kendi başına"
+    CSSCLASSLEFT: "Sol tarafta, metin ile çevrili."
+    CSSCLASSLEFTALONE: "Solda, kendisinde."
+    CSSCLASSRIGHT: "Sağ tarafta, metin ile çevrili"
+    EMAIL: "Eposta adresi"
     FILE: Dosya
     FOLDER: Klasör
     IMAGEDIMENSIONS: Boyutlar
     IMAGEHEIGHTPX: Yükseklik
     IMAGEWIDTHPX: Genişlik
-    LINK: 'Link'
-    LINKANCHOR: 'Bu sayfadaki çapa'
-    LINKDESCR: 'Bağlantı açıklaması'
-    LINKEMAIL: 'Eposta adresi'
-    LINKEXTERNAL: 'Başka bir sitedeki sayfa (dış bağlantı)'
-    LINKFILE: 'Dosya indir'
-    LINKINTERNAL: 'Bu sitedeki bir sayfa (iç bağlantı)'
-    LINKOPENNEWWIN: 'Bağlantı yeni bir pencerede mi açılsın?'
-    LINKTO: 'Bağlantı oluştur'
+    LINK: Link
+    LINKANCHOR: "Bu sayfadaki çapa"
+    LINKDESCR: "Bağlantı açıklaması"
+    LINKEMAIL: "Eposta adresi"
+    LINKEXTERNAL: "Başka bir sitedeki sayfa (dış bağlantı)"
+    LINKFILE: "Dosya indir"
+    LINKINTERNAL: "Bu sitedeki bir sayfa (iç bağlantı)"
+    LINKOPENNEWWIN: "Bağlantı yeni bir pencerede mi açılsın?"
+    LINKTO: "Bağlantı oluştur"
     PAGE: Sayfa
   Image_iframe_ss:
-    TITLE: 'Resim göndermek için gerekli IFrame'
+    TITLE: "Resim göndermek için gerekli IFrame"
   LeftAndMain:
     DELETED: Silinmiş.
     HELP: Yardım
-    PERMAGAIN: 'İYS yönetiminden çıkış yaptınız.  Eğer tekrar giriş yapmak isterseniz, aşağıya kullanıcı adı ve şifrenizi giriniz.'
+    PERMAGAIN: "İYS yönetiminden çıkış yaptınız.  Eğer tekrar giriş yapmak isterseniz, aşağıya kullanıcı adı ve şifrenizi giriniz."
     PreviewButton: Önizleme
     SAVEDUP: Kaydedildi.
   LoginAttempt:
-    Email: 'E-posta Adresi'
-    IP: 'IP Adresi'
+    Email: "E-posta Adresi"
+    IP: "IP Adresi"
     Status: Durum
   Member:
-    BUTTONCHANGEPASSWORD: 'Şifreyi Değiştir'
-    BUTTONLOGIN: 'Giriş'
-    BUTTONLOGINOTHER: 'Başka bir kullanıcı olarak giriş yap'
-    BUTTONLOSTPASSWORD: 'Şifremi kaybettim'
-    CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
-    CONFIRMPASSWORD: 'Şifreyi Onayla'
-    DefaultAdminFirstname: 'Varsayılan Yönetici'
+    BUTTONCHANGEPASSWORD: "Şifreyi Değiştir"
+    BUTTONLOGIN: Giriş
+    BUTTONLOGINOTHER: "Başka bir kullanıcı olarak giriş yap"
+    BUTTONLOSTPASSWORD: "Şifremi kaybettim"
+    CONFIRMNEWPASSWORD: "Yeni Şifreyi Onayla"
+    CONFIRMPASSWORD: "Şifreyi Onayla"
+    DefaultAdminFirstname: "Varsayılan Yönetici"
     DefaultDateTime: varsayılan
     EMAIL: Eposta
-    ENTEREMAIL: 'Lütfen parola belirleme linki almak için eposta adresi giriniz.'
-    ERRORNEWPASSWORD: 'Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin'
-    ERRORPASSWORDNOTMATCH: 'Şu anki şifreniz doğru girilmedi, lütfen tekrar deneyin'
-    FIRSTNAME: 'Ad'
-    INTERFACELANG: 'Arayüz Dili'
-    NEWPASSWORD: 'Yeni Şifre'
+    ENTEREMAIL: "Lütfen parola belirleme linki almak için eposta adresi giriniz."
+    ERRORNEWPASSWORD: "Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin"
+    ERRORPASSWORDNOTMATCH: "Şu anki şifreniz doğru girilmedi, lütfen tekrar deneyin"
+    FIRSTNAME: Ad
+    INTERFACELANG: "Arayüz Dili"
+    NEWPASSWORD: "Yeni Şifre"
     PASSWORD: Şifre
     PLURALNAME: Üyeler
     SINGULARNAME: Üye
-    SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'
-    SUBJECTPASSWORDRESET: 'Parola değiştirme bağlantınız'
+    SUBJECTPASSWORDCHANGED: "Parolanız değiştirildi"
+    SUBJECTPASSWORDRESET: "Parola değiştirme bağlantınız"
     SURNAME: Soyad
-    YOUROLDPASSWORD: 'Eski şifreniz'
+    YOUROLDPASSWORD: "Eski şifreniz"
     belongs_many_many_Groups: Gruplar
-    db_LastVisited: 'Son Ziyaret Tarihi'
-    db_Locale: 'Arayüz Bölümü'
-    db_LockedOutUntil: 'Şu tarihe kadar kapalı:'
-    db_NumVisit: 'Ziyaret Sayısı'
+    db_LastVisited: "Son Ziyaret Tarihi"
+    db_Locale: "Arayüz Bölümü"
+    db_LockedOutUntil: "Şu tarihe kadar kapalı:"
+    db_NumVisit: "Ziyaret Sayısı"
     db_Password: Parola
-    db_PasswordExpiry: 'Parola için Son Geçerlilik Tarihi'
+    db_PasswordExpiry: "Parola için Son Geçerlilik Tarihi"
   MemberAuthenticator:
-    TITLE: 'E-posta & Şifre'
+    TITLE: "E-posta & Şifre"
   MemberDatetimeOptionsetField:
-    DATEFORMATBAD: 'Tarih biçimi geçersiz'
+    DATEFORMATBAD: "Tarih biçimi geçersiz"
   ModelAdmin:
     DELETE: Sil
-    IMPORT: 'CSV''den içer aktar'
-    NOCSVFILE: 'CSV dosyası ekleme'
-    NOIMPORT: 'İçe aktarılacak bir şey yok'
+    IMPORT: "CSV'den içer aktar"
+    NOCSVFILE: "CSV dosyası ekleme"
+    NOIMPORT: "İçe aktarılacak bir şey yok"
     RESET: Sıfırla
   NullableField:
-    IsNullLabel: 'Boş değer'
+    IsNullLabel: "Boş değer"
   Permission:
-    CMS_ACCESS_CATEGORY: 'CMS Erişimi'
-    FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
+    CMS_ACCESS_CATEGORY: "CMS Erişimi"
+    FULLADMINRIGHTS: "Tüm yönetici(administrator) hakları"
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roller ve giriş izinleri'
+    PERMISSIONS_CATEGORY: "Roller ve giriş izinleri"
   PhoneNumberField:
-    VALIDATION: 'Lütfen geçerli bir telefon numarası giriniz'
+    VALIDATION: "Lütfen geçerli bir telefon numarası giriniz"
   Security:
-    ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
-    BUTTONSEND: 'Gönder'
-    CHANGEPASSWORDBELOW: 'Aşağıdaki formu kullanarak şifrenizi değiştirebilirsiniz.'
-    CHANGEPASSWORDHEADER: 'Şifre değiştir'
-    ENTERNEWPASSWORD: 'Lütfen bir şifre giriniz.'
-    ERRORPASSWORDPERMISSION: 'Şifrenizi değiştirebilmek için sisteme giriş yapmış olmanız gerekmektedir!'
-    LOGGEDOUT: 'Çıkış yaptınız. Eğer tekrar giriş yapmak istiyorsanız lütfen kullanıcı bilgilerinizi giriniz.'
-    LOGIN: 'Oturum aç'
-    NOTEPAGESECURED: 'O sayfaya erişim kısıtlanmıştır. Lütfen aşağıdaki formu kullanarak kullanıcı bilgilerinizi giriniz.'
-    NOTERESETPASSWORD: 'E-posta adresinize şifrenizi sıfırlamanızı sağlayacak linki gönderebilmemiz için lütfen e-posta adresinizi giriniz'
+    ALREADYLOGGEDIN: "Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız."
+    BUTTONSEND: Gönder
+    CHANGEPASSWORDBELOW: "Aşağıdaki formu kullanarak şifrenizi değiştirebilirsiniz."
+    CHANGEPASSWORDHEADER: "Şifre değiştir"
+    ENTERNEWPASSWORD: "Lütfen bir şifre giriniz."
+    ERRORPASSWORDPERMISSION: "Şifrenizi değiştirebilmek için sisteme giriş yapmış olmanız gerekmektedir!"
+    LOGGEDOUT: "Çıkış yaptınız. Eğer tekrar giriş yapmak istiyorsanız lütfen kullanıcı bilgilerinizi giriniz."
+    LOGIN: "Oturum aç"
+    NOTEPAGESECURED: "O sayfaya erişim kısıtlanmıştır. Lütfen aşağıdaki formu kullanarak kullanıcı bilgilerinizi giriniz."
+    NOTERESETPASSWORD: "E-posta adresinize şifrenizi sıfırlamanızı sağlayacak linki gönderebilmemiz için lütfen e-posta adresinizi giriniz"
   SecurityAdmin:
-    EDITPERMISSIONS: 'Gruplardaki izinleri düzenle'
-    GROUPNAME: 'Grup adı'
+    EDITPERMISSIONS: "Gruplardaki izinleri düzenle"
+    GROUPNAME: "Grup adı"
     MEMBERS: Üyeler
-    NEWGROUP: 'Yeni Grup'
+    NEWGROUP: "Yeni Grup"
     PERMISSIONS: İzinler
     TABROLES: Roller
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Aktar'
+    BtnImport: Aktar
   SiteTree:
-    TABMAIN: Ana (Esas)
+    TABMAIN: "Ana (Esas)"
   TableListField:
-    CSVEXPORT: 'CSV olarak kaydet'
+    CSVEXPORT: "CSV olarak kaydet"
   ToggleField:
-    LESS: daha az
-    MORE: daha fazla
+    LESS: "daha az"
+    MORE: "daha fazla"
   UploadField:
-    ATTACHFILE: 'Dosya ekle'
-    ATTACHFILES: 'Dosya ekle'
-    AttachFile: 'Dosyalar ekle'
+    ATTACHFILE: "Dosya ekle"
+    ATTACHFILES: "Dosya ekle"
+    AttachFile: "Dosyalar ekle"
     DOEDIT: Kaydet
-    DROPFILE: 'dosyası kaldır'
-    DROPFILES: 'dosyaları kaldır'
-    EDITINFO: 'Dosyayı düzenle'
-    FIELDNOTSET: 'Dosya bilgisi bulunamadı'
-    FROMCOMPUTER: 'Kendi makinenizden'
-    FROMFILES: 'Dosyalardan'
-    STARTALL: 'Tümünü başlat'
+    DROPFILE: "dosyası kaldır"
+    DROPFILES: "dosyaları kaldır"
+    EDITINFO: "Dosyayı düzenle"
+    FIELDNOTSET: "Dosya bilgisi bulunamadı"
+    FROMCOMPUTER: "Kendi makinenizden"
+    FROMFILES: Dosyalardan
+    STARTALL: "Tümünü başlat"
     Saved: Kaydedilmiş
   Versioned:
     has_many_Versions: Versiyonlar

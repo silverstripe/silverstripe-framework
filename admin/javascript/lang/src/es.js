@@ -1,7 +1,7 @@
 {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Ud tiene {num} páginas seleccionadas.\n\n¿Está seguro de querer archivar estas páginas?\n\nEstas páginas y sus hijas se retirarán de publicación y se enviarán al archivo.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Ud tiene {num} página(s) seleccionada(s).\n\n¿Realmente quieres eliminarla(s) desde el sitio en vivo?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "Ud tiene {num} página(s) seleccionada(s).\n\n¿Realmente quiere eliminarla(s)?",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Ud tiene {num} página(s) seleccionada(s).\n\n¿Realmente la(s) quiere publicar?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Ud tiene {num} páginas seleccionadas.\n\n¿Está seguro de querer restaurar estas páginas?\n\nLos hijos de las páginas archivadas serán restauradas al nivel raíz a no ser que esas páginas también sean restauradas.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Ud tiene {num} página(s) seleccionada(s).\n\n¿Realmente la(s) quiere retirar de publicación?",
