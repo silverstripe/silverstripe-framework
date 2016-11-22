@@ -14957,6 +14957,22 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   vertical-align:middle;
 }
 
+.form-builder-modal__close-button{
+  top:.9231rem;
+  right:.9231rem;
+  position:absolute;
+  z-index:61;
+  margin-right:0;
+  margin-top:-2px;
+  height:32px;
+}
+
+.form-builder-modal__close-button span{
+  overflow:hidden;
+  display:block;
+  margin-top:-7px;
+}
+
 .form__field-message-item{
   display:block;
 }

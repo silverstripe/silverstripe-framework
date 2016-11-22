@@ -11,7 +11,7 @@ import ListGroupItem from 'components/ListGroup/ListGroupItem';
 import Toolbar from 'components/Toolbar/Toolbar';
 import FormAction from 'components/FormAction/FormAction';
 import CampaignAdminItem from './CampaignAdminItem';
-import BreadcrumbComponent from 'components/Breadcrumb/Breadcrumb';
+import Breadcrumb from 'components/Breadcrumb/Breadcrumb';
 import Preview from 'components/Preview/Preview';
 import i18n from 'i18n';
 
@@ -156,7 +156,7 @@ class CampaignAdminList extends SilverStripeComponent {
       <div className={`fill-width campaign-admin__campaign ${selectedClass}`}>
         <div className="fill-height campaign-admin__campaign-items" aria-expanded="true">
           <Toolbar showBackButton handleBackButtonClick={this.props.handleBackButtonClick}>
-            <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
+            <Breadcrumb multiline />
           </Toolbar>
           <div className={bodyClass.join(' ')}>
             {body}
@@ -314,7 +314,6 @@ function mapStateToProps(state, ownProps) {
     record: record || {},
     campaign: state.campaign,
     treeClass,
-    breadcrumbs: state.breadcrumbs,
   };
 }
 

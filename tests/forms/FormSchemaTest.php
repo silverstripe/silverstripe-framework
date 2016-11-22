@@ -423,7 +423,9 @@ class FormSchemaTest extends SapphireTest {
 						'validation' =>
 							[
 								'required' => true,
-								'max' => 40,
+								'max' => [
+									'length' => 40,
+								],
 							],
 						'attributes' =>
 							[],

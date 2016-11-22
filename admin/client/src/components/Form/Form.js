@@ -48,6 +48,7 @@ class Form extends SilverStripeComponent {
       <form {...formProps}>
         {messages}
 
+        {this.props.afterMessages}
         {fields &&
           <fieldset>
             {fields}
@@ -67,6 +68,7 @@ class Form extends SilverStripeComponent {
 
 Form.propTypes = {
   actions: PropTypes.array,
+  afterMessages: PropTypes.node,
   attributes: PropTypes.shape({
     action: PropTypes.string.isRequired,
     className: PropTypes.string,

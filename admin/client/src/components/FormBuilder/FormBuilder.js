@@ -319,10 +319,12 @@ class FormBuilder extends SilverStripeComponent {
       touchOnChange,
       persistentSubmitErrors,
       form,
+      afterMessages,
     } = this.props;
 
     const props = {
       form, // required as redux-form identifier
+      afterMessages,
       fields: this.normalizeFields(schema.fields, state),
       actions: this.normalizeActions(schema.actions),
       attributes,
@@ -348,15 +350,19 @@ class FormBuilder extends SilverStripeComponent {
 }
 
 const schemaPropType = PropTypes.shape({
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   schema: PropTypes.shape({
     attributes: PropTypes.shape({
       class: PropTypes.string,
       enctype: PropTypes.string,
     }),
     fields: PropTypes.array.isRequired,
-  }).isRequired,
+  }),
   state: PropTypes.shape({
+    fields: PropTypes.array,
+  }),
+  loading: PropTypes.boolean,
+  stateOverride: PropTypes.shape({
     fields: PropTypes.array,
   }),
 });
