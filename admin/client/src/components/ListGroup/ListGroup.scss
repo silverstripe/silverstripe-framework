@@ -3,8 +3,17 @@
 .list-group {
   margin-left: -$grid-gutter-width / 2;
   margin-right: -$grid-gutter-width / 2;
-  border-bottom: 1px solid $border-color-light;
-  margin-bottom: $spacer-y * .75;
+  margin-bottom: $panel-padding-y;
+}
+
+.list-group-flush {
+  &:first-child {
+    border-top: 0;
+  }
+
+  &:last-child {
+    border-bottom: $list-group-border-width solid $list-group-border-color;
+  }
 }
 
 .list-group-item {
@@ -16,10 +25,6 @@
   cursor: pointer;
   text-decoration: none;
   transition: opacity .2s ease-in-out;
-
-  &:first-child {
-    border-top: 0;
-  }
 
   &:hover {
     text-decoration: none;
@@ -35,6 +40,10 @@
       opacity: 1;
     }
   }
+}
+
+.list-group-item-text {
+  line-height: $line-height;
 }
 
 .list-group-item-heading {
