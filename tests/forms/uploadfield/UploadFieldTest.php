@@ -497,6 +497,8 @@ class UploadFieldTest extends FunctionalTest {
 	}
 
 	public function testEdit() {
+		//for some reason the date_format is being set to null
+		Config::inst()->update('i18n', 'date_format', 'yyyy-MM-dd');
 		$memberID = $this->loginWithPermission('ADMIN');
 
 		$record = $this->objFromFixture('UploadFieldTest_Record', 'record1');
