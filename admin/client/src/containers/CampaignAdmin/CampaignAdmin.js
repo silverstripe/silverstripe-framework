@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router';
 import backend from 'lib/Backend';
 import * as breadcrumbsActions from 'state/breadcrumbs/BreadcrumbsActions';
-import BreadcrumbComponent from 'components/Breadcrumb/Breadcrumb';
+import Breadcrumb from 'components/Breadcrumb/Breadcrumb';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormAction from 'components/FormAction/FormAction';
 import i18n from 'i18n';
@@ -127,7 +127,7 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div className="fill-height" aria-expanded="true">
         <Toolbar>
-          <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
+          <Breadcrumb multiline />
         </Toolbar>
         <div className="panel panel--padded panel--scrollable flexbox-area-grow">
           <div className="toolbar toolbar--content">
@@ -177,7 +177,7 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div>
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
-          <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
+          <Breadcrumb multiline />
         </Toolbar>
 
         <div className="panel panel--padded panel--scrollable flexbox-area-grow form--inline">
@@ -204,7 +204,7 @@ class CampaignAdmin extends SilverStripeComponent {
     return (
       <div>
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
-          <BreadcrumbComponent multiline crumbs={this.props.breadcrumbs} />
+          <Breadcrumb multiline />
         </Toolbar>
         <div className="panel panel--padded panel--scrollable flexbox-area-grow form--inline">
           <FormBuilderLoader {...formBuilderProps} />

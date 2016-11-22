@@ -53,7 +53,9 @@ class Validator {
       case 'regex': {
         return validator.matches(value, config.pattern);
       }
-
+      case 'max': {
+        return value.length <= config.length;
+      }
       default: {
         throw new Error(`Unknown validation rule used: '${rule}'`);
       }

@@ -63,6 +63,7 @@ const config = [
       'bootstrap-collapse': 'BootstrapCollapse',
       'components/Breadcrumb/Breadcrumb': 'Breadcrumb',
       'state/breadcrumbs/BreadcrumbsActions': 'BreadcrumbsActions',
+      'state/schema/SchemaActions': 'SchemaActions',
       'components/FormAction/FormAction': 'FormAction',
       'components/FormBuilder/FormBuilder': 'FormBuilder',
       'components/FormBuilderModal/FormBuilderModal': 'FormBuilderModal',

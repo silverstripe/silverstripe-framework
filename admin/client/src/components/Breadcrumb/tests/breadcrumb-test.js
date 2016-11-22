@@ -1,11 +1,11 @@
 /* global jest, describe, beforeEach, it, expect */
 
-jest.dontMock('../Breadcrumb');
+jest.unmock('../Breadcrumb');
 
 // FYI: Changing these to import statements broke jest's automocking
-const React = require('react');
-const ReactTestUtils = require('react-addons-test-utils');
-const BreadcrumbsComponent = require('../Breadcrumb').default;
+import React from 'react';
+import ReactTestUtils from 'react-addons-test-utils';
+import { Breadcrumb } from '../Breadcrumb';
 
 describe('BreadcrumbsComponent', () => {
   let props = null;
@@ -30,7 +30,7 @@ describe('BreadcrumbsComponent', () => {
       ];
 
       breadcrumbs = ReactTestUtils.renderIntoDocument(
-        <BreadcrumbsComponent {...props} />
+        <Breadcrumb {...props} />
       );
       const listEls = breadcrumbs.getBreadcrumbs();
       expect(listEls[0][0].props.children.props.children).toBe('breadcrumb1');
@@ -42,7 +42,7 @@ describe('BreadcrumbsComponent', () => {
 
     it('should return null if props.crumbs is not set', () => {
       breadcrumbs = ReactTestUtils.renderIntoDocument(
-        <BreadcrumbsComponent {...props} />
+        <Breadcrumb {...props} />
       );
 
       const listEls = breadcrumbs.getBreadcrumbs();

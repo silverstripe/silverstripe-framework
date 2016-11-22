@@ -8,6 +8,8 @@ use SilverStripe\BehatExtension\Context\LoginContext;
 use SilverStripe\BehatExtension\Context\FixtureContext;
 use SilverStripe\BehatExtension\Context\EmailContext;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Dev\BehatFixtureFactory;
+use SilverStripe\Dev\FixtureFactory;
 
 
 /**
@@ -55,7 +57,9 @@ class FeatureContext extends SilverStripeContext {
 		parent::setMinkParameters($parameters);
 
 		if(isset($parameters['files_path'])) {
-			$this->getSubcontext('FixtureContext')->setFilesPath($parameters['files_path']);
+			/** @var FixtureContext $fixtureContext */
+			$fixtureContext = $this->getSubcontext('FixtureContext');
+			$fixtureContext->setFilesPath($parameters['files_path']);
 		}
 	}
 
@@ -64,7 +68,7 @@ class FeatureContext extends SilverStripeContext {
 	 */
 	public function getFixtureFactory() {
 		if(!$this->fixtureFactory) {
-			$this->fixtureFactory = Injector::inst()->create('SilverStripe\\Dev\\BehatFixtureFactory');
+			$this->fixtureFactory = Injector::inst()->create(BehatFixtureFactory::class);
 		}
 		return $this->fixtureFactory;
 	}

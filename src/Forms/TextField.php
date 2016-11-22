@@ -111,7 +111,9 @@ class TextField extends FormField {
 	public function getSchemaValidation() {
 		$rules = parent::getSchemaValidation();
 		if ($this->getMaxLength()) {
-			$rules['max'] = $this->getMaxLength();
+			$rules['max'] = [
+			    'length' => $this->getMaxLength(),
+            ];
 		}
 		return $rules;
 	}

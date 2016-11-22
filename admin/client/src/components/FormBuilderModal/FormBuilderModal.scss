@@ -1,0 +1,15 @@
+.form-builder-modal__close-button {
+  top: $spacer-sm;
+  right: $spacer-sm;
+  position: absolute;
+  z-index: 61;
+  margin-right: 0;
+  margin-top: -2px;
+  height: 32px;
+
+  span {
+    overflow: hidden;
+    display: block;
+    margin-top: -7px;
+  }
+}

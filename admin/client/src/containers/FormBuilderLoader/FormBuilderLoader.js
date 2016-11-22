@@ -9,6 +9,7 @@ import {
   destroy as reduxDestroyForm,
 } from 'redux-form';
 import * as schemaActions from 'state/schema/SchemaActions';
+import merge from 'merge';
 import Form from 'components/Form/Form';
 import FormBuilder, { basePropTypes, schemaPropType } from 'components/FormBuilder/FormBuilder';
 
@@ -18,10 +19,7 @@ class FormBuilderLoader extends Component {
     super(props);
 
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.state = {
-      fetching: false,
-    };
+    this.clearSchema = this.clearSchema.bind(this);
   }
 
   componentDidMount() {
@@ -30,17 +28,13 @@ class FormBuilderLoader extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.schemaUrl !== prevProps.schemaUrl) {
+      this.clearSchema(prevProps.schemaUrl);
       this.fetch();
     }
   }
 
   componentWillUnmount() {
-    // we will reload the schema any when we mount again, this is here so that redux-form doesn't
-    // preload previous data mistakenly. (since it only accepts initialised values)
-    reduxDestroyForm(this.props.form);
-    if (this.props.form) {
-      this.props.schemaActions.destroySchema(this.props.form);
-    }
+    this.clearSchema(this.props.schemaUrl);
   }
 
   /**
@@ -64,13 +58,22 @@ class FormBuilderLoader extends Component {
     return messages;
   }
 
+  clearSchema(schemaUrl) {
+    if (schemaUrl) {
+      // we will reload the schema anyway when we mount again, this is here so that redux-form
+      // doesn't preload previous data mistakenly. (since it only accepts initialised values)
+      reduxDestroyForm(schemaUrl);
+      this.props.schemaActions.setSchema(schemaUrl, null);
+    }
+  }
+
   /**
    * Handles updating the schema after response is received and gathering server-side validation
    * messages.
    *
-   * @param dataWithAction
-   * @param action
-   * @param submitFn
+   * @param {object} data
+   * @param {string} action
+   * @param {function} submitFn
    * @returns {Promise}
    */
   handleSubmit(data, action, submitFn) {
@@ -84,15 +87,18 @@ class FormBuilderLoader extends Component {
     if (!promise) {
       throw new Error('Promise was not returned for submitting');
     }
+
     return promise
       .then(formSchema => {
-        this.props.schemaActions.setSchema(formSchema);
+        if (formSchema) {
+          this.props.schemaActions.setSchema(this.props.schemaUrl, formSchema);
+        }
         return formSchema;
       })
       // TODO Suggest storing messages in a separate redux store rather than throw an error
       // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
       .then(formSchema => {
-        if (!formSchema.state) {
+        if (!formSchema || !formSchema.state) {
           return formSchema;
         }
         const messages = this.getMessages(formSchema.state);
@@ -102,6 +108,60 @@ class FormBuilderLoader extends Component {
         }
         return formSchema;
       });
+  }
+
+  overrideStateData(state) {
+    if (!this.props.stateOverrides || !state) {
+      return state;
+    }
+    const fieldOverrides = this.props.stateOverrides.fields;
+    let fields = state.fields;
+    if (fieldOverrides && fields) {
+      fields = fields.map((field) => {
+        const fieldOverride = fieldOverrides.find((override) => override.name === field.name);
+        if (!fieldOverride) {
+          return field;
+        }
+        // need to be recursive for the unknown-sized "data" properly
+        return merge.recursive(true, field, fieldOverride);
+      });
+    }
+    return Object.assign({},
+      state,
+      this.props.stateOverrides,
+      { fields }
+    );
+  }
+
+  /**
+   * Checks for any state override data provided, which will take precendence over the state
+   * received through fetch.
+   *
+   * This is important for editing a WYSIWYG item which needs the form schema and only parts of
+   * the form state.
+   *
+   * @param {object} state
+   * @returns {object}
+   */
+  overrideStateData(state) {
+    if (!this.props.stateOverrides || !state) {
+      return state;
+    }
+    const fieldOverrides = this.props.stateOverrides.fields;
+    let fields = state.fields;
+    if (fieldOverrides && fields) {
+      fields = fields.map((field) => {
+        const fieldOverride = fieldOverrides.find((override) => override.name === field.name);
+        // need to be recursive for the unknown-sized "data" properly
+        return (fieldOverride) ? merge.recursive(true, field, fieldOverride) : field;
+      });
+    }
+
+    return Object.assign({},
+      state,
+      this.props.stateOverrides,
+      { fields }
+    );
   }
 
   /**
@@ -115,15 +175,20 @@ class FormBuilderLoader extends Component {
   fetch(schema = true, state = true) {
     const headerValues = [];
 
-    if (schema === true) {
+    if (schema) {
       headerValues.push('schema');
     }
 
-    if (state === true) {
+    if (state) {
       headerValues.push('state');
     }
 
-    this.setState({ fetching: true });
+    if (this.props.loading) {
+      return Promise.resolve({});
+    }
+
+    // using `this.state.fetching` caused race-condition issues.
+    this.props.schemaActions.setSchemaLoading(this.props.schemaUrl, true);
 
     return fetch(this.props.schemaUrl, {
       headers: { 'X-FormSchema-Request': headerValues.join() },
@@ -131,10 +196,17 @@ class FormBuilderLoader extends Component {
     })
       .then(response => response.json())
       .then(formSchema => {
+        this.props.schemaActions.setSchemaLoading(this.props.schemaUrl, false);
+
         if (typeof formSchema.id !== 'undefined') {
-          this.props.schemaActions.setSchema(formSchema);
+          const overriddenSchema = Object.assign({},
+            formSchema,
+            { state: this.overrideStateData(formSchema.state) }
+          );
+          this.props.schemaActions.setSchema(this.props.schemaUrl, overriddenSchema);
+
+          return overriddenSchema;
         }
-        this.setState({ fetching: false });
         return formSchema;
       });
   }
@@ -142,11 +214,12 @@ class FormBuilderLoader extends Component {
   render() {
     // If the response from fetching the initial data
     // hasn't come back yet, don't render anything.
-    if (!this.props.schema || this.state.fetching) {
+    if (!this.props.schema || !this.props.schema.schema || this.props.loading) {
       return null;
     }
 
     const props = Object.assign({}, this.props, {
+      form: this.props.schemaUrl,
       onSubmitSuccess: this.props.onSubmitSuccess,
       handleSubmit: this.handleSubmit,
     });
@@ -161,6 +234,7 @@ FormBuilderLoader.propTypes = Object.assign({}, basePropTypes, {
   form: PropTypes.string,
   submitting: PropTypes.bool,
 });
+
 FormBuilderLoader.defaultProps = {
   // Perform this *outside* of render() to avoid re-rendering of the whole DOM structure
   // every time render() is triggered.
@@ -168,20 +242,23 @@ FormBuilderLoader.defaultProps = {
   baseFieldComponent: ReduxFormField,
 };
 
-export default connect(
-  (state, ownProps) => {
-    const schema = state.schemas[ownProps.schemaUrl];
-    const form = schema && schema.id;
-    const reduxFormState = state.form
-      && state.form[ownProps.schemaUrl];
-    const submitting = reduxFormState
-      && reduxFormState.submitting;
-    const values = reduxFormState
-      && reduxFormState.values;
+function mapStateToProps(state, ownProps) {
+  const schema = state.schemas[ownProps.schemaUrl];
 
-    return { schema, form, submitting, values };
-  },
-  (dispatch) => ({
+  const reduxFormState = state.form && state.form[ownProps.schemaUrl];
+  const submitting = reduxFormState && reduxFormState.submitting;
+  const values = reduxFormState && reduxFormState.values;
+
+  const stateOverrides = schema && schema.stateOverride;
+  const loading = schema && schema.metadata && schema.metadata.loading;
+
+  return { schema, submitting, values, stateOverrides, loading };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
     schemaActions: bindActionCreators(schemaActions, dispatch),
-  })
-)(FormBuilderLoader);
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(FormBuilderLoader);

@@ -34,30 +34,30 @@ jQuery.entwine('ss', ($) => {
 
     onunmatch() {
       // solves errors given by ReactDOM "no matched root found" error.
-      this.close();
-    },
-
-    open() {
-      this._renderModal();
-    },
-
-    close() {
       this._clearModal();
     },
 
-    _renderModal() {
-      const handleHide = () => this._clearModal();
+    open() {
+      this._renderModal(true);
+    },
+
+    close() {
+      this._renderModal(false);
+    },
+
+    _renderModal(show) {
+      const handleHide = () => this.close();
       const handleSubmit = (...args) => this._handleSubmitModal(...args);
       const id = $('form.cms-edit-form :input[name=ID]').val();
       const store = window.ss.store;
-      const sectionConfig = store.getState()
-        .config.sections['SilverStripe\\CMS\\Controllers\\CMSPageEditController'];
+      const sectionKey = 'SilverStripe\\CMS\\Controllers\\CMSPageEditController';
+      const sectionConfig = store.getState().config.sections[sectionKey];
       const modalSchemaUrl = `${sectionConfig.form.AddToCampaignForm.schemaUrl}/${id}`;
 
       ReactDOM.render(
         <Provider store={store}>
           <FormBuilderModal
-            show
+            show={show}
             handleSubmit={handleSubmit}
             handleHide={handleHide}
             schemaUrl={modalSchemaUrl}
@@ -76,8 +76,6 @@ jQuery.entwine('ss', ($) => {
     },
 
     _handleSubmitModal(data, action, submitFn) {
-      event.preventDefault();
-
       return submitFn();
     },
 

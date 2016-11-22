@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from 'i18n';
 import { Modal } from 'react-bootstrap-ss';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import FormBuilderLoader from 'containers/FormBuilderLoader/FormBuilderLoader';
@@ -18,6 +19,9 @@ class FormBuilderModal extends SilverStripeComponent {
    * @returns {Component}
    */
   getForm() {
+    if (!this.props.schemaUrl) {
+      return null;
+    }
     return (
       <FormBuilderLoader
         schemaUrl={this.props.schemaUrl}
@@ -88,6 +92,7 @@ class FormBuilderModal extends SilverStripeComponent {
     }
 
     if (promise) {
+      // do not want this as part of the main promise chain.
       promise
         .then((response) => {
           this.setState({
@@ -111,6 +116,29 @@ class FormBuilderModal extends SilverStripeComponent {
     return promise;
   }
 
+  renderHeader() {
+    if (this.props.title !== false) {
+      return (
+        <Modal.Header closeButton><Modal.Title>{this.props.title}</Modal.Title></Modal.Header>
+      );
+    }
+
+    if (typeof this.props.handleHide === 'function') {
+      return (
+        <button
+          type="button"
+          className="close form-builder-modal__close-button"
+          onClick={this.handleHide}
+          aria-label={i18n._t('FormBuilderModal.CLOSE', 'Close')}
+        >
+          <span aria-hidden="true">×</span>
+        </button>
+      );
+    }
+
+    return null;
+  }
+
   render() {
     const form = this.getForm();
     const response = this.getResponse();
@@ -120,10 +148,9 @@ class FormBuilderModal extends SilverStripeComponent {
         show={this.props.show}
         onHide={this.handleHide}
         className={this.props.className}
+        bsSize={this.props.bsSize}
       >
-        {this.props.title !== false &&
-          <Modal.Header closeButton><Modal.Title>{this.props.title}</Modal.Title></Modal.Header>
-        }
+        {this.renderHeader()}
         <Modal.Body className={this.props.bodyClassName}>
           {response}
           {form}
@@ -136,7 +163,7 @@ class FormBuilderModal extends SilverStripeComponent {
 
 FormBuilderModal.propTypes = {
   show: React.PropTypes.bool,
-  title: React.PropTypes.string,
+  title: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.bool]),
   className: React.PropTypes.string,
   bodyClassName: React.PropTypes.string,
   handleHide: React.PropTypes.func,

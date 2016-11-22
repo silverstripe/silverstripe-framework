@@ -1,5 +1,6 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
 class Breadcrumb extends SilverStripeComponent {
@@ -20,7 +21,12 @@ class Breadcrumb extends SilverStripeComponent {
     return [].concat(
      this.props.crumbs.slice(0, -1).map((crumb, index) => [
        <li className="breadcrumb__item">
-         <Link key={index} className="breadcrumb__item-title" to={crumb.href}>{crumb.text}</Link>
+         <Link
+           key={index}
+           className="breadcrumb__item-title"
+           to={crumb.href}
+           onClick={crumb.onClick}
+         >{crumb.text}</Link>
         </li>,
      ]),
        this.props.crumbs.slice(-1).map((crumb, index) => {
@@ -32,7 +38,7 @@ class Breadcrumb extends SilverStripeComponent {
              <h2 className="breadcrumb__item-title breadcrumb__item-title--last" key={index}>
                {crumb.text}
                {crumb.icon &&
-               <span className={iconClassNames} onClick={crumb.icon.action}></span>
+               <span className={iconClassNames} onClick={crumb.icon.action} />
                }
              </h2>
            </li>,
@@ -47,4 +53,12 @@ Breadcrumb.propTypes = {
   crumbs: React.PropTypes.array,
 };
 
-export default Breadcrumb;
+function mapStateToProps(state) {
+  return {
+    crumbs: state.breadcrumbs,
+  };
+}
+
+export { Breadcrumb };
+
+export default connect(mapStateToProps)(Breadcrumb);
