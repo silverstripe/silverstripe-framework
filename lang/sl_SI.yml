@@ -1,107 +1,107 @@
 sl_SI:
   AddToCampaign:
-    ErrorGeneral: 'Se opravičujemo, prišlo je do napake'
+    ErrorGeneral: "Se opravičujemo, prišlo je do napake"
   AssetAdmin:
-    ALLOWEDEXTS: 'Dovoljeni tipi datotek za nalaganje'
+    ALLOWEDEXTS: "Dovoljeni tipi datotek za nalaganje"
     NEWFOLDER: NovaMapa
   AssetTableField:
     DIM: Dimenzije
-    FILENAME: Ime datoteke
+    FILENAME: "Ime datoteke"
     FOLDER: Mapa
     HEIGHT: Višina
-    LASTEDIT: 'Nazadnje spremenjeno'
+    LASTEDIT: "Nazadnje spremenjeno"
     OWNER: Lastnik
-    SIZE: 'Velikost datoteke'
+    SIZE: "Velikost datoteke"
     TITLE: Naslov
-    TYPE: 'Tip datoteke'
+    TYPE: "Tip datoteke"
     URL: URL
     WIDTH: Širina
   AssetUploadField:
-    ChooseFiles: 'Izberi datoteke'
-    DRAGFILESHERE: 'Povlecite datoteke na to mesto'
-    DROPAREA: 'Območje za datoteke'
-    EDITALL: 'Uredi vse'
-    EDITANDORGANIZE: 'Uredi in organiziraj'
-    EDITINFO: 'Uredi datoteke'
+    ChooseFiles: "Izberi datoteke"
+    DRAGFILESHERE: "Povlecite datoteke na to mesto"
+    DROPAREA: "Območje za datoteke"
+    EDITALL: "Uredi vse"
+    EDITANDORGANIZE: "Uredi in organiziraj"
+    EDITINFO: "Uredi datoteke"
     FILES: Datoteke
-    FROMCOMPUTER: 'Izberite datoteke iz vašega računalnika'
-    FROMCOMPUTERINFO: 'Naložite datoteke iz računalnika'
-    INSERTURL: 'Vstavite iz URL naslova'
-    REMOVEINFO: 'Odstranite datoteko iz tega polja'
+    FROMCOMPUTER: "Izberite datoteke iz vašega računalnika"
+    FROMCOMPUTERINFO: "Naložite datoteke iz računalnika"
+    INSERTURL: "Vstavite iz URL naslova"
+    REMOVEINFO: "Odstranite datoteko iz tega polja"
     TOTAL: Skupaj
-    UPLOADINPROGRESS: 'Prosimo počakajte... nalaganje datotek je v teku'
+    UPLOADINPROGRESS: "Prosimo počakajte... nalaganje datotek je v teku"
     UPLOADOR: ALI
   BBCodeParser:
     ALIGNEMENT: Poravnava
-    ALIGNEMENTEXAMPLE: 'desno'
-    BOLD: 'Krepki tekst'
+    ALIGNEMENTEXAMPLE: desno
+    BOLD: "Krepki tekst"
     BOLDEXAMPLE: Krepko
-    CODE: 'Blok s kodo'
-    COLOREDEXAMPLE: 'modri tekst'
-    EMAILLINK: 'E-poštna povezava'
-    EMAILLINKDESCRIPTION: 'Ustvari e-poštno povezavo'
+    CODE: "Blok s kodo"
+    COLOREDEXAMPLE: "modri tekst"
+    EMAILLINK: "E-poštna povezava"
+    EMAILLINKDESCRIPTION: "Ustvari e-poštno povezavo"
     IMAGE: Slika
-    IMAGEDESCRIPTION: 'Prikažite fotografijo v vaši objavi'
-    ITALIC: 'Ležeči tekst'
+    IMAGEDESCRIPTION: "Prikažite fotografijo v vaši objavi"
+    ITALIC: "Ležeči tekst"
     ITALICEXAMPLE: Ležeče
-    LINK: 'Spletna povezava'
-    LINKDESCRIPTION: 'Povezava na drugo spletno mesto ali URL'
-    UNDERLINE: 'Podčrtan tekst'
+    LINK: "Spletna povezava"
+    LINKDESCRIPTION: "Povezava na drugo spletno mesto ali URL"
+    UNDERLINE: "Podčrtan tekst"
     UNDERLINEEXAMPLE: Podčrtano
   BackLink_Button_ss:
     Back: Nazaj
   BasicAuth:
-    ENTERINFO: 'Prosimo vpišite uporabniško ime in geslo.'
-    ERRORNOTADMIN: 'Ta uporabnik ni administrator.'
-    ERRORNOTREC: 'Uporabniško ime ali geslo je neveljavno'
+    ENTERINFO: "Prosimo vpišite uporabniško ime in geslo."
+    ERRORNOTADMIN: "Ta uporabnik ni administrator."
+    ERRORNOTREC: "Uporabniško ime ali geslo je neveljavno"
   Boolean:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   CMSLoadingScreen_ss:
     LOADING: Nalagam...
-    REQUIREJS: 'Zahteve CMS sistema so, da morate imeti omogočen JavaScript.'
+    REQUIREJS: "Zahteve CMS sistema so, da morate imeti omogočen JavaScript."
   CMSMain:
-    ACCESS: 'Dostop do ''{title}'' sekcije'
-    ACCESSALLINTERFACES: 'Dostop do vseh sekcije CMS-a.'
+    ACCESS: "Dostop do '{title}' sekcije"
+    ACCESSALLINTERFACES: "Dostop do vseh sekcije CMS-a."
     SAVE: Shrani
   CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Pozabljeno geslo?'
-    BUTTONLOGIN: 'Ponovna prijava'
-    BUTTONLOGOUT: 'Odjava'
+    BUTTONFORGOTPASSWORD: "Pozabljeno geslo?"
+    BUTTONLOGIN: "Ponovna prijava"
+    BUTTONLOGOUT: Odjava
   CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Predogled spletne strani'
+    PREVIEW: "Predogled spletne strani"
   CMSPagesController_Tools_ss:
     FILTER: Filter
   CMSProfileController:
-    MENUTITLE: 'Moj profil'
+    MENUTITLE: "Moj profil"
   CMSSecurity:
-    TimedOutTitleAnonymous: 'Vaša seja je potekla.'
-    TimedOutTitleMember: 'Hej {name}! Tvoja seja je potekla.'
+    TimedOutTitleAnonymous: "Vaša seja je potekla."
+    TimedOutTitleMember: "Hej {name}! Tvoja seja je potekla."
   CampaignAdmin:
     MENUTITLE: Kampanje
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Zamenjali ste geslo za'
-    CHANGEPASSWORDTEXT3: 'Zamenjaj geslo'
+    CHANGEPASSWORDTEXT1: "Zamenjali ste geslo za"
+    CHANGEPASSWORDTEXT3: "Zamenjaj geslo"
     EMAIL: E-pošta
     HELLO: Živjo
     PASSWORD: Geslo
   ChangeSet:
-    DESCRIPTION_AND: '{first} in {drugi}'
+    DESCRIPTION_AND: "{first} in {drugi}"
     DESCRIPTION_ITEM: predmet
     DESCRIPTION_ITEMS: predmetov
-    DESCRIPTION_OTHER_ITEM: 'drug predmet'
-    DESCRIPTION_OTHER_ITEMS: 'ostali predmeti'
+    DESCRIPTION_OTHER_ITEM: "drug predmet"
+    DESCRIPTION_OTHER_ITEMS: "ostali predmeti"
     NAME: Ime
     PLURALNAME: Kampanje
     SINGULARNAME: Kampanja
     STATE: Stanje
   CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Zamenjaj geslo'
+    SHOWONCLICKTITLE: "Zamenjaj geslo"
   ContentController:
-    NOTLOGGEDIN: 'Niste prijavljeni'
+    NOTLOGGEDIN: "Niste prijavljeni"
   CreditCardField:
     FIRST: prvi
     FOURTH: četrti
@@ -114,7 +114,7 @@ sl_SI:
     DAYS: dni
     HOUR: ura
     HOURS: ur
-    LessThanMinuteAgo: 'manj kot minuto'
+    LessThanMinuteAgo: "manj kot minuto"
     MIN: min
     MINS: minut
     MONTH: mesec
@@ -124,28 +124,28 @@ sl_SI:
     YEAR: leto
     YEARS: let
   DateField:
-    NOTSET: 'ni nastavljeno'
+    NOTSET: "ni nastavljeno"
     TODAY: danes
-    VALIDDATEFORMAT2: 'Prosimo vnesite veljavno obliko datuma ({format})'
+    VALIDDATEFORMAT2: "Prosimo vnesite veljavno obliko datuma ({format})"
   DatetimeField:
-    NOTSET: 'Ni nastavljeno'
+    NOTSET: "Ni nastavljeno"
   Director:
-    INVALID_REQUEST: 'Neveljavna zahteva'
+    INVALID_REQUEST: "Neveljavna zahteva"
   DropdownField:
     CHOOSE: (Izberi)
-    CHOOSESEARCH: '(Izberi ali poišči)'
+    CHOOSESEARCH: "(Izberi ali poišči)"
   EmailField:
-    VALIDATION: 'Prosimo vtipkajte e-poštni naslov'
+    VALIDATION: "Prosimo vtipkajte e-poštni naslov"
   File:
     Content: Vsebina
-    CssType: 'CSS datoteka'
-    DocType: 'Word-ov dokument'
-    Filename: Ime datoteke
-    HtlType: 'HTML datoteka'
-    HtmlType: 'HTML datoteka'
-    JsType: 'Javascript datoteka'
-    Mp3Type: 'MP3 avdio datoteka'
-    MpgType: 'MPEG video datoteka'
+    CssType: "CSS datoteka"
+    DocType: "Word-ov dokument"
+    Filename: "Ime datoteke"
+    HtlType: "HTML datoteka"
+    HtmlType: "HTML datoteka"
+    JsType: "Javascript datoteka"
+    Mp3Type: "MP3 avdio datoteka"
+    MpgType: "MPEG video datoteka"
     Name: Ime
     PLURALNAME: Datoteke
     SINGULARNAME: Datoteka
@@ -155,124 +155,124 @@ sl_SI:
     SINGULARNAME: Mapa
   ForgotPasswordEmail_ss:
     HELLO: Živjo
-    TEXT1: 'Tukaj je vaša'
-    TEXT2: 'povezava za resetiranje gesla'
+    TEXT1: "Tukaj je vaša"
+    TEXT2: "povezava za resetiranje gesla"
     TEXT3: za
   Form:
     SubmitBtnLabel: Pojdi
   GridAction:
     DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
-    UnlinkRelation: Odstrani povezavo
+    UnlinkRelation: "Odstrani povezavo"
   GridField:
-    Add: 'Dodaj {name}'
+    Add: "Dodaj {name}"
     Filter: Filter
-    FilterBy: 'Filtriraj po'
+    FilterBy: "Filtriraj po"
     Find: Najdi
-    LEVELUP: 'Nivo višje'
-    NewRecord: 'Nov %s'
+    LEVELUP: "Nivo višje"
+    NewRecord: "Nov %s"
     ResetFilter: Resetiraj
   GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
     Delete: Izbriši
-    DeletePermissionsFailure: 'Nimate pravic za brisanje'
-    Deleted: 'Izbrisano %s %s'
+    DeletePermissionsFailure: "Nimate pravic za brisanje"
+    Deleted: "Izbrisano %s %s"
     Save: Shrani
-    Saved: 'Shranjeno {name} {link}'
+    Saved: "Shranjeno {name} {link}"
   GridFieldEditButton_ss:
     EDIT: Uredi
   GridFieldItemEditView:
-    Go_back: 'Nazaj'
+    Go_back: Nazaj
   Group:
-    AddRole: 'Dodaj vlogo za to skupino'
+    AddRole: "Dodaj vlogo za to skupino"
     DefaultGroupTitleAdministrators: Administratorji
-    DefaultGroupTitleContentAuthors: 'Avtorji vsebine'
+    DefaultGroupTitleContentAuthors: "Avtorji vsebine"
     Description: Opis
-    Locked: 'Zaklenjeno?'
+    Locked: Zaklenjeno?
     PLURALNAME: Skupine
-    Parent: 'Starševska skupina'
-    RolesAddEditLink: 'Uredi vloge'
+    Parent: "Starševska skupina"
+    RolesAddEditLink: "Uredi vloge"
     SINGULARNAME: Skupina
-    Sort: 'Vrstni red sortiranja'
+    Sort: "Vrstni red sortiranja"
     has_many_Permissions: Dovoljenja
     many_many_Members: Člani
   GroupImportForm:
-    ResultDeleted: 'Izbrisane %d skupine'
-    ResultUpdated: 'Posodobljene %d skupine'
+    ResultDeleted: "Izbrisane %d skupine"
+    ResultUpdated: "Posodobljene %d skupine"
   HTMLEditorField:
-    ANCHORSCANNOTACCESSPAGE: 'Nimate dovoljenj za dostop do vsebin na izbrani strani.'
-    ANCHORSPAGENOTFOUND: 'Ciljne strani ni mogoče najti.'
+    ANCHORSCANNOTACCESSPAGE: "Nimate dovoljenj za dostop do vsebin na izbrani strani."
+    ANCHORSPAGENOTFOUND: "Ciljne strani ni mogoče najti."
     ANCHORVALUE: Sidro
-    BUTTONADDURL: 'Dodaj url'
-    CAPTIONTEXT: 'Napis'
-    CSSCLASS: 'Poravnava / stil'
+    BUTTONADDURL: "Dodaj url"
+    CAPTIONTEXT: Napis
+    CSSCLASS: "Poravnava / stil"
     DETAILS: Podrobnosti
-    EMAIL: 'E-poštni naslov'
+    EMAIL: "E-poštni naslov"
     FOLDER: Mapa
-    IMAGEALT: 'Alternativni tekst (alt)'
-    IMAGEALTTEXT: 'Alternativni tekst (alt) - se pojavi, če fotografije ni mogoče prikazati'
+    IMAGEALT: "Alternativni tekst (alt)"
+    IMAGEALTTEXT: "Alternativni tekst (alt) - se pojavi, če fotografije ni mogoče prikazati"
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Višina
-    IMAGETITLETEXT: 'Naslov (namig)'
+    IMAGETITLETEXT: "Naslov (namig)"
     IMAGEWIDTHPX: Širina
-    LINKDESCR: 'Opis povezave'
-    LINKDETAILS: 'Podrobnosti povezave'
-    LINKEMAIL: 'Povezava na e-poštni naslov'
-    LINKEXTERNAL: 'Povezava na drugo spletno stran'
-    LINKFILE: 'Povezava za prenos datoteke'
-    LINKINTERNAL: 'Povezava na stran znotraj tega spletnega mesta'
-    LINKOPENNEWWIN: 'Odpri povezavo v novem oknu?'
-    LINKTO: 'Tip povezave'
+    LINKDESCR: "Opis povezave"
+    LINKDETAILS: "Podrobnosti povezave"
+    LINKEMAIL: "Povezava na e-poštni naslov"
+    LINKEXTERNAL: "Povezava na drugo spletno stran"
+    LINKFILE: "Povezava za prenos datoteke"
+    LINKINTERNAL: "Povezava na stran znotraj tega spletnega mesta"
+    LINKOPENNEWWIN: "Odpri povezavo v novem oknu?"
+    LINKTO: "Tip povezave"
     PAGE: Stran
-    SUBJECT: 'Predmet e-pošte'
+    SUBJECT: "Predmet e-pošte"
     URL: URL
   HtmlEditorField:
     ANCHORVALUE: Sidro
-    BUTTONADDURL: 'Dodaj url'
+    BUTTONADDURL: "Dodaj url"
     BUTTONINSERT: Vstavi
-    BUTTONINSERTLINK: 'Vstavi povezavo'
-    BUTTONREMOVELINK: 'Odstrani povezavo'
+    BUTTONINSERTLINK: "Vstavi povezavo"
+    BUTTONREMOVELINK: "Odstrani povezavo"
     BUTTONUpdate: Posodobi
     DETAILS: Podrobnosti
-    EMAIL: 'E-poštni naslov'
+    EMAIL: "E-poštni naslov"
     FILE: Datoteka
     FOLDER: Mapa
-    FROMCMS: 'Iz CMS urejevalnika'
-    FROMCOMPUTER: 'Iz vašega računalnika'
-    FROMWEB: 'Iz spleta'
-    FindInFolder: 'Iskanje po mapah'
+    FROMCMS: "Iz CMS urejevalnika"
+    FROMCOMPUTER: "Iz vašega računalnika"
+    FROMWEB: "Iz spleta"
+    FindInFolder: "Iskanje po mapah"
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Višina
     IMAGEWIDTHPX: Širina
   Member:
-    EDIT_PASSWORD: 'Novo geslo'
+    EDIT_PASSWORD: "Novo geslo"
     EMAIL: E-pošta
-    FIRSTNAME: 'Ime'
-    KEEPMESIGNEDIN: 'Zapomni si me prijavljenega'
-    LOGGEDINAS: 'Prijavljeni ste kot {name}.'
-    NEWPASSWORD: 'Novo geslo'
-    NoPassword: 'Uporabnik nima nastavljenega gesla.'
+    FIRSTNAME: Ime
+    KEEPMESIGNEDIN: "Zapomni si me prijavljenega"
+    LOGGEDINAS: "Prijavljeni ste kot {name}."
+    NEWPASSWORD: "Novo geslo"
+    NoPassword: "Uporabnik nima nastavljenega gesla."
     PASSWORD: Geslo
     PLURALNAME: Uporabniki
     SINGULARNAME: Uporabnik
-    SUBJECTPASSWORDCHANGED: 'Vaše geslo je bilo posodobljeno'
+    SUBJECTPASSWORDCHANGED: "Vaše geslo je bilo posodobljeno"
     SURNAME: Priimek
-    TIMEFORMAT: 'Časovni zapis'
-    WELCOMEBACK: 'Dobrodošli nazaj, {firstname}'
-    YOUROLDPASSWORD: 'Vaše staro geslo'
+    TIMEFORMAT: "Časovni zapis"
+    WELCOMEBACK: "Dobrodošli nazaj, {firstname}"
+    YOUROLDPASSWORD: "Vaše staro geslo"
     belongs_many_many_Groups: Grupe
-    db_LastVisited: 'Nazadnje obiskano'
+    db_LastVisited: "Nazadnje obiskano"
     db_Password: Geslo
-    db_PasswordExpiry: 'Datum poteka gesla'
+    db_PasswordExpiry: "Datum poteka gesla"
   MemberAuthenticator:
-    TITLE: 'E-pošta in geslo'
+    TITLE: "E-pošta in geslo"
   MemberDatetimeOptionsetField:
     Preview: Predogled
   Permission:
     AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'Dostop do CMS'
-    FULLADMINRIGHTS: 'Polne administratorske pravice'
+    CMS_ACCESS_CATEGORY: "Dostop do CMS"
+    FULLADMINRIGHTS: "Polne administratorske pravice"
     PLURALNAME: Dovoljenja
     SINGULARNAME: Dovoljenje
   PermissionRole:
@@ -280,10 +280,10 @@ sl_SI:
     SINGULARNAME: Vloga
     Title: Naslov
   Security:
-    CHANGEPASSWORDHEADER: 'Zamenjaj geslo'
-    ENTERNEWPASSWORD: 'Prosimo vtipkajte novo geslo.'
-    LOGIN: 'Prijava'
-    LOSTPASSWORDHEADER: 'Pozabljeno geslo'
+    CHANGEPASSWORDHEADER: "Zamenjaj geslo"
+    ENTERNEWPASSWORD: "Prosimo vtipkajte novo geslo."
+    LOGIN: Prijava
+    LOSTPASSWORDHEADER: "Pozabljeno geslo"
   SecurityAdmin:
     MEMBERS: Uporabniki
     MENUTITLE: Varnost
@@ -292,18 +292,18 @@ sl_SI:
     TABROLES: Vloge
     Users: Uporabniki
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Uvozi iz CSV'
+    BtnImport: "Uvozi iz CSV"
   SilverStripeNavigator:
     Edit: Uredi
-    EditView: 'Način urejanja'
+    EditView: "Način urejanja"
     Mobile: Mobilno
-    PreviewView: 'Način predogleda'
+    PreviewView: "Način predogleda"
     Responsive: Odzivno
-    SplitView: 'Razdeljeni način'
+    SplitView: "Razdeljeni način"
     Tablet: Tablica
     Width: širina
   TableListField:
-    CSVEXPORT: 'Izvozi v CSV'
+    CSVEXPORT: "Izvozi v CSV"
     Print: Natisni
   TableListField_PageControls_ss:
     OF: od
@@ -311,29 +311,29 @@ sl_SI:
     LESS: manj
     MORE: več
   UploadField:
-    ATTACHFILE: 'Pripini datoteko'
-    ATTACHFILES: 'Pripni datoteke'
-    AttachFile: 'Pripni datoteko/(e)'
-    CHOOSEANOTHERFILE: 'Izberite drugo datoteko'
-    DELETE: 'Izbriši iz datotek'
-    DELETEINFO: 'Trajno izbriši to datoteko iz shrambe datotek'
+    ATTACHFILE: "Pripini datoteko"
+    ATTACHFILES: "Pripni datoteke"
+    AttachFile: "Pripni datoteko/(e)"
+    CHOOSEANOTHERFILE: "Izberite drugo datoteko"
+    DELETE: "Izbriši iz datotek"
+    DELETEINFO: "Trajno izbriši to datoteko iz shrambe datotek"
     DOEDIT: Shrani
     Dimensions: Dimenzije
     EDIT: Uredi
-    EDITINFO: 'Uredi datoteko'
-    FIELDNOTSET: 'Ni informacij o datoteki'
-    FROMCOMPUTER: 'Iz vašega računalnika'
-    FROMCOMPUTERINFO: 'Izberite iz datotek'
-    FROMFILES: 'Iz datotek'
+    EDITINFO: "Uredi datoteko"
+    FIELDNOTSET: "Ni informacij o datoteki"
+    FROMCOMPUTER: "Iz vašega računalnika"
+    FROMCOMPUTERINFO: "Izberite iz datotek"
+    FROMFILES: "Iz datotek"
     REMOVE: Odstrani
-    STARTALL: 'Zaženi vse'
+    STARTALL: "Zaženi vse"
     Saved: Shranjeno
   Versioned:
     has_many_Versions: Verzije
   VersionedGridFieldItemRequest:
     ARCHIVE: Arhiv
-    Archived: 'Arhivirano %s %s'
-    BUTTONARCHIVEDESC: 'Odstrani iz objave in pošlji v arhiv'
+    Archived: "Arhivirano %s %s"
+    BUTTONARCHIVEDESC: "Odstrani iz objave in pošlji v arhiv"
     BUTTONPUBLISH: Objavi
-    BUTTONUNPUBLISH: Odstrani iz objave
-    BUTTONUNPUBLISHDESC: 'Odstrani ta zapis iz objavljene strani'
+    BUTTONUNPUBLISH: "Odstrani iz objave"
+    BUTTONUNPUBLISHDESC: "Odstrani ta zapis iz objavljene strani"
