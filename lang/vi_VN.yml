@@ -2,18 +2,18 @@ vi_VN:
   CMSMain:
     SAVE: Lưu
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Bạn có thể thay đổi mật khẩu tại'
+    CHANGEPASSWORDTEXT1: "Bạn có thể thay đổi mật khẩu tại"
   DateField:
-    TODAY: hôm nay
+    TODAY: "hôm nay"
   DropdownField:
     CHOOSE: (chọn)
   LeftAndMain:
-    HELP: Trợ giúp
-    PAGETYPE: 'Loại:'
-    PERMDEFAULT: 'Nhập email và mật khẩu để truy cập vào phần quản lý'
+    HELP: "Trợ giúp"
+    PAGETYPE: "Loại:"
+    PERMDEFAULT: "Nhập email và mật khẩu để truy cập vào phần quản lý"
   Member:
-    INTERFACELANG: 'Ngôn ngữ'
-    SUBJECTPASSWORDCHANGED: 'Thay đổi mật khẩu'
-    SUBJECTPASSWORDRESET: 'Quên mật khẩu'
+    INTERFACELANG: "Ngôn ngữ"
+    SUBJECTPASSWORDCHANGED: "Thay đổi mật khẩu"
+    SUBJECTPASSWORDRESET: "Quên mật khẩu"
   SiteTree:
-    TABMAIN: Nội dung
+    TABMAIN: "Nội dung"

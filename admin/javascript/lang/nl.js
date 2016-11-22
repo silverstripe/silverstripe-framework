@@ -8,7 +8,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('nl', {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Je hebt {num} pagina(s) geselecteerd.\n\nWeet je zeker dat je de pagina(s) wilt archiveren?\n\nDe publicatie van deze en onderliggende pagina's wordt ingetrokken en gearchiveerd.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Je hebt {num} pagina(s) geselecteerd.\n\nWeet je zeker dat je de publicatie van deze pagina's wilt intrekken?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "Je hebt {num} pagina(s) geselecteerd.\n\nWeet je zeker dat je de pagina(s) wilt verwijderen?",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Je hebt {num} pagina(s) geselecteerd.\n\nWeet je zeker dat je de pagina(s) wilt publiceren?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Je hebt {num} pagina(s) geselecteerd.\n\nWeet je zeker dat je de pagina(s) wilt herstellen? Onderliggende pagina's worden naar het top level hersteld, tenzij deze pagina's ook worden hersteld.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Je hebt {num} pagina(s) geselecteerd.\n\nWeet je zeker dat je de publicatie wilt intrekken?",
