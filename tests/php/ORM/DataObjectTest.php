@@ -1762,6 +1762,6 @@ class DataObjectTest extends SapphireTest {
 		$staff->Salary = PHP_INT_MAX;
 		$staff->write();
 		$this->assertEquals(PHP_INT_MAX, DataObjectTest\Staff::get()->byID($staff->ID)->Salary);
-	}
+}
 
 }

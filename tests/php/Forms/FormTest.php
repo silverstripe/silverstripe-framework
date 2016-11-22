@@ -436,6 +436,34 @@ class FormTest extends FunctionalTest {
 		);
 	}
 
+	public function testValidationException() {
+		$this->get('FormTest_Controller');
+
+		$response = $this->post(
+			'FormTest_Controller/Form',
+			array(
+				'Email' => 'test@test.com',
+				'SomeRequiredField' => 'test',
+				'action_triggerException' => 1,
+			)
+		);
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_Email_Holder span.message',
+			array(
+				'Error on Email field'
+			),
+			'Formfield validation shows note on field if invalid'
+		);
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_error',
+			array(
+				'Error at top of form'
+			),
+			'Required fields show a notification on field when left blank'
+		);
+
+	}
+
 	public function testGloballyDisabledSecurityTokenInheritsToNewForm() {
 		SecurityToken::enable();
 
@@ -758,6 +786,7 @@ class FormTest extends FunctionalTest {
 		$form = $this->getStubForm();
 		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->sessionMessage('<em>Escaped HTML</em>', 'good', true);
+		$form->setupFormErrors();
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('.message');
 		$this->assertContains(
@@ -768,6 +797,7 @@ class FormTest extends FunctionalTest {
 		$form = $this->getStubForm();
 		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
 		$form->sessionMessage('<em>Unescaped HTML</em>', 'good', false);
+		$form->setupFormErrors();
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('.message');
 		$this->assertContains(
@@ -779,7 +809,7 @@ class FormTest extends FunctionalTest {
 	function testFieldMessageEscapeHtml() {
 		$form = $this->getStubForm();
 		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
-		$form->addErrorMessage('key1', '<em>Escaped HTML</em>', 'good', true);
+		$form->getSessionValidationResult()->addFieldMessage('key1', '<em>Escaped HTML</em>', 'good');
 		$form->setupFormErrors();
 		$parser = new CSSContentParser($result = $form->forTemplate());
 		$messageEls = $parser->getBySelector('#Form_Form_key1_Holder .message');
@@ -790,7 +820,7 @@ class FormTest extends FunctionalTest {
 
 		$form = $this->getStubForm();
 		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
-		$form->addErrorMessage('key1', '<em>Unescaped HTML</em>', 'good', false);
+		$form->getSessionValidationResult()->addFieldMessage('key1', '<em>Unescaped HTML</em>', 'good', null, false);
 		$form->setupFormErrors();
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('#Form_Form_key1_Holder .message');
