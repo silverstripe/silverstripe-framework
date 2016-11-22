@@ -13,6 +13,18 @@ class HTTPRequestTest extends SapphireTest {
 		$this->assertEquals("add", $request->remaining());
 		
 		$this->assertEquals(array("_matched" => true), $request->match('add', true));
+
+		/* Test that match and param work when a url ends with a parameter with dots */
+		$request = new SS_HTTPRequest('GET', 'path/action/param.with.dots');
+		$this->assertEquals(
+			array(
+				'Action' => 'action',
+				'ID' => 'param.with.dots'
+			),
+			$request->match('path/$Action/$ID')
+		);
+
+		$this->assertEquals('param.with.dots', $request->param('ID'));
 	}
 	
 	public function testHttpMethodOverrides() {
