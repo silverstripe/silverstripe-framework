@@ -53,7 +53,7 @@ class FixtureBlueprint {
 	public function __construct($name, $class = null, $defaults = array()) {
 		if(!$class) $class = $name;
 
-		if(!is_subclass_of($class, 'SilverStripe\\ORM\\DataObject')) {
+		if(!is_subclass_of($class, DataObject::class)) {
 			throw new InvalidArgumentException(sprintf(
 				'Class "%s" is not a valid subclass of DataObject',
 				$class

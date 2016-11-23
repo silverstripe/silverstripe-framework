@@ -1,0 +1,22 @@
+SilverStripe\Forms\Tests\GridField\GridFieldTest\Team:
+    team1:
+        Name: Team 1
+        City: Cologne
+    team2:
+        Name: Team 2
+        City: Wellington
+    team3:
+        Name: Team 3
+        City: Auckland
+    team4:
+        Name: Team 4
+        City: Melbourne
+SilverStripe\Forms\Tests\GridField\GridFieldTest\Player:
+    player1_team1:
+        Name: Player 1
+        Email: player1@test.com
+        Teams: =>SilverStripe\Forms\Tests\GridField\GridFieldTest\Team.team1
+SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader:
+  cheerleader1_team1:
+    Name: Heather
+    Team: =>SilverStripe\Forms\Tests\GridField\GridFieldTest\Team.team4

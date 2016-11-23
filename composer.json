@@ -38,16 +38,26 @@
   "autoload": {
     "psr-4": {
       "SilverStripe\\Admin\\": "admin/code/",
+      "SilverStripe\\Admin\\Tests\\": "admin/tests/",
       "SilverStripe\\Assets\\": "src/Assets/",
+      "SilverStripe\\Assets\\Tests\\": "tests/php/Assets/",
       "SilverStripe\\Control\\": "src/Control/",
+      "SilverStripe\\Control\\Tests\\": "tests/php/Control/",
       "SilverStripe\\Core\\": "src/Core/",
+      "SilverStripe\\Core\\Tests\\": "tests/php/Core/",
       "SilverStripe\\Dev\\": "src/Dev/",
+      "SilverStripe\\Dev\\Tests\\": "tests/php/Dev/",
       "SilverStripe\\Forms\\": "src/Forms/",
+      "SilverStripe\\Forms\\Tests\\": "tests/php/Forms/",
       "SilverStripe\\i18n\\": "src/i18n/",
+      "SilverStripe\\i18n\\Tests\\": "tests/php/i18n/",
       "SilverStripe\\Logging\\": "src/Logging/",
       "SilverStripe\\ORM\\": "src/ORM/",
+      "SilverStripe\\ORM\\Tests\\": "tests/php/ORM/",
       "SilverStripe\\Security\\": "src/Security/",
-      "SilverStripe\\View\\": "src/View/"
+      "SilverStripe\\Security\\Tests\\": "tests/php/Security/",
+      "SilverStripe\\View\\": "src/View/",
+      "SilverStripe\\View\\Tests\\": "tests/php/View/"
     },
     "files": ["src/Core/Constants.php"],
     "classmap": ["tests/behat/features/bootstrap"]

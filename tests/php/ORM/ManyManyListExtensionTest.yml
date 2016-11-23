@@ -1,0 +1,6 @@
+SilverStripe\ORM\Tests\ManyManyListTest\IndirectPrimary:
+  manymany_extra_primary:
+    Title: 'primary'
+SilverStripe\ORM\Tests\ManyManyListTest\SecondarySub:
+  manymany_extra_secondary:
+    Title: 'secondary'

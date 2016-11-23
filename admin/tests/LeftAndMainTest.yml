@@ -1,4 +1,4 @@
-LeftAndMainTest_Object:
+SilverStripe\Admin\Tests\LeftAndMainTest\TestObject:
   page1:
     Title: Page 1
     Sort: 1
@@ -10,11 +10,11 @@ LeftAndMainTest_Object:
     Sort: 3
   page31:
     Title: Page 3.1
-    Parent: =>LeftAndMainTest_Object.page3
+    Parent: =>SilverStripe\Admin\Tests\LeftAndMainTest\TestObject.page3
     Sort: 1
   page32:
     Title: Page 3.2
-    Parent: =>LeftAndMainTest_Object.page3
+    Parent: =>SilverStripe\Admin\Tests\LeftAndMainTest\TestObject.page3
     Sort: 2
   page4:
     Title: Page 4

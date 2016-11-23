@@ -1,0 +1,12 @@
+SilverStripe\Forms\Tests\FormScaffolderTest\Tag:
+  tag1:
+    Title: Tag 1
+SilverStripe\Forms\Tests\FormScaffolderTest\Article:
+  article1:
+    Title: Article 1
+    Content: Test
+    Tags: =>SilverStripe\Forms\Tests\FormScaffolderTest\Tag.tag1
+SilverStripe\Forms\Tests\FormScaffolderTest\Author:
+  author1:
+    FirstName: Author 1
+    Tags: =>SilverStripe\Forms\Tests\FormScaffolderTest\Article.article1

@@ -70,7 +70,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
 	 */
 	public static function add_controller($controllerClass) {
 		if($menuItem = self::menuitem_for_controller($controllerClass)) {
-			self::add_menu_item_obj($controllerClass, $menuItem);
+			$code = static::get_menu_code($controllerClass);
+			self::add_menu_item_obj($code, $menuItem);
 		}
 	}
 

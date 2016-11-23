@@ -379,15 +379,9 @@ class Injector {
 			}
 
 			$file = isset($spec['src']) ? $spec['src'] : null;
-			$name = null;
-
-			if (file_exists($file)) {
-				$filename = basename($file);
-				$name = substr($filename, 0, strrpos($filename, '.'));
-			}
 
 			// class is whatever's explicitly set,
-			$class = isset($spec['class']) ? $spec['class'] : $name;
+			$class = isset($spec['class']) ? $spec['class'] : null;
 
 			// or the specid if nothing else available.
 			if (!$class && is_string($specId)) {
@@ -395,9 +389,14 @@ class Injector {
 			}
 
 			// make sure the class is set...
+			if (empty($class)) {
+				throw new \InvalidArgumentException('Missing spec class');
+			}
 			$spec['class'] = $class;
 
-			$id = is_string($specId) ? $specId : (isset($spec['id']) ? $spec['id'] : $class);
+			$id = is_string($specId)
+				? $specId
+				: (isset($spec['id']) ? $spec['id'] : $class);
 
 			$priority = isset($spec['priority']) ? $spec['priority'] : 1;
 

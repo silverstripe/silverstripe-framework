@@ -1,0 +1,15 @@
+SilverStripe\Forms\Tests\CheckboxSetFieldTest\Tag:
+   tag1:
+      Title: Tag 1
+   tag2:
+      Title: Tag 2
+   tag3:
+      Title: Tag 3
+SilverStripe\Forms\Tests\CheckboxSetFieldTest\Article:
+   articlewithouttags:
+      Content: Article 1
+   articlewithtags:
+      Content: Article 2
+      Tags:
+        - =>SilverStripe\Forms\Tests\CheckboxSetFieldTest\Tag.tag1
+        - =>SilverStripe\Forms\Tests\CheckboxSetFieldTest\Tag.tag2

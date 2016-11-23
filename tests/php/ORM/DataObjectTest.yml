@@ -1,0 +1,147 @@
+SilverStripe\ORM\Tests\DataObjectTest\Sortable:
+  numeric1:
+    Sort: 0
+    Name: steven
+  numeric2:
+    Sort: -1
+    Name: bonny
+  numeric3:
+    Sort: 1
+    Name: sam
+  numeric4:
+    Sort: -2
+    Name: Bob
+  numeric5:
+    Sort: 2
+    Name: jane
+  numeric6:
+    Sort: -10
+    Name: Steve
+  numeric7:
+    Sort: 10
+    Name: John
+SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany:
+  equipmentcompany1:
+    Name: Company corp
+  equipmentcompany2:
+    Name: 'Team co.'
+SilverStripe\ORM\Tests\DataObjectTest\SubEquipmentCompany:
+  subequipmentcompany1:
+    Name: John Smith and co
+SilverStripe\ORM\Tests\DataObjectTest\Team:
+  team1:
+    Title: Team 1
+    Sponsors:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
+    EquipmentSuppliers: =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
+  team2:
+    Title: Team 2
+    Sponsors:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
+      - =>SilverStripe\ORM\Tests\DataObjectTest\SubEquipmentCompany.subequipmentcompany1
+    EquipmentSuppliers:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
+  team3:
+    Title: Team 3
+SilverStripe\ORM\Tests\DataObjectTest\Player:
+  captain1:
+    FirstName: Captain
+    Surname: Zookeeper
+    ShirtNumber: 007
+    FavouriteTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    Teams: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    FoundingTeams: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    IsRetired: 1
+  captain2:
+    FirstName: Captain 2
+    Surname: Aaron
+    Teams: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+    FoundingTeams: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+  player1:
+    FirstName: Player 1
+  player2:
+    FirstName: Player 2
+    Teams:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+SilverStripe\ORM\Tests\DataObjectTest\SubTeam:
+  subteam1:
+    Title: Subteam 1
+    SubclassDatabaseField: Subclassed 1
+    ExtendedDatabaseField: Extended 1
+    ParentTeam: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+    Sponsors:
+      - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany1
+      - =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany2
+    EquipmentSuppliers: =>SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany.equipmentcompany1
+  subteam2_with_player_relation:
+    Title: Subteam 2
+    SubclassDatabaseField: Subclassed 2
+    ExtendedHasOneRelationship: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player1
+  subteam3_with_empty_fields:
+    Title: Subteam 3
+SilverStripe\ORM\Tests\DataObjectTest\TeamComment:
+  comment1:
+    Name: Joe
+    Comment: This is a team comment by Joe
+    Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  comment2:
+    Name: Bob
+    Comment: This is a team comment by Bob
+    Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  comment3:
+    Name: Phil
+    Comment: Phil is a unique guy, and comments on team2
+    Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+SilverStripe\ORM\Tests\ManyManyListTest\Product:
+  producta:
+    Title: 'Product A'
+  productb:
+    Title: 'Product B'
+    RelatedProducts: =>SilverStripe\ORM\Tests\ManyManyListTest\Product.producta
+SilverStripe\ORM\Tests\ManyManyListTest\Category:
+  categorya:
+    Title: 'Category A'
+    Products:
+      - =>SilverStripe\ORM\Tests\ManyManyListTest\Product.producta
+      - =>SilverStripe\ORM\Tests\ManyManyListTest\Product.productb
+  comment1:
+    Name: Joe
+    Comment: This is a team comment by Joe
+    Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  comment2:
+    Name: Bob
+    Comment: This is a team comment by Bob
+    Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  comment3:
+    Name: Phil
+    Comment: Phil is a unique guy, and comments on team2
+    Team: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+SilverStripe\ORM\Tests\DataObjectTest\Fan:
+  fan1:
+    Name: Damian
+    Email: damian@thefans.com
+    Favourite: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  fan2:
+    Name: Stephen
+    Favourite: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player1
+    SecondFavourite: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team2
+  fan3:
+    Name: Richard
+    Email: richie@richers.com
+    Favourite: =>SilverStripe\ORM\Tests\DataObjectTest\Team.team1
+  fan4:
+    Name: Mitch
+    Favourite: =>SilverStripe\ORM\Tests\DataObjectTest\SubTeam.subteam1
+  fan5:
+    Name: Hamish
+    Email: ''
+SilverStripe\ORM\Tests\DataObjectTest\Company:
+  company1:
+    Name: Company corp
+    Owner: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player1
+  company1:
+    Name: 'Team co.'
+    Owner: =>SilverStripe\ORM\Tests\DataObjectTest\Player.player2

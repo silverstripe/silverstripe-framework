@@ -1,0 +1,82 @@
+SilverStripe\Assets\Folder:
+  folder1:
+    Name: UploadFieldTest
+  folder1-subfolder1:
+    Name: subfolder1
+    Parent: =>SilverStripe\Assets\Folder.folder1
+SilverStripe\Assets\File:
+  file1:
+    Title: File1
+    FileFilename: UploadFieldTest/file1.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: file1.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1
+  file2:
+    Title: File2
+    FileFilename: UploadFieldTest/file2.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: file2.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1
+  file3:
+    Title: File3
+    FileFilename: UploadFieldTest/file3.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: file3.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1
+  file4:
+    Title: File4
+    FileFilename: UploadFieldTest/file4.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: file4.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1
+  file5:
+    Title: File5
+    FileFilename: UploadFieldTest/file5.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: file5.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1
+  file-noview:
+    Title: noview.txt
+    Name: noview.txt
+    FileFilename: UploadFieldTest/noview.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: noview.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1
+  file-noedit:
+    Title: noedit.txt
+    Name: noedit.txt
+    FileFilename: UploadFieldTest/noedit.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: noedit.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1
+  file-nodelete:
+    Title: nodelete.txt
+    Name: nodelete.txt
+    FileFilename: UploadFieldTest/nodelete.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: nodelete.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1
+  file-subfolder:
+    Title: file-subfolder.txt
+    Name: file-subfolder.txt
+    FileFilename: UploadFieldTest/subfolder1/file-subfolder.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: file-subfolder.txt
+    Parent: =>SilverStripe\Assets\Folder.folder1-subfolder1
+SilverStripe\Forms\Tests\UploadFieldTest\TestRecord:
+  record1:
+    Title: Record 1
+    HasOneFileID: =>SilverStripe\Assets\File.file1
+    HasManyFiles: =>SilverStripe\Assets\File.file2,=>SilverStripe\Assets\File.file3
+    ManyManyFiles:
+      - =>SilverStripe\Assets\File.file4
+      - =>SilverStripe\Assets\File.file5
+      - =>SilverStripe\Assets\File.file-noedit
+      - =>SilverStripe\Assets\File.file-nodelete
+    HasManyNoViewFiles:
+      - =>SilverStripe\Assets\File.file4
+      - =>SilverStripe\Assets\File.file5
+      - =>SilverStripe\Assets\File.file-noedit
+      - =>SilverStripe\Assets\File.file-nodelete
+      - =>SilverStripe\Assets\File.file-noview
+    ReadonlyField: =>SilverStripe\Assets\File.file4

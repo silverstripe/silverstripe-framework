@@ -2,6 +2,8 @@
 
 namespace SilverStripe\View;
 
+use SilverStripe\Dev\Debug;
+
 /**
  * Handles finding templates from a stack of template manifest objects.
  */

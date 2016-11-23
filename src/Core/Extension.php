@@ -4,7 +4,6 @@ namespace SilverStripe\Core;
 
 use BadMethodCallException;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Object;
 
 /**
  * Add extension that can be added to an object with {@link Object::add_extension()}.

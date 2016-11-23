@@ -1,9 +1,0 @@
-ComponentSetTest_Player:
-  player1_team1:
-    Email: player1_team1@test.com
-  player2:
-    Email: player2@test.com
-ComponentSetTest_Team:
-  team1:
-    Title: team1
-    Players: =>ComponentSetTest_Player.player1_team1

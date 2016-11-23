@@ -1,0 +1,24 @@
+SilverStripe\ORM\Tests\DataExtensionTest\RelatedObject:
+  obj1:
+    FieldOne: Obj1
+  obj2:
+    FieldOne: Obj2
+SilverStripe\Security\Permission:
+  adminpermission:
+    Code: ADMIN
+SilverStripe\Security\Group:
+  admingroup:
+    Permissions: '=>SilverStripe\Security\Permission.adminpermission'
+SilverStripe\Security\Member:
+  admin:
+    Email: admin@test.com
+    Groups: '=>SilverStripe\Security\Group.admingroup'
+  websiteuser:
+    Email: websiteuser@test.com
+SilverStripe\ORM\Tests\DataExtensionTest\TestMember:
+  member1:
+    Name: Sam
+    Website: http://www.example.org
+SilverStripe\ORM\Tests\DataExtensionTest\MyObject:
+  object1:
+    Title: Object 1

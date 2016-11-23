@@ -3,11 +3,12 @@
 // Bootstrap for running SapphireTests
 
 // Connect to database
+use SilverStripe\Control\Tests\FakeController;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DB;
 
 require_once __DIR__ . '/../../src/Core/Core.php';
-require_once __DIR__ . '/../FakeController.php';
+require_once __DIR__ . '/../php/Control/FakeController.php';
 
 global $databaseConfig;
 DB::connect($databaseConfig);

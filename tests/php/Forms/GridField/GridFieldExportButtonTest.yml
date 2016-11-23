@@ -1,0 +1,12 @@
+SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\Team:
+  test-team-1:
+    Name: Test
+    City: City
+    RugbyTeamNumber: 2
+  test-team-2:
+    Name: Test2
+    City: 'Quoted "City" 2'
+    RugbyTeamNumber: 0
+SilverStripe\Forms\Tests\GridField\GridFieldExportButtonTest\NoView:
+  item1:
+    Name: Foo

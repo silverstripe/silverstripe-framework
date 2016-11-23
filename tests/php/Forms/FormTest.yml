@@ -1,0 +1,22 @@
+SilverStripe\Forms\Tests\FormTest\Team:
+  team1:
+    Name: Team 1
+  team2:
+    Name: Team 2
+SilverStripe\Forms\Tests\FormTest\Player:
+  captainWithDetails:
+    Name: Captain Details
+    Birthday: 1982-01-01
+    Biography: Bio 1
+    FavouriteTeam: =>SilverStripe\Forms\Tests\FormTest\Team.team1
+    Teams: =>SilverStripe\Forms\Tests\FormTest\Team.team1
+  captainNoDetails:
+    Name: Captain No Details
+    Teams: =>SilverStripe\Forms\Tests\FormTest\Team.team2
+  player1:
+    Name: Player 1
+  player2:
+    Name: Player 2
+    Teams:
+      - =>SilverStripe\Forms\Tests\FormTest\Team.team1
+      - =>SilverStripe\Forms\Tests\FormTest\Team.team2
