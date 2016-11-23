@@ -18,11 +18,11 @@ class FieldGroupTest extends SapphireTest {
 			)
 		);
 
-		$textField->setError('Test error message', 'warning');
-		$emailField->setError('Test error message', 'error');
+		$textField->setMessage('Test error message', 'error');
+		$emailField->setMessage('Test error warning', 'warning');
 
-		$this->assertEquals('Test error message,  Test error message.', $fieldGroup->Message());
-		$this->assertEquals('warning.  error', $fieldGroup->MessageType());
+		$this->assertEquals('Test error message, Test error warning.', $fieldGroup->getMessage());
+		$this->assertEquals('error', $fieldGroup->getMessageType());
 	}
 
 }

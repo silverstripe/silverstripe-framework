@@ -12,6 +12,8 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\TextField;
+use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -54,6 +56,7 @@ class TestController extends Controller implements TestOnly
 			),
 			new FieldList(
 				FormAction::create('doSubmit'),
+				FormAction::create('doTriggerException'),
 				FormAction::create('doSubmitValidationExempt'),
 				FormAction::create('doSubmitActionExempt')
 					->setValidationExempt(true)
@@ -74,6 +77,13 @@ class TestController extends Controller implements TestOnly
 		$form->sessionMessage('Test save was successful', 'good');
 		return $this->redirectBack();
 	}
+
+	public function doTriggerException($data, $form, $request) {
+ 		$result = new ValidationResult();
+ 		$result->addFieldError('Email', 'Error on Email field');
+ 		$result->addError('Error at top of form');
+ 		throw new ValidationException($result);
+ 	}
 
 	public function doSubmitValidationExempt($data, $form, $request)
 	{

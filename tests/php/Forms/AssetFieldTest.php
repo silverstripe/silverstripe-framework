@@ -346,7 +346,7 @@ class AssetFieldTest extends FunctionalTest {
 
 		$form = new TestForm();
 		$form->loadDataFrom($data, true);
-		if($form->validate()) {
+		if($form->validationResult()->isValid()) {
 			$record = $form->getRecord();
 			$form->saveInto($record);
 			$record->write();

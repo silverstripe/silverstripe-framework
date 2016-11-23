@@ -124,12 +124,13 @@ class CMSMemberLoginForm extends LoginForm
     /**
      * Redirect the user to the change password form.
      *
+     * @skipUpgrade
      * @return HTTPResponse
      */
     protected function redirectToChangePassword()
     {
         // Since this form is loaded via an iframe, this redirect must be performed via javascript
-        $changePasswordForm = new ChangePasswordForm($this->controller, 'SilverStripe\\Security\\ChangePasswordForm');
+        $changePasswordForm = new ChangePasswordForm($this->controller, 'ChangePasswordForm');
         $changePasswordForm->sessionMessage(
             _t('Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
             'good'

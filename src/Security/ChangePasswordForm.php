@@ -14,6 +14,7 @@ use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\Form;
+use SilverStripe\ORM\ValidationResult;
 
 /**
  * Standard Change Password Form
@@ -64,7 +65,6 @@ class ChangePasswordForm extends Form
         parent::__construct($controller, $name, $fields, $actions);
     }
 
-
     /**
      * Change the password
      *
@@ -75,7 +75,7 @@ class ChangePasswordForm extends Form
     {
         if ($member = Member::currentUser()) {
             // The user was logged in, check the current password
-            if (empty($data['OldPassword']) || !$member->checkPassword($data['OldPassword'])->valid()) {
+            if (empty($data['OldPassword']) || !$member->checkPassword($data['OldPassword'])->isValid()) {
                 $this->clearMessage();
                 $this->sessionMessage(
                     _t('Member.ERRORPASSWORDNOTMATCH', "Your current password does not match, please try again"),
@@ -108,60 +108,52 @@ class ChangePasswordForm extends Form
 
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
             return $this->controller->redirect($this->controller->Link('changepassword'));
-        } elseif ($data['NewPassword1'] == $data['NewPassword2']) {
-            $isValid = $member->changePassword($data['NewPassword1']);
-            if ($isValid->valid()) {
-                // Clear locked out status
-                $member->LockedOutUntil = null;
-                $member->FailedLoginCount = null;
-                $member->write();
+        }
 
-                if ($member->canLogIn()->valid()) {
-                    $member->logIn();
-                }
-
-                // TODO Add confirmation message to login redirect
-                Session::clear('AutoLoginHash');
-
-                if (!empty($_REQUEST['BackURL'])
-                    // absolute redirection URLs may cause spoofing
-                    && Director::is_site_url($_REQUEST['BackURL'])
-                ) {
-                    $url = Director::absoluteURL($_REQUEST['BackURL']);
-                    return $this->controller->redirect($url);
-                } else {
-                    // Redirect to default location - the login form saying "You are logged in as..."
-                    $redirectURL = HTTP::setGetVar(
-                        'BackURL',
-                        Director::absoluteBaseURL(),
-                        $this->controller->Link('login')
-                    );
-                    return $this->controller->redirect($redirectURL);
-                }
-            } else {
-                $this->clearMessage();
-                $this->sessionMessage(
-                    _t(
-                        'Member.INVALIDNEWPASSWORD',
-                        "We couldn't accept that password: {password}",
-                        array('password' => nl2br("\n".Convert::raw2xml($isValid->starredList())))
-                    ),
-                    "bad",
-                    false
-                );
-
-                // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
-                return $this->controller->redirect($this->controller->Link('changepassword'));
-            }
-        } else {
+        // Fail if passwords do not match
+        if ($data['NewPassword1'] !== $data['NewPassword2']) {
             $this->clearMessage();
             $this->sessionMessage(
                 _t('Member.ERRORNEWPASSWORD', "You have entered your new password differently, try again"),
                 "bad"
             );
-
             // redirect back to the form, instead of using redirectBack() which could send the user elsewhere.
             return $this->controller->redirect($this->controller->Link('changepassword'));
+        }
+
+        // Check if the new password is accepted
+        $validationResult = $member->changePassword($data['NewPassword1']);
+        if (!$validationResult->isValid()) {
+            $this->setSessionValidationResult($validationResult);
+            return $this->controller->redirect($this->controller->Link('changepassword'));
+        }
+
+        // Clear locked out status
+        $member->LockedOutUntil = null;
+        $member->FailedLoginCount = null;
+        $member->write();
+
+        if ($member->canLogIn()->isValid()) {
+            $member->logIn();
+        }
+
+        // TODO Add confirmation message to login redirect
+        Session::clear('AutoLoginHash');
+
+        if (!empty($_REQUEST['BackURL'])
+            // absolute redirection URLs may cause spoofing
+            && Director::is_site_url($_REQUEST['BackURL'])
+        ) {
+            $url = Director::absoluteURL($_REQUEST['BackURL']);
+            return $this->controller->redirect($url);
+        } else {
+            // Redirect to default location - the login form saying "You are logged in as..."
+            $redirectURL = HTTP::setGetVar(
+                'BackURL',
+                Director::absoluteBaseURL(),
+                $this->controller->Link('login')
+            );
+            return $this->controller->redirect($redirectURL);
         }
     }
 }

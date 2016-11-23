@@ -38,6 +38,25 @@ If you want to load the schema from a server via XHR, use the
  * `touchOnChange` (bool): See [redux-form](http://redux-form.com/6.0.5/docs/api/ReduxForm.md/)
  * `persistentSubmitErrors` (bool): See [redux-form](http://redux-form.com/6.0.5/docs/api/ReduxForm.md/)
  * `validate` (function): See [redux-form](http://redux-form.com/6.0.5/docs/api/ReduxForm.md/)
+ * `responseRequestedSchema` (array): This allows you to customise the response requested from the server
+ on submit. See below on "Handling submissions".
+  
+## Handling submissions
+
+The `responseRequestedSchema` property will control the value of the 'X-Formschema-Request' header, which
+in turn communicates to PHP the kind of response react would like. Your form should only specify the
+bare minimum that it requires, as each header will represent additional overhead on all XHR requests. 
+  
+This is an array which may be any combination of the below values:
+
+* `schema`: The schema is requested on submit
+* `state`: The state is requested on submit. Note that this may also include form errors.
+* `errors`: The list of validation errors is returned in case of error.
+* `auto`: (default) Conditionally return `errors` if there are errors, or `state` if there are none.
+
+Note that these are only the requested header values; The PHP submission method may choose to ignore
+these values, and return any combination of the above. Typically the only time this requested value
+is respected is when handled by the default validation error handler (LeftAndMain::getSchemaResponse)
 
 ## Schema Structure
 

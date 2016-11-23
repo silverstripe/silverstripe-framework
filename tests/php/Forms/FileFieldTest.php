@@ -33,9 +33,7 @@ class FileFieldTest extends FunctionalTest {
 		);
 		$fileField->setValue($fileFieldValue);
 
-		$this->assertTrue(
-			$form->validate()
-		);
+		$this->assertTrue($form->validationResult()->isValid());
 	}
 
 	/**
@@ -63,7 +61,7 @@ class FileFieldTest extends FunctionalTest {
 		$fileField->setValue($fileFieldValue);
 
 		$this->assertFalse(
-			$form->validate(),
+			$form->validationResult()->isValid(),
 			'An error occured when uploading a file, but the validator returned true'
 		);
 
@@ -72,7 +70,7 @@ class FileFieldTest extends FunctionalTest {
 		$fileField->setValue($fileFieldValue);
 
 		$this->assertFalse(
-			$form->validate(),
+			$form->validationResult()->isValid(),
 			'An empty array was passed as parameter for an uploaded file, but the validator returned true'
 		);
 
@@ -81,7 +79,7 @@ class FileFieldTest extends FunctionalTest {
 		$fileField->setValue($fileFieldValue);
 
 		$this->assertFalse(
-			$form->validate(),
+			$form->validationResult()->isValid(),
 			'A null value was passed as parameter for an uploaded file, but the validator returned true'
 		);
 	}

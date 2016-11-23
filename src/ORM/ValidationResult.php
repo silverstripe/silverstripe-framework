@@ -2,259 +2,235 @@
 
 namespace SilverStripe\ORM;
 
-use SilverStripe\Core\Object;
+use InvalidArgumentException;
+use Serializable;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injectable;
+use SilverStripe\Dev\Deprecation;
 
 /**
  * A class that combined as a boolean result with an optional list of error messages.
  * This is used for returning validation results from validators
+ *
+ * Each message can have a code or field which will uniquely identify that message. However,
+ * messages can be stored without a field or message as an "overall" message.
  */
-class ValidationResult extends Object
+class ValidationResult implements Serializable
 {
-	/**
-	 * @var bool - is the result valid or not
-	 */
-	protected $isValid = true;
+    use Injectable;
 
+    /**
+     * Standard "error" type
+     */
+    const TYPE_ERROR = 'error';
 
-	/**
-	 * @var array of errors
-	 */
-	protected $errorList = array();
+    /**
+     * Standard "good" message type
+     */
+    const TYPE_GOOD = 'good';
 
-	/**
-	 * Create a new ValidationResult.
-	 * By default, it is a successful result.	Call $this->error() to record errors.
-	 *
-	 * @param void $valid @deprecated
-	 * @param void $message @deprecated
-	 */
-	public function __construct($valid = null, $message = null) {
-		if ($message !== null) {
-			Deprecation::notice('3.2', '$message parameter is deprecated please use addMessage or addError instead', false);
-			$this->addError($message);
-		}
-		if ($valid !== null) {
-			Deprecation::notice('3.2', '$valid parameter is deprecated please addError to mark the result as invalid', false);
-		$this->isValid = $valid;
-        if ($message) {
-            $this->errorList[] = $message;
+    /**
+     * Non-error message type.
+     */
+    const TYPE_INFO = 'info';
+
+    /**
+     * Warning message type
+     */
+    const TYPE_WARNING = 'warning';
+
+    /**
+     * Message type is html
+     */
+    const CAST_HTML = 'html';
+
+    /**
+     * Message type is plain text
+     */
+    const CAST_TEXT = 'text';
+
+    /**
+     * Is the result valid or not.
+     * Note that there can be non-error messages in the list.
+     *
+     * @var bool
+     */
+    protected $isValid = true;
+
+    /**
+     * List of messages
+     *
+     * @var array
+     */
+    protected $messages = array();
+
+    /**
+     * Create a new ValidationResult.
+     * By default, it is a successful result.   Call $this->error() to record errors.
+     */
+    public function __construct()
+    {
+        if (func_num_args() > 0) {
+            Deprecation::notice('3.2', '$valid parameter is deprecated please addError to mark the result as invalid', false);
+            $this->isValid = func_get_arg(0);
         }
-		parent::__construct();
-	}
-
-	/**
-	 * Return the full error meta-data, suitable for combining with another ValidationResult.
-	 */
-	function getErrorMetaData() {
-		return $this->errorList;
-	}
-
-	/**
-	 * Record a
-	 * against this validation result.
-	 *
-	 * It's better to use addError, addFeildError, addMessage, or addFieldMessage instead.
-	 *
-	 * @param string $message     The message string.
-	 * @param string $code        A codename for this error. Only one message per codename will be added.
-	 *                            This can be usedful for ensuring no duplicate messages
-	 * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
-	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
-	 *                            class to the form, so other values can be used if desired.
-	 * @param bool $escapeHtml    Automatically sanitize the message. Set to FALSE if the message contains HTML.
-	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
-	 *                            user supplied data in the message.
-	 *
-	 * @deprecated 3.2
-	 */
-	public function error($message, $code = null, $fieldName = null, $messageType = "bad", $escapeHtml = true) {
-		Deprecation::notice('3.2', 'Use addError or addFieldError instead.');
-
-		return $this->addFieldError($fieldName, $message, $messageType, $code, $escapeHtml);
-	}
-
-	/**
-	 * Record an error against this validation result,
-	 *
-	 * @param string $message     The message string.
-	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
-	 *                            class to the form, so other values can be used if desired.
-	 * @param string $code        A codename for this error. Only one message per codename will be added.
-	 *                            This can be usedful for ensuring no duplicate messages
-	 * @param bool $escapeHtml    Automatically sanitize the message. Set to FALSE if the message contains HTML.
-	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
-	 *                            user supplied data in the message.
-	 */
-	public function addError($message, $messageType = "bad", $code = null, $escapeHtml = true) {
-
-		return $this->addFieldError(null, $message, $messageType, $code, $escapeHtml);
-	}
-
-	/**
-	 * Record an error against this validation result,
-	 *
-	 * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
-	 * @param string $message     The message string.
-	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
-	 *                            class to the form, so other values can be used if desired.
-	 * @param string $code        A codename for this error. Only one message per codename will be added.
-	 *                            This can be usedful for ensuring no duplicate messages
-	 * @param bool $escapeHtml    Automatically sanitize the message. Set to FALSE if the message contains HTML.
-	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
-	 *                            user supplied data in the message.
-	 */
-	public function addFieldError($fieldName = null, $message, $messageType = "bad", $code = null, $escapeHtml = true) {
-		$this->isValid = false;
-
-		return $this->addFieldMessage($fieldName, $message, $messageType, $code, $escapeHtml);
-	}
-
-	/**
-	 * Add a message to this ValidationResult without necessarily marking it as an error
-	 *
-	 * @param string $message     The message string.
-	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
-	 *                            class to the form, so other values can be used if desired.
-	 * @param string $code        A codename for this error. Only one message per codename will be added.
-	 *                            This can be usedful for ensuring no duplicate messages
-	 * @param bool $escapeHtml    Automatically sanitize the message. Set to FALSE if the message contains HTML.
-	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
-	 *                            user supplied data in the message.
-	 */
-	public function addMessage($message, $messageType = "bad", $code = null, $escapeHtml = true) {
-		return $this->addFieldMessage(null, $message, $messageType, $code, $escapeHtml);
-	}
-
-	/**
-	 * Add a message to this ValidationResult without necessarily marking it as an error
-	 *
-	 * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
-	 * @param string $message     The message string.
-	 * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
-	 *                            class to the form, so other values can be used if desired.
-	 * @param string $code        A codename for this error. Only one message per codename will be added.
-	 *                            This can be usedful for ensuring no duplicate messages
-	 * @param bool $escapeHtml    Automatically sanitize the message. Set to FALSE if the message contains HTML.
-	 *                            In that case, you might want to use {@link Convert::raw2xml()} to escape any
-	 *                            user supplied data in the message.
-	 */
-	public function addFieldMessage($fieldName, $message, $messageType = "bad", $code = null, $escapeHtml = true) {
-		$metadata = array(
-			'message' => $escapeHtml ? Convert::raw2xml($message) : $message,
-			'fieldName' => $fieldName,
-			'messageType' => $messageType,
-		);
-
-		if($code) {
-			if(!is_numeric($code)) {
-				$this->errorList[$code] = $metadata;
-			} else {
-				throw new InvalidArgumentException(
-					"ValidationResult::error() - Don't use a numeric code '$code'.  Use a string.");
-			}
-		} else {
-			$this->errorList[] = $metadata;
-		}
-
-		return $this;
-	}
-
-	/**
-	 * Returns true if the result is valid.
-	 * @return boolean
-	 */
-    public function valid()
-    {
-		return $this->isValid;
-	}
-
-	/**
-	 * Get an array of errors
-	 * @return array
-	 */
-    public function messageList()
-    {
-		$list = array();
-		foreach($this->errorList as $key => $item) {
-			if(is_numeric($key)) $list[] = $item['message'];
-			else $list[$key] = $item['message'];
-		}
-		return $list;
-	}
-
-	/**
-	 * Get the field-specific messages as a map.
-	 * Keys will be field names, and values will be a 2 element map with keys 'messsage', and 'messageType'
-	 */
-	public function fieldErrors() {
-		$output = array();
-		foreach($this->errorList as $key => $item) {
-			if($item['fieldName']) {
-				$output[$item['fieldName']] = array(
-					'message' => $item['message'],
-					'messageType' => $item['messageType']
-				);
-			}
-		}
-		return $output;
-	}
-
-	/**
-	 * Get an array of error codes
-	 * @return array
-	 */
-    public function codeList()
-    {
-		$codeList = array();
-        foreach ($this->errorList as $k => $v) {
-            if (!is_numeric($k)) {
-                $codeList[] = $k;
-            }
+        if (func_num_args() > 1) {
+            Deprecation::notice('3.2', '$message parameter is deprecated please use addMessage or addError instead', false);
+            $this->addError(func_get_arg(1));
         }
-		return $codeList;
-	}
+    }
 
-	/**
-	 * Get the error message as a string.
-	 * @return string
-	 */
-    public function message()
+    /**
+     * Record an error against this validation result,
+     *
+     * @param string $message     The message string.
+     * @param string $messageType Passed as a CSS class to the form, so other values can be used if desired.
+     * Standard types are defined by the TYPE_ constant definitions.
+     * @param string $code        A codename for this error. Only one message per codename will be added.
+     *                            This can be usedful for ensuring no duplicate messages
+     * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
+     * Bool values will be treated as plain text flag.
+     * @return $this
+     */
+    public function addError($message, $messageType = self::TYPE_ERROR, $code = null, $cast = self::CAST_TEXT)
     {
-		return implode("; ", $this->messageList());
-	}
+        return $this->addFieldError(null, $message, $messageType, $code, $cast);
+    }
 
-	/**
-	 * The the error message that's not related to a field as a string
-	 */
-	public function overallMessage() {
-		$messages = array();
-		foreach($this->errorList as $item) {
-			if(!$item['fieldName']) $messages[] = $item['message'];
-		}
-		return implode("; ", $messages);
-	}
+    /**
+     * Record an error against this validation result,
+     *
+     * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
+     * @param string $message     The message string.
+     * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
+     *                            class to the form, so other values can be used if desired.
+     * @param string $code        A codename for this error. Only one message per codename will be added.
+     *                            This can be usedful for ensuring no duplicate messages
+     * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
+     * Bool values will be treated as plain text flag.
+     * @return $this
+     */
+    public function addFieldError(
+        $fieldName,
+        $message,
+        $messageType = self::TYPE_ERROR,
+        $code = null,
+        $cast = self::CAST_TEXT
+    ) {
+        $this->isValid = false;
+        return $this->addFieldMessage($fieldName, $message, $messageType, $code, $cast);
+    }
 
-	/**
-	 * Get a starred list of all messages
-	 * @return string
-	 */
-    public function starredList()
+    /**
+     * Add a message to this ValidationResult without necessarily marking it as an error
+     *
+     * @param string $message     The message string.
+     * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
+     *                            class to the form, so other values can be used if desired.
+     * @param string $code        A codename for this error. Only one message per codename will be added.
+     *                            This can be usedful for ensuring no duplicate messages
+     * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
+     * Bool values will be treated as plain text flag.
+     * @return $this
+     */
+    public function addMessage($message, $messageType = self::TYPE_ERROR, $code = null, $cast = self::CAST_TEXT)
     {
-		return " * " . implode("\n * ", $this->messageList());
-	}
+        return $this->addFieldMessage(null, $message, $messageType, $code, $cast);
+    }
 
-	/**
-	 * Combine this Validation Result with the ValidationResult given in other.
-	 * It will be valid if both this and the other result are valid.
-	 * This object will be modified to contain the new validation information.
-	 *
-	 * @param ValidationResult $other the validation result object to combine
-	 * @return $this
-	 */
+    /**
+     * Add a message to this ValidationResult without necessarily marking it as an error
+     *
+     * @param string $fieldName   The field to link the message to.  If omitted; a form-wide message is assumed.
+     * @param string $message     The message string.
+     * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
+     *                            class to the form, so other values can be used if desired.
+     * @param string $code        A codename for this error. Only one message per codename will be added.
+     *                            This can be usedful for ensuring no duplicate messages
+     * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
+     * Bool values will be treated as plain text flag.
+     * @return $this
+     */
+    public function addFieldMessage(
+        $fieldName,
+        $message,
+        $messageType = self::TYPE_ERROR,
+        $code = null,
+        $cast = self::CAST_TEXT
+    ) {
+        if ($code && is_numeric($code)) {
+            throw new InvalidArgumentException("Don't use a numeric code '$code'.  Use a string.");
+        }
+        if (is_bool($cast)) {
+            $cast = $cast ? self::CAST_TEXT : self::CAST_HTML;
+        }
+        $metadata = array(
+            'message' => $message,
+            'fieldName' => $fieldName,
+            'messageType' => $messageType,
+            'messageCast' => $cast,
+        );
+
+        if ($code) {
+            $this->messages[$code] = $metadata;
+        } else {
+            $this->messages[] = $metadata;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns true if the result is valid.
+     * @return boolean
+     */
+    public function isValid()
+    {
+        return $this->isValid;
+    }
+
+    /**
+     * Return the full error meta-data, suitable for combining with another ValidationResult.
+     *
+     * @return array Array of messages, where each item is an array of data for that message.
+     */
+    public function getMessages()
+    {
+        return $this->messages;
+    }
+
+    /**
+     * Combine this Validation Result with the ValidationResult given in other.
+     * It will be valid if both this and the other result are valid.
+     * This object will be modified to contain the new validation information.
+     *
+     * @param ValidationResult $other the validation result object to combine
+     * @return $this
+     */
     public function combineAnd(ValidationResult $other)
     {
-		$this->isValid = $this->isValid && $other->valid();
-		$this->errorList = array_merge($this->errorList, $other->getErrorMetaData());
-		return $this;
-	}
+        $this->isValid = $this->isValid && $other->isValid();
+        $this->messages = array_merge($this->messages, $other->getMessages());
+        return $this;
+    }
+
+    /**
+     * String representation of object
+     *
+     * @return string the string representation of the object or null
+     */
+    public function serialize()
+    {
+        return json_encode([$this->messages, $this->isValid]);
+    }
+
+    /**
+     * Constructs the object
+     *
+     * @param string $serialized
+     */
+    public function unserialize($serialized)
+    {
+        list($this->messages, $this->isValid) = json_decode($serialized, true);
+    }
 }

@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms;
 
 use SilverStripe\Core\Object;
+use SilverStripe\ORM\ValidationResult;
 
 /**
  * This validation class handles all form and custom form validation through the use of Required
@@ -12,40 +13,42 @@ use SilverStripe\Core\Object;
 abstract class Validator extends Object
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->resetResult();
+    }
+
     /**
      * @var Form $form
      */
     protected $form;
 
     /**
-     * @var array $errors
+     * @var ValidationResult $result
      */
-    protected $errors;
+    protected $result;
 
     /**
      * @param Form $form
-     *
      * @return $this
      */
     public function setForm($form)
     {
         $this->form = $form;
-
         return $this;
     }
 
     /**
      * Returns any errors there may be.
      *
-     * @return null|array
+     * @return ValidationResult
      */
     public function validate()
     {
-        $this->errors = null;
-
+        $this->resetResult();
         $this->php($this->form->getData());
-
-        return $this->errors;
+        return $this->result;
     }
 
     /**
@@ -55,17 +58,22 @@ abstract class Validator extends Object
      *
      * See {@link getErrors()} for details.
      *
-     * @param string $fieldName
-     * @param string $errorMessage
-     * @param string $errorMessageType
+     * @param string $fieldName Field name for this error
+     * @param string $message The message string
+     * @param string $messageType The type of message: e.g. "bad", "warning", "good", or "required". Passed as a CSS
+     *                            class to the form, so other values can be used if desired.
+     * @param string|bool $cast Cast type; One of the CAST_ constant definitions.
+     * Bool values will be treated as plain text flag.
+     * @return $this
      */
-    public function validationError($fieldName, $errorMessage, $errorMessageType = '')
-    {
-        $this->errors[] = array(
-            'fieldName' => $fieldName,
-            'message' => $errorMessage,
-            'messageType' => $errorMessageType,
-        );
+    public function validationError(
+        $fieldName,
+        $message,
+        $messageType = ValidationResult::TYPE_ERROR,
+        $cast = ValidationResult::CAST_TEXT
+    ) {
+        $this->result->addFieldError($fieldName, $message, $messageType, null, $cast);
+        return $this;
     }
 
     /**
@@ -77,6 +85,7 @@ abstract class Validator extends Object
      *         'fieldName' => '[form field name]',
      *         'message' => '[validation error message]',
      *         'messageType' => '[bad|message|validation|required]',
+     *         'messageCast' => '[text|html]'
      *     )
      * </code>
      *
@@ -84,32 +93,20 @@ abstract class Validator extends Object
      */
     public function getErrors()
     {
-        return $this->errors;
+        if ($this->result) {
+            return $this->result->getMessages();
+        }
+        return null;
     }
 
     /**
-     * @param string $fieldName
-     * @param array $data
+     * Get last validation result
+     *
+     * @return ValidationResult
      */
-    public function requireField($fieldName, $data)
+    public function getResult()
     {
-        if (is_array($data[$fieldName]) && count($data[$fieldName])) {
-            foreach ($data[$fieldName] as $componentKey => $componentValue) {
-                if (!strlen($componentValue)) {
-                    $this->validationError(
-                        $fieldName,
-                        sprintf('%s %s is required', $fieldName, $componentKey),
-                        'required'
-                    );
-                }
-            }
-        } elseif (!strlen($data[$fieldName])) {
-            $this->validationError(
-                $fieldName,
-                sprintf('%s is required', $fieldName),
-                'required'
-            );
-        }
+        return $this->result;
     }
 
     /**
@@ -131,4 +128,15 @@ abstract class Validator extends Object
      * @return mixed
      */
     abstract public function php($data);
+
+    /**
+     * Clear current result
+     *
+     * @return $this
+     */
+    protected function resetResult()
+    {
+        $this->result = ValidationResult::create();
+        return $this;
+    }
 }

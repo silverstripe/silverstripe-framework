@@ -459,7 +459,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
         if ($sourceObject->manyMany()) {
             foreach ($sourceObject->manyMany() as $name => $type) {
-                        //many_many include belongs_many_many
+            //many_many include belongs_many_many
                 $this->duplicateRelations($sourceObject, $destinationObject, $name);
             }
         }
@@ -1139,11 +1139,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 
             if ($defaults) {
                 foreach ($defaults as $fieldName => $fieldValue) {
-                                // SRM 2007-03-06: Stricter check
+                // SRM 2007-03-06: Stricter check
                     if (!isset($this->$fieldName) || $this->$fieldName === null) {
                         $this->$fieldName = $fieldValue;
                     }
-                                // Set many-many defaults with an array of ids
+                // Set many-many defaults with an array of ids
                     if (is_array($fieldValue) && $this->getSchema()->manyManyComponent(static::class, $fieldName)) {
                         /** @var ManyManyList $manyManyJoin */
                         $manyManyJoin = $this->$fieldName();
@@ -1170,19 +1170,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         if ($this->ObsoleteClassName) {
             return new ValidationException(
                 "Object is of class '{$this->ObsoleteClassName}' which doesn't exist - ".
-                "you need to change the ClassName before you can write it",
-                E_USER_WARNING
+                "you need to change the ClassName before you can write it"
             );
         }
 
         if ($this->config()->get('validation_enabled')) {
             $result = $this->validate();
-            if (!$result->valid()) {
-                return new ValidationException(
-                    $result,
-                    $result->message(),
-                    E_USER_WARNING
-                );
+            if (!$result->isValid()) {
+                return new ValidationException($result);
             }
         }
         return null;
@@ -2356,7 +2351,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                 'before' => array_key_exists($name, $this->original) ? $this->original[$name] : null,
                 'after' => array_key_exists($name, $this->record) ? $this->record[$name] : null,
                 'level' => $level
-                            );
+                );
             }
         }
 
@@ -3382,7 +3377,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     }
                     $types = array(
                     'db'        => (array)Config::inst()->get($ancestorClass, 'db', Config::UNINHERITED)
-                                    );
+                    );
                     if ($includerelations) {
                         $types['has_one'] = (array)Config::inst()->get($ancestorClass, 'has_one', Config::UNINHERITED);
                         $types['has_many'] = (array)Config::inst()->get($ancestorClass, 'has_many', Config::UNINHERITED);

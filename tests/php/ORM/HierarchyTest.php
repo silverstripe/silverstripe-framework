@@ -31,17 +31,7 @@ class HierarchyTest extends SapphireTest {
 		$obj2aa = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj2aa');
 
 		$obj2->ParentID = $obj2aa->ID;
-			$obj2->write();
-		}
-		catch (ValidationException $e) {
-			$this->assertContains(
-				Convert::raw2xml('Infinite loop found within the "HierarchyTest_Object" hierarchy'),
-				$e->getMessage()
-			);
-			return;
-		}
-
-		$this->fail('Failed to prevent infinite loop in hierarchy.');
+		$obj2->write();
 	}
 
 	/**
@@ -194,7 +184,7 @@ class HierarchyTest extends SapphireTest {
 	}
 
 	/**
-	 * @covers SilverStripe\ORM\Hierarchy\Hierarchy::markChildren()
+	 * @covers \SilverStripe\ORM\Hierarchy\Hierarchy::markChildren()
 	 */
 	public function testMarkChildrenDoesntUnmarkPreviouslyMarked() {
 		$obj3 = $this->objFromFixture(HierarchyTest\TestObject::class, 'obj3');

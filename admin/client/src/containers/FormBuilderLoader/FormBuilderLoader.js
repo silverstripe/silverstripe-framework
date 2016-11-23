@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import fetch from 'isomorphic-fetch';
+import deepFreeze from 'deep-freeze-strict';
 import {
   Field as ReduxFormField,
   reduxForm,
@@ -20,6 +21,7 @@ class FormBuilderLoader extends Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.clearSchema = this.clearSchema.bind(this);
+    this.reduceSchemaErrors = this.reduceSchemaErrors.bind(this);
   }
 
   componentDidMount() {
@@ -90,10 +92,13 @@ class FormBuilderLoader extends Component {
 
     return promise
       .then(formSchema => {
-        if (formSchema) {
-          this.props.schemaActions.setSchema(this.props.schemaUrl, formSchema);
+        let schema = formSchema;
+        if (schema) {
+          // Strip errors out of schema response in preparation for setSchema and SubmissionError
+          schema = this.reduceSchemaErrors(schema);
+          this.props.schemaActions.setSchema(this.props.schemaUrl, schema);
         }
-        return formSchema;
+        return schema;
       })
       // TODO Suggest storing messages in a separate redux store rather than throw an error
       // ref: https://github.com/erikras/redux-form/issues/94#issuecomment-143398399
@@ -110,27 +115,40 @@ class FormBuilderLoader extends Component {
       });
   }
 
-  overrideStateData(state) {
-    if (!this.props.stateOverrides || !state) {
-      return state;
+  /**
+   * Given a submitted schema, ensure that any errors property is merged safely into
+   * the state.
+   *
+   * @param {Object} schema - New schema result
+   * @return {Object}
+   */
+  reduceSchemaErrors(schema) {
+    // Skip if there are no errors
+    if (!schema.errors) {
+      return schema;
     }
-    const fieldOverrides = this.props.stateOverrides.fields;
-    let fields = state.fields;
-    if (fieldOverrides && fields) {
-      fields = fields.map((field) => {
-        const fieldOverride = fieldOverrides.find((override) => override.name === field.name);
-        if (!fieldOverride) {
-          return field;
-        }
-        // need to be recursive for the unknown-sized "data" properly
-        return merge.recursive(true, field, fieldOverride);
-      });
+
+    // Inherit state from current schema if not being assigned in this request
+    let reduced = Object.assign({}, schema);
+    if (!reduced.state) {
+      reduced = Object.assign({}, reduced, { state: this.props.schema.state });
     }
-    return Object.assign({},
-      state,
-      this.props.stateOverrides,
-      { fields }
-    );
+
+    // Modify state.fields and replace state.messages
+    reduced = Object.assign({}, reduced, {
+      state: Object.assign({}, reduced.state, {
+        // Replace message property for each field
+        fields: reduced.state.fields.map((field) => Object.assign({}, field, {
+          message: schema.errors.find((error) => error.field === field.name),
+        })),
+        // Non-field messages
+        messages: schema.errors.filter((error) => !error.field),
+      }),
+    });
+
+    // Can be safely discarded
+    delete reduced.errors;
+    return deepFreeze(reduced);
   }
 
   /**
@@ -173,6 +191,7 @@ class FormBuilderLoader extends Component {
    * @return {Object} Promise from the AJAX request.
    */
   fetch(schema = true, state = true) {
+    // Note: `errors` is only valid for submissions, not schema requests, so omitted here
     const headerValues = [];
 
     if (schema) {

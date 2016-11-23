@@ -77,7 +77,6 @@ class FormSchemaTest extends SapphireTest {
 					'name' => 'SecurityID',
 				]
 			],
-			'valid' => null,
 			'messages' => [],
 		];
 
@@ -104,10 +103,9 @@ class FormSchemaTest extends SapphireTest {
 				]
 			],
 			'messages' => [[
-				'value' => ['html' => 'All saved'],
-					'type' => 'good'
+				'value' => 'All saved',
+				'type' => 'good'
 			]],
-			'valid' => null,
 		];
 
 		$state = $formSchema->getState($form);
@@ -123,7 +121,7 @@ class FormSchemaTest extends SapphireTest {
 		$form->loadDataFrom([
 			'Title' => null,
 		]);
-		$this->assertFalse($form->validate());
+		$this->assertFalse($form->validationResult()->isValid());
 		$formSchema = new FormSchema();
 		$expected = [
 			'id' => 'Form_TestForm',
@@ -132,7 +130,7 @@ class FormSchemaTest extends SapphireTest {
 					'id' => 'Form_TestForm_Title',
 					'value' => null,
 					'message' =>  [
-						'value' => ['html' => '&quot;Title&quot; is required'],
+						'value' => '"Title" is required',
 						'type' => 'required'
 					],
 					'data' => [],
@@ -146,7 +144,6 @@ class FormSchemaTest extends SapphireTest {
 					'name' => 'SecurityID',
 				]
 			],
-			'valid' => false,
 			'messages' => []
 		];
 
@@ -165,7 +162,7 @@ class FormSchemaTest extends SapphireTest {
 					->setIcon('save'),
 				(new FormAction("cancel", "Cancel"))
 					->setUseButtonTag(true),
-				new PopoverField("More options", [
+				$pop = new PopoverField("More options", [
 					new FormAction("publish", "Publish record"),
 					new FormAction("archive", "Archive"),
 				])

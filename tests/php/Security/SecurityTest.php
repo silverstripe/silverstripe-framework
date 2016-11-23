@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBClassName;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Authenticator;
 use SilverStripe\Security\LoginAttempt;
 use SilverStripe\Security\Member;
@@ -444,7 +445,10 @@ class SecurityTest extends FunctionalTest {
 					$member->LockedOutUntil,
 					'User does not have a lockout time set if under threshold for failed attempts'
 				);
-				$this->assertContains(Convert::raw2xml(_t('Member.ERRORWRONGCRED')), $this->loginErrorMessage());
+				$this->assertHasMessage(_t(
+				    'Member.ERRORWRONGCRED',
+                    'The provided details don\'t seem to be correct. Please try again.'
+                ));
 			} else {
 				// Fuzzy matching for time to avoid side effects from slow running tests
 				$this->assertGreaterThan(
@@ -462,7 +466,7 @@ class SecurityTest extends FunctionalTest {
 				array('count' => Member::config()->lock_out_delay_mins)
 			);
 			if($i > Member::config()->lock_out_after_incorrect_logins) {
-				$this->assertContains($msg, $this->loginErrorMessage());
+                $this->assertHasMessage($msg);
 			}
 		}
 
@@ -491,9 +495,8 @@ class SecurityTest extends FunctionalTest {
 			$this->doTestLoginForm('testuser@example.com' , 'incorrectpassword');
 		}
 		$this->assertNull($this->session()->inst_get('loggedInAs'));
-		$this->assertContains(
-			$this->loginErrorMessage(),
-			Convert::raw2xml(_t('Member.ERRORWRONGCRED')),
+		$this->assertHasMessage(
+		    _t('Member.ERRORWRONGCRED','The provided details don\'t seem to be correct. Please try again.'),
 			'The user can retry with a wrong password after the lockout expires'
 		);
 
@@ -560,9 +563,7 @@ class SecurityTest extends FunctionalTest {
 		$this->assertTrue(is_object($attempt));
 		$this->assertEquals($attempt->Status, 'Failure');
 		$this->assertEquals($attempt->Email, 'wronguser@silverstripe.com');
-		$this->assertNotNull(
-			$this->loginErrorMessage(), 'An invalid email returns a message.'
-		);
+        $this->assertNotEmpty($this->getValidationResult()->getMessages(), 'An invalid email returns a message.');
 	}
 
 	public function testSuccessfulLoginAttempts() {
@@ -640,12 +641,35 @@ class SecurityTest extends FunctionalTest {
 		);
 	}
 
-	/**
-	 * Get the error message on the login form
-	 */
-	public function loginErrorMessage() {
-		$result = $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.result');
-		return $result->message();
-	}
+    /**
+     * Assert this message is in the current login form errors
+     *
+     * @param string $expected
+     * @param string $errorMessage
+     */
+	protected function assertHasMessage($expected, $errorMessage = null) {
+        $messages = [];
+        $result = $this->getValidationResult();
+		if ($result) {
+            foreach($result->getMessages() as $message) {
+                $messages[] = $message['message'];
+            }
+        }
 
+        $this->assertContains($expected, $messages, $errorMessage);
+    }
+
+    /**
+     * Get validation result from last login form submission
+     *
+     * @return ValidationResult
+     */
+    protected function getValidationResult() {
+        $result = $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.result');
+		if ($result) {
+            /** @var ValidationResult $resultObj */
+            return unserialize($result);
+        }
+        return null;
+    }
 }

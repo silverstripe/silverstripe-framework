@@ -8,7 +8,7 @@ use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm_ItemRequest;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\ValidationResult;
 
 /**
  * Provides versioned dataobject support to {@see GridFieldDetailForm_ItemRequest}
@@ -25,7 +25,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest
         // Check if record is versionable
         /** @var Versioned|DataObject $record */
         $record = $this->getRecord();
-        if (!$record || !$record->has_extension('SilverStripe\ORM\Versioning\Versioned')) {
+        if (!$record || !$record->has_extension(Versioned::class)) {
             return $actions;
         }
 
@@ -100,12 +100,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest
 
         // Record name before it's deleted
         $title = $record->Title;
-
-        try {
             $record->doArchive();
-        } catch (ValidationException $e) {
-            return $this->generateValidationResponse($form, $e);
-        }
 
         $message = sprintf(
             _t('VersionedGridFieldItemRequest.Archived', 'Archived %s %s'),
@@ -139,15 +134,9 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest
             return $this->httpError(403);
         }
 
-        // Save from form data
-        try {
             // Initial save and reload
             $record = $this->saveFormIntoRecord($data, $form);
             $record->publishRecursive();
-        } catch (ValidationException $e) {
-            return $this->generateValidationResponse($form, $e);
-        }
-
         $editURL = $this->Link('edit');
         $xmlTitle = Convert::raw2xml($record->Title);
         $link = "<a href=\"{$editURL}\">{$xmlTitle}</a>";
@@ -181,12 +170,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest
 
         // Record name before it's deleted
         $title = $record->Title;
-
-        try {
             $record->doUnpublish();
-        } catch (ValidationException $e) {
-            return $this->generateValidationResponse($form, $e);
-        }
 
         $message = sprintf(
             _t('VersionedGridFieldItemRequest.Unpublished', 'Unpublished %s %s'),
@@ -205,11 +189,12 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest
      */
     protected function setFormMessage($form, $message)
     {
-        $form->sessionMessage($message, 'good', false);
+        $form->sessionMessage($message, 'good', ValidationResult::CAST_HTML);
         $controller = $this->getToplevelController();
         if ($controller->hasMethod('getEditForm')) {
+            /** @var Form $backForm */
             $backForm = $controller->getEditForm();
-            $backForm->sessionMessage($message, 'good', false);
+            $backForm->sessionMessage($message, 'good', ValidationResult::CAST_HTML);
         }
     }
 }
