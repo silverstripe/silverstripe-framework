@@ -192,8 +192,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase {
 
 		// i18n needs to be set to the defaults or tests fail
 		i18n::set_locale(i18n::default_locale());
-		i18n::config()->date_format = null;
-		i18n::config()->time_format = null;
 
 		// Set default timezone consistently to avoid NZ-specific dependencies
 		date_default_timezone_set('UTC');
