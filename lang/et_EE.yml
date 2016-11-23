@@ -337,7 +337,6 @@ et_EE:
     DAYNOLEADING: 'Kuupäev ilma nullita'
     FOURDIGITYEAR: 'Aasta nelja numbrina'
     FULLNAMEMONTH: 'Kuu täisnimetus (nt august)'
-    HOURNOLEADING: 'Tunnid ilma nullita'
     MINUTENOLEADING: 'Minutid ilma nullita'
     MONTHNOLEADING: 'Kuu ilma nullita'
     Preview: Eelvaade

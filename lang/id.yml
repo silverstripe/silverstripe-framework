@@ -386,7 +386,6 @@ id:
     DIGITSDECFRACTIONSECOND: 'Satu atau lebih angka merepresentasikan pecahan desimal dari detik'
     FOURDIGITYEAR: 'Tahun empat angka'
     FULLNAMEMONTH: 'Nama lengkap bulan (misalnya Juni)'
-    HOURNOLEADING: 'Angka jam tanpa nol di depan'
     MINUTENOLEADING: 'Angka menit tanpa nol di depan'
     MONTHNOLEADING: 'Angka bulan tanpa nol di depan'
     Preview: Pratinjau

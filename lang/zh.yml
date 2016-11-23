@@ -324,7 +324,6 @@ zh:
     ShowAsList: '以列表方式展示'
     TooManyPages: '页面数目过多'
     ValidationError: '验证错误'
-    VersionUnknown: 未知
   LeftAndMain_Menu_ss:
     Hello: 您好
     LOGOUT: '退出'
@@ -389,7 +388,6 @@ zh:
     DIGITSDECFRACTIONSECOND: '一个或多个代表秒的小数数字'
     FOURDIGITYEAR: '四位数年份'
     FULLNAMEMONTH: '月份全名（例如六月）'
-    HOURNOLEADING: '起首不为零的小时'
     MINUTENOLEADING: '起首不为零的分钟'
     MONTHNOLEADING: '起首不为零的月份数字'
     Preview: 预览

@@ -202,7 +202,6 @@ gl_ES:
     DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
     FOURDIGITYEAR: 'Catro díxitos ano'
     FULLNAMEMONTH: 'Nome completo do mes (p.e. Xuño)'
-    HOURNOLEADING: 'Hora sen ceros a esquerda'
     MINUTENOLEADING: 'Minuto sen ceros a esquerda'
     MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
     Preview: Previsualizar

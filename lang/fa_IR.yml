@@ -36,7 +36,6 @@ fa_IR:
     INSERTURL: 'وارد‌کردن از نشانی اینترنتی'
     REMOVEINFO: 'حذف این فایل از این فیلد'
     TOTAL: مجموع
-    TOUPLOAD: 'انتخاب فایل‌ها جهت آپلود...'
     UPLOADINPROGRESS: 'لطفاً صبر کنید... آپلود در جریان است'
     UPLOADOR: یا
   BBCodeParser:
@@ -74,8 +73,6 @@ fa_IR:
     ANY: هر
     NOANSWER: 'خیر'
     YESANSWER: 'بله'
-  CAMPAIGNS:
-    ADDTOCAMPAIGN: 'افزودن به کمپین'
   CMSLoadingScreen_ss:
     LOADING: بارگذاری...
     REQUIREJS: 'سی‌ام‌اس نیازمند این است که جاوااسکریپت را فعال نمایید.'
@@ -303,7 +300,6 @@ fa_IR:
     CSSCLASS: 'چیدمان / سبک'
     DETAILS: جزئیات
     EMAIL: 'نشانی ایمیل'
-    FILE: فايل
     FOLDER: پوشه
     IMAGEDIMENSIONS: ابعاد
     IMAGEHEIGHTPX: ارتفاع
@@ -313,12 +309,7 @@ fa_IR:
     INSERTMEDIA: 'واردکردن رسانه از'
     LINK: 'واردکردن لینک'
     LINKDESCR: 'توضیحات لینک'
-    LINKEMAIL: 'نشانی ایمیل'
-    LINKEXTERNAL: 'وب‌سایت دیگر'
-    LINKFILE: 'یک فایل دانلود کنید'
-    LINKINTERNAL: 'صفحه روی وب‌سایت'
     LINKOPENNEWWIN: 'لینک در پنجره جدید باز شود؟'
-    LINKTO: 'لینک به'
     PAGE: صفحه
     SUBJECT: 'موضوع ایمیل'
     URL: نشانی اینترنتی
@@ -380,7 +371,6 @@ fa_IR:
     ShowAsList: 'نمایش به‌صورت لیست'
     TooManyPages: 'صفحات بسیار زیاد'
     ValidationError: 'خطای اعتبارسنجی'
-    VersionUnknown: نامشخص
   LeftAndMain_Menu_ss:
     Hello: درود
     LOGOUT: 'خروج'
@@ -419,7 +409,6 @@ fa_IR:
     PASSWORD: رمز عبور
     PASSWORDEXPIRED: 'رمز عبور شما منقضی شده‌است. لطفاً یکی جدید برگزینید.'
     PLURALNAME: اعضاء
-    REMEMBERME: 'مرا برای بار بعد به‌خاطر بسپار؟'
     SINGULARNAME: عضو
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما دگرگون شد'
     SUBJECTPASSWORDRESET: 'پیوند ازنوسازی گذرواژه شما'
@@ -442,7 +431,6 @@ fa_IR:
     DAYNOLEADING: 'روز از ماه بدون نمایش صفر در ابتدا'
     FOURDIGITYEAR: 'سال چهار عددی'
     FULLNAMEMONTH: 'نام کامل ماه (مثال ژوئن)'
-    HOURNOLEADING: 'ساعت بدون نمایش صفر در ابتدا'
     MINUTENOLEADING: 'دقیقه بدون نمایش صفر در ابتدا'
     MONTHNOLEADING: 'عدد ماه بدون نمایش صفر در ابتدا'
     Preview: پیش‌نمایش

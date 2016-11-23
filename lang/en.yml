@@ -18,6 +18,7 @@ en:
     HEIGHT: Height
     LASTEDIT: 'Last changed'
     OWNER: Owner
+    PATH: Path
     SIZE: 'File size'
     TITLE: Title
     TYPE: 'File type'
@@ -75,7 +76,7 @@ en:
     NOANSWER: 'No'
     YESANSWER: 'Yes'
   CAMPAIGNS:
-    ADDTOCAMPAIGN: 'Add to campaign'
+    ADDTOCAMPAIGN: 'Add to Campaign'
   CMSLoadingScreen_ss:
     LOADING: Loading...
     REQUIREJS: 'The CMS requires that you have JavaScript enabled.'
@@ -103,9 +104,11 @@ en:
     TimedOutTitleAnonymous: 'Your session has timed out.'
     TimedOutTitleMember: 'Hey {name}!<br />Your session has timed out.'
   CampaignAdmin:
+    ACCESS_HELP: 'Allow viewing of the campaign publishing section.'
     MENUTITLE: Campaigns
   Campaigns:
     AddToCampaign: 'Add To Campaign'
+    AddToCampaignFormFieldLabel: 'Select a Campaign'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'The password for account with email address {email} has been changed. If you didn\''t change your password please change your password using the link below'
     CHANGEPASSWORDTEXT1: 'You changed your password for'
@@ -187,6 +190,7 @@ en:
   DropdownField:
     CHOOSE: (Choose)
     CHOOSESEARCH: '(Choose or Search)'
+    CHOOSE_MODEL: '(Choose {name})'
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   EmailField:
     VALIDATION: 'Please enter an email address'
@@ -196,6 +200,7 @@ en:
     AviType: 'AVI video file'
     Content: Content
     CssType: 'CSS file'
+    DRAFT: Draft
     DmgType: 'Apple disk image'
     DocType: 'Word document'
     Filename: Filename
@@ -205,9 +210,11 @@ en:
     HtmlType: 'HTML file'
     INVALIDEXTENSION: 'Extension is not allowed (valid: {extensions})'
     INVALIDEXTENSIONSHORT: 'Extension is not allowed'
+    INVALIDEXTENSION_SHORT: 'Extension is not allowed'
     IcoType: 'Icon image'
     JpgType: 'JPEG image - good for photos'
     JsType: 'Javascript file'
+    MODIFIED: Modified
     Mp3Type: 'MP3 audio file'
     MpgType: 'MPEG video file'
     NOFILESIZE: 'File size is zero bytes.'
@@ -239,6 +246,7 @@ en:
     CSRF_FAILED_MESSAGE: 'There seems to have been a technical problem. Please click the back button, refresh your browser, and try again.'
     FIELDISREQUIRED: '{name} is required'
     SubmitBtnLabel: Go
+    VALIDATIONCREDIT: 'Please ensure you have entered the credit card number correctly'
     VALIDATIONCREDITNUMBER: 'Please ensure you have entered the {number} credit card number correctly'
     VALIDATIONNOTUNIQUE: 'The value entered is not unique'
     VALIDATIONPASSWORDSDONTMATCH: 'Passwords don''t match'
@@ -319,7 +327,7 @@ en:
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
     EMAIL: 'Email address'
-    FILE: File
+    FILE: SilverStripe\\Assets\\File
     FOLDER: Folder
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
@@ -332,14 +340,15 @@ en:
     IMAGEWIDTHPX: Width
     INSERTMEDIA: 'Insert media from'
     LINK: 'Insert Link'
-    LINKANCHOR: 'Anchor on this page'
+    LINKANCHOR: 'Link to an anchor on this page'
     LINKDESCR: 'Link description'
-    LINKEMAIL: 'Email address'
-    LINKEXTERNAL: 'Another website'
-    LINKFILE: 'Download a file'
-    LINKINTERNAL: 'Page on the site'
+    LINKDETAILS: 'Link details'
+    LINKEMAIL: 'Link to an email address'
+    LINKEXTERNAL: 'Link to another website'
+    LINKFILE: 'Link to download a file'
+    LINKINTERNAL: 'Link to a page on this site'
     LINKOPENNEWWIN: 'Open link in a new window?'
-    LINKTO: 'Link to'
+    LINKTO: 'Link type'
     PAGE: Page
     SUBJECT: 'Email subject'
     URL: URL
@@ -351,7 +360,7 @@ en:
     ERROR_HOSTNAME: 'This file hostname is not included in the whitelist'
     ERROR_ID: 'Need either "ID" or "FileURL" parameter to identify the file'
     ERROR_NOTFOUND: 'Unable to find file to view'
-    ERROR_OEMBED_REMOTE: 'Oembed is only compatible with remote files'
+    ERROR_OEMBED_REMOTE: 'Embed is only compatible with remote files'
     ERROR_SCHEME: 'This file scheme is not included in the whitelist'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Infinite loop found within the "{type}" hierarchy. Please change the parent to resolve this'
@@ -501,6 +510,7 @@ en:
     FOURDIGITYEAR: 'Four-digit year'
     FULLNAMEMONTH: 'Full name of month (e.g. June)'
     HOURNOLEADING: 'Hour without leading zero'
+    HOURNOLEADING24: 'Hour without leading zero, 24 hour format'
     MINUTENOLEADING: 'Minute without leading zero'
     MONTHNOLEADING: 'Month digit without leading zero'
     Preview: Preview
@@ -642,6 +652,54 @@ en:
     Tablet: Tablet
     ViewDeviceWidth: 'Select a preview width'
     Width: width
+  SilverStripe\Admin\CMSProfileController:
+    MENUTITLE: 'My Profile'
+  SilverStripe\Admin\CampaignAdmin:
+    MENUTITLE: Campaigns
+  SilverStripe\Admin\SecurityAdmin:
+    MENUTITLE: Security
+  SilverStripe\Assets\File:
+    PLURALNAME: Files
+    SINGULARNAME: File
+  SilverStripe\Assets\Folder:
+    PLURALNAME: Folders
+    SINGULARNAME: Folder
+  SilverStripe\Assets\Image:
+    PLURALNAME: Images
+    SINGULARNAME: Image
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'Data Objects'
+    SINGULARNAME: 'Data Object'
+  SilverStripe\ORM\Versioning\ChangeSet:
+    PLURALNAME: Campaigns
+    SINGULARNAME: Campaign
+  SilverStripe\ORM\Versioning\ChangeSetItem:
+    PLURALNAME: 'Change Set Items'
+    SINGULARNAME: 'Change Set Item'
+  SilverStripe\Security\Group:
+    PLURALNAME: Groups
+    SINGULARNAME: Group
+  SilverStripe\Security\LoginAttempt:
+    PLURALNAME: 'Login Attempts'
+    SINGULARNAME: 'Login Attempt'
+  SilverStripe\Security\Member:
+    PLURALNAME: Members
+    SINGULARNAME: Member
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Member Passwords'
+    SINGULARNAME: 'Member Password'
+  SilverStripe\Security\Permission:
+    PLURALNAME: Permissions
+    SINGULARNAME: Permission
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Roles
+    SINGULARNAME: Role
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Permission Role Codes'
+    SINGULARNAME: 'Permission Role Code'
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: 'Remember Login Hashs'
+    SINGULARNAME: 'Remember Login Hash'
   SiteTree:
     TABMAIN: Main
   TableListField:
@@ -685,6 +743,7 @@ en:
     Saved: Saved
     UPLOADSINTO: 'saves into /{path}'
   Versioned:
+    INFERRED_TITLE: 'Generated by publish of ''{title}'' at {created}'
     has_many_Versions: Versions
   VersionedGridFieldItemRequest:
     ARCHIVE: Archive

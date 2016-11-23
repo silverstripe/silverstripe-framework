@@ -28,7 +28,6 @@ hr:
     INSERTURL: 'Ubaci sa linka'
     REMOVEINFO: 'Izbrišite ovu datoteku s ovog polja'
     TOTAL: Ukupno
-    TOUPLOAD: 'Odaberite datoteke za upload...'
     UPLOADINPROGRESS: 'Molim pričekajte... upload u tijeku'
     UPLOADOR: ILI
   BBCodeParser:
@@ -45,8 +44,6 @@ hr:
     ANY: Bilo koji
     NOANSWER: 'Ne'
     YESANSWER: 'Da'
-  CAMPAIGNS:
-    ADDTOCAMPAIGN: 'Dodaj kampanji'
   CMSLoadingScreen_ss:
     LOADING: učitavam...
   CMSMain:
@@ -204,16 +201,12 @@ hr:
     many_many_Members: Članovi
   HTMLEditorField:
     ANCHORVALUE: Sidro
-    FILE: Datoteka
     FOLDER: Direktorij
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Visina
     IMAGEWIDTHPX: Širina
     LINK: 'Ubaci vezu'
-    LINKFILE: 'Preuzmi datoteku'
-    LINKINTERNAL: 'Stranica na ovom webu'
     LINKOPENNEWWIN: 'Otvori link u novom prozoru?'
-    LINKTO: 'Poveži na'
     PAGE: Stranica
     URL: Link
   HtmlEditorField:
@@ -263,7 +256,6 @@ hr:
     PreviewButton: Pregled
     SAVEDUP: Spremljeno
     ValidationError: 'Greška validacije'
-    VersionUnknown: nepoznato
   LeftAndMain_Menu_ss:
     Hello: Pozdrav
     LOGOUT: 'Odjava'

@@ -358,7 +358,6 @@ pl:
     DIGITSDECFRACTIONSECOND: 'Jedna lub więcej cyfr reprezentujących ułamek sekundy'
     FOURDIGITYEAR: 'Czterocyfrowy rok'
     FULLNAMEMONTH: 'Pełna nazwa miesiąca (np. Czerwiec)'
-    HOURNOLEADING: 'Godzina bez wiodącego zera'
     MINUTENOLEADING: 'Minuta bez wiodącego zera'
     MONTHNOLEADING: 'Miesiąc bez wiodącego zera'
     Preview: Podgląd

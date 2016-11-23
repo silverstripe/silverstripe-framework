@@ -358,7 +358,6 @@ nb:
     DIGITSDECFRACTIONSECOND: 'Ett eller flere siffer som representerer en desimlbrøkdel av et sekund'
     FOURDIGITYEAR: 'Firesifret årstall'
     FULLNAMEMONTH: 'Fullt navn på måned (eks. juni)'
-    HOURNOLEADING: 'Time uten ledende null'
     MINUTENOLEADING: 'Minutt uten ledende null'
     MONTHNOLEADING: 'Månedssiffer uten ledende null'
     Preview: Forhåndsvisning

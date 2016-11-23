@@ -312,7 +312,6 @@ bg:
     DIGITSDECFRACTIONSECOND: 'Една или повече цифри, представляващи десетичната част на секундата'
     FOURDIGITYEAR: 'Четирицифрена година'
     FULLNAMEMONTH: 'Пълно наименование на месец (напр. Януари)'
-    HOURNOLEADING: 'Час без водеща нула'
     MINUTENOLEADING: 'Минути без водеща нула'
     MONTHNOLEADING: 'Месец без водеща нула'
     Preview: Преглед

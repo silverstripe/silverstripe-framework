@@ -339,7 +339,6 @@ es:
     ShowAsList: 'Mostrar como lista'
     TooManyPages: 'Muchas páginas'
     ValidationError: 'Error de validación'
-    VersionUnknown: desconocido
   LeftAndMain_Menu_ss:
     Hello: Hola
     LOGOUT: 'Finalizar la sesión'
@@ -404,7 +403,6 @@ es:
     DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
     FOURDIGITYEAR: 'Año de cuatro dígitos'
     FULLNAMEMONTH: 'Nombre completo del mes (ej.Junio)'
-    HOURNOLEADING: 'Hora sin ceros a la izquierda'
     MINUTENOLEADING: 'Minutos sin cero inicial'
     MONTHNOLEADING: 'Dígitos mes sin cero inicial'
     Preview: Vista previa

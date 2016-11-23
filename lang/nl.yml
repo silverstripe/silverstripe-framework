@@ -339,7 +339,6 @@ nl:
     ShowAsList: 'laat als lijst zien'
     TooManyPages: 'Te veel pagina''s'
     ValidationError: 'Validatiefout'
-    VersionUnknown: onbekend
   LeftAndMain_Menu_ss:
     Hello: Hallo
     LOGOUT: 'Uitloggen'
@@ -404,7 +403,6 @@ nl:
     DIGITSDECFRACTIONSECOND: 'Een of meer cijfers die een decimale fractie van een seconde voorstellen'
     FOURDIGITYEAR: '4-cijfers jaar'
     FULLNAMEMONTH: 'Volledige naam van de maand (bv. juni)'
-    HOURNOLEADING: 'Uur zonder voorloopnul'
     MINUTENOLEADING: 'Minuut zonder voorloopnul'
     MONTHNOLEADING: 'Dag van de maand zonder voorloopnul'
     Preview: Voorbeeld

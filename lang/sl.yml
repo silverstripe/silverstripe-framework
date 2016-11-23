@@ -344,7 +344,6 @@ sl:
     DIGITSDECFRACTIONSECOND: 'Ena ali več decimalk, ki predstavljajo sekunde'
     FOURDIGITYEAR: 'Štirimesten zapis letnice'
     FULLNAMEMONTH: 'Celoten zapis meseca (npr: junij)'
-    HOURNOLEADING: 'Ura brez zapisa sprednje ničle'
     MINUTENOLEADING: 'Minute brez zapisa sprednje ničle'
     MONTHNOLEADING: 'Mesec brez zapisa sprednje ničle'
     Preview: Predogled
