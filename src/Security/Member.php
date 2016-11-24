@@ -817,7 +817,6 @@ class Member extends DataObject implements TemplateGlobalProvider {
 		if($id) {
 			return DataObject::get_by_id('SilverStripe\\Security\\Member', $id);
 		}
-		return null;
 	}
 
 	/**

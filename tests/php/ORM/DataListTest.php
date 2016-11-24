@@ -346,6 +346,13 @@ class DataListTest extends SapphireTest {
 		$this->assertNotNull($sponsors->Min('ID'));
 		$this->assertNotNull($sponsors->Avg('ID'));
 		$this->assertNotNull($sponsors->Sum('ID'));
+
+		// Test non-orm many_many_extraFields
+		$company = $this->objFromFixture(EquipmentCompany::class, 'equipmentcompany1');
+		$this->assertNotNull($company->SponsoredTeams()->Max('SponsorFee'));
+		$this->assertNotNull($company->SponsoredTeams()->Min('SponsorFee'));
+		$this->assertNotNull($company->SponsoredTeams()->Avg('SponsorFee'));
+		$this->assertNotNull($company->SponsoredTeams()->Sum('SponsorFee'));
 	}
 
 	public function testEach() {

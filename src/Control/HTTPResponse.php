@@ -111,7 +111,7 @@ class HTTPResponse {
 	}
 
 	/**
-	 * @param string $code
+	 * @param int $code
 	 * @param string $description Optional. See {@link setStatusDescription()}.
 	 *  No newlines are allowed in the description.
 	 *  If omitted, will default to the standard HTTP description

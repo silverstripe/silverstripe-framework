@@ -214,14 +214,12 @@ cs:
     JsType: 'Javascript soubor'
     Mp3Type: 'MP3 audio soubor'
     MpgType: 'MPEG video soubor'
-    NOFILESIZE: 'Velikost souboru je 0 bajtů.'
     NOVALIDUPLOAD: 'Soubor není validní pro nahrání'
     Name: Jméno
     PLURALNAME: Soubory
     PdfType: 'Adobe Acrobat PDF soubor'
     PngType: 'PNG obrázek - vhodný jako univerzálmí formát'
     SINGULARNAME: Soubor
-    TOOLARGE: 'Velikost souboru je příliš velká, povolené maximum {size}'
     TOOLARGESHORT: 'Velikost souboru překračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Titulek

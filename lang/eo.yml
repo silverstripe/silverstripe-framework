@@ -200,6 +200,7 @@ eo:
     AviType: 'AVI videa dosiero'
     Content: Enhavo
     CssType: 'CSS-dosiero'
+    DRAFT: Malneto
     DmgType: 'Apple-diska bildo'
     DocType: 'Word-dokumento'
     Filename: Dosiernomo
@@ -209,9 +210,11 @@ eo:
     HtmlType: 'HTML-dosiero'
     INVALIDEXTENSION: 'Malvalida sufikso (validaj: {extensions})'
     INVALIDEXTENSIONSHORT: 'Malvalida sufikso'
+    INVALIDEXTENSION_SHORT: 'Malvalida sufikso'
     IcoType: 'Bildsimbolo'
     JpgType: 'JPEG-bildo - taŭga por fotoj'
     JsType: 'Ĝavaskripta dosiero'
+    MODIFIED: Ŝanĝita
     Mp3Type: 'MP3-sondosiero'
     MpgType: 'AVI-videa dosiero'
     NOFILESIZE: 'Dosiero havas nul bajtojn'
@@ -740,6 +743,7 @@ eo:
     Saved: Konservis
     UPLOADSINTO: 'konservas en /{path}'
   Versioned:
+    INFERRED_TITLE: 'Generita de publikigo de  ''{title}'' ĉe {created}'
     has_many_Versions: Versioj
   VersionedGridFieldItemRequest:
     ARCHIVE: Arkivo

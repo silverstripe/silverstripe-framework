@@ -214,14 +214,12 @@ sk:
     JsType: 'Javascript súbor'
     Mp3Type: 'MP3 audio súbor'
     MpgType: 'MPEG video súbor'
-    NOFILESIZE: 'Veľkosť súboru je nula bajtov.'
     NOVALIDUPLOAD: 'Subor nie je povolený pre nahratie'
     Name: Meno
     PLURALNAME: Súbory
     PdfType: 'Adobe Acrobat PDF súbor'
     PngType: 'PNG obrázok - vhodný univerzálny formát'
     SINGULARNAME: Súbor
-    TOOLARGE: 'Veľkosť súboru je príliš veľká, maximum {size} je povolené'
     TOOLARGESHORT: 'Veľkosť súboru prekračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Názov

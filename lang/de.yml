@@ -12,6 +12,7 @@ de:
     HEIGHT: Höhe
     LASTEDIT: 'Letzte Änderung'
     OWNER: Eigentümer
+    PATH: Pfad
     SIZE: 'Größe'
     TITLE: Titel
     TYPE: 'Typ'
@@ -27,6 +28,7 @@ de:
     FILES: Dateien
     FROMCOMPUTER: 'Dateien auf Ihrem Computer auswählen'
     FROMCOMPUTERINFO: 'Von Ihrem Computer hochladen'
+    INSERTURL: 'Von URL einfügen'
     REMOVEINFO: 'Entferne diese Datei aus dem Feld'
     TOTAL: Insgesamt
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
@@ -100,9 +102,16 @@ de:
     HELLO: Hallo
     PASSWORD: Passwort
   ChangeSet:
+    DESCRIPTION_AND: '{first} und {second}'
+    DESCRIPTION_ITEM: Eintrag
+    DESCRIPTION_ITEMS: Einträge
     DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, und {item}'
     DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'anderer Eintrag'
+    DESCRIPTION_OTHER_ITEMS: 'andere Einträge'
     NAME: Name
+    STATE: Status
   CheckboxField:
     NOANSWER: 'Nein'
     YESANSWER: 'Ja'
@@ -113,6 +122,7 @@ de:
   ConfirmedPasswordField:
     ATLEAST: 'Passwörter müssen mindestens {min} Zeichen lang sein.'
     BETWEEN: 'Passwörter müssen zwischen {min} und {max} Zeichen lang sein.'
+    LOGGED_IN_ERROR: 'Sie müssen eingeloggt sein, um Ihr Passwort ändern zu können!'
     MAXIMUM: 'Passwörter dürfen maximal {max} Zeichen lang sein.'
     SHOWONCLICKTITLE: 'Passwort ändern'
   ContentController:
@@ -156,6 +166,8 @@ de:
     INVALID_REQUEST: 'Ungültige Anfrage'
   DropdownField:
     CHOOSE: (Auswahl)
+    CHOOSESEARCH: '(Auswählen oder Suchen)'
+    CHOOSE_MODEL: '({name} auswählen)'
     SOURCE_VALIDATION: 'Bitte wählen Sie aus der Liste. {value} ist kein gültiger Wert'
   EmailField:
     VALIDATION: 'Bitte geben Sie eine E-Mail-Adresse ein'
@@ -165,6 +177,7 @@ de:
     AviType: 'AVI Videodatei'
     Content: Inhalt
     CssType: 'CSS Datei'
+    DRAFT: Entwurf
     DmgType: 'Apple Disk Image'
     DocType: 'Word Dokument'
     Filename: Dateiname
@@ -174,9 +187,11 @@ de:
     HtmlType: 'HTML Datei'
     INVALIDEXTENSION: 'Dateityp ist nicht erlaubt (erlaubt sind: {extensions})'
     INVALIDEXTENSIONSHORT: 'Dateityp ist nicht erlaubt'
+    INVALIDEXTENSION_SHORT: 'Dateityp ist nicht erlaubt'
     IcoType: 'Icon Bild'
     JpgType: 'JPEG Bild - ideal für Fotos'
     JsType: 'Javascript Datei'
+    MODIFIED: Zuletzt geändert
     Mp3Type: 'MP3 Audiodatei'
     MpgType: 'MPEG Videodatei'
     NOVALIDUPLOAD: 'Datei ist kein gültiger Upload'
@@ -185,6 +200,7 @@ de:
     PdfType: 'Adobe Acrobat PDF Datei'
     PngType: 'PNG Bild - vielseitig einsetzbar'
     SINGULARNAME: Datei
+    TOOLARGESHORT: 'Dateigröße übersteigt {size}'
     TiffType: 'TIFF Bild - ideal für hohe Auflösungen'
     Title: Titel
     WavType: 'WAV Audiodatei'
@@ -205,6 +221,7 @@ de:
     CSRF_FAILED_MESSAGE: 'Es gab ein technisches Problem. Bitte versuchen Sie es erneut, nachdem sie die vorherige Seite neu geladen haben.'
     FIELDISREQUIRED: '{name} muss ausgefüllt werden'
     SubmitBtnLabel: Los
+    VALIDATIONCREDIT: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer korrekt eingegeben haben'
     VALIDATIONCREDITNUMBER: 'Bitte stellen Sie sicher, dass Sie die Kreditkartennummer ({number}) korrekt eingegeben haben'
     VALIDATIONNOTUNIQUE: 'Der eingegebene Wert ist nicht einzigartig'
     VALIDATIONPASSWORDSDONTMATCH: 'Die Passwörter stimmen nicht überein'
@@ -273,8 +290,16 @@ de:
     ResultDeleted: '%d Gruppe(n) gelöscht'
     ResultUpdated: '%d Gruppe(n) aktualisiert'
   HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'Sie haben keine Berechtigungen, den Inhalt dieser Seite zu sehen.'
+    ANCHORSPAGENOTFOUND: 'Zielseite nicht gefunden'
     ANCHORVALUE: Anker
     BUTTONADDURL: 'URL hinzufügen'
+    CAPTIONTEXT: 'Beschriftungstext'
+    CSSCLASS: 'Ausrichtung / Stil'
+    CSSCLASSCENTER: 'Zentriert, selbstständig'
+    CSSCLASSLEFT: 'Links, mit umfließendem Text'
+    CSSCLASSLEFTALONE: 'Links, alleinstehend'
+    CSSCLASSRIGHT: 'Rechts, mit umfließendem Text'
     DETAILS: Details
     EMAIL: 'E-Mail-Adresse'
     FOLDER: Ordner
@@ -288,8 +313,15 @@ de:
     IMAGETITLETEXTDESC: 'Weiterführende Informationen über das Bild'
     IMAGEWIDTHPX: Breite
     LINK: 'Verweis einfügen'
+    LINKANCHOR: 'Link oder Anker auf dieser Seite'
     LINKDESCR: 'Beschreibung des Verweises'
+    LINKDETAILS: 'Link Details'
+    LINKEMAIL: 'Link zu einer E-Mail-Adresse'
+    LINKEXTERNAL: 'Link auf eine andere Webseite'
+    LINKFILE: 'Link zu einem Dateidownload'
+    LINKINTERNAL: 'Link zu einer Seite auf dieser Webseite'
     LINKOPENNEWWIN: 'Verweis in neuem Fenster öffnen?'
+    LINKTO: 'Linktyp'
     PAGE: Seite
     SUBJECT: 'E-Mail-Betreff'
     URL: URL
@@ -325,6 +357,8 @@ de:
     FROMWEB: 'Aus dem Web'
     FindInFolder: 'In Ordner suchen'
     IMAGEALT: 'Alternativtext (alt)'
+    IMAGEALTTEXT: 'Alternativtext (alt) - erscheint, falls das Bild nicht angezeigt werden kann.'
+    IMAGEALTTEXTDESC: 'Wird von Screenreadern vorgelesen oder angezeigt, falls das Bild nicht angezeigt werden kann.'
     IMAGEDIMENSIONS: Dimensionen
     IMAGEHEIGHTPX: Höhe (px)
     IMAGETITLE: 'Titeltext (Tooltip) - für zusätzliche Informationen über das Bild'
@@ -358,10 +392,13 @@ de:
     CANCEL: Abbrechen
     CANT_REORGANISE: 'Sie besitzen nicht die benötigten Zugriffsrechte um Seiten der höchsten Ebene zu bearbeiten. Ihre Änderungen wurden nicht gespeichert.'
     DELETED: Gelöscht.
+    DropdownBatchActionsDefault: 'Aktion auswählen...'
     HELP: Hilfe
+    PAGETYPE: 'Seitentyp'
     PERMAGAIN: 'Sie wurden aus dem System ausgeloggt. Falls Sie sich wieder einloggen möchten, geben Sie bitte Benutzernamen und Passwort im untenstehenden Formular an.'
     PERMALREADY: 'Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular.'
     PERMDEFAULT: 'Sie müssen angemeldet sein, um auf diesen Bereich zugreifen zu können. Bitte geben Sie Ihre Zugangsdaten ein.'
+    PLEASESAVE: 'Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern.'
     PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: 'Der Seitenbaum wurde erfolgreich sortiert.'
     SAVEDUP: Gespeichert.
@@ -415,6 +452,7 @@ de:
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
     SURNAME: Nachname
     TIMEFORMAT: 'Uhrzeitformat'
+    VALIDATIONMEMBEREXISTS: 'Es gibt bereits ein Mitglied mit dieser {identifier}'
     ValidationIdentifierFailed: 'Das vorhandene Mitglied #{id} mit identischer Bezeichnung kann nicht überschrieben werden ({name} = {value}))'
     WELCOMEBACK: 'Hallo {firstname}. Schön, dass du wieder da bist'
     YOUROLDPASSWORD: 'Ihr altes Passwort'
@@ -435,6 +473,7 @@ de:
     DIGITSDECFRACTIONSECOND: 'Eine oder mehrere Ziffern, die einen Dezimalbruch einer Sekunde darstellen'
     FOURDIGITYEAR: 'Vierstellige Jahreszahl'
     FULLNAMEMONTH: 'Volle Monatsbezeichnung (z.B. Juni)'
+    HOURNOLEADING24: 'Stunde ohne führende Null, 24 Stunden Format'
     MINUTENOLEADING: 'Minute, ohne führende Null'
     MONTHNOLEADING: 'Monat, ohne führende Null'
     Preview: Vorschau
@@ -571,6 +610,43 @@ de:
     Tablet: Tablett
     ViewDeviceWidth: 'Breite der Vorschau auswählen'
     Width: Breite
+  SilverStripe\Admin\CMSProfileController:
+    MENUTITLE: 'Mein Profil'
+  SilverStripe\Admin\SecurityAdmin:
+    MENUTITLE: Sicherheit
+  SilverStripe\Assets\File:
+    PLURALNAME: Dateien
+    SINGULARNAME: Datei
+  SilverStripe\Assets\Folder:
+    PLURALNAME: Ordner
+    SINGULARNAME: Ordner
+  SilverStripe\Assets\Image:
+    PLURALNAME: Bilder
+    SINGULARNAME: Bild
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: 'DatenObjekte'
+    SINGULARNAME: 'DatenObjekt'
+  SilverStripe\Security\Group:
+    PLURALNAME: Gruppen
+    SINGULARNAME: Gruppe
+  SilverStripe\Security\LoginAttempt:
+    PLURALNAME: 'Loginversuche'
+    SINGULARNAME: 'Loginversuch'
+  SilverStripe\Security\Member:
+    PLURALNAME: Benutzer
+    SINGULARNAME: Benutzer
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: 'Benutzerpasswörter'
+    SINGULARNAME: 'Benutzerpasswort'
+  SilverStripe\Security\Permission:
+    PLURALNAME: Berechtigungen
+    SINGULARNAME: Zugriffsberechtigung
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Rollen
+    SINGULARNAME: Rolle
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Berechtigungsrollencodes'
+    SINGULARNAME: 'Berechtigungsrollencode'
   SiteTree:
     TABMAIN: Hauptteil
   TableListField:
@@ -616,6 +692,9 @@ de:
   Versioned:
     has_many_Versions: Versionen
   VersionedGridFieldItemRequest:
+    ARCHIVE: Archiv
+    Archived: '%s %s archiviert'
+    BUTTONARCHIVEDESC: 'Veröffentlichung zurücknehmen und in das Archiv verschieben'
     BUTTONPUBLISH: Veröffentlichen
     BUTTONUNPUBLISH: Veröffentlichung zurücknehmen
     BUTTONUNPUBLISHDESC: 'Entferne diesn Eintrag von der veröffentlichten Website'
