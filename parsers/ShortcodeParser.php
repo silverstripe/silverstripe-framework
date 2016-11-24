@@ -572,7 +572,7 @@ class ShortcodeParser extends Object {
 			
 			$location = self::INLINE;
 			if($class == 'left' || $class == 'right') $location = self::BEFORE;
-			if($class == 'center' || $class == 'leftALone') $location = self::SPLIT;
+			if($class == 'center' || $class == 'leftAlone') $location = self::SPLIT;
 
 			if(!$parent) {
 				if($location !== self::INLINE) {
