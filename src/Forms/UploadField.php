@@ -46,7 +46,7 @@ use Exception;
  * since the required frontend dependencies are included through CMS bundling.
  */
 class UploadField extends FormField {
-	use FileUploadable;
+	use FileUploadReceiver;
 
 	/**
 	 * @var array
@@ -223,7 +223,7 @@ class UploadField extends FormField {
 		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
 
 		$this->ufConfig = self::config()->defaultConfig;
-		$this->constructFileUploadable();
+		$this->constructFileUploadReceiver();
 
 		parent::__construct($name, $title);
 

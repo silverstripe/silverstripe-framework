@@ -26,9 +26,8 @@ use Exception;
  *  - Files can't be edited once uploaded.
  *  - Attached files can only be removed, not deleted.
  */
-class AssetField extends FormField
-{
-	use Uploadable;
+class AssetField extends FormField {
+	use UploadReceiver;
 
 	/**
 	 * @var array
@@ -158,14 +157,13 @@ class AssetField extends FormField
 	 * @param string $name The internal field name, passed to forms.
 	 * @param string $title The field label.
 	 */
-    public function __construct($name, $title = null)
-    {
+	public function __construct($name, $title = null) {
 		$this->addExtraClass('ss-upload'); // class, used by js
 		$this->addExtraClass('ss-uploadfield'); // class, used by css for uploadfield only
 
 		$this->ufConfig = array_merge($this->ufConfig, self::config()->defaultConfig);
 
-		$this->constructUploadable();
+		$this->constructUploadReceiver();
 		parent::__construct($name, $title);
 
 		// AssetField always uses rename replacement method
@@ -188,8 +186,7 @@ class AssetField extends FormField
 	 * @param string
 	 * @return $this
 	 */
-    public function setTemplateFileButtons($template)
-    {
+	public function setTemplateFileButtons($template) {
 		$this->templateFileButtons = $template;
 		return $this;
 	}
@@ -197,8 +194,7 @@ class AssetField extends FormField
 	/**
 	 * @return string
 	 */
-    public function getTemplateFileButtons()
-    {
+	public function getTemplateFileButtons() {
 		return $this->_templates($this->templateFileButtons, '_FileButtons');
 	}
 
@@ -207,8 +203,7 @@ class AssetField extends FormField
 	 *
 	 * @return boolean
 	 */
-    public function canPreviewFolder()
-    {
+	public function canPreviewFolder() {
 		if(!$this->isActive()) {
 			return false;
 		}
@@ -227,8 +222,7 @@ class AssetField extends FormField
 	 * required permission code
 	 * @return $this Self reference
 	 */
-    public function setCanPreviewFolder($canPreviewFolder)
-    {
+	public function setCanPreviewFolder($canPreviewFolder) {
 		return $this->setConfig('canPreviewFolder', $canPreviewFolder);
 	}
 
@@ -236,8 +230,7 @@ class AssetField extends FormField
 	 * @param string
 	 * @return $this
 	 */
-    public function setDisplayFolderName($name)
-    {
+	public function setDisplayFolderName($name) {
 		$this->displayFolderName = $name;
 		return $this;
 	}
@@ -245,8 +238,7 @@ class AssetField extends FormField
 	/**
 	 * @return string
 	 */
-    public function getDisplayFolderName()
-    {
+	public function getDisplayFolderName() {
 		return $this->displayFolderName;
 	}
 
@@ -256,8 +248,7 @@ class AssetField extends FormField
 	 * @param DataObject $record
 	 * @return $this
 	 */
-    public function setRecord($record)
-    {
+	public function setRecord($record) {
 		$this->record = $record;
 		return $this;
 	}
@@ -268,8 +259,7 @@ class AssetField extends FormField
 	 *
 	 * @return DataObject
 	 */
-    public function getRecord()
-    {
+	public function getRecord() {
 		if (!$this->record
 			&& $this->form
 			&& ($record = $this->form->getRecord())
@@ -280,8 +270,7 @@ class AssetField extends FormField
 		return $this->record;
 	}
 
-    public function setValue($value, $record = null)
-    {
+	public function setValue($value, $record = null) {
 		// Extract value from underlying record
 		if(empty($value) && $this->getName() && $record instanceof DataObject) {
 			$name = $this->getName();
@@ -316,14 +305,12 @@ class AssetField extends FormField
 		return parent::setValue($value, $record);
 	}
 
-    public function Value()
-    {
+	public function Value() {
 		// Re-override FileField Value to use data value
 		return $this->dataValue();
 	}
 
-    public function saveInto(DataObjectInterface $record)
-    {
+	public function saveInto(DataObjectInterface $record) {
 		// Check required relation details are available
 		$name = $this->getName();
 		if(!$name) {
@@ -348,8 +335,7 @@ class AssetField extends FormField
 	 * @param mixed $val
 	 * @return $this self reference
 	 */
-    public function setConfig($key, $val)
-    {
+	public function setConfig($key, $val) {
 		$this->ufConfig[$key] = $val;
 		return $this;
 	}
@@ -362,8 +348,7 @@ class AssetField extends FormField
 	 * @param string $key
 	 * @return mixed
 	 */
-    public function getConfig($key)
-    {
+	public function getConfig($key) {
 		if(isset($this->ufConfig[$key])) {
 			return $this->ufConfig[$key];
 		}
@@ -374,8 +359,7 @@ class AssetField extends FormField
 	 *
 	 * @return boolean
 	 */
-    public function getAutoUpload()
-    {
+	public function getAutoUpload() {
 		return $this->getConfig('autoUpload');
 	}
 
@@ -385,8 +369,7 @@ class AssetField extends FormField
 	 * @param boolean $autoUpload
 	 * @return $this Self reference
 	 */
-    public function setAutoUpload($autoUpload)
-    {
+	public function setAutoUpload($autoUpload) {
 		return $this->setConfig('autoUpload', $autoUpload);
 	}
 
@@ -395,8 +378,7 @@ class AssetField extends FormField
 	 *
 	 * @return boolean
 	 */
-    public function canUpload()
-    {
+	public function canUpload() {
 		if(!$this->isActive()) {
 			return false;
 		}
@@ -415,8 +397,7 @@ class AssetField extends FormField
 	 * permission code
 	 * @return $this Self reference
 	 */
-    public function setCanUpload($canUpload)
-    {
+	public function setCanUpload($canUpload) {
 		return $this->setConfig('canUpload', $canUpload);
 	}
 
@@ -425,8 +406,7 @@ class AssetField extends FormField
 	 *
 	 * @return bool
 	 */
-    public function isActive()
-    {
+	public function isActive() {
 		return !$this->isDisabled() && !$this->isReadonly();
 	}
 
@@ -435,8 +415,7 @@ class AssetField extends FormField
 	 *
 	 * @return int
 	 */
-    public function getPreviewMaxWidth()
-    {
+	public function getPreviewMaxWidth() {
 		return $this->getConfig('previewMaxWidth');
 	}
 
@@ -446,8 +425,7 @@ class AssetField extends FormField
 	 * @param int $previewMaxWidth
 	 * @return $this Self reference
 	 */
-    public function setPreviewMaxWidth($previewMaxWidth)
-    {
+	public function setPreviewMaxWidth($previewMaxWidth) {
 		return $this->setConfig('previewMaxWidth', $previewMaxWidth);
 	}
 
@@ -456,8 +434,7 @@ class AssetField extends FormField
 	 *
 	 * @return int
 	 */
-    public function getPreviewMaxHeight()
-    {
+	public function getPreviewMaxHeight() {
 		return $this->getConfig('previewMaxHeight');
 	}
 
@@ -467,8 +444,7 @@ class AssetField extends FormField
 	 * @param int $previewMaxHeight
 	 * @return $this Self reference
 	 */
-    public function setPreviewMaxHeight($previewMaxHeight)
-    {
+	public function setPreviewMaxHeight($previewMaxHeight) {
 		return $this->setConfig('previewMaxHeight', $previewMaxHeight);
 	}
 
@@ -479,8 +455,7 @@ class AssetField extends FormField
 	 * @see javascript/UploadField_uploadtemplate.js
 	 * @return string
 	 */
-    public function getUploadTemplateName()
-    {
+	public function getUploadTemplateName() {
 		return $this->getConfig('uploadTemplateName');
 	}
 
@@ -490,8 +465,7 @@ class AssetField extends FormField
 	 * @param string $uploadTemplateName
 	 * @return $this Self reference
 	 */
-    public function setUploadTemplateName($uploadTemplateName)
-    {
+	public function setUploadTemplateName($uploadTemplateName) {
 		return $this->setConfig('uploadTemplateName', $uploadTemplateName);
 	}
 
@@ -502,8 +476,7 @@ class AssetField extends FormField
 	 * @see javascript/DownloadField_downloadtemplate.js
 	 * @return string
 	 */
-    public function getDownloadTemplateName()
-    {
+	public function getDownloadTemplateName() {
 		return $this->getConfig('downloadTemplateName');
 	}
 
@@ -513,13 +486,11 @@ class AssetField extends FormField
 	 * @param string $downloadTemplateName
 	 * @return $this Self reference
 	 */
-    public function setDownloadTemplateName($downloadTemplateName)
-    {
+	public function setDownloadTemplateName($downloadTemplateName) {
 		return $this->setConfig('downloadTemplateName', $downloadTemplateName);
 	}
 
-    public function extraClass()
-    {
+	public function extraClass() {
 		if($this->isDisabled()) {
 			$this->addExtraClass('disabled');
 		}
@@ -530,8 +501,7 @@ class AssetField extends FormField
 		return parent::extraClass();
 	}
 
-    public function Field($properties = array())
-    {
+	public function Field($properties = array()) {
 		// Calculated config as per jquery.fileupload-ui.js
 		$config = array(
 			'allowedMaxFileNumber' => 1, // Only one file allowed for AssetField
@@ -577,8 +547,7 @@ class AssetField extends FormField
 	 * @param Validator $validator
 	 * @return boolean
 	 */
-    public function validate($validator)
-    {
+	public function validate($validator) {
 		$name = $this->getName();
 		$value = $this->Value();
 
@@ -620,8 +589,7 @@ class AssetField extends FormField
 	 * @param array $postVars Array of posted form data
 	 * @return array data for uploaded file
 	 */
-    protected function extractUploadedFileData($postVars)
-    {
+	protected function extractUploadedFileData($postVars) {
 		// Note: Format of posted file parameters in php is a feature of using
 		// <input name='{$Name}[Upload]' /> for multiple file uploads
 
@@ -653,8 +621,7 @@ class AssetField extends FormField
 	 * @param string $error Error message
 	 * @return array Result of saved file, or null if error
 	 */
-    protected function saveTemporaryFile($tmpFile, &$error = null)
-    {
+	protected function saveTemporaryFile($tmpFile, &$error = null) {
 		$error = null;
 		if (empty($tmpFile)) {
 			$error = _t('UploadField.FIELDNOTSET', 'File information not found');
@@ -696,8 +663,7 @@ class AssetField extends FormField
 	 * @param string $variant
 	 * @return array Encoded list of file attributes
 	 */
-    protected function encodeAssetAttributes($filename, $hash, $variant)
-    {
+	protected function encodeAssetAttributes($filename, $hash, $variant) {
 		// Force regeneration of file thumbnail for this tuple (without saving into db)
 		$object = DBFile::create();
 		$object->setValue(array('Filename' => $filename, 'Hash' => $hash, 'Variant' => $variant));
@@ -725,8 +691,7 @@ class AssetField extends FormField
 	 * @param HTTPRequest $request
 	 * @return HTTPResponse
 	 */
-    public function upload(HTTPRequest $request)
-    {
+	public function upload(HTTPRequest $request) {
 		if($this->isDisabled() || $this->isReadonly() || !$this->canUpload()) {
 			return $this->httpError(403);
 		}
@@ -767,8 +732,7 @@ class AssetField extends FormField
 		return $response;
 	}
 
-    public function performReadonlyTransformation()
-    {
+	public function performReadonlyTransformation() {
 		$clone = clone $this;
 		$clone->addExtraClass('readonly');
 		$clone->setReadonly(true);
@@ -782,13 +746,10 @@ class AssetField extends FormField
 	 * @param string $default Default value to return if no value could be calculated
 	 * @return string Foreign class name.
 	 */
-    public function getRelationAutosetClass($default = 'SilverStripe\\Assets\\File')
-    {
+	public function getRelationAutosetClass($default = 'SilverStripe\\Assets\\File') {
 
 		// Don't autodetermine relation if no relationship between parent record
-        if (!$this->relationAutoSetting) {
-            return $default;
-        }
+		if(!$this->relationAutoSetting) return $default;
 
 		// Check record and name
 		$name = $this->getName();
@@ -804,10 +765,10 @@ class AssetField extends FormField
 	/**
 	 * @return AssetStore
 	 */
-    protected function getAssetStore()
-    {
+	protected function getAssetStore() {
 		return Injector::inst()->get('AssetStore');
 	}
+
 	public function getAttributes() {
 		return array_merge(
 			parent::getAttributes(),

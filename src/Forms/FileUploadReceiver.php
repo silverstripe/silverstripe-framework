@@ -25,10 +25,12 @@ use SilverStripe\ORM\ValidationException;
  * Additionally supports writing directly to the File table not attached
  * to any parent record.
  *
+ * Note that this trait expects to be applied to a {@see FormField} class
+ *
  * @mixin FormField
  */
-trait FileUploadable {
-	use Uploadable;
+trait FileUploadReceiver {
+	use UploadReceiver;
 
 	/**
 	 * Flag to automatically determine and save a has_one-relationship
@@ -54,8 +56,8 @@ trait FileUploadable {
 	 */
 	protected $items;
 
-	protected function constructFileUploadable() {
-		$this->constructUploadable();
+	protected function constructFileUploadReceiver() {
+		$this->constructUploadReceiver();
 	}
 
 

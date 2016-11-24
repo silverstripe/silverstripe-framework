@@ -10,9 +10,11 @@ use SilverStripe\Assets\Upload_Validator;
 /**
  * Represents a form field which has an Upload() instance and can upload to a folder
  *
+ * Note that this trait expects to be applied to a {@see FormField} class
+ *
  * @mixin FormField
  */
-trait Uploadable
+trait UploadReceiver
 {
 	/**
 	 * Upload object (needed for validation
@@ -34,7 +36,7 @@ trait Uploadable
 	/**
 	 * Bootstrap Uploadable field
 	 */
-	protected function constructUploadable() {
+	protected function constructUploadReceiver() {
 		// Set Upload instance
 		$this->setUpload(Upload::create());
 

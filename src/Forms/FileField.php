@@ -47,7 +47,7 @@ use SilverStripe\Core\Object;
  * </code>
  */
 class FileField extends FormField {
-	use Uploadable;
+	use UploadReceiver;
 
 	/**
 	 * Flag to automatically determine and save a has_one-relationship
@@ -67,7 +67,7 @@ class FileField extends FormField {
 	 * @param int $value The value of the field.
 	 */
 	public function __construct($name, $title = null, $value = null) {
-		$this->constructUploadable();
+		$this->constructUploadReceiver();
 		parent::__construct($name, $title, $value);
 	}
 
