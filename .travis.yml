@@ -29,6 +29,7 @@ matrix:
 
 before_script:
  - export CORE_RELEASE=$TRAVIS_BRANCH
+ - "if [ \"$TRAVIS_PULL_REQUEST\" == false ]; then git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*; git fetch; for remote in `git branch -r`; do git branch --track ${remote#origin/} $remote; done; wget https://gist.githubusercontent.com/dhensby/e8c8979ac4fde4b7b348fcf8097df095/raw/bb44afc5ec8befc37777df664203af2d4f3372ff/dna-test.sh; chmod +x dna-test.sh; export CORE_RELEASE=$(./dna-test.sh \"$TRAVIS_BRANCH\"); fi"
  - composer self-update || true
  - phpenv rehash
  - git clone git://github.com/silverstripe-labs/silverstripe-travis-support.git ~/travis-support
