@@ -60,7 +60,11 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		$formattedData = $this->_formatter->format($event);
 		$subject = $formattedData['subject'];
 		$data = $formattedData['data'];
-		$from = Config::inst()->get('SS_LogEmailWriter', 'send_from');
+		if (Email::config()->send_all_emails_from) {
+			$from = Email::config()->send_all_emails_from;
+		} else {
+			$from = Config::inst()->get('SS_LogEmailWriter', 'send_from') ?: Email::config()->admin_email;
+		}
 
 		// override the SMTP server with a custom one if required
 		$originalSMTP = ini_get('SMTP');
@@ -85,12 +89,22 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 				$headers
 			);
 		} else {
-			mail(
+			// Try it with the -f option first, without if it fails - borrowed from Mailer
+			$result = mail(
 				$this->emailAddress,
 				$subject,
 				$data,
-				$headers
+				$headers,
+				escapeshellarg("-f$from")
 			);
+			if(!$result) {
+				mail(
+					$this->emailAddress,
+					$subject,
+					$data,
+					$headers
+				);
+			}
 		}
 
 		// reset the SMTP server to the original
