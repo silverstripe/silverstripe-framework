@@ -53,8 +53,26 @@ class ReadonlyField extends FormField {
 	}
 
 	public function Value() {
-		if($this->value) return $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
+		if($this->value) return $this->value;
 		else return '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
+	}
+
+	/**
+	 * This is a legacy fix to ensure that the `dontEscape` flag has an impact on readonly fields
+	 * now that we've moved to casting template values more rigidly
+	 *
+	 * @param string $field
+	 * @return string
+	 */
+	public function castingHelper($field) {
+		if (
+			(strcasecmp($field, 'Value') === 0)
+			&& ($this->dontEscape || empty($this->value))
+		) {
+			// Value is either empty, or unescaped
+			return 'HTMLText';
+		}
+		return parent::castingHelper($field);
 	}
 
 	public function getAttributes() {

@@ -8,7 +8,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('cs', {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Vybráno {num} stránek.\n\nSkutečně chcete archivovat tyto stránky?\n\nTyto stránky a její všechny podstránky budou nezveřejněny a odeslány do archívu.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Máte vybráno {num} stránek.\n\nSkutečně chcete vymazat tyto stránky z webu?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "Máte vybráno {num} stránek.\n\nSkutečně je chcete vymazat?",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Máte vybráno {num} stránek.\n\nSkutečně je chcete zveřejnit?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Vybráno {num} stránek.\n\nSkutečně chcete obnovit?\n\nPodstránky archivovaných stránek budou obnoveny do nejvzšší úrovně, pokud tyto stránky budou také obnoveny.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Máte vybráno {num} stránek.\n\nSkutečně je chcete nezveřejnit?",

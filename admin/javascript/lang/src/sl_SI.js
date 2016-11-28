@@ -1,7 +1,7 @@
 {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Izbrano število strani: {num}\n\nSte prepričani, da želite arhivirati te strani?\n\nTe strani in vse ostale podstrani bodo odstranjene iz objave in premaknjene v arhiv.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Izbrali ste {num} strani.\n\nAli ste prepričani, da želite izbrisati te strani iz objave?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "Izbrali ste {num} strani.\n\nAli ste prepričani, da jih želite izbrisati?",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to publish?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to restore to stage?\n\nChildren of archived pages will be restored to the root level, unless those pages are also being restored.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to unpublish",

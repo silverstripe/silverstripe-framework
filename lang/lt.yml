@@ -1,119 +1,119 @@
 lt:
   AssetAdmin:
-    ALLOWEDEXTS: 'Leidžiamų įkelti bylų plėtiniai'
-    HIDEALLOWEDEXTS: 'Slėpti leidžiamus bylų plėtinius'
-    NEWFOLDER: Naujas kalalogas
-    SHOWALLOWEDEXTS: 'Rodyti leidžiamus bylų plėtinius'
+    ALLOWEDEXTS: "Leidžiamų įkelti bylų plėtiniai"
+    HIDEALLOWEDEXTS: "Slėpti leidžiamus bylų plėtinius"
+    NEWFOLDER: "Naujas kalalogas"
+    SHOWALLOWEDEXTS: "Rodyti leidžiamus bylų plėtinius"
   AssetTableField:
-    CREATED: 'Įkelta'
+    CREATED: Įkelta
     DIM: Išmatavimai
-    FILENAME: Bylos pavadinimas
+    FILENAME: "Bylos pavadinimas"
     FOLDER: Katalogas
     HEIGHT: Aukštis
-    LASTEDIT: 'Redaguota'
+    LASTEDIT: Redaguota
     OWNER: Vartotojas
-    SIZE: 'Bylos dydis'
+    SIZE: "Bylos dydis"
     TITLE: Pavadinimas
-    TYPE: 'Bylos tipas'
-    URL: URL adresas
+    TYPE: "Bylos tipas"
+    URL: "URL adresas"
     WIDTH: Plotis
   AssetUploadField:
-    ChooseFiles: 'Pasirinkite bylas'
-    DRAGFILESHERE: 'Vilkite bylas čia'
-    DROPAREA: 'Įmetimo vieta'
-    EDITALL: 'Redaguoti visus'
-    EDITANDORGANIZE: 'Redaguoti ir tvarkyti'
-    EDITINFO: 'Redaguoti bylas'
+    ChooseFiles: "Pasirinkite bylas"
+    DRAGFILESHERE: "Vilkite bylas čia"
+    DROPAREA: "Įmetimo vieta"
+    EDITALL: "Redaguoti visus"
+    EDITANDORGANIZE: "Redaguoti ir tvarkyti"
+    EDITINFO: "Redaguoti bylas"
     FILES: Bylos
-    FROMCOMPUTER: 'Pasirinkite bylas iš jūsų kompiuterio'
-    FROMCOMPUTERINFO: 'Įkelti iš jūsų kompiuterio'
-    INSERTURL: 'Įkelti iš nuorodos'
-    REMOVEINFO: 'Pašalinti šią bylą iš šio lauko'
+    FROMCOMPUTER: "Pasirinkite bylas iš jūsų kompiuterio"
+    FROMCOMPUTERINFO: "Įkelti iš jūsų kompiuterio"
+    INSERTURL: "Įkelti iš nuorodos"
+    REMOVEINFO: "Pašalinti šią bylą iš šio lauko"
     TOTAL: Viso
-    UPLOADINPROGRESS: 'Prašome palaukti... vyksta įkėlimas'
+    UPLOADINPROGRESS: "Prašome palaukti... vyksta įkėlimas"
     UPLOADOR: ARBA
   BBCodeParser:
     ALIGNEMENT: Lygiavimas
-    ALIGNEMENTEXAMPLE: 'sulygiuota pagal dešinę'
-    BOLD: 'Pastorintas tekstas'
+    ALIGNEMENTEXAMPLE: "sulygiuota pagal dešinę"
+    BOLD: "Pastorintas tekstas"
     BOLDEXAMPLE: Pastorinta
-    CODE: 'Kodo blokas'
-    CODEDESCRIPTION: 'Nesuformatuotas kodo blokas'
-    CODEEXAMPLE: 'Kodo blokas'
-    COLORED: 'Spalvotas tekstas'
-    COLOREDEXAMPLE: 'mėlynas tekstas'
-    EMAILLINK: 'E. pašto nuoroda'
-    EMAILLINKDESCRIPTION: 'Sukurti nuorodą į e. paštą'
+    CODE: "Kodo blokas"
+    CODEDESCRIPTION: "Nesuformatuotas kodo blokas"
+    CODEEXAMPLE: "Kodo blokas"
+    COLORED: "Spalvotas tekstas"
+    COLOREDEXAMPLE: "mėlynas tekstas"
+    EMAILLINK: "E. pašto nuoroda"
+    EMAILLINKDESCRIPTION: "Sukurti nuorodą į e. paštą"
     IMAGE: Paveikslėlis
-    IMAGEDESCRIPTION: 'Rodyti paveikslėlį mano skelbime'
-    ITALIC: 'Pasviręs tekstas'
+    IMAGEDESCRIPTION: "Rodyti paveikslėlį mano skelbime"
+    ITALIC: "Pasviręs tekstas"
     ITALICEXAMPLE: Pasviręs
-    LINK: 'Puslapio nuoroda'
-    LINKDESCRIPTION: 'Nuoroda į kitą svetainę ar URL adresą'
-    STRUCK: 'Struck-out tekstas'
+    LINK: "Puslapio nuoroda"
+    LINKDESCRIPTION: "Nuoroda į kitą svetainę ar URL adresą"
+    STRUCK: "Struck-out tekstas"
     STRUCKEXAMPLE: Struck-out
-    UNDERLINE: 'Pabrauktas tekstas'
+    UNDERLINE: "Pabrauktas tekstas"
     UNDERLINEEXAMPLE: Pabraukta
-    UNORDERED: 'Nerūšiuotas sąrašas'
-    UNORDEREDDESCRIPTION: 'Nerūšiuotas sąrašas'
-    UNORDEREDEXAMPLE1: 'nerūšiuota įrašas 1'
+    UNORDERED: "Nerūšiuotas sąrašas"
+    UNORDEREDDESCRIPTION: "Nerūšiuotas sąrašas"
+    UNORDEREDEXAMPLE1: "nerūšiuota įrašas 1"
   BackLink_Button_ss:
     Back: Atgal
   BasicAuth:
-    ENTERINFO: 'Įveskite vartotojo vardą ir slaptažodį'
-    ERRORNOTADMIN: 'Vartotojas nėra administratorius'
-    ERRORNOTREC: 'Toks vartotojo vardas / slaptažodis neatpažintas'
+    ENTERINFO: "Įveskite vartotojo vardą ir slaptažodį"
+    ERRORNOTADMIN: "Vartotojas nėra administratorius"
+    ERRORNOTREC: "Toks vartotojo vardas / slaptažodis neatpažintas"
   Boolean:
-    ANY: Bet koks
-    NOANSWER: 'Ne'
-    YESANSWER: 'Taip'
+    ANY: "Bet koks"
+    NOANSWER: Ne
+    YESANSWER: Taip
   CMSLoadingScreen_ss:
     LOADING: Keliama...
-    REQUIREJS: 'Šiai TVS būtina įjungti JavaScript.'
+    REQUIREJS: "Šiai TVS būtina įjungti JavaScript."
   CMSMain:
-    ACCESS: 'Patekti į ''{title}'' dalį'
-    ACCESSALLINTERFACES: 'Patekti į visas TVS dalis'
-    ACCESSALLINTERFACESHELP: 'Perrašo konkretesnes nuostatas.'
+    ACCESS: "Patekti į '{title}' dalį"
+    ACCESSALLINTERFACES: "Patekti į visas TVS dalis"
+    ACCESSALLINTERFACESHELP: "Perrašo konkretesnes nuostatas."
     SAVE: Išsaugoti
   CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Pamiršote slaptažodį?'
-    BUTTONLOGIN: 'Prisijungti'
-    BUTTONLOGOUT: 'Atsijungti'
-    PASSWORDEXPIRED: '<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target="_top" href="{link}">Prašome sukurti naują.</a></p>'
+    BUTTONFORGOTPASSWORD: "Pamiršote slaptažodį?"
+    BUTTONLOGIN: Prisijungti
+    BUTTONLOGOUT: Atsijungti
+    PASSWORDEXPIRED: "<p>Jūsų slaptažodžio galiojimas pasibaigė. <a target=\"_top\" href=\"{link}\">Prašome sukurti naują.</a></p>"
   CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Puslapio peržiūra'
+    PREVIEW: "Puslapio peržiūra"
   CMSPagesController_Tools_ss:
     FILTER: Filtras
   CMSProfileController:
-    MENUTITLE: 'Mano profilis'
+    MENUTITLE: "Mano profilis"
   CMSSecurity:
-    INVALIDUSER: '<p>Blogas vartotojas. Norėdami tęsti, prašome <a target="_top" href="{link}">prisijungti</a> iš naujo.</p>'
-    LoginMessage: '<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>'
+    INVALIDUSER: "<p>Blogas vartotojas. Norėdami tęsti, prašome <a target=\"_top\" href=\"{link}\">prisijungti</a> iš naujo.</p>"
+    LoginMessage: "<p>Jei dar neišsaugojote padarytus pakeitimus, jūs galėsite tęsti darbą, prisijungę žemiau esančioje formoje.</p>"
     SUCCESS: Sėkmingai
-    SUCCESSCONTENT: '<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target="_top" href="{link}">spauskite čia</a></p>'
-    TimedOutTitleAnonymous: 'Jūsų prisijungimo galiojimas pasibaigė.'
-    TimedOutTitleMember: 'Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė.'
+    SUCCESSCONTENT: "<p>Sėkmingai prisijungėte. Jeigu jūsų automatiškai nenukreipia, <a target=\"_top\" href=\"{link}\">spauskite čia</a></p>"
+    TimedOutTitleAnonymous: "Jūsų prisijungimo galiojimas pasibaigė."
+    TimedOutTitleMember: "Sveiki, {name}!<br />Jūsų prisijungimo galiojimas pasibaigė."
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Jūs pakeitėte slaptažodį'
-    CHANGEPASSWORDTEXT2: 'Nuo šiol galite naudoti šiuos prisijungimo duomenis:'
-    EMAIL: El. paštas
+    CHANGEPASSWORDTEXT1: "Jūs pakeitėte slaptažodį"
+    CHANGEPASSWORDTEXT2: "Nuo šiol galite naudoti šiuos prisijungimo duomenis:"
+    EMAIL: "El. paštas"
     HELLO: Sveiki
     PASSWORD: Slaptažodis
   CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Taip'
+    NOANSWER: Ne
+    YESANSWER: Taip
   CheckboxFieldSetField:
-    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
+    SOURCE_VALIDATION: "Prašome pasirinkti reikšmę iš pateikto sąrašo. '{value}' yra negalima reikšmė."
   CheckboxSetField:
-    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
+    SOURCE_VALIDATION: "Prašome pasirinkti reikšmę iš pateikto sąrašo. '{value}' yra negalima reikšmė."
   ConfirmedPasswordField:
-    ATLEAST: 'Slaptažodžiai privalo būti bent {min} simbolių ilgio.'
-    BETWEEN: 'Slaptažodžiai privalo būti nuo {min} iki {max} simbolių ilgio.'
-    MAXIMUM: 'Slaptažodžiai privalo būti ne ilgesni nei {max} simbolių ilgio.'
-    SHOWONCLICKTITLE: 'Pakeisti slaptažodį'
+    ATLEAST: "Slaptažodžiai privalo būti bent {min} simbolių ilgio."
+    BETWEEN: "Slaptažodžiai privalo būti nuo {min} iki {max} simbolių ilgio."
+    MAXIMUM: "Slaptažodžiai privalo būti ne ilgesni nei {max} simbolių ilgio."
+    SHOWONCLICKTITLE: "Pakeisti slaptažodį"
   ContentController:
-    DRAFT_SITE_ACCESS_RESTRICTION: 'Jūs turite prisijungti su savo TVS slaptažodžiu, kad galėtumėte peržiūrėti juodraščio arba archyvo turinį.<a href="%s">Spauskite čia, norėdami grįžti į svetainę</a>.'
-    NOTLOGGEDIN: 'Neprisijungęs'
+    DRAFT_SITE_ACCESS_RESTRICTION: "Jūs turite prisijungti su savo TVS slaptažodžiu, kad galėtumėte peržiūrėti juodraščio arba archyvo turinį.<a href=\"%s\">Spauskite čia, norėdami grįžti į svetainę</a>."
+    NOTLOGGEDIN: Neprisijungęs
   CreditCardField:
     FIRST: pirmas
     FOURTH: ketvirtas
@@ -122,202 +122,202 @@ lt:
   CurrencyField:
     CURRENCYSYMBOL: €
   DataObject:
-    PLURALNAME: 'Duomenų objektai'
-    SINGULARNAME: 'Duomenų objektas'
+    PLURALNAME: "Duomenų objektai"
+    SINGULARNAME: "Duomenų objektas"
   Date:
     DAY: d.
     DAYS: d.
     HOUR: val.
     HOURS: val.
-    LessThanMinuteAgo: 'mažiau nei min.'
+    LessThanMinuteAgo: "mažiau nei min."
     MIN: min.
     MINS: min.
     MONTH: mėn.
     MONTHS: mėn.
     SEC: s.
     SECS: s.
-    TIMEDIFFAGO: 'prieš {difference}'
-    TIMEDIFFIN: 'po {difference}'
+    TIMEDIFFAGO: "prieš {difference}"
+    TIMEDIFFIN: "po {difference}"
     YEAR: m.
     YEARS: m.
   DateField:
-    NOTSET: 'nenustatyta'
+    NOTSET: nenustatyta
     TODAY: šiandien
-    VALIDDATEFORMAT2: 'Prašome suvesti datą reikiamu formatu ({format})'
-    VALIDDATEMAXDATE: 'Data privalo būti senesnė arba lygi vėliausiai galimai datai ({date})'
-    VALIDDATEMINDATE: 'Data privalo būti naujesnė arba lygi anksčiausiai galimai datai ({date})'
+    VALIDDATEFORMAT2: "Prašome suvesti datą reikiamu formatu ({format})"
+    VALIDDATEMAXDATE: "Data privalo būti senesnė arba lygi vėliausiai galimai datai ({date})"
+    VALIDDATEMINDATE: "Data privalo būti naujesnė arba lygi anksčiausiai galimai datai ({date})"
   DatetimeField:
-    NOTSET: 'Nenurodyta'
+    NOTSET: Nenurodyta
   Director:
-    INVALID_REQUEST: 'Klaidinga užklausa'
+    INVALID_REQUEST: "Klaidinga užklausa"
   DropdownField:
     CHOOSE: (Pasirinkti)
-    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''{value}'' yra negalima reikšmė.'
+    SOURCE_VALIDATION: "Prašome pasirinkti reikšmę iš pateikto sąrašo. '{value}' yra negalima reikšmė."
   EmailField:
-    VALIDATION: 'Prašome suvesti el. pašto adresą'
+    VALIDATION: "Prašome suvesti el. pašto adresą"
   Enum:
-    ANY: Bet koks
+    ANY: "Bet koks"
   File:
-    AviType: 'AVI video byla'
+    AviType: "AVI video byla"
     Content: Turinys
-    CssType: 'CSS byla'
-    DmgType: 'Apple disk image'
-    DocType: 'Word dokumentas'
-    Filename: Bylos pavadinimas
-    GifType: 'GIF paveikslėlis - tinkamas grafikai'
-    GzType: 'GZIP archyvas'
-    HtlType: 'HTML byla'
-    HtmlType: 'HTML byla'
-    INVALIDEXTENSION: 'Neleidžiamas bylos plėtinys (galimi: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Neleidžiamas bylos plėtinys'
-    IcoType: 'Icon paveikslėlis'
-    JpgType: 'JPEG paveikslėlis - tinkamas nuotraukoms'
-    JsType: 'Javascript byla'
-    Mp3Type: 'MP3 garso byla'
-    MpgType: 'MPEG video byla'
-    NOVALIDUPLOAD: 'Byla netinkama įkėlimui'
+    CssType: "CSS byla"
+    DmgType: "Apple disk image"
+    DocType: "Word dokumentas"
+    Filename: "Bylos pavadinimas"
+    GifType: "GIF paveikslėlis - tinkamas grafikai"
+    GzType: "GZIP archyvas"
+    HtlType: "HTML byla"
+    HtmlType: "HTML byla"
+    INVALIDEXTENSION: "Neleidžiamas bylos plėtinys (galimi: {extensions})"
+    INVALIDEXTENSIONSHORT: "Neleidžiamas bylos plėtinys"
+    IcoType: "Icon paveikslėlis"
+    JpgType: "JPEG paveikslėlis - tinkamas nuotraukoms"
+    JsType: "Javascript byla"
+    Mp3Type: "MP3 garso byla"
+    MpgType: "MPEG video byla"
+    NOVALIDUPLOAD: "Byla netinkama įkėlimui"
     Name: Pavadinimas
     PLURALNAME: Bylos
-    PdfType: 'Adome Acrobat PDF byla'
-    PngType: 'PNG paveikslėlis - geras bendro tipo formatas'
+    PdfType: "Adome Acrobat PDF byla"
+    PngType: "PNG paveikslėlis - geras bendro tipo formatas"
     SINGULARNAME: Byla
-    TiffType: 'Tagged paveikslėlių formatas'
+    TiffType: "Tagged paveikslėlių formatas"
     Title: Pavadinimas
-    WavType: 'WAV garso byla'
-    XlsType: 'Excel skaičiuoklė'
-    ZipType: 'ZIP archyvas'
+    WavType: "WAV garso byla"
+    XlsType: "Excel skaičiuoklė"
+    ZipType: "ZIP archyvas"
   Filesystem:
-    SYNCRESULTS: 'Sinchronizacija baigta: {createdcount} įrašai sukurti, {deletedcount} įrašai ištrinti'
+    SYNCRESULTS: "Sinchronizacija baigta: {createdcount} įrašai sukurti, {deletedcount} įrašai ištrinti"
   Folder:
     PLURALNAME: Katalogai
     SINGULARNAME: Katalogas
   ForgotPasswordEmail_ss:
     HELLO: Sveiki
-    TEXT1: 'Jūsų'
-    TEXT2: 'slaptažodžio atstatymo nuoroda'
+    TEXT1: Jūsų
+    TEXT2: "slaptažodžio atstatymo nuoroda"
     TEXT3: svetainei
   Form:
-    CSRF_EXPIRED_MESSAGE: 'Jūsų prisijungimas nebegalioja. Prašome iš naujo išsaugoti duomenis.'
-    CSRF_FAILED_MESSAGE: 'Iškilo techninė problema. Prašome paspausti mygtuką Atgal, perkraukite naršyklės langą ir bandykite vėl.'
-    FIELDISREQUIRED: '{name} yra privalomas'
+    CSRF_EXPIRED_MESSAGE: "Jūsų prisijungimas nebegalioja. Prašome iš naujo išsaugoti duomenis."
+    CSRF_FAILED_MESSAGE: "Iškilo techninė problema. Prašome paspausti mygtuką Atgal, perkraukite naršyklės langą ir bandykite vėl."
+    FIELDISREQUIRED: "{name} yra privalomas"
     SubmitBtnLabel: Vykdyti
-    VALIDATIONCREDITNUMBER: 'Prašome įsitikinti, ar teisingai suvedėte kreditinės kortelės numerį {number}'
-    VALIDATIONNOTUNIQUE: 'Įvesta reikšmė nėra unikali'
-    VALIDATIONPASSWORDSDONTMATCH: 'Nesutampa slaptažodžiai'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Slaptažodžiai negali būti tušti'
-    VALIDATIONSTRONGPASSWORD: 'Slaptažodžiai privalo būti sudaryti panaudojant bent vieną skaitmenį ir bent vieną raidę'
+    VALIDATIONCREDITNUMBER: "Prašome įsitikinti, ar teisingai suvedėte kreditinės kortelės numerį {number}"
+    VALIDATIONNOTUNIQUE: "Įvesta reikšmė nėra unikali"
+    VALIDATIONPASSWORDSDONTMATCH: "Nesutampa slaptažodžiai"
+    VALIDATIONPASSWORDSNOTEMPTY: "Slaptažodžiai negali būti tušti"
+    VALIDATIONSTRONGPASSWORD: "Slaptažodžiai privalo būti sudaryti panaudojant bent vieną skaitmenį ir bent vieną raidę"
     VALIDATOR: Tikrintojas
-    VALIDCURRENCY: 'Prašome suvesti teisingą valiutą'
+    VALIDCURRENCY: "Prašome suvesti teisingą valiutą"
   FormField:
-    Example: 'pvz. %s'
+    Example: "pvz. %s"
     NONE: nėra
   GridAction:
     DELETE_DESCRIPTION: Ištrinti
     Delete: Ištrinti
     UnlinkRelation: Atkabinti
   GridField:
-    Add: 'Sukurti {name}'
+    Add: "Sukurti {name}"
     Filter: Filtruoti
-    FilterBy: 'Filtruoti pagal '
+    FilterBy: "Filtruoti pagal "
     Find: Rasti
-    LEVELUP: 'Aukštyn'
-    LinkExisting: 'Pasirinkti esamą'
-    NewRecord: 'Naujas %s'
-    NoItemsFound: 'Įrašų nerasta'
-    PRINTEDAT: 'Atspausdinta'
-    PRINTEDBY: 'Atspausdino'
-    PlaceHolder: 'Rasti {type}'
-    PlaceHolderWithLabels: 'Rasti {type} pagal {name}'
-    RelationSearch: 'Sąryšių paieška'
+    LEVELUP: Aukštyn
+    LinkExisting: "Pasirinkti esamą"
+    NewRecord: "Naujas %s"
+    NoItemsFound: "Įrašų nerasta"
+    PRINTEDAT: Atspausdinta
+    PRINTEDBY: Atspausdino
+    PlaceHolder: "Rasti {type}"
+    PlaceHolderWithLabels: "Rasti {type} pagal {name}"
+    RelationSearch: "Sąryšių paieška"
     ResetFilter: Atstatyti
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'Nėra leidimų trynimui'
-    EditPermissionsFailure: 'Nėra leidimų atjungti įrašą'
+    DeletePermissionsFailure: "Nėra leidimų trynimui"
+    EditPermissionsFailure: "Nėra leidimų atjungti įrašą"
   GridFieldDetailForm:
     CancelBtn: Atšaukti
     Create: Sukurti
     Delete: Ištrinti
-    DeletePermissionsFailure: 'Nėra leidimų trynimui'
-    Deleted: 'Ištrinta %s %s'
+    DeletePermissionsFailure: "Nėra leidimų trynimui"
+    Deleted: "Ištrinta %s %s"
     Save: Išsaugoti
-    Saved: 'Išsaugota {name} {link}'
+    Saved: "Išsaugota {name} {link}"
   GridFieldEditButton_ss:
     EDIT: Redaguoti
   GridFieldItemEditView:
-    Go_back: 'Atgal'
+    Go_back: Atgal
   Group:
-    AddRole: 'Pridėti rolę šiai grupei'
-    Code: 'Grupės kodas'
+    AddRole: "Pridėti rolę šiai grupei"
+    Code: "Grupės kodas"
     DefaultGroupTitleAdministrators: Administratoriai
-    DefaultGroupTitleContentAuthors: 'Turinio autoriai'
+    DefaultGroupTitleContentAuthors: "Turinio autoriai"
     Description: Aprašymas
-    GroupReminder: 'Jeigu pasirinksite tėvinę grupę, ši grupė perims visas jos roles'
-    HierarchyPermsError: 'Nepavyko priskirti tėvinės grupės "%s" su priskirtais leidimais (būtina ADMIN prieeiga)'
-    Locked: 'Užrakinta?'
-    NoRoles: 'Rolių nerasta'
+    GroupReminder: "Jeigu pasirinksite tėvinę grupę, ši grupė perims visas jos roles"
+    HierarchyPermsError: "Nepavyko priskirti tėvinės grupės \"%s\" su priskirtais leidimais (būtina ADMIN prieeiga)"
+    Locked: Užrakinta?
+    NoRoles: "Rolių nerasta"
     PLURALNAME: Grupės
-    Parent: 'Priklauso grupei'
-    RolesAddEditLink: 'Tvarkyti roles'
+    Parent: "Priklauso grupei"
+    RolesAddEditLink: "Tvarkyti roles"
     SINGULARNAME: Grupė
-    Sort: 'Rūšiavimo tvarka'
+    Sort: "Rūšiavimo tvarka"
     has_many_Permissions: Leidimai
     many_many_Members: Vartotojai
   GroupImportForm:
-    Help1: '<p>Importuoti vieną ar kelias grupes <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
-    Help2: '<div class="advanced"><h4>Detalesnis aprašymas</h4><ul><li>Galimi stulpeliai: <em>%s</em>.</li><li>Esamos grupės yra surandamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos.</li><li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li><li>Leidimų kodai gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li></ul></div>'
-    ResultCreated: 'Sukurta {count} grupių'
-    ResultDeleted: 'Ištrinta %d grupių'
-    ResultUpdated: 'Atnaujinta %d grupių'
+    Help1: "<p>Importuoti vieną ar kelias grupes <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href=\"#\" class=\"toggle-advanced\">Rodyti detalesnį aprašymą</a></small></p>"
+    Help2: "<div class=\"advanced\"><h4>Detalesnis aprašymas</h4><ul><li>Galimi stulpeliai: <em>%s</em>.</li><li>Esamos grupės yra surandamos su jų unikalia <em>Code</em> reikšme ir atnaujinamos duomenimis iš importuojamos bylos.</li><li>Grupių hierarchija gali būti sukurta naudojant <em>ParentCode</em> stulpelį.</li><li>Leidimų kodai gali būti priskirti naudojant <em>PermissionCode</em> stulpelį. Esami leidimai nebus pakeisti.</li></ul></div>"
+    ResultCreated: "Sukurta {count} grupių"
+    ResultDeleted: "Ištrinta %d grupių"
+    ResultUpdated: "Atnaujinta %d grupių"
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Rastas begalinis sąryšis "{type}" hierarchijoje. Prašome patikrinti tėvinius sąryšius'
+    InfiniteLoopNotAllowed: "Rastas begalinis sąryšis \"{type}\" hierarchijoje. Prašome patikrinti tėvinius sąryšius"
   HtmlEditorField:
-    ADDURL: 'Pridėti URL'
-    ADJUSTDETAILSDIMENSIONS: 'Detalesnė inf. ir matmenys'
-    ANCHORSCANNOTACCESSPAGE: 'Neturite teisių pasiekti pasirinkto puslapio turinį.'
-    ANCHORSPAGENOTFOUND: 'Pasirinktas puslapis nerastas.'
+    ADDURL: "Pridėti URL"
+    ADJUSTDETAILSDIMENSIONS: "Detalesnė inf. ir matmenys"
+    ANCHORSCANNOTACCESSPAGE: "Neturite teisių pasiekti pasirinkto puslapio turinį."
+    ANCHORSPAGENOTFOUND: "Pasirinktas puslapis nerastas."
     ANCHORVALUE: Nuoroda
-    BUTTONADDURL: 'Pridėti URL'
+    BUTTONADDURL: "Pridėti URL"
     BUTTONINSERT: Įterpti
-    BUTTONINSERTLINK: 'Įterpti nuorodą'
-    BUTTONREMOVELINK: 'Pašalinti nuorodą'
+    BUTTONINSERTLINK: "Įterpti nuorodą"
+    BUTTONREMOVELINK: "Pašalinti nuorodą"
     BUTTONUpdate: Atnaujinti
-    CAPTIONTEXT: 'Pavadinimo tekstas'
-    CSSCLASS: 'Lygiavimas / stilius'
-    CSSCLASSCENTER: 'Centruotas, be nieko.'
-    CSSCLASSLEFT: 'Kairėje, su tekstu aplink.'
-    CSSCLASSLEFTALONE: 'Kairėje, savaiminis.'
-    CSSCLASSRIGHT: 'Dešinėje, su tekstu aplink.'
-    DETAILS: Detalesnė inf.
-    EMAIL: 'E. pašto adresas'
+    CAPTIONTEXT: "Pavadinimo tekstas"
+    CSSCLASS: "Lygiavimas / stilius"
+    CSSCLASSCENTER: "Centruotas, be nieko."
+    CSSCLASSLEFT: "Kairėje, su tekstu aplink."
+    CSSCLASSLEFTALONE: "Kairėje, savaiminis."
+    CSSCLASSRIGHT: "Dešinėje, su tekstu aplink."
+    DETAILS: "Detalesnė inf."
+    EMAIL: "E. pašto adresas"
     FILE: Byla
     FOLDER: Katalogas
-    FROMCMS: 'Iš TVS'
-    FROMCOMPUTER: 'Iš jūsų kompiuterio'
-    FROMWEB: 'Iš interneto'
-    FindInFolder: 'Rasti kataloge'
-    IMAGEALT: 'Alternatyvus tekstas (alt)'
+    FROMCMS: "Iš TVS"
+    FROMCOMPUTER: "Iš jūsų kompiuterio"
+    FROMWEB: "Iš interneto"
+    FindInFolder: "Rasti kataloge"
+    IMAGEALT: "Alternatyvus tekstas (alt)"
     IMAGEDIMENSIONS: Matmenys
     IMAGEHEIGHTPX: Aukštis
-    IMAGETITLE: 'Pavadinimo tekstas (tooltip) - papildomai informacijai apie paveikslėlį'
-    IMAGETITLETEXT: 'Pavadinimo tekstas (tooltip)'
-    IMAGETITLETEXTDESC: 'Papildomai informacijai apie paveikslėlį'
+    IMAGETITLE: "Pavadinimo tekstas (tooltip) - papildomai informacijai apie paveikslėlį"
+    IMAGETITLETEXT: "Pavadinimo tekstas (tooltip)"
+    IMAGETITLETEXTDESC: "Papildomai informacijai apie paveikslėlį"
     IMAGEWIDTHPX: Plotis
-    INSERTMEDIA: 'Įterpti Media'
-    LINK: 'Nuoroda'
-    LINKANCHOR: 'Nuoroda šiame puslapyje'
-    LINKDESCR: 'Nuorodos aprašymas'
-    LINKEMAIL: 'E. pašto adresas'
-    LINKEXTERNAL: 'Kita svetainė'
-    LINKFILE: 'Atsisiųsti bylą'
-    LINKINTERNAL: 'Puslapis svetainėje'
-    LINKOPENNEWWIN: 'Atidaryti nuorodą naujame lange?'
-    LINKTO: 'Nuoroda į'
+    INSERTMEDIA: "Įterpti Media"
+    LINK: Nuoroda
+    LINKANCHOR: "Nuoroda šiame puslapyje"
+    LINKDESCR: "Nuorodos aprašymas"
+    LINKEMAIL: "E. pašto adresas"
+    LINKEXTERNAL: "Kita svetainė"
+    LINKFILE: "Atsisiųsti bylą"
+    LINKINTERNAL: "Puslapis svetainėje"
+    LINKOPENNEWWIN: "Atidaryti nuorodą naujame lange?"
+    LINKTO: "Nuoroda į"
     PAGE: Puslapis
-    SUBJECT: 'El. laiško tema'
-    URL: URL adresas
-    URLDESCRIPTION: 'Įkelkite video ir paveikslėlius iš interneto į jūsų puslapį tiesiog įvesdami bylos nuorodą. Būtinai pasitikrinkite ar turite leidimą panaudoti norimas bylas.<br /><br />Atminkite, kad pridėtos bylos nesaugomos TVS, bet rodomos tiesiai iš išorinio šaltinio. Jeigu šios bylos bus pašalintos iš ten, jūsų svetainėje jie nebebus rodomi.'
-    URLNOTANOEMBEDRESOURCE: 'Nepavyko URL nuorodos ''{url}'' panaudoti media turiniui.'
-    UpdateMEDIA: 'Atnaujinti media'
+    SUBJECT: "El. laiško tema"
+    URL: "URL adresas"
+    URLDESCRIPTION: "Įkelkite video ir paveikslėlius iš interneto į jūsų puslapį tiesiog įvesdami bylos nuorodą. Būtinai pasitikrinkite ar turite leidimą panaudoti norimas bylas.<br /><br />Atminkite, kad pridėtos bylos nesaugomos TVS, bet rodomos tiesiai iš išorinio šaltinio. Jeigu šios bylos bus pašalintos iš ten, jūsų svetainėje jie nebebus rodomi."
+    URLNOTANOEMBEDRESOURCE: "Nepavyko URL nuorodos '{url}' panaudoti media turiniui."
+    UpdateMEDIA: "Atnaujinti media"
   Image:
     PLURALNAME: Bylos
     SINGULARNAME: Byla
@@ -325,125 +325,123 @@ lt:
     PLURALNAME: Bylos
     SINGULARNAME: Byla
   Image_iframe_ss:
-    TITLE: 'Paveikslėlio siuntimas iframe'
+    TITLE: "Paveikslėlio siuntimas iframe"
   LeftAndMain:
-    CANT_REORGANISE: 'Jūs neturite leidimo keisti aukščiausio lygio puslapių. Jūsų pakeitimai neišsaugoti.'
+    CANT_REORGANISE: "Jūs neturite leidimo keisti aukščiausio lygio puslapių. Jūsų pakeitimai neišsaugoti."
     DELETED: Ištrinta.
     HELP: Pagalba
-    PERMAGAIN: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
-    PERMALREADY: 'Deja, bet Jūs negalite patekti į šią TVS dalį. Jeigu norite prisijungti kitu vartotoju, tai atlikite žemiau.'
-    PERMDEFAULT: 'Jūs turite būti prisijungę, norėdami pasiekti administravimo zoną; prašome suvesti prisijungimo duomenis į žemiau esančius laukelius.'
+    PERMAGAIN: "Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius."
+    PERMALREADY: "Deja, bet Jūs negalite patekti į šią TVS dalį. Jeigu norite prisijungti kitu vartotoju, tai atlikite žemiau."
+    PERMDEFAULT: "Jūs turite būti prisijungę, norėdami pasiekti administravimo zoną; prašome suvesti prisijungimo duomenis į žemiau esančius laukelius."
     PreviewButton: Peržiūra
-    REORGANISATIONSUCCESSFUL: 'Puslapių medis pertvarkytas sėkmingai.'
+    REORGANISATIONSUCCESSFUL: "Puslapių medis pertvarkytas sėkmingai."
     SAVEDUP: Išsaugota.
-    ShowAsList: 'rodyti kaip sąrašą'
-    TooManyPages: 'Per daug puslapių'
-    ValidationError: 'Tikrinimo klaida'
-    VersionUnknown: nežinoma
+    ShowAsList: "rodyti kaip sąrašą"
+    TooManyPages: "Per daug puslapių"
+    ValidationError: "Tikrinimo klaida"
   LeftAndMain_Menu_ss:
     Hello: Sveiki
-    LOGOUT: 'Atsijungti'
+    LOGOUT: Atsijungti
   ListboxField:
-    SOURCE_VALIDATION: 'Prašome pasirinkti reikšmę iš pateikto sąrašo. ''%s'' yra negalima reikšmė.'
+    SOURCE_VALIDATION: "Prašome pasirinkti reikšmę iš pateikto sąrašo. '%s' yra negalima reikšmė."
   LoginAttempt:
-    Email: 'E. pašto adresas'
-    IP: 'IP adresas'
-    PLURALNAME: 'Bandymai prisijungti'
-    SINGULARNAME: 'Bandymas prisijungti'
+    Email: "E. pašto adresas"
+    IP: "IP adresas"
+    PLURALNAME: "Bandymai prisijungti"
+    SINGULARNAME: "Bandymas prisijungti"
     Status: Būsena
   Member:
-    ADDGROUP: 'Pridėti grupę'
-    BUTTONCHANGEPASSWORD: 'Pakeisti slaptažodį'
-    BUTTONLOGIN: 'Prisijungti'
-    BUTTONLOGINOTHER: 'Prisijungti kitu vardu'
-    BUTTONLOSTPASSWORD: 'Pamiršau savo slaptažodį'
-    CANTEDIT: 'Neturite teisių tai atlikti'
-    CONFIRMNEWPASSWORD: 'Patvirtinkite naują slaptažodį'
-    CONFIRMPASSWORD: 'Patvirtinkite slaptažodį'
-    DATEFORMAT: 'Datos formatas'
-    DefaultAdminFirstname: 'Pagrindinis administratorius'
-    DefaultDateTime: pagal nutylėjimą
-    EMAIL: E. paštas
-    EMPTYNEWPASSWORD: 'Naujas slaptažodis negali būti tuščias, bandykite iš naujo'
-    ENTEREMAIL: 'Norėdami gauti slaptažodžio atstatymo nuorodą, įveskite e. pašto adresą.'
-    ERRORLOCKEDOUT2: 'Jūsų paskyra laikinai sustabdyta dėl per didelio klaidingų bandymų prisijungti skaičiaus. Pabandykite prisijungti vėliau {count} min. laikotarpyje.'
-    ERRORNEWPASSWORD: 'Nesutampa naujas slaptažodis, bandykite dar kartą'
-    ERRORPASSWORDNOTMATCH: 'Blogas senas slaptažodis, bandykite dar kartą'
-    ERRORWRONGCRED: 'Pateikti duomenys blogi, bandykite dar kartą.'
-    FIRSTNAME: 'Vardas'
-    INTERFACELANG: 'Kalba'
-    INVALIDNEWPASSWORD: 'Neleidžiamas slaptažodis: {password}'
-    LOGGEDINAS: 'Prisijungėte kaip {name}.'
-    NEWPASSWORD: 'Naujas slaptažodis'
-    NoPassword: 'Šis vartotojas neturi slaptažodžio.'
+    ADDGROUP: "Pridėti grupę"
+    BUTTONCHANGEPASSWORD: "Pakeisti slaptažodį"
+    BUTTONLOGIN: Prisijungti
+    BUTTONLOGINOTHER: "Prisijungti kitu vardu"
+    BUTTONLOSTPASSWORD: "Pamiršau savo slaptažodį"
+    CANTEDIT: "Neturite teisių tai atlikti"
+    CONFIRMNEWPASSWORD: "Patvirtinkite naują slaptažodį"
+    CONFIRMPASSWORD: "Patvirtinkite slaptažodį"
+    DATEFORMAT: "Datos formatas"
+    DefaultAdminFirstname: "Pagrindinis administratorius"
+    DefaultDateTime: "pagal nutylėjimą"
+    EMAIL: "E. paštas"
+    EMPTYNEWPASSWORD: "Naujas slaptažodis negali būti tuščias, bandykite iš naujo"
+    ENTEREMAIL: "Norėdami gauti slaptažodžio atstatymo nuorodą, įveskite e. pašto adresą."
+    ERRORLOCKEDOUT2: "Jūsų paskyra laikinai sustabdyta dėl per didelio klaidingų bandymų prisijungti skaičiaus. Pabandykite prisijungti vėliau {count} min. laikotarpyje."
+    ERRORNEWPASSWORD: "Nesutampa naujas slaptažodis, bandykite dar kartą"
+    ERRORPASSWORDNOTMATCH: "Blogas senas slaptažodis, bandykite dar kartą"
+    ERRORWRONGCRED: "Pateikti duomenys blogi, bandykite dar kartą."
+    FIRSTNAME: Vardas
+    INTERFACELANG: Kalba
+    INVALIDNEWPASSWORD: "Neleidžiamas slaptažodis: {password}"
+    LOGGEDINAS: "Prisijungėte kaip {name}."
+    NEWPASSWORD: "Naujas slaptažodis"
+    NoPassword: "Šis vartotojas neturi slaptažodžio."
     PASSWORD: Slaptažodis
-    PASSWORDEXPIRED: 'Jūsų slaptažodžio galiojimas pasibaigė. Prašome sukurti naują.'
+    PASSWORDEXPIRED: "Jūsų slaptažodžio galiojimas pasibaigė. Prašome sukurti naują."
     PLURALNAME: Vartotojai
     SINGULARNAME: Vartotojas
-    SUBJECTPASSWORDCHANGED: 'Jūsų slaptažodis pakeistas'
-    SUBJECTPASSWORDRESET: 'Slaptažodžio atstatymo nuoroda'
+    SUBJECTPASSWORDCHANGED: "Jūsų slaptažodis pakeistas"
+    SUBJECTPASSWORDRESET: "Slaptažodžio atstatymo nuoroda"
     SURNAME: Pavardė
-    TIMEFORMAT: 'Laiko formatas'
-    ValidationIdentifierFailed: 'Nepavyko atnaujinti vartotojo #{id} duomenų su atpažinimo kodu ({name} = {value})'
-    WELCOMEBACK: 'Sveiki, {firstname}'
-    YOUROLDPASSWORD: 'Jūsų senas slaptažodis'
+    TIMEFORMAT: "Laiko formatas"
+    ValidationIdentifierFailed: "Nepavyko atnaujinti vartotojo #{id} duomenų su atpažinimo kodu ({name} = {value})"
+    WELCOMEBACK: "Sveiki, {firstname}"
+    YOUROLDPASSWORD: "Jūsų senas slaptažodis"
     belongs_many_many_Groups: Grupės
-    db_LastVisited: 'Paskutinį kart lankyta'
-    db_Locale: 'Vartotojo sąsajos kalba'
-    db_LockedOutUntil: 'Užrakinta iki '
-    db_NumVisit: 'Vizitų skaičius'
+    db_LastVisited: "Paskutinį kart lankyta"
+    db_Locale: "Vartotojo sąsajos kalba"
+    db_LockedOutUntil: "Užrakinta iki "
+    db_NumVisit: "Vizitų skaičius"
     db_Password: Slaptažodis
-    db_PasswordExpiry: 'Slaptažodžio pabaigos data'
+    db_PasswordExpiry: "Slaptažodžio pabaigos data"
   MemberAuthenticator:
-    TITLE: 'E-paštas ir slaptažodis'
+    TITLE: "E-paštas ir slaptažodis"
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) arba PM (Post meridiem)'
+    AMORPM: "AM (Ante meridiem) arba PM (Post meridiem)"
     Custom: Pasirinktinas
-    DATEFORMATBAD: 'Neteisingas datos formatas'
-    DAYNOLEADING: 'Mėnesio diena be nulio pradžioje'
-    DIGITSDECFRACTIONSECOND: 'Vienas ar daugiau skaitmenų, rodančių trupmeninę sekundės dalį'
-    FOURDIGITYEAR: 'Metai iš keturių skaitmenų'
-    FULLNAMEMONTH: 'Pilnas mėnesio pavadinimas (pvz. Liepa)'
-    HOURNOLEADING: 'Valanda be nulio pradžioje'
-    MINUTENOLEADING: 'Minutė be nulio pradžioje'
-    MONTHNOLEADING: 'Mėnesis be nulio pradžioje'
+    DATEFORMATBAD: "Neteisingas datos formatas"
+    DAYNOLEADING: "Mėnesio diena be nulio pradžioje"
+    DIGITSDECFRACTIONSECOND: "Vienas ar daugiau skaitmenų, rodančių trupmeninę sekundės dalį"
+    FOURDIGITYEAR: "Metai iš keturių skaitmenų"
+    FULLNAMEMONTH: "Pilnas mėnesio pavadinimas (pvz. Liepa)"
+    MINUTENOLEADING: "Minutė be nulio pradžioje"
+    MONTHNOLEADING: "Mėnesis be nulio pradžioje"
     Preview: Peržiūra
-    SHORTMONTH: 'Trumpas mėnesio pavadinimas (pvz. Lie)'
-    TWODIGITDAY: 'Mėnesis iš dviejų skaitmenų'
-    TWODIGITHOUR: 'Valanda iš dviejų skaitmenų (nuo 00 iki 23)'
-    TWODIGITMINUTE: 'Minutė iš dviejų skaitmenų (nuo 00 iki 59)'
-    TWODIGITMONTH: 'Mėnesis iš dviejų skaitmenų (01 - sausis ir t.t.)'
-    TWODIGITSECOND: 'Sekundė iš dviejų skaitmenų (nuo 00 iki 59)'
-    TWODIGITYEAR: 'Metai iš dviejų skaitmenų'
-    Toggle: 'Rodyti formatavimo aprašymą'
+    SHORTMONTH: "Trumpas mėnesio pavadinimas (pvz. Lie)"
+    TWODIGITDAY: "Mėnesis iš dviejų skaitmenų"
+    TWODIGITHOUR: "Valanda iš dviejų skaitmenų (nuo 00 iki 23)"
+    TWODIGITMINUTE: "Minutė iš dviejų skaitmenų (nuo 00 iki 59)"
+    TWODIGITMONTH: "Mėnesis iš dviejų skaitmenų (01 - sausis ir t.t.)"
+    TWODIGITSECOND: "Sekundė iš dviejų skaitmenų (nuo 00 iki 59)"
+    TWODIGITYEAR: "Metai iš dviejų skaitmenų"
+    Toggle: "Rodyti formatavimo aprašymą"
   MemberImportForm:
-    Help1: '<p>Importuoti vartotojus <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href="#" class="toggle-advanced">Rodyti detalesnį aprašymą</a></small></p>'
-    Help2: '<div class="advanced"><h4>Detalesnis aprašymas</h4><ul><li>Galimi stulpeliai: <em>%s</em>.</li><li>Esami vartotojai yra surandami su jų unikalia <em>Code</em> reikšme ir atnaujinami duomenimis iš importuojamos bylos.</li><li>Grupės gali būti priskirtos naudojant <em>Groups</em> column. stulpelį. Grupės yra atpažįstamos pagal <em>Code</em> stulpelį, kelios grupės nurodomos per kablelį. Jau priskirtos vartotojui grupės nebus pakeistos.</li></ul></div>'
-    ResultCreated: 'Sukurta {count} vartotojų'
-    ResultDeleted: 'Ištrinta %d vartotojų'
-    ResultNone: 'Nėra jokių pakeitimų'
-    ResultUpdated: 'Atnaujinta {count} vartotojų'
+    Help1: "<p>Importuoti vartotojus <em>CSV</em> formatu (kableliu atskirtos reikšmės). <small><a href=\"#\" class=\"toggle-advanced\">Rodyti detalesnį aprašymą</a></small></p>"
+    Help2: "<div class=\"advanced\"><h4>Detalesnis aprašymas</h4><ul><li>Galimi stulpeliai: <em>%s</em>.</li><li>Esami vartotojai yra surandami su jų unikalia <em>Code</em> reikšme ir atnaujinami duomenimis iš importuojamos bylos.</li><li>Grupės gali būti priskirtos naudojant <em>Groups</em> column. stulpelį. Grupės yra atpažįstamos pagal <em>Code</em> stulpelį, kelios grupės nurodomos per kablelį. Jau priskirtos vartotojui grupės nebus pakeistos.</li></ul></div>"
+    ResultCreated: "Sukurta {count} vartotojų"
+    ResultDeleted: "Ištrinta %d vartotojų"
+    ResultNone: "Nėra jokių pakeitimų"
+    ResultUpdated: "Atnaujinta {count} vartotojų"
   MemberPassword:
-    PLURALNAME: 'Vartotojų slaptažodžiai'
-    SINGULARNAME: 'Vartotojo slaptažodis'
+    PLURALNAME: "Vartotojų slaptažodžiai"
+    SINGULARNAME: "Vartotojo slaptažodis"
   MemberTableField:
-    APPLY_FILTER: 'Vykdyti'
+    APPLY_FILTER: Vykdyti
   ModelAdmin:
     DELETE: Ištrinti
-    DELETEDRECORDS: 'Ištrinta {count} įrašų.'
-    EMPTYBEFOREIMPORT: 'Perrašyti duomenis'
-    IMPORT: 'Importuoti iš CSV'
-    IMPORTEDRECORDS: 'Importuota {count} įrašų'
-    NOCSVFILE: 'Pasirinkite CSV bylą, kurią importuotsite'
-    NOIMPORT: 'Nėra ką importuoti'
+    DELETEDRECORDS: "Ištrinta {count} įrašų."
+    EMPTYBEFOREIMPORT: "Perrašyti duomenis"
+    IMPORT: "Importuoti iš CSV"
+    IMPORTEDRECORDS: "Importuota {count} įrašų"
+    NOCSVFILE: "Pasirinkite CSV bylą, kurią importuotsite"
+    NOIMPORT: "Nėra ką importuoti"
     RESET: Atstatyti
-    Title: 'Duomenų objektai'
-    UPDATEDRECORDS: 'Atnaujinta {count} įrašų'
+    Title: "Duomenų objektai"
+    UPDATEDRECORDS: "Atnaujinta {count} įrašų"
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Duomenų bazės stulpeliai'
-    IMPORTSPECLINK: 'Rodyti %s aprašymą'
+    IMPORTSPECFIELDS: "Duomenų bazės stulpeliai"
+    IMPORTSPECLINK: "Rodyti %s aprašymą"
     IMPORTSPECRELATIONS: Sąryšiai
-    IMPORTSPECTITLE: '%s aprašymas'
+    IMPORTSPECTITLE: "%s aprašymas"
   ModelAdmin_Tools_ss:
     FILTER: Filtras
     IMPORT: Importuoti
@@ -454,134 +452,134 @@ lt:
     FIELDLABELAMOUNT: Kiekis
     FIELDLABELCURRENCY: Valiuta
   NullableField:
-    IsNullLabel: 'Tuščias'
+    IsNullLabel: Tuščias
   NumericField:
-    VALIDATION: '''{value}'' nėra skaičius, prašome įvesti skaičių'
+    VALIDATION: "'{value}' nėra skaičius, prašome įvesti skaičių"
   Pagination:
     Page: Puslapis
     View: Rodoma
   PasswordValidator:
-    LOWCHARSTRENGTH: 'Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: %s'
-    PREVPASSWORD: 'Jūs jau naudojote šį slaptažodį anksčiau, prašome sukurti naują'
-    TOOSHORT: 'Slaptažodis yra per trumpas, jis turi būti sudarytas iš %s arba didesnio skaičiaus simbolių'
+    LOWCHARSTRENGTH: "Padarykite slaptažodį sudėtingesnį, panaudodami bent kelis simbolius iš šio sąrašo: %s"
+    PREVPASSWORD: "Jūs jau naudojote šį slaptažodį anksčiau, prašome sukurti naują"
+    TOOSHORT: "Slaptažodis yra per trumpas, jis turi būti sudarytas iš %s arba didesnio skaičiaus simbolių"
   Permission:
     AdminGroup: Administratorius
-    CMS_ACCESS_CATEGORY: 'TVS Prieiga'
-    FULLADMINRIGHTS: 'Pilnos administravimo teisės'
-    FULLADMINRIGHTS_HELP: 'Turi ir viršija visus kitus leidimus.'
+    CMS_ACCESS_CATEGORY: "TVS Prieiga"
+    FULLADMINRIGHTS: "Pilnos administravimo teisės"
+    FULLADMINRIGHTS_HELP: "Turi ir viršija visus kitus leidimus."
     PLURALNAME: Leidimai
     SINGULARNAME: Leidimas
   PermissionCheckboxSetField:
-    AssignedTo: 'priskirta "{title}"'
-    FromGroup: 'paveldėta iš grupės "{title}"'
-    FromRole: 'paveldėta iš rolės "{title}"'
-    FromRoleOnGroup: 'paveldėta iš rolės "%s" grupėje "%s"'
+    AssignedTo: "priskirta \"{title}\""
+    FromGroup: "paveldėta iš grupės \"{title}\""
+    FromRole: "paveldėta iš rolės \"{title}\""
+    FromRoleOnGroup: "paveldėta iš rolės \"%s\" grupėje \"%s\""
   PermissionRole:
-    OnlyAdminCanApply: 'Gali priskirti tik administratorius'
+    OnlyAdminCanApply: "Gali priskirti tik administratorius"
     PLURALNAME: Rolės
     SINGULARNAME: Rolė
     Title: Pavadinimas
   PermissionRoleCode:
-    PLURALNAME: 'Leidimų rolių kodai'
-    PermsError: 'Nepavyko priskirto kodo "%s" su priskirtais leidimais (būtina ADMIN prieiga)'
-    SINGULARNAME: 'Leidimų rolių kodai'
+    PLURALNAME: "Leidimų rolių kodai"
+    PermsError: "Nepavyko priskirto kodo \"%s\" su priskirtais leidimais (būtina ADMIN prieiga)"
+    SINGULARNAME: "Leidimų rolių kodai"
   Permissions:
-    PERMISSIONS_CATEGORY: 'Rolės ir priėjimo leidimai'
-    UserPermissionsIntro: 'Priskiriant grupes šiam vartotojui, keičiasi vartotojui suteiktos teisės. Norėdami susipažinti detaliau su leidimais atskiroms grupėms, eikite į grupių sąrašą.'
+    PERMISSIONS_CATEGORY: "Rolės ir priėjimo leidimai"
+    UserPermissionsIntro: "Priskiriant grupes šiam vartotojui, keičiasi vartotojui suteiktos teisės. Norėdami susipažinti detaliau su leidimais atskiroms grupėms, eikite į grupių sąrašą."
   PhoneNumberField:
-    VALIDATION: 'Įveskite teisingą telefono numerį'
+    VALIDATION: "Įveskite teisingą telefono numerį"
   Security:
-    ALREADYLOGGEDIN: 'Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, spauskite čia.'
-    BUTTONSEND: 'Atsiųsti slaptažodžio atstatymo nuorodą'
-    CHANGEPASSWORDBELOW: 'Žemiau galite pasikeisti savo slaptažodį.'
-    CHANGEPASSWORDHEADER: 'Pasikeiskite savo slaptažodį'
-    ENTERNEWPASSWORD: 'Įveskite naują slaptažodį.'
-    ERRORPASSWORDPERMISSION: 'Norėdami pakeisti savo slaptažodį, turite būti prisijungęs!'
-    LOGGEDOUT: 'Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius.'
-    LOGIN: 'Prisijungti'
-    LOSTPASSWORDHEADER: 'Slaptažodžio atstatymas'
-    NOTEPAGESECURED: 'Šis puslapis yra apsaugotas. Įveskite savo duomenis į žemiau esančius laukelius.'
-    NOTERESETLINKINVALID: '<p>Neteisinga arba negaliojanti slaptažodžio atstatymo nuoroda.</p><p>Galite atsisiųsti naują <a href="{link1}">čia</a> arba pasikeisti slaptažodį po to, kai <a href="{link2}">prisijungsite</a>.</p>'
-    NOTERESETPASSWORD: 'Įveskite savo e. pašto adresą ir atsiųsime slaptažodžio atstatymui skirtą nuorodą'
-    PASSWORDSENTHEADER: 'Slaptažodžio atstatymo nuoroda nusiųsta į ''{email}'''
-    PASSWORDSENTTEXT: 'Atstatymo nuoroda nusiųsta į ''{email}'''
+    ALREADYLOGGEDIN: "Jūs neturite prieigos prie šio puslapio. Jeigu norite prisijungti kaip kitas vartotojas, spauskite čia."
+    BUTTONSEND: "Atsiųsti slaptažodžio atstatymo nuorodą"
+    CHANGEPASSWORDBELOW: "Žemiau galite pasikeisti savo slaptažodį."
+    CHANGEPASSWORDHEADER: "Pasikeiskite savo slaptažodį"
+    ENTERNEWPASSWORD: "Įveskite naują slaptažodį."
+    ERRORPASSWORDPERMISSION: "Norėdami pakeisti savo slaptažodį, turite būti prisijungęs!"
+    LOGGEDOUT: "Jūs atsijungėte. Norėdami vėl prisijungti, įveskite savo duomenis į žemiau esančius laukelius."
+    LOGIN: Prisijungti
+    LOSTPASSWORDHEADER: "Slaptažodžio atstatymas"
+    NOTEPAGESECURED: "Šis puslapis yra apsaugotas. Įveskite savo duomenis į žemiau esančius laukelius."
+    NOTERESETLINKINVALID: "<p>Neteisinga arba negaliojanti slaptažodžio atstatymo nuoroda.</p><p>Galite atsisiųsti naują <a href=\"{link1}\">čia</a> arba pasikeisti slaptažodį po to, kai <a href=\"{link2}\">prisijungsite</a>.</p>"
+    NOTERESETPASSWORD: "Įveskite savo e. pašto adresą ir atsiųsime slaptažodžio atstatymui skirtą nuorodą"
+    PASSWORDSENTHEADER: "Slaptažodžio atstatymo nuoroda nusiųsta į '{email}'"
+    PASSWORDSENTTEXT: "Atstatymo nuoroda nusiųsta į '{email}'"
   SecurityAdmin:
-    ACCESS_HELP: 'Leisti peržiūrėti, sukurti ir redaguoti vartotojus, taip pat priskirti leidimus ir roles jiems.'
-    APPLY_ROLES: 'Priskirti grupei roles'
-    APPLY_ROLES_HELP: 'Galimybė redaguoti grupei priskirtas roles. Būtinas leidimas "Prieiti prie ''Vartotojai''"'
-    EDITPERMISSIONS: 'Tvarkyti leidimus grupei'
-    EDITPERMISSIONS_HELP: 'Galimybė grupei redaguoti "Priėjimą/Leidimus" ir IP adresus. Būtinas leidimas "Prieiti prie ''Saugumas''"'
-    GROUPNAME: 'Grupės pavadinimas'
-    IMPORTGROUPS: 'Importuoti grupes'
-    IMPORTUSERS: 'Importuoti vartotojus'
+    ACCESS_HELP: "Leisti peržiūrėti, sukurti ir redaguoti vartotojus, taip pat priskirti leidimus ir roles jiems."
+    APPLY_ROLES: "Priskirti grupei roles"
+    APPLY_ROLES_HELP: "Galimybė redaguoti grupei priskirtas roles. Būtinas leidimas \"Prieiti prie 'Vartotojai'\""
+    EDITPERMISSIONS: "Tvarkyti leidimus grupei"
+    EDITPERMISSIONS_HELP: "Galimybė grupei redaguoti \"Priėjimą/Leidimus\" ir IP adresus. Būtinas leidimas \"Prieiti prie 'Saugumas'\""
+    GROUPNAME: "Grupės pavadinimas"
+    IMPORTGROUPS: "Importuoti grupes"
+    IMPORTUSERS: "Importuoti vartotojus"
     MEMBERS: Vartotojai
     MENUTITLE: Saugumas
-    MemberListCaution: 'Dėmesio: Pašalinus vartotojus iš šio sąrašo, jie bus pašalinti ir iš visų grupių, bei duomenų bazės.'
-    NEWGROUP: 'Nauja grupė'
+    MemberListCaution: "Dėmesio: Pašalinus vartotojus iš šio sąrašo, jie bus pašalinti ir iš visų grupių, bei duomenų bazės."
+    NEWGROUP: "Nauja grupė"
     PERMISSIONS: Leidimai
     ROLES: Rolės
-    ROLESDESCRIPTION: 'Rolės - tai iš anksto sudarytas leidimų sąrašas, kuris gali būti priskirtas grupėms.<br />Jos yra paveldimos iš tėvinės grupės.'
+    ROLESDESCRIPTION: "Rolės - tai iš anksto sudarytas leidimų sąrašas, kuris gali būti priskirtas grupėms.<br />Jos yra paveldimos iš tėvinės grupės."
     TABROLES: Rolės
     Users: Vartotojai
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Importuoti iš CSV'
-    FileFieldLabel: 'CSV byla <small>(leidžiami plėtiniai: *.csv)</small>'
+    BtnImport: "Importuoti iš CSV"
+    FileFieldLabel: "CSV byla <small>(leidžiami plėtiniai: *.csv)</small>"
   SilverStripeNavigator:
     Auto: Automatinis
-    ChangeViewMode: 'Pakeisti peržiūros rėžimą'
+    ChangeViewMode: "Pakeisti peržiūros rėžimą"
     Desktop: Kompiuteris
-    DualWindowView: 'Du langai'
+    DualWindowView: "Du langai"
     Edit: Redaguoti
-    EditView: 'Redagavimo rėžimas'
-    Mobile: Mob. įrenginys
-    PreviewState: 'Peržiūros būsena'
-    PreviewView: 'Peržiūros rėžimas'
+    EditView: "Redagavimo rėžimas"
+    Mobile: "Mob. įrenginys"
+    PreviewState: "Peržiūros būsena"
+    PreviewView: "Peržiūros rėžimas"
     Responsive: Adaptyvus
-    SplitView: 'Perskirtas rėžimas'
+    SplitView: "Perskirtas rėžimas"
     Tablet: Planšetė
-    ViewDeviceWidth: 'Pasirinkite peržiūros plotį'
+    ViewDeviceWidth: "Pasirinkite peržiūros plotį"
     Width: plotis
   SiteTree:
     TABMAIN: Pagrindinis
   TableListField:
-    CSVEXPORT: 'Ekportuoti į CSV'
+    CSVEXPORT: "Ekportuoti į CSV"
     Print: Spausdinti
   TableListField_PageControls_ss:
     OF: iš
   TextField:
-    VALIDATEMAXLENGTH: '''{name}'' reikšmė negali būti ilgesnė nei {maxLength} simbolių ilgio.'
+    VALIDATEMAXLENGTH: "'{name}' reikšmė negali būti ilgesnė nei {maxLength} simbolių ilgio."
   TimeField:
-    VALIDATEFORMAT: 'Prašome suvesti laiką teisingu formatu ({format})'
+    VALIDATEFORMAT: "Prašome suvesti laiką teisingu formatu ({format})"
   ToggleField:
     LESS: mažiau
     MORE: daugiau
   UploadField:
-    ATTACHFILE: 'Prisegti bylą'
-    ATTACHFILES: 'Prisegti bylas'
-    AttachFile: 'Prisegti bylą(-as)'
-    CHOOSEANOTHERFILE: 'Pasirinkti kitą bylą'
-    CHOOSEANOTHERINFO: 'Pakeisti šią bylą kita bylą iš bylų sąrašo'
-    DELETE: 'Ištrinti iš bylų'
-    DELETEINFO: 'Ištrinti bylą iš bylų sąrašo visam laikui'
+    ATTACHFILE: "Prisegti bylą"
+    ATTACHFILES: "Prisegti bylas"
+    AttachFile: "Prisegti bylą(-as)"
+    CHOOSEANOTHERFILE: "Pasirinkti kitą bylą"
+    CHOOSEANOTHERINFO: "Pakeisti šią bylą kita bylą iš bylų sąrašo"
+    DELETE: "Ištrinti iš bylų"
+    DELETEINFO: "Ištrinti bylą iš bylų sąrašo visam laikui"
     DOEDIT: Išsaugoti
-    DROPFILE: 'Įmesti bylą'
-    DROPFILES: 'Įmesti bylas'
+    DROPFILE: "Įmesti bylą"
+    DROPFILES: "Įmesti bylas"
     Dimensions: Matmenys
     EDIT: Redaguoti
-    EDITINFO: 'Redaguoti šią bylą'
-    FIELDNOTSET: 'Informacija apie bylą nerasta'
-    FROMCOMPUTER: 'Iš jūsų kompiuterio'
-    FROMCOMPUTERINFO: 'Pasirinkti iš bylų'
-    FROMFILES: 'Iš bylų'
-    HOTLINKINFO: 'Pastaba: Šis paveikslėlis bus su nuoroda. Prašome įsitikinti, jog turite puslapio autoriaus leidimą taip daryti.'
-    MAXNUMBEROFFILES: 'Viršytas bylų kiekis {count}'
-    MAXNUMBEROFFILESONE: 'Galima įkelti tik vieną bylą'
-    MAXNUMBEROFFILESSHORT: 'Galima įkelti tik {count} bylų'
-    OVERWRITEWARNING: 'Byla su tokiu pavadinimu jau yra'
+    EDITINFO: "Redaguoti šią bylą"
+    FIELDNOTSET: "Informacija apie bylą nerasta"
+    FROMCOMPUTER: "Iš jūsų kompiuterio"
+    FROMCOMPUTERINFO: "Pasirinkti iš bylų"
+    FROMFILES: "Iš bylų"
+    HOTLINKINFO: "Pastaba: Šis paveikslėlis bus su nuoroda. Prašome įsitikinti, jog turite puslapio autoriaus leidimą taip daryti."
+    MAXNUMBEROFFILES: "Viršytas bylų kiekis {count}"
+    MAXNUMBEROFFILESONE: "Galima įkelti tik vieną bylą"
+    MAXNUMBEROFFILESSHORT: "Galima įkelti tik {count} bylų"
+    OVERWRITEWARNING: "Byla su tokiu pavadinimu jau yra"
     REMOVE: Pašalinti
-    REMOVEINFO: 'Pašalinti šią bylą iš čia, bet netrinti iš bylų sąrašo.'
-    STARTALL: 'Pradėti viską'
+    REMOVEINFO: "Pašalinti šią bylą iš čia, bet netrinti iš bylų sąrašo."
+    STARTALL: "Pradėti viską"
     Saved: Išsaugota
-    UPLOADSINTO: 'saugo į /{path}'
+    UPLOADSINTO: "saugo į /{path}"
   Versioned:
     has_many_Versions: Versijos

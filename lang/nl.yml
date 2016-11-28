@@ -1,119 +1,119 @@
 nl:
   AssetAdmin:
-    ALLOWEDEXTS: 'Toegestane extensies'
-    HIDEALLOWEDEXTS: 'Verberg toegestane extensies'
-    NEWFOLDER: Nieuwe map
-    SHOWALLOWEDEXTS: 'Toon toegestane extensies'
+    ALLOWEDEXTS: "Toegestane extensies"
+    HIDEALLOWEDEXTS: "Verberg toegestane extensies"
+    NEWFOLDER: "Nieuwe map"
+    SHOWALLOWEDEXTS: "Toon toegestane extensies"
   AssetTableField:
-    CREATED: 'Eerste upload'
+    CREATED: "Eerste upload"
     DIM: Afmetingen
     FILENAME: Bestandsnaam
     FOLDER: Map
     HEIGHT: Hoogte
-    LASTEDIT: 'Laatste wijziging'
+    LASTEDIT: "Laatste wijziging"
     OWNER: Eigenaar
-    SIZE: 'Grootte'
+    SIZE: Grootte
     TITLE: Titel
-    TYPE: 'Type'
+    TYPE: Type
     URL: URL
     WIDTH: Breedte
   AssetUploadField:
-    ChooseFiles: 'Selecteer bestand'
-    DRAGFILESHERE: 'Sleep bestanden hierheen'
-    DROPAREA: 'Sleep hierheen'
-    EDITALL: 'Alle bewerken'
-    EDITANDORGANIZE: 'Bewerk en beheer'
-    EDITINFO: 'Bewerk alle bestanden'
+    ChooseFiles: "Selecteer bestand"
+    DRAGFILESHERE: "Sleep bestanden hierheen"
+    DROPAREA: "Sleep hierheen"
+    EDITALL: "Alle bewerken"
+    EDITANDORGANIZE: "Bewerk en beheer"
+    EDITINFO: "Bewerk alle bestanden"
     FILES: Bestanden
-    FROMCOMPUTER: 'Selecteer bestanden op uw computer'
-    FROMCOMPUTERINFO: 'Uploaden vanaf uw computer'
-    INSERTURL: 'Voeg toe van URL'
-    REMOVEINFO: 'Verwijder bestand van dit veld'
+    FROMCOMPUTER: "Selecteer bestanden op uw computer"
+    FROMCOMPUTERINFO: "Uploaden vanaf uw computer"
+    INSERTURL: "Voeg toe van URL"
+    REMOVEINFO: "Verwijder bestand van dit veld"
     TOTAL: Totaal
-    UPLOADINPROGRESS: 'Een ogenblik geduld... upload wordt uitgevoerd'
+    UPLOADINPROGRESS: "Een ogenblik geduld... upload wordt uitgevoerd"
     UPLOADOR: OF
   BBCodeParser:
     ALIGNEMENT: Uitlijning
-    ALIGNEMENTEXAMPLE: 'rechts uitgelijnd'
-    BOLD: 'Vetgedrukte tekst'
+    ALIGNEMENTEXAMPLE: "rechts uitgelijnd"
+    BOLD: "Vetgedrukte tekst"
     BOLDEXAMPLE: Vetgedrukt
-    CODE: 'Code Blok'
-    CODEDESCRIPTION: 'niet opgemaakt code blok'
-    CODEEXAMPLE: 'Code Blok'
-    COLORED: 'Gekleurde tekst'
-    COLOREDEXAMPLE: 'blauwe tekst'
-    EMAILLINK: 'Email link'
-    EMAILLINKDESCRIPTION: 'Maak een koppeling naar een e-mailadres'
+    CODE: "Code Blok"
+    CODEDESCRIPTION: "niet opgemaakt code blok"
+    CODEEXAMPLE: "Code Blok"
+    COLORED: "Gekleurde tekst"
+    COLOREDEXAMPLE: "blauwe tekst"
+    EMAILLINK: "Email link"
+    EMAILLINKDESCRIPTION: "Maak een koppeling naar een e-mailadres"
     IMAGE: Afbeelding
-    IMAGEDESCRIPTION: 'Toon een afbeelding in uw bericht'
-    ITALIC: 'Cursieve tekst'
+    IMAGEDESCRIPTION: "Toon een afbeelding in uw bericht"
+    ITALIC: "Cursieve tekst"
     ITALICEXAMPLE: Cursief
-    LINK: 'Website link'
-    LINKDESCRIPTION: 'Link naar een andere website of URL'
-    STRUCK: 'Doorgehaalde tekst'
+    LINK: "Website link"
+    LINKDESCRIPTION: "Link naar een andere website of URL"
+    STRUCK: "Doorgehaalde tekst"
     STRUCKEXAMPLE: Doorgehaald
-    UNDERLINE: 'Onderstreepte tekst'
+    UNDERLINE: "Onderstreepte tekst"
     UNDERLINEEXAMPLE: Onderstreept
-    UNORDERED: 'Ongesorteerde lijst'
-    UNORDEREDDESCRIPTION: 'Ongesorteerde lijst'
-    UNORDEREDEXAMPLE1: 'ongesorteerd item 1'
+    UNORDERED: "Ongesorteerde lijst"
+    UNORDEREDDESCRIPTION: "Ongesorteerde lijst"
+    UNORDEREDEXAMPLE1: "ongesorteerd item 1"
   BackLink_Button_ss:
     Back: Terug
   BasicAuth:
-    ENTERINFO: 'Voer een gebruikersnaam en wachtwoord in.'
-    ERRORNOTADMIN: 'Die gebruiker is geen beheerder.'
-    ERRORNOTREC: 'De gebruikersnaam en/of het wachtwoord wordt niet herkend'
+    ENTERINFO: "Voer een gebruikersnaam en wachtwoord in."
+    ERRORNOTADMIN: "Die gebruiker is geen beheerder."
+    ERRORNOTREC: "De gebruikersnaam en/of het wachtwoord wordt niet herkend"
   Boolean:
     ANY: Elke
-    NOANSWER: 'Nee'
-    YESANSWER: 'Ja'
+    NOANSWER: Nee
+    YESANSWER: Ja
   CMSLoadingScreen_ss:
     LOADING: Laden...
-    REQUIREJS: 'Het CMS vereist dat JavaScript ingeschakeld is.'
+    REQUIREJS: "Het CMS vereist dat JavaScript ingeschakeld is."
   CMSMain:
-    ACCESS: 'Toegang tot het ''{title}'' gedeelte'
-    ACCESSALLINTERFACES: 'Toegang tot alle CMS onderdelen'
-    ACCESSALLINTERFACESHELP: 'Overstemt meer specifieke toegangsinstellingen'
+    ACCESS: "Toegang tot het '{title}' gedeelte"
+    ACCESSALLINTERFACES: "Toegang tot alle CMS onderdelen"
+    ACCESSALLINTERFACESHELP: "Overstemt meer specifieke toegangsinstellingen"
     SAVE: Bewaar
   CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Wachtwoord vergeten?'
-    BUTTONLOGIN: 'Opnieuw inloggen'
-    BUTTONLOGOUT: 'Uitloggen'
-    PASSWORDEXPIRED: '<p>Je wachtwoord is verlopen. <a target="_top" href="{link}">Kies een nieuw wachtwoord.</a></p>'
+    BUTTONFORGOTPASSWORD: "Wachtwoord vergeten?"
+    BUTTONLOGIN: "Opnieuw inloggen"
+    BUTTONLOGOUT: Uitloggen
+    PASSWORDEXPIRED: "<p>Je wachtwoord is verlopen. <a target=\"_top\" href=\"{link}\">Kies een nieuw wachtwoord.</a></p>"
   CMSPageHistoryController_versions_ss:
-    PREVIEW: 'Website voorbeeld'
+    PREVIEW: "Website voorbeeld"
   CMSPagesController_Tools_ss:
     FILTER: Filter
   CMSProfileController:
-    MENUTITLE: 'Mijn Profiel'
+    MENUTITLE: "Mijn Profiel"
   CMSSecurity:
-    INVALIDUSER: '<p>Ongeldige gebruiker <a target="_top" href="{link}">Log hier opnieuw in</a> om verder te gaan.</p>'
-    LoginMessage: '<p>Je kunt verder met wat je aan het doen was, door opnieuw in te loggen.</p>'
+    INVALIDUSER: "<p>Ongeldige gebruiker <a target=\"_top\" href=\"{link}\">Log hier opnieuw in</a> om verder te gaan.</p>"
+    LoginMessage: "<p>Je kunt verder met wat je aan het doen was, door opnieuw in te loggen.</p>"
     SUCCESS: Succes
-    SUCCESSCONTENT: '<p>Je bent ingelogd. <a target="_top" href="{link}">Klik hier</a> als je niet automatisch wordt doorgestuurd.</p>'
-    TimedOutTitleAnonymous: 'Sessie is verlopen'
-    TimedOutTitleMember: 'Hallo {name}!<br />Je sessie is verlopen.'
+    SUCCESSCONTENT: "<p>Je bent ingelogd. <a target=\"_top\" href=\"{link}\">Klik hier</a> als je niet automatisch wordt doorgestuurd.</p>"
+    TimedOutTitleAnonymous: "Sessie is verlopen"
+    TimedOutTitleMember: "Hallo {name}!<br />Je sessie is verlopen."
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'U heeft het wachtwoord veranderd voor'
-    CHANGEPASSWORDTEXT2: 'U kunt nu onderstaande gegevens gebruiken om in te loggen:'
+    CHANGEPASSWORDTEXT1: "U heeft het wachtwoord veranderd voor"
+    CHANGEPASSWORDTEXT2: "U kunt nu onderstaande gegevens gebruiken om in te loggen:"
     EMAIL: E-mail
     HELLO: Hallo
     PASSWORD: Wachtwoord
   CheckboxField:
-    NOANSWER: 'Nee'
-    YESANSWER: 'Ja'
+    NOANSWER: Nee
+    YESANSWER: Ja
   CheckboxFieldSetField:
-    SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. {value} is geen geldige keuze.'
+    SOURCE_VALIDATION: "Selecteer een optie uit de lijst. {value} is geen geldige keuze."
   CheckboxSetField:
-    SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. ''{value}'' is geen geldige keuze.'
+    SOURCE_VALIDATION: "Selecteer een optie uit de lijst. '{value}' is geen geldige keuze."
   ConfirmedPasswordField:
-    ATLEAST: 'Een wachtwoord moet tenminste {min} karakters hebben.'
-    BETWEEN: 'Een wachtwoord moet tussen de {min} en {max} karakters hebben'
-    MAXIMUM: 'Een wachtwoord mag maximaal {max} karakters hebben.'
-    SHOWONCLICKTITLE: 'Verander wachtwoord'
+    ATLEAST: "Een wachtwoord moet tenminste {min} karakters hebben."
+    BETWEEN: "Een wachtwoord moet tussen de {min} en {max} karakters hebben"
+    MAXIMUM: "Een wachtwoord mag maximaal {max} karakters hebben."
+    SHOWONCLICKTITLE: "Verander wachtwoord"
   ContentController:
-    DRAFT_SITE_ACCESS_RESTRICTION: 'Je moet inloggen met je CMS wachtwoord om die inhoud te kunnen zien. <a href="%s">Klik hier</a> om terug te keren naar de gepubliceerde site.'
-    NOTLOGGEDIN: 'Niet ingelogd'
+    DRAFT_SITE_ACCESS_RESTRICTION: "Je moet inloggen met je CMS wachtwoord om die inhoud te kunnen zien. <a href=\"%s\">Klik hier</a> om terug te keren naar de gepubliceerde site."
+    NOTLOGGEDIN: "Niet ingelogd"
   CreditCardField:
     FIRST: eerste
     FOURTH: vierde
@@ -122,202 +122,202 @@ nl:
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Data objecten'
-    SINGULARNAME: 'Data object'
+    PLURALNAME: "Data objecten"
+    SINGULARNAME: "Data object"
   Date:
     DAY: dag
     DAYS: dagen
     HOUR: uur
     HOURS: uren
-    LessThanMinuteAgo: 'minder dan één minuut'
+    LessThanMinuteAgo: "minder dan één minuut"
     MIN: minuut
     MINS: minuten
     MONTH: maand
     MONTHS: maanden
     SEC: seconde
     SECS: seconden
-    TIMEDIFFAGO: '{difference} geleden'
-    TIMEDIFFIN: 'in {difference}'
+    TIMEDIFFAGO: "{difference} geleden"
+    TIMEDIFFIN: "in {difference}"
     YEAR: jaar
     YEARS: jaren
   DateField:
-    NOTSET: 'niet ingesteld'
+    NOTSET: "niet ingesteld"
     TODAY: vandaag
-    VALIDDATEFORMAT2: 'Vul een geldig datumformaat in ({format})'
-    VALIDDATEMAXDATE: 'De datum moet ouder of gelijk zijn aan de maximale datum ({date})'
-    VALIDDATEMINDATE: 'De datum moet nieuwer of gelijk zijn aan de minimale datum ({date})'
+    VALIDDATEFORMAT2: "Vul een geldig datumformaat in ({format})"
+    VALIDDATEMAXDATE: "De datum moet ouder of gelijk zijn aan de maximale datum ({date})"
+    VALIDDATEMINDATE: "De datum moet nieuwer of gelijk zijn aan de minimale datum ({date})"
   DatetimeField:
-    NOTSET: 'Niet ingesteld'
+    NOTSET: "Niet ingesteld"
   Director:
-    INVALID_REQUEST: 'Fout bij verwerken'
+    INVALID_REQUEST: "Fout bij verwerken"
   DropdownField:
     CHOOSE: (Kies)
-    SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. {value} is geen geldige keuze.'
+    SOURCE_VALIDATION: "Selecteer een optie uit de lijst. {value} is geen geldige keuze."
   EmailField:
-    VALIDATION: 'Gelieve een e-mailadres in te voeren.'
+    VALIDATION: "Gelieve een e-mailadres in te voeren."
   Enum:
     ANY: Elke
   File:
-    AviType: 'AVI video bestand'
+    AviType: "AVI video bestand"
     Content: Inhoud
-    CssType: 'CSS bestand'
-    DmgType: 'Apple disk image'
-    DocType: 'Word document'
-    Filename: 'Bestandsnaam '
-    GifType: 'GIF afbeelding - goed voor diagrammen'
-    GzType: 'GZIP gecomprimeerd bestand'
-    HtlType: 'HTML bestand'
-    HtmlType: 'HTML bestand'
-    INVALIDEXTENSION: 'Extensie is niet toegestaan (Toegestaan: {extensions})'
-    INVALIDEXTENSIONSHORT: 'Extensie is niet toegestaan'
-    IcoType: 'Icoon bestand'
-    JpgType: 'JPEG afbeelding - goed voor foto''s'
-    JsType: 'Javascript bestand'
-    Mp3Type: 'MP3 audio bestand'
-    MpgType: 'MPEG video bestand'
-    NOVALIDUPLOAD: 'Geen geldig bestand'
+    CssType: "CSS bestand"
+    DmgType: "Apple disk image"
+    DocType: "Word document"
+    Filename: "Bestandsnaam "
+    GifType: "GIF afbeelding - goed voor diagrammen"
+    GzType: "GZIP gecomprimeerd bestand"
+    HtlType: "HTML bestand"
+    HtmlType: "HTML bestand"
+    INVALIDEXTENSION: "Extensie is niet toegestaan (Toegestaan: {extensions})"
+    INVALIDEXTENSIONSHORT: "Extensie is niet toegestaan"
+    IcoType: "Icoon bestand"
+    JpgType: "JPEG afbeelding - goed voor foto's"
+    JsType: "Javascript bestand"
+    Mp3Type: "MP3 audio bestand"
+    MpgType: "MPEG video bestand"
+    NOVALIDUPLOAD: "Geen geldig bestand"
     Name: Naam
     PLURALNAME: Bestanden
-    PdfType: 'Adobe Acrobat PDF bestand'
-    PngType: 'PNG afbeelding - goed voor allerlei afbeeldingen'
+    PdfType: "Adobe Acrobat PDF bestand"
+    PngType: "PNG afbeelding - goed voor allerlei afbeeldingen"
     SINGULARNAME: Bestand
-    TiffType: 'Tagged beeldformaat'
-    Title: 'Titel '
-    WavType: 'WAV audio bestand'
-    XlsType: 'Excel document'
-    ZipType: 'ZIP bestand'
+    TiffType: "Tagged beeldformaat"
+    Title: "Titel "
+    WavType: "WAV audio bestand"
+    XlsType: "Excel document"
+    ZipType: "ZIP bestand"
   Filesystem:
-    SYNCRESULTS: 'Synchronisatie voltooid: {createdcount} items gemaakt, {deletedcount} items verwijderd'
+    SYNCRESULTS: "Synchronisatie voltooid: {createdcount} items gemaakt, {deletedcount} items verwijderd"
   Folder:
     PLURALNAME: Mappen
     SINGULARNAME: Map
   ForgotPasswordEmail_ss:
     HELLO: Hallo
-    TEXT1: 'Hier is uw'
-    TEXT2: 'wachtwoord reset link'
+    TEXT1: "Hier is uw"
+    TEXT2: "wachtwoord reset link"
     TEXT3: voor
   Form:
-    CSRF_EXPIRED_MESSAGE: 'Uw sessie is verlopen. Verzend het formulier opnieuw.'
-    CSRF_FAILED_MESSAGE: 'Er lijkt een technisch probleem te zijn. Klik op de knop terug, vernieuw uw browser, en probeer het opnieuw.'
-    FIELDISREQUIRED: '{name} is verplicht'
+    CSRF_EXPIRED_MESSAGE: "Uw sessie is verlopen. Verzend het formulier opnieuw."
+    CSRF_FAILED_MESSAGE: "Er lijkt een technisch probleem te zijn. Klik op de knop terug, vernieuw uw browser, en probeer het opnieuw."
+    FIELDISREQUIRED: "{name} is verplicht"
     SubmitBtnLabel: Versturen
-    VALIDATIONCREDITNUMBER: 'Gelieve uw credit card number {number} juist in te vullen'
-    VALIDATIONNOTUNIQUE: 'De ingevoerde waarde is niet uniek'
-    VALIDATIONPASSWORDSDONTMATCH: 'Wachtwoorden komen niet overeen'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Wachtwoorden mogen niet leeg zijn'
-    VALIDATIONSTRONGPASSWORD: 'Wachtwoorden moeten bestaan uit minstens één cijfer en één alfanumeriek karakter.'
+    VALIDATIONCREDITNUMBER: "Gelieve uw credit card number {number} juist in te vullen"
+    VALIDATIONNOTUNIQUE: "De ingevoerde waarde is niet uniek"
+    VALIDATIONPASSWORDSDONTMATCH: "Wachtwoorden komen niet overeen"
+    VALIDATIONPASSWORDSNOTEMPTY: "Wachtwoorden mogen niet leeg zijn"
+    VALIDATIONSTRONGPASSWORD: "Wachtwoorden moeten bestaan uit minstens één cijfer en één alfanumeriek karakter."
     VALIDATOR: Validator
-    VALIDCURRENCY: 'Vul een geldige munteenheid in'
+    VALIDCURRENCY: "Vul een geldige munteenheid in"
   FormField:
-    Example: 'bv. %s'
+    Example: "bv. %s"
     NONE: geen
   GridAction:
     DELETE_DESCRIPTION: Verwijderen
     Delete: Verwijder
     UnlinkRelation: Ontkoppelen
   GridField:
-    Add: '{name} toevoegen'
+    Add: "{name} toevoegen"
     Filter: Filter
-    FilterBy: 'Filteren'
+    FilterBy: Filteren
     Find: Zoeken
-    LEVELUP: 'Niveau omhoog'
-    LinkExisting: 'Koppel een bestaand item'
-    NewRecord: 'Nieuw %s'
-    NoItemsFound: 'Geen items gevonden.'
-    PRINTEDAT: 'Geprint op'
-    PRINTEDBY: 'Geprint door'
-    PlaceHolder: 'Zoek {type}'
-    PlaceHolderWithLabels: 'Zoek {type} op {name}'
-    RelationSearch: 'Zoek relatie'
+    LEVELUP: "Niveau omhoog"
+    LinkExisting: "Koppel een bestaand item"
+    NewRecord: "Nieuw %s"
+    NoItemsFound: "Geen items gevonden."
+    PRINTEDAT: "Geprint op"
+    PRINTEDBY: "Geprint door"
+    PlaceHolder: "Zoek {type}"
+    PlaceHolderWithLabels: "Zoek {type} op {name}"
+    RelationSearch: "Zoek relatie"
     ResetFilter: Resetten
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
-    EditPermissionsFailure: 'Geen toelating om te ontkoppelen'
+    DeletePermissionsFailure: "Onvoldoende rechten om te verwijderen"
+    EditPermissionsFailure: "Geen toelating om te ontkoppelen"
   GridFieldDetailForm:
     CancelBtn: Annuleren
     Create: Aanmaken
     Delete: Verwijderen
-    DeletePermissionsFailure: 'Onvoldoende rechten om te verwijderen'
-    Deleted: '%s %s verwijderd'
+    DeletePermissionsFailure: "Onvoldoende rechten om te verwijderen"
+    Deleted: "%s %s verwijderd"
     Save: Opslaan
-    Saved: '{name} {link} opgeslagen'
+    Saved: "{name} {link} opgeslagen"
   GridFieldEditButton_ss:
     EDIT: Bewerken
   GridFieldItemEditView:
-    Go_back: 'Ga terug'
+    Go_back: "Ga terug"
   Group:
-    AddRole: 'Voeg een rol toe aan deze groep'
-    Code: 'Groep code'
+    AddRole: "Voeg een rol toe aan deze groep"
+    Code: "Groep code"
     DefaultGroupTitleAdministrators: Beheerders
-    DefaultGroupTitleContentAuthors: 'Inhoud Auteurs'
-    Description: 'Omschrijving '
-    GroupReminder: 'Als je de bovenliggende groep selecteert, neemt deze groep alle rollen over'
-    HierarchyPermsError: 'U moet (ADMIN) rechten hebben om de bovenliggende groep "%s" toe te kennen'
-    Locked: 'Gesloten?'
-    NoRoles: 'Geen rollen gevonden'
+    DefaultGroupTitleContentAuthors: "Inhoud Auteurs"
+    Description: "Omschrijving "
+    GroupReminder: "Als je de bovenliggende groep selecteert, neemt deze groep alle rollen over"
+    HierarchyPermsError: "U moet (ADMIN) rechten hebben om de bovenliggende groep \"%s\" toe te kennen"
+    Locked: Gesloten?
+    NoRoles: "Geen rollen gevonden"
     PLURALNAME: Groepen
-    Parent: 'Bovenliggende groep'
-    RolesAddEditLink: 'Rollen beheren'
+    Parent: "Bovenliggende groep"
+    RolesAddEditLink: "Rollen beheren"
     SINGULARNAME: Groep
-    Sort: 'Sorteer-richting'
+    Sort: Sorteer-richting
     has_many_Permissions: Rechten
     many_many_Members: Leden
   GroupImportForm:
-    Help1: '<p>Importeer een of meerdere groepen in <em>CSV</em>-formaat (comma-separated values). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
-    Help2: '<div class="advanced"> <h4>Geavanceerd gebruik</h4> <ul> <li>Toegestane kolommen: <em>%s</em></li> <li>Bestaande groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li> <li>Groepshiërarchiën kunnen aangemaakt worden door een <em>ParentCode</em> kolom te gebruiken</li>; <li>Toegangscodes kunnen toegewezen worden met de <em>PermissionCode</em> kolom. Bestaande toegangscodes worden niet verwijderd.</li> </ul> </div>'
-    ResultCreated: '{count} groepen aangemaakt'
-    ResultDeleted: '%d groepen verwijderd'
-    ResultUpdated: '%d groepen aangepast'
+    Help1: "<p>Importeer een of meerdere groepen in <em>CSV</em>-formaat (comma-separated values). <small><a href=\"#\" class=\"toggle-advanced\">Toon geavanceerd gebruik</a></small></p>"
+    Help2: "<div class=\"advanced\"> <h4>Geavanceerd gebruik</h4> <ul> <li>Toegestane kolommen: <em>%s</em></li> <li>Bestaande groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li> <li>Groepshiërarchiën kunnen aangemaakt worden door een <em>ParentCode</em> kolom te gebruiken</li>; <li>Toegangscodes kunnen toegewezen worden met de <em>PermissionCode</em> kolom. Bestaande toegangscodes worden niet verwijderd.</li> </ul> </div>"
+    ResultCreated: "{count} groepen aangemaakt"
+    ResultDeleted: "%d groepen verwijderd"
+    ResultUpdated: "%d groepen aangepast"
   Hierarchy:
-    InfiniteLoopNotAllowed: 'Oneindige lus gevonden in "{type}" hiërarchie. Wijzig het hogere niveau om dit op te lossen'
+    InfiniteLoopNotAllowed: "Oneindige lus gevonden in \"{type}\" hiërarchie. Wijzig het hogere niveau om dit op te lossen"
   HtmlEditorField:
-    ADDURL: 'Voeg URL toe'
-    ADJUSTDETAILSDIMENSIONS: 'Details en afmetingen'
-    ANCHORSCANNOTACCESSPAGE: 'Je bent niet gemachtigd om de opgevraagde pagina te bekijken.'
-    ANCHORSPAGENOTFOUND: 'Pagina niet gevonden.'
+    ADDURL: "Voeg URL toe"
+    ADJUSTDETAILSDIMENSIONS: "Details en afmetingen"
+    ANCHORSCANNOTACCESSPAGE: "Je bent niet gemachtigd om de opgevraagde pagina te bekijken."
+    ANCHORSPAGENOTFOUND: "Pagina niet gevonden."
     ANCHORVALUE: Anker
-    BUTTONADDURL: 'Voeg URL toe'
+    BUTTONADDURL: "Voeg URL toe"
     BUTTONINSERT: Invoegen
-    BUTTONINSERTLINK: 'Link invoegen'
-    BUTTONREMOVELINK: 'Link verwijderen'
+    BUTTONINSERTLINK: "Link invoegen"
+    BUTTONREMOVELINK: "Link verwijderen"
     BUTTONUpdate: Bijwerken
-    CAPTIONTEXT: 'Onderschrift'
-    CSSCLASS: 'Uitlijning / stijl'
-    CSSCLASSCENTER: 'Gecentreerd.'
-    CSSCLASSLEFT: 'Aan de linkerkant, met tekst naast.'
-    CSSCLASSLEFTALONE: 'Aan de linkerkant, zonder iets naast.'
-    CSSCLASSRIGHT: 'Aan de rechterkant, met tekst naast.'
+    CAPTIONTEXT: Onderschrift
+    CSSCLASS: "Uitlijning / stijl"
+    CSSCLASSCENTER: Gecentreerd.
+    CSSCLASSLEFT: "Aan de linkerkant, met tekst naast."
+    CSSCLASSLEFTALONE: "Aan de linkerkant, zonder iets naast."
+    CSSCLASSRIGHT: "Aan de rechterkant, met tekst naast."
     DETAILS: Details
-    EMAIL: 'E-mailadres'
+    EMAIL: E-mailadres
     FILE: Bestand
     FOLDER: Map
-    FROMCMS: 'Uit het CMS'
-    FROMCOMPUTER: 'Vanaf computer'
-    FROMWEB: 'Vanaf een website'
-    FindInFolder: 'Zoek in map'
-    IMAGEALT: 'Alternatieve tekst (alt tekst)'
+    FROMCMS: "Uit het CMS"
+    FROMCOMPUTER: "Vanaf computer"
+    FROMWEB: "Vanaf een website"
+    FindInFolder: "Zoek in map"
+    IMAGEALT: "Alternatieve tekst (alt tekst)"
     IMAGEDIMENSIONS: Dimensies
     IMAGEHEIGHTPX: Hoogte
-    IMAGETITLE: 'Tooltip (title) - Toon extra informatie over de afbeelding'
-    IMAGETITLETEXT: 'Tooltip (title)'
-    IMAGETITLETEXTDESC: 'Toon extra informatie over de afbeelding'
+    IMAGETITLE: "Tooltip (title) - Toon extra informatie over de afbeelding"
+    IMAGETITLETEXT: "Tooltip (title)"
+    IMAGETITLETEXTDESC: "Toon extra informatie over de afbeelding"
     IMAGEWIDTHPX: Breedte
-    INSERTMEDIA: 'Voeg media in'
-    LINK: 'Link invoegen'
-    LINKANCHOR: 'Anker op deze pagina'
-    LINKDESCR: 'Linkomschrijving'
-    LINKEMAIL: 'E-mailadres'
-    LINKEXTERNAL: 'Een andere website'
-    LINKFILE: 'Een bestand downloaden'
-    LINKINTERNAL: 'Pagina op deze site'
-    LINKOPENNEWWIN: 'Link in een nieuw venster openen?'
-    LINKTO: 'Verwijs naar'
+    INSERTMEDIA: "Voeg media in"
+    LINK: "Link invoegen"
+    LINKANCHOR: "Anker op deze pagina"
+    LINKDESCR: Linkomschrijving
+    LINKEMAIL: E-mailadres
+    LINKEXTERNAL: "Een andere website"
+    LINKFILE: "Een bestand downloaden"
+    LINKINTERNAL: "Pagina op deze site"
+    LINKOPENNEWWIN: "Link in een nieuw venster openen?"
+    LINKTO: "Verwijs naar"
     PAGE: Pagina
-    SUBJECT: 'Email onderwerp'
+    SUBJECT: "Email onderwerp"
     URL: URL
-    URLDESCRIPTION: 'Voeg video''s of afbeeldingen van een andere webpagina toe, door de URL in te voeren. Zorg er voor dat je de juiste toestemming hebt, om het materiaal te delen op het internet.<br><br>De bestanden worden niet opgeslagen in het CMS, maar geëmbed vanaf de originele locatie. Als het bestand niet meer beschikbaar is op de originele locatie, is deze niet meer zichtbaar op deze pagina.'
-    URLNOTANOEMBEDRESOURCE: '{url} kon niet worden omgezet in een media-bron.'
-    UpdateMEDIA: 'Media bijwerken'
+    URLDESCRIPTION: "Voeg video's of afbeeldingen van een andere webpagina toe, door de URL in te voeren. Zorg er voor dat je de juiste toestemming hebt, om het materiaal te delen op het internet.<br><br>De bestanden worden niet opgeslagen in het CMS, maar geëmbed vanaf de originele locatie. Als het bestand niet meer beschikbaar is op de originele locatie, is deze niet meer zichtbaar op deze pagina."
+    URLNOTANOEMBEDRESOURCE: "{url} kon niet worden omgezet in een media-bron."
+    UpdateMEDIA: "Media bijwerken"
   Image:
     PLURALNAME: Bestanden
     SINGULARNAME: Bestand
@@ -325,125 +325,123 @@ nl:
     PLURALNAME: Bestanden
     SINGULARNAME: Bestand
   Image_iframe_ss:
-    TITLE: 'Afbeelding uploaden'
+    TITLE: "Afbeelding uploaden"
   LeftAndMain:
-    CANT_REORGANISE: 'U hebt geen rechten om de pagina''s op het Top niveau aan te passen. Uw aanpassing is niet opgeslagen. '
+    CANT_REORGANISE: "U hebt geen rechten om de pagina's op het Top niveau aan te passen. Uw aanpassing is niet opgeslagen. "
     DELETED: Verwijderd.
     HELP: Help
-    PERMAGAIN: 'U bent uitgelogd uit het CMS.  Als u weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hieronder in.'
-    PERMALREADY: 'Helaas, je hebt geen toegang tot dat deel van het CMS. Hieronder kun je inloggen als iemand anders.'
-    PERMDEFAULT: 'Je moet ingelogd zijn, om dit deel van de website te bekijken. Vul hieronder je inlog gegevens in.'
+    PERMAGAIN: "U bent uitgelogd uit het CMS.  Als u weer wilt inloggen vul dan uw gebruikersnaam en wachtwoord hieronder in."
+    PERMALREADY: "Helaas, je hebt geen toegang tot dat deel van het CMS. Hieronder kun je inloggen als iemand anders."
+    PERMDEFAULT: "Je moet ingelogd zijn, om dit deel van de website te bekijken. Vul hieronder je inlog gegevens in."
     PreviewButton: Voorbeeld
-    REORGANISATIONSUCCESSFUL: 'Menu-indeling is aangepast'
+    REORGANISATIONSUCCESSFUL: "Menu-indeling is aangepast"
     SAVEDUP: Opgeslagen.
-    ShowAsList: 'laat als lijst zien'
-    TooManyPages: 'Te veel pagina''s'
-    ValidationError: 'Validatiefout'
-    VersionUnknown: onbekend
+    ShowAsList: "laat als lijst zien"
+    TooManyPages: "Te veel pagina's"
+    ValidationError: Validatiefout
   LeftAndMain_Menu_ss:
     Hello: Hallo
-    LOGOUT: 'Uitloggen'
+    LOGOUT: Uitloggen
   ListboxField:
-    SOURCE_VALIDATION: 'Selecteer een optie uit de lijst. %s is geen geldige keuze.'
+    SOURCE_VALIDATION: "Selecteer een optie uit de lijst. %s is geen geldige keuze."
   LoginAttempt:
-    Email: 'E-mailadres '
-    IP: 'IP adres'
-    PLURALNAME: 'Pogingen om in te loggen'
-    SINGULARNAME: 'Poging om in te loggen'
+    Email: "E-mailadres "
+    IP: "IP adres"
+    PLURALNAME: "Pogingen om in te loggen"
+    SINGULARNAME: "Poging om in te loggen"
     Status: Status
   Member:
-    ADDGROUP: 'Groep toevoegen'
-    BUTTONCHANGEPASSWORD: 'Wachtwoord veranderen'
-    BUTTONLOGIN: 'Inloggen'
-    BUTTONLOGINOTHER: 'Als iemand anders inloggen'
-    BUTTONLOSTPASSWORD: 'Ik ben mijn wachtwoord vergeten'
-    CANTEDIT: 'Je hebt geen rechten hiervoor'
-    CONFIRMNEWPASSWORD: 'Bevestig het nieuwe wachtwoord'
-    CONFIRMPASSWORD: 'Bevestig wachtwoord'
-    DATEFORMAT: 'Datum formaat'
-    DefaultAdminFirstname: 'Standaard Beheerder'
+    ADDGROUP: "Groep toevoegen"
+    BUTTONCHANGEPASSWORD: "Wachtwoord veranderen"
+    BUTTONLOGIN: Inloggen
+    BUTTONLOGINOTHER: "Als iemand anders inloggen"
+    BUTTONLOSTPASSWORD: "Ik ben mijn wachtwoord vergeten"
+    CANTEDIT: "Je hebt geen rechten hiervoor"
+    CONFIRMNEWPASSWORD: "Bevestig het nieuwe wachtwoord"
+    CONFIRMPASSWORD: "Bevestig wachtwoord"
+    DATEFORMAT: "Datum formaat"
+    DefaultAdminFirstname: "Standaard Beheerder"
     DefaultDateTime: standaard
     EMAIL: Email
-    EMPTYNEWPASSWORD: 'Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw'
-    ENTEREMAIL: 'Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten.'
-    ERRORLOCKEDOUT2: 'Uw account is tijdelijk uitgeschakeld als gevolg van te veel mislukte pogingen om in te loggen. Probeer het over {count} minuten opnieuw.'
-    ERRORNEWPASSWORD: 'Het nieuwe wachtwoord komt niet overeen, probeer het nogmaals'
-    ERRORPASSWORDNOTMATCH: 'Uw huidige wachtwoord kom niet overeen, probeer het nogmaals'
-    ERRORWRONGCRED: 'De ingevulde gegevens lijken niet correct. Probeer het nog een keer.'
-    FIRSTNAME: 'Voornaam'
-    INTERFACELANG: 'Interface taal'
-    INVALIDNEWPASSWORD: 'Dit is geen goed wachtwoord: {password}'
-    LOGGEDINAS: 'U bent ingelogd als {name}.'
-    NEWPASSWORD: 'Nieuw wachtwoord'
-    NoPassword: 'Er is geen wachtwoord voor deze gebruiker.'
+    EMPTYNEWPASSWORD: "Het nieuwe wachtwoord mag niet leeg zijn, probeer opnieuw"
+    ENTEREMAIL: "Typ uw e-mailadres om een link te ontvangen waarmee u uw wachtwoord kunt resetten."
+    ERRORLOCKEDOUT2: "Uw account is tijdelijk uitgeschakeld als gevolg van te veel mislukte pogingen om in te loggen. Probeer het over {count} minuten opnieuw."
+    ERRORNEWPASSWORD: "Het nieuwe wachtwoord komt niet overeen, probeer het nogmaals"
+    ERRORPASSWORDNOTMATCH: "Uw huidige wachtwoord kom niet overeen, probeer het nogmaals"
+    ERRORWRONGCRED: "De ingevulde gegevens lijken niet correct. Probeer het nog een keer."
+    FIRSTNAME: Voornaam
+    INTERFACELANG: "Interface taal"
+    INVALIDNEWPASSWORD: "Dit is geen goed wachtwoord: {password}"
+    LOGGEDINAS: "U bent ingelogd als {name}."
+    NEWPASSWORD: "Nieuw wachtwoord"
+    NoPassword: "Er is geen wachtwoord voor deze gebruiker."
     PASSWORD: Wachtwoord
-    PASSWORDEXPIRED: 'Je wachtwoord is verlopen. Kies een nieuw wachtwoord.'
+    PASSWORDEXPIRED: "Je wachtwoord is verlopen. Kies een nieuw wachtwoord."
     PLURALNAME: Leden
     SINGULARNAME: Lid
-    SUBJECTPASSWORDCHANGED: 'Uw wachtwoord is veranderd'
-    SUBJECTPASSWORDRESET: 'Link om uw wachtwoord opnieuw aan te maken'
+    SUBJECTPASSWORDCHANGED: "Uw wachtwoord is veranderd"
+    SUBJECTPASSWORDRESET: "Link om uw wachtwoord opnieuw aan te maken"
     SURNAME: Achternaam
-    TIMEFORMAT: 'Tijd formaat'
-    ValidationIdentifierFailed: 'Een bestaande gebruiker #{id} kan niet dezelfde unieke velden hebben ({name} = {value}))'
-    WELCOMEBACK: 'Welkom terug, {firstname}'
-    YOUROLDPASSWORD: 'Uw oude wachtwoord'
+    TIMEFORMAT: "Tijd formaat"
+    ValidationIdentifierFailed: "Een bestaande gebruiker #{id} kan niet dezelfde unieke velden hebben ({name} = {value}))"
+    WELCOMEBACK: "Welkom terug, {firstname}"
+    YOUROLDPASSWORD: "Uw oude wachtwoord"
     belongs_many_many_Groups: Groepen
-    db_LastVisited: 'Datum van het laatste bezoek'
-    db_Locale: 'Interface taal'
-    db_LockedOutUntil: 'Gesloten tot'
-    db_NumVisit: 'Aantal bezoeken'
+    db_LastVisited: "Datum van het laatste bezoek"
+    db_Locale: "Interface taal"
+    db_LockedOutUntil: "Gesloten tot"
+    db_NumVisit: "Aantal bezoeken"
     db_Password: Wachtwoord
-    db_PasswordExpiry: 'Wachtwoord vervaldatum'
+    db_PasswordExpiry: "Wachtwoord vervaldatum"
   MemberAuthenticator:
-    TITLE: 'Email &amp; Wachtwoord'
+    TITLE: "Email &amp; Wachtwoord"
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) of PM (Post meridiem)'
+    AMORPM: "AM (Ante meridiem) of PM (Post meridiem)"
     Custom: Aangepast
-    DATEFORMATBAD: 'Datum is niet correct opgegeven'
-    DAYNOLEADING: 'Dag van de maand zonder voorloopnul'
-    DIGITSDECFRACTIONSECOND: 'Een of meer cijfers die een decimale fractie van een seconde voorstellen'
-    FOURDIGITYEAR: '4-cijfers jaar'
-    FULLNAMEMONTH: 'Volledige naam van de maand (bv. juni)'
-    HOURNOLEADING: 'Uur zonder voorloopnul'
-    MINUTENOLEADING: 'Minuut zonder voorloopnul'
-    MONTHNOLEADING: 'Dag van de maand zonder voorloopnul'
+    DATEFORMATBAD: "Datum is niet correct opgegeven"
+    DAYNOLEADING: "Dag van de maand zonder voorloopnul"
+    DIGITSDECFRACTIONSECOND: "Een of meer cijfers die een decimale fractie van een seconde voorstellen"
+    FOURDIGITYEAR: "4-cijfers jaar"
+    FULLNAMEMONTH: "Volledige naam van de maand (bv. juni)"
+    MINUTENOLEADING: "Minuut zonder voorloopnul"
+    MONTHNOLEADING: "Dag van de maand zonder voorloopnul"
     Preview: Voorbeeld
-    SHORTMONTH: 'Korte naam van de maand (bv. jun)'
-    TWODIGITDAY: 'Dag van de maand (met voorloopnul)'
-    TWODIGITHOUR: '2-cijfers uur (00 tot 23)'
-    TWODIGITMINUTE: '2-cijfers minuten (00 tot 59)'
-    TWODIGITMONTH: '2-cijfers maand (01 = januari, enz.)'
-    TWODIGITSECOND: '2-cijfers seconden (00 tot 59)'
-    TWODIGITYEAR: '2-cijfers jaar'
-    Toggle: 'Toon opmaak hulp'
+    SHORTMONTH: "Korte naam van de maand (bv. jun)"
+    TWODIGITDAY: "Dag van de maand (met voorloopnul)"
+    TWODIGITHOUR: "2-cijfers uur (00 tot 23)"
+    TWODIGITMINUTE: "2-cijfers minuten (00 tot 59)"
+    TWODIGITMONTH: "2-cijfers maand (01 = januari, enz.)"
+    TWODIGITSECOND: "2-cijfers seconden (00 tot 59)"
+    TWODIGITYEAR: "2-cijfers jaar"
+    Toggle: "Toon opmaak hulp"
   MemberImportForm:
-    Help1: '<p>Importeer leden in <em>CSV</em>-formaat (comma-separated values). <small><a href="#" class="toggle-advanced">Toon geavanceerd gebruik</a></small></p>'
-    Help2: '<div class="advanced"><h4>Geavanceerd gebruik</h4><ul><li>Toegestane kolommen: <em>%s</em></li><li>Bestaande gebruikers worden geïdentificeerd door middel van hun unieke <em>Code</em>, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li><li>Groepen kunnen worden toegekend door <em>Groups</em> column. Groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>, meerdere groepen kunnen worden gescheiden door een komma. Bestaande groepsleden worden niet verwijderd.</li></ul></div>'
-    ResultCreated: '{count} leden aangemaakt'
-    ResultDeleted: '%d leden verwijderd'
-    ResultNone: 'Geen wijzingen'
-    ResultUpdated: '{count} leden bijgewerkt'
+    Help1: "<p>Importeer leden in <em>CSV</em>-formaat (comma-separated values). <small><a href=\"#\" class=\"toggle-advanced\">Toon geavanceerd gebruik</a></small></p>"
+    Help2: "<div class=\"advanced\"><h4>Geavanceerd gebruik</h4><ul><li>Toegestane kolommen: <em>%s</em></li><li>Bestaande gebruikers worden geïdentificeerd door middel van hun unieke <em>Code</em>, en aangepast met de nieuwe waarden vanuit het geïmporteerde bestand</li><li>Groepen kunnen worden toegekend door <em>Groups</em> column. Groepen worden geïdentificeerd door middel van hun unieke <em>Code</em>, meerdere groepen kunnen worden gescheiden door een komma. Bestaande groepsleden worden niet verwijderd.</li></ul></div>"
+    ResultCreated: "{count} leden aangemaakt"
+    ResultDeleted: "%d leden verwijderd"
+    ResultNone: "Geen wijzingen"
+    ResultUpdated: "{count} leden bijgewerkt"
   MemberPassword:
-    PLURALNAME: 'Gebruikerswachtwoorden'
-    SINGULARNAME: 'Gebruikerswachtwoord'
+    PLURALNAME: Gebruikerswachtwoorden
+    SINGULARNAME: Gebruikerswachtwoord
   MemberTableField:
-    APPLY_FILTER: 'Filter toepassen'
+    APPLY_FILTER: "Filter toepassen"
   ModelAdmin:
     DELETE: Verwijderen
-    DELETEDRECORDS: '{count} records verwijderd.'
-    EMPTYBEFOREIMPORT: 'Vervang gegevens'
-    IMPORT: 'Importeren vanuit CSV'
-    IMPORTEDRECORDS: '{count} records geïmporteerd.'
-    NOCSVFILE: 'Selecteer een CSV bestand om te importeren'
-    NOIMPORT: 'Niets om te importeren'
+    DELETEDRECORDS: "{count} records verwijderd."
+    EMPTYBEFOREIMPORT: "Vervang gegevens"
+    IMPORT: "Importeren vanuit CSV"
+    IMPORTEDRECORDS: "{count} records geïmporteerd."
+    NOCSVFILE: "Selecteer een CSV bestand om te importeren"
+    NOIMPORT: "Niets om te importeren"
     RESET: Reset
-    Title: 'Data modellen'
-    UPDATEDRECORDS: '{count} records bijgewerkt'
+    Title: "Data modellen"
+    UPDATEDRECORDS: "{count} records bijgewerkt"
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Database kolommen'
-    IMPORTSPECLINK: 'Toon specificaties van %s'
+    IMPORTSPECFIELDS: "Database kolommen"
+    IMPORTSPECLINK: "Toon specificaties van %s"
     IMPORTSPECRELATIONS: Relaties
-    IMPORTSPECTITLE: 'Specificatie van %s'
+    IMPORTSPECTITLE: "Specificatie van %s"
   ModelAdmin_Tools_ss:
     FILTER: Filter
     IMPORT: Importeren
@@ -454,134 +452,134 @@ nl:
     FIELDLABELAMOUNT: Aantal
     FIELDLABELCURRENCY: Munteenheid
   NullableField:
-    IsNullLabel: 'Is null'
+    IsNullLabel: "Is null"
   NumericField:
-    VALIDATION: '''{value}'' is geen getal, enkel getallen worden door dit veld geaccepteerd'
+    VALIDATION: "'{value}' is geen getal, enkel getallen worden door dit veld geaccepteerd"
   Pagination:
     Page: Pagina
     View: Bekijk
   PasswordValidator:
-    LOWCHARSTRENGTH: 'Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: %s'
-    PREVPASSWORD: 'U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord.'
-    TOOSHORT: 'Het wachtwoord is te kort, het moet minimaal %s karakters hebben'
+    LOWCHARSTRENGTH: "Maak a.u.b. uw wachtwoord sterker door enkele van de volgende karakters te gebruiken: %s"
+    PREVPASSWORD: "U heeft dit wachtwoord in het verleden al gebruikt, kies a.u.b. een nieuw wachtwoord."
+    TOOSHORT: "Het wachtwoord is te kort, het moet minimaal %s karakters hebben"
   Permission:
     AdminGroup: Beheerder
-    CMS_ACCESS_CATEGORY: 'CMS Toegang'
-    FULLADMINRIGHTS: 'Volledige admin rechten'
-    FULLADMINRIGHTS_HELP: 'Impliceert en overstemt alle andere toegewezen rechten.'
+    CMS_ACCESS_CATEGORY: "CMS Toegang"
+    FULLADMINRIGHTS: "Volledige admin rechten"
+    FULLADMINRIGHTS_HELP: "Impliceert en overstemt alle andere toegewezen rechten."
     PLURALNAME: Machtigingen
     SINGULARNAME: Machtiging
   PermissionCheckboxSetField:
-    AssignedTo: 'toegewezen aan "{title}"'
-    FromGroup: 'geërfd van de groep "{title}"'
-    FromRole: 'geërfd van de rol "{title}"'
-    FromRoleOnGroup: 'geërfd van rol "%s" in groep "%s"'
+    AssignedTo: "toegewezen aan \"{title}\""
+    FromGroup: "geërfd van de groep \"{title}\""
+    FromRole: "geërfd van de rol \"{title}\""
+    FromRoleOnGroup: "geërfd van rol \"%s\" in groep \"%s\""
   PermissionRole:
-    OnlyAdminCanApply: 'Alleen admin kan doorvoeren'
+    OnlyAdminCanApply: "Alleen admin kan doorvoeren"
     PLURALNAME: Rollen
     SINGULARNAME: Rol
     Title: Titel
   PermissionRoleCode:
-    PLURALNAME: 'Permissie codes'
-    PermsError: 'U moet (ADMIN) rechten hebben om de code "%s" toe te kennen'
-    SINGULARNAME: 'Machtigingen rol code'
+    PLURALNAME: "Permissie codes"
+    PermsError: "U moet (ADMIN) rechten hebben om de code \"%s\" toe te kennen"
+    SINGULARNAME: "Machtigingen rol code"
   Permissions:
-    PERMISSIONS_CATEGORY: 'Rollen en toegangsrechten'
-    UserPermissionsIntro: 'Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen.'
+    PERMISSIONS_CATEGORY: "Rollen en toegangsrechten"
+    UserPermissionsIntro: "Groepen aan deze gebruiker toewijzen zullen diens permissies aanpassen. Zie de sectie Groepen voor meer informatie over machtigingen voor afzonderlijke groepen."
   PhoneNumberField:
-    VALIDATION: 'Voer een geldig telefoonnummer in'
+    VALIDATION: "Voer een geldig telefoonnummer in"
   Security:
-    ALREADYLOGGEDIN: 'U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen.'
-    BUTTONSEND: 'Nieuw wachtwoord aanmaken'
-    CHANGEPASSWORDBELOW: 'U kunt uw wachtwoord hieronder veranderen.'
-    CHANGEPASSWORDHEADER: 'Verander uw wachtwoord'
-    ENTERNEWPASSWORD: 'Voer een nieuw wachtwoord in.'
-    ERRORPASSWORDPERMISSION: 'U moet ingelogd zijn om uw wachtwoord te kunnen veranderen!'
-    LOGGEDOUT: 'U bent uitgelogd.  Als u weer wilt inloggen kunt u uw gegevens hieronder invoeren.'
-    LOGIN: 'Meld aan'
-    LOSTPASSWORDHEADER: 'Wachtwoord vergeten'
-    NOTEPAGESECURED: 'Deze pagina is beveiligd. Voer uw gegevens in en u wordt automatisch doorgestuurd.'
-    NOTERESETLINKINVALID: '<p>De link om uw wachtwoord te kunnen wijzigen is niet meer geldig.</p><p>U kunt <a href="{link1}">een nieuwe link aanvragen</a> of uw wachtwoord aanpassen door <a href="{link2}">in te loggen</a>.</p>'
-    NOTERESETPASSWORD: 'Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen.'
-    PASSWORDSENTHEADER: 'Wachtwoord herstel link verzonden naar {email}'
-    PASSWORDSENTTEXT: 'Bedankt! Er is een link verstuurd naar {email} om uw wachtwoord opnieuw in te stellen, in de veronderstelling dat er een account bestaat voor dit e-mailadres.'
+    ALREADYLOGGEDIN: "U hebt geen toegang tot deze pagina.  Als u een andere account met de nodige rechten hebt, kan u hieronder opnieuw inloggen."
+    BUTTONSEND: "Nieuw wachtwoord aanmaken"
+    CHANGEPASSWORDBELOW: "U kunt uw wachtwoord hieronder veranderen."
+    CHANGEPASSWORDHEADER: "Verander uw wachtwoord"
+    ENTERNEWPASSWORD: "Voer een nieuw wachtwoord in."
+    ERRORPASSWORDPERMISSION: "U moet ingelogd zijn om uw wachtwoord te kunnen veranderen!"
+    LOGGEDOUT: "U bent uitgelogd.  Als u weer wilt inloggen kunt u uw gegevens hieronder invoeren."
+    LOGIN: "Meld aan"
+    LOSTPASSWORDHEADER: "Wachtwoord vergeten"
+    NOTEPAGESECURED: "Deze pagina is beveiligd. Voer uw gegevens in en u wordt automatisch doorgestuurd."
+    NOTERESETLINKINVALID: "<p>De link om uw wachtwoord te kunnen wijzigen is niet meer geldig.</p><p>U kunt <a href=\"{link1}\">een nieuwe link aanvragen</a> of uw wachtwoord aanpassen door <a href=\"{link2}\">in te loggen</a>.</p>"
+    NOTERESETPASSWORD: "Voer uw e-mailadres in en we sturen een link waarmee u een nieuw wachtwoord kunt instellen."
+    PASSWORDSENTHEADER: "Wachtwoord herstel link verzonden naar {email}"
+    PASSWORDSENTTEXT: "Bedankt! Er is een link verstuurd naar {email} om uw wachtwoord opnieuw in te stellen, in de veronderstelling dat er een account bestaat voor dit e-mailadres."
   SecurityAdmin:
-    ACCESS_HELP: 'Bevoegdheid voor bekijken, toevoegen en bewerken van leden, en toewijzen van rechten en rollen aan hen.'
-    APPLY_ROLES: 'Pas rollen toe aan groepen'
-    APPLY_ROLES_HELP: 'Bewerkingsmogelijkheid van rollen voor groepen. Heeft rechten voor "Gebruikerssectie" nodig.'
-    EDITPERMISSIONS: 'Bewerk rechten voor groepen'
-    EDITPERMISSIONS_HELP: 'Bewerkingsmogelijkheid van Rechten en IP adressen voor groepen. Heeft rechten voor "Beveiligingsectie" nodig.'
-    GROUPNAME: 'Groep naam'
-    IMPORTGROUPS: 'Importeer groepen'
-    IMPORTUSERS: 'Importeer gebruikers'
+    ACCESS_HELP: "Bevoegdheid voor bekijken, toevoegen en bewerken van leden, en toewijzen van rechten en rollen aan hen."
+    APPLY_ROLES: "Pas rollen toe aan groepen"
+    APPLY_ROLES_HELP: "Bewerkingsmogelijkheid van rollen voor groepen. Heeft rechten voor \"Gebruikerssectie\" nodig."
+    EDITPERMISSIONS: "Bewerk rechten voor groepen"
+    EDITPERMISSIONS_HELP: "Bewerkingsmogelijkheid van Rechten en IP adressen voor groepen. Heeft rechten voor \"Beveiligingsectie\" nodig."
+    GROUPNAME: "Groep naam"
+    IMPORTGROUPS: "Importeer groepen"
+    IMPORTUSERS: "Importeer gebruikers"
     MEMBERS: Leden
     MENUTITLE: Beveiliging
-    MemberListCaution: 'Let op: Verwijderen van leden van deze lijst heeft als gevolg dat deze uit alle groepen en de database worden verwijderd'
-    NEWGROUP: 'Nieuwe Groep'
+    MemberListCaution: "Let op: Verwijderen van leden van deze lijst heeft als gevolg dat deze uit alle groepen en de database worden verwijderd"
+    NEWGROUP: "Nieuwe Groep"
     PERMISSIONS: Rechten
     ROLES: Rollen
-    ROLESDESCRIPTION: 'In deze sectie kan je rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tabblad gewijzigd kunnen worden.'
+    ROLESDESCRIPTION: "In deze sectie kan je rollen toevoegen aan deze groep. Rollen zijn logische groeperingen van rechten die in het Rollen tabblad gewijzigd kunnen worden."
     TABROLES: Rollen
     Users: Gebruikers
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Importeer vanuit CSV'
-    FileFieldLabel: 'CSV Bestand <small>(Toegestane extensies: *.csv)</small>'
+    BtnImport: "Importeer vanuit CSV"
+    FileFieldLabel: "CSV Bestand <small>(Toegestane extensies: *.csv)</small>"
   SilverStripeNavigator:
     Auto: Automatisch
-    ChangeViewMode: 'Wijzig weergavemodus'
+    ChangeViewMode: "Wijzig weergavemodus"
     Desktop: Desktop
-    DualWindowView: 'Dubbelvenster'
+    DualWindowView: Dubbelvenster
     Edit: Bewerken
-    EditView: 'Bewerkmodus'
+    EditView: Bewerkmodus
     Mobile: Mobiel
-    PreviewState: 'Voorbeeldstatus'
-    PreviewView: 'Voorbeeldmodus'
+    PreviewState: Voorbeeldstatus
+    PreviewView: Voorbeeldmodus
     Responsive: Responsive
-    SplitView: 'Split-modus'
+    SplitView: Split-modus
     Tablet: Tablet
-    ViewDeviceWidth: 'Selecteer een voorbeeldbreedte'
+    ViewDeviceWidth: "Selecteer een voorbeeldbreedte"
     Width: breedte
   SiteTree:
     TABMAIN: Hoofdgedeelte
   TableListField:
-    CSVEXPORT: 'Exporteer naar CSV'
+    CSVEXPORT: "Exporteer naar CSV"
     Print: Afdrukken
   TableListField_PageControls_ss:
     OF: van
   TextField:
-    VALIDATEMAXLENGTH: 'De waarde voor {name} mag niet langer zijn dan {maxLength} tekens.'
+    VALIDATEMAXLENGTH: "De waarde voor {name} mag niet langer zijn dan {maxLength} tekens."
   TimeField:
-    VALIDATEFORMAT: 'Vul een geldig datumformaat in ({format})'
+    VALIDATEFORMAT: "Vul een geldig datumformaat in ({format})"
   ToggleField:
     LESS: minder
     MORE: meer
   UploadField:
-    ATTACHFILE: 'Voeg een bestand toe'
-    ATTACHFILES: 'Voeg bestanden toe'
-    AttachFile: 'Voeg bestand(en) toe'
-    CHOOSEANOTHERFILE: 'Kies een ander bestand'
-    CHOOSEANOTHERINFO: 'Vervang dit bestand met een ander uit de bestandsopslag'
-    DELETE: 'Volledig verwijderen'
-    DELETEINFO: 'Verwijder dit bestand definitief van de bestandsopslag'
+    ATTACHFILE: "Voeg een bestand toe"
+    ATTACHFILES: "Voeg bestanden toe"
+    AttachFile: "Voeg bestand(en) toe"
+    CHOOSEANOTHERFILE: "Kies een ander bestand"
+    CHOOSEANOTHERINFO: "Vervang dit bestand met een ander uit de bestandsopslag"
+    DELETE: "Volledig verwijderen"
+    DELETEINFO: "Verwijder dit bestand definitief van de bestandsopslag"
     DOEDIT: Opslaan
-    DROPFILE: 'sleep een bestand hierheen'
-    DROPFILES: 'sleep hier bestanden heen'
+    DROPFILE: "sleep een bestand hierheen"
+    DROPFILES: "sleep hier bestanden heen"
     Dimensions: Afmetingen
     EDIT: Bewerken
-    EDITINFO: 'Bewerk dit bestand'
-    FIELDNOTSET: 'Bestandsinformatie niet gevonden'
-    FROMCOMPUTER: 'Vanaf computer'
-    FROMCOMPUTERINFO: 'Kies uit bestanden'
-    FROMFILES: 'Vanuit bestaande bestanden'
-    HOTLINKINFO: 'Info: Deze afbeelding wordt hotlinked. Zorg ervoor dat u de machtigingen van de oorspronkelijke site maker om dit te doen.'
-    MAXNUMBEROFFILES: 'Maximale aantal van {count} bestand(en) overschreden.'
-    MAXNUMBEROFFILESONE: 'Kan slechts één bestand uploaden'
-    MAXNUMBEROFFILESSHORT: 'Kan alleen {count} bestanden uploaden'
-    OVERWRITEWARNING: 'Bestand met dezelfde naam bestaat al'
+    EDITINFO: "Bewerk dit bestand"
+    FIELDNOTSET: "Bestandsinformatie niet gevonden"
+    FROMCOMPUTER: "Vanaf computer"
+    FROMCOMPUTERINFO: "Kies uit bestanden"
+    FROMFILES: "Vanuit bestaande bestanden"
+    HOTLINKINFO: "Info: Deze afbeelding wordt hotlinked. Zorg ervoor dat u de machtigingen van de oorspronkelijke site maker om dit te doen."
+    MAXNUMBEROFFILES: "Maximale aantal van {count} bestand(en) overschreden."
+    MAXNUMBEROFFILESONE: "Kan slechts één bestand uploaden"
+    MAXNUMBEROFFILESSHORT: "Kan alleen {count} bestanden uploaden"
+    OVERWRITEWARNING: "Bestand met dezelfde naam bestaat al"
     REMOVE: Verwijder
-    REMOVEINFO: 'Verwijder (ontkoppel) dit bestand, maar behoud het in bestandsopslag van de website.'
-    STARTALL: 'Start alle'
+    REMOVEINFO: "Verwijder (ontkoppel) dit bestand, maar behoud het in bestandsopslag van de website."
+    STARTALL: "Start alle"
     Saved: Opgeslagen
-    UPLOADSINTO: 'wordt opgeslagen in /{path}'
+    UPLOADSINTO: "wordt opgeslagen in /{path}"
   Versioned:
     has_many_Versions: Versies
