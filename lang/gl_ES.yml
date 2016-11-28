@@ -1,60 +1,60 @@
 gl_ES:
   AssetTableField:
-    CREATED: 'Primeiro subido'
+    CREATED: "Primeiro subido"
     DIM: Dimensións
-    FILENAME: Nome ficheiro
+    FILENAME: "Nome ficheiro"
     FOLDER: Cartafol
-    LASTEDIT: 'Último cambio'
+    LASTEDIT: "Último cambio"
     OWNER: Propietario
-    SIZE: 'Tamaño ficheiro'
+    SIZE: "Tamaño ficheiro"
     TITLE: Título
-    TYPE: 'Tipo ficheiro'
+    TYPE: "Tipo ficheiro"
   AssetUploadField:
-    ChooseFiles: 'Escoller ficheiros'
-    DRAGFILESHERE: 'Arrastrar ficheiro aquí'
-    DROPAREA: 'Área Contedor'
-    EDITANDORGANIZE: 'Editar e organizar'
-    FROMCOMPUTER: 'Escolle ficheiros do teu computador'
+    ChooseFiles: "Escoller ficheiros"
+    DRAGFILESHERE: "Arrastrar ficheiro aquí"
+    DROPAREA: "Área Contedor"
+    EDITANDORGANIZE: "Editar e organizar"
+    FROMCOMPUTER: "Escolle ficheiros do teu computador"
   BBCodeParser:
     ALIGNEMENT: Aliñamento
-    ALIGNEMENTEXAMPLE: 'aliñamento a dereita'
-    BOLD: 'Texto en negriña'
+    ALIGNEMENTEXAMPLE: "aliñamento a dereita"
+    BOLD: "Texto en negriña"
     BOLDEXAMPLE: Negriña
-    CODE: 'Bloque de código'
-    CODEDESCRIPTION: 'Bloque de código sen formato'
-    CODEEXAMPLE: 'Bloque de código'
-    COLORED: 'Texto colorado'
-    COLOREDEXAMPLE: 'texto azul'
-    EMAILLINK: 'Ligazón de correo-e'
-    EMAILLINKDESCRIPTION: 'Crear ligazón para un enderezo de correo-e'
+    CODE: "Bloque de código"
+    CODEDESCRIPTION: "Bloque de código sen formato"
+    CODEEXAMPLE: "Bloque de código"
+    COLORED: "Texto colorado"
+    COLOREDEXAMPLE: "texto azul"
+    EMAILLINK: "Ligazón de correo-e"
+    EMAILLINKDESCRIPTION: "Crear ligazón para un enderezo de correo-e"
     IMAGE: Imaxe
-    IMAGEDESCRIPTION: 'Amosar a imaxe na túa publicación'
-    ITALIC: 'Texto en cursiva'
+    IMAGEDESCRIPTION: "Amosar a imaxe na túa publicación"
+    ITALIC: "Texto en cursiva"
     ITALICEXAMPLE: Cursiva
-    LINK: 'Ligazón ó sitio web'
-    LINKDESCRIPTION: 'Ligar a outro sitio web ou URL'
-    STRUCK: 'Texto tachado'
+    LINK: "Ligazón ó sitio web"
+    LINKDESCRIPTION: "Ligar a outro sitio web ou URL"
+    STRUCK: "Texto tachado"
     STRUCKEXAMPLE: Tachado
-    UNDERLINE: 'Texto subliñado'
+    UNDERLINE: "Texto subliñado"
     UNDERLINEEXAMPLE: Subliñado
-    UNORDERED: 'Lista desordenada'
-    UNORDEREDDESCRIPTION: 'Lista desordenada'
-    UNORDEREDEXAMPLE1: 'elemento desordenado 1'
+    UNORDERED: "Lista desordenada"
+    UNORDEREDDESCRIPTION: "Lista desordenada"
+    UNORDEREDEXAMPLE1: "elemento desordenado 1"
   BasicAuth:
-    ENTERINFO: 'Por favor insire un nome de usuario e contrasinal.'
-    ERRORNOTADMIN: 'Ese usuario non é un administrador.'
-    ERRORNOTREC: 'Ese nome de usuario/contrasinal non é recoñecido'
+    ENTERINFO: "Por favor insire un nome de usuario e contrasinal."
+    ERRORNOTADMIN: "Ese usuario non é un administrador."
+    ERRORNOTREC: "Ese nome de usuario/contrasinal non é recoñecido"
   Boolean:
     ANY: Ningún
   CMSMain:
-    ACCESSALLINTERFACES: 'Acceder a todas as seccións do CMS'
-    ACCESSALLINTERFACESHELP: 'Anular a configuración de acceso máis específica.'
+    ACCESSALLINTERFACES: "Acceder a todas as seccións do CMS"
+    ACCESSALLINTERFACESHELP: "Anular a configuración de acceso máis específica."
     SAVE: Gardar
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Mudaches o teu contrasinal por'
-    CHANGEPASSWORDTEXT2: 'Podes empregar agora as seguintes credenciais para iniciar sesión:'
+    CHANGEPASSWORDTEXT1: "Mudaches o teu contrasinal por"
+    CHANGEPASSWORDTEXT2: "Podes empregar agora as seguintes credenciais para iniciar sesión:"
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Mudar Contrasinal'
+    SHOWONCLICKTITLE: "Mudar Contrasinal"
   CreditCardField:
     FIRST: primeiro
     FOURTH: cuarto
@@ -63,31 +63,31 @@ gl_ES:
   CurrencyField:
     CURRENCYSYMBOL: €
   DataObject:
-    PLURALNAME: 'Obxectos de Datos'
-    SINGULARNAME: 'Obxecto de Dato'
+    PLURALNAME: "Obxectos de Datos"
+    SINGULARNAME: "Obxecto de Dato"
   DateField:
-    NOTSET: 'sen establecer'
+    NOTSET: "sen establecer"
   DropdownField:
     CHOOSE: (Escoller)
   Enum:
     ANY: Ningún
   File:
     Content: Contido
-    Filename: Nome ficheiro
-    NOVALIDUPLOAD: 'Ficheiro non v&aacute;lido para subir'
+    Filename: "Nome ficheiro"
+    NOVALIDUPLOAD: "Ficheiro non v&aacute;lido para subir"
     Name: Nome
     PLURALNAME: Ficheiros
     SINGULARNAME: Ficheiro
     Title: Título
   ForgotPasswordEmail_ss:
     HELLO: Ola
-    TEXT1: 'Estás aquí'
-    TEXT2: 'ligazón de reinicio do contrasinal'
+    TEXT1: "Estás aquí"
+    TEXT2: "ligazón de reinicio do contrasinal"
     TEXT3: para
   Form:
-    VALIDATIONNOTUNIQUE: 'O valor inserido non é único'
-    VALIDATIONPASSWORDSDONTMATCH: 'Os contrasinais non emparellan'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Os contrasinais non pode ser baleiro'
+    VALIDATIONNOTUNIQUE: "O valor inserido non é único"
+    VALIDATIONPASSWORDSDONTMATCH: "Os contrasinais non emparellan"
+    VALIDATIONPASSWORDSNOTEMPTY: "Os contrasinais non pode ser baleiro"
     VALIDATOR: Validador
   FormField:
     NONE: ningún
@@ -97,199 +97,198 @@ gl_ES:
   GridField:
     Filter: Filtro
     Find: Atopar
-    LinkExisting: 'Ligazón existente'
-    NewRecord: 'Novo %s'
-    NoItemsFound: 'Ningún elemento atopado'
-    PRINTEDAT: 'Impreso ás'
-    PRINTEDBY: 'Impreso por'
-    RelationSearch: 'Busca relacionada'
+    LinkExisting: "Ligazón existente"
+    NewRecord: "Novo %s"
+    NoItemsFound: "Ningún elemento atopado"
+    PRINTEDAT: "Impreso ás"
+    PRINTEDBY: "Impreso por"
+    RelationSearch: "Busca relacionada"
     ResetFilter: Reiniciar
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 'Non eliminar permisos'
+    DeletePermissionsFailure: "Non eliminar permisos"
   Group:
-    AddRole: 'Engadir un role para este grupo'
-    Code: 'Código de Grupo'
+    AddRole: "Engadir un role para este grupo"
+    Code: "Código de Grupo"
     DefaultGroupTitleAdministrators: Administradores
-    DefaultGroupTitleContentAuthors: 'Autores do Contido'
-    GroupReminder: 'Se escolles un grupo pai, este grupo collerá todos os seus roles'
-    NoRoles: 'Ningún rol atopado'
-    Parent: 'Grupo Pai'
-    RolesAddEditLink: 'Xestionar roles'
-    Sort: 'Modo de ordenación'
+    DefaultGroupTitleContentAuthors: "Autores do Contido"
+    GroupReminder: "Se escolles un grupo pai, este grupo collerá todos os seus roles"
+    NoRoles: "Ningún rol atopado"
+    Parent: "Grupo Pai"
+    RolesAddEditLink: "Xestionar roles"
+    Sort: "Modo de ordenación"
     has_many_Permissions: Permisos
   GroupImportForm:
-    Help1: '<p>Importar un ou máis grupos no formato <em>CSV</em>  (valores separados por comas). <small><a href="#" class="toggle-advanced">Amosar uso avanzado</a></small></p>'
-    ResultDeleted: 'Eliminados %d grupos'
-    ResultUpdated: 'Actualizados %d grupos'
+    Help1: "<p>Importar un ou máis grupos no formato <em>CSV</em>  (valores separados por comas). <small><a href=\"#\" class=\"toggle-advanced\">Amosar uso avanzado</a></small></p>"
+    ResultDeleted: "Eliminados %d grupos"
+    ResultUpdated: "Actualizados %d grupos"
   HtmlEditorField:
     ANCHORVALUE: Áncora
     BUTTONINSERT: Inserir
-    BUTTONINSERTLINK: 'Inserir ligazón'
-    BUTTONREMOVELINK: 'Eliminar ligazón'
-    CAPTIONTEXT: 'Texto da lenda (caption)'
-    CSSCLASS: 'Alineamento/estilo'
-    CSSCLASSCENTER: 'Centrado, sobre si mesmo.'
-    CSSCLASSLEFT: 'Sobre a esquerda, co texto arredor del.'
-    CSSCLASSLEFTALONE: 'Á esquerda, sobre si mesmo.'
-    CSSCLASSRIGHT: 'Sobre a dereita, co texto arredor del.'
+    BUTTONINSERTLINK: "Inserir ligazón"
+    BUTTONREMOVELINK: "Eliminar ligazón"
+    CAPTIONTEXT: "Texto da lenda (caption)"
+    CSSCLASS: Alineamento/estilo
+    CSSCLASSCENTER: "Centrado, sobre si mesmo."
+    CSSCLASSLEFT: "Sobre a esquerda, co texto arredor del."
+    CSSCLASSLEFTALONE: "Á esquerda, sobre si mesmo."
+    CSSCLASSRIGHT: "Sobre a dereita, co texto arredor del."
     DETAILS: Detalles
-    EMAIL: 'Enderezo Correo-e'
+    EMAIL: "Enderezo Correo-e"
     FILE: Ficheiro
     FOLDER: Cartafol
-    FROMCMS: 'Dende o CMS'
-    FROMCOMPUTER: 'Dende o teu Computador'
+    FROMCMS: "Dende o CMS"
+    FROMCOMPUTER: "Dende o teu Computador"
     IMAGEDIMENSIONS: Dimensións
     IMAGEHEIGHTPX: Alto
-    IMAGETITLE: 'Texto do título (tooltip) - para información adicional sobre a imaxe'
+    IMAGETITLE: "Texto do título (tooltip) - para información adicional sobre a imaxe"
     IMAGEWIDTHPX: Ancho
-    LINK: 'Inserir ligazón'
-    LINKANCHOR: 'Áncora sobre esta páxina'
-    LINKDESCR: 'Descrición da ligazón'
-    LINKEMAIL: 'Enderezo Correo-e'
-    LINKEXTERNAL: 'Outro sitio web'
-    LINKFILE: 'Descargar un ficheiro'
-    LINKINTERNAL: 'Páxina no sitio'
-    LINKOPENNEWWIN: 'Abrir ligazón en nova ventá?'
-    LINKTO: 'Ligar a'
+    LINK: "Inserir ligazón"
+    LINKANCHOR: "Áncora sobre esta páxina"
+    LINKDESCR: "Descrición da ligazón"
+    LINKEMAIL: "Enderezo Correo-e"
+    LINKEXTERNAL: "Outro sitio web"
+    LINKFILE: "Descargar un ficheiro"
+    LINKINTERNAL: "Páxina no sitio"
+    LINKOPENNEWWIN: "Abrir ligazón en nova ventá?"
+    LINKTO: "Ligar a"
     PAGE: Páxina
   Image_iframe_ss:
-    TITLE: 'Iframe subindo imaxe'
+    TITLE: "Iframe subindo imaxe"
   LeftAndMain:
     HELP: Axuda
-    PERMAGAIN: 'Non tes unha sesión válida no CMS. Se queres volver entrar, insire o nome de usuario e contrasinal a continuación.'
+    PERMAGAIN: "Non tes unha sesión válida no CMS. Se queres volver entrar, insire o nome de usuario e contrasinal a continuación."
   LoginAttempt:
-    Email: 'Enderezo Correo-e'
-    IP: 'Enderezo IP'
+    Email: "Enderezo Correo-e"
+    IP: "Enderezo IP"
     Status: Estado
   Member:
-    BUTTONCHANGEPASSWORD: 'Mudar Contrasinal'
-    BUTTONLOGIN: 'Iniciar sesión'
-    BUTTONLOGINOTHER: 'Iniciar sesión como'
-    BUTTONLOSTPASSWORD: 'Perdín o meu contrasinal'
-    CONFIRMNEWPASSWORD: 'Confirmar Novo Contrasinal'
-    CONFIRMPASSWORD: 'Confirmar Contrasinal'
-    DefaultAdminFirstname: 'Administrador por Defecto'
-    DefaultDateTime: por defecto
+    BUTTONCHANGEPASSWORD: "Mudar Contrasinal"
+    BUTTONLOGIN: "Iniciar sesión"
+    BUTTONLOGINOTHER: "Iniciar sesión como"
+    BUTTONLOSTPASSWORD: "Perdín o meu contrasinal"
+    CONFIRMNEWPASSWORD: "Confirmar Novo Contrasinal"
+    CONFIRMPASSWORD: "Confirmar Contrasinal"
+    DefaultAdminFirstname: "Administrador por Defecto"
+    DefaultDateTime: "por defecto"
     EMAIL: Correo-e
-    EMPTYNEWPASSWORD: 'O novo contrasinal non pode ser baleiro, por favor téntao de novo'
-    ENTEREMAIL: 'Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio.'
-    ERRORNEWPASSWORD: 'Inseriches a nova contrasinal doutra maneira, téntao de novo'
-    ERRORPASSWORDNOTMATCH: 'O teu contrasinal actual non emparella, por favor téntao de novo'
-    FIRSTNAME: 'Nome'
-    INTERFACELANG: 'Idioma da Interface'
-    NEWPASSWORD: 'Novo Contrasinal'
+    EMPTYNEWPASSWORD: "O novo contrasinal non pode ser baleiro, por favor téntao de novo"
+    ENTEREMAIL: "Por favor insire un enderezo de correo-e para conseguir unha ligazón de reinicio."
+    ERRORNEWPASSWORD: "Inseriches a nova contrasinal doutra maneira, téntao de novo"
+    ERRORPASSWORDNOTMATCH: "O teu contrasinal actual non emparella, por favor téntao de novo"
+    FIRSTNAME: Nome
+    INTERFACELANG: "Idioma da Interface"
+    NEWPASSWORD: "Novo Contrasinal"
     PASSWORD: Contrasinal
     PLURALNAME: Membros
     SINGULARNAME: Membro
-    SUBJECTPASSWORDCHANGED: 'O teu contrasinal mudou'
-    SUBJECTPASSWORDRESET: 'A túa ligazón de reinicio de contrasinal'
+    SUBJECTPASSWORDCHANGED: "O teu contrasinal mudou"
+    SUBJECTPASSWORDRESET: "A túa ligazón de reinicio de contrasinal"
     SURNAME: Apelidos
-    YOUROLDPASSWORD: 'O teu vello contrasinal'
+    YOUROLDPASSWORD: "O teu vello contrasinal"
     belongs_many_many_Groups: Grupos
-    db_LastVisited: 'Data Última Visita'
-    db_Locale: 'Idioma da Interface'
-    db_LockedOutUntil: 'Bloqueado ata que'
-    db_NumVisit: 'Número de Visitas'
+    db_LastVisited: "Data Última Visita"
+    db_Locale: "Idioma da Interface"
+    db_LockedOutUntil: "Bloqueado ata que"
+    db_NumVisit: "Número de Visitas"
     db_Password: Contrasinal
-    db_PasswordExpiry: 'Data de expiración do contrasinal'
+    db_PasswordExpiry: "Data de expiración do contrasinal"
   MemberAuthenticator:
-    TITLE: 'Correo-e e Contrasinal'
+    TITLE: "Correo-e e Contrasinal"
   MemberDatetimeOptionsetField:
-    AMORPM: 'AM (Ante meridiem) ou PM (Post meridiem)'
+    AMORPM: "AM (Ante meridiem) ou PM (Post meridiem)"
     Custom: Personalizado
-    DATEFORMATBAD: 'O formato da data é inválida'
-    DAYNOLEADING: 'Día do mes sen ceros a esquerda'
-    DIGITSDECFRACTIONSECOND: 'Un ou máis díxitos representando unha fracción decimal dun segundo'
-    FOURDIGITYEAR: 'Catro díxitos ano'
-    FULLNAMEMONTH: 'Nome completo do mes (p.e. Xuño)'
-    HOURNOLEADING: 'Hora sen ceros a esquerda'
-    MINUTENOLEADING: 'Minuto sen ceros a esquerda'
-    MONTHNOLEADING: 'Díxito do mes sen ceros a esquerda'
+    DATEFORMATBAD: "O formato da data é inválida"
+    DAYNOLEADING: "Día do mes sen ceros a esquerda"
+    DIGITSDECFRACTIONSECOND: "Un ou máis díxitos representando unha fracción decimal dun segundo"
+    FOURDIGITYEAR: "Catro díxitos ano"
+    FULLNAMEMONTH: "Nome completo do mes (p.e. Xuño)"
+    MINUTENOLEADING: "Minuto sen ceros a esquerda"
+    MONTHNOLEADING: "Díxito do mes sen ceros a esquerda"
     Preview: Previsualizar
-    SHORTMONTH: 'Nome curto do mes (p.e. Xuñ)'
-    TWODIGITDAY: 'Dous díxitos día do mes'
-    TWODIGITHOUR: 'Dous díxitos para a hora (00 ata 23)'
-    TWODIGITMINUTE: 'Dous díxitos minuto (00 ata 59)'
-    TWODIGITMONTH: 'Dous díxitos para o mes (01=Xaneiro, etc.)'
-    TWODIGITSECOND: 'Dous díxitos de segundo (00 ata 59)'
-    TWODIGITYEAR: 'Dous díxitos ano'
+    SHORTMONTH: "Nome curto do mes (p.e. Xuñ)"
+    TWODIGITDAY: "Dous díxitos día do mes"
+    TWODIGITHOUR: "Dous díxitos para a hora (00 ata 23)"
+    TWODIGITMINUTE: "Dous díxitos minuto (00 ata 59)"
+    TWODIGITMONTH: "Dous díxitos para o mes (01=Xaneiro, etc.)"
+    TWODIGITSECOND: "Dous díxitos de segundo (00 ata 59)"
+    TWODIGITYEAR: "Dous díxitos ano"
   MemberImportForm:
-    Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Amosar uso avanzado</a></small></p>'
-    ResultDeleted: 'Eliminados %d membros'
-    ResultNone: 'Sen cambios'
+    Help1: "<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href=\"#\" class=\"toggle-advanced\">Amosar uso avanzado</a></small></p>"
+    ResultDeleted: "Eliminados %d membros"
+    ResultNone: "Sen cambios"
   MemberTableField:
-    APPLY_FILTER: 'Aplicar Filtro'
+    APPLY_FILTER: "Aplicar Filtro"
   ModelAdmin:
     DELETE: Eliminar
-    IMPORT: 'Importar dende CSV'
-    NOCSVFILE: 'Por favor navega por un ficheiro CSV para importar'
-    NOIMPORT: 'Nada para importar'
+    IMPORT: "Importar dende CSV"
+    NOCSVFILE: "Por favor navega por un ficheiro CSV para importar"
+    NOIMPORT: "Nada para importar"
     RESET: Reiniciar
   MoneyField:
     FIELDLABELAMOUNT: Cantidade
     FIELDLABELCURRENCY: Moeda
   NullableField:
-    IsNullLabel: 'É Nulo'
+    IsNullLabel: "É Nulo"
   Permission:
     AdminGroup: Administrador
-    CMS_ACCESS_CATEGORY: 'Acceso CMS'
-    FULLADMINRIGHTS: 'Todos os dereitos administrativos'
-    FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
+    CMS_ACCESS_CATEGORY: "Acceso CMS"
+    FULLADMINRIGHTS: "Todos os dereitos administrativos"
+    FULLADMINRIGHTS_HELP: "Implica e anula todos os outros permisos asinados."
   PermissionCheckboxSetField:
-    FromRoleOnGroup: 'herdado do role "%s" sobre o grupo "%s"'
+    FromRoleOnGroup: "herdado do role \"%s\" sobre o grupo \"%s\""
   Permissions:
-    PERMISSIONS_CATEGORY: 'Roles e permisos de acceso'
+    PERMISSIONS_CATEGORY: "Roles e permisos de acceso"
   PhoneNumberField:
-    VALIDATION: 'Por favor insire un número de teléfono válido'
+    VALIDATION: "Por favor insire un número de teléfono válido"
   Security:
-    ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
-    BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'
-    CHANGEPASSWORDBELOW: 'Podes mudar o contrasinal abaixo.'
-    CHANGEPASSWORDHEADER: 'Mudar Contrasinal'
-    ENTERNEWPASSWORD: 'Por favor insire un novo contrasinal.'
-    ERRORPASSWORDPERMISSION: 'Debes iniciar sesión para poder mudar o teu contrasinal!'
-    LOGGEDOUT: 'Pechouse a túa sesión. Se desexas iniciar sesión de novo, insire as túas credenciais a continuación.'
-    LOGIN: 'Iniciar sesión'
-    NOTEPAGESECURED: 'Esa páxina é segura. Insire as túas credenciais abaixo e enviarémoste dereito a ela.'
-    NOTERESETPASSWORD: 'Insire o teu enderezo de correo-e e enviarémosche unha ligazón coa que reiniciar o teu contrasinal'
+    ALREADYLOGGEDIN: "Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación."
+    BUTTONSEND: "Enviarme a ligazón de restablecemento do contrasinal"
+    CHANGEPASSWORDBELOW: "Podes mudar o contrasinal abaixo."
+    CHANGEPASSWORDHEADER: "Mudar Contrasinal"
+    ENTERNEWPASSWORD: "Por favor insire un novo contrasinal."
+    ERRORPASSWORDPERMISSION: "Debes iniciar sesión para poder mudar o teu contrasinal!"
+    LOGGEDOUT: "Pechouse a túa sesión. Se desexas iniciar sesión de novo, insire as túas credenciais a continuación."
+    LOGIN: "Iniciar sesión"
+    NOTEPAGESECURED: "Esa páxina é segura. Insire as túas credenciais abaixo e enviarémoste dereito a ela."
+    NOTERESETPASSWORD: "Insire o teu enderezo de correo-e e enviarémosche unha ligazón coa que reiniciar o teu contrasinal"
   SecurityAdmin:
-    ACCESS_HELP: 'Permitir a visualización, adición e edición de usuarios, asemade asinar permisos e roles aos mesmos.'
-    APPLY_ROLES: 'Aplicar roles aos grupos'
-    APPLY_ROLES_HELP: 'Capacidade para editar os roles asinados a un grupo. Require os permisos "Acceso a sección ''Usuarios'' ".'
-    EDITPERMISSIONS: 'Xestionar permisos para grupos'
-    EDITPERMISSIONS_HELP: 'Capacidade para editar Permisos e Enderezos IP para un grupo. Require o permiso "Acceso a sección de ''Seguridade'' ".'
-    GROUPNAME: 'Nome do grupo'
-    IMPORTGROUPS: 'Importar grupos'
+    ACCESS_HELP: "Permitir a visualización, adición e edición de usuarios, asemade asinar permisos e roles aos mesmos."
+    APPLY_ROLES: "Aplicar roles aos grupos"
+    APPLY_ROLES_HELP: "Capacidade para editar os roles asinados a un grupo. Require os permisos \"Acceso a sección 'Usuarios' \"."
+    EDITPERMISSIONS: "Xestionar permisos para grupos"
+    EDITPERMISSIONS_HELP: "Capacidade para editar Permisos e Enderezos IP para un grupo. Require o permiso \"Acceso a sección de 'Seguridade' \"."
+    GROUPNAME: "Nome do grupo"
+    IMPORTGROUPS: "Importar grupos"
     MEMBERS: Membros
-    MemberListCaution: 'Coidado: Eliminando os membros da lista eliminaranse de todos os grupos e da base de datos'
-    NEWGROUP: 'Novo grupo'
+    MemberListCaution: "Coidado: Eliminando os membros da lista eliminaranse de todos os grupos e da base de datos"
+    NEWGROUP: "Novo grupo"
     PERMISSIONS: Permisos
-    ROLESDESCRIPTION: 'Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos.'
+    ROLESDESCRIPTION: "Os roles son conxuntos de permisos predefinidos, e poden ser asinados a grupos.<br />Poden ser herdados dos grupos pai si requeridos."
     Users: Usuarios
   SecurityAdmin_MemberImportForm:
-    BtnImport: 'Importar dende CSV'
-    FileFieldLabel: 'Ficheiro CSV <small>(Extensións permitidas: *.csv)</small>'
+    BtnImport: "Importar dende CSV"
+    FileFieldLabel: "Ficheiro CSV <small>(Extensións permitidas: *.csv)</small>"
   SiteTree:
     TABMAIN: Principal
   TableListField:
-    CSVEXPORT: 'Exportar a CSV'
+    CSVEXPORT: "Exportar a CSV"
   ToggleField:
     LESS: menos
     MORE: máis
   UploadField:
-    ATTACHFILE: 'Anexar un ficheiro'
-    ATTACHFILES: 'Anexar ficheiros'
-    AttachFile: 'Anexar ficheiro(s)'
-    DELETEINFO: 'Eliminar permanentemente este ficheiro do almacén de ficheiros'
+    ATTACHFILE: "Anexar un ficheiro"
+    ATTACHFILES: "Anexar ficheiros"
+    AttachFile: "Anexar ficheiro(s)"
+    DELETEINFO: "Eliminar permanentemente este ficheiro do almacén de ficheiros"
     DOEDIT: Gardar
-    DROPFILE: 'soltar un ficheiro'
-    DROPFILES: 'ficheiros soltados'
-    EDITINFO: 'Editar este ficheiro'
-    FIELDNOTSET: 'Ficheiro de información non atopado'
-    FROMCOMPUTER: 'Dende o teu Computador'
-    FROMFILES: 'Dende ficheiros'
-    REMOVEINFO: 'Eliminar este ficheiro daquí, pero non eliminalo do almacén de ficheiros'
-    STARTALL: 'Comezar todo'
+    DROPFILE: "soltar un ficheiro"
+    DROPFILES: "ficheiros soltados"
+    EDITINFO: "Editar este ficheiro"
+    FIELDNOTSET: "Ficheiro de información non atopado"
+    FROMCOMPUTER: "Dende o teu Computador"
+    FROMFILES: "Dende ficheiros"
+    REMOVEINFO: "Eliminar este ficheiro daquí, pero non eliminalo do almacén de ficheiros"
+    STARTALL: "Comezar todo"
     Saved: Gardado
   Versioned:
     has_many_Versions: Versións
