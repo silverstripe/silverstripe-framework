@@ -867,8 +867,10 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * filesystem.
 	 *
 	 * @return string Returns a random password.
+	 * @deprecated 3.6.0..4.0.0
 	 */
 	public static function create_new_password() {
+		Deprecation::notice('4.0', 'Please use Security/lostpassword to reset a password');
 		$words = Config::inst()->get('Security', 'word_list');
 
 		if($words && file_exists($words)) {
