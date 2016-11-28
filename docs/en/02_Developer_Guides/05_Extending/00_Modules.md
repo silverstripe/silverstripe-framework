@@ -101,6 +101,52 @@ operate in other structures, paths to static files such as CSS or JavaScript won
 See the [How to Publish a SilverStripe Module](how_tos/publish_a_module) for details on how to publish your SilverStripe
 modules with the community
 
+## Module Standard
+
+The SilverStripe module standard defines a set of conventions that high-quality SilverStripe modules should follow. It’s a bit like PSR for SilverStripe CMS. Suggested improvements can be raised as pull requests.
+
+### Coding Guidelines
+
+ * Declaration of level of support is provided for each module (either via README.md or composer) including the below.
+   * Level of support provided.
+   * Supporting user(s) and/or organisation(s).
+ * Complies to a well defined module directory structure and coding standards:
+   * templates (for ss templates)
+   * code (for php files)
+   * tests (for php test files) and
+   * _config (for yml config)
+ * The module is a Composer package.
+ * All Composer dependencies are bound to a single major release (e.g. ~3.1 not >=3.1).
+ * There is a level of test coverage.
+ * A clear public API documented in the docblock tags.
+ * Recommend the use of [PSR-1](http://www.php-fig.org/psr/psr-1/) and [PSR-2](http://www.php-fig.org/psr/psr-2/).
+ * .gitattributes will be used to exclude non-essential files from the distribution. At a minimum tests, docs, and IDE/dev-tool config should be excluded.
+
+### Documentation Guidelines
+
+Documentation will use the following format:
+
+ * README.md provides:
+   * Links or badges to CI and code quality tools.
+   * A short summary of the module, end-user.
+   * Installation instructions
+   * Testing/development instructions and a link to contrib instructions.
+   * How to report security vulnerabilities. Note that PSR-9 / PSR-10 may be recommended once released.
+   * Security, license, links to more detailed docs.
+ * CONTRIBUTING.md
+ * A changelog CHANGELOG.md (may link to other more detailed docs if you want).
+ * Has a licence (LICENSE.md file) - for SilverStripe supported this needs to be BSD.
+ * Detailed documentation in /docs/en as a nested set of GitHub-compatible Markdown files.
+ * Links and image references are relative, and are able to be followed in viewers such as GitHub.
+ * Page Metadata can be added to pages.
+
+Documentation will cover:
+
+ * Installation
+ * Configuration
+ * Usage guides for key features; screenshots are recommended.
+ * A committers guide, covering PR-merging and release guidelines.
+
 
 ## Related
 
