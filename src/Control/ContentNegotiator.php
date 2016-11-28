@@ -31,183 +31,196 @@ use SilverStripe\Core\Object;
  * Some developers might know what they're doing and don't want ContentNegotiator messing with their
  * HTML4 doctypes, but still find it useful to have self-closing tags removed.
  */
-class ContentNegotiator extends Object {
+class ContentNegotiator extends Object
+{
 
-	/**
-	 * @config
-	 *
-	 * @var string
-	 */
-	private static $content_type = '';
+    /**
+     * @config
+     *
+     * @var string
+     */
+    private static $content_type = '';
 
-	/**
-	 * @config
-	 *
-	 * @var string
-	 */
-	private static $encoding = 'utf-8';
+    /**
+     * @config
+     *
+     * @var string
+     */
+    private static $encoding = 'utf-8';
 
-	/**
-	 * @config
-	 *
-	 * @var bool
-	 */
-	private static $enabled = false;
+    /**
+     * @config
+     *
+     * @var bool
+     */
+    private static $enabled = false;
 
-	/**
-	 * @config
-	 *
-	 * @var string
-	 */
-	private static $default_format = 'html';
+    /**
+     * @config
+     *
+     * @var string
+     */
+    private static $default_format = 'html';
 
-	/**
-	 * Returns true if negotiation is enabled for the given response. By default, negotiation is only
-	 * enabled for pages that have the xml header.
-	 *
-	 * @param HTTPResponse $response
-	 * @return bool
-	 */
-	public static function enabled_for($response) {
-		$contentType = $response->getHeader("Content-Type");
+    /**
+     * Returns true if negotiation is enabled for the given response. By default, negotiation is only
+     * enabled for pages that have the xml header.
+     *
+     * @param HTTPResponse $response
+     * @return bool
+     */
+    public static function enabled_for($response)
+    {
+        $contentType = $response->getHeader("Content-Type");
 
-		// Disable content negotiation for other content types
-		if ($contentType
-			&& substr($contentType, 0, 9) != 'text/html'
-			&& substr($contentType, 0, 21) != 'application/xhtml+xml'
-		) {
-			return false;
-		}
+        // Disable content negotiation for other content types
+        if ($contentType
+            && substr($contentType, 0, 9) != 'text/html'
+            && substr($contentType, 0, 21) != 'application/xhtml+xml'
+        ) {
+            return false;
+        }
 
-		if(static::config()->enabled) {
-			return true;
-		} else {
-			return (substr($response->getBody(),0,5) == '<' . '?xml');
-		}
-	}
+        if (static::config()->enabled) {
+            return true;
+        } else {
+            return (substr($response->getBody(), 0, 5) == '<' . '?xml');
+        }
+    }
 
-	/**
-	 * @param HTTPResponse $response
-	 */
-	public static function process(HTTPResponse $response) {
-		if(!self::enabled_for($response)) return;
+    /**
+     * @param HTTPResponse $response
+     */
+    public static function process(HTTPResponse $response)
+    {
+        if (!self::enabled_for($response)) {
+            return;
+        }
 
-		$mimes = array(
-			"xhtml" => "application/xhtml+xml",
-			"html" => "text/html",
-		);
-		$q = array();
-		if(headers_sent()) {
-			$chosenFormat = static::config()->default_format;
+        $mimes = array(
+            "xhtml" => "application/xhtml+xml",
+            "html" => "text/html",
+        );
+        $q = array();
+        if (headers_sent()) {
+            $chosenFormat = static::config()->default_format;
+        } elseif (isset($_GET['forceFormat'])) {
+            $chosenFormat = $_GET['forceFormat'];
+        } else {
+            // The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml. We put this
+            // special case in here so that designers don't get worried that their templates are HTML4.
+            if (isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
+                $chosenFormat = "xhtml";
+            } else {
+                foreach ($mimes as $format => $mime) {
+                    $regExp = '/' . str_replace(array('+','/'), array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
+                    if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
+                        $preference = isset($matches[2]) ? $matches[2] : 1;
+                        if (!isset($q[$preference])) {
+                            $q[$preference] = $format;
+                        }
+                    }
+                }
 
-		} else if(isset($_GET['forceFormat'])) {
-			$chosenFormat = $_GET['forceFormat'];
+                if ($q) {
+                    // Get the preferred format
+                    krsort($q);
+                    $chosenFormat = reset($q);
+                } else {
+                    $chosenFormat = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'default_format');
+                }
+            }
+        }
 
-		} else {
-			// The W3C validator doesn't send an HTTP_ACCEPT header, but it can support xhtml. We put this
-			// special case in here so that designers don't get worried that their templates are HTML4.
-			if(isset($_SERVER['HTTP_USER_AGENT']) && substr($_SERVER['HTTP_USER_AGENT'], 0, 14) == 'W3C_Validator/') {
-				$chosenFormat = "xhtml";
+        $negotiator = new ContentNegotiator();
+        $negotiator->$chosenFormat( $response );
+    }
 
-			} else {
-				foreach($mimes as $format => $mime) {
-					$regExp = '/' . str_replace(array('+','/'),array('\+','\/'), $mime) . '(;q=(\d+\.\d+))?/i';
-					if (isset($_SERVER['HTTP_ACCEPT']) && preg_match($regExp, $_SERVER['HTTP_ACCEPT'], $matches)) {
-						$preference = isset($matches[2]) ? $matches[2] : 1;
-						if(!isset($q[$preference])) $q[$preference] = $format;
-					}
-				}
+    /**
+     * Check user defined content type and use it, if it's empty use the strict application/xhtml+xml.
+     * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;
+     * <input>, checked, selected).
+     *
+     * @param HTTPResponse $response
+     *
+     * @todo Search for more xhtml replacement
+     */
+    public function xhtml(HTTPResponse $response)
+    {
+        $content = $response->getBody();
+        $encoding = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'encoding');
 
-				if($q) {
-					// Get the preferred format
-					krsort($q);
-					$chosenFormat = reset($q);
-				} else {
-					$chosenFormat = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'default_format');
-				}
-			}
-		}
+        $contentType = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'content_type');
+        if (empty($contentType)) {
+            $response->addHeader("Content-Type", "application/xhtml+xml; charset=" . $encoding);
+        } else {
+            $response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
+        }
+        $response->addHeader("Vary", "Accept");
 
-		$negotiator = new ContentNegotiator();
-		$negotiator->$chosenFormat( $response );
-	}
+        // Fix base tag
+        $content = preg_replace(
+            '/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/',
+            '<base href="$1" />',
+            $content
+        );
 
-	/**
-	 * Check user defined content type and use it, if it's empty use the strict application/xhtml+xml.
-	 * Replaces a few common tags and entities with their XHTML representations (<br>, <img>, &nbsp;
-	 * <input>, checked, selected).
-	 *
-	 * @param HTTPResponse $response
-	 *
-	 * @todo Search for more xhtml replacement
-	 */
-	public function xhtml(HTTPResponse $response) {
-		$content = $response->getBody();
-		$encoding = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'encoding');
+        $content = str_replace('&nbsp;', '&#160;', $content);
+        $content = str_replace('<br>', '<br />', $content);
+        $content = str_replace('<hr>', '<hr />', $content);
+        $content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
+        $content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content);
+        $content = preg_replace('#(<param[^>]*[^/>])>#i', '\\1/>', $content);
+        $content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", "$1=\"selected\"$2", $content);
+        $content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", "$1=\"checked\"$2", $content);
 
-		$contentType = Config::inst()->get('SilverStripe\\Control\\ContentNegotiator', 'content_type');
-		if (empty($contentType)) {
-			$response->addHeader("Content-Type", "application/xhtml+xml; charset=" . $encoding);
-		} else {
-			$response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
-		}
-		$response->addHeader("Vary" , "Accept");
+        $response->setBody($content);
+    }
 
-		// Fix base tag
-		$content = preg_replace('/<base href="([^"]*)"><!--\[if[[^\]*]\] \/><!\[endif\]-->/',
-			'<base href="$1" />', $content);
+    /**
+     * Performs the following replacements:
+     * - Check user defined content type and use it, if it's empty use the text/html.
+     * - If find a XML header replaces it and existing doctypes with HTML4.01 Strict.
+     * - Replaces self-closing tags like <img /> with unclosed solitary tags like <img>.
+     * - Replaces all occurrences of "application/xhtml+xml" with "text/html" in the template.
+     * - Removes "xmlns" attributes and any <?xml> Pragmas.
+     *
+     * @param HTTPResponse $response
+     */
+    public function html(HTTPResponse $response)
+    {
+        $encoding = $this->config()->get('encoding');
+        $contentType = $this->config()->get('content_type');
+        if (empty($contentType)) {
+            $response->addHeader("Content-Type", "text/html; charset=" . $encoding);
+        } else {
+            $response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
+        }
+        $response->addHeader("Vary", "Accept");
 
-		$content = str_replace('&nbsp;','&#160;', $content);
-		$content = str_replace('<br>','<br />', $content);
-		$content = str_replace('<hr>','<hr />', $content);
-		$content = preg_replace('#(<img[^>]*[^/>])>#i', '\\1/>', $content);
-		$content = preg_replace('#(<input[^>]*[^/>])>#i', '\\1/>', $content);
-		$content = preg_replace('#(<param[^>]*[^/>])>#i', '\\1/>', $content);
-		$content = preg_replace("#(\<option[^>]*[\s]+selected)(?!\s*\=)#si", "$1=\"selected\"$2", $content);
-		$content = preg_replace("#(\<input[^>]*[\s]+checked)(?!\s*\=)#si", "$1=\"checked\"$2", $content);
+        $content = $response->getBody();
+        $hasXMLHeader = (substr($content, 0, 5) == '<' . '?xml' );
 
-		$response->setBody($content);
-	}
+        // Fix base tag
+        $content = preg_replace(
+            '/<base href="([^"]*)" \/>/',
+            '<base href="$1"><!--[if lte IE 6]></base><![endif]-->',
+            $content
+        );
 
-	/**
-	 * Performs the following replacements:
-	 * - Check user defined content type and use it, if it's empty use the text/html.
-	 * - If find a XML header replaces it and existing doctypes with HTML4.01 Strict.
-	 * - Replaces self-closing tags like <img /> with unclosed solitary tags like <img>.
-	 * - Replaces all occurrences of "application/xhtml+xml" with "text/html" in the template.
-	 * - Removes "xmlns" attributes and any <?xml> Pragmas.
-	 *
-	 * @param HTTPResponse $response
-	 */
-	public function html(HTTPResponse $response) {
-		$encoding = $this->config()->get('encoding');
-		$contentType = $this->config()->get('content_type');
-		if (empty($contentType)) {
-			$response->addHeader("Content-Type", "text/html; charset=" . $encoding);
-		} else {
-			$response->addHeader("Content-Type", $contentType . "; charset=" . $encoding);
-		}
-		$response->addHeader("Vary", "Accept");
+        $content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
+        $content = str_replace(array('/>','xml:lang','application/xhtml+xml'), array('>','lang','text/html'), $content);
 
-		$content = $response->getBody();
-		$hasXMLHeader = (substr($content,0,5) == '<' . '?xml' );
+        // Only replace the doctype in templates with the xml header
+        if ($hasXMLHeader) {
+            $content = preg_replace(
+                '/<!DOCTYPE[^>]+>/',
+                '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
+                $content
+            );
+        }
+        $content = preg_replace('/<html xmlns="[^"]+"/', '<html ', $content);
 
-		// Fix base tag
-		$content = preg_replace('/<base href="([^"]*)" \/>/',
-			'<base href="$1"><!--[if lte IE 6]></base><![endif]-->', $content);
-
-		$content = preg_replace("#<\\?xml[^>]+\\?>\n?#", '', $content);
-		$content = str_replace(array('/>','xml:lang','application/xhtml+xml'),array('>','lang','text/html'), $content);
-
-		// Only replace the doctype in templates with the xml header
-		if($hasXMLHeader) {
-			$content = preg_replace('/<!DOCTYPE[^>]+>/',
-				'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
-				$content);
-		}
-		$content = preg_replace('/<html xmlns="[^"]+"/','<html ', $content);
-
-		$response->setBody($content);
-	}
-
+        $response->setBody($content);
+    }
 }

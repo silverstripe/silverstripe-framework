@@ -26,154 +26,162 @@ namespace SilverStripe\Forms;
  *
  * @author Pete Bacon Darwin
  */
-class NullableField extends FormField {
-	/**
-	 * The field that holds the value of this field
-	 *
-	 * @var FormField
-	 */
-	protected $valueField;
+class NullableField extends FormField
+{
+    /**
+     * The field that holds the value of this field
+     *
+     * @var FormField
+     */
+    protected $valueField;
 
-	/**
-	 * The label to show next to the is null check box.
-	 *
-	 * @var string
-	 */
-	protected $isNullLabel;
+    /**
+     * The label to show next to the is null check box.
+     *
+     * @var string
+     */
+    protected $isNullLabel;
 
-	/**
-	 * Create a new nullable field
-	 *
-	 * @param FormField $valueField
-	 * @param null|string $isNullLabel
-	 */
-	public function __construct(FormField $valueField, $isNullLabel = null) {
-		$this->valueField = $valueField;
+    /**
+     * Create a new nullable field
+     *
+     * @param FormField $valueField
+     * @param null|string $isNullLabel
+     */
+    public function __construct(FormField $valueField, $isNullLabel = null)
+    {
+        $this->valueField = $valueField;
 
-		if(isset($isNullLabel)) {
-			$this->setIsNullLabel($isNullLabel);
-		} else {
-			$this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null');
-		}
+        if (isset($isNullLabel)) {
+            $this->setIsNullLabel($isNullLabel);
+        } else {
+            $this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null');
+        }
 
-		parent::__construct(
-			$valueField->getName(),
-			$valueField->Title(),
-			$valueField->Value()
-		);
+        parent::__construct(
+            $valueField->getName(),
+            $valueField->Title(),
+            $valueField->Value()
+        );
 
-		$this->setForm($valueField->getForm());
-		$this->setRightTitle($valueField->RightTitle());
-		$this->setReadonly($valueField->isReadonly());
-	}
+        $this->setForm($valueField->getForm());
+        $this->setRightTitle($valueField->RightTitle());
+        $this->setReadonly($valueField->isReadonly());
+    }
 
-	/**
-	 * Get the label used for the Is Null checkbox.
-	 *
-	 * @return string
-	 */
-	public function getIsNullLabel() {
-		return $this->isNullLabel;
-	}
+    /**
+     * Get the label used for the Is Null checkbox.
+     *
+     * @return string
+     */
+    public function getIsNullLabel()
+    {
+        return $this->isNullLabel;
+    }
 
-	/**
-	 * Set the label used for the Is Null checkbox.
-	 *
-	 * @param $isNulLabel string
-	 *
-	 * @return $this
-	 */
-	public function setIsNullLabel($isNulLabel) {
-		$this->isNullLabel = $isNulLabel;
+    /**
+     * Set the label used for the Is Null checkbox.
+     *
+     * @param $isNulLabel string
+     *
+     * @return $this
+     */
+    public function setIsNullLabel($isNulLabel)
+    {
+        $this->isNullLabel = $isNulLabel;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * Get the id used for the Is Null check box.
-	 *
-	 * @return string
-	 */
-	public function getIsNullId() {
-		return $this->getName() . "_IsNull";
-	}
+    /**
+     * Get the id used for the Is Null check box.
+     *
+     * @return string
+     */
+    public function getIsNullId()
+    {
+        return $this->getName() . "_IsNull";
+    }
 
-	/**
-	 * @param array $properties
-	 *
-	 * @return string
-	 */
-	public function Field($properties = array()) {
-		if($this->isReadonly()) {
-			$nullableCheckbox = new CheckboxField_Readonly($this->getIsNullId());
-		} else {
-			$nullableCheckbox = new CheckboxField($this->getIsNullId());
-		}
+    /**
+     * @param array $properties
+     *
+     * @return string
+     */
+    public function Field($properties = array())
+    {
+        if ($this->isReadonly()) {
+            $nullableCheckbox = new CheckboxField_Readonly($this->getIsNullId());
+        } else {
+            $nullableCheckbox = new CheckboxField($this->getIsNullId());
+        }
 
-		$nullableCheckbox->setValue(is_null($this->dataValue()));
+        $nullableCheckbox->setValue(is_null($this->dataValue()));
 
-		return sprintf(
-			'%s %s&nbsp;<span>%s</span>',
-			$this->valueField->Field(),
-			$nullableCheckbox->Field(),
-			$this->getIsNullLabel()
-		);
-	}
+        return sprintf(
+            '%s %s&nbsp;<span>%s</span>',
+            $this->valueField->Field(),
+            $nullableCheckbox->Field(),
+            $this->getIsNullLabel()
+        );
+    }
 
-	/**
-	 * Value is sometimes an array, and sometimes a single value, so we need to handle both cases
-	 *
-	 * @param mixed $value
-	 * @param null|array $data
-	 *
-	 * @return $this
-	 */
-	public function setValue($value, $data = null) {
-		$id = $this->getIsNullId();
+    /**
+     * Value is sometimes an array, and sometimes a single value, so we need to handle both cases
+     *
+     * @param mixed $value
+     * @param null|array $data
+     *
+     * @return $this
+     */
+    public function setValue($value, $data = null)
+    {
+        $id = $this->getIsNullId();
 
-		if(is_array($data) && array_key_exists($id, $data) && $data[$id]) {
-			$value = null;
-		}
+        if (is_array($data) && array_key_exists($id, $data) && $data[$id]) {
+            $value = null;
+        }
 
-		$this->valueField->setValue($value);
+        $this->valueField->setValue($value);
 
-		parent::setValue($value);
+        parent::setValue($value);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @param string $name
-	 *
-	 * @return $this
-	 */
-	public function setName($name) {
-		$this->valueField->setName($name);
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->valueField->setName($name);
 
-		parent::setName($name);
+        parent::setName($name);
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function debug() {
-		$result = sprintf(
-			'%s (%s: $s : <span style="color: red">%s</span>) = ',
-			$this->class,
-			$this->name,
-			$this->title,
-			$this->message
-		);
+    /**
+     * @return string
+     */
+    public function debug()
+    {
+        $result = sprintf(
+            '%s (%s: $s : <span style="color: red">%s</span>) = ',
+            $this->class,
+            $this->name,
+            $this->title,
+            $this->message
+        );
 
-		if($this->value === null) {
-			$result .= "<<null>>";
-		} else {
-			$result .= (string) $this->value;
-		}
+        if ($this->value === null) {
+            $result .= "<<null>>";
+        } else {
+            $result .= (string) $this->value;
+        }
 
-		return $result;
-	}
-
+        return $result;
+    }
 }

@@ -18,47 +18,52 @@ use SilverStripe\Dev\Debug;
  *
  * To actually perform the transformation, call $form->transform(new MyTransformation());
  */
-class FormTransformation extends Object {
-	public function transform(FormField $field) {
-		// Look for a performXXTransformation() method on the field itself.
-		// performReadonlyTransformation() is a pretty commonly applied method.
-		// Otherwise, look for a transformXXXField() method on this object.
-		// This is more commonly done in custom transformations
+class FormTransformation extends Object
+{
+    public function transform(FormField $field)
+    {
+        // Look for a performXXTransformation() method on the field itself.
+        // performReadonlyTransformation() is a pretty commonly applied method.
+        // Otherwise, look for a transformXXXField() method on this object.
+        // This is more commonly done in custom transformations
 
-		// We iterate through each array simultaneously, looking at [0] of both, then [1] of both.
-		// This provides a more natural failover scheme.
+        // We iterate through each array simultaneously, looking at [0] of both, then [1] of both.
+        // This provides a more natural failover scheme.
 
-		$transNames = array_reverse(array_map(
-			function($name) { return ClassInfo::shortName($name); },
-			array_values(ClassInfo::ancestry($this->class))
-		));
-		$fieldClasses = array_reverse(array_map(
-			function($name) { return ClassInfo::shortName($name); },
-			array_values(ClassInfo::ancestry($field->class))
-		));
+        $transNames = array_reverse(array_map(
+            function ($name) {
+                return ClassInfo::shortName($name);
+            },
+            array_values(ClassInfo::ancestry($this->class))
+        ));
+        $fieldClasses = array_reverse(array_map(
+            function ($name) {
+                return ClassInfo::shortName($name);
+            },
+            array_values(ClassInfo::ancestry($field->class))
+        ));
 
-		$len = max(sizeof($transNames), sizeof($fieldClasses));
-		for($i=0; $i<$len; $i++) {
-			// This is lets fieldClasses be longer than transNames
-			if(!empty($transNames[$i])) {
-				$funcName = 'perform' . $transNames[$i];
-				if($field->hasMethod($funcName)) {
-					//echo "<li>$field->class used $funcName";
-					return $field->$funcName($this);
-				}
-			}
+        $len = max(sizeof($transNames), sizeof($fieldClasses));
+        for ($i=0; $i<$len; $i++) {
+            // This is lets fieldClasses be longer than transNames
+            if (!empty($transNames[$i])) {
+                $funcName = 'perform' . $transNames[$i];
+                if ($field->hasMethod($funcName)) {
+                    //echo "<li>$field->class used $funcName";
+                    return $field->$funcName($this);
+                }
+            }
 
-			// And this one does the reverse.
-			if(!empty($fieldClasses[$i])) {
-				$funcName = 'transform' . $fieldClasses[$i];
-				if($this->hasMethod($funcName)) {
-					//echo "<li>$field->class used $funcName";
-					return $this->$funcName($field);
-				}
-			}
-		}
+            // And this one does the reverse.
+            if (!empty($fieldClasses[$i])) {
+                $funcName = 'transform' . $fieldClasses[$i];
+                if ($this->hasMethod($funcName)) {
+                    //echo "<li>$field->class used $funcName";
+                    return $this->$funcName($field);
+                }
+            }
+        }
 
-		throw new \BadMethodCallException("FormTransformation:: Can't perform '$this->class' on '$field->class'");
-	}
+        throw new \BadMethodCallException("FormTransformation:: Can't perform '$this->class' on '$field->class'");
+    }
 }
-

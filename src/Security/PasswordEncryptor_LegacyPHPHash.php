@@ -11,22 +11,22 @@ namespace SilverStripe\Security;
  */
 class PasswordEncryptor_LegacyPHPHash extends PasswordEncryptor_PHPHash
 {
-	public function encrypt($password, $salt = null, $member = null)
-	{
-		$password = parent::encrypt($password, $salt, $member);
+    public function encrypt($password, $salt = null, $member = null)
+    {
+        $password = parent::encrypt($password, $salt, $member);
 
-		// Legacy fix: This shortening logic is producing unpredictable results.
-		//
-		// Convert the base of the hexadecimal password to 36 to make it shorter
-		// In that way we can store also a SHA256 encrypted password in just 64
-		// letters.
-		return substr(base_convert($password, 16, 36), 0, 64);
-	}
+        // Legacy fix: This shortening logic is producing unpredictable results.
+        //
+        // Convert the base of the hexadecimal password to 36 to make it shorter
+        // In that way we can store also a SHA256 encrypted password in just 64
+        // letters.
+        return substr(base_convert($password, 16, 36), 0, 64);
+    }
 
-	public function check($hash, $password, $salt = null, $member = null)
-	{
-		// Due to flawed base_convert() floating poing precision,
-		// only the first 10 characters are consistently useful for comparisons.
-		return (substr($hash, 0, 10) === substr($this->encrypt($password, $salt, $member), 0, 10));
-	}
+    public function check($hash, $password, $salt = null, $member = null)
+    {
+        // Due to flawed base_convert() floating poing precision,
+        // only the first 10 characters are consistently useful for comparisons.
+        return (substr($hash, 0, 10) === substr($this->encrypt($password, $salt, $member), 0, 10));
+    }
 }

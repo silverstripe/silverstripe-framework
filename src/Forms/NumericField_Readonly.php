@@ -7,24 +7,24 @@ namespace SilverStripe\Forms;
  */
 class NumericField_Readonly extends ReadonlyField
 {
-	/**
-	 * @return static
-	 */
-	public function performReadonlyTransformation()
-	{
-		return clone $this;
-	}
+    /**
+     * @return static
+     */
+    public function performReadonlyTransformation()
+    {
+        return clone $this;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function Value()
-	{
-		return $this->value ?: '0';
-	}
+    /**
+     * @return string
+     */
+    public function Value()
+    {
+        return $this->value ?: '0';
+    }
 
-	public function getValueCast()
-	{
-		return 'Decimal';
-	}
+    public function getValueCast()
+    {
+        return 'Decimal';
+    }
 }

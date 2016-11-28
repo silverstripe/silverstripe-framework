@@ -7,28 +7,30 @@ namespace SilverStripe\Forms;
  *
  * Use a {@link ReadonlyField} if you need to display a label and value.
  */
-class LabelField extends DatalessField {
-	/**
-	 * @param string $name
-	 * @param null|string $title
-	 */
-	public function __construct($name, $title = null) {
-		// legacy handling:
-		// $title, $headingLevel...
-		$args = func_get_args();
+class LabelField extends DatalessField
+{
+    /**
+     * @param string $name
+     * @param null|string $title
+     */
+    public function __construct($name, $title = null)
+    {
+        // legacy handling:
+        // $title, $headingLevel...
+        $args = func_get_args();
 
-		if(!isset($args[1])) {
-			$title = (isset($args[0])) ? $args[0] : null;
+        if (!isset($args[1])) {
+            $title = (isset($args[0])) ? $args[0] : null;
 
-			if(isset($args[0])) {
-				$title = $args[0];
-			}
+            if (isset($args[0])) {
+                $title = $args[0];
+            }
 
-			// Prefix name to avoid collisions.
-			/** @skipUpgrade */
-			$name = 'LabelField' . $title;
-		}
+            // Prefix name to avoid collisions.
+            /** @skipUpgrade */
+            $name = 'LabelField' . $title;
+        }
 
-		parent::__construct($name, $title);
-	}
+        parent::__construct($name, $title);
+    }
 }

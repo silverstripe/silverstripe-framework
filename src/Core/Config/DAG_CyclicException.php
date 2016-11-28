@@ -11,16 +11,15 @@ use Exception;
 class DAG_CyclicException extends Exception
 {
 
-	public $dag;
+    public $dag;
 
-	/**
-	 * @param string $message The Exception message
-	 * @param DAG $dag The remainder of the Directed Acyclic Graph (DAG) after the last successful sort
-	 */
-	public function __construct($message, $dag)
-	{
-		$this->dag = $dag;
-		parent::__construct($message);
-	}
-
+    /**
+     * @param string $message The Exception message
+     * @param DAG $dag The remainder of the Directed Acyclic Graph (DAG) after the last successful sort
+     */
+    public function __construct($message, $dag)
+    {
+        $this->dag = $dag;
+        parent::__construct($message);
+    }
 }

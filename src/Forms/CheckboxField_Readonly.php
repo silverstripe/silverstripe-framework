@@ -8,21 +8,20 @@ namespace SilverStripe\Forms;
 class CheckboxField_Readonly extends ReadonlyField
 {
 
-	public function performReadonlyTransformation()
-	{
-		return clone $this;
-	}
+    public function performReadonlyTransformation()
+    {
+        return clone $this;
+    }
 
-	public function Value()
-	{
-		return $this->value ?
-			_t('CheckboxField.YESANSWER', 'Yes') :
-			_t('CheckboxField.NOANSWER', 'No');
-	}
+    public function Value()
+    {
+        return $this->value ?
+            _t('CheckboxField.YESANSWER', 'Yes') :
+            _t('CheckboxField.NOANSWER', 'No');
+    }
 
-	public function getValueCast()
-	{
-		return 'Text';
-	}
-
+    public function getValueCast()
+    {
+        return 'Text';
+    }
 }

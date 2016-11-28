@@ -18,54 +18,57 @@ use SilverStripe\View\SSViewer;
  * The purpose of this class is to have a footer that can round off
  * {@link GridField} without having to use pagination.
  */
-class GridFieldFooter implements GridField_HTMLProvider {
+class GridFieldFooter implements GridField_HTMLProvider
+{
 
-	/**
-	 * A message to display in the footer
-	 *
-	 * @var string
-	 */
-	protected $message = null;
+    /**
+     * A message to display in the footer
+     *
+     * @var string
+     */
+    protected $message = null;
 
-	/**
-	 * True to show record count
-	 *
-	 * @var bool
-	 */
-	protected $showrecordcount = false;
+    /**
+     * True to show record count
+     *
+     * @var bool
+     */
+    protected $showrecordcount = false;
 
-	/**
-	 *
-	 * @param string $message A message to display in the footer
-	 * @param bool $showrecordcount
-	 */
-	public function __construct($message = null, $showrecordcount = true) {
-		if($message) {
-			$this->message = $message;
-		}
-		$this->showrecordcount = $showrecordcount;
-	}
+    /**
+     *
+     * @param string $message A message to display in the footer
+     * @param bool $showrecordcount
+     */
+    public function __construct($message = null, $showrecordcount = true)
+    {
+        if ($message) {
+            $this->message = $message;
+        }
+        $this->showrecordcount = $showrecordcount;
+    }
 
 
-	public function getHTMLFragments($gridField) {
-		$count = $gridField->getList()->count();
+    public function getHTMLFragments($gridField)
+    {
+        $count = $gridField->getList()->count();
 
-		$forTemplate = new ArrayData(array(
-			'ShowRecordCount' => $this->showrecordcount,
-			'Message' => $this->message,
-			'FirstShownRecord' => 1,
-			'LastShownRecord' => $count,
-			'NumRecords' => $count
-		));
+        $forTemplate = new ArrayData(array(
+            'ShowRecordCount' => $this->showrecordcount,
+            'Message' => $this->message,
+            'FirstShownRecord' => 1,
+            'LastShownRecord' => $count,
+            'NumRecords' => $count
+        ));
 
-		$template = SSViewer::get_templates_by_class($this, '', __CLASS__);
-		return array(
-			'footer' => $forTemplate->renderWith(
-				$template,
-				array(
-					'Colspan' => count($gridField->getColumns())
-				)
-			)
-		);
-	}
+        $template = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        return array(
+            'footer' => $forTemplate->renderWith(
+                $template,
+                array(
+                    'Colspan' => count($gridField->getColumns())
+                )
+            )
+        );
+    }
 }

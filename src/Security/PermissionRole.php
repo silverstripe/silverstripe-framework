@@ -23,85 +23,93 @@ use SilverStripe\ORM\ManyManyList;
  * @method HasManyList Codes() List of PermissionRoleCode objects
  * @method ManyManyList Groups() List of Group objects
  */
-class PermissionRole extends DataObject {
-	private static $db = array(
-		"Title" => "Varchar",
-		"OnlyAdminCanApply" => "Boolean"
-	);
+class PermissionRole extends DataObject
+{
+    private static $db = array(
+        "Title" => "Varchar",
+        "OnlyAdminCanApply" => "Boolean"
+    );
 
-	private static $has_many = array(
-		"Codes" => "SilverStripe\\Security\\PermissionRoleCode",
-	);
+    private static $has_many = array(
+        "Codes" => "SilverStripe\\Security\\PermissionRoleCode",
+    );
 
-	private static $belongs_many_many = array(
-		"Groups" => "SilverStripe\\Security\\Group",
-	);
+    private static $belongs_many_many = array(
+        "Groups" => "SilverStripe\\Security\\Group",
+    );
 
-	private static $table_name = "PermissionRole";
+    private static $table_name = "PermissionRole";
 
-	private static $default_sort = '"Title"';
+    private static $default_sort = '"Title"';
 
-	private static $singular_name = 'Role';
+    private static $singular_name = 'Role';
 
-	private static $plural_name = 'Roles';
+    private static $plural_name = 'Roles';
 
-	public function getCMSFields() {
-		$fields = parent::getCMSFields();
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
 
-		$fields->removeFieldFromTab('Root', 'Codes');
-		$fields->removeFieldFromTab('Root', 'Groups');
+        $fields->removeFieldFromTab('Root', 'Codes');
+        $fields->removeFieldFromTab('Root', 'Groups');
 
-		$fields->addFieldToTab(
-			'Root.Main',
-			$permissionField = new PermissionCheckboxSetField(
-				'Codes',
-				Permission::singleton()->i18n_plural_name(),
-				'SilverStripe\\Security\\PermissionRoleCode',
-				'RoleID'
-			)
-		);
-		$permissionField->setHiddenPermissions(
-			Permission::config()->hidden_permissions
-		);
+        $fields->addFieldToTab(
+            'Root.Main',
+            $permissionField = new PermissionCheckboxSetField(
+                'Codes',
+                Permission::singleton()->i18n_plural_name(),
+                'SilverStripe\\Security\\PermissionRoleCode',
+                'RoleID'
+            )
+        );
+        $permissionField->setHiddenPermissions(
+            Permission::config()->hidden_permissions
+        );
 
-		return $fields;
-	}
+        return $fields;
+    }
 
-	public function onAfterDelete() {
-		parent::onAfterDelete();
+    public function onAfterDelete()
+    {
+        parent::onAfterDelete();
 
-		// Delete associated permission codes
-		$codes = $this->Codes();
-		foreach ( $codes as $code ) {
-			$code->delete();
-		}
-	}
+        // Delete associated permission codes
+        $codes = $this->Codes();
+        foreach ($codes as $code) {
+            $code->delete();
+        }
+    }
 
-	public function fieldLabels($includerelations = true) {
-		$labels = parent::fieldLabels($includerelations);
-		$labels['Title'] = _t('PermissionRole.Title', 'Title');
-		$labels['OnlyAdminCanApply'] = _t(
-			'PermissionRole.OnlyAdminCanApply',
-			'Only admin can apply',
-			'Checkbox to limit which user can apply this role'
-		);
+    public function fieldLabels($includerelations = true)
+    {
+        $labels = parent::fieldLabels($includerelations);
+        $labels['Title'] = _t('PermissionRole.Title', 'Title');
+        $labels['OnlyAdminCanApply'] = _t(
+            'PermissionRole.OnlyAdminCanApply',
+            'Only admin can apply',
+            'Checkbox to limit which user can apply this role'
+        );
 
-		return $labels;
-	}
+        return $labels;
+    }
 
-	public function canView($member = null) {
-		return Permission::check('APPLY_ROLES', 'any', $member);
-	}
+    public function canView($member = null)
+    {
+        return Permission::check('APPLY_ROLES', 'any', $member);
+    }
 
-	public function canCreate($member = null, $context = array()) {
-		return Permission::check('APPLY_ROLES', 'any', $member);
-	}
+    public function canCreate($member = null, $context = array())
+    {
+        return Permission::check('APPLY_ROLES', 'any', $member);
+    }
 
-	public function canEdit($member = null) {
-		return Permission::check('APPLY_ROLES', 'any', $member);
-	}
+    public function canEdit($member = null)
+    {
+        return Permission::check('APPLY_ROLES', 'any', $member);
+    }
 
-	public function canDelete($member = null) {
-		return Permission::check('APPLY_ROLES', 'any', $member);
-	}
+    public function canDelete($member = null)
+    {
+        return Permission::check('APPLY_ROLES', 'any', $member);
+    }
 }

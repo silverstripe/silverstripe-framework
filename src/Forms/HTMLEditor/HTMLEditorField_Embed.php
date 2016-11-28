@@ -18,147 +18,149 @@ use Embed\Embed;
 class HTMLEditorField_Embed extends HTMLEditorField_File
 {
 
-	private static $casting = array(
-		'Type' => 'Varchar',
-		'Info' => 'Varchar'
-	);
+    private static $casting = array(
+        'Type' => 'Varchar',
+        'Info' => 'Varchar'
+    );
 
-	/**
-	 * Embed result
-	 *
-	 * @var Embed
-	 */
-	protected $embed;
+    /**
+     * Embed result
+     *
+     * @var Embed
+     */
+    protected $embed;
 
-	public function __construct($url, File $file = null)
-	{
-		parent::__construct($url, $file);
-		$this->embed = Embed::create($url);
-		if (!$this->embed) {
-			$controller = Controller::curr();
-			$response = $controller->getResponse();
-			$response->addHeader('X-Status',
-				rawurlencode(_t(
-					'HTMLEditorField.URLNOTANOEMBEDRESOURCE',
-					"The URL '{url}' could not be turned into a media resource.",
-					"The given URL is not a valid Oembed resource; the embed element couldn't be created.",
-					array('url' => $url)
-				)));
-			$response->setStatusCode(404);
+    public function __construct($url, File $file = null)
+    {
+        parent::__construct($url, $file);
+        $this->embed = Embed::create($url);
+        if (!$this->embed) {
+            $controller = Controller::curr();
+            $response = $controller->getResponse();
+            $response->addHeader(
+                'X-Status',
+                rawurlencode(_t(
+                    'HTMLEditorField.URLNOTANOEMBEDRESOURCE',
+                    "The URL '{url}' could not be turned into a media resource.",
+                    "The given URL is not a valid Oembed resource; the embed element couldn't be created.",
+                    array('url' => $url)
+                ))
+            );
+            $response->setStatusCode(404);
 
-			throw new HTTPResponse_Exception($response);
-		}
-	}
+            throw new HTTPResponse_Exception($response);
+        }
+    }
 
-	/**
-	 * Get file-edit fields for this filed
-	 *
-	 * @return FieldList
-	 */
-	public function getFields()
-	{
-		$fields = parent::getFields();
-		if ($this->Type === 'photo') {
-			$fields->insertBefore('CaptionText', new TextField(
-				'AltText',
-				_t('HTMLEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'),
-				$this->Title,
-				80
-			));
-			$fields->insertBefore('CaptionText', new TextField(
-				'Title',
-				_t('HTMLEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
-			));
-		}
-		return $fields;
-	}
+    /**
+     * Get file-edit fields for this filed
+     *
+     * @return FieldList
+     */
+    public function getFields()
+    {
+        $fields = parent::getFields();
+        if ($this->Type === 'photo') {
+            $fields->insertBefore('CaptionText', new TextField(
+                'AltText',
+                _t('HTMLEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'),
+                $this->Title,
+                80
+            ));
+            $fields->insertBefore('CaptionText', new TextField(
+                'Title',
+                _t('HTMLEditorField.IMAGETITLE', 'Title text (tooltip) - for additional information about the image')
+            ));
+        }
+        return $fields;
+    }
 
-	/**
-	 * Get width of this Embed
-	 *
-	 * @return int
-	 */
-	public function getWidth()
-	{
-		return $this->embed->width ?: 100;
-	}
+    /**
+     * Get width of this Embed
+     *
+     * @return int
+     */
+    public function getWidth()
+    {
+        return $this->embed->width ?: 100;
+    }
 
-	/**
-	 * Get height of this Embed
-	 *
-	 * @return int
-	 */
-	public function getHeight()
-	{
-		return $this->embed->height ?: 100;
-	}
+    /**
+     * Get height of this Embed
+     *
+     * @return int
+     */
+    public function getHeight()
+    {
+        return $this->embed->height ?: 100;
+    }
 
-	public function getPreviewURL()
-	{
-		// Use thumbnail url
-		if ($this->embed->image) {
-			return $this->embed->image;
-		}
+    public function getPreviewURL()
+    {
+        // Use thumbnail url
+        if ($this->embed->image) {
+            return $this->embed->image;
+        }
 
-		// Use direct image type
-		if ($this->getType() == 'photo' && !empty($this->embed->url)) {
-			return $this->embed->url;
-		}
+        // Use direct image type
+        if ($this->getType() == 'photo' && !empty($this->embed->url)) {
+            return $this->embed->url;
+        }
 
-		// Default media
-		return FRAMEWORK_ADMIN_DIR . '/client/dist/images/src/default_media.png';
-	}
+        // Default media
+        return FRAMEWORK_ADMIN_DIR . '/client/dist/images/src/default_media.png';
+    }
 
-	public function getName()
-	{
-		if ($this->embed->title) {
-			return $this->embed->title;
-		} else {
-			return parent::getName();
-		}
-	}
+    public function getName()
+    {
+        if ($this->embed->title) {
+            return $this->embed->title;
+        } else {
+            return parent::getName();
+        }
+    }
 
-	/**
-	 * Get Embed type
-	 *
-	 * @return string
-	 */
-	public function getType()
-	{
-		return $this->embed->type;
-	}
+    /**
+     * Get Embed type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->embed->type;
+    }
 
-	/**
-	 * Get filetype
-	 *
-	 * @return string
-	 */
-	public function getFileType()
-	{
-		return $this->getType()
-			?: parent::getFileType();
-	}
+    /**
+     * Get filetype
+     *
+     * @return string
+     */
+    public function getFileType()
+    {
+        return $this->getType()
+            ?: parent::getFileType();
+    }
 
-	/**
-	 * @return AdapterInterface
-	 */
-	public function getEmbed()
-	{
-		return $this->embed;
-	}
+    /**
+     * @return AdapterInterface
+     */
+    public function getEmbed()
+    {
+        return $this->embed;
+    }
 
-	public function appCategory()
-	{
-		return 'embed';
-	}
+    public function appCategory()
+    {
+        return 'embed';
+    }
 
-	/**
-	 * Info for this Embed
-	 *
-	 * @return string
-	 */
-	public function getInfo()
-	{
-		return $this->embed->info;
-	}
+    /**
+     * Info for this Embed
+     *
+     * @return string
+     */
+    public function getInfo()
+    {
+        return $this->embed->info;
+    }
 }

@@ -12,29 +12,29 @@ use SilverStripe\ORM\FieldType\DBDate;
 class DateField_Disabled extends DateField
 {
 
-	protected $disabled = true;
+    protected $disabled = true;
 
-	public function Field($properties = array())
-	{
-		if ($this->valueObj) {
-			if ($this->valueObj->isToday()) {
-				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
-					. ' (' . _t('DateField.TODAY', 'today') . ')');
-			} else {
-				$df = new DBDate($this->name);
-				$df->setValue($this->dataValue());
-				$val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
-					. ', ' . $df->Ago());
-			}
-		} else {
-			$val = '<i>(' . _t('DateField.NOTSET', 'not set') . ')</i>';
-		}
+    public function Field($properties = array())
+    {
+        if ($this->valueObj) {
+            if ($this->valueObj->isToday()) {
+                $val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
+                    . ' (' . _t('DateField.TODAY', 'today') . ')');
+            } else {
+                $df = new DBDate($this->name);
+                $df->setValue($this->dataValue());
+                $val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
+                    . ', ' . $df->Ago());
+            }
+        } else {
+            $val = '<i>(' . _t('DateField.NOTSET', 'not set') . ')</i>';
+        }
 
-		return "<span class=\"readonly\" id=\"" . $this->ID() . "\">$val</span>";
-	}
+        return "<span class=\"readonly\" id=\"" . $this->ID() . "\">$val</span>";
+    }
 
-	public function Type()
-	{
-		return "date_disabled readonly";
-	}
+    public function Type()
+    {
+        return "date_disabled readonly";
+    }
 }

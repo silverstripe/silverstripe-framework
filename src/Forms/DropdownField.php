@@ -13,15 +13,15 @@ use SilverStripe\View\ArrayData;
  * Using here an example of an art gallery, with Exhibition pages,
  * each of which has a Gallery they belong to.  The Gallery class is also user-defined.
  * <code>
- * 	static $has_one = array(
- * 		'Gallery' => 'Gallery',
- * 	);
+ *  static $has_one = array(
+ *      'Gallery' => 'Gallery',
+ *  );
  *
- * 	public function getCMSFields() {
- * 		$fields = parent::getCMSFields();
- * 		$field = DropdownField::create('GalleryID', 'Gallery', Gallery::get()->map('ID', 'Title'))
- * 			->setEmptyString('(Select one)');
- * 		$fields->addFieldToTab('Root.Content', $field, 'Content');
+ *  public function getCMSFields() {
+ *      $fields = parent::getCMSFields();
+ *      $field = DropdownField::create('GalleryID', 'Gallery', Gallery::get()->map('ID', 'Title'))
+ *          ->setEmptyString('(Select one)');
+ *      $fields->addFieldToTab('Root.Content', $field, 'Content');
  * </code>
  *
  * As you see, you need to put "GalleryID", rather than "Gallery" here.
@@ -84,49 +84,52 @@ use SilverStripe\View\ArrayData;
  * @see ListboxField for a single <select> box (with single or multiple selections).
  * @see TreeDropdownField for a rich and customizeable UI that can visualize a tree of selectable elements
  */
-class DropdownField extends SingleSelectField {
+class DropdownField extends SingleSelectField
+{
 
-	/**
-	 * Build a field option for template rendering
-	 *
-	 * @param mixed $value Value of the option
-	 * @param string $title Title of the option
-	 * @return ArrayData Field option
-	 */
-	protected function getFieldOption($value, $title) {
-		// Check selection
-		$selected = $this->isSelectedValue($value, $this->Value());
+    /**
+     * Build a field option for template rendering
+     *
+     * @param mixed $value Value of the option
+     * @param string $title Title of the option
+     * @return ArrayData Field option
+     */
+    protected function getFieldOption($value, $title)
+    {
+        // Check selection
+        $selected = $this->isSelectedValue($value, $this->Value());
 
-		// Check disabled
-		$disabled = false;
-		if($this->isDisabledValue($value) && $title != $this->getEmptyString()){
-			$disabled = 'disabled';
-		}
+        // Check disabled
+        $disabled = false;
+        if ($this->isDisabledValue($value) && $title != $this->getEmptyString()) {
+            $disabled = 'disabled';
+        }
 
-		return new ArrayData(array(
-			'Title' => $title,
-			'Value' => $value,
-			'Selected' => $selected,
-			'Disabled' => $disabled,
-		));
-	}
+        return new ArrayData(array(
+            'Title' => $title,
+            'Value' => $value,
+            'Selected' => $selected,
+            'Disabled' => $disabled,
+        ));
+    }
 
-	/**
-	 * @param array $properties
-	 * @return string
-	 */
-	public function Field($properties = array()) {
-		$options = array();
+    /**
+     * @param array $properties
+     * @return string
+     */
+    public function Field($properties = array())
+    {
+        $options = array();
 
-		// Add all options
-		foreach($this->getSourceEmpty() as $value => $title) {
-			$options[] = $this->getFieldOption($value, $title);
-		}
+        // Add all options
+        foreach ($this->getSourceEmpty() as $value => $title) {
+            $options[] = $this->getFieldOption($value, $title);
+        }
 
-		$properties = array_merge($properties, array(
-			'Options' => new ArrayList($options)
-		));
+        $properties = array_merge($properties, array(
+            'Options' => new ArrayList($options)
+        ));
 
-		return parent::Field($properties);
-	}
+        return parent::Field($properties);
+    }
 }

@@ -12,66 +12,66 @@ use SilverStripe\Forms\FieldList;
 class NullSecurityToken extends SecurityToken
 {
 
-	/**
-	 * @param String
-	 * @return boolean
-	 */
-	public function check($compare)
-	{
-		return true;
-	}
+    /**
+     * @param String
+     * @return boolean
+     */
+    public function check($compare)
+    {
+        return true;
+    }
 
-	/**
-	 * @param HTTPRequest $request
-	 * @return Boolean
-	 */
-	public function checkRequest($request)
-	{
-		return true;
-	}
+    /**
+     * @param HTTPRequest $request
+     * @return Boolean
+     */
+    public function checkRequest($request)
+    {
+        return true;
+    }
 
-	/**
-	 * @param FieldList $fieldset
-	 * @return false
-	 */
-	public function updateFieldSet(&$fieldset)
-	{
-		// Remove, in case it was added beforehand
-		$fieldset->removeByName($this->getName());
+    /**
+     * @param FieldList $fieldset
+     * @return false
+     */
+    public function updateFieldSet(&$fieldset)
+    {
+        // Remove, in case it was added beforehand
+        $fieldset->removeByName($this->getName());
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 * @param String $url
-	 * @return String
-	 */
-	public function addToUrl($url)
-	{
-		return $url;
-	}
+    /**
+     * @param String $url
+     * @return String
+     */
+    public function addToUrl($url)
+    {
+        return $url;
+    }
 
-	/**
-	 * @return String
-	 */
-	public function getValue()
-	{
-		return null;
-	}
+    /**
+     * @return String
+     */
+    public function getValue()
+    {
+        return null;
+    }
 
-	/**
-	 * @param String $val
-	 */
-	public function setValue($val)
-	{
-		// no-op
-	}
+    /**
+     * @param String $val
+     */
+    public function setValue($val)
+    {
+        // no-op
+    }
 
-	/**
-	 * @return String
-	 */
-	public function generate()
-	{
-		return null;
-	}
+    /**
+     * @return String
+     */
+    public function generate()
+    {
+        return null;
+    }
 }

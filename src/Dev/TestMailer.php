@@ -4,105 +4,123 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Email\Mailer;
 
-class TestMailer extends Mailer {
-	protected $emailsSent = array();
+class TestMailer extends Mailer
+{
+    protected $emailsSent = array();
 
-	/**
-	 * Send a plain-text email.
-	 * TestMailer will merely record that the email was asked to be sent, without sending anything.
-	 *
-	 * @param string $to
-	 * @param string $from
-	 * @param string $subject
-	 * @param string $plainContent
-	 * @param bool $attachedFiles
-	 * @param bool $customHeaders
-	 * @return bool|mixed
-	 */
-	public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customHeaders = false) {
-		$this->emailsSent[] = array(
-			'type' => 'plain',
-			'to' => $to,
-			'from' => $from,
-			'subject' => $subject,
+    /**
+     * Send a plain-text email.
+     * TestMailer will merely record that the email was asked to be sent, without sending anything.
+     *
+     * @param string $to
+     * @param string $from
+     * @param string $subject
+     * @param string $plainContent
+     * @param bool $attachedFiles
+     * @param bool $customHeaders
+     * @return bool|mixed
+     */
+    public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customHeaders = false)
+    {
+        $this->emailsSent[] = array(
+            'type' => 'plain',
+            'to' => $to,
+            'from' => $from,
+            'subject' => $subject,
 
-			'content' => $plainContent,
-			'plainContent' => $plainContent,
+            'content' => $plainContent,
+            'plainContent' => $plainContent,
 
-			'attachedFiles' => $attachedFiles,
-			'customHeaders' => $customHeaders,
-		);
+            'attachedFiles' => $attachedFiles,
+            'customHeaders' => $customHeaders,
+        );
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Send a multi-part HTML email
-	 * TestMailer will merely record that the email was asked to be sent, without sending anything.
-	 *
-	 * @param string $to
-	 * @param string $from
-	 * @param string $subject
-	 * @param string $htmlContent
-	 * @param bool $attachedFiles
-	 * @param bool $customHeaders
-	 * @param bool $plainContent
-	 * @param bool $inlineImages
-	 * @return bool|mixed
-	 */
-	public function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customHeaders = false,
-			$plainContent = false, $inlineImages = false) {
+    /**
+     * Send a multi-part HTML email
+     * TestMailer will merely record that the email was asked to be sent, without sending anything.
+     *
+     * @param string $to
+     * @param string $from
+     * @param string $subject
+     * @param string $htmlContent
+     * @param bool $attachedFiles
+     * @param bool $customHeaders
+     * @param bool $plainContent
+     * @param bool $inlineImages
+     * @return bool|mixed
+     */
+    public function sendHTML(
+        $to,
+        $from,
+        $subject,
+        $htmlContent,
+        $attachedFiles = false,
+        $customHeaders = false,
+        $plainContent = false,
+        $inlineImages = false
+    ) {
 
-		$this->emailsSent[] = array(
-			'type' => 'html',
-			'to' => $to,
-			'from' => $from,
-			'subject' => $subject,
+        $this->emailsSent[] = array(
+            'type' => 'html',
+            'to' => $to,
+            'from' => $from,
+            'subject' => $subject,
 
-			'content' => $htmlContent,
-			'plainContent' => $plainContent,
-			'htmlContent' => $htmlContent,
+            'content' => $htmlContent,
+            'plainContent' => $plainContent,
+            'htmlContent' => $htmlContent,
 
-			'attachedFiles' => $attachedFiles,
-			'customHeaders' => $customHeaders,
-			'inlineImages' => $inlineImages,
-		);
+            'attachedFiles' => $attachedFiles,
+            'customHeaders' => $customHeaders,
+            'inlineImages' => $inlineImages,
+        );
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Clear the log of emails sent
-	 */
-	public function clearEmails() {
-		$this->emailsSent = array();
-	}
+    /**
+     * Clear the log of emails sent
+     */
+    public function clearEmails()
+    {
+        $this->emailsSent = array();
+    }
 
-	/**
-	 * Search for an email that was sent.
-	 * All of the parameters can either be a string, or, if they start with "/", a PREG-compatible regular expression.
-	 *
-	 * @param string $to
-	 * @param string $from
-	 * @param string $subject
-	 * @param string $content
-	 * @return array Contains the keys: 'type', 'to', 'from', 'subject', 'content', 'plainContent', 'attachedFiles',
-	 *               'customHeaders', 'htmlContent', 'inlineImages'
-	 */
-	public function findEmail($to, $from = null, $subject = null, $content = null) {
-		foreach($this->emailsSent as $email) {
-			$matched = true;
+    /**
+     * Search for an email that was sent.
+     * All of the parameters can either be a string, or, if they start with "/", a PREG-compatible regular expression.
+     *
+     * @param string $to
+     * @param string $from
+     * @param string $subject
+     * @param string $content
+     * @return array Contains the keys: 'type', 'to', 'from', 'subject', 'content', 'plainContent', 'attachedFiles',
+     *               'customHeaders', 'htmlContent', 'inlineImages'
+     */
+    public function findEmail($to, $from = null, $subject = null, $content = null)
+    {
+        foreach ($this->emailsSent as $email) {
+            $matched = true;
 
-			foreach(array('to','from','subject','content') as $field) {
-				if($value = $$field) {
-					if($value[0] == '/') $matched = preg_match($value, $email[$field]);
-					else $matched = ($value == $email[$field]);
-					if(!$matched) break;
-				}
-			}
+            foreach (array('to','from','subject','content') as $field) {
+                if ($value = $$field) {
+                    if ($value[0] == '/') {
+                        $matched = preg_match($value, $email[$field]);
+                    } else {
+                        $matched = ($value == $email[$field]);
+                    }
+                    if (!$matched) {
+                        break;
+                    }
+                }
+            }
 
-			if($matched) return $email;
-		}
-	}
-
+            if ($matched) {
+                return $email;
+            }
+        }
+    }
 }

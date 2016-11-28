@@ -10,104 +10,112 @@ use SilverStripe\View\Requirements;
  * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
  * since the required frontend dependencies are included through CMS bundling.
  */
-class ToggleCompositeField extends CompositeField {
-	/**
-	 * @var bool
-	 */
-	protected $startClosed = true;
+class ToggleCompositeField extends CompositeField
+{
+    /**
+     * @var bool
+     */
+    protected $startClosed = true;
 
-	/**
-	 * @var int
-	 */
-	protected $headingLevel = 3;
+    /**
+     * @var int
+     */
+    protected $headingLevel = 3;
 
-	/**
-	 * @inheritdoc
-	 *
-	 * @param string $name
-	 * @param string $title
-	 * @param array|FieldList $children
-	 */
-	public function __construct($name, $title, $children) {
-		parent::__construct($children);
-		$this->setName($name);
-		$this->setTitle($title);
-	}
+    /**
+     * @inheritdoc
+     *
+     * @param string $name
+     * @param string $title
+     * @param array|FieldList $children
+     */
+    public function __construct($name, $title, $children)
+    {
+        parent::__construct($children);
+        $this->setName($name);
+        $this->setTitle($title);
+    }
 
-	/**
-	 * @inheritdoc
-	 *
-	 * @param array $properties
-	 * @return string
-	 */
-	public function FieldHolder($properties = array()) {
-		$context = $this;
+    /**
+     * @inheritdoc
+     *
+     * @param array $properties
+     * @return string
+     */
+    public function FieldHolder($properties = array())
+    {
+        $context = $this;
 
-		if(count($properties)) {
-			$context = $this->customise($properties);
-		}
+        if (count($properties)) {
+            $context = $this->customise($properties);
+        }
 
-		return $context->renderWith($this->getTemplates());
-	}
+        return $context->renderWith($this->getTemplates());
+    }
 
-	/**
-	 * @inheritdoc
-	 *
-	 * @return array
-	 */
-	public function getAttributes() {
-		$attributes = array(
-			'id' => $this->ID(),
-			'class' => $this->extraClass(),
-		);
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     */
+    public function getAttributes()
+    {
+        $attributes = array(
+            'id' => $this->ID(),
+            'class' => $this->extraClass(),
+        );
 
-		if($this->getStartClosed()) {
-			$attributes['class'] .= ' ss-toggle ss-toggle-start-closed';
-		} else {
-			$attributes['class'] .= ' ss-toggle';
-		}
+        if ($this->getStartClosed()) {
+            $attributes['class'] .= ' ss-toggle ss-toggle-start-closed';
+        } else {
+            $attributes['class'] .= ' ss-toggle';
+        }
 
-		return array_merge(
-			$this->attributes,
-			$attributes
-		);
-	}
+        return array_merge(
+            $this->attributes,
+            $attributes
+        );
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function getStartClosed() {
-		return $this->startClosed;
-	}
+    /**
+     * @return bool
+     */
+    public function getStartClosed()
+    {
+        return $this->startClosed;
+    }
 
-	/**
-	 * Controls whether the field is open or closed by default. By default the field is closed.
-	 *
-	 * @param bool $startClosed
-	 *
-	 * @return $this
-	 */
-	public function setStartClosed($startClosed) {
-		$this->startClosed = (bool) $startClosed;
+    /**
+     * Controls whether the field is open or closed by default. By default the field is closed.
+     *
+     * @param bool $startClosed
+     *
+     * @return $this
+     */
+    public function setStartClosed($startClosed)
+    {
+        $this->startClosed = (bool) $startClosed;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getHeadingLevel() {
-		return $this->headingLevel;
-	}
+    /**
+     * @return int
+     */
+    public function getHeadingLevel()
+    {
+        return $this->headingLevel;
+    }
 
-	/**
-	 * @param int $headingLevel
-	 *
-	 * @return $this
-	 */
-	public function setHeadingLevel($headingLevel) {
-		$this->headingLevel = (int) $headingLevel;
+    /**
+     * @param int $headingLevel
+     *
+     * @return $this
+     */
+    public function setHeadingLevel($headingLevel)
+    {
+        $this->headingLevel = (int) $headingLevel;
 
-		return $this;
-	}
+        return $this;
+    }
 }

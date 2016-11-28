@@ -42,63 +42,66 @@ use SilverStripe\View\ArrayData;
  * array. Is it also appropriate to accept so many different
  * types of data when just using an array would be appropriate?
  */
-class CheckboxSetField extends MultiSelectField {
+class CheckboxSetField extends MultiSelectField
+{
 
-	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_MULTISELECT;
+    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_MULTISELECT;
 
-	/**
-	 * @todo Explain different source data that can be used with this field,
-	 * e.g. SQLMap, ArrayList or an array.
-	 *
-	 * @param array $properties
-	 * @return DBHTMLText
-	 */
-	public function Field($properties = array()) {
-		$properties = array_merge($properties, array(
-			'Options' => $this->getOptions()
-		));
+    /**
+     * @todo Explain different source data that can be used with this field,
+     * e.g. SQLMap, ArrayList or an array.
+     *
+     * @param array $properties
+     * @return DBHTMLText
+     */
+    public function Field($properties = array())
+    {
+        $properties = array_merge($properties, array(
+            'Options' => $this->getOptions()
+        ));
 
-		return FormField::Field($properties);
-	}
+        return FormField::Field($properties);
+    }
 
-	/**
-	 * Gets the list of options to render in this formfield
-	 *
-	 * @return ArrayList
-	 */
-	public function getOptions() {
-		$selectedValues = $this->getValueArray();
-		$defaultItems = $this->getDefaultItems();
+    /**
+     * Gets the list of options to render in this formfield
+     *
+     * @return ArrayList
+     */
+    public function getOptions()
+    {
+        $selectedValues = $this->getValueArray();
+        $defaultItems = $this->getDefaultItems();
 
-		// Generate list of options to display
-		$odd = false;
-		$formID = $this->ID();
-		$options = new ArrayList();
-		foreach($this->getSource() as $itemValue => $title) {
-			$itemID = Convert::raw2htmlid("{$formID}_{$itemValue}");
-			$odd = !$odd;
-			$extraClass = $odd ? 'odd' : 'even';
-			$extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $itemValue);
+        // Generate list of options to display
+        $odd = false;
+        $formID = $this->ID();
+        $options = new ArrayList();
+        foreach ($this->getSource() as $itemValue => $title) {
+            $itemID = Convert::raw2htmlid("{$formID}_{$itemValue}");
+            $odd = !$odd;
+            $extraClass = $odd ? 'odd' : 'even';
+            $extraClass .= ' val' . preg_replace('/[^a-zA-Z0-9\-\_]/', '_', $itemValue);
 
-			$itemChecked = in_array($itemValue, $selectedValues) || in_array($itemValue, $defaultItems);
-			$itemDisabled = $this->isDisabled() || in_array($itemValue, $defaultItems);
+            $itemChecked = in_array($itemValue, $selectedValues) || in_array($itemValue, $defaultItems);
+            $itemDisabled = $this->isDisabled() || in_array($itemValue, $defaultItems);
 
-			$options->push(new ArrayData(array(
-				'ID' => $itemID,
-				'Class' => $extraClass,
-				'Name' => "{$this->name}[{$itemValue}]",
-				'Value' => $itemValue,
-				'Title' => $title,
-				'isChecked' => $itemChecked,
-				'isDisabled' => $itemDisabled,
-			)));
-		}
-		$this->extend('updateGetOptions', $options);
-		return $options;
-	}
+            $options->push(new ArrayData(array(
+                'ID' => $itemID,
+                'Class' => $extraClass,
+                'Name' => "{$this->name}[{$itemValue}]",
+                'Value' => $itemValue,
+                'Title' => $title,
+                'isChecked' => $itemChecked,
+                'isDisabled' => $itemDisabled,
+            )));
+        }
+        $this->extend('updateGetOptions', $options);
+        return $options;
+    }
 
-	public function Type() {
-		return 'optionset checkboxset';
-	}
-
+    public function Type()
+    {
+        return 'optionset checkboxset';
+    }
 }

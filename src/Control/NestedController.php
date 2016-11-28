@@ -9,13 +9,13 @@ namespace SilverStripe\Control;
  *
  * Controllers that implement this interface must always return a nested controller.
  */
-interface NestedController {
+interface NestedController
+{
 
-	/**
-	 * Get overriding controller
-	 *
-	 * @return Controller
-	 */
-	public function getNestedController();
-
+    /**
+     * Get overriding controller
+     *
+     * @return Controller
+     */
+    public function getNestedController();
 }

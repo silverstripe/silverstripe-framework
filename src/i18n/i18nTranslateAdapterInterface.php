@@ -12,10 +12,11 @@ namespace SilverStripe\i18n;
  *
  * @see http://framework.zend.com/manual/en/zend.translate.additional.html#zend.translate.additional.combination
  */
-interface i18nTranslateAdapterInterface {
-	/**
-	 * @param string $locale
-	 * @return string
-	 */
-	public function getFilenameForLocale($locale);
+interface i18nTranslateAdapterInterface
+{
+    /**
+     * @param string $locale
+     * @return string
+     */
+    public function getFilenameForLocale($locale);
 }

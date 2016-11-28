@@ -22,32 +22,33 @@ use SilverStripe\ORM\DataObject;
  *
  * @method Member Member() Member object of the user trying to log in, only if Member with Email exists
  */
-class LoginAttempt extends DataObject {
+class LoginAttempt extends DataObject
+{
 
-	private static $db = array(
-		'Email' => 'Varchar(255)',
-		'Status' => "Enum('Success,Failure')",
-		'IP' => 'Varchar(255)',
-	);
+    private static $db = array(
+        'Email' => 'Varchar(255)',
+        'Status' => "Enum('Success,Failure')",
+        'IP' => 'Varchar(255)',
+    );
 
-	private static $has_one = array(
-		'Member' => 'SilverStripe\\Security\\Member', // only linked if the member actually exists
-	);
+    private static $has_one = array(
+        'Member' => 'SilverStripe\\Security\\Member', // only linked if the member actually exists
+    );
 
-	private static $table_name = "LoginAttempt";
+    private static $table_name = "LoginAttempt";
 
-	/**
-	 * @param bool $includerelations Indicate if the labels returned include relation fields
-	 * @return array
-	 */
-	public function fieldLabels($includerelations = true) {
-		$labels = parent::fieldLabels($includerelations);
-		/** @skipUpgrade */
-		$labels['Email'] = _t('LoginAttempt.Email', 'Email Address');
-		$labels['Status'] = _t('LoginAttempt.Status', 'Status');
-		$labels['IP'] = _t('LoginAttempt.IP', 'IP Address');
+    /**
+     * @param bool $includerelations Indicate if the labels returned include relation fields
+     * @return array
+     */
+    public function fieldLabels($includerelations = true)
+    {
+        $labels = parent::fieldLabels($includerelations);
+        /** @skipUpgrade */
+        $labels['Email'] = _t('LoginAttempt.Email', 'Email Address');
+        $labels['Status'] = _t('LoginAttempt.Status', 'Status');
+        $labels['IP'] = _t('LoginAttempt.IP', 'IP Address');
 
-		return $labels;
-	}
-
+        return $labels;
+    }
 }

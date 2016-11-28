@@ -11,10 +11,10 @@ use HTMLPurifier;
  */
 class PurifierHTMLCleaner extends HTMLCleaner
 {
-	public function cleanHTML($content)
-	{
-		$html = new HTMLPurifier();
-		$doc = Injector::inst()->create('HTMLValue', $html->purify($content));
-		return $doc->getContent();
-	}
+    public function cleanHTML($content)
+    {
+        $html = new HTMLPurifier();
+        $doc = Injector::inst()->create('HTMLValue', $html->purify($content));
+        return $doc->getContent();
+    }
 }

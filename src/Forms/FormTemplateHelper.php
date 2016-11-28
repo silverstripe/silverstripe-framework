@@ -23,48 +23,52 @@ use SilverStripe\Core\Injector\Injectable;
  *
  * Globally, the FormTemplateHelper can be set via the {@link Injector} API.
  */
-class FormTemplateHelper {
-	use Injectable;
+class FormTemplateHelper
+{
+    use Injectable;
 
-	/**
-	 * @param Form $form
-	 *
-	 * @return string
-	 */
-	public function generateFormID($form) {
-		if($id = $form->getHTMLID()) {
-			return Convert::raw2htmlid($id);
-		}
+    /**
+     * @param Form $form
+     *
+     * @return string
+     */
+    public function generateFormID($form)
+    {
+        if ($id = $form->getHTMLID()) {
+            return Convert::raw2htmlid($id);
+        }
 
-		$reflection = new ReflectionClass($form);
-		$shortName = str_replace(array('.', '/'), '', $form->getName());
-		return Convert::raw2htmlid($reflection->getShortName() . '_' . $shortName);
-	}
+        $reflection = new ReflectionClass($form);
+        $shortName = str_replace(array('.', '/'), '', $form->getName());
+        return Convert::raw2htmlid($reflection->getShortName() . '_' . $shortName);
+    }
 
-	/**
-	 * @param FormField $field
-	 *
-	 * @return string
-	 */
-	public function generateFieldHolderID($field) {
-		return $this->generateFieldID($field) . '_Holder';
-	}
+    /**
+     * @param FormField $field
+     *
+     * @return string
+     */
+    public function generateFieldHolderID($field)
+    {
+        return $this->generateFieldID($field) . '_Holder';
+    }
 
-	/**
-	 * Generate the field ID value
-	 *
-	 * @param FormField $field
-	 * @return string
-	 */
-	public function generateFieldID($field) {
-		if($form = $field->getForm()) {
-			return sprintf("%s_%s",
-				$this->generateFormID($form),
-				Convert::raw2htmlid($field->getName())
-			);
-		}
+    /**
+     * Generate the field ID value
+     *
+     * @param FormField $field
+     * @return string
+     */
+    public function generateFieldID($field)
+    {
+        if ($form = $field->getForm()) {
+            return sprintf(
+                "%s_%s",
+                $this->generateFormID($form),
+                Convert::raw2htmlid($field->getName())
+            );
+        }
 
-		return Convert::raw2htmlid($field->getName());
-	}
-
+        return Convert::raw2htmlid($field->getName());
+    }
 }

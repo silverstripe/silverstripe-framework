@@ -7,13 +7,14 @@ namespace SilverStripe\Core\Injector;
  *
  * If it isn't found, return null.
  */
-interface ServiceConfigurationLocator {
+interface ServiceConfigurationLocator
+{
 
-	/**
-	 * Finds the Injector config for a named service.
-	 *
-	 * @param string $name
-	 * @return mixed
-	 */
-	public function locateConfigFor($name);
+    /**
+     * Finds the Injector config for a named service.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function locateConfigFor($name);
 }

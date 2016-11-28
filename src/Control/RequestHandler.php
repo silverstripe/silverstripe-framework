@@ -45,484 +45,516 @@ use BadMethodCallException;
  *
  * {@link RequestHandler::handleRequest()} is where this behaviour is implemented.
  */
-class RequestHandler extends ViewableData {
+class RequestHandler extends ViewableData
+{
 
-	/**
-	 * @var HTTPRequest $request The request object that the controller was called with.
-	 * Set in {@link handleRequest()}. Useful to generate the {}
-	 */
-	protected $request = null;
-
-	/**
-	 * The DataModel for this request
-	 */
-	protected $model = null;
-
-	/**
-	 * This variable records whether RequestHandler::__construct()
-	 * was called or not. Useful for checking if subclasses have
-	 * called parent::__construct()
-	 *
-	 * @var boolean
-	 */
-	protected $brokenOnConstruct = true;
-
-	/**
-	 * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
-	 * be called on this RequestHandlingData object.
-	 *
-	 * The keys of this array are parse rules.  See {@link HTTPRequest::match()} for a description of the rules
-	 * available.
-	 *
-	 * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
-	 * the named parameter of the parsed URL wil be used to determine the method name.
-	 * @config
-	 */
-	private static $url_handlers = array(
-		'$Action' => '$Action',
-	);
-
-
-	/**
-	 * Define a list of action handling methods that are allowed to be called directly by URLs.
-	 * The variable should be an array of action names. This sample shows the different values that it can contain:
-	 *
-	 * <code>
-	 * array(
-	 * 		// someaction can be accessed by anyone, any time
-	 *		'someaction',
-	 *		// So can otheraction
-	 *		'otheraction' => true,
-	 *		// restrictedaction can only be people with ADMIN privilege
-	 *		'restrictedaction' => 'ADMIN',
-	 *		// complexaction can only be accessed if $this->canComplexAction() returns true
-	 *		'complexaction' '->canComplexAction'
-	 *	);
-	 * </code>
-	 *
-	 * Form getters count as URL actions as well, and should be included in allowed_actions.
-	 * Form actions on the other handed (first argument to {@link FormAction()} should NOT be included,
-	 * these are handled separately through {@link Form->httpSubmission}. You can control access on form actions
-	 * either by conditionally removing {@link FormAction} in the form construction,
-	 * or by defining $allowed_actions in your {@link Form} class.
-	 * @config
-	 */
-	private static $allowed_actions = null;
-
-	/**
-	 * @config
-	 * @var boolean Enforce presence of $allowed_actions when checking acccess.
-	 * Defaults to TRUE, meaning all URL actions will be denied.
-	 * When set to FALSE, the controller will allow *all* public methods to be called.
-	 * In most cases this isn't desireable, and in fact a security risk,
-	 * since some helper methods can cause side effects which shouldn't be exposed through URLs.
-	 */
-	private static $require_allowed_actions = true;
-
-	public function __construct() {
-		$this->brokenOnConstruct = false;
-
-		$this->setRequest(new NullHTTPRequest());
-
-		// This will prevent bugs if setDataModel() isn't called.
-		$this->model = DataModel::inst();
-
-		parent::__construct();
-	}
-
-	/**
-	 * Set the DataModel for this request.
-	 *
-	 * @param DataModel $model
-	 */
-	public function setDataModel($model) {
-		$this->model = $model;
-	}
-
-	/**
-	 * Handles URL requests.
-	 *
-	 *  - ViewableData::handleRequest() iterates through each rule in {@link self::$url_handlers}.
-	 *  - If the rule matches, the named method will be called.
-	 *  - If there is still more URL to be processed, then handleRequest()
-	 *    is called on the object that that method returns.
-	 *
-	 * Once all of the URL has been processed, the final result is returned.
-	 * However, if the final result is an array, this
-	 * array is interpreted as being additional template data to customise the
-	 * 2nd to last result with, rather than an object
-	 * in its own right.  This is most frequently used when a Controller's
-	 * action will return an array of data with which to
-	 * customise the controller.
-	 *
-	 * @param HTTPRequest $request The object that is reponsible for distributing URL parsing
-	 * @param DataModel $model
-	 * @return HTTPResponse|RequestHandler|string|array
-	 */
-	public function handleRequest(HTTPRequest $request, DataModel $model) {
-		// $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
-		if($this->brokenOnConstruct) {
-			$handlerClass = get_class($this);
-			throw new BadMethodCallException(
-				"parent::__construct() needs to be called on {$handlerClass}::__construct()"
-			);
-		}
-
-		$this->setRequest($request);
-		$this->setDataModel($model);
-
-		$match = $this->findAction($request);
-
-		// If nothing matches, return this object
-		if (!$match) {
-			return $this;
-		}
-
-		// Start to find what action to call. Start by using what findAction returned
-		$action = $match['action'];
-
-		// We used to put "handleAction" as the action on controllers, but (a) this could only be called when
-		// you had $Action in your rule, and (b) RequestHandler didn't have one. $Action is better
-		if ($action == 'handleAction') {
-			// TODO Fix LeftAndMain usage
-			// Deprecation::notice('3.2.0', 'Calling handleAction directly is deprecated - use $Action instead');
-			$action = '$Action';
-		}
-
-		// Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
-		if($action[0] == '$') {
-			$action = str_replace("-", "_", $request->latestParam(substr($action,1)));
-		}
-
-		if(!$action) {
-			if(isset($_REQUEST['debug_request'])) {
-				Debug::message("Action not set; using default action method name 'index'");
-			}
-			$action = "index";
-		} else if(!is_string($action)) {
-			user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
-		}
-
-		$classMessage = Director::isLive() ? 'on this handler' : 'on class '.get_class($this);
-
-		try {
-			if(!$this->hasAction($action)) {
-				return $this->httpError(404, "Action '$action' isn't available $classMessage.");
-			}
-			if(!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'doInit'))) {
-				return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
-			}
-			$result = $this->handleAction($request, $action);
-		}
-		catch (HTTPResponse_Exception $e) {
-			return $e->getResponse();
-		}
-		catch(PermissionFailureException $e) {
-			$result = Security::permissionFailure(null, $e->getMessage());
-		}
-
-		if($result instanceof HTTPResponse && $result->isError()) {
-			if(isset($_REQUEST['debug_request'])) Debug::message("Rule resulted in HTTP error; breaking");
-			return $result;
-		}
-
-		// If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to
-		// parse. It might have its own handler. However, we only do this if we haven't just parsed an
-		// empty rule ourselves, to prevent infinite loops. Also prevent further handling of controller
-		// actions which return themselves to avoid infinite loops.
-		$matchedRuleWasEmpty = $request->isEmptyPattern($match['rule']);
-		if($this !== $result && !$matchedRuleWasEmpty && ($result instanceof RequestHandler)) {
-			$returnValue = $result->handleRequest($request, $model);
-
-			// Array results can be used to handle
-			if(is_array($returnValue)) {
-				$returnValue = $this->customise($returnValue);
-			}
-
-			return $returnValue;
-
-		// If we return some other data, and all the URL is parsed, then return that
-		} else if($request->allParsed()) {
-			return $result;
-
-		// But if we have more content on the URL and we don't know what to do with it, return an error.
-		} else {
-			return $this->httpError(404, "I can't handle sub-URLs $classMessage.");
-		}
-	}
-
-	/**
-	 * @param HTTPRequest $request
-	 * @return array
+    /**
+     * @var HTTPRequest $request The request object that the controller was called with.
+     * Set in {@link handleRequest()}. Useful to generate the {}
      */
-	protected function findAction($request) {
-		$handlerClass = ($this->class) ? $this->class : get_class($this);
+    protected $request = null;
 
-		// We stop after RequestHandler; in other words, at ViewableData
-		while($handlerClass && $handlerClass != 'SilverStripe\\View\\ViewableData') {
-			$urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::UNINHERITED);
+    /**
+     * The DataModel for this request
+     */
+    protected $model = null;
 
-			if($urlHandlers) foreach($urlHandlers as $rule => $action) {
-				if(isset($_REQUEST['debug_request'])) {
-					Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
-				}
+    /**
+     * This variable records whether RequestHandler::__construct()
+     * was called or not. Useful for checking if subclasses have
+     * called parent::__construct()
+     *
+     * @var boolean
+     */
+    protected $brokenOnConstruct = true;
 
-				if($request->match($rule, true)) {
-					if(isset($_REQUEST['debug_request'])) {
-						Debug::message(
-							"Rule '$rule' matched to action '$action' on $this->class. ".
-							"Latest request params: " . var_export($request->latestParams(), true)
-						);
-					}
+    /**
+     * The default URL handling rules.  This specifies that the next component of the URL corresponds to a method to
+     * be called on this RequestHandlingData object.
+     *
+     * The keys of this array are parse rules.  See {@link HTTPRequest::match()} for a description of the rules
+     * available.
+     *
+     * The values of the array are the method to be called if the rule matches.  If this value starts with a '$', then
+     * the named parameter of the parsed URL wil be used to determine the method name.
+     * @config
+     */
+    private static $url_handlers = array(
+        '$Action' => '$Action',
+    );
 
-					return array('rule' => $rule, 'action' => $action);
-				}
-			}
 
-			$handlerClass = get_parent_class($handlerClass);
-		}
-		return null;
-	}
+    /**
+     * Define a list of action handling methods that are allowed to be called directly by URLs.
+     * The variable should be an array of action names. This sample shows the different values that it can contain:
+     *
+     * <code>
+     * array(
+     *      // someaction can be accessed by anyone, any time
+     *      'someaction',
+     *      // So can otheraction
+     *      'otheraction' => true,
+     *      // restrictedaction can only be people with ADMIN privilege
+     *      'restrictedaction' => 'ADMIN',
+     *      // complexaction can only be accessed if $this->canComplexAction() returns true
+     *      'complexaction' '->canComplexAction'
+     *  );
+     * </code>
+     *
+     * Form getters count as URL actions as well, and should be included in allowed_actions.
+     * Form actions on the other handed (first argument to {@link FormAction()} should NOT be included,
+     * these are handled separately through {@link Form->httpSubmission}. You can control access on form actions
+     * either by conditionally removing {@link FormAction} in the form construction,
+     * or by defining $allowed_actions in your {@link Form} class.
+     * @config
+     */
+    private static $allowed_actions = null;
 
-	/**
-	 * Given a request, and an action name, call that action name on this RequestHandler
-	 *
-	 * Must not raise HTTPResponse_Exceptions - instead it should return
-	 *
-	 * @param $request
-	 * @param $action
-	 * @return HTTPResponse
-	 */
-	protected function handleAction($request, $action) {
-		$classMessage = Director::isLive() ? 'on this handler' : 'on class '.get_class($this);
+    /**
+     * @config
+     * @var boolean Enforce presence of $allowed_actions when checking acccess.
+     * Defaults to TRUE, meaning all URL actions will be denied.
+     * When set to FALSE, the controller will allow *all* public methods to be called.
+     * In most cases this isn't desireable, and in fact a security risk,
+     * since some helper methods can cause side effects which shouldn't be exposed through URLs.
+     */
+    private static $require_allowed_actions = true;
 
-		if(!$this->hasMethod($action)) {
-			return new HTTPResponse("Action '$action' isn't available $classMessage.", 404);
-		}
+    public function __construct()
+    {
+        $this->brokenOnConstruct = false;
 
-		$res = $this->extend('beforeCallActionHandler', $request, $action);
-		if ($res) return reset($res);
+        $this->setRequest(new NullHTTPRequest());
 
-		$actionRes = $this->$action($request);
+        // This will prevent bugs if setDataModel() isn't called.
+        $this->model = DataModel::inst();
 
-		$res = $this->extend('afterCallActionHandler', $request, $action, $actionRes);
-		if ($res) return reset($res);
+        parent::__construct();
+    }
 
-		return $actionRes;
-	}
+    /**
+     * Set the DataModel for this request.
+     *
+     * @param DataModel $model
+     */
+    public function setDataModel($model)
+    {
+        $this->model = $model;
+    }
 
-	/**
-	 * Get a array of allowed actions defined on this controller,
-	 * any parent classes or extensions.
-	 *
-	 * Caution: Since 3.1, allowed_actions definitions only apply
-	 * to methods on the controller they're defined on,
-	 * so it is recommended to use the $class argument
-	 * when invoking this method.
-	 *
-	 * @param string $limitToClass
-	 * @return array|null
-	 */
-	public function allowedActions($limitToClass = null) {
-		if($limitToClass) {
-			$actions = Config::inst()->get(
-				$limitToClass,
-				'allowed_actions',
-				Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
-			);
-		} else {
-			$actions = Config::inst()->get(get_class($this), 'allowed_actions');
-		}
+    /**
+     * Handles URL requests.
+     *
+     *  - ViewableData::handleRequest() iterates through each rule in {@link self::$url_handlers}.
+     *  - If the rule matches, the named method will be called.
+     *  - If there is still more URL to be processed, then handleRequest()
+     *    is called on the object that that method returns.
+     *
+     * Once all of the URL has been processed, the final result is returned.
+     * However, if the final result is an array, this
+     * array is interpreted as being additional template data to customise the
+     * 2nd to last result with, rather than an object
+     * in its own right.  This is most frequently used when a Controller's
+     * action will return an array of data with which to
+     * customise the controller.
+     *
+     * @param HTTPRequest $request The object that is reponsible for distributing URL parsing
+     * @param DataModel $model
+     * @return HTTPResponse|RequestHandler|string|array
+     */
+    public function handleRequest(HTTPRequest $request, DataModel $model)
+    {
+        // $handlerClass is used to step up the class hierarchy to implement url_handlers inheritance
+        if ($this->brokenOnConstruct) {
+            $handlerClass = get_class($this);
+            throw new BadMethodCallException(
+                "parent::__construct() needs to be called on {$handlerClass}::__construct()"
+            );
+        }
 
-		if(is_array($actions)) {
-			if(array_key_exists('*', $actions)) {
-				Deprecation::notice(
-					'3.0',
-					'Wildcards (*) are no longer valid in $allowed_actions due their ambiguous '
-					. ' and potentially insecure behaviour. Please define all methods explicitly instead.'
-				);
-			}
+        $this->setRequest($request);
+        $this->setDataModel($model);
 
-			// convert all keys and values to lowercase to
-			// allow for easier comparison, unless it is a permission code
-			$actions = array_change_key_case($actions, CASE_LOWER);
+        $match = $this->findAction($request);
 
-			foreach($actions as $key => $value) {
-				if(is_numeric($key)) $actions[$key] = strtolower($value);
-			}
+        // If nothing matches, return this object
+        if (!$match) {
+            return $this;
+        }
 
-			return $actions;
-		} else {
-			return null;
-		}
-	}
+        // Start to find what action to call. Start by using what findAction returned
+        $action = $match['action'];
 
-	/**
-	 * Checks if this request handler has a specific action,
-	 * even if the current user cannot access it.
-	 * Includes class ancestry and extensions in the checks.
-	 *
-	 * @param string $action
-	 * @return bool
-	 */
-	public function hasAction($action) {
-		if($action == 'index') return true;
+        // We used to put "handleAction" as the action on controllers, but (a) this could only be called when
+        // you had $Action in your rule, and (b) RequestHandler didn't have one. $Action is better
+        if ($action == 'handleAction') {
+            // TODO Fix LeftAndMain usage
+            // Deprecation::notice('3.2.0', 'Calling handleAction directly is deprecated - use $Action instead');
+            $action = '$Action';
+        }
 
-		// Don't allow access to any non-public methods (inspect instance plus all extensions)
-		$insts = array_merge(array($this), (array) $this->getExtensionInstances());
-		foreach($insts as $inst) {
-			if(!method_exists($inst, $action)) continue;
-			$r = new ReflectionClass(get_class($inst));
-			$m = $r->getMethod($action);
-			if(!$m || !$m->isPublic()) return false;
-		}
+        // Actions can reference URL parameters, eg, '$Action/$ID/$OtherID' => '$Action',
+        if ($action[0] == '$') {
+            $action = str_replace("-", "_", $request->latestParam(substr($action, 1)));
+        }
 
-		$action  = strtolower($action);
-		$actions = $this->allowedActions();
+        if (!$action) {
+            if (isset($_REQUEST['debug_request'])) {
+                Debug::message("Action not set; using default action method name 'index'");
+            }
+            $action = "index";
+        } elseif (!is_string($action)) {
+            user_error("Non-string method name: " . var_export($action, true), E_USER_ERROR);
+        }
 
-		// Check if the action is defined in the allowed actions of any ancestry class
-		// as either a key or value. Note that if the action is numeric, then keys are not
-		// searched for actions to prevent actual array keys being recognised as actions.
-		if(is_array($actions)) {
-			$isKey   = !is_numeric($action) && array_key_exists($action, $actions);
-			$isValue = in_array($action, $actions, true);
-			if($isKey || $isValue) return true;
-		}
+        $classMessage = Director::isLive() ? 'on this handler' : 'on class '.get_class($this);
 
-		$actionsWithoutExtra = $this->config()->get(
-			'allowed_actions',
-			Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
-		);
-		if(!is_array($actions) || !$actionsWithoutExtra) {
-			if($action != 'doInit' && $action != 'run' && method_exists($this, $action)) return true;
-		}
+        try {
+            if (!$this->hasAction($action)) {
+                return $this->httpError(404, "Action '$action' isn't available $classMessage.");
+            }
+            if (!$this->checkAccessAction($action) || in_array(strtolower($action), array('run', 'doInit'))) {
+                return $this->httpError(403, "Action '$action' isn't allowed $classMessage.");
+            }
+            $result = $this->handleAction($request, $action);
+        } catch (HTTPResponse_Exception $e) {
+            return $e->getResponse();
+        } catch (PermissionFailureException $e) {
+            $result = Security::permissionFailure(null, $e->getMessage());
+        }
 
-		return false;
-	}
+        if ($result instanceof HTTPResponse && $result->isError()) {
+            if (isset($_REQUEST['debug_request'])) {
+                Debug::message("Rule resulted in HTTP error; breaking");
+            }
+            return $result;
+        }
 
-	/**
-	 * Return the class that defines the given action, so that we know where to check allowed_actions.
-	 *
-	 * @param string $actionOrigCasing
-	 * @return string
-	 */
-	protected function definingClassForAction($actionOrigCasing) {
-		$action = strtolower($actionOrigCasing);
+        // If we return a RequestHandler, call handleRequest() on that, even if there is no more URL to
+        // parse. It might have its own handler. However, we only do this if we haven't just parsed an
+        // empty rule ourselves, to prevent infinite loops. Also prevent further handling of controller
+        // actions which return themselves to avoid infinite loops.
+        $matchedRuleWasEmpty = $request->isEmptyPattern($match['rule']);
+        if ($this !== $result && !$matchedRuleWasEmpty && ($result instanceof RequestHandler)) {
+            $returnValue = $result->handleRequest($request, $model);
 
-		$definingClass = null;
-		$insts = array_merge(array($this), (array) $this->getExtensionInstances());
-		foreach($insts as $inst) {
-			if(!method_exists($inst, $action)) continue;
-			$r = new ReflectionClass(get_class($inst));
-			$m = $r->getMethod($actionOrigCasing);
-			return $m->getDeclaringClass()->getName();
-		}
-		return null;
-	}
+            // Array results can be used to handle
+            if (is_array($returnValue)) {
+                $returnValue = $this->customise($returnValue);
+            }
 
-	/**
-	 * Check that the given action is allowed to be called from a URL.
-	 * It will interrogate {@link self::$allowed_actions} to determine this.
-	 *
-	 * @param string $action
-	 * @return bool
-	 * @throws Exception
-	 */
-	public function checkAccessAction($action) {
-		$actionOrigCasing = $action;
-		$action = strtolower($action);
+            return $returnValue;
 
-		$isAllowed = false;
-		$isDefined = false;
+        // If we return some other data, and all the URL is parsed, then return that
+        } elseif ($request->allParsed()) {
+            return $result;
 
-		// Get actions for this specific class (without inheritance)
-		$definingClass = $this->definingClassForAction($actionOrigCasing);
-		$allowedActions = $this->allowedActions($definingClass);
+        // But if we have more content on the URL and we don't know what to do with it, return an error.
+        } else {
+            return $this->httpError(404, "I can't handle sub-URLs $classMessage.");
+        }
+    }
 
-		// check if specific action is set
-		if(isset($allowedActions[$action])) {
-			$isDefined = true;
-			$test = $allowedActions[$action];
-			if($test === true || $test === 1 || $test === '1') {
-				// TRUE should always allow access
-				$isAllowed = true;
-			} elseif(substr($test, 0, 2) == '->') {
-				// Determined by custom method with "->" prefix
-				list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
-				$isAllowed = call_user_func_array(array($this, $method), $arguments);
-			} else {
-				// Value is a permission code to check the current member against
-				$isAllowed = Permission::check($test);
-			}
-		} elseif(
-			is_array($allowedActions)
-			&& (($key = array_search($action, $allowedActions, true)) !== false)
-			&& is_numeric($key)
-		) {
-			// Allow numeric array notation (search for array value as action instead of key)
-			$isDefined = true;
-			$isAllowed = true;
-		} elseif(is_array($allowedActions) && !count($allowedActions)) {
-			// If defined as empty array, deny action
-			$isAllowed = false;
-		} elseif($allowedActions === null) {
-			// If undefined, allow action based on configuration
-			$isAllowed = !Config::inst()->get('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions');
-		}
+    /**
+     * @param HTTPRequest $request
+     * @return array
+     */
+    protected function findAction($request)
+    {
+        $handlerClass = ($this->class) ? $this->class : get_class($this);
 
-		// If we don't have a match in allowed_actions,
-		// whitelist the 'index' action as well as undefined actions based on configuration.
-		if(!$isDefined && ($action == 'index' || empty($action))) {
-			$isAllowed = true;
-		}
+        // We stop after RequestHandler; in other words, at ViewableData
+        while ($handlerClass && $handlerClass != 'SilverStripe\\View\\ViewableData') {
+            $urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::UNINHERITED);
 
-		return $isAllowed;
-	}
+            if ($urlHandlers) {
+                foreach ($urlHandlers as $rule => $action) {
+                    if (isset($_REQUEST['debug_request'])) {
+                        Debug::message("Testing '$rule' with '" . $request->remaining() . "' on $this->class");
+                    }
 
-	/**
-	 * Throws a HTTP error response encased in a {@link HTTPResponse_Exception}, which is later caught in
-	 * {@link RequestHandler::handleAction()} and returned to the user.
-	 *
-	 * @param int $errorCode
-	 * @param string $errorMessage Plaintext error message
-	 * @uses HTTPResponse_Exception
-	 * @throws HTTPResponse_Exception
-	 */
-	public function httpError($errorCode, $errorMessage = null) {
+                    if ($request->match($rule, true)) {
+                        if (isset($_REQUEST['debug_request'])) {
+                            Debug::message(
+                                "Rule '$rule' matched to action '$action' on $this->class. ".
+                                "Latest request params: " . var_export($request->latestParams(), true)
+                            );
+                        }
 
-		$request = $this->getRequest();
+                        return array('rule' => $rule, 'action' => $action);
+                    }
+                }
+            }
 
-		// Call a handler method such as onBeforeHTTPError404
-		$this->extend("onBeforeHTTPError{$errorCode}", $request);
+            $handlerClass = get_parent_class($handlerClass);
+        }
+        return null;
+    }
 
-		// Call a handler method such as onBeforeHTTPError, passing 404 as the first arg
-		$this->extend('onBeforeHTTPError', $errorCode, $request);
+    /**
+     * Given a request, and an action name, call that action name on this RequestHandler
+     *
+     * Must not raise HTTPResponse_Exceptions - instead it should return
+     *
+     * @param $request
+     * @param $action
+     * @return HTTPResponse
+     */
+    protected function handleAction($request, $action)
+    {
+        $classMessage = Director::isLive() ? 'on this handler' : 'on class '.get_class($this);
 
-		// Throw a new exception
-		throw new HTTPResponse_Exception($errorMessage, $errorCode);
-	}
+        if (!$this->hasMethod($action)) {
+            return new HTTPResponse("Action '$action' isn't available $classMessage.", 404);
+        }
 
-	/**
-	 * Returns the HTTPRequest object that this controller is using.
-	 * Returns a placeholder {@link NullHTTPRequest} object unless
-	 * {@link handleAction()} or {@link handleRequest()} have been called,
-	 * which adds a reference to an actual {@link HTTPRequest} object.
-	 *
-	 * @return HTTPRequest|NullHTTPRequest
-	 */
-	public function getRequest() {
-		return $this->request;
-	}
+        $res = $this->extend('beforeCallActionHandler', $request, $action);
+        if ($res) {
+            return reset($res);
+        }
 
-	/**
-	 * Typically the request is set through {@link handleAction()}
-	 * or {@link handleRequest()}, but in some based we want to set it manually.
-	 *
-	 * @param HTTPRequest $request
-	 * @return $this
-	 */
-	public function setRequest($request) {
-		$this->request = $request;
-		return $this;
-	}
+        $actionRes = $this->$action($request);
+
+        $res = $this->extend('afterCallActionHandler', $request, $action, $actionRes);
+        if ($res) {
+            return reset($res);
+        }
+
+        return $actionRes;
+    }
+
+    /**
+     * Get a array of allowed actions defined on this controller,
+     * any parent classes or extensions.
+     *
+     * Caution: Since 3.1, allowed_actions definitions only apply
+     * to methods on the controller they're defined on,
+     * so it is recommended to use the $class argument
+     * when invoking this method.
+     *
+     * @param string $limitToClass
+     * @return array|null
+     */
+    public function allowedActions($limitToClass = null)
+    {
+        if ($limitToClass) {
+            $actions = Config::inst()->get(
+                $limitToClass,
+                'allowed_actions',
+                Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
+            );
+        } else {
+            $actions = Config::inst()->get(get_class($this), 'allowed_actions');
+        }
+
+        if (is_array($actions)) {
+            if (array_key_exists('*', $actions)) {
+                Deprecation::notice(
+                    '3.0',
+                    'Wildcards (*) are no longer valid in $allowed_actions due their ambiguous '
+                    . ' and potentially insecure behaviour. Please define all methods explicitly instead.'
+                );
+            }
+
+            // convert all keys and values to lowercase to
+            // allow for easier comparison, unless it is a permission code
+            $actions = array_change_key_case($actions, CASE_LOWER);
+
+            foreach ($actions as $key => $value) {
+                if (is_numeric($key)) {
+                    $actions[$key] = strtolower($value);
+                }
+            }
+
+            return $actions;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Checks if this request handler has a specific action,
+     * even if the current user cannot access it.
+     * Includes class ancestry and extensions in the checks.
+     *
+     * @param string $action
+     * @return bool
+     */
+    public function hasAction($action)
+    {
+        if ($action == 'index') {
+            return true;
+        }
+
+        // Don't allow access to any non-public methods (inspect instance plus all extensions)
+        $insts = array_merge(array($this), (array) $this->getExtensionInstances());
+        foreach ($insts as $inst) {
+            if (!method_exists($inst, $action)) {
+                continue;
+            }
+            $r = new ReflectionClass(get_class($inst));
+            $m = $r->getMethod($action);
+            if (!$m || !$m->isPublic()) {
+                return false;
+            }
+        }
+
+        $action  = strtolower($action);
+        $actions = $this->allowedActions();
+
+        // Check if the action is defined in the allowed actions of any ancestry class
+        // as either a key or value. Note that if the action is numeric, then keys are not
+        // searched for actions to prevent actual array keys being recognised as actions.
+        if (is_array($actions)) {
+            $isKey   = !is_numeric($action) && array_key_exists($action, $actions);
+            $isValue = in_array($action, $actions, true);
+            if ($isKey || $isValue) {
+                return true;
+            }
+        }
+
+        $actionsWithoutExtra = $this->config()->get(
+            'allowed_actions',
+            Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
+        );
+        if (!is_array($actions) || !$actionsWithoutExtra) {
+            if ($action != 'doInit' && $action != 'run' && method_exists($this, $action)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Return the class that defines the given action, so that we know where to check allowed_actions.
+     *
+     * @param string $actionOrigCasing
+     * @return string
+     */
+    protected function definingClassForAction($actionOrigCasing)
+    {
+        $action = strtolower($actionOrigCasing);
+
+        $definingClass = null;
+        $insts = array_merge(array($this), (array) $this->getExtensionInstances());
+        foreach ($insts as $inst) {
+            if (!method_exists($inst, $action)) {
+                continue;
+            }
+            $r = new ReflectionClass(get_class($inst));
+            $m = $r->getMethod($actionOrigCasing);
+            return $m->getDeclaringClass()->getName();
+        }
+        return null;
+    }
+
+    /**
+     * Check that the given action is allowed to be called from a URL.
+     * It will interrogate {@link self::$allowed_actions} to determine this.
+     *
+     * @param string $action
+     * @return bool
+     * @throws Exception
+     */
+    public function checkAccessAction($action)
+    {
+        $actionOrigCasing = $action;
+        $action = strtolower($action);
+
+        $isAllowed = false;
+        $isDefined = false;
+
+        // Get actions for this specific class (without inheritance)
+        $definingClass = $this->definingClassForAction($actionOrigCasing);
+        $allowedActions = $this->allowedActions($definingClass);
+
+        // check if specific action is set
+        if (isset($allowedActions[$action])) {
+            $isDefined = true;
+            $test = $allowedActions[$action];
+            if ($test === true || $test === 1 || $test === '1') {
+                // TRUE should always allow access
+                $isAllowed = true;
+            } elseif (substr($test, 0, 2) == '->') {
+                // Determined by custom method with "->" prefix
+                list($method, $arguments) = Object::parse_class_spec(substr($test, 2));
+                $isAllowed = call_user_func_array(array($this, $method), $arguments);
+            } else {
+                // Value is a permission code to check the current member against
+                $isAllowed = Permission::check($test);
+            }
+        } elseif (is_array($allowedActions)
+            && (($key = array_search($action, $allowedActions, true)) !== false)
+            && is_numeric($key)
+        ) {
+            // Allow numeric array notation (search for array value as action instead of key)
+            $isDefined = true;
+            $isAllowed = true;
+        } elseif (is_array($allowedActions) && !count($allowedActions)) {
+            // If defined as empty array, deny action
+            $isAllowed = false;
+        } elseif ($allowedActions === null) {
+            // If undefined, allow action based on configuration
+            $isAllowed = !Config::inst()->get('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions');
+        }
+
+        // If we don't have a match in allowed_actions,
+        // whitelist the 'index' action as well as undefined actions based on configuration.
+        if (!$isDefined && ($action == 'index' || empty($action))) {
+            $isAllowed = true;
+        }
+
+        return $isAllowed;
+    }
+
+    /**
+     * Throws a HTTP error response encased in a {@link HTTPResponse_Exception}, which is later caught in
+     * {@link RequestHandler::handleAction()} and returned to the user.
+     *
+     * @param int $errorCode
+     * @param string $errorMessage Plaintext error message
+     * @uses HTTPResponse_Exception
+     * @throws HTTPResponse_Exception
+     */
+    public function httpError($errorCode, $errorMessage = null)
+    {
+
+        $request = $this->getRequest();
+
+        // Call a handler method such as onBeforeHTTPError404
+        $this->extend("onBeforeHTTPError{$errorCode}", $request);
+
+        // Call a handler method such as onBeforeHTTPError, passing 404 as the first arg
+        $this->extend('onBeforeHTTPError', $errorCode, $request);
+
+        // Throw a new exception
+        throw new HTTPResponse_Exception($errorMessage, $errorCode);
+    }
+
+    /**
+     * Returns the HTTPRequest object that this controller is using.
+     * Returns a placeholder {@link NullHTTPRequest} object unless
+     * {@link handleAction()} or {@link handleRequest()} have been called,
+     * which adds a reference to an actual {@link HTTPRequest} object.
+     *
+     * @return HTTPRequest|NullHTTPRequest
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Typically the request is set through {@link handleAction()}
+     * or {@link handleRequest()}, but in some based we want to set it manually.
+     *
+     * @param HTTPRequest $request
+     * @return $this
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+        return $this;
+    }
 }

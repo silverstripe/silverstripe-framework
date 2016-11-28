@@ -90,7 +90,7 @@ class AssetManipulationList
         unset($this->protected[$key]);
         unset($this->deleted[$key]);
         // Skip if already public
-        if(isset($this->public[$key])) {
+        if (isset($this->public[$key])) {
             return false;
         }
         unset($asset['Variant']);
@@ -113,7 +113,7 @@ class AssetManipulationList
         }
         unset($this->deleted[$key]);
         // Skip if already protected
-        if(isset($this->protected[$key])) {
+        if (isset($this->protected[$key])) {
             return false;
         }
         unset($asset['Variant']);
@@ -135,7 +135,7 @@ class AssetManipulationList
             return false;
         }
         // Skip if already deleted
-        if(isset($this->deleted[$key])) {
+        if (isset($this->deleted[$key])) {
             return false;
         }
         unset($asset['Variant']);

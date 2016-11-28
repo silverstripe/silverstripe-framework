@@ -15,12 +15,13 @@
 define('FRAMEWORK_NAME', 'framework');
 
 if (version_compare(phpversion(), '5.5.0', '<')) {
-	header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
-	echo str_replace(
-		array('$PHPVersion', 'sapphire'),
-		array(phpversion(), FRAMEWORK_NAME),
-		file_get_contents(__DIR__ . "/php5-required.html"));
-	die();
+    header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+    echo str_replace(
+        array('$PHPVersion', 'sapphire'),
+        array(phpversion(), FRAMEWORK_NAME),
+        file_get_contents(__DIR__ . "/php5-required.html")
+    );
+    die();
 }
 
 include(__DIR__ . '/install.php5');

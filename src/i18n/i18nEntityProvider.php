@@ -18,56 +18,57 @@ namespace SilverStripe\i18n;
  *
  * @uses i18nTextCollector->collectFromEntityProviders()
  */
-interface i18nEntityProvider {
+interface i18nEntityProvider
+{
 
-	/**
-	 * Example usage:
-	 * <code>
-	 * class MyTestClass implements i18nEntityProvider {
-	 * function provideI18nEntities() {
-	 * 	$entities = array();
-	 * 	foreach($this->stat('my_static_array) as $key => $value) {
-	 * 		$entities["MyTestClass.my_static_array_{$key}"] = array(
-	 * 			$value,
-	 *
-	 * 			'My context description'
-	 * 		);
-	 * 	}
-	 * 	return $entities;
-	 * }
-	 *
-	 * public static function my_static_array() {
-	 * 	$t_my_static_array = array();
-	 * 	foreach(self::$my_static_array as $k => $v) {
-	 * 		$t_my_static_array[$k] = _t("MyTestClass.my_static_array_{$key}", $v);
-	 * 	}
-	 * 	return $t_my_static_array;
-	 * }
-	 * }
-	 * </code>
-	 *
-	 * Example usage in {@link DataObject->provideI18nEntities()}.
-	 *
-	 * You can ask textcollector to add the provided entity to a different module
-	 * than the class is contained in by adding a 4th argument to the array:
-	 * <code>
-	 * class MyTestClass implements i18nEntityProvider {
-	 * function provideI18nEntities() {
-	 * 	$entities = array();
-	 * 		$entities["MyOtherModuleClass.MYENTITY"] = array(
-	 * 			$value,
-	 *
-	 * 			'My context description',
-	 * 			'myothermodule'
-	 * 		);
-	 * 	}
-	 * 	return $entities;
-	 * }
-	 * </code>
-	 *
-	 * @return array All entites in an associative array, with
-	 * entity name as the key, and a numerical array of pseudo-arguments
-	 * for _t() as a value.
-	 */
-	public function provideI18nEntities();
+    /**
+     * Example usage:
+     * <code>
+     * class MyTestClass implements i18nEntityProvider {
+     * function provideI18nEntities() {
+     *  $entities = array();
+     *  foreach($this->stat('my_static_array) as $key => $value) {
+     *      $entities["MyTestClass.my_static_array_{$key}"] = array(
+     *          $value,
+     *
+     *          'My context description'
+     *      );
+     *  }
+     *  return $entities;
+     * }
+     *
+     * public static function my_static_array() {
+     *  $t_my_static_array = array();
+     *  foreach(self::$my_static_array as $k => $v) {
+     *      $t_my_static_array[$k] = _t("MyTestClass.my_static_array_{$key}", $v);
+     *  }
+     *  return $t_my_static_array;
+     * }
+     * }
+     * </code>
+     *
+     * Example usage in {@link DataObject->provideI18nEntities()}.
+     *
+     * You can ask textcollector to add the provided entity to a different module
+     * than the class is contained in by adding a 4th argument to the array:
+     * <code>
+     * class MyTestClass implements i18nEntityProvider {
+     * function provideI18nEntities() {
+     *  $entities = array();
+     *      $entities["MyOtherModuleClass.MYENTITY"] = array(
+     *          $value,
+     *
+     *          'My context description',
+     *          'myothermodule'
+     *      );
+     *  }
+     *  return $entities;
+     * }
+     * </code>
+     *
+     * @return array All entites in an associative array, with
+     * entity name as the key, and a numerical array of pseudo-arguments
+     * for _t() as a value.
+     */
+    public function provideI18nEntities();
 }

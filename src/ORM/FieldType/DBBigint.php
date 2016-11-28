@@ -12,18 +12,20 @@ use SilverStripe\ORM\DB;
  * @subpackage model
  * @see Int
  */
-class DBBigInt extends DBInt {
+class DBBigInt extends DBInt
+{
 
-	public function requireField() {
-		$parts = array(
-			'datatype' => 'bigint',
-			'precision' => 8,
-			'null' => 'not null',
-			'default' => $this->defaultVal,
-			'arrayValue' => $this->arrayValue
-		);
+    public function requireField()
+    {
+        $parts = array(
+            'datatype' => 'bigint',
+            'precision' => 8,
+            'null' => 'not null',
+            'default' => $this->defaultVal,
+            'arrayValue' => $this->arrayValue
+        );
 
-		$values = array('type' => 'bigint', 'parts' => $parts);
-		DB::require_field($this->tableName, $this->name, $values);
-	}
+        $values = array('type' => 'bigint', 'parts' => $parts);
+        DB::require_field($this->tableName, $this->name, $values);
+    }
 }
