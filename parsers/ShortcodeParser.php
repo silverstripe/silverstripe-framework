@@ -606,9 +606,9 @@ class ShortcodeParser extends Object {
 				if(!empty($tag['attrs']['location'])) $class = $tag['attrs']['location'];
 				else if(!empty($tag['attrs']['class'])) $class = $tag['attrs']['class'];
 
-				$location = self::INLINE;
-				if($class == 'left' || $class == 'right') $location = self::BEFORE;
-				if($class == 'center' || $class == 'leftALone') $location = self::SPLIT;
+			$location = self::INLINE;
+			if($class == 'left' || $class == 'right') $location = self::BEFORE;
+			if($class == 'center' || $class == 'leftAlone') $location = self::SPLIT;
 
 				if(!$parent) {
 					if($location !== self::INLINE) {
