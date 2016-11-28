@@ -53,7 +53,7 @@ class ReadonlyField extends FormField {
 	}
 
 	public function Value() {
-		if($this->value) return $this->dontEscape ? $this->value : Convert::raw2xml($this->value);
+		if($this->value) return $this->getDontEscape() ? $this->value : Convert::raw2xml($this->value);
 		else return '<i>(' . _t('FormField.NONE', 'none') . ')</i>';
 	}
 

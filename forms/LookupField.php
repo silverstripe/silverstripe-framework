@@ -61,7 +61,7 @@ class LookupField extends DropdownField {
 		if($mapped) {
 			$attrValue = implode(', ', array_values($mapped));
 
-			if(!$this->dontEscape) {
+			if(!$this->getDontEscape()) {
 				$attrValue = Convert::raw2xml($attrValue);
 			}
 

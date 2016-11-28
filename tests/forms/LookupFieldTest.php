@@ -34,7 +34,7 @@ class LookupFieldTest extends SapphireTest {
 		$source = array(1 => 'one', 2 => 'two', 3 => 'three');
 		$f = new LookupField('test', 'test', $source);
 		$f->setValue('<ins>w00t</ins>');
-		$f->dontEscape = true; // simulates CMSMain->compareversions()
+		$f->setDontEscape(true); // simulates CMSMain->compareversions()
 		$this->assertEquals(
 			'<span class="readonly" id="test"><ins>w00t</ins></span><input type="hidden" name="test" value="" />',
 			$f->Field()->getValue()
