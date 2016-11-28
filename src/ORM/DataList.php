@@ -405,12 +405,14 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
         // Validate and process arguments
         $arguments = func_get_args();
         switch (sizeof($arguments)) {
-            case 1: $filters = $arguments[0];
+            case 1:
+                $filters = $arguments[0];
 
-break;
-            case 2: $filters = array($arguments[0] => $arguments[1]);
+                break;
+            case 2:
+                $filters = array($arguments[0] => $arguments[1]);
 
-break;
+                break;
             default:
                 throw new InvalidArgumentException('Incorrect number of arguments passed to filter()');
         }

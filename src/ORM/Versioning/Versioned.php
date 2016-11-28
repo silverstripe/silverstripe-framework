@@ -392,7 +392,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider
                     $stageTable = $this->stageTable($table, $stage);
                     $query->renameTable($table, $stageTable);
                 }
-            break;
+                break;
 
         // Reading a specific stage, but only return items that aren't in any other stage
             case 'stage_unique':
@@ -420,7 +420,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider
                     $query->addWhere('"'.$baseTable.'"."ID" NOT IN (SELECT "ID" FROM "'.$tempName.'")');
                     $query->renameTable($tempName, $excludingTable);
                 }
-            break;
+                break;
 
         // Return all version instances
             case 'archive':
@@ -516,9 +516,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider
                         break;
                     }
                 }
-            break;
+                break;
             default:
-            throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: "
+                throw new InvalidArgumentException("Bad value for query parameter Versioned.mode: "
                 . $dataQuery->getQueryParam('Versioned.mode'));
         }
     }

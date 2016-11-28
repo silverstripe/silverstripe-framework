@@ -92,21 +92,26 @@ class CliTestReporter extends SapphireTestReporter
     {
         // Status indicator, a la PHPUnit
         switch ($this->currentTest['status']) {
-            case TEST_FAILURE: echo CLI::text("F", "red", null, true);
+            case TEST_FAILURE:
+                echo CLI::text("F", "red", null, true);
 
-break;
-            case TEST_ERROR: echo CLI::text("E", "red", null, true);
+                break;
+            case TEST_ERROR:
+                echo CLI::text("E", "red", null, true);
 
-break;
-            case TEST_INCOMPLETE: echo CLI::text("I", "yellow");
+                break;
+            case TEST_INCOMPLETE:
+                echo CLI::text("I", "yellow");
 
-break;
-            case TEST_SUCCESS: echo CLI::text(".", "green");
+                break;
+            case TEST_SUCCESS:
+                echo CLI::text(".", "green");
 
-break;
-            default: echo CLI::text("?", "yellow");
+                break;
+            default:
+                echo CLI::text("?", "yellow");
 
-break;
+                break;
         }
 
         static $colCount = 0;

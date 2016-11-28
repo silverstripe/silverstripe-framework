@@ -452,18 +452,22 @@ class SapphireTestReporter implements PHPUnit_Framework_TestListener
             foreach ($suite['tests'] as $test) {
                 $testCount++;
                 switch ($test['status']) {
-                    case TEST_ERROR: $errorCount++;
+                    case TEST_ERROR:
+                        $errorCount++;
 
-break;
-                    case TEST_INCOMPLETE: $incompleteCount++;
+                        break;
+                    case TEST_INCOMPLETE:
+                        $incompleteCount++;
 
-break;
-                    case TEST_SUCCESS: $passCount++;
+                        break;
+                    case TEST_SUCCESS:
+                        $passCount++;
 
-break;
-                    case TEST_FAILURE: $failCount++;
+                        break;
+                    case TEST_FAILURE:
+                        $failCount++;
 
-break;
+                        break;
                 }
 
                 // Report test error

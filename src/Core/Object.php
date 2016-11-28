@@ -126,19 +126,19 @@ abstract class Object
                         switch ($argString[0]) {
                             case '"':
                                 $result = stripcslashes(substr($argString, 1, -1));
-                            break;
+                                break;
                             case "'":
                                 $result = str_replace(array("\\\\", "\\'"), array("\\", "'"), substr($argString, 1, -1));
-                            break;
+                                break;
                             default:
-                            throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
+                                throw new Exception("Bad T_CONSTANT_ENCAPSED_STRING arg $argString");
                         }
 
-                    break;
+                        break;
 
                     case T_DNUMBER:
                         $result = (double)$token[1];
-                    break;
+                        break;
 
                     case T_LNUMBER:
                         $result = (int)$token[1];
@@ -150,25 +150,28 @@ abstract class Object
                         end($bucket);
                         $currentKey = current($bucket);
                         array_pop($bucket);
-                    break;
+                        break;
 
                     case T_STRING:
                         switch ($token[1]) {
-                            case 'true': $result = true;
+                            case 'true':
+                                $result = true;
 
-break;
-                            case 'false': $result = false;
+                                break;
+                            case 'false':
+                                $result = false;
 
-break;
-                            case 'null': $result = null;
+                                break;
+                            case 'null':
+                                $result = null;
                                 $forceResult = true;
 
-break;
+                                break;
                             default:
-throw new Exception("Bad T_STRING arg '{$token[1]}'");
+                                throw new Exception("Bad T_STRING arg '{$token[1]}'");
                         }
 
-                    break;
+                        break;
 
                     case T_ARRAY:
                         $result = array();

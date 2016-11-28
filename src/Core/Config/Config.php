@@ -489,7 +489,7 @@ class Config
         return false;
     }
 
-    static protected function check_key_or_value_contained_in_suppress_array($k, $v, $suppresses)
+    protected static function check_key_or_value_contained_in_suppress_array($k, $v, $suppresses)
     {
         foreach ($suppresses as $suppress) {
             list($sk, $sv) = $suppress;
@@ -500,7 +500,7 @@ class Config
         return false;
     }
 
-    static protected function filter_array_by_suppress_array($array, $suppress)
+    protected static function filter_array_by_suppress_array($array, $suppress)
     {
         $res = array();
 

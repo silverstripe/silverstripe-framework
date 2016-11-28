@@ -331,7 +331,6 @@ abstract class Database
             // Switch command type
             switch ($writeInfo['command']) {
                 case "update":
-
                     // Build update
                     $query = new SQLUpdate("\"$table\"", $this->escapeColumnKeys($fieldValues));
 

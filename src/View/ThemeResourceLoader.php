@@ -124,11 +124,11 @@ class ThemeResourceLoader
             switch ($package) {
                 case 'silverstripe/framework':
                     $modulePath = FRAMEWORK_DIR;
-                break;
+                    break;
 
                 case 'silverstripe/cms':
                     $modulePath = CMS_DIR;
-                break;
+                    break;
 
                 default:
                     list($vendor, $modulePath) = explode('/', $parts[0], 2);

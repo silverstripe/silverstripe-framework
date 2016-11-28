@@ -402,14 +402,15 @@ class GDBackend extends Object implements Image_Backend, Flushable
                 switch ($angle) {
                     case 90:
                         imagesetpixel($rotate, $y, $destHeight - $x - 1, $color);
-                    break;
+                        break;
                     case 180:
                         imagesetpixel($rotate, $destWidth - $x - 1, $destHeight - $y - 1, $color);
-                    break;
+                        break;
                     case 270:
                         imagesetpixel($rotate, $destWidth - $y - 1, $x, $color);
-                    break;
-                    default: $rotate = $this->gd;
+                        break;
+                    default:
+                        $rotate = $this->gd;
                 };
             }
         }
