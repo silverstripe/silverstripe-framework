@@ -1,92 +1,103 @@
 hr:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: "Izgleda kako nemate potrebna prava za dodati {ObjectTitle} na {CampaignTitle}"
+    ErrorGeneral: "Ispričavamo se, dogodila se greška"
+    ErrorItemPermissionDenied: "Izgleda kako nemate potrebna prava za dodati {ObjectTitle} na kampanju"
+    ErrorNotFound: "{Type} nije pronađen"
+    Success: "Uspješno dodao  {ObjectTitle} na {CampaignTitle}"
   AssetAdmin:
-    NEWFOLDER: Novi direktorij
-    SHOWALLOWEDEXTS: 'Prikaži dozvoljene ekstenzije'
+    ALLOWEDEXTS: "Dozvoljene ekstenzije datoteka za prijenos"
+    HIDEALLOWEDEXTS: "Sakrij dozvoljene ekstenzije"
+    NEWFOLDER: "Novi direktorij"
+    SHOWALLOWEDEXTS: "Prikaži dozvoljene ekstenzije"
   AssetTableField:
-    CREATED: 'Uploadano'
+    CREATED: Uploadano
     DIM: Dimenzije
-    FILENAME: Naziv datoteke
+    FILENAME: "Naziv datoteke"
     FOLDER: Direktorij
     HEIGHT: Visina
-    LASTEDIT: 'Zadnja promjena'
+    LASTEDIT: "Zadnja promjena"
     OWNER: Vlasnik
-    SIZE: 'Veličina datoteke'
+    PATH: Put
+    SIZE: "Veličina datoteke"
     TITLE: Naslov
-    TYPE: 'Tip datoteke'
+    TYPE: "Tip datoteke"
     URL: Link
     WIDTH: Širina
   AssetUploadField:
-    ChooseFiles: 'Odaberite datoteke'
-    DRAGFILESHERE: 'Povucite datoteke ovdje'
-    DROPAREA: 'Područje ubacivanja'
-    EDITALL: 'Uredi sve'
-    EDITANDORGANIZE: 'Uredi i organiziraj'
-    EDITINFO: 'Uredi datoteke'
+    ChooseFiles: "Odaberite datoteke"
+    DRAGFILESHERE: "Povucite datoteke ovdje"
+    DROPAREA: "Područje ubacivanja"
+    EDITALL: "Uredi sve"
+    EDITANDORGANIZE: "Uredi i organiziraj"
+    EDITINFO: "Uredi datoteke"
     FILES: Datoteke
-    FROMCOMPUTER: 'Odaberite datoteke sa svog računala'
-    FROMCOMPUTERINFO: 'Uploadajte sa svog računala'
-    INSERTURL: 'Ubaci sa linka'
-    REMOVEINFO: 'Izbrišite ovu datoteku s ovog polja'
+    FROMCOMPUTER: "Odaberite datoteke sa svog računala"
+    FROMCOMPUTERINFO: "Uploadajte sa svog računala"
+    INSERTURL: "Ubaci sa linka"
+    REMOVEINFO: "Izbrišite ovu datoteku s ovog polja"
     TOTAL: Ukupno
-    UPLOADINPROGRESS: 'Molim pričekajte... upload u tijeku'
+    TOUPLOAD: "Odaberite datoteke za upload..."
+    UPLOADINPROGRESS: "Molim pričekajte... upload u tijeku"
     UPLOADOR: ILI
   BBCodeParser:
     ALIGNEMENT: Poravnanje
-    BOLD: 'Bold Text'
+    ALIGNEMENTEXAMPLE: "desno poravnato"
+    BOLD: "Bold Text"
     BOLDEXAMPLE: Bold
   BackLink_Button_ss:
     Back: Nazad
   BasicAuth:
-    ENTERINFO: 'Unesite korisničko ime i lozinu'
-    ERRORNOTADMIN: 'Korisnik nije administrator'
-    ERRORNOTREC: 'Korisničko ime / lozinka nije prepoznata'
+    ENTERINFO: "Unesite korisničko ime i lozinu"
+    ERRORNOTADMIN: "Korisnik nije administrator"
+    ERRORNOTREC: "Korisničko ime / lozinka nije prepoznata"
   Boolean:
-    ANY: Bilo koji
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    ANY: "Bilo koji"
+    NOANSWER: Ne
+    YESANSWER: Da
   CMSLoadingScreen_ss:
     LOADING: učitavam...
   CMSMain:
     SAVE: Snimi
   CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 'Zaboravljena lozinka?'
+    BUTTONFORGOTPASSWORD: "Zaboravljena lozinka?"
   CMSPagesController_Tools_ss:
     FILTER: Filter
   CMSProfileController:
-    MENUTITLE: 'Moj profil'
+    MENUTITLE: "Moj profil"
   CMSSecurity:
     SUCCESS: Uspjeh
-    TimedOutTitleAnonymous: 'Vaša sesija je istekla.'
-    TimedOutTitleMember: 'Bok {name}!<br />Vaša sesija je istekla.'
+    TimedOutTitleAnonymous: "Vaša sesija je istekla."
+    TimedOutTitleMember: "Bok {name}!<br />Vaša sesija je istekla."
   CampaignAdmin:
     MENUTITLE: Kampanje
   Campaigns:
-    AddToCampaign: 'Dodaj kampanji'
+    AddToCampaign: "Dodaj kampanji"
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 'Promjenili ste lozinku za '
-    CHANGEPASSWORDTEXT2: 'Za prijavu koristite slijedeće podatke'
-    CHANGEPASSWORDTEXT3: 'Promjeni lozinku'
+    CHANGEPASSWORDTEXT1: "Promjenili ste lozinku za "
+    CHANGEPASSWORDTEXT2: "Za prijavu koristite slijedeće podatke"
+    CHANGEPASSWORDTEXT3: "Promjeni lozinku"
     EMAIL: Email
     HELLO: Pozdrav
     PASSWORD: Lozinka
   ChangeSet:
-    DESCRIPTION_AND: '{first} i {second}'
+    DESCRIPTION_AND: "{first} i {second}"
     DESCRIPTION_ITEM: stavka
     DESCRIPTION_ITEMS: stavke
-    DESCRIPTION_LIST_FIRST: '{item}'
-    DESCRIPTION_LIST_LAST: '{list}, i {item}'
-    DESCRIPTION_LIST_MID: '{list}, {item}'
-    DESCRIPTION_OTHER_ITEM: 'ostala stavka'
-    DESCRIPTION_OTHER_ITEMS: 'ostale stavke'
+    DESCRIPTION_LIST_FIRST: "{item}"
+    DESCRIPTION_LIST_LAST: "{list}, i {item}"
+    DESCRIPTION_LIST_MID: "{list}, {item}"
+    DESCRIPTION_OTHER_ITEM: "ostala stavka"
+    DESCRIPTION_OTHER_ITEMS: "ostale stavke"
     NAME: Naziv
     PLURALNAME: Kampanje
     SINGULARNAME: Kampanja
     STATE: Stanje
   CheckboxField:
-    NOANSWER: 'Ne'
-    YESANSWER: 'Da'
+    NOANSWER: Ne
+    YESANSWER: Da
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 'Promjenite lozinku'
+    SHOWONCLICKTITLE: "Promjenite lozinku"
   CreditCardField:
     FIRST: prvi
     FOURTH: četvrti
@@ -95,107 +106,107 @@ hr:
   CurrencyField:
     CURRENCYSYMBOL: $
   DataObject:
-    PLURALNAME: 'Podatkovni objekti'
-    SINGULARNAME: 'Podatkovni objekt'
+    PLURALNAME: "Podatkovni objekti"
+    SINGULARNAME: "Podatkovni objekt"
   Date:
     DAY: dan
     DAYS: dana
     HOUR: sat
     HOURS: sati
-    LessThanMinuteAgo: 'manje od minute'
+    LessThanMinuteAgo: "manje od minute"
     MIN: min
     MINS: minuta
     MONTH: mjesec
     MONTHS: mjeseci
     SEC: sek
     SECS: sekundi
-    TIMEDIFFAGO: 'prije {difference}'
-    TIMEDIFFIN: 'za {difference}'
+    TIMEDIFFAGO: "prije {difference}"
+    TIMEDIFFIN: "za {difference}"
     YEAR: godina
     YEARS: godina
   DateField:
-    NOTSET: 'nije postavljeno'
+    NOTSET: "nije postavljeno"
     TODAY: danas
-    VALIDDATEFORMAT2: 'Molimo unesite datum u ispravnom formatu ({format})'
+    VALIDDATEFORMAT2: "Molimo unesite datum u ispravnom formatu ({format})"
   DatetimeField:
-    NOTSET: 'Nije postavljeno'
+    NOTSET: "Nije postavljeno"
   Director:
-    INVALID_REQUEST: 'Neispravan zahtjev'
+    INVALID_REQUEST: "Neispravan zahtjev"
   DropdownField:
     CHOOSE: (Odaberite)
   EmailField:
-    VALIDATION: 'Molimo unesite email adresu'
+    VALIDATION: "Molimo unesite email adresu"
   Enum:
-    ANY: bilo koji
+    ANY: "bilo koji"
   File:
-    AviType: 'AVI video datoteka'
+    AviType: "AVI video datoteka"
     Content: Sadržaj
-    CssType: 'CSS datoteka'
-    DocType: 'Word dokument'
-    Filename: Naziv datoteke
-    GifType: 'GIF slika - dobra za dijagrame'
-    GzType: 'GZIP komprimirana datoteka'
-    HtlType: 'HTML datoteka'
-    HtmlType: 'HTML datoteka'
-    INVALIDEXTENSION: 'Ekstenzija nije dozvoljena (valjane: {extensions}) '
-    INVALIDEXTENSIONSHORT: 'Ekstenzija nije dozvoljena'
-    IcoType: 'Slika ikone'
-    JpgType: 'JPEG slika - dobra za fotografije'
-    JsType: 'Javascript datoteka'
-    Mp3Type: 'MP3 zvuk datoteka'
-    MpgType: 'MPEG video datoteka'
-    NOVALIDUPLOAD: 'Datoteka nije valjan upload'
+    CssType: "CSS datoteka"
+    DocType: "Word dokument"
+    Filename: "Naziv datoteke"
+    GifType: "GIF slika - dobra za dijagrame"
+    GzType: "GZIP komprimirana datoteka"
+    HtlType: "HTML datoteka"
+    HtmlType: "HTML datoteka"
+    INVALIDEXTENSION: "Ekstenzija nije dozvoljena (valjane: {extensions}) "
+    INVALIDEXTENSIONSHORT: "Ekstenzija nije dozvoljena"
+    IcoType: "Slika ikone"
+    JpgType: "JPEG slika - dobra za fotografije"
+    JsType: "Javascript datoteka"
+    Mp3Type: "MP3 zvuk datoteka"
+    MpgType: "MPEG video datoteka"
+    NOVALIDUPLOAD: "Datoteka nije valjan upload"
     Name: Naziv
     PLURALNAME: Datoteke
-    PngType: 'PNG slika - dobar generalan format'
+    PngType: "PNG slika - dobar generalan format"
     SINGULARNAME: Datoteka
     Title: Naslov
-    WavType: 'WAV zvuk datoteka'
-    XlsType: 'Excel tablica'
-    ZipType: 'ZIP komprimirana datoteka'
+    WavType: "WAV zvuk datoteka"
+    XlsType: "Excel tablica"
+    ZipType: "ZIP komprimirana datoteka"
   Folder:
     PLURALNAME: Direktoriji
     SINGULARNAME: Direktorij
   ForgotPasswordEmail_ss:
     HELLO: Pozdrav
-    TEXT1: 'Ovdje je Vaš'
-    TEXT2: 'link za resetiranje lozinke'
+    TEXT1: "Ovdje je Vaš"
+    TEXT2: "link za resetiranje lozinke"
     TEXT3: za
   Form:
     SubmitBtnLabel: Kreni
-    VALIDATIONNOTUNIQUE: 'Unešena vrijednost nije unikatna'
-    VALIDATIONPASSWORDSDONTMATCH: 'Lozinke se ne slažu'
-    VALIDATIONPASSWORDSNOTEMPTY: 'Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak'
+    VALIDATIONNOTUNIQUE: "Unešena vrijednost nije unikatna"
+    VALIDATIONPASSWORDSDONTMATCH: "Lozinke se ne slažu"
+    VALIDATIONPASSWORDSNOTEMPTY: "Lozinke moraju imati najmanje jedan broj i jedan alfanumerički znak"
   FormField:
     NONE: nijedan
   GridAction:
     DELETE_DESCRIPTION: Obriši
     Delete: Obriši
   GridField:
-    Add: 'Dodaj {name}'
+    Add: "Dodaj {name}"
     Filter: Filter
-    FilterBy: 'Filtriraj po'
+    FilterBy: "Filtriraj po"
     Find: Pronađi
   GridFieldDetailForm:
     CancelBtn: Odustani
     Create: Kreiraj
     Delete: Obriši
-    DeletePermissionsFailure: 'Nema dozvole brisanja'
-    Deleted: 'Obrisano %s %s'
+    DeletePermissionsFailure: "Nema dozvole brisanja"
+    Deleted: "Obrisano %s %s"
     Save: Spremi
-    Saved: 'Spremljeno {name} {link}'
+    Saved: "Spremljeno {name} {link}"
   GridFieldEditButton_ss:
     EDIT: Uredi
   GridFieldItemEditView:
-    Go_back: 'Idi nazad'
+    Go_back: "Idi nazad"
   Group:
-    Code: 'Krupni kod'
+    Code: "Krupni kod"
     DefaultGroupTitleAdministrators: Administratori
-    DefaultGroupTitleContentAuthors: 'Autori sadržaja'
+    DefaultGroupTitleContentAuthors: "Autori sadržaja"
     Description: Opis
-    Locked: 'Zaključano?'
+    Locked: Zaključano?
     PLURALNAME: Grupe
-    Parent: 'Roditeljska grupa'
+    Parent: "Roditeljska grupa"
     SINGULARNAME: Grupa
     has_many_Permissions: Dozvole
     many_many_Members: Članovi
@@ -205,40 +216,40 @@ hr:
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Visina
     IMAGEWIDTHPX: Širina
-    LINK: 'Ubaci vezu'
-    LINKOPENNEWWIN: 'Otvori link u novom prozoru?'
+    LINK: "Ubaci vezu"
+    LINKOPENNEWWIN: "Otvori link u novom prozoru?"
     PAGE: Stranica
     URL: Link
   HtmlEditorField:
     ANCHORVALUE: Sidro
-    BUTTONADDURL: 'Dodaj link'
+    BUTTONADDURL: "Dodaj link"
     BUTTONINSERT: Ubaci
-    BUTTONINSERTLINK: 'Ubaci vezu'
-    BUTTONREMOVELINK: 'Obriši vezu'
+    BUTTONINSERTLINK: "Ubaci vezu"
+    BUTTONREMOVELINK: "Obriši vezu"
     BUTTONUpdate: Ažuriraj
-    CSSCLASS: 'Poravnanje / Stil'
-    CSSCLASSCENTER: 'Centralno'
-    CSSCLASSLEFT: 'Lijevo, sa okruženjem teksta.'
-    CSSCLASSRIGHT: 'Desno, sa okruženjem teksta'
+    CSSCLASS: "Poravnanje / Stil"
+    CSSCLASSCENTER: Centralno
+    CSSCLASSLEFT: "Lijevo, sa okruženjem teksta."
+    CSSCLASSRIGHT: "Desno, sa okruženjem teksta"
     DETAILS: Detalji
-    EMAIL: 'Email adresa'
+    EMAIL: "Email adresa"
     FILE: Datoteka
     FOLDER: Direktorij
-    FROMCOMPUTER: 'Sa računala'
-    FROMWEB: 'Sa weba'
-    FindInFolder: 'Pronađi u direktoriju'
-    IMAGEALT: 'Alternativni tekst (alt)'
+    FROMCOMPUTER: "Sa računala"
+    FROMWEB: "Sa weba"
+    FindInFolder: "Pronađi u direktoriju"
+    IMAGEALT: "Alternativni tekst (alt)"
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Visina
     IMAGEWIDTHPX: Širina
-    LINK: 'Ubaci/uredi link za označeni tekst'
-    LINKDESCR: 'Opis veze'
-    LINKEMAIL: 'Email adresa'
-    LINKEXTERNAL: 'Na drugom webu'
-    LINKFILE: 'Preuzmite datoteku'
-    LINKINTERNAL: 'Stranicu na ovom webu'
-    LINKOPENNEWWIN: 'Otvori vezu (link) u novom prozoru?'
-    LINKTO: 'Poveži na'
+    LINK: "Ubaci/uredi link za označeni tekst"
+    LINKDESCR: "Opis veze"
+    LINKEMAIL: "Email adresa"
+    LINKEXTERNAL: "Na drugom webu"
+    LINKFILE: "Preuzmite datoteku"
+    LINKINTERNAL: "Stranicu na ovom webu"
+    LINKOPENNEWWIN: "Otvori vezu (link) u novom prozoru?"
+    LINKTO: "Poveži na"
     PAGE: Stranica
   Image:
     PLURALNAME: Datoteke
@@ -247,66 +258,66 @@ hr:
     PLURALNAME: Datoteke
     SINGULARNAME: Datoteka
   Image_iframe_ss:
-    TITLE: 'Iframe za upload slike'
+    TITLE: "Iframe za upload slike"
   LeftAndMain:
     CANCEL: Odustani
     DELETED: Obrisano.
     HELP: Pomoć
-    PERMAGAIN: 'Odjavili ste se sa sustava. Želite li se ponovno prijaviti upišite korisničko ime i lozinku.'
+    PERMAGAIN: "Odjavili ste se sa sustava. Želite li se ponovno prijaviti upišite korisničko ime i lozinku."
     PreviewButton: Pregled
     SAVEDUP: Spremljeno
-    ValidationError: 'Greška validacije'
+    ValidationError: "Greška validacije"
   LeftAndMain_Menu_ss:
     Hello: Pozdrav
-    LOGOUT: 'Odjava'
+    LOGOUT: Odjava
   LoginAttempt:
-    Email: 'Email adresa'
-    IP: 'IP adresa'
+    Email: "Email adresa"
+    IP: "IP adresa"
     Status: Status
   Member:
-    ADDGROUP: 'Dodaj grupu'
-    BUTTONCHANGEPASSWORD: 'Promjeni lozinku'
-    BUTTONLOGIN: 'Prijava'
-    BUTTONLOGINOTHER: 'Prijavite se kao netko drugi'
-    BUTTONLOSTPASSWORD: 'Zaboravljena lozinka?'
-    CANTEDIT: 'Nema prava za to'
-    CONFIRMNEWPASSWORD: 'Potvrdite novu lozinku'
-    CONFIRMPASSWORD: 'Potvrdi lozinku'
-    CURRENT_PASSWORD: 'Trenutna lozinka'
-    DATEFORMAT: 'Format datuma'
-    DefaultAdminFirstname: 'Zadani administrator'
+    ADDGROUP: "Dodaj grupu"
+    BUTTONCHANGEPASSWORD: "Promjeni lozinku"
+    BUTTONLOGIN: Prijava
+    BUTTONLOGINOTHER: "Prijavite se kao netko drugi"
+    BUTTONLOSTPASSWORD: "Zaboravljena lozinka?"
+    CANTEDIT: "Nema prava za to"
+    CONFIRMNEWPASSWORD: "Potvrdite novu lozinku"
+    CONFIRMPASSWORD: "Potvrdi lozinku"
+    CURRENT_PASSWORD: "Trenutna lozinka"
+    DATEFORMAT: "Format datuma"
+    DefaultAdminFirstname: "Zadani administrator"
     DefaultDateTime: zadano
-    EDIT_PASSWORD: 'Nova lozinka'
+    EDIT_PASSWORD: "Nova lozinka"
     EMAIL: Email
-    ERRORNEWPASSWORD: 'Pogrešno ste upisali novu lozinku, pokušajte ponovno.'
-    ERRORPASSWORDNOTMATCH: 'Vaša trenutna lozinka se ne podudara, probajte ponovno'
-    FIRSTNAME: 'Ime'
-    INTERFACELANG: 'Jezik sučelja'
-    NEWPASSWORD: 'Nova lozinka'
+    ERRORNEWPASSWORD: "Pogrešno ste upisali novu lozinku, pokušajte ponovno."
+    ERRORPASSWORDNOTMATCH: "Vaša trenutna lozinka se ne podudara, probajte ponovno"
+    FIRSTNAME: Ime
+    INTERFACELANG: "Jezik sučelja"
+    NEWPASSWORD: "Nova lozinka"
     PASSWORD: Lozinka
     PLURALNAME: Članovi
     SINGULARNAME: Član
-    SUBJECTPASSWORDCHANGED: 'Vaša lozinka je izmjenjena'
-    SUBJECTPASSWORDRESET: 'Link za reset lozinke'
+    SUBJECTPASSWORDCHANGED: "Vaša lozinka je izmjenjena"
+    SUBJECTPASSWORDRESET: "Link za reset lozinke"
     SURNAME: Prezime
-    YOUROLDPASSWORD: 'Stara lozinka'
+    YOUROLDPASSWORD: "Stara lozinka"
     belongs_many_many_Groups: Grupe
-    db_LastVisited: 'Datum zadnje posjete'
-    db_LockedOutUntil: 'Zaključano do'
+    db_LastVisited: "Datum zadnje posjete"
+    db_LockedOutUntil: "Zaključano do"
     db_Password: Lozinka
-    db_PasswordExpiry: 'Lozinka ističe'
+    db_PasswordExpiry: "Lozinka ističe"
   MemberAuthenticator:
-    TITLE: 'E-mail &amp; Lozinka'
+    TITLE: "E-mail &amp; Lozinka"
   MemberDatetimeOptionsetField:
     Preview: Pregled
   ModelAdmin:
-    IMPORT: 'Uvezi iz CSV'
-    IMPORTEDRECORDS: 'Uveženo {count} zapisa.'
-    NOCSVFILE: 'Molimo pretražite CSV datoteku za uvoz'
-    NOIMPORT: 'Ništa za uvoz'
+    IMPORT: "Uvezi iz CSV"
+    IMPORTEDRECORDS: "Uveženo {count} zapisa."
+    NOCSVFILE: "Molimo pretražite CSV datoteku za uvoz"
+    NOIMPORT: "Ništa za uvoz"
     RESET: Resetiraj
-    Title: 'Klasa podataka'
-    UPDATEDRECORDS: 'Osvježeno {count} zapisa.'
+    Title: "Klasa podataka"
+    UPDATEDRECORDS: "Osvježeno {count} zapisa."
   ModelAdmin_Tools_ss:
     FILTER: Filter
     IMPORT: Uvoz
@@ -320,8 +331,8 @@ hr:
     View: Pregled
   Permission:
     AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: 'CMS pristup'
-    FULLADMINRIGHTS: 'Puna administrativna prava'
+    CMS_ACCESS_CATEGORY: "CMS pristup"
+    FULLADMINRIGHTS: "Puna administrativna prava"
     PLURALNAME: Dozvole
     SINGULARNAME: Dozvola
   PermissionRole:
@@ -329,22 +340,22 @@ hr:
     SINGULARNAME: Uloga
     Title: Naslov
   PhoneNumberField:
-    VALIDATION: 'Molim unesite ispravan telefonski broj'
+    VALIDATION: "Molim unesite ispravan telefonski broj"
   Security:
-    ALREADYLOGGEDIN: 'Nije Vam dozvoljen pristup ovoj stranici. Imate li drugi korisnički račun koji ima prava pristupa ovoj stranici možete se koristiti njime.'
-    BUTTONSEND: 'Pošalji mi link za reset lozinke'
-    CHANGEPASSWORDBELOW: 'Svoju lozinku možete promjeniti ovdje'
-    CHANGEPASSWORDHEADER: 'Promjeni lozinku'
-    ENTERNEWPASSWORD: 'Upišite novu lozinku'
-    ERRORPASSWORDPERMISSION: 'Morate biti prijavljeni kako bi ste promjenili lozinku'
-    LOGGEDOUT: 'Odlogirani ste. Želite li se ponovno logirati, upišite podatke'
-    LOGIN: 'Logiraj se'
-    NOTEPAGESECURED: 'Ova stranica je zaštićena. Prijavite se na sustav sa svojim pristupnim podatcima i odmah ćemo vas preusmjeriti.'
-    NOTERESETPASSWORD: 'Unesite svoju e-mail adresu, a mi ćemo Vam poslati link putem kojega možete resetirati Vašu lozinku.'
+    ALREADYLOGGEDIN: "Nije Vam dozvoljen pristup ovoj stranici. Imate li drugi korisnički račun koji ima prava pristupa ovoj stranici možete se koristiti njime."
+    BUTTONSEND: "Pošalji mi link za reset lozinke"
+    CHANGEPASSWORDBELOW: "Svoju lozinku možete promjeniti ovdje"
+    CHANGEPASSWORDHEADER: "Promjeni lozinku"
+    ENTERNEWPASSWORD: "Upišite novu lozinku"
+    ERRORPASSWORDPERMISSION: "Morate biti prijavljeni kako bi ste promjenili lozinku"
+    LOGGEDOUT: "Odlogirani ste. Želite li se ponovno logirati, upišite podatke"
+    LOGIN: "Logiraj se"
+    NOTEPAGESECURED: "Ova stranica je zaštićena. Prijavite se na sustav sa svojim pristupnim podatcima i odmah ćemo vas preusmjeriti."
+    NOTERESETPASSWORD: "Unesite svoju e-mail adresu, a mi ćemo Vam poslati link putem kojega možete resetirati Vašu lozinku."
   SecurityAdmin:
     MEMBERS: Članovi
     MENUTITLE: Sigurnost
-    NEWGROUP: 'Nova Grupa'
+    NEWGROUP: "Nova Grupa"
     PERMISSIONS: Dozvole
     ROLES: Uloge
     TABROLES: Uloge
@@ -352,7 +363,7 @@ hr:
   SilverStripeNavigator:
     Auto: Aut
     Edit: Uredi
-    EditView: 'Mod uređivanja'
+    EditView: "Mod uređivanja"
     Width: širina
   SiteTree:
     TABMAIN: Osnovno
@@ -364,15 +375,15 @@ hr:
     LESS: manje
     MORE: više
   UploadField:
-    ATTACHFILE: 'Dodaj datoteku'
-    ATTACHFILES: 'Dodaj datoteke'
-    AttachFile: 'Dodaj datoteku(e)'
-    CHOOSEANOTHERFILE: 'Odaberi drugu datoteku'
-    DELETE: 'Obriši iz datoteka'
+    ATTACHFILE: "Dodaj datoteku"
+    ATTACHFILES: "Dodaj datoteke"
+    AttachFile: "Dodaj datoteku(e)"
+    CHOOSEANOTHERFILE: "Odaberi drugu datoteku"
+    DELETE: "Obriši iz datoteka"
     DOEDIT: Snimi
     EDIT: Uredi
-    EDITINFO: 'Uredi ovu datoteku'
-    FROMCOMPUTER: 'Sa računala'
+    EDITINFO: "Uredi ovu datoteku"
+    FROMCOMPUTER: "Sa računala"
     REMOVE: Ukloni
   Versioned:
     has_many_Versions: Verzije

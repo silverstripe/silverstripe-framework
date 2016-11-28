@@ -165,6 +165,14 @@ class FormField extends RequestHandler {
 	protected $attributes = array();
 
 	/**
+	 * @config
+	 * @var array
+	 */
+	private static $casting = array(
+		'Value' => 'Text',
+	);
+
+	/**
 	 * Takes a field name and converts camelcase to spaced words. Also resolves combined field
 	 * names with dot syntax to spaced words.
 	 *
@@ -1267,6 +1275,15 @@ class FormField extends RequestHandler {
 		$field->dontEscape = $this->dontEscape;
 
 		return $field;
+	}
+
+	/**
+	 * Determine if the value of this formfield accepts front-end submitted values and is saveable.
+	 *
+	 * @return bool
+	 */
+	public function canSubmitValue() {
+		return $this->hasData() && !$this->isReadonly() && !$this->isDisabled();
 	}
 
 }
