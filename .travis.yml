@@ -21,7 +21,7 @@ matrix:
     - php: 5.5
       env: DB=PGSQL PHPUNIT_TEST=1
     - php: 5.6
-      env: DB=MYSQL PHPUNIT_TEST=1
+      env: DB=MYSQL PHPUNIT_TEST=1 PHPCS_TEST=1
     - php: 7.0
       env: DB=MYSQL PDO=1 PHPUNIT_COVERAGE_TEST=1
     - php: 5.6
@@ -34,38 +34,41 @@ matrix:
       env: DB=MYSQL CMS_TEST=1 BEHAT_TEST=1
 
 before_script:
- - export CORE_RELEASE=$TRAVIS_BRANCH
- - printf "\n" | pecl install imagick
- - composer self-update || true
- - phpenv rehash
- - phpenv config-rm xdebug.ini
- - "export DISPLAY=\":99\""
- - "export XVFBARGS=\":99 -ac -screen 0 1024x768x16\""
- - "export COMPOSER_ROOT_VERSION=4.0.x-dev"
- - "if [ \"$na\" = \"\" ]; then composer install --prefer-dist; fi"
- - "if [ \"$DB\" = \"PGSQL\" ]; then composer require silverstripe/postgresql:2.0.x-dev --prefer-dist; fi"
- - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
- - "if [ \"$CMS_TEST\" = \"1\" ]; then COMPOSER_ROOT_VERSION=4.0.x-dev composer require silverstripe/cms:4.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi"
- - "if [ \"$CMS_TEST\" = \"1\" ]; then php ./cms/tests/bootstrap/mysite.php; fi"
- - "if [ \"$NPM_TEST\" = \"1\" ] && [ `git log --format=format:%aE -1` = \"support@greenkeeper.io\" ]; then echo \"Removing npm-shrinkwrap.json\"; rm npm-shrinkwrap.json; fi"
- - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sh -e /etc/init.d/xvfb start; sleep 3; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ]; then (vendor/bin/selenium-server-standalone > selenium.log 2>&1 &); fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> serve.log &); fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then (vendor/bin/serve --bootstrap-file cms/tests/behat/serve-bootstrap.php &> serve.log &); fi"
+  - export CORE_RELEASE=$TRAVIS_BRANCH
+  - printf "\n" | pecl install imagick
+  - composer self-update || true
+  - "if [ \"$PHPCS_TEST\" = \"1\" ]; then pyrus install pear/PHP_CodeSniffer; fi"
+  - phpenv rehash
+  - phpenv config-rm xdebug.ini
+  - "export DISPLAY=\":99\""
+  - "export XVFBARGS=\":99 -ac -screen 0 1024x768x16\""
+  - "export COMPOSER_ROOT_VERSION=4.0.x-dev"
+  - "if [ \"$na\" = \"\" ]; then composer install --prefer-dist; fi"
+  - "if [ \"$DB\" = \"PGSQL\" ]; then composer require silverstripe/postgresql:2.0.x-dev --prefer-dist; fi"
+  - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
+  - "if [ \"$CMS_TEST\" = \"1\" ]; then COMPOSER_ROOT_VERSION=4.0.x-dev composer require silverstripe/cms:4.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi"
+  - "if [ \"$CMS_TEST\" = \"1\" ]; then php ./cms/tests/bootstrap/mysite.php; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ] && [ `git log --format=format:%aE -1` = \"support@greenkeeper.io\" ]; then echo \"Removing npm-shrinkwrap.json\"; rm npm-shrinkwrap.json; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install; fi"
+  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sh -e /etc/init.d/xvfb start; sleep 3; fi"
+  - "if [ \"$BEHAT_TEST\" = \"1\" ]; then (vendor/bin/selenium-server-standalone > selenium.log 2>&1 &); fi"
+  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> serve.log &); fi"
+  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then (vendor/bin/serve --bootstrap-file cms/tests/behat/serve-bootstrap.php &> serve.log &); fi"
+
 script:
- - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit; fi"
- - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/phpunit cms/tests; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat --config tests/behat/config.yml .; fi"
- - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config tests/behat/cms-config.yml; fi"
- - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
- - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run lint; fi"
- - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run build; fi"
- - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage.xml; fi"
- - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi"
+  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit; fi"
+  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/phpunit cms/tests; fi"
+  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat --config tests/behat/config.yml .; fi"
+  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config tests/behat/cms-config.yml; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run lint; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run build; fi"
+  - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage.xml; fi"
+  - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi"
+  - "if [ \"$PHPCS_TEST\" = \"1\" ]; then composer run-script lint; fi"
 
 after_failure:
- - php ./tests/behat/travis-upload-artifacts.php --if-env BEHAT_TEST,ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/
+  - php ./tests/behat/travis-upload-artifacts.php --if-env BEHAT_TEST,ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/
 
 branches:
   except:
