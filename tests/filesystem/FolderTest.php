@@ -26,7 +26,7 @@ class FolderTest extends SapphireTest {
 		$file1 = $this->objFromFixture('File', 'file1-folder1');
 
 		$children = $folder1->allChildren();
-		$this->assertEquals(2, $children->Count());
+		$this->assertEquals(4, $children->Count());
 		$this->assertContains($subfolder1->ID, $children->column('ID'));
 		$this->assertContains($file1->ID, $children->column('ID'));
 	}
