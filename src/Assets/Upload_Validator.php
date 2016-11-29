@@ -8,7 +8,7 @@ use SilverStripe\Dev\SapphireTest;
 
 class Upload_Validator
 {
-	use Injectable;
+    use Injectable;
 
     /**
      * Contains a list of the max file sizes shared by
