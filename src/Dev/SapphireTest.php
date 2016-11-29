@@ -1082,6 +1082,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         // Reinstate PHPUnit error handling
         set_error_handler(array('PHPUnit_Util_ErrorHandler', 'handleError'));
 
+        // Ensure test db is killed on exit
+        register_shutdown_function(function () {
+            static::kill_temp_db();
+        });
+
         return $dbname;
     }
 
