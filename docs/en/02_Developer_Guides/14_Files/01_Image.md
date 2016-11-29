@@ -65,7 +65,7 @@ You can also create your own functions by extending the image class, for example
 			return $this->getWidth() < $this->getHeight();
 		}
 		
-		public function generatePaddedImageByWidth(GD $gd,$width=600,$color="fff"){
+		public function generatePaddedImageByWidth(GD $gd,$width=600,$color="ffffff"){
 			return $gd->paddedResize($width, round($gd->getHeight()/($gd->getWidth()/$width),0),$color);
 		}
 		
@@ -103,6 +103,19 @@ For output of an image tag with the image automatically resized to 80px width, y
 	$Image.Orientation // returns Orientation
 	$Image.Filename // returns filename
 	$Image.URL // returns filename
+
+### Padded Image Resize
+
+The paddedResize (PHP) and PaddedImage (template) methods allow you to resize an image with existing ratio and will
+pad any surplus space. You can specify the color of the padding using a hex code such as FFFFFF or 000000.
+
+You can also specify a level of transparency to apply to the padding color in a fourth param. This will only effect
+png images.
+
+	:::php
+	$Image.PaddedImage(80, 80, FFFFFF, 50) // white padding with 50% transparency
+	$Image.PaddedImage(80, 80, FFFFFF, 100) // white padding with 100% transparency
+	$Image.PaddedImage(80, 80, FFFFFF) // white padding with no transparency
 
 
 ### Form Upload
