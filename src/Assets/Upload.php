@@ -105,7 +105,7 @@ class Upload extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->validator = Injector::inst()->create('SilverStripe\\Assets\\Upload_Validator');
+        $this->validator = Upload_Validator::create();
         $this->replaceFile = self::config()->replaceFile;
     }
 

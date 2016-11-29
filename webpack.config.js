@@ -64,6 +64,7 @@ const config = [
       'components/Breadcrumb/Breadcrumb': 'Breadcrumb',
       'state/breadcrumbs/BreadcrumbsActions': 'BreadcrumbsActions',
       'state/schema/SchemaActions': 'SchemaActions',
+      'components/FieldHolder/FieldHolder': 'FieldHolder',
       'components/FormAction/FormAction': 'FormAction',
       'components/FormBuilder/FormBuilder': 'FormBuilder',
       'components/FormBuilderModal/FormBuilderModal': 'FormBuilderModal',

@@ -2,10 +2,8 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Assets\Upload_Validator;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
-use SilverStripe\Assets\Upload;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Object;
 
@@ -50,6 +48,7 @@ use SilverStripe\Core\Object;
  */
 class FileField extends FormField
 {
+    use UploadReceiver;
 
     /**
      * Flag to automatically determine and save a has_one-relationship
@@ -59,24 +58,7 @@ class FileField extends FormField
      *
      * @var boolean
      */
-    public $relationAutoSetting = true;
-
-    /**
-     * Upload object (needed for validation
-     * and actually moving the temporary file
-     * created by PHP).
-     *
-     * @var Upload
-     */
-    protected $upload;
-
-    /**
-     * Partial filesystem path relative to /assets directory.
-     * Defaults to Upload::$uploads_folder.
-     *
-     * @var string
-     */
-    protected $folderName = false;
+    protected $relationAutoSetting = true;
 
     /**
      * Create a new file field.
@@ -87,7 +69,7 @@ class FileField extends FormField
      */
     public function __construct($name, $title = null, $value = null)
     {
-        $this->upload = Upload::create();
+        $this->constructUploadReceiver();
         parent::__construct($name, $title, $value);
     }
 
@@ -164,52 +146,6 @@ class FileField extends FormField
         return isset($_FILES[$this->getName()]) ? $_FILES[$this->getName()] : null;
     }
 
-    /**
-     * Get custom validator for this field
-     *
-     * @return Upload_Validator
-     */
-    public function getValidator()
-    {
-        return $this->upload->getValidator();
-    }
-
-    /**
-     * Set custom validator for this field
-     *
-     * @param Upload_Validator $validator
-     * @return $this Self reference
-     */
-    public function setValidator($validator)
-    {
-        $this->upload->setValidator($validator);
-        return $this;
-    }
-
-    /**
-     * Sets the upload folder name
-     *
-     * @param string $folderName
-     * @return FileField Self reference
-     */
-    public function setFolderName($folderName)
-    {
-        $this->folderName = $folderName;
-        return $this;
-    }
-
-    /**
-     * Gets the upload folder name
-     *
-     * @return string
-     */
-    public function getFolderName()
-    {
-        return ($this->folderName !== false)
-            ? $this->folderName
-            : Upload::config()->uploads_folder;
-    }
-
     public function validate($validator)
     {
         if (!isset($_FILES[$this->name])) {
@@ -233,67 +169,24 @@ class FileField extends FormField
     }
 
     /**
-     * Retrieves the Upload handler
+     * Set if relation can be automatically assigned to the underlying dataobject
      *
-     * @return Upload
+     * @param bool $auto
+     * @return $this
      */
-    public function getUpload()
+    public function setRelationAutoSetting($auto)
     {
-        return $this->upload;
-    }
-
-    /**
-     * Sets the upload handler
-     *
-     * @param Upload $upload
-     * @return FileField Self reference
-     */
-    public function setUpload(Upload $upload)
-    {
-        $this->upload = $upload;
+        $this->relationAutoSetting = $auto;
         return $this;
     }
 
     /**
-     * Limit allowed file extensions. Empty by default, allowing all extensions.
-     * To allow files without an extension, use an empty string.
-     * See {@link File::$allowed_extensions} to get a good standard set of
-     * extensions that are typically not harmful in a webserver context.
-     * See {@link setAllowedMaxFileSize()} to limit file size by extension.
+     * Check if relation can be automatically assigned to the underlying dataobject
      *
-     * @param array $rules List of extensions
-     * @return $this
+     * @return bool
      */
-    public function setAllowedExtensions($rules)
+    public function getRelationAutoSetting()
     {
-        $this->getValidator()->setAllowedExtensions($rules);
-        return $this;
-    }
-
-    /**
-     * Limit allowed file extensions by specifying categories of file types.
-     * These may be 'image', 'image/supported', 'audio', 'video', 'archive', 'flash', or 'document'
-     * See {@link File::$allowed_extensions} for details of allowed extensions
-     * for each of these categories
-     *
-     * @param string $category Category name
-     * @param string,... $categories Additional category names
-     * @return $this
-     */
-    public function setAllowedFileCategories($category)
-    {
-        $extensions = File::get_category_extensions(func_get_args());
-        return $this->setAllowedExtensions($extensions);
-    }
-
-    /**
-     * Returns list of extensions allowed by this field, or an empty array
-     * if there is no restriction
-     *
-     * @return array
-     */
-    public function getAllowedExtensions()
-    {
-        return $this->getValidator()->getAllowedExtensions();
+        return $this->relationAutoSetting;
     }
 }

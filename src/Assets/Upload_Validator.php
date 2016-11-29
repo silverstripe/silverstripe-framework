@@ -3,10 +3,12 @@
 namespace SilverStripe\Assets;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Dev\SapphireTest;
 
 class Upload_Validator
 {
+    use Injectable;
 
     /**
      * Contains a list of the max file sizes shared by

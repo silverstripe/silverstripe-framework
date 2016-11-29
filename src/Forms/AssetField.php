@@ -14,7 +14,6 @@ use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\View\Requirements;
 use Exception;
 
 /**
@@ -27,8 +26,9 @@ use Exception;
  *  - Files can't be edited once uploaded.
  *  - Attached files can only be removed, not deleted.
  */
-class AssetField extends FileField
+class AssetField extends FormField
 {
+    use UploadReceiver;
 
     /**
      * @var array
@@ -165,6 +165,7 @@ class AssetField extends FileField
 
         $this->ufConfig = array_merge($this->ufConfig, self::config()->defaultConfig);
 
+        $this->constructUploadReceiver();
         parent::__construct($name, $title);
 
         // AssetField always uses rename replacement method
@@ -806,5 +807,13 @@ class AssetField extends FileField
     protected function getAssetStore()
     {
         return Injector::inst()->get('AssetStore');
+    }
+
+    public function getAttributes()
+    {
+        return array_merge(
+            parent::getAttributes(),
+            ['type' => 'file']
+        );
     }
 }
