@@ -85,12 +85,15 @@ Config::inst()->pushConfigYamlManifest($configManifest);
 
 // Load template manifest
 SilverStripe\View\ThemeResourceLoader::instance()->addSet('$default', new SilverStripe\View\ThemeManifest(
-	BASE_PATH, project(), false, $flush
+    BASE_PATH,
+    project(),
+    false,
+    $flush
 ));
 
 // If in live mode, ensure deprecation, strict and notices are not reported
-if(Director::isLive()) {
-	error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
+if (Director::isLive()) {
+    error_reporting(E_ALL & ~(E_DEPRECATED | E_STRICT | E_NOTICE));
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -116,24 +119,26 @@ $errorHandler->start();
  * @param string $className
  * @return mixed
  */
-function singleton($className) {
-	if($className === 'SilverStripe\\Core\\Config\\Config') {
-		throw new InvalidArgumentException("Don't pass Config to singleton()");
-	}
-	if(!isset($className)) {
-		throw new InvalidArgumentException("singleton() Called without a class");
-	}
-	if(!is_string($className)) {
-		throw new InvalidArgumentException(
-			"singleton() passed bad class_name: " . var_export($className, true)
-		);
-	}
-	return Injector::inst()->get($className);
+function singleton($className)
+{
+    if ($className === 'SilverStripe\\Core\\Config\\Config') {
+        throw new InvalidArgumentException("Don't pass Config to singleton()");
+    }
+    if (!isset($className)) {
+        throw new InvalidArgumentException("singleton() Called without a class");
+    }
+    if (!is_string($className)) {
+        throw new InvalidArgumentException(
+            "singleton() passed bad class_name: " . var_export($className, true)
+        );
+    }
+    return Injector::inst()->get($className);
 }
 
-function project() {
-	global $project;
-	return $project;
+function project()
+{
+    global $project;
+    return $project;
 }
 
 /**
@@ -145,8 +150,9 @@ function project() {
  * @param array $injection
  * @return string
  */
-function _t($entity, $string = "", $context = "", $injection = null) {
-	return i18n::_t($entity, $string, $context, $injection);
+function _t($entity, $string = "", $context = "", $injection = null)
+{
+    return i18n::_t($entity, $string, $context, $injection);
 }
 
 /**
@@ -157,25 +163,28 @@ function _t($entity, $string = "", $context = "", $injection = null) {
  * @param string|int $memoryLimit A memory limit string, such as "64M".  If omitted, unlimited memory will be set.
  * @return Boolean TRUE indicates a successful change, FALSE a denied change.
  */
-function increase_memory_limit_to($memoryLimit = -1) {
-	$curLimit = ini_get('memory_limit');
+function increase_memory_limit_to($memoryLimit = -1)
+{
+    $curLimit = ini_get('memory_limit');
 
-	// Can't go higher than infinite
-	if($curLimit == -1 ) return true;
+    // Can't go higher than infinite
+    if ($curLimit == -1) {
+        return true;
+    }
 
-	// Check hard maximums
-	$max = get_increase_memory_limit_max();
+    // Check hard maximums
+    $max = get_increase_memory_limit_max();
 
-	if($max && $max != -1 && translate_memstring($memoryLimit) > translate_memstring($max)) {
-		return false;
-	}
+    if ($max && $max != -1 && translate_memstring($memoryLimit) > translate_memstring($max)) {
+        return false;
+    }
 
-	// Increase the memory limit if it's too low
-	if($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
-		ini_set('memory_limit', $memoryLimit);
-	}
+    // Increase the memory limit if it's too low
+    if ($memoryLimit == -1 || translate_memstring($memoryLimit) > translate_memstring($curLimit)) {
+        ini_set('memory_limit', $memoryLimit);
+    }
 
-	return true;
+    return true;
 }
 
 $_increase_memory_limit_max = ini_get('memory_limit');
@@ -187,17 +196,19 @@ $_increase_memory_limit_max = ini_get('memory_limit');
  *
  * @param string $memoryLimit Memory limit string
  */
-function set_increase_memory_limit_max($memoryLimit) {
-	global $_increase_memory_limit_max;
-	$_increase_memory_limit_max = $memoryLimit;
+function set_increase_memory_limit_max($memoryLimit)
+{
+    global $_increase_memory_limit_max;
+    $_increase_memory_limit_max = $memoryLimit;
 }
 
 /**
  * @return string Memory limit string
  */
-function get_increase_memory_limit_max() {
-	global $_increase_memory_limit_max;
-	return $_increase_memory_limit_max;
+function get_increase_memory_limit_max()
+{
+    global $_increase_memory_limit_max;
+    return $_increase_memory_limit_max;
 }
 
 /**
@@ -206,11 +217,14 @@ function get_increase_memory_limit_max() {
  *
  * @param int $limit - The new limit to increase to
  */
-function increase_xdebug_nesting_level_to($limit) {
-	if (function_exists('xdebug_enable')) {
-		$current = ini_get('xdebug.max_nesting_level');
-		if ((int)$current < $limit) ini_set('xdebug.max_nesting_level', $limit);
-	}
+function increase_xdebug_nesting_level_to($limit)
+{
+    if (function_exists('xdebug_enable')) {
+        $current = ini_get('xdebug.max_nesting_level');
+        if ((int)$current < $limit) {
+            ini_set('xdebug.max_nesting_level', $limit);
+        }
+    }
 }
 
 /**
@@ -219,13 +233,18 @@ function increase_xdebug_nesting_level_to($limit) {
  * @param string $memString A memory limit string, such as "64M"
  * @return float
  */
-function translate_memstring($memString) {
-	switch(strtolower(substr($memString, -1))) {
-		case "k": return round(substr($memString, 0, -1)*1024);
-		case "m": return round(substr($memString, 0, -1)*1024*1024);
-		case "g": return round(substr($memString, 0, -1)*1024*1024*1024);
-		default: return round($memString);
-	}
+function translate_memstring($memString)
+{
+    switch (strtolower(substr($memString, -1))) {
+        case "k":
+            return round(substr($memString, 0, -1)*1024);
+        case "m":
+            return round(substr($memString, 0, -1)*1024*1024);
+        case "g":
+            return round(substr($memString, 0, -1)*1024*1024*1024);
+        default:
+            return round($memString);
+    }
 }
 
 /**
@@ -236,25 +255,28 @@ function translate_memstring($memString) {
  * @param int $timeLimit The time limit in seconds.  If omitted, no time limit will be set.
  * @return Boolean TRUE indicates a successful change, FALSE a denied change.
  */
-function increase_time_limit_to($timeLimit = null) {
-	$max = get_increase_time_limit_max();
-	if($max != -1 && $max != null && $timeLimit > $max) return false;
+function increase_time_limit_to($timeLimit = null)
+{
+    $max = get_increase_time_limit_max();
+    if ($max != -1 && $max != null && $timeLimit > $max) {
+        return false;
+    }
 
-	if(!ini_get('safe_mode')) {
-		if(!$timeLimit) {
-			set_time_limit(0);
-			return true;
-		} else {
-			$currTimeLimit = ini_get('max_execution_time');
-			// Only increase if its smaller
-			if($currTimeLimit && $currTimeLimit < $timeLimit) {
-				set_time_limit($timeLimit);
-			}
-			return true;
-		}
-	} else {
-		return false;
-	}
+    if (!ini_get('safe_mode')) {
+        if (!$timeLimit) {
+            set_time_limit(0);
+            return true;
+        } else {
+            $currTimeLimit = ini_get('max_execution_time');
+            // Only increase if its smaller
+            if ($currTimeLimit && $currTimeLimit < $timeLimit) {
+                set_time_limit($timeLimit);
+            }
+            return true;
+        }
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -262,15 +284,17 @@ function increase_time_limit_to($timeLimit = null) {
  *
  * @param int $timeLimit Limit in seconds
  */
-function set_increase_time_limit_max($timeLimit) {
-	global $_increase_time_limit_max;
-	$_increase_time_limit_max = $timeLimit;
+function set_increase_time_limit_max($timeLimit)
+{
+    global $_increase_time_limit_max;
+    $_increase_time_limit_max = $timeLimit;
 }
 
 /**
  * @return Int Limit in seconds
  */
-function get_increase_time_limit_max() {
-	global $_increase_time_limit_max;
-	return $_increase_time_limit_max;
+function get_increase_time_limit_max()
+{
+    global $_increase_time_limit_max;
+    return $_increase_time_limit_max;
 }

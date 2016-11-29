@@ -6,7 +6,8 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Config\Config;
 
-class ProtectedAssetAdapter extends AssetAdapter implements ProtectedAdapter {
+class ProtectedAssetAdapter extends AssetAdapter implements ProtectedAdapter
+{
 
     /**
      * Name of default folder to save secure assets in under ASSETS_PATH.
@@ -27,14 +28,15 @@ class ProtectedAssetAdapter extends AssetAdapter implements ProtectedAdapter {
         )
     );
 
-    protected function findRoot($root) {
+    protected function findRoot($root)
+    {
         // Use explicitly defined path
-        if($root) {
+        if ($root) {
             return parent::findRoot($root);
         }
 
         // Use environment defined path
-        if(defined('SS_PROTECTED_ASSETS_PATH')) {
+        if (defined('SS_PROTECTED_ASSETS_PATH')) {
             return SS_PROTECTED_ASSETS_PATH;
         }
 
@@ -48,7 +50,8 @@ class ProtectedAssetAdapter extends AssetAdapter implements ProtectedAdapter {
      * @param string $path
      * @return string|null
      */
-    public function getProtectedUrl($path) {
+    public function getProtectedUrl($path)
+    {
         // Public URLs are handled via a request handler within /assets.
         // If assets are stored locally, then asset paths of protected files should be equivalent.
         return Controller::join_links(Director::baseURL(), ASSETS_DIR, $path);

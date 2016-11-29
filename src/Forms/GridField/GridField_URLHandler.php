@@ -16,15 +16,15 @@ namespace SilverStripe\Forms\GridField;
 interface GridField_URLHandler extends GridFieldComponent
 {
 
-	/**
-	 * Return URLs to be handled by this grid field, in an array the same form
-	 * as $url_handlers.
-	 *
-	 * Handler methods will be called on the component, rather than the
-	 * {@link GridField}.
-	 *
-	 * @param GridField $gridField
-	 * @return array
-	 */
-	public function getURLHandlers($gridField);
+    /**
+     * Return URLs to be handled by this grid field, in an array the same form
+     * as $url_handlers.
+     *
+     * Handler methods will be called on the component, rather than the
+     * {@link GridField}.
+     *
+     * @param GridField $gridField
+     * @return array
+     */
+    public function getURLHandlers($gridField);
 }

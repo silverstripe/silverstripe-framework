@@ -8,24 +8,24 @@ namespace SilverStripe\Core\Manifest;
  */
 class ManifestCache_APC implements ManifestCache
 {
-	protected $pre;
+    protected $pre;
 
-	function __construct($name)
-	{
-		$this->pre = $name;
-	}
+    function __construct($name)
+    {
+        $this->pre = $name;
+    }
 
-	function load($key)
-	{
-		return apc_fetch($this->pre . $key);
-	}
+    function load($key)
+    {
+        return apc_fetch($this->pre . $key);
+    }
 
-	function save($data, $key)
-	{
-		apc_store($this->pre . $key, $data);
-	}
+    function save($data, $key)
+    {
+        apc_store($this->pre . $key, $data);
+    }
 
-	function clear()
-	{
-	}
+    function clear()
+    {
+    }
 }

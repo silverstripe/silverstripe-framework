@@ -8,22 +8,22 @@ namespace SilverStripe\Core\Manifest;
  */
 class ManifestCache_File_PHP extends ManifestCache_File
 {
-	function load($key)
-	{
-		global $loaded_manifest;
-		$loaded_manifest = null;
+    function load($key)
+    {
+        global $loaded_manifest;
+        $loaded_manifest = null;
 
-		$file = $this->folder . DIRECTORY_SEPARATOR . 'cache_' . $key;
-		if (file_exists($file)) {
-			include $file;
-		}
+        $file = $this->folder . DIRECTORY_SEPARATOR . 'cache_' . $key;
+        if (file_exists($file)) {
+            include $file;
+        }
 
-		return $loaded_manifest;
-	}
+        return $loaded_manifest;
+    }
 
-	function save($data, $key)
-	{
-		$file = $this->folder . DIRECTORY_SEPARATOR. 'cache_' . $key;
-		file_put_contents($file, '<?php $loaded_manifest = ' . var_export($data, true) . ';');
-	}
+    function save($data, $key)
+    {
+        $file = $this->folder . DIRECTORY_SEPARATOR. 'cache_' . $key;
+        file_put_contents($file, '<?php $loaded_manifest = ' . var_export($data, true) . ';');
+    }
 }

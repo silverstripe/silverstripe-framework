@@ -8,13 +8,13 @@ namespace SilverStripe\View;
 interface Requirements_Minifier
 {
 
-	/**
-	 * Minify the given content
-	 *
-	 * @param string $content
-	 * @param string $type Either js or css
-	 * @param string $filename Name of file to display in case of error
-	 * @return string minified content
-	 */
-	public function minify($content, $type, $filename);
+    /**
+     * Minify the given content
+     *
+     * @param string $content
+     * @param string $type Either js or css
+     * @param string $filename Name of file to display in case of error
+     * @return string minified content
+     */
+    public function minify($content, $type, $filename);
 }

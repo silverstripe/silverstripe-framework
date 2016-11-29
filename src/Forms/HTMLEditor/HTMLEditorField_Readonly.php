@@ -9,12 +9,12 @@ use SilverStripe\Forms\HTMLReadonlyField;
  */
 class HTMLEditorField_Readonly extends HTMLReadonlyField
 {
-	private static $casting = [
-		'Value' => 'HTMLText',
-	];
+    private static $casting = [
+        'Value' => 'HTMLText',
+    ];
 
-	public function Type()
-	{
-		return 'htmleditorfield readonly';
-	}
+    public function Type()
+    {
+        return 'htmleditorfield readonly';
+    }
 }

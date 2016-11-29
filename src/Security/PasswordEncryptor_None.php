@@ -9,13 +9,13 @@ namespace SilverStripe\Security;
  */
 class PasswordEncryptor_None extends PasswordEncryptor
 {
-	public function encrypt($password, $salt = null, $member = null)
-	{
-		return $password;
-	}
+    public function encrypt($password, $salt = null, $member = null)
+    {
+        return $password;
+    }
 
-	public function salt($password, $member = null)
-	{
-		return false;
-	}
+    public function salt($password, $member = null)
+    {
+        return false;
+    }
 }

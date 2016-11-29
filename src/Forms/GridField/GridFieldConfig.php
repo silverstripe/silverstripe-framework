@@ -22,115 +22,128 @@ use SilverStripe\Core\Object;
  * - {@link GridFieldConfig_RecordEditor}
  * - {@link GridFieldConfig_RelationEditor}
  */
-class GridFieldConfig extends Object {
+class GridFieldConfig extends Object
+{
 
-	/**
-	 * @var ArrayList
-	 */
-	protected $components = null;
+    /**
+     * @var ArrayList
+     */
+    protected $components = null;
 
 
-	/**
-	 *
-	 */
-	public function __construct() {
-		parent::__construct();
-		$this->components = new ArrayList();
-	}
+    /**
+     *
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->components = new ArrayList();
+    }
 
-	/**
-	 * @param GridFieldComponent $component
-	 * @param string $insertBefore The class of the component to insert this one before
-	 * @return $this
-	 */
-	public function addComponent(GridFieldComponent $component, $insertBefore = null) {
-		if($insertBefore) {
-			$existingItems = $this->getComponents();
-			$this->components = new ArrayList;
-			$inserted = false;
-			foreach($existingItems as $existingItem) {
-				if(!$inserted && $existingItem instanceof $insertBefore) {
-					$this->components->push($component);
-					$inserted = true;
-				}
-				$this->components->push($existingItem);
-			}
-			if(!$inserted) $this->components->push($component);
-		} else {
-			$this->getComponents()->push($component);
-		}
-		return $this;
-	}
+    /**
+     * @param GridFieldComponent $component
+     * @param string $insertBefore The class of the component to insert this one before
+     * @return $this
+     */
+    public function addComponent(GridFieldComponent $component, $insertBefore = null)
+    {
+        if ($insertBefore) {
+            $existingItems = $this->getComponents();
+            $this->components = new ArrayList;
+            $inserted = false;
+            foreach ($existingItems as $existingItem) {
+                if (!$inserted && $existingItem instanceof $insertBefore) {
+                    $this->components->push($component);
+                    $inserted = true;
+                }
+                $this->components->push($existingItem);
+            }
+            if (!$inserted) {
+                $this->components->push($component);
+            }
+        } else {
+            $this->getComponents()->push($component);
+        }
+        return $this;
+    }
 
-	/**
-	 * @param GridFieldComponent $component,... One or more components
-	 * @return $this
-	 */
-	public function addComponents($component = null) {
-		$components = func_get_args();
-		foreach($components as $component) {
-			$this->addComponent($component);
-		}
-		return $this;
-	}
+    /**
+     * @param GridFieldComponent $component,... One or more components
+     * @return $this
+     */
+    public function addComponents($component = null)
+    {
+        $components = func_get_args();
+        foreach ($components as $component) {
+            $this->addComponent($component);
+        }
+        return $this;
+    }
 
-	/**
-	 * @param GridFieldComponent $component
-	 * @return $this
-	 */
-	public function removeComponent(GridFieldComponent $component) {
-		$this->getComponents()->remove($component);
-		return $this;
-	}
+    /**
+     * @param GridFieldComponent $component
+     * @return $this
+     */
+    public function removeComponent(GridFieldComponent $component)
+    {
+        $this->getComponents()->remove($component);
+        return $this;
+    }
 
-	/**
-	 * @param string $type Class name or interface
-	 * @return $this
-	 */
-	public function removeComponentsByType($type) {
-		$components = $this->getComponentsByType($type);
-		foreach($components as $component) {
-			$this->removeComponent($component);
-		}
-		return $this;
-	}
+    /**
+     * @param string $type Class name or interface
+     * @return $this
+     */
+    public function removeComponentsByType($type)
+    {
+        $components = $this->getComponentsByType($type);
+        foreach ($components as $component) {
+            $this->removeComponent($component);
+        }
+        return $this;
+    }
 
-	/**
-	 * @return ArrayList Of GridFieldComponent
-	 */
-	public function getComponents() {
-		if(!$this->components) {
-			$this->components = new ArrayList();
-		}
-		return $this->components;
-	}
+    /**
+     * @return ArrayList Of GridFieldComponent
+     */
+    public function getComponents()
+    {
+        if (!$this->components) {
+            $this->components = new ArrayList();
+        }
+        return $this->components;
+    }
 
-	/**
-	 * Returns all components extending a certain class, or implementing a certain interface.
-	 *
-	 * @param string $type Class name or interface
-	 * @return ArrayList Of GridFieldComponent
-	 */
-	public function getComponentsByType($type) {
-		$components = new ArrayList();
-		foreach($this->components as $component) {
-			if($component instanceof $type) $components->push($component);
-		}
-		return $components;
-	}
+    /**
+     * Returns all components extending a certain class, or implementing a certain interface.
+     *
+     * @param string $type Class name or interface
+     * @return ArrayList Of GridFieldComponent
+     */
+    public function getComponentsByType($type)
+    {
+        $components = new ArrayList();
+        foreach ($this->components as $component) {
+            if ($component instanceof $type) {
+                $components->push($component);
+            }
+        }
+        return $components;
+    }
 
-	/**
-	 * Returns the first available component with the given class or interface.
-	 *
-	 * @param string $type ClassName
-	 * @return GridFieldComponent
-	 */
-	public function getComponentByType($type) {
-		foreach($this->components as $component) {
-			if($component instanceof $type) {
-				return $component;
-			}
-		}
-		return null;
-	}
+    /**
+     * Returns the first available component with the given class or interface.
+     *
+     * @param string $type ClassName
+     * @return GridFieldComponent
+     */
+    public function getComponentByType($type)
+    {
+        foreach ($this->components as $component) {
+            if ($component instanceof $type) {
+                return $component;
+            }
+        }
+        return null;
+    }
 }

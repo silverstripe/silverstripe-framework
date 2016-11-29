@@ -8,10 +8,10 @@ namespace SilverStripe\Forms\HTMLEditor;
 class HTMLEditorField_Flash extends HTMLEditorField_File
 {
 
-	public function getFields()
-	{
-		$fields = parent::getFields();
-		$fields->removeByName('CaptionText', true);
-		return $fields;
-	}
+    public function getFields()
+    {
+        $fields = parent::getFields();
+        $fields->removeByName('CaptionText', true);
+        return $fields;
+    }
 }

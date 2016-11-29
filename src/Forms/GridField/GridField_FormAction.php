@@ -12,112 +12,112 @@ use SilverStripe\Forms\FormAction;
  */
 class GridField_FormAction extends FormAction
 {
-	/**
-	 * @var GridField
-	 */
-	protected $gridField;
+    /**
+     * @var GridField
+     */
+    protected $gridField;
 
-	/**
-	 * @var array
-	 */
-	protected $stateValues;
+    /**
+     * @var array
+     */
+    protected $stateValues;
 
-	/**
-	 * @var array
-	 */
-	protected $args = array();
+    /**
+     * @var array
+     */
+    protected $args = array();
 
-	/**
-	 * @var string
-	 */
-	protected $actionName;
+    /**
+     * @var string
+     */
+    protected $actionName;
 
-	/**
-	 * @var boolean
-	 */
-	public $useButtonTag = true;
+    /**
+     * @var boolean
+     */
+    public $useButtonTag = true;
 
-	/**
-	 * @param GridField $gridField
-	 * @param string $name
-	 * @param string $title
-	 * @param string $actionName
-	 * @param array $args
-	 */
-	public function __construct(GridField $gridField, $name, $title, $actionName, $args)
-	{
-		$this->gridField = $gridField;
-		$this->actionName = $actionName;
-		$this->args = $args;
+    /**
+     * @param GridField $gridField
+     * @param string $name
+     * @param string $title
+     * @param string $actionName
+     * @param array $args
+     */
+    public function __construct(GridField $gridField, $name, $title, $actionName, $args)
+    {
+        $this->gridField = $gridField;
+        $this->actionName = $actionName;
+        $this->args = $args;
 
-		parent::__construct($name, $title);
-	}
+        parent::__construct($name, $title);
+    }
 
-	/**
-	 * Encode all non-word characters.
-	 *
-	 * @param string $value
-	 *
-	 * @return string
-	 */
-	public function nameEncode($value)
-	{
-		return (string)preg_replace_callback('/[^\w]/', array($this, '_nameEncode'), $value);
-	}
+    /**
+     * Encode all non-word characters.
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    public function nameEncode($value)
+    {
+        return (string)preg_replace_callback('/[^\w]/', array($this, '_nameEncode'), $value);
+    }
 
-	/**
-	 * @param array $match
-	 *
-	 * @return string
-	 */
-	public function _nameEncode($match)
-	{
-		return '%' . dechex(ord($match[0]));
-	}
+    /**
+     * @param array $match
+     *
+     * @return string
+     */
+    public function _nameEncode($match)
+    {
+        return '%' . dechex(ord($match[0]));
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getAttributes()
-	{
-		// Store state in session, and pass ID to client side.
-		$state = array(
-			'grid' => $this->getNameFromParent(),
-			'actionName' => $this->actionName,
-			'args' => $this->args,
-		);
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        // Store state in session, and pass ID to client side.
+        $state = array(
+            'grid' => $this->getNameFromParent(),
+            'actionName' => $this->actionName,
+            'args' => $this->args,
+        );
 
-		// Ensure $id doesn't contain only numeric characters
-		$id = 'gf_' . substr(md5(serialize($state)), 0, 8);
-		Session::set($id, $state);
-		$actionData['StateID'] = $id;
+        // Ensure $id doesn't contain only numeric characters
+        $id = 'gf_' . substr(md5(serialize($state)), 0, 8);
+        Session::set($id, $state);
+        $actionData['StateID'] = $id;
 
-		return array_merge(
-			parent::getAttributes(),
-			array(
-				// Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch
-				// will strip it from the requests
-				'name' => 'action_gridFieldAlterAction' . '?' . http_build_query($actionData),
-				'data-url' => $this->gridField->Link(),
-			)
-		);
-	}
+        return array_merge(
+            parent::getAttributes(),
+            array(
+                // Note:  This field needs to be less than 65 chars, otherwise Suhosin security patch
+                // will strip it from the requests
+                'name' => 'action_gridFieldAlterAction' . '?' . http_build_query($actionData),
+                'data-url' => $this->gridField->Link(),
+            )
+        );
+    }
 
-	/**
-	 * Calculate the name of the gridfield relative to the form.
-	 *
-	 * @return string
-	 */
-	protected function getNameFromParent()
-	{
-		$base = $this->gridField;
-		$name = array();
+    /**
+     * Calculate the name of the gridfield relative to the form.
+     *
+     * @return string
+     */
+    protected function getNameFromParent()
+    {
+        $base = $this->gridField;
+        $name = array();
 
-		do {
-			array_unshift($name, $base->getName());
-			$base = $base->getForm();
-		} while ($base && !($base instanceof Form));
+        do {
+            array_unshift($name, $base->getName());
+            $base = $base->getForm();
+        } while ($base && !($base instanceof Form));
 
-		return implode('.', $name);
-	}
+        return implode('.', $name);
+    }
 }

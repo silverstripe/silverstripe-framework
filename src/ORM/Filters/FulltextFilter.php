@@ -27,74 +27,79 @@ use Exception;
  *
  * @todo Add support for databases besides MySQL
  */
-class FulltextFilter extends SearchFilter {
+class FulltextFilter extends SearchFilter
+{
 
-	protected function applyOne(DataQuery $query) {
-		$this->model = $query->applyRelation($this->relation);
-		$predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName());
-		return $query->where(array($predicate => $this->getValue()));
-	}
+    protected function applyOne(DataQuery $query)
+    {
+        $this->model = $query->applyRelation($this->relation);
+        $predicate = sprintf("MATCH (%s) AGAINST (?)", $this->getDbName());
+        return $query->where(array($predicate => $this->getValue()));
+    }
 
-	protected function excludeOne(DataQuery $query) {
-		$this->model = $query->applyRelation($this->relation);
-		$predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName());
-		return $query->where(array($predicate => $this->getValue()));
-	}
+    protected function excludeOne(DataQuery $query)
+    {
+        $this->model = $query->applyRelation($this->relation);
+        $predicate = sprintf("NOT MATCH (%s) AGAINST (?)", $this->getDbName());
+        return $query->where(array($predicate => $this->getValue()));
+    }
 
-	public function isEmpty() {
-		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
-	}
+    public function isEmpty()
+    {
+        return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
+    }
 
 
-	/**
-	 * This implementation allows for a list of columns to be passed into MATCH() instead of just one.
-	 *
-	 * @example
-	 * <code>
-	 * 	MyDataObject::get()->filter('SearchFields:fulltext', 'search term')
-	 * </code>
-	 *
-	 * @throws Exception
-	 * @return string
-	*/
-	public function getDbName() {
-		$indexes = Config::inst()->get($this->model, "indexes");
-		if(is_array($indexes) && array_key_exists($this->getName(), $indexes)) {
-			$index = $indexes[$this->getName()];
-			if(is_array($index) && array_key_exists("value", $index)) {
-				return $this->prepareColumns($index['value']);
-			} else {
-				// Parse a fulltext string (eg. fulltext ("ColumnA", "ColumnB")) to figure out which columns
-				// we need to search.
-				if(preg_match('/^fulltext\s+\((.+)\)$/i', $index, $matches)) {
-					return $this->prepareColumns($matches[1]);
-				} else {
-					throw new Exception(sprintf(
-						"Invalid fulltext index format for '%s' on '%s'",
-						$this->getName(),
-						$this->model
-					));
-				}
-			}
-		}
+    /**
+     * This implementation allows for a list of columns to be passed into MATCH() instead of just one.
+     *
+     * @example
+     * <code>
+     *  MyDataObject::get()->filter('SearchFields:fulltext', 'search term')
+     * </code>
+     *
+     * @throws Exception
+     * @return string
+    */
+    public function getDbName()
+    {
+        $indexes = Config::inst()->get($this->model, "indexes");
+        if (is_array($indexes) && array_key_exists($this->getName(), $indexes)) {
+            $index = $indexes[$this->getName()];
+            if (is_array($index) && array_key_exists("value", $index)) {
+                return $this->prepareColumns($index['value']);
+            } else {
+                // Parse a fulltext string (eg. fulltext ("ColumnA", "ColumnB")) to figure out which columns
+                // we need to search.
+                if (preg_match('/^fulltext\s+\((.+)\)$/i', $index, $matches)) {
+                    return $this->prepareColumns($matches[1]);
+                } else {
+                    throw new Exception(sprintf(
+                        "Invalid fulltext index format for '%s' on '%s'",
+                        $this->getName(),
+                        $this->model
+                    ));
+                }
+            }
+        }
 
-		return parent::getDbName();
-	}
+        return parent::getDbName();
+    }
 
-	/**
-	 * Adds table identifier to the every column.
-	 * Columns must have table identifier to prevent duplicate column name error.
-	 *
-	 * @param array $columns
-	 * @return string
-	 */
-	protected function prepareColumns($columns) {
-		$cols = preg_split('/"?\s*,\s*"?/', trim($columns, '(") '));
-		$table = DataObject::getSchema()->tableForField($this->model, current($cols));
-		$cols = array_map(function($col) use ($table) {
-			return sprintf('"%s"."%s"', $table, $col);
-		}, $cols);
-		return implode(',', $cols);
-	}
-
+    /**
+     * Adds table identifier to the every column.
+     * Columns must have table identifier to prevent duplicate column name error.
+     *
+     * @param array $columns
+     * @return string
+     */
+    protected function prepareColumns($columns)
+    {
+        $cols = preg_split('/"?\s*,\s*"?/', trim($columns, '(") '));
+        $table = DataObject::getSchema()->tableForField($this->model, current($cols));
+        $cols = array_map(function ($col) use ($table) {
+            return sprintf('"%s"."%s"', $table, $col);
+        }, $cols);
+        return implode(',', $cols);
+    }
 }

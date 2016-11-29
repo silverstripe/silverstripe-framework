@@ -8,14 +8,13 @@ namespace SilverStripe\Forms\GridField;
 class GridFieldConfig_RecordViewer extends GridFieldConfig_Base
 {
 
-	public function __construct($itemsPerPage = null)
-	{
-		parent::__construct($itemsPerPage);
+    public function __construct($itemsPerPage = null)
+    {
+        parent::__construct($itemsPerPage);
 
-		$this->addComponent(new GridFieldViewButton());
-		$this->addComponent(new GridFieldDetailForm());
+        $this->addComponent(new GridFieldViewButton());
+        $this->addComponent(new GridFieldDetailForm());
 
-		$this->extend('updateConfig');
-	}
-
+        $this->extend('updateConfig');
+    }
 }

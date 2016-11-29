@@ -8,14 +8,16 @@ namespace SilverStripe\ORM\Filters;
  * Can be used by SearchContext and DataList->filter, eg;
  * Model::get()->filter("Field1:GreaterThanOrEqual", $value);
  */
-class GreaterThanOrEqualFilter extends ComparisonFilter {
+class GreaterThanOrEqualFilter extends ComparisonFilter
+{
 
-	protected function getOperator() {
-		return ">=";
-	}
+    protected function getOperator()
+    {
+        return ">=";
+    }
 
-	protected function getInverseOperator() {
-		return "<";
-	}
-
+    protected function getInverseOperator()
+    {
+        return "<";
+    }
 }

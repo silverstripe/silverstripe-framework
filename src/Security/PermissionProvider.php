@@ -7,13 +7,14 @@ namespace SilverStripe\Security;
  * Every implementor of PermissionProvider is accessed and providePermissions() called to get the full list of
  * permission codes.
  */
-interface PermissionProvider {
+interface PermissionProvider
+{
 
-	/**
-	 * Return a map of permission codes to add to the dropdown shown in the Security section of the CMS.
-	 * array(
-	 *   'VIEW_SITE' => 'View the site',
-	 * );
-	 */
-	public function providePermissions();
+    /**
+     * Return a map of permission codes to add to the dropdown shown in the Security section of the CMS.
+     * array(
+     *   'VIEW_SITE' => 'View the site',
+     * );
+     */
+    public function providePermissions();
 }

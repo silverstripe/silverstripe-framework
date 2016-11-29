@@ -8,7 +8,8 @@ use SilverStripe\Control\HTTPResponse_Exception;
 /**
  * Represents a store usable with ProtectedFileController to serve up non-direct file requests
  */
-interface AssetStoreRouter {
+interface AssetStoreRouter
+{
 
     /**
      * Generate a custom HTTP response for a request to a given asset, identified by a path.

@@ -5,50 +5,55 @@ namespace SilverStripe\Forms;
 /**
  * Hidden field.
  */
-class HiddenField extends FormField {
+class HiddenField extends FormField
+{
 
-	protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HIDDEN;
+    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_HIDDEN;
 
-	/**
-	 * @param array $properties
-	 * @return string
-	 */
-	public function FieldHolder($properties = array()) {
-		return $this->Field($properties);
-	}
+    /**
+     * @param array $properties
+     * @return string
+     */
+    public function FieldHolder($properties = array())
+    {
+        return $this->Field($properties);
+    }
 
-	/**
-	 * @return static
-	 */
-	public function performReadonlyTransformation() {
-		$clone = clone $this;
+    /**
+     * @return static
+     */
+    public function performReadonlyTransformation()
+    {
+        $clone = clone $this;
 
-		$clone->setReadonly(true);
+        $clone->setReadonly(true);
 
-		return $clone;
-	}
+        return $clone;
+    }
 
-	/**
-	 * @return bool
-	 */
-	public function IsHidden() {
-		return true;
-	}
+    /**
+     * @return bool
+     */
+    public function IsHidden()
+    {
+        return true;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getAttributes() {
-		return array_merge(
-			parent::getAttributes(),
-			array(
-				'type' => 'hidden',
-			)
-		);
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getAttributes()
+    {
+        return array_merge(
+            parent::getAttributes(),
+            array(
+                'type' => 'hidden',
+            )
+        );
+    }
 
-	function SmallFieldHolder($properties = array()) {
-		return $this->FieldHolder($properties);
-	}
-
+    function SmallFieldHolder($properties = array())
+    {
+        return $this->FieldHolder($properties);
+    }
 }

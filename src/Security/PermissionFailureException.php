@@ -9,6 +9,7 @@ use Exception;
  * and potentially redirect them to the log-in page.  The exception message may be presented to the
  * user, so it shouldn't be in nerd-speak.
  */
-class PermissionFailureException extends Exception {
+class PermissionFailureException extends Exception
+{
 
 }

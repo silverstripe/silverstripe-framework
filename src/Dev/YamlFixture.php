@@ -68,85 +68,95 @@ use InvalidArgumentException;
  *      ErrorCode: 404
  * </code>
  */
-class YamlFixture extends Object {
+class YamlFixture extends Object
+{
 
-	/**
-	 * Absolute path to the .yml fixture file
-	 *
-	 * @var string
-	 */
-	protected $fixtureFile;
+    /**
+     * Absolute path to the .yml fixture file
+     *
+     * @var string
+     */
+    protected $fixtureFile;
 
-	/**
-	 * String containing fixture
-	 *
-	 * @var String
-	 */
-	protected $fixtureString;
+    /**
+     * String containing fixture
+     *
+     * @var String
+     */
+    protected $fixtureString;
 
-	/**
-	 * @param string $fixture Absolute file path, or relative path to {@link Director::baseFolder()}
-	 */
-	public function __construct($fixture) {
-		if(false !== strpos($fixture, "\n")) {
-			$this->fixtureString = $fixture;
-		} else {
-			if(!Director::is_absolute($fixture)) $fixture = Director::baseFolder().'/'. $fixture;
+    /**
+     * @param string $fixture Absolute file path, or relative path to {@link Director::baseFolder()}
+     */
+    public function __construct($fixture)
+    {
+        if (false !== strpos($fixture, "\n")) {
+            $this->fixtureString = $fixture;
+        } else {
+            if (!Director::is_absolute($fixture)) {
+                $fixture = Director::baseFolder().'/'. $fixture;
+            }
 
-			if(!file_exists($fixture)) {
-				throw new InvalidArgumentException('YamlFixture::__construct(): Fixture path "' . $fixture
-					. '" not found');
-			}
+            if (!file_exists($fixture)) {
+                throw new InvalidArgumentException('YamlFixture::__construct(): Fixture path "' . $fixture
+                    . '" not found');
+            }
 
-			$this->fixtureFile = $fixture;
-		}
+            $this->fixtureFile = $fixture;
+        }
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	/**
-	 * @return String Absolute file path
-	 */
-	public function getFixtureFile() {
-		return $this->fixtureFile;
-	}
+    /**
+     * @return String Absolute file path
+     */
+    public function getFixtureFile()
+    {
+        return $this->fixtureFile;
+    }
 
-	/**
-	 * @return String Fixture string
-	 */
-	public function getFixtureString() {
-		return $this->fixtureString;
-	}
+    /**
+     * @return String Fixture string
+     */
+    public function getFixtureString()
+    {
+        return $this->fixtureString;
+    }
 
-	/**
-	 * Persists the YAML data in a FixtureFactory,
-	 * which in turn saves them into the database.
-	 * Please use the passed in factory to access the fixtures afterwards.
-	 *
-	 * @param  FixtureFactory $factory
-	 */
-	public function writeInto(FixtureFactory $factory) {
-		$parser = new Parser();
-		if (isset($this->fixtureString)) {
-			$fixtureContent = $parser->parse($this->fixtureString);
-		} else {
-			if (!file_exists($this->fixtureFile)) return;
+    /**
+     * Persists the YAML data in a FixtureFactory,
+     * which in turn saves them into the database.
+     * Please use the passed in factory to access the fixtures afterwards.
+     *
+     * @param  FixtureFactory $factory
+     */
+    public function writeInto(FixtureFactory $factory)
+    {
+        $parser = new Parser();
+        if (isset($this->fixtureString)) {
+            $fixtureContent = $parser->parse($this->fixtureString);
+        } else {
+            if (!file_exists($this->fixtureFile)) {
+                return;
+            }
 
-			$contents = file_get_contents($this->fixtureFile);
-			$fixtureContent = $parser->parse($contents);
+            $contents = file_get_contents($this->fixtureFile);
+            $fixtureContent = $parser->parse($contents);
 
-			if (!$fixtureContent) return;
-		}
+            if (!$fixtureContent) {
+                return;
+            }
+        }
 
-		foreach($fixtureContent as $class => $items) {
-			foreach($items as $identifier => $data) {
-				if(ClassInfo::exists($class)) {
-					$factory->createObject($class, $identifier, $data);
-				} else {
-					$factory->createRaw($class, $identifier, $data);
-				}
-			}
-		}
-	}
-
+        foreach ($fixtureContent as $class => $items) {
+            foreach ($items as $identifier => $data) {
+                if (ClassInfo::exists($class)) {
+                    $factory->createObject($class, $identifier, $data);
+                } else {
+                    $factory->createRaw($class, $identifier, $data);
+                }
+            }
+        }
+    }
 }

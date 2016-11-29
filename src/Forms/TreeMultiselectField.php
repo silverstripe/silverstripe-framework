@@ -12,7 +12,6 @@ use SilverStripe\View\Requirements;
 use SilverStripe\View\ViewableData;
 use stdClass;
 
-
 /**
  * This formfield represents many-many joins using a tree selector shown in a dropdown styled element
  * which can be added to any form usually in the CMS.
@@ -41,153 +40,164 @@ use stdClass;
  * // by Tree Multiselect Field in the administration.
  * function onChangeParents(&$items) {
  *  // This ensures this DataObject can never be a parent of itself
- * 	if($items){
- * 		foreach($items as $k => $id){
- * 			if($id == $this->ID){
- * 				unset($items[$k]);
- * 			}
- * 		}
- * 	}
- * 	return true;
+ *  if($items){
+ *      foreach($items as $k => $id){
+ *          if($id == $this->ID){
+ *              unset($items[$k]);
+ *          }
+ *      }
+ *  }
+ *  return true;
  * }
  * </code>
  *
  * @see TreeDropdownField for the sample implementation, but only allowing single selects
  */
-class TreeMultiselectField extends TreeDropdownField {
-	public function __construct($name, $title=null, $sourceObject="SilverStripe\\Security\\Group", $keyField="ID", $labelField="Title") {
-		parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
-		$this->removeExtraClass('single');
-		$this->addExtraClass('multiple');
-		$this->value = 'unchanged';
-	}
+class TreeMultiselectField extends TreeDropdownField
+{
+    public function __construct($name, $title = null, $sourceObject = "SilverStripe\\Security\\Group", $keyField = "ID", $labelField = "Title")
+    {
+        parent::__construct($name, $title, $sourceObject, $keyField, $labelField);
+        $this->removeExtraClass('single');
+        $this->addExtraClass('multiple');
+        $this->value = 'unchanged';
+    }
 
-	/**
-	 * Return this field's linked items
-	 */
-	public function getItems() {
-		// If the value has been set, use that
-		if($this->value != 'unchanged' && is_array($this->sourceObject)) {
-			$items = array();
-			$values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
-			foreach($values as $value) {
-				$item = new stdClass;
-				$item->ID = $value;
-				$item->Title = $this->sourceObject[$value];
-				$items[] = $item;
-			}
-			return $items;
+    /**
+     * Return this field's linked items
+     */
+    public function getItems()
+    {
+        // If the value has been set, use that
+        if ($this->value != 'unchanged' && is_array($this->sourceObject)) {
+            $items = array();
+            $values = is_array($this->value) ? $this->value : preg_split('/ *, */', trim($this->value));
+            foreach ($values as $value) {
+                $item = new stdClass;
+                $item->ID = $value;
+                $item->Title = $this->sourceObject[$value];
+                $items[] = $item;
+            }
+            return $items;
 
-		// Otherwise, look data up from the linked relation
-		} if($this->value != 'unchanged' && is_string($this->value)) {
-			$items = new ArrayList();
-			$ids = explode(',', $this->value);
-			foreach($ids as $id) {
-				if(!is_numeric($id)) continue;
-				$item = DataObject::get_by_id($this->sourceObject, $id);
-				if($item) $items->push($item);
-			}
-			return $items;
-		} else if($this->form) {
-			$fieldName = $this->name;
-			$record = $this->form->getRecord();
-			if(is_object($record) && $record->hasMethod($fieldName))
-				return $record->$fieldName();
-		}
-	}
+        // Otherwise, look data up from the linked relation
+        } if ($this->value != 'unchanged' && is_string($this->value)) {
+            $items = new ArrayList();
+            $ids = explode(',', $this->value);
+            foreach ($ids as $id) {
+                if (!is_numeric($id)) {
+                    continue;
+                }
+                $item = DataObject::get_by_id($this->sourceObject, $id);
+                if ($item) {
+                    $items->push($item);
+                }
+            }
+            return $items;
+        } elseif ($this->form) {
+            $fieldName = $this->name;
+            $record = $this->form->getRecord();
+            if (is_object($record) && $record->hasMethod($fieldName)) {
+                return $record->$fieldName();
+            }
+        }
+    }
 
-	/**
-	 * We overwrite the field attribute to add our hidden fields, as this
-	 * formfield can contain multiple values.
-	 *
-	 * @param array $properties
-	 * @return DBHTMLText
-	 */
-	public function Field($properties = array()) {
-		$value = '';
-		$titleArray = array();
-		$idArray = array();
-		$items = $this->getItems();
-		$emptyTitle = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
+    /**
+     * We overwrite the field attribute to add our hidden fields, as this
+     * formfield can contain multiple values.
+     *
+     * @param array $properties
+     * @return DBHTMLText
+     */
+    public function Field($properties = array())
+    {
+        $value = '';
+        $titleArray = array();
+        $idArray = array();
+        $items = $this->getItems();
+        $emptyTitle = _t('DropdownField.CHOOSE', '(Choose)', 'start value of a dropdown');
 
-		if($items && count($items)) {
-			foreach($items as $item) {
-				$idArray[] = $item->ID;
-				$titleArray[] = ($item instanceof ViewableData)
-					? $item->obj($this->labelField)->forTemplate()
-					: Convert::raw2xml($item->{$this->labelField});
-			}
+        if ($items && count($items)) {
+            foreach ($items as $item) {
+                $idArray[] = $item->ID;
+                $titleArray[] = ($item instanceof ViewableData)
+                    ? $item->obj($this->labelField)->forTemplate()
+                    : Convert::raw2xml($item->{$this->labelField});
+            }
 
-			$title = implode(", ", $titleArray);
-			$value = implode(",", $idArray);
-		} else {
-			$title = $emptyTitle;
-		}
+            $title = implode(", ", $titleArray);
+            $value = implode(",", $idArray);
+        } else {
+            $title = $emptyTitle;
+        }
 
-		$dataUrlTree = '';
-		if ($this->form){
-			$dataUrlTree = $this->Link('tree');
-			if (!empty($idArray)){
-				$dataUrlTree = Controller::join_links($dataUrlTree, '?forceValue='.implode(',',$idArray));
-			}
-		}
-		$properties = array_merge(
-			$properties,
-			array(
-				'Title' => $title,
-				'EmptyTitle' => $emptyTitle,
-				'Link' => $dataUrlTree,
-				'Value' => $value
-			)
-		);
-		return FormField::Field($properties);
-	}
+        $dataUrlTree = '';
+        if ($this->form) {
+            $dataUrlTree = $this->Link('tree');
+            if (!empty($idArray)) {
+                $dataUrlTree = Controller::join_links($dataUrlTree, '?forceValue='.implode(',', $idArray));
+            }
+        }
+        $properties = array_merge(
+            $properties,
+            array(
+                'Title' => $title,
+                'EmptyTitle' => $emptyTitle,
+                'Link' => $dataUrlTree,
+                'Value' => $value
+            )
+        );
+        return FormField::Field($properties);
+    }
 
-	/**
-	 * Save the results into the form
-	 * Calls function $record->onChange($items) before saving to the assummed
-	 * Component set.
-	 *
-	 * @param DataObjectInterface $record
-	 */
-	public function saveInto(DataObjectInterface $record) {
-		// Detect whether this field has actually been updated
-		if($this->value !== 'unchanged') {
-			$items = array();
+    /**
+     * Save the results into the form
+     * Calls function $record->onChange($items) before saving to the assummed
+     * Component set.
+     *
+     * @param DataObjectInterface $record
+     */
+    public function saveInto(DataObjectInterface $record)
+    {
+        // Detect whether this field has actually been updated
+        if ($this->value !== 'unchanged') {
+            $items = array();
 
-			$fieldName = $this->name;
-			$saveDest = $record->$fieldName();
-			if(!$saveDest) {
-				user_error("TreeMultiselectField::saveInto() Field '$fieldName' not found on"
-					. " $record->class.$record->ID", E_USER_ERROR);
-			}
+            $fieldName = $this->name;
+            $saveDest = $record->$fieldName();
+            if (!$saveDest) {
+                user_error("TreeMultiselectField::saveInto() Field '$fieldName' not found on"
+                    . " $record->class.$record->ID", E_USER_ERROR);
+            }
 
-			if($this->value) {
-				$items = preg_split("/ *, */", trim($this->value));
-			}
+            if ($this->value) {
+                $items = preg_split("/ *, */", trim($this->value));
+            }
 
-			// Allows you to modify the items on your object before save
-			$funcName = "onChange$fieldName";
-			if($record->hasMethod($funcName)){
-				$result = $record->$funcName($items);
-				if(!$result){
-					return;
-				}
-			}
+            // Allows you to modify the items on your object before save
+            $funcName = "onChange$fieldName";
+            if ($record->hasMethod($funcName)) {
+                $result = $record->$funcName($items);
+                if (!$result) {
+                    return;
+                }
+            }
 
-			$saveDest->setByIDList($items);
-		}
-	}
+            $saveDest->setByIDList($items);
+        }
+    }
 
-	/**
-	 * Changes this field to the readonly field.
-	 */
-	public function performReadonlyTransformation() {
-		$copy = $this->castedCopy('SilverStripe\\Forms\\TreeMultiselectField_Readonly');
-		$copy->setKeyField($this->keyField);
-		$copy->setLabelField($this->labelField);
-		$copy->setSourceObject($this->sourceObject);
+    /**
+     * Changes this field to the readonly field.
+     */
+    public function performReadonlyTransformation()
+    {
+        $copy = $this->castedCopy('SilverStripe\\Forms\\TreeMultiselectField_Readonly');
+        $copy->setKeyField($this->keyField);
+        $copy->setLabelField($this->labelField);
+        $copy->setSourceObject($this->sourceObject);
 
-		return $copy;
-	}
+        return $copy;
+    }
 }

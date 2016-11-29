@@ -17,12 +17,12 @@ use SilverStripe\ORM\SS_List;
 interface GridField_DataManipulator extends GridFieldComponent
 {
 
-	/**
-	 * Manipulate the {@link DataList} as needed by this grid modifier.
-	 *
-	 * @param GridField $gridField
-	 * @param SS_List $dataList
-	 * @return DataList
-	 */
-	public function getManipulatedData(GridField $gridField, SS_List $dataList);
+    /**
+     * Manipulate the {@link DataList} as needed by this grid modifier.
+     *
+     * @param GridField $gridField
+     * @param SS_List $dataList
+     * @return DataList
+     */
+    public function getManipulatedData(GridField $gridField, SS_List $dataList);
 }

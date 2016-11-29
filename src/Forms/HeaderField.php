@@ -7,96 +7,104 @@ namespace SilverStripe\Forms;
  *
  * This can be used to add extra text in your forms.
  */
-class HeaderField extends DatalessField {
+class HeaderField extends DatalessField
+{
 
-	/**
-	 * The level of the <h1> to <h6> HTML tag.
-	 *
-	 * @var int
-	 */
-	protected $headingLevel = 2;
+    /**
+     * The level of the <h1> to <h6> HTML tag.
+     *
+     * @var int
+     */
+    protected $headingLevel = 2;
 
-	protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
+    protected $schemaDataType = self::SCHEMA_DATA_TYPE_STRUCTURAL;
 
-	/**
-	 * @skipUpgrade
-	 * @var string
-	 */
-	protected $schemaComponent = 'HeaderField';
+    /**
+     * @skipUpgrade
+     * @var string
+     */
+    protected $schemaComponent = 'HeaderField';
 
-	/**
-	 * @param string $name
-	 * @param string $title
-	 * @param int $headingLevel
-	 */
-	public function __construct($name, $title, $headingLevel = 2) {
-		$this->setHeadingLevel($headingLevel);
-		parent::__construct($name, $title);
-	}
+    /**
+     * @param string $name
+     * @param string $title
+     * @param int $headingLevel
+     */
+    public function __construct($name, $title, $headingLevel = 2)
+    {
+        $this->setHeadingLevel($headingLevel);
+        parent::__construct($name, $title);
+    }
 
-	/**
-	 * @return int
-	 */
-	public function getHeadingLevel() {
-		return $this->headingLevel;
-	}
+    /**
+     * @return int
+     */
+    public function getHeadingLevel()
+    {
+        return $this->headingLevel;
+    }
 
-	/**
-	 * @param int $headingLevel
-	 *
-	 * @return $this
-	 */
-	public function setHeadingLevel($headingLevel) {
-		$this->headingLevel = $headingLevel;
+    /**
+     * @param int $headingLevel
+     *
+     * @return $this
+     */
+    public function setHeadingLevel($headingLevel)
+    {
+        $this->headingLevel = $headingLevel;
 
-		return $this;
-	}
+        return $this;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getAttributes() {
-		return array_merge(
-			parent::getAttributes(),
-			array(
-				'id' => $this->ID(),
-				'class' => $this->extraClass(),
-				'type' => null,
-				'name' => null
-			)
-		);
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function getAttributes()
+    {
+        return array_merge(
+            parent::getAttributes(),
+            array(
+                'id' => $this->ID(),
+                'class' => $this->extraClass(),
+                'type' => null,
+                'name' => null
+            )
+        );
+    }
 
-	/**
-	 * @return null
-	 */
-	public function Type() {
-		return null;
-	}
+    /**
+     * @return null
+     */
+    public function Type()
+    {
+        return null;
+    }
 
-	/**
-	 * Header fields support dynamic titles via schema state
-	 *
-	 * @return array
-	 */
-	public function getSchemaStateDefaults() {
-		$state = parent::getSchemaStateDefaults();
+    /**
+     * Header fields support dynamic titles via schema state
+     *
+     * @return array
+     */
+    public function getSchemaStateDefaults()
+    {
+        $state = parent::getSchemaStateDefaults();
 
-		$state['data']['title'] = $this->Title();
+        $state['data']['title'] = $this->Title();
 
-		return $state;
-	}
+        return $state;
+    }
 
-	/**
-	 * Header fields heading level to be set
-	 *
-	 * @return array
-	 */
-	public function getSchemaDataDefaults() {
-		$data = parent::getSchemaDataDefaults();
+    /**
+     * Header fields heading level to be set
+     *
+     * @return array
+     */
+    public function getSchemaDataDefaults()
+    {
+        $data = parent::getSchemaDataDefaults();
 
-		$data['data']['headingLevel'] = $this->headingLevel;
+        $data['data']['headingLevel'] = $this->headingLevel;
 
-		return $data;
-	}
+        return $data;
+    }
 }

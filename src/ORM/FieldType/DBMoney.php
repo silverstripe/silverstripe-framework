@@ -19,206 +19,242 @@ require_once 'Zend/Currency.php';
  * @todo Addition, substraction and allocation of values
  * @todo Model validation for $allowedCurrencies
  */
-class DBMoney extends DBComposite {
+class DBMoney extends DBComposite
+{
 
-	/**
-	 * @var string $locale
-	 */
-	protected $locale = null;
+    /**
+     * @var string $locale
+     */
+    protected $locale = null;
 
-	/**
-	 * @var Zend_Currency
-	 */
-	protected $currencyLib;
+    /**
+     * @var Zend_Currency
+     */
+    protected $currencyLib;
 
-	/**
-	 * Limit the currencies
-	 * @var array $allowedCurrencies
-	 */
-	protected $allowedCurrencies;
+    /**
+     * Limit the currencies
+     * @var array $allowedCurrencies
+     */
+    protected $allowedCurrencies;
 
-	/**
-	 * @param array
-	 */
-	private static $composite_db = array(
-		"Currency" => "Varchar(3)",
-		"Amount" => 'Decimal(19,4)'
-	);
+    /**
+     * @param array
+     */
+    private static $composite_db = array(
+        "Currency" => "Varchar(3)",
+        "Amount" => 'Decimal(19,4)'
+    );
 
-	public function __construct($name = null) {
-		$this->currencyLib = new Zend_Currency(null, i18n::get_locale());
+    public function __construct($name = null)
+    {
+        $this->currencyLib = new Zend_Currency(null, i18n::get_locale());
 
-		parent::__construct($name);
-	}
+        parent::__construct($name);
+    }
 
-	/**
-	 * @param array $options
-	 * @return string
-	 */
-	public function Nice($options = array()) {
-		$amount = $this->getAmount();
-		if(!isset($options['display'])) $options['display'] = Zend_Currency::USE_SYMBOL;
-		if(!isset($options['currency'])) $options['currency'] = $this->getCurrency();
-		if(!isset($options['symbol'])) {
-			$options['symbol'] = $this->currencyLib->getSymbol($this->getCurrency(), $this->getLocale());
-		}
-		return (is_numeric($amount)) ? $this->currencyLib->toCurrency($amount, $options) : '';
-	}
+    /**
+     * @param array $options
+     * @return string
+     */
+    public function Nice($options = array())
+    {
+        $amount = $this->getAmount();
+        if (!isset($options['display'])) {
+            $options['display'] = Zend_Currency::USE_SYMBOL;
+        }
+        if (!isset($options['currency'])) {
+            $options['currency'] = $this->getCurrency();
+        }
+        if (!isset($options['symbol'])) {
+            $options['symbol'] = $this->currencyLib->getSymbol($this->getCurrency(), $this->getLocale());
+        }
+        return (is_numeric($amount)) ? $this->currencyLib->toCurrency($amount, $options) : '';
+    }
 
-	/**
-	 * @param array $options
-	 * @return string
-	 */
-	public function NiceWithShortname($options = array()){
-		$options['display'] = Zend_Currency::USE_SHORTNAME;
-		return $this->Nice($options);
-	}
+    /**
+     * @param array $options
+     * @return string
+     */
+    public function NiceWithShortname($options = array())
+    {
+        $options['display'] = Zend_Currency::USE_SHORTNAME;
+        return $this->Nice($options);
+    }
 
-	/**
-	 * @param array $options
-	 * @return string
-	 */
-	public function NiceWithName($options = array()){
-		$options['display'] = Zend_Currency::USE_NAME;
-		return $this->Nice($options);
-	}
+    /**
+     * @param array $options
+     * @return string
+     */
+    public function NiceWithName($options = array())
+    {
+        $options['display'] = Zend_Currency::USE_NAME;
+        return $this->Nice($options);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getCurrency() {
-		return $this->getField('Currency');
-	}
+    /**
+     * @return string
+     */
+    public function getCurrency()
+    {
+        return $this->getField('Currency');
+    }
 
-	/**
-	 * @param string $currency
-	 * @param bool $markChanged
-	 */
-	public function setCurrency($currency, $markChanged = true) {
-		$this->setField('Currency', $currency, $markChanged);
-	}
+    /**
+     * @param string $currency
+     * @param bool $markChanged
+     */
+    public function setCurrency($currency, $markChanged = true)
+    {
+        $this->setField('Currency', $currency, $markChanged);
+    }
 
-	/**
-	 * @return float
-	 */
-	public function getAmount() {
-		return $this->getField('Amount');
-	}
+    /**
+     * @return float
+     */
+    public function getAmount()
+    {
+        return $this->getField('Amount');
+    }
 
-	/**
-	 * @param float $amount
-	 * @param bool $markChanged
-	 */
-	public function setAmount($amount, $markChanged = true) {
-		$this->setField('Amount', (float)$amount, $markChanged);
-	}
+    /**
+     * @param float $amount
+     * @param bool $markChanged
+     */
+    public function setAmount($amount, $markChanged = true)
+    {
+        $this->setField('Amount', (float)$amount, $markChanged);
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function exists() {
-		return ($this->getCurrency() && is_numeric($this->getAmount()));
-	}
+    /**
+     * @return boolean
+     */
+    public function exists()
+    {
+        return ($this->getCurrency() && is_numeric($this->getAmount()));
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function hasAmount() {
-		$a = $this->getAmount();
-		return (!empty($a) && is_numeric($a));
-	}
+    /**
+     * @return boolean
+     */
+    public function hasAmount()
+    {
+        $a = $this->getAmount();
+        return (!empty($a) && is_numeric($a));
+    }
 
-	/**
-	 * @param string $locale
-	 */
-	public function setLocale($locale) {
-		$this->locale = $locale;
-		$this->currencyLib->setLocale($locale);
-	}
+    /**
+     * @param string $locale
+     */
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+        $this->currencyLib->setLocale($locale);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getLocale() {
-		return ($this->locale) ? $this->locale : i18n::get_locale();
-	}
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return ($this->locale) ? $this->locale : i18n::get_locale();
+    }
 
-	/**
-	 * @param string $currency
-	 * @param string $locale
-	 * @return string
-	 */
-	public function getSymbol($currency = null, $locale = null) {
+    /**
+     * @param string $currency
+     * @param string $locale
+     * @return string
+     */
+    public function getSymbol($currency = null, $locale = null)
+    {
 
-		if($locale === null) $locale = $this->getLocale();
-		if($currency === null) $currency = $this->getCurrency();
+        if ($locale === null) {
+            $locale = $this->getLocale();
+        }
+        if ($currency === null) {
+            $currency = $this->getCurrency();
+        }
 
-		return $this->currencyLib->getSymbol($currency, $locale);
-	}
+        return $this->currencyLib->getSymbol($currency, $locale);
+    }
 
-	/**
-	 * @param string $currency
-	 * @param string $locale
-	 * @return string
-	 */
-	public function getShortName($currency = null, $locale = null) {
-		if($locale === null) $locale = $this->getLocale();
-		if($currency === null) $currency = $this->getCurrency();
+    /**
+     * @param string $currency
+     * @param string $locale
+     * @return string
+     */
+    public function getShortName($currency = null, $locale = null)
+    {
+        if ($locale === null) {
+            $locale = $this->getLocale();
+        }
+        if ($currency === null) {
+            $currency = $this->getCurrency();
+        }
 
-		return $this->currencyLib->getShortName($currency, $locale);
-	}
+        return $this->currencyLib->getShortName($currency, $locale);
+    }
 
-	/**
-	 * @param string $currency
-	 * @param string $locale
-	 * @return string
-	 */
-	public function getCurrencyName($currency = null, $locale = null) {
-		if($locale === null) $locale = $this->getLocale();
-		if($currency === null) $currency = $this->getCurrency();
+    /**
+     * @param string $currency
+     * @param string $locale
+     * @return string
+     */
+    public function getCurrencyName($currency = null, $locale = null)
+    {
+        if ($locale === null) {
+            $locale = $this->getLocale();
+        }
+        if ($currency === null) {
+            $currency = $this->getCurrency();
+        }
 
-		return $this->currencyLib->getName($currency, $locale);
-	}
+        return $this->currencyLib->getName($currency, $locale);
+    }
 
-	/**
-	 * @param array $arr
-	 */
-	public function setAllowedCurrencies($arr) {
-		$this->allowedCurrencies = $arr;
-	}
+    /**
+     * @param array $arr
+     */
+    public function setAllowedCurrencies($arr)
+    {
+        $this->allowedCurrencies = $arr;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getAllowedCurrencies() {
-		return $this->allowedCurrencies;
-	}
+    /**
+     * @return array
+     */
+    public function getAllowedCurrencies()
+    {
+        return $this->allowedCurrencies;
+    }
 
-	/**
-	 * Returns a CompositeField instance used as a default
-	 * for form scaffolding.
-	 *
-	 * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
-	 *
-	 * @param string $title Optional. Localized title of the generated instance
-	 * @param array $params
-	 * @return FormField
-	 */
-	public function scaffoldFormField($title = null, $params = null) {
-		$field = new MoneyField($this->getName());
-		$field->setAllowedCurrencies($this->getAllowedCurrencies());
-		$field->setLocale($this->getLocale());
+    /**
+     * Returns a CompositeField instance used as a default
+     * for form scaffolding.
+     *
+     * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
+     *
+     * @param string $title Optional. Localized title of the generated instance
+     * @param array $params
+     * @return FormField
+     */
+    public function scaffoldFormField($title = null, $params = null)
+    {
+        $field = new MoneyField($this->getName());
+        $field->setAllowedCurrencies($this->getAllowedCurrencies());
+        $field->setLocale($this->getLocale());
 
-		return $field;
-	}
+        return $field;
+    }
 
-	/**
-	 * For backwards compatibility reasons
-	 * (mainly with ecommerce module),
-	 * this returns the amount value of the field,
-	 * rather than a {@link Nice()} formatting.
-	 */
-	public function __toString() {
-		return (string)$this->getAmount();
-	}
+    /**
+     * For backwards compatibility reasons
+     * (mainly with ecommerce module),
+     * this returns the amount value of the field,
+     * rather than a {@link Nice()} formatting.
+     */
+    public function __toString()
+    {
+        return (string)$this->getAmount();
+    }
 }

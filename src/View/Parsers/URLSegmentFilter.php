@@ -14,130 +14,142 @@ use SilverStripe\Core\Object;
  *
  * See {@link FileNameFilter} for similar implementation for filesystem-based URLs.
  */
-class URLSegmentFilter extends Object {
+class URLSegmentFilter extends Object
+{
 
-	/**
-	 * @config
-	 * @var Boolean
-	 */
-	private static $default_use_transliterator = true;
+    /**
+     * @config
+     * @var Boolean
+     */
+    private static $default_use_transliterator = true;
 
-	/**
-	 * @config
-	 * @var array See {@link setReplacements()}.
-	 */
-	private static $default_replacements = array(
-		'/&amp;/u' => '-and-',
-		'/&/u' => '-and-',
-		'/\s|\+/u' => '-', // remove whitespace/plus
-		'/[_.]+/u' => '-', // underscores and dots to dashes
-		'/[^A-Za-z0-9\-]+/u' => '', // remove non-ASCII chars, only allow alphanumeric and dashes
-		'/[\/\?=#]+/u' => '-', // remove forward slashes, question marks, equal signs and hashes in case multibyte is allowed (and non-ASCII chars aren't removed)
-		'/[\-]{2,}/u' => '-', // remove duplicate dashes
-		'/^[\-]+/u' => '', // Remove all leading dashes
-		'/[\-]+$/u' => '' // Remove all trailing dashes
-	);
+    /**
+     * @config
+     * @var array See {@link setReplacements()}.
+     */
+    private static $default_replacements = array(
+        '/&amp;/u' => '-and-',
+        '/&/u' => '-and-',
+        '/\s|\+/u' => '-', // remove whitespace/plus
+        '/[_.]+/u' => '-', // underscores and dots to dashes
+        '/[^A-Za-z0-9\-]+/u' => '', // remove non-ASCII chars, only allow alphanumeric and dashes
+        '/[\/\?=#]+/u' => '-', // remove forward slashes, question marks, equal signs and hashes in case multibyte is allowed (and non-ASCII chars aren't removed)
+        '/[\-]{2,}/u' => '-', // remove duplicate dashes
+        '/^[\-]+/u' => '', // Remove all leading dashes
+        '/[\-]+$/u' => '' // Remove all trailing dashes
+    );
 
-	/**
-	 * Doesn't try to replace or transliterate non-ASCII filters.
-	 * Useful for character sets that have little overlap with ASCII (e.g. far eastern),
-	 * as well as better search engine optimization for URLs.
-	 * @see http://www.ietf.org/rfc/rfc3987
-	 *
-	 * @config
-	 * @var boolean
-	 */
-	private static $default_allow_multibyte = false;
+    /**
+     * Doesn't try to replace or transliterate non-ASCII filters.
+     * Useful for character sets that have little overlap with ASCII (e.g. far eastern),
+     * as well as better search engine optimization for URLs.
+     * @see http://www.ietf.org/rfc/rfc3987
+     *
+     * @config
+     * @var boolean
+     */
+    private static $default_allow_multibyte = false;
 
-	/**
-	 * @var array See {@link setReplacements()}
-	 */
-	public $replacements = array();
+    /**
+     * @var array See {@link setReplacements()}
+     */
+    public $replacements = array();
 
-	/**
-	 * Note: Depending on the applied replacement rules, this method might result in an empty string.
-	 *
-	 * @param string $name URL path (without domain or query parameters), in utf8 encoding
-	 * @return string A filtered path compatible with RFC 3986
-	 */
-	public function filter($name) {
-		if(!$this->getAllowMultibyte()) {
-			// Only transliterate when no multibyte support is requested
-			$transliterator = $this->getTransliterator();
-			if($transliterator) $name = $transliterator->toASCII($name);
-		}
+    /**
+     * Note: Depending on the applied replacement rules, this method might result in an empty string.
+     *
+     * @param string $name URL path (without domain or query parameters), in utf8 encoding
+     * @return string A filtered path compatible with RFC 3986
+     */
+    public function filter($name)
+    {
+        if (!$this->getAllowMultibyte()) {
+            // Only transliterate when no multibyte support is requested
+            $transliterator = $this->getTransliterator();
+            if ($transliterator) {
+                $name = $transliterator->toASCII($name);
+            }
+        }
 
-		$name = mb_strtolower($name);
-		$replacements = $this->getReplacements();
+        $name = mb_strtolower($name);
+        $replacements = $this->getReplacements();
 
-		// Unset automated removal of non-ASCII characters, and don't try to transliterate
-		if($this->getAllowMultibyte() && isset($replacements['/[^A-Za-z0-9\-]+/u'])) {
-			unset($replacements['/[^A-Za-z0-9\-]+/u']);
-		}
+        // Unset automated removal of non-ASCII characters, and don't try to transliterate
+        if ($this->getAllowMultibyte() && isset($replacements['/[^A-Za-z0-9\-]+/u'])) {
+            unset($replacements['/[^A-Za-z0-9\-]+/u']);
+        }
 
-		foreach($replacements as $regex => $replace) {
-			$name = preg_replace($regex, $replace, $name);
-		}
+        foreach ($replacements as $regex => $replace) {
+            $name = preg_replace($regex, $replace, $name);
+        }
 
-		// Multibyte URLs require percent encoding to comply to RFC 3986.
-		// Without this setting, the "remove non-ASCII chars" regex takes care of that.
-		if($this->getAllowMultibyte()) $name = rawurlencode($name);
+        // Multibyte URLs require percent encoding to comply to RFC 3986.
+        // Without this setting, the "remove non-ASCII chars" regex takes care of that.
+        if ($this->getAllowMultibyte()) {
+            $name = rawurlencode($name);
+        }
 
-		return $name;
-	}
+        return $name;
+    }
 
-	/**
-	 * @param array $r Map of find/replace used for preg_replace().
-	 */
-	public function setReplacements($r) {
-		$this->replacements = $r;
-	}
+    /**
+     * @param array $r Map of find/replace used for preg_replace().
+     */
+    public function setReplacements($r)
+    {
+        $this->replacements = $r;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getReplacements() {
-		return ($this->replacements) ? $this->replacements : (array)$this->config()->default_replacements;
-	}
+    /**
+     * @return array
+     */
+    public function getReplacements()
+    {
+        return ($this->replacements) ? $this->replacements : (array)$this->config()->default_replacements;
+    }
 
-	/**
-	 * @var Transliterator
-	 */
-	protected $transliterator;
+    /**
+     * @var Transliterator
+     */
+    protected $transliterator;
 
-	/**
-	 * @return Transliterator
-	 */
-	public function getTransliterator() {
-		if($this->transliterator === null && $this->config()->default_use_transliterator) {
-			$this->transliterator = Transliterator::create();
-		}
-		return $this->transliterator;
-	}
+    /**
+     * @return Transliterator
+     */
+    public function getTransliterator()
+    {
+        if ($this->transliterator === null && $this->config()->default_use_transliterator) {
+            $this->transliterator = Transliterator::create();
+        }
+        return $this->transliterator;
+    }
 
-	/**
-	 * @param Transliterator $t
-	 */
-	public function setTransliterator($t) {
-		$this->transliterator = $t;
-	}
+    /**
+     * @param Transliterator $t
+     */
+    public function setTransliterator($t)
+    {
+        $this->transliterator = $t;
+    }
 
-	/**
-	 * @var boolean
-	 */
-	protected $allowMultibyte;
+    /**
+     * @var boolean
+     */
+    protected $allowMultibyte;
 
-	/**
-	 * @param boolean
-	 */
-	public function setAllowMultibyte($bool) {
-		$this->allowMultibyte = $bool;
-	}
+    /**
+     * @param boolean
+     */
+    public function setAllowMultibyte($bool)
+    {
+        $this->allowMultibyte = $bool;
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function getAllowMultibyte() {
-		return ($this->allowMultibyte !== null) ? $this->allowMultibyte : $this->config()->default_allow_multibyte;
-	}
+    /**
+     * @return boolean
+     */
+    public function getAllowMultibyte()
+    {
+        return ($this->allowMultibyte !== null) ? $this->allowMultibyte : $this->config()->default_allow_multibyte;
+    }
 }

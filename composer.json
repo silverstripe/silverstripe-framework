@@ -66,6 +66,9 @@
       "src/",
       "thirdparty/"
   ],
+  "scripts": {
+    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/"
+  },
   "min-stability": "dev",
   "prefer-stable": true
 }

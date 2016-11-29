@@ -11,22 +11,22 @@ use tidy;
 class TidyHTMLCleaner extends HTMLCleaner
 {
 
-	protected $defaultConfig = array(
-		'clean' => true,
-		'output-xhtml' => true,
-		'show-body-only' => true,
-		'wrap' => 0,
-		'doctype' => 'omit',
-		'input-encoding' => 'utf8',
-		'output-encoding' => 'utf8'
-	);
+    protected $defaultConfig = array(
+        'clean' => true,
+        'output-xhtml' => true,
+        'show-body-only' => true,
+        'wrap' => 0,
+        'doctype' => 'omit',
+        'input-encoding' => 'utf8',
+        'output-encoding' => 'utf8'
+    );
 
-	public function cleanHTML($content)
-	{
-		$tidy = new tidy();
-		$output = $tidy->repairString($content, $this->config);
+    public function cleanHTML($content)
+    {
+        $tidy = new tidy();
+        $output = $tidy->repairString($content, $this->config);
 
-		// Clean leading/trailing whitespace
-		return preg_replace('/(^\s+)|(\s+$)/', '', $output);
-	}
+        // Clean leading/trailing whitespace
+        return preg_replace('/(^\s+)|(\s+$)/', '', $output);
+    }
 }

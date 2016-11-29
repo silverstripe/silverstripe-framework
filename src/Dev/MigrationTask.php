@@ -15,24 +15,24 @@ namespace SilverStripe\Dev;
  * <code>
  * class MyMigrationTask extends BuildTask {
  *
- * 	protected $title = "My Database Migrations"; // title of the script
- * 	protected $description = "Description"; // description of what it does
+ *  protected $title = "My Database Migrations"; // title of the script
+ *  protected $description = "Description"; // description of what it does
  *
- * 	public function run($request) {
- * 		if ($request->getVar('Direction') == 'down') {
- * 			$this->down();
- * 		} else {
- * 			$this->up();
- * 		}
- * 	}
+ *  public function run($request) {
+ *      if ($request->getVar('Direction') == 'down') {
+ *          $this->down();
+ *      } else {
+ *          $this->up();
+ *      }
+ *  }
  *
- * 	public function up() {
- * 		// do something when going from old -> new
- * 	}
+ *  public function up() {
+ *      // do something when going from old -> new
+ *  }
  *
- * 	public function down() {
- * 		// do something when going from new -> old
- * 	}
+ *  public function down() {
+ *      // do something when going from new -> old
+ *  }
  * }
  * </code>
  *
@@ -48,25 +48,29 @@ namespace SilverStripe\Dev;
  * http://www.yoursite.com/dev/tasks/MyMigrationTask?isDev=1
  * </code>
  */
-class MigrationTask extends BuildTask {
+class MigrationTask extends BuildTask
+{
 
-	private static $segment = 'MigrationTask';
+    private static $segment = 'MigrationTask';
 
-	protected $title = "Database Migrations";
+    protected $title = "Database Migrations";
 
-	protected $description = "Provide atomic database changes (not implemented yet)";
+    protected $description = "Provide atomic database changes (not implemented yet)";
 
-	public function run($request) {
-		if ($request->param('Direction') == 'down') {
-			$this->down();
-		} else {
-			$this->up();
-		}
-	}
+    public function run($request)
+    {
+        if ($request->param('Direction') == 'down') {
+            $this->down();
+        } else {
+            $this->up();
+        }
+    }
 
-	public function up() {}
+    public function up()
+    {
+    }
 
-	public function down() {}
-
+    public function down()
+    {
+    }
 }
-

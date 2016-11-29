@@ -9,13 +9,13 @@ use SilverStripe\ORM\DB;
  */
 class PasswordEncryptor_MySQLOldPassword extends PasswordEncryptor
 {
-	public function encrypt($password, $salt = null, $member = null)
-	{
-		return DB::prepared_query("SELECT OLD_PASSWORD(?)", array($password))->value();
-	}
+    public function encrypt($password, $salt = null, $member = null)
+    {
+        return DB::prepared_query("SELECT OLD_PASSWORD(?)", array($password))->value();
+    }
 
-	public function salt($password, $member = null)
-	{
-		return false;
-	}
+    public function salt($password, $member = null)
+    {
+        return false;
+    }
 }

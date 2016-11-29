@@ -11,9 +11,11 @@ namespace SilverStripe\ORM\Filters;
  *  "abcdefg" => "abcd" # false
  * </code>
  */
-class EndsWithFilter extends PartialMatchFilter {
+class EndsWithFilter extends PartialMatchFilter
+{
 
-	protected function getMatchPattern($value) {
-		return "%$value";
-	}
+    protected function getMatchPattern($value)
+    {
+        return "%$value";
+    }
 }

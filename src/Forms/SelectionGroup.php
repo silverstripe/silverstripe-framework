@@ -14,16 +14,16 @@ use SilverStripe\View\Requirements;
  *
  * @example <code>
  * $items = array(
- * 	new SelectionGroup_Item(
- * 		'one',
- * 		new LiteralField('one', 'one view'),
- * 		'one title'
- * 	),
- * 	new SelectionGroup_Item(
- * 		'two',
- * 		new LiteralField('two', 'two view'),
- * 		'two title'
- * 	),
+ *  new SelectionGroup_Item(
+ *      'one',
+ *      new LiteralField('one', 'one view'),
+ *      'one title'
+ *  ),
+ *  new SelectionGroup_Item(
+ *      'two',
+ *      new LiteralField('two', 'two view'),
+ *      'two title'
+ *  ),
  * );
  * $field = new SelectionGroup('MyGroup', $items);
  * </code>
@@ -31,96 +31,102 @@ use SilverStripe\View\Requirements;
  * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
  * since the required frontend dependencies are included through CMS bundling.
  */
-class SelectionGroup extends CompositeField {
+class SelectionGroup extends CompositeField
+{
 
-	/**
-	 * Create a new selection group.
-	 *
-	 * @param string $name The field name of the selection group.
-	 * @param array $items The list of {@link SelectionGroup_Item}
-	 * @param mixed $value
-	 */
-	public function __construct($name, $items, $value = null) {
-		if($value !== null) {
-			$this->setValue($value);
-		}
+    /**
+     * Create a new selection group.
+     *
+     * @param string $name The field name of the selection group.
+     * @param array $items The list of {@link SelectionGroup_Item}
+     * @param mixed $value
+     */
+    public function __construct($name, $items, $value = null)
+    {
+        if ($value !== null) {
+            $this->setValue($value);
+        }
 
-		$selectionItems = array();
+        $selectionItems = array();
 
-		foreach($items as $key => $item) {
-			if($item instanceof SelectionGroup_Item) {
-				$selectionItems[] = $item;
-			} else {
-				// Convert legacy format
-				if(strpos($key,'//') !== false) {
-					list($key,$title) = explode('//', $key,2);
-				} else {
-					$title = null;
-				}
-				$selectionItems[] = new SelectionGroup_Item($key, $item, $title);
-			}
-		}
+        foreach ($items as $key => $item) {
+            if ($item instanceof SelectionGroup_Item) {
+                $selectionItems[] = $item;
+            } else {
+                // Convert legacy format
+                if (strpos($key, '//') !== false) {
+                    list($key,$title) = explode('//', $key, 2);
+                } else {
+                    $title = null;
+                }
+                $selectionItems[] = new SelectionGroup_Item($key, $item, $title);
+            }
+        }
 
-		parent::__construct($selectionItems);
+        parent::__construct($selectionItems);
 
-		$this->setName($name);
-	}
+        $this->setName($name);
+    }
 
-	public function FieldSet() {
-		return $this->FieldList();
-	}
+    public function FieldSet()
+    {
+        return $this->FieldList();
+    }
 
-	public function FieldList() {
-		$items = parent::FieldList()->toArray();
-		$count = 0;
-		$newItems = array();
+    public function FieldList()
+    {
+        $items = parent::FieldList()->toArray();
+        $count = 0;
+        $newItems = array();
 
-		/** @var SelectionGroup_Item $item */
-		foreach($items as $item) {
-			if($this->value == $item->getValue()) {
-				$firstSelected = true;
-				$checked = true;
-			} else {
-				$firstSelected = false;
-				$checked = false;
-			}
+        /** @var SelectionGroup_Item $item */
+        foreach ($items as $item) {
+            if ($this->value == $item->getValue()) {
+                $firstSelected = true;
+                $checked = true;
+            } else {
+                $firstSelected = false;
+                $checked = false;
+            }
 
-			$itemID = $this->ID() . '_' . (++$count);
-			// @todo Move into SelectionGroup_Item.ss template at some point.
-			$extra = array(
-				"RadioButton" => DBField::create_field('HTMLFragment', FormField::create_tag(
-					'input',
-					array(
-						'class' => 'selector',
-						'type' => 'radio',
-						'id' => $itemID,
-						'name' => $this->name,
-						'value' => $item->getValue(),
-						'checked' => $checked,
-						'aria-labelledby' => "title-{$itemID}",
-					)
-				)),
-				"RadioLabel" => DBField::create_field('HTMLFragment', FormField::create_tag(
-					'label',
-					array(
-						'id' => "title-{$itemID}",
-						'for' => $itemID
-					),
-					$item->getTitle()
-				)),
-				"Selected" => $firstSelected,
-			);
-			$newItems[] = $item->customise($extra);
-		}
+            $itemID = $this->ID() . '_' . (++$count);
+            // @todo Move into SelectionGroup_Item.ss template at some point.
+            $extra = array(
+                "RadioButton" => DBField::create_field('HTMLFragment', FormField::create_tag(
+                    'input',
+                    array(
+                        'class' => 'selector',
+                        'type' => 'radio',
+                        'id' => $itemID,
+                        'name' => $this->name,
+                        'value' => $item->getValue(),
+                        'checked' => $checked,
+                        'aria-labelledby' => "title-{$itemID}",
+                    )
+                )),
+                "RadioLabel" => DBField::create_field('HTMLFragment', FormField::create_tag(
+                    'label',
+                    array(
+                        'id' => "title-{$itemID}",
+                        'for' => $itemID
+                    ),
+                    $item->getTitle()
+                )),
+                "Selected" => $firstSelected,
+            );
+            $newItems[] = $item->customise($extra);
+        }
 
-		return new ArrayList($newItems);
-	}
+        return new ArrayList($newItems);
+    }
 
-	public function hasData() {
-		return true;
-	}
+    public function hasData()
+    {
+        return true;
+    }
 
-	public function FieldHolder($properties = array()) {
-		return parent::FieldHolder($properties);
-	}
+    public function FieldHolder($properties = array())
+    {
+        return parent::FieldHolder($properties);
+    }
 }

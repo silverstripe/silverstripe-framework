@@ -11,10 +11,10 @@ use SilverStripe\ORM\DataObjectInterface;
 class PermissionCheckboxSetField_Readonly extends PermissionCheckboxSetField
 {
 
-	protected $readonly = true;
+    protected $readonly = true;
 
-	public function saveInto(DataObjectInterface $record)
-	{
-		return false;
-	}
+    public function saveInto(DataObjectInterface $record)
+    {
+        return false;
+    }
 }

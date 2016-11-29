@@ -15,55 +15,59 @@ use SilverStripe\ORM\DataQuery;
  * getInverseOperator() should return a string operator that evaluates the inverse of getOperator(),
  * eg; if getOperator() returns "<", then the inverse should be ">=
  */
-abstract class ComparisonFilter extends SearchFilter {
+abstract class ComparisonFilter extends SearchFilter
+{
 
-	/**
-	 * Should return an operator to be used for comparisons
-	 *
-	 * @return string Operator
-	 */
-	abstract protected function getOperator();
+    /**
+     * Should return an operator to be used for comparisons
+     *
+     * @return string Operator
+     */
+    abstract protected function getOperator();
 
-	/**
-	 * Should return an inverse operator to be used for comparisons
-	 *
-	 * @return string Inverse operator
-	 */
-	abstract protected function getInverseOperator();
+    /**
+     * Should return an inverse operator to be used for comparisons
+     *
+     * @return string Inverse operator
+     */
+    abstract protected function getInverseOperator();
 
-	/**
-	 * Applies a comparison filter to the query
-	 * Handles SQL escaping for both numeric and string values
-	 *
-	 * @param DataQuery $query
-	 * @return DataQuery
-	 */
-	protected function applyOne(DataQuery $query) {
-		$this->model = $query->applyRelation($this->relation);
+    /**
+     * Applies a comparison filter to the query
+     * Handles SQL escaping for both numeric and string values
+     *
+     * @param DataQuery $query
+     * @return DataQuery
+     */
+    protected function applyOne(DataQuery $query)
+    {
+        $this->model = $query->applyRelation($this->relation);
 
-		$predicate = sprintf("%s %s ?", $this->getDbName(), $this->getOperator());
-		return $query->where(array(
-			$predicate => $this->getDbFormattedValue()
-		));
-	}
+        $predicate = sprintf("%s %s ?", $this->getDbName(), $this->getOperator());
+        return $query->where(array(
+            $predicate => $this->getDbFormattedValue()
+        ));
+    }
 
-	/**
-	 * Applies a exclusion(inverse) filter to the query
-	 * Handles SQL escaping for both numeric and string values
-	 *
-	 * @param DataQuery $query
-	 * @return DataQuery
-	 */
-	protected function excludeOne(DataQuery $query) {
-		$this->model = $query->applyRelation($this->relation);
+    /**
+     * Applies a exclusion(inverse) filter to the query
+     * Handles SQL escaping for both numeric and string values
+     *
+     * @param DataQuery $query
+     * @return DataQuery
+     */
+    protected function excludeOne(DataQuery $query)
+    {
+        $this->model = $query->applyRelation($this->relation);
 
-		$predicate = sprintf("%s %s ?", $this->getDbName(), $this->getInverseOperator());
-		return $query->where(array(
-			$predicate => $this->getDbFormattedValue()
-		));
-	}
+        $predicate = sprintf("%s %s ?", $this->getDbName(), $this->getInverseOperator());
+        return $query->where(array(
+            $predicate => $this->getDbFormattedValue()
+        ));
+    }
 
-	public function isEmpty() {
-		return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
-	}
+    public function isEmpty()
+    {
+        return $this->getValue() === array() || $this->getValue() === null || $this->getValue() === '';
+    }
 }

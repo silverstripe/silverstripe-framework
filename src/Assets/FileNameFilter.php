@@ -28,101 +28,112 @@ use SilverStripe\View\Parsers\Transliterator;
  *
  * See {@link URLSegmentFilter} for a more generic implementation.
  */
-class FileNameFilter extends Object {
+class FileNameFilter extends Object
+{
 
-	/**
-	 * @config
-	 * @var Boolean
-	 */
-	private static $default_use_transliterator = true;
+    /**
+     * @config
+     * @var Boolean
+     */
+    private static $default_use_transliterator = true;
 
-	/**
-	 * @config
-	 * @var array See {@link setReplacements()}.
-	 */
-	private static $default_replacements = array(
-		'/\s/' => '-', // remove whitespace
-		'/_/' => '-', // underscores to dashes
-		'/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
-		'/[\-]{2,}/' => '-', // remove duplicate dashes
-		'/^[\.\-_]+/' => '', // Remove all leading dots, dashes or underscores
-	);
+    /**
+     * @config
+     * @var array See {@link setReplacements()}.
+     */
+    private static $default_replacements = array(
+        '/\s/' => '-', // remove whitespace
+        '/_/' => '-', // underscores to dashes
+        '/[^A-Za-z0-9+.\-]+/' => '', // remove non-ASCII chars, only allow alphanumeric plus dash and dot
+        '/[\-]{2,}/' => '-', // remove duplicate dashes
+        '/^[\.\-_]+/' => '', // Remove all leading dots, dashes or underscores
+    );
 
-	/**
-	 * @var array See {@link setReplacements()}
-	 */
-	public $replacements = array();
+    /**
+     * @var array See {@link setReplacements()}
+     */
+    public $replacements = array();
 
-	/**
-	 * Depending on the applied replacement rules, this method
-	 * might result in an empty string. In this case, {@link getDefaultName()}
-	 * will be used to return a randomly generated file name, while retaining its extension.
-	 *
-	 * @param string $name including extension (not path).
-	 * @return string A filtered filename
-	 */
-	public function filter($name) {
-		$ext = pathinfo($name, PATHINFO_EXTENSION);
+    /**
+     * Depending on the applied replacement rules, this method
+     * might result in an empty string. In this case, {@link getDefaultName()}
+     * will be used to return a randomly generated file name, while retaining its extension.
+     *
+     * @param string $name including extension (not path).
+     * @return string A filtered filename
+     */
+    public function filter($name)
+    {
+        $ext = pathinfo($name, PATHINFO_EXTENSION);
 
-		$transliterator = $this->getTransliterator();
-		if($transliterator) $name = $transliterator->toASCII($name);
-		foreach($this->getReplacements() as $regex => $replace) {
-			$name = preg_replace($regex, $replace, $name);
-		}
+        $transliterator = $this->getTransliterator();
+        if ($transliterator) {
+            $name = $transliterator->toASCII($name);
+        }
+        foreach ($this->getReplacements() as $regex => $replace) {
+            $name = preg_replace($regex, $replace, $name);
+        }
 
-		// Safeguard against empty file names
-		$nameWithoutExt = pathinfo($name, PATHINFO_FILENAME);
-		if(empty($nameWithoutExt)) $name = $this->getDefaultName() . '.' . $ext;
+        // Safeguard against empty file names
+        $nameWithoutExt = pathinfo($name, PATHINFO_FILENAME);
+        if (empty($nameWithoutExt)) {
+            $name = $this->getDefaultName() . '.' . $ext;
+        }
 
-		return $name;
-	}
+        return $name;
+    }
 
-	/**
-	 * Take care not to add replacements which might invalidate the file structure,
-	 * e.g. removing dots will remove file extension information.
-	 *
-	 * @param array $r Map of find/replace used for preg_replace().
-	 */
-	public function setReplacements($r) {
-		$this->replacements = $r;
-	}
+    /**
+     * Take care not to add replacements which might invalidate the file structure,
+     * e.g. removing dots will remove file extension information.
+     *
+     * @param array $r Map of find/replace used for preg_replace().
+     */
+    public function setReplacements($r)
+    {
+        $this->replacements = $r;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getReplacements() {
-		return ($this->replacements) ? $this->replacements : (array)$this->config()->default_replacements;
-	}
+    /**
+     * @return array
+     */
+    public function getReplacements()
+    {
+        return ($this->replacements) ? $this->replacements : (array)$this->config()->default_replacements;
+    }
 
-	/**
-	 * Transliterator instance, or false to disable.
-	 * If null will use default.
-	 *
-	 * @var Transliterator|false
-	 */
-	protected $transliterator;
+    /**
+     * Transliterator instance, or false to disable.
+     * If null will use default.
+     *
+     * @var Transliterator|false
+     */
+    protected $transliterator;
 
-	/**
-	 * @return Transliterator
-	 */
-	public function getTransliterator() {
-		if($this->transliterator === null && $this->config()->default_use_transliterator) {
-			$this->transliterator = Transliterator::create();
-		}
-		return $this->transliterator;
-	}
+    /**
+     * @return Transliterator
+     */
+    public function getTransliterator()
+    {
+        if ($this->transliterator === null && $this->config()->default_use_transliterator) {
+            $this->transliterator = Transliterator::create();
+        }
+        return $this->transliterator;
+    }
 
-	/**
-	 * @param Transliterator|false $t
-	 */
-	public function setTransliterator($t) {
-		$this->transliterator = $t;
-	}
+    /**
+     * @param Transliterator|false $t
+     */
+    public function setTransliterator($t)
+    {
+        $this->transliterator = $t;
+    }
 
-	/**
-	 * @return String File name without extension
-	 */
-	public function getDefaultName() {
-		return (string)uniqid();
-	}
+    /**
+     * @return String File name without extension
+     */
+    public function getDefaultName()
+    {
+        return (string)uniqid();
+    }
 }

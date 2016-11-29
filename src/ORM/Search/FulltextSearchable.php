@@ -20,95 +20,107 @@ use Exception;
  *
  * @see http://doc.silverstripe.org/framework/en/tutorials/4-site-search
  */
-class FulltextSearchable extends DataExtension {
+class FulltextSearchable extends DataExtension
+{
 
-	/**
-	 * Comma-separated list of database column names
-	 * that can be searched on. Used for generation of the database index defintions.
-	 *
-	 * @var string
-	 */
-	protected $searchFields;
+    /**
+     * Comma-separated list of database column names
+     * that can be searched on. Used for generation of the database index defintions.
+     *
+     * @var string
+     */
+    protected $searchFields;
 
-	/**
-	 * @var array List of class names
-	 */
-	protected static $searchable_classes;
+    /**
+     * @var array List of class names
+     */
+    protected static $searchable_classes;
 
-	/**
-	 * Enable the default configuration of MySQL full-text searching on the given data classes.
-	 * It can be used to limit the searched classes, but not to add your own classes.
-	 * For this purpose, please use {@link Object::add_extension()} directly:
-	 * <code>
-	 * MyObject::add_extension("FulltextSearchable('MySearchableField,MyOtherField')");
-	 * </code>
-	 *
-	 * Caution: This is a wrapper method that should only be used in _config.php,
-	 * and only be called once in your code.
-	 *
-	 * @param array $searchableClasses The extension will be applied to all DataObject subclasses
-	 *  listed here. Default: {@link SiteTree} and {@link File}.
-	 * @throws Exception
-	 */
-	public static function enable(
-		$searchableClasses = array('SilverStripe\\CMS\\Model\\SiteTree', 'SilverStripe\\Assets\\File')
-	) {
-		$defaultColumns = array(
-			'SilverStripe\\CMS\\Model\\SiteTree' => '"Title","MenuTitle","Content","MetaDescription"',
-			'SilverStripe\\Assets\\File' => '"Name","Title"'
-		);
+    /**
+     * Enable the default configuration of MySQL full-text searching on the given data classes.
+     * It can be used to limit the searched classes, but not to add your own classes.
+     * For this purpose, please use {@link Object::add_extension()} directly:
+     * <code>
+     * MyObject::add_extension("FulltextSearchable('MySearchableField,MyOtherField')");
+     * </code>
+     *
+     * Caution: This is a wrapper method that should only be used in _config.php,
+     * and only be called once in your code.
+     *
+     * @param array $searchableClasses The extension will be applied to all DataObject subclasses
+     *  listed here. Default: {@link SiteTree} and {@link File}.
+     * @throws Exception
+     */
+    public static function enable(
+        $searchableClasses = array('SilverStripe\\CMS\\Model\\SiteTree', 'SilverStripe\\Assets\\File')
+    ) {
+        $defaultColumns = array(
+            'SilverStripe\\CMS\\Model\\SiteTree' => '"Title","MenuTitle","Content","MetaDescription"',
+            'SilverStripe\\Assets\\File' => '"Name","Title"'
+        );
 
-		if(!is_array($searchableClasses)) $searchableClasses = array($searchableClasses);
-		foreach($searchableClasses as $class) {
-			if(!class_exists($class)) continue;
+        if (!is_array($searchableClasses)) {
+            $searchableClasses = array($searchableClasses);
+        }
+        foreach ($searchableClasses as $class) {
+            if (!class_exists($class)) {
+                continue;
+            }
 
-			if(isset($defaultColumns[$class])) {
-				Config::inst()->update(
-					$class, 'create_table_options', array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
-				);
-				$class::add_extension(__CLASS__."('{$defaultColumns[$class]}')");
-			} else {
-				throw new Exception(
-					"FulltextSearchable::enable() I don't know the default search columns for class '$class'"
-				);
-			}
-		}
-		self::$searchable_classes = $searchableClasses;
-		if(class_exists("SilverStripe\\CMS\\Controllers\\ContentController")){
-			ContentController::add_extension("SilverStripe\\CMS\\Search\\ContentControllerSearchExtension");
-		}
-	}
+            if (isset($defaultColumns[$class])) {
+                Config::inst()->update(
+                    $class,
+                    'create_table_options',
+                    array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
+                );
+                $class::add_extension(__CLASS__."('{$defaultColumns[$class]}')");
+            } else {
+                throw new Exception(
+                    "FulltextSearchable::enable() I don't know the default search columns for class '$class'"
+                );
+            }
+        }
+        self::$searchable_classes = $searchableClasses;
+        if (class_exists("SilverStripe\\CMS\\Controllers\\ContentController")) {
+            ContentController::add_extension("SilverStripe\\CMS\\Search\\ContentControllerSearchExtension");
+        }
+    }
 
-	/**
-	 * @param array|string $searchFields Comma-separated list (or array) of database column names
-	 *  that can be searched on. Used for generation of the database index defintions.
-	 */
-	public function __construct($searchFields = array()) {
-		if(is_array($searchFields)) $this->searchFields = '"'.implode('","', $searchFields).'"';
-		else $this->searchFields = $searchFields;
+    /**
+     * @param array|string $searchFields Comma-separated list (or array) of database column names
+     *  that can be searched on. Used for generation of the database index defintions.
+     */
+    public function __construct($searchFields = array())
+    {
+        if (is_array($searchFields)) {
+            $this->searchFields = '"'.implode('","', $searchFields).'"';
+        } else {
+            $this->searchFields = $searchFields;
+        }
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	public static function get_extra_config($class, $extensionClass, $args) {
-		return array(
-			'indexes' => array(
-				'SearchFields' => array(
-					'type' => 'fulltext',
-					'name' => 'SearchFields',
-					'value' => $args[0]
-				)
-			)
-		);
-	}
+    public static function get_extra_config($class, $extensionClass, $args)
+    {
+        return array(
+            'indexes' => array(
+                'SearchFields' => array(
+                    'type' => 'fulltext',
+                    'name' => 'SearchFields',
+                    'value' => $args[0]
+                )
+            )
+        );
+    }
 
-	/**
-	 * Shows all classes that had the {@link FulltextSearchable} extension applied through {@link enable()}.
-	 *
-	 * @return array
-	 */
-	public static function get_searchable_classes() {
-		return self::$searchable_classes;
-	}
-
+    /**
+     * Shows all classes that had the {@link FulltextSearchable} extension applied through {@link enable()}.
+     *
+     * @return array
+     */
+    public static function get_searchable_classes()
+    {
+        return self::$searchable_classes;
+    }
 }

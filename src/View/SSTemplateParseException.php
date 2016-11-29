@@ -12,19 +12,18 @@ use Exception;
 class SSTemplateParseException extends Exception
 {
 
-	/**
-	 * SSTemplateParseException constructor.
-	 * @param string $message
-	 * @param SSTemplateParser $parser
-	 */
-	public function __construct($message, $parser)
-	{
-		$prior = substr($parser->string, 0, $parser->pos);
+    /**
+     * SSTemplateParseException constructor.
+     * @param string $message
+     * @param SSTemplateParser $parser
+     */
+    public function __construct($message, $parser)
+    {
+        $prior = substr($parser->string, 0, $parser->pos);
 
-		preg_match_all('/\r\n|\r|\n/', $prior, $matches);
-		$line = count($matches[0]) + 1;
+        preg_match_all('/\r\n|\r|\n/', $prior, $matches);
+        $line = count($matches[0]) + 1;
 
-		parent::__construct("Parse error in template on line $line. Error was: $message");
-	}
-
+        parent::__construct("Parse error in template on line $line. Error was: $message");
+    }
 }

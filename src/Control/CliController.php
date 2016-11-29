@@ -14,33 +14,37 @@ use SilverStripe\Security\Security;
  * "sake DailyTask" from the commandline will call {@link process()} on every subclass
  * of DailyTask.
  */
-abstract class CliController extends Controller {
+abstract class CliController extends Controller
+{
 
-	private static $allowed_actions = array(
-		'index'
-	);
+    private static $allowed_actions = array(
+        'index'
+    );
 
-	protected function init() {
-		parent::init();
-		// Unless called from the command line, all CliControllers need ADMIN privileges
-		if(!Director::is_cli() && !Permission::check("ADMIN")) {
-			Security::permissionFailure();
-		}
-	}
+    protected function init()
+    {
+        parent::init();
+        // Unless called from the command line, all CliControllers need ADMIN privileges
+        if (!Director::is_cli() && !Permission::check("ADMIN")) {
+            Security::permissionFailure();
+        }
+    }
 
-	public function index() {
-		foreach(ClassInfo::subclassesFor($this->class) as $subclass) {
-			echo $subclass . "\n";
-			/** @var CliController $task */
-			$task = Injector::inst()->create($subclass);
-			$task->doInit();
-			$task->process();
-		}
-	}
+    public function index()
+    {
+        foreach (ClassInfo::subclassesFor($this->class) as $subclass) {
+            echo $subclass . "\n";
+            /** @var CliController $task */
+            $task = Injector::inst()->create($subclass);
+            $task->doInit();
+            $task->process();
+        }
+    }
 
-	/**
-	 * Overload this method to contain the task logic.
-	 */
-	public function process() {}
-
+    /**
+     * Overload this method to contain the task logic.
+     */
+    public function process()
+    {
+    }
 }

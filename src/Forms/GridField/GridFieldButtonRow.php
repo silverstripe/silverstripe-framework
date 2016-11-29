@@ -14,24 +14,27 @@ use SilverStripe\View\SSViewer;
  * This row provides two new HTML fragment spaces: 'toolbar-header-left' and
  * 'toolbar-header-right'.
  */
-class GridFieldButtonRow implements GridField_HTMLProvider {
+class GridFieldButtonRow implements GridField_HTMLProvider
+{
 
-	protected $targetFragment;
+    protected $targetFragment;
 
-	public function __construct($targetFragment = 'before') {
-		$this->targetFragment = $targetFragment;
-	}
+    public function __construct($targetFragment = 'before')
+    {
+        $this->targetFragment = $targetFragment;
+    }
 
-	public function getHTMLFragments( $gridField) {
-		$data = new ArrayData(array(
-			"TargetFragmentName" => $this->targetFragment,
-			"LeftFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-left)",
-			"RightFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
-		));
+    public function getHTMLFragments($gridField)
+    {
+        $data = new ArrayData(array(
+            "TargetFragmentName" => $this->targetFragment,
+            "LeftFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-left)",
+            "RightFragment" => "\$DefineFragment(buttons-{$this->targetFragment}-right)",
+        ));
 
-		$templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
-		return array(
-			$this->targetFragment => $data->renderWith($templates)
-		);
-	}
+        $templates = SSViewer::get_templates_by_class($this, '', __CLASS__);
+        return array(
+            $this->targetFragment => $data->renderWith($templates)
+        );
+    }
 }
