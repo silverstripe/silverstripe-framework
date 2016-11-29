@@ -10,10 +10,10 @@ addons:
 env:
   global:
     - TRAVIS_NODE_VERSION="4"
-    - "ARTIFACTS_AWS_REGION=us-east-1"
-    - "ARTIFACTS_S3_BUCKET=silverstripe-travis-artifacts"
-    - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
-    - secure: "UmbXCNLK0f2Dk+7qX8bOVcgIt4QhRvccoWvMUxaPtIU+95HCbG10eeCxvfOeBax+tHcRXmeCG4vM4tcuT/WoANkAma/VX74DylFjbWhks2tsKOcr2kjTrOwe6Q9CXOBjVAlcx0lnV/a+w83KARjXGnCrIbE7p7r4EDw31rkVufg="
+    - ARTIFACTS_REGION=us-east-1
+    - ARTIFACTS_BUCKET=silverstripe-travis-artifacts
+    - secure: "jVR0iLTuvVfA6jKX5+A3AdUEs8Ps+r3SbL0zGR687K8IoSp3a/+JLH12zFCEexOuxwCtOhlMq8zoZsptCEduCDq+0payk5k6GjNVywFaWjJCV573JScdaHAtoumoHMUvua+Pxds0qKAD2XEYAcOR4Qu7S4HLJV6E1QqHg9PRW5s=" # Encrypted ARTIFACTS_KEY
+    - secure: "SDGv49c2Ee2YBz7dATE3WnHSVSvJiRJ2BVtRasVshdNDNz3NBRzh13C2fDwTGBU1J6PxiQaGTXBy/BGsvbYk2BvdzHVwozkBpHVSaCNdarpCJ5yZZTqKC3mpA1S5353r5tqronwFuMDpftzXnRMfLZGGQ4kYb9hjV55+FPUTFPk=" # Encrypted ARTIFACTS_SECRET
 
 matrix:
   fast_finish: true

@@ -2,18 +2,17 @@
 
 namespace SilverStripe\Forms;
 
-use InvalidArgumentException;
+use ReflectionClass;
+use SilverStripe\Control\Controller;
+use SilverStripe\Control\RequestHandler;
+use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Convert;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\ClassInfo;
-use SilverStripe\Dev\Deprecation;
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\RequestHandler;
 use SilverStripe\View\SSViewer;
-use ReflectionClass;
 
 /**
  * Represents a field in a form.
@@ -1459,6 +1458,16 @@ class FormField extends RequestHandler
         }
 
         return $field;
+    }
+
+    /**
+     * Determine if the value of this formfield accepts front-end submitted values and is saveable.
+     *
+     * @return bool
+     */
+    public function canSubmitValue()
+    {
+        return $this->hasData() && !$this->isReadonly() && !$this->isDisabled();
     }
 
     /**

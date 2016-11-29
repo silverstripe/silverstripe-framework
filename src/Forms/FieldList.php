@@ -72,6 +72,9 @@ class FieldList extends ArrayList
         return $this->sequentialSet;
     }
 
+    /**
+     * @return FormField[]
+     */
     public function saveableFields()
     {
         if (!$this->sequentialSaveableSet) {
@@ -88,15 +91,19 @@ class FieldList extends ArrayList
 
     protected function collateDataFields(&$list, $saveableOnly = false)
     {
+        if (!isset($list)) {
+            $list = array();
+        }
+        /** @var FormField $field */
         foreach ($this as $field) {
             if ($field instanceof CompositeField) {
                 $field->collateDataFields($list, $saveableOnly);
             }
 
             if ($saveableOnly) {
-                $isIncluded =  ($field->hasData() && !$field->isReadonly() && !$field->isDisabled());
+                $isIncluded =  $field->canSubmitValue();
             } else {
-                $isIncluded =  ($field->hasData());
+                $isIncluded =  $field->hasData();
             }
             if ($isIncluded) {
                 $name = $field->getName();

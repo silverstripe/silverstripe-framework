@@ -386,8 +386,11 @@ class Form extends RequestHandler
             $vars = $request->requestVars();
         }
 
+        // Ensure we only process saveable fields (non structural, readonly, or disabled)
+        $allowedFields = array_keys($this->Fields()->saveableFields());
+
         // Populate the form
-        $this->loadDataFrom($vars, true);
+        $this->loadDataFrom($vars, true, $allowedFields);
 
         // Protection against CSRF attacks
         $token = $this->getSecurityToken();

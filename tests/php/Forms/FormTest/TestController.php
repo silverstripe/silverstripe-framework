@@ -47,7 +47,10 @@ class TestController extends Controller implements TestOnly
 				new EmailField('Email'),
 				new TextField('SomeRequiredField'),
 				new CheckboxSetField('Boxes', null, array('1' => 'one', '2' => 'two')),
-				new NumericField('Number')
+				new NumericField('Number'),
+				TextField::create('ReadonlyField')
+					->setReadonly(true)
+					->setValue('This value is readonly')
 			),
 			new FieldList(
 				FormAction::create('doSubmit'),

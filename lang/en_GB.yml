@@ -1,25 +1,25 @@
 en_GB:
   AssetTableField:
-    SIZE: 'Size'
-    TYPE: 'Type'
+    SIZE: Size
+    TYPE: Type
   BBCodeParser:
-    COLORED: 'Coloured text'
-    ITALICEXAMPLE: Italic Text
+    COLORED: "Coloured text"
+    ITALICEXAMPLE: "Italic Text"
   ChangePasswordEmail_ss:
     HELLO: Hello
   File:
-    NOFILESIZE: 'File size is zero bytes.'
+    NOFILESIZE: "File size is zero bytes."
   ForgotPasswordEmail_ss:
     HELLO: Hello
-  HTMLEditorField:
-    CSSCLASSCENTER: 'Centred, on its own.'
-    LINK: 'Link'
+  HtmlEditorField:
+    CSSCLASSCENTER: "Centred, on its own."
+    LINK: Link
   LeftAndMain:
-    PAGETYPE: 'Page type:'
-    PERMAGAIN: 'You have been logged out of the CMS. If you would like to log in again, enter a username and password below.'
-    PERMALREADY: 'I''m sorry, but you can''t access that part of the CMS. If you want to log in as someone else, do so below'
+    PAGETYPE: "Page type:"
+    PERMAGAIN: "You have been logged out of the CMS. If you would like to log in again, enter a username and password below."
+    PERMALREADY: "I'm sorry, but you can't access that part of the CMS. If you want to log in as someone else, do so below"
   Member:
-    ERRORNEWPASSWORD: 'Your have entered your new password differently, try again'
+    ERRORNEWPASSWORD: "Your have entered your new password differently, try again"
   Security:
-    ALREADYLOGGEDIN: 'You don''t have access to this page. If you have another account that can access that page, you can log in again.'
-    LOGGEDOUT: 'You have been logged out. If you would like to log in again, enter your credentials below.'
+    ALREADYLOGGEDIN: "You don't have access to this page. If you have another account that can access that page, you can log in again."
+    LOGGEDOUT: "You have been logged out. If you would like to log in again, enter your credentials below."
