@@ -18,6 +18,7 @@ fi:
     HEIGHT: Korkeus
     LASTEDIT: "Viimeksi muokattu"
     OWNER: Omistaja
+    PATH: Polku
     SIZE: Koko
     TITLE: Otsikko
     TYPE: Tyyppi
@@ -36,6 +37,7 @@ fi:
     INSERTURL: "Lisää URL-osoitteesta"
     REMOVEINFO: "Poista tämä tiedosto tästä kentästä"
     TOTAL: Yhteensä
+    TOUPLOAD: "Valitse siirrettävät tiedostot..."
     UPLOADINPROGRESS: "Ole hyvä ja odota... siirto käynnissä"
     UPLOADOR: TAI
   BBCodeParser:
@@ -73,6 +75,8 @@ fi:
     ANY: Yhtään
     NOANSWER: Ei
     YESANSWER: Kyllä
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: "Lisää Kampanjaan"
   CMSLoadingScreen_ss:
     LOADING: Ladataan...
     REQUIREJS: "CMS-järjestelmä vaatii, että selaimessasi on JavaScript päällä."
@@ -100,10 +104,13 @@ fi:
     TimedOutTitleAnonymous: "Istuntosi on vanhentunut."
     TimedOutTitleMember: "Hei {name}!<br />Istuntosi on vanhentunut."
   CampaignAdmin:
+    ACCESS_HELP: "Salli Kampanjan julkaisuosion tarkastelu."
     MENUTITLE: Kampanjat
   Campaigns:
     AddToCampaign: "Lisää Kampanjaan"
+    AddToCampaignFormFieldLabel: "Valitse Kampanja"
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: "Tilin salasana sähköpostille {email} on vaihdettu. Mikäli et itse tätä tehnyt, vaihda salasana oheisesta linkistä"
     CHANGEPASSWORDTEXT1: "Vaihdoit salasanasi osoitteelle"
     CHANGEPASSWORDTEXT2: "Kirjautuaksesi sisään voit käyttää seuraavia tietoja:"
     CHANGEPASSWORDTEXT3: "Vaihda salasana"
@@ -183,6 +190,7 @@ fi:
   DropdownField:
     CHOOSE: (Valitse)
     CHOOSESEARCH: "(Valitse tai Hae)"
+    CHOOSE_MODEL: "(Valitse {name})"
     SOURCE_VALIDATION: "Valitse arvo pudotusvalikosta. {value} ei kelpaa"
   EmailField:
     VALIDATION: "Anna sähköpostiosoite, ole hyvä."
@@ -192,6 +200,7 @@ fi:
     AviType: AVI-videotiedosto
     Content: Sisältö
     CssType: CSS-tiedosto
+    DRAFT: Luonnos
     DmgType: Apple-levykuva
     DocType: Word-tiedosto
     Filename: Tiedostonimi
@@ -201,17 +210,22 @@ fi:
     HtmlType: HTML-tiedosto
     INVALIDEXTENSION: "Tiedostopääte ei ole sallittu (sallitut muodot: {extensions})"
     INVALIDEXTENSIONSHORT: "Tiedostopääte ei ole sallittu"
+    INVALIDEXTENSION_SHORT: "Laajennos ei ole sallittu"
     IcoType: Icon-kuva
     JpgType: "JPEG-kuva - hyvä valokuville"
     JsType: Javascript-tiedosto
+    MODIFIED: Muokattu
     Mp3Type: MP3-äänitiedosto
     MpgType: MPEG-videotiedosto
+    NOFILESIZE: "Tiedostokoko on nolla tavua."
     NOVALIDUPLOAD: "Tiedosto ei ole kelvollinen ladattavaksi"
     Name: Nimi
     PLURALNAME: Tiedostot
     PdfType: "Adobe Acrobat PDF-tiedosto"
     PngType: "PNG-kuva - hyvä yleinen muoto"
     SINGULARNAME: Tiedosto
+    TOOLARGE: "Tiedostokoko on liian suuri: maks. sallittu koko on {size}"
+    TOOLARGESHORT: "Sallittu tiedostokoko ylitetty {size}"
     TiffType: TIFF-kuva
     Title: Otsikko
     WavType: WAV-äänitiedosto
@@ -232,6 +246,7 @@ fi:
     CSRF_FAILED_MESSAGE: "On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu ja yritä uudelleen."
     FIELDISREQUIRED: "{name} on pakollinen"
     SubmitBtnLabel: Siirry
+    VALIDATIONCREDIT: "Tarkista, ovatko antamasi luottokortin numerot oikein"
     VALIDATIONCREDITNUMBER: "Tarkista, ovatko antamasi luottokortin numerot ({number}) oikein"
     VALIDATIONNOTUNIQUE: "Syötetty arvo ei ole yksilöllinen"
     VALIDATIONPASSWORDSDONTMATCH: "Salasanat eivät täsmää"
@@ -312,6 +327,7 @@ fi:
     CSSCLASSRIGHT: "Oikealla, tesktin ympätöimänä."
     DETAILS: Tiedot
     EMAIL: Sähköposti
+    FILE: SilverStripe\Assets\File
     FOLDER: Kansio
     IMAGEALT: "Vaihtoehtoinen teksti (alt)"
     IMAGEALTTEXT: "Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää"
@@ -324,8 +340,15 @@ fi:
     IMAGEWIDTHPX: Leveys
     INSERTMEDIA: "Liitä media kohteesta"
     LINK: "Lisää linkki"
+    LINKANCHOR: "Linkki ankkuriin tällä sivulla"
     LINKDESCR: "Linkin kuvaus"
+    LINKDETAILS: "Linkin tiedot"
+    LINKEMAIL: "Linkki sähköpostiosoitteeseen"
+    LINKEXTERNAL: "Linkki toiseen verkko-osoitteeseen"
+    LINKFILE: "Linkki ladattavaan tiedostoon"
+    LINKINTERNAL: "Linkki sivuston toiseen sivuun"
     LINKOPENNEWWIN: "Avataanko linkki uudessa ikkunassa?"
+    LINKTO: "Linkin tyyppi"
     PAGE: Sivu
     SUBJECT: "Sähköpostin aihe"
     URL: URL
@@ -337,6 +360,7 @@ fi:
     ERROR_HOSTNAME: "Tämän tiedoston isäntänimi ei ole sallitujen listalla"
     ERROR_ID: "\"ID\" tai \"FileURL\" parametri on pakollinen tiedoston tunnistamiseksi"
     ERROR_NOTFOUND: "Näytettävää tiedostoa ei löydy"
+    ERROR_OEMBED_REMOTE: "Upotus on yhteensopiva vain etätiedostoihin"
     ERROR_SCHEME: "Tämän tiedoston skeema ei ole sallittujen listalla"
   Hierarchy:
     InfiniteLoopNotAllowed: "\"{type}\" -hierarkiasta löytyi loputon silmukka. Ole hyvä ja muuta isäntää korjataksesi ongelman."
@@ -366,6 +390,8 @@ fi:
     FROMWEB: Webistä
     FindInFolder: "Etsi kansiosta"
     IMAGEALT: "Vaihtoehtoinen teksti (alt)"
+    IMAGEALTTEXT: "Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää"
+    IMAGEALTTEXTDESC: "Näytetään ruudunlukuohjelmille tai jos kuvaa ei voi näyttää"
     IMAGEDIMENSIONS: Mitat
     IMAGEHEIGHTPX: Korkeus
     IMAGETITLE: "Otsikko (tooltip) - kuvan lisätietoja varten"
@@ -400,16 +426,20 @@ fi:
     CANCEL: Peruuta
     CANT_REORGANISE: "Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu."
     DELETED: Poistettu.
+    DropdownBatchActionsDefault: Toiminnot
     HELP: Ohje
+    PAGETYPE: "Sivutyyppi:"
     PERMAGAIN: "Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla."
     PERMALREADY: "Pahoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alta."
     PERMDEFAULT: "Sinun tulee olla kirjautuneena ylläpito-osioon; syötä tunnuksesi kenttiin."
+    PLEASESAVE: "Tallenna sivu: tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu."
     PreviewButton: Esikatselu
     REORGANISATIONSUCCESSFUL: "Hakemistopuu uudelleenjärjestettiin onnistuneesti."
     SAVEDUP: Tallennettu.
     ShowAsList: "näytä listana"
     TooManyPages: "Liian monta sivua"
     ValidationError: "Virhe vahvistuksessa"
+    VersionUnknown: tuntematon
   LeftAndMain_Menu_ss:
     Hello: Hei
     LOGOUT: "Kirjaudu ulos"
@@ -452,11 +482,13 @@ fi:
     PASSWORD: Salasana
     PASSWORDEXPIRED: "Salasanasi on vanhentunut. Ole hyvä ja valitse uusi."
     PLURALNAME: Jäsenet
+    REMEMBERME: "Muista seuraavalla kerralla?"
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: "Salasanasi on vaihdettu"
     SUBJECTPASSWORDRESET: "Salasanasi palautuslinkki"
     SURNAME: Sukunimi
     TIMEFORMAT: Aikamuoto
+    VALIDATIONMEMBEREXISTS: "Toisella käyttäjällä on jo olemassa sama %s"
     ValidationIdentifierFailed: "Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))"
     WELCOMEBACK: "Tervetuloa takaisin, {firstname}"
     YOUROLDPASSWORD: "Vanha salasanasi"
@@ -477,6 +509,8 @@ fi:
     DIGITSDECFRACTIONSECOND: "Yksi tai useampi desimaali osoittamaan sekunnin osia"
     FOURDIGITYEAR: "Nelinumeroinen vuosiluku"
     FULLNAMEMONTH: "Kuukausi kirjoitettuna (esim. kesäkuu)"
+    HOURNOLEADING: "Tunti ilman edessä olevaa nollaa"
+    HOURNOLEADING24: "Tunti ilman edessä olevaa nollaa, 24h muoto"
     MINUTENOLEADING: "Minuutti ilman edessä olevaa nollaa"
     MONTHNOLEADING: "Kuukausi ilman ensimmäistä nollaa (0)"
     Preview: Esikatselu
@@ -618,6 +652,54 @@ fi:
     Tablet: Tabletti
     ViewDeviceWidth: "Valitse esikatselun leveys"
     Width: leveys
+  SilverStripe\Admin\CMSProfileController:
+    MENUTITLE: Profiilini
+  SilverStripe\Admin\CampaignAdmin:
+    MENUTITLE: Kampanjat
+  SilverStripe\Admin\SecurityAdmin:
+    MENUTITLE: Tietosuoja
+  SilverStripe\Assets\File:
+    PLURALNAME: Tiedostot
+    SINGULARNAME: Tiedosto
+  SilverStripe\Assets\Folder:
+    PLURALNAME: Kansiot
+    SINGULARNAME: Kansio
+  SilverStripe\Assets\Image:
+    PLURALNAME: Kuvat
+    SINGULARNAME: Kuva
+  SilverStripe\ORM\DataObject:
+    PLURALNAME: Dataobjektit
+    SINGULARNAME: Dataobjekti
+  SilverStripe\ORM\Versioning\ChangeSet:
+    PLURALNAME: Kampanjat
+    SINGULARNAME: Kampanja
+  SilverStripe\ORM\Versioning\ChangeSetItem:
+    PLURALNAME: "Vaihda Valikoiman kohteet"
+    SINGULARNAME: "Vaihda Valikoiman kohde"
+  SilverStripe\Security\Group:
+    PLURALNAME: Ryhmät
+    SINGULARNAME: Ryhmä
+  SilverStripe\Security\LoginAttempt:
+    PLURALNAME: Kirjautumisyritykset
+    SINGULARNAME: Kirjautumisyritys
+  SilverStripe\Security\Member:
+    PLURALNAME: Käyttäjät
+    SINGULARNAME: Käyttäjä
+  SilverStripe\Security\MemberPassword:
+    PLURALNAME: "Käyttäjän salasanat"
+    SINGULARNAME: "Käyttäjän salasana"
+  SilverStripe\Security\Permission:
+    PLURALNAME: Oikeudet
+    SINGULARNAME: Oikeus
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Roolit
+    SINGULARNAME: Rooli
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: "Käyttöoikeuden roolin koodit"
+    SINGULARNAME: "Käyttöoikeuden roolin koodi"
+  SilverStripe\Security\RememberLoginHash:
+    PLURALNAME: "Muista kirjautumistarkisteet"
+    SINGULARNAME: "Muista kirjautumistarkiste"
   SiteTree:
     TABMAIN: Yleiset
   TableListField:
@@ -661,6 +743,7 @@ fi:
     Saved: Tallennettu
     UPLOADSINTO: "tallentuu polkuun: /{path}"
   Versioned:
+    INFERRED_TITLE: "Luotu julkaisusta '{title}', {created}"
     has_many_Versions: Versiot
   VersionedGridFieldItemRequest:
     ARCHIVE: Arkistoi

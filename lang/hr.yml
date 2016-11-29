@@ -1,5 +1,13 @@
 hr:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: "Izgleda kako nemate potrebna prava za dodati {ObjectTitle} na {CampaignTitle}"
+    ErrorGeneral: "Ispričavamo se, dogodila se greška"
+    ErrorItemPermissionDenied: "Izgleda kako nemate potrebna prava za dodati {ObjectTitle} na kampanju"
+    ErrorNotFound: "{Type} nije pronađen"
+    Success: "Uspješno dodao  {ObjectTitle} na {CampaignTitle}"
   AssetAdmin:
+    ALLOWEDEXTS: "Dozvoljene ekstenzije datoteka za prijenos"
+    HIDEALLOWEDEXTS: "Sakrij dozvoljene ekstenzije"
     NEWFOLDER: "Novi direktorij"
     SHOWALLOWEDEXTS: "Prikaži dozvoljene ekstenzije"
   AssetTableField:
@@ -10,6 +18,7 @@ hr:
     HEIGHT: Visina
     LASTEDIT: "Zadnja promjena"
     OWNER: Vlasnik
+    PATH: Put
     SIZE: "Veličina datoteke"
     TITLE: Naslov
     TYPE: "Tip datoteke"
@@ -28,10 +37,12 @@ hr:
     INSERTURL: "Ubaci sa linka"
     REMOVEINFO: "Izbrišite ovu datoteku s ovog polja"
     TOTAL: Ukupno
+    TOUPLOAD: "Odaberite datoteke za upload..."
     UPLOADINPROGRESS: "Molim pričekajte... upload u tijeku"
     UPLOADOR: ILI
   BBCodeParser:
     ALIGNEMENT: Poravnanje
+    ALIGNEMENTEXAMPLE: "desno poravnato"
     BOLD: "Bold Text"
     BOLDEXAMPLE: Bold
   BackLink_Button_ss:
