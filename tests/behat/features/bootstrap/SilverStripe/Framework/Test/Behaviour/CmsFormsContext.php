@@ -11,7 +11,8 @@ use Behat\Behat\Context\ClosuredContextInterface,
 	Behat\Gherkin\Node\PyStringNode,
 	Behat\Gherkin\Node\TableNode,
 	Behat\MinkExtension\Context\MinkContext as MinkContext;
-	
+
+use Behat\Mink\Element\NodeElement;
 use Symfony\Component\DomCrawler\Crawler;
 
 // PHPUnit
@@ -74,12 +75,8 @@ class CmsFormsContext extends BehatContext {
 	 * @When /^I fill in "(?P<value>(?:[^"]|\\")*)" for the "(?P<field>(?:[^"]|\\")*)" HTML field$/
 	 */
 	public function stepIFillInTheHtmlFieldWith($field, $value) {
-		$field = $this->fixStepArgument($field);
+		$inputField = $this->getHtmlField($field);
 		$value = $this->fixStepArgument($value);
-
-		$page = $this->getSession()->getPage();
-		$inputField = $page->findField($field);
-		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
 
 		$this->getSession()->evaluateScript(sprintf(
 			"jQuery('#%s').entwine('ss').getEditor().setContent('%s')",
@@ -92,12 +89,8 @@ class CmsFormsContext extends BehatContext {
 	 * @When /^I append "(?P<value>(?:[^"]|\\")*)" to the "(?P<field>(?:[^"]|\\")*)" HTML field$/
 	 */
 	public function stepIAppendTotheHtmlField($field, $value) {
-		$field = $this->fixStepArgument($field);
+		$inputField = $this->getHtmlField($field);
 		$value = $this->fixStepArgument($value);
-
-		$page = $this->getSession()->getPage();
-		$inputField = $page->findField($field);
-		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
 
 		$this->getSession()->evaluateScript(sprintf(
 			"jQuery('#%s').entwine('ss').getEditor().insertContent('%s')",
@@ -110,11 +103,7 @@ class CmsFormsContext extends BehatContext {
 	 * @Then /^the "(?P<locator>(?:[^"]|\\")*)" HTML field should(?P<negative> not? |\s*)contain "(?P<html>.*)"$/
 	 */
 	public function theHtmlFieldShouldContain($locator, $negative, $html) {
-		$locator = $this->fixStepArgument($locator);
-		$page = $this->getSession()->getPage();
-		$element = $page->findField($locator);
-		assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
-
+		$element = $this->getHtmlField($locator);
 		$actual = $element->getValue();
 		$regex = '/'.preg_quote($html, '/').'/ui';
 		$failed = false;
@@ -154,10 +143,7 @@ class CmsFormsContext extends BehatContext {
 	 * @Given /^"(?P<text>([^"]*))" in the "(?P<field>(?:[^"]|\\")*)" HTML field should(?P<negate>(?: not)?) be (?P<formatting>(.*))$/
 	 */
 	public function stepContentInHtmlFieldShouldHaveFormatting($text, $field, $negate, $formatting) {
-		$field = $this->fixStepArgument($field);
-		$page = $this->getSession()->getPage();
-		$inputField = $page->findField($field);
-		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
+		$inputField = $this->getHtmlField($field);
 
 		$crawler = new Crawler($inputField->getValue());
 		$matchedNode = null;
@@ -192,10 +178,7 @@ class CmsFormsContext extends BehatContext {
 	 * @When /^I select "(?P<text>([^"]*))" in the "(?P<field>(?:[^"]|\\")*)" HTML field$/
 	 */
 	public function stepIHighlightTextInHtmlField($text, $field) {
-		$field = $this->fixStepArgument($field);
-		$page = $this->getSession()->getPage();
-		$inputField = $page->findField($field);
-		assertNotNull($inputField, sprintf('HTML field "%s" not found', $field));
+		$inputField = $this->getHtmlField($field);
 		$inputFieldId = $inputField->getAttribute('id');
 		$text = addcslashes($text, "'");
 
@@ -264,6 +247,21 @@ JS;
 		} else {
 			assertNotNull($matchedEl);
 		}
+	}
+
+	/**
+	 * Locate a HTML editor field
+	 *
+	 * @param string $locator Raw html field identifier as passed from
+	 * @return NodeElement
+	 */
+	protected function getHtmlField($locator)
+	{
+		$locator = $this->fixStepArgument($locator);
+		$page = $this->getSession()->getPage();
+		$element = $page->find('css', 'textarea.htmleditor[name=\'' . $locator . '\']');
+		assertNotNull($element, sprintf('HTML field "%s" not found', $locator));
+		return $element;
 	}
 
 }
