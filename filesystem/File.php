@@ -247,7 +247,7 @@ class File extends DataObject {
 		foreach($parts as $part) {
 			if($part == ASSETS_DIR && !$parentID) continue;
 			$item = File::get()->filter(array(
-				'Name' => $part,
+				'Name:ExactMatch:case' => $part,
 				'ParentID' => $parentID
 			))->first();
 			if(!$item) break;

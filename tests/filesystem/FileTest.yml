@@ -30,6 +30,14 @@ File:
     Filename: assets/FileTest-folder1/File1.txt
     Name: File1.txt
     ParentID: =>Folder.folder1
+  lowercase:
+    Filename: assets/FileTest-folder1/casetest.txt
+    Name: casetest.txt
+    ParentID: =>Folder.folder1
+  uppercase:
+    Filename: assets/FileTest-folder1/Casetest.TXT
+    Name: Casetest.TXT
+    ParentID: =>Folder.folder1
 Permission:
   admin:
     Code: ADMIN
