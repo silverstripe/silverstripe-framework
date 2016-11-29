@@ -284,12 +284,16 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		$res['LookupSteps'][] = $sub;
 		
 		$property = $sub['Call']['Method']['text'];
-		
+		$callArgs = "null";
 		if (isset($sub['Call']['CallArguments']) && $arguments = $sub['Call']['CallArguments']['php']) {
-			$res['php'] .= "->$method('$property', array($arguments), true)";
+			$callArgs = "array($arguments)";
 		}
-		else {
-			$res['php'] .= "->$method('$property', null, true)";
+
+		if ($method === 'obj') {
+			// obj() has an extra parameter for caching
+			$res['php'] .= "->$method('$property', $callArgs, true, true)";
+		} else {
+			$res['php'] .= "->$method('$property', $callArgs, true)";
 		}
 	}
 
@@ -921,8 +925,9 @@ class SSTemplateParser extends Parser implements TemplateParser {
 			if ($arg['ArgumentMode'] == 'string') {
 				throw new SSTemplateParseException('Control block cant take string as argument.', $this);
 			}
-			$on = str_replace('$$FINAL', 'obj', 
-				($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
+			$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
+			// obj() has a fourth argument to enable caching, so add that to the end of the call
+			$on = preg_replace('/(\))$/', ', true)', $on);
 		}
 
 		return
@@ -955,6 +960,8 @@ class SSTemplateParser extends Parser implements TemplateParser {
 		}
 		
 		$on = str_replace('$$FINAL', 'obj', ($arg['ArgumentMode'] == 'default') ? $arg['lookup_php'] : $arg['php']);
+		// obj() has a fourth argument to enable caching, so add that to the end of the call
+		$on = preg_replace('/(\))$/', ', true)', $on);
 		return 
 			$on . '; $scope->pushScope();' . PHP_EOL .
 				$res['Template']['php'] . PHP_EOL .
