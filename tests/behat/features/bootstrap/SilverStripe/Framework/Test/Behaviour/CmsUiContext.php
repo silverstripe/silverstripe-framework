@@ -534,4 +534,14 @@ class CmsUiContext extends BehatContext {
 
 		return null;
 	}
+
+	/**
+	* @Given /^I wait for CMS page loading$/
+	*/
+	public function iWaitCmsPageLoading(){
+		$selector = ".cms-content-loading-spinner";
+		$session = $this->getSession();
+		// wait for up to 10 seconds, or if CMS page loading finishes
+		$session->wait(10000, "(0 === jQuery('$selector').length)");
+	}
 }
