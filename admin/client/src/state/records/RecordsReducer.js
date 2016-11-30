@@ -7,8 +7,12 @@ function recordsReducer(state = initialState, action) {
   let records = null;
   let recordType = null;
   let record = null;
+  let apolloRecordRelation = {};
 
   switch (action.type) {
+    case 'APOLLO_QUERY_RESULT':
+
+      return state;
 
     case ACTION_TYPES.CREATE_RECORD:
       return deepFreeze(Object.assign({}, state, {}));

@@ -75,6 +75,9 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						border-bottom-right-radius: 3px;
 						border-right:none;
 					}
+          input {
+            margin-left: 5px;
+          }
 					a.tab-nav-link{
 						color:$color-text;
 						display:inline-block;
@@ -312,13 +315,11 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						white-space: nowrap;
 					}
 				}
-				button.ss-ui-button{
+				button.ss-ui-button,
+        .btn {
 					width: 100%;
-					&:hover, &:focus, &:active{
-						box-shadow: none;
-						background-color: darken($tab-panel-texture-color,4%);
-						outline:none;
-					}
+          text-align: left;
+          margin: 0 5px;
 				}
 			}
 			/* Re-align last tab */

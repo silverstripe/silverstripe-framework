@@ -257,3 +257,23 @@ div.grid-field__sort-field + .form__fieldgroup-item {
     }
   }
 }
+
+.grid-field-import.in {
+  display: block;
+
+  .modal-content {
+    overflow-y: scroll;
+  }
+
+  .modal-dialog {
+    max-height: 600px;
+
+    .advanced {
+      display: none;
+    }
+  }
+}
+
+.import-form .advanced {
+  display: none;
+}

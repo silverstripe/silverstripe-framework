@@ -288,21 +288,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             if ($canEdit) {
                 $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
                     ->setUseButtonTag(true)
-                    ->addExtraClass('ss-ui-action-constructive')
-                    ->setAttribute('data-icon', 'accept'));
+                    ->addExtraClass('btn-primary font-icon-save'));
             }
 
             if ($canDelete) {
                 $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
                     ->setUseButtonTag(true)
-                    ->addExtraClass('ss-ui-action-destructive action-delete'));
+                    ->addExtraClass('btn-secondary action-delete'));
             }
         } else { // adding new record
             //Change the Save label to 'Create'
             $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
                 ->setUseButtonTag(true)
-                ->addExtraClass('ss-ui-action-constructive')
-                ->setAttribute('data-icon', 'add'));
+                ->addExtraClass('btn-primary font-icon-plus'));
 
             // Add a Cancel link which is a button-like link and link back to one level up.
             $crumbs = $this->Breadcrumbs();
@@ -310,7 +308,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 $oneLevelUp = $crumbs->offsetGet($crumbs->count() - 2);
                 $text = sprintf(
                     "<a class=\"%s\" href=\"%s\">%s</a>",
-                    "crumb ss-ui-button ss-ui-action-destructive cms-panel-link ui-corner-all", // CSS classes
+                    "crumb btn btn-secondary font-icon-trash cms-panel-link", // CSS classes
                     $oneLevelUp->Link, // url
                     _t('GridFieldDetailForm.CancelBtn', 'Cancel') // label
                 );

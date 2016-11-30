@@ -54,7 +54,7 @@ $.entwine('ss', function($) {
 							content = '<span class="non-sortable"></span>';
 							self.addClass('show-filter').find('.filter-header').show();
 						} else {
-							content = '<button type="button" name="showFilter" class="btn font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>';
+							content = '<button type="button" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>';
 							self.removeClass('show-filter').find('.filter-header').hide();
 						}
 
@@ -132,6 +132,34 @@ $.entwine('ss', function($) {
 			this.css('cursor', 'default');
 		}
 	});
+
+  $('.grid-field .action.action_import:button').entwine({
+    onclick: function(e) {
+      e.preventDefault();
+
+      var backdrop = $('.modal-backdrop');
+
+      if(backdrop.length < 1) {
+        backdrop = $('<div class="modal-backdrop fade in"></div>');
+        $('body').append(backdrop);
+      } else {
+        backdrop.addClass('fade in').fadeIn();
+      }
+
+      $(this.data('target')).addClass('in');
+
+      // workaround until GridField rewritten into react.
+      var self = this;
+
+      $(this.data('target')).find('[data-dismiss]').on('click', function() {
+        backdrop.fadeOut(function() {
+          $(this).removeClass('in');
+        });
+
+        $(self.data('target')).removeClass('in');
+      })
+    }
+  });
 
 	$('.grid-field .action:button').entwine({
 		onclick: function(e){
@@ -377,11 +405,8 @@ $.entwine('ss', function($) {
 							.find(".action_gridfield_relationfind")
 							.replaceWith(hiddenField);
 					var addbutton = $(this).closest(".grid-field").find(".action_gridfield_relationadd");
-					if(addbutton.data('button')){
-						addbutton.button('enable');
-					} else {
-						addbutton.removeAttr('disabled');
-					}
+
+          addbutton.removeAttr('disabled');
 				}
 			});
 		}

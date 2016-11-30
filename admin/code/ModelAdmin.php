@@ -246,9 +246,9 @@ abstract class ModelAdmin extends LeftAndMain
             $context->getSearchFields(),
             new FieldList(
                 FormAction::create('search', _t('MemberTableField.APPLY_FILTER', 'Apply Filter'))
-                    ->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive'),
+                    ->setUseButtonTag(true)->addExtraClass('btn-primary'),
                 ResetFormAction::create('clearsearch', _t('ModelAdmin.RESET', 'Reset'))
-                    ->setUseButtonTag(true)
+                    ->setUseButtonTag(true)->addExtraClass('btn-secondary'),
             ),
             new RequiredFields()
         );
