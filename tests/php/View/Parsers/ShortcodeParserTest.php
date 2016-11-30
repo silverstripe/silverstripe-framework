@@ -188,6 +188,9 @@ class ShortcodeParserTest extends SapphireTest {
 	}
 
 	public function testtExtract() {
+		$this->markTestSkipped(
+			'Feature disabled due to https://github.com/silverstripe/silverstripe-framework/issues/5987'
+		);
 		// Left extracts to before the current block
 		$this->assertEqualsIgnoringWhitespace(
 			'Code<div>FooBar</div>',
