@@ -30,6 +30,10 @@
     color: $body-color-light;
   }
 
+  a.btn-primary {
+    color: #fff;
+  }
+
   .btn {
     margin-bottom: 0;
   }
@@ -43,6 +47,9 @@
   padding: $spacer-xs;
   min-height: auto;
 
+  &.ss-gridfield-buttonrow {
+    margin-top: 0;
+  }
 
   @include media-breakpoint-down(md) {
 

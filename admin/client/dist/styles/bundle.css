@@ -10163,6 +10163,10 @@ body.cms{
   color:#0071c4;
 }
 
+.ui-widget-content a.btn-primary{
+  color:#fff;
+}
+
 .cms-content-tools{
   background:#f6f7f8;
   width:300px;
@@ -10291,17 +10295,6 @@ body.cms{
 
 .cms-tree-filtered>a,.cms-tree-filtered>strong{
   font-size:14px;
-}
-
-.cms-content-batchactions-button{
-  display:inline-block;
-  padding:4px 6px;
-  vertical-align:middle;
-  background-image:-webkit-gradient(linear,left top,left bottom,from(#fff),to(#d9d9d9));
-  background-image:-webkit-linear-gradient(top,#fff,#d9d9d9);
-  background-image:linear-gradient(180deg,#fff,#d9d9d9);
-  border:1px solid #aaa;
-  border-radius:4px;
 }
 
 .cms-content-batchactions{
@@ -12041,7 +12034,7 @@ li.class-ErrorPage>a .jstree-pageicon{
   padding-right:18px;
 }
 
-.cms-menu.collapsed .ss-ui-button.sticky-toggle{
+.cms-menu.collapsed .sticky-toggle{
   background-position:12px;
   width:40px;
 }
@@ -12060,7 +12053,7 @@ li.class-ErrorPage>a .jstree-pageicon{
   padding-bottom:14px;
 }
 
-.cms-menu .ss-ui-button.sticky-toggle{
+.cms-menu .sticky-toggle{
   float:left;
   width:52px;
   height:52px;
@@ -12079,19 +12072,19 @@ li.class-ErrorPage>a .jstree-pageicon{
   z-index:2;
 }
 
-.cms-menu .ss-ui-button.sticky-toggle:hover{
+.cms-menu .sticky-toggle:hover{
   box-shadow:0 0 0;
 }
 
-.cms-menu .ss-ui-button.sticky-toggle.active{
+.cms-menu .sticky-toggle.active{
   background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAPRJREFUeNq8VNsNgjAULcZ/GIERGKEj8OWnlQ0coSPoBIKffjkCIzBCR8AJ4NQckqb2mhCJNzlpch+H23tPyaZpUlvYTm1kmxHtU87DsSlxWKAGcrpfwNP7H/ebi2uyeEYgqXD0wEiypWghLwANskG8Gjvp+eWKbk0o+nysZ654NctOzsAFMFFcM6aZe5KGXQezMYnxmSjn82poteBgHechmWZO/uv63VcdYQsjV1xKyQFRyVyxo0UnLc4uQdIxZpkrEr11gnm1KPAbaYArSRvv8zFqya4V5BBoSBRklnr9wRMJJbDuiQikKlW8iujvv5FZgAEAPlxgpNhINwUAAAAASUVORK5CYII=);
 }
 
-.cms-menu .ss-ui-button.sticky-toggle .ui-button-text{
+.cms-menu .sticky-toggle .ui-button-text{
   padding:0;
 }
 
-.cms-menu .ss-ui-button.sticky-toggle:hover+.sticky-status-indicator{
+.cms-menu .sticky-toggle:hover+.sticky-status-indicator{
   display:block;
 }
 
@@ -14970,8 +14963,7 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
 }
 
 .btn-toolbar{
-  margin-top:1.2308rem;
-  margin-bottom:1.2308rem;
+  margin:1.2308rem 0;
 }
 
 fieldset+.btn-toolbar{
@@ -15533,6 +15525,10 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   color:#66727d;
 }
 
+.toolbar a.btn-primary{
+  color:#fff;
+}
+
 .toolbar .btn{
   margin-bottom:0;
 }
@@ -15543,6 +15539,10 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   margin-right:-1.5385rem;
   padding:.76925rem;
   min-height:auto;
+}
+
+.toolbar--content.ss-gridfield-buttonrow{
+  margin-top:0;
 }
 
 @media (max-width:991px){

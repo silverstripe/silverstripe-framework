@@ -54,7 +54,7 @@ $.entwine('ss', function($) {
 							content = '<span class="non-sortable"></span>';
 							self.addClass('show-filter').find('.filter-header').show();
 						} else {
-							content = '<button type="button" name="showFilter" class="btn font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>';
+							content = '<button type="button" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>';
 							self.removeClass('show-filter').find('.filter-header').hide();
 						}
 
@@ -376,11 +376,8 @@ $.entwine('ss', function($) {
 							.find(".action_gridfield_relationfind")
 							.replaceWith(hiddenField);
 					var addbutton = $(this).closest(".grid-field").find(".action_gridfield_relationadd");
-					if(addbutton.data('button')){
-						addbutton.button('enable');
-					} else {
-						addbutton.removeAttr('disabled');
-					}
+
+          addbutton.removeAttr('disabled');
 				}
 			});
 		}

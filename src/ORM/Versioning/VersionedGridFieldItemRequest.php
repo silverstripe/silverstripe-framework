@@ -37,8 +37,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest
                 _t('VersionedGridFieldItemRequest.BUTTONPUBLISH', 'Publish')
             )
                 ->setUseButtonTag(true)
-                ->addExtraClass('ss-ui-action-constructive')
-                ->setAttribute('data-icon', 'accept');
+                ->addExtraClass('btn btn-primary font-icon-rocket');
 
             // Insert after save
             if ($actions->fieldByName('action_doSave')) {
@@ -61,7 +60,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest
                         'VersionedGridFieldItemRequest.BUTTONUNPUBLISHDESC',
                         'Remove this record from the published site'
                     ))
-                    ->addExtraClass('ss-ui-action-destructive')
+                    ->addExtraClass('btn-secondary')
             );
         }
 
@@ -77,7 +76,7 @@ class VersionedGridFieldItemRequest extends GridFieldDetailForm_ItemRequest
                         'VersionedGridFieldItemRequest.BUTTONARCHIVEDESC',
                         'Unpublish and send to archive'
                     ))
-                    ->addExtraClass('delete ss-ui-action-destructive')
+                    ->addExtraClass('delete btn-secondary')
             );
         }
         return $actions;

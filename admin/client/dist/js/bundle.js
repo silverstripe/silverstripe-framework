@@ -1178,11 +1178,7 @@ minHeight:370,maxHeight:400,closeOnEscape:!1,open:function e(){$(".ui-widget-ove
 }})},onunmatch:function x(){this._super()},open:function R(){this.ssdialog("open")},close:function I(){this.ssdialog("close")},toggle:function A(e){this.is(":visible")?this.close():this.open()},reauthenticate:function D(e){
 "undefined"!=typeof e.SecurityID&&$(":input[name=SecurityID]").val(e.SecurityID),"undefined"!=typeof e.TempID&&$("body").data("member-tempid",e.TempID),this.close()}}),$("form.loading,.cms-content.loading,.cms-content-fields.loading,.cms-content-view.loading").entwine({
 onmatch:function F(){this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>'),this._super()},onunmatch:function M(){this.find(".cms-content-loading-overlay,.cms-content-loading-spinner").remove(),
-this._super()}}),$('.cms input[type="submit"], .cms button, .cms input[type="reset"], .cms .ss-ui-button').entwine({onadd:function N(){this.addClass("ss-ui-button"),this.data("button")||this.button(),this._super()
-
-},onremove:function U(){this.data("button")&&this.button("destroy"),this._super()}}),$(".cms .cms-panel-link").entwine({onclick:function L(e){if($(this).hasClass("external-link"))return void e.stopPropagation()
-
-
+this._super()}}),$(".cms .cms-panel-link").entwine({onclick:function N(e){if($(this).hasClass("external-link"))return void e.stopPropagation()
 var t=this.attr("href"),n=t&&!t.match(/^#/)?t:this.data("href"),i={pjax:this.data("pjaxTarget")}
 $(".cms-container").loadPanel(n,null,i),e.preventDefault()}}),$(".cms .ss-ui-button-ajax").entwine({onclick:function onclick(e){$(this).removeClass("ui-button-text-only"),$(this).addClass("ss-ui-button-loading ui-button-text-icons")
 
@@ -1193,49 +1189,49 @@ var href=this.attr("href"),url=href?href:this.data("href")
 jQuery.ajax({url:url,complete:function complete(xmlhttp,status){var msg=xmlhttp.getResponseHeader("X-Status")?xmlhttp.getResponseHeader("X-Status"):xmlhttp.responseText
 try{"undefined"!=typeof msg&&null!==msg&&eval(msg)}catch(e){}loading.hide(),$(".cms-container").refresh(),$(this).removeClass("ss-ui-button-loading ui-button-text-icons"),$(this).addClass("ui-button-text-only")
 
-},dataType:"html"}),e.preventDefault()}}),$(".cms .ss-ui-dialog-link").entwine({UUID:null,onmatch:function H(){this._super(),this.setUUID((new Date).getTime())},onunmatch:function B(){this._super()},onclick:function V(){
+},dataType:"html"}),e.preventDefault()}}),$(".cms .ss-ui-dialog-link").entwine({UUID:null,onmatch:function U(){this._super(),this.setUUID((new Date).getTime())},onunmatch:function L(){this._super()},onclick:function H(){
 this._super()
 var e=this,t="ss-ui-dialog-"+this.getUUID(),n=$("#"+t)
 n.length||(n=$('<div class="ss-ui-dialog" id="'+t+'" />'),$("body").append(n))
 var i=this.data("popupclass")?this.data("popupclass"):""
-return n.ssdialog({iframeUrl:this.attr("href"),autoOpen:!0,dialogExtraClass:i}),!1}}),$(".cms-content .btn-toolbar").entwine({onmatch:function q(){this.find(".ss-ui-button").click(function(){var e=this.form
+return n.ssdialog({iframeUrl:this.attr("href"),autoOpen:!0,dialogExtraClass:i}),!1}}),$(".cms-content .btn-toolbar").entwine({onmatch:function B(){this.find(".ss-ui-button").click(function(){var e=this.form
 
 
-e&&(e.clickedButton=this,setTimeout(function(){e.clickedButton=null},10))}),this.redraw(),this._super()},onunmatch:function G(){this._super()},redraw:function z(){window.debug&&console.log("redraw",this.attr("class"),this.get(0)),
+e&&(e.clickedButton=this,setTimeout(function(){e.clickedButton=null},10))}),this.redraw(),this._super()},onunmatch:function V(){this._super()},redraw:function q(){window.debug&&console.log("redraw",this.attr("class"),this.get(0)),
 this.contents().filter(function(){return 3==this.nodeType&&!/\S/.test(this.nodeValue)}).remove(),this.find(".ss-ui-button").each(function(){$(this).data("button")||$(this).button()}),this.find(".ss-ui-buttonset").buttonset()
 
-}}),$(".cms .field.date input.text").entwine({onmatch:function W(){var e=$(this).parents(".field.date:first"),t=e.data()
+}}),$(".cms .field.date input.text").entwine({onmatch:function G(){var e=$(this).parents(".field.date:first"),t=e.data()
 return t.showcalendar?(t.showOn="button",t.locale&&$.datepicker.regional[t.locale]&&(t=$.extend(t,$.datepicker.regional[t.locale],{})),this.prop("disabled")||this.prop("readonly")||$(this).datepicker(t),
-void this._super()):void this._super()},onunmatch:function X(){this._super()}}),$(".cms .field.dropdown select, .cms .field select[multiple], .form__fieldgroup-item select.dropdown").entwine({onmatch:function Q(){
+void this._super()):void this._super()},onunmatch:function z(){this._super()}}),$(".cms .field.dropdown select, .cms .field select[multiple], .form__fieldgroup-item select.dropdown").entwine({onmatch:function W(){
 return this.is(".no-chosen")?void this._super():(this.data("placeholder")||this.data("placeholder"," "),this.removeClass("has-chosen").chosen("destroy"),this.siblings(".chosen-container").remove(),applyChosen(this),
-void this._super())},onunmatch:function K(){this._super()}}),$(".cms-panel-layout").entwine({redraw:function J(){window.debug&&console.log("redraw",this.attr("class"),this.get(0))}}),$(".cms .grid-field").entwine({
-showDetailView:function Y(e){var t=window.location.search.replace(/^\?/,"")
-t&&(e=$.path.addSearchParams(e,t)),$(".cms-container").loadPanel(e)}}),$(".cms-search-form").entwine({onsubmit:function Z(e){var t,n
+void this._super())},onunmatch:function X(){this._super()}}),$(".cms-panel-layout").entwine({redraw:function Q(){window.debug&&console.log("redraw",this.attr("class"),this.get(0))}}),$(".cms .grid-field").entwine({
+showDetailView:function K(e){var t=window.location.search.replace(/^\?/,"")
+t&&(e=$.path.addSearchParams(e,t)),$(".cms-container").loadPanel(e)}}),$(".cms-search-form").entwine({onsubmit:function J(e){var t,n
 t=this.find(":input:not(:submit)").filter(function(){var e=$.grep($(this).fieldValue(),function(e){return e})
 return e.length}),n=this.attr("action"),t.length&&(n=$.path.addSearchParams(n,t.serialize().replace("+","%20")))
 var i=this.closest(".cms-container")
-return i.find(".cms-edit-form").tabs("select",0),i.loadPanel(n,"",{},!0),!1}}),$(".cms-search-form button[type=reset], .cms-search-form input[type=reset]").entwine({onclick:function ee(e){e.preventDefault()
+return i.find(".cms-edit-form").tabs("select",0),i.loadPanel(n,"",{},!0),!1}}),$(".cms-search-form button[type=reset], .cms-search-form input[type=reset]").entwine({onclick:function Y(e){e.preventDefault()
 
 
 var t=$(this).parents("form")
-t.clearForm(),t.find(".dropdown select").prop("selectedIndex",0).trigger("chosen:updated"),t.submit()}}),window._panelDeferredCache={},$(".cms-panel-deferred").entwine({onadd:function te(){this._super(),
-this.redraw()},onremove:function ne(){window.debug&&console.log("saving",this.data("url"),this),this.data("deferredNoCache")||(window._panelDeferredCache[this.data("url")]=this.html()),this._super()},redraw:function ie(){
+t.clearForm(),t.find(".dropdown select").prop("selectedIndex",0).trigger("chosen:updated"),t.submit()}}),window._panelDeferredCache={},$(".cms-panel-deferred").entwine({onadd:function Z(){this._super(),
+this.redraw()},onremove:function ee(){window.debug&&console.log("saving",this.data("url"),this),this.data("deferredNoCache")||(window._panelDeferredCache[this.data("url")]=this.html()),this._super()},redraw:function te(){
 window.debug&&console.log("redraw",this.attr("class"),this.get(0))
 var e=this,t=this.data("url")
 if(!t)throw'Elements of class .cms-panel-deferred need a "data-url" attribute'
 this._super(),this.children().length||(this.data("deferredNoCache")||"undefined"==typeof window._panelDeferredCache[t]?(this.addClass("loading"),$.ajax({url:t,complete:function n(){e.removeClass("loading")
 
-},success:function i(t,n,r){e.html(t)}})):this.html(window._panelDeferredCache[t]))}}),$(".cms-tabset").entwine({onadd:function re(){this.redrawTabs(),this._super()},onremove:function oe(){this.data("tabs")&&this.tabs("destroy"),
-this._super()},redrawTabs:function ae(){this.rewriteHashlinks()
+},success:function i(t,n,r){e.html(t)}})):this.html(window._panelDeferredCache[t]))}}),$(".cms-tabset").entwine({onadd:function ne(){this.redrawTabs(),this._super()},onremove:function ie(){this.data("tabs")&&this.tabs("destroy"),
+this._super()},redrawTabs:function re(){this.rewriteHashlinks()
 var e=this.attr("id"),t=this.find("ul:first .ui-tabs-active")
 this.data("tabs")||this.tabs({active:t.index()!=-1?t.index():0,beforeLoad:function n(e,t){return!1},beforeActivate:function i(e,t){var n=t.oldTab.find(".cms-panel-link")
 if(n&&1===n.length)return!1},activate:function r(e,t){var n=$(this).closest("form").find(".btn-toolbar")
-$(t.newTab).closest("li").hasClass("readonly")?n.fadeOut():n.show()}}),this.trigger("afterredrawtabs")},rewriteHashlinks:function se(){$(this).find("ul a").each(function(){if($(this).attr("href")){var e=$(this).attr("href").match(/#.*/)
+$(t.newTab).closest("li").hasClass("readonly")?n.fadeOut():n.show()}}),this.trigger("afterredrawtabs")},rewriteHashlinks:function oe(){$(this).find("ul a").each(function(){if($(this).attr("href")){var e=$(this).attr("href").match(/#.*/)
 
 
-e&&$(this).attr("href",document.location.href.replace(/#.*/,"")+e[0])}})}}),$("#filters-button").entwine({onmatch:function le(){this._super(),this.data("collapsed",!0),this.data("animating",!1)},onunmatch:function ue(){
-this._super()},showHide:function ce(){var e=this,t=$(".cms-content-filters").first(),n=this.data("collapsed")
-n?(this.addClass("active"),t.css("display","block")):(this.removeClass("active"),t.css("display","")),e.data("collapsed",!n)},onclick:function de(){this.showHide()}})})
+e&&$(this).attr("href",document.location.href.replace(/#.*/,"")+e[0])}})}}),$("#filters-button").entwine({onmatch:function ae(){this._super(),this.data("collapsed",!0),this.data("animating",!1)},onunmatch:function se(){
+this._super()},showHide:function le(){var e=this,t=$(".cms-content-filters").first(),n=this.data("collapsed")
+n?(this.addClass("active"),t.css("display","block")):(this.removeClass("active"),t.css("display","")),e.data("collapsed",!n)},onclick:function ue(){this.showHide()}})})
 var statusMessage=function e(t,n){t=jQuery("<div/>").text(t).html(),jQuery.noticeAdd({text:t,type:n,stayTime:5e3,inEffect:{left:"0",opacity:"show"}})}}).call(exports,__webpack_require__(1))},function(e,t,n){
 "use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),o=i(r)
@@ -2086,7 +2082,7 @@ n(162),n(192),o["default"].entwine("ss",function(e){e(".grid-field").entwine({re
 
 n||(n={}),n.data||(n.data=[]),n.data=n.data.concat(l),window.location.search&&(n.data=window.location.search.replace(/^\?/,"")+"&"+e.param(n.data)),o.addClass("loading"),e.ajax(e.extend({},{headers:{"X-Pjax":"CurrentField"
 },type:"POST",url:this.data("url"),dataType:"html",success:function u(t){if(r.empty().append(e(t).children()),a&&r.find(':input[name="'+a+'"]').focus(),r.find(".filter-header").length){var s
-"show"==n.data[0].filter?(s='<span class="non-sortable"></span>',r.addClass("show-filter").find(".filter-header").show()):(s='<button type="button" name="showFilter" class="btn font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>',
+"show"==n.data[0].filter?(s='<span class="non-sortable"></span>',r.addClass("show-filter").find(".filter-header").show()):(s='<button type="button" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>',
 r.removeClass("show-filter").find(".filter-header").hide()),r.find(".sortable-header th:last").html(s)}o.removeClass("loading"),i&&i.apply(this,arguments),r.trigger("reload",r)},error:function c(e){alert(s["default"]._t("GRIDFIELD.ERRORINTRANSACTION")),
 o.removeClass("loading")}},n))},showDetailView:function n(e){window.location.href=e},getItems:function i(){return this.find(".ss-gridfield-item")},setState:function r(e,t){var n=this.getState()
 n[e]=t,this.find(':input[name="'+this.data("name")+'[GridState]"]').val(JSON.stringify(n))},getState:function o(){return JSON.parse(this.find(':input[name="'+this.data("name")+'[GridState]"]').val())}}),
@@ -2132,9 +2128,7 @@ e.ajax({headers:{"X-Pjax":"Partial"},dataType:"json",type:"GET",url:e(r).data("s
 }})},select:function i(t,n){var i=e('<input type="hidden" name="relationID" class="action_gridfield_relationfind" />')
 i.val(n.item.id),e(this).closest(".grid-field").find(".action_gridfield_relationfind").replaceWith(i)
 var r=e(this).closest(".grid-field").find(".action_gridfield_relationadd")
-r.data("button")?r.button("enable"):r.removeAttr("disabled")}})}}),e(".grid-field .pagination-page-number input").entwine({onkeydown:function A(t){if(13==t.keyCode){var n=parseInt(e(this).val(),10),i=e(this).getGridField()
-
-
+r.removeAttr("disabled")}})}}),e(".grid-field .pagination-page-number input").entwine({onkeydown:function A(t){if(13==t.keyCode){var n=parseInt(e(this).val(),10),i=e(this).getGridField()
 return i.setState("GridFieldPaginator",{currentPage:n}),i.reload(),!1}}})})},function(e,t,n){"use strict"
 function i(e){if(e&&e.__esModule)return e
 var t={}
@@ -2205,10 +2199,11 @@ var a=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=argum
 for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e}
 t["default"]=o
 var s=n(226),l=i(s),u=n(33),c=i(u),d=(0,l["default"])({})},function(e,t,n){"use strict"
-function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length<=0||void 0===arguments[0]?d:arguments[0],t=arguments[1],n=null,i=null,o=null
+function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length<=0||void 0===arguments[0]?d:arguments[0],t=arguments[1],n=null,i=null,o=null,s={}
 
 
-switch(t.type){case c["default"].CREATE_RECORD:return(0,l["default"])(a({},e,{}))
+switch(t.type){case"APOLLO_QUERY_RESULT":return e
+case c["default"].CREATE_RECORD:return(0,l["default"])(a({},e,{}))
 case c["default"].UPDATE_RECORD:return(0,l["default"])(a({},e,{}))
 case c["default"].DELETE_RECORD:return(0,l["default"])(a({},e,{}))
 case c["default"].FETCH_RECORDS_REQUEST:return e

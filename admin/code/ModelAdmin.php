@@ -235,9 +235,9 @@ abstract class ModelAdmin extends LeftAndMain {
 			$context->getSearchFields(),
 			new FieldList(
 				FormAction::create('search', _t('MemberTableField.APPLY_FILTER', 'Apply Filter'))
-					->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive'),
+					->setUseButtonTag(true)->addExtraClass('btn-primary'),
 				ResetFormAction::create('clearsearch', _t('ModelAdmin.RESET','Reset'))
-					->setUseButtonTag(true)
+					->setUseButtonTag(true)->addExtraClass('btn-secondary')
 			),
 			new RequiredFields()
 		);
@@ -424,7 +424,8 @@ abstract class ModelAdmin extends LeftAndMain {
 		);
 
 		$actions = new FieldList(
-			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
+			FormAction::create('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
+				->addExtraClass('btn btn-secondary-outline font-icon-upload')
 		);
 
 		$form = new Form(

@@ -5,6 +5,8 @@
 .btn-toolbar {
   margin-top: $spacer-y;
   margin-bottom: $spacer-y;
+  margin-left: 0;
+  margin-right: 0;
 
   fieldset + & {
     margin-top: 0;
