@@ -32,6 +32,11 @@
 }
 
 // Gives button a larger icon
+.btn--icon-sm[class*="font-icon-"]::before {
+  font-size: 14px;
+  position: relative;
+}
+
 .btn--icon-md[class*="font-icon-"]::before {
   font-size: 17px;
   position: relative;
