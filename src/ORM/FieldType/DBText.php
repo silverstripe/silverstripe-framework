@@ -12,7 +12,7 @@ use SilverStripe\ORM\DB;
 use InvalidArgumentException;
 
 /**
- * Represents a variable-length string of up to 2 megabytes, designed to store raw text
+ * Represents a variable-length string of up to 16 megabytes, designed to store raw text
  *
  * Example definition via {@link DataObject::$db}:
  * <code>
