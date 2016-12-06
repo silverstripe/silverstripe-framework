@@ -295,6 +295,7 @@ class FormSchemaTest extends SapphireTest {
 						'placement' => 'bottom',
 						'tag' => 'div',
 						'legend' => null,
+                        'buttonTooltip' => null,
 					],
 					'validation' => [],
 					'children' => [

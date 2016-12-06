@@ -44,13 +44,23 @@ class PopoverField extends SilverStripeComponent {
     if (!this.props.title) {
       buttonClasses.push('font-icon-dot-3 btn--no-text btn--icon-xl');
     }
+
+    const buttonProps = {
+      id: this.props.id,
+      type: 'button',
+      className: buttonClasses.join(' '),
+    };
+    if (this.props.data.buttonTooltip) {
+      buttonProps.title = this.props.data.buttonTooltip;
+    }
+
     return (
-      <OverlayTrigger rootClose trigger="click" container={this}
+      <OverlayTrigger rootClose trigger="click"
         placement={placement} overlay={overlay}
         onEnter={this.handleShow}
         onExited={this.handleHide}
       >
-        <button id={this.props.id} type="button" className={buttonClasses.join(' ')}>
+        <button {...buttonProps}>
           {this.props.title}
         </button>
       </OverlayTrigger>
@@ -75,6 +85,7 @@ PopoverField.propTypes = {
     React.PropTypes.array,
     React.PropTypes.shape({
       popoverTitle: React.PropTypes.string,
+      buttonTooltip: React.PropTypes.string,
       placement: React.PropTypes.oneOf(['top', 'right', 'bottom', 'left']),
     }),
   ]),
