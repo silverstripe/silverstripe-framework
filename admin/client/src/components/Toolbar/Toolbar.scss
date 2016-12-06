@@ -6,9 +6,10 @@
   min-height: $toolbar-total-height;
 
   .btn-toolbar {
-    // TODO Remove '.cms .btn-toolbar' override
     margin-top: 0;
     margin-bottom: 0;
+    margin-left: -5px;
+    margin-right: -5px;
   }
 }
 

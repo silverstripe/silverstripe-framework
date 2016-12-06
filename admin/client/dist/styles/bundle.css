@@ -12846,6 +12846,10 @@ li.class-ErrorPage>a .jstree-pageicon{
   border-right:none;
 }
 
+.cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li input{
+  margin-left:5px;
+}
+
 .cms .ss-ui-action-tabset.multi ul.ui-tabs-nav li a.tab-nav-link{
   color:#66727d;
   display:inline-block;
@@ -13406,14 +13410,10 @@ li.class-ErrorPage>a .jstree-pageicon{
   white-space:nowrap;
 }
 
-.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button{
+.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel .btn,.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button{
   width:100%;
-}
-
-.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:active,.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:focus,.cms .ss-ui-action-tabset.action-menus.ss-tabset .ui-tabs-panel button.ss-ui-button:hover{
-  box-shadow:none;
-  background-color:#ebedef;
-  outline:none;
+  text-align:left;
+  margin:0 5px;
 }
 
 .cms .ss-ui-action-tabset.action-menus.ss-tabset .last .ui-tabs-panel.ss-ui-action-tab{
@@ -13433,6 +13433,10 @@ li.class-ErrorPage>a .jstree-pageicon{
   margin-top:1.2308rem;
 }
 
+.permissioncheckboxsetfield_readonly label,.permissioncheckboxset label{
+  margin:0;
+}
+
 .cms-content.cms-edit-form .permissioncheckboxset.form-group--no-label>.form__field-holder--no-label,.cms-content.cms-edit-form .permissioncheckboxsetfield_readonly.form-group--no-label>.form__field-holder--no-label{
   margin-left:0;
   -webkit-box-flex:0;
@@ -13443,6 +13447,20 @@ li.class-ErrorPage>a .jstree-pageicon{
 .permissioncheckboxset .optionset,.permissioncheckboxsetfield_readonly .optionset{
   padding-left:0;
   list-style-type:none;
+}
+
+.permissioncheckboxset .font-icon-cancel-circled,.permissioncheckboxset .font-icon-check-mark-circle,.permissioncheckboxsetfield_readonly .font-icon-cancel-circled,.permissioncheckboxsetfield_readonly .font-icon-check-mark-circle{
+  font-size:18px;
+  position:relative;
+  top:2px;
+}
+
+.permissioncheckboxset .font-icon-check-mark-circle,.permissioncheckboxsetfield_readonly .font-icon-check-mark-circle{
+  color:#3fa142;
+}
+
+.permissioncheckboxset .font-icon-cancel-circled,.permissioncheckboxsetfield_readonly .font-icon-cancel-circled{
+  color:#d40404;
 }
 
 .permissioncheckboxsetfield_readonly li,.permissioncheckboxset li{
@@ -13469,7 +13487,6 @@ li.class-ErrorPage>a .jstree-pageicon{
 
 .permissioncheckboxsetfield_readonly .optionset li label span{
   display:inline-block;
-  left:-16px;
   margin-bottom:-2px;
   margin-right:6px;
 }
@@ -15508,8 +15525,7 @@ div.grid-field__sort-field+.form__fieldgroup-item{
 }
 
 .toolbar--content .btn-toolbar,.toolbar--north .btn-toolbar,.toolbar--south .btn-toolbar,.toolbar .btn-toolbar{
-  margin-top:0;
-  margin-bottom:0;
+  margin:0 -5px;
 }
 
 .toolbar--north{
