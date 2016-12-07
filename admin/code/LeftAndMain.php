@@ -1551,24 +1551,16 @@ class LeftAndMain extends Controller implements PermissionProvider {
 					if($record->hasMethod('canEdit') && $record->canEdit()) {
 						$actions->push(
 							FormAction::create('save',_t('CMSMain.SAVE','Save'))
-								->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+								->addExtraClass('btn btn-primary')
+								->addExtraClass('font-icon-add-circle')
 						);
 					}
 					if($record->hasMethod('canDelete') && $record->canDelete()) {
 						$actions->push(
 							FormAction::create('delete',_t('ModelAdmin.DELETE','Delete'))
-								->addExtraClass('ss-ui-action-destructive')
+								->addExtraClass('btn btn-secondary')
 						);
 					}
-				}
-			}
-
-			// Use <button> to allow full jQuery UI styling
-			$actionsFlattened = $actions->dataFields();
-			if($actionsFlattened) {
-				/** @var FormAction $action */
-				foreach($actionsFlattened as $action) {
-					$action->setUseButtonTag(true);
 				}
 			}
 

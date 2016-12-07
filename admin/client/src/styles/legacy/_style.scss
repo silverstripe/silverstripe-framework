@@ -490,6 +490,8 @@ body.cms {
 		.toolbar--content {
 			margin-left: -20px;
 			margin-right: -20px;
+      padding-left: 20px;
+      padding-right: 20px;
 		}
 
 		> .grid-field:first-child > .toolbar--content {
@@ -674,6 +676,10 @@ body.cms {
   &.icon-button-group-tabs {
     margin-top: 12px;
     margin-bottom: 13px;
+  }
+
+  .btn {
+    vertical-align: top;
   }
 }
 
@@ -1041,6 +1047,10 @@ body.cms {
 
 .ui-widget-content a {
   color: $link-color;
+
+  &.btn-primary {
+    color: #fff;
+  }
 }
 
 /**
@@ -1188,14 +1198,6 @@ body.cms {
 /**
  * CMS Batch actions
  */
-.cms-content-batchactions-button {
-  display: inline-block;
-  padding: 4px 6px;
-  vertical-align: middle;
-  background-image: linear-gradient(to bottom, #fff, #D9D9D9);
-  border: 1px solid #aaa;
-  border-radius: 4px;
-}
 
 .cms-content-batchactions {
   float: left;
@@ -1313,6 +1315,7 @@ form.member-profile-form {
   #CsvFile .middleColumn {
     background: none !important;
   }
+
 
   .advanced h4 {
     margin-bottom: .5em;

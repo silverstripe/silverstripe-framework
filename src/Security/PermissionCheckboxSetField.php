@@ -236,7 +236,7 @@ class PermissionCheckboxSetField extends FormField
                     }
 
                     $inheritMessage = '<small>' . $inheritMessage . '</small>';
-                    $icon = ($checked) ? 'accept' : 'decline';
+                    $icon = ($checked) ? 'check-mark-circle' : 'cancel-circled';
 
                     // If the field is readonly, add a span that will replace the disabled checkbox input
                     if ($this->readonly) {
@@ -244,7 +244,7 @@ class PermissionCheckboxSetField extends FormField
                             . "<input id=\"$itemID\"$disabled name=\"$this->name[$code]\" type=\"checkbox\""
                             . " value=\"$code\"$checked class=\"checkbox\" />"
                             . "<label {$title}for=\"$itemID\">"
-                            . "<span class=\"ui-button-icon-primary ui-icon btn-icon-$icon\"></span>"
+                            . "<span class=\"font-icon-$icon\"></span>"
                             . "$value$inheritMessage</label>"
                             . "</li>\n";
                     } else {

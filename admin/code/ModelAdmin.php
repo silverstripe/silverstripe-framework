@@ -18,6 +18,8 @@ use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DatetimeField;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
@@ -174,6 +176,19 @@ abstract class ModelAdmin extends LeftAndMain {
 			$detailform->setValidator($detailValidator);
 		}
 
+        if($this->showImportForm) {
+            $import = CompositeField::create(array(
+                new LiteralField(
+                    'ImportForm',
+                    $this->customise(new ArrayData(array(
+
+                    )))->renderWith('SilverStripe\\Forms\\GridField\\GridFieldImportButton_Modal')
+                )
+            ));
+
+            $fieldConfig->addComponent(new GridFieldImportButton('buttons-before-left', $import));
+        }
+
 		$form = Form::create(
 			$this,
 			'EditForm',
@@ -235,9 +250,9 @@ abstract class ModelAdmin extends LeftAndMain {
 			$context->getSearchFields(),
 			new FieldList(
 				FormAction::create('search', _t('MemberTableField.APPLY_FILTER', 'Apply Filter'))
-					->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive'),
+					->setUseButtonTag(true)->addExtraClass('btn-primary'),
 				ResetFormAction::create('clearsearch', _t('ModelAdmin.RESET','Reset'))
-					->setUseButtonTag(true)
+					->setUseButtonTag(true)->addExtraClass('btn-secondary')
 			),
 			new RequiredFields()
 		);
@@ -424,7 +439,8 @@ abstract class ModelAdmin extends LeftAndMain {
 		);
 
 		$actions = new FieldList(
-			new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
+			FormAction::create('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
+				->addExtraClass('btn btn-secondary-outline font-icon-upload')
 		);
 
 		$form = new Form(
