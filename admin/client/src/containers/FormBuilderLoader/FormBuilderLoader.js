@@ -228,7 +228,7 @@ class FormBuilderLoader extends Component {
 }
 
 FormBuilderLoader.propTypes = Object.assign({}, basePropTypes, {
-  schemaActions: PropTypes.object.isRequired,
+  schemaActions: PropTypes.object,
   schemaUrl: PropTypes.string.isRequired,
   schema: schemaPropType,
   form: PropTypes.string,

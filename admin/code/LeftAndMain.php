@@ -152,7 +152,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	];
 
 	private static $url_handlers = [
-		'GET schema/$FormName/$ItemID' => 'schema'
+		'GET schema/$FormName/$ItemID/$OtherItemID' => 'schema'
 	];
 
 	private static $dependencies = [

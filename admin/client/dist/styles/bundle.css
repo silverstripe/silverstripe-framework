@@ -5897,18 +5897,18 @@ a.label:focus,a.label:hover{
   padding:.75rem 1.25rem;
   margin-bottom:-1px;
   background-color:#fff;
-  border:1px solid #ddd;
+  border:1px solid #e5e8eb;
 }
 
 .list-group-item:first-child{
-  border-top-right-radius:.25rem;
-  border-top-left-radius:.25rem;
+  border-top-right-radius:0;
+  border-top-left-radius:0;
 }
 
 .list-group-item:last-child{
   margin-bottom:0;
-  border-bottom-right-radius:.25rem;
-  border-bottom-left-radius:.25rem;
+  border-bottom-right-radius:0;
+  border-bottom-left-radius:0;
 }
 
 .list-group-flush .list-group-item{
@@ -14839,24 +14839,26 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
 .list-group{
   margin-left:-1.5385rem;
   margin-right:-1.5385rem;
+  margin-bottom:1.5385rem;
+}
+
+.list-group-flush:first-child{
+  border-top:0;
+}
+
+.list-group-flush:last-child{
   border-bottom:1px solid #e5e8eb;
-  margin-bottom:.9231rem;
 }
 
 .list-group-item{
   padding:.76925rem 1.5385rem;
   min-height:65px;
   cursor:pointer;
-  text-decoration:none;
   -webkit-transition:opacity .2s ease-in-out;
   transition:opacity .2s ease-in-out;
 }
 
-.list-group-item:first-child{
-  border-top:0;
-}
-
-.list-group-item:hover{
+.list-group-item,.list-group-item:hover{
   text-decoration:none;
 }
 
@@ -14867,6 +14869,10 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
 .list-group-item.active,.list-group-item.active .list-group-item__status{
   color:#fff;
   opacity:1;
+}
+
+.list-group-item-text{
+  line-height:1.539;
 }
 
 .list-group-item-heading{
@@ -16143,7 +16149,7 @@ body,html{
   .campaign-admin__campaign .list-group-item.active:hover{
     background-color:#f5f5f5;
     color:#4f5861;
-    border-color:#ddd;
+    border-color:#e5e8eb;
   }
 }
 
