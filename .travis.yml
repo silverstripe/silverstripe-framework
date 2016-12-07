@@ -7,13 +7,6 @@ addons:
     packages:
       - tidy
 
-env:
-  global:
-    - "ARTIFACTS_AWS_REGION=us-east-1"
-    - "ARTIFACTS_S3_BUCKET=silverstripe-travis-artifacts"
-    - secure: "DjwZKhY/c0wXppGmd8oEMiTV0ayfOXiCmi9Lg1aXoSXNnj+sjLmhYwhUWjehjR6IX0MRtzJG6v7V5Y+4nSGe+i+XIrBQnhPQ95Jrkm1gKofX2mznWTl9npQElNS1DXi58NLPbiB3qxHWGFBRAWmRQrsAouyZabkPnChnSa9ldOg="
-    - secure: "UmbXCNLK0f2Dk+7qX8bOVcgIt4QhRvccoWvMUxaPtIU+95HCbG10eeCxvfOeBax+tHcRXmeCG4vM4tcuT/WoANkAma/VX74DylFjbWhks2tsKOcr2kjTrOwe6Q9CXOBjVAlcx0lnV/a+w83KARjXGnCrIbE7p7r4EDw31rkVufg="
-
 matrix:
   include:
     - php: 5.3
@@ -55,7 +48,7 @@ script:
  - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms; fi"
 
 after_failure:
- - php ~/travis-support/travis_upload_artifacts.php --if-env BEHAT_TEST,ARTIFACTS_AWS_SECRET_ACCESS_KEY --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_S3_BUCKET/
+ - php ~/travis-support/travis_upload_artifacts.php --if-env BEHAT_TEST,ARTIFACTS_KEY --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/
 
 branches:
   except:
@@ -63,9 +56,3 @@ branches:
     - 2.2
     - 2.3
     - translation-staging
-
-#  global:
-#   - secure: "AZmjVPtUD8JBA7ag4ULlEwEKXSEZbIUjDHeRBFugaOtdsn5yigGLmwYbzsg2tq7k7UkdbbAlGct0SUbiRJb9F2wPA5+eUd/p49fgDIU6CTSWIlT87H2BwgOrxKwS9sDwxLptPFM6vWQ8JKYSNGmVIepie9kQZbu4L2k5k6B69jQ="
-#   - secure: "f3kKpUn9cS5K+p/E52cMqN18cDApol/43LanDmHO6mo3iRAztk3jZLyfNOUq6JASKMqdh8+9kencRpEoaAYbcQnDPoZsT9POResiJ9/ADKB6RwWy+lcFHUp9E2Zf/x2VRh9FmXEguDhpWzkJqzWYJGCSig1IBp/+TjzKnsjQHIY="
-#
-# - php ~/travis-support/travis_setup_sauceconnect.php --if-env BEHAT_TEST --username ${SAUCE_USERNAME} --access-key ${SAUCE_ACCESS_KEY} --tunnel-identifier ${TRAVIS_JOB_NUMBER} --base-url http://localhost
