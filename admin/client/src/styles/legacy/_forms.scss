@@ -800,9 +800,12 @@ div.switch-states{
     max-height: 180px;
   }
 
-  .importSpec {
-    margin-bottom: 8px;
-    padding-left: 16px;
+  .form-group {
+    padding-bottom: 0;
+
+    &:after {
+      display: none;
+    }
   }
 }
 

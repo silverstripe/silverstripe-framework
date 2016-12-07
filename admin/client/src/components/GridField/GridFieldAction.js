@@ -1,5 +1,6 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
+import { Modal } from 'react-bootstrap-ss';
 
 class GridFieldAction extends SilverStripeComponent {
   constructor(props) {
@@ -17,6 +18,9 @@ class GridFieldAction extends SilverStripeComponent {
   }
 
   handleClick(event) {
+    console.log('handle click');
+
+    return false;
     this.props.handleClick(event, this.props.record.ID);
   }
 }

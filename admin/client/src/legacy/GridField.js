@@ -132,6 +132,34 @@ $.entwine('ss', function($) {
 		}
 	});
 
+  $('.grid-field .action.action_import:button').entwine({
+    onclick: function(e) {
+      e.preventDefault();
+
+      var backdrop = $('.modal-backdrop');
+
+      if(backdrop.length < 1) {
+        backdrop = $('<div class="modal-backdrop fade in"></div>');
+        $('body').append(backdrop);
+      } else {
+        backdrop.addClass('fade in').fadeIn();
+      }
+
+      $(this.data('target')).addClass('in');
+
+      // workaround until GridField rewritten into react.
+      var self = this;
+
+      $(this.data('target')).find('[data-dismiss]').on('click', function() {
+        backdrop.fadeOut(function() {
+          $(this).removeClass('in');
+        });
+
+        $(self.data('target')).removeClass('in');
+      })
+    }
+  });
+
 	$('.grid-field .action:button').entwine({
 		onclick: function(e){
 			var filterState='show'; //filterstate should equal current state.

@@ -11,12 +11,14 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
@@ -103,7 +105,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			Member::get(),
 			$memberListConfig = GridFieldConfig_RecordEditor::create()
 				->addComponent(new GridFieldButtonRow('after'))
-				->addComponent(new GridFieldExportButton('buttons-after-left'))
+				->addComponent(new GridFieldExportButton('buttons-before-left'))
 		)->addExtraClass("members_grid");
 
 		if($record && method_exists($record, 'getValidator')) {
@@ -121,7 +123,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 			'Groups',
 			false,
 			Group::get(),
-			GridFieldConfig_RecordEditor::create()
+			$groupListConfig = GridFieldConfig_RecordEditor::create()
+                ->addComponent(new GridFieldExportButton('buttons-before-left'))
 		);
 		/** @var GridFieldDataColumns $columns */
 		$columns = $groupList->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDataColumns');
@@ -160,28 +163,30 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 
 		// Add import capabilities. Limit to admin since the import logic can affect assigned permissions
 		if(Permission::check('ADMIN')) {
-			$fields->addFieldsToTab('Root.Users', array(
-				new HeaderField('ImportUsersHeader', _t('SecurityAdmin.IMPORTUSERS', 'Import users'), 3),
-				new LiteralField(
-					'MemberImportFormIframe',
-					sprintf(
-							'<iframe src="%s" id="MemberImportFormIframe" width="100%%" height="330px" frameBorder="0">'
-						. '</iframe>',
-						$this->Link('memberimport')
-					)
-				)
-			));
-			$fields->addFieldsToTab('Root.Groups', array(
-				new HeaderField('ImportGroupsHeader', _t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
-				new LiteralField(
-					'GroupImportFormIframe',
-					sprintf(
-							'<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="330px" frameBorder="0">'
-						. '</iframe>',
-						$this->Link('groupimport')
-					)
-				)
-			));
+            // @todo when grid field is converted to react use the react component
+            $memberImport = CompositeField::create(array(
+                new LiteralField(
+                    'MemberImportFormIframe',
+                    $this->customise(new ArrayData(array(
+                        'URL' => $this->Link('memberimport')
+                    )))->renderWith('SilverStripe\\Forms\\GridField\\GridFieldImportButton_Modal')
+                )
+            ));
+
+            $memberListConfig
+                ->addComponent(new GridFieldImportButton('buttons-before-left', $memberImport));
+
+            $groupImport = CompositeField::create(array(
+                new LiteralField(
+                    'GroupImportFormIframe',
+                    $this->customise(new ArrayData(array(
+                        'URL' => $this->Link('groupimport')
+                    )))->renderWith('SilverStripe\\Forms\\GridField\\GridFieldImportButton_Modal')
+                )
+            ));
+
+            $groupListConfig
+                ->addComponent(new GridFieldImportButton('buttons-before-left', $groupImport));
 		}
 
 		// Tab nav in CMS is rendered through separate template

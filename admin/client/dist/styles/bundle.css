@@ -9288,9 +9288,12 @@ div.switch-states .switch a.active span{
   max-height:180px;
 }
 
-.cms-content-filters .importSpec{
-  margin-bottom:8px;
-  padding-left:16px;
+.cms-content-filters .form-group{
+  padding-bottom:0;
+}
+
+.cms-content-filters .form-group:after{
+  display:none;
 }
 
 .ss-uploadfield .form__field-holder .ss-uploadfield-item{
@@ -9705,6 +9708,8 @@ body.cms{
 .ui-tabs .ui-tabs-panel .toolbar--content{
   margin-left:-20px;
   margin-right:-20px;
+  padding-left:20px;
+  padding-right:20px;
 }
 
 .ui-tabs .ui-tabs-panel>.grid-field:first-child>.toolbar--content{
@@ -9866,6 +9871,10 @@ body.cms{
 .cms-content-header-tabs.icon-button-group-tabs{
   margin-top:12px;
   margin-bottom:13px;
+}
+
+.cms-content-header-tabs .btn{
+  vertical-align:top;
 }
 
 .panel{
@@ -14980,7 +14989,8 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
 }
 
 .btn-toolbar{
-  margin:1.2308rem 0;
+  margin-top:1.2308rem;
+  margin-bottom:1.2308rem;
 }
 
 fieldset+.btn-toolbar{
@@ -15441,7 +15451,19 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   }
 }
 
-.field.hidden{
+.grid-field-import.in{
+  display:block;
+}
+
+.grid-field-import.in .modal-content{
+  overflow-y:scroll;
+}
+
+.grid-field-import.in .modal-dialog{
+  max-height:600px;
+}
+
+.field.hidden,.grid-field-import.in .modal-dialog .advanced,.import-form .advanced{
   display:none;
 }
 
@@ -15528,6 +15550,10 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   margin:0 -5px;
 }
 
+.toolbar--content .btn-toolbar .pull-xs-left .btn-primary,.toolbar--north .btn-toolbar .pull-xs-left .btn-primary,.toolbar--south .btn-toolbar .pull-xs-left .btn-primary,.toolbar .btn-toolbar .pull-xs-left .btn-primary{
+  margin-left:5px;
+}
+
 .toolbar--north{
   background-image:none;
   background-color:#f0f2f4;
@@ -15558,6 +15584,7 @@ div.grid-field__sort-field+.form__fieldgroup-item{
 }
 
 .toolbar--content.ss-gridfield-buttonrow{
+  padding-top:0;
   margin-top:0;
 }
 
@@ -15958,6 +15985,7 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
   position:absolute;
   z-index:2;
   margin-right:0;
+  font-size:24px;
   height:32px;
 }
 

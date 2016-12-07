@@ -18,6 +18,8 @@ use SilverStripe\Forms\FileField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\DatetimeField;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
@@ -173,6 +175,19 @@ abstract class ModelAdmin extends LeftAndMain {
 			$detailform = $listField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDetailForm');
 			$detailform->setValidator($detailValidator);
 		}
+
+        if($this->showImportForm) {
+            $import = CompositeField::create(array(
+                new LiteralField(
+                    'ImportForm',
+                    $this->customise(new ArrayData(array(
+
+                    )))->renderWith('SilverStripe\\Forms\\GridField\\GridFieldImportButton_Modal')
+                )
+            ));
+
+            $fieldConfig->addComponent(new GridFieldImportButton('buttons-before-left', $import));
+        }
 
 		$form = Form::create(
 			$this,
