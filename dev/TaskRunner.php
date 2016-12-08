@@ -59,6 +59,10 @@ class TaskRunner extends Controller {
 		}
 	}
 
+	/**
+	 * Runs a BuildTask
+	 * @param SS_HTTPRequest $request
+	 */
 	public function runTask($request) {
 		$name = $request->param('TaskName');
 		$tasks = $this->getTasks();
@@ -73,7 +77,7 @@ class TaskRunner extends Controller {
 
 		foreach ($tasks as $task) {
 			if ($task['segment'] == $name) {
-				$inst = Injector::inst()->create($task['class']);
+				$inst = Injector::inst()->create($task['class']); /** @var BuildTask $inst */
 				$title(sprintf('Running Task %s', $inst->getTitle()));
 
 				if (!$inst->isEnabled()) {

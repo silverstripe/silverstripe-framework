@@ -33,9 +33,14 @@ abstract class BuildTask extends Object {
 	/**
  	 * Implement this method in the task subclass to
 	 * execute via the TaskRunner
+	 *
+	 * @param SS_HTTPRequest $request
 	 */
 	abstract public function run($request);
 
+	/**
+	 * @return bool
+	 */
 	public function isEnabled() {
 		return $this->enabled;
 	}
@@ -55,5 +60,3 @@ abstract class BuildTask extends Object {
 	}
 
 }
-
-
