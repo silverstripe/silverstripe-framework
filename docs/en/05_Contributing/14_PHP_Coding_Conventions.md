@@ -34,6 +34,11 @@ linefeed combination (CRLF) as is standard for the Windows OS (0x0D, 0x0A).
 
 Class, function, variable and constant names may only contain alphanumeric characters and underscores.
 
+## Spelling
+
+All symbols and documentation should use UK-English spelling (e.g. "behaviour" instead of "behavior"),
+except when necessitated by third party conventions (e.g using PHP's `Serializable` interface).
+
 ### Classes
 
 Class and filenames are in `UpperCamelCase` format:
