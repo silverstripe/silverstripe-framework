@@ -92,123 +92,32 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 		]);
 	}
 
-	public function schema($request) {
-		// TODO Hardcoding schema until we can get GridField to generate a schema dynamically
-		$treeClassJS = Convert::raw2js($this->config()->tree_class);
-        $adminURL = Convert::raw2js(AdminRootController::admin_url());
-		$json = <<<JSON
-{
-	"id": "{$adminURL}campaigns\/schema\/EditForm",
-	"schema": {
-		"name": "EditForm",
-		"id": "Form_EditForm",
-		"action": "schema",
-		"method": "GET",
-		"attributes": {
-			"id": "Form_EditForm",
-			"action": "{$adminURL}campaigns\/EditForm",
-			"method": "POST",
-			"enctype": "multipart\/form-data",
-			"target": null
-		},
-		"data": [],
-		"fields": [{
-			"name": "ID",
-			"id": "Form_EditForm_ID",
-			"type": "Hidden",
-			"component": null,
-			"holderId": null,
-			"title": false,
-			"source": null,
-			"extraClass": "hidden form-group--no-label",
-			"description": null,
-			"rightTitle": null,
-			"leftTitle": null,
-			"readOnly": false,
-			"disabled": false,
-			"customValidationMessage": "",
-			"attributes": [],
-			"data": []
-		}, {
-			"name": "ChangeSets",
-			"id": "Form_EditForm_ChangeSets",
-			"type": "Custom",
-			"component": "GridField",
-			"holderId": null,
-			"title": "Campaigns",
-			"source": null,
-			"extraClass": null,
-			"description": null,
-			"rightTitle": null,
-			"leftTitle": null,
-			"readOnly": false,
-			"disabled": false,
-			"customValidationMessage": "",
-			"attributes": [],
-			"data": {
-				"recordType": "{$treeClassJS}",
-				"collectionReadEndpoint": {
-					"url": "{$adminURL}campaigns\/sets",
-					"method": "GET"
-				},
-				"itemReadEndpoint": {
-					"url": "{$adminURL}campaigns\/set\/:id",
-					"method": "GET"
-				},
-				"itemUpdateEndpoint": {
-					"url": "{$adminURL}campaigns\/set\/:id",
-					"method": "PUT"
-				},
-				"itemCreateEndpoint": {
-					"url": "{$adminURL}campaigns\/set\/:id",
-					"method": "POST"
-				},
-				"itemDeleteEndpoint": {
-					"url": "{$adminURL}campaigns\/set\/:id",
-					"method": "DELETE"
-				},
-				"editFormSchemaEndpoint": "{$adminURL}campaigns\/schema\/DetailEditForm",
-				"columns": [
-					{"name": "Title", "field": "Name"},
-					{"name": "Changes", "field": "ChangesCount"},
-					{"name": "Description", "field": "Description"}
-				]
-			}
-		}, {
-			"name": "SecurityID",
-			"id": "Form_EditForm_SecurityID",
-			"type": "Hidden",
-			"component": null,
-			"holderId": null,
-			"title": "Security ID",
-			"source": null,
-			"extraClass": "hidden",
-			"description": null,
-			"rightTitle": null,
-			"leftTitle": null,
-			"readOnly": false,
-			"disabled": false,
-			"customValidationMessage": "",
-			"attributes": [],
-			"data": []
-		}],
-		"actions": []
-	}
-}
-JSON;
+	public function getEditForm($id = null, $fields = null)
+    {
+        $fields = new FieldList(
+            CampaignAdminList::create('ChangeSets')
+        );
+        $actions = new FieldList();
+        $form = Form::create($this, 'EditForm', $fields, $actions);
 
-		$formName = $request->param('ID');
-		if($formName == 'EditForm') {
-			$response = $this->getResponse();
-			$response->addHeader('Content-Type', 'application/json');
-			$response->setBody($json);
-			return $response;
-		} else {
-			return parent::schema($request);
-		}
-	}
+        // Set callback response
+        $form->setValidationResponseCallback(function() use ($form) {
+            $schemaId = $this->Link('schema/EditForm');
+            return $this->getSchemaResponse($form, $schemaId);
+        });
 
-	/**
+        return $form;
+    }
+
+    public function EditForm($request = null)
+    {
+        // Get ID either from posted back value, or url parameter
+        $request = $request ?: $this->getRequest();
+        $id = $request->param('ID') ?: $request->postVar('ID');
+        return $this->getEditForm($id);
+    }
+
+    /**
 	 * REST endpoint to get a list of campaigns.
 	 *
 	 * @return HTTPResponse

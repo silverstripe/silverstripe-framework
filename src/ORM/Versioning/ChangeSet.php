@@ -79,6 +79,12 @@ class ChangeSet extends DataObject
         'SilverStripe\\Assets\\File',
     );
 
+    private static $summary_fields = [
+        'Name' => 'Title',
+        'ChangesCount' => 'Changes',
+        'Description' => 'Description',
+    ];
+
     /**
      * Default permission to require for publishers.
      * Publishers must either be able to use the campaign admin, or have all admin access.
@@ -533,6 +539,16 @@ class ChangeSet extends DataObject
             ]
         );
         return $string;
+    }
+
+    /**
+     * Required to support count display in react gridfield column
+     *
+     * @return int
+     */
+    public function getChangesCount()
+    {
+        return $this->Changes()->count();
     }
 
     public function fieldLabels($includerelations = true)
