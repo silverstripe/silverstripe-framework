@@ -165,6 +165,10 @@ pair in the mask is removed
 
 ## Configuration YAML Syntax and Rules
 
+<div class="alert" markdown="1">
+As of Silverstripe 4, YAML files can no longer be placed any deeper than 2 directories deep. As this was an unintended bug, this change will only affect you if you nest your modules deeper than the top level of your project.
+</div>
+
 Each module can have a directory immediately underneath the main module directory called `_config/`. Inside this 
 directory you can add YAML files that contain values for the configuration system. 
 
