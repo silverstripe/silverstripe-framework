@@ -2378,12 +2378,13 @@ var n=o(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.handleShow=n.handleShow.bind(n),n.handleHide=n.handleHide.bind(n),n.state={showing:!1},n}return a(t,e),s(t,[{key:"handleShow",value:function n(){this.setState({showing:!0})}},{key:"handleHide",
 value:function i(){this.setState({showing:!1})}},{key:"render",value:function l(){var e=this.getPlacement(),t=u["default"].createElement(c.Popover,{id:this.props.id+"_Popover",className:"fade in popover-"+e,
 title:this.props.data.popoverTitle},this.props.children),n=["btn","btn-secondary"]
-return this.state.showing&&n.push("btn--no-focus"),this.props.title||n.push("font-icon-dot-3 btn--no-text btn--icon-xl"),u["default"].createElement(c.OverlayTrigger,{rootClose:!0,trigger:"click",container:this,
-placement:e,overlay:t,onEnter:this.handleShow,onExited:this.handleHide},u["default"].createElement("button",{id:this.props.id,type:"button",className:n.join(" ")},this.props.title))}},{key:"getPlacement",
-value:function d(){var e=this.props.data.placement
+this.state.showing&&n.push("btn--no-focus"),this.props.title||n.push("font-icon-dot-3 btn--no-text btn--icon-xl")
+var i={id:this.props.id,type:"button",className:n.join(" ")}
+return this.props.data.buttonTooltip&&(i.title=this.props.data.buttonTooltip),u["default"].createElement(c.OverlayTrigger,{rootClose:!0,trigger:"click",placement:e,overlay:t,onEnter:this.handleShow,onExited:this.handleHide
+},u["default"].createElement("button",i,this.props.title))}},{key:"getPlacement",value:function d(){var e=this.props.data.placement
 return e||"bottom"}}]),t}(f["default"])
 p.propTypes={id:u["default"].PropTypes.string,title:u["default"].PropTypes.any,data:u["default"].PropTypes.oneOfType([u["default"].PropTypes.array,u["default"].PropTypes.shape({popoverTitle:u["default"].PropTypes.string,
-placement:u["default"].PropTypes.oneOf(["top","right","bottom","left"])})])},t["default"]=p},function(e,t,n){"use strict"
+buttonTooltip:u["default"].PropTypes.string,placement:u["default"].PropTypes.oneOf(["top","right","bottom","left"])})])},t["default"]=p},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function o(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called")
 
 

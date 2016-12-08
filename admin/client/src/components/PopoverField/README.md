@@ -17,6 +17,7 @@ is represented by a button.
  * `title` (any): The title to display on the button to open the popover, if left blank it will display an ellipsis icon.
  * `data` (object) (required): Extra data that helps define this field uniquely.
    * `popoverTitle` (string): The title to appear for the popover.
+   * `buttonTooltip` (string): Title for button tooltip.
    * `placement` (string): Where the popover will appear in relation to the button, options available are:
      * top
      * right

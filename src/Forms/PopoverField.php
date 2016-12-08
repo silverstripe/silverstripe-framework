@@ -39,6 +39,13 @@ class PopoverField extends FieldGroup
     protected $placement = 'bottom';
 
     /**
+     * Tooltip to put on button
+     *
+     * @var string
+     */
+    protected $buttonTooltip = null;
+
+    /**
      * Get popup title
      *
      * @return string
@@ -57,6 +64,24 @@ class PopoverField extends FieldGroup
     public function setPopoverTitle($popoverTitle)
     {
         $this->popoverTitle = $popoverTitle;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getButtonTooltip()
+    {
+        return $this->buttonTooltip;
+    }
+
+    /**
+     * @param string $text
+     * @return $this
+     */
+    public function setButtonTooltip($text)
+    {
+        $this->buttonTooltip = $text;
         return $this;
     }
 
@@ -91,6 +116,7 @@ class PopoverField extends FieldGroup
 
         $schema['data']['popoverTitle'] = $this->getPopoverTitle();
         $schema['data']['placement'] = $this->getPlacement();
+        $schema['data']['buttonTooltip'] = $this->getButtonTooltip();
 
         return $schema;
     }
