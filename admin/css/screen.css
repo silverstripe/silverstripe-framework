@@ -224,6 +224,7 @@ form.small .field input.text, form.small .field textarea, form.small .field sele
 /** ---------------------------------------------------- Checkbox Field ---------------------------------------------------- */
 .field.checkbox { padding-left: 184px; margin-bottom: 8px; }
 .field.checkbox input { margin-left: 0; }
+.field.checkbox .help { margin-left: 0; }
 
 input.checkbox { margin-left: 0; }
 

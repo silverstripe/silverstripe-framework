@@ -4,7 +4,7 @@
 		 * Takes form fields with a title attribute, extracts it, and displays
 		 * it as inline help text below the field.
 		 */
-		$(".cms form .field .middleColumn > [title]").entwine({
+		$(".cms form .field .middleColumn > [title], .cms form .field.checkbox input[type='checkbox'][title]").entwine({
 			onmatch: function() {
 				
 				var title = this.prop("title");
