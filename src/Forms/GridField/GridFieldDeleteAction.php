@@ -169,8 +169,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             if ($actionName == 'deleterecord') {
                 if (!$item->canDelete()) {
                     throw new ValidationException(
-                        _t('GridFieldAction_Delete.DeletePermissionsFailure', "No delete permissions"),
-                        0
+                        _t('GridFieldAction_Delete.DeletePermissionsFailure', "No delete permissions")
                     );
                 }
 
@@ -178,8 +177,7 @@ class GridFieldDeleteAction implements GridField_ColumnProvider, GridField_Actio
             } else {
                 if (!$item->canEdit()) {
                     throw new ValidationException(
-                        _t('GridFieldAction_Delete.EditPermissionsFailure', "No permission to unlink record"),
-                        0
+                        _t('GridFieldAction_Delete.EditPermissionsFailure', "No permission to unlink record")
                     );
                 }
 

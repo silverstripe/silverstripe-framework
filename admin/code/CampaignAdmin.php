@@ -10,7 +10,9 @@ use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\Versioning\ChangeSet;
 use SilverStripe\ORM\Versioning\ChangeSetItem;
 use SilverStripe\ORM\DataObject;
@@ -437,19 +439,22 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider {
 					->setIcon('save'),
 				FormAction::create('cancel', _t('LeftAndMain.CANCEL', 'Cancel'))
 					->setUseButtonTag(true)
-			)
+			),
+			new RequiredFields('Name')
 		);
 
 		// Load into form
 		if($id && $record) {
 			$form->loadDataFrom($record);
 		}
-        $form->getValidator()->addRequiredField('Name');
 		// Configure form to respond to validation errors with form schema
 		// if requested via react.
-		$form->setValidationResponseCallback(function() use ($form, $record) {
-			$schemaId = Controller::join_links($this->Link('schema/DetailEditForm'), $record->exists() ? $record->ID : '');
-			return $this->getSchemaResponse($form, $schemaId);
+		$form->setValidationResponseCallback(function(ValidationResult $errors) use ($form, $record) {
+			$schemaId = Controller::join_links(
+				$this->Link('schema/DetailEditForm'),
+				$record->isInDB() ? $record->ID : ''
+			);
+			return $this->getSchemaResponse($schemaId, $form, $errors);
 		});
 
 		return $form;

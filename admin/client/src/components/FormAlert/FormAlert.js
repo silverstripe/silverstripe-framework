@@ -36,6 +36,7 @@ class FormAlert extends SilverStripeComponent {
    * @returns {string} can be the following values "success", "warning", "danger", "info"
    */
   getMessageStyle() {
+    // See ValidationResult::TYPE_ constant definitions in PHP.
     switch (this.props.type) {
       case 'good':
       case 'success':

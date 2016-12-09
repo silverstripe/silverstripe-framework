@@ -937,7 +937,7 @@ class UploadFieldTest extends FunctionalTest {
 		$form = new UploadFieldTest\UploadFieldTestForm();
 		$form->loadDataFrom($data, true);
 
-		if($form->validate()) {
+		if($form->validationResult()->isValid()) {
 			$record = $form->getRecord();
 			$form->saveInto($record);
 			$record->write();

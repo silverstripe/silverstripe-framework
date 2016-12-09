@@ -2,12 +2,13 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Control\Controller;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Session;
+use SilverStripe\Security\Permission;
 use SilverStripe\Security\Tests\GroupTest\TestMember;
-use ReflectionMethod;
 
 class GroupTest extends FunctionalTest {
 
@@ -35,16 +36,17 @@ class GroupTest extends FunctionalTest {
 		$this->assertNull($g3->Code, 'Default title doesnt trigger attribute setting');
 	}
 
+	/**
+	 * @skipUpgrade
+	 */
 	public function testMemberGroupRelationForm() {
 		Session::set('loggedInAs', $this->idFromFixture(TestMember::class, 'admin'));
 
 		$adminGroup = $this->objFromFixture(Group::class, 'admingroup');
 		$parentGroup = $this->objFromFixture(Group::class, 'parentgroup');
-		$childGroup = $this->objFromFixture(Group::class, 'childgroup');
 
 		// Test single group relation through checkboxsetfield
-		/** @skipUpgrade */
-		$form = new GroupTest\MemberForm($this, 'Form');
+		$form = new GroupTest\MemberForm(new Controller(), 'Form');
 		$member = $this->objFromFixture(TestMember::class, 'admin');
 		$form->loadDataFrom($member);
 		$checkboxSetField = $form->Fields()->fieldByName('Groups');
@@ -75,9 +77,6 @@ class GroupTest extends FunctionalTest {
 			"Removing a previously added toplevel group works"
 		);
 		$this->assertContains($adminGroup->ID, $updatedGroups->column('ID'));
-
-		// Test adding child group
-
 	}
 
 	public function testUnsavedGroups() {
@@ -124,55 +123,47 @@ class GroupTest extends FunctionalTest {
 		$childGroupID = $this->idFromFixture(Group::class, 'childgroup');
 		$group->delete();
 
-		$this->assertEquals(0, DataObject::get(Group::class, "\"ID\" = {$groupID}")->Count(),
+		$this->assertEquals(0, DataObject::get(Group::class, "\"ID\" = {$groupID}")->count(),
 			'Group is removed');
-		$this->assertEquals(0, DataObject::get('SilverStripe\\Security\\Permission', "\"GroupID\" = {$groupID}")->Count(),
+		$this->assertEquals(0, DataObject::get(Permission::class, "\"GroupID\" = {$groupID}")->count(),
 			'Permissions removed along with the group');
-		$this->assertEquals(0, DataObject::get(Group::class, "\"ParentID\" = {$groupID}")->Count(),
+		$this->assertEquals(0, DataObject::get(Group::class, "\"ParentID\" = {$groupID}")->count(),
 			'Child groups are removed');
-		$this->assertEquals(0, DataObject::get(Group::class, "\"ParentID\" = {$childGroupID}")->Count(),
+		$this->assertEquals(0, DataObject::get(Group::class, "\"ParentID\" = {$childGroupID}")->count(),
 			'Grandchild groups are removed');
 	}
 
 	public function testValidatesPrivilegeLevelOfParent() {
-		$nonAdminUser = $this->objFromFixture(TestMember::class, 'childgroupuser');
-		$adminUser = $this->objFromFixture(TestMember::class, 'admin');
 		$nonAdminGroup = $this->objFromFixture(Group::class, 'childgroup');
 		$adminGroup = $this->objFromFixture(Group::class, 'admingroup');
-
-		$nonAdminValidateMethod = new ReflectionMethod($nonAdminGroup, 'validate');
-		$nonAdminValidateMethod->setAccessible(true);
 
 		// Making admin group parent of a non-admin group, effectively expanding is privileges
 		$nonAdminGroup->ParentID = $adminGroup->ID;
 
 		$this->logInWithPermission('APPLY_ROLES');
-		$result = $nonAdminValidateMethod->invoke($nonAdminGroup);
+		$result = $nonAdminGroup->validate();
 		$this->assertFalse(
-			$result->valid(),
+			$result->isValid(),
 			'Members with only APPLY_ROLES can\'t assign parent groups with direct ADMIN permissions'
 		);
 
 		$this->logInWithPermission('ADMIN');
-		$result = $nonAdminValidateMethod->invoke($nonAdminGroup);
+		$result = $nonAdminGroup->validate();
 		$this->assertTrue(
-			$result->valid(),
+			$result->isValid(),
 			'Members with ADMIN can assign parent groups with direct ADMIN permissions'
 		);
 		$nonAdminGroup->write();
-		$newlyAdminGroup = $nonAdminGroup;
 
 		$this->logInWithPermission('ADMIN');
 		$inheritedAdminGroup = $this->objFromFixture(Group::class, 'group1');
-		$inheritedAdminMethod = new ReflectionMethod($inheritedAdminGroup, 'validate');
-		$inheritedAdminMethod->setAccessible(true);
 		$inheritedAdminGroup->ParentID = $adminGroup->ID;
 		$inheritedAdminGroup->write(); // only works with ADMIN login
 
 		$this->logInWithPermission('APPLY_ROLES');
-		$result = $inheritedAdminMethod->invoke($nonAdminGroup);
+		$result = $nonAdminGroup->validate();
 		$this->assertFalse(
-			$result->valid(),
+			$result->isValid(),
 			'Members with only APPLY_ROLES can\'t assign parent groups with inherited ADMIN permission'
 		);
 	}

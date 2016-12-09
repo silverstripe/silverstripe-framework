@@ -13,14 +13,10 @@ use SilverStripe\ORM\Connect\MySQLDatabase;
 use SilverStripe\ORM\FieldType\DBPolymorphicForeignKey;
 use SilverStripe\ORM\FieldType\DBVarchar;
 use SilverStripe\ORM\ManyManyList;
-use SilverStripe\ORM\Tests\ManyManyListTest\Category;
-use SilverStripe\ORM\Tests\ManyManyListTest\ExtraFieldsObject;
-use SilverStripe\ORM\Tests\ManyManyListTest\Product;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\View\ViewableData;
 use stdClass;
 use ReflectionException;
-use ReflectionMethod;
 use InvalidArgumentException;
 
 class DataObjectTest extends SapphireTest {
@@ -1055,7 +1051,6 @@ class DataObjectTest extends SapphireTest {
 
 	public function testWritingInvalidDataObjectThrowsException() {
 		$validatedObject = new DataObjectTest\ValidatedObject();
-
 		$this->setExpectedException(ValidationException::class);
 		$validatedObject->write();
 	}
@@ -1179,12 +1174,6 @@ class DataObjectTest extends SapphireTest {
 			'Default Value',
 			'Defaults are populated from overloaded populateDefaults() method'
 		);
-	}
-
-	protected function makeAccessible($object, $method) {
-		$reflectionMethod = new ReflectionMethod($object, $method);
-		$reflectionMethod->setAccessible(true);
-		return $reflectionMethod;
 	}
 
 	public function testValidateModelDefinitionsFailsWithArray() {
@@ -1762,6 +1751,6 @@ class DataObjectTest extends SapphireTest {
 		$staff->Salary = PHP_INT_MAX;
 		$staff->write();
 		$this->assertEquals(PHP_INT_MAX, DataObjectTest\Staff::get()->byID($staff->ID)->Salary);
-	}
+}
 
 }

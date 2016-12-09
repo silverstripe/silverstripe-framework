@@ -54,7 +54,7 @@ class OptionsetFieldTest extends SapphireTest {
 		$this->assertTrue($field->validate($validator));
 
 		// ... but should not pass "RequiredFields" validation
-		$this->assertFalse($form->validate());
+		$this->assertFalse($form->validationResult()->isValid());
 
 		//disabled items shouldn't validate
 		$field->setDisabledItems(array('Five'));

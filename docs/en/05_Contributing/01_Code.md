@@ -84,9 +84,9 @@ Each release is labeled in the format `$MAJOR`.`$MINOR`.`$PATCH`. For example, 3
 
 * `$MAJOR` version is incremented if any backwards incompatible changes are introduced to the public API. 
 * `$MINOR` version is incremented if new, backwards compatible **functionality** is introduced to the public API or 
-	improvements are introduced within the private code. 
+  improvements are introduced within the private code. 
 * `$PATCH` version is incremented if only backwards compatible **bug fixes** are introduced. A bug fix is defined as 
-	an internal change that fixes incorrect behavior.
+  an internal change that fixes incorrect behavior.
 
 **Public API** refers to any aspect of the system that has been designed to be used by SilverStripe modules & site developers. In SilverStripe 3, because we haven't been clear, in principle we have to treat every public or protected method as *potentially* part of the public API, but sometimes it comes to a judgement call about how likely it is that a given method will have been used in a particular way. If we were strict about never changing publicly exposed behaviour, it would be difficult to fix any bug whatsoever, which isn't in the interests of our user community.
 

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\Tests;
 
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Object;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Control\Cookie;
@@ -131,7 +132,7 @@ class MemberTest extends FunctionalTest {
 			'sha1_v2.4'
 		);
 		$result = $member->checkPassword('mynewpassword');
-		$this->assertTrue($result->valid());
+		$this->assertTrue($result->isValid());
 
 		Security::config()->password_encryption_algorithm = $origAlgo;
 	}
@@ -150,7 +151,7 @@ class MemberTest extends FunctionalTest {
 			'sha1_v2.4'
 		);
 		$result = $member->checkPassword('');
-		$this->assertTrue($result->valid());
+		$this->assertTrue($result->isValid());
 	}
 
 	public function testSetPassword() {
@@ -158,7 +159,7 @@ class MemberTest extends FunctionalTest {
 		$member->Password = "test1";
 		$member->write();
 		$result = $member->checkPassword('test1');
-		$this->assertTrue($result->valid());
+		$this->assertTrue($result->isValid());
 	}
 
 	/**
@@ -212,7 +213,7 @@ class MemberTest extends FunctionalTest {
 		$member = $this->objFromFixture(Member::class, 'test');
 		$this->assertNotNull($member);
 		$valid = $member->changePassword('32asDF##$$%%');
-		$this->assertTrue($valid->valid());
+		$this->assertTrue($valid->isValid());
 
 		$this->assertEmailSent('testuser@example.com', null, 'Your password has been changed',
 			'/testuser@example\.com/');
@@ -250,80 +251,81 @@ class MemberTest extends FunctionalTest {
 	 *  - at least 7 characters long
 	 */
 	public function testValidatePassword() {
-		$member = $this->objFromFixture(Member::class, 'test');
+        /** @var Member $member */
+        $member = $this->objFromFixture(Member::class, 'test');
 		$this->assertNotNull($member);
 
 		Member::set_password_validator(new MemberTest\TestPasswordValidator());
 
 		// BAD PASSWORDS
 
-		$valid = $member->changePassword('shorty');
-		$this->assertFalse($valid->valid());
-		$this->assertContains("TOO_SHORT", $valid->codeList());
+		$result = $member->changePassword('shorty');
+		$this->assertFalse($result->isValid());
+		$this->assertArrayHasKey("TOO_SHORT", $result->getMessages());
 
-		$valid = $member->changePassword('longone');
-		$this->assertNotContains("TOO_SHORT", $valid->codeList());
-		$this->assertContains("LOW_CHARACTER_STRENGTH", $valid->codeList());
-		$this->assertFalse($valid->valid());
+		$result = $member->changePassword('longone');
+		$this->assertArrayNotHasKey("TOO_SHORT", $result->getMessages());
+		$this->assertArrayHasKey("LOW_CHARACTER_STRENGTH", $result->getMessages());
+		$this->assertFalse($result->isValid());
 
-		$valid = $member->changePassword('w1thNumb3rs');
-		$this->assertNotContains("LOW_CHARACTER_STRENGTH", $valid->codeList());
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('w1thNumb3rs');
+		$this->assertArrayNotHasKey("LOW_CHARACTER_STRENGTH", $result->getMessages());
+		$this->assertTrue($result->isValid());
 
 		// Clear out the MemberPassword table to ensure that the system functions properly in that situation
 		DB::query("DELETE FROM \"MemberPassword\"");
 
 		// GOOD PASSWORDS
 
-		$valid = $member->changePassword('withSym###Ls');
-		$this->assertNotContains("LOW_CHARACTER_STRENGTH", $valid->codeList());
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls');
+		$this->assertArrayNotHasKey("LOW_CHARACTER_STRENGTH", $result->getMessages());
+		$this->assertTrue($result->isValid());
 
-		$valid = $member->changePassword('withSym###Ls2');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls2');
+		$this->assertTrue($result->isValid());
 
-		$valid = $member->changePassword('withSym###Ls3');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls3');
+		$this->assertTrue($result->isValid());
 
-		$valid = $member->changePassword('withSym###Ls4');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls4');
+		$this->assertTrue($result->isValid());
 
-		$valid = $member->changePassword('withSym###Ls5');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls5');
+		$this->assertTrue($result->isValid());
 
-		$valid = $member->changePassword('withSym###Ls6');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls6');
+		$this->assertTrue($result->isValid());
 
-		$valid = $member->changePassword('withSym###Ls7');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls7');
+		$this->assertTrue($result->isValid());
 
 		// CAN'T USE PASSWORDS 2-7, but I can use pasword 1
 
-		$valid = $member->changePassword('withSym###Ls2');
-		$this->assertFalse($valid->valid());
-		$this->assertContains("PREVIOUS_PASSWORD", $valid->codeList());
+		$result = $member->changePassword('withSym###Ls2');
+		$this->assertFalse($result->isValid());
+		$this->assertArrayHasKey("PREVIOUS_PASSWORD", $result->getMessages());
 
-		$valid = $member->changePassword('withSym###Ls5');
-		$this->assertFalse($valid->valid());
-		$this->assertContains("PREVIOUS_PASSWORD", $valid->codeList());
+		$result = $member->changePassword('withSym###Ls5');
+		$this->assertFalse($result->isValid());
+		$this->assertArrayHasKey("PREVIOUS_PASSWORD", $result->getMessages());
 
-		$valid = $member->changePassword('withSym###Ls7');
-		$this->assertFalse($valid->valid());
-		$this->assertContains("PREVIOUS_PASSWORD", $valid->codeList());
+		$result = $member->changePassword('withSym###Ls7');
+		$this->assertFalse($result->isValid());
+		$this->assertArrayHasKey("PREVIOUS_PASSWORD", $result->getMessages());
 
-		$valid = $member->changePassword('withSym###Ls');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls');
+		$this->assertTrue($result->isValid());
 
 		// HAVING DONE THAT, PASSWORD 2 is now available from the list
 
-		$valid = $member->changePassword('withSym###Ls2');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls2');
+		$this->assertTrue($result->isValid());
 
-		$valid = $member->changePassword('withSym###Ls3');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls3');
+		$this->assertTrue($result->isValid());
 
-		$valid = $member->changePassword('withSym###Ls4');
-		$this->assertTrue($valid->valid());
+		$result = $member->changePassword('withSym###Ls4');
+		$this->assertTrue($result->isValid());
 
 		Member::set_password_validator(null);
 	}
@@ -337,14 +339,14 @@ class MemberTest extends FunctionalTest {
 		$member = $this->objFromFixture(Member::class, 'test');
 		$this->assertNotNull($member);
 		$valid = $member->changePassword("Xx?1234234");
-		$this->assertTrue($valid->valid());
+		$this->assertTrue($valid->isValid());
 
 		$expiryDate = date('Y-m-d', time() + 90*86400);
 		$this->assertEquals($expiryDate, $member->PasswordExpiry);
 
 		Member::config()->password_expiry_days = null;
 		$valid = $member->changePassword("Xx?1234235");
-		$this->assertTrue($valid->valid());
+		$this->assertTrue($valid->isValid());
 
 		$this->assertNull($member->PasswordExpiry);
 	}
@@ -870,11 +872,11 @@ class MemberTest extends FunctionalTest {
 				'alc_device' => $firstHash->DeviceID
 			)
 		);
-		$message = _t(
+		$message = Convert::raw2xml(_t(
 			'Member.LOGGEDINAS',
 			"You're logged in as {name}.",
 			array('name' => $m1->FirstName)
-		);
+		));
 		$this->assertContains($message, $response->getBody());
 
 		$this->session()->inst_set('loggedInAs', null);
@@ -924,9 +926,9 @@ class MemberTest extends FunctionalTest {
 	}
 
 	public function testExpiredRememberMeHashAutologin() {
+		/** @var Member $m1 */
 		$m1 = $this->objFromFixture(Member::class, 'noexpiry');
-
-		$m1->login(true);
+		$m1->logIn(true);
 		$firstHash = RememberLoginHash::get()->filter('MemberID', $m1->ID)->first();
 		$this->assertNotNull($firstHash);
 
@@ -936,7 +938,7 @@ class MemberTest extends FunctionalTest {
 		$firstHash->ExpiryDate = '2000-01-01 00:00:00';
 		$firstHash->write();
 
-		DBDateTime::set_mock_now('1999-12-31 23:59:59');
+		DBDatetime::set_mock_now('1999-12-31 23:59:59');
 
 		$response = $this->get(
 			'Security/login',
@@ -947,11 +949,11 @@ class MemberTest extends FunctionalTest {
 				'alc_device' => $firstHash->DeviceID
 			)
 		);
-		$message = _t(
+		$message = Convert::raw2xml(_t(
 			'Member.LOGGEDINAS',
 			"You're logged in as {name}.",
 			array('name' => $m1->FirstName)
-		);
+		));
 		$this->assertContains($message, $response->getBody());
 
 		$this->session()->inst_set('loggedInAs', null);
@@ -1017,11 +1019,11 @@ class MemberTest extends FunctionalTest {
 				'alc_device' => $firstHash->DeviceID
 			)
 		);
-		$message = _t(
+		$message = Convert::raw2xml(_t(
 			'Member.LOGGEDINAS',
 			"You're logged in as {name}.",
 			array('name' => $m1->FirstName)
-		);
+		));
 		$this->assertContains($message, $response->getBody());
 
 		$this->session()->inst_set('loggedInAs', null);

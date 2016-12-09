@@ -3,6 +3,8 @@
 namespace SilverStripe\ORM;
 
 use Exception;
+use InvalidArgumentException;
+use SilverStripe\Core\Injector\Injectable;
 
 /**
  * Exception thrown by {@link DataObject}::write if validation fails. By throwing an
@@ -11,6 +13,7 @@ use Exception;
  */
 class ValidationException extends Exception
 {
+    use Injectable;
 
     /**
      * The contained ValidationResult related to this error
@@ -23,32 +26,40 @@ class ValidationException extends Exception
      * Construct a new ValidationException with an optional ValidationResult object
      *
      * @param ValidationResult|string $result The ValidationResult containing the
-     * failed result. Can be substituted with an error message instead if no
-     * ValidationResult exists.
-     * @param string|integer $message The error message. If $result was given the
-     * message string rather than a ValidationResult object then this will have
-     * the error code number.
-     * @param integer $code The error code number, if not given in the second parameter
+     * failed result, or error message to build error from
+     * @param integer $code The error code number
      */
-    public function __construct($result = null, $message = null, $code = 0)
+    public function __construct($result = null, $code = 0)
     {
-
-        // Check arguments
-        if (!($result instanceof ValidationResult)) {
-            // Shift parameters if no ValidationResult is given
-            $code = $message;
-            $message = $result;
-
-            // Infer ValidationResult from parameters
-            $result = new ValidationResult(false, $message);
-        } elseif (empty($message)) {
-            // Infer message if not given
-            $message = $result->message();
+        // Catch legacy behaviour where second argument was not code
+        if ($code && !is_numeric($code)) {
+            throw new InvalidArgumentException("Code must be numeric");
         }
 
-        // Construct
-        $this->result = $result;
-        parent::__construct($message, $code);
+        // Set default message and result
+        $exceptionMessage = _t("ValidationException.DEFAULT_ERROR", "Validation error");
+        if (!$result) {
+            $result = $exceptionMessage;
+        }
+
+        // Check result type
+        if ($result instanceof ValidationResult) {
+            $this->result = $result;
+            // Pick first message
+            foreach ($result->getMessages() as $message) {
+                $exceptionMessage = $message['message'];
+                break;
+            }
+        } elseif (is_string($result)) {
+            $this->result = ValidationResult::create()->addError($result);
+            $exceptionMessage = $result;
+        } else {
+            throw new InvalidArgumentException(
+                "ValidationExceptions must be passed a ValdiationResult, a string, or nothing at all"
+            );
+        }
+
+        parent::__construct($exceptionMessage, $code);
     }
 
     /**

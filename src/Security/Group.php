@@ -428,7 +428,7 @@ class Group extends DataObject
                 ->column('Code');
             $privilegedCodes = Config::inst()->get('SilverStripe\\Security\\Permission', 'privileged_permissions');
             if (array_intersect($inheritedCodes, $privilegedCodes)) {
-                $result->error(sprintf(
+                $result->addError(sprintf(
                     _t(
                         'Group.HierarchyPermsError',
                         'Can\'t assign parent group "%s" with privileged permissions (requires ADMIN access)'

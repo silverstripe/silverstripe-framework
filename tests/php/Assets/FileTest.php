@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Assets\Tests;
 
+use SilverStripe\Assets\Image;
 use SilverStripe\Assets\Storage\AssetStore;
 use SilverStripe\Assets\Tests\FileTest\MyCustomFile;
 use SilverStripe\ORM\ValidationException;
@@ -178,22 +179,21 @@ class FileTest extends SapphireTest {
 
 		// Invalid ext
 		$file->Name = 'asdf.php';
-		$v = $file->validate();
-		$this->assertFalse($v->valid());
-		$this->assertContains('Extension is not allowed', $v->message());
+		$result = $file->validate();
+		$this->assertFalse($result->isValid());
+        $messages = $result->getMessages();
+        $this->assertEquals(1, count($messages));
+		$this->assertEquals('Extension is not allowed', $messages[0]['message']);
 
 		// Valid ext
 		$file->Name = 'asdf.txt';
-		$v = $file->validate();
-		$this->assertTrue($v->valid());
+		$result = $file->validate();
+		$this->assertTrue($result->isValid());
 
 		// Capital extension is valid as well
 		$file->Name = 'asdf.TXT';
-		$v = $file->validate();
-		$this->assertTrue($v->valid());
-
-		Config::inst()->remove(File::class, 'allowed_extensions');
-		Config::inst()->update(File::class, 'allowed_extensions', $orig);
+		$result = $file->validate();
+		$this->assertTrue($result->isValid());
 	}
 
 	public function testAppCategory() {
@@ -372,7 +372,7 @@ class FileTest extends SapphireTest {
 
 	public function testNameAndTitleGeneration() {
 		// When name is assigned, title is automatically assigned
-		$file = $this->objFromFixture('SilverStripe\\Assets\\Image', 'setfromname');
+		$file = $this->objFromFixture(Image::class, 'setfromname');
 		$this->assertEquals('FileTest', $file->Title);
 	}
 
@@ -386,13 +386,13 @@ class FileTest extends SapphireTest {
 	}
 
 	public function testFileType() {
-		$file = $this->objFromFixture('SilverStripe\\Assets\\Image', 'gif');
+		$file = $this->objFromFixture(Image::class, 'gif');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
 
 		$file = $this->objFromFixture(File::class, 'pdf');
 		$this->assertEquals("Adobe Acrobat PDF file", $file->FileType);
 
-		$file = $this->objFromFixture('SilverStripe\\Assets\\Image', 'gifupper');
+		$file = $this->objFromFixture(Image::class, 'gifupper');
 		$this->assertEquals("GIF image - good for diagrams", $file->FileType);
 
 		/* Only a few file types are given special descriptions; the rest are unknown */
@@ -450,7 +450,7 @@ class FileTest extends SapphireTest {
 		$newTitle = "FileTest-folder-renamed";
 
 		//rename a folder's title
-		$folderID = $this->objFromFixture("SilverStripe\\Assets\\Folder","folder2")->ID;
+		$folderID = $this->objFromFixture(Folder::class,"folder2")->ID;
 		$folder = DataObject::get_by_id(Folder::class,$folderID);
 		$folder->Title = $newTitle;
 		$folder->write();
@@ -508,30 +508,30 @@ class FileTest extends SapphireTest {
 	}
 
 	public function testCanEdit() {
-		$file = $this->objFromFixture('SilverStripe\\Assets\\Image', 'gif');
+		$file = $this->objFromFixture(Image::class, 'gif');
 
 		// Test anonymous permissions
 		Session::set('loggedInAs', null);
 		$this->assertFalse($file->canEdit(), "Anonymous users can't edit files");
 
 		// Test permissionless user
-		$this->objFromFixture('SilverStripe\\Security\\Member', 'frontend')->logIn();
+		$this->objFromFixture(Member::class, 'frontend')->logIn();
 		$this->assertFalse($file->canEdit(), "Permissionless users can't edit files");
 
 		// Test global CMS section users
-		$this->objFromFixture('SilverStripe\\Security\\Member', 'cms')->logIn();
+		$this->objFromFixture(Member::class, 'cms')->logIn();
 		$this->assertTrue($file->canEdit(), "Users with all CMS section access can edit files");
 
 		// Test cms access users without file access
-		$this->objFromFixture('SilverStripe\\Security\\Member', 'security')->logIn();
+		$this->objFromFixture(Member::class, 'security')->logIn();
 		$this->assertFalse($file->canEdit(), "Security CMS users can't edit files");
 
 		// Test asset-admin user
-		$this->objFromFixture('SilverStripe\\Security\\Member', 'assetadmin')->logIn();
+		$this->objFromFixture(Member::class, 'assetadmin')->logIn();
 		$this->assertTrue($file->canEdit(), "Asset admin users can edit files");
 
 		// Test admin
-		$this->objFromFixture('SilverStripe\\Security\\Member', 'admin')->logIn();
+		$this->objFromFixture(Member::class, 'admin')->logIn();
 		$this->assertTrue($file->canEdit(), "Admins can edit files");
 	}
 

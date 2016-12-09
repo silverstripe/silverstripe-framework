@@ -4,6 +4,7 @@ namespace SilverStripe\Security\Tests;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\PasswordEncryptor;
 use SilverStripe\Security\PasswordEncryptor_PHPHash;
 use SilverStripe\Security\Security;
@@ -53,10 +54,11 @@ class MemberAuthenticatorTest extends SapphireTest {
 		);
 		MemberAuthenticator::authenticate($data);
 
-		$member = DataObject::get_by_id(Member::class, $member->ID);
+        /** @var Member $member */
+        $member = DataObject::get_by_id(Member::class, $member->ID);
 		$this->assertEquals($member->PasswordEncryption, "sha1_v2.4");
 		$result = $member->checkPassword('mypassword');
-		$this->assertTrue($result->valid());
+		$this->assertTrue($result->isValid());
 	}
 
 	public function testNoLegacyPasswordHashMigrationOnIncompatibleAlgorithm() {
@@ -82,7 +84,7 @@ class MemberAuthenticatorTest extends SapphireTest {
 		$member = DataObject::get_by_id(Member::class, $member->ID);
 		$this->assertEquals($member->PasswordEncryption, "crc32");
 		$result = $member->checkPassword('mypassword');
-		$this->assertTrue($result->valid());
+		$this->assertTrue($result->isValid());
 	}
 
 	public function testCustomIdentifierField(){
@@ -139,9 +141,10 @@ class MemberAuthenticatorTest extends SapphireTest {
 			'tempid' => $tempID,
 			'Password' => 'mypassword'
 		), $form);
+		$form->restoreFormState();
 		$this->assertNotEmpty($result);
 		$this->assertEquals($result->ID, $member->ID);
-		$this->assertEmpty($form->Message());
+		$this->assertEmpty($form->getMessage());
 
 		// Test incorrect login
 		$form->clearMessage();
@@ -149,9 +152,11 @@ class MemberAuthenticatorTest extends SapphireTest {
 			'tempid' => $tempID,
 			'Password' => 'notmypassword'
 		), $form);
+		$form->restoreFormState();
 		$this->assertEmpty($result);
-		$this->assertEquals('The provided details don&#039;t seem to be correct. Please try again.', $form->Message());
-		$this->assertEquals('bad', $form->MessageType());
+		$this->assertEquals(_t('Member.ERRORWRONGCRED'), $form->getMessage());
+		$this->assertEquals(ValidationResult::TYPE_ERROR, $form->getMessageType());
+        $this->assertEquals(ValidationResult::CAST_TEXT, $form->getMessageCast());
 	}
 
 	/**
@@ -168,9 +173,10 @@ class MemberAuthenticatorTest extends SapphireTest {
 			'Email' => 'admin',
 			'Password' => 'password'
 		), $form);
+		$form->restoreFormState();
 		$this->assertNotEmpty($result);
 		$this->assertEquals($result->Email, Security::default_admin_username());
-		$this->assertEmpty($form->Message());
+		$this->assertEmpty($form->getMessage());
 
 		// Test incorrect login
 		$form->clearMessage();
@@ -178,9 +184,14 @@ class MemberAuthenticatorTest extends SapphireTest {
 			'Email' => 'admin',
 			'Password' => 'notmypassword'
 		), $form);
+		$form->restoreFormState();
 		$this->assertEmpty($result);
-		$this->assertEquals('The provided details don&#039;t seem to be correct. Please try again.', $form->Message());
-		$this->assertEquals('bad', $form->MessageType());
+		$this->assertEquals(
+		    'The provided details don\'t seem to be correct. Please try again.',
+            $form->getMessage()
+        );
+		$this->assertEquals(ValidationResult::TYPE_ERROR, $form->getMessageType());
+        $this->assertEquals(ValidationResult::CAST_TEXT, $form->getMessageCast());
 	}
 
 	public function testDefaultAdminLockOut()

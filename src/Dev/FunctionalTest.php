@@ -261,10 +261,10 @@ class FunctionalTest extends SapphireTest
      *
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of at least one of the matched tags
+     * @param string $message
      * @throws PHPUnit_Framework_AssertionFailedError
-     * @return boolean
      */
-    public function assertPartialMatchBySelector($selector, $expectedMatches)
+    public function assertPartialMatchBySelector($selector, $expectedMatches, $message = null)
     {
         if (is_string($expectedMatches)) {
             $expectedMatches = array($expectedMatches);
@@ -275,21 +275,18 @@ class FunctionalTest extends SapphireTest
         $actuals = array();
         if ($items) {
             foreach ($items as $item) {
-                $actuals[trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''))] = true;
+                $actuals[trim(preg_replace('/\s+/', ' ', (string)$item))] = true;
             }
         }
 
-        foreach ($expectedMatches as $match) {
-            $this->assertTrue(
-                isset($actuals[$match]),
-                "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
-                . implode("'\n'", $expectedMatches) . "'\n\n"
-                    . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
-            );
-            return false;
-        }
+        $message = $message ?:
+        "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
+            . implode("'\n'", $expectedMatches) . "'\n\n"
+            . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'";
 
-        return true;
+        foreach ($expectedMatches as $match) {
+            $this->assertTrue(isset($actuals[$match]), $message);
+        }
     }
 
     /**
@@ -301,10 +298,10 @@ class FunctionalTest extends SapphireTest
      *
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of *all* matching tags as an array
+     * @param string $message
      * @throws PHPUnit_Framework_AssertionFailedError
-     * @return boolean
      */
-    public function assertExactMatchBySelector($selector, $expectedMatches)
+    public function assertExactMatchBySelector($selector, $expectedMatches, $message = null)
     {
         if (is_string($expectedMatches)) {
             $expectedMatches = array($expectedMatches);
@@ -315,18 +312,16 @@ class FunctionalTest extends SapphireTest
         $actuals = array();
         if ($items) {
             foreach ($items as $item) {
-                $actuals[] = trim(preg_replace("/[ \n\r\t]+/", " ", $item. ''));
+                $actuals[] = trim(preg_replace('/\s+/', ' ', (string)$item));
             }
         }
 
-        $this->assertTrue(
-            $expectedMatches == $actuals,
-            "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
+        $message = $message ?:
+                "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
                 . implode("'\n'", $expectedMatches) . "'\n\n"
-                . "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
-        );
+            . "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'";
 
-        return true;
+        $this->assertTrue($expectedMatches == $actuals, $message);
     }
 
     /**
@@ -338,10 +333,10 @@ class FunctionalTest extends SapphireTest
      *
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of at least one of the matched tags
+     * @param string $message
      * @throws PHPUnit_Framework_AssertionFailedError
-     * @return boolean
      */
-    public function assertPartialHTMLMatchBySelector($selector, $expectedMatches)
+    public function assertPartialHTMLMatchBySelector($selector, $expectedMatches, $message = null)
     {
         if (is_string($expectedMatches)) {
             $expectedMatches = array($expectedMatches);
@@ -357,16 +352,14 @@ class FunctionalTest extends SapphireTest
             }
         }
 
-        foreach ($expectedMatches as $match) {
-            $this->assertTrue(
-                isset($actuals[$match]),
+        $message = $message ?:
                 "Failed asserting the CSS selector '$selector' has a partial match to the expected elements:\n'"
                 . implode("'\n'", $expectedMatches) . "'\n\n"
-                . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'"
-            );
-        }
+            . "Instead the following elements were found:\n'" . implode("'\n'", array_keys($actuals)) . "'";
 
-        return true;
+        foreach ($expectedMatches as $match) {
+            $this->assertTrue(isset($actuals[$match]), $message);
+        }
     }
 
     /**
@@ -378,9 +371,10 @@ class FunctionalTest extends SapphireTest
      *
      * @param string $selector A basic CSS selector, e.g. 'li.jobs h3'
      * @param array|string $expectedMatches The content of *all* matched tags as an array
+     * @param string $message
      * @throws PHPUnit_Framework_AssertionFailedError
      */
-    public function assertExactHTMLMatchBySelector($selector, $expectedMatches)
+    public function assertExactHTMLMatchBySelector($selector, $expectedMatches, $message = null)
     {
         $items = $this->cssParser()->getBySelector($selector);
 
@@ -392,12 +386,12 @@ class FunctionalTest extends SapphireTest
             }
         }
 
-        $this->assertTrue(
-            $expectedMatches == $actuals,
+        $message = $message ?:
             "Failed asserting the CSS selector '$selector' has an exact match to the expected elements:\n'"
             . implode("'\n'", $expectedMatches) . "'\n\n"
-            . "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'"
-        );
+            . "Instead the following elements were found:\n'" . implode("'\n'", $actuals) . "'";
+
+        $this->assertTrue($expectedMatches == $actuals, $message);
     }
 
     /**

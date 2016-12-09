@@ -81,9 +81,9 @@ class MemberAuthenticator extends Authenticator
         // Validate against member if possible
         if ($member && !$asDefaultAdmin) {
             $result = $member->checkPassword($data['Password']);
-            $success = $result->valid();
+            $success = $result->isValid();
         } else {
-            $result = new ValidationResult(false, _t('Member.ERRORWRONGCRED'));
+            $result = ValidationResult::create()->addError(_t('Member.ERRORWRONGCRED'));
         }
 
         // Emit failure to member and form (if available)
@@ -92,7 +92,7 @@ class MemberAuthenticator extends Authenticator
                 $member->registerFailedLogin();
             }
             if ($form) {
-                $form->sessionMessage($result->message(), 'bad');
+                $form->setSessionValidationResult($result, true);
             }
         } else {
             if ($member) {

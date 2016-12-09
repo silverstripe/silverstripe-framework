@@ -8,6 +8,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
@@ -16,6 +17,7 @@ use SilverStripe\Forms\PasswordField;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\RequiredFields;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\Requirements;
 
 /**
@@ -160,19 +162,18 @@ JS;
         Requirements::customScript($js, 'MemberLoginFormFieldFocus');
     }
 
-    /**
-     * Get message from session
-     */
-    protected function getMessageFromSession()
+    public function restoreFormState()
     {
+        parent::restoreFormState();
 
         $forceMessage = Session::get('MemberLoginForm.force_message');
         if (($member = Member::currentUser()) && !$forceMessage) {
-            $this->message = _t(
+            $message = _t(
                 'Member.LOGGEDINAS',
                 "You're logged in as {name}.",
                 array('name' => $member->{$this->loggedInAsField})
             );
+            $this->setMessage($message, ValidationResult::TYPE_INFO);
         }
 
         // Reset forced message
@@ -180,7 +181,7 @@ JS;
             Session::set('MemberLoginForm.force_message', false);
         }
 
-        return parent::getMessageFromSession();
+        return $this;
     }
 
 
@@ -283,11 +284,8 @@ JS;
                 $member->logIn();
             }
 
-            Session::set(
-                'Security.Message.message',
-                _t('Member.WELCOMEBACK', "Welcome Back, {firstname}", array('firstname' => $firstname))
-            );
-            Session::set("Security.Message.type", "good");
+            $message = _t('Member.WELCOMEBACK', "Welcome Back, {firstname}", array('firstname' => $firstname));
+            Security::setLoginMessage($message, ValidationResult::TYPE_GOOD);
         }
         return Controller::curr()->redirectBack();
     }
