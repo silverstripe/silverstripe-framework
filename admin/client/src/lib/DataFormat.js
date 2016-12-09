@@ -1,3 +1,4 @@
+import i18n from 'i18n';
 import QueryString from 'query-string';
 
 export function urlQuery(location, newQuery) {
@@ -17,20 +18,32 @@ export function urlQuery(location, newQuery) {
 }
 
 export function fileSize(size) {
+  let number = null;
+  let metric = '';
+
   if (size < 1024) {
-    return `${size} bytes`;
+    number = size;
+    metric = 'bytes';
+  } else if (size < 1024 * 10) {
+    number = Math.round(size / 1024 * 10) / 10;
+    metric = 'KB';
+  } else if (size < 1024 * 1024) {
+    number = Math.round(size / 1024);
+    metric = 'KB';
+  } else if (size < 1024 * 1024 * 10) {
+    number = Math.round(size / 1024 * 1024 * 10) / 10;
+    metric = 'MB';
+  } else if (size < 1024 * 1024 * 1024) {
+    number = Math.round(size / 1024 * 1024);
+    metric = 'MB';
   }
-  if (size < 1024 * 10) {
-    return `${Math.round(size / 1024 * 10) / 10} KB`;
+  if (!number || !metric) {
+    number = Math.round(size / (1024 * 1024 * 1024) * 10) / 10;
+    metric = 'GB';
   }
-  if (size < 1024 * 1024) {
-    return `${Math.round(size / 1024)} KB`;
+
+  if (isNaN(number)) {
+    return i18n._t('File.NO_SIZE', 'N/A');
   }
-  if (size < 1024 * 1024 * 10) {
-    return `${Math.round((size / 1024) / 1024 * 10) / 10} MB`;
-  }
-  if (size < 1024 * 1024 * 1024) {
-    return `${Math.round((size / 1024) / 1024)} MB`;
-  }
-  return `${Math.round(size / (1024 * 1024 * 1024) * 10) / 10} GB`;
+  return `${number} ${metric}`;
 }
