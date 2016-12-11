@@ -21,6 +21,11 @@ as well as the [AirBnB React Conventions](https://github.com/airbnb/javascript/t
 A lot of their rules can be validated via [ESLint](http://eslint.org/),
 and can be checked locally via `npm run lint`.
 
+## Spelling
+
+All symbols and documentation should use UK-English spelling (e.g. "behaviour" instead of "behavior"),
+except when necessitated by third party conventions (e.g using "color" for CSS styles).
+
 ## File and Folder Naming
 
 - All frontend files (CSS, JavaScript, images) should be placed in
