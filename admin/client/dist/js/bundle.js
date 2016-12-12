@@ -2162,7 +2162,7 @@ var e={},t=(0,l.combineReducers)(g["default"].getAll()),n=[c["default"]],i=h["de
 var p=o(l.createStore),m=p(t,e)
 m.dispatch(y.setConfig(h["default"].getAll())),window.ss=window.ss||{},window.ss.store=m
 var v=new s["default"](m)
-v.start(window.location.pathname)}var a=n(204),s=r(a),l=n(108),u=n(226),c=r(u),d=n(110),f=n(225),p=n(146),h=r(p),m=n(227),g=r(m),v=n(228),y=i(v),b=n(230),_=r(b),w=n(231),C=r(w),T=n(232),E=r(T),P=n(233),O=r(P),S=n(235),k=r(S),j=n(236),x=r(j),R=n(252),I=r(R),A=n(10),D=r(A)
+v.start(window.location.pathname),window.jQuery("body").addClass("react-boot")}var a=n(204),s=r(a),l=n(108),u=n(226),c=r(u),d=n(110),f=n(225),p=n(146),h=r(p),m=n(227),g=r(m),v=n(228),y=i(v),b=n(230),_=r(b),w=n(231),C=r(w),T=n(232),E=r(T),P=n(233),O=r(P),S=n(235),k=r(S),j=n(236),x=r(j),R=n(252),I=r(R),A=n(10),D=r(A)
 
 
 D["default"].polyfill(),window.onload=o},function(e,t,n){"use strict"
