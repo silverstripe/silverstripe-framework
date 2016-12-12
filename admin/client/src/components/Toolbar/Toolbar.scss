@@ -42,6 +42,15 @@
   .btn {
     margin-bottom: 0;
   }
+
+  // If the first button isn't a btn with BG the icon should align with margin
+  .btn-toolbar > {
+    .btn-secondary:first-child,
+    .grid-csv-button:first-child,
+    .grid-print-button:first-child {
+      margin-left: -5px;
+    }
+  }
 }
 
 // Secondary content actions eg. Add page button
@@ -49,13 +58,9 @@
   margin-top: -$panel-padding-y;
   margin-left: -$panel-padding-x;
   margin-right: -$panel-padding-x;
-  padding: $spacer-xs;
+  padding-top: $spacer-xs;
+  padding-bottom: $spacer-xs;
   min-height: auto;
-
-  &.ss-gridfield-buttonrow {
-    padding-top: 0;
-    margin-top: 0;
-  }
 
   @include media-breakpoint-down(md) {
 

@@ -831,14 +831,12 @@ body.cms {
 .message {                        // White
   display: block;
   clear: both;
-  margin: 0 0 $spacer-y;
-  padding: $grid-y + $grid-x/4 $grid-x + $grid-x/2;
-  font-weight: normal;
-  border: 1px #ccc solid;
+  margin-bottom: $spacer-y;
+  padding: $alert-padding;
+  border: $alert-border-width solid #ccc;
   background: #fff;                 // for browsers that don't understand rgba
   background: rgba(#fff,0.5);
-  text-shadow: none;
-  border-radius: 3px;
+  @include border-radius($alert-border-radius);
 
 	.panel--padded > & {
 		margin-bottom: $grid-gutter-width-half;
@@ -861,8 +859,13 @@ body.cms {
 		border-color: $color-good;
 	}
 
-  p {
-    margin: 0;
+  // Improve alignment and spacing of inner content
+  > p,
+  > ul {
+    margin-bottom: 0;
+  }
+  > p + p {
+    margin-top: 5px;
   }
 }
 
@@ -1045,12 +1048,8 @@ body.cms {
   }
 }
 
-.ui-widget-content a {
-  color: $link-color;
-
-  &.btn-primary {
-    color: #fff;
-  }
+.ui-widget-content a.btn-primary {
+  color: $white;
 }
 
 /**
@@ -1262,9 +1261,17 @@ body.cms {
     border-top-right-radius: 0;
   }
 
-  .btn-toolbar {
-    position: absolute;
-    right: 0;
+  .toolbar & {
+    .btn-toolbar {
+      position: absolute;
+      right: 0;
+      margin-left: 0;
+      margin-right: 0;
+
+      > btn {
+        margin-left: 0;
+      }
+    }
   }
 
   .action,

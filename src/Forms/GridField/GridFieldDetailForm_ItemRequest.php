@@ -294,7 +294,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             if ($canDelete) {
                 $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
                     ->setUseButtonTag(true)
-                    ->addExtraClass('btn-secondary action-delete'));
+                    ->addExtraClass('btn-danger-outline btn-hide-outline font-icon-trash action-delete'));
             }
         } else { // adding new record
             //Change the Save label to 'Create'
@@ -308,7 +308,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                 $oneLevelUp = $crumbs->offsetGet($crumbs->count() - 2);
                 $text = sprintf(
                     "<a class=\"%s\" href=\"%s\">%s</a>",
-                    "crumb btn btn-secondary font-icon-trash cms-panel-link", // CSS classes
+                    "crumb btn btn-secondary cms-panel-link", // CSS classes
                     $oneLevelUp->Link, // url
                     _t('GridFieldDetailForm.CancelBtn', 'Cancel') // label
                 );

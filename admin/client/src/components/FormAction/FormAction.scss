@@ -185,6 +185,11 @@
   }
 }
 
+// For secondary type actions without border
+.btn-hide-outline {
+  border-color: transparent;
+}
+
 
 // Grouped buttons
 .btn-group {
@@ -235,4 +240,9 @@ button.close {
   &::before {
     color: $body-color-light;
   }
+}
+
+// Main Save & Publish actions for edit page
+.btn-secondary-outline.font-icon-check-mark {
+  color: green;
 }

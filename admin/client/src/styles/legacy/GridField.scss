@@ -265,31 +265,29 @@
             color: #444 !important; /* Not sure why IE think it needs this */
           }
 
-          &.ss-ui-button {
-            &.ss-gridfield-button-close,
-            &.ss-gridfield-button-filter:not(.trigger) {
-              &.hover-alike:active,
-              &:active,
-              &.hover-alike,
-              &:hover {
-                color: $white;
-              }
+          &.ss-gridfield-button-close,
+          &.ss-gridfield-button-filter:not(.trigger) {
+            &.hover-alike:active,
+            &:active,
+            &.hover-alike,
+            &:hover {
+              color: $white;
+            }
+          }
+
+          &.ss-gridfield-button-reset {
+            margin: 0;
+            display: none;
+
+            &:hover,
+            &:active {
+              opacity: 1;
+              background: transparent;
             }
 
-            &.ss-gridfield-button-reset {
-              margin: 0;
-              display: none;
-
-              &:hover,
-              &:active {
-                opacity: 1;
-                background: transparent;
-              }
-
-              &.filtered {
-                display: block;
-                opacity: 0.8;
-              }
+            &.filtered {
+              display: block;
+              opacity: 0.8;
             }
           }
         }
@@ -370,6 +368,25 @@
 
     &.ssui-button-disabled {
       opacity: 0;
+    }
+  }
+}
+
+.grid-field {
+
+  // If gridfield isn't first thing on page
+  .form-group + & {
+    .toolbar--content {
+      margin-top: 0;
+    }
+  }
+
+  .ss-gridfield-buttonrow-after {
+    margin-top: 0;
+
+    .grid-csv-button:first-child,
+    .grid-print-button:first-child {
+      margin-left: -5px;
     }
   }
 }

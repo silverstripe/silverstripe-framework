@@ -314,7 +314,7 @@ $btn-complete-shadow: darken($btn-primary-bg, 6%);
 
 $btn-danger-color: $white;
 $btn-danger-bg: $brand-danger;
-$btn-danger-border: $brand-danger;
+$btn-danger-border: lighten($brand-danger, 10%);
 
 // $btn-link-disabled-color: $gray-light;
 //
@@ -514,7 +514,7 @@ $nav-tabs-active-link-hover-border-color: $body-color-light;
 // Define colors for form feedback states and, by default, alerts.
 
 // $state-success-text: #3c763d;
-// $state-success-bg: #dff0d8;
+$state-success-bg: #eaf6e4;
 // $state-success-border: darken($state-success-bg, 5%);
 //
 // $state-info-text: #31708f;
