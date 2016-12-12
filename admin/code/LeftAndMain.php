@@ -347,16 +347,21 @@ class LeftAndMain extends Controller implements PermissionProvider
         if (!$formName) {
             return (new HTTPResponse('Missing request params', 400));
         }
-
-        if (!$this->hasMethod("get{$formName}")) {
+    
+        $formMethod = "get{$formName}";
+        if (!$this->hasMethod($formMethod)) {
             return (new HTTPResponse('Form not found', 404));
         }
 
         if (!$this->hasAction($formName)) {
             return (new HTTPResponse('Form not accessible', 401));
         }
-
-        $form = $this->{"get{$formName}"}($itemID);
+    
+        if ($itemID) {
+            $form = $this->{$formMethod}($itemID);
+        } else {
+            $form = $this->{$formMethod}();
+        }
         $schemaID = $request->getURL();
         return $this->getSchemaResponse($schemaID, $form);
     }

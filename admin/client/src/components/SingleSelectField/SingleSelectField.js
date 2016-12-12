@@ -81,7 +81,8 @@ class SingleSelectField extends SilverStripeComponent {
   getInputProps() {
     const props = {
       bsClass: this.props.bsClass,
-      className: `${this.props.className} ${this.props.extraClass}`,
+      // @TODO Prevent entwine chosen applying chosen
+      className: `${this.props.className} ${this.props.extraClass} no-chosen`,
       id: this.props.id,
       name: this.props.name,
       disabled: this.props.disabled,

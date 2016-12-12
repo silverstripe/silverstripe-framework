@@ -18,5 +18,6 @@
 	</div>
 
 	$EditorToolbar
+
 </body>
 </html>

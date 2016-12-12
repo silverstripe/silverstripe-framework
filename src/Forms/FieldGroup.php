@@ -61,6 +61,8 @@ use SilverStripe\ORM\ValidationResult;
 class FieldGroup extends CompositeField
 {
 
+    protected $schemaComponent = 'FieldGroup';
+
     protected $zebra;
 
     /**

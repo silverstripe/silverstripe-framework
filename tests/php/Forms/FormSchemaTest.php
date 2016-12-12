@@ -306,6 +306,11 @@ class FormSchemaTest extends SapphireTest
                         'tag' => 'div',
                         'legend' => null,
                         'buttonTooltip' => null,
+                        'inherited' => [
+                            'data' => [
+                                'fieldholder' => 'small'
+                            ],
+                        ],
                     ],
                     'validation' => [],
                     'children' => [

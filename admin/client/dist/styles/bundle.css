@@ -14840,6 +14840,19 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   content:"6";
 }
 
+.field-group-component>.form-group{
+  margin-top:0;
+  display:inline-block;
+  margin-right:.6154rem;
+  min-width:166px;
+  vertical-align:bottom;
+}
+
+.field-group-component>.form-group .form__field-label{
+  font-size:.846rem;
+  color:#66727d;
+}
+
 .list-group{
   margin-left:-1.5385rem;
   margin-right:-1.5385rem;
@@ -14929,13 +14942,16 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   line-height:14px;
   margin-bottom:0;
   float:left;
-  width:70%;
   max-height:52px;
 }
 
 .breadcrumb>li.breadcrumb__item--last,.breadcrumb__item--last{
   display:block;
   float:none;
+}
+
+.breadcrumb>li.breadcrumb__item--last.breadcrumb__item--no-crumb:before,.breadcrumb__item--last.breadcrumb__item--no-crumb:before{
+  content:"";
 }
 
 .breadcrumb__item-title--last,.cms h2.breadcrumb__item-title--last{
@@ -15758,6 +15774,16 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
 
 .cms-edit-form:not(.AssetAdmin) .form__field-holder--stacked .form__field-holder{
   margin-left:-1.5385rem;
+}
+
+.field input[type=date].creditcard,.field input[type=date].text,.field input[type=date].TreeDropdownField,.field input[type=datetime-local].creditcard,.field input[type=datetime-local].text,.field input[type=datetime-local].TreeDropdownField,.field input[type=month].creditcard,.field input[type=month].text,.field input[type=month].TreeDropdownField,.field input[type=time].creditcard,.field input[type=time].text,.field input[type=time].TreeDropdownField,input[type=date].form-control,input[type=datetime-local].form-control,input[type=month].form-control,input[type=time].form-control{
+  min-height:calc(.5385rem * 2 + 20px + 2px);
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0){
+  .field input[type=date].creditcard,.field input[type=date].text,.field input[type=date].TreeDropdownField,.field input[type=datetime-local].creditcard,.field input[type=datetime-local].text,.field input[type=datetime-local].TreeDropdownField,.field input[type=month].creditcard,.field input[type=month].text,.field input[type=month].TreeDropdownField,.field input[type=time].creditcard,.field input[type=time].text,.field input[type=time].TreeDropdownField,input[type=date].form-control,input[type=datetime-local].form-control,input[type=month].form-control,input[type=time].form-control{
+    line-height:1.539;
+  }
 }
 
 @media (min-width:992px){

@@ -54,7 +54,7 @@ class TextField extends SilverStripeComponent {
       } else {
         Object.assign(props, {
           componentClass: 'input',
-          type: this.props.type,
+          type: this.props.type.toLowerCase(),
         });
       }
     }

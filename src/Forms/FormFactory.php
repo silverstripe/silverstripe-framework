@@ -30,7 +30,7 @@ interface FormFactory
     /**
      * Return list of mandatory context keys
      *
-     * @return mixed
+     * @return array
      */
     public function getRequiredContext();
 }

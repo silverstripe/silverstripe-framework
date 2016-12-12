@@ -3,7 +3,6 @@
   line-height: 14px;
   margin-bottom: 0;
   float: left;
-  width: 70%;
   max-height: $toolbar-height;
 }
 
@@ -11,6 +10,10 @@
 .breadcrumb__item--last {
   display: block;
   float: none;
+
+  &.breadcrumb__item--no-crumb:before {
+    content: "";
+  }
 }
 
 .cms h2.breadcrumb__item-title--last, // TODO Fix CMS clash
