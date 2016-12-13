@@ -88,7 +88,7 @@ class CsvBulkLoader extends BulkLoader
                 @unlink($file);
             }
         } catch (Exception $e) {
-            print "Failed to parse {$last}\n";
+            printf("Failed to parse %s because %s\n", $last, $e->getMessage());
         }
 
         return $result;
