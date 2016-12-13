@@ -1192,8 +1192,6 @@ $.entwine('ss', function($) {
       if (!this.prop('disabled') && !this.prop('readonly')) {
         $(this).datepicker(config);
       }
-      // // Unfortunately jQuery UI only allows configuration of icon images, not sprites
-      // this.next('button').button('option', 'icons', {primary : 'ui-icon-calendar'});
 
       this._super();
     },

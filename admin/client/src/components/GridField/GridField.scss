@@ -50,6 +50,11 @@
     &:hover {
       background-color: $background-darker;
     }
+
+    &:focus {
+      outline: none;
+      border-bottom: $table-border-width solid $brand-primary;
+    }
   }
 
   &:hover {
@@ -157,7 +162,7 @@ input.grid-field__sort-field {
 }
 
 div.grid-field__sort-field + .form__fieldgroup-item {
-  top: 14px;
+  top: 16px;
   right: 7px;
   position: absolute;
 }
@@ -166,6 +171,10 @@ div.grid-field__sort-field + .form__fieldgroup-item {
   .fieldgroup:not(.filter-buttons),
   .fieldgroup:not(.filter-buttons) .fieldgroup-field {
     width: 100%;
+  }
+
+  .ss-gridfield-button-reset {
+    margin-right: 0;
   }
 }
 

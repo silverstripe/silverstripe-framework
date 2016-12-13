@@ -93,7 +93,12 @@
     .grid-csv-button,
     .grid-print-button {
       margin-bottom: 0;
+      margin-right: 0;
       display: inline-block;
+
+      .btn-secondary {
+        margin-right: 0;
+      }
     }
   }
 

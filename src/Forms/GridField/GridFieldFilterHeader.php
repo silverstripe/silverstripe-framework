@@ -134,6 +134,34 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
         return $dataListClone;
     }
 
+    /**
+     * Returns whether this {@link GridField} has any columns to sort on at all.
+     *
+     * @return boolean
+     */
+    public function canFilterAnyColumns($gridField)
+    {
+        $list = $gridField->getList();
+
+        if (!$this->checkDataType($list)) {
+            return false;
+        }
+
+        $columns = $gridField->getColumns();
+        $filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
+
+        foreach ($columns as $columnField) {
+            $metadata = $gridField->getColumnMetadata($columnField);
+            $title = $metadata['title'];
+
+            if ($title && $list->canFilterBy($columnField)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getHTMLFragments($gridField)
     {
         $list = $gridField->getList();
@@ -143,10 +171,13 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
 
         /** @var Filterable $list */
         $forTemplate = new ArrayData(array());
-        $forTemplate->Fields = new ArrayList;
+        $forTemplate->Fields = new ArrayList();
+
         $columns = $gridField->getColumns();
         $filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
         $currentColumn = 0;
+        $canFilter = false;
+
         foreach ($columns as $columnField) {
             $currentColumn++;
             $metadata = $gridField->getColumnMetadata($columnField);
@@ -154,6 +185,8 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
             $fields = new FieldGroup();
 
             if ($title && $list->canFilterBy($columnField)) {
+                $canFilter = true;
+
                 $value = '';
                 if (isset($filterArguments[$columnField])) {
                     $value = $filterArguments[$columnField];
@@ -170,7 +203,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
                 $fields->push($field);
                 $fields->push(
                     GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
-                        ->addExtraClass('btn font-icon-cancel btn--no-text ss-gridfield-button-reset')
+                        ->addExtraClass('btn font-icon-cancel btn-secondary btn--no-text ss-gridfield-button-reset')
                         ->setAttribute('title', _t('GridField.ResetFilter', "Reset"))
                         ->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
                 );
@@ -194,6 +227,10 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
             }
 
             $forTemplate->Fields->push($fields);
+        }
+
+        if(!$canFilter) {
+            return null;
         }
 
         $templates = SSViewer::get_templates_by_class($this, '_Row', __CLASS__);

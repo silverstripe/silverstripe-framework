@@ -9716,10 +9716,6 @@ body.cms{
   padding-right:20px;
 }
 
-.ui-tabs .ui-tabs-panel>.grid-field:first-child>.toolbar--content{
-  margin-top:-1.5385rem;
-}
-
 .ui-tabs .ui-tabs-panel .alert+.grid-field{
   margin-top:1.5385rem;
 }
@@ -12155,7 +12151,7 @@ li.class-ErrorPage>a .jstree-pageicon{
   display:block;
   min-height:50px;
   color:#4f5861;
-  padding:17px 5px 17px 8px;
+  padding:16px 5px 16px 8px;
   background-color:#e9f0f4;
   cursor:pointer;
   position:relative;
@@ -14096,7 +14092,12 @@ li.class-ErrorPage>a .jstree-pageicon{
 
 .cms .grid-field .grid-csv-button,.cms .grid-field .grid-print-button{
   margin-bottom:0;
+  margin-right:0;
   display:inline-block;
+}
+
+.cms .grid-field .grid-csv-button .btn-secondary,.cms .grid-field .grid-print-button .btn-secondary{
+  margin-right:0;
 }
 
 .cms .grid-field__table .filter-header .fieldholder-small{
@@ -15045,6 +15046,15 @@ fieldset+.btn-toolbar{
   box-shadow:none;
 }
 
+.btn.btn--no-text{
+  text-indent:-90000px;
+  overflow:hidden;
+}
+
+.btn.btn--no-text:before{
+  text-indent:0;
+}
+
 .btn[class*=font-icon-]:before{
   position:relative;
   margin-right:6px;
@@ -15150,6 +15160,10 @@ fieldset+.btn-toolbar{
   background:#fff;
 }
 
+.btn-primary:focus{
+  outline-color:#29abe2;
+}
+
 .btn-primary-outline{
   border-color:#56bd59;
 }
@@ -15173,6 +15187,11 @@ fieldset+.btn-toolbar{
 .btn-secondary:active,.btn-secondary:active:focus,.btn-secondary:active:hover,.btn-secondary:focus,.btn-secondary:hover{
   background-color:#e7e9ec;
   border-color:transparent;
+  outline-color:#29abe2;
+}
+
+.btn.active:active{
+  outline:none;
 }
 
 .btn-secondary-outline{
@@ -15336,6 +15355,11 @@ button.close{
   background-color:#f0f2f4;
 }
 
+.grid-field .grid-field__sort:focus{
+  outline:none;
+  border-bottom:1px solid #29abe2;
+}
+
 .grid-field__sort:hover{
   border-bottom:1px solid #e5e8eb;
 }
@@ -15425,13 +15449,17 @@ input.grid-field__sort-field.text{
 }
 
 div.grid-field__sort-field+.form__fieldgroup-item{
-  top:14px;
+  top:16px;
   right:7px;
   position:absolute;
 }
 
 .filter-header .fieldgroup:not(.filter-buttons),.filter-header .fieldgroup:not(.filter-buttons) .fieldgroup-field{
   width:100%;
+}
+
+.filter-header .ss-gridfield-button-reset{
+  margin-right:0;
 }
 
 .filter-buttons{

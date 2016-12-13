@@ -187,12 +187,17 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
                     }
                 }
             } else {
-                if ($currentColumn == count($columns)
-                        && $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldFilterHeader')) {
-                    $field = new LiteralField(
-                        $fieldName,
-                        '<button type="button" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>'
-                    );
+                if ($currentColumn == count($columns)) {
+                    $filter = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldFilterHeader');
+
+                    if($filter->canFilterAnyColumns($gridField)) {
+                        $field = new LiteralField(
+                            $fieldName,
+                            '<button type="button" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>'
+                        );
+                    } else {
+                        $field = new LiteralField($fieldName, '<span class="non-sortable"></span>');
+                    }
                 } else {
                     $field = new LiteralField($fieldName, '<span class="non-sortable">' . $title . '</span>');
                 }

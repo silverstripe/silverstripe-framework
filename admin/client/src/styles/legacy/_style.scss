@@ -494,10 +494,6 @@ body.cms {
       padding-right: 20px;
 		}
 
-		> .grid-field:first-child > .toolbar--content {
-			margin-top: -$grid-gutter-width-half;
-		}
-
 		.alert + .grid-field {
 			margin-top: $panel-padding-y;
 		}

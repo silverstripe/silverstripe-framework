@@ -44,7 +44,6 @@ const config = [
       'LeftAndMain.Ping': `${PATHS.ADMIN_JS_SRC}/legacy/LeftAndMain.Ping.js`,
       leaktools: `${PATHS.ADMIN_JS_SRC}/legacy/leaktools.js`,
       MemberImportForm: `${PATHS.ADMIN_JS_SRC}/legacy/MemberImportForm.js`,
-      CMSSecurity: `${PATHS.ADMIN_JS_SRC}/legacy/CMSSecurity.js`,
       UploadField_select: `${PATHS.ADMIN_JS_SRC}/legacy/UploadField_select.js`,
       TinyMCE_SSPlugin: `${PATHS.ADMIN_JS_SRC}/legacy/TinyMCE_SSPlugin.js`,
     },

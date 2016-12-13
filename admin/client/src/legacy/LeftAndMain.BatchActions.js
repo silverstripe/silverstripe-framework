@@ -375,11 +375,6 @@ $.entwine('ss.tree', function($){
       var form = $(e.target.form),
         btn = form.find(':submit'),
         selected = $(e.target).val();
-      if(!selected || selected == -1) {
-        btn.attr('disabled', 'disabled').button('refresh');
-      } else {
-        btn.removeAttr('disabled').button('refresh');
-      }
 
       // Refresh selected / enabled nodes
       $('#Form_BatchActionsForm').refreshSelected();

@@ -16,6 +16,15 @@
   margin-right: $spacer-x * .5; // 8px
   position: relative;
   box-shadow: none;
+
+  &.btn--no-text {
+    text-indent: -90000px;
+    overflow: hidden;
+
+    &:before {
+      text-indent: 0;
+    }
+  }
 }
 
 // Button icons
@@ -116,6 +125,10 @@
   .btn__circle {
     background: $white;
   }
+
+  &:focus {
+    outline-color: $brand-primary;
+  }
 }
 
 .btn-primary-outline {
@@ -147,6 +160,13 @@
   &:active:focus {
     background-color: $gray-lighter;
     border-color: transparent;
+    outline-color: $brand-primary;
+  }
+}
+
+.btn.active {
+  &:active {
+    outline: none;
   }
 }
 

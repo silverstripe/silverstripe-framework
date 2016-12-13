@@ -106,10 +106,11 @@ $.entwine('ss', function($) {
 		onclick: function(e) {
 			this.closest('.grid-field__table')
 				.find('.filter-header')
-				.show('slow') // animate visibility
+				.show()
 				.find(':input:first').focus(); // focus first search field
+
 			this.closest('.grid-field').addClass('show-filter');
-			this.parent().html('<span class="non-sortable"></span>');
+      this.parent().html('<span class="non-sortable"></span>');
 			e.preventDefault();
 		}
 	});
@@ -166,16 +167,19 @@ $.entwine('ss', function($) {
 			var filterState='show'; //filterstate should equal current state.
 
 			// If the button is disabled, do nothing.
-			if (this.button('option', 'disabled')) {
+			if (this.is(':disabled')) {
 				e.preventDefault();
 				return;
 			}
 
-			if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.grid-field').hasClass('show-filter'))){
+			if(this.hasClass('ss-gridfield-button-close') || !(this.closest('.grid-field').hasClass('show-filter'))) {
 				filterState='hidden';
 			}
 
-			this.getGridField().reload({data: [{name: this.attr('name'), value: this.val(), filter: filterState}]});
+			this.getGridField().reload({
+        data: [{name: this.attr('name'), value: this.val(), filter: filterState}]
+      });
+
 			e.preventDefault();
 		},
 		/**
@@ -235,7 +239,7 @@ $.entwine('ss', function($) {
 				buttonDisabled = $button.is(':disabled');
 
 			if ((inputHasValue && buttonDisabled) || (!inputHasValue && !buttonDisabled)) {
-				$button.button("option", "disabled", !buttonDisabled);
+				$button.attr("disabled", !buttonDisabled);
 			}
 		}
 	});
