@@ -2,10 +2,12 @@
 
 namespace SilverStripe\Forms\Schema;
 
-use SilverStripe\Control\Session;
+use InvalidArgumentException;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormField;
+use SilverStripe\ORM\ValidationResult;
 
 /**
  * Represents a {@link Form} as structured data which allows a frontend library to render it.
@@ -14,6 +16,69 @@ use SilverStripe\Forms\FormField;
  */
 class FormSchema
 {
+    /**
+     * Request the schema part
+     */
+    const PART_SCHEMA = 'schema';
+
+    /**
+     * Request the state part
+     */
+    const PART_STATE = 'state';
+
+    /**
+     * Request the errors from a {@see ValidationResult}
+     */
+    const PART_ERRORS = 'errors';
+
+    /**
+     * Request errors if invalid, or state if valid
+     */
+    const PART_AUTO = 'auto';
+
+    /**
+     * Returns a representation of the provided {@link Form} as structured data,
+     * based on the request data.
+     *
+     * @param array|string $schemaParts Array or list of requested parts.
+     * @param string $schemaID ID for this schema. Required.
+     * @param Form $form Required for 'state' or 'schema' response
+     * @param ValidationResult $result Required for 'error' response
+     * @return array
+     */
+    public function getMultipartSchema($schemaParts, $schemaID, Form $form = null, ValidationResult $result = null)
+    {
+        if (!is_array($schemaParts)) {
+            $schemaParts = preg_split('#\s*,\s*#', $schemaParts) ?: [];
+        }
+        $wantSchema = in_array('schema', $schemaParts);
+        $wantState = in_array('state', $schemaParts);
+        $wantErrors = in_array('errors', $schemaParts);
+        $auto = in_array('auto', $schemaParts);
+
+        // Require ID
+        if (empty($schemaID)) {
+            throw new InvalidArgumentException("schemaID is required");
+        }
+        $return = ['id' => $schemaID];
+
+        // Default to schema if not set
+        if ($form && ($wantSchema || empty($schemaParts))) {
+            $return['schema'] = $this->getSchema($form);
+        }
+
+        // Return 'state' if requested, or if there are errors and 'auto'
+        if ($form && ($wantState || ($auto && !$result))) {
+            $return['state'] = $this->getState($form);
+        }
+
+        // Return errors if 'errors' or 'auto'
+        if ($result && ($wantErrors || $auto)) {
+            $return['errors'] = $this->getErrors($result);
+        }
+
+        return $return;
+    }
 
     /**
      * Gets the schema for this form as a nested array.
@@ -55,18 +120,9 @@ class FormSchema
      */
     public function getState(Form $form)
     {
-        // Ensure that session errors are populated within form field messages
-        $form->setupFormErrors();
-
-        // @todo - Replace with ValidationResult handling
-        // Currently tri-state; null (unsubmitted), true (submitted-valid), false (submitted-invalid)
-        $errors = Session::get("FormInfo.{$form->FormName()}.errors");
-        $valid = isset($errors) ? empty($errors) : null;
-
         $state = [
             'id' => $form->FormName(),
             'fields' => [],
-            'valid' => $valid,
             'messages' => [],
         ];
 
@@ -76,15 +132,44 @@ class FormSchema
             $this->getFieldStates($form->Actions())
         );
 
-        if ($message = $form->Message()) {
-            $state['messages'][] = [
-                // TODO Make form / field messages not always stored as html
-                'value' => ['html' => $message],
-                'type' => $form->MessageType(),
-            ];
+        if ($message = $form->getSchemaMessage()) {
+            $state['messages'][] = $message;
         }
 
         return $state;
+    }
+
+    /**
+     * @param ValidationResult $result
+     * @return array List of errors
+     */
+    public function getErrors(ValidationResult $result)
+    {
+        $messages = [];
+        foreach ($result->getMessages() as $message) {
+            $messages[] = $this->getSchemaForMessage($message);
+        }
+        return $messages;
+    }
+
+    /**
+     * Return form schema for encoded validation message
+     *
+     * @param array $message Internal ValidationResult format for this message
+     * @return array Form schema format for this message
+     */
+    protected function getSchemaForMessage($message)
+    {
+        // Form schema messages treat simple strings as plain text, so nest for html messages
+        $value = $message['message'];
+        if ($message['messageCast'] === ValidationResult::CAST_HTML) {
+            $value = ['html' => $message];
+        }
+        return [
+            'value' => $value,
+            'type' => $message['messageType'],
+            'field' => empty($message['fieldName']) ? null : $message['fieldName'],
+        ];
     }
 
     protected function getFieldStates($fields)

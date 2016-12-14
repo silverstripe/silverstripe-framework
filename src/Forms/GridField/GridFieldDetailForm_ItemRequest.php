@@ -4,11 +4,9 @@ namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
@@ -20,6 +18,7 @@ use SilverStripe\ORM\HasManyList;
 use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 
@@ -117,7 +116,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $form->makeReadonly();
 
         $data = new ArrayData(array(
-            'Backlink' => $controller->Link(),
+            'Backlink'     => $controller->Link(),
             'ItemEditForm' => $form
         ));
         $return = $data->renderWith($this->getTemplates());
@@ -399,11 +398,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         }
 
         // Save from form data
-        try {
-            $this->saveFormIntoRecord($data, $form);
-        } catch (ValidationException $e) {
-            return $this->generateValidationResponse($form, $e);
-        }
+        $this->saveFormIntoRecord($data, $form);
 
         $link = '<a href="' . $this->Link('edit') . '">"'
             . htmlspecialchars($this->record->Title, ENT_QUOTES)
@@ -417,7 +412,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             )
         );
 
-        $form->sessionMessage($message, 'good', false);
+        $form->sessionMessage($message, 'good', ValidationResult::CAST_HTML);
 
         // Redirect after save
         return $this->redirectAfterSave($isNewRecord);
@@ -478,62 +473,29 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         }
 
         // Save form and any extra saved data into this dataobject
-        $form->saveInto($this->record);
-        $this->record->write();
+            $form->saveInto($this->record);
+            $this->record->write();
         $extraData = $this->getExtraSavedData($this->record, $list);
-        $list->add($this->record, $extraData);
+            $list->add($this->record, $extraData);
 
         return $this->record;
-    }
-
-    /**
-     * Generate a response object for a form validation error
-     *
-     * @param Form $form The source form
-     * @param ValidationException $e The validation error message
-     * @return HTTPResponse
-     * @throws HTTPResponse_Exception
-     */
-    protected function generateValidationResponse($form, $e)
-    {
-        $controller = $this->getToplevelController();
-
-        $form->sessionMessage($e->getResult()->message(), 'bad', false);
-        $responseNegotiator = new PjaxResponseNegotiator(array(
-            'CurrentForm' => function () use (&$form) {
-                return $form->forTemplate();
-            },
-            'default' => function () use (&$controller) {
-                return $controller->redirectBack();
-            }
-        ));
-        if ($controller->getRequest()->isAjax()) {
-            $controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');
-        }
-        return $responseNegotiator->respond($controller->getRequest());
     }
 
     /**
      * @param array $data
      * @param Form $form
      * @return HTTPResponse
+     * @throws ValidationException
      */
     public function doDelete($data, $form)
     {
         $title = $this->record->Title;
-        try {
-            if (!$this->record->canDelete()) {
-                throw new ValidationException(
-                    _t('GridFieldDetailForm.DeletePermissionsFailure', "No delete permissions"),
-                    0
-                );
-            }
-
-            $this->record->delete();
-        } catch (ValidationException $e) {
-            $form->sessionMessage($e->getResult()->message(), 'bad', false);
-            return $this->getToplevelController()->redirectBack();
+        if (!$this->record->canDelete()) {
+            throw new ValidationException(
+                _t('GridFieldDetailForm.DeletePermissionsFailure', "No delete permissions")
+            );
         }
+        $this->record->delete();
 
         $message = sprintf(
             _t('GridFieldDetailForm.Deleted', 'Deleted %s %s'),
@@ -544,9 +506,9 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $toplevelController = $this->getToplevelController();
         if ($toplevelController && $toplevelController instanceof LeftAndMain) {
             $backForm = $toplevelController->getEditForm();
-            $backForm->sessionMessage($message, 'good', false);
+            $backForm->sessionMessage($message, 'good', ValidationResult::CAST_HTML);
         } else {
-            $form->sessionMessage($message, 'good', false);
+            $form->sessionMessage($message, 'good', ValidationResult::CAST_HTML);
         }
 
         //when an item is deleted, redirect to the parent controller

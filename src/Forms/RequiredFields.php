@@ -15,8 +15,12 @@ use SilverStripe\ORM\ArrayLib;
 class RequiredFields extends Validator
 {
 
+    /**
+     * List of required fields
+     *
+     * @var array
+     */
     protected $required;
-    protected $useLabels = true;
 
     /**
      * Pass each field to be validated as a seperate argument to the constructor
@@ -84,56 +88,58 @@ class RequiredFields extends Validator
             $valid = ($field->validate($this) && $valid);
         }
 
-        if ($this->required) {
-            foreach ($this->required as $fieldName) {
-                if (!$fieldName) {
-                    continue;
-                }
+        if (!$this->required) {
+            return $valid;
+        }
 
-                if ($fieldName instanceof FormField) {
-                    $formField = $fieldName;
-                    $fieldName = $fieldName->getName();
+        foreach ($this->required as $fieldName) {
+            if (!$fieldName) {
+                continue;
+            }
+
+            if ($fieldName instanceof FormField) {
+                $formField = $fieldName;
+                $fieldName = $fieldName->getName();
+            } else {
+                $formField = $fields->dataFieldByName($fieldName);
+            }
+
+            // submitted data for file upload fields come back as an array
+            $value = isset($data[$fieldName]) ? $data[$fieldName] : null;
+
+            if (is_array($value)) {
+                if ($formField instanceof FileField && isset($value['error']) && $value['error']) {
+                    $error = true;
                 } else {
-                    $formField = $fields->dataFieldByName($fieldName);
+                    $error = (count($value)) ? false : true;
                 }
+            } else {
+                // assume a string or integer
+                $error = (strlen($value)) ? false : true;
+            }
 
-                // submitted data for file upload fields come back as an array
-                $value = isset($data[$fieldName]) ? $data[$fieldName] : null;
-
-                if (is_array($value)) {
-                    if ($formField instanceof FileField && isset($value['error']) && $value['error']) {
-                        $error = true;
-                    } else {
-                        $error = (count($value)) ? false : true;
-                    }
-                } else {
-                    // assume a string or integer
-                    $error = (strlen($value)) ? false : true;
-                }
-
-                if ($formField && $error) {
-                    $errorMessage = _t(
-                        'Form.FIELDISREQUIRED',
-                        '{name} is required',
-                        array(
-                            'name' => strip_tags(
-                                '"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'
-                            )
+            if ($formField && $error) {
+                $errorMessage = _t(
+                    'Form.FIELDISREQUIRED',
+                    '{name} is required',
+                    array(
+                        'name' => strip_tags(
+                            '"' . ($formField->Title() ? $formField->Title() : $fieldName) . '"'
                         )
-                    );
+                    )
+                );
 
-                    if ($msg = $formField->getCustomValidationMessage()) {
-                        $errorMessage = $msg;
-                    }
-
-                    $this->validationError(
-                        $fieldName,
-                        $errorMessage,
-                        "required"
-                    );
-
-                    $valid = false;
+                if ($msg = $formField->getCustomValidationMessage()) {
+                    $errorMessage = $msg;
                 }
+
+                $this->validationError(
+                    $fieldName,
+                    $errorMessage,
+                    "required"
+                );
+
+                $valid = false;
             }
         }
 

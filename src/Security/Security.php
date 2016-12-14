@@ -21,6 +21,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
@@ -324,7 +325,7 @@ class Security extends Controller implements TemplateGlobalProvider
             // Somewhat hackish way to render a login form with an error message.
             $me = new Security();
             $form = $me->LoginForm();
-            $form->sessionMessage($message, 'warning');
+            $form->sessionMessage($message, ValidationResult::TYPE_WARNING);
             Session::set('MemberLoginForm.force_message', 1);
             $loginResponse = $me->login();
             if ($loginResponse instanceof HTTPResponse) {
@@ -340,8 +341,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $message = $messageSet['default'];
         }
 
-        Session::set("Security.Message.message", $message);
-        Session::set("Security.Message.type", 'warning');
+        static::setLoginMessage($message, ValidationResult::TYPE_WARNING);
 
         Session::set("BackURL", $_SERVER['REQUEST_URI']);
 
@@ -349,10 +349,10 @@ class Security extends Controller implements TemplateGlobalProvider
         // Audit logging hook
         $controller->extend('permissionDenied', $member);
 
-        return $controller->redirect(
-            Config::inst()->get('SilverStripe\\Security\\Security', 'login_url')
-            . "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
-        );
+        return $controller->redirect(Controller::join_links(
+            static::config()->get('login_url'),
+            "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
+        ));
     }
 
     protected function init()
@@ -559,11 +559,36 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         $messageType = Session::get('Security.Message.type');
-        if ($messageType === 'bad') {
-            return "<p class=\"message $messageType\">$message</p>";
-        } else {
-            return "<p>$message</p>";
+        $messageCast = Session::get('Security.Message.cast');
+        if ($messageCast !== ValidationResult::CAST_HTML) {
+            $message = Convert::raw2xml($message);
         }
+        return sprintf('<p class="message %s">%s</p>', Convert::raw2att($messageType), $message);
+    }
+
+    /**
+     * Set the next message to display for the security login page. Defaults to warning
+     *
+     * @param string $message Message
+     * @param string $messageType Message type. One of ValidationResult::TYPE_*
+     * @param string $messageCast Message cast. One of ValidationResult::CAST_*
+     */
+    public static function setLoginMessage(
+        $message,
+        $messageType = ValidationResult::TYPE_WARNING,
+        $messageCast = ValidationResult::CAST_TEXT
+    ) {
+        Session::set("Security.Message.message", $message);
+        Session::set("Security.Message.type", $messageType);
+        Session::set("Security.Message.cast", $messageCast);
+    }
+
+    /**
+     * Clear login message
+     */
+    public static function clearLoginMessage()
+    {
+        Session::clear("Security.Message");
     }
 
 
@@ -603,7 +628,7 @@ class Security extends Controller implements TemplateGlobalProvider
         $message = $this->getLoginMessage($messageType);
 
         // We've displayed the message in the form output, so reset it for the next run.
-        Session::clear('Security.Message');
+        static::clearLoginMessage();
 
         // only display tabs when more than one authenticator is provided
         // to save bandwidth and reduce the amount of custom styling needed

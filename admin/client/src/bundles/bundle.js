@@ -24,6 +24,7 @@ require('expose?Toolbar!components/Toolbar/Toolbar');
 require('expose?Breadcrumb!components/Breadcrumb/Breadcrumb');
 require('expose?BreadcrumbsActions!state/breadcrumbs/BreadcrumbsActions');
 require('expose?Config!lib/Config');
+require('expose?DataFormat!lib/DataFormat');
 require('expose?ReducerRegister!lib/ReducerRegister');
 require('expose?ReactRouteRegister!lib/ReactRouteRegister');
 require('expose?Injector!lib/Injector');

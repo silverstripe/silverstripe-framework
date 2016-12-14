@@ -332,11 +332,10 @@ class FormFieldTest extends SapphireTest {
 		$field = new FormField('MyField', 'My Field');
 		$validator = new RequiredFields('MyField');
 		$form = new Form(new Controller(), 'TestForm', new FieldList($field), new FieldList(), $validator);
-		$form->validate();
-		$form->setupFormErrors();
+		$form->validationResult();
 		$schema = $field->getSchemaState();
 		$this->assertEquals(
-			['html' => '&quot;My Field&quot; is required'],
+			'"My Field" is required',
 			$schema['message']['value']
 		);
 	}

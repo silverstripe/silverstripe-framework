@@ -35,10 +35,7 @@ class Validator extends Upload_Validator implements TestOnly
 
 		// extension validation
 		if(!$this->isValidExtension()) {
-			$this->errors[] = _t(
-				'File.INVALIDEXTENSION_SHORT',
-				'Extension is not allowed'
-			);
+			$this->errors[] = _t('File.INVALIDEXTENSIONSHORT', 'Extension is not allowed');
 			return false;
 		}
 

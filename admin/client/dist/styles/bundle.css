@@ -15002,6 +15002,11 @@ fieldset+.btn-toolbar{
   color:#d40404;
 }
 
+.btn--icon-sm[class*=font-icon-]:before{
+  font-size:14px;
+  position:relative;
+}
+
 .btn--icon-md[class*=font-icon-]:before{
   font-size:17px;
   position:relative;

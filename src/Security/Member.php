@@ -275,7 +275,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         if (!Security::has_default_admin()) {
             return null;
         }
-
+        
         // Find or create ADMIN group
         Group::singleton()->requireDefaultRecords();
         $adminGroup = Permission::get_groups_by_permission('ADMIN')->first();
@@ -310,7 +310,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     /**
      * Check if the passed password matches the stored one (if the member is not locked out).
      *
-     * @param string $password
+     * @param  string $password
      * @return ValidationResult
      */
     public function checkPassword($password)
@@ -318,7 +318,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         $result = $this->canLogIn();
 
         // Short-circuit the result upon failure, no further checks needed.
-        if (!$result->valid()) {
+        if (!$result->isValid()) {
             return $result;
         }
 
@@ -329,13 +329,13 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // Check a password is set on this member
         if (empty($this->Password) && $this->exists()) {
-            $result->error(_t('Member.NoPassword', 'There is no password on this member.'));
+            $result->addError(_t('Member.NoPassword', 'There is no password on this member.'));
             return $result;
         }
 
         $e = PasswordEncryptor::create_for_algorithm($this->PasswordEncryption);
         if (!$e->check($this->Password, $password, $this->Salt, $this)) {
-            $result->error(_t(
+            $result->addError(_t(
                 'Member.ERRORWRONGCRED',
                 'The provided details don\'t seem to be correct. Please try again.'
             ));
@@ -368,7 +368,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         $result = ValidationResult::create();
 
         if ($this->isLockedOut()) {
-            $result->error(
+            $result->addError(
                 _t(
                     'Member.ERRORLOCKEDOUT2',
                     'Your account has been temporarily disabled because of too many failed attempts at ' .
@@ -499,7 +499,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         // Clear the incorrect log-in count
         $this->registerSuccessfulLogin();
 
-        $this->LockedOutUntil = null;
+            $this->LockedOutUntil = null;
 
         $this->regenerateTempID();
 
@@ -938,7 +938,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             $existingRecord = DataObject::get_one('SilverStripe\\Security\\Member', $filter);
 
             if ($existingRecord) {
-                throw new ValidationException(ValidationResult::create(false, _t(
+                throw new ValidationException(_t(
                     'Member.ValidationIdentifierFailed',
                     'Can\'t overwrite existing member #{id} with identical identifier ({name} = {value}))',
                     'Values in brackets show "fieldname = value", usually denoting an existing email address',
@@ -947,7 +947,7 @@ class Member extends DataObject implements TemplateGlobalProvider
                         'name' => $identifierField,
                         'value' => $this->$identifierField
                     )
-                )));
+                ));
             }
         }
 
@@ -1055,9 +1055,9 @@ class Member extends DataObject implements TemplateGlobalProvider
         }
 
         // If there are no admin groups in this set then it's ok
-        $adminGroups = Permission::get_groups_by_permission('ADMIN');
-        $adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
-        return count(array_intersect($ids, $adminGroupIDs)) == 0;
+            $adminGroups = Permission::get_groups_by_permission('ADMIN');
+            $adminGroupIDs = ($adminGroups) ? $adminGroups->column('ID') : array();
+            return count(array_intersect($ids, $adminGroupIDs)) == 0;
     }
 
 
@@ -1231,7 +1231,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             ];
         }
 
-        $columnsWithTablename = array();
+            $columnsWithTablename = array();
         foreach ($format['columns'] as $column) {
             $columnsWithTablename[] = static::getSchema()->sqlColumnForField(__CLASS__, $column);
         }
@@ -1757,7 +1757,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         $this->Password = $password;
         $valid = $this->validate();
 
-        if ($valid->valid()) {
+        if ($valid->isValid()) {
             $this->AutoLoginHash = null;
             $this->write();
         }

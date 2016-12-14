@@ -8,11 +8,7 @@ export default function schemaReducer(state = initialState, action = null) {
 
     case ACTION_TYPES.SET_SCHEMA: {
       return deepFreeze(Object.assign({}, state, {
-        [action.payload.id]: Object.assign({}, state[action.payload.id], {
-          id: action.payload.id,
-          schema: action.payload.schema,
-          state: action.payload.state,
-        }),
+        [action.payload.id]: Object.assign({}, state[action.payload.id], action.payload),
       }));
     }
 

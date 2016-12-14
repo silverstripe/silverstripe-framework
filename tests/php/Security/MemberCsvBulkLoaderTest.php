@@ -87,6 +87,6 @@ class MemberCsvBulkLoaderTest extends SapphireTest {
 		// TODO Direct getter doesn't work, wtf!
 		$this->assertEquals(Security::config()->password_encryption_algorithm, $member->getField('PasswordEncryption'));
 		$result = $member->checkPassword('mypassword');
-		$this->assertTrue($result->valid());
+		$this->assertTrue($result->isValid());
 	}
 }

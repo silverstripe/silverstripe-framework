@@ -40,6 +40,7 @@ use SilverStripe\View\SSViewer;
  */
 class FormField extends RequestHandler
 {
+    use FormMessage;
 
     /** @see $schemaDataType */
     const SCHEMA_DATA_TYPE_STRING = 'String';
@@ -102,16 +103,6 @@ class FormField extends RequestHandler
      * @var mixed
      */
     protected $value;
-
-    /**
-     * @var string
-     */
-    protected $message;
-
-    /**
-     * @var string
-     */
-    protected $messageType;
 
     /**
      * @var string
@@ -274,8 +265,6 @@ class FormField extends RequestHandler
         'HolderID' => 'Text',
         'Title' => 'Text',
         'RightTitle' => 'Text',
-        'MessageType' => 'Text',
-        'Message' => 'HTMLFragment',
         'Description' => 'HTMLFragment',
     );
 
@@ -457,32 +446,6 @@ class FormField extends RequestHandler
     }
 
     /**
-     * Returns the field message, used by form validation.
-     *
-     * Use {@link setError()} to set this property.
-     *
-     * @return string
-     */
-    public function Message()
-    {
-        return $this->message;
-    }
-
-    /**
-     * Returns the field message type.
-     *
-     * Arbitrary value which is mostly used for CSS classes in the rendered HTML, e.g "required".
-     *
-     * Use {@link setError()} to set this property.
-     *
-     * @return string
-     */
-    public function MessageType()
-    {
-        return $this->messageType;
-    }
-
-    /**
      * Returns the field value.
      *
      * @return mixed
@@ -613,8 +576,8 @@ class FormField extends RequestHandler
         // e.g. red borders on input tags.
         //
         // CSS class needs to be different from the one rendered through {@link FieldHolder()}.
-        if ($this->Message()) {
-            $classes[] .= 'holder-' . $this->MessageType();
+        if ($this->getMessage()) {
+            $classes[] .= 'holder-' . $this->getMessageType();
         }
 
         return implode(' ', $classes);
@@ -871,22 +834,13 @@ class FormField extends RequestHandler
         return $form->getSecurityToken()->isEnabled();
     }
 
-    /**
-     * Sets the error message to be displayed on the form field.
-     *
-     * Allows HTML content, so remember to use Convert::raw2xml().
-     *
-     * @param string $message
-     * @param string $messageType
-     *
-     * @return $this
-     */
-    public function setError($message, $messageType)
+    public function castingHelper($field)
     {
-        $this->message = $message;
-        $this->messageType = $messageType;
-
-        return $this;
+        // Override casting for field message
+        if (strcasecmp($field, 'Message') === 0 && ($helper = $this->getMessageCastingHelper())) {
+            return $helper;
+        }
+        return parent::castingHelper($field);
     }
 
     /**
@@ -1211,12 +1165,12 @@ class FormField extends RequestHandler
      */
     public function performReadonlyTransformation()
     {
-        $readonlyClassName = $this->class . '_Readonly';
+        $readonlyClassName = static::class . '_Readonly';
 
         if (ClassInfo::exists($readonlyClassName)) {
             $clone = $this->castedCopy($readonlyClassName);
         } else {
-            $clone = $this->castedCopy('SilverStripe\\Forms\\ReadonlyField');
+            $clone = $this->castedCopy(ReadonlyField::class);
         }
 
         $clone->setReadonly(true);
@@ -1606,16 +1560,9 @@ class FormField extends RequestHandler
             'name' => $this->getName(),
             'id' => $this->ID(),
             'value' => $this->Value(),
-            'message' => null,
+            'message' => $this->getSchemaMessage(),
             'data' => [],
         ];
-
-        if ($message = $this->Message()) {
-            $state['message'] = [
-                'value' => ['html' => $message],
-                'type' => $this->MessageType(),
-            ];
-        }
 
         return $state;
     }

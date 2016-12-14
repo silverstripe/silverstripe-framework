@@ -35,6 +35,7 @@ use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\ValidationException;
@@ -55,17 +56,19 @@ use InvalidArgumentException;
 
 use SilverStripe\SiteConfig\SiteConfig;
 
-
 /**
  * LeftAndMain is the parent class of all the two-pane views in the CMS.
  * If you are wanting to add more areas to the CMS, you can do it by subclassing LeftAndMain.
  *
  * This is essentially an abstract class which should be subclassed.
  * See {@link CMSMain} for a good example.
- *
- * @property FormSchema $schema
  */
 class LeftAndMain extends Controller implements PermissionProvider {
+
+    /**
+     * Form schema header identifier
+     */
+    const SCHEMA_HEADER = 'X-Formschema-Request';
 
 	/**
 	 * Enable front-end debugging (increases verbosity) in dev mode.
@@ -156,8 +159,15 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	];
 
 	private static $dependencies = [
-		'schema' => '%$FormSchema'
+		'FormSchema' => '%$FormSchema'
 	];
+
+    /**
+     * Current form schema helper
+     *
+     * @var FormSchema
+     */
+    protected $schema = null;
 
 	/**
 	 * Assign themes to use for cms
@@ -296,6 +306,26 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		];
 	}
 
+    /**
+     * Get form schema helper
+     *
+     * @return FormSchema
+     */
+    public function getFormSchema() {
+        return $this->schema;
+    }
+
+    /**
+     * Set form schema helper for this controller
+     *
+     * @param FormSchema $schema
+     * @return $this
+     */
+    public function setFormSchema(FormSchema $schema) {
+        $this->schema = $schema;
+        return $this;
+    }
+
 	/**
 	 * Gets a JSON schema representing the current edit form.
 	 *
@@ -305,7 +335,6 @@ class LeftAndMain extends Controller implements PermissionProvider {
 	 * @return HTTPResponse
 	 */
 	public function schema($request) {
-		$response = $this->getResponse();
 		$formName = $request->param('FormName');
 		$itemID = $request->param('ItemID');
 
@@ -322,72 +351,43 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		}
 
 		$form = $this->{"get{$formName}"}($itemID);
-
-		$response->addHeader('Content-Type', 'application/json');
-		$response->setBody(Convert::raw2json($this->getSchemaForForm($form)));
-
-		return $response;
+		$schemaID = $request->getURL();
+        return $this->getSchemaResponse($schemaID, $form);
 	}
 
+    /**
+     * Check if the current request has a X-Formschema-Request header set.
+     * Used by conditional logic that responds to validation results
+     *
+     * @return bool
+     */
+	protected function getSchemaRequested() {
+        $parts = $this->getRequest()->getHeader(static::SCHEMA_HEADER);
+        return !empty($parts);
+    }
+
 	/**
-	 * Given a form, generate a response containing the requested form
-	 * schema if X-Formschema-Request header is set.
+	 * Generate schema for the given form based on the X-Formschema-Request header value
 	 *
-	 * @param Form $form
-	 * @param String $id Optional, will default to the current request URL
+	 * @param string $schemaID ID for this schema. Required.
+	 * @param Form $form Required for 'state' or 'schema' response
+	 * @param ValidationResult $errors Required for 'error' response
+     * @param array $extraData Any extra data to be merged with the schema response
 	 * @return HTTPResponse
 	 */
-	protected function getSchemaResponse($form, $id = null) {
-		$request = $this->getRequest();
-		if($request->getHeader('X-Formschema-Request')) {
-			$data = $this->getSchemaForForm($form, $id);
-			$response = new HTTPResponse(Convert::raw2json($data));
-			$response->addHeader('Content-Type', 'application/json');
+	protected function getSchemaResponse($schemaID, $form = null, ValidationResult $errors = null, $extraData = []) {
+        $parts = $this->getRequest()->getHeader(static::SCHEMA_HEADER);
+        $data = $this
+            ->getFormSchema()
+            ->getMultipartSchema($parts, $schemaID, $form, $errors);
 
-			// Clear non-schema form validation / data / message
-			// since it does not need to be redirected
-			$form->clearMessage();
-			return $response;
-		}
-		return null;
-	}
+        if ($extraData) {
+            $data = array_merge($data, $extraData);
+        }
 
-	/**
-	 * Returns a representation of the provided {@link Form} as structured data,
-	 * based on the request data.
-	 *
-	 * @param Form $form
-	 * @param String $id Optional, will default to the current request URL
-	 * @return array
-	 */
-	protected function getSchemaForForm(Form $form, $id = null) {
-		$request = $this->getRequest();
-		$id = $id ? $id : $request->getURL();
-		$return = null;
-
-		// Valid values for the "X-Formschema-Request" header are "schema" and "state".
-		// If either of these values are set they will be stored in the $schemaParst array
-		// and used to construct the response body.
-		if ($schemaHeader = $request->getHeader('X-Formschema-Request')) {
-			$schemaParts = array_filter(explode(',', $schemaHeader), function($value) {
-				$validHeaderValues = ['schema', 'state'];
-				return in_array(trim($value), $validHeaderValues);
-			});
-		} else {
-			$schemaParts = ['schema'];
-		}
-
-		$return = ['id' => $id];
-
-		if (in_array('schema', $schemaParts)) {
-			$return['schema'] = $this->schema->getSchema($form);
-		}
-
-		if (in_array('state', $schemaParts)) {
-			$return['state'] = $this->schema->getState($form);
-		}
-
-		return $return;
+        $response = new HTTPResponse(Convert::raw2json($data));
+        $response->addHeader('Content-Type', 'application/json');
+        return $response;
 	}
 
 	/**
@@ -1304,14 +1304,12 @@ class LeftAndMain extends Controller implements PermissionProvider {
 		$this->setCurrentPageID($record->ID);
 
 		$message = _t('LeftAndMain.SAVEDUP', 'Saved.');
-		if($request->getHeader('X-Formschema-Request')) {
+        if($this->getSchemaRequested()) {
 			$schemaId = Controller::join_links($this->Link('schema/DetailEditForm'), $id);
 			// Ensure that newly created records have all their data loaded back into the form.
 			$form->loadDataFrom($record);
 			$form->setMessage($message, 'good');
-			$data = $this->getSchemaForForm($form, $schemaId);
-			$response = new HTTPResponse(Convert::raw2json($data));
-			$response->addHeader('Content-Type', 'application/json');
+            $response = $this->getSchemaResponse($schemaId, $form);
 		} else {
 			$response = $this->getResponseNegotiator()->respond($request);
 		}
@@ -1580,10 +1578,9 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$form->loadDataFrom($record);
 			$form->setTemplate($this->getTemplatesWithSuffix('_EditForm'));
 			$form->setAttribute('data-pjax-fragment', 'CurrentForm');
-			$form->setValidationResponseCallback(function() use ($negotiator, $form) {
+			$form->setValidationResponseCallback(function(ValidationResult $errors) use ($negotiator, $form) {
 				$request = $this->getRequest();
 				if($request->isAjax() && $negotiator) {
-					$form->setupFormErrors();
 					$result = $form->forTemplate();
 
 					return $negotiator->respond($request, array(

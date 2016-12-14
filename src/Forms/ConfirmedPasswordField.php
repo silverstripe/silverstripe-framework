@@ -519,7 +519,7 @@ class ConfirmedPasswordField extends FormField
 
             // With a valid user and password, check the password is correct
             $checkResult = $member->checkPassword($this->currentPasswordValue);
-            if (!$checkResult->valid()) {
+            if (!$checkResult->isValid()) {
                 $validator->validationError(
                     $name,
                     _t(

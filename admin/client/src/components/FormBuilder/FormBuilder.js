@@ -103,8 +103,9 @@ class FormBuilder extends SilverStripeComponent {
     const dataWithAction = Object.assign({}, data, {
       [action]: 1,
     });
+    const requestedSchema = this.props.responseRequestedSchema.join();
     const headers = {
-      'X-Formschema-Request': 'state,schema',
+      'X-Formschema-Request': requestedSchema,
       'X-Requested-With': 'XMLHttpRequest',
     };
 
@@ -383,12 +384,19 @@ const basePropTypes = {
   submitting: PropTypes.bool,
   baseFormComponent: PropTypes.func.isRequired,
   baseFieldComponent: PropTypes.func.isRequired,
+  responseRequestedSchema: PropTypes.arrayOf(PropTypes.oneOf([
+    'schema', 'state', 'errors', 'auto',
+  ])),
 };
 
 FormBuilder.propTypes = Object.assign({}, basePropTypes, {
   form: PropTypes.string.isRequired,
   schema: schemaPropType.isRequired,
 });
+
+FormBuilder.defaultProps = {
+  responseRequestedSchema: ['auto'],
+};
 
 export { basePropTypes, schemaPropType };
 export default FormBuilder;

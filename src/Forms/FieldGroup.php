@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
+use SilverStripe\ORM\ValidationResult;
 
 /**
  * Lets you include a nested group of fields inside a template.
@@ -147,34 +148,48 @@ class FieldGroup extends CompositeField
     /**
      * @return string
      */
-    public function Message()
+    public function getMessage()
     {
-        $fs = array();
-        $this->collateDataFields($fs);
+        $dataFields = array();
+        $this->collateDataFields($dataFields);
 
-        foreach ($fs as $subfield) {
-            if ($m = $subfield->Message()) {
-                $message[] = rtrim($m, ".");
+        /** @var FormField $subfield */
+        $messages = [];
+        foreach ($dataFields as $subfield) {
+            $message = $subfield->obj('Message')->forTemplate();
+            if ($message) {
+                $messages[] = rtrim($message, ".");
             }
         }
 
-        return (isset($message)) ? implode(",  ", $message) . "." : "";
+        if (!$messages) {
+            return null;
+        }
+
+        return implode(", ", $messages) . ".";
     }
 
     /**
      * @return string
      */
-    public function MessageType()
+    public function getMessageType()
     {
-        $fs = array();
-        $this->collateDataFields($fs);
+        $dataFields = array();
+        $this->collateDataFields($dataFields);
 
-        foreach ($fs as $subfield) {
-            if ($m = $subfield->MessageType()) {
-                $MessageType[] = $m;
+        /** @var FormField $subfield */
+        foreach ($dataFields as $subfield) {
+            $type = $subfield->getMessageType();
+            if ($type) {
+                return $type;
             }
         }
 
-        return (isset($MessageType)) ? implode(".  ", $MessageType) : "";
+        return null;
+    }
+
+    public function getMessageCast()
+    {
+        return ValidationResult::CAST_HTML;
     }
 }

@@ -7,7 +7,8 @@ use SilverStripe\Forms\Tests\FormTest\ControllerWithSecurityToken;
 use SilverStripe\Forms\Tests\FormTest\ControllerWithStrictPostCheck;
 use SilverStripe\Forms\Tests\FormTest\Player;
 use SilverStripe\Forms\Tests\FormTest\Team;
-use SilverStripe\ORM\DataModel;
+use SilverStripe\ORM\ValidationResult;
+use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\RandomGenerator;
 use SilverStripe\Dev\CSSContentParser;
@@ -255,7 +256,7 @@ class FormTest extends FunctionalTest {
 		$form->saveInto($object);
 		$playersIds = $object->Players()->getIDList();
 
-		$this->assertTrue($form->validate());
+		$this->assertTrue($form->validationResult()->isValid());
 		$this->assertEquals(
 			$playersIds,
 			array(),
@@ -420,7 +421,7 @@ class FormTest extends FunctionalTest {
 	public function testSessionSuccessMessage() {
 		$this->get('FormTest_Controller');
 
-		$response = $this->post(
+		$this->post(
 			'FormTest_Controller/Form',
 			array(
 				'Email' => 'test@test.com',
@@ -436,16 +437,44 @@ class FormTest extends FunctionalTest {
 		);
 	}
 
+	public function testValidationException() {
+		$this->get('FormTest_Controller');
+
+		$this->post(
+			'FormTest_Controller/Form',
+			array(
+				'Email' => 'test@test.com',
+				'SomeRequiredField' => 'test',
+				'action_doTriggerException' => 1,
+			)
+		);
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_Email_Holder span.message',
+			array(
+				'Error on Email field'
+			),
+			'Formfield validation shows note on field if invalid'
+		);
+		$this->assertPartialMatchBySelector(
+			'#Form_Form_error',
+			array(
+				'Error at top of form'
+			),
+			'Required fields show a notification on field when left blank'
+		);
+
+	}
+
 	public function testGloballyDisabledSecurityTokenInheritsToNewForm() {
 		SecurityToken::enable();
 
 		$form1 = $this->getStubForm();
-		$this->assertInstanceOf('SilverStripe\\Security\\SecurityToken', $form1->getSecurityToken());
+		$this->assertInstanceOf(SecurityToken::class, $form1->getSecurityToken());
 
 		SecurityToken::disable();
 
 		$form2 = $this->getStubForm();
-		$this->assertInstanceOf('SilverStripe\\Security\\NullSecurityToken', $form2->getSecurityToken());
+		$this->assertInstanceOf(NullSecurityToken::class, $form2->getSecurityToken());
 
 		SecurityToken::enable();
 	}
@@ -472,7 +501,7 @@ class FormTest extends FunctionalTest {
 		SecurityToken::enable();
 		$expectedToken = SecurityToken::inst()->getValue();
 
-		$response = $this->get('FormTest_ControllerWithSecurityToken');
+		$this->get('FormTest_ControllerWithSecurityToken');
 		// can't use submitForm() as it'll automatically insert SecurityID into the POST data
 		$response = $this->post(
 			'FormTest_ControllerWithSecurityToken/Form',
@@ -490,7 +519,7 @@ class FormTest extends FunctionalTest {
 		$this->assertNotEquals($invalidToken, $expectedToken);
 
 		// Test token with request
-		$response = $this->get('FormTest_ControllerWithSecurityToken');
+		$this->get('FormTest_ControllerWithSecurityToken');
 		$response = $this->post(
 			'FormTest_ControllerWithSecurityToken/Form',
 			array(
@@ -513,7 +542,7 @@ class FormTest extends FunctionalTest {
 		$attrs = $matched[0]->attributes();
 		$this->assertEquals('test@test.com', (string)$attrs['value'], 'Submitted data is preserved');
 
-		$response = $this->get('FormTest_ControllerWithSecurityToken');
+		$this->get('FormTest_ControllerWithSecurityToken');
 		$tokenEls = $this->cssParser()->getBySelector('#Form_Form_SecurityID');
 		$this->assertEquals(
 			1,
@@ -533,13 +562,13 @@ class FormTest extends FunctionalTest {
 	}
 
 	public function testStrictFormMethodChecking() {
-		$response = $this->get('FormTest_ControllerWithStrictPostCheck');
+		$this->get('FormTest_ControllerWithStrictPostCheck');
 		$response = $this->get(
 			'FormTest_ControllerWithStrictPostCheck/Form/?Email=test@test.com&action_doSubmit=1'
 		);
 		$this->assertEquals(405, $response->getStatusCode(), 'Submission fails with wrong method');
 
-		$response = $this->get('FormTest_ControllerWithStrictPostCheck');
+		$this->get('FormTest_ControllerWithStrictPostCheck');
 		$response = $this->post(
 			'FormTest_ControllerWithStrictPostCheck/Form',
 			array(
@@ -756,8 +785,7 @@ class FormTest extends FunctionalTest {
 
 	function testMessageEscapeHtml() {
 		$form = $this->getStubForm();
-		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
-		$form->sessionMessage('<em>Escaped HTML</em>', 'good', true);
+		$form->setMessage('<em>Escaped HTML</em>', 'good', ValidationResult::CAST_TEXT);
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('.message');
 		$this->assertContains(
@@ -766,8 +794,7 @@ class FormTest extends FunctionalTest {
 		);
 
 		$form = $this->getStubForm();
-		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
-		$form->sessionMessage('<em>Unescaped HTML</em>', 'good', false);
+		$form->setMessage('<em>Unescaped HTML</em>', 'good', ValidationResult::CAST_HTML);
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('.message');
 		$this->assertContains(
@@ -776,11 +803,9 @@ class FormTest extends FunctionalTest {
 		);
 	}
 
-	function testFieldMessageEscapeHtml() {
+	public function testFieldMessageEscapeHtml() {
 		$form = $this->getStubForm();
-		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
-		$form->addErrorMessage('key1', '<em>Escaped HTML</em>', 'good', true);
-		$form->setupFormErrors();
+		$form->Fields()->dataFieldByName('key1')->setMessage('<em>Escaped HTML</em>', 'good');
 		$parser = new CSSContentParser($result = $form->forTemplate());
 		$messageEls = $parser->getBySelector('#Form_Form_key1_Holder .message');
 		$this->assertContains(
@@ -788,10 +813,12 @@ class FormTest extends FunctionalTest {
 			$messageEls[0]->asXML()
 		);
 
+		// Test with HTML
 		$form = $this->getStubForm();
-		$form->getController()->handleRequest(new HTTPRequest('GET', '/'), DataModel::inst()); // stub out request
-		$form->addErrorMessage('key1', '<em>Unescaped HTML</em>', 'good', false);
-		$form->setupFormErrors();
+		$form
+            ->Fields()
+            ->dataFieldByName('key1')
+            ->setMessage('<em>Unescaped HTML</em>', 'good', ValidationResult::CAST_HTML);
 		$parser = new CSSContentParser($form->forTemplate());
 		$messageEls = $parser->getBySelector('#Form_Form_key1_Holder .message');
 		$this->assertContains(

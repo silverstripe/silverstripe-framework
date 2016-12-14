@@ -4,9 +4,12 @@ namespace SilverStripe\Forms\Tests\FormTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\ManyManyList;
 
 /**
  * @skipUpgrade
+ *
+ * @method ManyManyList Players()
  */
 class Team extends DataObject implements TestOnly
 {

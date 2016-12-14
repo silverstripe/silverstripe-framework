@@ -12,7 +12,6 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\FieldType\DBComposite;
 use SilverStripe\Security\Permission;
-use SilverStripe\Core\Convert;
 
 /**
  * Represents a file reference stored in a database
@@ -455,7 +454,7 @@ class DBFile extends DBComposite implements AssetContainer, Thumbnail
     {
         $result = new ValidationResult();
         $this->validate($result, $filename);
-        if (!$result->valid()) {
+        if (!$result->isValid()) {
             throw new ValidationException($result);
         }
     }
@@ -477,19 +476,8 @@ class DBFile extends DBComposite implements AssetContainer, Thumbnail
             return true;
         }
 
-        // Check allowed extensions
-        $extensions = $this->getAllowedExtensions();
-        if (empty($extensions)) {
-            $extensions = File::config()->allowed_extensions;
-        }
-        sort($extensions);
-        $message = _t(
-            'File.INVALIDEXTENSION',
-            'Extension is not allowed (valid: {extensions})',
-            'Argument 1: Comma-separated list of valid extensions',
-            array('extensions' => wordwrap(implode(', ', $extensions)))
-        );
-        $result->error($message);
+        $message = _t('File.INVALIDEXTENSIONSHORT', 'Extension is not allowed');
+        $result->addError($message);
         return false;
     }
 

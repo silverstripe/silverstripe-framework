@@ -6,7 +6,6 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\PermissionRole;
 use SilverStripe\Security\PermissionRoleCode;
 use SilverStripe\Dev\FunctionalTest;
-use ReflectionMethod;
 
 class PermissionRoleTest extends FunctionalTest {
 	protected static $fixture_file = 'PermissionRoleTest.yml';
@@ -24,31 +23,26 @@ class PermissionRoleTest extends FunctionalTest {
 
 	public function testValidatesPrivilegedPermissions() {
 		$nonAdminCode = new PermissionRoleCode(array('Code' => 'CMS_ACCESS_CMSMain'));
-		$nonAdminValidateMethod = new ReflectionMethod($nonAdminCode, 'validate');
-		$nonAdminValidateMethod->setAccessible(true);
-
 		$adminCode = new PermissionRoleCode(array('Code' => 'ADMIN'));
-		$adminValidateMethod = new ReflectionMethod($adminCode, 'validate');
-		$adminValidateMethod->setAccessible(true);
 
 		$this->logInWithPermission('APPLY_ROLES');
-		$result = $nonAdminValidateMethod->invoke($nonAdminCode);
+		$result = $nonAdminCode->validate();
 		$this->assertTrue(
-			$result->valid(),
+			$result->isValid(),
 			'Members with only APPLY_ROLES can create non-privileged permission role codes'
 		);
 
 		$this->logInWithPermission('APPLY_ROLES');
-		$result = $adminValidateMethod->invoke($adminCode);
+		$result = $adminCode->validate();
 		$this->assertFalse(
-			$result->valid(),
+			$result->isValid(),
 			'Members with only APPLY_ROLES can\'t create privileged permission role codes'
 		);
 
 		$this->logInWithPermission('ADMIN');
-		$result = $adminValidateMethod->invoke($adminCode);
+		$result = $adminCode->validate();
 		$this->assertTrue(
-			$result->valid(),
+			$result->isValid(),
 			'Members with ADMIN can create privileged permission role codes'
 		);
 	}
