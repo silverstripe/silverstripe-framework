@@ -568,14 +568,14 @@ return t.state||(t=c({},t,{state:this.props.schema.state})),t=c({},t,{state:c({}
 })}),messages:e.errors.filter(function(e){return!e.field})})}),delete t.errors,(0,b["default"])(t)}},{key:"overrideStateData",value:function m(e){if(!this.props.stateOverrides||!e)return e
 var t=this.props.stateOverrides.fields,n=e.fields
 return t&&n&&(n=n.map(function(e){var n=t.find(function(t){return t.name===e.name})
-return n?E["default"].recursive(!0,e,n):e})),c({},e,this.props.stateOverrides,{fields:n})}},{key:"fetch",value:function g(){var e=this,t=arguments.length<=0||void 0===arguments[0]||arguments[0],n=arguments.length<=1||void 0===arguments[1]||arguments[1],i=[]
+return n?E["default"].recursive(!0,e,n):e})),c({},e,this.props.stateOverrides,{fields:n})}},{key:"callFetch",value:function g(e){return(0,v["default"])(this.props.schemaUrl,{headers:{"X-FormSchema-Request":e.join(",")
+},credentials:"same-origin"}).then(function(e){return e.json()})}},{key:"fetch",value:function y(){var e=this,t=arguments.length<=0||void 0===arguments[0]||arguments[0],n=arguments.length<=1||void 0===arguments[1]||arguments[1],i=[]
 
 
-return t&&i.push("schema"),n&&i.push("state"),this.props.loading?Promise.resolve({}):(this.props.actions.schema.setSchemaLoading(this.props.schemaUrl,!0),(0,v["default"])(this.props.schemaUrl,{headers:{
-"X-FormSchema-Request":i.join()},credentials:"same-origin"}).then(function(e){return e.json()}).then(function(t){if(e.props.actions.schema.setSchemaLoading(e.props.schemaUrl,!1),"undefined"!=typeof t.id){
-var n=c({},t,{state:e.overrideStateData(t.state)})
-return e.props.actions.schema.setSchema(e.props.schemaUrl,n),n}return t}))}},{key:"handleAutofill",value:function y(e,t){this.props.actions.reduxForm.autofill(this.props.schemaUrl,e,t)}},{key:"render",
-value:function w(){if(!this.props.schema||!this.props.schema.schema||this.props.loading)return null
+return t&&i.push("schema"),n&&i.push("state"),this.props.loading?Promise.resolve({}):(this.props.actions.schema.setSchemaLoading(this.props.schemaUrl,!0),this.callFetch(i).then(function(t){if(e.props.actions.schema.setSchemaLoading(e.props.schemaUrl,!1),
+"undefined"!=typeof t.id){var n=c({},t,{state:e.overrideStateData(t.state)})
+return e.props.actions.schema.setSchema(e.props.schemaUrl,n),n}return t}))}},{key:"handleAutofill",value:function w(e,t){this.props.actions.reduxForm.autofill(this.props.schemaUrl,e,t)}},{key:"render",
+value:function C(){if(!this.props.schema||!this.props.schema.schema||this.props.loading)return null
 var e=c({},this.props,{form:this.props.schemaUrl,onSubmitSuccess:this.props.onSubmitSuccess,handleSubmit:this.handleSubmit,onAutofill:this.handleAutofill})
 return p["default"].createElement(k["default"],e)}}]),t}(f.Component)
 j.propTypes=c({},S.basePropTypes,{actions:f.PropTypes.shape({schema:f.PropTypes.object,reduxFrom:f.PropTypes.object}),schemaUrl:f.PropTypes.string.isRequired,schema:S.schemaPropType,form:f.PropTypes.string,
@@ -858,14 +858,15 @@ n(this,e)}return i(e,null,[{key:"get",value:function t(e){return window.ss.confi
 }}]),e}()
 t["default"]=r},function(e,t,n){(function(t){e.exports=t.DataFormat=n(151)}).call(t,function(){return this}())},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(null===t)return null
-if(t){var n=a({},e.query,t),i=c["default"].stringify(n)
+if(t){var n=s({},e.query,t),i=d["default"].stringify(n)
 return i?"?"+i:""}return e.search}function o(e){var t=null,n=""
 return e<1024?(t=e,n="bytes"):e<10240?(t=Math.round(e/1024*10)/10,n="KB"):e<1048576?(t=Math.round(e/1024),n="KB"):e<10485760?(t=Math.round(e/1024*1024*10)/10,n="MB"):e<1073741824&&(t=Math.round(e/1024*1024),
-n="MB"),t&&n||(t=Math.round(e/1073741824*10)/10,n="GB"),isNaN(t)?l["default"]._t("File.NO_SIZE","N/A"):t+" "+n}Object.defineProperty(t,"__esModule",{value:!0})
-var a=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
+n="MB"),t&&n||(t=Math.round(e/1073741824*10)/10,n="GB"),isNaN(t)?u["default"]._t("File.NO_SIZE","N/A"):t+" "+n}function a(e){return/[.]/.exec(e)?e.replace(/^.+[.]/,""):""}Object.defineProperty(t,"__esModule",{
+value:!0})
+var s=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
 for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e}
-t.urlQuery=r,t.fileSize=o
-var s=n(116),l=i(s),u=n(152),c=i(u)},,,function(e,t,n){(function(t){e.exports=t.ReducerRegister=n(155)}).call(t,function(){return this}())},function(e,t){"use strict"
+t.urlQuery=r,t.fileSize=o,t.getFileExtension=a
+var l=n(116),u=i(l),c=n(152),d=i(c)},,,function(e,t,n){(function(t){e.exports=t.ReducerRegister=n(155)}).call(t,function(){return this}())},function(e,t){"use strict"
 function n(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}Object.defineProperty(t,"__esModule",{value:!0})
 var i=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),r={},o=function(){function e(){

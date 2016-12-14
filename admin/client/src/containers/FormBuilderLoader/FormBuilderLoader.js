@@ -185,7 +185,21 @@ class FormBuilderLoader extends Component {
   }
 
   /**
-   * Fetches data used to generate a form. This can be form schema and or form state data.
+   * Call to make the fetching happen
+   *
+   * @param headerValues
+   * @returns {*}
+   */
+  callFetch(headerValues) {
+    return fetch(this.props.schemaUrl, {
+      headers: { 'X-FormSchema-Request': headerValues.join(',') },
+      credentials: 'same-origin',
+    })
+      .then(response => response.json());
+  }
+
+  /**
+   * Fetches data used to generate a form. This can be form schema and/or form state data.
    * When the response comes back the data is saved to state.
    *
    * @param {Boolean} schema If form schema data should be returned in the response.
@@ -211,11 +225,7 @@ class FormBuilderLoader extends Component {
     // using `this.state.fetching` caused race-condition issues.
     this.props.actions.schema.setSchemaLoading(this.props.schemaUrl, true);
 
-    return fetch(this.props.schemaUrl, {
-      headers: { 'X-FormSchema-Request': headerValues.join() },
-      credentials: 'same-origin',
-    })
-      .then(response => response.json())
+    return this.callFetch(headerValues)
       .then(formSchema => {
         this.props.actions.schema.setSchemaLoading(this.props.schemaUrl, false);
 
