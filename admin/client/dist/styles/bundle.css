@@ -7863,6 +7863,10 @@ h1{
   content:"<";
 }
 
+.font-icon-icon-enlarge:before{
+  content:"=";
+}
+
 .icon-btn-icon,.ui-state-default [class*=btn-icon-],.ui-widget-content [class*=btn-icon-]{
   background-image:url(../images/sprite-btn-icon.png);
 }

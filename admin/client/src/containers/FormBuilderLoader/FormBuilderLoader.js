@@ -8,6 +8,7 @@ import {
   reduxForm,
   SubmissionError,
   destroy as reduxDestroyForm,
+  autofill,
 } from 'redux-form';
 import * as schemaActions from 'state/schema/SchemaActions';
 import merge from 'merge';
@@ -22,6 +23,7 @@ class FormBuilderLoader extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.clearSchema = this.clearSchema.bind(this);
     this.reduceSchemaErrors = this.reduceSchemaErrors.bind(this);
+    this.handleAutofill = this.handleAutofill.bind(this);
   }
 
   componentDidMount() {
@@ -65,7 +67,7 @@ class FormBuilderLoader extends Component {
       // we will reload the schema anyway when we mount again, this is here so that redux-form
       // doesn't preload previous data mistakenly. (since it only accepts initialised values)
       reduxDestroyForm(schemaUrl);
-      this.props.schemaActions.setSchema(schemaUrl, null);
+      this.props.actions.schema.setSchema(schemaUrl, null);
     }
   }
 
@@ -96,7 +98,7 @@ class FormBuilderLoader extends Component {
         if (schema) {
           // Strip errors out of schema response in preparation for setSchema and SubmissionError
           schema = this.reduceSchemaErrors(schema);
-          this.props.schemaActions.setSchema(this.props.schemaUrl, schema);
+          this.props.actions.schema.setSchema(this.props.schemaUrl, schema);
         }
         return schema;
       })
@@ -207,7 +209,7 @@ class FormBuilderLoader extends Component {
     }
 
     // using `this.state.fetching` caused race-condition issues.
-    this.props.schemaActions.setSchemaLoading(this.props.schemaUrl, true);
+    this.props.actions.schema.setSchemaLoading(this.props.schemaUrl, true);
 
     return fetch(this.props.schemaUrl, {
       headers: { 'X-FormSchema-Request': headerValues.join() },
@@ -215,19 +217,32 @@ class FormBuilderLoader extends Component {
     })
       .then(response => response.json())
       .then(formSchema => {
-        this.props.schemaActions.setSchemaLoading(this.props.schemaUrl, false);
+        this.props.actions.schema.setSchemaLoading(this.props.schemaUrl, false);
 
         if (typeof formSchema.id !== 'undefined') {
           const overriddenSchema = Object.assign({},
             formSchema,
             { state: this.overrideStateData(formSchema.state) }
           );
-          this.props.schemaActions.setSchema(this.props.schemaUrl, overriddenSchema);
+          this.props.actions.schema.setSchema(this.props.schemaUrl, overriddenSchema);
 
           return overriddenSchema;
         }
         return formSchema;
       });
+  }
+
+  /**
+   * Sets the value of a field based on actions within other fields, this is a more semantic way to
+   * change a field's value than calling onChange() for the target field.
+   *
+   * By virtue of redux-form, it also flags the field as "meta.autofilled"
+   *
+   * @param field
+   * @param value
+   */
+  handleAutofill(field, value) {
+    this.props.actions.reduxForm.autofill(this.props.schemaUrl, field, value);
   }
 
   render() {
@@ -241,13 +256,17 @@ class FormBuilderLoader extends Component {
       form: this.props.schemaUrl,
       onSubmitSuccess: this.props.onSubmitSuccess,
       handleSubmit: this.handleSubmit,
+      onAutofill: this.handleAutofill,
     });
     return <FormBuilder {...props} />;
   }
 }
 
 FormBuilderLoader.propTypes = Object.assign({}, basePropTypes, {
-  schemaActions: PropTypes.object,
+  actions: PropTypes.shape({
+    schema: PropTypes.object,
+    reduxFrom: PropTypes.object,
+  }),
   schemaUrl: PropTypes.string.isRequired,
   schema: schemaPropType,
   form: PropTypes.string,
@@ -276,7 +295,10 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    schemaActions: bindActionCreators(schemaActions, dispatch),
+    actions: {
+      schema: bindActionCreators(schemaActions, dispatch),
+      reduxForm: bindActionCreators({ autofill }, dispatch),
+    },
   };
 }
 
