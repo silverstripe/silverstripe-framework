@@ -265,6 +265,21 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		$new->ThumbnailImage($width,$height,true);
 		return $new;
 	}
+	
+	/**
+	 * Crop's part of image.
+	 * @param int $top y position of left upper corner of crop rectangle
+	 * @param int $left x position of left upper corner of crop rectangle
+	 * @param int $width rectangle width
+	 * @param int $height rectangle height
+	 * @return Image_Backend
+	 */
+	public function crop($top, $left, $width, $height) {
+		$new = clone $this;
+		$new->cropImage($width, $height, $left, $top);
+		
+		return $new;
+	}
 
 	/**
 	 * @param Image $frontend
