@@ -9,12 +9,14 @@ how you can load default records into the test database.
 
 	:::php
 	<?php
+    
+    use SilverStripe\Dev\SapphireTest;
 
-	class PageTest extends SapphireTest {
-
+	class PageTest extends SapphireTest
+    {
 		/** 
 		 * Defines the fixture file to use for this test class
-		 *
+		 * @var string
 		 */
 		protected static $fixture_file = 'SiteTreeTest.yml';
 
@@ -26,7 +28,8 @@ how you can load default records into the test database.
 		 *  - Generates from Title by default, unless URLSegment is explicitly set
 		 *  - Resolves duplicates by appending a number
 		 */
-		public function testURLGeneration() {
+		public function testURLGeneration()
+        {
 			$expectedURLs = array(
 				'home' => 'home',
 				'staff' => 'my-staff',
