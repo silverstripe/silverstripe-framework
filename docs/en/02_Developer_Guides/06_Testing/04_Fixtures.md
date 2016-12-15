@@ -14,9 +14,11 @@ ideal for fixture generation. Say we have the following two DataObjects:
 
 	:::php
 	<?php
+    
+    use SilverStripe\ORM\DataObject;
 
-	class Player extends DataObject {
-		
+	class Player extends DataObject
+    {
 		private static $db = array (
 			'Name' => 'Varchar(255)'
 		);
@@ -26,8 +28,8 @@ ideal for fixture generation. Say we have the following two DataObjects:
 		);
 	}
 
-	class Team extends DataObject {
-
+	class Team extends DataObject
+    {
 		private static $db = array (
 			'Name' => 'Varchar(255)',
 			'Origin' => 'Varchar(255)'
@@ -133,14 +135,35 @@ As the YAML fixtures will call `write`, any `onBeforeWrite()` or default value l
 test.
 </div>
 
+### Fixtures for namespaced classes
+
+As of SilverStripe 4 you will need to use fully qualfied class names in your YAML fixture files. In the above examples, they belong to the global namespace so there is nothing requires, but if you have a deeper DataObject, or it has a relationship to models that are part of the framework for example, you will need to include their namespaces:
+
+    :::yml
+    MyProject\Model\Player:
+      john:
+        Name: join
+    
+    MyProject\Model\Team:
+      crusaders:
+        Name: Crusaders
+        Origin: Canterbury
+        Players: =>MyProject\Model\Player.john
+
+<div class="notice" markdown="1">
+If your tests are failing and your database has table names that follow the fully qualified class names, you've probably forgotten to implement `private static $table_name = 'Player';` on your namespaced class. This property was introduced in SilverStripe 4 to reduce data migration work. See [api:DataObject] for an example.
+</div>
+
 ### Defining many_many_extraFields
 
 `many_many` relations can have additional database fields attached to the relationship. For example we may want to 
 declare the role each player has in the team.
 
 	:::php
-	class Player extends DataObject {
-		
+    use SilverStripe\ORM\DataObject;
+    
+	class Player extends DataObject
+    {
 		private static $db = array (
 			'Name' => 'Varchar(255)'
 		);
@@ -150,8 +173,8 @@ declare the role each player has in the team.
 		);
 	}
 
-	class Team extends DataObject {
-
+	class Team extends DataObject
+    {
 		private static $db = array (
 			'Name' => 'Varchar(255)'
 		);
@@ -161,8 +184,8 @@ declare the role each player has in the team.
 		);
 
 		private static $many_many_extraFields = array(
-			"Players" => array(
-				"Role" => "Varchar"
+			'Players' => array(
+				'Role' => "Varchar"
 			)
 		);	
 	}
@@ -200,7 +223,7 @@ Alternatively, you can use the [api:FixtureFactory] class, which allows you to s
 creation, and dynamic/lazy value setting.
 
 <div class="hint" markdown='1'>
-SapphireTest uses FixtureFactory under the hood when it is provided with YAML based fixtures.
+`SapphireTest` uses `FixtureFactory` under the hood when it is provided with YAML based fixtures.
 </div>
 
 The idea is that rather than instantiating objects directly, we'll have a factory class for them. This factory can have 
