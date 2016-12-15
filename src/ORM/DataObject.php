@@ -3038,6 +3038,22 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     }
 
     /**
+     * Get the database table name for this object. This can be used for the
+     * table name when making custom joins, e.g.:
+     *
+     * <code>
+     * $dataQuery->innerJoin(MyDataObject::getTableName(), 'MyObject.ID = SomeOther.ID');
+     * </code>
+     *
+     * @return string
+     */
+    public static function getTableName()
+    {
+        return self::$table_name;
+    }
+
+
+    /**
      * Get the name of the base table for this object
      *
      * @return string
