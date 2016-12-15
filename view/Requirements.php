@@ -1359,8 +1359,6 @@ class Requirements_Backend {
 			$this->css($theme . $css, $media);
 		} elseif($module) {
 			$this->css($module . $css, $media);
-		} else {
-			throw new InvalidArgumentException("The css file doesn't exists. Please check if the file $name.css exists in any context or search for themedCSS references calling this file in your templates.");
 		}
 	}
 
@@ -1393,8 +1391,6 @@ class Requirements_Backend {
 			$this->javascript($theme . $js);
 		} elseif($module) {
 			$this->javascript($module . $js);
-		} else {
-			throw new InvalidArgumentException("The javascript file doesn't exists. Please check if the file $name.js exists in any context or search for themedJavascript references calling this file in your templates.");
 		}
 	}
 
