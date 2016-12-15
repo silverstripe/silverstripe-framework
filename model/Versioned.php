@@ -607,7 +607,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 				$data = array_intersect_key($data, $fields);
 
 				foreach ($data as $k => $v) {
-					if (!isset($newManipulation['fields'][$k])) {
+					if (!array_key_exists($k, $newManipulation['fields'])) {
 						$newManipulation['fields'][$k] = $v;
 					}
 				}
@@ -902,9 +902,9 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	}
 
 	/**
-	 * Get the latest published version of this object.
+	 * Is the latest version of the object published?
 	 *
-	 * @return DataObject
+	 * @return bool
 	 */
 	public function latestPublished() {
 		// Get the root data object class - this will have the version field

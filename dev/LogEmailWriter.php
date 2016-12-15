@@ -15,7 +15,7 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 	 * @config
 	 * @var $send_from Email address to send log information from
 	 */
-	private static $send_from = 'errors@silverstripe.com';
+	private static $send_from = null;
 
 	protected $emailAddress;
 
@@ -60,7 +60,11 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		$formattedData = $this->_formatter->format($event);
 		$subject = $formattedData['subject'];
 		$data = $formattedData['data'];
-		$from = Config::inst()->get('SS_LogEmailWriter', 'send_from');
+		if (Email::config()->send_all_emails_from) {
+			$from = Email::config()->send_all_emails_from;
+		} else {
+			$from = Config::inst()->get('SS_LogEmailWriter', 'send_from') ?: Email::config()->admin_email;
+		}
 
 		// override the SMTP server with a custom one if required
 		$originalSMTP = ini_get('SMTP');
@@ -69,6 +73,12 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 		// Use plain mail() implementation to avoid complexity of Mailer implementation.
 		// Only use built-in mailer when we're in test mode (to allow introspection)
 		$mailer = Email::mailer();
+
+		$headers = "Content-type: text/html";
+		if ($from) {
+			$headers .= "\nFrom: " . $from;
+		}
+
 		if($mailer instanceof TestMailer) {
 			$mailer->sendHTML(
 				$this->emailAddress,
@@ -76,15 +86,25 @@ class SS_LogEmailWriter extends Zend_Log_Writer_Abstract {
 				$subject,
 				$data,
 				null,
-				"Content-type: text/html\nFrom: " . $from
+				$headers
 			);
 		} else {
-			mail(
+			// Try it with the -f option first, without if it fails - borrowed from Mailer
+			$result = mail(
 				$this->emailAddress,
 				$subject,
 				$data,
-				"Content-type: text/html\nFrom: " . $from
+				$headers,
+				escapeshellarg("-f$from")
 			);
+			if(!$result) {
+				mail(
+					$this->emailAddress,
+					$subject,
+					$data,
+					$headers
+				);
+			}
 		}
 
 		// reset the SMTP server to the original

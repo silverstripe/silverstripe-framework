@@ -1277,4 +1277,13 @@ class FormField extends RequestHandler {
 		return $field;
 	}
 
+	/**
+	 * Determine if the value of this formfield accepts front-end submitted values and is saveable.
+	 *
+	 * @return bool
+	 */
+	public function canSubmitValue() {
+		return $this->hasData() && !$this->isReadonly() && !$this->isDisabled();
+	}
+
 }

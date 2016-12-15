@@ -1,5 +1,5 @@
-(function($){
-	$.entwine('ss', function($){
+(function($) {
+	$.entwine('ss', function($) {
 		/**
 		 * Lightweight wrapper around jQuery UI tabs for generic tab set-up
 		 */
@@ -34,11 +34,11 @@
 			 * @param {string} hash
 			 * @desc Allows linking to a specific tab.
 			 */
-			openTabFromURL: function (hash) {
+			openTabFromURL: function(hash) {
 				var $trigger;
 
 				// Make sure the hash relates to a valid tab.
-				$.each(this.find('.cms-panel-link'), function () {
+				$.each(this.find('.ui-tabs-anchor'), function() {
 					// The hash in in the button's href and there is exactly one tab with that id.
 					if (this.href.indexOf(hash) !== -1 && $(hash).length === 1) {
 						$trigger = $(this);
@@ -52,7 +52,7 @@
 				}
 
 				// Switch to the correct tab when AJAX loading completes.
-				$(window).one('ajaxComplete', function () {
+				$(document).ready(function() {
 					$trigger.click();
 				});
 			},
@@ -66,7 +66,7 @@
 					if (!$(this).attr('href')) return;
 
 					var matches = $(this).attr('href').match(/#.*/);
-					if(!matches) return;
+					if (!matches) return;
 					$(this).attr('href', document.location.href.replace(/#.*/, '') + matches[0]);
 				});
 			}

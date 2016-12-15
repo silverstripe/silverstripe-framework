@@ -17,6 +17,15 @@ abstract class SS_Database {
 	protected $connector = null;
 
 	/**
+	 * In cases where your environment does not have 'SHOW DATABASES' permission,
+	 * you can set this to true. Then selectDatabase() will always connect without
+	 * doing databaseExists() check.
+	 *
+	 * @var bool
+	 */
+	private static $optimistic_connect = false;
+
+	/**
 	 * Get the current connector
 	 *
 	 * @return DBConnector
@@ -132,7 +141,8 @@ abstract class SS_Database {
 			$sql,
 			function($sql) use($connector, $parameters, $errorLevel) {
 				return $connector->preparedQuery($sql, $parameters, $errorLevel);
-			}
+			},
+			$parameters
 		);
 	}
 
@@ -165,13 +175,18 @@ abstract class SS_Database {
 	 *
 	 * @param string $sql Query to run, and single parameter to callback
 	 * @param callable $callback Callback to execute code
+	 * @param array $parameters Parameters for any parameterised query
 	 * @return mixed Result of query
 	 */
-	protected function benchmarkQuery($sql, $callback) {
+	protected function benchmarkQuery($sql, $callback, $parameters = array()) {
 		if (isset($_REQUEST['showqueries']) && Director::isDev()) {
 			$starttime = microtime(true);
 			$result = $callback($sql);
 			$endtime = round(microtime(true) - $starttime, 4);
+			// replace parameters as closely as possible to what we'd expect the DB to put in
+			if (strtolower($_REQUEST['showqueries']) == 'inline') {
+				$sql = DB::inline_parameters($sql, $parameters);
+			}
 			Debug::message("\n$sql\n{$endtime}s\n", false);
 			return $result;
 		} else {
@@ -630,18 +645,23 @@ abstract class SS_Database {
 	 * @return boolean Flag indicating success
 	 */
 	public function selectDatabase($name, $create = false, $errorLevel = E_USER_ERROR) {
-		if (!$this->schemaManager->databaseExists($name)) {
-			// Check DB creation permisson
-			if (!$create) {
-				if ($errorLevel !== false) {
-					user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel);
-				}
-				// Unselect database
-				$this->connector->unloadDatabase();
-				return false;
-			}
-			$this->schemaManager->createDatabase($name);
+		// In case our live environment is locked down, we can bypass a SHOW DATABASE check
+		$canConnect = Config::inst()->get(get_class($this), 'optimistic_connect')
+			|| $this->schemaManager->databaseExists($name);
+		if($canConnect) {
+			return $this->connector->selectDatabase($name);
 		}
+
+		// Check DB creation permisson
+		if (!$create) {
+			if ($errorLevel !== false) {
+				user_error("Attempted to connect to non-existing database \"$name\"", $errorLevel);
+			}
+			// Unselect database
+			$this->connector->unloadDatabase();
+			return false;
+		}
+		$this->schemaManager->createDatabase($name);
 		return $this->connector->selectDatabase($name);
 	}
 

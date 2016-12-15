@@ -1700,6 +1700,13 @@ class DataObjectTest extends SapphireTest {
 
 	}
 
+	public function testBigIntField() {
+		$staff = new DataObjectTest_Staff();
+		$staff->Salary = PHP_INT_MAX;
+		$staff->write();
+		$this->assertEquals(PHP_INT_MAX, DataObjectTest_Staff::get()->byID($staff->ID)->Salary);
+	}
+
 }
 
 class DataObjectTest_Sortable extends DataObject implements TestOnly {
@@ -1920,11 +1927,14 @@ class DataObjectTest_EquipmentCompany extends DataObjectTest_Company implements 
 
 class DataObjectTest_SubEquipmentCompany extends DataObjectTest_EquipmentCompany implements TestOnly {
 	private static $db = array(
-		'SubclassDatabaseField' => 'Varchar'
+		'SubclassDatabaseField' => 'Varchar',
 	);
 }
 
 class DataObjectTest_Staff extends DataObject implements TestOnly {
+	private static $db = array(
+		'Salary' => 'BigInt',
+	);
 	private static $has_one = array (
 		'CurrentCompany'  => 'DataObjectTest_Company',
 		'PreviousCompany' => 'DataObjectTest_Company'

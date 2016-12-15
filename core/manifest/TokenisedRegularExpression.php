@@ -13,32 +13,40 @@ class TokenisedRegularExpression {
 	 */
 	protected $expression;
 
+	/**
+	 * The first expression to match
+	 */
+	protected $firstMatch;
+
 	public function __construct($expression) {
 		$this->expression = $expression;
+		$this->firstMatch = is_array($expression[0]) ? $expression[0][0] : $expression[0];
 	}
 
 	public function findAll($tokens) {
 		$tokenTypes = array();
 		foreach($tokens as $i => $token) {
 			if(is_array($token)) {
-				$tokenTypes[$i] = $token[0];
+				$tokenType = $token[0];
 			} else {
-				$tokenTypes[$i] = $token;
+				$tokenType = $token;
 				// Pre-process string tokens for matchFrom()
 				$tokens[$i] = array($token, $token);
 			}
+
+			if ($tokenType == $this->firstMatch) {
+				$tokenTypes[$i] = $tokenType;
+			}
 		}
 
-		$startKeys = array_keys($tokenTypes, is_array($this->expression[0])
-			? $this->expression[0][0] : $this->expression[0]);
 		$allMatches = array();
-
-		foreach($startKeys as $startKey) {
+		foreach($tokenTypes as $startKey => $dud) {
 			$matches = array();
 			if($this->matchFrom($startKey, 0, $tokens, $matches)) {
 				$allMatches[] = $matches;
 			}
 		}
+
 		return $allMatches;
 	}
 

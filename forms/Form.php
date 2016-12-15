@@ -355,18 +355,8 @@ class Form extends RequestHandler {
 			$vars = $request->requestVars();
 		}
 
-		// construct an array of allowed fields that can be populated from request data.
-		// readonly or disabled fields should not be loading data from requests
-		$allowedFields = array();
-		$dataFields = $this->Fields()->dataFields();
-		if ($dataFields) {
-			/** @var FormField $field */
-			foreach ($this->Fields()->dataFields() as $name => $field) {
-				if (!$field->isReadonly() && !$field->isDisabled()) {
-					$allowedFields[] = $name;
-				}
-			}
-		}
+		// Ensure we only process saveable fields (non structural, readonly, or disabled)
+		$allowedFields = array_keys($this->Fields()->saveableFields());
 
 		// Populate the form
 		$this->loadDataFrom($vars, true, $allowedFields);
@@ -493,13 +483,9 @@ class Form extends RequestHandler {
 			return true;
 		}
 
-		// Always allow actions which map to buttons. See httpSubmission() for further access checks.
-		$fields = $this->fields->dataFields() ?: array();
-		$actions = $this->actions->dataFields() ?: array();
-
-		$fieldsAndActions = array_merge($fields, $actions);
- 		foreach ($fieldsAndActions as $fieldOrAction) {
-			if ($fieldOrAction instanceof FormAction && $fieldOrAction->actionName() === $action) {
+		$actions = $this->getAllActions();
+ 		foreach ($actions as $formAction) {
+			if ($formAction->actionName() === $action) {
 				return true;
 			}
 		}
@@ -1396,7 +1382,7 @@ class Form extends RequestHandler {
 	 *  For backwards compatibility reasons, this parameter can also be set to === true, which is the same as passing
 	 *  CLEAR_MISSING
 	 *
-	 * @param FieldList $fieldList An optional list of fields to process.  This can be useful when you have a
+	 * @param array $fieldList An optional list of fields to process.  This can be useful when you have a
 	 * form that has some fields that save to one object, and some that save to another.
 	 * @return Form
 	 */
@@ -1678,21 +1664,31 @@ class Form extends RequestHandler {
 	 * @return FormAction
 	 */
 	public function buttonClicked() {
-		$fields = $this->fields->dataFields() ?: array();
-		$actions = $this->actions->dataFields() ?: array();
-
- 		if(!$actions && !$fields) {
-			return null;
-		}
-
-		$fieldsAndActions = array_merge($fields, $actions);
- 		foreach ($fieldsAndActions as $fieldOrAction) {
-			if ($fieldOrAction instanceof FormAction && $this->buttonClickedFunc === $fieldOrAction->actionName()) {
-				return $fieldOrAction;
+		$actions = $this->getAllActions();
+ 		foreach ($actions as $action) {
+			if ($this->buttonClickedFunc === $action->actionName()) {
+				return $action;
 			}
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get a list of all actions, including those in the main "fields" FieldList
+	 *
+	 * @return array
+	 */
+	protected function getAllActions() {
+		$fields = $this->fields->dataFields() ?: array();
+		$actions = $this->actions->dataFields() ?: array();
+
+		$fieldsAndActions = array_merge($fields, $actions);
+		$actions = array_filter($fieldsAndActions, function($fieldOrAction) {
+			return $fieldOrAction instanceof FormAction;
+		});
+
+		return $actions;
 	}
 
 	/**
