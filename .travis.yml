@@ -7,14 +7,6 @@ addons:
     packages:
       - tidy
 
-env:
-  global:
-    - TRAVIS_NODE_VERSION="4"
-    - ARTIFACTS_REGION=us-east-1
-    - ARTIFACTS_BUCKET=silverstripe-travis-artifacts
-    - secure: "jVR0iLTuvVfA6jKX5+A3AdUEs8Ps+r3SbL0zGR687K8IoSp3a/+JLH12zFCEexOuxwCtOhlMq8zoZsptCEduCDq+0payk5k6GjNVywFaWjJCV573JScdaHAtoumoHMUvua+Pxds0qKAD2XEYAcOR4Qu7S4HLJV6E1QqHg9PRW5s=" # Encrypted ARTIFACTS_KEY
-    - secure: "SDGv49c2Ee2YBz7dATE3WnHSVSvJiRJ2BVtRasVshdNDNz3NBRzh13C2fDwTGBU1J6PxiQaGTXBy/BGsvbYk2BvdzHVwozkBpHVSaCNdarpCJ5yZZTqKC3mpA1S5353r5tqronwFuMDpftzXnRMfLZGGQ4kYb9hjV55+FPUTFPk=" # Encrypted ARTIFACTS_SECRET
-
 matrix:
   fast_finish: true
   include:
@@ -76,9 +68,3 @@ branches:
     - 2.2
     - 2.3
     - translation-staging
-
-#  global:
-#   - secure: "AZmjVPtUD8JBA7ag4ULlEwEKXSEZbIUjDHeRBFugaOtdsn5yigGLmwYbzsg2tq7k7UkdbbAlGct0SUbiRJb9F2wPA5+eUd/p49fgDIU6CTSWIlT87H2BwgOrxKwS9sDwxLptPFM6vWQ8JKYSNGmVIepie9kQZbu4L2k5k6B69jQ="
-#   - secure: "f3kKpUn9cS5K+p/E52cMqN18cDApol/43LanDmHO6mo3iRAztk3jZLyfNOUq6JASKMqdh8+9kencRpEoaAYbcQnDPoZsT9POResiJ9/ADKB6RwWy+lcFHUp9E2Zf/x2VRh9FmXEguDhpWzkJqzWYJGCSig1IBp/+TjzKnsjQHIY="
-#
-# - php ~/travis-support/travis_setup_sauceconnect.php --if-env BEHAT_TEST --username ${SAUCE_USERNAME} --access-key ${SAUCE_ACCESS_KEY} --tunnel-identifier ${TRAVIS_JOB_NUMBER} --base-url http://localhost

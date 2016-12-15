@@ -50,6 +50,9 @@ abstract class BuildTask extends Object
      */
     abstract public function run($request);
 
+    /**
+     * @return bool
+     */
     public function isEnabled()
     {
         return $this->enabled;

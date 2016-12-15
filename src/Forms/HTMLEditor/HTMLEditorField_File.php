@@ -117,7 +117,8 @@ abstract class HTMLEditorField_File extends ViewableData
                     'center' => _t('HTMLEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
                     'left' => _t('HTMLEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
                     'right' => _t('HTMLEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
-                )
+                ),
+                HtmlEditorField::config()->get('media_alignment')
             ),
             FieldGroup::create(
                 _t('HTMLEditorField.IMAGEDIMENSIONS', 'Dimensions'),
