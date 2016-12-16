@@ -7,14 +7,13 @@ use SilverStripe\ORM\DataObject;
 
 class Article extends DataObject implements TestOnly
 {
-	private static $table_name = 'ListboxFieldTest_Article';
+    private static $table_name = 'ListboxFieldTest_Article';
 
-	private static $db = array(
-		"Content" => "Text",
-	);
+    private static $db = array(
+        "Content" => "Text",
+    );
 
-	private static $many_many = array(
-		"Tags" => Tag::class,
-	);
-
+    private static $many_many = array(
+        "Tags" => Tag::class,
+    );
 }

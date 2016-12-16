@@ -8,13 +8,12 @@ use SilverStripe\Dev\TestOnly;
 class HasAction extends Controller implements TestOnly
 {
 
-	private static $allowed_actions = array(
-		'allowed_action',
-		//'other_action' => 'lowercase_permission'
-	);
+    private static $allowed_actions = array(
+        'allowed_action',
+        //'other_action' => 'lowercase_permission'
+    );
 
-	protected $templates = array(
-		'template_action' => 'template'
-	);
-
+    protected $templates = array(
+        'template_action' => 'template'
+    );
 }

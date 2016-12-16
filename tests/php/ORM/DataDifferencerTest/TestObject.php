@@ -15,33 +15,32 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'DataDifferencerTest_Object';
+    private static $table_name = 'DataDifferencerTest_Object';
 
-	private static $extensions = array(
-		Versioned::class
-	);
+    private static $extensions = array(
+        Versioned::class
+    );
 
-	private static $db = array(
-		'Choices' => "Varchar",
-	);
+    private static $db = array(
+        'Choices' => "Varchar",
+    );
 
-	private static $has_one = array(
-		'Image' => Image::class,
-		'HasOneRelation' => HasOneRelationObject::class
-	);
+    private static $has_one = array(
+        'Image' => Image::class,
+        'HasOneRelation' => HasOneRelationObject::class
+    );
 
-	public function getCMSFields()
-	{
-		$fields = parent::getCMSFields();
-		$choices = array(
-			'a' => 'a',
-			'b' => 'b',
-			'c' => 'c',
-		);
-		$listField = new ListboxField('Choices', 'Choices', $choices);
-		$fields->push($listField);
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $choices = array(
+            'a' => 'a',
+            'b' => 'b',
+            'c' => 'c',
+        );
+        $listField = new ListboxField('Choices', 'Choices', $choices);
+        $fields->push($listField);
 
-		return $fields;
-	}
-
+        return $fields;
+    }
 }

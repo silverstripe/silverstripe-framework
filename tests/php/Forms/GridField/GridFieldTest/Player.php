@@ -11,15 +11,14 @@ use SilverStripe\ORM\ManyManyList;
  */
 class Player extends DataObject implements TestOnly
 {
-	private static $table_name = 'GridFieldTest_Player';
+    private static $table_name = 'GridFieldTest_Player';
 
-	private static $db = array(
-		'Name' => 'Varchar',
-		'Email' => 'Varchar',
-	);
+    private static $db = array(
+        'Name' => 'Varchar',
+        'Email' => 'Varchar',
+    );
 
-	private static $belongs_many_many = [
-		'Teams' => Team::class
-	];
-
+    private static $belongs_many_many = [
+        'Teams' => Team::class
+    ];
 }

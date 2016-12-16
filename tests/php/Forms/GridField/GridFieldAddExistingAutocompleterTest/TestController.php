@@ -18,24 +18,26 @@ use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 class TestController extends Controller implements TestOnly
 {
 
-	private static $allowed_actions = array('Form');
+    private static $allowed_actions = array('Form');
 
-	protected $template = 'BlankPage';
+    protected $template = 'BlankPage';
 
-	public function Link($action = null)
-	{
-		return Controller::join_links('GridFieldAddExistingAutocompleterTest_Controller', $action, '/');
-	}
+    public function Link($action = null)
+    {
+        return Controller::join_links('GridFieldAddExistingAutocompleterTest_Controller', $action, '/');
+    }
 
-	public function Form()
-	{
-		/** @var Player $player */
-		$player = Player::get()->find('Email', 'player1@test.com');
-		$config = GridFieldConfig::create()->addComponents(
-			$relationComponent = new GridFieldAddExistingAutocompleter('before'),
-			new GridFieldDataColumns()
-		);
-		$field = new GridField('testfield', 'testfield', $player->Teams(), $config);
-		return new Form($this, 'Form', new FieldList($field), new FieldList());
-	}
+    public function Form()
+    {
+        /**
+ * @var Player $player
+*/
+        $player = Player::get()->find('Email', 'player1@test.com');
+        $config = GridFieldConfig::create()->addComponents(
+            $relationComponent = new GridFieldAddExistingAutocompleter('before'),
+            new GridFieldDataColumns()
+        );
+        $field = new GridField('testfield', 'testfield', $player->Teams(), $config);
+        return new Form($this, 'Form', new FieldList($field), new FieldList());
+    }
 }

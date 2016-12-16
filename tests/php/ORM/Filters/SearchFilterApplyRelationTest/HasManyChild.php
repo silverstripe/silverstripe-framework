@@ -6,10 +6,10 @@ use SilverStripe\Dev\TestOnly;
 
 class HasManyChild extends HasManyParent implements TestOnly
 {
-	private static $table_name = 'SearchFilterApplyRelationTest_HasManyChild';
+    private static $table_name = 'SearchFilterApplyRelationTest_HasManyChild';
 
-	// This is to create an separate Table only.
-	private static $db = array(
-		"ChildField" => "Varchar"
-	);
+    // This is to create an separate Table only.
+    private static $db = array(
+        "ChildField" => "Varchar"
+    );
 }

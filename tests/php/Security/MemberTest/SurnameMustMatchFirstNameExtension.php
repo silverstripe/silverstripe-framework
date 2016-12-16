@@ -10,8 +10,8 @@ use SilverStripe\ORM\DataExtension;
  */
 class SurnameMustMatchFirstNameExtension extends DataExtension implements TestOnly
 {
-	public function updatePHP($data, $form)
-	{
-		return $data['FirstName'] == $data['Surname'];
-	}
+    public function updatePHP($data, $form)
+    {
+        return $data['FirstName'] == $data['Surname'];
+    }
 }

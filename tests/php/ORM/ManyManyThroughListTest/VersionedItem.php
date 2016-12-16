@@ -14,17 +14,17 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class VersionedItem extends DataObject implements TestOnly
 {
-	private static $table_name = 'ManyManyThroughListTest_VersionedItem';
+    private static $table_name = 'ManyManyThroughListTest_VersionedItem';
 
-	private static $db = [
-		'Title' => 'Varchar'
-	];
+    private static $db = [
+        'Title' => 'Varchar'
+    ];
 
-	private static $extensions = [
-		Versioned::class
-	];
+    private static $extensions = [
+        Versioned::class
+    ];
 
-	private static $belongs_many_many = [
-		'Objects' => 'SilverStripe\\ORM\\Tests\\ManyManyThroughListTest\\VersionedObject.Items'
-	];
+    private static $belongs_many_many = [
+        'Objects' => 'SilverStripe\\ORM\\Tests\\ManyManyThroughListTest\\VersionedObject.Items'
+    ];
 }

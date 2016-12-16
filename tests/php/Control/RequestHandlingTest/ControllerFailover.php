@@ -7,8 +7,8 @@ use SilverStripe\View\ViewableData;
 
 class ControllerFailover extends ViewableData implements TestOnly
 {
-	public function failoverMethod()
-	{
-		return "failoverMethod";
-	}
+    public function failoverMethod()
+    {
+        return "failoverMethod";
+    }
 }

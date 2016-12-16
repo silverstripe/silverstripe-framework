@@ -8,15 +8,15 @@ use SilverStripe\Forms\Form;
 
 class DummyMediaFormFieldExtension extends Extension implements TestOnly
 {
-	public static $fields = null;
-	public static $update_called = false;
+    public static $fields = null;
+    public static $update_called = false;
 
-	/**
-	 * @param Form $form
-	 */
-	public function updateImageForm($form)
-	{
-		self::$update_called = true;
-		self::$fields = $form->Fields();
-	}
+    /**
+     * @param Form $form
+     */
+    public function updateImageForm($form)
+    {
+        self::$update_called = true;
+        self::$fields = $form->Fields();
+    }
 }

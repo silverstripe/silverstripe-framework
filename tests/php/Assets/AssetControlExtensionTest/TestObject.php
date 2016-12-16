@@ -15,19 +15,19 @@ use SilverStripe\Security\Member;
  */
 class TestObject extends DataObject implements TestOnly
 {
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-		'Image' => "DBFile('image/supported')"
-	);
+    private static $db = array(
+        'Title' => 'Varchar(255)',
+        'Image' => "DBFile('image/supported')"
+    );
 
-	private static $table_name = 'AssetControlExtensionTest_TestObject';
+    private static $table_name = 'AssetControlExtensionTest_TestObject';
 
-	/**
-	 * @param Member $member
-	 * @return bool
-	 */
-	public function canView($member = null)
-	{
-		return true;
-	}
+    /**
+     * @param Member $member
+     * @return bool
+     */
+    public function canView($member = null)
+    {
+        return true;
+    }
 }

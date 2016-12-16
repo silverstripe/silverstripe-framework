@@ -14,29 +14,28 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class CustomRelation extends DataObject implements TestOnly
 {
-	private static $extensions = array(
-		Versioned::class,
-	);
+    private static $extensions = array(
+        Versioned::class,
+    );
 
-	private static $table_name = 'VersionedOwnershipTest_CustomRelation';
+    private static $table_name = 'VersionedOwnershipTest_CustomRelation';
 
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-	);
+    private static $db = array(
+        'Title' => 'Varchar(255)',
+    );
 
-	private static $owned_by = array(
-		'Pages'
-	);
+    private static $owned_by = array(
+        'Pages'
+    );
 
-	/**
-	 * All pages with the same number. E.g. 'Page 1' owns 'Custom 1'
-	 *
-	 * @return DataList
-	 */
-	public function Pages()
-	{
-		$title = str_replace('Custom', 'Page', $this->Title);
-		return TestPage::get()->filter('Title', $title);
-	}
-
+    /**
+     * All pages with the same number. E.g. 'Page 1' owns 'Custom 1'
+     *
+     * @return DataList
+     */
+    public function Pages()
+    {
+        $title = str_replace('Custom', 'Page', $this->Title);
+        return TestPage::get()->filter('Title', $title);
+    }
 }

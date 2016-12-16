@@ -13,13 +13,13 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class Image extends DataObject implements TestOnly
 {
-	private static $extensions = array(
-		Versioned::class,
-	);
+    private static $extensions = array(
+        Versioned::class,
+    );
 
-	private static $table_name = 'VersionedOwnershipTest_Image';
+    private static $table_name = 'VersionedOwnershipTest_Image';
 
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-	);
+    private static $db = array(
+        'Title' => 'Varchar(255)',
+    );
 }

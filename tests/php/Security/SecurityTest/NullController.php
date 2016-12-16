@@ -8,14 +8,13 @@ use SilverStripe\Dev\TestOnly;
 class NullController extends Controller implements TestOnly
 {
 
-	public function redirect($url, $code = 302)
-	{
-		// NOOP
-	}
+    public function redirect($url, $code = 302)
+    {
+        // NOOP
+    }
 
-	public function Link($action = null)
-	{
-		return Controller::join_links('SecurityTest_NullController', $action, '/');
-	}
-
+    public function Link($action = null)
+    {
+        return Controller::join_links('SecurityTest_NullController', $action, '/');
+    }
 }

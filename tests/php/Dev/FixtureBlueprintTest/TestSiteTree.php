@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class TestSiteTree extends DataObject implements TestOnly
 {
-	private static $table_name = 'FixtureBlueprintTest_TestSiteTree';
+    private static $table_name = 'FixtureBlueprintTest_TestSiteTree';
 
-	private static $db = array(
-		"Title" => "Varchar"
-	);
+    private static $db = array(
+        "Title" => "Varchar"
+    );
 }

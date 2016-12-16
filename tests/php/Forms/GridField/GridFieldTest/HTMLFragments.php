@@ -7,15 +7,15 @@ use SilverStripe\Forms\GridField\GridField_HTMLProvider;
 
 class HTMLFragments implements GridField_HTMLProvider, TestOnly
 {
-	protected $fragments;
+    protected $fragments;
 
-	public function __construct($fragments)
-	{
-		$this->fragments = $fragments;
-	}
+    public function __construct($fragments)
+    {
+        $this->fragments = $fragments;
+    }
 
-	public function getHTMLFragments($gridField)
-	{
-		return $this->fragments;
-	}
+    public function getHTMLFragments($gridField)
+    {
+        return $this->fragments;
+    }
 }

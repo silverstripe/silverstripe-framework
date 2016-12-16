@@ -2,27 +2,27 @@
 Only:
   ModuleExists: mysite
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Module:
     MysiteExists: Yes
 ---
 Only:
   ModuleExists: nosuchmodule
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Module:
     NoSuchModuleExists: Yes
 ---
 Except:
   ModuleExists: mysite
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Module:
     MysiteExists: No
 ---
 Except:
   ModuleExists: nosuchmodule
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Module:
     NoSuchModuleExists: No

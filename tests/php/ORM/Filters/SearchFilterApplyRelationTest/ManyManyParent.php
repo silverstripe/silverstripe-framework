@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class ManyManyParent extends DataObject implements TestOnly
 {
-	private static $table_name = 'SearchFilterApplyRelationTest_ManyManyParent';
+    private static $table_name = 'SearchFilterApplyRelationTest_ManyManyParent';
 
-	private static $db = array(
-		"Title" => "Varchar"
-	);
+    private static $db = array(
+        "Title" => "Varchar"
+    );
 }

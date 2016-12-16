@@ -11,23 +11,23 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class BaseObject extends DataObject implements TestOnly
 {
-	use Permissions;
+    use Permissions;
 
-	private static $table_name = 'ChangeSetTest_Base';
+    private static $table_name = 'ChangeSetTest_Base';
 
-	private static $db = [
-		'Foo' => 'Int',
-	];
+    private static $db = [
+        'Foo' => 'Int',
+    ];
 
-	private static $has_many = [
-		'Mids' => MidObject::class,
-	];
+    private static $has_many = [
+        'Mids' => MidObject::class,
+    ];
 
-	private static $owns = [
-		'Mids',
-	];
+    private static $owns = [
+        'Mids',
+    ];
 
-	private static $extensions = [
-		Versioned::class,
-	];
+    private static $extensions = [
+        Versioned::class,
+    ];
 }

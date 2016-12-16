@@ -7,11 +7,11 @@ use SilverStripe\ORM\DataObject;
 
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'DBCompositeTest_DataObject';
+    private static $table_name = 'DBCompositeTest_DataObject';
 
-	private static $db = array(
-		'Title' => 'Text',
-		'MyMoney' => 'Money',
-		'OverriddenMoney' => 'Money'
-	);
+    private static $db = array(
+        'Title' => 'Text',
+        'MyMoney' => 'Money',
+        'OverriddenMoney' => 'Money'
+    );
 }

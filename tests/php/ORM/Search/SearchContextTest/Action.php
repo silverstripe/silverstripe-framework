@@ -7,15 +7,14 @@ use SilverStripe\ORM\DataObject;
 
 class Action extends DataObject implements TestOnly
 {
-	private static $table_name = 'SearchContextTest_Action';
+    private static $table_name = 'SearchContextTest_Action';
 
-	private static $db = array(
-		'Description' => 'Text',
-		'SolutionArea' => 'Varchar'
-	);
+    private static $db = array(
+        'Description' => 'Text',
+        'SolutionArea' => 'Varchar'
+    );
 
-	private static $has_one = array(
-		'Project' => Project::class,
-	);
-
+    private static $has_one = array(
+        'Project' => Project::class,
+    );
 }

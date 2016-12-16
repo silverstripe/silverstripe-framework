@@ -7,13 +7,13 @@ use SilverStripe\View\Parsers\ShortcodeHandler;
 
 class TestShortcode implements ShortcodeHandler, TestOnly
 {
-	public static function get_shortcodes()
-	{
-		return 'test';
-	}
+    public static function get_shortcodes()
+    {
+        return 'test';
+    }
 
-	public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
-	{
-		return 'shortcode content';
-	}
+    public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
+    {
+        return 'shortcode content';
+    }
 }

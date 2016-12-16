@@ -2,27 +2,27 @@
 Only:
   ClassExists: SilverStripe\Control\Director
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Class:
     DirectorExists: Yes
 ---
 Only:
   ClassExists: NoSuchClass
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Class:
     NoSuchClassExists: Yes
 ---
 Except:
   ClassExists: SilverStripe\Control\Director
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Class:
     DirectorExists: No
 ---
 Except:
   ClassExists: NoSuchClass
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Class:
     NoSuchClassExists: No

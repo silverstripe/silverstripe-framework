@@ -7,19 +7,18 @@ use SilverStripe\ORM\DataObject;
 
 class Product extends DataObject implements TestOnly
 {
-	private static $table_name = 'ManyManyListTest_Product';
+    private static $table_name = 'ManyManyListTest_Product';
 
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
+    private static $db = array(
+        'Title' => 'Varchar'
+    );
 
-	private static $many_many = array(
-		'RelatedProducts' => Product::class
-	);
+    private static $many_many = array(
+        'RelatedProducts' => Product::class
+    );
 
-	private static $belongs_many_many = array(
-		'RelatedTo' => Product::class,
-		'Categories' => Category::class
-	);
-
+    private static $belongs_many_many = array(
+        'RelatedTo' => Product::class,
+        'Categories' => Category::class
+    );
 }

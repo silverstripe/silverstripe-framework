@@ -42,215 +42,221 @@ use SilverStripe\ORM\Versioning\ChangeSetItem;
  *
  *  and add an AddToCampaignHandler_FormAction to the EditForm, possibly through getCMSActions
  */
-class AddToCampaignHandler {
-	use Injectable;
+class AddToCampaignHandler
+{
+    use Injectable;
 
-	/**
-	 * Parent controller for this form
-	 *
-	 * @var Controller
-	 */
-	protected $controller;
+    /**
+     * Parent controller for this form
+     *
+     * @var Controller
+     */
+    protected $controller;
 
-	/**
-	 * The submitted form data
-	 *
-	 * @var array
-	 */
-	protected $data;
+    /**
+     * The submitted form data
+     *
+     * @var array
+     */
+    protected $data;
 
-	/**
-	 * Form name to use
-	 *
-	 * @var string
-	 */
-	protected $name;
+    /**
+     * Form name to use
+     *
+     * @var string
+     */
+    protected $name;
 
-	/**
-	 * AddToCampaignHandler constructor.
-	 *
-	 * @param Controller $controller Controller for this form
-	 * @param array|DataObject $data The data submitted as part of that form
-	 * @param string $name Form name
-	 */
-	public function __construct($controller = null, $data = [], $name = 'AddToCampaignForm') {
-		$this->controller = $controller;
-		if ($data instanceof DataObject) {
-			$data = $data->toMap();
-		}
-		$this->data = $data;
-		$this->name = $name;
-	}
+    /**
+     * AddToCampaignHandler constructor.
+     *
+     * @param Controller $controller Controller for this form
+     * @param array|DataObject $data The data submitted as part of that form
+     * @param string $name Form name
+     */
+    public function __construct($controller = null, $data = [], $name = 'AddToCampaignForm')
+    {
+        $this->controller = $controller;
+        if ($data instanceof DataObject) {
+            $data = $data->toMap();
+        }
+        $this->data = $data;
+        $this->name = $name;
+    }
 
-	/**
-	 * Perform the action. Either returns a Form or performs the action, as per the class doc
-	 *
-	 * @return DBHTMLText|HTTPResponse
-	 */
-	public function handle() {
-		$object = $this->getObject($this->data['ID'], $this->data['ClassName']);
+    /**
+     * Perform the action. Either returns a Form or performs the action, as per the class doc
+     *
+     * @return DBHTMLText|HTTPResponse
+     */
+    public function handle()
+    {
+        $object = $this->getObject($this->data['ID'], $this->data['ClassName']);
 
-		if (empty($this->data['Campaign'])) {
-			return $this->Form($object)->forTemplate();
-		} else {
-			return $this->addToCampaign($object, $this->data['Campaign']);
-		}
-	}
+        if (empty($this->data['Campaign'])) {
+            return $this->Form($object)->forTemplate();
+        } else {
+            return $this->addToCampaign($object, $this->data['Campaign']);
+        }
+    }
 
-	/**
-	 * Get what ChangeSets are available for an item to be added to by this user
-	 *
-	 * @return ArrayList[ChangeSet]
-	 */
-	protected function getAvailableChangeSets() {
-		return ChangeSet::get()
-			->filter('State', ChangeSet::STATE_OPEN)
-			->filterByCallback(function($item) {
-				/** @var ChangeSet $item */
-				return $item->canView();
-			});
-	}
+    /**
+     * Get what ChangeSets are available for an item to be added to by this user
+     *
+     * @return ArrayList[ChangeSet]
+     */
+    protected function getAvailableChangeSets()
+    {
+        return ChangeSet::get()
+            ->filter('State', ChangeSet::STATE_OPEN)
+            ->filterByCallback(function ($item) {
+                /** @var ChangeSet $item */
+                return $item->canView();
+            });
+    }
 
-	/**
-	 * Safely get a DataObject from a client-supplied ID and ClassName, checking: argument
-	 * validity; existence; and canView permissions.
-	 *
-	 * @param int $id The ID of the DataObject
-	 * @param string $class The Class of the DataObject
-	 * @return DataObject The referenced DataObject
-	 * @throws HTTPResponse_Exception
-	 */
-	protected function getObject($id, $class) {
-		$id = (int)$id;
-		$class = ClassInfo::class_name($class);
+    /**
+     * Safely get a DataObject from a client-supplied ID and ClassName, checking: argument
+     * validity; existence; and canView permissions.
+     *
+     * @param int $id The ID of the DataObject
+     * @param string $class The Class of the DataObject
+     * @return DataObject The referenced DataObject
+     * @throws HTTPResponse_Exception
+     */
+    protected function getObject($id, $class)
+    {
+        $id = (int)$id;
+        $class = ClassInfo::class_name($class);
 
-		if (!$class || !is_subclass_of($class, 'SilverStripe\\ORM\\DataObject') || !Object::has_extension($class, 'SilverStripe\\ORM\\Versioning\\Versioned')) {
-			$this->controller->httpError(400, _t(
-				'AddToCampaign.ErrorGeneral',
-				'We apologise, but there was an error'
-			));
-			return null;
-		}
+        if (!$class || !is_subclass_of($class, 'SilverStripe\\ORM\\DataObject') || !Object::has_extension($class, 'SilverStripe\\ORM\\Versioning\\Versioned')) {
+            $this->controller->httpError(400, _t(
+                'AddToCampaign.ErrorGeneral',
+                'We apologise, but there was an error'
+            ));
+            return null;
+        }
 
-		$object = DataObject::get($class)->byID($id);
+        $object = DataObject::get($class)->byID($id);
 
-		if (!$object) {
-			$this->controller->httpError(404, _t(
-				'AddToCampaign.ErrorNotFound',
-				'That {Type} couldn\'t be found',
-				'',
-				['Type' => $class]
-			));
-			return null;
-		}
+        if (!$object) {
+            $this->controller->httpError(404, _t(
+                'AddToCampaign.ErrorNotFound',
+                'That {Type} couldn\'t be found',
+                '',
+                ['Type' => $class]
+            ));
+            return null;
+        }
 
-		if (!$object->canView()) {
-			$this->controller->httpError(403, _t(
-					'AddToCampaign.ErrorItemPermissionDenied',
-					'It seems you don\'t have the necessary permissions to add {ObjectTitle} to a campaign',
-					'',
-					['ObjectTitle' => $object->Title]
-				)
-			);
-			return null;
-		}
+        if (!$object->canView()) {
+            $this->controller->httpError(403, _t(
+                'AddToCampaign.ErrorItemPermissionDenied',
+                'It seems you don\'t have the necessary permissions to add {ObjectTitle} to a campaign',
+                '',
+                ['ObjectTitle' => $object->Title]
+            ));
+            return null;
+        }
 
-		return $object;
-	}
+        return $object;
+    }
 
-	/**
-	 * Builds a Form that mirrors the parent editForm, but with an extra field to collect the ChangeSet ID
-	 *
-	 * @param DataObject $object The object we're going to be adding to whichever ChangeSet is chosen
-	 * @return Form
-	 */
-	public function Form($object) {
-		$inChangeSets = array_unique(ChangeSetItem::get_for_object($object)->column('ChangeSetID'));
-		$changeSets = $this->getAvailableChangeSets()->map();
+    /**
+     * Builds a Form that mirrors the parent editForm, but with an extra field to collect the ChangeSet ID
+     *
+     * @param DataObject $object The object we're going to be adding to whichever ChangeSet is chosen
+     * @return Form
+     */
+    public function Form($object)
+    {
+        $inChangeSets = array_unique(ChangeSetItem::get_for_object($object)->column('ChangeSetID'));
+        $changeSets = $this->getAvailableChangeSets()->map();
 
-		$campaignDropdown = DropdownField::create('Campaign', '', $changeSets);
-		$campaignDropdown->setEmptyString(_t('Campaigns.AddToCampaignFormFieldLabel', 'Select a Campaign'));
-		$campaignDropdown->addExtraClass('noborder');
-		$campaignDropdown->addExtraClass('no-chosen');
-		$campaignDropdown->setDisabledItems($inChangeSets);
+        $campaignDropdown = DropdownField::create('Campaign', '', $changeSets);
+        $campaignDropdown->setEmptyString(_t('Campaigns.AddToCampaignFormFieldLabel', 'Select a Campaign'));
+        $campaignDropdown->addExtraClass('noborder');
+        $campaignDropdown->addExtraClass('no-chosen');
+        $campaignDropdown->setDisabledItems($inChangeSets);
 
-		$fields = new FieldList([
-			$campaignDropdown,
-			HiddenField::create('ID', null, $this->data['ID']),
-			HiddenField::create('ClassName', null, $this->data['ClassName'])
-		]);
+        $fields = new FieldList([
+            $campaignDropdown,
+            HiddenField::create('ID', null, $this->data['ID']),
+            HiddenField::create('ClassName', null, $this->data['ClassName'])
+        ]);
 
 
-		$form = new Form(
-			$this->controller,
-			$this->name,
-			$fields,
-			new FieldList(
-				$action = AddToCampaignHandler_FormAction::create()
-			)
-		);
+        $form = new Form(
+            $this->controller,
+            $this->name,
+            $fields,
+            new FieldList(
+                $action = AddToCampaignHandler_FormAction::create()
+            )
+        );
 
-		$action->addExtraClass('add-to-campaign__action');
+        $action->addExtraClass('add-to-campaign__action');
 
-		$form->setHTMLID('Form_EditForm_AddToCampaign');
+        $form->setHTMLID('Form_EditForm_AddToCampaign');
 
-		$form->loadDataFrom($this->data);
+        $form->loadDataFrom($this->data);
         $form->getValidator()->addRequiredField('Campaign');
-		$form->addExtraClass('form--no-dividers add-to-campaign__form');
+        $form->addExtraClass('form--no-dividers add-to-campaign__form');
 
-		return $form;
-	}
+        return $form;
+    }
 
-	/**
-	 * Performs the actual action of adding the object to the ChangeSet, once the ChangeSet ID is known
-	 *
-	 * @param DataObject $object The object to add to the ChangeSet
-	 * @param int $campaignID The ID of the ChangeSet to add $object to
-	 * @return HTTPResponse
-	 * @throws HTTPResponse_Exception
-	 */
-	public function addToCampaign($object, $campaignID) {
-		/** @var ChangeSet $changeSet */
-		$changeSet = ChangeSet::get()->byID($campaignID);
+    /**
+     * Performs the actual action of adding the object to the ChangeSet, once the ChangeSet ID is known
+     *
+     * @param DataObject $object The object to add to the ChangeSet
+     * @param int $campaignID The ID of the ChangeSet to add $object to
+     * @return HTTPResponse
+     * @throws HTTPResponse_Exception
+     */
+    public function addToCampaign($object, $campaignID)
+    {
+        /** @var ChangeSet $changeSet */
+        $changeSet = ChangeSet::get()->byID($campaignID);
 
-		if (!$changeSet) {
-			$this->controller->httpError(404, _t(
-				'AddToCampaign.ErrorNotFound',
-				'That {Type} couldn\'t be found',
-				'',
-				['Type' => 'Campaign']
-			));
-			return null;
-		}
+        if (!$changeSet) {
+            $this->controller->httpError(404, _t(
+                'AddToCampaign.ErrorNotFound',
+                'That {Type} couldn\'t be found',
+                '',
+                ['Type' => 'Campaign']
+            ));
+            return null;
+        }
 
-		if (!$changeSet->canEdit()) {
-			$this->controller->httpError(403, _t(
-				'AddToCampaign.ErrorCampaignPermissionDenied',
-				'It seems you don\'t have the necessary permissions to add {ObjectTitle} to {CampaignTitle}',
-				'',
-				['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
-			));
-			return null;
-		}
+        if (!$changeSet->canEdit()) {
+            $this->controller->httpError(403, _t(
+                'AddToCampaign.ErrorCampaignPermissionDenied',
+                'It seems you don\'t have the necessary permissions to add {ObjectTitle} to {CampaignTitle}',
+                '',
+                ['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
+            ));
+            return null;
+        }
 
-		$changeSet->addObject($object);
+        $changeSet->addObject($object);
 
-		$request = $this->controller->getRequest();
-		$message = _t(
-				'AddToCampaign.Success',
-				'Successfully added {ObjectTitle} to {CampaignTitle}',
-				'',
-				['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
-		);
-		if ($request->getHeader('X-Formschema-Request')) {
-			return $message;
-		} elseif (Director::is_ajax()) {
-			$response = new HTTPResponse($message, 200);
+        $request = $this->controller->getRequest();
+        $message = _t(
+            'AddToCampaign.Success',
+            'Successfully added {ObjectTitle} to {CampaignTitle}',
+            '',
+            ['ObjectTitle' => $object->Title, 'CampaignTitle' => $changeSet->Title]
+        );
+        if ($request->getHeader('X-Formschema-Request')) {
+            return $message;
+        } elseif (Director::is_ajax()) {
+            $response = new HTTPResponse($message, 200);
 
-			$response->addHeader('Content-Type', 'text/plain; charset=utf-8');
-			return $response;
-		} else {
-			return $this->controller->getController()->redirectBack();
-		}
-	}
+            $response->addHeader('Content-Type', 'text/plain; charset=utf-8');
+            return $response;
+        } else {
+            return $this->controller->getController()->redirectBack();
+        }
+    }
 }

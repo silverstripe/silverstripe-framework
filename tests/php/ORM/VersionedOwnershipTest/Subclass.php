@@ -12,22 +12,22 @@ use SilverStripe\ORM\Tests\VersionedOwnershipTest;
  */
 class Subclass extends TestObject implements TestOnly
 {
-	private static $db = array(
-		'Description' => 'Text',
-	);
+    private static $db = array(
+        'Description' => 'Text',
+    );
 
-	private static $has_one = array(
-		'Related' => Related::class,
-	);
+    private static $has_one = array(
+        'Related' => Related::class,
+    );
 
-	private static $has_many = array(
-		'Banners' => RelatedMany::class,
-	);
+    private static $has_many = array(
+        'Banners' => RelatedMany::class,
+    );
 
-	private static $table_name = 'VersionedOwnershipTest_Subclass';
+    private static $table_name = 'VersionedOwnershipTest_Subclass';
 
-	private static $owns = array(
-		'Related',
-		'Banners',
-	);
+    private static $owns = array(
+        'Related',
+        'Banners',
+    );
 }

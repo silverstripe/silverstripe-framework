@@ -12,22 +12,22 @@ use SilverStripe\ORM\DataExtension;
  */
 class CMSFieldsBaseExtension extends DataExtension implements TestOnly
 {
-	private static $db = array(
-		'ExtendedFieldKeep' => 'Varchar(255)',
-		'ExtendedFieldRemove' => 'Varchar(255)'
-	);
+    private static $db = array(
+        'ExtendedFieldKeep' => 'Varchar(255)',
+        'ExtendedFieldRemove' => 'Varchar(255)'
+    );
 
-	public function updateCMSFields(FieldList $fields)
-	{
-		$fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldRemove'));
-		$fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldKeep'));
+    public function updateCMSFields(FieldList $fields)
+    {
+        $fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldRemove'));
+        $fields->addFieldToTab('Root.Test', new TextField('ExtendedFieldKeep'));
 
-		if ($childField = $fields->dataFieldByName('ChildFieldBeforeExtension')) {
-			$childField->setTitle('ChildFieldBeforeExtension: Modified Title');
-		}
+        if ($childField = $fields->dataFieldByName('ChildFieldBeforeExtension')) {
+            $childField->setTitle('ChildFieldBeforeExtension: Modified Title');
+        }
 
-		if ($grandchildField = $fields->dataFieldByName('GrandchildFieldBeforeExtension')) {
-			$grandchildField->setTitle('GrandchildFieldBeforeExtension: Modified Title');
-		}
-	}
+        if ($grandchildField = $fields->dataFieldByName('GrandchildFieldBeforeExtension')) {
+            $grandchildField->setTitle('GrandchildFieldBeforeExtension: Modified Title');
+        }
+    }
 }

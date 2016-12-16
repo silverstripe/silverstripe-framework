@@ -14,39 +14,39 @@ use SilverStripe\Security\Member;
  * @property string $Title
  * @property DBFile $Header
  * @property DBFile $Download
- * @mixin Versioned
+ * @mixin    Versioned
  */
 class VersionedObject extends DataObject implements TestOnly
 {
-	private static $extensions = array(
-		Versioned::class
-	);
+    private static $extensions = array(
+        Versioned::class
+    );
 
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-		'Header' => "DBFile('image/supported')",
-		'Download' => 'DBFile'
-	);
+    private static $db = array(
+        'Title' => 'Varchar(255)',
+        'Header' => "DBFile('image/supported')",
+        'Download' => 'DBFile'
+    );
 
-	private static $table_name = 'AssetControlExtensionTest_VersionedObject';
+    private static $table_name = 'AssetControlExtensionTest_VersionedObject';
 
-	/**
-	 * @param Member $member
-	 * @return bool
-	 */
-	public function canView($member = null)
-	{
-		if (!$member) {
-			$member = Member::currentUser();
-		}
+    /**
+     * @param Member $member
+     * @return bool
+     */
+    public function canView($member = null)
+    {
+        if (!$member) {
+            $member = Member::currentUser();
+        }
 
-		// Expectation that versioned::canView will hide this object in draft
-		$result = $this->extendedCan('canView', $member);
-		if ($result !== null) {
-			return $result;
-		}
+        // Expectation that versioned::canView will hide this object in draft
+        $result = $this->extendedCan('canView', $member);
+        if ($result !== null) {
+            return $result;
+        }
 
-		// Open to public
-		return true;
-	}
+        // Open to public
+        return true;
+    }
 }

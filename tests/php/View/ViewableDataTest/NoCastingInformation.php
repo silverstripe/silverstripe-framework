@@ -7,8 +7,8 @@ use SilverStripe\View\ViewableData;
 
 class NoCastingInformation extends ViewableData implements TestOnly
 {
-	public function noCastingInformation()
-	{
-		return "No casting information";
-	}
+    public function noCastingInformation()
+    {
+        return "No casting information";
+    }
 }

@@ -10,9 +10,9 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class EndObjectChild extends EndObject implements TestOnly
 {
-	private static $table_name = 'ChangeSetTest_EndObjectChild';
+    private static $table_name = 'ChangeSetTest_EndObjectChild';
 
-	private static $db = [
-		'Qux' => 'Int',
-	];
+    private static $db = [
+        'Qux' => 'Int',
+    ];
 }

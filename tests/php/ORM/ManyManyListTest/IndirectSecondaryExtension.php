@@ -11,12 +11,11 @@ use SilverStripe\ORM\DataExtension;
  */
 class IndirectSecondaryExtension extends DataExtension implements TestOnly
 {
-	private static $db = array(
-		'Title' => 'Varchar(255)'
-	);
+    private static $db = array(
+        'Title' => 'Varchar(255)'
+    );
 
-	private static $belongs_many_many = array(
-		'Primary' => IndirectPrimary::class
-	);
-
+    private static $belongs_many_many = array(
+        'Primary' => IndirectPrimary::class
+    );
 }

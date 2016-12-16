@@ -8,10 +8,12 @@ use SilverStripe\Forms\InlineFormAction;
 /**
  * Tests {@see InlineFormAction}
  */
-class InlineFormActionTest extends SapphireTest {
+class InlineFormActionTest extends SapphireTest
+{
 
-	public function testField() {
-		$action = new InlineFormAction('dothing', 'My Title', 'ss-action');
+    public function testField()
+    {
+        $action = new InlineFormAction('dothing', 'My Title', 'ss-action');
         $html = (string)$action->Field();
         $this->assertContains('<input', $html);
         $this->assertContains('type="submit"', $html);
@@ -19,5 +21,5 @@ class InlineFormActionTest extends SapphireTest {
         $this->assertContains('value="My Title"', $html);
         $this->assertContains('id="dothing"', $html);
         $this->assertContains('class="action ss-action"', $html);
-	}
+    }
 }

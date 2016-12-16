@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class ObjectD extends DataObject implements TestOnly
 {
-	private static $table_name = 'DataQueryTest_D';
+    private static $table_name = 'DataQueryTest_D';
 
-	private static $has_one = array(
-		'Relation' => ObjectB::class,
-	);
+    private static $has_one = array(
+        'Relation' => ObjectB::class,
+    );
 }

@@ -10,9 +10,9 @@ use SilverStripe\Dev\TestOnly;
  */
 class Subclass extends TestObject implements TestOnly
 {
-	private static $table_name = 'DBFileTest_Subclass';
+    private static $table_name = 'DBFileTest_Subclass';
 
-	private static $db = array(
-		"AnotherFile" => "DBFile"
-	);
+    private static $db = array(
+        "AnotherFile" => "DBFile"
+    );
 }

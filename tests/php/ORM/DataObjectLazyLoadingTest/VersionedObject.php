@@ -11,13 +11,13 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class VersionedObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'VersionedLazy_DataObject';
+    private static $table_name = 'VersionedLazy_DataObject';
 
-	private static $db = [
-		"PageName" => "Varchar"
-	];
+    private static $db = [
+        "PageName" => "Varchar"
+    ];
 
-	private static $extensions = [
-		Versioned::class
-	];
+    private static $extensions = [
+        Versioned::class
+    ];
 }

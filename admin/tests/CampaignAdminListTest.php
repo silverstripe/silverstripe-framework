@@ -10,7 +10,8 @@ use SilverStripe\Forms\Form;
 
 class CampaignAdminListTest extends SapphireTest
 {
-    public function testSchema() {
+    public function testSchema()
+    {
         $fields = new FieldList(
             $changesets = CampaignAdminList::create('ChangeSets')
         );

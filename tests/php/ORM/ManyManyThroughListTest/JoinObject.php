@@ -12,15 +12,15 @@ use SilverStripe\ORM\DataObject;
  */
 class JoinObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'ManyManyThroughListTest_JoinObject';
+    private static $table_name = 'ManyManyThroughListTest_JoinObject';
 
-	private static $db = [
-		'Title' => 'Varchar',
-		'Sort' => 'Int',
-	];
+    private static $db = [
+        'Title' => 'Varchar',
+        'Sort' => 'Int',
+    ];
 
-	private static $has_one = [
-		'Parent' => TestObject::class,
-		'Child' => Item::class,
-	];
+    private static $has_one = [
+        'Parent' => TestObject::class,
+        'Child' => Item::class,
+    ];
 }

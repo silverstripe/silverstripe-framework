@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'GridFieldPrintButtonTest_Object';
+    private static $table_name = 'GridFieldPrintButtonTest_Object';
 
-	private static $db = array(
-		'Name' => 'Varchar'
-	);
+    private static $db = array(
+        'Name' => 'Varchar'
+    );
 }

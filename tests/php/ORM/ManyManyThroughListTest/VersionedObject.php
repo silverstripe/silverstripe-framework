@@ -11,30 +11,30 @@ use SilverStripe\ORM\Versioning\Versioned;
  * Basic parent object
  *
  * @property string $Title
- * @method ManyManyThroughList Items()
- * @mixin Versioned
+ * @method   ManyManyThroughList Items()
+ * @mixin    Versioned
  */
 class VersionedObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'ManyManyThroughListTest_VersionedObject';
+    private static $table_name = 'ManyManyThroughListTest_VersionedObject';
 
-	private static $db = [
-		'Title' => 'Varchar',
-	];
+    private static $db = [
+        'Title' => 'Varchar',
+    ];
 
-	private static $extensions = [
-		Versioned::class,
-	];
+    private static $extensions = [
+        Versioned::class,
+    ];
 
-	private static $owns = [
-		'Items', // Should automatically own both mapping and child records
-	];
+    private static $owns = [
+        'Items', // Should automatically own both mapping and child records
+    ];
 
-	private static $many_many = [
-		'Items' => [
-			'through' => VersionedJoinObject::class,
-			'from' => 'Parent',
-			'to' => 'Child',
-		],
-	];
+    private static $many_many = [
+        'Items' => [
+            'through' => VersionedJoinObject::class,
+            'from' => 'Parent',
+            'to' => 'Child',
+        ],
+    ];
 }

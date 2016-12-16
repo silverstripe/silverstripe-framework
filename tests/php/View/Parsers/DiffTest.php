@@ -5,18 +5,20 @@ namespace SilverStripe\View\Tests\Parsers;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\Parsers\Diff;
 
-class DiffTest extends SapphireTest {
+class DiffTest extends SapphireTest
+{
 
-	/**
-	 * @see https://groups.google.com/forum/#!topic/silverstripe-dev/yHcluCvuszo
-	 */
-	public function testTableDiff() {
-		if(!class_exists('DOMDocument')) {
-			$this->markTestSkipped('"DOMDocument" required');
-			return;
-		}
+    /**
+     * @see https://groups.google.com/forum/#!topic/silverstripe-dev/yHcluCvuszo
+     */
+    public function testTableDiff()
+    {
+        if (!class_exists('DOMDocument')) {
+            $this->markTestSkipped('"DOMDocument" required');
+            return;
+        }
 
-		$from = "<table>
+        $from = "<table>
 		<tbody>
 			<tr class=\"blah\">
 				<td colspan=\"2\">Row 1</td>
@@ -32,7 +34,7 @@ class DiffTest extends SapphireTest {
 			</tbody>
 		</table>";
 
-		$to = "<table class=\"new-class\">
+        $to = "<table class=\"new-class\">
 		<tbody>
 			<tr class=\"blah\">
 				<td colspan=\"2\">Row 1</td>
@@ -44,14 +46,14 @@ class DiffTest extends SapphireTest {
 		</tbody>
 		</table>";
 
-		$expected = "<ins>" . $to . "</ins>" . "<del>" . $from . "</del>";
-		$compare = Diff::compareHTML($from, $to);
+        $expected = "<ins>" . $to . "</ins>" . "<del>" . $from . "</del>";
+        $compare = Diff::compareHTML($from, $to);
 
-		// Very hard to debug this way, wouldn't need to do this if PHP had an *actual* DOM parsing lib,
-		// and not just the poor excuse that is DOMDocument
-		$compare = preg_replace('/[\s\t\n\r]*/', '', $compare);
-		$expected = preg_replace('/[\s\t\n\r]*/', '', $expected);
+        // Very hard to debug this way, wouldn't need to do this if PHP had an *actual* DOM parsing lib,
+        // and not just the poor excuse that is DOMDocument
+        $compare = preg_replace('/[\s\t\n\r]*/', '', $compare);
+        $expected = preg_replace('/[\s\t\n\r]*/', '', $expected);
 
-		$this->assertEquals($compare, $expected);
-	}
+        $this->assertEquals($compare, $expected);
+    }
 }

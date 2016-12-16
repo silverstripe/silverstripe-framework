@@ -8,9 +8,8 @@ use SilverStripe\ORM\DataExtension;
 class AppliedToDO extends DataExtension implements TestOnly
 {
 
-	public function testMethodApplied()
-	{
-		return "hello world";
-	}
-
+    public function testMethodApplied()
+    {
+        return "hello world";
+    }
 }

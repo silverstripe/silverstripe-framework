@@ -13,14 +13,14 @@ use SilverStripe\ORM\ManyManyList;
  */
 class Team extends DataObject implements TestOnly
 {
-	private static $table_name = 'FormTest_Team';
+    private static $table_name = 'FormTest_Team';
 
-	private static $db = array(
-		'Name' => 'Varchar',
-		'Region' => 'Varchar',
-	);
+    private static $db = array(
+        'Name' => 'Varchar',
+        'Region' => 'Varchar',
+    );
 
-	private static $many_many = array(
-		'Players' => Player::class
-	);
+    private static $many_many = array(
+        'Players' => Player::class
+    );
 }

@@ -10,31 +10,31 @@ use SilverStripe\Forms\FormField;
  */
 class TestFormField extends FormField implements TestOnly
 {
-	private static $url_handlers = array(
-		"POST " => "handleInPlaceEdit",
-		'' => 'handleField',
-		'$Action' => '$Action',
-	);
+    private static $url_handlers = array(
+        "POST " => "handleInPlaceEdit",
+        '' => 'handleField',
+        '$Action' => '$Action',
+    );
 
-	// These contain uppercase letters to test that allowed_actions doesn't need to be all lowercase
-	private static $allowed_actions = array(
-		'TEST',
-		'handleField',
-		'handleInPLACEEDIT',
-	);
+    // These contain uppercase letters to test that allowed_actions doesn't need to be all lowercase
+    private static $allowed_actions = array(
+        'TEST',
+        'handleField',
+        'handleInPLACEEDIT',
+    );
 
-	public function test()
-	{
-		return "Test method on $this->name";
-	}
+    public function test()
+    {
+        return "Test method on $this->name";
+    }
 
-	public function handleField()
-	{
-		return "$this->name requested";
-	}
+    public function handleField()
+    {
+        return "$this->name requested";
+    }
 
-	public function handleInPlaceEdit($request)
-	{
-		return "$this->name posted, update to " . $request->postVar($this->name);
-	}
+    public function handleInPlaceEdit($request)
+    {
+        return "$this->name posted, update to " . $request->postVar($this->name);
+    }
 }

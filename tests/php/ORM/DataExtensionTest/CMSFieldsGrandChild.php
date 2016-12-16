@@ -12,24 +12,26 @@ use SilverStripe\ORM\Tests\DataExtensionTest\CMSFieldsChild;
  */
 class CMSFieldsGrandChild extends CMSFieldsChild implements TestOnly
 {
-	private static $table_name = 'DataExtensionTest_CMSFieldsGrandChild';
+    private static $table_name = 'DataExtensionTest_CMSFieldsGrandChild';
 
-	private static $db = array(
-		'GrandchildField' => 'Varchar(255)'
-	);
+    private static $db = array(
+        'GrandchildField' => 'Varchar(255)'
+    );
 
-	public function getCMSFields()
-	{
-		$this->beforeUpdateCMSFields(function (FieldList $fields) {
-			// Remove field from parent's beforeExtendingCMSFields
-			$fields->removeByName('ChildFieldBeforeExtension', true);
+    public function getCMSFields()
+    {
+        $this->beforeUpdateCMSFields(
+            function (FieldList $fields) {
+                // Remove field from parent's beforeExtendingCMSFields
+                $fields->removeByName('ChildFieldBeforeExtension', true);
 
-			// Adds own pre-extension field
-			$fields->addFieldToTab('Root.Test', new TextField('GrandchildFieldBeforeExtension'));
-		});
+                // Adds own pre-extension field
+                $fields->addFieldToTab('Root.Test', new TextField('GrandchildFieldBeforeExtension'));
+            }
+        );
 
-		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Test', new TextField('GrandchildField'));
-		return $fields;
-	}
+        $fields = parent::getCMSFields();
+        $fields->addFieldToTab('Root.Test', new TextField('GrandchildField'));
+        return $fields;
+    }
 }

@@ -8,25 +8,25 @@ use SilverStripe\Dev\TestOnly;
 class InjectorTestConfigLocator extends SilverStripeServiceConfigurationLocator implements TestOnly
 {
 
-	protected function configFor($name)
-	{
+    protected function configFor($name)
+    {
 
-		switch ($name) {
-			case TestObject::class:
-				return $this->configs[$name] = array(
-					'class' => ConstructableObject::class,
-					'constructor' => array(
-						'%$'.OtherTestObject::class
-					)
-				);
+        switch ($name) {
+            case TestObject::class:
+            return $this->configs[$name] = array(
+                    'class' => ConstructableObject::class,
+                    'constructor' => array(
+                        '%$'.OtherTestObject::class
+                    )
+                );
 
-			case 'ConfigConstructor':
-				return $this->configs[$name] = array(
-					'class' => ConstructableObject::class,
-					'constructor' => array('value')
-				);
-		}
+            case 'ConfigConstructor':
+            return $this->configs[$name] = array(
+                    'class' => ConstructableObject::class,
+                    'constructor' => array('value')
+                );
+        }
 
-		return parent::configFor($name);
-	}
+        return parent::configFor($name);
+    }
 }

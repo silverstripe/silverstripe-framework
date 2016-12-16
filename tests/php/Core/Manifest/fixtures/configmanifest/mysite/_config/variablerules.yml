@@ -1,70 +1,70 @@
 ---
 Only:
-  EnvOrConstantMatchesValue_Foo: Foo
+  ENVORCONSTANTMATCHESVALUE_FOO: Foo
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     FooIsFoo: Yes
 ---
 Only:
-  EnvOrConstantMatchesValue_Foo: Qux
+  ENVORCONSTANTMATCHESVALUE_FOO: Qux
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     FooIsQux: Yes
 ---
 Only:
-  EnvOrConstantMatchesValue_Bar: Bar
+  ENVORCONSTANTMATCHESVALUE_BAR: Bar
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BarIsBar: Yes
 ---
 Only:
-  EnvOrConstantMatchesValue_Bar: Qux
+  ENVORCONSTANTMATCHESVALUE_BAR: Qux
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BarIsQux: Yes
 ---
 Only:
-  EnvOrConstantMatchesValue_Baz: Baz
+  ENVORCONSTANTMATCHESVALUE_Baz: Baz
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BazIsBaz: Yes
 ---
 Except:
-  EnvOrConstantMatchesValue_Foo: Foo
+  ENVORCONSTANTMATCHESVALUE_FOO: Foo
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     FooIsFoo: No
 ---
 Except:
-  EnvOrConstantMatchesValue_Foo: Qux
+  ENVORCONSTANTMATCHESVALUE_FOO: Qux
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     FooIsQux: No
 ---
 Except:
-  EnvOrConstantMatchesValue_Bar: Bar
+  ENVORCONSTANTMATCHESVALUE_BAR: Bar
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BarIsBar: No
 ---
 Except:
-  EnvOrConstantMatchesValue_Bar: Qux
+  ENVORCONSTANTMATCHESVALUE_BAR: Qux
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BarIsQux: No
 ---
 Except:
-  EnvOrConstantMatchesValue_Baz: Baz
+  ENVORCONSTANTMATCHESVALUE_Baz: Baz
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BazIsBaz: No

@@ -2,41 +2,41 @@
 Only:
   Environment: live
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Environment:
     LiveEnvironment: live
 ---
 Only:
   Environment: dev
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Environment:
     DevEnvironment: dev
 ---
 Only:
   Environment: test
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Environment:
     TestEnvironment: test
 ---
 Except:
   Environment: live
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Environment:
     LiveEnvironment: notlive
 ---
 Except:
   Environment: dev
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Environment:
     DevEnvironment: notdev
 ---
 Except:
   Environment: test
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   Environment:
     TestEnvironment: nottest

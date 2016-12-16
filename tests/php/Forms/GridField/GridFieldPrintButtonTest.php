@@ -12,41 +12,46 @@ use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\Tests\GridField\GridFieldPrintButtonTest\TestObject;
 
-class GridFieldPrintButtonTest extends SapphireTest {
+class GridFieldPrintButtonTest extends SapphireTest
+{
 
-	protected $extraDataObjects = array(
-		TestObject::class
-	);
+    protected $extraDataObjects = array(
+        TestObject::class
+    );
 
-	public function setUp() {
-		parent::setUp();
+    public function setUp()
+    {
+        parent::setUp();
 
-		// 42 items
-		for($i = 1; $i <= 42; $i++) {
-			$obj = new TestObject();
-			$obj->Name = "Object {$i}";
-			$obj->write();
-		}
-	}
+        // 42 items
+        for ($i = 1; $i <= 42; $i++) {
+            $obj = new TestObject();
+            $obj->Name = "Object {$i}";
+            $obj->write();
+        }
+    }
 
-	public function testLimit() {
-		$list = TestObject::get();
+    public function testLimit()
+    {
+        $list = TestObject::get();
 
-		$button = new GridFieldPrintButton();
-		$button->setPrintColumns(array('Name' => 'My Name'));
+        $button = new GridFieldPrintButton();
+        $button->setPrintColumns(array('Name' => 'My Name'));
 
-		// Get paginated gridfield config
-		$config = GridFieldConfig::create()
-			->addComponent(new GridFieldPaginator(10))
-			->addComponent($button);
-		$gridField = new GridField('testfield', 'testfield', $list, $config);
-		$controller = new Controller();
-		/** @skipUpgrade */
-		new Form($controller, 'Form', new FieldList($gridField), new FieldList());
+        // Get paginated gridfield config
+        $config = GridFieldConfig::create()
+            ->addComponent(new GridFieldPaginator(10))
+            ->addComponent($button);
+        $gridField = new GridField('testfield', 'testfield', $list, $config);
+        $controller = new Controller();
+        /**
+ * @skipUpgrade
+*/
+        new Form($controller, 'Form', new FieldList($gridField), new FieldList());
 
-		// Printed data should ignore pagination limit
-		$printData = $button->generatePrintData($gridField);
-		$rows = $printData->ItemRows;
-		$this->assertEquals(42, $rows->count());
-	}
+        // Printed data should ignore pagination limit
+        $printData = $button->generatePrintData($gridField);
+        $rows = $printData->ItemRows;
+        $this->assertEquals(42, $rows->count());
+    }
 }

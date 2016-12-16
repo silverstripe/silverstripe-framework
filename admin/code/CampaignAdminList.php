@@ -39,11 +39,11 @@ class CampaignAdminList extends FormField
             "url" => $oneSetAction,
             "method" => "PUT"
         ];
-		$data['data']['itemCreateEndpoint'] = [
+        $data['data']['itemCreateEndpoint'] = [
             "url" => $oneSetAction,
             "method" => "POST"
         ];
-		$data['data']["itemDeleteEndpoint"] = [
+        $data['data']["itemDeleteEndpoint"] = [
             "url" => $oneSetAction,
             "method" => "DELETE"
         ];
@@ -51,7 +51,7 @@ class CampaignAdminList extends FormField
 
         // Set summary columns
         $columns = [];
-        foreach(ChangeSet::singleton()->summaryFields() as $field => $label) {
+        foreach (ChangeSet::singleton()->summaryFields() as $field => $label) {
             $columns[] = [
                 'field' => $field,
                 'name' => $label,

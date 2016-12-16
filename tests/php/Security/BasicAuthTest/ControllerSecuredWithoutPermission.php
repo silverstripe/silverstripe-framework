@@ -9,17 +9,16 @@ use SilverStripe\Security\BasicAuth;
 class ControllerSecuredWithoutPermission extends Controller implements TestOnly
 {
 
-	protected $template = 'BlankPage';
+    protected $template = 'BlankPage';
 
-	protected function init()
-	{
-		BasicAuth::protect_entire_site(true, null);
-		parent::init();
-	}
+    protected function init()
+    {
+        BasicAuth::protect_entire_site(true, null);
+        parent::init();
+    }
 
-	public function Link($action = null)
-	{
-		return Controller::join_links('BasicAuthTest_ControllerSecuredWithoutPermission', $action, '/');
-	}
-
+    public function Link($action = null)
+    {
+        return Controller::join_links('BasicAuthTest_ControllerSecuredWithoutPermission', $action, '/');
+    }
 }

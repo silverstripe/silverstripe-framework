@@ -8,21 +8,21 @@ use SilverStripe\ORM\Versioning\Versioned;
 
 class VersionedModel extends DataObject implements TestOnly
 {
-	private static $table_name = 'SSViewerCacheBlockTest_VersionedModel';
+    private static $table_name = 'SSViewerCacheBlockTest_VersionedModel';
 
-	protected $entropy = 'default';
+    protected $entropy = 'default';
 
-	private static $extensions = array(
-		Versioned::class
-	);
+    private static $extensions = array(
+        Versioned::class
+    );
 
-	public function setEntropy($entropy)
-	{
-		$this->entropy = $entropy;
-	}
+    public function setEntropy($entropy)
+    {
+        $this->entropy = $entropy;
+    }
 
-	public function Inspect()
-	{
-		return $this->entropy . ' ' . Versioned::get_reading_mode();
-	}
+    public function Inspect()
+    {
+        return $this->entropy . ' ' . Versioned::get_reading_mode();
+    }
 }

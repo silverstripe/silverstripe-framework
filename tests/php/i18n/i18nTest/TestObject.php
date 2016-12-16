@@ -8,19 +8,19 @@ use SilverStripe\i18n\i18nEntityProvider;
 
 class TestObject extends Object implements TestOnly, i18nEntityProvider
 {
-	static $my_translatable_property = "Untranslated";
+    static $my_translatable_property = "Untranslated";
 
-	public static function my_translatable_property()
-	{
-		return _t("i18nTest_Object.my_translatable_property", self::$my_translatable_property);
-	}
+    public static function my_translatable_property()
+    {
+        return _t("i18nTest_Object.my_translatable_property", self::$my_translatable_property);
+    }
 
-	public function provideI18nEntities()
-	{
-		return array(
-			"i18nTest_Object.my_translatable_property" => array(
-				self::$my_translatable_property
-			)
-		);
-	}
+    public function provideI18nEntities()
+    {
+        return array(
+            "i18nTest_Object.my_translatable_property" => array(
+                self::$my_translatable_property
+            )
+        );
+    }
 }

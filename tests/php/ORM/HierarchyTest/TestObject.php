@@ -13,21 +13,21 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'HierarchyTest_Object';
+    private static $table_name = 'HierarchyTest_Object';
 
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
+    private static $db = array(
+        'Title' => 'Varchar'
+    );
 
-	private static $extensions = array(
-		Hierarchy::class,
-		Versioned::class,
-	);
+    private static $extensions = array(
+        Hierarchy::class,
+        Versioned::class,
+    );
 
-	private static $default_sort = 'Title ASC';
+    private static $default_sort = 'Title ASC';
 
-	public function cmstreeclasses()
-	{
-		return $this->markingClasses();
-	}
+    public function cmstreeclasses()
+    {
+        return $this->markingClasses();
+    }
 }

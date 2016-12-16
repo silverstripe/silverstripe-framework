@@ -1,5 +1,7 @@
 <?php
 
+namespace SilverStripe\Assets\Tests\Flysystem;
+
 use SilverStripe\Assets\Flysystem\ProtectedAssetAdapter;
 use SilverStripe\Assets\Flysystem\PublicAssetAdapter;
 use SilverStripe\Assets\Filesystem;
@@ -7,14 +9,14 @@ use SilverStripe\Assets\File;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Core\Config\Config;
 
-
-class AssetAdapterTest extends SapphireTest {
-
+class AssetAdapterTest extends SapphireTest
+{
     protected $rootDir = null;
 
     protected $originalServer = null;
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
 
         $this->rootDir = ASSETS_PATH . '/AssetAdapterTest';
@@ -23,19 +25,21 @@ class AssetAdapterTest extends SapphireTest {
         $this->originalServer = $_SERVER;
     }
 
-    public function tearDown() {
-        if($this->rootDir) {
+    public function tearDown()
+    {
+        if ($this->rootDir) {
             Filesystem::removeFolder($this->rootDir);
             $this->rootDir = null;
         }
-        if($this->originalServer) {
+        if ($this->originalServer) {
             $_SERVER = $this->originalServer;
             $this->originalServer = null;
         }
         parent::tearDown();
     }
 
-    public function testPublicAdapter() {
+    public function testPublicAdapter()
+    {
         $_SERVER['SERVER_SOFTWARE'] = 'Apache/2.2.22 (Win64) PHP/5.3.13';
         $adapter = new PublicAssetAdapter($this->rootDir);
         $this->assertFileExists($this->rootDir . '/.htaccess');
@@ -45,7 +49,7 @@ class AssetAdapterTest extends SapphireTest {
         $content = $htaccess['contents'];
         // Allowed extensions set
         $this->assertContains('RewriteCond %{REQUEST_URI} !\\.(?i:', $content);
-        foreach(File::config()->allowed_extensions as $extension) {
+        foreach (File::config()->allowed_extensions as $extension) {
             $this->assertRegExp('/\b'.preg_quote($extension).'\b/', $content);
         }
 
@@ -63,7 +67,8 @@ class AssetAdapterTest extends SapphireTest {
         $this->assertEquals('/assets/AssetAdapterTest/file.jpg', $adapter->getPublicUrl('file.jpg'));
     }
 
-    public function testProtectedAdapter() {
+    public function testProtectedAdapter()
+    {
         $_SERVER['SERVER_SOFTWARE'] = 'Apache/2.2.22 (Win64) PHP/5.3.13';
         $adapter = new ProtectedAssetAdapter($this->rootDir . '/.protected');
         $this->assertFileExists($this->rootDir . '/.protected/.htaccess');

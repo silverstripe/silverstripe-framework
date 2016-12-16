@@ -7,12 +7,11 @@ use SilverStripe\Dev\TestOnly;
 class NonEmptyObject implements TestOnly
 {
 
-	static $c = "Cucumber";
+    static $c = "Cucumber";
 
-	public function __construct()
-	{
-		$this->a = "Apple";
-		$this->b = "Banana";
-	}
-
+    public function __construct()
+    {
+        $this->a = "Apple";
+        $this->b = "Banana";
+    }
 }

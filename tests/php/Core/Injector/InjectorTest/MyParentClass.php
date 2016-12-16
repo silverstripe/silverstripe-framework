@@ -6,5 +6,5 @@ use SilverStripe\Dev\TestOnly;
 
 class MyParentClass implements TestOnly
 {
-	public $one;
+    public $one;
 }

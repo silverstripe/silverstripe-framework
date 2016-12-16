@@ -11,5 +11,5 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class HideTestSubObject extends HideTestObject
 {
-	private static $table_name = 'HierarchyHideTest_SubObject';
+    private static $table_name = 'HierarchyHideTest_SubObject';
 }

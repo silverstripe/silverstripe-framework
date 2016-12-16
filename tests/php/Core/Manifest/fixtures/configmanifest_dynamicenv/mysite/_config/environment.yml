@@ -2,17 +2,17 @@
 Only:
   Environment: live
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   DynamicEnvironment: live
 ---
 Only:
   Environment: dev
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   DynamicEnvironment: dev
 ---
 Only:
   Environment: test
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   DynamicEnvironment: test

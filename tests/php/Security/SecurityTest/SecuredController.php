@@ -9,19 +9,19 @@ use SilverStripe\Security\Security;
 
 class SecuredController extends Controller implements TestOnly
 {
-	private static $allowed_actions = array('index');
+    private static $allowed_actions = array('index');
 
-	public function index()
-	{
-		if (!Permission::check('ADMIN')) {
-			return Security::permissionFailure($this);
-		}
+    public function index()
+    {
+        if (!Permission::check('ADMIN')) {
+            return Security::permissionFailure($this);
+        }
 
-		return 'Success';
-	}
+        return 'Success';
+    }
 
-	public function Link($action = null)
-	{
-		return Controller::join_links('SecurityTest_SecuredController', $action, '/');
-	}
+    public function Link($action = null)
+    {
+        return Controller::join_links('SecurityTest_SecuredController', $action, '/');
+    }
 }

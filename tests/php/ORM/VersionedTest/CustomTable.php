@@ -11,13 +11,13 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class CustomTable extends DataObject implements TestOnly
 {
-	private static $db = [
-		'Title' => 'Varchar'
-	];
+    private static $db = [
+        'Title' => 'Varchar'
+    ];
 
-	private static $table_name = 'VTCustomTable';
+    private static $table_name = 'VTCustomTable';
 
-	private static $extensions = [
-		Versioned::class,
-	];
+    private static $extensions = [
+        Versioned::class,
+    ];
 }

@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class PlayerContract extends DataObject implements TestOnly
 {
-	private static $table_name = 'CsvBulkLoaderTest_PlayerContract';
+    private static $table_name = 'CsvBulkLoaderTest_PlayerContract';
 
-	private static $db = array(
-		'Amount' => 'Currency',
-	);
+    private static $db = array(
+        'Amount' => 'Currency',
+    );
 }

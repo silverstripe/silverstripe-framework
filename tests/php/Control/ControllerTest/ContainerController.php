@@ -8,13 +8,12 @@ use SilverStripe\Dev\TestOnly;
 class ContainerController extends Controller implements TestOnly
 {
 
-	private static $allowed_actions = array(
-		'subcontroller',
-	);
+    private static $allowed_actions = array(
+        'subcontroller',
+    );
 
-	public function subcontroller()
-	{
-		return new SubController();
-	}
-
+    public function subcontroller()
+    {
+        return new SubController();
+    }
 }

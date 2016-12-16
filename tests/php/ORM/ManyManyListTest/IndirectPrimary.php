@@ -12,19 +12,19 @@ use SilverStripe\ORM\DataObject;
  */
 class IndirectPrimary extends DataObject implements TestOnly
 {
-	private static $table_name = 'ManyManyListTest_IndirectPrimary';
+    private static $table_name = 'ManyManyListTest_IndirectPrimary';
 
-	private static $db = array(
-		'Title' => 'Varchar(255)'
-	);
+    private static $db = array(
+        'Title' => 'Varchar(255)'
+    );
 
-	private static $many_many = array(
-		'Secondary' => Secondary::class
-	);
+    private static $many_many = array(
+        'Secondary' => Secondary::class
+    );
 
-	private static $many_many_extraFields = array(
-		'Secondary' => array(
-			'DocumentSort' => 'Int'
-		)
-	);
+    private static $many_many_extraFields = array(
+        'Secondary' => array(
+            'DocumentSort' => 'Int'
+        )
+    );
 }

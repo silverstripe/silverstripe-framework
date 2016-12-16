@@ -12,49 +12,56 @@ use SilverStripe\View\SSViewer;
 class TestComponent_ItemRequest extends RequestHandler
 {
 
-	private static $allowed_actions = array('Form', 'showform', 'testpage');
+    private static $allowed_actions = array('Form', 'showform', 'testpage');
 
-	protected $gridField;
+    protected $gridField;
 
-	protected $link;
+    protected $link;
 
-	protected $id;
+    protected $id;
 
-	public function __construct($gridField, $id, $link)
-	{
-		$this->gridField = $gridField;
-		$this->id = $id;
-		$this->link = $link;
-		parent::__construct();
-	}
+    public function __construct($gridField, $id, $link)
+    {
+        $this->gridField = $gridField;
+        $this->id = $id;
+        $this->link = $link;
+        parent::__construct();
+    }
 
-	public function Link()
-	{
-		return $this->link;
-	}
+    public function Link()
+    {
+        return $this->link;
+    }
 
-	public function showform()
-	{
-		return "<head>" . SSViewer::get_base_tag("") . "</head>" . $this->Form()->forTemplate();
-	}
+    public function showform()
+    {
+        return "<head>" . SSViewer::get_base_tag("") . "</head>" . $this->Form()->forTemplate();
+    }
 
-	public function Form()
-	{
-		/** @skipUpgrade */
-		return new Form($this, 'Form', new FieldList(
-			new TextField("Test")
-		), new FieldList(
-			new FormAction('doAction', 'Go')
-		));
-	}
+    public function Form()
+    {
+        /**
+ * @skipUpgrade
+*/
+        return new Form(
+            $this,
+            'Form',
+            new FieldList(
+                new TextField("Test")
+            ),
+            new FieldList(
+                new FormAction('doAction', 'Go')
+            )
+        );
+    }
 
-	public function doAction($data, $form)
-	{
-		return "Submitted " . $data['Test'] . " to item #" . $this->id;
-	}
+    public function doAction($data, $form)
+    {
+        return "Submitted " . $data['Test'] . " to item #" . $this->id;
+    }
 
-	public function testpage()
-	{
-		return "Test page for item #" . $this->id;
-	}
+    public function testpage()
+    {
+        return "Test page for item #" . $this->id;
+    }
 }
