@@ -20,7 +20,7 @@
 class TextareaField extends FormField {
 
 	private static $casting = array(
-		'Value' => 'HTMLText',
+		'Value' => 'HTMLText(array("shortcodes" => 0))',
 	);
 
 	/**
