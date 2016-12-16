@@ -9,7 +9,7 @@ jest.unmock('redux-form');
 const React = require('react');
 import ReactTestUtils from 'react-addons-test-utils';
 import FormBuilder from '../FormBuilder';
-import schemaFieldValues, { findField } from 'lib/schemaFieldValues';
+import schemaFieldValues, { findField, schemaMerge } from 'lib/schemaFieldValues';
 
 describe('FormBuilder', () => {
   const baseProps = {
@@ -61,7 +61,7 @@ describe('FormBuilder', () => {
         value: 'My test field',
       };
 
-      const field = formBuilder.mergeFieldData(fieldStructure, fieldState);
+      const field = schemaMerge(fieldStructure, fieldState);
 
       expect(field.component).toBe('TextField');
       expect(field.data.someCustomData.x).toBe(1);

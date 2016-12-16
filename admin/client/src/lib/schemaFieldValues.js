@@ -1,3 +1,27 @@
+import merge from 'merge';
+
+/**
+ * For a given form field, merge the schema with state and return the props
+ * to be assigned when rendering the field component.
+ *
+ * @param {Object} schema
+ * @param {Object} state
+ * @return {Object}
+ */
+export function schemaMerge(schema, state) {
+  // could be a dataless field
+  if (typeof state === 'undefined') {
+    return schema;
+  }
+  return merge.recursive(true, schema, {
+    data: state.data,
+    source: state.source,
+    message: state.message,
+    valid: state.valid,
+    value: state.value,
+  });
+}
+
 /**
  * Finds the field with matching id from the schema or state, this is mainly for dealing with
  * schema's deep nesting of fields.

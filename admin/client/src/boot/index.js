@@ -68,6 +68,12 @@ function appBoot() {
   // Bootstrap routing
   const routes = new BootRoutes(store);
   routes.start(window.location.pathname);
+
+  // @TODO - Remove once we remove entwine
+  // Enable top-level css selectors for react-dependant entwine sections
+  if (window.jQuery) {
+    window.jQuery('body').addClass('js-react-boot');
+  }
 }
 
 window.onload = appBoot;
