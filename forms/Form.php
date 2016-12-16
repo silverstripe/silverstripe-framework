@@ -1404,6 +1404,7 @@ class Form extends RequestHandler {
 		if(is_object($data)) $this->record = $data;
 
 		// dont include fields without data
+		/** @var FormField[] $dataFields */
 		$dataFields = $this->Fields()->dataFields();
 		if($dataFields) foreach($dataFields as $field) {
 			$name = $field->getName();
@@ -1436,15 +1437,31 @@ class Form extends RequestHandler {
 					$val = $data[$name];
 				}
 				// If field is in array-notation we need to access nested data
-				else if(strpos($name,'[')) {
-					// First encode data using PHP's method of converting nested arrays to form data
-					$flatData = urldecode(http_build_query($data));
-					// Then pull the value out from that flattened string
-					preg_match('/' . addcslashes($name,'[]') . '=([^&]*)/', $flatData, $matches);
+				else if(preg_match_all('/(.*)\[(.*)\]/U', $name, $matches)) {
+					//discard first match which is just the whole string
+					array_shift($matches);
 
-					if (isset($matches[1])) {
-						$exists = true;
-						$val = $matches[1];
+					$keys = array_pop($matches);
+					$name = array_shift($matches);
+					$name = array_shift($name);
+
+					if (array_key_exists($name, $data)) {
+						$tmpData = &$data[$name];
+						// drill down into the data array looking for the corresponding value
+						foreach ($keys as $arrayKey) {
+							if ($arrayKey !== '') {
+								$tmpData = &$tmpData[$arrayKey];
+							} else {
+								//empty square brackets means new array
+								if (is_array($tmpData)) {
+									$tmpData = array_shift($tmpData);
+								}
+							}
+						}
+						if ($tmpData) {
+							$val = $tmpData;
+							$exists = true;
+						}
 					}
 				}
 			}
