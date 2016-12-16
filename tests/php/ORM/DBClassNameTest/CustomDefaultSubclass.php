@@ -6,9 +6,9 @@ use SilverStripe\Dev\TestOnly;
 
 class CustomDefaultSubclass extends CustomDefault implements TestOnly
 {
-	private static $table_name = 'DBClassNameTest_CustomDefaultSubclass';
+    private static $table_name = 'DBClassNameTest_CustomDefaultSubclass';
 
-	private static $db = array(
-		'Content' => 'HTMLText'
-	);
+    private static $db = array(
+        'Content' => 'HTMLText'
+    );
 }

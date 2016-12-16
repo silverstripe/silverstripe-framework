@@ -8,17 +8,20 @@ use SilverStripe\ORM\ValidationResult;
 
 class TestValidator extends Validator
 {
-	public function validationError(
-		$fieldName, $message, $messageType = ValidationResult::TYPE_ERROR, $cast = ValidationResult::CAST_TEXT
-	) {
-		throw new Exception($message);
-	}
+    public function validationError(
+        $fieldName,
+        $message,
+        $messageType = ValidationResult::TYPE_ERROR,
+        $cast = ValidationResult::CAST_TEXT
+    ) {
+        throw new Exception($message);
+    }
 
-	public function javascript()
-	{
-	}
+    public function javascript()
+    {
+    }
 
-	public function php($data)
-	{
-	}
+    public function php($data)
+    {
+    }
 }

@@ -6,10 +6,10 @@ use SilverStripe\Dev\TestOnly;
 
 class ConstructableObject implements TestOnly
 {
-	public $property;
+    public $property;
 
-	public function __construct($prop)
-	{
-		$this->property = $prop;
-	}
+    public function __construct($prop)
+    {
+        $this->property = $prop;
+    }
 }

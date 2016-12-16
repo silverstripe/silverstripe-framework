@@ -10,16 +10,15 @@ use SilverStripe\Control\HTTPResponse;
 class LeftAndMain_HTTPResponse extends HTTPResponse
 {
 
-	protected $isFinished = false;
+    protected $isFinished = false;
 
-	public function isFinished()
-	{
-		return (parent::isFinished() || $this->isFinished);
-	}
+    public function isFinished()
+    {
+        return (parent::isFinished() || $this->isFinished);
+    }
 
-	public function setIsFinished($bool)
-	{
-		$this->isFinished = $bool;
-	}
-
+    public function setIsFinished($bool)
+    {
+        $this->isFinished = $bool;
+    }
 }

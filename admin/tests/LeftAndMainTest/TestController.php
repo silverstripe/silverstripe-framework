@@ -8,12 +8,12 @@ use SilverStripe\Dev\TestOnly;
 
 class TestController extends LeftAndMain implements TestOnly
 {
-	protected $template = 'BlankPage';
+    protected $template = 'BlankPage';
 
-	private static $tree_class = TestObject::class;
+    private static $tree_class = TestObject::class;
 
-	public function Link($action = null)
-	{
-		return Controller::join_links('LeftAndMainTest_Controller', $action, '/');
-	}
+    public function Link($action = null)
+    {
+        return Controller::join_links('LeftAndMainTest_Controller', $action, '/');
+    }
 }

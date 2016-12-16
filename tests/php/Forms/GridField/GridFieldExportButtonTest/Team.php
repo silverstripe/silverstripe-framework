@@ -7,17 +7,16 @@ use SilverStripe\ORM\DataObject;
 
 class Team extends DataObject implements TestOnly
 {
-	private static $table_name = 'GridFieldExportButtonTest_Team';
+    private static $table_name = 'GridFieldExportButtonTest_Team';
 
-	private static $db = array(
-		'Name' => 'Varchar',
-		'City' => 'Varchar',
-		'RugbyTeamNumber' => 'Int'
-	);
+    private static $db = array(
+        'Name' => 'Varchar',
+        'City' => 'Varchar',
+        'RugbyTeamNumber' => 'Int'
+    );
 
-	public function canView($member = null)
-	{
-		return true;
-	}
-
+    public function canView($member = null)
+    {
+        return true;
+    }
 }

@@ -6,5 +6,5 @@ use SilverStripe\Dev\TestOnly;
 
 class FieldlessSubTable extends Team implements TestOnly
 {
-	private static $table_name = 'DataObjectTest_FieldlessSubTable';
+    private static $table_name = 'DataObjectTest_FieldlessSubTable';
 }

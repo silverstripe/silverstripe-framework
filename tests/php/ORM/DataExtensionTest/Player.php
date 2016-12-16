@@ -7,10 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class Player extends DataObject implements TestOnly
 {
-	private static $table_name = 'DataExtensionTest_Player';
+    private static $table_name = 'DataExtensionTest_Player';
 
-	private static $db = array(
-		'Name' => 'Varchar'
-	);
-
+    private static $db = array(
+        'Name' => 'Varchar'
+    );
 }

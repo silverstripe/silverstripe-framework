@@ -1,28 +1,28 @@
 ---
 Only:
-  ConstantDefined: ConstantDefined_Foo
+  ConstantDefined: CONSTANTDEFINED_FOO
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   ConstantDefined:
     FooDefined: Yes
 ---
 Only:
-  ConstantDefined: ConstantDefined_Bar
+  ConstantDefined: CONSTANTDEFINED_BAR
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   ConstantDefined:
     BarDefined: Yes
 ---
 Except:
-  ConstantDefined: ConstantDefined_Foo
+  ConstantDefined: CONSTANTDEFINED_FOO
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   ConstantDefined:
     FooDefined: No
 ---
 Except:
-  ConstantDefined: ConstantDefined_Bar
+  ConstantDefined: CONSTANTDEFINED_BAR
 ---
-ConfigManifestTest:
+SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   ConstantDefined:
     BarDefined: No

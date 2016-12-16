@@ -8,20 +8,20 @@ use SilverStripe\View\ViewableData;
 class TestViewableData extends ViewableData implements TestOnly
 {
 
-	private static $default_cast = 'Text';
+    private static $default_cast = 'Text';
 
-	private static $casting = array(
-		'TextValue' => 'Text',
-		'HTMLValue' => 'HTMLFragment'
-	);
+    private static $casting = array(
+        'TextValue' => 'Text',
+        'HTMLValue' => 'HTMLFragment'
+    );
 
-	public function methodWithOneArgument($arg1)
-	{
-		return "arg1:{$arg1}";
-	}
+    public function methodWithOneArgument($arg1)
+    {
+        return "arg1:{$arg1}";
+    }
 
-	public function methodWithTwoArguments($arg1, $arg2)
-	{
-		return "arg1:{$arg1},arg2:{$arg2}";
-	}
+    public function methodWithTwoArguments($arg1, $arg2)
+    {
+        return "arg1:{$arg1},arg2:{$arg2}";
+    }
 }

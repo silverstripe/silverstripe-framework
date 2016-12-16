@@ -6,5 +6,5 @@ use SilverStripe\ORM\Tests\DBClassNameTest\ObjectSubClass;
 
 class ObjectSubSubClass extends ObjectSubClass
 {
-	private static $table_name = 'DBClassNameTest_ObjectSubSubClass';
+    private static $table_name = 'DBClassNameTest_ObjectSubSubClass';
 }

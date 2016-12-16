@@ -11,34 +11,33 @@ use SilverStripe\ORM\DataModel;
 
 class TestRequestFilter implements RequestFilter, TestOnly
 {
-	public $preCalls = 0;
-	public $postCalls = 0;
+    public $preCalls = 0;
+    public $postCalls = 0;
 
-	public $failPre = false;
-	public $failPost = false;
+    public $failPre = false;
+    public $failPost = false;
 
-	public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
-	{
-		++$this->preCalls;
+    public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
+    {
+        ++$this->preCalls;
 
-		if ($this->failPre) {
-			return false;
-		}
-	}
+        if ($this->failPre) {
+            return false;
+        }
+    }
 
-	public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model)
-	{
-		++$this->postCalls;
+    public function postRequest(HTTPRequest $request, HTTPResponse $response, DataModel $model)
+    {
+        ++$this->postCalls;
 
-		if ($this->failPost) {
-			return false;
-		}
-	}
+        if ($this->failPost) {
+            return false;
+        }
+    }
 
-	public function reset()
-	{
-		$this->preCalls = 0;
-		$this->postCalls = 0;
-	}
-
+    public function reset()
+    {
+        $this->preCalls = 0;
+        $this->postCalls = 0;
+    }
 }

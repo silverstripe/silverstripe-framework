@@ -7,15 +7,15 @@ use SilverStripe\ORM\DataObject;
 
 class Fan extends DataObject implements TestOnly
 {
-	private static $table_name = 'DataObjectTest_Fan';
+    private static $table_name = 'DataObjectTest_Fan';
 
-	private static $db = array(
-		'Name' => 'Varchar(255)',
-		'Email' => 'Varchar',
-	);
+    private static $db = array(
+        'Name' => 'Varchar(255)',
+        'Email' => 'Varchar',
+    );
 
-	private static $has_one = array(
-		'Favourite' => DataObject::class, // Polymorphic relation
-		'SecondFavourite' => DataObject::class
-	);
+    private static $has_one = array(
+        'Favourite' => DataObject::class, // Polymorphic relation
+        'SecondFavourite' => DataObject::class
+    );
 }

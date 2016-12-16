@@ -16,37 +16,37 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'VersionedTest_DataObject';
+    private static $table_name = 'VersionedTest_DataObject';
 
-	private static $db = array(
-		"Name" => "Varchar",
-		'Title' => 'Varchar',
-		'Content' => 'HTMLText',
-	);
+    private static $db = array(
+        "Name" => "Varchar",
+        'Title' => 'Varchar',
+        'Content' => 'HTMLText',
+    );
 
-	private static $extensions = array(
-		Versioned::class,
-	);
+    private static $extensions = array(
+        Versioned::class,
+    );
 
-	private static $has_one = array(
-		'Parent' => TestObject::class,
-	);
+    private static $has_one = array(
+        'Parent' => TestObject::class,
+    );
 
-	private static $has_many = array(
-		'Children' => TestObject::class,
-	);
+    private static $has_many = array(
+        'Children' => TestObject::class,
+    );
 
-	private static $many_many = array(
-		'Related' => RelatedWithoutversion::class,
-	);
+    private static $many_many = array(
+        'Related' => RelatedWithoutversion::class,
+    );
 
 
-	public function canView($member = null)
-	{
-		$extended = $this->extendedCan(__FUNCTION__, $member);
-		if ($extended !== null) {
-			return $extended;
-		}
-		return true;
-	}
+    public function canView($member = null)
+    {
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
+        }
+        return true;
+    }
 }

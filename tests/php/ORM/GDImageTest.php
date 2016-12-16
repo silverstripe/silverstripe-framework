@@ -2,35 +2,38 @@
 
 namespace SilverStripe\ORM\Tests;
 
-
-require_once(__DIR__  . "/ImageTest.php");
+require_once __DIR__  . "/ImageTest.php";
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Cache;
 use Zend_Cache;
 
+class GDImageTest extends ImageTest
+{
 
-class GDImageTest extends ImageTest {
+    public function setUp()
+    {
+        parent::setUp();
 
-	public function setUp() {
-		parent::setUp();
+        if (!extension_loaded("gd")) {
+            $this->markTestSkipped("The GD extension is required");
+            return;
+        }
 
-		if(!extension_loaded("gd")) {
-			$this->markTestSkipped("The GD extension is required");
-			return;
-		}
+        /**
+ * @skipUpgrade
+*/
+        Config::inst()->update(
+            'SilverStripe\\Core\\Injector\\Injector',
+            'Image_Backend',
+            'SilverStripe\\Assets\\GDBackend'
+        );
+    }
 
-		/** @skipUpgrade */
-		Config::inst()->update(
-			'SilverStripe\\Core\\Injector\\Injector',
-			'Image_Backend',
-			'SilverStripe\\Assets\\GDBackend'
-		);
-	}
-
-	public function tearDown() {
-		$cache = Cache::factory('GDBackend_Manipulations');
-		$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
-		parent::tearDown();
-	}
+    public function tearDown()
+    {
+        $cache = Cache::factory('GDBackend_Manipulations');
+        $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+        parent::tearDown();
+    }
 }

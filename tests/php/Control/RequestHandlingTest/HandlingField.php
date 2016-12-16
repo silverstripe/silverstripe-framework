@@ -11,17 +11,17 @@ use SilverStripe\Forms\FormField;
 class HandlingField extends FormField implements TestOnly
 {
 
-	private static $allowed_actions = array(
-		'actionOnField'
-	);
+    private static $allowed_actions = array(
+        'actionOnField'
+    );
 
-	public function actionOnField()
-	{
-		return "Test method on $this->name";
-	}
+    public function actionOnField()
+    {
+        return "Test method on $this->name";
+    }
 
-	public function actionNotAllowedOnField()
-	{
-		return "actionNotAllowedOnField on $this->name";
-	}
+    public function actionNotAllowedOnField()
+    {
+        return "actionNotAllowedOnField on $this->name";
+    }
 }

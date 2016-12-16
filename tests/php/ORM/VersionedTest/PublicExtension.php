@@ -10,8 +10,8 @@ use SilverStripe\ORM\DataExtension;
  */
 class PublicExtension extends DataExtension implements TestOnly
 {
-	public function canViewNonLive($member = null)
-	{
-		return true;
-	}
+    public function canViewNonLive($member = null)
+    {
+        return true;
+    }
 }

@@ -9,15 +9,15 @@ use SilverStripe\ORM\DataExtension;
 
 class ArticleExtension extends DataExtension implements TestOnly
 {
-	private static $db = array(
-		'ExtendedField' => 'Varchar'
-	);
+    private static $db = array(
+        'ExtendedField' => 'Varchar'
+    );
 
-	public function updateCMSFields(FieldList $fields)
-	{
-		$fields->addFieldToTab('Root.Main',
-			new TextField('AddedExtensionField')
-		);
-	}
-
+    public function updateCMSFields(FieldList $fields)
+    {
+        $fields->addFieldToTab(
+            'Root.Main',
+            new TextField('AddedExtensionField')
+        );
+    }
 }

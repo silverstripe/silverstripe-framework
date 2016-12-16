@@ -1,58 +1,63 @@
 <?php
 
+namespace SilverStripe\Control\Tests\Email;
+
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Dev\TestOnly;
-use SilverStripe\Control\Email\Mailer;
 
-class MailerTest extends SapphireTest {
+class MailerTest extends SapphireTest
+{
 
-	/**
-	 * Replaces ----=_NextPart_214491627619 placeholders with ----=_NextPart_000000000000
-	 *
-	 * @param string $input
-	 * @return string
-	 */
-	protected function normaliseDivisions($input) {
-		return preg_replace('/----=_NextPart_\d+/m', '----=_NextPart_000000000000', $input);
-	}
+    /**
+     * Replaces ----=_NextPart_214491627619 placeholders with ----=_NextPart_000000000000
+     *
+     * @param  string $input
+     * @return string
+     */
+    protected function normaliseDivisions($input)
+    {
+        return preg_replace('/----=_NextPart_\d+/m', '----=_NextPart_000000000000', $input);
+    }
 
-	/**
-	 * Test plain text messages
-	 */
-	public function testSendPlain() {
-		$mailer = new MailerTest_MockMailer();
+    /**
+     * Test plain text messages
+     */
+    public function testSendPlain()
+    {
+        $mailer = new MailerTest\MockMailer();
 
-		// Test with default encoding
-		$testMessage = "The majority of the answers so far are saying that private methods are implementation details ".
-			"which don't (or at least shouldn't) matter so long as the public interface is well-tested and ".
-			"working. That's absolutely correct if your only purpose for testing is to guarantee that the ".
-			"public interface works.";
-		list($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) = $mailer->sendPlain(
-			'<email@silverstripe.com>',
-			'tom@jones <tom@silverstripe.com>',
-			"What is the <purpose> of testing?",
-			$testMessage,
-			null,
-			array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
-		);
+        // Test with default encoding
+        $testMessage = "The majority of the answers so far are saying that private methods are implementation details ".
+            "which don't (or at least shouldn't) matter so long as the public interface is well-tested and ".
+            "working. That's absolutely correct if your only purpose for testing is to guarantee that the ".
+            "public interface works.";
+        list($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) = $mailer->sendPlain(
+            '<email@silverstripe.com>',
+            'tom@jones <tom@silverstripe.com>',
+            "What is the <purpose> of testing?",
+            $testMessage,
+            null,
+            array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
+        );
 
-		$this->assertEquals('email@silverstripe.com', $to);
-		$this->assertEquals('=?UTF-8?B?V2hhdCBpcyB0aGUgPHB1cnBvc2U+IG9mIHRlc3Rpbmc/?=', $subjectEncoded);
-		$this->assertEquals('=?UTF-8?B?'.  base64_encode('What is the <purpose> of testing?').'?=', $subjectEncoded);
+        $this->assertEquals('email@silverstripe.com', $to);
+        $this->assertEquals('=?UTF-8?B?V2hhdCBpcyB0aGUgPHB1cnBvc2U+IG9mIHRlc3Rpbmc/?=', $subjectEncoded);
+        $this->assertEquals('=?UTF-8?B?'.  base64_encode('What is the <purpose> of testing?').'?=', $subjectEncoded);
 
-		$this->assertEquals(<<<PHP
+        $this->assertEquals(
+            <<<PHP
 The majority of the answers so far are saying that private methods are impl=
 ementation details which don't (or at least shouldn't) matter so long as th=
 e public interface is well-tested and working. That's absolutely correct if=
  your only purpose for testing is to guarantee that the public interface wo=
 rks.
 PHP
-			,
-			Convert::nl2os($fullBody)
-		);
-		$this->assertEquals($testMessage, quoted_printable_decode($fullBody));
-		$this->assertEquals(<<<PHP
+            ,
+            Convert::nl2os($fullBody)
+        );
+        $this->assertEquals($testMessage, quoted_printable_decode($fullBody));
+        $this->assertEquals(
+            <<<PHP
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 From: tomjones <tom@silverstripe.com>
@@ -62,25 +67,26 @@ Bcc: andrew@thing.com
 Cc: admin@silverstripe.com
 
 PHP
-			,
-			Convert::nl2os($headersEncoded)
-		);
-		$this->assertEquals('tom@silverstripe.com', $bounceAddress);
+            ,
+            Convert::nl2os($headersEncoded)
+        );
+        $this->assertEquals('tom@silverstripe.com', $bounceAddress);
 
-		// Test override bounce email and alternate encoding
-		$mailer->setBounceEmail('bounce@silverstripe.com');
-		$mailer->setMessageEncoding('base64');
-		list($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) = $mailer->sendPlain(
-			'<email@silverstripe.com>',
-			'tom@jones <tom@silverstripe.com>',
-			"What is the <purpose> of testing?",
-			$testMessage,
-			null,
-			array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
-		);
+        // Test override bounce email and alternate encoding
+        $mailer->setBounceEmail('bounce@silverstripe.com');
+        $mailer->setMessageEncoding('base64');
+        list($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) = $mailer->sendPlain(
+            '<email@silverstripe.com>',
+            'tom@jones <tom@silverstripe.com>',
+            "What is the <purpose> of testing?",
+            $testMessage,
+            null,
+            array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
+        );
 
-		$this->assertEquals('bounce@silverstripe.com', $bounceAddress);
-		$this->assertEquals(<<<PHP
+        $this->assertEquals('bounce@silverstripe.com', $bounceAddress);
+        $this->assertEquals(
+            <<<PHP
 VGhlIG1ham9yaXR5IG9mIHRoZSBhbnN3ZXJzIHNvIGZhciBhcmUgc2F5aW5n
 IHRoYXQgcHJpdmF0ZSBtZXRob2RzIGFyZSBpbXBsZW1lbnRhdGlvbiBkZXRh
 aWxzIHdoaWNoIGRvbid0IChvciBhdCBsZWFzdCBzaG91bGRuJ3QpIG1hdHRl
@@ -90,40 +96,43 @@ IHlvdXIgb25seSBwdXJwb3NlIGZvciB0ZXN0aW5nIGlzIHRvIGd1YXJhbnRl
 ZSB0aGF0IHRoZSBwdWJsaWMgaW50ZXJmYWNlIHdvcmtzLg==
 
 PHP
-			,
-			Convert::nl2os($fullBody)
-		);
-		$this->assertEquals($testMessage, base64_decode($fullBody));
-	}
+            ,
+            Convert::nl2os($fullBody)
+        );
+        $this->assertEquals($testMessage, base64_decode($fullBody));
+    }
 
-	/**
-	 * Test HTML messages
-	 */
-	public function testSendHTML() {
-		$mailer = new MailerTest_MockMailer();
+    /**
+     * Test HTML messages
+     */
+    public function testSendHTML()
+    {
+        $mailer = new MailerTest\MockMailer();
 
-		// Test with default encoding
-		$testMessageHTML = "<p>The majority of the <i>answers</i> so far are saying that private methods are " .
-			"implementation details which don&#39;t (<a href=\"http://www.google.com\">or at least shouldn&#39;t</a>) ".
-			"matter so long as the public interface is well-tested &amp; working</p> ".
-			"<p>That&#39;s absolutely correct if your only purpose for testing is to guarantee that the ".
-			"public interface works.</p>";
-		$testMessagePlain = Convert::xml2raw($testMessageHTML);
-		$this->assertTrue(stripos($testMessagePlain, '&#') === false);
-		list($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) = $mailer->sendHTML(
-			'<email@silverstripe.com>',
-			'tom@jones <tom@silverstripe.com>',
-			"What is the <purpose> of testing?",
-			$testMessageHTML,
-			null,
-			array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
-		);
+        // Test with default encoding
+        $testMessageHTML = "<p>The majority of the <i>answers</i> so far are saying that private methods are " .
+            "implementation details which don&#39;t (<a href=\"http://www.google.com\">or at least shouldn&#39;t</a>) ".
+            "matter so long as the public interface is well-tested &amp; working</p> ".
+            "<p>That&#39;s absolutely correct if your only purpose for testing is to guarantee that the ".
+            "public interface works.</p>";
+        $testMessagePlain = Convert::xml2raw($testMessageHTML);
+        $this->assertTrue(stripos($testMessagePlain, '&#') === false);
+        list($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) = $mailer->sendHTML(
+            '<email@silverstripe.com>',
+            'tom@jones <tom@silverstripe.com>',
+            "What is the <purpose> of testing?",
+            $testMessageHTML,
+            null,
+            array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
+        );
 
-		$this->assertEquals('email@silverstripe.com', $to);
-		$this->assertEquals('=?UTF-8?B?V2hhdCBpcyB0aGUgPHB1cnBvc2U+IG9mIHRlc3Rpbmc/?=', $subjectEncoded);
-		$this->assertEquals('=?UTF-8?B?'.  base64_encode('What is the <purpose> of testing?').'?=', $subjectEncoded);
+        $this->assertEquals('email@silverstripe.com', $to);
+        $this->assertEquals('=?UTF-8?B?V2hhdCBpcyB0aGUgPHB1cnBvc2U+IG9mIHRlc3Rpbmc/?=', $subjectEncoded);
+        $this->assertEquals('=?UTF-8?B?'.  base64_encode('What is the <purpose> of testing?').'?=', $subjectEncoded);
 
-		$this->assertEquals(Convert::nl2os(<<<PHP
+        $this->assertEquals(
+            Convert::nl2os(
+                <<<PHP
 
 This is a multi-part message in MIME format.
 
@@ -152,12 +161,13 @@ if your only purpose for testing is to guarantee that the public interface =
 works.</p>=0A</BODY>=0A</HTML>
 ------=_NextPart_000000000000--
 PHP
-			),
-			Convert::nl2os($this->normaliseDivisions($fullBody))
-		);
-		// Check that the messages exist in the output
-		$this->assertTrue(stripos($fullBody, quoted_printable_encode($testMessagePlain)) !== false);
-		$this->assertEquals(<<<PHP
+            ),
+            Convert::nl2os($this->normaliseDivisions($fullBody))
+        );
+        // Check that the messages exist in the output
+        $this->assertTrue(stripos($fullBody, quoted_printable_encode($testMessagePlain)) !== false);
+        $this->assertEquals(
+            <<<PHP
 MIME-Version: 1.0
 Content-Type: multipart/alternative; boundary="----=_NextPart_000000000000"
 Content-Transfer-Encoding: 7bit
@@ -168,25 +178,26 @@ Bcc: andrew@thing.com
 Cc: admin@silverstripe.com
 
 PHP
-			,
-			Convert::nl2os($this->normaliseDivisions($headersEncoded))
-		);
-		$this->assertEquals('tom@silverstripe.com', $bounceAddress);
+            ,
+            Convert::nl2os($this->normaliseDivisions($headersEncoded))
+        );
+        $this->assertEquals('tom@silverstripe.com', $bounceAddress);
 
-		// Test override bounce email and alternate encoding
-		$mailer->setBounceEmail('bounce@silverstripe.com');
-		$mailer->setMessageEncoding('base64');
-		list($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) = $mailer->sendHTML(
-			'<email@silverstripe.com>',
-			'tom@jones <tom@silverstripe.com>',
-			"What is the <purpose> of testing?",
-			$testMessageHTML,
-			null,
-			array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
-		);
+        // Test override bounce email and alternate encoding
+        $mailer->setBounceEmail('bounce@silverstripe.com');
+        $mailer->setMessageEncoding('base64');
+        list($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) = $mailer->sendHTML(
+            '<email@silverstripe.com>',
+            'tom@jones <tom@silverstripe.com>',
+            "What is the <purpose> of testing?",
+            $testMessageHTML,
+            null,
+            array('CC' => 'admin@silverstripe.com', 'bcc' => 'andrew@thing.com')
+        );
 
-		$this->assertEquals('bounce@silverstripe.com', $bounceAddress);
-		$this->assertEquals(<<<PHP
+        $this->assertEquals('bounce@silverstripe.com', $bounceAddress);
+        $this->assertEquals(
+            <<<PHP
 
 This is a multi-part message in MIME format.
 
@@ -225,20 +236,11 @@ PC9CT0RZPgo8L0hUTUw+
 
 ------=_NextPart_000000000000--
 PHP
-			,
-			Convert::nl2os($this->normaliseDivisions($fullBody))
-		);
+            ,
+            Convert::nl2os($this->normaliseDivisions($fullBody))
+        );
 
-		// Check that the text message version is somewhere in there
-		$this->assertTrue(stripos($fullBody, chunk_split(base64_encode($testMessagePlain), 60)) !== false);
-	}
-}
-
-/**
- * Mocks the sending of emails without actually sending anything
- */
-class MailerTest_MockMailer extends Mailer implements TestOnly {
-	protected function email($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress) {
-		return array($to, $subjectEncoded, $fullBody, $headersEncoded, $bounceAddress);
-	}
+        // Check that the text message version is somewhere in there
+        $this->assertTrue(stripos($fullBody, chunk_split(base64_encode($testMessagePlain), 60)) !== false);
+    }
 }

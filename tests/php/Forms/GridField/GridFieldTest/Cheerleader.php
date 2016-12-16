@@ -7,13 +7,13 @@ use SilverStripe\ORM\DataObject;
 
 class Cheerleader extends DataObject implements TestOnly
 {
-	private static $table_name = 'GridFieldTest_Cheerleader';
+    private static $table_name = 'GridFieldTest_Cheerleader';
 
-	private static $db = [
-		'Name' => 'Varchar'
-	];
+    private static $db = [
+        'Name' => 'Varchar'
+    ];
 
-	private static $has_one = [
-		'Team' => Team::class,
-	];
+    private static $has_one = [
+        'Team' => Team::class,
+    ];
 }

@@ -8,9 +8,11 @@ use SilverStripe\Dev\SapphireTest;
 /**
  * Tests set manipulations of groups of assets of differing visibilities
  */
-class AssetManipulationListTest extends SapphireTest {
+class AssetManipulationListTest extends SapphireTest
+{
 
-    public function testVisibility() {
+    public function testVisibility()
+    {
         $set = new AssetManipulationList();
         $file1 = ['Filename' => 'Test1.jpg', 'Hash' => '975677589962604d9e16b700cf84734f9dda2817'];
         $file2 = ['Filename' => 'Test2.jpg', 'Hash' => '22af86a45ea56287437a12cf83aded5c077a5db5'];
@@ -74,10 +76,11 @@ class AssetManipulationListTest extends SapphireTest {
     /**
      * Helper to count all items in a set
      *
-     * @param AssetManipulationList $set
+     * @param  AssetManipulationList $set
      * @return int
      */
-    protected function countItems(AssetManipulationList $set) {
+    protected function countItems(AssetManipulationList $set)
+    {
         return count($set->getPublicAssets()) + count($set->getProtectedAssets()) + count($set->getDeletedAssets());
     }
 }

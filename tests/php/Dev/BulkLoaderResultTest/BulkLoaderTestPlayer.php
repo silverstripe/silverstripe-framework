@@ -7,10 +7,10 @@ use SilverStripe\ORM\DataObject;
 
 class Player extends DataObject implements TestOnly
 {
-	private static $table_name = 'BulkLoaderTestPlayer';
+    private static $table_name = 'BulkLoaderTestPlayer';
 
-	private static $db = array(
-		'Name' => 'Varchar',
-		'Status' => 'Varchar',
-	);
+    private static $db = array(
+        'Name' => 'Varchar',
+        'Status' => 'Varchar',
+    );
 }

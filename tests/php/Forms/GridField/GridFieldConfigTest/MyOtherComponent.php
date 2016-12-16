@@ -7,8 +7,8 @@ use SilverStripe\Forms\GridField\GridField_URLHandler;
 
 class MyOtherComponent implements GridField_URLHandler, TestOnly
 {
-	public function getURLHandlers($gridField)
-	{
-		return array();
-	}
+    public function getURLHandlers($gridField)
+    {
+        return array();
+    }
 }

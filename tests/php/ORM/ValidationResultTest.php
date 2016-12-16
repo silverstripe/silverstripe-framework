@@ -8,15 +8,19 @@ use SilverStripe\ORM\ValidationResult;
 
 class ValidationResultTest extends SapphireTest
 {
-    public function testSerialise() {
+    public function testSerialise()
+    {
         $result = new ValidationResult();
         $result->addError("Error", ValidationResult::TYPE_ERROR, null, ValidationResult::CAST_HTML);
         $result->addMessage("Message", ValidationResult::TYPE_GOOD);
         $serialised = serialize($result);
 
-        /** @var ValidationResult $result2 */
+        /**
+ * @var ValidationResult $result2
+*/
         $result2 = unserialize($serialised);
-        $this->assertEquals([
+        $this->assertEquals(
+            [
             [
                 'message' => 'Error',
                 'fieldName' => null,
@@ -29,7 +33,9 @@ class ValidationResultTest extends SapphireTest
                 'messageCast' => ValidationResult::CAST_TEXT,
                 'messageType' => ValidationResult::TYPE_GOOD,
             ]
-        ], $result2->getMessages());
+            ],
+            $result2->getMessages()
+        );
         $this->assertFalse($result2->isValid());
     }
 }

@@ -27,362 +27,394 @@ use ArrayIterator;
  * Additional CMSMenu items can be added through {@link LeftAndMainExtension::init()}
  * extensions added to {@link LeftAndMain}.
  */
-class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider {
+class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
+{
 
-	/**
-	 * Sort by menu priority, highest to lowest
-	 */
-	const MENU_PRIORITY = 'menu_priority';
+    /**
+     * Sort by menu priority, highest to lowest
+     */
+    const MENU_PRIORITY = 'menu_priority';
 
-	/**
-	 * Sort by url priority, highest to lowest
-	 */
-	const URL_PRIORITY = 'url_priority';
+    /**
+     * Sort by url priority, highest to lowest
+     */
+    const URL_PRIORITY = 'url_priority';
 
-	/**
-	 * An array of changes to be made to the menu items, in the order that the changes should be
-	 * applied.  Each item is a map in one of the two forms:
-	 *  - array('type' => 'add', 'item' => new CMSMenuItem(...) )
-	 *  - array('type' => 'remove', 'code' => 'codename' )
-	 */
-	protected static $menu_item_changes = array();
+    /**
+     * An array of changes to be made to the menu items, in the order that the changes should be
+     * applied.  Each item is a map in one of the two forms:
+     *  - array('type' => 'add', 'item' => new CMSMenuItem(...) )
+     *  - array('type' => 'remove', 'code' => 'codename' )
+     */
+    protected static $menu_item_changes = array();
 
-	/**
-	 * Set to true if clear_menu() is called, to indicate that the default menu shouldn't be
-	 * included
-	 */
-	protected static $menu_is_cleared = false;
+    /**
+     * Set to true if clear_menu() is called, to indicate that the default menu shouldn't be
+     * included
+     */
+    protected static $menu_is_cleared = false;
 
-	/**
-	 * Generate CMS main menu items by collecting valid
-	 * subclasses of {@link LeftAndMain}
-	 */
-	public static function populate_menu() {
-		self::$menu_is_cleared = false;
-	}
+    /**
+     * Generate CMS main menu items by collecting valid
+     * subclasses of {@link LeftAndMain}
+     */
+    public static function populate_menu()
+    {
+        self::$menu_is_cleared = false;
+    }
 
-	/**
-	 * Add a LeftAndMain controller to the CMS menu.
-	 *
-	 * @param string $controllerClass The class name of the controller
-	 * @todo A director rule is added when a controller link is added, but it won't be removed
-	 *			when the item is removed. Functionality needed in {@link Director}.
-	 */
-	public static function add_controller($controllerClass) {
-		if($menuItem = self::menuitem_for_controller($controllerClass)) {
-			$code = static::get_menu_code($controllerClass);
-			self::add_menu_item_obj($code, $menuItem);
-		}
-	}
+    /**
+     * Add a LeftAndMain controller to the CMS menu.
+     *
+     * @param string $controllerClass The class name of the controller
+     * @todo A director rule is added when a controller link is added, but it won't be removed
+     *          when the item is removed. Functionality needed in {@link Director}.
+     */
+    public static function add_controller($controllerClass)
+    {
+        if ($menuItem = self::menuitem_for_controller($controllerClass)) {
+            $code = static::get_menu_code($controllerClass);
+            self::add_menu_item_obj($code, $menuItem);
+        }
+    }
 
-	/**
-	 * Return a CMSMenuItem to add the given controller to the CMSMenu
-	 *
-	 * @param string $controllerClass
-	 * @return CMSMenuItem
-	 */
-	protected static function menuitem_for_controller($controllerClass) {
-		$urlBase = AdminRootController::admin_url();
-		$urlSegment   = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
-		$menuPriority = Config::inst()->get($controllerClass, 'menu_priority', Config::FIRST_SET);
+    /**
+     * Return a CMSMenuItem to add the given controller to the CMSMenu
+     *
+     * @param string $controllerClass
+     * @return CMSMenuItem
+     */
+    protected static function menuitem_for_controller($controllerClass)
+    {
+        $urlBase = AdminRootController::admin_url();
+        $urlSegment   = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
+        $menuPriority = Config::inst()->get($controllerClass, 'menu_priority', Config::FIRST_SET);
 
-		// Don't add menu items defined the old way
-		if (!$urlSegment) {
-			return null;
-		}
+        // Don't add menu items defined the old way
+        if (!$urlSegment) {
+            return null;
+        }
 
-		$link = Controller::join_links($urlBase, $urlSegment) . '/';
+        $link = Controller::join_links($urlBase, $urlSegment) . '/';
 
-		// doesn't work if called outside of a controller context (e.g. in _config.php)
-		// as the locale won't be detected properly. Use {@link LeftAndMain->MainMenu()} to update
-		// titles for existing menu entries
-		$menuTitle = LeftAndMain::menu_title($controllerClass);
+        // doesn't work if called outside of a controller context (e.g. in _config.php)
+        // as the locale won't be detected properly. Use {@link LeftAndMain->MainMenu()} to update
+        // titles for existing menu entries
+        $menuTitle = LeftAndMain::menu_title($controllerClass);
 
-		return new CMSMenuItem($menuTitle, $link, $controllerClass, $menuPriority);
-	}
+        return new CMSMenuItem($menuTitle, $link, $controllerClass, $menuPriority);
+    }
 
 
-	/**
-	 * Add an arbitrary URL to the CMS menu.
-	 *
-	 * @param string $code A unique identifier (used to create a CSS ID and its key in {@link $menu_items})
-	 * @param string $menuTitle The link's title in the CMS menu
-	 * @param string $url The url of the link
-	 * @param integer $priority The menu priority (sorting order) of the menu item.  Higher priorities will be further
-	 *                          left.
-	 * @param array $attributes an array of attributes to include on the link.
-	 *
-	 * @return boolean The result of the operation.
-	 */
-	public static function add_link($code, $menuTitle, $url, $priority = -1, $attributes = null) {
-		return self::add_menu_item($code, $menuTitle, $url, null, $priority, $attributes);
-	}
+    /**
+     * Add an arbitrary URL to the CMS menu.
+     *
+     * @param string $code A unique identifier (used to create a CSS ID and its key in {@link $menu_items})
+     * @param string $menuTitle The link's title in the CMS menu
+     * @param string $url The url of the link
+     * @param integer $priority The menu priority (sorting order) of the menu item.  Higher priorities will be further
+     *                          left.
+     * @param array $attributes an array of attributes to include on the link.
+     *
+     * @return boolean The result of the operation.
+     */
+    public static function add_link($code, $menuTitle, $url, $priority = -1, $attributes = null)
+    {
+        return self::add_menu_item($code, $menuTitle, $url, null, $priority, $attributes);
+    }
 
-	/**
-	 * Add a navigation item to the main administration menu showing in the top bar.
-	 *
-	 * uses {@link CMSMenu::$menu_items}
-	 *
-	 * @param string $code Unique identifier for this menu item (e.g. used by {@link replace_menu_item()} and
-	 *                    {@link remove_menu_item}. Also used as a CSS-class for icon customization.
-	 * @param string $menuTitle Localized title showing in the menu bar
-	 * @param string $url A relative URL that will be linked in the menu bar.
-	 * @param string $controllerClass The controller class for this menu, used to check permisssions.
-	 *                    If blank, it's assumed that this is public, and always shown to users who
-	 *                    have the rights to access some other part of the admin area.
-	 * @param int $priority
-	 * @param array $attributes an array of attributes to include on the link.
-	 * @return bool Success
-	 */
-	public static function add_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1,
-											$attributes = null) {
-		// If a class is defined, then force the use of that as a code.  This helps prevent menu item duplication
-		if($controllerClass) {
-			$code = self::get_menu_code($controllerClass);
-		}
+    /**
+     * Add a navigation item to the main administration menu showing in the top bar.
+     *
+     * uses {@link CMSMenu::$menu_items}
+     *
+     * @param string $code Unique identifier for this menu item (e.g. used by {@link replace_menu_item()} and
+     *                    {@link remove_menu_item}. Also used as a CSS-class for icon customization.
+     * @param string $menuTitle Localized title showing in the menu bar
+     * @param string $url A relative URL that will be linked in the menu bar.
+     * @param string $controllerClass The controller class for this menu, used to check permisssions.
+     *                    If blank, it's assumed that this is public, and always shown to users who
+     *                    have the rights to access some other part of the admin area.
+     * @param int $priority
+     * @param array $attributes an array of attributes to include on the link.
+     * @return bool Success
+     */
+    public static function add_menu_item(
+        $code,
+        $menuTitle,
+        $url,
+        $controllerClass = null,
+        $priority = -1,
+        $attributes = null
+    ) {
+        // If a class is defined, then force the use of that as a code.  This helps prevent menu item duplication
+        if ($controllerClass) {
+            $code = self::get_menu_code($controllerClass);
+        }
 
-		return self::replace_menu_item($code, $menuTitle, $url, $controllerClass, $priority, $attributes);
-	}
+        return self::replace_menu_item($code, $menuTitle, $url, $controllerClass, $priority, $attributes);
+    }
 
-	/**
-	 * Get a single menu item by its code value.
-	 *
-	 * @param string $code
-	 * @return array
-	 */
-	public static function get_menu_item($code) {
-		$menuItems = self::get_menu_items();
-		return (isset($menuItems[$code])) ? $menuItems[$code] : false;
-	}
+    /**
+     * Get a single menu item by its code value.
+     *
+     * @param string $code
+     * @return array
+     */
+    public static function get_menu_item($code)
+    {
+        $menuItems = self::get_menu_items();
+        return (isset($menuItems[$code])) ? $menuItems[$code] : false;
+    }
 
-	/**
-	 * Get menu code for class
-	 *
-	 * @param string $cmsClass Controller class name
-	 * @return string
-	 */
-	public static function get_menu_code($cmsClass) {
-		return Convert::raw2htmlname(str_replace('\\', '-', $cmsClass));
-	}
+    /**
+     * Get menu code for class
+     *
+     * @param string $cmsClass Controller class name
+     * @return string
+     */
+    public static function get_menu_code($cmsClass)
+    {
+        return Convert::raw2htmlname(str_replace('\\', '-', $cmsClass));
+    }
 
-	/**
-	 * Get all menu entries.
-	 *
-	 * @return array
-	 */
-	public static function get_menu_items() {
-		$menuItems = array();
+    /**
+     * Get all menu entries.
+     *
+     * @return array
+     */
+    public static function get_menu_items()
+    {
+        $menuItems = array();
 
-		// Set up default menu items
-		if(!self::$menu_is_cleared) {
-			$cmsClasses = self::get_cms_classes();
-			foreach($cmsClasses as $cmsClass) {
-				$menuItem = self::menuitem_for_controller($cmsClass);
-				$menuCode = self::get_menu_code($cmsClass);
-				if($menuItem) {
-					$menuItems[$menuCode] = $menuItem;
-				}
-			}
-		}
+        // Set up default menu items
+        if (!self::$menu_is_cleared) {
+            $cmsClasses = self::get_cms_classes();
+            foreach ($cmsClasses as $cmsClass) {
+                $menuItem = self::menuitem_for_controller($cmsClass);
+                $menuCode = self::get_menu_code($cmsClass);
+                if ($menuItem) {
+                    $menuItems[$menuCode] = $menuItem;
+                }
+            }
+        }
 
-		// Apply changes
-		foreach(self::$menu_item_changes as $change) {
-			switch($change['type']) {
-				case 'add':
-					$menuItems[$change['code']] = $change['item'];
-					break;
+        // Apply changes
+        foreach (self::$menu_item_changes as $change) {
+            switch ($change['type']) {
+                case 'add':
+                    $menuItems[$change['code']] = $change['item'];
+                    break;
 
-				case 'remove':
-					unset($menuItems[$change['code']]);
-					break;
+                case 'remove':
+                    unset($menuItems[$change['code']]);
+                    break;
 
-				default:
-					user_error("Bad menu item change type {$change['type']}", E_USER_WARNING);
-			}
-		}
+                default:
+                    user_error("Bad menu item change type {$change['type']}", E_USER_WARNING);
+            }
+        }
 
-		// Sort menu items according to priority, then title asc
-		$menuPriority = array();
-		$menuTitle    = array();
-		foreach($menuItems as $key => $menuItem) {
-			$menuPriority[$key] = is_numeric($menuItem->priority) ? $menuItem->priority : 0;
-			$menuTitle[$key]    = $menuItem->title;
-		}
-		array_multisort($menuPriority, SORT_DESC, $menuTitle, SORT_ASC, $menuItems);
+        // Sort menu items according to priority, then title asc
+        $menuPriority = array();
+        $menuTitle    = array();
+        foreach ($menuItems as $key => $menuItem) {
+            $menuPriority[$key] = is_numeric($menuItem->priority) ? $menuItem->priority : 0;
+            $menuTitle[$key]    = $menuItem->title;
+        }
+        array_multisort($menuPriority, SORT_DESC, $menuTitle, SORT_ASC, $menuItems);
 
-		return $menuItems;
-	}
+        return $menuItems;
+    }
 
-	/**
-	 * Get all menu items that the passed member can view.
-	 * Defaults to {@link Member::currentUser()}.
-	 *
-	 * @param Member $member
-	 * @return array
-	 */
-	public static function get_viewable_menu_items($member = null) {
-		if(!$member && $member !== FALSE) {
-			$member = Member::currentUser();
-		}
+    /**
+     * Get all menu items that the passed member can view.
+     * Defaults to {@link Member::currentUser()}.
+     *
+     * @param Member $member
+     * @return array
+     */
+    public static function get_viewable_menu_items($member = null)
+    {
+        if (!$member && $member !== false) {
+            $member = Member::currentUser();
+        }
 
-		$viewableMenuItems = array();
-		$allMenuItems = self::get_menu_items();
-		if($allMenuItems) foreach($allMenuItems as $code => $menuItem) {
-			// exclude all items which have a controller to perform permission
-			// checks on
-			if($menuItem->controller) {
-				$controllerObj = singleton($menuItem->controller);
-				if(Controller::has_curr()) {
-					// Necessary for canView() to have request data available,
-					// e.g. to check permissions against LeftAndMain->currentPage()
-					$controllerObj->setRequest(Controller::curr()->getRequest());
-					if(!$controllerObj->canView($member)) continue;
-				}
-			}
+        $viewableMenuItems = array();
+        $allMenuItems = self::get_menu_items();
+        if ($allMenuItems) {
+            foreach ($allMenuItems as $code => $menuItem) {
+                        // exclude all items which have a controller to perform permission
+                        // checks on
+                if ($menuItem->controller) {
+                    $controllerObj = singleton($menuItem->controller);
+                    if (Controller::has_curr()) {
+                        // Necessary for canView() to have request data available,
+                        // e.g. to check permissions against LeftAndMain->currentPage()
+                        $controllerObj->setRequest(Controller::curr()->getRequest());
+                        if (!$controllerObj->canView($member)) {
+                            continue;
+                        }
+                    }
+                }
 
-			$viewableMenuItems[$code] = $menuItem;
-		}
+                $viewableMenuItems[$code] = $menuItem;
+            }
+        }
 
-		return $viewableMenuItems;
-	}
+        return $viewableMenuItems;
+    }
 
-	/**
-	 * Removes an existing item from the menu.
-	 *
-	 * @param string $code Unique identifier for this menu item
-	 */
-	public static function remove_menu_item($code) {
-		self::$menu_item_changes[] = array('type' => 'remove', 'code' => $code);
-	}
+    /**
+     * Removes an existing item from the menu.
+     *
+     * @param string $code Unique identifier for this menu item
+     */
+    public static function remove_menu_item($code)
+    {
+        self::$menu_item_changes[] = array('type' => 'remove', 'code' => $code);
+    }
 
-	/**
-	 * Remove menu item by class name.
-	 *
-	 * @param string $className Name of class
-	 */
-	public static function remove_menu_class($className) {
-		$code = self::get_menu_code($className);
-		self::remove_menu_item($code);
-	}
+    /**
+     * Remove menu item by class name.
+     *
+     * @param string $className Name of class
+     */
+    public static function remove_menu_class($className)
+    {
+        $code = self::get_menu_code($className);
+        self::remove_menu_item($code);
+    }
 
-	/**
-	 * Clears the entire menu
-	 */
-	public static function clear_menu() {
-		self::$menu_item_changes = array();
-		self::$menu_is_cleared = true;
-	}
+    /**
+     * Clears the entire menu
+     */
+    public static function clear_menu()
+    {
+        self::$menu_item_changes = array();
+        self::$menu_is_cleared = true;
+    }
 
-	/**
-	 * Replace a navigation item to the main administration menu showing in the top bar.
-	 *
-	 * @param string $code Unique identifier for this menu item (e.g. used by {@link replace_menu_item()} and
-	 *                    {@link remove_menu_item}. Also used as a CSS-class for icon customization.
-	 * @param string $menuTitle Localized title showing in the menu bar
-	 * @param string $url A relative URL that will be linked in the menu bar.
-	 *                    Make sure to add a matching route via {@link Director::$rules} to this url.
-	 * @param string $controllerClass The controller class for this menu, used to check permisssions.
-	 *                    If blank, it's assumed that this is public, and always shown to users who
-	 *                    have the rights to access some other part of the admin area.
-	 * @param int $priority
-	 * @param array $attributes an array of attributes to include on the link.
-	 * @return bool Success
-	 */
-	public static function replace_menu_item($code, $menuTitle, $url, $controllerClass = null, $priority = -1,
-												$attributes = null) {
-		$item = new CMSMenuItem($menuTitle, $url, $controllerClass, $priority);
+    /**
+     * Replace a navigation item to the main administration menu showing in the top bar.
+     *
+     * @param string $code Unique identifier for this menu item (e.g. used by {@link replace_menu_item()} and
+     *                    {@link remove_menu_item}. Also used as a CSS-class for icon customization.
+     * @param string $menuTitle Localized title showing in the menu bar
+     * @param string $url A relative URL that will be linked in the menu bar.
+     *                    Make sure to add a matching route via {@link Director::$rules} to this url.
+     * @param string $controllerClass The controller class for this menu, used to check permisssions.
+     *                    If blank, it's assumed that this is public, and always shown to users who
+     *                    have the rights to access some other part of the admin area.
+     * @param int $priority
+     * @param array $attributes an array of attributes to include on the link.
+     * @return bool Success
+     */
+    public static function replace_menu_item(
+        $code,
+        $menuTitle,
+        $url,
+        $controllerClass = null,
+        $priority = -1,
+        $attributes = null
+    ) {
+        $item = new CMSMenuItem($menuTitle, $url, $controllerClass, $priority);
 
-		if($attributes) {
-			$item->setAttributes($attributes);
-		}
+        if ($attributes) {
+            $item->setAttributes($attributes);
+        }
 
-		self::$menu_item_changes[] = array(
-			'type' => 'add',
-			'code' => $code,
-			'item' => $item,
-		);
-	}
+        self::$menu_item_changes[] = array(
+            'type' => 'add',
+            'code' => $code,
+            'item' => $item,
+        );
+    }
 
-	/**
-	 * Add a previously built menu item object to the menu
-	 *
-	 * @param string $code
-	 * @param CMSMenuItem $cmsMenuItem
-	 */
-	protected static function add_menu_item_obj($code, $cmsMenuItem) {
-		self::$menu_item_changes[] = array(
-			'type' => 'add',
-			'code' => $code,
-			'item' => $cmsMenuItem,
-		);
-	}
+    /**
+     * Add a previously built menu item object to the menu
+     *
+     * @param string $code
+     * @param CMSMenuItem $cmsMenuItem
+     */
+    protected static function add_menu_item_obj($code, $cmsMenuItem)
+    {
+        self::$menu_item_changes[] = array(
+            'type' => 'add',
+            'code' => $code,
+            'item' => $cmsMenuItem,
+        );
+    }
 
-	/**
-	 * A utility funciton to retrieve subclasses of a given class that
-	 * are instantiable (ie, not abstract) and have a valid menu title.
-	 *
-	 * Sorted by url_priority config.
-	 *
-	 * @todo A variation of this function could probably be moved to {@link ClassInfo}
-	 * @param string $root The root class to begin finding subclasses
-	 * @param boolean $recursive Look for subclasses recursively?
-	 * @param string $sort Name of config on which to sort. Can be 'menu_priority' or 'url_priority'
-	 * @return array Valid, unique subclasses
-	 */
-	public static function get_cms_classes($root = null, $recursive = true, $sort = self::MENU_PRIORITY) {
-		if(!$root) {
-			$root = 'SilverStripe\\Admin\\LeftAndMain';
-		}
-		/** @todo Make these actual abstract classes */
-		$abstractClasses = ['SilverStripe\\Admin\\LeftAndMain', 'SilverStripe\\CMS\\Controllers\\CMSMain'];
-		$subClasses = array_values(ClassInfo::subclassesFor($root));
-		foreach($subClasses as $className) {
-			if($recursive && $className != $root) {
-				$subClasses = array_merge($subClasses, array_values(ClassInfo::subclassesFor($className)));
-			}
-		}
-		$subClasses = array_unique($subClasses);
-		foreach($subClasses as $key => $className) {
-			// Remove abstract classes and LeftAndMain
-			if(in_array($className, $abstractClasses) || ClassInfo::classImplements($className, 'SilverStripe\\Dev\\TestOnly')) {
-				unset($subClasses[$key]);
-			} else {
-				// Separate conditional to avoid autoloading the class
-				$classReflection = new ReflectionClass($className);
-				if(!$classReflection->isInstantiable()) {
-					unset($subClasses[$key]);
-				}
-			}
-		}
+    /**
+     * A utility funciton to retrieve subclasses of a given class that
+     * are instantiable (ie, not abstract) and have a valid menu title.
+     *
+     * Sorted by url_priority config.
+     *
+     * @todo A variation of this function could probably be moved to {@link ClassInfo}
+     * @param string $root The root class to begin finding subclasses
+     * @param boolean $recursive Look for subclasses recursively?
+     * @param string $sort Name of config on which to sort. Can be 'menu_priority' or 'url_priority'
+     * @return array Valid, unique subclasses
+     */
+    public static function get_cms_classes($root = null, $recursive = true, $sort = self::MENU_PRIORITY)
+    {
+        if (!$root) {
+            $root = 'SilverStripe\\Admin\\LeftAndMain';
+        }
+        /** @todo Make these actual abstract classes */
+        $abstractClasses = ['SilverStripe\\Admin\\LeftAndMain', 'SilverStripe\\CMS\\Controllers\\CMSMain'];
+        $subClasses = array_values(ClassInfo::subclassesFor($root));
+        foreach ($subClasses as $className) {
+            if ($recursive && $className != $root) {
+                $subClasses = array_merge($subClasses, array_values(ClassInfo::subclassesFor($className)));
+            }
+        }
+        $subClasses = array_unique($subClasses);
+        foreach ($subClasses as $key => $className) {
+            // Remove abstract classes and LeftAndMain
+            if (in_array($className, $abstractClasses) || ClassInfo::classImplements($className, 'SilverStripe\\Dev\\TestOnly')) {
+                unset($subClasses[$key]);
+            } else {
+                // Separate conditional to avoid autoloading the class
+                $classReflection = new ReflectionClass($className);
+                if (!$classReflection->isInstantiable()) {
+                    unset($subClasses[$key]);
+                }
+            }
+        }
 
-		// Sort by specified sorting config
-		usort($subClasses, function ($a, $b) use ($sort) {
-			$priorityA = Config::inst()->get($a, $sort);
-			$priorityB = Config::inst()->get($b, $sort);
-			return $priorityB - $priorityA;
-		});
+        // Sort by specified sorting config
+        usort($subClasses, function ($a, $b) use ($sort) {
+            $priorityA = Config::inst()->get($a, $sort);
+            $priorityB = Config::inst()->get($b, $sort);
+            return $priorityB - $priorityA;
+        });
 
-		return $subClasses;
-	}
+        return $subClasses;
+    }
 
-	/**
-	 * IteratorAggregate Interface Method.  Iterates over the menu items.
-	 */
-	public function getIterator() {
-		return new ArrayIterator(self::get_menu_items());
-	}
+    /**
+     * IteratorAggregate Interface Method.  Iterates over the menu items.
+     */
+    public function getIterator()
+    {
+        return new ArrayIterator(self::get_menu_items());
+    }
 
-	/**
-	 * Provide menu titles to the i18n entity provider
-	 */
-	public function provideI18nEntities() {
-		$cmsClasses = self::get_cms_classes();
-		$entities = array();
-		foreach($cmsClasses as $cmsClass) {
-			$defaultTitle = LeftAndMain::menu_title($cmsClass, false);
-			$ownerModule = i18n::get_owner_module($cmsClass);
-			$entities["{$cmsClass}.MENUTITLE"] = array($defaultTitle, 'Menu title', $ownerModule);
-		}
-		return $entities;
-	}
+    /**
+     * Provide menu titles to the i18n entity provider
+     */
+    public function provideI18nEntities()
+    {
+        $cmsClasses = self::get_cms_classes();
+        $entities = array();
+        foreach ($cmsClasses as $cmsClass) {
+            $defaultTitle = LeftAndMain::menu_title($cmsClass, false);
+            $ownerModule = i18n::get_owner_module($cmsClass);
+            $entities["{$cmsClass}.MENUTITLE"] = array($defaultTitle, 'Menu title', $ownerModule);
+        }
+        return $entities;
+    }
 }

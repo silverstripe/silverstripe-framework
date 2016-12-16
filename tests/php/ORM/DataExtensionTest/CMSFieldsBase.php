@@ -12,20 +12,20 @@ use SilverStripe\ORM\DataObject;
 class CMSFieldsBase extends DataObject implements TestOnly
 {
 
-	private static $table_name = 'DataExtensionTest_CMSFieldsBase';
+    private static $table_name = 'DataExtensionTest_CMSFieldsBase';
 
-	private static $db = array(
-		'PageField' => 'Varchar(255)'
-	);
+    private static $db = array(
+        'PageField' => 'Varchar(255)'
+    );
 
-	private static $extensions = array(
-		CMSFieldsBaseExtension::class
-	);
+    private static $extensions = array(
+        CMSFieldsBaseExtension::class
+    );
 
-	public function getCMSFields()
-	{
-		$fields = parent::getCMSFields();
-		$fields->addFieldToTab('Root.Test', new TextField('PageField'));
-		return $fields;
-	}
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
+        $fields->addFieldToTab('Root.Test', new TextField('PageField'));
+        return $fields;
+    }
 }

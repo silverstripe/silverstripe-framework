@@ -7,9 +7,9 @@ use SilverStripe\View\ViewableData;
 
 class CastingClass extends ViewableData implements TestOnly
 {
-	private static $casting = array(
-		'Field' => 'CastingType',
-		'Argument' => 'ArgumentType(Argument)',
-		'ArrayArgument' => 'ArrayArgumentType(array(foo, bar))'
-	);
+    private static $casting = array(
+        'Field' => 'CastingType',
+        'Argument' => 'ArgumentType(Argument)',
+        'ArrayArgument' => 'ArrayArgumentType(array(foo, bar))'
+    );
 }

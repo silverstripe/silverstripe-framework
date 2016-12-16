@@ -11,69 +11,75 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\BehatFixtureFactory;
 use SilverStripe\Dev\FixtureFactory;
 
-
 /**
  * Features context
  *
  * Context automatically loaded by Behat.
  * Uses subcontexts to extend functionality.
  */
-class FeatureContext extends SilverStripeContext {
+class FeatureContext extends SilverStripeContext
+{
 
-	/**
-	 * @var FixtureFactory
-	 */
-	protected $fixtureFactory;
+    /**
+     * @var FixtureFactory
+     */
+    protected $fixtureFactory;
 
-	/**
-	 * Initializes context.
-	 * Every scenario gets it's own context object.
-	 *
-	 * @param array $parameters context parameters (set them up through behat.yml)
-	 */
-	public function __construct(array $parameters) {
-		parent::__construct($parameters);
+    /**
+     * Initializes context.
+     * Every scenario gets it's own context object.
+     *
+     * @param array $parameters context parameters (set them up through behat.yml)
+     */
+    public function __construct(array $parameters)
+    {
+        parent::__construct($parameters);
 
-		$this->useContext('BasicContext', new BasicContext($parameters));
-		$this->useContext('LoginContext', new LoginContext($parameters));
-		$this->useContext('CmsFormsContext', new CmsFormsContext($parameters));
-		$this->useContext('CmsUiContext', new CmsUiContext($parameters));
-		$this->useContext('EmailContext', new EmailContext($parameters));
+        $this->useContext('BasicContext', new BasicContext($parameters));
+        $this->useContext('LoginContext', new LoginContext($parameters));
+        $this->useContext('CmsFormsContext', new CmsFormsContext($parameters));
+        $this->useContext('CmsUiContext', new CmsUiContext($parameters));
+        $this->useContext('EmailContext', new EmailContext($parameters));
 
-		$fixtureContext = new FixtureContext($parameters);
-		$fixtureContext->setFixtureFactory($this->getFixtureFactory());
-		$this->useContext('FixtureContext', $fixtureContext);
+        $fixtureContext = new FixtureContext($parameters);
+        $fixtureContext->setFixtureFactory($this->getFixtureFactory());
+        $this->useContext('FixtureContext', $fixtureContext);
 
-		// Use blueprints to set user name from identifier
-		$factory = $fixtureContext->getFixtureFactory();
-		$blueprint = Injector::inst()->create('SilverStripe\\Dev\\FixtureBlueprint', 'SilverStripe\\Security\\Member');
-		$blueprint->addCallback('beforeCreate', function($identifier, &$data, &$fixtures) {
-			if(!isset($data['FirstName'])) $data['FirstName'] = $identifier;
-		});
-		$factory->define('SilverStripe\\Security\\Member', $blueprint);
-	}
+        // Use blueprints to set user name from identifier
+        $factory = $fixtureContext->getFixtureFactory();
+        $blueprint = Injector::inst()->create('SilverStripe\\Dev\\FixtureBlueprint', 'SilverStripe\\Security\\Member');
+        $blueprint->addCallback('beforeCreate', function ($identifier, &$data, &$fixtures) {
+            if (!isset($data['FirstName'])) {
+                $data['FirstName'] = $identifier;
+            }
+        });
+        $factory->define('SilverStripe\\Security\\Member', $blueprint);
+    }
 
-	public function setMinkParameters(array $parameters) {
-		parent::setMinkParameters($parameters);
+    public function setMinkParameters(array $parameters)
+    {
+        parent::setMinkParameters($parameters);
 
-		if(isset($parameters['files_path'])) {
-			/** @var FixtureContext $fixtureContext */
-			$fixtureContext = $this->getSubcontext('FixtureContext');
-			$fixtureContext->setFilesPath($parameters['files_path']);
-		}
-	}
+        if (isset($parameters['files_path'])) {
+            /** @var FixtureContext $fixtureContext */
+            $fixtureContext = $this->getSubcontext('FixtureContext');
+            $fixtureContext->setFilesPath($parameters['files_path']);
+        }
+    }
 
-	/**
-	 * @return FixtureFactory
-	 */
-	public function getFixtureFactory() {
-		if(!$this->fixtureFactory) {
-			$this->fixtureFactory = Injector::inst()->create(BehatFixtureFactory::class);
-		}
-		return $this->fixtureFactory;
-	}
+    /**
+     * @return FixtureFactory
+     */
+    public function getFixtureFactory()
+    {
+        if (!$this->fixtureFactory) {
+            $this->fixtureFactory = Injector::inst()->create(BehatFixtureFactory::class);
+        }
+        return $this->fixtureFactory;
+    }
 
-	public function setFixtureFactory(FixtureFactory $factory) {
-		$this->fixtureFactory = $factory;
-	}
+    public function setFixtureFactory(FixtureFactory $factory)
+    {
+        $this->fixtureFactory = $factory;
+    }
 }

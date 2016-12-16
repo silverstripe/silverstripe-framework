@@ -13,28 +13,28 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class PublicStage extends DataObject implements TestOnly
 {
-	private static $table_name = 'VersionedTest_PublicStage';
+    private static $table_name = 'VersionedTest_PublicStage';
 
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
+    private static $db = array(
+        'Title' => 'Varchar'
+    );
 
-	private static $extensions = array(
-		Versioned::class
-	);
+    private static $extensions = array(
+        Versioned::class
+    );
 
-	public function canView($member = null)
-	{
-		$extended = $this->extendedCan(__FUNCTION__, $member);
-		if ($extended !== null) {
-			return $extended;
-		}
-		return true;
-	}
+    public function canView($member = null)
+    {
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
+        }
+        return true;
+    }
 
-	public function canViewVersioned($member = null)
-	{
-		// All non-live modes are public
-		return true;
-	}
+    public function canViewVersioned($member = null)
+    {
+        // All non-live modes are public
+        return true;
+    }
 }

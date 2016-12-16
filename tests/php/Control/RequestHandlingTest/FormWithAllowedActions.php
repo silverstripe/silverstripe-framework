@@ -7,17 +7,17 @@ use SilverStripe\Forms\Form;
 
 class FormWithAllowedActions extends Form implements TestOnly
 {
-	private static $allowed_actions = array(
-		'allowedformaction' => 1,
-	);
+    private static $allowed_actions = array(
+        'allowedformaction' => 1,
+    );
 
-	public function allowedformaction()
-	{
-		return 'allowedformaction';
-	}
+    public function allowedformaction()
+    {
+        return 'allowedformaction';
+    }
 
-	public function disallowedformaction()
-	{
-		return 'disallowedformaction';
-	}
+    public function disallowedformaction()
+    {
+        return 'disallowedformaction';
+    }
 }

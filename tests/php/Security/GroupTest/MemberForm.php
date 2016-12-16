@@ -9,19 +9,18 @@ use SilverStripe\Forms\FormAction;
 class MemberForm extends Form
 {
 
-	public function __construct($controller, $name)
-	{
-		$fields = TestMember::singleton()->getCMSFields();
-		$actions = new FieldList(
-			new FormAction('doSave', 'save')
-		);
+    public function __construct($controller, $name)
+    {
+        $fields = TestMember::singleton()->getCMSFields();
+        $actions = new FieldList(
+            new FormAction('doSave', 'save')
+        );
 
-		parent::__construct($controller, $name, $fields, $actions);
-	}
+        parent::__construct($controller, $name, $fields, $actions);
+    }
 
-	public function doSave($data, $form)
-	{
-		// done in testing methods
-	}
-
+    public function doSave($data, $form)
+    {
+        // done in testing methods
+    }
 }

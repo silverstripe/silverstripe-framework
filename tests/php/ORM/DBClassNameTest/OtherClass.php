@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class OtherClass extends DataObject implements TestOnly
 {
-	private static $table_name = 'DBClassNameTest_OtherClass';
+    private static $table_name = 'DBClassNameTest_OtherClass';
 
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
+    private static $db = array(
+        'Title' => 'Varchar'
+    );
 }

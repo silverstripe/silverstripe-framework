@@ -14,37 +14,37 @@ use SilverStripe\Security\Permission;
  */
 trait Permissions
 {
-	public function canEdit($member = null)
-	{
-		return $this->can(__FUNCTION__, $member);
-	}
+    public function canEdit($member = null)
+    {
+        return $this->can(__FUNCTION__, $member);
+    }
 
-	public function canDelete($member = null)
-	{
-		return $this->can(__FUNCTION__, $member);
-	}
+    public function canDelete($member = null)
+    {
+        return $this->can(__FUNCTION__, $member);
+    }
 
-	public function canCreate($member = null, $context = array())
-	{
-		return $this->can(__FUNCTION__, $member, $context);
-	}
+    public function canCreate($member = null, $context = array())
+    {
+        return $this->can(__FUNCTION__, $member, $context);
+    }
 
-	public function canPublish($member = null, $context = array())
-	{
-		return $this->can(__FUNCTION__, $member, $context);
-	}
+    public function canPublish($member = null, $context = array())
+    {
+        return $this->can(__FUNCTION__, $member, $context);
+    }
 
-	public function canUnpublish($member = null, $context = array())
-	{
-		return $this->can(__FUNCTION__, $member, $context);
-	}
+    public function canUnpublish($member = null, $context = array())
+    {
+        return $this->can(__FUNCTION__, $member, $context);
+    }
 
-	public function can($perm, $member = null, $context = array())
-	{
-		$perms = [
-			"PERM_{$perm}",
-			'CAN_ALL',
-		];
-		return Permission::checkMember($member, $perms);
-	}
+    public function can($perm, $member = null, $context = array())
+    {
+        $perms = [
+            "PERM_{$perm}",
+            'CAN_ALL',
+        ];
+        return Permission::checkMember($member, $perms);
+    }
 }

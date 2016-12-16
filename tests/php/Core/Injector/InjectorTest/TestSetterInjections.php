@@ -11,21 +11,22 @@ use SilverStripe\View\ViewableData;
 class TestSetterInjections extends ViewableData implements TestOnly
 {
 
-	protected $backend;
+    protected $backend;
 
-	/** @config */
-	private static $dependencies = array(
-		'backend' => '%$SilverStripe\\Core\\Tests\\Injector\\InjectorTest\\NewRequirementsBackend'
-	);
+    /**
+ * @config
+*/
+    private static $dependencies = array(
+        'backend' => '%$SilverStripe\\Core\\Tests\\Injector\\InjectorTest\\NewRequirementsBackend'
+    );
 
-	public function getBackend()
-	{
-		return $this->backend;
-	}
+    public function getBackend()
+    {
+        return $this->backend;
+    }
 
-	public function setBackend($backend)
-	{
-		$this->backend = $backend;
-	}
-
+    public function setBackend($backend)
+    {
+        $this->backend = $backend;
+    }
 }

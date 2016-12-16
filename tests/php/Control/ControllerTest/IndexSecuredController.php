@@ -8,8 +8,7 @@ use SilverStripe\Dev\TestOnly;
 class IndexSecuredController extends ControllerTest\AccessBaseController implements TestOnly
 {
 
-	private static $allowed_actions = array(
-		"index" => "ADMIN",
-	);
-
+    private static $allowed_actions = array(
+        "index" => "ADMIN",
+    );
 }

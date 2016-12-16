@@ -8,40 +8,40 @@ use SilverStripe\View\ViewableData;
 class Castable extends ViewableData implements TestOnly
 {
 
-	private static $default_cast = Caster::class;
+    private static $default_cast = Caster::class;
 
-	private static $casting = array(
-		'alwaysCasted' => RequiresCasting::class,
-		'castedUnsafeXML' => UnescapedCaster::class,
-		'test' => 'Text',
-	);
+    private static $casting = array(
+        'alwaysCasted' => RequiresCasting::class,
+        'castedUnsafeXML' => UnescapedCaster::class,
+        'test' => 'Text',
+    );
 
-	public $test = 'test';
+    public $test = 'test';
 
-	public $uncastedZeroValue = 0;
+    public $uncastedZeroValue = 0;
 
-	public function alwaysCasted()
-	{
-		return 'alwaysCasted';
-	}
+    public function alwaysCasted()
+    {
+        return 'alwaysCasted';
+    }
 
-	public function noCastingInformation()
-	{
-		return 'noCastingInformation';
-	}
+    public function noCastingInformation()
+    {
+        return 'noCastingInformation';
+    }
 
-	public function unsafeXML()
-	{
-		return '<foo>';
-	}
+    public function unsafeXML()
+    {
+        return '<foo>';
+    }
 
-	public function castedUnsafeXML()
-	{
-		return $this->unsafeXML();
-	}
+    public function castedUnsafeXML()
+    {
+        return $this->unsafeXML();
+    }
 
-	public function forTemplate()
-	{
-		return 'castable';
-	}
+    public function forTemplate()
+    {
+        return 'castable';
+    }
 }

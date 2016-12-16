@@ -7,5 +7,5 @@ use SilverStripe\ORM\DataObject;
 
 class Ploy extends DataObject implements TestOnly
 {
-	private static $table_name = 'DataObjectTest_Ploy';
+    private static $table_name = 'DataObjectTest_Ploy';
 }

@@ -8,15 +8,14 @@ use SilverStripe\View\ViewableData;
 class RequiresCasting extends ViewableData implements TestOnly
 {
 
-	public $test = 'overwritten';
+    public $test = 'overwritten';
 
-	public function forTemplate()
-	{
-		return 'casted';
-	}
+    public function forTemplate()
+    {
+        return 'casted';
+    }
 
-	public function setValue()
-	{
-	}
-
+    public function setValue()
+    {
+    }
 }

@@ -7,5 +7,5 @@ use SilverStripe\View\ViewableData;
 
 class Cached extends ViewableData implements TestOnly
 {
-	public $Test;
+    public $Test;
 }

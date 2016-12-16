@@ -8,21 +8,20 @@ use SilverStripe\ORM\Tests\DataExtensionTest\RelatedObject;
 
 class ContactRole extends DataExtension implements TestOnly
 {
-	private static $table_name = 'DataExtensionTest_ContactRole';
+    private static $table_name = 'DataExtensionTest_ContactRole';
 
-	private static $db = array(
-		'Website' => 'Varchar',
-		'Phone' => 'Varchar(255)',
-	);
+    private static $db = array(
+        'Website' => 'Varchar',
+        'Phone' => 'Varchar(255)',
+    );
 
-	private static $has_many = array(
-		'RelatedObjects' => RelatedObject::class
-	);
+    private static $has_many = array(
+        'RelatedObjects' => RelatedObject::class
+    );
 
-	private static $defaults = array(
-		'Phone' => '123'
-	);
+    private static $defaults = array(
+        'Phone' => '123'
+    );
 
-	private static $api_access = true;
-
+    private static $api_access = true;
 }

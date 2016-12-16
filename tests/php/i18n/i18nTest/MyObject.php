@@ -8,18 +8,18 @@ use SilverStripe\Security\Group;
 
 class MyObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'i18nTest_MyObject';
+    private static $table_name = 'i18nTest_MyObject';
 
-	private static $db = array(
-		'FirstProperty' => 'Varchar',
-		'SecondProperty' => 'Int'
-	);
+    private static $db = array(
+        'FirstProperty' => 'Varchar',
+        'SecondProperty' => 'Int'
+    );
 
-	private static $has_many = array(
-		'Relation' => Group::class
-	);
+    private static $has_many = array(
+        'Relation' => Group::class
+    );
 
-	private static $singular_name = "My Object";
+    private static $singular_name = "My Object";
 
-	private static $plural_name = "My Objects";
+    private static $plural_name = "My Objects";
 }

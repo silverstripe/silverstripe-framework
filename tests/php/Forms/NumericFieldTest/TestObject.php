@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'NumericFieldTest_Object';
+    private static $table_name = 'NumericFieldTest_Object';
 
-	private static $db = array(
-		'Number' => 'Float'
-	);
+    private static $db = array(
+        'Number' => 'Float'
+    );
 }

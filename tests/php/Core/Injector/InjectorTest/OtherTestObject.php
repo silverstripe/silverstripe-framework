@@ -7,16 +7,15 @@ use SilverStripe\Dev\TestOnly;
 class OtherTestObject implements TestOnly
 {
 
-	private $sampleService;
+    private $sampleService;
 
-	public function setSampleService($s)
-	{
-		$this->sampleService = $s;
-	}
+    public function setSampleService($s)
+    {
+        $this->sampleService = $s;
+    }
 
-	public function s()
-	{
-		return $this->sampleService;
-	}
-
+    public function s()
+    {
+        return $this->sampleService;
+    }
 }

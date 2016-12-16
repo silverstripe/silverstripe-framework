@@ -7,11 +7,11 @@ use SilverStripe\View\ViewableData;
 
 class NotCached extends ViewableData implements TestOnly
 {
-	public $Test;
+    public $Test;
 
-	protected function objCacheGet($key)
-	{
-		// Disable caching
-		return null;
-	}
+    protected function objCacheGet($key)
+    {
+        // Disable caching
+        return null;
+    }
 }

@@ -7,6 +7,5 @@ use SilverStripe\Dev\TestOnly;
 class CircularOne implements TestOnly
 {
 
-	public $circularTwo;
-
+    public $circularTwo;
 }

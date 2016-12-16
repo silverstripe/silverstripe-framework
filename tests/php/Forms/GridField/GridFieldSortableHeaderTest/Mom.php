@@ -10,9 +10,9 @@ use SilverStripe\Dev\TestOnly;
 class Mom extends Cheerleader implements TestOnly
 {
 
-	private static $table_name = 'GridFieldSortableHeaderTest_Mom';
+    private static $table_name = 'GridFieldSortableHeaderTest_Mom';
 
-	private static $db = array(
-		'NumberOfCookiesBaked' => 'Int'
-	);
+    private static $db = array(
+        'NumberOfCookiesBaked' => 'Int'
+    );
 }

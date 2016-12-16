@@ -12,25 +12,24 @@ use SilverStripe\ORM\DataObject;
 class CustomSetter_Object extends DataObject implements TestOnly
 {
 
-	private static $table_name = 'MoneyFieldTest_CustomSetter_Object';
+    private static $table_name = 'MoneyFieldTest_CustomSetter_Object';
 
-	private static $db = array(
-		'MyMoney' => 'Money',
-	);
+    private static $db = array(
+        'MyMoney' => 'Money',
+    );
 
-	public function getCustomMoney()
-	{
-		return $this->MyMoney->getValue();
-	}
+    public function getCustomMoney()
+    {
+        return $this->MyMoney->getValue();
+    }
 
-	public function setCustomMoney($value)
-	{
+    public function setCustomMoney($value)
+    {
 
-		$newAmount = $value->getAmount() * 2;
-		$this->MyMoney->setAmount($newAmount);
+        $newAmount = $value->getAmount() * 2;
+        $this->MyMoney->setAmount($newAmount);
 
-		$newAmount = $value->getAmount() * 2;
-		$this->MyMoney->setCurrency($value->getCurrency());
-
-	}
+        $newAmount = $value->getAmount() * 2;
+        $this->MyMoney->setCurrency($value->getCurrency());
+    }
 }

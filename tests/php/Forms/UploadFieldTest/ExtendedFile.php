@@ -11,7 +11,7 @@ use SilverStripe\Dev\TestOnly;
 class ExtendedFile extends File implements TestOnly
 {
 
-	private static $has_many = array(
-		'HasOneExtendedRecords' => 'UploadFieldTest_Record.HasOneExtendedFile'
-	);
+    private static $has_many = array(
+        'HasOneExtendedRecords' => 'UploadFieldTest_Record.HasOneExtendedFile'
+    );
 }

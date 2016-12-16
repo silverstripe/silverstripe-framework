@@ -11,13 +11,12 @@ use SilverStripe\Forms\Form;
  */
 class ExtraFieldsForm extends Form implements TestOnly
 {
-	public function getExtraFields()
-	{
-		$fields = parent::getExtraFields();
+    public function getExtraFields()
+    {
+        $fields = parent::getExtraFields();
 
-		$fields->push(new CheckboxField('ExtraFieldCheckbox', 'Extra Field Checkbox', 1));
+        $fields->push(new CheckboxField('ExtraFieldCheckbox', 'Extra Field Checkbox', 1));
 
-		return $fields;
-	}
-
+        return $fields;
+    }
 }

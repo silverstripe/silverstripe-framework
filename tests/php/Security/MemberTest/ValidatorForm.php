@@ -15,15 +15,20 @@ use SilverStripe\Forms\TextField;
 class ValidatorForm extends Form implements TestOnly
 {
 
-	public function __construct()
-	{
-		parent::__construct(Controller::curr(), __CLASS__, new FieldList(
-			new TextField('Email'),
-			new TextField('Surname'),
-			new TextField('ID'),
-			new TextField('FirstName')
-		), new FieldList(
-			new FormAction('someAction')
-		));
-	}
+    public function __construct()
+    {
+        parent::__construct(
+            Controller::curr(),
+            __CLASS__,
+            new FieldList(
+                new TextField('Email'),
+                new TextField('Surname'),
+                new TextField('ID'),
+                new TextField('FirstName')
+            ),
+            new FieldList(
+                new FormAction('someAction')
+            )
+        );
+    }
 }

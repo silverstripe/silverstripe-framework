@@ -6,9 +6,8 @@ use SilverStripe\ORM\DataExtension;
 
 class TestExtension extends DataExtension
 {
-	public function canEdit($member = null)
-	{
-		return false;
-	}
-
+    public function canEdit($member = null)
+    {
+        return false;
+    }
 }

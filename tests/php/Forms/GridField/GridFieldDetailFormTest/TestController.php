@@ -16,31 +16,35 @@ use SilverStripe\Forms\GridField\GridFieldViewButton;
 class TestController extends Controller implements TestOnly
 {
 
-	public function Link($action = null)
-	{
-		return Controller::join_links('GridFieldDetailFormTest_Controller', $action, '/');
-	}
+    public function Link($action = null)
+    {
+        return Controller::join_links('GridFieldDetailFormTest_Controller', $action, '/');
+    }
 
-	private static $allowed_actions = array('Form');
+    private static $allowed_actions = array('Form');
 
-	protected $template = 'BlankPage';
+    protected $template = 'BlankPage';
 
-	public function Form()
-	{
-		$group = PeopleGroup::get()
-			->filter('Name', 'My Group')
-			->sort('Name')
-			->First();
+    public function Form()
+    {
+        $group = PeopleGroup::get()
+            ->filter('Name', 'My Group')
+            ->sort('Name')
+            ->First();
 
-		$field = new GridField('testfield', 'testfield', $group->People());
-		$field->getConfig()->addComponent(new GridFieldToolbarHeader());
-		$field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
-		$field->getConfig()->addComponent(new GridFieldViewButton());
-		$field->getConfig()->addComponent(new GridFieldEditButton());
-		/** @skipUpgrade */
-		$field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
-		$field->getConfig()->addComponent(new GridFieldEditButton());
-		/** @skipUpgrade */
-		return new Form($this, 'Form', new FieldList($field), new FieldList());
-	}
+        $field = new GridField('testfield', 'testfield', $group->People());
+        $field->getConfig()->addComponent(new GridFieldToolbarHeader());
+        $field->getConfig()->addComponent(new GridFieldAddNewButton('toolbar-header-right'));
+        $field->getConfig()->addComponent(new GridFieldViewButton());
+        $field->getConfig()->addComponent(new GridFieldEditButton());
+        /**
+ * @skipUpgrade
+*/
+        $field->getConfig()->addComponent($gridFieldForm = new GridFieldDetailForm($this, 'Form'));
+        $field->getConfig()->addComponent(new GridFieldEditButton());
+        /**
+ * @skipUpgrade
+*/
+        return new Form($this, 'Form', new FieldList($field), new FieldList());
+    }
 }

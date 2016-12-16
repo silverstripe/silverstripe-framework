@@ -15,14 +15,19 @@ use SilverStripe\Forms\FormAction;
 class FieldController extends Controller implements TestOnly
 {
 
-	private static $allowed_actions = array('TestForm');
+    private static $allowed_actions = array('TestForm');
 
-	public function TestForm()
-	{
-		return new Form($this, "TestForm", new FieldList(
-			new HandlingField("MyField")
-		), new FieldList(
-			new FormAction("myAction")
-		));
-	}
+    public function TestForm()
+    {
+        return new Form(
+            $this,
+            "TestForm",
+            new FieldList(
+                new HandlingField("MyField")
+            ),
+            new FieldList(
+                new FormAction("myAction")
+            )
+        );
+    }
 }

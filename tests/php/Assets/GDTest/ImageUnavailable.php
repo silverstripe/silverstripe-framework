@@ -8,9 +8,8 @@ use SilverStripe\Dev\TestOnly;
 class ImageUnavailable extends GDBackend implements TestOnly
 {
 
-	public function failedResample($arg = null)
-	{
-		return true;
-	}
-
+    public function failedResample($arg = null)
+    {
+        return true;
+    }
 }

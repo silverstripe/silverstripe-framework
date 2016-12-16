@@ -9,7 +9,7 @@ use SilverStripe\Dev\TestOnly;
  */
 class ArchivedObject extends VersionedObject implements TestOnly
 {
-	private static $keep_archived_assets = true;
+    private static $keep_archived_assets = true;
 
-	private static $table_name = 'AssetControlExtensionTest_ArchivedObject';
+    private static $table_name = 'AssetControlExtensionTest_ArchivedObject';
 }

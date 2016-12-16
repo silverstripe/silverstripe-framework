@@ -9,18 +9,20 @@ use SilverStripe\Forms\FormAction;
 
 class ControllerFormWithAllowedActions extends Controller implements TestOnly
 {
-	private static $allowed_actions = array('Form');
+    private static $allowed_actions = array('Form');
 
-	/** @skipUpgrade */
-	public function Form()
-	{
-		return new FormWithAllowedActions(
-			$this,
-			'Form',
-			new FieldList(),
-			new FieldList(
-				new FormAction('allowedformaction')
-			)
-		);
-	}
+    /**
+ * @skipUpgrade
+*/
+    public function Form()
+    {
+        return new FormWithAllowedActions(
+            $this,
+            'Form',
+            new FieldList(),
+            new FieldList(
+                new FormAction('allowedformaction')
+            )
+        );
+    }
 }

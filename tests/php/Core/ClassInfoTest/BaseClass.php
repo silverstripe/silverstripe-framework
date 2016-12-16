@@ -7,5 +7,5 @@ use SilverStripe\ORM\DataObject;
 
 class BaseClass extends DataObject implements TestOnly
 {
-	private static $table_name = 'ClassInfoTest_BaseClass';
+    private static $table_name = 'ClassInfoTest_BaseClass';
 }

@@ -10,18 +10,18 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class VersionedObject extends DataObject
 {
-	private static $table_name = 'ChangeSetItemTest_Versioned';
+    private static $table_name = 'ChangeSetItemTest_Versioned';
 
-	private static $db = [
-		'Foo' => 'Int'
-	];
+    private static $db = [
+        'Foo' => 'Int'
+    ];
 
-	private static $extensions = [
-		Versioned::class
-	];
+    private static $extensions = [
+        Versioned::class
+    ];
 
-	function canEdit($member = null)
-	{
-		return true;
-	}
+    function canEdit($member = null)
+    {
+        return true;
+    }
 }

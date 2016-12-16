@@ -9,5 +9,5 @@ namespace SilverStripe\ORM\Tests\ManyManyListTest;
  */
 class SecondarySub extends Secondary
 {
-	private static $table_name = 'ManyManyListTest_SecondarySub';
+    private static $table_name = 'ManyManyListTest_SecondarySub';
 }

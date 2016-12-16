@@ -15,23 +15,23 @@ use SilverStripe\ORM\Versioning\Versioned;
 class PublicViaExtension extends DataObject implements TestOnly
 {
 
-	private static $table_name = 'VersionedTest_PublicViaExtension';
+    private static $table_name = 'VersionedTest_PublicViaExtension';
 
-	public function canView($member = null)
-	{
-		$extended = $this->extendedCan(__FUNCTION__, $member);
-		if ($extended !== null) {
-			return $extended;
-		}
-		return true;
-	}
+    public function canView($member = null)
+    {
+        $extended = $this->extendedCan(__FUNCTION__, $member);
+        if ($extended !== null) {
+            return $extended;
+        }
+        return true;
+    }
 
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
+    private static $db = array(
+        'Title' => 'Varchar'
+    );
 
-	private static $extensions = array(
-		Versioned::class,
-		PublicExtension::class,
-	);
+    private static $extensions = array(
+        Versioned::class,
+        PublicExtension::class,
+    );
 }

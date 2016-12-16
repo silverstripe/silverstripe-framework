@@ -12,51 +12,51 @@ use SilverStripe\Forms\RequiredFields;
 class TestForm extends Form implements TestOnly
 {
 
-	public function getRecord()
-	{
-		if (empty($this->record)) {
-			$this->record = TestObject::get()
-				->filter('Title', 'Object1')
-				->first();
-		}
-		return $this->record;
-	}
+    public function getRecord()
+    {
+        if (empty($this->record)) {
+            $this->record = TestObject::get()
+                ->filter('Title', 'Object1')
+                ->first();
+        }
+        return $this->record;
+    }
 
-	/**
-	 * @skipUpgrade
-	 * @param null $controller
-	 * @param string $name
-	 */
-	public function __construct($controller = null, $name = 'Form')
-	{
-		if (empty($controller)) {
-			$controller = new TestController();
-		}
+    /**
+     * @skipUpgrade
+     * @param null   $controller
+     * @param string $name
+     */
+    public function __construct($controller = null, $name = 'Form')
+    {
+        if (empty($controller)) {
+            $controller = new TestController();
+        }
 
-		$fields = new FieldList(
-			AssetField::create('File')
-				->setFolderName('MyFiles'),
-			AssetField::create('Image')
-				->setAllowedFileCategories('image/supported')
-				->setFolderName('MyImages'),
-			AssetField::create('NoRelationField')
-				->setFolderName('MyDocuments')
-		);
-		$actions = new FieldList(
-			new FormAction('submit')
-		);
-		$validator = new RequiredFields();
+        $fields = new FieldList(
+            AssetField::create('File')
+                ->setFolderName('MyFiles'),
+            AssetField::create('Image')
+                ->setAllowedFileCategories('image/supported')
+                ->setFolderName('MyImages'),
+            AssetField::create('NoRelationField')
+                ->setFolderName('MyDocuments')
+        );
+        $actions = new FieldList(
+            new FormAction('submit')
+        );
+        $validator = new RequiredFields();
 
-		parent::__construct($controller, $name, $fields, $actions, $validator);
+        parent::__construct($controller, $name, $fields, $actions, $validator);
 
-		$this->loadDataFrom($this->getRecord());
-	}
+        $this->loadDataFrom($this->getRecord());
+    }
 
-	public function submit($data, Form $form)
-	{
-		$record = $this->getRecord();
-		$form->saveInto($record);
-		$record->write();
-		return json_encode($record->toMap());
-	}
+    public function submit($data, Form $form)
+    {
+        $record = $this->getRecord();
+        $form->saveInto($record);
+        $record->write();
+        return json_encode($record->toMap());
+    }
 }

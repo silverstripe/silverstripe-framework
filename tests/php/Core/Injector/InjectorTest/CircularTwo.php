@@ -7,12 +7,12 @@ use SilverStripe\Dev\TestOnly;
 class CircularTwo implements TestOnly
 {
 
-	public $circularOne;
+    public $circularOne;
 
-	public $otherVar;
+    public $otherVar;
 
-	public function __construct($value = null)
-	{
-		$this->otherVar = $value;
-	}
+    public function __construct($value = null)
+    {
+        $this->otherVar = $value;
+    }
 }

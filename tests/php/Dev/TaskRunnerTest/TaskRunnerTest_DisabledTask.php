@@ -6,10 +6,10 @@ use SilverStripe\Dev\BuildTask;
 
 class TaskRunnerTest_DisabledTask extends BuildTask
 {
-	protected $enabled = false;
+    protected $enabled = false;
 
-	public function run($request)
-	{
-		// NOOP
-	}
+    public function run($request)
+    {
+        // NOOP
+    }
 }

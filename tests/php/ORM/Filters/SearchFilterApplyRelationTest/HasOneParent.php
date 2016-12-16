@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class HasOneParent extends DataObject implements TestOnly
 {
-	private static $table_name = 'SearchFilterApplyRelationTest_HasOneParent';
+    private static $table_name = 'SearchFilterApplyRelationTest_HasOneParent';
 
-	private static $db = array(
-		"Title" => "Varchar"
-	);
+    private static $db = array(
+        "Title" => "Varchar"
+    );
 }

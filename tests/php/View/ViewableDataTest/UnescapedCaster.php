@@ -8,16 +8,15 @@ use SilverStripe\View\ViewableData;
 
 class UnescapedCaster extends ViewableData implements TestOnly
 {
-	protected $value;
+    protected $value;
 
-	public function setValue($value)
-	{
-		$this->value = $value;
-	}
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
 
-	public function forTemplate()
-	{
-		return Convert::raw2xml($this->value);
-	}
-
+    public function forTemplate()
+    {
+        return Convert::raw2xml($this->value);
+    }
 }

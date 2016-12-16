@@ -7,11 +7,11 @@ use SilverStripe\ORM\DataObject;
 
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'AssetFieldTest_TestObject';
+    private static $table_name = 'AssetFieldTest_TestObject';
 
-	private static $db = array(
-		"Title" => "Text",
-		"File" => "DBFile",
-		"Image" => "DBFile('image/supported')"
-	);
+    private static $db = array(
+        "Title" => "Text",
+        "File" => "DBFile",
+        "Image" => "DBFile('image/supported')"
+    );
 }

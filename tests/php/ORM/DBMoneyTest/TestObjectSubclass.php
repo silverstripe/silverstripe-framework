@@ -6,9 +6,9 @@ use SilverStripe\Dev\TestOnly;
 
 class TestObjectSubclass extends TestObject implements TestOnly
 {
-	private static $table_name = 'MoneyTest_SubClass';
+    private static $table_name = 'MoneyTest_SubClass';
 
-	private static $db = [
-		'MyOtherMoney' => 'Money',
-	];
+    private static $db = [
+        'MyOtherMoney' => 'Money',
+    ];
 }

@@ -13,21 +13,21 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class RelatedMany extends DataObject implements TestOnly
 {
-	private static $extensions = array(
-		Versioned::class,
-	);
+    private static $extensions = array(
+        Versioned::class,
+    );
 
-	private static $table_name = 'VersionedOwnershipTest_RelatedMany';
+    private static $table_name = 'VersionedOwnershipTest_RelatedMany';
 
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-	);
+    private static $db = array(
+        'Title' => 'Varchar(255)',
+    );
 
-	private static $has_one = array(
-		'Page' => Subclass::class,
-	);
+    private static $has_one = array(
+        'Page' => Subclass::class,
+    );
 
-	private static $owned_by = array(
-		'Page'
-	);
+    private static $owned_by = array(
+        'Page'
+    );
 }

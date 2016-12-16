@@ -7,9 +7,9 @@ use SilverStripe\ORM\DataObject;
 
 class TestBase extends DataObject implements TestOnly
 {
-	private static $table_name = 'SQLSelectTestBase';
+    private static $table_name = 'SQLSelectTestBase';
 
-	private static $db = array(
-		"Title" => "Varchar",
-	);
+    private static $db = array(
+        "Title" => "Varchar",
+    );
 }

@@ -11,15 +11,15 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class EndObject extends DataObject implements TestOnly
 {
-	use Permissions;
+    use Permissions;
 
-	private static $table_name = 'ChangeSetTest_End';
+    private static $table_name = 'ChangeSetTest_End';
 
-	private static $db = [
-		'Baz' => 'Int',
-	];
+    private static $db = [
+        'Baz' => 'Int',
+    ];
 
-	private static $extensions = [
-		Versioned::class,
-	];
+    private static $extensions = [
+        Versioned::class,
+    ];
 }

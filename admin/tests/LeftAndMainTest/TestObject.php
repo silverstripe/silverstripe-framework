@@ -8,22 +8,21 @@ use SilverStripe\ORM\Hierarchy\Hierarchy;
 
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'LeftAndMainTest_Object';
+    private static $table_name = 'LeftAndMainTest_Object';
 
-	private static $db = array(
-		'Title' => 'Varchar',
-		'URLSegment' => 'Varchar',
-		'Sort' => 'Int',
-	);
+    private static $db = array(
+        'Title' => 'Varchar',
+        'URLSegment' => 'Varchar',
+        'Sort' => 'Int',
+    );
 
-	private static $default_sort = '"Sort"';
+    private static $default_sort = '"Sort"';
 
-	private static $extensions = [
-		Hierarchy::class
-	];
+    private static $extensions = [
+        Hierarchy::class
+    ];
 
-	public function CMSTreeClasses()
-	{
-	}
-
+    public function CMSTreeClasses()
+    {
+    }
 }

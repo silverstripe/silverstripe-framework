@@ -11,14 +11,14 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class TestObject extends DataObject implements TestOnly
 {
-	private static $extensions = array(
-		Versioned::class,
-	);
+    private static $extensions = array(
+        Versioned::class,
+    );
 
-	private static $table_name = 'VersionedOwnershipTest_Object';
+    private static $table_name = 'VersionedOwnershipTest_Object';
 
-	private static $db = array(
-		'Title' => 'Varchar(255)',
-		'Content' => 'Text',
-	);
+    private static $db = array(
+        'Title' => 'Varchar(255)',
+        'Content' => 'Text',
+    );
 }

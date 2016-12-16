@@ -13,19 +13,19 @@ use SilverStripe\ORM\Versioning\Versioned;
  */
 class HideTestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'HierarchyHideTest_Object';
+    private static $table_name = 'HierarchyHideTest_Object';
 
-	private static $db = array(
-		'Title' => 'Varchar'
-	);
+    private static $db = array(
+        'Title' => 'Varchar'
+    );
 
-	private static $extensions = array(
-		Hierarchy::class,
-		Versioned::class,
-	);
+    private static $extensions = array(
+        Hierarchy::class,
+        Versioned::class,
+    );
 
-	public function cmstreeclasses()
-	{
-		return $this->markingClasses();
-	}
+    public function cmstreeclasses()
+    {
+        return $this->markingClasses();
+    }
 }

@@ -8,11 +8,10 @@ use SilverStripe\Dev\TestOnly;
 class TestFlushable implements Flushable, TestOnly
 {
 
-	public static $flushed = false;
+    public static $flushed = false;
 
-	public static function flush()
-	{
-		self::$flushed = true;
-	}
-
+    public static function flush()
+    {
+        self::$flushed = true;
+    }
 }

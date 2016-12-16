@@ -11,9 +11,9 @@ use SilverStripe\ORM\DataObject;
  */
 class ImageOnly extends DataObject implements TestOnly
 {
-	private static $table_name = 'DBFileTest_ImageOnly';
+    private static $table_name = 'DBFileTest_ImageOnly';
 
-	private static $db = array(
-		"MyFile" => "DBFile('image/supported')"
-	);
+    private static $db = array(
+        "MyFile" => "DBFile('image/supported')"
+    );
 }

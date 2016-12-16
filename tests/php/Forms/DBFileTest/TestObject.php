@@ -11,9 +11,9 @@ use SilverStripe\ORM\DataObject;
  */
 class TestObject extends DataObject implements TestOnly
 {
-	private static $table_name = 'DBFileTest_TestObject';
+    private static $table_name = 'DBFileTest_TestObject';
 
-	private static $db = array(
-		"MyFile" => "DBFile"
-	);
+    private static $db = array(
+        "MyFile" => "DBFile"
+    );
 }
