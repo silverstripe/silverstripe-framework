@@ -71,7 +71,9 @@ function appBoot() {
 
   // @TODO - Remove once we remove entwine
   // Enable top-level css selectors for react-dependant entwine sections
-  window.jQuery('body').addClass('react-boot');
+  if (window.jQuery) {
+    window.jQuery('body').addClass('js-react-boot');
+  }
 }
 
 window.onload = appBoot;
