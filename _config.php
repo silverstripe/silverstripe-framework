@@ -43,5 +43,14 @@ SS_Cache::set_cache_lifetime('GDBackend_Manipulations', null, 100);
 // If you don't want to see deprecation errors for the new APIs, change this to 3.2.0-dev.
 Deprecation::notification_version('3.2.0');
 
+$cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'aggregatecache';
+
+if (!is_dir($cachedir)) {
+	mkdir($cachedir);
+}
+
+SS_Cache::add_backend('aggregatecache', 'File', array('cache_dir' => $cachedir));
+SS_Cache::pick_backend('aggregatecache', 'aggregate');
+
 // TODO Remove once new ManifestBuilder with submodule support is in place
 require_once('admin/_config.php');
