@@ -64,6 +64,7 @@ class Aggregate extends ViewableData {
 		}
 	}
 
+	private static $_cache_has_been_set = false;
 	/**
 	 * Constructor
 	 *
@@ -78,6 +79,15 @@ class Aggregate extends ViewableData {
 			. ' (check partial-caching.md documentation for more details.)');
 		$this->type = $type;
 		$this->filter = $filter;
+		if(! self::$_cache_has_been_set) {
+			self::$_cache_has_been_set = true;
+			$cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'aggregatecache';
+			if (!is_dir($cachedir)) {
+				mkdir($cachedir);
+			}
+			SS_Cache::add_backend('aggregatecache', 'File', array('cache_dir' => $cachedir));
+			SS_Cache::pick_backend('aggregatecache', 'aggregate');		
+		}
 		parent::__construct();
 	}
 
