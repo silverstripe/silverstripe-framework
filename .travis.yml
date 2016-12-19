@@ -7,6 +7,10 @@ addons:
     packages:
       - tidy
 
+env:
+  global:
+    - TRAVIS_NODE_VERSION="4"
+
 matrix:
   fast_finish: true
   include:
