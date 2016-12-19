@@ -95,5 +95,5 @@ class MySQLQuery extends Query
             }
         }
         return $column;
-    }   
+    }
 }
