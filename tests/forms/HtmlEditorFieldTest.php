@@ -15,6 +15,20 @@ class HtmlEditorFieldTest extends FunctionalTest {
 
 	protected $extraDataObjects = array('HtmlEditorFieldTest_Object');
 
+	public function testCasting() {
+		// Test special characters
+		$inputText = "These are some unicodes: ä, ö, & ü";
+		$field = new HTMLEditorField("Test", "Test");
+		$field->setValue($inputText);
+		$this->assertContains('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
+
+		// Test shortcodes
+		$inputText = "Shortcode: [file_link id=4]";
+		$field = new HTMLEditorField("Test", "Test");
+		$field->setValue($inputText);
+		$this->assertContains('Shortcode: [file_link id=4]', $field->Field());
+	}
+
 	public function testBasicSaving() {
 		$obj = new HtmlEditorFieldTest_Object();
 		$editor   = new HtmlEditorField('Content');
