@@ -216,15 +216,12 @@ it:
     MODIFIED: Modificato
     Mp3Type: "File audio MP3"
     MpgType: "File video MPEG"
-    NOFILESIZE: "La dimensione del file è zero byte."
     NOVALIDUPLOAD: "Il file caricato non è valido"
     Name: Nome
     PLURALNAME: File
     PdfType: "File Adobe Acrobat PDF"
     PngType: "Immagine PNG - consigliata per utilizzo generico"
     SINGULARNAME: File
-    TOOLARGE: "La dimensione del file è troppo grande, massimo consentito {size}"
-    TOOLARGESHORT: "La dimensione del file eccede {size}"
     TiffType: "Immagine TIFF"
     Title: Titolo
     WavType: "File audio WAV"
@@ -389,8 +386,6 @@ it:
     FROMWEB: "Dal web"
     FindInFolder: "Trova nella Cartella"
     IMAGEALT: "Testo alternativo (alt)"
-    IMAGEALTTEXT: "Testo alternativo (alt) - mostrato nel caso l'immagine non possa essere visualizzata"
-    IMAGEALTTEXTDESC: "Mostrato agli screen reader o se l'immagine non può essere visualizzata"
     IMAGEDIMENSIONS: Dimensioni
     IMAGEHEIGHTPX: Altezza
     IMAGETITLE: "Titolo (tooltip) - per informazioni aggiuntive sull'immagine."
@@ -425,13 +420,10 @@ it:
     CANCEL: Annulla
     CANT_REORGANISE: "Non hai i permessi per modificare le pagine di primo livello. Le modifiche non sono state salvate."
     DELETED: Eliminato.
-    DropdownBatchActionsDefault: Azioni
     HELP: Aiuto
-    PAGETYPE: "Tipo di pagina:"
     PERMAGAIN: "Sei stato disconnesso dal CMS. Se desideri autenticarti nuovamente, inserisci qui sotto nome utente e password."
     PERMALREADY: "Siamo spiacenti, ma non puoi accedere a questa sezione del CMS. Se desideri autenticarti come qualcun altro, fallo qui sotto."
     PERMDEFAULT: "Devi essere autenticato per accedere all'area amministrativa; Per favore inserisci le tue credenziali qui sotto"
-    PLEASESAVE: "Per favore salva la pagina: La stessa potrebbe non venire aggiornata se non si provvede quanto prima a salvarla."
     PreviewButton: Anteprima
     REORGANISATIONSUCCESSFUL: "Albero del sito riorganizzato con successo."
     SAVEDUP: Salvato.
@@ -487,7 +479,6 @@ it:
     SUBJECTPASSWORDRESET: "Link per azzerare la tua password"
     SURNAME: Cognome
     TIMEFORMAT: "Formato dell'ora"
-    VALIDATIONMEMBEREXISTS: "Esiste già un utente con l'e-mail %s"
     ValidationIdentifierFailed: "Non posso sovrascrivere l'utente esistente #{id} con identificatore identico ({name} = {value}))"
     WELCOMEBACK: "Bentornato, {firstname}"
     YOUROLDPASSWORD: "La tua vecchia password"
