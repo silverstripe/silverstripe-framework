@@ -293,6 +293,7 @@ class PaginatedList extends SS_ListDecorator {
 		}
 
 		$left  = max($current - $offset, 1);
+		$right = min($current + $offset, $total);
 		$range = range($current - $offset, $current + $offset);
 
 		if ($left + $context > $total) {
@@ -304,7 +305,7 @@ class PaginatedList extends SS_ListDecorator {
 			$num     = $i + 1;
 
 			$emptyRange = $num != 1 && $num != $total && (
-				$num == $left - 1 || $num == $left + $context + 1
+				$num == $left - 1 || $num == $right + 1
 			);
 
 			if ($emptyRange) {
