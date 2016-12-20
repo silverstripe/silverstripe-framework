@@ -11,8 +11,16 @@ $.entwine('ss', function($){
 
 	$('.memberdatetimeoptionset .toggle').entwine({
 		onclick: function(e) {
-			$(this).closest('.form__field-description').parent().find('.toggle-content').toggle();
-			return false;
+      e.preventDefault();
+
+			var content = $(this).closest('.form__field-description').parent()
+        .find('.toggle-content');
+
+      if(content.is(":visible")) {
+        content.hide();
+      } else {
+        content.show();
+      }
 		}
 	});
 

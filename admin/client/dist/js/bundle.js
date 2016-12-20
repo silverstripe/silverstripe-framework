@@ -1704,7 +1704,9 @@ n(166),a["default"].entwine("ss",function(e){e(".ss-toggle").entwine({onadd:func
 }}})})},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}var r=n(1),a=i(r)
 a["default"].entwine("ss",function(e){e(".memberdatetimeoptionset").entwine({onmatch:function t(){this.find(".toggle-content").hide(),this._super()}}),e(".memberdatetimeoptionset .toggle").entwine({onclick:function n(t){
-return e(this).closest(".form__field-description").parent().find(".toggle-content").toggle(),!1}})})},function(e,t,n){(function(e){"use strict"
+t.preventDefault()
+var n=e(this).closest(".form__field-description").parent().find(".toggle-content")
+n.is(":visible")?n.hide():n.show()}})})},function(e,t,n){(function(e){"use strict"
 function t(e){return e&&e.__esModule?e:{"default":e}}var i=n(1),r=t(i),a=n(114),o=t(a)
 n(196),n(197),r["default"].entwine("ss",function(t){var n,i
 t(window).bind("resize.treedropdownfield",function(){var e=function o(){t(".TreeDropdownField").closePanel()}
