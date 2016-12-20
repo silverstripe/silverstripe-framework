@@ -14911,8 +14911,9 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   color:#4f5861;
 }
 
-.accordion__title .collapsed:before{
+.accordion__title.collapsed:before{
   content:"6";
+  display:block;
 }
 
 .field-group-component>.form-group{
@@ -16195,7 +16196,6 @@ input.checkbox,input.radio,input[type=checkbox],input[type=radio]{
 
 .modal__response--error,.modal__response--good{
   font-size:1.23rem;
-  font-weight:300;
 }
 
 .modal__response--error span:before,.modal__response--good span:before{

@@ -8,9 +8,12 @@ class AccordionBlock extends SilverStripeComponent {
   render() {
     const headerID = `${this.props.groupid}_Header`;
     const listID = `${this.props.groupid}_Items`;
-    const href = `#${listID}`;
+    const listIDAttr = listID.replace(/\\/g, '_');
+    const headerIDAttr = headerID.replace(/\\/g, '_');
+    const href = `#${listIDAttr}`;
+
     const groupProps = {
-      id: listID,
+      id: listIDAttr,
       'aria-expanded': true,
       className: 'list-group list-group-flush collapse in',
       role: 'tabpanel',
@@ -23,7 +26,7 @@ class AccordionBlock extends SilverStripeComponent {
           href={href}
           aria-expanded="true"
           aria-controls={listID}
-          id={headerID}
+          id={headerIDAttr}
           role="tab"
         >{this.props.title}
         </a>
