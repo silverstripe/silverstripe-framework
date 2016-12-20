@@ -921,6 +921,7 @@ class UploadField extends FileField {
 			'urlSelectDialog' => $this->Link('select'),
 			'urlAttach' => $this->Link('attach'),
 			'urlFileExists' => $this->link('fileexists'),
+			'folderName' => $this->getFolderName(),
 			'acceptFileTypes' => '.+$',
 			// Fileupload treats maxNumberOfFiles as the max number of _additional_ items allowed
 			'maxNumberOfFiles' => $allowedMaxFileNumber ? ($allowedMaxFileNumber - count($this->getItemIDs())) : null,
@@ -1228,6 +1229,7 @@ class UploadField extends FileField {
 	 *
 	 * @param string $originalFile Filename
 	 * @return bool
+	 * @deprecated 4.0
 	 */
 	protected function checkFileExists($originalFile) {
 
@@ -1253,15 +1255,23 @@ class UploadField extends FileField {
 	 * @param SS_HTTPRequest $request
 	 */
 	public function fileexists(SS_HTTPRequest $request) {
+		$fileName = $request->requestVar('filename');
+		$folderName = $request->requestVar('foldername') ? $request->requestVar('foldername') : $this->getFolderName();
+		$parentPath = Controller::join_links(ASSETS_DIR, $folderName, '/');
+
 		// Assert that requested filename doesn't attempt to escape the directory
-		$originalFile = $request->requestVar('filename');
-		if($originalFile !== basename($originalFile)) {
+		if($fileName !== basename($fileName)) {
 			$return = array(
 				'error' => _t('File.NOVALIDUPLOAD', 'File is not a valid upload')
 			);
 		} else {
+			// Check both original and safely filtered filename
+			$nameFilter = FileNameFilter::create();
+			$filteredFileName = $nameFilter->filter($fileName);
+			// check if either file exists
 			$return = array(
-				'exists' => $this->checkFileExists($originalFile)
+				'exists' => File::find($parentPath.$fileName)
+					|| File::find($parentPath.$filteredFileName)
 			);
 		}
 
