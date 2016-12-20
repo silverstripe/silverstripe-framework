@@ -360,7 +360,17 @@ class ChangeSetItem extends DataObject implements Thumbnail
             }
         }
 
-        return false;
+        return true;
+    }
+
+    /**
+     * Determine if this item has changes
+     *
+     * @return bool
+     */
+    public function hasChange()
+    {
+        return $this->getChangeType() !== ChangeSetItem::CHANGE_NONE;
     }
 
     /**

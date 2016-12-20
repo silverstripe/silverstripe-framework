@@ -40,9 +40,7 @@ class VersionedOwnershipTest extends SapphireTest
         foreach ($this->getFixtureFactory()->getFixtures() as $class => $fixtures) {
             foreach ($fixtures as $name => $id) {
                 if (stripos($name, '_published') !== false) {
-                    /**
- * @var Versioned|DataObject $object
-*/
+                    /** @var Versioned|DataObject $object */
                     $object = DataObject::get($class)->byID($id);
                     $object->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
                 }
@@ -68,9 +66,7 @@ class VersionedOwnershipTest extends SapphireTest
      */
     public function testFindOwned()
     {
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass1
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass1 */
         $subclass1 = $this->objFromFixture(VersionedOwnershipTest\Subclass::class, 'subclass1_published');
         $this->assertDOSEquals(
             [
@@ -96,9 +92,7 @@ class VersionedOwnershipTest extends SapphireTest
             $subclass1->findOwned(false)
         );
 
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass2
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass2 */
         $subclass2 = $this->objFromFixture(VersionedOwnershipTest\Subclass::class, 'subclass2_published');
         $this->assertDOSEquals(
             [
@@ -120,9 +114,7 @@ class VersionedOwnershipTest extends SapphireTest
             $subclass2->findOwned(false)
         );
 
-        /**
- * @var VersionedOwnershipTest\Related $related1
-*/
+        /** @var VersionedOwnershipTest\Related $related1 */
         $related1 = $this->objFromFixture(VersionedOwnershipTest\Related::class, 'related1');
         $this->assertDOSEquals(
             [
@@ -133,9 +125,7 @@ class VersionedOwnershipTest extends SapphireTest
             $related1->findOwned()
         );
 
-        /**
- * @var VersionedOwnershipTest\Related $related2
-*/
+        /** @var VersionedOwnershipTest\Related $related2 */
         $related2 = $this->objFromFixture(VersionedOwnershipTest\Related::class, 'related2_published');
         $this->assertDOSEquals(
             [
@@ -152,9 +142,7 @@ class VersionedOwnershipTest extends SapphireTest
      */
     public function testFindOwners()
     {
-        /**
- * @var VersionedOwnershipTest\Attachment $attachment1
-*/
+        /** @var VersionedOwnershipTest\Attachment $attachment1 */
         $attachment1 = $this->objFromFixture(VersionedOwnershipTest\Attachment::class, 'attachment1');
         $this->assertDOSEquals(
             [
@@ -172,9 +160,7 @@ class VersionedOwnershipTest extends SapphireTest
             $attachment1->findOwners(false)
         );
 
-        /**
- * @var VersionedOwnershipTest\Attachment $attachment5
-*/
+        /** @var VersionedOwnershipTest\Attachment $attachment5 */
         $attachment5 = $this->objFromFixture(VersionedOwnershipTest\Attachment::class, 'attachment5_published');
         $this->assertDOSEquals(
             [
@@ -195,9 +181,7 @@ class VersionedOwnershipTest extends SapphireTest
             $attachment5->findOwners(false)
         );
 
-        /**
- * @var VersionedOwnershipTest\Related $related1
-*/
+        /** @var VersionedOwnershipTest\Related $related1 */
         $related1 = $this->objFromFixture(VersionedOwnershipTest\Related::class, 'related1');
         $this->assertDOSEquals(
             [
@@ -224,9 +208,7 @@ class VersionedOwnershipTest extends SapphireTest
         $subclass2ID = $this->idFromFixture(VersionedOwnershipTest\Subclass::class, 'subclass2_published');
 
         // Check that stage record is ok
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass2Stage
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass2Stage */
         $subclass2Stage = Versioned::get_by_stage(VersionedOwnershipTest\Subclass::class, 'Stage')->byID($subclass2ID);
         $this->assertDOSEquals(
             [
@@ -248,9 +230,7 @@ class VersionedOwnershipTest extends SapphireTest
         );
 
         // Live records are unchanged
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass2Live
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass2Live */
         $subclass2Live = Versioned::get_by_stage(VersionedOwnershipTest\Subclass::class, 'Live')->byID($subclass2ID);
         $this->assertDOSEquals(
             [
@@ -278,9 +258,7 @@ class VersionedOwnershipTest extends SapphireTest
      */
     public function testRecursivePublish()
     {
-        /**
- * @var VersionedOwnershipTest\Subclass $parent
-*/
+        /** @var VersionedOwnershipTest\Subclass $parent */
         $parent = $this->objFromFixture(VersionedOwnershipTest\Subclass::class, 'subclass1_published');
         $parentID = $parent->ID;
         $banner1 = $this->objFromFixture(VersionedOwnershipTest\RelatedMany::class, 'relatedmany1_published');
@@ -335,9 +313,7 @@ class VersionedOwnershipTest extends SapphireTest
         $this->assertEmpty($banner2Live->PageID);
 
         // Test that a changeset was created
-        /**
- * @var ChangeSet $changeset
-*/
+        /** @var ChangeSet $changeset */
         $changeset = ChangeSet::get()->sort('"ChangeSet"."ID" DESC')->first();
         $this->assertNotEmpty($changeset);
 
@@ -387,32 +363,22 @@ class VersionedOwnershipTest extends SapphireTest
         $this->assertFalse($unsaved->doUnpublish());
 
         // Draft-only objects can't be unpublished
-        /**
- * @var VersionedOwnershipTest\RelatedMany $banner3Unpublished
-*/
+        /** @var VersionedOwnershipTest\RelatedMany $banner3Unpublished */
         $banner3Unpublished = $this->objFromFixture(VersionedOwnershipTest\RelatedMany::class, 'relatedmany3');
         $this->assertFalse($banner3Unpublished->doUnpublish());
 
         // First test: mid-level unpublish; We expect that owners should be unpublished, but not
         // owned objects, nor other siblings shared by the same owner.
         $related2 = $this->objFromFixture(VersionedOwnershipTest\Related::class, 'related2_published');
-        /**
- * @var VersionedOwnershipTest\Attachment $attachment3
-*/
+        /** @var VersionedOwnershipTest\Attachment $attachment3 */
         $attachment3 = $this->objFromFixture(VersionedOwnershipTest\Attachment::class, 'attachment3_published');
-        /**
- * @var VersionedOwnershipTest\RelatedMany $relatedMany4
-*/
+        /** @var VersionedOwnershipTest\RelatedMany $relatedMany4 */
         $relatedMany4 = $this->objFromFixture(VersionedOwnershipTest\RelatedMany::class, 'relatedmany4_published');
-        /**
- * @var VersionedOwnershipTest\Related $related2
-*/
+        /** @var VersionedOwnershipTest\Related $related2 */
         $this->assertTrue($related2->doUnpublish());
         $subclass2 = $this->objFromFixture(VersionedOwnershipTest\Subclass::class, 'subclass2_published');
 
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass2
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass2 */
         $this->assertFalse($subclass2->isPublished()); // Owner IS unpublished
         $this->assertTrue($attachment3->isPublished()); // Owned object is NOT unpublished
         $this->assertTrue($relatedMany4->isPublished()); // Owned object by owner is NOT unpublished
@@ -439,9 +405,7 @@ class VersionedOwnershipTest extends SapphireTest
         // When archiving an object, any published owners should be unpublished at the same time
         // but NOT achived
 
-        /**
- * @var VersionedOwnershipTest\Attachment $attachment3
-*/
+        /** @var VersionedOwnershipTest\Attachment $attachment3 */
         $attachment3 = $this->objFromFixture(VersionedOwnershipTest\Attachment::class, 'attachment3_published');
         $attachment3ID = $attachment3->ID;
         $this->assertTrue($attachment3->doArchive());
@@ -455,17 +419,13 @@ class VersionedOwnershipTest extends SapphireTest
         $this->assertEmpty($liveAttachment);
 
         // Owning object is unpublished only
-        /**
- * @var VersionedOwnershipTest\Related $stageOwner
-*/
+        /** @var VersionedOwnershipTest\Related $stageOwner */
         $stageOwner = $this->objFromFixture(VersionedOwnershipTest\Related::class, 'related2_published');
         $this->assertTrue($stageOwner->isOnDraft());
         $this->assertFalse($stageOwner->isPublished());
 
         // Bottom level owning object is also unpublished
-        /**
- * @var VersionedOwnershipTest\Subclass $stageTopOwner
-*/
+        /** @var VersionedOwnershipTest\Subclass $stageTopOwner */
         $stageTopOwner = $this->objFromFixture(VersionedOwnershipTest\Subclass::class, 'subclass2_published');
         $this->assertTrue($stageTopOwner->isOnDraft());
         $this->assertFalse($stageTopOwner->isPublished());
@@ -473,9 +433,7 @@ class VersionedOwnershipTest extends SapphireTest
 
     public function testRecursiveRevertToLive()
     {
-        /**
- * @var VersionedOwnershipTest\Subclass $parent
-*/
+        /** @var VersionedOwnershipTest\Subclass $parent */
         $parent = $this->objFromFixture(VersionedOwnershipTest\Subclass::class, 'subclass1_published');
         $parentID = $parent->ID;
         $banner1 = $this->objFromFixture(VersionedOwnershipTest\RelatedMany::class, 'relatedmany1_published');
@@ -523,9 +481,7 @@ class VersionedOwnershipTest extends SapphireTest
 
         // Check that the newly created banner, even though it still exist, has been
         // unlinked from the reverted draft record
-        /**
- * @var VersionedOwnershipTest\RelatedMany $banner4Draft
-*/
+        /** @var VersionedOwnershipTest\RelatedMany $banner4Draft */
         $banner4Draft = Versioned::get_by_stage(VersionedOwnershipTest\RelatedMany::class, Versioned::DRAFT)
             ->byID($banner4->ID);
         $this->assertTrue($banner4Draft->isOnDraft());
@@ -538,9 +494,7 @@ class VersionedOwnershipTest extends SapphireTest
      */
     public function testRecursiveRollback()
     {
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass2
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass2 */
         $this->sleep(1);
         $subclass2 = $this->objFromFixture(VersionedOwnershipTest\Subclass::class, 'subclass2_published');
 
@@ -564,9 +518,7 @@ class VersionedOwnershipTest extends SapphireTest
         // Check reverting to first version
         $this->sleep(1);
         $subclass2->doRollbackTo($versions[1]);
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass2Draft
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass2Draft */
         $subclass2Draft = Versioned::get_by_stage(VersionedOwnershipTest\Subclass::class, Versioned::DRAFT)
             ->byID($subclass2->ID);
         $this->assertEquals('Subclass 2 - v1', $subclass2Draft->Title);
@@ -584,9 +536,7 @@ class VersionedOwnershipTest extends SapphireTest
         // Check rolling forward to a later version
         $this->sleep(1);
         $subclass2->doRollbackTo($versions[3]);
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass2Draft
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass2Draft */
         $subclass2Draft = Versioned::get_by_stage(VersionedOwnershipTest\Subclass::class, Versioned::DRAFT)
             ->byID($subclass2->ID);
         $this->assertEquals('Subclass 2 - v1 - v2 - v3', $subclass2Draft->Title);
@@ -604,9 +554,7 @@ class VersionedOwnershipTest extends SapphireTest
         // And rolling back one version
         $this->sleep(1);
         $subclass2->doRollbackTo($versions[2]);
-        /**
- * @var VersionedOwnershipTest\Subclass $subclass2Draft
-*/
+        /** @var VersionedOwnershipTest\Subclass $subclass2Draft */
         $subclass2Draft = Versioned::get_by_stage(VersionedOwnershipTest\Subclass::class, Versioned::DRAFT)
             ->byID($subclass2->ID);
         $this->assertEquals('Subclass 2 - v1 - v2', $subclass2Draft->Title);
@@ -628,13 +576,9 @@ class VersionedOwnershipTest extends SapphireTest
     public function testInferedOwners()
     {
         // Make sure findOwned() works
-        /**
- * @var VersionedOwnershipTest\TestPage $page1
-*/
+        /** @var VersionedOwnershipTest\TestPage $page1 */
         $page1 = $this->objFromFixture(VersionedOwnershipTest\TestPage::class, 'page1_published');
-        /**
- * @var VersionedOwnershipTest\TestPage $page2
-*/
+        /** @var VersionedOwnershipTest\TestPage $page2 */
         $page2 = $this->objFromFixture(VersionedOwnershipTest\TestPage::class, 'page2_published');
         $this->assertDOSEquals(
             [
@@ -656,13 +600,9 @@ class VersionedOwnershipTest extends SapphireTest
         );
 
         // Check that findOwners works
-        /**
- * @var VersionedOwnershipTest\Image $image1
-*/
+        /** @var VersionedOwnershipTest\Image $image1 */
         $image1 = $this->objFromFixture(VersionedOwnershipTest\Image::class, 'image1_published');
-        /**
- * @var VersionedOwnershipTest\Image $image2
-*/
+        /** @var VersionedOwnershipTest\Image $image2 */
         $image2 = $this->objFromFixture(VersionedOwnershipTest\Image::class, 'image2_published');
 
         $this->assertDOSEquals(
@@ -696,9 +636,7 @@ class VersionedOwnershipTest extends SapphireTest
         );
 
         // Test custom relation can findOwners()
-        /**
- * @var VersionedOwnershipTest\CustomRelation $custom1
-*/
+        /** @var VersionedOwnershipTest\CustomRelation $custom1 */
         $custom1 = $this->objFromFixture(VersionedOwnershipTest\CustomRelation::class, 'custom1_published');
         $this->assertDOSEquals(
             [['Title' => 'Page 1']],

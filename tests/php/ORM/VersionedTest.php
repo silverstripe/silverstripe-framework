@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Versioning\Versioned;
@@ -274,9 +275,7 @@ class VersionedTest extends SapphireTest
 
     public function testPublishCreateNewVersion()
     {
-        /**
- * @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page1
-*/
+        /** @var VersionedTest\TestObject $page1 */
         $page1 = $this->objFromFixture(VersionedTest\TestObject::class, 'page1');
         $page1->Content = 'orig';
         $page1->write();
@@ -538,9 +537,7 @@ class VersionedTest extends SapphireTest
         // Create a few initial versions to ensure this version
         // doesn't clash with child versions
         $this->sleep(1);
-        /**
- * @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page2
-*/
+        /** @var VersionedTest\TestObject $page2 */
         $page2 = $this->objFromFixture(VersionedTest\TestObject::class, 'page2');
         $page2->Title = 'dummy1';
         $page2->write();
@@ -556,9 +553,7 @@ class VersionedTest extends SapphireTest
         // Create another version where this object and some
         // child records have been modified
         $this->sleep(1);
-        /**
- * @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page2a
-*/
+        /** @var VersionedTest\TestObject $page2a */
         $page2a = $this->objFromFixture(VersionedTest\TestObject::class, 'page2a');
         $page2a->Title = 'Page 2a - v2';
         $page2a->write();
@@ -577,9 +572,7 @@ class VersionedTest extends SapphireTest
         );
 
         // test selecting v1
-        /**
- * @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page2v1
-*/
+        /** @var VersionedTest\TestObject $page2v1 */
         $page2v1 = Versioned::get_version(VersionedTest\TestObject::class, $page2->ID, $version1);
         $this->assertEquals('Page 2 - v1', $page2v1->Title);
 
@@ -600,9 +593,7 @@ class VersionedTest extends SapphireTest
         );
 
         // When selecting v2, we get the same as on stage
-        /**
- * @var \SilverStripe\ORM\Tests\VersionedTest\VersionedTest_DataObject $page2v2
-*/
+        /** @var VersionedTest\TestObject $page2v2 */
         $page2v2 = Versioned::get_version(VersionedTest\TestObject::class, $page2->ID, $version2);
         $this->assertEquals('Page 2 - v2', $page2v2->Title);
 
@@ -649,7 +640,6 @@ class VersionedTest extends SapphireTest
 
     public function testArchiveVersion()
     {
-
         // In 2005 this file was created
         DBDatetime::set_mock_now('2005-01-01 00:00:00');
         $testPage = new VersionedTest\Subclass();
@@ -697,6 +687,54 @@ class VersionedTest extends SapphireTest
         $this->assertInstanceOf(VersionedTest\Subclass::class, $testPageCurrent);
         $this->assertEquals("2009", $testPageCurrent->ExtraField);
         $this->assertEquals("I'm enjoying 2009", $testPageCurrent->Content);
+    }
+
+    /**
+     * Test that archive works on live stage
+     */
+    public function testArchiveLive()
+    {
+        Versioned::set_stage(Versioned::LIVE);
+        $this->logInWithPermission('ADMIN');
+        $record = new VersionedTest\TestObject();
+        $record->Name = 'test object';
+        // Writing in live mode should write to draft as well
+        $record->write();
+        $recordID = $record->ID;
+        $this->assertTrue($record->isPublished());
+        $this->assertTrue($record->isOnDraft());
+
+        // Delete in live
+        /** @var VersionedTest\TestObject $recordLive */
+        $recordLive = VersionedTest\TestObject::get()->byID($recordID);
+        $recordLive->doArchive();
+        $this->assertFalse($recordLive->isPublished());
+        $this->assertFalse($recordLive->isOnDraft());
+    }
+
+    /**
+     * Test archive works on draft
+     */
+    public function testArchiveDraft()
+    {
+        Versioned::set_stage(Versioned::DRAFT);
+        $this->logInWithPermission('ADMIN');
+        $record = new VersionedTest\TestObject();
+        $record->Name = 'test object';
+
+        // Writing in draft mode requires publishing to effect on live
+        $record->write();
+        $record->publishRecursive();
+        $recordID = $record->ID;
+        $this->assertTrue($record->isPublished());
+        $this->assertTrue($record->isOnDraft());
+
+        // Delete in draft
+        /** @var VersionedTest\TestObject $recordDraft */
+        $recordDraft = VersionedTest\TestObject::get()->byID($recordID);
+        $recordDraft->doArchive();
+        $this->assertFalse($recordDraft->isPublished());
+        $this->assertFalse($recordDraft->isOnDraft());
     }
 
     public function testAllVersions()
@@ -958,9 +996,9 @@ class VersionedTest extends SapphireTest
      */
     public function testReadingModeSecurity()
     {
-        $this->setExpectedException('SilverStripe\\Control\\HTTPResponse_Exception');
-        $session = Injector::inst()->create('SilverStripe\\Control\\Session', array());
-        $result = Director::test('/?stage=Stage', null, $session);
+        $this->setExpectedException(HTTPResponse_Exception::class);
+        $session = Injector::inst()->create(Session::class, array());
+        Director::test('/?stage=Stage', null, $session);
     }
 
     /**

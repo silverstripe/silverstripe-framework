@@ -152,6 +152,10 @@ class ChangeSet extends DataObject
             throw new BadMethodCallException("ChangeSet must be saved before adding items");
         }
 
+        if (!$object->isInDB()) {
+            throw new BadMethodCallException("Items must be saved before adding to a changeset");
+        }
+
         $references = [
             'ObjectID'    => $object->ID,
             'ObjectClass' => $object->baseClass(),
@@ -353,17 +357,30 @@ class ChangeSet extends DataObject
      */
     public function canPublish($member = null)
     {
-        // All changes must be publishable
-        $atLeastOneChange = false;
         foreach ($this->Changes() as $change) {
-            $atLeastOneChange = true;
             /** @var ChangeSetItem $change */
             if (!$change->canPublish($member)) {
                 return false;
             }
         }
+        return true;
+    }
 
-        return $atLeastOneChange;
+    /**
+     * Determine if there are changes to publish
+     *
+     * @return bool
+     */
+    public function hasChanges()
+    {
+        // All changes must be publishable
+        /** @var ChangeSetItem $change */
+        foreach ($this->Changes() as $change) {
+            if ($change->hasChange()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

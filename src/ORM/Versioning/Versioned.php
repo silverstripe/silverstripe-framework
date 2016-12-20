@@ -1612,7 +1612,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider
 
         $owner->invokeWithExtensions('onBeforeArchive', $this);
         $owner->doUnpublish();
-        $owner->delete();
+        $owner->deleteFromStage(static::DRAFT);
         $owner->invokeWithExtensions('onAfterArchive', $this);
 
         return true;

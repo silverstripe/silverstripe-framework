@@ -257,6 +257,31 @@ class ChangeSetTest extends SapphireTest
         $this->assertTrue($changeSet->canPublish());
     }
 
+    public function testHasChanges()
+    {
+        // Create changeset containing all items (unpublished)
+        Versioned::set_stage(Versioned::DRAFT);
+        $this->logInWithPermission('ADMIN');
+        $changeSet = new ChangeSet();
+        $changeSet->write();
+        $base = new ChangeSetTest\BaseObject();
+        $base->Foo = 1;
+        $base->write();
+        $changeSet->addObject($base);
+
+        // New changeset with changes can be published
+        $this->assertTrue($changeSet->canPublish());
+        $this->assertTrue($changeSet->hasChanges());
+
+        // Writing the record to live dissolves the changes in this changeset
+        $base->publishSingle();
+        $this->assertTrue($changeSet->canPublish());
+        $this->assertFalse($changeSet->hasChanges());
+
+        // Changeset can be safely published without error
+        $changeSet->publish();
+    }
+
     public function testCanRevert()
     {
         $this->markTestSkipped("Requires ChangeSet::revert to be implemented first");
