@@ -47,3 +47,9 @@ export function fileSize(size) {
   }
   return `${number} ${metric}`;
 }
+
+export function getFileExtension(filename) {
+  return /[.]/.exec(filename)
+    ? filename.replace(/^.+[.]/, '')
+    : '';
+}

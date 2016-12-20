@@ -184,6 +184,10 @@ class FormBuilder extends SilverStripeComponent {
           { children: this.mapFieldsToComponents(field.children) }
         );
       }
+      props = Object.assign(
+        { onAutofill: this.props.onAutofill },
+        props
+      );
 
       // Don't wrap structural or readonly fields, since they don't need connected fields.
       // The redux-form connected fields also messed up react-bootstrap's tab handling.

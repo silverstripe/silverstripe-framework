@@ -21,6 +21,7 @@ require('expose?GridFieldRow!components/GridField/GridFieldRow');
 require('expose?GridFieldTable!components/GridField/GridFieldTable');
 require('expose?HiddenField!components/HiddenField/HiddenField');
 require('expose?TextField!components/TextField/TextField');
+require('expose?LiteralField!components/LiteralField/LiteralField');
 require('expose?Toolbar!components/Toolbar/Toolbar');
 require('expose?Breadcrumb!components/Breadcrumb/Breadcrumb');
 require('expose?BreadcrumbsActions!state/breadcrumbs/BreadcrumbsActions');

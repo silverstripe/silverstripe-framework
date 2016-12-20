@@ -278,3 +278,6 @@
 .font-icon-block:before {
   content: "\3c";
 }
+.font-icon-icon-enlarge:before {
+  content: "\3d";
+}
