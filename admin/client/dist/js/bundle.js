@@ -2123,8 +2123,8 @@ n||(n={}),n.data||(n.data=[]),n.data=n.data.concat(l),window.location.search&&(n
 r.removeClass("show-filter").find(".filter-header").hide()),r.find(".sortable-header th:last").html(s)}o.removeClass("loading"),i&&i.apply(this,arguments),r.trigger("reload",r)},error:function c(e){alert(s["default"]._t("GRIDFIELD.ERRORINTRANSACTION")),
 o.removeClass("loading")}},n))},showDetailView:function n(e){window.location.href=e},getItems:function i(){return this.find(".ss-gridfield-item")},setState:function r(e,t){var n=this.getState()
 n[e]=t,this.find(':input[name="'+this.data("name")+'[GridState]"]').val(JSON.stringify(n))},getState:function o(){return JSON.parse(this.find(':input[name="'+this.data("name")+'[GridState]"]').val())}}),
-e(".grid-field *").entwine({getGridField:function a(){return this.closest(".grid-field")}}),e(".grid-field :button[name=showFilter]").entwine({onclick:function l(t){e(".filter-header").show("slow").find(":input:first").focus(),
-this.closest(".grid-field").addClass("show-filter"),this.parent().html('<span class="non-sortable"></span>'),t.preventDefault()}}),e(".grid-field .ss-gridfield-item").entwine({onclick:function u(t){if(e(t.target).closest(".action").length)return this._super(t),
+e(".grid-field *").entwine({getGridField:function a(){return this.closest(".grid-field")}}),e(".grid-field :button[name=showFilter]").entwine({onclick:function l(e){this.closest(".grid-field__table").find(".filter-header").show("slow").find(":input:first").focus(),
+this.closest(".grid-field").addClass("show-filter"),this.parent().html('<span class="non-sortable"></span>'),e.preventDefault()}}),e(".grid-field .ss-gridfield-item").entwine({onclick:function u(t){if(e(t.target).closest(".action").length)return this._super(t),
 !1
 var n=this.find(".edit-link")
 n.length&&this.getGridField().showDetailView(n.prop("href"))},onmouseover:function c(){this.find(".edit-link").length&&this.css("cursor","pointer")},onmouseout:function d(){this.css("cursor","default")

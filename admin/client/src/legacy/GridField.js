@@ -104,7 +104,8 @@ $.entwine('ss', function($) {
 
 	$('.grid-field :button[name=showFilter]').entwine({
 		onclick: function(e) {
-			$('.filter-header')
+			this.closest('.grid-field__table')
+				.find('.filter-header')
 				.show('slow') // animate visibility
 				.find(':input:first').focus(); // focus first search field
 			this.closest('.grid-field').addClass('show-filter');
