@@ -60,4 +60,40 @@ class MySQLQuery extends Query
             return false;
         }
     }
+
+    /**
+     * Return an array containing all values in the leftmost column, where the keys are the
+     * same as the values.
+     *
+     * @return array
+     */
+    public function keyedColumn()
+    {
+        $column = [];
+        if (is_object($this->handle)) {
+            foreach ($this->handle->fetch_all(MYSQLI_ASSOC) as $record) {
+                $val = $record[key($record)];
+                $column[$val] = $val;
+            }
+        }
+        return $column;
+    }
+
+    /**
+     * Return a map from the first column to the second column.
+     *
+     * @return array
+     */
+    public function map()
+    {
+        $column = [];
+        if (is_object($this->handle)) {
+            foreach ($this->handle->fetch_all(MYSQLI_ASSOC) as $record) {
+                $key = reset($record);
+                $val = next($record);
+                $column[$key] = $val;
+            }
+        }
+        return $column;
+    }
 }

@@ -336,6 +336,24 @@ class DataQueryTest extends SapphireTest
         $this->resetDBSchema(true);
     }
 
+    public function testMap()
+    {
+        $fixtures = DataQueryTest\ObjectC::get();
+        $expected = array();
+        foreach ($fixtures as $fixture) {
+            $expected[$fixture->ID] = $fixture->Title;
+            $fixture->destroy();
+        }
+        $result = DB::query("SELECT \"ID\", \"Title\" FROM \"DataQueryTest_C\"")->map();
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testKeyedColumn()
+    {
+        $result = DB::query("SELECT \"Title\" FROM \"DataQueryTest_C\"")->keyedColumn();
+        $this->assertEquals(['First' => 'First', 'Second' => 'Second', 'Last' => 'Last'], $result);
+    }
+
     /**
      * Tests that getFinalisedQuery can include all tables
      */
