@@ -16,15 +16,6 @@
   margin-right: $spacer-x * .5; // 8px
   position: relative;
   box-shadow: none;
-
-  &.btn--no-text {
-    text-indent: -90000px;
-    overflow: hidden;
-
-    &:before {
-      text-indent: 0;
-    }
-  }
 }
 
 // Button icons
@@ -32,7 +23,7 @@
   position: relative;
   margin-right: 6px;
   line-height: $line-height-base;
-  font-size: 16px;
+  font-size: $font-size-lg;
   float: left;
 }
 
@@ -69,6 +60,24 @@
 .btn--no-text[class*="font-icon-"]::before,
 .no-text[class*="font-icon-"]::before {
   margin-right: 0;
+  text-indent: 0;
+}
+
+// Used buttons with text and icons, but you wan to hide the text only. eg. gridfield pagination
+// Could change to BS .text-hide { @include text-hide(); }, although slightly different
+.btn--hide-text {
+  text-indent: -90000px;
+  overflow: hidden;
+  min-width: calc(#{$btn-padding-x} * 2 + #{$font-size-lg}); // Fix Safari, enough to show icon and include padding
+
+  &.btn-sm {
+    min-width: calc(#{$btn-padding-x-sm} * 2 + #{$font-size-lg}); // Fix Safari, enough to show icon and include padding
+  }
+
+  &[class*=font-icon-]::before {
+    text-indent: 0;
+    margin-right: 0;
+  }
 }
 
 
@@ -153,20 +162,24 @@
   border-color: transparent;
   background-color: transparent;
 
-  &:hover,
-  &:active,
-  &:focus,
-  &:active:hover,
-  &:active:focus {
-    background-color: $gray-lighter;
+  &:hover {
+    background-color: $btn-secondary-bg;
     border-color: transparent;
-    outline-color: $brand-primary;
   }
-}
 
-.btn.active {
-  &:active {
-    outline: none;
+  &:focus,
+  &:active,
+  &.active {
+    @include box-shadow(inset 0 0 2px rgba(0, 0, 0, .125));
+    background-color: $btn-secondary-bg;
+    border-color: $btn-secondary-border;
+
+    &:hover,
+    &:focus,
+    &.focus {
+      background-color: $btn-secondary-bg;
+      border-color: $btn-secondary-border;
+    }
   }
 }
 
@@ -205,7 +218,7 @@
   }
 }
 
-// For secondary type actions without border
+// For secondary type actions without border, TODO change word "outline" to border
 .btn-hide-outline {
   border-color: transparent;
 }

@@ -218,7 +218,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
                 );
                 $fields->push(
                     GridField_FormAction::create($gridField, 'reset', false, 'reset', null)
-                        ->addExtraClass('btn font-icon-cancel btn--no-text grid-field__filter-clear ss-gridfield-button-close')
+                        ->addExtraClass('btn font-icon-cancel btn--no-text grid-field__filter-clear btn--icon-md ss-gridfield-button-close')
                         ->setAttribute('title', _t('GridField.ResetFilter', "Reset"))
                         ->setAttribute('id', 'action_reset_' . $gridField->getModelClass() . '_' . $columnField)
                 );

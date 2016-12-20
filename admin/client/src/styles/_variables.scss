@@ -292,7 +292,7 @@ $btn-primary-border: $btn-primary-bg;
 $btn-primary-shadow: darken($btn-primary-bg, 6%);
 
 $btn-secondary-color: $body-color-light;
-$btn-secondary-bg: $gray-lighter;
+$btn-secondary-bg: #dee3e8;
 $btn-secondary-border: $border-color-dark;
 
 // $btn-info-color: #fff;
@@ -318,11 +318,11 @@ $btn-danger-border: lighten($brand-danger, 10%);
 
 // $btn-link-disabled-color: $gray-light;
 //
-// $btn-padding-x-sm: .75rem;
-// $btn-padding-y-sm: .25rem;
-//
-// $btn-padding-x-lg: 1.25rem;
-// $btn-padding-y-lg: .75rem;
+$btn-padding-x-sm: .4615rem; // 6px
+$btn-padding-y-sm: .3077rem; // 4px
+
+$btn-padding-x-lg: 1.25rem;
+$btn-padding-y-lg: .75rem;
 
 // Allows for customizing button radius independently from global border radius
 $btn-border-radius: .23rem;
@@ -785,6 +785,11 @@ $desktop-width: 1366px;
 $search-width: 360px;
 $search-width-lg: 500px;
 $search-width-max: 100%;
+
+// CMS menu
+
+$cms-menu-width: $panel-padding-y * 9;
+$cms-menu-width-collapsed: $panel-padding-y * 3;
 
 
 // Transition speeds

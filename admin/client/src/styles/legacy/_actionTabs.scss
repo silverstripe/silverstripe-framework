@@ -315,11 +315,11 @@ $border: 1px solid darken(#D9D9D9, 15%);
 						white-space: nowrap;
 					}
 				}
-				button.ss-ui-button,
-        .btn {
+
+				.btn {
 					width: 100%;
-          text-align: left;
-          margin: 0 5px;
+					text-align: left;
+					border-radius: 0;
 				}
 			}
 			/* Re-align last tab */

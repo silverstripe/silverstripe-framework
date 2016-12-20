@@ -294,7 +294,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             if ($canDelete) {
                 $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
                     ->setUseButtonTag(true)
-                    ->addExtraClass('btn-danger-outline btn-hide-outline font-icon-trash action-delete'));
+                    ->addExtraClass('btn-danger-outline btn-hide-outline font-icon-trash-bin action-delete'));
             }
         } else { // adding new record
             //Change the Save label to 'Create'

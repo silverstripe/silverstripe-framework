@@ -132,6 +132,7 @@ body.cms {
     .cms-backlink {
       margin-top: -7px;
       float: left;
+      min-width: 24px; // Safari fix
     }
   }
 

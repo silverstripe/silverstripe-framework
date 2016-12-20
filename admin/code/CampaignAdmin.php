@@ -42,6 +42,8 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider
 
     private static $menu_title = 'Campaigns';
 
+    private static $menu_icon_class = 'font-icon-page-multiple';
+
     private static $tree_class = 'SilverStripe\\ORM\\Versioning\\ChangeSet';
 
     private static $url_handlers = [

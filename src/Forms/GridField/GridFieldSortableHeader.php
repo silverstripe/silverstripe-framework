@@ -190,10 +190,10 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
                 if ($currentColumn == count($columns)) {
                     $filter = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldFilterHeader');
 
-                    if($filter->canFilterAnyColumns($gridField)) {
+                    if($filter && $filter->canFilterAnyColumns($gridField)) {
                         $field = new LiteralField(
                             $fieldName,
-                            '<button type="button" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>'
+                            '<button type="button" name="showFilter" title="Open search and filter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>'
                         );
                     } else {
                         $field = new LiteralField($fieldName, '<span class="non-sortable"></span>');

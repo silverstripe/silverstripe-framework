@@ -96,14 +96,12 @@
   float: left;
   margin: $spacer-xs $spacer-x / 2 $spacer-xs #{-$spacer-xs};
   padding-left: $spacer-x / 4;
+  padding-right: $spacer-x / 4;
+  min-width: 24px; // Safari fix
   color: $body-color-light; // TEMP: Needed for anchor buttons to override legacy styles
 
   .toolbar--south & {
     margin-top: 0;
     margin-right: 5px;
-  }
-
-  &.btn--no-text {
-    padding-right: $spacer-x / 4;
   }
 }

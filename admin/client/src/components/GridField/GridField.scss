@@ -61,35 +61,28 @@
     border-bottom: $table-border-width solid $border-color-light;
   }
 
-  .ui-button-text { // TODO BEMify classes
-    display: inline;
-    padding: 0;
-    vertical-align: top;
-    color: $body-color-light;
-
-    &::after {
-      content: ")";
-      display: inline-block;
-      color: lighten($text-muted, 20%);
-      font-family: silverstripe;
-    }
+  &::after {
+    content: ")";
+    display: inline-block;
+    color: lighten($text-muted, 20%);
+    font-family: silverstripe;
   }
 
   &.ss-gridfield-sorted-desc, // TODO BEMify class
   &.ss-gridfield-sorted-asc {
     border-bottom: 1px solid $component-active-border-color;
 
-    .ui-button-text::after, // TODO BEMify class
-    &:hover.ui-button-text::after {
+    &::after,
+    &:hover::after {
       color: $component-active-border-color;
     }
   }
 
-  &.ss-gridfield-sorted-desc .ui-button-text::after { // TODO BEMify classes
+  &.ss-gridfield-sorted-desc::after { // TODO BEMify classes
     content: "*";
   }
 
-  &.ss-gridfield-sorted-asc .ui-button-text::after { // TODO BEMify classes
+  &.ss-gridfield-sorted-asc::after { // TODO BEMify classes
     content: "(";
   }
 

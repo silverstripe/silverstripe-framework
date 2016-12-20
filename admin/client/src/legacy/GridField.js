@@ -54,7 +54,7 @@ $.entwine('ss', function($) {
 							content = '<span class="non-sortable"></span>';
 							self.addClass('show-filter').find('.filter-header').show();
 						} else {
-							content = '<button type="button" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open ss-gridfield-button-filter trigger"></button>';
+							content = '<button type="button" title="Open search and filter" name="showFilter" class="btn btn-secondary font-icon-search btn--no-text btn--icon-large grid-field__filter-open"></button>';
 							self.removeClass('show-filter').find('.filter-header').hide();
 						}
 

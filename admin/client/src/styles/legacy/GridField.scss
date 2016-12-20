@@ -75,18 +75,23 @@
 
       input.relation-search {
         width: 270px;
-        height: 32px;
-        margin-bottom: $spacer-y * .75;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
+        padding-right: 0;
       }
 
       button.action_gridfield_relationadd {
-        height: 32px;
         margin-left: 0; // Webkit needs this
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
         border-left: 0;
+        margin-right: 0;
+        padding-top: $input-padding-y; // Replicate input
+        padding-bottom: $input-padding-y;
+
+        &:hover {
+          border-color: $btn-secondary-border;
+        }
       }
     }
 
@@ -95,10 +100,6 @@
       margin-bottom: 0;
       margin-right: 0;
       display: inline-block;
-
-      .btn-secondary {
-        margin-right: 0;
-      }
     }
   }
 
@@ -256,28 +257,24 @@
         }
 
         button {
-          &.ss-gridfield-button-filter:not(.trigger) {
-            color: $white;
-          }
-
           &.ss-gridfield-button-filter:not(.trigger),
           &.grid-field__filter-clear {
             margin-top: 3px;
             margin-bottom: 3px;
-          }
+            background: transparent;
+            color: $white;
 
-          &.action_gridfield_relationadd:hover {
-            color: #444 !important; /* Not sure why IE think it needs this */
-          }
-
-          &.ss-gridfield-button-close,
-          &.ss-gridfield-button-filter:not(.trigger) {
             &.hover-alike:active,
             &:active,
             &.hover-alike,
             &:hover {
               color: $white;
+              background-color: darken($gray-dark, 10);
             }
+          }
+
+          &.action_gridfield_relationadd:hover {
+            color: #444 !important; /* Not sure why IE think it needs this */
           }
 
           &.ss-gridfield-button-reset {
