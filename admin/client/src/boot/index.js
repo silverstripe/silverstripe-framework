@@ -12,6 +12,7 @@ import RecordsReducer from 'state/records/RecordsReducer';
 import CampaignReducer from 'state/campaign/CampaignReducer';
 import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
 import bootInjector from 'boot/BootInjector';
+import ApolloClient, { createNetworkInterface } from 'apollo-client';
 
 // Sections
 // eslint-disable-next-line no-unused-vars
@@ -21,6 +22,24 @@ import es6promise from 'es6-promise';
 es6promise.polyfill();
 
 function appBoot() {
+  const baseUrl = Config.get('absoluteBaseUrl');
+  const apolloClient = new ApolloClient({
+    shouldBatch: true,
+    addTypename: true,
+    dataIdFromObject: (o) => {
+      if(o.id >= 0 && o.__typename) {
+        return `${o.__typename}:${o.id}`;
+      }
+      return null;
+    },
+    networkInterface: createNetworkInterface({
+      uri: `${baseUrl}graphql/`,
+      opts: {
+        credentials: 'same-origin',
+      },
+    }),
+  });
+
   reducerRegister.add('config', ConfigReducer);
   reducerRegister.add('form', ReduxFormReducer);
   reducerRegister.add('schemas', SchemaReducer);
@@ -28,12 +47,16 @@ function appBoot() {
   reducerRegister.add('campaign', CampaignReducer);
   reducerRegister.add('breadcrumbs', BreadcrumbsReducer);
   reducerRegister.add('routing', routerReducer);
+  reducerRegister.add('apollo', apolloClient.reducer());
 
   bootInjector.start();
 
   const initialState = {};
   const rootReducer = combineReducers(reducerRegister.getAll());
-  const middleware = [thunkMiddleware];
+  const middleware = [
+    thunkMiddleware,
+    apolloClient.middleware(),
+  ];
 
   const env = Config.get('environment');
   const debugging = Config.get('debugging');
@@ -65,8 +88,12 @@ function appBoot() {
   window.ss = window.ss || {};
   window.ss.store = store;
 
+  // Expose client for legacy use
+  window.ss = window.ss || {};
+  window.ss.apolloClient = apolloClient;
+
   // Bootstrap routing
-  const routes = new BootRoutes(store);
+  const routes = new BootRoutes(store, apolloClient);
   routes.start(window.location.pathname);
 
   // @TODO - Remove once we remove entwine

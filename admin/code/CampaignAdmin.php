@@ -194,7 +194,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider
         try {
             $changeSet->sync();
             $hal['Description'] = $changeSet->getDescription();
-            $hal['canPublish'] = $changeSet->canPublish();
+            $hal['canPublish'] = $changeSet->canPublish() && $changeSet->hasChanges();
 
             foreach ($changeSet->Changes() as $changeSetItem) {
                 if (!$changeSetItem) {

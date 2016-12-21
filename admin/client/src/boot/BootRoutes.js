@@ -1,7 +1,6 @@
 import $ from 'jQuery';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import { Router as ReactRouter, useRouterHistory } from 'react-router';
 import createHistory from 'history/lib/createBrowserHistory';
 import Config from 'lib/Config';
@@ -9,6 +8,7 @@ import pageRouter from 'lib/Router';
 import reactRouteRegister from 'lib/ReactRouteRegister';
 import App from 'containers/App/App';
 import { syncHistoryWithStore } from 'react-router-redux';
+import { ApolloProvider } from 'react-apollo';
 
 /**
  * Bootstraps routes
@@ -17,9 +17,11 @@ class BootRoutes {
 
   /**
    * @param {Object} store Redux store
+   * @param {Object} client The Apollo client
    */
-  constructor(store) {
+  constructor(store, client) {
     this.store = store;
+    this.client = client;
 
     // pageRouter must be initialised, regardless of whether we are
     // using page.js routing for this request.
@@ -83,12 +85,12 @@ class BootRoutes {
       this.store
     );
     ReactDOM.render(
-      <Provider store={this.store}>
+      <ApolloProvider store={this.store} client={this.client}>
         <ReactRouter
           history={history}
           routes={reactRouteRegister.getRootRoute()}
         />
-      </Provider>,
+      </ApolloProvider>,
       document.getElementsByClassName('cms-content')[0]
     );
   }

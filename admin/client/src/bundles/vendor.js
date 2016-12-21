@@ -28,6 +28,10 @@ require('expose?QueryString!query-string');
 require('expose?Page!page.js');
 require('expose?BootstrapCollapse!bootstrap/dist/js/umd/collapse.js');
 require('expose?validator!validator');
+require('expose?ApolloClient!apollo-client');
+require('expose?ReactApollo!react-apollo');
+require('expose?GraphQLTag!graphql-tag');
+require('expose?GraphQLFragments!graphql-fragments');
 
 require('../../../thirdparty/jquery-ondemand/jquery.ondemand.js');
 require('../../../thirdparty/jquery-ui/jquery-ui.js');
