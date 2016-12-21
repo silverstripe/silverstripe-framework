@@ -432,17 +432,36 @@ $.entwine('ss', function($) {
       this.trigger('submitform', {form: form, button: button});
 
       // set button to "submitting" state
-      $(button).addClass('loading');
+      $(button).addClass('btn--loading loading');
+
+      if($(button).is('button')) {
+        $(button).data('original-text', $(button).text());
+        $(button).text('');
+
+        $(button).append($(
+          '<div class="btn__loading-icon">'+
+            '<span class="btn__circle btn__circle--1" />'+
+            '<span class="btn__circle btn__circle--2" />'+
+            '<span class="btn__circle btn__circle--3" />'+
+          '</div>'));
+
+        $(button).css($(button).outerWidth() + 'px');
+      }
 
       // validate if required
       var validationResult = form.validate();
+
+      var clearButton = function() {
+        $(button).removeClass('btn--loading loading');
+        $(button).find('.btn__loading-icon').remove();
+        $(button).css('width', 'auto');
+        $(button).text($(button).data('original-text'));
+      }
+
       if(typeof validationResult!=='undefined' && !validationResult) {
         // TODO Automatically switch to the tab/position of the first error
         statusMessage("Validation failed.", "bad");
-
-        $(button).removeClass('loading');
-
-        return false;
+        clearButton();
       }
 
       // get all data from the form
@@ -458,6 +477,7 @@ $.entwine('ss', function($) {
       // Save tab selections so we can restore them later
       this.saveTabState();
 
+
       // Standard Pjax behaviour is to replace the submitted form with new content.
       // The returned view isn't always decided upon when the request
       // is fired, so the server might decide to change it based on its own logic,
@@ -468,9 +488,10 @@ $.entwine('ss', function($) {
         data: formData,
         type: 'POST',
         complete: function() {
-          $(button).removeClass('loading');
+          clearButton()
         },
         success: function(data, status, xhr) {
+          clearButton();
           form.removeClass('changed'); // TODO This should be using the plugin API
           if(callback) callback(data, status, xhr);
 

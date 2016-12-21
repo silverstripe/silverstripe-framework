@@ -109,9 +109,11 @@
   }
 }
 
-.btn--loading > span,
-.btn--loading::before {
-  visibility: hidden;
+.btn--loading {
+  & > span,
+  &::before {
+    visibility: hidden;
+  }
 }
 
 @keyframes loading-icon {

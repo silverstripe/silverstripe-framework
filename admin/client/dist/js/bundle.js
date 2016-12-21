@@ -1057,16 +1057,16 @@ return!n.length||(n.each(function(){$(this).confirmUnsavedChanges()||(i=!1)}),i)
 this.checkCanNavigate(n.pjax?n.pjax.split(","):["Content"])&&(this.saveTabState(),n.__forceReferer=r,i&&(n.__forceReload=1+Math.random()),window.ss.router.show(e,n))},reloadCurrentPanel:function g(){this.loadPanel(document.URL,null,null,!0)
 
 },submitForm:function v(e,t,n,i){var r=this
-t||(t=this.find(".btn-toolbar :submit[name=action_save]")),t||(t=this.find(".btn-toolbar :submit:first")),e.trigger("beforesubmitform"),this.trigger("submitform",{form:e,button:t}),$(t).addClass("loading")
-
-
-var a=e.validate()
-if("undefined"!=typeof a&&!a)return statusMessage("Validation failed.","bad"),$(t).removeClass("loading"),!1
-var o=e.serializeArray()
-return o.push({name:$(t).attr("name"),value:"1"}),o.push({name:"BackURL",value:document.URL.replace(/\/$/,"")}),this.saveTabState(),jQuery.ajax(jQuery.extend({headers:{"X-Pjax":"CurrentForm,Breadcrumbs"
-},url:e.attr("action"),data:o,type:"POST",complete:function s(){$(t).removeClass("loading")},success:function l(t,i,a){e.removeClass("changed"),n&&n(t,i,a)
-var s=r.handleAjaxResponse(t,i,a)
-s&&s.filter("form").trigger("aftersubmitform",{status:i,xhr:a,formData:o})}},i)),!1},LastState:null,PauseState:!1,handleStateChange:function y(e){var t=arguments.length<=1||void 0===arguments[1]?window.history.state:arguments[1]
+t||(t=this.find(".btn-toolbar :submit[name=action_save]")),t||(t=this.find(".btn-toolbar :submit:first")),e.trigger("beforesubmitform"),this.trigger("submitform",{form:e,button:t}),$(t).addClass("btn--loading loading"),
+$(t).is("button")&&($(t).data("original-text",$(t).text()),$(t).text(""),$(t).append($('<div class="btn__loading-icon"><span class="btn__circle btn__circle--1" /><span class="btn__circle btn__circle--2" /><span class="btn__circle btn__circle--3" /></div>')),
+$(t).css($(t).outerWidth()+"px"))
+var a=e.validate(),o=function l(){$(t).removeClass("btn--loading loading"),$(t).find(".btn__loading-icon").remove(),$(t).css("width","auto"),$(t).text($(t).data("original-text"))}
+"undefined"==typeof a||a||(statusMessage("Validation failed.","bad"),o())
+var s=e.serializeArray()
+return s.push({name:$(t).attr("name"),value:"1"}),s.push({name:"BackURL",value:document.URL.replace(/\/$/,"")}),this.saveTabState(),jQuery.ajax(jQuery.extend({headers:{"X-Pjax":"CurrentForm,Breadcrumbs"
+},url:e.attr("action"),data:s,type:"POST",complete:function u(){o()},success:function c(t,i,a){o(),e.removeClass("changed"),n&&n(t,i,a)
+var l=r.handleAjaxResponse(t,i,a)
+l&&l.filter("form").trigger("aftersubmitform",{status:i,xhr:a,formData:s})}},i)),!1},LastState:null,PauseState:!1,handleStateChange:function y(e){var t=arguments.length<=1||void 0===arguments[1]?window.history.state:arguments[1]
 
 
 if(!this.getPauseState()){this.getStateChangeXHR()&&this.getStateChangeXHR().abort()
@@ -2041,10 +2041,11 @@ n.length&&this.getGridField().showDetailView(n.prop("href"))},onmouseover:functi
 
 }}),e(".grid-field .action.action_import:button").entwine({onclick:function f(t){t.preventDefault()
 var n=e(".modal-backdrop")
-n.length<1?(n=e('<div class="modal-backdrop fade in"></div>'),e("body").append(n)):n.addClass("fade in").fadeIn(),e(this.data("target")).addClass("in")
-var i=this
-e(this.data("target")).find("[data-dismiss]").on("click",function(){n.fadeOut(function(){e(this).removeClass("in")}),e(i.data("target")).removeClass("in")})}}),e(".grid-field .action:button").entwine({
-onclick:function p(e){var t="show"
+n.length<1?(n=e('<div class="modal-backdrop fade in"></div>'),e("body").append(n)):n.addClass("fade in").fadeIn()
+var i=e(this.data("target"))
+i.addClass("in"),i.find("[data-dismiss]").on("click",function(){n.fadeOut(function(){n.removeClass("in")}),i.removeClass("in")})}}),e(".grid-field .action:button").entwine({onclick:function p(e){var t="show"
+
+
 return this.is(":disabled")?void e.preventDefault():(!this.hasClass("ss-gridfield-button-close")&&this.closest(".grid-field").hasClass("show-filter")||(t="hidden"),this.getGridField().reload({data:[{name:this.attr("name"),
 value:this.val(),filter:t}]}),void e.preventDefault())},actionurl:function h(){var t=this.closest(":button"),n=this.getGridField(),i=this.closest("form"),r=i.find(":input.gridstate").serialize(),a=i.find('input[name="SecurityID"]').val()
 
