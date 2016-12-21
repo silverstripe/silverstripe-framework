@@ -46,21 +46,17 @@ class GridFieldImportButton implements GridField_HTMLProvider
             null
         );
         $button->addExtraClass('btn btn-secondary no-ajax font-icon-upload btn--icon-large action_import');
+
+        // means that you can only have 1 import per page
         $button
             ->setAttribute('data-toggle', "modal")
-            ->setAttribute('data-target', "#". $gridField->ID() . ' .grid-field-import');
+            ->setAttribute('data-target', "#". $gridField->getForm()->getHTMLID() . '_ImportModal');
 
         $button->setForm($gridField->getForm());
         $extra = null;
 
-        if($this->importFormField) {
-            $extra = ($this->importFormField instanceof Form)
-                ? $this->importFormField->forTemplate()
-                : $this->importFormField->Field();
-        }
-
         return array(
-            $this->targetFragment => ($extra) ? '<p class="grid-csv-button">' . $button->Field() . '</p>'.$extra : '',
+            $this->targetFragment => '<p class="grid-csv-button">'. $button->Field() . '</p>'
         );
     }
 

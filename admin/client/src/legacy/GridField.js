@@ -147,17 +147,15 @@ $.entwine('ss', function($) {
         backdrop.addClass('fade in').fadeIn();
       }
 
-      $(this.data('target')).addClass('in');
+      var modal = $(this.data('target'));
 
-      // workaround until GridField rewritten into react.
-      var self = this;
-
-      $(this.data('target')).find('[data-dismiss]').on('click', function() {
+      modal.addClass('in');
+      modal.find('[data-dismiss]').on('click', function() {
         backdrop.fadeOut(function() {
-          $(this).removeClass('in');
+          backdrop.removeClass('in');
         });
 
-        $(self.data('target')).removeClass('in');
+        modal.removeClass('in');
       })
     }
   });

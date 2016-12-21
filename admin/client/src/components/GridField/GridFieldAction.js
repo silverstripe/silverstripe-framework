@@ -18,9 +18,6 @@ class GridFieldAction extends SilverStripeComponent {
   }
 
   handleClick(event) {
-    console.log('handle click');
-
-    return false;
     this.props.handleClick(event, this.props.record.ID);
   }
 }

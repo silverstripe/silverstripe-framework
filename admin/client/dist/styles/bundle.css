@@ -855,6 +855,10 @@ body .ui-tooltip{ border-width:2px; }
 	top:6px;
 	cursor:pointer;
 }
+.chosen-container-multi .chosen-choices{
+  padding:4px 5px;
+}
+
 /*!
  * Bootstrap v4.0.0-alpha.2 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.

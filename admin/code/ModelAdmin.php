@@ -521,28 +521,33 @@ abstract class ModelAdmin extends LeftAndMain
         $results = $loader->load($_FILES['_CsvFile']['tmp_name']);
 
         $message = '';
-        if ($results->CreatedCount()) {
-            $message .= _t(
-                'ModelAdmin.IMPORTEDRECORDS',
-                "Imported {count} records.",
-                array('count' => $results->CreatedCount())
-            );
-        }
-        if ($results->UpdatedCount()) {
-            $message .= _t(
-                'ModelAdmin.UPDATEDRECORDS',
-                "Updated {count} records.",
-                array('count' => $results->UpdatedCount())
-            );
-        }
-        if ($results->DeletedCount()) {
-            $message .= _t(
-                'ModelAdmin.DELETEDRECORDS',
-                "Deleted {count} records.",
-                array('count' => $results->DeletedCount())
-            );
-        }
-        if (!$results->CreatedCount() && !$results->UpdatedCount()) {
+
+        if($results) {
+            if ($results->CreatedCount()) {
+                $message .= _t(
+                    'ModelAdmin.IMPORTEDRECORDS',
+                    "Imported {count} records.",
+                    array('count' => $results->CreatedCount())
+                );
+            }
+            if ($results && $results->UpdatedCount()) {
+                $message .= _t(
+                    'ModelAdmin.UPDATEDRECORDS',
+                    "Updated {count} records.",
+                    array('count' => $results->UpdatedCount())
+                );
+            }
+            if ($results->DeletedCount()) {
+                $message .= _t(
+                    'ModelAdmin.DELETEDRECORDS',
+                    "Deleted {count} records.",
+                    array('count' => $results->DeletedCount())
+                );
+            }
+            if (!$results->CreatedCount() && !$results->UpdatedCount()) {
+                $message .= _t('ModelAdmin.NOIMPORT', "Nothing to import");
+            }
+        } else {
             $message .= _t('ModelAdmin.NOIMPORT', "Nothing to import");
         }
 

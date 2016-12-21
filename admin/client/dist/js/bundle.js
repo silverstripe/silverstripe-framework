@@ -666,7 +666,7 @@ i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Obj
 function t(e){r(this,t)
 var n=a(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.handleClick=n.handleClick.bind(n),n}return o(t,e),s(t,[{key:"render",value:function n(){return u["default"].createElement("button",{className:"grid-field__icon-action font-icon-"+this.props.icon+" btn--icon-large",
-onClick:this.handleClick})}},{key:"handleClick",value:function i(e){return console.log("handle click"),!1}}]),t}(d["default"])
+onClick:this.handleClick})}},{key:"handleClick",value:function i(e){this.props.handleClick(e,this.props.record.ID)}}]),t}(d["default"])
 p.PropTypes={handleClick:u["default"].PropTypes.func.isRequired},t["default"]=p},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){var n=["id"]
 return n.reduce(function(e,n){return e.replace(":"+n,t[n])},e)}function a(e,t,n){var i={recordType:e},a={Accept:"text/json"},o=t.toLowerCase()
@@ -2156,8 +2156,7 @@ var s=n(108),l=i(s),u=n(33),c=i(u),d=(0,l["default"])({})},function(e,t,n){"use 
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function a(){var e=arguments.length<=0||void 0===arguments[0]?d:arguments[0],t=arguments[1],n=null,i=null,a=null,s={}
 
 
-switch(t.type){case"APOLLO_QUERY_RESULT":return e
-case c["default"].CREATE_RECORD:return(0,l["default"])(o({},e,{}))
+switch(t.type){case c["default"].CREATE_RECORD:return(0,l["default"])(o({},e,{}))
 case c["default"].UPDATE_RECORD:return(0,l["default"])(o({},e,{}))
 case c["default"].DELETE_RECORD:return(0,l["default"])(o({},e,{}))
 case c["default"].FETCH_RECORDS_REQUEST:return e
