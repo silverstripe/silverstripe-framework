@@ -1,4 +1,4 @@
-<button class="sticky-toggle" type="button" title="Sticky nav"><%t LeftAndMain.MenuToggleStickyNav "Sticky nav" %></button>
+<button class="sticky-toggle" type="button" title="<%t LeftAndMain.MenuToggleStickyNav "Sticky nav" %>"><%t LeftAndMain.MenuToggleStickyNav "Sticky nav" %></button>
 <span class="sticky-status-indicator"><%t LeftAndMain.MenuToggleAuto "Auto" %></span>
-<a class="toggle-expand" href="#"><span>&raquo;<span class="sr-only"><%t LeftAndMain.MenuToggleExpand "Expand panel" %></span></span></a>
-<a class="toggle-collapse" href="#"><span>&laquo;<span class="sr-only"><%t LeftAndMain.MenuToggleCollapse "Collapse panel" %></span></span></a>
+<a class="toggle-expand" href="#" data-toggle="tooltip" title="<%t LeftAndMain.ExpandPanel "Expand Panel" %>"><span>&raquo;</span></a>
+<a class="toggle-collapse" href="#" data-toggle="tooltip" title="<%t LeftAndMain.CollapsePanel "Collapse Panel" %>"><span>&laquo;</span></a>
