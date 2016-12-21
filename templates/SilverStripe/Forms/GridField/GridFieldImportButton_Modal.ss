@@ -11,9 +11,5 @@
                 $ImportForm
             <% end_if %>
         </div>
-
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary-outline font-icon-check-mark" data-dismiss="modal"><%t GridField.DONE 'Done' %></button>
-        </div>
     </div>
 </div>

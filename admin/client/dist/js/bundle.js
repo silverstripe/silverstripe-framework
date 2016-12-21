@@ -327,6 +327,7 @@ t&&e.push("btn-"+t),"string"!=typeof this.props.title&&e.push("btn--no-text")
 var n=this.getIcon()
 return n&&e.push("font-icon-"+n),this.props.loading&&e.push("btn--loading"),this.props.disabled&&e.push("disabled"),"string"==typeof this.props.extraClass&&e.push(this.props.extraClass),e.join(" ")}},{
 key:"getButtonStyle",value:function d(){if("undefined"!=typeof this.props.data.buttonStyle)return this.props.data.buttonStyle
+if("undefined"!=typeof this.props.buttonStyle)return this.props.buttonStyle
 var e=this.props.extraClass.split(" ")
 return e.find(function(e){return e.indexOf("btn-")>-1})?null:"action_save"===this.props.name||e.find(function(e){return"ss-ui-action-constructive"===e})?"primary":"secondary"}},{key:"getIcon",value:function f(){
 return this.props.icon||this.props.data.icon||null}},{key:"getLoadingIcon",value:function p(){return this.props.loading?c["default"].createElement("div",{className:"btn__loading-icon"},c["default"].createElement("span",{
@@ -2571,8 +2572,8 @@ className:c.join(" ")},u),h["default"].createElement("div",{className:"toolbar t
 },{key:"renderButtonToolbar",value:function p(){var e=this.getItems()
 if(!e||!e.length)return h["default"].createElement("div",{className:"btn-toolbar"})
 var t={}
-return"open"===this.props.record.State?t=c(t,{title:$["default"]._t("Campaigns.PUBLISHCAMPAIGN"),bootstrapButtonStyle:"primary",loading:this.props.campaign.isPublishing,handleClick:this.handlePublish,icon:"rocket"
-}):"published"===this.props.record.State&&(t=c(t,{title:$["default"]._t("Campaigns.REVERTCAMPAIGN"),bootstrapButtonStyle:"secondary-outline",icon:"back-in-time",disabled:!0})),h["default"].createElement("div",{
+return"open"===this.props.record.State?t=c(t,{title:$["default"]._t("Campaigns.PUBLISHCAMPAIGN"),buttonStyle:"primary",loading:this.props.campaign.isPublishing,handleClick:this.handlePublish,icon:"rocket"
+}):"published"===this.props.record.State&&(t=c(t,{title:$["default"]._t("Campaigns.REVERTCAMPAIGN"),buttonStyle:"secondary-outline",icon:"back-in-time",disabled:!0})),h["default"].createElement("div",{
 className:"btn-toolbar"},h["default"].createElement(F["default"],t))}},{key:"getItems",value:function m(){return this.props.record&&this.props.record._embedded?this.props.record._embedded.items:null}},{
 key:"groupItemsForSet",value:function g(){var e={},t=this.getItems()
 return t?(t.forEach(function(t){var n=t.BaseClass

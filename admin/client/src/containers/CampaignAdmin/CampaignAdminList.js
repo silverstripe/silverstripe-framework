@@ -204,7 +204,7 @@ class CampaignAdminList extends SilverStripeComponent {
     if (this.props.record.State === 'open') {
       actionProps = Object.assign(actionProps, {
         title: i18n._t('Campaigns.PUBLISHCAMPAIGN'),
-        bootstrapButtonStyle: 'primary',
+        buttonStyle: 'primary',
         loading: this.props.campaign.isPublishing,
         handleClick: this.handlePublish,
         icon: 'rocket',
@@ -213,7 +213,7 @@ class CampaignAdminList extends SilverStripeComponent {
       // TODO Implement "revert" feature
       actionProps = Object.assign(actionProps, {
         title: i18n._t('Campaigns.REVERTCAMPAIGN'),
-        bootstrapButtonStyle: 'secondary-outline',
+        buttonStyle: 'secondary-outline',
         icon: 'back-in-time',
         disabled: true,
       });
