@@ -11,10 +11,11 @@ class DataObjectDuplicationTest extends SapphireTest {
 	);
 
 	public function testDuplicate() {
+		SS_Datetime::set_mock_now('2016-01-01 01:01:01');
 		$orig = new DataObjectDuplicateTestClass1();
 		$orig->text = 'foo';
 		$orig->write();
-
+		SS_Datetime::set_mock_now('2016-01-02 01:01:01');
 		$duplicate = $orig->duplicate();
 		$this->assertInstanceOf('DataObjectDuplicateTestClass1', $duplicate,
 			'Creates the correct type'
@@ -28,6 +29,8 @@ class DataObjectDuplicationTest extends SapphireTest {
 		$this->assertEquals(2, DataObjectDuplicateTestClass1::get()->Count(),
 			'Only creates a single duplicate'
 		);
+		$this->assertEquals(SS_Datetime::now()->Nice(), $duplicate->dbObject('Created')->Nice());
+		$this->assertNotEquals($orig->dbObject('Created')->Nice(), $duplicate->dbObject('Created')->Nice());
 	}
 
 	public function testDuplicateHasOne() {

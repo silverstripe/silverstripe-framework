@@ -68,9 +68,9 @@ fa_IR:
   BackLink_Button_ss:
     Back: بازگشت
   BasicAuth:
-    ENTERINFO: "لطفاً یک نام‌کاربری و رمز عبور را وارد نمایید."
+    ENTERINFO: "لطفاً یک نام‌کاربری و گذرواژه را وارد نمایید."
     ERRORNOTADMIN: "این کاربر یک مدیر نیست."
-    ERRORNOTREC: "این نام کاربری / رمز عبور شناخته‌شده نیست"
+    ERRORNOTREC: "این نام کاربری / گذرواژه شناخته‌شده نیست"
   Boolean:
     ANY: هر
     NOANSWER: خیر
@@ -86,10 +86,10 @@ fa_IR:
     ACCESSALLINTERFACESHELP: "شامل تنظیمات دسترسی‌های ویژه می‌شود."
     SAVE: ذخیره
   CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: "رمز عبور را فراموش کرده‌اید؟"
+    BUTTONFORGOTPASSWORD: "گذرواژه را فراموش کرده‌اید؟"
     BUTTONLOGIN: "ورود دوباره"
     BUTTONLOGOUT: خروج
-    PASSWORDEXPIRED: "<p>رمز عبور شما منقضی شده‌است. <a target=\"_top\" href=\"{link}\">لطفاً یکی دیگر برگزینید.</a></p>"
+    PASSWORDEXPIRED: "<p>گذرواژه شما منقضی شده‌است. <a target=\"_top\" href=\"{link}\">لطفاً یکی دیگر برگزینید.</a></p>"
   CMSPageHistoryController_versions_ss:
     PREVIEW: "پیش‌نمایش وب‌سایت"
   CMSPagesController_Tools_ss:
@@ -109,12 +109,12 @@ fa_IR:
     AddToCampaign: "افزودن به کمپین"
     AddToCampaignFormFieldLabel: "انتخاب یک کمپین"
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "شما رمز عبورتان را تغییر دادید برای"
+    CHANGEPASSWORDTEXT1: "شما گذرواژه‌تان را تغییر دادید برای"
     CHANGEPASSWORDTEXT2: "اکنون می‌توانید با این اطلاعات وارد شوید:"
-    CHANGEPASSWORDTEXT3: "تغییر رمز عبور"
+    CHANGEPASSWORDTEXT3: "تغییر گذرواژه"
     EMAIL: ايميل
     HELLO: درود
-    PASSWORD: "رمز عبور"
+    PASSWORD: گذرواژه
   ChangeSet:
     DESCRIPTION_AND: "{first} و {second}"
     DESCRIPTION_ITEM: آیتم
@@ -136,14 +136,15 @@ fa_IR:
   CheckboxSetField:
     SOURCE_VALIDATION: "لطفاً یک ارزش از لیست فراهم‌شده برگزینید. '{value}' یک گزینه معتبر نیست"
   ConfirmedPasswordField:
-    ATLEAST: "رمزهای عبور باید حداقل {min} کاراکتر باشد."
-    BETWEEN: "رمزهای عبور باید بین {min} تا {max} کاراکتر باشد."
-    CURRENT_PASSWORD_MISSING: "شما باید رمز عبور کنونی خود را وارد نمایید."
-    LOGGED_IN_ERROR: "جهت تغییر رمز عبور خود باید وارد شده باشید."
-    MAXIMUM: "رمزهای عبور باید حداکثر {max} کاراکتر باشد."
-    SHOWONCLICKTITLE: "تغییر رمز عبور"
+    ATLEAST: "گذرواژه باید حداقل {min} کاراکتر باشد."
+    BETWEEN: "گذرواژه باید بین {min} تا {max} کاراکتر باشد."
+    CURRENT_PASSWORD_ERROR: "گذرواژه‌ای که وارد نموده‌اید درست نیست."
+    CURRENT_PASSWORD_MISSING: "شما باید گذرواژه کنونی خود را وارد نمایید."
+    LOGGED_IN_ERROR: "جهت تغییر گذرواژه خود باید وارد شده باشید."
+    MAXIMUM: "گذرواژه باید حداکثر {max} کاراکتر باشد."
+    SHOWONCLICKTITLE: "تغییر گذرواژه"
   ContentController:
-    DRAFT_SITE_ACCESS_RESTRICTION: "برای نمایش پیش‌نویس یا محتوای آرشیو شده باید با رمز عبور سی‌ام‌اس خود وارد شوید. <a href=\"%s\">اینجا را کلیک کنید</a> تا به سایت منتشر‌شده بازگردید."
+    DRAFT_SITE_ACCESS_RESTRICTION: "برای نمایش پیش‌نویس یا محتوای آرشیو شده باید با گذرواژه سی‌ام‌اس خود وارد شوید. <a href=\"%s\">اینجا را کلیک کنید</a> تا به سایت منتشر‌شده بازگردید."
     NOTLOGGEDIN: "وارد نشده"
   CreditCardField:
     FIRST: نخست
@@ -193,6 +194,7 @@ fa_IR:
     AviType: "فایل ویدیو AVI"
     Content: محتوا
     CssType: "فایل CSS"
+    DRAFT: پیش‌نویس
     DmgType: "دیسک ایمیج اپل"
     DocType: "فایل Word"
     Filename: "نام فايل"
@@ -205,6 +207,7 @@ fa_IR:
     IcoType: "تصویر آیکن"
     JpgType: "تصویر JPEG - مناسب برای عکس‌ها"
     JsType: "فایل جاوااسکریپت"
+    MODIFIED: "تغییر یافته"
     Mp3Type: "فایل صوتی MP3"
     MpgType: "فایل ویدیویی MPEG"
     NOVALIDUPLOAD: "فایل یک بارگذاری معتبر نیست"
@@ -226,7 +229,7 @@ fa_IR:
   ForgotPasswordEmail_ss:
     HELLO: درود
     TEXT1: "شما اینجاست"
-    TEXT2: "لینک نوسازی رمز عبور"
+    TEXT2: "لینک ازنوسازی گذرواژه"
     TEXT3: برای
   Form:
     CSRF_EXPIRED_MESSAGE: "جلسه شما به پایان رسیده است. لطفاً فرم را مجدداً ارسال کنید."
@@ -235,9 +238,9 @@ fa_IR:
     SubmitBtnLabel: برو
     VALIDATIONCREDITNUMBER: "لطفاً اطمینان حاصل‌کنید که {number} شماره کارت اعتباری را به درستی وارد کرده‌اید"
     VALIDATIONNOTUNIQUE: "مقدار وارد شده یکتا نیست"
-    VALIDATIONPASSWORDSDONTMATCH: "رمزهای عبور همانند هم نیستند"
-    VALIDATIONPASSWORDSNOTEMPTY: "رمزهای عبور نباید تهی باشند"
-    VALIDATIONSTRONGPASSWORD: "رمزهای عبور باید حداقل شامل یک شماره و یک کاراکتر الفبایی باشند"
+    VALIDATIONPASSWORDSDONTMATCH: "گذرواژه‌ها همانند هم نیستند"
+    VALIDATIONPASSWORDSNOTEMPTY: "گذرواژه‌ها نباید تهی باشند"
+    VALIDATIONSTRONGPASSWORD: "گذرواژه‌ها باید حداقل شامل یک شماره و یک کاراکتر الفبایی باشند"
     VALIDATOR: اعتبارسنج
     VALIDCURRENCY: "لطفاً یک واحد پول معتبر وارد نمایید"
   FormField:
@@ -303,6 +306,7 @@ fa_IR:
     ANCHORSCANNOTACCESSPAGE: "شما مجاز به دسترسی به محتوای صفحه هدف نیستید."
     ANCHORSPAGENOTFOUND: "صفحه‌ی هدف پیدا نشد."
     BUTTONADDURL: "افزودن نشانی اینترنتی"
+    CAPTIONTEXT: "متن کپشن"
     CSSCLASS: "چیدمان / سبک"
     DETAILS: جزئیات
     EMAIL: "نشانی ایمیل"
@@ -315,7 +319,12 @@ fa_IR:
     INSERTMEDIA: "واردکردن رسانه از"
     LINK: "واردکردن لینک"
     LINKDESCR: "توضیحات لینک"
+    LINKDETAILS: "جزئیات لینک"
+    LINKEMAIL: "لینک به یک نشانی ایمیل"
+    LINKEXTERNAL: "لینک به وب‌سایت دیگر"
+    LINKFILE: "لینک به یک فایل قابل دانلود"
     LINKOPENNEWWIN: "لینک در پنجره جدید باز شود؟"
+    LINKTO: "نوع لینک"
     PAGE: صفحه
     SUBJECT: "موضوع ایمیل"
     URL: "نشانی اینترنتی"
@@ -330,8 +339,8 @@ fa_IR:
     ANCHORSPAGENOTFOUND: "صفحه‌ی هدف پیدا نشد"
     BUTTONADDURL: "افزودن نشانی اینترنتی"
     BUTTONINSERT: "وارد کردن"
-    BUTTONINSERTLINK: "گذاشتن پیوند"
-    BUTTONREMOVELINK: "برداشتن پیوند"
+    BUTTONINSERTLINK: "وارد کردن لینک"
+    BUTTONREMOVELINK: "حذف لینک"
     BUTTONUpdate: "به روزرسانی"
     CAPTIONTEXT: "متن کپشن"
     CSSCLASS: "جاگیری / الگو"
@@ -347,14 +356,14 @@ fa_IR:
     IMAGEHEIGHTPX: بلندی
     IMAGEWIDTHPX: پهنا
     INSERTMEDIA: "واردکردن رسانه"
-    LINK: پیوند
+    LINK: "واردکردن لینک"
     LINKDESCR: "توضیحات لینک"
     LINKEMAIL: "پست الکترونیک"
     LINKEXTERNAL: "تارگاه دیگر"
     LINKFILE: "یک پرونده را بارگزاری کنید"
     LINKINTERNAL: "برگ در تارگاه"
-    LINKOPENNEWWIN: "در پنجره جدید باز شود ؟"
-    LINKTO: "پیوند به"
+    LINKOPENNEWWIN: "در یک پنجره‌ی جدید باز شود؟"
+    LINKTO: "لینک به"
     PAGE: برگ
     SUBJECT: "موضوع پست الکترونیک"
     URL: نشانی
@@ -370,13 +379,17 @@ fa_IR:
   LeftAndMain:
     CANCEL: لغو
     DELETED: "حذف شده"
+    DropdownBatchActionsDefault: "یک عملکرد انتخاب کنید..."
     HELP: کمک
-    PERMAGAIN: "شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و رمز عبور خود را در قسمت زیر وارد کنید"
+    PAGETYPE: "نوع صفحه"
+    PERMAGAIN: "شما از سیستم مدیریت محتوا خارج شده اید.اگر میخواهید دوباره وارد شوید نام کاربری و گذرواژه خود را در قسمت زیر وارد کنید"
+    PERMDEFAULT: "جهت ورود به محیط مدیریت باید وارد شده باشید؛ لطفاً اطلاعات خود را در زیر وارد نمایید."
     PreviewButton: پیش‌نمایش
     SAVEDUP: "ذخیره شده"
     ShowAsList: "نمایش به‌صورت لیست"
     TooManyPages: "صفحات بسیار زیاد"
     ValidationError: "خطای اعتبارسنجی"
+    VersionUnknown: نامشخص
   LeftAndMain_Menu_ss:
     Hello: درود
     LOGOUT: خروج
@@ -390,46 +403,49 @@ fa_IR:
     Status: وضعیت
   Member:
     ADDGROUP: "افزودن گروه"
-    BUTTONCHANGEPASSWORD: "تغییر رمز عبور"
+    BUTTONCHANGEPASSWORD: "تغییر گذرواژه"
     BUTTONLOGIN: ورود
     BUTTONLOGINOTHER: "ورود به عنوان شخصی دیگر"
-    BUTTONLOSTPASSWORD: "من رمز عبور خود را فراموش کرده‌ام"
+    BUTTONLOSTPASSWORD: "من گذرواژه خود را فراموش کرده‌ام"
     CANTEDIT: "شما دسترسی انجام این کار را ندارید."
-    CONFIRMNEWPASSWORD: "تکرار رمز عبور جدید"
-    CONFIRMPASSWORD: "تکرار رمز عبور"
-    CURRENT_PASSWORD: "رمز ورود کنونی"
+    CONFIRMNEWPASSWORD: "تکرار گذرواژه جدید"
+    CONFIRMPASSWORD: "تکرار گذرواژه"
+    CURRENT_PASSWORD: "گذرواژه کنونی"
     DATEFORMAT: "قالب تاریخ"
     DefaultAdminFirstname: "مدیر پیشفرض"
     DefaultDateTime: پیش‌فرض
-    EDIT_PASSWORD: "رمز ورود جدید"
+    EDIT_PASSWORD: "گذرواژه جدید"
     EMAIL: "پست الکترونیک"
     EMPTYNEWPASSWORD: "رمز عبور جدید نمیتواند خالی باشد، لطفا دوباره تلاش کنید"
-    ENTEREMAIL: "لطفاً یک نشانی ایمیل وارد نمایید تا پیوند ازنوسازی رمز عبور را دریافت کنید."
-    ERRORPASSWORDNOTMATCH: "رمز عبور کنونی همانند نیست، لطفاً مجدداً تلاش نمایید"
+    ENTEREMAIL: "لطفاً یک نشانی ایمیل وارد نمایید تا لینک ازنوسازی گذرواژه را دریافت کنید."
+    ERRORNEWPASSWORD: "شما گذرواژه جدید خود را متفاوت وارد کرده‌اید، دوباره امتحان نمایید"
+    ERRORPASSWORDNOTMATCH: "گذرواژه کنونی همانند نیست، لطفاً مجدداً تلاش نمایید"
     FIRSTNAME: نام
     INTERFACELANG: "زبان برنامه"
+    INVALIDNEWPASSWORD: "ما نتوانستیم این گذرواژه را بپذیریم: {password}"
     KEEPMESIGNEDIN: "مرا واردشده نگه‌دار"
     LOGGEDINAS: "شما به {name} عنوان وارد شده‌اید."
     NEWPASSWORD: "گذرواژه تازه"
-    NoPassword: "رمز عبوری برای این کاربر وجود ندارد"
-    PASSWORD: "رمز عبور"
-    PASSWORDEXPIRED: "رمز عبور شما منقضی شده‌است. لطفاً یکی جدید برگزینید."
+    NoPassword: "گذرواژه‌ای برای این کاربر وجود ندارد"
+    PASSWORD: گذرواژه
+    PASSWORDEXPIRED: "گذرواژه شما منقضی شده‌است. لطفاً یکی جدید برگزینید."
     PLURALNAME: اعضاء
+    REMEMBERME: "مرا برای بار بعد به خاطر بسپار؟"
     SINGULARNAME: عضو
-    SUBJECTPASSWORDCHANGED: "گذرواژه شما دگرگون شد"
-    SUBJECTPASSWORDRESET: "پیوند ازنوسازی گذرواژه شما"
+    SUBJECTPASSWORDCHANGED: "گذرواژه شما تغییر یافته است"
+    SUBJECTPASSWORDRESET: "لینک ازنوسازی گذرواژه شما"
     SURNAME: "نام خانوادگی"
     TIMEFORMAT: "قالب زمان"
     WELCOMEBACK: "خوش آمدید، {firstname}"
-    YOUROLDPASSWORD: "رمز عبور قدیمی"
+    YOUROLDPASSWORD: "گذرواژه قدیمی شما"
     belongs_many_many_Groups: گروه‌ها
     db_LastVisited: "تاریخ آخرین بازدید"
     db_LockedOutUntil: "بسته شده تا "
     db_NumVisit: "شمار بازدید"
-    db_Password: "رمز عبور"
-    db_PasswordExpiry: "تاریخ از میان رفتن گذرواژه"
+    db_Password: گذرواژه
+    db_PasswordExpiry: "تاریخ انقضاء گذرواژه"
   MemberAuthenticator:
-    TITLE: "ایمیل و رمز عبور"
+    TITLE: "ایمیل و گذرواژه"
   MemberDatetimeOptionsetField:
     AMORPM: "ق‌ظ (قبل‌از‌ظهر) یا ب‌ظ (بعد‌از‌ظهر)"
     Custom: دلخواه
@@ -437,6 +453,8 @@ fa_IR:
     DAYNOLEADING: "روز از ماه بدون نمایش صفر در ابتدا"
     FOURDIGITYEAR: "سال چهار عددی"
     FULLNAMEMONTH: "نام کامل ماه (مثال ژوئن)"
+    HOURNOLEADING: "ساعت بدون صفر آغازین"
+    HOURNOLEADING24: "ساعت بدون صفر آغازین، قالب ۲۴ ساعته"
     MINUTENOLEADING: "دقیقه بدون نمایش صفر در ابتدا"
     MONTHNOLEADING: "عدد ماه بدون نمایش صفر در ابتدا"
     Preview: پیش‌نمایش
@@ -454,8 +472,8 @@ fa_IR:
     ResultNone: "تغییری ایجاد نشد"
     ResultUpdated: "به‌روز‌رسانی {count} عضو"
   MemberPassword:
-    PLURALNAME: "رمزهای عبور کاربر"
-    SINGULARNAME: "رمز عبور کاربر"
+    PLURALNAME: "گذرواژه‌های کاربر"
+    SINGULARNAME: "گذرواژه کاربر"
   MemberTableField:
     APPLY_FILTER: "اعمال پالایش"
   ModelAdmin:
@@ -488,7 +506,7 @@ fa_IR:
     Page: صفحه
     View: نمایش
   PasswordValidator:
-    TOOSHORT: "رمز عبور بسیار کوتاه است، باید %s کاراکتر یا بیشتر باشد"
+    TOOSHORT: "گذرواژه بسیار کوتاه است، باید %s کاراکتر یا بیشتر باشد"
   Permission:
     AdminGroup: "مدیر کل"
     CMS_ACCESS_CATEGORY: "دسترسی CMS"
@@ -512,15 +530,15 @@ fa_IR:
     VALIDATION: "لطفاً شماره تلفن معتبر وارد کنید"
   Security:
     ALREADYLOGGEDIN: "شما به این صفحه دسترسی ندارید. اگر حساب کاربری دیگری دارید که به این صفحه دسترسی دارد، شما میتوانید دوباره وارد شوید.."
-    BUTTONSEND: "برایم یک ازنوسازی رمز عبور ارسال کن"
-    CHANGEPASSWORDBELOW: "می‌توانید رمز عبور خود را در پایین تغییر دهید."
+    BUTTONSEND: "برایم لینک ازنوسازی گذرواژه ارسال کن"
+    CHANGEPASSWORDBELOW: "می‌توانید گذرواژه خود را در پایین تغییر دهید."
     CHANGEPASSWORDHEADER: "تغییر گذرواژه"
     ENTERNEWPASSWORD: "لطفاً گذرواژه جدید را وارد کنید."
-    ERRORPASSWORDPERMISSION: "جهت تغییر رمز عبور خود باید وارد شده باشید!"
+    ERRORPASSWORDPERMISSION: "جهت تغییر گذرواژه خود باید وارد شده باشید!"
     LOGGEDOUT: "شما خارج شده‌اید. اگر مایل هستید دوباره وارد شوید، اطلاعات معتبر خود را در زیر وارد نمایید."
     LOGIN: ورود
-    LOSTPASSWORDHEADER: "فراموشی رمز عبور"
-    PASSWORDSENTHEADER: "پیوند ازنوسازی رمز عبور به '{email}' ارسال شد"
+    LOSTPASSWORDHEADER: "فراموشی گذرواژه"
+    PASSWORDSENTHEADER: "لینک ازنوسازی گذرواژه به '{email}' ارسال شد"
   SecurityAdmin:
     APPLY_ROLES: "اعمال وظایف به گروه"
     EDITPERMISSIONS: "مدیریت دسترسی‌های گروه‌ها"
@@ -579,8 +597,8 @@ fa_IR:
     PLURALNAME: اعضاء
     SINGULARNAME: عضو
   SilverStripe\Security\MemberPassword:
-    PLURALNAME: "رمز عبورهای عضو"
-    SINGULARNAME: "رمز عبور عضو"
+    PLURALNAME: "گذرواژه‌های کاربر"
+    SINGULARNAME: "گذرواژه کاربر"
   SilverStripe\Security\Permission:
     PLURALNAME: مجوز‌ها
     SINGULARNAME: مجوز
@@ -594,6 +612,7 @@ fa_IR:
   TimeField:
     VALIDATEFORMAT: "لطفاً یک قالب زمان معتبر وارد نمایید ({format})"
   ToggleField:
+    LESS: کمتر
     MORE: بیشتر
   UploadField:
     ATTACHFILE: "ضمیمه کردن یک فایل"
@@ -611,6 +630,7 @@ fa_IR:
     FROMCOMPUTER: "از کامپیوتر شما"
     FROMCOMPUTERINFO: "انتخاب از فایل‌ها"
     FROMFILES: "از فایل‌ها"
+    HOTLINKINFO: "اطلاعات: این تصویر هات‌لینک‌شده می‌شود. لطفاً مطمئن شوید برای این‌کار دارای مجوزهایی از خالق سایت اصلی هستید."
     MAXNUMBEROFFILESONE: "تنها یک فایل را می‌تواند آپلود کند"
     MAXNUMBEROFFILESSHORT: "تنها {count} فایل را می‌تواند آپلود کند"
     OVERWRITEWARNING: "فایل با نام یکسان از پیش وجود دارد"
@@ -625,5 +645,6 @@ fa_IR:
     BUTTONARCHIVEDESC: "عدم انتشار و ارسال به بایگانی"
     BUTTONPUBLISH: انتشار
     BUTTONUNPUBLISH: "عدم انتشار"
+    Published: "منتشرشده {name} {link}"
   i18n:
     PLURAL: "{number} {form}"
