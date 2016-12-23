@@ -5,6 +5,7 @@ namespace SilverStripe\Dev;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injectable;
@@ -377,5 +378,78 @@ class DebugView
         $output .= '</pre>';
 
         return $output;
+    }
+
+    public function renderMessage($message, $caller, $showHeader = true)
+    {
+        $header = '';
+        if ($showHeader) {
+            $file = basename($caller['file']);
+            $line = $caller['line'];
+            $header .= "<b>Debug (line {$line} of {$file}):</b>\n";
+        }
+        return "<p class=\"message warning\">\n" . $header . Convert::raw2xml($message) . "</p>\n";
+    }
+
+    /**
+     * Similar to renderVariable() but respects debug() method on object if available
+     *
+     * @param mixed $val
+     * @param array $caller
+     * @param bool $showHeader
+     * @return string
+     */
+    public function debugVariable($val, $caller, $showHeader = true)
+    {
+        $text = $this->debugVariableText($val);
+
+        if ($showHeader) {
+            $callerFormatted = $this->formatCaller($caller);
+            return "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
+                . "<h3>Debug <span style=\"font-size: 65%\">($callerFormatted)</span>\n</h3>\n"
+                . $text
+                . "</div>";
+        } else {
+            return $text;
+        }
+    }
+
+    /**
+     * Get debug text for this object
+     *
+     * @param mixed $val
+     * @return string
+     */
+    public function debugVariableText($val)
+    {
+        // Check debug
+        if (ClassInfo::hasMethod($val, 'debug')) {
+            return $val->debug();
+        }
+
+        // Format as array
+        if (is_array($val)) {
+            $result = '';
+            foreach ($val as $key => $valueItem) {
+                $keyText = Convert::raw2xml($key);
+                $valueText = $this->debugVariableText($valueItem);
+                $result .= "<li>{$keyText} = {$valueText}</li>\n";
+            }
+            return "<ul>\n{$result}</ul>\n";
+        }
+
+        // Format object
+        if (is_object($val)) {
+            return var_export($val, true);
+        }
+
+        // Format bool
+        if (is_bool($val)) {
+            return '(bool) ' . ($val ? 'true' : 'false');
+        }
+
+        // Format text
+        $html = Convert::raw2xml($val);
+        return "<pre style=\"font-family: Courier new, serif\">{$html}</pre>\n";
     }
 }

@@ -3,7 +3,7 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Convert;
+use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Permission;
@@ -35,33 +35,21 @@ class Debug
     /**
      * Show the contents of val in a debug-friendly way.
      * Debug::show() is intended to be equivalent to dprintr()
+     * Does not work on live mode.
      *
      * @param mixed $val
      * @param bool $showHeader
+     * @param HTTPRequest|null $request
      */
-    public static function show($val, $showHeader = true)
+    public static function show($val, $showHeader = true, HTTPRequest $request = null)
     {
-        if (!Director::isLive()) {
-            if ($showHeader) {
-                $caller = Debug::caller();
-                if (Director::is_ajax() || Director::is_cli()) {
-                    echo "Debug ($caller[class]$caller[type]$caller[function]() in " . basename($caller['file'])
-                        . ":$caller[line])\n";
-                } else {
-                    echo "<div style=\"background-color: white; text-align: left;\">\n<hr>\n"
-                        . "<h3>Debug <span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]()"
-                        . " \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
-                }
-            }
-
-            echo Debug::text($val);
-
-            if (!Director::is_ajax() && !Director::is_cli()) {
-                echo "</div>";
-            } else {
-                echo "\n\n";
-            }
+        // Don't show on live
+        if (Director::isLive()) {
+            return;
         }
+
+        echo static::create_debug_view($request)
+            ->debugVariable($val, static::caller(), $showHeader);
     }
 
     /**
@@ -88,107 +76,123 @@ class Debug
     }
 
     /**
-     * Close out the show dumper
+     * Close out the show dumper.
+     * Does not work on live mode
      *
      * @param mixed $val
+     * @param bool $showHeader
+     * @param HTTPRequest $request
      */
-    public static function endshow($val)
+    public static function endshow($val, $showHeader = true, HTTPRequest $request = null)
     {
-        if (!Director::isLive()) {
-            $caller = Debug::caller();
-            echo "<hr>\n<h3>Debug \n<span style=\"font-size: 65%\">($caller[class]$caller[type]$caller[function]()"
-                . " \nin " . basename($caller['file']) . ":$caller[line])</span>\n</h3>\n";
-            echo Debug::text($val);
-            die();
+        // Don't show on live
+        if (Director::isLive()) {
+            return;
         }
+
+        echo static::create_debug_view($request)
+            ->debugVariable($val, static::caller(), $showHeader);
+
+        die();
     }
 
     /**
      * Quick dump of a variable.
+     * Note: This method will output in live!
      *
      * @param mixed $val
+     * @param HTTPRequest $request Current request to influence output format
      */
-    public static function dump($val)
+    public static function dump($val, HTTPRequest $request = null)
     {
-        echo self::create_debug_view()->renderVariable($val, self::caller());
+        echo self::create_debug_view($request)
+            ->renderVariable($val, self::caller());
     }
 
     /**
+     * Get debug text for this object
+     *
      * @param mixed $val
+     * @param HTTPRequest $request
      * @return string
      */
-    public static function text($val)
+    public static function text($val, HTTPRequest $request = null)
     {
-        if (is_object($val)) {
-            if (method_exists($val, 'hasMethod')) {
-                $hasDebugMethod = $val->hasMethod('debug');
-            } else {
-                $hasDebugMethod = method_exists($val, 'debug');
-            }
-
-            if ($hasDebugMethod) {
-                return $val->debug();
-            }
-        }
-
-        if (is_array($val)) {
-            $result = "<ul>\n";
-            foreach ($val as $k => $v) {
-                $result .= "<li>$k = " . Debug::text($v) . "</li>\n";
-            }
-            $val = $result . "</ul>\n";
-        } elseif (is_object($val)) {
-            $val = var_export($val, true);
-        } elseif (is_bool($val)) {
-            $val = $val ? 'true' : 'false';
-            $val = '(bool) ' . $val;
-        } else {
-            if (!Director::is_cli() && !Director::is_ajax()) {
-                $val = "<pre style=\"font-family: Courier new\">" . htmlentities($val, ENT_COMPAT, 'UTF-8')
-                    . "</pre>\n";
-            }
-        }
-
-        return $val;
+        return static::create_debug_view($request)
+            ->debugVariableText($val);
     }
 
     /**
-     * Show a debugging message
+     * Show a debugging message.
+     * Does not work on live mode
      *
      * @param string $message
      * @param bool $showHeader
+     * @param HTTPRequest|null $request
      */
-    public static function message($message, $showHeader = true)
+    public static function message($message, $showHeader = true, HTTPRequest $request = null)
     {
-        if (!Director::isLive()) {
-            $caller = Debug::caller();
-            $file = basename($caller['file']);
-            if (Director::is_cli()) {
-                if ($showHeader) {
-                    echo "Debug (line $caller[line] of $file):\n ";
-                }
-                echo $message . "\n";
-            } else {
-                echo "<p class=\"message warning\">\n";
-                if ($showHeader) {
-                    echo "<b>Debug (line $caller[line] of $file):</b>\n ";
-                }
-                echo Convert::raw2xml($message) . "</p>\n";
-            }
+        // Don't show on live
+        if (Director::isLive()) {
+            return;
         }
+
+        echo static::create_debug_view($request)
+            ->renderMessage($message, static::caller(), $showHeader);
     }
 
     /**
      * Create an instance of an appropriate DebugView object.
      *
+     * @param HTTPRequest $request Optional request to target this view for
      * @return DebugView
      */
-    public static function create_debug_view()
+    public static function create_debug_view(HTTPRequest $request = null)
     {
-        $service = Director::is_cli() || Director::is_ajax()
-            ? CliDebugView::class
-            : DebugView::class;
+        $service = static::supportsHTML($request)
+            ? DebugView::class
+            : CliDebugView::class;
         return Injector::inst()->get($service);
+    }
+
+    /**
+     * Determine if the given request supports html output
+     *
+     * @param HTTPRequest $request
+     * @return bool
+     */
+    protected static function supportsHTML(HTTPRequest $request = null)
+    {
+        // No HTML output in CLI
+        if (Director::is_cli()) {
+            return false;
+        }
+
+        // Get current request if registered
+        if (!$request && Injector::inst()->has(HTTPRequest::class)) {
+            $request = Injector::inst()->get(HTTPRequest::class);
+        }
+        if (!$request) {
+            return false;
+        }
+        // Request must include text/html
+        $accepted = $request->getAcceptMimetypes(false);
+
+        // Explicit opt in
+        if (in_array('text/html', $accepted)) {
+            return true;
+        };
+
+        // Implicit opt-out
+        if (in_array('application/json', $accepted)) {
+            return false;
+        }
+
+        // Fallback to wildcard comparison
+        if (in_array('*/*', $accepted)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -197,9 +201,11 @@ class Debug
      */
     public static function require_developer_login()
     {
+        // Don't require login for dev mode
         if (Director::isDev()) {
             return;
         }
+
         if (isset($_SESSION['loggedInAs'])) {
             // We have to do some raw SQL here, because this method is called in Object::defineMethods().
             // This means we have to be careful about what objects we create, as we don't want Object::defineMethods()
