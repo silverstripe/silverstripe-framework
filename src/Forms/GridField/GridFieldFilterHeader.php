@@ -229,7 +229,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
             $forTemplate->Fields->push($fields);
         }
 
-        if(!$canFilter) {
+        if (!$canFilter) {
             return null;
         }
 

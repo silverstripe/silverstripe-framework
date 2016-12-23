@@ -2,12 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\ORM\DataObject;
-use SilverStripe\Forms\Form;
 use SilverStripe\Forms\CompositeField;
-
 
 class GridFieldImportButton implements GridField_HTMLProvider
 {

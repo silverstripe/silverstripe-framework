@@ -833,7 +833,7 @@ class LeftAndMain extends Controller implements PermissionProvider
      */
     public static function menu_icon_class_for_class($class)
     {
-       return Config::inst()->get($class, 'menu_icon_class', Config::FIRST_SET);
+        return Config::inst()->get($class, 'menu_icon_class', Config::FIRST_SET);
     }
 
     /**

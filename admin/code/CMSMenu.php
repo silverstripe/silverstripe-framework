@@ -157,7 +157,13 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
         }
 
         return self::replace_menu_item(
-            $code, $menuTitle, $url, $controllerClass, $priority, $attributes, $iconClass
+            $code,
+            $menuTitle,
+            $url,
+            $controllerClass,
+            $priority,
+            $attributes,
+            $iconClass
         );
     }
 

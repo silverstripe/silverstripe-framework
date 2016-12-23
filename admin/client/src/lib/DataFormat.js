@@ -35,7 +35,7 @@ export function fileSize(size) {
     number = Math.round(size / 1024 * 1024);
     metric = 'MB';
   }
-  if (!number || !metric) {
+  if ((!number && number !== 0) || !metric) {
     number = Math.round(size / (1024 * 1024 * 1024) * 10) / 10;
     metric = 'GB';
   }

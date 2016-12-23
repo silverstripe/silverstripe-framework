@@ -182,7 +182,7 @@ abstract class ModelAdmin extends LeftAndMain
             $detailform->setValidator($detailValidator);
         }
 
-        if($this->showImportForm) {
+        if ($this->showImportForm) {
             $import = CompositeField::create(array(
                 new LiteralField(
                     'ImportForm',
@@ -522,7 +522,7 @@ abstract class ModelAdmin extends LeftAndMain
 
         $message = '';
 
-        if($results) {
+        if ($results) {
             if ($results->CreatedCount()) {
                 $message .= _t(
                     'ModelAdmin.IMPORTEDRECORDS',
