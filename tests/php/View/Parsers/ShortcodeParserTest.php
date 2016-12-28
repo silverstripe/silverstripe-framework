@@ -213,35 +213,39 @@ class ShortcodeParserTest extends SapphireTest
         $this->assertEquals(preg_replace('/\s+/', '', $a), preg_replace('/\s+/', '', $b), $message);
     }
 
-    public function testtExtract()
+    public function testExtractBefore()
     {
-        $this->markTestSkipped(
-            'Feature disabled due to https://github.com/silverstripe/silverstripe-framework/issues/5987'
-        );
         // Left extracts to before the current block
         $this->assertEqualsIgnoringWhitespace(
             'Code<div>FooBar</div>',
             $this->parser->parse('<div>Foo[test_shortcode class=left]Code[/test_shortcode]Bar</div>')
         );
-
         // Even if the immediate parent isn't a the current block
         $this->assertEqualsIgnoringWhitespace(
             'Code<div>Foo<b>BarBaz</b>Qux</div>',
             $this->parser->parse('<div>Foo<b>Bar[test_shortcode class=left]Code[/test_shortcode]Baz</b>Qux</div>')
         );
+    }
 
+    public function testExtractSplit()
+    {
+        $this->markTestSkipped(
+            'Feature disabled due to https://github.com/silverstripe/silverstripe-framework/issues/5987'
+        );
         // Center splits the current block
         $this->assertEqualsIgnoringWhitespace(
             '<div>Foo</div>Code<div>Bar</div>',
             $this->parser->parse('<div>Foo[test_shortcode class=center]Code[/test_shortcode]Bar</div>')
         );
-
         // Even if the immediate parent isn't a the current block
         $this->assertEqualsIgnoringWhitespace(
             '<div>Foo<b>Bar</b></div>Code<div><b>Baz</b>Qux</div>',
             $this->parser->parse('<div>Foo<b>Bar[test_shortcode class=center]Code[/test_shortcode]Baz</b>Qux</div>')
         );
+    }
 
+    public function testExtractNone()
+    {
         // No class means don't extract
         $this->assertEqualsIgnoringWhitespace(
             '<div>FooCodeBar</div>',

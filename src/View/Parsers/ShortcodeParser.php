@@ -689,11 +689,11 @@ class ShortcodeParser extends Object
                 }
 
                 $location = self::INLINE;
-                /**
-                 * Below code disabled due to https://github.com/silverstripe/silverstripe-framework/issues/5987
                 if ($class == 'left' || $class == 'right') {
                     $location = self::BEFORE;
                 }
+                /**
+                 * Below code disabled due to https://github.com/silverstripe/silverstripe-framework/issues/5987
                 if ($class == 'center' || $class == 'leftAlone') {
                     $location = self::SPLIT;
                 }

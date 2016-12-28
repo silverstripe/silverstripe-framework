@@ -2,16 +2,16 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse_Exception;
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
+use SilverStripe\Control\Session;
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
@@ -19,8 +19,8 @@ use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
-use SilverStripe\Security\SecurityToken;
 use SilverStripe\Security\NullSecurityToken;
+use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -1661,16 +1661,30 @@ class Form extends RequestHandler
                 if (array_key_exists($name, $data)) {
                     $exists = true;
                     $val = $data[$name];
-                } // If field is in array-notation we need to access nested data
-                elseif (strpos($name, '[')) {
-                    // First encode data using PHP's method of converting nested arrays to form data
-                    $flatData = urldecode(http_build_query($data));
-                    // Then pull the value out from that flattened string
-                    preg_match('/' . addcslashes($name, '[]') . '=([^&]*)/', $flatData, $matches);
-
-                    if (isset($matches[1])) {
-                        $exists = true;
-                        $val = $matches[1];
+                } elseif (preg_match_all('/(.*)\[(.*)\]/U', $name, $matches)) {
+                    // If field is in array-notation we need to access nested data
+                    //discard first match which is just the whole string
+                    array_shift($matches);
+                    $keys = array_pop($matches);
+                    $name = array_shift($matches);
+                    $name = array_shift($name);
+                    if (array_key_exists($name, $data)) {
+                        $tmpData = &$data[$name];
+                        // drill down into the data array looking for the corresponding value
+                        foreach ($keys as $arrayKey) {
+                            if ($arrayKey !== '') {
+                                $tmpData = &$tmpData[$arrayKey];
+                            } else {
+                                //empty square brackets means new array
+                                if (is_array($tmpData)) {
+                                    $tmpData = array_shift($tmpData);
+                                }
+                            }
+                        }
+                        if ($tmpData) {
+                            $val = $tmpData;
+                            $exists = true;
+                        }
                     }
                 }
             }

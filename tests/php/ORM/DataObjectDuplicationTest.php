@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 class DataObjectDuplicationTest extends SapphireTest
 {
@@ -18,10 +19,11 @@ class DataObjectDuplicationTest extends SapphireTest
 
     public function testDuplicate()
     {
+        DBDatetime::set_mock_now('2016-01-01 01:01:01');
         $orig = new DataObjectDuplicationTest\Class1();
         $orig->text = 'foo';
         $orig->write();
-
+        DBDatetime::set_mock_now('2016-01-02 01:01:01');
         $duplicate = $orig->duplicate();
         $this->assertInstanceOf(
             DataObjectDuplicationTest\Class1::class,
@@ -43,6 +45,8 @@ class DataObjectDuplicationTest extends SapphireTest
             DataObjectDuplicationTest\Class1::get()->Count(),
             'Only creates a single duplicate'
         );
+        $this->assertEquals(DBDatetime::now()->Nice(), $duplicate->dbObject('Created')->Nice());
+        $this->assertNotEquals($orig->dbObject('Created')->Nice(), $duplicate->dbObject('Created')->Nice());
     }
 
     public function testDuplicateHasOne()

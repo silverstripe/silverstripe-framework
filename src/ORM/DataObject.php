@@ -416,8 +416,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function duplicate($doWrite = true)
     {
+        $map = $this->toMap();
+        unset($map['Created']);
         /** @var static $clone */
-        $clone = Injector::inst()->create(static::class, $this->toMap(), false, $this->model);
+        $clone = Injector::inst()->create(static::class, $map, false, $this->model);
         $clone->ID = 0;
 
         $clone->invokeWithExtensions('onBeforeDuplicate', $this, $doWrite);

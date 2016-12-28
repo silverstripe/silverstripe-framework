@@ -93,10 +93,10 @@ class FormTest extends FunctionalTest
         $form->loadDataFrom($requestData);
 
         $fields = $form->Fields();
-        $this->assertEquals($fields->fieldByName('key1')->Value(), 'val1');
-        $this->assertEquals($fields->fieldByName('namespace[key2]')->Value(), 'val2');
-        $this->assertEquals($fields->fieldByName('namespace[key3][key4]')->Value(), 'val4');
-        $this->assertEquals($fields->fieldByName('othernamespace[key5][key6][key7]')->Value(), 'val7');
+        $this->assertEquals('val1', $fields->fieldByName('key1')->Value());
+        $this->assertEquals('val2', $fields->fieldByName('namespace[key2]')->Value());
+        $this->assertEquals('val4', $fields->fieldByName('namespace[key3][key4]')->Value());
+        $this->assertEquals('val7', $fields->fieldByName('othernamespace[key5][key6][key7]')->Value());
     }
 
     public function testSubmitReadonlyFields()

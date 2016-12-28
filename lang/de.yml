@@ -390,13 +390,10 @@ de:
     CANCEL: Abbrechen
     CANT_REORGANISE: "Sie besitzen nicht die benötigten Zugriffsrechte um Seiten der höchsten Ebene zu bearbeiten. Ihre Änderungen wurden nicht gespeichert."
     DELETED: Gelöscht.
-    DropdownBatchActionsDefault: Aktionen
     HELP: Hilfe
-    PAGETYPE: "Seitentyp:"
     PERMAGAIN: "Sie wurden aus dem System ausgeloggt. Falls Sie sich wieder einloggen möchten, geben Sie bitte Benutzernamen und Passwort im untenstehenden Formular an."
     PERMALREADY: "Leider dürfen Sie diesen Teil des CMS nicht aufrufen. Wenn Sie sich als jemand anderes einloggen wollen, benutzen Sie bitte das nachstehende Formular."
     PERMDEFAULT: "Sie müssen angemeldet sein, um auf diesen Bereich zugreifen zu können. Bitte geben Sie Ihre Zugangsdaten ein."
-    PLEASESAVE: "Diese Seite konnte nicht aktualisiert werden weil sie noch nicht gespeichert wurde - bitte speichern."
     PreviewButton: Vorschau
     REORGANISATIONSUCCESSFUL: "Der Seitenbaum wurde erfolgreich sortiert."
     SAVEDUP: Gespeichert.

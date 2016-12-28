@@ -8,6 +8,20 @@ use SilverStripe\Forms\TextareaField;
 class TextareaFieldTest extends SapphireTest
 {
 
+    public function testCasting()
+    {
+        // Test special characters
+        $inputText = "These are some unicodes: ä, ö, & ü";
+        $field = new TextareaField("Test", "Test");
+        $field->setValue($inputText);
+        $this->assertContains('These are some unicodes: &auml;, &ouml;, &amp; &uuml;', $field->Field());
+        // Test shortcodes
+        $inputText = "Shortcode: [file_link id=4]";
+        $field = new TextareaField("Test", "Test");
+        $field->setValue($inputText);
+        $this->assertContains('Shortcode: [file_link id=4]', $field->Field());
+    }
+
     /**
      * Quick smoke test to ensure that text with unicodes is being displayed properly in readonly fields.
      */
