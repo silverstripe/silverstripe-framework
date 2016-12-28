@@ -12,8 +12,8 @@ else{i[t]=[n]
 var r=document.getElementsByTagName("head")[0],o=document.createElement("script")
 o.type="text/javascript",o.charset="utf-8",o.async=!0,o.src=e.p+""+t+".js/"+({0:"CMSSecurity",1:"LeftAndMain.Ping",2:"MemberImportForm",3:"TinyMCE_SSPlugin",4:"UploadField_select",5:"bundle",6:"leaktools"
 }[t]||t)+".js",r.appendChild(o)}},e.m=t,e.c=r,e.p="",e(0)}([function(t,e,n){"use strict"
-n(269),n(565),n(566),n(569),n(571),n(573),n(603),n(605),n(738),n(748),n(763),n(938),n(940),n(986),n(992),n(1245),n(1253),n(1256),n(1257),n(1260),n(1263),n(1264),n(1495),n(1506),n(1509),n(1523),n(170),n(200),
-n(205),n(1524),n(1525),n(1526),n(1527),n(201),n(1528),n(1529),n(1530),n(1531),n(1532),n(1533),n(1534),n(1535)},function(t,e){t.exports=jQuery},,,,function(t,e){t.exports=React},,,,,,function(t,e){function n(){
+n(269),n(565),n(566),n(569),n(571),n(573),n(603),n(605),n(738),n(748),n(763),n(938),n(940),n(986),n(992),n(1245),n(1253),n(1256),n(1257),n(1260),n(1263),n(1264),n(1496),n(1507),n(1510),n(1524),n(170),n(200),
+n(205),n(1525),n(1526),n(1527),n(1528),n(201),n(1529),n(1530),n(1531),n(1532),n(1533),n(1534),n(1535),n(1536)},function(t,e){t.exports=jQuery},,,,function(t,e){t.exports=React},,,,,,function(t,e){function n(){
 throw new Error("setTimeout has not been defined")}function r(){throw new Error("clearTimeout has not been defined")}function i(t){if(d===setTimeout)return setTimeout(t,0)
 if((d===n||!d)&&setTimeout)return d=setTimeout,setTimeout(t,0)
 try{return d(t,0)}catch(e){try{return d.call(null,t,0)}catch(e){return d.call(this,t,0)}}}function o(t){if(f===clearTimeout)return clearTimeout(t)
@@ -9887,7 +9887,7 @@ var a=n(1399)
 e.createApolloStore=a.createApolloStore,e.createApolloReducer=a.createApolloReducer
 var s=n(1473)
 e.ObservableQuery=s.ObservableQuery
-var l=n(1484)
+var l=n(1485)
 e.readQueryFromStore=l.readQueryFromStore
 var u=n(1402)
 e.writeQueryToStore=u.writeQueryToStore
@@ -9895,9 +9895,9 @@ var c=n(1405)
 e.getQueryDefinition=c.getQueryDefinition,e.getFragmentDefinitions=c.getFragmentDefinitions,e.createFragmentMap=c.createFragmentMap
 var d=n(1478)
 e.ApolloError=d.ApolloError
-var f=n(1492)
+var f=n(1493)
 e.ApolloClient=f["default"]
-var p=n(1493)
+var p=n(1494)
 e.createFragment=p.createFragment,e.clearFragmentDefinitions=p.clearFragmentDefinitions,e.disableFragmentWarnings=p.disableFragmentWarnings,e.enableFragmentWarnings=p.enableFragmentWarnings
 var h=n(1422)
 e.toIdValue=h.toIdValue,Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=f["default"]},function(t,e,n){"use strict"
@@ -10377,8 +10377,9 @@ function r(t){if(!t)throw new Error("You must pass an options argument to create
 return new u(t.uri,t.batchInterval,t.opts)}var i=this&&this.__extends||function(t,e){function n(){this.constructor=t}for(var r in e)e.hasOwnProperty(r)&&(t[r]=e[r])
 t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)}
 n(1394)
-var o=n(1276),a=n(1397),s=n(1266),l=n(1398),u=function(t){function e(e,n,r){if(t.call(this,e,r),!a(n))throw new Error("pollInterval must be a number, got "+n)
-this.pollInterval=n,this.batcher=new l.QueryBatcher({batchFetchFunction:this.batchQuery.bind(this)}),this.batcher.start(this.pollInterval)}return i(e,t),e.prototype.query=function(t){return this.batcher.enqueueRequest(t)
+var o=n(1276),a=n(1397),s=n(1266),l=n(1398),u=function(t){function e(e,n,r){var i=t.call(this,e,r)||this
+if(!a(n))throw new Error("pollInterval must be a number, got "+n)
+return i.pollInterval=n,i.batcher=new l.QueryBatcher({batchFetchFunction:i.batchQuery.bind(i)}),i.batcher.start(i.pollInterval),i}return i(e,t),e.prototype.query=function(t){return this.batcher.enqueueRequest(t)
 
 },e.prototype.batchQuery=function(t){var e=this,n=o({},this._opts),r=[]
 return t.forEach(function(t){r.push(e.applyMiddlewares({request:t,options:n}))}),new Promise(function(t,n){Promise.all(r).then(function(r){return e.batchedFetchFromRemoteEndpoint(r).then(function(t){return t.json()
@@ -10684,8 +10685,8 @@ if(r&&r.queryString!==e.queryString)throw new Error("Internal Error: may not upd
 var c=!1,d=void 0
 e.storePreviousVariables&&r&&r.networkStatus!==u.loading&&(l(r.variables,e.variables)||(c=!0,d=r.variables))
 var f=u.loading
-return c?f=u.setVariables:e.isPoll?f=u.poll:e.isRefetch?f=u.refetch:e.isPoll&&(f=u.poll),n[e.queryId]={queryString:e.queryString,variables:e.variables,previousVariables:d,stopped:!1,loading:!0,networkError:null,
-graphQLErrors:null,networkStatus:f,forceFetch:e.forceFetch,returnPartialData:e.returnPartialData,lastRequestId:e.requestId,metadata:e.metadata},n}if(o.isQueryResultAction(e)){if(!t[e.queryId])return t
+return c?f=u.setVariables:e.isPoll?f=u.poll:e.isRefetch?f=u.refetch:e.isPoll&&(f=u.poll),n[e.queryId]={queryString:e.queryString,variables:e.variables,previousVariables:d,loading:!0,networkError:null,graphQLErrors:null,
+networkStatus:f,forceFetch:e.forceFetch,returnPartialData:e.returnPartialData,lastRequestId:e.requestId,metadata:e.metadata},n}if(o.isQueryResultAction(e)){if(!t[e.queryId])return t
 if(e.requestId<t[e.queryId].lastRequestId)return t
 var n=s({},t),p=a.graphQLResultHasError(e.result)
 return n[e.queryId]=s({},t[e.queryId],{loading:!1,networkError:null,graphQLErrors:p?e.result.errors:null,previousVariables:null,networkStatus:u.ready}),n}if(o.isQueryErrorAction(e)){if(!t[e.queryId])return t
@@ -10696,13 +10697,10 @@ var n=s({},t)
 return n[e.queryId]=s({},t[e.queryId],{loading:!1,networkError:e.error,networkStatus:u.error}),n}if(o.isQueryResultClientAction(e)){if(!t[e.queryId])return t
 var n=s({},t)
 return n[e.queryId]=s({},t[e.queryId],{loading:!e.complete,networkError:null,previousVariables:null,networkStatus:e.complete?u.ready:u.loading}),n}if(o.isQueryStopAction(e)){var n=s({},t)
-return n[e.queryId]=s({},t[e.queryId],{loading:!1,stopped:!0,networkStatus:u.ready}),n}return o.isStoreResetAction(e)?i(t,e):t}function i(t,e){var n=e.observableQueryIds,r=Object.keys(t).filter(function(t){
-return n.indexOf(t)>-1}).reduce(function(e,n){return e[n]=s({},t[n],{loading:!0,networkStatus:u.loading}),e},{})
-return r}var o=n(1401),a=n(1422),s=n(1276),l=n(1462)
-!function(t){t[t.loading=1]="loading",t[t.setVariables=2]="setVariables",t[t.fetchMore=3]="fetchMore",t[t.refetch=4]="refetch",t[t.poll=6]="poll",t[t.ready=7]="ready",t[t.error=8]="error"}(e.NetworkStatus||(e.NetworkStatus={}))
-
-
-var u=e.NetworkStatus
+return delete n[e.queryId],n}return o.isStoreResetAction(e)?i(t,e):t}function i(t,e){var n=e.observableQueryIds,r=Object.keys(t).filter(function(t){return n.indexOf(t)>-1}).reduce(function(e,n){return e[n]=s({},t[n],{
+loading:!0,networkStatus:u.loading}),e},{})
+return r}var o=n(1401),a=n(1422),s=n(1276),l=n(1462),u
+!function(t){t[t.loading=1]="loading",t[t.setVariables=2]="setVariables",t[t.fetchMore=3]="fetchMore",t[t.refetch=4]="refetch",t[t.poll=6]="poll",t[t.ready=7]="ready",t[t.error=8]="error"}(u=e.NetworkStatus||(e.NetworkStatus={})),
 e.queries=r},function(t,e,n){function r(t,e){return i(t,e)}var i=n(1354)
 t.exports=r},function(t,e,n){"use strict"
 function r(t,e){if(void 0===t&&(t={}),i.isMutationInitAction(e)){var n=o({},t)
@@ -10734,11 +10732,10 @@ e>0&&n(c)?e>1?r(c,e-1,n,a,s):i(s,c):a||(s[s.length]=c)}return s}var i=n(1440),o=
 t.exports=r},function(t,e,n){function r(t){return a(t)||o(t)||!!(s&&t&&t[s])}var i=n(1269),o=n(1307),a=n(1274),s=i?i.isConcatSpreadable:void 0
 t.exports=r},function(t,e,n){"use strict"
 var r=this&&this.__extends||function(t,e){function n(){this.constructor=t}for(var r in e)e.hasOwnProperty(r)&&(t[r]=e[r])
-t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)},i=n(1474),o=n(1478),a=n(1479),s=n(1491),l=n(1461),u=n(1405),c=n(1276),d=n(1462),f=function(t){function e(e){var n=this,r=e.scheduler,i=e.options,o=e.shouldSubscribe,a=void 0===o||o,s=r.queryManager,l=s.generateQueryId(),u=function(t){
-return n.onSubscribe(t)}
-t.call(this,u),this.isCurrentlyPolling=!1,this.options=i,this.variables=this.options.variables||{},this.scheduler=r,this.queryManager=s,this.queryId=l,this.shouldSubscribe=a,this.observers=[],this.subscriptionHandles=[]
-
-}return r(e,t),e.prototype.result=function(){var t=this
+t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)},i=n(1474),o=n(1478),a=n(1479),s=n(1492),l=n(1461),u=n(1405),c=n(1276),d=n(1462),f=function(t){function e(e){var n=e.scheduler,r=e.options,i=e.shouldSubscribe,o=void 0===i||i,a,s=n.queryManager,l=s.generateQueryId(),u=function(t){
+return a.onSubscribe(t)}
+return a=t.call(this,u)||this,a.isCurrentlyPolling=!1,a.options=r,a.variables=a.options.variables||{},a.scheduler=n,a.queryManager=s,a.queryId=l,a.shouldSubscribe=o,a.observers=[],a.subscriptionHandles=[],
+a}return r(e,t),e.prototype.result=function(){var t=this
 return new Promise(function(e,n){var r=t.subscribe({next:function(t){e(t),setTimeout(function(){r.unsubscribe()},0)},error:function(t){n(t)}})})},e.prototype.currentResult=function(){var t=this.queryManager.getCurrentQueryResult(this,!0),e=t.data,n=t.partial,r=this.queryManager.getApolloState().queries[this.queryId]
 
 
@@ -10773,15 +10770,14 @@ this.isCurrentlyPolling&&(this.scheduler.stopPollingQuery(this.queryId),this.isC
 
 },e.prototype.onSubscribe=function(t){var e=this
 this.observers.push(t),t.next&&this.lastResult&&t.next(this.lastResult),t.error&&this.lastError&&t.error(this.lastError),1===this.observers.length&&this.setUpQuery()
-var n={unsubscribe:function(){e.observers=e.observers.filter(function(e){return e!==t}),0===e.observers.length&&e.tearDownQuery()}}
+var n={unsubscribe:function(){e.observers.findIndex(function(e){return e===t})<0||(e.observers=e.observers.filter(function(e){return e!==t}),0===e.observers.length&&e.tearDownQuery())}}
 return n},e.prototype.setUpQuery=function(){var t=this
 if(this.shouldSubscribe&&this.queryManager.addObservableQuery(this.queryId,this),this.options.pollInterval){if(this.options.noFetch)throw new Error("noFetch option should not use query polling.")
 this.isCurrentlyPolling=!0,this.scheduler.startPollingQuery(this.options,this.queryId)}var e={next:function(e){t.observers.forEach(function(t){t.next&&t.next(e)}),t.lastResult=e},error:function(e){t.observers.forEach(function(t){
 t.error?t.error(e):console.error("Unhandled error",e.message,e.stack)}),t.lastError=e}}
 this.queryManager.startQuery(this.queryId,this.options,this.queryManager.queryListenerForObserver(this.queryId,this.options,e))},e.prototype.tearDownQuery=function(){this.isCurrentlyPolling&&(this.scheduler.stopPollingQuery(this.queryId),
-this.isCurrentlyPolling=!1),this.subscriptionHandles.forEach(function(t){return t.unsubscribe()}),this.subscriptionHandles=[],this.queryManager.stopQuery(this.queryId),this.observers=[]},e}(i.Observable)
-
-
+this.isCurrentlyPolling=!1),this.subscriptionHandles.forEach(function(t){return t.unsubscribe()}),this.subscriptionHandles=[],this.queryManager.stopQuery(this.queryId),this.shouldSubscribe&&this.queryManager.removeObservableQuery(this.queryId),
+this.observers=[]},e}(i.Observable)
 e.ObservableQuery=f},function(t,e,n){"use strict"
 function r(t){return void 0!==t.unsubscribe}var i=n(1475),o=function(){function t(t){this.subscriberFunction=t}return t.prototype[i["default"]]=function(){return this},t.prototype.subscribe=function(t){
 var e=this.subscriberFunction(t)
@@ -10799,81 +10795,79 @@ t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)}
 e.isApolloError=n
 var i=function(t){var e=""
 return Array.isArray(t.graphQLErrors)&&0!==t.graphQLErrors.length&&t.graphQLErrors.forEach(function(t){e+="GraphQL error: "+t.message+"\n"}),t.networkError&&(e+="Network error: "+t.networkError.message+"\n"),
-e=e.replace(/\n$/,"")},o=function(t){function e(e){var n=e.graphQLErrors,r=e.networkError,o=e.errorMessage,a=e.extraInfo
-t.call(this,o),this.graphQLErrors=n,this.networkError=r,this.stack=(new Error).stack,o?this.message=o:this.message=i(this),this.extraInfo=a}return r(e,t),e}(Error)
+e=e.replace(/\n$/,"")},o=function(t){function e(e){var n=e.graphQLErrors,r=e.networkError,o=e.errorMessage,a=e.extraInfo,s=t.call(this,o)||this
+return s.graphQLErrors=n,s.networkError=r,s.stack=(new Error).stack,o?s.message=o:s.message=i(s),s.extraInfo=a,s}return r(e,t),e}(Error)
 e.ApolloError=o},function(t,e,n){"use strict"
-var r=n(1480),i=n(1462),o=n(1276),a=n(1399),s=n(1405),l=n(1482),u=n(1483),c=n(1395),d=n(1484),f=n(1484),p=n(1490),h=n(1474),m=n(1461),v=n(1491),g=n(1478),y=n(1473)
-!function(t){t[t.normal=1]="normal",t[t.refetch=2]="refetch",t[t.poll=3]="poll"}(e.FetchType||(e.FetchType={}))
-var b=e.FetchType,_=function(){function t(t){var e=this,n=t.networkInterface,r=t.store,o=t.reduxRootSelector,a=t.reducerConfig,s=void 0===a?{mutationBehaviorReducers:{}}:a,l=t.resultTransformer,u=t.resultComparator,c=t.addTypename,d=void 0===c||c
+var r=n(1480),i=n(1481),o=n(1462),a=n(1276),s=n(1399),l=n(1405),u=n(1483),c=n(1484),d=n(1395),f=n(1485),p=n(1485),h=n(1491),m=n(1474),v=n(1461),g=n(1492),y=n(1478),b=n(1473),_
+!function(t){t[t.normal=1]="normal",t[t.refetch=2]="refetch",t[t.poll=3]="poll"}(_=e.FetchType||(e.FetchType={}))
+var x=function(){function t(t){var e=t.networkInterface,n=t.store,i=t.reduxRootSelector,a=t.reducerConfig,s=void 0===a?{mutationBehaviorReducers:{}}:a,l=t.resultTransformer,u=t.resultComparator,c=t.addTypename,d=void 0===c||c,f=t.queryDeduplication,p=void 0!==f&&f,m=this
 
 
-if(this.idCounter=0,this.networkInterface=n,this.store=r,this.reduxRootSelector=o,this.reducerConfig=s,this.resultTransformer=l,this.resultComparator=u,this.pollingTimers={},this.queryListeners={},this.queryDocuments={},
-this.addTypename=d,this.scheduler=new p.QueryScheduler({queryManager:this}),this.fetchQueryPromises={},this.observableQueries={},this.queryIdsByName={},this.store.subscribe){var f
-this.store.subscribe(function(){var t=f||{},n=Object.keys(t).length
-f=e.getApolloState(),i(t,f)&&n||e.broadcastQueries()})}}return t.prototype.broadcastNewStore=function(t){this.broadcastQueries()},t.prototype.mutate=function(t){var e=this,n=t.mutation,r=t.variables,i=t.resultBehaviors,o=void 0===i?[]:i,a=t.optimisticResponse,d=t.updateQueries,f=t.refetchQueries,p=void 0===f?[]:f,h=this.generateQueryId()
+if(this.idCounter=1,this.networkInterface=e,this.deduplicator=new r.Deduplicator(e),this.store=n,this.reduxRootSelector=i,this.reducerConfig=s,this.resultTransformer=l,this.resultComparator=u,this.pollingTimers={},
+this.queryListeners={},this.queryDocuments={},this.addTypename=d,this.queryDeduplication=p,this.scheduler=new h.QueryScheduler({queryManager:this}),this.fetchQueryPromises={},this.observableQueries={},
+this.queryIdsByName={},this.store.subscribe){var v
+this.store.subscribe(function(){var t=v||{},e=Object.keys(t).length
+v=m.getApolloState(),o(t,v)&&e||m.broadcastQueries()})}}return t.prototype.broadcastNewStore=function(t){this.broadcastQueries()},t.prototype.mutate=function(t){var e=this,n=t.mutation,r=t.variables,i=t.resultBehaviors,o=void 0===i?[]:i,a=t.optimisticResponse,s=t.updateQueries,c=t.refetchQueries,f=void 0===c?[]:c,p=this.generateQueryId()
 
 
-this.addTypename&&(n=l.addTypenameToDocument(n)),s.checkDocument(n)
-var m=c.print(n),v={query:n,variables:r,operationName:s.getOperationName(n)},y=a?this.collectResultBehaviorsFromUpdateQueries(d,{data:a},!0):[]
-this.queryDocuments[h]=n
-var b=Object.keys(this.observableQueries).map(function(t){var n=e.observableQueries[t].observableQuery.options
-return n.reducer?u.createStoreReducer(n.reducer,n.query,n.variables,e.reducerConfig):null}).filter(function(t){return null!==t})
-return this.store.dispatch({type:"APOLLO_MUTATION_INIT",mutationString:m,mutation:n,variables:r,operationName:s.getOperationName(n),mutationId:h,optimisticResponse:a,resultBehaviors:o.concat(y),extraReducers:b
-}),new Promise(function(t,r){e.networkInterface.query(v).then(function(i){i.errors&&r(new g.ApolloError({graphQLErrors:i.errors})),e.store.dispatch({type:"APOLLO_MUTATION_RESULT",result:i,mutationId:h,
-document:n,operationName:s.getOperationName(n),resultBehaviors:o.concat(e.collectResultBehaviorsFromUpdateQueries(d,i)),extraReducers:b}),p.forEach(function(t){e.refetchQueryByName(t)}),delete e.queryDocuments[h],
-t(e.transformResult(i))})["catch"](function(t){e.store.dispatch({type:"APOLLO_MUTATION_ERROR",error:t,mutationId:h}),delete e.queryDocuments[h],r(new g.ApolloError({networkError:t}))})})},t.prototype.queryListenerForObserver=function(t,e,n){
-var r=this,i
+this.addTypename&&(n=u.addTypenameToDocument(n)),l.checkDocument(n)
+var h=d.print(n),m={query:n,variables:r,operationName:l.getOperationName(n)},v=a?this.collectResultBehaviorsFromUpdateQueries(s,{data:a},!0):[]
+return this.queryDocuments[p]=n,this.store.dispatch({type:"APOLLO_MUTATION_INIT",mutationString:h,mutation:n,variables:r,operationName:l.getOperationName(n),mutationId:p,optimisticResponse:a,resultBehaviors:o.concat(v),
+extraReducers:this.getExtraReducers()}),new Promise(function(t,r){e.networkInterface.query(m).then(function(i){i.errors&&r(new y.ApolloError({graphQLErrors:i.errors})),e.store.dispatch({type:"APOLLO_MUTATION_RESULT",
+result:i,mutationId:p,document:n,operationName:l.getOperationName(n),resultBehaviors:o.concat(e.collectResultBehaviorsFromUpdateQueries(s,i)),extraReducers:e.getExtraReducers()}),f.forEach(function(t){
+e.refetchQueryByName(t)}),delete e.queryDocuments[p],t(e.transformResult(i))})["catch"](function(t){e.store.dispatch({type:"APOLLO_MUTATION_ERROR",error:t,mutationId:p}),delete e.queryDocuments[p],r(new y.ApolloError({
+networkError:t}))})})},t.prototype.queryListenerForObserver=function(t,e,n){var r=this,i
 return function(o){if(o){var a=o.returnPartialData||o.previousVariables,s=i&&o.networkStatus!==i.networkStatus
-if(!o.loading||s&&e.notifyOnNetworkStatusChange||a)if(o.graphQLErrors||o.networkError){var l=new g.ApolloError({graphQLErrors:o.graphQLErrors,networkError:o.networkError})
-if(n.error)try{n.error(l)}catch(u){console.error("Error in observer.error \n"+u.stack)}else console.error("Unhandled error",l,l.stack)}else try{var c={data:d.readQueryFromStore({store:r.getDataWithOptimisticResults(),
+if(!o.loading||s&&e.notifyOnNetworkStatusChange||a)if(o.graphQLErrors||o.networkError){var l=new y.ApolloError({graphQLErrors:o.graphQLErrors,networkError:o.networkError})
+if(n.error)try{n.error(l)}catch(u){console.error("Error in observer.error \n"+u.stack)}else console.error("Unhandled error",l,l.stack)}else try{var c={data:f.readQueryFromStore({store:r.getDataWithOptimisticResults(),
 query:r.queryDocuments[t],variables:o.previousVariables||o.variables,returnPartialData:e.returnPartialData||e.noFetch,config:r.reducerConfig}),loading:o.loading,networkStatus:o.networkStatus}
 if(n.next&&r.isDifferentResult(i,c)){i=c
-try{n.next(r.transformResult(c))}catch(u){console.error("Error in observer.next \n"+u.stack)}}}catch(f){return void(n.error&&n.error(new g.ApolloError({networkError:f})))}}}},t.prototype.watchQuery=function(t,e){
-void 0===e&&(e=!0),s.getQueryDefinition(t.query)
-var n=o({},t)
-this.addTypename&&(n.query=l.addTypenameToDocument(n.query))
-var r=new y.ObservableQuery({scheduler:this.scheduler,options:n,shouldSubscribe:e})
+try{n.next(r.transformResult(c))}catch(u){console.error("Error in observer.next \n"+u.stack)}}}catch(d){return void(n.error&&n.error(new y.ApolloError({networkError:d})))}}}},t.prototype.watchQuery=function(t,e){
+void 0===e&&(e=!0),l.getQueryDefinition(t.query)
+var n=a({},t)
+this.addTypename&&(n.query=u.addTypenameToDocument(n.query))
+var r=new b.ObservableQuery({scheduler:this.scheduler,options:n,shouldSubscribe:e})
 return r},t.prototype.query=function(t){var e=this
 if(t.returnPartialData)throw new Error("returnPartialData option only supported on watchQuery.")
 if("Document"!==t.query.kind)throw new Error('You must wrap the query string in a "gql" tag.')
 var n=this.idCounter,r=new Promise(function(i,o){return e.addFetchQueryPromise(n,r,i,o),e.watchQuery(t,!1).result().then(function(t){e.removeFetchQueryPromise(n),i(t)})["catch"](function(t){e.removeFetchQueryPromise(n),
 o(t)})})
-return r},t.prototype.fetchQuery=function(t,e,n){var r=e.variables,i=e.forceFetch,o=void 0!==i&&i,a=e.returnPartialData,s=void 0!==a&&a,l=e.noFetch,u=void 0!==l&&l,d=e.metadata,p=void 0===d?null:d,h=this.transformQueryDocument(e).queryDoc,m=c.print(h),v,g=o
+return r},t.prototype.fetchQuery=function(t,e,n){var r=e.variables,i=e.forceFetch,o=void 0!==i&&i,a=e.returnPartialData,s=void 0!==a&&a,l=e.noFetch,u=void 0!==l&&l,c=e.metadata,f=void 0===c?null:c,h=this.transformQueryDocument(e).queryDoc,m=d.print(h),v,g=o
 
 
-if(!o){var y=f.diffQueryAgainstStore({query:h,store:this.reduxRootSelector(this.store.getState()).data,returnPartialData:!0,variables:r,config:this.reducerConfig}),_=y.isMissing,x=y.result
-g=_,v=x}var w=this.generateRequestId(),k=g&&!u
-return this.queryDocuments[t]=h,this.store.dispatch({type:"APOLLO_QUERY_INIT",queryString:m,document:h,variables:r,forceFetch:o,returnPartialData:s||u,queryId:t,requestId:w,storePreviousVariables:k,isPoll:n===b.poll,
-isRefetch:n===b.refetch,metadata:p}),k&&!s||this.store.dispatch({type:"APOLLO_QUERY_RESULT_CLIENT",result:{data:v},variables:r,document:h,complete:!k,queryId:t,requestId:w}),k?this.fetchRequest({requestId:w,
+if(!o){var y=p.diffQueryAgainstStore({query:h,store:this.reduxRootSelector(this.store.getState()).data,returnPartialData:!0,variables:r,config:this.reducerConfig}),b=y.isMissing,x=y.result
+g=b,v=x}var w=this.generateRequestId(),k=g&&!u
+return this.queryDocuments[t]=h,this.store.dispatch({type:"APOLLO_QUERY_INIT",queryString:m,document:h,variables:r,forceFetch:o,returnPartialData:s||u,queryId:t,requestId:w,storePreviousVariables:k,isPoll:n===_.poll,
+isRefetch:n===_.refetch,metadata:f}),k&&!s||this.store.dispatch({type:"APOLLO_QUERY_RESULT_CLIENT",result:{data:v},variables:r,document:h,complete:!k,queryId:t,requestId:w}),k?this.fetchRequest({requestId:w,
 queryId:t,document:h,options:e}):Promise.resolve({data:v})},t.prototype.generateQueryId=function(){var t=this.idCounter.toString()
 return this.idCounter++,t},t.prototype.stopQueryInStore=function(t){this.store.dispatch({type:"APOLLO_QUERY_STOP",queryId:t})},t.prototype.getApolloState=function(){return this.reduxRootSelector(this.store.getState())
 
-},t.prototype.getInitialState=function(){return{data:this.getApolloState().data}},t.prototype.getDataWithOptimisticResults=function(){return a.getDataWithOptimisticResults(this.getApolloState())},t.prototype.addQueryListener=function(t,e){
+},t.prototype.getInitialState=function(){return{data:this.getApolloState().data}},t.prototype.getDataWithOptimisticResults=function(){return s.getDataWithOptimisticResults(this.getApolloState())},t.prototype.addQueryListener=function(t,e){
 this.queryListeners[t]=this.queryListeners[t]||[],this.queryListeners[t].push(e)},t.prototype.addFetchQueryPromise=function(t,e,n,r){this.fetchQueryPromises[t.toString()]={promise:e,resolve:n,reject:r}
 
 },t.prototype.removeFetchQueryPromise=function(t){delete this.fetchQueryPromises[t.toString()]},t.prototype.addObservableQuery=function(t,e){this.observableQueries[t]={observableQuery:e}
-var n=s.getQueryDefinition(e.options.query)
-if(n.name&&n.name.value){var r=s.getQueryDefinition(e.options.query).name.value
-this.queryIdsByName[r]=this.queryIdsByName[r]||[],this.queryIdsByName[r].push(e.queryId)}},t.prototype.removeObservableQuery=function(t){var e=this.observableQueries[t].observableQuery,n=s.getQueryDefinition(e.options.query).name.value
+var n=l.getQueryDefinition(e.options.query)
+if(n.name&&n.name.value){var r=n.name.value
+this.queryIdsByName[r]=this.queryIdsByName[r]||[],this.queryIdsByName[r].push(e.queryId)}},t.prototype.removeObservableQuery=function(t){var e=this.observableQueries[t].observableQuery,n=l.getQueryDefinition(e.options.query),r=n.name?n.name.value:null
 
 
-delete this.observableQueries[t],this.queryIdsByName[n]=this.queryIdsByName[n].filter(function(t){return!(e.queryId===t)})},t.prototype.resetStore=function(){var t=this
+delete this.observableQueries[t],r&&(this.queryIdsByName[r]=this.queryIdsByName[r].filter(function(t){return!(e.queryId===t)}))},t.prototype.resetStore=function(){var t=this
 Object.keys(this.fetchQueryPromises).forEach(function(e){var n=t.fetchQueryPromises[e].reject
 n(new Error("Store reset while query was in flight."))}),this.store.dispatch({type:"APOLLO_STORE_RESET",observableQueryIds:Object.keys(this.observableQueries)}),Object.keys(this.observableQueries).forEach(function(e){
 var n=t.reduxRootSelector(t.store.getState()).queries[e]
-t.observableQueries[e].observableQuery.options.noFetch||n&&n.stopped||t.observableQueries[e].observableQuery.refetch()})},t.prototype.startQuery=function(t,e,n){return this.addQueryListener(t,n),this.fetchQuery(t,e)["catch"](function(t){}),
+t.observableQueries[e].observableQuery.options.noFetch||t.observableQueries[e].observableQuery.refetch()})},t.prototype.startQuery=function(t,e,n){return this.addQueryListener(t,n),this.fetchQuery(t,e)["catch"](function(t){}),
 t},t.prototype.startGraphQLSubscription=function(t){var e=this,n=t.document,r=t.variables,i=n
-this.addTypename&&(i=l.addTypenameToDocument(i))
-var o={query:i,variables:r,operationName:s.getOperationName(i)},a,u=[]
-return new h.Observable(function(t){if(u.push(t),1===u.length){var n=function(t,n){t?u.forEach(function(e){e.error(t)}):(e.store.dispatch({type:"APOLLO_SUBSCRIPTION_RESULT",document:i,operationName:s.getOperationName(i),
-result:{data:n},variables:r,subscriptionId:a,extraReducers:e.getExtraReducers()}),u.forEach(function(t){t.next(n)}))}
-a=e.networkInterface.subscribe(o,n)}return{unsubscribe:function(){u=u.filter(function(e){return e!==t}),0===u.length&&e.networkInterface.unsubscribe(a)},_networkSubscriptionId:a}})},t.prototype.stopQuery=function(t){
+this.addTypename&&(i=u.addTypenameToDocument(i))
+var o={query:i,variables:r,operationName:l.getOperationName(i)},a,s=[]
+return new m.Observable(function(t){if(s.push(t),1===s.length){var n=function(t,n){t?s.forEach(function(e){e.error(t)}):(e.store.dispatch({type:"APOLLO_SUBSCRIPTION_RESULT",document:i,operationName:l.getOperationName(i),
+result:{data:n},variables:r,subscriptionId:a,extraReducers:e.getExtraReducers()}),s.forEach(function(t){t.next(n)}))}
+a=e.networkInterface.subscribe(o,n)}return{unsubscribe:function(){s=s.filter(function(e){return e!==t}),0===s.length&&e.networkInterface.unsubscribe(a)},_networkSubscriptionId:a}})},t.prototype.stopQuery=function(t){
 delete this.queryListeners[t],delete this.queryDocuments[t],this.stopQueryInStore(t)},t.prototype.getCurrentQueryResult=function(t,e){void 0===e&&(e=!1)
 var n=this.getQueryParts(t),r=n.variables,i=n.document,o=t.options,a={store:e?this.getDataWithOptimisticResults():this.getApolloState().data,query:i,variables:r,returnPartialData:!1,config:this.reducerConfig
 }
-try{var s=d.readQueryFromStore(a)
+try{var s=f.readQueryFromStore(a)
 return{data:s,partial:!1}}catch(l){if(o.returnPartialData||o.noFetch)try{a.returnPartialData=!0
-var s=d.readQueryFromStore(a)
+var s=f.readQueryFromStore(a)
 return{data:s,partial:!0}}catch(l){}return{data:{},partial:!0}}},t.prototype.getQueryWithPreviousResult=function(t,e){void 0===e&&(e=!1)
 var n
 if("string"==typeof t){if(!this.observableQueries[t])throw new Error("ObservableQuery with this id doesn't exist: "+t)
@@ -10882,31 +10876,39 @@ var r=this.getQueryParts(n),i=r.variables,o=r.document,a=this.getCurrentQueryRes
 return{previousResult:a,variables:i,document:o}},t.prototype.transformResult=function(t){return this.resultTransformer?this.resultTransformer(t):t},t.prototype.getQueryParts=function(t){var e=t.options,n=t.options.query
 
 
-return this.addTypename&&(n=l.addTypenameToDocument(n)),{variables:e.variables,document:n}},t.prototype.collectResultBehaviorsFromUpdateQueries=function(t,e,n){var r=this
+return this.addTypename&&(n=u.addTypenameToDocument(n)),{variables:e.variables,document:n}},t.prototype.collectResultBehaviorsFromUpdateQueries=function(t,e,n){var r=this
 if(void 0===n&&(n=!1),!t)return[]
 var i=[]
 return Object.keys(t).forEach(function(o){var a=t[o],s=r.queryIdsByName[o]
-s&&s.forEach(function(t){var s=r.getQueryWithPreviousResult(t,n),l=s.previousResult,u=s.variables,c=s.document,d=v.tryFunctionOrLogError(function(){return a(l,{mutationResult:e,queryName:o,queryVariables:u
+s&&s.forEach(function(t){var s=r.getQueryWithPreviousResult(t,n),l=s.previousResult,u=s.variables,c=s.document,d=g.tryFunctionOrLogError(function(){return a(l,{mutationResult:e,queryName:o,queryVariables:u
 })})
 d&&i.push({type:"QUERY_RESULT",newResult:d,variables:u,document:c})})}),i},t.prototype.transformQueryDocument=function(t){var e=t.query
-return this.addTypename&&(e=l.addTypenameToDocument(e)),{queryDoc:e}},t.prototype.getExtraReducers=function(){var t=this
+return this.addTypename&&(e=u.addTypenameToDocument(e)),{queryDoc:e}},t.prototype.getExtraReducers=function(){var t=this
 return Object.keys(this.observableQueries).map(function(e){var n=t.observableQueries[e].observableQuery.options
-return n.reducer?u.createStoreReducer(n.reducer,n.query,n.variables,t.reducerConfig):null}).filter(function(t){return null!==t})},t.prototype.fetchRequest=function(t){var e=this,n=t.requestId,r=t.queryId,i=t.document,o=t.options,a=o.variables,l=o.noFetch,u=o.returnPartialData,c={
-query:i,variables:a,operationName:s.getOperationName(i)},f=new Promise(function(t,o){e.addFetchQueryPromise(n,f,t,o),e.networkInterface.query(c).then(function(t){var o=e.getExtraReducers()
-if(e.store.dispatch({type:"APOLLO_QUERY_RESULT",document:i,operationName:s.getOperationName(i),result:t,queryId:r,requestId:n,extraReducers:o}),e.removeFetchQueryPromise(n),t.errors)throw new g.ApolloError({
+return n.reducer?c.createStoreReducer(n.reducer,n.query,n.variables,t.reducerConfig):null}).filter(function(t){return null!==t})},t.prototype.fetchRequest=function(t){var e=this,n=t.requestId,r=t.queryId,i=t.document,o=t.options,a=o.variables,s=o.noFetch,u=o.returnPartialData,c={
+query:i,variables:a,operationName:l.getOperationName(i)},d=new Promise(function(t,o){e.addFetchQueryPromise(n,d,t,o),e.deduplicator.query(c,e.queryDeduplication).then(function(t){var o=e.getExtraReducers()
+
+
+if(e.store.dispatch({type:"APOLLO_QUERY_RESULT",document:i,operationName:l.getOperationName(i),result:t,queryId:r,requestId:n,extraReducers:o}),e.removeFetchQueryPromise(n),t.errors)throw new y.ApolloError({
 graphQLErrors:t.errors})
 return t}).then(function(){var r
-try{r=d.readQueryFromStore({store:e.getApolloState().data,variables:a,returnPartialData:u||l,query:i,config:e.reducerConfig})}catch(o){}var s=e.getApolloState().reducerError
-return!r&&s?Promise.reject(s):(e.removeFetchQueryPromise(n),t({data:r,loading:!1,networkStatus:m.NetworkStatus.ready}),null)})["catch"](function(t){g.isApolloError(t)?o(t):(e.store.dispatch({type:"APOLLO_QUERY_ERROR",
-error:t,queryId:r,requestId:n}),e.removeFetchQueryPromise(n),o(new g.ApolloError({networkError:t})))})})
-return f},t.prototype.refetchQueryByName=function(t){var e=this,n=this.queryIdsByName[t]
+try{r=f.readQueryFromStore({store:e.getApolloState().data,variables:a,returnPartialData:u||s,query:i,config:e.reducerConfig})}catch(o){}var l=e.getApolloState().reducerError
+return!r&&l?Promise.reject(l):(e.removeFetchQueryPromise(n),t({data:r,loading:!1,networkStatus:v.NetworkStatus.ready}),null)})["catch"](function(t){y.isApolloError(t)?o(t):(e.store.dispatch({type:"APOLLO_QUERY_ERROR",
+error:t,queryId:r,requestId:n}),e.removeFetchQueryPromise(n),o(new y.ApolloError({networkError:t})))})})
+return d},t.prototype.refetchQueryByName=function(t){var e=this,n=this.queryIdsByName[t]
 void 0===n?console.warn("Warning: unknown query with name "+t+" asked to refetch"):n.forEach(function(t){e.observableQueries[t].observableQuery.refetch()})},t.prototype.isDifferentResult=function(t,e){
-var n=this.resultComparator||i
+var n=this.resultComparator||o
 return!n(t,e)},t.prototype.broadcastQueries=function(){var t=this.getApolloState().queries
-r(this.queryListeners,function(e,n){e&&e.forEach(function(e){if(e){var r=t[n]
+i(this.queryListeners,function(e,n){e&&e.forEach(function(e){if(e){var r=t[n]
 e(r)}})})},t.prototype.generateRequestId=function(){var t=this.idCounter
 return this.idCounter++,t},t}()
-e.QueryManager=_},function(t,e,n){function r(t,e){return t&&i(t,o(e))}var i=n(1319),o=n(1481)
+e.QueryManager=x},function(t,e,n){"use strict"
+var r=n(1395),i=function(){function t(t){this.networkInterface=t,this.inFlightRequestPromises={}}return t.prototype.query=function(t,e){var n=this
+if(void 0===e&&(e=!0),!e)return this.networkInterface.query(t)
+var r=this.getKey(t)
+return this.inFlightRequestPromises[r]||(this.inFlightRequestPromises[r]=this.networkInterface.query(t)),this.inFlightRequestPromises[r].then(function(t){return delete n.inFlightRequestPromises[r],t})},
+t.prototype.getKey=function(t){return r.print(t.query)+"|"+JSON.stringify(t.variables)+"|"+t.operationName},t}()
+e.Deduplicator=i},function(t,e,n){function r(t,e){return t&&i(t,o(e))}var i=n(1319),o=n(1482)
 t.exports=r},function(t,e,n){function r(t){return"function"==typeof t?t:i}var i=n(1292)
 t.exports=r},function(t,e,n){"use strict"
 function r(t,e){if(void 0===e&&(e=!1),t&&t.selections){if(!e){var n=t.selections.some(function(t){return"Field"===t.kind&&"__typename"===t.name.value})
@@ -10916,7 +10918,7 @@ return e.definitions.forEach(function(t){var e="OperationDefinition"===t.kind
 r(t.selectionSet,e)}),e}var o=n(1405),a=n(1425),s={kind:"Field",alias:null,name:{kind:"Name",value:"__typename"}}
 e.addTypenameToDocument=i},function(t,e,n){"use strict"
 function r(t,e,n,r){return function(a,s){var l=i.readQueryFromStore({store:a,query:e,variables:n,returnPartialData:!0,config:r}),u=t(l,s)
-return l!==u?o.writeResultToStore({dataId:"ROOT_QUERY",result:u,store:a,document:e,variables:n,dataIdFromObject:r.dataIdFromObject}):a}}var i=n(1484),o=n(1402)
+return l!==u?o.writeResultToStore({dataId:"ROOT_QUERY",result:u,store:a,document:e,variables:n,dataIdFromObject:r.dataIdFromObject}):a}}var i=n(1485),o=n(1402)
 e.createStoreReducer=r},function(t,e,n){"use strict"
 function r(t){var e=t.store,n=t.query,r=t.variables,o=t.returnPartialData,a=void 0!==o&&o,s=t.config,l=i({query:n,store:e,returnPartialData:a,variables:r,config:s}).result
 return l}function i(t){var e=t.store,n=t.query,r=t.variables,i=t.returnPartialData,o=void 0===i||i,s=t.config
@@ -10924,7 +10926,7 @@ u.getQueryDefinition(n)
 var l={store:e,returnPartialData:o,customResolvers:s&&s.customResolvers,hasMissingField:!1},c={type:"id",id:"ROOT_QUERY"},p=a["default"](f,n,c,l,r,{fragmentMatcher:d})
 return{result:p,isMissing:l.hasMissingField}}function o(t){if(!s.isIdValue(t))throw new Error("Encountered a sub-selection on the query, but the store doesn't have an object reference. This should never happen during normal use unless you have custom code that is directly manipulating the store; please file an issue.")
 
-}var a=n(1485),s=n(1422),l=n(1422),u=n(1405)
+}var a=n(1486),s=n(1422),l=n(1422),u=n(1405)
 e.readQueryFromStore=r
 var c=!1,d=function(t,e,n){o(t)
 var r=n.store[t.id]
@@ -10952,7 +10954,7 @@ return t.selectionSet?null===f||"undefined"==typeof f?f:Array.isArray(f)?a(t,f,n
 
 })}function s(t,e){return null===e||"undefined"==typeof e||"string"==typeof e||"number"==typeof e||"boolean"==typeof e||Array.isArray(e)?e:(Object.keys(t).forEach(function(n){e.hasOwnProperty(n)&&s(t[n],e[n])
 
-}),void Object.keys(e).forEach(function(n){t.hasOwnProperty(n)||(t[n]=e[n])}))}var l=n(1486),u=n(1487),c=n(1488),d=n(1489)
+}),void Object.keys(e).forEach(function(n){t.hasOwnProperty(n)||(t[n]=e[n])}))}var l=n(1487),u=n(1488),c=n(1489),d=n(1490)
 e.filter=d.filter,e.check=d.check,e.propType=d.propType,Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=r},function(t,e){"use strict"
 function n(t){r(t)
 var e=null
@@ -11017,7 +11019,7 @@ return e?new o(null===n[r]?"The "+l+" `"+s+"` is marked as required "+("in `"+i+
 
 }return t(n,r,i,a,s)}var n=e.bind(null,!1)
 return n.isRequired=e.bind(null,!0),n}function s(t){return a(function(e,n){var r=e[n]
-try{return i(t,r),null}catch(o){return o}})}var l=n(1485)
+try{return i(t,r),null}catch(o){return o}})}var l=n(1486)
 e.filter=r,e.check=i
 var u="<<anonymous>>"
 o.prototype=Error.prototype
@@ -11044,21 +11046,19 @@ this.intervalQueries.hasOwnProperty(r.toString())&&this.intervalQueries[r].lengt
 return new i.ObservableQuery({scheduler:this,options:t})},t}()
 e.QueryScheduler=s},function(t,e){"use strict"
 function n(t){try{return t()}catch(e){console.error&&console.error(e)}}e.tryFunctionOrLogError=n},function(t,e,n){(function(t){"use strict"
-function r(t){return t[h]}var i=n(1266),o=n(1404),a=n(1276),s=n(1267),l=n(1399),u=n(1479),c=n(1422),d=n(1493),f=n(1405),p=n(1494),h="apollo",m=!1,v=!1,g=!1,y=!1,b=function(){function e(e){var n=this,r=void 0===e?{}:e,o=r.networkInterface,a=r.reduxRootKey,l=r.reduxRootSelector,u=r.initialState,d=r.dataIdFromObject,f=r.resultTransformer,h=r.resultComparator,m=r.ssrMode,v=void 0!==m&&m,g=r.ssrForceFetchDelay,y=void 0===g?0:g,b=r.mutationBehaviorReducers,_=void 0===b?{}:b,x=r.addTypename,w=void 0===x||x,k=r.queryTransformer,j=r.customResolvers,T=r.connectToDevTools
+function r(t){return t[h]}var i=n(1266),o=n(1404),a=n(1276),s=n(1267),l=n(1399),u=n(1479),c=n(1422),d=n(1494),f=n(1405),p=n(1495),h="apollo",m=!1,v=!1,g=!1,y=!1,b=function(){function e(e){var n=void 0===e?{}:e,r=n.networkInterface,o=n.reduxRootKey,a=n.reduxRootSelector,l=n.initialState,u=n.dataIdFromObject,d=n.resultComparator,f=n.ssrMode,h=void 0!==f&&f,m=n.ssrForceFetchDelay,v=void 0===m?0:m,g=n.mutationBehaviorReducers,y=void 0===g?{}:g,b=n.addTypename,_=void 0===b||b,x=n.resultTransformer,w=n.customResolvers,k=n.connectToDevTools,j=n.queryDeduplication,T=void 0!==j&&j,E=this
 
 
-if(this.middleware=function(){return function(t){return n.setStore(t),function(e){return function(r){var i=e(r)
-return n.queryManager.broadcastNewStore(t.getState()),n.devToolsHookCb&&n.devToolsHookCb({action:r,state:n.queryManager.getApolloState(),dataWithOptimisticResults:n.queryManager.getDataWithOptimisticResults()
-}),i}}}},a&&l)throw new Error('Both "reduxRootKey" and "reduxRootSelector" are configured, but only one of two is allowed.')
-if(a&&(console.warn('"reduxRootKey" option is deprecated and might be removed in the upcoming versions, please use the "reduxRootSelector" instead.'),this.reduxRootKey=a),k)throw new Error('queryTransformer option no longer supported in Apollo Client 0.5. Instead, there is a new "addTypename" option, which is on by default.')
-
-
-!l&&a?this.reduxRootSelector=function(t){return t[a]}:s(l)?(this.reduxRootKey=l,this.reduxRootSelector=function(t){return t[l]}):"function"==typeof l?this.reduxRootSelector=l:this.reduxRootSelector=null,
-this.initialState=u?u:{},this.networkInterface=o?o:i.createNetworkInterface({uri:"/graphql"}),this.addTypename=w,this.resultTransformer=f,this.resultComparator=h,this.shouldForceFetch=!(v||y>0),this.dataId=d,
-this.fieldWithArgs=c.storeKeyNameFromFieldNameAndArgs,y&&setTimeout(function(){return n.shouldForceFetch=!0},y),this.reducerConfig={dataIdFromObject:d,mutationBehaviorReducers:_,customResolvers:j},this.watchQuery=this.watchQuery.bind(this),
-this.query=this.query.bind(this),this.mutate=this.mutate.bind(this),this.setStore=this.setStore.bind(this),this.resetStore=this.resetStore.bind(this)
-var E="undefined"==typeof t||{NODE_ENV:"production"}&&!1&&"undefined"!=typeof window&&!window.__APOLLO_CLIENT__
-"undefined"==typeof T&&(T=E),T&&(window.__APOLLO_CLIENT__=this),this.version=p.version}return e.prototype.watchQuery=function(t){this.initStore(),!this.shouldForceFetch&&t.forceFetch&&(t=a({},t,{forceFetch:!1
+if(this.middleware=function(){return function(t){return E.setStore(t),function(e){return function(n){var r=e(n)
+return E.queryManager.broadcastNewStore(t.getState()),E.devToolsHookCb&&E.devToolsHookCb({action:n,state:E.queryManager.getApolloState(),dataWithOptimisticResults:E.queryManager.getDataWithOptimisticResults()
+}),r}}}},o&&a)throw new Error('Both "reduxRootKey" and "reduxRootSelector" are configured, but only one of two is allowed.')
+o&&(console.warn('"reduxRootKey" option is deprecated and might be removed in the upcoming versions, please use the "reduxRootSelector" instead.'),this.reduxRootKey=o),!a&&o?this.reduxRootSelector=function(t){
+return t[o]}:s(a)?(this.reduxRootKey=a,this.reduxRootSelector=function(t){return t[a]}):"function"==typeof a?this.reduxRootSelector=a:this.reduxRootSelector=null,this.initialState=l?l:{},this.networkInterface=r?r:i.createNetworkInterface({
+uri:"/graphql"}),this.addTypename=_,this.resultTransformer=x,this.resultComparator=d,this.shouldForceFetch=!(h||v>0),this.dataId=u,this.fieldWithArgs=c.storeKeyNameFromFieldNameAndArgs,this.queryDeduplication=T,
+v&&setTimeout(function(){return E.shouldForceFetch=!0},v),this.reducerConfig={dataIdFromObject:u,mutationBehaviorReducers:y,customResolvers:w},this.watchQuery=this.watchQuery.bind(this),this.query=this.query.bind(this),
+this.mutate=this.mutate.bind(this),this.setStore=this.setStore.bind(this),this.resetStore=this.resetStore.bind(this)
+var C="undefined"==typeof t||{NODE_ENV:"production"}&&!1&&"undefined"!=typeof window&&!window.__APOLLO_CLIENT__
+"undefined"==typeof k&&(k=C),k&&(window.__APOLLO_CLIENT__=this),this.version=p.version}return e.prototype.watchQuery=function(t){this.initStore(),!this.shouldForceFetch&&t.forceFetch&&(t=a({},t,{forceFetch:!1
 })),t.fragments&&!v,1,d.createFragment(t.query,void 0,!0)
 var e=f.addFragmentsToDocument(t.query,t.fragments),n=a({},t,{query:e})
 return delete n.fragments,this.queryManager.watchQuery(n)},e.prototype.query=function(t){this.initStore(),!this.shouldForceFetch&&t.forceFetch&&(t=a({},t,{forceFetch:!1})),t.fragments&&!m,1,d.createFragment(t.query,void 0,!0)
@@ -11081,7 +11081,7 @@ if(this.reduxRootSelector?e=this.reduxRootSelector:(e=r,this.reduxRootKey=h),o(e
 
 
 this.store=t,this.queryManager=new u.QueryManager({networkInterface:this.networkInterface,reduxRootSelector:e,store:t,addTypename:this.addTypename,resultTransformer:this.resultTransformer,resultComparator:this.resultComparator,
-reducerConfig:this.reducerConfig})},e}()
+reducerConfig:this.reducerConfig,queryDeduplication:this.queryDeduplication})},e}()
 Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=b}).call(e,n(11))},function(t,e,n){"use strict"
 function r(t,n,r){void 0===n&&(n=[]),void 0===r&&(r=!1),r||c||(c=!0),n=s(n)
 var i=l.getFragmentDefinitions(t)
@@ -11092,16 +11092,16 @@ e.fragmentDefinitionsMap[n].push(t)):e.fragmentDefinitionsMap.hasOwnProperty(n)|
 }var s=n(1470),l=n(1405)
 e.fragmentDefinitionsMap={}
 var u=!0,c=!1
-e.createFragment=r,e.disableFragmentWarnings=i,e.enableFragmentWarnings=o,e.clearFragmentDefinitions=a},function(t,e){e.version="0.5.21"},function(t,e,n){(function(e){t.exports=e.ReactApollo=n(1496)}).call(e,function(){
+e.createFragment=r,e.disableFragmentWarnings=i,e.enableFragmentWarnings=o,e.clearFragmentDefinitions=a},function(t,e){e.version="0.5.24"},function(t,e,n){(function(e){t.exports=e.ReactApollo=n(1497)}).call(e,function(){
 return this}())},function(t,e,n){"use strict"
-var r=n(1497)
+var r=n(1498)
 e.ApolloProvider=r["default"]
-var i=n(1499)
+var i=n(1500)
 e.graphql=i["default"],e.withApollo=i.withApollo
 var o=n(109)
 e.compose=o.compose},function(t,e,n){"use strict"
 var r=this&&this.__extends||function(t,e){function n(){this.constructor=t}for(var r in e)e.hasOwnProperty(r)&&(t[r]=e[r])
-t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)},i=n(5),o=n(5),a=n(1498),s=function(t){function e(e,n){var r=t.call(this,e,n)||this
+t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)},i=n(5),o=n(5),a=n(1499),s=function(t){function e(e,n){var r=t.call(this,e,n)||this
 return a(e.client,'ApolloClient was not passed a client instance. Make sure you pass in your client via the "client" prop.'),r.client=e.client,e.store?(r.store=e.store,e.immutable&&e.client.initStore(),
 r):(e.client.initStore(),r.store=e.client.store,r)}return r(e,t),e.prototype.getChildContext=function(){return{store:this.store,client:this.client}},e.prototype.render=function(){return i.Children.only(this.props.children)
 
@@ -11179,7 +11179,7 @@ return!r&&i?i:(e.withRef&&(u.ref="wrappedInstance"),this.renderedElement=l.creat
 return a.displayName=o,a.WrappedComponent=n,a.contextTypes={store:l.PropTypes.object.isRequired,client:l.PropTypes.object.isRequired},h(a,n,{})}}var s=this&&this.__extends||function(t,e){function n(){this.constructor=t
 
 }for(var r in e)e.hasOwnProperty(r)&&(t[r]=e[r])
-t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)},l=n(5),u=n(1500),c=n(1501),d=n(1502),f=n(1498),p=n(1503),h=n(1504),m=n(255),v=n(1505),g=function(t){return{}},y=function(t){return t
+t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)},l=n(5),u=n(1501),c=n(1502),d=n(1503),f=n(1499),p=n(1504),h=n(1505),m=n(255),v=n(1506),g=function(t){return{}},y=function(t){return t
 
 },b=function(t){return!1},_=0
 e.withApollo=o,Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=a},function(t,e){(function(e){function n(t,e,n){switch(n.length){case 0:return t.call(e)
@@ -11252,10 +11252,10 @@ var c=s.length?s:l.length?l:u
 var d=c[0]
 e=d.variableDefinitions||[]
 var f=d.name&&"Name"===d.name.kind
-return r=f?d.name.value:"data",{name:r,type:n,variables:e}}var i=n(1498)
+return r=f?d.name.value:"data",{name:r,type:n,variables:e}}var i=n(1499)
 !function(t){t[t.Query=0]="Query",t[t.Mutation=1]="Mutation",t[t.Subscription=2]="Subscription"}(e.DocumentType||(e.DocumentType={}))
 var o=e.DocumentType
-e.parser=r},function(t,e,n){(function(e){t.exports=e.GraphQLTag=n(1507)}).call(e,function(){return this}())},function(t,e,n){function r(t,e){var n=Object.prototype.toString.call(t)
+e.parser=r},function(t,e,n){(function(e){t.exports=e.GraphQLTag=n(1508)}).call(e,function(){return this}())},function(t,e,n){function r(t,e){var n=Object.prototype.toString.call(t)
 if("[object Array]"===n)return t.map(function(t){return r(t,e)})
 if("[object Object]"!==n)throw new Error("Unexpected input.")
 e&&t.loc&&delete t.loc
@@ -11267,7 +11267,7 @@ if(!e||"Document"!==e.kind)throw new Error("Not a valid GraphQL document.")
 return e=r(e,!1),s[t]=e,e}function o(){var t=Array.prototype.slice.call(arguments),e=t[0]
 t.shift()
 for(var n=t,r="",o=0;o<n.length;o++)r+=e[o],r+=n[o].kind&&"Document"===n[o].kind?n[o].loc.source.body:n[o]
-return r+=e[e.length-1],i(r)}var a=n(1508).parse,s={}
+return r+=e[e.length-1],i(r)}var a=n(1509).parse,s={}
 o["default"]=o,t.exports=o},function(t,e){t.exports=function(t){function e(r){if(n[r])return n[r].exports
 var i=n[r]={exports:{},id:r,loaded:!1}
 return t[r].call(i.exports,i,i.exports,e),i.loaded=!0,i.exports}var n={}
@@ -11611,12 +11611,12 @@ var i=n(4)},function(t,e,n){"use strict"
 function r(t){return t&&t.__esModule?t:{"default":t}}function i(t){return(0,a["default"])(t,"Received null or undefined error."),{message:t.message,locations:t.locations}}Object.defineProperty(e,"__esModule",{
 value:!0}),e.formatError=i
 var o=n(14),a=r(o)},function(t,e){"use strict"
-function n(t,e){if(!t)throw new Error(e)}Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=n}])},function(t,e,n){(function(e){t.exports=e.GraphQLFragments=n(1510)}).call(e,function(){return this
+function n(t,e){if(!t)throw new Error(e)}Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=n}])},function(t,e,n){(function(e){t.exports=e.GraphQLFragments=n(1511)}).call(e,function(){return this
 
 }())},function(t,e,n){"use strict"
-var r=n(1511)
+var r=n(1512)
 Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=r["default"]},function(t,e,n){"use strict"
-var r=n(1512),i=n(1513),o=function(){function t(t){for(var e=[],n=1;n<arguments.length;n++)e[n-1]=arguments[n]
+var r=n(1513),i=n(1514),o=function(){function t(t){for(var e=[],n=1;n<arguments.length;n++)e[n-1]=arguments[n]
 this.document=t,this.children=e,this.propType=this.propType.bind(this)}return t.prototype.childFragments=function(){return(t=[]).concat.apply(t,this.children.map(function(t){return t.fragments()}))
 var t},t.prototype.fragmentDocument=function(){return i.addFragmentsToDocument(this.document,this.childFragments())},t.prototype.fragments=function(){return i.getFragmentDefinitions(this.fragmentDocument())
 
@@ -11638,7 +11638,7 @@ var m=h.typeCondition.name.value
 if(n.fragmentMatcher(e,m,a)){var v=i(h.selectionSet,e,n)
 f(c,v)}}}),n.resultMapper?n.resultMapper(c,e):c}function o(t,e,n){var r=n.variableValues,o=n.contextValue,s=n.resolver,l=t.name.value,f=u.argumentsObjectFromField(t,r),p={isLeaf:!t.selectionSet,resultKey:u.resultKeyNameFromField(t)
 },h=s(l,e,f,o,p)
-return t.selectionSet?c(h)||d(h)?h:Array.isArray(h)?a(t,h,n):i(t.selectionSet,h,n):h}function a(t,e,n){return e.map(function(e){return c(e)?null:Array.isArray(e)?a(t,e,n):i(t.selectionSet,e,n)})}var s=n(1513),l=n(1517),u=n(1518),c=n(1520),d=n(1521),f=n(1522)
+return t.selectionSet?c(h)||d(h)?h:Array.isArray(h)?a(t,h,n):i(t.selectionSet,h,n):h}function a(t,e,n){return e.map(function(e){return c(e)?null:Array.isArray(e)?a(t,e,n):i(t.selectionSet,e,n)})}var s=n(1514),l=n(1518),u=n(1519),c=n(1521),d=n(1522),f=n(1523)
 
 
 Object.defineProperty(e,"__esModule",{value:!0}),e["default"]=r},function(t,e,n){"use strict"
@@ -11664,7 +11664,7 @@ return e}function u(t){void 0===t&&(t=[])
 var e={}
 return t.forEach(function(t){e[t.name.value]=t}),e}function c(t,e){return i(t),f({},t,{definitions:t.definitions.concat(e)})}function d(t){i(t)
 try{return s(t)}catch(e){try{var n=a(t)
-return n[0]}catch(e){throw new Error("Expected a parsed GraphQL query with a query or a fragment.")}}}var f=n(1514),p=n(1515),h=n(1516)
+return n[0]}catch(e){throw new Error("Expected a parsed GraphQL query with a query or a fragment.")}}}var f=n(1515),p=n(1516),h=n(1517)
 e.getMutationDefinition=r,e.checkDocument=i,e.getOperationName=o,e.getFragmentDefinitions=a,e.getQueryDefinition=s,e.getFragmentDefinition=l,e.createFragmentMap=u,e.addFragmentsToDocument=c,e.getMainDefinition=d
 
 },function(t,e){function n(t,e,n){switch(n.length){case 0:return t.call(e)
@@ -11877,7 +11877,7 @@ return l(n,e,t,u),n[e.value]})}}function u(t,e){if(t.arguments&&t.arguments.leng
 return t.arguments.forEach(function(t){var r=t.name,i=t.value
 return l(n,r,i,e)}),n}return null}function c(t){return t.alias?t.alias.value:t.name.value}function d(t){return"Field"===t.kind}function f(t){return"InlineFragment"===t.kind}function p(t){return t.errors&&t.errors.length
 
-}var h=n(1519)
+}var h=n(1520)
 e.argumentsObjectFromField=u,e.resultKeyNameFromField=c,e.isField=d,e.isInlineFragment=f,e.graphQLResultHasError=p},function(t,e){function n(t,e){for(var n=-1,r=t?t.length:0,i=Array(r);++n<r;)i[n]=e(t[n],n,t)
 
 
