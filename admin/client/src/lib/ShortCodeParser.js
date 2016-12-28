@@ -4,7 +4,7 @@
  * Can use generic call functions `elementToCode(elements, code)` or `codeToHtml(html, code)`
  * or shortcode specific function calls.
  */
-class ShortCodeParser {
+const ShortCodeParser = {
   elementToCode(elements, code) {
     switch (code) {
       case 'embed': {
@@ -19,7 +19,7 @@ class ShortCodeParser {
         return null;
       }
     }
-  }
+  },
 
   codeToHtml(html, code) {
     switch (code) {
@@ -35,7 +35,7 @@ class ShortCodeParser {
         return null;
       }
     }
-  }
+  },
 
   toImageHtml(html) {
     let content = html;
@@ -58,7 +58,7 @@ class ShortCodeParser {
     }
 
     return content;
-  }
+  },
 
   toEmbedHtml(html) {
     let content = html;
@@ -87,7 +87,7 @@ class ShortCodeParser {
     }
 
     return content;
-  }
+  },
 
   toImageCode(elements) {
     const tempDiv = document.createElement('div');
@@ -111,7 +111,7 @@ class ShortCodeParser {
     });
 
     return elements;
-  }
+  },
 
   toEmbedCode(elements) {
     const tempDiv = document.createElement('div');
@@ -131,8 +131,8 @@ class ShortCodeParser {
     });
 
     return elements;
-  }
-}
+  },
+};
 
 function attrsToString(attrs) {
   return Object.entries(attrs)
