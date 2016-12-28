@@ -225,7 +225,7 @@ fi:
     PngType: "PNG-kuva - hyvä yleinen muoto"
     SINGULARNAME: Tiedosto
     TOOLARGE: "Tiedostokoko on liian suuri: maks. sallittu koko on {size}"
-    TOOLARGESHORT: "Sallittu tiedostokoko ylitetty {size}"
+    TOOLARGESHORT: "Sallittu tiedostokoko {size} ylitetty "
     TiffType: TIFF-kuva
     Title: Otsikko
     WavType: WAV-äänitiedosto
@@ -391,7 +391,7 @@ fi:
     FindInFolder: "Etsi kansiosta"
     IMAGEALT: "Vaihtoehtoinen teksti (alt)"
     IMAGEALTTEXT: "Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää"
-    IMAGEALTTEXTDESC: "Näytetään ruudunlukuohjelmille tai jos kuvaa ei voi näyttää"
+    IMAGEALTTEXTDESC: "Näytetään ruudunlukuohjelmille tai jos kuvia ei voi näyttää"
     IMAGEDIMENSIONS: Mitat
     IMAGEHEIGHTPX: Korkeus
     IMAGETITLE: "Otsikko (tooltip) - kuvan lisätietoja varten"
@@ -426,13 +426,13 @@ fi:
     CANCEL: Peruuta
     CANT_REORGANISE: "Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu."
     DELETED: Poistettu.
-    DropdownBatchActionsDefault: Toiminnot
+    DropdownBatchActionsDefault: "Valitse toiminto..."
     HELP: Ohje
-    PAGETYPE: "Sivutyyppi:"
+    PAGETYPE: "Sivun tyyppi"
     PERMAGAIN: "Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla."
     PERMALREADY: "Pahoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alta."
     PERMDEFAULT: "Sinun tulee olla kirjautuneena ylläpito-osioon; syötä tunnuksesi kenttiin."
-    PLEASESAVE: "Tallenna sivu: tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu."
+    PLEASESAVE: "Tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu. Tallenna sivu."
     PreviewButton: Esikatselu
     REORGANISATIONSUCCESSFUL: "Hakemistopuu uudelleenjärjestettiin onnistuneesti."
     SAVEDUP: Tallennettu.
@@ -488,7 +488,7 @@ fi:
     SUBJECTPASSWORDRESET: "Salasanasi palautuslinkki"
     SURNAME: Sukunimi
     TIMEFORMAT: Aikamuoto
-    VALIDATIONMEMBEREXISTS: "Toisella käyttäjällä on jo olemassa sama %s"
+    VALIDATIONMEMBEREXISTS: "Rekisteröityneellä käyttäjällä on jo käytössä tämä {identifier}."
     ValidationIdentifierFailed: "Olemassa olevan käyttäjän id:n #{id} päälle ei voida kirjoittaa samalla tunnisteella ({name} = {value}))"
     WELCOMEBACK: "Tervetuloa takaisin, {firstname}"
     YOUROLDPASSWORD: "Vanha salasanasi"
