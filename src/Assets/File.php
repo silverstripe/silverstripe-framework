@@ -1012,8 +1012,6 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
     /**
      * Formats a file size (eg: (int)42 becomes string '42 bytes')
      *
-     * @todo unit tests
-     *
      * @param int $size
      * @return string
      */
@@ -1040,22 +1038,29 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
     /**
      * Convert a php.ini value (eg: 512M) to bytes
      *
-     * @todo unit tests
-     *
-     * @param string $iniValue
+     * @param  string $iniValue
      * @return int
      */
     public static function ini2bytes($iniValue)
     {
-        switch (strtolower(substr(trim($iniValue), -1))) {
+        $iniValues = str_split(trim($iniValue));
+        $unit = strtolower(array_pop($iniValues));
+        $quantity = (int) implode($iniValues);
+        switch ($unit) {
             case 'g':
-                $iniValue *= 1024;
+                $quantity *= 1024;
+                // deliberate no break
             case 'm':
-                $iniValue *= 1024;
+                $quantity *= 1024;
+                // deliberate no break
             case 'k':
-                $iniValue *= 1024;
+                $quantity *= 1024;
+                // deliberate no break
+            default:
+                // no-op: pre-existing behaviour
+                break;
         }
-        return $iniValue;
+        return $quantity;
     }
 
     /**
