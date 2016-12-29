@@ -24,6 +24,11 @@ class RandomGenerator
     {
         $isWin = preg_match('/WIN/', PHP_OS);
 
+        // PHP 7.1 preference, since mcrypt is deprecated
+        if (function_exists('random_bytes')) {
+            return bin2hex(random_bytes(64));
+        }
+
         // TODO Fails with "Could not gather sufficient random data" on IIS, temporarily disabled on windows
         if (!$isWin) {
             if (function_exists('mcrypt_create_iv')) {
