@@ -3,6 +3,7 @@
 namespace SilverStripe\Security\Tests;
 
 use SilverStripe\Control\Controller;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Dev\FunctionalTest;
@@ -134,6 +135,40 @@ class GroupTest extends FunctionalTest
             'Orphaned nodes dont contain invalid parent IDs'
         );
         $this->assertContains($orphanGroup->ID, $orphanGroup->collateAncestorIDs());
+    }
+
+    /**
+     * Test that Groups including their children (recursively) are collated and returned
+     */
+    public function testCollateFamilyIds()
+    {
+        $group = $this->objFromFixture(Group::class, 'parentgroup');
+        $groupIds = $this->allFixtureIDs(Group::class);
+        $ids = array_intersect_key($groupIds, array_flip(['parentgroup', 'childgroup', 'grandchildgroup']));
+        $this->assertEquals(array_values($ids), $group->collateFamilyIDs());
+    }
+
+    /**
+     * Test that an exception is thrown if collateFamilyIDs is called on an unsaved Group
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage Cannot call collateFamilyIDs on unsaved Group.
+     */
+    public function testCannotCollateUnsavedGroupFamilyIds()
+    {
+        $group = new Group;
+        $group->collateFamilyIDs();
+    }
+
+    /**
+     * Test that a Group's children can be retrieved
+     */
+    public function testGetAllChildren()
+    {
+        $group = $this->objFromFixture(Group::class, 'parentgroup');
+
+        $children = $group->getAllChildren();
+        $this->assertInstanceOf(ArrayList::class, $children);
+        $this->assertSame(['childgroup', 'grandchildgroup'], $children->column('Code'));
     }
 
     public function testDelete()
