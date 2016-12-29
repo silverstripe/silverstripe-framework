@@ -1043,7 +1043,7 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
      */
     public static function ini2bytes($iniValue)
     {
-        $iniValues = array_filter(str_split(trim($iniValue)));
+        $iniValues = str_split(trim($iniValue));
         $unit = strtolower(array_pop($iniValues));
         $quantity = (int) implode($iniValues);
         switch ($unit) {
