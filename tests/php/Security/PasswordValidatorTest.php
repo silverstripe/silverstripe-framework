@@ -8,6 +8,11 @@ use SilverStripe\Dev\SapphireTest;
 
 class PasswordValidatorTest extends SapphireTest
 {
+    /**
+     * {@inheritDoc}
+     * @var bool
+     */
+    protected $usesDatabase = true;
 
     public function testValidate()
     {
@@ -44,8 +49,30 @@ class PasswordValidatorTest extends SapphireTest
         $this->assertTrue($r->isValid(), 'Passing enough tests');
     }
 
+    /**
+     * Test that a certain number of historical passwords are checked if specified
+     */
     public function testHistoricalPasswordCount()
     {
-        $this->markTestIncomplete();
+        $validator = new PasswordValidator;
+        $validator->checkHistoricalPasswords(3);
+        Member::set_password_validator($validator);
+
+        $member = new Member;
+        $member->FirstName = 'Repeat';
+        $member->Surname = 'Password-Man';
+        $member->Password = 'honk';
+        $member->write();
+
+        // Create a set of used passwords
+        $member->changePassword('foobar');
+        $member->changePassword('foobaz');
+        $member->changePassword('barbaz');
+
+        $this->assertFalse($member->changePassword('barbaz')->isValid());
+        $this->assertFalse($member->changePassword('foobaz')->isValid());
+        $this->assertFalse($member->changePassword('foobar')->isValid());
+        $this->assertTrue($member->changePassword('honk')->isValid());
+        $this->assertTrue($member->changePassword('newpassword')->isValid());
     }
 }
