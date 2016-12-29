@@ -98,7 +98,8 @@ Variables can come from your database fields, or custom methods you define on yo
 **mysite/code/Page.php**
 
 	:::php
-	public function UsersIpAddress() {
+	public function UsersIpAddress()
+    {
 		return $this->getRequest()->getIP();
 	}
 
@@ -112,8 +113,8 @@ Variables can come from your database fields, or custom methods you define on yo
 </div>
 
 The variables that can be used in a template vary based on the object currently in [scope](#scope). Scope defines what
-object the methods get called on. For the standard `Page.ss` template the scope is the current [api:Page_Controller] 
-class. This object gives you access to all the database fields on [api:Page_Controller], its corresponding [api:Page]
+object the methods get called on. For the standard `Page.ss` template the scope is the current [api:PageController] 
+class. This object gives you access to all the database fields on [api:PageController], its corresponding [api:Page]
 record and any subclasses of those two.
 
 **mysite/code/Layout/Page.ss**
@@ -407,12 +408,12 @@ In the `<% loop %>` section, we saw an example of two **scopes**. Outside the `<
 the scope of the top level `Page`. But inside the loop, we were in the scope of an item in the list (i.e the `Child`) 
 
 The scope determines where the value comes from when you refer to a variable. Typically the outer scope of a `Page.ss` 
-layout template is the [api:Page_Controller] that is currently being rendered. 
+layout template is the [api:PageController] that is currently being rendered. 
 
-When the scope is a `Page_Controller` it will automatically also look up any methods in the corresponding `Page` data
+When the scope is a `PageController` it will automatically also look up any methods in the corresponding `Page` data
 record. In the case of `$Title` the flow looks like
 
-	$Title --> [Looks up: Current Page_Controller and parent classes] --> [Looks up: Current Page and parent classes]
+	$Title --> [Looks up: Current PageController and parent classes] --> [Looks up: Current Page and parent classes]
 
 The list of variables you could use in your template is the total of all the methods in the current scope object, parent
 classes of the current scope object, and any [api:Extension] instances you have.

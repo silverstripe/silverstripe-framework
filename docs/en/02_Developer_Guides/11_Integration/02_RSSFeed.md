@@ -57,7 +57,7 @@ You can use [api:RSSFeed] to easily create a feed showing your latest Page updat
 	
 	..
 
-	class Page_Controller extends ContentController {
+	class PageController extends ContentController {
 
 		private static $allowed_actions = array(
 			'rss'
@@ -118,7 +118,7 @@ Then in our controller, we add a new action which returns a the XML list of `Pla
 	:::php
 	<?php
 
-	class Page_Controller extends ContentController {
+	class PageController extends ContentController {
 
 		private static $allowed_actions = array(
 			'players'

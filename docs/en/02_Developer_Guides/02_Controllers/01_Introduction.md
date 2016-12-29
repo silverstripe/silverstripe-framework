@@ -34,7 +34,7 @@ at http://yoursite.com/teams/ and the `players` custom action is at http://yours
 
 <div class="info" markdown="1">
 If you're using the `cms` module with and dealing with `Page` objects then for your custom `Page Type` controllers you 
-would extend `ContentController` or `Page_Controller`. You don't need to define the routes value as the `cms` handles 
+would extend `ContentController` or `PageController`. You don't need to define the routes value as the `cms` handles 
 routing.
 </div>
 

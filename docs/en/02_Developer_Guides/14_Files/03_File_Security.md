@@ -59,7 +59,7 @@ authorised users, the following should be considered:
 
 
     :::php
-    class Page_Controller extends ContentController {
+    class PageController extends ContentController {
         public function init() {
             parent::init();
             // Whitelist any protected files on this page for the current user
@@ -88,7 +88,7 @@ authorised users, the following should be considered:
 
 
     :::php
-    class Page_Controller extends ContentController {
+    class PageController extends ContentController {
         public function init() {
             parent::init();
             // Whitelist any protected files on this page for the current user

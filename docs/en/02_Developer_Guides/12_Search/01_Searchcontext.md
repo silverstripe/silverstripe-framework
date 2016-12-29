@@ -79,9 +79,9 @@ the `$fields` constructor parameter.
 	:::php
 	<?php
 
-	..
+	// ..
 
-	class Page_Controller extends ContentController {
+	class PageController extends ContentController {
 
 		public function SearchForm() {
 			$context = singleton('MyDataObject')->getCustomSearchContext();

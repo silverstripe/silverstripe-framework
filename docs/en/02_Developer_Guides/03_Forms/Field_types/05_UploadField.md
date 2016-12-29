@@ -431,7 +431,7 @@ code could be used:
 	:::php
 	class GalleryPage extends Page {}
 
-	class GalleryPage_Controller extends Page_Controller {
+	class GalleryPageController extends PageController {
 		private static $allowed_actions = array('Form');
 		public function Form() {
 			$fields = new FieldList(

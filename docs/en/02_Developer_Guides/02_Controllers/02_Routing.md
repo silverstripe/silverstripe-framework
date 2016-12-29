@@ -4,11 +4,11 @@ summary: A more in depth look at how to map requests to particular controllers a
 # Routing
 
 Routing is the process of mapping URL's to [api:Controllers] and actions. In the introduction we defined a new custom route
-for our `TeamsController` mapping any `teams` URL to our `TeamsController`
+for our `TeamController` mapping any `teams` URL to our `TeamController`
 
 <div class="info" markdown="1">
 If you're using the `cms` module with and dealing with `Page` objects then for your custom `Page Type` controllers you 
-would extend `ContentController` or `Page_Controller`. You don't need to define the routes value as the `cms` handles 
+would extend `ContentController` or `PageController`. You don't need to define the routes value as the `cms` handles 
 routing.
 </div>
 
@@ -17,16 +17,17 @@ These routes by standard, go into a `routes.yml` file in your applications `_con
 
 **mysite/_config/routes.yml**
 
-	:::yml
-	---
-	Name: mysiteroutes
-	After: framework/routes#coreroutes
-	---
-	Director:
-	  rules:
-	    'teams//$Action/$ID/$Name': 'TeamController'
-	    'player/': 'PlayerController'
-	    '': 'HomeController'
+```yml
+---
+Name: mysiteroutes
+After: framework/routes#coreroutes
+---
+Director:
+  rules:
+    'teams//$Action/$ID/$Name': 'TeamController'
+    'player/': 'PlayerController'
+    '': 'HomeController'
+```
 
 <div class="notice" markdown="1">
 To understand the syntax for the `routes.yml` file better, read the [Configuration](../configuration) documentation.
@@ -34,8 +35,9 @@ To understand the syntax for the `routes.yml` file better, read the [Configurati
 
 ## Parameters
 
-	:::yml
-	'teams//$Action/$ID/$Name': 'TeamController'
+```yml
+'teams//$Action/$ID/$Name': 'TeamController'
+```
 
 This route has defined that any URL beginning with `team` should create, and be handled by a `TeamController` instance.
 
@@ -49,49 +51,49 @@ All Controllers have access to `$this->getRequest()` for the request object and 
 
 Here is what those parameters would look like for certain requests
 
-	:::php
-	// GET /teams/
+```php
+// GET /teams/
 
-	print_r($this->getRequest()->params());
+print_r($this->getRequest()->params());
 
-	// Array
-	// (
-	//   [Action] => null
-	//   [ID] => null
-	//   [Name] => null
-	// )
+// Array
+// (
+//   [Action] => null
+//   [ID] => null
+//   [Name] => null
+// )
 
-	// GET /teams/players/
+// GET /teams/players/
 
-	print_r($this->getRequest()->params());
+print_r($this->getRequest()->params());
 
-	// Array
-	// (
-	//   [Action] => 'players'
-	//   [ID] => null
-	//   [Name] => null
-	// )
+// Array
+// (
+//   [Action] => 'players'
+//   [ID] => null
+//   [Name] => null
+// )
 
-	// GET /teams/players/1
+// GET /teams/players/1
 
-	print_r($this->getRequest()->params());
+print_r($this->getRequest()->params());
 
-	// Array
-	// (
-	//   [Action] => 'players'
-	//   [ID] => 1
-	//   [Name] => null
-	// )
+// Array
+// (
+//   [Action] => 'players'
+//   [ID] => 1
+//   [Name] => null
+// )
+```
 
 You can also fetch one parameter at a time.
 
-	:::php
+```php
+// GET /teams/players/1/
 
-	// GET /teams/players/1/
-
-	echo $this->getRequest()->param('ID');
-	// returns '1'
-
+echo $this->getRequest()->param('ID');
+// returns '1'
+```
 
 ## URL Patterns
 
@@ -108,26 +110,29 @@ A rule must always start with alphabetical ([A-Za-z]) characters or a $Variable 
  | `!`         | **Require Variable** - Placing this after a parameter variable requires data to be present for the rule to match | 
  | `//`        | **Shift Point** - Declares that only variables denoted with a $ are parsed into the $params AFTER this point in the regex | 
 
-	:::yml
-	'teams/$Action/$ID/$OtherID': 'TeamController' 
+```yml
+'teams/$Action/$ID/$OtherID': 'TeamController' 
 
-	# /teams/
-	# /teams/players/
-	# /teams/
+# /teams/
+# /teams/players/
+# /teams/
+```
 
 Standard URL handler syntax. For any URL that contains 'team' this rule will match and hand over execution to the 
 matching controller. The `TeamsController` is passed an optional action, id and other id parameters to do any more
 decision making.
 
-	:::yml
-	'teams/$Action!/$ID!/': 'TeamController'
+```yml
+'teams/$Action!/$ID!/': 'TeamController'
+```
 
 This does the same matching as the previous example, any URL starting with `teams` will look at this rule **but** both
 `$Action` and `$ID` are required. Any requests to `team/` will result in a `404` error rather than being handed off to
 the `TeamController`.
 
-	:::yml
-	`admin/help//$Action/$ID`: 'AdminHelp'
+```yml
+'admin/help//$Action/$ID: 'AdminHelp'
+```
 
 Match an url starting with `/admin/help/`, but don't include `/help/` as part of the action (the shift point is set to 
 start parsing variables and the appropriate controller action AFTER the `//`).
@@ -152,19 +157,22 @@ This is useful when you want to provide custom actions for the mapping of `teams
 
 **mysite/code/controllers/TeamController.php**
 
-	:::php
-	<?php
+```
+<?php
 
-	class TeamController extends Controller {
+use SilverStripe\Control\Controller;
 
-		private static $allowed_actions = array(
-			'payroll'
-		);
+class TeamController extends Controller
+{
+    private static $allowed_actions = array(
+        'payroll'
+    );
 
-	    private static $url_handlers = array(
-			'staff/$ID/$Name' => 'payroll',
-			'coach/$ID/$Name' => 'payroll'
-	    );
+    private static $url_handlers = array(
+        'staff/$ID/$Name' => 'payroll',
+        'coach/$ID/$Name' => 'payroll'
+    );
+```
 
 The syntax for the `$url_handlers` array users the same pattern matches as the `YAML` configuration rules.
 
@@ -175,28 +183,34 @@ class specifies the URL pattern in `$url_handlers`. Notice that it defines 5
 parameters.
 
 
-	:::php
-	class FeedController extends ContentController {
+```php
+use SilverStripe\CMS\Controllers\ContentController;
 
-		private static $allowed_actions = array('go');
-		private static $url_handlers = array(
-			'go/$UserName/$AuthToken/$Timestamp/$OutputType/$DeleteMode' => 'go'
-		);
-		public function go() {
-			$this->validateUser(
-				$this->getRequest()->param('UserName'),
-				$this->getRequest()->param('AuthToken')
-			);
-			/* more processing goes here */
-		}
+class FeedController extends ContentController
+{
+    private static $allowed_actions = array('go');
+    private static $url_handlers = array(
+        'go/$UserName/$AuthToken/$Timestamp/$OutputType/$DeleteMode' => 'go'
+    );
+
+    public function go()
+    {
+        $this->validateUser(
+            $this->getRequest()->param('UserName'),
+            $this->getRequest()->param('AuthToken')
+        );
+        /* more processing goes here */
+    }
+}
 
 The YAML rule, in contrast, is simple. It needs to provide only enough
 information for the framework to choose the desired controller.
 
-	:::yaml
-	Director:
-	  rules:
-	    'feed': 'FeedController'
+```yml
+Director:
+  rules:
+    'feed': 'FeedController'
+```
 
 ## Links
 
