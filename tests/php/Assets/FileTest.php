@@ -54,8 +54,8 @@ class FileTest extends SapphireTest
         $fileIDs = $this->allFixtureIDs(File::class);
         foreach ($fileIDs as $fileID) {
             /**
- * @var File $file
-*/
+             * @var File $file
+             */
             $file = DataObject::get_by_id(File::class, $fileID);
             $root = ASSETS_PATH . '/FileTest/';
             if ($folder = $file->Parent()) {
@@ -143,7 +143,7 @@ class FileTest extends SapphireTest
         // because the parent folders don't exist in the database
         $folder = Folder::find_or_make('/FileTest/');
         $testfilePath = BASE_PATH . '/assets/FileTest/CreateWithFilenameHasCorrectPath.txt'; // Important: No leading slash
-        $fh = fopen($testfilePath, "w");
+        $fh = fopen($testfilePath, 'w');
         fwrite($fh, str_repeat('x', 1000000));
         fclose($fh);
 
@@ -285,8 +285,8 @@ class FileTest extends SapphireTest
     public function testSetNameChangesFilesystemOnWrite()
     {
         /**
- * @var File $file
-*/
+         * @var File $file
+         */
         $file = $this->objFromFixture(File::class, 'asdf');
         $this->logInWithPermission('ADMIN');
         $file->publishRecursive();
@@ -461,8 +461,8 @@ class FileTest extends SapphireTest
     public function testDeleteFile()
     {
         /**
- * @var File $file
-*/
+         * @var File $file
+         */
         $file = $this->objFromFixture(File::class, 'asdf');
         $this->logInWithPermission('ADMIN');
         $file->publishSingle();
@@ -502,7 +502,7 @@ class FileTest extends SapphireTest
         //get folder again and see if the filename has changed
         $folder = DataObject::get_by_id(Folder::class, $folderID);
         $this->assertEquals(
-            $newTitle . "/",
+            $newTitle . '/',
             $folder->Filename,
             "Folder Filename updated after rename of Title"
         );
@@ -587,7 +587,6 @@ class FileTest extends SapphireTest
         $this->assertTrue($file->canEdit(), "Admins can edit files");
     }
 
-
     public function testJoinPaths()
     {
         $this->assertEquals('name/file.jpg', File::join_paths('/name', 'file.jpg'));
@@ -596,6 +595,32 @@ class FileTest extends SapphireTest
         $this->assertEquals('name/file.jpg', File::join_paths('name/', '/', 'file.jpg'));
         $this->assertEquals('file.jpg', File::join_paths('/', '/', 'file.jpg'));
         $this->assertEquals('', File::join_paths('/', '/'));
+    }
+
+    /**
+     * Test that ini2bytes returns the number of bytes for a PHP ini style size declaration
+     *
+     * @param string $iniValue
+     * @param int    $expected
+     * @dataProvider ini2BytesProvider
+     */
+    public function testIni2Bytes($iniValue, $expected)
+    {
+        $this->assertSame($expected, File::ini2bytes($iniValue));
+    }
+
+    /**
+     * @return array
+     */
+    public function ini2BytesProvider()
+    {
+        return [
+            ['2k', 2048],
+            ['512M', 524288],
+            ['512 M', 524288],
+            ['1024g', 1048576],
+            ['1024G', 1048576]
+        ];
     }
 
     /**

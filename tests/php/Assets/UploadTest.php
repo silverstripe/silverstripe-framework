@@ -33,8 +33,7 @@ class UploadTest extends SapphireTest
         $tmpFileName = 'UploadTest-testUpload.txt';
         $tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
         $tmpFileContent = '';
-        for ($i=0; $i<10000;
-        $i++) {
+        for ($i = 0; $i < 10000; $i++) {
             $tmpFileContent .= '0';
         }
         file_put_contents($tmpFilePath, $tmpFileContent);
@@ -94,8 +93,7 @@ class UploadTest extends SapphireTest
         $tmpFileName = 'UploadTest-testUpload.txt';
         $tmpFilePath = TEMP_FOLDER . '/' . $tmpFileName;
         $tmpFileContent = '';
-        for ($i=0; $i<10000;
-        $i++) {
+        for ($i = 0; $i < 10000; $i++) {
             $tmpFileContent .= '0';
         }
         file_put_contents($tmpFilePath, $tmpFileContent);
