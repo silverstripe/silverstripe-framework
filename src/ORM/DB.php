@@ -3,6 +3,7 @@
 namespace SilverStripe\ORM;
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Cookie;
