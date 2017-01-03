@@ -215,7 +215,8 @@ abstract class Database
             if (strtolower($_REQUEST['showqueries']) == 'inline') {
                 $sql = DB::inline_parameters($sql, $parameters);
             }
-            Debug::message("\n$sql\n{$endtime}s\n", false);
+            $queryCount = sprintf("%04d", $this->queryCount);
+            Debug::message("\n$queryCount: $sql\n{$endtime}s\n", false);
             return $result;
         } else {
             return $callback($sql);
