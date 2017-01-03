@@ -5,6 +5,7 @@ namespace SilverStripe\ORM\Connect;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\Debug;
+use SilverStripe\ORM\DB;
 use SilverStripe\ORM\PaginatedList;
 use SilverStripe\ORM\Queries\SQLUpdate;
 use SilverStripe\ORM\Queries\SQLInsert;
