@@ -2,14 +2,16 @@
 
 namespace SilverStripe\Security;
 
+use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
@@ -18,16 +20,14 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
 use Exception;
-use Page;
-use Page_Controller;
 use Subsite;
 
 /**
@@ -515,14 +515,14 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         // Use sitetree pages to render the security page
-        $tmpPage = new Page();
+        $tmpPage = new SiteTree();
         $tmpPage->Title = $title;
         /** @skipUpgrade */
         $tmpPage->URLSegment = "Security";
         // Disable ID-based caching  of the log-in page by making it a random number
         $tmpPage->ID = -1 * rand(1, 10000000);
 
-        $controller = Page_Controller::create($tmpPage);
+        $controller = ContentController::create($tmpPage);
         $controller->setDataModel($this->model);
         $controller->doInit();
         return $controller;

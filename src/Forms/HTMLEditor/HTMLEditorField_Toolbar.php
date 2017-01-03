@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
-use Page;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Upload;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
@@ -516,7 +516,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $id = (int)$this->getRequest()->getVar('PageID');
         $anchors = array();
 
-        if (($page = Page::get()->byID($id)) && !empty($page)) {
+        if (($page = SiteTree::get()->byID($id)) && !empty($page)) {
             if (!$page->canView()) {
                 throw new HTTPResponse_Exception(
                     _t(
