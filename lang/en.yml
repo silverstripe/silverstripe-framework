@@ -67,6 +67,7 @@ en:
     UNORDEREDEXAMPLE1: 'unordered item 1'
   BackLink_Button_ss:
     Back: Back
+    NavigateUp: Navigate up a folder
   BasicAuth:
     ENTERINFO: 'Please enter a username and password.'
     ERRORNOTADMIN: 'That user is not an administrator.'
@@ -440,6 +441,10 @@ en:
     TooManyPages: 'Too many pages'
     ValidationError: 'Validation error'
     VersionUnknown: unknown
+    MenuToggleAuto: Auto
+    MenuToggleCollapse: Collapse
+    MenuToggleExpand: Expand
+    MenuToggleStickyNav: "Sticky Nav"
   LeftAndMain_Menu_ss:
     Hello: Hi
     LOGOUT: 'Log out'
