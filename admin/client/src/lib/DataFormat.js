@@ -2,7 +2,11 @@ import i18n from 'i18n';
 import qs from 'qs';
 
 /**
- * Merge existing querystring with new querystring object
+ * Merge existing querystring with new querystring object.
+ * Does not deep merge.
+ *
+ * Example:
+ * `urlQuery({ foo: 1 }, { bar: 2 })` returns `'?foo=1&bar=2'`
  *
  * @param {Object} locationQuery - Current browser querystring object (window.location.query)
  * @param {Object} newQuery - New object to update. Set to null to clear instead of merge.
@@ -26,7 +30,9 @@ export function urlQuery(locationQuery, newQuery) {
 /**
  * Turn flatterned querystring object into recursive nested objects,
  * similarly to how PHP handles nested querystring objects.
- * E.g. turn `{'query[val]': bob}` into `{query: { val: bob }}`
+ *
+ * Example:
+ * `decodeQuery('query[val]=bob')` returns `{query: { val: bob }}`
  *
  * @param {String} query - Querystring string
  * @return {Object} - Unflattened query object
