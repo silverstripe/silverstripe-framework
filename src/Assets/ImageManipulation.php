@@ -725,7 +725,9 @@ trait ImageManipulation
             function (AssetStore $store, $filename, $hash, $variant) use ($callback) {
                 /** @var Image_Backend $backend */
                 $backend = $this->getImageBackend();
-                if (!$backend) {
+
+                // If backend isn't available
+                if (!$backend || !$backend->getImageResource()) {
                     return null;
                 }
                 $backend = $callback($backend);
