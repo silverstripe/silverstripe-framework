@@ -73,6 +73,13 @@ class GDBackend extends Object implements Image_Backend, Flushable
         }
     }
 
+    public function __destruct()
+    {
+        if ($resource = $this->getImageResource()) {
+            imagedestroy($resource);
+        }
+    }
+
     public function loadFrom($path)
     {
         // If we're working with image resampling, things could take a while.  Bump up the time-limit

@@ -733,13 +733,22 @@ trait ImageManipulation
                     return null;
                 }
 
-                return $backend->writeToStore(
+                $return = $backend->writeToStore(
                     $store,
                     $filename,
                     $hash,
                     $variant,
                     array('conflict' => AssetStore::CONFLICT_USE_EXISTING)
                 );
+
+                // Enforce garbage collection on $backend, avoid increasing memory use on each manipulation
+                // by holding on to the underlying GD image resource.
+                // Even though it's a local variable with no other references,
+                // PHP holds on to it for the entire lifecycle of the script,
+                // which is potentially related to passing it into the $callback closure.
+                gc_collect_cycles();
+
+                return $return;
             }
         );
     }
