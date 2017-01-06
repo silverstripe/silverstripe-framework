@@ -272,6 +272,8 @@ class Form extends RequestHandler {
 		$this->securityToken = ($securityEnabled) ? new SecurityToken() : new NullSecurityToken();
 
 		$this->setupDefaultClasses();
+
+		$this->extend('updateForm');
 	}
 
 	/**
