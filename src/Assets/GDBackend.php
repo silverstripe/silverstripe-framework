@@ -73,6 +73,13 @@ class GDBackend extends Object implements Image_Backend, Flushable
         }
     }
 
+    public function __destruct()
+    {
+        if ($resource = $this->getImageResource()) {
+            imagedestroy($resource);
+        }
+    }
+
     public function loadFrom($path)
     {
         // If we're working with image resampling, things could take a while.  Bump up the time-limit
@@ -92,7 +99,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
 
         // We use getimagesize instead of extension checking, because sometimes extensions are wrong.
         $meta = getimagesize($path);
-        if ($meta === false) {
+        if ($meta === false || !$this->checkAvailableMemory($meta)) {
             $this->markFailed($path, $mtime);
             return;
         }
@@ -140,7 +147,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
             return;
         }
 
-        // Skip if failed before
+        // Skip if failed before, or image is too large
         $filename = $assetContainer->getFilename();
         $hash = $assetContainer->getHash();
         $variant = $assetContainer->getVariant();
@@ -148,8 +155,16 @@ class GDBackend extends Object implements Image_Backend, Flushable
             return;
         }
 
-        // Mark as potentially failed prior to creation, resetting this on success
         $content = $assetContainer->getString();
+
+        // We use getimagesizefromstring instead of extension checking, because sometimes extensions are wrong.
+        $meta = getimagesizefromstring($content);
+        if ($meta === false || !$this->checkAvailableMemory($meta)) {
+            $this->markFailed($filename, $hash, $variant);
+            return;
+        }
+
+        // Mark as potentially failed prior to creation, resetting this on success
         $image = imagecreatefromstring($content);
         if ($image === false) {
             $this->markFailed($filename, $hash, $variant);
@@ -205,6 +220,35 @@ class GDBackend extends Object implements Image_Backend, Flushable
     {
         $key = sha1(implode('|', func_get_args()));
         return (bool)$this->cache->load($key);
+    }
+
+    /**
+     * Check if we've got enough memory available for resampling this image. This check is rough,
+     * so it will not catch all images that are too large - it also won't work accurately on large,
+     * animated GIFs as bits per pixel can't be calculated for an animated GIF with a global color
+     * table.
+     *
+     * @param array $imageInfo Value from getimagesize() or getimagesizefromstring()
+     * @return boolean
+     */
+    protected function checkAvailableMemory($imageInfo)
+    {
+        $limit = translate_memstring(ini_get('memory_limit'));
+        if ($limit < 0) {
+            return true; // memory_limit == -1
+        }
+
+        // bits per channel (rounded up, default to 1)
+        $bits = isset($imageInfo['bits']) ? ($imageInfo['bits'] + 7) / 8 : 1;
+
+        // channels (default 4 rgba)
+        $channels = isset($imageInfo['channels']) ? $imageInfo['channels'] : 4;
+        $bytesPerPixel = $bits * $channels;
+
+        // width * height * bytes per pixel
+        $memoryRequired = $imageInfo[0] * $imageInfo[1] * $bytesPerPixel;
+
+        return $memoryRequired + memory_get_usage() < $limit;
     }
 
     /**
@@ -615,16 +659,31 @@ class GDBackend extends Object implements Image_Backend, Flushable
         if ($extension = pathinfo($filename, PATHINFO_EXTENSION)) {
             $path .= "." . $extension;
         }
-        $this->writeTo($path);
+
+        $writeSuccess = $this->writeTo($path);
+        if (!$writeSuccess) {
+            return null;
+        }
+
         $result = $assetStore->setFromLocalFile($path, $filename, $hash, $variant, $config);
         unlink($path);
+
         return $result;
     }
 
+    /**
+     * @param string $filename
+     * @return boolean
+     */
     public function writeTo($filename)
     {
         if (!$filename) {
-            return;
+            return false;
+        }
+
+        // The GD resource might not exist if the image is too large to be processed, see checkAvailableMemory().
+        if (!$this->gd) {
+            return false;
         }
 
         // Get current image data
@@ -653,7 +712,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
             }
         }
 
-        // if $this->interlace != 0, the output image will be interlaced
+        // If $this->interlace != 0, the output image will be interlaced.
         imageinterlace($this->gd, $this->interlace);
 
         // if the extension does not exist, the file will not be created!
@@ -672,9 +731,14 @@ class GDBackend extends Object implements Image_Backend, Flushable
                 imagepng($this->gd, $filename);
                 break;
         }
-        if (file_exists($filename)) {
-            @chmod($filename, 0664);
+
+        if (!file_exists($filename)) {
+            return false;
         }
+
+        @chmod($filename, 0664);
+
+        return true;
     }
 
     /**
