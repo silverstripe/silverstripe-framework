@@ -94,7 +94,7 @@ for you to try.
 
 To send emails, you can use Monolog's [NativeMailerHandler](https://github.com/Seldaek/monolog/blob/master/src/Monolog/Handler/NativeMailerHandler.php#L74), like this:
 
-	Injector:
+	SilverStripe\Core\Injector\Injector:
 	  Logger: 
 	    calls:
 	      MailHandler: [ pushHandler, [ %$MailHandler ] ]
@@ -119,7 +119,7 @@ The calls key, `MailHandler`, can be anything you like: its main purpose is to l
 
 To log to a file, you can use Monolog's [StreamHandler](https://github.com/Seldaek/monolog/blob/master/src/Monolog/Handler/StreamHandler.php#L74), like this:
 
-	Injector:
+	SilverStripe\Core\Injector\Injector:
 	  Logger: 
 	    calls:
 	      LogFileHandler: [ pushHandler, [ %$LogFileHandler ] ]
@@ -136,7 +136,7 @@ The log file will be relative to the framework/ path, so "../silverstripe.log" w
 You can disable a handler by removing its pushHandlers call from the calls option of the Logger service definition.
 The handler key of the default handler is `DisplayErrorHandler`, so you can disable it like this:
 
-	Injector:
+	SilverStripe\Core\Injector\Injector:
 	  Logger:
 	    calls:
 	      DisplayErrorHandler:	%%remove%%
@@ -152,7 +152,7 @@ non-dev.
 	Only:
 	  environment: dev
 	---
-	Injector:
+	SilverStripe\Core\Injector\Injector:
 	  Logger:
 	    calls:
 	      - [ pushHandler, [ %$DisplayErrorHandler ]] 
@@ -167,7 +167,7 @@ non-dev.
 	Except:
 	  environment: dev
 	---
-	Injector:
+	SilverStripe\Core\Injector\Injector:
 	  Logger:
 	    calls:
 	      - [ pushHandler, [ %$LogFileHandler ]] 
@@ -225,7 +225,7 @@ others.
 Monolog comes by default with SilverStripe, but you may use another PSR-3 compliant logger, if you wish. To do this,
 set the `Injector.Logger` configuration parameter, providing a new injector definition. For example:
 
-	Injector:
+	SilverStripe\Core\Injector\Injector:
 	  ErrorHandler:
 	    class: Logging\Logger
 	    constructor:
@@ -246,7 +246,7 @@ configuration. It does a number of things:
 This error handler is flexible enough to work with any PSR-3 logging implementation, but sometimes you will want to use
 another. To replace this, you should registered a new service, `ErrorHandlerLoader`.  For example:
 
-	Injector:
+	SilverStripe\Core\Injector\Injector:
 	  ErrorHandlerLoader: 
 	    class: MyApp\CustomErrorHandlerLoader
 
