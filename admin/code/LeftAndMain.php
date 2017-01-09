@@ -1199,8 +1199,7 @@ class LeftAndMain extends Controller implements PermissionProvider
                         _t('LeftAndMain.TooManyPages', 'Too many pages'),
                         Controller::join_links(
                             $controller->LinkWithSearch($controller->Link()),
-                            '
-							?view=list&ParentID=' . $parent->ID
+                            '?view=list&ParentID=' . $parent->ID
                         ),
                         _t(
                             'LeftAndMain.ShowAsList',
