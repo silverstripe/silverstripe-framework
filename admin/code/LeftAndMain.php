@@ -1126,7 +1126,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			$nodeCountCallback = function($parent, $numChildren) use(&$controller, $className, $nodeThresholdLeaf) {
 				if ($className !== 'SilverStripe\\CMS\\Model\\SiteTree'
 					|| !$parent->ID
-					|| $numChildren >= $nodeThresholdLeaf
+					|| $numChildren <= $nodeThresholdLeaf
 				) {
 					return null;
 				}
