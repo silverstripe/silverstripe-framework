@@ -103,7 +103,29 @@ class Convert
             );
         }
     }
-
+    
+    /**
+     * Convert a value to be suitable for an HTML class attribute. Replaces non
+     * supported characters with a hyphen and converts to lowercase.
+     *
+     * @param array|string $val String to escape, or array of strings
+     *
+     * @return array|string
+     */
+    public static function raw2htmlclass($val)
+    {
+        $val = self::raw2htmlid($val);
+        
+        if (is_array($val)) {
+            foreach ($val as $k => $v) {
+                $val[$k] = strtolower(str_replace('_', '-', $v));
+            }
+            return $val;
+        } else {
+            return strtolower(str_replace('_', '-', $val));
+        }
+    }
+    
     /**
      * Ensure that text is properly escaped for XML.
      *
