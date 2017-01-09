@@ -32,9 +32,14 @@ class Breadcrumb extends SilverStripeComponent {
        this.props.crumbs.slice(-1).map((crumb, index) => {
          const iconClassNames = ['breadcrumb__icon', crumb.icon ? crumb.icon.className : '']
            .join(' ');
+         const itemClassNames = ['breadcrumb__item', 'breadcrumb__item--last'];
+
+         if (crumb.noCrumb) {
+           itemClassNames.push('breadcrumb__item--no-crumb');
+         }
 
          return [
-           <li className="breadcrumb__item breadcrumb__item--last">
+           <li className={itemClassNames.join(' ')}>
              <h2 className="breadcrumb__item-title breadcrumb__item-title--last" key={index}>
                {crumb.text}
                {crumb.icon &&

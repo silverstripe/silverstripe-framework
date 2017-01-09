@@ -723,6 +723,7 @@ $close-text-shadow: 0 1px 0 #fff;
 // $pre-scrollable-max-height: 340px;
 
 // Panel sizes
+
 $cms-panel-xs: 60px;
 $cms-panel-sm: 300px;
 $cms-panel-md: 448px;
@@ -730,6 +731,7 @@ $cms-panel-lg: 638px;
 
 
 // Shadows
+
 $shadow-level-1: rgba(0, 0, 0, .1);
 $shadow-level-2: rgba(0, 0, 0, .15);
 $shadow-level-3: rgba(0, 0, 0, .2);
@@ -737,18 +739,21 @@ $shadow-level-4: rgba(0, 0, 0, .25);
 $shadow-level-5: rgba(0, 0, 0, .3);
 
 // TODO tidy all shadows cms wide (including AssetAdmin)
+
 $shadow-light: $shadow-level-3;
 $shadow-lighter: $shadow-level-1;
 $dropdown-shadow: 0 0 3px $shadow-level-3;
 $gallery-item-shadow: 0 1px 4px $shadow-level-3;
 
 // Gives items depth of different levels
+
 $z-depth-1: 0 2px 5px 0 $shadow-level-1, 0 2px 10px 0 $shadow-level-1;
 $z-depth-2: 0 8px 12px 0 $shadow-level-3, 0 6px 20px 0 $shadow-level-2;
 $z-depth-3: 0 12px 20px 0 $shadow-level-4, 0 17px 40px 0 $shadow-level-3;
 $z-depth-4: 0 16px 28px 0 $shadow-level-5, 0 25px 55px 0 $shadow-level-5;
 
 // Masks: typically behind modals, drag drop areas
+
 $page-mask-light: rgba(236, 239, 241, .9);
 
 
@@ -773,6 +778,13 @@ $tablet-height: 1024px;
 $tablet-width: 768px;
 $desktop-height: 768px;
 $desktop-width: 1366px;
+
+
+// Search panel sizes
+
+$search-width: 360px;
+$search-width-lg: 500px;
+$search-width-max: 100%;
 
 
 // Transition speeds

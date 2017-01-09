@@ -32,6 +32,7 @@ require('expose?ApolloClient!apollo-client');
 require('expose?ReactApollo!react-apollo');
 require('expose?GraphQLTag!graphql-tag');
 require('expose?GraphQLFragments!graphql-fragments');
+require('expose?qs!qs');
 
 require('../../../thirdparty/jquery-ondemand/jquery.ondemand.js');
 require('../../../thirdparty/jquery-ui/jquery-ui.js');

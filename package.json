@@ -52,7 +52,6 @@
     "merge": "^1.2.0",
     "page.js": "^4.13.3",
     "qs": "^6.1.0",
-    "query-string": "^3.0.3",
     "react": "^15.3.1",
     "react-addons-css-transition-group": "^15.3.1",
     "react-apollo": "^0.7.0",

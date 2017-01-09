@@ -97,6 +97,7 @@ const config = [
       redux: 'Redux',
       config: 'Config',
       'lib/Router': 'Router',
+      qs: 'qs',
     },
     module: {
       loaders: [

@@ -48,6 +48,8 @@ class CompositeField extends FormField
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_STRUCTURAL;
 
+    protected $schemaComponent = 'CompositeField';
+
     public function __construct($children = null)
     {
         if ($children instanceof FieldList) {
@@ -82,6 +84,13 @@ class CompositeField extends FormField
 
         $defaults['data']['tag'] = $this->getTag();
         $defaults['data']['legend'] = $this->getLegend();
+
+        // Scaffolded children will inherit this data
+        $defaults['data']['inherited'] = [
+            'data' => [
+                'fieldholder' => 'small'
+            ],
+        ];
 
         return $defaults;
     }

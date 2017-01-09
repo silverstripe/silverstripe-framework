@@ -15,6 +15,7 @@ import CompositeField from 'components/CompositeField/CompositeField';
 import Tabs from 'components/Tabs/Tabs';
 import TabItem from 'components/Tabs/TabItem';
 import FormAction from 'components/FormAction/FormAction';
+import FieldGroup from 'components/FieldGroup/FieldGroup';
 
 /**
  * TODO remove when dependency injector for javascript is incorporated
@@ -29,6 +30,7 @@ class BootInjector {
     injector.register('CheckboxSetField', CheckboxSetField);
     injector.register('OptionsetField', OptionsetField);
     injector.register('GridField', GridField);
+    injector.register('FieldGroup', FieldGroup);
     injector.register('SingleSelectField', SingleSelectField);
     injector.register('PopoverField', PopoverField);
     injector.register('HeaderField', HeaderField);

@@ -29,6 +29,7 @@ class Injector {
   getComponentByDataType(dataType) {
     switch (dataType) {
       case 'Text':
+      case 'Date':
       case 'DateTime':
         return this.components.TextField;
       case 'Hidden':

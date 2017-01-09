@@ -8,6 +8,7 @@ require('expose?schemaFieldValues!lib/schemaFieldValues');
 require('expose?FieldHolder!components/FieldHolder/FieldHolder');
 require('expose?Form!components/Form/Form');
 require('expose?FormConstants!components/Form/FormConstants');
+require('expose?FormAlert!components/FormAlert/FormAlert');
 require('expose?FormAction!components/FormAction/FormAction');
 require('expose?SchemaActions!state/schema/SchemaActions');
 require('expose?FormBuilder!components/FormBuilder/FormBuilder');

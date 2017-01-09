@@ -1,20 +1,18 @@
 import i18n from 'i18n';
-import QueryString from 'query-string';
+import qs from 'qs';
 
-export function urlQuery(location, newQuery) {
-  if (newQuery === null) {
-    return null;
-  }
-  if (newQuery) {
-    const mergedQuery = Object.assign({}, location.query, newQuery);
-    const query = QueryString.stringify(mergedQuery);
-
-    if (query) {
-      return `?${query}`;
-    }
-    return '';
-  }
-  return location.search;
+/**
+ * Turn flatterned querystring object into recursive nested objects,
+ * similarly to how PHP handles nested querystring objects.
+ *
+ * Example:
+ * `decodeQuery('query[val]=bob')` returns `{query: { val: bob }}`
+ *
+ * @param {String} query - Querystring string
+ * @return {Object} - Unflattened query object
+ */
+export function decodeQuery(query) {
+  return qs.parse(query.replace(/^\?/, ''));
 }
 
 export function fileSize(size) {

@@ -1,0 +1,15 @@
+  // Note: Intentionally non-bem due to the way composite fields affect nested styles
+.field-group-component {
+  > .form-group {
+    margin-top: 0;
+    display: inline-block;
+    margin-right: $spacer-x / 2;
+    min-width: 166px;
+    vertical-align: bottom; // Align fields with no labels
+
+    .form__field-label {
+      font-size: $font-size-xs;
+      color: $text-muted;
+    }
+  }
+}

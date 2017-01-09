@@ -18,10 +18,14 @@ class CompositeField extends SilverStripeComponent {
     return null;
   }
 
+  getClassName() {
+    return `${this.props.className} ${this.props.extraClass}`;
+  }
+
   render() {
     const legend = this.getLegend();
     const Tag = this.props.data.tag || 'div';
-    const className = `${this.props.className} ${this.props.extraClass}`;
+    const className = this.getClassName();
 
     return (
       <Tag className={className}>
