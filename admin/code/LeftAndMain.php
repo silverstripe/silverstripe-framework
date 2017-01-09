@@ -1188,7 +1188,7 @@ class LeftAndMain extends Controller implements PermissionProvider
             $nodeCountCallback = function ($parent, $numChildren) use (&$controller, $className, $nodeThresholdLeaf) {
                 if ($className !== 'SilverStripe\\CMS\\Model\\SiteTree'
                     || !$parent->ID
-                    || $numChildren >= $nodeThresholdLeaf
+                    || $numChildren <= $nodeThresholdLeaf
                 ) {
                     return null;
                 }
@@ -1199,8 +1199,7 @@ class LeftAndMain extends Controller implements PermissionProvider
                         _t('LeftAndMain.TooManyPages', 'Too many pages'),
                         Controller::join_links(
                             $controller->LinkWithSearch($controller->Link()),
-                            '
-							?view=list&ParentID=' . $parent->ID
+                            '?view=listview&ParentID=' . $parent->ID
                         ),
                         _t(
                             'LeftAndMain.ShowAsList',
