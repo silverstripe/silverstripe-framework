@@ -27,7 +27,7 @@ function appBoot() {
     shouldBatch: true,
     addTypename: true,
     dataIdFromObject: (o) => {
-      if(o.id >= 0 && o.__typename) {
+      if (o.id >= 0 && o.__typename) {
         return `${o.__typename}:${o.id}`;
       }
       return null;

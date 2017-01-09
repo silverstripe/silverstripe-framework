@@ -16,7 +16,7 @@
     "lock": "npm-shrinkwrap --dev",
     "test": "NODE_PATH=\"./client/src:./admin/client/src\" jest",
     "coverage": "NODE_PATH=\"./client/src:./admin/client/src\" jest --coverage",
-    "lint": "eslint client/src & eslint admin/client/src & sass-lint -v"
+    "lint": "eslint client/src && eslint admin/client/src && sass-lint -v"
   },
   "repository": {
     "type": "git",

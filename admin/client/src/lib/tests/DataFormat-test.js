@@ -10,7 +10,6 @@ import { decodeQuery } from '../DataFormat';
 
 
 describe('DataFormat', () => {
-
   describe('decodeQuery', () => {
     it('should decode flat keys', () => {
       expect(decodeQuery('?foo=1')).toEqual({ foo: '1' });
@@ -19,5 +18,4 @@ describe('DataFormat', () => {
       expect(decodeQuery('?foo[bar]=1')).toEqual({ foo: { bar: '1' } });
     });
   });
-
 });

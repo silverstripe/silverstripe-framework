@@ -34,12 +34,6 @@ describe('FormBuilder', () => {
   };
 
   describe('mergeFieldData()', () => {
-    let formBuilder = null;
-
-    beforeEach(() => {
-      formBuilder = new FormBuilder(baseProps);
-    });
-
     it('should deep merge properties on the originalobject', () => {
       const fieldStructure = {
         component: 'TextField',
