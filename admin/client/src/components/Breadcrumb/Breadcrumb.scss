@@ -11,8 +11,15 @@
   display: block;
   float: none;
 
-  &.breadcrumb__item--no-crumb:before {
-    content: "";
+  &.breadcrumb__item--no-crumb {
+    h2 {
+      padding-right: 1px;
+    }
+
+    &:before {
+      content: "";
+      padding: 0;
+    }
   }
 }
 

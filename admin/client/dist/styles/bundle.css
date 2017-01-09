@@ -14950,8 +14950,13 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   float:none;
 }
 
+.breadcrumb>li.breadcrumb__item--last.breadcrumb__item--no-crumb h2,.breadcrumb__item--last.breadcrumb__item--no-crumb h2{
+  padding-right:1px;
+}
+
 .breadcrumb>li.breadcrumb__item--last.breadcrumb__item--no-crumb:before,.breadcrumb__item--last.breadcrumb__item--no-crumb:before{
   content:"";
+  padding:0;
 }
 
 .breadcrumb__item-title--last,.cms h2.breadcrumb__item-title--last{
