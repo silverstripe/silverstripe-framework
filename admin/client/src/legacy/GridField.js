@@ -153,29 +153,38 @@ $.entwine('ss', function($) {
     openmodal: function() {
       // Remove existing modal
       let modal = $(this.data('target'));
-      modal.remove();
-
-      // Add modal to end of body tag
-      modal = $(this.data('modal'));
-      modal.appendTo(document.body);
+      let newModal = $(this.data('modal'));
+      if (modal.length < 1) {
+        // Add modal to end of body tag
+        modal = newModal;
+        modal.appendTo(document.body);
+      } else {
+        // Replace inner content
+        modal.innerHTML = newModal.innerHTML;
+      }
 
       // Apply backdrop
       let backdrop = $('.modal-backdrop');
       if(backdrop.length < 1) {
-        backdrop = $('<div class="modal-backdrop fade in"></div>');
-        $('body').append(backdrop);
-      } else {
-        backdrop.addClass('fade in').fadeIn();
+        backdrop = $('<div class="modal-backdrop fade"></div>');
+        backdrop.appendTo(document.body);
       }
 
-      modal.addClass('in');
+      // Set close action
       modal.find('[data-dismiss]').on('click', function() {
-        backdrop.fadeOut(function() {
-          backdrop.removeClass('in');
-        });
-
+        backdrop.removeClass('in');
         modal.removeClass('in');
+        setTimeout(function() {
+          backdrop.remove();
+        }, 0.2)
       })
+
+      // Fade each element in (use setTimeout to ensure initial render at opacity=0 works)
+      setTimeout(function() {
+        backdrop.addClass('in');
+        modal.addClass('in');
+      }, 0);
+
     }
   });
 

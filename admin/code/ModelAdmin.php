@@ -30,6 +30,7 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Member;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
@@ -506,7 +507,10 @@ abstract class ModelAdmin extends LeftAndMain
         if (empty($_FILES['_CsvFile']['tmp_name']) ||
             file_get_contents($_FILES['_CsvFile']['tmp_name']) == ''
         ) {
-            $form->sessionMessage(_t('ModelAdmin.NOCSVFILE', 'Please browse for a CSV file to import'), 'good');
+            $form->sessionMessage(
+                _t('ModelAdmin.NOCSVFILE', 'Please browse for a CSV file to import'),
+                ValidationResult::TYPE_ERROR
+            );
             $this->redirectBack();
             return false;
         }
