@@ -662,12 +662,12 @@ return!t||"object"!=typeof t&&"function"!=typeof t?e:t}function a(e,t){if("funct
 e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),t&&(Object.setPrototypeOf?Object.setPrototypeOf(e,t):e.__proto__=t)}Object.defineProperty(t,"__esModule",{
 value:!0})
 var s=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
-i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(5),u=i(l),c=n(20),d=i(c),f=n(21),p=function(e){
+i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),l=n(5),u=i(l),c=n(20),d=i(c),f=function(e){
 function t(e){r(this,t)
 var n=o(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.handleClick=n.handleClick.bind(n),n}return a(t,e),s(t,[{key:"render",value:function n(){return u["default"].createElement("button",{className:"grid-field__icon-action font-icon-"+this.props.icon+" btn--icon-large",
 onClick:this.handleClick})}},{key:"handleClick",value:function i(e){this.props.handleClick(e,this.props.record.ID)}}]),t}(d["default"])
-p.PropTypes={handleClick:u["default"].PropTypes.func.isRequired},t["default"]=p},function(e,t,n){"use strict"
+f.PropTypes={handleClick:u["default"].PropTypes.func.isRequired},t["default"]=f},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){var n=["id"]
 return n.reduce(function(e,n){return e.replace(":"+n,t[n])},e)}function o(e,t,n){var i={recordType:e},o={Accept:"text/json"},a=t.toLowerCase()
 return function(t){t({type:u["default"].FETCH_RECORDS_REQUEST,payload:i})
@@ -2154,7 +2154,7 @@ var a=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=argum
 for(var i in n)Object.prototype.hasOwnProperty.call(n,i)&&(e[i]=n[i])}return e}
 t["default"]=o
 var s=n(108),l=i(s),u=n(33),c=i(u),d=(0,l["default"])({})},function(e,t,n){"use strict"
-function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length<=0||void 0===arguments[0]?d:arguments[0],t=arguments[1],n=null,i=null,o=null,s={}
+function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function o(){var e=arguments.length<=0||void 0===arguments[0]?d:arguments[0],t=arguments[1],n=null,i=null,o=null
 
 
 switch(t.type){case c["default"].CREATE_RECORD:return(0,l["default"])(a({},e,{}))

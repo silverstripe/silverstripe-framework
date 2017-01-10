@@ -7,7 +7,6 @@ function recordsReducer(state = initialState, action) {
   let records = null;
   let recordType = null;
   let record = null;
-  let apolloRecordRelation = {};
 
   switch (action.type) {
     case ACTION_TYPES.CREATE_RECORD:
