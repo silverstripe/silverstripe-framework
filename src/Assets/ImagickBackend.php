@@ -23,6 +23,15 @@ class ImagickBackend extends Imagick implements Image_Backend
     private static $default_quality = 75;
 
     /**
+     * @return $this
+     */
+    public function getImageResource()
+    {
+        // the object represents the resource
+        return $this;
+    }
+
+    /**
      * Create a new backend with the given object
      *
      * @param AssetContainer $assetContainer Object to load from
