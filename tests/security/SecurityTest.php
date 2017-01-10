@@ -581,6 +581,13 @@ class SecurityTest extends FunctionalTest {
 		$this->assertContains('noindex', $robotsHeader);
 	}
 
+	public function testDoNotSendEmptyRobotsHeaderIfNotDefined() {
+		Config::inst()->update('Security', 'robots_tag', null);
+		$response = $this->get(Config::inst()->get('Security', 'login_url'));
+		$robotsHeader = $response->getHeader('X-Robots-Tag');
+		$this->assertNull($robotsHeader);
+	}
+
 	/**
 	 * Execute a log-in form using Director::test().
 	 * Helper method for the tests above

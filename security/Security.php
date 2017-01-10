@@ -336,7 +336,9 @@ class Security extends Controller implements TemplateGlobalProvider {
 		$this->getResponse()->addHeader('X-Frame-Options', $this->config()->frame_options);
 
 		// Prevent search engines from indexing the login page
-		$this->getResponse()->addHeader('X-Robots-Tag', $this->config()->robots_tag);
+		if ($this->config()->robots_tag) {
+			$this->getResponse()->addHeader('X-Robots-Tag', $this->config()->robots_tag);
+		}
 	}
 
 	public function index() {
