@@ -1087,6 +1087,7 @@ mappings:
   ConfigTest_TestNest: SilverStripe\Core\Tests\Config\ConfigTest\TestNest
   ConfigTest: SilverStripe\Core\Tests\Config\ConfigTest
   ConfigTest_Config_MemCache: SilverStripe\Core\Tests\Config\ConfigTest\ConfigTestMemCache
+  Page_Controller: PageController
 skipConfigs:
   - db
   - casting
