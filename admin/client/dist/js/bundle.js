@@ -2039,41 +2039,41 @@ this.closest(".grid-field").addClass("show-filter"),this.parent().html('<span cl
 var n=this.find(".edit-link")
 n.length&&this.getGridField().showDetailView(n.prop("href"))},onmouseover:function c(){this.find(".edit-link").length&&this.css("cursor","pointer")},onmouseout:function d(){this.css("cursor","default")
 
-}}),e(".grid-field .action.action_import:button").entwine({onclick:function f(t){t.preventDefault()
+}}),e(".grid-field .action.action_import:button").entwine({onclick:function f(e){e.preventDefault(),this.openmodal()},onmatch:function p(){this._super(),"open"===this.data("state")&&this.openmodal()},onunmatch:function h(){
+this._super()},openmodal:function m(){var t=e(this.data("target"))
+t.remove(),t=e(this.data("modal")),t.appendTo(document.body)
 var n=e(".modal-backdrop")
-n.length<1?(n=e('<div class="modal-backdrop fade in"></div>'),e("body").append(n)):n.addClass("fade in").fadeIn()
-var i=e(this.data("target"))
-i.addClass("in"),i.find("[data-dismiss]").on("click",function(){n.fadeOut(function(){n.removeClass("in")}),i.removeClass("in")})}}),e(".grid-field .action:button").entwine({onclick:function p(e){var t="show"
+n.length<1?(n=e('<div class="modal-backdrop fade in"></div>'),e("body").append(n)):n.addClass("fade in").fadeIn(),t.addClass("in"),t.find("[data-dismiss]").on("click",function(){n.fadeOut(function(){n.removeClass("in")
 
-
+}),t.removeClass("in")})}}),e(".grid-field .action:button").entwine({onclick:function g(e){var t="show"
 return this.is(":disabled")?void e.preventDefault():(!this.hasClass("ss-gridfield-button-close")&&this.closest(".grid-field").hasClass("show-filter")||(t="hidden"),this.getGridField().reload({data:[{name:this.attr("name"),
-value:this.val(),filter:t}]}),void e.preventDefault())},actionurl:function h(){var t=this.closest(":button"),n=this.getGridField(),i=this.closest("form"),r=i.find(":input.gridstate").serialize(),a=i.find('input[name="SecurityID"]').val()
+value:this.val(),filter:t}]}),void e.preventDefault())},actionurl:function v(){var t=this.closest(":button"),n=this.getGridField(),i=this.closest("form"),r=i.find(":input.gridstate").serialize(),a=i.find('input[name="SecurityID"]').val()
 
 
 r+="&"+encodeURIComponent(t.attr("name"))+"="+encodeURIComponent(t.val()),a&&(r+="&SecurityID="+encodeURIComponent(a)),window.location.search&&(r=window.location.search.replace(/^\?/,"")+"&"+r)
 var o=n.data("url").indexOf("?")==-1?"?":"&"
-return e.path.makeUrlAbsolute(n.data("url")+o+r,e("base").attr("href"))}}),e(".grid-field .add-existing-autocompleter").entwine({onbuttoncreate:function m(){var e=this
-this.toggleDisabled(),this.find('input[type="text"]').on("keyup",function(){e.toggleDisabled()})},onunmatch:function g(){this.find('input[type="text"]').off("keyup")},toggleDisabled:function v(){var e=this.find(".ss-ui-button"),t=this.find('input[type="text"]'),n=""!==t.val(),i=e.is(":disabled")
+return e.path.makeUrlAbsolute(n.data("url")+o+r,e("base").attr("href"))}}),e(".grid-field .add-existing-autocompleter").entwine({onbuttoncreate:function y(){var e=this
+this.toggleDisabled(),this.find('input[type="text"]').on("keyup",function(){e.toggleDisabled()})},onunmatch:function b(){this.find('input[type="text"]').off("keyup")},toggleDisabled:function _(){var e=this.find(".ss-ui-button"),t=this.find('input[type="text"]'),n=""!==t.val(),i=e.is(":disabled")
 
-;(n&&i||!n&&!i)&&e.attr("disabled",!i)}}),e(".grid-field .grid-field__col-compact .action.gridfield-button-delete, .cms-edit-form .btn-toolbar button.action.action-delete").entwine({onclick:function y(e){
-return confirm(s["default"]._t("TABLEFIELD.DELETECONFIRMMESSAGE"))?void this._super(e):(e.preventDefault(),!1)}}),e(".grid-field .action.gridfield-button-print").entwine({UUID:null,onmatch:function b(){
-this._super(),this.setUUID((new Date).getTime())},onunmatch:function _(){this._super()},onclick:function w(e){var t=this.actionurl()
-return window.open(t),e.preventDefault(),!1}}),e(".ss-gridfield-print-iframe").entwine({onmatch:function C(){this._super(),this.hide().bind("load",function(){this.focus()
+;(n&&i||!n&&!i)&&e.attr("disabled",!i)}}),e(".grid-field .grid-field__col-compact .action.gridfield-button-delete, .cms-edit-form .btn-toolbar button.action.action-delete").entwine({onclick:function w(e){
+return confirm(s["default"]._t("TABLEFIELD.DELETECONFIRMMESSAGE"))?void this._super(e):(e.preventDefault(),!1)}}),e(".grid-field .action.gridfield-button-print").entwine({UUID:null,onmatch:function C(){
+this._super(),this.setUUID((new Date).getTime())},onunmatch:function T(){this._super()},onclick:function E(e){var t=this.actionurl()
+return window.open(t),e.preventDefault(),!1}}),e(".ss-gridfield-print-iframe").entwine({onmatch:function P(){this._super(),this.hide().bind("load",function(){this.focus()
 var e=this.contentWindow||this
-e.print()})},onunmatch:function T(){this._super()}}),e(".grid-field .action.no-ajax").entwine({onclick:function E(e){return window.location.href=this.actionurl(),e.preventDefault(),!1}}),e(".grid-field .action-detail").entwine({
-onclick:function P(){return this.getGridField().showDetailView(e(this).prop("href")),!1}}),e(".grid-field[data-selectable]").entwine({getSelectedItems:function O(){return this.find(".ss-gridfield-item.ui-selected")
+e.print()})},onunmatch:function O(){this._super()}}),e(".grid-field .action.no-ajax").entwine({onclick:function S(e){return window.location.href=this.actionurl(),e.preventDefault(),!1}}),e(".grid-field .action-detail").entwine({
+onclick:function k(){return this.getGridField().showDetailView(e(this).prop("href")),!1}}),e(".grid-field[data-selectable]").entwine({getSelectedItems:function j(){return this.find(".ss-gridfield-item.ui-selected")
 
-},getSelectedIDs:function S(){return e.map(this.getSelectedItems(),function(t){return e(t).data("id")})}}),e(".grid-field[data-selectable] .ss-gridfield-items").entwine({onadd:function k(){this._super(),
-this.selectable()},onremove:function j(){this._super(),this.data("selectable")&&this.selectable("destroy")}}),e(".grid-field .filter-header :input").entwine({onmatch:function x(){var e=this.closest(".extra").find(".ss-gridfield-button-filter"),t=this.closest(".extra").find(".ss-gridfield-button-reset")
+},getSelectedIDs:function x(){return e.map(this.getSelectedItems(),function(t){return e(t).data("id")})}}),e(".grid-field[data-selectable] .ss-gridfield-items").entwine({onadd:function R(){this._super(),
+this.selectable()},onremove:function I(){this._super(),this.data("selectable")&&this.selectable("destroy")}}),e(".grid-field .filter-header :input").entwine({onmatch:function F(){var e=this.closest(".extra").find(".ss-gridfield-button-filter"),t=this.closest(".extra").find(".ss-gridfield-button-reset")
 
 
-this.val()&&(e.addClass("filtered"),t.addClass("filtered")),this._super()},onunmatch:function R(){this._super()},onkeydown:function I(e){if(!this.closest(".ss-gridfield-button-reset").length){var t=this.closest(".extra").find(".ss-gridfield-button-filter"),n=this.closest(".extra").find(".ss-gridfield-button-reset")
+this.val()&&(e.addClass("filtered"),t.addClass("filtered")),this._super()},onunmatch:function A(){this._super()},onkeydown:function D(e){if(!this.closest(".ss-gridfield-button-reset").length){var t=this.closest(".extra").find(".ss-gridfield-button-filter"),n=this.closest(".extra").find(".ss-gridfield-button-reset")
 
 
 if("13"==e.keyCode){var i=this.closest(".filter-header").find(".ss-gridfield-button-filter"),r="show"
 return!this.hasClass("ss-gridfield-button-close")&&this.closest(".grid-field").hasClass("show-filter")||(r="hidden"),this.getGridField().reload({data:[{name:i.attr("name"),value:i.val(),filter:r}]}),!1
 
-}t.addClass("hover-alike"),n.addClass("hover-alike")}}}),e(".grid-field .relation-search").entwine({onfocusin:function F(t){this.autocomplete({source:function n(t,i){var r=e(this.element),a=e(this.element).closest("form")
+}t.addClass("hover-alike"),n.addClass("hover-alike")}}}),e(".grid-field .relation-search").entwine({onfocusin:function M(t){this.autocomplete({source:function n(t,i){var r=e(this.element),a=e(this.element).closest("form")
 
 
 e.ajax({headers:{"X-Pjax":"Partial"},dataType:"json",type:"GET",url:e(r).data("searchUrl"),data:encodeURIComponent(r.attr("name"))+"="+encodeURIComponent(r.val()),success:i,error:function o(e){alert(s["default"]._t("GRIDFIELD.ERRORINTRANSACTION","An error occured while fetching data from the server\n Please try again later."))
@@ -2081,7 +2081,7 @@ e.ajax({headers:{"X-Pjax":"Partial"},dataType:"json",type:"GET",url:e(r).data("s
 }})},select:function i(t,n){var i=e('<input type="hidden" name="relationID" class="action_gridfield_relationfind" />')
 i.val(n.item.id),e(this).closest(".grid-field").find(".action_gridfield_relationfind").replaceWith(i)
 var r=e(this).closest(".grid-field").find(".action_gridfield_relationadd")
-r.removeAttr("disabled")}})}}),e(".grid-field .pagination-page-number input").entwine({onkeydown:function A(t){if(13==t.keyCode){var n=parseInt(e(this).val(),10),i=e(this).getGridField()
+r.removeAttr("disabled")}})}}),e(".grid-field .pagination-page-number input").entwine({onkeydown:function N(t){if(13==t.keyCode){var n=parseInt(e(this).val(),10),i=e(this).getGridField()
 return i.setState("GridFieldPaginator",{currentPage:n}),i.reload(),!1}}})})},function(e,t,n){"use strict"
 function i(e){if(e&&e.__esModule)return e
 var t={}

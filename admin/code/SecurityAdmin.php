@@ -11,9 +11,7 @@ use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
@@ -178,29 +176,16 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
         // Add import capabilities. Limit to admin since the import logic can affect assigned permissions
         if (Permission::check('ADMIN')) {
             // @todo when grid field is converted to react use the react component
-            $memberImport = CompositeField::create(array(
-                new LiteralField(
-                    'MemberImportFormIframe',
-                    $this->customise(new ArrayData(array(
-                        'URL' => $this->Link('memberimport')
-                    )))->renderWith('SilverStripe\\Forms\\GridField\\GridFieldImportButton_Modal')
-                )
-            ));
-
-            $memberListConfig
-                ->addComponent(new GridFieldImportButton('buttons-before-left', $memberImport));
-
-            $groupImport = CompositeField::create(array(
-                new LiteralField(
-                    'GroupImportFormIframe',
-                    $this->customise(new ArrayData(array(
-                        'URL' => $this->Link('groupimport')
-                    )))->renderWith('SilverStripe\\Forms\\GridField\\GridFieldImportButton_Modal')
-                )
-            ));
-
-            $groupListConfig
-                ->addComponent(new GridFieldImportButton('buttons-before-left', $groupImport));
+            $memberListConfig->addComponent(
+                GridFieldImportButton::create('buttons-before-left')
+                    ->setImportIframe($this->Link('memberimport'))
+                    ->setModalTitle(_t('SecurityAdmin.IMPORTUSERS', 'Import users'))
+            );
+            $groupListConfig->addComponent(
+                GridFieldImportButton::create('buttons-before-left')
+                    ->setImportIframe($this->Link('groupimport'))
+                    ->setModalTitle(_t('SecurityAdmin.IMPORTGROUPS', 'Import groups'))
+            );
         }
 
         // Tab nav in CMS is rendered through separate template
@@ -277,11 +262,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
 
         /** @var Group $group */
         $group = $this->currentPage();
-        /** @skipUpgrade */
-        $form = new MemberImportForm(
-            $this,
-            'MemberImportForm'
-        );
+        $form = new MemberImportForm($this, __FUNCTION__);
         $form->setGroup($group);
 
         return $form;
@@ -312,8 +293,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
             return null;
         }
 
-        $form = new GroupImportForm($this, 'GroupImportForm');
-        return $form;
+        return new GroupImportForm($this, __FUNCTION__);
     }
 
     /**

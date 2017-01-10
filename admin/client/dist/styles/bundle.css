@@ -15594,7 +15594,7 @@ div.grid-field__sort-field+.form__fieldgroup-item{
 }
 
 .grid-field-import.in .modal-content{
-  overflow-y:scroll;
+  overflow-y:auto;
 }
 
 .grid-field-import.in .modal-dialog{

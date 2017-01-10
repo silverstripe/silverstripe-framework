@@ -11,6 +11,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\ResetFormAction;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\HiddenField;
@@ -30,8 +31,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\Security\Member;
-use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\SSViewer;
 
 /**
  * Generates a three-pane UI for editing model classes, with an
@@ -170,7 +171,7 @@ abstract class ModelAdmin extends LeftAndMain
             $list,
             $fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
                 ->addComponent($exportButton)
-                ->removeComponentsByType('SilverStripe\\Forms\\GridField\\GridFieldFilterHeader')
+                ->removeComponentsByType(GridFieldFilterHeader::class)
                 ->addComponents(new GridFieldPrintButton('buttons-before-left'))
         );
 
@@ -178,21 +179,16 @@ abstract class ModelAdmin extends LeftAndMain
         if (singleton($this->modelClass)->hasMethod('getCMSValidator')) {
             $detailValidator = singleton($this->modelClass)->getCMSValidator();
             /** @var GridFieldDetailForm $detailform */
-            $detailform = $listField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDetailForm');
+            $detailform = $listField->getConfig()->getComponentByType(GridFieldDetailForm::class);
             $detailform->setValidator($detailValidator);
         }
 
         if ($this->showImportForm) {
-            $import = CompositeField::create(array(
-                new LiteralField(
-                    'ImportForm',
-                    $this->customise(new ArrayData(array(
-
-                    )))->renderWith('SilverStripe\\Forms\\GridField\\GridFieldImportButton_Modal')
-                )
-            ));
-
-            $fieldConfig->addComponent(new GridFieldImportButton('buttons-before-left', $import));
+            $fieldConfig->addComponent(
+                GridFieldImportButton::create('buttons-before-left')
+                    ->setImportForm($this->ImportForm())
+                    ->setModalTitle(_t('ModelAdmin.IMPORT', 'Import from CSV'))
+            );
         }
 
         $form = Form::create(

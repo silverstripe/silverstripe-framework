@@ -137,17 +137,36 @@ $.entwine('ss', function($) {
   $('.grid-field .action.action_import:button').entwine({
     onclick: function(e) {
       e.preventDefault();
+      this.openmodal();
+    },
+    onmatch: function() {
+			this._super();
+			// Trigger auto-open
+			if (this.data('state') === 'open') {
+			  this.openmodal();
+      }
+		},
+		onunmatch: function() {
+			this._super();
+		},
 
-      var backdrop = $('.modal-backdrop');
+    openmodal: function() {
+      // Remove existing modal
+      let modal = $(this.data('target'));
+      modal.remove();
 
+      // Add modal to end of body tag
+      modal = $(this.data('modal'));
+      modal.appendTo(document.body);
+
+      // Apply backdrop
+      let backdrop = $('.modal-backdrop');
       if(backdrop.length < 1) {
         backdrop = $('<div class="modal-backdrop fade in"></div>');
         $('body').append(backdrop);
       } else {
         backdrop.addClass('fade in').fadeIn();
       }
-
-      var modal = $(this.data('target'));
 
       modal.addClass('in');
       modal.find('[data-dismiss]').on('click', function() {

@@ -35,20 +35,6 @@
 		<div class="cms-content-view">
 			$EditForm
 		</div>
-
-        <% if ImportForm %>
-            <div id="{$EditForm.HTMLID}_ImportModal" class="modal fade grid-field-import" tabindex="-1" role="dialog">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content"><div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-
-                    <div class="modal-body">
-                        $ImportForm
-                    </div>
-                </div>
-            </div>
-        <% end_if %>
 	</div>
 
 </div>
