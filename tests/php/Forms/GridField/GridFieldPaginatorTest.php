@@ -2,46 +2,46 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use SilverStripe\Control\Controller;
+use SilverStripe\Dev\CSSContentParser;
+use SilverStripe\Dev\FunctionalTest;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig;
+use SilverStripe\Forms\GridField\GridFieldPageCount;
+use SilverStripe\Forms\GridField\GridFieldPaginator;
+use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
-use SilverStripe\Dev\CSSContentParser;
-use SilverStripe\Dev\FunctionalTest;
-use SilverStripe\Control\Controller;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
-use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
-use SilverStripe\Forms\GridField\GridFieldPaginator;
-use SilverStripe\Forms\GridField\GridFieldPageCount;
-use SilverStripe\Forms\GridField\GridField;
 
 class GridFieldPaginatorTest extends FunctionalTest
 {
     /**
- * @var ArrayList
-*/
+     * @var ArrayList
+     */
     protected $list;
 
     /**
- * @var GridField
-*/
+     * @var GridField
+     */
     protected $gridField;
 
     /**
- * @var string
-*/
+     * @var string
+     */
     protected static $fixture_file = 'GridFieldTest.yml';
 
     /**
- * @var Form
-*/
+     * @var Form
+     */
     protected $form;
 
     /**
- * @var array
-*/
+     * @var array
+     */
     protected $extraDataObjects = array(
         Team::class,
         Player::class
@@ -85,6 +85,27 @@ class GridFieldPaginatorTest extends FunctionalTest
 
         // Check that there is still 'View 1 - 4 of 4' part on the left of the paginator
         $this->assertEquals(2, count($content->getBySelector('.pagination-records-number')));
+    }
+
+    public function testUnlimitedRowCount()
+    {
+        $total = $this->list->count();
+        // set up the paginator
+        /** @var GridFieldPaginator $paginator */
+        $paginator = $this->gridField->getConfig()->getComponentByType(GridFieldPaginator::class);
+        $paginator->setThrowExceptionOnBadDataType(true);
+        $paginator->setItemsPerPage(1);
+        $paginator->getManipulatedData($this->gridField, $this->list);
+
+
+        $params = $paginator->getTemplateParameters($this->gridField)->toMap();
+        $this->assertFalse($params['OnlyOnePage']);
+        $this->assertEquals($total, $params['NumRecords']);
+
+        $paginator->setItemsPerPage(0);
+        $params = $paginator->getTemplateParameters($this->gridField)->toMap();
+        $this->assertTrue($params['OnlyOnePage']);
+        $this->assertEquals($total, $params['NumRecords']);
     }
 
     public function testPaginationAvoidsIllegalOffsets()
