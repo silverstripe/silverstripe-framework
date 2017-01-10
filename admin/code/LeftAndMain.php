@@ -1461,7 +1461,7 @@ class LeftAndMain extends Controller implements PermissionProvider
         $id = $request->requestVar('ID');
         $parentID = $request->requestVar('ParentID');
 
-        if ($className == 'SilverStripe\\CMS\\Model\\SiteTree' && $page = DataObject::get_by_id('Page', $id)) {
+        if ($className == 'SilverStripe\\CMS\\Model\\SiteTree' && $page = DataObject::get_by_id(SiteTree::class, $id)) {
             $root = $page->getParentType();
             if (($parentID == '0' || $root == 'root') && !SiteConfig::current_site_config()->canCreateTopLevel()) {
                 $this->getResponse()->setStatusCode(
