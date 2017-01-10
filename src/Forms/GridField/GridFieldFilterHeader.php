@@ -137,6 +137,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
     /**
      * Returns whether this {@link GridField} has any columns to sort on at all.
      *
+     * @param GridField $gridField
      * @return boolean
      */
     public function canFilterAnyColumns($gridField)
@@ -148,8 +149,6 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
         }
 
         $columns = $gridField->getColumns();
-        $filterArguments = $gridField->State->GridFieldFilterHeader->Columns->toArray();
-
         foreach ($columns as $columnField) {
             $metadata = $gridField->getColumnMetadata($columnField);
             $title = $metadata['title'];

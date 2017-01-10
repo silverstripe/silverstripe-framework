@@ -188,7 +188,7 @@ class GridFieldSortableHeader implements GridField_HTMLProvider, GridField_DataM
                 }
             } else {
                 if ($currentColumn == count($columns)) {
-                    $filter = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldFilterHeader');
+                    $filter = $gridField->getConfig()->getComponentByType(GridFieldFilterHeader::class);
 
                     if ($filter && $filter->canFilterAnyColumns($gridField)) {
                         $field = new LiteralField(
