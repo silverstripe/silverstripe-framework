@@ -2,15 +2,9 @@
 
 namespace SilverStripe\Framework\Test\Behaviour;
 
-use Behat\Behat\Context\ClosuredContextInterface;
-use Behat\Behat\Context\TranslatedContextInterface;
 use Behat\Behat\Context\BehatContext;
-use Behat\Behat\Context\Step;
-use Behat\Behat\Exception\PendingException;
 use Behat\Mink\Exception\ElementHtmlException;
-use Behat\Gherkin\Node\PyStringNode;
 use Behat\Gherkin\Node\TableNode;
-use Behat\MinkExtension\Context\MinkContext as MinkContext;
 use Symfony\Component\DomCrawler\Crawler;
 use Behat\Mink\Element\NodeElement;
 use SilverStripe\SiteConfig\SiteConfig;
@@ -213,30 +207,6 @@ jQuery(doc).find('body *').each(function() {
 JS;
 
         $this->getSession()->executeScript($js);
-    }
-
-    /**
-     * Example: I should see a "Submit" button
-     * Example: I should not see a "Delete" button
-     *
-     * @Given /^I should( not? |\s*)see a "([^"]*)" button$/
-     */
-    public function iShouldSeeAButton($negative, $text)
-    {
-        $page = $this->getSession()->getPage();
-        $els = $page->findAll('named', array('link_or_button', "'$text'"));
-        $matchedEl = null;
-        foreach ($els as $el) {
-            if ($el->isVisible()) {
-                $matchedEl = $el;
-            }
-        }
-
-        if (trim($negative)) {
-            assertNull($matchedEl, sprintf('%s button found', $text));
-        } else {
-            assertNotNull($matchedEl, sprintf('%s button not found', $text));
-        }
     }
 
     /**
