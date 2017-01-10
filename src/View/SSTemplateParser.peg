@@ -12,7 +12,7 @@ template language, producing the executable version SSTemplateParser.php
 To recompile after changing this file, run this from the 'framework/View' directory via command line (in most cases
 this is: sapphire/view):
 
-	php ../thirdparty/php-peg/cli.php SSTemplateParser.php.inc > SSTemplateParser.php
+	php ../thirdparty/php-peg/cli.php SSTemplateParser.peg > SSTemplateParser.php
 
 See the php-peg docs for more information on the parser format, and how to convert this file into SSTemplateParser.php
 
