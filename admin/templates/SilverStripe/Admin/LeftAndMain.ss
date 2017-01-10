@@ -6,7 +6,7 @@
 	<meta name="viewport" content="width=720, maximum-scale=1.0" />
 	<title>$Title</title>
 </head>
-<body class="loading cms"data-frameworkpath="$ModulePath(framework)"
+<body class="loading cms" data-frameworkpath="$ModulePath(framework)"
 	data-member-tempid="$CurrentMember.TempIDHash.ATT"
 >
 	<% include SilverStripe\\Admin\\CMSLoadingScreen %>

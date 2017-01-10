@@ -207,7 +207,7 @@ $.entwine('ss.tree', function($){
         },
         'themes': {
           'theme': 'apple',
-          'url': $('body').data('frameworkpath') + '/thirdparty/jstree/themes/apple/style.css'
+          'url': $('body').data('frameworkpath') + '/admin/thirdparty/jstree/themes/apple/style.css'
         },
         // Caution: SilverStripe has disabled $.vakata.css.add_sheet() for performance reasons,
         // which means you need to add any CSS manually to framework/admin/scss/_tree.css
