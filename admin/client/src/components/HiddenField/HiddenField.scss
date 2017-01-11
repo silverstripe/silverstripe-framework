@@ -1,3 +1,7 @@
 .field.hidden {
   display: none;
+
+  .form--inline & {
+    display: none;
+  }
 }

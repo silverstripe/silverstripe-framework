@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import fieldHolder from 'components/FieldHolder/FieldHolder';
 import ReactTinyMCE from 'react-tinymce';
 import tinymceLoader from './tinymceLoader';
-import insertMediaPlugin from './insertMediaPlugin';
+import tinymcePluginLoader from './tinymcePluginLoader';
 
 class HtmlEditorField extends Component {
 
@@ -17,6 +17,18 @@ class HtmlEditorField extends Component {
     return window.tinymce.EditorManager.get(this.props.id);
   }
 
+  /**
+   * Handles changes to the text field's value.
+   *
+   * @param {Event} event
+   */
+  handleChange(event) {
+    const value = event.target.getContent({ format: 'raw' });
+    if (typeof this.props.onChange === 'function') {
+      this.props.onChange(value);
+    }
+  }
+
   render() {
     return (
       <ReactTinyMCE
@@ -29,18 +41,6 @@ class HtmlEditorField extends Component {
         onRedo={this.handleChange}
       />
     );
-  }
-
-  /**
-   * Handles changes to the text field's value.
-   *
-   * @param {Event} event
-   */
-  handleChange(event) {
-    const value = event.target.getContent({ format: 'raw' });
-    if (typeof this.props.onChange === 'function') {
-      this.props.onChange(value);
-    }
   }
 }
 
@@ -65,6 +65,8 @@ HtmlEditorField.defaultProps = {
   className: '',
 };
 
-export { HtmlEditorField, insertMediaPlugin, tinymceLoader };
+const TinymceEditorField = tinymceLoader(tinymcePluginLoader(HtmlEditorField));
 
-export default fieldHolder(tinymceLoader(insertMediaPlugin(HtmlEditorField)));
+export { HtmlEditorField, TinymceEditorField };
+
+export default fieldHolder(TinymceEditorField);

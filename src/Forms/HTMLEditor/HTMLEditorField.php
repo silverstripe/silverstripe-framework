@@ -74,18 +74,18 @@ class HTMLEditorField extends TextareaField
     public function getSchemaDataDefaults()
     {
         $data = parent::getSchemaDataDefaults();
-        
+
         $config = $this->getEditorConfig();
         $attributes = $config->getAttributes();
-        
+
         $data['data']['editor'] = $attributes['data-editor'];
         $data['data']['config'] = $config->getConfig();
-        
+
         unset($data['data']['config']['external_plugins']['ssbuttons']);
-        
+
         return $data;
     }
-    
+
     /**
      * Gets the HTMLEditorConfig instance
      *

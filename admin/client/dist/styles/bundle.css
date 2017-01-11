@@ -15604,7 +15604,7 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   max-height:600px;
 }
 
-.field.hidden,.grid-field-import.in .modal-dialog .advanced,.import-form .advanced{
+.field.hidden,.form--inline .field.hidden,.grid-field-import.in .modal-dialog .advanced,.import-form .advanced{
   display:none;
 }
 

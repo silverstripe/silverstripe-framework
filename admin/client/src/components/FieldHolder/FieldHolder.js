@@ -6,6 +6,11 @@ import FormAlert from 'components/FormAlert/FormAlert';
 
 function fieldHolder(Field) {
   class FieldHolder extends SilverStripeComponent {
+    constructor(props) {
+      super(props);
+
+      this.getHolderProps = this.getHolderProps.bind(this);
+    }
 
     /**
      * Build description

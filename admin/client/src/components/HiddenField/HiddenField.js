@@ -1,6 +1,7 @@
 import React from 'react';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
 import { FormControl } from 'react-bootstrap-ss';
+import fieldHolder from 'components/FieldHolder/FieldHolder';
 
 class HiddenField extends SilverStripeComponent {
   /**
@@ -40,4 +41,4 @@ HiddenField.defaultProps = {
   value: '',
 };
 
-export default HiddenField;
+export default fieldHolder(HiddenField);

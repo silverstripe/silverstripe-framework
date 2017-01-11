@@ -1,3 +1,33 @@
+
+function attrsToString(attrs) {
+  return Object.entries(attrs)
+    .map((attr) => {
+      const [name, value] = attr;
+      return (value) ? `${name}="${value}"` : null;
+    })
+    .filter((attr) => !!attr)
+    .join(' ');
+}
+
+function stringToAttrs(attrString) {
+  const matchRule = /([^\s\/'"=,]+)\s*=\s*(('([^']+)')|("([^"]+)")|([^\s,\]]+))/g;
+  const reduceRule = /^([^\s\/'"=,]+)\s*=\s*(?:(?:'([^']+)')|(?:"([^"]+)")|(?:[^\s,\]]+))$/;
+  return attrString
+  // Split on all attributes, quoted or not
+    .match(matchRule)
+    .reduce((prev, next) => {
+      const match = next.match(reduceRule);
+      const key = match[1];
+      // single, double, or unquoted match
+      const value = match[2] || match[3] || match[4];
+
+      return Object.assign({},
+        prev,
+        { [key]: value }
+      );
+    }, {});
+}
+
 /**
  * Handles shortcode parsing on the client-side, will need to replicate on server-side.
  *
@@ -39,10 +69,11 @@ const ShortCodeParser = {
 
   toImageHtml(html) {
     let content = html;
-    let matches;
+    let matches = null;
     const tagRegex = /\[image(.*?)\]/gi;
 
-    while((matches = tagRegex.exec(content))) {
+    matches = tagRegex.exec(content);
+    while (matches) {
       const attrs = stringToAttrs(matches[1]);
       const element = document.createElement('img');
 
@@ -55,6 +86,7 @@ const ShortCodeParser = {
       element.dataset.id = attrs.id;
 
       content = content.replace(matches[0], element.outerHTML);
+      matches = tagRegex.exec(content);
     }
 
     return content;
@@ -62,10 +94,11 @@ const ShortCodeParser = {
 
   toEmbedHtml(html) {
     let content = html;
-    let matches;
+    let matches = null;
     const tagRegex = /\[embed(.*?)\](.+?)\[\/\s*embed\s*\]/gi;
 
-    while(matches = tagRegex.exec(content)) {
+    matches = tagRegex.exec(content);
+    while (matches) {
       const attrs = stringToAttrs(matches[1]);
       const element = document.createElement('img');
       attrs.cssclass = attrs.class;
@@ -73,7 +106,7 @@ const ShortCodeParser = {
       ['width', 'height', 'class'].forEach((name) => (
         element.setAttribute(name, attrs[name])
       ));
-      element.setAttribute('src', attrs['thumbnail']);
+      element.setAttribute('src', attrs.thumbnail);
       element.dataset.url = matches[2];
 
       element.classList.add('ss-htmleditorfield-file embed');
@@ -84,6 +117,7 @@ const ShortCodeParser = {
       });
 
       content = content.replace(matches[0], element.outerHTML);
+      matches = tagRegex.exec(content);
     }
 
     return content;
@@ -92,8 +126,8 @@ const ShortCodeParser = {
   toImageCode(elements) {
     const tempDiv = document.createElement('div');
 
-    elements.querySelectorAll('img').forEach(function(element) {
-      var attrs = {
+    elements.querySelectorAll('img').forEach((element) => {
+      const attrs = {
         // Requires server-side preprocessing of HTML+shortcodes in HTMLValue
         src: element.getAttribute('src'),
         id: element.dataset.id,
@@ -102,7 +136,7 @@ const ShortCodeParser = {
         class: element.getAttribute('class'),
         // don't save caption, since that's in the containing element
         title: element.getAttribute('title'),
-        alt: element.getAttribute('alt')
+        alt: element.getAttribute('alt'),
       };
       tempDiv.innerHTML = `[image ${attrsToString(attrs)}]`;
       const shortCode = tempDiv.childNodes[0];
@@ -116,7 +150,7 @@ const ShortCodeParser = {
   toEmbedCode(elements) {
     const tempDiv = document.createElement('div');
 
-    elements.querySelectorAll('.ss-htmleditorfield-file.embed').forEach(function(element) {
+    elements.querySelectorAll('.ss-htmleditorfield-file.embed').forEach((element) => {
       const attrs = {
         width: element.getAttribute('width'),
         class: element.getAttribute('cssclass'),
@@ -133,33 +167,6 @@ const ShortCodeParser = {
     return elements;
   },
 };
-
-function attrsToString(attrs) {
-  return Object.entries(attrs)
-    .map((attr) => {
-      const [name, value] = attr;
-      return (value) ? `${name}="${value}"` : null;
-    })
-    .filter((attr) => !!attr)
-    .join(' ');
-}
-
-function stringToAttrs(attrString) {
-  return attrString
-  // Split on all attributes, quoted or not
-    .match(/([^\s\/'"=,]+)\s*=\s*(('([^']+)')|("([^"]+)")|([^\s,\]]+))/g)
-    .reduce((prev, next) => {
-      const match = next.match(/^([^\s\/'"=,]+)\s*=\s*(?:(?:'([^']+)')|(?:"([^"]+)")|(?:[^\s,\]]+))$/);
-      const key = match[1];
-      // single, double, or unquoted match
-      const value = match[2] || match[3] || match[4];
-
-      return Object.assign({},
-        prev,
-        { [key]: value }
-      );
-    }, {});
-}
 
 export { attrsToString, stringToAttrs };
 
