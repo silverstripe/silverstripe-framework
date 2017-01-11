@@ -960,7 +960,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             && $this->config()->notify_password_change
         ) {
             Email::create()
-                ->setTemplate('SilverStripe\\Email\\ChangePasswordEmail')
+                ->setTemplate('SilverStripe\\Control\\Email\\ChangePasswordEmail')
                 ->setData($this)
                 ->setTo($this->Email)
                 ->setSubject(_t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'))

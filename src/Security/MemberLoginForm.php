@@ -364,7 +364,7 @@ JS;
             $token = $member->generateAutologinTokenAndStoreHash();
 
             Email::create()
-                ->setTemplate('SilverStripe\\Email\\ForgotPasswordEmail')
+                ->setTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
                 ->setData($member)
                 ->setSubject(_t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'))
                 ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
