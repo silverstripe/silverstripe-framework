@@ -76,6 +76,30 @@ class FolderTest extends SapphireTest
         $this->assertEquals($folder1->Filename . 'CreateFromNameAndParentID/', $newFolder->Filename);
     }
 
+    public function testRenamesDuplicateFolders()
+    {
+        $original = new Folder();
+        $original->update([
+            'Name' => 'folder1',
+            'ParentID' => 0
+        ]);
+        $original->write();
+
+        $duplicate = new Folder();
+        $duplicate->update([
+            'Name' => 'folder1',
+            'ParentID' => 0
+        ]);
+        $duplicate->write();
+
+        $original = Folder::get()->byID($original->ID);
+
+        $this->assertEquals($original->Name, 'folder1');
+        $this->assertEquals($original->Title, 'folder1');
+        $this->assertEquals($duplicate->Name, 'folder1-v2');
+        $this->assertEquals($duplicate->Title, 'folder1-v2');
+    }
+
     public function testAllChildrenIncludesFolders()
     {
         $folder1 = $this->objFromFixture(Folder::class, 'folder1');
@@ -255,14 +279,18 @@ class FolderTest extends SapphireTest
 
         $newFolder->Name = 'TestNameCopiedToTitle';
         $this->assertEquals($newFolder->Name, $newFolder->Title);
+        $this->assertEquals($newFolder->Title, 'TestNameCopiedToTitle');
 
         $newFolder->Title = 'TestTitleCopiedToName';
         $this->assertEquals($newFolder->Name, $newFolder->Title);
+        $this->assertEquals($newFolder->Title, 'TestTitleCopiedToName');
 
         $newFolder->Name = 'TestNameWithIllegalCharactersCopiedToTitle <!BANG!>';
         $this->assertEquals($newFolder->Name, $newFolder->Title);
+        $this->assertEquals($newFolder->Title, 'TestNameWithIllegalCharactersCopiedToTitle <!BANG!>');
 
         $newFolder->Title = 'TestTitleWithIllegalCharactersCopiedToName <!BANG!>';
         $this->assertEquals($newFolder->Name, $newFolder->Title);
+        $this->assertEquals($newFolder->Title, 'TestTitleWithIllegalCharactersCopiedToName <!BANG!>');
     }
 }

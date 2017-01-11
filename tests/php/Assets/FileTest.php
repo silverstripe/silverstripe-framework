@@ -535,6 +535,88 @@ class FileTest extends SapphireTest
         );
     }
 
+    public function testRenamesDuplicateFilesInSameFolder()
+    {
+        $original = new File();
+        $original->update([
+            'Name' => 'file1.txt',
+            'ParentID' => 0
+        ]);
+        $original->write();
+
+        $duplicate = new File();
+        $duplicate->update([
+            'Name' => 'file1.txt',
+            'ParentID' => 0
+        ]);
+        $duplicate->write();
+
+        $original = File::get()->byID($original->ID);
+
+        $this->assertEquals($original->Name, 'file1.txt');
+        $this->assertEquals($original->Title, 'file1');
+        $this->assertEquals($duplicate->Name, 'file1-v2.txt');
+        $this->assertEquals($duplicate->Title, 'file1 v2');
+    }
+
+    public function testSetsEmptyTitleToNameWithoutExtensionAndSpecialCharacters()
+    {
+        $fileWithTitle = new File();
+        $fileWithTitle->update([
+            'Name' => 'file1-with-title.txt',
+            'Title' => 'Some Title'
+        ]);
+        $fileWithTitle->write();
+
+        $this->assertEquals($fileWithTitle->Name, 'file1-with-title.txt');
+        $this->assertEquals($fileWithTitle->Title, 'Some Title');
+
+        $fileWithoutTitle = new File();
+        $fileWithoutTitle->update([
+            'Name' => 'file1-without-title.txt',
+        ]);
+        $fileWithoutTitle->write();
+
+        $this->assertEquals($fileWithoutTitle->Name, 'file1-without-title.txt');
+        $this->assertEquals($fileWithoutTitle->Title, 'file1 without title');
+    }
+
+    public function testSetsEmptyNameToSingularNameWithoutTitle()
+    {
+        $fileWithTitle = new File();
+        $fileWithTitle->update([
+            'Name' => '',
+            'Title' => 'Some Title',
+        ]);
+        $fileWithTitle->write();
+
+        $this->assertEquals($fileWithTitle->Name, 'Some-Title');
+        $this->assertEquals($fileWithTitle->Title, 'Some Title');
+
+        $fileWithoutTitle = new File();
+        $fileWithoutTitle->update([
+            'Name' => '',
+            'Title' => '',
+        ]);
+        $fileWithoutTitle->write();
+
+        $this->assertEquals($fileWithoutTitle->Name, $fileWithoutTitle->i18n_singular_name());
+        $this->assertEquals($fileWithoutTitle->Title, $fileWithoutTitle->i18n_singular_name());
+    }
+
+    public function testSetsEmptyNameToTitleIfPresent()
+    {
+        $file = new File();
+        $file->update([
+            'Name' => '',
+            'Title' => 'file1',
+        ]);
+        $file->write();
+
+        $this->assertEquals($file->Name, 'file1');
+        $this->assertEquals($file->Title, 'file1');
+    }
+
     public function testSetsOwnerOnFirstWrite()
     {
         Session::set('loggedInAs', null);
