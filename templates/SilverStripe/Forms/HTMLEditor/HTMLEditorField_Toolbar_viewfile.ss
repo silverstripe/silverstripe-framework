@@ -23,12 +23,12 @@
 			<div class="clear"><!-- --></div>
 		</label>
 		<div class="ss-uploadfield-item-actions">
-			<button type="button" data-icon="deleteLight" class="ss-uploadfield-item-cancel ss-uploadfield-item-remove" title="<%t UploadField.REMOVE 'Remove' %>">
+			<button type="button" data-icon="deleteLight" class="btn ss-uploadfield-item-cancel ss-uploadfield-item-remove" title="<%t UploadField.REMOVE 'Remove' %>">
 				<%t UploadField.REMOVE 'Remove' %>
 			</button>
 
 			<div class="ss-uploadfield-item-edit edit">
-				<button type="button" class="ss-uploadfield-item-edit ss-ui-button ui-corner-all" title="<%t UploadField.EDITINFO 'Edit this file' %>" data-icon="pencil">
+				<button type="button" class="btn ss-uploadfield-item-edit ss-ui-button ui-corner-all" title="<%t UploadField.EDITINFO 'Edit this file' %>" data-icon="pencil">
 					<%t UploadField.EDIT 'Edit' %>
 					<span class="toggle-details">
 						<span class="toggle-details-icon"></span>

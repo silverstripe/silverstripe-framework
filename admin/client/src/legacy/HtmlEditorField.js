@@ -389,7 +389,7 @@ $.entwine('ss', function($) {
                 'Insert'
               ),
               'data-icon': 'accept',
-              class: 'ss-ui-action-constructive media-insert',
+              class: 'btn action btn-primary media-insert',
               click: function() {
                 $(this).find('form').submit();
               }
@@ -991,10 +991,10 @@ $.entwine('ss', function($) {
       header[(hasItems) ? 'show' : 'hide']();
 
       // Disable "insert" button if no files are selected
-      this.closest('ui-dialog')
-        .find('ui-dialog-buttonpane .media-insert')
-        .button(hasItems ? 'enable' : 'disable')
-        .toggleClass('ui-state-disabled', !hasItems);
+      this.closest('.ui-dialog')
+        .find('.ui-dialog-buttonpane .media-insert')
+        .toggleClass('ui-state-disabled', !hasItems)
+        .prop('disabled', !hasItems);
 
       // Hide file selection and step labels when editing an existing file
       this.find('.htmleditorfield-default-panel')[editingSelected || insertingURL ? 'hide' : 'show']();
@@ -1079,9 +1079,10 @@ $.entwine('ss', function($) {
 
   //When 'Insert from URL' button is clicked
   $('form.htmleditorfield-mediaform div.ss-upload .upload-url').entwine({
-    onclick: function () {
-      var form = this.closest('form');
+    onclick: function (event) {
+      event.preventDefault();
 
+      var form = this.closest('form');
       form.addClass('insertingURL');
       form.redraw();
     }
@@ -1174,14 +1175,18 @@ $.entwine('ss', function($) {
     },
 
     validate: function() {
-      var val = this.val(), orig = val;
+      let val = this.val(),
+        orig = val,
+        hasVal = !!val;
 
       val = $.trim(val);
       val = val.replace(/^https?:\/\//i, '');
-      if (orig !== val) this.val(val);
+      if (orig !== val) {
+        this.val(val);
+      }
 
-      this.getAddButton().button(!!val ? 'enable' : 'disable');
-      return !!val;
+      this.getAddButton().prop('disabled', !hasVal);
+      return hasVal;
     }
   });
 

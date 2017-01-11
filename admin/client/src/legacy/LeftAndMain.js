@@ -1150,49 +1150,6 @@ $.entwine('ss', function($) {
   });
 
   /**
-   * Add styling to all contained buttons, and create buttonsets if required.
-   */
-  $('.cms-content .btn-toolbar').entwine({
-    onmatch: function() {
-      this.find('.ss-ui-button').click(function() {
-          var form = this.form;
-
-          // forms don't natively store the button they've been triggered with
-          if(form) {
-            form.clickedButton = this;
-            // Reset the clicked button shortly after the onsubmit handlers
-            // have fired on the form
-          setTimeout(function() {
-            form.clickedButton = null;
-          }, 10);
-        }
-      });
-
-      this.redraw();
-      this._super();
-    },
-    onunmatch: function() {
-      this._super();
-    },
-    redraw: function() {
-      if(window.debug) console.log('redraw', this.attr('class'), this.get(0));
-
-      // Remove whitespace to avoid gaps with inline elements
-      this.contents().filter(function() {
-        return (this.nodeType == 3 && !/\S/.test(this.nodeValue));
-      }).remove();
-
-      // Init buttons if required
-      this.find('.ss-ui-button').each(function() {
-        if(!$(this).data('button')) $(this).button();
-      });
-
-      // Mark up buttonsets
-      this.find('.ss-ui-buttonset').buttonset();
-    }
-  });
-
-  /**
    * Duplicates functionality in DateField.js, but due to using entwine we can match
    * the DOM element on creation, rather than onclick - which allows us to decorate
    * the field with a calendar icon

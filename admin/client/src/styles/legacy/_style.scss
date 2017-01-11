@@ -1733,7 +1733,7 @@ body.cms-dialog {
     }
 
     div.remoteurl{
-      width: calc(100% - 84px);
+      width: calc(100% - 100px);
       position: relative;
       display: inline-block;
 
@@ -1752,7 +1752,7 @@ body.cms-dialog {
       }
     }
 
-    button.add-url{
+    button.add-url {
       display: inline-block;;
       float: none;
       margin: 2px 0 0;

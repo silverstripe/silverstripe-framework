@@ -17,7 +17,7 @@
 
 // Mixin generates the styling for the actions buttons in file uploads
 @mixin ss-uploadfield-action-buttons{
-	.ss-ui-button {
+	.btn {
 		background: none;
 		border: 0;
 		box-shadow: none;
@@ -41,7 +41,7 @@
 			.ui-icon {
 			  display: block;
 			  margin: 0;
-			  position:realtive;
+			  position: relative;
 			  top:8px;
 			}
 		}
@@ -54,12 +54,11 @@
 //	as is used for files in the files up-load area. The arrows
 //	themselves are added in the _style file
 //**/
-@mixin ss-uploadfield-editButton{
+@mixin ss-uploadfield-editButton {
 	&.ss-uploadfield-item-edit {
 		opacity:0.9;
-		padding-top: 1px;
-		padding-bottom: 0;
 		height:100%;
+
 		border-radius: 0;
 		&.ui-state-hover{
 			background:none;

@@ -297,7 +297,7 @@
   z-index:0;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn{
   background:none;
   border:0;
   box-shadow:none;
@@ -306,11 +306,11 @@
   float:right;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-delete{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-delete{
   display:none;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-cancel,.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-overwrite-warning{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-cancel,.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-overwrite-warning{
   border-radius:0;
   border-left:1px solid hsla(0,0%,100%,.2);
   margin-top:0;
@@ -318,35 +318,33 @@
   opacity:.9;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-cancel:hover,.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-overwrite-warning:hover{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-cancel:hover,.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-overwrite-warning:hover{
   opacity:1;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-cancel .ui-icon,.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-overwrite-warning .ui-icon{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-cancel .ui-icon,.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-overwrite-warning .ui-icon{
   display:block;
   margin:0;
-  position:realtive;
+  position:relative;
   top:8px;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-edit{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-edit{
   opacity:.9;
-  padding-top:1px;
-  padding-bottom:0;
   height:100%;
   border-radius:0;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-edit.ui-state-hover{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-edit.ui-state-hover{
   background:none;
   opacity:1;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-edit.ui-state-hover span.toggle-details{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-edit.ui-state-hover span.toggle-details{
   opacity:1;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-edit span.toggle-details{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-edit span.toggle-details{
   opacity:.9;
   margin-left:3px;
   display:inline-block;
@@ -355,7 +353,7 @@
   cursor:pointer;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-edit span.toggle-details .toggle-details-icon{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-edit span.toggle-details .toggle-details-icon{
   margin-top:1px;
   display:inline-block;
   width:8px;
@@ -363,11 +361,11 @@
   vertical-align:middle;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button.ss-uploadfield-item-edit span.toggle-details .toggle-details-icon.opened{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn.ss-uploadfield-item-edit span.toggle-details .toggle-details-icon.opened{
   margin-top:0;
 }
 
-.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .ss-ui-button .ui-icon{
+.ss-assetuploadfield .ss-uploadfield-files .ss-uploadfield-item-actions .btn .ui-icon{
   display:none;
 }
 
