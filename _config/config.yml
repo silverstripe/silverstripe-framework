@@ -6,6 +6,13 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\Forms\Schema\FormSchema
   FixtureFactory:
     class: SilverStripe\Dev\FixtureFactory
+  Swift_Transport: Swift_MailTransport
+  Swift_Maler:
+    constructor:
+      - '%$Swift_Transport'
+  SilverStripe\Control\Email\Mailer:
+    properties:
+      SwiftMailer: '%$Swift_Mailer
 SilverStripe\Control\HTTP:
   cache_control:
     max-age: 0

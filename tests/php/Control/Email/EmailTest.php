@@ -434,22 +434,4 @@ class EmailTest extends SapphireTest
         $email->render();
         $this->assertContains('my content', $email->getBody());
     }
-
-    public function testCreateFromCallback()
-    {
-        $email = Email::create_from_callback(
-            'SilverStripe\\Email\\Email',
-            array('EmailContent' => 'My content'),
-            function ($message) {
-                $message->setTo('to@example.com');
-                $message->setFrom('from@example.com');
-            }
-        );
-        $this->assertCount(1, $email->getTo());
-        $this->assertContains('to@example.com', array_keys($email->getTo()));
-        $this->assertCount(1, $email->getFrom());
-        $this->assertContains('from@example.com', array_keys($email->getFrom()));
-        $email->send();
-        $this->assertContains('My content', $email->getBody(), 'Email was not rendered');
-    }
 }

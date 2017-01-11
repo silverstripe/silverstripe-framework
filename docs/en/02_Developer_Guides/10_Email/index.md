@@ -14,14 +14,8 @@ Out of the box, SilverStripe will use the built-in PHP `mail()` command via the 
 like to use a more robust transport to send mail you can swap out the transport used by the `Mailer` via config:
 
 ```yml
-Mailer:
+SilverStripe\Control\Email\Mailer:
   swift_transport: Swift_SendmailTransport
-```
-
-or in PHP
-
-```php
-Mailer::get_inst()->setTransport(new Swift_SendmailTransport);
 ```
 
 ## Usage
@@ -54,8 +48,6 @@ To customise this template, copy it to the `mysite/templates/Email/` folder or u
 HTML emails can use custom templates using the same template language as your website template. You can also pass the
 email object additional information using the `setData` and `addData` methods. 
 
-A convenience method `Email::create_from_callback()` allows the quick creation of an email from custom template and data.
-
 **mysite/templates/Email/MyCustomEmail.ss**
 
 	:::ss
@@ -65,21 +57,21 @@ A convenience method `Email::create_from_callback()` allows the quick creation o
 The PHP Logic..
 
 ```php
-$email = SilverStripe\Control\Email\Email::create_from_callback(
-    'Email\\MyCustomEmail', //template 
-    array( // template data
+$email = SilverStripe\Control\Email\Email::create()
+    ->setTemplate('Email\\MyCustomEmail') 
+    ->setData(array(
         'Member' => Member::currentUser(),
         'Link'=> $link,
-    ),
-    function ($message) use ($to, $from, $subject) { //callback to make customisations to the message
-        $message
-            ->setFrom($from)
-            ->setTo($to)
-            ->setSubject($subject);
-    }
-);
+    ))
+    ->setFrom($from)
+    ->setTo($to)
+    ->setSubject($subject);
 
-$email->send();
+if ($email->send()) {
+    //email sent successfully
+} else {
+    // there may have been 1 or more failures
+}
 ```
 
 <div class="alert" markdown="1">
@@ -94,7 +86,7 @@ You can set the default sender address of emails through the `Email.admin_email`
 **mysite/_config/app.yml**
 
 	:::yaml
-	Email:
+	SilverStripe\Control\Email\Email:
 	  admin_email: support@silverstripe.org
   
 

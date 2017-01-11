@@ -22,13 +22,11 @@ class SwiftPluginTest extends SapphireTest
 
     protected function getEmail()
     {
-        return Email::create_from_callback('SilverStripe\\Email\\Email', null, function ($message) {
-            /** @var Email $message */
-            $message->setTo('original-to@example.com');
-            $message->setCC('original-cc@example.com');
-            $message->setBCC('original-bcc@example.com');
-            $message->setFrom('original-from@example.com');
-        });
+        return (new Email())
+            ->setTo('original-to@example.com')
+            ->setCC('original-cc@example.com')
+            ->setBCC('original-bcc@example.com')
+            ->setFrom('original-from@example.com');
     }
 
     protected function getMailer()

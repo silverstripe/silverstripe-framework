@@ -3,6 +3,7 @@
 namespace SilverStripe\Control\Email;
 
 use SilverStripe\Control\Director;
+use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Convert;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\View\Requirements;
@@ -55,13 +56,18 @@ class Email extends ViewableData
     /**
      * @var string The name of the used template (without *.ss extension)
      */
-    private $template = "SilverStripe\\Email\\Email";
+    private $template = self::class;
 
     /**
      * @var array|ViewableData Additional data available in a template.
      * Used in the same way than {@link ViewableData->customize()}.
      */
     private $data = array();
+
+    /**
+     * @var array
+     */
+    private $failedRecipients = array();
 
     /**
      * Checks for RFC822-valid email format.
@@ -429,6 +435,8 @@ class Email extends ViewableData
 
     /**
      * @param string $path Path to file
+     * @param string $alias An override for the name of the file
+     * @param string $mime The mime type for the attachment
      * @return $this
      */
     public function addAttachment($path, $alias = null, $mime = null)
@@ -445,6 +453,12 @@ class Email extends ViewableData
         return $this;
     }
 
+    /**
+     * @param string $data
+     * @param string $name
+     * @param string $mime
+     * @return $this
+     */
     public function addAttachmentFromData($data, $name, $mime = null)
     {
         $attachment = new \Swift_Attachment($data, $name);
@@ -524,6 +538,7 @@ class Email extends ViewableData
      */
     public function setBody($body)
     {
+        $body = HTTP::absoluteURLs($body);
         $this->getSwiftMessage()->setBody($body);
 
         return $this;
@@ -584,30 +599,9 @@ class Email extends ViewableData
     }
 
     /**
-     * @param string $template
-     * @param array|ViewableData $data
-     * @param callable|null $callback
-     * @return static
-     */
-    public static function create_from_callback($template, $data, $callback = null)
-    {
-        // create our email message from the arguments
-        $message = static::create();
-        $message->setTemplate($template);
-        $message->setData($data);
-
-        // if a callback is provided, call it against the message
-        if (is_callable($callback)) {
-            $callback($message);
-        }
-
-        return $message;
-    }
-
-    /**
      * Send the message to the recipients
      *
-     * @return array|bool true if successful or array of failed recipients
+     * @return bool true if successful or array of failed recipients
      */
     public function send()
     {
@@ -623,7 +617,7 @@ class Email extends ViewableData
         }
         $numFailed = Mailer::send_message($this);
         if ($numFailed) {
-            return Mailer::get_inst()->getFailedRecipients();
+            return false;
         }
 
         return true;

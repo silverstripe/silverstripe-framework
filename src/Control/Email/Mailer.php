@@ -42,7 +42,7 @@ class Mailer extends Object
     private $failedRecipients = array();
 
     /**
-     * @return mixed
+     * @return static
      */
     public static function get_inst()
     {

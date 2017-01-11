@@ -82,11 +82,10 @@ class MailerTest extends SapphireTest
 
     public function testSend()
     {
-        $email = Email::create_from_callback('SilverStripe\\Email\\Email', null, function ($message) {
-            $message->setTo('to@example.com');
-            $message->setFrom('from@example.com');
-            $message->setSubject('Subject');
-        });
+        $email = new Email();
+        $email->setTo('to@example.com');
+        $email->setFrom('from@example.com');
+        $email->setSubject('Subject');
 
         $mailer = $this->getMock(Mailer::class, array('sendSwift'));
         $mailer->expects($this->once())->method('sendSwift')->willReturnCallback(function ($message) {

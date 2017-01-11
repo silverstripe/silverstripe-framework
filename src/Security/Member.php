@@ -959,12 +959,12 @@ class Member extends DataObject implements TemplateGlobalProvider
             && $this->record['Password']
             && $this->config()->notify_password_change
         ) {
-            /** @var Email $e */
-            $e = Email::create_from_callback('SilverStripe\\Email\\ChangePasswordEmail', $this, function ($message) {
-                $message->setTo($this->Email);
-                $message->setSubject(_t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'));
-            });
-            $e->send();
+            Email::create()
+                ->setTemplate('SilverStripe\\Email\\ChangePasswordEmail')
+                ->setData($this)
+                ->setTo($this->Email)
+                ->setSubject(_t('Member.SUBJECTPASSWORDCHANGED', "Your password has been changed", 'Email subject'))
+                ->send();
         }
 
         // The test on $this->ID is used for when records are initially created.
