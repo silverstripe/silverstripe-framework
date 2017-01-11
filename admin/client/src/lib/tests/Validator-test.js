@@ -1,4 +1,7 @@
-/* global jest, describe, beforeEach, it, expect */
+/* global jest, describe, beforeEach, it, expect, console */
+
+// Needs to be set before requiring other libraries
+global.console = { warn: jest.fn() };
 
 jest.unmock('react');
 jest.unmock('react-addons-test-utils');
@@ -56,9 +59,9 @@ describe('Validator', () => {
   describe('validateValue()', () => {
     it('should throw an error', () => {
       validator = new Validator({});
-      const callRuleDoesNotExist = () => validator.validateValue('one', 'ruledoesnotexist');
-
-      expect(callRuleDoesNotExist).toThrowError(/unknown/i);
+      validator.validateValue('one', 'ruledoesnotexist');
+      // eslint-disable-next-line no-console
+      expect(console.warn).toBeCalled();
     });
   });
 
