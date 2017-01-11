@@ -253,9 +253,9 @@ class SSViewer implements Flushable
             $templates[] = $template;
             $templates[] = ['type' => 'Includes', $template];
 
-            // If the class is "Page_Controller", look for Page.ss
-            if (stripos($class, '_controller') !== false) {
-                $templates[] = str_ireplace('_controller', '', $class) . $suffix;
+            // If the class is "PageController" (PSR-2 compatibility) or "Page_Controller" (legacy), look for Page.ss
+            if (preg_match('/^(?<name>.+[^\\\\])_?Controller$/iU', $class, $matches)) {
+                $templates[] = $matches['name'] . $suffix;
             }
 
             if ($baseClass && $class == $baseClass) {

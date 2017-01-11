@@ -8,7 +8,7 @@ Let's start by defining a new `ContactPage` page type:
 	<?php
 	class ContactPage extends Page {
 	}
-	class ContactPage_Controller extends Page_Controller {
+	class ContactPageController extends PageController {
 		private static $allowed_actions = array('Form');
 		public function Form() { 
 			$fields = new FieldList( 
@@ -61,7 +61,7 @@ If you now create a ContactPage in the CMS (making sure you have rebuilt the dat
 Now that we have a contact form, we need some way of collecting the data submitted. We do this by creating a function on the controller with the same name as the form action. In this case, we create the function 'submit' on the ContactPage_Controller class.
 
 	:::php
-	class ContactPage_Controller extends Page_Controller {
+	class ContactPageController extends PageController {
 		private static $allowed_actions = array('Form');
 		public function Form() {
 			// ...

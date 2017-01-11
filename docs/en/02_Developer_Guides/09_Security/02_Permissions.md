@@ -14,27 +14,35 @@ The simple usage, Permission::check("PERM_CODE") will detect if the currently lo
 
 **Group ACLs**
 
-*  Call **Permission::check("MY_PERMISSION_CODE")** to see if the current user has MY_PERMISSION_CODE.
-*  MY_PERMISSION_CODE can be loaded into the Security admin on the appropriate group, using the "Permissions" tab.
+*  Call **Permission::check('MY_PERMISSION_CODE')** to see if the current user has MY_PERMISSION_CODE.
+*  `MY_PERMISSION_CODE` can be loaded into the Security admin on the appropriate group, using the "Permissions" tab.
 
 ## PermissionProvider
 
 [api:PermissionProvider] is an interface which lets you define a method *providePermissions()*.
 This method should return a map of permission code names with a human readable explanation of its purpose.
 
-	:::php
-	class Page_Controller implements PermissionProvider {
-	  public function init() {
-	    parent::init();
-	    if(!Permission::check("VIEW_SITE")) Security::permissionFailure();
-	  }
+```php
+use SilverStripe\Security\PermissionProvider;
 
-	  public function providePermissions() {
-	    return array(
-	      "VIEW_SITE" => "Access the site",
-	    );
-	  }
-	}
+class PageController implements PermissionProvider
+{
+    public function init()
+    {
+        parent::init();
+        if (!Permission::check('VIEW_SITE')) {
+            Security::permissionFailure();
+        }
+    }
+
+    public function providePermissions()
+    {
+        return array(
+            'VIEW_SITE' => 'Access the site'
+        );
+    }
+}
+```
 
 
 This can then be used to add a dropdown for permission codes to the security panel.  Permission::get_all_codes() will be
@@ -89,10 +97,11 @@ This works much like ADMIN permissions (see above)
 
 You can check if a user has access to the CMS by simply performing a check against `CMS_ACCESS`.
 
-	:::php
-	if (Permission::checkMember($member, 'CMS_ACCESS')) {
-		//user can access the CMS
-	}
+```php
+if (Permission::checkMember($member, 'CMS_ACCESS')) {
+    //user can access the CMS
+}
+```
 
 Internally, this checks that the user has any of the defined `CMS_ACCESS_*` permissions.
 

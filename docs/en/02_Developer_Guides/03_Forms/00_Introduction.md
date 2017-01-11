@@ -14,56 +14,66 @@ See the [Forms Tutorial](../../tutorials/forms/) for a step by step process of c
 
 Creating a [api:Form] has the following signature.
 
-	:::php
-	$form = new Form(
-		$controller, // the Controller to render this form on 
-		$name, // name of the method that returns this form on the controller
-		FieldList $fields, // list of FormField instances 
-		FieldList $actions, // list of FormAction instances
-		$required // optional use of RequiredFields object
-	);
+    :::php
+    $form = new Form(
+        $controller, // the Controller to render this form on 
+        $name, // name of the method that returns this form on the controller
+        FieldList $fields, // list of FormField instances 
+        FieldList $actions, // list of FormAction instances
+        $required // optional use of RequiredFields object
+    );
 
 In practice, this looks like:
 
 **mysite/code/Page.php**
 
-	:::php
-	<?php
+```php
+<?php
 
-	class Page_Controller extends ContentController {
-		
-		private static $allowed_actions = array(
-			'HelloForm'
-		);
-		
-		public function HelloForm() {
-			$fields = new FieldList(
-				TextField::create('Name', 'Your Name')
-			);
+use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\RequiredFields;
+use SilverStripe\Forms\TextField;
 
-			$actions = new FieldList(
-				FormAction::create("doSayHello")->setTitle("Say hello")
-			);
+class PageController extends ContentController
+{   
+    private static $allowed_actions = array(
+        'HelloForm'
+    );
+    
+    public function HelloForm()
+    {
+        $fields = new FieldList(
+            TextField::create('Name', 'Your Name')
+        );
 
-			$required = new RequiredFields('Name');
+        $actions = new FieldList(
+            FormAction::create('doSayHello')->setTitle('Say hello')
+        );
 
-			$form = new Form($this, 'HelloForm', $fields, $actions, $required);
-	
-			return $form;
-		}
-	
-		public function doSayHello($data, Form $form) {
-			$form->sessionMessage('Hello '. $data['Name'], 'success');
+        $required = new RequiredFields('Name');
 
-			return $this->redirectBack();
-		}
-	}
+        $form = new Form($this, 'HelloForm', $fields, $actions, $required);
+
+        return $form;
+    }
+
+    public function doSayHello($data, Form $form)
+    {
+        $form->sessionMessage('Hello ' . $data['Name'], 'success');
+
+        return $this->redirectBack();
+    }
+}
+```
 
 **mysite/templates/Page.ss**
 
-	:::ss
-	$HelloForm
-
+```ss
+$HelloForm
+```
 
 <div class="info" markdown="1">
 The examples above use `FormField::create()` instead of the  `new` operator (`new FormField()`). These are functionally 
@@ -80,10 +90,11 @@ the [api:FormActions]. The URL is known as the `$controller` instance will know 
 Because the `HelloForm()` method will be the location the user is taken to, it needs to be handled like any other 
 controller action. To grant it access through URLs, we add it to the `$allowed_actions` array.
 
-	:::php
-	private static $allowed_actions = array(
-		'HelloForm'
-	);
+```php
+private static $allowed_actions = array(
+    'HelloForm'
+);
+```
 
 <div class="notice" markdown="1">
 Form actions (`doSayHello`), on the other hand, should _not_ be included in `$allowed_actions`; these are handled 
@@ -96,8 +107,9 @@ separately through [api:Form::httpSubmission()].
 Fields in a [api:Form] are represented as a single [api:FieldList] instance containing subclasses of [api:FormField]. 
 Some common examples are [api:TextField] or [api:DropdownField]. 
 
-	:::php
-	TextField::create($name, $title, $value);
+```php
+TextField::create($name, $title, $value);
+```
 
 <div class="info" markdown='1'>
 A list of the common FormField subclasses is available on the [Common Subclasses](field_types/common_subclasses/) page.
@@ -106,48 +118,52 @@ A list of the common FormField subclasses is available on the [Common Subclasses
 The fields are added to the [api:FieldList] `fields` property on the `Form` and can be modified at up to the point the 
 `Form` is rendered.
 
-	:::php
-	$fields = new FieldList(
-		TextField::create('Name'),
-		EmailField::create('Email')
-	);
+```php
+$fields = new FieldList(
+    TextField::create('Name'),
+    EmailField::create('Email')
+);
 
-	$form = new Form($controller, 'MethodName', $fields, ...);
+$form = new Form($controller, 'MethodName', $fields, ...);
 
-	// or use `setFields`
-	$form->setFields($fields);
+// or use `setFields`
+$form->setFields($fields);
 
-	// to fetch the current fields..
-	$fields = $form->getFields();
+// to fetch the current fields..
+$fields = $form->getFields();
+```
 
 A field can be appended to the [api:FieldList].
 
-	:::php
-	$fields = $form->Fields();
+```php
+$fields = $form->Fields();
 
-	// add a field
-	$fields->push(TextField::create(..));
+// add a field
+$fields->push(TextField::create(/* ... */));
 
-	// insert a field before another one
-	$fields->insertBefore(TextField::create(..), 'Email');
+// insert a field before another one
+$fields->insertBefore(TextField::create(/* ... */), 'Email');
 
-	// insert a field after another one
-	$fields->insertAfter(TextField::create(..), 'Name');
-	
-	// insert a tab before the main content tab (used to position tabs in the CMS)
-	$fields->insertBefore(Tab::create(...), 'Main');
-	// Note: you need to create and position the new tab prior to adding fields via addFieldToTab()
+// insert a field after another one
+$fields->insertAfter(TextField::create(/* ... */), 'Name');
+
+// insert a tab before the main content tab (used to position tabs in the CMS)
+$fields->insertBefore(Tab::create(/* ... */), 'Main');
+// Note: you need to create and position the new tab prior to adding fields via addFieldToTab()
+```
 
 Fields can be fetched after they have been added in.
-	
-	:::php
-	$email = $form->Fields()->dataFieldByName('Email');
-	$email->setTitle('Your Email Address');
+
+```php
+$email = $form->Fields()->dataFieldByName('Email');
+$email->setTitle('Your Email Address');
+```
 
 Fields can be removed from the form.
-	
-	:::php
-	$form->getFields()->removeByName('Email');
+    
+```php
+$form->getFields()->removeByName('Email');
+```
 
 <div class="alert" markdown="1">
 Forms can be tabbed (such as the CMS interface). In these cases, there are additional functions such as `addFieldToTab`
@@ -164,13 +180,14 @@ default `FormField` object has several methods for doing common operations.
 Most of the `set` operations will return the object back so methods can be chained.
 </div>
 
-	:::php
-	$field = new TextField(..);
+```php
+$field = new TextField(..);
 
-	$field
-		->setMaxLength(100)
-		->setAttribute('placeholder', 'Enter a value..')
-		->setTitle('');
+$field
+    ->setMaxLength(100)
+    ->setAttribute('placeholder', 'Enter a value..')
+    ->setTitle('');
+```
 
 ### Custom Templates
 
@@ -178,61 +195,67 @@ The [api:Form] HTML markup and each of the [api:FormField] instances are rendere
 templates by using the `setTemplate` method on either the `Form` or `FormField`. For more details on providing custom 
 templates see [Form Templates](form_templates)
 
-	:::php
-	$form = new Form(..);
+```php
+$form = new Form(..);
 
-	$form->setTemplate('CustomForm');
+$form->setTemplate('CustomForm');
 
-	// or, for a FormField
-	$field = new TextField(..);
+// or, for a FormField
+$field = new TextField(..);
 
-	$field->setTemplate('CustomTextField');
-	$field->setFieldHolderTemplate('CustomTextField_Holder');
+$field->setTemplate('CustomTextField');
+$field->setFieldHolderTemplate('CustomTextField_Holder');
+```
 
 ## Adding FormActions
 
 [api:FormAction] objects are displayed at the bottom of the `Form` in the form of a `button` or `input` tag. When a
 user presses the button, the form is submitted to the corresponding method.
 
-	:::php
-	FormAction::create($action, $title);
+```php
+FormAction::create($action, $title);
+```
 
 As with [api:FormField], the actions for a `Form` are stored within a [api:FieldList] instance in the `actions` property
 on the form.
-	
-	:::php
-	public function MyForm() {
-		$fields = new FieldList(..);
+    
+```php
+public function MyForm()
+{
+    $fields = new FieldList(/* .. */);
 
-		$actions = new FieldList(
-			FormAction::create('doSubmitForm', 'Submit')
-		);
+    $actions = new FieldList(
+        FormAction::create('doSubmitForm', 'Submit')
+    );
 
-		$form = new Form($controller, 'MyForm', $fields, $actions);
+    $form = new Form($controller, 'MyForm', $fields, $actions);
 
-		// Get the actions
-		$actions = $form->Actions();
+    // Get the actions
+    $actions = $form->Actions();
 
-		// As actions is a FieldList, push, insertBefore, removeByName and other
-		// methods described for `Fields` also work for actions.
+    // As actions is a FieldList, push, insertBefore, removeByName and other
+    // methods described for `Fields` also work for actions.
 
-		$actions->push(
-			FormAction::create('doSecondaryFormAction', 'Another Button')
-		);
+    $actions->push(
+        FormAction::create('doSecondaryFormAction', 'Another Button')
+    );
 
-		$actions->removeByName('doSubmitForm');
-		$form->setActions($actions);
+    $actions->removeByName('doSubmitForm');
+    $form->setActions($actions);
 
-		return $form
-	}
+    return $form
+}
 
-	public function doSubmitForm($data, $form) {
-		//
-	}
+public function doSubmitForm($data, $form)
+{
+    //
+}
 
-	public function doSecondaryFormAction($data, $form) {
-		//
-	}
+public function doSecondaryFormAction($data, $form)
+{
+    //
+}
+```
 
 The first `$action` argument for creating a `FormAction` is the name of the method to invoke when submitting the form 
 with the particular button. In the previous example, clicking the 'Another Button' would invoke the 
@@ -252,45 +275,55 @@ The `$action` method takes two arguments:
  * `$data` an array containing the values of the form mapped from `$name => $value`
  * `$form` the submitted [api:Form] instance.
 
-	:::php
-	<?php
+```php
+<?php
 
-	class Page_Controller extends ContentController {
+use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\TextField;
 
-		private static $allowed_actions = array(
-			'MyForm'
-		);
+class PageController extends ContentController
+{
+    private static $allowed_actions = array(
+        'MyForm'
+    );
 
-		public function MyForm() {
-			$fields = new FieldList(
-				TextField::create('Name'),
-				EmailField::create('Email')
-			);
+    public function MyForm()
+    {
+        $fields = new FieldList(
+            TextField::create('Name'),
+            EmailField::create('Email')
+        );
 
-			$actions = new FieldList(
-				FormAction::create('doSubmitForm', 'Submit')
-			);
+        $actions = new FieldList(
+            FormAction::create('doSubmitForm', 'Submit')
+        );
 
-			$form = new Form($controller, 'MyForm', $fields, $actions);
+        $form = new Form($controller, 'MyForm', $fields, $actions);
 
-			return $form
-		}
+        return $form
+    }
 
-		public function doSubmitForm($data, $form) {
-			// Submitted data is available as a map.
-			echo $data['Name'];
-			echo $data['Email'];
+    public function doSubmitForm($data, $form)
+    {
+        // Submitted data is available as a map.
+        echo $data['Name'];
+        echo $data['Email'];
 
-			// You can also fetch the value from the field.
-			echo $form->Fields()->dataFieldByName('Email')->Value();
+        // You can also fetch the value from the field.
+        echo $form->Fields()->dataFieldByName('Email')->Value();
 
-			// Using the Form instance you can get / set status such as error messages.
-			$form->sessionMessage("Successful!", 'good');
+        // Using the Form instance you can get / set status such as error messages.
+        $form->sessionMessage('Successful!', 'good');
 
-			// After dealing with the data you can redirect the user back.
-			return $this->redirectBack();
-		}
-	}
+        // After dealing with the data you can redirect the user back.
+        return $this->redirectBack();
+    }
+}
+```
 
 ## Validation
 
@@ -300,12 +333,14 @@ validating its' own data value.
 
 For more information, see the [Form Validation](validation) documentation.
 
-	:::php
-	$validator = new RequiredFields(array(
-		'Name', 'Email'
-	));
+```php
+$validator = new RequiredFields(array(
+    'Name',
+    'Email'
+));
 
-	$form = new Form($this, 'MyForm', $fields, $actions, $validator);
+$form = new Form($this, 'MyForm', $fields, $actions, $validator);
+```
 
 ## API Documentation
 

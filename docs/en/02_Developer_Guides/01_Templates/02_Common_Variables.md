@@ -15,7 +15,7 @@ scope, and you can specify additional static methods to be available globally in
 <div class="notice" markdown="1">
 Want a quick way of knowing what scope you're in? Try putting `$ClassName` in your template. You should see a string 
 such as `Page` of the object that's in scope. The methods you can call on that object then are any functions, database 
-properties or relations on the `Page` class, `Page_Controller` class as well as anything from their subclasses **or** 
+properties or relations on the `Page` class, `PageController` class as well as anything from their subclasses **or** 
 extensions.
 </div>
 

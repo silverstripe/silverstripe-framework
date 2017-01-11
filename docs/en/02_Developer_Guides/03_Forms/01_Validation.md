@@ -7,43 +7,53 @@ SilverStripe provides server-side form validation out of the box through the [ap
 [api:RequiredFields]. A single `Validator` instance is set on each `Form`. Validators are implemented as an argument to 
 the [api:Form] constructor or through the function `setValidator`.
 
-	:::php
-	<?php
+```php
+<?php
 
-	class Page_Controller extends ContentController {
+use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\RequiredFields;
 
-		private static $allowed_actions = array(
-			'MyForm'
-		);
+class PageController extends ContentController
+{
+    private static $allowed_actions = array(
+        'MyForm'
+    );
 
-		public function MyForm() {
-			$fields = new FieldList(
-				TextField::create('Name'),
-				EmailField::create('Email')
-			);
+    public function MyForm()
+    {
+        $fields = new FieldList(
+            TextField::create('Name'),
+            EmailField::create('Email')
+        );
 
-			$actions = new FieldList(
-				FormAction::create('doSubmitForm', 'Submit')
-			);
+        $actions = new FieldList(
+            FormAction::create('doSubmitForm', 'Submit')
+        );
 
-			// the fields 'Name' and 'Email' are required.
-			$required = new RequiredFields(array(
-				'Name', 'Email'
-			));
+        // the fields 'Name' and 'Email' are required.
+        $required = new RequiredFields(array(
+            'Name', 'Email'
+        ));
 
-			// $required can be set as an argument
-			$form = new Form($controller, 'MyForm', $fields, $actions, $required);
+        // $required can be set as an argument
+        $form = new Form($controller, 'MyForm', $fields, $actions, $required);
 
-			// Or, through a setter.
-			$form->setValidator($required);
+        // Or, through a setter.
+        $form->setValidator($required);
 
-			return $form;
-		}
+        return $form;
+    }
 
-		public function doSubmitForm($data, $form) {
-			//..
-		}
-	}
+    public function doSubmitForm($data, $form)
+    {
+        //..
+    }
+}
+```
 
 In this example we will be required to input a value for `Name` and a valid email address for `Email` before the 
 `doSubmitForm` method is called.
@@ -63,15 +73,17 @@ The data value of the `FormField` submitted is not passed into validate. It is s
 the `setValue` method.
 </div>
 
-	:::php
-	public function validate($validator) {
-		if($this->Value() == 10) {
-		    $validator->validationError($this->Name(), 'This value cannot be 10');
-			return false;
-		}
+```php
+public function validate($validator)
+{
+    if ((int) $this->Value() === 10) {
+        $validator->validationError($this->Name(), 'This value cannot be 10');
+        return false;
+    }
 
-		return true;
-	}
+    return true;
+}
+```
 
 The `validate` method should return `true` if the value passes any validation and `false` if SilverStripe should trigger
 a validation error on the page. In addition a useful error message must be set on the given validator.
@@ -86,80 +98,94 @@ two ways to go about this:
 A custom `FormField` which handles the validation. This means the `FormField` can be reused throughout the site and have
 the same validation logic applied to it throughout.
 
-**mysite/code/formfields/CustomNumberField.php**
+**mysite/code/CustomNumberField.php**
 
-	:::php
-	<?php
+```php
+<?php
 
-	class CustomNumberField extends TextField {
+use SilverStripe\Forms\TextField;
 
-		public function validate($validator) {
-			if(!is_numeric($this->value)) {
-				$validator->validationError(
-					$this->name, "Not a number. This must be between 2 and 5", "validation", false
-				);
-				
-				return false;
-			}
-			else if($this->value > 5 || $this->value < 2) {
-				$validator->validationError(
-					$this->name, "Your number must be between 2 and 5", "validation", false
-				);
+class CustomNumberField extends TextField
+{
+    public function validate($validator)
+    {
+        if (!is_numeric($this->value)) {
+            $validator->validationError(
+                $this->name, 'Not a number. This must be between 2 and 5', 'validation', false
+            );
+            
+            return false;
+        } elseif ($this->value > 5 || $this->value < 2) {
+            $validator->validationError(
+                $this->name, 'Your number must be between 2 and 5', 'validation', false
+            );
 
-				return false;
-			}
+            return false;
+        }
 
-			return true;
-		}
-	}
+        return true;
+    }
+}
+```
 
 Or, an alternative approach to the custom class is to define the behavior inside the Form's action method. This is less
 reusable and would not be possible within the `CMS` or other automated `UI` but does not rely on creating custom 
 `FormField` classes.
-	
-	:::php
-	<?php
+    
+```php
+<?php
 
-	class Page_Controller extends ContentController {
+use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\Forms\EmailField;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\Form;
+use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Security\Member;
 
-		private static $allowed_actions = array(
-			'MyForm'
-		);
+class Page_Controller extends ContentController
+{
+    private static $allowed_actions = array(
+        'MyForm'
+    );
 
-		public function MyForm() {
-			$fields = new FieldList(
-				TextField::create('Name'),
-				EmailField::create('Email')
-			);
+    public function MyForm()
+    {
+        $fields = new FieldList(
+            TextField::create('Name'),
+            EmailField::create('Email')
+        );
 
-			$actions = new FieldList(
-				FormAction::create('doSubmitForm', 'Submit')
-			);
+        $actions = new FieldList(
+            FormAction::create('doSubmitForm', 'Submit')
+        );
 
-			$form = new Form($controller, 'MyForm', $fields, $actions);
+        $form = new Form($controller, 'MyForm', $fields, $actions);
 
-			return $form;
-		}
+        return $form;
+    }
 
-		public function doSubmitForm($data, $form) {
-			// At this point, RequiredFields->isValid() will have been called already,
-			// so we can assume that the values exist. Say we want to make sure that email hasn't already been used.
-			
-			$check = Member::get()->filter('Email', $data['Email'])->first();
+    public function doSubmitForm($data, $form)
+    {
+        // At this point, RequiredFields->isValid() will have been called already,
+        // so we can assume that the values exist. Say we want to make sure that email hasn't already been used.
+        
+        $check = Member::get()->filter('Email', $data['Email'])->first();
 
-			if($check) {
-				$form->addErrorMessage('Email', 'This email already exists', 'bad');
+        if ($check) {
+            $form->addErrorMessage('Email', 'This email already exists', 'bad');
 
-				return $this->redirectBack();
-			}
+            return $this->redirectBack();
+        }
 
 
-			$form->sessionMessage("You have been added to our mailing list", 'good');
-			
-			return $this->redirectBack();
-		}
-	}
-	
+        $form->sessionMessage('You have been added to our mailing list', 'good');
+        
+        return $this->redirectBack();
+    }
+}
+```
+    
 ## Exempt validation actions
 
 In some cases you might need to disable validation for specific actions. E.g. actions which discard submitted
@@ -167,32 +193,32 @@ data may not need to check the validity of the posted content.
 
 You can disable validation on individual using one of two methods:
 
+```php
+$actions = new FieldList(
+    $action = FormAction::create('doSubmitForm', 'Submit')
+);
+$form = new Form($controller, 'MyForm', $fields, $actions);
 
-	:::php
-	$actions = new FieldList(
-		$action = FormAction::create('doSubmitForm', 'Submit')
-	);
-	$form = new Form($controller, 'MyForm', $fields, $actions);
-	
-	// Disable actions on the form action themselves
-	$action->setValidationExempt(true);
-	
-	// Alternatively, you can whitelist individual actions on the form object by name
-	$form->setValidationExemptActions(['doSubmitForm']);
+// Disable actions on the form action themselves
+$action->setValidationExempt(true);
 
+// Alternatively, you can whitelist individual actions on the form object by name
+$form->setValidationExemptActions(['doSubmitForm']);
+```
 
 ## Server-side validation messages
 
 If a `FormField` fails to pass `validate()` the default error message is returned.
 
-	:::php
-	'$Name' is required
+```
+'$Name' is required
+```
 
 Use `setCustomValidationMessage` to provide a custom message.
 
-	:::php
-	$field = new TextField(..);
-	$field->setCustomValidationMessage('Whoops, looks like you have missed me!');
+```php
+$field = new TextField(/* .. */);
+$field->setCustomValidationMessage('Whoops, looks like you have missed me!');
 
 ## JavaScript validation
 
@@ -201,15 +227,15 @@ to provide the information required in order to plug in custom libraries like [P
 [jQuery.Validate](http://jqueryvalidation.org/). Most of these libraries work on HTML `data-` attributes or special 
 classes added to each input. For Parsley we can structure the form like.
 
-	:::php
-	$form = new Form(..);
-	$form->setAttribute('data-parsley-validate', true);
+```php
+$form = new Form(/* .. */);
+$form->setAttribute('data-parsley-validate', true);
 
-	$field = $fields->dataFieldByName('Name');
+$field = $fields->dataFieldByName('Name');
 
-	$field->setAttribute('required', true);
-	$field->setAttribute('data-parsley-mincheck', '2');
-
+$field->setAttribute('required', true);
+$field->setAttribute('data-parsley-mincheck', '2');
+```
 
 ## Model Validation
 
@@ -228,23 +254,26 @@ error message, or a [api:ValidationResult] object containing the list of errors 
 
 E.g.
 
+```php
+use SilverStripe\Control\Controller;
+use SilverStripe\ORM\ValidationException;
 
-    :::php
-    class MyController extends Controller
+class MyController extends Controller
+{
+    public function doSave($data, $form)
     {
-        public function doSave($data, $form) {
-            $success = $this->sendEmail($data);
-            
-            // Example error handling
-            if (!$success) {
-                throw new ValidationException('Sorry, we could not email to that address');
-            }
-            
-            // If success
-            return $this->redirect($this->Link('success'));
+        $success = $this->sendEmail($data);
+        
+        // Example error handling
+        if (!$success) {
+            throw new ValidationException('Sorry, we could not email to that address');
         }
+        
+        // If success
+        return $this->redirect($this->Link('success'));
     }
-
+}
+```
 
 ### Validation in the CMS
 
@@ -257,28 +286,36 @@ respect the provided `Validator` and handle displaying error and success respons
 Again, custom error messages can be provided through the `FormField`
 </div>
 
-	:::php
-	<?php
+```php
+<?php
 
-	class Page extends SiteTree {
+use SilverStripe\CMS\Model\SiteTree;
+use SilverStripe\Forms\TextField;
+use SilverStripe\Forms\RequiredFields;
 
-		private static $db = array(
-			'MyRequiredField' => 'Text'
-		);
+class Page extends SiteTree
+{
+    private static $db = array(
+        'MyRequiredField' => 'Text'
+    );
 
-		public function getCMSFields() {
-			$fields = parent::getCMSFields();
+    public function getCMSFields()
+    {
+        $fields = parent::getCMSFields();
 
-			$fields->addFieldToTab('Root.Main', 
-				TextField::create('MyRequiredField')->setCustomValidationMessage('You missed me.')
-			);
-		}
-		
-		public function getCMSValidator() {
-			return new RequiredFields(array(
-				'MyRequiredField'
-			));
-		}
+        $fields->addFieldToTab('Root.Main', 
+            TextField::create('MyRequiredField')->setCustomValidationMessage('You missed me.')
+        );
+    }
+    
+    public function getCMSValidator()
+    {
+        return new RequiredFields(array(
+            'MyRequiredField'
+        ));
+    }
+}
+```
 
 ## API Documentation
 

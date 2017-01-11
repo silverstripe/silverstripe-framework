@@ -12,7 +12,7 @@ code for a `Form` is to create it as a subclass to `Form`. Let's look at a examp
 	:::php
 	<?php
 
-	class Page_Controller extends ContentController {
+	class PageController extends ContentController {
 		
 		public function SearchForm() {
 			$fields = new FieldList(
@@ -128,7 +128,7 @@ Our controller will now just have to create a new instance of this form object. 
 	:::php
 	<?php
 
-	class Page_Controller extends ContentController {
+	class PageController extends ContentController {
 		
 		private static $allowed_actions = array(
 			'SearchForm',

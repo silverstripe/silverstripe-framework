@@ -23,7 +23,7 @@ use SilverStripe\Core\Object;
  * If you want to implement a FileField into a form element, you need to pass it an array of source data.
  *
  * <code>
- * class ExampleForm_Controller extends Page_Controller {
+ * class ExampleFormController extends PageController {
  *
  *  function Form() {
  *      $fields = new FieldList(

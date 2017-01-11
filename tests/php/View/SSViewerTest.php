@@ -23,7 +23,7 @@ use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel;
-use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModel_Controller;
+use SilverStripe\View\Tests\SSViewerTest\SSViewerTestModelController;
 use SilverStripe\View\ViewableData;
 use SilverStripe\View\SSViewer_FromString;
 use SilverStripe\View\SSTemplateParser;
@@ -1526,17 +1526,15 @@ after'
 
     public function testLayout()
     {
-        $self = $this;
-
         $this->useTestTheme(
             __DIR__.'/SSViewerTest',
             'layouttest',
-            function () use ($self) {
+            function () {
                 $template = new SSViewer(array('Page'));
-                $self->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
+                $this->assertEquals("Foo\n\n", $template->process(new ArrayData(array())));
 
                 $template = new SSViewer(array('Shortcodes', 'Page'));
-                $self->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
+                $this->assertEquals("[file_link]\n\n", $template->process(new ArrayData(array())));
             }
         );
     }
@@ -1546,48 +1544,47 @@ after'
      */
     public function testGetTemplatesByClass()
     {
-        $self = $this;
         $this->useTestTheme(
-            __DIR__.'/SSViewerTest',
+            __DIR__ . '/SSViewerTest',
             'layouttest',
-            function () use ($self) {
+            function () {
                 // Test passing a string
                 $templates = SSViewer::get_templates_by_class(
-                    SSViewerTestModel_Controller::class,
+                    SSViewerTestModelController::class,
                     '',
                     Controller::class
                 );
-                $self->assertEquals(
+                $this->assertEquals(
                     [
-                    SSViewerTestModel_Controller::class,
-                    [
-                    'type' => 'Includes',
-                    SSViewerTestModel_Controller::class,
-                    ],
-                    SSViewerTestModel::class,
-                    Controller::class,
-                    [
-                    'type' => 'Includes',
-                    Controller::class,
-                    ],
+                        SSViewerTestModelController::class,
+                        [
+                            'type' => 'Includes',
+                            SSViewerTestModelController::class,
+                        ],
+                        SSViewerTestModel::class,
+                        Controller::class,
+                        [
+                            'type' => 'Includes',
+                            Controller::class,
+                        ],
                     ],
                     $templates
                 );
 
                 // Test to ensure we're stopping at the base class.
                 $templates = SSViewer::get_templates_by_class(
-                    SSViewerTestModel_Controller::class,
+                    SSViewerTestModelController::class,
                     '',
-                    SSViewerTestModel_Controller::class
+                    SSViewerTestModelController::class
                 );
-                $self->assertEquals(
+                $this->assertEquals(
                     [
-                    SSViewerTestModel_Controller::class,
-                    [
-                    'type' => 'Includes',
-                    SSViewerTestModel_Controller::class,
-                    ],
-                    SSViewerTestModel::class,
+                        SSViewerTestModelController::class,
+                        [
+                            'type' => 'Includes',
+                            SSViewerTestModelController::class,
+                        ],
+                        SSViewerTestModel::class,
                     ],
                     $templates
                 );
@@ -1595,27 +1592,27 @@ after'
                 // Make sure we can search templates by suffix.
                 $templates = SSViewer::get_templates_by_class(
                     SSViewerTestModel::class,
-                    '_Controller',
+                    'Controller',
                     DataObject::class
                 );
-                $self->assertEquals(
+                $this->assertEquals(
                     [
-                    SSViewerTestModel_Controller::class,
-                    [
-                    'type' => 'Includes',
-                    SSViewerTestModel_Controller::class,
-                    ],
-                    DataObject::class.'_Controller',
-                    [
-                    'type' => 'Includes',
-                    DataObject::class.'_Controller',
-                    ],
+                        SSViewerTestModelController::class,
+                        [
+                            'type' => 'Includes',
+                            SSViewerTestModelController::class,
+                        ],
+                        DataObject::class . 'Controller',
+                        [
+                            'type' => 'Includes',
+                            DataObject::class . 'Controller',
+                        ],
                     ],
                     $templates
                 );
 
                 // Let's throw something random in there.
-                $self->setExpectedException('InvalidArgumentException');
+                $this->setExpectedException('InvalidArgumentException');
                 SSViewer::get_templates_by_class(array());
             }
         );

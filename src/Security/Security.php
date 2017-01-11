@@ -518,7 +518,7 @@ class Security extends Controller implements TemplateGlobalProvider
         $tmpPage = new SiteTree();
         $tmpPage->Title = $title;
         /** @skipUpgrade */
-        $tmpPage->URLSegment = "Security";
+        $tmpPage->URLSegment = 'Security';
         // Disable ID-based caching  of the log-in page by making it a random number
         $tmpPage->ID = -1 * rand(1, 10000000);
 

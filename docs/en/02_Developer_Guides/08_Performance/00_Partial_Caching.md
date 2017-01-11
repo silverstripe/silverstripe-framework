@@ -83,7 +83,7 @@ If your caching logic is complex or re-usable, you can define a method on your c
 fragment.
 
 For example, a block that shows a collection of rotating slides needs to update whenever the relationship 
-`Page::$many_many = array('Slides' => 'Slide')` changes. In Page_Controller:
+`Page::$many_many = array('Slides' => 'Slide')` changes. In `PageController`:
 
 	:::php
 
@@ -151,7 +151,7 @@ heavy load:
 	<% cached 'blogstatistics', $Blog.ID if $HighLoad %>
 
 
-By adding a `HighLoad` function to your `Page_Controller`, you could enable or disable caching dynamically.
+By adding a `HighLoad` function to your `PageController`, you could enable or disable caching dynamically.
 
 To cache the contents of a page for all anonymous users, but dynamically calculate the contents for logged in members,
  use something like:
