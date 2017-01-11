@@ -259,7 +259,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
             $remoteURL = new TextField('RemoteURL', 'http://'),
             new LiteralField(
                 'addURLImage',
-                '<button type="button" class="action ui-action-constructive ui-button field font-icon-plus add-url">' .
+                '<button type="button" class="btn action btn-primary field font-icon-plus add-url">' .
                 _t('HTMLEditorField.BUTTONADDURL', 'Add url') . '</button>'
             )
         );
