@@ -5,7 +5,6 @@ const initialState = deepFreeze({});
 
 export default function schemaReducer(state = initialState, action = null) {
   switch (action.type) {
-
     case ACTION_TYPES.SET_SCHEMA: {
       return deepFreeze(Object.assign({}, state, {
         [action.payload.id]: Object.assign({}, state[action.payload.id], action.payload),

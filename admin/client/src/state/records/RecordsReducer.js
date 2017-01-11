@@ -9,7 +9,6 @@ function recordsReducer(state = initialState, action) {
   let record = null;
 
   switch (action.type) {
-
     case ACTION_TYPES.CREATE_RECORD:
       return deepFreeze(Object.assign({}, state, {}));
 

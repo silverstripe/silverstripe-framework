@@ -6,9 +6,14 @@
   min-height: $toolbar-total-height;
 
   .btn-toolbar {
-    // TODO Remove '.cms .btn-toolbar' override
     margin-top: 0;
     margin-bottom: 0;
+    margin-left: -5px;
+    margin-right: -5px;
+
+    .pull-xs-left .btn-primary {
+      margin-left: 5px;
+    }
   }
 }
 
@@ -30,8 +35,21 @@
     color: $body-color-light;
   }
 
+  a.btn-primary {
+    color: #fff;
+  }
+
   .btn {
     margin-bottom: 0;
+  }
+
+  // If the first button isn't a btn with BG the icon should align with margin
+  .btn-toolbar > {
+    .btn-secondary:first-child,
+    .grid-csv-button:first-child,
+    .grid-print-button:first-child {
+      margin-left: -5px;
+    }
   }
 }
 
@@ -40,9 +58,9 @@
   margin-top: -$panel-padding-y;
   margin-left: -$panel-padding-x;
   margin-right: -$panel-padding-x;
-  padding: $spacer-xs;
+  padding-top: $spacer-xs;
+  padding-bottom: $spacer-xs;
   min-height: auto;
-
 
   @include media-breakpoint-down(md) {
 
@@ -78,14 +96,12 @@
   float: left;
   margin: $spacer-xs $spacer-x / 2 $spacer-xs #{-$spacer-xs};
   padding-left: $spacer-x / 4;
+  padding-right: $spacer-x / 4;
+  min-width: 24px; // Safari fix
   color: $body-color-light; // TEMP: Needed for anchor buttons to override legacy styles
 
   .toolbar--south & {
     margin-top: 0;
     margin-right: 5px;
-  }
-
-  &.btn--no-text {
-    padding-right: $spacer-x / 4;
   }
 }

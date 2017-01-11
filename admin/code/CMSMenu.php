@@ -115,12 +115,13 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
      * @param integer $priority The menu priority (sorting order) of the menu item.  Higher priorities will be further
      *                          left.
      * @param array $attributes an array of attributes to include on the link.
+     * @param string $iconClass
      *
      * @return boolean The result of the operation.
      */
-    public static function add_link($code, $menuTitle, $url, $priority = -1, $attributes = null)
+    public static function add_link($code, $menuTitle, $url, $priority = -1, $attributes = null, $iconClass = null)
     {
-        return self::add_menu_item($code, $menuTitle, $url, null, $priority, $attributes);
+        return self::add_menu_item($code, $menuTitle, $url, null, $priority, $attributes, $iconClass);
     }
 
     /**
@@ -137,6 +138,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
      *                    have the rights to access some other part of the admin area.
      * @param int $priority
      * @param array $attributes an array of attributes to include on the link.
+     * @param string $iconClass
+     *
      * @return bool Success
      */
     public static function add_menu_item(
@@ -145,14 +148,23 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
         $url,
         $controllerClass = null,
         $priority = -1,
-        $attributes = null
+        $attributes = null,
+        $iconClass = null
     ) {
         // If a class is defined, then force the use of that as a code.  This helps prevent menu item duplication
         if ($controllerClass) {
             $code = self::get_menu_code($controllerClass);
         }
 
-        return self::replace_menu_item($code, $menuTitle, $url, $controllerClass, $priority, $attributes);
+        return self::replace_menu_item(
+            $code,
+            $menuTitle,
+            $url,
+            $controllerClass,
+            $priority,
+            $attributes,
+            $iconClass
+        );
     }
 
     /**
@@ -308,6 +320,8 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
      *                    have the rights to access some other part of the admin area.
      * @param int $priority
      * @param array $attributes an array of attributes to include on the link.
+     * @param string $iconClass
+     *
      * @return bool Success
      */
     public static function replace_menu_item(
@@ -316,9 +330,10 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
         $url,
         $controllerClass = null,
         $priority = -1,
-        $attributes = null
+        $attributes = null,
+        $iconClass = null
     ) {
-        $item = new CMSMenuItem($menuTitle, $url, $controllerClass, $priority);
+        $item = new CMSMenuItem($menuTitle, $url, $controllerClass, $priority, $iconClass);
 
         if ($attributes) {
             $item->setAttributes($attributes);

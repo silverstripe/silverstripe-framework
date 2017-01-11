@@ -90,7 +90,7 @@
 .cms-menu {
 	z-index: 80;
 	background: $color-theme-bg;
-	width: ($grid-x * 20);
+	width: $cms-menu-width;
 
 	.cms-menu-list {
 		margin: 0;
@@ -110,7 +110,7 @@
 	}
 
 	&.collapsed {
-		width: ($grid-x * 7.5) !important; // Using important because JavaScript is overriding this value
+		width: $cms-menu-width-collapsed !important; // Using important because JavaScript is overriding this value
 		cursor: auto;
 		z-index: 1000;
 
@@ -154,7 +154,7 @@
 			padding-right: 18px;
 		}
 
-		.ss-ui-button.sticky-toggle {
+		.sticky-toggle {
 			background-position: 12px center;
       width: 40px;
 		}
@@ -175,7 +175,7 @@
 		}
 	}
 
-	.ss-ui-button.sticky-toggle {
+	.sticky-toggle {
 		float: left;
 		width: 52px;
 		height: 52px;
@@ -259,6 +259,38 @@
 	}
 }
 
+// SS4 menu font icons
+.menu__icon {
+	position: absolute;
+	margin-top: -1px;
+	left: 13px;
+	font-size: $font-size-lg;
+	transition: all .2s;
+	color: darken($base-menu-bg, 44%);
+
+	.collapsed & {
+		left: 22px;
+	}
+}
+
+#Menu-Help {
+	.text::after {
+		content: "@";
+		font-family: silverstripe;
+		display: inline-block;
+		opacity: 0;
+		font-size: 10px;
+		margin-left: 6px;
+		margin-top: -2px;
+		color: darken($base-menu-bg, 44%);
+		transition: opacity .25s ease-in-out;
+	}
+
+	a:hover .text::after {
+		opacity: 1;
+	}
+}
+
 .cms-menu-list {
 
 	a:focus,
@@ -272,7 +304,7 @@
 			display: block;
 			min-height: 50px;
 			color: $color-text-default;
-			padding: (2 * $grid-y + 1) 5px (2 * $grid-y + 1) 8px;
+			padding: (2 * $grid-y) 5px (2 * $grid-y) 8px;
 			background-color: $base-menu-bg;
 			cursor: pointer;
 			position: relative;

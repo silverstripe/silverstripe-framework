@@ -42,7 +42,8 @@
     }
   }
 
-  .collapsed::before {
+  &.collapsed::before {
     content: "6";
+    display: block;
   }
 }

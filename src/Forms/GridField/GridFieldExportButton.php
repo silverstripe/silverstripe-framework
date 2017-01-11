@@ -63,8 +63,7 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
             'export',
             null
         );
-        $button->setAttribute('data-icon', 'download-csv');
-        $button->addExtraClass('no-ajax font-icon-down-circled action_export');
+        $button->addExtraClass('btn btn-secondary no-ajax font-icon-down-circled action_export');
         $button->setForm($gridField->getForm());
         return array(
             $this->targetFragment => '<p class="grid-csv-button">' . $button->Field() . '</p>',

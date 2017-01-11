@@ -39,7 +39,6 @@ class CMSSecurity extends Security
         parent::init();
 
         Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/vendor.js');
-        Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/CMSSecurity.js');
     }
 
     public function Link($action = null)

@@ -131,7 +131,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
             'addto'
         );
         $addAction->setAttribute('data-icon', 'chain--plus');
-        $addAction->addExtraClass('action_gridfield_relationadd');
+        $addAction->addExtraClass('btn btn-secondary-outline font-icon-link action_gridfield_relationadd');
 
         // If an object is not found, disable the action
         if (!is_int($gridField->State->GridFieldAddRelation(null))) {

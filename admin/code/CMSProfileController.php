@@ -34,8 +34,7 @@ class CMSProfileController extends LeftAndMain
         $form->Fields()->push(new HiddenField('ID', null, Member::currentUserID()));
         $form->Actions()->push(
             FormAction::create('save', _t('CMSMain.SAVE', 'Save'))
-                ->addExtraClass('ss-ui-button ss-ui-action-constructive')
-                ->setAttribute('data-icon', 'accept')
+                ->addExtraClass('btn-primary font-icon-save')
                 ->setUseButtonTag(true)
         );
 

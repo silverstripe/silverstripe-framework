@@ -1,5 +1,7 @@
-<tr class="filter-header" style="display:none;">
-	<% loop $Fields %>
-	<th class="extra">$Field</th>
-	<% end_loop %>
-</tr>
+<% if Fields %>
+    <tr class="filter-header" style="display:none;">
+	   <% loop $Fields %>
+	       <th class="extra">$Field</th>
+	   <% end_loop %>
+    </tr>
+<% end_if %>

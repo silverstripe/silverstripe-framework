@@ -103,8 +103,10 @@ $.entwine('ss', function($) {
       // Create default controls unless they already exist.
       if(!this.find('.cms-panel-toggle').length) {
         container = $("<div class='toolbar toolbar--south cms-panel-toggle'></div>")
-          .append('<a class="toggle-expand" href="#"><span>&raquo;</span></a>')
-          .append('<a class="toggle-collapse" href="#"><span>&laquo;</span></a>');
+          .append('<a class="toggle-expand" href="#" data-toggle="tooltip" title="'+
+              i18n._t('LeftAndMain.EXPANDPANEL', 'Expand Panel') +'"><span>&raquo;</span></a>')
+          .append('<a class="toggle-collapse" href="#" data-toggle="tooltip" title="'+
+              i18n._t('LeftAndMain.COLLAPSEPANEL', 'Collapse Panel') +'"><span>&laquo;</span></a>');
 
         this.append(container);
       }

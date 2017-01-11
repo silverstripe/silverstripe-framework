@@ -12,11 +12,11 @@ use SilverStripe\Forms\Tab;
 use SilverStripe\Forms\TabSet;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldButtonRow;
 use SilverStripe\Forms\GridField\GridFieldExportButton;
+use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Member;
@@ -44,6 +44,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
     private static $subitem_class = 'SilverStripe\\Security\\Member';
 
     private static $required_permission_codes = 'CMS_ACCESS_SecurityAdmin';
+
+    private static $menu_icon_class = 'font-icon-torsos-all';
 
     private static $allowed_actions = array(
         'EditForm',
@@ -110,7 +112,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
             Member::get(),
             $memberListConfig = GridFieldConfig_RecordEditor::create()
                 ->addComponent(new GridFieldButtonRow('after'))
-                ->addComponent(new GridFieldExportButton('buttons-after-left'))
+                ->addComponent(new GridFieldExportButton('buttons-before-left'))
         )->addExtraClass("members_grid");
 
         if ($record && method_exists($record, 'getValidator')) {
@@ -128,7 +130,8 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
             'Groups',
             false,
             Group::get(),
-            GridFieldConfig_RecordEditor::create()
+            $groupListConfig = GridFieldConfig_RecordEditor::create()
+                ->addComponent(new GridFieldExportButton('buttons-before-left'))
         );
         /** @var GridFieldDataColumns $columns */
         $columns = $groupList->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDataColumns');
@@ -172,28 +175,17 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
 
         // Add import capabilities. Limit to admin since the import logic can affect assigned permissions
         if (Permission::check('ADMIN')) {
-            $fields->addFieldsToTab('Root.Users', array(
-                new HeaderField('ImportUsersHeader', _t('SecurityAdmin.IMPORTUSERS', 'Import users'), 3),
-                new LiteralField(
-                    'MemberImportFormIframe',
-                    sprintf(
-                        '<iframe src="%s" id="MemberImportFormIframe" width="100%%" height="330px" frameBorder="0">'
-                        . '</iframe>',
-                        $this->Link('memberimport')
-                    )
-                )
-            ));
-            $fields->addFieldsToTab('Root.Groups', array(
-                new HeaderField('ImportGroupsHeader', _t('SecurityAdmin.IMPORTGROUPS', 'Import groups'), 3),
-                new LiteralField(
-                    'GroupImportFormIframe',
-                    sprintf(
-                        '<iframe src="%s" id="GroupImportFormIframe" width="100%%" height="330px" frameBorder="0">'
-                        . '</iframe>',
-                        $this->Link('groupimport')
-                    )
-                )
-            ));
+            // @todo when grid field is converted to react use the react component
+            $memberListConfig->addComponent(
+                GridFieldImportButton::create('buttons-before-left')
+                    ->setImportIframe($this->Link('memberimport'))
+                    ->setModalTitle(_t('SecurityAdmin.IMPORTUSERS', 'Import users'))
+            );
+            $groupListConfig->addComponent(
+                GridFieldImportButton::create('buttons-before-left')
+                    ->setImportIframe($this->Link('groupimport'))
+                    ->setModalTitle(_t('SecurityAdmin.IMPORTGROUPS', 'Import groups'))
+            );
         }
 
         // Tab nav in CMS is rendered through separate template
@@ -270,11 +262,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
 
         /** @var Group $group */
         $group = $this->currentPage();
-        /** @skipUpgrade */
-        $form = new MemberImportForm(
-            $this,
-            'MemberImportForm'
-        );
+        $form = new MemberImportForm($this, __FUNCTION__);
         $form->setGroup($group);
 
         return $form;
@@ -305,8 +293,7 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider
             return null;
         }
 
-        $form = new GroupImportForm($this, 'GroupImportForm');
-        return $form;
+        return new GroupImportForm($this, __FUNCTION__);
     }
 
     /**

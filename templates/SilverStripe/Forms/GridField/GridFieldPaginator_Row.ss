@@ -6,7 +6,7 @@
 				$FirstPage $PreviousPage
 				<span class="pagination-page-number">
 					<%t Pagination.Page 'Page' %>
-					<input class="text" value="$CurrentPageNum" data-skip-autofocus="true" />
+					<input class="text" title="Current page" value="$CurrentPageNum" data-skip-autofocus="true" />
 					<%t TableListField_PageControls_ss.OF 'of' is 'Example: View 1 of 2' %>
 					$NumPages
 				</span>

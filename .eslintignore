@@ -25,7 +25,6 @@ admin/client/src/i18nx.js
 admin/client/src/jQuery.js
 admin/client/src/legacy/LeftAndMain.js
 admin/client/src/legacy/LeftAndMain.*.js
-admin/client/src/legacy/CMSSecurity.js
 admin/client/src/legacy/MemberDatetimeOptionsetField.js
 admin/client/src/legacy/MemberImportForm.js
 admin/client/src/legacy/ModelAdmin.js

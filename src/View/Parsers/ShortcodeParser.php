@@ -213,7 +213,7 @@ class ShortcodeParser extends Object
 
         if ($next) {
             $parent->insertBefore($new, $next);
-        } else {
+        } elseif ($parent) {
             $parent->appendChild($new);
         }
     }

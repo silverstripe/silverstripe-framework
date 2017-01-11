@@ -16,8 +16,8 @@
 		</div>
 
 		<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">
-            <% if $SearchForm || $ImportForm %>
-			    <button id="filters-button" class="icon-button font-icon-search no-text" title="<%t CMSPagesController_Tools_ss.FILTER 'Filter' %>"></button>
+            <% if $SearchForm %>
+			    <button id="filters-button" class="btn btn-secondary btn--icon-large font-icon-search no-text" title="<%t CMSPagesController_Tools_ss.FILTER 'Filter' %>"></button>
             <% end_if %>
 			<ul class="cms-tabset-nav-primary">
 				<% loop $ManagedModelTabs %>

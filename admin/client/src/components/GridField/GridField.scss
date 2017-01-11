@@ -50,41 +50,39 @@
     &:hover {
       background-color: $background-darker;
     }
+
+    &:focus {
+      outline: none;
+      border-bottom: $table-border-width solid $brand-primary;
+    }
   }
 
   &:hover {
     border-bottom: $table-border-width solid $border-color-light;
   }
 
-  .ui-button-text { // TODO BEMify classes
-    display: inline;
-    padding: 0;
-    vertical-align: top;
-    color: $body-color-light;
-
-    &::after {
-      content: ")";
-      display: inline-block;
-      color: lighten($text-muted, 20%);
-      font-family: silverstripe;
-    }
+  &::after {
+    content: ")";
+    display: inline-block;
+    color: lighten($text-muted, 20%);
+    font-family: silverstripe;
   }
 
   &.ss-gridfield-sorted-desc, // TODO BEMify class
   &.ss-gridfield-sorted-asc {
     border-bottom: 1px solid $component-active-border-color;
 
-    .ui-button-text::after, // TODO BEMify class
-    &:hover.ui-button-text::after {
+    &::after,
+    &:hover::after {
       color: $component-active-border-color;
     }
   }
 
-  &.ss-gridfield-sorted-desc .ui-button-text::after { // TODO BEMify classes
+  &.ss-gridfield-sorted-desc::after { // TODO BEMify classes
     content: "*";
   }
 
-  &.ss-gridfield-sorted-asc .ui-button-text::after { // TODO BEMify classes
+  &.ss-gridfield-sorted-asc::after { // TODO BEMify classes
     content: "(";
   }
 
@@ -157,7 +155,7 @@ input.grid-field__sort-field {
 }
 
 div.grid-field__sort-field + .form__fieldgroup-item {
-  top: 14px;
+  top: 16px;
   right: 7px;
   position: absolute;
 }
@@ -166,6 +164,10 @@ div.grid-field__sort-field + .form__fieldgroup-item {
   .fieldgroup:not(.filter-buttons),
   .fieldgroup:not(.filter-buttons) .fieldgroup-field {
     width: 100%;
+  }
+
+  .ss-gridfield-button-reset {
+    margin-right: 0;
   }
 }
 
@@ -256,4 +258,24 @@ div.grid-field__sort-field + .form__fieldgroup-item {
       display: table-cell;
     }
   }
+}
+
+.grid-field-import.in {
+  display: block;
+
+  .modal-content {
+    overflow-y: auto;
+  }
+
+  .modal-dialog {
+    max-height: 600px;
+
+    .advanced {
+      display: none;
+    }
+  }
+}
+
+.import-form .advanced {
+  display: none;
 }

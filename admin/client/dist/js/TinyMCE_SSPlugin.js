@@ -1,4 +1,4 @@
-webpackJsonp([3],[function(t,e,n){(function(t){"use strict"
+webpackJsonp([2],[function(t,e,n){(function(t){"use strict"
 !function(){var e={getInfo:function n(){return{longname:"Special buttons for SilverStripe CMS",author:"Sam Minnée",authorurl:"http://www.siverstripe.com/",infourl:"http://www.silverstripe.com/",version:"1.0"
 }},init:function i(e){e.addButton("sslink",{icon:"link",title:"Insert Link",cmd:"sslink"}),e.addMenuItem("sslink",{icon:"link",text:"Insert Link",cmd:"sslink"}),e.addButton("ssmedia",{icon:"image",title:"Insert Media",
 cmd:"ssmedia"}),e.addMenuItem("ssmedia",{icon:"image",text:"Insert Media",cmd:"ssmedia"}),e.addCommand("sslink",function(e){t("#"+this.id).entwine("ss").openLinkDialog()}),e.addCommand("ssmedia",function(e){

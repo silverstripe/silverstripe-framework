@@ -22,6 +22,7 @@
     position: absolute;
     z-index: 2;
     margin-right: 0;
+    font-size: 24px;
     height: 32px;
 
     span {
@@ -72,7 +73,6 @@
 .modal__response--good,
 .modal__response--error {
   font-size: $font-size-lg;
-  font-weight: 300;
 
   span::before {
     font-family: silverstripe;

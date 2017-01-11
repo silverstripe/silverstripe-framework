@@ -11,6 +11,7 @@ use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\GridField\GridFieldDetailForm;
+use SilverStripe\Forms\GridField\GridFieldFilterHeader;
 use SilverStripe\Forms\ResetFormAction;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\HiddenField;
@@ -22,14 +23,17 @@ use SilverStripe\Forms\GridField\GridFieldExportButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\GridField\GridFieldPrintButton;
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\CompositeField;
+use SilverStripe\Forms\GridField\GridFieldImportButton;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\SS_List;
+use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\Member;
-use SilverStripe\View\Requirements;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\SSViewer;
 
 /**
  * Generates a three-pane UI for editing model classes, with an
@@ -168,7 +172,7 @@ abstract class ModelAdmin extends LeftAndMain
             $list,
             $fieldConfig = GridFieldConfig_RecordEditor::create($this->stat('page_length'))
                 ->addComponent($exportButton)
-                ->removeComponentsByType('SilverStripe\\Forms\\GridField\\GridFieldFilterHeader')
+                ->removeComponentsByType(GridFieldFilterHeader::class)
                 ->addComponents(new GridFieldPrintButton('buttons-before-left'))
         );
 
@@ -176,8 +180,16 @@ abstract class ModelAdmin extends LeftAndMain
         if (singleton($this->modelClass)->hasMethod('getCMSValidator')) {
             $detailValidator = singleton($this->modelClass)->getCMSValidator();
             /** @var GridFieldDetailForm $detailform */
-            $detailform = $listField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDetailForm');
+            $detailform = $listField->getConfig()->getComponentByType(GridFieldDetailForm::class);
             $detailform->setValidator($detailValidator);
+        }
+
+        if ($this->showImportForm) {
+            $fieldConfig->addComponent(
+                GridFieldImportButton::create('buttons-before-left')
+                    ->setImportForm($this->ImportForm())
+                    ->setModalTitle(_t('ModelAdmin.IMPORT', 'Import from CSV'))
+            );
         }
 
         $form = Form::create(
@@ -246,9 +258,9 @@ abstract class ModelAdmin extends LeftAndMain
             $context->getSearchFields(),
             new FieldList(
                 FormAction::create('search', _t('MemberTableField.APPLY_FILTER', 'Apply Filter'))
-                    ->setUseButtonTag(true)->addExtraClass('ss-ui-action-constructive'),
+                    ->setUseButtonTag(true)->addExtraClass('btn-primary'),
                 ResetFormAction::create('clearsearch', _t('ModelAdmin.RESET', 'Reset'))
-                    ->setUseButtonTag(true)
+                    ->setUseButtonTag(true)->addExtraClass('btn-secondary')
             ),
             new RequiredFields()
         );
@@ -449,7 +461,8 @@ abstract class ModelAdmin extends LeftAndMain
         );
 
         $actions = new FieldList(
-            new FormAction('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
+            FormAction::create('import', _t('ModelAdmin.IMPORT', 'Import from CSV'))
+                ->addExtraClass('btn btn-secondary-outline font-icon-upload')
         );
 
         $form = new Form(
@@ -494,7 +507,10 @@ abstract class ModelAdmin extends LeftAndMain
         if (empty($_FILES['_CsvFile']['tmp_name']) ||
             file_get_contents($_FILES['_CsvFile']['tmp_name']) == ''
         ) {
-            $form->sessionMessage(_t('ModelAdmin.NOCSVFILE', 'Please browse for a CSV file to import'), 'good');
+            $form->sessionMessage(
+                _t('ModelAdmin.NOCSVFILE', 'Please browse for a CSV file to import'),
+                ValidationResult::TYPE_ERROR
+            );
             $this->redirectBack();
             return false;
         }
@@ -505,28 +521,33 @@ abstract class ModelAdmin extends LeftAndMain
         $results = $loader->load($_FILES['_CsvFile']['tmp_name']);
 
         $message = '';
-        if ($results->CreatedCount()) {
-            $message .= _t(
-                'ModelAdmin.IMPORTEDRECORDS',
-                "Imported {count} records.",
-                array('count' => $results->CreatedCount())
-            );
-        }
-        if ($results->UpdatedCount()) {
-            $message .= _t(
-                'ModelAdmin.UPDATEDRECORDS',
-                "Updated {count} records.",
-                array('count' => $results->UpdatedCount())
-            );
-        }
-        if ($results->DeletedCount()) {
-            $message .= _t(
-                'ModelAdmin.DELETEDRECORDS',
-                "Deleted {count} records.",
-                array('count' => $results->DeletedCount())
-            );
-        }
-        if (!$results->CreatedCount() && !$results->UpdatedCount()) {
+
+        if ($results) {
+            if ($results->CreatedCount()) {
+                $message .= _t(
+                    'ModelAdmin.IMPORTEDRECORDS',
+                    "Imported {count} records.",
+                    array('count' => $results->CreatedCount())
+                );
+            }
+            if ($results && $results->UpdatedCount()) {
+                $message .= _t(
+                    'ModelAdmin.UPDATEDRECORDS',
+                    "Updated {count} records.",
+                    array('count' => $results->UpdatedCount())
+                );
+            }
+            if ($results->DeletedCount()) {
+                $message .= _t(
+                    'ModelAdmin.DELETEDRECORDS',
+                    "Deleted {count} records.",
+                    array('count' => $results->DeletedCount())
+                );
+            }
+            if (!$results->CreatedCount() && !$results->UpdatedCount()) {
+                $message .= _t('ModelAdmin.NOIMPORT', "Nothing to import");
+            }
+        } else {
             $message .= _t('ModelAdmin.NOIMPORT', "Nothing to import");
         }
 

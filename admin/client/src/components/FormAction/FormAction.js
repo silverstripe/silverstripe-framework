@@ -46,6 +46,7 @@ class FormAction extends SilverStripeComponent {
 
     // Add 'type' class
     const style = this.getButtonStyle();
+
     if (style) {
       buttonClasses.push(`btn-${style}`);
     }
@@ -87,6 +88,10 @@ class FormAction extends SilverStripeComponent {
     // Add 'type' class
     if (typeof this.props.data.buttonStyle !== 'undefined') {
       return this.props.data.buttonStyle;
+    }
+
+    if (typeof this.props.buttonStyle !== 'undefined') {
+      return this.props.buttonStyle;
     }
 
     const extraClasses = this.props.extraClass.split(' ');

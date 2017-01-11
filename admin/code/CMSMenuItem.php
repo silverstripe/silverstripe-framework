@@ -51,19 +51,26 @@ class CMSMenuItem extends Object
     protected $attributes = array();
 
     /**
+     * @var string
+     */
+    public $iconClass;
+
+    /**
      * Create a new CMS Menu Item
      *
      * @param string $title
      * @param string $url
      * @param string $controller Controller class name
      * @param integer $priority The sort priority of the item
+     * @param string $iconClass
      */
-    public function __construct($title, $url, $controller = null, $priority = -1)
+    public function __construct($title, $url, $controller = null, $priority = -1, $iconClass = null)
     {
         $this->title = $title;
         $this->url = $url;
         $this->controller = $controller;
         $this->priority = $priority;
+        $this->iconClass = $iconClass;
 
         parent::__construct();
     }

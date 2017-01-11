@@ -512,7 +512,8 @@ class LeftAndMain extends Controller implements PermissionProvider
             -2,
             array(
                 'target' => '_blank'
-            )
+            ),
+            'font-icon-help-circled'
         );
 
         // Allow customisation of the access check by a extension
@@ -823,6 +824,19 @@ class LeftAndMain extends Controller implements PermissionProvider
     }
 
     /**
+     * Return the web font icon class name for this interface icon. Uses the
+     * built in SilveStripe webfont. {@see menu_icon_for_class()} for providing
+     * a background image.
+     *
+     * @param string $class.
+     * @return string
+     */
+    public static function menu_icon_class_for_class($class)
+    {
+        return Config::inst()->get($class, 'menu_icon_class', Config::FIRST_SET);
+    }
+
+    /**
      * @param HTTPRequest $request
      * @return HTTPResponse
      * @throws HTTPResponse_Exception
@@ -936,11 +950,18 @@ class LeftAndMain extends Controller implements PermissionProvider
                     // Provide styling for custom $menu-icon. Done here instead of in
                     // CMSMenu::populate_menu(), because the icon is part of
                     // the CMS right pane for the specified class as well...
+                    $iconClass = false;
+
                     if ($menuItem->controller) {
                         $menuIcon = LeftAndMain::menu_icon_for_class($menuItem->controller);
+
                         if (!empty($menuIcon)) {
                             $menuIconStyling .= $menuIcon;
                         }
+
+                        $iconClass = LeftAndMain::menu_icon_class_for_class($menuItem->controller);
+                    } else {
+                        $iconClass = $menuItem->iconClass;
                     }
 
                     $menu->push(new ArrayData(array(
@@ -949,6 +970,7 @@ class LeftAndMain extends Controller implements PermissionProvider
                         "Title" => Convert::raw2xml($title),
                         "Code" => $code,
                         "Icon" => strtolower($code),
+                        "IconClass" => $iconClass,
                         "Link" => $menuItem->url,
                         "LinkingMode" => $linkingmode
                     )));
@@ -1644,24 +1666,16 @@ class LeftAndMain extends Controller implements PermissionProvider
                     if ($record->hasMethod('canEdit') && $record->canEdit()) {
                         $actions->push(
                             FormAction::create('save', _t('CMSMain.SAVE', 'Save'))
-                                ->addExtraClass('ss-ui-action-constructive')->setAttribute('data-icon', 'accept')
+                               ->addExtraClass('btn btn-primary')
+                               ->addExtraClass('font-icon-add-circle')
                         );
                     }
                     if ($record->hasMethod('canDelete') && $record->canDelete()) {
                         $actions->push(
                             FormAction::create('delete', _t('ModelAdmin.DELETE', 'Delete'))
-                                ->addExtraClass('ss-ui-action-destructive')
+                                ->addExtraClass('btn btn-secondary')
                         );
                     }
-                }
-            }
-
-            // Use <button> to allow full jQuery UI styling
-            $actionsFlattened = $actions->dataFields();
-            if ($actionsFlattened) {
-                /** @var FormAction $action */
-                foreach ($actionsFlattened as $action) {
-                    $action->setUseButtonTag(true);
                 }
             }
 
@@ -1851,8 +1865,8 @@ class LeftAndMain extends Controller implements PermissionProvider
                     ->setAttribute('data-placeholder', _t('LeftAndMain.DropdownBatchActionsDefault', 'Choose an action...'))
             ),
             new FieldList(
-                // TODO i18n
-                new FormAction('submit', _t('Form.SubmitBtnLabel', "Go"))
+                FormAction::create('submit', _t('Form.SubmitBtnLabel', "Go"))
+                    ->addExtraClass('btn-secondary-outline')
             )
         );
         $form->addExtraClass('cms-batch-actions form--no-dividers');
