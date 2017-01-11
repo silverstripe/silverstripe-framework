@@ -175,7 +175,7 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div>
+      <div className="fill-height">
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
           <Breadcrumb multiline />
         </Toolbar>
@@ -202,7 +202,7 @@ class CampaignAdmin extends SilverStripeComponent {
     };
 
     return (
-      <div>
+      <div className="fill-height">
         <Toolbar showBackButton handleBackButtonClick={this.handleBackButtonClick}>
           <Breadcrumb multiline />
         </Toolbar>
