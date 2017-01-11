@@ -3,9 +3,15 @@
 namespace SilverStripe\Control\Tests\Email;
 
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Control\Email\SwiftMailer;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\Security\Member;
+use Swift_Attachment;
+use Swift_Mailer;
+use Swift_Message;
+use Swift_NullTransport;
+use Swift_RfcComplianceException;
 
 class EmailTest extends SapphireTest
 {
@@ -19,10 +25,10 @@ class EmailTest extends SapphireTest
         $children = $email->getSwiftMessage()->getChildren();
         $this->assertCount(1, $children);
 
-        /** @var \Swift_Attachment $child */
+        /** @var Swift_Attachment $child */
         $child = reset($children);
 
-        $this->assertInstanceOf(\Swift_Attachment::class, $child);
+        $this->assertInstanceOf(Swift_Attachment::class, $child);
         $this->assertEquals('text/plain', $child->getContentType());
         $this->assertEquals('attachment.txt', $child->getFilename());
     }
@@ -36,10 +42,10 @@ class EmailTest extends SapphireTest
 
         $this->assertCount(1, $children);
 
-        /** @var \Swift_Attachment $child */
+        /** @var Swift_Attachment $child */
         $child = reset($children);
 
-        $this->assertInstanceOf(\Swift_Attachment::class, $child);
+        $this->assertInstanceOf(Swift_Attachment::class, $child);
         $this->assertEquals('foo bar', $child->getBody());
         $this->assertEquals('text/plain', $child->getContentType());
         $this->assertEquals('foo.txt', $child->getFilename());
@@ -67,14 +73,8 @@ class EmailTest extends SapphireTest
         $visible = Email::obfuscate($emailAddress, 'visible');
         $hex = Email::obfuscate($emailAddress, 'hex');
 
-        $this->assertEquals(
-            '<span class="codedirection">moc.elpmaxe@1-tset</span>',
-            $direction
-        );
-        $this->assertEquals(
-            'test [dash] 1 [at] example [dot] com',
-            $visible
-        );
+        $this->assertEquals('<span class="codedirection">moc.elpmaxe@1-tset</span>', $direction);
+        $this->assertEquals('test [dash] 1 [at] example [dot] com', $visible);
         $this->assertEquals(
             '&#x74;&#x65;&#x73;&#x74;&#x2d;&#x31;&#x40;&#x65;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#x6d;',
             $hex
@@ -83,28 +83,27 @@ class EmailTest extends SapphireTest
 
     public function testSendPlain()
     {
-        $email = $this
-            ->getMockBuilder(Email::class)
-            ->enableProxyingToOriginalMethods()
-            ->disableOriginalConstructor()
-            ->setConstructorArgs(array(
-                'from@example.com',
-                'to@example.com',
-                'Test send plain',
-                'Testing Email->sendPlain()',
-                'cc@example.com',
-                'bcc@example.com',
-            ))
-            ->getMock();
+        $email = $this->getMockBuilder(Email::class)
+                      ->enableProxyingToOriginalMethods()
+                      ->disableOriginalConstructor()
+                      ->setConstructorArgs(array(
+                          'from@example.com',
+                          'to@example.com',
+                          'Test send plain',
+                          'Testing Email->sendPlain()',
+                          'cc@example.com',
+                          'bcc@example.com',
+                      ))
+                      ->getMock();
 
         // email should not call render if a body is supplied
         $email->expects($this->never())->method('render');
 
         $email->addAttachment(__DIR__ . '/EmailTest/attachment.txt', null, 'text/plain');
-        $numFailed = $email->sendPlain();
+        $successful = $email->sendPlain();
 
-        $this->assertCount(0, $numFailed);
-        $this->assertEmpty($this->mailer->getFailedRecipients());
+        $this->assertTrue($successful);
+        $this->assertEmpty($email->getFailedRecipients());
 
         $sentMail = $this->mailer->findEmail('to@example.com');
 
@@ -120,7 +119,7 @@ class EmailTest extends SapphireTest
         $children = $email->getSwiftMessage()->getChildren();
         $this->assertCount(1, $children);
         $child = reset($children);
-        $this->assertInstanceOf(\Swift_Attachment::class, $child);
+        $this->assertInstanceOf(Swift_Attachment::class, $child);
 
         $this->assertEquals('text/plain', $child->getContentType());
         $this->assertEquals('attachment.txt', $child->getFilename());
@@ -129,28 +128,27 @@ class EmailTest extends SapphireTest
 
     public function testSend()
     {
-        $email = $this
-            ->getMockBuilder(Email::class)
-            ->enableProxyingToOriginalMethods()
-            ->disableOriginalConstructor()
-            ->setConstructorArgs(array(
-                'from@example.com',
-                'to@example.com',
-                'Test send HTML',
-                'Testing Email->send()',
-                'cc@example.com',
-                'bcc@example.com',
-            ))
-            ->getMock();
+        $email = $this->getMockBuilder(Email::class)
+                      ->enableProxyingToOriginalMethods()
+                      ->disableOriginalConstructor()
+                      ->setConstructorArgs(array(
+                          'from@example.com',
+                          'to@example.com',
+                          'Test send HTML',
+                          'Testing Email->send()',
+                          'cc@example.com',
+                          'bcc@example.com',
+                      ))
+                      ->getMock();
 
         // email should not call render if a body is supplied
         $email->expects($this->never())->method('render');
 
         $email->addAttachment(__DIR__ . '/EmailTest/attachment.txt', null, 'text/plain');
-        $numFailed = $email->send();
+        $successful = $email->send();
 
-        $this->assertCount(0, $numFailed);
-        $this->assertEmpty($this->mailer->getFailedRecipients());
+        $this->assertTrue($successful);
+        $this->assertEmpty($email->getFailedRecipients());
 
         $sentMail = $this->mailer->findEmail('to@example.com');
 
@@ -165,7 +163,7 @@ class EmailTest extends SapphireTest
         // 2 because a plain version and an attachment
         $this->assertCount(2, $children);
         $child = reset($children);
-        $this->assertInstanceOf(\Swift_Attachment::class, $child);
+        $this->assertInstanceOf(Swift_Attachment::class, $child);
 
         $this->assertEquals('text/plain', $child->getContentType());
         $this->assertEquals('attachment.txt', $child->getFilename());
@@ -174,7 +172,15 @@ class EmailTest extends SapphireTest
 
     public function testConsturctor()
     {
-        $email = new Email('from@example.com', 'to@example.com', 'subject', 'body', 'cc@example.com', 'bcc@example.com', 'bounce@example.com');
+        $email = new Email(
+            'from@example.com',
+            'to@example.com',
+            'subject',
+            'body',
+            'cc@example.com',
+            'bcc@example.com',
+            'bounce@example.com'
+        );
 
         $this->assertCount(1, $email->getFrom());
         $this->assertContains('from@example.com', array_keys($email->getFrom()));
@@ -191,10 +197,18 @@ class EmailTest extends SapphireTest
 
     public function testGetSwiftMessage()
     {
-        $email = new Email('from@example.com', 'to@example.com', 'subject', 'body', 'cc@example.com', 'bcc@example.com', 'bounce@example.com');
+        $email = new Email(
+            'from@example.com',
+            'to@example.com',
+            'subject',
+            'body',
+            'cc@example.com',
+            'bcc@example.com',
+            'bounce@example.com'
+        );
         $swiftMessage = $email->getSwiftMessage();
 
-        $this->assertInstanceOf(\Swift_Message::class, $swiftMessage);
+        $this->assertInstanceOf(Swift_Message::class, $swiftMessage);
 
         $this->assertCount(1, $swiftMessage->getFrom());
         $this->assertContains('from@example.com', array_keys($swiftMessage->getFrom()));
@@ -214,7 +228,7 @@ class EmailTest extends SapphireTest
         Email::config()->update('admin_email', 'admin@example.com');
         DBDatetime::set_mock_now('2017-01-01 07:00:00');
         $email = new Email();
-        $swiftMessage = new \Swift_Message();
+        $swiftMessage = new Swift_Message();
         $email->setSwiftMessage($swiftMessage);
         $this->assertCount(1, $email->getFrom());
         $this->assertContains('admin@example.com', array_keys($swiftMessage->getFrom()));
@@ -222,7 +236,7 @@ class EmailTest extends SapphireTest
         $this->assertEquals($swiftMessage, $email->getSwiftMessage());
 
         // check from field is retained
-        $swiftMessage = new \Swift_Message();
+        $swiftMessage = new Swift_Message();
         $swiftMessage->setFrom('from@example.com');
         $email->setSwiftMessage($swiftMessage);
         $this->assertCount(1, $email->getFrom());
@@ -324,7 +338,14 @@ class EmailTest extends SapphireTest
 
     public function testSetGetBCC()
     {
-        $email = new Email('from@example.com', 'to@example.com', 'subject', 'body', 'cc@example.com', 'bcc@example.com');
+        $email = new Email(
+            'from@example.com',
+            'to@example.com',
+            'subject',
+            'body',
+            'cc@example.com',
+            'bcc@example.com'
+        );
         $this->assertCount(1, $email->getBCC());
         $this->assertContains('bcc@example.com', array_keys($email->getBCC()));
         $email->setBCC('new-bcc@example.com', 'Silver Stripe');
@@ -333,7 +354,14 @@ class EmailTest extends SapphireTest
 
     public function testAddBCC()
     {
-        $email = new Email('from@example.com', 'to@example.com', 'subject', 'body', 'cc@example.com', 'bcc@example.com');
+        $email = new Email(
+            'from@example.com',
+            'to@example.com',
+            'subject',
+            'body',
+            'cc@example.com',
+            'bcc@example.com'
+        );
         $this->assertCount(1, $email->getBCC());
         $this->assertContains('bcc@example.com', array_keys($email->getBCC()));
         $email->addBCC('new-bcc@example.com', 'Silver Stripe');
@@ -415,9 +443,24 @@ class EmailTest extends SapphireTest
     public function testTemplate()
     {
         $email = new Email();
-        $this->assertEquals('SilverStripe\\Email\\Email', $email->getTemplate());
+        $this->assertEquals(Email::class, $email->getTemplate());
         $email->setTemplate('MyTemplate');
         $this->assertEquals('MyTemplate', $email->getTemplate());
+    }
+
+    public function testGetFailedRecipients()
+    {
+        $mailer = new SwiftMailer();
+        $transport = $this->getMockBuilder(Swift_NullTransport::class)->getMock();
+        $transport->expects($this->once())
+                  ->method('send')
+                  ->willThrowException(new Swift_RfcComplianceException('Bad email'));
+        $mailer->setSwiftMailer(new Swift_Mailer($transport));
+        $email = new Email();
+        $email->setTo('to@example.com');
+        $email->setFrom('from@example.com');
+        $mailer->send($email);
+        $this->assertCount(1, $email->getFailedRecipients());
     }
 
     public function testIsEmail()

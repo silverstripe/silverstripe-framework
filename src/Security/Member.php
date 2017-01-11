@@ -954,7 +954,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         // We don't send emails out on dev/tests sites to prevent accidentally spamming users.
         // However, if TestMailer is in use this isn't a risk.
-        if ((Director::isLive() || Mailer::get_inst() instanceof TestMailer)
+        if ((Director::isLive() || Injector::inst()->get(Mailer::class) instanceof TestMailer)
             && $this->isChanged('Password')
             && $this->record['Password']
             && $this->config()->notify_password_change

@@ -3,16 +3,13 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Email\Email;
-use SilverStripe\Control\Email\Mailer;
+use SilverStripe\Control\Email\SwiftMailer;
 
-class TestMailer extends Mailer
+class TestMailer extends SwiftMailer
 {
     /**
-     * @var string
-     * @config
+     * @var array
      */
-    private static $swift_transport = 'Swift_NullTransport';
-
     protected $emailsSent = array();
 
     /**

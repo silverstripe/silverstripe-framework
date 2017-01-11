@@ -5,6 +5,7 @@ namespace SilverStripe\Control\Email;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\ViewableData;
@@ -588,6 +589,18 @@ class Email extends ViewableData
         return $this;
     }
 
+    public function setFailedRecipients($recipients)
+    {
+        $this->failedRecipients = $recipients;
+
+        return $this;
+    }
+
+    public function getFailedRecipients()
+    {
+        return $this->failedRecipients;
+    }
+
     /**
      * Used by {@link SSViewer} templates to detect if we're rendering an email template rather than a page template
      *
@@ -606,21 +619,16 @@ class Email extends ViewableData
     public function send()
     {
         $this->getSwiftMessage()->setContentType('text/html');
+        if (!$this->getBody()) {
+            $this->render();
+        }
         //create plain text part
         $this->getSwiftMessage()->addPart(
             Convert::xml2raw($this->getSwiftMessage()->getBody()),
             'text/plain',
             'utf-8'
         );
-        if (!$this->getBody()) {
-            $this->render();
-        }
-        $numFailed = Mailer::send_message($this);
-        if ($numFailed) {
-            return false;
-        }
-
-        return true;
+        return Injector::inst()->get(Mailer::class)->send($this);
     }
 
     /**
@@ -629,16 +637,11 @@ class Email extends ViewableData
     public function sendPlain()
     {
         $this->getSwiftMessage()->setContentType('text/plain');
-        $numFailed = Mailer::send_message($this);
         if (!$this->getBody()) {
             $this->render();
             $this->setBody(Convert::xml2raw($this->getBody()));
         }
-        if ($numFailed) {
-            return Mailer::get_inst()->getFailedRecipients();
-        }
-
-        return true;
+        return Injector::inst()->get(Mailer::class)->send($this);
     }
 
     /**
