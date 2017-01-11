@@ -14,7 +14,7 @@ describe('BreadcrumbsComponent', () => {
     props = {};
   });
 
-  describe('getBreadcrumbs()', () => {
+  describe('renderBreadcrumbs()', () => {
     let breadcrumbs = null;
 
     it('should convert the props.crumbs array into jsx to be rendered', () => {
@@ -32,11 +32,15 @@ describe('BreadcrumbsComponent', () => {
       breadcrumbs = ReactTestUtils.renderIntoDocument(
         <Breadcrumb {...props} />
       );
-      const listEls = breadcrumbs.getBreadcrumbs();
-      expect(listEls[0][0].props.children.props.children).toBe('breadcrumb1');
-      expect(listEls[1][0].props.children.props.children).toBe('breadcrumb2');
-      expect(listEls[2][0].props.children.props.children[0]).toBe('breadcrumb3');
-      expect(listEls[2][0].props.children.props.children[1].props.className.split(' '))
+      const listEls = breadcrumbs.renderBreadcrumbs();
+      console.log(listEls[2].props.children);
+      expect(listEls[0].props.children.props.children).toBe('breadcrumb1');
+      expect(listEls[1].props.children.props.children).toBe('breadcrumb2');
+      expect(listEls[2].props.children).toBe(undefined);
+
+      const lastEl = breadcrumbs.renderLastCrumb();
+      expect(lastEl.props.children.props.children[0]).toBe('breadcrumb3');
+      expect(lastEl.props.children.props.children[1].props.className.split(' '))
         .toContain('breadcrumb3icon');
     });
 
@@ -45,7 +49,7 @@ describe('BreadcrumbsComponent', () => {
         <Breadcrumb {...props} />
       );
 
-      const listEls = breadcrumbs.getBreadcrumbs();
+      const listEls = breadcrumbs.renderBreadcrumbs();
       expect(listEls).toBe(null);
     });
   });

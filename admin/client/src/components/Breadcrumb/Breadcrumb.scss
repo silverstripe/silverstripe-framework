@@ -6,6 +6,10 @@
   max-height: $toolbar-height;
 }
 
+.breadcrumb__container {
+  max-height: $toolbar-height;
+}
+
 .breadcrumb>li.breadcrumb__item--last, // TODO Fix Bootstrap clash
 .breadcrumb__item--last {
   display: block;

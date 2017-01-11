@@ -5,53 +5,64 @@ import { Link } from 'react-router';
 
 class Breadcrumb extends SilverStripeComponent {
 
-  render() {
-    return (
-      <ol className="breadcrumb">
-        {this.getBreadcrumbs()}
-      </ol>
-    );
+  getLastCrumb() {
+    return this.props.crumbs && this.props.crumbs[this.props.crumbs.length - 1];
   }
 
-  getBreadcrumbs() {
-    if (typeof this.props.crumbs === 'undefined') {
+  renderBreadcrumbs() {
+    if (!this.props.crumbs) {
       return null;
     }
 
-    return [].concat(
-     this.props.crumbs.slice(0, -1).map((crumb, index) => [
-       <li className="breadcrumb__item">
+    return this.props.crumbs.slice(0, -1).map((crumb, index) => (
+       <li key={index} className="breadcrumb__item">
          <Link
-           key={index}
            className="breadcrumb__item-title"
            to={crumb.href}
            onClick={crumb.onClick}
          >{crumb.text}</Link>
-        </li>,
-     ]),
-       this.props.crumbs.slice(-1).map((crumb, index) => {
-         const iconClassNames = ['breadcrumb__icon', crumb.icon ? crumb.icon.className : '']
-           .join(' ');
-         const itemClassNames = ['breadcrumb__item', 'breadcrumb__item--last'];
+        </li>
+    )).concat([
+      <li
+        key={this.props.crumbs.length - 1}
+        className="breadcrumb__item"
+      />,
+    ]);
+  }
 
-         if (crumb.noCrumb) {
-           itemClassNames.push('breadcrumb__item--no-crumb');
-         }
+  renderLastCrumb() {
+    const crumb = this.getLastCrumb();
+    if (!crumb) {
+      return null;
+    }
 
-         return [
-           <li className={itemClassNames.join(' ')}>
-             <h2 className="breadcrumb__item-title breadcrumb__item-title--last" key={index}>
-               {crumb.text}
-               {crumb.icon &&
-               <span className={iconClassNames} onClick={crumb.icon.action} />
-               }
-             </h2>
-           </li>,
-         ];
-       })
+    const iconClassNames = ['breadcrumb__icon'];
+    if (crumb.icon) {
+      iconClassNames.push(crumb.icon.className);
+    }
+
+    return (
+      <div className="breadcrumb__item breadcrumb__item--last">
+        <h2 className="breadcrumb__item-title">
+          {crumb.text}
+          {crumb.icon &&
+          <span className={iconClassNames.join(' ')} onClick={crumb.icon.action} />
+          }
+        </h2>
+      </div>
     );
   }
 
+  render() {
+    return (
+      <div className="breadcrumb__container fill-height">
+        <ol className="breadcrumb">
+          {this.renderBreadcrumbs()}
+        </ol>
+        {this.renderLastCrumb()}
+      </div>
+    );
+  }
 }
 
 Breadcrumb.propTypes = {
