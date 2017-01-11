@@ -176,7 +176,7 @@ $.entwine('ss', function($) {
         modal.removeClass('in');
         setTimeout(function() {
           backdrop.remove();
-        }, 0.2)
+        }, 150) // Simulate the bootstrap out-transition period
       })
 
       // Fade each element in (use setTimeout to ensure initial render at opacity=0 works)
