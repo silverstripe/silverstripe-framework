@@ -22,18 +22,18 @@ class TestMailer extends Mailer
      */
     public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customHeaders = false)
     {
-        $this->emailsSent[] = array(
-            'type' => 'plain',
-            'to' => $to,
-            'from' => $from,
-            'subject' => $subject,
+        $this->saveEmail([
+            'Type' => 'plain',
+            'To' => $to,
+            'From' => $from,
+            'Subject' => $subject,
 
-            'content' => $plainContent,
-            'plainContent' => $plainContent,
+            'Content' => $plainContent,
+            'PlainContent' => $plainContent,
 
-            'attachedFiles' => $attachedFiles,
-            'customHeaders' => $customHeaders,
-        );
+            'AttachedFiles' => $attachedFiles,
+            'CustomHeaders' => $customHeaders,
+        ]);
 
         return true;
     }
@@ -63,22 +63,31 @@ class TestMailer extends Mailer
         $inlineImages = false
     ) {
 
-        $this->emailsSent[] = array(
-            'type' => 'html',
-            'to' => $to,
-            'from' => $from,
-            'subject' => $subject,
+        $this->saveEmail([
+            'Type' => 'html',
+            'To' => $to,
+            'From' => $from,
+            'Subject' => $subject,
 
-            'content' => $htmlContent,
-            'plainContent' => $plainContent,
-            'htmlContent' => $htmlContent,
+            'Content' => $htmlContent,
+            'PlainContent' => $plainContent,
+            'HtmlContent' => $htmlContent,
 
-            'attachedFiles' => $attachedFiles,
-            'customHeaders' => $customHeaders,
-            'inlineImages' => $inlineImages,
-        );
+            'AttachedFiles' => $attachedFiles,
+            'CustomHeaders' => $customHeaders,
+            'InlineImages' => $inlineImages,
+        ]);
 
         return true;
+    }
+
+    /**
+     * Save a single email to the log
+     * @param $data A map of information about the email
+     */
+    protected function saveEmail($data)
+    {
+        $this->emailsSent[] = $data;
     }
 
     /**
@@ -102,11 +111,18 @@ class TestMailer extends Mailer
      */
     public function findEmail($to, $from = null, $subject = null, $content = null)
     {
+        $compare = [
+            'To' => $to,
+            'From' => $from,
+            'Subject' => $subject,
+            'Content' => $content,
+        ];
+
         foreach ($this->emailsSent as $email) {
             $matched = true;
 
-            foreach (array('to','from','subject','content') as $field) {
-                if ($value = $$field) {
+            foreach (array('To','From','Subject','Content') as $field) {
+                if ($value = $compare[$field]) {
                     if ($value[0] == '/') {
                         $matched = preg_match($value, $email[$field]);
                     } else {
