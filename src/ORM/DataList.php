@@ -837,11 +837,13 @@ class DataList extends ViewableData implements SS_List, Filterable, Sortable, Li
      * Returns an Iterator for this DataList.
      * This function allows you to use DataLists in foreach loops
      *
-     * @return ArrayIterator
+     * @return Generator
      */
     public function getIterator()
     {
-        return new ArrayIterator($this->toArray());
+        foreach ($this->dataQuery->query()->execute() as $row) {
+            yield $this->createDataObject($row);
+        }
     }
 
     /**
