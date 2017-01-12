@@ -10,9 +10,4 @@ interface Mailer
      * @return bool
      */
     public function send($email);
-
-    /**
-     * @return array
-     */
-    public function getFailedRecipients();
 }

@@ -186,7 +186,7 @@ class Email extends ViewableData
     public function setSwiftMessage($swiftMessage)
     {
         $swiftMessage->setDate(DBDatetime::now()->Format('U'));
-        if (!$swiftMessage->getFrom() && $defaultFrom = $this->config()->admin_email) {
+        if (!$swiftMessage->getFrom() && ($defaultFrom = $this->config()->admin_email)) {
             $swiftMessage->setFrom($defaultFrom);
         }
         $this->swiftMessage = $swiftMessage;
@@ -621,13 +621,13 @@ class Email extends ViewableData
         $this->getSwiftMessage()->setContentType('text/html');
         if (!$this->getBody()) {
             $this->render();
+            //create plain text part
+            $this->getSwiftMessage()->addPart(
+                Convert::xml2raw($this->getSwiftMessage()->getBody()),
+                'text/plain',
+                'utf-8'
+            );
         }
-        //create plain text part
-        $this->getSwiftMessage()->addPart(
-            Convert::xml2raw($this->getSwiftMessage()->getBody()),
-            'text/plain',
-            'utf-8'
-        );
         return Injector::inst()->get(Mailer::class)->send($this);
     }
 

@@ -12,7 +12,7 @@ use Swift_Message;
  * Mailer objects are responsible for actually sending emails.
  * The default Mailer class will use PHP's mail() function.
  */
-class SwiftMailer
+class SwiftMailer implements Mailer
 {
 
     use Configurable;
@@ -32,23 +32,6 @@ class SwiftMailer
     private $swift;
 
     /**
-     * @return static
-     */
-    public static function get_inst()
-    {
-        return Injector::inst()->get(Mailer::class);
-    }
-
-    /**
-     * @param Email $message
-     * @return int
-     */
-    public static function send_message($message)
-    {
-        return static::get_inst()->send($message);
-    }
-
-    /**
      * @param Email $message
      * @return bool Whether the sending was "successful" or not
      */
@@ -64,9 +47,10 @@ class SwiftMailer
 
     /**
      * @param Swift_Message $message
+     * @param array $failedRecipients
      * @return int
      */
-    public function sendSwift($message, &$failedRecipients = null)
+    protected function sendSwift($message, &$failedRecipients = null)
     {
         return $this->getSwiftMailer()->send($message, $failedRecipients);
     }

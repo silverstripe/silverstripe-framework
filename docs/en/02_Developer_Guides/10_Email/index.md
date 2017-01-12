@@ -14,8 +14,8 @@ Out of the box, SilverStripe will use the built-in PHP `mail()` command via the 
 like to use a more robust transport to send mail you can swap out the transport used by the `Mailer` via config:
 
 ```yml
-SilverStripe\Control\Email\Mailer:
-  swift_transport: Swift_SendmailTransport
+SilverStripe\Core\Injector\Injector:
+  Swift_Transport: Swift_SendmailTransport
 ```
 
 ## Usage
