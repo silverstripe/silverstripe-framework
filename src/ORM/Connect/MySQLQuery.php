@@ -39,7 +39,8 @@ class MySQLQuery extends Query
     public function seek($row)
     {
         if (is_object($this->handle)) {
-            return $this->handle->data_seek($row);
+            $this->handle->data_seek($row);
+            return $this->handle->fetch_assoc();
         }
         return null;
     }
