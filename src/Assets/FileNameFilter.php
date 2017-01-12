@@ -77,7 +77,8 @@ class FileNameFilter extends Object
         // Safeguard against empty file names
         $nameWithoutExt = pathinfo($name, PATHINFO_FILENAME);
         if (empty($nameWithoutExt)) {
-            $name = $this->getDefaultName() . '.' . $ext;
+            $name = $this->getDefaultName();
+            $name .= $ext ? '.' . $ext : '';
         }
 
         return $name;

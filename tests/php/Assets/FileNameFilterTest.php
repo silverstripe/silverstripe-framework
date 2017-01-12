@@ -142,4 +142,11 @@ class FileNameFilterTest extends SapphireTest
         $filter = new FileNameFilter();
         $this->assertEquals('test-document.txt', $filter->filter($name));
     }
+
+    public function testDoesntAddExtensionWhenMissing()
+    {
+        $name = 'no-extension';
+        $filter = new FileNameFilter();
+        $this->assertEquals('no-extension', $filter->filter($name));
+    }
 }
