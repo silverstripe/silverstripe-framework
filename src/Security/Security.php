@@ -514,15 +514,17 @@ class Security extends Controller implements TemplateGlobalProvider
             return $this;
         }
 
-        // Use sitetree pages to render the security page
-        $tmpPage = new SiteTree();
+        // Use the default setting for which Page to use to render the security page
+        $pageClass = (string) $this->stat('template_main');
+        $tmpPage = new $pageClass;
         $tmpPage->Title = $title;
         /** @skipUpgrade */
         $tmpPage->URLSegment = 'Security';
         // Disable ID-based caching  of the log-in page by making it a random number
         $tmpPage->ID = -1 * rand(1, 10000000);
 
-        $controller = ContentController::create($tmpPage);
+        $controllerClass = $tmpPage->getControllerName();
+        $controller = $controllerClass::create($tmpPage);
         $controller->setDataModel($this->model);
         $controller->doInit();
         return $controller;
