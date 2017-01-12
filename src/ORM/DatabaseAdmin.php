@@ -331,8 +331,11 @@ class DatabaseAdmin extends Controller
                     $updateQueries = [sprintf($updateQuery, '')];
 
                     // Remap versioned table ClassName values as well
-                    if (singleton($newClassName)->has_extension(Versioned::class)) {
-                        $updateQueries[] = sprintf($updateQuery, '_Live');
+                    $class = singleton($newClassName);
+                    if ($class->has_extension(Versioned::class)) {
+                        if ($class->hasStages()) {
+                            $updateQueries[] = sprintf($updateQuery, '_Live');
+                        }
                         $updateQueries[] = sprintf($updateQuery, '_Versions');
                     }
 
