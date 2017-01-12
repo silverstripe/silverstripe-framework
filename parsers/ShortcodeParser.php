@@ -108,6 +108,8 @@ class ShortcodeParser {
 	 */
 	public function parse($content) {
 		if(!$this->shortcodes) return $content;
+
+		$content = $this->removePTag($content);
 		
 		$shortcodes = implode('|', array_map('preg_quote', array_keys($this->shortcodes)));
 		$pattern    = "/\[($shortcodes)(.*?)(\/\]|\](?(4)|(?:(.+?)\[\/\s*\\1\s*\]))|\])/s";
@@ -157,6 +159,54 @@ class ShortcodeParser {
 		return call_user_func(
 			$this->shortcodes[$shortcode], 
 			$attributes, isset($matches[4][0]) ? $matches[4][0] : '', $this, $shortcode);
+	}
+
+	/**
+	 * Don't auto-p wrap shortcodes that stand alone
+	 *
+	 * Ensures that shortcodes are not wrapped in <<p>>...<</p>>.
+	 *
+	 * @param string $content The content.
+	 * @return string The filtered content.
+	 */
+	protected function removePTag($content) {
+		if(!$this->shortcodes) return $content;
+
+		$tagregexp = join('|', array_map('preg_quote', array_keys($this->shortcodes)));
+
+		$pattern =
+			  '/'
+			. '<p>'                              // Opening paragraph
+			. '\\s*+'                            // Optional leading whitespace
+			. '('                                // 1: The shortcode
+			.     '\\['                          // Opening bracket
+			.     "($tagregexp)"                 // 2: Shortcode name
+			.     '\\b'                          // Word boundary
+			                                     // Unroll the loop: Inside the opening shortcode tag
+			.     '[^\\]\\/]*'                   // Not a closing bracket or forward slash
+			.     '(?:'
+			.         '\\/(?!\\])'               // A forward slash not followed by a closing bracket
+			.         '[^\\]\\/]*'               // Not a closing bracket or forward slash
+			.     ')*?'
+			.     '(?:'
+			.         '\\/\\]'                   // Self closing tag and closing bracket
+			.     '|'
+			.         '\\]'                      // Closing bracket
+			.         '(?:'                      // Unroll the loop: Optionally, anything between the opening and closing shortcode tags
+			.             '[^\\[]*+'             // Not an opening bracket
+			.             '(?:'
+			.                 '\\[(?!\\/\\2\\])' // An opening bracket not followed by the closing shortcode tag
+			.                 '[^\\[]*+'         // Not an opening bracket
+			.             ')*+'
+			.             '\\[\\/\\2\\]'         // Closing shortcode tag
+			.         ')?'
+			.     ')'
+			. ')'
+			. '\\s*+'                            // optional trailing whitespace
+			. '<\\/p>'                           // closing paragraph
+			. '/s';
+
+		return preg_replace( $pattern, '$1', $content );
 	}
 	
 }
