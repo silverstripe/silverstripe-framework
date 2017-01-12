@@ -15022,6 +15022,9 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   line-height:14px;
   margin-bottom:0;
   float:left;
+}
+
+.breadcrumb,.breadcrumb__container{
   max-height:52px;
 }
 

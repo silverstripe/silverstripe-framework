@@ -765,13 +765,16 @@ e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,enumerable:!1,wri
 }}Object.defineProperty(t,"__esModule",{value:!0}),t.Breadcrumb=void 0
 var l=function(){function e(e,t){for(var n=0;n<t.length;n++){var i=t[n]
 i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(t,n,i){return n&&e(t.prototype,n),i&&e(t,i),t}}(),u=n(5),d=i(u),c=n(20),f=i(c),p=n(106),h=n(142),m=function(e){
-function t(){return r(this,t),a(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return o(t,e),l(t,[{key:"render",value:function n(){return d["default"].createElement("ol",{className:"breadcrumb"
-},this.getBreadcrumbs())}},{key:"getBreadcrumbs",value:function i(){return"undefined"==typeof this.props.crumbs?null:[].concat(this.props.crumbs.slice(0,-1).map(function(e,t){return[d["default"].createElement("li",{
-className:"breadcrumb__item"},d["default"].createElement(h.Link,{key:t,className:"breadcrumb__item-title",to:e.href,onClick:e.onClick},e.text))]}),this.props.crumbs.slice(-1).map(function(e,t){var n=["breadcrumb__icon",e.icon?e.icon.className:""].join(" "),i=["breadcrumb__item","breadcrumb__item--last"]
+function t(){return r(this,t),a(this,(t.__proto__||Object.getPrototypeOf(t)).apply(this,arguments))}return o(t,e),l(t,[{key:"getLastCrumb",value:function n(){return this.props.crumbs&&this.props.crumbs[this.props.crumbs.length-1]
 
-
-return e.noCrumb&&i.push("breadcrumb__item--no-crumb"),[d["default"].createElement("li",{className:i.join(" ")},d["default"].createElement("h2",{className:"breadcrumb__item-title breadcrumb__item-title--last",
-key:t},e.text,e.icon&&d["default"].createElement("span",{className:n,onClick:e.icon.action})))]}))}}]),t}(f["default"])
+}},{key:"renderBreadcrumbs",value:function i(){return this.props.crumbs?this.props.crumbs.slice(0,-1).map(function(e,t){return d["default"].createElement("li",{key:t,className:"breadcrumb__item"},d["default"].createElement(h.Link,{
+className:"breadcrumb__item-title",to:e.href,onClick:e.onClick},e.text))}).concat([d["default"].createElement("li",{key:this.props.crumbs.length-1,className:"breadcrumb__item"})]):null}},{key:"renderLastCrumb",
+value:function s(){var e=this.getLastCrumb()
+if(!e)return null
+var t=["breadcrumb__icon"]
+return e.icon&&t.push(e.icon.className),d["default"].createElement("div",{className:"breadcrumb__item breadcrumb__item--last"},d["default"].createElement("h2",{className:"breadcrumb__item-title"},e.text,e.icon&&d["default"].createElement("span",{
+className:t.join(" "),onClick:e.icon.action})))}},{key:"render",value:function u(){return d["default"].createElement("div",{className:"breadcrumb__container fill-height"},d["default"].createElement("ol",{
+className:"breadcrumb"},this.renderBreadcrumbs()),this.renderLastCrumb())}}]),t}(f["default"])
 m.propTypes={crumbs:d["default"].PropTypes.array},t.Breadcrumb=m,t["default"]=(0,p.connect)(s)(m)},function(e,t){e.exports=ReactRouter},function(e,t,n){(function(t){e.exports=t.BreadcrumbsActions=n(144)
 
 }).call(t,function(){return this}())},function(e,t,n){"use strict"
