@@ -9,6 +9,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Dev\Deprecation;
+use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\Permission;
 
@@ -325,10 +326,22 @@ class DatabaseAdmin extends Controller
                         echo "<li>Correcting $badRecordCount obsolete classname values for $newClassName</li>\n";
                     }
                     $table = $schema->baseDataTable($baseDataClass);
-                    DB::prepared_query(
-                        "UPDATE \"$table\" SET \"ClassName\" = ? WHERE \"ClassName\" = ?",
-                        [ $newClassName, $oldClassName ]
-                    );
+
+                    $updateQuery = "UPDATE \"$table%s\" SET \"ClassName\" = ? WHERE \"ClassName\" = ?";
+                    $updateQueries = [sprintf($updateQuery, '')];
+
+                    // Remap versioned table ClassName values as well
+                    $class = singleton($newClassName);
+                    if ($class->has_extension(Versioned::class)) {
+                        if ($class->hasStages()) {
+                            $updateQueries[] = sprintf($updateQuery, '_Live');
+                        }
+                        $updateQueries[] = sprintf($updateQuery, '_Versions');
+                    }
+
+                    foreach ($updateQueries as $query) {
+                        DB::prepared_query($query, [$newClassName, $oldClassName]);
+                    }
                 }
             }
         }
