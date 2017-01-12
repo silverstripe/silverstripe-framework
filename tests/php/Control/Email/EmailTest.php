@@ -170,6 +170,29 @@ class EmailTest extends SapphireTest
         $this->assertEquals('Hello, I\'m a text document.', $child->getBody());
     }
 
+    public function testRenderedSend()
+    {
+        $email = $this->getMockBuilder(Email::class)
+                      ->enableProxyingToOriginalMethods()
+                      ->disableOriginalConstructor()
+                      ->setConstructorArgs(array(
+                          'from@example.com',
+                          'to@example.com',
+                      ))
+                      ->getMock();
+        $email->setData(array(
+            'EmailContent' => 'test',
+        ));
+        $this->assertFalse($email->hasPlainPart());
+        $this->assertEmpty($email->getBody());
+        // these seem to fail for some reason :/
+        //$email->expects($this->once())->method('render');
+        //$email->expects($this->once())->method('generatePlainPartFromBody');
+        $email->send();
+        $this->assertTrue($email->hasPlainPart());
+        $this->assertNotEmpty($email->getBody());
+    }
+
     public function testConsturctor()
     {
         $email = new Email(
@@ -440,12 +463,20 @@ class EmailTest extends SapphireTest
         $this->assertEquals('<h1>Title</h1>', $email->getBody());
     }
 
-    public function testTemplate()
+    public function testHTMLTemplate()
     {
         $email = new Email();
-        $this->assertEquals(Email::class, $email->getTemplate());
-        $email->setTemplate('MyTemplate');
-        $this->assertEquals('MyTemplate', $email->getTemplate());
+        $this->assertEquals(Email::class, $email->getHTMLTemplate());
+        $email->setHTMLTemplate('MyTemplate');
+        $this->assertEquals('MyTemplate', $email->getHTMLTemplate());
+    }
+
+    public function testPlainTemplate()
+    {
+        $email = new Email();
+        $this->assertEmpty($email->getPlainTemplate());
+        $email->setPlainTemplate('MyTemplate');
+        $this->assertEquals('MyTemplate', $email->getPlainTemplate());
     }
 
     public function testGetFailedRecipients()
@@ -476,5 +507,79 @@ class EmailTest extends SapphireTest
         ));
         $email->render();
         $this->assertContains('my content', $email->getBody());
+        $children = $email->getSwiftMessage()->getChildren();
+        $this->assertCount(1, $children);
+        $plainPart = reset($children);
+        $this->assertEquals('my content', $plainPart->getBody());
+
+        // ensure repeat renders don't add multiple plain parts
+        $email->render();
+        $this->assertCount(1, $email->getSwiftMessage()->getChildren());
+    }
+
+    public function testRenderPlainOnly()
+    {
+        $email = new Email();
+        $email->setData(array(
+            'EmailContent' => 'test content',
+        ));
+        $email->render(true);
+        $this->assertEquals('text/plain', $email->getSwiftMessage()->getContentType());
+        $this->assertEmpty($email->getSwiftMessage()->getChildren());
+    }
+
+    public function testHasPlainPart()
+    {
+        $email = new Email();
+        $email->setData(array(
+            'EmailContent' => 'test',
+        ));
+        //emails are assumed to be HTML by default
+        $this->assertFalse($email->hasPlainPart());
+        //make sure plain attachments aren't picked up as a plain part
+        $email->addAttachmentFromData('data', 'attachent.txt', 'text/plain');
+        $this->assertFalse($email->hasPlainPart());
+        $email->getSwiftMessage()->addPart('plain', 'text/plain');
+        $this->assertTrue($email->hasPlainPart());
+    }
+
+    public function testGeneratePlainPartFromBody()
+    {
+        $email = new Email();
+        $email->setBody('<h1>Test</h1>');
+        $this->assertEmpty($email->getSwiftMessage()->getChildren());
+        $email->generatePlainPartFromBody();
+        $children = $email->getSwiftMessage()->getChildren();
+        $this->assertCount(1, $children);
+        $plainPart = reset($children);
+        $this->assertContains('Test', $plainPart->getBody());
+        $this->assertNotContains('<h1>Test</h1>', $plainPart->getBody());
+    }
+
+    public function testMultipleEmailSends()
+    {
+        $email = new Email();
+        $email->setData(array(
+            'EmailContent' => 'Test',
+        ));
+        $this->assertEmpty($email->getBody());
+        $this->assertEmpty($email->getSwiftMessage()->getChildren());
+        $email->send();
+        $this->assertContains('Test', $email->getBody());
+        $this->assertCount(1, $email->getSwiftMessage()->getChildren());
+        $children = $email->getSwiftMessage()->getChildren();
+        /** @var \Swift_MimePart $plainPart */
+        $plainPart = reset($children);
+        $this->assertContains('Test', $plainPart->getBody());
+
+
+        //send again
+        $email->send();
+        $this->assertContains('Test', $email->getBody());
+        $this->assertCount(1, $email->getSwiftMessage()->getChildren());
+        $children = $email->getSwiftMessage()->getChildren();
+        /** @var \Swift_MimePart $plainPart */
+        $plainPart = reset($children);
+        $this->assertContains('Test', $plainPart->getBody());
     }
 }

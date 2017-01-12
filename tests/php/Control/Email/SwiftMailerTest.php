@@ -62,6 +62,8 @@ class SwiftMailerTest extends SapphireTest
     public function testSendSwift()
     {
         $mailer = new SwiftMailer();
+        $sendSwiftMethod = new \ReflectionMethod($mailer, 'sendSwift');
+        $sendSwiftMethod->setAccessible(true);
         $transport = $this->getMockBuilder(Swift_NullTransport::class)->getMock();
         $transport->expects($this->once())
             ->method('send');
@@ -69,6 +71,6 @@ class SwiftMailerTest extends SapphireTest
         $swiftMessage = new Swift_Message('Test', 'Body');
         $swiftMessage->setTo('to@example.com');
         $swiftMessage->setFrom('from@example.com');
-        $mailer->sendSwift($swiftMessage);
+        $sendSwiftMethod->invoke($mailer, $swiftMessage);
     }
 }

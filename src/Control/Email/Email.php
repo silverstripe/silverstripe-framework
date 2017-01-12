@@ -10,6 +10,7 @@ use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\ViewableData;
 use Swift_Message;
+use Swift_MimePart;
 
 /**
  * Class to support sending emails.
@@ -55,9 +56,19 @@ class Email extends ViewableData
     private $swiftMessage;
 
     /**
-     * @var string The name of the used template (without *.ss extension)
+     * @var string The name of the HTML template to render the email with (without *.ss extension)
      */
-    private $template = self::class;
+    private $HTMLTemplate = self::class;
+
+    /**
+     * @var string The name of the plain text template to render the plain part of the email with
+     */
+    private $plainTemplate = '';
+
+    /**
+     * @var Swift_MimePart
+     */
+    private $plainPart;
 
     /**
      * @var array|ViewableData Additional data available in a template.
@@ -172,7 +183,7 @@ class Email extends ViewableData
     public function getSwiftMessage()
     {
         if (!$this->swiftMessage) {
-            $this->setSwiftMessage(new Swift_Message());
+            $this->setSwiftMessage(new Swift_Message(null, null, 'text/html', 'utf-8'));
         }
 
         return $this->swiftMessage;
@@ -568,9 +579,9 @@ class Email extends ViewableData
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getHTMLTemplate()
     {
-        return $this->template;
+        return $this->HTMLTemplate;
     }
 
     /**
@@ -579,16 +590,46 @@ class Email extends ViewableData
      * @param string $template
      * @return $this
      */
-    public function setTemplate($template)
+    public function setHTMLTemplate($template)
     {
         if (substr($template, -3) == '.ss') {
             $template = substr($template, 0, -3);
         }
-        $this->template = $template;
+        $this->HTMLTemplate = $template;
 
         return $this;
     }
 
+    /**
+     * Get the template to render the plain part with
+     *
+     * @return string
+     */
+    public function getPlainTemplate()
+    {
+        return $this->plainTemplate;
+    }
+
+    /**
+     * Set the template to render the plain part with
+     *
+     * @param string $template
+     * @return $this
+     */
+    public function setPlainTemplate($template)
+    {
+        if (substr($template, -3) == '.ss') {
+            $template = substr($template, 0, -3);
+        }
+        $this->plainTemplate = $template;
+
+        return $this;
+    }
+
+    /**
+     * @param array $recipients
+     * @return $this
+     */
     public function setFailedRecipients($recipients)
     {
         $this->failedRecipients = $recipients;
@@ -596,6 +637,9 @@ class Email extends ViewableData
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getFailedRecipients()
     {
         return $this->failedRecipients;
@@ -618,15 +662,11 @@ class Email extends ViewableData
      */
     public function send()
     {
-        $this->getSwiftMessage()->setContentType('text/html');
         if (!$this->getBody()) {
             $this->render();
-            //create plain text part
-            $this->getSwiftMessage()->addPart(
-                Convert::xml2raw($this->getSwiftMessage()->getBody()),
-                'text/plain',
-                'utf-8'
-            );
+        }
+        if (!$this->hasPlainPart()) {
+            $this->generatePlainPartFromBody();
         }
         return Injector::inst()->get(Mailer::class)->send($this);
     }
@@ -636,22 +676,90 @@ class Email extends ViewableData
      */
     public function sendPlain()
     {
-        $this->getSwiftMessage()->setContentType('text/plain');
-        if (!$this->getBody()) {
-            $this->render();
-            $this->setBody(Convert::xml2raw($this->getBody()));
+        if (!$this->hasPlainPart()) {
+            $this->render(true);
         }
         return Injector::inst()->get(Mailer::class)->send($this);
     }
 
     /**
      * Render the email
+     * @param bool $plainOnly Only render the message as plain text
+     * @return $this
+     */
+    public function render($plainOnly = false)
+    {
+        if ($existingPlainPart = $this->findPlainPart()) {
+            $this->getSwiftMessage()->detach($existingPlainPart);
+        }
+        unset($existingPlainPart);
+        if (!$this->getHTMLTemplate() && !$this->getPlainTemplate()) {
+            return $this;
+        }
+        $HTMLPart = '';
+        $plainPart = '';
+
+        if ($this->getHTMLTemplate()) {
+            $HTMLPart = $this->renderWith($this->getHTMLTemplate(), $this->getData());
+        }
+
+        if ($this->getPlainTemplate()) {
+            $plainPart =  $this->renderWith($this->getPlainTemplate(), $this->getData());
+        } elseif ($HTMLPart) {
+            $plainPart = Convert::xml2raw($HTMLPart);
+        }
+
+        if ($HTMLPart && !$plainOnly) {
+            $this->setBody($HTMLPart);
+            $this->getSwiftMessage()->setContentType('text/html');
+            $this->getSwiftMessage()->setCharset('utf-8');
+            if ($plainPart) {
+                $this->getSwiftMessage()->addPart($plainPart, 'text/plain', 'utf-8');
+            }
+        } elseif ($plainPart || $plainOnly) {
+            if ($plainPart) {
+                $this->setBody($plainPart);
+            }
+            $this->getSwiftMessage()->setContentType('text/plain');
+            $this->getSwiftMessage()->setCharset('utf-8');
+        }
+
+        return $this;
+    }
+
+    public function findPlainPart()
+    {
+        foreach ($this->getSwiftMessage()->getChildren() as $child) {
+            if ($child instanceof Swift_MimePart && $child->getContentType() == 'text/plain') {
+                return $child;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPlainPart()
+    {
+        if ($this->getSwiftMessage()->getContentType() == 'text/plain') {
+            return true;
+        }
+        return (bool) $this->findPlainPart();
+    }
+
+    /**
+     * Automatically adds a plain part to the email generated from the current Body
      *
      * @return $this
      */
-    public function render()
+    public function generatePlainPartFromBody()
     {
-        $this->setBody($this->renderWith($this->getTemplate(), $this->getData()));
+        $this->getSwiftMessage()->addPart(
+            Convert::xml2raw($this->getBody()),
+            'text/plain',
+            'utf-8'
+        );
 
         return $this;
     }
