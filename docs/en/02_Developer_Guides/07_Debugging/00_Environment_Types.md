@@ -10,7 +10,7 @@ and behaviors. The environment is managed either through a [YML configuration fi
 The definition of setting an environment type in a `mysite/_config/app.yml` looks like
 
 	:::yml
-	Director:
+	SilverStripe\Control\Director:
 	  environment_type: 'dev'
 
 The definition of setting an environment type in a `_ss_environment.php` file looks like
@@ -44,7 +44,7 @@ want to password protect the site. You can enable that by adding this to your `m
 	Only:
 	  environment: 'test'
 	---
-	BasicAuth:
+	SilverStripe\Security\BasicAuth:
 	  entire_site_protected: true
 
 ### Live Mode
@@ -78,11 +78,11 @@ Checking for what environment you're running in can also be done in PHP. Your ap
 certain functionality depending on the environment type. 
 
 	:::php
-	if(Director::isLive()) {
+	if (Director::isLive()) {
 		// is in live
-	} else if(Director::isTest()) {
+	} elseif (Director::isTest()) {
 		// is in test mode
-	} else if(Director::isDev()) {
+	} elseif (Director::isDev()) {
 		// is in dev mode
 	}
 
