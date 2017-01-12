@@ -99,15 +99,25 @@ if (!isset($database) || !$database) {
 
 if (defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
     global $databaseConfig;
+
+    // Checks if the database global is defined (if present, wraps with prefix and suffix)
+    $databaseNameWrapper = function ($name) {
+        if (!$name) {
+            return '';
+        } else {
+            return (defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : '')
+            . $name
+            . (defined('SS_DATABASE_SUFFIX') ? SS_DATABASE_SUFFIX : '');
+        }
+    };
+
     /** @skipUpgrade */
     $databaseConfig = array(
         "type" => defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLDatabase',
         "server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : 'localhost',
         "username" => SS_DATABASE_USERNAME,
         "password" => SS_DATABASE_PASSWORD,
-        "database" => (defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : '')
-            . $database
-            . (defined('SS_DATABASE_SUFFIX') ? SS_DATABASE_SUFFIX : ''),
+        "database" => $databaseNameWrapper($database),
     );
 
     // Set the port if called for
