@@ -13,6 +13,8 @@ import CampaignReducer from 'state/campaign/CampaignReducer';
 import BreadcrumbsReducer from 'state/breadcrumbs/BreadcrumbsReducer';
 import bootInjector from 'boot/BootInjector';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import { printRequest } from 'apollo-client/transport/networkInterface';
+import qs from 'qs';
 
 // Sections
 // eslint-disable-next-line no-unused-vars
@@ -23,6 +25,12 @@ es6promise.polyfill();
 
 function appBoot() {
   const baseUrl = Config.get('absoluteBaseUrl');
+  const networkInterface = createNetworkInterface({
+    uri: `${baseUrl}graphql/`,
+    opts: {
+      credentials: 'same-origin',
+    },
+  });
   const apolloClient = new ApolloClient({
     shouldBatch: true,
     addTypename: true,
@@ -32,13 +40,26 @@ function appBoot() {
       }
       return null;
     },
-    networkInterface: createNetworkInterface({
-      uri: `${baseUrl}graphql/`,
-      opts: {
-        credentials: 'same-origin',
-      },
-    }),
+    networkInterface,
   });
+
+  networkInterface.use([{
+    applyMiddleware(req, next) {
+      const entries = printRequest(req.request);
+
+      // eslint-disable-next-line no-param-reassign
+      req.options.headers = Object.assign(
+        {},
+        req.options.headers,
+        {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+        }
+      );
+      // eslint-disable-next-line no-param-reassign
+      req.options.body = qs.stringify(entries);
+      next();
+    },
+  }]);
 
   reducerRegister.add('config', ConfigReducer);
   reducerRegister.add('form', ReduxFormReducer);

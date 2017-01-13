@@ -33,7 +33,6 @@ describe('BreadcrumbsComponent', () => {
         <Breadcrumb {...props} />
       );
       const listEls = breadcrumbs.renderBreadcrumbs();
-      console.log(listEls[2].props.children);
       expect(listEls[0].props.children.props.children).toBe('breadcrumb1');
       expect(listEls[1].props.children.props.children).toBe('breadcrumb2');
       expect(listEls[2].props.children).toBe(undefined);
