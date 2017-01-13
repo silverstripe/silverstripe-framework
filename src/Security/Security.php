@@ -125,6 +125,14 @@ class Security extends Controller implements TemplateGlobalProvider
     private static $template_main = 'Page';
 
     /**
+     * Class to use for page rendering
+     *
+     * @var string
+     * @config
+     */
+    private static $page_class = 'Page';
+
+    /**
      * Default message set used in permission failures.
      *
      * @config
@@ -515,7 +523,7 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         // Use the default setting for which Page to use to render the security page
-        $pageClass = (string) $this->stat('template_main');
+        $pageClass = $this->stat('page_class');
         $tmpPage = new $pageClass;
         $tmpPage->Title = $title;
         /** @skipUpgrade */
