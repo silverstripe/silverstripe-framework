@@ -123,4 +123,24 @@ class GridFieldConfigTest extends SapphireTest
             $config->getComponents()->count()
         );
     }
+
+    /**
+     * Test that components can be removed with an array of class names or interfaces
+     */
+    public function testRemoveMultipleComponents()
+    {
+        $config = GridFieldConfig::create()
+            ->addComponent(new MyComponent)
+            ->addComponent(new MyComponent)
+            ->addComponent(new MyOtherComponent);
+
+        $config->removeComponentsByType(
+            [
+                MyComponent::class,
+                MyOtherComponent::class
+            ]
+        );
+
+        $this->assertSame(0, $config->getComponents()->count());
+    }
 }
