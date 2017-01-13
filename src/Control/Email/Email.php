@@ -727,6 +727,9 @@ class Email extends ViewableData
         return $this;
     }
 
+    /**
+     * @return Swift_MimePart|false
+     */
     public function findPlainPart()
     {
         foreach ($this->getSwiftMessage()->getChildren() as $child) {

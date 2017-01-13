@@ -310,7 +310,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // Set up the test mailer
         $this->mailer = new TestMailer();
-        $this->mailer->setSwiftMailer(new \Swift_Mailer(new \Swift_NullTransport()));
         Injector::inst()->registerService($this->mailer, Mailer::class);
         Email::config()->remove('send_all_emails_to');
         Email::config()->remove('send_all_emails_from');
