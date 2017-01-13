@@ -129,7 +129,9 @@ class Folder extends File
      */
     public function setTitle($title)
     {
-        $this->setName($title);
+        $this->setField('Title', $title);
+        $this->setField('Name', $title);
+
         return $this;
     }
 
@@ -141,21 +143,6 @@ class Folder extends File
     public function getTitle()
     {
         return $this->Name;
-    }
-
-    /**
-     * Override setting the Title of Folders to that Name and Title are always in sync.
-     * Note that this is not appropriate for files, because someone might want to create a human-readable name
-     * of a file that is different from its name on disk. But folders should always match their name on disk.
-     *
-     * @param string $name
-     * @return $this
-     */
-    public function setName($name)
-    {
-        parent::setName($name);
-        $this->setField('Title', $this->Name);
-        return $this;
     }
 
     /**

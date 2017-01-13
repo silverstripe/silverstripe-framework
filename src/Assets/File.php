@@ -10,6 +10,7 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\FieldList;
@@ -639,12 +640,65 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
             $this->OwnerID = Member::currentUserID();
         }
 
-        // Set default name
-        if (!$this->getField('Name')) {
-            $this->Name ="new-" . strtolower($this->class);
+        $name = $this->getField('Name');
+        $title = $this->getField('Title');
+
+        $changed = $this->isChanged('Name');
+
+        // Name can't be blank, default to Title
+        if (!$name) {
+            $changed = true;
+            $name = $title;
         }
 
-        // Propegate changes to the AssetStore and update the DBFile field
+        $filter = FileNameFilter::create();
+        if ($name) {
+            // Fix illegal characters
+            $name = $filter->filter($name);
+        } else {
+            // Default to file name
+            $changed = true;
+            $name = $this->i18n_singular_name();
+            $name = $filter->filter($name);
+        }
+
+        // Check for duplicates when the name has changed (or is set for the first time)
+        if ($changed) {
+            $nameGenerator = $this->getNameGenerator($name);
+            // Defaults to returning the original filename on first iteration
+            foreach ($nameGenerator as $newName) {
+                // This logic is also used in the Folder subclass, but we're querying
+                // for duplicates on the File base class here (including the Folder subclass).
+
+                // TODO Add read lock to avoid other processes creating files with the same name
+                // before this process has a chance to persist in the database.
+                $existingFile = File::get()->filter(array(
+                    'Name' => $newName,
+                    'ParentID' => (int) $this->ParentID
+                ))->exclude(array(
+                    'ID' => $this->ID
+                ))->first();
+                if (!$existingFile) {
+                    $name = $newName;
+                    break;
+                }
+            }
+        }
+
+        // Update actual field value
+        $this->setField('Name', $name);
+
+        // Update title
+        if (!$title) {
+            // Generate a readable title, dashes and underscores replaced by whitespace,
+            // and any file extensions removed.
+            $this->setField(
+                'Title',
+                str_replace(array('-','_'), ' ', preg_replace('/\.[^.]+$/', '', $name))
+            );
+        }
+
+        // Propagate changes to the AssetStore and update the DBFile field
         $this->updateFilesystem();
 
         parent::onBeforeWrite();
@@ -715,62 +769,14 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
     }
 
     /**
-     * Setter function for Name. Automatically sets a default title,
-     * and removes characters that might be invalid on the filesystem.
-     * Also adds a suffix to the name if the filename already exists
-     * on the filesystem, and is associated to a different {@link File} database record
-     * in the same folder. This means "myfile.jpg" might become "myfile-1.jpg".
+     * Get an asset renamer for the given filename.
      *
-     * Does not change the filesystem itself, please use {@link write()} for this.
-     *
-     * @param string $name
-     * @return $this
+     * @param string $filename Path name
+     * @return AssetNameGenerator
      */
-    public function setName($name)
+    protected function getNameGenerator($filename)
     {
-        $oldName = $this->Name;
-
-        // It can't be blank, default to Title
-        if (!$name) {
-            $name = $this->Title;
-        }
-
-        // Fix illegal characters
-        $filter = FileNameFilter::create();
-        $name = $filter->filter($name);
-
-        // We might have just turned it blank, so check again.
-        if (!$name) {
-            $name = 'new-folder';
-        }
-
-        // If it's changed, check for duplicates
-        if ($oldName && $oldName != $name) {
-            $base = pathinfo($name, PATHINFO_FILENAME);
-            $ext = self::get_file_extension($name);
-            $suffix = 1;
-
-            while (File::get()->filter(array(
-                    'Name' => $name,
-                    'ParentID' => (int) $this->ParentID
-                ))->exclude(array(
-                    'ID' => $this->ID
-                ))->first()
-            ) {
-                $suffix++;
-                $name = "$base-$suffix.$ext";
-            }
-        }
-
-        // Update actual field value
-        $this->setField('Name', $name);
-
-        // Update title
-        if (!$this->Title) {
-            $this->Title = str_replace(array('-','_'), ' ', preg_replace('/\.[^.]+$/', '', $name));
-        }
-
-        return $this;
+        return Injector::inst()->createWithArgs('AssetNameGenerator', array($filename));
     }
 
     /**

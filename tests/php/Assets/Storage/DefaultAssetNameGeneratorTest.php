@@ -104,4 +104,32 @@ class DefaultAssetNameGeneratorTest extends SapphireTest
         $this->assertEquals('folder/MyFile-v99.jpg', $suggestions[98]);
         $this->assertNotEquals('folder/MyFile-v100.jpg', $suggestions[99]);
     }
+
+    public function testFolderWithoutDefaultPrefix()
+    {
+        Config::inst()->update(DefaultAssetNameGenerator::class, 'version_prefix', '');
+        $generator = new DefaultAssetNameGenerator('folder/subfolder');
+        $suggestions = iterator_to_array($generator);
+
+        // Expect 100 suggestions
+        $this->assertEquals(100, count($suggestions));
+
+        // First item is always the same as input
+        $this->assertEquals('folder/subfolder', $suggestions[0]);
+        $this->assertEquals('folder/subfolder2', $suggestions[1]);
+    }
+
+    public function testFolderWithDefaultPrefix()
+    {
+        Config::inst()->update(DefaultAssetNameGenerator::class, 'version_prefix', '-v');
+        $generator = new DefaultAssetNameGenerator('folder/subfolder');
+        $suggestions = iterator_to_array($generator);
+
+        // Expect 100 suggestions
+        $this->assertEquals(100, count($suggestions));
+
+        // First item is always the same as input
+        $this->assertEquals('folder/subfolder', $suggestions[0]);
+        $this->assertEquals('folder/subfolder-v2', $suggestions[1]);
+    }
 }
