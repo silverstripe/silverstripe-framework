@@ -1067,7 +1067,6 @@ mappings:
   EmailTest: SilverStripe\Control\Tests\Email\EmailTest
   EmailTest_Mailer: SilverStripe\Control\Tests\Email\EmailTest\TestMailer
   MailerTest: SilverStripe\Control\Tests\Email\MailerTest
-  MailerTest_MockMailer: SilverStripe\Control\Tests\Email\MailerTest\MockMailer
   ErrorControlChainTest_Chain: SilverStripe\Core\Tests\Startup\ErrorControlChainTest\ErrorControlChainTest_Chain
   ErrorControlChainTest: SilverStripe\Core\Tests\Startup\ErrorControlChainTest
   ParameterConfirmationTokenTest_Token: SilverStripe\Core\Tests\Startup\ParameterConfirmationTokenTest\ParameterConfirmationTokenTest_Token

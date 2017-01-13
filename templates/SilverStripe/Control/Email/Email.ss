@@ -6,7 +6,7 @@
 <body>
 
 <div class="body">
-	$Body
+	$EmailContent
 </div>
 
 </body>

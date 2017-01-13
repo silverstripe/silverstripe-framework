@@ -6,6 +6,7 @@ use SilverStripe\CMS\Controllers\RootURLController;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Email\Email;
+use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -307,10 +308,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         // Clear requirements
         Requirements::clear();
 
-        // Set up email
+        // Set up the test mailer
         $this->mailer = new TestMailer();
-        Injector::inst()->registerService($this->mailer, 'SilverStripe\\Control\\Email\\Mailer');
+        Injector::inst()->registerService($this->mailer, Mailer::class);
         Email::config()->remove('send_all_emails_to');
+        Email::config()->remove('send_all_emails_from');
+        Email::config()->remove('cc_all_emails_to');
+        Email::config()->remove('bcc_all_emails_to');
     }
 
     /**

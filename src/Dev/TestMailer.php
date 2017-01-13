@@ -3,87 +3,69 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Email\Mailer;
+use Swift_Attachment;
 
-class TestMailer extends Mailer
+class TestMailer implements Mailer
 {
-    protected $emailsSent = array();
-
     /**
-     * Send a plain-text email.
-     * TestMailer will merely record that the email was asked to be sent, without sending anything.
-     *
-     * @param string $to
-     * @param string $from
-     * @param string $subject
-     * @param string $plainContent
-     * @param bool $attachedFiles
-     * @param bool $customHeaders
-     * @return bool|mixed
+     * @var array
      */
-    public function sendPlain($to, $from, $subject, $plainContent, $attachedFiles = false, $customHeaders = false)
+    protected $emailsSent = [];
+
+    public function send($email)
     {
-        $this->saveEmail([
-            'Type' => 'plain',
-            'To' => $to,
-            'From' => $from,
-            'Subject' => $subject,
+        // Detect body type
+        $htmlContent = null;
+        $plainContent = null;
+        if ($email->getSwiftMessage()->getContentType() === 'text/plain') {
+            $type = 'plain';
+            $plainContent = $email->getBody();
+        } else {
+            $type = 'html';
+            $htmlContent = $email->getBody();
+            $plainPart = $email->findPlainPart();
+            if ($plainPart) {
+                $plainContent = $plainPart->getBody();
+            }
+        }
 
-            'Content' => $plainContent,
-            'PlainContent' => $plainContent,
+        // Get attachments
+        $attachedFiles = [];
+        foreach ($email->getSwiftMessage()->getChildren() as $child) {
+            if ($child instanceof Swift_Attachment) {
+                $attachedFiles[] = [
+                    'contents' => $child->getBody(),
+                    'filename' => $child->getFilename(),
+                    'mimetype' => $child->getContentType(),
+                ];
+            }
+        }
 
-            'AttachedFiles' => $attachedFiles,
-            'CustomHeaders' => $customHeaders,
-        ]);
+        // Serialise email
+        $serialised = [
+            'Type' => $type,
+            'To' => implode(';', array_keys($email->getTo() ?: [])),
+            'From' => implode(';', array_keys($email->getFrom() ?: [])),
+            'Subject' => $email->getSubject(),
+            'Content' => $email->getBody(),
+            'AttachedFiles' => $attachedFiles
+        ];
+        if ($plainContent) {
+            $serialised['PlainContent'] = $plainContent;
+        }
+        if ($htmlContent) {
+            $serialised['HtmlContent'] = $htmlContent;
+        }
 
-        return true;
-    }
-
-    /**
-     * Send a multi-part HTML email
-     * TestMailer will merely record that the email was asked to be sent, without sending anything.
-     *
-     * @param string $to
-     * @param string $from
-     * @param string $subject
-     * @param string $htmlContent
-     * @param bool $attachedFiles
-     * @param bool $customHeaders
-     * @param bool $plainContent
-     * @param bool $inlineImages
-     * @return bool|mixed
-     */
-    public function sendHTML(
-        $to,
-        $from,
-        $subject,
-        $htmlContent,
-        $attachedFiles = false,
-        $customHeaders = false,
-        $plainContent = false,
-        $inlineImages = false
-    ) {
-
-        $this->saveEmail([
-            'Type' => 'html',
-            'To' => $to,
-            'From' => $from,
-            'Subject' => $subject,
-
-            'Content' => $htmlContent,
-            'PlainContent' => $plainContent,
-            'HtmlContent' => $htmlContent,
-
-            'AttachedFiles' => $attachedFiles,
-            'CustomHeaders' => $customHeaders,
-            'InlineImages' => $inlineImages,
-        ]);
+        $this->saveEmail($serialised);
 
         return true;
     }
 
     /**
      * Save a single email to the log
-     * @param $data A map of information about the email
+     *
+     * @param array $data A map of information about the email
      */
     protected function saveEmail($data)
     {
@@ -138,5 +120,6 @@ class TestMailer extends Mailer
                 return $email;
             }
         }
+        return null;
     }
 }

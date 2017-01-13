@@ -7,10 +7,16 @@ covers how to create an `Email` instance, customise it with a HTML template, the
 
 ## Configuration
 
-Out of the box, SilverStripe will use the built-in PHP `mail()` command. If you are not running an SMTP server, you 
-will need to either configure PHP's SMTP settings (see [PHP documentation](http://php.net/mail) to include your mail 
-server configuration or use one of the third party SMTP services like [SparkPost](https://github.com/lekoala/silverstripe-sparkpost) 
-and [Postmark](https://github.com/fullscreeninteractive/silverstripe-postmarkmailer).
+SilverStripe provides an API over the top of the [SwiftMailer](http://swiftmailer.org/) PHP library which comes with an
+extensive list of "transports" for sending mail via different services. 
+
+Out of the box, SilverStripe will use the built-in PHP `mail()` command via the `Swift_MailTransport` class. If you'd
+like to use a more robust transport to send mail you can swap out the transport used by the `Mailer` via config:
+
+```yml
+SilverStripe\Core\Injector\Injector:
+  Swift_Transport: Swift_SendmailTransport
+```
 
 ## Usage
 
@@ -31,8 +37,8 @@ to `*text*`).
 	$email->send();
 
 <div class="info" markdown="1">
-The default HTML template for emails is named `GenericEmail` and is located in `framework/templates/email/`. To 
-customise this template, copy it to the `mysite/templates/Email/` folder or use `setTemplate` when you create the 
+The default HTML template for emails is named `GenericEmail` and is located in `framework/templates/SilverStripe/Email/`.
+To customise this template, copy it to the `mysite/templates/Email/` folder or use `setTemplate` when you create the 
 `Email` instance.
 </div>
 
@@ -40,7 +46,7 @@ customise this template, copy it to the `mysite/templates/Email/` folder or use 
 ### Templates
 
 HTML emails can use custom templates using the same template language as your website template. You can also pass the
-email object additional information using the `populateTemplate` method. 
+email object additional information using the `setData` and `addData` methods. 
 
 **mysite/templates/Email/MyCustomEmail.ss**
 
@@ -50,63 +56,28 @@ email object additional information using the `populateTemplate` method.
 
 The PHP Logic..
 
-	:::php
-	$email = new Email();
-	$email
-		->setFrom($from)
-		->setTo($to)
-		->setSubject($subject)
-		->setTemplate('MyCustomEmail')
-		->populateTemplate(new ArrayData(array(
-			'Member' => Member::currentUser(),
-			'Link' => $link
-		)));
+```php
+$email = SilverStripe\Control\Email\Email::create()
+    ->setTemplate('Email\\MyCustomEmail') 
+    ->setData(array(
+        'Member' => Member::currentUser(),
+        'Link'=> $link,
+    ))
+    ->setFrom($from)
+    ->setTo($to)
+    ->setSubject($subject);
 
-	$email->send();
+if ($email->send()) {
+    //email sent successfully
+} else {
+    // there may have been 1 or more failures
+}
+```
 
 <div class="alert" markdown="1">
 As we've added a new template file (`MyCustomEmail`) make sure you clear the SilverStripe cache for your changes to
 take affect.
 </div>
-
-## Sub classing
-
-To keep your application code clean and your internal API clear, a better approach to generating an email is to create 
-a new subclass of `Email` which takes the required dependencies and handles setting the properties itself.
-
-**mysite/code/MyCustomEmail.php**
-
-	:::php
-	<?php
-
-	class MyEmail extends Email {
-		
-		protected $ss_template = "MyEmail";
-
-		public function __construct($member) {
-			$from = 'no-reply@mysite.com';
-			$to = $member->Email;
-			$subject = "Welcome to our site.";
-			$link = Director::absoluteBaseUrl();
-
-			parent::__construct($from, $to, $subject);
-
-			$this->populateTemplate(new ArrayData(array(
-				'Member' => $member->Email,
-				'Link' => $link
-			)));
-		}
-	}
-
-Then within your application, usage of the email is much clearer to follow.
-
-	:::php
-	<?php
-	$member = Member::currentUser();
-
-	$email = new MyEmail($member);
-	$email->send();
-
 
 ## Administrator Emails
 
@@ -115,7 +86,7 @@ You can set the default sender address of emails through the `Email.admin_email`
 **mysite/_config/app.yml**
 
 	:::yaml
-	Email:
+	SilverStripe\Control\Email\Email:
 	  admin_email: support@silverstripe.org
   
 
@@ -128,10 +99,12 @@ email marked as spam. If you want to send from another address think about using
 
 There are several other [configuration settings](/developer_guides/configuration) to manipulate the email server.
 
-*  `Email.send_all_emails_to` will redirect all emails sent to the given address. This is useful for testing and staging
-servers where you do not wish to send emails out.
-*  `Email.cc_all_emails_to` and `Email.bcc_all_emails_to` will add an additional recipient in the BCC / CC header. 
-These are good for monitoring system-generated correspondence on the live systems.
+*  `SilverStripe\Control\Email\Email.send_all_emails_to` will redirect all emails sent to the given address.
+All recipients will be removed (including CC and BCC addresses). This is useful for testing and staging servers where 
+you do not wish to send emails out. For debugging the original addresses are added as `X-Original-*` headers on the email.
+*  `SilverStripe\Control\Email\Email.cc_all_emails_to` and `SilverStripe\Control\Email\Email.bcc_all_emails_to` will add
+an additional recipient in the BCC / CC header. These are good for monitoring system-generated correspondence on the 
+live systems.
 
 Configuration of those properties looks like the following:
 
@@ -146,7 +119,10 @@ Configuration of those properties looks like the following:
 
 ### Setting custom "Reply To" email address.
 
-For email messages that should have an email address which is replied to that actually differs from the original "from" email, do the following. This is encouraged especially when the domain responsible for sending the message isn't necessarily the same which should be used for return correspondence and should help prevent your message from being marked as spam. 
+For email messages that should have an email address which is replied to that actually differs from the original "from" 
+email, do the following. This is encouraged especially when the domain responsible for sending the message isn't
+necessarily the same which should be used for return correspondence and should help prevent your message from being 
+marked as spam. 
 
 	:::php
 	$email = new Email(..);
@@ -154,74 +130,21 @@ For email messages that should have an email address which is replied to that ac
 
 ### Setting Custom Headers
 
-For email headers which do not have getters or setters (like setTo(), setFrom()) you can use **addCustomHeader($header,
-$value)**
+For email headers which do not have getters or setters (like setTo(), setFrom()) you can manipulate the underlying
+`Swift_Message` that we provide a wrapper for.
 
 	:::php
 	$email = new Email(...);
-	$email->addCustomHeader('HeaderName', 'HeaderValue');
+	$email->getSwiftMessage()->getHeaders()->addTextHeader('HeaderName', 'HeaderValue');
 	..
 
 <div class="info" markdown="1">
 See this [Wikipedia](http://en.wikipedia.org/wiki/E-mail#Message_header) entry for a list of header names.
 </div>
 
-## Newsletters
+## SwiftMailer Documentation
 
-The [newsletter module](http://silverstripe.org/newsletter-module) provides a UI and logic to send batch emails.
-
-## Custom Mailers
-
-SilverStripe supports changing out the underlying web server SMTP mailer service through the `Email::set_mailer()` 
-function. A `Mailer` subclass will commonly override the `sendPlain` and `sendHTML` methods to send emails through curl
-or some other process that isn't the built in `mail()` command. 
-
-<div class="info" markdown="1">
-There are a number of custom mailer add-ons available like [Mandrill](https://github.com/lekoala/silverstripe-mandrill)
-and [Postmark](https://github.com/fullscreeninteractive/silverstripe-postmarkmailer).
-</div>
-
-In this example, `LocalMailer` will take any email's going while the site is in Development mode and save it to the 
-assets folder instead.
-
-**mysite/code/LocalMailer.php**
-
-	:::php
-	<?php
-
-	class LocalMailer extends Mailer {
-
-		function sendHTML($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
-			$file = ASSETS_PATH . '/_mail_'. urlencode(sprintf("%s_%s", $subject, $to));
-
-			file_put_contents($file, $htmlContent);
-		}
-
-
-		function sendPlain($to, $from, $subject, $htmlContent, $attachedFiles = false, $customheaders = false, $plainContent = false, $inlineImages = false) {
-			$file = ASSETS_PATH . '/_mail_'. urlencode(sprintf("%s_%s", $subject, $to));
-
-			file_put_contents($file, $htmlContent);
-		}
-	}
-
-**mysite/_config.php**
-	
-	:::php
-	if(Director::isLive()) {
-		Email::set_mailer(new PostmarkMailer());
-	} else {
-		Email::set_mailer(new LocalMailer());
-	}
-
-
-### Setting bounce handler
-
-A bounce handler email can be specified one of a few ways:
-
-* Via config by setting the `Mailer.default_bounce_email` config to the desired email address.
-* Via _ss_environment.php by setting the `BOUNCE_EMAIL` definition.
-* Via PHP by calling `Email::mailer()->setBounceEmail('bounce@mycompany.com');`
+For further information on SwiftMailer, consult their docs: http://swiftmailer.org/docs/introduction.html
 
 ## API Documentation
 

@@ -363,16 +363,13 @@ JS;
         if ($member) {
             $token = $member->generateAutologinTokenAndStoreHash();
 
-            /** @var Email $e */
-            $e = Email::create();
-            $e->setSubject(_t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'));
-            $e->setTemplate('ForgotPasswordEmail');
-            $e->populateTemplate($member);
-            $e->populateTemplate(array(
-                'PasswordResetLink' => Security::getPasswordResetLink($member, $token)
-            ));
-            $e->setTo($member->Email);
-            $e->send();
+            Email::create()
+                ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
+                ->setData($member)
+                ->setSubject(_t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'))
+                ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
+                ->setTo($member->Email)
+                ->send();
 
             return $this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
         } elseif ($data['Email']) {
