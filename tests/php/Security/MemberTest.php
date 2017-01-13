@@ -1402,4 +1402,66 @@ class MemberTest extends FunctionalTest
         $userFromSession = Member::currentUser();
         $this->assertEquals($adminMember->ID, $userFromSession->ID);
     }
+
+    /**
+     * @covers \SilverStripe\Security\Member::actAs()
+     */
+    public function testActAsUserPermissions()
+    {
+        $this->assertNull(Member::currentUser());
+
+        /** @var Member $adminMember */
+        $adminMember = $this->objFromFixture(Member::class, 'admin');
+
+        // Check acting as admin when not logged in
+        $checkAdmin = Member::actAs($adminMember, function () {
+            return Permission::check('ADMIN');
+        });
+        $this->assertTrue($checkAdmin);
+
+        // Check nesting
+        $checkAdmin = Member::actAs($adminMember, function () {
+            return Member::actAs(null, function () {
+                return Permission::check('ADMIN');
+            });
+        });
+        $this->assertFalse($checkAdmin);
+
+        // Check logging in as non-admin user
+        $this->logInWithPermission('TEST_PERMISSION');
+
+        $hasPerm = Member::actAs(null, function () {
+            return Permission::check('TEST_PERMISSION');
+        });
+        $this->assertFalse($hasPerm);
+
+        // Check permissions can be promoted
+        $checkAdmin = Member::actAs($adminMember, function () {
+            return Permission::check('ADMIN');
+        });
+        $this->assertTrue($checkAdmin);
+    }
+
+    /**
+     * @covers \SilverStripe\Security\Member::actAs()
+     */
+    public function testActAsUser()
+    {
+        $this->assertNull(Member::currentUser());
+
+        /** @var Member $adminMember */
+        $adminMember = $this->objFromFixture(Member::class, 'admin');
+        $memberID = Member::actAs($adminMember, function () {
+            return Member::currentUserID();
+        });
+        $this->assertEquals($adminMember->ID, $memberID);
+
+        // Check nesting
+        $memberID = Member::actAs($adminMember, function () {
+            return Member::actAs(null, function () {
+                return Member::currentUserID();
+            });
+        });
+        $this->assertEmpty($memberID);
+    }
 }

@@ -872,12 +872,50 @@ class Member extends DataObject implements TemplateGlobalProvider
     }
 
     /**
+     * Allow override of the current user ID
+     *
+     * @var int|null Set to null to fallback to session, or an explicit ID
+     */
+    protected static $overrideID = null;
+
+    /**
+     * Temporarily act as the specified user, limited to a $callback, but
+     * without logging in as that user.
+     *
+     * E.g.
+     * <code>
+     * Member::logInAs(Security::findAnAdministrator(), function() {
+     *     $record->write();
+     * });
+     * </code>
+     *
+     * @param Member|null|int $member Member or member ID to log in as.
+     * Set to null or 0 to act as a logged out user.
+     * @param $callback
+     */
+    public static function actAs($member, $callback)
+    {
+        $id = ($member instanceof Member ? $member->ID : $member) ?: 0;
+        $previousID = static::$overrideID;
+        static::$overrideID = $id;
+        try {
+            return $callback();
+        } finally {
+            static::$overrideID = $previousID;
+        }
+    }
+
+    /**
      * Get the ID of the current logged in user
      *
      * @return int Returns the ID of the current logged in user or 0.
      */
     public static function currentUserID()
     {
+        if (isset(static::$overrideID)) {
+            return static::$overrideID;
+        }
+
         $id = Session::get("loggedInAs");
         if (!$id && !self::$_already_tried_to_auto_log_in) {
             self::autoLogin();
@@ -886,6 +924,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
         return is_numeric($id) ? $id : 0;
     }
+
     private static $_already_tried_to_auto_log_in = false;
 
 
