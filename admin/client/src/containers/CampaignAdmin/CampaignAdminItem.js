@@ -56,7 +56,7 @@ class CampaignAdminItem extends SilverStripeComponent {
     }
 
     return (
-      <div>
+      <div className="fill-height">
         {thumbnail}
         <h4 className="list-group-item-heading">{item.Title}</h4>
         <span

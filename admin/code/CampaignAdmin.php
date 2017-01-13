@@ -425,7 +425,7 @@ class CampaignAdmin extends LeftAndMain implements PermissionProvider
      * @param int $id
      * @return Form
      */
-    public function getDetailEditForm($id)
+    public function getDetailEditForm($id = null)
     {
         // Get record-specific fields
         $record = null;

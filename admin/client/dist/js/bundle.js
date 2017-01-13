@@ -2500,14 +2500,14 @@ handleBackButtonClick:this.handleBackButtonClick.bind(this)}
 return p["default"].createElement(A["default"],e)}},{key:"renderDetailEditView",value:function m(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t=e
 this.props.params.id>0&&(t=e+"/"+this.props.params.id)
 var n={createFn:this.campaignEditCreateFn.bind(this),schemaUrl:t}
-return p["default"].createElement("div",null,p["default"].createElement(x["default"],{showBackButton:!0,handleBackButtonClick:this.handleBackButtonClick},p["default"].createElement(C["default"],{multiline:!0
-})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow form--inline"},p["default"].createElement(I["default"],n)))}},{key:"renderCreateView",value:function g(){
-var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t=e
+return p["default"].createElement("div",{className:"fill-height"},p["default"].createElement(x["default"],{showBackButton:!0,handleBackButtonClick:this.handleBackButtonClick},p["default"].createElement(C["default"],{
+multiline:!0})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow form--inline"},p["default"].createElement(I["default"],n)))}},{key:"renderCreateView",
+value:function g(){var e=this.props.sectionConfig.form.DetailEditForm.schemaUrl,t=e
 this.props.params.id>0&&(t=e+"/"+this.props.params.id)
 var n={createFn:this.campaignAddCreateFn.bind(this),schemaUrl:t}
-return p["default"].createElement("div",null,p["default"].createElement(x["default"],{showBackButton:!0,handleBackButtonClick:this.handleBackButtonClick},p["default"].createElement(C["default"],{multiline:!0
-})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow form--inline"},p["default"].createElement(I["default"],n)))}},{key:"campaignEditCreateFn",value:function v(e,t){
-var n=this,i=this.props.sectionConfig.url
+return p["default"].createElement("div",{className:"fill-height"},p["default"].createElement(x["default"],{showBackButton:!0,handleBackButtonClick:this.handleBackButtonClick},p["default"].createElement(C["default"],{
+multiline:!0})),p["default"].createElement("div",{className:"panel panel--padded panel--scrollable flexbox-area-grow form--inline"},p["default"].createElement(I["default"],n)))}},{key:"campaignEditCreateFn",
+value:function v(e,t){var n=this,i=this.props.sectionConfig.url
 if("action_cancel"===t.name){var r=d({},t,{handleClick:function a(e){e.preventDefault(),n.props.router.push(i)}})
 return p["default"].createElement(e,d({key:t.id},r))}return p["default"].createElement(e,d({key:t.id},t))}},{key:"campaignAddCreateFn",value:function b(e,t){var n=this,i=this.props.sectionConfig.url
 if("action_cancel"===t.name){var r=d({},t,{handleClick:function a(e){e.preventDefault(),n.props.router.push(i)}})
@@ -2649,9 +2649,9 @@ case"deleted":t.className="label label-error list-group-item__status",t.Title=p[
 break
 case"none":default:t.className="label label-success list-group-item__status",t.Title=p["default"]._t("CampaignItem.NO_CHANGES","No changes")}var r=u["default"].createElement("span",{className:"list-group-item__info campaign-admin__item-links--has-links font-icon-link"
 },"3 linked items")
-return n.Thumbnail&&(e=u["default"].createElement("span",{className:"list-group-item__thumbnail"},u["default"].createElement("img",{alt:n.Title,src:n.Thumbnail}))),u["default"].createElement("div",null,e,u["default"].createElement("h4",{
-className:"list-group-item-heading"},n.Title),u["default"].createElement("span",{className:"list-group-item__info campaign-admin__item-links--is-linked font-icon-link"}),r,t.className&&t.Title&&u["default"].createElement("span",{
-className:t.className},t.Title))}}]),t}(c["default"])
+return n.Thumbnail&&(e=u["default"].createElement("span",{className:"list-group-item__thumbnail"},u["default"].createElement("img",{alt:n.Title,src:n.Thumbnail}))),u["default"].createElement("div",{className:"fill-height"
+},e,u["default"].createElement("h4",{className:"list-group-item-heading"},n.Title),u["default"].createElement("span",{className:"list-group-item__info campaign-admin__item-links--is-linked font-icon-link"
+}),r,t.className&&t.Title&&u["default"].createElement("span",{className:t.className},t.Title))}}]),t}(c["default"])
 h.propTypes={campaign:u["default"].PropTypes.object.isRequired,item:u["default"].PropTypes.object.isRequired},t["default"]=h},function(e,t,n){"use strict"
 function i(e){return e&&e.__esModule?e:{"default":e}}function r(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function a(e,t){if(!e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called")
 
