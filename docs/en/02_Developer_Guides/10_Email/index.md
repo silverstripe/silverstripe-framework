@@ -38,7 +38,7 @@ to `*text*`).
 
 <div class="info" markdown="1">
 The default HTML template for emails is named `GenericEmail` and is located in `framework/templates/SilverStripe/Email/`.
-To customise this template, copy it to the `mysite/templates/Email/` folder or use `setTemplate` when you create the 
+To customise this template, copy it to the `mysite/templates/Email/` folder or use `setHTMLTemplate` when you create the 
 `Email` instance.
 </div>
 
@@ -58,7 +58,7 @@ The PHP Logic..
 
 ```php
 $email = SilverStripe\Control\Email\Email::create()
-    ->setTemplate('Email\\MyCustomEmail') 
+    ->setHTMLTemplate('Email\\MyCustomEmail') 
     ->setData(array(
         'Member' => Member::currentUser(),
         'Link'=> $link,
@@ -78,6 +78,18 @@ if ($email->send()) {
 As we've added a new template file (`MyCustomEmail`) make sure you clear the SilverStripe cache for your changes to
 take affect.
 </div>
+
+#### Custom plain templates
+
+By default SilverStripe will generate a plain text representation of the email from the HTML body. However if you'd like
+to specify your own own plaintext version/template you can use `$email->setPlainTemplate()` to render a custom view of
+the plain email:
+
+```php
+$email = new Email();
+$email->setPlainTemplate('MyPlanTemplate');
+$this->send();
+```
 
 ## Administrator Emails
 
