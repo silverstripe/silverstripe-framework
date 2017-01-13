@@ -91,15 +91,22 @@ class GridFieldConfig extends Object
     }
 
     /**
-     * @param string $type Class name or interface
+     * @param string|string[] $types Class name or interface, or an array of the same
      * @return $this
      */
-    public function removeComponentsByType($type)
+    public function removeComponentsByType($types)
     {
-        $components = $this->getComponentsByType($type);
-        foreach ($components as $component) {
-            $this->removeComponent($component);
+        if (!is_array($types)) {
+            $types = [$types];
         }
+
+        foreach ($types as $type) {
+            $components = $this->getComponentsByType($type);
+            foreach ($components as $component) {
+                $this->removeComponent($component);
+            }
+        }
+
         return $this;
     }
 
