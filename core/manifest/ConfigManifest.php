@@ -99,7 +99,7 @@ class SS_ConfigManifest {
 		}
 
 		// If we don't have a variantKeySpec (because we're forcing regen, or it just wasn't in the cache), generate it
-		if (false === $this->variantKeySpec) {
+		if (false === $this->phpConfigSources || false === $this->variantKeySpec) {
 			$this->regenerate($includeTests);
 		}
 
