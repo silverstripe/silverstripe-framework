@@ -134,6 +134,39 @@ will be created and associated with the device used during authentication. When 
 for all devices will be revoked, unless `[api:RememberLoginHash::$logout_across_devices] is set to false. For extra security,
 single tokens can be enforced by setting `[api:RememberLoginHash::$force_single_token] to true.
 
+## Acting as another user ##
+
+Occasionally, it may be necessary not only to check permissions of a particular member, but also to
+temporarily assume the identity of another user for certain tasks. E.g. when running a CLI task,
+it may be necessary to log in as an administrator to perform write operations.
+
+You can use `Member::actAs()` method, which takes a member or member id to act as, and a callback
+within which the current user will be assigned the given member. After this method returns
+the current state will be restored to whichever current user (if any) was logged in.
+
+If you pass in null as a first argument, you can also mock being logged out, without modifying
+the current user.
+
+Note: Take care not to invoke this method to perform any operation the current user should not
+reasonably be expected to be allowed to do.
+
+E.g.
+
+
+    :::php
+    class CleanRecordsTask extends BuildTask
+    {
+        public function run($request)
+        {
+            if (!Director::is_cli()) {
+                throw new BadMethodCallException('This task only runs on CLI');
+            }
+            $admin = Security::findAnAdministrator();
+            Member::actAs($admin, function() {
+                DataRecord::get()->filter('Dirty', true)->removeAll();
+            });
+        }
+
 
 ## API Documentation
 

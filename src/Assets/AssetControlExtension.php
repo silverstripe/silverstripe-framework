@@ -111,9 +111,11 @@ class AssetControlExtension extends DataExtension
         }
 
         // Check if canView permits anonymous viewers
-        return $record->canView(Member::create())
-            ? AssetManipulationList::STATE_PUBLIC
-            : AssetManipulationList::STATE_PROTECTED;
+        return Member::actAs(null, function () use ($record) {
+            return $record->canView()
+                ? AssetManipulationList::STATE_PUBLIC
+                : AssetManipulationList::STATE_PROTECTED;
+        });
     }
 
     /**
