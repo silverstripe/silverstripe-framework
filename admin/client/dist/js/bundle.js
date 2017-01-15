@@ -2542,8 +2542,9 @@ e.addButton(h,{icon:"image",title:"Insert Media",cmd:h}),e.addMenuItem(h,{icon:"
 n=p["default"].elementToCode(n,"embed"),n=p["default"].elementToCode(n,"image")
 var i=""
 n.body.childNodes.forEach(function(e){void 0!==e.outerHTML&&(i+=e.outerHTML)}),e.content=i}),e.on("BeforeSetContent",function(e){var t=e.content
-t=p["default"].codeToHtml(t,"embed"),t=p["default"].codeToHtml(t,"image"),e.content=t})},C=function j(e){return{src:e.url||"broken-image",alt:e.AltText,width:parseInt(e.InsertWidth,10),height:parseInt(e.InsertHeight,10),
-title:e.TitleTooltip,"class":e.Alignment,"data-id":e.ID}},T=function x(e){if(!e)return{}
+t=p["default"].codeToHtml(t,"embed"),t=p["default"].codeToHtml(t,"image"),e.content=t})},C=function j(e){var t={src:e.url||"broken-image",alt:e.AltText,title:e.TitleTooltip,"class":e.Alignment,"data-id":e.ID
+},n=parseInt(e.InsertWidth,10),i=parseInt(e.InsertHeight,10)
+return n&&(t.width=n),i&&(t.height=i),t},T=function x(e){if(!e)return{}
 var t=e.parentElement,n=t&&t.querySelector(".caption"),i={url:e.getAttribute("src"),AltText:e.getAttribute("alt"),InsertWidth:e.getAttribute("width"),InsertHeight:e.getAttribute("height"),TitleTooltip:e.getAttribute("title"),
 Alignment:e.getAttribute("class"),Caption:n&&n.textContent,ID:e.getAttribute("data-id")}
 return["InsertWidth","InsertHeight","ID"].forEach(function(e){i[e]="string"==typeof i[e]?parseInt(i[e],10):null,isNaN(i[e])&&delete i[e]}),i},E=function R(e,t,n){var i=C(e),r=e&&e.Caption,o=null,a=null,s=null

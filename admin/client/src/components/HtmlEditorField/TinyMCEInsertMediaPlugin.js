@@ -4,6 +4,7 @@ import ShortCodeParser from 'lib/ShortCodeParser';
 const pluginKey = 'ssmedia';
 const MAX_TRIES = 10;
 const DELAY_POLL = 100;
+const NO_IMAGE_PLACEHOLDER = 'broken-image.png';
 let loaded = false;
 
 // This is needed since initPlugin can only be applied to PluginManager once
@@ -83,15 +84,26 @@ const initPlugin = (editor) => {
   });
 };
 
-const getAttributes = (data) => ({
-  src: data.url || 'broken-image',
-  alt: data.AltText,
-  width: parseInt(data.InsertWidth, 10),
-  height: parseInt(data.InsertHeight, 10),
-  title: data.TitleTooltip,
-  class: data.Alignment,
-  'data-id': data.ID,
-});
+const getAttributes = (data) => {
+  const attrs = {
+    src: data.url || NO_IMAGE_PLACEHOLDER,
+    alt: data.AltText,
+    title: data.TitleTooltip,
+    class: data.Alignment,
+    'data-id': data.ID,
+  };
+  const width = parseInt(data.InsertWidth, 10);
+  const height = parseInt(data.InsertHeight, 10);
+
+  if (width) {
+    attrs.width = width;
+  }
+  if (height) {
+    attrs.height = height;
+  }
+
+  return attrs;
+};
 
 const getDefaultAttributes = (node) => {
   if (!node) {
