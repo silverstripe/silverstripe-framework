@@ -86,10 +86,11 @@ class ArrayList extends ViewableData implements SS_List, Filterable, Sortable, L
     {
         foreach ($this->items as $i => $item) {
             if (is_array($item)) {
-                $this->items[$i] = new ArrayData($item);
+                yield new ArrayData($item);
+            } else {
+                yield $item;
             }
         }
-        return new ArrayIterator($this->items);
     }
 
     /**
