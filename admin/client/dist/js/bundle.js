@@ -2510,9 +2510,10 @@ this.setState({loadedPlugins:t,failedPlugins:n})}},{key:"handleFail",value:funct
 
 }).concat([e])
 this.setState({loadedPlugins:t,failedPlugins:n})}},{key:"render",value:function c(){var t=this,n=this.state.loadedPlugins.length+this.state.failedPlugins.length,i=n===this.props.plugins.length,r=this.props.plugins.map(function(e,n){
-return d["default"].createElement(e,{key:n,showing:i,id:t.props.id,onLoad:t.handleLoad,onFail:t.handleFail})}),o=l({},this.props.data.config,{plugins:this.state.loadedPlugins.join(",")}),a=l({},this.props.data,{
-config:o}),s=i&&d["default"].createElement(e,l({},this.props,{data:a}))
-return d["default"].createElement("div",{className:"html-editor-field__container"},s,d["default"].createElement("div",{className:"html-editor-field__plugins-list"},r))}}]),n}(c.Component)
+return d["default"].createElement(e,{key:n,showing:i,id:t.props.id,onLoad:t.handleLoad,onFail:t.handleFail})}),o=l({},this.props.data.config,{plugins:this.state.loadedPlugins.join(","),toolbar:this.props.data.config.toolbar.map(function(e){
+return e.replace("sslink","link")})}),a=l({},this.props.data,{config:o})
+return d["default"].createElement("div",{className:"html-editor-field__container"},i&&d["default"].createElement(e,l({},this.props,{data:a})),d["default"].createElement("div",{className:"html-editor-field__plugins-list"
+},r))}}]),n}(c.Component)
 return t.propTypes={id:c.PropTypes.string.isRequired,data:c.PropTypes.shape({config:c.PropTypes.object}),plugins:c.PropTypes.array},t.defaultProps={plugins:[p["default"]]},t}Object.defineProperty(t,"__esModule",{
 value:!0})
 var l=Object.assign||function(e){for(var t=1;t<arguments.length;t++){var n=arguments[t]
@@ -2533,21 +2534,21 @@ var n=[],i=!0,r=!1,o=void 0
 try{for(var a=e[Symbol.iterator](),s;!(i=(s=a.next()).done)&&(n.push(s.value),!t||n.length!==t);i=!0);}catch(l){r=!0,o=l}finally{try{!i&&a["return"]&&a["return"]()}finally{if(r)throw o}}return n}return function(t,n){
 if(Array.isArray(t))return t
 if(Symbol.iterator in Object(t))return e(t,n)
-throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),c=n(5),d=i(c),f=n(300),p=i(f),h="ssmedia",m=10,g=100,v=!1,y={},b=function O(e,t){y[e]=t},_=function S(e){return delete y[e]
-
-},w=function k(e){var t=new DOMParser
-e.addButton(h,{icon:"image",title:"Insert Media",cmd:h}),e.addMenuItem(h,{icon:"image",text:"Insert Media",cmd:h}),e.addCommand(h,function(){var t=y[e.id]
+throw new TypeError("Invalid attempt to destructure non-iterable instance")}}(),c=n(5),d=i(c),f=n(300),p=i(f),h="ssmedia",m=10,g=100,v="broken-image.png",y=!1,b={},_=function S(e,t){b[e]=t},w=function k(e){
+return delete b[e]},C=function j(e){var t=new DOMParser
+e.addButton(h,{icon:"image",title:"Insert Media",cmd:h}),e.addMenuItem(h,{icon:"image",text:"Insert Media",cmd:h}),e.addCommand(h,function(){var t=b[e.id]
 "function"==typeof t&&t()}),e.on("BeforeExecCommand",function(t){var n=t.command,i=t.ui,r=t.value
 "mceAdvImage"!==n&&"mceImage"!==n||(t.preventDefault(),e.execCommand(h,i,r))}),e.on("SaveContent",function(e){var n=t.parseFromString(e.content,"text/html")
 n=p["default"].elementToCode(n,"embed"),n=p["default"].elementToCode(n,"image")
 var i=""
 n.body.childNodes.forEach(function(e){void 0!==e.outerHTML&&(i+=e.outerHTML)}),e.content=i}),e.on("BeforeSetContent",function(e){var t=e.content
-t=p["default"].codeToHtml(t,"embed"),t=p["default"].codeToHtml(t,"image"),e.content=t})},C=function j(e){var t={src:e.url||"broken-image",alt:e.AltText,title:e.TitleTooltip,"class":e.Alignment,"data-id":e.ID
-},n=parseInt(e.InsertWidth,10),i=parseInt(e.InsertHeight,10)
-return n&&(t.width=n),i&&(t.height=i),t},T=function x(e){if(!e)return{}
+t=p["default"].codeToHtml(t,"embed"),t=p["default"].codeToHtml(t,"image"),e.content=t})},T=function x(e){var t={src:e.url||v,alt:e.AltText,title:e.TitleTooltip,"class":e.Alignment,"data-id":e.ID},n=parseInt(e.InsertWidth,10),i=parseInt(e.InsertHeight,10)
+
+
+return n&&(t.width=n),i&&(t.height=i),t},E=function R(e){if(!e)return{}
 var t=e.parentElement,n=t&&t.querySelector(".caption"),i={url:e.getAttribute("src"),AltText:e.getAttribute("alt"),InsertWidth:e.getAttribute("width"),InsertHeight:e.getAttribute("height"),TitleTooltip:e.getAttribute("title"),
 Alignment:e.getAttribute("class"),Caption:n&&n.textContent,ID:e.getAttribute("data-id")}
-return["InsertWidth","InsertHeight","ID"].forEach(function(e){i[e]="string"==typeof i[e]?parseInt(i[e],10):null,isNaN(i[e])&&delete i[e]}),i},E=function R(e,t,n){var i=C(e),r=e&&e.Caption,o=null,a=null,s=null
+return["InsertWidth","InsertHeight","ID"].forEach(function(e){i[e]="string"==typeof i[e]?parseInt(i[e],10):null,isNaN(i[e])&&delete i[e]}),i},P=function I(e,t,n){var i=T(e),r=e&&e.Caption,o=null,a=null,s=null
 
 
 if(n instanceof HTMLImageElement?(a=o=n,o&&o.parentElement.classList.contains("captionImage")&&(a=s=o.parentElement)):o=document.createElement("img"),Object.entries(i).forEach(function(e){var t=u(e,2),n=t[0],i=t[1]
@@ -2559,22 +2560,22 @@ l.add("captionImage"),l.add(i["class"]),s.style.width=i.width
 var c=s.querySelector(".caption")
 c||(c=document.createElement("p"),c.classList.add("caption"),s.appendChild(c)),c.classList.add(i["class"]).textContent=r,s.insertBefore(o,s.firstChild)}else s=null
 var d=s||o
-a&&a!==d&&a.parentElement.replaceChild(d,a),a||t.insertContent(d.outerHTML,{skip_undo:1})},P=function(e){function t(e){r(this,t)
+a&&a!==d&&a.parentElement.replaceChild(d,a),a||t.insertContent(d.outerHTML,{skip_undo:1})},O=function(e){function t(e){r(this,t)
 var n=o(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.checkPlugin=n.checkPlugin.bind(n),n.getEditor=n.getEditor.bind(n),n.handleSubmit=n.handleSubmit.bind(n),n.handleHide=n.handleHide.bind(n),n.handleShow=n.handleShow.bind(n),n.state={loaded:!1,show:!1
-},n}return a(t,e),l(t,[{key:"componentWillMount",value:function n(){b(this.props.id,this.handleShow),this.checkPlugin()}},{key:"componentWillReceiveProps",value:function i(e){this.props.id!==e.id&&_(this.props.id),
-b(e.id,this.handleShow)}},{key:"componentWillUnmount",value:function u(){_(this.props.id)}},{key:"getModal",value:function c(){return window.InsertMediaModal["default"]}},{key:"getEditor",value:function f(){
+},n}return a(t,e),l(t,[{key:"componentWillMount",value:function n(){_(this.props.id,this.handleShow),this.checkPlugin()}},{key:"componentWillReceiveProps",value:function i(e){this.props.id!==e.id&&w(this.props.id),
+_(e.id,this.handleShow)}},{key:"componentWillUnmount",value:function u(){w(this.props.id)}},{key:"getModal",value:function c(){return window.InsertMediaModal["default"]}},{key:"getEditor",value:function f(){
 return window.tinymce.EditorManager.get(this.props.id)}},{key:"getSelectedNode",value:function p(){var e=this.getEditor()
-return e&&e.selection&&e.selection.getNode()}},{key:"checkPlugin",value:function y(){return!v&&this.getModal()&&window.tinymce&&(v=!0,window.tinymce.PluginManager.add(h,w)),v?(this.setState({loaded:v}),
+return e&&e.selection&&e.selection.getNode()}},{key:"checkPlugin",value:function v(){return!y&&this.getModal()&&window.tinymce&&(y=!0,window.tinymce.PluginManager.add(h,C)),y?(this.setState({loaded:y}),
 void("function"==typeof this.props.onLoad&&this.props.onLoad(h))):void(this.state.tries<m?(this.setState({tries:this.state.tries+1}),setTimeout(this.checkPlugin,g)):"function"==typeof this.props.onFail&&this.props.onFail(h))
 
-}},{key:"handleSubmit",value:function C(e,t){var n=s({},e,t),i=this.getEditor(),r=this.getSelectedNode()
-switch(t.category){case"image":E(n,i,r)}this.handleHide()}},{key:"handleHide",value:function P(){this.setState({show:!1})}},{key:"handleShow",value:function O(){this.setState({show:!0})}},{key:"render",
+}},{key:"handleSubmit",value:function b(e,t){var n=s({},e,t),i=this.getEditor(),r=this.getSelectedNode()
+switch(t.category){case"image":P(n,i,r)}this.handleHide()}},{key:"handleHide",value:function T(){this.setState({show:!1})}},{key:"handleShow",value:function O(){this.setState({show:!0})}},{key:"render",
 value:function S(){if(!this.state.loaded)return d["default"].createElement("div",{className:"insert-media-plugin__placeholder"})
-var e=this.getModal(),t=T(this.getSelectedNode())
+var e=this.getModal(),t=E(this.getSelectedNode())
 return d["default"].createElement(e,{title:!1,show:this.state.show,onInsert:this.handleSubmit,onHide:this.handleHide,fileAttributes:t})}}]),t}(c.Component)
-P.propTypes={id:c.PropTypes.string.isRequired,onLoad:c.PropTypes.func,onFail:c.PropTypes.func},t.registerCommand=b,t.unregisterCommand=_,t.initPlugin=w,t.getAttributes=C,t.getDefaultAttributes=T,t.insertImage=E,
-t["default"]=P},function(e,t){"use strict"
+O.propTypes={id:c.PropTypes.string.isRequired,onLoad:c.PropTypes.func,onFail:c.PropTypes.func},t.registerCommand=_,t.unregisterCommand=w,t.initPlugin=C,t.getAttributes=T,t.getDefaultAttributes=E,t.insertImage=P,
+t["default"]=O},function(e,t){"use strict"
 function n(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}function i(e){return Object.entries(e).map(function(e){var t=a(e,2),n=t[0],i=t[1]
 
 

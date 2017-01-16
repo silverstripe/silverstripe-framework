@@ -57,14 +57,21 @@ export default function tinymceLoader(EditorField) {
       const config = Object.assign(
         {},
         this.props.data.config,
-        { plugins: this.state.loadedPlugins.join(',') }
+        {
+          plugins: this.state.loadedPlugins.join(','),
+          // TODO remove toolbar's row.replace when sslink has been implemented
+          toolbar: this.props.data.config.toolbar.map((row) => (
+            row.replace('sslink', 'link')
+          )),
+        }
       );
       const data = Object.assign({}, this.props.data, { config });
-      const editor = showing && <EditorField {...this.props} data={data} />;
 
       return (
         <div className="html-editor-field__container">
-          {editor}
+          {showing &&
+          <EditorField {...this.props} data={data} />
+          }
           <div className="html-editor-field__plugins-list">
             {pluginsList}
           </div>
