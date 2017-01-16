@@ -2089,9 +2089,9 @@ if(null!=e)for(var n in e)Object.prototype.hasOwnProperty.call(e,n)&&(t[n]=e[n])
 return t["default"]=e,t}function r(e){return e&&e.__esModule?e:{"default":e}}function a(){var e=m["default"].get("absoluteBaseUrl"),t=(0,I.createNetworkInterface)({uri:e+"graphql/",opts:{credentials:"same-origin"
 }}),n=new F["default"]({shouldBatch:!0,addTypename:!0,dataIdFromObject:function O(e){return e.id>=0&&e.__typename?e.__typename+":"+e.id:null},networkInterface:t})
 t.use([{applyMiddleware:function k(e,t){var n=(0,A.printRequest)(e.request)
-e.options.headers=o({},e.options.headers,{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"}),e.options.body=M["default"].stringify(n),t()}}]),v["default"].add("config",w["default"]),v["default"].add("form",f.reducer),
-v["default"].add("schemas",T["default"]),v["default"].add("records",P["default"]),v["default"].add("campaign",S["default"]),v["default"].add("breadcrumbs",j["default"]),v["default"].add("routing",p.routerReducer),
-v["default"].add("apollo",n.reducer()),R["default"].start()
+e.options.headers=o({},e.options.headers,{"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8"}),e.options.body=M["default"].stringify(o({},n,{variables:JSON.stringify(n.variables)})),t()}}]),
+v["default"].add("config",w["default"]),v["default"].add("form",f.reducer),v["default"].add("schemas",T["default"]),v["default"].add("records",P["default"]),v["default"].add("campaign",S["default"]),v["default"].add("breadcrumbs",j["default"]),
+v["default"].add("routing",p.routerReducer),v["default"].add("apollo",n.reducer()),R["default"].start()
 var i={},r=(0,u.combineReducers)(v["default"].getAll()),a=[c["default"],n.middleware()],s=m["default"].get("environment"),d=m["default"].get("debugging"),h=u.applyMiddleware.apply(void 0,a),g=window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__,y=window.__REDUX_DEVTOOLS_EXTENSION__||window.devToolsExtension
 
 
