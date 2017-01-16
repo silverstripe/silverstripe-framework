@@ -56,7 +56,11 @@ function appBoot() {
         }
       );
       // eslint-disable-next-line no-param-reassign
-      req.options.body = qs.stringify(entries);
+      req.options.body = qs.stringify(Object.assign(
+        {},
+        entries,
+        { variables: JSON.stringify(entries.variables) }
+      ));
       next();
     },
   }]);
