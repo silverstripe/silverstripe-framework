@@ -44,7 +44,7 @@ class ForeignKey extends Int {
 				$field = new DropdownField($this->name, $title, $list->map('ID', $titleField));
 				$field->setEmptyString(' ');
 			} else {
-				$field = new NumericField($this->name, $title);
+				$field = null;
 			}
 
 		}
