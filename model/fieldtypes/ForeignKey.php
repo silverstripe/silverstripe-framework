@@ -37,17 +37,16 @@ class ForeignKey extends Int {
 			$field = new UploadField($relationName, $title);
 		} else {
 			$titleField = (singleton($hasOneClass)->hasField('Title')) ? "Title" : "Name";
-			// Use a SQL query instead of the ORM to save on PHP memory, DB objects and queries
-			$list = array();
-			$sqlQuery = new SQLSelect();
-			$sqlQuery->setFrom($hasOneClass);
-
-			$result = $sqlQuery->execute();
-			foreach ($result as $row) {
-				$list[$row['ID']] = $row[$titleField];
+			$list = DataList::create($hasOneClass);
+			// Don't scaffold a dropdown for large tables, as making the list concrete
+			// might exceed the available PHP memory in creating too many DataObject instances
+			if($list->count() < 100) {
+				$field = new DropdownField($this->name, $title, $list->map('ID', $titleField));
+				$field->setEmptyString(' ');
+			} else {
+				$field = null;
 			}
-			$field = new DropdownField($this->name, $title, $list);
-			$field->setEmptyString(' ');
+
 		}
 
 		return $field;
