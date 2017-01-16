@@ -131,7 +131,9 @@ class PDODatabaseTest extends SapphireTest
 
         //store the current value so we can reset it back at the end
         $origStringify = $connection->getAttribute(PDO::ATTR_STRINGIFY_FETCHES);
-        $connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+        @$connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false);
+        $origEmulate = $connection->getAttribute(PDO::ATTR_EMULATE_PREPARES);
+        @$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 
 
         $result = DB::get_connector()->query(
@@ -154,6 +156,7 @@ class PDODatabaseTest extends SapphireTest
         $this->assertInternalType("string", $row['ID']);
         $this->assertInternalType("string", $row['Title']);
 
-        $connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, $origStringify);
+        @$connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, $origStringify);
+        @$connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, $origEmulate);
     }
 }

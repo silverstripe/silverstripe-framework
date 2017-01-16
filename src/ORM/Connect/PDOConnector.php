@@ -187,14 +187,10 @@ class PDOConnector extends DBConnector
             $charset = $connCharset;
         }
         $options = array(
-            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES ' . $charset . ' COLLATE ' . $connCollation,
+            PDO::ATTR_EMULATE_PREPARES => self::is_emulate_prepare(),
+            PDO::ATTR_STRINGIFY_FETCHES => self::is_stringify_fetches(),
         );
-        if (self::is_emulate_prepare()) {
-            $options[PDO::ATTR_EMULATE_PREPARES] = true;
-        }
-        if (self::is_stringify_fetches()) {
-            $options[PDO::ATTR_STRINGIFY_FETCHES] = true;
-        }
 
         // May throw a PDOException if fails
         $this->pdoConnection = new PDO(
