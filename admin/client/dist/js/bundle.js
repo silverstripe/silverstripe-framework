@@ -424,7 +424,8 @@ case"alphanumeric":return u["default"].isAlphanumeric(e)
 case"alpha":return u["default"].isAlpha(e)
 case"regex":return u["default"].matches(e,n.pattern)
 case"max":return e.length<=n.length
-default:throw new Error("Unknown validation rule used: '"+t+"'")}}},{key:"validateFieldSchema",value:function l(e){return this.validateField(e.name,e.validation,null!==e.leftTitle?e.leftTitle:e.title,e.customValidationMessage)
+case"email":return u["default"].isEmail(e)
+default:console.warn("Unknown validation rule used: '"+t+"'")}}},{key:"validateFieldSchema",value:function l(e){return this.validateField(e.name,e.validation,null!==e.leftTitle?e.leftTitle:e.title,e.customValidationMessage)
 
 }},{key:"getMessage",value:function d(e,t){var n=""
 if("string"==typeof t.message)n=t.message

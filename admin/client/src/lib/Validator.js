@@ -56,8 +56,13 @@ class Validator {
       case 'max': {
         return value.length <= config.length;
       }
+      case 'email': {
+        return validator.isEmail(value);
+      }
       default: {
-        throw new Error(`Unknown validation rule used: '${rule}'`);
+        // eslint-disable-next-line no-console
+        console.warn(`Unknown validation rule used: '${rule}'`);
+        return false;
       }
     }
   }
