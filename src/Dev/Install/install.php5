@@ -665,6 +665,15 @@ class InstallRequirements {
 			. 'If not set to \'&\' this may cause issues with URL GET parameters'
 		));
 
+		// always_populate_raw_post_data should be set to -1 if PHP < 7.0
+        if (version_compare(PHP_VERSION, '7.0.0', '<')) {
+            $this->suggestPHPSetting('always_populate_raw_post_data', ['-1'], [
+                'PHP Configuration',
+                'always_populate_raw_post_data option',
+                'It\'s highly recommended to set this to \'-1\' in php 5.x, as $HTTP_RAW_POST_DATA is removed in php 7'
+            ]);
+        }
+
 		// Check memory allocation
 		$this->requireMemory(32 * 1024 * 1024, 64 * 1024 * 1024, array(
 			"PHP Configuration",
