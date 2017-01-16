@@ -302,6 +302,8 @@ class LeftAndMainTest_Object extends DataObject implements TestOnly {
 		'Hierarchy'
 	);
 
-	public function CMSTreeClasses() {}
+	public function CMSTreeClasses() {
+		return '';
+	}
 
 }
