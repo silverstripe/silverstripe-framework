@@ -293,4 +293,10 @@ class FolderTest extends SapphireTest
         $this->assertEquals($newFolder->Name, $newFolder->Title);
         $this->assertEquals($newFolder->Title, 'TestTitleWithIllegalCharactersCopiedToName <!BANG!>');
     }
+
+    public function testRootFolder()
+    {
+        $root = Folder::singleton();
+        $this->assertEquals('/', $root->getFilename());
+    }
 }

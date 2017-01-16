@@ -47,18 +47,6 @@ class Folder extends File
     }
 
     /**
-     *
-     */
-    public function populateDefaults()
-    {
-        parent::populateDefaults();
-
-        if (!$this->Name) {
-            $this->Name = _t('AssetAdmin.NEWFOLDER', "NewFolder");
-        }
-    }
-
-    /**
      * Find the given folder or create it as a database record
      *
      * @param string $folderPath Directory path relative to assets root
