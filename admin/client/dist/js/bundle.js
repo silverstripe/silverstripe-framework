@@ -753,7 +753,7 @@ function t(e){r(this,t)
 var n=a(this,(t.__proto__||Object.getPrototypeOf(t)).call(this,e))
 return n.handleBackButtonClick=n.handleBackButtonClick.bind(n),n}return o(t,e),s(t,[{key:"render",value:function n(){var e=["btn","btn-secondary","action","font-icon-left-open-big","toolbar__back-button","btn--no-text"],t={
 className:e.join(" "),onClick:this.handleBackButtonClick,href:"#",type:"button"}
-return u["default"].createElement("div",{className:"toolbar toolbar--north"},u["default"].createElement("div",{className:"toolbar__navigation"},this.props.showBackButton&&u["default"].createElement("button",t),this.props.children))
+return u["default"].createElement("div",{className:"toolbar toolbar--north"},u["default"].createElement("div",{className:"toolbar__navigation fill-width"},this.props.showBackButton&&u["default"].createElement("button",t),this.props.children))
 
 }},{key:"handleBackButtonClick",value:function i(e){return"undefined"!=typeof this.props.handleBackButtonClick?void this.props.handleBackButtonClick(e):void e.preventDefault()}}]),t}(c["default"])
 f.propTypes={handleBackButtonClick:u["default"].PropTypes.func,showBackButton:u["default"].PropTypes.bool,breadcrumbs:u["default"].PropTypes.array},f.defaultProps={showBackButton:!1},t["default"]=f},function(e,t,n){
