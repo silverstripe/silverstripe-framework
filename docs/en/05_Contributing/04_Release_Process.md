@@ -4,10 +4,6 @@ summary: Describes the process followed for "core" releases.
 
 This page describes the process followed for "core" releases (mainly the `framework` and `cms` modules).
 
-## Release Maintainer
-
-The current maintainer responsible for planning and performing releases is Ingo Schommer (ingo at silverstripe dot com).
-
 ## Release Planning
 
 Our most up-to-date release plans are typically in the ["framework" milestone](https://github.com/silverstripe/silverstripe-framework/milestones) and ["cms" milestone](https://github.com/silverstripe/silverstripe-cms/milestones).
