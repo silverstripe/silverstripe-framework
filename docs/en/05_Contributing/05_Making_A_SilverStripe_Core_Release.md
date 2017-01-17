@@ -28,13 +28,13 @@ As a core contributor it is necessary to have installed the following set of too
 * [cow release tool](https://github.com/silverstripe/cow#install). This should typically
   be installed in a global location via the below command. Please see the installation
   docs on the cow repo for more setup details.
-  - `composer global require silverstripe/cow dev-master`
-* [transifex client](http://docs.transifex.com/client/). You will also need to ensure that
-  your transifex account has been granted the necessary write permissions on the cms, framework,
-  installer, simple theme, siteconfig and reports modules:
-  - `pip install transifex-client`
+  `composer global require silverstripe/cow dev-master`
+* [transifex client](http://docs.transifex.com/client/). 
+  `pip install transifex-client`
+  If you're on OSX 10.10+, the standard Python installer is locked down.
+  Use `brew install python; sudo easy_install pip` instead
 * [AWS CLI tools](https://aws.amazon.com/cli/):
-  - `pip install awscli`
+  `pip install awscli`
 * The `tar` and `zip` commands
 * A good _ss_environment.php setup in your localhost webroot.
 
@@ -71,7 +71,9 @@ the [core committers](core_committers), who will assist with setting up your cre
   [silverstripe-labs](https://github.com/silverstripe-labs) organisations.
 * Moderator permissions on the [community forum](http://www.silverstripe.org/community/forums/releases-and-announcements/).
 * Admin permissions on [transifex](https://www.transifex.com/silverstripe/).
-* AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket.
+  Set up a [~/.transifexrc](https://docs.transifex.com/client/client-configuration) with your credentials.
+* AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket
+  ([add credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) via `aws configure`).
 * Permission on [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce).
 * Moderator permissions in the #silverstripe [IRC channel](http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/)
 * Administrator account on [docs.silverstripe.org](https://docs.silverstripe.org) and
@@ -170,24 +172,17 @@ any mistakes migrating their way into the public sphere).
 
 Invoked by running `cow release` in the format as below:
  
-    cow release <version> --from=<prior-version> --branch-auto -vvv
+    cow release <version> -vvv
 
 This command has the following parameters:
 
-* `<version>` The version that is to be released. E.g. 3.2.4 or 3.2.4-rc1
-* `<prior-version>` The version from which to compare to generate a changelog.
-  E.g. 3.2.3 (if releasing 3.2.4), or 3.2.5 (if releasing 3.3.0 and that's the
-  newest 3.2.x version). You can normally leave this out for patch releases,
-  and the code will normally be able to guess the right version, but you may
-  as well declare it every time.
-* `--branch-auto` Will automatically create a new temporary release branch (e.g. 3.2.4) if
-  one does not exist.
+* `<version>` The version that is to be released. E.g. 3.2.4 or 4.0.0-alpha4
 
 This can take between 5-15 minutes, and will invoke the following steps,
 each of which can also be run in isolation (in case the process stalls
 and needs to be manually advanced):
 
-* `realease:create` The release version will be created in the `release-<version>`
+* `release:create` The release version will be created in the `release-<version>`
   folder directly underneath the folder this command was invoked in. Cow
   will look at the available versions and branch-aliases of silverstripe/installer
   to determine the best version to install from. E.g. installing 4.0.0 will
