@@ -28,13 +28,13 @@ As a core contributor it is necessary to have installed the following set of too
 * [cow release tool](https://github.com/silverstripe/cow#install). This should typically
   be installed in a global location via the below command. Please see the installation
   docs on the cow repo for more setup details.
-  - `composer global require silverstripe/cow dev-master`
-* [transifex client](http://docs.transifex.com/client/). You will also need to ensure that
-  your transifex account has been granted the necessary write permissions on the cms, framework,
-  installer, simple theme, siteconfig and reports modules:
-  - `pip install transifex-client`
+  `composer global require silverstripe/cow dev-master`
+* [transifex client](http://docs.transifex.com/client/). 
+  `pip install transifex-client`
+  If you're on OSX 10.10+, the standard Python installer is locked down.
+  Use `brew install python; sudo easy_install pip` instead
 * [AWS CLI tools](https://aws.amazon.com/cli/):
-  - `pip install awscli`
+  `pip install awscli`
 * The `tar` and `zip` commands
 * A good _ss_environment.php setup in your localhost webroot.
 
