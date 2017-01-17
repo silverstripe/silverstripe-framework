@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
@@ -261,7 +262,9 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
             );
         }
         Config::unnest();
-        return Convert::array2json($json);
+        $response = new HTTPResponse(Convert::array2json($json));
+        $response->addHeader('Content-Type', 'text/json');
+        return $response;
     }
 
     /**
