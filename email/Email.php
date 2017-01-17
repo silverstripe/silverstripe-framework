@@ -322,7 +322,7 @@ class Email extends ViewableData {
 	/**
 	 * Set the "Reply-To" header with an email address.
 	 *
-	 * @param string $val
+	 * @param string $val The email address of the "Reply-To" header
 	 * @return $this
 	 */
 	public function setReplyTo($val) {
@@ -432,6 +432,7 @@ class Email extends ViewableData {
 
 	/**
 	 * Used by {@link SSViewer} templates to detect if we're rendering an email template rather than a page template
+	 * @return bool
 	 */
 	public function IsEmail() {
 		return true;
