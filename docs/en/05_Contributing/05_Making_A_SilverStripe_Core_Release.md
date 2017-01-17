@@ -260,6 +260,7 @@ subtasks which are invoked in sequence:
   s3 bucket `silverstripe-ssorg-releases`. If you have setup your AWS profile
   for silverstripe releases under a non-default name, you can specify this profile
   on the command line with the `--aws-profile=<profile>` command.
+  See "Stage 3: Let the world know" to check if this worked correctly.
 
 Once all of these commands have completed there are a couple of final tasks left that
 aren't strictly able to be automated:
