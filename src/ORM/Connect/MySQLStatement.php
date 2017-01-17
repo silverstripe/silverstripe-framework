@@ -57,6 +57,26 @@ class MySQLStatement extends Query
     protected $boundValues = [];
 
     /**
+     * Hook the result-set given into a Query class, suitable for use by SilverStripe.
+     * @param mysqli_stmt $statement The related statement, if present
+     * @param mysqli_result $metadata The metadata for this statement
+     */
+    public function __construct($statement, $metadata)
+    {
+        $this->statement = $statement;
+        $this->metadata = $metadata;
+
+        // Immediately bind and buffer
+        $this->bind();
+    }
+
+    public function __destruct()
+    {
+        $this->statement->close();
+        $this->currentRecord = false;
+    }
+
+    /**
      * Binds this statement to the variables
      */
     protected function bind()
@@ -82,58 +102,24 @@ class MySQLStatement extends Query
         call_user_func_array([$this->statement, 'bind_result'], $variables ?? []);
     }
 
-    /**
-     * Hook the result-set given into a Query class, suitable for use by SilverStripe.
-     * @param mysqli_stmt $statement The related statement, if present
-     * @param mysqli_result $metadata The metadata for this statement
-     */
-    public function __construct($statement, $metadata)
+    public function getIterator()
     {
-        $this->statement = $statement;
-        $this->metadata = $metadata;
-
-        // Immediately bind and buffer
-        $this->bind();
-    }
-
-    public function __destruct()
-    {
-        $this->statement->close();
-        $this->currentRecord = false;
-    }
-
-    public function seek($row)
-    {
-        $this->rowNum = $row - 1;
-
-        // Fix for https://github.com/silverstripe/silverstripe-framework/issues/9097 without breaking the seek() API
-        $this->statement->data_seek($row);
-        $result = $this->next();
-        $this->statement->data_seek($row);
-        return $result;
+        while($this->statement->fetch()) {
+            // Dereferenced row
+            $row = [];
+            foreach ($this->boundValues as $key => $value) {
+                $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
+                if (in_array($this->types[$key], $floatTypes ?? [])) {
+                    $value = (float)$value;
+                }
+                $row[$key] = $value;
+            }
+            yield $row;
+        }
     }
 
     public function numRecords()
     {
         return $this->statement->num_rows();
-    }
-
-    public function nextRecord()
-    {
-        // Skip data if out of data
-        if (!$this->statement->fetch()) {
-            return false;
-        }
-
-        // Dereferenced row
-        $row = [];
-        foreach ($this->boundValues as $key => $value) {
-            $floatTypes = [MYSQLI_TYPE_FLOAT, MYSQLI_TYPE_DOUBLE, MYSQLI_TYPE_DECIMAL, MYSQLI_TYPE_NEWDECIMAL];
-            if (in_array($this->types[$key], $floatTypes ?? [])) {
-                $value = (float)$value;
-            }
-            $row[$key] = $value;
-        }
-        return $row;
     }
 }
