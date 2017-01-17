@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Connect;
 
 use PDOStatement;
 use PDO;
+use ArrayIterator;
 
 /**
  * A result-set from a PDO database.
@@ -32,10 +33,8 @@ class PDOQuery extends Query
         $statement->closeCursor();
     }
 
-    public function seek($row)
-    {
-        $this->rowNum = $row - 1;
-        return $this->nextRecord();
+    public function getIterator() {
+        return new ArrayIterator($this->results);
     }
 
     public function numRecords()
@@ -43,14 +42,4 @@ class PDOQuery extends Query
         return count($this->results);
     }
 
-    public function nextRecord()
-    {
-        $index = $this->rowNum + 1;
-
-        if (isset($this->results[$index])) {
-            return $this->results[$index];
-        } else {
-            return false;
-        }
-    }
 }

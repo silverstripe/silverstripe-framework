@@ -361,7 +361,7 @@ abstract class DBSchemaManager
             if ($dbID && isset($options[$dbID])) {
                 if (preg_match('/ENGINE=([^\s]*)/', $options[$dbID], $alteredEngineMatches)) {
                     $alteredEngine = $alteredEngineMatches[1];
-                    $tableStatus = $this->query(sprintf('SHOW TABLE STATUS LIKE \'%s\'', $table))->first();
+                    $tableStatus = $this->query(sprintf('SHOW TABLE STATUS LIKE \'%s\'', $table))->record();
                     $tableOptionsChanged = ($tableStatus['Engine'] != $alteredEngine);
                 }
             }

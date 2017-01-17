@@ -15,29 +15,8 @@ use Iterator;
  * on providing the specific data-access methods that are required: {@link nextRecord()}, {@link numRecords()}
  * and {@link seek()}
  */
-abstract class Query implements Iterator
+abstract class Query implements \IteratorAggregate
 {
-
-    /**
-     * The current record in the interator.
-     *
-     * @var array
-     */
-    protected $currentRecord = null;
-
-    /**
-     * The number of the current row in the interator.
-     *
-     * @var int
-     */
-    protected $rowNum = -1;
-
-    /**
-     * Flag to keep track of whether iteration has begun, to prevent unnecessary seeks
-     *
-     * @var bool
-     */
-    protected $queryHasBegun = false;
 
     /**
      * Return an array containing all the values from a specific column. If no column is set, then the first will be
@@ -48,9 +27,9 @@ abstract class Query implements Iterator
      */
     public function column($column = null)
     {
-        $result = array();
+        $result = [];
 
-        while ($record = $this->next()) {
+        foreach ($this as $record) {
             if ($column) {
                 $result[] = $record[$column];
             } else {
@@ -69,7 +48,8 @@ abstract class Query implements Iterator
      */
     public function keyedColumn()
     {
-        $column = array();
+        $column = [];
+
         foreach ($this as $record) {
             $val = $record[key($record)];
             $column[$val] = $val;
@@ -94,13 +74,13 @@ abstract class Query implements Iterator
     }
 
     /**
-     * Returns the next record in the iterator.
+     * Returns the first record in the result
      *
      * @return array
      */
     public function record()
     {
-        return $this->next();
+        return $this->getIterator()->current();
     }
 
     /**
@@ -110,7 +90,7 @@ abstract class Query implements Iterator
      */
     public function value()
     {
-        $record = $this->next();
+        $record = $this->record();
         if ($record) {
             return $record[key($record)];
         }
@@ -153,89 +133,11 @@ abstract class Query implements Iterator
     }
 
     /**
-     * Iterator function implementation. Rewind the iterator to the first item and return it.
-     * Makes use of {@link seek()} and {@link numRecords()}, takes care of the plumbing.
-     *
-     * @return array
-     */
-    public function rewind()
-    {
-        if ($this->queryHasBegun && $this->numRecords() > 0) {
-            $this->queryHasBegun = false;
-            $this->currentRecord = null;
-            return $this->seek(0);
-        }
-        return null;
-    }
-
-    /**
-     * Iterator function implementation. Return the current item of the iterator.
-     *
-     * @return array
-     */
-    public function current()
-    {
-        if (!$this->currentRecord) {
-            return $this->next();
-        } else {
-            return $this->currentRecord;
-        }
-    }
-
-    /**
-     * Iterator function implementation. Return the first item of this iterator.
-     *
-     * @return array
-     */
-    public function first()
-    {
-        $this->rewind();
-        return $this->current();
-    }
-
-    /**
-     * Iterator function implementation. Return the row number of the current item.
-     *
-     * @return int
-     */
-    public function key()
-    {
-        return $this->rowNum;
-    }
-
-    /**
-     * Iterator function implementation. Return the next record in the iterator.
-     * Makes use of {@link nextRecord()}, takes care of the plumbing.
-     *
-     * @return array
-     */
-    public function next()
-    {
-        $this->queryHasBegun = true;
-        $this->currentRecord = $this->nextRecord();
-        $this->rowNum++;
-        return $this->currentRecord;
-    }
-
-    /**
-     * Iterator function implementation. Check if the iterator is pointing to a valid item.
-     *
-     * @return bool
-     */
-    public function valid()
-    {
-        if (!$this->queryHasBegun) {
-            $this->next();
-        }
-        return $this->currentRecord !== false;
-    }
-
-    /**
      * Return the next record in the query result.
      *
      * @return array
      */
-    abstract public function nextRecord();
+    abstract public function getIterator();
 
     /**
      * Return the total number of items in the query result.
@@ -243,12 +145,4 @@ abstract class Query implements Iterator
      * @return int
      */
     abstract public function numRecords();
-
-    /**
-     * Go to a specific row number in the query result and return the record.
-     *
-     * @param int $rowNum Row number to go to.
-     * @return array
-     */
-    abstract public function seek($rowNum);
 }
