@@ -149,7 +149,14 @@ class Email extends ViewableData {
 	private static $cc_all_emails_to = null;
 
 	/**
-	 * Create a new email.
+	 * Create a new email
+	 * @param string $from
+	 * @param string $to
+	 * @param string $subject
+	 * @param string $body
+	 * @param string $bounceHandlerURL
+	 * @param string $cc
+	 * @param string $bcc
 	 */
 	public function __construct($from = null, $to = null, $subject = null, $body = null, $bounceHandlerURL = null,
 			$cc = null, $bcc = null) {
@@ -168,6 +175,12 @@ class Email extends ViewableData {
 		parent::__construct();
 	}
 
+	/**
+	 * @param  string $data
+	 * @param  string $filename
+	 * @param  string $mimetype
+	 * @return $this
+	 */
 	public function attachFileFromString($data, $filename, $mimetype = null) {
 		$this->attachments[] = array(
 			'contents' => $data,
@@ -195,55 +208,97 @@ class Email extends ViewableData {
 		return $this;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function Subject() {
 		return $this->subject;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function Body() {
 		return $this->body;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function To() {
 		return $this->to;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function From() {
 		return $this->from;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function Cc() {
 		return $this->cc;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function Bcc() {
 		return $this->bcc;
 	}
 
+	/**
+	 * @param string $val
+	 * @return $this
+	 */
 	public function setSubject($val) {
 		$this->subject = $val;
 		return $this;
 	}
 
+	/**
+	 * @param string $val
+	 * @return $this
+	 */
 	public function setBody($val) {
 		$this->body = $val;
 		return $this;
 	}
 
+	/**
+	 * @param string $val
+	 * @return $this
+	 */
 	public function setTo($val) {
 		$this->to = $val;
 		return $this;
 	}
 
+	/**
+	 * @param string $val
+	 * @return $this
+	 */
 	public function setFrom($val) {
 		$this->from = $val;
 		return $this;
 	}
 
+	/**
+	 * @param string $val
+	 * @return $this
+	 */
 	public function setCc($val) {
 		$this->cc = $val;
 		return $this;
 	}
 
+	/**
+	 * @param string $val
+	 * @return $this
+	 */
 	public function setBcc($val) {
 		$this->bcc = $val;
 		return $this;
@@ -252,6 +307,7 @@ class Email extends ViewableData {
 	/**
 	 * Set the "Reply-To" header with an email address.
 	 * @param string $email The email address of the "Reply-To" header
+	 * @return $this
 	 */
 	public function replyTo($email) {
 		$this->addCustomHeader('Reply-To', $email);
@@ -264,6 +320,7 @@ class Email extends ViewableData {
 	 *
 	 * @param string $headerName
 	 * @param string $headerValue
+	 * @return $this
 	 */
 	public function addCustomHeader($headerName, $headerValue) {
 		if($headerName == 'Cc') $this->cc = $headerValue;
@@ -275,6 +332,9 @@ class Email extends ViewableData {
 		return $this;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function BaseURL() {
 		return Director::absoluteBaseURL();
 	}
@@ -298,6 +358,7 @@ class Email extends ViewableData {
 	 * Set template name (without *.ss extension).
 	 *
 	 * @param string $template
+	 * @return $this
 	 */
 	public function setTemplate($template) {
 		$this->ss_template = $template;
@@ -330,6 +391,7 @@ class Email extends ViewableData {
 
 	/**
 	 * Used by {@link SSViewer} templates to detect if we're rendering an email template rather than a page template
+	 * @return bool
 	 */
 	public function IsEmail() {
 		return true;
@@ -338,6 +400,7 @@ class Email extends ViewableData {
 	/**
 	 * Populate this email template with values.
 	 * This may be called many times.
+	 * return $this
 	 */
 	public function populateTemplate($data) {
 		if($this->template_data) {
@@ -356,6 +419,7 @@ class Email extends ViewableData {
 	 * the template into body.	Called before send() or debugSend()
 	 * $isPlain=true will cause the template to be ignored, otherwise the GenericEmail template will be used
 	 * and it won't be plain email :)
+	 * @return $this
 	 */
 	protected function parseVariables($isPlain = false) {
 		$origState = Config::inst()->get('SSViewer', 'source_file_comments');
@@ -390,6 +454,7 @@ class Email extends ViewableData {
 
 	/**
 	 * Validates the email address. Returns true of false
+	 * @return mixed
 	 */
 	public static function validEmailAddress($address) {
 		if (function_exists('filter_var')) {
