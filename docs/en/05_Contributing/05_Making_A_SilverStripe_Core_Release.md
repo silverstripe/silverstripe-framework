@@ -71,7 +71,9 @@ the [core committers](core_committers), who will assist with setting up your cre
   [silverstripe-labs](https://github.com/silverstripe-labs) organisations.
 * Moderator permissions on the [community forum](http://www.silverstripe.org/community/forums/releases-and-announcements/).
 * Admin permissions on [transifex](https://www.transifex.com/silverstripe/).
-* AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket.
+  Set up a [~/.transifexrc](https://docs.transifex.com/client/client-configuration) with your credentials.
+* AWS write permissions on the `silverstripe-ssorg-releases` s3 bucket
+  ([add credentials](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html) via `aws configure`).
 * Permission on [silverstripe release announcement](https://groups.google.com/forum/#!forum/silverstripe-announce).
 * Moderator permissions in the #silverstripe [IRC channel](http://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/)
 * Administrator account on [docs.silverstripe.org](https://docs.silverstripe.org) and
