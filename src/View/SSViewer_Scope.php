@@ -289,14 +289,20 @@ class SSViewer_Scope
         }
 
         if (!$this->itemIterator) {
+            // Turn the iterator into an array. This lets us get the count and iterate on it, even if it's a generator.
             if (is_array($this->item)) {
-                $this->itemIterator = new ArrayIterator($this->item);
+                $arrayVersion = $this->item;
             } else {
-                $this->itemIterator = $this->item->getIterator();
+                $arrayVersion = [];
+                foreach ($this->item as $record) {
+                    $arrayVersion[] = $record;
+                }
             }
 
+            $this->itemIterator = new ArrayIterator($arrayVersion);
+
             $this->itemStack[$this->localIndex][SSViewer_Scope::ITEM_ITERATOR] = $this->itemIterator;
-            $this->itemIteratorTotal = iterator_count($this->itemIterator); // Count the total number of items
+            $this->itemIteratorTotal = count($arrayVersion); // Count the total number of items
             $this->itemStack[$this->localIndex][SSViewer_Scope::ITEM_ITERATOR_TOTAL] = $this->itemIteratorTotal;
             $this->itemIterator->rewind();
         } else {
