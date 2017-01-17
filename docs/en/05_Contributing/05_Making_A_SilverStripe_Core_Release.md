@@ -172,24 +172,17 @@ any mistakes migrating their way into the public sphere).
 
 Invoked by running `cow release` in the format as below:
  
-    cow release <version> --from=<prior-version> --branch-auto -vvv
+    cow release <version> -vvv
 
 This command has the following parameters:
 
-* `<version>` The version that is to be released. E.g. 3.2.4 or 3.2.4-rc1
-* `<prior-version>` The version from which to compare to generate a changelog.
-  E.g. 3.2.3 (if releasing 3.2.4), or 3.2.5 (if releasing 3.3.0 and that's the
-  newest 3.2.x version). You can normally leave this out for patch releases,
-  and the code will normally be able to guess the right version, but you may
-  as well declare it every time.
-* `--branch-auto` Will automatically create a new temporary release branch (e.g. 3.2.4) if
-  one does not exist.
+* `<version>` The version that is to be released. E.g. 3.2.4 or 4.0.0-alpha4
 
 This can take between 5-15 minutes, and will invoke the following steps,
 each of which can also be run in isolation (in case the process stalls
 and needs to be manually advanced):
 
-* `realease:create` The release version will be created in the `release-<version>`
+* `release:create` The release version will be created in the `release-<version>`
   folder directly underneath the folder this command was invoked in. Cow
   will look at the available versions and branch-aliases of silverstripe/installer
   to determine the best version to install from. E.g. installing 4.0.0 will
