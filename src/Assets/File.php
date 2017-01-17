@@ -4,6 +4,7 @@ namespace SilverStripe\Assets;
 
 use SilverStripe\Admin\AdminRootController;
 use SilverStripe\Admin\CMSPreviewable;
+use SilverStripe\Assets\Storage\AssetNameGenerator;
 use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\CMS\Model\SiteTree;
