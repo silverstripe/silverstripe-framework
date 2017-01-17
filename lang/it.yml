@@ -37,7 +37,6 @@ it:
     INSERTURL: 'Inserisci da URL'
     REMOVEINFO: 'Rimuovi questo file da questo campo'
     TOTAL: Totale
-    TOUPLOAD: 'Scegli i files da caricare...'
     UPLOADINPROGRESS: 'Attendere prego... caricamento in corso'
     UPLOADOR: O
   BBCodeParser:
@@ -323,7 +322,6 @@ it:
     CSSCLASSRIGHT: 'Sulla destra, con il testo attorno.'
     DETAILS: Dettagli
     EMAIL: 'Indirizzo email'
-    FILE: SilverStripe\Assets\File
     FOLDER: Cartella
     IMAGEALT: 'Testo alternativo (alt)'
     IMAGEALTTEXT: 'Testo alternativo (alt) - mostrato nel caso l''immagine non possa essere visualizzata'
@@ -473,7 +471,6 @@ it:
     PASSWORD: Password
     PASSWORDEXPIRED: 'La tua password è scaduta. Per favore selezionarne una nuova.'
     PLURALNAME: Utenti
-    REMEMBERME: 'Ricordati di me la prossima volta?'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
@@ -499,7 +496,6 @@ it:
     DIGITSDECFRACTIONSECOND: 'Una o più cifre che rappresentano una frazione decimale di secondo'
     FOURDIGITYEAR: 'Anno a quattro cifre'
     FULLNAMEMONTH: 'Nome completo del mese (es. Giugno)'
-    HOURNOLEADING: 'Ore senza zero iniziale'
     HOURNOLEADING24: 'Ore senza zero iniziale, formato 24 ore'
     MINUTENOLEADING: 'Minuti senza zero iniziale'
     MONTHNOLEADING: 'Mese senza zero iniziale'

@@ -37,7 +37,6 @@ fa_IR:
     INSERTURL: 'وارد‌کردن از نشانی اینترنتی'
     REMOVEINFO: 'حذف این فایل از این فیلد'
     TOTAL: 'مجموع'
-    TOUPLOAD: 'انتخاب فایل‌ها جهت آپلود...'
     UPLOADINPROGRESS: 'لطفاً صبر کنید... آپلود در جریان است'
     UPLOADOR: یا
   BBCodeParser:
@@ -430,7 +429,6 @@ fa_IR:
     PASSWORD: گذرواژه
     PASSWORDEXPIRED: 'گذرواژه شما منقضی شده‌است. لطفاً یکی جدید برگزینید.'
     PLURALNAME: اعضاء
-    REMEMBERME: 'مرا برای بار بعد به خاطر بسپار؟'
     SINGULARNAME: عضو
     SUBJECTPASSWORDCHANGED: 'گذرواژه شما تغییر یافته است'
     SUBJECTPASSWORDRESET: 'لینک ازنوسازی گذرواژه شما'
@@ -453,7 +451,6 @@ fa_IR:
     DAYNOLEADING: 'روز از ماه بدون نمایش صفر در ابتدا'
     FOURDIGITYEAR: 'سال چهار عددی'
     FULLNAMEMONTH: 'نام کامل ماه (مثال ژوئن)'
-    HOURNOLEADING: 'ساعت بدون صفر آغازین'
     HOURNOLEADING24: 'ساعت بدون صفر آغازین، قالب ۲۴ ساعته'
     MINUTENOLEADING: 'دقیقه بدون نمایش صفر در ابتدا'
     MONTHNOLEADING: 'عدد ماه بدون نمایش صفر در ابتدا'

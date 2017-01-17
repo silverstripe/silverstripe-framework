@@ -37,7 +37,6 @@ hr:
     INSERTURL: 'Ubaci sa linka'
     REMOVEINFO: 'Izbrišite ovu datoteku s ovog polja'
     TOTAL: Ukupno
-    TOUPLOAD: 'Odaberite datoteke za upload...'
     UPLOADINPROGRESS: 'Molim pričekajte... upload u tijeku'
     UPLOADOR: ILI
   BBCodeParser:

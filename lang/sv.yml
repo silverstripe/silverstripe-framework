@@ -27,7 +27,6 @@ sv:
     FROMCOMPUTERINFO: 'Ladda upp från din dator'
     REMOVEINFO: 'Ta bort från detta fält'
     TOTAL: Totalt
-    TOUPLOAD: 'Välj filer att ladda upp...'
     UPLOADINPROGRESS: 'Var god dröj... uppladdning pågår'
     UPLOADOR: ELLER
   BBCodeParser:

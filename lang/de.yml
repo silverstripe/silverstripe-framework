@@ -31,7 +31,6 @@ de:
     INSERTURL: 'Von URL einfügen'
     REMOVEINFO: 'Entferne diese Datei aus dem Feld'
     TOTAL: Insgesamt
-    TOUPLOAD: 'Dateien zum Hochladen auswählen...'
     UPLOADINPROGRESS: 'Bitte warten sie... Upload im Gang'
     UPLOADOR: oder
   BBCodeParser:
@@ -443,7 +442,6 @@ de:
     PASSWORD: Passwort
     PASSWORDEXPIRED: 'Ihr Passwort ist abgelaufen. Bitte wählen Sie ein neues Passwort.'
     PLURALNAME: Benutzer
-    REMEMBERME: 'Für das nächste Mal merken?'
     SINGULARNAME: Benutzer
     SUBJECTPASSWORDCHANGED: 'Ihr Passwort wurde geändert'
     SUBJECTPASSWORDRESET: 'Ihr Link zur Passwortrücksetzung'
@@ -469,7 +467,6 @@ de:
     DIGITSDECFRACTIONSECOND: 'Eine oder mehrere Ziffern, die einen Dezimalbruch einer Sekunde darstellen'
     FOURDIGITYEAR: 'Vierstellige Jahreszahl'
     FULLNAMEMONTH: 'Volle Monatsbezeichnung (z.B. Juni)'
-    HOURNOLEADING: 'Stunde ohne führende Null'
     HOURNOLEADING24: 'Stunde ohne führende Null, 24 Stunden Format'
     MINUTENOLEADING: 'Minute, ohne führende Null'
     MONTHNOLEADING: 'Monat, ohne führende Null'
