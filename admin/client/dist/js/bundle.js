@@ -384,7 +384,7 @@ t=l({},t,t.input),delete t.input
 var i=this.props.createFn
 return"function"==typeof i?i(n,t):f["default"].createElement(n,l({key:t.id},t))}},{key:"mapFieldsToComponents",value:function v(e){var t=this,n=this.props.baseFieldComponent
 return e.map(function(e){var i=e
-return e.children&&(i=l({},e,{children:t.mapFieldsToComponents(e.children)})),i=l({onAutofill:t.props.onAutofill},i),"Structural"===e.type||e.readOnly===!0?t.buildComponent(i):f["default"].createElement(n,l({
+return e.children&&(i=l({},e,{children:t.mapFieldsToComponents(e.children)})),i=l({onAutofill:t.props.onAutofill,form:t.props.form},i),"Structural"===e.type||e.readOnly===!0?t.buildComponent(i):f["default"].createElement(n,l({
 key:i.id},i,{component:t.buildComponent}))})}},{key:"mapActionsToComponents",value:function y(e){var t=this
 return e.map(function(e){var n=l({},e)
 return e.children?n.children=t.mapActionsToComponents(e.children):(n.handleClick=t.handleAction,t.props.submitting&&t.state.submittingAction===e.name&&(n.loading=!0)),t.buildComponent(n)})}},{key:"normalizeFields",
@@ -425,7 +425,7 @@ case"alpha":return u["default"].isAlpha(e)
 case"regex":return u["default"].matches(e,n.pattern)
 case"max":return e.length<=n.length
 case"email":return u["default"].isEmail(e)
-default:console.warn("Unknown validation rule used: '"+t+"'")}}},{key:"validateFieldSchema",value:function l(e){return this.validateField(e.name,e.validation,null!==e.leftTitle?e.leftTitle:e.title,e.customValidationMessage)
+default:return console.warn("Unknown validation rule used: '"+t+"'"),!1}}},{key:"validateFieldSchema",value:function l(e){return this.validateField(e.name,e.validation,null!==e.leftTitle?e.leftTitle:e.title,e.customValidationMessage)
 
 }},{key:"getMessage",value:function d(e,t){var n=""
 if("string"==typeof t.message)n=t.message
