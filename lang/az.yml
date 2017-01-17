@@ -1,184 +1,184 @@
 az:
   BBCodeParser:
     ALIGNEMENT: Yönlənmə
-    ALIGNEMENTEXAMPLE: "sağa yönəlmə"
-    BOLD: "Qalın mətn"
+    ALIGNEMENTEXAMPLE: 'sağa yönəlmə'
+    BOLD: 'Qalın mətn'
     BOLDEXAMPLE: Qalın
-    CODE: "Kod bloku"
-    CODEDESCRIPTION: "Formatlanmamış kod bloku"
-    CODEEXAMPLE: "Kod bloku"
-    COLORED: "Rəngli mətn"
-    COLOREDEXAMPLE: "mavi mətn"
-    EMAILLINK: "E-poçt link"
-    EMAILLINKDESCRIPTION: "E-poçta link yarat"
+    CODE: 'Kod bloku'
+    CODEDESCRIPTION: 'Formatlanmamış kod bloku'
+    CODEEXAMPLE: 'Kod bloku'
+    COLORED: 'Rəngli mətn'
+    COLOREDEXAMPLE: 'mavi mətn'
+    EMAILLINK: 'E-poçt link'
+    EMAILLINKDESCRIPTION: 'E-poçta link yarat'
     IMAGE: Şəkil
-    IMAGEDESCRIPTION: "Postunuzda şəkil görünsün"
-    ITALIC: "Kursiv mətn"
+    IMAGEDESCRIPTION: 'Postunuzda şəkil görünsün'
+    ITALIC: 'Kursiv mətn'
     ITALICEXAMPLE: Kursiv
-    LINK: "Vebsayt linki"
-    LINKDESCRIPTION: "Başqa veb sayta və ya URL-ə link"
-    STRUCK: "Struck-out mətn"
-    UNDERLINE: "Altından xətt çəkilmiş mətn"
-    UNDERLINEEXAMPLE: "Altından xətt çəkilmiş"
-    UNORDERED: "Sıralanmamış siyahı"
-    UNORDEREDDESCRIPTION: "Sıralanmamış siyahı"
-    UNORDEREDEXAMPLE1: "nizamlanmamış element 1"
+    LINK: 'Vebsayt linki'
+    LINKDESCRIPTION: 'Başqa veb sayta və ya URL-ə link'
+    STRUCK: 'Struck-out mətn'
+    UNDERLINE: 'Altından xətt çəkilmiş mətn'
+    UNDERLINEEXAMPLE: 'Altından xətt çəkilmiş'
+    UNORDERED: 'Sıralanmamış siyahı'
+    UNORDEREDDESCRIPTION: 'Sıralanmamış siyahı'
+    UNORDEREDEXAMPLE1: 'nizamlanmamış element 1'
   BasicAuth:
-    ENTERINFO: "Zəhmət olmasa istifadəçi adı və ya parolu yazın."
-    ERRORNOTADMIN: "İstifadəçi administrator deyil"
-    ERRORNOTREC: "Belə istifadəçi adı və ya parol tanınmadı"
+    ENTERINFO: 'Zəhmət olmasa istifadəçi adı və ya parolu yazın.'
+    ERRORNOTADMIN: 'İstifadəçi administrator deyil'
+    ERRORNOTREC: 'Belə istifadəçi adı və ya parol tanınmadı'
   Boolean:
     ANY: İstənilən
   CMSMain:
-    SAVE: "Yadda saxla"
+    SAVE: 'Yadda saxla'
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "Siz parolu bu url üçün dəyişdiniz"
-    CHANGEPASSWORDTEXT2: "Siz aşağıdakilarla daxil ola bilərsiniz."
+    CHANGEPASSWORDTEXT1: 'Siz parolu bu url üçün dəyişdiniz'
+    CHANGEPASSWORDTEXT2: 'Siz aşağıdakilarla daxil ola bilərsiniz.'
     EMAIL: E-poçt
     HELLO: Salam
     PASSWORD: Parol
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: "Parolu dəyiş"
+    SHOWONCLICKTITLE: 'Parolu dəyiş'
   CreditCardField:
     FIRST: birinci
     FOURTH: dördüncü
     SECOND: ikinci
     THIRD: üçüncü
   DataObject:
-    PLURALNAME: "Data Obyektlər"
-    SINGULARNAME: "Data Obyekt"
+    PLURALNAME: 'Data Obyektlər'
+    SINGULARNAME: 'Data Obyekt'
   DateField:
-    NOTSET: "təyin edilməyib"
-    TODAY: "bu gün"
+    NOTSET: 'təyin edilməyib'
+    TODAY: 'bu gün'
   DropdownField:
     CHOOSE: (Seçin)
   Enum:
     ANY: İxtiyari
   File:
     Content: Məzmun
-    Filename: "Faylın adı"
-    NOVALIDUPLOAD: "Fayl yükləmək üçün yararlı deyil"
+    Filename: 'Faylın adı'
+    NOVALIDUPLOAD: 'Fayl yükləmək üçün yararlı deyil'
     Name: Ad
     PLURALNAME: Fayllar
     SINGULARNAME: Fayl
     Title: Başlıq
   ForgotPasswordEmail_ss:
     HELLO: Salam
-    TEXT1: "Burada sizin"
-    TEXT2: "parolu sıfırlma linki"
+    TEXT1: 'Burada sizin'
+    TEXT2: 'parolu sıfırlma linki'
     TEXT3: üçün
   Form:
-    VALIDATIONNOTUNIQUE: "Daxil edilən məlumat unikal deyil"
-    VALIDATIONPASSWORDSDONTMATCH: "Parollar uyğun gəlmir"
-    VALIDATIONPASSWORDSNOTEMPTY: "Parollar boş ola bilməz"
+    VALIDATIONNOTUNIQUE: 'Daxil edilən məlumat unikal deyil'
+    VALIDATIONPASSWORDSDONTMATCH: 'Parollar uyğun gəlmir'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Parollar boş ola bilməz'
   FormField:
-    NONE: "heç bir"
+    NONE: 'heç bir'
   Group:
-    Code: "Qrup kodu"
+    Code: 'Qrup kodu'
     DefaultGroupTitleAdministrators: Administratorlar
-    DefaultGroupTitleContentAuthors: "Məzmun müəllifləri"
-    Description: "Qısa təsvir"
-    Locked: Bloklanıb?
-    Parent: "Valideyn qrupu"
+    DefaultGroupTitleContentAuthors: 'Məzmun müəllifləri'
+    Description: 'Qısa təsvir'
+    Locked: 'Bloklanıb?'
+    Parent: 'Valideyn qrupu'
     Sort: Sıralama
     has_many_Permissions: Səlahiyyətlər
     many_many_Members: Üzvlər
   HtmlEditorField:
     ANCHORVALUE: Ankor
-    BUTTONINSERTLINK: "Link əlavə et"
-    BUTTONREMOVELINK: "Linki sil"
+    BUTTONINSERTLINK: 'Link əlavə et'
+    BUTTONREMOVELINK: 'Linki sil'
     CAPTIONTEXT: Mətn
     CSSCLASSCENTER: Mərkəzləşmiş.
-    CSSCLASSLEFT: "Solda, mətnin kəsilməsi ilə."
-    CSSCLASSLEFTALONE: "Özünün solunda."
-    CSSCLASSRIGHT: "Sağda, mətnin kəsilməsi ilə."
-    EMAIL: "E-poçt ünvanı"
+    CSSCLASSLEFT: 'Solda, mətnin kəsilməsi ilə.'
+    CSSCLASSLEFTALONE: 'Özünün solunda.'
+    CSSCLASSRIGHT: 'Sağda, mətnin kəsilməsi ilə.'
+    EMAIL: 'E-poçt ünvanı'
     FILE: Fayl
     FOLDER: Qovluq
     IMAGEDIMENSIONS: Ölçülər
     IMAGEHEIGHTPX: Uzunluq
     IMAGEWIDTHPX: En
     LINK: Link
-    LINKANCHOR: "Bu səhifədə ankor"
-    LINKDESCR: "Link təsviri"
+    LINKANCHOR: 'Bu səhifədə ankor'
+    LINKDESCR: 'Link təsviri'
     LINKEMAIL: E-poçt
-    LINKEXTERNAL: "Başqa vebsayt"
-    LINKFILE: "Faylı yüklə"
-    LINKINTERNAL: "Saytda olan səhifə"
-    LINKOPENNEWWIN: "Link yeni pəncərədə açılsın?"
-    LINKTO: "Linki qoy"
+    LINKEXTERNAL: 'Başqa vebsayt'
+    LINKFILE: 'Faylı yüklə'
+    LINKINTERNAL: 'Saytda olan səhifə'
+    LINKOPENNEWWIN: 'Link yeni pəncərədə açılsın?'
+    LINKTO: 'Linki qoy'
     PAGE: Səhifə
   LoginAttempt:
     Email: E-poçt
-    IP: "İP ünvan"
+    IP: 'İP ünvan'
   Member:
-    BUTTONCHANGEPASSWORD: "Parolu dəyiş"
-    BUTTONLOGIN: "Daxil ol"
-    BUTTONLOGINOTHER: "Başqa adla daxil ol"
-    BUTTONLOSTPASSWORD: "Parol yaddan çıxıb."
-    CONFIRMNEWPASSWORD: "Yeni parolun təsdiqi"
-    CONFIRMPASSWORD: "Parolu təsdiqlə"
-    DefaultAdminFirstname: "Əsas admin"
+    BUTTONCHANGEPASSWORD: 'Parolu dəyiş'
+    BUTTONLOGIN: 'Daxil ol'
+    BUTTONLOGINOTHER: 'Başqa adla daxil ol'
+    BUTTONLOSTPASSWORD: 'Parol yaddan çıxıb.'
+    CONFIRMNEWPASSWORD: 'Yeni parolun təsdiqi'
+    CONFIRMPASSWORD: 'Parolu təsdiqlə'
+    DefaultAdminFirstname: 'Əsas admin'
     EMAIL: E-poçt
-    EMPTYNEWPASSWORD: "Yeni şifrə boş ola bilməz, təkrar edin. "
-    ENTEREMAIL: "Parolu sıfırlama linkini əldə etmək üçün e-poçtunuzu daxil edin."
-    ERRORNEWPASSWORD: "Yeni parolunuzu başqa cür daxil etdiniz, bir daha cəhd edin"
-    ERRORPASSWORDNOTMATCH: "Parol uyğun gəlmir, yenidən cəhd edin"
+    EMPTYNEWPASSWORD: 'Yeni şifrə boş ola bilməz, təkrar edin. '
+    ENTEREMAIL: 'Parolu sıfırlama linkini əldə etmək üçün e-poçtunuzu daxil edin.'
+    ERRORNEWPASSWORD: 'Yeni parolunuzu başqa cür daxil etdiniz, bir daha cəhd edin'
+    ERRORPASSWORDNOTMATCH: 'Parol uyğun gəlmir, yenidən cəhd edin'
     FIRSTNAME: Ad
-    INTERFACELANG: "İnterfeys dili"
-    NEWPASSWORD: "Yeni parol"
+    INTERFACELANG: 'İnterfeys dili'
+    NEWPASSWORD: 'Yeni parol'
     PASSWORD: Parol
     PLURALNAME: Üzvlər
     SINGULARNAME: Üzv
-    SUBJECTPASSWORDCHANGED: "Sizin parolunuz dəyişildi"
-    SUBJECTPASSWORDRESET: "Parolu sıfırlama linki"
+    SUBJECTPASSWORDCHANGED: 'Sizin parolunuz dəyişildi'
+    SUBJECTPASSWORDRESET: 'Parolu sıfırlama linki'
     SURNAME: Soyad
-    YOUROLDPASSWORD: "Sizin keçmiş parol"
+    YOUROLDPASSWORD: 'Sizin keçmiş parol'
     belongs_many_many_Groups: Qruplar
-    db_LastVisited: "Son ziyarət tarixi"
-    db_Locale: "İnterfeys dili"
-    db_LockedOutUntil: "Bloklanıb, açılma vaxtı"
-    db_NumVisit: "Ziyarət sayı"
+    db_LastVisited: 'Son ziyarət tarixi'
+    db_Locale: 'İnterfeys dili'
+    db_LockedOutUntil: 'Bloklanıb, açılma vaxtı'
+    db_NumVisit: 'Ziyarət sayı'
     db_Password: Parol
-    db_PasswordExpiry: "Parolun etibarlılığının bitmə vaxtı"
+    db_PasswordExpiry: 'Parolun etibarlılığının bitmə vaxtı'
   MemberAuthenticator:
-    TITLE: "E-poçt &amp; Parol"
+    TITLE: 'E-poçt &amp; Parol'
   MoneyField:
     FIELDLABELAMOUNT: Miqdar
     FIELDLABELCURRENCY: Valyuta
   NullableField:
     IsNullLabel: Boşdur
   Permission:
-    FULLADMINRIGHTS: "Tam administrativ hüquqlar"
-    FULLADMINRIGHTS_HELP: "Başqa təyin edilmiş bütün icazələr rədd olunur."
+    FULLADMINRIGHTS: 'Tam administrativ hüquqlar'
+    FULLADMINRIGHTS_HELP: 'Başqa təyin edilmiş bütün icazələr rədd olunur.'
   PermissionCheckboxSetField:
-    FromRoleOnGroup: "\"%s\" rolundan \"%s\" qrupunda törəyib"
+    FromRoleOnGroup: '"%s" rolundan "%s" qrupunda törəyib'
   Permissions:
     PERMISSIONS_CATEGORY: İcazələr
   PhoneNumberField:
-    VALIDATION: "Düzgün telefon nömrəsi daxil et."
+    VALIDATION: 'Düzgün telefon nömrəsi daxil et.'
   Security:
-    ALREADYLOGGEDIN: "Sizin bu səhifəyə icazəniz yoxdur. Əgər bu səhifəyə icazəsi olan başqa profiliniz varsa hesabınıza daxil olun"
-    BUTTONSEND: "Parolu sıfırlama linkini göndər"
-    CHANGEPASSWORDBELOW: "Şifrəni burda deyişə bilərsiniz. "
-    CHANGEPASSWORDHEADER: "Parolu dəyiş"
-    ENTERNEWPASSWORD: "Yeni şifrəni daxil edin."
-    ERRORPASSWORDPERMISSION: "Parolu dəyişmək üçün hesaba daxil olmalısınız!"
-    LOGGEDOUT: "Hesabdan çıxdınız. Yenidən daxil olmaq üçün məlumatları daxil edin."
-    LOGIN: "Daxil ol"
-    NOTEPAGESECURED: "Səhifə təhlükəsizdir. Məlumatları daxil edin və biz sizə göndərəcəyik. "
-    NOTERESETPASSWORD: "E-poçtunuzu daxil edin və parol sıfırlama linkini göndərəcəyik"
+    ALREADYLOGGEDIN: 'Sizin bu səhifəyə icazəniz yoxdur. Əgər bu səhifəyə icazəsi olan başqa profiliniz varsa hesabınıza daxil olun'
+    BUTTONSEND: 'Parolu sıfırlama linkini göndər'
+    CHANGEPASSWORDBELOW: 'Şifrəni burda deyişə bilərsiniz. '
+    CHANGEPASSWORDHEADER: 'Parolu dəyiş'
+    ENTERNEWPASSWORD: 'Yeni şifrəni daxil edin.'
+    ERRORPASSWORDPERMISSION: 'Parolu dəyişmək üçün hesaba daxil olmalısınız!'
+    LOGGEDOUT: 'Hesabdan çıxdınız. Yenidən daxil olmaq üçün məlumatları daxil edin.'
+    LOGIN: 'Daxil ol'
+    NOTEPAGESECURED: 'Səhifə təhlükəsizdir. Məlumatları daxil edin və biz sizə göndərəcəyik. '
+    NOTERESETPASSWORD: 'E-poçtunuzu daxil edin və parol sıfırlama linkini göndərəcəyik'
   SecurityAdmin:
-    GROUPNAME: "Qrupun adı"
+    GROUPNAME: 'Qrupun adı'
     MEMBERS: Üzvlər
     PERMISSIONS: Səlahiyyətlər
     ROLES: Rollar
   SiteTree:
     TABMAIN: Əsas
   TableListField:
-    CSVEXPORT: "CSV-yə ixrac et"
+    CSVEXPORT: 'CSV-yə ixrac et'
   ToggleField:
-    LESS: "daha az"
-    MORE: "daha çox"
+    LESS: 'daha az'
+    MORE: 'daha çox'
   Versioned:
     has_many_Versions: Versiyalar

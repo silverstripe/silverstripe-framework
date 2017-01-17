@@ -1,131 +1,131 @@
 uk:
   AssetAdmin:
-    NEWFOLDER: "Нова Тека"
+    NEWFOLDER: 'Нова Тека'
   AssetTableField:
-    CREATED: "Вперше завантажено"
+    CREATED: 'Вперше завантажено'
     DIM: Виміри
-    FILENAME: "Ім'я файлу"
-    LASTEDIT: "Востаннє змінено"
+    FILENAME: 'Ім''я файлу'
+    LASTEDIT: 'Востаннє змінено'
     OWNER: Власник
-    SIZE: Розмір
+    SIZE: 'Розмір'
     TITLE: Назва
     TYPE: Тип
   AssetUploadField:
-    ChooseFiles: "Виберіть файли"
-    DRAGFILESHERE: "Перемістіть файли сюди"
-    DROPAREA: "Місце для перенесення файлів"
-    EDITALL: "Редагувати все"
-    EDITANDORGANIZE: "Редагувати та впорядковувати"
-    EDITINFO: "Редагувати файли"
+    ChooseFiles: 'Виберіть файли'
+    DRAGFILESHERE: 'Перемістіть файли сюди'
+    DROPAREA: 'Місце для перенесення файлів'
+    EDITALL: 'Редагувати все'
+    EDITANDORGANIZE: 'Редагувати та впорядковувати'
+    EDITINFO: 'Редагувати файли'
     FILES: Файли
-    FROMCOMPUTER: "Виберіть файли з вашого комп’ютера"
-    FROMCOMPUTERINFO: "Завантажте з вашого комп’ютера"
+    FROMCOMPUTER: 'Виберіть файли з вашого комп’ютера'
+    FROMCOMPUTERINFO: 'Завантажте з вашого комп’ютера'
     TOTAL: Підсумок
-    UPLOADINPROGRESS: "Зачекайте, будь ласка, виконується завантаження"
+    UPLOADINPROGRESS: 'Зачекайте, будь ласка, виконується завантаження'
     UPLOADOR: АБО
   BBCodeParser:
     ALIGNEMENT: Вирівнювання
-    ALIGNEMENTEXAMPLE: "вирівнювання справа"
-    BOLD: "Жирний текст"
+    ALIGNEMENTEXAMPLE: 'вирівнювання справа'
+    BOLD: 'Жирний текст'
     BOLDEXAMPLE: Жирний
-    CODE: "Блок Коду"
-    CODEDESCRIPTION: "Неформатований блок коду"
-    CODEEXAMPLE: "Блок коду"
-    COLORED: "Кольоровий текст"
-    COLOREDEXAMPLE: "синій текст"
+    CODE: 'Блок Коду'
+    CODEDESCRIPTION: 'Неформатований блок коду'
+    CODEEXAMPLE: 'Блок коду'
+    COLORED: 'Кольоровий текст'
+    COLOREDEXAMPLE: 'синій текст'
     IMAGE: Зображення
-    UNORDERED: "Невпорядкований список"
-    UNORDEREDDESCRIPTION: "Невпорядкований список"
+    UNORDERED: 'Невпорядкований список'
+    UNORDEREDDESCRIPTION: 'Невпорядкований список'
   BackLink_Button_ss:
     Back: Назад
   BasicAuth:
-    ENTERINFO: "Будь ласка, введіть ім'я користувача та пароль."
-    ERRORNOTADMIN: "Цей користувач не є адміністратором."
-    ERRORNOTREC: "Таке ім'я користувача / пароль не існує"
+    ENTERINFO: 'Будь ласка, введіть ім''я користувача та пароль.'
+    ERRORNOTADMIN: 'Цей користувач не є адміністратором.'
+    ERRORNOTREC: 'Таке ім''я користувача / пароль не існує'
   CMSMain:
     SAVE: Зберегти
   CMSProfileController:
-    MENUTITLE: "Мій профіль"
+    MENUTITLE: 'Мій профіль'
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "Ви змінили свій пароль для"
-    CHANGEPASSWORDTEXT2: "Тепер Ви можете використовувати наступні дані для входу:"
+    CHANGEPASSWORDTEXT1: 'Ви змінили свій пароль для'
+    CHANGEPASSWORDTEXT2: 'Тепер Ви можете використовувати наступні дані для входу:'
     HELLO: Привіт
     PASSWORD: Пароль
   ConfirmedPasswordField:
-    ATLEAST: "Пароль повинен містити що найменше {min} символів."
-    BETWEEN: "Пароль повинен містити від {min} до {max} символів."
-    MAXIMUM: "Пароль повинен містити не більше ніж {max} символів."
-    SHOWONCLICKTITLE: "Змінити пароль"
+    ATLEAST: 'Пароль повинен містити що найменше {min} символів.'
+    BETWEEN: 'Пароль повинен містити від {min} до {max} символів.'
+    MAXIMUM: 'Пароль повинен містити не більше ніж {max} символів.'
+    SHOWONCLICKTITLE: 'Змінити пароль'
   CreditCardField:
     FIRST: перший
     FOURTH: четвертий
     SECOND: другий
     THIRD: третій
   DataObject:
-    PLURALNAME: "Об’єкти даних"
-    SINGULARNAME: "Об’єкт даних"
+    PLURALNAME: 'Об’єкти даних'
+    SINGULARNAME: 'Об’єкт даних'
   DateField:
-    NOTSET: "не встановлено"
+    NOTSET: 'не встановлено'
     TODAY: сьогодні
   DropdownField:
     CHOOSE: (Оберіть)
   Enum:
     ANY: Будь-який
   File:
-    NOVALIDUPLOAD: "Цей файл не може бути завантаженим"
+    NOVALIDUPLOAD: 'Цей файл не може бути завантаженим'
     PLURALNAME: Файли
     SINGULARNAME: Файл
   ForgotPasswordEmail_ss:
     HELLO: Привіт
   Form:
-    VALIDATIONNOTUNIQUE: "Введене значання не унікальне"
-    VALIDATIONPASSWORDSDONTMATCH: "Паролі не збігаються"
-    VALIDATIONPASSWORDSNOTEMPTY: "Паролі не можуть бути порожніми"
+    VALIDATIONNOTUNIQUE: 'Введене значання не унікальне'
+    VALIDATIONPASSWORDSDONTMATCH: 'Паролі не збігаються'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Паролі не можуть бути порожніми'
   GridField:
-    Add: "Додати {name}"
+    Add: 'Додати {name}'
     Filter: Фільтр
-    FilterBy: "Фільтр по"
+    FilterBy: 'Фільтр по'
     Find: Пошук
-    LEVELUP: "Рівень вижче"
+    LEVELUP: 'Рівень вижче'
   GridFieldDetailForm:
     CancelBtn: Відмінити
     Create: Створити
     Delete: Видалити
     Save: Зберегти
-    Saved: "Збережено {name} {link}"
+    Saved: 'Збережено {name} {link}'
   Group:
-    AddRole: "Додати роль до цієї групи"
-    Code: "Код групи"
-    Locked: Заблокувати?
-    Parent: "Батьківська група"
-    RolesAddEditLink: "Керувати ролями"
+    AddRole: 'Додати роль до цієї групи'
+    Code: 'Код групи'
+    Locked: 'Заблокувати?'
+    Parent: 'Батьківська група'
+    RolesAddEditLink: 'Керувати ролями'
     has_many_Permissions: Права
     many_many_Members: Члени
   HtmlEditorField:
     ANCHORVALUE: Якір
-    BUTTONINSERTLINK: "Вставити посилання"
-    BUTTONREMOVELINK: "Вмдалити посилання"
-    CAPTIONTEXT: "Текст заголовку"
-    CSSCLASS: "Вирівнювання / стиль"
-    CSSCLASSCENTER: "По центру, без тексту навколо."
-    CSSCLASSLEFT: "Зліва, з текстом навколо."
-    CSSCLASSRIGHT: "Справа, з текстом навколо."
-    EMAIL: "Адреса е-пошти"
+    BUTTONINSERTLINK: 'Вставити посилання'
+    BUTTONREMOVELINK: 'Вмдалити посилання'
+    CAPTIONTEXT: 'Текст заголовку'
+    CSSCLASS: 'Вирівнювання / стиль'
+    CSSCLASSCENTER: 'По центру, без тексту навколо.'
+    CSSCLASSLEFT: 'Зліва, з текстом навколо.'
+    CSSCLASSRIGHT: 'Справа, з текстом навколо.'
+    EMAIL: 'Адреса е-пошти'
     FILE: Файл
     FOLDER: Тека
-    IMAGEDIMENSIONS: Розміри
+    IMAGEDIMENSIONS: 'Розміри'
     IMAGEHEIGHTPX: Висота
-    IMAGETITLE: "Текст заголовку (tooltip) - для додаткової інформації про зображення"
+    IMAGETITLE: 'Текст заголовку (tooltip) - для додаткової інформації про зображення'
     IMAGEWIDTHPX: Ширина
-    LINK: "Вставити/редагувати посилання для підсвіченого виразу"
-    LINKANCHOR: "Якір на цю сторінку"
-    LINKDESCR: "Опис посилання"
-    LINKEMAIL: "Адресу е-пошти"
-    LINKEXTERNAL: "Інший сайт"
-    LINKFILE: "Завантажити файл"
-    LINKINTERNAL: "Сторінку з цього сайту"
-    LINKOPENNEWWIN: "Відчиняти посилання у новому вікні?"
-    LINKTO: "Посилатися на"
+    LINK: 'Вставити/редагувати посилання для підсвіченого виразу'
+    LINKANCHOR: 'Якір на цю сторінку'
+    LINKDESCR: 'Опис посилання'
+    LINKEMAIL: 'Адресу е-пошти'
+    LINKEXTERNAL: 'Інший сайт'
+    LINKFILE: 'Завантажити файл'
+    LINKINTERNAL: 'Сторінку з цього сайту'
+    LINKOPENNEWWIN: 'Відчиняти посилання у новому вікні?'
+    LINKTO: 'Посилатися на'
     PAGE: Сторінка
   Image:
     PLURALNAME: Файли
@@ -134,94 +134,94 @@ uk:
     PLURALNAME: Файли
     SINGULARNAME: Файл
   Image_iframe_ss:
-    TITLE: "АйФрейм завантаження зображення"
+    TITLE: 'АйФрейм завантаження зображення'
   LeftAndMain:
     HELP: Допомога
-    PERMAGAIN: "Ви вийшли з системи. Якщо Ви хочете повторно ідентифікуватися, введіть дані нижче."
+    PERMAGAIN: 'Ви вийшли з системи. Якщо Ви хочете повторно ідентифікуватися, введіть дані нижче.'
   LeftAndMain_Menu_ss:
     Hello: Привіт
     LOGOUT: Вилогуватися
   Member:
-    BUTTONCHANGEPASSWORD: "Змінити пароль"
+    BUTTONCHANGEPASSWORD: 'Змінити пароль'
     BUTTONLOGIN: Увійти
-    BUTTONLOGINOTHER: "Увійдіть кимось іншим"
-    BUTTONLOSTPASSWORD: "Я загубив свій пароль"
-    CONFIRMNEWPASSWORD: "Підтвердіть новий пароль"
-    CONFIRMPASSWORD: "Підтвердіть пароль"
+    BUTTONLOGINOTHER: 'Увійдіть кимось іншим'
+    BUTTONLOSTPASSWORD: 'Я загубив свій пароль'
+    CONFIRMNEWPASSWORD: 'Підтвердіть новий пароль'
+    CONFIRMPASSWORD: 'Підтвердіть пароль'
     DefaultDateTime: типовий
     EMAIL: Е-пошта
-    EMPTYNEWPASSWORD: "Новий пароль не може бути порожнім, будь-ласка, спробуйте ще раз"
-    ENTEREMAIL: "Введіть, будь-ласка, електронну адресу щоб отримати посилання для відновлення паролю."
-    ERRORNEWPASSWORD: "Ви ввели новий пароль із відмінностями, спробуйте знову"
-    ERRORPASSWORDNOTMATCH: "Ваш теперішній пароль не збігається, будь ласка, повторіть"
-    FIRSTNAME: Ім'я
-    INTERFACELANG: "Мова Інтерфейсу"
-    NEWPASSWORD: "Новий пароль"
+    EMPTYNEWPASSWORD: 'Новий пароль не може бути порожнім, будь-ласка, спробуйте ще раз'
+    ENTEREMAIL: 'Введіть, будь-ласка, електронну адресу щоб отримати посилання для відновлення паролю.'
+    ERRORNEWPASSWORD: 'Ви ввели новий пароль із відмінностями, спробуйте знову'
+    ERRORPASSWORDNOTMATCH: 'Ваш теперішній пароль не збігається, будь ласка, повторіть'
+    FIRSTNAME: 'Ім''я'
+    INTERFACELANG: 'Мова Інтерфейсу'
+    NEWPASSWORD: 'Новий пароль'
     PASSWORD: Пароль
     PLURALNAME: Члени
     SINGULARNAME: Член
-    SUBJECTPASSWORDCHANGED: "Ваш пароль змінено"
-    SUBJECTPASSWORDRESET: "Посилання на відновлення Вашого паролю"
+    SUBJECTPASSWORDCHANGED: 'Ваш пароль змінено'
+    SUBJECTPASSWORDRESET: 'Посилання на відновлення Вашого паролю'
     SURNAME: Прізвище
-    YOUROLDPASSWORD: "Ваш старий пароль"
+    YOUROLDPASSWORD: 'Ваш старий пароль'
     belongs_many_many_Groups: Групи
-    db_LastVisited: "Дата останнього відвідування"
-    db_LockedOutUntil: "Заблоковано поки"
-    db_NumVisit: "Кількість відвідувань"
+    db_LastVisited: 'Дата останнього відвідування'
+    db_LockedOutUntil: 'Заблоковано поки'
+    db_NumVisit: 'Кількість відвідувань'
     db_Password: Пароль
-    db_PasswordExpiry: "Дата закінчення терміну дії пароля"
+    db_PasswordExpiry: 'Дата закінчення терміну дії пароля'
   MemberAuthenticator:
-    TITLE: "Е-пошта та Пароль"
+    TITLE: 'Е-пошта та Пароль'
   MemberPassword:
-    PLURALNAME: "Паролі користувача"
-    SINGULARNAME: "Пароль користувача"
+    PLURALNAME: 'Паролі користувача'
+    SINGULARNAME: 'Пароль користувача'
   ModelAdmin:
-    IMPORT: "Імпортувати з CSV"
+    IMPORT: 'Імпортувати з CSV'
   MoneyField:
     FIELDLABELAMOUNT: Кількість
     FIELDLABELCURRENCY: Валюта
   Pagination:
     Page: Сторінка
   Permission:
-    SINGULARNAME: "Право доступу"
+    SINGULARNAME: 'Право доступу'
   PermissionCheckboxSetField:
-    FromRoleOnGroup: "Успадкований з ролі \"%s\" на групу \"%s\""
+    FromRoleOnGroup: 'Успадкований з ролі "%s" на групу "%s"'
   PermissionRole:
-    PLURALNAME: Ролі
-    SINGULARNAME: Роль
+    PLURALNAME: 'Ролі'
+    SINGULARNAME: 'Роль'
     Title: Назва
   PhoneNumberField:
-    VALIDATION: "Будь ласка, введіть дійсний номер телефону"
+    VALIDATION: 'Будь ласка, введіть дійсний номер телефону'
   Security:
-    ALREADYLOGGEDIN: "Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче."
-    BUTTONSEND: "Надішліть мені посилання для відновлення паролю"
-    CHANGEPASSWORDBELOW: "Ви можете змінити пароль нижче."
-    CHANGEPASSWORDHEADER: "Змінити свій пароль"
-    ENTERNEWPASSWORD: "Ви можете змінити пароль нижче."
-    ERRORPASSWORDPERMISSION: "Ви повинні увійти до системи для зміни паролю!"
-    LOGGEDOUT: "Ви вийшли з системи. Якщо Ви хочете знову увійти, то введіть дані нижче."
+    ALREADYLOGGEDIN: 'Ви не маєте доступу до цієї сторінки. Якщо Ви володієте іншим рахунком, який має доступ до цієї сторінки, Ви можете увійти до системи нижче.'
+    BUTTONSEND: 'Надішліть мені посилання для відновлення паролю'
+    CHANGEPASSWORDBELOW: 'Ви можете змінити пароль нижче.'
+    CHANGEPASSWORDHEADER: 'Змінити свій пароль'
+    ENTERNEWPASSWORD: 'Ви можете змінити пароль нижче.'
+    ERRORPASSWORDPERMISSION: 'Ви повинні увійти до системи для зміни паролю!'
+    LOGGEDOUT: 'Ви вийшли з системи. Якщо Ви хочете знову увійти, то введіть дані нижче.'
     LOGIN: Увійти
-    NOTEPAGESECURED: "Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі."
-    NOTERESETPASSWORD: "Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю"
+    NOTEPAGESECURED: 'Ця сторінка захищена. Будь ласка, введіть Ваші дані нижче та ми Вас перенаправимо далі.'
+    NOTERESETPASSWORD: 'Введіть адресу Вашої е-пошти і ми надішлемо вам посилання для відновлення паролю'
   SecurityAdmin:
-    EDITPERMISSIONS: "Керувати дозволами для груп"
-    IMPORTUSERS: "Імпортувати користувачів"
+    EDITPERMISSIONS: 'Керувати дозволами для груп'
+    IMPORTUSERS: 'Імпортувати користувачів'
     MEMBERS: Члени
-    NEWGROUP: "Нова Група"
+    NEWGROUP: 'Нова Група'
     PERMISSIONS: Дозволи
   SiteTree:
     TABMAIN: Головна
   TableListField:
-    CSVEXPORT: "Експортувати в CSV"
+    CSVEXPORT: 'Експортувати в CSV'
   ToggleField:
     LESS: менше
     MORE: більше
   UploadField:
-    ATTACHFILE: "Прикріпити файл"
-    ATTACHFILES: "Прикріпити файли"
-    AttachFile: "Прикріпити файл(и)"
+    ATTACHFILE: 'Прикріпити файл'
+    ATTACHFILES: 'Прикріпити файли'
+    AttachFile: 'Прикріпити файл(и)'
     DOEDIT: Зберегти
-    EDITINFO: "Редагувати цей файл"
-    FROMFILES: "З файлів"
+    EDITINFO: 'Редагувати цей файл'
+    FROMFILES: 'З файлів'
   Versioned:
     has_many_Versions: Версіїї

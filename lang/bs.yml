@@ -2,51 +2,51 @@ bs:
   AssetAdmin:
     NEWFOLDER: NoviDirektorij
   AssetTableField:
-    CREATED: "Prvo postavljeno"
+    CREATED: 'Prvo postavljeno'
     DIM: Dimenzije
-    FILENAME: "Ime datoteke"
-    LASTEDIT: "Zadnja promjena"
+    FILENAME: 'Ime datoteke'
+    LASTEDIT: 'Zadnja promjena'
     OWNER: Vlasnik
     SIZE: Veličina
     TITLE: Naslov
     TYPE: Tip
   BBCodeParser:
     ALIGNEMENT: Poravnanje
-    ALIGNEMENTEXAMPLE: "desno poravnanje"
-    BOLD: "Podebljani tekst"
+    ALIGNEMENTEXAMPLE: 'desno poravnanje'
+    BOLD: 'Podebljani tekst'
     BOLDEXAMPLE: Podebljano
-    CODE: "Blok koda"
-    CODEDESCRIPTION: "Neoblikovani blok koda"
-    CODEEXAMPLE: "Blok koda"
-    COLORED: "Obojeni tekst"
-    COLOREDEXAMPLE: "plavi tekst"
-    EMAILLINK: "E-mail link"
-    EMAILLINKDESCRIPTION: "Kreiraj link za e-mail adresu"
+    CODE: 'Blok koda'
+    CODEDESCRIPTION: 'Neoblikovani blok koda'
+    CODEEXAMPLE: 'Blok koda'
+    COLORED: 'Obojeni tekst'
+    COLOREDEXAMPLE: 'plavi tekst'
+    EMAILLINK: 'E-mail link'
+    EMAILLINKDESCRIPTION: 'Kreiraj link za e-mail adresu'
     IMAGE: Slika
-    IMAGEDESCRIPTION: "Prikažite sliku u Vašoj poruci"
-    ITALIC: "Ukošeni tekst"
+    IMAGEDESCRIPTION: 'Prikažite sliku u Vašoj poruci'
+    ITALIC: 'Ukošeni tekst'
     ITALICEXAMPLE: Ukošeno
-    LINK: "Link web stranice"
-    LINKDESCRIPTION: "Link neke druge web stranice ili URL"
-    STRUCK: "Precrtani tekst"
+    LINK: 'Link web stranice'
+    LINKDESCRIPTION: 'Link neke druge web stranice ili URL'
+    STRUCK: 'Precrtani tekst'
     STRUCKEXAMPLE: Precrtano
-    UNDERLINE: "Podvučeni tekst"
+    UNDERLINE: 'Podvučeni tekst'
     UNDERLINEEXAMPLE: Podvučeno
-    UNORDERED: "Neuređena lista"
-    UNORDEREDDESCRIPTION: "Neuređena lista"
-    UNORDEREDEXAMPLE1: "neuređena stavka 1"
+    UNORDERED: 'Neuređena lista'
+    UNORDEREDDESCRIPTION: 'Neuređena lista'
+    UNORDEREDEXAMPLE1: 'neuređena stavka 1'
   BasicAuth:
-    ENTERINFO: "Molimo, unesite korisničko ime i šifru."
-    ERRORNOTADMIN: "Ovaj korisnik nije administrator."
-    ERRORNOTREC: "Korisničko ime / šifra nije prepoznata"
+    ENTERINFO: 'Molimo, unesite korisničko ime i šifru.'
+    ERRORNOTADMIN: 'Ovaj korisnik nije administrator.'
+    ERRORNOTREC: 'Korisničko ime / šifra nije prepoznata'
   Boolean:
     NOANSWER: Ne
     YESANSWER: Da
   CMSMain:
     SAVE: Snimi
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "Promijenili ste svoju šifru za"
-    CHANGEPASSWORDTEXT2: "Možete koristiti slijedeće podatke za prijavu:"
+    CHANGEPASSWORDTEXT1: 'Promijenili ste svoju šifru za'
+    CHANGEPASSWORDTEXT2: 'Možete koristiti slijedeće podatke za prijavu:'
     HELLO: Pozdrav
   CheckboxField:
     NOANSWER: Ne
@@ -59,100 +59,100 @@ bs:
   CurrencyField:
     CURRENCYSYMBOL: KM
   DateField:
-    NOTSET: "nije postavljeno"
+    NOTSET: 'nije postavljeno'
     TODAY: danas
   DropdownField:
     CHOOSE: (Izaberite)
   ForgotPasswordEmail_ss:
     HELLO: Pozdrav
-    TEXT1: "Ovo je Vaš"
-    TEXT2: "link za ponovno podešavanje šifre"
+    TEXT1: 'Ovo je Vaš'
+    TEXT2: 'link za ponovno podešavanje šifre'
     TEXT3: za
   Form:
     SubmitBtnLabel: Idi
-    VALIDATIONNOTUNIQUE: "Unesena vrijednost nije jedinstvena"
-    VALIDATIONPASSWORDSDONTMATCH: "Šifre se ne slažu"
-    VALIDATIONPASSWORDSNOTEMPTY: "Polja za unos šifre ne smiju ostati prazna"
-    VALIDATOR: "Provjera ispravnosti"
+    VALIDATIONNOTUNIQUE: 'Unesena vrijednost nije jedinstvena'
+    VALIDATIONPASSWORDSDONTMATCH: 'Šifre se ne slažu'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Polja za unos šifre ne smiju ostati prazna'
+    VALIDATOR: 'Provjera ispravnosti'
   FormField:
     NONE: ništa
   GridFieldDetailForm:
     Create: Kreiraj
   HtmlEditorField:
     ANCHORVALUE: Sidro
-    BUTTONINSERTLINK: "Ubaci link"
-    BUTTONREMOVELINK: "Ukloni link"
-    CSSCLASS: "Poravnanje / stil"
+    BUTTONINSERTLINK: 'Ubaci link'
+    BUTTONREMOVELINK: 'Ukloni link'
+    CSSCLASS: 'Poravnanje / stil'
     CSSCLASSCENTER: Središnje
-    CSSCLASSLEFT: "Lijevo, sa okruženim tekstom."
-    CSSCLASSLEFTALONE: "Na lijevoj strani, samo od sebe."
-    CSSCLASSRIGHT: "Desno, sa okruženim tekstom."
-    EMAIL: "E-mail adresa"
+    CSSCLASSLEFT: 'Lijevo, sa okruženim tekstom.'
+    CSSCLASSLEFTALONE: 'Na lijevoj strani, samo od sebe.'
+    CSSCLASSRIGHT: 'Desno, sa okruženim tekstom.'
+    EMAIL: 'E-mail adresa'
     FILE: Datoteka
     FOLDER: Direktorij
     IMAGEDIMENSIONS: Dimenzije
     IMAGEHEIGHTPX: Visina
-    IMAGEWIDTHPX: Širina
+    IMAGEWIDTHPX: 'Širina'
     LINK: Link
-    LINKANCHOR: "Sidro na ovoj stranici"
-    LINKDESCR: "Opis linka"
-    LINKEMAIL: "E-mail adresa"
-    LINKEXTERNAL: "Druga web stranica"
-    LINKFILE: "Preuzmi datoteku"
-    LINKINTERNAL: "Stavka na stranici"
-    LINKOPENNEWWIN: "Otvori link u novom prozoru?"
-    LINKTO: "Poveži sa"
+    LINKANCHOR: 'Sidro na ovoj stranici'
+    LINKDESCR: 'Opis linka'
+    LINKEMAIL: 'E-mail adresa'
+    LINKEXTERNAL: 'Druga web stranica'
+    LINKFILE: 'Preuzmi datoteku'
+    LINKINTERNAL: 'Stavka na stranici'
+    LINKOPENNEWWIN: 'Otvori link u novom prozoru?'
+    LINKTO: 'Poveži sa'
     PAGE: Stranica
   Image_iframe_ss:
-    TITLE: "Iframe za postavljanje slika"
+    TITLE: 'Iframe za postavljanje slika'
   LeftAndMain:
     HELP: Pomoć
-    PERMAGAIN: "Odjavljeni ste sa CMS-a. Ukoliko se želite ponovo prijaviti, unesite korisničko ime i šifru ispod."
+    PERMAGAIN: 'Odjavljeni ste sa CMS-a. Ukoliko se želite ponovo prijaviti, unesite korisničko ime i šifru ispod.'
   Member:
-    BUTTONCHANGEPASSWORD: "Promijeni šifru"
+    BUTTONCHANGEPASSWORD: 'Promijeni šifru'
     BUTTONLOGIN: Prijava
-    BUTTONLOGINOTHER: "Prijavite se sa drugim korisnikom"
-    BUTTONLOSTPASSWORD: "Zaboravio sam šifru"
-    CONFIRMNEWPASSWORD: "Potvrdite novu šifru"
-    CONFIRMPASSWORD: "Potvrdite šifru"
+    BUTTONLOGINOTHER: 'Prijavite se sa drugim korisnikom'
+    BUTTONLOSTPASSWORD: 'Zaboravio sam šifru'
+    CONFIRMNEWPASSWORD: 'Potvrdite novu šifru'
+    CONFIRMPASSWORD: 'Potvrdite šifru'
     EMAIL: E-mail
-    ERRORNEWPASSWORD: "Pogrešno ste upisali novu šifru, pokušajte ponovo"
-    ERRORPASSWORDNOTMATCH: "Vaša trenutna šifra se ne slaže, molimo pokušajte ponovo"
+    ERRORNEWPASSWORD: 'Pogrešno ste upisali novu šifru, pokušajte ponovo'
+    ERRORPASSWORDNOTMATCH: 'Vaša trenutna šifra se ne slaže, molimo pokušajte ponovo'
     FIRSTNAME: Ime
-    INTERFACELANG: "Jezik sučelja"
-    NEWPASSWORD: "Nova šifra"
-    PASSWORD: Šifra
-    SUBJECTPASSWORDCHANGED: "Vaša šifra je promijenjena"
-    SUBJECTPASSWORDRESET: "Link za ponovno podešavanje Vaše šifre"
+    INTERFACELANG: 'Jezik sučelja'
+    NEWPASSWORD: 'Nova šifra'
+    PASSWORD: 'Šifra'
+    SUBJECTPASSWORDCHANGED: 'Vaša šifra je promijenjena'
+    SUBJECTPASSWORDRESET: 'Link za ponovno podešavanje Vaše šifre'
     SURNAME: Prezime
-    YOUROLDPASSWORD: "Vaša stara šifra"
+    YOUROLDPASSWORD: 'Vaša stara šifra'
   MemberAuthenticator:
-    TITLE: "E-mail i šifra"
+    TITLE: 'E-mail i šifra'
   Permission:
-    FULLADMINRIGHTS: "Puna administrativna ovlaštenja"
+    FULLADMINRIGHTS: 'Puna administrativna ovlaštenja'
   PhoneNumberField:
-    VALIDATION: "Molimo, unesite ispravan broj telefona"
+    VALIDATION: 'Molimo, unesite ispravan broj telefona'
   Security:
-    ALREADYLOGGEDIN: "Ne možete pristupiti ovoj stranici. Ukoliko imate drugi korisnički račun koji može pristupiti ovoj stranici, prijavite si ispod."
-    BUTTONSEND: "Pošalji mi link za ponovno podešavanje šifre"
-    CHANGEPASSWORDBELOW: "Vašu šifru možete promijeniti ispod."
-    CHANGEPASSWORDHEADER: "Promijenite Vašu šifru"
-    ENTERNEWPASSWORD: "Molimo, unesite novu šifru."
-    ERRORPASSWORDPERMISSION: "Morate se prijaviti kako bi promijenili Vašu šifru."
-    LOGGEDOUT: "Odjavljeni ste. Ukoliko se želite ponovo prijaviti, unesite Vaše podatke ispod."
+    ALREADYLOGGEDIN: 'Ne možete pristupiti ovoj stranici. Ukoliko imate drugi korisnički račun koji može pristupiti ovoj stranici, prijavite si ispod.'
+    BUTTONSEND: 'Pošalji mi link za ponovno podešavanje šifre'
+    CHANGEPASSWORDBELOW: 'Vašu šifru možete promijeniti ispod.'
+    CHANGEPASSWORDHEADER: 'Promijenite Vašu šifru'
+    ENTERNEWPASSWORD: 'Molimo, unesite novu šifru.'
+    ERRORPASSWORDPERMISSION: 'Morate se prijaviti kako bi promijenili Vašu šifru.'
+    LOGGEDOUT: 'Odjavljeni ste. Ukoliko se želite ponovo prijaviti, unesite Vaše podatke ispod.'
     LOGIN: Prijava
-    NOTEPAGESECURED: "Ova stranica je osigurana. Unesite Vaše podatke i poslat ćemo Vam sadržaj."
-    NOTERESETPASSWORD: "Unesite Vašu e-mail adresu na koju ćemo Vam poslati link za ponovno podešavanje Vaše šifre."
+    NOTEPAGESECURED: 'Ova stranica je osigurana. Unesite Vaše podatke i poslat ćemo Vam sadržaj.'
+    NOTERESETPASSWORD: 'Unesite Vašu e-mail adresu na koju ćemo Vam poslati link za ponovno podešavanje Vaše šifre.'
   SecurityAdmin:
-    EDITPERMISSIONS: "Izmijeni ovlaštenja i IP adrese na svakoj grupi"
-    GROUPNAME: "Ime grupe"
+    EDITPERMISSIONS: 'Izmijeni ovlaštenja i IP adrese na svakoj grupi'
+    GROUPNAME: 'Ime grupe'
     MEMBERS: Članovi
-    NEWGROUP: "Nova grupa"
+    NEWGROUP: 'Nova grupa'
     PERMISSIONS: Ovlaštenja
   SiteTree:
     TABMAIN: Glavno
   TableListField:
-    CSVEXPORT: "Izvezi u CSV"
+    CSVEXPORT: 'Izvezi u CSV'
   ToggleField:
     LESS: manje
     MORE: više

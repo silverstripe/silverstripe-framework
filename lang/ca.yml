@@ -2,52 +2,52 @@ ca:
   AssetAdmin:
     NEWFOLDER: NovaCarpeta
   AssetTableField:
-    CREATED: "Carregat per primer cop"
-    FILENAME: "Nom del fitxer"
-    LASTEDIT: "Darrer canvi"
+    CREATED: 'Carregat per primer cop'
+    FILENAME: 'Nom del fitxer'
+    LASTEDIT: 'Darrer canvi'
     OWNER: Propietari
     SIZE: Mida
     TITLE: Títol
     TYPE: Tipus
   BBCodeParser:
     ALIGNEMENT: Alineació
-    ALIGNEMENTEXAMPLE: "alineat a la dreta"
-    BOLD: "Text en negreta"
+    ALIGNEMENTEXAMPLE: 'alineat a la dreta'
+    BOLD: 'Text en negreta'
     BOLDEXAMPLE: Negreta
-    CODE: "Bloc de codi"
-    CODEDESCRIPTION: "Bloc de codi sense format"
-    CODEEXAMPLE: "Bloc de codi"
-    COLORED: "Text colorejat"
-    COLOREDEXAMPLE: "text blau"
-    EMAILLINK: "Enllaç a correu electrònic"
-    EMAILLINKDESCRIPTION: "Crea un enllaç a una adreça de correu electrònic"
+    CODE: 'Bloc de codi'
+    CODEDESCRIPTION: 'Bloc de codi sense format'
+    CODEEXAMPLE: 'Bloc de codi'
+    COLORED: 'Text colorejat'
+    COLOREDEXAMPLE: 'text blau'
+    EMAILLINK: 'Enllaç a correu electrònic'
+    EMAILLINKDESCRIPTION: 'Crea un enllaç a una adreça de correu electrònic'
     IMAGE: Imatge
-    IMAGEDESCRIPTION: "Mostra una imatge al vostre escrit"
-    ITALIC: "Text en cursiva"
+    IMAGEDESCRIPTION: 'Mostra una imatge al vostre escrit'
+    ITALIC: 'Text en cursiva'
     ITALICEXAMPLE: Cursiva
-    LINK: "Enllaç web "
-    LINKDESCRIPTION: "Enllaça a un altre web o URL"
-    STRUCK: "Text tatxat"
+    LINK: 'Enllaç web '
+    LINKDESCRIPTION: 'Enllaça a un altre web o URL'
+    STRUCK: 'Text tatxat'
     STRUCKEXAMPLE: Tatxat
-    UNDERLINE: "Text subratllat"
+    UNDERLINE: 'Text subratllat'
     UNDERLINEEXAMPLE: Subratllat
-    UNORDERED: "Llista no ordenada"
-    UNORDEREDDESCRIPTION: "Llista no ordenada"
-    UNORDEREDEXAMPLE1: "element no ordenat 1"
+    UNORDERED: 'Llista no ordenada'
+    UNORDEREDDESCRIPTION: 'Llista no ordenada'
+    UNORDEREDEXAMPLE1: 'element no ordenat 1'
   BasicAuth:
-    ENTERINFO: "Si us plau, introduïu un nom d'usuari i contrasenya"
-    ERRORNOTADMIN: "Aquest usuari no és un administrador."
-    ERRORNOTREC: "Aquest nom d'usuari / contrasenya no es reconeix"
+    ENTERINFO: 'Si us plau, introduïu un nom d''usuari i contrasenya'
+    ERRORNOTADMIN: 'Aquest usuari no és un administrador.'
+    ERRORNOTREC: 'Aquest nom d''usuari / contrasenya no es reconeix'
   CMSMain:
     SAVE: Desa
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "Heu canviat la vostra contrasenya per"
-    CHANGEPASSWORDTEXT2: "Podeu usar ara les següents credencials per a entrar:"
-    EMAIL: "Correu electrònic"
+    CHANGEPASSWORDTEXT1: 'Heu canviat la vostra contrasenya per'
+    CHANGEPASSWORDTEXT2: 'Podeu usar ara les següents credencials per a entrar:'
+    EMAIL: 'Correu electrònic'
     HELLO: Hola
     PASSWORD: Contrasenya
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: "Canvia la contrasenya"
+    SHOWONCLICKTITLE: 'Canvia la contrasenya'
   CreditCardField:
     FIRST: primer
     FOURTH: quart
@@ -56,133 +56,133 @@ ca:
   CurrencyField:
     CURRENCYSYMBOL: €E
   DataObject:
-    PLURALNAME: "Objectes de dades"
-    SINGULARNAME: "Objecte de dades"
+    PLURALNAME: 'Objectes de dades'
+    SINGULARNAME: 'Objecte de dades'
   DateField:
-    NOTSET: "no definit"
+    NOTSET: 'no definit'
     TODAY: avui
   DropdownField:
     CHOOSE: (Trieu)
   File:
     Content: Contingut
-    Filename: "Nom del fitxer"
+    Filename: 'Nom del fitxer'
     Name: Nom
     PLURALNAME: Fitxers
     SINGULARNAME: Fitxer
     Title: Títol
   ForgotPasswordEmail_ss:
     HELLO: Hola
-    TEXT1: "Aquí teniu el vostre"
-    TEXT2: "enllaç de reinici de la contrasenya"
+    TEXT1: 'Aquí teniu el vostre'
+    TEXT2: 'enllaç de reinici de la contrasenya'
     TEXT3: per
   Form:
-    VALIDATIONNOTUNIQUE: "El valor que heu introduït no és únic"
-    VALIDATIONPASSWORDSDONTMATCH: "Les contrasenyes no concorden"
-    VALIDATIONPASSWORDSNOTEMPTY: "Les contrasenyes no poden deixar-se en blanc"
+    VALIDATIONNOTUNIQUE: 'El valor que heu introduït no és únic'
+    VALIDATIONPASSWORDSDONTMATCH: 'Les contrasenyes no concorden'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Les contrasenyes no poden deixar-se en blanc'
     VALIDATOR: Validador
   FormField:
     NONE: cap
   Group:
-    Code: "Codi de grup"
+    Code: 'Codi de grup'
     Description: Descripció
-    Locked: Bloquejat?
-    Parent: "Grup precedent"
+    Locked: 'Bloquejat?'
+    Parent: 'Grup precedent'
     Sort: Ordre
     has_many_Permissions: Permisos
     many_many_Members: Membres
   HtmlEditorField:
     ANCHORVALUE: Ancla
-    BUTTONINSERTLINK: "Insereix un enllaç"
-    BUTTONREMOVELINK: "Suprimeix un enllaç"
-    CSSCLASS: "Alineació / estil"
-    CSSCLASSCENTER: "Centrat, ell sol."
-    CSSCLASSLEFT: "A l'esquerra, amb text envoltant."
-    CSSCLASSLEFTALONE: "A l'esquerra, per si sol."
-    CSSCLASSRIGHT: "A la dreta, amb text envoltant."
-    EMAIL: "Adreça de correu electrònic"
+    BUTTONINSERTLINK: 'Insereix un enllaç'
+    BUTTONREMOVELINK: 'Suprimeix un enllaç'
+    CSSCLASS: 'Alineació / estil'
+    CSSCLASSCENTER: 'Centrat, ell sol.'
+    CSSCLASSLEFT: 'A l''esquerra, amb text envoltant.'
+    CSSCLASSLEFTALONE: 'A l''esquerra, per si sol.'
+    CSSCLASSRIGHT: 'A la dreta, amb text envoltant.'
+    EMAIL: 'Adreça de correu electrònic'
     FILE: Fitxer
     FOLDER: Carpeta
     IMAGEHEIGHTPX: Alçada
     IMAGEWIDTHPX: Amplada
     LINK: Enllaç
-    LINKANCHOR: "Ancla a aquesta pàgina"
-    LINKDESCR: "Descripció de l'enllaç"
-    LINKEMAIL: "Una adreça de correu electrònic"
-    LINKEXTERNAL: "Un altre lloc web"
-    LINKFILE: "Descàrrega d'un fitxer"
-    LINKINTERNAL: "Pàgina del lloc web"
-    LINKOPENNEWWIN: "Obrir l'enllaç a una nova finestra?"
-    LINKTO: "Enllaça a"
-    PAGE: Pàgina
+    LINKANCHOR: 'Ancla a aquesta pàgina'
+    LINKDESCR: 'Descripció de l''enllaç'
+    LINKEMAIL: 'Una adreça de correu electrònic'
+    LINKEXTERNAL: 'Un altre lloc web'
+    LINKFILE: 'Descàrrega d''un fitxer'
+    LINKINTERNAL: 'Pàgina del lloc web'
+    LINKOPENNEWWIN: 'Obrir l''enllaç a una nova finestra?'
+    LINKTO: 'Enllaça a'
+    PAGE: 'Pàgina'
   Image_iframe_ss:
-    TITLE: "Iframe Carregador d'imatge"
+    TITLE: 'Iframe Carregador d''imatge'
   LeftAndMain:
     HELP: Ajuda
-    PERMAGAIN: "Heu estat desconnectat del SGC. Si voleu entrar de nou, introduïu un nom d'usuari i contrasenya a sota"
+    PERMAGAIN: 'Heu estat desconnectat del SGC. Si voleu entrar de nou, introduïu un nom d''usuari i contrasenya a sota'
   LoginAttempt:
-    Email: "Adreça de correu"
-    IP: "Adreça IP"
+    Email: 'Adreça de correu'
+    IP: 'Adreça IP'
     Status: Estat
   Member:
-    BUTTONCHANGEPASSWORD: "Canvia la contrasenya"
+    BUTTONCHANGEPASSWORD: 'Canvia la contrasenya'
     BUTTONLOGIN: Entrar
-    BUTTONLOGINOTHER: "Entreu com a algú diferent"
-    BUTTONLOSTPASSWORD: "He perdut la meva contrasenya"
-    CONFIRMNEWPASSWORD: "Confirmeu la nova contrasenya"
-    CONFIRMPASSWORD: "Confirmeu la contrasenya"
-    EMAIL: "Correu electrònic"
-    ENTEREMAIL: "Si us plau, introduïu una adreça de correu per a obtenir un enllaç de reinici de contrasenya."
-    ERRORNEWPASSWORD: "Heu introduït la vostra nova contrasenya de forma diferent, proveu-ho de nou"
-    ERRORPASSWORDNOTMATCH: "La vostra contrasenya actual no concorda, si us plau intenteu-ho de nou"
+    BUTTONLOGINOTHER: 'Entreu com a algú diferent'
+    BUTTONLOSTPASSWORD: 'He perdut la meva contrasenya'
+    CONFIRMNEWPASSWORD: 'Confirmeu la nova contrasenya'
+    CONFIRMPASSWORD: 'Confirmeu la contrasenya'
+    EMAIL: 'Correu electrònic'
+    ENTEREMAIL: 'Si us plau, introduïu una adreça de correu per a obtenir un enllaç de reinici de contrasenya.'
+    ERRORNEWPASSWORD: 'Heu introduït la vostra nova contrasenya de forma diferent, proveu-ho de nou'
+    ERRORPASSWORDNOTMATCH: 'La vostra contrasenya actual no concorda, si us plau intenteu-ho de nou'
     FIRSTNAME: Nom
-    INTERFACELANG: "Interfície de llengua"
-    NEWPASSWORD: "Nova contrasenya"
+    INTERFACELANG: 'Interfície de llengua'
+    NEWPASSWORD: 'Nova contrasenya'
     PASSWORD: Contrasenya
     PLURALNAME: Membres
     SINGULARNAME: Membre
-    SUBJECTPASSWORDCHANGED: "La vostra contrasenya s'ha canviat"
-    SUBJECTPASSWORDRESET: "Enllaç per canviar la contrasenya"
+    SUBJECTPASSWORDCHANGED: 'La vostra contrasenya s''ha canviat'
+    SUBJECTPASSWORDRESET: 'Enllaç per canviar la contrasenya'
     SURNAME: Cognom
-    YOUROLDPASSWORD: "La vostra contrasenya anterior"
+    YOUROLDPASSWORD: 'La vostra contrasenya anterior'
     belongs_many_many_Groups: Grups
-    db_LastVisited: "Data de la darrera visita"
-    db_Locale: "Idioma d'interfície"
-    db_LockedOutUntil: "Bloquejat fins a"
-    db_NumVisit: "Nombre de visites"
+    db_LastVisited: 'Data de la darrera visita'
+    db_Locale: 'Idioma d''interfície'
+    db_LockedOutUntil: 'Bloquejat fins a'
+    db_NumVisit: 'Nombre de visites'
     db_Password: Contrasenya
-    db_PasswordExpiry: "Data d'expiració de la contrasenya"
+    db_PasswordExpiry: 'Data d''expiració de la contrasenya'
   MemberAuthenticator:
-    TITLE: "Correu electrònic i contrasenya"
+    TITLE: 'Correu electrònic i contrasenya'
   ModelAdmin:
     DELETE: Suprimeix
-    IMPORT: "Importa de CSV"
-    NOCSVFILE: "Si us plau, cerqueu el fitxer CSV per a importar"
-    NOIMPORT: "No hi ha res a importar"
+    IMPORT: 'Importa de CSV'
+    NOCSVFILE: 'Si us plau, cerqueu el fitxer CSV per a importar'
+    NOIMPORT: 'No hi ha res a importar'
   Permission:
-    FULLADMINRIGHTS: "Drets administratius totals"
+    FULLADMINRIGHTS: 'Drets administratius totals'
   PhoneNumberField:
-    VALIDATION: "Si us plau, introduïu un número de telèfon vàlid"
+    VALIDATION: 'Si us plau, introduïu un número de telèfon vàlid'
   Security:
-    ALREADYLOGGEDIN: "No teniu accés a aquesta pàgina. Si teniu un altre compte que pot accedir a aquesta pàgina, podeu entrar-hi a sota."
-    BUTTONSEND: "Envia'm l'enllaç per reiniciar la contrasenya"
-    CHANGEPASSWORDBELOW: "Podeu canviar la vostra contrasenya a sota."
-    CHANGEPASSWORDHEADER: "Canviar la vostra contrasenya"
-    ENTERNEWPASSWORD: "Si us plau, introduïu una nova contrasenya."
-    ERRORPASSWORDPERMISSION: "Heu d'estar connectat per a canviar la vostra contrasenya!"
-    LOGGEDOUT: "Heu estat desconnectat. Si voleu entrar de nou, introduïu les vostres credencials a sota."
+    ALREADYLOGGEDIN: 'No teniu accés a aquesta pàgina. Si teniu un altre compte que pot accedir a aquesta pàgina, podeu entrar-hi a sota.'
+    BUTTONSEND: 'Envia''m l''enllaç per reiniciar la contrasenya'
+    CHANGEPASSWORDBELOW: 'Podeu canviar la vostra contrasenya a sota.'
+    CHANGEPASSWORDHEADER: 'Canviar la vostra contrasenya'
+    ENTERNEWPASSWORD: 'Si us plau, introduïu una nova contrasenya.'
+    ERRORPASSWORDPERMISSION: 'Heu d''estar connectat per a canviar la vostra contrasenya!'
+    LOGGEDOUT: 'Heu estat desconnectat. Si voleu entrar de nou, introduïu les vostres credencials a sota.'
     LOGIN: Entrar
-    NOTEPAGESECURED: "Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem."
-    NOTERESETPASSWORD: "Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya"
+    NOTEPAGESECURED: 'Aquesta pàgina està protegida. Introduïu les vostres credencials a sota i us hi enviarem.'
+    NOTERESETPASSWORD: 'Introduïu la vostra adreça de correu electrònic i us enviarem un enllaç amb el qual reiniciar la vostra contrasenya'
   SecurityAdmin:
-    EDITPERMISSIONS: "Edita els permisos i les adreces IP de cada grup"
-    GROUPNAME: "Nom de grup"
+    EDITPERMISSIONS: 'Edita els permisos i les adreces IP de cada grup'
+    GROUPNAME: 'Nom de grup'
     MEMBERS: Membres
-    NEWGROUP: "Nou grup"
+    NEWGROUP: 'Nou grup'
     PERMISSIONS: Permisos
   SiteTree:
     TABMAIN: Principal
   TableListField:
-    CSVEXPORT: "Exporta a CSV"
+    CSVEXPORT: 'Exporta a CSV'
   ToggleField:
     LESS: menys
     MORE: més

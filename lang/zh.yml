@@ -1,39 +1,39 @@
 zh:
   AssetAdmin:
     NEWFOLDER: 新建文件夹
-    SHOWALLOWEDEXTS: 显示允许的扩展名
+    SHOWALLOWEDEXTS: '显示允许的扩展名'
   AssetTableField:
-    CREATED: 首先上传的
+    CREATED: '首先上传的'
     DIM: 尺寸
     FILENAME: 文件名
     FOLDER: 文件夹
     LASTEDIT: 最近更改的
     OWNER: 所有人
     SIZE: 文件尺寸
-    TITLE: 标题
+    TITLE: '标题'
     TYPE: 文件类型
     URL: 网址
   AssetUploadField:
     ChooseFiles: 选择文件
     DRAGFILESHERE: 将文件拖放至此
     DROPAREA: 放置区域
-    EDITALL: 编辑全部
+    EDITALL: '编辑全部'
     EDITANDORGANIZE: 编辑并组织
     EDITINFO: 编辑文件
     FILES: 文件
     FROMCOMPUTER: 从您的电脑选择文件
-    FROMCOMPUTERINFO: 从您的电脑上传
+    FROMCOMPUTERINFO: '从您的电脑上传'
     TOTAL: 合计
-    UPLOADINPROGRESS: 请稍候……上传正在进行中
+    UPLOADINPROGRESS: '请稍候……上传正在进行中'
     UPLOADOR: 或
   BBCodeParser:
     ALIGNEMENT: 对齐
     ALIGNEMENTEXAMPLE: 向右对齐
     BOLD: 粗体文字
     BOLDEXAMPLE: 粗体
-    CODE: 代码块
-    CODEDESCRIPTION: 未格式化的代码块
-    CODEEXAMPLE: 代码块
+    CODE: '代码块'
+    CODEDESCRIPTION: '未格式化的代码块'
+    CODEEXAMPLE: '代码块'
     COLORED: 彩色文字
     COLOREDEXAMPLE: 蓝色文字
     EMAILLINK: 电子邮件链接
@@ -50,59 +50,59 @@ zh:
     UNDERLINEEXAMPLE: 带下划线的
     UNORDERED: 未排序列表
     UNORDEREDDESCRIPTION: 未排序列表
-    UNORDEREDEXAMPLE1: "未排序项目 1"
+    UNORDEREDEXAMPLE1: '未排序项目 1'
   BackLink_Button_ss:
     Back: 返回
   BasicAuth:
-    ENTERINFO: 请输入一个用户名和密码。
+    ENTERINFO: '请输入一个用户名和密码。'
     ERRORNOTADMIN: 那个用户不是一名管理员。
-    ERRORNOTREC: "那个用户名 / 密码无法被辨认"
+    ERRORNOTREC: '那个用户名 / 密码无法被辨认'
   Boolean:
     ANY: 任何
     NOANSWER: 不是
     YESANSWER: 是
   CMSLoadingScreen_ss:
-    LOADING: 正在载入……
-    REQUIREJS: "CMS 要求您启用 JavaScript。"
+    LOADING: '正在载入……'
+    REQUIREJS: 'CMS 要求您启用 JavaScript。'
   CMSMain:
-    ACCESS: "访问 '{title}' 部分"
-    ACCESSALLINTERFACES: "对所有 CMS 部分的访问"
-    ACCESSALLINTERFACESHELP: 支配更多的特殊访问设置
+    ACCESS: '访问 ''{title}'' 部分'
+    ACCESSALLINTERFACES: '对所有 CMS 部分的访问'
+    ACCESSALLINTERFACESHELP: '支配更多的特殊访问设置'
     SAVE: 保存
   CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: 忘记密码？
+    BUTTONFORGOTPASSWORD: '忘记密码？'
     BUTTONLOGIN: 重新登录
     BUTTONLOGOUT: 登出
-    PASSWORDEXPIRED: "<p>您的密码已过期。 <a target=\"_top\" href=\"{link}\">请选择一个新的。</a></ P>"
+    PASSWORDEXPIRED: '<p>您的密码已过期。 <a target="_top" href="{link}">请选择一个新的。</a></ P>'
   CMSPageHistoryController_versions_ss:
     PREVIEW: 网站预览
   CMSProfileController:
     MENUTITLE: 我的个人资料
   CMSSecurity:
-    INVALIDUSER: "<p>用户已无效。 <a target=\"_top\" href=\"{link}\">请在此继续重新进行身份验证</a>。</ p>"
-    LoginMessage: <p>如果您有任何未保存的工作，你可以重新登录以回到你未保存的地方。</p>
+    INVALIDUSER: '<p>用户已无效。 <a target="_top" href="{link}">请在此继续重新进行身份验证</a>。</ p>'
+    LoginMessage: '<p>如果您有任何未保存的工作，你可以重新登录以回到你未保存的地方。</p>'
     SUCCESS: 成功
-    SUCCESSCONTENT: "<p>登录成功。如果您没有自动重定向<a target=\"_top\" href=\"{link}\">点击此处</a></p>"
-    TimedOutTitleAnonymous: 你的登陆超时已过期。
-    TimedOutTitleMember: "你好{name}!<br />你的登陆超时已过期。"
+    SUCCESSCONTENT: '<p>登录成功。如果您没有自动重定向<a target="_top" href="{link}">点击此处</a></p>'
+    TimedOutTitleAnonymous: '你的登陆超时已过期。'
+    TimedOutTitleMember: '你好{name}!<br />你的登陆超时已过期。'
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 您的密码已更改为：
+    CHANGEPASSWORDTEXT1: '您的密码已更改为：'
     CHANGEPASSWORDTEXT2: 现在，您可以使用下列证书来登录了：
     EMAIL: 电子邮件
     HELLO: 您好
-    PASSWORD: 密码
+    PASSWORD: '密码'
   CheckboxField:
     NOANSWER: 不是
     YESANSWER: 是
   CheckboxFieldSetField:
-    SOURCE_VALIDATION: "请选择列表内提供的选项。{value}不是一个有效的选项"
+    SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
   CheckboxSetField:
-    SOURCE_VALIDATION: "请选择列表内提供的选项。'{value}'不是一个有效的选项"
+    SOURCE_VALIDATION: '请选择列表内提供的选项。''{value}''不是一个有效的选项'
   ConfirmedPasswordField:
-    ATLEAST: "密码长度必须至少 {min} 个字符。"
-    BETWEEN: "密码长度必须含 {min} 到 {max} 个字符。"
-    MAXIMUM: "密码长度必须至多 {max} 个字符。"
-    SHOWONCLICKTITLE: 更改密码
+    ATLEAST: '密码长度必须至少 {min} 个字符。'
+    BETWEEN: '密码长度必须含 {min} 到 {max} 个字符。'
+    MAXIMUM: '密码长度必须至多 {max} 个字符。'
+    SHOWONCLICKTITLE: '更改密码'
   ContentController:
     NOTLOGGEDIN: 尚未登录
   CreditCardField:
@@ -127,122 +127,122 @@ zh:
     MONTHS: 月份
     SEC: 秒
     SECS: 秒
-    TIMEDIFFAGO: "{difference} 以前"
-    TIMEDIFFIN: "在 {difference} 中"
+    TIMEDIFFAGO: '{difference} 以前'
+    TIMEDIFFIN: '在 {difference} 中'
     YEAR: 年
     YEARS: 年
   DateField:
     NOTSET: 未设置
     TODAY: 今天
-    VALIDDATEFORMAT2: "请输入一个有效的日期格式 ({format})"
-    VALIDDATEMAXDATE: "您的日期必须更早或者符合最大允许日期 ({date})"
-    VALIDDATEMINDATE: "您的日期必须更迟或者符合最小允许日期 ({date})"
+    VALIDDATEFORMAT2: '请输入一个有效的日期格式 ({format})'
+    VALIDDATEMAXDATE: '您的日期必须更早或者符合最大允许日期 ({date})'
+    VALIDDATEMINDATE: '您的日期必须更迟或者符合最小允许日期 ({date})'
   DatetimeField:
     NOTSET: 未设置
   Director:
-    INVALID_REQUEST: 无效请求
+    INVALID_REQUEST: '无效请求'
   DropdownField:
     CHOOSE: （选择）
-    SOURCE_VALIDATION: "请选择列表内提供的选项。{value}不是一个有效的选项"
+    SOURCE_VALIDATION: '请选择列表内提供的选项。{value}不是一个有效的选项'
   EmailField:
-    VALIDATION: 请输入一个电子邮件地址
+    VALIDATION: '请输入一个电子邮件地址'
   Enum:
     ANY: 任何
   File:
-    AviType: "AVI 视频文件"
-    Content: 内容
-    CssType: "CSS 文件"
+    AviType: 'AVI 视频文件'
+    Content: '内容'
+    CssType: 'CSS 文件'
     DmgType: 应用磁盘图片
-    DocType: "Word 文档"
+    DocType: 'Word 文档'
     Filename: 文件名
-    GifType: "GIF 图片 - 适合图表"
-    GzType: "GZIP 压缩文件"
-    HtlType: "HTML 文件"
-    HtmlType: "HTML 文件"
-    INVALIDEXTENSION: "扩展名不允许（有效扩展名： {extensions}）"
-    INVALIDEXTENSIONSHORT: 扩展名不允许
-    IcoType: 图标图片
-    JpgType: "JPEG 图片 - 适合照片"
-    JsType: "Javascript 文件"
-    Mp3Type: "MP3 音频文件"
-    MpgType: "MPEG 视频文件"
-    NOVALIDUPLOAD: 该文件不是有效上传的
+    GifType: 'GIF 图片 - 适合图表'
+    GzType: 'GZIP 压缩文件'
+    HtlType: 'HTML 文件'
+    HtmlType: 'HTML 文件'
+    INVALIDEXTENSION: '扩展名不允许（有效扩展名： {extensions}）'
+    INVALIDEXTENSIONSHORT: '扩展名不允许'
+    IcoType: '图标图片'
+    JpgType: 'JPEG 图片 - 适合照片'
+    JsType: 'Javascript 文件'
+    Mp3Type: 'MP3 音频文件'
+    MpgType: 'MPEG 视频文件'
+    NOVALIDUPLOAD: '该文件不是有效上传的'
     Name: 名称
     PLURALNAME: 文件
-    PdfType: "Adobe Acrobat PDF 文件"
-    PngType: "PNG 图片 - 良好的通用格式"
+    PdfType: 'Adobe Acrobat PDF 文件'
+    PngType: 'PNG 图片 - 良好的通用格式'
     SINGULARNAME: 文件
-    TiffType: 标记图片格式
-    Title: 标题
-    WavType: "WAV 音频文件"
-    XlsType: "Excel 表格"
-    ZipType: "ZIP 压缩文件"
+    TiffType: '标记图片格式'
+    Title: '标题'
+    WavType: 'WAV 音频文件'
+    XlsType: 'Excel 表格'
+    ZipType: 'ZIP 压缩文件'
   Filesystem:
-    SYNCRESULTS: "同步更新完成：{createdcount} 项已创建， {deletedcount} 项已删除"
+    SYNCRESULTS: '同步更新完成：{createdcount} 项已创建， {deletedcount} 项已删除'
   Folder:
     PLURALNAME: 文件夹
     SINGULARNAME: 文件夹
   ForgotPasswordEmail_ss:
     HELLO: 您好
     TEXT1: 这是您的
-    TEXT2: 密码重设链接
+    TEXT2: '密码重设链接'
     TEXT3: 为
   Form:
     CSRF_FAILED_MESSAGE: 似乎是一个技术问题。请点击返回按钮，刷新浏览器，然后再试一次。
-    FIELDISREQUIRED: "{name} 为必填"
+    FIELDISREQUIRED: '{name} 为必填'
     SubmitBtnLabel: 前往
-    VALIDATIONCREDITNUMBER: "请确保您输入了正确的 {number} 信用卡号码"
-    VALIDATIONNOTUNIQUE: 输入的值不是唯一的
-    VALIDATIONPASSWORDSDONTMATCH: 密码不匹配
-    VALIDATIONPASSWORDSNOTEMPTY: 密码不得为空
-    VALIDATIONSTRONGPASSWORD: 密码必须至少有一个数字和一个字母数字字符
+    VALIDATIONCREDITNUMBER: '请确保您输入了正确的 {number} 信用卡号码'
+    VALIDATIONNOTUNIQUE: '输入的值不是唯一的'
+    VALIDATIONPASSWORDSDONTMATCH: '密码不匹配'
+    VALIDATIONPASSWORDSNOTEMPTY: '密码不得为空'
+    VALIDATIONSTRONGPASSWORD: '密码必须至少有一个数字和一个字母数字字符'
     VALIDATOR: 验证器
-    VALIDCURRENCY: 请输入一个有效的货币
+    VALIDCURRENCY: '请输入一个有效的货币'
   FormField:
-    Example: "例如 %s"
-    NONE: 无
+    Example: '例如 %s'
+    NONE: '无'
   GridAction:
-    DELETE_DESCRIPTION: 删除
-    Delete: 删除
+    DELETE_DESCRIPTION: '删除'
+    Delete: '删除'
     UnlinkRelation: 解除链接
   GridField:
-    Add: "添加 {name}"
+    Add: '添加 {name}'
     Filter: 过滤器
     FilterBy: 过滤条件
     Find: 查找
     LEVELUP: 等级提升
     LinkExisting: 链接已存在
-    NewRecord: "新 %s"
+    NewRecord: '新 %s'
     NoItemsFound: 没有找到任何项目
     PRINTEDAT: 印刷地
     PRINTEDBY: 印刷人
-    PlaceHolder: "查找 {type}"
-    PlaceHolderWithLabels: "通过 {name} 查找 {type}"
-    RelationSearch: 关系搜索
+    PlaceHolder: '查找 {type}'
+    PlaceHolderWithLabels: '通过 {name} 查找 {type}'
+    RelationSearch: '关系搜索'
     ResetFilter: 重设
   GridFieldAction_Delete:
-    DeletePermissionsFailure: 没有删除权限
+    DeletePermissionsFailure: '没有删除权限'
     EditPermissionsFailure: 没有解除记录链接的权限
   GridFieldDetailForm:
     CancelBtn: 取消
     Create: 创建
-    Delete: 删除
-    DeletePermissionsFailure: 没有删除权限
-    Deleted: "已删除的 %s %s"
+    Delete: '删除'
+    DeletePermissionsFailure: '没有删除权限'
+    Deleted: '已删除的 %s %s'
     Save: 保存
-    Saved: "已保存 {name} {link}"
+    Saved: '已保存 {name} {link}'
   GridFieldEditButton_ss:
     EDIT: 编辑
   GridFieldItemEditView:
     Go_back: 返回
   Group:
-    AddRole: 在这个小组中添加一个角色
-    Code: 小组代码
+    AddRole: '在这个小组中添加一个角色'
+    Code: '小组代码'
     DefaultGroupTitleAdministrators: 管理员
-    DefaultGroupTitleContentAuthors: 内容作者
+    DefaultGroupTitleContentAuthors: '内容作者'
     Description: 描述
-    GroupReminder: 如果您选择了某父组，该组别将会承担起所有功能角色
-    HierarchyPermsError: "无法为父组 \"%s\" 分配特权权限（要求具备 ADMIN 访问）"
+    GroupReminder: '如果您选择了某父组，该组别将会承担起所有功能角色'
+    HierarchyPermsError: '无法为父组 "%s" 分配特权权限（要求具备 ADMIN 访问）'
     Locked: 锁定？
     NoRoles: 没有找到角色
     PLURALNAME: 群组
@@ -253,57 +253,57 @@ zh:
     has_many_Permissions: 权限
     many_many_Members: 成员
   GroupImportForm:
-    Help1: "<p>用<em>CSV</em>格式（逗号分隔值）导入一个或多个小组。<small><a href=\"#\" class=\"toggle-advanced\">显示高级用法</a></small></p>"
-    ResultCreated: "创建 {count} 个小组"
-    ResultDeleted: "已删除 %d 小组"
-    ResultUpdated: "已更新 %d 小组"
+    Help1: '<p>用<em>CSV</em>格式（逗号分隔值）导入一个或多个小组。<small><a href="#" class="toggle-advanced">显示高级用法</a></small></p>'
+    ResultCreated: '创建 {count} 个小组'
+    ResultDeleted: '已删除 %d 小组'
+    ResultUpdated: '已更新 %d 小组'
   Hierarchy:
-    InfiniteLoopNotAllowed: "\"{type}\" 层次结构中发现无限循环。请更改父类型来解决此问题"
+    InfiniteLoopNotAllowed: '"{type}" 层次结构中发现无限循环。请更改父类型来解决此问题'
   HtmlEditorField:
-    ADDURL: 添加网址
-    ADJUSTDETAILSDIMENSIONS: "详情 &amp;amp; 体积"
-    ANCHORSCANNOTACCESSPAGE: 您不允许访问该页面的内容。
-    ANCHORSPAGENOTFOUND: 无法找到该页面。
+    ADDURL: '添加网址'
+    ADJUSTDETAILSDIMENSIONS: '详情 &amp;amp; 体积'
+    ANCHORSCANNOTACCESSPAGE: '您不允许访问该页面的内容。'
+    ANCHORSPAGENOTFOUND: '无法找到该页面。'
     ANCHORVALUE: 固定
-    BUTTONADDURL: 添加网址
-    BUTTONINSERT: 插入
-    BUTTONINSERTLINK: 插入链接
+    BUTTONADDURL: '添加网址'
+    BUTTONINSERT: '插入'
+    BUTTONINSERTLINK: '插入链接'
     BUTTONREMOVELINK: 移除链接
     BUTTONUpdate: 更新
-    CAPTIONTEXT: 标题文本
-    CSSCLASS: "对齐 / 样式"
-    CSSCLASSCENTER: 单独居中
-    CSSCLASSLEFT: 居左，以文字环绕。
-    CSSCLASSLEFTALONE: 居左，无其他元素。
-    CSSCLASSRIGHT: 居右，以文字环绕。
-    DETAILS: 详情
+    CAPTIONTEXT: '标题文本'
+    CSSCLASS: '对齐 / 样式'
+    CSSCLASSCENTER: '单独居中'
+    CSSCLASSLEFT: '居左，以文字环绕。'
+    CSSCLASSLEFTALONE: '居左，无其他元素。'
+    CSSCLASSRIGHT: '居右，以文字环绕。'
+    DETAILS: '详情'
     EMAIL: 电子邮件地址
     FILE: 文件
     FOLDER: 文件夹
-    FROMCMS: "从 CMS 处"
+    FROMCMS: '从 CMS 处'
     FROMCOMPUTER: 从您的电脑处
     FROMWEB: 从网站上
     FindInFolder: 在文件夹中寻找
-    IMAGEALT: "替代性文本 (alt)"
+    IMAGEALT: '替代性文本 (alt)'
     IMAGEDIMENSIONS: 体积
     IMAGEHEIGHTPX: 高度
-    IMAGETITLE: "标题文字（工具提示）- 关于该图像的更多信息"
-    IMAGETITLETEXT: 标题文字（工具提示）
-    IMAGETITLETEXTDESC: 要获取关于该图像的更多信息
+    IMAGETITLE: '标题文字（工具提示）- 关于该图像的更多信息'
+    IMAGETITLETEXT: '标题文字（工具提示）'
+    IMAGETITLETEXTDESC: '要获取关于该图像的更多信息'
     IMAGEWIDTHPX: 宽度
-    LINK: 插入链接
+    LINK: '插入链接'
     LINKANCHOR: 固定于此页面
     LINKDESCR: 链接描述
     LINKEMAIL: 电子邮件地址
     LINKEXTERNAL: 另一个网站
     LINKFILE: 下载文件
-    LINKINTERNAL: 站内页面
+    LINKINTERNAL: '站内页面'
     LINKOPENNEWWIN: 在新窗口中打开链接？
     LINKTO: 链接到
     PAGE: 页面
-    SUBJECT: 电子邮件标题
+    SUBJECT: '电子邮件标题'
     URL: 网址
-    URLNOTANOEMBEDRESOURCE: "'{url}' 该网址无法转换成媒体来源。"
+    URLNOTANOEMBEDRESOURCE: '''{url}'' 该网址无法转换成媒体来源。'
   Image:
     PLURALNAME: 文件
     SINGULARNAME: 文件
@@ -311,12 +311,12 @@ zh:
     PLURALNAME: 文件
     SINGULARNAME: 文件
   Image_iframe_ss:
-    TITLE: 图片上传内嵌框架
+    TITLE: '图片上传内嵌框架'
   LeftAndMain:
     CANT_REORGANISE: 您没有权限更改顶层页面。您的更改没有保存。
-    DELETED: 已删除。
+    DELETED: '已删除。'
     HELP: 帮助
-    PERMAGAIN: "您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。"
+    PERMAGAIN: '您已经退出 CMS。如果您想再次登录，请在下面输入用户名和密码。'
     PERMALREADY: 抱歉，您不能访问这一部分的后台管理。如果您想以不同的身份登录，请在下面进行操作。
     PreviewButton: 预览
     REORGANISATIONSUCCESSFUL: 重新组织网站地图已成功
@@ -328,109 +328,109 @@ zh:
     Hello: 您好
     LOGOUT: 退出
   ListboxField:
-    SOURCE_VALIDATION: 请选择列表内提供的选项。%s不是一个有效的选项
+    SOURCE_VALIDATION: '请选择列表内提供的选项。%s不是一个有效的选项'
   LoginAttempt:
     Email: 电子邮件地址
-    IP: "IP 地址"
+    IP: 'IP 地址'
     PLURALNAME: 登录尝试
     SINGULARNAME: 登录尝试
     Status: 状态
   Member:
-    ADDGROUP: 添加组别
-    BUTTONCHANGEPASSWORD: 更改密码
+    ADDGROUP: '添加组别'
+    BUTTONCHANGEPASSWORD: '更改密码'
     BUTTONLOGIN: 登录
     BUTTONLOGINOTHER: 以不同身份登录
-    BUTTONLOSTPASSWORD: 我丢失了密码
+    BUTTONLOSTPASSWORD: '我丢失了密码'
     CANTEDIT: 您没有权限完成这一操作
-    CONFIRMNEWPASSWORD: 确认新密码
-    CONFIRMPASSWORD: 确认密码
-    DATEFORMAT: 日期格式
+    CONFIRMNEWPASSWORD: '确认新密码'
+    CONFIRMPASSWORD: '确认密码'
+    DATEFORMAT: '日期格式'
     DefaultAdminFirstname: 默认管理员
     DefaultDateTime: 默认
     EMAIL: 电子邮件
-    EMPTYNEWPASSWORD: 新密码不能为空，请重试
-    ENTEREMAIL: 请输入电子邮件地址以获取密码重置链接
-    ERRORLOCKEDOUT2: "由于登录失败次数过多，您的账户暂时被冻结。请在 {count} 分钟后重试。"
-    ERRORNEWPASSWORD: 您输入的新密码不同，请重试
-    ERRORPASSWORDNOTMATCH: 您的现有密码不匹配，请重试
+    EMPTYNEWPASSWORD: '新密码不能为空，请重试'
+    ENTEREMAIL: '请输入电子邮件地址以获取密码重置链接'
+    ERRORLOCKEDOUT2: '由于登录失败次数过多，您的账户暂时被冻结。请在 {count} 分钟后重试。'
+    ERRORNEWPASSWORD: '您输入的新密码不同，请重试'
+    ERRORPASSWORDNOTMATCH: '您的现有密码不匹配，请重试'
     ERRORWRONGCRED: 所提供的资料似乎是不正确的。请再试一次。
     FIRSTNAME: 名字
     INTERFACELANG: 界面语言
-    INVALIDNEWPASSWORD: "我们不能接受该密码：{password}"
-    LOGGEDINAS: "您以 {name} 身份登录。"
-    NEWPASSWORD: 新密码
-    NoPassword: 该成员无密码
-    PASSWORD: 密码
-    PASSWORDEXPIRED: "您的密码已过期。 请选择一个新的。"
+    INVALIDNEWPASSWORD: '我们不能接受该密码：{password}'
+    LOGGEDINAS: '您以 {name} 身份登录。'
+    NEWPASSWORD: '新密码'
+    NoPassword: '该成员无密码'
+    PASSWORD: '密码'
+    PASSWORDEXPIRED: '您的密码已过期。 请选择一个新的。'
     PLURALNAME: 成员
     SINGULARNAME: 成员
-    SUBJECTPASSWORDCHANGED: 您的密码已更改
-    SUBJECTPASSWORDRESET: 您的密码重设链接
+    SUBJECTPASSWORDCHANGED: '您的密码已更改'
+    SUBJECTPASSWORDRESET: '您的密码重设链接'
     SURNAME: 姓氏
-    TIMEFORMAT: 时间格式
-    ValidationIdentifierFailed: "不能用相同的标识符 ({name} = {value})) 重写现有成员 #{id}"
-    WELCOMEBACK: "欢迎回来， {firstname}"
-    YOUROLDPASSWORD: 您的旧密码
+    TIMEFORMAT: '时间格式'
+    ValidationIdentifierFailed: '不能用相同的标识符 ({name} = {value})) 重写现有成员 #{id}'
+    WELCOMEBACK: '欢迎回来， {firstname}'
+    YOUROLDPASSWORD: '您的旧密码'
     belongs_many_many_Groups: 群组
     db_LastVisited: 上次访问日期
     db_Locale: 界面区域设置
     db_LockedOutUntil: 保持锁定直到
     db_NumVisit: 访问数字
-    db_Password: 密码
-    db_PasswordExpiry: 密码失效日期
+    db_Password: '密码'
+    db_PasswordExpiry: '密码失效日期'
   MemberAuthenticator:
-    TITLE: 电子邮件和密码
+    TITLE: '电子邮件和密码'
   MemberDatetimeOptionsetField:
-    AMORPM: "AM（上午）或 PM（下午）"
+    AMORPM: 'AM（上午）或 PM（下午）'
     Custom: 自定义
-    DATEFORMATBAD: 日期格式无效
+    DATEFORMATBAD: '日期格式无效'
     DAYNOLEADING: 起首不为零的月份日期
     DIGITSDECFRACTIONSECOND: 一个或多个代表秒的小数数字
     FOURDIGITYEAR: 四位数年份
-    FULLNAMEMONTH: 月份全名（例如六月）
+    FULLNAMEMONTH: '月份全名（例如六月）'
     MINUTENOLEADING: 起首不为零的分钟
     MONTHNOLEADING: 起首不为零的月份数字
     Preview: 预览
-    SHORTMONTH: "月份简称（例如 Jun）"
+    SHORTMONTH: '月份简称（例如 Jun）'
     TWODIGITDAY: 两位数表示的月份日期
-    TWODIGITHOUR: "两位数表示的小时（00 到 23）"
-    TWODIGITMINUTE: "两位数表示的分钟（00 到 59）"
+    TWODIGITHOUR: '两位数表示的小时（00 到 23）'
+    TWODIGITMINUTE: '两位数表示的分钟（00 到 59）'
     TWODIGITMONTH: 两位数表示的月份（01=一月，以此类推）
-    TWODIGITSECOND: "两位数表示的秒（00 到 59）"
+    TWODIGITSECOND: '两位数表示的秒（00 到 59）'
     TWODIGITYEAR: 两位数表示的年份
-    Toggle: 显示格式帮助
+    Toggle: '显示格式帮助'
   MemberImportForm:
-    Help1: "<p>采用 <em>CSV 格式</em> 导入用户（逗号分隔值）<small><a href=\"#\" class=\"toggle-advanced\">显示高级用法</a></small></p>"
-    ResultCreated: "已创建 {count} 位成员"
-    ResultDeleted: "已删除 %d 位成员"
-    ResultNone: 无更改
-    ResultUpdated: "已更新 {count} 个成员"
+    Help1: '<p>采用 <em>CSV 格式</em> 导入用户（逗号分隔值）<small><a href="#" class="toggle-advanced">显示高级用法</a></small></p>'
+    ResultCreated: '已创建 {count} 位成员'
+    ResultDeleted: '已删除 %d 位成员'
+    ResultNone: '无更改'
+    ResultUpdated: '已更新 {count} 个成员'
   MemberPassword:
-    PLURALNAME: 成员密码
-    SINGULARNAME: 成员密码
+    PLURALNAME: '成员密码'
+    SINGULARNAME: '成员密码'
   MemberTableField:
     APPLY_FILTER: 应用过滤器
   ModelAdmin:
-    DELETE: 删除
-    DELETEDRECORDS: "已删除 {count} 个记录。"
+    DELETE: '删除'
+    DELETEDRECORDS: '已删除 {count} 个记录。'
     EMPTYBEFOREIMPORT: 替代数据
-    IMPORT: "从 CSV 中导入"
-    IMPORTEDRECORDS: "已导入 {count} 个记录。"
-    NOCSVFILE: "请浏览并选择要导入的 CSV 文件"
-    NOIMPORT: 没有可导入的项目
+    IMPORT: '从 CSV 中导入'
+    IMPORTEDRECORDS: '已导入 {count} 个记录。'
+    NOCSVFILE: '请浏览并选择要导入的 CSV 文件'
+    NOIMPORT: '没有可导入的项目'
     RESET: 重设
     Title: 数据模型
-    UPDATEDRECORDS: "更新了 {count} 个记录。"
+    UPDATEDRECORDS: '更新了 {count} 个记录。'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 数据库栏目
-    IMPORTSPECLINK: "展示 %s 的详细信息"
-    IMPORTSPECRELATIONS: 关系
-    IMPORTSPECTITLE: "%s 的详细信息"
+    IMPORTSPECFIELDS: '数据库栏目'
+    IMPORTSPECLINK: '展示 %s 的详细信息'
+    IMPORTSPECRELATIONS: '关系'
+    IMPORTSPECTITLE: '%s 的详细信息'
   ModelAdmin_Tools_ss:
     FILTER: 过滤
-    IMPORT: 导入
+    IMPORT: '导入'
   ModelSidebar_ss:
-    IMPORT_TAB_HEADER: 导入
+    IMPORT_TAB_HEADER: '导入'
     SEARCHLISTINGS: 搜索
   MoneyField:
     FIELDLABELAMOUNT: 金额
@@ -438,76 +438,76 @@ zh:
   NullableField:
     IsNullLabel: 为空
   NumericField:
-    VALIDATION: "'{value}' 不是数字，该区域只接受数字"
+    VALIDATION: '''{value}'' 不是数字，该区域只接受数字'
   Pagination:
     Page: 页面
     View: 查看
   PasswordValidator:
-    LOWCHARSTRENGTH: 请添加下列部分字符以提升密码强度：%s
-    PREVPASSWORD: 您已经使用过这个密码，请选用新的密码
-    TOOSHORT: "密码长度过短，必须为 %s 个字符或更长"
+    LOWCHARSTRENGTH: '请添加下列部分字符以提升密码强度：%s'
+    PREVPASSWORD: '您已经使用过这个密码，请选用新的密码'
+    TOOSHORT: '密码长度过短，必须为 %s 个字符或更长'
   Permission:
     AdminGroup: 管理员
-    CMS_ACCESS_CATEGORY: "CMS 访问"
-    FULLADMINRIGHTS: 完全管理权
-    FULLADMINRIGHTS_HELP: 包含并支配其它所有已分配权限
+    CMS_ACCESS_CATEGORY: 'CMS 访问'
+    FULLADMINRIGHTS: '完全管理权'
+    FULLADMINRIGHTS_HELP: '包含并支配其它所有已分配权限'
     PLURALNAME: 权限
     SINGULARNAME: 权限
   PermissionCheckboxSetField:
-    AssignedTo: "已分配至 \"{title}\""
-    FromGroup: "从小组 \"{title}\"继承"
-    FromRole: "从角色 \"{title}\"继承"
-    FromRoleOnGroup: "从 \"%s\" 小组的 \"%s\" 角色继承"
+    AssignedTo: '已分配至 "{title}"'
+    FromGroup: '从小组 "{title}"继承'
+    FromRole: '从角色 "{title}"继承'
+    FromRoleOnGroup: '从 "%s" 小组的 "%s" 角色继承'
   PermissionRole:
     OnlyAdminCanApply: 只有管理员可以应用
     PLURALNAME: 角色
     SINGULARNAME: 角色
-    Title: 标题
+    Title: '标题'
   PermissionRoleCode:
-    PLURALNAME: 权限角色代码
-    PermsError: "无法为代码 \"%s\"分配特权权限（要求具备 ADMIN 访问）"
-    SINGULARNAME: 权限角色代码
+    PLURALNAME: '权限角色代码'
+    PermsError: '无法为代码 "%s"分配特权权限（要求具备 ADMIN 访问）'
+    SINGULARNAME: '权限角色代码'
   Permissions:
     PERMISSIONS_CATEGORY: 角色及访问权限
-    UserPermissionsIntro: 把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。
+    UserPermissionsIntro: '把群组分配给该用户会改变其权限。请查看群组部分以获取关于个体组别的权限详情。'
   PhoneNumberField:
-    VALIDATION: 请输入一个有效的电话号码
+    VALIDATION: '请输入一个有效的电话号码'
   Security:
-    ALREADYLOGGEDIN: 您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。
-    BUTTONSEND: 将密码重设链接发送给我
-    CHANGEPASSWORDBELOW: 您可以在下面更改您的密码。
-    CHANGEPASSWORDHEADER: 更改您的密码
-    ENTERNEWPASSWORD: 请输入一个新密码。
-    ERRORPASSWORDPERMISSION: 您必须登录才能更改您的密码！
-    LOGGEDOUT: 您已经退出了。如果您希望再次登录，请在下面输入您的证书。
+    ALREADYLOGGEDIN: '您无法进入这个页面。如果您有另一个帐号可以进入这个页面，您可以在下面再次登录。'
+    BUTTONSEND: '将密码重设链接发送给我'
+    CHANGEPASSWORDBELOW: '您可以在下面更改您的密码。'
+    CHANGEPASSWORDHEADER: '更改您的密码'
+    ENTERNEWPASSWORD: '请输入一个新密码。'
+    ERRORPASSWORDPERMISSION: '您必须登录才能更改您的密码！'
+    LOGGEDOUT: '您已经退出了。如果您希望再次登录，请在下面输入您的证书。'
     LOGIN: 登录
-    LOSTPASSWORDHEADER: 忘记密码
-    NOTEPAGESECURED: 该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。
-    NOTERESETLINKINVALID: "<p>密码重设链接无效或已过期。</p><p>您可以在<a href=\"{link1}\">这里</a> 要求一个新的或在<a href=\"{link2}\">登录</a>后更改您的密码。</p>"
-    NOTERESETPASSWORD: 请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码
-    PASSWORDSENTHEADER: "密码重设链接已发送至'{email}'"
-    PASSWORDSENTTEXT: "谢谢！复位链接已发送到 '{email}'，假定此电子邮件地址存在一个帐户。"
+    LOSTPASSWORDHEADER: '忘记密码'
+    NOTEPAGESECURED: '该页面受安全保护。请在下面输入您的证书，然后我们会立即将您引导至该页面。'
+    NOTERESETLINKINVALID: '<p>密码重设链接无效或已过期。</p><p>您可以在<a href="{link1}">这里</a> 要求一个新的或在<a href="{link2}">登录</a>后更改您的密码。</p>'
+    NOTERESETPASSWORD: '请输入您的电子邮件地址，然后我们会将一个链接发送给您，您可以用它来重设您的密码'
+    PASSWORDSENTHEADER: '密码重设链接已发送至''{email}'''
+    PASSWORDSENTTEXT: '谢谢！复位链接已发送到 ''{email}''，假定此电子邮件地址存在一个帐户。'
   SecurityAdmin:
-    ACCESS_HELP: 允许查看、添加和编辑用户，以及将权限和角色分配给他们
+    ACCESS_HELP: '允许查看、添加和编辑用户，以及将权限和角色分配给他们'
     APPLY_ROLES: 将角色应用至小组
-    APPLY_ROLES_HELP: 编辑角色的能力已被分配给一个小组。需要“访问‘用户’部分”的权限。
+    APPLY_ROLES_HELP: '编辑角色的能力已被分配给一个小组。需要“访问‘用户’部分”的权限。'
     EDITPERMISSIONS: 管理小组的权限
-    EDITPERMISSIONS_HELP: "一个小组编辑权限和 IP 地址的能力。需要“访问‘安全’部分”的权限。"
+    EDITPERMISSIONS_HELP: '一个小组编辑权限和 IP 地址的能力。需要“访问‘安全’部分”的权限。'
     GROUPNAME: 小组名称
-    IMPORTGROUPS: 导入小组
-    IMPORTUSERS: 导入用户
+    IMPORTGROUPS: '导入小组'
+    IMPORTUSERS: '导入用户'
     MEMBERS: 成员
-    MENUTITLE: 安全
-    MemberListCaution: 注意：从这个列表中删除成员将会使它们从所有小组和数据库中被删除
+    MENUTITLE: '安全'
+    MemberListCaution: '注意：从这个列表中删除成员将会使它们从所有小组和数据库中被删除'
     NEWGROUP: 新的小组
     PERMISSIONS: 权限
     ROLES: 角色
-    ROLESDESCRIPTION: "角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。"
+    ROLESDESCRIPTION: '角色是预定义的权限，并可被分配到小组。<br />如果需要的话，它们可以从父小组继承。'
     TABROLES: 角色
     Users: 用户
   SecurityAdmin_MemberImportForm:
-    BtnImport: "从 CSV 导入"
-    FileFieldLabel: "CSV 文件 <small>(允许的扩展名：*.csv)</small>"
+    BtnImport: '从 CSV 导入'
+    FileFieldLabel: 'CSV 文件 <small>(允许的扩展名：*.csv)</small>'
   SilverStripeNavigator:
     Auto: 自动
     ChangeViewMode: 改变视图模式
@@ -526,25 +526,25 @@ zh:
   SiteTree:
     TABMAIN: 主要的
   TableListField:
-    CSVEXPORT: "导出到 CSV"
+    CSVEXPORT: '导出到 CSV'
     Print: 打印
   TableListField_PageControls_ss:
     OF: 的
   TextField:
-    VALIDATEMAXLENGTH: "{name} 的长度必须至多{maxLength} 个字符。"
+    VALIDATEMAXLENGTH: '{name} 的长度必须至多{maxLength} 个字符。'
   TimeField:
-    VALIDATEFORMAT: "请输入有效的时间格式 ({format})"
+    VALIDATEFORMAT: '请输入有效的时间格式 ({format})'
   ToggleField:
     LESS: 更少
     MORE: 更多
   UploadField:
-    ATTACHFILE: 附加单个文件
-    ATTACHFILES: 附加多个文件
-    AttachFile: 附加一个或多个文件
+    ATTACHFILE: '附加单个文件'
+    ATTACHFILES: '附加多个文件'
+    AttachFile: '附加一个或多个文件'
     CHOOSEANOTHERFILE: 选择另一文件
     CHOOSEANOTHERINFO: 用文件库里的文件替换该文件
     DELETE: 从文件中移除
-    DELETEINFO: 从文件库中永久移除该文件
+    DELETEINFO: '从文件库中永久移除该文件'
     DOEDIT: 保存
     DROPFILE: 释放单个文件
     DROPFILES: 释放多个文件
@@ -555,15 +555,15 @@ zh:
     FROMCOMPUTER: 从您的电脑处
     FROMCOMPUTERINFO: 从文件中选择
     FROMFILES: 从文件中
-    HOTLINKINFO: 信息：该图像将会被映射。请确保您已获得网站原始制作者的允许。
-    MAXNUMBEROFFILES: "超过允许的最大 {count} 个文件数目"
-    MAXNUMBEROFFILESONE: 只能上传一个文件
-    MAXNUMBEROFFILESSHORT: "只能上传 {count} 个文件"
+    HOTLINKINFO: '信息：该图像将会被映射。请确保您已获得网站原始制作者的允许。'
+    MAXNUMBEROFFILES: '超过允许的最大 {count} 个文件数目'
+    MAXNUMBEROFFILESONE: '只能上传一个文件'
+    MAXNUMBEROFFILESSHORT: '只能上传 {count} 个文件'
     OVERWRITEWARNING: 已经存在相同名称的文件
     REMOVE: 移除
-    REMOVEINFO: 从这里移除文件，但是不将其从文件库中删除
+    REMOVEINFO: '从这里移除文件，但是不将其从文件库中删除'
     STARTALL: 开始所有
     Saved: 已保存
-    UPLOADSINTO: "保存到 /{path}"
+    UPLOADSINTO: '保存到 /{path}'
   Versioned:
     has_many_Versions: 版本

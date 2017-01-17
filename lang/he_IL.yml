@@ -2,31 +2,31 @@ he_IL:
   AssetAdmin:
     NEWFOLDER: תיקיהחדשה
   AssetTableField:
-    CREATED: "הועלה לראשונה"
+    CREATED: 'הועלה לראשונה'
     DIM: מידות
-    FILENAME: "שם הקובץ"
-    LASTEDIT: "שונה לאחרונה"
-    OWNER: "בעל הקובץ"
+    FILENAME: 'שם הקובץ'
+    LASTEDIT: 'שונה לאחרונה'
+    OWNER: 'בעל הקובץ'
     SIZE: גודל
     TITLE: כותרת
     TYPE: סוג
-    URL: "כתובת הדף"
+    URL: 'כתובת הדף'
   BasicAuth:
-    ENTERINFO: "נא הכנס שם משתמש וסיסמא"
-    ERRORNOTADMIN: "משתמש זה אינו מנהל"
-    ERRORNOTREC: "שם המשתמש / סיסמא לא מזוהה"
+    ENTERINFO: 'נא הכנס שם משתמש וסיסמא'
+    ERRORNOTADMIN: 'משתמש זה אינו מנהל'
+    ERRORNOTREC: 'שם המשתמש / סיסמא לא מזוהה'
   CMSMain:
-    ACCESSALLINTERFACES: "גישה לכל ממשקי המערכת"
+    ACCESSALLINTERFACES: 'גישה לכל ממשקי המערכת'
     SAVE: שמור
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "שינית את הסיסמא עבור"
-    CHANGEPASSWORDTEXT2: "כעת אתה יכול להשתמש בפרטים הבאים בכדי להתחבר:"
+    CHANGEPASSWORDTEXT1: 'שינית את הסיסמא עבור'
+    CHANGEPASSWORDTEXT2: 'כעת אתה יכול להשתמש בפרטים הבאים בכדי להתחבר:'
     HELLO: היי
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: "שינוי סיסמה"
+    SHOWONCLICKTITLE: 'שינוי סיסמה'
   DataObject:
-    PLURALNAME: "אובייקטי מידע"
-    SINGULARNAME: "אובייקט מידע"
+    PLURALNAME: 'אובייקטי מידע'
+    SINGULARNAME: 'אובייקט מידע'
   DropdownField:
     CHOOSE: (בחר)
   File:
@@ -35,80 +35,80 @@ he_IL:
   ForgotPasswordEmail_ss:
     HELLO: היי
   Form:
-    VALIDATIONNOTUNIQUE: "הערך שהוקש אינו יחודי"
-    VALIDATIONPASSWORDSDONTMATCH: "הסיסמאות לא תואמות"
-    VALIDATIONPASSWORDSNOTEMPTY: "הסיסמאות לא יכול להיות ריקות"
+    VALIDATIONNOTUNIQUE: 'הערך שהוקש אינו יחודי'
+    VALIDATIONPASSWORDSDONTMATCH: 'הסיסמאות לא תואמות'
+    VALIDATIONPASSWORDSNOTEMPTY: 'הסיסמאות לא יכול להיות ריקות'
   Group:
-    Code: "קוד קבוצה"
-    Locked: נעול?
-    Parent: "קבוצת אב"
+    Code: 'קוד קבוצה'
+    Locked: 'נעול?'
+    Parent: 'קבוצת אב'
     has_many_Permissions: הרשאות
-    many_many_Members: "חברים רשומים"
+    many_many_Members: 'חברים רשומים'
   HtmlEditorField:
-    BUTTONINSERTLINK: "הכנס קישור"
-    BUTTONREMOVELINK: "הסר קישור"
-    CSSCLASS: יישור/סגנון
-    CSSCLASSCENTER: "ממורכז, ללא טקסט בצדדים."
-    CSSCLASSLEFT: "לשמאל, עם טקסט מסודר מסביב."
-    CSSCLASSRIGHT: "לימין, עם טקסט מסודר מסביב."
-    EMAIL: "כתובת אימייל"
+    BUTTONINSERTLINK: 'הכנס קישור'
+    BUTTONREMOVELINK: 'הסר קישור'
+    CSSCLASS: 'יישור/סגנון'
+    CSSCLASSCENTER: 'ממורכז, ללא טקסט בצדדים.'
+    CSSCLASSLEFT: 'לשמאל, עם טקסט מסודר מסביב.'
+    CSSCLASSRIGHT: 'לימין, עם טקסט מסודר מסביב.'
+    EMAIL: 'כתובת אימייל'
     FILE: קובץ
     FOLDER: תיקיה
     IMAGEDIMENSIONS: ממדים
     IMAGEHEIGHTPX: גובה
     IMAGEWIDTHPX: רוחב
-    LINKDESCR: "תאור הקישור"
-    LINKOPENNEWWIN: "לפתוח קישור בחלון חדש?"
+    LINKDESCR: 'תאור הקישור'
+    LINKOPENNEWWIN: 'לפתוח קישור בחלון חדש?'
   Image_iframe_ss:
-    TITLE: "מסגרת העלאת תמונה"
+    TITLE: 'מסגרת העלאת תמונה'
   LeftAndMain:
     HELP: עזרה
-    PERMAGAIN: "התנתקת מהמערכת. לחיבור מחדש נא להזין שם וסיסמה"
+    PERMAGAIN: 'התנתקת מהמערכת. לחיבור מחדש נא להזין שם וסיסמה'
   Member:
-    BUTTONCHANGEPASSWORD: "שנה סיסמא"
+    BUTTONCHANGEPASSWORD: 'שנה סיסמא'
     BUTTONLOGIN: התחבר
-    BUTTONLOGINOTHER: "התחבר כמשתמש אחר"
-    BUTTONLOSTPASSWORD: "שכחתי את הסיסמא"
-    CONFIRMNEWPASSWORD: "אשר סיסמא חדשה"
-    CONFIRMPASSWORD: "אשר סיסמא"
-    EMAIL: "דואר אלקטרוני"
-    ERRORNEWPASSWORD: "הסיסמא החדשה שלך שגויה, נסה שנית."
-    ERRORPASSWORDNOTMATCH: "הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית"
-    FIRSTNAME: "שם פרטי"
-    INTERFACELANG: "שפת ממשק"
-    NEWPASSWORD: "סיסמא חדשה"
+    BUTTONLOGINOTHER: 'התחבר כמשתמש אחר'
+    BUTTONLOSTPASSWORD: 'שכחתי את הסיסמא'
+    CONFIRMNEWPASSWORD: 'אשר סיסמא חדשה'
+    CONFIRMPASSWORD: 'אשר סיסמא'
+    EMAIL: 'דואר אלקטרוני'
+    ERRORNEWPASSWORD: 'הסיסמא החדשה שלך שגויה, נסה שנית.'
+    ERRORPASSWORDNOTMATCH: 'הסיסמא הנוכחית שלך לא תואמת, נא נסה שנית'
+    FIRSTNAME: 'שם פרטי'
+    INTERFACELANG: 'שפת ממשק'
+    NEWPASSWORD: 'סיסמא חדשה'
     PASSWORD: סיסמא
-    PLURALNAME: "חברים רשומים"
-    SINGULARNAME: "חבר רשום"
-    SUBJECTPASSWORDCHANGED: "סיסמתך השתנתה"
-    SUBJECTPASSWORDRESET: "קישור לאתחול הסיסמא שלך"
-    SURNAME: "שם משפחה"
-    YOUROLDPASSWORD: "הסיסמא הישנה שלך"
+    PLURALNAME: 'חברים רשומים'
+    SINGULARNAME: 'חבר רשום'
+    SUBJECTPASSWORDCHANGED: 'סיסמתך השתנתה'
+    SUBJECTPASSWORDRESET: 'קישור לאתחול הסיסמא שלך'
+    SURNAME: 'שם משפחה'
+    YOUROLDPASSWORD: 'הסיסמא הישנה שלך'
     belongs_many_many_Groups: קבוצות
-    db_LockedOutUntil: "נעול עד "
-    db_PasswordExpiry: "תאריך תפוגת סיסמא"
+    db_LockedOutUntil: 'נעול עד '
+    db_PasswordExpiry: 'תאריך תפוגת סיסמא'
   MemberAuthenticator:
-    TITLE: "דואר אלקטרוני וסיסמא"
+    TITLE: 'דואר אלקטרוני וסיסמא'
   ModelAdmin:
     DELETE: מחק
-    IMPORT: "ייבא מקובץ CSV"
-    NOCSVFILE: "בחר קובץ CSV לייבוא"
-    NOIMPORT: "לא נמצאו פריטים לייבוא"
+    IMPORT: 'ייבא מקובץ CSV'
+    NOCSVFILE: 'בחר קובץ CSV לייבוא'
+    NOIMPORT: 'לא נמצאו פריטים לייבוא'
   PhoneNumberField:
-    VALIDATION: "יש להכניס מספר טלפון תקין"
+    VALIDATION: 'יש להכניס מספר טלפון תקין'
   Security:
-    ALREADYLOGGEDIN: "אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו."
-    BUTTONSEND: "שלח לי קישור לאיפוס סיסמא"
-    CHANGEPASSWORDBELOW: "אתה יכול לשנות את סיסמתך להלן."
-    CHANGEPASSWORDHEADER: "שנה את הסיסמא שלך"
-    ENTERNEWPASSWORD: "נא הכנס סיסמא חדשה."
-    ERRORPASSWORDPERMISSION: "אתה מוכרח להיות מחובר על מנת לשנות את הסיסמא שלך!"
-    LOGGEDOUT: "נותקת . אם ברצונך להתחבר שנית הכנס את הפרטים שלך"
-    NOTEPAGESECURED: "עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד."
-    NOTERESETPASSWORD: "הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך"
+    ALREADYLOGGEDIN: 'אין לך הרשאה לעמוד זה. אם ברשותך חשבון אחר עם גישה לעמוד זה את יכול להתחבר איתו.'
+    BUTTONSEND: 'שלח לי קישור לאיפוס סיסמא'
+    CHANGEPASSWORDBELOW: 'אתה יכול לשנות את סיסמתך להלן.'
+    CHANGEPASSWORDHEADER: 'שנה את הסיסמא שלך'
+    ENTERNEWPASSWORD: 'נא הכנס סיסמא חדשה.'
+    ERRORPASSWORDPERMISSION: 'אתה מוכרח להיות מחובר על מנת לשנות את הסיסמא שלך!'
+    LOGGEDOUT: 'נותקת . אם ברצונך להתחבר שנית הכנס את הפרטים שלך'
+    NOTEPAGESECURED: 'עמוד זה אינו מאובטח. הכנס את הפרטים שלך להלן ונשלח אליך מייד.'
+    NOTERESETPASSWORD: 'הכנס את כתובת הדואר האלקטרוני שלך ונשלח אליך קישור שבעזרתו תוכל לאפס את הסיסמא שלך'
   SecurityAdmin:
-    EDITPERMISSIONS: "ערוך הרשאות וכתובות IP לכל קבוצה"
-    NEWGROUP: "קבוצה חדשה"
+    EDITPERMISSIONS: 'ערוך הרשאות וכתובות IP לכל קבוצה'
+    NEWGROUP: 'קבוצה חדשה'
   ToggleField:
     LESS: פחות
     MORE: עוד

@@ -2,26 +2,26 @@ zh_CN:
   AssetAdmin:
     NEWFOLDER: 新建文件夹
   AssetTableField:
-    CREATED: 第一次被上传
+    CREATED: '第一次被上传'
     DIM: 尺寸
     FILENAME: 文件名
     LASTEDIT: 上一次被更改
-    OWNER: 拥有者
+    OWNER: '拥有者'
     SIZE: 大小
     TITLE: 文件名称
     TYPE: 类型
   BasicAuth:
-    ENTERINFO: 请输入用户名和密码
+    ENTERINFO: '请输入用户名和密码'
     ERRORNOTADMIN: 此用户没有管理员权限。
-    ERRORNOTREC: 没有找到此用户名/密码
+    ERRORNOTREC: '没有找到此用户名/密码'
   CMSMain:
     SAVE: 保存
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: 您已更改了登陆%s的密码
+    CHANGEPASSWORDTEXT1: '您已更改了登陆%s的密码'
     CHANGEPASSWORDTEXT2: 您现在可以用下列权限信息进行登路：
     HELLO: 嗨
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: 更改密码
+    SHOWONCLICKTITLE: '更改密码'
   DataObject:
     PLURALNAME: 数据对象
     SINGULARNAME: 数据对象
@@ -33,32 +33,32 @@ zh_CN:
   ForgotPasswordEmail_ss:
     HELLO: 嗨
   Form:
-    VALIDATIONNOTUNIQUE: 输入值已被他人占用
-    VALIDATIONPASSWORDSDONTMATCH: （密码相互不匹配）
-    VALIDATIONPASSWORDSNOTEMPTY: 密码不能空白
+    VALIDATIONNOTUNIQUE: '输入值已被他人占用'
+    VALIDATIONPASSWORDSDONTMATCH: '（密码相互不匹配）'
+    VALIDATIONPASSWORDSNOTEMPTY: '密码不能空白'
   Group:
-    Code: 团队代码
+    Code: '团队代码'
     Locked: 锁定？
     Parent: 主团队
     has_many_Permissions: 权限
     many_many_Members: 成员
   HtmlEditorField:
-    BUTTONINSERTLINK: 插入链接
-    BUTTONREMOVELINK: 删除链接
-    CSSCLASS: 对齐/样式
-    CSSCLASSCENTER: 自居中
+    BUTTONINSERTLINK: '插入链接'
+    BUTTONREMOVELINK: '删除链接'
+    CSSCLASS: '对齐/样式'
+    CSSCLASSCENTER: '自居中'
     CSSCLASSLEFT: 左端自动换行
     CSSCLASSRIGHT: 右端自动换行
     EMAIL: 电子邮件地址
     FILE: 文件
     FOLDER: 文件夹
     IMAGEDIMENSIONS: 尺寸
-    IMAGEHEIGHTPX: 高（像素）
-    IMAGEWIDTHPX: 宽（像素）
-    LINK: 对所选文字插入/编辑链接
+    IMAGEHEIGHTPX: '高（像素）'
+    IMAGEWIDTHPX: '宽（像素）'
+    LINK: '对所选文字插入/编辑链接'
     LINKDESCR: 链接描述
     LINKEMAIL: 电子邮件地址
-    LINKEXTERNAL: 其它网站
+    LINKEXTERNAL: '其它网站'
     LINKFILE: 下载文件
     LINKINTERNAL: 本站网页
     LINKOPENNEWWIN: 在新窗口打开链接？
@@ -66,49 +66,49 @@ zh_CN:
     PAGE: 页
     URL: （路径）URL
   Image_iframe_ss:
-    TITLE: 图象上传内嵌框架（Iframe）
+    TITLE: '图象上传内嵌框架（Iframe）'
   LeftAndMain:
     HELP: 帮助
-    PERMAGAIN: 您于CMS的登录已被注销，请在下面输入用户名和密码重新登录。
+    PERMAGAIN: '您于CMS的登录已被注销，请在下面输入用户名和密码重新登录。'
   Member:
-    BUTTONCHANGEPASSWORD: 更改密码
+    BUTTONCHANGEPASSWORD: '更改密码'
     BUTTONLOGIN: 登录
-    BUTTONLOGINOTHER: 使用其他帐户登录
-    BUTTONLOSTPASSWORD: 忘记密码
-    CONFIRMNEWPASSWORD: 确认新密码
-    CONFIRMPASSWORD: 确认密码
+    BUTTONLOGINOTHER: '使用其他帐户登录'
+    BUTTONLOSTPASSWORD: '忘记密码'
+    CONFIRMNEWPASSWORD: '确认新密码'
+    CONFIRMPASSWORD: '确认密码'
     EMAIL: 电子邮件
-    ERRORNEWPASSWORD: 您输入了一个不同的新密码，请重新输入
-    ERRORPASSWORDNOTMATCH: 您当前的密码不正确，请再次输入
+    ERRORNEWPASSWORD: '您输入了一个不同的新密码，请重新输入'
+    ERRORPASSWORDNOTMATCH: '您当前的密码不正确，请再次输入'
     FIRSTNAME: 名
     INTERFACELANG: 界面语言
-    NEWPASSWORD: 新密码
-    PASSWORD: 密码
+    NEWPASSWORD: '新密码'
+    PASSWORD: '密码'
     PLURALNAME: 成员
     SINGULARNAME: 成员
-    SUBJECTPASSWORDCHANGED: 您的密码已更改
-    SUBJECTPASSWORDRESET: 重设您的密码链接
+    SUBJECTPASSWORDCHANGED: '您的密码已更改'
+    SUBJECTPASSWORDRESET: '重设您的密码链接'
     SURNAME: 姓
-    YOUROLDPASSWORD: 您的旧密码
+    YOUROLDPASSWORD: '您的旧密码'
     belongs_many_many_Groups: 团队
     db_LockedOutUntil: 禁止直至
-    db_PasswordExpiry: 密码过期日期
+    db_PasswordExpiry: '密码过期日期'
   MemberAuthenticator:
-    TITLE: 电邮地址和密码
+    TITLE: '电邮地址和密码'
   ModelAdmin:
-    DELETE: 删除
+    DELETE: '删除'
   PhoneNumberField:
-    VALIDATION: 请输入有效电话号码
+    VALIDATION: '请输入有效电话号码'
   Security:
-    ALREADYLOGGEDIN: 您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。
-    BUTTONSEND: 给我发送密码重设链接
-    CHANGEPASSWORDBELOW: 您可在下面更改您的密码
-    CHANGEPASSWORDHEADER: 更改您的密码
-    ENTERNEWPASSWORD: 请输入新密码
-    ERRORPASSWORDPERMISSION: 您必需登录以更改您的密码
-    LOGGEDOUT: 您已被撤消登录。如果您想再次登录，在下面输入您的登录信息。
-    NOTEPAGESECURED: 此页是受安全保护的。输入您的登录信息，我们会将您送达。
-    NOTERESETPASSWORD: 输入您的电邮地址，我们会给您发送一个您可重设密码的链接
+    ALREADYLOGGEDIN: '您无访问此页的权限。如果您拥有另一个可访问次页的帐户，请在下面登录。'
+    BUTTONSEND: '给我发送密码重设链接'
+    CHANGEPASSWORDBELOW: '您可在下面更改您的密码'
+    CHANGEPASSWORDHEADER: '更改您的密码'
+    ENTERNEWPASSWORD: '请输入新密码'
+    ERRORPASSWORDPERMISSION: '您必需登录以更改您的密码'
+    LOGGEDOUT: '您已被撤消登录。如果您想再次登录，在下面输入您的登录信息。'
+    NOTEPAGESECURED: '此页是受安全保护的。输入您的登录信息，我们会将您送达。'
+    NOTERESETPASSWORD: '输入您的电邮地址，我们会给您发送一个您可重设密码的链接'
   SecurityAdmin:
     NEWGROUP: 新建会员组
   SiteTree:

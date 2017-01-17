@@ -1,171 +1,171 @@
 bg:
   AssetAdmin:
-    ALLOWEDEXTS: "Позволени разширения на файловете за качване"
-    HIDEALLOWEDEXTS: "Скрий позволените разширения"
+    ALLOWEDEXTS: 'Позволени разширения на файловете за качване'
+    HIDEALLOWEDEXTS: 'Скрий позволените разширения'
     NEWFOLDER: НоваПапка
-    SHOWALLOWEDEXTS: "Покажи позволените разширения"
+    SHOWALLOWEDEXTS: 'Покажи позволените разширения'
   AssetTableField:
     CREATED: Създаден
-    DIM: Размери
-    FILENAME: "Име на файл"
+    DIM: 'Размери'
+    FILENAME: 'Име на файл'
     FOLDER: Папка
     HEIGHT: Височина
-    LASTEDIT: "Последна промяна"
+    LASTEDIT: 'Последна промяна'
     OWNER: Собственик
-    SIZE: "Големина на файла"
+    SIZE: 'Големина на файла'
     TITLE: Заглавие
-    TYPE: "Тип на файла"
+    TYPE: 'Тип на файла'
     URL: URL
     WIDTH: Широчина
   AssetUploadField:
-    ChooseFiles: "Избери файлове"
-    DRAGFILESHERE: "Завлечете файловете тук"
-    DROPAREA: "Зона за пускане"
-    EDITALL: "Редакция на всички"
-    EDITANDORGANIZE: "Редактиране и подреждане"
-    EDITINFO: "Редактиране на файлове"
+    ChooseFiles: 'Избери файлове'
+    DRAGFILESHERE: 'Завлечете файловете тук'
+    DROPAREA: 'Зона за пускане'
+    EDITALL: 'Редакция на всички'
+    EDITANDORGANIZE: 'Редактиране и подреждане'
+    EDITINFO: 'Редактиране на файлове'
     FILES: Файлове
-    FROMCOMPUTER: "Избери файлове от компютъра"
-    FROMCOMPUTERINFO: "Качи от компютъра"
-    INSERTURL: "Въведи URL на файла"
-    REMOVEINFO: "Премахни файла от това поле"
+    FROMCOMPUTER: 'Избери файлове от компютъра'
+    FROMCOMPUTERINFO: 'Качи от компютъра'
+    INSERTURL: 'Въведи URL на файла'
+    REMOVEINFO: 'Премахни файла от това поле'
     TOTAL: Общо
-    UPLOADINPROGRESS: "Моля, изчакайте... файловете се качват"
+    UPLOADINPROGRESS: 'Моля, изчакайте... файловете се качват'
     UPLOADOR: ИЛИ
   BBCodeParser:
     ALIGNEMENT: Подравняване
-    ALIGNEMENTEXAMPLE: "дясно подравнен"
-    BOLD: "Удебелен текст"
+    ALIGNEMENTEXAMPLE: 'дясно подравнен'
+    BOLD: 'Удебелен текст'
     BOLDEXAMPLE: Удебелен
-    CODE: "Блок код"
-    CODEDESCRIPTION: "Неформатиран блок код"
-    CODEEXAMPLE: "Блок код"
-    COLORED: "Оцветен текст"
-    COLOREDEXAMPLE: "син текст"
-    EMAILLINK: "Мейл връзка"
-    EMAILLINKDESCRIPTION: "Създай връзка към мейл адрес"
+    CODE: 'Блок код'
+    CODEDESCRIPTION: 'Неформатиран блок код'
+    CODEEXAMPLE: 'Блок код'
+    COLORED: 'Оцветен текст'
+    COLOREDEXAMPLE: 'син текст'
+    EMAILLINK: 'Мейл връзка'
+    EMAILLINKDESCRIPTION: 'Създай връзка към мейл адрес'
     IMAGE: Изображение
-    IMAGEDESCRIPTION: "Показва изображение във вашата публикация"
-    ITALIC: "Наклонен текст"
+    IMAGEDESCRIPTION: 'Показва изображение във вашата публикация'
+    ITALIC: 'Наклонен текст'
     ITALICEXAMPLE: Наклонено
-    LINK: "Връзка към уебсайт"
-    LINKDESCRIPTION: "Връзка към друг уебсайт или URL"
-    STRUCK: "Задраскан Текст"
+    LINK: 'Връзка към уебсайт'
+    LINKDESCRIPTION: 'Връзка към друг уебсайт или URL'
+    STRUCK: 'Задраскан Текст'
     STRUCKEXAMPLE: Задраскай
-    UNDERLINE: "Подчертан текст"
+    UNDERLINE: 'Подчертан текст'
     UNDERLINEEXAMPLE: Подчертано
-    UNORDERED: "Неподреден лист"
-    UNORDEREDDESCRIPTION: "Неподреден лист"
-    UNORDEREDEXAMPLE1: "неподреден елемент 1"
+    UNORDERED: 'Неподреден лист'
+    UNORDEREDDESCRIPTION: 'Неподреден лист'
+    UNORDEREDEXAMPLE1: 'неподреден елемент 1'
   BackLink_Button_ss:
     Back: Назад
   BasicAuth:
-    ENTERINFO: "Моля, въведете потребителско име и парола."
-    ERRORNOTADMIN: "Този потребител не е администратор."
-    ERRORNOTREC: "Това потребителско име / парола не е разпознато"
+    ENTERINFO: 'Моля, въведете потребителско име и парола.'
+    ERRORNOTADMIN: 'Този потребител не е администратор.'
+    ERRORNOTREC: 'Това потребителско име / парола не е разпознато'
   Boolean:
     ANY: Всички
     NOANSWER: Не
     YESANSWER: Да
   CMSLoadingScreen_ss:
-    LOADING: "Зареждане ..."
-    REQUIREJS: "Необходимо е да активирате JavaScript."
+    LOADING: 'Зареждане ...'
+    REQUIREJS: 'Необходимо е да активирате JavaScript.'
   CMSMain:
-    ACCESS: "Достъп до секция '{title}'"
-    ACCESSALLINTERFACES: "Достъп до всички секции на CMS"
+    ACCESS: 'Достъп до секция ''{title}'''
+    ACCESSALLINTERFACES: 'Достъп до всички секции на CMS'
     SAVE: Запис
   CMSMemberLoginForm:
-    BUTTONFORGOTPASSWORD: "Забравена парола?"
-    BUTTONLOGIN: "Влез обратно"
-    BUTTONLOGOUT: Изход
+    BUTTONFORGOTPASSWORD: 'Забравена парола?'
+    BUTTONLOGIN: 'Влез обратно'
+    BUTTONLOGOUT: 'Изход'
   CMSPageHistoryController_versions_ss:
-    PREVIEW: "Преглед на сайта"
+    PREVIEW: 'Преглед на сайта'
   CMSPagesController_Tools_ss:
     FILTER: Филтър
   CMSProfileController:
-    MENUTITLE: "Моят профил"
+    MENUTITLE: 'Моят профил'
   CMSSecurity:
     SUCCESS: Успешно
-    TimedOutTitleAnonymous: "Вашата сесия е изтекла."
-    TimedOutTitleMember: "Здравей {name}!<br />Твоята сесия е изтекла."
+    TimedOutTitleAnonymous: 'Вашата сесия е изтекла.'
+    TimedOutTitleMember: 'Здравей {name}!<br />Твоята сесия е изтекла.'
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "Вие сменихте вашата парола за"
-    CHANGEPASSWORDTEXT2: "Вече можете да ползвате следните данни за вход:"
-    EMAIL: "Ел. поща"
+    CHANGEPASSWORDTEXT1: 'Вие сменихте вашата парола за'
+    CHANGEPASSWORDTEXT2: 'Вече можете да ползвате следните данни за вход:'
+    EMAIL: 'Ел. поща'
     HELLO: Здравей!
     PASSWORD: Парола
   CheckboxField:
     NOANSWER: Не
     YESANSWER: Да
   ConfirmedPasswordField:
-    ATLEAST: "Паролата трябва да е дълга мин. {min} символа."
-    BETWEEN: "Паролата трябва да е дълга от {min} до {max} символа."
-    MAXIMUM: "Паролата трябва да е дълга макс. {max} символа."
-    SHOWONCLICKTITLE: "Промяна на парола"
+    ATLEAST: 'Паролата трябва да е дълга мин. {min} символа.'
+    BETWEEN: 'Паролата трябва да е дълга от {min} до {max} символа.'
+    MAXIMUM: 'Паролата трябва да е дълга макс. {max} символа.'
+    SHOWONCLICKTITLE: 'Промяна на парола'
   CreditCardField:
     FIRST: първи
     FOURTH: четвърти
     SECOND: втори
     THIRD: трети
   DataObject:
-    PLURALNAME: "Обекти с данни"
-    SINGULARNAME: "Обект с данни"
+    PLURALNAME: 'Обекти с данни'
+    SINGULARNAME: 'Обект с данни'
   Date:
     DAY: ден
     DAYS: дни
     HOUR: час
     HOURS: часа
-    LessThanMinuteAgo: "по-малко от минута"
+    LessThanMinuteAgo: 'по-малко от минута'
     MIN: минута
     MINS: минути
     MONTH: месец
     MONTHS: месеци
     SEC: секунда
     SECS: секунди
-    TIMEDIFFAGO: "преди {difference}"
-    TIMEDIFFIN: "за {difference}"
+    TIMEDIFFAGO: 'преди {difference}'
+    TIMEDIFFIN: 'за {difference}'
     YEAR: година
     YEARS: години
   DateField:
-    NOTSET: "не е зададена"
+    NOTSET: 'не е зададена'
     TODAY: днес
-    VALIDDATEFORMAT2: "Моля, въведете валиден формат за дата ({format})"
-    VALIDDATEMAXDATE: "Датата трябва да бъде същата или преди ({date})"
-    VALIDDATEMINDATE: "Датата трябва да бъде същата или след ({date})"
+    VALIDDATEFORMAT2: 'Моля, въведете валиден формат за дата ({format})'
+    VALIDDATEMAXDATE: 'Датата трябва да бъде същата или преди ({date})'
+    VALIDDATEMINDATE: 'Датата трябва да бъде същата или след ({date})'
   DatetimeField:
-    NOTSET: "не е зададена"
+    NOTSET: 'не е зададена'
   Director:
-    INVALID_REQUEST: "Грешна заявка"
+    INVALID_REQUEST: 'Грешна заявка'
   DropdownField:
     CHOOSE: (Избери)
   EmailField:
-    VALIDATION: "Моля, въведете имейл адрес"
+    VALIDATION: 'Моля, въведете имейл адрес'
   Enum:
     ANY: Някой
   File:
     Content: Съдържание
-    Filename: "Име на файл"
-    INVALIDEXTENSION: "Това разширение не е разрешено (разрешени са: {extensions})"
-    INVALIDEXTENSIONSHORT: "Това разширение не е разрешено"
-    NOVALIDUPLOAD: "Невалиден файл за качване"
+    Filename: 'Име на файл'
+    INVALIDEXTENSION: 'Това разширение не е разрешено (разрешени са: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Това разширение не е разрешено'
+    NOVALIDUPLOAD: 'Невалиден файл за качване'
     Name: Име
     PLURALNAME: Файлове
     SINGULARNAME: Файл
     Title: Заглавие
   Filesystem:
-    SYNCRESULTS: "Синхронизацията завърши: бяха създадени {createdcount} елемента, бяха изтрити {deletedcount} елемента"
+    SYNCRESULTS: 'Синхронизацията завърши: бяха създадени {createdcount} елемента, бяха изтрити {deletedcount} елемента'
   ForgotPasswordEmail_ss:
     HELLO: Здравей!
-    TEXT1: "Това е Вашият"
-    TEXT2: "адрес за рестартирване на парола"
+    TEXT1: 'Това е Вашият'
+    TEXT2: 'адрес за рестартирване на парола'
     TEXT3: за
   Form:
-    VALIDATIONNOTUNIQUE: "Въведената стойност не е уникална"
-    VALIDATIONPASSWORDSDONTMATCH: "Паролите не съвпадат"
-    VALIDATIONPASSWORDSNOTEMPTY: "Паролите не може да бъдат празни"
-    VALIDATIONSTRONGPASSWORD: "Паролите трябва да съдържат поне една цифра и една буква."
+    VALIDATIONNOTUNIQUE: 'Въведената стойност не е уникална'
+    VALIDATIONPASSWORDSDONTMATCH: 'Паролите не съвпадат'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Паролите не може да бъдат празни'
+    VALIDATIONSTRONGPASSWORD: 'Паролите трябва да съдържат поне една цифра и една буква.'
     VALIDATOR: Валидатор
-    VALIDCURRENCY: "Моля, въведете коректна валута."
+    VALIDCURRENCY: 'Моля, въведете коректна валута.'
   FormField:
     NONE: нищо
   GridAction:
@@ -173,172 +173,172 @@ bg:
     Delete: Изтрий
     UnlinkRelation: Откачане
   GridField:
-    Add: "Добави {name}"
+    Add: 'Добави {name}'
     Filter: Филтър
-    FilterBy: "Филтриране по"
+    FilterBy: 'Филтриране по'
     Find: Търси
-    LEVELUP: "Ниво нагоре"
-    LinkExisting: "Свържи към съществуващ"
-    NewRecord: "Нов %s"
-    NoItemsFound: "Няма намерени елементи"
-    PRINTEDAT: "Отпечатано на"
-    PRINTEDBY: "Отпечатано от"
-    PlaceHolder: "Намери {type}"
-    PlaceHolderWithLabels: "Намери {type} по {name}"
-    RelationSearch: "Търсене на връзка"
+    LEVELUP: 'Ниво нагоре'
+    LinkExisting: 'Свържи към съществуващ'
+    NewRecord: 'Нов %s'
+    NoItemsFound: 'Няма намерени елементи'
+    PRINTEDAT: 'Отпечатано на'
+    PRINTEDBY: 'Отпечатано от'
+    PlaceHolder: 'Намери {type}'
+    PlaceHolderWithLabels: 'Намери {type} по {name}'
+    RelationSearch: 'Търсене на връзка'
     ResetFilter: Изчистване
   GridFieldAction_Delete:
-    DeletePermissionsFailure: "Изтриването не е разрешено"
+    DeletePermissionsFailure: 'Изтриването не е разрешено'
   GridFieldDetailForm:
     Create: Създай
     Delete: Изтрий
-    DeletePermissionsFailure: "Изтриването не е разрешено"
-    Deleted: "Изтрити %s %s"
+    DeletePermissionsFailure: 'Изтриването не е разрешено'
+    Deleted: 'Изтрити %s %s'
     Save: Запис
   Group:
-    AddRole: "Добавяне на роля към групата"
-    Code: "Код на група"
-    GroupReminder: "Ако изберете родителска група, тази група ще наследи всички нейни роли"
-    Locked: Заключена?
-    NoRoles: "Няма намерени роли"
-    Parent: "Група източник"
-    RolesAddEditLink: "Управление на ролите"
-    has_many_Permissions: Разрешения
+    AddRole: 'Добавяне на роля към групата'
+    Code: 'Код на група'
+    GroupReminder: 'Ако изберете родителска група, тази група ще наследи всички нейни роли'
+    Locked: 'Заключена?'
+    NoRoles: 'Няма намерени роли'
+    Parent: 'Група източник'
+    RolesAddEditLink: 'Управление на ролите'
+    has_many_Permissions: 'Разрешения'
     many_many_Members: Потребители
   GroupImportForm:
-    Help1: "<p>Внасяне на една или повече групи в <em>CSV формат</em> (comma-separated values). <small><a href=\"#\" class=\"toggle-advanced\">Покажи начин на употреба</a></small></p>"
-    ResultCreated: "Бяха създадени {count} група/и"
-    ResultDeleted: "Бяха изтрити %d групи"
-    ResultUpdated: "Бяха обновени %d групи"
+    Help1: '<p>Внасяне на една или повече групи в <em>CSV формат</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Покажи начин на употреба</a></small></p>'
+    ResultCreated: 'Бяха създадени {count} група/и'
+    ResultDeleted: 'Бяха изтрити %d групи'
+    ResultUpdated: 'Бяха обновени %d групи'
   HtmlEditorField:
-    ADDURL: "Добави URL"
-    ADJUSTDETAILSDIMENSIONS: "Детайли и размери"
+    ADDURL: 'Добави URL'
+    ADJUSTDETAILSDIMENSIONS: 'Детайли и размери'
     ANCHORVALUE: Котва
     BUTTONINSERT: Вмъкни
-    BUTTONINSERTLINK: "Вмъкни препратка"
-    BUTTONREMOVELINK: "Премахни препратка"
+    BUTTONINSERTLINK: 'Вмъкни препратка'
+    BUTTONREMOVELINK: 'Премахни препратка'
     BUTTONUpdate: Актуализация
-    CAPTIONTEXT: "Описание (под снимката)"
-    CSSCLASS: "Подравняване / стил"
+    CAPTIONTEXT: 'Описание (под снимката)'
+    CSSCLASS: 'Подравняване / стил'
     CSSCLASSCENTER: Центрирано
-    CSSCLASSLEFT: "В ляво, с текст който да се нанася около него"
-    CSSCLASSLEFTALONE: "В ляво, самостоятелно."
-    CSSCLASSRIGHT: "В дясно, с текст който да се нанася около него"
+    CSSCLASSLEFT: 'В ляво, с текст който да се нанася около него'
+    CSSCLASSLEFTALONE: 'В ляво, самостоятелно.'
+    CSSCLASSRIGHT: 'В дясно, с текст който да се нанася около него'
     DETAILS: Детайли
-    EMAIL: "email адрес"
+    EMAIL: 'email адрес'
     FILE: Файл
     FOLDER: Папка
-    FROMCMS: "От CMS"
-    FROMCOMPUTER: "От компютъра"
-    FROMWEB: "От интернет"
-    FindInFolder: "Прегледай папка"
-    IMAGEALT: "Алтернативен текст (alt)"
-    IMAGEDIMENSIONS: Размери
+    FROMCMS: 'От CMS'
+    FROMCOMPUTER: 'От компютъра'
+    FROMWEB: 'От интернет'
+    FindInFolder: 'Прегледай папка'
+    IMAGEALT: 'Алтернативен текст (alt)'
+    IMAGEDIMENSIONS: 'Размери'
     IMAGEHEIGHTPX: Височина
-    IMAGETITLE: "Описание (tooltip) - за допълнителна информация към изображението"
-    IMAGETITLETEXT: "Описание (tooltip)"
-    IMAGETITLETEXTDESC: "Допълнителна информация към изображението"
+    IMAGETITLE: 'Описание (tooltip) - за допълнителна информация към изображението'
+    IMAGETITLETEXT: 'Описание (tooltip)'
+    IMAGETITLETEXTDESC: 'Допълнителна информация към изображението'
     IMAGEWIDTHPX: Широчина
     LINK: Връзка
-    LINKANCHOR: "Котва на тази страница"
-    LINKDESCR: "Описание на препратка"
-    LINKEMAIL: "email адрес"
-    LINKEXTERNAL: "Друг уебсайт"
-    LINKFILE: "Свали файл"
-    LINKINTERNAL: "Страница в сайта"
-    LINKOPENNEWWIN: "Да се отвори ли препратката в нов прозорец?"
-    LINKTO: "Препратка към"
+    LINKANCHOR: 'Котва на тази страница'
+    LINKDESCR: 'Описание на препратка'
+    LINKEMAIL: 'email адрес'
+    LINKEXTERNAL: 'Друг уебсайт'
+    LINKFILE: 'Свали файл'
+    LINKINTERNAL: 'Страница в сайта'
+    LINKOPENNEWWIN: 'Да се отвори ли препратката в нов прозорец?'
+    LINKTO: 'Препратка към'
     PAGE: Страница
-    URLNOTANOEMBEDRESOURCE: "URL адресът '{url}' не може да бъде превърнат в медиен ресурс."
+    URLNOTANOEMBEDRESOURCE: 'URL адресът ''{url}'' не може да бъде превърнат в медиен ресурс.'
   Image_iframe_ss:
-    TITLE: "Iframe за качване на изображение"
+    TITLE: 'Iframe за качване на изображение'
   LeftAndMain:
-    CANT_REORGANISE: "Нямаш права да променяш страници от най-горно ниво. Твоите промени не бяха записани."
+    CANT_REORGANISE: 'Нямаш права да променяш страници от най-горно ниво. Твоите промени не бяха записани.'
     DELETED: Изтрит
     HELP: Помощ
-    PERMAGAIN: "Вие излязохте от CMS. Ако искате да влезете отново, моля, въведете потребителско име и парола."
+    PERMAGAIN: 'Вие излязохте от CMS. Ако искате да влезете отново, моля, въведете потребителско име и парола.'
     PreviewButton: Преглед
-    REORGANISATIONSUCCESSFUL: "Реорганизацията на дървото на сайта беше успешна."
+    REORGANISATIONSUCCESSFUL: 'Реорганизацията на дървото на сайта беше успешна.'
     SAVEDUP: Записано
   LeftAndMain_Menu_ss:
     Hello: Здравей
     LOGOUT: Излизане
   LoginAttempt:
-    Email: "Email адрес"
-    IP: "IP адрес"
+    Email: 'Email адрес'
+    IP: 'IP адрес'
     Status: Статус
   Member:
-    ADDGROUP: "Добави група"
-    BUTTONCHANGEPASSWORD: "Променете паролата"
+    ADDGROUP: 'Добави група'
+    BUTTONCHANGEPASSWORD: 'Променете паролата'
     BUTTONLOGIN: Влез
-    BUTTONLOGINOTHER: "Влез като някой друг"
-    BUTTONLOSTPASSWORD: "Загубих си паролата"
-    CANTEDIT: "Нямаш права за това действие"
-    CONFIRMNEWPASSWORD: "Потвърдете новата парола"
-    CONFIRMPASSWORD: "Потвърдете паролата"
-    DefaultDateTime: "по подразбиране"
+    BUTTONLOGINOTHER: 'Влез като някой друг'
+    BUTTONLOSTPASSWORD: 'Загубих си паролата'
+    CANTEDIT: 'Нямаш права за това действие'
+    CONFIRMNEWPASSWORD: 'Потвърдете новата парола'
+    CONFIRMPASSWORD: 'Потвърдете паролата'
+    DefaultDateTime: 'по подразбиране'
     EMAIL: Еmail
-    EMPTYNEWPASSWORD: "Не е въведена нова парола"
-    ENTEREMAIL: "Въведете email, на който ще изпратим връзка за анулиране на парола."
-    ERRORNEWPASSWORD: "Въвели сте новата парола различно, моля опитайте пак"
-    ERRORPASSWORDNOTMATCH: "Вашата текуща парола не съвпада, моля опитайте пак"
+    EMPTYNEWPASSWORD: 'Не е въведена нова парола'
+    ENTEREMAIL: 'Въведете email, на който ще изпратим връзка за анулиране на парола.'
+    ERRORNEWPASSWORD: 'Въвели сте новата парола различно, моля опитайте пак'
+    ERRORPASSWORDNOTMATCH: 'Вашата текуща парола не съвпада, моля опитайте пак'
     FIRSTNAME: Име
     INTERFACELANG: Език
-    INVALIDNEWPASSWORD: "Не може да бъде приета паролата: {password}"
-    LOGGEDINAS: "Вие сте влезли като {name}."
-    NEWPASSWORD: "Нова парола"
+    INVALIDNEWPASSWORD: 'Не може да бъде приета паролата: {password}'
+    LOGGEDINAS: 'Вие сте влезли като {name}.'
+    NEWPASSWORD: 'Нова парола'
     PASSWORD: Парола
     PLURALNAME: Потребители
     SINGULARNAME: Потребител
-    SUBJECTPASSWORDCHANGED: "Вашата парола беше променена"
-    SUBJECTPASSWORDRESET: "Връзка за анулиране на паролата"
+    SUBJECTPASSWORDCHANGED: 'Вашата парола беше променена'
+    SUBJECTPASSWORDRESET: 'Връзка за анулиране на паролата'
     SURNAME: Фамилия
-    WELCOMEBACK: "Добре дошли отново, {firstname}"
-    YOUROLDPASSWORD: "Вашата стара парола"
+    WELCOMEBACK: 'Добре дошли отново, {firstname}'
+    YOUROLDPASSWORD: 'Вашата стара парола'
     belongs_many_many_Groups: Групи
-    db_LastVisited: "Дата на последно посещение"
-    db_Locale: "Език на интерфейса"
-    db_LockedOutUntil: "Заключен до"
-    db_NumVisit: "Брой посещения"
+    db_LastVisited: 'Дата на последно посещение'
+    db_Locale: 'Език на интерфейса'
+    db_LockedOutUntil: 'Заключен до'
+    db_NumVisit: 'Брой посещения'
     db_Password: Парола
-    db_PasswordExpiry: "Дата на изтичане валидността на паролата"
+    db_PasswordExpiry: 'Дата на изтичане валидността на паролата'
   MemberAuthenticator:
-    TITLE: "email и парола"
+    TITLE: 'email и парола'
   MemberDatetimeOptionsetField:
-    AMORPM: "АМ (преди обед) или РМ (следобед)"
+    AMORPM: 'АМ (преди обед) или РМ (следобед)'
     Custom: Произволно
-    DATEFORMATBAD: "Невалиден формат на датата"
-    DAYNOLEADING: "Ден от месеца без водеща нула"
-    DIGITSDECFRACTIONSECOND: "Една или повече цифри, представляващи десетичната част на секундата"
-    FOURDIGITYEAR: "Четирицифрена година"
-    FULLNAMEMONTH: "Пълно наименование на месец (напр. Януари)"
-    MINUTENOLEADING: "Минути без водеща нула"
-    MONTHNOLEADING: "Месец без водеща нула"
+    DATEFORMATBAD: 'Невалиден формат на датата'
+    DAYNOLEADING: 'Ден от месеца без водеща нула'
+    DIGITSDECFRACTIONSECOND: 'Една или повече цифри, представляващи десетичната част на секундата'
+    FOURDIGITYEAR: 'Четирицифрена година'
+    FULLNAMEMONTH: 'Пълно наименование на месец (напр. Януари)'
+    MINUTENOLEADING: 'Минути без водеща нула'
+    MONTHNOLEADING: 'Месец без водеща нула'
     Preview: Преглед
-    SHORTMONTH: "Кратко изписване на месеца (напр. Яну)"
-    TWODIGITDAY: "Двуцифрен ден от месеца"
-    TWODIGITHOUR: "Час с водеща нула (00 до 23)"
-    TWODIGITMINUTE: "Минути с водеща нула (00 до 59)"
-    TWODIGITMONTH: "Месец с водеща нула (01=Януари, и т.н.)"
-    TWODIGITSECOND: "Секунди с водеща нула (00 до 59)"
-    TWODIGITYEAR: "Двуцифрена година"
+    SHORTMONTH: 'Кратко изписване на месеца (напр. Яну)'
+    TWODIGITDAY: 'Двуцифрен ден от месеца'
+    TWODIGITHOUR: 'Час с водеща нула (00 до 23)'
+    TWODIGITMINUTE: 'Минути с водеща нула (00 до 59)'
+    TWODIGITMONTH: 'Месец с водеща нула (01=Януари, и т.н.)'
+    TWODIGITSECOND: 'Секунди с водеща нула (00 до 59)'
+    TWODIGITYEAR: 'Двуцифрена година'
   MemberImportForm:
-    Help1: "<p>Внасяне на потебители в <em>CSV формат</em> (comma-separated values). <small><a href=\"#\" class=\"toggle-advanced\">Покажи начин на употреба</a></small></p>"
-    ResultCreated: "Бяха добавени {count} потребители"
-    ResultDeleted: "Бяха изтрити %d членове"
-    ResultNone: "Нямаше промени"
-    ResultUpdated: "Бяха актуализирани {count} потребители"
+    Help1: '<p>Внасяне на потебители в <em>CSV формат</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Покажи начин на употреба</a></small></p>'
+    ResultCreated: 'Бяха добавени {count} потребители'
+    ResultDeleted: 'Бяха изтрити %d членове'
+    ResultNone: 'Нямаше промени'
+    ResultUpdated: 'Бяха актуализирани {count} потребители'
   MemberTableField:
-    APPLY_FILTER: "Приложи филтър"
+    APPLY_FILTER: 'Приложи филтър'
   ModelAdmin:
     DELETE: Изтрий
-    DELETEDRECORDS: "Бяха изтрити {count} записа."
-    IMPORT: "Внасяне от CSV"
-    IMPORTEDRECORDS: "Бяха внесени {count} записа."
-    NOCSVFILE: "Преглед на CSV файл за внасяне"
-    NOIMPORT: "Нищо за внасяне"
+    DELETEDRECORDS: 'Бяха изтрити {count} записа.'
+    IMPORT: 'Внасяне от CSV'
+    IMPORTEDRECORDS: 'Бяха внесени {count} записа.'
+    NOCSVFILE: 'Преглед на CSV файл за внасяне'
+    NOIMPORT: 'Нищо за внасяне'
     RESET: Нулиране
-    UPDATEDRECORDS: "Бяха обновени {count} записа."
+    UPDATEDRECORDS: 'Бяха обновени {count} записа.'
   ModelAdmin_Tools_ss:
     FILTER: Филтър
     IMPORT: Внасяне
@@ -349,83 +349,83 @@ bg:
     FIELDLABELAMOUNT: Сума
     FIELDLABELCURRENCY: Валута
   NumericField:
-    VALIDATION: "'{value}' не е число, само числа могат да се въвеждат в това поле"
+    VALIDATION: '''{value}'' не е число, само числа могат да се въвеждат в това поле'
   Permission:
     AdminGroup: Администратор
-    CMS_ACCESS_CATEGORY: "Достъп до CMS"
-    FULLADMINRIGHTS: "Пълни административни права"
+    CMS_ACCESS_CATEGORY: 'Достъп до CMS'
+    FULLADMINRIGHTS: 'Пълни административни права'
   PermissionCheckboxSetField:
-    AssignedTo: "приписана на \"{title}\""
-    FromGroup: "унаследена от група \"{title}\""
-    FromRole: "унаследена от роля \"{title}\""
-    FromRoleOnGroup: "унаследено от роля \"%s\" на група \"%s\""
+    AssignedTo: 'приписана на "{title}"'
+    FromGroup: 'унаследена от група "{title}"'
+    FromRole: 'унаследена от роля "{title}"'
+    FromRoleOnGroup: 'унаследено от роля "%s" на група "%s"'
   Permissions:
-    PERMISSIONS_CATEGORY: "Роли и разрешения за достъп"
+    PERMISSIONS_CATEGORY: 'Роли и разрешения за достъп'
   PhoneNumberField:
-    VALIDATION: "Моля, въведете валиден телефонен номер"
+    VALIDATION: 'Моля, въведете валиден телефонен номер'
   Security:
-    ALREADYLOGGEDIN: "Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу."
-    BUTTONSEND: "Пратете ми линка за промяна на паролата"
-    CHANGEPASSWORDBELOW: "Можете да смените вашата парола по-долу."
-    CHANGEPASSWORDHEADER: "Сменете вашата парола"
-    ENTERNEWPASSWORD: "Моля, въведете нова парола."
-    ERRORPASSWORDPERMISSION: "Трябва да сте влезли, за да можете да промените вашата парола!"
-    LOGGEDOUT: "Вие излязохте. Ако искате да влезете отново, въведете вашите данни по-долу."
-    LOGIN: "Влезте в системата"
-    NOTEPAGESECURED: "Тази страница е защитена. Въведете вашите данни по-долу, за да продължите."
-    NOTERESETLINKINVALID: "<p>Връзката за нулиране на парола не е вярна или е просрочена.</p><p>Можете да заявите нова <a href=\"{link1}\">тук</a> или да промените паролата си след като <a href=\"{link2}\">влезете</a>.</p>"
-    NOTERESETPASSWORD: "Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си"
-    PASSWORDSENTHEADER: "Връзка за нулиране на парола беше изпратена на '{email}'"
-    PASSWORDSENTTEXT: "Благодарим ви! Връзка за нулиране на паролата беше изпратен на '{email}', ако съществува акаунт с този имейл адрес."
+    ALREADYLOGGEDIN: 'Вие нямате достъп до тази страница. Ако имате друг акаунт, с който може да влезете в тази страница, въведете го по-долу.'
+    BUTTONSEND: 'Пратете ми линка за промяна на паролата'
+    CHANGEPASSWORDBELOW: 'Можете да смените вашата парола по-долу.'
+    CHANGEPASSWORDHEADER: 'Сменете вашата парола'
+    ENTERNEWPASSWORD: 'Моля, въведете нова парола.'
+    ERRORPASSWORDPERMISSION: 'Трябва да сте влезли, за да можете да промените вашата парола!'
+    LOGGEDOUT: 'Вие излязохте. Ако искате да влезете отново, въведете вашите данни по-долу.'
+    LOGIN: 'Влезте в системата'
+    NOTEPAGESECURED: 'Тази страница е защитена. Въведете вашите данни по-долу, за да продължите.'
+    NOTERESETLINKINVALID: '<p>Връзката за нулиране на парола не е вярна или е просрочена.</p><p>Можете да заявите нова <a href="{link1}">тук</a> или да промените паролата си след като <a href="{link2}">влезете</a>.</p>'
+    NOTERESETPASSWORD: 'Въведете вашият email адрес и ще ви изпратим линк, с който ще можете да смените паролата си'
+    PASSWORDSENTHEADER: 'Връзка за нулиране на парола беше изпратена на ''{email}'''
+    PASSWORDSENTTEXT: 'Благодарим ви! Връзка за нулиране на паролата беше изпратен на ''{email}'', ако съществува акаунт с този имейл адрес.'
   SecurityAdmin:
-    ACCESS_HELP: "Позволява преглед, добавяне и редактиране на потребители, както и задаване на разрешения и роли за тях."
-    APPLY_ROLES: "Задаване роли на групи"
-    APPLY_ROLES_HELP: "Възможност за редактиране на ролите, възложени на група. Необходим е достъп до раздел \"Потребители\"."
-    EDITPERMISSIONS: "Управление на разрешенията на групите"
-    EDITPERMISSIONS_HELP: "Възможност за редактиране на Разрешенията и IP адресите за група. Необходим е достъп до раздел \"Сигурност\"."
-    GROUPNAME: "Име на група"
-    IMPORTGROUPS: "Внасяне на файл с групи"
+    ACCESS_HELP: 'Позволява преглед, добавяне и редактиране на потребители, както и задаване на разрешения и роли за тях.'
+    APPLY_ROLES: 'Задаване роли на групи'
+    APPLY_ROLES_HELP: 'Възможност за редактиране на ролите, възложени на група. Необходим е достъп до раздел "Потребители".'
+    EDITPERMISSIONS: 'Управление на разрешенията на групите'
+    EDITPERMISSIONS_HELP: 'Възможност за редактиране на Разрешенията и IP адресите за група. Необходим е достъп до раздел "Сигурност".'
+    GROUPNAME: 'Име на група'
+    IMPORTGROUPS: 'Внасяне на файл с групи'
     MEMBERS: Потребители
     MENUTITLE: Сигурност
-    MemberListCaution: "Внимание: изтривайки потребители от този списък, ще ги премахне от всички групи и от базата данни."
-    NEWGROUP: "Нова група"
-    PERMISSIONS: Разрешения
-    ROLES: Роли
-    ROLESDESCRIPTION: "Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи."
-    TABROLES: Роли
+    MemberListCaution: 'Внимание: изтривайки потребители от този списък, ще ги премахне от всички групи и от базата данни.'
+    NEWGROUP: 'Нова група'
+    PERMISSIONS: 'Разрешения'
+    ROLES: 'Роли'
+    ROLESDESCRIPTION: 'Ролите са предварително зададени сетове от разрешения и могат да бъдат присвоявани на групи.<br />Ако е нужно, те се наследяват от родителските групи.'
+    TABROLES: 'Роли'
     Users: Потребители
   SecurityAdmin_MemberImportForm:
-    BtnImport: "Внасяне от CSV"
-    FileFieldLabel: "CSV файл <small>(разширение: *.csv)</small>"
+    BtnImport: 'Внасяне от CSV'
+    FileFieldLabel: 'CSV файл <small>(разширение: *.csv)</small>'
   SilverStripeNavigator:
-    Edit: Редакция
+    Edit: 'Редакция'
   SiteTree:
     TABMAIN: Главно
   TableListField:
-    CSVEXPORT: "Експортирай на CSV"
+    CSVEXPORT: 'Експортирай на CSV'
   TimeField:
-    VALIDATEFORMAT: "Моля, въведете валиден формат за дата ({format})"
+    VALIDATEFORMAT: 'Моля, въведете валиден формат за дата ({format})'
   ToggleField:
     LESS: по-малко
     MORE: повече
   UploadField:
-    ATTACHFILE: "Прикачване на файл"
-    ATTACHFILES: "Прикачване на файлове"
-    AttachFile: "Прикачване на файл(ове)"
-    DELETEINFO: "Изтрий файла от сървъра"
+    ATTACHFILE: 'Прикачване на файл'
+    ATTACHFILES: 'Прикачване на файлове'
+    AttachFile: 'Прикачване на файл(ове)'
+    DELETEINFO: 'Изтрий файла от сървъра'
     DOEDIT: Запис
-    DROPFILE: "пуснете файл"
-    DROPFILES: "пускане на файлове"
-    Dimensions: Размери
-    EDITINFO: "Редактирай този файл"
-    FIELDNOTSET: "Информация за файла не беше намерена"
-    FROMCOMPUTER: "От компютъра"
-    FROMFILES: "От файлове"
-    MAXNUMBEROFFILES: "Максималния брой файлове ({count}) е надхвърлен."
-    MAXNUMBEROFFILESSHORT: "Максималният брой файлове за качване е {count}"
-    REMOVE: Премахни
-    REMOVEINFO: "Премахни файла без да го изтриваш"
-    STARTALL: "Старт на всички"
+    DROPFILE: 'пуснете файл'
+    DROPFILES: 'пускане на файлове'
+    Dimensions: 'Размери'
+    EDITINFO: 'Редактирай този файл'
+    FIELDNOTSET: 'Информация за файла не беше намерена'
+    FROMCOMPUTER: 'От компютъра'
+    FROMFILES: 'От файлове'
+    MAXNUMBEROFFILES: 'Максималния брой файлове ({count}) е надхвърлен.'
+    MAXNUMBEROFFILESSHORT: 'Максималният брой файлове за качване е {count}'
+    REMOVE: 'Премахни'
+    REMOVEINFO: 'Премахни файла без да го изтриваш'
+    STARTALL: 'Старт на всички'
     Saved: Записано
   Versioned:
     has_many_Versions: Версии

@@ -16,7 +16,7 @@ th:
     DRAGFILESHERE: ลากไฟล์มาไว้ที่นี่
     DROPAREA: พื้นที่วางข้อมูล
     EDITALL: แก้ไขทั้งหมด
-    EDITANDORGANIZE: "แก้ไข & จัดระเบียบ"
+    EDITANDORGANIZE: 'แก้ไข & จัดระเบียบ'
     EDITINFO: แก้ไขไฟล์
     FILES: ไฟล์
     FROMCOMPUTER: เลือกไฟล์จากคอมพิวเตอร์ของคุณ
@@ -28,12 +28,12 @@ th:
     BOLDEXAMPLE: ตัวหนา
     EMAILLINK: ลิงก์อีเมล
     EMAILLINKDESCRIPTION: สร้างลิงค์ให้กับที่อยู่อีเมล์
-    IMAGE: รูปภาพ
-    IMAGEDESCRIPTION: แสดงรูปภาพในหน้าบทความของคุณ
+    IMAGE: 'รูปภาพ'
+    IMAGEDESCRIPTION: 'แสดงรูปภาพในหน้าบทความของคุณ'
     ITALIC: ข้อความตัวเอียง
     ITALICEXAMPLE: ตัวเอียง
     LINK: ลิงก์เว็บไซต์
-    LINKDESCRIPTION: "ลิงก์ไปที่เว็บไซต์อื่นๆ หรือ URL อื่นๆ"
+    LINKDESCRIPTION: 'ลิงก์ไปที่เว็บไซต์อื่นๆ หรือ URL อื่นๆ'
     STRUCK: ข้อความแบบขีดเส้นใต้
     UNDERLINEEXAMPLE: ยังไม่ได้กำหนด
   BasicAuth:
@@ -43,18 +43,18 @@ th:
     ANY: ใดๆ
   CMSLoadingScreen_ss:
     LOADING: กำลังโหลด...
-    REQUIREJS: "CMS ตัวนี้จำเป็นต้องมีการเปิดใช้งานจาวาสคริปต์"
+    REQUIREJS: 'CMS ตัวนี้จำเป็นต้องมีการเปิดใช้งานจาวาสคริปต์'
   CMSMain:
-    ACCESSALLINTERFACES: "เข้าถึงพื้นที่ในส่วนของ CMS ทั้งหมด"
+    ACCESSALLINTERFACES: 'เข้าถึงพื้นที่ในส่วนของ CMS ทั้งหมด'
     SAVE: บันทึก
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: คุณได้เปลี่ยนรหัสผ่านสำหรับ
-    CHANGEPASSWORDTEXT2: "คุณสามารถใช้ข้อมูลส่วนตัวต่อไปนี้เพื่อเข้าสู่ระบบ:"
+    CHANGEPASSWORDTEXT2: 'คุณสามารถใช้ข้อมูลส่วนตัวต่อไปนี้เพื่อเข้าสู่ระบบ:'
     EMAIL: อีเมล
     HELLO: สวัสดี
     PASSWORD: รหัสผ่าน
   ConfirmedPasswordField:
-    BETWEEN: "รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร"
+    BETWEEN: 'รหัสผ่านต้องมีความยาวตัวอักษรอย่างน้อย {min} ถึง {max} ตัวอักษร'
     SHOWONCLICKTITLE: เปลี่ยนรหัสผ่าน
   CreditCardField:
     FIRST: แรก
@@ -75,31 +75,31 @@ th:
   Enum:
     ANY: ใดๆ
   File:
-    AviType: "ไฟล์วีดีโอ AVI"
+    AviType: 'ไฟล์วีดีโอ AVI'
     Content: เนื้อหา
-    CssType: "ไฟล์ CSS"
-    DocType: "เอกสาร Word"
+    CssType: 'ไฟล์ CSS'
+    DocType: 'เอกสาร Word'
     Filename: ชื่อไฟล์
-    GifType: "รูปภาพ GIF - ดีสำหรับแผนผังหรือไดอะแกรม"
-    GzType: "ไฟล์บีบอัดข้อมูล GZIP"
-    HtlType: "ไฟล์ HTML"
-    HtmlType: "ไฟล์ HTML"
+    GifType: 'รูปภาพ GIF - ดีสำหรับแผนผังหรือไดอะแกรม'
+    GzType: 'ไฟล์บีบอัดข้อมูล GZIP'
+    HtlType: 'ไฟล์ HTML'
+    HtmlType: 'ไฟล์ HTML'
     INVALIDEXTENSIONSHORT: ส่วนเสริมไม่ได้รับอนุญาตให้ใช้งาน
     IcoType: รูปไอคอน
-    JpgType: "รูปภาพ JPEG - ดีสำหรับภาพถ่าย"
+    JpgType: 'รูปภาพ JPEG - ดีสำหรับภาพถ่าย'
     JsType: ไฟล์จาวาสคริปต์
-    Mp3Type: "ไฟล์เสียง MP3"
-    MpgType: "ไฟล์วีดีโอ MPEG"
+    Mp3Type: 'ไฟล์เสียง MP3'
+    MpgType: 'ไฟล์วีดีโอ MPEG'
     Name: ชื่อ
     PLURALNAME: ไฟล์
-    PdfType: "ไฟล์ Adobe Acrobat PDF"
-    PngType: "รูปภาพ PNG - ดีสำหรับรูปแบบที่มีเป้าหมายสำหรับใช้งานทั่วไป"
+    PdfType: 'ไฟล์ Adobe Acrobat PDF'
+    PngType: 'รูปภาพ PNG - ดีสำหรับรูปแบบที่มีเป้าหมายสำหรับใช้งานทั่วไป'
     SINGULARNAME: ไฟล์
-    TiffType: "ไฟล์รูปภาพ TIF"
+    TiffType: 'ไฟล์รูปภาพ TIF'
     Title: ชื่อ
-    WavType: "ไฟล์เสียง WAV"
-    XlsType: "สเปรดชีท Excel"
-    ZipType: "ไฟล์บีบอัดข้อมูล ZIP"
+    WavType: 'ไฟล์เสียง WAV'
+    XlsType: 'สเปรดชีท Excel'
+    ZipType: 'ไฟล์บีบอัดข้อมูล ZIP'
   Folder:
     PLURALNAME: โฟลเดอร์
     SINGULARNAME: โฟลเดอร์
@@ -120,16 +120,16 @@ th:
     Delete: ลบ
     UnlinkRelation: ยกเลิกการลิงก์
   GridField:
-    Add: "เพิ่ม {name}"
+    Add: 'เพิ่ม {name}'
     Filter: ตัวกรองข้อมูล
     FilterBy: กรองข้อมูลจาก
     Find: ค้นหา
     LinkExisting: ลิงก์ที่มีอยู่
-    NewRecord: "ใหม่ %s"
+    NewRecord: 'ใหม่ %s'
     NoItemsFound: ไม่พบรายการที่ต้องการ
     PRINTEDAT: ถูกสั่งพิมพ์ที่
     PRINTEDBY: พิมพ์โดย
-    PlaceHolder: "ค้นหา {type}"
+    PlaceHolder: 'ค้นหา {type}'
     ResetFilter: รีเซ็ต
   GridFieldAction_Delete:
     DeletePermissionsFailure: ไม่ได้รับสิทธิ์ให้ลบได้
@@ -137,7 +137,7 @@ th:
     CancelBtn: ยกเลิก
     Create: สร้าง
     Delete: ลบ
-    Deleted: "ลบ %s %s แล้ว"
+    Deleted: 'ลบ %s %s แล้ว'
     Save: บันทึก
   Group:
     AddRole: เพิ่มบทบาทให้กับกลุ่มนี้
@@ -145,8 +145,8 @@ th:
     DefaultGroupTitleAdministrators: ผู้ดูและระบบ
     DefaultGroupTitleContentAuthors: ผู้แต่งเนื้อหา
     Description: คำอธิบาย
-    GroupReminder: "หากคุณเลือกกลุ่มแม่, กลุ่มดังกล่าวนี้จะถึงบทบาททั้งหมดของกลุ่มแม่มา"
-    Locked: ล็อค?
+    GroupReminder: 'หากคุณเลือกกลุ่มแม่, กลุ่มดังกล่าวนี้จะถึงบทบาททั้งหมดของกลุ่มแม่มา'
+    Locked: 'ล็อค?'
     NoRoles: ไม่พบบทบาทที่ต้องการ
     PLURALNAME: กลุ่ม
     Parent: กลุ่มหลักต้นทาง
@@ -156,29 +156,29 @@ th:
     has_many_Permissions: สิทธิ์
     many_many_Members: สมาชิก
   GroupImportForm:
-    ResultCreated: "สร้างกลุ่มแล้ว {count} กลุ่ม"
-    ResultDeleted: "ลบกลุ่มแล้ว %d กลุ่ม"
-    ResultUpdated: "อัพเดทแล้ว %d กลุ่ม"
+    ResultCreated: 'สร้างกลุ่มแล้ว {count} กลุ่ม'
+    ResultDeleted: 'ลบกลุ่มแล้ว %d กลุ่ม'
+    ResultUpdated: 'อัพเดทแล้ว %d กลุ่ม'
   HtmlEditorField:
-    ADDURL: "เพิ่ม URL"
-    ADJUSTDETAILSDIMENSIONS: "รายละเอียด &amp; ขนาดสัดส่วน"
+    ADDURL: 'เพิ่ม URL'
+    ADJUSTDETAILSDIMENSIONS: 'รายละเอียด &amp; ขนาดสัดส่วน'
     BUTTONINSERT: แทรก
     BUTTONINSERTLINK: แทรกลิงค์
     BUTTONREMOVELINK: ลบลิงค์
     BUTTONUpdate: อัพเดท
-    CAPTIONTEXT: ข้อความคำอธิบายใต้ภาพ
-    CSSCLASS: "การจัดวาง / รูปแบบ"
+    CAPTIONTEXT: 'ข้อความคำอธิบายใต้ภาพ'
+    CSSCLASS: 'การจัดวาง / รูปแบบ'
     DETAILS: รายละเอียด
     EMAIL: ที่อยู่อีเมล
     FILE: ไฟล์
     FOLDER: โฟลเดอร์
-    FROMCMS: "จาก CMS"
+    FROMCMS: 'จาก CMS'
     FROMCOMPUTER: จากคอมพิวเตอร์ของคุณ
     FROMWEB: จากเว็บไซต์
     FindInFolder: ค้นหาในโฟลเดอร์
     IMAGEDIMENSIONS: ขนาดสัดส่วน
     IMAGEHEIGHTPX: ส่วนสูง
-    IMAGETITLETEXT: "ข้อความหัวเรื่อง (tooltip)"
+    IMAGETITLETEXT: 'ข้อความหัวเรื่อง (tooltip)'
     IMAGEWIDTHPX: ความกว้าง
     LINK: ลิงก์
     LINKDESCR: คำอธิบายลิงค์
@@ -196,10 +196,10 @@ th:
     PLURALNAME: ไฟล์
     SINGULARNAME: ไฟล์
   Image_iframe_ss:
-    TITLE: "หน้าต่าง iframe สำหรับอัพโหลดรูปภาพ"
+    TITLE: 'หน้าต่าง iframe สำหรับอัพโหลดรูปภาพ'
   LeftAndMain:
     HELP: ช่วยเหลือ
-    PERMAGAIN: "คุณได้ออกจากระบบของ CMS แล้ว หากคุณต้องการเข้าสู่ระบบอีกครั้ง กรุณากรอกชื่อผู้ใช้งานและรหัสผ่านของคุณด้านล่าง"
+    PERMAGAIN: 'คุณได้ออกจากระบบของ CMS แล้ว หากคุณต้องการเข้าสู่ระบบอีกครั้ง กรุณากรอกชื่อผู้ใช้งานและรหัสผ่านของคุณด้านล่าง'
   LeftAndMain_Menu_ss:
     Hello: สวัสดีค่ะ
     LOGOUT: ออกจากระบบ
@@ -220,9 +220,9 @@ th:
     DefaultAdminFirstname: ผู้ดูแลที่กำหนดไว้เริ่มต้น
     EMAIL: อีเมล
     ENTEREMAIL: กรุณากรอกที่อยู่อีเมลเพื่อขอรับลิงก์สำหรับรีเซ็ตรหัสผ่านใหม่
-    ERRORPASSWORDNOTMATCH: "รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง"
+    ERRORPASSWORDNOTMATCH: 'รหัสผ่านไม่ตรงกัน กรุณาลองใหม่อีกครั้ง'
     FIRSTNAME: ชื่อจริง
-    INTERFACELANG: ภาษาสำหรับหน้าจอติดต่อผู้ใช้
+    INTERFACELANG: 'ภาษาสำหรับหน้าจอติดต่อผู้ใช้'
     NEWPASSWORD: รหัสผ่านใหม่
     PASSWORD: รหัสผ่าน
     PLURALNAME: สมาชิก
@@ -234,18 +234,18 @@ th:
     YOUROLDPASSWORD: รหัสผ่านเก่าของคุณ
     belongs_many_many_Groups: กลุ่ม
     db_LastVisited: วันที่เยี่ยมชมล่าสุด
-    db_Locale: ภาษาสำหรับส่วนอินเทอร์เฟซ
+    db_Locale: 'ภาษาสำหรับส่วนอินเทอร์เฟซ'
     db_LockedOutUntil: ออกจากระบบจนกว่า
     db_NumVisit: จำนวนการเข้าชม
     db_Password: รหัสผ่าน
     db_PasswordExpiry: วันที่รหัสผ่านหมดอายุ
   MemberAuthenticator:
-    TITLE: "อีเมล &amp; รหัสผ่าน"
+    TITLE: 'อีเมล &amp; รหัสผ่าน'
   MemberDatetimeOptionsetField:
     DATEFORMATBAD: รูปแบบวันที่ไม่ถูกต้อง
     Preview: ดูตัวอย่าง
   MemberImportForm:
-    ResultDeleted: "ลบสมาชิกแล้ว %d สมาชิก"
+    ResultDeleted: 'ลบสมาชิกแล้ว %d สมาชิก'
     ResultNone: ยังไม่มีการเปลี่ยนแปลง
   MemberPassword:
     PLURALNAME: รหัสผ่านสมาชิก
@@ -254,13 +254,13 @@ th:
     APPLY_FILTER: ประยุกต์ใช้ตัวกรองข้อมูล
   ModelAdmin:
     DELETE: ลบ
-    DELETEDRECORDS: "ลบแล้ว {count} รายการ"
-    IMPORT: "นำเข้าจากไฟล์ CSV"
-    IMPORTEDRECORDS: "นำเข้าแล้ว {count} รายการ"
-    NOCSVFILE: "กรุณาเปิดดูเพื่อเลือกไฟล์ CSV สำหรับนำเข้าข้อมูล"
+    DELETEDRECORDS: 'ลบแล้ว {count} รายการ'
+    IMPORT: 'นำเข้าจากไฟล์ CSV'
+    IMPORTEDRECORDS: 'นำเข้าแล้ว {count} รายการ'
+    NOCSVFILE: 'กรุณาเปิดดูเพื่อเลือกไฟล์ CSV สำหรับนำเข้าข้อมูล'
     NOIMPORT: ไม่มีข้อมูลให้นำเข้า
     RESET: รีเซ็ต
-    UPDATEDRECORDS: "อัพเดทแล้ว {count} รายการ"
+    UPDATEDRECORDS: 'อัพเดทแล้ว {count} รายการ'
   ModelAdmin_Tools_ss:
     FILTER: กรองข้อมูล
     IMPORT: นำเข้า
@@ -275,7 +275,7 @@ th:
     View: เปิดดู
   Permission:
     AdminGroup: ผู้ดูแลระบบ
-    CMS_ACCESS_CATEGORY: "การเข้าถึง CMS"
+    CMS_ACCESS_CATEGORY: 'การเข้าถึง CMS'
     PLURALNAME: สิทธิ์อนุญาต
     SINGULARNAME: สิทธิ์อนุญาต
   PermissionRole:
@@ -286,11 +286,11 @@ th:
   PhoneNumberField:
     VALIDATION: กรุณากรอกหมายเลขโทรศัพท์ที่ถูกต้อง
   Security:
-    ALREADYLOGGEDIN: "คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ <a href=\"%s\">เข้าสู่ระบบอีกครั้ง</a>"
+    ALREADYLOGGEDIN: 'คุณไม่จำเป็นต้องเข้ามาที่หน้าเว็บนี้. หากคุณมีบัญชีอื่นๆที่สามารถเข้าถึงหน้าเว็บนี้ได้อยู่แล้ว คุณสามารถ <a href="%s">เข้าสู่ระบบอีกครั้ง</a>'
     BUTTONSEND: ส่งลิงค์รีเซ็ตรหัสผ่านให้กับฉัน
     CHANGEPASSWORDBELOW: คุณสามารถเปลี่ยนรหัสผ่านของคุณได้จากด้านล่าง
     ENTERNEWPASSWORD: กรุณากรอกรหัสผ่านใหม่ของคุณ
-    ERRORPASSWORDPERMISSION: "คุณต้องเข้าสู่ระบบก่อน จึงจะสามารถเปลี่ยนรหัสผ่านของคุณได้"
+    ERRORPASSWORDPERMISSION: 'คุณต้องเข้าสู่ระบบก่อน จึงจะสามารถเปลี่ยนรหัสผ่านของคุณได้'
     LOGIN: เข้าสู่ระบบ
   SecurityAdmin:
     APPLY_ROLES: กำหนดบทบาทให้กลุ่ม
@@ -299,7 +299,7 @@ th:
     IMPORTGROUPS: นำเข้ากลุ่ม
     IMPORTUSERS: นำเข้าผู้ใช้งาน
     MEMBERS: สมาชิก
-    MENUTITLE: ความปลอดภัย
+    MENUTITLE: 'ความปลอดภัย'
     NEWGROUP: สร้างกลุ่มใหม่
     PERMISSIONS: สิทธิ์อนุญาต
     ROLES: บทบาท
@@ -312,7 +312,7 @@ th:
   SiteTree:
     TABMAIN: หลัก
   TableListField:
-    CSVEXPORT: "ส่งข้อมูลออกเป็น CSV"
+    CSVEXPORT: 'ส่งข้อมูลออกเป็น CSV'
     Print: พิมพ์
   TableListField_PageControls_ss:
     OF: จาก
@@ -335,7 +335,7 @@ th:
     FROMCOMPUTERINFO: เลือกจากไฟล์
     FROMFILES: จากไฟล์
     REMOVE: ลบออก
-    REMOVEINFO: "ลบไฟล์นี้จากที่นี่ แต่ไม่ต้องลบไฟล์ดังกล่าวจากพื้นที่จัดเก็บไฟล์"
+    REMOVEINFO: 'ลบไฟล์นี้จากที่นี่ แต่ไม่ต้องลบไฟล์ดังกล่าวจากพื้นที่จัดเก็บไฟล์'
     STARTALL: เริ่มทั้งหมด
     Saved: บันทึกแล้ว
   Versioned:

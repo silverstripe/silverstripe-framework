@@ -1,7 +1,7 @@
 el:
   AssetTableField:
     DIM: Διαστάσεις
-    FILENAME: "Όνομα αρχείου"
+    FILENAME: 'Όνομα αρχείου'
     FOLDER: Φάκελος
     OWNER: Ιδιοκτήτης
     TITLE: Τίτλος
@@ -15,8 +15,8 @@ el:
     NOANSWER: Όχι
     YESANSWER: Ναί
   CMSMain:
-    SAVE: Αποθήκευση
+    SAVE: 'Αποθήκευση'
   CMSProfileController:
-    MENUTITLE: "Το προφίλ μου"
+    MENUTITLE: 'Το προφίλ μου'
   LeftAndMain:
     HELP: Βοήθεια

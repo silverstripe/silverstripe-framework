@@ -1,52 +1,52 @@
 pt_BR:
   AssetAdmin:
-    NEWFOLDER: "Nova Pasta"
+    NEWFOLDER: 'Nova Pasta'
   AssetTableField:
-    CREATED: "Primeiro upload"
+    CREATED: 'Primeiro upload'
     DIM: Dimensões
-    FILENAME: "Nome do Arquivo"
-    LASTEDIT: "Última Alteração"
+    FILENAME: 'Nome do Arquivo'
+    LASTEDIT: 'Última Alteração'
     OWNER: Dono
     SIZE: Tamanho
     TITLE: Título
     TYPE: Tipo
   BBCodeParser:
     ALIGNEMENT: Alinhamento
-    ALIGNEMENTEXAMPLE: "alinhado a direito"
-    BOLD: "Texto em Negrito"
+    ALIGNEMENTEXAMPLE: 'alinhado a direito'
+    BOLD: 'Texto em Negrito'
     BOLDEXAMPLE: Negrito
-    CODE: "Bloco de código"
-    CODEDESCRIPTION: "Bloco de código não formatado"
-    CODEEXAMPLE: "Bloco de código"
-    COLORED: "Texto colorido"
-    COLOREDEXAMPLE: "Texto em Azul"
-    EMAILLINK: "Link para e-mail"
-    EMAILLINKDESCRIPTION: "Cria link para um e-mail"
+    CODE: 'Bloco de código'
+    CODEDESCRIPTION: 'Bloco de código não formatado'
+    CODEEXAMPLE: 'Bloco de código'
+    COLORED: 'Texto colorido'
+    COLOREDEXAMPLE: 'Texto em Azul'
+    EMAILLINK: 'Link para e-mail'
+    EMAILLINKDESCRIPTION: 'Cria link para um e-mail'
     IMAGE: Imagem
-    IMAGEDESCRIPTION: "Mostrar imagem no post"
-    ITALIC: "Texto em Itálico"
+    IMAGEDESCRIPTION: 'Mostrar imagem no post'
+    ITALIC: 'Texto em Itálico'
     ITALICEXAMPLE: Itálico
-    LINK: "link para site"
-    LINKDESCRIPTION: "Link para outro site ou URL"
-    UNDERLINE: "Texto subinhado"
+    LINK: 'link para site'
+    LINKDESCRIPTION: 'Link para outro site ou URL'
+    UNDERLINE: 'Texto subinhado'
     UNDERLINEEXAMPLE: Sublinhado
     UNORDERED: Marcadores
     UNORDEREDDESCRIPTION: Marcadores
-    UNORDEREDEXAMPLE1: "Item não ordenado 1"
+    UNORDEREDEXAMPLE1: 'Item não ordenado 1'
   BasicAuth:
-    ENTERINFO: "Por favor entre nome de usuário e senha."
-    ERRORNOTADMIN: "Este usuário não é um administrador"
-    ERRORNOTREC: "Este nome de usuário / senha não é reconhecido"
+    ENTERINFO: 'Por favor entre nome de usuário e senha.'
+    ERRORNOTADMIN: 'Este usuário não é um administrador'
+    ERRORNOTREC: 'Este nome de usuário / senha não é reconhecido'
   CMSMain:
-    ACCESSALLINTERFACES: "Acessar todas as interfaces do CMS"
+    ACCESSALLINTERFACES: 'Acessar todas as interfaces do CMS'
     SAVE: Salvar
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "Você alterou sua senha para"
-    CHANGEPASSWORDTEXT2: "Agora, você pode usar as seguintes credenciais para realizar o login:"
+    CHANGEPASSWORDTEXT1: 'Você alterou sua senha para'
+    CHANGEPASSWORDTEXT2: 'Agora, você pode usar as seguintes credenciais para realizar o login:'
     HELLO: Olá
     PASSWORD: Senha
   ConfirmedPasswordField:
-    SHOWONCLICKTITLE: "Trocar senha"
+    SHOWONCLICKTITLE: 'Trocar senha'
   CreditCardField:
     FIRST: primeiro
     FOURTH: quarto
@@ -55,133 +55,133 @@ pt_BR:
   CurrencyField:
     CURRENCYSYMBOL: R$
   DataObject:
-    PLURALNAME: "Dados dos objetos"
-    SINGULARNAME: "Dado do objeto"
+    PLURALNAME: 'Dados dos objetos'
+    SINGULARNAME: 'Dado do objeto'
   DateField:
-    NOTSET: "não informado"
+    NOTSET: 'não informado'
     TODAY: hoje
   DropdownField:
     CHOOSE: Selecione
   File:
     Content: Conteudo
-    Filename: "Nome do Arquivo"
+    Filename: 'Nome do Arquivo'
     Name: Nome
     PLURALNAME: Arquivos
     SINGULARNAME: Arquivo
     Title: Titulo
   ForgotPasswordEmail_ss:
     HELLO: Olá
-    TEXT1: "Este é seu"
-    TEXT2: "link para reiniciar sua senha"
+    TEXT1: 'Este é seu'
+    TEXT2: 'link para reiniciar sua senha'
     TEXT3: para
   Form:
-    VALIDATIONNOTUNIQUE: "O valor inserido não é exclusivo"
-    VALIDATIONPASSWORDSDONTMATCH: "Senha não confere"
-    VALIDATIONPASSWORDSNOTEMPTY: "As Passwords não podem estar vazias"
+    VALIDATIONNOTUNIQUE: 'O valor inserido não é exclusivo'
+    VALIDATIONPASSWORDSDONTMATCH: 'Senha não confere'
+    VALIDATIONPASSWORDSNOTEMPTY: 'As Passwords não podem estar vazias'
     VALIDATOR: Verificador
   FormField:
     NONE: nenhum
   Group:
-    Code: "Grupo de código"
+    Code: 'Grupo de código'
     Description: Descrição
-    Locked: Travado?
-    Parent: "Grupo pai"
+    Locked: 'Travado?'
+    Parent: 'Grupo pai'
     Sort: Ordenação
     has_many_Permissions: Permissões
     many_many_Members: Membros
   HtmlEditorField:
     ANCHORVALUE: Âncora
-    BUTTONINSERTLINK: "Inserir link"
-    BUTTONREMOVELINK: "Remover link"
-    CSSCLASS: "Alinhamento / estilo"
+    BUTTONINSERTLINK: 'Inserir link'
+    BUTTONREMOVELINK: 'Remover link'
+    CSSCLASS: 'Alinhamento / estilo'
     CSSCLASSCENTER: Centralizado.
-    CSSCLASSLEFT: "Na esquerda, com o texto ajustado."
-    CSSCLASSLEFTALONE: "Na esquerda de si mesmo."
-    CSSCLASSRIGHT: "Na direita, com o texto ajustado."
-    EMAIL: "Endereço de e-mail"
+    CSSCLASSLEFT: 'Na esquerda, com o texto ajustado.'
+    CSSCLASSLEFTALONE: 'Na esquerda de si mesmo.'
+    CSSCLASSRIGHT: 'Na direita, com o texto ajustado.'
+    EMAIL: 'Endereço de e-mail'
     FILE: Arquivo
     FOLDER: Pasta
     IMAGEDIMENSIONS: Dimensões
     IMAGEHEIGHTPX: Altura
     IMAGEWIDTHPX: Largura
     LINK: Link
-    LINKANCHOR: "Âncora nesta página"
-    LINKDESCR: "Descrição do link"
-    LINKEMAIL: "Endereço de e-mail"
-    LINKEXTERNAL: "Outro site"
-    LINKFILE: "Download de arquivo"
-    LINKINTERNAL: "Página no site"
-    LINKOPENNEWWIN: "Abrir link em nova janela?"
-    LINKTO: "Link para"
+    LINKANCHOR: 'Âncora nesta página'
+    LINKDESCR: 'Descrição do link'
+    LINKEMAIL: 'Endereço de e-mail'
+    LINKEXTERNAL: 'Outro site'
+    LINKFILE: 'Download de arquivo'
+    LINKINTERNAL: 'Página no site'
+    LINKOPENNEWWIN: 'Abrir link em nova janela?'
+    LINKTO: 'Link para'
     PAGE: Página
   Image_iframe_ss:
-    TITLE: "Upload de imagem"
+    TITLE: 'Upload de imagem'
   LeftAndMain:
     HELP: Ajuda
-    PERMAGAIN: "Você foi desconectado do CMS. Se você quiser entrar novamente, digite um nome de usuário e senha abaixo."
+    PERMAGAIN: 'Você foi desconectado do CMS. Se você quiser entrar novamente, digite um nome de usuário e senha abaixo.'
   LoginAttempt:
-    Email: "Endereço de E-mail"
-    IP: "Endereço IP"
+    Email: 'Endereço de E-mail'
+    IP: 'Endereço IP'
   Member:
-    BUTTONCHANGEPASSWORD: "Alterar Senha"
+    BUTTONCHANGEPASSWORD: 'Alterar Senha'
     BUTTONLOGIN: Entrar
-    BUTTONLOGINOTHER: "Entrar com outro usuário"
-    BUTTONLOSTPASSWORD: "Esqueci minha senha"
-    CONFIRMNEWPASSWORD: "Confirme Nova Senha"
-    CONFIRMPASSWORD: "Confirme Senha"
+    BUTTONLOGINOTHER: 'Entrar com outro usuário'
+    BUTTONLOSTPASSWORD: 'Esqueci minha senha'
+    CONFIRMNEWPASSWORD: 'Confirme Nova Senha'
+    CONFIRMPASSWORD: 'Confirme Senha'
     EMAIL: E-mail
-    ENTEREMAIL: "Por favor, entre com seu enderenço de e-mail para receber o link de reinicialização de sua senha"
-    ERRORNEWPASSWORD: "Você digitou sua nova senha incorretamente, tente novamente"
-    ERRORPASSWORDNOTMATCH: "Sua senha atual não confere, por favor tente novamente"
+    ENTEREMAIL: 'Por favor, entre com seu enderenço de e-mail para receber o link de reinicialização de sua senha'
+    ERRORNEWPASSWORD: 'Você digitou sua nova senha incorretamente, tente novamente'
+    ERRORPASSWORDNOTMATCH: 'Sua senha atual não confere, por favor tente novamente'
     FIRSTNAME: Nome
-    INTERFACELANG: "Idioma da interface"
-    NEWPASSWORD: "Nova Senha"
+    INTERFACELANG: 'Idioma da interface'
+    NEWPASSWORD: 'Nova Senha'
     PASSWORD: Senha
     PLURALNAME: Membros
     SINGULARNAME: Membro
-    SUBJECTPASSWORDCHANGED: "Sua senha foi alterada"
-    SUBJECTPASSWORDRESET: "Link para resetar sua senha"
+    SUBJECTPASSWORDCHANGED: 'Sua senha foi alterada'
+    SUBJECTPASSWORDRESET: 'Link para resetar sua senha'
     SURNAME: Sobrenome
-    YOUROLDPASSWORD: "Senha antiga"
+    YOUROLDPASSWORD: 'Senha antiga'
     belongs_many_many_Groups: Grupo
-    db_LastVisited: "Ultima data de visita"
-    db_Locale: "Interface de localização"
-    db_LockedOutUntil: "Bloqueado até"
-    db_NumVisit: "Numero de Visitantes"
+    db_LastVisited: 'Ultima data de visita'
+    db_Locale: 'Interface de localização'
+    db_LockedOutUntil: 'Bloqueado até'
+    db_NumVisit: 'Numero de Visitantes'
     db_Password: Senha
-    db_PasswordExpiry: "Data de expiração da senha"
+    db_PasswordExpiry: 'Data de expiração da senha'
   MemberAuthenticator:
-    TITLE: "E-mail &amp; Senha"
+    TITLE: 'E-mail &amp; Senha'
   ModelAdmin:
     DELETE: Excluir
-    IMPORT: "importar do CSV"
-    NOCSVFILE: "Por favor, localize um arquivo CSV para importar"
-    NOIMPORT: "Não há itens a serem importados"
+    IMPORT: 'importar do CSV'
+    NOCSVFILE: 'Por favor, localize um arquivo CSV para importar'
+    NOIMPORT: 'Não há itens a serem importados'
   Permission:
-    FULLADMINRIGHTS: "Todos os direitos administrativos"
+    FULLADMINRIGHTS: 'Todos os direitos administrativos'
   PhoneNumberField:
-    VALIDATION: "Por favor digite um número de telefone válido"
+    VALIDATION: 'Por favor digite um número de telefone válido'
   Security:
-    ALREADYLOGGEDIN: "Você não tem acesso a esta página. Se você tem outra conta que pode acessar esta página, você pode efetuar o login abaixo."
-    BUTTONSEND: "Envie-me o link para resetar a senha"
-    CHANGEPASSWORDBELOW: "Você pode alterar sua senha abaixo."
-    CHANGEPASSWORDHEADER: "Alterar sua senha"
-    ENTERNEWPASSWORD: "Por favor entre uma nova senha."
-    ERRORPASSWORDPERMISSION: "Você precisa estar logado para alterar sua senha!"
-    LOGGEDOUT: "Você saiu do sistema. Se você gostaria de entrar novamente, digite suas credenciais abaixo"
+    ALREADYLOGGEDIN: 'Você não tem acesso a esta página. Se você tem outra conta que pode acessar esta página, você pode efetuar o login abaixo.'
+    BUTTONSEND: 'Envie-me o link para resetar a senha'
+    CHANGEPASSWORDBELOW: 'Você pode alterar sua senha abaixo.'
+    CHANGEPASSWORDHEADER: 'Alterar sua senha'
+    ENTERNEWPASSWORD: 'Por favor entre uma nova senha.'
+    ERRORPASSWORDPERMISSION: 'Você precisa estar logado para alterar sua senha!'
+    LOGGEDOUT: 'Você saiu do sistema. Se você gostaria de entrar novamente, digite suas credenciais abaixo'
     LOGIN: Entrar
-    NOTEPAGESECURED: "Esta página é protegida. Digite suas credenciais abaixo para continuar."
-    NOTERESETPASSWORD: "Digite seu endereço de e-mail e nós mandaremos a você um link com o qual você pode resetar sua senha"
+    NOTEPAGESECURED: 'Esta página é protegida. Digite suas credenciais abaixo para continuar.'
+    NOTERESETPASSWORD: 'Digite seu endereço de e-mail e nós mandaremos a você um link com o qual você pode resetar sua senha'
   SecurityAdmin:
-    EDITPERMISSIONS: "Editar permissões e endereço IP para cada grupo"
-    GROUPNAME: "Nome do grupo"
+    EDITPERMISSIONS: 'Editar permissões e endereço IP para cada grupo'
+    GROUPNAME: 'Nome do grupo'
     MEMBERS: Membros
-    NEWGROUP: "Novo Grupo"
+    NEWGROUP: 'Novo Grupo'
     PERMISSIONS: Permissões
   SiteTree:
     TABMAIN: Principal
   TableListField:
-    CSVEXPORT: "Exportar para CSV"
+    CSVEXPORT: 'Exportar para CSV'
   ToggleField:
     LESS: menos
     MORE: mais

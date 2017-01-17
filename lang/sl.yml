@@ -1,86 +1,86 @@
 sl:
   AssetAdmin:
-    NEWFOLDER: "Nova mapa"
-    SHOWALLOWEDEXTS: "Pokaži dovoljene razširitve"
+    NEWFOLDER: 'Nova mapa'
+    SHOWALLOWEDEXTS: 'Pokaži dovoljene razširitve'
   AssetTableField:
-    CREATED: "Naloženo na začetku"
+    CREATED: 'Naloženo na začetku'
     DIM: Dimenzije
-    FILENAME: "Ime datoteke"
+    FILENAME: 'Ime datoteke'
     FOLDER: Mapa
-    LASTEDIT: "Zadnje naloženo"
+    LASTEDIT: 'Zadnje naloženo'
     OWNER: Lastnik
-    SIZE: "Velikost datoteke"
+    SIZE: 'Velikost datoteke'
     TITLE: Naslov
     TYPE: Tip
     URL: URL
   AssetUploadField:
-    ChooseFiles: "Izberite datoteke"
-    DRAGFILESHERE: "Potegnite datoteke na to mesto "
-    EDITALL: "Uredi vse"
-    EDITANDORGANIZE: "Uredite in razvrščajte"
-    EDITINFO: "Uredi datoteke"
+    ChooseFiles: 'Izberite datoteke'
+    DRAGFILESHERE: 'Potegnite datoteke na to mesto '
+    EDITALL: 'Uredi vse'
+    EDITANDORGANIZE: 'Uredite in razvrščajte'
+    EDITINFO: 'Uredi datoteke'
     FILES: Datoteke
-    FROMCOMPUTER: "Izberite datoteke z vašega računalnika"
-    FROMCOMPUTERINFO: "Prenesite z vašega računalnika"
+    FROMCOMPUTER: 'Izberite datoteke z vašega računalnika'
+    FROMCOMPUTERINFO: 'Prenesite z vašega računalnika'
     TOTAL: Vse
-    UPLOADINPROGRESS: "Prosimo, počakajte ... prenos poteka."
+    UPLOADINPROGRESS: 'Prosimo, počakajte ... prenos poteka.'
     UPLOADOR: ALI
   BBCodeParser:
     ALIGNEMENT: Poravnava
-    ALIGNEMENTEXAMPLE: "desno poravnano"
-    BOLD: "Zapisano krepko"
+    ALIGNEMENTEXAMPLE: 'desno poravnano'
+    BOLD: 'Zapisano krepko'
     BOLDEXAMPLE: Krepko
-    CODE: "Sklop kode"
-    CODEDESCRIPTION: "Neurejen sklop kode"
-    CODEEXAMPLE: "Sklop kode"
-    COLORED: "Pobarvano besedilo"
-    COLOREDEXAMPLE: "modro besedilo"
-    EMAILLINK: "Povezava z e-naslovom"
-    EMAILLINKDESCRIPTION: "Ustvarite povezavo z e-naslovom"
+    CODE: 'Sklop kode'
+    CODEDESCRIPTION: 'Neurejen sklop kode'
+    CODEEXAMPLE: 'Sklop kode'
+    COLORED: 'Pobarvano besedilo'
+    COLOREDEXAMPLE: 'modro besedilo'
+    EMAILLINK: 'Povezava z e-naslovom'
+    EMAILLINKDESCRIPTION: 'Ustvarite povezavo z e-naslovom'
     IMAGE: Slika
-    IMAGEDESCRIPTION: "Prikažite sliko v objavljenem zapisu"
-    ITALIC: "Zapisano ležeče"
+    IMAGEDESCRIPTION: 'Prikažite sliko v objavljenem zapisu'
+    ITALIC: 'Zapisano ležeče'
     ITALICEXAMPLE: Ležeče
-    LINK: "Spletna povezava (URL)"
-    LINKDESCRIPTION: "Povezava do spletnega mesta (URL)"
-    STRUCK: "Prečrtano besedilo"
+    LINK: 'Spletna povezava (URL)'
+    LINKDESCRIPTION: 'Povezava do spletnega mesta (URL)'
+    STRUCK: 'Prečrtano besedilo'
     STRUCKEXAMPLE: Prečrtano
-    UNDERLINE: "Podčrtano besedilo"
+    UNDERLINE: 'Podčrtano besedilo'
     UNDERLINEEXAMPLE: Podčrtano
-    UNORDERED: "Neurejen seznam"
-    UNORDEREDDESCRIPTION: "Neurejen seznam"
-    UNORDEREDEXAMPLE1: "alineja na neurejenem seznamu"
+    UNORDERED: 'Neurejen seznam'
+    UNORDEREDDESCRIPTION: 'Neurejen seznam'
+    UNORDEREDEXAMPLE1: 'alineja na neurejenem seznamu'
   BackLink_Button_ss:
     Back: Nazaj
   BasicAuth:
-    ENTERINFO: "Vpišite uporabniško ime in geslo."
-    ERRORNOTADMIN: "Uporabnik ni administrator tega spletnega mesta."
-    ERRORNOTREC: "Ne prepoznam uporabniškega imena ali gesla"
+    ENTERINFO: 'Vpišite uporabniško ime in geslo.'
+    ERRORNOTADMIN: 'Uporabnik ni administrator tega spletnega mesta.'
+    ERRORNOTREC: 'Ne prepoznam uporabniškega imena ali gesla'
   Boolean:
     ANY: Katerikoli
   CMSLoadingScreen_ss:
-    LOADING: "Nalaganje ..."
-    REQUIREJS: "CMS zahteva, da imate omogočen JavaScript."
+    LOADING: 'Nalaganje ...'
+    REQUIREJS: 'CMS zahteva, da imate omogočen JavaScript.'
   CMSMain:
-    ACCESS: "Dostop do razdelka '{title}'"
-    ACCESSALLINTERFACES: "Dostop do vseh sklopov CMS"
-    ACCESSALLINTERFACESHELP: "Omogoča bolj specifične nastavitve za možnosti dostop."
+    ACCESS: 'Dostop do razdelka ''{title}'''
+    ACCESSALLINTERFACES: 'Dostop do vseh sklopov CMS'
+    ACCESSALLINTERFACESHELP: 'Omogoča bolj specifične nastavitve za možnosti dostop.'
     SAVE: Shrani
   CMSPageHistoryController_versions_ss:
-    PREVIEW: "Predogled spletne strani"
+    PREVIEW: 'Predogled spletne strani'
   CMSProfileController:
-    MENUTITLE: "Moj profil"
+    MENUTITLE: 'Moj profil'
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDTEXT1: "Geslo ste spremenili v"
-    CHANGEPASSWORDTEXT2: "Za prijavo lahko odslej uporabite naslednje podatke:"
+    CHANGEPASSWORDTEXT1: 'Geslo ste spremenili v'
+    CHANGEPASSWORDTEXT2: 'Za prijavo lahko odslej uporabite naslednje podatke:'
     EMAIL: E-naslov
-    HELLO: "Pozdravljeni,"
+    HELLO: 'Pozdravljeni,'
     PASSWORD: Geslo
   ConfirmedPasswordField:
-    ATLEAST: "Geslo mora vsebovati vsaj {min} znakov."
-    BETWEEN: "Geslo mora biti dolgo od {min} do {max} znakov."
-    MAXIMUM: "Geslo je lahko dolgo največ {max} znakov."
-    SHOWONCLICKTITLE: "Spremeni geslo"
+    ATLEAST: 'Geslo mora vsebovati vsaj {min} znakov.'
+    BETWEEN: 'Geslo mora biti dolgo od {min} do {max} znakov.'
+    MAXIMUM: 'Geslo je lahko dolgo največ {max} znakov.'
+    SHOWONCLICKTITLE: 'Spremeni geslo'
   ContentController:
     NOTLOGGEDIN: Neprijavljen
   CreditCardField:
@@ -89,181 +89,181 @@ sl:
     SECOND: drugič
     THIRD: tretjič
   DataObject:
-    PLURALNAME: "Podatkovni objekti"
-    SINGULARNAME: "Podatkovni objekt"
+    PLURALNAME: 'Podatkovni objekti'
+    SINGULARNAME: 'Podatkovni objekt'
   Date:
     DAY: dan
     DAYS: dnevi
     HOUR: ura
     HOURS: ure
-    LessThanMinuteAgo: "manj kot minuta"
+    LessThanMinuteAgo: 'manj kot minuta'
     MIN: minuta
     MINS: inute
     MONTH: mesec
     MONTHS: meseci
     SEC: sekunda
     SECS: sekunde
-    TIMEDIFFAGO: "pred {difference}"
-    TIMEDIFFIN: "v {difference}"
+    TIMEDIFFAGO: 'pred {difference}'
+    TIMEDIFFIN: 'v {difference}'
     YEAR: leto
     YEARS: leta
   DateField:
-    NOTSET: "ni nastavljeno"
+    NOTSET: 'ni nastavljeno'
     TODAY: danes
-    VALIDDATEFORMAT2: "Prosim, vnesite ustrezno obliko datuma ({format})"
-    VALIDDATEMAXDATE: "Datum mora biti starejši ali enak največjemu dovoljenemu datumu ({date})"
-    VALIDDATEMINDATE: "Datum mora biti novejši ali enak najmanjšemu dovoljenemu datumu ({date})"
+    VALIDDATEFORMAT2: 'Prosim, vnesite ustrezno obliko datuma ({format})'
+    VALIDDATEMAXDATE: 'Datum mora biti starejši ali enak največjemu dovoljenemu datumu ({date})'
+    VALIDDATEMINDATE: 'Datum mora biti novejši ali enak najmanjšemu dovoljenemu datumu ({date})'
   DatetimeField:
-    NOTSET: "Ni nastavljeno"
+    NOTSET: 'Ni nastavljeno'
   Director:
-    INVALID_REQUEST: "Napačna zahteva"
+    INVALID_REQUEST: 'Napačna zahteva'
   DropdownField:
     CHOOSE: (Izberi)
   EmailField:
-    VALIDATION: "Prosim, vpišite e-naslov."
+    VALIDATION: 'Prosim, vpišite e-naslov.'
   Enum:
     ANY: Katerikoli
   File:
-    AviType: "AVI video datoteka"
+    AviType: 'AVI video datoteka'
     Content: Vsebina
-    CssType: "CSS datoteka"
-    DocType: "Word datoteka"
-    Filename: "Ime datoteke"
-    GifType: "GIF slika - primerna za diagrame"
-    GzType: "GZIP stisnjena datoteka"
-    HtlType: "HTML datoteka"
-    HtmlType: "HTML datoteka"
-    INVALIDEXTENSION: "Podaljševanje ni dovoljeno (dovoljeno: {extensions})"
-    INVALIDEXTENSIONSHORT: "Podaljševanje ni dovoljeno."
+    CssType: 'CSS datoteka'
+    DocType: 'Word datoteka'
+    Filename: 'Ime datoteke'
+    GifType: 'GIF slika - primerna za diagrame'
+    GzType: 'GZIP stisnjena datoteka'
+    HtlType: 'HTML datoteka'
+    HtmlType: 'HTML datoteka'
+    INVALIDEXTENSION: 'Podaljševanje ni dovoljeno (dovoljeno: {extensions})'
+    INVALIDEXTENSIONSHORT: 'Podaljševanje ni dovoljeno.'
     IcoType: Ikona
-    JpgType: "JPEG slika - primerno za fotografije"
-    JsType: "Javascript datoteka"
-    Mp3Type: "MP3 avdio datoteka"
-    MpgType: "MPEG video datoteka"
-    NOVALIDUPLOAD: "Datoteke ni možno naložiti."
+    JpgType: 'JPEG slika - primerno za fotografije'
+    JsType: 'Javascript datoteka'
+    Mp3Type: 'MP3 avdio datoteka'
+    MpgType: 'MPEG video datoteka'
+    NOVALIDUPLOAD: 'Datoteke ni možno naložiti.'
     Name: Ime
     PLURALNAME: Datoteke
-    PdfType: "Adobe Acrobat PDF datoteka"
-    PngType: "PNG slika - večstransko uporabna oblika"
+    PdfType: 'Adobe Acrobat PDF datoteka'
+    PngType: 'PNG slika - večstransko uporabna oblika'
     SINGULARNAME: Datoteka
     Title: Naslov
-    WavType: "WAV avdio datoteka"
-    XlsType: "Excel preglednica"
-    ZipType: "ZIP stisnjena datoteka"
+    WavType: 'WAV avdio datoteka'
+    XlsType: 'Excel preglednica'
+    ZipType: 'ZIP stisnjena datoteka'
   Filesystem:
-    SYNCRESULTS: "Sinhronizacija končana: {createdcount} ustvarjenih elementov, {deletedcount} izbrisanih elementov"
+    SYNCRESULTS: 'Sinhronizacija končana: {createdcount} ustvarjenih elementov, {deletedcount} izbrisanih elementov'
   Folder:
     PLURALNAME: Mape
     SINGULARNAME: Mapa
   ForgotPasswordEmail_ss:
-    HELLO: "Pozdravljeni,"
-    TEXT1: "Tukaj je vaša"
-    TEXT2: "povezava za ponastavitev gesla"
+    HELLO: 'Pozdravljeni,'
+    TEXT1: 'Tukaj je vaša'
+    TEXT2: 'povezava za ponastavitev gesla'
     TEXT3: za
   Form:
-    CSRF_EXPIRED_MESSAGE: "Vaša seja je potekla. Prosimo ponovno oddajte obrazec "
-    FIELDISREQUIRED: "{name} je potrebno"
+    CSRF_EXPIRED_MESSAGE: 'Vaša seja je potekla. Prosimo ponovno oddajte obrazec '
+    FIELDISREQUIRED: '{name} je potrebno'
     SubmitBtnLabel: Naprej
-    VALIDATIONCREDITNUMBER: "Prosim, preverite, da ste vnesli številko kreditne kartice {number} pravilno."
-    VALIDATIONNOTUNIQUE: "Vpisana vrednost ni unikatna"
-    VALIDATIONPASSWORDSDONTMATCH: "Vpisani gesli se ne ujemata"
-    VALIDATIONPASSWORDSNOTEMPTY: "Vpišite geslo (dvakrat) v za to predvideni polji"
-    VALIDATIONSTRONGPASSWORD: "Geslo naj vsebuje vsaj eno črko in vsaj eno številko."
+    VALIDATIONCREDITNUMBER: 'Prosim, preverite, da ste vnesli številko kreditne kartice {number} pravilno.'
+    VALIDATIONNOTUNIQUE: 'Vpisana vrednost ni unikatna'
+    VALIDATIONPASSWORDSDONTMATCH: 'Vpisani gesli se ne ujemata'
+    VALIDATIONPASSWORDSNOTEMPTY: 'Vpišite geslo (dvakrat) v za to predvideni polji'
+    VALIDATIONSTRONGPASSWORD: 'Geslo naj vsebuje vsaj eno črko in vsaj eno številko.'
     VALIDATOR: Preverjanje
-    VALIDCURRENCY: "Prosim, vnesite pravo valuto."
+    VALIDCURRENCY: 'Prosim, vnesite pravo valuto.'
   FormField:
-    Example: "npr. %s"
+    Example: 'npr. %s'
     NONE: brez
   GridAction:
     DELETE_DESCRIPTION: Izbriši
     Delete: Izbriši
-    UnlinkRelation: "Odstrani povezavo"
+    UnlinkRelation: 'Odstrani povezavo'
   GridField:
-    Add: "Dodaj {name}"
+    Add: 'Dodaj {name}'
     Filter: Filter
-    FilterBy: "Filtriraj po"
+    FilterBy: 'Filtriraj po'
     Find: Poišči
-    LinkExisting: "Poveži na"
-    NewRecord: "Novih %s"
-    NoItemsFound: "Ni rezultatov"
-    PRINTEDAT: "Tiskano pri"
+    LinkExisting: 'Poveži na'
+    NewRecord: 'Novih %s'
+    NoItemsFound: 'Ni rezultatov'
+    PRINTEDAT: 'Tiskano pri'
     PRINTEDBY: Natisnil
-    PlaceHolder: "Poišči {type} "
-    PlaceHolderWithLabels: "Poišči {type} glede na {name}"
-    RelationSearch: "Povezano iskanje"
+    PlaceHolder: 'Poišči {type} '
+    PlaceHolderWithLabels: 'Poišči {type} glede na {name}'
+    RelationSearch: 'Povezano iskanje'
     ResetFilter: Ponastavi
   GridFieldAction_Delete:
-    DeletePermissionsFailure: "Ni dovoljenja za brisanje"
+    DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
   GridFieldDetailForm:
     CancelBtn: Prekliči
     Create: Ustvari
     Delete: Izbriši
-    DeletePermissionsFailure: "Ni dovoljenja za brisanje"
-    Deleted: "Izbrisanih %s %s"
+    DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
+    Deleted: 'Izbrisanih %s %s'
     Save: Shrani
-    Saved: "Shranjeno {name} {link}"
+    Saved: 'Shranjeno {name} {link}'
   GridFieldEditButton_ss:
     EDIT: Uredi
   GridFieldItemEditView:
     Go_back: Nazaj
   Group:
-    AddRole: "Skupinam pripiši vloge"
-    Code: "Koda skupine"
+    AddRole: 'Skupinam pripiši vloge'
+    Code: 'Koda skupine'
     DefaultGroupTitleAdministrators: Administratorji
-    DefaultGroupTitleContentAuthors: "Avtorji vsebine"
+    DefaultGroupTitleContentAuthors: 'Avtorji vsebine'
     Description: Opis
-    GroupReminder: "Če izberete nadrejeno skupino, bo ta skupina prevzela vse njene vloge"
-    Locked: "Zaklenjeno za urejanje?"
-    NoRoles: "Ni najdenih vlog"
+    GroupReminder: 'Če izberete nadrejeno skupino, bo ta skupina prevzela vse njene vloge'
+    Locked: 'Zaklenjeno za urejanje?'
+    NoRoles: 'Ni najdenih vlog'
     PLURALNAME: Skupine
-    Parent: "Nadrejena skupina"
-    RolesAddEditLink: "Dodaj in uredi vloge"
+    Parent: 'Nadrejena skupina'
+    RolesAddEditLink: 'Dodaj in uredi vloge'
     SINGULARNAME: Skupina
-    Sort: "Način razvrščanja"
+    Sort: 'Način razvrščanja'
     has_many_Permissions: Dovoljenja
     many_many_Members: Uporabniki
   GroupImportForm:
-    Help1: "<p>Uvozi eno ali več skupin v formatu <em>CSV</ em> (comma-separated values). <small> <a href=\"#\" class=\"toggle-advanced\">Prikaži možnosti za napredno urejanje</ a> </ small> </ p>"
-    ResultCreated: "Ustvarjenih je {count} skupin"
-    ResultDeleted: "Število izbrisanih skupin %d"
-    ResultUpdated: "Število ponastavljenih skupin %d"
+    Help1: '<p>Uvozi eno ali več skupin v formatu <em>CSV</ em> (comma-separated values). <small> <a href="#" class="toggle-advanced">Prikaži možnosti za napredno urejanje</ a> </ small> </ p>'
+    ResultCreated: 'Ustvarjenih je {count} skupin'
+    ResultDeleted: 'Število izbrisanih skupin %d'
+    ResultUpdated: 'Število ponastavljenih skupin %d'
   HtmlEditorField:
-    ADDURL: "Dodaj URL"
+    ADDURL: 'Dodaj URL'
     ANCHORVALUE: Sidro
-    BUTTONADDURL: "Dodaj url"
+    BUTTONADDURL: 'Dodaj url'
     BUTTONINSERT: Vstavi
-    BUTTONINSERTLINK: "Vstavi povezavo"
-    BUTTONREMOVELINK: "Odstrani povezavo"
+    BUTTONINSERTLINK: 'Vstavi povezavo'
+    BUTTONREMOVELINK: 'Odstrani povezavo'
     BUTTONUpdate: Osveži
     CAPTIONTEXT: Pripis
-    CSSCLASS: "Poravnava in slog"
-    CSSCLASSCENTER: "Na sredini, samostojno"
-    CSSCLASSLEFT: "Levo, z oblivajočim besedilom"
-    CSSCLASSLEFTALONE: "Na levi, samostojno."
-    CSSCLASSRIGHT: "Desno, z oblivajočim besedilom"
+    CSSCLASS: 'Poravnava in slog'
+    CSSCLASSCENTER: 'Na sredini, samostojno'
+    CSSCLASSLEFT: 'Levo, z oblivajočim besedilom'
+    CSSCLASSLEFTALONE: 'Na levi, samostojno.'
+    CSSCLASSRIGHT: 'Desno, z oblivajočim besedilom'
     DETAILS: Podrobno
     EMAIL: E-naslov
     FILE: Datoteka
     FOLDER: Mapa
-    FROMCOMPUTER: "Z vašega računalnika"
-    FROMWEB: "S spleta"
-    FindInFolder: "Poišči v mapi"
-    IMAGEALT: "Nadomestno besedilo (alt)"
+    FROMCOMPUTER: 'Z vašega računalnika'
+    FROMWEB: 'S spleta'
+    FindInFolder: 'Poišči v mapi'
+    IMAGEALT: 'Nadomestno besedilo (alt)'
     IMAGEDIMENSIONS: Velikosti
     IMAGEHEIGHTPX: Višina
-    IMAGETITLE: "Naslov (tooltip)  bo izpisan kot dopolnitev k vsebini slike"
-    IMAGETITLETEXT: "Naslov (tooltip)"
-    IMAGETITLETEXTDESC: "Za dodatne informacije o sliki"
-    IMAGEWIDTHPX: Širina
+    IMAGETITLE: 'Naslov (tooltip)  bo izpisan kot dopolnitev k vsebini slike'
+    IMAGETITLETEXT: 'Naslov (tooltip)'
+    IMAGETITLETEXTDESC: 'Za dodatne informacije o sliki'
+    IMAGEWIDTHPX: 'Širina'
     LINK: Povezava
-    LINKANCHOR: "Sidro na tej strani"
-    LINKDESCR: "Opis povezave"
+    LINKANCHOR: 'Sidro na tej strani'
+    LINKDESCR: 'Opis povezave'
     LINKEMAIL: E-naslov
-    LINKEXTERNAL: "Drugo spletno mesto"
-    LINKFILE: "Naloženo datoteko"
-    LINKINTERNAL: "Stran znotraj tega spletnega mesta"
-    LINKOPENNEWWIN: "Naj se povezava odpira v novem oknu?"
-    LINKTO: "Poveži na"
+    LINKEXTERNAL: 'Drugo spletno mesto'
+    LINKFILE: 'Naloženo datoteko'
+    LINKINTERNAL: 'Stran znotraj tega spletnega mesta'
+    LINKOPENNEWWIN: 'Naj se povezava odpira v novem oknu?'
+    LINKTO: 'Poveži na'
     PAGE: Stran
     URL: URL
   Image:
@@ -273,113 +273,113 @@ sl:
     PLURALNAME: Datoteke
     SINGULARNAME: Datoteka
   Image_iframe_ss:
-    TITLE: "Slika \"uploading iframe\""
+    TITLE: 'Slika "uploading iframe"'
   LeftAndMain:
-    CANT_REORGANISE: "Nimate dovoljenja za menjavo strani v zgornjem nivoju. Sprememba ni shranjena."
+    CANT_REORGANISE: 'Nimate dovoljenja za menjavo strani v zgornjem nivoju. Sprememba ni shranjena.'
     DELETED: Izbrisano.
     HELP: Pomoč
-    PERMAGAIN: "Odjavili ste se iz CMS-vmesnika. Če se želite ponovno prijaviti, vpišite uporabniško ime in geslo."
+    PERMAGAIN: 'Odjavili ste se iz CMS-vmesnika. Če se želite ponovno prijaviti, vpišite uporabniško ime in geslo.'
     PreviewButton: Predogled
-    REORGANISATIONSUCCESSFUL: "Struktura spletnega mesta je bila uspešno spremenjena."
+    REORGANISATIONSUCCESSFUL: 'Struktura spletnega mesta je bila uspešno spremenjena.'
     SAVEDUP: Shranjeno.
-    ShowAsList: "pokaži kot seznam"
-    TooManyPages: "Preveč strani"
-    ValidationError: "Napaka pri potrjevanju"
+    ShowAsList: 'pokaži kot seznam'
+    TooManyPages: 'Preveč strani'
+    ValidationError: 'Napaka pri potrjevanju'
   LeftAndMain_Menu_ss:
-    Hello: "Pozdravljeni,"
+    Hello: 'Pozdravljeni,'
     LOGOUT: Odjava
   LoginAttempt:
     Email: E-naslov
     IP: IP-naslov
-    PLURALNAME: "Poskusi prijave"
-    SINGULARNAME: "Poskus prijave"
+    PLURALNAME: 'Poskusi prijave'
+    SINGULARNAME: 'Poskus prijave'
     Status: Stanje
   Member:
-    ADDGROUP: "Dodaj skupino"
-    BUTTONCHANGEPASSWORD: "Spremeni geslo"
+    ADDGROUP: 'Dodaj skupino'
+    BUTTONCHANGEPASSWORD: 'Spremeni geslo'
     BUTTONLOGIN: Prijava
-    BUTTONLOGINOTHER: "Prijavite se z drugim uporabniškim imenom"
-    BUTTONLOSTPASSWORD: "Pozabil-a sem geslo"
-    CANTEDIT: "Nimate dovoljenja za to dejanje"
-    CONFIRMNEWPASSWORD: "Potrdi novo geslo"
-    CONFIRMPASSWORD: "Potrdi geslo"
-    DATEFORMAT: "Format datuma"
-    DefaultAdminFirstname: "Privzeti administrator"
+    BUTTONLOGINOTHER: 'Prijavite se z drugim uporabniškim imenom'
+    BUTTONLOSTPASSWORD: 'Pozabil-a sem geslo'
+    CANTEDIT: 'Nimate dovoljenja za to dejanje'
+    CONFIRMNEWPASSWORD: 'Potrdi novo geslo'
+    CONFIRMPASSWORD: 'Potrdi geslo'
+    DATEFORMAT: 'Format datuma'
+    DefaultAdminFirstname: 'Privzeti administrator'
     DefaultDateTime: privzeto
     EMAIL: E-naslov
-    EMPTYNEWPASSWORD: "Polje za vpis novega gesla ne sme ostati prazno. Poskusite ponovno."
-    ENTEREMAIL: "Vpišite e-naslov, na katerega vam bomo nato poslali povezavo za ponastavitev gesla."
-    ERRORNEWPASSWORD: "Novo geslo ste drugače zapisali - poskusite ponovno."
-    ERRORPASSWORDNOTMATCH: "Vpisani novi gesli se ne ujemata. Poskusite ponovno."
-    ERRORWRONGCRED: "Izgleda, da podani podatki niso točni. Poskusite ponovno"
+    EMPTYNEWPASSWORD: 'Polje za vpis novega gesla ne sme ostati prazno. Poskusite ponovno.'
+    ENTEREMAIL: 'Vpišite e-naslov, na katerega vam bomo nato poslali povezavo za ponastavitev gesla.'
+    ERRORNEWPASSWORD: 'Novo geslo ste drugače zapisali - poskusite ponovno.'
+    ERRORPASSWORDNOTMATCH: 'Vpisani novi gesli se ne ujemata. Poskusite ponovno.'
+    ERRORWRONGCRED: 'Izgleda, da podani podatki niso točni. Poskusite ponovno'
     FIRSTNAME: Ime
     INTERFACELANG: Jezik
-    INVALIDNEWPASSWORD: "Tega gesla ne moremo sprejeti: {password}"
-    LOGGEDINAS: "Vpisan(a) si kot: {name}."
-    NEWPASSWORD: "Novo geslo"
-    NoPassword: "Za tega člana ni gesla"
+    INVALIDNEWPASSWORD: 'Tega gesla ne moremo sprejeti: {password}'
+    LOGGEDINAS: 'Vpisan(a) si kot: {name}.'
+    NEWPASSWORD: 'Novo geslo'
+    NoPassword: 'Za tega člana ni gesla'
     PASSWORD: Geslo
     PLURALNAME: Uporabniki
     SINGULARNAME: Uporabnik
-    SUBJECTPASSWORDCHANGED: "Geslo je bilo spremenjeno"
-    SUBJECTPASSWORDRESET: "Povezava za resetiranje vašega gesla"
+    SUBJECTPASSWORDCHANGED: 'Geslo je bilo spremenjeno'
+    SUBJECTPASSWORDRESET: 'Povezava za resetiranje vašega gesla'
     SURNAME: Priimek
-    TIMEFORMAT: "Format časovnega zapisa"
-    WELCOMEBACK: "Ponovno pozdravljeni, {firstname}"
-    YOUROLDPASSWORD: "Staro geslo"
+    TIMEFORMAT: 'Format časovnega zapisa'
+    WELCOMEBACK: 'Ponovno pozdravljeni, {firstname}'
+    YOUROLDPASSWORD: 'Staro geslo'
     belongs_many_many_Groups: Skupine
-    db_LastVisited: "Datum zadnjega obiska"
-    db_Locale: "Lokalizacija vmesnika"
-    db_LockedOutUntil: "Zaklenjeno do"
-    db_NumVisit: "Število obiskov"
+    db_LastVisited: 'Datum zadnjega obiska'
+    db_Locale: 'Lokalizacija vmesnika'
+    db_LockedOutUntil: 'Zaklenjeno do'
+    db_NumVisit: 'Število obiskov'
     db_Password: Geslo
-    db_PasswordExpiry: "Datum poteka veljavnosti gesla"
+    db_PasswordExpiry: 'Datum poteka veljavnosti gesla'
   MemberAuthenticator:
-    TITLE: "Uporabniški račun"
+    TITLE: 'Uporabniški račun'
   MemberDatetimeOptionsetField:
-    AMORPM: "AM (zjutraj in dopoldan) ali PM (popoldan in zvečer)"
+    AMORPM: 'AM (zjutraj in dopoldan) ali PM (popoldan in zvečer)'
     Custom: Prilagojeno
-    DATEFORMATBAD: "Zapis datuma je napačen"
-    DAYNOLEADING: "Dan v mesecu brez zapisa sprednje ničle"
-    DIGITSDECFRACTIONSECOND: "Ena ali več decimalk, ki predstavljajo sekunde"
-    FOURDIGITYEAR: "Štirimesten zapis letnice"
-    FULLNAMEMONTH: "Celoten zapis meseca (npr: junij)"
-    MINUTENOLEADING: "Minute brez zapisa sprednje ničle"
-    MONTHNOLEADING: "Mesec brez zapisa sprednje ničle"
+    DATEFORMATBAD: 'Zapis datuma je napačen'
+    DAYNOLEADING: 'Dan v mesecu brez zapisa sprednje ničle'
+    DIGITSDECFRACTIONSECOND: 'Ena ali več decimalk, ki predstavljajo sekunde'
+    FOURDIGITYEAR: 'Štirimesten zapis letnice'
+    FULLNAMEMONTH: 'Celoten zapis meseca (npr: junij)'
+    MINUTENOLEADING: 'Minute brez zapisa sprednje ničle'
+    MONTHNOLEADING: 'Mesec brez zapisa sprednje ničle'
     Preview: Predogled
-    SHORTMONTH: "Kratek zapis meseca (npr. Jun)"
-    TWODIGITDAY: "Dvomestno število za mesec"
-    TWODIGITHOUR: "Dvomestno število za uro (od 00 do 23)"
-    TWODIGITMINUTE: "Dvomestno število za minute (od 00 do 59)"
-    TWODIGITMONTH: "Dvomesten zapis meseca (01 = Januar)"
-    TWODIGITSECOND: "Dvomesten zapis sekund (od 00 do 59)"
-    TWODIGITYEAR: "Dvomestno število za letnico"
+    SHORTMONTH: 'Kratek zapis meseca (npr. Jun)'
+    TWODIGITDAY: 'Dvomestno število za mesec'
+    TWODIGITHOUR: 'Dvomestno število za uro (od 00 do 23)'
+    TWODIGITMINUTE: 'Dvomestno število za minute (od 00 do 59)'
+    TWODIGITMONTH: 'Dvomesten zapis meseca (01 = Januar)'
+    TWODIGITSECOND: 'Dvomesten zapis sekund (od 00 do 59)'
+    TWODIGITYEAR: 'Dvomestno število za letnico'
   MemberImportForm:
-    Help1: "<p>Uvoz uporabnikov v <em>formatu CSV</em> (comma-separated values). <small><a href=\"#\" class=\"toggle-advanced\">Prikaži možnosti za napredno urejanje.</a></small></p>"
-    ResultCreated: "Ustvarjenih {count} članov"
-    ResultDeleted: "Število izbrisanih uporabnikov: %d"
-    ResultNone: "Ni sprememb"
-    ResultUpdated: "Posodobljenih {count} članov"
+    Help1: '<p>Uvoz uporabnikov v <em>formatu CSV</em> (comma-separated values). <small><a href="#" class="toggle-advanced">Prikaži možnosti za napredno urejanje.</a></small></p>'
+    ResultCreated: 'Ustvarjenih {count} članov'
+    ResultDeleted: 'Število izbrisanih uporabnikov: %d'
+    ResultNone: 'Ni sprememb'
+    ResultUpdated: 'Posodobljenih {count} članov'
   MemberPassword:
-    PLURALNAME: "Gesla uporabnika"
-    SINGULARNAME: "Geslo uporabnika"
+    PLURALNAME: 'Gesla uporabnika'
+    SINGULARNAME: 'Geslo uporabnika'
   MemberTableField:
-    APPLY_FILTER: "Uporabi filter"
+    APPLY_FILTER: 'Uporabi filter'
   ModelAdmin:
     DELETE: Izbriši
-    DELETEDRECORDS: "Izbrisanih je {count} zapisov."
-    EMPTYBEFOREIMPORT: "Nadomesti podatke"
-    IMPORT: "Uvozi CSV-datoteko"
-    IMPORTEDRECORDS: "Uvoženih je {count} zapisov."
-    NOCSVFILE: "Poiščite CSV-datoteko za uvoz"
-    NOIMPORT: "Ne najdem ničesar za uvoz"
+    DELETEDRECORDS: 'Izbrisanih je {count} zapisov.'
+    EMPTYBEFOREIMPORT: 'Nadomesti podatke'
+    IMPORT: 'Uvozi CSV-datoteko'
+    IMPORTEDRECORDS: 'Uvoženih je {count} zapisov.'
+    NOCSVFILE: 'Poiščite CSV-datoteko za uvoz'
+    NOIMPORT: 'Ne najdem ničesar za uvoz'
     RESET: Ponastavi
-    Title: "Podatkovni modeli"
-    UPDATEDRECORDS: "Posodobi {count} zapisov."
+    Title: 'Podatkovni modeli'
+    UPDATEDRECORDS: 'Posodobi {count} zapisov.'
   ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: "Stolpci podatkovne baze"
-    IMPORTSPECLINK: "Pokaži specifikacije za %s"
-    IMPORTSPECTITLE: "Specifikacije za %s"
+    IMPORTSPECFIELDS: 'Stolpci podatkovne baze'
+    IMPORTSPECLINK: 'Pokaži specifikacije za %s'
+    IMPORTSPECTITLE: 'Specifikacije za %s'
   ModelAdmin_Tools_ss:
     FILTER: Filtriraj
     IMPORT: Uvozi
@@ -390,116 +390,116 @@ sl:
     FIELDLABELAMOUNT: Znesek
     FIELDLABELCURRENCY: Valuta
   NullableField:
-    IsNullLabel: "Prazno polje"
+    IsNullLabel: 'Prazno polje'
   NumericField:
-    VALIDATION: "'{value}' ni številka. V to polje lahko vnesete samo številke."
+    VALIDATION: '''{value}'' ni številka. V to polje lahko vnesete samo številke.'
   Pagination:
     Page: Stran
     View: Poglej
   Permission:
     AdminGroup: Administrator
-    CMS_ACCESS_CATEGORY: "Dostop do CMS-vmesnika"
-    FULLADMINRIGHTS: "Popolne administratorske pravice"
-    FULLADMINRIGHTS_HELP: "Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji."
+    CMS_ACCESS_CATEGORY: 'Dostop do CMS-vmesnika'
+    FULLADMINRIGHTS: 'Popolne administratorske pravice'
+    FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
     PLURALNAME: Dovoljenja
     SINGULARNAME: Dovoljenje
   PermissionCheckboxSetField:
-    FromGroup: "Privzeto iz skupine \"{title}\""
-    FromRoleOnGroup: "podedovano iz vloge \"%s\" na skupino \"%s\""
+    FromGroup: 'Privzeto iz skupine "{title}"'
+    FromRoleOnGroup: 'podedovano iz vloge "%s" na skupino "%s"'
   PermissionRole:
     PLURALNAME: Vloge
     SINGULARNAME: Vloga
     Title: Naslov
   Permissions:
-    PERMISSIONS_CATEGORY: "Vloge in dovoljenja za dostop"
+    PERMISSIONS_CATEGORY: 'Vloge in dovoljenja za dostop'
   PhoneNumberField:
-    VALIDATION: "Vpišite veljavno telefonsko številko"
+    VALIDATION: 'Vpišite veljavno telefonsko številko'
   Security:
-    ALREADYLOGGEDIN: "Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko ponovno prijavite."
-    BUTTONSEND: "Pošlji povezavo za ponastavitev gesla"
-    CHANGEPASSWORDBELOW: "Spodaj lahko spremenite svoje geslo."
-    CHANGEPASSWORDHEADER: "Spremenite geslo"
-    ENTERNEWPASSWORD: "Vpišite novo geslo."
-    ERRORPASSWORDPERMISSION: "Da bi lahko zamenjali geslo, se morate prijaviti."
-    LOGGEDOUT: "Vaša prijava je bila prekinjena. Če se želite ponovno prijaviti, vpišite svoje podatke."
+    ALREADYLOGGEDIN: 'Nimate dovoljenja za dostop do te strani. Če imate uporabniško ime z večimi pravicami, se lahko ponovno prijavite.'
+    BUTTONSEND: 'Pošlji povezavo za ponastavitev gesla'
+    CHANGEPASSWORDBELOW: 'Spodaj lahko spremenite svoje geslo.'
+    CHANGEPASSWORDHEADER: 'Spremenite geslo'
+    ENTERNEWPASSWORD: 'Vpišite novo geslo.'
+    ERRORPASSWORDPERMISSION: 'Da bi lahko zamenjali geslo, se morate prijaviti.'
+    LOGGEDOUT: 'Vaša prijava je bila prekinjena. Če se želite ponovno prijaviti, vpišite svoje podatke.'
     LOGIN: Prijava
-    LOSTPASSWORDHEADER: "Izgubljeno geslo"
-    NOTEPAGESECURED: "Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke."
-    NOTERESETLINKINVALID: "<p>Povezava za ponastavitev gesla je napačna ali pa je njena veljavnost potekla.</p><p><a href=\"{link1}\">Tukaj</a> lahko zaprosite za novo povezavo or pa zamenjate geslo, ko  <a href=\"{link2}\">se prijavite v sistem</a>.</p>"
-    NOTERESETPASSWORD: "Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla"
-    PASSWORDSENTHEADER: "Povezava za ponastavitev gesla je bila poslana na e-naslov '{email}'."
-    PASSWORDSENTTEXT: "Hvala! Povezava za ponastavitev gesla je bila poslana na e-naslov '{email}', ki je naveden kot e-naslov vašega računa. "
+    LOSTPASSWORDHEADER: 'Izgubljeno geslo'
+    NOTEPAGESECURED: 'Stran je zaščitena. Da bi lahko nadaljevali, vpišite svoje podatke.'
+    NOTERESETLINKINVALID: '<p>Povezava za ponastavitev gesla je napačna ali pa je njena veljavnost potekla.</p><p><a href="{link1}">Tukaj</a> lahko zaprosite za novo povezavo or pa zamenjate geslo, ko  <a href="{link2}">se prijavite v sistem</a>.</p>'
+    NOTERESETPASSWORD: 'Vpišite e-naslov, na katerega vam bomo poslali povezavo za ponastavitev gesla'
+    PASSWORDSENTHEADER: 'Povezava za ponastavitev gesla je bila poslana na e-naslov ''{email}''.'
+    PASSWORDSENTTEXT: 'Hvala! Povezava za ponastavitev gesla je bila poslana na e-naslov ''{email}'', ki je naveden kot e-naslov vašega računa. '
   SecurityAdmin:
-    ACCESS_HELP: "Dovoli ogled, dodajanje in urejanje uporabnikov ter dodeljevanje dovoljenj in vlog zanje."
-    APPLY_ROLES: "Skupinam pripiši vloge"
-    APPLY_ROLES_HELP: "Možnost upravljanja z vlogami skupin. Potrebujete dovoljenje za dostop do sklopa \"Varnost\"."
-    EDITPERMISSIONS: "Upravljanje dovoljenj za skupine"
-    EDITPERMISSIONS_HELP: "Možnost upravljanja z dovoljenji in IP-naslovi skupin. Potrebujete dovoljenje za dostop do sklopa \"Varnost\"."
-    GROUPNAME: "Ime skupine"
-    IMPORTGROUPS: "Uvozi skupine"
-    IMPORTUSERS: "Uvozi uporabnike"
+    ACCESS_HELP: 'Dovoli ogled, dodajanje in urejanje uporabnikov ter dodeljevanje dovoljenj in vlog zanje.'
+    APPLY_ROLES: 'Skupinam pripiši vloge'
+    APPLY_ROLES_HELP: 'Možnost upravljanja z vlogami skupin. Potrebujete dovoljenje za dostop do sklopa "Varnost".'
+    EDITPERMISSIONS: 'Upravljanje dovoljenj za skupine'
+    EDITPERMISSIONS_HELP: 'Možnost upravljanja z dovoljenji in IP-naslovi skupin. Potrebujete dovoljenje za dostop do sklopa "Varnost".'
+    GROUPNAME: 'Ime skupine'
+    IMPORTGROUPS: 'Uvozi skupine'
+    IMPORTUSERS: 'Uvozi uporabnike'
     MEMBERS: Člani
     MENUTITLE: Varnost
-    MemberListCaution: "Pozor! Če boste odstranili uporabnike s tega seznama, jih boste hkrati odstranili iz vseh drugih skupin in izbrisali iz podatkovne zbirke."
-    NEWGROUP: "Nova Skupina"
+    MemberListCaution: 'Pozor! Če boste odstranili uporabnike s tega seznama, jih boste hkrati odstranili iz vseh drugih skupin in izbrisali iz podatkovne zbirke.'
+    NEWGROUP: 'Nova Skupina'
     PERMISSIONS: Dovoljenja
     ROLES: Vloge
-    ROLESDESCRIPTION: "Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku \"Vloge\"."
+    ROLESDESCRIPTION: 'Tukaj lahko skupini dodajate vloge. Vloge so logični sklopi dovoljenj, ki jih urejate v zavihku "Vloge".'
     TABROLES: Vloge
     Users: Uporabniki
   SecurityAdmin_MemberImportForm:
     BtnImport: Uvozi
-    FileFieldLabel: "CSV-datoteka <small>(Samo končnica: *.csv)</small>"
+    FileFieldLabel: 'CSV-datoteka <small>(Samo končnica: *.csv)</small>'
   SilverStripeNavigator:
     Auto: Samodejno
-    ChangeViewMode: "Spremeni pogled"
+    ChangeViewMode: 'Spremeni pogled'
     Desktop: Namizje
     Edit: Uredi
-    EditView: "Način za urejanje"
-    PreviewState: "Stanje predogleda"
-    PreviewView: "Način za predogled"
+    EditView: 'Način za urejanje'
+    PreviewState: 'Stanje predogleda'
+    PreviewView: 'Način za predogled'
     Responsive: Odziven
-    SplitView: "Razdeljeni način"
-    ViewDeviceWidth: "Izberi širino predogleda"
+    SplitView: 'Razdeljeni način'
+    ViewDeviceWidth: 'Izberi širino predogleda'
     Width: širina
   SiteTree:
     TABMAIN: Domov
   TableListField:
-    CSVEXPORT: "Izvozi kot CSV-datoteko"
+    CSVEXPORT: 'Izvozi kot CSV-datoteko'
     Print: Natisni
   TableListField_PageControls_ss:
     OF: od
   TimeField:
-    VALIDATEFORMAT: "Prosim, vnesite čas v ustrezni obliki ({format})"
+    VALIDATEFORMAT: 'Prosim, vnesite čas v ustrezni obliki ({format})'
   ToggleField:
     LESS: manj
     MORE: več
   UploadField:
-    ATTACHFILE: "Pripni datoteko"
-    ATTACHFILES: "Pripni datoteke"
-    AttachFile: "Pripni datoteko (ali več njih)"
-    CHOOSEANOTHERFILE: "Izberi še eno datoteko"
-    DELETE: "Izbriši iz zbirke naloženih datotek"
-    DELETEINFO: "Dokončno izbriši datoteko iz knjižnjice datotek"
+    ATTACHFILE: 'Pripni datoteko'
+    ATTACHFILES: 'Pripni datoteke'
+    AttachFile: 'Pripni datoteko (ali več njih)'
+    CHOOSEANOTHERFILE: 'Izberi še eno datoteko'
+    DELETE: 'Izbriši iz zbirke naloženih datotek'
+    DELETEINFO: 'Dokončno izbriši datoteko iz knjižnjice datotek'
     DOEDIT: Shrani
-    DROPFILE: "Spusti datoteko"
-    DROPFILES: "Spusti datoteko"
+    DROPFILE: 'Spusti datoteko'
+    DROPFILES: 'Spusti datoteko'
     Dimensions: Dimenzije
     EDIT: Uredi
-    EDITINFO: "Uredi datoteko"
-    FIELDNOTSET: "Pred uvozom počisti bazo podatkov"
-    FROMCOMPUTER: "Z vašega računalnika"
-    FROMCOMPUTERINFO: "Izberite iz zbirke naloženih datotek"
-    FROMFILES: "Iz datotek"
-    HOTLINKINFO: "Info: Ta slika bo dostopna prek povezave. Prosim, preverite, da imate dovoljenje avtorja za tako uporabo."
-    MAXNUMBEROFFILES: "Doseženo je največje možno število datotek: {count}"
-    MAXNUMBEROFFILESONE: "Naložite lahko samo eno datoteko"
-    MAXNUMBEROFFILESSHORT: "Naložite lahko največ {count} datotek"
-    OVERWRITEWARNING: "Datoteka z enakim imenom že obstaja"
+    EDITINFO: 'Uredi datoteko'
+    FIELDNOTSET: 'Pred uvozom počisti bazo podatkov'
+    FROMCOMPUTER: 'Z vašega računalnika'
+    FROMCOMPUTERINFO: 'Izberite iz zbirke naloženih datotek'
+    FROMFILES: 'Iz datotek'
+    HOTLINKINFO: 'Info: Ta slika bo dostopna prek povezave. Prosim, preverite, da imate dovoljenje avtorja za tako uporabo.'
+    MAXNUMBEROFFILES: 'Doseženo je največje možno število datotek: {count}'
+    MAXNUMBEROFFILESONE: 'Naložite lahko samo eno datoteko'
+    MAXNUMBEROFFILESSHORT: 'Naložite lahko največ {count} datotek'
+    OVERWRITEWARNING: 'Datoteka z enakim imenom že obstaja'
     REMOVE: Odstrani
-    REMOVEINFO: "Odstrani datoteko, vendar je ne izbriši iz knjižnjice datotek"
-    STARTALL: "Zaženi vse"
+    REMOVEINFO: 'Odstrani datoteko, vendar je ne izbriši iz knjižnjice datotek'
+    STARTALL: 'Zaženi vse'
     Saved: Shranjeno
-    UPLOADSINTO: "shrani v /{path}"
+    UPLOADSINTO: 'shrani v /{path}'
   Versioned:
     has_many_Versions: Verzije
