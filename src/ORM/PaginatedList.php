@@ -225,6 +225,21 @@ class PaginatedList extends ListDecorator
     }
 
     /**
+     * @return array
+     */
+    public function toArray()
+    {
+        $result = [];
+
+        // Use getIterator()
+        foreach($this as $record) {
+            $result[] = $record;
+        }
+
+        return $result;
+    }
+
+    /**
      * Returns a set of links to all the pages in the list. This is useful for
      * basic pagination.
      *
