@@ -279,12 +279,9 @@ aren't strictly able to be automated:
   3.0 or 3.1) should usually be omitted.
 * Set the github milestones to completed, and create placeholders for the next
   minor versions. It may be necessary to re-assign any issues assigned to the prior
-  milestones to these new ones. See the below links for each module milestone list:
-   * [installer](https://github.com/silverstripe/silverstripe-installer/milestones)
-   * [framework](https://github.com/silverstripe/silverstripe-framework/milestones)
-   * [cms](https://github.com/silverstripe/silverstripe-cms/milestones)
+  milestones to these new ones.
 * Make sure that the [releases page](https://github.com/silverstripe/silverstripe-installer/releases)
-  on github shows the new tag.
+  on github shows the new tag. 
 
 *Updating non-patch versions*
 
