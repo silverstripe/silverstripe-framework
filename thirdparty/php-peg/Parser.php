@@ -45,6 +45,26 @@ class ParserRegexp {
  *   for result construction and building
  */
 class Parser {
+    /**
+     * @var string
+     */
+    public $string;
+
+    /**
+     * @var int
+     */
+    public $pos;
+
+    /**
+     * @var int
+     */
+    public $depth;
+    
+    /**
+     * @var array
+     */
+    public $regexps;
+    
 	function __construct( $string ) {
 		$this->string = $string ;
 		$this->pos = 0 ;
@@ -105,7 +125,7 @@ class Parser {
 	}
 
 	function packread( $key, $pos ) {
-		throw 'PackRead after PackHas=>false in Parser.php' ;
+		throw new \Exception('PackRead after PackHas=>false in Parser.php');
 	}
 
 	function packwrite( $key, $pos, $res ) {

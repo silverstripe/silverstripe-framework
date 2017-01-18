@@ -83,7 +83,10 @@ class MemberAuthenticator extends Authenticator
             $result = $member->checkPassword($data['Password']);
             $success = $result->isValid();
         } else {
-            $result = ValidationResult::create()->addError(_t('Member.ERRORWRONGCRED'));
+            $result = ValidationResult::create()->addError(_t(
+                'Member.ERRORWRONGCRED',
+                'The provided details don\'t seem to be correct. Please try again.'
+            ));
         }
 
         // Emit failure to member and form (if available)

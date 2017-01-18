@@ -7,6 +7,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ConfigStaticManifest;
 use SilverStripe\Core\Manifest\ConfigManifest;
 use SilverStripe\Control\Director;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\i18n\i18n;
 
 /**
@@ -121,7 +122,7 @@ $errorHandler->start();
  */
 function singleton($className)
 {
-    if ($className === 'SilverStripe\\Core\\Config\\Config') {
+    if ($className === Config::class) {
         throw new InvalidArgumentException("Don't pass Config to singleton()");
     }
     if (!isset($className)) {
@@ -146,13 +147,13 @@ function project()
  *
  * @param string $entity
  * @param string $string
- * @param string $context
  * @param array $injection
  * @return string
  */
-function _t($entity, $string = "", $context = "", $injection = null)
+function _t($entity, $string = "", $injection = [])
 {
-    return i18n::_t($entity, $string, $context, $injection);
+    // Pass args directly to handle deprecation
+    return call_user_func_array([i18n::class, '_t'], func_get_args());
 }
 
 /**

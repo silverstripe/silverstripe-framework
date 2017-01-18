@@ -3,7 +3,7 @@
 namespace SilverStripe\i18n\Tests\i18nTextCollectorTest;
 
 use SilverStripe\Dev\TestOnly;
-use SilverStripe\i18n\i18nTextCollector;
+use SilverStripe\i18n\TextCollection\i18nTextCollector;
 
 /**
  * Assist with testing of specific protected methods

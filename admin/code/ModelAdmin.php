@@ -464,7 +464,7 @@ abstract class ModelAdmin extends LeftAndMain
         }
 
         $fields = new FieldList(
-            new HiddenField('ClassName', _t('ModelAdmin.CLASSTYPE'), $this->modelClass),
+            new HiddenField('ClassName', false, $this->modelClass),
             new FileField('_CsvFile', false)
         );
 

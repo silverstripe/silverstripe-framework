@@ -14,7 +14,47 @@ SilverStripe\i18n\i18n:
   module_priority:
     - other_modules
 ---
+name: i18nMessages
+---
+SilverStripe\Core\Injector\Injector:
+  # Custom yml loader for localisation messages
+  SilverStripe\i18n\Messages\Reader:
+    class: SilverStripe\i18n\Messages\YamlReader
+  SilverStripe\i18n\Messages\Writer:
+    class: SilverStripe\i18n\Messages\YamlWriter
+  Symfony\Component\Translation\Loader\LoaderInterface:
+    class: SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader
+    properties:
+      Reader: %$SilverStripe\i18n\Messages\Reader
+  # Ensure our cache respects ModuleYamlLoader's self-invalidation
+  # @see DirectoryListResource::isFresh()
+  # Note: This could be replaced with a more aggressive cache if necessary on a live environment
+  Symfony\Component\Config\ConfigCacheFactoryInterface:
+    class: Symfony\Component\Config\ResourceCheckerConfigCacheFactory
+    constructor:
+      0: [ %$Symfony\Component\Config\Resource\SelfCheckingResourceChecker ]
+  # Create default translator with standard cache path and our custom loader
+  Symfony\Component\Translation\TranslatorInterface:
+    class: Symfony\Component\Translation\Translator
+    constructor:
+      0: 'en'
+      1: null
+      2: `TEMP_FOLDER`
+    properties:
+      ConfigCacheFactory: %$Symfony\Component\Config\ConfigCacheFactoryInterface
+    calls:
+      FallbackLocales: [ setFallbackLocales, [['en']]]
+      Loader: [ addLoader, ['ss', %$Symfony\Component\Translation\Loader\LoaderInterface ]]
+  # Set this translator as our message provider for silverstripe's i18n
+  SilverStripe\i18n\Messages\MessageProvider:
+    class: SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider
+    properties:
+      Translator: %$Symfony\Component\Translation\TranslatorInterface
+---
 Name: textcollector
 ---
 SilverStripe\Core\Injector\Injector:
-  SilverStripe\i18n\i18nTextCollector_Writer: SilverStripe\i18n\i18nTextCollector_Writer_RailsYaml
+  SilverStripe\i18n\TextCollection\i18nTextCollector:
+    properties:
+      Reader: %$SilverStripe\i18n\Messages\Reader
+      Writer: %$SilverStripe\i18n\Messages\Writer

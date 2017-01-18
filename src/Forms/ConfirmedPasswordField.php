@@ -560,7 +560,7 @@ class ConfirmedPasswordField extends FormField
     {
         /** @var ReadonlyField $field */
         $field = $this->castedCopy('SilverStripe\\Forms\\ReadonlyField')
-            ->setTitle($this->title ? $this->title : _t('Member.PASSWORD'))
+            ->setTitle($this->title ? $this->title : _t('Member.PASSWORD', 'Password'))
             ->setValue('*****');
 
         return $field;

@@ -2,136 +2,30 @@
 
 namespace SilverStripe\i18n\Tests;
 
-use SilverStripe\Assets\Filesystem;
+use InvalidArgumentException;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Manifest\ClassManifest;
-use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
-use SilverStripe\i18n\i18nRailsYamlAdapter;
-use SilverStripe\i18n\Tests\i18nTest\CustomTranslatorAdapter;
-use SilverStripe\i18n\Tests\i18nTest\MyObject;
-use SilverStripe\i18n\Tests\i18nTest\MySubObject;
-use SilverStripe\i18n\Tests\i18nTest\OtherCustomTranslatorAdapter;
-use SilverStripe\i18n\Tests\i18nTest\TestDataObject;
-use SilverStripe\i18n\Tests\i18nTest\TestObject;
+use SilverStripe\i18n\Messages\MessageProvider;
+use SilverStripe\i18n\Messages\Symfony\SymfonyMessageProvider;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
-use SilverStripe\View\ThemeResourceLoader;
-use SilverStripe\View\ThemeManifest;
-use Zend_Translate;
-
-require_once 'Zend/Translate.php';
 
 class i18nTest extends SapphireTest
 {
-
-    /**
-     * @var string $tmpBasePath Used to write language files.
-     * We don't want to store them inside framework (or in any web-accessible place)
-     * in case something goes wrong with the file parsing.
-     */
-    protected $alternateBaseSavePath;
-
-    /**
-     * @var string $alternateBasePath Fake webroot with a single module
-     * /i18ntestmodule which contains some files with _t() calls.
-     */
-    protected $alternateBasePath;
-
-    protected $extraDataObjects = [
-        TestDataObject::class
-    ];
-
-    protected $preloadClasses = [
-        OtherCustomTranslatorAdapter::class,
-        CustomTranslatorAdapter::class,
-        TestObject::class,
-        MySubObject::class,
-        MyObject::class
-    ];
-
+    use i18nTestManifest;
 
     public function setUp()
     {
         parent::setUp();
-
-        // Force loading of classes before manifests potentially break autoloading
-        foreach ($this->preloadClasses as $class) {
-            if (!class_exists($class)) {
-                throw new \LogicException("Could not load class $class");
-            }
-        }
-
-        $s = DIRECTORY_SEPARATOR;
-        $this->alternateBasePath = __DIR__ . $s . 'i18nTest' . $s . "_fakewebroot";
-        $this->alternateBaseSavePath = TEMP_FOLDER . $s . 'i18nTextCollectorTest_webroot';
-        Filesystem::makeFolder($this->alternateBaseSavePath);
-        Director::config()->update('alternate_base_folder', $this->alternateBasePath);
-
-        // Replace old template loader with new one with alternate base path
-        $this->_oldLoader = ThemeResourceLoader::instance();
-        ThemeResourceLoader::set_instance($loader = new ThemeResourceLoader($this->alternateBasePath));
-        $loader->addSet(
-            '$default',
-            new ThemeManifest(
-                $this->alternateBasePath,
-                project(),
-                false,
-                true
-            )
-        );
-
-        SSViewer::config()->update('theme', 'testtheme1');
-
-        $this->originalLocale = i18n::get_locale();
-
-        // Override default adapter to avoid cached translations between tests.
-        // Emulates behaviour in i18n::get_translators()
-        $this->origAdapter = i18n::get_translator('core');
-        $adapter = new Zend_Translate(
-            array(
-            'adapter' => i18nRailsYamlAdapter::class,
-            'locale' => i18n::config()->get('default_locale'),
-            'disableNotices' => true,
-            )
-        );
-        i18n::register_translator($adapter, 'core');
-        $adapter->removeCache();
-        i18n::include_by_locale('en');
-    }
-
-    /**
-     * Number of test manifests
-     *
-     * @var int
-     */
-    protected $manifests = 0;
-
-    /**
-     * Safely push a new class manifest.
-     * These will be cleaned up on tearDown()
-     *
-     * @param ClassManifest $manifest
-     */
-    protected function pushManifest(ClassManifest $manifest)
-    {
-        $this->manifests++;
-        ClassLoader::instance()->pushManifest($manifest);
+        $this->setupManifest();
     }
 
     public function tearDown()
     {
-        ThemeResourceLoader::set_instance($this->_oldLoader);
-        i18n::set_locale($this->originalLocale);
-        i18n::register_translator($this->origAdapter, 'core');
-
-        while ($this->manifests > 0) {
-            ClassLoader::instance()->popManifest();
-            $this->manifests--;
-        }
-
+        $this->tearDownManifest();
         parent::tearDown();
     }
 
@@ -145,16 +39,22 @@ class i18nTest extends SapphireTest
 
     public function testGetClosestTranslation()
     {
-
         // Validate necessary assumptions for this test
+        // As per set of locales loaded from _fakewebroot
         $translations = i18n::get_existing_translations();
-        $this->assertTrue(isset($translations['en_US']));
-        $this->assertTrue(isset($translations['en_GB']));
-        $this->assertTrue(isset($translations['es_ES']));
-        $this->assertTrue(isset($translations['es_AR']));
-        $this->assertFalse(isset($translations['en_ZZ']));
-        $this->assertFalse(isset($translations['es_ZZ']));
-        $this->assertFalse(isset($translations['zz_ZZ']));
+        $this->assertEquals(
+            [
+                'en_GB',
+                'en_US',
+                'fr_FR',
+                'de_AT',
+                'de_DE',
+                'es_AR',
+                'es_ES',
+                'mi_NZ',
+            ],
+            array_keys($translations)
+        );
 
         // Test indeterminate locales
         $this->assertEmpty(i18n::get_closest_translation('zz_ZZ'));
@@ -172,57 +72,51 @@ class i18nTest extends SapphireTest
 
     public function testDataObjectFieldLabels()
     {
-        $oldLocale = i18n::get_locale();
         i18n::set_locale('de_DE');
-        $obj = new i18nTest\TestDataObject();
 
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTest_DataObject.MyProperty' => 'MyProperty'
-            ),
+        // Load into the translator as a literal array data source
+        /** @var SymfonyMessageProvider $provider */
+        $provider = Injector::inst()->get(MessageProvider::class);
+        $provider->getTranslator()->addResource(
+            'array',
+            [ 'i18nTest_DataObject.MyProperty' => 'MyProperty' ],
             'en_US'
         );
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTest_DataObject.MyProperty' => 'Mein Attribut'
-            ),
+        $provider->getTranslator()->addResource(
+            'array',
+            [ 'i18nTest_DataObject.MyProperty' => 'Mein Attribut' ],
             'de_DE'
         );
+        $provider->getTranslator()->addResource(
+            'array',
+            [ 'i18nTest_DataObject.MyUntranslatedProperty' => 'Mein Attribut' ],
+            'en_US'
+        );
 
+        // Test field labels
+        $obj = new i18nTest\TestDataObject();
         $this->assertEquals(
             $obj->fieldLabel('MyProperty'),
             'Mein Attribut'
-        );
-
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTest_DataObject.MyUntranslatedProperty' => 'Mein Attribut'
-            ),
-            'en_US'
         );
         $this->assertEquals(
             $obj->fieldLabel('MyUntranslatedProperty'),
             'My Untranslated Property'
         );
-
-        i18n::set_locale($oldLocale);
     }
 
     public function testProvideI18nEntities()
     {
-        $oldLocale = i18n::get_locale();
-        i18n::set_locale('en_US');
-
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTest_Object.MyProperty' => 'Untranslated'
-            ),
+        /** @var SymfonyMessageProvider $provider */
+        $provider = Injector::inst()->get(MessageProvider::class);
+        $provider->getTranslator()->addResource(
+            'array',
+            [ 'i18nTest_Object.MyProperty' => 'Untranslated' ],
             'en_US'
         );
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTest_Object.my_translatable_property' => 'Übersetzt'
-            ),
+        $provider->getTranslator()->addResource(
+            'array',
+            [ 'i18nTest_Object.my_translatable_property' => 'Übersetzt' ],
             'de_DE'
         );
 
@@ -254,24 +148,28 @@ class i18nTest extends SapphireTest
     {
         $oldLocale = i18n::get_locale();
 
-        i18n::set_locale('en_US');
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTestModule.MAINTEMPLATE' => 'Main Template',
-            'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'My replacement no namespace: %s',
-            'i18nTestModule.LAYOUTTEMPLATE' => 'Layout Template',
-            'i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE' => 'Layout Template no namespace',
-            'i18nTestModule.SPRINTFNAMESPACE' => 'My replacement: %s',
-            'i18nTestModule.WITHNAMESPACE' => 'Include Entity with Namespace',
-            'i18nTestModuleInclude.ss.NONAMESPACE' => 'Include Entity without Namespace',
-            'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'My include replacement: %s',
-            'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'My include replacement no namespace: %s'
-            ),
+        /** @var SymfonyMessageProvider $provider */
+        $provider = Injector::inst()->get(MessageProvider::class);
+        $provider->getTranslator()->addResource(
+            'array',
+            [
+                'i18nTestModule.MAINTEMPLATE' => 'Main Template',
+                'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'My replacement no namespace: %s',
+                'i18nTestModule.LAYOUTTEMPLATE' => 'Layout Template',
+                'i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE' => 'Layout Template no namespace',
+                'i18nTestModule.SPRINTFNAMESPACE' => 'My replacement: %s',
+                'i18nTestModule.WITHNAMESPACE' => 'Include Entity with Namespace',
+                'i18nTestModuleInclude.ss.NONAMESPACE' => 'Include Entity without Namespace',
+                'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'My include replacement: %s',
+                'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'My include replacement no namespace: %s'
+            ],
             'en_US'
         );
 
         $viewer = new SSViewer('i18nTestModule');
-        $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
+        $parsedHtml = Convert::nl2os($viewer->process(new ArrayData([
+            'TestProperty' => 'TestPropertyValue'
+        ])));
         $this->assertContains(
             Convert::nl2os("Layout Template\n"),
             $parsedHtml
@@ -281,22 +179,24 @@ class i18nTest extends SapphireTest
             $parsedHtml
         );
 
-        i18n::set_locale('de_DE');
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTestModule.MAINTEMPLATE' => 'TRANS Main Template',
-            'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'TRANS My replacement no namespace: %s',
-            'i18nTestModule.LAYOUTTEMPLATE' => 'TRANS Layout Template',
-            'i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE' => 'TRANS Layout Template no namespace',
-            'i18nTestModule.SPRINTFNAMESPACE' => 'TRANS My replacement: %s',
-            'i18nTestModule.WITHNAMESPACE' => 'TRANS Include Entity with Namespace',
-            'i18nTestModuleInclude.ss.NONAMESPACE' => 'TRANS Include Entity without Namespace',
-            'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'TRANS My include replacement: %s',
-            'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'TRANS My include replacement no namespace: %s'
-            ),
+        $provider->getTranslator()->addResource(
+            'array',
+            [
+                'i18nTestModule.MAINTEMPLATE' => 'TRANS Main Template',
+                'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'TRANS My replacement no namespace: %s',
+                'i18nTestModule.LAYOUTTEMPLATE' => 'TRANS Layout Template',
+                'i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE' => 'TRANS Layout Template no namespace',
+                'i18nTestModule.SPRINTFNAMESPACE' => 'TRANS My replacement: %s',
+                'i18nTestModule.WITHNAMESPACE' => 'TRANS Include Entity with Namespace',
+                'i18nTestModuleInclude.ss.NONAMESPACE' => 'TRANS Include Entity without Namespace',
+                'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'TRANS My include replacement: %s',
+                'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'TRANS My include replacement no namespace: %s',
+                'i18nTestModule.PLURALS' => 'An item|{count} items',
+            ],
             'de_DE'
         );
 
+        i18n::set_locale('de_DE');
         $viewer = new SSViewer('i18nTestModule');
         $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
         $this->assertContains(
@@ -331,35 +231,34 @@ class i18nTest extends SapphireTest
             Convert::nl2os("TRANS My include replacement no namespace: TestPropertyValue\n"),
             $parsedHtml
         );
+        // Check plurals
+        $this->assertContains('Single: An item', $parsedHtml);
+        $this->assertContains('Multiple: 4 items', $parsedHtml);
+        $this->assertContains('None: 0 items', $parsedHtml);
 
         i18n::set_locale($oldLocale);
     }
 
     public function testNewTMethodSignature()
     {
-        global $lang;
-        $oldLocale = i18n::get_locale();
-
-        i18n::set_locale('en_US');
-
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
-            'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}',
-            'i18nTestModule.INJECTIONSLEGACY' => 'TRANS Hello %s %s. But it is late, %s',
-            ),
+        /** @var SymfonyMessageProvider $provider */
+        $provider = Injector::inst()->get(MessageProvider::class);
+        $provider->getTranslator()->addResource(
+            'array',
+            [
+                'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
+                'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}',
+                'i18nTestModule.INJECTIONSLEGACY' => 'TRANS Hello %s %s. But it is late, %s',
+            ],
             'en_US'
         );
 
         $entity = "i18nTestModule.INJECTIONS";
         $default = "Hello {name} {greeting}. But it is late, {goodbye}";
+        $entityLegacy = 'i18nTestModule.INJECTIONSLEGACY';
+        $defaultLegacy = 'TRANS Hello %s %s. But it is late, %s';
 
-        $translated = i18n::_t('i18nTestModule.NEWMETHODSIG', "New _t method signature test");
-        $this->assertContains(
-            "TRANS New _t method signature test",
-            $translated
-        );
-
+        // Test missing entity key
         $translated = i18n::_t(
             $entity.'_DOES_NOT_EXIST',
             $default,
@@ -371,10 +270,11 @@ class i18nTest extends SapphireTest
             "Testing fallback to the translation default (but using the injection array)"
         );
 
+        // Test standard injection
         $translated = i18n::_t(
             $entity,
             $default,
-            array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you")
+            ["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]
         );
         $this->assertContains(
             "TRANS Hello Paul good you are here. But it is late, see you",
@@ -382,11 +282,12 @@ class i18nTest extends SapphireTest
             "Testing entity, default string and injection array"
         );
 
+        // @deprecated 5.0 Passing in context
         $translated = i18n::_t(
             $entity,
             $default,
             "New context (this should be ignored)",
-            array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen")
+            ["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]
         );
         $this->assertContains(
             "TRANS Hello Steffen willkommen. But it is late, wiedersehen",
@@ -394,16 +295,12 @@ class i18nTest extends SapphireTest
             "Full test of translation, using default, context and injection array"
         );
 
-        $translated = i18n::_t($entity, array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
-        $this->assertContains(
-            "TRANS Hello Cat meow. But it is late, meow",
-            $translated,
-            "Testing a translation with just entity and injection array"
-        );
-
+        // @deprecated 5.0 Passing in % placeholders (detected in default value)
+        // Note: Missing-placeholder substitution no longer functions
         $translated = i18n::_t(
-            'i18nTestModule.INJECTIONSLEGACY', // has %s placeholders
-            array("name"=>"Cat", "greeting2"=>"meow", "goodbye"=>"meow")
+            $entityLegacy, // has %s placeholders
+            $defaultLegacy,
+            ["name"=>"Cat", "greeting2"=>"meow", "goodbye"=>"meow"]
         );
         $this->assertContains(
             "TRANS Hello Cat meow. But it is late, meow",
@@ -411,27 +308,13 @@ class i18nTest extends SapphireTest
             "Testing sprintf placeholders with named injections"
         );
 
-        $translated = i18n::_t(
-            'i18nTestModule.INJECTIONSLEGACY', // has %s placeholders
-            array("Cat", "meow"/*, "meow" */) // remove third arg
+        // Passing in non-associative arrays for placeholders is now an error
+        $this->setExpectedException(InvalidArgumentException::class, 'Injection must be an associative array');
+        i18n::_t(
+            $entity, // has {name} placeholders
+            $default,
+            ["Cat", "meow", "meow"]
         );
-        $this->assertContains(
-            "TRANS Hello Cat meow. But it is late, ",
-            $translated,
-            "Testing sprintf placeholders with unnamed injections and too few args"
-        );
-
-        $translated = i18n::_t(
-            'i18nTestModule.INJECTIONS', // has {name} placeholders
-            array("Cat", "meow", "meow")
-        );
-        $this->assertContains(
-            "TRANS Hello Cat meow. But it is late, meow",
-            $translated,
-            "Testing named injection placeholders with unnamed injections"
-        );
-
-        i18n::set_locale($oldLocale);
     }
 
     /**
@@ -439,20 +322,19 @@ class i18nTest extends SapphireTest
      * */
     public function testNewTemplateTranslation()
     {
-        global $lang;
-        $oldLocale = i18n::get_locale();
-
-        i18n::set_locale('en_US');
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
-            'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}'
-            ),
+        /** @var SymfonyMessageProvider $provider */
+        $provider = Injector::inst()->get(MessageProvider::class);
+        $provider->getTranslator()->addResource(
+            'array',
+            [
+                'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
+                'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}'
+            ],
             'en_US'
         );
 
         $viewer = new SSViewer('i18nTestModule');
-        $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(array('TestProperty' => 'TestPropertyValue'))));
+        $parsedHtml = Convert::nl2os($viewer->process(new ArrayData(['TestProperty' => 'TestPropertyValue'])));
         $this->assertContains(
             Convert::nl2os("Hello Mark welcome. But it is late, bye\n"),
             $parsedHtml,
@@ -465,12 +347,6 @@ class i18nTest extends SapphireTest
             "Testing entity, default string and injection array"
         );
 
-        $this->assertContains(
-            Convert::nl2os("TRANS Hello Cat meow. But it is late, meow\n"),
-            $parsedHtml,
-            "Testing a translation with just entity and injection array"
-        );
-
         //test injected calls
         $this->assertContains(
             Convert::nl2os(
@@ -479,8 +355,6 @@ class i18nTest extends SapphireTest
             $parsedHtml,
             "Testing a translation with just entity and injection array, but with global variables injected in"
         );
-
-        i18n::set_locale($oldLocale);
     }
 
     public function testGetLocaleFromLang()
@@ -501,233 +375,61 @@ class i18nTest extends SapphireTest
 
     public function testTranslate()
     {
-        $oldLocale = i18n::get_locale();
-
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTestModule.ENTITY' => 'Entity with "Double Quotes"',
-            ),
+        /** @var SymfonyMessageProvider $provider */
+        $provider = Injector::inst()->get(MessageProvider::class);
+        $provider->getTranslator()->addResource(
+            'array',
+            [ 'i18nTestModule.ENTITY' => 'Entity with "Double Quotes"' ],
             'en_US'
         );
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTestModule.ENTITY' => 'Entity with "Double Quotes" (de)',
-            'i18nTestModule.ADDITION' => 'Addition (de)',
-            ),
+        $provider->getTranslator()->addResource(
+            'array',
+            [
+                'i18nTestModule.ENTITY' => 'Entity with "Double Quotes" (de)',
+                'i18nTestModule.ADDITION' => 'Addition (de)',
+            ],
             'de'
         );
-        i18n::get_translator('core')->getAdapter()->addTranslation(
-            array(
-            'i18nTestModule.ENTITY' => 'Entity with "Double Quotes" (de_AT)',
-            ),
+        $provider->getTranslator()->addResource(
+            'array',
+            [
+                'i18nTestModule.ENTITY' => 'Entity with "Double Quotes" (de_AT)',
+            ],
             'de_AT'
         );
 
 
         $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY'),
             'Entity with "Double Quotes"',
+            i18n::_t('i18nTestModule.ENTITY', 'Ignored default'),
             'Returns translation in default language'
         );
 
         i18n::set_locale('de');
         $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY'),
             'Entity with "Double Quotes" (de)',
+            i18n::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
             'Returns translation according to current locale'
         );
 
         i18n::set_locale('de_AT');
         $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY'),
             'Entity with "Double Quotes" (de_AT)',
+            i18n::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
             'Returns specific regional translation if available'
         );
         $this->assertEquals(
-            i18n::_t('i18nTestModule.ADDITION'),
             'Addition (de)',
+            i18n::_t('i18nTestModule.ADDITION', 'Addition'),
             'Returns fallback non-regional translation if regional is not available'
         );
 
         i18n::set_locale('fr');
         $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY'),
-            '',
-            'Returns empty translation without default string if locale is not found'
+            'Entity with "Double Quotes" (fr)',
+            i18n::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
+            'Non-specific locales fall back to language-only localisations'
         );
-        $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY', 'default'),
-            'default',
-            'Returns default string if locale is not found'
-        );
-
-        i18n::set_locale($oldLocale);
-    }
-
-    public function testIncludeByLocale()
-    {
-        // Looping through modules, so we can test the translation autoloading
-        // Load non-exclusive to retain core class autoloading
-        $classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
-        $this->pushManifest($classManifest);
-
-        $adapter = i18n::get_translator('core')->getAdapter();
-        $this->assertTrue($adapter->isAvailable('en'));
-        $this->assertFalse($adapter->isAvailable('de'));
-        $this->assertFalse(
-            $adapter->isTranslated('i18nTestModule.ENTITY', 'de'),
-            'Existing unloaded entity not available before call'
-        );
-        $this->assertFalse(
-            $adapter->isTranslated('i18nTestModule.ENTITY', 'af'),
-            'Non-existing unloaded entity not available before call'
-        );
-
-        // set _fakewebroot module priority
-        i18n::config()->update('module_priority', array('subfolder','i18ntestmodule'));
-
-        i18n::include_by_locale('de');
-
-        $this->assertTrue($adapter->isAvailable('en'));
-        $this->assertTrue($adapter->isAvailable('de'));
-        $this->assertTrue($adapter->isTranslated('i18nTestModule.ENTITY', null, 'de'), 'Includes module files');
-        $this->assertTrue($adapter->isTranslated('i18nTestTheme1.LAYOUTTEMPLATE', null, 'de'), 'Includes theme files');
-        $this->assertTrue($adapter->isTranslated('i18nTestModule.OTHERENTITY', null, 'de'), 'Includes submodule files');
-
-        // check module priority
-        $this->assertEquals(
-            $adapter->translate('i18nTestModule.PRIORITYNOTICE', 'de'),
-            'High Module Priority (de)'
-        );
-    }
-
-    public function testIncludeByLocaleWithoutFallbackLanguage()
-    {
-        $classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
-        $this->pushManifest($classManifest);
-
-        $adapter = i18n::get_translator('core')->getAdapter();
-        $this->assertTrue($adapter->isAvailable('en'));
-        $this->assertFalse($adapter->isAvailable('mi')); // not defined at all
-        $this->assertFalse($adapter->isAvailable('mi_NZ')); // defined, but not loaded yet
-        $this->assertFalse(
-            $adapter->isTranslated('i18nTestModule.ENTITY', 'mi'),
-            'Existing unloaded entity not available before call'
-        );
-        $this->assertFalse(
-            $adapter->isTranslated('i18nTestModule.ENTITY', 'mi_NZ'),
-            'Non-existing unloaded entity not available before call'
-        );
-
-        i18n::include_by_locale('mi_NZ');
-
-        $this->assertFalse($adapter->isAvailable('mi'));
-        $this->assertTrue($adapter->isAvailable('mi_NZ'));
-        $this->assertTrue($adapter->isTranslated('i18nTestModule.ENTITY', null, 'mi_NZ'), 'Includes module files');
-    }
-
-    public function testRegisterTranslator()
-    {
-        $translator = new Zend_Translate(
-            array(
-            'adapter' => CustomTranslatorAdapter::class,
-            'disableNotices' => true,
-            )
-        );
-
-        i18n::register_translator($translator, 'custom', 10);
-        $translators = i18n::get_translators();
-        $this->assertArrayHasKey('custom', $translators[10]);
-        $this->assertInstanceOf('Zend_Translate', $translators[10]['custom']);
-        $this->assertInstanceOf(CustomTranslatorAdapter::class, $translators[10]['custom']->getAdapter());
-
-        i18n::unregister_translator('custom');
-        $translators = i18n::get_translators();
-        $this->assertArrayNotHasKey('custom', $translators[10]);
-    }
-
-    public function testMultipleTranslators()
-    {
-        // Looping through modules, so we can test the translation autoloading
-        // Load non-exclusive to retain core class autoloading
-        $classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
-        $this->pushManifest($classManifest);
-
-        // Changed manifest, so we also need to unset all previously collected messages.
-        // The easiest way to do this it to register a new adapter.
-        $adapter = new Zend_Translate(
-            array(
-            'adapter' => i18nRailsYamlAdapter::class,
-            'locale' => i18n::config()->get('default_locale'),
-            'disableNotices' => true,
-            )
-        );
-        i18n::register_translator($adapter, 'core');
-
-        i18n::set_locale('en_US');
-
-        $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY'),
-            'Entity with "Double Quotes"'
-        );
-        $this->assertEquals(
-            i18n::_t('AdapterEntity1', 'AdapterEntity1'),
-            'AdapterEntity1',
-            'Falls back to default string if not found'
-        );
-
-        // Add a new translator
-        $translator = new Zend_Translate(
-            array(
-            'adapter' => CustomTranslatorAdapter::class,
-            'disableNotices' => true,
-            )
-        );
-        i18n::register_translator($translator, 'custom', 11);
-        $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY'),
-            'i18nTestModule.ENTITY CustomAdapter (en_US)',
-            'Existing entities overruled by adapter with higher priority'
-        );
-        $this->assertEquals(
-            i18n::_t('AdapterEntity1', 'AdapterEntity1'),
-            'AdapterEntity1 CustomAdapter (en_US)',
-            'New entities only defined in new adapter are detected'
-        );
-
-        // Add a second new translator to test priorities
-        $translator = new Zend_Translate(
-            array(
-            'adapter' => OtherCustomTranslatorAdapter::class,
-            'disableNotices' => true,
-            )
-        );
-        i18n::register_translator($translator, 'othercustom_lower_prio', 5);
-        $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY'),
-            'i18nTestModule.ENTITY CustomAdapter (en_US)',
-            'Adapter with lower priority loses'
-        );
-
-        // Add a third new translator to test priorities
-        $translator = new Zend_Translate(
-            array(
-            'adapter' => OtherCustomTranslatorAdapter::class,
-            'disableNotices' => true,
-            )
-        );
-
-        i18n::register_translator($translator, 'othercustom_higher_prio', 15);
-
-        $this->assertEquals(
-            i18n::_t('i18nTestModule.ENTITY'),
-            'i18nTestModule.ENTITY OtherCustomAdapter (en_US)',
-            'Adapter with higher priority wins'
-        );
-
-        i18n::unregister_translator('custom');
-        i18n::unregister_translator('othercustom_lower_prio');
-        i18n::unregister_translator('othercustom_higher_prio');
     }
 
     public function testGetLanguageName()

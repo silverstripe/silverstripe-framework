@@ -519,10 +519,17 @@ class Injector
             return $newVal;
         }
 
+        // Evaluate service references
         if (is_string($value) && strpos($value, '%$') === 0) {
             $id = substr($value, 2);
             return $this->get($id);
         }
+
+        // Evaluate constants surrounded by back ticks
+        if (preg_match('/^`(?<name>[^`]+)`$/', $value, $matches)) {
+            $value = defined($matches['name']) ? constant($matches['name']) : null;
+        }
+
         return $value;
     }
 

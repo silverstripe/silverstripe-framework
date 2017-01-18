@@ -120,13 +120,15 @@ en:
     PASSWORD: Password
   ChangeSet:
     DESCRIPTION_AND: '{first} and {second}'
-    DESCRIPTION_ITEM: item
-    DESCRIPTION_ITEMS: items
+    DESCRIPTION_ITEM_PLURALS:
+      one: 'one item'
+      other: '{count} items'
     DESCRIPTION_LIST_FIRST: '{item}'
     DESCRIPTION_LIST_LAST: '{list}, and {item}'
     DESCRIPTION_LIST_MID: '{list}, {item}'
-    DESCRIPTION_OTHER_ITEM: 'other item'
-    DESCRIPTION_OTHER_ITEMS: 'other items'
+    DESCRIPTION_OTHER_ITEM_PLURALS:
+      one: 'one other item'
+      other: '{count} other items'
     NAME: Name
     PLURALNAME: Campaigns
     SINGULARNAME: Campaign
@@ -328,7 +330,7 @@ en:
     CSSCLASSRIGHT: 'On the right, with text wrapping around.'
     DETAILS: Details
     EMAIL: 'Email address'
-    FILE: SilverStripe\\Assets\\File
+    FILE: File
     FOLDER: Folder
     IMAGEALT: 'Alternative text (alt)'
     IMAGEALTTEXT: 'Alternative text (alt) - shown if image can''t be displayed'
@@ -665,45 +667,87 @@ en:
     MENUTITLE: Security
   SilverStripe\Assets\File:
     PLURALNAME: Files
+    PLURALS:
+      one: 'A File'
+      other: '{count} Files'
     SINGULARNAME: File
   SilverStripe\Assets\Folder:
     PLURALNAME: Folders
+    PLURALS:
+      one: 'A Folder'
+      other: '{count} Folders'
     SINGULARNAME: Folder
   SilverStripe\Assets\Image:
     PLURALNAME: Images
+    PLURALS:
+      one: 'An Image'
+      other: '{count} Images'
     SINGULARNAME: Image
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Data Objects'
+    PLURALS:
+      one: 'A Data Object'
+      other: '{count} Data Objects'
     SINGULARNAME: 'Data Object'
   SilverStripe\ORM\Versioning\ChangeSet:
     PLURALNAME: Campaigns
+    PLURALS:
+      one: 'A Campaign'
+      other: '{count} Campaigns'
     SINGULARNAME: Campaign
   SilverStripe\ORM\Versioning\ChangeSetItem:
     PLURALNAME: 'Change Set Items'
+    PLURALS:
+      one: 'A Change Set Item'
+      other: '{count} Change Set Items'
     SINGULARNAME: 'Change Set Item'
   SilverStripe\Security\Group:
     PLURALNAME: Groups
+    PLURALS:
+      one: 'A Group'
+      other: '{count} Groups'
     SINGULARNAME: Group
   SilverStripe\Security\LoginAttempt:
     PLURALNAME: 'Login Attempts'
+    PLURALS:
+      one: 'A Login Attempt'
+      other: '{count} Login Attempts'
     SINGULARNAME: 'Login Attempt'
   SilverStripe\Security\Member:
     PLURALNAME: Members
+    PLURALS:
+      one: 'A Member'
+      other: '{count} Members'
     SINGULARNAME: Member
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Member Passwords'
+    PLURALS:
+      one: 'A Member Password'
+      other: '{count} Member Passwords'
     SINGULARNAME: 'Member Password'
   SilverStripe\Security\Permission:
     PLURALNAME: Permissions
+    PLURALS:
+      one: 'A Permission'
+      other: '{count} Permissions'
     SINGULARNAME: Permission
   SilverStripe\Security\PermissionRole:
     PLURALNAME: Roles
+    PLURALS:
+      one: 'A Role'
+      other: '{count} Roles'
     SINGULARNAME: Role
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Permission Role Codes'
+    PLURALS:
+      one: 'A Permission Role Code'
+      other: '{count} Permission Role Codes'
     SINGULARNAME: 'Permission Role Code'
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Remember Login Hashs'
+    PLURALS:
+      one: 'A Remember Login Hash'
+      other: '{count} Remember Login Hashs'
     SINGULARNAME: 'Remember Login Hash'
   SiteTree:
     TABMAIN: Main

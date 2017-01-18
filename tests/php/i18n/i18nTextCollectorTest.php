@@ -2,74 +2,46 @@
 
 namespace SilverStripe\i18n\Tests;
 
+use PHPUnit_Framework_Error_Notice;
 use SilverStripe\Assets\Filesystem;
-use SilverStripe\Control\Director;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Manifest\ClassManifest;
-use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
-use SilverStripe\i18n\i18nTextCollector;
-use SilverStripe\i18n\i18nTextCollector_Writer_RailsYaml;
+use SilverStripe\i18n\TextCollection\i18nTextCollector;
+use SilverStripe\i18n\Messages\YamlWriter;
 use SilverStripe\i18n\Tests\i18nTextCollectorTest\Collector;
-use SilverStripe\View\ThemeResourceLoader;
+use SilverStripe\View\SSViewer;
 
 class i18nTextCollectorTest extends SapphireTest
 {
+    use i18nTestManifest;
 
     /**
-     * @var string $tmpBasePath Used to write language files.
-     * We don't want to store them inside framework (or in any web-accessible place)
-     * in case something goes wrong with the file parsing.
+     * @var string
      */
-    protected $alternateBaseSavePath;
-
-    /**
-     * @var string $alternateBasePath Fake webroot with a single module
-     * /i18ntestmodule which contains some files with _t() calls.
-     */
-    protected $alternateBasePath;
-
-    protected $manifest;
+    protected $alternateBaseSavePath = null;
 
     public function setUp()
     {
         parent::setUp();
+        $this->setupManifest();
 
-        $this->alternateBasePath = __DIR__ . "/i18nTest/_fakewebroot";
-        Config::inst()->update(Director::class, 'alternate_base_folder', $this->alternateBasePath);
-        $this->alternateBaseSavePath = TEMP_FOLDER . '/i18nTextCollectorTest_webroot';
+        $this->alternateBaseSavePath = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'i18nTextCollectorTest_webroot';
         Filesystem::makeFolder($this->alternateBaseSavePath);
-
-        // Push a class and template loader running from the fake webroot onto
-        // the stack.
-        $this->manifest = new ClassManifest(
-            $this->alternateBasePath,
-            false,
-            true,
-            false
-        );
-
-        // Replace old template loader with new one with alternate base path
-        $this->_oldLoader = ThemeResourceLoader::instance();
-        ThemeResourceLoader::set_instance(new ThemeResourceLoader($this->alternateBasePath));
     }
 
     public function tearDown()
     {
-        ThemeResourceLoader::set_instance($this->_oldLoader);
-        // Pop if added during testing
-        if (ClassLoader::instance()->getManifest() === $this->manifest) {
-            ClassLoader::instance()->popManifest();
+        if (is_dir($this->alternateBaseSavePath)) {
+            Filesystem::removeFolder($this->alternateBaseSavePath);
         }
+
+        $this->tearDownManifest();
         parent::tearDown();
     }
 
     public function testConcatenationInEntityValues()
     {
-        $c = new i18nTextCollector();
+        $c = i18nTextCollector::create();
 
         $php = <<<PHP
 _t(
@@ -87,20 +59,19 @@ _t(
 "Line 5");
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
             array(
-                'Test.CONCATENATED' => array("Line 1 and Line '2' and Line \"3\"",'Comment'),
-                'Test.CONCATENATED2' => array("Line \"4\" and Line 5")
-            )
+                'Test.CONCATENATED' => "Line 1 and Line '2' and Line \"3\"",
+                'Test.CONCATENATED2' => "Line \"4\" and Line 5"
+            ),
+            $c->collectFromCode($php, 'mymodule')
         );
     }
 
     public function testCollectFromNewTemplateSyntaxUsingParserSubclass()
     {
-            $c = new i18nTextCollector();
-
-            $html = <<<SS
-			<% _t('Test.SINGLEQUOTE','Single Quote'); %>
+        $c = i18nTextCollector::create();
+        $html = <<<SS
+        <% _t('Test.SINGLEQUOTE','Single Quote'); %>
 <%t i18nTestModule.NEWMETHODSIG "New _t method signature test" %>
 <%t i18nTestModule.INJECTIONS_0 "Hello {name} {greeting}, and {goodbye}" name="Mark" greeting="welcome" goodbye="bye" %>
 <%t i18nTestModule.INJECTIONS_1 "Hello {name} {greeting}, and {goodbye}" name="Paul" greeting="welcome" goodbye="cya" %>
@@ -111,57 +82,49 @@ SS;
         $c->collectFromTemplate($html, 'mymodule', 'Test');
 
         $this->assertEquals(
-            $c->collectFromTemplate($html, 'mymodule', 'Test'),
-            array(
-                'Test.SINGLEQUOTE' => array('Single Quote'),
-                'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test",null,null),
-                'i18nTestModule.INJECTIONS_0' => array("Hello {name} {greeting}, and {goodbye}", null, null),
-                'i18nTestModule.INJECTIONS_1' => array("Hello {name} {greeting}, and {goodbye}", null, null),
-                'i18nTestModule.INJECTIONS_2' => array("Hello {name} {greeting}", null, "context (ignored)"),
-                'i18nTestModule.INJECTIONS_3' => array(null, null, null),
-                'i18nTestModule.INJECTIONS_4' => array(null, null, null),
-            )
+            [
+                'Test.SINGLEQUOTE' => 'Single Quote',
+                'i18nTestModule.NEWMETHODSIG' => "New _t method signature test",
+                'i18nTestModule.INJECTIONS_0' => "Hello {name} {greeting}, and {goodbye}",
+                'i18nTestModule.INJECTIONS_1' => "Hello {name} {greeting}, and {goodbye}",
+                'i18nTestModule.INJECTIONS_2' => "Hello {name} {greeting}",
+            ],
+            $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
     }
 
     public function testCollectFromTemplateSimple()
     {
-        $c = new i18nTextCollector();
+        $c = i18nTextCollector::create();
 
         $html = <<<SS
 <% _t('Test.SINGLEQUOTE','Single Quote'); %>
 SS;
         $this->assertEquals(
-            $c->collectFromTemplate($html, 'mymodule', 'Test'),
-            array(
-                'Test.SINGLEQUOTE' => array('Single Quote')
-            )
+            [ 'Test.SINGLEQUOTE' => 'Single Quote' ],
+            $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
 
         $html = <<<SS
 <% _t(  "Test.DOUBLEQUOTE", "Double Quote and Spaces"   ); %>
 SS;
         $this->assertEquals(
-            $c->collectFromTemplate($html, 'mymodule', 'Test'),
-            array(
-                'Test.DOUBLEQUOTE' => array("Double Quote and Spaces")
-            )
+            [ 'Test.DOUBLEQUOTE' => "Double Quote and Spaces" ],
+            $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
 
         $html = <<<SS
 <% _t("Test.NOSEMICOLON","No Semicolon") %>
 SS;
         $this->assertEquals(
-            $c->collectFromTemplate($html, 'mymodule', 'Test'),
-            array(
-                'Test.NOSEMICOLON' => array("No Semicolon")
-            )
+            [ 'Test.NOSEMICOLON' => "No Semicolon" ],
+            $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
     }
 
     public function testCollectFromTemplateAdvanced()
     {
-        $c = new i18nTextCollector();
+        $c = i18nTextCollector::create();
 
         $html = <<<SS
 <% _t(
@@ -170,10 +133,8 @@ SS;
 ) %>
 SS;
         $this->assertEquals(
-            $c->collectFromTemplate($html, 'mymodule', 'Test'),
-            array(
-                'Test.NEWLINES' => array("New Lines")
-            )
+            [ 'Test.NEWLINES' => "New Lines" ],
+            $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
 
         $html = <<<SS
@@ -184,10 +145,8 @@ SS;
 ) %>
 SS;
         $this->assertEquals(
-            $c->collectFromTemplate($html, 'mymodule', 'Test'),
-            array(
-                'Test.PRIOANDCOMMENT' => array(' Prio and Value with "Double Quotes"','Comment with "Double Quotes"')
-            )
+            [ 'Test.PRIOANDCOMMENT' => ' Prio and Value with "Double Quotes"' ],
+            $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
 
         $html = <<<SS
@@ -199,42 +158,36 @@ SS;
 ) %>
 SS;
         $this->assertEquals(
-            $c->collectFromTemplate($html, 'mymodule', 'Test'),
-            array(
-                'Test.PRIOANDCOMMENT' => array(" Prio and Value with 'Single Quotes'","Comment with 'Single Quotes'")
-            )
+            [ 'Test.PRIOANDCOMMENT' => " Prio and Value with 'Single Quotes'" ],
+            $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
     }
 
 
     public function testCollectFromCodeSimple()
     {
-        $c = new i18nTextCollector();
+        $c = i18nTextCollector::create();
 
         $php = <<<PHP
 _t('Test.SINGLEQUOTE','Single Quote');
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.SINGLEQUOTE' => array('Single Quote')
-            )
+            [ 'Test.SINGLEQUOTE' => 'Single Quote' ],
+            $c->collectFromCode($php, 'mymodule')
         );
 
         $php = <<<PHP
 _t(  "Test.DOUBLEQUOTE", "Double Quote and Spaces"   );
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.DOUBLEQUOTE' => array("Double Quote and Spaces")
-            )
+            [ 'Test.DOUBLEQUOTE' => "Double Quote and Spaces" ],
+            $c->collectFromCode($php, 'mymodule')
         );
     }
 
     public function testCollectFromCodeAdvanced()
     {
-        $c = new i18nTextCollector();
+        $c = i18nTextCollector::create();
 
         $php = <<<PHP
 _t(
@@ -243,10 +196,8 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.NEWLINES' => array("New Lines")
-            )
+            [ 'Test.NEWLINES' => "New Lines" ],
+            $c->collectFromCode($php, 'mymodule')
         );
 
         $php = <<<PHP
@@ -258,10 +209,8 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.PRIOANDCOMMENT' => array(' Value with "Double Quotes"','Comment with "Double Quotes"')
-            )
+            [ 'Test.PRIOANDCOMMENT' => ' Value with "Double Quotes"' ],
+            $c->collectFromCode($php, 'mymodule')
         );
 
         $php = <<<PHP
@@ -273,10 +222,8 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.PRIOANDCOMMENT' => array(" Value with 'Single Quotes'","Comment with 'Single Quotes'")
-            )
+            [ 'Test.PRIOANDCOMMENT' => " Value with 'Single Quotes'" ],
+            $c->collectFromCode($php, 'mymodule')
         );
 
         $php = <<<PHP
@@ -286,10 +233,8 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.PRIOANDCOMMENT' => array("Value with 'Escaped Single Quotes'")
-            )
+            [ 'Test.PRIOANDCOMMENT' => "Value with 'Escaped Single Quotes'" ],
+            $c->collectFromCode($php, 'mymodule')
         );
 
         $php = <<<PHP
@@ -299,17 +244,15 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.PRIOANDCOMMENT' => array("Doublequoted Value with 'Unescaped Single Quotes'")
-            )
+            [ 'Test.PRIOANDCOMMENT' => "Doublequoted Value with 'Unescaped Single Quotes'"],
+            $c->collectFromCode($php, 'mymodule')
         );
     }
 
 
     public function testNewlinesInEntityValues()
     {
-        $c = new i18nTextCollector();
+        $c = i18nTextCollector::create();
 
         $php = <<<PHP
 _t(
@@ -321,10 +264,8 @@ PHP;
 
         $eol = PHP_EOL;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.NEWLINESINGLEQUOTE' => array("Line 1{$eol}Line 2")
-            )
+            [ 'Test.NEWLINESINGLEQUOTE' => "Line 1{$eol}Line 2" ],
+            $c->collectFromCode($php, 'mymodule')
         );
 
         $php = <<<PHP
@@ -335,10 +276,8 @@ Line 2"
 );
 PHP;
         $this->assertEquals(
-            $c->collectFromCode($php, 'mymodule'),
-            array(
-                'Test.NEWLINEDOUBLEQUOTE' => array("Line 1{$eol}Line 2")
-            )
+            [ 'Test.NEWLINEDOUBLEQUOTE' => "Line 1{$eol}Line 2" ],
+            $c->collectFromCode($php, 'mymodule')
         );
     }
 
@@ -347,79 +286,65 @@ PHP;
      */
     public function testCollectFromCodeNewSignature()
     {
-        $c = new i18nTextCollector();
+        $c = i18nTextCollector::create();
 
         $php = <<<PHP
 _t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
-_t('i18nTestModule.INJECTIONS1','_DOES_NOT_EXIST', "Hello {name} {greeting}. But it is late, {goodbye}",
-	array("name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"));
 _t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {goodbye}",
 	array("name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"));
 _t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}",
 		"New context (this should be ignored)",
 		array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
-_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
-_t('i18nTestModule.INJECTIONS5','_DOES_NOT_EXIST', "Hello {name} {greeting}. But it is late, {goodbye}",
-	["name"=>"Mark", "greeting"=>"welcome", "goodbye"=>"bye"]);
 _t('i18nTestModule.INJECTIONS6', "Hello {name} {greeting}. But it is late, {goodbye}",
 	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 _t("i18nTestModule.INJECTIONS7", "Hello {name} {greeting}. But it is late, {goodbye}",
 		"New context (this should be ignored)",
 		["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]);
-_t('i18nTestModule.INJECTIONS8', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
 PHP;
 
         $collectedTranslatables = $c->collectFromCode($php, 'mymodule');
 
-        $expectedArray = (array(
-            'i18nTestModule.NEWMETHODSIG' => array("New _t method signature test"),
-            'i18nTestModule.INJECTIONS1' => array("_DOES_NOT_EXIST",
-                "Hello {name} {greeting}. But it is late, {goodbye}"),
-            'i18nTestModule.INJECTIONS2' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
-            'i18nTestModule.INJECTIONS3' => array("Hello {name} {greeting}. But it is late, {goodbye}",
-                "New context (this should be ignored)"),
-            'i18nTestModule.INJECTIONS5' => array("_DOES_NOT_EXIST",
-                "Hello {name} {greeting}. But it is late, {goodbye}"),
-            'i18nTestModule.INJECTIONS6' => array("Hello {name} {greeting}. But it is late, {goodbye}"),
-            'i18nTestModule.INJECTIONS7' => array("Hello {name} {greeting}. But it is late, {goodbye}",
-                "New context (this should be ignored)"),
-        ));
+        $expectedArray = [
+            'i18nTestModule.INJECTIONS2' => "Hello {name} {greeting}. But it is late, {goodbye}",
+            'i18nTestModule.INJECTIONS3' => "Hello {name} {greeting}. But it is late, {goodbye}",
+            'i18nTestModule.INJECTIONS6' => "Hello {name} {greeting}. But it is late, {goodbye}",
+            'i18nTestModule.INJECTIONS7' => "Hello {name} {greeting}. But it is late, {goodbye}",
+            'i18nTestModule.NEWMETHODSIG' => "New _t method signature test",
+        ];
+        $this->assertEquals($expectedArray, $collectedTranslatables);
 
-        ksort($expectedArray);
-
-        $this->assertEquals($collectedTranslatables, $expectedArray);
+        // Test warning is raised
+        $this->setExpectedException(
+            PHPUnit_Framework_Error_Notice::class,
+            'Missing localisation default for key i18nTestModule.INJECTIONS4'
+        );
+        $php = <<<PHP
+_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
+PHP;
+        $c->collectFromCode($php, 'mymodule');
     }
 
-    /**
-     * @todo Should be in a separate test suite, but don't want to duplicate setup logic
-     */
-    public function testYamlWriter()
+    public function testUncollectableCode()
     {
-        $writer = new i18nTextCollector_Writer_RailsYaml();
-        $entities = array(
-            'Level1.Level2.EntityName' => array('Text', 'Context'),
-            'Level1.OtherEntityName' => array('Other Text', 'Other Context'),
-            'Level1.BoolTest' => array('True'),
-            'Level1.FlagTest' => array('No'),
-            'Level1.TextTest' => array('Maybe')
-        );
-        $yaml = <<<YAML
-de:
-  Level1:
-    Level2:
-      EntityName: Text
-    OtherEntityName: 'Other Text'
-    BoolTest: 'True'
-    FlagTest: 'No'
-    TextTest: Maybe
+        $c = i18nTextCollector::create();
 
-YAML;
-        $this->assertEquals($yaml, Convert::nl2os($writer->getYaml($entities, 'de')));
+        $php = <<<PHP
+_t(static::class.'.KEY1', 'Default');
+_t(self::class.'.KEY2', 'Default');
+_t(__CLASS__.'.KEY3', 'Default');
+_t('Collectable.KEY4', 'Default');
+PHP;
+
+        $collectedTranslatables = $c->collectFromCode($php, 'mymodule');
+
+        // Only one item is collectable
+        $expectedArray = [ 'Collectable.KEY4' => 'Default' ];
+        $this->assertEquals($expectedArray, $collectedTranslatables);
     }
 
     public function testCollectFromIncludedTemplates()
     {
-        $c = new i18nTextCollector();
+        $c = i18nTextCollector::create();
 
         $templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
         $html = file_get_contents($templateFilePath);
@@ -427,23 +352,23 @@ YAML;
 
         $this->assertArrayHasKey('RandomNamespace.LAYOUTTEMPLATENONAMESPACE', $matches);
         $this->assertEquals(
-            $matches['RandomNamespace.LAYOUTTEMPLATENONAMESPACE'],
-            array('Layout Template no namespace')
+            'Layout Template no namespace',
+            $matches['RandomNamespace.LAYOUTTEMPLATENONAMESPACE']
         );
         $this->assertArrayHasKey('RandomNamespace.SPRINTFNONAMESPACE', $matches);
         $this->assertEquals(
-            $matches['RandomNamespace.SPRINTFNONAMESPACE'],
-            array('My replacement no namespace: %s')
+            'My replacement no namespace: %s',
+            $matches['RandomNamespace.SPRINTFNONAMESPACE']
         );
         $this->assertArrayHasKey('i18nTestModule.LAYOUTTEMPLATE', $matches);
         $this->assertEquals(
-            $matches['i18nTestModule.LAYOUTTEMPLATE'],
-            array('Layout Template')
+            'Layout Template',
+            $matches['i18nTestModule.LAYOUTTEMPLATE']
         );
         $this->assertArrayHasKey('i18nTestModule.SPRINTFNAMESPACE', $matches);
         $this->assertEquals(
-            $matches['i18nTestModule.SPRINTFNAMESPACE'],
-            array('My replacement: %s')
+            'My replacement: %s',
+            $matches['i18nTestModule.SPRINTFNAMESPACE']
         );
 
         // Includes should not automatically inject translations into parent templates
@@ -455,8 +380,8 @@ YAML;
 
     public function testCollectFromThemesTemplates()
     {
-        $c = new i18nTextCollector();
-        Config::inst()->update('SilverStripe\\View\\SSViewer', 'theme', 'testtheme1');
+        $c = i18nTextCollector::create();
+        SSViewer::set_themes([ 'testtheme1' ]);
 
         // Collect from layout
         $layoutFilePath = $this->alternateBasePath . '/themes/testtheme1/templates/Layout/i18nTestTheme1.ss';
@@ -465,16 +390,12 @@ YAML;
 
         // all entities from i18nTestTheme1.ss
         $this->assertEquals(
-            array(
-                'i18nTestTheme1.LAYOUTTEMPLATE'
-                    => array('Theme1 Layout Template'),
-                'i18nTestTheme1.SPRINTFNAMESPACE'
-                    => array('Theme1 My replacement: %s'),
-                'i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE'
-                    => array('Theme1 Layout Template no namespace'),
-                'i18nTestTheme1.ss.SPRINTFNONAMESPACE'
-                    => array('Theme1 My replacement no namespace: %s'),
-            ),
+            [
+                'i18nTestTheme1.LAYOUTTEMPLATE' => 'Theme1 Layout Template',
+                'i18nTestTheme1.SPRINTFNAMESPACE' => 'Theme1 My replacement: %s',
+                'i18nTestTheme1.ss.LAYOUTTEMPLATENONAMESPACE' => 'Theme1 Layout Template no namespace',
+                'i18nTestTheme1.ss.SPRINTFNONAMESPACE' => 'Theme1 My replacement no namespace: %s',
+            ],
             $layoutMatches
         );
 
@@ -485,29 +406,20 @@ YAML;
 
         // all entities from i18nTestTheme1Include.ss
         $this->assertEquals(
-            array(
-                'i18nTestTheme1Include.SPRINTFINCLUDENAMESPACE'
-                    => array('Theme1 My include replacement: %s'),
-                'i18nTestTheme1Include.WITHNAMESPACE'
-                    => array('Theme1 Include Entity with Namespace'),
-                'i18nTestTheme1Include.ss.NONAMESPACE'
-                    => array('Theme1 Include Entity without Namespace'),
-                'i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE'
-                    => array('Theme1 My include replacement no namespace: %s')
-            ),
+            [
+                'i18nTestTheme1Include.SPRINTFINCLUDENAMESPACE' => 'Theme1 My include replacement: %s',
+                'i18nTestTheme1Include.WITHNAMESPACE' => 'Theme1 Include Entity with Namespace',
+                'i18nTestTheme1Include.ss.NONAMESPACE' => 'Theme1 Include Entity without Namespace',
+                'i18nTestTheme1Include.ss.SPRINTFINCLUDENONAMESPACE' => 'Theme1 My include replacement no namespace: %s'
+            ],
             $includeMatches
         );
     }
 
     public function testCollectMergesWithExisting()
     {
-        i18n::set_locale('en_US');
-        i18n::config()->update('default_locale', 'en_US');
-        i18n::include_by_locale('en');
-        i18n::include_by_locale('en_US');
-
-        $c = new i18nTextCollector();
-        $c->setWriter(new i18nTextCollector_Writer_RailsYaml());
+        $c = i18nTextCollector::create();
+        $c->setWriter(new YamlWriter());
         $c->basePath = $this->alternateBasePath;
         $c->baseSavePath = $this->alternateBaseSavePath;
 
@@ -522,6 +434,16 @@ YAML;
             $entitiesByModule['i18ntestmodule'],
             'Adds new entities'
         );
+
+        // Test cross-module strings are set correctly
+        $this->assertArrayHasKey(
+            'i18nProviderClass.OTHER_MODULE',
+            $entitiesByModule['i18ntestmodule']
+        );
+        $this->assertEquals(
+            'i18ntestmodule string defined in i18nothermodule',
+            $entitiesByModule['i18ntestmodule']['i18nProviderClass.OTHER_MODULE']
+        );
     }
 
     public function testCollectFromFilesystemAndWriteMasterTables()
@@ -530,8 +452,8 @@ YAML;
         i18n::set_locale('en_US');  //set the locale to the US locale expected in the asserts
         i18n::config()->update('default_locale', 'en_US');
 
-        $c = new i18nTextCollector();
-        $c->setWriter(new i18nTextCollector_Writer_RailsYaml());
+        $c = i18nTextCollector::create();
+        $c->setWriter(new YamlWriter());
         $c->basePath = $this->alternateBasePath;
         $c->baseSavePath = $this->alternateBaseSavePath;
 
@@ -648,20 +570,26 @@ YAML;
 
     public function testCollectFromEntityProvidersInCustomObject()
     {
-        $c = new i18nTextCollector();
+        // note: Disable _fakewebroot manifest for this test
+        $this->popManifests();
 
+        $c = i18nTextCollector::create();
         $filePath = __DIR__ . '/i18nTest/MyObject.php';
         $matches = $c->collectFromEntityProviders($filePath);
         $this->assertEquals(
-            array(
-                'SilverStripe\i18n\Tests\i18nTest\MyObject.PLURALNAME',
-                'SilverStripe\i18n\Tests\i18nTest\MyObject.SINGULARNAME',
-            ),
-            array_keys($matches)
-        );
-        $this->assertEquals(
-            'My Object',
-            $matches['SilverStripe\i18n\Tests\i18nTest\MyObject.SINGULARNAME'][0]
+            [
+                'SilverStripe\Admin\LeftAndMain.OTHER_TITLE' => [
+                    'default' => 'Other title',
+                    'module' => 'admin',
+                ],
+                'SilverStripe\i18n\Tests\i18nTest\MyObject.PLURALNAME' => 'My Objects',
+                'SilverStripe\i18n\Tests\i18nTest\MyObject.PLURALS' => [
+                    'one' => 'A My Object',
+                    'other' => '{count} My Objects',
+                ],
+                'SilverStripe\i18n\Tests\i18nTest\MyObject.SINGULARNAME' => 'My Object',
+            ],
+            $matches
         );
     }
 
@@ -671,48 +599,47 @@ YAML;
     public function testResolveDuplicates()
     {
         $collector = new Collector();
-        ClassLoader::instance()->pushManifest($this->manifest);
 
         // Dummy data as collected
-        $data1 = array(
-            'i18ntestmodule' => array(
-                'i18nTestModule.PLURALNAME' => array('Data Objects'),
-                'i18nTestModule.SINGULARNAME' => array('Data Object')
-            ),
-            'mymodule' => array(
-                'i18nTestModule.PLURALNAME' => array('Ignored String'),
-                'i18nTestModule.STREETNAME' => array('Shortland Street')
-            )
-        );
-        $expected = array(
-            'i18ntestmodule' => array(
-                'i18nTestModule.PLURALNAME' => array('Data Objects'),
-                'i18nTestModule.SINGULARNAME' => array('Data Object')
-            ),
-            'mymodule' => array(
-                // Because this key doesn't exist in i18ntestmodule strings
-                'i18nTestModule.STREETNAME' => array('Shortland Street')
-            )
-        );
+        $data1 = [
+            'i18ntestmodule' => [
+                'i18nTestModule.PLURALNAME' => 'Data Objects',
+                'i18nTestModule.SINGULARNAME' => 'Data Object',
+            ],
+            'mymodule' => [
+                'i18nTestModule.PLURALNAME' => 'Ignored String',
+                'i18nTestModule.STREETNAME' => 'Shortland Street',
+            ],
+        ];
+        $expected = [
+            'i18ntestmodule' => [
+                'i18nTestModule.PLURALNAME' => 'Data Objects',
+                'i18nTestModule.SINGULARNAME' => 'Data Object',
+            ],
+            'mymodule' => [
+                // Removed PLURALNAME because this key doesn't exist in i18ntestmodule strings
+                'i18nTestModule.STREETNAME' => 'Shortland Street'
+            ]
+        ];
 
         $resolved = $collector->resolveDuplicateConflicts_Test($data1);
         $this->assertEquals($expected, $resolved);
 
         // Test getConflicts
-        $data2 = array(
-            'module1' => array(
-                'i18ntestmodule.ONE' => array('One'),
-                'i18ntestmodule.TWO' => array('Two'),
-                'i18ntestmodule.THREE' => array('Three'),
-            ),
-            'module2' => array(
-                'i18ntestmodule.THREE' => array('Three'),
-            ),
-            'module3' => array(
-                'i18ntestmodule.TWO' => array('Two'),
-                'i18ntestmodule.THREE' => array('Three'),
-            )
-        );
+        $data2 = [
+            'module1' => [
+                'i18ntestmodule.ONE' => 'One',
+                'i18ntestmodule.TWO' => 'Two',
+                'i18ntestmodule.THREE' => 'Three',
+            ],
+            'module2' => [
+                'i18ntestmodule.THREE' => 'Three',
+            ],
+            'module3' => [
+                'i18ntestmodule.TWO' => 'Two',
+                'i18ntestmodule.THREE' => 'Three',
+            ],
+        ];
         $conflictsA = $collector->getConflicts_Test($data2);
         sort($conflictsA);
         $this->assertEquals(
@@ -735,7 +662,6 @@ YAML;
     public function testModuleDetection()
     {
         $collector = new Collector();
-        ClassLoader::instance()->pushManifest($this->manifest);
         $modules = $collector->getModules_Test($this->alternateBasePath);
         $this->assertEquals(
             array(
@@ -790,9 +716,10 @@ YAML;
         // Standard modules with code in odd places should only have code in those directories detected
         $otherFiles = $collector->getFileListForModule_Test('i18nothermodule');
         $otherRoot = $this->alternateBasePath . '/i18nothermodule';
-        $this->assertEquals(3, count($otherFiles));
+        $this->assertEquals(4, count($otherFiles));
         // Only detect well-behaved files
         $this->assertArrayHasKey("{$otherRoot}/code/i18nOtherModule.php", $otherFiles);
+        $this->assertArrayHasKey("{$otherRoot}/code/i18nProviderClass.php", $otherFiles);
         $this->assertArrayHasKey("{$otherRoot}/code/i18nTestModuleDecorator.php", $otherFiles);
         $this->assertArrayHasKey("{$otherRoot}/templates/i18nOtherModule.ss", $otherFiles);
 

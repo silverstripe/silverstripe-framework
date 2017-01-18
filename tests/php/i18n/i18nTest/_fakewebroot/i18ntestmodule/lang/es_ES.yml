@@ -11,8 +11,5 @@ en:
     WITHNAMESPACE: Include Entity with Namespace
     LAYOUTTEMPLATE: Layout Template
     SPRINTFNAMESPACE: My replacement: %s
-    PLURAL:
-      one: 'A test'
-      other: '{count} tests'
   i18nTestModuleInclude.ss:
     SPRINTFINCLUDENAMESPACE: My include replacement: %s

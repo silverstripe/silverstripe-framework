@@ -154,7 +154,7 @@ class HTMLEditorField extends TextareaField
      */
     public function performReadonlyTransformation()
     {
-        return $this->castedCopy('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Readonly');
+        return $this->castedCopy(HTMLEditorField_Readonly::class);
     }
 
     public function performDisabledTransformation()

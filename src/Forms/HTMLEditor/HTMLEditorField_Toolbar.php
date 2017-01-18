@@ -104,6 +104,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
      * Return a {@link Form} instance allowing a user to
      * add links in the TinyMCE content editor.
      *
+     * @skipUpgrade
      * @return Form
      */
     public function LinkForm()
@@ -111,7 +112,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $siteTree = TreeDropdownField::create(
             'internal',
             _t('HTMLEditorField.PAGE', "Page"),
-            'SilverStripe\\CMS\\Model\\SiteTree',
+            SiteTree::class,
             'ID',
             'MenuTitle',
             true
@@ -158,7 +159,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
                     $siteTree,
                     TextField::create('external', _t('HTMLEditorField.URL', 'URL'), 'http://'),
                     EmailField::create('email', _t('HTMLEditorField.EMAIL', 'Email address')),
-                    $fileField = UploadField::create('file', _t('HTMLEditorField.FILE', 'SilverStripe\\Assets\\File')),
+                    $fileField = UploadField::create('file', _t('HTMLEditorField.FILE', 'File')),
                     TextField::create('Anchor', _t('HTMLEditorField.ANCHORVALUE', 'Anchor')),
                     TextField::create('Subject', _t('HTMLEditorField.SUBJECT', 'Email subject')),
                     TextField::create('Description', _t('HTMLEditorField.LINKDESCR', 'Link description')),
@@ -229,7 +230,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $columns = $fileField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDataColumns');
         $columns->setDisplayFields(array(
             'StripThumbnail' => false,
-            'Title' => _t('File.Title'),
+            'Title' => _t('File.Title', 'Title'),
             'Created' => File::singleton()->fieldLabel('Created'),
         ));
         $columns->setFieldCasting(array(

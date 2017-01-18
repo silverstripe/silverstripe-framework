@@ -208,6 +208,35 @@ class InjectorTest extends SapphireTest
         $this->assertEquals('Three', $another->filters[2]);
     }
 
+    public function testConstantUsage()
+    {
+        $injector = new Injector();
+        $services = array(
+            AnotherService::class => array(
+                'properties' => array(
+                    'filters' => array(
+                        '`BASE_PATH`',
+                        '`TEMP_FOLDER`',
+                        '`NOT_DEFINED`',
+                        'THIRDPARTY_DIR' // Not back-tick escaped
+                    )
+                ),
+            )
+        );
+
+        $injector->load($services);
+        $another = $injector->get(AnotherService::class);
+        $this->assertEquals(
+            [
+                BASE_PATH,
+                TEMP_FOLDER,
+                null,
+                'THIRDPARTY_DIR',
+            ],
+            $another->filters
+        );
+    }
+
     public function testAutoSetInjector()
     {
         $injector = new Injector();

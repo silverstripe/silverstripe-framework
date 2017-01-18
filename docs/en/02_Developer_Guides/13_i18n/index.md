@@ -166,12 +166,61 @@ All strings passed through the `_t()` function will be collected in a separate l
 The `_t()` function is the main gateway to localized text, and takes four parameters, all but the first being optional.
 It can be used to translate strings in both PHP files and template files. The usage for each case is described below.
 
- * **$entity:** Unique identifier, composed by a namespace and an entity name, with a dot separating them. Both are arbitrary names, although by convention we use the name of the containing class or template. Use this identifier to reference the same translation elsewhere in your code.
- * **$string:** (optional) The original language string to be translated. Only needs to be declared once, and gets picked up the [text collector](#collecting-text).
- * **$string:** (optional) Natural language comment (particularly short phrases and individual words)
-are very context dependent. This parameter allows the developer to convey this information
-to the translator.
- * **$array::** (optional) An array of injecting variables into the second parameter
+* **$entity:** Unique identifier, composed by a namespace and an entity name, with a dot
+  separating them. Both are arbitrary names, although by convention we use the name of
+  the containing class or template. Use this identifier to reference the same translation
+  elsewhere in your code.
+* **$default:** The original language string to be translated. This should be declared
+  whenever used, and will get picked up the [text collector](#collecting-text).
+* **$injection::** (optional) An array of injecting variables into the second parameter
+
+## Pluralisation
+
+i18n also supports locale-respective pluralisation rules. Many languages have more than two plural forms,
+unlike English which has two only; One for the singular, and another for any other number.
+
+More information on what forms these plurals can take for various locales can be found on the
+[CLDR documentation](http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html)
+
+The ability to pluralise strings is provided through the `i18n::pluaralise` method, which is similar to the
+`i18n::_t` method, other than that it takes an additional `$count` argument.
+
+For instance, this is an example of how to correctly declare pluralisations for an object
+
+
+    :::php
+    class MyObject extends DataObject, implements i18nEntityProvider
+    {
+        public function provideI18nEntities()
+        {
+            return [
+                'MyObject.SINGULAR_NAME' => 'object',
+                'MyObject.PLURAL_NAME' => 'objects',
+                'MyObject.PLURALS' => [
+                    'one' => 'An object',
+                    'other' => '{count} objects',
+                ],
+            ];
+        }
+    }
+
+
+In YML format this will be expressed as the below. This follows the
+[ruby i18n convention](guides.rubyonrails.org/i18n.html#pluralization) for plural forms.
+
+
+    :::yaml
+    en:
+      MyObject:
+        SINGULAR_NAME: 'object'
+        PLURAL_NAME: 'objects'
+        PLURALS:
+          one: 'An object',
+          other: '{count} objects'
+
+
+Note: i18nTextCollector support for pluralisation is not yet available.
+Please ensure that any required plurals are exposed via provideI18nEntities.
 
 #### Usage in PHP Files
 
@@ -180,15 +229,23 @@ to the translator.
 	// Simple string translation
 	_t('LeftAndMain.FILESIMAGES','Files & Images');
 
-	// Using the natural languate comment parameter to supply additional context information to translators
-	_t('LeftAndMain.HELLO','Site content','Menu title');
-
 	// Using injection to add variables into the translated strings.
 	_t('CMSMain.RESTORED',
 		"Restored {value} successfully",
-		'This is a message when restoring a broken part of the CMS',
 		array('value' => $itemRestored)
 	);
+
+
+You can invoke plurals for any object using the new `i18n::pluralise` method.
+In addition to array form, you can also pass in a pipe-delimited string as a default
+argument for brevity.
+
+
+    :::php
+    public function pluralise($count)
+    {
+        return i18n::pluralise('MyObject.PLURALS', 'An object|{count} objects', $count);
+    }
 
 #### Usage in Template Files
 
@@ -207,11 +264,15 @@ the PHP version of the function.
 	// Simple string translation
 	<%t Namespace.Entity "String to translate" %>
 
-	// Using the natural languate comment parameter to supply additional context information to translators
-	<%t SearchResults.NoResult "There are no results matching your query." is "A message displayed to users when the search produces no results." %>
-
 	// Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
 	<%t Header.Greeting "Hello {name} {greeting}" name=$Name greeting=$Greeting %>
+	
+Pluralisation in templates is available via the global `$pluralise` method.
+
+
+    :::ss
+    You have $pluralise('i18nTestModule.PLURALS', 'An item|{count} items', $Count) in your cart
+
 
 #### Caching in Template Files with locale switching
 
@@ -279,13 +340,14 @@ Each module can have one language table per locale, stored by convention in the 
 The translation is powered by [Zend_Translate](http://framework.zend.com/manual/current/en/modules/zend.i18n.translating.html),
 which supports different translation adapters, dealing with different storage formats.
 
-By default, SilverStripe 3.x uses a YAML format (through the [Zend_Translate_RailsYAML adapter](https://github.com/chillu/zend_translate_railsyaml)).
+By default, SilverStripe uses a YAML format which is loaded via the
+[symfony/translate](http://symfony.com/doc/current/translation.html)  library.
 
 Example: framework/lang/en.yml (extract)
 
 	en:
 	  ImageUploader:
-	    Attach: 'Attach %s'
+	    Attach: 'Attach {title}'
 	  UploadField:
 	    NOTEADDFILES: 'You can add files once you have saved for the first time.'
 
@@ -293,31 +355,13 @@ Translation table: framework/lang/de.yml (extract)
 
 	de:
 	  ImageUploader:
-	    ATTACH: '%s anhängen'
+	    ATTACH: '{title} anhängen'
 	  UploadField:
 	    NOTEADDFILES: 'Sie können Dateien hinzufügen sobald Sie das erste mal gespeichert haben'
 
 Note that translations are cached across requests.
 The cache can be cleared through the `?flush=1` query parameter,
 or explicitly through `Zend_Translate::getCache()->clean(Zend_Cache::CLEANING_MODE_ALL)`.
-
-<div class="hint" markdown='1'>
-The format of language definitions has changed significantly in since version 2.x.
-</div>
-
-In order to enable usage of [version 2.x style language definitions](http://doc.silverstripe.org/framework/en/2.4/topics/i18n#language-tables-in-php) in 3.x, you need to register a legacy adapter
-in your `mysite/_config.php`:
-
-	:::php
-	i18n::register_translator(
-		new Zend_Translate(array(
-			'adapter' => 'i18nSSLegacyAdapter',
-			'locale' => i18n::default_locale(),
-			'disableNotices' => true,
-		)),
-		'legacy',
-		9 // priority lower than standard translator
-	);
 
 ## Javascript Usage
 

@@ -8,6 +8,7 @@ use SilverStripe\Security\Member;
 
 class TestDataObject extends DataObject implements TestOnly
 {
+    private static $table_name = 'i18nTest_TestDataObject';
 
     private static $db = array(
         'MyProperty' => 'Varchar',

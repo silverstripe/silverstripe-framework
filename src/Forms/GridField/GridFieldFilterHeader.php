@@ -212,7 +212,7 @@ class GridFieldFilterHeader implements GridField_HTMLProvider, GridField_DataMan
                 $fields->push(
                     GridField_FormAction::create($gridField, 'filter', false, 'filter', null)
                         ->addExtraClass('btn font-icon-search btn--no-text btn--icon-large grid-field__filter-submit ss-gridfield-button-filter')
-                        ->setAttribute('title', _t('GridField.Filter', "Filter"))
+                        ->setAttribute('title', _t('GridField.Filter', 'Filter'))
                         ->setAttribute('id', 'action_filter_' . $gridField->getModelClass() . '_' . $columnField)
                 );
                 $fields->push(
