@@ -22,7 +22,8 @@
   }
 
   .font-icon-check-mark-circle,
-  .font-icon-cancel-circled {
+  .font-icon-cancel-circled,
+  .font-icon-disable-circled {
     font-size: 18px;
     position: relative;
     top: 2px;
@@ -34,6 +35,10 @@
 
   .font-icon-cancel-circled {
     color: $brand-danger;
+  }
+
+  .font-icon-disable-circle {
+  	color: $gray;
   }
 
   li {

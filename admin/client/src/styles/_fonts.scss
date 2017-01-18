@@ -117,7 +117,8 @@
   content: "\7a";
 }
 
-.font-icon-cancel-circled::before {
+.font-icon-cancel-circled::before,
+.font-icon-disable-circled::before {
   content: "\51";
 }
 

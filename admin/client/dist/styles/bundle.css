@@ -7639,7 +7639,7 @@ h1{
   content:"z";
 }
 
-.font-icon-cancel-circled:before{
+.font-icon-cancel-circled:before,.font-icon-disable-circled:before{
   content:"Q";
 }
 
@@ -13510,7 +13510,7 @@ li.class-ErrorPage>a .jstree-pageicon{
   list-style-type:none;
 }
 
-.permissioncheckboxset .font-icon-cancel-circled,.permissioncheckboxset .font-icon-check-mark-circle,.permissioncheckboxsetfield_readonly .font-icon-cancel-circled,.permissioncheckboxsetfield_readonly .font-icon-check-mark-circle{
+.permissioncheckboxset .font-icon-cancel-circled,.permissioncheckboxset .font-icon-check-mark-circle,.permissioncheckboxset .font-icon-disable-circled,.permissioncheckboxsetfield_readonly .font-icon-cancel-circled,.permissioncheckboxsetfield_readonly .font-icon-check-mark-circle,.permissioncheckboxsetfield_readonly .font-icon-disable-circled{
   font-size:18px;
   position:relative;
   top:2px;
@@ -13522,6 +13522,10 @@ li.class-ErrorPage>a .jstree-pageicon{
 
 .permissioncheckboxset .font-icon-cancel-circled,.permissioncheckboxsetfield_readonly .font-icon-cancel-circled{
   color:#d40404;
+}
+
+.permissioncheckboxset .font-icon-disable-circle,.permissioncheckboxsetfield_readonly .font-icon-disable-circle{
+  color:#545d67;
 }
 
 .permissioncheckboxsetfield_readonly li,.permissioncheckboxset li{
