@@ -125,6 +125,18 @@ class SQLQueryTest extends SapphireTest {
 		$this->assertTrue($query->canSortBy('Name'));
 	}
 
+    /**
+     * Test multiple order by SQL clauses.
+     */
+	public function testAddOrderBy() {
+		$query = new SQLQuery();
+		$query->setSelect('ID', "Title")->setFrom('Page')->addOrderBy('(ID % 2)  = 0', 'ASC')->addOrderBy('ID > 50', 'ASC');
+		$this->assertSQLEquals(
+			'SELECT ID, Title, (ID % 2)  = 0 AS "_SortColumn0", ID > 50 AS "_SortColumn1" FROM Page ORDER BY "_SortColumn0" ASC, "_SortColumn1" ASC',
+			$query->sql($parameters)
+		);
+	}
+
 	public function testSelectWithChainedFilterParameters() {
 		$query = new SQLQuery();
 		$query->setSelect(array("Name","Meta"))->setFrom("MyTable");
