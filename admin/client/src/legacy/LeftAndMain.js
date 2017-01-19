@@ -1041,7 +1041,7 @@ $.entwine('ss', function($) {
    */
   $('form.loading,.cms-content.loading,.cms-content-fields.loading,.cms-content-view.loading').entwine({
     onmatch: function() {
-      this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
+      this.closest('div').append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
       this._super();
     },
     onunmatch: function() {

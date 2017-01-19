@@ -425,7 +425,7 @@ case"alpha":return u["default"].isAlpha(e)
 case"regex":return u["default"].matches(e,n.pattern)
 case"max":return e.length<=n.length
 case"email":return u["default"].isEmail(e)
-default:console.warn("Unknown validation rule used: '"+t+"'")}}},{key:"validateFieldSchema",value:function l(e){return this.validateField(e.name,e.validation,null!==e.leftTitle?e.leftTitle:e.title,e.customValidationMessage)
+default:return console.warn("Unknown validation rule used: '"+t+"'"),!1}}},{key:"validateFieldSchema",value:function l(e){return this.validateField(e.name,e.validation,null!==e.leftTitle?e.leftTitle:e.title,e.customValidationMessage)
 
 }},{key:"getMessage",value:function d(e,t){var n=""
 if("string"==typeof t.message)n=t.message
@@ -1128,8 +1128,10 @@ minHeight:370,maxHeight:400,closeOnEscape:!1,open:function e(){$(".ui-widget-ove
 
 }})},onunmatch:function x(){this._super()},open:function R(){this.ssdialog("open")},close:function I(){this.ssdialog("close")},toggle:function F(e){this.is(":visible")?this.close():this.open()},reauthenticate:function A(e){
 "undefined"!=typeof e.SecurityID&&$(":input[name=SecurityID]").val(e.SecurityID),"undefined"!=typeof e.TempID&&$("body").data("member-tempid",e.TempID),this.close()}}),$("form.loading,.cms-content.loading,.cms-content-fields.loading,.cms-content-view.loading").entwine({
-onmatch:function D(){this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>'),this._super()},onunmatch:function M(){this.find(".cms-content-loading-overlay,.cms-content-loading-spinner").remove(),
-this._super()}}),$(".cms .cms-panel-link").entwine({onclick:function N(e){if($(this).hasClass("external-link"))return void e.stopPropagation()
+onmatch:function D(){this.closest("div").append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>'),this._super()},onunmatch:function M(){
+this.find(".cms-content-loading-overlay,.cms-content-loading-spinner").remove(),this._super()}}),$(".cms .cms-panel-link").entwine({onclick:function N(e){if($(this).hasClass("external-link"))return void e.stopPropagation()
+
+
 var t=this.attr("href"),n=t&&!t.match(/^#/)?t:this.data("href"),i={pjax:this.data("pjaxTarget")}
 $(".cms-container").loadPanel(n,null,i),e.preventDefault()}}),$(".cms .ss-ui-button-ajax").entwine({onclick:function onclick(e){$(this).removeClass("ui-button-text-only"),$(this).addClass("ss-ui-button-loading ui-button-text-icons")
 
