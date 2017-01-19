@@ -47,7 +47,9 @@ use SilverStripe\View\SSViewer;
  */
 abstract class ModelAdmin extends LeftAndMain
 {
-
+    /**
+     * @inheritdoc
+     */
     private static $url_rule = '/$ModelClass/$Action';
 
     /**
@@ -92,7 +94,7 @@ abstract class ModelAdmin extends LeftAndMain
     );
 
     /**
-     * @var String
+     * @var string The {@link \SilverStripe\ORM\DataObject} sub-class being managed during this object's lifetime.
      */
     protected $modelClass;
 
@@ -124,15 +126,17 @@ abstract class ModelAdmin extends LeftAndMain
     private static $model_importers = null;
 
     /**
-     * Amount of results showing on a single page.
-     *
      * @config
-     * @var int
+     * @var int Amount of results to show per page
      */
     private static $page_length = 30;
 
     /**
      * Initialize the model admin interface. Sets up embedded jquery libraries and requisite plugins.
+     *
+     * Sets the `modelClass` field which determines which of the {@link DataObject} objects will have visible data. This
+     * is determined by the URL (with the first slug being the name of the DataObject class to represent. If this class
+     * is loaded without any URL, we pick the first DataObject from the list of {@link self::$managed_models}.
      */
     protected function init()
     {
@@ -153,6 +157,12 @@ abstract class ModelAdmin extends LeftAndMain
         }
     }
 
+    /**
+     * Overrides {@link \SilverStripe\Admin\LeftAndMain} to ensure the active model class (the DataObject we are
+     * currently viewing) is included in the URL.
+     *
+     * @inheritdoc
+     */
     public function Link($action = null)
     {
         if (!$action) {
@@ -161,6 +171,15 @@ abstract class ModelAdmin extends LeftAndMain
         return parent::Link($action);
     }
 
+    /**
+     * Produces an edit form that includes a default {@link \SilverStripe\Forms\GridField\GridField} for the currently
+     * active {@link \SilverStripe\ORM\DataObject}. The GridField will show data from the currently active `modelClass`
+     * only (see {@link self::init()}).
+     *
+     * @param int|null $id
+     * @param \SilverStripe\Forms\FieldList $fields
+     * @return \SilverStripe\Forms\Form A Form object with one tab per {@link \SilverStripe\Forms\GridField\GridField}
+     */
     public function getEditForm($id = null, $fields = null)
     {
         $list = $this->getList();
@@ -221,7 +240,7 @@ abstract class ModelAdmin extends LeftAndMain
     }
 
     /**
-     * @return SearchContext
+     * @return \SilverStripe\ORM\Search\SearchContext
      */
     public function getSearchContext()
     {
@@ -241,7 +260,7 @@ abstract class ModelAdmin extends LeftAndMain
     }
 
     /**
-     * @return Form|bool
+     * @return \SilverStripe\Forms\Form|bool
      */
     public function SearchForm()
     {
@@ -275,6 +294,26 @@ abstract class ModelAdmin extends LeftAndMain
         return $form;
     }
 
+    /**
+     * You can override how ModelAdmin returns DataObjects by either overloading this method, or defining an extension
+     * to ModelAdmin that implements the `updateList` method (and takes a {@link \SilverStripe\ORM\DataList} as the
+     * first argument).
+     *
+     * For example, you might want to do this if this particular ModelAdmin should only ever show objects where an
+     * Archived flag is set to false. That would be best done as an extension, for example:
+     *
+     * <code>
+     * public function updateList(\SilverStripe\ORM\DataList $list)
+     * {
+     *     return $list->filter('Archived', false);
+     * }
+     * </code>
+     *
+     * If you want to use the built-in search form that ModelAdmin provides, you should also make amends to the DataList
+     * returned by this method, rather than creating a new DataList.
+     *
+     * @return \SilverStripe\ORM\DataList
+     */
     public function getList()
     {
         $context = $this->getSearchContext();
@@ -300,10 +339,8 @@ abstract class ModelAdmin extends LeftAndMain
 
 
     /**
-     * Returns managed models' create, search, and import forms
-     * @uses SearchContext
-     * @uses SearchFilter
-     * @return SS_List of forms
+
+     * @return \SilverStripe\ORM\ArrayList An ArrayList of all managed models to build the tabs for this ModelAdmin
      */
     protected function getManagedModelTabs()
     {
