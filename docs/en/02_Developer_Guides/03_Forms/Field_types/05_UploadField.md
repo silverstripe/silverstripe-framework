@@ -57,7 +57,7 @@ The following example adds an UploadField to a page for single fileupload, based
 ```
 
 The UploadField will auto-detect the relation based on its `name` property, and save
-it into the GalleyPages' `SingleImageID` field. Setting the `setAllowedMaxFileNumber`
+it into the GalleryPage's `SingleImageID` field. Setting the `setAllowedMaxFileNumber`
 to 1 will make sure that only one image can ever be uploaded and linked to the relation.	
 
 ### Multiple fileupload
