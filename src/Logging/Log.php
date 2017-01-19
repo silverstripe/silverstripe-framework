@@ -18,36 +18,7 @@ use SilverStripe\Dev\Deprecation;
  *  - Log::NOTICE
  *  - Log::INFO
  *  - Log::DEBUG
- *
- * You can add an error writer by calling {@link Log::add_writer()}
- *
- * Example usage of logging errors by email notification:
- * <code>
- * Log::add_writer(new LogEmailWriter('my@email.com'), Log::ERR);
- * </code>
- *
- * Example usage of logging errors by file:
- * <code>
- *  Log::add_writer(new LogFileWriter('/var/log/silverstripe/errors.log'), Log::ERR);
- * </code>
- *
- * Example usage of logging at warnings and errors by setting the priority to '<=':
- * <code>
- * Log::add_writer(new LogEmailWriter('my@email.com'), Log::WARN, '<=');
- * </code>
- *
- * Each writer object can be assigned a formatter. The formatter is
- * responsible for formatting the message before giving it to the writer.
- * {@link LogErrorEmailFormatter} is such an example that formats errors
- * into HTML for human readability in an email client.
- *
- * Formatters are added to writers like this:
- * <code>
- * $logEmailWriter = new LogEmailWriter('my@email.com');
- * $myEmailFormatter = new MyLogEmailFormatter();
- * $logEmailWriter->setFormatter($myEmailFormatter);
- * </code>
- */
+*/
 class Log
 {
 
