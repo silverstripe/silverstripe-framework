@@ -1042,7 +1042,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     {
         parent::onAfterWrite();
 
-        Permission::flush_permission_cache();
+        Permission::reset();
 
         if ($this->isChanged('Password')) {
             MemberPassword::log($this);

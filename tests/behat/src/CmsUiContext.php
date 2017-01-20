@@ -1,33 +1,23 @@
 <?php
 
-namespace SilverStripe\Framework\Test\Behaviour;
+namespace SilverStripe\Framework\Tests\Behaviour;
 
-use Behat\Behat\Context\BehatContext;
-use Behat\Behat\Context\Step;
-use Behat\Behat\Event\StepEvent;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
+use Behat\Behat\Context\Context;
+use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
+use SilverStripe\BehatExtension\Context\RetryableContextTrait;
+use SilverStripe\BehatExtension\Utility\StepHelper;
 
 /**
  * CmsUiContext
  *
  * Context used to define steps related to SilverStripe CMS UI like Tree or Panel.
  */
-class CmsUiContext extends BehatContext
+class CmsUiContext implements Context
 {
-    protected $context;
-
-    /**
-     * Initializes context.
-     * Every scenario gets it's own context object.
-     *
-     * @param   array   $parameters     context parameters (set them up through behat.yml)
-     */
-    public function __construct(array $parameters)
-    {
-        // Initialize your context here
-        $this->context = $parameters;
-    }
+    use MainContextAwareTrait;
+    use StepHelper;
 
     /**
      * Get Mink session from MinkContext
@@ -148,9 +138,9 @@ class CmsUiContext extends BehatContext
      */
     public function stepIShouldSeeInCmsTree($text)
     {
-        $cms_tree_element = $this->getCmsTreeElement();
-
-        $element = $cms_tree_element->find('named', array('content', "'$text'"));
+        // Wait until visible
+        $cmsTreeElement = $this->getCmsTreeElement();
+        $element = $cmsTreeElement->find('named', array('content', "'$text'"));
         assertNotNull($element, sprintf('%s not found', $text));
     }
 
@@ -159,9 +149,9 @@ class CmsUiContext extends BehatContext
      */
     public function stepIShouldNotSeeInCmsTree($text)
     {
-        $cms_tree_element = $this->getCmsTreeElement();
-
-        $element = $cms_tree_element->find('named', array('content', "'$text'"));
+        // Wait until not visible
+        $cmsTreeElement = $this->getCmsTreeElement();
+        $element = $cmsTreeElement->find('named', array('content', "'$text'"));
         assertNull($element, sprintf('%s found', $text));
     }
 
@@ -390,10 +380,8 @@ SCRIPT
      */
     public function iSetTheCmsToMode($mode)
     {
-        return array(
-            new Step\When(sprintf('I fill in the "Change view mode" dropdown with "%s"', $mode)),
-            new Step\When('I wait for 1 second') // wait for CMS layout to redraw
-        );
+        $this->theIFillInTheDropdownWith('Change view mode', $mode);
+        sleep(1);
     }
 
     /**
@@ -430,7 +418,7 @@ SCRIPT
 
         $label->click();
 
-        return new Step\When('I wait for the preview to load');
+        $this->iWaitForThePreviewToLoad();
     }
 
     /**
