@@ -1,10 +1,11 @@
 <?php
 
-namespace SilverStripe\Framework\Test\Behaviour;
+namespace SilverStripe\Framework\Tests\Behaviour;
 
-use Behat\Behat\Context\BehatContext;
+use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementHtmlException;
 use Behat\Gherkin\Node\TableNode;
+use SilverStripe\BehatExtension\Context\MainContextAwareTrait;
 use Symfony\Component\DomCrawler\Crawler;
 use Behat\Mink\Element\NodeElement;
 use SilverStripe\SiteConfig\SiteConfig;
@@ -14,21 +15,9 @@ use SilverStripe\SiteConfig\SiteConfig;
  *
  * Context used to define steps related to forms inside CMS.
  */
-class CmsFormsContext extends BehatContext
+class CmsFormsContext implements Context
 {
-    protected $context;
-
-    /**
-     * Initializes context.
-     * Every scenario gets it's own context object.
-     *
-     * @param   array   $parameters     context parameters (set them up through behat.yml)
-     */
-    public function __construct(array $parameters)
-    {
-        // Initialize your context here
-        $this->context = $parameters;
-    }
+    use MainContextAwareTrait;
 
     /**
      * Get Mink session from MinkContext

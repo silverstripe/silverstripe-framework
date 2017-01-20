@@ -15,6 +15,5 @@ Feature: Log in
 
   Scenario: /admin/ redirect for not logged in user
     # disable automatic redirection so we can use the profiler
-    When I go to "/admin/" without redirection
-    Then I should be redirected to "/Security/login"
+    When I go to "/admin/"
     And I should see a log-in form

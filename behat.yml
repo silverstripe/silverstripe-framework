@@ -1,0 +1,26 @@
+default:
+  suites:
+    framework:
+      paths:
+        - %paths.modules.framework%/tests/behat/features
+      contexts:
+        - SilverStripe\Framework\Tests\Behaviour\FeatureContext
+        - SilverStripe\Framework\Tests\Behaviour\CmsFormsContext
+        - SilverStripe\Framework\Tests\Behaviour\CmsUiContext
+        - SilverStripe\BehatExtension\Context\BasicContext
+        - SilverStripe\BehatExtension\Context\EmailContext
+        - SilverStripe\BehatExtension\Context\LoginContext
+        -
+          SilverStripe\BehatExtension\Context\FixtureContext:
+            - %paths.modules.framework%/tests/behat/features/files/
+
+  extensions:
+    SilverStripe\BehatExtension\MinkExtension:
+      default_session: selenium2
+      javascript_session: selenium2
+      selenium2:
+        browser: firefox
+
+    SilverStripe\BehatExtension\Extension:
+      screenshot_path: %paths.base%/tests/behat/artifacts/screenshots
+      bootstrap_file: "tests/behat/serve-bootstrap.php"

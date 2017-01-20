@@ -3,6 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\DataObject;
@@ -19,7 +20,7 @@ use SilverStripe\View\TemplateGlobalProvider;
  * @property int GroupID
  * @method Group Group()
  */
-class Permission extends DataObject implements TemplateGlobalProvider
+class Permission extends DataObject implements TemplateGlobalProvider, Resettable
 {
 
     // the (1) after Type specifies the DB default value which is needed for
@@ -148,7 +149,7 @@ class Permission extends DataObject implements TemplateGlobalProvider
      * Flush the permission cache, for example if you have edited group membership or a permission record.
      * @todo Call this whenever Group_Members is added to or removed from
      */
-    public static function flush_permission_cache()
+    public static function reset()
     {
         self::$cache_permissions = array();
     }
@@ -711,7 +712,7 @@ class Permission extends DataObject implements TemplateGlobalProvider
         parent::onBeforeWrite();
 
         // Just in case we've altered someone's permissions
-        Permission::flush_permission_cache();
+        Permission::reset();
     }
 
     public static function get_template_global_variables()

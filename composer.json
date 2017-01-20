@@ -25,9 +25,9 @@
     "silverstripe/assets": "^1@dev",
     "swiftmailer/swiftmailer": "~5.4",
     "symfony/cache": "^3.3@dev",
-    "symfony/config": "^2.8",
+    "symfony/config": "^3.2",
     "symfony/translation": "^2.8",
-    "symfony/yaml": "~2.7",
+    "symfony/yaml": "~3.2",
     "vlucas/phpdotenv": "^2.4",
 
     "php": ">=5.6.0",
@@ -44,9 +44,8 @@
   "require-dev": {
     "phpunit/phpunit": "^5.7",
     "silverstripe/versioned": "^1.0@dev",
-    "silverstripe/behat-extension": "^2.1.0",
+    "silverstripe/behat-extension": "^3",
     "silverstripe/serve": "dev-master",
-    "silverstripe/testsession": "^2.0.0-alpha3",
     "se/selenium-server-standalone": "2.41.0"
   },
   "extra": {
@@ -72,13 +71,13 @@
       "SilverStripe\\Security\\": "src/Security/",
       "SilverStripe\\Security\\Tests\\": "tests/php/Security/",
       "SilverStripe\\View\\": "src/View/",
-      "SilverStripe\\View\\Tests\\": "tests/php/View/"
+      "SilverStripe\\View\\Tests\\": "tests/php/View/",
+      "SilverStripe\\Framework\\Tests\\Behaviour\\": "tests/behat/src/"
     },
     "files": [
       "src/Core/Constants.php",
       "src/Dev/PhpUnitShim.php"
-    ],
-    "classmap": ["tests/behat/features/bootstrap"]
+    ]
   },
   "include-path": [
       "src/",
