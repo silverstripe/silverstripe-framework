@@ -58,6 +58,8 @@ abstract class SearchFilter extends Object
      */
     protected $relation;
 
+    protected $aggregate;
+
     /**
      * @param string $fullName Determines the name of the field, as well as the searched database
      *  column. Can contain a relation name in dot notation, which will automatically join
@@ -73,6 +75,7 @@ abstract class SearchFilter extends Object
 
         // sets $this->name and $this->relation
         $this->addRelation($fullName);
+        $this->addAggregate($fullName);
         $this->value = $value;
         $this->setModifiers($modifiers);
     }
@@ -92,6 +95,23 @@ abstract class SearchFilter extends Object
         } else {
             $this->name = $name;
         }
+    }
+
+
+    protected function addAggregate($name)
+    {
+        if(!$this->relation) {
+        	return;
+        }
+
+        if(!preg_match('/([A-Za-z]+)\((?:([A-Za-z_*][A-Za-z0-9_]*))?\)$/', $name, $matches)) {
+        	return;
+        }
+
+        $this->aggregate = [
+        	'function' => strtoupper($matches[1]),
+        	'column' => isset($matches[2]) ? $matches[2] : null
+        ];
     }
 
     /**
@@ -217,15 +237,42 @@ abstract class SearchFilter extends Object
         }
 
         // Ensure that we're dealing with a DataObject.
-        if (!is_subclass_of($this->model, 'SilverStripe\\ORM\\DataObject')) {
+        if (!is_subclass_of($this->model, DataObject::class)) {
             throw new InvalidArgumentException(
                 "Model supplied to " . get_class($this) . " should be an instance of DataObject."
             );
         }
+		$schema = DataObject::getSchema();
+        
+        if($this->aggregate) {
+        	$column = $this->aggregate['column'];
+        	$function = $this->aggregate['function'];
+
+        	$table = $column ? 
+        		$schema->tableForField($this->model, $column) :
+        		$schema->baseDataTable($this->model);
+
+        	if(!$table) {
+        		throw new InvalidArgumentException(sprintf(
+        			'Invalid column %s for aggregate function %s on %s',
+        			$column,
+        			$function,
+        			$this->model
+        		));
+        	}        	
+	    	return sprintf(
+	    		'%s("%s".%s)',
+	    		$function,
+	    		$table,
+	    		$column ? '"$column"' : '"ID"'
+	    	);
+        }
+
 
         // Find table this field belongs to
-        $table = DataObject::getSchema()->tableForField($this->model, $this->name);
+        $table = $schema->tableForField($this->model, $this->name);
         if (!$table) {
+
             // fallback to the provided name in the event of a joined column
             // name (as the candidate class doesn't check joined records)
             $parts = explode('.', $this->fullName);
@@ -248,6 +295,16 @@ abstract class SearchFilter extends Object
         $dbField = singleton($this->model)->dbObject($this->name);
         $dbField->setValue($this->value);
         return $dbField->RAW();
+    }
+
+    public function applyAggregate(DataQuery $query, $having)
+    {
+    	$schema = DataObject::getSchema();
+    	$baseTable = $schema->baseDataTable($query->dataClass());
+    	
+    	return $query
+        	->having($having)
+        	->groupby("{$baseTable}.ID");    	
     }
 
     /**

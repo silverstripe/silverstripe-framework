@@ -55,6 +55,13 @@ class ExactMatchFilter extends SearchFilter
         $field = $this->getDbName();
         $value = $this->getValue();
 
+        if($this->aggregate) {        	
+        	return $this->applyAggregate(
+        		$query,
+        		sprintf('%s = %s', $field, $value)
+        	);
+        }
+
         // Null comparison check
         if ($value === null) {
             $where = DB::get_conn()->nullCheckClause($field, $inclusive);
