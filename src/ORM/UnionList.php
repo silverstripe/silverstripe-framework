@@ -13,12 +13,22 @@ class UnionList extends ViewableData implements SS_List
 {
     protected $lists = array();
 
+    /**
+     * Create a new UnionList.
+     *
+     * @param array $lists - Lists to hold
+     */
     public function __construct(array $lists = array())
     {
         $this->lists = array_values($lists);
         parent::__construct();
     }
 
+    /**
+     * Return the total number of items in each SS_List.
+     *
+     * @return int
+     */
     public function count()
     {
         $count = 0;
@@ -28,11 +38,21 @@ class UnionList extends ViewableData implements SS_List
         return $count;
     }
 
+     /**
+     * Returns true if one of the SS_List's have an item.
+     *
+     * @return bool
+     */
     public function exists()
     {
         return $this->count() > 0;
     }
 
+    /**
+     * Iterate over each SS_List, one after the other.
+     *
+     * @return ArrayIterator
+     */
     public function getIterator()
     {
         foreach ($this->lists as $i => $list) {
@@ -42,6 +62,11 @@ class UnionList extends ViewableData implements SS_List
         }
     }
 
+    /**
+     * Get array of each record in each SS_List.
+     *
+     * @return array
+     */
     public function toArray()
     {
         $result = array();
@@ -53,6 +78,12 @@ class UnionList extends ViewableData implements SS_List
         return $result;
     }
 
+    /**
+     * Walks the list using the specified callback
+     *
+     * @param callable $callback
+     * @return $this
+     */
     public function each($callback)
     {
         foreach ($this as $item) {
@@ -71,6 +102,11 @@ class UnionList extends ViewableData implements SS_List
         return $val;
     }
 
+    /**
+     * Return this list as an array and every object it as an sub array as well
+     *
+     * @return array
+     */
     public function toNestedArray()
     {
         $result = array();
@@ -90,18 +126,34 @@ class UnionList extends ViewableData implements SS_List
         return $result;
     }
 
+    /**
+     * Get first item in the first SS_List.
+     *
+     * @return array
+     */
     public function first()
     {
         $list = isset($this->lists[0]) ? $this->lists[0] : null;
         return ($list) ? $list->first() : null;
     }
 
+    /**
+     * Get last item in the last SS_List.
+     *
+     * @return array
+     */
     public function last()
     {
         $list = end($this->lists);
         return ($list) ? $list->last() : null;
     }
 
+     /**
+     * Returns an array of a single field value for each item in each list.
+     *
+     * @param string $colName
+     * @return array
+     */
     public function column($colName = "ID")
     {
         $result = array();
