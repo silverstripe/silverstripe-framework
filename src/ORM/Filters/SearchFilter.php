@@ -58,6 +58,15 @@ abstract class SearchFilter extends Object
      */
     protected $relation;
 
+    /**
+     * An array of data about an aggregate column being used
+     * ex:
+     * [
+     * 	'function' => 'COUNT',
+     * 	'column' => 'ID'
+     * ]
+     * @var array
+     */
     protected $aggregate;
 
     /**
@@ -97,7 +106,11 @@ abstract class SearchFilter extends Object
         }
     }
 
-
+    /**
+     * Parses the name for any aggregate functions and stores them in the $aggregate array
+     * 
+     * @param string $name
+     */
     protected function addAggregate($name)
     {
         if(!$this->relation) {
@@ -264,7 +277,7 @@ abstract class SearchFilter extends Object
 	    		'%s("%s".%s)',
 	    		$function,
 	    		$table,
-	    		$column ? '"$column"' : '"ID"'
+	    		$column ? "\"$column\"" : '"ID"'
 	    	);
         }
 
@@ -291,12 +304,23 @@ abstract class SearchFilter extends Object
     {
         // SRM: This code finds the table where the field named $this->name lives
         // Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
+        
+        if($this->aggregate) {
+        	return intval($this->value);
+        }
+
         /** @var DBField $dbField */
         $dbField = singleton($this->model)->dbObject($this->name);
         $dbField->setValue($this->value);
         return $dbField->RAW();
     }
 
+    /**
+     * Given an escaped HAVING clause, add it along with the appropriate GROUP BY clause
+     * @param  DataQuery $query  
+     * @param  string    $having
+     * @return DataQuery
+     */
     public function applyAggregate(DataQuery $query, $having)
     {
     	$schema = DataObject::getSchema();

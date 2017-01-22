@@ -44,9 +44,11 @@ abstract class ComparisonFilter extends SearchFilter
         $this->model = $query->applyRelation($this->relation);
 
         $predicate = sprintf("%s %s ?", $this->getDbName(), $this->getOperator());
-        return $query->where(array(
-            $predicate => $this->getDbFormattedValue()
-        ));
+        $clause = [$predicate => $this->getDbFormattedValue()];
+
+        return $this->aggregate ?
+        	$this->applyAggregate($query, $clause) :
+        	$query->where($clause);
     }
 
     /**
@@ -61,9 +63,11 @@ abstract class ComparisonFilter extends SearchFilter
         $this->model = $query->applyRelation($this->relation);
 
         $predicate = sprintf("%s %s ?", $this->getDbName(), $this->getInverseOperator());
-        return $query->where(array(
-            $predicate => $this->getDbFormattedValue()
-        ));
+        $clause = [$predicate => $this->getDbFormattedValue()];
+
+        return $this->aggregate ?
+        	$this->applyAggregate($query, $clause) :
+        	$query->where($clause);
     }
 
     public function isEmpty()

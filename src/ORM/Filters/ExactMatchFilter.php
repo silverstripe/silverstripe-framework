@@ -55,13 +55,6 @@ class ExactMatchFilter extends SearchFilter
         $field = $this->getDbName();
         $value = $this->getValue();
 
-        if($this->aggregate) {        	
-        	return $this->applyAggregate(
-        		$query,
-        		sprintf('%s = %s', $field, $value)
-        	);
-        }
-
         // Null comparison check
         if ($value === null) {
             $where = DB::get_conn()->nullCheckClause($field, $inclusive);
@@ -82,7 +75,12 @@ class ExactMatchFilter extends SearchFilter
             $nullClause = DB::get_conn()->nullCheckClause($field, true);
             $where .= " OR {$nullClause}";
         }
-        return $query->where(array($where => $value));
+
+        $clause = [$where => $value];
+        
+        return $this->aggregate ?
+        	$this->applyAggregate($query, $clause) :
+        	$query->where($clause);
     }
 
     /**
@@ -196,7 +194,11 @@ class ExactMatchFilter extends SearchFilter
             }
         }
 
-        return $query->where(array($predicate => $values));
+        $clause = [$predicate => $values];
+
+        return $this->aggregate ? 
+        	$this->applyAggregate($query, $clause) :
+        	$query->where($clause);
     }
 
     public function isEmpty()
