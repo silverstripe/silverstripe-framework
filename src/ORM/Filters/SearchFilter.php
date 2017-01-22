@@ -117,7 +117,13 @@ abstract class SearchFilter extends Object
         	return;
         }
 
-        if(!preg_match('/([A-Za-z]+)\((?:([A-Za-z_*][A-Za-z0-9_]*))?\)$/', $name, $matches)) {
+        if(!preg_match('/([A-Za-z]+)\(\s*(?:([A-Za-z_*][A-Za-z0-9_]*))?\s*\)$/', $name, $matches)) {
+        	if(stristr($name, '(') !== false) {
+        		throw new InvalidArgumentException(sprintf(
+        			'Malformed aggregate filter %s',
+        			$name
+        		));
+        	}
         	return;
         }
 

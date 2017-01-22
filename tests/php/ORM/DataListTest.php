@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
@@ -1221,8 +1222,48 @@ class DataListTest extends SapphireTest
         $this->assertSQLNotContains('"DataObjectTest_Fan"."Email" IS NOT NULL', $items9->sql());
     }
 
-    public function testAggregateFilters()
+    public function testAggregateDBName()
     {
+    	$filter = new ExactMatchFilter(
+    		'Comments.Count()'
+    	);
+    	$filter->setModel(new DataObjectTest\Team());
+    	$this->assertEquals('COUNT("DataObjectTest_Team"."ID")', $filter->getDBName());
+
+    	foreach(['Comments.Max(ID)', 'Comments.Max( ID )', 'Comments.Max(  ID)'] as $name) {
+	    	$filter = new ExactMatchFilter($name);
+	    	$filter->setModel(new DataObjectTest\Team());
+	    	$this->assertEquals('MAX("DataObjectTest_Team"."ID")', $filter->getDBName());
+
+    	}
+    }
+
+    public function testAggregateFilterExceptions()
+    {
+		$ex = null;
+		try {
+			$filter = new ExactMatchFilter('Comments.Max( This will not parse! )');
+		} catch(\Exception $e) {
+			$ex = $e;
+		}
+		$this->assertInstanceOf(\InvalidArgumentException::class, $e);
+		$this->assertRegExp('/Malformed/', $e->getMessage());
+
+
+		$filter = new ExactMatchFilter('Comments.Max(NonExistentColumn)');
+		$filter->setModel(new DataObjectTest\Team());
+		$ex = null;
+		try {
+			$name = $filter->getDBName();
+		} catch(\Exception $e) {
+			$ex = $e;
+		}
+		$this->assertInstanceOf(\InvalidArgumentException::class, $e);
+		$this->assertRegExp('/Invalid column/', $e->getMessage());
+    }
+
+    public function testAggregateFilters()
+    {    	
     	$teams = Team::get()->filter('Comments.Count()', 2);
     	$team1 = $this->objFromFixture(Team::class, 'team1');
 
@@ -1280,8 +1321,6 @@ class DataListTest extends SapphireTest
     	$teams = Team::get()->filter('Comments.Avg(ID):LessThan', 2);
     	$this->assertEquals(1, $teams->count());
     	$this->assertEquals(1, $teams->first()->ID);
-
-
     }
 
     /**
