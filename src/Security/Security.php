@@ -547,7 +547,7 @@ class Security extends Controller implements TemplateGlobalProvider
         // Disable ID-based caching  of the log-in page by making it a random number
         $tmpPage->ID = -1 * rand(1, 10000000);
 
-        $controllerClass = $tmpPage->getControllerName();
+        $controllerClass = $tmpPage->getFrontendControllerName();
         $controller = $controllerClass::create($tmpPage);
         $controller->setDataModel($this->model);
         $controller->doInit();
