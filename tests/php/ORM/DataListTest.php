@@ -1246,8 +1246,8 @@ class DataListTest extends SapphireTest
 		} catch(\Exception $e) {
 			$ex = $e;
 		}
-		$this->assertInstanceOf(\InvalidArgumentException::class, $e);
-		$this->assertRegExp('/Malformed/', $e->getMessage());
+		$this->assertInstanceOf(\InvalidArgumentException::class, $ex);
+		$this->assertRegExp('/Malformed/', $ex->getMessage());
 
 
 		$filter = new ExactMatchFilter('Comments.Max(NonExistentColumn)');
@@ -1258,68 +1258,91 @@ class DataListTest extends SapphireTest
 		} catch(\Exception $e) {
 			$ex = $e;
 		}
-		$this->assertInstanceOf(\InvalidArgumentException::class, $e);
-		$this->assertRegExp('/Invalid column/', $e->getMessage());
+		$this->assertInstanceOf(\InvalidArgumentException::class, $ex);
+		$this->assertRegExp('/Invalid column/', $ex->getMessage());
     }
 
     public function testAggregateFilters()
     {    	
     	$teams = Team::get()->filter('Comments.Count()', 2);
+    	
     	$team1 = $this->objFromFixture(Team::class, 'team1');
+    	$team2 = $this->objFromFixture(Team::class, 'team2');
+    	$team3 = $this->objFromFixture(Team::class, 'team3');
+    	$team4 = $this->objFromFixture(SubTeam::class, 'subteam1');
+    	$team5 = $this->objFromFixture(SubTeam::class, 'subteam2_with_player_relation');
+    	$team6 = $this->objFromFixture(SubTeam::class, 'subteam3_with_empty_fields');
 
-    	$this->assertEquals(1, $teams->count());
+    	$this->assertCount(1, $teams);
     	$this->assertEquals($team1->ID, $teams->first()->ID);
 
     	$teams = Team::get()->filter('Comments.Count()', [1,2]);
     	
-    	$this->assertEquals(2, $teams->count());
-    	$this->assertEquals([], array_diff([1,2], $teams->column('ID')));
+    	$this->assertCount(2, $teams);
+    	foreach([$team1, $team2] as $expectedTeam) {
+    		$this->assertContains($expectedTeam->ID, $teams->column('ID'));
+    	}
 
     	$teams = Team::get()->filter('Comments.Count():GreaterThan', 1);
 
-    	$this->assertEquals(1, $teams->count());
-    	$this->assertEquals([1], $teams->column('ID'));
+    	$this->assertCount(1, $teams);
+    	$this->assertContains(
+    		$this->objFromFixture(Team::class, 'team1')->ID,
+    		$teams->column('ID')
+    	);
 
     	$teams = Team::get()->filter('Comments.Count():LessThan', 2);
 
-    	$this->assertEquals(5, $teams->count());
-    	$this->assertEquals([], array_diff([2,3,4,5,6], $teams->column('ID')));
+    	$this->assertCount(5, $teams);
+    	foreach([$team2, $team3, $team4, $team5, $team6] as $expectedTeam) {
+    		$this->assertContains($expectedTeam->ID, $teams->column('ID'));
+    	}
 
     	$teams = Team::get()->filter('Comments.Count():GreaterThanOrEqual', 1);
 
-    	$this->assertEquals(2, $teams->count());
-    	$this->assertEquals([1,2], $teams->column('ID'));
+    	$this->assertCount(2, $teams);
+    	foreach([$team1, $team2] as $expectedTeam) {
+    		$this->assertContains($expectedTeam->ID, $teams->column('ID'));
+    	}
 
     	$teams = Team::get()->filter('Comments.Count():LessThanOrEqual', 1);
 
-    	$this->assertEquals(5, $teams->count());
-    	$this->assertEquals([], array_diff([2,3,4,5,6], $teams->column('ID')));
+    	$this->assertCount(5, $teams);
+    	foreach([$team2, $team3, $team4, $team5, $team6] as $expectedTeam) {
+    		$this->assertContains($expectedTeam->ID, $teams->column('ID'));
+    	}
 
     	$teams = Team::get()->filter('Comments.Max(ID)', 2);
-    	$this->assertEquals(1, $teams->count());
+    	$this->assertCount(1, $teams);
     	$this->assertEquals(1, $teams->first()->ID);
 
     	$teams = Team::get()->filter('Comments.Min(ID)', 1);
-    	$this->assertEquals(1, $teams->count());
+    	$this->assertCount(1, $teams);
     	$this->assertEquals(1, $teams->first()->ID);
 
     	$teams = Team::get()->filter('Comments.Max(ID):GreaterThan', 1);
-    	$this->assertEquals(2, $teams->count());
-    	$this->assertEquals([1,2], $teams->column('ID'));
+    	$this->assertCount(2, $teams);
+    	foreach([$team1, $team2] as $expectedTeam) {
+    		$this->assertContains($expectedTeam->ID, $teams->column('ID'));
+    	}
 
     	$teams = Team::get()->filter('Comments.Sum(ID)', 3);
-    	$this->assertEquals(2, $teams->count());
-    	$this->assertEquals([1,2], $teams->column('ID'));
+    	$this->assertCount(2, $teams);
+    	foreach([$team1, $team2] as $expectedTeam) {
+    		$this->assertContains($expectedTeam->ID, $teams->column('ID'));
+    	}
 
     	$teams = Team::get()->filter('Comments.Sum(ID):LessThan', 1);
-    	$this->assertEquals(0, $teams->count());
+    	$this->assertCount(0, $teams);
 
     	$teams = Team::get()->filter('Comments.Avg(ID):GreaterThan', 1);
-    	$this->assertEquals(2, $teams->count());
-    	$this->assertEquals([1,2], $teams->column('ID'));
-    	
+    	$this->assertCount(2, $teams);
+    	foreach([$team1, $team2] as $expectedTeam) {
+    		$this->assertContains($expectedTeam->ID, $teams->column('ID'));
+    	}
+
     	$teams = Team::get()->filter('Comments.Avg(ID):LessThan', 2);
-    	$this->assertEquals(1, $teams->count());
+    	$this->assertCount(1, $teams);
     	$this->assertEquals(1, $teams->first()->ID);
     }
 
