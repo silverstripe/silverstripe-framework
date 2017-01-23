@@ -81,7 +81,11 @@ class CsvBulkLoader extends BulkLoader {
 				@unlink($file);
 			}
 		} catch (Exception $e) {
-			print "Failed to parse {$last}\n";
+			$failedMessage = sprintf("Failed to parse %s", $last);
+			if (Director::isDev()) {
+				$failedMessage = sprintf($failedMessage . " because %s", $e->getMessage());
+			}
+			print $failedMessage . PHP_EOL;
 		}
 
 		return $result;
