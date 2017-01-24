@@ -62,20 +62,24 @@ see [Using development versions](#using-development-versions).
 
 ## Adding modules to your project
 
-Composer isn't only used to download SilverStripe CMS, it can also be used to manage all SilverStripe modules.  Installing a module can be done with the following command:
+Composer isn't only used to download SilverStripe CMS, it is also used to manage all SilverStripe modules. Installing a module can be done with the following command:
 
 ```
-composer require "silverstripe/forum:*"
+composer require silverstripe/forum
 ```
 
-This will install the forum module in the latest compatible version. You can also omit the `:*` if you simply want the latest compatible version of the module.
+This will install the forum module in the latest compatible version. If you know the specific version you want to install already (such as `^0.8`), you can add it after the package name. For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key):
+
+```
+composer require silverstripe/forum ^0.8
+```
 
 By default, Composer updates other existing modules (like `framework` and `cms`),
 and installs "dev" dependencies like PHPUnit. In case you don't need those dependencies,
 use the following command instead:
 
 ```
-composer require --no-update "silverstripe/forum:*"
+composer require --no-update silverstripe/forum
 composer update --no-dev
 ```
 
@@ -88,10 +92,8 @@ composer search silverstripe
 
 This will return a list of package names of the forum `vendor/package`.  If you prefer, you can search for packages on [packagist.org](https://packagist.org/search/?q=silverstripe).
 
-The second part after the colon, `*`, is a version string.  `*` is a good default: it will give you the latest version that works with the other modules you have installed. Alternatively you can specify a specific version, or a constraint such as `^4.0`. For more information, read the [Composer documentation](http://getcomposer.org/doc/01-basic-usage.md#the-require-key).
-
 <div class="warning" markdown="1">
-`master` is not a legal version string - it's a branch name. These are different things. The version string that would get you the branch is `dev-master`. The version string that would get you a numeric branch is a little different. The version string for the `3` branch is `3.x-dev`.
+**Version constraints:** `master` is not a legal version string - it's a branch name. These are different things. The version string that would get you the branch is `dev-master`. The version string that would get you a numeric branch is a little different. The version string for the `4` branch is `4.x-dev`.
 </div>
 
 ## Updating dependencies
@@ -117,7 +119,7 @@ So your deployment process, as it relates to Composer, should be as follows:
  * Run `composer update` on your development version before you start whatever testing you have planned. Perform all the necessary testing.
  * Check `composer.lock` into your repository.
  * Deploy your project code base, using the deployment tool of your choice.
- * Run `composer install --no-dev -o` on your production version.
+ * Run `composer install --no-dev -o` on your production version. In this command, the `--no-dev` command tells Composer not to install your development-only dependencies, and `-o` is an alias for `--optimise-autoloader`, which will convert your PSR-0 and PSR-4 autoloader definitions into a classmap to improve the speed of the autoloader.
 
 ## Composer managed modules, Git and .gitignore
 
@@ -177,12 +179,11 @@ Full example of composer.json with the SSAutoGitIgnore installed and enabled
 		"php": ">=5.5.0",
 		"silverstripe/cms": "^4.0",
 		"silverstripe/framework": "^4.0",
-		"silverstripe-themes/simple": "*"
+		"silverstripe-themes/simple": "~3.2.0"
 	},
 	"require-dev": {
-		"silverstripe/compass": "*",
-		"silverstripe/docsviewer": "*",
-		"gdmedia/ss-auto-git-ignore": "*"
+		"silverstripe/docsviewer": "^3.0",
+		"gdmedia/ss-auto-git-ignore": "^1.0"
 	},
 	"scripts": {
 		"post-update-cmd": "GDM\\SSAutoGitIgnore\\UpdateScript::Go"
@@ -241,11 +242,10 @@ To remove dependencies, or if you prefer seeing all your dependencies in a text 
 		"php": ">=5.5.0",
 		"silverstripe/cms": "^4.0",
 		"silverstripe/framework": "^4.0",
-		"silverstripe-themes/simple": "*"
+		"silverstripe-themes/simple": "~3.2.0"
 	},
 	"require-dev": {
-		"silverstripe/compass": "*",
-		"silverstripe/docsviewer": "*"
+		"silverstripe/docsviewer": "^3.0"
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true
@@ -344,7 +344,7 @@ Open `composer.json`, and find the module's `require`. Then put `as (core versio
 		"php": ">=5.5.0",
 		"silverstripe/cms": "3.5.1.2",
 		"silverstripe/framework": "dev-myproj as 4.0.x-dev",
-		"silverstripe-themes/simple": "*"
+		"silverstripe-themes/simple": "~3.2.0"
 	}
 }
 ```
