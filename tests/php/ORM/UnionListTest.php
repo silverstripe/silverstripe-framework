@@ -23,6 +23,11 @@ class UnionListTest extends SapphireTest
     // Borrow the model from DataObjectTest
     protected static $fixture_file = 'DataObjectTest.yml';
 
+    /**
+     * @var UnionList
+     */
+    protected $unionList = null;
+
     protected function getExtraDataObjects()
     {
         return array_merge(
@@ -31,33 +36,9 @@ class UnionListTest extends SapphireTest
         );
     }
 
-    /*public function testFirst()
+    public function setUp()
     {
-    }*/
-
-    /*public function testLast()
-    {
-    }*/
-
-    public function testColumn()
-    {
-        $unionList = $this->createUnionList();
-        $expected = [
-            0 => 'test obj 1',
-            1 => 'test obj 2',
-            2 => 'test obj 1',
-            3 => 'test obj 2',
-        ];
-        $this->assertEquals($expected, $unionList->column('Name'));
-    }
-
-    public function testCount()
-    {
-        $unionList = $this->createUnionList();
-        $this->assertEquals(4, $unionList->count());
-    }
-
-    protected function createUnionList() {
+        parent::setUp();
         // create an object to test with
         $obj1 = new ValidatedObject();
         $obj1->Name = 'test obj 1';
@@ -72,7 +53,32 @@ class UnionListTest extends SapphireTest
         $list1 = ValidatedObject::get()->filter(array('Name' => 'test obj 1'));
         $list2 = ValidatedObject::get()->filter(array('Name' => 'test obj 2'));
         $list3 = ValidatedObject::get();
-        $unionList = UnionList::create(array($list1, $list2, $list3));
-        return $unionList;
+        $this->unionList = UnionList::create(array($list1, $list2, $list3));
+    }
+
+    /*public function testFirst()
+    {
+    }*/
+
+    /*public function testLast()
+    {
+    }*/
+
+    public function testColumn()
+    {
+        $unionList = clone $this->unionList;
+        $expected = [
+            0 => 'test obj 1',
+            1 => 'test obj 2',
+            2 => 'test obj 1',
+            3 => 'test obj 2',
+        ];
+        $this->assertEquals($expected, $unionList->column('Name'));
+    }
+
+    public function testCount()
+    {
+        $unionList = clone $this->unionList;
+        $this->assertEquals(4, $unionList->count());
     }
 }
