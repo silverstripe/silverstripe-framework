@@ -89,7 +89,7 @@ class LeftAndMain extends Controller implements PermissionProvider
 
     /**
      * @config
-     * @var string
+     * @var string Used by {@link AdminRootController} to augment Director route rules for sub-classes of LeftAndMain
      */
     private static $url_rule = '/$Action/$ID/$OtherID';
 
@@ -1605,9 +1605,9 @@ class LeftAndMain extends Controller implements PermissionProvider
     }
 
     /**
-     * Calls {@link SiteTree->getCMSFields()}
+     * Calls {@link SiteTree->getCMSFields()} by default to determine the form fields to display.
      *
-     * @param Int $id
+     * @param int $id
      * @param FieldList $fields
      * @return Form
      */
