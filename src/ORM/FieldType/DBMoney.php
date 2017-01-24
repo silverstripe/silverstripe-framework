@@ -103,10 +103,12 @@ class DBMoney extends DBComposite
     /**
      * @param string $currency
      * @param bool $markChanged
+     * @return $this
      */
     public function setCurrency($currency, $markChanged = true)
     {
         $this->setField('Currency', $currency, $markChanged);
+        return $this;
     }
 
     /**
@@ -120,10 +122,12 @@ class DBMoney extends DBComposite
     /**
      * @param float $amount
      * @param bool $markChanged
+     * @return $this
      */
     public function setAmount($amount, $markChanged = true)
     {
         $this->setField('Amount', (float)$amount, $markChanged);
+        return $this;
     }
 
     /**
@@ -145,11 +149,13 @@ class DBMoney extends DBComposite
 
     /**
      * @param string $locale
+     * @return $this
      */
     public function setLocale($locale)
     {
         $this->locale = $locale;
         $this->currencyLib->setLocale($locale);
+        return $this;
     }
 
     /**
@@ -214,10 +220,12 @@ class DBMoney extends DBComposite
 
     /**
      * @param array $arr
+     * @return $this
      */
     public function setAllowedCurrencies($arr)
     {
         $this->allowedCurrencies = $arr;
+        return $this;
     }
 
     /**
