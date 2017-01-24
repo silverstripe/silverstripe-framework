@@ -5,6 +5,7 @@ namespace SilverStripe\Assets\Flysystem;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Config as FlysystemConfig;
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
@@ -43,8 +44,10 @@ class AssetAdapter extends Local
 
     public function __construct($root = null, $writeFlags = LOCK_EX, $linkHandling = self::DISALLOW_LINKS)
     {
-        // Get root path
+        // Get root path, and ensure that this exists and is safe
         $root = $this->findRoot($root);
+        Filesystem::makeFolder($root);
+        $root = realpath($root);
 
         // Override permissions with config
         $permissions = Config::inst()->get(get_class($this), 'file_permissions');

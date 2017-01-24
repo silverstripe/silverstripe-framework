@@ -7,6 +7,13 @@ use SilverStripe\Control\Director;
 
 class PublicAssetAdapter extends AssetAdapter implements PublicAdapter
 {
+    /**
+     * Prefix between the root url and base of the assets folder
+     * Used for generating public urls
+     *
+     * @var string
+     */
+    protected $parentUrlPrefix = null;
 
     /**
      * Server specific configuration necessary to block http traffic to a local folder
@@ -26,11 +33,18 @@ class PublicAssetAdapter extends AssetAdapter implements PublicAdapter
     protected function findRoot($root)
     {
         if ($root) {
-            return parent::findRoot($root);
+            $path = parent::findRoot($root);
+        } else {
+            $path = ASSETS_PATH;
         }
 
-        // Empty root will set the path to assets
-        return ASSETS_PATH;
+        // Detect segment between root directory and assets root
+        if (stripos($path, BASE_PATH) === 0) {
+            $this->parentUrlPrefix = substr($path, strlen(BASE_PATH));
+        } else {
+            $this->parentUrlPrefix = ASSETS_DIR;
+        }
+        return $path;
     }
 
     /**
@@ -41,15 +55,6 @@ class PublicAssetAdapter extends AssetAdapter implements PublicAdapter
      */
     public function getPublicUrl($path)
     {
-        $rootPath = realpath(BASE_PATH);
-        $filesPath = realpath($this->pathPrefix);
-
-        if (stripos($filesPath, $rootPath) === 0) {
-            $dir = substr($filesPath, strlen($rootPath));
-            return Controller::join_links(Director::baseURL(), $dir, $path);
-        }
-
-        // File outside of webroot can't be used
-        return null;
+        return Controller::join_links(Director::baseURL(), $this->parentUrlPrefix, $path);
     }
 }
