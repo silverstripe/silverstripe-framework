@@ -2,19 +2,9 @@
 
 namespace SilverStripe\ORM\Tests;
 
-use SilverStripe\Dev\Debug;
-use SilverStripe\Core\Convert;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\UnionList;
-use SilverStripe\ORM\DB;
-use SilverStripe\ORM\Filterable;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
-use SilverStripe\ORM\Tests\DataObjectTest\Fan;
-use SilverStripe\ORM\Tests\DataObjectTest\Player;
-use SilverStripe\ORM\Tests\DataObjectTest\Sortable;
-use SilverStripe\ORM\Tests\DataObjectTest\SubTeam;
-use SilverStripe\ORM\Tests\DataObjectTest\Team;
-use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
 use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
 
 class UnionListTest extends SapphireTest
@@ -49,20 +39,38 @@ class UnionListTest extends SapphireTest
         $obj2->Name = 'test obj 2';
         $obj2->write();
         $this->assertTrue($obj2->isInDB());
+
+        $obj3 = new ValidatedObject();
+        $obj3->Name = 'test obj 3';
+        $obj3->write();
+        $this->assertTrue($obj3->isInDB());
+
+        $obj4 = new ValidatedObject();
+        $obj4->Name = 'test obj 4';
+        $obj4->write();
+        $this->assertTrue($obj4->isInDB());
        
         $list1 = ValidatedObject::get()->filter(array('Name' => 'test obj 1'));
         $list2 = ValidatedObject::get()->filter(array('Name' => 'test obj 2'));
-        $list3 = ValidatedObject::get();
+        $list3 = new ArrayList(array($obj3, $obj4));
         $this->unionList = UnionList::create(array($list1, $list2, $list3));
     }
 
-    /*public function testFirst()
+    public function testFirst()
     {
-    }*/
+        $unionList = clone $this->unionList;
+        $obj1 = $unionList->first();
+        $this->assertTrue($obj1->isInDB());
+        $this->assertEquals('test obj 1', $obj1->Title);
+    }
 
-    /*public function testLast()
+    public function testLast()
     {
-    }*/
+        $unionList = clone $this->unionList;
+        $obj1 = $unionList->first();
+        $this->assertTrue($obj1->isInDB());
+        $this->assertEquals('test obj 4', $obj1->Title);
+    }
 
     public function testColumn()
     {
@@ -70,8 +78,8 @@ class UnionListTest extends SapphireTest
         $expected = [
             0 => 'test obj 1',
             1 => 'test obj 2',
-            2 => 'test obj 1',
-            3 => 'test obj 2',
+            2 => 'test obj 3',
+            3 => 'test obj 4',
         ];
         $this->assertEquals($expected, $unionList->column('Name'));
     }
