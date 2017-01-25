@@ -67,6 +67,7 @@ class YamlReader implements Reader
                 }
             }
         }
+        ksort($messages);
         return $messages;
     }
 }

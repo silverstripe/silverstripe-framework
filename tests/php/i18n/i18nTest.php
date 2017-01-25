@@ -49,6 +49,8 @@ class i18nTest extends SapphireTest
                 'fr_FR',
                 'de_AT',
                 'de_DE',
+                'ja_JP',
+                'pl_PL',
                 'es_AR',
                 'es_ES',
                 'mi_NZ',
@@ -147,6 +149,7 @@ class i18nTest extends SapphireTest
     public function testTemplateTranslation()
     {
         $oldLocale = i18n::get_locale();
+        i18n::config()->update('missing_default_warning', false);
 
         /** @var SymfonyMessageProvider $provider */
         $provider = Injector::inst()->get(MessageProvider::class);
@@ -322,6 +325,8 @@ class i18nTest extends SapphireTest
      * */
     public function testNewTemplateTranslation()
     {
+        i18n::config()->update('missing_default_warning', false);
+
         /** @var SymfonyMessageProvider $provider */
         $provider = Injector::inst()->get(MessageProvider::class);
         $provider->getTranslator()->addResource(
@@ -429,6 +434,46 @@ class i18nTest extends SapphireTest
             'Entity with "Double Quotes" (fr)',
             i18n::_t('i18nTestModule.ENTITY', 'Entity with "Double Quotes"'),
             'Non-specific locales fall back to language-only localisations'
+        );
+    }
+
+    public function pluralisationDataProvider()
+    {
+        return [
+            // English - 2 plural forms
+            ['en_NZ', 0, '0 months'],
+            ['en_NZ', 1, 'A month'],
+            ['en_NZ', 2, '2 months'],
+            ['en_NZ', 5, '5 months'],
+            ['en_NZ', 10, '10 months'],
+            // Polish - 4 plural forms
+            ['pl_PL', 0, '0 miesięcy'],
+            ['pl_PL', 1, '1 miesiąc'],
+            ['pl_PL', 2, '2 miesiące'],
+            ['pl_PL', 5, '5 miesięcy'],
+            ['pl_PL', 10, '10 miesięcy'],
+            // Japanese - 1 plural form
+            ['ja_JP', 0, '0日'],
+            ['ja_JP', 1, '1日'],
+            ['ja_JP', 2, '2日'],
+            ['ja_JP', 5, '5日'],
+            ['ja_JP', 10, '10日'],
+        ];
+    }
+
+    /**
+     * @dataProvider pluralisationDataProvider()
+     * @param string $locale
+     * @param int $count
+     * @param string $expected
+     */
+    public function testPluralisation($locale, $count, $expected)
+    {
+        i18n::set_locale($locale);
+        $this->assertEquals(
+            $expected,
+            _t('Month.PLURALS', 'A month|{count} months', ['count' => $count]),
+            "Plural form in locale $locale with count $count should be $expected"
         );
     }
 

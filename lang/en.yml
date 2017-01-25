@@ -744,11 +744,11 @@ en:
       other: '{count} Permission Role Codes'
     SINGULARNAME: 'Permission Role Code'
   SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Remember Login Hashs'
+    PLURALNAME: 'Login Hashes'
     PLURALS:
-      one: 'A Remember Login Hash'
-      other: '{count} Remember Login Hashs'
-    SINGULARNAME: 'Remember Login Hash'
+      one: 'A Login Hash'
+      other: '{count} Login Hashes'
+    SINGULARNAME: 'Login Hash'
   SiteTree:
     TABMAIN: Main
   TableListField:

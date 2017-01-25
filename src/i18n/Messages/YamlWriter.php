@@ -3,12 +3,16 @@
 namespace SilverStripe\i18n\Messages;
 
 use SilverStripe\Assets\Filesystem;
+use SilverStripe\i18n\i18n;
 use Symfony\Component\Yaml\Dumper;
 use SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader;
 use LogicException;
 
 /**
  * Write yml files compatible with ModuleYamlLoader
+ *
+ * Note: YamlWriter may not correctly denormalise plural strings if writing outside of the
+ * default locale (en).
  *
  * @see ModuleYamlLoader
  */
@@ -69,28 +73,76 @@ class YamlWriter implements Writer
      */
     protected function denormaliseMessages($messages)
     {
+        // Sort prior to denormalisation
+        ksort($messages);
         $entities = [];
         foreach ($messages as $entity => $value) {
             // Skip un-namespaced keys
+            $value = $this->denormaliseValue($value);
+
+            // Non-nested key
             if (strstr($entity, '.') === false) {
                 $entities[$entity] = $value;
                 continue;
             }
-            $parts = explode('.', $entity);
-            $class = array_shift($parts);
 
-            // Ensure the `.ss` suffix gets added to the top level class rather than the key
-            if (count($parts) > 1 && reset($parts) === 'ss') {
-                $class .= '.ss';
-                array_shift($parts);
-            }
-            $key = implode('.', $parts);
+            // Get key nested within class
+            list($class, $key) = $this->getClassKey($entity);
             if (!isset($entities[$class])) {
                 $entities[$class] = [];
             }
+
             $entities[$class][$key] = $value;
         }
         return $entities;
+    }
+
+    /**
+     * Convert entities array format into yml-ready string / array
+     *
+     * @param array|string $value Input value
+     * @return array|string denormalised value
+     */
+    protected function denormaliseValue($value)
+    {
+        // Check plural form
+        $plurals = $this->getPluralForm($value);
+        if ($plurals) {
+            return $plurals;
+        }
+
+        // Non-plural non-array is already denormalised
+        if (!is_array($value)) {
+            return $value;
+        }
+
+        // Denormalise from default key
+        if (!empty($value['default'])) {
+            return $this->denormaliseValue($value['default']);
+        }
+
+        // No value
+        return null;
+    }
+
+    /**
+     * Get array-plural form for any value
+     *
+     * @param array|string $value
+     * @return array List of plural forms, or empty array if not plural
+     */
+    protected function getPluralForm($value)
+    {
+        // Strip non-plural keys away
+        if (is_array($value)) {
+            $forms = i18n::config()->get('plurals');
+            $forms = array_combine($forms, $forms);
+            return array_intersect_key($value, $forms);
+        }
+
+        // Parse from string
+        // Note: Risky outside of en locale.
+        return i18n::parse_plurals($value);
     }
 
     /**
@@ -107,5 +159,25 @@ class YamlWriter implements Writer
             $locale => $entities
         ], 99);
         return $content;
+    }
+
+    /**
+     * Determine class and key for a localisation entity
+     *
+     * @param string $entity
+     * @return array Two-length array with class and key as elements
+     */
+    protected function getClassKey($entity)
+    {
+        $parts = explode('.', $entity);
+        $class = array_shift($parts);
+
+        // Ensure the `.ss` suffix gets added to the top level class rather than the key
+        if (count($parts) > 1 && reset($parts) === 'ss') {
+            $class .= '.ss';
+            array_shift($parts);
+        }
+        $key = implode('.', $parts);
+        return array($class, $key);
     }
 }

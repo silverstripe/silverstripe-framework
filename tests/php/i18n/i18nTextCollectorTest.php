@@ -60,7 +60,10 @@ _t(
 PHP;
         $this->assertEquals(
             array(
-                'Test.CONCATENATED' => "Line 1 and Line '2' and Line \"3\"",
+                'Test.CONCATENATED' => [
+                    'default' => "Line 1 and Line '2' and Line \"3\"",
+                    'comment' => 'Comment'
+                ],
                 'Test.CONCATENATED2' => "Line \"4\" and Line 5"
             ),
             $c->collectFromCode($php, 'mymodule')
@@ -70,6 +73,8 @@ PHP;
     public function testCollectFromNewTemplateSyntaxUsingParserSubclass()
     {
         $c = i18nTextCollector::create();
+        $c->setWarnOnEmptyDefault(false);
+
         $html = <<<SS
         <% _t('Test.SINGLEQUOTE','Single Quote'); %>
 <%t i18nTestModule.NEWMETHODSIG "New _t method signature test" %>
@@ -78,6 +83,7 @@ PHP;
 <%t i18nTestModule.INJECTIONS_2 "Hello {name} {greeting}" is "context (ignored)" name="Steffen" greeting="Wilkommen" %>
 <%t i18nTestModule.INJECTIONS_3 name="Cat" greeting='meow' goodbye="meow" %>
 <%t i18nTestModule.INJECTIONS_4 name=\$absoluteBaseURL greeting=\$get_locale goodbye="global calls" %>
+<%t i18nTestModule.INJECTIONS_9 "An item|{count} items" is "Test Pluralisation" count=4 %>
 SS;
         $c->collectFromTemplate($html, 'mymodule', 'Test');
 
@@ -87,10 +93,26 @@ SS;
                 'i18nTestModule.NEWMETHODSIG' => "New _t method signature test",
                 'i18nTestModule.INJECTIONS_0' => "Hello {name} {greeting}, and {goodbye}",
                 'i18nTestModule.INJECTIONS_1' => "Hello {name} {greeting}, and {goodbye}",
-                'i18nTestModule.INJECTIONS_2' => "Hello {name} {greeting}",
+                'i18nTestModule.INJECTIONS_2' => [
+                    'default' => "Hello {name} {greeting}",
+                    'comment' => 'context (ignored)',
+                ],
+                'i18nTestModule.INJECTIONS_9' => [
+                    'one' => 'An item',
+                    'other' => '{count} items',
+                    'comment' => 'Test Pluralisation'
+                ],
             ],
             $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
+
+        // Test warning is raised on empty default
+        $c->setWarnOnEmptyDefault(true);
+        $this->setExpectedException(
+            PHPUnit_Framework_Error_Notice::class,
+            'Missing localisation default for key i18nTestModule.INJECTIONS_3'
+        );
+        $c->collectFromTemplate($html, 'mymodule', 'Test');
     }
 
     public function testCollectFromTemplateSimple()
@@ -125,6 +147,7 @@ SS;
     public function testCollectFromTemplateAdvanced()
     {
         $c = i18nTextCollector::create();
+        $c->setWarnOnEmptyDefault(false);
 
         $html = <<<SS
 <% _t(
@@ -145,7 +168,10 @@ SS;
 ) %>
 SS;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => ' Prio and Value with "Double Quotes"' ],
+            [ 'Test.PRIOANDCOMMENT' => [
+                'default' => ' Prio and Value with "Double Quotes"',
+                'comment' => 'Comment with "Double Quotes"',
+            ]],
             $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
 
@@ -158,9 +184,29 @@ SS;
 ) %>
 SS;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => " Prio and Value with 'Single Quotes'" ],
+            [ 'Test.PRIOANDCOMMENT' => [
+                'default' => " Prio and Value with 'Single Quotes'",
+                'comment' => "Comment with 'Single Quotes'",
+            ]],
             $c->collectFromTemplate($html, 'mymodule', 'Test')
         );
+
+        // Test empty
+        $html = <<<SS
+<% _t('Test.PRIOANDCOMMENT') %>
+SS;
+        $this->assertEquals(
+            [],
+            $c->collectFromTemplate($html, 'mymodule', 'Test')
+        );
+
+        // Test warning is raised on empty default
+        $c->setWarnOnEmptyDefault(true);
+        $this->setExpectedException(
+            PHPUnit_Framework_Error_Notice::class,
+            'Missing localisation default for key Test.PRIOANDCOMMENT'
+        );
+        $c->collectFromTemplate($html, 'mymodule', 'Test');
     }
 
 
@@ -209,7 +255,12 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => ' Value with "Double Quotes"' ],
+            [
+                'Test.PRIOANDCOMMENT' => [
+                    'default' => ' Value with "Double Quotes"',
+                    'comment' => 'Comment with "Double Quotes"',
+                ]
+            ],
             $c->collectFromCode($php, 'mymodule')
         );
 
@@ -222,7 +273,10 @@ _t(
 );
 PHP;
         $this->assertEquals(
-            [ 'Test.PRIOANDCOMMENT' => " Value with 'Single Quotes'" ],
+            [ 'Test.PRIOANDCOMMENT' => [
+                'default' => " Value with 'Single Quotes'",
+                'comment' => "Comment with 'Single Quotes'"
+            ] ],
             $c->collectFromCode($php, 'mymodule')
         );
 
@@ -241,6 +295,8 @@ PHP;
 _t(
 	'Test.PRIOANDCOMMENT',
 	"Doublequoted Value with 'Unescaped Single Quotes'"
+	
+	
 );
 PHP;
         $this->assertEquals(
@@ -287,6 +343,7 @@ PHP;
     public function testCollectFromCodeNewSignature()
     {
         $c = i18nTextCollector::create();
+        $c->setWarnOnEmptyDefault(false); // Disable warnings for tests
 
         $php = <<<PHP
 _t('i18nTestModule.NEWMETHODSIG',"New _t method signature test");
@@ -295,25 +352,39 @@ _t('i18nTestModule.INJECTIONS2', "Hello {name} {greeting}. But it is late, {good
 _t("i18nTestModule.INJECTIONS3", "Hello {name} {greeting}. But it is late, {goodbye}",
 		"New context (this should be ignored)",
 		array("name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"));
+_t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
 _t('i18nTestModule.INJECTIONS6', "Hello {name} {greeting}. But it is late, {goodbye}",
 	["name"=>"Paul", "greeting"=>"good you are here", "goodbye"=>"see you"]);
 _t("i18nTestModule.INJECTIONS7", "Hello {name} {greeting}. But it is late, {goodbye}",
 		"New context (this should be ignored)",
 		["name"=>"Steffen", "greeting"=>"willkommen", "goodbye"=>"wiedersehen"]);
+_t('i18nTestModule.INJECTIONS8', ["name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"]);
+_t('i18nTestModule.INJECTIONS9', "An item|{count} items", ['count' => 4], "Test Pluralisation");
 PHP;
 
         $collectedTranslatables = $c->collectFromCode($php, 'mymodule');
 
         $expectedArray = [
             'i18nTestModule.INJECTIONS2' => "Hello {name} {greeting}. But it is late, {goodbye}",
-            'i18nTestModule.INJECTIONS3' => "Hello {name} {greeting}. But it is late, {goodbye}",
+            'i18nTestModule.INJECTIONS3' => [
+                'default' => "Hello {name} {greeting}. But it is late, {goodbye}",
+                'comment' => 'New context (this should be ignored)'
+            ],
             'i18nTestModule.INJECTIONS6' => "Hello {name} {greeting}. But it is late, {goodbye}",
-            'i18nTestModule.INJECTIONS7' => "Hello {name} {greeting}. But it is late, {goodbye}",
+            'i18nTestModule.INJECTIONS7' => [
+                'default' => "Hello {name} {greeting}. But it is late, {goodbye}",
+                'comment' => "New context (this should be ignored)",
+            ],
+            'i18nTestModule.INJECTIONS9' => [
+                'one' => 'An item',
+                'other' => '{count} items',
+                'comment' => 'Test Pluralisation',
+            ],
             'i18nTestModule.NEWMETHODSIG' => "New _t method signature test",
         ];
         $this->assertEquals($expectedArray, $collectedTranslatables);
 
-        // Test warning is raised
+        // Test warning is raised on empty default
         $this->setExpectedException(
             PHPUnit_Framework_Error_Notice::class,
             'Missing localisation default for key i18nTestModule.INJECTIONS4'
@@ -321,6 +392,7 @@ PHP;
         $php = <<<PHP
 _t('i18nTestModule.INJECTIONS4', array("name"=>"Cat", "greeting"=>"meow", "goodbye"=>"meow"));
 PHP;
+        $c->setWarnOnEmptyDefault(true);
         $c->collectFromCode($php, 'mymodule');
     }
 
@@ -345,6 +417,7 @@ PHP;
     public function testCollectFromIncludedTemplates()
     {
         $c = i18nTextCollector::create();
+        $c->setWarnOnEmptyDefault(false); // Disable warnings for tests
 
         $templateFilePath = $this->alternateBasePath . '/i18ntestmodule/templates/Layout/i18nTestModule.ss';
         $html = file_get_contents($templateFilePath);
@@ -419,6 +492,7 @@ PHP;
     public function testCollectMergesWithExisting()
     {
         $c = i18nTextCollector::create();
+        $c->setWarnOnEmptyDefault(false);
         $c->setWriter(new YamlWriter());
         $c->basePath = $this->alternateBasePath;
         $c->baseSavePath = $this->alternateBaseSavePath;
@@ -441,18 +515,22 @@ PHP;
             $entitiesByModule['i18ntestmodule']
         );
         $this->assertEquals(
-            'i18ntestmodule string defined in i18nothermodule',
+            [
+                'comment' => 'Test string in another module',
+                'default' => 'i18ntestmodule string defined in i18nothermodule',
+            ],
             $entitiesByModule['i18ntestmodule']['i18nProviderClass.OTHER_MODULE']
         );
     }
 
     public function testCollectFromFilesystemAndWriteMasterTables()
     {
-        $local = i18n::get_locale();
         i18n::set_locale('en_US');  //set the locale to the US locale expected in the asserts
         i18n::config()->update('default_locale', 'en_US');
+        i18n::config()->update('missing_default_warning', false);
 
         $c = i18nTextCollector::create();
+        $c->setWarnOnEmptyDefault(false);
         $c->setWriter(new YamlWriter());
         $c->basePath = $this->alternateBasePath;
         $c->baseSavePath = $this->alternateBaseSavePath;
@@ -564,8 +642,6 @@ PHP;
             "    MAINTEMPLATE: 'Theme2 Main Template'\n",
             $theme2LangFileContent
         );
-
-        i18n::set_locale($local);  //set the locale to the US locale expected in the asserts
     }
 
     public function testCollectFromEntityProvidersInCustomObject()
@@ -574,6 +650,8 @@ PHP;
         $this->popManifests();
 
         $c = i18nTextCollector::create();
+
+        // Collect from MyObject.php
         $filePath = __DIR__ . '/i18nTest/MyObject.php';
         $matches = $c->collectFromEntityProviders($filePath);
         $this->assertEquals(
@@ -590,6 +668,36 @@ PHP;
                 'SilverStripe\i18n\Tests\i18nTest\MyObject.SINGULARNAME' => 'My Object',
             ],
             $matches
+        );
+    }
+
+    public function testCollectFromEntityProvidersInWebRoot()
+    {
+        // Collect from i18nProviderClass
+        $c = i18nTextCollector::create();
+        $c->setWarnOnEmptyDefault(false);
+        $c->setWriter(new YamlWriter());
+        $c->basePath = $this->alternateBasePath;
+        $c->baseSavePath = $this->alternateBaseSavePath;
+        $entitiesByModule = $c->collect(null, false);
+        $this->assertEquals(
+            [
+                'comment' => 'Plural forms for the test class',
+                'one' => 'A class',
+                'other' => '{count} classes',
+            ],
+            $entitiesByModule['i18nothermodule']['i18nProviderClass.PLURALS']
+        );
+        $this->assertEquals(
+            'My Provider Class',
+            $entitiesByModule['i18nothermodule']['i18nProviderClass.TITLE']
+        );
+        $this->assertEquals(
+            [
+                'comment' => 'Test string in another module',
+                'default' => 'i18ntestmodule string defined in i18nothermodule',
+            ],
+            $entitiesByModule['i18ntestmodule']['i18nProviderClass.OTHER_MODULE']
         );
     }
 

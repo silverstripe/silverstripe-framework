@@ -172,7 +172,10 @@ class MemberAuthenticatorTest extends SapphireTest
         );
         $form->restoreFormState();
         $this->assertEmpty($result);
-        $this->assertEquals(_t('Member.ERRORWRONGCRED'), $form->getMessage());
+        $this->assertEquals(
+            _t('Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
+            $form->getMessage()
+        );
         $this->assertEquals(ValidationResult::TYPE_ERROR, $form->getMessageType());
         $this->assertEquals(ValidationResult::CAST_TEXT, $form->getMessageCast());
     }

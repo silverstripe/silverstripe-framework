@@ -172,7 +172,11 @@ It can be used to translate strings in both PHP files and template files. The us
   elsewhere in your code.
 * **$default:** The original language string to be translated. This should be declared
   whenever used, and will get picked up the [text collector](#collecting-text).
+* **$string:** (optional) Natural language comment (particularly short phrases and individual words)
+  are very context dependent. This parameter allows the developer to convey this information
+  to the translator.
 * **$injection::** (optional) An array of injecting variables into the second parameter
+
 
 ## Pluralisation
 
@@ -182,8 +186,11 @@ unlike English which has two only; One for the singular, and another for any oth
 More information on what forms these plurals can take for various locales can be found on the
 [CLDR documentation](http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html)
 
-The ability to pluralise strings is provided through the `i18n::pluaralise` method, which is similar to the
-`i18n::_t` method, other than that it takes an additional `$count` argument.
+The ability to pluralise strings is provided through the `i18n::_t` method when supplied with a
+`{count}` argument and `|` pipe-delimiter provided with the default string.
+
+Plural forms can also be explicitly declared via the i18nEntityProvider interface in array-format
+with both a 'one' and 'other' key (as per the CLDR for the default `en` language).
 
 For instance, this is an example of how to correctly declare pluralisations for an object
 
@@ -234,18 +241,10 @@ Please ensure that any required plurals are exposed via provideI18nEntities.
 		"Restored {value} successfully",
 		array('value' => $itemRestored)
 	);
+	
+	// Plurals are invoked via a `|` pipe-delimeter with a {count} argument
+	_t('MyObject.PLURALS', 'An object|{count} objects', [ 'count' => '$count ]);
 
-
-You can invoke plurals for any object using the new `i18n::pluralise` method.
-In addition to array form, you can also pass in a pipe-delimited string as a default
-argument for brevity.
-
-
-    :::php
-    public function pluralise($count)
-    {
-        return i18n::pluralise('MyObject.PLURALS', 'An object|{count} objects', $count);
-    }
 
 #### Usage in Template Files
 
@@ -267,11 +266,8 @@ the PHP version of the function.
 	// Using injection to add variables into the translated strings (note that $Name and $Greeting must be available in the current template scope).
 	<%t Header.Greeting "Hello {name} {greeting}" name=$Name greeting=$Greeting %>
 	
-Pluralisation in templates is available via the global `$pluralise` method.
-
-
-    :::ss
-    You have $pluralise('i18nTestModule.PLURALS', 'An item|{count} items', $Count) in your cart
+	// Plurals follow the same convention, required a `|` and `{count}` in the default string
+    <%t MyObject.PLURALS 'An item|{count} items' count=$Count %>
 
 
 #### Caching in Template Files with locale switching

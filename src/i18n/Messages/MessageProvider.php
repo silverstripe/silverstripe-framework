@@ -22,9 +22,9 @@ interface MessageProvider
      *
      * @param string $entity Identifier for this message in Namespace.key format
      * @param array|string $default Default message with pipe-separated delimiters, or array
-     * @param int $count Number to pluralise against
      * @param array $injection List of injection variables
+     * @param int $count Number to pluralise against
      * @return string Localised string
      */
-    public function pluralise($entity, $default, $count, $injection);
+    public function pluralise($entity, $default, $injection, $count);
 }

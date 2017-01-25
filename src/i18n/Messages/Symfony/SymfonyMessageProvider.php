@@ -104,7 +104,7 @@ class SymfonyMessageProvider implements MessageProvider
         return $result;
     }
 
-    public function pluralise($entity, $default, $count, $injection)
+    public function pluralise($entity, $default, $injection, $count)
     {
         if (is_array($default)) {
             $default = $this->normalisePlurals($default);

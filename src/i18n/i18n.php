@@ -1956,56 +1956,80 @@ class i18n implements TemplateGlobalProvider
     );
 
     /**
-     * This is the main translator function. Returns the string defined by $class and $entity according to the
+     * Map of rails plurals into standard order (fewest to most)
+     * Note: Default locale only supplies one|other, but non-default locales
+     * can specify custom plurals.
+     *
+     * @config
+     * @var array
+     */
+    private static $plurals = [
+        'zero',
+        'one',
+        'two',
+        'few',
+        'many',
+        'other',
+    ];
+
+    /**
+     * Plural forms in default (en) locale
+     *
+     * @var array
+     */
+    private static $default_plurals = [
+        'one',
+        'other',
+    ];
+
+    /**
+     * Warn if _t() invoked without a default.
+     *
+     * @config
+     * @var bool
+     */
+    private static $missing_default_warning = true;
+
+    /**
+     * This is the main translator function. Returns the string defined by $entity according to the
      * currently set locale.
+     *
+     * Also supports pluralisation of strings. Pass in a `count` argument, as well as a
+     * default value with `|` pipe-delimited options for each plural form.
      *
      * @param string $entity Entity that identifies the string. It must be in the form
      * "Namespace.Entity" where Namespace will be usually the class name where this
      * string is used and Entity identifies the string inside the namespace.
-     * @param string $default The original string itself. In a usual call this is a
-     * mandatory parameter, but if you are reusing a string which has already been
-     * "declared" (using another call to this function, with the same class and entity),
-     * you can omit it.
-     * @param array $injection (optional) array of key value pairs that are used
-     * to replace corresponding expressions in {curly brackets} in the $string.
-     * The injection array can also be used as the their argument to the _t() function
-     * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
+     * @param mixed $arg,... Additional arguments are parsed as such:
+     *  - Next string argument is a default. Pass in a `|` pipe-delimited value with `{count}`
+     *    to do pluralisation.
+     *  - Any other string argument after default is context for i18nTextCollector
+     *  - Any array argument in any order is an injection parameter list. Pass in a `count`
+     *    injection parameter to pluralise.
+     * @return string
      */
-    public static function _t($entity, $default = '', $injection = [])
+    public static function _t($entity, $arg = null)
     {
-        // Deprecate passing in injection as second param
-        if (is_array($default)) {
-            Deprecation::notice('5.0', 'Passing in $injection as second parameter is deprecated');
-            $injection = $default;
-            $default = '';
+        // Detect args
+        $default = null;
+        $injection = [];
+        foreach (array_slice(func_get_args(), 1) as $arg) {
+            if (is_array($arg)) {
+                $injection = $arg;
+            } elseif (!isset($default)) {
+                $default = $arg ?: '';
+            }
         }
 
         // Encourage the provision of default values so that text collector can discover new strings
-        if (!$default) {
-            user_error(
-                "Localisation without a default is deprecated (key: $entity) and will be an exception in 5.0",
-                E_USER_WARNING
-            );
-        }
-
-        // Deprecate old $context param
-        if (!is_array($injection)) {
-            // Don't need to show warning if only mistake is passing in null instead of empty array
-            if ($injection || func_num_args() > 3) {
-                Deprecation::notice('5.0', '$context parameter is deprecated');
-            }
-            // Find best injection array
-            if (func_num_args() > 3 && is_array(func_get_arg(3))) {
-                $injection = func_get_arg(3);
-            } else {
-                $injection = [];
-            }
+        if (!$default && static::config()->get('missing_default_warning')) {
+            user_error("Missing default for localisation key $entity", E_USER_WARNING);
         }
 
         // Deprecate legacy injection format (`string %s, %d`)
         // inject the variables from injectionArray (if present)
         $sprintfArgs = [];
-        if ($default && $injection && !preg_match('/\{[\w\d]*\}/i', $default) && preg_match('/%[s,d]/', $default)) {
+        if ($default && !preg_match('/\{[\w\d]*\}/i', $default) && preg_match('/%[s,d]/', $default)) {
             Deprecation::notice('5.0', 'sprintf style localisation variables are deprecated');
             $sprintfArgs = array_values($injection);
             $injection = [];
@@ -2019,8 +2043,20 @@ class i18n implements TemplateGlobalProvider
             $injection = [];
         }
 
+        // Detect plurals: Has a {count} argument as well as a `|` pipe delimited string (if provided)
+        $isPlural = isset($injection['count']);
+        $count = $isPlural ? $injection['count'] : null;
+        // Refine check against default
+        if ($isPlural && $default && !static::parse_plurals($default)) {
+            $isPlural = false;
+        }
+
         // Pass back to translation backend
-        $result = static::getMessageProvider()->translate($entity, $default, $injection);
+        if ($isPlural) {
+            $result = static::getMessageProvider()->pluralise($entity, $default, $injection, $count);
+        } else {
+            $result = static::getMessageProvider()->translate($entity, $default, $injection);
+        }
 
         // Sometimes default is omitted, so we don't know we have %s injection format until after translation
         if (!$default && !preg_match('/\{[\w\d]*\}/i', $result) && preg_match('/%[s,d]/', $result)) {
@@ -2043,37 +2079,44 @@ class i18n implements TemplateGlobalProvider
     }
 
     /**
-     * Pluralise an item or items.
+     * Split plural string into standard CLDR array form.
+     * A string is considered a pluralised form if it has a {count} argument, and
+     * a single `|` pipe-delimiting character.
      *
-     * Yaml form of these strings should be set via the rails i18n standard format
-     * http://guides.rubyonrails.org/i18n.html#pluralization. For example:
+     * Note: Only splits in the default (en) locale as the string form contains limited metadata.
      *
-     * <code>
-     * en:
-     *   ChangeSet:
-     *     DESCRIPTION_ITEM_PLURALS:
-     *       one: 'one item'
-     *       other: '{count} items'
-     * </code>
-     *
-     * Some languages support up to 6 plural forms:
-     * @link http://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html
-     *
-     * @todo text collection support for pluralised strings
-     *
-     * @param string $entity Entity that identifies the string. It must be in the form
-     * "Namespace.Entity" where Namespace will be usually the class name where this
-     * string is used and Entity identifies the string inside the namespace.
-     * Standard convention is to have a `Class.<FIELD>_PLURALS` key for a <Field> on a class
-     * @param string|array $default If passed as a string, treated as a symfony format specifier.
-     * If passed as an array, treated as a ruby i18n pluralised form.
-     * @param int $count Number to pluralise against
-     * @param array $injection Additional parameters
-     * @return string Localised number
+     * @param string $string Input string
+     * @return array List of plural forms, or empty array if not plural
      */
-    public static function pluralise($entity, $default = '', $count = 0, $injection = [])
+    public static function parse_plurals($string)
     {
-        return static::getMessageProvider()->pluralise($entity, $default, $count, $injection);
+        if (strstr($string, '|') && strstr($string, '{count}')) {
+            $keys = i18n::config()->get('default_plurals');
+            $values = explode('|', $string);
+            if (count($keys) == count($values)) {
+                return array_combine($keys, $values);
+            }
+        }
+        return [];
+    }
+
+    /**
+     * Convert CLDR array plural form to `|` pipe-delimited string.
+     * Unlike parse_plurals, this supports all locale forms (not just en)
+     *
+     * @param array $plurals
+     * @return string Delimited string, or null if not plurals
+     */
+    public static function encode_plurals($plurals)
+    {
+        // Validate against global plural list
+        $forms = i18n::config()->get('plurals');
+        $forms = array_combine($forms, $forms);
+        $intersect = array_intersect_key($plurals, $forms);
+        if ($intersect) {
+            return implode('|', $intersect);
+        }
+        return null;
     }
 
     /**
@@ -2452,7 +2495,6 @@ class i18n implements TemplateGlobalProvider
             'i18nLocale' => 'get_locale',
             'get_locale',
             'i18nScriptDirection' => 'get_script_direction',
-            'pluralise',
         );
     }
 

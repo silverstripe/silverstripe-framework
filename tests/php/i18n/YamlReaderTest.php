@@ -2,7 +2,6 @@
 
 namespace SilverStripe\i18n\Tests;
 
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\Messages\YamlReader;
 
@@ -27,11 +26,15 @@ class YamlReaderTest extends SapphireTest
             'i18nTestModule.WITHNAMESPACE' => 'Include Entity with Namespace',
             'i18nTestModule.LAYOUTTEMPLATE' => 'Layout Template',
             'i18nTestModule.SPRINTFNAMESPACE' => 'My replacement: %s',
-            'i18nTestModule.PLURAL' => [
+            'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'My include replacement: %s',
+            'i18nTestModule.PLURALS' => [
                 'one' => 'A test',
                 'other' => '{count} tests',
             ],
-            'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'My include replacement: %s',
+            'Month.PLURALS' => [
+                'one' => 'A month',
+                'other' => '{count} months',
+            ],
         ];
         $this->assertEquals($expected, $output);
     }

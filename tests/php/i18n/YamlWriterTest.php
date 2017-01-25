@@ -15,25 +15,47 @@ class YamlWriterTest extends SapphireTest
             'Level1.Level2.EntityName' => 'Text',
             'Level1.OtherEntityName' => 'Other Text',
             'Level1.Plurals' => [
+                'context' => 'Some ignored context',
                 'one' => 'An item',
                 'other' => '{count} items',
             ],
+            'Level1.PluralString1' => 'An item|{count} items',
+            'Level1.PluralString2' => [
+                'context' => 'Another ignored context',
+                'default' => 'An item|{count} items',
+            ],
+            // Some near-false-positives for plurals
+            'Level1.NotPlural1' => 'Not a plural|string', // no count
+            'Level1.NotPlural2' => 'Not|a|plural|string{count}', // unexpected number
+            'Level1.NotPlural3' => 'Not a plural string {count}', // no pipe
             'Level1.BoolTest' => 'True',
             'Level1.FlagTest' => 'No',
             'Level1.TextTest' => 'Maybe',
+            'Template.ss.Key' => 'Template var',
             'TopLevel' => 'The Top',
         ];
         $yaml = <<<YAML
 de:
   Level1:
+    BoolTest: 'True'
+    FlagTest: 'No'
     Level2.EntityName: Text
+    NotPlural1: 'Not a plural|string'
+    NotPlural2: 'Not|a|plural|string{count}'
+    NotPlural3: 'Not a plural string {count}'
     OtherEntityName: 'Other Text'
+    PluralString1:
+      one: 'An item'
+      other: '{count} items'
+    PluralString2:
+      one: 'An item'
+      other: '{count} items'
     Plurals:
       one: 'An item'
       other: '{count} items'
-    BoolTest: 'True'
-    FlagTest: 'No'
     TextTest: Maybe
+  Template.ss:
+    Key: 'Template var'
   TopLevel: 'The Top'
 
 YAML;

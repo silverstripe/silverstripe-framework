@@ -4,6 +4,7 @@ namespace SilverStripe\i18n\Messages\Symfony;
 
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Dev\Debug;
+use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\Reader;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\PluralizationRules;
@@ -15,24 +16,6 @@ use Symfony\Component\Translation\PluralizationRules;
  */
 class ModuleYamlLoader extends ArrayLoader
 {
-    use Configurable;
-
-    /**
-     * Map of rails plurals into symfony standard order
-     *
-     * @see PluralizationRules For symfony's implementation of this logic
-     * @config
-     * @var array
-     */
-    private static $plurals = [
-        'zero',
-        'one',
-        'two',
-        'few',
-        'many',
-        'other',
-    ];
-
     /**
      * Message reader
      *
@@ -123,7 +106,7 @@ class ModuleYamlLoader extends ArrayLoader
     protected function normalisePlurals($key, $map, $locale)
     {
         $parts = [];
-        foreach ($this->config()->get('plurals') as $form) {
+        foreach (i18n::config()->get('plurals') as $form) {
             if (isset($map[$form])) {
                 $parts[] = $map[$form];
             }

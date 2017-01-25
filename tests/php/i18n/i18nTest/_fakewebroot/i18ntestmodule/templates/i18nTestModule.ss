@@ -2,6 +2,6 @@
 $Layout
 lonely _t() call that should be ignored
 <% _t('i18nTestModule.NEWENTITY',"Not stored in master file yet") %>
-Single: $pluralise('i18nTestModule.PLURALS', 'An item|{count} items', 1)
-Multiple: $pluralise('i18nTestModule.PLURALS', 'An item|{count} items', 4)
-None: $pluralise('i18nTestModule.PLURALS', 'An item|{count} items', 0)
+Single: <%t i18nTestModule.PLURALS 'An item|{count} items' count=1 %>
+Multiple: <%t i18nTestModule.PLURALS 'An item|{count} items' count=4 %>
+None: <%t i18nTestModule.PLURALS 'An item|{count} items' count=0 %>
