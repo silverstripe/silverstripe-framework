@@ -29,7 +29,7 @@ class URLSegmentFilter extends Object {
 		'/&/u' => '-and-',
 		'/\s/u' => '-', // remove whitespace
 		'/_/u' => '-', // underscores to dashes
-		'/[^A-Za-z0-9.-]+/u' => '', // remove non-ASCII chars, only allow alphanumeric, dashes and dots.
+		'/[^A-Za-z0-9-]+/u' => '', // remove non-ASCII chars, only allow alphanumeric, dashes and dots.
 		'/[\-]{2,}/u' => '-', // remove duplicate dashes
 		'/^[\.\-_]/u' => '', // Remove all leading dots, dashes or underscores
 	);
