@@ -12,6 +12,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
@@ -159,6 +160,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     private $extensionsToReapply = array(), $extensionsToRemove = array();
 
+    /**
+     * Check flushables on setupOnce()
+     *
+     * @var bool
+     */
+    protected static $flushedFlushables = false;
 
     /**
      * Determines if unit tests are currently run, flag set during test bootstrap.
@@ -379,6 +386,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // Set default timezone consistently to avoid NZ-specific dependencies
         date_default_timezone_set('UTC');
+
+        // Flush all flushable records
+        $flush = !empty($_GET['flush']);
+        if (!self::$flushedFlushables && $flush) {
+            self::$flushedFlushables = true;
+            foreach (ClassInfo::implementorsOf(Flushable::class) as $class) {
+                $class::flush();
+            }
+        }
     }
 
     /**
@@ -976,11 +992,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public static function use_test_manifest()
     {
-        $flush = true;
-        if (isset($_GET['flush']) && $_GET['flush'] === '0') {
-            $flush = false;
-        }
-
+        $flush = !empty($_GET['flush']);
         $classManifest = new ClassManifest(
             BASE_PATH,
             true,

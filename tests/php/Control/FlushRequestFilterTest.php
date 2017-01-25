@@ -2,20 +2,20 @@
 
 namespace SilverStripe\Control\Tests;
 
+use SilverStripe\Control\Tests\FlushRequestFilterTest\TestFlushable;
 use SilverStripe\Dev\FunctionalTest;
 
 class FlushRequestFilterTest extends FunctionalTest
 {
-
     /**
      * Assert that classes that implement flushable are called
      */
     public function testImplementorsAreCalled()
     {
-        $this->assertFalse(FlushRequestFilterTest\TestFlushable::$flushed);
+        TestFlushable::$flushed = false;
 
         $this->get('?flush=1');
 
-        $this->assertTrue(FlushRequestFilterTest\TestFlushable::$flushed);
+        $this->assertTrue(TestFlushable::$flushed);
     }
 }
