@@ -103,17 +103,18 @@ class TaskRunner extends Controller {
 		// remove the base class
 		array_shift($taskClasses);
 
-		if($taskClasses) foreach($taskClasses as $class) {
+		foreach($taskClasses as $class) {
 			if (!$this->taskEnabled($class)) continue;
+			$singleton = singleton($class);
 
 			$desc = (Director::is_cli())
-				? Convert::html2raw(singleton($class)->getDescription())
-				: singleton($class)->getDescription();
+				? Convert::html2raw($singleton->getDescription())
+				: $singleton->getDescription();
 
 			$availableTasks[] = array(
 				'class' => $class,
 				'title' => singleton($class)->getTitle(),
-				'segment' => str_replace('\\', '-', $class),
+				'segment' => $singleton->config()->segment ?: str_replace('\\', '-', $class),
 				'description' => $desc,
 			);
 		}

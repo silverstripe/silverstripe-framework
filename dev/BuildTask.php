@@ -13,6 +13,14 @@
 abstract class BuildTask extends Object {
 
 	/**
+	 * Set a custom url segment (to follow dev/tasks/)
+	 *
+	 * @config
+	 * @var string
+	 */
+	private static $segment = null;
+
+	/**
 	 * @var bool $enabled If set to FALSE, keep it from showing in the list
 	 * and from being executable through URL or CLI.
 	 */
