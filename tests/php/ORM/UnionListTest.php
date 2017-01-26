@@ -99,23 +99,20 @@ class UnionListTest extends SapphireTest
         $recordSet = $unionList->toNestedArray();
         $expected = [
             0 => [
-                'ID' => 1,
                 'Name' => 'test obj 1',
             ],
             1 => [
-                'ID' => 2,
                 'Name' => 'test obj 2',
             ],
             2 => [
-                'ID' => 3,
                 'Name' => 'test obj 3',
             ],
             3 => [
-                'ID' => 4,
                 'Name' => 'test obj 4',
             ],
         ];
         foreach ($recordSet as $i => $record) {
+            unset($recordSet[$i]['ID']);
             unset($recordSet[$i]['ClassName']);
             unset($recordSet[$i]['RecordClassName']);
             unset($recordSet[$i]['Created']);
