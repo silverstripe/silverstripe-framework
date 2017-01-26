@@ -1,14 +1,18 @@
 <?php
 
-namespace SilverStripe\i18n;
+namespace SilverStripe\i18n\TextCollection;
 
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Object;
-use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use ReflectionClass;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\i18n\i18n;
+use SilverStripe\i18n\i18nEntityProvider;
+use SilverStripe\i18n\Messages\Reader;
+use SilverStripe\i18n\Messages\Writer;
 
 /**
  * SilverStripe-variant of the "gettext" tool:
@@ -34,8 +38,9 @@ use ReflectionClass;
  * @uses i18nEntityProvider
  * @uses i18n
  */
-class i18nTextCollector extends Object
+class i18nTextCollector
 {
+    use Injectable;
 
     /**
      * Default (master) locale
@@ -43,6 +48,13 @@ class i18nTextCollector extends Object
      * @var string
      */
     protected $defaultLocale;
+
+    /**
+     * Trigger if warnings should be shown if default is omitted
+     *
+     * @var bool
+     */
+    protected $warnOnEmptyDefault = false;
 
     /**
      * The directory base on which the collector should act.
@@ -62,9 +74,16 @@ class i18nTextCollector extends Object
     public $baseSavePath;
 
     /**
-     * @var i18nTextCollector_Writer
+     * @var Writer
      */
     protected $writer;
+
+    /**
+     * Translation reader
+     *
+     * @var Reader
+     */
+    protected $reader;
 
     /**
      * List of file extensions to parse
@@ -83,31 +102,51 @@ class i18nTextCollector extends Object
             : i18n::get_lang_from_locale(i18n::config()->get('default_locale'));
         $this->basePath = Director::baseFolder();
         $this->baseSavePath = Director::baseFolder();
-
-        parent::__construct();
+        $this->setWarnOnEmptyDefault(i18n::config()->get('missing_default_warning'));
     }
 
     /**
      * Assign a writer
      *
-     * @param i18nTextCollector_Writer $writer
+     * @param Writer $writer
+     * @return $this
      */
     public function setWriter($writer)
     {
         $this->writer = $writer;
+        return $this;
     }
 
     /**
      * Gets the currently assigned writer, or the default if none is specified.
      *
-     * @return i18nTextCollector_Writer
+     * @return Writer
      */
     public function getWriter()
     {
-        if (!$this->writer) {
-            $this->setWriter(Injector::inst()->get('SilverStripe\\i18n\\i18nTextCollector_Writer'));
-        }
         return $this->writer;
+    }
+
+    /**
+     * Get reader
+     *
+     * @return Reader
+     */
+    public function getReader()
+    {
+        return $this->reader;
+    }
+
+    /**
+     * Set reader
+     *
+     * @param Reader $reader
+     * @return $this
+     */
+    public function setReader(Reader $reader)
+    {
+        $this->reader = $reader;
+        return $this;
     }
 
     /**
@@ -347,31 +386,19 @@ class i18nTextCollector extends Object
      */
     protected function mergeWithExisting($entitiesByModule)
     {
-        // TODO Support all defined source formats through i18n::get_translators().
-        //      Currently not possible because adapter instances can't be fully reset through the Zend API,
-        //      meaning master strings accumulate across modules
-        foreach ($entitiesByModule as $module => $entities) {
-            $adapter = Injector::inst()->create('SilverStripe\\i18n\\i18nRailsYamlAdapter');
-            $fileName = $adapter->getFilenameForLocale($this->defaultLocale);
-            $masterFile = "{$this->basePath}/{$module}/lang/{$fileName}";
-            if (!file_exists($masterFile)) {
-                continue;
-            }
+        // For each module do a simple merge of the default yml with these strings
+        foreach ($entitiesByModule as $module => $messages) {
+            // Load existing localisations
+            $masterFile = "{$this->basePath}/{$module}/lang/{$this->defaultLocale}.yml";
+            $existingMessages = $this->getReader()->read($this->defaultLocale, $masterFile);
 
-            $adapter->addTranslation(array(
-                'content' => $masterFile,
-                'locale' => $this->defaultLocale
-            ));
-            $entitiesByModule[$module] = array_merge(
-                array_map(
-                    // Transform each master string from scalar value to array of strings
-                    function ($v) {
-                        return array($v);
-                    },
-                    $adapter->getMessages($this->defaultLocale)
-                ),
-                $entities
-            );
+            // Merge
+            if ($existingMessages) {
+                $entitiesByModule[$module] = array_merge(
+                    $existingMessages,
+                    $messages
+                );
+            }
         }
         return $entitiesByModule;
     }
@@ -395,18 +422,32 @@ class i18nTextCollector extends Object
                 $entitiesByModule[$module] = $processedEntities;
             }
 
-            // extract all entities for "foreign" modules (fourth argument)
+            // Extract all entities for "foreign" modules ('module' key in array form)
             // @see CMSMenu::provideI18nEntities for an example usage
             foreach ($entitiesByModule[$module] as $fullName => $spec) {
-                if (!empty($spec[2]) && $spec[2] !== $module) {
-                    $othermodule = $spec[2];
-                    if (!isset($entitiesByModule[$othermodule])) {
-                        $entitiesByModule[$othermodule] = array();
+                $specModule = $module;
+
+                // Rewrite spec if module is specified
+                if (is_array($spec) && isset($spec['module'])) {
+                    $specModule = $spec['module'];
+                    unset($spec['module']);
+
+                    // If only element is defalt, simplify
+                    if (count($spec) === 1 && !empty($spec['default'])) {
+                        $spec = $spec['default'];
                     }
-                    unset($spec[2]);
-                    $entitiesByModule[$othermodule][$fullName] = $spec;
+                }
+
+                // Remove from source module
+                if ($specModule !== $module) {
                     unset($entitiesByModule[$module][$fullName]);
                 }
+
+                // Write to target module
+                if (!isset($entitiesByModule[$specModule])) {
+                    $entitiesByModule[$specModule] = [];
+                }
+                $entitiesByModule[$specModule][$fullName] = $spec;
             }
         }
         return $entitiesByModule;
@@ -493,11 +534,12 @@ class i18nTextCollector extends Object
 
     /**
      * Extracts translatables from .php files.
+     * Note: Translations without default values are omitted.
      *
      * @param string $content The text content of a parsed template-file
      * @param string $module Module's name or 'themes'. Could also be a namespace
      * Generated by templates includes. E.g. 'UploadField.ss'
-     * @return array $entities An array of entities representing the extracted translation function calls in code
+     * @return array Map of localised keys to default values provided for this code
      */
     public function collectFromCode($content, $module)
     {
@@ -506,29 +548,46 @@ class i18nTextCollector extends Object
         $tokens = token_get_all("<?php\n" . $content);
         $inTransFn = false;
         $inConcat = false;
-        $finalTokenDueToArray = false;
+        $inArrayClosedBy = false; // Set to the expected closing token, or false if not in array
         $currentEntity = array();
         foreach ($tokens as $token) {
             if (is_array($token)) {
                 list($id, $text) = $token;
 
-                if ($inTransFn && $id == T_ARRAY) {
-                    //raw 'array' token found in _t function, stop processing the tokens for this _t now
-                    $finalTokenDueToArray = true;
+                // Suppress tokenisation within array
+                if ($inTransFn && !$inArrayClosedBy && $id == T_ARRAY) {
+                    $inArrayClosedBy = ')'; // Array will close with this element
+                    continue;
                 }
 
+                // Start definition
                 if ($id == T_STRING && $text == '_t') {
-                    // start definition
                     $inTransFn = true;
-                } elseif ($inTransFn && $id == T_VARIABLE) {
-                    // Dynamic definition from provideEntities - skip
+                    continue;
+                }
+
+                // Skip rest of processing unless we are in a translation, and not inside a nested array
+                if (!$inTransFn || $inArrayClosedBy) {
+                    continue;
+                }
+
+                // If inside this translation, some elements might be unreachable
+                if (in_array($id, [T_VARIABLE, T_STATIC, T_CLASS_C]) ||
+                    ($id === T_STRING && in_array($text, ['self', 'static', 'parent']))
+                ) {
+                    // Un-collectable strings such as _t(static::class.'.KEY').
+                    // Should be provided by i18nEntityProvider instead
                     $inTransFn = false;
+                    $inArrayClosedBy = false;
                     $inConcat = false;
                     $currentEntity = array();
-                } elseif ($inTransFn && $id == T_CONSTANT_ENCAPSED_STRING) {
+                    continue;
+                }
+
+                if ($id == T_CONSTANT_ENCAPSED_STRING) {
                     // Fixed quoting escapes, and remove leading/trailing quotes
                     if (preg_match('/^\'/', $text)) {
-                        $text = str_replace("\'", "'", $text);
+                        $text = str_replace("\\'", "'", $text);
                         $text = preg_replace('/^\'/', '', $text);
                         $text = preg_replace('/\'$/', '', $text);
                     } else {
@@ -538,35 +597,85 @@ class i18nTextCollector extends Object
                     }
 
                     if ($inConcat) {
-                        $currentEntity[count($currentEntity)-1] .= $text;
+                        // Parser error
+                        if (empty($currentEntity)) {
+                            user_error('Error concatenating localisation key', E_USER_WARNING);
+                        } else {
+                            $currentEntity[count($currentEntity) - 1] .= $text;
+                        }
                     } else {
                         $currentEntity[] = $text;
                     }
                 }
-            } elseif ($inTransFn && $token == '.') {
-                $inConcat = true;
-            } elseif ($inTransFn && $token == ',') {
-                $inConcat = false;
-            } elseif ($inTransFn && ($token == ')' || $finalTokenDueToArray || $token == '[')) {
-                // finalize definition
-                $inTransFn = false;
-                $inConcat = false;
-                $entity = array_shift($currentEntity);
-                $entities[$entity] = $currentEntity;
-                $currentEntity = array();
-                $finalTokenDueToArray = false;
+                continue; // is_array
             }
-        }
 
-        foreach ($entities as $entity => $spec) {
-            // call without master language definition
-            if (!$spec) {
-                unset($entities[$entity]);
+            // Test we can close this array
+            if ($inTransFn && $inArrayClosedBy && ($token === $inArrayClosedBy)) {
+                $inArrayClosedBy = false;
                 continue;
             }
 
-            unset($entities[$entity]);
-            $entities[$this->normalizeEntity($entity, $module)] = $spec;
+            // Continue only if in translation and not in array
+            if (!$inTransFn || $inArrayClosedBy) {
+                continue;
+            }
+
+            switch ($token) {
+                case '.':
+                    $inConcat = true;
+                    break;
+                case ',':
+                    $inConcat = false;
+                    break;
+                case '[':
+                    // Enter array
+                    $inArrayClosedBy = ']';
+                    break;
+                case ')':
+                    // finalize definition
+                    $inTransFn = false;
+                    $inConcat = false;
+                    // Ensure key is valid before saving
+                    if (!empty($currentEntity[0])) {
+                        $key = $currentEntity[0];
+                        $default = '';
+                        $comment = '';
+                        if (!empty($currentEntity[1])) {
+                            $default = $currentEntity[1];
+                            if (!empty($currentEntity[2])) {
+                                $comment = $currentEntity[2];
+                            }
+                        }
+                        // Save in appropriate format
+                        if ($default) {
+                            $plurals = i18n::parse_plurals($default);
+                            // Use array form if either plural or metadata is provided
+                            if ($plurals) {
+                                $entity = $plurals;
+                            } elseif ($comment) {
+                                $entity = ['default' => $default];
+                            } else {
+                                $entity = $default;
+                            }
+                            if ($comment) {
+                                $entity['comment'] = $comment;
+                            }
+                            $entities[$key] = $entity;
+                        } elseif ($this->getWarnOnEmptyDefault()) {
+                            trigger_error("Missing localisation default for key " . $currentEntity[0], E_USER_NOTICE);
+                        }
+                    }
+                    $currentEntity = array();
+                    $inArrayClosedBy = false;
+                    break;
+            }
+        }
+
+        // Normalise all keys
+        foreach ($entities as $key => $entity) {
+            unset($entities[$key]);
+            $entities[$this->normalizeEntity($key, $module)] = $entity;
         }
         ksort($entities);
 
@@ -585,7 +694,7 @@ class i18nTextCollector extends Object
     public function collectFromTemplate($content, $fileName, $module, &$parsedFiles = array())
     {
         // use parser to extract <%t style translatable entities
-        $entities = i18nTextCollector_Parser::GetTranslatables($content);
+        $entities = Parser::getTranslatables($content, $this->getWarnOnEmptyDefault());
 
         // use the old method of getting _t() style translatable entities
         // Collect in actual template
@@ -622,7 +731,7 @@ class i18nTextCollector extends Object
         $classes = ClassInfo::classes_for_file($filePath);
         foreach ($classes as $class) {
             // Skip non-implementing classes
-            if (!class_exists($class) || !is_a($class, 'SilverStripe\\i18n\\i18nEntityProvider', true)) {
+            if (!class_exists($class) || !is_a($class, i18nEntityProvider::class, true)) {
                 continue;
             }
 
@@ -632,8 +741,29 @@ class i18nTextCollector extends Object
                 continue;
             }
 
+            /** @var i18nEntityProvider $obj */
             $obj = singleton($class);
-            $entities = array_merge($entities, (array)$obj->provideI18nEntities());
+            $provided = $obj->provideI18nEntities();
+            // Handle deprecated return syntax
+            foreach ($provided as $key => $value) {
+                // Detect non-associative result for any key
+                if (is_array($value) && $value === array_values($value)) {
+                    Deprecation::notice('5.0', 'Non-associative translations from providei18nEntities is deprecated');
+                    $entity = array_filter([
+                        'default' => $value[0],
+                        'comment' => isset($value[1]) ? $value[1] : null,
+                        'module' => isset($value[2]) ? $value[2] : null,
+                    ]);
+                    if (count($entity) === 1) {
+                        $provided[$key] = $value[0];
+                    } elseif ($entity) {
+                        $provided[$key] = $entity;
+                    } else {
+                        unset($provided[$key]);
+                    }
+                }
+            }
+            $entities = array_merge($entities, $provided);
         }
 
         ksort($entities);
@@ -723,5 +853,23 @@ class i18nTextCollector extends Object
     public function setDefaultLocale($locale)
     {
         $this->defaultLocale = $locale;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getWarnOnEmptyDefault()
+    {
+        return $this->warnOnEmptyDefault;
+    }
+
+    /**
+     * @param bool $warnOnEmptyDefault
+     * @return $this
+     */
+    public function setWarnOnEmptyDefault($warnOnEmptyDefault)
+    {
+        $this->warnOnEmptyDefault = $warnOnEmptyDefault;
+        return $this;
     }
 }

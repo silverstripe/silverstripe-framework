@@ -494,14 +494,14 @@ class ChangeSet extends DataObject
         if ($countedOther) {
             if ($counted) {
                 $parts[] = i18n::pluralise(
-                    _t('ChangeSet.DESCRIPTION_OTHER_ITEM', 'other item'),
-                    _t('ChangeSet.DESCRIPTION_OTHER_ITEMS', 'other items'),
+                    'ChangeSet.DESCRIPTION_OTHER_ITEM_PLURALS',
+                    'one other item|{count} other items',
                     $countedOther
                 );
             } else {
                 $parts[] = i18n::pluralise(
-                    _t('ChangeSet.DESCRIPTION_ITEM', 'item'),
-                    _t('ChangeSet.DESCRIPTION_ITEMS', 'items'),
+                    'ChangeSet.DESCRIPTION_ITEM_PLURALS',
+                    'one item|{count} items',
                     $countedOther
                 );
             }

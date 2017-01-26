@@ -674,16 +674,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * E.g. "0 Pages", "1 File", "3 Images"
      *
      * @param string $count
-     * @param bool $prependNumber Include number in result. Defaults to true.
      * @return string
      */
-    public function i18n_pluralise($count, $prependNumber = true)
+    public function i18n_pluralise($count)
     {
+        $default = 'one ' . $this->i18n_singular_name() . '|{count} ' . $this->i18n_plural_name();
         return i18n::pluralise(
-            $this->i18n_singular_name(),
-            $this->i18n_plural_name(),
-            $count,
-            $prependNumber
+            static::class.'.PLURALS',
+            $default,
+            $count
         );
     }
 
@@ -696,12 +695,15 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function singular_name()
     {
-        if (!$name = $this->stat('singular_name')) {
-            $reflection = new \ReflectionClass($this);
-            $name = ucwords(trim(strtolower(preg_replace('/_?([A-Z])/', ' $1', $reflection->getShortName()))));
+        $name = $this->stat('singular_name');
+        if ($name) {
+            return $name;
         }
-
-        return $name;
+        return ucwords(trim(strtolower(preg_replace(
+            '/_?([A-Z])/',
+            ' $1',
+            ClassInfo::shortName($this)
+        ))));
     }
 
     /**
@@ -717,9 +719,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function i18n_singular_name()
     {
-        // @todo Update localisation to FQN for all classes
-        $reflection = new \ReflectionClass($this);
-        return _t($reflection->getShortName().'.SINGULARNAME', $this->singular_name());
+        return _t(static::class.'.SINGULARNAME', $this->singular_name());
     }
 
     /**
@@ -733,14 +733,13 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     {
         if ($name = $this->stat('plural_name')) {
             return $name;
-        } else {
-            $name = $this->singular_name();
-            //if the penultimate character is not a vowel, replace "y" with "ies"
-            if (preg_match('/[^aeiou]y$/i', $name)) {
-                $name = substr($name, 0, -1) . 'ie';
-            }
-            return ucfirst($name . 's');
         }
+        $name = $this->singular_name();
+        //if the penultimate character is not a vowel, replace "y" with "ies"
+        if (preg_match('/[^aeiou]y$/i', $name)) {
+            $name = substr($name, 0, -1) . 'ie';
+        }
+        return ucfirst($name . 's');
     }
 
     /**
@@ -755,10 +754,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function i18n_plural_name()
     {
-        // @todo Update localisation to FQN for all classes
-        $name = $this->plural_name();
-        $reflection = new \ReflectionClass($this);
-        return _t($reflection->getShortName().'.PLURALNAME', $name);
+        return _t(static::class.'.PLURALNAME', $this->plural_name());
     }
 
     /**
@@ -3740,33 +3736,21 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     private static $summary_fields = null;
 
-    /**
-     * Collect all static properties on the object
-     * which contain natural language, and need to be translated.
-     * The full entity name is composed from the class name and a custom identifier.
-     *
-     * @return array A numerical array which contains one or more entities in array-form.
-     * Each numeric entity array contains the "arguments" for a _t() call as array values:
-     * $entity, $string, $priority, $context.
-     */
     public function provideI18nEntities()
     {
-        $entities = array();
-
-        $entities["{$this->class}.SINGULARNAME"] = array(
-            $this->singular_name(),
-
-            'Singular name of the object, used in dropdowns and to generally identify a single object in the interface'
-        );
-
-        $entities["{$this->class}.PLURALNAME"] = array(
-            $this->plural_name(),
-
-            'Pural name of the object, used in dropdowns and to generally identify a collection of this object in the'
-            . ' interface'
-        );
-
-        return $entities;
+        // Note: see http://guides.rubyonrails.org/i18n.html#pluralization for rules
+        // Best guess for a/an rule. Better guesses require overriding in subclasses
+        $pluralName = $this->plural_name();
+        $singularName = $this->singular_name();
+        $conjunction = preg_match('/^[aeiou]/i', $singularName) ? 'An ' : 'A ';
+        return [
+            static::class.'.SINGULARNAME' => $this->singular_name(),
+            static::class.'.PLURALNAME' => $pluralName,
+            static::class.'.PLURALS' => [
+                'one' => $conjunction . $singularName,
+                'other' => '{count} ' . $pluralName
+            ]
+        ];
     }
 
     /**

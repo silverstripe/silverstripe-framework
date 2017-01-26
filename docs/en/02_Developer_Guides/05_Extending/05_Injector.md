@@ -121,6 +121,21 @@ As well as properties, method calls can also be specified:
 	      - [ pushHandler, [ %$DefaultHandler ] ]
 
 
+## Using constants as variables
+
+Any of the core constants can be used as a service argument by quoting with back ticks "`".
+
+
+    :::yaml
+    CachingService:
+      class: SilverStripe\Cache\CacheProvider
+      properties:
+        CacheDir: `TEMP_DIR`
+
+
+Note: undefined variables will be replaced with null
+
+
 ## Factories
 
 Some services require non-trivial construction which means they must be created by a factory class. To do this, create

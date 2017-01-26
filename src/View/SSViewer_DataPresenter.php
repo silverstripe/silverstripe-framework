@@ -43,7 +43,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             // Get all the exposed variables from all classes that implement the TemplateGlobalProvider interface
             $this->createCallableArray(
                 self::$globalProperties,
-                "SilverStripe\\View\\TemplateGlobalProvider",
+                TemplateGlobalProvider::class,
                 "get_template_global_variables"
             );
         }
@@ -55,7 +55,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
             // //call non-statically
             $this->createCallableArray(
                 self::$iteratorProperties,
-                "SilverStripe\\View\\TemplateIteratorProvider",
+                TemplateIteratorProvider::class,
                 "get_template_iterator_variables",
                 true
             );
@@ -82,11 +82,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
                     if (!is_array($details)) {
                         $details = array(
                             'method' => $details,
-                            'casting' => Config::inst()->get(
-                                'SilverStripe\\View\\ViewableData',
-                                'default_cast',
-                                Config::FIRST_SET
-                            )
+                            'casting' => ViewableData::config()->get('default_cast', Config::FIRST_SET)
                         );
                     }
 
@@ -189,11 +185,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
 
                     // If not provided, use default
                     if (!$casting) {
-                        $casting = Config::inst()->get(
-                            'SilverStripe\\View\\ViewableData',
-                            'default_cast',
-                            Config::FIRST_SET
-                        );
+                        $casting = ViewableData::config()->get('default_cast', Config::FIRST_SET);
                     }
 
                     $obj = Injector::inst()->get($casting, false, array($property));

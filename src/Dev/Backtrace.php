@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Dev;
 
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\Configurable;
 

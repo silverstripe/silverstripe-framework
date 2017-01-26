@@ -21,6 +21,9 @@ use DateInterval;
  */
 class RememberLoginHash extends DataObject
 {
+    private static $singular_name = 'Login Hash';
+
+    private static $plural_name = 'Login Hashes';
 
     private static $db = array (
         'DeviceID' => 'Varchar(40)',
@@ -29,7 +32,7 @@ class RememberLoginHash extends DataObject
     );
 
     private static $has_one = array (
-        'Member' => 'SilverStripe\\Security\\Member',
+        'Member' => Member::class,
     );
 
     private static $indexes = array(

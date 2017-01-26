@@ -2,6 +2,8 @@
 
 namespace SilverStripe\i18n;
 
+use SilverStripe\i18n\TextCollection\i18nTextCollector;
+
 /**
  * Dynamically provide translatable entites for the {@link i18n} logic.
  * This is particularly handy for natural language strings in static variables
@@ -22,53 +24,53 @@ interface i18nEntityProvider
 {
 
     /**
+     * Returns the list of provided translations for this object.
+     *
+     * Note: Pluralised forms are always returned in array format.
+     *
      * Example usage:
      * <code>
-     * class MyTestClass implements i18nEntityProvider {
-     * function provideI18nEntities() {
-     *  $entities = array();
-     *  foreach($this->stat('my_static_array) as $key => $value) {
-     *      $entities["MyTestClass.my_static_array_{$key}"] = array(
-     *          $value,
-     *
-     *          'My context description'
-     *      );
-     *  }
-     *  return $entities;
-     * }
-     *
-     * public static function my_static_array() {
-     *  $t_my_static_array = array();
-     *  foreach(self::$my_static_array as $k => $v) {
-     *      $t_my_static_array[$k] = _t("MyTestClass.my_static_array_{$key}", $v);
-     *  }
-     *  return $t_my_static_array;
-     * }
+     * class MyTestClass implements i18nEntityProvider
+     * {
+     *   public function provideI18nEntities()
+     *   {
+     *     $entities = [];
+     *     foreach($this->stat('my_static_array) as $key => $value) {
+     *       $entities["MyTestClass.my_static_array_{$key}"] = $value;
+     *     }
+     *     $entities["MyTestClass.PLURALS"] = [
+     *       'one' => 'A test class',
+     *       'other' => '{count} test classes',
+     *     ]
+     *     return $entities;
+     *   }
      * }
      * </code>
      *
      * Example usage in {@link DataObject->provideI18nEntities()}.
      *
-     * You can ask textcollector to add the provided entity to a different module
-     * than the class is contained in by adding a 4th argument to the array:
-     * <code>
-     * class MyTestClass implements i18nEntityProvider {
-     * function provideI18nEntities() {
-     *  $entities = array();
-     *      $entities["MyOtherModuleClass.MYENTITY"] = array(
-     *          $value,
+     * You can ask textcollector to add the provided entity to a different module.
+     * Simply wrap the returned value for any item in an array with the format:
+     * [ 'default' => $defaultValue, 'module' => $module ]
      *
-     *          'My context description',
-     *          'myothermodule'
-     *      );
-     *  }
-     *  return $entities;
+     * <code>
+     * class MyTestClass implements i18nEntityProvider
+     * {
+     *   public function provideI18nEntities()
+     *   {
+     *     $entities = [
+     *       'MyOtherModuleClass.MYENTITY' => [
+     *         'default' => $value,
+     *         'module' => 'myothermodule',
+     *       ]
+     *     ];
+     *   }
+     *   return $entities;
      * }
      * </code>
      *
-     * @return array All entites in an associative array, with
-     * entity name as the key, and a numerical array of pseudo-arguments
-     * for _t() as a value.
+     * @return array Map of keys to default values, which are strings in the default case,
+     * and array-form for pluralisations.
      */
     public function provideI18nEntities();
 }

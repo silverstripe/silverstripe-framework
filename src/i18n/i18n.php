@@ -3,24 +3,16 @@
 namespace SilverStripe\i18n;
 
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Cache;
-use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Object;
-use SilverStripe\Core\Flushable;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\ORM\ArrayLib;
+use SilverStripe\Dev\Deprecation;
+use SilverStripe\i18n\Messages\MessageProvider;
+use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
-use Zend_Cache_Backend_ExtendedInterface;
-use Zend_Cache;
-use Zend_Cache_Core;
-use Zend_Translate_Adapter;
-use Zend_Translate;
-use Zend_Locale_Data;
-use Zend_Locale_Exception;
+use SilverStripe\View\ThemeResourceLoader;
 use InvalidArgumentException;
-
-require_once 'Zend/Translate.php';
 
 /**
  * Base-class for storage and retrieval of translated entities.
@@ -79,11 +71,15 @@ require_once 'Zend/Translate.php';
  *
  * @author Bernat Foj Capell <bernat@silverstripe.com>
  */
-class i18n extends Object implements TemplateGlobalProvider, Flushable
+class i18n implements TemplateGlobalProvider
 {
+    use Injectable;
+    use Configurable;
 
     /**
      * This static variable is used to store the current defined locale.
+     *
+     * @var string
      */
     protected static $current_locale = '';
 
@@ -92,12 +88,6 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
      * @var string
      */
     private static $default_locale = 'en_US';
-
-    /**
-     * @config
-     * @var boolean
-     */
-    private static $js_i18n = true;
 
     /**
      * @config
@@ -112,38 +102,34 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
     private static $time_format = 'H:mm';
 
     /**
-     * @var array Array of priority keys to instances of Zend_Translate, mapped by name.
-     */
-    protected static $translators;
-
-    /**
-     * Triggered early in the request when someone requests a flush.
-     */
-    public static function flush()
-    {
-        $cache = self::get_cache();
-        $backend = $cache->getBackend();
-
-        if ($backend instanceof Zend_Cache_Backend_ExtendedInterface
-            && ($capabilities = $backend->getCapabilities())
-            && $capabilities['tags']
-        ) {
-            $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $cache->getTags());
-        } else {
-            $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
-        }
-    }
-
-    /**
-     * Return an instance of the cache used for i18n data.
+     * List of prioritised modules, in lowest to highest priority.
      *
-     * @skipUpgrade
-     * @return Zend_Cache_Core
+     * @config
+     * @var array
      */
-    public static function get_cache()
-    {
-        return Cache::factory('i18n', 'Output', array('lifetime' => null, 'automatic_serialization' => true));
-    }
+    private static $module_priority = [];
+
+    /**
+     * Config for ltr/rtr of specific locales.
+     * Will default to ltr.
+     *
+     * @config
+     * @var array
+     */
+    private static $text_direction = [
+        'ar' => 'rtl',
+        'dv' => 'rtl',
+        'fa' => 'rtl',
+        'ha_Arab' => 'rtl',
+        'he' => 'rtl',
+        'ku' => 'rtl',
+        'pa_Arab' => 'rtl',
+        'ps' => 'rtl',
+        'syr' => 'rtl',
+        'ug' => 'rtl',
+        'ur' => 'rtl',
+        'uz_Arab' => 'rtl',
+    ];
 
     /**
      * An exhaustive list of possible locales (code => language and country)
@@ -1970,256 +1956,167 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
     );
 
     /**
-     * This is the main translator function. Returns the string defined by $class and $entity according to the
+     * Map of rails plurals into standard order (fewest to most)
+     * Note: Default locale only supplies one|other, but non-default locales
+     * can specify custom plurals.
+     *
+     * @config
+     * @var array
+     */
+    private static $plurals = [
+        'zero',
+        'one',
+        'two',
+        'few',
+        'many',
+        'other',
+    ];
+
+    /**
+     * Plural forms in default (en) locale
+     *
+     * @var array
+     */
+    private static $default_plurals = [
+        'one',
+        'other',
+    ];
+
+    /**
+     * Warn if _t() invoked without a default.
+     *
+     * @config
+     * @var bool
+     */
+    private static $missing_default_warning = true;
+
+    /**
+     * This is the main translator function. Returns the string defined by $entity according to the
      * currently set locale.
      *
-     * @param string $entity Entity that identifies the string. It must be in the form "Namespace.Entity" where
-     *                       Namespace will be usually the class name where this string is used and Entity identifies
-     *                       the string inside the namespace.
-     * @param string $string The original string itself. In a usual call this is a mandatory parameter, but if you are
-     *                       reusing a string which has already been "declared" (using another call to this function,
-     *                       with the same class and entity), you can omit it.
-     * @param string $context (optional) If the string can be difficult to translate by any reason, you can help
-     *                        translators with some more info using this param
-     * @param array $injection (optional) array of key value pairs that are used to replace corresponding
-     *                              expressions in {curly brackets} in the $string. The injection array can also be
-     *                              used as the their argument to the _t() function
-     * @return string The translated string, according to the currently set locale {@link i18n::set_locale()}
+     * Also supports pluralisation of strings. Pass in a `count` argument, as well as a
+     * default value with `|` pipe-delimited options for each plural form.
+     *
+     * @param string $entity Entity that identifies the string. It must be in the form
+     * "Namespace.Entity" where Namespace will be usually the class name where this
+     * string is used and Entity identifies the string inside the namespace.
+     * @param mixed $arg,... Additional arguments are parsed as such:
+     *  - Next string argument is a default. Pass in a `|` pipe-delimited value with `{count}`
+     *    to do pluralisation.
+     *  - Any other string argument after default is context for i18nTextCollector
+     *  - Any array argument in any order is an injection parameter list. Pass in a `count`
+     *    injection parameter to pluralise.
+     * @return string
      */
-    public static function _t($entity, $string = "", $context = "", $injection = null)
+    public static function _t($entity, $arg = null)
     {
-        //fetch the injection array out of the parameters (if it is present)
-        $argList = func_get_args();
-        $argNum = func_num_args();
-        //_t($entity, $string = "", $context (optional), $injectionArray (optional))
-        $injectionArray = null;
-        for ($i = 0; $i < $argNum; $i++) {
-            if (is_array($argList[$i])) {   //we have reached the injectionArray
-                $injectionArray = $argList[$i]; //any array in the args will be the injection array
+        // Detect args
+        $default = null;
+        $injection = [];
+        foreach (array_slice(func_get_args(), 1) as $arg) {
+            if (is_array($arg)) {
+                $injection = $arg;
+            } elseif (!isset($default)) {
+                $default = $arg ?: '';
             }
         }
 
-        // Find best translation
-        $locale = i18n::get_locale();
-        $returnValue = static::with_translators(function (Zend_Translate_Adapter $adapter) use ($entity, $locale) {
-            // Return translation only if we found a match thats not the entity itself (Zend fallback)
-            $translation = $adapter->translate($entity, $locale);
-            if ($translation && $translation != $entity) {
-                return $translation;
-            }
-            return null;
-        });
-
-        // Fall back to default string argument
-        if ($returnValue === null) {
-            $returnValue = (is_string($string)) ? $string : '';
+        // Encourage the provision of default values so that text collector can discover new strings
+        if (!$default && static::config()->get('missing_default_warning')) {
+            user_error("Missing default for localisation key $entity", E_USER_WARNING);
         }
 
+        // Deprecate legacy injection format (`string %s, %d`)
         // inject the variables from injectionArray (if present)
-        if ($injectionArray) {
-            $regex = '/\{[\w\d]*\}/i';
-            if (!preg_match($regex, $returnValue)) {
-                // Legacy mode: If no injection placeholders are found,
-                // replace sprintf placeholders in fixed order.
-                // Fail silently in case the translation is outdated
-                preg_match_all('/%[s,d]/', $returnValue, $returnValueArgs);
-                if ($returnValueArgs) {
-                    foreach ($returnValueArgs[0] as $i => $returnValueArg) {
-                        if ($i >= count($injectionArray)) {
-                            $injectionArray[] = '';
-                        }
-                    }
-                }
-                $replaced = vsprintf($returnValue, array_values($injectionArray));
-                if ($replaced) {
-                    $returnValue = $replaced;
-                }
-            } elseif (!ArrayLib::is_associative($injectionArray)) {
-                // Legacy mode: If injection placeholders are found,
-                // but parameters are passed without names, replace them in fixed order.
-                $returnValue = preg_replace_callback(
-                    $regex,
-                    function () use (&$injectionArray) {
-                        return $injectionArray ? array_shift($injectionArray) : '';
-                    },
-                    $returnValue
-                );
-            } else {
-                // Standard placeholder replacement with named injections and variable order.
-                foreach ($injectionArray as $variable => $injection) {
-                    $placeholder = '{'.$variable.'}';
-                    $returnValue = str_replace($placeholder, $injection, $returnValue, $count);
-                    if (!$count) {
-                        Injector::inst()->get('Logger')->log('notice', sprintf(
-                            "Couldn't find placeholder '%s' in translation string '%s' (id: '%s')",
-                            $placeholder,
-                            $returnValue,
-                            $entity
-                        ));
-                    }
-                }
-            }
+        $sprintfArgs = [];
+        if ($default && !preg_match('/\{[\w\d]*\}/i', $default) && preg_match('/%[s,d]/', $default)) {
+            Deprecation::notice('5.0', 'sprintf style localisation variables are deprecated');
+            $sprintfArgs = array_values($injection);
+            $injection = [];
         }
 
-        return $returnValue;
-    }
+        // If injection isn't associative, assume legacy injection format
+        $failUnlessSprintf = false;
+        if ($injection && array_values($injection) === $injection) {
+            $failUnlessSprintf = true; // Note: Will trigger either a deprecation error or exception below
+            $sprintfArgs = array_values($injection);
+            $injection = [];
+        }
 
-    /**
-     * Pluralise an item or items.
-     *
-     * @param string $singular Singular form
-     * @param string $plural Plural form
-     * @param int $number Number of items (natural number only)
-     * @param bool $prependNumber Include number in result
-     * @return string Result with the number and pluralised form appended. E.g. '1 page'
-     */
-    public static function pluralise($singular, $plural, $number, $prependNumber = true)
-    {
-        $locale = static::get_locale();
-        $form = static::with_translators(
-            function (Zend_Translate_Adapter $adapter) use ($singular, $plural, $number, $locale) {
-                // Return translation only if we found a match thats not the entity itself (Zend fallback)
-                $result = $adapter->plural($singular, $plural, $number, $locale);
-                if ($result) {
-                    return $result;
-                }
-                return null;
-            }
-        );
-        if ($prependNumber) {
-            return _t('i18n.PLURAL', '{number} {form}', [
-                'number' => $number,
-                'form' => $form
-            ]);
+        // Detect plurals: Has a {count} argument as well as a `|` pipe delimited string (if provided)
+        $isPlural = isset($injection['count']);
+        $count = $isPlural ? $injection['count'] : null;
+        // Refine check against default
+        if ($isPlural && $default && !static::parse_plurals($default)) {
+            $isPlural = false;
+        }
+
+        // Pass back to translation backend
+        if ($isPlural) {
+            $result = static::getMessageProvider()->pluralise($entity, $default, $injection, $count);
         } else {
-            return $form;
+            $result = static::getMessageProvider()->translate($entity, $default, $injection);
         }
+
+        // Sometimes default is omitted, so we don't know we have %s injection format until after translation
+        if (!$default && !preg_match('/\{[\w\d]*\}/i', $result) && preg_match('/%[s,d]/', $result)) {
+            Deprecation::notice('5.0', 'sprintf style localisation is deprecated');
+            if ($injection) {
+                $sprintfArgs = array_values($injection);
+            }
+        } elseif ($failUnlessSprintf) {
+            // Note: After removing deprecated code, you can move this error up into the is-associative check
+            // Neither default nor translated strings were %s substituted, and our array isn't associative
+            throw new InvalidArgumentException('Injection must be an associative array');
+        }
+
+        // @deprecated (see above)
+        if ($sprintfArgs) {
+            return vsprintf($result, $sprintfArgs);
+        }
+
+        return $result;
     }
 
     /**
-     * Loop over all translators in order of precedence, and return the first non-null value
-     * returned via $callback
+     * Split plural string into standard CLDR array form.
+     * A string is considered a pluralised form if it has a {count} argument, and
+     * a single `|` pipe-delimiting character.
      *
-     * @param callable $callback Callback which is given the translator
-     * @return mixed First non-null result from $callback, or null if none matched
+     * Note: Only splits in the default (en) locale as the string form contains limited metadata.
+     *
+     * @param string $string Input string
+     * @return array List of plural forms, or empty array if not plural
      */
-    protected static function with_translators($callback)
+    public static function parse_plurals($string)
     {
-        // get current locale (either default or user preference)
-        $locale = i18n::get_locale();
-        $lang = i18n::get_lang_from_locale($locale);
-
-        // Only call getter if static isn't already defined (for performance reasons)
-        $translatorsByPrio = self::$translators ?: self::get_translators();
-
-        foreach ($translatorsByPrio as $priority => $translators) {
-            /** @var Zend_Translate $translator */
-            foreach ($translators as $name => $translator) {
-                $adapter = $translator->getAdapter();
-
-                // at this point, we need to ensure the language and locale are loaded
-                // as include_by_locale() doesn't load a fallback.
-
-                // TODO Remove reliance on global state, by refactoring into an i18nTranslatorManager
-                // which is instanciated by core with a $clean instance variable.
-
-                if (!$adapter->isAvailable($lang)) {
-                    i18n::include_by_locale($lang);
-                }
-
-                if (!$adapter->isAvailable($locale)) {
-                    i18n::include_by_locale($locale);
-                }
-
-                $result = call_user_func($callback, $adapter);
-                if ($result !== null) {
-                    return $result;
-                }
+        if (strstr($string, '|') && strstr($string, '{count}')) {
+            $keys = i18n::config()->get('default_plurals');
+            $values = explode('|', $string);
+            if (count($keys) == count($values)) {
+                return array_combine($keys, $values);
             }
         }
-
-        // Nothing matched
-        return null;
-    }
-
-
-    /**
-     * @return array Array of priority keys to instances of Zend_Translate, mapped by name.
-     */
-    public static function get_translators()
-    {
-        if (!Zend_Translate::getCache()) {
-            Zend_Translate::setCache(self::get_cache());
-        }
-
-        if (!self::$translators) {
-            $defaultPriority = 10;
-            self::$translators[$defaultPriority] = array(
-                'core' => new Zend_Translate(array(
-                    'adapter' => 'SilverStripe\\i18n\\i18nRailsYamlAdapter',
-                    'locale' => i18n::config()->get('default_locale'),
-                    'disableNotices' => true,
-                ))
-            );
-
-            i18n::include_by_locale('en');
-            i18n::include_by_locale('en_US');
-        }
-
-        return self::$translators;
+        return [];
     }
 
     /**
-     * @param String
-     * @return Zend_Translate
+     * Convert CLDR array plural form to `|` pipe-delimited string.
+     * Unlike parse_plurals, this supports all locale forms (not just en)
+     *
+     * @param array $plurals
+     * @return string Delimited string, or null if not plurals
      */
-    public static function get_translator($name)
+    public static function encode_plurals($plurals)
     {
-        foreach (self::get_translators() as $priority => $translators) {
-            if (isset($translators[$name])) {
-                return $translators[$name];
-            }
+        // Validate against global plural list
+        $forms = i18n::config()->get('plurals');
+        $forms = array_combine($forms, $forms);
+        $intersect = array_intersect_key($plurals, $forms);
+        if ($intersect) {
+            return implode('|', $intersect);
         }
         return null;
-    }
-
-    /**
-     * @param Zend_Translate $translator Needs to implement {@link i18nTranslateAdapterInterface}
-     * @param string $name If left blank will override the default translator.
-     * @param int $priority
-     */
-    public static function register_translator($translator, $name, $priority = 10)
-    {
-        if (!is_int($priority)) {
-            throw new InvalidArgumentException("register_translator expects an int priority");
-        }
-
-        // Ensure it's not there. If it is, we're replacing it. It may exist in a different priority.
-        self::unregister_translator($name);
-
-        // Add our new translator
-        if (!isset(self::$translators[$priority])) {
-            self::$translators[$priority] = array();
-        }
-        self::$translators[$priority][$name] = $translator;
-
-        // Resort array, ensuring highest priority comes first
-        krsort(self::$translators);
-
-        i18n::include_by_locale('en_US');
-        i18n::include_by_locale('en');
-    }
-
-    /**
-     * @param String
-     */
-    public static function unregister_translator($name)
-    {
-        foreach (self::get_translators() as $priority => $translators) {
-            if (isset($translators[$name])) {
-                unset(self::$translators[$priority][$name]);
-            }
-        }
     }
 
     /**
@@ -2285,25 +2182,14 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
     public static function get_existing_translations()
     {
         $locales = array();
-
-        // TODO Inspect themes
-        $modules = ClassLoader::instance()->getManifest()->getModules();
-
-        foreach ($modules as $module) {
-            if (!file_exists("{$module}/lang/")) {
-                continue;
-            }
-
+        foreach (static::get_lang_dirs() as $langPath) {
             $allLocales = i18n::config()->get('all_locales');
-            $moduleLocales = scandir("{$module}/lang/");
-            foreach ($moduleLocales as $moduleLocale) {
-                $locale = pathinfo($moduleLocale, PATHINFO_FILENAME);
-                $ext = pathinfo($moduleLocale, PATHINFO_EXTENSION);
-                if ($locale && in_array($ext, array('php','yml'))) {
+            $langFiles = scandir($langPath);
+            foreach ($langFiles as $langFile) {
+                $locale = pathinfo($langFile, PATHINFO_FILENAME);
+                $ext = pathinfo($langFile, PATHINFO_EXTENSION);
+                if ($locale && $ext === 'yml') {
                     // Normalize locale to include likely region tag, avoid repetition in locale labels
-                    // TODO Replace with CLDR list of actually available languages/regions
-                    // Only allow explicitly registered locales, otherwise we'll get into trouble
-                    // if the locale doesn't exist in Zend's CLDR data
                     $fullLocale = self::get_locale_from_lang($locale);
                     if (isset($allLocales[$fullLocale])) {
                         $locales[$fullLocale] = $allLocales[$fullLocale];
@@ -2505,36 +2391,32 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
      * Returns the script direction in format compatible with the HTML "dir" attribute.
      *
      * @see http://www.w3.org/International/tutorials/bidi-xhtml/
-     * @param String $locale Optional locale incl. region (underscored)
-     * @return String "rtl" or "ltr"
+     * @param string $locale Optional locale incl. region (underscored)
+     * @return string "rtl" or "ltr"
      */
     public static function get_script_direction($locale = null)
     {
-        require_once 'Zend/Locale/Data.php';
+        $dirs = static::config()->get('text_direction');
         if (!$locale) {
             $locale = i18n::get_locale();
         }
-        try {
-            $dir = Zend_Locale_Data::getList($locale, 'layout');
-        } catch (Zend_Locale_Exception $e) {
-            $dir = Zend_Locale_Data::getList(i18n::get_lang_from_locale($locale), 'layout');
+        if (isset($dirs[$locale])) {
+            return $dirs[$locale];
         }
-
-        return ($dir && $dir['characters'] == 'right-to-left') ? 'rtl' : 'ltr';
+        $lang = static::get_lang_from_locale($locale);
+        if (isset($dirs[$lang])) {
+            return $dirs[$lang];
+        }
+        return 'ltr';
     }
 
     /**
-     * Includes all available language files for a certain defined locale.
+     * Get sorted modules
      *
-     * @param string $locale All resources from any module in locale $locale will be loaded
-     * @param Boolean $clean Clean old caches?
+     * @return array Array of module names -> path
      */
-    public static function include_by_locale($locale, $clean = false)
+    public static function get_sorted_modules()
     {
-        if ($clean) {
-            self::flush();
-        }
-
         // Get list of module => path pairs, and then just the names
         $modules = ClassLoader::instance()->getManifest()->getModules();
         $moduleNames = array_keys($modules);
@@ -2545,7 +2427,7 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
             array_splice($moduleNames, $idx, 1);
         }
 
-        // Get the order from the config syste,
+        // Get the order from the config syste (lowest to highest)
         $order = i18n::config()->get('module_priority');
 
         // Find all modules that don't have their order specified by the config system
@@ -2559,9 +2441,9 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
             array_splice($order, 0, 0, $unspecified);
         }
 
-        // Put the project module back in at the begining if it wasn't specified by the config system
+        // Put the project at end (highest priority)
         if (!in_array($project, $order)) {
-            array_unshift($order, $project);
+            $order[] = $project;
         }
 
         $sortedModules = array();
@@ -2571,90 +2453,40 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
             }
         }
         $sortedModules = array_reverse($sortedModules, true);
-
-        // Loop in reverse order, meaning the translator with the highest priority goes first
-        $translatorsByPrio = array_reverse(self::get_translators(), true);
-        foreach ($translatorsByPrio as $priority => $translators) {
-            /** @var Zend_Translate $translator */
-            foreach ($translators as $name => $translator) {
-                /** @var i18nTranslateAdapterInterface|Zend_Translate_Adapter $adapter */
-                $adapter = $translator->getAdapter();
-
-                // Load translations from modules
-                foreach ($sortedModules as $module) {
-                    $filename = $adapter->getFilenameForLocale($locale);
-                    $filepath = "{$module}/lang/" . $filename;
-
-                    if ($filename && !file_exists($filepath)) {
-                        continue;
-                    }
-                    $adapter->addTranslation(
-                        array('content' => $filepath, 'locale' => $locale)
-                    );
-                }
-
-                // Load translations from themes
-                // TODO Replace with theme listing once implemented in TemplateManifest
-                $themesBase = Director::baseFolder() . '/themes';
-                if (is_dir($themesBase)) {
-                    foreach (scandir($themesBase) as $theme) {
-                        if (strpos($theme, Config::inst()->get('SilverStripe\\View\\SSViewer', 'theme')) === 0
-                            && file_exists("{$themesBase}/{$theme}/lang/")
-                        ) {
-                            $filename = $adapter->getFilenameForLocale($locale);
-                            $filepath = "{$themesBase}/{$theme}/lang/" . $filename;
-                            if ($filename && !file_exists($filepath)) {
-                                continue;
-                            }
-                            $adapter->addTranslation(
-                                array('content' => $filepath, 'locale' => $locale)
-                            );
-                        }
-                    }
-                }
-
-                // Add empty translations to ensure the locales are "registered" with isAvailable(),
-                // and the next invocation of include_by_locale() doesn't cause a new reparse.
-                $adapter->addTranslation(
-                    array(
-                        // Cached by content hash, so needs to be locale dependent
-                        'content' => array($locale => $locale),
-                        'locale' => $locale,
-                        'usetranslateadapter' => true
-                    )
-                );
-            }
-        }
+        return $sortedModules;
     }
 
     /**
-     * Given a class name (a "locale namespace"), will search for its module and, if available,
-     * will load the resources for the currently defined locale.
-     * If not available, the original English resource will be loaded instead (to avoid blanks)
+     * Find the list of prioritised /lang folders in this application
      *
-     * @param string $class Resources for this class will be included, according to the set locale.
+     * @return array
      */
-    public static function include_by_class($class)
+    public static function get_lang_dirs()
     {
-        $module = self::get_owner_module($class);
+        $paths = [];
 
-        $translatorsByPrior = array_reverse(self::get_translators(), true);
-        foreach ($translatorsByPrior as $priority => $translators) {
-            /** @var Zend_Translate $translator */
-            foreach ($translators as $name => $translator) {
-                /** @var i18nTranslateAdapterInterface|Zend_Translate_Adapter $adapter */
-                $adapter = $translator->getAdapter();
-                $filename = $adapter->getFilenameForLocale(self::get_locale());
-                $filepath = "{$module}/lang/" . $filename;
-                if ($filename && !file_exists($filepath)) {
-                    continue;
-                }
-                $adapter->addTranslation(array(
-                    'content' => $filepath,
-                    'locale' => self::get_locale()
-                ));
+        // Search sorted modules
+        foreach (static::get_sorted_modules() as $module => $path) {
+            $langPath = "{$path}/lang/";
+            if (is_dir($langPath)) {
+                $paths[] = $langPath;
             }
         }
+
+        // Search theme dirs
+        $locator = ThemeResourceLoader::instance();
+        foreach (SSViewer::get_themes() as $theme) {
+            if ($locator->getSet($theme)) {
+                continue;
+            }
+            $path = $locator->getPath($theme);
+            $langPath = "{$path}/lang/";
+            if (is_dir($langPath)) {
+                $paths[] = $langPath;
+            }
+        }
+
+        return $paths;
     }
 
     public static function get_template_global_variables()
@@ -2664,5 +2496,13 @@ class i18n extends Object implements TemplateGlobalProvider, Flushable
             'get_locale',
             'i18nScriptDirection' => 'get_script_direction',
         );
+    }
+
+    /**
+     * @return MessageProvider
+     */
+    public static function getMessageProvider()
+    {
+        return Injector::inst()->get(MessageProvider::class);
     }
 }

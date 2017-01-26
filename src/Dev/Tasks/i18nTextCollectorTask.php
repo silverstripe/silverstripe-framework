@@ -6,7 +6,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\BuildTask;
-use SilverStripe\i18n\i18nTextCollector;
+use SilverStripe\i18n\TextCollection\i18nTextCollector;
 
 /**
  * Collects i18n strings

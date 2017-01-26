@@ -454,11 +454,10 @@ mappings:
   i18nRailsYamlAdapter: SilverStripe\i18n\i18nRailsYamlAdapter
   i18nSSLegacyAdapter: SilverStripe\i18n\i18nSSLegacyAdapter
   i18nSSLegacyAdapter_Iterator: SilverStripe\i18n\i18nSSLegacyAdapter_Iterator
-  i18nTextCollector: SilverStripe\i18n\i18nTextCollector
-  i18nTextCollector_Writer: SilverStripe\i18n\i18nTextCollector_Writer
-  i18nTextCollector_Writer_Php: SilverStripe\i18n\i18nTextCollector_Writer_Php
-  i18nTextCollector_Writer_RailsYaml: SilverStripe\i18n\i18nTextCollector_Writer_RailsYaml
-  i18nTextCollector_Parser: SilverStripe\i18n\i18nTextCollector_Parser
+  i18nTextCollector: SilverStripe\i18n\TextCollection\i18nTextCollector
+  i18nTextCollector_Writer: SilverStripe\i18n\Messages\Writer
+  i18nTextCollector_Writer_RailsYaml: SilverStripe\i18n\Messages\YamlWriter
+  i18nTextCollector_Parser: SilverStripe\i18n\TextCollection\Parser
   i18nTranslateAdapterInterface: SilverStripe\i18n\i18nTranslateAdapterInterface
   SilverStripe\Framework\Logging\DebugViewFriendlyErrorFormatter: SilverStripe\Logging\DebugViewFriendlyErrorFormatter
   SilverStripe\Framework\Logging\DetailedErrorFormatter: SilverStripe\Logging\DetailedErrorFormatter
