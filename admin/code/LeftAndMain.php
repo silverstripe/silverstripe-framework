@@ -1013,8 +1013,7 @@ class LeftAndMain extends Controller implements PermissionProvider {
 			}
 
 			$link = Controller::join_links($recordController->Link("show"), $record->ID);
-			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))
-				->forTemplate() . '</li>';
+			$html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))->forTemplate();
 
 			$data[$id] = array(
 				'html' => $html,
@@ -1990,16 +1989,21 @@ class LeftAndMain_TreeNode extends ViewableData {
 	 *
 	 * @todo Remove hardcoded assumptions around returning an <li>, by implementing recursive tree node rendering
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function forTemplate() {
 		$obj = $this->obj;
-		return "<li id=\"record-$obj->ID\" data-id=\"$obj->ID\" data-pagetype=\"$obj->ClassName\" class=\""
-			. $this->getClasses() . "\">" . "<ins class=\"jstree-icon\">&nbsp;</ins>"
-			. "<a href=\"" . $this->getLink() . "\" title=\"("
-			. trim(_t('LeftAndMain.PAGETYPE','Page type'), " :") // account for inconsistencies in translations
-			. ": " . $obj->i18n_singular_name() . ") $obj->Title\" ><ins class=\"jstree-icon\">&nbsp;</ins><span class=\"text\">" . ($obj->TreeTitle)
-			. "</span></a>";
+
+		return (string)SSViewer::execute_template('LeftAndMain_TreeNode', $obj, array(
+			'Classes' => $this->getClasses(),
+			'Link' => $this->getLink(),
+			'Title' => sprintf(
+				'(%s: %s) %s',
+				trim(_t('LeftAndMain.PAGETYPE','Page type'), " :"),
+				$obj->i18n_singular_name(),
+				$obj->Title
+			),
+		));
 	}
 
 	/**
