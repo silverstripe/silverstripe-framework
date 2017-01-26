@@ -1,5 +1,6 @@
 <?php
 
+
 /**
  * Calculate an Aggregate on a particular field of a particular DataObject type (possibly with
  * an additional filter before the aggregate)
@@ -37,104 +38,124 @@
  */
 class Aggregate extends ViewableData {
 
-	private static $cache = null;
+    private static $cache = null;
 
-	/** Build & cache the cache object */
-	protected static function cache() {
-		return self::$cache ? self::$cache : (self::$cache = SS_Cache::factory('aggregate'));
-	}
+    /** Build & cache the cache object */
+    protected static function cache() {
+        self::set_as_file_cache_to_avoid_clearing_entire_cache();
+        return self::$cache ? self::$cache : (self::$cache = SS_Cache::factory('aggregate'));
+    }
 
-	/**
-	 * Clear the aggregate cache for a given type, or pass nothing to clear all aggregate caches.
-	 * {@link $class} is just effective if the cache backend supports tags.
-	 */
-	public static function flushCache($class=null) {
-		$cache = self::cache();
-		$capabilities = $cache->getBackend()->getCapabilities();
-		if($capabilities['tags'] && (!$class || $class == 'DataObject')) {
-			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('aggregate'));
-		} elseif($capabilities['tags']) {
-			$tags = ClassInfo::ancestry($class);
-			foreach($tags as &$tag) {
-				$tag = preg_replace('/[^a-zA-Z0-9_]/', '_', $tag);
-			}
-			$cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, $tags);
-		} else {
-			$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
-		}
-	}
+    /**
+     * make sure aggregate always uses File caching
+     * as many of the other caches will clear all caches
+     * everytime the DataObject is written...
+     * @see: https://github.com/silverstripe/silverstripe-framework/issues/6383
+     */
+    protected static function set_as_file_cache_to_avoid_clearing_entire_cache()
+    {
+        $cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'aggregatecache';
 
-	/**
-	 * Constructor
-	 *
-	 * @deprecated 3.1 Use DataList to aggregate data
-	 *
-	 * @param string $type The DataObject type we are building an aggregate for
-	 * @param string $filter (optional) An SQL filter to apply to the selected rows before calculating the aggregate
-	 */
-	public function __construct($type, $filter = '') {
-		Deprecation::notice('4.0', 'Call aggregate methods on a DataList directly instead. In templates'
-			. ' an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead'
-			. ' (check partial-caching.md documentation for more details.)');
-		$this->type = $type;
-		$this->filter = $filter;
-		parent::__construct();
-	}
+        if (!is_dir($cachedir)) {
+            mkdir($cachedir);
+        }
 
-	/**
-	 * Build the SQLSelect to calculate the aggregate
-	 * This is a seperate function so that subtypes of Aggregate can change just this bit
-	 * @param string $attr - the SQL field statement for selection (i.e. "MAX(LastUpdated)")
-	 * @return SQLSelect
-	 */
-	protected function query($attr) {
-		$query = DataList::create($this->type)->where($this->filter);
-		$query->setSelect($attr);
-		$query->setOrderBy(array());
-		$singleton->extend('augmentSQL', $query);
-		return $query;
-	}
+        SS_Cache::add_backend('aggregatecache', 'File', array('cache_dir' => $cachedir));
+        SS_Cache::pick_backend('aggregatecache', 'aggregate');
+    }
 
-	/**
-	 * Entry point for being called from a template.
-	 *
-	 * This gets the aggregate function
-	 *
-	 */
-	public function XML_val($name, $args = null, $cache = false) {
-		$func = strtoupper( strpos($name, 'get') === 0 ? substr($name, 3) : $name );
-		$attribute = $args ? $args[0] : 'ID';
+    /**
+     * Clear the aggregate cache for a given type, or pass nothing to clear all aggregate caches.
+     * {@link $class} is just effective if the cache backend supports tags.
+     */
+    public static function flushCache($class=null) {
+        $cache = self::cache();
+        $capabilities = $cache->getBackend()->getCapabilities();
+        if($capabilities['tags'] && (!$class || $class == 'DataObject')) {
+            $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, array('aggregate'));
+        } elseif($capabilities['tags']) {
+            $tags = ClassInfo::ancestry($class);
+            foreach($tags as &$tag) {
+                $tag = preg_replace('/[^a-zA-Z0-9_]/', '_', $tag);
+            }
+            $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_ANY_TAG, $tags);
+        } else {
+            $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+        }
+    }
 
-		$table = null;
+    /**
+     * Constructor
+     *
+     * @deprecated 3.1 Use DataList to aggregate data
+     *
+     * @param string $type The DataObject type we are building an aggregate for
+     * @param string $filter (optional) An SQL filter to apply to the selected rows before calculating the aggregate
+     */
+    public function __construct($type, $filter = '') {
+        Deprecation::notice('4.0', 'Call aggregate methods on a DataList directly instead. In templates'
+            . ' an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead'
+            . ' (check partial-caching.md documentation for more details.)');
+        self::set_as_file_cache_to_avoid_clearing_entire_cache();
+        $this->type = $type;
+        $this->filter = $filter;
+        parent::__construct();
+    }
 
-		foreach (ClassInfo::ancestry($this->type, true) as $class) {
-			$fields = DataObject::database_fields($class, false);
-			if (array_key_exists($attribute, $fields)) { $table = $class; break; }
-		}
+    /**
+     * Build the SQLSelect to calculate the aggregate
+     * This is a seperate function so that subtypes of Aggregate can change just this bit
+     * @param string $attr - the SQL field statement for selection (i.e. "MAX(LastUpdated)")
+     * @return SQLSelect
+     */
+    protected function query($attr) {
+        $query = DataList::create($this->type)->where($this->filter);
+        $query->setSelect($attr);
+        $query->setOrderBy(array());
+        $singleton->extend('augmentSQL', $query);
+        return $query;
+    }
 
-		if (!$table) user_error("Couldn't find table for field $attribute in type {$this->type}", E_USER_ERROR);
+    /**
+     * Entry point for being called from a template.
+     *
+     * This gets the aggregate function
+     *
+     */
+    public function XML_val($name, $args = null, $cache = false) {
+        $func = strtoupper( strpos($name, 'get') === 0 ? substr($name, 3) : $name );
+        $attribute = $args ? $args[0] : 'ID';
 
-		$query = $this->query("$func(\"$table\".\"$attribute\")");
+        $table = null;
 
-		// Cache results of this specific SQL query until flushCache() is triggered.
-		$sql = $query->sql($parameters);
-		$cachekey = sha1($sql.'-'.var_export($parameters, true));
-		$cache = self::cache();
+        foreach (ClassInfo::ancestry($this->type, true) as $class) {
+            $fields = DataObject::database_fields($class, false);
+            if (array_key_exists($attribute, $fields)) { $table = $class; break; }
+        }
 
-		if (!($result = $cache->load($cachekey))) {
-			$result = (string)$query->execute()->value(); if (!$result) $result = '0';
-			$cache->save($result, null, array('aggregate', preg_replace('/[^a-zA-Z0-9_]/', '_', $this->type)));
-		}
+        if (!$table) user_error("Couldn't find table for field $attribute in type {$this->type}", E_USER_ERROR);
 
-		return $result;
-	}
+        $query = $this->query("$func(\"$table\".\"$attribute\")");
 
-	/**
-	 * Entry point for being called from PHP.
-	 */
-	public function __call($method, $arguments) {
-		return $this->XML_val($method, $arguments);
-	}
+        // Cache results of this specific SQL query until flushCache() is triggered.
+        $sql = $query->sql($parameters);
+        $cachekey = sha1($sql.'-'.var_export($parameters, true));
+        $cache = self::cache();
+
+        if (!($result = $cache->load($cachekey))) {
+            $result = (string)$query->execute()->value(); if (!$result) $result = '0';
+            $cache->save($result, null, array('aggregate', preg_replace('/[^a-zA-Z0-9_]/', '_', $this->type)));
+        }
+
+        return $result;
+    }
+
+    /**
+     * Entry point for being called from PHP.
+     */
+    public function __call($method, $arguments) {
+        return $this->XML_val($method, $arguments);
+    }
 }
 
 /**
@@ -148,43 +169,43 @@ class Aggregate extends ViewableData {
  */
 class Aggregate_Relationship extends Aggregate {
 
-	/**
-	 * Constructor
-	 *
-	 * @param DataObject $object The object that has_many somethings that we're calculating the aggregate for
-	 * @param string $relationship The name of the relationship
-	 * @param string $filter (optional) An SQL filter to apply to the relationship rows before calculating the
-	 *                       aggregate
-	 */
-	public function __construct($object, $relationship, $filter = '') {
-		$this->object = $object;
-		$this->relationship = $relationship;
+    /**
+     * Constructor
+     *
+     * @param DataObject $object The object that has_many somethings that we're calculating the aggregate for
+     * @param string $relationship The name of the relationship
+     * @param string $filter (optional) An SQL filter to apply to the relationship rows before calculating the
+     *                       aggregate
+     */
+    public function __construct($object, $relationship, $filter = '') {
+        $this->object = $object;
+        $this->relationship = $relationship;
 
-		$this->has_many = $object->has_many($relationship);
-		$this->many_many = $object->many_many($relationship);
+        $this->has_many = $object->has_many($relationship);
+        $this->many_many = $object->many_many($relationship);
 
-		if (!$this->has_many && !$this->many_many) {
-			user_error("Could not find relationship $relationship on object class {$object->class} in"
-				. " Aggregate Relationship", E_USER_ERROR);
-		}
+        if (!$this->has_many && !$this->many_many) {
+            user_error("Could not find relationship $relationship on object class {$object->class} in"
+                . " Aggregate Relationship", E_USER_ERROR);
+        }
 
-		parent::__construct($this->has_many ? $this->has_many : $this->many_many[1], $filter);
-	}
+        parent::__construct($this->has_many ? $this->has_many : $this->many_many[1], $filter);
+    }
 
-	protected function query($attr) {
-		if ($this->has_many) {
-			$query = $this->object->getComponentsQuery($this->relationship, $this->filter);
-		}
-		else {
-			$query = $this->object->getManyManyComponentsQuery($this->relationship, $this->filter);
-		}
+    protected function query($attr) {
+        if ($this->has_many) {
+            $query = $this->object->getComponentsQuery($this->relationship, $this->filter);
+        }
+        else {
+            $query = $this->object->getManyManyComponentsQuery($this->relationship, $this->filter);
+        }
 
-		$query->setSelect($attr);
-		$query->setGroupBy(array());
+        $query->setSelect($attr);
+        $query->setGroupBy(array());
 
-		$singleton = singleton($this->type);
-		$singleton->extend('augmentSQL', $query);
+        $singleton = singleton($this->type);
+        $singleton->extend('augmentSQL', $query);
 
-		return $query;
-	}
+        return $query;
+    }
 }
