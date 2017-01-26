@@ -41,9 +41,25 @@ class Aggregate extends ViewableData {
 
 	/** Build & cache the cache object */
 	protected static function cache() {
+		self::set_as_file_cache_to_avoid_clearing_entire_cache();
 		return self::$cache ? self::$cache : (self::$cache = SS_Cache::factory('aggregate'));
 	}
 
+    /**
+     * make sure aggregate always uses File caching
+     * as many of the other caches will clear all caches
+     * everytime the DataObject is written...
+     * @see: https://github.com/silverstripe/silverstripe-framework/issues/6383
+     */
+    protected static function set_as_file_cache_to_avoid_clearing_entire_cache()
+    {
+        $cachedir = TEMP_FOLDER . DIRECTORY_SEPARATOR . 'aggregatecache';
+        if (!is_dir($cachedir)) {
+            mkdir($cachedir);
+        }
+        SS_Cache::add_backend('aggregatecache', 'File', array('cache_dir' => $cachedir));
+        SS_Cache::pick_backend('aggregatecache', 'aggregate');
+    }
 	/**
 	 * Clear the aggregate cache for a given type, or pass nothing to clear all aggregate caches.
 	 * {@link $class} is just effective if the cache backend supports tags.
@@ -76,6 +92,7 @@ class Aggregate extends ViewableData {
 		Deprecation::notice('4.0', 'Call aggregate methods on a DataList directly instead. In templates'
 			. ' an example of the new syntax is &lt% cached List(Member).max(LastEdited) %&gt instead'
 			. ' (check partial-caching.md documentation for more details.)');
+		self::set_as_file_cache_to_avoid_clearing_entire_cache();
 		$this->type = $type;
 		$this->filter = $filter;
 		parent::__construct();
