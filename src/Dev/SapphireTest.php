@@ -17,6 +17,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Manifest\ConfigStaticManifest;
+use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
@@ -256,15 +257,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         if (class_exists('SilverStripe\\CMS\\Controllers\\RootURLController')) {
             RootURLController::reset();
         }
-        if (class_exists('Translatable')) {
-            Translatable::reset();
+
+        // Reset all resettables
+        /** @var Resettable $resettable */
+        foreach (ClassInfo::implementorsOf(Resettable::class) as $resettable) {
+            $resettable::reset();
         }
-        Versioned::reset();
-        DataObject::reset();
-        if (class_exists('SilverStripe\\CMS\\Model\\SiteTree')) {
-            SiteTree::reset();
-        }
-        Hierarchy::reset();
+
         if (Controller::has_curr()) {
             Controller::curr()->setSession(Session::create(array()));
         }

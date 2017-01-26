@@ -2,8 +2,9 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Control\Director;
-use SilverStripe\Core\Object;
+use InvalidArgumentException;
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 
@@ -13,15 +14,15 @@ use SilverStripe\View\Requirements;
  *
  * Caution: This API is highly volatile, and might change without prior deprecation.
  */
-class DateField_View_JQuery extends Object
+class DateField_View_JQuery
 {
+    use Injectable;
+    use Configurable;
 
+    /**
+     * @var DateField
+     */
     protected $field;
-
-    /*
-	 * the current jQuery UI DatePicker locale file
-	 */
-    protected $jqueryLocaleFile = '';
 
     /**
      * @var array Maps values from {@link i18n::$all_locales} to
@@ -44,8 +45,12 @@ class DateField_View_JQuery extends Object
      */
     public function __construct($field)
     {
-        parent::__construct();
         $this->field = $field;
+
+        // Health check
+        if (!$this->localePath('en')) {
+            throw new InvalidArgumentException("Missing jquery config");
+        }
     }
 
     /**
@@ -57,21 +62,18 @@ class DateField_View_JQuery extends Object
     }
 
     /**
-     * Check if jQuery UI locale settings exists for the current locale
-     * @return boolean
+     * Get path to localisation file for a given locale, if it exists
+     *
+     * @param string $lang
+     * @return string Relative path to file, or null if it isn't available
      */
-    function regionalSettingsExist()
+    protected function localePath($lang)
     {
-        $lang = $this->getLang();
-        $localeFile = THIRDPARTY_DIR . "/jquery-ui/datepicker/i18n/jquery.ui.datepicker-{$lang}.js";
-        if (file_exists(Director::baseFolder() . '/' . $localeFile)) {
-            $this->jqueryLocaleFile = $localeFile;
-            return true;
-        } else {
-            // file goes before internal en_US settings,
-            // but both will validate
-            return ($lang == 'en');
+        $path = ADMIN_THIRDPARTY_DIR . "/jquery-ui/datepicker/i18n/jquery.ui.datepicker-{$lang}.js";
+        if (file_exists(BASE_PATH . '/' . $path)) {
+            return $path;
         }
+        return null;
     }
 
     public function onBeforeRender()
@@ -84,10 +86,12 @@ class DateField_View_JQuery extends Object
      */
     public function onAfterRender($html)
     {
-        if ($this->getField()->getConfig('showcalendar')) {
-            // Include language files (if required)
-            if ($this->jqueryLocaleFile) {
-                Requirements::javascript($this->jqueryLocaleFile);
+        if ($this->getField()->getShowCalendar()) {
+            // Load config for this locale if available
+            $locale = $this->getLocale();
+            $localeFile = $this->localePath($locale);
+            if ($localeFile) {
+                Requirements::javascript($localeFile);
             }
         }
 
@@ -98,26 +102,20 @@ class DateField_View_JQuery extends Object
      * Determines which language to use for jQuery UI, which
      * can be different from the value set in i18n.
      *
-     * @return String
+     * @return string
      */
-    protected function getLang()
+    public function getLocale()
     {
-        $locale = $this->getField()->getLocale();
+        $locale = $this->getField()->getClientLocale();
+
+        // Check standard mappings
         $map = $this->config()->locale_map;
-        if ($this->getField()->getConfig('jslocale')) {
-            // Undocumented config property for now, might move to the jQuery view helper
-            $lang = $this->getField()->getConfig('jslocale');
-        } else {
-            if (array_key_exists($locale, $map)) {
-                // Specialized mapping for combined lang properties
-                $lang = $map[$locale];
-            } else {
-                // Fall back to default lang (meaning "en_US" turns into "en")
-                $lang = i18n::get_lang_from_locale($locale);
-            }
+        if (array_key_exists($locale, $map)) {
+            return $map[$locale];
         }
 
-        return $lang;
+        // Fall back to default lang (meaning "en_US" turns into "en")
+        return i18n::getData()->langFromLocale($locale);
     }
 
     /**
@@ -125,9 +123,10 @@ class DateField_View_JQuery extends Object
      * Needs to be consistent with Zend formatting, otherwise validation will fail.
      * Removes all time settings like hour/minute/second from the format.
      * See http://docs.jquery.com/UI/Datepicker/formatDate
+     * From http://userguide.icu-project.org/formatparse/datetime
      *
-     * @param String $format
-     * @return String
+     * @param string $format
+     * @return string
      */
     public static function convert_iso_to_jquery_format($format)
     {
@@ -183,5 +182,15 @@ class DateField_View_JQuery extends Object
         $replacements = array_values($convert);
 
         return preg_replace($patterns, $replacements, $format);
+    }
+
+    /**
+     * Get client date format
+     *
+     * @return string
+     */
+    public function getDateFormat()
+    {
+        return static::convert_iso_to_jquery_format($this->getField()->getDateFormat());
     }
 }

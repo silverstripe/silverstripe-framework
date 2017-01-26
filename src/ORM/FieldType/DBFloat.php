@@ -52,7 +52,9 @@ class DBFloat extends DBField
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return new NumericField($this->name, $title);
+        $field = NumericField::create($this->name, $title);
+        $field->setScale(null); // remove no-decimal restriction
+        return $field;
     }
 
     public function nullValue()

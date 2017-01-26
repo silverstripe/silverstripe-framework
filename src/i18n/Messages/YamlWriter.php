@@ -141,7 +141,7 @@ class YamlWriter implements Writer
         }
 
         // Parse from string
-        // Note: Risky outside of en locale.
+        // Note: Risky outside of 'en' locale.
         return i18n::parse_plurals($value);
     }
 

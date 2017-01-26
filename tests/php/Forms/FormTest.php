@@ -432,7 +432,7 @@ class FormTest extends FunctionalTest
         );
 
         $this->assertContains(
-            '&#039;&lt;a href=&quot;http://mysite.com&quot;&gt;link&lt;/a&gt;&#039; is not a number, only numbers can be accepted for this field',
+            '&#039;&lt;a href=&quot;http://mysite.com&quot;&gt;link&lt;/a&gt;&#039; is not a number, only numbers can be accepted for this field',
             $response->getBody(),
             "Validation messages are safely XML encoded"
         );
@@ -447,7 +447,7 @@ class FormTest extends FunctionalTest
     {
         $this->get('FormTest_Controller');
 
-        $this->post(
+        $result = $this->post(
             'FormTest_Controller/Form',
             array(
                 'Email' => 'test@test.com',

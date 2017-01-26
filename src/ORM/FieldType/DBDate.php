@@ -2,18 +2,17 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\Core\Convert;
+use IntlDateFormatter;
+use InvalidArgumentException;
+use NumberFormatter;
 use SilverStripe\Forms\DateField;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
-use DateTime;
-use Exception;
-use Zend_Date;
 
 /**
  * Represents a date field.
- * The field currently supports New Zealand date format (DD/MM/YYYY),
- * or an ISO 8601 formatted date (YYYY-MM-DD).
+ * Dates should be stored using ISO 8601 formatted date (y-MM-dd).
  * Alternatively you can set a timestamp that is evaluated through
  * PHP's built-in date() function according to your system locale.
  *
@@ -24,76 +23,73 @@ use Zend_Date;
  * );
  * </code>
  *
- * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
+ * Date formats all follow CLDR standard format codes
+ * @link http://userguide.icu-project.org/formatparse/datetime
  */
 class DBDate extends DBField
 {
-
     /**
-     * @config
-     * @see DBDateTime::nice_format
-     * @see DBTime::nice_format
-     * @return $this
+     * Standard ISO format string for date in CLDR standard format
      */
-    private static $nice_format = 'd/m/Y';
+    const ISO_DATE = 'y-MM-dd';
 
     public function setValue($value, $record = null, $markChanged = true)
     {
-        if ($value === false || $value === null || (is_string($value) && !strlen($value))) {
-            // don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
-            // saved as NULL in database
-            $this->value = null;
-            return $this;
+        $value = $this->parseDate($value);
+        if ($value === false) {
+            throw new InvalidArgumentException(
+                "Invalid date passed. Use " . self::ISO_DATE . " to prevent this error."
+            );
         }
-
-        // @todo This needs tidy up (what if you only specify a month and a year, for example?)
-        if (is_array($value)) {
-            if (!empty($value['Day']) && !empty($value['Month']) && !empty($value['Year'])) {
-                $this->value = $value['Year'] . '-' . $value['Month'] . '-' . $value['Day'];
-            }
-            /*
-             * return $this whether successfully set values from array based
-             * input or not (so checks below don't fail on an empty array)
-             */
-            return $this;
-        }
-
-        // Default to NZ date format - strtotime expects a US date
-        if (preg_match('#^([0-9]+)/([0-9]+)/([0-9]+)$#', $value, $parts)) {
-            $value = "$parts[2]/$parts[1]/$parts[3]";
-        }
-
-        if (is_numeric($value)) {
-            $this->value = date('Y-m-d', $value);
-        } elseif (is_string($value)) {
-            try {
-                $date = new DateTime($value);
-                $this->value = $date->format('Y-m-d');
-            } catch (Exception $e) {
-                $this->value = null;
-            }
-        }
+        $this->value = $value;
         return $this;
     }
 
     /**
-     * Returns the date in the format specified by the config value nice_format, or dd/mm/yy by default
+     * Parse timestamp or iso8601-ish date into standard iso8601 format
+     *
+     * @param mixed $value
+     * @return string|null|false Formatted date, null if empty but valid, or false if invalid
+     */
+    protected function parseDate($value)
+    {
+        // Skip empty values
+        if (empty($value) && !is_numeric($value)) {
+            return null;
+        }
+
+        // Determine value to parse
+        if (is_array($value)) {
+            $source = $value; // parse array
+        } elseif (is_numeric($value)) {
+            $source = $value; // parse timestamp
+        } else {
+            // Convert US date -> iso, fix y2k, etc
+            $value = $this->fixInputDate($value);
+            $source = strtotime($value); // convert string to timestamp
+        }
+        if ($value === false) {
+            return false;
+        }
+
+        // Format as iso8601
+        $formatter = $this->getFormatter();
+        $formatter->setPattern($this->getISOFormat());
+        return $formatter->format($source);
+    }
+
+    /**
+     * Returns the standard localised medium date
      *
      * @return string
      */
     public function Nice()
     {
-        return $this->Format($this->config()->nice_format);
-    }
-
-    /**
-     * Returns the date in US format: “01/18/2006”
-     *
-     * @return string
-     */
-    public function NiceUS()
-    {
-        return $this->Format('m/d/Y');
+        if (!$this->value) {
+            return null;
+        }
+        $formatter = $this->getFormatter();
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
@@ -103,17 +99,17 @@ class DBDate extends DBField
      */
     public function Year()
     {
-        return $this->Format('Y');
+        return $this->Format('y');
     }
 
     /**
-     * Returns the Full day, of the given date.
+     * Returns the day of the week
      *
      * @return string
      */
-    public function Day()
+    public function DayOfWeek()
     {
-        return $this->Format('l');
+        return $this->Format('cccc');
     }
 
     /**
@@ -123,7 +119,7 @@ class DBDate extends DBField
      */
     public function Month()
     {
-        return $this->Format('F');
+        return $this->Format('LLLL');
     }
 
     /**
@@ -133,73 +129,116 @@ class DBDate extends DBField
      */
     public function ShortMonth()
     {
-        return $this->Format('M');
+        return $this->Format('LLL');
     }
 
     /**
      * Returns the day of the month.
+     *
      * @param bool $includeOrdinal Include ordinal suffix to day, e.g. "th" or "rd"
      * @return string
      */
     public function DayOfMonth($includeOrdinal = false)
     {
-            $format = 'j';
-        if ($includeOrdinal) {
-            $format .= 'S';
+        $number = $this->Format('d');
+        if ($includeOrdinal && $number) {
+            $formatter = NumberFormatter::create(i18n::get_locale(), NumberFormatter::ORDINAL);
+            return $formatter->format((int)$number);
         }
-            return $this->Format($format);
+        return $number;
     }
 
     /**
-     * Returns the date in the format 24 December 2006
+     * Returns the date in the localised short format
+     *
+     * @return string
+     */
+    public function Short()
+    {
+        if (!$this->value) {
+            return null;
+        }
+        $formatter = $this->getFormatter(IntlDateFormatter::SHORT);
+        return $formatter->format($this->getTimestamp());
+    }
+
+    /**
+     * Returns the date in the localised long format
      *
      * @return string
      */
     public function Long()
     {
-        return $this->Format('j F Y');
+        if (!$this->value) {
+            return null;
+        }
+        $formatter = $this->getFormatter(IntlDateFormatter::LONG);
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
-     * Returns the date in the format 24 Dec 2006
+     * Returns the date in the localised full format
      *
      * @return string
      */
     public function Full()
     {
-        return $this->Format('j M Y');
+        if (!$this->value) {
+            return null;
+        }
+        $formatter = $this->getFormatter(IntlDateFormatter::FULL);
+        return $formatter->format($this->getTimestamp());
+    }
+
+    /**
+     * Get date formatter
+     *
+     * @param int $dateLength
+     * @param int $timeLength
+     * @return IntlDateFormatter
+     */
+    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::NONE)
+    {
+        return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
+    }
+
+    /**
+     * Get standard ISO date format string
+     *
+     * @return string
+     */
+    public function getISOFormat()
+    {
+        return self::ISO_DATE;
     }
 
     /**
      * Return the date using a particular formatting string.
      *
-     * @param string $format Format code string. e.g. "d M Y" (see http://php.net/date)
+     * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
      * @return string The date in the requested format
      */
     public function Format($format)
     {
-        if ($this->value) {
-            $date = new DateTime($this->value);
-            return $date->format($format);
+        if (!$this->value) {
+            return null;
         }
-        return null;
+        $formatter = $this->getFormatter();
+        $formatter->setPattern($format);
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
-     * Return the date formatted using the given strftime formatting string.
+     * Get unix timestamp for this date
      *
-     * strftime obeys the current LC_TIME/LC_ALL when printing lexical values
-     * like day- and month-names
-     *
-     * @param string $formattingString
-     * @return string
+     * @return int
      */
-    public function FormatI18N($formattingString)
+    public function getTimestamp()
     {
         if ($this->value) {
-            return strftime($formattingString, strtotime($this->value));
+            return strtotime($this->value);
         }
-        return null;
+        return 0;
     }
 
     /**
@@ -210,19 +249,18 @@ class DBDate extends DBField
      */
     public function FormatFromSettings($member = null)
     {
-        require_once 'Zend/Date.php';
-
         if (!$member) {
-            if (!Member::currentUserID()) {
-                return false;
-            }
             $member = Member::currentUser();
         }
 
-        $formatD = $member->getDateFormat();
-        $zendDate = new Zend_Date($this->getValue(), 'y-MM-dd');
+        // Fall back to nice
+        if (!$member) {
+            return $this->Nice();
+        }
 
-        return $zendDate->toString($formatD);
+        // Get user format
+        $format = $member->getDateFormat();
+        return $this->Format($format);
     }
 
     /**
@@ -258,7 +296,7 @@ class DBDate extends DBField
     public function Rfc822()
     {
         if ($this->value) {
-            return date('r', strtotime($this->value));
+            return date('r', $this->getTimestamp());
         }
         return null;
     }
@@ -271,18 +309,23 @@ class DBDate extends DBField
     public function Rfc2822()
     {
         if ($this->value) {
-            return date('Y-m-d H:i:s', strtotime($this->value));
+            return date('Y-m-d H:i:s', $this->getTimestamp());
         }
         return null;
     }
 
+    /**
+     * Date in RFC3339 format
+     *
+     * @return string
+     */
     public function Rfc3339()
     {
-        $timestamp = ($this->value) ? strtotime($this->value) : false;
-        if (!$timestamp) {
-            return false;
+        if (!$this->value) {
+            return null;
         }
 
+        $timestamp = $this->getTimestamp();
         $date = date('Y-m-d\TH:i:s', $timestamp);
 
         $matches = array();
@@ -300,15 +343,16 @@ class DBDate extends DBField
      *
      * @param boolean $includeSeconds Show seconds, or just round to "less than a minute".
      * @param int $significance Minimum significant value of X for "X units ago" to display
-     * @return  String
+     * @return string
      */
     public function Ago($includeSeconds = true, $significance = 2)
     {
         if (!$this->value) {
             return null;
         }
-            $time = DBDatetime::now()->Format('U');
-        if (strtotime($this->value) == $time || $time > strtotime($this->value)) {
+        $timestamp = $this->getTimestamp();
+        $now = DBDatetime::now()->getTimestamp();
+        if ($timestamp <= $now) {
             return _t(
                 'Date.TIMEDIFFAGO',
                 "{difference} ago",
@@ -336,8 +380,9 @@ class DBDate extends DBField
             return false;
         }
 
-        $time = DBDatetime::now()->Format('U');
-        $ago = abs($time - strtotime($this->value));
+        $now = DBDatetime::now()->getTimestamp();
+        $time = $this->getTimestamp();
+        $ago = abs($time - $now);
         if ($ago < 60 && !$includeSeconds) {
             return _t('Date.LessThanMinuteAgo', 'less than a minute');
         } elseif ($ago < $significance * 60 && $includeSeconds) {
@@ -368,33 +413,57 @@ class DBDate extends DBField
             return null;
         }
 
-        $time = DBDatetime::now()->Format('U');
-        $ago = abs($time - strtotime($this->value));
-
+        $now = DBDatetime::now()->getTimestamp();
+        $time = $this->getTimestamp();
+        $ago = abs($time - $now);
         switch ($format) {
             case "seconds":
                 $span = $ago;
-                return ($span != 1) ? "{$span} "._t("Date.SECS", "secs") : "{$span} "._t("Date.SEC", "sec");
+                return _t(
+                    __CLASS__.'.SECONDS_SHORT_PLURALS',
+                    '{count} sec|{count} secs',
+                    ['count' => $span]
+                );
 
             case "minutes":
                 $span = round($ago/60);
-                return ($span != 1) ? "{$span} "._t("Date.MINS", "mins") : "{$span} "._t("Date.MIN", "min");
+                return _t(
+                    __CLASS__.'.MINUTES_SHORT_PLURALS',
+                    '{count} min|{count} mins',
+                    ['count' => $span]
+                );
 
             case "hours":
                 $span = round($ago/3600);
-                return ($span != 1) ? "{$span} "._t("Date.HOURS", "hours") : "{$span} "._t("Date.HOUR", "hour");
+                return _t(
+                    __CLASS__.'.HOURS_SHORT_PLURALS',
+                    '{count} hour|{count} hours',
+                    ['count' => $span]
+                );
 
             case "days":
                 $span = round($ago/86400);
-                return ($span != 1) ? "{$span} "._t("Date.DAYS", "days") : "{$span} "._t("Date.DAY", "day");
+                return _t(
+                    __CLASS__.'.DAYS_SHORT_PLURALS',
+                    '{count} day|{count} days',
+                    ['count' => $span]
+                );
 
             case "months":
                 $span = round($ago/86400/30);
-                return ($span != 1) ? "{$span} "._t("Date.MONTHS", "months") : "{$span} "._t("Date.MONTH", "month");
+                return _t(
+                    __CLASS__.'.MONTHS_SHORT_PLURALS',
+                    '{count} month|{count} months',
+                    ['count' => $span]
+                );
 
             case "years":
                 $span = round($ago/86400/365);
-                return ($span != 1) ? "{$span} "._t("Date.YEARS", "years") : "{$span} "._t("Date.YEAR", "year");
+                return _t(
+                    __CLASS__.'.YEARS_SHORT_PLURALS',
+                    '{count} year|{count} years',
+                    ['count' => $span]
+                );
 
             default:
                 throw new \InvalidArgumentException("Invalid format $format");
@@ -414,7 +483,7 @@ class DBDate extends DBField
      */
     public function InPast()
     {
-        return strtotime($this->value) < DBDatetime::now()->Format('U');
+        return strtotime($this->value) < DBDatetime::now()->getTimestamp();
     }
 
     /**
@@ -423,7 +492,7 @@ class DBDate extends DBField
      */
     public function InFuture()
     {
-        return strtotime($this->value) > DBDatetime::now()->Format('U');
+        return strtotime($this->value) > DBDatetime::now()->getTimestamp();
     }
 
     /**
@@ -432,85 +501,129 @@ class DBDate extends DBField
      */
     public function IsToday()
     {
-        return (date('Y-m-d', strtotime($this->value)) == DBDatetime::now()->Format('Y-m-d'));
+        return $this->Format(self::ISO_DATE) === DBDatetime::now()->Format(self::ISO_DATE);
     }
 
     /**
      * Returns a date suitable for insertion into a URL and use by the system.
+     *
+     * @return string
      */
     public function URLDate()
     {
-        return date('Y-m-d', strtotime($this->value));
-    }
-
-
-    public function days_between($fyear, $fmonth, $fday, $tyear, $tmonth, $tday)
-    {
-        return abs((mktime(0, 0, 0, $fmonth, $fday, $fyear) - mktime(0, 0, 0, $tmonth, $tday, $tyear))/(60*60*24));
-    }
-
-    public function day_before($fyear, $fmonth, $fday)
-    {
-        return date("Y-m-d", mktime(0, 0, 0, $fmonth, $fday-1, $fyear));
-    }
-
-    public function next_day($fyear, $fmonth, $fday)
-    {
-        return date("Y-m-d", mktime(0, 0, 0, $fmonth, $fday+1, $fyear));
-    }
-
-    public function weekday($fyear, $fmonth, $fday)
-    {
- // 0 is a Monday
-        return (((mktime(0, 0, 0, $fmonth, $fday, $fyear) - mktime(0, 0, 0, 7, 17, 2006))/(60*60*24))+700000) % 7;
-    }
-
-    public function prior_monday($fyear, $fmonth, $fday)
-    {
-        return date("Y-m-d", mktime(0, 0, 0, $fmonth, $fday-$this->weekday($fyear, $fmonth, $fday), $fyear));
-    }
-
-    /**
-     * Return the nearest date in the past, based on day and month.
-     * Automatically attaches the correct year.
-     *
-     * This is useful for determining a financial year start or end date.
-     *
-     * @param $fmonth int The number of the month (e.g. 3 is March, 4 is April)
-     * @param $fday int The day of the month
-     * @param $fyear int Determine historical value
-     * @return string Date in YYYY-MM-DD format
-     */
-    public static function past_date($fmonth, $fday = 1, $fyear = null)
-    {
-        if (!$fyear) {
-            $fyear = date('Y');
-        }
-        $fday = (int) $fday;
-        $fmonth = (int) $fmonth;
-        $fyear = (int) $fyear;
-
-        $pastDate = mktime(0, 0, 0, $fmonth, $fday, $fyear);
-        $curDate = mktime(0, 0, 0, date('m'), date('d'), $fyear);
-
-        if ($pastDate < $curDate) {
-            return date('Y-m-d', mktime(0, 0, 0, $fmonth, $fday, $fyear));
-        } else {
-            return date('Y-m-d', mktime(0, 0, 0, $fmonth, $fday, $fyear - 1));
-        }
+        return rawurlencode($this->Format(self::ISO_DATE));
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = DateField::create($this->name, $title);
+        $format = $field->getDateFormat();
 
         // Show formatting hints for better usability
-        $field->setDescription(sprintf(
-            _t('FormField.Example', 'e.g. %s', 'Example format'),
-            Convert::raw2xml(Zend_Date::now()->toString($field->getConfig('dateformat')))
+        $now = DBDatetime::now()->Format($format);
+        $field->setDescription(_t(
+            'FormField.EXAMPLE',
+            'e.g. {format}',
+            'Example format',
+            [ 'format' => $now ]
         ));
-        $field->setAttribute('placeholder', $field->getConfig('dateformat'));
+        $field->setAttribute('placeholder', $format);
 
         return $field;
+    }
+
+    /**
+     * Fix non-iso dates
+     *
+     * @param string $value
+     * @return string
+     */
+    protected function fixInputDate($value)
+    {
+        // split
+        list($day, $month, $year, $time) = $this->explodeDateString($value);
+
+        // Detect invalid year order
+        if (!checkdate($month, $day, $year) && checkdate($month, $year, $day)) {
+            trigger_error(
+                "Unexpected date order. Use " . self::ISO_DATE . " to prevent this notice.",
+                E_USER_NOTICE
+            );
+            list($day, $year) = [$year, $day];
+        }
+
+        // Fix y2k year
+        $year = $this->guessY2kYear($year);
+
+        // Validate date
+        if (!checkdate($month, $day, $year)) {
+            throw new InvalidArgumentException("Invalid date passed. Use " . self::ISO_DATE . " to prevent this error.");
+        }
+
+        // Convert to y-m-d
+        return sprintf('%d-%02d-%02d%s', $year, $month, $day, $time);
+    }
+
+    /**
+     * Attempt to split date string into day, month, year, and timestamp components.
+     * Don't read this code without a drink in hand!
+     *
+     * @param string $value
+     * @return array
+     */
+    protected function explodeDateString($value)
+    {
+        // US date format with 4-digit year first
+        if (preg_match('#^(?<year>\\d{4})/(?<day>\\d+)/(?<month>\\d+)(?<time>.*)$#', $value, $matches)) {
+            trigger_error(
+                "Implicit y/d/m conversion. Use " . self::ISO_DATE . " to prevent this notice.",
+                E_USER_NOTICE
+            );
+            return [$matches['day'], $matches['month'], $matches['year'], $matches['time']];
+        }
+
+        // US date format without 4-digit year first: assume m/d/y
+        if (preg_match('#^(?<month>\\d+)/(?<day>\\d+)/(?<year>\\d+)(?<time>.*)$#', $value, $matches)) {
+            // Assume m/d/y
+            trigger_error(
+                "Implicit m/d/y conversion. Use " . self::ISO_DATE . " to prevent this notice.",
+                E_USER_NOTICE
+            );
+            return [$matches['day'], $matches['month'], $matches['year'], $matches['time']];
+        }
+
+        // check d.m.y
+        if (preg_match('#^(?<day>\\d+)\\.(?<month>\\d+)\\.(?<year>\\d+)(?<time>.*)$#', $value, $matches)) {
+            return [$matches['day'], $matches['month'], $matches['year'], $matches['time']];
+        }
+
+        // check y-m-d
+        if (preg_match('#^(?<year>\\d+)\\-(?<month>\\d+)\\-(?<day>\\d+)(?<time>.*)$#', $value, $matches)) {
+            return [$matches['day'], $matches['month'], $matches['year'], $matches['time']];
+        }
+
+        throw new InvalidArgumentException(
+            "Invalid date passed. Use " . self::ISO_DATE . " to prevent this error."
+        );
+    }
+
+    /**
+     * @param int $year
+     * @return int Fixed year
+     */
+    protected function guessY2kYear($year)
+    {
+        // Fix y2k
+        if ($year < 100) {
+            trigger_error("Implicit y2k conversion. Please use full YYYY year for dates", E_USER_NOTICE);
+            if ($year >= 70) {
+                // 70 -> 99 converted to 19(x)
+                $year += 1900;
+            } else {
+                // 0 -> 69 converted to 20(x)
+                $year += 2000;
+            }
+        }
+        return $year;
     }
 }

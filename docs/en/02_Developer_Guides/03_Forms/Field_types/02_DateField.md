@@ -37,7 +37,7 @@ A custom date format for a [api:DateField] can be provided through `setConfig`.
 
 	:::php
 	// will display a date in the following format: 31-06-2012
-	DateField::create('MyDate')->setConfig('dateformat', 'dd-MM-yyyy'); 
+	DateField::create('MyDate')->setDateFormat('dd-MM-yyyy'); 
 
 <div class="info" markdown="1">
 The formats are based on [Zend_Date constants](http://framework.zend.com/manual/1.12/en/zend.date.constants.html).

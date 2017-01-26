@@ -47,7 +47,12 @@ class CSVParserTest extends SapphireTest
             "Unicode FTW"),
             $biographies
         );
-        $this->assertEquals(array("31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
+        $this->assertEquals([
+            "1988-01-31",
+            "1982-01-31",
+            "1882-01-31",
+            "1982-06-30"
+        ], $birthdays);
         $this->assertEquals(array('1', '0', '1', '1'), $registered);
     }
 
@@ -85,7 +90,12 @@ class CSVParserTest extends SapphireTest
             "Unicode FTW"),
             $biographies
         );
-        $this->assertEquals(array("31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
+        $this->assertEquals([
+            "1988-01-31",
+            "1982-01-31",
+            "1882-01-31",
+            "1982-06-30"
+        ], $birthdays);
         $this->assertEquals(array('1', '0', '1', '1'), $registered);
     }
 
@@ -118,7 +128,13 @@ class CSVParserTest extends SapphireTest
             "Unicode FTW"),
             $biographies
         );
-        $this->assertEquals(array("Birthday","31/01/1988","31/01/1982","31/01/1882","31/06/1982"), $birthdays);
+        $this->assertEquals([
+            "Birthday",
+            "1988-01-31",
+            "1982-01-31",
+            "1882-01-31",
+            "1982-06-30"
+        ], $birthdays);
         $this->assertEquals(array('IsRegistered', '1', '0', '1', '1'), $registered);
     }
 }

@@ -3,6 +3,7 @@
 namespace SilverStripe\Core\Manifest;
 
 use Exception;
+use SilverStripe\Control\Director;
 
 /**
  * A utility class which builds a manifest of all classes, interfaces and some
@@ -352,6 +353,32 @@ class ClassManifest
         }
 
         return $modules;
+    }
+
+    /**
+     * Get module that owns this class
+     *
+     * @param string $class Class name
+     * @return string
+     */
+    public function getOwnerModule($class)
+    {
+        $path = realpath($this->getItemPath($class));
+        if (!$path) {
+            return null;
+        }
+
+        // Find based on loaded modules
+        foreach ($this->getModules() as $parent => $module) {
+            if (stripos($path, realpath($parent)) === 0) {
+                return $module;
+            }
+        }
+
+        // Assume top level folder is the module name
+        $relativePath = substr($path, strlen(realpath(Director::baseFolder())));
+        $parts = explode('/', trim($relativePath, '/'));
+        return array_shift($parts);
     }
 
     /**

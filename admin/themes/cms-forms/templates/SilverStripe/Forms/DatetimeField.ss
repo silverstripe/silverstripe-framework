@@ -1,5 +1,5 @@
 $DateField.SmallFieldHolder
 $TimeField.SmallFieldHolder
-<% if $HasTimezone %>
+<% if $TimeZone %>
 	$TimezoneField.Field
 <% end_if %>

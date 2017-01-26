@@ -2,41 +2,21 @@
 
 namespace SilverStripe\ORM\FieldType;
 
+use NumberFormatter;
 use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\MoneyField;
 use SilverStripe\i18n\i18n;
-use Zend_Currency;
-
-require_once 'Zend/Currency.php';
 
 /**
- * Implements the "Money" pattern.
- *
- * @see http://www.martinfowler.com/eaaCatalog/money.html
- *
- * @todo Support different ways of rounding
- * @todo Equality operators
- * @todo Addition, substraction and allocation of values
- * @todo Model validation for $allowedCurrencies
+ * Provides storage of a localised money object in currency and amount components.
+ * Currency codes should follow the ISO 4217 standard 3 digit code.
  */
 class DBMoney extends DBComposite
 {
-
     /**
      * @var string $locale
      */
     protected $locale = null;
-
-    /**
-     * @var Zend_Currency
-     */
-    protected $currencyLib;
-
-    /**
-     * Limit the currencies
-     * @var array $allowedCurrencies
-     */
-    protected $allowedCurrencies;
 
     /**
      * @param array
@@ -46,50 +26,60 @@ class DBMoney extends DBComposite
         "Amount" => 'Decimal(19,4)'
     );
 
-    public function __construct($name = null)
+    /**
+     * Get currency formatter
+     *
+     * @return NumberFormatter
+     */
+    public function getFormatter()
     {
-        $this->currencyLib = new Zend_Currency(null, i18n::get_locale());
-
-        parent::__construct($name);
+        $locale = $this->getLocale();
+        $currency = $this->getCurrency();
+        if ($currency) {
+            $locale .= '@currency=' . $currency;
+        }
+        return NumberFormatter::create($locale, NumberFormatter::CURRENCY);
     }
 
     /**
-     * @param array $options
+     * Get nicely formatted currency (based on current locale)
+     *
      * @return string
      */
-    public function Nice($options = array())
+    public function Nice()
     {
+        if (!$this->exists()) {
+            return null;
+        }
         $amount = $this->getAmount();
-        if (!isset($options['display'])) {
-            $options['display'] = Zend_Currency::USE_SYMBOL;
+        $currency = $this->getCurrency();
+
+        // Without currency, format as basic localised number
+        $formatter = $this->getFormatter();
+        if (!$currency) {
+            return $formatter->format($amount);
         }
-        if (!isset($options['currency'])) {
-            $options['currency'] = $this->getCurrency();
-        }
-        if (!isset($options['symbol'])) {
-            $options['symbol'] = $this->currencyLib->getSymbol($this->getCurrency(), $this->getLocale());
-        }
-        return (is_numeric($amount)) ? $this->currencyLib->toCurrency($amount, $options) : '';
+
+        // Localise currency
+        return $formatter->formatCurrency($amount, $currency);
     }
 
     /**
-     * @param array $options
+     * Standard '0.00 CUR' format (non-localised)
+     *
      * @return string
      */
-    public function NiceWithShortname($options = array())
+    public function getValue()
     {
-        $options['display'] = Zend_Currency::USE_SHORTNAME;
-        return $this->Nice($options);
-    }
-
-    /**
-     * @param array $options
-     * @return string
-     */
-    public function NiceWithName($options = array())
-    {
-        $options['display'] = Zend_Currency::USE_NAME;
-        return $this->Nice($options);
+        if (!$this->exists()) {
+            return null;
+        }
+        $amount = $this->getAmount();
+        $currency = $this->getCurrency();
+        if (empty($currency)) {
+            return $amount;
+        }
+        return $amount . ' ' . $currency;
     }
 
     /**
@@ -120,13 +110,17 @@ class DBMoney extends DBComposite
     }
 
     /**
-     * @param float $amount
+     * @param mixed $amount
      * @param bool $markChanged
      * @return $this
      */
     public function setAmount($amount, $markChanged = true)
     {
-        $this->setField('Amount', (float)$amount, $markChanged);
+        // Retain nullability to mark this field as empty
+        if (isset($amount)) {
+            $amount = (float)$amount;
+        }
+        $this->setField('Amount', $amount, $markChanged);
         return $this;
     }
 
@@ -135,11 +129,13 @@ class DBMoney extends DBComposite
      */
     public function exists()
     {
-        return ($this->getCurrency() && is_numeric($this->getAmount()));
+        return is_numeric($this->getAmount());
     }
 
     /**
-     * @return boolean
+     * Determine if this has a non-zero amount
+     *
+     * @return bool
      */
     public function hasAmount()
     {
@@ -154,7 +150,6 @@ class DBMoney extends DBComposite
     public function setLocale($locale)
     {
         $this->locale = $locale;
-        $this->currencyLib->setLocale($locale);
         return $this;
     }
 
@@ -163,77 +158,17 @@ class DBMoney extends DBComposite
      */
     public function getLocale()
     {
-        return ($this->locale) ? $this->locale : i18n::get_locale();
+        return $this->locale ?: i18n::get_locale();
     }
 
     /**
-     * @param string $currency
-     * @param string $locale
+     * Get currency symbol
+     *
      * @return string
      */
-    public function getSymbol($currency = null, $locale = null)
+    public function getSymbol()
     {
-
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-        if ($currency === null) {
-            $currency = $this->getCurrency();
-        }
-
-        return $this->currencyLib->getSymbol($currency, $locale);
-    }
-
-    /**
-     * @param string $currency
-     * @param string $locale
-     * @return string
-     */
-    public function getShortName($currency = null, $locale = null)
-    {
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-        if ($currency === null) {
-            $currency = $this->getCurrency();
-        }
-
-        return $this->currencyLib->getShortName($currency, $locale);
-    }
-
-    /**
-     * @param string $currency
-     * @param string $locale
-     * @return string
-     */
-    public function getCurrencyName($currency = null, $locale = null)
-    {
-        if ($locale === null) {
-            $locale = $this->getLocale();
-        }
-        if ($currency === null) {
-            $currency = $this->getCurrency();
-        }
-
-        return $this->currencyLib->getName($currency, $locale);
-    }
-
-    /**
-     * @param array $arr
-     * @return $this
-     */
-    public function setAllowedCurrencies($arr)
-    {
-        $this->allowedCurrencies = $arr;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllowedCurrencies()
-    {
-        return $this->allowedCurrencies;
+        return $this->getFormatter()->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
     }
 
     /**
@@ -248,21 +183,7 @@ class DBMoney extends DBComposite
      */
     public function scaffoldFormField($title = null, $params = null)
     {
-        $field = new MoneyField($this->getName());
-        $field->setAllowedCurrencies($this->getAllowedCurrencies());
-        $field->setLocale($this->getLocale());
-
-        return $field;
-    }
-
-    /**
-     * For backwards compatibility reasons
-     * (mainly with ecommerce module),
-     * this returns the amount value of the field,
-     * rather than a {@link Nice()} formatting.
-     */
-    public function __toString()
-    {
-        return (string)$this->getAmount();
+        return MoneyField::create($this->getName(), $title)
+            ->setLocale($this->getLocale());
     }
 }

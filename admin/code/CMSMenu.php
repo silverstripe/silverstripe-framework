@@ -5,6 +5,7 @@ namespace SilverStripe\Admin;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Object;
 use SilverStripe\Control\Controller;
 use SilverStripe\i18n\i18n;
@@ -427,7 +428,7 @@ class CMSMenu extends Object implements IteratorAggregate, i18nEntityProvider
         $entities = array();
         foreach ($cmsClasses as $cmsClass) {
             $defaultTitle = LeftAndMain::menu_title($cmsClass, false);
-            $ownerModule = i18n::get_owner_module($cmsClass);
+            $ownerModule = ClassLoader::instance()->getManifest()->getOwnerModule($cmsClass);
             $entities["{$cmsClass}.MENUTITLE"] = [
                 'default' => $defaultTitle,
                 'module' => $ownerModule

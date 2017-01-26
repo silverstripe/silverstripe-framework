@@ -449,6 +449,7 @@ class FormField extends RequestHandler
     /**
      * Returns the field value.
      *
+     * @see FormField::setSubmittedValue()
      * @return mixed
      */
     public function Value()
@@ -472,7 +473,7 @@ class FormField extends RequestHandler
 
     /**
      * Returns the field value suitable for insertion into the data object.
-     *
+     * @see Formfield::setValue()
      * @return mixed
      */
     public function dataValue()
@@ -769,14 +770,31 @@ class FormField extends RequestHandler
     /**
      * Set the field value.
      *
-     * @param mixed $value
-     * @param null|array|DataObject $data {@see Form::loadDataFrom}
+     * If a FormField requires specific behaviour for loading content from either the database
+     * or a submitted form value they should override setSubmittedValue() instead.
+     *
+     * @param mixed $value Either the parent object, or array of source data being loaded
+     * @param array|DataObject $data {@see Form::loadDataFrom}
      * @return $this
      */
-    public function setValue($value)
+    public function setValue($value, $data = null)
     {
         $this->value = $value;
         return $this;
+    }
+
+    /**
+     * Set value assigned from a submitted form postback.
+     * Can be overridden to handle custom behaviour for user-localised
+     * data formats.
+     *
+     * @param mixed $value
+     * @param array|DataObject $data
+     * @return $this
+     */
+    public function setSubmittedValue($value, $data = null)
+    {
+        return $this->setValue($value, $data);
     }
 
     /**
@@ -1129,7 +1147,6 @@ class FormField extends RequestHandler
     public function setReadonly($readonly)
     {
         $this->readonly = $readonly;
-
         return $this;
     }
 

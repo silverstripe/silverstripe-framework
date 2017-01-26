@@ -1617,9 +1617,13 @@ class Form extends RequestHandler
             $mergeStrategy = 0;
         }
 
-        // if an object is passed, save it for historical reference through {@link getRecord()}
+        // If an object is passed, save it for historical reference through {@link getRecord()}
+        // Also use this to determine if we are loading a submitted form, or loading
+        // from a dataobject
+        $submitted = true;
         if (is_object($data)) {
             $this->record = $data;
+            $submitted = false;
         }
 
         // dont include fields without data
@@ -1649,10 +1653,10 @@ class Form extends RequestHandler
 
             if (is_object($data)) {
                 $exists = (
-                isset($data->$name) ||
-                $data->hasMethod($name) ||
-                ($data->hasMethod('hasField') && $data->hasField($name))
-                    );
+                    isset($data->$name) ||
+                    $data->hasMethod($name) ||
+                    ($data->hasMethod('hasField') && $data->hasField($name))
+                );
 
                 if ($exists) {
                     $val = $data->__get($name);
@@ -1690,13 +1694,22 @@ class Form extends RequestHandler
             }
 
             // save to the field if either a value is given, or loading of blank/undefined values is forced
+            $setValue = false;
             if ($exists) {
                 if ($val != false || ($mergeStrategy & self::MERGE_IGNORE_FALSEISH) != self::MERGE_IGNORE_FALSEISH) {
-                    // pass original data as well so composite fields can act on the additional information
-                    $field->setValue($val, $data);
+                    $setValue = true;
                 }
             } elseif (($mergeStrategy & self::MERGE_CLEAR_MISSING) == self::MERGE_CLEAR_MISSING) {
-                $field->setValue($val, $data);
+                $setValue = true;
+            }
+
+            // pass original data as well so composite fields can act on the additional information
+            if ($setValue) {
+                if ($submitted) {
+                    $field->setSubmittedValue($val, $data);
+                } else {
+                    $field->setValue($val, $data);
+                }
             }
         }
         return $this;

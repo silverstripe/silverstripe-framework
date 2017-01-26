@@ -4,8 +4,6 @@ namespace SilverStripe\Forms;
 
 use SilverStripe\i18n\i18n;
 use SilverStripe\Security\Member;
-use Zend_Locale;
-use Collator;
 
 /**
  * A simple extension to dropdown field, pre-configured to list countries.
@@ -53,23 +51,8 @@ class CountryDropdownField extends DropdownField
             return parent::setSource($source);
         }
 
-        // map empty source to country list
-        // Get a list of countries from Zend
-        $source = Zend_Locale::getTranslationList('territory', $this->locale(), 2);
-
-        // We want them ordered by display name, not country code
-
-        // PHP 5.3 has an extension that sorts UTF-8 strings correctly
-        if (class_exists('Collator') && ($collator = Collator::create($this->locale()))) {
-            $collator->asort($source);
-        } else {
-            // Otherwise just put up with them being weirdly ordered for now
-            asort($source);
-        }
-
-        // We don't want "unknown country" as an option
-        unset($source['ZZ']);
-
+        // Get sorted countries
+        $source = i18n::getData()->i18nCountries();
         return parent::setSource($source);
     }
 
@@ -83,10 +66,10 @@ class CountryDropdownField extends DropdownField
             && (!$value || !isset($source[$value]))
             && $this->locale()
         ) {
-            $locale = new Zend_Locale();
-            $locale->setLocale($this->locale());
-            $value = $locale->getRegion();
-            $this->setValue($value);
+            $value = i18n::getData()->countryFromLocale(i18n::get_locale());
+            if ($value) {
+                $this->setValue($value);
+            }
         }
 
         // Default to default country otherwise

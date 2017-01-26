@@ -2,11 +2,8 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\ORM\DataObject;
+use NumberFormatter;
 use SilverStripe\i18n\i18n;
-use Zend_Locale;
-use Zend_Locale_Exception;
-use Zend_Locale_Format;
 
 /**
  * Text input field with validation for numeric values. Supports validating
@@ -19,6 +16,13 @@ class NumericField extends TextField
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DECIMAL;
 
     /**
+     * Used to determine if the number given is in the correct format when validating
+     *
+     * @var mixed
+     */
+    protected $originalValue = null;
+
+    /**
      * Override locale for this field.
      *
      * @var string
@@ -26,65 +30,129 @@ class NumericField extends TextField
     protected $locale = null;
 
     /**
-     * @param mixed $value
-     * @param array $data
+     * Use HTML5 number input type.
+     * Note that enabling html5 disables certain localisation features.
      *
-     * @return $this
-     *
-     * @throws Zend_Locale_Exception
+     * @var bool
      */
-    public function setValue($value, $data = array())
+    protected $html5 = false;
+
+    /**
+     * Number of decimal places allowed, if bound.
+     * Null means unbound.
+     * Defaults to 0, which is integer value.
+     *
+     * @var string
+     */
+    protected $scale = 0;
+
+    /**
+     * Get number formatter for localising this field
+     *
+     * @return NumberFormatter
+     */
+    protected function getFormatter()
     {
-        require_once "Zend/Locale/Format.php";
-
-        // If passing in a non-string number, or a value
-        // directly from a DataObject then localise this number
-
-        if (is_int($value) || is_float($value) || $data instanceof DataObject) {
-            $locale = new Zend_Locale($this->getLocale());
-
-            $this->value = Zend_Locale_Format::toNumber(
-                $value,
-                array('locale' => $locale)
-            );
+        if ($this->getHTML5()) {
+            // Locale-independent html5 number formatter
+            $formatter = NumberFormatter::create(i18n::config()->get('default_locale'), NumberFormatter::DECIMAL);
+            $formatter->setAttribute(NumberFormatter::GROUPING_USED, false);
+            $formatter->setSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL, '.');
         } else {
-            $this->value = $this->clean($value);
+            // Locale-specific number formatter
+            $formatter = NumberFormatter::create($this->getLocale(), NumberFormatter::DECIMAL);
         }
 
+        // Set decimal precision
+        $scale = $this->getScale();
+        if ($scale === 0) {
+            $formatter->setAttribute(NumberFormatter::DECIMAL_ALWAYS_SHOWN, false);
+            $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 0);
+        } else {
+            $formatter->setAttribute(NumberFormatter::DECIMAL_ALWAYS_SHOWN, true);
+            if ($scale === null) {
+                // At least one digit to distinguish floating point from integer
+                $formatter->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, 1);
+            } else {
+                $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, $scale);
+            }
+        }
+        return $formatter;
+    }
+
+    /**
+     * Get type argument for parse / format calls. one of TYPE_INT32, TYPE_INT64 or TYPE_DOUBLE
+     *
+     * @return int
+     */
+    protected function getNumberType()
+    {
+        $scale = $this->getScale();
+        if ($scale === 0) {
+            return PHP_INT_SIZE > 4
+                ? NumberFormatter::TYPE_INT64
+                : NumberFormatter::TYPE_INT32;
+        }
+        return NumberFormatter::TYPE_DOUBLE;
+    }
+
+    public function setSubmittedValue($value, $data = null)
+    {
+        // Save original value in case parse fails
+        $value = trim($value);
+        $this->originalValue = $value;
+
+        // Empty string is no-number (not 0)
+        if (strlen($value) === 0) {
+            $this->value = null;
+            return $this;
+        }
+
+        // Format number
+        $formatter = $this->getFormatter();
+        $parsed = 0;
+        $this->value = $formatter->parse($value, $this->getNumberType(), $parsed); // Note: may store literal `false` for invalid values
+        // Ensure that entire string is parsed
+        if ($parsed < strlen($value)) {
+            $this->value = false;
+        }
         return $this;
     }
 
     /**
-     * In some cases and locales, validation expects non-breaking spaces.
-     *
-     * Returns the value, with all spaces replaced with non-breaking spaces.
-     *
-     * @param string $input
+     * Format value for output
      *
      * @return string
      */
-    protected function clean($input)
+    public function Value()
     {
-        $replacement = html_entity_decode('&nbsp;', null, 'UTF-8');
+        // Show invalid value back to user in case of error
+        if ($this->value === false) {
+            return $this->originalValue;
+        }
+        $formatter = $this->getFormatter();
+        return $formatter->format($this->value, $this->getNumberType());
+    }
 
-        return str_replace(' ', $replacement, trim($input));
+    public function setValue($value, $data = null)
+    {
+        $this->originalValue = $value;
+        $this->value = $this->cast($value);
+        return $this;
     }
 
     /**
-     * Determine if the current value is a valid number in the current locale.
+     * Helper to cast non-localised strings to their native type
      *
-     * @return bool
+     * @param string $value
+     * @return float|int
      */
-    protected function isNumeric()
+    protected function cast($value)
     {
-        require_once "Zend/Locale/Format.php";
-
-        $locale = new Zend_Locale($this->getLocale());
-
-        return Zend_Locale_Format::isNumber(
-            $this->clean($this->value),
-            array('locale' => $locale)
-        );
+        if ($this->getScale() === 0) {
+            return (int)$value;
+        }
+        return (float)$value;
     }
 
     /**
@@ -95,6 +163,16 @@ class NumericField extends TextField
         return 'numeric text';
     }
 
+    public function getAttributes()
+    {
+        $attributes = parent::getAttributes();
+        if ($this->getHTML5()) {
+            $attributes['type'] = 'number';
+            $attributes['step'] = $this->getStep();
+        }
+        return $attributes;
+    }
+
     /**
      * Validate this field
      *
@@ -103,11 +181,8 @@ class NumericField extends TextField
      */
     public function validate($validator)
     {
-        if (!$this->value) {
-            return true;
-        }
-
-        if ($this->isNumeric()) {
+        // false signifies invalid value due to failed parse()
+        if ($this->value !== false) {
             return true;
         }
 
@@ -116,11 +191,9 @@ class NumericField extends TextField
             _t(
                 'NumericField.VALIDATION',
                 "'{value}' is not a number, only numbers can be accepted for this field",
-                array('value' => $this->value)
-            ),
-            "validation"
+                ['value' => $this->originalValue]
+            )
         );
-
         return false;
     }
 
@@ -132,44 +205,13 @@ class NumericField extends TextField
     }
 
     /**
-     * Extracts the number value from the localised string value.
+     * Get internal database value
      *
-     * @return string
+     * @return int|float
      */
     public function dataValue()
     {
-        require_once "Zend/Locale/Format.php";
-
-        if (!$this->isNumeric()) {
-            return 0;
-        }
-
-        $locale = new Zend_Locale($this->getLocale());
-
-        $number = Zend_Locale_Format::getNumber(
-            $this->clean($this->value),
-            array('locale' => $locale)
-        );
-
-        return $number;
-    }
-
-    /**
-     * Creates a read-only version of the field.
-     *
-     * @return NumericField_Readonly
-     */
-    public function performReadonlyTransformation()
-    {
-        $field = new NumericField_Readonly(
-            $this->name,
-            $this->title,
-            $this->value
-        );
-
-        $field->setForm($this->form);
-
-        return $field;
+        return $this->cast($this->value);
     }
 
     /**
@@ -197,6 +239,71 @@ class NumericField extends TextField
     {
         $this->locale = $locale;
 
+        return $this;
+    }
+
+    /**
+     * Determine if we should use html5 number input
+     *
+     * @return bool
+     */
+    public function getHTML5()
+    {
+        return $this->html5;
+    }
+
+    /**
+     * Set whether this field should use html5 number input type.
+     * Note: If setting to true this will disable all number localisation.
+     *
+     * @param bool $html5
+     * @return $this
+     */
+    public function setHTML5($html5)
+    {
+        $this->html5 = $html5;
+        return $this;
+    }
+
+    /**
+     * Step attribute for html5. E.g. '0.01' to enable two decimal places.
+     * Ignored if html5 isn't enabled.
+     *
+     * @return string
+     */
+    public function getStep()
+    {
+        $scale = $this->getScale();
+        if ($scale === null) {
+            return 'any';
+        }
+        if ($scale === 0) {
+            return '1';
+        }
+        return '0.'.str_repeat('0', $scale - 1).'1';
+    }
+
+    /**
+     * Get number of digits to show to the right of the decimal point.
+     * 0 for integer, any number for floating point, or null to flexible
+     *
+     * @return int|null
+     */
+    public function getScale()
+    {
+        return $this->scale;
+    }
+
+    /**
+     * Get number of digits to show to the right of the decimal point.
+     * 0 for integer, any number for floating point, or null to flexible
+     *
+     * @param int|null $scale
+     * @return $this
+     */
+    public function setScale($scale)
+    {
+        $this->scale = $scale;
         return $this;
     }
 }

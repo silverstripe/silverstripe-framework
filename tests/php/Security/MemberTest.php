@@ -405,12 +405,10 @@ class MemberTest extends FunctionalTest
 
     public function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat()
     {
-        i18n::config()
-            ->update('date_format', 'yyyy-MM-dd')
-            ->update('time_format', 'H:mm');
+        // Note: All default strings are based on locale defaults for en_US
         $member = $this->objFromFixture(Member::class, 'noformatmember');
-        $this->assertEquals('yyyy-MM-dd', $member->DateFormat);
-        $this->assertEquals('H:mm', $member->TimeFormat);
+        $this->assertEquals('MMM d, y', $member->DateFormat);
+        $this->assertEquals('h:mm:ss a', $member->TimeFormat);
     }
 
     public function testInGroups()

@@ -73,7 +73,7 @@ class SymfonyMessageProvider implements MessageProvider
             ->addResource('ss', $this->getSourceDirs(), $locale);
 
         // Add lang-only file. E.g. 'en'
-        $lang = i18n::get_lang_from_locale($locale);
+        $lang = i18n::getData()->langFromLocale($locale);
         if ($lang !== $locale) {
             $this
                 ->getTranslator()
@@ -139,7 +139,7 @@ class SymfonyMessageProvider implements MessageProvider
     public function getSourceDirs()
     {
         if (!$this->sourceDirs) {
-            $this->setSourceDirs(i18n::get_lang_dirs());
+            $this->setSourceDirs(i18n::getSources()->getLangDirs());
         }
         return $this->sourceDirs;
     }

@@ -7,15 +7,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\i18n\i18n;
-use Exception;
 
-/**
- * Partially based on Zend_CurrencyTest.
- *
- * @copyright Copyright (c) 2006 Zend Technologies USA Inc. (http://www.zend.com)
- * @license   http://framework.zend.com/license/new-bsd    New BSD License
- * @version   $Id: CurrencyTest.php 14644 2009-04-04 18:59:08Z thomas $
- */
 class DBMoneyTest extends SapphireTest
 {
 
@@ -31,7 +23,6 @@ class DBMoneyTest extends SapphireTest
         $obj = $this->objFromFixture(DBMoneyTest\TestObject::class, 'test1');
         $this->assertInstanceOf(DBMoney::class, $obj->MyMoney);
     }
-
 
     public function testLoadFromFixture()
     {
@@ -148,98 +139,66 @@ class DBMoneyTest extends SapphireTest
         i18n::set_locale($local);
     }
 
+    /**
+     * Covers Nice() and getValue()
+     */
     public function testToCurrency()
     {
         $USD = new DBMoney();
+        $USD->setValue([
+            'Currency' => 'USD',
+            'Amount' => 53292.18,
+        ]);
         $USD->setLocale('en_US');
-        $USD->setAmount(53292.18);
+        $this->assertSame('53292.18 USD', $USD->getValue());
         $this->assertSame('$53,292.18', $USD->Nice());
-        $this->assertSame('$ 53.292,18', $USD->Nice(array('format' => 'de_AT')));
+
+        // USD in de locale
+        $USD->setLocale('de_DE');
+        $this->assertSame($this->clean('53.292,18 $'), $this->clean($USD->Nice()));
+
+        // USD in swedish locale is fun
+        $USD->setLocale('sv');
+        $this->assertSame($this->clean('53 292,18 US$'), $this->clean($USD->Nice()));
     }
 
-    public function testGetSign()
+    public function testGetSymbol()
     {
+        // Swedish kroner
         $SKR = new DBMoney();
-        $SKR->setValue(
-            array(
-            'Currency' => 'SKR',
+        $SKR->setValue([
+            'Currency' => 'SEK',
             'Amount' => 3.44
-            )
-        );
+        ]);
+        $SKR->setLocale('sv');
+        $this->assertSame('kr', $SKR->getSymbol());
 
-        $this->assertSame('€', $SKR->getSymbol('EUR', 'de_AT'));
-        $this->assertSame(null, $SKR->getSymbol());
-
-        try {
-            $SKR->getSymbol('EGP', 'de_XX');
-            $this->setExpectedException("Exception");
-        } catch (Exception $e) {
-        }
-
+        // EU currency
         $EUR = new DBMoney();
-        $EUR->setValue(
-            array(
+        $EUR->setValue([
             'Currency' => 'EUR',
             'Amount' => 3.44
-            )
-        );
+        ]);
         $EUR->setLocale('de_DE');
         $this->assertSame('€', $EUR->getSymbol());
-    }
 
-    public function testGetName()
-    {
-        $m = new DBMoney();
-        $m->setValue(
-            array(
-            'Currency' => 'EUR',
-            'Amount' => 3.44
-            )
-        );
-        $m->setLocale('ar_EG');
-
-        $this->assertSame('Estnische Krone', $m->getCurrencyName('EEK', 'de_AT'));
-        $this->assertSame('يورو', $m->getCurrencyName());
-
-        try {
-            $m->getCurrencyName('EGP', 'xy_XY');
-            $this->setExpectedException("Exception");
-        } catch (Exception $e) {
-        }
-    }
-
-    public function testGetShortName()
-    {
-        $m = new DBMoney();
-        $m->setValue(
-            array(
-            'Currency' => 'EUR',
-            'Amount' => 3.44
-            )
-        );
-        $m->setLocale('de_AT');
-
-        $this->assertSame('EUR', $m->getShortName('Euro', 'de_AT'));
-        $this->assertSame('USD', $m->getShortName('US-Dollar', 'de_AT'));
-        //$this->assertSame('EUR', $m->getShortName(null, 'de_AT'));
-        $this->assertSame('EUR', $m->getShortName());
-
-        try {
-            $m->getShortName('EUR', 'xy_ZT');
-            $this->setExpectedException("Exception");
-        } catch (Exception $e) {
-        }
+        // Where locale doesn't match currency
+        $USD = new DBMoney();
+        $USD->setValue([
+            'Currency' => 'USD',
+            'Amount' => 3.44,
+        ]);
+        $USD->setLocale('de_DE');
+        $this->assertSame('$', $USD->getSymbol());
     }
 
     public function testSetValueAsArray()
     {
         $m = new DBMoney();
-        $m->setValue(
-            array(
+        $m->setValue([
             'Currency' => 'EUR',
             'Amount' => 3.44
-            )
-        );
+        ]);
         $this->assertEquals(
             $m->getCurrency(),
             'EUR'
@@ -253,12 +212,10 @@ class DBMoneyTest extends SapphireTest
     public function testSetValueAsMoney()
     {
         $m1 = new DBMoney();
-        $m1->setValue(
-            array(
+        $m1->setValue([
             'Currency' => 'EUR',
             'Amount' => 3.44
-            )
-        );
+        ]);
         $m2 = new DBMoney();
         $m2->setValue($m1);
         $this->assertEquals(
@@ -277,22 +234,25 @@ class DBMoneyTest extends SapphireTest
         $this->assertFalse($m1->exists());
 
         $m2 = new DBMoney();
-        $m2->setValue(
-            array(
+        $m2->setValue([
             'Currency' => 'EUR',
             'Amount' => 3.44
-            )
-        );
+        ]);
         $this->assertTrue($m2->exists());
 
         $m3 = new DBMoney();
-        $m3->setValue(
-            array(
+        $m3->setValue([
             'Currency' => 'EUR',
             'Amount' => 0
-            )
-        );
+        ]);
         $this->assertTrue($m3->exists());
+
+        $m4 = new DBMoney();
+        $m4->setValue([
+            'Currency' => 'EUR',
+            'Amount' => null,
+        ]);
+        $this->assertFalse($m4->exists());
     }
 
     public function testLoadIntoDataObject()
@@ -302,12 +262,10 @@ class DBMoneyTest extends SapphireTest
         $this->assertInstanceOf(DBMoney::class, $obj->obj('MyMoney'));
 
         $m = new DBMoney();
-        $m->setValue(
-            array(
+        $m->setValue([
             'Currency' => 'EUR',
             'Amount' => 1.23
-            )
-        );
+        ]);
         $obj->MyMoney = $m;
 
         $this->assertEquals($obj->MyMoney->getCurrency(), 'EUR');
@@ -318,12 +276,10 @@ class DBMoneyTest extends SapphireTest
     {
         $obj = new DBMoneyTest\TestObject();
         $m = new DBMoney();
-        $m->setValue(
-            array(
+        $m->setValue([
             'Currency' => 'EUR',
             'Amount' => 1.23
-            )
-        );
+        ]);
         $obj->MyMoney = $m;
         $obj->write();
 
@@ -385,5 +341,20 @@ class DBMoneyTest extends SapphireTest
 
         $m->setValue(array('Amount' => 0.00));
         $this->assertFalse($obj->MyMoney->hasAmount());
+    }
+
+
+    /**
+     * In some cases and locales, validation expects non-breaking spaces.
+     *
+     * Duplicates non-public NumericField::clean method
+     *
+     * @param  string $input
+     * @return string The input value, with all spaces replaced with non-breaking spaces
+     */
+    protected function clean($input)
+    {
+        $nbsp = html_entity_decode('&nbsp;', null, 'UTF-8');
+        return str_replace(' ', $nbsp, trim($input));
     }
 }

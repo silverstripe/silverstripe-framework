@@ -945,9 +945,9 @@ class Requirements_Backend
         $candidates = array(
             'en.js',
             'en_US.js',
-            i18n::get_lang_from_locale(i18n::config()->default_locale) . '.js',
+            i18n::getData()->langFromLocale(i18n::config()->default_locale) . '.js',
             i18n::config()->default_locale . '.js',
-            i18n::get_lang_from_locale(i18n::get_locale()) . '.js',
+            i18n::getData()->langFromLocale(i18n::get_locale()) . '.js',
             i18n::get_locale() . '.js',
         );
         foreach ($candidates as $candidate) {

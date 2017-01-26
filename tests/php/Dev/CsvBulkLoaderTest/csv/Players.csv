@@ -1,1 +1,4 @@
-"John","He's a good guy","ignored","31/01/1988","1""Jane","She is awesome.\nSo awesome that she gets multiple rows and \"escaped\" strings in her biography","ignored","31/01/1982","0""Jamie","Pretty old\, with an escaped comma","ignored","31/01/1882","1""Järg","Unicode FTW","ignored","31/06/1982","1"
+"John","He's a good guy","ignored","1988-01-31","1"
+"Jane","She is awesome.\nSo awesome that she gets multiple rows and \"escaped\" strings in her biography","ignored","1982-01-31","0"
+"Jamie","Pretty old\, with an escaped comma","ignored","1882-01-31","1"
+"Järg","Unicode FTW","ignored","1982-06-30","1"

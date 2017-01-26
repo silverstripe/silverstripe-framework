@@ -2,7 +2,7 @@
 Name: basei18n
 Before: '/i18n'
 ---
-SilverStripe\i18n\i18n:
+SilverStripe\i18n\Data\Sources:
   module_priority:
     - admin
     - framework
@@ -10,7 +10,7 @@ SilverStripe\i18n\i18n:
 ---
 Name: defaulti18n
 ---
-SilverStripe\i18n\i18n:
+SilverStripe\i18n\Data\Sources:
   module_priority:
     - other_modules
 ---
@@ -58,3 +58,9 @@ SilverStripe\Core\Injector\Injector:
     properties:
       Reader: %$SilverStripe\i18n\Messages\Reader
       Writer: %$SilverStripe\i18n\Messages\Writer
+---
+Name: i18ndata
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\i18n\Data\Locales:
+    class: SilverStripe\i18n\Data\Intl\IntlLocales

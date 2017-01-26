@@ -400,8 +400,8 @@ class GridFieldTest extends SapphireTest
     public function testGetCastedValueObject()
     {
         $obj = new GridField('testfield', 'testfield');
-        $value = $obj->getCastedValue('This is a sentance. This ia another.', 'Date');
-        $this->assertEquals(null, $value);
+        $value = $obj->getCastedValue('Here is some <html> content', 'Text');
+        $this->assertEquals('Here is some &lt;html&gt; content', $value);
     }
 
     /**

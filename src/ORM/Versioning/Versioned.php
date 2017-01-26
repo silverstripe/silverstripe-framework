@@ -9,6 +9,7 @@ use SilverStripe\Control\Cookie;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Object;
+use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\ORM\DataQuery;
@@ -34,7 +35,7 @@ use LogicException;
  * @property int $Version
  * @property DataObject|Versioned $owner
  */
-class Versioned extends DataExtension implements TemplateGlobalProvider
+class Versioned extends DataExtension implements TemplateGlobalProvider, Resettable
 {
 
     /**

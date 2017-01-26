@@ -2,9 +2,11 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\i18n\i18n;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\ThemeResourceLoader;
@@ -15,6 +17,172 @@ use TinyMCE_Compressor;
  */
 class TinyMCEConfig extends HTMLEditorConfig
 {
+    /**
+     * @config
+     * @var array
+     */
+    private static $tinymce_lang = [
+        'ar_EG' => 'ar',
+        'ca_AD' => 'ca',
+        'ca_ES' => 'ca',
+        'cs_CZ' => 'cs',
+        'cy_GB' => 'cy',
+        'da_DK' => 'da',
+        'da_GL' => 'da',
+        'de_AT' => 'de',
+        'de_BE' => 'de',
+        'de_CH' => 'de',
+        'de_DE' => 'de',
+        'de_LI' => 'de',
+        'de_LU' => 'de',
+        'de_BR' => 'de',
+        'de_US' => 'de',
+        'el_CY' => 'el',
+        'el_GR' => 'el',
+        'es_AR' => 'es',
+        'es_BO' => 'es',
+        'es_CL' => 'es',
+        'es_CO' => 'es',
+        'es_CR' => 'es',
+        'es_CU' => 'es',
+        'es_DO' => 'es',
+        'es_EC' => 'es',
+        'es_ES' => 'es',
+        'es_GQ' => 'es',
+        'es_GT' => 'es',
+        'es_HN' => 'es',
+        'es_MX' => 'es',
+        'es_NI' => 'es',
+        'es_PA' => 'es',
+        'es_PE' => 'es',
+        'es_PH' => 'es',
+        'es_PR' => 'es',
+        'es_PY' => 'es',
+        'es_SV' => 'es',
+        'es_UY' => 'es',
+        'es_VE' => 'es',
+        'es_AD' => 'es',
+        'es_BZ' => 'es',
+        'es_US' => 'es',
+        'fa_AF' => 'fa',
+        'fa_IR' => 'fa',
+        'fa_PK' => 'fa',
+        'fi_FI' => 'fi',
+        'fi_SE' => 'fi',
+        'fr_BE' => 'fr',
+        'fr_BF' => 'fr',
+        'fr_BI' => 'fr',
+        'fr_BJ' => 'fr',
+        'fr_CA' => 'fr_ca',
+        'fr_CF' => 'fr',
+        'fr_CG' => 'fr',
+        'fr_CH' => 'fr',
+        'fr_CI' => 'fr',
+        'fr_CM' => 'fr',
+        'fr_DJ' => 'fr',
+        'fr_DZ' => 'fr',
+        'fr_FR' => 'fr',
+        'fr_GA' => 'fr',
+        'fr_GF' => 'fr',
+        'fr_GN' => 'fr',
+        'fr_GP' => 'fr',
+        'fr_HT' => 'fr',
+        'fr_KM' => 'fr',
+        'fr_LU' => 'fr',
+        'fr_MA' => 'fr',
+        'fr_MC' => 'fr',
+        'fr_MG' => 'fr',
+        'fr_ML' => 'fr',
+        'fr_MQ' => 'fr',
+        'fr_MU' => 'fr',
+        'fr_NC' => 'fr',
+        'fr_NE' => 'fr',
+        'fr_PF' => 'fr',
+        'fr_PM' => 'fr',
+        'fr_RE' => 'fr',
+        'fr_RW' => 'fr',
+        'fr_SC' => 'fr',
+        'fr_SN' => 'fr',
+        'fr_SY' => 'fr',
+        'fr_TD' => 'fr',
+        'fr_TG' => 'fr',
+        'fr_TN' => 'fr',
+        'fr_VU' => 'fr',
+        'fr_WF' => 'fr',
+        'fr_YT' => 'fr',
+        'fr_GB' => 'fr',
+        'fr_US' => 'fr',
+        'he_IL' => 'he',
+        'hu_HU' => 'hu',
+        'hu_AT' => 'hu',
+        'hu_RO' => 'hu',
+        'hu_RS' => 'hu',
+        'is_IS' => 'is',
+        'it_CH' => 'it',
+        'it_IT' => 'it',
+        'it_SM' => 'it',
+        'it_FR' => 'it',
+        'it_HR' => 'it',
+        'it_US' => 'it',
+        'it_VA' => 'it',
+        'ja_JP' => 'ja',
+        'ko_KP' => 'ko',
+        'ko_KR' => 'ko',
+        'ko_CN' => 'ko',
+        'mi_NZ' => 'mi_NZ',
+        'nb_NO' => 'nb',
+        'nb_SJ' => 'nb',
+        'nl_AN' => 'nl',
+        'nl_AW' => 'nl',
+        'nl_BE' => 'nl',
+        'nl_NL' => 'nl',
+        'nl_SR' => 'nl',
+        'nn_NO' => 'nn',
+        'pl_PL' => 'pl',
+        'pl_UA' => 'pl',
+        'pt_AO' => 'pt',
+        'pt_BR' => 'pt',
+        'pt_CV' => 'pt',
+        'pt_GW' => 'pt',
+        'pt_MZ' => 'pt',
+        'pt_PT' => 'pt',
+        'pt_ST' => 'pt',
+        'pt_TL' => 'pt',
+        'ro_MD' => 'ro',
+        'ro_RO' => 'ro',
+        'ro_RS' => 'ro',
+        'ru_BY' => 'ru',
+        'ru_KG' => 'ru',
+        'ru_KZ' => 'ru',
+        'ru_RU' => 'ru',
+        'ru_SJ' => 'ru',
+        'ru_UA' => 'ru',
+        'si_LK' => 'si',
+        'sk_SK' => 'sk',
+        'sk_RS' => 'sk',
+        'sq_AL' => 'sq',
+        'sr_BA' => 'sr',
+        'sr_ME' => 'sr',
+        'sr_RS' => 'sr',
+        'sv_FI' => 'sv',
+        'sv_SE' => 'sv',
+        'tr_CY' => 'tr',
+        'tr_TR' => 'tr',
+        'tr_DE' => 'tr',
+        'tr_MK' => 'tr',
+        'uk_UA' => 'uk',
+        'vi_VN' => 'vi',
+        'vi_US' => 'vi',
+        'zh_CN' => 'zh-cn',
+        'zh_HK' => 'zh-cn',
+        'zh_MO' => 'zh-cn',
+        'zh_SG' => 'zh-cn',
+        'zh_TW' => 'zh-tw',
+        'zh_ID' => 'zh-cn',
+        'zh_MY' => 'zh-cn',
+        'zh_TH' => 'zh-cn',
+        'zh_US' => 'zn-cn',
+    ];
 
     /**
      * Location of module relative to BASE_DIR. This must contain the following dirs
@@ -491,5 +659,21 @@ class TinyMCEConfig extends HTMLEditorConfig
     {
         // include TinyMCE Javascript
         Requirements::javascript($this->getScriptURL());
+    }
+
+
+    /**
+     * Get the current tinyMCE language
+     *
+     * @return string Language
+     */
+    public static function get_tinymce_lang()
+    {
+        $lang = static::config()->get('tinymce_lang');
+        $locale = i18n::get_locale();
+        if (isset($lang[$locale])) {
+            return $lang[$locale];
+        }
+        return 'en';
     }
 }

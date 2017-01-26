@@ -18,16 +18,17 @@ class CurrencyField extends TextField
      * allows the value to be set. removes the first character
      * if it is not a number (probably a currency symbol)
      *
-     * @param mixed $val
+     * @param mixed $value
+     * @param mixed $data
      * @return $this
      */
-    public function setValue($val)
+    public function setValue($value, $data = null)
     {
-        if (!$val) {
-            $val = 0.00;
+        if (!$value) {
+            $value = 0.00;
         }
         $this->value = DBCurrency::config()->get('currency_symbol')
-            . number_format((double)preg_replace('/[^0-9.\-]/', '', $val), 2);
+            . number_format((double)preg_replace('/[^0-9.\-]/', '', $value), 2);
         return $this;
     }
     /**

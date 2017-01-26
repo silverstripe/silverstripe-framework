@@ -230,21 +230,19 @@ class MemberAuthenticatorTest extends SapphireTest
         Config::inst()->update(Member::class, 'lock_out_delay_mins', 10);
         DBDatetime::set_mock_now('2016-04-18 00:00:00');
         $controller = new Security();
-        /**
- * @skipUpgrade
-*/
+        /** @skipUpgrade */
         $form = new Form($controller, 'Form', new FieldList(), new FieldList());
 
         // Test correct login
         MemberAuthenticator::authenticate(
-            array(
-            'Email' => 'admin',
-            'Password' => 'wrongpassword'
-            ),
+            [
+                'Email' => 'admin',
+                'Password' => 'wrongpassword'
+            ],
             $form
         );
 
         $this->assertTrue(Member::default_admin()->isLockedOut());
-        $this->assertEquals(Member::default_admin()->LockedOutUntil, '2016-04-18 00:10:00');
+        $this->assertEquals('2016-04-18 00:10:00', Member::default_admin()->LockedOutUntil);
     }
 }

@@ -9,8 +9,8 @@ class CheckboxField extends FormField
 {
 
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_BOOLEAN;
-    
-    public function setValue($value)
+
+    public function setValue($value, $data = null)
     {
         $this->value = ($value) ? 1 : 0;
         return $this;

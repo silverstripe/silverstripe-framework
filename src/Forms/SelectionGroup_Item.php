@@ -48,7 +48,7 @@ class SelectionGroup_Item extends CompositeField
         return $this->value;
     }
 
-    function setValue($Value)
+    function setValue($Value, $data = null)
     {
         $this->value = $Value;
         return $this;

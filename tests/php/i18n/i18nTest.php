@@ -31,7 +31,7 @@ class i18nTest extends SapphireTest
 
     public function testGetExistingTranslations()
     {
-        $translations = i18n::get_existing_translations();
+        $translations = i18n::getSources()->getKnownLocales();
         $this->assertTrue(isset($translations['en_US']), 'Checking for en translation');
         $this->assertEquals($translations['en_US'], 'English (United States)');
         $this->assertTrue(isset($translations['de_DE']), 'Checking for de_DE translation');
@@ -41,7 +41,7 @@ class i18nTest extends SapphireTest
     {
         // Validate necessary assumptions for this test
         // As per set of locales loaded from _fakewebroot
-        $translations = i18n::get_existing_translations();
+        $translations = i18n::getSources()->getKnownLocales();
         $this->assertEquals(
             [
                 'en_GB',
@@ -50,10 +50,10 @@ class i18nTest extends SapphireTest
                 'de_AT',
                 'de_DE',
                 'ja_JP',
+                'mi_NZ',
                 'pl_PL',
                 'es_AR',
                 'es_ES',
-                'mi_NZ',
             ],
             array_keys($translations)
         );
@@ -364,18 +364,18 @@ class i18nTest extends SapphireTest
 
     public function testGetLocaleFromLang()
     {
-        $this->assertEquals('en_US', i18n::get_locale_from_lang('en'));
-        $this->assertEquals('de_DE', i18n::get_locale_from_lang('de_DE'));
-        $this->assertEquals('xy_XY', i18n::get_locale_from_lang('xy'));
+        $this->assertEquals('en_US', i18n::getData()->localeFromLang('en'));
+        $this->assertEquals('de_DE', i18n::getData()->localeFromLang('de_DE'));
+        $this->assertEquals('xy_XY', i18n::getData()->localeFromLang('xy'));
     }
 
     public function testValidateLocale()
     {
-        $this->assertTrue(i18n::validate_locale('en_US'), 'Known locale in underscore format is valid');
-        $this->assertTrue(i18n::validate_locale('en-US'), 'Known locale in dash format is valid');
-        $this->assertFalse(i18n::validate_locale('en'), 'Short lang format is not valid');
-        $this->assertFalse(i18n::validate_locale('xx_XX'), 'Unknown locale in correct format is not valid');
-        $this->assertFalse(i18n::validate_locale(''), 'Empty string is not valid');
+        $this->assertTrue(i18n::getData()->validate('en_US'), 'Known locale in underscore format is valid');
+        $this->assertTrue(i18n::getData()->validate('en-US'), 'Known locale in dash format is valid');
+        $this->assertFalse(i18n::getData()->validate('en'), 'Short lang format is not valid');
+        $this->assertFalse(i18n::getData()->validate('xx_XX'), 'Unknown locale in correct format is not valid');
+        $this->assertFalse(i18n::getData()->validate(''), 'Empty string is not valid');
     }
 
     public function testTranslate()
@@ -483,7 +483,9 @@ class i18nTest extends SapphireTest
             'common_languages',
             array('de_CGN' => array('name' => 'German (Cologne)', 'native' => 'K&ouml;lsch'))
         );
-        $this->assertEquals('German (Cologne)', i18n::get_language_name('de_CGN'));
-        $this->assertEquals('K&ouml;lsch', i18n::get_language_name('de_CGN', true));
+        $this->assertEquals('German', i18n::getData()->languageName('de_CGN'));
+        $this->assertEquals('Deutsch', i18n::with_locale('de_CGN', function () {
+            return i18n::getData()->languageName('de_CGN');
+        }));
     }
 }

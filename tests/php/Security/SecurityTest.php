@@ -435,7 +435,7 @@ class SecurityTest extends FunctionalTest
     {
         $admin = $this->objFromFixture(Member::class, 'test');
         $admin->FailedLoginCount = 99;
-        $admin->LockedOutUntil = DBDatetime::now()->Format('Y-m-d H:i:s');
+        $admin->LockedOutUntil = DBDatetime::now()->getValue();
         $admin->write();
 
         $this->assertNull($admin->AutoLoginHash, 'Hash is empty before lost password');

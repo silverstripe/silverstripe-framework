@@ -305,6 +305,29 @@ PHP;
         );
     }
 
+    public function testCollectFromCodeNamespace()
+    {
+        $c = i18nTextCollector::create();
+
+        $php = <<<PHP
+<?php
+namespace SilverStripe\Framework\Core;
+
+class MyClass extends Base implements SomeService {
+    public function getNewLines() {
+        return _t(
+            __CLASS__.'.NEWLINES',
+            'New Lines'
+        );
+    }
+}
+PHP;
+        $this->assertEquals(
+            [ 'SilverStripe\\Framework\\Core\\MyClass.NEWLINES' => "New Lines" ],
+            $c->collectFromCode($php, 'mymodule')
+        );
+    }
+
 
     public function testNewlinesInEntityValues()
     {

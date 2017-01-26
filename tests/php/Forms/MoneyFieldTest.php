@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\Tests\MoneyFieldTest\CustomSetter_Object;
 use SilverStripe\Forms\Tests\MoneyFieldTest\TestObject;
 use SilverStripe\ORM\FieldType\DBMoney;
@@ -18,45 +19,72 @@ class MoneyFieldTest extends SapphireTest
 
     public function testSaveInto()
     {
-        $o = new TestObject();
+        $testObject = new TestObject();
 
-        $m = new DBMoney();
-        $m->setAmount(123456.78);
-        $m->setCurrency('EUR');
-        $f = new MoneyField('MyMoney', 'MyMoney', $m);
+        $money = new DBMoney();
+        $money->setAmount(123456.78);
+        $money->setCurrency('EUR');
+        $field = new MoneyField('MyMoney', 'MyMoney', $money);
 
-        $f->saveInto($o);
-        $this->assertEquals(123456.78, $o->MyMoney->getAmount());
-        $this->assertEquals('EUR', $o->MyMoney->getCurrency());
+        $field->saveInto($testObject);
+        $this->assertEquals(123456.78, $testObject->MyMoney->getAmount());
+        $this->assertEquals('EUR', $testObject->MyMoney->getCurrency());
     }
 
     public function testSetValueAsMoney()
     {
-        $o = new TestObject();
+        $testObject = new TestObject();
 
-        $f = new MoneyField('MyMoney', 'MyMoney');
+        $field = new MoneyField('MyMoney', 'MyMoney');
+        $field->setLocale('en_NZ');
 
-        $m = new DBMoney();
-        $m->setAmount(123456.78);
-        $m->setCurrency('EUR');
-        $f->setValue($m);
+        $money = new DBMoney();
+        $money->setAmount(123456.78);
+        $money->setCurrency('EUR');
+        $field->setValue($money);
 
-        $f->saveInto($o);
-        $this->assertEquals(123456.78, $o->MyMoney->getAmount());
-        $this->assertEquals('EUR', $o->MyMoney->getCurrency());
+        $field->saveInto($testObject);
+        $this->assertEquals(123456.78, $testObject->MyMoney->getAmount());
+        $this->assertEquals('EUR', $testObject->MyMoney->getCurrency());
+        $this->assertEquals('123456.78 EUR', $field->dataValue());
+        $this->assertEquals('€123,456.78', $field->Value());
     }
 
     public function testSetValueAsArray()
     {
-        $o = new TestObject();
+        $testObject = new TestObject();
+        $field = new MoneyField('MyMoney', 'MyMoney');
+        $field->setSubmittedValue([
+            'Currency' => 'EUR',
+            'Amount' => 123456.78
+        ]);
 
-        $f = new MoneyField('MyMoney', 'MyMoney');
+        $field->saveInto($testObject);
+        $this->assertEquals(123456.78, $testObject->MyMoney->getAmount());
+        $this->assertEquals('EUR', $testObject->MyMoney->getCurrency());
+    }
 
-        $f->setValue(array('Currency'=>'EUR','Amount'=>123456.78));
+    public function testSetValueAsString()
+    {
+        $testObject = new TestObject();
+        $field = new MoneyField('MyMoney');
+        $field->setLocale('en_NZ');
+        $field->setValue('1.01 usd');
+        $field->saveInto($testObject);
+        $this->assertEquals(1.01, $testObject->MyMoney->getAmount());
+        $this->assertEquals('USD', $testObject->MyMoney->getCurrency());
+        $this->assertEquals('1.01 USD', $field->dataValue());
+        $this->assertEquals('US$1.01', $field->Value());
 
-        $f->saveInto($o);
-        $this->assertEquals(123456.78, $o->MyMoney->getAmount());
-        $this->assertEquals('EUR', $o->MyMoney->getCurrency());
+        $testObject = new TestObject();
+        $field = new MoneyField('MyMoney');
+        $field->setLocale('en_NZ');
+        $field->setValue('1.01');
+        $field->saveInto($testObject);
+        $this->assertEquals(1.01, $testObject->MyMoney->getAmount());
+        $this->assertNull($testObject->MyMoney->getCurrency());
+        $this->assertEquals('1.01', $field->dataValue());
+        $this->assertEquals('$1.01', $field->Value());
     }
 
     /**
@@ -69,10 +97,34 @@ class MoneyFieldTest extends SapphireTest
         $o = new CustomSetter_Object();
 
         $f = new MoneyField('CustomMoney', 'Test Money Field');
-        $f->setValue(array('Currency'=>'EUR','Amount'=>123456.78));
+        $f->setSubmittedValue([
+            'Currency'=>'EUR',
+            'Amount'=>123456.78
+        ]);
 
         $f->saveInto($o);
         $this->assertEquals((2 * 123456.78), $o->MyMoney->getAmount());
         $this->assertEquals('EUR', $o->MyMoney->getCurrency());
+    }
+
+    public function testValidation()
+    {
+        $field = new MoneyField('Money');
+        $field->setAllowedCurrencies(['NZD', 'USD']);
+
+        // Valid currency
+        $validator = new RequiredFields();
+        $field->setSubmittedValue([
+            'Currency' => 'NZD',
+            'Amount' => 123
+        ]);
+        $this->assertTrue($field->validate($validator));
+
+        // Invalid currency
+        $field->setSubmittedValue([
+            'Currency' => 'EUR',
+            'Amount' => 123
+        ]);
+        $this->assertFalse($field->validate($validator));
     }
 }
