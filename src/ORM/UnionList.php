@@ -11,6 +11,11 @@ use LogicException;
  */
 class UnionList extends ViewableData implements SS_List
 {
+    /**
+     * An array of SS_List instances
+     *
+     * @var array
+     */
     protected $lists = array();
 
     /**
@@ -18,7 +23,7 @@ class UnionList extends ViewableData implements SS_List
      *
      * @param array $lists - Lists to hold
      */
-    public function __construct(array $lists = array())
+    public function __construct(array $lists)
     {
         $this->lists = array_values($lists);
         parent::__construct();
@@ -154,7 +159,7 @@ class UnionList extends ViewableData implements SS_List
      * @param string $colName
      * @return array
      */
-    public function column($colName = "ID")
+    public function column($colName = 'ID')
     {
         $result = array();
         foreach ($this->lists as $i => $list) {
