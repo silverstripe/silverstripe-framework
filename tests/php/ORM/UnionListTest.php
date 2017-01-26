@@ -85,6 +85,14 @@ class UnionListTest extends SapphireTest
         $this->assertEquals('test obj 4', $recordSet[3]->Name);
     }
 
+    public function testExists()
+    {
+        $unionList = $this->unionList;
+        $this->assertEquals(true, $unionList->exists());
+        $unionList = UnionList::create(array(ValidatedObject::get()->filter(array('Name' => 'non existant'))));
+        $this->assertEquals(false, $unionList->exists());
+    }
+
     public function testToNestedArray()
     {
         $unionList = $this->unionList;
