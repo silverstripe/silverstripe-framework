@@ -47,8 +47,8 @@ abstract class ComparisonFilter extends SearchFilter
         $clause = [$predicate => $this->getDbFormattedValue()];
 
         return $this->aggregate ?
-        	$this->applyAggregate($query, $clause) :
-        	$query->where($clause);
+            $this->applyAggregate($query, $clause) :
+            $query->where($clause);
     }
 
     /**
@@ -66,8 +66,8 @@ abstract class ComparisonFilter extends SearchFilter
         $clause = [$predicate => $this->getDbFormattedValue()];
 
         return $this->aggregate ?
-        	$this->applyAggregate($query, $clause) :
-        	$query->where($clause);
+            $this->applyAggregate($query, $clause) :
+            $query->where($clause);
     }
 
     public function isEmpty()

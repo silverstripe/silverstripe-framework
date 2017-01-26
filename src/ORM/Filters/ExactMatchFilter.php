@@ -79,8 +79,8 @@ class ExactMatchFilter extends SearchFilter
         $clause = [$where => $value];
         
         return $this->aggregate ?
-        	$this->applyAggregate($query, $clause) :
-        	$query->where($clause);
+            $this->applyAggregate($query, $clause) :
+            $query->where($clause);
     }
 
     /**
@@ -196,9 +196,9 @@ class ExactMatchFilter extends SearchFilter
 
         $clause = [$predicate => $values];
 
-        return $this->aggregate ? 
-        	$this->applyAggregate($query, $clause) :
-        	$query->where($clause);
+        return $this->aggregate ?
+            $this->applyAggregate($query, $clause) :
+            $query->where($clause);
     }
 
     public function isEmpty()

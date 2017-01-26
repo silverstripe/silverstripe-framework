@@ -36,14 +36,14 @@ class PartialMatchFilter extends SearchFilter
      */
     public function apply(DataQuery $query)
     {
-    	if($this->aggregate) {
-    		throw new InvalidArgumentException(sprintf(
-    			'Aggregate functions can only be used with comparison filters. See %s',
-    			$this->fullName
-    		));
-    	}
+        if ($this->aggregate) {
+            throw new InvalidArgumentException(sprintf(
+                'Aggregate functions can only be used with comparison filters. See %s',
+                $this->fullName
+            ));
+        }
 
-    	return parent::apply($query);
+        return parent::apply($query);
     }
 
     protected function applyOne(DataQuery $query)
@@ -61,8 +61,8 @@ class PartialMatchFilter extends SearchFilter
         $clause = [$comparisonClause => $this->getMatchPattern($this->getValue())];
         
         return $this->aggregate ?
-        	$this->applyAggregate($query, $clause) :
-        	$query->where($clause);
+            $this->applyAggregate($query, $clause) :
+            $query->where($clause);
     }
 
     protected function applyMany(DataQuery $query)
