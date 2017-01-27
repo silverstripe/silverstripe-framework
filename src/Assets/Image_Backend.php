@@ -50,6 +50,13 @@ interface Image_Backend
     public function loadFrom($path);
 
     /**
+     * Get the currently assigned image resource
+     *
+     * @return mixed
+     */
+    public function getImageResource();
+
+    /**
      * Write to the given asset store
      *
      * @param AssetStore $assetStore
