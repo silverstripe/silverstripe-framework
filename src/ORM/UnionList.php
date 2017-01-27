@@ -60,7 +60,7 @@ class UnionList extends ViewableData implements SS_List
      */
     public function getIterator()
     {
-        foreach ($this->lists as $i => $list) {
+        foreach ($this->lists as $list) {
             foreach ($list as $record) {
                 yield $record;
             }
@@ -75,7 +75,7 @@ class UnionList extends ViewableData implements SS_List
     public function toArray()
     {
         $result = array();
-        foreach ($this->lists as $i => $list) {
+        foreach ($this->lists as $list) {
             foreach ($list as $record) {
                 $result[] = $record;
             }
@@ -115,7 +115,7 @@ class UnionList extends ViewableData implements SS_List
     public function toNestedArray()
     {
         $result = array();
-        foreach ($this->lists as $i => $list) {
+        foreach ($this->lists as $list) {
             foreach ($list as $item) {
                 if (is_object($item)) {
                     if (method_exists($item, 'toMap')) {
@@ -138,8 +138,8 @@ class UnionList extends ViewableData implements SS_List
      */
     public function first()
     {
-        $list = isset($this->lists[0]) ? $this->lists[0] : null;
-        return ($list) ? $list->first() : null;
+        $list = resets($this->lists);
+        return $list ? $list->first() : null;
     }
 
     /**
@@ -150,7 +150,7 @@ class UnionList extends ViewableData implements SS_List
     public function last()
     {
         $list = end($this->lists);
-        return ($list) ? $list->last() : null;
+        return $list ? $list->last() : null;
     }
 
      /**
@@ -162,7 +162,7 @@ class UnionList extends ViewableData implements SS_List
     public function column($colName = 'ID')
     {
         $result = array();
-        foreach ($this->lists as $i => $list) {
+        foreach ($this->lists as $list) {
             $result = array_merge($result, $list->column($colName));
         }
         return $result;

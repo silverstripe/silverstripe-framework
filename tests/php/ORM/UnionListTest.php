@@ -10,30 +10,19 @@ use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
 
 class UnionListTest extends SapphireTest
 {
-    /**
-     * Borrow the model from DataObjectTest
-     * {@inheritDoc}
-     */
-    protected static $fixture_file = 'DataObjectTest.yml';
+    protected static $fixture_file = 'UnionListTest.yml';
 
     /**
      * @var UnionList
      */
     protected $unionList = null;
 
-    protected function getExtraDataObjects()
-    {
-        return array_merge(
-            DataObjectTest::$extra_data_objects,
-            ManyManyListTest::$extra_data_objects
-        );
-    }
-
     public function setUp()
     {
         parent::setUp();
+        
         // create an object to test with
-        $obj1 = new ValidatedObject();
+        /*$obj1 = new ValidatedObject();
         $obj1->Name = 'test obj 1';
         $obj1->write();
         $this->assertTrue($obj1->isInDB());
@@ -51,6 +40,10 @@ class UnionListTest extends SapphireTest
         $obj4 = new ValidatedObject();
         $obj4->Name = 'test obj 4';
         $obj4->write();
+        $this->assertTrue($obj4->isInDB());*/
+        $obj3 = ValidatedObject::get()->find('Name', 'test obj 3');
+        $obj4 = ValidatedObject::get()->find('Name', 'test obj 4');
+        $this->assertTrue($obj3->isInDB());
         $this->assertTrue($obj4->isInDB());
        
         $list1 = ValidatedObject::get()->filter(array('Name' => 'test obj 1'));
@@ -88,9 +81,9 @@ class UnionListTest extends SapphireTest
     public function testExists()
     {
         $unionList = $this->unionList;
-        $this->assertEquals(true, $unionList->exists());
+        $this->assertTrue($unionList->exists());
         $unionList = UnionList::create(array(ValidatedObject::get()->filter(array('Name' => 'non existant'))));
-        $this->assertEquals(false, $unionList->exists());
+        $this->assertFalse($unionList->exists());
     }
 
     public function testToNestedArray()
