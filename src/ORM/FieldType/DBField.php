@@ -148,7 +148,7 @@ abstract class DBField extends ViewableData
      *
      * @param string $name
      *
-     * @return DBField
+     * @return $this
      */
     public function setName($name)
     {
@@ -196,10 +196,12 @@ abstract class DBField extends ViewableData
      * @param bool $markChanged Indicate wether this field should be marked changed.
      *  Set to FALSE if you are initializing this field after construction, rather
      *  than setting a new value.
+     * @return $this
      */
     public function setValue($value, $record = null, $markChanged = true)
     {
         $this->value = $value;
+        return $this;
     }
 
     /**
@@ -446,7 +448,9 @@ abstract class DBField extends ViewableData
     {
         $fieldName = $this->name;
         if (empty($fieldName)) {
-            throw new \BadMethodCallException("DBField::saveInto() Called on a nameless '" . get_class($this) . "' object");
+            throw new \BadMethodCallException(
+                "DBField::saveInto() Called on a nameless '" . get_class($this) . "' object"
+            );
         }
         $dataObject->$fieldName = $this->value;
     }
