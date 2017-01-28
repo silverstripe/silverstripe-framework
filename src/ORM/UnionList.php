@@ -138,7 +138,7 @@ class UnionList extends ViewableData implements SS_List
      */
     public function first()
     {
-        $list = resets($this->lists);
+        $list = reset($this->lists);
         return $list ? $list->first() : null;
     }
 
