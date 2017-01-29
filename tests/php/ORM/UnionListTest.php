@@ -10,7 +10,7 @@ use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
 
 class UnionListTest extends SapphireTest
 {
-    protected $usesDatabase = true;
+    protected static $fixture_file = 'UnionListTest.yml';
 
     /**
      * @var UnionList
@@ -27,26 +27,9 @@ class UnionListTest extends SapphireTest
     public function setUp()
     {
         parent::setUp();
-        
-        // create an object to test with
-        $obj1 = new ValidatedObject();
-        $obj1->Name = 'test obj 1';
-        $obj1->write();
-        $this->assertTrue($obj1->isInDB());
-
-        $obj2 = new ValidatedObject();
-        $obj2->Name = 'test obj 2';
-        $obj2->write();
-        $this->assertTrue($obj2->isInDB());
-
-        $obj3 = new ValidatedObject();
-        $obj3->Name = 'test obj 3';
-        $obj3->write();
+        $obj3 = ValidatedObject::get()->find('Name', 'test obj 3');
+        $obj4 = ValidatedObject::get()->find('Name', 'test obj 4');
         $this->assertTrue($obj3->isInDB());
-
-        $obj4 = new ValidatedObject();
-        $obj4->Name = 'test obj 4';
-        $obj4->write();
         $this->assertTrue($obj4->isInDB());
        
         $list1 = ValidatedObject::get()->filter(array('Name' => 'test obj 1'));

@@ -1,0 +1,13 @@
+SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject:
+  numeric1:
+    Sort: 0
+    Name: 'test obj 1'
+  numeric2:
+    Sort: -1
+    Name: 'test obj 2'
+  numeric3:
+    Sort: 1
+    Name: 'test obj 3'
+  numeric4:
+    Sort: -2
+    Name: 'test obj 4'
