@@ -768,7 +768,7 @@ class HTTPRequest implements ArrayAccess
     {
         $headerOverrideIP = null;
         if (TRUSTED_PROXY) {
-            $headers = (defined('SS_TRUSTED_PROXY_IP_HEADER')) ? array(SS_TRUSTED_PROXY_IP_HEADER) : null;
+            $headers = (getenv('SS_TRUSTED_PROXY_IP_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_IP_HEADER')) : null;
             if (!$headers) {
                 // Backwards compatible defaults
                 $headers = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR');

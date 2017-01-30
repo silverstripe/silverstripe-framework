@@ -32,8 +32,7 @@ if (version_compare(phpversion(), '5.5.0', '<')) {
  *
  * The main.php does a number of set-up activities for the request.
  *
- *  - Includes the first one of the following files that it finds: (root)/_ss_environment.php,
- *    (root)/../_ss_environment.php, or (root)/../../_ss_environment.php
+ *  - Includes the .env file in your webroot
  *  - Gets an up-to-date manifest from {@link ManifestBuilder}
  *  - Sets up error handlers with {@link Debug::loadErrorHandlers()}
  *  - Calls {@link DB::connect()}, passing it the global variable $databaseConfig that should

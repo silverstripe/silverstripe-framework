@@ -210,7 +210,7 @@ class ConfigManifest
 
         if (isset($key['envvars'])) {
             foreach ($key['envvars'] as $variable => $foo) {
-                $key['envvars'][$variable] = isset($_ENV[$variable]) ? $_ENV[$variable] : null;
+                $key['envvars'][$variable] = getenv($variable) ?: null;
             }
         }
 
@@ -726,7 +726,7 @@ class ConfigManifest
                     break;
 
                 case 'envvarset':
-                    $matches = $matches && isset($_ENV[$v]);
+                    $matches = $matches && getenv($v);
                     break;
 
                 case 'constantdefined':
@@ -735,7 +735,7 @@ class ConfigManifest
 
                 default:
                     $matches = $matches && (
-                        (isset($_ENV[$k]) && $_ENV[$k] == $v) ||
+                        getenv($k) == $v ||
                         (defined($k) && constant($k) == $v)
                     );
                     break;

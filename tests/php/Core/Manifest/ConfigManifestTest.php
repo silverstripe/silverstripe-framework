@@ -427,7 +427,9 @@ class ConfigManifestTest extends SapphireTest
 
     public function testEnvVarSetRules()
     {
-        $_ENV['ENVVARSET_FOO'] = 1;
+        $loader = new \Dotenv\Loader(null);
+
+        $loader->setEnvironmentVariable('ENVVARSET_FOO', 1);
         $config = $this->getConfigFixtureValue('EnvVarSet');
 
         $this->assertEquals(
@@ -463,7 +465,9 @@ class ConfigManifestTest extends SapphireTest
 
     public function testEnvOrConstantMatchesValueRules()
     {
-        $_ENV['ENVORCONSTANTMATCHESVALUE_FOO'] = 'Foo';
+        $loader = new \Dotenv\Loader(null);
+
+        $loader->setEnvironmentVariable('ENVORCONSTANTMATCHESVALUE_FOO', 'Foo');
         define('ENVORCONSTANTMATCHESVALUE_BAR', 'Bar');
         $config = $this->getConfigFixtureValue('EnvOrConstantMatchesValue');
 
@@ -537,7 +541,9 @@ class ConfigManifestTest extends SapphireTest
 
     public function testMultipleRules()
     {
-        $_ENV['MULTIPLERULES_ENVVARIABLESET'] = 1;
+        $loader = new \Dotenv\Loader(null);
+
+        $loader->setEnvironmentVariable('MULTIPLERULES_ENVVARIABLESET', 1);
         define('MULTIPLERULES_DEFINEDCONSTANT', 'defined');
         $config = $this->getConfigFixtureValue('MultipleRules');
 

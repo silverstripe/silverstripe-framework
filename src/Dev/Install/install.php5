@@ -60,8 +60,7 @@ if (!$included) {
 	exit(1);
 }
 
-$envFileExists = defined('SS_ENVIRONMENT_FILE');
-$usingEnv = $envFileExists && !empty($_REQUEST['useEnv']);
+$usingEnv = !empty($_REQUEST['useEnv']);
 
 require_once __DIR__ . '/DatabaseConfigurationHelper.php';
 require_once __DIR__ . '/DatabaseAdapterRegistry.php';
@@ -142,8 +141,8 @@ if(isset($_REQUEST['db'])) {
 	if(isset($_REQUEST['db']['type'])) {
 		$type = $_REQUEST['db']['type'];
 	} else {
-        if( defined('SS_DATABASE_CLASS') ){
-            $type = $_REQUEST['db']['type'] = SS_DATABASE_CLASS;
+        if ($type = getenv('SS_DATABASE_CLASS')) {
+            $_REQUEST['db']['type'] = $type;
         } elseif( $databaseClasses['MySQLPDODatabase']['supported'] ) {
             $type = $_REQUEST['db']['type'] = 'MySQLPDODatabase';
         } elseif( $databaseClasses['MySQLDatabase']['supported'] ) {
@@ -156,10 +155,10 @@ if(isset($_REQUEST['db'])) {
 	// Disabled inputs don't submit anything - we need to use the environment (except the database name)
 	if($usingEnv) {
 		$_REQUEST['db'][$type] = $databaseConfig = array(
-			"type" => defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : $type,
-			"server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : "localhost",
-			"username" => defined('SS_DATABASE_USERNAME') ? SS_DATABASE_USERNAME : "root",
-			"password" => defined('SS_DATABASE_PASSWORD') ? SS_DATABASE_PASSWORD : "",
+			"type" => getenv('SS_DATABASE_CLASS') ?: $type,
+			"server" => getenv('SS_DATABASE_SERVER') ?: "localhost",
+			"username" => getenv('SS_DATABASE_USERNAME') ?: "root",
+			"password" => getenv('SS_DATABASE_PASSWORD') ?: "",
 			"database" => $_REQUEST['db'][$type]['database'],
 		);
 
@@ -169,8 +168,8 @@ if(isset($_REQUEST['db'])) {
 		$databaseConfig['type'] = $type;
 	}
 } else {
-    if( defined('SS_DATABASE_CLASS') ){
-        $type = $_REQUEST['db']['type'] = SS_DATABASE_CLASS;
+    if($type = getenv('SS_DATABASE_CLASS')) {
+        $_REQUEST['db']['type'] = $type;
     } elseif( $databaseClasses['MySQLPDODatabase']['supported'] ) {
         $type = $_REQUEST['db']['type'] = 'MySQLPDODatabase';
     } elseif( $databaseClasses['MySQLDatabase']['supported'] ) {
@@ -180,9 +179,9 @@ if(isset($_REQUEST['db'])) {
     }
 	$_REQUEST['db'][$type] = $databaseConfig = array(
 		"type" => $type,
-		"server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : "localhost",
-		"username" => defined('SS_DATABASE_USERNAME') ? SS_DATABASE_USERNAME : "root",
-		"password" => defined('SS_DATABASE_PASSWORD') ? SS_DATABASE_PASSWORD : "",
+		"server" => getenv('SS_DATABASE_SERVER') ?: "localhost",
+		"username" => getenv('SS_DATABASE_USERNAME') ?: "root",
+		"password" => getenv('SS_DATABASE_PASSWORD') ?: "",
 		"database" => isset($_SERVER['argv'][2]) ? $_SERVER['argv'][2] : "SS_mysite",
 	);
 }
@@ -191,16 +190,16 @@ if(isset($_REQUEST['admin'])) {
 	// Disabled inputs don't submit anything - we need to use the environment (except the database name)
 	if($usingEnv) {
 		$_REQUEST['admin'] = $adminConfig = array(
-			'username' => defined('SS_DEFAULT_ADMIN_USERNAME') ? SS_DEFAULT_ADMIN_USERNAME : 'admin',
-			'password' => defined('SS_DEFAULT_ADMIN_PASSWORD') ? SS_DEFAULT_ADMIN_PASSWORD : '',
+			'username' => getenv('SS_DEFAULT_ADMIN_USERNAME') ?: 'admin',
+			'password' => getenv('SS_DEFAULT_ADMIN_PASSWORD') ?: '',
 		);
 	} else {
 		$adminConfig = $_REQUEST['admin'];
 	}
 } else {
 	$_REQUEST['admin'] = $adminConfig = array(
-		'username' => defined('SS_DEFAULT_ADMIN_USERNAME') ? SS_DEFAULT_ADMIN_USERNAME : 'admin',
-		'password' => defined('SS_DEFAULT_ADMIN_PASSWORD') ? SS_DEFAULT_ADMIN_PASSWORD : '',
+		'username' => getenv('SS_DEFAULT_ADMIN_USERNAME') ?: 'admin',
+		'password' => getenv('SS_DEFAULT_ADMIN_PASSWORD') ?: '',
 	);
 }
 
@@ -1402,7 +1401,7 @@ class Installer extends InstallRequirements {
 		// Write the config file
 		global $usingEnv;
 		if($usingEnv) {
-			$this->statusMessage("Setting up 'mysite/_config.php' for use with _ss_environment.php...");
+			$this->statusMessage("Setting up 'mysite/_config.php' for use with environment variables...");
 			$this->writeToFile("mysite/_config.php", <<<PHP
 <?php
 

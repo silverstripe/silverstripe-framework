@@ -176,7 +176,7 @@ class ClassManifest
         $this->base  = $base;
         $this->tests = $includeTests;
 
-        $cacheClass = defined('SS_MANIFESTCACHE') ? SS_MANIFESTCACHE : 'SilverStripe\\Core\\Manifest\\ManifestCache_File';
+        $cacheClass = getenv('SS_MANIFESTCACHE') ?: 'SilverStripe\\Core\\Manifest\\ManifestCache_File';
 
         $this->cache = new $cacheClass('classmanifest'.($includeTests ? '_tests' : ''));
         $this->cacheKey = 'manifest';

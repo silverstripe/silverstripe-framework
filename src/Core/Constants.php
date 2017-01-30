@@ -3,7 +3,6 @@
  * This file is the Framework constants bootstrap. It will prepare some basic common constants.
  *
  * It takes care of:
- *  - Including _ss_environment.php
  *  - Normalisation of $_SERVER values
  *  - Initialisation of necessary constants (mostly paths)
  *
@@ -31,48 +30,6 @@
 // ENVIRONMENT CONFIG
 
 /**
- * Include _ss_environment.php file
- */
-//define the name of the environment file
-$envFile = '_ss_environment.php';
-//define the dirs to start scanning from (have to add the trailing slash)
-// we're going to check the realpath AND the path as the script sees it
-$dirsToCheck = array(
-    realpath('.'),
-    dirname($_SERVER['SCRIPT_FILENAME'])
-);
-//if they are the same, remove one of them
-if ($dirsToCheck[0] == $dirsToCheck[1]) {
-    unset($dirsToCheck[1]);
-}
-foreach ($dirsToCheck as $dir) {
-    //check this dir and every parent dir (until we hit the base of the drive)
-    // or until we hit a dir we can't read
-    while (true) {
-        //if it's readable, go ahead
-        if (@is_readable($dir)) {
-            //if the file exists, then we include it, set relevant vars and break out
-            if (file_exists($dir . DIRECTORY_SEPARATOR . $envFile)) {
-                define('SS_ENVIRONMENT_FILE', $dir . DIRECTORY_SEPARATOR . $envFile);
-                include_once(SS_ENVIRONMENT_FILE);
-                //break out of BOTH loops because we found the $envFile
-                break(2);
-            }
-        } else {
-            //break out of the while loop, we can't read the dir
-            break;
-        }
-        if (dirname($dir) == $dir) {
-            // here we need to check that the path of the last dir and the next one are
-            // not the same, if they are, we have hit the root of the drive
-            break;
-        }
-        //go up a directory
-        $dir = dirname($dir);
-    }
-}
-
-/**
  * Validate whether the request comes directly from a trusted server or not
  * This is necessary to validate whether or not the values of X-Forwarded-
  * or Client-IP HTTP headers can be trusted
@@ -82,18 +39,18 @@ if (!defined('TRUSTED_PROXY')) {
 
     if (getenv('BlockUntrustedProxyHeaders') // Legacy setting (reverted from documentation)
         || getenv('BlockUntrustedIPs') // Documented setting
-        || defined('SS_TRUSTED_PROXY_IPS')
+        || getenv('SS_TRUSTED_PROXY_IPS')
     ) {
         $trusted = false;
 
-        if (defined('SS_TRUSTED_PROXY_IPS') && SS_TRUSTED_PROXY_IPS !== 'none') {
-            if (SS_TRUSTED_PROXY_IPS === '*') {
+        if (getenv('SS_TRUSTED_PROXY_IPS') !== 'none') {
+            if (getenv('SS_TRUSTED_PROXY_IPS') === '*') {
                 $trusted = true;
             } elseif (isset($_SERVER['REMOTE_ADDR'])) {
                 if (!class_exists('SilverStripe\\Control\\Util\\IPUtils')) {
                     require_once 'Control/IPUtils.php';
                 };
-                $trusted = SilverStripe\Control\Util\IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', SS_TRUSTED_PROXY_IPS));
+                $trusted = SilverStripe\Control\Util\IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', getenv('SS_TRUSTED_PROXY_IPS')));
             }
         }
     }
@@ -202,6 +159,23 @@ if (!defined('BASE_PATH')) {
     }
     define('BASE_PATH', $candidateBasePath);
 }
+
+// Allow a first class env var to be set that disables .env file loading
+if (!getenv('SS_IGNORE_DOT_ENV')) {
+    foreach (array(
+                 BASE_PATH,
+                 dirname(BASE_PATH),
+             ) as $path) {
+        try {
+            (new \Dotenv\Dotenv($path))->load();
+        } catch (\Dotenv\Exception\InvalidPathException $e) {
+            // no .env found - no big deal
+            continue;
+        }
+        break;
+    }
+}
+
 if (!defined('BASE_URL')) {
     // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
     $path = realpath($_SERVER['SCRIPT_FILENAME']);

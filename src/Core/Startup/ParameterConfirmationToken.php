@@ -179,7 +179,7 @@ class ParameterConfirmationToken
         // See https://support.microsoft.com/en-us/kb/307347
         $headerOverride = false;
         if (TRUSTED_PROXY) {
-            $headers = (defined('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(SS_TRUSTED_PROXY_PROTOCOL_HEADER) : null;
+            $headers = (getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) : null;
             if (!$headers) {
                 // Backwards compatible defaults
                 $headers = array('HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS');

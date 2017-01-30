@@ -12,7 +12,7 @@ class DBTest extends SapphireTest
     public function testValidAlternativeDatabaseName()
     {
 
-        $prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
 
         Director::config()->update('environment_type', 'dev');
         $this->assertTrue(DB::valid_alternative_database_name($prefix.'tmpdb1234567'));

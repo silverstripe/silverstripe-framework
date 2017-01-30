@@ -152,10 +152,7 @@ class Deprecation
         if (isset(self::$enabled)) {
             return self::$enabled;
         }
-        if (defined('SS_DEPRECATION_ENABLED')) {
-            return SS_DEPRECATION_ENABLED;
-        }
-        return true;
+        return getenv('SS_DEPRECATION_ENABLED') ?: true;
     }
 
     /**

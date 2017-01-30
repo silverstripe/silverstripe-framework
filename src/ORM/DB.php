@@ -241,7 +241,7 @@ class DB
             return false;
         }
 
-        $prefix = defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : 'ss_';
+        $prefix = getenv('SS_DATABASE_PREFIX') ?: 'ss_';
         $pattern = strtolower(sprintf('/^%stmpdb\d{7}$/', $prefix));
         return (bool)preg_match($pattern, $name);
     }
