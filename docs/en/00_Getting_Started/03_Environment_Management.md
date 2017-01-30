@@ -87,3 +87,4 @@ SilverStripe core environment variables are listed here, though you're free to d
 | `SS_ALLOWED_HOSTS` | A comma deliminated list of hostnames the site is allowed to respond to |
 | `SS_MANIFESTCACHE` | The manifest cache to use (defaults to file based caching) |
 | `SS_IGNORE_DOT_ENV` | If set the .env file will be ignored. This is good for live to mitigate any performance implications of loading the .env file |
+| `SS_HOST` | The hostname to use when it isn't determinable by other means (eg: for CLI commands) |

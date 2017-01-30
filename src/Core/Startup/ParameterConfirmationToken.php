@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Control\Director;
 use SilverStripe\Security\RandomGenerator;
 
 /**
@@ -203,7 +204,7 @@ class ParameterConfirmationToken
 
         $parts = array_filter(array(
             // What's our host
-            $_SERVER['HTTP_HOST'],
+            Director::host(),
             // SilverStripe base
             self::$alternateBaseURL !== null ? self::$alternateBaseURL : BASE_URL,
             // And URL including base script (eg: if it's index.php/page/url/)

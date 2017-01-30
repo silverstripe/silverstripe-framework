@@ -20,6 +20,21 @@ if(PHP_SAPI != "cli" && PHP_SAPI  != "cgi" && PHP_SAPI != "cgi-fcgi") {
 	die();
 }
 
+// We update the $_SERVER variable to contain data consistent with the rest of the application.
+$_SERVER = array_merge(array(
+    'SERVER_PROTOCOL' => 'HTTP/1.1',
+    'HTTP_ACCEPT' => 'text/plain;q=0.5',
+    'HTTP_ACCEPT_LANGUAGE' => '*;q=0.5',
+    'HTTP_ACCEPT_ENCODING' => '',
+    'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1;q=0.5',
+    'SERVER_SIGNATURE' => 'Command-line PHP/' . phpversion(),
+    'SERVER_SOFTWARE' => 'PHP/' . phpversion(),
+    'SERVER_ADDR' => '127.0.0.1',
+    'REMOTE_ADDR' => '127.0.0.1',
+    'REQUEST_METHOD' => 'GET',
+    'HTTP_USER_AGENT' => 'CLI',
+), $_SERVER);
+
 /**
  * Identify the cli-script.php file and change to its container directory, so that require_once() works
  */

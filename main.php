@@ -188,8 +188,9 @@ if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseC
 		header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
 		die('SilverStripe Framework requires a $databaseConfig defined.');
 	}
+	$host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
 	$s = (isset($_SERVER['SSL']) || (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) ? 's' : '';
-	$installURL = "http$s://" . $_SERVER['HTTP_HOST'] . BASE_URL . '/install.php';
+	$installURL = "http$s://" . $host . BASE_URL . '/install.php';
 
 	// The above dirname() will equate to "\" on Windows when installing directly from http://localhost (not using
 	// a sub-directory), this really messes things up in some browsers. Let's get rid of the backslashes

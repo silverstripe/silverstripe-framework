@@ -58,8 +58,7 @@ Example `.env`:
     SS_DEFAULT_ADMIN_PASSWORD="password"
     
     # Basic CLI hostname
-    global $_FILE_TO_URL_MAPPING;
-    $_FILE_TO_URL_MAPPING[__DIR__] = "http://localhost";
+    SS_HOST="localhost";
 
 
 You will also need to be assigned the following permissions. Contact one of the SS staff from
