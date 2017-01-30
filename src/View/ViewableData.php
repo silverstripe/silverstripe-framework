@@ -547,29 +547,6 @@ class ViewableData extends Object implements IteratorAggregate
     }
 
     /**
-     * Return the directory if the current active theme (relative to the site root).
-     *
-     * This method is useful for things such as accessing theme images from your template without hardcoding the theme
-     * page - e.g. <img src="$ThemeDir/images/something.gif">.
-     *
-     * This method should only be used when a theme is currently active. However, it will fall over to the current
-     * project directory.
-     *
-     * @param string $subtheme the subtheme path to get
-     * @return string
-     */
-    public function ThemeDir($subtheme = null)
-    {
-        if (Config::inst()->get('SilverStripe\\View\\SSViewer', 'theme_enabled')
-            && $theme = Config::inst()->get('SilverStripe\\View\\SSViewer', 'theme')
-        ) {
-            return THEMES_DIR . "/$theme" . ($subtheme ? "_$subtheme" : null);
-        }
-
-        return project();
-    }
-
-    /**
      * Get part of the current classes ancestry to be used as a CSS class.
      *
      * This method returns an escaped string of CSS classes representing the current classes ancestry until it hits a
