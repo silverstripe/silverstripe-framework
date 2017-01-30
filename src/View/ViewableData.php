@@ -11,6 +11,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Debug;
+use SilverStripe\View\SSViewer;
 use IteratorAggregate;
 use LogicException;
 use InvalidArgumentException;
@@ -555,15 +556,18 @@ class ViewableData extends Object implements IteratorAggregate
      * This method should only be used when a theme is currently active. However, it will fall over to the current
      * project directory.
      *
-     * @param string $subtheme the subtheme path to get
+     * When multiple themes have been defined, the first theme defined will be returned. If you're using this to
+     * reference a specific file, you should use {@link ThemeResourceLoader::findThemedResource()} instead.
+     *
      * @return string
      */
-    public function ThemeDir($subtheme = null)
+    public function ThemeDir()
     {
-        if (Config::inst()->get('SilverStripe\\View\\SSViewer', 'theme_enabled')
-            && $theme = Config::inst()->get('SilverStripe\\View\\SSViewer', 'theme')
+        if (Config::inst()->get(SSViewer::class, 'theme_enabled')
+            && $themes = SSViewer::get_themes()
         ) {
-            return THEMES_DIR . "/$theme" . ($subtheme ? "_$subtheme" : null);
+            $topTheme = array_shift($themes);
+            return THEMES_DIR . "/{$topTheme}";
         }
 
         return project();
