@@ -80,13 +80,12 @@ can leave sensitive files exposed to public access (the `RewriteRule` conditions
 
 All requests go through `framework/main.php`, which sets up the execution environment:
 
- * Tries to locate an `_ss_environment.php` 
-   [configuration file](/getting_started/environment_management) in the webroot, 
-   or the two levels above it (to allow sharing configuration between multiple webroots).
+ * Tries to locate an `.env` 
+   [configuration file](/getting_started/environment_management) in the webroot.
  * Sets constants based on the filesystem structure (e.g. `BASE_URL`, `BASE_PATH` and `TEMP_FOLDER`)
  * Normalizes the `url` parameter in preparation for handing it off to `Director`
  * Connects to a database, based on information stored in the global `$databaseConfig` variable.
-   The configuration is either defined in your `_config.php`, or through `_ss_environment.php`
+   The configuration is either defined in your `_config.php`, or through `.env`
  * Sets up [error handlers](../debugging/error_handling)
  * Optionally continues a [session](../cookies_and_sessions/sessions) if the request already contains a session identifier
  * Loads manifests for PHP classes, templates, as well as any [YAML configuration](../configuration).

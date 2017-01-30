@@ -75,7 +75,7 @@ This change could be committed to a minor release like *3.2.0*, and remains depr
 (e.g. *3.3.0*, *3.4.0*), until a new major release (e.g. *4.0.0*), at which point it gets removed from the codebase. 
 
 Deprecation notices are enabled by default on dev environment, but can be
-turned off via either _ss_environment.php or in your _config.php. Deprecation
+turned off via either `.env` or in your _config.php. Deprecation
 notices are always disabled on both live and test.
 
 
@@ -86,11 +86,10 @@ notices are always disabled on both live and test.
     Deprecation::set_enabled(false);
 
 
-`_ss_environment.php`
+`.env`
 
 
-    :::php
-    define('SS_DEPRECATION_ENABLED', false);
+    SS_DEPRECATION_ENABLED="0"
 
 
 ## Security Releases

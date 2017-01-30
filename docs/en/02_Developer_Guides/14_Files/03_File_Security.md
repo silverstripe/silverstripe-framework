@@ -232,11 +232,10 @@ In order to better ensure these files are protected, it's recommended to move th
 root altogether.
 
 For instance, given your web root is in the folder `/sites/mysite/www`, you can tell the asset store
-to put protected files into `/sites/mysite/protected` with the below `_ss_environment.php` setting:
+to put protected files into `/sites/mysite/protected` with the below `.env` setting:
 
 
-    :::php
-    define('SS_PROTECTED_ASSETS_PATH', '/sites/mysite/protected');
+    SS_PROTECTED_ASSETS_PATH="/sites/mysite/protected"
 
 
 ### Configuring: File types

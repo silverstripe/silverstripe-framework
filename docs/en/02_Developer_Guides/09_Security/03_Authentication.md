@@ -37,13 +37,12 @@ When a new SilverStripe site is created for the first time, it may be necessary 
 CMS access for the first time. SilverStripe provides a default admin configuration system, which allows a username
 and password to be configured for a single special user outside of the normal membership system.
 
-It is advisable to configure this user in your `_ss_environment.php` file outside of the web root, as below:
+It is advisable to configure this user in your `.env` file inside of the web root, as below:
 
-	:::php
-	// Configure a default username and password to access the CMS on all sites in this environment.
-	define('SS_DEFAULT_ADMIN_USERNAME', 'admin');
-	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
+	# Configure a default username and password to access the CMS on all sites in this environment.
+	SS_DEFAULT_ADMIN_USERNAME="admin"
+	SS_DEFAULT_ADMIN_PASSWORD="password"
 
 When a user logs in with these credentials, then a [api:Member] with the Email 'admin' will be generated in
 the database, but without any password information. This means that the password can be reset or changed by simply
-updating the `_ss_environment.php` file.
+updating the `.env` file.

@@ -129,20 +129,18 @@ Since SilverStripe modules are installed into their own folder, you have to mana
 
 Here is the default SilverStripe [.gitignore](http://git-scm.com/docs/gitignore) with the forum module ignored
 
-```
-assets/*
-_ss_environment.php
-tools/phing-metadata
-silverstripe-cache
-.buildpath
-.project
-.settings
-.idea
-.DS_Store
-vendor/
-# Don't include the forum module, as this will be installed with composer
-forum
-```
+	```assets/*
+	.env
+	tools/phing-metadata
+	silverstripe-cache
+	.buildpath
+	.project
+	.settings
+	.idea
+	.DS_Store
+	vendor/
+	# Don't include the forum module, as this will be installed with composer
+	forum```
 
 In large projects it can get difficult to manage your [.gitignore](http://git-scm.com/docs/gitignore) and ensure it contains all composer managed modules and themes.
 
