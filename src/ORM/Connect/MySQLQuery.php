@@ -37,12 +37,10 @@ class MySQLQuery extends Query
     }
 
     public function getIterator() {
-        if (!is_object($this->handle)) {
-            return null;
-        }
-
-        while ($data = $this->handle->fetch_assoc()) {
-            yield $data;
+        if (is_object($this->handle)) {
+            while ($data = $this->handle->fetch_assoc()) {
+                yield $data;
+            }
         }
     }
 
