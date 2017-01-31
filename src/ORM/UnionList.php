@@ -25,7 +25,9 @@ class UnionList extends ViewableData implements SS_List
      */
     public function __construct(array $lists)
     {
-        $this->lists = array_values($lists);
+        foreach ($lists as $list) {
+            $this->lists[] = clone $list;
+        }
         parent::__construct();
     }
 
@@ -50,7 +52,17 @@ class UnionList extends ViewableData implements SS_List
      */
     public function exists()
     {
-        return $this->count() > 0;
+        foreach ($this->lists as $list) {
+            if ($list instanceof ArrayList && $list->exists()) {
+                return true;
+            }
+        }
+        foreach ($this->lists as $list) {
+            if (!($list instanceof ArrayList) && $list->exists()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
