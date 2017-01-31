@@ -211,13 +211,17 @@ and production environments.
 You can also combine CSS files into a media-specific stylesheets as you would with the `Requirements::css` call - use
 the third paramter of the `combine_files` function:
 
-	:::php
-	$printStylesheets = array(
-		"$themeDir/css/print_HomePage.css",
-		"$themeDir/css/print_Page.css",
-	);
+```php
+$loader = ThemeResourceLoader::instance();
+$themes = SSViewer::get_themes();
 
-	Requirements::combine_files('print.css', $printStylesheets, 'print');
+$printStylesheets = array(
+	$loader->findThemedCSS('print_HomePage.css', $themes),
+	$loader->findThemedCSS('print_Page.css', $themes)
+);
+
+Requirements::combine_files('print.css', $printStylesheets, 'print');
+```
 
 By default, all requirements files are flushed (deleted) when ?flush querystring parameter is set.
 This can be disabled by setting the `Requirements.disable_flush_combined` config to `true`.
@@ -232,13 +236,17 @@ the destination location of the resulting combined CSS.
 You can also add the 'async' and/or 'defer' attributes to combined Javascript files as you would with the 
 `Requirements::javascript` call - use the third paramter of the `combine_files` function:
 
-	:::php
-	$scripts = array(
-		"$themeDir/javascript/some_script.js",
-		"$themeDir/javascript/some_other_script.js",
-	);
+```php
+$loader = ThemeResourceLoader::instance();
+$themes = SSViewer::get_themes();
 
-	Requirements::combine_files('scripts.js', $scripts, array('async' => true, 'defer' => true));
+$scripts = array(
+    $loader->findThemedJavascript('some_script.js', $themes),
+    $loader->findThemedJavascript('some_other_script.js', $themes)
+);
+
+Requirements::combine_files('scripts.js', $scripts, array('async' => true, 'defer' => true));
+```
 
 
 ## Clearing assets
