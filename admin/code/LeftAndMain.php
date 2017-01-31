@@ -2022,7 +2022,7 @@ class LeftAndMain_TreeNode extends ViewableData {
 			}
 			$classes .= ' ' . $filterClasses;
 		}
-		return $classes;
+		return $classes ?: '';
 	}
 
 	public function getObj() {
