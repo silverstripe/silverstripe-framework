@@ -54,6 +54,14 @@ mb_regex_encoding('UTF-8');
  */
 gc_enable();
 
+/**
+ * Include the Zend autoloader. This will be removed in the near future.
+ */
+if (file_exists('thirdparty/Zend/Loader/Autoloader.php')) {
+    require_once 'thirdparty/Zend/Loader/Autoloader.php';
+    Zend_Loader_Autoloader::getInstance();
+}
+
 // Initialise the dependency injector as soon as possible, as it is
 // subsequently used by some of the following code
 $injector = new Injector(array('locator' => 'SilverStripe\\Core\\Injector\\SilverStripeServiceConfigurationLocator'));
