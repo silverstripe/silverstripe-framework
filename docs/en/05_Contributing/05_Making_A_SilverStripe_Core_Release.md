@@ -357,36 +357,11 @@ will need to be regularly updated.
   forum category. Make this a global read-only sticky, and un-sticky any older release.
 * Update the #silverstripe [IRC](https://www.silverstripe.org/community/contributing-to-silverstripe/irc-channel/) topic to include the new release version.
 
-### Stage 4: Web platform installer release
-
-The web platform installer is available [on the web app gallery](http://www.microsoft.com/web/gallery/silverstripecms.aspx).
-
-In order to update this you will need a Microsoft live account, and have it authorised
-by SilverStripe staff in order to publish these releases.
-
-
-To update this release there is an additional download tool at 
-`[https://code.platform.silverstripe.com/silverstripe/webpi](https://code.platform.silverstripe.com/silverstripe/webpi)`
-which will guide you through the process of generating a new zip release.
-
-    ./make-package 3.2.4 3.2.4
-    aws s3 cp ./silverstripe-3.2.4-webpi.zip s3://silverstripe-ssorg-releases/sssites-ssorg-prod/assets/downloads/webpi/silverstripe-3.2.4-webpi.zip --acl public-read --profile silverstripe
-
-Once you have a new release, update the necessary details at 
-[http://www.microsoft.com/web/gallery/appsubmit.aspx?id=57](http://www.microsoft.com/web/gallery/appsubmit.aspx?id=57)
-to submit a new version, including:
- 
-* Set the version number
-* Update the release date
-* Submit the package URL
-* Submit the package SHA
-
 ## See also
 
 * [Release Process](release_process)
 * [Translation Process](translation_process)
 * [Core committers](core_committers)
-* [WebPI Installer](https://docs.silverstripe.org/en/getting_started/installation/other_installation_options/windows_platform_installer/)
 
 If at any time a release runs into an unsolveable problem contact the
 core committers on the [discussion group](https://groups.google.com/forum/#!forum/silverstripe-committers)

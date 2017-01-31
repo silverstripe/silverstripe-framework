@@ -134,7 +134,7 @@ class LeftAndMain extends Controller implements PermissionProvider
      * @config
      * @var string
      */
-    private static $help_link = '//userhelp.silverstripe.org/framework/en/3.3';
+    private static $help_link = '//userhelp.silverstripe.org/framework/en/3.5';
 
     /**
      * @var array
@@ -347,7 +347,7 @@ class LeftAndMain extends Controller implements PermissionProvider
         if (!$formName) {
             return (new HTTPResponse('Missing request params', 400));
         }
-    
+
         $formMethod = "get{$formName}";
         if (!$this->hasMethod($formMethod)) {
             return (new HTTPResponse('Form not found', 404));
@@ -356,7 +356,7 @@ class LeftAndMain extends Controller implements PermissionProvider
         if (!$this->hasAction($formName)) {
             return (new HTTPResponse('Form not accessible', 401));
         }
-    
+
         if ($itemID) {
             $form = $this->{$formMethod}($itemID);
         } else {
@@ -579,9 +579,9 @@ class LeftAndMain extends Controller implements PermissionProvider
         $htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
 
         Requirements::customScript("
-			window.ss = window.ss || {};
-			window.ss.config = " . $this->getCombinedClientConfig() . ";
-		");
+            window.ss = window.ss || {};
+            window.ss.config = " . $this->getCombinedClientConfig() . ";
+        ");
 
         Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/vendor.js');
         Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/bundle.js');
@@ -1345,8 +1345,7 @@ class LeftAndMain extends Controller implements PermissionProvider
             }
 
             $link = Controller::join_links($recordController->Link("show"), $record->ID);
-            $html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))
-                ->forTemplate() . '</li>';
+            $html = LeftAndMain_TreeNode::create($record, $link, $this->isCurrentPage($record))->forTemplate() ;
 
             $data[$id] = array(
                 'html' => $html,
@@ -1631,7 +1630,7 @@ class LeftAndMain extends Controller implements PermissionProvider
             if ($fields == null) {
                 user_error(
                     "getCMSFields() returned null  - it should return a FieldList object.
-					Perhaps you forgot to put a return statement at the end of your method?",
+                    Perhaps you forgot to put a return statement at the end of your method?",
                     E_USER_ERROR
                 );
             }
@@ -1711,7 +1710,7 @@ class LeftAndMain extends Controller implements PermissionProvider
 
             // Set this if you want to split up tabs into a separate header row
             // if($form->Fields()->hasTabset()) {
-            // 	$form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');
+            //     $form->Fields()->findOrMakeTab('Root')->setTemplate('SilverStripe\\Forms\\CMSTabSet');
             // }
 
             // Add a default or custom validator.
@@ -1759,16 +1758,16 @@ class LeftAndMain extends Controller implements PermissionProvider
             "EditForm",
             new FieldList(
                 // new HeaderField(
-                // 	'WelcomeHeader',
-                // 	$this->getApplicationName()
+                //     'WelcomeHeader',
+                //     $this->getApplicationName()
                 // ),
                 // new LiteralField(
-                // 	'WelcomeText',
-                // 	sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
-                // 		_t('LeftAndMain_right_ss.WELCOMETO','Welcome to'),
-                // 		$this->getApplicationName(),
-                // 		_t('CHOOSEPAGE','Please choose an item from the left.')
-                // 	)
+                //     'WelcomeText',
+                //     sprintf('<p id="WelcomeMessage">%s %s. %s</p>',
+                //         _t('LeftAndMain_right_ss.WELCOMETO','Welcome to'),
+                //         $this->getApplicationName(),
+                //         _t('CHOOSEPAGE','Please choose an item from the left.')
+                //     )
                 // )
             ),
             new FieldList()

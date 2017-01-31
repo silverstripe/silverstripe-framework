@@ -24,5 +24,6 @@ class TestObject extends DataObject implements TestOnly
 
     public function CMSTreeClasses()
     {
+        return '';
     }
 }
