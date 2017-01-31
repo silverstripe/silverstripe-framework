@@ -384,7 +384,7 @@ t=l({},t,t.input),delete t.input
 var i=this.props.createFn
 return"function"==typeof i?i(n,t):f["default"].createElement(n,l({key:t.id},t))}},{key:"mapFieldsToComponents",value:function v(e){var t=this,n=this.props.baseFieldComponent
 return e.map(function(e){var i=e
-return e.children&&(i=l({},e,{children:t.mapFieldsToComponents(e.children)})),i=l({onAutofill:t.props.onAutofill},i),"Structural"===e.type||e.readOnly===!0?t.buildComponent(i):f["default"].createElement(n,l({
+return e.children&&(i=l({},e,{children:t.mapFieldsToComponents(e.children)})),i=l({onAutofill:t.props.onAutofill,form:t.props.form},i),"Structural"===e.type||e.readOnly===!0?t.buildComponent(i):f["default"].createElement(n,l({
 key:i.id},i,{component:t.buildComponent}))})}},{key:"mapActionsToComponents",value:function y(e){var t=this
 return e.map(function(e){var n=l({},e)
 return e.children?n.children=t.mapActionsToComponents(e.children):(n.handleClick=t.handleAction,t.props.submitting&&t.state.submittingAction===e.name&&(n.loading=!0)),t.buildComponent(n)})}},{key:"normalizeFields",
