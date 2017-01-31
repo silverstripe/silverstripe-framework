@@ -22,8 +22,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.$folder1Subfolder1->ID.' a span.item';
 		$firstResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
-			(string)$firstResult[0],
 			$folder1Subfolder1->Name,
+			(string)$firstResult[0],
 			$folder1Subfolder1->Name.' is found, nested under '.$folder1->Name
 		);
 
@@ -31,8 +31,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$subfolder->ID.' a span.item';
 		$secondResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
-			(string)$secondResult[0],
 			$subfolder->Name,
+			(string)$secondResult[0],
 			$subfolder->Name.' is found at root level'
 		);
 
@@ -40,9 +40,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$folder2 = $this->objFromFixture('Folder','folder2');
 		$cssPath = 'ul.tree li#selector-TestTree-'.$folder2->ID.' a span.item';
 		$noResult = $parser->getBySelector($cssPath);
-		$this->assertEquals(
+		$this->assertEmpty(
 			$noResult,
-			array(),
 			$folder2.' is not found'
 		);
 
@@ -58,8 +57,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$cssPath = 'ul.tree li#selector-TestTree-'.$folder1->ID.' li#selector-TestTree-'.$folder1Subfolder1->ID.' a span.item';
 		$firstResult = $parser->getBySelector($cssPath);
 		$this->assertEquals(
-			(string)$firstResult[0],
 			$folder1Subfolder1->Name,
+			(string)$firstResult[0],
 			$folder1Subfolder1->Name.' is found, nested under '.$folder1->Name
 		);
 
@@ -74,8 +73,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 			$file1->Name.' with ID '.$file1->ID.' is in search results'
 		);
 		$this->assertEquals(
-			(string)$firstResult[0],
 			$file1->Name,
+			(string)$firstResult[0],
 			$file1->Name.' is found nested under '.$subfolder->Name
 		);
 
@@ -87,8 +86,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 			$file2->Name.' with ID '.$file2->ID.' is in search results'
 		);
 		$this->assertEquals(
-			(string)$secondResult[0],
 			$file2->Name,
+			(string)$secondResult[0],
 			$file2->Name.' is found nested under '.$subfolder->Name
 		);
 
@@ -96,9 +95,8 @@ class TreeDropdownFieldTest extends SapphireTest {
 		$file3 = $this->objFromFixture('File','asdf');
 		$cssPath = 'ul.tree li#selector-TestTree-'.$file3->ID;
 		$noResult = $parser->getBySelector($cssPath);
-		$this->assertEquals(
+		$this->assertEmpty(
 			$noResult,
-			array(),
 			$file3->Name.' is not found'
 		);
 	}
