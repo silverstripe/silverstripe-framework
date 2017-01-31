@@ -67,6 +67,7 @@ fi:
     UNORDEREDEXAMPLE1: "järjestämätön lista 1"
   BackLink_Button_ss:
     Back: Takaisin
+    NavigateUp: "Siirry edelliseen kansioon"
   BasicAuth:
     ENTERINFO: "Anna käyttäjänimi ja salasana"
     ERRORNOTADMIN: "Tämä käyttäjä ei ole ylläpitäjä"
@@ -110,7 +111,7 @@ fi:
     AddToCampaign: "Lisää Kampanjaan"
     AddToCampaignFormFieldLabel: "Valitse Kampanja"
   ChangePasswordEmail_ss:
-    CHANGEPASSWORDFOREMAIL: "Tilin salasana sähköpostille {email} on vaihdettu. Mikäli et itse tätä tehnyt, vaihda salasana oheisesta linkistä"
+    CHANGEPASSWORDFOREMAIL: "Tilin salasana on vaihdettu. Sähköpostiosoite on {email}. Mikäli et pyytänyt salasanan vaihtoa, vaihda salasanasi alla olevasta linkistä"
     CHANGEPASSWORDTEXT1: "Vaihdoit salasanasi osoitteelle"
     CHANGEPASSWORDTEXT2: "Kirjautuaksesi sisään voit käyttää seuraavia tietoja:"
     CHANGEPASSWORDTEXT3: "Vaihda salasana"
@@ -240,7 +241,7 @@ fi:
     HELLO: Hei
     TEXT1: "Tässä on sinun"
     TEXT2: "salasanan vaihtolinkki"
-    TEXT3: henkilölle
+    TEXT3: kohteeseen
   Form:
     CSRF_EXPIRED_MESSAGE: "Istuntosi on umpeutunut. Lähetä lomake uudelleen."
     CSRF_FAILED_MESSAGE: "On ilmeisesti tapahtunut tekninen virhe. Klikkaa selaimesi Takaisin-nappia, päivitä sivu ja yritä uudelleen."
@@ -425,11 +426,15 @@ fi:
   LeftAndMain:
     CANCEL: Peruuta
     CANT_REORGANISE: "Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu."
+    CollapsePanel: "Supista paneeli"
     DELETED: Poistettu.
     DropdownBatchActionsDefault: "Valitse toiminto..."
+    ExpandPanel: "Laajenna paneeli"
     HELP: Ohje
+    MenuToggleAuto: Autom.
+    MenuToggleStickyNav: "Tahmea navi"
     PAGETYPE: "Sivun tyyppi"
-    PERMAGAIN: "Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alla."
+    PERMAGAIN: "Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alle."
     PERMALREADY: "Pahoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alta."
     PERMDEFAULT: "Sinun tulee olla kirjautuneena ylläpito-osioon; syötä tunnuksesi kenttiin."
     PLEASESAVE: "Tätä sivua ei voitu päivittää, koska sitä ei ole vielä tallennettu. Tallenna sivu."
@@ -482,7 +487,7 @@ fi:
     PASSWORD: Salasana
     PASSWORDEXPIRED: "Salasanasi on vanhentunut. Ole hyvä ja valitse uusi."
     PLURALNAME: Jäsenet
-    REMEMBERME: "Muista seuraavalla kerralla?"
+    REMEMBERME: "Muista minut seuraavalla kerralla?"
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: "Salasanasi on vaihdettu"
     SUBJECTPASSWORDRESET: "Salasanasi palautuslinkki"
@@ -704,6 +709,7 @@ fi:
     TABMAIN: Yleiset
   TableListField:
     CSVEXPORT: "Vie CSV:nä"
+    CSVIMPORT: "Tuo CSV"
     Print: Tulosta
   TableListField_PageControls_ss:
     OF: /
@@ -742,6 +748,8 @@ fi:
     STARTALL: "Aloita kaikki"
     Saved: Tallennettu
     UPLOADSINTO: "tallentuu polkuun: /{path}"
+  ValidationException:
+    DEFAULT_ERROR: Validointivirhe
   Versioned:
     INFERRED_TITLE: "Luotu julkaisusta '{title}', {created}"
     has_many_Versions: Versiot

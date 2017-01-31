@@ -127,7 +127,7 @@ class Hierarchy extends DataExtension {
 	 *
 	 * @return string
 	 */
-	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title', $extraArg = null,
+	public function getChildrenAsUL($attributes = "", $titleEval = '"<li>" . $child->Title . "</li>"', $extraArg = null,
 			$limitToMarked = false, $childrenMethod = "AllChildrenIncludingDeleted",
 			$numChildrenMethod = "numChildren", $rootCall = true,
 			$nodeCountThreshold = null, $nodeCountCallback = null) {
@@ -169,6 +169,10 @@ class Hierarchy extends DataExtension {
 						$output .= $titleEval($child, $numChildrenMethod);
 					} else {
 						$output .= eval("return $titleEval;");
+					}
+					$output = trim($output);
+					if (substr($output, -5) == '</li>') {
+						$output = trim(substr($output, 0, -5));
 					}
 					$output .= "\n";
 
