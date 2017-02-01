@@ -497,7 +497,6 @@ mappings:
   ViewableData: SilverStripe\View\ViewableData
   ViewableData_Customised: SilverStripe\View\ViewableData_Customised
   ViewableData_Debugger: SilverStripe\View\ViewableData_Debugger
-  BBCodeParser: SilverStripe\View\Parsers\BBCodeParser
   HTMLCleaner: SilverStripe\View\Parsers\HTMLCleaner
   SS_HTMLValue: SilverStripe\View\Parsers\HTMLValue
   SS_HTML4Value: SilverStripe\View\Parsers\HTML4Value
@@ -507,7 +506,6 @@ mappings:
   ShortcodeHandler: SilverStripe\View\Parsers\ShortcodeHandler
   ShortcodeParser: SilverStripe\View\Parsers\ShortcodeParser
   SQLFormatter: SilverStripe\View\Parsers\SQLFormatter
-  TextParser: SilverStripe\View\Parsers\TextParser
   TidyHTMLCleaner: SilverStripe\View\Parsers\TidyHTMLCleaner
   SS_Transliterator: SilverStripe\View\Parsers\Transliterator
   SilverStripe\View\Parsers\SS_Transliterator: SilverStripe\View\Parsers\Transliterator
