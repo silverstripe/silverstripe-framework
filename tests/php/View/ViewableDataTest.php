@@ -2,9 +2,11 @@
 
 namespace SilverStripe\View\Tests;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\View\ArrayData;
+use SilverStripe\View\SSViewer;
 use SilverStripe\View\ViewableData;
 
 /**
@@ -203,5 +205,55 @@ class ViewableDataTest extends SapphireTest
         $container->setFailover($failover);
         $this->assertSame($failover, $container->getFailover(), 'getFailover() returned a different object');
         $this->assertFalse($container->hasMethod('testMethod'), 'testMethod() incorrectly reported as existing');
+    }
+
+    /**
+     * Tests that the ThemeDir method will return the highest-priority theme if requested, or fall back to legacy
+     * functionality by returning the globally defined $project
+     *
+     * @dataProvider themeDirProvider
+     */
+    public function testThemeDir($configData, $expected)
+    {
+        Config::nest();
+
+        foreach ($configData as $property => $value) {
+            Config::inst()->remove(SSViewer::class, $property);
+            Config::inst()->update(SSViewer::class, $property, $value);
+        }
+
+        $viewableData = new ViewableData;
+        $this->assertSame($expected, $viewableData->ThemeDir());
+
+        Config::unnest();
+    }
+
+    /**
+     * @return array[]
+     */
+    public function themeDirProvider()
+    {
+        global $project;
+        return [
+            [
+                ['theme_enabled' => false],
+                $project
+            ],
+            [
+                [
+                    'theme_enabled' => true,
+                    'theme' => 'ruby',
+                    'themes' => null
+                ],
+                THEMES_DIR . '/ruby'
+            ],
+            [
+                [
+                    'theme_enabled' => true,
+                    'themes' => ['sapphire', 'ruby', 'topaz', '$default']
+                ],
+                THEMES_DIR . '/sapphire'
+            ]
+        ];
     }
 }
