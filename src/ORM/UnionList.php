@@ -53,12 +53,8 @@ class UnionList extends ViewableData implements SS_List
     public function exists()
     {
         foreach ($this->lists as $list) {
-            if ($list instanceof ArrayList && $list->exists()) {
-                return true;
-            }
-        }
-        foreach ($this->lists as $list) {
-            if (!($list instanceof ArrayList) && $list->exists()) {
+            if (($list instanceof ArrayList && $list->exists()) ||
+                (method_exists($list, 'exists') && $list->exists())) {
                 return true;
             }
         }
