@@ -23,8 +23,8 @@
     "symfony/yaml": "~2.7",
     "embed/embed": "^2.6",
     "swiftmailer/swiftmailer": "~5.4",
-    "symfony/config": "^2.8|^3",
-    "symfony/translation": "^2.8|^3",
+    "symfony/config": "^2.8||^3",
+    "symfony/translation": "^2.8||^3",
     "vlucas/phpdotenv": "^2.4"
   },
   "require-dev": {
