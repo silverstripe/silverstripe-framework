@@ -13,10 +13,9 @@ The definition of setting an environment type in a `mysite/_config/app.yml` look
 	SilverStripe\Control\Director:
 	  environment_type: 'dev'
 
-The definition of setting an environment type in a `_ss_environment.php` file looks like
+The definition of setting an environment type in a `.env` file looks like
 
-	:::php
-	define('SS_ENVIRONMENT_TYPE', 'dev');
+	SS_ENVIRONMENT_TYPE="dev"
 
 The three environment types you can set are `dev`, `test` and `live`.
 

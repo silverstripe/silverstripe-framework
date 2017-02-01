@@ -36,32 +36,29 @@ As a core contributor it is necessary to have installed the following set of too
 * [AWS CLI tools](https://aws.amazon.com/cli/):
   `pip install awscli`
 * The `tar` and `zip` commands
-* A good _ss_environment.php setup in your localhost webroot.
+* A good `.env` setup in your localhost webroot.
 
-Example `_ss_environment.php`:
+Example `.env`:
 
-    :::php
-    <?php
-    // Environent
-    define('SS_TRUSTED_PROXY_IPS', '*');
-    define('SS_ENVIRONMENT_TYPE', 'dev');
+    # Environent
+    SS_TRUSTED_PROXY_IPS="*"
+    SS_ENVIRONMENT_TYPE="dev"
     
-    // DB Credentials
-    define('SS_DATABASE_CLASS', 'MySQLDatabase');
-    define('SS_DATABASE_SERVER', '127.0.0.1');
-    define('SS_DATABASE_USERNAME', 'root');
-    define('SS_DATABASE_PASSWORD', '');
+    # DB Credentials
+    SS_DATABASE_CLASS="MySQLDatabase"
+    SS_DATABASE_SERVER="127.0.0.1"
+    SS_DATABASE_USERNAME="root"
+    SS_DATABASE_PASSWORD=""
     
-    // Each release will have its own DB
-    define('SS_DATABASE_CHOOSE_NAME', true);
+    # Each release will have its own DB
+    SS_DATABASE_CHOOSE_NAME=1
     
-    // So you can test releases
-    define('SS_DEFAULT_ADMIN_USERNAME', 'admin');
-    define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
+    # So you can test releases
+    SS_DEFAULT_ADMIN_USERNAME="admin"
+    SS_DEFAULT_ADMIN_PASSWORD="password"
     
-    // Basic CLI hostname
-    global $_FILE_TO_URL_MAPPING;
-    $_FILE_TO_URL_MAPPING[__DIR__] = "http://localhost";
+    # Basic CLI hostname
+    SS_HOST="localhost";
 
 
 You will also need to be assigned the following permissions. Contact one of the SS staff from
@@ -198,7 +195,7 @@ and needs to be manually advanced):
   back up to transifex to make them available for translation. Changes to these
   files will also be automatically committed to git.
 * `release:test` Will run all unit tests on this release. Make sure that you
-  setup your `_ss_environment.php` correctly (as above) so that this will work.
+  setup your `.env` correctly (as above) so that this will work.
 * `release:changelog` Will compare the current branch head with `--from` parameter
   version in order to generate a changelog file. This wil be placed into the
   `./framework/docs/en/04_Changelogs/` folder. If an existing file named after

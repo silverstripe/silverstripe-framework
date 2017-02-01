@@ -106,6 +106,13 @@ class Director implements TemplateGlobalProvider
      *
      * @var string
      */
+    private static $alternate_host;
+
+    /**
+     * @config
+     *
+     * @var string
+     */
     private static $alternate_base_url;
 
     /**
@@ -139,6 +146,15 @@ class Director implements TemplateGlobalProvider
      */
     public static function direct($url, DataModel $model)
     {
+        // check allowed hosts
+        if (getenv('SS_ALLOWED_HOSTS') && !Director::is_cli()) {
+            $all_allowed_hosts = explode(',', getenv('SS_ALLOWED_HOSTS'));
+            if (!in_array(static::host(), $all_allowed_hosts)) {
+                throw new HTTPResponse_Exception('Invalid Host', 400);
+            }
+        }
+
+
         // Validate $_FILES array before merging it with $_POST
         foreach ($_FILES as $k => $v) {
             if (is_array($v['tmp_name'])) {
@@ -552,6 +568,62 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
+     * A helper to determine the current hostname used to access the site.
+     * The following are used to determine the host (in order)
+     *  - Director.alternate_host
+     *  - Director.alternate_base_url (if it contains a domain name)
+     *  - Trusted proxy headers
+     *  - HTTP Host header
+     *  - SS_HOST env var
+     *  - SERVER_NAME
+     *  - gethostname()
+     *
+     * @return string
+     */
+    public static function host()
+    {
+        $headerOverride = false;
+        if (TRUSTED_PROXY) {
+            $headers = (getenv('SS_TRUSTED_PROXY_HOST_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_HOST_HEADER')) : null;
+            if (!$headers) {
+                // Backwards compatible defaults
+                $headers = array('HTTP_X_FORWARDED_HOST');
+            }
+            foreach ($headers as $header) {
+                if (!empty($_SERVER[$header])) {
+                    // Get the first host, in case there's multiple separated through commas
+                    $headerOverride = strtok($_SERVER[$header], ',');
+                    break;
+                }
+            }
+        }
+
+        if ($host = static::config()->get('alternate_host')) {
+            return $host;
+        }
+
+        if ($baseURL = static::config()->get('alternate_base_url')) {
+            if (preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $baseURL, $matches)) {
+                return parse_url($baseURL, PHP_URL_HOST);
+            }
+        }
+
+        if ($headerOverride) {
+            return $headerOverride;
+        }
+
+        if (isset($_SERVER['HTTP_HOST'])) {
+            return $_SERVER['HTTP_HOST'];
+        }
+
+        if ($host = getenv('SS_HOST')) {
+            return $host;
+        }
+
+        return isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : gethostname();
+    }
+
+    /**
      * Returns the domain part of the URL 'http://www.mysite.com'. Returns FALSE is this environment
      * variable isn't set.
      *
@@ -559,31 +631,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function protocolAndHost()
     {
-        $alternate = Config::inst()->get('SilverStripe\\Control\\Director', 'alternate_base_url');
-        if ($alternate) {
-            if (preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $alternate, $matches)) {
-                return $matches[1];
-            }
-        }
-
-        if (isset($_SERVER['HTTP_HOST'])) {
-            return Director::protocol() . $_SERVER['HTTP_HOST'];
-        } else {
-            global $_FILE_TO_URL_MAPPING;
-            if (Director::is_cli() && isset($_FILE_TO_URL_MAPPING)) {
-                $errorSuggestion = '  You probably want to define ' .
-                'an entry in $_FILE_TO_URL_MAPPING that covers "' . Director::baseFolder() . '"';
-            } elseif (Director::is_cli()) {
-                $errorSuggestion = '  You probably want to define $_FILE_TO_URL_MAPPING in ' .
-                'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.com wiki';
-            } else {
-                $errorSuggestion = "";
-            }
-
-            user_error("Director::protocolAndHost() lacks sufficient information - HTTP_HOST not set."
-                . $errorSuggestion, E_USER_WARNING);
-            return false;
-        }
+        return static::protocol() . static::host();
     }
 
     /**
@@ -607,7 +655,7 @@ class Director implements TemplateGlobalProvider
         // See https://support.microsoft.com/en-us/kb/307347
         $headerOverride = false;
         if (TRUSTED_PROXY) {
-            $headers = (defined('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(SS_TRUSTED_PROXY_PROTOCOL_HEADER) : null;
+            $headers = (getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) : null;
             if (!$headers) {
                 // Backwards compatible defaults
                 $headers = array('HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS');
@@ -950,7 +998,7 @@ class Director implements TemplateGlobalProvider
             $login = "$_SERVER[PHP_AUTH_USER]:$_SERVER[PHP_AUTH_PW]@";
         }
 
-        return Director::protocol() . $login .  $_SERVER['HTTP_HOST'] . Director::baseURL();
+        return Director::protocol() . $login .  static::host() . Director::baseURL();
     }
 
     /**
@@ -1052,7 +1100,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function forceWWW()
     {
-        if (!Director::isDev() && !Director::isTest() && strpos($_SERVER['HTTP_HOST'], 'www') !== 0) {
+        if (!Director::isDev() && !Director::isTest() && strpos(static::host(), 'www') !== 0) {
             $destURL = str_replace(
                 Director::protocol(),
                 Director::protocol() . 'www.',
@@ -1191,11 +1239,7 @@ class Director implements TemplateGlobalProvider
 
         // Check if we are running on one of the test servers
         $devServers = (array)Config::inst()->get('SilverStripe\\Control\\Director', 'dev_servers');
-        if (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], $devServers)) {
-            return true;
-        }
-
-        return false;
+        return in_array(static::host(), $devServers);
     }
 
     /**
@@ -1223,11 +1267,7 @@ class Director implements TemplateGlobalProvider
 
         // Check if we are running on one of the test servers
         $testServers = (array)Config::inst()->get('SilverStripe\\Control\\Director', 'test_servers');
-        if (isset($_SERVER['HTTP_HOST']) && in_array($_SERVER['HTTP_HOST'], $testServers)) {
-            return true;
-        }
-
-        return false;
+        return in_array(static::host(), $testServers);
     }
 
     /**

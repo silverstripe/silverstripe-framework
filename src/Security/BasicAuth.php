@@ -134,9 +134,9 @@ class BasicAuth
      * away from prying eyes, but still be able to test the regular log-in features of the site.
      *
      * If you are including conf/ConfigureFromEnv.php in your _config.php file, you can also enable
-     * this feature by adding this line to your _ss_environment.php:
+     * this feature by adding this line to your .env:
      *
-     * define('SS_USE_BASIC_AUTH', true);
+     * SS_USE_BASIC_AUTH=1
      *
      * @param boolean $protect Set this to false to disable protection.
      * @param string $code {@link Permission} code that is required from the user.

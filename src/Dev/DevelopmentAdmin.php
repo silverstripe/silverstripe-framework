@@ -64,31 +64,6 @@ class DevelopmentAdmin extends Controller
             return;
         }
 
-        // check for valid url mapping
-        // lacking this information can cause really nasty bugs,
-        // e.g. when running Director::test() from a FunctionalTest instance
-        global $_FILE_TO_URL_MAPPING;
-        if (Director::is_cli()) {
-            if (isset($_FILE_TO_URL_MAPPING)) {
-                $testPath = BASE_PATH;
-                $matched = false;
-                while ($testPath && $testPath != "/" && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
-                    if (isset($_FILE_TO_URL_MAPPING[$testPath])) {
-                        $matched = true;
-                        break;
-                    }
-                    $testPath = dirname($testPath);
-                }
-                if (!$matched) {
-                    echo 'Warning: You probably want to define '.
-                        'an entry in $_FILE_TO_URL_MAPPING that covers "' . Director::baseFolder() . '"' . "\n";
-                }
-            } else {
-                echo 'Warning: You probably want to define $_FILE_TO_URL_MAPPING in '.
-                    'your _ss_environment.php as instructed on the "sake" page of the doc.silverstripe.org wiki'."\n";
-            }
-        }
-
         // Backwards compat: Default to "draft" stage, which is important
         // for tasks like dev/build which call DataObject->requireDefaultRecords(),
         // but also for other administrative tasks which have assumptions about the default stage.

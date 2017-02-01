@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Startup;
 
+use SilverStripe\Control\Director;
 use SilverStripe\Security\RandomGenerator;
 
 /**
@@ -179,7 +180,7 @@ class ParameterConfirmationToken
         // See https://support.microsoft.com/en-us/kb/307347
         $headerOverride = false;
         if (TRUSTED_PROXY) {
-            $headers = (defined('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(SS_TRUSTED_PROXY_PROTOCOL_HEADER) : null;
+            $headers = (getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) : null;
             if (!$headers) {
                 // Backwards compatible defaults
                 $headers = array('HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS');
@@ -203,7 +204,7 @@ class ParameterConfirmationToken
 
         $parts = array_filter(array(
             // What's our host
-            $_SERVER['HTTP_HOST'],
+            Director::host(),
             // SilverStripe base
             self::$alternateBaseURL !== null ? self::$alternateBaseURL : BASE_URL,
             // And URL including base script (eg: if it's index.php/page/url/)

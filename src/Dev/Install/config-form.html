@@ -101,7 +101,7 @@
 													// All are disabled by default when environment is used
 													$disabled = 'disabled="disabled"';
 													// If SS_DATABASE_CLASS is specified, check the database in the list
-													if(defined('SS_DATABASE_CLASS') && SS_DATABASE_CLASS == $class) {
+													if(getenv('SS_DATABASE_CLASS') == $class) {
 														$checked = ' checked="checked"';
 													}
 												} else {
@@ -135,8 +135,8 @@
 													$fieldType = ($fieldName == 'password') ? 'password' : 'text';
 													// values
 													$defaultValue = (isset($fieldSpec['default'])) ? $fieldSpec['default'] : null;
-													if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
-														$value = constant($fieldSpec['envVar']);
+													if($usingEnv && isset($fieldSpec['envVar']) && $envVar = getenv($fieldSpec['envVar'])) {
+														$value = $envVar;
 													} else {
 														$value = (isset($databaseConfig[$fieldName]) && $databaseConfig['type'] == $class) ? $databaseConfig[$fieldName] : $defaultValue;
 													}
@@ -149,7 +149,7 @@
 														'name' => "db[$class][$fieldName]",
 														'value' => $value,
 													);
-													if($usingEnv && isset($fieldSpec['envVar']) && defined($fieldSpec['envVar'])) {
+													if($usingEnv && isset($fieldSpec['envVar']) && getenv($fieldSpec['envVar'])) {
 														$attrs['disabled'] = 'disabled';
 													}
 													if(isset($fieldSpec['envVar'])) {
@@ -177,7 +177,7 @@
 										<?php if($envFileExists) { ?>
 										<div id="use_environment_field" class="field">
 											<input id="use_environment" type="checkbox" name="useEnv" <?php if($usingEnv) echo "checked=\"checked\"" ?>>
-											<label for="use_environment">Use _ss_environment file for configuration (<a href="http://doc.silverstripe.org/framework/en/topics/environment-management" target="_blank">?</a>)</label>
+											<label for="use_environment">Use environment variables for configuration (<a href="http://doc.silverstripe.org/framework/en/topics/environment-management" target="_blank">?</a>)</label>
 										</div>
 										<?php } ?>
 
@@ -202,14 +202,14 @@
 									<div class="field">
 										<label for="admin_username">Email:</label>
 										<span class="middleColumn">
-											<input type="text" class="text configured-by-env" name="admin[username]" id="admin_username" value="<?php echo htmlspecialchars($adminConfig['username'], ENT_QUOTES, 'UTF-8'); ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
+											<input type="text" class="text configured-by-env" name="admin[username]" id="admin_username" value="<?php echo htmlspecialchars($adminConfig['username'], ENT_QUOTES, 'UTF-8'); ?>" <?php if($usingEnv && getenv('SS_DEFAULT_ADMIN_USERNAME')) echo 'disabled="disabled"' ?>>
 										</span>
 									</div>
 
 									<div class="field">
 										<label for="admin_password">Password:</label>
 										<span class="middleColumn">
-											<input type="password" class="text configured-by-env" name="admin[password]" id="admin_password" value="<?php echo htmlspecialchars($adminConfig['password'], ENT_QUOTES, 'UTF-8'); ?>" <?php if($usingEnv && defined('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
+											<input type="password" class="text configured-by-env" name="admin[password]" id="admin_password" value="<?php echo htmlspecialchars($adminConfig['password'], ENT_QUOTES, 'UTF-8'); ?>" <?php if($usingEnv && getenv('SS_DEFAULT_ADMIN_PASSWORD')) echo 'disabled="disabled"' ?>>
 										</span>
 									</div>
 								</div>

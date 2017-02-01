@@ -20,6 +20,21 @@ if(PHP_SAPI != "cli" && PHP_SAPI  != "cgi" && PHP_SAPI != "cgi-fcgi") {
 	die();
 }
 
+// We update the $_SERVER variable to contain data consistent with the rest of the application.
+$_SERVER = array_merge(array(
+    'SERVER_PROTOCOL' => 'HTTP/1.1',
+    'HTTP_ACCEPT' => 'text/plain;q=0.5',
+    'HTTP_ACCEPT_LANGUAGE' => '*;q=0.5',
+    'HTTP_ACCEPT_ENCODING' => '',
+    'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1;q=0.5',
+    'SERVER_SIGNATURE' => 'Command-line PHP/' . phpversion(),
+    'SERVER_SOFTWARE' => 'PHP/' . phpversion(),
+    'SERVER_ADDR' => '127.0.0.1',
+    'REMOTE_ADDR' => '127.0.0.1',
+    'REQUEST_METHOD' => 'GET',
+    'HTTP_USER_AGENT' => 'CLI',
+), $_SERVER);
+
 /**
  * Identify the cli-script.php file and change to its container directory, so that require_once() works
  */
@@ -82,23 +97,20 @@ $_SESSION = null;
 // Connect to database
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
 	echo "\nPlease configure your database connection details.  You can do this by creating a file
-called _ss_environment.php in either of the following locations:\n\n";
-	echo " - " .  BASE_PATH  . DIRECTORY_SEPARATOR . "_ss_environment.php\n - ";
-	echo dirname(BASE_PATH) . DIRECTORY_SEPARATOR . "_ss_environment.php\n\n";
+called .env in " . BASE_PATH;
 	echo <<<ENVCONTENT
 
 Put the following content into this file:
 --------------------------------------------------
-<?php
 
-/* Change this from 'dev' to 'live' for a production environment. */
-define('SS_ENVIRONMENT_TYPE', 'dev');
+# Change this from 'dev' to 'live' for a production environment.
+SS_ENVIRONMENT_TYPE="dev"
 
 /* This defines a default database user */
-define('SS_DATABASE_SERVER', 'localhost');
-define('SS_DATABASE_USERNAME', '<user>');
-define('SS_DATABASE_PASSWORD', '<password>');
-define('SS_DATABASE_NAME', '<database>');
+SS_DATABASE_SERVER="localhost"
+SS_DATABASE_USERNAME="<user>"
+SS_DATABASE_PASSWORD="<password>"
+SS_DATABASE_NAME="<database>"
 --------------------------------------------------
 
 Once you have done that, run 'composer install' or './framework/sake dev/build' to create

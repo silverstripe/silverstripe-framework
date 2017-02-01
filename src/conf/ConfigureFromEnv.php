@@ -1,9 +1,9 @@
 <?php
 /**
- * Configure SilverStripe from the _ss_environment.php file.
+ * Configure SilverStripe from the environment variables.
  * Usage: Put "require_once('conf/ConfigureFromEnv.php');" into your _config.php file.
  *
- * If you include this file, you will be able to use the following defines in _ss_environment.php to control
+ * If you include this file, you will be able to use the following variables to control
  * your site.
  *
  * Your database connection will be set up using these defines:
@@ -55,49 +55,27 @@ use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Security;
 
-/*
- * _ss_environment.php handler
- */
-if (defined('SS_ENVIRONMENT_FILE')) {
-    // Only perform validation if SS_ENVIRONMENT_FILE is actually set, which is to say, there is an
-    // _ss_environment.php file
-    foreach (array(
-        'SS_DATABASE_PASSWORD',
-        'SS_DATABASE_USERNAME',
-        'SS_ENVIRONMENT_TYPE',) as $reqDefine) {
-        if (!defined($reqDefine)) {
-            user_error(
-                "$reqDefine must be defined in your _ss_environment.php."
-                . "See http://doc.silverstripe.org/framework/en/topics/environment-management for more information",
-                E_USER_ERROR
-            );
-        }
-    }
-}
-
-if (defined('SS_ENVIRONMENT_TYPE')) {
-    Director::config()->environment_type = SS_ENVIRONMENT_TYPE;
+if ($envType = getenv('SS_ENVIRONMENT_TYPE')) {
+    Director::config()->environment_type = $envType;
 }
 
 global $database;
 
 // No database provided
 if (!isset($database) || !$database) {
-    if (defined('SS_DATABASE_NAME')) {
-        $database = SS_DATABASE_NAME;
-    } elseif (defined('SS_DATABASE_CHOOSE_NAME') && SS_DATABASE_CHOOSE_NAME) {
-        $loopCount = (int)SS_DATABASE_CHOOSE_NAME;
+    if (!($database = getenv('SS_DATABASE_NAME')) && $chooseName = getenv('SS_DATABASE_CHOOSE_NAME')) {
+        $loopCount = (int)$chooseName;
         $databaseDir = BASE_PATH;
-        for ($i=0; $i<$loopCount-1;
-        $i++) {
+        for ($i=0; $i<$loopCount-1; $i++) {
             $databaseDir = dirname($databaseDir);
         }
-        $database = "SS_" . basename($databaseDir);
+        $database = getenv('SS_DATABASE_PREFIX') ?: 'SS_';
+        $database .= basename($databaseDir);
         $database = str_replace('.', '', $database);
     }
 }
 
-if (defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
+if ($dbUser = getenv('SS_DATABASE_USERNAME')) {
     global $databaseConfig;
 
     // Checks if the database global is defined (if present, wraps with prefix and suffix)
@@ -105,69 +83,69 @@ if (defined('SS_DATABASE_USERNAME') && defined('SS_DATABASE_PASSWORD')) {
         if (!$name) {
             return '';
         } else {
-            return (defined('SS_DATABASE_PREFIX') ? SS_DATABASE_PREFIX : '')
+            return (getenv('SS_DATABASE_PREFIX') ?: '')
             . $name
-            . (defined('SS_DATABASE_SUFFIX') ? SS_DATABASE_SUFFIX : '');
+            . (getenv('SS_DATABASE_SUFFIX') ?: '');
         }
     };
 
     /** @skipUpgrade */
     $databaseConfig = array(
-        "type" => defined('SS_DATABASE_CLASS') ? SS_DATABASE_CLASS : 'MySQLDatabase',
-        "server" => defined('SS_DATABASE_SERVER') ? SS_DATABASE_SERVER : 'localhost',
-        "username" => SS_DATABASE_USERNAME,
-        "password" => SS_DATABASE_PASSWORD,
+        "type" => getenv('SS_DATABASE_CLASS') ?: 'MySQLDatabase',
+        "server" => getenv('SS_DATABASE_SERVER') ?: 'localhost',
+        "username" => $dbUser,
+        "password" => getenv('SS_DATABASE_PASSWORD'),
         "database" => $databaseNameWrapper($database),
     );
 
     // Set the port if called for
-    if (defined('SS_DATABASE_PORT')) {
-        $databaseConfig['port'] = SS_DATABASE_PORT;
+    if ($dbPort = getenv('SS_DATABASE_PORT')) {
+        $databaseConfig['port'] = $dbPort;
     }
 
     // Set the timezone if called for
-    if (defined('SS_DATABASE_TIMEZONE')) {
-        $databaseConfig['timezone'] = SS_DATABASE_TIMEZONE;
+    if ($dbTZ = getenv('SS_DATABASE_TIMEZONE')) {
+        $databaseConfig['timezone'] = $dbTZ;
     }
 
     // For schema enabled drivers:
-    if (defined('SS_DATABASE_SCHEMA')) {
-        $databaseConfig["schema"] = SS_DATABASE_SCHEMA;
+    if ($dbSchema = getenv('SS_DATABASE_SCHEMA')) {
+        $databaseConfig["schema"] = $dbSchema;
     }
 
     // For SQlite3 memory databases (mainly for testing purposes)
-    if (defined('SS_DATABASE_MEMORY')) {
-        $databaseConfig["memory"] = SS_DATABASE_MEMORY;
+    if ($dbMemory = getenv('SS_DATABASE_MEMORY')) {
+        $databaseConfig["memory"] = $dbMemory;
     }
 }
 
-if (defined('SS_SEND_ALL_EMAILS_TO')) {
-    Email::config()->send_all_emails_to = SS_SEND_ALL_EMAILS_TO;
+if ($sendAllEmailsTo = getenv('SS_SEND_ALL_EMAILS_TO')) {
+    Email::config()->send_all_emails_to = $sendAllEmailsTo;
 }
-if (defined('SS_SEND_ALL_EMAILS_FROM')) {
-    Email::config()->send_all_emails_from = SS_SEND_ALL_EMAILS_FROM;
+if ($sendAllEmailsFrom = getenv('SS_SEND_ALL_EMAILS_FROM')) {
+    Email::config()->send_all_emails_from = $sendAllEmailsFrom;
 }
 
-if (defined('SS_DEFAULT_ADMIN_USERNAME')) {
-    if (!defined('SS_DEFAULT_ADMIN_PASSWORD')) {
+if ($defaultAdminUser = getenv('SS_DEFAULT_ADMIN_USERNAME')) {
+    if (!$defaultAdminPass = getenv('SS_DEFAULT_ADMIN_PASSWORD')) {
         user_error(
-            "SS_DEFAULT_ADMIN_PASSWORD must be defined in your _ss_environment.php,"
+            "SS_DEFAULT_ADMIN_PASSWORD must be defined in your environment,"
             . "if SS_DEFAULT_ADMIN_USERNAME is defined.  See "
             . "http://doc.silverstripe.org/framework/en/topics/environment-management for more information",
             E_USER_ERROR
         );
     } else {
-        Security::setDefaultAdmin(SS_DEFAULT_ADMIN_USERNAME, SS_DEFAULT_ADMIN_PASSWORD);
+        Security::setDefaultAdmin($defaultAdminUser, $defaultAdminPass);
     }
 }
-if (defined('SS_USE_BASIC_AUTH') && SS_USE_BASIC_AUTH) {
-    BasicAuth::config()->entire_site_protected = SS_USE_BASIC_AUTH;
+if ($useBasicAuth = getenv('SS_USE_BASIC_AUTH')) {
+    BasicAuth::config()->entire_site_protected = $useBasicAuth;
 }
 
-if (defined('SS_ERROR_LOG')) {
+if ($errorLog = getenv('SS_ERROR_LOG')) {
     $logger = Injector::inst()->get('Logger');
     if ($logger instanceof Logger) {
-        $logger->pushHandler(new StreamHandler(BASE_PATH . '/' . SS_ERROR_LOG, Logger::WARNING));
+        $logger->pushHandler(new StreamHandler(BASE_PATH . '/' . $errorLog, Logger::WARNING));
     } else {
         user_error("SS_ERROR_LOG setting only works with Monolog, you are using another logger", E_USER_WARNING);
     }
@@ -175,3 +153,24 @@ if (defined('SS_ERROR_LOG')) {
 
 // Allow database adapters to handle their own configuration
 DatabaseAdapterRegistry::autoconfigure();
+
+unset(
+    $envType,
+    $chooseName,
+    $loopCount,
+    $databaseDir,
+    $i,
+    $databaseNameWrapper,
+    $dbUser,
+    $dbPort,
+    $dbTZ,
+    $dbSchema,
+    $dbMemory,
+    $sendAllEmailsTo,
+    $sendAllEmailsFrom,
+    $defaultAdminUser,
+    $defaultAdminPass,
+    $useBasicAuth,
+    $errorLog,
+    $logger
+);

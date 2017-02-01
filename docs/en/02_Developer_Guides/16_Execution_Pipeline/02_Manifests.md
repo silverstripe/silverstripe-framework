@@ -15,7 +15,7 @@ By default, manifests are stored on the local filesystem through PHP's `serializ
 Combined with PHP opcode caching this provides fast access.
 In order to share manifests between servers, or centralise cache management,
 other storage adapters are available. These can be configured by a `SS_MANIFESTCACHE` constant,
-placed in your `_ss_environment.php`.
+placed in your `.env`.
 
  * `ManifestCache_File`: The default adapter using PHP's `serialize()`
  * `ManifestCache_File_PHP`: Using `var_export()`, which is faster when a PHP opcode cache is installed

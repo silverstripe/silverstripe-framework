@@ -72,9 +72,8 @@ class ThemeManifest implements ThemeList
 
         $this->project = $project;
 
-        $cacheClass = defined('SS_MANIFESTCACHE')
-            ? SS_MANIFESTCACHE
-            : 'SilverStripe\\Core\\Manifest\\ManifestCache_File';
+        $cacheClass = getenv('SS_MANIFESTCACHE')
+            ?: 'SilverStripe\\Core\\Manifest\\ManifestCache_File';
 
         $this->cache = new $cacheClass('thememanifest'.($includeTests ? '_tests' : ''));
         $this->cacheKey = $this->getCacheKey();

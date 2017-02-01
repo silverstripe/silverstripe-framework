@@ -160,22 +160,21 @@ You will need to give **Modify** permission to **IUSR** user. To do it right cli
 
 Now that we've got the backend server software sorted out, it's time to install the SilverStripe CMS/framework.
 
-Create a new file called **_ss_environment.php** in **C:\inetpub\wwwroot**
+Create a new file called `.env` in **C:\inetpub\wwwroot\ss**
 
 This file tells SilverStripe projects installed on this machine which database server and credentials, as well as anything environment specific.
 
-Inside the newly created _ss_environment.php file, insert the following code:
+Inside the newly created `.env` file, insert the following code:
 
-	<?php
-	/* What kind of environment is this: development, test, or live (ie, production)? */
-	define('SS_ENVIRONMENT_TYPE', 'dev');
-	/* Database connection */
-	define('SS_DATABASE_SERVER', 'localhost');
-	define('SS_DATABASE_USERNAME', 'sa');
-	define('SS_DATABASE_PASSWORD', '');
-	/* Configure a default username and password to access the CMS on all sites in this environment */
-	define('SS_DEFAULT_ADMIN_USERNAME', 'username');
-	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
+	# What kind of environment is this: development, test, or live (ie, production)?
+    SS_ENVIRONMENT_TYPE="dev";
+	# Database connection
+	SS_DATABASE_SERVER="localhost"
+	SS_DATABASE_USERNAME="sa"
+	SS_DATABASE_PASSWORD=""
+	# Configure a default username and password to access the CMS on all sites in this environment
+	SS_DEFAULT_ADMIN_USERNAME="username"
+	SS_DEFAULT_ADMIN_PASSWORD="password"
 
 Insert the password you created for SQL Server earlier into the **SS_DATABASE_PASSWORD** field that is currently empty.
 
@@ -211,7 +210,7 @@ If all goes to plan, you're done, and you should see a basic template with a few
 
 Most of the time, it's caused by a loaded PHP extension that is broken.
 
-  * Have you set up the MSSQL database details correctly in _ss_environment.php?
+  * Have you set up the MSSQL database details correctly in `.env` file?
   * Have you made IIS expose errors? (see "How do I make IIS expose errors..." below)
   * Are you running non-standard PHP extensions? If so, try unloading them one by one
   * Make sure you're using the latest [[http://www.microsoft.com/downloads/en/details.aspx?FamilyID=80E44913-24B4-4113-8807-CAAE6CF2CA05&displaylang=en/|Microsoft Drivers for PHP for SQL Server]]

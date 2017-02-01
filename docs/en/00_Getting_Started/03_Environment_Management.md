@@ -1,112 +1,65 @@
 # Environment management
 
-As website developers, we noticed that we had a few problems.  You may have the same problems:
+As part of website development and hosting it is natural for our sites to be hosted on several different environments.
+These can be our laptops for local development, a testing server for customers to test changes on, or a production 
+server.
 
-*  On our development laptops, we have a number of sites, but the database connection details are the same for each of
-them.  Why should we have to go through the installation process and re-enter them each time?
-*  Each of those sites needed to be in development mode when we were editing them on our laptops, but in production mode
-when we deploy them to our servers.  Additionally, our production host's database connection details will likely be
-different than our local server.
+For each of these environments we may require slightly different configurations for our servers. This could be our debug
+level, caching backends, or - of course - sensitive information such as database credentials.
 
-SilverStripe comes with a solution to this: the `_ss_environment.php` file.  You can put a single `_ss_environment.php`
-file in your "projects" folder on your development box, and it will be used by each of your development sites.
+To solve this problem of setting variables per environment we use environment variables with the help of the 
+[PHPDotEnv](https://github.com/vlucas/phpdotenv) library by Vance Lucas.
 
-## Setting up your development machine with _ss_environment.php
+## Security considerations
 
-In this example, we assume that you are managing multiple projects as subfolders of `~/Sites/`, and that you can visit
-these at `http://localhost/`.  For example, you might have a project at `~/Sites/myproject/`, and visit it at
-`http://localhost/myproject/`.
+Sensitive credentials should not be stored in a VCS or project code and should only be stored on the environment in 
+question. When using live environments the use of `.env` files is discouraged and instead one should use "first class"
+environment variables.
 
-Create a new file, `~/Sites/_ss_environment.php`.  Put the following content in it, editing the values of the
-"SS_DATABASE_..." and "SS_DEFAULT_ADMIN_..." defines as appropriate.
+If you do use a `.env` file on your servers, you must ensure that external access to `.env` files is blocked by the
+webserver.
 
-	:::php
-	<?php
-	/* What kind of environment is this: development, test, or live (ie, production)? */
-	define('SS_ENVIRONMENT_TYPE', 'dev/test/live');
-	
-	/* Database connection */
-	define('SS_DATABASE_SERVER', 'localhost');
-	define('SS_DATABASE_USERNAME', 'root');
-	define('SS_DATABASE_PASSWORD', '');
-	
-	/* Configure a default username and password to access the CMS on all sites in this environment. */
-	define('SS_DEFAULT_ADMIN_USERNAME', 'username');
-	define('SS_DEFAULT_ADMIN_PASSWORD', 'password');
+## Managing environment variables with `.env` files
 
+By default the `.env` must be placed in your project root (ie: same folder as you `composer.json`) or the parent
+directory. If this file exists, it will be automatically loaded by the framework and the environment variables will be
+set. An example `.env` file is included in the default installer named`.env.example`.
 
-Now, edit each of your site's configuration file, usually `mysite/_config.php`.  Delete all mention
-of `$databaseConfig` and `Director::set_dev_servers`, and instead make sure that you file starts like this.
+## Managing environment variables with Apache
 
-	:::php
-	<?php
-	
-	global $project;
-	$project = 'mysite';
-	
-	global $database;
-	$database = '(databasename)';
-	
-	// Use _ss_environment.php file for configuration
-	require_once("conf/ConfigureFromEnv.php");
+You can set "real" environment variables using Apache. Please 
+[see the Apache docs for more information](https://httpd.apache.org/docs/current/env.html)
 
+## How to access the environment variables
 
-## How it works
+Accessing the environment varaibles is easy and can be done using the `getenv` method or in the `$_ENV` and `$_SERVER`
+super-globals:
 
-The mechanism by which the `_ss_environment.php` files work is quite simple.  Here's how it works:
+```php
+getenv('SS_DATABASE_CLASS');
+$_ENV['SS_DATABASE_CLASS'];
+$_SERVER['SS_DATABASE_CLASS'];
+```
 
-*  At the beginning of SilverStripe's execution, the `_ss_environment.php` file is searched for, and if it is found, it's
-included.  SilverStripe looks in all the parent folders of framework up to the server root (using the REAL location of
-the dir - see PHP realpath()):
-*  The `_ss_environment.php` file sets a number of "define()".
-*  "conf/ConfigureFromEnv.php" is included from within your `mysite/_config.php`.  This file has a number of regular
-configuration commands that use those defines as their arguments.  If you are curious, open up
-`framework/conf/ConfigureFromEnv.php` and see for yourself!
+## Including an extra `.env` file
 
-### An Example
+Sometimes it may be useful to include an extra `.env` file - on a shared local development environment where all
+database credentials could be the same. To do this, you can add this snippet to your `mysite/_config.php` file:
 
-This is my `_ss_environment.php` file. I have it placed in `/var`, as each of the sites are in a subfolder of `/var`.
+```php
+try {
+	(new \Dotenv\Dotenv('/path/to/env/'))->load();
+} catch (\Dotenv\Exception\InvalidPathException $e) {
+	// no file found
+}
+```
 
-	:::php
-	<?php
-	// These four define set the database connection details.
-	define('SS_DATABASE_CLASS', 'MySQLPDODatabase');
-	define('SS_DATABASE_SERVER', 'localhost');
-	define('SS_DATABASE_USERNAME', 'root');
-	define('SS_DATABASE_PASSWORD', '<password>');
-	
-	// This sets a prefix, which is prepended to the $database variable. This is
-	// helpful mainly on shared hosts, when every database has a prefix.
-	define('SS_DATABASE_PREFIX', 'simon_');
-	
-	// These two lines are a bit complicated. If I'm connecting to the server from
-	// 127.0.0.1 or MyIP and I'm using a browser with a + in the UserAgent, the site
-	// is put in dev mode, otherwise it is put in live mode. Most sites would only
-	// need to put the site in either dev or live mode, thus wont need the IP checks
-	if(isset($_SERVER['REMOTE_ADDR']) && ($_SERVER['REMOTE_ADDR'] == '127.0.0.1' || ($_SERVER['REMOTE_ADDR'] == '<MyIP>' 
-	&& strpos($_SERVER['HTTP_USER_AGENT'], '+') !== false))) 
-		define('SS_ENVIRONMENT_TYPE', 'dev');
-	else 
-		define('SS_ENVIRONMENT_TYPE', 'live');
-	
-	// These two defines sets a default login which, when used, will always log
-	// you in as an admin, even creating one if none exist.
-	define('SS_DEFAULT_ADMIN_USERNAME', '<email>');
-	define('SS_DEFAULT_ADMIN_PASSWORD', '<password>');
-	
-	// This causes errors to be written to the BASE_PATH/silverstripe.log file.
-	// Path must be relative to BASE_PATH
-	define('SS_ERROR_LOG', 'silverstripe.log');
-	
-	// This is used by sake to know which directory points to which URL
-	global $_FILE_TO_URL_MAPPING;
-	$_FILE_TO_URL_MAPPING['/var/www'] = 'http://simon.geek.nz';
+## Core environment variables
 
-## Available Constants
+SilverStripe core environment variables are listed here, though you're free to define any you need for your application.
 
 | Name  | Description |
 | ----  | ----------- |
-| `TEMP_FOLDER` | Absolute file path to store temporary files such as cached templates or the class manifest. Needs to be writeable by the webserver user. Defaults to *silverstripe-cache* in the webroot, and falls back to *sys_get_temp_dir()*. See *getTempFolder()* in *framework/core/TempPath.php*.|
 | `SS_DATABASE_CLASS` | The database class to use, MySQLPDODatabase, MySQLDatabase, MSSQLDatabase, etc. defaults to MySQLDatabase.|
 | `SS_DATABASE_SERVER`| The database server to use, defaulting to localhost.|
 | `SS_DATABASE_USERNAME`| The database username (mandatory).|
@@ -125,3 +78,13 @@ This is my `_ss_environment.php` file. I have it placed in `/var`, as each of th
 | `SS_SEND_ALL_EMAILS_TO`| If you define this constant, all emails will be redirected to this address.|
 | `SS_SEND_ALL_EMAILS_FROM`| If you define this constant, all emails will be sent from this address.|
 | `SS_ERROR_LOG` | Relative path to the log file. |
+| `SS_PROTECTED_ASSETS_PATH` | Path to secured assets - defaults to ASSET_PATH/.protected |
+| `SS_DATABASE_MEMORY` | Used for SQLite3 DBs |
+| `SS_TRUSTED_PROXY_PROTOCOL_HEADER` | Used to define the proxy header to be used to determine HTTPS status |
+| `SS_TRUSTED_PROXY_IP_HEADER` | Used to define the proxy header to be used to determine request IPs |
+| `SS_TRUSTED_PROXY_HOST_HEADER` | Used to define the proxy header to be used to determine the requested host name |
+| `SS_TRUSTED_PROXY_IPS` | IP address or CIDR range to trust proxy headers from |
+| `SS_ALLOWED_HOSTS` | A comma deliminated list of hostnames the site is allowed to respond to |
+| `SS_MANIFESTCACHE` | The manifest cache to use (defaults to file based caching) |
+| `SS_IGNORE_DOT_ENV` | If set the .env file will be ignored. This is good for live to mitigate any performance implications of loading the .env file |
+| `SS_HOST` | The hostname to use when it isn't determinable by other means (eg: for CLI commands) |

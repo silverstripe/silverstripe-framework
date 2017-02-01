@@ -3,7 +3,6 @@
  * This file is the Framework constants bootstrap. It will prepare some basic common constants.
  *
  * It takes care of:
- *  - Including _ss_environment.php
  *  - Normalisation of $_SERVER values
  *  - Initialisation of necessary constants (mostly paths)
  *
@@ -31,48 +30,6 @@
 // ENVIRONMENT CONFIG
 
 /**
- * Include _ss_environment.php file
- */
-//define the name of the environment file
-$envFile = '_ss_environment.php';
-//define the dirs to start scanning from (have to add the trailing slash)
-// we're going to check the realpath AND the path as the script sees it
-$dirsToCheck = array(
-    realpath('.'),
-    dirname($_SERVER['SCRIPT_FILENAME'])
-);
-//if they are the same, remove one of them
-if ($dirsToCheck[0] == $dirsToCheck[1]) {
-    unset($dirsToCheck[1]);
-}
-foreach ($dirsToCheck as $dir) {
-    //check this dir and every parent dir (until we hit the base of the drive)
-    // or until we hit a dir we can't read
-    while (true) {
-        //if it's readable, go ahead
-        if (@is_readable($dir)) {
-            //if the file exists, then we include it, set relevant vars and break out
-            if (file_exists($dir . DIRECTORY_SEPARATOR . $envFile)) {
-                define('SS_ENVIRONMENT_FILE', $dir . DIRECTORY_SEPARATOR . $envFile);
-                include_once(SS_ENVIRONMENT_FILE);
-                //break out of BOTH loops because we found the $envFile
-                break(2);
-            }
-        } else {
-            //break out of the while loop, we can't read the dir
-            break;
-        }
-        if (dirname($dir) == $dir) {
-            // here we need to check that the path of the last dir and the next one are
-            // not the same, if they are, we have hit the root of the drive
-            break;
-        }
-        //go up a directory
-        $dir = dirname($dir);
-    }
-}
-
-/**
  * Validate whether the request comes directly from a trusted server or not
  * This is necessary to validate whether or not the values of X-Forwarded-
  * or Client-IP HTTP headers can be trusted
@@ -82,18 +39,18 @@ if (!defined('TRUSTED_PROXY')) {
 
     if (getenv('BlockUntrustedProxyHeaders') // Legacy setting (reverted from documentation)
         || getenv('BlockUntrustedIPs') // Documented setting
-        || defined('SS_TRUSTED_PROXY_IPS')
+        || getenv('SS_TRUSTED_PROXY_IPS')
     ) {
         $trusted = false;
 
-        if (defined('SS_TRUSTED_PROXY_IPS') && SS_TRUSTED_PROXY_IPS !== 'none') {
-            if (SS_TRUSTED_PROXY_IPS === '*') {
+        if (getenv('SS_TRUSTED_PROXY_IPS') !== 'none') {
+            if (getenv('SS_TRUSTED_PROXY_IPS') === '*') {
                 $trusted = true;
             } elseif (isset($_SERVER['REMOTE_ADDR'])) {
                 if (!class_exists('SilverStripe\\Control\\Util\\IPUtils')) {
                     require_once 'Control/IPUtils.php';
                 };
-                $trusted = SilverStripe\Control\Util\IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', SS_TRUSTED_PROXY_IPS));
+                $trusted = SilverStripe\Control\Util\IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', getenv('SS_TRUSTED_PROXY_IPS')));
             }
         }
     }
@@ -102,80 +59,6 @@ if (!defined('TRUSTED_PROXY')) {
      * Declare whether or not the connecting server is a trusted proxy
      */
     define('TRUSTED_PROXY', $trusted);
-}
-
-/**
- * A blank HTTP_HOST value is used to detect command-line execution.
- * We update the $_SERVER variable to contain data consistent with the rest of the application.
- */
-if (!isset($_SERVER['HTTP_HOST'])) {
-    // HTTP_HOST, REQUEST_PORT, SCRIPT_NAME, and PHP_SELF
-    global $_FILE_TO_URL_MAPPING;
-    if (isset($_FILE_TO_URL_MAPPING)) {
-        $fullPath = $testPath = realpath($_SERVER['SCRIPT_FILENAME']);
-        while ($testPath && $testPath != '/' && !preg_match('/^[A-Z]:\\\\$/', $testPath)) {
-            if (isset($_FILE_TO_URL_MAPPING[$testPath])) {
-                $url = $_FILE_TO_URL_MAPPING[$testPath]
-                    . str_replace(DIRECTORY_SEPARATOR, '/', substr($fullPath, strlen($testPath)));
-
-                $components = parse_url($url);
-                $_SERVER['HTTP_HOST'] = $components['host'];
-                if (!empty($components['port'])) {
-                    $_SERVER['HTTP_HOST'] .= ':' . $components['port'];
-                }
-                $_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'] = $components['path'];
-                if (!empty($components['port'])) {
-                    $_SERVER['REQUEST_PORT'] = $components['port'];
-                }
-                break;
-            }
-            $testPath = dirname($testPath);
-        }
-    }
-
-    // Everything else
-    $serverDefaults = array(
-        'SERVER_PROTOCOL' => 'HTTP/1.1',
-        'HTTP_ACCEPT' => 'text/plain;q=0.5',
-        'HTTP_ACCEPT_LANGUAGE' => '*;q=0.5',
-        'HTTP_ACCEPT_ENCODING' => '',
-        'HTTP_ACCEPT_CHARSET' => 'ISO-8859-1;q=0.5',
-        'SERVER_SIGNATURE' => 'Command-line PHP/' . phpversion(),
-        'SERVER_SOFTWARE' => 'PHP/' . phpversion(),
-        'SERVER_ADDR' => '127.0.0.1',
-        'REMOTE_ADDR' => '127.0.0.1',
-        'REQUEST_METHOD' => 'GET',
-        'HTTP_USER_AGENT' => 'CLI',
-    );
-
-    $_SERVER = array_merge($serverDefaults, $_SERVER);
-
-    /**
-     * If we have an HTTP_HOST value, then we're being called from the webserver and there are some things that
-     * need checking
-     */
-} else {
-
-    /**
-     * Fix HTTP_HOST from reverse proxies
-     */
-    $trustedProxyHeader = (defined('SS_TRUSTED_PROXY_HOST_HEADER'))
-        ? SS_TRUSTED_PROXY_HOST_HEADER
-        : 'HTTP_X_FORWARDED_HOST';
-
-    if (TRUSTED_PROXY && !empty($_SERVER[$trustedProxyHeader])) {
-        // Get the first host, in case there's multiple separated through commas
-        $_SERVER['HTTP_HOST'] = strtok($_SERVER[$trustedProxyHeader], ',');
-    }
-}
-
-// Filter by configured allowed hosts
-if (defined('SS_ALLOWED_HOSTS') && php_sapi_name() !== "cli") {
-    $all_allowed_hosts = explode(',', SS_ALLOWED_HOSTS);
-    if (!isset($_SERVER['HTTP_HOST']) || !in_array($_SERVER['HTTP_HOST'], $all_allowed_hosts)) {
-        header('HTTP/1.1 400 Invalid Host', true, 400);
-        die();
-    }
 }
 
 /**
@@ -202,6 +85,23 @@ if (!defined('BASE_PATH')) {
     }
     define('BASE_PATH', $candidateBasePath);
 }
+
+// Allow a first class env var to be set that disables .env file loading
+if (!getenv('SS_IGNORE_DOT_ENV')) {
+    foreach (array(
+                 BASE_PATH,
+                 dirname(BASE_PATH),
+             ) as $path) {
+        try {
+            (new \Dotenv\Dotenv($path))->load();
+        } catch (\Dotenv\Exception\InvalidPathException $e) {
+            // no .env found - no big deal
+            continue;
+        }
+        break;
+    }
+}
+
 if (!defined('BASE_URL')) {
     // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
     $path = realpath($_SERVER['SCRIPT_FILENAME']);

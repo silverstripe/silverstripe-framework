@@ -537,11 +537,10 @@ as well as the login form.
 
 To prevent a forged hostname appearing being used by the application, SilverStripe
 allows the configure of a whitelist of hosts that are allowed to access the system. By defining
-this whitelist in your _ss_environment.php file, any request presenting a `Host` header that is
+this whitelist in your `.env` file, any request presenting a `Host` header that is
 _not_ in this list will be blocked with a HTTP 400 error:
 
-	:::php
-	define('SS_ALLOWED_HOSTS', 'www.mysite.com,mysite.com,subdomain.mysite.com');
+	SS_ALLOWED_HOSTS="www.mysite.com,mysite.com,subdomain.mysite.com"
 
 Please note that if this configuration is defined, you _must_ include _all_ subdomains (eg www.)
 that will be accessing the site.
@@ -556,14 +555,12 @@ mechanisms, as rewritten urls could persist between requests in order to misdire
 into visiting external sites.
 
 In order to prevent this kind of attack, it's necessary to whitelist trusted proxy
-server IPs using the SS_TRUSTED_PROXY_IPS define in your _ss_environment.php.
+server IPs using the SS_TRUSTED_PROXY_IPS define in your `.env`.
 
-
-	:::php
-	define('SS_TRUSTED_PROXY_IPS', '127.0.0.1,192.168.0.1');
-	define('SS_TRUSTED_PROXY_HOST_HEADER', 'HTTP_X_FORWARDED_HOST');
-	define('SS_TRUSTED_PROXY_IP_HEADER', 'HTTP_X_FORWARDED_FOR');
-	define('SS_TRUSTED_PROXY_PROTOCOL_HEADER', 'HTTP_X_FORWARDED_PROTOCOL');
+	SS_TRUSTED_PROXY_IPS="127.0.0.1,192.168.0.1"
+	SS_TRUSTED_PROXY_HOST_HEADER="HTTP_X_FORWARDED_HOST"
+	SS_TRUSTED_PROXY_IP_HEADER="HTTP_X_FORWARDED_FOR"
+	SS_TRUSTED_PROXY_PROTOCOL_HEADER="HTTP_X_FORWARDED_PROTOCOL"
 
 At the same time, you'll also need to define which headers you trust from these proxy IPs. Since there are multiple ways through which proxies can pass through HTTP information on the original hostname, IP and protocol, these values need to be adjusted for your specific proxy. The header names match their equivalent `$_SERVER` values.
 
@@ -571,14 +568,14 @@ If there is no proxy server, 'none' can be used to distrust all clients.
 If only trusted servers will make requests then you can use '*' to trust all clients.
 Otherwise a comma separated list of individual IP addresses should be declared.
 
-This behaviour is enabled whenever SS_TRUSTED_PROXY_IPS is defined, or if the
+This behaviour is enabled whenever `SS_TRUSTED_PROXY_IPS` is defined, or if the
 `BlockUntrustedIPs` environment variable is declared. It is advisable to include the
 following in your .htaccess to ensure this behaviour is activated.
 
 
 	<IfModule mod_env.c>
 		# Ensure that X-Forwarded-Host is only allowed to determine the request
-		# hostname for servers ips defined by SS_TRUSTED_PROXY_IPS in your _ss_environment.php
+		# hostname for servers ips defined by SS_TRUSTED_PROXY_IPS in your .env
 		# Note that in a future release this setting will be always on.
 		SetEnv BlockUntrustedIPs true
 	</IfModule>
@@ -586,7 +583,7 @@ following in your .htaccess to ensure this behaviour is activated.
 
 In a future release this behaviour will be changed to be on by default, and this environment
 variable will be no longer necessary, thus it will be necessary to always set
-SS_TRUSTED_PROXY_IPS if using a proxy.
+`SS_TRUSTED_PROXY_IPS` if using a proxy.
 
 ##  Related
 

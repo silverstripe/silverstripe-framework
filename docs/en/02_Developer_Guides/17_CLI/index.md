@@ -44,25 +44,21 @@ This currently only works on UNIX like systems, not on Windows.
 
 Sometimes SilverStripe needs to know the URL of your site. For example, when sending an email or generating static 
 files. When you're visiting the site in a web browser this is easy to work out, but when executing scripts on the 
-command line, it has no way of knowing. To work this out, add lines to your 
-[_ss_environment.php](/getting_started/environment_management) file.
+command line, it has no way of knowing. To work this out, there are several ways to resolve this. You can set alternate
+base URLs, hosts, and protocol.
 
-	:::php
-	global $_FILE_TO_URL_MAPPING;
+eg:
 
-	$_FILE_TO_URL_MAPPING['/Users/sminnee/Sites'] = 'http://localhost';
+```yml
+SilverStripe\Control\Director:
+  alternate_base_url: 'https://example.com/'
+```
 
-The above statement tells SilverStripe that anything executed under the `/Users/sminnee/Sites` directory will have the
-base URL `http://localhost`. The site `/Users/sminnee/Sites/my_silverstripe_project` will translate to the URL
-`http://localhost/my_silverstripe_project`.
+Alternatively you can use the `SS_HOST` environment variable to set a fallback hostname:
 
-You can add multiple file to url mapping definitions. The most specific mapping will be used.
-
-	:::php
-	global $_FILE_TO_URL_MAPPING;
-
-	$_FILE_TO_URL_MAPPING['/Users/sminnee/Sites'] = 'http://localhost';
-	$_FILE_TO_URL_MAPPING['/Users/sminnee/Sites/my_silverstripe_project'] = 'http://project.localhost';
+```
+SS_HOST="localhost"
+```
 
 ### Usage
 

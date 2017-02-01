@@ -2,7 +2,7 @@ $(document).ready(function () {
 
     /**
      * Toggle field readonly modes, if check configuration comes from
-     * _ss_environment (values populated on reload).
+     * environment variables (values populated on reload).
      */
     $('#use_environment').click(function (e) {
         if (!$(this).is(':checked')) {

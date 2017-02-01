@@ -42,7 +42,7 @@ class DevAdminControllerTest extends FunctionalTest
     public function testGoodRegisteredControllerOutput()
     {
         // Check for the controller running from the registered url above
-        // (we use contains rather than equals because sometimes you get Warning: You probably want to define an entry in $_FILE_TO_URL_MAPPING)
+        // (we use contains rather than equals because sometimes you get a warning)
         $this->assertContains(Controller1::OK_MSG, $this->getCapture('/dev/x1'));
         $this->assertContains(Controller1::OK_MSG, $this->getCapture('/dev/x1/y1'));
     }

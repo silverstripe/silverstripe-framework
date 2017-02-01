@@ -35,13 +35,8 @@ class ProtectedAssetAdapter extends AssetAdapter implements ProtectedAdapter
             return parent::findRoot($root);
         }
 
-        // Use environment defined path
-        if (defined('SS_PROTECTED_ASSETS_PATH')) {
-            return SS_PROTECTED_ASSETS_PATH;
-        }
-
-        // Default location is under assets
-        return ASSETS_PATH . '/' . Config::inst()->get(get_class($this), 'secure_folder');
+        // Use environment defined path or default location is under assets
+        return getenv('SS_PROTECTED_ASSETS_PATH') ?: ASSETS_PATH . '/' . Config::inst()->get(get_class($this), 'secure_folder');
     }
 
     /**
