@@ -472,7 +472,7 @@ sk:
     SUBJECTPASSWORDRESET: "Odkaz na resetovanie hesla"
     SURNAME: Priezvisko
     TIMEFORMAT: "Formát času"
-    ValidationIdentifierFailed: "Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorm ({name} = {value})"
+    ValidationIdentifierFailed: "Nemôžte prepísať existujúceho člena #{id} s identickým identifikátorom ({name} = {value})"
     WELCOMEBACK: "Vitajte späť, {firstname}"
     YOUROLDPASSWORD: "Vaše staré heslo"
     belongs_many_many_Groups: Skupiny
