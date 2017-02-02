@@ -291,7 +291,6 @@ abstract class SearchFilter extends Object
         // Find table this field belongs to
         $table = $schema->tableForField($this->model, $this->name);
         if (!$table) {
-
             // fallback to the provided name in the event of a joined column
             // name (as the candidate class doesn't check joined records)
             $parts = explode('.', $this->fullName);
