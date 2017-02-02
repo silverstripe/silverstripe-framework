@@ -6,6 +6,7 @@ use SilverStripe\Core\Convert;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DB;
 use SilverStripe\ORM\Filterable;
+use SilverStripe\ORM\Filters\ExactMatchFilter;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\Tests\DataObjectTest\EquipmentCompany;
 use SilverStripe\ORM\Tests\DataObjectTest\Fan;
@@ -15,6 +16,7 @@ use SilverStripe\ORM\Tests\DataObjectTest\SubTeam;
 use SilverStripe\ORM\Tests\DataObjectTest\Team;
 use SilverStripe\ORM\Tests\DataObjectTest\TeamComment;
 use SilverStripe\ORM\Tests\DataObjectTest\ValidatedObject;
+use SilverStripe\ORM\Tests\DataObjectTest\Staff;
 
 class DataListTest extends SapphireTest
 {
@@ -29,6 +31,7 @@ class DataListTest extends SapphireTest
             ManyManyListTest::$extra_data_objects
         );
     }
+
 
     public function testFilterDataObjectByCreatedDate()
     {
@@ -1218,6 +1221,144 @@ class DataListTest extends SapphireTest
         $items9 = $list->filter('Email:nocase', array('', 'damian@thefans.com'));
         $this->assertSQLNotContains('"DataObjectTest_Fan"."Email" IS NULL', $items9->sql());
         $this->assertSQLNotContains('"DataObjectTest_Fan"."Email" IS NOT NULL', $items9->sql());
+    }
+
+    public function testAggregateDBName()
+    {
+        $filter = new ExactMatchFilter(
+            'Comments.Count()'
+        );
+        $filter->setModel(new DataObjectTest\Team());
+        $this->assertEquals('COUNT("DataObjectTest_Team"."ID")', $filter->getDBName());
+
+        foreach (['Comments.Max(ID)', 'Comments.Max( ID )', 'Comments.Max(  ID)'] as $name) {
+            $filter = new ExactMatchFilter($name);
+            $filter->setModel(new DataObjectTest\Team());
+            $this->assertEquals('MAX("DataObjectTest_Team"."ID")', $filter->getDBName());
+        }
+    }
+
+    public function testAggregateFilterExceptions()
+    {
+        $ex = null;
+        try {
+            $filter = new ExactMatchFilter('Comments.Max( This will not parse! )');
+        } catch (\Exception $e) {
+            $ex = $e;
+        }
+        $this->assertInstanceOf(\InvalidArgumentException::class, $ex);
+        $this->assertRegExp('/Malformed/', $ex->getMessage());
+
+
+        $filter = new ExactMatchFilter('Comments.Max(NonExistentColumn)');
+        $filter->setModel(new DataObjectTest\Team());
+        $ex = null;
+        try {
+            $name = $filter->getDBName();
+        } catch (\Exception $e) {
+            $ex = $e;
+        }
+        $this->assertInstanceOf(\InvalidArgumentException::class, $ex);
+        $this->assertRegExp('/Invalid column/', $ex->getMessage());
+    }
+
+    public function testAggregateFilters()
+    {
+        $teams = Team::get()->filter('Comments.Count()', 2);
+        
+        $team1 = $this->objFromFixture(Team::class, 'team1');
+        $team2 = $this->objFromFixture(Team::class, 'team2');
+        $team3 = $this->objFromFixture(Team::class, 'team3');
+        $team4 = $this->objFromFixture(SubTeam::class, 'subteam1');
+        $team5 = $this->objFromFixture(SubTeam::class, 'subteam2_with_player_relation');
+        $team6 = $this->objFromFixture(SubTeam::class, 'subteam3_with_empty_fields');
+
+        $company1 = $this->objFromFixture(EquipmentCompany::class, 'equipmentcompany1');
+        $company2 = $this->objFromFixture(EquipmentCompany::class, 'equipmentcompany2');
+
+        $company1->CurrentStaff()->add(Staff::create(['Salary' => 3])->write());
+        $company1->CurrentStaff()->add(Staff::create(['Salary' => 5])->write());
+        $company2->CurrentStaff()->add(Staff::create(['Salary' => 4])->write());
+
+        $this->assertCount(1, $teams);
+        $this->assertEquals($team1->ID, $teams->first()->ID);
+
+        $teams = Team::get()->filter('Comments.Count()', [1,2]);
+        
+        $this->assertCount(2, $teams);
+        foreach ([$team1, $team2] as $expectedTeam) {
+            $this->assertContains($expectedTeam->ID, $teams->column('ID'));
+        }
+
+        $teams = Team::get()->filter('Comments.Count():GreaterThan', 1);
+
+        $this->assertCount(1, $teams);
+        $this->assertContains(
+            $this->objFromFixture(Team::class, 'team1')->ID,
+            $teams->column('ID')
+        );
+
+        $teams = Team::get()->filter('Comments.Count():LessThan', 2);
+
+        $this->assertCount(5, $teams);
+        foreach ([$team2, $team3, $team4, $team5, $team6] as $expectedTeam) {
+            $this->assertContains($expectedTeam->ID, $teams->column('ID'));
+        }
+
+        $teams = Team::get()->filter('Comments.Count():GreaterThanOrEqual', 1);
+
+        $this->assertCount(2, $teams);
+        foreach ([$team1, $team2] as $expectedTeam) {
+            $this->assertContains($expectedTeam->ID, $teams->column('ID'));
+        }
+
+        $teams = Team::get()->filter('Comments.Count():LessThanOrEqual', 1);
+
+        $this->assertCount(5, $teams);
+        foreach ([$team2, $team3, $team4, $team5, $team6] as $expectedTeam) {
+            $this->assertContains($expectedTeam->ID, $teams->column('ID'));
+        }
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Max(Salary)', 5);
+        $this->assertCount(1, $companies);
+        $this->assertEquals($company1->ID, $companies->first()->ID);
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Min(Salary)', 3);
+        $this->assertCount(1, $companies);
+        $this->assertEquals($company1->ID, $companies->first()->ID);
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Max(Salary):GreaterThan', 3);
+        $this->assertCount(2, $companies);
+        foreach ([$company1, $company2] as $expectedTeam) {
+            $this->assertContains($expectedTeam->ID, $companies->column('ID'));
+        }
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Sum(Salary)', 8);
+        $this->assertCount(1, $companies);
+        $this->assertEquals($company1->ID, $companies->first()->ID);
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Sum(Salary):LessThan', 7);
+        $this->assertCount(1, $companies);
+        $this->assertEquals($company2->ID, $companies->first()->ID);
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Sum(Salary):GreaterThan', 100);
+        $this->assertCount(0, $companies);
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Sum(Salary):GreaterThan', 7);
+        $this->assertCount(1, $companies);
+        $this->assertEquals($company1->ID, $companies->first()->ID);
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Avg(Salary)', 4);
+        $this->assertCount(2, $companies);
+        foreach ([$company1, $company2] as $expectedTeam) {
+            $this->assertContains($expectedTeam->ID, $companies->column('ID'));
+        }
+
+        $companies = EquipmentCompany::get()->filter('CurrentStaff.Avg(Salary):LessThan', 10);
+        $this->assertCount(2, $companies);
+        foreach ([$company1, $company2] as $expectedTeam) {
+            $this->assertContains($expectedTeam->ID, $companies->column('ID'));
+        }
     }
 
     /**

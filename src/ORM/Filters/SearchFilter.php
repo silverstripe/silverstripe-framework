@@ -59,6 +59,17 @@ abstract class SearchFilter extends Object
     protected $relation;
 
     /**
+     * An array of data about an aggregate column being used
+     * ex:
+     * [
+     *  'function' => 'COUNT',
+     *  'column' => 'ID'
+     * ]
+     * @var array
+     */
+    protected $aggregate;
+
+    /**
      * @param string $fullName Determines the name of the field, as well as the searched database
      *  column. Can contain a relation name in dot notation, which will automatically join
      *  the necessary tables (e.g. "Comments.Name" to join the "Comments" has-many relationship and
@@ -73,6 +84,7 @@ abstract class SearchFilter extends Object
 
         // sets $this->name and $this->relation
         $this->addRelation($fullName);
+        $this->addAggregate($fullName);
         $this->value = $value;
         $this->setModifiers($modifiers);
     }
@@ -92,6 +104,33 @@ abstract class SearchFilter extends Object
         } else {
             $this->name = $name;
         }
+    }
+
+    /**
+     * Parses the name for any aggregate functions and stores them in the $aggregate array
+     *
+     * @param string $name
+     */
+    protected function addAggregate($name)
+    {
+        if (!$this->relation) {
+            return;
+        }
+
+        if (!preg_match('/([A-Za-z]+)\(\s*(?:([A-Za-z_*][A-Za-z0-9_]*))?\s*\)$/', $name, $matches)) {
+            if (stristr($name, '(') !== false) {
+                throw new InvalidArgumentException(sprintf(
+                    'Malformed aggregate filter %s',
+                    $name
+                ));
+            }
+            return;
+        }
+
+        $this->aggregate = [
+            'function' => strtoupper($matches[1]),
+            'column' => isset($matches[2]) ? $matches[2] : null
+        ];
     }
 
     /**
@@ -217,14 +256,40 @@ abstract class SearchFilter extends Object
         }
 
         // Ensure that we're dealing with a DataObject.
-        if (!is_subclass_of($this->model, 'SilverStripe\\ORM\\DataObject')) {
+        if (!is_subclass_of($this->model, DataObject::class)) {
             throw new InvalidArgumentException(
                 "Model supplied to " . get_class($this) . " should be an instance of DataObject."
             );
         }
+        $schema = DataObject::getSchema();
+        
+        if ($this->aggregate) {
+            $column = $this->aggregate['column'];
+            $function = $this->aggregate['function'];
+
+            $table = $column ?
+                $schema->tableForField($this->model, $column) :
+                $schema->baseDataTable($this->model);
+
+            if (!$table) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid column %s for aggregate function %s on %s',
+                    $column,
+                    $function,
+                    $this->model
+                ));
+            }
+            return sprintf(
+                '%s("%s".%s)',
+                $function,
+                $table,
+                $column ? "\"$column\"" : '"ID"'
+            );
+        }
+
 
         // Find table this field belongs to
-        $table = DataObject::getSchema()->tableForField($this->model, $this->name);
+        $table = $schema->tableForField($this->model, $this->name);
         if (!$table) {
             // fallback to the provided name in the event of a joined column
             // name (as the candidate class doesn't check joined records)
@@ -244,10 +309,31 @@ abstract class SearchFilter extends Object
     {
         // SRM: This code finds the table where the field named $this->name lives
         // Todo: move to somewhere more appropriate, such as DataMapper, the magical class-to-be?
+        
+        if ($this->aggregate) {
+            return intval($this->value);
+        }
+
         /** @var DBField $dbField */
         $dbField = singleton($this->model)->dbObject($this->name);
         $dbField->setValue($this->value);
         return $dbField->RAW();
+    }
+
+    /**
+     * Given an escaped HAVING clause, add it along with the appropriate GROUP BY clause
+     * @param  DataQuery $query
+     * @param  string    $having
+     * @return DataQuery
+     */
+    public function applyAggregate(DataQuery $query, $having)
+    {
+        $schema = DataObject::getSchema();
+        $baseTable = $schema->baseDataTable($query->dataClass());
+        
+        return $query
+            ->having($having)
+            ->groupby("\"{$baseTable}\".\"ID\"");
     }
 
     /**
