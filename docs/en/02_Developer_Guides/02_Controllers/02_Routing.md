@@ -22,7 +22,7 @@ These routes by standard, go into a `routes.yml` file in your applications `_con
 Name: mysiteroutes
 After: framework/routes#coreroutes
 ---
-Director:
+SilverStripe\Control\Director:
   rules:
     'teams//$Action/$ID/$Name': 'TeamController'
     'player/': 'PlayerController'
