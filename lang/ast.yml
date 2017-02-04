@@ -26,6 +26,6 @@ ast:
     db_LockedOutUntil: 'Bloquiáu fasta'
     db_PasswordExpiry: 'Data d''espiración de la contraseña'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'heredáu del rol "%s" nel grupu "%s"'
+    FromRoleOnGroup: 'heredáu del rol "{roletitle}" nel grupu "{grouptitle}"'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes volver conectate.'

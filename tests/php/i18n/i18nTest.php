@@ -157,14 +157,14 @@ class i18nTest extends SapphireTest
             'array',
             [
                 'i18nTestModule.MAINTEMPLATE' => 'Main Template',
-                'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'My replacement no namespace: %s',
+                'REPLACEMENTNONAMESPACE' => 'My replacement no namespace: {replacement}',
                 'i18nTestModule.LAYOUTTEMPLATE' => 'Layout Template',
-                'i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE' => 'Layout Template no namespace',
-                'i18nTestModule.SPRINTFNAMESPACE' => 'My replacement: %s',
+                'LAYOUTTEMPLATENONAMESPACE' => 'Layout Template no namespace',
+                'i18nTestModule.REPLACEMENTNAMESPACE' => 'My replacement: {replacement}',
                 'i18nTestModule.WITHNAMESPACE' => 'Include Entity with Namespace',
-                'i18nTestModuleInclude.ss.NONAMESPACE' => 'Include Entity without Namespace',
-                'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'My include replacement: %s',
-                'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'My include replacement no namespace: %s'
+                'NONAMESPACE' => 'Include Entity without Namespace',
+                'i18nTestModuleInclude_ss.REPLACEMENTINCLUDENAMESPACE' => 'My include replacement: {replacement}',
+                'REPLACEMENTINCLUDENONAMESPACE' => 'My include replacement no namespace: {replacement}'
             ],
             'en_US'
         );
@@ -186,14 +186,14 @@ class i18nTest extends SapphireTest
             'array',
             [
                 'i18nTestModule.MAINTEMPLATE' => 'TRANS Main Template',
-                'i18nTestModule.ss.SPRINTFNONAMESPACE' => 'TRANS My replacement no namespace: %s',
+                'REPLACEMENTNONAMESPACE' => 'TRANS My replacement no namespace: {replacement}',
                 'i18nTestModule.LAYOUTTEMPLATE' => 'TRANS Layout Template',
-                'i18nTestModule.ss.LAYOUTTEMPLATENONAMESPACE' => 'TRANS Layout Template no namespace',
-                'i18nTestModule.SPRINTFNAMESPACE' => 'TRANS My replacement: %s',
+                'LAYOUTTEMPLATENONAMESPACE' => 'TRANS Layout Template no namespace',
+                'i18nTestModule.REPLACEMENTNAMESPACE' => 'TRANS My replacement: {replacement}',
                 'i18nTestModule.WITHNAMESPACE' => 'TRANS Include Entity with Namespace',
-                'i18nTestModuleInclude.ss.NONAMESPACE' => 'TRANS Include Entity without Namespace',
-                'i18nTestModuleInclude.ss.SPRINTFINCLUDENAMESPACE' => 'TRANS My include replacement: %s',
-                'i18nTestModuleInclude.ss.SPRINTFINCLUDENONAMESPACE' => 'TRANS My include replacement no namespace: %s',
+                'NONAMESPACE' => 'TRANS Include Entity without Namespace',
+                'i18nTestModuleInclude_ss.REPLACEMENTINCLUDENAMESPACE' => 'TRANS My include replacement: {replacement}',
+                'REPLACEMENTINCLUDENONAMESPACE' => 'TRANS My include replacement no namespace: {replacement}',
                 'i18nTestModule.PLURALS' => 'An item|{count} items',
             ],
             'de_DE'
@@ -250,16 +250,13 @@ class i18nTest extends SapphireTest
             'array',
             [
                 'i18nTestModule.NEWMETHODSIG' => 'TRANS New _t method signature test',
-                'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}',
-                'i18nTestModule.INJECTIONSLEGACY' => 'TRANS Hello %s %s. But it is late, %s',
+                'i18nTestModule.INJECTIONS' => 'TRANS Hello {name} {greeting}. But it is late, {goodbye}'
             ],
             'en_US'
         );
 
         $entity = "i18nTestModule.INJECTIONS";
         $default = "Hello {name} {greeting}. But it is late, {goodbye}";
-        $entityLegacy = 'i18nTestModule.INJECTIONSLEGACY';
-        $defaultLegacy = 'TRANS Hello %s %s. But it is late, %s';
 
         // Test missing entity key
         $translated = i18n::_t(
@@ -296,19 +293,6 @@ class i18nTest extends SapphireTest
             "TRANS Hello Steffen willkommen. But it is late, wiedersehen",
             $translated,
             "Full test of translation, using default, context and injection array"
-        );
-
-        // @deprecated 5.0 Passing in % placeholders (detected in default value)
-        // Note: Missing-placeholder substitution no longer functions
-        $translated = i18n::_t(
-            $entityLegacy, // has %s placeholders
-            $defaultLegacy,
-            ["name"=>"Cat", "greeting2"=>"meow", "goodbye"=>"meow"]
-        );
-        $this->assertContains(
-            "TRANS Hello Cat meow. But it is late, meow",
-            $translated,
-            "Testing sprintf placeholders with named injections"
         );
 
         // Passing in non-associative arrays for placeholders is now an error

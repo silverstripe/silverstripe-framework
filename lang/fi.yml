@@ -72,7 +72,7 @@ fi:
     FilterBy: 'Suodata &raquo;'
     Find: Etsi
     LinkExisting: 'Linkitä olemassaoleva'
-    NewRecord: 'Uusi %s'
+    NewRecord: 'Uusi {type}'
     NoItemsFound: 'Ei kohteita'
     PRINTEDAT: Tulostettu
     PRINTEDBY: Tulostaja
@@ -92,7 +92,7 @@ fi:
     Create: Luo
     Delete: Poista
     DeletePermissionsFailure: 'Ei oikeuksia poistamiseen'
-    Deleted: 'Poistettiin %s %s'
+    Deleted: 'Poistettiin {type} {name}'
     Save: Tallenna
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Muokkaa
@@ -231,7 +231,7 @@ fi:
     Description: Kuvaus
     GROUPNAME: 'Ryhmän nimi'
     GroupReminder: 'Valitessasi isäntäryhmän roolit periytyvät tähän ryhmään'
-    HierarchyPermsError: 'Isäntäryhmään ei voitu asettaa "%s" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
+    HierarchyPermsError: 'Isäntäryhmään ei voitu asettaa "{group}" annettuja oikeuksia (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     Locked: 'Lukittu?'
     MEMBERS: Jäsenet
     NEWGROUP: 'Uusi ryhmä'
@@ -289,7 +289,7 @@ fi:
     PLURALS:
       one: Käyttäjä
       other: '{count} Käyttäjää'
-    REMEMBERME: 'Muista minut? (%d päivän ajan tällä koneella)'
+    REMEMBERME: 'Muista minut? ({days} päivän ajan tällä koneella)'
     SINGULARNAME: Käyttäjä
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
@@ -311,9 +311,9 @@ fi:
       other: '{count} Käyttäjän salasanaa'
     SINGULARNAME: 'Käyttäjän salasana'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Ole hyvä ja tee monimutkaisempi salasana lisäämällä joitakin seuraavista merkeistä: %s'
+    LOWCHARSTRENGTH: 'Ole hyvä ja tee monimutkaisempi salasana lisäämällä joitakin seuraavista merkeistä: {chars}'
     PREVPASSWORD: 'Olet jo käyttänyt tätä salasanaa aikaisemmin, ole hyvä ja valitse uusi'
-    TOOSHORT: 'Salasanan on oltava vähintään %s merkkiä'
+    TOOSHORT: 'Salasanan on oltava vähintään {minimum} merkkiä'
   SilverStripe\Security\Permission:
     AdminGroup: Järjestelmänvalvoja
     CMS_ACCESS_CATEGORY: CMS-pääsy
@@ -330,7 +330,7 @@ fi:
     AssignedTo: 'valittiin "{title}"'
     FromGroup: 'periytyivät ryhmästä "{title}"'
     FromRole: 'periytyivät roolista "{title}"'
-    FromRoleOnGroup: 'periytynyt roolista "%s" ryhmässä "%s"'
+    FromRoleOnGroup: 'periytynyt roolista "{roletitle}" ryhmässä "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Vain järjestelmänvalvojalla on oikeudet asettaa'
     PLURALNAME: Roolit
@@ -344,7 +344,7 @@ fi:
     PLURALS:
       one: 'Käyttöoikeuden roolin koodi'
       other: '{count} Käyttöoikeuksien roolien koodit'
-    PermsError: 'Ei voida asettaa koodia "%s" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
+    PermsError: 'Ei voida asettaa koodia "{code}" annetuilla oikeuksilla (vaaditaan JÄRJESTELMÄNVALVOJAN oikeudet)'
     SINGULARNAME: 'Käyttöoikeuden roolin koodi'
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: Kirjautumistarkisteet

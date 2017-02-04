@@ -22,13 +22,12 @@ use InvalidArgumentException;
  * <code>
  * _t('MyNamespace.MYENTITY', 'My default natural language value');
  * _t('MyNamespace.MYENTITY', 'My default natural language value', 'My explanatory context');
- * sprintf(_t('MyNamespace.MYENTITY', 'Counting %s things'), 42);
+ * _t('MyNamespace.MYENTITY', 'Counting {number} things', ['number' => 42]);
  * </code>
  *
  * Templates:
  * <code>
  * <%t MyNamespace.MYENTITY 'My default natural language value' %>
- * <%t MyNamespace.MYENTITY 'Counting %s things' s=$ThingsCount %>
  * <%t MyNamespace.MYENTITY 'Counting {count} things' count=$ThingsCount %>
  * </code>
  *

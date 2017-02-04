@@ -1,7 +1,7 @@
-<% _t('i18nTestModule.LAYOUTTEMPLATE',"Layout Template") %>
-<% _t('LAYOUTTEMPLATENONAMESPACE',"Layout Template no namespace") %>
-<% sprintf(_t('i18nTestModule.SPRINTFNAMESPACE','My replacement: %s'),$TestProperty) %>
-<% sprintf(_t('SPRINTFNONAMESPACE','My replacement no namespace: %s'),$TestProperty) %>
+<%t i18nTestModule.LAYOUTTEMPLATE "Layout Template" %>
+<%t LAYOUTTEMPLATENONAMESPACE "Layout Template no namespace" %>
+<%t i18nTestModule.REPLACEMENTNAMESPACE 'My replacement: {replacement}' replacement=$TestProperty %>
+<%t REPLACEMENTNONAMESPACE 'My replacement no namespace: {replacement}' replacement=$TestProperty %>
 <% include i18nTestModuleInclude %>
 
 <%t i18nTestModule.NEWMETHODSIG "New _t method signature test" %>

@@ -71,7 +71,7 @@ az:
     FULLADMINRIGHTS: 'Tam administrativ hüquqlar'
     FULLADMINRIGHTS_HELP: 'Başqa təyin edilmiş bütün icazələr rədd olunur.'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: '"%s" rolundan "%s" qrupunda törəyib'
+    FromRoleOnGroup: '"{roletitle}" rolundan "{grouptitle}" qrupunda törəyib'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Sizin bu səhifəyə icazəniz yoxdur. Əgər bu səhifəyə icazəsi olan başqa profiliniz varsa hesabınıza daxil olun'
     BUTTONSEND: 'Parolu sıfırlama linkini göndər'

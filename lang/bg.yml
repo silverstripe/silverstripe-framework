@@ -71,7 +71,7 @@ bg:
     FilterBy: 'Филтриране по'
     Find: Търси
     LinkExisting: 'Свържи към съществуващ'
-    NewRecord: 'Нов %s'
+    NewRecord: 'Нов {type}'
     NoItemsFound: 'Няма намерени елементи'
     PRINTEDAT: 'Отпечатано на'
     PRINTEDBY: 'Отпечатано от'
@@ -91,7 +91,7 @@ bg:
     Create: Създай
     Delete: Изтрий
     DeletePermissionsFailure: 'Изтриването не е разрешено'
-    Deleted: 'Изтрити %s %s'
+    Deleted: 'Изтрити {type} {name}'
     Save: Запис
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: 'Редактиране'
@@ -280,7 +280,7 @@ bg:
     PLURALS:
       one: Потребител
       other: '{count} потребителя'
-    REMEMBERME: 'Запомни ме следващия път? (за %d ден/дни на това устройство)'
+    REMEMBERME: 'Запомни ме следващия път? (за {count} ден/дни на това устройство)'
     SINGULARNAME: Потребител
     SUBJECTPASSWORDCHANGED: 'Вашата парола беше променена'
     SUBJECTPASSWORDRESET: 'Връзка за анулиране на паролата'
@@ -302,9 +302,9 @@ bg:
       other: '{count} потребителски пароли'
     SINGULARNAME: 'Потребителска парола'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Добавете някои от следните символи: %s, за да увеличите силата на паролата си'
+    LOWCHARSTRENGTH: 'Добавете някои от следните символи: {chars}, за да увеличите силата на паролата си'
     PREVPASSWORD: 'Вече сте използвали тази парола. Моля, изберете нова.'
-    TOOSHORT: 'Паролата е прекалено къса. Трябва да е от поне %s символа'
+    TOOSHORT: 'Паролата е прекалено къса. Трябва да е от поне {minimum} символа'
   SilverStripe\Security\Permission:
     AdminGroup: Администратор
     CMS_ACCESS_CATEGORY: 'Достъп до CMS'
@@ -322,7 +322,7 @@ bg:
     AssignedTo: 'приписана на "{title}"'
     FromGroup: 'унаследена от група "{title}"'
     FromRole: 'унаследена от роля "{title}"'
-    FromRoleOnGroup: 'унаследено от роля "%s" на група "%s"'
+    FromRoleOnGroup: 'унаследено от роля "{roletitle}" на група "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Може да се приложи само от администратор'
     PLURALNAME: 'Роли'

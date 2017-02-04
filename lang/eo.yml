@@ -72,7 +72,7 @@ eo:
     FilterBy: 'Filtri laŭ'
     Find: Serĉi
     LinkExisting: 'Ligi ekzistantajn'
-    NewRecord: 'Novaj %s'
+    NewRecord: 'Novaj {type}'
     NoItemsFound: 'Neniu elemento troviĝis'
     PRINTEDAT: 'Presita ĉe'
     PRINTEDBY: 'Presita de'
@@ -92,7 +92,7 @@ eo:
     Create: Krei
     Delete: Forigi
     DeletePermissionsFailure: 'Mankas permeso forigi'
-    Deleted: 'Forigita %s %s'
+    Deleted: 'Forigita {type} {name}'
     Save: Konservi
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redakti
@@ -231,7 +231,7 @@ eo:
     Description: Priskribo
     GROUPNAME: 'Nomo de grupo'
     GroupReminder: 'Se vi elektas patran grupon, ĉi tiu grupo prenos ĉiujn ĝiajn rolojn'
-    HierarchyPermsError: 'Ne povas agordi patran grupon "%s" kun privilegiaj permesoj (bezonas ADMIN-aliron)'
+    HierarchyPermsError: 'Ne povas agordi patran grupon "{group}" kun privilegiaj permesoj (bezonas ADMIN-aliron)'
     Locked: 'Ŝlosita?'
     MEMBERS: Membroj
     NEWGROUP: 'Nova Grupo'
@@ -289,7 +289,7 @@ eo:
     PLURALS:
       one: 'Unu membro'
       other: '{count} membroj'
-    REMEMBERME: 'Memoru min je la sekva fojo? (por %d tagoj ĉe ĉi tiu aparato)'
+    REMEMBERME: 'Memoru min je la sekva fojo? (por {count} tagoj ĉe ĉi tiu aparato)'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
@@ -311,9 +311,9 @@ eo:
       other: '{count} pasvortoj de membroj'
     SINGULARNAME: 'Membra pasvorto'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Bonvole plifortigu la pasvortan aldonante la jenajn signojn: %s'
+    LOWCHARSTRENGTH: 'Bonvole plifortigu la pasvortan aldonante la jenajn signojn: {chars}'
     PREVPASSWORD: 'Vi jam uzis tiun pasvorton pasintece, do bonvole elektu novan pasvorton'
-    TOOSHORT: 'Pasvorto estas tro mallonga; ĝi devas esti almenaŭ %s signojn longa'
+    TOOSHORT: 'Pasvorto estas tro mallonga; ĝi devas esti almenaŭ {minimum} signojn longa'
   SilverStripe\Security\Permission:
     AdminGroup: Administranto
     CMS_ACCESS_CATEGORY: CMS-aliro
@@ -331,7 +331,7 @@ eo:
     AssignedTo: 'agordita al "{title}"'
     FromGroup: 'heredita el grupo "{title}"'
     FromRole: 'heredita el rolo "{title}"'
-    FromRoleOnGroup: 'heredita el rolo "%s" en grupo "%s"'
+    FromRoleOnGroup: 'heredita el rolo "{roletitle}" en grupo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Nur administranto povas apliki'
     PLURALNAME: Roloj
@@ -345,7 +345,7 @@ eo:
     PLURALS:
       one: 'Unu permesrola kodo'
       other: '{count} permesrolaj kodoj'
-    PermsError: 'Ne povas agordi kodon "%s" kun privilegiaj permesoj (bezonas ADMIN-aliron)'
+    PermsError: 'Ne povas agordi kodon "{code}" kun privilegiaj permesoj (bezonas ADMIN-aliron)'
     SINGULARNAME: 'Permesrola kodo'
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Ensalutaj haketaĵoj'

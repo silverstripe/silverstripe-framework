@@ -58,7 +58,7 @@ fr:
     FilterBy: 'Filtrer par'
     Find: Trouver
     LinkExisting: 'Lien existant'
-    NewRecord: 'Nouveau %s'
+    NewRecord: 'Nouveau {type}'
     NoItemsFound: 'Aucun élément n’a été trouvé.'
     PRINTEDAT: 'Imprimé le'
     PRINTEDBY: 'Imprimé par'
@@ -78,7 +78,7 @@ fr:
     Create: Créer
     Delete: Supprimer
     DeletePermissionsFailure: 'Vous n’avez pas les autorisations pour supprimer'
-    Deleted: '%s %s supprimés'
+    Deleted: '{type} {name} supprimés'
     Save: Enregistrer
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Editer
@@ -230,9 +230,9 @@ fr:
     PLURALNAME: 'Mots de passe du membre'
     SINGULARNAME: 'Mot de passe du membre'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Veuillez augmenter la force de votre mot de passe en ajoutant certains caractères suivants : %s'
+    LOWCHARSTRENGTH: 'Veuillez augmenter la force de votre mot de passe en ajoutant certains caractères suivants : {chars}'
     PREVPASSWORD: 'Vous avez déjà utilisé ce mot de passe par le passé, veuillez en choisir un autre'
-    TOOSHORT: 'Le mot de passe est trop court, il doit contenir au moins %s caractères'
+    TOOSHORT: 'Le mot de passe est trop court, il doit contenir au moins {minimum} caractères'
   SilverStripe\Security\Permission:
     AdminGroup: Administrateur
     CONTENT_CATEGORY: 'Permissions du contenu'
@@ -243,9 +243,9 @@ fr:
     UserPermissionsIntro: "Assigner des groupes à cet utilisateur modifiera les autorisations dont il dispose. Consultez la section «\_Groupes\_» pour plus de détails sur les autorisations associées à chaque groupe."
   SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'assignée au groupe « {title} »'
-    FromGroup: "hérité du groupe «\_{title}\_»"
-    FromRole: "héritée du rôle «\_{title}\_»"
-    FromRoleOnGroup: "hérité du rôle «\_%s\_» du groupe «\_%s\_»"
+    FromGroup: 'hérité du groupe « {title} »'
+    FromRole: 'héritée du rôle « {title} »'
+    FromRoleOnGroup: 'hérité du rôle « {roletitle} » du groupe « {grouptitle} »'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Limité aux administrateurs'
     PLURALNAME: Rôles

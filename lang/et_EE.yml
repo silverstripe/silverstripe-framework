@@ -34,7 +34,7 @@ et_EE:
     FilterBy: Filtreerimisalus
     Find: Otsi
     LinkExisting: 'Lingi olemasolev'
-    NewRecord: 'Uus %s'
+    NewRecord: 'Uus {type}'
     NoItemsFound: 'Üksusi ei leitud'
     PRINTEDAT: 'Printimiskoht:'
     PRINTEDBY: Printis
@@ -52,7 +52,7 @@ et_EE:
     Create: Loo
     Delete: Kustuta
     DeletePermissionsFailure: 'Kustutamisõigused puuduvad'
-    Deleted: '%s %s on kustutatud'
+    Deleted: '{type} {name} on kustutatud'
     Save: Salvesta
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redigeeri
@@ -136,7 +136,7 @@ et_EE:
     AssignedTo: 'määratud grupile "{title}"'
     FromGroup: 'päritud grupilt "{title}"'
     FromRole: 'päritud rollilt "{title}"'
-    FromRoleOnGroup: 'päritud rollist "%s" grupis "%s"'
+    FromRoleOnGroup: 'päritud rollist "{roletitle}" grupis "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Ainult administraator saab rakendada'
     Title: Pealkiri

@@ -33,7 +33,7 @@ nb:
     FilterBy: 'Filtrer på '
     Find: Finn
     LinkExisting: 'Knytt til eksisterende'
-    NewRecord: 'Ny %s'
+    NewRecord: 'Ny {type}'
     NoItemsFound: 'Ingen elementer ble funnet'
     PRINTEDAT: 'Skrevet ut ved'
     PRINTEDBY: 'Skrevet ut av'
@@ -53,7 +53,7 @@ nb:
     Create: Opprett
     Delete: Slett
     DeletePermissionsFailure: 'Ikke tillatt å slette'
-    Deleted: 'Slettet %s %s'
+    Deleted: 'Slettet {type} {name}'
     Save: Lagre
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Rediger
@@ -89,7 +89,7 @@ nb:
     DefaultGroupTitleContentAuthors: Innholdsforfattere
     Description: Beskrivelse
     GroupReminder: 'Hvis du velger en overordnet gruppe, vil denne gruppen arve alle rollene'
-    HierarchyPermsError: 'Kan ikke angi overordnet gruppe "%s" med administratorrettigheter (krever ADMIN-tilgang)'
+    HierarchyPermsError: 'Kan ikke angi overordnet gruppe "{group}" med administratorrettigheter (krever ADMIN-tilgang)'
     Locked: 'Låst?'
     NoRoles: 'Ingen roller funnet'
     Parent: 'Overordnet gruppe'
@@ -134,9 +134,9 @@ nb:
     db_Password: Passord
     db_PasswordExpiry: 'Utløpsdato for passord'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: %s'
+    LOWCHARSTRENGTH: 'Vennligst øk passordstyrken ved å legge til noen av følgende tegn: {chars}'
     PREVPASSWORD: 'Du har brukt passordet tidligere, vennligst velg et nytt passord'
-    TOOSHORT: 'Passordet er for kort, det må være %s eller flere tegn langt'
+    TOOSHORT: 'Passordet er for kort, det må være {minimum} eller flere tegn langt'
   SilverStripe\Security\Permission:
     AdminGroup: Administratorer
     CONTENT_CATEGORY: Innholdstillatelser
@@ -147,12 +147,12 @@ nb:
     AssignedTo: 'tilordnet "{title}"'
     FromGroup: 'Arvet fra gruppe "{title}"'
     FromRole: 'arvet fra rolle "{title}"'
-    FromRoleOnGroup: 'arvet fra rollen "%s" i gruppen "%s"'
+    FromRoleOnGroup: 'arvet fra rollen "{roletitle}" i gruppen "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Bare administratorer kan søke'
     Title: Tittel
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Kan ikke angi kode "%s" med administratorrettigheter (krever ADMIN-tilgang)'
+    PermsError: 'Kan ikke angi kode "{code}" med administratorrettigheter (krever ADMIN-tilgang)'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Du har ikke adgang til denne siden. Hvis du har en annen konto som har adgang til denne siden, kan du logge inn med den under.'
     BUTTONSEND: 'Send meg en lenke for å nullstille passordet'

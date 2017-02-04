@@ -72,7 +72,7 @@ it:
     FilterBy: 'Filtra per'
     Find: Trova
     LinkExisting: 'Collega esistente'
-    NewRecord: 'Nuovo %s'
+    NewRecord: 'Nuovo {type}'
     NoItemsFound: 'Nessun elemento trovato'
     PRINTEDAT: 'Stampato alle'
     PRINTEDBY: 'Stampato da'
@@ -92,7 +92,7 @@ it:
     Create: Crea
     Delete: Elimina
     DeletePermissionsFailure: 'Non hai i permessi per eliminare'
-    Deleted: 'Eliminato %s %s'
+    Deleted: 'Eliminato {type} {name}'
     Save: Salva
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Modifica
@@ -231,7 +231,7 @@ it:
     Description: Descrizione
     GROUPNAME: 'Nome del gruppo'
     GroupReminder: 'Se scegli un gruppo genitore, questo gruppo erediterà tutti i suoi ruoli'
-    HierarchyPermsError: 'Non posso assegnare permessi privilegiati al gruppo genitore "%s" (richiede accesso ADMIN)'
+    HierarchyPermsError: 'Non posso assegnare permessi privilegiati al gruppo genitore "{group}" (richiede accesso ADMIN)'
     Locked: 'Bloccato?'
     MEMBERS: Membri
     NEWGROUP: 'Nuovo Gruppo'
@@ -289,7 +289,7 @@ it:
     PLURALS:
       one: 'Un Utente'
       other: '{count} Utenti'
-    REMEMBERME: 'Ricordati di me la prossima volta? (per %d giorni su questo dispositivo)'
+    REMEMBERME: 'Ricordati di me la prossima volta? (per {count} giorni su questo dispositivo)'
     SINGULARNAME: Utente
     SUBJECTPASSWORDCHANGED: 'La tua password è stata cambiata'
     SUBJECTPASSWORDRESET: 'Link per azzerare la tua password'
@@ -311,9 +311,9 @@ it:
       other: '{count} password utente'
     SINGULARNAME: 'Password utente'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: %s'
+    LOWCHARSTRENGTH: 'Perfavore aumenta la sicurezza della password aggiungendo alcuni dei seguenti caratteri: {chars}'
     PREVPASSWORD: 'Hai già usato questa password in passato, per favore scegline una nuova'
-    TOOSHORT: 'La password è troppo corta, deve essere lunga %s o più caratteri'
+    TOOSHORT: 'La password è troppo corta, deve essere lunga {minimum} o più caratteri'
   SilverStripe\Security\Permission:
     AdminGroup: Amministratore
     CMS_ACCESS_CATEGORY: 'Accesso al CMS'
@@ -331,7 +331,7 @@ it:
     AssignedTo: 'assegnato a "{title}"'
     FromGroup: 'ereditato dal gruppo "{title}"'
     FromRole: 'ereditato dal ruolo "{title}"'
-    FromRoleOnGroup: 'ereditato dal ruolo "%s" nel gruppo "%s"'
+    FromRoleOnGroup: 'ereditato dal ruolo "{roletitle}" nel gruppo "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Solo l''amministratore può applicare'
     PLURALNAME: Ruoli
@@ -345,7 +345,7 @@ it:
     PLURALS:
       one: 'Un codice di ruolo'
       other: '{count} codici di ruolo'
-    PermsError: 'Non posso assegnare permessi privilegiati al codice "%s" (richiede accesso ADMIN)'
+    PermsError: 'Non posso assegnare permessi privilegiati al codice "{code}" (richiede accesso ADMIN)'
     SINGULARNAME: 'Codice di ruolo'
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Hash di Login'

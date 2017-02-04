@@ -18,7 +18,7 @@ gl_ES:
     Filter: Filtro
     Find: Atopar
     LinkExisting: 'Ligazón existente'
-    NewRecord: 'Novo %s'
+    NewRecord: 'Novo {type}'
     NoItemsFound: 'Ningún elemento atopado'
     PRINTEDAT: 'Impreso ás'
     PRINTEDBY: 'Impreso por'
@@ -89,7 +89,7 @@ gl_ES:
     FULLADMINRIGHTS: 'Todos os dereitos administrativos'
     FULLADMINRIGHTS_HELP: 'Implica e anula todos os outros permisos asinados.'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'herdado do role "%s" sobre o grupo "%s"'
+    FromRoleOnGroup: 'herdado do role "{roletitle}" sobre o grupo "{grouptitle}"'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Non tes acceso a esta páxina. Se tes outra conta que pode acceder a páxina, podes iniciar sesión a continuación.'
     BUTTONSEND: 'Enviarme a ligazón de restablecemento do contrasinal'

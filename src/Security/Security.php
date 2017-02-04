@@ -356,16 +356,15 @@ class Security extends Controller implements TemplateGlobalProvider
                 $messageSet = $configMessageSet;
             } else {
                 $messageSet = array(
-                    'default'         => _t(
-                        'SilverStripe\\Security\\Security.NOTEPAGESECURED',
+                    'default' => _t(
+                        __CLASS__ . '.NOTEPAGESECURED',
                         "That page is secured. Enter your credentials below and we will send "
-                        . "you right along."
+                            . "you right along."
                     ),
                     'alreadyLoggedIn' => _t(
-                        'SilverStripe\\Security\\Security.ALREADYLOGGEDIN',
+                        __CLASS__ . '.ALREADYLOGGEDIN',
                         "You don't have access to this page.  If you have another account that "
-                        . "can access that page, you can log in again below.",
-                        "%s will be replaced with a link to log in."
+                            . "can access that page, you can log in again below."
                     )
                 );
             }
@@ -460,7 +459,7 @@ class Security extends Controller implements TemplateGlobalProvider
             },
             $this->getApplicableAuthenticators()
         );
-    }
+        }
 
 
     /**
@@ -679,7 +678,7 @@ class Security extends Controller implements TemplateGlobalProvider
             $handlers,
             function (Authenticator &$auth, $name) use ($link) {
                 $auth = $auth->getLoginHandler(Controller::join_links($link, $name));
-            }
+        }
         );
 
         return $this->delegateToMultipleHandlers(
@@ -687,8 +686,8 @@ class Security extends Controller implements TemplateGlobalProvider
             _t(__CLASS__.'.LOGIN', 'Log in'),
             $this->getTemplatesFor('login'),
             [$this, 'aggregateTabbedForms']
-        );
-    }
+            );
+        }
 
     /**
      * Log the currently logged in user out
@@ -892,7 +891,7 @@ class Security extends Controller implements TemplateGlobalProvider
         // Return the customised controller - may be used to render a Form (e.g. login form)
         if (is_array($result)) {
             $result = $this->renderWrappedController($title, $result, $templates);
-        }
+    }
 
         return $result;
     }
@@ -989,8 +988,8 @@ class Security extends Controller implements TemplateGlobalProvider
             _t('SilverStripe\\Security\\Security.CHANGEPASSWORDHEADER', 'Change your password'),
             $this->getTemplatesFor('changepassword'),
             [$this, 'aggregateAuthenticatorResponses']
-        );
-    }
+                );
+            }
 
     /**
      * Create a link to the password reset form.
@@ -1053,7 +1052,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         $service = DefaultAdminService::singleton();
         return $service->findOrCreateDefaultAdmin();
-    }
+        }
 
     /**
      * Flush the default admin credentials
@@ -1186,7 +1185,7 @@ class Security extends Controller implements TemplateGlobalProvider
 
         return [
             'password'  => $encryptor->encrypt($password, $salt, $member),
-            'salt'      => $salt,
+            'salt' => $salt,
             'algorithm' => $algorithm,
             'encryptor' => $encryptor
         ];
@@ -1338,8 +1337,8 @@ class Security extends Controller implements TemplateGlobalProvider
     public static function get_template_global_variables()
     {
         return [
-            "LoginURL"        => "login_url",
-            "LogoutURL"       => "logout_url",
+            "LoginURL" => "login_url",
+            "LogoutURL" => "logout_url",
             "LostPasswordURL" => "lost_password_url",
             "CurrentMember"   => "getCurrentUser",
             "currentUser"     => "getCurrentUser"

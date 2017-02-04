@@ -33,7 +33,7 @@ mi:
     FilterBy: 'Tātari mā'
     Find: Rapu
     LinkExisting: 'Hono Tīari'
-    NewRecord: '%s hōu'
+    NewRecord: '{type} hōu'
     NoItemsFound: 'Kāore i kitea he tūemi'
     PRINTEDAT: 'I tāngia i'
     PRINTEDBY: 'I tāngia e'
@@ -53,7 +53,7 @@ mi:
     Create: Hanga
     Delete: Muku
     DeletePermissionsFailure: 'Kāore he whakaaetanga muku'
-    Deleted: 'Kua mukua %s %s'
+    Deleted: 'Kua mukua {type} {name}'
     Save: Tiaki
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Whakatika
@@ -133,9 +133,9 @@ mi:
     db_Password: Kupuhipa
     db_PasswordExpiry: 'Rā Mōnehu Kupuhipa'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Whakakahatia tō kupuhipa mā te tāpiri i ētahi o ēnei pūāhua: %s'
+    LOWCHARSTRENGTH: 'Whakakahatia tō kupuhipa mā te tāpiri i ētahi o ēnei pūāhua: {chars}'
     PREVPASSWORD: 'Kua whakamahi kētia tēnā kupuhipa i mua, kōwhiria he kupuhipa hou'
-    TOOSHORT: 'He poto rawa te kupuhipa, me %s pūāhua neke atu te roa'
+    TOOSHORT: 'He poto rawa te kupuhipa, me {minimum} pūāhua neke atu te roa'
   SilverStripe\Security\Permission:
     AdminGroup: Kaiwhakahaere
     CONTENT_CATEGORY: 'Whakaaetanga ihirangi'
@@ -146,7 +146,7 @@ mi:
     AssignedTo: 'kua tautapatia ki  "{title}"'
     FromGroup: 'I tukuna iho i te rōpū "{title}"'
     FromRole: 'I tukuna iho i te tūnga "{title}"'
-    FromRoleOnGroup: 'i tukuna iho i "%s" i te rōpū "%s"'
+    FromRoleOnGroup: 'i tukuna iho i "{roletitle}" i te rōpū "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Ka taea anake te tono e ngā kaiwhakahaere'
     Title: Taitara

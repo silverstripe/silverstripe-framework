@@ -74,7 +74,7 @@ es_AR:
     CONTENT_CATEGORY: 'Permisos de contenido'
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
   SilverStripe\Security\PermissionCheckboxSetField:
-    FromRoleOnGroup: 'heredado desde el rol "%s" en el grupo "%s"'
+    FromRoleOnGroup: 'heredado desde el rol "{roletitle}" en el grupo "{grouptitle}"'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Ud no tiene acceso a esta página. Si tiene otra cuenta que puede acceder a esa página, entonces puede iniciar sesión nuevamente.'
     BUTTONSEND: 'Envíame el enlace para restablecer mi contraseña'

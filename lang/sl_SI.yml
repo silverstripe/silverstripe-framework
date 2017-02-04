@@ -22,7 +22,7 @@ sl_SI:
     Filter: Filter
     FilterBy: 'Filtriraj po'
     Find: Najdi
-    NewRecord: 'Nov %s'
+    NewRecord: 'Nov {type}'
     Print: Natisni
     ResetFilter: Resetiraj
   SilverStripe\Forms\GridField\GridFieldDeleteAction:
@@ -34,7 +34,7 @@ sl_SI:
     Create: Ustvari
     Delete: Izbriši
     DeletePermissionsFailure: 'Nimate pravic za brisanje'
-    Deleted: 'Izbrisano %s %s'
+    Deleted: 'Izbrisano {type} {name}'
     Save: Shrani
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Uredi

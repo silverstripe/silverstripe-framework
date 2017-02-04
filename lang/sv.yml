@@ -41,7 +41,7 @@ sv:
     FilterBy: 'Filtrera på'
     Find: Hitta
     LinkExisting: 'Länk finns'
-    NewRecord: 'Ny %s'
+    NewRecord: 'Ny {type}'
     NoItemsFound: 'Inget hittades'
     PRINTEDAT: Utskrivet
     PRINTEDBY: 'Utskrivet av'
@@ -61,7 +61,7 @@ sv:
     Create: Skapa
     Delete: Radera
     DeletePermissionsFailure: 'Rättighet för att radera saknas'
-    Deleted: 'Raderade %s %s'
+    Deleted: 'Raderade {type} {name}'
     Save: Spara
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Redigera
@@ -111,7 +111,7 @@ sv:
     DefaultGroupTitleContentAuthors: Författare
     Description: Beskrivning
     GroupReminder: 'Om du väljer en förälder till gruppen så kommer gruppen ärva alla förälderns roller'
-    HierarchyPermsError: 'Den överordnade gruppen "%s" kan inte ges priviligerad tillgång (adminrättigheter krävs)'
+    HierarchyPermsError: 'Den överordnade gruppen "{group}" kan inte ges priviligerad tillgång (adminrättigheter krävs)'
     Locked: 'Låst?'
     NoRoles: 'Inga roller fun'
     Parent: 'Överordnad grupp'
@@ -157,9 +157,9 @@ sv:
     db_Password: Lösenord
     db_PasswordExpiry: 'Lösenordet upphör att gälla'
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Var god och stärk ditt lösenord genom att lägga till något av följande tecken: %s'
+    LOWCHARSTRENGTH: 'Var god och stärk ditt lösenord genom att lägga till något av följande tecken: {chars}'
     PREVPASSWORD: 'Du har redan använt samma lösenord tidigare, var god och välj ett nytt lösenord'
-    TOOSHORT: 'Lösenordet är för kort, det måste innehålla %s eller fler tecken.'
+    TOOSHORT: 'Lösenordet är för kort, det måste innehålla {minimum} eller fler tecken.'
   SilverStripe\Security\Permission:
     AdminGroup: Administratör
     CONTENT_CATEGORY: Innehållsåtkomst
@@ -170,12 +170,12 @@ sv:
     AssignedTo: 'tilldelad till "{title}"'
     FromGroup: 'ärvde från grupp "{title}"'
     FromRole: 'ärvde från roll "{title}"'
-    FromRoleOnGroup: 'ärvt från roll "%s" i grupp "%s"'
+    FromRoleOnGroup: 'ärvt från roll "{roletitle}" i grupp "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Endast administratörer kan tillämpa denna roll'
     Title: Rollnamn
   SilverStripe\Security\PermissionRoleCode:
-    PermsError: 'Koden "%s" kan inte ges privilegierad tillgång (adminrättigheter krävs)'
+    PermsError: 'Koden "{code}" kan inte ges privilegierad tillgång (adminrättigheter krävs)'
   SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Du har inte tillträde till den här sidan. Om du har ett annat konto som har rätt behörighet kan du logga in igen nedan.'
     BUTTONSEND: 'Skicka återställningslänk'

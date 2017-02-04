@@ -72,7 +72,7 @@ ru:
     FilterBy: 'Фильтр по'
     Find: Найти
     LinkExisting: Связать
-    NewRecord: 'Новый(-ая) %s'
+    NewRecord: 'Новый(-ая) {type}'
     NoItemsFound: 'Элементов не найдено'
     PRINTEDAT: 'Когда распечатано:'
     PRINTEDBY: 'Кем распечатано:'
@@ -92,7 +92,7 @@ ru:
     Create: Создать
     Delete: Удалить
     DeletePermissionsFailure: 'Нет прав на удаление'
-    Deleted: 'Удалено %s %s'
+    Deleted: 'Удалено {type} {name}'
     Save: 'Сохранить'
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: 'Редактировать'
@@ -245,7 +245,7 @@ ru:
     Description: Описание
     GROUPNAME: 'Имя группы'
     GroupReminder: 'При назначении группы верхнего уровня все роли будут переняты из нее'
-    HierarchyPermsError: 'У Вас недостаточно прав для назначения родительской группы "%s" (необходимы права администратора)'
+    HierarchyPermsError: 'У Вас недостаточно прав для назначения родительской группы "{group}" (необходимы права администратора)'
     Locked: 'Блокировано?'
     MEMBERS: 'Члены группы'
     NEWGROUP: 'Новая группа'
@@ -309,7 +309,7 @@ ru:
       few: '{count} участника'
       many: '{count} участников'
       other: '{count} участников'
-    REMEMBERME: 'Запомнить меня? (на %d дней на этом устройстве)'
+    REMEMBERME: 'Запомнить меня? (на {count} дней на этом устройстве)'
     SINGULARNAME: Пользователь
     SUBJECTPASSWORDCHANGED: 'Ваш пароль изменен'
     SUBJECTPASSWORDRESET: 'Ссылка для переустановки пароля'
@@ -333,9 +333,9 @@ ru:
       other: '{count} паролей'
     SINGULARNAME: Пароль
   SilverStripe\Security\PasswordValidator:
-    LOWCHARSTRENGTH: 'Пожалуйста, увеличьте сложность пароля, добавив один из следующих символов: %s'
+    LOWCHARSTRENGTH: 'Пожалуйста, увеличьте сложность пароля, добавив один из следующих символов: {chars}'
     PREVPASSWORD: 'Вы уже использовали этот пароль прежде. Пожалуйста, выберите новый пароль.'
-    TOOSHORT: 'Слишком короткий пароль, минимальная длина - %s символов'
+    TOOSHORT: 'Слишком короткий пароль, минимальная длина - {minimum} символов'
   SilverStripe\Security\Permission:
     AdminGroup: Администратор
     CMS_ACCESS_CATEGORY: 'Доступ к CMS'
@@ -355,7 +355,7 @@ ru:
     AssignedTo: 'присвоено "{title}"'
     FromGroup: 'перенято от группы "{title}"'
     FromRole: 'перенято из роли "{title}"'
-    FromRoleOnGroup: 'перенято из роли "%s" для группы "%s"'
+    FromRoleOnGroup: 'перенято из роли "{roletitle}" для группы "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     OnlyAdminCanApply: 'Может применяться только администратором'
     PLURALNAME: 'Роли'
@@ -373,7 +373,7 @@ ru:
       few: '{count} кода роли доступа'
       many: '{count} кодов роли доступа'
       other: '{count} кодов роли доступа'
-    PermsError: 'У Вас недостаточно прав для назначения родительской группы "%s" (необходимы права администратора)'
+    PermsError: 'У Вас недостаточно прав для назначения родительской группы "{code}" (необходимы права администратора)'
     SINGULARNAME: 'Код роли доступа'
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Хэши авторизации'

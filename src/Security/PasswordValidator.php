@@ -88,12 +88,10 @@ class PasswordValidator
         if ($this->minLength) {
             if (strlen($password) < $this->minLength) {
                 $valid->addError(
-                    sprintf(
-                        _t(
-                            'SilverStripe\\Security\\PasswordValidator.TOOSHORT',
-                            'Password is too short, it must be %s or more characters long'
-                        ),
-                        $this->minLength
+                    _t(
+                        'SilverStripe\\Security\\PasswordValidator.TOOSHORT',
+                        'Password is too short, it must be {minimum} or more characters long',
+                        ['minimum' => $this->minLength]
                     ),
                     'bad',
                     'TOO_SHORT'
@@ -118,12 +116,10 @@ class PasswordValidator
 
             if ($score < $this->minScore) {
                 $valid->addError(
-                    sprintf(
-                        _t(
-                            'SilverStripe\\Security\\PasswordValidator.LOWCHARSTRENGTH',
-                            'Please increase password strength by adding some of the following characters: %s'
-                        ),
-                        implode(', ', $missedTests)
+                    _t(
+                        'SilverStripe\\Security\\PasswordValidator.LOWCHARSTRENGTH',
+                        'Please increase password strength by adding some of the following characters: {chars}',
+                        ['chars' => implode(', ', $missedTests)]
                     ),
                     'bad',
                     'LOW_CHARACTER_STRENGTH'

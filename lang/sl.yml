@@ -32,7 +32,7 @@ sl:
     FilterBy: 'Filtriraj po'
     Find: Poišči
     LinkExisting: 'Poveži na'
-    NewRecord: 'Novih %s'
+    NewRecord: 'Novih {type}'
     NoItemsFound: 'Ni rezultatov'
     PRINTEDAT: 'Tiskano pri'
     PRINTEDBY: Natisnil
@@ -51,7 +51,7 @@ sl:
     Create: Ustvari
     Delete: Izbriši
     DeletePermissionsFailure: 'Ni dovoljenja za brisanje'
-    Deleted: 'Izbrisanih %s %s'
+    Deleted: 'Izbrisanih {type} {name}'
     Save: Shrani
   SilverStripe\Forms\GridField\GridFieldEditButton_ss:
     EDIT: Uredi
@@ -133,7 +133,7 @@ sl:
     FULLADMINRIGHTS_HELP: 'Lahko izniči oziroma upravlja z vsemi drugimi dovoljenji.'
   SilverStripe\Security\PermissionCheckboxSetField:
     FromGroup: 'Privzeto iz skupine "{title}"'
-    FromRoleOnGroup: 'podedovano iz vloge "%s" na skupino "%s"'
+    FromRoleOnGroup: 'podedovano iz vloge "{roletitle}" na skupino "{grouptitle}"'
   SilverStripe\Security\PermissionRole:
     Title: Naslov
   SilverStripe\Security\Security:
