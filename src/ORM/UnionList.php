@@ -8,6 +8,7 @@ use LogicException;
 
 /**
  * A list object that wraps around other SS_List instances.
+ * Allows iteration over multiple collections in one loop.
  */
 class UnionList extends ViewableData implements SS_List
 {
@@ -53,8 +54,11 @@ class UnionList extends ViewableData implements SS_List
     public function exists()
     {
         foreach ($this->lists as $list) {
-            if (($list instanceof ArrayList && $list->exists()) ||
-                (method_exists($list, 'exists') && $list->exists())) {
+            if ($list instanceof ArrayList) {
+                if ($list->exists()) {
+                    return true;
+                }
+            } else if (method_exists($list, 'exists') && $list->exists()) {
                 return true;
             }
         }
@@ -176,17 +180,40 @@ class UnionList extends ViewableData implements SS_List
         return $result;
     }
 
+    /**
+     * Returns a map of this list
+     *
+     * @param string $keyfield The 'key' field of the result array
+     * @param string $titlefield The value field of the result array
+     * @return Map
+     */
     public function map($keyfield = 'ID', $titlefield = 'Title')
     {
-        throw new LogicException(
-            "UnionList::".__FUNCTION__."() is not allowed."
-        );
+        return new Map($this, $keyfield, $titlefield);
     }
 
+    /**
+     * Find the first item of this list where the given key = value
+     *
+     * @param string $key
+     * @param string $value
+     * @return mixed
+     */
     public function find($key, $value)
     {
+        foreach ($this->lists as $list) {
+            $result = $list->find($key, $value);
+            if ($result) {
+                return $result;
+            }
+        }
+        return null;
+    }
+
+    public function filter()
+    {
         throw new LogicException(
-            "UnionList::".__FUNCTION__."() is not allowed."
+            "UnionList::".__FUNCTION__."() is not allowed. This is due to API differences between DataList::filter() and ArrayList::filter()."
         );
     }
 

@@ -72,6 +72,27 @@ class UnionListTest extends SapphireTest
         $this->assertFalse($unionList->exists());
     }
 
+    public function testFind()
+    {
+        $unionList = $this->unionList;
+        $this->assertNotNull($unionList->find('Name', 'test obj 1'));
+        $this->assertNotNull($unionList->find('Name', 'test obj 2'));
+        $this->assertNotNull($unionList->find('Name', 'test obj 3'));
+        $this->assertNotNull($unionList->find('Name', 'test obj 4'));
+    }
+
+    public function testMap()
+    {
+        $unionList = $this->unionList;
+        $map = $unionList->map('Name', 'Name');
+        $this->assertEquals([
+            'test obj 1' => 'test obj 1',
+            'test obj 2' => 'test obj 2',
+            'test obj 3' => 'test obj 3',
+            'test obj 4' => 'test obj 4',
+        ], $map->toArray());
+    }
+
     public function testToNestedArray()
     {
         $unionList = $this->unionList;
