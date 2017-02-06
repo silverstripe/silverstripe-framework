@@ -115,6 +115,26 @@ class GridFieldExportButtonTest extends SapphireTest {
 			$button->generateExportFileData($this->gridField)
 		);
 	}
+
+	/**
+	 * @covers GridFieldExportButton::generateExportFileData()
+	 */
+	public function testMultipleColumnExport() {
+		$list = new ArrayList();
+		$list->add(new DataObject([
+			'Key' => 'FAKE_KEY',
+			'Val' => 22
+		]));
+
+		/** @var GridField $field */
+		$field = clone $this->gridField;
+		$columns = new GridFieldDataColumns();
+		$field->getConfig()->addComponent($columns->setDisplayFields(['Key', 'Val']));
+		$field->setList($list);
+		$button = new GridFieldExportButton();
+
+		$this->assertSame("\"Key\",\"Val\"\n\"FAKE_KEY\",\"22\"\n", $button->generateExportFileData($field));
+	}
 }
 
 /**
