@@ -3,4 +3,3 @@
 	<a href="$Link" title="$Title.ATT"><ins class="jstree-icon">&nbsp;</ins>
 		<span class="text">$TreeTitle</span>
 	</a>
-</li>
