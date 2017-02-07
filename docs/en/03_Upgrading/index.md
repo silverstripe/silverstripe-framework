@@ -21,7 +21,8 @@ For projects managed through Composer, update the version number of `framework` 
 ```
 
 <div class="info" markdown="1">
-Please note that until SilverStripe 4 is stable you will need to also add `"minimum-stability": "dev"` and `"prefer-stable": true` to your `composer.json` to be able to pull these modules.</div>
+Please note that until SilverStripe 4 is stable you will need to also add `"minimum-stability": "dev"` and `"prefer-stable": true` to your `composer.json` to be able to pull these modules.
+</div>
 
 This will also add extra dependencies, the `reports` and `siteconfig` modules. SilverStripe CMS is becoming more modular, and [composer is becoming the preferred way to manage your code](/getting_started/composer).
 
@@ -34,6 +35,14 @@ composer require silverstripe/asset-admin ^1.0
 ```
 
 This will also install the `graphql` module for GraphQL API access to your SilverStripe system, which powers the `asset-admin` module.
+
+## Migrate to dotenv
+
+SilverStripe 4 requires the use of `.env` and "real" environment variables instead of `_ss_environment.php` for your environment configuration.
+
+You'll need to move your constants to a new `.env` file before SilverStripe will build successfully.
+
+If you are not able to move your webserver away from using `_ss_environment.php` files, you can use [this example file](https://gist.github.com/robbieaverill/74fbfff6f438c94f6325107e4d7b2a45) and include it at the top of your `mysite/_config.php` file. This will export your constants as environment variables.
 
 ## Manual
 
