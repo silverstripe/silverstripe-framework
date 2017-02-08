@@ -759,6 +759,19 @@ class Director implements TemplateGlobalProvider {
 				die("<h1>Your browser is not accepting header redirects</h1>"
 					. "<p>Please <a href=\"$destURL\">click here</a>");
 			}
+		} elseif (!$matched && (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || (isset($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) 
+				&& strtolower($_SERVER['HTTP_X_FORWARDED_PROTOCOL']) == 'https')) { // beoptimized Github merge request
+                    
+                        $destURL = str_replace('https:', 'http:', Director::absoluteURL($_SERVER['REQUEST_URI']));
+                        
+			// This coupling to SapphireTest is necessary to test the destination URL and to not interfere with tests
+			if(class_exists('SapphireTest', false) && SapphireTest::is_running_test()) {
+				return $destURL;
+			} else {
+				if(!headers_sent()) header("Location: $destURL");
+				die("<h1>Your browser is not accepting header redirects</h1>"
+					. "<p>Please <a href=\"$destURL\">click here</a>");
+			}
 		} else {
 			return false;
 		}
