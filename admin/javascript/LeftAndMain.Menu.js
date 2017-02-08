@@ -227,8 +227,15 @@
 			}
 		});
 
-		/** Toggle the flyout panel to appear/disappear when mouse over */
+		$('.cms-menu-list .toggle').entwine({
+			onclick: function(e) {
+				this.getMenuItem().toggle();
+				e.preventDefault();
+			}
+		});
+
 		$('.cms-menu-list li').entwine({
+			/** Toggle the flyout panel to appear/disappear when mouse over */
 			toggleFlyout: function(bool) {
 				fly = $(this);
 				if (fly.children('ul').first().hasClass('collapsed-flyout')) {
@@ -238,23 +245,13 @@
 						fly.children('ul').find('li').hide();
 					}
 				}
-			}
-		});
-		//slight delay to prevent flyout closing from "sloppy mouse movement"
-		$('.cms-menu-list li').hoverIntent(function(){$(this).toggleFlyout(true);},function(){$(this).toggleFlyout(false);});
-		
-		$('.cms-menu-list .toggle').entwine({
-			onclick: function(e) {
-				this.getMenuItem().toggle();
-				e.preventDefault();
-			}
-		});
-		
-		$('.cms-menu-list li').entwine({
+			},
 			onmatch: function() {
 				if(this.find('ul').length) {
 					this.find('a:first').append('<span class="toggle-children"><span class="toggle-children-icon"></span></span>');
 				}
+				//Set up flyout panel with slight delay to prevent flyout closing from "sloppy mouse movement"
+				$(this).hoverIntent(function(){$(this).toggleFlyout(true);},function(){$(this).toggleFlyout(false);});
 				this._super();
 			},
 			onunmatch: function() {
