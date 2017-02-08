@@ -30,7 +30,6 @@ class SQLQueryTest extends SapphireTest {
 
 		//basic counting
 		$qry = SQLQueryTest_DO::get()->dataQuery()->getFinalisedQuery();
-		$qry->setGroupBy('"Common"');
 		$ids = $this->allFixtureIDs('SQLQueryTest_DO');
 
 		$count = $qry->count('"SQLQueryTest_DO"."ID"');
@@ -39,6 +38,11 @@ class SQLQueryTest extends SapphireTest {
 
 		//test with `having`
 		if (DB::get_conn() instanceof MySQLDatabase) {
+			$qry->setSelect(array(
+				'Date' => 'MAX("Date")',
+				'Common' => '"Common"',
+			));
+			$qry->setGroupBy('"Common"');
 			$qry->setHaving('"Date" > 2012-02-01');
 			$count = $qry->count('"SQLQueryTest_DO"."ID"');
 			$this->assertEquals(1, $count);
