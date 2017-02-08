@@ -2721,6 +2721,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             return null;
         }
 
+        if (!isset($this->record[$fieldName]) && isset($this->record[$fieldName . '_Lazy'])) {
+            $tableClass = $this->record[$fieldName . '_Lazy'];
+            $this->loadLazyFields($tableClass);
+        }
+
         $value = isset($this->record[$fieldName])
             ? $this->record[$fieldName]
             : null;

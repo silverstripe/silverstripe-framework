@@ -150,6 +150,21 @@ class DataObjectLazyLoadingTest extends SapphireTest
         );
     }
 
+    public function testDBObjectLazyLoadedFields()
+    {
+        $subteam1 = $this->objFromFixture(SubTeam::class, 'subteam1');
+        $teams = DataObject::get(Team::class); // query parent class
+        $subteam1Lazy = $teams->find('ID', $subteam1->ID);
+
+        $subteam1DO = $subteam1->dbObject('SubclassDatabaseField');
+        $subteam1LazyDO = $subteam1Lazy->dbObject('SubclassDatabaseField');
+
+        $this->assertEquals(
+            $subteam1DO->getValue(),
+            $subteam1LazyDO->getValue()
+        );
+    }
+
     public function testLazyLoadedFieldsSetField()
     {
         $subteam1 = $this->objFromFixture(SubTeam::class, 'subteam1');
