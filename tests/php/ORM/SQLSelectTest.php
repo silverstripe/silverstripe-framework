@@ -40,13 +40,17 @@ class SQLSelectTest extends SapphireTest
 
         //basic counting
         $qry = SQLSelectTest\TestObject::get()->dataQuery()->getFinalisedQuery();
-        $qry->setGroupBy('"Common"');
         $ids = $this->allFixtureIDs(SQLSelectTest\TestObject::class);
         $count = $qry->count('"SQLSelectTest_DO"."ID"');
         $this->assertEquals(count($ids), $count);
         $this->assertInternalType("int", $count);
         //test with `having`
         if (DB::get_conn() instanceof MySQLDatabase) {
+            $qry->setSelect(array(
+                'Date' => 'MAX("Date")',
+                'Common' => '"Common"',
+            ));
+            $qry->setGroupBy('"Common"');
             $qry->setHaving('"Date" > 2012-02-01');
             $count = $qry->count('"SQLSelectTest_DO"."ID"');
             $this->assertEquals(1, $count);

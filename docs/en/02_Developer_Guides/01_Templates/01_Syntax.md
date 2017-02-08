@@ -490,7 +490,7 @@ The `<% with %>` tag lets you change into a new scope. Consider the following ex
 This is functionalty the same as the following:
 
 	:::ss
-	Hello, $CurrentMember.FirstName, welcome back. Yout current balance is $CurrentMember.Balance
+	Hello, $CurrentMember.FirstName, welcome back. Your current balance is $CurrentMember.Balance
 
 Notice that the first example is much tidier, as it removes the repeated use of the `$CurrentMember` accessor.
 
