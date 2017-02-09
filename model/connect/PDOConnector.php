@@ -228,12 +228,12 @@ class PDOConnector extends DBConnector {
 		$result = $this->pdoConnection->exec($sql);
 
 		// Check for errors
-		if (!$this->hasError($result)) {
-			return $this->rowCount = $result;
+		if($this->hasError($result)) {
+			$this->databaseError($this->getLastError(), $errorLevel, $sql);
+			return null;
 		}
 
-		$this->databaseError($this->getLastError(), $errorLevel, $sql);
-		return null;
+		return $this->rowCount = $result;
 	}
 
 	public function query($sql, $errorLevel = E_USER_ERROR) {
