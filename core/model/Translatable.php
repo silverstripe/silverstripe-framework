@@ -938,6 +938,7 @@ class Translatable extends DataObjectDecorator implements PermissionProvider {
 		// This action is possible both when showing the "default language"
 		// and a translation. Include the current locale (record might not be saved yet).
 		$alreadyTranslatedLocales = $this->getTranslatedLocales();
+		$alreadyTranslatedLocales = array_combine($alreadyTranslatedLocales, $alreadyTranslatedLocales);
 		$alreadyTranslatedLocales[$this->owner->Locale] = $this->owner->Locale;
 		$alreadyTranslatedLocales = array_combine($alreadyTranslatedLocales, $alreadyTranslatedLocales);
 
