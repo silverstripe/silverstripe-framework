@@ -7,6 +7,6 @@
 			</li>
 		<% end_loop %>
 	<% else %>
-		<li>No options available</li>
+		<li><%t CheckboxSetField_ss.NOOPTIONSAVAILABLE 'No options available' %></li>
 	<% end_if %>
 </ul>
