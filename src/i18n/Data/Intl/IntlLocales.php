@@ -1606,8 +1606,8 @@ class IntlLocales implements Locales, Resettable
             return false;
         }
         return strcasecmp($lang, $region)
-            * strcasecmp($lang, $locale)
-            * strcasecmp($region, $locale) !== 0;
+            && strcasecmp($lang, $locale)
+            && strcasecmp($region, $locale);
     }
 
     /**

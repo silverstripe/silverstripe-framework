@@ -8859,8 +8859,13 @@ fieldset{
   height:18px;
 }
 
-.field input.day,.field input.month,.field input.year{
+.field input.day,.field input.month{
   width:56px;
+  display:inline;
+}
+
+.field input.year{
+  width:72px;
   display:inline;
 }
 

@@ -159,7 +159,7 @@ class MemberDatetimeOptionsetField extends OptionsetField
     public function setValue($value, $data = null)
     {
         if (is_array($value)) {
-            throw new InvalidArgumentException("Invalid value");
+            throw new InvalidArgumentException("Invalid array value: Expected string");
         }
         return parent::setValue($value, $data);
     }

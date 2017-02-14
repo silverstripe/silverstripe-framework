@@ -107,9 +107,13 @@ class NumericFieldTest extends SapphireTest
 
     public function testReadonly()
     {
-        i18n::set_locale('en_US');
         $field = new NumericField('Number');
-        $this->assertRegExp("#<span[^>]+>\s*0\s*<\/span>#", "".$field->performReadonlyTransformation()->Field()."");
+        $field->setLocale('de_DE');
+        $field->setScale(2);
+        $field->setValue(1001.3);
+        $html = $field->performReadonlyTransformation()->Field()->forTemplate();
+        $this->assertContains('value="1.001,30"', $html);
+        $this->assertContains('readonly="readonly"', $html);
     }
 
     public function testNumberTypeOnInputHtml()

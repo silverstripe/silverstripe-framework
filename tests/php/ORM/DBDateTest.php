@@ -94,96 +94,30 @@ class DBDateTest extends SapphireTest
 
     public function testMDYConversion()
     {
-        // Disable notices
-        $this->suppressNotices();
-
-        $this->assertEquals(
-            '4/03/2003',
-            DBField::create_field('Date', '3/4/2003')->Nice(),
-            "Date->Nice() works with M/D/YYYY format"
-        );
-
         $this->setExpectedException(
-            PHPUnit_Framework_Error_Notice::class,
-            "Implicit m/d/y conversion. Use " . DBDate::ISO_DATE . " to prevent this notice."
+            \InvalidArgumentException::class,
+            "Invalid date: '3/16/2003'. Use " . DBDate::ISO_DATE . " to prevent this error."
         );
-        $this->restoreNotices();
-        DBField::create_field('Date', '3/4/2003');
-    }
-
-    public function testYDMConversion()
-    {
-        // Disable notices
-        $this->suppressNotices();
-        $this->assertEquals(
-            '4/03/2003',
-            DBField::create_field('Date', '2003/4/3')->Nice(),
-            "Date->Nice() works with YYYY/D/M format"
-        );
-
-        $this->setExpectedException(
-            PHPUnit_Framework_Error_Notice::class,
-            "Implicit y/d/m conversion. Use " . DBDate::ISO_DATE . " to prevent this notice."
-        );
-        $this->restoreNotices();
-        DBField::create_field('Date', '2003/4/3');
+        DBField::create_field('Date', '3/16/2003');
     }
 
     public function testY2kCorrection()
     {
-        $this->suppressNotices();
-
-        $this->assertEquals(
-            '4/03/2003',
-            DBField::create_field('Date', '4.3.03')->Nice(),
-            "Date->Nice() works with D.M.YY format"
-        );
-        $this->assertEquals(
-            '4/03/2003',
-            DBField::create_field('Date', '04.03.03')->Nice(),
-            "Date->Nice() works with DD.MM.YY format"
-        );
-        $this->assertEquals(
-            '4/03/2003',
-            DBField::create_field('Date', '4.3.03')->Nice(),
-            "Date->Nice() works with D.M.YY format"
-        );
-        $this->assertEquals(
-            '4/03/2003',
-            DBField::create_field('Date', '4.03.03')->Nice(),
-            "Date->Nice() works with D.M.YY format"
-        );
-        $this->assertEquals(
-            '4/03/2003',
-            DBField::create_field('Date', '03-03-04')->Nice(),
-            "Date->Nice() works with Y-m-d format"
-        );
-
         $this->setExpectedException(
-            PHPUnit_Framework_Error_Notice::class,
-            "Implicit y2k conversion. Please use full YYYY year for dates"
+            \InvalidArgumentException::class,
+            "Invalid date: '03-03-04'. Use " . DBDate::ISO_DATE . " to prevent this error."
         );
-        $this->restoreNotices();
         DBField::create_field('Date', '03-03-04');
     }
 
     public function testInvertedYearCorrection()
     {
-        $this->suppressNotices();
-
-        // iso8601 expects year first
+        // iso8601 expects year first, but support year last
         $this->assertEquals(
             '4/03/2003',
             DBField::create_field('Date', '04-03-2003')->Nice(),
             "Date->Nice() works with DD-MM-YYYY format"
         );
-
-        $this->setExpectedException(
-            PHPUnit_Framework_Error_Notice::class,
-            "Unexpected date order. Use " . DBDate::ISO_DATE . " to prevent this notice."
-        );
-        $this->restoreNotices();
-        DBField::create_field('Date', '04-03-2003');
     }
 
     public function testYear()
@@ -400,7 +334,6 @@ class DBDateTest extends SapphireTest
         return [
             ['2000-12-31', '31/12/2000'],
             ['31-12-2000', '31/12/2000'],
-            ['12/31/2000', '31/12/2000'],
             ['2014-04-01', '01/04/2014'],
         ];
     }

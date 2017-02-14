@@ -111,26 +111,6 @@ class DBTime extends DBField
     }
 
     /**
-     * Returns the time in 12-hour format using the format string 'h:mm a' e.g. '1:32 pm'.
-     *
-     * @return string Formatted time.
-     */
-    public function Nice12()
-    {
-        return $this->Format('h:mm a');
-    }
-
-    /**
-     * Returns the time in 24-hour format using the format string 'H:mm' e.g. '13:32'.
-     *
-     * @return string Formatted time.
-     */
-    public function Nice24()
-    {
-        return $this->Format('H:mm');
-    }
-
-    /**
      * Return the time using a particular formatting string.
      *
      * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime

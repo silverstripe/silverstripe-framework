@@ -38,7 +38,7 @@ class DBDate extends DBField
         $value = $this->parseDate($value);
         if ($value === false) {
             throw new InvalidArgumentException(
-                "Invalid date passed. Use " . self::ISO_DATE . " to prevent this error."
+                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
             );
         }
         $this->value = $value;
@@ -308,10 +308,7 @@ class DBDate extends DBField
      */
     public function Rfc2822()
     {
-        if ($this->value) {
-            return date('Y-m-d H:i:s', $this->getTimestamp());
-        }
-        return null;
+        return $this->Format('y-MM-dd HH:mm:ss');
     }
 
     /**
@@ -321,15 +318,13 @@ class DBDate extends DBField
      */
     public function Rfc3339()
     {
-        if (!$this->value) {
+        $date = $this->Format('y-MM-dd\\THH:mm:ss');
+        if (!$date) {
             return null;
         }
 
-        $timestamp = $this->getTimestamp();
-        $date = date('Y-m-d\TH:i:s', $timestamp);
-
         $matches = array();
-        if (preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $timestamp), $matches)) {
+        if (preg_match('/^([\-+])(\d{2})(\d{2})$/', date('O', $this->getTimestamp()), $matches)) {
             $date .= $matches[1].$matches[2].':'.$matches[3];
         } else {
             $date .= 'Z';
@@ -541,23 +536,13 @@ class DBDate extends DBField
     protected function fixInputDate($value)
     {
         // split
-        list($day, $month, $year, $time) = $this->explodeDateString($value);
-
-        // Detect invalid year order
-        if (!checkdate($month, $day, $year) && checkdate($month, $year, $day)) {
-            trigger_error(
-                "Unexpected date order. Use " . self::ISO_DATE . " to prevent this notice.",
-                E_USER_NOTICE
-            );
-            list($day, $year) = [$year, $day];
-        }
-
-        // Fix y2k year
-        $year = $this->guessY2kYear($year);
+        list($year, $month, $day, $time) = $this->explodeDateString($value);
 
         // Validate date
         if (!checkdate($month, $day, $year)) {
-            throw new InvalidArgumentException("Invalid date passed. Use " . self::ISO_DATE . " to prevent this error.");
+            throw new InvalidArgumentException(
+                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
+            );
         }
 
         // Convert to y-m-d
@@ -565,65 +550,39 @@ class DBDate extends DBField
     }
 
     /**
-     * Attempt to split date string into day, month, year, and timestamp components.
-     * Don't read this code without a drink in hand!
+     * Attempt to split date string into year, month, day, and timestamp components.
      *
      * @param string $value
      * @return array
      */
     protected function explodeDateString($value)
     {
-        // US date format with 4-digit year first
-        if (preg_match('#^(?<year>\\d{4})/(?<day>\\d+)/(?<month>\\d+)(?<time>.*)$#', $value, $matches)) {
-            trigger_error(
-                "Implicit y/d/m conversion. Use " . self::ISO_DATE . " to prevent this notice.",
-                E_USER_NOTICE
+        // split on known delimiters (. / -)
+        if (!preg_match(
+            '#^(?<first>\\d+)[-/\\.](?<second>\\d+)[-/\\.](?<third>\\d+)(?<time>.*)$#',
+            $value,
+            $matches
+        )) {
+            throw new InvalidArgumentException(
+                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
             );
-            return [$matches['day'], $matches['month'], $matches['year'], $matches['time']];
         }
 
-        // US date format without 4-digit year first: assume m/d/y
-        if (preg_match('#^(?<month>\\d+)/(?<day>\\d+)/(?<year>\\d+)(?<time>.*)$#', $value, $matches)) {
-            // Assume m/d/y
-            trigger_error(
-                "Implicit m/d/y conversion. Use " . self::ISO_DATE . " to prevent this notice.",
-                E_USER_NOTICE
+        $parts = [
+            $matches['first'],
+            $matches['second'],
+            $matches['third']
+        ];
+        // Flip d-m-y to y-m-d
+        if ($parts[0] < 1000 && $parts[2] > 1000) {
+            $parts = array_reverse($parts);
+        }
+        if ($parts[0] < 1000) {
+            throw new InvalidArgumentException(
+                "Invalid date: '$value'. Use " . self::ISO_DATE . " to prevent this error."
             );
-            return [$matches['day'], $matches['month'], $matches['year'], $matches['time']];
         }
-
-        // check d.m.y
-        if (preg_match('#^(?<day>\\d+)\\.(?<month>\\d+)\\.(?<year>\\d+)(?<time>.*)$#', $value, $matches)) {
-            return [$matches['day'], $matches['month'], $matches['year'], $matches['time']];
-        }
-
-        // check y-m-d
-        if (preg_match('#^(?<year>\\d+)\\-(?<month>\\d+)\\-(?<day>\\d+)(?<time>.*)$#', $value, $matches)) {
-            return [$matches['day'], $matches['month'], $matches['year'], $matches['time']];
-        }
-
-        throw new InvalidArgumentException(
-            "Invalid date passed. Use " . self::ISO_DATE . " to prevent this error."
-        );
-    }
-
-    /**
-     * @param int $year
-     * @return int Fixed year
-     */
-    protected function guessY2kYear($year)
-    {
-        // Fix y2k
-        if ($year < 100) {
-            trigger_error("Implicit y2k conversion. Please use full YYYY year for dates", E_USER_NOTICE);
-            if ($year >= 70) {
-                // 70 -> 99 converted to 19(x)
-                $year += 1900;
-            } else {
-                // 0 -> 69 converted to 20(x)
-                $year += 2000;
-            }
-        }
-        return $year;
+        $parts[] = $matches['time'];
+        return $parts;
     }
 }

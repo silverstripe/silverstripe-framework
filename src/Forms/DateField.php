@@ -8,9 +8,7 @@ use InvalidArgumentException;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
- * Form field to display an editable date string,
- * either in a single `<input type="text">` field,
- * or in three separate fields for day, month and year.
+ * Form used for editing a date stirng
  *
  * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
  * since the required frontend dependencies are included through CMS bundling.
@@ -29,11 +27,10 @@ use SilverStripe\ORM\FieldType\DBDatetime;
  *
  * # Usage
  *
- * ## Example: German dates with separate fields for day, month, year
+ * ## Example: Field localised with german date format
  *
  *   $f = new DateField('MyDate');
  *   $f->setLocale('de_DE');
- *   $f->setSeparateDMYFields(true);
  *
  * # Validation
  *
@@ -96,14 +93,6 @@ class DateField extends TextField
     protected $placeholders = true;
 
     /**
-     * Declare whether D, M and Y fields should be separate inputs.
-     * If set then only numeric values will be accepted.
-     *
-     * @var bool
-     */
-    protected $separateDMYFields = false;
-
-    /**
      * Override locale for client side.
      *
      * @var string
@@ -145,16 +134,11 @@ class DateField extends TextField
     /**
      * Set if calendar should be shown on the frontend.
      *
-     * If set to true, disables separate DMY fields
-     *
      * @param bool $show
      * @return $this
      */
     public function setShowCalendar($show)
     {
-        if ($show && $this->getSeparateDMYFields()) {
-            throw new InvalidArgumentException("Can't separate DMY fields and show calendar popup");
-        }
         $this->showCalendar = $show;
         return $this;
     }
@@ -316,39 +300,6 @@ class DateField extends TextField
         return $attributes;
     }
 
-    public function Field($properties = array())
-    {
-        if (!$this->getSeparateDMYFields()) {
-            return parent::Field($properties);
-        }
-
-        // Three separate fields for day, month and year
-        $valArr = $this->iso8601ToArray($this->Value());
-        $fieldDay = NumericField::create($this->name . '[day]', false, $valArr ? $valArr['day'] : null)
-            ->addExtraClass('day')
-            ->setMaxLength(2);
-        $fieldMonth = NumericField::create($this->name . '[month]', false, $valArr ? $valArr['month'] : null)
-            ->addExtraClass('month')
-            ->setMaxLength(2);
-        $fieldYear = NumericField::create($this->name . '[year]', false, $valArr ? $valArr['year'] : null)
-            ->addExtraClass('year')
-            ->setMaxLength(4);
-
-        // Set placeholders
-        if ($this->getPlaceholders()) {
-            $fieldDay->setAttribute('placeholder', _t(__CLASS__ . '.DAY', 'Day'));
-            $fieldMonth->setAttribute('placeholder', _t(__CLASS__ . '.MONTH', 'Month'));
-            $fieldYear->setAttribute('placeholder', _t(__CLASS__ . '.YEAR', 'Year'));
-        }
-
-        // Join all fields
-        // @todo custom ordering based on locale
-        $sep = '&nbsp;<span class="separator">/</span>&nbsp;';
-        return $fieldDay->Field() . $sep
-            . $fieldMonth->Field() . $sep
-            . $fieldYear->Field();
-    }
-
     public function Type()
     {
         return 'date text';
@@ -364,21 +315,11 @@ class DateField extends TextField
     public function setSubmittedValue($value, $data = null)
     {
         // Save raw value for later validation
-        if ($this->isEmptyArray($value)) {
-            $this->rawValue = null;
-        } else {
-            $this->rawValue = $value;
-        }
+        $this->rawValue = $value;
 
         // Null case
         if (!$value) {
             $this->value = null;
-            return $this;
-        }
-
-        // If loading from array convert
-        if (is_array($value)) {
-            $this->value = $this->arrayToISO8601($value);
             return $this;
         }
 
@@ -556,33 +497,6 @@ class DateField extends TextField
     }
 
     /**
-     * Declare whether D, M and Y fields should be separate inputs.
-     * If set then only numeric values will be accepted.
-     *
-     * @return bool
-     */
-    public function getSeparateDMYFields()
-    {
-        return $this->separateDMYFields;
-    }
-
-    /**
-     * Set if we should separate D M and Y fields. If set to true, disabled calendar
-     * popup.
-     *
-     * @param bool $separate
-     * @return $this
-     */
-    public function setSeparateDMYFields($separate)
-    {
-        if ($separate && $this->getShowCalendar()) {
-            throw new InvalidArgumentException("Can't separate DMY fields and show calendar popup");
-        }
-        $this->separateDMYFields = $separate;
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getMinDate()
@@ -645,62 +559,6 @@ class DateField extends TextField
         }
 
         return $config;
-    }
-
-    /**
-     * Convert iso 8601 date to array (day / month / year)
-     *
-     * @param string $date
-     * @return array|null Array form, or null if not valid
-     */
-    public function iso8601ToArray($date)
-    {
-        if (!$date) {
-            return null;
-        }
-        $formatter = $this->getISO8601Formatter();
-        $timestamp = $formatter->parse($date);
-        if ($timestamp === false) {
-            return null;
-        }
-
-        // Format time manually into an array
-        return [
-            'day' => date('j', $timestamp),
-            'month' => date('n', $timestamp),
-            'year' => date('Y', $timestamp),
-        ];
-    }
-
-    /**
-     * Convert array to timestamp
-     *
-     * @param array $value
-     * @return string
-     */
-    public function arrayToISO8601($value)
-    {
-        if ($this->isEmptyArray($value)) {
-            return null;
-        }
-
-        // ensure all keys are specified
-        if (!isset($value['month']) || !isset($value['day']) || !isset($value['year'])) {
-            return null;
-        }
-
-        // Ensure valid range
-        if (!checkdate($value['month'], $value['day'], $value['year'])) {
-            return null;
-        }
-
-        // Note: Set formatter to strict for array input
-        $formatter = $this->getISO8601Formatter();
-        $timestamp = mktime(0, 0, 0, $value['month'], $value['day'], $value['year']);
-        if ($timestamp === false) {
-            return null;
-        }
-        return $formatter->format($timestamp);
     }
 
     /**
@@ -775,16 +633,5 @@ class DateField extends TextField
     protected function getClientView()
     {
         return DateField_View_JQuery::create($this);
-    }
-
-    /**
-     * Check if this array is empty
-     *
-     * @param $value
-     * @return bool
-     */
-    public function isEmptyArray($value)
-    {
-        return is_array($value) && !array_filter($value);
     }
 }

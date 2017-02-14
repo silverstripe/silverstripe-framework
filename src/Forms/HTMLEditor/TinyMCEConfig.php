@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
-use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;

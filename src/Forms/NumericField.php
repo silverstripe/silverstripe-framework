@@ -306,4 +306,11 @@ class NumericField extends TextField
         $this->scale = $scale;
         return $this;
     }
+
+    public function performReadonlyTransformation()
+    {
+        $field = clone $this;
+        $field->setReadonly(true);
+        return $field;
+    }
 }

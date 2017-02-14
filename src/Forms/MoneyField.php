@@ -89,7 +89,7 @@ class MoneyField extends FormField
         $currencyValue = $this->fieldCurrency ? $this->fieldCurrency->dataValue() : null;
         $allowedCurrencies = $this->getAllowedCurrencies();
         if (count($allowedCurrencies) === 1) {
-            // Dropdown field for multiple currencies
+            // Hidden field for single currency
             $field = HiddenField::create("{$name}[Currency]");
             reset($allowedCurrencies);
             $currencyValue = key($allowedCurrencies);
@@ -164,7 +164,7 @@ class MoneyField extends FormField
                 'Currency' => $value->getCurrency(),
                 'Amount' => $value->getAmount(),
             ];
-        } else {
+        } elseif (!is_array($value)) {
             throw new InvalidArgumentException("Invalid currency format");
         }
 
@@ -232,8 +232,6 @@ class MoneyField extends FormField
     public function performReadonlyTransformation()
     {
         $clone = clone $this;
-        $clone->fieldAmount = $clone->fieldAmount->performReadonlyTransformation();
-        $clone->fieldCurrency = $clone->fieldCurrency->performReadonlyTransformation();
         $clone->setReadonly(true);
         return $clone;
     }

@@ -4,6 +4,7 @@ namespace SilverStripe\Forms\Tests;
 
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField;
+use SilverStripe\Forms\SeparatedDateField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -110,8 +111,7 @@ class DateFieldTest extends SapphireTest
 
     public function testSetValueWithDateArray()
     {
-        $f = new DateField('Date', 'Date');
-        $f->setSeparateDMYFields(true);
+        $f = new SeparatedDateField('Date', 'Date');
         $f->setSubmittedValue([
             'day' => 29,
             'month' => 03,
@@ -147,10 +147,8 @@ class DateFieldTest extends SapphireTest
 
     public function testEmptyValueValidation()
     {
-        $field = new DateField('Date');
         $validator = new RequiredFields();
-        $this->assertTrue($field->validate($validator));
-        $field->setSeparateDMYFields(true);
+        $field = new SeparatedDateField('Date');
         $this->assertTrue($field->validate($validator));
         $field->setSubmittedValue([
             'day' => '',
@@ -162,8 +160,7 @@ class DateFieldTest extends SapphireTest
 
     public function testValidateArray()
     {
-        $f = new DateField('Date', 'Date');
-        $f->setSeparateDMYFields(true);
+        $f = new SeparatedDateField('Date', 'Date');
         $f->setSubmittedValue([
             'day' => 29,
             'month' => 03,
@@ -193,9 +190,7 @@ class DateFieldTest extends SapphireTest
 
     public function testValidateEmptyArrayValuesSetsNullForValueObject()
     {
-        $f = new DateField('Date', 'Date');
-        $f->setSeparateDMYFields(true);
-
+        $f = new SeparatedDateField('Date', 'Date');
         $f->setSubmittedValue([
             'day' => '',
             'month' => '',
@@ -213,7 +208,7 @@ class DateFieldTest extends SapphireTest
 
     public function testValidateArrayValue()
     {
-        $f = new DateField('Date', 'Date');
+        $f = new SeparatedDateField('Date', 'Date');
         $f->setSubmittedValue(['day' => 29, 'month' => 03, 'year' => 2003]);
         $this->assertTrue($f->validate(new RequiredFields()));
 
