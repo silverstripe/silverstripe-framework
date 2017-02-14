@@ -208,6 +208,7 @@ class Upload extends Controller {
 			$this->file->ParentID = $parentFolder ? $parentFolder->ID : 0;
 			// This is to prevent it from trying to rename the file
 			$this->file->Name = basename($relativeFilePath);
+			$this->file->Title = preg_replace("/{$fileSuffix}$/", '', $tmpFile['name']);
 			$this->file->write();
 			$this->file->onAfterUpload();
 			$this->extend('onAfterLoad', $this->file, $tmpFile);   //to allow extensions to e.g. create a version after an upload
