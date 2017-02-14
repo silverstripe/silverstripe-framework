@@ -41,6 +41,7 @@ class ClassManifestTest extends SapphireTest {
 			'classb'                   => "{$this->base}/module/classes/ClassB.php",
 			'classc'                   => "{$this->base}/module/classes/ClassC.php",
 			'classd'                   => "{$this->base}/module/classes/ClassD.php",
+			'classe'                   => "{$this->base}/module/classes/ClassE.php",
 			'sstemplateparser'         => FRAMEWORK_PATH."/view/SSTemplateParser.php",
 			'sstemplateparseexception' => FRAMEWORK_PATH."/view/SSTemplateParser.php"
 		);
@@ -49,7 +50,7 @@ class ClassManifestTest extends SapphireTest {
 
 	public function testGetClassNames() {
 		$this->assertEquals(
-			array('sstemplateparser', 'sstemplateparseexception', 'classa', 'classb', 'classc', 'classd'),
+			array('sstemplateparser', 'sstemplateparseexception', 'classa', 'classb', 'classc', 'classd', 'classe'),
 			$this->manifest->getClassNames());
 	}
 
