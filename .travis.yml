@@ -62,9 +62,11 @@ script:
   - "if [ \"$NPM_TEST\" = \"1\" ]; then git diff -w --no-color; fi"
   - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
   - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run lint; fi"
+  - "if [ \"$PHPCS_TEST\" = \"1\" ]; then composer run-script lint; fi"
+
+after_success:
   - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage.xml; fi"
   - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi"
-  - "if [ \"$PHPCS_TEST\" = \"1\" ]; then composer run-script lint; fi"
 
 after_failure:
   - php ./tests/behat/travis-upload-artifacts.php --if-env BEHAT_TEST,ARTIFACTS_BUCKET,ARTIFACTS_KEY,ARTIFACTS_SECRET --target-path $TRAVIS_REPO_SLUG/$TRAVIS_BUILD_ID/$TRAVIS_JOB_ID --artifacts-base-url https://s3.amazonaws.com/$ARTIFACTS_BUCKET/
