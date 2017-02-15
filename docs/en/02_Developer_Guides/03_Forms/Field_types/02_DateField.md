@@ -56,11 +56,11 @@ strtotime()).
 		
 ## Separate Day / Month / Year Fields
 
-To display separate input fields for day, month and year separately you can use the `DateFieldSeparated` subclass`.
+To display separate input fields for day, month and year separately you can use the `SeparatedDateField` subclass`.
 HTML5 placeholders 'day', 'month' and 'year' are enabled by default. 
 
 	:::php
-	DateFieldSeparated::create('MyDate');
+	SeparatedDateField::create('MyDate');
 
 <div class="alert" markdown="1">
 Any custom date format settings will be ignored. 
