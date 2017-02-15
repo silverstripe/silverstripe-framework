@@ -624,7 +624,7 @@ class ShortcodeParser extends Object {
 				$this->replaceMarkerWithContent($shortcode, $tag);
 			}
 
-			$content = $htmlvalue->getContent();
+			$content = @$htmlvalue->getContent();
 
 			// Clean up any marker classes left over, for example, those injected into <script> tags
 			$parser = $this;
