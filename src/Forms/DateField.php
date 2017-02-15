@@ -133,6 +133,7 @@ class DateField extends TextField
 
     /**
      * Set if calendar should be shown on the frontend.
+     * @internal WARNING: Experimental and volatile API.
      *
      * @param bool $show
      * @return $this
