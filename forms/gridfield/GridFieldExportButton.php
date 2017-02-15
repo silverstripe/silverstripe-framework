@@ -110,11 +110,12 @@ class GridFieldExportButton implements GridField_HTMLProvider, GridField_ActionP
 
 			// determine the CSV headers. If a field is callable (e.g. anonymous function) then use the
 			// source name as the header instead
+
 			foreach($csvColumns as $columnSource => $columnHeader) {
-				if (is_array($columnHeader) && array_key_exists('title', $columnHeader)) { 
+				if (is_array($columnHeader) && array_key_exists('title', $columnHeader)) {
 					$headers[] = $columnHeader['title'];
-				 } else { 
-					$headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader; 
+				} else {
+					$headers[] = (!is_string($columnHeader) && is_callable($columnHeader)) ? $columnSource : $columnHeader;
 				}
 			}
 
