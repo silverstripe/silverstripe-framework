@@ -2,30 +2,50 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use PHPUnit_Framework_Error_Notice;
+use SilverStripe\i18n\i18n;
+use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Security\Member;
 
 class DBDateTest extends SapphireTest
 {
-
-    protected $originalTZ;
+    protected $oldError = null;
 
     public function setUp()
     {
-        // Set timezone to support timestamp->date conversion.
-        $this->originalTZ = date_default_timezone_get();
-        date_default_timezone_set('Pacific/Auckland');
         parent::setUp();
+        $this->oldError = error_reporting();
+        // Validate setup
+        assert(date_default_timezone_get() === 'UTC');
+        i18n::set_locale('en_NZ');
     }
 
     public function tearDown()
     {
-        date_default_timezone_set($this->originalTZ);
+        $this->restoreNotices();
         parent::tearDown();
+    }
+
+    /**
+     * Temporarily disable notices
+     */
+    protected function suppressNotices()
+    {
+        error_reporting(error_reporting() & ~E_USER_NOTICE);
+        \PHPUnit_Framework_Error_Notice::$enabled = false;
+    }
+
+    /**
+     * Restore notices
+     */
+    protected function restoreNotices()
+    {
+        error_reporting($this->oldError);
+        \PHPUnit_Framework_Error_Notice::$enabled = true;
     }
 
     public function testNiceDate()
@@ -51,62 +71,52 @@ class DBDateTest extends SapphireTest
             "Date->Nice() works with timestamp strings"
         );
         $this->assertEquals(
-            '04/03/2003',
-            DBField::create_field('Date', '4/3/03')->Nice(),
-            "Date->Nice() works with D/M/YY format"
+            '4/03/2003',
+            DBField::create_field('Date', '4.3.2003')->Nice(),
+            "Date->Nice() works with D.M.YYYY format"
         );
         $this->assertEquals(
-            '04/03/2003',
-            DBField::create_field('Date', '04/03/03')->Nice(),
-            "Date->Nice() works with DD/MM/YY format"
+            '4/03/2003',
+            DBField::create_field('Date', '04.03.2003')->Nice(),
+            "Date->Nice() works with DD.MM.YYYY format"
         );
         $this->assertEquals(
-            '04/03/2003',
-            DBField::create_field('Date', '4/3/03')->Nice(),
-            "Date->Nice() works with D/M/YY format"
+            '4/03/2003',
+            DBField::create_field('Date', '2003-3-4')->Nice(),
+            "Date->Nice() works with YYYY-M-D format"
         );
         $this->assertEquals(
-            '04/03/2003',
-            DBField::create_field('Date', '4/03/03')->Nice(),
-            "Date->Nice() works with D/M/YY format"
-        );
-        $this->assertEquals(
-            '04/03/2003',
-            DBField::create_field('Date', '4/3/2003')->Nice(),
-            "Date->Nice() works with D/M/YYYY format"
-        );
-        $this->assertEquals(
-            '04/03/2003',
-            DBField::create_field('Date', '4-3-2003')->Nice(),
-            "Date->Nice() works with D-M-YYYY format"
-        );
-        $this->assertEquals(
-            '04/03/2003',
+            '4/03/2003',
             DBField::create_field('Date', '2003-03-04')->Nice(),
             "Date->Nice() works with YYYY-MM-DD format"
         );
-        $this->assertEquals(
-            '04/03/2003',
-            DBField::create_field('Date', '04/03/2003')->Nice(),
-            "Date->Nice() works with DD/MM/YYYY format"
-        );
-        $this->assertEquals(
-            '04/03/2003',
-            DBField::create_field('Date', '04-03-2003')->Nice(),
-            "Date->Nice() works with DD/MM/YYYY format"
-        );
-
-        $date = DBField::create_field('Date', '2003-03-04');
-        Config::inst()->update('SilverStripe\\ORM\\FieldType\\DBDate', 'nice_format', 'd F Y');
-        $this->assertEquals('04 March 2003', $date->Nice());
     }
 
-    public function testNiceUS()
+    public function testMDYConversion()
     {
+        $this->setExpectedException(
+            \InvalidArgumentException::class,
+            "Invalid date: '3/16/2003'. Use " . DBDate::ISO_DATE . " to prevent this error."
+        );
+        DBField::create_field('Date', '3/16/2003');
+    }
+
+    public function testY2kCorrection()
+    {
+        $this->setExpectedException(
+            \InvalidArgumentException::class,
+            "Invalid date: '03-03-04'. Use " . DBDate::ISO_DATE . " to prevent this error."
+        );
+        DBField::create_field('Date', '03-03-04');
+    }
+
+    public function testInvertedYearCorrection()
+    {
+        // iso8601 expects year first, but support year last
         $this->assertEquals(
-            '03/31/2008',
-            DBField::create_field('Date', 1206968400)->NiceUs(),
-            "Date->NiceUs() works with timestamp integers"
+            '4/03/2003',
+            DBField::create_field('Date', '04-03-2003')->Nice(),
+            "Date->Nice() works with DD-MM-YYYY format"
         );
     }
 
@@ -119,11 +129,11 @@ class DBDateTest extends SapphireTest
         );
     }
 
-    public function testDay()
+    public function testDayOfWeek()
     {
         $this->assertEquals(
             'Monday',
-            DBField::create_field('Date', 1206968400)->Day(),
+            DBField::create_field('Date', 1206968400)->DayOfWeek(),
             "Date->Day() works with timestamp integers"
         );
     }
@@ -175,15 +185,15 @@ class DBDateTest extends SapphireTest
         );
         $this->assertEquals(
             '3 April 2003',
-            DBField::create_field('Date', '3/4/2003')->Long(),
-            "Date->Long() works with D/M/YYYY"
+            DBField::create_field('Date', '3.4.2003')->Long(),
+            "Date->Long() works with D.M.YYYY"
         );
     }
 
     public function testFull()
     {
         $this->assertEquals(
-            '31 Mar 2008',
+            'Monday, 31 March 2008',
             DBField::create_field('Date', 1206968400)->Full(),
             "Date->Full() works with timestamp integers"
         );
@@ -225,13 +235,14 @@ class DBDateTest extends SapphireTest
     public function testExtendedDates()
     {
         $date = DBField::create_field('Date', '1800-10-10');
-        $this->assertEquals('10 Oct 1800', $date->Format('d M Y'));
+        $this->assertEquals('10 Oct 1800', $date->Format('dd MMM y'));
 
-        $date = DBField::create_field('Date', '1500-10-10');
-        $this->assertEquals('10 Oct 1500', $date->Format('d M Y'));
+        // Note: Fails around 1500 or older
+        $date = DBField::create_field('Date', '1600-10-10');
+        $this->assertEquals('10 Oct 1600', $date->Format('dd MMM y'));
 
         $date = DBField::create_field('Date', '3000-4-3');
-        $this->assertEquals('03 Apr 3000', $date->Format('d M Y'));
+        $this->assertEquals('03 Apr 3000', $date->Format('dd MMM y'));
     }
 
     public function testAgoInPast()
@@ -314,27 +325,40 @@ class DBDateTest extends SapphireTest
         DBDatetime::clear_mock_now();
     }
 
-    public function testFormatFromSettings()
+    /**
+     * @see testFormatFromSettings
+     * @return array
+     */
+    public function dataTestFormatFromSettings()
     {
+        return [
+            ['2000-12-31', '31/12/2000'],
+            ['31-12-2000', '31/12/2000'],
+            ['2014-04-01', '01/04/2014'],
+        ];
+    }
 
-        $memberID = $this->logInWithPermission();
-        $member = DataObject::get_by_id(Member::class, $memberID);
-        $member->DateFormat = 'dd/MM/YYYY';
-        $member->write();
+    /**
+     * @dataProvider dataTestFormatFromSettings
+     * @param string $from
+     * @param string $to
+     */
+    public function testFormatFromSettings($from, $to)
+    {
+        $this->suppressNotices();
+        $member = new Member();
+        $member->DateFormat = 'dd/MM/y';
 
-        $fixtures = array(
-            '2000-12-31' => '31/12/2000',
-            '31-12-2000' => '31/12/2000',
-            '31/12/2000' => '31/12/2000',
-            '2014-04-01' => '01/04/2014'
-        );
+        $date = DBField::create_field('Date', $from);
+        $this->assertEquals($to, $date->FormatFromSettings($member));
+    }
 
-        foreach ($fixtures as $from => $to) {
-            $date = DBField::create_field('Date', $from);
-            // With member
-            $this->assertEquals($to, $date->FormatFromSettings($member));
-            // Without member
-            $this->assertEquals($to, $date->FormatFromSettings());
-        }
+    /**
+     * Test that FormatFromSettings without a member defaults to Nice()
+     */
+    public function testFormatFromSettingsEmpty()
+    {
+        $date = DBfield::create_field('Date', '2000-12-31');
+        $this->assertEquals('31/12/2000', $date->FormatFromSettings());
     }
 }

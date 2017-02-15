@@ -57,11 +57,7 @@ class GridState extends HiddenField
         return $d;
     }
 
-    /**
-     * @param mixed $value
-     * @return $this
-     */
-    public function setValue($value)
+    public function setValue($value, $data = null)
     {
         if (is_string($value)) {
             $this->data = new GridState_Data(json_decode($value, true));

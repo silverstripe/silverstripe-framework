@@ -151,7 +151,7 @@ class PhoneNumberField extends FieldGroup
         return parent::Field($properties);
     }
 
-    public function setValue($value)
+    public function setValue($value, $data = null)
     {
         $this->value = self::joinPhoneNumber($value);
         $parts = $this->parseValue();

@@ -10,24 +10,10 @@ use SilverStripe\i18n\i18n;
 
 class TimeFieldTest extends SapphireTest
 {
-
     public function setUp()
     {
         parent::setUp();
-
-        $this->originalLocale = i18n::get_locale();
         i18n::set_locale('en_NZ');
-        $this->origTimeConfig = Config::inst()->get('SilverStripe\\Forms\\TimeField', 'default_config');
-        Config::inst()->update('SilverStripe\\Forms\\TimeField', 'default_config', array('timeformat' => 'HH:mm:ss'));
-    }
-
-    public function tearDown()
-    {
-        parent::tearDown();
-
-        i18n::set_locale($this->originalLocale);
-        Config::inst()->remove('SilverStripe\\Forms\\TimeField', 'default_config');
-        Config::inst()->update('SilverStripe\\Forms\\TimeField', 'default_config', $this->origTimeConfig);
     }
 
     public function testConstructorWithoutArgs()
@@ -71,51 +57,29 @@ class TimeFieldTest extends SapphireTest
         $this->assertEquals(
             $f->dataValue(),
             '23:00:00',
-            'Setting value to "11pm" parses with use_strtotime enabled'
+            'Setting value to "11pm" parses with strtotime enabled'
         );
         $this->assertTrue($f->validate(new RequiredFields()));
 
         $f = new TimeField('Time', 'Time');
-        $f->setConfig('use_strtotime', false);
-        $f->setValue('11pm');
-        $this->assertEquals(
-            $f->dataValue(),
-            null,
-            'Setting value to "11pm" parses with use_strtotime enabled'
-        );
-        $this->assertFalse($f->validate(new RequiredFields()));
-
-        $f = new TimeField('Time', 'Time');
-        $f->setValue('11pm');
-        $this->assertEquals($f->dataValue(), '23:00:00');
-
-        $f = new TimeField('Time', 'Time');
         $f->setValue('11:59pm');
-        $this->assertEquals($f->dataValue(), '23:59:00');
+        $this->assertEquals('23:59:00', $f->dataValue());
 
         $f = new TimeField('Time', 'Time');
         $f->setValue('11:59 pm');
-        $this->assertEquals($f->dataValue(), '23:59:00');
-
-        $f = new TimeField('Time', 'Time');
-        $f->setValue('11:59:38 pm');
-        $this->assertEquals($f->dataValue(), '23:59:38');
+        $this->assertEquals('23:59:00', $f->dataValue());
 
         $f = new TimeField('Time', 'Time');
         $f->setValue('23:59');
-        $this->assertEquals($f->dataValue(), '23:59:00');
+        $this->assertEquals('23:59:00', $f->dataValue());
 
         $f = new TimeField('Time', 'Time');
         $f->setValue('23:59:38');
-        $this->assertEquals($f->dataValue(), '23:59:38');
+        $this->assertEquals('23:59:38', $f->dataValue());
 
         $f = new TimeField('Time', 'Time');
         $f->setValue('12:00 am');
         $this->assertEquals($f->dataValue(), '00:00:00');
-
-        $f = new TimeField('Time', 'Time');
-        $f->setValue('12:00:01 am');
-        $this->assertEquals($f->dataValue(), '00:00:01');
     }
 
     public function testOverrideWithNull()
@@ -137,25 +101,25 @@ class TimeFieldTest extends SapphireTest
 
         // Check pm
         $f = new TimeField('Time', 'Time');
-        $f->setConfig('timeformat', 'h:mm:ss a');
+        $f->setTimeFormat('h:mm:ss a');
         $f->setValue('3:59 pm');
         $this->assertEquals($f->dataValue(), '15:59:00');
 
         // Check am
         $f = new TimeField('Time', 'Time');
-        $f->setConfig('timeformat', 'h:mm:ss a');
+        $f->setTimeFormat('h:mm:ss a');
         $f->setValue('3:59 am');
         $this->assertEquals($f->dataValue(), '03:59:00');
 
         // Check with ISO date/time
         $f = new TimeField('Time', 'Time');
-        $f->setConfig('timeformat', 'h:mm:ss a');
+        $f->setTimeFormat('h:mm:ss a');
         $f->setValue('15:59:00');
         $this->assertEquals($f->dataValue(), '15:59:00');
 
         // ISO am
         $f = new TimeField('Time', 'Time');
-        $f->setConfig('timeformat', 'h:mm:ss a');
+        $f->setTimeFormat('h:mm:ss a');
         $f->setValue('03:59:00');
         $this->assertEquals($f->dataValue(), '03:59:00');
     }

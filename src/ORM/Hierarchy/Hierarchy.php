@@ -6,6 +6,7 @@ use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Control\Controller;
+use SilverStripe\Core\Resettable;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ArrayList;
@@ -22,7 +23,7 @@ use Exception;
  * @property DataObject $owner
  * @method DataObject Parent()
  */
-class Hierarchy extends DataExtension
+class Hierarchy extends DataExtension implements Resettable
 {
 
     protected $markedNodes;

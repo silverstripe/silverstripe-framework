@@ -142,7 +142,7 @@ class HTMLEditorField extends TextareaField
         $record->{$this->name} = $htmlValue->getContent();
     }
 
-    public function setValue($value)
+    public function setValue($value, $data = null)
     {
         // Regenerate links prior to preview, so that the editor can see them.
         $value = Image::regenerate_html_links($value);

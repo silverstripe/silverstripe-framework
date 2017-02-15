@@ -295,10 +295,14 @@ form.small .field, .field.small {
 	}
 
 	/* Date Fields */
-	input.month, input.day, input.year {
+	input.month, input.day {
 		width: ($grid-x * 7);
     display: inline;
 	}
+  input.year {
+    width: ($grid-x * 9);
+    display: inline;
+  }
 
 	input.time {
 		width: ($grid-x * 11); // smaller time field, since input is restricted

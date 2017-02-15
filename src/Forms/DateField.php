@@ -2,231 +2,303 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
+use IntlDateFormatter;
 use SilverStripe\i18n\i18n;
 use InvalidArgumentException;
-use Zend_Locale;
-use Zend_Date;
-
-require_once 'Zend/Date.php';
+use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
- * Form field to display an editable date string,
- * either in a single `<input type="text">` field,
- * or in three separate fields for day, month and year.
- *
- * # Configuration
- *
- * - 'showcalendar' (boolean): Determines if a calendar picker is shown.
- *    By default, jQuery UI datepicker is used (see {@link DateField_View_JQuery}).
- * - 'jslocale' (string): Overwrites the "Locale" value set in this class.
- *    Only useful in combination with {@link DateField_View_JQuery}.
- * - 'dmyfields' (boolean): Show three input fields for day, month and year separately.
- *    CAUTION: Might not be useable in combination with 'showcalendar', depending on the used javascript library
- * - 'dmyseparator' (string): HTML markup to separate day, month and year fields.
- *    Only applicable with 'dmyfields'=TRUE. Use 'dateformat' to influence date representation with 'dmyfields'=FALSE.
- * - 'dmyplaceholders': Show HTML5 placehoder text to allow identification of the three separate input fields
- * - 'dateformat' (string): Date format compatible with Zend_Date.
- *    Usually set to default format for {@link locale} through {@link Zend_Locale_Format::getDateFormat()}.
- * - 'datavalueformat' (string): Internal ISO format string used by {@link dataValue()} to save the
- *    date to a database.
- * - 'min' (string): Minimum allowed date value (in ISO format, or strtotime() compatible).
- *    Example: '2010-03-31', or '-7 days'
- * - 'max' (string): Maximum allowed date value (in ISO format, or strtotime() compatible).
- *    Example: '2010-03-31', or '1 year'
- *
- * Depending which UI helper is used, further namespaced configuration options are available.
- * For the default jQuery UI, all options prefixed/namespaced with "jQueryUI." will be respected as well.
- * Example: <code>$myDateField->setConfig('jQueryUI.showWeek', true);</code>
- * See http://docs.jquery.com/UI/Datepicker for details.
+ * Form used for editing a date stirng
  *
  * Caution: The form field does not include any JavaScript or CSS when used outside of the CMS context,
  * since the required frontend dependencies are included through CMS bundling.
  *
  * # Localization
  *
- * The field will get its default locale from {@link i18n::get_locale()}, and set the `dateformat`
- * configuration accordingly. Changing the locale through {@link setLocale()} will not update the
- * `dateformat` configuration automatically.
+ * Date formatting can be controlled in the below order of priority:
+ *  - Format set via setDateFormat()
+ *  - Format generated from current locale set by setLocale() and setDateLength()
+ *  - Format generated from current locale in i18n
+ *
+ * You can also specify a setClientLocale() to set the javascript to a specific locale
+ * on the frontend. However, this will not override the date format string.
  *
  * See http://doc.silverstripe.org/framework/en/topics/i18n for more information about localizing form fields.
  *
  * # Usage
  *
- * ## Example: German dates with separate fields for day, month, year
+ * ## Example: Field localised with german date format
  *
  *   $f = new DateField('MyDate');
  *   $f->setLocale('de_DE');
- *   $f->setConfig('dmyfields', true);
  *
  * # Validation
  *
  * Caution: JavaScript validation is only supported for the 'en_NZ' locale at the moment,
  * it will be disabled automatically for all other locales.
+ *
+ * # Formats
+ *
+ * All format strings should follow the CLDR standard as per
+ * http://userguide.icu-project.org/formatparse/datetime. These will be converted
+ * automatically to jquery UI format.
+ *
+ * The value of this field in PHP will be ISO 8601 standard (e.g. 2004-02-12), and
+ * stores this as a timestamp internally.
+ *
+ * Note: Do NOT use php date format strings. Date format strings follow the date
+ * field symbol table as below.
+ *
+ * @see http://userguide.icu-project.org/formatparse/datetime
+ * @see http://api.jqueryui.com/datepicker/#utility-formatDate
  */
 class DateField extends TextField
 {
-
     protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_DATE;
 
     /**
-     * @config
-     * @var array
-     */
-    private static $default_config = array(
-        'showcalendar' => false,
-        'jslocale' => null,
-        'dmyfields' => false,
-        'dmyseparator' => '&nbsp;<span class="separator">/</span>&nbsp;',
-        'dmyplaceholders' => true,
-        'dateformat' => null,
-        'datavalueformat' => 'yyyy-MM-dd',
-        'min' => null,
-        'max' => null,
-    );
-
-    /**
-     * @var array
-     */
-    protected $config;
-
-    /**
-     * @var String
+     * Override locale. If empty will default to current locale
+     *
+     * @var string
      */
     protected $locale = null;
 
     /**
-     * @var Zend_Date Just set if the date is valid.
-     * {@link $value} will always be set to aid validation,
-     * and might contain invalid values.
+     * Override date format. If empty will default to that used by the current locale.
+     *
+     * @var null
      */
-    protected $valueObj = null;
+    protected $dateFormat = null;
 
-    public function __construct($name, $title = null, $value = null)
+    /**
+     * Set if js calendar should popup
+     *
+     * @var bool
+     */
+    protected $showCalendar = false;
+
+    /**
+     * Length of this date (full, short, etc).
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     * @var int
+     */
+    protected $dateLength = null;
+
+    /**
+     * Set whether to show placeholders
+     *
+     * @var bool
+     */
+    protected $placeholders = true;
+
+    /**
+     * Override locale for client side.
+     *
+     * @var string
+     */
+    protected $clientLocale = null;
+
+    /**
+     * Min date
+     *
+     * @var string ISO 8601 date for min date
+     */
+    protected $minDate = null;
+
+    /**
+     * Max date
+     *
+     * @var string ISO 860 date for max date
+     */
+    protected $maxDate = null;
+
+    /**
+     * Unparsed value, used exclusively for comparing with internal value
+     * to detect invalid values.
+     *
+     * @var mixed
+     */
+    protected $rawValue = null;
+
+    /**
+     * Check if calendar should be shown on the frontend
+     *
+     * @return bool
+     */
+    public function getShowCalendar()
     {
-        if (!$this->locale) {
-            $this->locale = i18n::get_locale();
+        return $this->showCalendar;
+    }
+
+    /**
+     * Set if calendar should be shown on the frontend.
+     * @internal WARNING: Experimental and volatile API.
+     *
+     * @param bool $show
+     * @return $this
+     */
+    public function setShowCalendar($show)
+    {
+        $this->showCalendar = $show;
+        return $this;
+    }
+
+    /**
+     * Get length of the date format to use. One of:
+     *
+     *  - IntlDateFormatter::SHORT
+     *  - IntlDateFormatter::MEDIUM
+     *  - IntlDateFormatter::LONG
+     *  - IntlDateFormatter::FULL
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     * @return int
+     */
+    public function getDateLength()
+    {
+        if ($this->dateLength) {
+            return $this->dateLength;
+        }
+        return IntlDateFormatter::MEDIUM;
+    }
+
+    /**
+     * Get length of the date format to use. One of:
+     *
+     *  - IntlDateFormatter::SHORT
+     *  - IntlDateFormatter::MEDIUM
+     *  - IntlDateFormatter::LONG
+     *  - IntlDateFormatter::FULL
+     *
+     * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
+     *
+     * @param int $length
+     * @return $this
+     */
+    public function setDateLength($length)
+    {
+        $this->dateLength = $length;
+        return $this;
+    }
+
+    /**
+     * Get date format in CLDR standard format
+     *
+     * This can be set explicitly. If not, this will be generated from the current locale
+     * with the current date length.
+     *
+     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     */
+    public function getDateFormat()
+    {
+        if ($this->dateFormat) {
+            return $this->dateFormat;
         }
 
-        $this->config = $this->config()->default_config;
-        if (!$this->getConfig('dateformat')) {
-            $this->setConfig('dateformat', i18n::config()->get('date_format'));
-        }
+        // Get from locale
+        return $this->getFormatter()->getPattern();
+    }
 
-        foreach ($this->config()->default_config as $defaultK => $defaultV) {
-            if ($defaultV) {
-                if ($defaultK=='locale') {
-                    $this->locale = $defaultV;
-                } else {
-                    $this->setConfig($defaultK, $defaultV);
-                }
+    /**
+     * Set date format in CLDR standard format.
+     *
+     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @param string $format
+     * @return $this
+     */
+    public function setDateFormat($format)
+    {
+        $this->dateFormat = $format;
+        return $this;
+    }
+
+    /**
+     * Get date formatter with the standard locale / date format
+     *
+     * @return IntlDateFormatter
+     */
+    protected function getFormatter()
+    {
+        $formatter = IntlDateFormatter::create(
+            $this->getLocale(),
+            $this->getDateLength(),
+            IntlDateFormatter::NONE
+        );
+
+        // Don't invoke getDateFormat() directly to avoid infinite loop
+        if ($this->dateFormat) {
+            $ok = $formatter->setPattern($this->dateFormat);
+            if (!$ok) {
+                throw new InvalidArgumentException("Invalid date format {$this->dateFormat}");
             }
         }
+        return $formatter;
+    }
 
-        parent::__construct($name, $title, $value);
+    /**
+     * Get a date formatter for the ISO 8601 format
+     *
+     * @return IntlDateFormatter
+     */
+    protected function getISO8601Formatter()
+    {
+        $formatter = IntlDateFormatter::create(
+            i18n::config()->get('default_locale'),
+            IntlDateFormatter::MEDIUM,
+            IntlDateFormatter::NONE
+        );
+        $formatter->setLenient(false);
+        // CLDR iso8601 date.
+        $formatter->setPattern('y-MM-dd');
+        return $formatter;
     }
 
     public function FieldHolder($properties = array())
     {
-        if ($this->getConfig('showcalendar')) {
-            // TODO Replace with properly extensible view helper system
-            $d = DateField_View_JQuery::create($this);
-            if (!$d->regionalSettingsExist()) {
-                $dateformat = $this->getConfig('dateformat');
+        return $this->renderWithClientView(function () use ($properties) {
+            return parent::FieldHolder($properties);
+        });
+    }
 
-                // if no localefile is present, the jQuery DatePicker
-                // month- and daynames will default to English, so the date
-                // will not pass Zend validatiobn. We provide a fallback
-                if (preg_match('/(MMM+)|(EEE+)/', $dateformat)) {
-                    $this->setConfig('dateformat', $this->getConfig('datavalueformat'));
-                }
-            }
-            $d->onBeforeRender();
+    public function SmallFieldHolder($properties = array())
+    {
+        return $this->renderWithClientView(function () use ($properties) {
+            return parent::SmallFieldHolder($properties);
+        });
+    }
+
+    /**
+     * Generate field with client view enabled
+     *
+     * @param callable $callback
+     * @return string
+     */
+    protected function renderWithClientView($callback)
+    {
+        $clientView = null;
+        if ($this->getShowCalendar()) {
+            $clientView = $this->getClientView();
+            $clientView->onBeforeRender();
         }
-        $html = parent::FieldHolder();
-
-        if (!empty($d)) {
-            $html = $d->onAfterRender($html);
+        $html = $callback();
+        if ($clientView) {
+            $html = $clientView->onAfterRender($html);
         }
         return $html;
     }
 
-    function SmallFieldHolder($properties = array())
+    public function getAttributes()
     {
-        $d = DateField_View_JQuery::create($this);
-        $d->onBeforeRender();
-        $html = parent::SmallFieldHolder($properties);
-        $html = $d->onAfterRender($html);
-        return $html;
-    }
+        $attributes = parent::getAttributes();
 
-    public function Field($properties = array())
-    {
-        $config = array(
-            'showcalendar' => $this->getConfig('showcalendar'),
-            'isoDateformat' => $this->getConfig('dateformat'),
-            'jquerydateformat' => DateField_View_JQuery::convert_iso_to_jquery_format($this->getConfig('dateformat')),
-            'min' => $this->getConfig('min'),
-            'max' => $this->getConfig('max')
-        );
-
-        // Add other jQuery UI specific, namespaced options (only serializable, no callbacks etc.)
-        // TODO Move to DateField_View_jQuery once we have a properly extensible HTML5 attribute system for FormField
-        $jqueryUIConfig = array();
-        foreach ($this->getConfig() as $k => $v) {
-            if (preg_match('/^jQueryUI\.(.*)/', $k, $matches)) {
-                $jqueryUIConfig[$matches[1]] = $v;
-            }
-        }
-        if ($jqueryUIConfig) {
-            $config['jqueryuiconfig'] =  Convert::array2json(array_filter($jqueryUIConfig));
-        }
-        $config = array_filter($config);
-        foreach ($config as $k => $v) {
-            $this->setAttribute('data-' . $k, $v);
+        // Merge with client config
+        $config = $this->getClientConfig();
+        foreach ($config as $key => $value) {
+            $attributes["data-{$key}"] = $value;
         }
 
-        // Three separate fields for day, month and year
-        if ($this->getConfig('dmyfields')) {
-            // values
-            $valArr = ($this->valueObj) ? $this->valueObj->toArray() : null;
-
-            // fields
-            $fieldNames = Zend_Locale::getTranslationList('Field', $this->locale);
-            $fieldDay = NumericField::create($this->name . '[day]', false, ($valArr) ? $valArr['day'] : null)
-                ->addExtraClass('day')
-                ->setAttribute('placeholder', $this->getConfig('dmyplaceholders') ? $fieldNames['day'] : null)
-                ->setMaxLength(2);
-
-            $fieldMonth = NumericField::create($this->name . '[month]', false, ($valArr) ? $valArr['month'] : null)
-                ->addExtraClass('month')
-                ->setAttribute('placeholder', $this->getConfig('dmyplaceholders') ? $fieldNames['month'] : null)
-                ->setMaxLength(2);
-
-            $fieldYear = NumericField::create($this->name . '[year]', false, ($valArr) ? $valArr['year'] : null)
-                ->addExtraClass('year')
-                ->setAttribute('placeholder', $this->getConfig('dmyplaceholders') ? $fieldNames['year'] : null)
-                ->setMaxLength(4);
-
-            // order fields depending on format
-            $sep = $this->getConfig('dmyseparator');
-            $format = $this->getConfig('dateformat');
-            $fields = array();
-            $fields[stripos($format, 'd')] = $fieldDay->Field();
-            $fields[stripos($format, 'm')] = $fieldMonth->Field();
-            $fields[stripos($format, 'y')] = $fieldYear->Field();
-            ksort($fields);
-            $html = implode($sep, $fields);
-
-            // dmyfields doesn't work with showcalendar
-            $this->setConfig('showcalendar', false);
-        } // Default text input field
-        else {
-            $html = parent::Field();
-        }
-
-        return $html;
+        return $attributes;
     }
 
     public function Type()
@@ -235,123 +307,59 @@ class DateField extends TextField
     }
 
     /**
-     * Sets the internal value to ISO date format.
+     * Assign value posted from form submission
      *
-     * @param mixed $val
+     * @param mixed $value
+     * @param mixed $data
      * @return $this
      */
-    public function setValue($val)
+    public function setSubmittedValue($value, $data = null)
     {
-        $locale = new Zend_Locale($this->locale);
+        // Save raw value for later validation
+        $this->rawValue = $value;
 
-        if (empty($val)) {
+        // Null case
+        if (!$value) {
             $this->value = null;
-            $this->valueObj = null;
-        } else {
-            if ($this->getConfig('dmyfields')) {
-                // Setting in correct locale
-                if (is_array($val) && $this->validateArrayValue($val)) {
-                    // set() gets confused with custom date formats when using array notation
-                    if (!(empty($val['day']) || empty($val['month']) || empty($val['year']))) {
-                        $this->valueObj = new Zend_Date($val, null, $locale);
-                        $this->value = $this->valueObj->toArray();
-                    } else {
-                        $this->value = $val;
-                        $this->valueObj = null;
-                    }
-                } // load ISO date from database (usually through Form->loadDataForm())
-                elseif (!empty($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'), $locale)) {
-                    $this->valueObj = new Zend_Date($val, $this->getConfig('datavalueformat'), $locale);
-                    $this->value = $this->valueObj->toArray();
-                } else {
-                    $this->value = $val;
-                    $this->valueObj = null;
-                }
-            } else {
-                // Setting in correct locale.
-                // Caution: Its important to have this check *before* the ISO date fallback,
-                // as some dates are falsely detected as ISO by isDate(), e.g. '03/04/03'
-                // (en_NZ for 3rd of April, definetly not yyyy-MM-dd)
-                if (!empty($val) && Zend_Date::isDate($val, $this->getConfig('dateformat'), $locale)) {
-                    $this->valueObj = new Zend_Date($val, $this->getConfig('dateformat'), $locale);
-                    $this->value = $this->valueObj->get($this->getConfig('dateformat'), $locale);
-                } // load ISO date from database (usually through Form->loadDataForm())
-                elseif (!empty($val) && Zend_Date::isDate($val, $this->getConfig('datavalueformat'))) {
-                    $this->valueObj = new Zend_Date($val, $this->getConfig('datavalueformat'));
-                    $this->value = $this->valueObj->get($this->getConfig('dateformat'), $locale);
-                } else {
-                    $this->value = $val;
-                    $this->valueObj = null;
-                }
-            }
+            return $this;
         }
 
+        // Parse from submitted value
+        $this->value = $this->localisedToISO8601($value);
         return $this;
     }
 
-    /**
-     * @return String ISO 8601 date, suitable for insertion into database
-     */
-    public function dataValue()
+    public function setValue($value, $data = null)
     {
-        if ($this->valueObj) {
-            return $this->valueObj->toString($this->getConfig('datavalueformat'));
-        } else {
-            return null;
+        // Save raw value for later validation
+        $this->rawValue = $value;
+
+        // Null case
+        if (!$value) {
+            $this->value = null;
+            return $this;
         }
+
+        if (is_array($value)) {
+            throw new InvalidArgumentException("Use setSubmittedValue to assign by array");
+        }
+
+        // Re-run through formatter to tidy up (e.g. remove time component)
+        $this->value = $this->tidyISO8601($value);
+        return $this;
+    }
+
+    public function Value()
+    {
+        return $this->iso8601ToLocalised($this->value);
     }
 
     public function performReadonlyTransformation()
     {
-        $field = $this->castedCopy('SilverStripe\\Forms\\DateField_Disabled');
+        $field = $this->castedCopy(DateField_Disabled::class);
         $field->setValue($this->dataValue());
-        $field->readonly = true;
-
+        $field->setReadonly(true);
         return $field;
-    }
-
-    /**
-     * @param mixed $class
-     * @return FormField
-     */
-    public function castedCopy($class)
-    {
-        /** @var FormField $copy */
-        $copy = Injector::inst()->create($class, $this->name);
-        if ($copy->hasMethod('setConfig')) {
-            /** @var DateField $copy */
-            $config = $this->getConfig();
-            foreach ($config as $k => $v) {
-                $copy->setConfig($k, $v);
-            }
-        }
-
-        return parent::castedCopy($copy);
-    }
-
-    /**
-     * Validate an array with expected keys 'day', 'month' and 'year.
-     * Used because Zend_Date::isDate() doesn't provide this.
-     *
-     * @param array $val
-     * @return bool
-     */
-    public function validateArrayValue($val)
-    {
-        if (!is_array($val)) {
-            return false;
-        }
-
-        // Validate against Zend_Date,
-        // but check for empty array keys (they're included in standard form submissions)
-        return (
-            array_key_exists('year', $val)
-            && (!$val['year'] || Zend_Date::isDate($val['year'], 'yyyy', $this->locale))
-            && array_key_exists('month', $val)
-            && (!$val['month'] || Zend_Date::isDate($val['month'], 'MM', $this->locale))
-            && array_key_exists('day', $val)
-            && (!$val['day'] || Zend_Date::isDate($val['day'], 'dd', $this->locale))
-        );
     }
 
     /**
@@ -361,66 +369,52 @@ class DateField extends TextField
     public function validate($validator)
     {
         // Don't validate empty fields
-        if (empty($this->value)) {
+        if (empty($this->rawValue)) {
             return true;
         }
 
-        // date format
-        if ($this->getConfig('dmyfields')) {
-            $valid = (!$this->value || $this->validateArrayValue($this->value));
-        } else {
-            $valid = (Zend_Date::isDate($this->value, $this->getConfig('dateformat'), $this->locale));
-        }
-        if (!$valid) {
+        // We submitted a value, but it couldn't be parsed
+        if (empty($this->value)) {
             $validator->validationError(
                 $this->name,
                 _t(
                     'DateField.VALIDDATEFORMAT2',
                     "Please enter a valid date format ({format})",
-                    array('format' => $this->getConfig('dateformat'))
-                ),
-                "validation"
+                    ['format' => $this->getDateFormat()]
+                )
             );
             return false;
         }
 
-        // min/max - Assumes that the date value was valid in the first place
-        if ($min = $this->getConfig('min')) {
-            // ISO or strtotime()
-            if (Zend_Date::isDate($min, $this->getConfig('datavalueformat'))) {
-                $minDate = new Zend_Date($min, $this->getConfig('datavalueformat'));
-            } else {
-                $minDate = new Zend_Date(strftime('%Y-%m-%d', strtotime($min)), $this->getConfig('datavalueformat'));
-            }
-            if (!$this->valueObj || (!$this->valueObj->isLater($minDate) && !$this->valueObj->equals($minDate))) {
+        // Check min date
+        $min = $this->getMinDate();
+        if ($min) {
+            $oops = strtotime($this->value) < strtotime($min);
+            if ($oops) {
                 $validator->validationError(
                     $this->name,
                     _t(
                         'DateField.VALIDDATEMINDATE',
                         "Your date has to be newer or matching the minimum allowed date ({date})",
-                        array('date' => $minDate->toString($this->getConfig('dateformat')))
-                    ),
-                    "validation"
+                        ['date' => $this->iso8601ToLocalised($min)]
+                    )
                 );
                 return false;
             }
         }
-        if ($max = $this->getConfig('max')) {
-            // ISO or strtotime()
-            if (Zend_Date::isDate($min, $this->getConfig('datavalueformat'))) {
-                $maxDate = new Zend_Date($max, $this->getConfig('datavalueformat'));
-            } else {
-                $maxDate = new Zend_Date(strftime('%Y-%m-%d', strtotime($max)), $this->getConfig('datavalueformat'));
-            }
-            if (!$this->valueObj || (!$this->valueObj->isEarlier($maxDate) && !$this->valueObj->equals($maxDate))) {
+
+        // Check max date
+        $max = $this->getMaxDate();
+        if ($max) {
+            $oops = strtotime($this->value) > strtotime($max);
+            if ($oops) {
                 $validator->validationError(
                     $this->name,
                     _t(
                         'DateField.VALIDDATEMAXDATE',
                         "Your date has to be older or matching the maximum allowed date ({date})",
-                        array('date' => $maxDate->toString($this->getConfig('dateformat')))
-                    ),
-                    "validation"
+                        ['date' => $this->iso8601ToLocalised($max)]
+                    )
                 );
                 return false;
             }
@@ -430,11 +424,13 @@ class DateField extends TextField
     }
 
     /**
+     * Get locale to use for this field
+     *
      * @return string
      */
     public function getLocale()
     {
-        return $this->locale;
+        return $this->locale ?: i18n::get_locale();
     }
 
     /**
@@ -450,54 +446,26 @@ class DateField extends TextField
     }
 
     /**
-     * @param string $name
-     * @param mixed $val
-     * @return $this
+     * Get locale code for client-side. Will default to getLocale() if omitted.
+     *
+     * @return string
      */
-    public function setConfig($name, $val)
+    public function getClientLocale()
     {
-        switch ($name) {
-            case 'min':
-                $format = $this->getConfig('datavalueformat');
-                if ($val && !Zend_Date::isDate($val, $format) && !strtotime($val)) {
-                    throw new InvalidArgumentException(
-                        sprintf(
-                            'Date "%s" is not a valid minimum date format (%s) or strtotime() argument',
-                            $val,
-                            $format
-                        )
-                    );
-                }
-                break;
-            case 'max':
-                $format = $this->getConfig('datavalueformat');
-                if ($val && !Zend_Date::isDate($val, $format) && !strtotime($val)) {
-                    throw new InvalidArgumentException(
-                        sprintf(
-                            'Date "%s" is not a valid maximum date format (%s) or strtotime() argument',
-                            $val,
-                            $format
-                        )
-                    );
-                }
-                break;
+        if ($this->clientLocale) {
+            return $this->clientLocale;
         }
-
-        $this->config[$name] = $val;
-        return $this;
+        return $this->getLocale();
     }
 
     /**
-     * @param String $name Optional, returns the whole configuration array if empty
-     * @return mixed|array
+     * @param string $clientLocale
+     * @return DateField
      */
-    public function getConfig($name = null)
+    public function setClientLocale($clientLocale)
     {
-        if ($name) {
-            return isset($this->config[$name]) ? $this->config[$name] : null;
-        } else {
-            return $this->config;
-        }
+        $this->clientLocale = $clientLocale;
+        return $this;
     }
 
     public function getSchemaValidation()
@@ -505,5 +473,166 @@ class DateField extends TextField
         $rules = parent::getSchemaValidation();
         $rules['date'] = true;
         return $rules;
+    }
+
+    /**
+     * If placeholders are shown
+     *
+     * @return bool
+     */
+    public function getPlaceholders()
+    {
+        return $this->placeholders;
+    }
+
+    /**
+     * Set if placeholders are shown
+     *
+     * @param bool $placeholders
+     * @return $this
+     */
+    public function setPlaceholders($placeholders)
+    {
+        $this->placeholders = $placeholders;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMinDate()
+    {
+        return $this->minDate;
+    }
+
+    /**
+     * @param string $minDate
+     * @return $this
+     */
+    public function setMinDate($minDate)
+    {
+        $this->minDate = $this->tidyISO8601($minDate);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMaxDate()
+    {
+        return $this->maxDate;
+    }
+
+    /**
+     * @param string $maxDate
+     * @return $this
+     */
+    public function setMaxDate($maxDate)
+    {
+        $this->maxDate = $this->tidyISO8601($maxDate);
+        return $this;
+    }
+
+    /**
+     * Get client data properties for this field
+     *
+     * @return array
+     */
+    public function getClientConfig()
+    {
+        $view = $this->getClientView();
+        $config = [
+            'showcalendar' => $this->getShowCalendar() ? 'true' : null,
+            'date-format' => $view->getDateFormat(), // https://api.jqueryui.com/datepicker/#option-dateFormat
+            'locale' => $view->getLocale(),
+        ];
+
+        // Format min/maxDate in format expected by jquery datepicker
+        $min = $this->getMinDate();
+        if ($min) {
+            // https://api.jqueryui.com/datepicker/#option-minDate
+            $config['min-date'] = $this->iso8601ToLocalised($min);
+        }
+        $max = $this->getMaxDate();
+        if ($max) {
+            // https://api.jqueryui.com/datepicker/#option-maxDate
+            $config['max-date'] = $this->iso8601ToLocalised($max);
+        }
+
+        return $config;
+    }
+
+    /**
+     * Convert date localised in the current locale to ISO 8601 date
+     *
+     * @param string $date
+     * @return string The formatted date, or null if not a valid date
+     */
+    public function localisedToISO8601($date)
+    {
+        if (!$date) {
+            return null;
+        }
+        $fromFormatter = $this->getFormatter();
+        $toFormatter = $this->getISO8601Formatter();
+        $timestamp = $fromFormatter->parse($date);
+        if ($timestamp === false) {
+            return null;
+        }
+        return $toFormatter->format($timestamp) ?: null;
+    }
+
+    /**
+     * Convert an ISO 8601 localised date into the format specified by the
+     * current date format.
+     *
+     * @param string $date
+     * @return string The formatted date, or null if not a valid date
+     */
+    public function iso8601ToLocalised($date)
+    {
+        $date = $this->tidyISO8601($date);
+        if (!$date) {
+            return null;
+        }
+        $fromFormatter = $this->getISO8601Formatter();
+        $toFormatter = $this->getFormatter();
+        $timestamp = $fromFormatter->parse($date);
+        if ($timestamp === false) {
+            return null;
+        }
+        return $toFormatter->format($timestamp) ?: null;
+    }
+
+    /**
+     * Tidy up iso8601-ish date, or approximation
+     *
+     * @param string $date Date in iso8601 or approximate form
+     * @return string iso8601 date, or null if not valid
+     */
+    public function tidyISO8601($date)
+    {
+        if (!$date) {
+            return null;
+        }
+        // Re-run through formatter to tidy up (e.g. remove time component)
+        $formatter = $this->getISO8601Formatter();
+        $timestamp = $formatter->parse($date);
+        if ($timestamp === false) {
+            // Fallback to strtotime
+            $timestamp = strtotime($date, DBDatetime::now()->getTimestamp());
+            if ($timestamp === false) {
+                return null;
+            }
+        }
+        return $formatter->format($timestamp);
+    }
+
+    /**
+     * @return DateField_View_JQuery
+     */
+    protected function getClientView()
+    {
+        return DateField_View_JQuery::create($this);
     }
 }

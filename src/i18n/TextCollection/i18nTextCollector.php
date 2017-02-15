@@ -99,7 +99,7 @@ class i18nTextCollector
     {
         $this->defaultLocale = $locale
             ? $locale
-            : i18n::get_lang_from_locale(i18n::config()->get('default_locale'));
+            : i18n::getData()->langFromLocale(i18n::config()->get('default_locale'));
         $this->basePath = Director::baseFolder();
         $this->baseSavePath = Director::baseFolder();
         $this->setWarnOnEmptyDefault(i18n::config()->get('missing_default_warning'));
@@ -257,7 +257,7 @@ class i18nTextCollector
         foreach ($conflicts as $conflict) {
             // Determine if we can narrow down the ownership
             $bestModule = $this->getBestModuleForKey($entitiesByModule, $conflict);
-            if (!$bestModule) {
+            if (!$bestModule || !isset($entitiesByModule[$bestModule])) {
                 continue;
             }
 
@@ -350,9 +350,10 @@ class i18nTextCollector
     protected function findModuleForClass($class)
     {
         if (ClassInfo::exists($class)) {
-            return i18n::get_owner_module($class);
+            return ClassLoader::instance()
+                ->getManifest()
+                ->getOwnerModule($class);
         }
-
 
         // If we can't find a class, see if it needs to be fully qualified
         if (strpos($class, '\\') !== false) {
@@ -367,7 +368,7 @@ class i18nTextCollector
 
         // Find all modules for candidate classes
         $modules = array_unique(array_map(function ($class) {
-            return i18n::get_owner_module($class);
+            return ClassLoader::instance()->getManifest()->getOwnerModule($class);
         }, $classes));
 
         if (count($modules) === 1) {
@@ -548,11 +549,36 @@ class i18nTextCollector
         $tokens = token_get_all("<?php\n" . $content);
         $inTransFn = false;
         $inConcat = false;
+        $inNamespace = false;
+        $inClass = false;
         $inArrayClosedBy = false; // Set to the expected closing token, or false if not in array
         $currentEntity = array();
+        $currentClass = []; // Class components
         foreach ($tokens as $token) {
             if (is_array($token)) {
                 list($id, $text) = $token;
+
+                // Check class
+                if ($id === T_NAMESPACE) {
+                    $inNamespace = true;
+                    $currentClass = [];
+                    continue;
+                }
+                if ($inNamespace && $id === T_STRING) {
+                    $currentClass[] = $text;
+                    continue;
+                }
+
+                // Check class
+                if ($id === T_CLASS) {
+                    $inClass = true;
+                    continue;
+                }
+                if ($inClass && $id === T_STRING) {
+                    $currentClass[] = $text;
+                    $inClass = false;
+                    continue;
+                }
 
                 // Suppress tokenisation within array
                 if ($inTransFn && !$inArrayClosedBy && $id == T_ARRAY) {
@@ -572,7 +598,7 @@ class i18nTextCollector
                 }
 
                 // If inside this translation, some elements might be unreachable
-                if (in_array($id, [T_VARIABLE, T_STATIC, T_CLASS_C]) ||
+                if (in_array($id, [T_VARIABLE, T_STATIC]) ||
                     ($id === T_STRING && in_array($text, ['self', 'static', 'parent']))
                 ) {
                     // Un-collectable strings such as _t(static::class.'.KEY').
@@ -584,6 +610,7 @@ class i18nTextCollector
                     continue;
                 }
 
+                // Check text
                 if ($id == T_CONSTANT_ENCAPSED_STRING) {
                     // Fixed quoting escapes, and remove leading/trailing quotes
                     if (preg_match('/^\'/', $text)) {
@@ -595,17 +622,22 @@ class i18nTextCollector
                         $text = preg_replace('/^"/', '', $text);
                         $text = preg_replace('/"$/', '', $text);
                     }
+                } elseif ($id === T_CLASS_C) {
+                    // Evaluate __CLASS__ . '.KEY' concatenation
+                    $text = implode('\\', $currentClass);
+                } else {
+                    continue;
+                }
 
-                    if ($inConcat) {
-                        // Parser error
-                        if (empty($currentEntity)) {
-                            user_error('Error concatenating localisation key', E_USER_WARNING);
-                        } else {
-                            $currentEntity[count($currentEntity) - 1] .= $text;
-                        }
+                if ($inConcat) {
+                    // Parser error
+                    if (empty($currentEntity)) {
+                        user_error('Error concatenating localisation key', E_USER_WARNING);
                     } else {
-                        $currentEntity[] = $text;
+                        $currentEntity[count($currentEntity) - 1] .= $text;
                     }
+                } else {
+                    $currentEntity[] = $text;
                 }
                 continue; // is_array
             }
@@ -613,6 +645,12 @@ class i18nTextCollector
             // Test we can close this array
             if ($inTransFn && $inArrayClosedBy && ($token === $inArrayClosedBy)) {
                 $inArrayClosedBy = false;
+                continue;
+            }
+
+            // Check if we can close the namespace
+            if ($inNamespace && $token === ';') {
+                $inNamespace = false;
                 continue;
             }
 

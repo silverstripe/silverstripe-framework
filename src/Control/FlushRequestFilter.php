@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use SilverStripe\Core\Flushable;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\Core\ClassInfo;
 
@@ -23,7 +24,7 @@ class FlushRequestFilter implements RequestFilter
     public function preRequest(HTTPRequest $request, Session $session, DataModel $model)
     {
         if (array_key_exists('flush', $request->getVars())) {
-            foreach (ClassInfo::implementorsOf('SilverStripe\\Core\\Flushable') as $class) {
+            foreach (ClassInfo::implementorsOf(Flushable::class) as $class) {
                 $class::flush();
             }
         }

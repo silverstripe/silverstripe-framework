@@ -101,10 +101,10 @@ class LiteralField extends DatalessField
      * Synonym of {@link setContent()} so that LiteralField is more compatible with other field types.
      *
      * @param string|FormField $content
-     *
+     * @param mixed $data
      * @return $this
      */
-    public function setValue($content)
+    public function setValue($content, $data = null)
     {
         $this->setContent($content);
 

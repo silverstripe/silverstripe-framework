@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security;
 
+use IntlDateFormatter;
 use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\CMS\Controllers\CMSMain;
 use SilverStripe\Control\Cookie;
@@ -9,7 +10,6 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Session;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
@@ -35,9 +35,6 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
 use DateTime;
-use Zend_Date;
-use Zend_Locale;
-use Zend_Locale_Format;
 
 /**
  * The member class which represents the users of the system
@@ -90,12 +87,12 @@ class Member extends DataObject implements TemplateGlobalProvider
     );
 
     private static $belongs_many_many = array(
-        'Groups' => 'SilverStripe\\Security\\Group',
+        'Groups' => Group::class,
     );
 
     private static $has_many = array(
-        'LoggedPasswords' => 'SilverStripe\\Security\\MemberPassword',
-        'RememberLoginHashes' => 'SilverStripe\\Security\\RememberLoginHash'
+        'LoggedPasswords' => MemberPassword::class,
+        'RememberLoginHashes' => RememberLoginHash::class,
     );
 
     private static $table_name = "Member";
@@ -386,10 +383,15 @@ class Member extends DataObject implements TemplateGlobalProvider
 
     /**
      * Returns true if this user is locked out
+     *
+     * @return bool
      */
     public function isLockedOut()
     {
-        return $this->LockedOutUntil && DBDatetime::now()->Format('U') < strtotime($this->LockedOutUntil);
+        if (!$this->LockedOutUntil) {
+            return false;
+        }
+        return DBDatetime::now()->getTimestamp() < $this->dbObject('LockedOutUntil')->getTimestamp();
     }
 
     /**
@@ -472,24 +474,18 @@ class Member extends DataObject implements TemplateGlobalProvider
             }
             if ($remember) {
                 $rememberLoginHash = RememberLoginHash::generate($this);
-                $tokenExpiryDays = Config::inst()->get(
-                    'SilverStripe\\Security\\RememberLoginHash',
-                    'token_expiry_days'
+                $tokenExpiryDays = RememberLoginHash::config()->get('token_expiry_days');
+                $deviceExpiryDays = RememberLoginHash::config()->get('device_expiry_days');
+                Cookie::set(
+                    'alc_enc',
+                    $this->ID . ':' . $rememberLoginHash->getToken(),
+                    $tokenExpiryDays,
+                    null,
+                    null,
+                    null,
+                    true
                 );
-                    $deviceExpiryDays = Config::inst()->get(
-                        'SilverStripe\\Security\\RememberLoginHash',
-                        'device_expiry_days'
-                    );
-                    Cookie::set(
-                        'alc_enc',
-                        $this->ID . ':' . $rememberLoginHash->getToken(),
-                        $tokenExpiryDays,
-                        null,
-                        null,
-                        null,
-                        true
-                    );
-                    Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
+                Cookie::set('alc_device', $rememberLoginHash->DeviceID, $deviceExpiryDays, null, null, null, true);
             } else {
                 Cookie::set('alc_enc', null);
                 Cookie::set('alc_device', null);
@@ -536,7 +532,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     public static function logged_in_session_exists()
     {
         if ($id = Member::currentUserID()) {
-            if ($member = DataObject::get_by_id('SilverStripe\\Security\\Member', $id)) {
+            if ($member = DataObject::get_by_id(Member::class, $id)) {
                 if ($member->exists()) {
                     return true;
                 }
@@ -555,7 +551,7 @@ class Member extends DataObject implements TemplateGlobalProvider
     public static function autoLogin()
     {
         // Don't bother trying this multiple times
-        if (!class_exists('SilverStripe\\Dev\\SapphireTest', false) || !SapphireTest::is_running_test()) {
+        if (!class_exists(SapphireTest::class, false) || !SapphireTest::is_running_test()) {
             self::$_already_tried_to_auto_log_in = true;
         }
 
@@ -708,7 +704,7 @@ class Member extends DataObject implements TemplateGlobalProvider
             $generator = new RandomGenerator();
             $token = $generator->randomToken();
             $hash = $this->encryptWithUserSettings($token);
-        } while (DataObject::get_one('SilverStripe\\Security\\Member', array(
+        } while (DataObject::get_one(Member::class, array(
             '"Member"."AutoLoginHash"' => $hash
         )));
 
@@ -745,13 +741,11 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public static function member_from_autologinhash($hash, $login = false)
     {
-
-        $nowExpression = DB::get_conn()->now();
         /** @var Member $member */
-        $member = DataObject::get_one('SilverStripe\\Security\\Member', array(
-            "\"Member\".\"AutoLoginHash\"" => $hash,
-            "\"Member\".\"AutoLoginExpired\" > $nowExpression" // NOW() can't be parameterised
-        ));
+        $member = Member::get()->filter([
+            'AutoLoginHash' => $hash,
+            'AutoLoginExpired:GreaterThan' => DBDatetime::now()->getValue(),
+        ])->first();
 
         if ($login && $member) {
             $member->logIn();
@@ -795,7 +789,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         $fields->replaceField('Locale', new DropdownField(
             'Locale',
             $this->fieldLabel('Locale'),
-            i18n::get_existing_translations()
+            i18n::getSources()->getKnownLocales()
         ));
 
         $fields->removeByName(static::config()->hidden_fields);
@@ -849,7 +843,7 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function getValidator()
     {
-        $validator = Injector::inst()->create('SilverStripe\\Security\\Member_Validator');
+        $validator = Member_Validator::create();
         $validator->setForMember($this);
         $this->extend('updateValidator', $validator);
 
@@ -867,7 +861,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         $id = Member::currentUserID();
 
         if ($id) {
-            return DataObject::get_by_id('SilverStripe\\Security\\Member', $id);
+            return DataObject::get_by_id(Member::class, $id);
         }
     }
 
@@ -936,7 +930,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 	 */
     public static function create_new_password()
     {
-        $words = Config::inst()->get('SilverStripe\\Security\\Security', 'word_list');
+        $words = Security::config()->get('word_list');
 
         if ($words && file_exists($words)) {
             $words = file($words);
@@ -971,11 +965,13 @@ class Member extends DataObject implements TemplateGlobalProvider
         $identifierField = Member::config()->unique_identifier_field;
         if ($this->$identifierField) {
             // Note: Same logic as Member_Validator class
-            $filter = array("\"$identifierField\"" => $this->$identifierField);
+            $filter = [
+                "\"Member\".\"$identifierField\"" => $this->$identifierField
+            ];
             if ($this->ID) {
                 $filter[] = array('"Member"."ID" <> ?' => $this->ID);
             }
-            $existingRecord = DataObject::get_one('SilverStripe\\Security\\Member', $filter);
+            $existingRecord = DataObject::get_one(Member::class, $filter);
 
             if ($existingRecord) {
                 throw new ValidationException(_t(
@@ -1131,9 +1127,9 @@ class Member extends DataObject implements TemplateGlobalProvider
     public function inGroup($group, $strict = false)
     {
         if (is_numeric($group)) {
-            $groupCheckObj = DataObject::get_by_id('SilverStripe\\Security\\Group', $group);
+            $groupCheckObj = DataObject::get_by_id(Group::class, $group);
         } elseif (is_string($group)) {
-            $groupCheckObj = DataObject::get_one('SilverStripe\\Security\\Group', array(
+            $groupCheckObj = DataObject::get_one(Group::class, array(
                 '"Group"."Code"' => $group
             ));
         } elseif ($group instanceof Group) {
@@ -1167,7 +1163,7 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function addToGroupByCode($groupcode, $title = "")
     {
-        $group = DataObject::get_one('SilverStripe\\Security\\Group', array(
+        $group = DataObject::get_one(Group::class, array(
             '"Group"."Code"' => $groupcode
         ));
 
@@ -1327,11 +1323,23 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function getDateFormat()
     {
-        if ($this->getField('DateFormat')) {
-            return $this->getField('DateFormat');
-        } else {
-            return i18n::config()->get('date_format');
+        $format = $this->getField('DateFormat');
+        if ($format) {
+            return $format;
         }
+        return $this->getDefaultDateFormat();
+    }
+
+    /**
+     * Get user locale
+     */
+    public function getLocale()
+    {
+        $locale = $this->getField('Locale');
+        if ($locale) {
+            return $locale;
+        }
+        return i18n::get_locale();
     }
 
     /**
@@ -1343,11 +1351,11 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function getTimeFormat()
     {
-        if ($this->getField('TimeFormat')) {
-            return $this->getField('TimeFormat');
-        } else {
-            return i18n::config()->get('time_format');
+        $timeFormat = $this->getField('TimeFormat');
+        if ($timeFormat) {
+            return $timeFormat;
         }
+        return $this->getDefaultTimeFormat();
     }
 
     //---------------------------------------------------------------------//
@@ -1363,7 +1371,7 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function Groups()
     {
-        $groups = Member_GroupSet::create('SilverStripe\\Security\\Group', 'Group_Members', 'GroupID', 'MemberID');
+        $groups = Member_GroupSet::create(Group::class, 'Group_Members', 'GroupID', 'MemberID');
         $groups = $groups->forForeignID($this->ID);
 
         $this->extend('updateGroups', $groups);
@@ -1432,7 +1440,7 @@ class Member extends DataObject implements TemplateGlobalProvider
         if (!$groups || $groups->Count() == 0) {
             $perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
 
-            if (class_exists('SilverStripe\\CMS\\Controllers\\CMSMain')) {
+            if (class_exists(CMSMain::class)) {
                 $cmsPerms = CMSMain::singleton()->providePermissions();
             } else {
                 $cmsPerms = LeftAndMain::singleton()->providePermissions();
@@ -1513,27 +1521,23 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function getCMSFields()
     {
-        require_once 'Zend/Date.php';
-
-        $self = $this;
-        $this->beforeUpdateCMSFields(function (FieldList $fields) use ($self) {
+        $this->beforeUpdateCMSFields(function (FieldList $fields) {
             /** @var FieldList $mainFields */
             $mainFields = $fields->fieldByName("Root")->fieldByName("Main")->getChildren();
 
             // Build change password field
-            $mainFields->replaceField('Password', $self->getMemberPasswordField());
+            $mainFields->replaceField('Password', $this->getMemberPasswordField());
 
             $mainFields->replaceField('Locale', new DropdownField(
                 "Locale",
                 _t('Member.INTERFACELANG', "Interface Language", 'Language of the CMS'),
-                i18n::get_existing_translations()
+                i18n::getSources()->getKnownLocales()
             ));
-            $mainFields->removeByName($self->config()->hidden_fields);
+            $mainFields->removeByName($this->config()->hidden_fields);
 
-            if (! $self->config()->lock_out_after_incorrect_logins) {
+            if (! $this->config()->lock_out_after_incorrect_logins) {
                 $mainFields->removeByName('FailedLoginCount');
             }
-
 
             // Groups relation will get us into logical conflicts because
             // Members are displayed within  group edit form in SecurityAdmin
@@ -1553,7 +1557,7 @@ class Member extends DataObject implements TemplateGlobalProvider
                 asort($groupsMap);
                 $fields->addFieldToTab(
                     'Root.Main',
-                    ListboxField::create('DirectGroups', singleton('SilverStripe\\Security\\Group')->i18n_plural_name())
+                    ListboxField::create('DirectGroups', Group::singleton()->i18n_plural_name())
                         ->setSource($groupsMap)
                         ->setAttribute(
                             'data-placeholder',
@@ -1565,16 +1569,16 @@ class Member extends DataObject implements TemplateGlobalProvider
                 // Add permission field (readonly to avoid complicated group assignment logic).
                 // This should only be available for existing records, as new records start
                 // with no permissions until they have a group assignment anyway.
-                if ($self->ID) {
+                if ($this->ID) {
                     $permissionsField = new PermissionCheckboxSetField_Readonly(
                         'Permissions',
                         false,
-                        'SilverStripe\\Security\\Permission',
+                        Permission::class,
                         'GroupID',
                         // we don't want parent relationships, they're automatically resolved in the field
-                        $self->getManyManyComponents('Groups')
+                        $this->getManyManyComponents('Groups')
                     );
-                    $fields->findOrMakeTab('Root.Permissions', singleton('SilverStripe\\Security\\Permission')->i18n_plural_name());
+                    $fields->findOrMakeTab('Root.Permissions', Permission::singleton()->i18n_plural_name());
                     $fields->addFieldToTab('Root.Permissions', $permissionsField);
                 }
             }
@@ -1584,47 +1588,109 @@ class Member extends DataObject implements TemplateGlobalProvider
                 $permissionsTab->addExtraClass('readonly');
             }
 
-            $defaultDateFormat = Zend_Locale_Format::getDateFormat(new Zend_Locale($self->Locale));
-            $dateFormatMap = array(
-                'MMM d, yyyy' => Zend_Date::now()->toString('MMM d, yyyy'),
-                'yyyy/MM/dd' => Zend_Date::now()->toString('yyyy/MM/dd'),
-                'MM/dd/yyyy' => Zend_Date::now()->toString('MM/dd/yyyy'),
-                'dd/MM/yyyy' => Zend_Date::now()->toString('dd/MM/yyyy'),
-            );
-            $dateFormatMap[$defaultDateFormat] = Zend_Date::now()->toString($defaultDateFormat)
-                . sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
+            // Date format selecter
             $mainFields->push(
                 $dateFormatField = new MemberDatetimeOptionsetField(
                     'DateFormat',
-                    $self->fieldLabel('DateFormat'),
-                    $dateFormatMap
+                    $this->fieldLabel('DateFormat'),
+                    $this->getDateFormats()
                 )
             );
             $formatClass = get_class($dateFormatField);
-            $dateFormatField->setValue($self->DateFormat);
+            $dateFormatField->setValue($this->DateFormat);
             $dateTemplate = SSViewer::get_templates_by_class($formatClass, '_description_date', $formatClass);
             $dateFormatField->setDescriptionTemplate($dateTemplate);
 
-            $defaultTimeFormat = Zend_Locale_Format::getTimeFormat(new Zend_Locale($self->Locale));
-            $timeFormatMap = array(
-                'h:mm a' => Zend_Date::now()->toString('h:mm a'),
-                'H:mm' => Zend_Date::now()->toString('H:mm'),
-            );
-            $timeFormatMap[$defaultTimeFormat] = Zend_Date::now()->toString($defaultTimeFormat)
-                . sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
+            // Time format selector
             $mainFields->push(
                 $timeFormatField = new MemberDatetimeOptionsetField(
                     'TimeFormat',
-                    $self->fieldLabel('TimeFormat'),
-                    $timeFormatMap
+                    $this->fieldLabel('TimeFormat'),
+                    $this->getTimeFormats()
                 )
             );
-            $timeFormatField->setValue($self->TimeFormat);
+            $timeFormatField->setValue($this->TimeFormat);
             $timeTemplate = SSViewer::get_templates_by_class($formatClass, '_description_time', $formatClass);
             $timeFormatField->setDescriptionTemplate($timeTemplate);
         });
 
         return parent::getCMSFields();
+    }
+
+    /**
+     * Get list of date formats with example values
+     *
+     * @return array
+     */
+    protected function getDateFormats()
+    {
+        $defaultDateFormat = $this->getDefaultDateFormat();
+        $formats = [
+            'MMM d, y' => null,
+            'yyyy/MM/dd' => null,
+            'MM/dd/y' => null,
+            'dd/MM/y' => null,
+        ];
+        unset($formats[$defaultDateFormat]);
+        $formats[$defaultDateFormat] = null;
+        // Fill in each format with example
+        foreach (array_keys($formats) as $format) {
+            $formats[$format] = DBDatetime::now()->Format($format);
+        }
+        // Mark default format
+        $formats[$defaultDateFormat] .= sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
+        return $formats;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultDateFormat()
+    {
+        $formatter = new IntlDateFormatter(
+            $this->getLocale(),
+            IntlDateFormatter::MEDIUM,
+            IntlDateFormatter::NONE
+        );
+        return $formatter->getPattern();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultTimeFormat()
+    {
+        $formatter = new IntlDateFormatter(
+            $this->getLocale(),
+            IntlDateFormatter::NONE,
+            IntlDateFormatter::MEDIUM
+        );
+        $defaultTimeFormat = $formatter->getPattern();
+        return $defaultTimeFormat;
+    }
+
+
+    /**
+     * Get list of date formats with example values
+     *
+     * @return array
+     */
+    protected function getTimeFormats()
+    {
+        $defaultTimeFormat = $this->getDefaultTimeFormat();
+        $formats = [
+            'h:mm a' => null,
+            'H:mm' => null,
+        ];
+        unset($formats[$defaultTimeFormat]);
+        $formats[$defaultTimeFormat] = null;
+        // Fill in each format with example
+        foreach (array_keys($formats) as $format) {
+            $formats[$format] = DBDatetime::now()->Format($format);
+        }
+        // Mark default format
+        $formats[$defaultTimeFormat] .= sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
+        return $formats;
     }
 
     /**
@@ -1816,7 +1882,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
             if ($this->FailedLoginCount >= self::config()->lock_out_after_incorrect_logins) {
                 $lockoutMins = self::config()->lock_out_delay_mins;
-                $this->LockedOutUntil = date('Y-m-d H:i:s', DBDatetime::now()->Format('U') + $lockoutMins*60);
+                $this->LockedOutUntil = date('Y-m-d H:i:s', DBDatetime::now()->getTimestamp() + $lockoutMins*60);
                 $this->FailedLoginCount = 0;
             }
         }

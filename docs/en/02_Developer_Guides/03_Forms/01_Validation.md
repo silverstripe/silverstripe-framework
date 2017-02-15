@@ -66,12 +66,7 @@ Each individual [api:FormField] instance is responsible for validating the submi
 
 Subclasses of `FormField` can define their own version of `validate` to provide custom validation rules such as the 
 above example with the `Email` validation. The `validate` method on `FormField` takes a single argument of the current 
-`Validator` instance. 
-
-<div class="notice" markdown="1">
-The data value of the `FormField` submitted is not passed into validate. It is stored in the `value` property through 
-the `setValue` method.
-</div>
+`Validator` instance.
 
 ```php
 public function validate($validator)

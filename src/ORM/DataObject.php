@@ -6,6 +6,7 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Object;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Resettable;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\HTTP;
@@ -100,7 +101,7 @@ use Exception;
  * @property string LastEdited Date and time of DataObject's last modification.
  * @property string Created Date and time of DataObject creation.
  */
-class DataObject extends ViewableData implements DataObjectInterface, i18nEntityProvider
+class DataObject extends ViewableData implements DataObjectInterface, i18nEntityProvider, Resettable
 {
 
     /**

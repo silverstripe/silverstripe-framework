@@ -127,7 +127,7 @@ abstract class DBField extends ViewableData
      * @param mixed $value value of field
      * @param string $name Name of field
      * @param mixed $object Additional parameter to pass to field constructor
-     * @return DBField
+     * @return static
      */
     public static function create_field($className, $value, $name = null, $object = null)
     {

@@ -2,10 +2,12 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\Core\Convert;
+use IntlDateFormatter;
+use InvalidArgumentException;
 use SilverStripe\Forms\TimeField;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
-use Zend_Date;
+use SilverStripe\Security\Member;
 
 /**
  * Represents a column in the database with the type 'Time'.
@@ -16,96 +18,186 @@ use Zend_Date;
  *  "StartTime" => "Time",
  * );
  * </code>
- *
- * @todo Add localization support, see http://open.silverstripe.com/ticket/2931
  */
 class DBTime extends DBField
 {
-
     /**
-     * @config
-     * @see Date::nice_format
-     * @see DBDateTime::nice_format
+     * Standard ISO format string for time in CLDR standard format
      */
-    private static $nice_format = 'g:ia';
+    const ISO_TIME = 'HH:mm:ss';
 
     public function setValue($value, $record = null, $markChanged = true)
     {
-        if ($value) {
-            if (preg_match('/(\d{1,2})[:.](\d{2})([a|A|p|P|][m|M])/', $value, $match)) {
-                $this->TwelveHour($match);
-            } else {
-                $this->value = date('H:i:s', strtotime($value));
-            }
-        } else {
-            $value = null;
+        $value = $this->parseTime($value);
+        if ($value === false) {
+            throw new InvalidArgumentException(
+                "Invalid date passed. Use " . $this->getISOFormat() . " to prevent this error."
+            );
         }
+        $this->value = $value;
+        return $this;
     }
 
     /**
-     * Returns the time in the format specified by the config value nice_format, or 12 hour format by default
+     * Parse timestamp or iso8601-ish date into standard iso8601 format
+     *
+     * @param mixed $value
+     * @return string|null|false Formatted time, null if empty but valid, or false if invalid
+     */
+    protected function parseTime($value)
+    {
+        // Skip empty values
+        if (empty($value) && !is_numeric($value)) {
+            return null;
+        }
+
+        // Determine value to parse
+        if (is_array($value)) {
+            $source = $value; // parse array
+        } elseif (is_numeric($value)) {
+            $source = $value; // parse timestamp
+        } else {
+            // Convert using strtotime
+            $source = strtotime($value);
+        }
+        if ($value === false) {
+            return false;
+        }
+
+        // Format as iso8601
+        $formatter = $this->getFormatter();
+        $formatter->setPattern($this->getISOFormat());
+        return $formatter->format($source);
+    }
+
+    /**
+     * Get date / time formatter for the current locale
+     *
+     * @param int $timeLength
+     * @return IntlDateFormatter
+     */
+    public function getFormatter($timeLength = IntlDateFormatter::MEDIUM)
+    {
+        return IntlDateFormatter::create(i18n::get_locale(), IntlDateFormatter::NONE, $timeLength);
+    }
+
+    /**
+     * Returns the date in the localised short format
+     *
+     * @return string
+     */
+    public function Short()
+    {
+        if (!$this->value) {
+            return null;
+        }
+        $formatter = $this->getFormatter(IntlDateFormatter::SHORT);
+        return $formatter->format($this->getTimestamp());
+    }
+
+    /**
+     * Returns the standard localised medium time
      * e.g. "3:15pm"
      *
      * @return string
      */
     public function Nice()
     {
-        return $this->Format($this->config()->nice_format);
-    }
-
-    /**
-     * Return a user friendly format for time
-     * in a 24 hour format.
-     *
-     * @return string Time in 24 hour format
-     */
-    public function Nice24()
-    {
-        return $this->Format('H:i');
+        if (!$this->value) {
+            return null;
+        }
+        $formatter = $this->getFormatter();
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
      * Return the time using a particular formatting string.
      *
-     * @param string $format Format code string. e.g. "g:ia"
-     * @return string The date in the requested format
+     * @param string $format Format code string. See http://userguide.icu-project.org/formatparse/datetime
+     * @return string The time in the requested format
      */
     public function Format($format)
     {
-        if ($this->value) {
-            return date($format, strtotime($this->value));
+        if (!$this->value) {
+            return null;
         }
-        return null;
-    }
-
-    public function TwelveHour($parts)
-    {
-        $hour = $parts[1];
-        $min = $parts[2];
-        $half = $parts[3];
-
-        // the transmation should exclude 12:00pm ~ 12:59pm
-        $this->value = (( (strtolower($half) == 'pm') && $hour != '12') ? $hour + 12 : $hour ) .":$min:00";
+        $formatter = $this->getFormatter();
+        $formatter->setPattern($format);
+        return $formatter->format($this->getTimestamp());
     }
 
     public function requireField()
     {
-        $parts=array('datatype'=>'time', 'arrayValue'=>$this->arrayValue);
-        $values=array('type'=>'time', 'parts'=>$parts);
+        $parts = [
+            'datatype' => 'time',
+            'arrayValue' => $this->arrayValue
+        ];
+        $values = [
+            'type' => 'time',
+            'parts' => $parts
+        ];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = TimeField::create($this->name, $title);
+        $format = $field->getTimeFormat();
 
         // Show formatting hints for better usability
-        $field->setDescription(sprintf(
-            _t('FormField.Example', 'e.g. %s', 'Example format'),
-            Convert::raw2xml(Zend_Date::now()->toString($field->getConfig('timeformat')))
+        $now = DBDatetime::now()->Format($format);
+        $field->setDescription(_t(
+            'FormField.Example',
+            'e.g. {format}',
+            'Example format',
+            [ 'format' => $now ]
         ));
-        $field->setAttribute('placeholder', $field->getConfig('timeformat'));
-
+        $field->setAttribute('placeholder', $format);
         return $field;
+    }
+
+    /**
+     * Return a time formatted as per a CMS user's settings.
+     *
+     * @param Member $member
+     * @return string A time formatted as per user-defined settings.
+     */
+    public function FormatFromSettings($member = null)
+    {
+        if (!$member) {
+            $member = Member::currentUser();
+        }
+
+        // Fall back to nice
+        if (!$member) {
+            return $this->Nice();
+        }
+
+        // Get user format
+        $format = $member->getTimeFormat();
+        return $this->Format($format);
+    }
+
+    /**
+     * Get standard ISO time format string
+     *
+     * @return string
+     */
+    public function getISOFormat()
+    {
+        return self::ISO_TIME;
+    }
+
+    /**
+     * Get unix timestamp for this time
+     *
+     * @return int
+     */
+    public function getTimestamp()
+    {
+        if ($this->value) {
+            return strtotime($this->value);
+        }
+        return 0;
     }
 }

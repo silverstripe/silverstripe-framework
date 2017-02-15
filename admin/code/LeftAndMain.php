@@ -23,6 +23,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\HTMLEditor\TinyMCEConfig;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\FieldList;
@@ -576,7 +577,7 @@ class LeftAndMain extends Controller implements PermissionProvider
         // Set default values in the config if missing.  These things can't be defined in the config
         // file because insufficient information exists when that is being processed
         $htmlEditorConfig = HTMLEditorConfig::get_active();
-        $htmlEditorConfig->setOption('language', i18n::get_tinymce_lang());
+        $htmlEditorConfig->setOption('language', TinyMCEConfig::get_tinymce_lang());
 
         Requirements::customScript("
             window.ss = window.ss || {};

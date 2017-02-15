@@ -41,31 +41,32 @@ class DBLocale extends DBVarchar
      * Resolves the locale to a common english-language
      * name through {@link i18n::get_common_locales()}.
      *
-     * @return String
+     * @return string
      */
     public function getShortName()
     {
-        $common_names = i18n::get_common_locales();
-        return (isset($common_names[$this->value])) ? $common_names[$this->value] : false;
+        return i18n::getData()->languageName($this->value);
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getLongName()
     {
-        return i18n::get_locale_name($this->value);
+        return i18n::getData()->localeName($this->value);
     }
 
     /**
      * Returns the localized name based on the field's value.
      * Example: "de_DE" returns "Deutsch".
      *
-     * @return String
+     * @return string
      */
     public function getNativeName()
     {
-        $common_names = i18n::get_common_locales(true);
-        return (isset($common_names[$this->value])) ? $common_names[$this->value] : false;
+        $locale = $this->value;
+        return i18n::with_locale($locale, function () use ($locale) {
+            return $this->getShortName();
+        });
     }
 }

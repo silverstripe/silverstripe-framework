@@ -60,18 +60,18 @@ abstract class MultiSelectField extends SelectField
     /**
      * Load a value into this MultiSelectField
      *
-     * @param mixed $val
+     * @param mixed $value
      * @param null|array|DataObject $obj {@see Form::loadDataFrom}
      * @return $this
      */
-    public function setValue($val, $obj = null)
+    public function setValue($value, $obj = null)
     {
         // If we're not passed a value directly,
         // we can look for it in a relation method on the object passed as a second arg
         if ($obj instanceof DataObject) {
             $this->loadFrom($obj);
         } else {
-            parent::setValue($val);
+            parent::setValue($value);
         }
         return $this;
     }

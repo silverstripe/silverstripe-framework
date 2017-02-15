@@ -2,28 +2,35 @@
 
 namespace SilverStripe\Forms;
 
+use InvalidArgumentException;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\Core\Convert;
+use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\View\ArrayData;
-use SilverStripe\View\Requirements;
-use Zend_Date;
 
 class MemberDatetimeOptionsetField extends OptionsetField
 {
-
+    /**
+     * Option value for custom date format option
+     */
     const CUSTOM_OPTION = '__custom__';
 
     /**
      * Non-ambiguous date to use for the preview.
-     * Must be in 'y-MM-dd HH:mm:ss' format
+     * Must be in ISO 8601 'y-MM-dd HH:mm:ss' format
      *
      * @var string
      */
-    private static $preview_date = '25-12-2011 17:30:00';
+    private static $preview_date = '2011-12-25 17:30:00';
 
     private static $casting = ['Description' => 'HTMLText'];
 
-    private $descriptionTemplate = '';
+    /**
+     * Template name to use for rendering the field description
+     *
+     * @var string
+     */
+    protected $descriptionTemplate = '';
 
     public function Field($properties = array())
     {
@@ -88,9 +95,8 @@ class MemberDatetimeOptionsetField extends OptionsetField
      */
     protected function previewFormat($format)
     {
-        $date = $this->config()->preview_date;
-        $zendDate = new Zend_Date($date, 'y-MM-dd HH:mm:ss');
-        return $zendDate->toString($format);
+        $date = DBDatetime::create_field('Datetime', $this->config()->preview_date);
+        return $date->Format($format);
     }
 
     public function getOptionName()
@@ -111,17 +117,30 @@ class MemberDatetimeOptionsetField extends OptionsetField
         return parent::getDescription();
     }
 
+    /**
+     * Get template name used to render description
+     *
+     * @return string
+     */
     public function getDescriptionTemplate()
     {
         return $this->descriptionTemplate;
     }
 
+    /**
+     * Assign a template to use for description. If assigned the description
+     * value will be ignored.
+     *
+     * @param string $template
+     * @return $this
+     */
     public function setDescriptionTemplate($template)
     {
         $this->descriptionTemplate = $template;
+        return $this;
     }
 
-    public function setValue($value)
+    public function setSubmittedValue($value, $data = null)
     {
         // Extract custom option from postback
         if (is_array($value)) {
@@ -134,8 +153,17 @@ class MemberDatetimeOptionsetField extends OptionsetField
             }
         }
 
-        return parent::setValue($value);
+        return parent::setSubmittedValue($value);
     }
+
+    public function setValue($value, $data = null)
+    {
+        if (is_array($value)) {
+            throw new InvalidArgumentException("Invalid array value: Expected string");
+        }
+        return parent::setValue($value, $data);
+    }
+
 
     /**
      * Validate this field
@@ -151,10 +179,8 @@ class MemberDatetimeOptionsetField extends OptionsetField
         }
 
         // Check that the current date with the date format is valid or not
-        require_once 'Zend/Date.php';
-        $date = Zend_Date::now()->toString($value);
-        $valid = Zend_Date::isDate($date, $value);
-        if ($valid) {
+        $date = DBDatetime::now()->Format($value);
+        if ($date && $date !== $value) {
             return true;
         }
 

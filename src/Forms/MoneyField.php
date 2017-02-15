@@ -2,8 +2,8 @@
 
 namespace SilverStripe\Forms;
 
+use InvalidArgumentException;
 use SilverStripe\ORM\ArrayLib;
-use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBMoney;
 use SilverStripe\ORM\DataObjectInterface;
 
@@ -21,15 +21,11 @@ class MoneyField extends FormField
     protected $schemaDataType = 'MoneyField';
 
     /**
-     * @var string $_locale
-     */
-    protected $_locale;
-
-    /**
      * Limit the currencies
-     * @var array $allowedCurrencies
+     *
+     * @var array
      */
-    protected $allowedCurrencies;
+    protected $allowedCurrencies = [];
 
     /**
      * @var NumericField
@@ -64,10 +60,12 @@ class MoneyField extends FormField
     public function __construct($name, $title = null, $value = "")
     {
         $this->setName($name);
-
-        // naming with underscores to prevent values from actually being saved somewhere
-        $this->fieldAmount = new NumericField("{$name}[Amount]", _t('MoneyField.FIELDLABELAMOUNT', 'Amount'));
-        $this->fieldCurrency = $this->buildCurrencyField();
+        $this->fieldAmount = NumericField::create(
+            "{$name}[Amount]",
+            _t('MoneyField.FIELDLABELAMOUNT', 'Amount')
+        )
+            ->setScale(2);
+        $this->buildCurrencyField();
 
         parent::__construct($name, $title, $value);
     }
@@ -86,17 +84,25 @@ class MoneyField extends FormField
     protected function buildCurrencyField()
     {
         $name = $this->getName();
+
+        // Validate allowed currencies
+        $currencyValue = $this->fieldCurrency ? $this->fieldCurrency->dataValue() : null;
         $allowedCurrencies = $this->getAllowedCurrencies();
-        if ($allowedCurrencies) {
-            $field = new DropdownField(
+        if (count($allowedCurrencies) === 1) {
+            // Hidden field for single currency
+            $field = HiddenField::create("{$name}[Currency]");
+            reset($allowedCurrencies);
+            $currencyValue = key($allowedCurrencies);
+        } elseif ($allowedCurrencies) {
+            // Dropdown field for multiple currencies
+            $field = DropdownField::create(
                 "{$name}[Currency]",
                 _t('MoneyField.FIELDLABELCURRENCY', 'Currency'),
-                ArrayLib::is_associative($allowedCurrencies)
-                    ? $allowedCurrencies
-                    : array_combine($allowedCurrencies, $allowedCurrencies)
+                $allowedCurrencies
             );
         } else {
-            $field = new TextField(
+            // Free-text entry for currency value
+            $field = TextField::create(
                 "{$name}[Currency]",
                 _t('MoneyField.FIELDLABELCURRENCY', 'Currency')
             );
@@ -104,27 +110,95 @@ class MoneyField extends FormField
 
         $field->setReadonly($this->isReadonly());
         $field->setDisabled($this->isDisabled());
+        if ($currencyValue) {
+            $field->setValue($currencyValue);
+        }
+        $this->fieldCurrency = $field;
         return $field;
     }
 
-    public function setValue($val)
+    public function setSubmittedValue($value, $data = null)
     {
-        $this->value = $val;
-
-        if (is_array($val)) {
-            $this->fieldCurrency->setValue($val['Currency']);
-            $this->fieldAmount->setValue($val['Amount']);
-        } elseif ($val instanceof DBMoney) {
-            $this->fieldCurrency->setValue($val->getCurrency());
-            $this->fieldAmount->setValue($val->getAmount());
+        if (empty($value)) {
+            $this->value = null;
+            $this->fieldCurrency->setValue(null);
+            $this->fieldAmount->setValue(null);
+            return $this;
         }
 
-        // @todo Format numbers according to current locale, incl.
-        //  decimal and thousands signs, while respecting the stored
-        //  precision in the database without truncating it during display
-        //  and subsequent save operations
+        // Handle submitted array value
+        if (!is_array($value)) {
+            throw new InvalidArgumentException("Value is not submitted array");
+        }
 
+        // Update each field
+        $this->fieldCurrency->setSubmittedValue($value['Currency'], $value);
+        $this->fieldAmount->setSubmittedValue($value['Amount'], $value);
+
+        // Get data value
+        $this->value = $this->dataValue();
         return $this;
+    }
+
+    public function setValue($value, $data = null)
+    {
+        if (empty($value)) {
+            $this->value = null;
+            $this->fieldCurrency->setValue(null);
+            $this->fieldAmount->setValue(null);
+            return $this;
+        }
+
+        // Convert string to array
+        // E.g. `44.00 NZD`
+        if (is_string($value) &&
+            preg_match('/^(?<amount>[\\d\\.]+)( (?<currency>\w{3}))?$/i', $value, $matches)
+        ) {
+            $currency = isset($matches['currency']) ? strtoupper($matches['currency']) : null;
+            $value = [
+                'Currency' => $currency,
+                'Amount' => (float)$matches['amount'],
+            ];
+        } elseif ($value instanceof DBMoney) {
+            $value = [
+                'Currency' => $value->getCurrency(),
+                'Amount' => $value->getAmount(),
+            ];
+        } elseif (!is_array($value)) {
+            throw new InvalidArgumentException("Invalid currency format");
+        }
+
+        // Save value
+        $this->fieldCurrency->setValue($value['Currency'], $value);
+        $this->fieldAmount->setValue($value['Amount'], $value);
+        $this->value = $this->dataValue();
+        return $this;
+    }
+
+    /**
+     * Get value as DBMoney object useful for formatting the number
+     *
+     * @return DBMoney
+     */
+    protected function getDBMoney()
+    {
+        return DBMoney::create_field('Money', [
+            'Currency' => $this->fieldCurrency->dataValue(),
+            'Amount' => $this->fieldAmount->dataValue()
+        ])
+            ->setLocale($this->getLocale());
+    }
+
+    public function dataValue()
+    {
+        // Non-localised money
+        return $this->getDBMoney()->getValue();
+    }
+
+    public function Value()
+    {
+        // Localised money
+        return $this->getDBMoney()->Nice();
     }
 
     /**
@@ -142,10 +216,7 @@ class MoneyField extends FormField
     {
         $fieldName = $this->getName();
         if ($dataObject->hasMethod("set$fieldName")) {
-            $dataObject->$fieldName = DBField::create_field('Money', array(
-                "Currency" => $this->fieldCurrency->dataValue(),
-                "Amount" => $this->fieldAmount->dataValue()
-            ));
+            $dataObject->$fieldName = $this->getDBMoney();
         } else {
             $currencyField = "{$fieldName}Currency";
             $amountField = "{$fieldName}Amount";
@@ -161,8 +232,6 @@ class MoneyField extends FormField
     public function performReadonlyTransformation()
     {
         $clone = clone $this;
-        $clone->fieldAmount = $clone->fieldAmount->performReadonlyTransformation();
-        $clone->fieldCurrency = $clone->fieldCurrency->performReadonlyTransformation();
         $clone->setReadonly(true);
         return $clone;
     }
@@ -188,18 +257,29 @@ class MoneyField extends FormField
     }
 
     /**
-     * @param array $arr
+     * Set list of currencies. Currencies should be in the 3-letter ISO 4217 currency code.
+     *
+     * @param array $currencies
      * @return $this
      */
-    public function setAllowedCurrencies($arr)
+    public function setAllowedCurrencies($currencies)
     {
-        $this->allowedCurrencies = $arr;
+        if (empty($currencies)) {
+            $currencies = [];
+        } elseif (is_string($currencies)) {
+            $currencies = [
+                $currencies => $currencies
+            ];
+        } elseif (!is_array($currencies)) {
+            throw new InvalidArgumentException("Invalid currency list");
+        } elseif (!ArrayLib::is_associative($currencies)) {
+            $currencies = array_combine($currencies, $currencies);
+        }
 
-        // @todo Has to be done twice in case allowed currencies changed since construction
-        $oldVal = $this->fieldCurrency->dataValue();
-        $this->fieldCurrency = $this->buildCurrencyField();
-        $this->fieldCurrency->setValue($oldVal);
+        $this->allowedCurrencies = $currencies;
 
+        // Rebuild currency field
+        $this->buildCurrencyField();
         return $this;
     }
 
@@ -211,15 +291,27 @@ class MoneyField extends FormField
         return $this->allowedCurrencies;
     }
 
+    /**
+     * Assign locale to format this currency in
+     *
+     * @param string $locale
+     * @return $this
+     */
     public function setLocale($locale)
     {
-        $this->_locale = $locale;
+        $this->fieldAmount->setLocale($locale);
         return $this;
     }
 
+    /**
+     * Get locale to format this currency in.
+     * Defaults to current locale.
+     *
+     * @return string
+     */
     public function getLocale()
     {
-        return $this->_locale;
+        return $this->fieldAmount->getLocale();
     }
 
     /**
@@ -230,7 +322,23 @@ class MoneyField extends FormField
      */
     public function validate($validator)
     {
-        return !(is_null($this->fieldAmount) || is_null($this->fieldCurrency));
+        // Validate currency
+        $currencies = $this->getAllowedCurrencies();
+        $currency = $this->fieldCurrency->dataValue();
+        if ($currency && $currencies && !in_array($currency, $currencies)) {
+            $validator->validationError(
+                $this->getName(),
+                _t(
+                    __CLASS__.'.INVALID_CURRENCY',
+                    'Currency {currency} is not in the list of allowed currencies',
+                    ['currency' => $currency]
+                )
+            );
+            return false;
+        }
+
+        // Field-specific validation
+        return $this->fieldAmount->validate($validator) && $this->fieldCurrency->validate($validator);
     }
 
     public function setForm($form)

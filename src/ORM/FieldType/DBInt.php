@@ -70,10 +70,12 @@ class DBInt extends DBField
     {
         if ($value === true) {
             return 1;
-        } elseif (empty($value) || !is_numeric($value)) {
+        }
+
+        if (empty($value) || !is_numeric($value)) {
             return 0;
         }
 
-        return $value;
+        return (int)$value;
     }
 }

@@ -103,11 +103,16 @@ abstract class DBString extends DBField
 
     public function prepValueForDB($value)
     {
-        if (!$this->nullifyEmpty && $value === '') {
-            return $value;
-        } else {
-            return parent::prepValueForDB($value);
+        // Cast non-empty value
+        if (strlen($value)) {
+            return (string)$value;
         }
+
+        // Return "empty" value
+        if ($this->nullifyEmpty || $value === null) {
+            return null;
+        }
+        return '';
     }
 
     /**

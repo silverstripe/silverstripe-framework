@@ -733,7 +733,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function baseFolder()
     {
-        $alternate = Config::inst()->get('SilverStripe\\Control\\Director', 'alternate_base_folder');
+        $alternate = static::config()->get('alternate_base_folder');
         return ($alternate) ? $alternate : BASE_PATH;
     }
 

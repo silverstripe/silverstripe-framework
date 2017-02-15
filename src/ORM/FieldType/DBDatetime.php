@@ -2,15 +2,14 @@
 
 namespace SilverStripe\ORM\FieldType;
 
-use SilverStripe\Core\Convert;
+use IntlDateFormatter;
 use SilverStripe\Forms\DatetimeField;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 use SilverStripe\View\TemplateGlobalProvider;
-use DateTime;
 use Exception;
 use InvalidArgumentException;
-use Zend_Date;
 
 /**
  * Represents a date-time field.
@@ -35,91 +34,51 @@ use Zend_Date;
  */
 class DBDatetime extends DBDate implements TemplateGlobalProvider
 {
-
     /**
-     * @config
-     * @see Date::nice_format
-     * @see Time::nice_format
+     * Standard ISO format string for date and time in CLDR standard format
      */
-    private static $nice_format = 'd/m/Y g:ia';
-
-    public function setValue($value, $record = null, $markChanged = true)
-    {
-        if ($value === false || $value === null || (is_string($value) && !strlen($value))) {
-            // don't try to evaluate empty values with strtotime() below, as it returns "1970-01-01" when it should be
-            // saved as NULL in database
-            $this->value = null;
-            return;
-        }
-
-        // Default to NZ date format - strtotime expects a US date
-        if (preg_match('#^([0-9]+)/([0-9]+)/([0-9]+)$#', $value, $parts)) {
-            $value = "$parts[2]/$parts[1]/$parts[3]";
-        }
-
-        if (is_numeric($value)) {
-            $this->value = date('Y-m-d H:i:s', $value);
-        } elseif (is_string($value)) {
-            try {
-                $date = new DateTime($value);
-                $this->value = $date->format('Y-m-d H:i:s');
-                return;
-            } catch (Exception $e) {
-                $this->value = null;
-                return;
-            }
-        }
-    }
+    const ISO_DATETIME = 'y-MM-dd HH:mm:ss';
 
     /**
-     * Returns the date and time in the format specified by the config value nice_format, or 'd/m/Y g:ia'
-     * by default (e.g. '31/01/2014 2:23pm').
-     *
-     * @return string Formatted date and time.
-     */
-    public function Nice()
-    {
-        return $this->Format($this->config()->nice_format);
-    }
-
-    /**
-     * Returns the date and time (in 24-hour format) using the format string 'd/m/Y H:i' e.g. '28/02/2014 13:32'.
-     *
-     * @return string Formatted date and time.
-     */
-    public function Nice24()
-    {
-        return $this->Format('d/m/Y H:i');
-    }
-
-    /**
-     * Returns the date using the format string 'd/m/Y' e.g. '28/02/2014'.
+     * Returns the standard localised date
      *
      * @return string Formatted date.
      */
     public function Date()
     {
-        return $this->Format('d/m/Y');
+        $formatter = $this->getFormatter(IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE);
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
-     * Returns the time in 12-hour format using the format string 'g:ia' e.g. '1:32pm'.
+     * Returns the standard localised time
      *
      * @return string Formatted time.
      */
     public function Time()
     {
-        return $this->Format('g:ia');
+        $formatter = $this->getFormatter(IntlDateFormatter::NONE, IntlDateFormatter::MEDIUM);
+        return $formatter->format($this->getTimestamp());
     }
 
     /**
-     * Returns the time in 24-hour format using the format string 'H:i' e.g. '13:32'.
+     * Returns the time in 12-hour format using the format string 'h:mm a' e.g. '1:32 pm'.
+     *
+     * @return string Formatted time.
+     */
+    public function Time12()
+    {
+        return $this->Format('h:mm a');
+    }
+
+    /**
+     * Returns the time in 24-hour format using the format string 'H:mm' e.g. '13:32'.
      *
      * @return string Formatted time.
      */
     public function Time24()
     {
-        return $this->Format('H:i');
+        return $this->Format('H:mm');
     }
 
     /**
@@ -130,57 +89,75 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public function FormatFromSettings($member = null)
     {
-        require_once 'Zend/Date.php';
-
         if (!$member) {
-            if (!Member::currentUserID()) {
-                return false;
-            }
             $member = Member::currentUser();
         }
 
-        $formatD = $member->getDateFormat();
-        $formatT = $member->getTimeFormat();
+        // Fall back to nice
+        if (!$member) {
+            return $this->Nice();
+        }
 
-        $zendDate = new Zend_Date($this->getValue(), 'y-MM-dd HH:mm:ss');
-        return $zendDate->toString($formatD).' '.$zendDate->toString($formatT);
+        $dateFormat = $member->getDateFormat();
+        $timeFormat = $member->getTimeFormat();
+
+        // Get user format
+        return $this->Format($dateFormat . ' ' . $timeFormat);
     }
 
     public function requireField()
     {
-        $parts=array('datatype'=>'datetime', 'arrayValue'=>$this->arrayValue);
-        $values=array('type'=>'datetime', 'parts'=>$parts);
+        $parts = [
+            'datatype' => 'datetime',
+            'arrayValue' => $this->arrayValue
+        ];
+        $values = [
+            'type' => 'datetime',
+            'parts' => $parts
+        ];
         DB::require_field($this->tableName, $this->name, $values);
     }
 
     /**
      * Returns the url encoded date and time in ISO 6801 format using format
-     * string 'Y-m-d%20H:i:s' e.g. '2014-02-28%2013:32:22'.
+     * string 'y-MM-dd%20HH:mm:ss' e.g. '2014-02-28%2013:32:22'.
      *
      * @return string Formatted date and time.
      */
     public function URLDatetime()
     {
-        return $this->Format('Y-m-d%20H:i:s');
+        return rawurlencode($this->Format(self::ISO_DATETIME));
     }
 
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = DatetimeField::create($this->name, $title);
+        $dateFormat = $field->getDateField()->getDateFormat();
+        $timeFormat = $field->getTimeField()->getTimeFormat();
 
-        // Show formatting hints for better usability
-        $dateField = $field->getDateField();
-        $dateField->setDescription(sprintf(
-            _t('FormField.Example', 'e.g. %s', 'Example format'),
-            Convert::raw2xml(Zend_Date::now()->toString($dateField->getConfig('dateformat')))
-        ));
-        $dateField->setAttribute('placeholder', $dateField->getConfig('dateformat'));
-        $timeField = $field->getTimeField();
-        $timeField->setDescription(sprintf(
-            _t('FormField.Example', 'e.g. %s', 'Example format'),
-            Convert::raw2xml(Zend_Date::now()->toString($timeField->getConfig('timeformat')))
-        ));
-        $timeField->setAttribute('placeholder', $timeField->getConfig('timeformat'));
+        // Set date formatting hints and example
+        $date = static::now()->Format($dateFormat);
+        $field
+            ->getDateField()
+            ->setDescription(_t(
+                'FormField.EXAMPLE',
+                'e.g. {format}',
+                'Example format',
+                [ 'format' => $date ]
+            ))
+            ->setAttribute('placeholder', $dateFormat);
+
+        // Set time formatting hints and example
+        $time = static::now()->Format($timeFormat);
+        $field
+            ->getTimeField()
+            ->setDescription(_t(
+                'FormField.EXAMPLE',
+                'e.g. {format}',
+                'Example format',
+                [ 'format' => $time ]
+            ))
+            ->setAttribute('placeholder', $timeFormat);
 
         return $field;
     }
@@ -198,11 +175,14 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
      */
     public static function now()
     {
+        /** @var DBDatetime $now */
+        $now = null;
         if (self::$mock_now) {
-            return self::$mock_now;
+            $now = self::$mock_now;
         } else {
-            return DBField::create_field('Datetime', date('Y-m-d H:i:s'));
+            $now = DBField::create_field('Datetime', time());
         }
+        return $now;
     }
 
     /**
@@ -238,5 +218,27 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         return array(
             'Now' => array('method' => 'now', 'casting' => 'Datetime'),
         );
+    }
+
+    /**
+     * Get date / time formatter for the current locale
+     *
+     * @param int $dateLength
+     * @param int $timeLength
+     * @return IntlDateFormatter
+     */
+    public function getFormatter($dateLength = IntlDateFormatter::MEDIUM, $timeLength = IntlDateFormatter::MEDIUM)
+    {
+        return new IntlDateFormatter(i18n::get_locale(), $dateLength, $timeLength);
+    }
+
+    /**
+     * Get standard ISO date format string
+     *
+     * @return string
+     */
+    public function getISOFormat()
+    {
+        return self::ISO_DATETIME;
     }
 }

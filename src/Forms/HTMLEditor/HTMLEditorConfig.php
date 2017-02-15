@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
+use SilverStripe\Core\Config\Configurable;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Object;
 
 /**
@@ -22,8 +24,10 @@ use SilverStripe\Core\Object;
  *
  * @author "Hamish Friedlander" <hamish@silverstripe.com>
  */
-abstract class HTMLEditorConfig extends Object
+abstract class HTMLEditorConfig
 {
+    use Configurable;
+    use Injectable;
 
     /**
      * Array of registered configurations

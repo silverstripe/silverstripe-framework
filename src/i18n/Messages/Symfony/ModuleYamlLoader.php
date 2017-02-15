@@ -84,9 +84,7 @@ class ModuleYamlLoader extends ArrayLoader
     protected function normaliseMessages($messages, $locale)
     {
         foreach ($messages as $key => $value) {
-            if (is_array($value)) {
-                $messages[$key] = $this->normalisePlurals($key, $value, $locale);
-            }
+            $messages[$key] = $this->normaliseMessage($key, $value, $locale);
         }
         return $messages;
     }
@@ -99,28 +97,26 @@ class ModuleYamlLoader extends ArrayLoader
      * @link http://symfony.com/doc/current/components/translation/usage.html#component-translation-pluralization
      *
      * @param string $key
-     * @param array $map
+     * @param mixed $value Input value
      * @param string $locale
      * @return string
      */
-    protected function normalisePlurals($key, $map, $locale)
+    protected function normaliseMessage($key, $value, $locale)
     {
-        $parts = [];
-        foreach (i18n::config()->get('plurals') as $form) {
-            if (isset($map[$form])) {
-                $parts[] = $map[$form];
-            }
+        if (!is_array($value)) {
+            return $value;
         }
-        // Non-associative plural, just keep in same order
-        if (empty($parts)) {
-            return $parts = $map;
+        if (isset($value['default'])) {
+            return $value['default'];
+        }
+        // Plurals
+        $pluralised = i18n::encode_plurals($value);
+        if ($pluralised) {
+            return $pluralised;
         }
 
         // Warn if mismatched plural forms
-        if (count($map) !== count($parts)) {
-            trigger_error("Plural form {$locale}.{$key} has invalid plural keys", E_USER_WARNING);
-        }
-
-        return implode('|', $parts);
+        trigger_error("Localisation entity {$locale}.{$key} is invalid", E_USER_WARNING);
+        return null;
     }
 }
