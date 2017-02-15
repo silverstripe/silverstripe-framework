@@ -9,6 +9,12 @@ use SilverStripe\i18n\i18n;
  */
 class SeparatedDateField extends DateField
 {
+
+    /**
+     * @var string
+     */
+    protected $separator = '/';
+
     public function Field($properties = array())
     {
         // Three separate fields for day, month and year
@@ -33,12 +39,47 @@ class SeparatedDateField extends DateField
             $fieldYear->setAttribute('placeholder', _t(__CLASS__ . '.YEAR', 'Year'));
         }
 
+        $format = $this->getDateFormat();
+        $validFormat = (
+            stripos($format, 'd') !== false
+            && stripos($format, 'm') !== false
+            && stripos($format, 'y') !== false
+        );
+        if (!$validFormat) {
+            throw new \InvalidArgumentException(
+                'Invalid date format for field ordering: ' . $format
+                . '. Requires "d", "m", and "y" values to determine order'
+            );
+        }
+
+        $fields = array();
+        $fields[stripos($format, 'd')] = $fieldDay->Field();
+        $fields[stripos($format, 'm')] = $fieldMonth->Field();
+        $fields[stripos($format, 'y')] = $fieldYear->Field();
+        ksort($fields);
+
+
         // Join all fields
-        // @todo custom ordering based on locale
-        $sep = '&nbsp;<span class="separator">/</span>&nbsp;';
-        return $fieldDay->Field() . $sep
-            . $fieldMonth->Field() . $sep
-            . $fieldYear->Field();
+        $sep = '&nbsp;<span class="separator">' . $this->getSeparator() . '</span>&nbsp;';
+        return implode($sep, $fields);
+    }
+
+    /**
+     * @param $string
+     * @return self
+     */
+    public function setSeparator($separator)
+    {
+        $this->separator = $separator;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSeparator()
+    {
+        return $this->separator;
     }
 
     /**
