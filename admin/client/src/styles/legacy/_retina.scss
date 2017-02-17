@@ -100,7 +100,7 @@
 
 	/* Default CMS logo */
 	.cms-logo {
-		a {
+		.cms-logo__link {
 			background-image: $application-logo-small-2x;
 			background-size: 22px 22px;
 		}
