@@ -253,7 +253,7 @@ class SiteConfig extends DataObject implements PermissionProvider {
 	}
 	
 	function providePermissions() {
-		return array(
+		$permissions = array(
 			'EDIT_SITECONFIG' => array(
 				'name' => _t('SiteConfig.EDIT_PERMISSION', 'Manage site configuration'),
 				'category' => _t('Permissions.PERMISSIONS_CATEGORY', 'Roles and access permissions'),
@@ -261,6 +261,8 @@ class SiteConfig extends DataObject implements PermissionProvider {
 				'sort' => 400
 			)
 		);
+		$this->extend('providePermissions',$permissions);
+		return $permissions;
 	}
 	
 	/**
