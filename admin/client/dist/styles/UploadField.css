@@ -76,6 +76,7 @@
 }
 
 .ss-uploadfield .ss-uploadfield-item .ss-uploadfield-item-info .ss-uploadfield-item-name{
+  cursor:default;
   display:block;
   line-height:13px;
   height:26px;
