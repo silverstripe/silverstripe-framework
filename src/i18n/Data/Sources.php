@@ -91,7 +91,7 @@ class Sources implements Resettable
         }
         $paths = [];
 
-        // Search sorted modules
+        // Search sorted modules (receives absolute paths)
         foreach ($this->getSortedModules() as $module => $path) {
             $langPath = "{$path}/lang/";
             if (is_dir($langPath)) {
@@ -99,14 +99,14 @@ class Sources implements Resettable
             }
         }
 
-        // Search theme dirs
+        // Search theme dirs (receives relative paths)
         $locator = ThemeResourceLoader::instance();
         foreach (SSViewer::get_themes() as $theme) {
             if ($locator->getSet($theme)) {
                 continue;
             }
             $path = $locator->getPath($theme);
-            $langPath = "{$path}/lang/";
+            $langPath = BASE_PATH . "/{$path}/lang/";
             if (is_dir($langPath)) {
                 $paths[] = $langPath;
             }
