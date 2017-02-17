@@ -37,6 +37,12 @@ Once we set a locale, all the calls to the translator function will return strin
 these translations are available. See [unicode.org](http://unicode.org/cldr/data/diff/supplemental/languages_and_territories.html) 
 for a complete listing of available locales.
 
+The `i18n` logic doesn't set the PHP locale via [setlocale()](http://php.net/setlocale).
+Localisation methods in SilverStripe rely on explicit locale settings as documented below.
+If you rely on PHP's built-in localisation such as [strftime()](http://php.net/strftime),
+please only change locale information selectively. Setting `LC_ALL` or `LC_NUMERIC` will cause issues with SilverStripe
+operations such as decimal separators in database queries.
+
 ### Getting the locale
 
 As you set the locale you can also get the current value, just by calling [api:i18n::get_locale()].
