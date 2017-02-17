@@ -780,6 +780,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function getValidator() {
 		$validator = Injector::inst()->create('Member_Validator');
+		$validator->setForMember($this);
 		$this->extend('updateValidator', $validator);
 
 		return $validator;
@@ -1823,21 +1824,39 @@ class Member_ForgotPasswordEmail extends Email {
  * Member Validator
  *
  * Custom validation for the Member object can be achieved either through an
- * {@link DataExtension} on the Member object or, by specifying a subclass of
+ * {@link DataExtension} on the Member_Validator object or, by specifying a subclass of
  * {@link Member_Validator} through the {@link Injector} API.
- *
+ * The Validator can also be modified by adding an Extension to Member and implement the
+ * <code>updateValidator</code> hook.
  * {@see Member::getValidator()}
+ *
+ * Additional required fields can also be set via config API, eg.
+ * <code>
+ * Member_Validator:
+ *   customRequired:
+ *     - Surname
+ * </code>
  *
  * @package framework
  * @subpackage security
  */
-class Member_Validator extends RequiredFields {
-
+class Member_Validator extends RequiredFields
+{
+	/**
+	 * Fields that are required by this validator
+	 * @config
+	 * @var array
+	 */
 	protected $customRequired = array(
 		'FirstName',
 		'Email'
 	);
 
+	/**
+	 * Determine what member this validator is meant for
+	 * @var Member
+	 */
+	protected $forMember = null;
 
 	/**
 	 * Constructor
@@ -1851,7 +1870,33 @@ class Member_Validator extends RequiredFields {
 
 		$required = array_merge($required, $this->customRequired);
 
-		parent::__construct($required);
+		// check for config API values and merge them in
+		$config = $this->config()->customRequired;
+		if(is_array($config)){
+			$required = array_merge($required, $config);
+		}
+
+		parent::__construct(array_unique($required));
+	}
+
+	/**
+	 * Get the member this validator applies to.
+	 * @return Member
+	 */
+	public function getForMember()
+	{
+		return $this->forMember;
+	}
+
+	/**
+	 * Set the Member this validator applies to.
+	 * @param Member $value
+	 * @return $this
+	 */
+	public function setForMember(Member $value)
+	{
+		$this->forMember = $value;
+		return $this;
 	}
 
 	/**
@@ -1864,47 +1909,54 @@ class Member_Validator extends RequiredFields {
 	 * @return bool Returns TRUE if the submitted data is valid, otherwise
 	 *              FALSE.
 	 */
-	public function php($data) {
+	public function php($data)
+	{
 		$valid = parent::php($data);
 
-		$identifierField = Member::config()->unique_identifier_field;
-		$member = DataObject::get_one('Member', array(
-			"\"$identifierField\"" => $data[$identifierField]
-		));
+		$identifierField = (string)Member::config()->unique_identifier_field;
 
-		// if we are in a complex table field popup, use ctf[childID], else use ID
-		if(isset($_REQUEST['ctf']['childID'])) {
-			$id = $_REQUEST['ctf']['childID'];
-		} elseif(isset($_REQUEST['ID'])) {
-			$id = $_REQUEST['ID'];
-		} else {
-			$id = null;
-		}
-
-		if($id && is_object($member) && $member->ID != $id) {
-			$uniqueField = $this->form->Fields()->dataFieldByName($identifierField);
-			$this->validationError(
-				$uniqueField->id(),
-				_t(
-					'Member.VALIDATIONMEMBEREXISTS',
-					'A member already exists with the same %s',
-					array('identifier' => strtolower($identifierField))
-				),
-				'required'
-			);
-			$valid = false;
-		}
-
-		// Execute the validators on the extensions
-		if($this->extension_instances) {
-			foreach($this->extension_instances as $extension) {
-				if(method_exists($extension, 'hasMethod') && $extension->hasMethod('updatePHP')) {
-					$valid &= $extension->updatePHP($data, $this->form);
+		// Only validate identifier field if it's actually set. This could be the case if
+		// somebody removes `Email` from the list of required fields.
+		if(isset($data[$identifierField])){
+			$id = isset($data['ID']) ? (int)$data['ID'] : 0;
+			if(!$id && ($ctrl = $this->form->getController())){
+				// get the record when within GridField (Member editing page in CMS)
+				if($ctrl instanceof GridFieldDetailForm_ItemRequest && $record = $ctrl->getRecord()){
+					$id = $record->ID;
 				}
+			}
+
+			// If there's no ID passed via controller or form-data, use the assigned member (if available)
+			if(!$id && ($member = $this->getForMember())){
+				$id = $member->exists() ? $member->ID : 0;
+			}
+
+			// set the found ID to the data array, so that extensions can also use it
+			$data['ID'] = $id;
+
+			$members = Member::get()->filter($identifierField, $data[$identifierField]);
+			if($id) {
+				$members = $members->exclude('ID', $id);
+			}
+
+			if($members->count() > 0) {
+				$this->validationError(
+					$identifierField,
+					_t(
+						'Member.VALIDATIONMEMBEREXISTS',
+						'A member already exists with the same {identifier}',
+						array('identifier' => Member::singleton()->fieldLabel($identifierField))
+					),
+					'required'
+				);
+				$valid = false;
 			}
 		}
 
-		return $valid;
-	}
 
+		// Execute the validators on the extensions
+		$results = $this->extend('updatePHP', $data, $this->form);
+		$results[] = $valid;
+		return min($results);
+	}
 }
