@@ -56,6 +56,8 @@
     "react-addons-css-transition-group": "^15.3.1",
     "react-apollo": "^0.7.0",
     "react-bootstrap-ss": "^0.30.6",
+    "react-dnd": "^2.2.3",
+    "react-dnd-html5-backend": "^2.2.3",
     "react-dom": "^15.3.1",
     "react-redux": "^4.4.1",
     "react-router": "^2.4.1",
