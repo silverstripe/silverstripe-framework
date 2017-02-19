@@ -1129,7 +1129,7 @@ minHeight:370,maxHeight:400,closeOnEscape:!1,open:function e(){$(".ui-widget-ove
 }})},onunmatch:function x(){this._super()},open:function R(){this.ssdialog("open")},close:function I(){this.ssdialog("close")},toggle:function F(e){this.is(":visible")?this.close():this.open()},reauthenticate:function A(e){
 "undefined"!=typeof e.SecurityID&&$(":input[name=SecurityID]").val(e.SecurityID),"undefined"!=typeof e.TempID&&$("body").data("member-tempid",e.TempID),this.close()}}),$("form.loading,.cms-content.loading,.cms-content-fields.loading,.cms-content-view.loading").entwine({
 onmatch:function D(){this.closest("div").append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>'),this._super()},onunmatch:function M(){
-this.find(".cms-content-loading-overlay,.cms-content-loading-spinner").remove(),this._super()}}),$(".cms .cms-panel-link").entwine({onclick:function N(e){if($(this).hasClass("external-link"))return void e.stopPropagation()
+this.closest("div").find(".cms-content-loading-overlay,.cms-content-loading-spinner").remove(),this._super()}}),$(".cms .cms-panel-link").entwine({onclick:function N(e){if($(this).hasClass("external-link"))return void e.stopPropagation()
 
 
 var t=this.attr("href"),n=t&&!t.match(/^#/)?t:this.data("href"),i={pjax:this.data("pjaxTarget")}

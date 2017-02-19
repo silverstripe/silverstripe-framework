@@ -1045,7 +1045,7 @@ $.entwine('ss', function($) {
       this._super();
     },
     onunmatch: function() {
-      this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
+      this.closest('div').find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
       this._super();
     }
   });
