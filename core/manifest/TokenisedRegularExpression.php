@@ -110,6 +110,9 @@ class TokenisedRegularExpression {
 			}
 			else return true;
 		}
+		else if (in_array($tokens[$tokenPos][0], array(T_COMMENT, T_DOC_COMMENT, T_WHITESPACE))) {
+			return $this->matchFrom($tokenPos + 1, $expressionPos, $tokens, $matches);
+		}
 
 		return false;
 

@@ -626,7 +626,7 @@ sk:
     APPLY_ROLES: "Aplikovať úlohy skupinám"
     APPLY_ROLES_HELP: "Schopnosť editovať úlohy pridelené k skupine. Vyžaduje \"Prístup k 'Užívatelia' sekcii\"."
     EDITPERMISSIONS: "Spravovať právomoci pre skupiny"
-    EDITPERMISSIONS_HELP: "Schopnosť upravovať právomoci a IP adresi pre skupinu. Vyžaduje prístup do sekcie \"Bezpečnosť\"."
+    EDITPERMISSIONS_HELP: "Schopnosť upravovať právomoci a IP adresy pre skupinu. Vyžaduje prístup do sekcie \"Bezpečnosť\"."
     GROUPNAME: "Názov skupiny"
     IMPORTGROUPS: "Importovať skupiny"
     IMPORTUSERS: "Importovať používateľov"
