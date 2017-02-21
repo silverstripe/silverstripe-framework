@@ -12,6 +12,7 @@ use SilverStripe\Forms\GridField\GridFieldConfig;
 use SilverStripe\Forms\GridField\GridFieldPageCount;
 use SilverStripe\Forms\GridField\GridFieldPaginator;
 use SilverStripe\Forms\GridField\GridFieldToolbarHeader;
+use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Player;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Team;
 use SilverStripe\ORM\ArrayList;
@@ -44,7 +45,8 @@ class GridFieldPaginatorTest extends FunctionalTest
      */
     protected $extraDataObjects = array(
         Team::class,
-        Player::class
+        Player::class,
+        Cheerleader::class,
     );
 
     public function setUp()
