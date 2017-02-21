@@ -66,3 +66,9 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Assets\Image_Backend:
     class: SilverStripe\Assets\GDBackend
   Image_Backend: '%$SilverStripe\Assets\Image_Backend'
+---
+Name: coreassetfield
+---
+SilverStripe\Core\Injector\Injector:
+  SilverStripe\Forms\FileHandleField:
+    class: SilverStripe\Forms\FileField

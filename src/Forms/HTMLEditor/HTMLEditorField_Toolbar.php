@@ -10,10 +10,12 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse_Exception;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\CheckboxField;
 use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
+use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig;
@@ -122,6 +124,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
         $numericLabelTmpl = '<span class="step-label"><span class="flyout">Step %d.</span>'
             . '<span class="title">%s</span></span>';
+        
         $form = new Form(
             $this->controller,
             "{$this->name}/LinkForm",
@@ -159,7 +162,10 @@ class HTMLEditorField_Toolbar extends RequestHandler
                     $siteTree,
                     TextField::create('external', _t('HTMLEditorField.URL', 'URL'), 'http://'),
                     EmailField::create('email', _t('HTMLEditorField.EMAIL', 'Email address')),
-                    $fileField = UploadField::create('file', _t('HTMLEditorField.FILE', 'File')),
+                    $fileField = TreeDropdownField::create(
+                        'file',
+                        _t('HTMLEditorField.FILE', 'File'),
+                        File::class),
                     TextField::create('Anchor', _t('HTMLEditorField.ANCHORVALUE', 'Anchor')),
                     TextField::create('Subject', _t('HTMLEditorField.SUBJECT', 'Email subject')),
                     TextField::create('Description', _t('HTMLEditorField.LINKDESCR', 'Link description')),
@@ -177,7 +183,6 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $headerWrap->addExtraClass('CompositeField composite cms-content-header form-group--no-label ');
         $contentComposite->setName('ContentBody');
         $contentComposite->addExtraClass('ss-insert-link content');
-        $fileField->setAllowedMaxFileNumber(1);
 
         $form->unsetValidator();
         $form->loadDataFrom($this);

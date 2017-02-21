@@ -4,8 +4,9 @@ namespace SilverStripe\ORM\FieldType;
 
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Image;
-use SilverStripe\Forms\UploadField;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\DropdownField;
+use SilverStripe\Forms\FileHandleField;
 use SilverStripe\Forms\NumericField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -48,7 +49,7 @@ class DBForeignKey extends DBInt
         }
         $hasOneSingleton = singleton($hasOneClass);
         if ($hasOneSingleton instanceof File) {
-            $field = new UploadField($relationName, $title);
+            $field = Injector::inst()->create(FileHandleField::class, $relationName, $title);
             if ($hasOneSingleton instanceof Image) {
                 $field->setAllowedFileCategories('image/supported');
             }
