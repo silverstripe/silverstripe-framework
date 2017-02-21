@@ -5923,8 +5923,9 @@ i.setDragImage(u,p.x,p.y)}try{i.setData("application/json",{})}catch(v){}this.se
 var g=this.getCurrentSourcePreviewNodeOptions(),y=g.captureDraggingState
 y?this.actions.publishDragSource():setTimeout(function(){return e.actions.publishDragSource()})}else if(o)this.beginDragNativeItem(o)
 else{if(!(i.types||t.target.hasAttribute&&t.target.hasAttribute("draggable")))return
-t.preventDefault()}}},{key:"handleTopDragEndCapture",value:function D(){var t=this.clearCurrentDragSourceNode()
-t&&this.actions.endDrag()}},{key:"handleTopDragEnterCapture",value:function A(t){this.dragEnterTargetIds=[]
+t.preventDefault()}}},{key:"handleTopDragEndCapture",value:function D(){this.clearCurrentDragSourceNode()&&this.actions.endDrag()}},{key:"handleTopDragEnterCapture",value:function A(t){this.dragEnterTargetIds=[]
+
+
 var e=this.enterLeaveCounter.enter(t.target)
 if(e&&!this.monitor.isDragging()){var n=t.dataTransfer,r=(0,m.matchNativeItemType)(n)
 r&&this.beginDragNativeItem(r)}}},{key:"handleDragEnter",value:function I(t,e){this.dragEnterTargetIds.unshift(e)}},{key:"handleTopDragEnter",value:function M(t){var e=this,n=this.dragEnterTargetIds
