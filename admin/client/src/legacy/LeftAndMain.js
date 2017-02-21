@@ -1041,11 +1041,11 @@ $.entwine('ss', function($) {
    */
   $('form.loading,.cms-content.loading,.cms-content-fields.loading,.cms-content-view.loading').entwine({
     onmatch: function() {
-      this.closest('div').append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
+      this.append('<div class="cms-content-loading-overlay ui-widget-overlay-light"></div><div class="cms-content-loading-spinner"></div>');
       this._super();
     },
     onunmatch: function() {
-      this.closest('div').find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
+      this.find('.cms-content-loading-overlay,.cms-content-loading-spinner').remove();
       this._super();
     }
   });
