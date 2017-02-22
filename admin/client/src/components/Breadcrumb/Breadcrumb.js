@@ -55,7 +55,7 @@ class Breadcrumb extends SilverStripeComponent {
 
   render() {
     return (
-      <div className="breadcrumb__container fill-height">
+      <div className="breadcrumb__container fill-height flexbox-area-grow">
         <ol className="breadcrumb">
           {this.renderBreadcrumbs()}
         </ol>

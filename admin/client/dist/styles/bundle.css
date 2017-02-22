@@ -828,9 +828,9 @@ body .ui-tooltip{ border-width:2px; }
 }
 
 * html .notice-wrap{
-	position:absolute;
+	position:absolute;		
 }
-
+ 
 .notice-item{
 	height:60px;
 	background:#333;

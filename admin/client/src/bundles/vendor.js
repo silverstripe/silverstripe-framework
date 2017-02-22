@@ -13,6 +13,8 @@ require('expose?jQuery!jQuery');
 // Note that these are order-dependent - earlier items should not depend on later ones
 require('expose?DeepFreezeStrict!deep-freeze-strict');
 require('expose?React!react');
+require('expose?ReactDND!react-dnd');
+require('expose?ReactDNDHtml5Backend!react-dnd-html5-backend');
 require('expose?Tether!tether');
 require('expose?ReactDom!react-dom');
 require('expose?Redux!redux');

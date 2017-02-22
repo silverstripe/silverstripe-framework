@@ -26,6 +26,7 @@ require('expose?LiteralField!components/LiteralField/LiteralField');
 require('expose?Toolbar!components/Toolbar/Toolbar');
 require('expose?Breadcrumb!components/Breadcrumb/Breadcrumb');
 require('expose?BreadcrumbsActions!state/breadcrumbs/BreadcrumbsActions');
+require('expose?Badge!components/Badge/Badge');
 require('expose?Config!lib/Config');
 require('expose?DataFormat!lib/DataFormat');
 require('expose?ReducerRegister!lib/ReducerRegister');
