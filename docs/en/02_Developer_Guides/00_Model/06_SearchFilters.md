@@ -42,7 +42,7 @@ config:
 
 
 	:::yaml
-	Injector:
+	SilverStripe\Core\Injector\Injector:
 	  DataListFilter.CustomMatch:
 	    class: MyVendor/Search/CustomMatchFilter
 

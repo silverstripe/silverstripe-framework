@@ -5,7 +5,8 @@ summary: SilverStripe's YAML based Configuration API for setting runtime configu
 
 SilverStripe comes with a comprehensive code based configuration system through the [api:Config] class. It primarily 
 relies on declarative [YAML](http://en.wikipedia.org/wiki/YAML) files, and falls back to procedural PHP code, as well 
-as PHP static variables.
+as PHP static variables. This is provided by the [silverstripe/config](https://github.com/silverstripe/silverstripe-config)
+library.
 
 The Configuration API can be seen as separate from other forms of variables in the SilverStripe system due to three 
 properties API:
@@ -49,19 +50,28 @@ be marked `private static` and follow the `lower_case_with_underscores` structur
 This can be done by calling the static method [api:Config::inst()], like so:
 
 	:::php
-	$config = Config::inst()->get('MyClass');
+	$config = Config::inst()->get('MyClass', 'property');
 
 Or through the `config()` object on the class.
 	
-	$config = $this->config();
+	$config = $this->config()->get('property')';
+	
+Note that by default `Config::inst()` returns only an immutable version of config. Use `Config::modify()`
+if it's necessary to alter class config. This is generally undesirable in most applications, as modification
+of the config can immediately have performance implications, so this should be used sparingly, or
+during testing to modify state.
 
-There are three public methods available on the instance. `get($class, $variable)`, `remove($class, $variable)` and
-`update($class, $variable, $value)`.
+Note that while both objects have similar methods the APIs differ slightly. The below actions are equivalent:
 
-<div class="notice" markdown="1">
-There is no "set" method. It is not possible to completely set the value of a classes' property. `update` adds new 
-values that are treated as the highest priority in the merge, and remove adds a merge mask that filters out values.
-</div>
+  * `Config::inst()->get('Class', 'property');` or `Class::config()->get('property')`
+  * `Config::inst()->uninherited('Class', 'property');` or `Class::config()->get('property', Config::UNINHERITED)`
+  * `Config::inst()->exists('Class', 'property');` or `Class::config()->exists('property')`
+  
+And mutable methods:
+
+  * `Config::modify()->merge('Class', 'property', 'newvalue');` or `Class::config()->merge('property', 'newvalue')`
+  * `Config::modify()->set('Class', 'property', 'newvalue');` or `Class::config()->set('property', 'newvalue')`
+  * `Config::modify()->remove('Class', 'property');` or `Class::config()->remove('property')`
 
 To set those configuration options on our previously defined class we can define it in a `YAML` file.
 
@@ -92,7 +102,7 @@ To use those variables in your application code:
 	echo implode(', ', Config::inst()->get('MyClass', 'option_two'));
 	// returns 'Foo, Bar, Baz'
 
-	Config::inst()->update('MyClass', 'option_one', true);
+	Config::inst()->set('MyClass', 'option_one', true);
 
 	echo Config::inst()->get('MyClass', 'option_one');
 	// returns true
@@ -134,7 +144,7 @@ the result will be the higher priority false-ish value.
 
 The locations that configuration values are taken from in highest -> lowest priority order are:
 
-- Any values set via a call to Config#update
+- Any values set via a call to Config#merge / Config#set
 - The configuration values taken from the YAML files in `_config/` directories (internally sorted in before / after 
 order, where the item that is latest is highest priority)
 - Any static set on an "additional static source" class (such as an extension) named the same as the name of the property
@@ -155,13 +165,13 @@ rather than add.
 		'allowed_actions', Config::UNINHERITED
 	);
 
-They are much simpler. They consist of a list of key / value pairs. When applied against the current composite value
+Available masks include:
 
-- If the composite value is a sequential array, any member of that array that matches any value in the mask is removed
-- If the composite value is an associative array, any member of that array that matches both the key and value of any 
-pair in the mask is removed
-- If the composite value is not an array, if that value matches any value in the mask it is removed
+  * Config::UNINHERITED - Exclude config inherited from parent classes
+  * Config::EXCLUDE_EXTRA_SOURCES - Exclude config applied by extensions
 
+You can also pass in literal `true` to disable all extra sources, or merge config options with
+bitwise `|` operator.
 
 ## Configuration YAML Syntax and Rules
 
@@ -280,11 +290,13 @@ rules contained match.
 You then list any of the following rules as sub-keys, with informational values as either a single value or a list.
 
   - 'classexists', in which case the value(s) should be classes that must exist
-  - 'moduleexists', in which case the value(s) should be modules that must exist
+  - 'moduleexists', in which case the value(s) should be modules that must exist. This supports either folder
+    name or composer `vendor/name` format.
   - 'environment', in which case the value(s) should be one of "live", "test" or "dev" to indicate the SilverStripe
     mode the site must be in
   - 'envvarset', in which case the value(s) should be environment variables that must be set
   - 'constantdefined', in which case the value(s) should be constants that must be defined
+  - 'envorconstant' A variable which should be defined either via environment vars or constants
 
 For instance, to add a property to "foo" when a module exists, and "bar" otherwise, you could do this:
 
@@ -303,18 +315,22 @@ For instance, to add a property to "foo" when a module exists, and "bar" otherwi
 	  property: 'bar'
 	---
 
+Multiple conditions of the same type can be declared via array format
+
+
+    :::yaml
+	---
+	Only:
+	  moduleexists:
+	    - 'silverstripe/blog'
+	    - 'silverstripe/lumberjack'
+
+
 <div class="alert" markdown="1">
 When you have more than one rule for a nested fragment, they're joined like 
 `FRAGMENT_INCLUDED = (ONLY && ONLY) && !(EXCEPT && EXCEPT)`. 
 That is, the fragment will be included if all Only rules match, except if all Except rules match.
 </div>
-
-
-<div class="alert" markdown="1">
-Due to YAML limitations, having multiple conditions of the same kind (say, two `EnvVarSet` in one "Only" block)
-will result in only the latter coming through.
-</div>
-
 
 ## API Documentation
 

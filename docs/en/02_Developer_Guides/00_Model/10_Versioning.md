@@ -23,7 +23,7 @@ also track versioned history.
 	:::php
 	class MyStagedModel extends DataObject {
 		private staic $extensions = [
-			"Versioned"
+			Versioned::class
 		];
 	}
 
@@ -34,8 +34,8 @@ can be specified by setting the constructor argument to "Versioned"
 
 	:::php
 	class VersionedModel extends DataObject {
-		private staic $extensions = [
-			"Versioned('Versioned')"
+		private static $extensions = [
+			"SilverStripe\\ORM\\Versioning\\Versioned('Versioned')"
 		];
 	}
 
@@ -63,14 +63,14 @@ adding a suffix.
 
  * `MyRecord` table: Contains staged data
  * `MyRecord_Live` table: Contains live data
- * `MyRecord_versions` table: Contains a version history (new record created on each save)
+ * `MyRecord_Versions` table: Contains a version history (new record created on each save)
 
 Similarly, any subclass you create on top of a versioned base will trigger the creation of additional tables, which are 
 automatically joined as required:
 
  * `MyRecordSubclass` table: Contains only staged data for subclass columns
  * `MyRecordSubclass_Live` table: Contains only live data for subclass columns
- * `MyRecordSubclass_versions` table: Contains only version history for subclass columns
+ * `MyRecordSubclass_Versions` table: Contains only version history for subclass columns
 
 ## Usage
 
@@ -81,12 +81,12 @@ explicitly request a certain stage through various getters on the `Versioned` cl
 
 	:::php
 	// Fetching multiple records
-	$stageRecords = Versioned::get_by_stage('MyRecord', 'Stage');
-	$liveRecords = Versioned::get_by_stage('MyRecord', 'Live');
+	$stageRecords = Versioned::get_by_stage('MyRecord', Versioned::DRAFT);
+	$liveRecords = Versioned::get_by_stage('MyRecord', Versioned::LIVE);
 
 	// Fetching a single record
-	$stageRecord = Versioned::get_by_stage('MyRecord', 'Stage')->byID(99);
-	$liveRecord = Versioned::get_by_stage('MyRecord', 'Live')->byID(99);
+	$stageRecord = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
+	$liveRecord = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->byID(99);
 
 ### Historical Versions
 
@@ -131,7 +131,7 @@ done via one of several ways:
    See "DataObject ownership" for reference on dependant objects.
 
 	:::php
-	$record = Versioned::get_by_stage('MyRecord', 'Stage')->byID(99);
+	$record = Versioned::get_by_stage('MyRecord', Versioned::DRAFT)->byID(99);
 	$record->MyField = 'changed';
 	// will update `MyRecord` table (assuming Versioned::current_stage() == 'Stage'),
 	// and write a row to `MyRecord_versions`.
@@ -144,7 +144,7 @@ Similarly, an "unpublish" operation does the reverse, and removes a record from 
 	:::php
 	$record = MyRecord::get()->byID(99); // stage doesn't matter here
 	// will remove the row from the `MyRecord_Live` table
-	$record->deleteFromStage('Live');
+	$record->deleteFromStage(Versioned::LIVE);
 
 ### Forcing the Current Stage
 
@@ -154,7 +154,7 @@ is initialized. But it can also be set and reset temporarily to force a specific
 	:::php
 	$origMode = Versioned::get_reading_mode(); // save current mode
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Live' records
-	Versioned::set_reading_mode('Stage'); // temporarily overwrite mode
+	Versioned::set_reading_mode(Versioned::DRAFT); // temporarily overwrite mode
 	$obj = MyRecord::getComplexObjectRetrieval(); // returns 'Stage' records
 	Versioned::set_reading_mode($origMode); // reset current mode
 
@@ -180,7 +180,7 @@ without requiring any custom code.
 	:::php
 	class MyPage extends Page {
 		private static $has_many = array(
-			'Banners' => 'Banner'
+			'Banners' => Banner::class
 		);
 		private static $owns = array(
 			'Banners'
@@ -189,11 +189,11 @@ without requiring any custom code.
 	
 	class Banner extends Page {
 		private static $extensions = array(
-			'Versioned'
+			Versioned::class
 		);
 		private static $has_one = array(
-			'Parent' => 'MyPage',
-			'Image' => 'Image',
+			'Parent' => MyPage::class,
+			'Image' => Image::class,
 		);
 		private static $owns = array(
 			'Image'
@@ -219,7 +219,7 @@ E.g.
 	:::php
 	class MyParent extends DataObject {
 		private static $extensions = array(
-			'Versioned'
+			Versioned::class
 		);
 		private static $owns = array(
 			'ChildObjects'
@@ -230,7 +230,7 @@ E.g.
 	}
 	class MyChild extends DataObject {
 		private static $extensions = array(
-			'Versioned'
+			Versioned::class
 		);
 		private static $owned_by = array(
 			'Parent'
@@ -258,7 +258,7 @@ smaller modifications of the generated `DataList` objects.
 Example: Get the first 10 live records, filtered by creation date:
 
 	:::php
-	$records = Versioned::get_by_stage('MyRecord', 'Live')->limit(10)->sort('Created', 'ASC');
+	$records = Versioned::get_by_stage('MyRecord', Versioned::LIVE)->limit(10)->sort('Created', 'ASC');
 
 ### Permissions
 
@@ -283,7 +283,7 @@ E.g.
     :::php
     class MyObject extends DataObject {
         private static $extensions = array(
-            'Versioned'
+            Versioned::class,
         );
         
         public function canViewVersioned($member = null) {
@@ -325,7 +325,7 @@ E.g.
     :::php
     class MyObject extends DataObject {
         private static $extensions = array(
-            'Versioned'
+            Versioned::class,
         );
         private static $non_live_permissions = array('ADMIN');
     }
@@ -348,7 +348,7 @@ to force a specific stage, we recommend the `Controller->init()` method for this
 	:::php
 	public function init() {
 		parent::init();
-		Versioned::set_reading_mode('Stage.Stage');
+		Versioned::set_stage(Versioned::DRAFT);
 	}
 
 

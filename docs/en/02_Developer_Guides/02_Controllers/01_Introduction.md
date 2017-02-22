@@ -49,7 +49,7 @@ Make sure that after you have modified the `routes.yml` file, that you clear you
 	Name: mysiteroutes
 	After: framework/routes#coreroutes
 	---
-	Director:
+	SilverStripe\Control\Director:
 	  rules:
 	    'teams//$Action/$ID/$Name': 'TeamController'
 
