@@ -17,7 +17,6 @@ use LogicException;
  */
 class DataObjectSchema
 {
-
     use Injectable;
     use Configurable;
 
@@ -289,7 +288,7 @@ class DataObjectSchema
 
         // Generate default table name
         if (!$table) {
-            $separator = $this->config()->get('table_namespace_separator');
+            $separator = DataObjectSchema::config()->uninherited('table_namespace_separator');
             $table = str_replace('\\', $separator, trim($class, '\\'));
         }
 
@@ -410,7 +409,7 @@ class DataObjectSchema
         $dbFields = array();
 
         // Ensure fixed fields appear at the start
-        $fixedFields = DataObject::config()->get('fixed_fields');
+        $fixedFields = DataObject::config()->uninherited('fixed_fields');
         if (get_parent_class($class) === DataObject::class) {
             // Merge fixed with ClassName spec and custom db fields
             $dbFields = $fixedFields;
@@ -495,7 +494,7 @@ class DataObjectSchema
         }
 
         // Short circuit for fixed fields
-        $fixed = DataObject::config()->get('fixed_fields');
+        $fixed = DataObject::config()->uninherited('fixed_fields');
         if (isset($fixed[$fieldName])) {
             return $this->baseDataClass($candidateClass);
         }
@@ -660,7 +659,7 @@ class DataObjectSchema
      */
     public function hasOneComponent($class, $component)
     {
-        $hasOnes = Config::inst()->get($class, 'has_one');
+        $hasOnes = Config::forClass($class)->get('has_one');
         if (!isset($hasOnes[$component])) {
             return null;
         }
@@ -682,7 +681,7 @@ class DataObjectSchema
      */
     public function belongsToComponent($class, $component, $classOnly = true)
     {
-        $belongsTo = (array)Config::inst()->get($class, 'belongs_to');
+        $belongsTo = (array)Config::forClass($class)->get('belongs_to');
         if (!isset($belongsTo[$component])) {
             return null;
         }

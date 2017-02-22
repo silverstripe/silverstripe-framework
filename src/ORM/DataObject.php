@@ -2,6 +2,7 @@
 
 namespace SilverStripe\ORM;
 
+use SilverStripe\Assets\AssetControlExtension;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Object;
@@ -252,9 +253,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @config
      * @var array
      */
-    private static $extensions = array(
-        'AssetControl' => 'SilverStripe\\Assets\\AssetControlExtension'
-    );
+    private static $extensions = [
+        'AssetControl' => AssetControlExtension::class,
+    ];
 
     /**
      * Override table name for this class. If ignored will default to FQN of class.
@@ -651,7 +652,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function isEmpty()
     {
-        $fixed = $this->config()->fixed_fields;
+        $fixed = DataObject::config()->uninherited('fixed_fields');
         foreach ($this->toMap() as $field => $value) {
             // only look at custom fields
             if (isset($fixed[$field])) {
@@ -1175,7 +1176,8 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
             );
         }
 
-        if ($this->config()->get('validation_enabled')) {
+        // Note: Validation can only be disabled at the global level, not per-model
+        if (DataObject::config()->uninherited('validation_enabled')) {
             $result = $this->validate();
             if (!$result->isValid()) {
                 return new ValidationException($result);
@@ -1659,10 +1661,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         }
 
         // Go through all relationship configuration fields.
+        $config = $this->config();
         $candidates = array_merge(
-            ($relations = Config::inst()->get($this->class, 'has_one')) ? $relations : array(),
-            ($relations = Config::inst()->get($this->class, 'has_many')) ? $relations : array(),
-            ($relations = Config::inst()->get($this->class, 'belongs_to')) ? $relations : array()
+            ($relations = $config->get('has_one')) ? $relations : array(),
+            ($relations = $config->get('has_many')) ? $relations : array(),
+            ($relations = $config->get('belongs_to')) ? $relations : array()
         );
 
         if (isset($candidates[$relationName])) {
@@ -1689,8 +1692,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function getRelationType($component)
     {
         $types = array('has_one', 'has_many', 'many_many', 'belongs_many_many', 'belongs_to');
+        $config = $this->config();
         foreach ($types as $type) {
-            $relations = Config::inst()->get($this->class, $type);
+            $relations = $config->get($type);
             if ($relations && isset($relations[$component])) {
                 return $type;
             }
@@ -1891,7 +1895,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function hasOne()
     {
-        return (array)Config::inst()->get($this->class, 'has_one', Config::INHERITED);
+        return (array)$this->config()->get('has_one');
     }
 
     /**
@@ -1904,7 +1908,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function belongsTo($classOnly = true)
     {
-        $belongsTo = (array)Config::inst()->get($this->class, 'belongs_to', Config::INHERITED);
+        $belongsTo = (array)$this->config()->get('belongs_to');
         if ($belongsTo && $classOnly) {
             return preg_replace('/(.+)?\..+/', '$1', $belongsTo);
         } else {
@@ -1922,7 +1926,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function hasMany($classOnly = true)
     {
-        $hasMany = (array)Config::inst()->get($this->class, 'has_many', Config::INHERITED);
+        $hasMany = (array)$this->config()->get('has_many');
         if ($hasMany && $classOnly) {
             return preg_replace('/(.+)?\..+/', '$1', $hasMany);
         } else {
@@ -1940,7 +1944,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function manyManyExtraFields()
     {
-        return Config::inst()->get($this->class, 'many_many_extraFields', Config::INHERITED);
+        return $this->config()->get('many_many_extraFields');
     }
 
     /**
@@ -1953,8 +1957,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function manyMany()
     {
-        $manyManys = (array)Config::inst()->get($this->class, 'many_many', Config::INHERITED);
-        $belongsManyManys = (array)Config::inst()->get($this->class, 'belongs_many_many', Config::INHERITED);
+        $config = $this->config();
+        $manyManys = (array)$config->get('many_many');
+        $belongsManyManys = (array)$config->get('belongs_many_many');
         $items = array_merge($manyManys, $belongsManyManys);
         return $items;
     }
@@ -1970,7 +1975,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function database_extensions($class)
     {
         $extensions = Config::inst()->get($class, 'database_extensions', Config::UNINHERITED);
-
         if ($extensions) {
             return $extensions;
         } else {
@@ -2533,65 +2537,25 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function can($perm, $member = null, $context = array())
     {
-        if (!isset($member)) {
-            $member = Member::currentUser();
+        if (!$member || !($member instanceof Member) || is_numeric($member)) {
+            $member = Member::currentUserID();
         }
-        if (Permission::checkMember($member, "ADMIN")) {
+
+        if ($member && Permission::checkMember($member, "ADMIN")) {
             return true;
         }
 
-        if ($this->getSchema()->manyManyComponent(static::class, 'Can' . $perm)) {
-            if ($this->ParentID && $this->SecurityType == 'Inherit') {
-                if (!($p = $this->Parent)) {
-                    return false;
-                }
-                return $this->Parent->can($perm, $member);
-            } else {
-                $permissionCache = $this->uninherited('permissionCache');
-                $memberID = $member ? $member->ID : 'none';
-
-                if (!isset($permissionCache[$memberID][$perm])) {
-                    if ($member->ID) {
-                        $groups = $member->Groups();
-                    }
-
-                    $groupList = implode(', ', $groups->column("ID"));
-
-                    // TODO Fix relation table hardcoding
-                    $query = new SQLSelect(
-                        "\"Page_Can$perm\".PageID",
-                        array("\"Page_Can$perm\""),
-                        "GroupID IN ($groupList)"
-                    );
-
-                    $permissionCache[$memberID][$perm] = $query->execute()->column();
-
-                    if ($perm == "View") {
-                        // TODO Fix relation table hardcoding
-                        $query = new SQLSelect("\"SiteTree\".\"ID\"", array(
-                            "\"SiteTree\"",
-                            "LEFT JOIN \"Page_CanView\" ON \"Page_CanView\".\"PageID\" = \"SiteTree\".\"ID\""
-                            ), "\"Page_CanView\".\"PageID\" IS NULL");
-
-                            $unsecuredPages = $query->execute()->column();
-                        if ($permissionCache[$memberID][$perm]) {
-                            $permissionCache[$memberID][$perm]
-                            = array_merge($permissionCache[$memberID][$perm], $unsecuredPages);
-                        } else {
-                            $permissionCache[$memberID][$perm] = $unsecuredPages;
-                        }
-                    }
-
-                    Config::inst()->update($this->class, 'permissionCache', $permissionCache);
-                }
-
-                if ($permissionCache[$memberID][$perm]) {
-                    return in_array($this->ID, $permissionCache[$memberID][$perm]);
-                }
-            }
-        } else {
-            return parent::can($perm, $member);
+        if (is_string($perm) && method_exists($this, 'can' . ucfirst($perm))) {
+            $method = 'can' . ucfirst($perm);
+            return $this->$method($member);
         }
+
+        $results = $this->extendedCan('can', $member);
+        if (isset($results)) {
+            return $results;
+        }
+
+        return ($member && Permission::checkMember($member, $perm));
     }
 
     /**
@@ -3240,7 +3204,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      */
     public function requireDefaultRecords()
     {
-        $defaultRecords = $this->config()->get('default_records', Config::UNINHERITED);
+        $defaultRecords = $this->config()->uninherited('default_records');
 
         if (!empty($defaultRecords)) {
             $hasData = DataObject::get_one($this->class);
@@ -3381,9 +3345,9 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
                     if ($ancestorClass === ViewableData::class) {
                         break;
                     }
-                    $types = array(
-                    'db'        => (array)Config::inst()->get($ancestorClass, 'db', Config::UNINHERITED)
-                    );
+                    $types = [
+                        'db' => (array)Config::inst()->get($ancestorClass, 'db', Config::UNINHERITED)
+                    ];
                     if ($includerelations) {
                         $types['has_one'] = (array)Config::inst()->get($ancestorClass, 'has_one', Config::UNINHERITED);
                         $types['has_many'] = (array)Config::inst()->get($ancestorClass, 'has_many', Config::UNINHERITED);
@@ -3537,7 +3501,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      * @config
      */
-    private static $db = null;
+    private static $db = [];
 
     /**
      * Use a casting object for a field. This is a map from
@@ -3593,7 +3557,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      * @config
      */
-    private static $defaults = null;
+    private static $defaults = [];
 
     /**
      * Multidimensional array which inserts default data into the database
@@ -3621,7 +3585,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      *  @var array
      * @config
      */
-    private static $has_one = null;
+    private static $has_one = [];
 
     /**
      * A meta-relationship that allows you to define the reverse side of a {@link DataObject::$has_one}.
@@ -3635,7 +3599,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      * @config
      */
-    private static $belongs_to;
+    private static $belongs_to = [];
 
     /**
      * This defines a one-to-many relationship. It is a map of component name to the remote data class.
@@ -3648,7 +3612,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      * @config
      */
-    private static $has_many = null;
+    private static $has_many = [];
 
     /**
      * many-many relationship definitions.
@@ -3656,7 +3620,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      * @config
      */
-    private static $many_many = null;
+    private static $many_many = [];
 
     /**
      * Extra fields to include on the connecting many-many table.
@@ -3674,7 +3638,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      * @config
      */
-    private static $many_many_extraFields = null;
+    private static $many_many_extraFields = [];
 
     /**
      * The inverse side of a many-many relationship.
@@ -3682,7 +3646,7 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * @var array
      * @config
      */
-    private static $belongs_many_many = null;
+    private static $belongs_many_many = [];
 
     /**
      * The default sort expression. This will be inserted in the ORDER BY
@@ -3733,14 +3697,14 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
      * default display in the search form.
      * @config
      */
-    private static $field_labels = null;
+    private static $field_labels = [];
 
     /**
      * Provides a default list of fields to be used by a 'summary'
      * view of this object.
      * @config
      */
-    private static $summary_fields = null;
+    private static $summary_fields = [];
 
     public function provideI18nEntities()
     {

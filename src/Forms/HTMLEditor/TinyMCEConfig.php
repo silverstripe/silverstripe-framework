@@ -555,7 +555,8 @@ class TinyMCEConfig extends HTMLEditorConfig
         // https://www.tinymce.com/docs/api/class/tinymce.editormanager/#baseURL
         $tinyMCEBaseURL = Controller::join_links(
             Director::absoluteBaseURL(),
-            $this->config()->get('base_dir') ?: ADMIN_THIRDPARTY_DIR . '/tinymce'
+            TinyMCEConfig::config()->get('base_dir')
+                ?: ADMIN_THIRDPARTY_DIR . '/tinymce'
         );
         $settings['baseURL'] = $tinyMCEBaseURL;
 

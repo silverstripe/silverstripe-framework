@@ -21,7 +21,6 @@ use SilverStripe\Forms\FieldList;
  */
 class Image extends File implements ShortcodeHandler
 {
-
     /**
      * @config
      * @var string
@@ -54,7 +53,7 @@ class Image extends File implements ShortcodeHandler
         $image = "<img src=\"{$previewLink}\" class=\"editor__thumbnail\" />";
 
         $link = $this->Link();
-        
+
         $statusTitle = $this->getStatusTitle();
         $statusFlag = "<span class=\"editor__status-flag\">{$statusTitle}</span>";
 

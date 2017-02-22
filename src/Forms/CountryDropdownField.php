@@ -52,7 +52,7 @@ class CountryDropdownField extends DropdownField
         }
 
         // Get sorted countries
-        $source = i18n::getData()->i18nCountries();
+        $source = i18n::getData()->getCountries();
         return parent::setSource($source);
     }
 
@@ -62,7 +62,7 @@ class CountryDropdownField extends DropdownField
 
         // Default value to best availabel locale
         $value = $this->Value();
-        if ($this->config()->default_to_locale
+        if (CountryDropdownField::config()->default_to_locale
             && (!$value || !isset($source[$value]))
             && $this->locale()
         ) {
@@ -74,7 +74,7 @@ class CountryDropdownField extends DropdownField
 
         // Default to default country otherwise
         if (!$value || !isset($source[$value])) {
-            $this->setValue($this->config()->default_country);
+            $this->setValue(CountryDropdownField::config()->default_country);
         }
 
         return parent::Field($properties);

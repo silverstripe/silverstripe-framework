@@ -127,7 +127,8 @@ class AssetControlExtension extends DataExtension
     protected function processManipulation(AssetManipulationList $manipulations)
     {
         // When deleting from stage then check if we should archive assets
-        $archive = $this->owner->config()->keep_archived_assets;
+        $archive = $this->owner->config()->get('keep_archived_assets');
+
         // Publish assets
         $this->publishAll($manipulations->getPublicAssets());
 

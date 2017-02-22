@@ -50,7 +50,7 @@ class AdminRootController extends Controller implements TemplateGlobalProvider
      * The LeftAndMain child that will be used as the initial panel to display if none is selected (i.e. if you
      * visit /admin)
      */
-    private static $default_panel = 'SilverStripe\\Admin\\SecurityAdmin';
+    private static $default_panel = SecurityAdmin::class;
 
     /**
      * @var array
@@ -84,8 +84,9 @@ class AdminRootController extends Controller implements TemplateGlobalProvider
      */
     protected static function add_rule_for_controller($controllerClass)
     {
-        $urlSegment = Config::inst()->get($controllerClass, 'url_segment', Config::FIRST_SET);
-        $urlRule    = Config::inst()->get($controllerClass, 'url_rule', Config::FIRST_SET);
+        $config = Config::forClass($controllerClass);
+        $urlSegment = $config->get('url_segment');
+        $urlRule    = $config->get('url_rule');
 
         if ($urlSegment) {
             // Make director rule
@@ -105,7 +106,8 @@ class AdminRootController extends Controller implements TemplateGlobalProvider
     {
         // If this is the final portion of the request (i.e. the URL is just /admin), direct to the default panel
         if ($request->allParsed()) {
-            $segment = Config::inst()->get($this->config()->default_panel, 'url_segment');
+            $segment = Config::forClass($this->config()->default_panel)
+                ->get('url_segment');
 
             $this->redirect(Controller::join_links(self::admin_url(), $segment, '/'));
             return $this->getResponse();
@@ -114,6 +116,7 @@ class AdminRootController extends Controller implements TemplateGlobalProvider
             $rules = self::rules();
             foreach ($rules as $pattern => $controller) {
                 if (($arguments = $request->match($pattern, true)) !== false) {
+                    /** @var LeftAndMain $controllerObj */
                     $controllerObj = Injector::inst()->create($controller);
                     $controllerObj->setSession($this->session);
 

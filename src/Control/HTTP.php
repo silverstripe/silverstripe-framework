@@ -5,7 +5,6 @@ namespace SilverStripe\Control;
 use SilverStripe\Assets\File;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Config\Config;
 use InvalidArgumentException;
 use finfo;
 
@@ -308,7 +307,7 @@ class HTTP
         // to get the file mime-type
         $ext = File::get_file_extension($filename);
         // Get the mime-types
-        $mimeTypes = HTTP::config()->get('MimeTypes');
+        $mimeTypes = HTTP::config()->uninherited('MimeTypes');
 
         // The mime type doesn't exist
         if (!isset($mimeTypes[$ext])) {
@@ -397,11 +396,11 @@ class HTTP
         // Populate $responseHeaders with all the headers that we want to build
         $responseHeaders = array();
 
-        $cacheControlHeaders = Config::inst()->get(__CLASS__, 'cache_control');
+        $cacheControlHeaders = HTTP::config()->uninherited('cache_control');
 
 
         // currently using a config setting to cancel this, seems to be so that the CMS caches ajax requests
-        if (function_exists('apache_request_headers') && Config::inst()->get(__CLASS__, 'cache_ajax_requests')) {
+        if (function_exists('apache_request_headers') && static::config()->uninherited('cache_ajax_requests')) {
             $requestHeaders = array_change_key_case(apache_request_headers(), CASE_LOWER);
             if (isset($requestHeaders['x-requested-with'])
                 && $requestHeaders['x-requested-with']=='XMLHttpRequest'
@@ -421,7 +420,7 @@ class HTTP
 
             // To do: User-Agent should only be added in situations where you *are* actually
             // varying according to user-agent.
-            $vary = Config::inst()->get(__CLASS__, 'vary');
+            $vary = HTTP::config()->uninherited('vary');
             if ($vary && strlen($vary)) {
                 $responseHeaders['Vary'] = $vary;
             }

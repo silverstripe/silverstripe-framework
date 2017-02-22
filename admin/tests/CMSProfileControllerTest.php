@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Admin\Tests;
 
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\Security\Member;
 
@@ -57,7 +58,7 @@ class CMSProfileControllerTest extends FunctionalTest
 
     public function testExtendedPermissionsStopEditingOwnProfile()
     {
-        $existingExtensions = Member::config()->get('extensions');
+        $existingExtensions = Member::config()->get('extensions', Config::EXCLUDE_EXTRA_SOURCES);
         Member::config()->update('extensions', [
             CMSProfileControllerTest\TestExtension::class
         ]);

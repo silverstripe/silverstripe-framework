@@ -63,29 +63,6 @@ class SSViewer implements Flushable
     private static $cacheblock_cache_flushed = false;
 
     /**
-     * Set whether HTML comments indicating the source .SS file used to render this page should be
-     * included in the output.  This is enabled by default
-     *
-     * @deprecated 4.0 Use the "SSViewer.source_file_comments" config setting instead
-     * @param boolean $val
-     */
-    public static function set_source_file_comments($val)
-    {
-        Deprecation::notice('4.0', 'Use the "SSViewer.source_file_comments" config setting instead');
-        SSViewer::config()->update('source_file_comments', $val);
-    }
-
-    /**
-     * @deprecated 4.0 Use the "SSViewer.source_file_comments" config setting instead
-     * @return boolean
-     */
-    public static function get_source_file_comments()
-    {
-        Deprecation::notice('4.0', 'Use the "SSViewer.source_file_comments" config setting instead');
-        return SSViewer::config()->get('source_file_comments');
-    }
-
-    /**
      * @var array $templates List of templates to select from
      */
     private $templates = null;
@@ -181,31 +158,29 @@ class SSViewer implements Flushable
      */
     public static function set_themes($themes = [])
     {
-        SSViewer::config()
-            ->remove('themes')
-            ->update('themes', $themes);
+        SSViewer::config()->set('themes', $themes);
     }
 
     public static function add_themes($themes = [])
     {
-        SSViewer::config()->update('themes', $themes);
+        SSViewer::config()->merge('themes', $themes);
     }
 
     public static function get_themes()
     {
         $default = [self::DEFAULT_THEME];
 
-        if (!SSViewer::config()->get('theme_enabled')) {
+        if (!SSViewer::config()->uninherited('theme_enabled')) {
             return $default;
         }
 
         // Explicit list is assigned
-        if ($list = SSViewer::config()->get('themes')) {
+        if ($list = SSViewer::config()->uninherited('themes')) {
             return $list;
         }
 
         // Support legacy behaviour
-        if ($theme = SSViewer::config()->get('theme')) {
+        if ($theme = SSViewer::config()->uninherited('theme')) {
             return [$theme, self::DEFAULT_THEME];
         }
 
@@ -345,47 +320,6 @@ class SSViewer implements Flushable
     public static function hasTemplate($templates)
     {
         return (bool)ThemeResourceLoader::instance()->findTemplate($templates, self::get_themes());
-    }
-
-    /**
-     * Set a global rendering option.
-     *
-     * The following options are available:
-     *  - rewriteHashlinks: If true (the default), <a href="#..."> will be rewritten to contain the
-     *    current URL.  This lets it play nicely with our <base> tag.
-     *  - If rewriteHashlinks = 'php' then, a piece of PHP script will be inserted before the hash
-     *    links: "<?php echo $_SERVER['REQUEST_URI']; ?>".  This is useful if you're generating a
-     *    page that will be saved to a .php file and may be accessed from different URLs.
-     *
-     * @deprecated 4.0 Use the "SSViewer.rewrite_hash_links" config setting instead
-     * @param string $optionName
-     * @param mixed $optionVal
-     */
-    public static function setOption($optionName, $optionVal)
-    {
-        if ($optionName == 'rewriteHashlinks') {
-            Deprecation::notice('4.0', 'Use the "SSViewer.rewrite_hash_links" config setting instead');
-            SSViewer::config()->update('rewrite_hash_links', $optionVal);
-        } else {
-            Deprecation::notice('4.0', 'Use the "SSViewer.' . $optionName . '" config setting instead');
-            SSViewer::config()->update($optionName, $optionVal);
-        }
-    }
-
-    /**
-     * @deprecated 4.0 Use the "SSViewer.rewrite_hash_links" config setting instead
-     * @param string
-     * @return mixed
-     */
-    public static function getOption($optionName)
-    {
-        if ($optionName == 'rewriteHashlinks') {
-            Deprecation::notice('4.0', 'Use the "SSViewer.rewrite_hash_links" config setting instead');
-            return SSViewer::config()->get('rewrite_hash_links');
-        } else {
-            Deprecation::notice('4.0', 'Use the "SSViewer.' . $optionName . '" config setting instead');
-            return SSViewer::config()->get($optionName);
-        }
     }
 
     /**
@@ -612,7 +546,7 @@ class SSViewer implements Flushable
 
         // If we have our crazy base tag, then fix # links referencing the current page.
 
-        $rewrite = SSViewer::config()->get('rewrite_hash_links');
+        $rewrite = SSViewer::config()->uninherited('rewrite_hash_links');
         if ($this->rewriteHashlinks && $rewrite) {
             if (strpos($output, '<base') !== false) {
                 if ($rewrite === 'php') {
@@ -669,7 +603,7 @@ class SSViewer implements Flushable
         return $this->getParser()->compileString(
             $content,
             $template,
-            Director::isDev() && SSViewer::config()->get('source_file_comments')
+            Director::isDev() && SSViewer::config()->uninherited('source_file_comments')
         );
     }
 

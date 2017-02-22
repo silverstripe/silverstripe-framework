@@ -86,7 +86,7 @@ class LeftAndMain extends Controller implements PermissionProvider
      * @config
      * @var string
      */
-    private static $url_segment;
+    private static $url_segment = null;
 
     /**
      * @config
@@ -265,7 +265,7 @@ class LeftAndMain extends Controller implements PermissionProvider
     /**
      * Gets the combined configuration of all LeafAndMain subclasses required by the client app.
      *
-     * @return array
+     * @return string
      *
      * WARNING: Experimental API
      */
@@ -289,7 +289,7 @@ class LeftAndMain extends Controller implements PermissionProvider
 
         // Set env
         $combinedClientConfig['environment'] = Director::get_environment_type();
-        $combinedClientConfig['debugging'] = $this->config()->client_debugging;
+        $combinedClientConfig['debugging'] = LeftAndMain::config()->uninherited('client_debugging');
 
         return Convert::raw2json($combinedClientConfig);
     }
@@ -471,7 +471,7 @@ class LeftAndMain extends Controller implements PermissionProvider
     public static function getRequiredPermissions()
     {
         $class = get_called_class();
-        $code = Config::inst()->get($class, 'required_permission_codes', Config::FIRST_SET);
+        $code = Config::inst()->get($class, 'required_permission_codes');
         if ($code === false) {
             return false;
         }
@@ -509,7 +509,7 @@ class LeftAndMain extends Controller implements PermissionProvider
         CMSMenu::add_link(
             'Help',
             _t('LeftAndMain.HELP', 'Help', 'Menu title'),
-            $this->config()->help_link,
+            LeftAndMain::config()->uninherited('help_link'),
             -2,
             array(
                 'target' => '_blank'
@@ -591,7 +591,7 @@ class LeftAndMain extends Controller implements PermissionProvider
         Requirements::add_i18n_javascript(ltrim(FRAMEWORK_DIR . '/client/lang', '/'), false, true);
         Requirements::add_i18n_javascript(FRAMEWORK_ADMIN_DIR . '/client/lang', false, true);
 
-        if ($this->config()->session_keepalive_ping) {
+        if (LeftAndMain::config()->uninherited('session_keepalive_ping')) {
             Requirements::javascript(FRAMEWORK_ADMIN_DIR . '/client/dist/js/LeftAndMain.Ping.js');
         }
 
@@ -644,7 +644,7 @@ class LeftAndMain extends Controller implements PermissionProvider
         $this->extend('init', $dummy);
 
         // Assign default cms theme and replace user-specified themes
-        SSViewer::set_themes($this->config()->admin_themes);
+        SSViewer::set_themes(LeftAndMain::config()->uninherited('admin_themes'));
 
         //set the reading mode for the admin to stage
         Versioned::set_stage(Versioned::DRAFT);
@@ -676,7 +676,7 @@ class LeftAndMain extends Controller implements PermissionProvider
 
         // Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
         $originalResponse = $this->getResponse();
-        $originalResponse->addHeader('X-Frame-Options', $this->config()->frame_options);
+        $originalResponse->addHeader('X-Frame-Options', LeftAndMain::config()->uninherited('frame_options'));
         $originalResponse->addHeader('Vary', 'X-Requested-With');
 
         return $response;
@@ -714,7 +714,7 @@ class LeftAndMain extends Controller implements PermissionProvider
             $this->setResponse($newResponse);
             return ''; // Actual response will be re-requested by client
         } else {
-            parent::redirect($url, $code);
+            return parent::redirect($url, $code);
         }
     }
 
@@ -752,11 +752,8 @@ class LeftAndMain extends Controller implements PermissionProvider
     public function Link($action = null)
     {
         // Handle missing url_segments
-        if ($this->config()->url_segment) {
-            $segment = $this->config()->get('url_segment', Config::FIRST_SET);
-        } else {
-            $segment = $this->class;
-        };
+        $segment = $this->config()->get('url_segment')
+            ?: $this->class;
 
         $link = Controller::join_links(
             AdminRootController::admin_url(),
@@ -795,7 +792,7 @@ class LeftAndMain extends Controller implements PermissionProvider
         }
 
         // Get default class title
-        $title = Config::inst()->get($class, 'menu_title', Config::FIRST_SET);
+        $title = static::config()->get('menu_title');
         if (!$title) {
             $title = preg_replace('/Admin$/', '', $class);
         }
@@ -816,7 +813,7 @@ class LeftAndMain extends Controller implements PermissionProvider
      */
     public static function menu_icon_for_class($class)
     {
-        $icon = Config::inst()->get($class, 'menu_icon', Config::FIRST_SET);
+        $icon = Config::inst()->get($class, 'menu_icon');
         if (!empty($icon)) {
             $class = strtolower(Convert::raw2htmlname(str_replace('\\', '-', $class)));
             return ".icon.icon-16.icon-{$class} { background-image: url('{$icon}'); } ";
@@ -834,7 +831,7 @@ class LeftAndMain extends Controller implements PermissionProvider
      */
     public static function menu_icon_class_for_class($class)
     {
-        return Config::inst()->get($class, 'menu_icon_class', Config::FIRST_SET);
+        return Config::inst()->get($class, 'menu_icon_class');
     }
 
     /**
@@ -951,8 +948,6 @@ class LeftAndMain extends Controller implements PermissionProvider
                     // Provide styling for custom $menu-icon. Done here instead of in
                     // CMSMenu::populate_menu(), because the icon is part of
                     // the CMS right pane for the specified class as well...
-                    $iconClass = false;
-
                     if ($menuItem->controller) {
                         $menuIcon = LeftAndMain::menu_icon_for_class($menuItem->controller);
 

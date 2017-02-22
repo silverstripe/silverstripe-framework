@@ -11,6 +11,7 @@ use InvalidArgumentException;
  *
  * Each file finder instance can have several options set on it:
  *   - name_regex (string): A regular expression that file basenames must match.
+ *   - dir_regexp (string): A regular expression that dir basenames must match
  *   - accept_callback (callback): A callback that is called to accept a file.
  *     If it returns false the item will be skipped. The callback is passed the
  *     basename, pathname and depth.
@@ -51,6 +52,7 @@ class FileFinder
      */
     protected static $default_options = array(
         'name_regex'           => null,
+        'dir_regex'            => null,
         'accept_callback'      => null,
         'accept_dir_callback'  => null,
         'accept_file_callback' => null,
@@ -193,6 +195,12 @@ class FileFinder
      */
     protected function acceptDir($basename, $pathname, $depth)
     {
+        if ($regex = $this->getOption('dir_regex')) {
+            if (!preg_match($regex, $basename)) {
+                return false;
+            }
+        }
+
         if ($this->getOption('ignore_vcs') && in_array($basename, self::$vcs_dirs)) {
             return false;
         }

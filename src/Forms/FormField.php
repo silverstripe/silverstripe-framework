@@ -375,7 +375,7 @@ class FormField extends RequestHandler
      */
     protected function setupDefaultClasses()
     {
-        $defaultClasses = self::config()->get('default_classes');
+        $defaultClasses = $this->config()->get('default_classes');
         if ($defaultClasses) {
             foreach ($defaultClasses as $class) {
                 $this->addExtraClass($class);

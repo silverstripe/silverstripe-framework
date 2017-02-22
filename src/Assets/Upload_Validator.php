@@ -90,7 +90,7 @@ class Upload_Validator
         // Check if there is any defined instance max file sizes
         if (empty($this->allowedMaxFileSize)) {
             // Set default max file sizes if there isn't
-            $fileSize = Config::inst()->get('SilverStripe\\Assets\\Upload_Validator', 'default_max_file_size');
+            $fileSize = Config::inst()->get(__CLASS__, 'default_max_file_size');
             if ($fileSize) {
                 $this->setAllowedMaxFileSize($fileSize);
             } else {

@@ -80,7 +80,7 @@ class FormScaffolder extends Object
         }
 
         // Add logical fields directly specified in db config
-        foreach ($this->obj->config()->db as $fieldName => $fieldType) {
+        foreach ($this->obj->config()->get('db') as $fieldName => $fieldType) {
             // Skip restricted fields
             if ($this->restrictFields && !in_array($fieldName, $this->restrictFields)) {
                 continue;

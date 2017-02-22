@@ -118,7 +118,7 @@ abstract class HTMLEditorField_File extends ViewableData
                     'left' => _t('HTMLEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
                     'right' => _t('HTMLEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
                 ),
-                HtmlEditorField::config()->get('media_alignment')
+                HtmlEditorField::config()->uninherited('media_alignment')
             ),
             FieldGroup::create(
                 _t('HTMLEditorField.IMAGEDIMENSIONS', 'Dimensions'),
@@ -313,8 +313,8 @@ abstract class HTMLEditorField_File extends ViewableData
     {
         // Get preview from file
         if ($this->file) {
-            $width = $this->config()->media_preview_width;
-            $height = $this->config()->media_preview_height;
+            $width = HTMLEditorField_File::config()->media_preview_width;
+            $height = HTMLEditorField_File::config()->media_preview_height;
             return $this->file->ThumbnailURL($width, $height);
         }
         return null;
@@ -356,7 +356,7 @@ abstract class HTMLEditorField_File extends ViewableData
                 return $height;
             }
         }
-        return $this->config()->insert_height;
+        return HTMLEditorField_File::config()->insert_height;
     }
 
     /**
@@ -372,7 +372,7 @@ abstract class HTMLEditorField_File extends ViewableData
                 return $width;
             }
         }
-        return $this->config()->insert_width;
+        return HTMLEditorField_File::config()->insert_width;
     }
 
     /**
@@ -383,7 +383,7 @@ abstract class HTMLEditorField_File extends ViewableData
     public function getInsertWidth()
     {
         $width = $this->getWidth();
-        $maxWidth = $this->config()->insert_width;
+        $maxWidth = HTMLEditorField_File::config()->insert_width;
         return ($width <= $maxWidth) ? $width : $maxWidth;
     }
 
@@ -396,7 +396,7 @@ abstract class HTMLEditorField_File extends ViewableData
     {
         $width = $this->getWidth();
         $height = $this->getHeight();
-        $maxWidth = $this->config()->insert_width;
+        $maxWidth = HTMLEditorField_File::config()->insert_width;
         return ($width <= $maxWidth) ? $height : round($height * ($maxWidth / $width));
     }
 }

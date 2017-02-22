@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms;
 
 use InvalidArgumentException;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\i18n\i18n;
@@ -109,7 +110,7 @@ class DateField_View_JQuery
         $locale = $this->getField()->getClientLocale();
 
         // Check standard mappings
-        $map = $this->config()->locale_map;
+        $map = Config::inst()->get(__CLASS__, 'locale_map');
         if (array_key_exists($locale, $map)) {
             return $map[$locale];
         }

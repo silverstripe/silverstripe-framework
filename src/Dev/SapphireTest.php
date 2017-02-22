@@ -3,26 +3,28 @@
 namespace SilverStripe\Dev;
 
 use SilverStripe\CMS\Controllers\RootURLController;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Cookie;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Control\Email\Mailer;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
+use SilverStripe\Control\Tests\FakeController;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\ConfigLoader;
+use SilverStripe\Core\Config\CoreConfigCreator;
+use SilverStripe\Core\Config\DefaultConfig;
+use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Core\Manifest\ConfigStaticManifest;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\Versioning\Versioned;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Hierarchy\Hierarchy;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBField;
@@ -224,13 +226,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     protected $originalReadingMode = null;
 
+    protected $originalEnv = null;
+
     public function setUp()
     {
-
         //nest config and injector for each test so they are effectively sandboxed per test
         Config::nest();
         Injector::nest();
 
+        $this->originalEnv = Director::get_environment_type();
         $this->originalReadingMode = Versioned::get_reading_mode();
 
         // We cannot run the tests on this abstract class.
@@ -244,7 +248,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         self::$is_running_test = true;
 
         // i18n needs to be set to the defaults or tests fail
-        i18n::set_locale(i18n::config()->get('default_locale'));
+        i18n::set_locale(i18n::config()->uninherited('default_locale'));
 
         // Set default timezone consistently to avoid NZ-specific dependencies
         date_default_timezone_set('UTC');
@@ -333,6 +337,8 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      */
     public function setUpOnce()
     {
+        static::start();
+
         //nest config and injector for each suite so they are effectively sandboxed
         Config::nest();
         Injector::nest();
@@ -590,6 +596,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             $response->removeHeader('Location');
         }
 
+        Director::set_environment_type($this->originalEnv);
         Versioned::set_reading_mode($this->originalReadingMode);
 
         //unnest injector / config now that tests are over
@@ -986,10 +993,22 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Start test environment
+     */
+    public static function start()
+    {
+        if (!static::is_running_test()) {
+            new FakeController();
+            static::use_test_manifest();
+            static::set_is_running_test(true);
+        }
+    }
+
+    /**
      * Pushes a class and template manifest instance that include tests onto the
      * top of the loader stacks.
      */
-    public static function use_test_manifest()
+    protected static function use_test_manifest()
     {
         $flush = !empty($_GET['flush']);
         $classManifest = new ClassManifest(
@@ -1008,11 +1027,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             $flush
         ));
 
-        Config::inst()->pushConfigStaticManifest(new ConfigStaticManifest(
-            BASE_PATH,
-            true,
-            $flush
-        ));
+        // Once new class loader is registered, push a new uncached config
+        $config = CoreConfigCreator::inst()->createCore();
+        ConfigLoader::instance()->pushManifest($config);
 
         // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class
         // (e.g. Member will now have various subclasses of DataObjects that implement TestOnly)
@@ -1323,6 +1340,30 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
     protected function setUpRoutes()
     {
+        // Get overridden routes
+        $rules = $this->getExtraRoutes();
+
+        // Add all other routes
+        foreach (Director::config()->uninherited('rules') as $route => $rule) {
+            if (!isset($rules[$route])) {
+                $rules[$route] = $rule;
+            }
+        }
+
+        // Add default catch-all rule
+        $rules['$Controller//$Action/$ID/$OtherID'] = '*';
+
+        // Add controller-name auto-routing
+        Director::config()->set('rules', $rules);
+    }
+
+    /**
+     * Get extra routes to merge into Director.rules
+     *
+     * @return array
+     */
+    protected function getExtraRoutes()
+    {
         $rules = [];
         foreach ($this->getExtraControllers() as $class) {
             $controllerInst = Controller::singleton($class);
@@ -1330,11 +1371,6 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             $route = rtrim($link, '/') . '//$Action/$ID/$OtherID';
             $rules[$route] = $class;
         }
-
-        // Add default catch-all rule
-        $rules['$Controller//$Action/$ID/$OtherID'] = '*';
-
-        // Add controller-name auto-routing
-        Director::config()->update('rules', $rules);
+        return $rules;
     }
 }

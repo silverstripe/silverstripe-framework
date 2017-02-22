@@ -221,7 +221,7 @@ class RSSFeed extends ViewableData
      */
     public function outputToBrowser()
     {
-        $prevState = SSViewer::config()->get('source_file_comments');
+        $prevState = SSViewer::config()->uninherited('source_file_comments');
         SSViewer::config()->update('source_file_comments', false);
 
         $response = Controller::curr()->getResponse();

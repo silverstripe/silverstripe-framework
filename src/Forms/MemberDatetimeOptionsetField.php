@@ -95,7 +95,7 @@ class MemberDatetimeOptionsetField extends OptionsetField
      */
     protected function previewFormat($format)
     {
-        $date = DBDatetime::create_field('Datetime', $this->config()->preview_date);
+        $date = DBDatetime::create_field('Datetime', MemberDatetimeOptionsetField::config()->preview_date);
         return $date->Format($format);
     }
 

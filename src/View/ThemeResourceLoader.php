@@ -2,6 +2,7 @@
 
 namespace SilverStripe\View;
 
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Debug;
 
 /**
@@ -119,23 +120,20 @@ class ThemeResourceLoader
                 $subpath = '';
             }
 
-            // To do: implement more flexible module path lookup
             $package = $parts[0];
-            switch ($package) {
-                case 'silverstripe/framework':
-                    $modulePath = FRAMEWORK_DIR;
-                    break;
 
-                case 'silverstripe/cms':
-                    $modulePath = CMS_DIR;
-                    break;
+            // Find matching module for this package
+            $module = ModuleLoader::instance()->getManifest()->getModule($package);
+            if ($module) {
+                $modulePath = $module->getRelativePath();
+            } else {
+                // fall back to dirname
+                list(, $modulePath) = explode('/', $parts[0], 2);
 
-                default:
-                    list($vendor, $modulePath) = explode('/', $parts[0], 2);
-                    // If the module is in the themes/<module>/ prefer that
-                    if (is_dir(THEMES_PATH . '/' .$modulePath)) {
-                        $modulePath = THEMES_DIR . '/' . $$modulePath;
-                    }
+                // If the module is in the themes/<module>/ prefer that
+                if (is_dir(THEMES_PATH . '/' .$modulePath)) {
+                    $modulePath = THEMES_DIR . '/' . $$modulePath;
+                }
             }
 
             return ltrim($modulePath . $subpath, '/');

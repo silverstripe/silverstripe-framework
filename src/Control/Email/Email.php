@@ -111,15 +111,15 @@ class Email extends ViewableData
     public static function obfuscate($email, $method = 'visible')
     {
         switch ($method) {
-            case 'direction' :
+            case 'direction':
                 Requirements::customCSS('span.codedirection { unicode-bidi: bidi-override; direction: rtl; }', 'codedirectionCSS');
 
                 return '<span class="codedirection">' . strrev($email) . '</span>';
-            case 'visible' :
+            case 'visible':
                 $obfuscated = array('@' => ' [at] ', '.' => ' [dot] ', '-' => ' [dash] ');
 
                 return strtr($email, $obfuscated);
-            case 'hex' :
+            case 'hex':
                 $encoded = '';
                 for ($x = 0; $x < strlen($email); $x++) {
                     $encoded .= '&#x' . bin2hex($email{$x}) . ';';

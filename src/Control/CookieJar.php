@@ -173,7 +173,7 @@ class CookieJar implements Cookie_Backend
             return setcookie($name, $value, $expiry, $path, $domain, $secure, $httpOnly);
         }
 
-        if (Cookie::config()->get('report_errors')) {
+        if (Cookie::config()->uninherited('report_errors')) {
             throw new LogicException(
                 "Cookie '$name' can't be set. The site started outputting content at line $line in $file"
             );

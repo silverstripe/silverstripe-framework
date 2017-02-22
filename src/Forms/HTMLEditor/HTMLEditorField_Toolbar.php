@@ -3,6 +3,7 @@
 namespace SilverStripe\Forms\HTMLEditor;
 
 use SilverStripe\Assets\File;
+use SilverStripe\Assets\Folder;
 use SilverStripe\Assets\Upload;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
@@ -252,7 +253,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
             ));
         }
         $scheme = strtolower(parse_url($fileUrl, PHP_URL_SCHEME));
-        $allowed_schemes = self::config()->fileurl_scheme_whitelist;
+        $allowed_schemes = self::config()->get('fileurl_scheme_whitelist');
         if (!$scheme || ($allowed_schemes && !in_array($scheme, $allowed_schemes))) {
             throw $this->getErrorFor(_t(
                 "HTMLEditorField_Toolbar.ERROR_SCHEME",
@@ -260,7 +261,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
             ));
         }
         $domain = strtolower(parse_url($fileUrl, PHP_URL_HOST));
-        $allowed_domains = self::config()->fileurl_domain_whitelist;
+        $allowed_domains = self::config()->get('fileurl_domain_whitelist');
         if (!$domain || ($allowed_domains && !in_array($domain, $allowed_domains))) {
             throw $this->getErrorFor(_t(
                 "HTMLEditorField_Toolbar.ERROR_HOSTNAME",

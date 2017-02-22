@@ -326,7 +326,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
      */
     public function scaffoldSearchFields($dataClass)
     {
-        $obj = singleton($dataClass);
+        $obj = DataObject::singleton($dataClass);
         $fields = null;
         if ($fieldSpecs = $obj->searchableFields()) {
             $customSearchableFields = $obj->stat('searchable_fields');
