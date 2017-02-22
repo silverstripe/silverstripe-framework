@@ -22,7 +22,25 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 */
 	public function __construct($filename = null) {
 		if(is_string($filename)) {
-			parent::__construct($filename);
+			try {
+				parent::__construct($filename);
+			} catch (Exception $e) {
+				if (file_exists($filename)) {
+					unlink($filename);
+				}
+				$filename = str_replace(Director::baseFolder() . '/', '', $filename);
+				$image = Image::get()->filter(array('Filename' => $filename))->first();
+				$image->delete();
+
+				if ($controller = Controller::curr()) {
+					// if the request is from a AJAX call, then post back the bad news
+					if ($controller->request->isAjax()) {
+						return $controller->httpError(500, 'Image corrupted');
+					}
+					// once SS purged the corrupted image, force the page to refresh
+					return $controller->redirect($controller->Link());
+				}
+			}
 		}
 		$this->setQuality(Config::inst()->get('ImagickBackend','default_quality'));
 	}
