@@ -163,7 +163,8 @@ $chain
 
 		// Next, check if we're in dev mode, or the database doesn't have any security data, or we are admin
 		if (Director::isDev() || !Security::database_is_ready() || Permission::check('ADMIN')) {
-			return $reloadToken->reloadWithToken();
+			$reloadToken->reloadWithToken();
+			return;
 		}
 
 		// Fail and redirect the user to the login page
