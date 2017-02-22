@@ -2,10 +2,13 @@
 
 namespace SilverStripe\ORM\Tests;
 
+use SilverStripe\Assets\Tests\FileMigrationHelperTest\Extension;
+use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
+use SilverStripe\Dev\Debug;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\ORM\Tests\DataExtensionTest\TestMember;
+use SilverStripe\ORM\DB;
 use SilverStripe\Security\Member;
 
 class DataExtensionTest extends SapphireTest
@@ -127,13 +130,11 @@ class DataExtensionTest extends SapphireTest
         // Pull the record out of the DB and examine the extended fields
         $player = DataObject::get_one(
             DataExtensionTest\Player::class,
-            array(
-            '"DataExtensionTest_Player"."Name"' => 'Joe'
-            )
+            [ '"DataExtensionTest_Player"."Name"' => 'Joe' ]
         );
-        $this->assertEquals($player->DateBirth, '1990-05-10');
-        $this->assertEquals($player->Address, '123 somewhere street');
-        $this->assertEquals($player->Status, 'Goalie');
+        $this->assertEquals('1990-05-10', $player->DateBirth);
+        $this->assertEquals('123 somewhere street', $player->Address);
+        $this->assertEquals('Goalie', $player->Status);
     }
 
     /**
@@ -141,7 +142,10 @@ class DataExtensionTest extends SapphireTest
      */
     public function testApiAccessCanBeExtended()
     {
-        $this->assertTrue(Config::inst()->get(DataExtensionTest\TestMember::class, 'api_access', Config::FIRST_SET));
+        $this->assertTrue(Config::inst()->get(
+            DataExtensionTest\TestMember::class,
+            'api_access'
+        ));
     }
 
     public function testPermissionExtension()

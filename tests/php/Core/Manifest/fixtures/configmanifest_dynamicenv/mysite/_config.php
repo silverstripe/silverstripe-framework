@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Director;
 
 // Dynamically change environment
-Config::inst()->update('SilverStripe\\Control\\Director', 'environment_type', 'dev');
+Director::set_environment_type('dev');

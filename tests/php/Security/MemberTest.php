@@ -26,7 +26,6 @@ class MemberTest extends FunctionalTest
     protected static $fixture_file = 'MemberTest.yml';
 
     protected $orig = array();
-    protected $local = null;
 
     protected $illegalExtensions = array(
         Member::class => array(
@@ -44,13 +43,7 @@ class MemberTest extends FunctionalTest
         //Setting the locale has to happen in the constructor (using the setUp and tearDown methods doesn't work)
         //This is because the test relies on the yaml file being interpreted according to a particular date format
         //and this setup occurs before the setUp method is run
-        $this->local = i18n::config()->get('default_locale');
-        i18n::config()->update('default_locale', 'en_US');
-    }
-
-    public function __destruct()
-    {
-        i18n::config()->update('default_locale', $this->local);
+        i18n::config()->set('default_locale', 'en_US');
     }
 
     /**

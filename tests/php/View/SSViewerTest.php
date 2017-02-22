@@ -68,11 +68,10 @@ class SSViewerTest extends SapphireTest
      */
     public function testCurrentTheme()
     {
-        //TODO: SiteConfig moved to CMS
         SSViewer::config()->update('theme', 'mytheme');
         $this->assertEquals(
             'mytheme',
-            SSViewer::config()->get('theme'),
+            SSViewer::config()->uninherited('theme'),
             'Current theme is the default - user has not defined one'
         );
     }
@@ -1730,7 +1729,7 @@ EOC;
 
     public function testRenderWithSourceFileComments()
     {
-        Director::config()->update('environment_type', 'dev');
+        Director::set_environment_type('dev');
         SSViewer::config()->update('source_file_comments', true);
         $i = __DIR__ . '/SSViewerTest/templates/Includes';
         $f = __DIR__ . '/SSViewerTest/templates/SSViewerTestComments';

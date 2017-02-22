@@ -13,14 +13,14 @@ use SilverStripe\Dev\SapphireTest;
 class AssetStoreTest extends SapphireTest
 {
 
+    /**
+     * @skipUpgrade
+     */
     public function setUp()
     {
         parent::setUp();
 
         // Set backend and base url
-        /**
- * @skipUpgrade
-*/
         TestAssetStore::activate('AssetStoreTest');
     }
 
@@ -332,7 +332,7 @@ class AssetStoreTest extends SapphireTest
      */
     public function testLegacyFilenames()
     {
-        Config::inst()->update(get_class(new FlysystemAssetStore()), 'legacy_filenames', true);
+        Config::modify()->set(FlysystemAssetStore::class, 'legacy_filenames', true);
 
         $backend = $this->getBackend();
 
@@ -442,12 +442,12 @@ class AssetStoreTest extends SapphireTest
         $store = $this->getBackend();
 
         // Disable legacy filenames
-        Config::inst()->update(get_class(new FlysystemAssetStore()), 'legacy_filenames', false);
+        Config::modify()->set(FlysystemAssetStore::class, 'legacy_filenames', false);
         $this->assertEquals(AssetStore::CONFLICT_OVERWRITE, $store->getDefaultConflictResolution(null));
         $this->assertEquals(AssetStore::CONFLICT_OVERWRITE, $store->getDefaultConflictResolution('somevariant'));
 
         // Enable legacy filenames
-        Config::inst()->update(get_class(new FlysystemAssetStore()), 'legacy_filenames', true);
+        Config::modify()->set(FlysystemAssetStore::class, 'legacy_filenames', true);
         $this->assertEquals(AssetStore::CONFLICT_RENAME, $store->getDefaultConflictResolution(null));
         $this->assertEquals(AssetStore::CONFLICT_OVERWRITE, $store->getDefaultConflictResolution('somevariant'));
     }

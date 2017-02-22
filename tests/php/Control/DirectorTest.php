@@ -31,7 +31,6 @@ class DirectorTest extends SapphireTest
     {
         parent::setUp();
 
-
         // Hold the original request URI once so it doesn't get overwritten
         if (!self::$originalRequestURI) {
             self::$originalRequestURI = $_SERVER['REQUEST_URI'];
@@ -41,18 +40,6 @@ class DirectorTest extends SapphireTest
         $this->originalGet = $_GET;
         $this->originalSession = $_SESSION;
         $_SESSION = array();
-
-        Config::inst()->update(
-            'SilverStripe\\Control\\Director',
-            'rules',
-            array(
-            'DirectorTestRule/$Action/$ID/$OtherID' => TestController::class,
-            'en-nz/$Action/$ID/$OtherID' => array(
-                'Controller' => TestController::class,
-                'Locale' => 'en_NZ'
-            )
-            )
-        );
 
         $headers = array(
             'HTTP_X_FORWARDED_PROTOCOL', 'HTTPS', 'SSL'
@@ -64,13 +51,29 @@ class DirectorTest extends SapphireTest
             }
         }
 
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
+        Config::modify()->set(Director::class, 'alternate_base_url', '/');
+    }
+
+    protected function getExtraRoutes()
+    {
+        $rules = parent::getExtraRoutes();
+
+        $rules['DirectorTestRule/$Action/$ID/$OtherID'] = TestController::class;
+        $rules['en-nz/$Action/$ID/$OtherID'] = [
+            'Controller' => TestController::class,
+            'Locale' => 'en_NZ',
+        ];
+        return $rules;
+    }
+
+    protected function setUpRoutes()
+    {
+        // Don't merge with any existing rules
+        Director::config()->set('rules', $this->getExtraRoutes());
     }
 
     public function tearDown()
     {
-        // TODO Remove director rule, currently API doesnt allow this
-
         $_GET = $this->originalGet;
         $_SESSION = $this->originalSession;
 
@@ -492,6 +495,7 @@ class DirectorTest extends SapphireTest
 
     public function testUnmatchedRequestReturns404()
     {
+        // Remove non-tested rules
         $this->assertEquals(404, Director::test('no-route')->getStatusCode());
     }
 

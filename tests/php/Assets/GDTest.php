@@ -124,15 +124,15 @@ class GDTest extends SapphireTest
             case 0:
                 $this->assertColourEquals(0, $samples[2]['alpha'], $tolerance);
                 $this->assertColourEquals(0, $samples[12]['alpha'], $tolerance);
-            break;
+                break;
             case 1:
                 $this->assertColourEquals(0, $samples[2]['alpha'], $tolerance);
                 $this->assertColourEquals(127, $samples[12]['alpha'], $tolerance);
-            break;
+                break;
             default:
                 $this->assertColourEquals(63, $samples[2]['alpha'], $tolerance);
                 $this->assertColourEquals(127, $samples[12]['alpha'], $tolerance);
-            break;
+                break;
         }
     }
 

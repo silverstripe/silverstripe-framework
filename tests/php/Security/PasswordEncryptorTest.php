@@ -12,29 +12,15 @@ use SilverStripe\Security\Tests\PasswordEncryptorTest\TestEncryptor;
 
 class PasswordEncryptorTest extends SapphireTest
 {
-
-    /**
-     *
-     * @var Config
-     */
-    private $config = null;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->config = clone(Config::inst());
-    }
-
     public function tearDown()
     {
         parent::tearDown();
-        Config::set_instance($this->config);
         PasswordEncryptor_Blowfish::set_cost(10);
     }
 
     public function testCreateForCode()
     {
-        Config::inst()->update(
+        Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
             ['test' => [TestEncryptor::class => null]]
@@ -53,7 +39,7 @@ class PasswordEncryptorTest extends SapphireTest
 
     public function testRegister()
     {
-        Config::inst()->update(
+        Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
             array('test' => array(TestEncryptor::class => null))
@@ -64,31 +50,21 @@ class PasswordEncryptorTest extends SapphireTest
         $this->assertContains(TestEncryptor::class, key($encryptor));
     }
 
-    public function testUnregister()
-    {
-        Config::inst()->update(
-            PasswordEncryptor::class,
-            'encryptors',
-            array('test' => array(TestEncryptor::class => null))
-        );
-        Config::inst()->remove(PasswordEncryptor::class, 'encryptors', 'test');
-        $this->assertNotContains('test', array_keys(PasswordEncryptor::get_encryptors()));
-    }
-
     public function testEncryptorPHPHashWithArguments()
     {
-        Config::inst()->update(
+        Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
             ['test_md5' => [PasswordEncryptor_PHPHash::class=>'md5']]
         );
+        /** @var PasswordEncryptor_PHPHash $e */
         $e = PasswordEncryptor::create_for_algorithm('test_md5');
         $this->assertEquals('md5', $e->getAlgorithm());
     }
 
     public function testEncryptorPHPHash()
     {
-        Config::inst()->update(
+        Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
             ['test_sha1' => [PasswordEncryptor_PHPHash::class => 'sha1']]
@@ -104,11 +80,12 @@ class PasswordEncryptorTest extends SapphireTest
 
     public function testEncryptorBlowfish()
     {
-        Config::inst()->update(
+        Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
             ['test_blowfish' => [PasswordEncryptor_Blowfish::class => '']]
         );
+        /** @var PasswordEncryptor_Blowfish $e */
         $e = PasswordEncryptor::create_for_algorithm('test_blowfish');
 
         $password = 'mypassword';
@@ -156,7 +133,7 @@ class PasswordEncryptorTest extends SapphireTest
 
     public function testEncryptorPHPHashCheck()
     {
-        Config::inst()->update(
+        Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
             ['test_sha1' => [PasswordEncryptor_PHPHash::class => 'sha1']]
@@ -174,7 +151,7 @@ class PasswordEncryptorTest extends SapphireTest
      */
     public function testEncryptorLegacyPHPHashCheck()
     {
-        Config::inst()->update(
+        Config::modify()->merge(
             PasswordEncryptor::class,
             'encryptors',
             ['test_sha1legacy' => [PasswordEncryptor_LegacyPHPHash::class => 'sha1']]

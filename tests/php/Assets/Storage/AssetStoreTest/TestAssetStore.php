@@ -14,7 +14,7 @@ use SilverStripe\Assets\Flysystem\GeneratedAssetHandler;
 use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Folder;
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Requirements;
 
@@ -23,7 +23,6 @@ use SilverStripe\View\Requirements;
  */
 class TestAssetStore extends FlysystemAssetStore
 {
-
     /**
      * Enable disclosure of secure assets
      *
@@ -81,10 +80,10 @@ class TestAssetStore extends FlysystemAssetStore
         Requirements::backend()->setAssetHandler($generated);
 
         // Disable legacy and set defaults
-        Config::inst()->remove(get_class(new FlysystemAssetStore()), 'legacy_filenames');
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
-        DBFile::config()->force_resample = false;
-        File::config()->force_resample = false;
+        FlysystemAssetStore::config()->set('legacy_filenames', false);
+        Director::config()->set('alternate_base_url', '/');
+        DBFile::config()->set('force_resample', false);
+        File::config()->set('force_resample', false);
         self::reset();
         self::$basedir = $basedir;
 
@@ -136,18 +135,14 @@ class TestAssetStore extends FlysystemAssetStore
             $asset = $asset->File;
         }
         // Extract filesystem used to store this object
-        /**
- * @var TestAssetStore $assetStore
-*/
+        /** @var TestAssetStore $assetStore */
         $assetStore = Injector::inst()->get('AssetStore');
         $fileID = $assetStore->getFileID($asset->Filename, $asset->Hash, $asset->Variant);
         $filesystem = $assetStore->getProtectedFilesystem();
         if (!$filesystem->has($fileID)) {
             $filesystem = $assetStore->getPublicFilesystem();
         }
-        /**
- * @var Local $adapter
-*/
+        /** @var Local $adapter */
         $adapter = $filesystem->getAdapter();
         return $adapter->applyPathPrefix($fileID);
     }

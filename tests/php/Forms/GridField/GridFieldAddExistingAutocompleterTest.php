@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
+use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\Tests\GridField\GridFieldAddExistingAutocompleterTest\TestController;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Cheerleader;
 use SilverStripe\Forms\Tests\GridField\GridFieldTest\Permissions;
@@ -29,22 +30,20 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
         TestController::class
     ];
 
-    function testScaffoldSearchFields()
+    public function testScaffoldSearchFields()
     {
         $autoCompleter = new GridFieldAddExistingAutocompleter($targetFragment = 'before', array('Test'));
         $this->assertEquals(
-            $autoCompleter->scaffoldSearchFields(Team::class),
             array(
                 'Name:PartialMatch',
                 'City:StartsWith',
                 'Cheerleaders.Name:StartsWith'
-            )
+            ),
+            $autoCompleter->scaffoldSearchFields(Team::class)
         );
         $this->assertEquals(
-            $autoCompleter->scaffoldSearchFields(Cheerleader::class),
-            array(
-                'Name:StartsWith'
-            )
+            [ 'Name:StartsWith' ],
+            $autoCompleter->scaffoldSearchFields(Cheerleader::class)
         );
     }
 

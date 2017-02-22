@@ -19,12 +19,5 @@ $_SERVER['REQUEST_URI'] = BASE_URL;
 // Fake a session
 $_SESSION = null;
 
-// Prepare manifest autoloader
-$controller = new FakeController();
-
-SapphireTest::use_test_manifest();
-
-SapphireTest::set_is_running_test(true);
-
 // Remove the error handler so that PHPUnit can add its own
 restore_error_handler();
