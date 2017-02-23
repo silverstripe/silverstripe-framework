@@ -132,20 +132,24 @@ class Upload extends Controller {
 			return false;
 		}
 		
-		$tmp_name = $tmpFile['tmp_name'];
-
-        try {
-            $test = new ImagickBackend($tmp_name);
-        } catch (Exception $e) {
-            if ($controller = Controller::curr()) {
-                if ($controller->request->isAjax()){
-                    return $controller->httpError(500, 'Image corrupted');
+		if (!empty($tmpFile['type'])) {
+            $type = $tmpFile['type'];
+            if (strpos($type, 'image/') !== false) {
+                $tmp_name = $tmpFile['tmp_name'];
+                try {
+                    $test = new ImagickBackend($tmp_name);
+                } catch (Exception $e) {
+                    if ($controller = Controller::curr()) {
+                        if ($controller->request->isAjax()){
+                            return $controller->httpError(500, 'Image corrupted');
+                        }
+                    }
+                    $this->errors[] = _t('File.CORRUPTED_IMAGE', 'Image corrupted.');
+                    return false;
                 }
             }
-            $this->errors[] = _t('File.CORRUPTED_IMAGE', 'Image corrupted.');
-            return false;
         }
-
+		
 		$valid = $this->validate($tmpFile);
 		if(!$valid) return false;
 
