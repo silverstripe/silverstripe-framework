@@ -139,6 +139,7 @@ class Upload extends Controller {
                 try {
                     $test = new ImagickBackend($tmp_name);
                 } catch (Exception $e) {
+					SS_Log::log($e, SS_Log::ERR);
                     if ($controller = Controller::curr()) {
                         if ($controller->request->isAjax()){
                             return $controller->httpError(500, 'Image corrupted');
