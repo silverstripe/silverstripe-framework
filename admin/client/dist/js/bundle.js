@@ -1844,7 +1844,7 @@ i&&(e+="#"+i)
 break
 case"anchor":e="#"+i
 break
-case"file":var r=this.find(".ss-uploadfield .ss-uploadfield-item").attr("data-fileid")
+case"file":var r=this.find(":input[name=file]").val()
 e=r?"[file_link,id="+r+"]":""
 break
 case"email":e="mailto:"+this.find(":input[name=email]").val(),n&&(e+="?subject="+encodeURIComponent(n)),t=null

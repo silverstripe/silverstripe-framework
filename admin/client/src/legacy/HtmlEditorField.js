@@ -598,7 +598,7 @@ $.entwine('ss', function($) {
           break;
 
         case 'file':
-          var fileid = this.find('.ss-uploadfield .ss-uploadfield-item').attr('data-fileid');
+          var fileid = this.find(':input[name=file]').val();
           href = fileid ? '[file_link,id=' + fileid + ']' : '';
           break;
 
