@@ -24,7 +24,11 @@ abstract class SS_HTMLValue extends ViewableData {
 	 * @return string
 	 */
 	public function getContent() {
-		$doc = clone $this->getDocument();
+		$state = libxml_use_internal_errors();
+		// Cloning a document with invalid markup (like duplicated ids) could cause a PHP warning
+        libxml_use_internal_errors(true);
+        $doc = clone $this->getDocument();
+        libxml_use_internal_errors($state);
 		$xp = new DOMXPath($doc);
 
 		// If there's no body, the content is empty string
