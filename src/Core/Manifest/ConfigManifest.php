@@ -7,10 +7,9 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\DAG;
 use SilverStripe\Core\Config\DAG_CyclicException;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Cache;
+use Symfony\Component\Cache\Simple\FilesystemCache;
 use Symfony\Component\Yaml\Parser;
 use Traversable;
-use Zend_Cache_Core;
 
 /**
  * A utility class which builds a manifest of configuration items
@@ -28,7 +27,7 @@ class ConfigManifest
     protected $includeTests;
 
     /**
-     * @var Zend_Cache_Core
+     * @var FilesystemCache
      */
     protected $cache;
 
@@ -114,15 +113,15 @@ class ConfigManifest
         $this->key = sha1($base).'_';
         $this->includeTests = $includeTests;
 
-        // Get the Zend Cache to load/store cache into
+        // Get a cache singleton
         $this->cache = $this->getCache();
 
         // Unless we're forcing regen, try loading from cache
         if (!$forceRegen) {
             // The PHP config sources are always needed
-            $this->phpConfigSources = $this->cache->load($this->key.'php_config_sources');
+            $this->phpConfigSources = $this->cache->get($this->key.'php_config_sources');
             // Get the variant key spec
-            $this->variantKeySpec = $this->cache->load($this->key.'variant_key_spec');
+            $this->variantKeySpec = $this->cache->get($this->key.'variant_key_spec');
         }
 
         // If we don't have a variantKeySpec (because we're forcing regen, or it just wasn't in the cache), generate it
@@ -136,14 +135,12 @@ class ConfigManifest
 
     /**
      * Provides a hook for mock unit tests despite no DI
-     * @return Zend_Cache_Core
+     * @return \Psr\SimpleCache\CacheInterface
      */
     protected function getCache()
     {
-        return Cache::factory('SS_Configuration', 'Core', array(
-            'automatic_serialization' => true,
-            'lifetime' => null
-        ));
+        // TODO Replace with CoreConfigCreator, see https://github.com/silverstripe/silverstripe-framework/pull/6641/files#diff-f8c9b17e06432278197a7d5c3a1043cb
+        return new FilesystemCache('SS_Configuration', 0, getTempFolder());
     }
 
     /**
@@ -264,9 +261,9 @@ class ConfigManifest
         $this->buildVariantKeySpec();
 
         if ($cache) {
-            $this->cache->save($this->phpConfigSources, $this->key.'php_config_sources');
-            $this->cache->save($this->yamlConfigFragments, $this->key.'yaml_config_fragments');
-            $this->cache->save($this->variantKeySpec, $this->key.'variant_key_spec');
+            $this->cache->set($this->key.'php_config_sources', $this->phpConfigSources);
+            $this->cache->set($this->key.'yaml_config_fragments', $this->yamlConfigFragments);
+            $this->cache->set($this->key.'variant_key_spec', $this->variantKeySpec);
         }
     }
 
@@ -650,12 +647,12 @@ class ConfigManifest
         // given variant is stale compared to the complete set of fragments
         if (!$this->yamlConfigFragments) {
             // First try and just load the exact variant
-            if ($this->yamlConfig = $this->cache->load($this->key.'yaml_config_'.$this->variantKey())) {
+            if ($this->yamlConfig = $this->cache->get($this->key.'yaml_config_'.$this->variantKey())) {
                 $this->yamlConfigVariantKey = $this->variantKey();
                 return;
             } // Otherwise try and load the fragments so we can build the variant
             else {
-                $this->yamlConfigFragments = $this->cache->load($this->key.'yaml_config_fragments');
+                $this->yamlConfigFragments = $this->cache->get($this->key.'yaml_config_fragments');
             }
         }
 
@@ -684,7 +681,7 @@ class ConfigManifest
         }
 
         if ($cache) {
-            $this->cache->save($this->yamlConfig, $this->key.'yaml_config_'.$this->variantKey());
+            $this->cache->set($this->key.'yaml_config_'.$this->variantKey(), $this->yamlConfig);
         }
 
         // Since yamlConfig has changed, call any callbacks that are interested

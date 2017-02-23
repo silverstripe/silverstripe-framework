@@ -1,10 +1,10 @@
 # Caching
 
-## Built-In Caches
+## Overview
 
 The framework uses caches to store infrequently changing values.
-By default, the storage mechanism is simply the filesystem, although
-other cache backends can be configured. All caches use the [api:Cache] API.
+By default, the storage mechanism chooses the most performant adapter available
+(PHP7 opcache, APC, or filesystem). Other cache backends can be configured.
 
 The most common caches are manifests of various resources: 
 
@@ -21,136 +21,170 @@ executing the action is limited to the following cases when performed via a web 
  * A user is logged in with ADMIN permissions
  * An error occurs during startup
 
-## The Cache API
+## Configuration
 
-The [api:Cache] class provides a bunch of static functions wrapping the Zend_Cache system 
-in something a little more easy to use with the SilverStripe config system.
+We are using the [PSR-16](http://www.php-fig.org/psr/psr-16/) standard ("SimpleCache")
+for caching, through the [symfony/cache](https://symfony.com/doc/current/components/cache.html) library.
+Note that this library describes usage of [PSR-6](http://www.php-fig.org/psr/psr-6/) by default,
+but also exposes caches following the PSR-16 interface. 
 
-A `Zend_Cache` has both a frontend (determines how to get the value to cache, 
-and how to serialize it for storage) and a backend (handles the actual 
-storage).
+Cache objects are configured via YAML
+and SilverStripe's [dependency injection](/developer-guides/extending/injector) system. 
 
-Rather than require library code to specify the backend directly, cache 
-consumers provide a name for the cache backend they want. The end developer 
-can then specify which backend to use for each name in their project's
-configuration. They can also use 'all' to provide a backend for all named 
-caches.
+    :::yml
+    SilverStripe\Core\Injector\Injector:
+      Psr\SimpleCache\CacheInterface.myCache:
+        factory: SilverStripe\Core\Cache\CacheFactory
+        constructor:
+          namespace: "myCache"
 
-End developers provide a set of named backends, then pick the specific 
-backend for each named cache. There is a default File cache set up as the 
-'default' named backend, which is assigned to 'all' named caches.
+Cache objects are instantiated through a [CacheFactory](SilverStripe\Core\Cache\CacheFactory),
+which determines which cache adapter is used (see "Adapters" below for details).
+This factory allows us you to globally define an adapter for all cache instances.  
 
-## Using Caches
+    :::php
+    use Psr\SimpleCache\CacheInterface
+    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
 
-Caches can be created and retrieved through the `Cache::factory()` method.
-The returned object is of type `Zend_Cache`.
+Caches are namespaced, which might allow granular clearing of a particular cache without affecting others.
+In our example, the namespace is "myCache", expressed in the service name as
+`Psr\SimpleCache\CacheInterface.myCache`. We recommend the `::class` short-hand to compose the full service name.
+ 
+Clearing caches by namespace is dependant on the used adapter: While the `FilesystemCache` adapter clears only the namespaced cache,
+a `MemcachedCache` adapter will clear all caches regardless of namespace, since the underlying memcached
+service doesn't support this. See "Invalidation" for alternative strategies.
 
-	:::php
-	// foo is any name (try to be specific), and is used to get configuration 
-	// & storage info
-	$cache = Cache::factory('foo'); 
-	if (!($result = $cache->load($cachekey))) {
-		$result = caluate some how;
-		$cache->save($result, $cachekey);
-	}
-	return $result;
 
-Normally there's no need to remove things from the cache - the cache 
-backends clear out entries based on age and maximum allocated storage. If you 
-include the version of the object in the cache key, even object changes 
-don't need any invalidation. You can force disable the cache though,
-e.g. in development mode.
+## Usage
+
+Cache objects follow the [PSR-16](http://www.php-fig.org/psr/psr-16/) class interface.
 
 	:::php
-	// Disables all caches
-	Cache::set_cache_lifetime('any', -1, 100);
+	use Psr\SimpleCache\CacheInterface
+    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
 
-You can also specifically clean a cache.
-Keep in mind that `Zend_Cache::CLEANING_MODE_ALL` deletes all cache
-entries across all caches, not just for the 'foo' cache in the example below.
+    // create a new item by trying to get it from the cache
+    $myValue = $cache->get('myCacheKey');
+    
+    // set a value and save it via the adapter
+    $cache->set('myCacheKey', 1234);
+    
+    // retrieve the cache item
+    if (!$cache->has('myCacheKey')) {
+        // ... item does not exists in the cache
+    }
+    
+## Invalidation
 
-	:::php
-	$cache = Cache::factory('foo'); 
-	$cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+Caches can be invalidated in different ways. The easiest is to actively clear the
+entire cache. If the adapter supports namespaced cache clearing,
+this will only affect a subset of cache keys ("myCache" in this example):
 
-A single element can be invalidated through its cache key.
+    :::php
+    use Psr\SimpleCache\CacheInterface
+    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+    
+    // remove all items in this (namespaced) cache
+    $cache->clear();
+    
+You can also delete a single item based on it's cache key:
 
-	:::php
-	$cache = Cache::factory('foo');  
-	$cache->remove($cachekey);
+    :::php
+    use Psr\SimpleCache\CacheInterface
+    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+    
+    // remove the cache item
+    $cache->delete('myCacheKey');
 
+Individual cache items can define a lifetime, after which the cached value is marked as expired:
+
+    :::php
+    use Psr\SimpleCache\CacheInterface
+    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+    
+    // remove the cache item
+    $cache->set('myCacheKey', 'myValue', 300); // cache for 300 seconds
+
+If a lifetime isn't defined on the `set()` call, it'll use the adapter default.
 In order to increase the chance of your cache actually being hit,
-it often pays to increase the lifetime of caches ("TTL").
-It defaults to 10 minutes (600s) in SilverStripe, which can be
-quite short depending on how often your data changes.
-Keep in mind that data expiry should primarily be handled by your cache key,
-e.g. by including the `LastEdited` value when caching `DataObject` results.
+it often pays to increase the lifetime of caches.
+You can also set your lifetime to `0`, which means they won't expire.
+Since many adapters don't have a way to actively remove expired caches,
+you need to be careful with resources here (e.g. filesystem space).
 
-	:::php
-	// set all caches to 3 hours
-	Cache::set_cache_lifetime('any', 60*60*3);
+    :::yml
+    SilverStripe\Core\Injector\Injector:
+      Psr\SimpleCache\CacheInterface.cacheblock:
+          constructor:
+            defaultLifetime: 3600
 
-## Alternative Cache Backends
+In most cases, invalidation and expiry should be handled by your cache key.
+For example, including the `LastEdited` value when caching `DataObject` results
+will automatically create a new cache key when the object has been changed.
+The following example caches a member's group names, and automatically
+creates a new cache key when any group is edited. Depending on the used adapter,
+old cache keys will be garbage collected as the cache fills up.
 
-By default, SilverStripe uses a file-based caching backend.
-Together with a file stat cache like [APC](http://us2.php.net/manual/en/book.apc.php) 
-this is reasonably quick, but still requires access to slow disk I/O.
-The `Zend_Cache` API supports various caching backends ([list](http://framework.zend.com/manual/1.12/en/zend.cache.backends.html))
-which can provide better performance, including APC, Xcache, ZendServer, Memcached and SQLite.
+    :::php
+    use Psr\SimpleCache\CacheInterface
+    $cache = Injector::inst()->get(CacheInterface::class . '.myCache');
+    
+    // Automatically changes when any group is edited
+    $cacheKey = implode(['groupNames', $member->ID, Groups::get()->max('LastEdited')]);
+    $cache->set($cacheKey, $member->Groups()->column('Title'));        
 
-## Cleaning caches on flush=1 requests
+If `?flush=1` is requested in the URL, this will trigger a call to `flush()` on
+any classes that implement the [Flushable](/developer_guides/execution_pipeline/flushable/)
+interface. Use this interface to trigger `clear()` on your caches.
 
-If `?flush=1` is requested in the URL, e.g. http://mysite.com?flush=1, this will trigger a call to `flush()` on
-any classes that implement the `Flushable` interface. Using this, you can trigger your caches to clean.
+## Adapters
 
-See [reference documentation on Flushable](/developer_guides/execution_pipeline/flushable/) for implementation details.
+SilverStripe tries to identify the most performant cache available on your system
+through the [DefaultCacheFactory](api:SilverStripe\Core\Cache\DefaultCacheFactory) implementation:
 
-### Memcached
+ * - `PhpFilesCache` (PHP 5.6 or PHP 7 with [opcache](http://php.net/manual/en/book.opcache.php) enabled).
+     This cache has relatively low [memory defaults](http://php.net/manual/en/opcache.configuration.php#ini.opcache.memory-consumption).
+     We recommend increasing it for large applications, or enabling the
+     [file_cache fallback](http://php.net/manual/en/opcache.configuration.php#ini.opcache.file-cache)
+ * - `ApcuCache` (requires APC) with a `FilesystemCache` fallback (for larger cache volumes)
+ * - `FilesystemCache` if none of the above is available
+ 
+The library supports various [cache adapters](https://github.com/symfony/cache/tree/master/Simple)
+which can provide better performance, particularly in multi-server environments with shared caches like Memcached.
 
-This backends stores cache records into a [memcached](http://www.danga.com/memcached/) 
-server. memcached is a high-performance, distributed memory object caching system. 
-To use this backend, you need a memcached daemon and the memcache PECL extension.
+Since we're using dependency injection to create caches, 
+you need to define a factory for a particular adapter,
+following the `SilverStripe\Core\Cache\CacheFactory` interface.
+Different adapters will require different constructor arguments.
+We've written factories for the most common cache scenarios:
+`FilesystemCacheFactory`, `MemcachedCacheFactory` and `ApcuCacheFactory`.
 
- 	:::php
-	// _config.php 
-	Cache::add_backend(
-		'primary_memcached', 
-		'Memcached',
-		array(
-			'servers' => array(
-				'host' => 'localhost', 
-				'port' => 11211, 
-				'persistent' => true, 
-				'weight' => 1, 
-				'timeout' => 5,
-				'retry_interval' => 15, 
-				'status' => true, 
-				'failure_callback' => null
-			)
-		)
-	);
-	Cache::pick_backend('primary_memcached', 'any', 10);
+Example: Configure core caches to use [memcached](http://www.danga.com/memcached/),
+which requires the [memcached PHP extension](http://php.net/memcached),
+and takes a `MemcachedClient` instance as a constructor argument.
 
-### APC
+    :::yml
+    ---
+    After:
+      - '#corecache'
+    ---
+    SilverStripe\Core\Injector\Injector:
+      MemcachedClient:
+        class: 'Memcached'
+        calls:
+          - [ addServer, [ 'localhost', 11211 ] ]
+      SilverStripe\Core\Cache\CacheFactory:
+        class: 'SilverStripe\Core\Cache\MemcachedCacheFactory'
+        constructor:
+          client: '%$MemcachedClient
 
-This backends stores cache records in shared memory through the [APC](http://pecl.php.net/package/APC)
- (Alternative PHP Cache) extension (which is of course need for using this backend).
+## Additional Caches
 
-	:::php
-	Cache::add_backend('primary_apc', 'APC');
-	Cache::pick_backend('primary_apc', 'any', 10);
+Unfortunately not all caches are configurable via cache adapters.
 
-### Two-Levels
-
-This backend is an hybrid one. It stores cache records in two other backends: 
-a fast one (but limited) like Apc, Memcache... and a "slow" one like File or Sqlite.
-
-	:::php
-	Cache::add_backend('two_level', 'Two-Levels', array(
-		'slow_backend' => 'File',
-		'fast_backend' => 'APC',
-		'slow_backend_options' => array(
-				'cache_dir' => TEMP_FOLDER . DIRECTORY_SEPARATOR . 'cache'
-		)
-	));
-	Cache::pick_backend('two_level', 'any', 10); 
+ * [SSViewer](api:SilverStripe\View\SSViewer) writes compiled templates as PHP files to the filesystem
+   (in order to achieve opcode caching on `include()` calls)
+ * [ConfigManifest](api:SilverStripe\Core\Manifest\ConfigManifest) is hardcoded to use `FilesystemCache`
+ * [ClassManifest](api:SilverStripe\Core\Manifest\ClassManifest) and [ThemeManifest](api:SilverStripe\View\ThemeManifest)
+   are using a custom `ManifestCache`
+ * [i18n](api:SilverStripe\i18n\i18n) uses `Symfony\Component\Config\ConfigCacheFactoryInterface` (filesystem-based)

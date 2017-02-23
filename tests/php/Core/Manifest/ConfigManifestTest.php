@@ -7,7 +7,7 @@ use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Manifest\ConfigManifest;
 use SilverStripe\Dev\SapphireTest;
 use ReflectionProperty;
-use Zend_Cache_Core;
+use Symfony\Component\Cache\Simple\ArrayCache;
 
 class ConfigManifestTest extends SapphireTest
 {
@@ -34,13 +34,13 @@ class ConfigManifestTest extends SapphireTest
     /**
      * A helper method to return a mock of the cache in order to test expectations and reduce dependency
      *
-     * @return Zend_Cache_Core
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getCacheMock()
     {
         return $this->getMock(
-            'Zend_Cache_Core',
-            array('load', 'save'),
+            ArrayCache::class,
+            array('set', 'get'),
             array(),
             '',
             false
@@ -51,7 +51,7 @@ class ConfigManifestTest extends SapphireTest
      * A helper method to return a mock of the manifest in order to test expectations and reduce dependency
      *
      * @param  $methods
-     * @return ConfigManifest
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     protected function getManifestMock($methods)
     {
@@ -82,7 +82,7 @@ class ConfigManifestTest extends SapphireTest
         // Set up a cache where we expect load to never be called
         $cache = $this->getCacheMock();
         $cache->expects($this->never())
-            ->method('load');
+            ->method('get');
 
         $manifest->expects($this->any())
             ->method('getCache')
@@ -95,7 +95,7 @@ class ConfigManifestTest extends SapphireTest
 
         $cache = $this->getCacheMock();
         $cache->expects($this->atLeastOnce())
-            ->method('save');
+            ->method('set');
 
         $manifest->expects($this->any())
             ->method('getCache')
@@ -119,7 +119,7 @@ class ConfigManifestTest extends SapphireTest
         // Load should be called twice
         $cache = $this->getCacheMock();
         $cache->expects($this->exactly(2))
-            ->method('load');
+            ->method('get');
 
         $manifest->expects($this->any())
             ->method('getCache')
@@ -133,7 +133,7 @@ class ConfigManifestTest extends SapphireTest
 
         $cache = $this->getCacheMock();
         $cache->expects($this->exactly(2))
-            ->method('load')
+            ->method('get')
             ->will($this->onConsecutiveCalls(false, false));
 
         $manifest->expects($this->any())
@@ -151,7 +151,7 @@ class ConfigManifestTest extends SapphireTest
 
         $cache = $this->getCacheMock();
         $cache->expects($this->exactly(2))
-            ->method('load')
+            ->method('get')
             ->will($this->onConsecutiveCalls(array(), array()));
 
         $manifest->expects($this->any())
@@ -186,7 +186,7 @@ class ConfigManifestTest extends SapphireTest
         $cache = $this->getCacheMock();
         $cache->expects($this->exactly(2))
               ->will($this->returnValue(false))
-              ->method('load');
+              ->method('get');
 
         $manifest->expects($this->any())
                  ->method('getCache')
@@ -204,7 +204,7 @@ class ConfigManifestTest extends SapphireTest
 
         $cache = $this->getCacheMock();
         $cache->expects($this->exactly(2))
-            ->method('load')
+            ->method('get')
             ->will($this->returnCallback(function ($parameter) {
                 if (strpos($parameter, 'variant_key_spec') !== false) {
                     return false;
@@ -227,7 +227,7 @@ class ConfigManifestTest extends SapphireTest
 
         $cache = $this->getCacheMock();
         $cache->expects($this->exactly(2))
-            ->method('load')
+            ->method('get')
             ->will($this->returnCallback(function ($parameter) {
                 if (strpos($parameter, 'php_config_sources') !== false) {
                     return false;

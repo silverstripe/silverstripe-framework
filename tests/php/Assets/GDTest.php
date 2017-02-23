@@ -3,7 +3,8 @@
 namespace SilverStripe\Assets\Tests;
 
 use SilverStripe\Assets\GDBackend;
-use SilverStripe\Core\Cache;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 
 /**
@@ -192,9 +193,9 @@ class GDTest extends SapphireTest
         $gd->loadFrom($fullPath);
 
         // Cache should refer to this file
-        $cache = Cache::factory('GDBackend_Manipulations');
+        $cache = Injector::inst()->get(CacheInterface::class . '.GDBackend_Manipulations');
         $key = sha1(implode('|', array($fullPath, filemtime($fullPath))));
-        $data = $cache->load($key);
+        $data = $cache->get($key);
         $this->assertEquals('1', $data);
     }
 

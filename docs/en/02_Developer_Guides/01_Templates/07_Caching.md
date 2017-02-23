@@ -30,8 +30,7 @@ When we render `$Counter` to the template we would expect the value to increase 
 ## Partial caching
 
 Partial caching is a feature that allows the caching of just a portion of a page. Instead of fetching the required data
-from the database to display, the contents of the area are fetched from the `TEMP_FOLDER` file-system pre-rendered and
-ready to go. More information about Partial caching is in the [Performance](../performance) guide.
+from the database to display, the contents of the area are fetched from a [cache backend](../performance/caching).
 
 	:::ss
 	<% cached 'MyCachedContent', LastEdited %>

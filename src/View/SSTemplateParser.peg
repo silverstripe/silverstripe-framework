@@ -743,10 +743,10 @@ class SSTemplateParser extends Parser implements TemplateParser
         // Get any condition
         $condition = isset($res['condition']) ? $res['condition'] : '';
 
-        $res['php'] .= 'if ('.$condition.'($partial = $cache->load('.$key.'))) $val .= $partial;' . PHP_EOL;
+        $res['php'] .= 'if ('.$condition.'($partial = $cache->get('.$key.'))) $val .= $partial;' . PHP_EOL;
         $res['php'] .= 'else { $oldval = $val; $val = "";' . PHP_EOL;
         $res['php'] .= $sub['php'] . PHP_EOL;
-        $res['php'] .= $condition . ' $cache->save($val); $val = $oldval . $val;' . PHP_EOL;
+        $res['php'] .= $condition . ' $cache->set('.$key.', $val); $val = $oldval . $val;' . PHP_EOL;
         $res['php'] .= '}';
     }
 

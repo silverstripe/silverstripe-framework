@@ -4,12 +4,11 @@ namespace SilverStripe\Assets;
 
 use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\Assets\Storage\AssetStore;
-use SilverStripe\Core\Cache;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Object;
 use SilverStripe\Core\Flushable;
 use InvalidArgumentException;
-use Zend_Cache;
-use Zend_Cache_Core;
 
 /**
  * A wrapper class for GD-based images, with lots of manipulation functions.
@@ -25,7 +24,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
     protected $gd;
 
     /**
-     * @var Zend_Cache_Core
+     * @var \Psr\SimpleCache\CacheInterface
      */
     protected $cache;
 
@@ -66,7 +65,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
     public function __construct(AssetContainer $assetContainer = null)
     {
         parent::__construct();
-        $this->cache = Cache::factory('GDBackend_Manipulations');
+        $this->cache = Injector::inst()->get(CacheInterface::class . '.GDBackend_Manipulations');
 
         if ($assetContainer) {
             $this->loadFromContainer($assetContainer);
@@ -219,7 +218,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
     public function failedResample($arg = null)
     {
         $key = sha1(implode('|', func_get_args()));
-        return (bool)$this->cache->load($key);
+        return (bool)$this->cache->get($key);
     }
 
     /**
@@ -259,7 +258,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
     protected function markFailed($arg = null)
     {
         $key = sha1(implode('|', func_get_args()));
-        $this->cache->save('1', $key);
+        $this->cache->set($key, '1');
     }
 
     /**
@@ -270,7 +269,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
     protected function markSucceeded($arg = null)
     {
         $key = sha1(implode('|', func_get_args()));
-        $this->cache->save('0', $key);
+        $this->cache->set($key, '0');
     }
 
 
@@ -762,8 +761,7 @@ class GDBackend extends Object implements Image_Backend, Flushable
 
     public static function flush()
     {
-        // Clear factory
-        $cache = Cache::factory('GDBackend_Manipulations');
-        $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+        $cache = Injector::inst()->get(CacheInterface::class . '.GDBackend_Manipulations');
+        $cache->clear();
     }
 }

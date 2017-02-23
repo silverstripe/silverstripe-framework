@@ -17,7 +17,7 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Control\PjaxResponseNegotiator;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Cache;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
@@ -2020,9 +2020,9 @@ class LeftAndMain extends Controller implements PermissionProvider
         // Tries to obtain version number from composer.lock if it exists
         $composerLockPath = BASE_PATH . '/composer.lock';
         if (file_exists($composerLockPath)) {
-            $cache = Cache::factory('LeftAndMain_CMSVersion');
-            $cacheKey = filemtime($composerLockPath);
-            $versions = $cache->load($cacheKey);
+            $cache = Injector::inst()->get(CacheInterface::class . '.LeftAndMain_CMSVersion');
+            $cacheKey = (string)filemtime($composerLockPath);
+            $versions = $cache->get($cacheKey);
             if ($versions) {
                 $versions = json_decode($versions, true);
             } else {
@@ -2038,7 +2038,7 @@ class LeftAndMain extends Controller implements PermissionProvider
                             $versions[$package->name] = $package->version;
                         }
                     }
-                    $cache->save(json_encode($versions), $cacheKey);
+                    $cache->set($cacheKey, json_encode($versions));
                 }
             }
         }

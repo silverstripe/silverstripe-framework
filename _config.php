@@ -1,6 +1,6 @@
 <?php
 
-use SilverStripe\Core\Cache;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
@@ -31,12 +31,6 @@ ShortcodeParser::get('regenerator')
 
 // @todo
 //	->register('dbfile_link', array('DBFile', 'handle_shortcode'))
-
-// Zend_Cache temp directory setting
-$_ENV['TMPDIR'] = TEMP_FOLDER; // for *nix
-$_ENV['TMP'] = TEMP_FOLDER; // for Windows
-
-Cache::set_cache_lifetime('GDBackend_Manipulations', null, 100);
 
 // If you don't want to see deprecation errors for the new APIs, change this to 3.2.0-dev.
 Deprecation::notification_version('3.2.0');
