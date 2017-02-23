@@ -124,7 +124,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
         $numericLabelTmpl = '<span class="step-label"><span class="flyout">Step %d.</span>'
             . '<span class="title">%s</span></span>';
-        
+
         $form = new Form(
             $this->controller,
             "{$this->name}/LinkForm",
@@ -165,7 +165,10 @@ class HTMLEditorField_Toolbar extends RequestHandler
                     $fileField = TreeDropdownField::create(
                         'file',
                         _t('HTMLEditorField.FILE', 'File'),
-                        File::class),
+                        File::class,
+                        'ID',
+                        'Name'
+                    ),
                     TextField::create('Anchor', _t('HTMLEditorField.ANCHORVALUE', 'Anchor')),
                     TextField::create('Subject', _t('HTMLEditorField.SUBJECT', 'Email subject')),
                     TextField::create('Description', _t('HTMLEditorField.LINKDESCR', 'Link description')),
