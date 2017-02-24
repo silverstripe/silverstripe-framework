@@ -1,4 +1,4 @@
-webpackJsonp([4],[function(e,t,n){"use strict"
+webpackJsonp([5],[function(e,t,n){"use strict"
 n(2),n(3),n(6),n(16),n(18),n(24),n(26),n(28),n(29),n(31),n(34),n(104),n(112),n(116),n(126),n(127),n(128),n(129),n(130),n(131),n(133),n(136),n(138),n(140),n(143),n(146),n(148),n(150),n(152),n(154),n(156),
 n(157),n(166),n(167),n(169),n(170),n(171),n(172),n(173),n(174),n(175),n(176),n(177),n(178),n(179),n(180),n(181),n(184),n(186),n(187),n(188),n(189),n(193),n(194),n(195),n(196),n(197),n(194),n(200),n(202),
 n(204),n(205)},,function(e,t){"use strict"
@@ -1811,15 +1811,13 @@ this.setEditor(t),t.init(this.attr("id")),this._super()},onremove:function n(){t
 return n.length||(n=e('<div id="insert-media-react__dialog-wrapper" />'),e("body").append(n)),n.setElement(this),void n.open()}var i=function s(e){return e.charAt(0).toUpperCase()+e.slice(1).toLowerCase()
 
 },r=this,a=e("#cms-editor-dialogs").data("url"+i(t)+"form"),o=e(".htmleditorfield-"+t+"dialog")
-o.length?(o.getForm().setElement(this),o.html(""),o.addClass("loading"),o.open()):(o=e('<div class="htmleditorfield-dialog htmleditorfield-'+t+'dialog loading">'),e("body").append(o)),e.ajax({url:a,complete:function l(){
-o.removeClass("loading")},success:function u(e){o.html(e),o.getForm().setElement(r),o.trigger("ssdialogopen")}})}}),e(".htmleditorfield-dialog").entwine({onadd:function s(){this.is(".ui-dialog-content")||this.ssdialog({
-autoOpen:!0,buttons:{insert:{text:_i18n2["default"]._t("HtmlEditorField.INSERT","Insert"),"data-icon":"accept","class":"btn action btn-primary media-insert",click:function t(){e(this).find("form").submit()
-
-}}}}),this._super()},getForm:function l(){return this.find("form")},open:function u(){this.ssdialog("open")},close:function c(){this.ssdialog("close")},toggle:function d(e){this.is(":visible")?this.close():this.open()
-
-},onscroll:function f(){this.animate({scrollTop:this.find("form").height()},500)}}),e("form.htmleditorfield-form").entwine({Selection:null,Bookmark:null,Element:null,setSelection:function p(t){return this._super(e(t))
-
-},onadd:function h(){var e=this.find(":header:first")
+if(!a){if("media"===t)throw new Error("Install silverstripe/asset-admin to use media dialog")
+throw new Error("Dialog named "+t+" is not available.")}o.length?(o.getForm().setElement(this),o.html(""),o.addClass("loading"),o.open()):(o=e('<div class="htmleditorfield-dialog htmleditorfield-'+t+'dialog loading">'),
+e("body").append(o)),e.ajax({url:a,complete:function l(){o.removeClass("loading")},success:function u(e){o.html(e),o.getForm().setElement(r),o.trigger("ssdialogopen")}})}}),e(".htmleditorfield-dialog").entwine({
+onadd:function s(){this.is(".ui-dialog-content")||this.ssdialog({autoOpen:!0,buttons:{insert:{text:_i18n2["default"]._t("HtmlEditorField.INSERT","Insert"),"data-icon":"accept","class":"btn action btn-primary media-insert",
+click:function t(){e(this).find("form").submit()}}}}),this._super()},getForm:function l(){return this.find("form")},open:function u(){this.ssdialog("open")},close:function c(){this.ssdialog("close")},toggle:function d(e){
+this.is(":visible")?this.close():this.open()},onscroll:function f(){this.animate({scrollTop:this.find("form").height()},500)}}),e("form.htmleditorfield-form").entwine({Selection:null,Bookmark:null,Element:null,
+setSelection:function p(t){return this._super(e(t))},onadd:function h(){var e=this.find(":header:first")
 this.getDialog().attr("title",e.text()),this._super()},onremove:function m(){this.setSelection(null),this.setBookmark(null),this.setElement(null),this._super()},getDialog:function g(){return this.closest(".htmleditorfield-dialog")
 
 },fromDialog:{onssdialogopen:function v(){var e=this.getEditor()

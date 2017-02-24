@@ -327,6 +327,7 @@ $.entwine('ss', function($) {
     },
 
     openDialog: function(type) {
+      // Note: This requires asset-admin module
       if (type === 'media' && window.InsertMediaModal) {
         let dialog = $('#insert-media-react__dialog-wrapper');
 
@@ -347,6 +348,13 @@ $.entwine('ss', function($) {
       var self = this,
         url = $('#cms-editor-dialogs').data('url' + capitalize(type) + 'form'),
         dialog = $('.htmleditorfield-' + type + 'dialog');
+
+      if (!url) {
+        if (type === 'media') {
+          throw new Error("Install silverstripe/asset-admin to use media dialog")
+        }
+        throw new Error(`Dialog named ${type} is not available.`);
+      }
 
       if(dialog.length) {
         // Clean existing dialog for reload

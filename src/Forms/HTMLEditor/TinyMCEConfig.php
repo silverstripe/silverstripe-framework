@@ -276,7 +276,7 @@ class TinyMCEConfig extends HTMLEditorConfig
         2 => array(
             'formatselect', '|',
             'paste', 'pastetext', '|',
-            'table', 'ssmedia', 'sslink', 'unlink', '|',
+            'table', 'sslink', 'unlink', '|',
             'code'
         ),
         3 => array()
@@ -339,7 +339,7 @@ class TinyMCEConfig extends HTMLEditorConfig
      *  - relative path - Will be treated as a relative url
      *  - absolute url - Some url to an external plugin
      *
-     * @param string $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
+     * @param string|array $plugin,... a string, or several strings, or a single array of strings - The plugins to enable
      * @return $this
      */
     public function enablePlugins($plugin)
