@@ -15778,6 +15778,10 @@ div.grid-field__sort-field+.form__fieldgroup-item{
   margin-right:5px;
 }
 
+.toolbar__navigation{
+  position:relative;
+}
+
 .nav-tabs{
   margin-bottom:1.5385rem;
 }
