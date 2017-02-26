@@ -1311,6 +1311,7 @@ n.length||(n=t.closest(".cms-tabset")),n.length?n.tabs("option","active",t.index
 }}},onremove:function i(){this.changetracker("destroy"),this._super()},onmatch:function r(){this._super()},onunmatch:function a(){this._super()},redraw:function l(){window.debug&&console.log("redraw",this.attr("class"),this.get(0)),
 this.add(this.find(".cms-tabset")).redrawTabs(),this.find(".cms-content-header").redraw()},_setupChangeTracker:function u(){this.changetracker(this.getChangeTrackerOptions())},confirmUnsavedChanges:function c(){
 if(this.trigger("beforesubmitform"),!this.is(".changed")||this.is(".discardchanges"))return!0
+if(this.find(".btn-toolbar :submit.btn--loading.loading").length>0)return!0
 var e=confirm(o["default"]._t("LeftAndMain.CONFIRMUNSAVED"))
 return e&&this.addClass("discardchanges"),e},onsubmit:function d(e,t){if("_blank"!=this.prop("target"))return t&&this.closest(".cms-container").submitForm(this,t),!1},validate:function f(){var e=!0
 return this.trigger("validate",{isValid:e}),e},"from .htmleditor":{oneditorinit:function p(t){var n=this,i=e(t.target).closest(".field.htmleditor"),r=i.find("textarea.htmleditor").getEditor().getInstance()

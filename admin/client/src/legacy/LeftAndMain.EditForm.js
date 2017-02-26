@@ -173,6 +173,9 @@ $.entwine('ss', function($){
       if(!this.is('.changed') || this.is('.discardchanges')) {
         return true;
       }
+      if (this.find('.btn-toolbar :submit.btn--loading.loading').length > 0) {
+        return true;
+      }
       var confirmed = confirm(i18n._t('LeftAndMain.CONFIRMUNSAVED'));
       if(confirmed) {
         // Ensures that once a form is confirmed, subsequent
