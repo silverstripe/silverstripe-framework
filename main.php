@@ -184,6 +184,26 @@ global $databaseConfig;
 
 // Redirect to the installer if no database is selected
 if(!isset($databaseConfig) || !isset($databaseConfig['database']) || !$databaseConfig['database']) {
+
+    // Is there an _ss_environment.php file?
+    if(file_exists(BASE_PATH . '/_ss_environment.php') || file_exists(dirname(BASE_PATH) . '/_ss_environment.php')) {
+        header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
+        $dv = new SilverStripe\Dev\DebugView();
+        echo $dv->renderHeader();
+        echo $dv->renderInfo(
+            "Configuraton Error",
+            Director::absoluteBaseURL()
+        );
+        echo $dv->renderParagraph(
+            'You need to replace your _ss_environment.php file with a .env file, or with environment variables.<br><br>'
+            . 'See the <a href="https://docs.silverstripe.org/en/4/getting_started/environment_management/">'
+            . 'Environment Management</a> docs for more information.'
+        );
+        echo $dv->renderFooter();
+
+        die();
+    }
+
 	if(!file_exists(BASE_PATH . '/install.php')) {
 		header($_SERVER['SERVER_PROTOCOL'] . " 500 Server Error");
 		die('SilverStripe Framework requires a $databaseConfig defined.');

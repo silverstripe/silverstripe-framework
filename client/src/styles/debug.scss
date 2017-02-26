@@ -6,15 +6,13 @@ body {
   font-family: Helvetica, Arial, sans-serif;
 }
 
+/**
+ * Use class="info" for a regular backgroun
+ */
 .info {
   margin: 0 0 6px 0;
   padding: 18px;
-  background-color: #003050;
   position: relative;
-  line-height: 24px;
-  color: #fff;
-
-  background-image: linear-gradient(darken(#003050, 5%), #003050 10%, #003050 90%, darken(#003050, 5%));
 
   // try to get the info above the template with z-index
   z-index: 9999;
@@ -22,7 +20,6 @@ body {
   h1 {
     margin: 0 0 6px 0;
     padding: 0 32px 0 0;
-    color: #fff;
     font-size: 24px;
     text-shadow: 0 1px darken(#003050, 5%);
     line-height: 30px;
@@ -31,39 +28,64 @@ body {
   }
 
   h3 {
-    color: #7da4be;
+    color: #003050;
     font-size: 16px;
     line-height: 18px;
-    font-weight: normal;
   }
 
   p {
     margin: 0;
     font-size: 14px;
+  }
+
+  a {
+    font-weight: bold;
+    text-decoration: none;
+    color: #7da4be;
+
+    &:hover,
+    &:active {
+      text-decoration: underline;
+      color: #7da4be;
+    }
+  }
+
+  li {
+    font-size: 14px;
+    margin: 6px 0;
+  }
+}
+
+/**
+ * Use class="info header" to get the dark background
+ */
+.header {
+  background-color: #003050;
+  background-image: linear-gradient(darken(#003050, 5%), #003050 10%, #003050 90%, darken(#003050, 5%));
+
+  color: #fff;
+
+  h1 {
+    background: url("../images/logo_small.png") no-repeat right 3px;
+  }
+
+  h3 {
+    color: #7da4be;
+    font-weight: normal;
+  }
+
+  p {
     color: #fff;
   }
 
   a {
     color: #fff;
-    font-weight: bold;
-    text-decoration: none;
 
     &:hover,
     &:active {
       color: #fff;
-      text-decoration: underline;
     }
   }
-}
-
-
-
-.header {
-  margin: 0;
-  border-bottom: 6px solid #ccdef3;
-  height: 23px;
-  background-color: #666673;
-  padding: 4px 0 2px 6px;
 }
 
 .trace,
@@ -76,10 +98,6 @@ body {
   position: relative;
   z-index: 9999;
 
-  li {
-    font-size: 14px;
-    margin: 6px 0;
-  }
 }
 
 a {

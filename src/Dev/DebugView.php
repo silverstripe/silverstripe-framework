@@ -237,7 +237,7 @@ class DebugView extends Object
      */
     public function renderInfo($title, $subtitle, $description = false)
     {
-        $output = '<div class="info">';
+        $output = '<div class="info header">';
         $output .= "<h1>" . Convert::raw2xml($title) . "</h1>";
         if ($subtitle) {
             $output .= "<h3>" . Convert::raw2xml($subtitle) . "</h3>";
@@ -280,7 +280,7 @@ class DebugView extends Object
         } else {
             $errstr = Convert::raw2xml($errstr);
         }
-        $output = '<div class="info ' . $errorType['class'] . '">';
+        $output = '<div class="header info ' . $errorType['class'] . '">';
         $output .= "<h1>[" . $errorType['title'] . '] ' . $errstr . "</h1>";
         $output .= "<h3>$httpRequestEnt</h3>";
         $output .= "<p>Line <strong>$errline</strong> in <strong>$errfile</strong></p>";
@@ -298,7 +298,7 @@ class DebugView extends Object
      */
     public function renderSourceFragment($lines, $errline)
     {
-        $output = '<div class="trace"><h3>Source</h3>';
+        $output = '<div class="info"><h3>Source</h3>';
         $output .= '<pre>';
         foreach ($lines as $offset => $line) {
             $line = htmlentities($line, ENT_COMPAT, 'UTF-8');
@@ -308,7 +308,7 @@ class DebugView extends Object
                 $output .= "<span>$offset</span> $line";
             }
         }
-        $output .= '</pre>';
+        $output .= '</pre></div>';
 
         return $output;
     }
@@ -321,7 +321,8 @@ class DebugView extends Object
      */
     public function renderTrace($trace)
     {
-        $output = '<h3>Trace</h3>';
+        $output = '<div class="info">';
+        $output .= '<h3>Trace</h3>';
         $output .= Backtrace::get_rendered_backtrace($trace);
         $output .= '</div>';
 
@@ -336,7 +337,7 @@ class DebugView extends Object
      */
     public function renderParagraph($text)
     {
-        return '<p class="info">' . $text . '</p>';
+        return '<div class="info"><p>' . $text . '</p></div>';
     }
 
     /**
