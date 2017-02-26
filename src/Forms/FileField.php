@@ -46,7 +46,7 @@ use SilverStripe\Core\Object;
  * }
  * </code>
  */
-class FileField extends FormField
+class FileField extends FormField implements FileHandleField
 {
     use UploadReceiver;
 

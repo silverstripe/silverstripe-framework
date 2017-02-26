@@ -65,7 +65,6 @@ require('../legacy/ToggleCompositeField.js');
 require('../legacy/MemberDatetimeOptionsetField.js');
 require('../legacy/TreeDropdownField.js');
 require('../legacy/DateField.js');
-require('../legacy/UploadField.js');
 require('../legacy/HtmlEditorField.js');
 require('../legacy/TabSet.js');
 require('../legacy/GridField.js');

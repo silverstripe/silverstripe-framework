@@ -44,7 +44,6 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
     private static $allowed_actions = array(
         'LinkForm',
-        'MediaForm',
         'viewfile',
         'getanchors'
     );
@@ -78,9 +77,8 @@ class HTMLEditorField_Toolbar extends RequestHandler
     public function forTemplate()
     {
         return sprintf(
-            '<div id="cms-editor-dialogs" data-url-linkform="%s" data-url-mediaform="%s"></div>',
-            Controller::join_links($this->controller->Link(), $this->name, 'LinkForm', 'forTemplate'),
-            Controller::join_links($this->controller->Link(), $this->name, 'MediaForm', 'forTemplate')
+            '<div id="cms-editor-dialogs" data-url-linkform="%s"></div>',
+            Controller::join_links($this->controller->Link(), $this->name, 'LinkForm', 'forTemplate')
         );
     }
 
@@ -122,6 +120,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
         $numericLabelTmpl = '<span class="step-label"><span class="flyout">Step %d.</span>'
             . '<span class="title">%s</span></span>';
+
         $form = new Form(
             $this->controller,
             "{$this->name}/LinkForm",
@@ -159,7 +158,13 @@ class HTMLEditorField_Toolbar extends RequestHandler
                     $siteTree,
                     TextField::create('external', _t('HTMLEditorField.URL', 'URL'), 'http://'),
                     EmailField::create('email', _t('HTMLEditorField.EMAIL', 'Email address')),
-                    $fileField = UploadField::create('file', _t('HTMLEditorField.FILE', 'File')),
+                    $fileField = TreeDropdownField::create(
+                        'file',
+                        _t('HTMLEditorField.FILE', 'File'),
+                        File::class,
+                        'ID',
+                        'Name'
+                    ),
                     TextField::create('Anchor', _t('HTMLEditorField.ANCHORVALUE', 'Anchor')),
                     TextField::create('Subject', _t('HTMLEditorField.SUBJECT', 'Email subject')),
                     TextField::create('Description', _t('HTMLEditorField.LINKDESCR', 'Link description')),
@@ -177,7 +182,6 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $headerWrap->addExtraClass('CompositeField composite cms-content-header form-group--no-label ');
         $contentComposite->setName('ContentBody');
         $contentComposite->addExtraClass('ss-insert-link content');
-        $fileField->setAllowedMaxFileNumber(1);
 
         $form->unsetValidator();
         $form->loadDataFrom($this);
@@ -198,146 +202,6 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $parentID = $this->controller->getRequest()->requestVar('ParentID');
         $this->extend('updateAttachParentID', $parentID);
         return $parentID;
-    }
-
-    /**
-     * Return a {@link Form} instance allowing a user to
-     * add images and flash objects to the TinyMCE content editor.
-     *
-     * @return Form
-     */
-    public function MediaForm()
-    {
-        // TODO Handle through GridState within field - currently this state set too late to be useful here (during
-        // request handling)
-        $parentID = $this->getAttachParentID();
-
-        $fileFieldConfig = GridFieldConfig::create()->addComponents(
-            new GridFieldSortableHeader(),
-            new GridFieldFilterHeader(),
-            new GridFieldDataColumns(),
-            new GridFieldPaginator(7),
-            // TODO Shouldn't allow delete here, its too confusing with a "remove from editor view" action.
-            // Remove once we can fit the search button in the last actual title column
-            new GridFieldDeleteAction(),
-            new GridFieldDetailForm()
-        );
-        $fileField = GridField::create('Files', false, null, $fileFieldConfig);
-        $fileField->setList($this->getFiles($parentID));
-        $fileField->setAttribute('data-selectable', true);
-        $fileField->setAttribute('data-multiselect', true);
-        /** @var GridFieldDataColumns $columns */
-        $columns = $fileField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldDataColumns');
-        $columns->setDisplayFields(array(
-            'StripThumbnail' => false,
-            'Title' => _t('File.Title', 'Title'),
-            'Created' => File::singleton()->fieldLabel('Created'),
-        ));
-        $columns->setFieldCasting(array(
-            'Created' => 'DBDatetime->Nice'
-        ));
-
-        $fromCMS = new CompositeField(
-            $select = TreeDropdownField::create('ParentID', "", 'SilverStripe\\Assets\\Folder')
-                ->addExtraClass('noborder')
-                ->setValue($parentID),
-            $fileField
-        );
-
-        $fromCMS->addExtraClass('content ss-uploadfield htmleditorfield-from-cms');
-        $select->addExtraClass('content-select');
-
-
-        $URLDescription = _t(
-            'HTMLEditorField.URLDESCRIPTION',
-            'Insert videos and images from the web into your page simply by entering the URL of the file. Make sure you have the rights or permissions before sharing media directly from the web.<br /><br />Please note that files are not added to the file store of the CMS but embeds the file from its original location, if for some reason the file is no longer available in its original location it will no longer be viewable on this page.'
-        );
-        $fromWeb = new CompositeField(
-            $description = new LiteralField(
-                'URLDescription',
-                '<div class="url-description">' . $URLDescription . '</div>'
-            ),
-            $remoteURL = new TextField('RemoteURL', 'http://'),
-            new LiteralField(
-                'addURLImage',
-                '<button type="button" class="btn action btn-primary field font-icon-plus add-url">' .
-                _t('HTMLEditorField.BUTTONADDURL', 'Add url') . '</button>'
-            )
-        );
-
-        $remoteURL->addExtraClass('remoteurl');
-        $fromWeb->addExtraClass('content ss-uploadfield htmleditorfield-from-web');
-
-        Requirements::css(ltrim(FRAMEWORK_ADMIN_DIR . '/client/dist/styles/AssetUploadField.css', '/'));
-        $computerUploadField = UploadField::create('AssetUploadField', '');
-        $computerUploadField->setConfig('previewMaxWidth', 40);
-        $computerUploadField->setConfig('previewMaxHeight', 30);
-        $computerUploadField->addExtraClass('toolbar toolbar--content ss-assetuploadfield htmleditorfield-from-computer');
-        $computerUploadField->removeExtraClass('ss-uploadfield');
-        $computerUploadField->setTemplate('SilverStripe\\Forms\\HTMLEditorField_UploadField');
-        $computerUploadField->setFolderName(Upload::config()->get('uploads_folder'));
-
-        $defaultPanel = new CompositeField(
-            $computerUploadField,
-            $fromCMS
-        );
-
-        $fromWebPanel = new CompositeField(
-            $fromWeb
-        );
-
-        $defaultPanel->addExtraClass('htmleditorfield-default-panel');
-        $fromWebPanel->addExtraClass('htmleditorfield-web-panel');
-
-        $allFields = new CompositeField(
-            $defaultPanel,
-            $fromWebPanel,
-            $editComposite = new CompositeField(
-                new LiteralField('contentEdit', '<div class="content-edit ss-uploadfield-files files"></div>')
-            )
-        );
-
-        $allFields->addExtraClass('ss-insert-media');
-
-        $headings = new CompositeField(
-            new LiteralField(
-                'Heading',
-                sprintf(
-                    '<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>',
-                    _t('HTMLEditorField.INSERTMEDIA', 'Insert media from')
-                ) .
-                sprintf(
-                    '<h3 class="htmleditorfield-mediaform-heading update">%s</h3>',
-                    _t('HTMLEditorField.UpdateMEDIA', 'Update media')
-                )
-            )
-        );
-
-        $headings->addExtraClass('cms-content-header');
-        $editComposite->addExtraClass('ss-assetuploadfield');
-
-        $fields = new FieldList(
-            $headings,
-            $allFields
-        );
-
-        $form = new Form(
-            $this->controller,
-            "{$this->name}/MediaForm",
-            $fields,
-            new FieldList()
-        );
-
-
-        $form->unsetValidator();
-        $form->disableSecurityToken();
-        $form->loadDataFrom($this);
-        $form->addExtraClass('htmleditorfield-form htmleditorfield-mediaform cms-dialog-content');
-
-        // Allow other people to extend the fields being added to the imageform
-        $this->extend('updateMediaForm', $form);
-
-        return $form;
     }
 
     /**

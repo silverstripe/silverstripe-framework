@@ -4,7 +4,6 @@ namespace SilverStripe\Forms\HTMLEditor;
 
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Object;
 
 /**
  * A PHP version of TinyMCE's configuration, to allow various parameters to be configured on a site or section basis
@@ -57,7 +56,7 @@ abstract class HTMLEditorConfig
      * instance - do not call 'new'
      *
      * @param string $identifier The identifier for the config set. If omitted, the active config is returned.
-     * @return HTMLEditorConfig The configuration object.
+     * @return static The configuration object.
      * This will be created if it does not yet exist for that identifier
      */
     public static function get($identifier = null)
