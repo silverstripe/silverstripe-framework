@@ -3,8 +3,6 @@
 namespace SilverStripe\Core\Manifest;
 
 use LogicException;
-use SilverStripe\Core\Cache;
-use Zend_Cache_Core;
 
 /**
  * A utility class which builds a manifest of configuration items
@@ -23,7 +21,7 @@ class ModuleManifest
      *
      * @var string
      */
-    protected $key;
+    protected $cacheKey;
 
     /**
      * Whether `test` directories should be searched when searching for configuration
@@ -33,7 +31,7 @@ class ModuleManifest
     protected $includeTests;
 
     /**
-     * @var Zend_Cache_Core
+     * @var ManifestCache
      */
     protected $cache;
 
@@ -93,15 +91,14 @@ class ModuleManifest
     public function __construct($base, $includeTests = false, $forceRegen = false)
     {
         $this->base = $base;
-        $this->key = sha1($base).'_modules';
+        $this->cacheKey = sha1($base).'_modules';
         $this->includeTests = $includeTests;
 
-        // Get the Zend Cache to load/store cache into
-        $this->cache = $this->getCache();
+        $this->cache = $this->getCache($includeTests);
 
         // Unless we're forcing regen, try loading from cache
         if (!$forceRegen) {
-            $this->modules = $this->cache->load($this->key) ?: [];
+            $this->modules = $this->cache->load($this->cacheKey) ?: [];
         }
         if (empty($this->modules)) {
             $this->regenerate($includeTests);
@@ -110,14 +107,15 @@ class ModuleManifest
 
     /**
      * Provides a hook for mock unit tests despite no DI
-     * @return Zend_Cache_Core
+     *
+     * @param bool $includeTests
+     * @return ManifestCache
      */
-    protected function getCache()
+    protected function getCache($includeTests = false)
     {
-        return Cache::factory('SS_Configuration', 'Core', array(
-            'automatic_serialization' => true,
-            'lifetime' => null
-        ));
+        // Cache
+        $cacheClass = getenv('SS_MANIFESTCACHE') ?: ManifestCache_File::class;
+        return new $cacheClass('classmanifest'.($includeTests ? '_tests' : ''));
     }
 
     /**
@@ -165,7 +163,7 @@ class ModuleManifest
         $finder->find($this->base);
 
         if ($cache) {
-            $this->cache->save($this->modules, $this->key);
+            $this->cache->save($this->modules, $this->cacheKey);
         }
     }
 
