@@ -2,23 +2,12 @@
 
 (() => {
   const sslink = {
-    /**
-     * Returns information about the plugin as a name/value array.
-     * The current keys are longname, author, authorurl, infourl and version.
-     *
-     * @returns Name/value array containing information about the plugin.
-     * @type Array
-     */
-    getInfo() {
-      return {
-        longname: 'Insert link for SilverStripe CMS',
-        author: 'Sam Minnée',
-        authorurl: 'http://www.siverstripe.com/',
-        infourl: 'http://www.silverstripe.com/',
-        version: '1.1',
-      };
-    },
 
+    /**
+     * Initialise this plugin
+     *
+     * @param {Object} ed
+     */
     init(ed) {
       ed.addButton('sslink', {
         icon: 'link',
