@@ -1,7 +1,7 @@
 <?php
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Config\CoreConfigCreator;
+use SilverStripe\Core\Config\CoreConfigFactory;
 use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
@@ -83,7 +83,7 @@ $moduleManifest = new ModuleManifest(BASE_PATH, false, $flush);
 ModuleLoader::instance()->pushManifest($moduleManifest);
 
 // Build config manifest
-$configManifest = CoreConfigCreator::inst()->createRoot($flush);
+$configManifest = CoreConfigFactory::inst()->createRoot($flush);
 ConfigLoader::instance()->pushManifest($configManifest);
 
 // After loading config, boot _config.php files

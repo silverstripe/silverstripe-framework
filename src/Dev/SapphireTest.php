@@ -13,7 +13,7 @@ use SilverStripe\Control\Tests\FakeController;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\ConfigLoader;
-use SilverStripe\Core\Config\CoreConfigCreator;
+use SilverStripe\Core\Config\CoreConfigFactory;
 use SilverStripe\Core\Config\DefaultConfig;
 use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Flushable;
@@ -1028,7 +1028,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         ));
 
         // Once new class loader is registered, push a new uncached config
-        $config = CoreConfigCreator::inst()->createCore();
+        $config = CoreConfigFactory::inst()->createCore();
         ConfigLoader::instance()->pushManifest($config);
 
         // Invalidate classname spec since the test manifest will now pull out new subclasses for each internal class

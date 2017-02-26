@@ -19,22 +19,21 @@ trait MiddlewareCommon
         $this->disableFlag = $disableFlag;
     }
 
-    protected function enabled($options)
+    /**
+     * Check if this middlware is enabled
+     *
+     * @param int|true $excludeMiddleware
+     * @return bool
+     */
+    protected function enabled($excludeMiddleware)
     {
-        if ($options === true) {
+        if ($excludeMiddleware === true) {
             return false;
         }
         if (!$this->disableFlag) {
             return true;
         }
-        if (is_array($options)) {
-            if (!isset($options['disableFlag'])) {
-                return true;
-            }
-            $options = $options['disableFlag'];
-        }
-
-        return ($options & $this->disableFlag) !== $this->disableFlag;
+        return ($excludeMiddleware & $this->disableFlag) !== $this->disableFlag;
     }
 
     public function serialize()

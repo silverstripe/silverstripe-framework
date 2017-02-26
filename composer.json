@@ -25,7 +25,6 @@
     "swiftmailer/swiftmailer": "~5.4",
     "symfony/cache": "^3.3@dev",
     "symfony/config": "^2.8",
-    "symfony/cache": "^3.1",
     "symfony/translation": "^2.8",
     "vlucas/phpdotenv": "^2.4",
     "silverstripe/config": "^1@dev"

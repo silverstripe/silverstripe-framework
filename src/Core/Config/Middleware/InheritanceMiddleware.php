@@ -13,22 +13,22 @@ class InheritanceMiddleware implements Middleware
     /**
      * Get config for a class
      *
-     * @param string $class
-     * @param mixed $options
-     * @param callable $next
-     * @return string
+     * @param string $class Name of class
+     * @param int|true $excludeMiddleware Middleware disable flags
+     * @param callable $next Callback to next middleware
+     * @return array Complete class config
      */
-    public function getClassConfig($class, $options, $next)
+    public function getClassConfig($class, $excludeMiddleware, $next)
     {
         // Check if enabled
-        if (!$this->enabled($options)) {
-            return $next($class, $options);
+        if (!$this->enabled($excludeMiddleware)) {
+            return $next($class, $excludeMiddleware);
         }
 
         // Merge hierarchy
         $config = [];
         foreach (ClassInfo::ancestry($class) as $nextClass) {
-            $nextConfig = $next($nextClass, $options);
+            $nextConfig = $next($nextClass, $excludeMiddleware);
             $config = Priority::mergeArray($nextConfig, $config);
         }
         return $config;

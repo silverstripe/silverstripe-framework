@@ -10,24 +10,24 @@ use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Object;
 
-class ExtensionMiddleware implements \SilverStripe\Config\Middleware\Middleware
+class ExtensionMiddleware implements Middleware
 {
     use MiddlewareCommon;
 
     /**
      * Get config for a class
      *
-     * @param string $class
-     * @param mixed $options
-     * @param callable $next
-     * @return string
+     * @param string $class Name of class
+     * @param int|true $excludeMiddleware Middleware disable flags
+     * @param callable $next Callback to next middleware
+     * @return array Complete class config
      */
-    public function getClassConfig($class, $options, $next)
+    public function getClassConfig($class, $excludeMiddleware, $next)
     {
         // Get base config
-        $config = $next($class, $options);
+        $config = $next($class, $excludeMiddleware);
 
-        if (!$this->enabled($options)) {
+        if (!$this->enabled($excludeMiddleware)) {
             return $config;
         }
 

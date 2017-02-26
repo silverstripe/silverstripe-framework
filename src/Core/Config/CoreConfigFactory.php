@@ -17,7 +17,7 @@ use Symfony\Component\Finder\Finder;
 /**
  * Factory for silverstripe configs
  */
-class CoreConfigCreator
+class CoreConfigFactory
 {
     /**
      * @var static

@@ -5,7 +5,7 @@ namespace SilverStripe\Core\Tests\Manifest;
 use Dotenv\Loader;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
 use SilverStripe\Control\Director;
-use SilverStripe\Core\Config\CoreConfigCreator;
+use SilverStripe\Core\Config\CoreConfigFactory;
 use SilverStripe\Dev\SapphireTest;
 
 class ConfigManifestTest extends SapphireTest
@@ -29,7 +29,7 @@ class ConfigManifestTest extends SapphireTest
     public function getTestConfig()
     {
         $config = new MemoryConfigCollection();
-        $transformer = CoreConfigCreator::inst()->buildYamlTransformerForPath(dirname(__FILE__) . '/fixtures/configmanifest');
+        $transformer = CoreConfigFactory::inst()->buildYamlTransformerForPath(dirname(__FILE__) . '/fixtures/configmanifest');
         $config->transform([$transformer]);
         return $config;
     }
