@@ -2,11 +2,14 @@
 
 namespace SilverStripe\View\Tests;
 
+use SilverStripe\Core\Injector\Injector;
 use SilverStripe\ORM\Versioning\Versioned;
-use SilverStripe\Core\Cache;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
 use SilverStripe\View\SSViewer;
+use Symfony\Component\Cache\Simple\FilesystemCache;
+use Symfony\Component\Cache\Simple\NullCache;
 
 // Not actually a data object, we just want a ViewableData object that's just for us
 
@@ -27,8 +30,15 @@ class SSViewerCacheBlockTest extends SapphireTest
     {
         $this->data = new SSViewerCacheBlockTest\TestModel();
 
-        Cache::factory('cacheblock')->clean();
-        Cache::set_cache_lifetime('cacheblock', $cacheOn ? 600 : -1);
+        $cache = null;
+        if ($cacheOn) {
+            $cache = new FilesystemCache('cacheblock', 0, getTempFolder()); // cache indefinitely
+        } else {
+            $cache = new NullCache();
+        }
+
+        Injector::inst()->registerService($cache, CacheInterface::class . '.cacheblock');
+        Injector::inst()->get(CacheInterface::class . '.cacheblock')->clear();
     }
 
     protected function _runtemplate($template, $data = null)

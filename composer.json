@@ -23,6 +23,7 @@
     "symfony/yaml": "~2.7",
     "embed/embed": "^2.6",
     "swiftmailer/swiftmailer": "~5.4",
+    "symfony/cache": "^3.3@dev",
     "symfony/config": "^2.8",
     "symfony/translation": "^2.8",
     "vlucas/phpdotenv": "^2.4"

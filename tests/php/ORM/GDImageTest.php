@@ -5,8 +5,8 @@ namespace SilverStripe\ORM\Tests;
 require_once __DIR__  . "/ImageTest.php";
 
 use SilverStripe\Core\Config\Config;
-use SilverStripe\Core\Cache;
-use Zend_Cache;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Injector\Injector;
 
 class GDImageTest extends ImageTest
 {
@@ -32,8 +32,9 @@ class GDImageTest extends ImageTest
 
     public function tearDown()
     {
-        $cache = Cache::factory('GDBackend_Manipulations');
-        $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
+        $cache = Injector::inst()->get(CacheInterface::class . '.GDBackend_Manipulations');
+        $cache->clear();
+
         parent::tearDown();
     }
 }

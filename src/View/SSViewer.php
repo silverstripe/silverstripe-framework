@@ -4,7 +4,7 @@ namespace SilverStripe\View;
 
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Cache;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
@@ -14,9 +14,6 @@ use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
 use SilverStripe\Security\Permission;
 use InvalidArgumentException;
-use Zend_Cache_Backend_ExtendedInterface;
-use Zend_Cache;
-use Zend_Cache_Core;
 
 /**
  * Parses a template file with an *.ss file extension.
@@ -466,17 +463,8 @@ class SSViewer implements Flushable
     public static function flush_cacheblock_cache($force = false)
     {
         if (!self::$cacheblock_cache_flushed || $force) {
-            $cache = Cache::factory('cacheblock');
-            $backend = $cache->getBackend();
-
-            if ($backend instanceof Zend_Cache_Backend_ExtendedInterface
-                && ($capabilities = $backend->getCapabilities())
-                && $capabilities['tags']
-            ) {
-                $cache->clean(Zend_Cache::CLEANING_MODE_MATCHING_TAG, $cache->getTags());
-            } else {
-                $cache->clean(Zend_Cache::CLEANING_MODE_ALL);
-            }
+            $cache = Injector::inst()->get(CacheInterface::class . '.cacheblock');
+            $cache->clear();
 
 
             self::$cacheblock_cache_flushed = true;
@@ -484,14 +472,14 @@ class SSViewer implements Flushable
     }
 
     /**
-     * @var Zend_Cache_Core
+     * @var CacheInterface
      */
     protected $partialCacheStore = null;
 
     /**
      * Set the cache object to use when storing / retrieving partial cache blocks.
      *
-     * @param Zend_Cache_Core $cache
+     * @param CacheInterface $cache
      */
     public function setPartialCacheStore($cache)
     {
@@ -501,11 +489,11 @@ class SSViewer implements Flushable
     /**
      * Get the cache object to use when storing / retrieving partial cache blocks.
      *
-     * @return Zend_Cache_Core
+     * @return CacheInterface
      */
     public function getPartialCacheStore()
     {
-        return $this->partialCacheStore ? $this->partialCacheStore : Cache::factory('cacheblock');
+        return $this->partialCacheStore ? $this->partialCacheStore : Injector::inst()->get(CacheInterface::class . '.cacheblock');
     }
 
     /**
