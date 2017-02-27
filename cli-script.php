@@ -125,6 +125,15 @@ ENVCONTENT;
 }
 DB::connect($databaseConfig);
 
+// register_argc_argv: Tells PHP whether to declare the argv & argc variables (that would contain the GET information)
+// http://php.net/manual/en/ini.core.php#ini.register-argc-argv
+if (!(int)ini_get('register_argc_argv')) {
+	echo 'register_argc_argv is required to obtain the GET information but is disabled.'
+	    .'Please enable it in your php.ini ('
+		. php_ini_loaded_file()
+        .')';
+    die();
+}
 
 // Get the request URL from the querystring arguments
 $url = isset($_SERVER['argv'][1]) ? $_SERVER['argv'][1] : null;
