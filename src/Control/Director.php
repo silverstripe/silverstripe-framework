@@ -571,9 +571,11 @@ class Director implements TemplateGlobalProvider
      *  - SERVER_NAME
      *  - gethostname()
      *
+     * @param bool $respectConfig Set to false to ignore config override
+     * (Necessary for checking host pre-config)
      * @return string
      */
-    public static function host()
+    public static function host($respectConfig = true)
     {
         $headerOverride = false;
         if (TRUSTED_PROXY) {
@@ -591,13 +593,15 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        if ($host = Director::config()->uninherited('alternate_host')) {
-            return $host;
-        }
+        if ($respectConfig) {
+            if ($host = Director::config()->uninherited('alternate_host')) {
+                return $host;
+            }
 
-        if ($baseURL = Director::config()->uninherited('alternate_base_url')) {
-            if (preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $baseURL, $matches)) {
-                return parse_url($baseURL, PHP_URL_HOST);
+            if ($baseURL = Director::config()->uninherited('alternate_base_url')) {
+                if (preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $baseURL, $matches)) {
+                    return parse_url($baseURL, PHP_URL_HOST);
+                }
             }
         }
 
@@ -1173,10 +1177,11 @@ class Director implements TemplateGlobalProvider
         }
 
         // Check if we are running on one of the test servers
-        if (in_array(static::host(), self::$dev_servers)) {
+        // Note: Bypass config for checking environment type
+        if (in_array(static::host(false), self::$dev_servers)) {
             return 'dev';
         }
-        if (in_array(static::host(), self::$test_servers)) {
+        if (in_array(static::host(false), self::$test_servers)) {
             return 'test';
         }
         return 'live';
