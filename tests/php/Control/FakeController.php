@@ -21,12 +21,7 @@ class FakeController extends Controller
 
         $this->pushCurrent();
 
-        $request = new HTTPRequest(
-            (isset($_SERVER['X-HTTP-Method-Override']))
-                ? $_SERVER['X-HTTP-Method-Override']
-                : $_SERVER['REQUEST_METHOD'],
-            '/'
-        );
+        $request = new HTTPRequest('GET', '/');
         $this->setRequest($request);
 
         $this->setResponse(new HTTPResponse());
