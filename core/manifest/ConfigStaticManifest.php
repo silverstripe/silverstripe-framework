@@ -25,7 +25,7 @@ class SS_ConfigStaticManifest_Reflection extends SS_ConfigStaticManifest {
 	 * Completely regenerates the manifest file.
 	 */
 	public function regenerate($cache = true) {
-		Deprecation::notice('3.4', 'This is no longer available as SS_ConfigStaticManifest now uses Reflection. For backwards compatibility define SS_USE_OLD_CONFIGSTATICMANIFEST in your _ss_environment.php file.');
+		Deprecation::notice('4.0', 'This method is no longer available as ' . __CLASS__ . ' uses Reflection.');
 	}
 
 	/**
@@ -46,7 +46,7 @@ class SS_ConfigStaticManifest_Reflection extends SS_ConfigStaticManifest {
 					$property = $reflection->getProperty($name);
 					if($property->isStatic()) {
 						if(!$property->isPrivate()) {
-							Deprecation::notice('3.4', "Config static $class::\$$name must be marked as private",
+							Deprecation::notice('4.0', "Config static $class::\$$name must be marked as private",
 								Deprecation::SCOPE_GLOBAL);
 							return null;
 						}
@@ -61,7 +61,7 @@ class SS_ConfigStaticManifest_Reflection extends SS_ConfigStaticManifest {
 	}
 
 	public function getStatics() {
-		Deprecation::notice('3.4', 'This is no longer available as SS_ConfigStaticManifest now uses Reflection. For backwards compatibility define SS_USE_OLD_CONFIGSTATICMANIFEST in your _ss_environment.php file.');
+		Deprecation::notice('4.0', 'This method is no longer available as ' . __CLASS__ . ' uses Reflection.');
 		return array();
 	}
 }
