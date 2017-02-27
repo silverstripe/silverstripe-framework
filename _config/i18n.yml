@@ -39,7 +39,7 @@ SilverStripe\Core\Injector\Injector:
     constructor:
       0: 'en'
       1: null
-      2: `TEMP_FOLDER`
+      2: '`TEMP_FOLDER`'
     properties:
       ConfigCacheFactory: %$Symfony\Component\Config\ConfigCacheFactoryInterface
     calls:
