@@ -6,10 +6,26 @@ use Dotenv\Loader;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Config\CoreConfigFactory;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\Dev\SapphireTest;
 
 class ConfigManifestTest extends SapphireTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $moduleManifest = new ModuleManifest(dirname(__FILE__) . '/fixtures/configmanifest');
+        ModuleLoader::instance()->pushManifest($moduleManifest);
+    }
+
+    public function tearDown()
+    {
+        ModuleLoader::instance()->popManifest();
+        parent::tearDown();
+    }
+
     /**
      * This is a helper method for getting a new manifest
      *
