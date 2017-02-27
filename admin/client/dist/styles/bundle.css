@@ -14943,6 +14943,37 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   color:#66727d;
 }
 
+.fieldgroup--fill-width>.form__field-holder>.fieldgroup{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  width:100%;
+  -webkit-box-orient:horizontal;
+  -webkit-box-direction:normal;
+      -ms-flex-direction:row;
+          flex-direction:row;
+}
+
+.fieldgroup--fill-width>.form__field-holder>.fieldgroup>.field:last-child{
+  margin-right:0;
+}
+
+.fieldgroup--fill-height>.form__field-holder>.fieldgroup{
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  height:100%;
+  min-height:0;
+  -webkit-box-orient:vertical;
+  -webkit-box-direction:normal;
+      -ms-flex-direction:column;
+          flex-direction:column;
+}
+
+.fieldgroup--fill-height>.form__field-holder>.fieldgroup>.field:last-child{
+  margin-bottom:0;
+}
+
 .list-group{
   margin-left:-1.5385rem;
   margin-right:-1.5385rem;
