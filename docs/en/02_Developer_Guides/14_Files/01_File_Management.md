@@ -153,10 +153,8 @@ You may also notice the 'Sync files' button (highlighted below). This button all
 
 ## Upload
 
-Files can be managed through forms in three ways:
+Files can be managed through forms in one way:
 
  * [api:FileField]: provides a simple HTML input with a type of "file".
- * [UploadField](/developer_guides/forms/field_types/uploadfield): more feature-rich field (
-    including AJAX-based uploads, previews, relationship management and file data management).
- * [AssetField](/developer_guides/forms/field_types/assetfield): Similar to UploadField,
-    but operates on a `[api:DBFile]` database field instead of a `[api:File]` record.
+
+_NOTE_: Modules are also available to handle Files.

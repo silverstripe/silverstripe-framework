@@ -44,7 +44,6 @@ const config = [
       'LeftAndMain.Ping': `${PATHS.ADMIN_JS_SRC}/legacy/LeftAndMain.Ping.js`,
       leaktools: `${PATHS.ADMIN_JS_SRC}/legacy/leaktools.js`,
       MemberImportForm: `${PATHS.ADMIN_JS_SRC}/legacy/MemberImportForm.js`,
-      UploadField_select: `${PATHS.ADMIN_JS_SRC}/legacy/UploadField_select.js`,
       TinyMCE_sslink: `${PATHS.ADMIN_JS_SRC}/legacy/TinyMCE_sslink.js`,
     },
     resolve: {
@@ -160,8 +159,6 @@ const config = [
       'bundle': `${PATHS.ADMIN_CSS_SRC}/bundle.scss`,
       'editor': `${PATHS.ADMIN_CSS_SRC}/editor.scss`,
       'GridField_print': `${PATHS.ADMIN_CSS_SRC}/legacy/GridField_print.scss`,
-      'AssetUploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/AssetUploadField.scss`,
-      'UploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/UploadField.scss`,
     },
     output: {
       path: 'admin/client/dist/styles',

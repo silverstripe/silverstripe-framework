@@ -329,7 +329,6 @@ mappings:
   EncryptAllPasswordsTask: SilverStripe\Dev\Tasks\EncryptAllPasswordsTask
   i18nTextCollectorTask: SilverStripe\Dev\Tasks\i18nTextCollectorTask
   MigrateFileTask: SilverStripe\Dev\Tasks\MigrateFileTask
-  AssetField: SilverStripe\Forms\AssetField
   CheckboxField: SilverStripe\Forms\CheckboxField
   CheckboxField_Readonly: SilverStripe\Forms\CheckboxField_Readonly
   CheckboxSetField: SilverStripe\Forms\CheckboxSetField
@@ -399,9 +398,6 @@ mappings:
   TreeDropdownField_Readonly: SilverStripe\Forms\TreeDropdownField_Readonly
   TreeMultiselectField: SilverStripe\Forms\TreeMultiselectField
   TreeMultiselectField_Readonly: SilverStripe\Forms\TreeMultiselectField_Readonly
-  UploadField: SilverStripe\Forms\UploadField
-  UploadField_ItemHandler: SilverStripe\Forms\UploadField_ItemHandler
-  UploadField_SelectHandler: SilverStripe\Forms\UploadField_SelectHandler
   Validator: SilverStripe\Forms\Validator
   HTMLEditorConfig: SilverStripe\Forms\HTMLEditor\HTMLEditorConfig
   HTMLEditorField: SilverStripe\Forms\HTMLEditor\HTMLEditorField
@@ -655,10 +651,6 @@ mappings:
   YamlFixtureTest: SilverStripe\Dev\Tests\YamlFixtureTest
   YamlFixtureTest_DataObject: SilverStripe\Dev\Tests\YamlFixtureTest\TestDataObject
   YamlFixtureTest_DataObjectRelation: SilverStripe\Dev\Tests\YamlFixtureTest\DataObjectRelation
-  AssetFieldTest: SilverStripe\Forms\Tests\AssetFieldTest
-  AssetFieldTest_Object: SilverStripe\Forms\Tests\AssetFieldTest\TestObject
-  AssetFieldTest_Form: SilverStripe\Forms\Tests\AssetFieldTest\TestForm
-  AssetFieldTest_Controller: SilverStripe\Forms\Tests\AssetFieldTest\TestController
   CheckboxFieldTest: SilverStripe\Forms\Tests\CheckboxFieldTest
   CheckboxFieldTest_Article: SilverStripe\Forms\Tests\CheckboxFieldtest\Article
   CheckboxSetFieldTest: SilverStripe\Forms\Tests\CheckboxSetFieldTest
@@ -731,12 +723,6 @@ mappings:
   TextFieldTest: SilverStripe\Forms\Tests\TextFieldTest
   TimeFieldTest: SilverStripe\Forms\Tests\TimeFieldTest
   TreeDropdownFieldTest: SilverStripe\Forms\Tests\TreeDropdownFieldTest
-  UploadFieldTest: SilverStripe\Forms\Tests\UploadFieldTest
-  UploadFieldTest_Record: SilverStripe\Forms\Tests\UploadFieldTest\TestRecord
-  UploadFieldTest_FileExtension: SilverStripe\Forms\Tests\UploadFieldTest\FileExtension
-  UploadFieldTest_ExtendedFile: SilverStripe\Forms\Tests\UploadFieldTest\ExtendedFile
-  UploadFieldTestForm: SilverStripe\Forms\Tests\UploadFieldTest\UploadFieldTestForm
-  UploadFieldTest_Controller: SilverStripe\Forms\Tests\UploadFieldTest\TestController
   i18nTest: SilverStripe\i18n\Tests\i18nTest
   i18nTest_DataObject: SilverStripe\i18n\Tests\i18Test\TestDataObject
   i18nTest_Object: SilverStripe\i18n\Tests\i18Test\TestObject
