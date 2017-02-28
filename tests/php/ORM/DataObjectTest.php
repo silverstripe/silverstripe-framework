@@ -1377,21 +1377,21 @@ class DataObjectTest extends SapphireTest
 
     public function testValidateModelDefinitionsFailsWithArray()
     {
-        Config::inst()->update(DataObjectTest\Team::class, 'has_one', array('NotValid' => array('NoArraysAllowed')));
+        Config::modify()->merge(DataObjectTest\Team::class, 'has_one', array('NotValid' => array('NoArraysAllowed')));
         $this->setExpectedException(InvalidArgumentException::class);
         DataObject::getSchema()->hasOneComponent(DataObjectTest\Team::class, 'NotValid');
     }
 
     public function testValidateModelDefinitionsFailsWithIntKey()
     {
-        Config::inst()->update(DataObjectTest\Team::class, 'has_many', array(12 => DataObjectTest\Player::class));
+        Config::modify()->set(DataObjectTest\Team::class, 'has_many', array(0 => DataObjectTest\Player::class));
         $this->setExpectedException(InvalidArgumentException::class);
-        DataObject::getSchema()->hasManyComponent(DataObjectTest\Team::class, 12);
+        DataObject::getSchema()->hasManyComponent(DataObjectTest\Team::class, 0);
     }
 
     public function testValidateModelDefinitionsFailsWithIntValue()
     {
-        Config::inst()->update(DataObjectTest\Team::class, 'many_many', array('Players' => 12));
+        Config::modify()->merge(DataObjectTest\Team::class, 'many_many', array('Players' => 12));
         $this->setExpectedException(InvalidArgumentException::class);
         DataObject::getSchema()->manyManyComponent(DataObjectTest\Team::class, 'Players');
     }
@@ -1460,7 +1460,7 @@ class DataObjectTest extends SapphireTest
 
         // Check everything works when no relation is present
         $teamWithoutSponsor = $this->objFromFixture(DataObjectTest\Team::class, 'team3');
-        $this->assertInstanceOf('SilverStripe\\ORM\\ManyManyList', $teamWithoutSponsor->Sponsors());
+        $this->assertInstanceOf(ManyManyList::class, $teamWithoutSponsor->Sponsors());
         $this->assertEquals(0, $teamWithoutSponsor->Sponsors()->count());
 
         // Test that belongs_many_many can be infered from with getNonReciprocalComponent

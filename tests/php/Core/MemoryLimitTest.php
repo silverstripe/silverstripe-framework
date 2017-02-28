@@ -49,22 +49,25 @@ class MemoryLimitTest extends SapphireTest
             return;
         }
 
-        set_time_limit(6000);
+        // Can't change time limit
+        if (!set_time_limit(6000)) {
+            return;
+        }
 
         // It can go up
-        increase_time_limit_to(7000);
+        $this->assertTrue(increase_time_limit_to(7000));
         $this->assertEquals(7000, ini_get('max_execution_time'));
 
         // But not down
-        increase_time_limit_to(5000);
+        $this->assertTrue(increase_time_limit_to(5000));
         $this->assertEquals(7000, ini_get('max_execution_time'));
 
         // 0/nothing means infinity
-        increase_time_limit_to();
+        $this->assertTrue(increase_time_limit_to());
         $this->assertEquals(0, ini_get('max_execution_time'));
 
         // Can't go down from there
-        increase_time_limit_to(10000);
+        $this->assertTrue(increase_time_limit_to(10000));
         $this->assertEquals(0, ini_get('max_execution_time'));
     }
 
@@ -82,6 +85,7 @@ class MemoryLimitTest extends SapphireTest
         set_increase_memory_limit_max(-1);
         set_increase_time_limit_max(-1);
     }
+
     public function tearDown()
     {
         ini_set('memory_limit', $this->origMemLimit);

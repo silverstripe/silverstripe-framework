@@ -21,7 +21,7 @@ class CampaignAdminList extends FormField
 
         // Get endpoints from admin
         $admin = CampaignAdmin::singleton();
-        $data['data']['recordType'] = $admin->config()->get('tree_class');
+        $data['data']['recordType'] = $admin->config()->uninherited('tree_class');
         $oneSetAction = $admin->Link("set") . "/:id";
         $setsAction = $admin->Link("sets");
         $schemaEndpoint = $admin->Link("schema") . "/DetailEditForm";

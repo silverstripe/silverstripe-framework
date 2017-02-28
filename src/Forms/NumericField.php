@@ -55,7 +55,10 @@ class NumericField extends TextField
     {
         if ($this->getHTML5()) {
             // Locale-independent html5 number formatter
-            $formatter = NumberFormatter::create(i18n::config()->get('default_locale'), NumberFormatter::DECIMAL);
+            $formatter = NumberFormatter::create(
+                i18n::config()->uninherited('default_locale'),
+                NumberFormatter::DECIMAL
+            );
             $formatter->setAttribute(NumberFormatter::GROUPING_USED, false);
             $formatter->setSymbol(NumberFormatter::DECIMAL_SEPARATOR_SYMBOL, '.');
         } else {

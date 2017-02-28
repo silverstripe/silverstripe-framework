@@ -1,13 +1,15 @@
 <?php
 
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\CoreConfigFactory;
+use SilverStripe\Core\Config\ConfigLoader;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
-use SilverStripe\Core\Manifest\ConfigStaticManifest;
-use SilverStripe\Core\Manifest\ConfigManifest;
 use SilverStripe\Control\Director;
-use SilverStripe\Dev\Deprecation;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\i18n\i18n;
 
 /**
@@ -56,7 +58,7 @@ gc_enable();
 
 // Initialise the dependency injector as soon as possible, as it is
 // subsequently used by some of the following code
-$injector = new Injector(array('locator' => 'SilverStripe\\Core\\Injector\\SilverStripeServiceConfigurationLocator'));
+$injector = new Injector(array('locator' => SilverStripeServiceConfigurationLocator::class));
 Injector::set_inst($injector);
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,13 +78,16 @@ $loader = ClassLoader::instance();
 $loader->registerAutoloader();
 $loader->pushManifest($manifest);
 
-// Now that the class manifest is up, load the static configuration
-$configManifest = new ConfigStaticManifest();
-Config::inst()->pushConfigStaticManifest($configManifest);
+// Init module manifest
+$moduleManifest = new ModuleManifest(BASE_PATH, false, $flush);
+ModuleLoader::instance()->pushManifest($moduleManifest);
 
-// And then the yaml configuration
-$configManifest = new ConfigManifest(BASE_PATH, false, $flush);
-Config::inst()->pushConfigYamlManifest($configManifest);
+// Build config manifest
+$configManifest = CoreConfigFactory::inst()->createRoot($flush);
+ConfigLoader::instance()->pushManifest($configManifest);
+
+// After loading config, boot _config.php files
+ModuleLoader::instance()->getManifest()->activateConfig();
 
 // Load template manifest
 SilverStripe\View\ThemeResourceLoader::instance()->addSet('$default', new SilverStripe\View\ThemeManifest(
@@ -103,7 +108,6 @@ if (Director::isLive()) {
 /**
  * Load error handlers
  */
-
 $errorHandler = Injector::inst()->get('ErrorHandler');
 $errorHandler->start();
 

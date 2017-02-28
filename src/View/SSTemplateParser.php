@@ -4000,7 +4000,7 @@ class SSTemplateParser extends Parser implements TemplateParser
         // the passed cache key, the block index, and the sha hash of the template.
         $res['php'] .= '$keyExpression = function() use ($scope, $cache) {' . PHP_EOL;
         $res['php'] .= '$val = \'\';' . PHP_EOL;
-        if ($globalKey = SSViewer::config()->get('global_key')) {
+        if ($globalKey = SSViewer::config()->uninherited('global_key')) {
             // Embed the code necessary to evaluate the globalKey directly into the template,
             // so that SSTemplateParser only needs to be called during template regeneration.
             // Warning: If the global key is changed, it's necessary to flush the template cache.

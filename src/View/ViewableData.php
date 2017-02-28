@@ -6,7 +6,6 @@ use SilverStripe\Core\Object;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
@@ -277,7 +276,7 @@ class ViewableData extends Object implements IteratorAggregate
      */
     public function castingHelper($field)
     {
-        $specs = $this->config()->casting;
+        $specs = $this->config()->get('casting');
         if (isset($specs[$field])) {
             return $specs[$field];
         }
@@ -294,7 +293,11 @@ class ViewableData extends Object implements IteratorAggregate
         }
 
         // Fall back to default_cast
-        return $this->config()->get('default_cast');
+        $default = $this->config()->get('default_cast');
+        if (empty($default)) {
+            throw new \Exception("No default_cast");
+        }
+        return $default;
     }
 
     /**
@@ -318,11 +321,13 @@ class ViewableData extends Object implements IteratorAggregate
      */
     public function escapeTypeForField($field)
     {
-        $class = $this->castingClass($field) ?: $this->config()->default_cast;
+        $class = $this->castingClass($field) ?: $this->config()->get('default_cast');
 
         // TODO: It would be quicker not to instantiate the object, but to merely
         // get its class from the Injector
-        return Injector::inst()->get($class, true)->config()->escape_type;
+        /** @var DBField $type */
+        $type = Injector::inst()->get($class, true);
+        return $type->config()->get('escape_type');
     }
 
     // TEMPLATE ACCESS LAYER -------------------------------------------------------------------------------------------

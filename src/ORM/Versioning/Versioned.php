@@ -595,7 +595,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider, Resetta
 
         // Build a list of suffixes whose tables need versioning
         $allSuffixes = array();
-        $versionableExtensions = $owner->config()->versionableExtensions;
+        $versionableExtensions = $owner->config()->get('versionableExtensions');
         if (count($versionableExtensions)) {
             foreach ($versionableExtensions as $versionableExtension => $suffixes) {
                 if ($owner->hasExtension($versionableExtension)) {
@@ -622,7 +622,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider, Resetta
             $fields = $schema->databaseFields($class, false);
             unset($fields['ID']);
             if ($fields) {
-                $options = Config::inst()->get($class, 'create_table_options', Config::FIRST_SET);
+                $options = Config::inst()->get($class, 'create_table_options');
                 $indexes = $owner->databaseIndexes();
                 $extensionClass = $allSuffixes[$suffix];
                 if ($suffix && ($extension = $owner->getExtensionInstance($extensionClass))) {
@@ -1104,7 +1104,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider, Resetta
             return $list;
         }
 
-        $relationships = $owner->config()->{$source};
+        $relationships = $owner->config()->get($source);
         foreach ($relationships as $relationship) {
             // Warn if invalid config
             if (!$owner->hasMethod($relationship)) {
@@ -1375,7 +1375,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider, Resetta
         }
 
         // Fall back to default permission check
-        $permissions = Config::inst()->get($owner->class, 'non_live_permissions', Config::FIRST_SET);
+        $permissions = Config::inst()->get($owner->class, 'non_live_permissions');
         $check = Permission::checkMember($member, $permissions);
         return (bool)$check;
     }
@@ -1441,7 +1441,7 @@ class Versioned extends DataExtension implements TemplateGlobalProvider, Resetta
     public function extendWithSuffix($table)
     {
         $owner = $this->owner;
-        $versionableExtensions = $owner->config()->versionableExtensions;
+        $versionableExtensions = $owner->config()->get('versionableExtensions');
 
         if (count($versionableExtensions)) {
             foreach ($versionableExtensions as $versionableExtension => $suffixes) {
@@ -1546,8 +1546,8 @@ class Versioned extends DataExtension implements TemplateGlobalProvider, Resetta
 
         // after publishing, objects which used to be owned need to be
         // dis-connected from this object (set ForeignKeyID = 0)
-        $owns = $owner->config()->owns;
-        $hasMany = $owner->config()->has_many;
+        $owns = $owner->config()->get('owns');
+        $hasMany = $owner->config()->get('has_many');
         if (empty($owns) || empty($hasMany)) {
             return;
         }

@@ -123,7 +123,7 @@ class MemberLoginForm extends LoginForm
                             'title',
                             sprintf(
                                 _t('Member.REMEMBERME', "Remember me next time? (for %d days on this device)"),
-                                RememberLoginHash::config()->get('token_expiry_days')
+                                RememberLoginHash::config()->uninherited('token_expiry_days')
                             )
                         )
                     );

@@ -27,13 +27,13 @@ class HTTPTest extends FunctionalTest
         $this->assertNotEmpty($response->getHeader('Cache-Control'));
 
         // Ensure max-age is zero for development.
-        Director::config()->update('environment_type', 'dev');
+        Director::set_environment_type('dev');
         $response = new HTTPResponse($body, 200);
         HTTP::add_cache_headers($response);
         $this->assertContains('max-age=0', $response->getHeader('Cache-Control'));
 
         // Ensure max-age setting is respected in production.
-        Director::config()->update('environment_type', 'live');
+        Director::set_environment_type('live');
         $response = new HTTPResponse($body, 200);
         HTTP::add_cache_headers($response);
         $this->assertContains('max-age=30', explode(', ', $response->getHeader('Cache-Control')));
@@ -59,7 +59,7 @@ class HTTPTest extends FunctionalTest
     {
         $body = "<html><head></head><body><h1>Mysite</h1></body></html>";
         $response = new HTTPResponse($body, 200);
-        Director::config()->update('environment_type', 'live');
+        Director::set_environment_type('live');
         HTTP::set_cache_age(30);
         HTTP::add_cache_headers($response);
 

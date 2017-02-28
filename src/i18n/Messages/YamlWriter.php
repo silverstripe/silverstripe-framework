@@ -135,7 +135,7 @@ class YamlWriter implements Writer
     {
         // Strip non-plural keys away
         if (is_array($value)) {
-            $forms = i18n::config()->get('plurals');
+            $forms = i18n::config()->uninherited('plurals');
             $forms = array_combine($forms, $forms);
             return array_intersect_key($value, $forms);
         }

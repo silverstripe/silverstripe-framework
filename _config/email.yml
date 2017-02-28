@@ -1,5 +1,5 @@
 ---
-Name: coreconfig
+Name: emailconfig
 ---
 SilverStripe\Core\Injector\Injector:
   Swift_Transport: Swift_MailTransport

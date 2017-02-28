@@ -386,8 +386,8 @@ class ClassManifest
      */
     protected function setDefaults()
     {
-        $this->classes['sstemplateparser'] = FRAMEWORK_PATH.'/View/SSTemplateParser.php';
-        $this->classes['sstemplateparseexception'] = FRAMEWORK_PATH.'/View/SSTemplateParseException.php';
+        $this->classes['sstemplateparser'] = FRAMEWORK_PATH.'/src/View/SSTemplateParser.php';
+        $this->classes['sstemplateparseexception'] = FRAMEWORK_PATH.'/src/View/SSTemplateParseException.php';
     }
 
     /**

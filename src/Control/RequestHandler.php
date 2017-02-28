@@ -2,10 +2,10 @@
 
 namespace SilverStripe\Control;
 
+use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Object;
 use SilverStripe\Dev\Debug;
-use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\Security\Security;
 use SilverStripe\Security\PermissionFailureException;
@@ -264,7 +264,7 @@ class RequestHandler extends ViewableData
         $handlerClass = ($this->class) ? $this->class : get_class($this);
 
         // We stop after RequestHandler; in other words, at ViewableData
-        while ($handlerClass && $handlerClass != 'SilverStripe\\View\\ViewableData') {
+        while ($handlerClass && $handlerClass != ViewableData::class) {
             $urlHandlers = Config::inst()->get($handlerClass, 'url_handlers', Config::UNINHERITED);
 
             if ($urlHandlers) {
@@ -338,22 +338,14 @@ class RequestHandler extends ViewableData
     public function allowedActions($limitToClass = null)
     {
         if ($limitToClass) {
-            $actions = Config::inst()->get(
-                $limitToClass,
-                'allowed_actions',
-                Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
-            );
+            $actions = Config::forClass($limitToClass)->get('allowed_actions', true);
         } else {
-            $actions = Config::inst()->get(get_class($this), 'allowed_actions');
+            $actions = $this->config()->get('allowed_actions');
         }
 
         if (is_array($actions)) {
             if (array_key_exists('*', $actions)) {
-                Deprecation::notice(
-                    '3.0',
-                    'Wildcards (*) are no longer valid in $allowed_actions due their ambiguous '
-                    . ' and potentially insecure behaviour. Please define all methods explicitly instead.'
-                );
+                throw new InvalidArgumentException("Invalid allowed_action '*'");
             }
 
             // convert all keys and values to lowercase to
@@ -413,10 +405,7 @@ class RequestHandler extends ViewableData
             }
         }
 
-        $actionsWithoutExtra = $this->config()->get(
-            'allowed_actions',
-            Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
-        );
+        $actionsWithoutExtra = $this->config()->get('allowed_actions', true);
         if (!is_array($actions) || !$actionsWithoutExtra) {
             if ($action != 'doInit' && $action != 'run' && method_exists($this, $action)) {
                 return true;

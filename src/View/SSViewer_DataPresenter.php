@@ -4,7 +4,6 @@ namespace SilverStripe\View;
 
 use InvalidArgumentException;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Object;
 
@@ -82,7 +81,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
                     if (!is_array($details)) {
                         $details = array(
                             'method' => $details,
-                            'casting' => ViewableData::config()->get('default_cast', Config::FIRST_SET)
+                            'casting' => ViewableData::config()->uninherited('default_cast')
                         );
                     }
 
@@ -185,7 +184,7 @@ class SSViewer_DataPresenter extends SSViewer_Scope
 
                     // If not provided, use default
                     if (!$casting) {
-                        $casting = ViewableData::config()->get('default_cast', Config::FIRST_SET);
+                        $casting = ViewableData::config()->uninherited('default_cast');
                     }
 
                     $obj = Injector::inst()->get($casting, false, array($property));

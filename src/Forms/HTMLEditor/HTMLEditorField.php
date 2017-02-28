@@ -105,7 +105,7 @@ class HTMLEditorField extends TextareaField
             $this->setEditorConfig($config);
         }
 
-        $this->setRows($this->config()->default_rows);
+        $this->setRows(HTMLEditorField::config()->default_rows);
     }
 
     public function getAttributes()
@@ -130,7 +130,7 @@ class HTMLEditorField extends TextareaField
 
         // Sanitise if requested
         $htmlValue = Injector::inst()->create('HTMLValue', $this->Value());
-        if ($this->config()->sanitise_server_side) {
+        if (HTMLEditorField::config()->sanitise_server_side) {
             $santiser = HTMLEditorSanitiser::create(HTMLEditorConfig::get_active());
             $santiser->sanitise($htmlValue);
         }

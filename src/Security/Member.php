@@ -474,8 +474,8 @@ class Member extends DataObject implements TemplateGlobalProvider
             }
             if ($remember) {
                 $rememberLoginHash = RememberLoginHash::generate($this);
-                $tokenExpiryDays = RememberLoginHash::config()->get('token_expiry_days');
-                $deviceExpiryDays = RememberLoginHash::config()->get('device_expiry_days');
+                $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
+                $deviceExpiryDays = RememberLoginHash::config()->uninherited('device_expiry_days');
                 Cookie::set(
                     'alc_enc',
                     $this->ID . ':' . $rememberLoginHash->getToken(),
@@ -610,7 +610,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 
                 if ($rememberLoginHash) {
                     $rememberLoginHash->renew();
-                    $tokenExpiryDays = RememberLoginHash::config()->get('token_expiry_days');
+                    $tokenExpiryDays = RememberLoginHash::config()->uninherited('token_expiry_days');
                     Cookie::set(
                         'alc_enc',
                         $member->ID . ':' . $rememberLoginHash->getToken(),
@@ -930,7 +930,7 @@ class Member extends DataObject implements TemplateGlobalProvider
 	 */
     public static function create_new_password()
     {
-        $words = Security::config()->get('word_list');
+        $words = Security::config()->uninherited('word_list');
 
         if ($words && file_exists($words)) {
             $words = file($words);

@@ -81,14 +81,14 @@ class Director implements TemplateGlobalProvider
      *
      * @var array
      */
-    private static $dev_servers = array();
+    protected static $dev_servers = array();
 
     /**
      * @config
      *
      * @var array
      */
-    private static $test_servers = array();
+    protected static $test_servers = array();
 
     /**
      * Setting this explicitly specifies the protocol ("http" or "https") used, overriding the normal
@@ -106,13 +106,6 @@ class Director implements TemplateGlobalProvider
      *
      * @var string
      */
-    private static $alternate_host;
-
-    /**
-     * @config
-     *
-     * @var string
-     */
     private static $alternate_base_url;
 
     /**
@@ -120,7 +113,7 @@ class Director implements TemplateGlobalProvider
      *
      * @var string
      */
-    private static $environment_type;
+    protected static $environment_type;
 
     /**
      * Process the given URL, creating the appropriate controller and executing it.
@@ -226,7 +219,7 @@ class Director implements TemplateGlobalProvider
                     $response->output();
                 }
             }
-        // Handle a controller
+            // Handle a controller
         } elseif ($result) {
             if ($result instanceof HTTPResponse) {
                 $response = $result;
@@ -429,7 +422,7 @@ class Director implements TemplateGlobalProvider
      */
     protected static function handleRequest(HTTPRequest $request, Session $session, DataModel $model)
     {
-        $rules = Director::config()->get('rules');
+        $rules = Director::config()->uninherited('rules');
 
         if (isset($_REQUEST['debug'])) {
             Debug::show($rules);
@@ -578,9 +571,11 @@ class Director implements TemplateGlobalProvider
      *  - SERVER_NAME
      *  - gethostname()
      *
+     * @param bool $respectConfig Set to false to ignore config override
+     * (Necessary for checking host pre-config)
      * @return string
      */
-    public static function host()
+    public static function host($respectConfig = true)
     {
         $headerOverride = false;
         if (TRUSTED_PROXY) {
@@ -598,13 +593,15 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        if ($host = static::config()->get('alternate_host')) {
-            return $host;
-        }
+        if ($respectConfig) {
+            if ($host = Director::config()->uninherited('alternate_host')) {
+                return $host;
+            }
 
-        if ($baseURL = static::config()->get('alternate_base_url')) {
-            if (preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $baseURL, $matches)) {
-                return parse_url($baseURL, PHP_URL_HOST);
+            if ($baseURL = Director::config()->uninherited('alternate_base_url')) {
+                if (preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $baseURL, $matches)) {
+                    return parse_url($baseURL, PHP_URL_HOST);
+                }
             }
         }
 
@@ -712,20 +709,6 @@ class Director implements TemplateGlobalProvider
     }
 
     /**
-     * Sets the root URL for the website. If the site isn't accessible from the URL you provide,
-     * weird things will happen.
-     *
-     * @deprecated 4.0 Use the "Director.alternate_base_url" config setting instead.
-     *
-     * @param string $baseURL
-     */
-    public static function setBaseURL($baseURL)
-    {
-        Deprecation::notice('4.0', 'Use the "Director.alternate_base_url" config setting instead');
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', $baseURL);
-    }
-
-    /**
      * Returns the root filesystem folder for the site. It will be automatically calculated unless
      * it is overridden with {@link setBaseFolder()}.
      *
@@ -733,22 +716,8 @@ class Director implements TemplateGlobalProvider
      */
     public static function baseFolder()
     {
-        $alternate = static::config()->get('alternate_base_folder');
+        $alternate = Director::config()->uninherited('alternate_base_folder');
         return ($alternate) ? $alternate : BASE_PATH;
-    }
-
-    /**
-     * Sets the root folder for the website. If the site isn't accessible from the folder you provide,
-     * weird things will happen.
-     *
-     * @deprecated 4.0 Use the "Director.alternate_base_folder" config setting instead.
-     *
-     * @param string $baseFolder
-     */
-    public static function setBaseFolder($baseFolder)
-    {
-        Deprecation::notice('4.0', 'Use the "Director.alternate_base_folder" config setting instead');
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_folder', $baseFolder);
     }
 
     /**
@@ -1172,40 +1141,50 @@ class Director implements TemplateGlobalProvider
      * Once the environment type is set, it can be checked with {@link Director::isDev()},
      * {@link Director::isTest()}, and {@link Director::isLive()}.
      *
-     * @deprecated 4.0 Use the "Director.environment_type" config setting instead
-     *
-     * @param $et string
+     * @param string $environment
      */
-    public static function set_environment_type($et)
+    public static function set_environment_type($environment)
     {
-        if ($et != 'dev' && $et != 'test' && $et != 'live') {
-            user_error(
-                "Director::set_environment_type passed '$et'.  It should be passed dev, test, or live",
-                E_USER_WARNING
+        if (!in_array($environment, ['dev', 'test', 'live'])) {
+            throw new \InvalidArgumentException(
+                "Director::set_environment_type passed '$environment'.  It should be passed dev, test, or live"
             );
-        } else {
-            Deprecation::notice('4.0', 'Use the "Director.environment_type" config setting instead');
-            Config::inst()->update('SilverStripe\\Control\\Director', 'environment_type', $et);
         }
+        self::$environment_type = $environment;
     }
 
     /**
      * Can also be checked with {@link Director::isDev()}, {@link Director::isTest()}, and
      * {@link Director::isLive()}.
      *
-     * @return bool|string
+     * @return bool
      */
     public static function get_environment_type()
     {
-        if (Director::isLive()) {
-            return 'live';
-        } elseif (Director::isTest()) {
-            return 'test';
-        } elseif (Director::isDev()) {
-            return 'dev';
-        } else {
-            return false;
+        // Check saved session
+        if ($env = self::session_environment()) {
+            return $env;
         }
+
+        // Check set
+        if (self::$environment_type) {
+            return self::$environment_type;
+        }
+
+        // Check getenv
+        if ($env = getenv('SS_ENVIRONMENT_TYPE')) {
+            return $env;
+        }
+
+        // Check if we are running on one of the test servers
+        // Note: Bypass config for checking environment type
+        if (in_array(static::host(false), self::$dev_servers)) {
+            return 'dev';
+        }
+        if (in_array(static::host(false), self::$test_servers)) {
+            return 'test';
+        }
+        return 'live';
     }
 
     /**
@@ -1216,7 +1195,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function isLive()
     {
-        return !(Director::isDev() || Director::isTest());
+        return self::get_environment_type() === 'live';
     }
 
     /**
@@ -1227,19 +1206,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function isDev()
     {
-        // Check session
-        if ($env = self::session_environment()) {
-            return $env === 'dev';
-        }
-
-        // Check config
-        if (Config::inst()->get('SilverStripe\\Control\\Director', 'environment_type') === 'dev') {
-            return true;
-        }
-
-        // Check if we are running on one of the test servers
-        $devServers = (array)Config::inst()->get('SilverStripe\\Control\\Director', 'dev_servers');
-        return in_array(static::host(), $devServers);
+        return self::get_environment_type() === 'dev';
     }
 
     /**
@@ -1250,24 +1217,7 @@ class Director implements TemplateGlobalProvider
      */
     public static function isTest()
     {
-        // In case of isDev and isTest both being set, dev has higher priority
-        if (self::isDev()) {
-            return false;
-        }
-
-        // Check saved session
-        if ($env = self::session_environment()) {
-            return $env === 'test';
-        }
-
-        // Check config
-        if (Config::inst()->get('SilverStripe\\Control\\Director', 'environment_type') === 'test') {
-            return true;
-        }
-
-        // Check if we are running on one of the test servers
-        $testServers = (array)Config::inst()->get('SilverStripe\\Control\\Director', 'test_servers');
-        return in_array(static::host(), $testServers);
+        return self::get_environment_type() === 'test';
     }
 
     /**
@@ -1275,7 +1225,7 @@ class Director implements TemplateGlobalProvider
      *
      * @return null|string
      */
-    protected static function session_environment()
+    public static function session_environment()
     {
         // Set session from querystring
         if (isset($_GET['isDev'])) {

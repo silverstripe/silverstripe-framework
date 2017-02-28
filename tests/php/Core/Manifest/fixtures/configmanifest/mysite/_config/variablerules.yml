@@ -1,69 +1,79 @@
 ---
 Only:
-  ENVORCONSTANTMATCHESVALUE_FOO: Foo
+  envorconstant:
+    CONSTANTMATCHESVALUE_FOO: Foo
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     FooIsFoo: Yes
 ---
 Only:
-  ENVORCONSTANTMATCHESVALUE_FOO: Qux
+  envorconstant:
+    CONSTANTMATCHESVALUE_FOO: 'Qux'
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     FooIsQux: Yes
 ---
 Only:
-  ENVORCONSTANTMATCHESVALUE_BAR: Bar
+  envorconstant:
+    CONSTANTMATCHESVALUE_BAR: Bar
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BarIsBar: Yes
 ---
 Only:
-  ENVORCONSTANTMATCHESVALUE_BAR: Qux
+  envorconstant:
+    CONSTANTMATCHESVALUE_BAR: Qux
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BarIsQux: Yes
 ---
 Only:
-  ENVORCONSTANTMATCHESVALUE_Baz: Baz
+  envorconstant:
+    CONSTANTMATCHESVALUE_Baz: Baz
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BazIsBaz: Yes
 ---
 Except:
-  ENVORCONSTANTMATCHESVALUE_FOO: Foo
+  envorconstant:
+    CONSTANTMATCHESVALUE_FOO: Foo
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     FooIsFoo: No
 ---
 Except:
-  ENVORCONSTANTMATCHESVALUE_FOO: Qux
+  envorconstant:
+    CONSTANTMATCHESVALUE_FOO: Qux
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     FooIsQux: No
 ---
 Except:
-  ENVORCONSTANTMATCHESVALUE_BAR: Bar
+  envorconstant:
+    CONSTANTMATCHESVALUE_BAR: Bar
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BarIsBar: No
 ---
 Except:
-  ENVORCONSTANTMATCHESVALUE_BAR: Qux
+  envorconstant:
+    CONSTANTMATCHESVALUE_BAR: Qux
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:
     BarIsQux: No
 ---
 Except:
-  ENVORCONSTANTMATCHESVALUE_Baz: Baz
+  envorconstant:
+    CONSTANTMATCHESVALUE_Baz: Baz
 ---
 SilverStripe\Core\Tests\Manifest\ConfigManifestTest:
   EnvOrConstantMatchesValue:

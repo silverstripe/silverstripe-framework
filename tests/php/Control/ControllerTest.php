@@ -2,7 +2,9 @@
 
 namespace SilverStripe\Control\Tests;
 
+use InvalidArgumentException;
 use PHPUnit_Framework_Error;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Tests\ControllerTest\AccessBaseController;
 use SilverStripe\Control\Tests\ControllerTest\AccessSecuredController;
 use SilverStripe\Control\Tests\ControllerTest\AccessWildcardSecuredController;
@@ -20,6 +22,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\FunctionalTest;
 use SilverStripe\ORM\DataModel;
+use SilverStripe\Security\Member;
 use SilverStripe\View\SSViewer;
 
 class ControllerTest extends FunctionalTest
@@ -103,7 +106,7 @@ class ControllerTest extends FunctionalTest
 
     public function testAllowedActions()
     {
-        $adminUser = $this->objFromFixture('SilverStripe\\Security\\Member', 'admin');
+        $adminUser = $this->objFromFixture(Member::class, 'admin');
 
         $response = $this->get("UnsecuredController/");
         $this->assertEquals(
@@ -121,7 +124,7 @@ class ControllerTest extends FunctionalTest
             'when called with an action in the URL'
         );
 
-        Config::inst()->update('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions', false);
+        Config::modify()->merge(RequestHandler::class, 'require_allowed_actions', false);
         $response = $this->get("UnsecuredController/index");
         $this->assertEquals(
             200,
@@ -129,7 +132,7 @@ class ControllerTest extends FunctionalTest
             'Access granted on index action without $allowed_actions on defining controller, ' .
             'when called with an action in the URL, and explicitly allowed through config'
         );
-        Config::inst()->update('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions', true);
+        Config::modify()->merge(RequestHandler::class, 'require_allowed_actions', true);
 
         $response = $this->get("UnsecuredController/method1");
         $this->assertEquals(
@@ -139,7 +142,7 @@ class ControllerTest extends FunctionalTest
             'when called without an action in the URL'
         );
 
-        Config::inst()->update('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions', false);
+        Config::modify()->merge(RequestHandler::class, 'require_allowed_actions', false);
         $response = $this->get("UnsecuredController/method1");
         $this->assertEquals(
             200,
@@ -147,7 +150,7 @@ class ControllerTest extends FunctionalTest
             'Access granted on action without $allowed_actions on defining controller, ' .
             'when called without an action in the URL, and explicitly allowed through config'
         );
-        Config::inst()->update('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions', true);
+        Config::modify()->merge(RequestHandler::class, 'require_allowed_actions', true);
 
         $response = $this->get("AccessBaseController/");
         $this->assertEquals(
@@ -313,13 +316,9 @@ class ControllerTest extends FunctionalTest
         $this->session()->inst_set('loggedInAs', null);
     }
 
-    /**
-     * @expectedException PHPUnit_Framework_Error
-     * @expectedExceptionMessage Wildcards (*) are no longer valid
-     */
     public function testWildcardAllowedActions()
     {
-        Deprecation::set_enabled(true);
+        $this->setExpectedException(InvalidArgumentException::class, "Invalid allowed_action '*'");
         $this->get('AccessWildcardSecuredController');
     }
 
@@ -399,7 +398,7 @@ class ControllerTest extends FunctionalTest
     }
 
     /**
-     * @covers SilverStripe\Control\Controller::hasAction
+     * @covers \SilverStripe\Control\Controller::hasAction
      */
     public function testHasAction()
     {
@@ -463,7 +462,7 @@ class ControllerTest extends FunctionalTest
     /* Controller::BaseURL no longer exists, but was just a direct call to Director::BaseURL, so not sure what this
     * code was supposed to test
     public function testBaseURL() {
-    Config::inst()->update('Director', 'alternate_base_url', '/baseurl/');
+    Config::modify()->merge('Director', 'alternate_base_url', '/baseurl/');
     $this->assertEquals(Controller::BaseURL(), Director::BaseURL());
     }
     */

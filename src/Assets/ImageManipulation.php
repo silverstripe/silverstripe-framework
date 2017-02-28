@@ -479,8 +479,8 @@ trait ImageManipulation
      */
     public function CMSThumbnail()
     {
-        $width = (int)Config::inst()->get(get_class($this), 'cms_thumbnail_width');
-        $height = (int)Config::inst()->get(get_class($this), 'cms_thumbnail_height');
+        $width = (int)Config::inst()->get(__CLASS__, 'cms_thumbnail_width');
+        $height = (int)Config::inst()->get(__CLASS__, 'cms_thumbnail_height');
         return $this->ThumbnailIcon($width, $height);
     }
 
@@ -491,8 +491,8 @@ trait ImageManipulation
      */
     public function StripThumbnail()
     {
-        $width = (int)Config::inst()->get(get_class($this), 'strip_thumbnail_width');
-        $height = (int)Config::inst()->get(get_class($this), 'strip_thumbnail_height');
+        $width = (int)Config::inst()->get(__CLASS__, 'strip_thumbnail_width');
+        $height = (int)Config::inst()->get(__CLASS__, 'strip_thumbnail_height');
         return $this->ThumbnailIcon($width, $height);
     }
 
@@ -503,7 +503,7 @@ trait ImageManipulation
      */
     public function PreviewThumbnail()
     {
-        $width = (int)Config::inst()->get(get_class($this), 'asset_preview_width');
+        $width = (int)Config::inst()->get(__CLASS__, 'asset_preview_width');
         return $this->ScaleMaxWidth($width)  ?: $this->IconTag();
     }
 

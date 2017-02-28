@@ -1087,11 +1087,11 @@ EOS
         $type = strtolower($type);
         switch (strtolower($type)) {
             case 'css':
-            return $backend->getCSS();
+                return $backend->getCSS();
             case 'js':
             case 'javascript':
             case 'script':
-            return $backend->getJavascript();
+                return $backend->getJavascript();
         }
         return array();
     }

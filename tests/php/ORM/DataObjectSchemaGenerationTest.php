@@ -147,9 +147,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
 
         // Test with alternate index format, although these indexes are the same
         $config = TestIndexObject::config();
-        $config
-            ->remove('indexes')
-            ->update('indexes', $config->get('indexes_alt'));
+        $config->set('indexes', $config->get('indexes_alt'));
 
         // Verify that it still doesn't need to be recreated
         $schema->schemaUpdate(

@@ -181,7 +181,7 @@ class HTMLEditorField_Image extends HTMLEditorField_File
     public function getInsertWidth()
     {
         $width = $this->getWidth();
-        $maxWidth = $this->config()->insert_width;
+        $maxWidth = HTMLEditorField_Image::config()->insert_width;
         return $width <= $maxWidth
             ? $width
             : $maxWidth;
@@ -196,7 +196,7 @@ class HTMLEditorField_Image extends HTMLEditorField_File
     {
         $width = $this->getWidth();
         $height = $this->getHeight();
-        $maxWidth = $this->config()->insert_width;
+        $maxWidth = HTMLEditorField_Image::config()->insert_width;
         return ($width <= $maxWidth) ? $height : round($height * ($maxWidth / $width));
     }
 

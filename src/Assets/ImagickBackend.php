@@ -61,7 +61,7 @@ class ImagickBackend extends Imagick implements Image_Backend
 
     protected function setDefaultQuality()
     {
-        $this->setQuality(Config::inst()->get('SilverStripe\\Assets\\ImagickBackend', 'default_quality'));
+        $this->setQuality(Config::inst()->get(__CLASS__, 'default_quality'));
     }
 
     public function writeToStore(AssetStore $assetStore, $filename, $hash = null, $variant = null, $config = array())

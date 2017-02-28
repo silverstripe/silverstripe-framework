@@ -99,10 +99,10 @@ class i18nTextCollector
     {
         $this->defaultLocale = $locale
             ? $locale
-            : i18n::getData()->langFromLocale(i18n::config()->get('default_locale'));
+            : i18n::getData()->langFromLocale(i18n::config()->uninherited('default_locale'));
         $this->basePath = Director::baseFolder();
         $this->baseSavePath = Director::baseFolder();
-        $this->setWarnOnEmptyDefault(i18n::config()->get('missing_default_warning'));
+        $this->setWarnOnEmptyDefault(i18n::config()->uninherited('missing_default_warning'));
     }
 
     /**

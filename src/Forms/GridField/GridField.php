@@ -18,7 +18,6 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Forms\Form;
 use LogicException;
 use InvalidArgumentException;
-use SilverStripe\View\Requirements;
 
 /**
  * Displays a {@link SS_List} in a grid format.
@@ -128,7 +127,7 @@ class GridField extends FormField
 
         $this->setConfig($config);
 
-        $state = $this->config->getComponentByType('SilverStripe\\Forms\\GridField\\GridState_Component');
+        $state = $this->config->getComponentByType(GridState_Component::class);
 
         if (!$state) {
             $this->config->addComponent(new GridState_Component());

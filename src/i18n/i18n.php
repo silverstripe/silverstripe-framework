@@ -163,7 +163,7 @@ class i18n implements TemplateGlobalProvider
         }
 
         // Encourage the provision of default values so that text collector can discover new strings
-        if (!$default && static::config()->get('missing_default_warning')) {
+        if (!$default && i18n::config()->uninherited('missing_default_warning')) {
             user_error("Missing default for localisation key $entity", E_USER_WARNING);
         }
 
@@ -232,7 +232,7 @@ class i18n implements TemplateGlobalProvider
     public static function parse_plurals($string)
     {
         if (strstr($string, '|') && strstr($string, '{count}')) {
-            $keys = i18n::config()->get('default_plurals');
+            $keys = i18n::config()->uninherited('default_plurals');
             $values = explode('|', $string);
             if (count($keys) == count($values)) {
                 return array_combine($keys, $values);
@@ -251,7 +251,7 @@ class i18n implements TemplateGlobalProvider
     public static function encode_plurals($plurals)
     {
         // Validate against global plural list
-        $forms = static::config()->get('plurals');
+        $forms = i18n::config()->uninherited('plurals');
         $forms = array_combine($forms, $forms);
         $intersect = array_intersect_key($plurals, $forms);
         if ($intersect) {
@@ -343,7 +343,7 @@ class i18n implements TemplateGlobalProvider
      */
     public static function get_locale()
     {
-        return self::$current_locale ?: static::config()->get('default_locale');
+        return self::$current_locale ?: i18n::config()->uninherited('default_locale');
     }
 
     /**

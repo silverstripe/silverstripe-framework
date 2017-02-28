@@ -2,20 +2,21 @@
 
 namespace SilverStripe\Core\Config;
 
+use SilverStripe\Dev\Deprecation;
+
 class Config_ForClass
 {
-
     /**
      * @var string $class
      */
     protected $class;
 
     /**
-     * @param string $class
+     * @param string|object $class
      */
     public function __construct($class)
     {
-        $this->class = $class;
+        $this->class = is_object($class) ? get_class($class) : $class;
     }
 
     /**
@@ -33,19 +34,45 @@ class Config_ForClass
      */
     public function __set($name, $val)
     {
-        $this->update($name, $val);
+        $this->set($name, $val);
     }
 
     /**
      * Explicit pass-through to Config::update()
      *
      * @param string $name
-     * @param mixed $val
+     * @param mixed $value
      * @return $this
      */
-    public function update($name, $val)
+    public function update($name, $value)
     {
-        Config::inst()->update($this->class, $name, $val);
+        Deprecation::notice('5.0', 'Use merge() instead');
+        return $this->merge($name, $value);
+    }
+
+    /**
+     * Merge a given config
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function merge($name, $value)
+    {
+        Config::modify()->merge($this->class, $name, $value);
+        return $this;
+    }
+
+    /**
+     * Replace config value
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function set($name, $value)
+    {
+        Config::modify()->set($this->class, $name, $value);
         return $this;
     }
 
@@ -61,12 +88,12 @@ class Config_ForClass
 
     /**
      * @param string $name
-     * @param int $sourceOptions
+     * @param mixed $options
      * @return mixed
      */
-    public function get($name, $sourceOptions = 0)
+    public function get($name, $options = 0)
     {
-        return Config::inst()->get($this->class, $name, $sourceOptions);
+        return Config::inst()->get($this->class, $name, $options);
     }
 
     /**
@@ -77,7 +104,7 @@ class Config_ForClass
      */
     public function remove($name)
     {
-        Config::inst()->remove($this->class, $name);
+        Config::modify()->remove($this->class, $name);
         return $this;
     }
 
@@ -88,6 +115,17 @@ class Config_ForClass
      */
     public function forClass($class)
     {
-        return Config::inst()->forClass($class);
+        return Config::forClass($class);
+    }
+
+    /**
+     * Get uninherited config
+     *
+     * @param string $name Name of config
+     * @return mixed
+     */
+    public function uninherited($name)
+    {
+        return $this->get($name, Config::UNINHERITED);
     }
 }

@@ -44,8 +44,8 @@ class Sources implements Resettable
             array_splice($moduleNames, $idx, 1);
         }
 
-        // Get the order from the config syste (lowest to highest)
-        $order = static::config()->get('module_priority');
+        // Get the order from the config system (lowest to highest)
+        $order = Sources::config()->uninherited('module_priority');
 
         // Find all modules that don't have their order specified by the config system
         $unspecified = array_diff($moduleNames, $order);

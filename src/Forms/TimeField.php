@@ -158,7 +158,7 @@ class TimeField extends TextField
     protected function getISO8601Formatter()
     {
         $formatter = IntlDateFormatter::create(
-            i18n::config()->get('default_locale'),
+            i18n::config()->uninherited('default_locale'),
             IntlDateFormatter::NONE,
             IntlDateFormatter::MEDIUM,
             date_default_timezone_get() // Default to server timezone

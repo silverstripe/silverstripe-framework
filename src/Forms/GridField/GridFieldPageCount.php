@@ -47,9 +47,9 @@ class GridFieldPageCount implements GridField_HTMLProvider
     protected function getPaginator($gridField)
     {
         /** @var GridFieldPaginator $paginator */
-        $paginator = $gridField->getConfig()->getComponentByType('SilverStripe\\Forms\\GridField\\GridFieldPaginator');
+        $paginator = $gridField->getConfig()->getComponentByType(GridFieldPaginator::class);
 
-        if (!$paginator && $this->config()->get('require_paginator')) {
+        if (!$paginator && GridFieldPageCount::config()->uninherited('require_paginator')) {
             throw new LogicException(
                 get_class($this) . " relies on a GridFieldPaginator to be added " .
                 "to the same GridField, but none are present."

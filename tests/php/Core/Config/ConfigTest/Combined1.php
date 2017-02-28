@@ -2,17 +2,20 @@
 
 namespace SilverStripe\Core\Tests\Config\ConfigTest;
 
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Dev\TestOnly;
 
-class Combined1 extends Config implements TestOnly
+class Combined1 implements TestOnly
 {
+    use Configurable;
+
     /**
      * @config
      */
-    private static $first = array('test_1');
+    private static $first = ['test_1'];
+
     /**
      * @config
      */
-    private static $second = array('test_1');
+    private static $second = ['test_1'];
 }

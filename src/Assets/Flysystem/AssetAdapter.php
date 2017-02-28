@@ -7,6 +7,7 @@ use League\Flysystem\Config as FlysystemConfig;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Filesystem;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
@@ -16,6 +17,7 @@ use SilverStripe\View\SSViewer;
  */
 class AssetAdapter extends Local
 {
+    use Configurable;
 
     /**
      * Server specific configuration necessary to block http traffic to a local folder
@@ -50,7 +52,7 @@ class AssetAdapter extends Local
         $root = realpath($root);
 
         // Override permissions with config
-        $permissions = Config::inst()->get(get_class($this), 'file_permissions');
+        $permissions = $this->config()->get('file_permissions');
         parent::__construct($root, $writeFlags, $linkHandling, $permissions);
 
         // Configure server
@@ -104,7 +106,7 @@ class AssetAdapter extends Local
         list($type) = explode('/', strtolower($type));
 
         // Determine configurations to write
-        $rules = Config::inst()->get(get_class($this), 'server_configuration', Config::FIRST_SET);
+        $rules = $this->config()->get('server_configuration');
         if (empty($rules[$type])) {
             return;
         }

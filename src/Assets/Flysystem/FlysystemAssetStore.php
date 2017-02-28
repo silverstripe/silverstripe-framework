@@ -16,7 +16,7 @@ use SilverStripe\Assets\Storage\AssetStoreRouter;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Flushable;
 use SilverStripe\Core\Injector\Injector;
 
@@ -25,6 +25,7 @@ use SilverStripe\Core\Injector\Injector;
  */
 class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable
 {
+    use Configurable;
 
     /**
      * Session key to use for user grants
@@ -347,7 +348,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable
     {
         if ($dirname
             && ltrim(dirname($dirname), '.')
-            && ! Config::inst()->get(get_class($this), 'keep_empty_dirs')
+            && ! $this->config()->get('keep_empty_dirs')
             && ! $filesystem->listContents($dirname)
         ) {
             $filesystem->deleteDir($dirname);
@@ -612,7 +613,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable
      */
     protected function useLegacyFilenames()
     {
-        return Config::inst()->get(get_class($this), 'legacy_filenames');
+        return $this->config()->get('legacy_filenames');
     }
 
     public function getMetadata($filename, $hash, $variant = null)
@@ -860,7 +861,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable
 
         // Add headers
         $response->addHeader('Content-Type', $mime);
-        $headers = Config::inst()->get(get_class($this), 'file_response_headers');
+        $headers = $this->config()->get('file_response_headers');
         foreach ($headers as $header => $value) {
             $response->addHeader($header, $value);
         }
@@ -874,7 +875,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable
      */
     protected function createDeniedResponse()
     {
-        $code = (int)Config::inst()->get(get_class($this), 'denied_response_code');
+        $code = (int)$this->config()->get('denied_response_code');
         return $this->createErrorResponse($code);
     }
 
@@ -885,7 +886,7 @@ class FlysystemAssetStore implements AssetStore, AssetStoreRouter, Flushable
      */
     protected function createMissingResponse()
     {
-        $code = (int)Config::inst()->get(get_class($this), 'missing_response_code');
+        $code = (int)$this->config()->get('missing_response_code');
         return $this->createErrorResponse($code);
     }
 

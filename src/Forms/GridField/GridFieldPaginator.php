@@ -42,7 +42,8 @@ class GridFieldPaginator implements GridField_HTMLProvider, GridField_DataManipu
      */
     public function __construct($itemsPerPage = null)
     {
-        $this->itemsPerPage = $itemsPerPage ?: GridFieldPaginator::config()->get('default_items_per_page');
+        $this->itemsPerPage = $itemsPerPage
+            ?: GridFieldPaginator::config()->uninherited('default_items_per_page');
     }
 
     /**

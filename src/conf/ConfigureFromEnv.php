@@ -48,16 +48,11 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-use SilverStripe\Control\Director;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
 use SilverStripe\Security\BasicAuth;
 use SilverStripe\Security\Security;
-
-if ($envType = getenv('SS_ENVIRONMENT_TYPE')) {
-    Director::config()->environment_type = $envType;
-}
 
 global $database;
 

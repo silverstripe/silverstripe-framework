@@ -209,13 +209,13 @@ class AssetFieldTest extends FunctionalTest
             switch ($name) {
                 case 'File[Filename]':
                     $tuple['Filename'] = $value;
-                break;
+                    break;
                 case 'File[Hash]':
                     $tuple['Hash'] = $value;
-                break;
+                    break;
                 case 'File[Variant]':
                     $tuple['Variant'] = $value;
-                break;
+                    break;
             }
         }
 

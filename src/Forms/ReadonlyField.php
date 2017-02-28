@@ -106,6 +106,7 @@ class ReadonlyField extends FormField
         }
 
         // Use default casting
-        return $this->config()->casting['Value'];
+        $casting = $this->config()->get('casting');
+        return $casting['Value'];
     }
 }

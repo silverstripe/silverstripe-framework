@@ -367,7 +367,7 @@ class Security extends Controller implements TemplateGlobalProvider
         $controller->extend('permissionDenied', $member);
 
         return $controller->redirect(Controller::join_links(
-            static::config()->get('login_url'),
+            Security::config()->uninherited('login_url'),
             "?BackURL=" . urlencode($_SERVER['REQUEST_URI'])
         ));
     }

@@ -2,6 +2,8 @@
 
 namespace SilverStripe\Core\Config;
 
+use SilverStripe\Dev\Deprecation;
+
 /**
  * Provides extensions to this object to integrate it with standard config API methods.
  *
@@ -17,29 +19,19 @@ trait Configurable
      */
     public static function config()
     {
-        return Config::inst()->forClass(get_called_class());
+        return Config::forClass(get_called_class());
     }
 
     /**
-     * Gets the first set value for the given config option
+     * Get inherited config value
      *
      * @param string $name
      * @return mixed
      */
     public function stat($name)
     {
-        return Config::inst()->get(get_class($this), $name, Config::FIRST_SET);
-    }
-
-    /**
-     * Update the config value for a given property
-     *
-     * @param string $name
-     * @param mixed $value
-     */
-    public function set_stat($name, $value)
-    {
-        Config::inst()->update(get_class($this), $name, $value);
+        Deprecation::notice('5.0', 'Use ->get');
+        return $this->config()->get($name);
     }
 
     /**
@@ -50,6 +42,20 @@ trait Configurable
      */
     public function uninherited($name)
     {
-        return Config::inst()->get(get_class($this), $name, Config::UNINHERITED);
+        return $this->config()->uninherited($name);
+    }
+
+    /**
+     * Update the config value for a given property
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return $this
+     */
+    public function set_stat($name, $value)
+    {
+        Deprecation::notice('5.0', 'Use ->config()->set()');
+        $this->config()->set($name, $value);
+        return $this;
     }
 }

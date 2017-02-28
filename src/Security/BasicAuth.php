@@ -160,7 +160,7 @@ class BasicAuth
      */
     public static function protect_site_if_necessary()
     {
-        $config = Config::inst()->forClass('SilverStripe\\Security\\BasicAuth');
+        $config = Config::forClass('SilverStripe\\Security\\BasicAuth');
         if ($config->entire_site_protected) {
             self::requireLogin($config->entire_site_protected_message, $config->entire_site_protected_code, false);
         }

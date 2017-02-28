@@ -21,7 +21,7 @@ abstract class Extension
      * This is used by extensions designed to be applied to controllers.
      * It works the same way as {@link Controller::$allowed_actions}.
      */
-    private static $allowed_actions = null;
+    private static $allowed_actions = [];
 
     /**
      * The object this extension is applied to.

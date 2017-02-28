@@ -45,49 +45,35 @@ class RequestHandlingTest extends FunctionalTest
         FormActionController::class
     ];
 
-    public function setUp()
+    public function getExtraRoutes()
     {
-        parent::setUp();
+        $routes = parent::getExtraRoutes();
+        return array_merge(
+            $routes,
+            [
+                // If we don't request any variables, then the whole URL will get shifted off.
+                // This is fine, but it means that the controller will have to parse the Action from the URL itself.
+                'testGoodBase1' => TestController::class,
 
-        Director::config()->update(
-            'rules',
-            array(
-            // If we don't request any variables, then the whole URL will get shifted off.
-            // This is fine, but it means that the controller will have to parse the Action from the URL itself.
-            'testGoodBase1' => TestController::class,
+                // The double-slash indicates how much of the URL should be shifted off the stack.
+                // This is important for dealing with nested request handlers appropriately.
+                'testGoodBase2//$Action/$ID/$OtherID' => TestController::class,
 
-            // The double-slash indicates how much of the URL should be shifted off the stack.
-            // This is important for dealing with nested request handlers appropriately.
-            'testGoodBase2//$Action/$ID/$OtherID' => TestController::class,
+                // By default, the entire URL will be shifted off. This creates a bit of
+                // backward-incompatability, but makes the URL rules much more explicit.
+                'testBadBase/$Action/$ID/$OtherID' => TestController::class,
 
-            // By default, the entire URL will be shifted off. This creates a bit of
-            // backward-incompatability, but makes the URL rules much more explicit.
-            'testBadBase/$Action/$ID/$OtherID' => TestController::class,
+                // Rules with an extension always default to the index() action
+                'testBaseWithExtension/virtualfile.xml' => TestController::class,
 
-            // Rules with an extension always default to the index() action
-            'testBaseWithExtension/virtualfile.xml' => TestController::class,
+                // Without the extension, the methodname should be matched
+                'testBaseWithExtension//$Action/$ID/$OtherID' => TestController::class,
 
-            // Without the extension, the methodname should be matched
-            'testBaseWithExtension//$Action/$ID/$OtherID' => TestController::class,
-
-            // Test nested base
-            'testParentBase/testChildBase//$Action/$ID/$OtherID' => TestController::class,
-            )
+                // Test nested base
+                'testParentBase/testChildBase//$Action/$ID/$OtherID' => TestController::class,
+            ]
         );
     }
-
-    // public function testRequestHandlerChainingLatestParams() {
-    // 	$c = new RequestHandlingTest_Controller();
-    // 	$c->init();
-    // 	$response = $c->handleRequest(new HTTPRequest('GET', 'testGoodBase1/TestForm/fields/MyField'));
-    // 	$this->assertEquals(
-    // 		$c->getRequest()->latestParams(),
-    // 		array(
-    // 			'Action' => 'fields',
-    // 			'ID' => 'MyField'
-    // 		)
-    // 	);
-    // }
 
     public function testConstructedWithNullRequest()
     {

@@ -122,11 +122,7 @@ trait Extensible
             if (in_array($class, self::$unextendable_classes)) {
                 continue;
             }
-            $extensions = Config::inst()->get(
-                $class,
-                'extensions',
-                Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES
-            );
+            $extensions = Config::inst()->get($class, 'extensions', true);
 
             if ($extensions) {
                 foreach ($extensions as $extension) {
@@ -217,8 +213,10 @@ trait Extensible
             }
         }
 
-        Config::inst()->update($class, 'extensions', array($extension));
-        Config::inst()->extraConfigSourcesChanged($class);
+        Config::modify()
+            ->merge($class, 'extensions', array(
+                $extension
+            ));
 
         Injector::inst()->unregisterNamedObject($class);
 
@@ -234,6 +232,8 @@ trait Extensible
 
     /**
      * Remove an extension from a class.
+     * Note: This will not remove extensions from parent classes, and must be called
+     * directly on the class assigned the extension.
      *
      * Keep in mind that this won't revert any datamodel additions
      * of the extension at runtime, unless its used before the
@@ -252,22 +252,23 @@ trait Extensible
     {
         $class = get_called_class();
 
-        Config::inst()->remove($class, 'extensions', Config::anything(), $extension);
-
-        // remove any instances of the extension with parameters
-        $config = Config::inst()->get($class, 'extensions');
-
-        if ($config) {
-            foreach ($config as $k => $v) {
-                // extensions with parameters will be stored in config as
-                // ExtensionName("Param").
-                if (preg_match(sprintf("/^(%s)\(/", preg_quote($extension, '/')), $v)) {
-                    Config::inst()->remove($class, 'extensions', Config::anything(), $v);
-                }
+        // Build filtered extension list
+        $found = false;
+        $config = Config::inst()->get($class, 'extensions', true) ?: [];
+        foreach ($config as $key => $candidate) {
+            // extensions with parameters will be stored in config as ExtensionName("Param").
+            if (strcasecmp($candidate, $extension) === 0 ||
+                stripos($candidate, $extension.'(') === 0
+            ) {
+                $found = true;
+                unset($config[$key]);
             }
         }
-
-        Config::inst()->extraConfigSourcesChanged($class);
+        // Don't dirty cache if no changes
+        if (!$found) {
+            return;
+        }
+        Config::modify()->set($class, 'extensions', $config);
 
         // unset singletons to avoid side-effects
         Injector::inst()->unregisterAllObjects();
@@ -292,7 +293,7 @@ trait Extensible
      */
     public static function get_extensions($class, $includeArgumentString = false)
     {
-        $extensions = Config::inst()->get($class, 'extensions');
+        $extensions = Config::forClass($class)->get('extensions', Config::EXCLUDE_EXTRA_SOURCES);
         if (empty($extensions)) {
             return array();
         }
@@ -329,7 +330,7 @@ trait Extensible
         $sources = null;
 
         // Get a list of extensions
-        $extensions = Config::inst()->get($class, 'extensions', Config::UNINHERITED | Config::EXCLUDE_EXTRA_SOURCES);
+        $extensions = Config::inst()->get($class, 'extensions', true);
 
         if (!$extensions) {
             return null;

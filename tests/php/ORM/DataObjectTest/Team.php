@@ -4,7 +4,23 @@ namespace SilverStripe\ORM\Tests\DataObjectTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
+use SilverStripe\ORM\HasManyList;
+use SilverStripe\ORM\ManyManyList;
 
+/**
+ * @property string Title
+ * @property string DatabaseField
+ * @method Player Captain()
+ * @method Player Founder()
+ * @method Player HasOneRelationship()
+ * @method HasManyList SubTeams()
+ * @method HasManyList Comments()
+ * @method HasManyList Fans()
+ * @method HasManyList PlayerFans()
+ * @method ManyManyList Players()
+ * @method ManyManyList Sponsors()
+ * @method ManyManyList EquipmentSuppliers()
+ */
 class Team extends DataObject implements TestOnly
 {
     private static $table_name = 'DataObjectTest_Team';

@@ -244,7 +244,7 @@ class DateField extends TextField
     protected function getISO8601Formatter()
     {
         $formatter = IntlDateFormatter::create(
-            i18n::config()->get('default_locale'),
+            i18n::config()->uninherited('default_locale'),
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::NONE
         );
