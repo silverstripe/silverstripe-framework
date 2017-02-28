@@ -123,17 +123,17 @@ As well as properties, method calls can also be specified:
 
 ## Using constants as variables
 
-Any of the core constants can be used as a service argument by quoting with back ticks "`".
+Any of the core constants can be used as a service argument by quoting with back ticks "`". Please ensure you also quote the entire value (see below).
 
 
-    :::yaml
-    CachingService:
-      class: SilverStripe\Cache\CacheProvider
-      properties:
-        CacheDir: `TEMP_DIR`
+```yaml
+CachingService:
+  class: SilverStripe\Cache\CacheProvider
+  properties:
+    CacheDir: '`TEMP_DIR`'
+```
 
-
-Note: undefined variables will be replaced with null
+Note: undefined variables will be replaced with null.
 
 
 ## Factories
