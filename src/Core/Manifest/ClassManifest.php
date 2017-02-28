@@ -206,12 +206,14 @@ class ClassManifest
     {
         $name = strtolower($name);
 
-        if (isset($this->classes[$name])) {
-            return $this->classes[$name];
-        } elseif (isset($this->interfaces[$name])) {
-            return $this->interfaces[$name];
-        } elseif (isset($this->traits[$name])) {
-            return $this->traits[$name];
+        foreach ([
+            $this->classes,
+            $this->interfaces,
+            $this->traits
+        ] as $source) {
+            if (isset($source[$name]) && file_exists($source[$name])) {
+                return $source[$name];
+            }
         }
         return null;
     }
@@ -382,15 +384,6 @@ class ClassManifest
     }
 
     /**
-     * Used to set up files that we want to exclude from parsing for performance reasons.
-     */
-    protected function setDefaults()
-    {
-        $this->classes['sstemplateparser'] = FRAMEWORK_PATH.'/src/View/SSTemplateParser.php';
-        $this->classes['sstemplateparseexception'] = FRAMEWORK_PATH.'/src/View/SSTemplateParseException.php';
-    }
-
-    /**
      * Completely regenerates the manifest file.
      *
      * @param bool $cache Cache the result.
@@ -407,12 +400,10 @@ class ClassManifest
             $this->$reset = array();
         }
 
-        $this->setDefaults();
-
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
-            'name_regex'    => '/^(_config.php|[^_].*\.php)$/',
-            'ignore_files'  => array('index.php', 'main.php', 'cli-script.php', 'SSTemplateParser.php'),
+            'name_regex'    => '/^((_config)|([^_].*))\\.php$/',
+            'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
             'ignore_tests'  => !$this->tests,
             'file_callback' => array($this, 'handleFile'),
             'dir_callback' => array($this, 'handleDir')
