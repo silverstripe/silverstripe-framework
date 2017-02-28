@@ -15124,6 +15124,11 @@ div.TreeDropdownField a.jstree-loading .jstree-pageicon{
   display:block;
 }
 
+.form-group.field--merge-below:after{
+  border-bottom:0;
+  box-shadow:none;
+}
+
 .btn-toolbar{
   margin-top:1.2308rem;
   margin-bottom:1.2308rem;
