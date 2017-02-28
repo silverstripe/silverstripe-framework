@@ -263,8 +263,6 @@ class NamespacedClassManifestTest extends SapphireTest
             'silverstripe\test\classf' => "{$this->base}/module/classes/ClassF.php",
             'silverstripe\test\classg' => "{$this->base}/module/classes/ClassG.php",
             'silverstripe\test\classh' => "{$this->base}/module/classes/ClassH.php",
-            'sstemplateparser'         => FRAMEWORK_PATH."/src/View/SSTemplateParser.php",
-            'sstemplateparseexception' => FRAMEWORK_PATH."/src/View/SSTemplateParseException.php",
             'silverstripe\framework\tests\classi' => "{$this->base}/module/classes/ClassI.php",
         );
 
@@ -274,7 +272,7 @@ class NamespacedClassManifestTest extends SapphireTest
     public function testGetClassNames()
     {
         $this->assertEquals(
-            array('sstemplateparser', 'sstemplateparseexception', 'silverstripe\test\classa',
+            array('silverstripe\test\classa',
                 'silverstripe\test\classb', 'silverstripe\test\classc', 'silverstripe\test\classd',
                 'silverstripe\test\classe', 'silverstripe\test\classf', 'silverstripe\test\classg',
                 'silverstripe\test\classh', 'silverstripe\framework\tests\classi'),
