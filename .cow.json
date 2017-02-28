@@ -1,0 +1,7 @@
+{
+  "child-stability-inherit": true,
+  "dependency-constraint": "semver",
+  "vendors": [
+    "silverstripe"
+  ]
+}
