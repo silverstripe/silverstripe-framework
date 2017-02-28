@@ -13,3 +13,24 @@
     }
   }
 }
+
+.fieldgroup--fill-width > .form__field-holder > .fieldgroup {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+
+  > .field:last-child {
+    margin-right: 0;
+  }
+}
+
+.fieldgroup--fill-height > .form__field-holder > .fieldgroup {
+  display: flex;
+  height: 100%;
+  min-height: 0; // See https://www.fxsitecompat.com/en-GB/docs/2014/initial-value-of-min-width-height-on-flex-items-has-been-reverted-to-auto/
+  flex-direction: column;
+
+  > .field:last-child {
+    margin-bottom: 0;
+  }
+}
