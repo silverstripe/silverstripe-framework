@@ -260,7 +260,7 @@ First of all, you need to create your form on it's own class, that way you can d
 is *MyForm*. If the template doesn't exist, then it falls back to using Form.ss.
 
 *MyForm.ss* should then be placed into your *templates/Includes* directory for your project. Here is an example of
-basic customisation:
+basic customisation, with two ways of presenting the field and its inline validation:
 
 	:::ss
 	<form $FormAttributes>
@@ -274,11 +274,19 @@ basic customisation:
 			<div id="Email" class="field email">
 				<label class="left" for="{$FormName}_Email">Email</label>
 				$Fields.dataFieldByName(Email)
+				<span id="{$FormName}_error" class="message $Fields.dataFieldByName(Email).MessageType">
+					$Fields.dataFieldByName(Email).Message
+				</span>
 			</div>
 			
 			<div id="Email" class="field password">
 				<label class="left" for="{$FormName}_Password">Password</label>
-				$Fields.dataFieldByName(Password)
+				<% with $Fields.dataFieldByName(Password) %>
+					$field
+					<% if $Message %>
+						<p id="{$FormName}_error" class="message $MessageType">$Message</p>
+					<% end_if %>
+				<% end_with %>
 			</div>
 			
 			$Fields.dataFieldByName(SecurityID)
