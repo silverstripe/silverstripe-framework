@@ -1,80 +1,87 @@
 {
-  "name": "silverstripe/framework",
-  "type": "silverstripe-module",
-  "description": "The SilverStripe framework",
-  "homepage": "http://silverstripe.org",
-  "license": "BSD-3-Clause",
-  "keywords": ["silverstripe", "framework"],
-  "authors": [
-    {
-      "name": "SilverStripe",
-      "homepage": "http://silverstripe.com"
+    "name": "silverstripe/framework",
+    "type": "silverstripe-module",
+    "description": "The SilverStripe framework",
+    "homepage": "http://silverstripe.org",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "silverstripe",
+        "framework"
+    ],
+    "authors": [
+        {
+            "name": "SilverStripe",
+            "homepage": "http://silverstripe.com"
+        },
+        {
+            "name": "The SilverStripe Community",
+            "homepage": "http://silverstripe.org"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "composer/installers": "~1.0",
+        "monolog/monolog": "~1.11",
+        "league/flysystem": "~1.0.12",
+        "symfony/yaml": "~2.7",
+        "embed/embed": "^2.6",
+        "swiftmailer/swiftmailer": "~5.4",
+        "symfony/cache": "^3.3@dev",
+        "symfony/config": "^2.8",
+        "symfony/translation": "^2.8",
+        "vlucas/phpdotenv": "^2.4",
+        "silverstripe/config": "^1.0.0@alpha"
     },
-    {
-      "name": "The SilverStripe Community",
-      "homepage": "http://silverstripe.org"
-    }
-  ],
-  "require": {
-    "php": ">=5.5.0",
-    "composer/installers": "~1.0",
-    "monolog/monolog": "~1.11",
-    "league/flysystem": "~1.0.12",
-    "symfony/yaml": "~2.7",
-    "embed/embed": "^2.6",
-    "swiftmailer/swiftmailer": "~5.4",
-    "symfony/cache": "^3.3@dev",
-    "symfony/config": "^2.8",
-    "symfony/translation": "^2.8",
-    "vlucas/phpdotenv": "^2.4",
-    "silverstripe/config": "^1@dev"
-  },
-  "require-dev": {
-    "phpunit/PHPUnit": "~4.8",
-    "silverstripe/behat-extension": "^2.1.0",
-    "silverstripe/serve": "dev-master",
-    "silverstripe/testsession": "^2.0.0-alpha3",
-    "se/selenium-server-standalone": "2.41.0"
-  },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "4.0.x-dev"
-    }
-  },
-  "autoload": {
-    "psr-4": {
-      "SilverStripe\\Admin\\": "admin/code/",
-      "SilverStripe\\Admin\\Tests\\": "admin/tests/",
-      "SilverStripe\\Assets\\": "src/Assets/",
-      "SilverStripe\\Assets\\Tests\\": "tests/php/Assets/",
-      "SilverStripe\\Control\\": "src/Control/",
-      "SilverStripe\\Control\\Tests\\": "tests/php/Control/",
-      "SilverStripe\\Core\\": "src/Core/",
-      "SilverStripe\\Core\\Tests\\": "tests/php/Core/",
-      "SilverStripe\\Dev\\": "src/Dev/",
-      "SilverStripe\\Dev\\Tests\\": "tests/php/Dev/",
-      "SilverStripe\\Forms\\": "src/Forms/",
-      "SilverStripe\\Forms\\Tests\\": "tests/php/Forms/",
-      "SilverStripe\\i18n\\": "src/i18n/",
-      "SilverStripe\\i18n\\Tests\\": "tests/php/i18n/",
-      "SilverStripe\\Logging\\": "src/Logging/",
-      "SilverStripe\\ORM\\": "src/ORM/",
-      "SilverStripe\\ORM\\Tests\\": "tests/php/ORM/",
-      "SilverStripe\\Security\\": "src/Security/",
-      "SilverStripe\\Security\\Tests\\": "tests/php/Security/",
-      "SilverStripe\\View\\": "src/View/",
-      "SilverStripe\\View\\Tests\\": "tests/php/View/"
+    "require-dev": {
+        "phpunit/PHPUnit": "~4.8",
+        "silverstripe/behat-extension": "^2.1.0",
+        "silverstripe/serve": "dev-master",
+        "silverstripe/testsession": "^2.0.0-alpha3",
+        "se/selenium-server-standalone": "2.41.0"
     },
-    "files": ["src/Core/Constants.php"],
-    "classmap": ["tests/behat/features/bootstrap"]
-  },
-  "include-path": [
-      "src/",
-      "thirdparty/"
-  ],
-  "scripts": {
-    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/ admin/code/ tests/ admin/tests/"
-  },
-  "min-stability": "dev",
-  "prefer-stable": true
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.0.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "SilverStripe\\Admin\\": "admin/code/",
+            "SilverStripe\\Admin\\Tests\\": "admin/tests/",
+            "SilverStripe\\Assets\\": "src/Assets/",
+            "SilverStripe\\Assets\\Tests\\": "tests/php/Assets/",
+            "SilverStripe\\Control\\": "src/Control/",
+            "SilverStripe\\Control\\Tests\\": "tests/php/Control/",
+            "SilverStripe\\Core\\": "src/Core/",
+            "SilverStripe\\Core\\Tests\\": "tests/php/Core/",
+            "SilverStripe\\Dev\\": "src/Dev/",
+            "SilverStripe\\Dev\\Tests\\": "tests/php/Dev/",
+            "SilverStripe\\Forms\\": "src/Forms/",
+            "SilverStripe\\Forms\\Tests\\": "tests/php/Forms/",
+            "SilverStripe\\i18n\\": "src/i18n/",
+            "SilverStripe\\i18n\\Tests\\": "tests/php/i18n/",
+            "SilverStripe\\Logging\\": "src/Logging/",
+            "SilverStripe\\ORM\\": "src/ORM/",
+            "SilverStripe\\ORM\\Tests\\": "tests/php/ORM/",
+            "SilverStripe\\Security\\": "src/Security/",
+            "SilverStripe\\Security\\Tests\\": "tests/php/Security/",
+            "SilverStripe\\View\\": "src/View/",
+            "SilverStripe\\View\\Tests\\": "tests/php/View/"
+        },
+        "files": [
+            "src/Core/Constants.php"
+        ],
+        "classmap": [
+            "tests/behat/features/bootstrap"
+        ]
+    },
+    "include-path": [
+        "src/",
+        "thirdparty/"
+    ],
+    "scripts": {
+        "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/ admin/code/ tests/ admin/tests/"
+    },
+    "min-stability": "dev",
+    "prefer-stable": true
 }
