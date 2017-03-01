@@ -7,13 +7,12 @@
     "test": "tests"
   },
   "engines": {
-    "node": "^4.2.0"
+    "node": "^6.10.0"
   },
   "scripts": {
     "build": "webpack --bail --progress",
     "watch": "webpack --progress --config ./webpack-dev.config.js --watch",
     "css": "WEBPACK_CHILD=css webpack",
-    "lock": "npm-shrinkwrap --dev",
     "test": "NODE_PATH=\"./client/src:./admin/client/src\" jest",
     "coverage": "NODE_PATH=\"./client/src:./admin/client/src\" jest --coverage",
     "lint": "eslint client/src && eslint admin/client/src && sass-lint -v"
@@ -86,7 +85,6 @@
     "imports-loader": "^0.6.5",
     "jest-cli": "^0.9.2",
     "node-sass": "^3.8.0",
-    "npm-shrinkwrap": "^6.0.1",
     "postcss-loader": "^0.10.1",
     "react-addons-test-utils": "^15.3.1",
     "redux-logger": "^2.6.1",

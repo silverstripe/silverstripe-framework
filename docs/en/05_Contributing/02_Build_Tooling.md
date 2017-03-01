@@ -11,7 +11,7 @@ dependencies in your project codebase however you like.
 The [NodeJS](https://nodejs.org) JavaScript runtime is the foundation of our client-side
 build tool chain. If you want to do things like upgrade dependencies, make changes to core
 JavaScript or SCSS files, you'll need Node installed on your dev environment. Our build
-tooling supports the v4.x (LTS) version of NodeJS.
+tooling supports the v6.x (LTS) version of NodeJS.
  
 If you already have a newer version of Node.js installed, check out the
 [Node Version Manager](https://github.com/creationix/nvm) to run multiple versions
@@ -21,14 +21,17 @@ Since we're compiling SVG icons, you'll also need to compile native Node addons,
 which requires `gcc` or a similar compiler - see [node-gyp](https://github.com/nodejs/node-gyp#installation)
 for instructions on how to get a compiler running on your platform.
 
-[npm](https://www.npmjs.com/) is the package manager we use for JavaScript dependencies.
-It comes bundled with NodeJS so should already have it installed if you have Node.
+[yarn](https://yarnpkg.com/) is the package manager we use for JavaScript dependencies.
 The configuration for an npm package goes in `package.json`.
+You'll need to install after [Node.js is installed](https://yarnpkg.com/en/docs/install), we recommend using `npm` which comes with Node.js to install it globally.
+```
+npm install -g yarn
+```
 
-Once you've installed Node.js, run the following command in each core module folder:
+Once you've installed Node.js and yarn, run the following command once in each core module folders:
 
 ```
-npm install
+yarn
 ```
 
 ## The Basics: ES6, Webpack and Babel
@@ -76,6 +79,13 @@ The first `--` separator is required to separate arguments from NPM's own ones.
 
 ```
 $ npm run build -- --watch
+```
+
+*For development only*:
+Run this to keep webpack automatically rebuilding your file changes, this will also include *.map files for easier debugging.
+It is important to note that this should not be used for pushing up changes, and you should run `npm run build` after you're done.
+```
+$ npm run watch
 ```
 
 ### css
