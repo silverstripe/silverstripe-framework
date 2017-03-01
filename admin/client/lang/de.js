@@ -8,7 +8,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('de', {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\n\nWollen Sie diese wirklich archivieren?\n\nDiese Seiten und alle Unterseiten davon werden von der veröffentlichen Seite gelöscht und in das Archiv verschoben.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\n\nWollen Sie diese wirklich von der veröfffentlichten Seite löschen?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nAre you sure you want to delete these pages?\n\nThese pages and all of their children pages will be deleted and sent to the archive.",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\n\nWollen Sie diese wirklich veröffentlichen?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\\n\\nWollen Sie diese wirklich wiederherstellen?\\n\\nUnterseiten von archivierten Seiten werden auf der Root-Ebene wiederhergestellt, es sei denn, diese Seiten werden ebenfalls wiederhergestellt.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Sie haben {num} Seite(n) ausgewählt.\n\nWollen Sie wirklich die Veröffentlichung zurücknehmen?",

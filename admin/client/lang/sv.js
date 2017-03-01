@@ -8,7 +8,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('sv', {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Du har {num} sida/sidor valda.\n\n\nÄr du säker på att du vill arkivera dessa sidor?\n\n\nDessa sidor och sidornas undersidor kommer att avpubliceras och arkiveras.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Du har valt {num} sida/sidor\n\nVill du verkligen radera dem från den publicerade sidan?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nAre you sure you want to delete these pages?\n\nThese pages and all of their children pages will be deleted and sent to the archive.",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Du har valt {num} sida/sidor.\nVill du verkligen publicera dem.",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Du har {num} sida/sidor valda. \n\nVill du verkligen återställa till ett tidigare skede?\n\nUndersidor till arkiverade sidor kommer att återställas till rotnivå , såvida dessa sidor också återställs .",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Du har valt {num} sida/sidor\n\nVill du verkligen avpublicera",

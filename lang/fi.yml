@@ -37,6 +37,7 @@ fi:
     INSERTURL: 'Lisää URL-osoitteesta'
     REMOVEINFO: 'Poista tämä tiedosto tästä kentästä'
     TOTAL: Yhteensä
+    TOUPLOAD: 'Valitse siirrettävät tiedostot...'
     UPLOADINPROGRESS: 'Ole hyvä ja odota... siirto käynnissä'
     UPLOADOR: TAI
   BBCodeParser:
@@ -66,6 +67,7 @@ fi:
     UNORDEREDEXAMPLE1: 'järjestämätön lista 1'
   BackLink_Button_ss:
     Back: Takaisin
+    NavigateUp: 'Siirry edelliseen kansioon'
   BasicAuth:
     ENTERINFO: 'Anna käyttäjänimi ja salasana'
     ERRORNOTADMIN: 'Tämä käyttäjä ei ole ylläpitäjä'
@@ -109,6 +111,7 @@ fi:
     AddToCampaign: 'Lisää Kampanjaan'
     AddToCampaignFormFieldLabel: 'Valitse Kampanja'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'Tilin salasana on vaihdettu. Sähköpostiosoite on {email}. Mikäli et pyytänyt salasanan vaihtoa, vaihda salasanasi alla olevasta linkistä'
     CHANGEPASSWORDTEXT1: 'Vaihdoit salasanasi osoitteelle'
     CHANGEPASSWORDTEXT2: 'Kirjautuaksesi sisään voit käyttää seuraavia tietoja:'
     CHANGEPASSWORDTEXT3: 'Vaihda salasana'
@@ -215,12 +218,14 @@ fi:
     MODIFIED: Muokattu
     Mp3Type: MP3-äänitiedosto
     MpgType: MPEG-videotiedosto
+    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
     PdfType: 'Adobe Acrobat PDF-tiedosto'
     PngType: 'PNG-kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
+    TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
     TOOLARGESHORT: 'Sallittu tiedostokoko {size} ylitetty '
     TiffType: TIFF-kuva
     Title: Otsikko
@@ -323,6 +328,7 @@ fi:
     CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
     DETAILS: Tiedot
     EMAIL: Sähköposti
+    FILE: SilverStripe\Assets\File
     FOLDER: Kansio
     IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
     IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
@@ -420,9 +426,13 @@ fi:
   LeftAndMain:
     CANCEL: Peruuta
     CANT_REORGANISE: 'Sinulla ei ole oikeuksia mennä ylemmän tason sivuille. Muutoksiasi ei tallennettu.'
+    CollapsePanel: 'Supista paneeli'
     DELETED: Poistettu.
     DropdownBatchActionsDefault: 'Valitse toiminto...'
+    ExpandPanel: 'Laajenna paneeli'
     HELP: Ohje
+    MenuToggleAuto: Autom.
+    MenuToggleStickyNav: 'Tahmea navi'
     PAGETYPE: 'Sivun tyyppi'
     PERMAGAIN: 'Olet kirjautunut ulos CMS:stä. Jos haluat kirjautua uudelleen sisään, syötä käyttäjätunnuksesi ja salasanasi alle.'
     PERMALREADY: 'Pahoittelut, mutta et pääse tähän osaan CMS:ää. Jos haluat kirjautua jonain muuna, voit tehdä sen alta.'
@@ -477,6 +487,7 @@ fi:
     PASSWORD: Salasana
     PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Jäsenet
+    REMEMBERME: 'Muista minut seuraavalla kerralla?'
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
@@ -503,6 +514,7 @@ fi:
     DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
     FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
     FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
+    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
     HOURNOLEADING24: 'Tunti ilman edessä olevaa nollaa, 24h muoto'
     MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
     MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
@@ -697,6 +709,7 @@ fi:
     TABMAIN: Yleiset
   TableListField:
     CSVEXPORT: 'Vie CSV:nä'
+    CSVIMPORT: 'Tuo CSV'
     Print: Tulosta
   TableListField_PageControls_ss:
     OF: /
@@ -735,6 +748,8 @@ fi:
     STARTALL: 'Aloita kaikki'
     Saved: Tallennettu
     UPLOADSINTO: 'tallentuu polkuun: /{path}'
+  ValidationException:
+    DEFAULT_ERROR: Validointivirhe
   Versioned:
     INFERRED_TITLE: 'Luotu julkaisusta ''{title}'', {created}'
     has_many_Versions: Versiot

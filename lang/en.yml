@@ -120,15 +120,13 @@ en:
     PASSWORD: Password
   ChangeSet:
     DESCRIPTION_AND: '{first} and {second}'
-    DESCRIPTION_ITEM_PLURALS:
-      one: 'one item'
-      other: '{count} items'
+    DESCRIPTION_ITEM: item
+    DESCRIPTION_ITEMS: items
     DESCRIPTION_LIST_FIRST: '{item}'
     DESCRIPTION_LIST_LAST: '{list}, and {item}'
     DESCRIPTION_LIST_MID: '{list}, {item}'
-    DESCRIPTION_OTHER_ITEM_PLURALS:
-      one: 'one other item'
-      other: '{count} other items'
+    DESCRIPTION_OTHER_ITEM: 'other item'
+    DESCRIPTION_OTHER_ITEMS: 'other items'
     NAME: Name
     PLURALNAME: Campaigns
     SINGULARNAME: Campaign
@@ -143,6 +141,8 @@ en:
     SOURCE_VALIDATION: 'Please select a value within the list provided. {value} is not a valid option'
   CheckboxSetField:
     SOURCE_VALIDATION: 'Please select a value within the list provided. ''{value}'' is not a valid option'
+  CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'No options available'
   ConfirmedPasswordField:
     ATLEAST: 'Passwords must be at least {min} characters long.'
     BETWEEN: 'Passwords must be {min} to {max} characters long.'
@@ -258,7 +258,8 @@ en:
     VALIDATOR: Validator
     VALIDCURRENCY: 'Please enter a valid currency'
   FormField:
-    Example: 'e.g. %s'
+    EXAMPLE: 'e.g. {format}'
+    Example: 'e.g. {format}'
     NONE: none
   GridAction:
     DELETE_DESCRIPTION: Delete
@@ -683,12 +684,37 @@ en:
       one: 'An Image'
       other: '{count} Images'
     SINGULARNAME: Image
+  SilverStripe\Forms\MoneyField:
+    INVALID_CURRENCY: 'Currency {currency} is not in the list of allowed currencies'
+  SilverStripe\Forms\SeparatedDateField:
+    DAY: Day
+    MONTH: Month
+    YEAR: Year
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Data Objects'
     PLURALS:
       one: 'A Data Object'
       other: '{count} Data Objects'
     SINGULARNAME: 'Data Object'
+  SilverStripe\ORM\FieldType\DBDate:
+    DAYS_SHORT_PLURALS:
+      one: '{count} day'
+      other: '{count} days'
+    HOURS_SHORT_PLURALS:
+      one: '{count} hour'
+      other: '{count} hours'
+    MINUTES_SHORT_PLURALS:
+      one: '{count} min'
+      other: '{count} mins'
+    MONTHS_SHORT_PLURALS:
+      one: '{count} month'
+      other: '{count} months'
+    SECONDS_SHORT_PLURALS:
+      one: '{count} sec'
+      other: '{count} secs'
+    YEARS_SHORT_PLURALS:
+      one: '{count} year'
+      other: '{count} years'
   SilverStripe\ORM\Versioning\ChangeSet:
     PLURALNAME: Campaigns
     PLURALS:

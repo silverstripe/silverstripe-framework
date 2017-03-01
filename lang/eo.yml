@@ -37,6 +37,7 @@ eo:
     INSERTURL: 'Enigi el URL'
     REMOVEINFO: 'Forigi ĉi tiun dosieron el ĉi tiu kampo'
     TOTAL: Totalo
+    TOUPLOAD: 'Elekti dosieron alŝutotan...'
     UPLOADINPROGRESS: 'Bonvolu atendi...alŝuto daŭras'
     UPLOADOR: AŬ
   BBCodeParser:
@@ -66,6 +67,7 @@ eo:
     UNORDEREDEXAMPLE1: 'neordigita ero 1'
   BackLink_Button_ss:
     Back: Retro
+    NavigateUp: 'Navigi supren unu dosierujon'
   BasicAuth:
     ENTERINFO: 'bonvolu enigi salutnomon kaj pasvorton.'
     ERRORNOTADMIN: 'Tiu uzanto ne estas administranto.'
@@ -109,6 +111,7 @@ eo:
     AddToCampaign: 'Aldoni al kampanjo'
     AddToCampaignFormFieldLabel: 'Elekti kampanjon'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'La pasvorto por la konto kun retadreso {email} estas ŝanĝita. Se vi ne ŝanĝis vian pasvorton bonvolu ŝanĝi vian pasvorton per la suba ligilo.'
     CHANGEPASSWORDTEXT1: 'Vi ŝanĝis vian pasvorton por'
     CHANGEPASSWORDTEXT2: 'Nun vi povas uzi la jenan legitimaĵon por ensaluti:'
     CHANGEPASSWORDTEXT3: 'Ŝangi pasvorton'
@@ -215,12 +218,15 @@ eo:
     MODIFIED: Ŝanĝita
     Mp3Type: MP3-sondosiero
     MpgType: 'AVI-videa dosiero'
+    NOFILESIZE: 'Dosiero havas nul bajtojn'
     NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
     Name: Nomo
     PLURALNAME: Dosieroj
     PdfType: 'Dosiero de Adobe Acrobat PDF'
     PngType: 'PNG-bildo - ĝeneralcela formato'
     SINGULARNAME: Dosiero
+    TOOLARGE: 'Dosiero estas tro granda; maksimumo permesita estas {size}'
+    TOOLARGESHORT: 'Dosiero estas pli ol {size}'
     TiffType: 'Markita bildoformato'
     Title: Titolo
     WavType: WAV-sondosiero
@@ -322,6 +328,7 @@ eo:
     CSSCLASSRIGHT: 'Dekstre, kaj teksto ĉirkaŭfluas.'
     DETAILS: Detaloj
     EMAIL: 'Retpoŝta adreso'
+    FILE: SilverStripe\Assets\File
     FOLDER: Dosierujo
     IMAGEALT: 'Alternativa teksto (alt)'
     IMAGEALTTEXT: 'Alternativa teksto (alt) - vidiĝas se ne eblas vidigi bildon'
@@ -384,6 +391,8 @@ eo:
     FROMWEB: 'El la TTT'
     FindInFolder: 'Serĉi en dosierujo'
     IMAGEALT: 'Alternativa teksto (alt)'
+    IMAGEALTTEXT: 'Alternativa teksto (alt) - vidiĝas se ne eblas vidigi bildon'
+    IMAGEALTTEXTDESC: 'Vidigita al ekranlegiloj aŭ se ne eblas vidigi bildon'
     IMAGEDIMENSIONS: Dimensioj
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Titola teksto (ŝpruchelpilo) - por plua informo pri la bildo'
@@ -417,11 +426,18 @@ eo:
   LeftAndMain:
     CANCEL: Rezigni
     CANT_REORGANISE: 'Vi ne rajtas ŝanĝi supronivelajn paĝojn. Via ŝanĝo ne konserviĝis.'
+    CollapsePanel: 'Kolapsi panelon'
     DELETED: Forigita.
+    DropdownBatchActionsDefault: 'Elekti agon...'
+    ExpandPanel: 'Plivastigi panelon'
     HELP: Helpo
+    MenuToggleAuto: Aŭtomate
+    MenuToggleStickyNav: 'Persista navigado'
+    PAGETYPE: 'Tipo de paĝo'
     PERMAGAIN: 'Vin adiaŭis la CMS. Se vi volas denove saluti, enigu salutnomon kaj pasvorton malsupre.'
     PERMALREADY: 'Bedaŭrinde vi ne povas aliri tiun parton de la CMS. Se vi volas ensaluti kiel aliulo, faru tion sube.'
     PERMDEFAULT: 'Necesas ensaluti por aliri la administran zonon; bonvolu enigi viajn akreditaĵoj sube.'
+    PLEASESAVE: 'Bonvolu konservi paĝon: Ne eblis ĝisdatigi ĉi tiun paĝon ĉar ĝi ankoraŭ ne estas konservita.'
     PreviewButton: Antaŭvido
     REORGANISATIONSUCCESSFUL: 'Sukcese reorganizis la retejan arbon.'
     SAVEDUP: Konservita.
@@ -471,11 +487,13 @@ eo:
     PASSWORD: Pasvorto
     PASSWORDEXPIRED: 'Via pasvorto finiĝis. Bonvolu elekti novan.'
     PLURALNAME: Membroj
+    REMEMBERME: 'Ĉu memoru min je la sekva fojo?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
     SURNAME: 'Familia nomo'
     TIMEFORMAT: 'Formato de horo'
+    VALIDATIONMEMBEREXISTS: 'Jam ekzistas membro kun la sama {identifier}'
     ValidationIdentifierFailed: 'Ne povas anstataŭigi ekzistantan membron #{id} per sama identigilo ({name} = {value}))'
     WELCOMEBACK: 'Bonvenon denove, {firstname}'
     YOUROLDPASSWORD: 'Vian malnovan pasvorton'
@@ -496,6 +514,7 @@ eo:
     DIGITSDECFRACTIONSECOND: 'Almenaŭ unu cifero indikanta dekuman frakcion de sekundo'
     FOURDIGITYEAR: 'Kvarcifera jaro'
     FULLNAMEMONTH: 'Tuta nomo de monato (ekz. junio)'
+    HOURNOLEADING: 'Horo sen antaŭira nulo'
     HOURNOLEADING24: 'Horo sen antaŭira nulo, 24-hora formato'
     MINUTENOLEADING: 'Minuto sen antaŭira nulo'
     MONTHNOLEADING: 'Monato sen antaŭira nulo'
@@ -690,6 +709,7 @@ eo:
     TABMAIN: Ĉefaj
   TableListField:
     CSVEXPORT: 'Eksporti al CSV'
+    CSVIMPORT: 'Importi el CSV'
     Print: Presi
   TableListField_PageControls_ss:
     OF: de
@@ -728,6 +748,8 @@ eo:
     STARTALL: 'Startigi ĉiujn'
     Saved: Konservis
     UPLOADSINTO: 'konservas en /{path}'
+  ValidationException:
+    DEFAULT_ERROR: 'Validiga eraro'
   Versioned:
     INFERRED_TITLE: 'Generita de publikigo de  ''{title}'' ĉe {created}'
     has_many_Versions: Versioj

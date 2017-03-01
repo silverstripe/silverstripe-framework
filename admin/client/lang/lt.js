@@ -8,7 +8,7 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   ss.i18n.addDictionary('lt', {
     "CMSMAIN.BATCH_ARCHIVE_PROMPT": "Pažymėjote {num} puslapius(-į).\n\nAr tikrai norite archyvuoti šiuos puslapius?\n\nŠie puslapiai ir visi po jais esantys puslapiai bus nebepublikuojami ir suarchyvuoti.",
     "CMSMAIN.BATCH_DELETELIVE_PROMPT": "Pažymėjote {num} puslapius(-į).\n\nAr tikrai norite ištrinti iš publikuotų puslapių?",
-    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nAre you sure you want to delete these pages?\n\nThese pages and all of their children pages will be deleted and sent to the archive.",
+    "CMSMAIN.BATCH_DELETE_PROMPT": "You have {num} page(s) selected.\n\nDo you really want to delete?",
     "CMSMAIN.BATCH_PUBLISH_PROMPT": "Pažymėjote {num} puslapius(-į).\n\nAr tikrai norite publikuoti?",
     "CMSMAIN.BATCH_RESTORE_PROMPT": "Pažymėjote {num} puslapius(-į).\n\nAr tikrai norite atstatyti?\n\nPuslapiai, esantys po suarchyvuotais puslapiais, bus atstatyti aukščiausiame lygyje, nebent šie puslapiai irgi bus atstatyti.",
     "CMSMAIN.BATCH_UNPUBLISH_PROMPT": "Pažymėjote {num} puslapius(-į).\n\nAr tikrai norite nebepublikuoti?",

@@ -467,7 +467,7 @@ cs:
     PASSWORD: Heslo
     PASSWORDEXPIRED: 'Vaše heslo expirovalo. Prosím, zvolte nové heslo.'
     PLURALNAME: Členové
-    REMEMBERME: "Zapamatovat si mě pro příště?"
+    REMEMBERME: 'Zapamatovat si mě pro příště?'
     SINGULARNAME: Člen
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bylo změněno'
     SUBJECTPASSWORDRESET: 'Nulovací odkaz pro Vaše heslo'
