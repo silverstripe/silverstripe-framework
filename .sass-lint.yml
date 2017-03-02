@@ -4,6 +4,7 @@ files:
   ignore:
     - 'client/src/styles/legacy/*'
     - 'admin/client/src/styles/legacy/*'
+    - 'src/Dev/**/*'
 options:
   formatter: stylish
   merge-default-rules: false

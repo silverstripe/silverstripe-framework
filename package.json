@@ -68,7 +68,7 @@
   "devDependencies": {
     "autoprefixer": "^6.4.0",
     "babel-core": "^6.7.4",
-    "babel-jest": "^9.0.3",
+    "babel-jest": "^19.0.0",
     "babel-loader": "^6.2.5",
     "babel-plugin-transform-es2015-modules-umd": "^6.6.5",
     "babel-plugin-transform-object-assign": "^6.5.0",
@@ -83,7 +83,7 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "imports-loader": "^0.6.5",
-    "jest-cli": "^0.9.2",
+    "jest-cli": "^19.0.2",
     "node-sass": "^3.8.0",
     "postcss-loader": "^0.10.1",
     "react-addons-test-utils": "^15.3.1",
@@ -92,25 +92,20 @@
     "sass-lint": "^1.9.1",
     "sass-loader": "^4.0.0",
     "script-loader": "^0.7.0",
-    "semver": "^5.1.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.2"
   },
   "jest": {
-    "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
-    "testPathDirs": [
+    "roots": [
       "admin/client/src",
       "client/src"
     ],
-    "testDirectoryName": "tests",
-    "mocksPattern": "mocks",
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/qs",
-      "<rootDir>/node_modules/redux-form"
+    "testMatch": [
+      "**/tests/**/*-test.js?(x)"
     ],
-    "bail": true,
-    "testRunner": "<rootDir>/node_modules/jest-cli/src/testRunners/jasmine/jasmine2.js"
+    "transform": {
+      ".*": "babel-jest"
+    }
   },
   "babel": {
     "presets": [
