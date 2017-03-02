@@ -63,17 +63,16 @@ class DefaultCacheFactory implements CacheFactory
         }
 
         if ($phpFilesSupported) {
-            $opcache = Injector::inst()->create(PhpFilesCache::class, false, [$namespace, $defaultLifetime, $directory]);
+            $opcache = Injector::inst()->create(PhpFilesCache::class, $namespace, $defaultLifetime, $directory);
             return $opcache;
         }
 
-        $fs = Injector::inst()->create(FilesystemCache::class, false, [$namespace, $defaultLifetime, $directory]);
+        $fs = Injector::inst()->create(FilesystemCache::class, $namespace, $defaultLifetime, $directory);
         if (!$apcuSupported) {
             return $fs;
         }
+        $apcu = Injector::inst()->create(ApcuCache::class, $namespace, (int) $defaultLifetime / 5, $version);
 
-        $apcu = Injector::inst()->create(ApcuCache::class, false, [$namespace, (int) $defaultLifetime / 5, $version]);
-
-        return Injector::inst()->create(ChainCache::class, false, [[$apcu, $fs]]);
+        return Injector::inst()->create(ChainCache::class, [$apcu, $fs]);
     }
 }
