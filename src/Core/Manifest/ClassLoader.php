@@ -13,6 +13,7 @@ class ClassLoader
 {
 
     /**
+     * @internal
      * @var ClassLoader
      */
     private static $instance;

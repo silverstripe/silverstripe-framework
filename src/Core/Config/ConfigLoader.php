@@ -10,6 +10,7 @@ use SilverStripe\Config\Collections\ConfigCollectionInterface;
 class ConfigLoader
 {
     /**
+     * @internal
      * @var self
      */
     private static $instance;
