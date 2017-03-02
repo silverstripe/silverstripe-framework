@@ -212,11 +212,6 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             }
         }
 
-
-        // Caution: API violation. Form expects a Controller, but we are giving it a RequestHandler instead.
-        // Thanks to this however, we are able to nest GridFields, and also access the initial Controller by
-        // dereferencing GridFieldDetailForm_ItemRequest->getController() multiple times. See getToplevelController
-        // below.
         $form = new Form(
             $this,
             'ItemEditForm',

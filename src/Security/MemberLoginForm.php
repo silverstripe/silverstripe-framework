@@ -2,13 +2,9 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\Session;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Email\Email;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
@@ -38,17 +34,6 @@ class MemberLoginForm extends LoginForm
      * @var string
      */
     public $loggedInAsField = 'FirstName';
-
-    protected $authenticator_class = 'SilverStripe\\Security\\MemberAuthenticator';
-
-    /**
-     * Since the logout and dologin actions may be conditionally removed, it's necessary to ensure these
-     * remain valid actions regardless of the member login state.
-     *
-     * @var array
-     * @config
-     */
-    private static $allowed_actions = array('dologin', 'logout');
 
     /**
      * Constructor
@@ -184,205 +169,11 @@ JS;
         return $this;
     }
 
-
     /**
-     * Login form handler method
-     *
-     * This method is called when the user clicks on "Log in"
-     *
-     * @param array $data Submitted data
+     * @return MemberLoginHandler
      */
-    public function dologin($data)
+    protected function buildRequestHandler()
     {
-        if ($this->performLogin($data)) {
-            $this->logInUserAndRedirect($data);
-        } else {
-            /** @skipUpgrade */
-            if (array_key_exists('Email', $data)) {
-                Session::set('SessionForms.MemberLoginForm.Email', $data['Email']);
-                Session::set('SessionForms.MemberLoginForm.Remember', isset($data['Remember']));
-            }
-
-            if (isset($_REQUEST['BackURL'])) {
-                $backURL = $_REQUEST['BackURL'];
-            } else {
-                $backURL = null;
-            }
-
-            if ($backURL) {
-                Session::set('BackURL', $backURL);
-            }
-
-            // Show the right tab on failed login
-            $loginLink = Director::absoluteURL($this->controller->Link('login'));
-            if ($backURL) {
-                $loginLink .= '?BackURL=' . urlencode($backURL);
-            }
-            $this->controller->redirect($loginLink . '#' . $this->FormName() .'_tab');
-        }
-    }
-
-    /**
-     * Login in the user and figure out where to redirect the browser.
-     *
-     * The $data has this format
-     * array(
-     *   'AuthenticationMethod' => 'MemberAuthenticator',
-     *   'Email' => 'sam@silverstripe.com',
-     *   'Password' => '1nitialPassword',
-     *   'BackURL' => 'test/link',
-     *   [Optional: 'Remember' => 1 ]
-     * )
-     *
-     * @param array $data
-     * @return HTTPResponse
-     */
-    protected function logInUserAndRedirect($data)
-    {
-        Session::clear('SessionForms.MemberLoginForm.Email');
-        Session::clear('SessionForms.MemberLoginForm.Remember');
-
-        if (Member::currentUser()->isPasswordExpired()) {
-            if (isset($_REQUEST['BackURL']) && $backURL = $_REQUEST['BackURL']) {
-                Session::set('BackURL', $backURL);
-            }
-            /** @skipUpgrade */
-            $cp = ChangePasswordForm::create($this->controller, 'ChangePasswordForm');
-            $cp->sessionMessage(
-                _t('Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
-                'good'
-            );
-            return $this->controller->redirect('Security/changepassword');
-        }
-
-        // Absolute redirection URLs may cause spoofing
-        if (!empty($_REQUEST['BackURL'])) {
-            $url = $_REQUEST['BackURL'];
-            if (Director::is_site_url($url)) {
-                $url = Director::absoluteURL($url);
-            } else {
-                // Spoofing attack, redirect to homepage instead of spoofing url
-                $url = Director::absoluteBaseURL();
-            }
-            return $this->controller->redirect($url);
-        }
-
-        // If a default login dest has been set, redirect to that.
-        if ($url = Security::config()->default_login_dest) {
-            $url = Controller::join_links(Director::absoluteBaseURL(), $url);
-            return $this->controller->redirect($url);
-        }
-
-        // Redirect the user to the page where they came from
-        $member = Member::currentUser();
-        if ($member) {
-            $firstname = Convert::raw2xml($member->FirstName);
-            if (!empty($data['Remember'])) {
-                Session::set('SessionForms.MemberLoginForm.Remember', '1');
-                $member->logIn(true);
-            } else {
-                $member->logIn();
-            }
-
-            $message = _t('Member.WELCOMEBACK', "Welcome Back, {firstname}", array('firstname' => $firstname));
-            Security::setLoginMessage($message, ValidationResult::TYPE_GOOD);
-        }
-        return Controller::curr()->redirectBack();
-    }
-
-
-    /**
-     * Log out form handler method
-     *
-     * This method is called when the user clicks on "logout" on the form
-     * created when the parameter <i>$checkCurrentUser</i> of the
-     * {@link __construct constructor} was set to TRUE and the user was
-     * currently logged in.
-     */
-    public function logout()
-    {
-        $s = new Security();
-        $s->logout();
-    }
-
-
-    /**
-     * Try to authenticate the user
-     *
-     * @param array $data Submitted data
-     * @return Member Returns the member object on successful authentication
-     *                or NULL on failure.
-     */
-    public function performLogin($data)
-    {
-        $member = call_user_func_array(array($this->authenticator_class, 'authenticate'), array($data, $this));
-        if ($member) {
-            $member->LogIn(isset($data['Remember']));
-            return $member;
-        } else {
-            $this->extend('authenticationFailed', $data);
-            return null;
-        }
-    }
-
-
-    /**
-     * Forgot password form handler method.
-     * Called when the user clicks on "I've lost my password".
-     * Extensions can use the 'forgotPassword' method to veto executing
-     * the logic, by returning FALSE. In this case, the user will be redirected back
-     * to the form without further action. It is recommended to set a message
-     * in the form detailing why the action was denied.
-     *
-     * @skipUpgrade
-     * @param array $data Submitted data
-     * @return HTTPResponse
-     */
-    public function forgotPassword($data)
-    {
-        // Ensure password is given
-        if (empty($data['Email'])) {
-            $this->sessionMessage(
-                _t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
-                'bad'
-            );
-
-            return $this->controller->redirect('Security/lostpassword');
-        }
-
-        // Find existing member
-        /** @var Member $member */
-        $member = Member::get()->filter("Email", $data['Email'])->first();
-
-        // Allow vetoing forgot password requests
-        $results = $this->extend('forgotPassword', $member);
-        if ($results && is_array($results) && in_array(false, $results, true)) {
-            return $this->controller->redirect('Security/lostpassword');
-        }
-
-        if ($member) {
-            $token = $member->generateAutologinTokenAndStoreHash();
-
-            Email::create()
-                ->setHTMLTemplate('SilverStripe\\Control\\Email\\ForgotPasswordEmail')
-                ->setData($member)
-                ->setSubject(_t('Member.SUBJECTPASSWORDRESET', "Your password reset link", 'Email subject'))
-                ->addData('PasswordResetLink', Security::getPasswordResetLink($member, $token))
-                ->setTo($member->Email)
-                ->send();
-
-            return $this->controller->redirect('Security/passwordsent/' . urlencode($data['Email']));
-        } elseif ($data['Email']) {
-            // Avoid information disclosure by displaying the same status,
-            // regardless wether the email address actually exists
-            return $this->controller->redirect('Security/passwordsent/' . rawurlencode($data['Email']));
-        } else {
-            $this->sessionMessage(
-                _t('Member.ENTEREMAIL', 'Please enter an email address to get a password reset link.'),
-                'bad'
-            );
-
-            return $this->controller->redirect('Security/lostpassword');
-        }
+        return MemberLoginHandler::create($this);
     }
 }

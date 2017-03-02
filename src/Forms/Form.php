@@ -2,26 +2,22 @@
 
 namespace SilverStripe\Forms;
 
-use SilverStripe\Control\Controller;
-use SilverStripe\Control\Director;
+use SilverStripe\Control\HasRequestHandler;
 use SilverStripe\Control\HTTP;
-use SilverStripe\Control\HTTPRequest;
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\RequestHandler;
 use SilverStripe\Control\Session;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Convert;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
-use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\Security\NullSecurityToken;
 use SilverStripe\Security\SecurityToken;
 use SilverStripe\View\SSViewer;
+use SilverStripe\View\ViewableData;
 
 /**
  * Base class for all forms.
@@ -64,9 +60,14 @@ use SilverStripe\View\SSViewer;
  * For example, the "URLSegment" field in a standard CMS form would be
  * accessible through "admin/EditForm/field/URLSegment/FieldHolder".
  */
-class Form extends RequestHandler
+class Form extends ViewableData implements HasRequestHandler
 {
     use FormMessage;
+
+    /**
+     * Default form Name property
+     */
+    const DEFAULT_NAME = 'Form';
 
     /**
      * Form submission data is URL encoded
@@ -97,7 +98,9 @@ class Form extends RequestHandler
     protected $actions;
 
     /**
-     * @var Controller
+     * Parent (optional) request handler
+     *
+     * @var RequestHandler
      */
     protected $controller;
 
@@ -112,7 +115,8 @@ class Form extends RequestHandler
     protected $validator;
 
     /**
-     * @var callable {@see setValidationResponseCallback()}
+     * @see setValidationResponseCallback()
+     * @var callable
      */
     protected $validationResponseCallback;
 
@@ -127,7 +131,9 @@ class Form extends RequestHandler
     protected $strictFormMethodCheck = false;
 
     /**
-     * @var DataObject|null $record Populated by {@link loadDataFrom()}.
+     * Populated by {@link loadDataFrom()}.
+     *
+     * @var DataObject|null
      */
     protected $record;
 
@@ -135,7 +141,7 @@ class Form extends RequestHandler
      * Keeps track of whether this form has a default action or not.
      * Set to false by $this->disableDefaultAction();
      *
-     * @var boolean
+     * @var bool
      */
     protected $hasDefaultAction = true;
 
@@ -168,11 +174,6 @@ class Form extends RequestHandler
     protected $template;
 
     /**
-     * @var callable|null
-     */
-    protected $buttonClickedFunc;
-
-    /**
      * Should we redirect the user back down to the
      * the form on validation errors rather then just the page
      *
@@ -191,7 +192,9 @@ class Form extends RequestHandler
     protected $securityToken = null;
 
     /**
-     * @var array $extraClasses List of additional CSS classes for the form tag.
+     * List of additional CSS classes for the form tag.
+     *
+     * @var array
      */
     protected $extraClasses = array();
 
@@ -207,8 +210,10 @@ class Form extends RequestHandler
     protected $encType;
 
     /**
-     * @var array Any custom form attributes set through {@link setAttributes()}.
+     * Any custom form attributes set through {@link setAttributes()}.
      * Some attributes are calculated on the fly, so please use {@link getAttributes()} to access them.
+     *
+     * @var array
      */
     protected $attributes = array();
 
@@ -217,12 +222,10 @@ class Form extends RequestHandler
      */
     protected $validationExemptActions = array();
 
-    private static $allowed_actions = array(
-        'handleField',
-        'httpSubmission',
-        'forTemplate',
-    );
-
+    /**
+     * @config
+     * @var array
+     */
     private static $casting = array(
         'AttributesHTML' => 'HTMLFragment',
         'FormAttributes' => 'HTMLFragment',
@@ -236,14 +239,19 @@ class Form extends RequestHandler
     private $templateHelper = null;
 
     /**
-     * @ignore
+     * HTML ID for this form.
+     *
+     * @var string
      */
     private $htmlID = null;
 
     /**
-     * @ignore
+     * Custom form action path, if not linking to itself.
+     * E.g. could be used to post to an external link
+     *
+     * @var string
      */
-    private $formActionPath = false;
+    protected $formActionPath = false;
 
     /**
      * @var bool
@@ -253,15 +261,20 @@ class Form extends RequestHandler
     /**
      * Create a new form, with the given fields an action buttons.
      *
-     * @param Controller $controller The parent controller, necessary to create the appropriate form action tag.
+     * @param RequestHandler $controller Optional parent request handler
      * @param string $name The method on the controller that will return this form object.
      * @param FieldList $fields All of the fields in the form - a {@link FieldList} of {@link FormField} objects.
      * @param FieldList $actions All of the action buttons in the form - a {@link FieldLis} of
      *                           {@link FormAction} objects
      * @param Validator|null $validator Override the default validator instance (Default: {@link RequiredFields})
      */
-    public function __construct($controller, $name, FieldList $fields, FieldList $actions, Validator $validator = null)
-    {
+    public function __construct(
+        RequestHandler $controller = null,
+        $name = self::DEFAULT_NAME,
+        FieldList $fields = null,
+        FieldList $actions = null,
+        Validator $validator = null
+    ) {
         parent::__construct();
 
         $fields->setForm($this);
@@ -269,12 +282,8 @@ class Form extends RequestHandler
 
         $this->fields = $fields;
         $this->actions = $actions;
-        $this->controller = $controller;
+        $this->setController($controller);
         $this->setName($name);
-
-        if (!$this->controller) {
-            user_error("$this->class form created without a controller", E_USER_ERROR);
-        }
 
         // Form validation
         $this->validator = ($validator) ? $validator : new RequiredFields();
@@ -285,8 +294,7 @@ class Form extends RequestHandler
 
         // Check if CSRF protection is enabled, either on the parent controller or from the default setting. Note that
         // method_exists() is used as some controllers (e.g. GroupTest) do not always extend from Object.
-        if (method_exists($controller, 'securityTokenEnabled') || (method_exists($controller, 'hasMethod')
-                && $controller->hasMethod('securityTokenEnabled'))) {
+        if (ClassInfo::hasMethod($controller, 'securityTokenEnabled')) {
             $securityEnabled = $controller->securityTokenEnabled();
         } else {
             $securityEnabled = SecurityToken::is_enabled();
@@ -298,17 +306,8 @@ class Form extends RequestHandler
     }
 
     /**
-     * @var array
-     */
-    private static $url_handlers = array(
-        'field/$FieldName!' => 'handleField',
-        'POST ' => 'httpSubmission',
-        'GET ' => 'httpSubmission',
-        'HEAD ' => 'httpSubmission',
-    );
-
-    /**
      * Load form state from session state
+     *
      * @return $this
      */
     public function restoreFormState()
@@ -329,11 +328,14 @@ class Form extends RequestHandler
 
     /**
      * Flush persistant form state details
+     *
+     * @return $this
      */
     public function clearFormState()
     {
         Session::clear("FormInfo.{$this->FormName()}.result");
         Session::clear("FormInfo.{$this->FormName()}.data");
+        return $this;
     }
 
     /**
@@ -350,10 +352,12 @@ class Form extends RequestHandler
      * Store the given form data in the session
      *
      * @param array $data
+     * @return $this
      */
     public function setSessionData($data)
     {
         Session::set("FormInfo.{$this->FormName()}.data", $data);
+        return $this;
     }
 
     /**
@@ -374,6 +378,7 @@ class Form extends RequestHandler
      * Sets the ValidationResult in the session to be used with the next view of this form.
      * @param ValidationResult $result The result to save
      * @param bool $combineWithExisting If true, then this will be added to the existing result.
+     * @return $this
      */
     public function setSessionValidationResult(ValidationResult $result, $combineWithExisting = false)
     {
@@ -392,12 +397,19 @@ class Form extends RequestHandler
         // Serialise
         $resultData = $result ? serialize($result) : null;
         Session::set("FormInfo.{$this->FormName()}.result", $resultData);
+        return $this;
     }
 
+    /**
+     * Clear form message (and in session)
+     *
+     * @return $this
+     */
     public function clearMessage()
     {
         $this->setMessage(null);
         $this->clearFormState();
+        return $this;
     }
 
     /**
@@ -468,175 +480,6 @@ class Form extends RequestHandler
     }
 
     /**
-     * Handle a form submission.  GET and POST requests behave identically.
-     * Populates the form with {@link loadDataFrom()}, calls {@link validate()},
-     * and only triggers the requested form action/method
-     * if the form is valid.
-     *
-     * @param HTTPRequest $request
-     * @return HTTPResponse
-     * @throws HTTPResponse_Exception
-     */
-    public function httpSubmission($request)
-    {
-        // Strict method check
-        if ($this->strictFormMethodCheck) {
-            // Throws an error if the method is bad...
-            if ($this->formMethod != $request->httpMethod()) {
-                $response = Controller::curr()->getResponse();
-                $response->addHeader('Allow', $this->formMethod);
-                $this->httpError(405, _t("Form.BAD_METHOD", "This form requires a ".$this->formMethod." submission"));
-            }
-
-            // ...and only uses the variables corresponding to that method type
-            $vars = $this->formMethod == 'GET' ? $request->getVars() : $request->postVars();
-        } else {
-            $vars = $request->requestVars();
-        }
-
-        // Ensure we only process saveable fields (non structural, readonly, or disabled)
-        $allowedFields = array_keys($this->Fields()->saveableFields());
-
-        // Populate the form
-        $this->loadDataFrom($vars, true, $allowedFields);
-
-        // Protection against CSRF attacks
-        // @todo Move this to SecurityTokenField::validate()
-        $token = $this->getSecurityToken();
-        if (! $token->checkRequest($request)) {
-            $securityID = $token->getName();
-            if (empty($vars[$securityID])) {
-                $this->httpError(400, _t(
-                    "Form.CSRF_FAILED_MESSAGE",
-                    "There seems to have been a technical problem. Please click the back button, ".
-                    "refresh your browser, and try again."
-                ));
-            } else {
-                // Clear invalid token on refresh
-                $this->clearFormState();
-                $data = $this->getData();
-                unset($data[$securityID]);
-                $this->setSessionData($data);
-                $this->sessionError(_t(
-                    "Form.CSRF_EXPIRED_MESSAGE",
-                    "Your session has expired. Please re-submit the form."
-                ));
-
-                // Return the user
-                return $this->controller->redirectBack();
-            }
-        }
-
-        // Determine the action button clicked
-        $funcName = null;
-        foreach ($vars as $paramName => $paramVal) {
-            if (substr($paramName, 0, 7) == 'action_') {
-                // Break off querystring arguments included in the action
-                if (strpos($paramName, '?') !== false) {
-                    list($paramName, $paramVars) = explode('?', $paramName, 2);
-                    $newRequestParams = array();
-                    parse_str($paramVars, $newRequestParams);
-                    $vars = array_merge((array)$vars, (array)$newRequestParams);
-                }
-
-                // Cleanup action_, _x and _y from image fields
-                $funcName = preg_replace(array('/^action_/','/_x$|_y$/'), '', $paramName);
-                break;
-            }
-        }
-
-        // If the action wasn't set, choose the default on the form.
-        if (!isset($funcName) && $defaultAction = $this->defaultAction()) {
-            $funcName = $defaultAction->actionName();
-        }
-
-        if (isset($funcName)) {
-            $this->setButtonClicked($funcName);
-        }
-
-        // Permission checks (first on controller, then falling back to form)
-        if (// Ensure that the action is actually a button or method on the form,
-            // and not just a method on the controller.
-            $this->controller->hasMethod($funcName)
-            && !$this->controller->checkAccessAction($funcName)
-            // If a button exists, allow it on the controller
-            // buttonClicked() validates that the action set above is valid
-            && !$this->buttonClicked()
-        ) {
-            return $this->httpError(
-                403,
-                sprintf('Action "%s" not allowed on controller (Class: %s)', $funcName, get_class($this->controller))
-            );
-        } elseif ($this->hasMethod($funcName)
-            && !$this->checkAccessAction($funcName)
-            // No checks for button existence or $allowed_actions is performed -
-            // all form methods are callable (e.g. the legacy "callfieldmethod()")
-        ) {
-            return $this->httpError(
-                403,
-                sprintf('Action "%s" not allowed on form (Name: "%s")', $funcName, $this->name)
-            );
-        }
-
-        // Action handlers may throw ValidationExceptions.
-        try {
-            // Or we can use the Valiator attached to the form
-            $result = $this->validationResult();
-            if (!$result->isValid()) {
-                return $this->getValidationErrorResponse($result);
-            }
-
-            // First, try a handler method on the controller (has been checked for allowed_actions above already)
-            if ($this->controller->hasMethod($funcName)) {
-                return $this->controller->$funcName($vars, $this, $request);
-            }
-
-            // Otherwise, try a handler method on the form object.
-            if ($this->hasMethod($funcName)) {
-                return $this->$funcName($vars, $this, $request);
-            }
-
-            // Check for inline actions
-            if ($field = $this->checkFieldsForAction($this->Fields(), $funcName)) {
-                return $field->$funcName($vars, $this, $request);
-            }
-        } catch (ValidationException $e) {
-            // The ValdiationResult contains all the relevant metadata
-            $result = $e->getResult();
-            $this->loadMessagesFrom($result);
-            return $this->getValidationErrorResponse($result);
-        }
-
-        return $this->httpError(404);
-    }
-
-    /**
-     * @param string $action
-     * @return bool
-     */
-    public function checkAccessAction($action)
-    {
-        if (parent::checkAccessAction($action)) {
-            return true;
-        }
-
-        $actions = $this->getAllActions();
-        foreach ($actions as $formAction) {
-            if ($formAction->actionName() === $action) {
-                return true;
-            }
-        }
-
-            // Always allow actions on fields
-        $field = $this->checkFieldsForAction($this->Fields(), $action);
-        if ($field && $field->checkAccessAction($action)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * @return callable
      */
     public function getValidationResponseCallback()
@@ -660,133 +503,6 @@ class Form extends RequestHandler
 
         return $this;
     }
-
-    /**
-     * Returns the appropriate response up the controller chain
-     * if {@link validate()} fails (which is checked prior to executing any form actions).
-     * By default, returns different views for ajax/non-ajax request, and
-     * handles 'application/json' requests with a JSON object containing the error messages.
-     * Behaviour can be influenced by setting {@link $redirectToFormOnValidationError},
-     * and can be overruled by setting {@link $validationResponseCallback}.
-     *
-     * @param ValidationResult $result
-     * @return HTTPResponse
-     */
-    protected function getValidationErrorResponse(ValidationResult $result)
-    {
-        // Check for custom handling mechanism
-        $callback = $this->getValidationResponseCallback();
-        if ($callback && $callbackResponse = call_user_func($callback, $result)) {
-            return $callbackResponse;
-        }
-
-        // Check if handling via ajax
-        if ($this->getRequest()->isAjax()) {
-            return $this->getAjaxErrorResponse($result);
-        }
-
-        // Prior to redirection, persist this result in session to re-display on redirect
-        $this->setSessionValidationResult($result);
-        $this->setSessionData($this->getData());
-
-        // Determine redirection method
-        if ($this->getRedirectToFormOnValidationError() && ($pageURL = $this->getRedirectReferer())) {
-            return $this->controller->redirect($pageURL . '#' . $this->FormName());
-        }
-        return $this->controller->redirectBack();
-    }
-
-    /**
-     * Build HTTP error response for ajax requests
-     *
-     * @internal called from {@see Form::getValidationErrorResponse}
-     * @param ValidationResult $result
-     * @return HTTPResponse
-     */
-    protected function getAjaxErrorResponse(ValidationResult $result)
-    {
-        // Ajax form submissions accept json encoded errors by default
-        $acceptType = $this->getRequest()->getHeader('Accept');
-        if (strpos($acceptType, 'application/json') !== false) {
-            // Send validation errors back as JSON with a flag at the start
-            $response = new HTTPResponse(Convert::array2json($result->getMessages()));
-            $response->addHeader('Content-Type', 'application/json');
-            return $response;
-        }
-
-        // Send the newly rendered form tag as HTML
-        $this->loadMessagesFrom($result);
-        $response = new HTTPResponse($this->forTemplate());
-        $response->addHeader('Content-Type', 'text/html');
-        return $response;
-    }
-
-    /**
-     * Get referrer to redirect back to and safely validates it
-     *
-     * @internal called from {@see Form::getValidationErrorResponse}
-     * @return string|null
-     */
-    protected function getRedirectReferer()
-    {
-        $pageURL = $this->getRequest()->getHeader('Referer');
-        if (!$pageURL) {
-            return null;
-        }
-        if (!Director::is_site_url($pageURL)) {
-            return null;
-        }
-
-        // Remove existing pragmas
-        $pageURL = preg_replace('/(#.*)/', '', $pageURL);
-        return Director::absoluteURL($pageURL);
-    }
-
-    /**
-     * Fields can have action to, let's check if anyone of the responds to $funcname them
-     *
-     * @param SS_List|array $fields
-     * @param callable $funcName
-     * @return FormField
-     */
-    protected function checkFieldsForAction($fields, $funcName)
-    {
-        foreach ($fields as $field) {
-            /** @skipUpgrade */
-            if (method_exists($field, 'FieldList')) {
-                if ($field = $this->checkFieldsForAction($field->FieldList(), $funcName)) {
-                    return $field;
-                }
-            } elseif ($field->hasMethod($funcName) && $field->checkAccessAction($funcName)) {
-                return $field;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Handle a field request.
-     * Uses {@link Form->dataFieldByName()} to find a matching field,
-     * and falls back to {@link FieldList->fieldByName()} to look
-     * for tabs instead. This means that if you have a tab and a
-     * formfield with the same name, this method gives priority
-     * to the formfield.
-     *
-     * @param HTTPRequest $request
-     * @return FormField
-     */
-    public function handleField($request)
-    {
-        $field = $this->Fields()->dataFieldByName($request->param('FieldName'));
-
-        if ($field) {
-            return $field;
-        } else {
-            // falling back to fieldByName, e.g. for getting tabs
-            return $this->Fields()->fieldByName($request->param('FieldName'));
-        }
-    }
-
     /**
      * Convert this form into a readonly form
      */
@@ -906,6 +622,10 @@ class Form extends RequestHandler
      */
     public function actionIsValidationExempt($action)
     {
+        // Non-actions don't bypass validation
+        if (!$action) {
+            return false;
+        }
         if ($action->getValidationExempt()) {
             return true;
         }
@@ -1350,11 +1070,10 @@ class Form extends RequestHandler
     {
         if ($this->formActionPath) {
             return $this->formActionPath;
-        } elseif ($this->controller->hasMethod("FormObjectLink")) {
-            return $this->controller->FormObjectLink($this->name);
-        } else {
-            return Controller::join_links($this->controller->Link(), $this->name);
         }
+
+        // Get action from request handler link
+        return $this->getRequestHandler()->Link();
     }
 
     /**
@@ -1406,9 +1125,9 @@ class Form extends RequestHandler
     }
 
     /**
-     * Get the controller.
+     * Get the controller or parent request handler.
      *
-     * @return Controller
+     * @return RequestHandler
      */
     public function getController()
     {
@@ -1416,15 +1135,14 @@ class Form extends RequestHandler
     }
 
     /**
-     * Set the controller.
+     * Set the controller or parent request handler.
      *
-     * @param Controller $controller
-     * @return Form
+     * @param RequestHandler $controller
+     * @return $this
      */
-    public function setController($controller)
+    public function setController(RequestHandler $controller = null)
     {
         $this->controller = $controller;
-
         return $this;
     }
 
@@ -1537,21 +1255,19 @@ class Form extends RequestHandler
      */
     public function validationResult()
     {
-        // Opportunity to invalidate via validator
-        $action = $this->buttonClicked();
-        if ($action && $this->actionIsValidationExempt($action)) {
+        // Automatically pass if there is no validator, or the clicked button is exempt
+        // Note: Soft support here for validation with absent request handler
+        $handler = $this->getRequestHandler();
+        $action = $handler ? $handler->buttonClicked() : null;
+        $validator = $this->getValidator();
+        if (!$validator || $this->actionIsValidationExempt($action)) {
             return ValidationResult::create();
         }
 
         // Invoke validator
-        if ($this->validator) {
-            $result = $this->validator->validate();
-            $this->loadMessagesFrom($result);
-            return $result;
-        }
-
-        // Successful result
-        return ValidationResult::create();
+        $result = $validator->validate();
+        $this->loadMessagesFrom($result);
+        return $result;
     }
 
     const MERGE_DEFAULT = 0;
@@ -1765,6 +1481,7 @@ class Form extends RequestHandler
         $data = array();
 
         if ($dataFields) {
+            /** @var FormField $field */
             foreach ($dataFields as $field) {
                 if ($field->getName()) {
                     $data[$field->getName()] = $field->dataValue();
@@ -1830,7 +1547,7 @@ class Form extends RequestHandler
         $content = $this->forTemplate();
         $this->IncludeFormTag = true;
 
-        $content .= "<input type=\"hidden\" name=\"_form_action\" id=\"" . $this->FormName . "_form_action\""
+        $content .= "<input type=\"hidden\" name=\"_form_action\" id=\"" . $this->FormName() . "_form_action\""
             . " value=\"" . $this->FormAction() . "\" />\n";
         $content .= "<input type=\"hidden\" name=\"_form_name\" value=\"" . $this->FormName() . "\" />\n";
         $content .= "<input type=\"hidden\" name=\"_form_method\" value=\"" . $this->FormMethod() . "\" />\n";
@@ -1856,53 +1573,6 @@ class Form extends RequestHandler
         }
 
         return $template->process($custom);
-    }
-
-
-    /**
-     * Sets the button that was clicked.  This should only be called by the Controller.
-     *
-     * @param callable $funcName The name of the action method that will be called.
-     * @return $this
-     */
-    public function setButtonClicked($funcName)
-    {
-        $this->buttonClickedFunc = $funcName;
-
-        return $this;
-    }
-
-    /**
-     * @return FormAction
-     */
-    public function buttonClicked()
-    {
-        $actions = $this->getAllActions();
-        foreach ($actions as $action) {
-            if ($this->buttonClickedFunc === $action->actionName()) {
-                return $action;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get a list of all actions, including those in the main "fields" FieldList
-     *
-     * @return array
-     */
-    protected function getAllActions()
-    {
-        $fields = $this->fields->dataFields() ?: array();
-        $actions = $this->actions->dataFields() ?: array();
-
-        $fieldsAndActions = array_merge($fields, $actions);
-        $actions = array_filter($fieldsAndActions, function ($fieldOrAction) {
-            return $fieldOrAction instanceof FormAction;
-        });
-
-        return $actions;
     }
 
     /**
@@ -2044,37 +1714,46 @@ class Form extends RequestHandler
         return $result;
     }
 
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // TESTING HELPERS
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Current request handler, build by buildRequestHandler(),
+     * accessed by getRequestHandler()
+     *
+     * @var FormRequestHandler
+     */
+    protected $requestHandler = null;
 
     /**
-     * Test a submission of this form.
-     * @param string $action
-     * @param array $data
-     * @return HTTPResponse the response object that the handling controller produces.  You can interrogate this in
-     * your unit test.
-     * @throws HTTPResponse_Exception
+     * Get request handler for this form
+     *
+     * @return FormRequestHandler
      */
-    public function testSubmission($action, $data)
+    public function getRequestHandler()
     {
-        $data['action_' . $action] = true;
-
-        return Director::test($this->FormAction(), $data, Controller::curr()->getSession());
+        if (!$this->requestHandler) {
+            $this->requestHandler = $this->buildRequestHandler();
+        }
+        return $this->requestHandler;
     }
 
     /**
-     * Test an ajax submission of this form.
+     * Assign a specific request handler for this form
      *
-     * @param string $action
-     * @param array $data
-     * @return HTTPResponse the response object that the handling controller produces.  You can interrogate this in
-     * your unit test.
+     * @param FormRequestHandler $handler
+     * @return $this
      */
-    public function testAjaxSubmission($action, $data)
+    public function setRequestHandler(FormRequestHandler $handler)
     {
-        $data['ajax'] = 1;
-        return $this->testSubmission($action, $data);
+        $this->requestHandler = $handler;
+        return $this;
+    }
+
+    /**
+     * Scaffold new request handler for this form
+     *
+     * @return FormRequestHandler
+     */
+    protected function buildRequestHandler()
+    {
+        return FormRequestHandler::create($this);
     }
 }

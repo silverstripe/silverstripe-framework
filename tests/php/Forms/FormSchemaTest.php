@@ -20,16 +20,16 @@ class FormSchemaTest extends SapphireTest
 
     public function testGetSchema()
     {
-        $form = new Form(new Controller(), 'TestForm', new FieldList(), new FieldList());
+        $form = new Form(null, 'TestForm', new FieldList(), new FieldList());
         $formSchema = new FormSchema();
         $expected = [
             'name' => 'TestForm',
             'id' => 'Form_TestForm',
-            'action' => 'Controller/TestForm',
+            'action' => null,
             'method' => 'POST',
             'attributes' => [
                 'id' => 'Form_TestForm',
-                'action' => 'Controller/TestForm',
+                'action' => null,
                 'method' => 'POST',
                 'enctype' => 'application/x-www-form-urlencoded',
                 'target' => null,
@@ -67,7 +67,7 @@ class FormSchemaTest extends SapphireTest
 
     public function testGetState()
     {
-        $form = new Form(new Controller(), 'TestForm', new FieldList(), new FieldList());
+        $form = new Form(null, 'TestForm', new FieldList(), new FieldList());
         $formSchema = new FormSchema();
         $expected = [
             'id' => 'Form_TestForm',
@@ -92,7 +92,7 @@ class FormSchemaTest extends SapphireTest
     {
         $fields = new FieldList();
         $actions = new FieldList();
-        $form = new Form(new Controller(), 'TestForm', $fields, $actions);
+        $form = new Form(null, 'TestForm', $fields, $actions);
         $form->sessionMessage('All saved', 'good');
         $formSchema = new FormSchema();
         $expected = [
@@ -122,7 +122,7 @@ class FormSchemaTest extends SapphireTest
         $fields = new FieldList(new TextField('Title'));
         $actions = new FieldList();
         $validator = new RequiredFields('Title');
-        $form = new Form(new Controller(), 'TestForm', $fields, $actions, $validator);
+        $form = new Form(null, 'TestForm', $fields, $actions, $validator);
         $form->loadDataFrom(
             [
             'Title' => null,
@@ -159,10 +159,13 @@ class FormSchemaTest extends SapphireTest
         $this->assertJsonStringEqualsJsonString(json_encode($expected), json_encode($state));
     }
 
+    /**
+     * @skipUpgrade
+     */
     public function testGetNestedSchema()
     {
         $form = new Form(
-            new Controller(),
+            null,
             'TestForm',
             new FieldList(new TextField("Name")),
             new FieldList(
@@ -180,17 +183,14 @@ class FormSchemaTest extends SapphireTest
             )
         );
         $formSchema = new FormSchema();
-        /**
- * @skipUpgrade
-*/
         $expected = [
             'name' => 'TestForm',
             'id' => 'Form_TestForm',
-            'action' => 'Controller/TestForm',
+            'action' => null,
             'method' => 'POST',
             'attributes' => [
                 'id' => 'Form_TestForm',
-                'action' => 'Controller/TestForm',
+                'action' => null,
                 'method' => 'POST',
                 'enctype' => 'application/x-www-form-urlencoded',
                 'target' => null,
@@ -392,7 +392,7 @@ class FormSchemaTest extends SapphireTest
     public function testSchemaValidation()
     {
         $form = new Form(
-            new Controller(),
+            null,
             'TestForm',
             new FieldList(
                 TextField::create("Name")
@@ -409,12 +409,12 @@ class FormSchemaTest extends SapphireTest
         $expected = [
             'name' => 'TestForm',
             'id' => 'Form_TestForm',
-            'action' => 'Controller/TestForm',
+            'action' => null,
             'method' => 'POST',
             'attributes' =>
                 [
                     'id' => 'Form_TestForm',
-                    'action' => 'Controller/TestForm',
+                    'action' => null,
                     'method' => 'POST',
                     'enctype' => 'application/x-www-form-urlencoded',
                     'target' => null,

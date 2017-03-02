@@ -340,4 +340,22 @@ class ClassInfo
         $reflection = new ReflectionClass($nameOrObject);
         return $reflection->getShortName();
     }
+
+    /**
+     * Helper to determine if the given object has a method
+     *
+     * @param object $object
+     * @param string $method
+     * @return bool
+     */
+    public static function hasMethod($object, $method)
+    {
+        if (empty($object)) {
+            return false;
+        }
+        if (method_exists($object, $method)) {
+            return true;
+        }
+        return method_exists($object, 'hasMethod') && $object->hasMethod($method);
+    }
 }

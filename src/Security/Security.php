@@ -2,17 +2,15 @@
 
 namespace SilverStripe\Security;
 
+use Page;
 use SilverStripe\CMS\Controllers\ContentController;
-use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\Forms\EmailField;
@@ -28,6 +26,7 @@ use SilverStripe\View\ArrayData;
 use SilverStripe\View\SSViewer;
 use SilverStripe\View\TemplateGlobalProvider;
 use Exception;
+use SilverStripe\View\ViewableData_Customised;
 use Subsite;
 
 /**
@@ -130,7 +129,7 @@ class Security extends Controller implements TemplateGlobalProvider
      * @var string
      * @config
      */
-    private static $page_class = 'Page';
+    private static $page_class = Page::class;
 
     /**
      * Default message set used in permission failures.
@@ -192,18 +191,6 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     private static $robots_tag = 'noindex, nofollow';
 
-
-    /**
-     * Get location of word list file
-     *
-     * @deprecated 4.0 Use the "Security.word_list" config setting instead
-     */
-    public static function get_word_list()
-    {
-        Deprecation::notice('4.0', 'Use the "Security.word_list" config setting instead');
-        return self::config()->word_list;
-    }
-
     /**
      * Enable or disable recording of login attempts
      * through the {@link LoginRecord} object.
@@ -226,31 +213,6 @@ class Security extends Controller implements TemplateGlobalProvider
      * @var bool
      */
     static $database_is_ready = false;
-
-    /**
-     * Set location of word list file
-     *
-     * @deprecated 4.0 Use the "Security.word_list" config setting instead
-     * @param string $wordListFile Location of word list file
-     */
-    public static function set_word_list($wordListFile)
-    {
-        Deprecation::notice('4.0', 'Use the "Security.word_list" config setting instead');
-        self::config()->word_list = $wordListFile;
-    }
-
-    /**
-     * Set the default message set used in permissions failures.
-     *
-     * @deprecated 4.0 Use the "Security.default_message_set" config setting instead
-     * @param string|array $messageSet
-     */
-    public static function set_default_message_set($messageSet)
-    {
-        Deprecation::notice('4.0', 'Use the "Security.default_message_set" config setting instead');
-        self::config()->default_message_set = $messageSet;
-    }
-
 
     /**
      * Register that we've had a permission failure trying to view the given page
@@ -377,13 +339,15 @@ class Security extends Controller implements TemplateGlobalProvider
         parent::init();
 
         // Prevent clickjacking, see https://developer.mozilla.org/en-US/docs/HTTP/X-Frame-Options
-        if ($this->config()->frame_options) {
-            $this->getResponse()->addHeader('X-Frame-Options', $this->config()->frame_options);
+        $frameOptions = $this->config()->get('frame_options');
+        if ($frameOptions) {
+            $this->getResponse()->addHeader('X-Frame-Options', $frameOptions);
         }
 
         // Prevent search engines from indexing the login page
-        if ($this->config()->robots_tag) {
-            $this->getResponse()->addHeader('X-Robots-Tag', $this->config()->robots_tag);
+        $robotsTag = $this->config()->get('robots_tag');
+        if ($robotsTag) {
+            $this->getResponse()->addHeader('X-Robots-Tag', $robotsTag);
         }
     }
 
@@ -473,6 +437,7 @@ class Security extends Controller implements TemplateGlobalProvider
      *                       - If it's false, the code calling logout() is
      *                         responsible for sending the user where-ever
      *                         they should go.
+     * @return HTTPResponse|null
      */
     public function logout($redirect = true)
     {
@@ -482,8 +447,9 @@ class Security extends Controller implements TemplateGlobalProvider
         }
 
         if ($redirect && (!$this->getResponse()->isFinished())) {
-            $this->redirectBack();
+            return $this->redirectBack();
         }
+        return null;
     }
 
     /**
@@ -534,21 +500,24 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     protected function getResponseController($title)
     {
-        if (!class_exists('SilverStripe\\CMS\\Model\\SiteTree')) {
+        // Use the default setting for which Page to use to render the security page
+        $pageClass = $this->stat('page_class');
+        if (!$pageClass || !class_exists($pageClass)) {
             return $this;
         }
 
-        // Use the default setting for which Page to use to render the security page
-        $pageClass = $this->stat('page_class');
-        $tmpPage = new $pageClass;
-        $tmpPage->Title = $title;
+        // Create new instance of page holder
+        /** @var Page $holderPage */
+        $holderPage = new $pageClass;
+        $holderPage->Title = $title;
         /** @skipUpgrade */
-        $tmpPage->URLSegment = 'Security';
+        $holderPage->URLSegment = 'Security';
         // Disable ID-based caching  of the log-in page by making it a random number
-        $tmpPage->ID = -1 * rand(1, 10000000);
+        $holderPage->ID = -1 * rand(1, 10000000);
 
-        $controllerClass = $tmpPage->getControllerName();
-        $controller = $controllerClass::create($tmpPage);
+        $controllerClass = $holderPage->getControllerName();
+        /** @var ContentController $controller */
+        $controller = $controllerClass::create($holderPage);
         $controller->setDataModel($this->model);
         $controller->doInit();
         return $controller;
@@ -698,19 +667,20 @@ class Security extends Controller implements TemplateGlobalProvider
             return $response;
         }
 
+        $message = _t(
+            'Security.NOTERESETPASSWORD',
+            'Enter your e-mail address and we will send you a link with which you can reset your password'
+        );
+        /** @var ViewableData_Customised $customisedController */
         $customisedController = $controller->customise(array(
-            'Content' =>
-                '<p>' .
-                _t(
-                    'Security.NOTERESETPASSWORD',
-                    'Enter your e-mail address and we will send you a link with which you can reset your password'
-                ) .
-                '</p>',
+            'Content' => DBField::create_field('HTMLFragment', "<p>$message</p>"),
             'Form' => $this->LostPasswordForm(),
         ));
 
         //Controller::$currentController = $controller;
-        return $customisedController->renderWith($this->getTemplatesFor('lostpassword'));
+        $result = $customisedController->renderWith($this->getTemplatesFor('lostpassword'));
+
+        return $result;
     }
 
 
@@ -757,21 +727,19 @@ class Security extends Controller implements TemplateGlobalProvider
 
         $email = Convert::raw2xml(rawurldecode($request->param('ID')) . '.' . $request->getExtension());
 
+        $message = _t(
+            'Security.PASSWORDSENTTEXT',
+            "Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
+            . " address.",
+            array('email' => Convert::raw2xml($email))
+        );
         $customisedController = $controller->customise(array(
             'Title' => _t(
                 'Security.PASSWORDSENTHEADER',
                 "Password reset link sent to '{email}'",
                 array('email' => $email)
             ),
-            'Content' =>
-                "<p>"
-                . _t(
-                    'Security.PASSWORDSENTTEXT',
-                    "Thank you! A reset link has been sent to '{email}', provided an account exists for this email"
-                    . " address.",
-                    array('email' => $email)
-                )
-                . "</p>",
+            'Content' => DBField::create_field('HTMLFragment', "<p>$message</p>"),
             'Email' => $email
         ));
 
@@ -844,31 +812,37 @@ class Security extends Controller implements TemplateGlobalProvider
         } elseif (Session::get('AutoLoginHash')) {
             // Subsequent request after the "first load with hash" (see previous if clause).
             $customisedController = $controller->customise(array(
-                'Content' =>
-                    '<p>' .
-                    _t('Security.ENTERNEWPASSWORD', 'Please enter a new password.') .
-                    '</p>',
+                'Content' => DBField::create_field(
+                    'HTMLFragment',
+                    '<p>' . _t('Security.ENTERNEWPASSWORD', 'Please enter a new password.') . '</p>'
+                ),
                 'Form' => $this->ChangePasswordForm(),
             ));
         } elseif (Member::currentUser()) {
             // Logged in user requested a password change form.
             $customisedController = $controller->customise(array(
-                'Content' => '<p>'
-                    . _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>',
+                'Content' => DBField::create_field(
+                    'HTMLFragment',
+                    '<p>' . _t('Security.CHANGEPASSWORDBELOW', 'You can change your password below.') . '</p>'
+                ),
                 'Form' => $this->ChangePasswordForm()));
         } else {
             // Show friendly message if it seems like the user arrived here via password reset feature.
             if (isset($_REQUEST['m']) || isset($_REQUEST['t'])) {
                 $customisedController = $controller->customise(
-                    array('Content' =>
+                    array('Content' => DBField::create_field(
+                        'HTMLFragment',
                         _t(
                             'Security.NOTERESETLINKINVALID',
                             '<p>The password reset link is invalid or expired.</p>'
                             . '<p>You can request a new one <a href="{link1}">here</a> or change your password after'
                             . ' you <a href="{link2}">logged in</a>.</p>',
-                            array('link1' => $this->Link('lostpassword'), 'link2' => $this->Link('login'))
+                            [
+                                'link1' => $this->Link('lostpassword'),
+                                'link2' => $this->Link('login')
+                            ]
                         )
-                    )
+                    ))
                 );
             } else {
                 return self::permissionFailure(
@@ -884,16 +858,12 @@ class Security extends Controller implements TemplateGlobalProvider
     /**
      * Factory method for the lost password form
      *
+     * @skipUpgrade
      * @return ChangePasswordForm Returns the lost password form
      */
     public function ChangePasswordForm()
     {
-        /** @skipUpgrade */
-        $formName = 'ChangePasswordForm';
-        return Injector::inst()->createWithArgs(
-            'SilverStripe\\Security\\ChangePasswordForm',
-            [ $this,  $formName]
-        );
+        return ChangePasswordForm::create($this, 'ChangePasswordForm');
     }
 
     /**
@@ -1092,7 +1062,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         // Fall back to the default encryption algorithm
         if (!$algorithm) {
-            $algorithm = self::config()->password_encryption_algorithm;
+            $algorithm = self::config()->get('password_encryption_algorithm');
         }
 
         $e = PasswordEncryptor::create_for_algorithm($algorithm);
@@ -1221,7 +1191,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function login_url()
     {
-        return Controller::join_links(Director::baseURL(), self::config()->login_url);
+        return Controller::join_links(Director::baseURL(), self::config()->get('login_url'));
     }
 
 
@@ -1234,7 +1204,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function logout_url()
     {
-        return Controller::join_links(Director::baseURL(), self::config()->logout_url);
+        return Controller::join_links(Director::baseURL(), self::config()->get('logout_url'));
     }
 
     /**
@@ -1246,7 +1216,7 @@ class Security extends Controller implements TemplateGlobalProvider
      */
     public static function lost_password_url()
     {
-        return Controller::join_links(Director::baseURL(), self::config()->lost_password_url);
+        return Controller::join_links(Director::baseURL(), self::config()->get('lost_password_url'));
     }
 
     /**

@@ -463,6 +463,9 @@ class DropdownFieldTest extends SapphireTest
         return $foundDisabled;
     }
 
+    /**
+     * @skipUpgrade
+     */
     public function testValidation()
     {
         $field = DropdownField::create(
@@ -475,10 +478,7 @@ class DropdownFieldTest extends SapphireTest
             )
         );
         $validator = new RequiredFields();
-        /**
- * @skipUpgrade
-*/
-        $form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
+        $form = new Form(null, 'Form', new FieldList($field), new FieldList(), $validator);
         $field->setValue("One");
         $this->assertTrue($field->validate($validator));
         $field->setName("TestNew"); //try changing name of field

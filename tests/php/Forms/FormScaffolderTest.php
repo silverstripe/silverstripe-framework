@@ -37,7 +37,7 @@ class FormScaffolderTest extends SapphireTest
     {
         $article = new Article;
         $fields = $article->getCMSFields();
-        $form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
+        $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom($article);
 
         $this->assertTrue(
@@ -67,7 +67,7 @@ class FormScaffolderTest extends SapphireTest
         $article1 = $this->objFromFixture(Article::class, 'article1');
 
         $fields = $article1->getCMSFields();
-        $form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
+        $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom($article1);
 
         $this->assertNotNull(
@@ -101,7 +101,7 @@ class FormScaffolderTest extends SapphireTest
         $article1 = $this->objFromFixture(Article::class, 'article1');
 
         $fields = $article1->getCMSFields();
-        $form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
+        $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom($article1);
 
         $this->assertNotNull(
@@ -119,7 +119,7 @@ class FormScaffolderTest extends SapphireTest
             'restrictFields' => array('Title')
             )
         );
-        $form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
+        $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom($article1);
 
         $this->assertNotNull(
@@ -141,7 +141,7 @@ class FormScaffolderTest extends SapphireTest
             'fieldClasses' => array('Title' => 'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField')
             )
         );
-        $form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
+        $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom($article1);
 
         $this->assertNotNull(
@@ -157,7 +157,7 @@ class FormScaffolderTest extends SapphireTest
     public function testGetFormFields()
     {
         $fields = Article::singleton()->getFrontEndFields();
-        $form = new Form(new Controller(), 'TestForm', $fields, new FieldList());
+        $form = new Form(null, 'TestForm', $fields, new FieldList());
         $form->loadDataFrom(singleton(Article::class));
 
         $this->assertFalse($fields->hasTabSet(), 'getFrontEndFields() doesnt produce a TabSet by default');

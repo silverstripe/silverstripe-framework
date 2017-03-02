@@ -22,6 +22,10 @@ class TestController extends Controller implements TestOnly
 
     private static $allowed_actions = array('Form');
 
+    /**
+     * @skipUpgrade
+     * @return Form
+     */
     public function Form()
     {
         $gridConfig = GridFieldConfig::create();
@@ -30,9 +34,6 @@ class TestController extends Controller implements TestOnly
         $gridData = new ArrayList();
         $gridField = new GridField('Grid', 'My grid', $gridData, $gridConfig);
 
-        /**
- * @skipUpgrade
-*/
         return new Form(
             $this,
             'Form',

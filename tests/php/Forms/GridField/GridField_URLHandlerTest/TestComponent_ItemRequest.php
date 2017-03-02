@@ -28,7 +28,7 @@ class TestComponent_ItemRequest extends RequestHandler
         parent::__construct();
     }
 
-    public function Link()
+    public function Link($action = null)
     {
         return $this->link;
     }
@@ -40,12 +40,10 @@ class TestComponent_ItemRequest extends RequestHandler
 
     public function Form()
     {
-        /**
- * @skipUpgrade
-*/
+        /** @skipUpgrade */
         return new Form(
             $this,
-            'Form',
+            Form::DEFAULT_NAME,
             new FieldList(
                 new TextField("Test")
             ),

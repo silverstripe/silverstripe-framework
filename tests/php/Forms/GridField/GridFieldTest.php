@@ -2,7 +2,6 @@
 
 namespace SilverStripe\Forms\Tests\GridField;
 
-use SilverStripe\Control\Controller;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\FieldList;
@@ -415,7 +414,7 @@ class GridFieldTest extends SapphireTest
         // $obj = new GridField('testfield', 'testfield', ArrayList::create(), $config);
         // $id = 'testGridStateActionField';
         // Session::set($id, array('grid'=>'', 'actionName'=>'jump'));
-        // $form = new Form(new Controller(), 'mockform', new FieldList(array($obj)), new FieldList());
+        // $form = new Form(null, 'mockform', new FieldList(array($obj)), new FieldList());
         // $request = new HTTPRequest('POST', 'url');
         // $obj->gridFieldAlterAction(array('StateID'=>$id), $form, $request);
     }
@@ -460,7 +459,7 @@ class GridFieldTest extends SapphireTest
             )
         );
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
-        $form = new Form(new Controller(), 'testform', new FieldList(array($field)), new FieldList());
+        $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $this->assertContains(
             "<div class=\"right\">rightone\nrighttwo</div><div class=\"left\">left</div>",
@@ -496,7 +495,7 @@ class GridFieldTest extends SapphireTest
             )
         );
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
-        $form = new Form(new Controller(), 'testform', new FieldList(array($field)), new FieldList());
+        $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $this->assertContains(
             "<div>first\n<strong>second</strong></div>",
@@ -532,7 +531,7 @@ class GridFieldTest extends SapphireTest
             )
         );
         $field = new GridField('testfield', 'testfield', ArrayList::create(), $config);
-        $form = new Form(new Controller(), 'testform', new FieldList(array($field)), new FieldList());
+        $form = new Form(null, 'testform', new FieldList(array($field)), new FieldList());
 
         $this->setExpectedException('LogicException');
         $field->FieldHolder();
@@ -573,7 +572,7 @@ class GridFieldTest extends SapphireTest
         $config = new GridFieldConfig();
         $config->addComponent(new GridFieldDataColumns());
         $obj = new GridField('testfield', 'testfield', $list, $config);
-        $form = new Form(new Controller(), 'mockform', new FieldList(array($obj)), new FieldList());
+        $form = new Form(null, 'mockform', new FieldList(array($obj)), new FieldList());
         $content = new CSSContentParser($obj->FieldHolder());
 
         $members = $content->getBySelector('.ss-gridfield-item tr');

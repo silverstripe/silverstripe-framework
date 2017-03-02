@@ -4,6 +4,7 @@ namespace SilverStripe\Control;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\View\Requirements;
 
@@ -12,6 +13,7 @@ use SilverStripe\View\Requirements;
  */
 class HTTPResponse
 {
+    use Injectable;
 
     /**
      * @var array

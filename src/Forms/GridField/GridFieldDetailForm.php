@@ -3,13 +3,13 @@
 namespace SilverStripe\Forms\GridField;
 
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\RequestHandler;
 use SilverStripe\Core\Extensible;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Core\Object;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Control\Controller;
 use SilverStripe\Forms\Validator;
 use SilverStripe\Forms\FieldList;
 use Closure;
@@ -128,7 +128,7 @@ class GridFieldDetailForm implements GridField_URLHandler
      *
      * @param GridField $gridField
      * @param DataObject $record
-     * @param Controller $requestHandler
+     * @param RequestHandler $requestHandler
      * @return GridFieldDetailForm_ItemRequest
      */
     protected function getItemRequestHandler($gridField, $record, $requestHandler)

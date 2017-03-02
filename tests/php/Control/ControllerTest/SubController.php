@@ -7,6 +7,7 @@ use SilverStripe\Dev\TestOnly;
 
 class SubController extends Controller implements TestOnly
 {
+    private static $url_segment = 'SubController';
 
     private static $allowed_actions = array(
         'subaction',

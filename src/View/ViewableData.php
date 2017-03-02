@@ -561,7 +561,7 @@ class ViewableData extends Object implements IteratorAggregate
      * @return string
      * @uses ClassInfo
      */
-    public function CSSClasses($stopAtClass = 'SilverStripe\\View\\ViewableData')
+    public function CSSClasses($stopAtClass = self::class)
     {
         $classes       = array();
         $classAncestry = array_reverse(ClassInfo::ancestry($this->class));

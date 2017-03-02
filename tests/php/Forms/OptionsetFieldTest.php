@@ -34,6 +34,9 @@ class OptionsetFieldTest extends SapphireTest
         );
     }
 
+    /**
+     * @skipUpgrade
+     */
     public function testValidation()
     {
         $field = OptionsetField::create(
@@ -46,10 +49,7 @@ class OptionsetFieldTest extends SapphireTest
             )
         );
         $validator = new RequiredFields('Test');
-        /**
- * @skipUpgrade
-*/
-        $form = new Form($this, 'Form', new FieldList($field), new FieldList(), $validator);
+        $form = new Form(null, 'Form', new FieldList($field), new FieldList(), $validator);
 
         $field->setValue("One");
         $this->assertTrue($field->validate($validator));

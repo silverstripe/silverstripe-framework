@@ -7,6 +7,7 @@ use SilverStripe\Control\RequestHandler;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridField_URLHandler;
 use SilverStripe\Forms\TextField;
 use SilverStripe\View\SSViewer;
@@ -19,13 +20,16 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
 
     private static $allowed_actions = array('Form', 'showform', 'testpage', 'handleItem');
 
+    /**
+     * @var GridField
+     */
     protected $gridField;
 
+    /**
+     * @skipUpgrade
+     */
     public function getURLHandlers($gridField)
     {
-        /**
- * @skipUpgrade
-*/
         return array(
             'showform' => 'showform',
             'testpage' => 'testpage',
@@ -44,7 +48,7 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
         );
     }
 
-    public function Link()
+    public function Link($action = null)
     {
         return $this->gridField->Link();
     }
@@ -54,12 +58,12 @@ class TestComponent extends RequestHandler implements GridField_URLHandler
         return "<head>" . SSViewer::get_base_tag("") . "</head>" . $this->Form($gridField, $request)->forTemplate();
     }
 
+    /**
+     * @skipUpgrade
+     */
     public function Form($gridField, $request)
     {
         $this->gridField = $gridField;
-        /**
- * @skipUpgrade
-*/
         return new Form(
             $this,
             'Form',

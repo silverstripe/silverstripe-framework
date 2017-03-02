@@ -3,8 +3,6 @@
 // Bootstrap for running SapphireTests
 
 // Connect to database
-use SilverStripe\Control\Tests\FakeController;
-use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DB;
 
 require_once __DIR__ . '/../../src/Core/Core.php';

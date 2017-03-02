@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\GridField;
 
+use SilverStripe\Control\HasRequestHandler;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
@@ -1032,7 +1033,13 @@ class GridField extends FormField
                                 return $result;
                             }
 
-                            if ($this !== $result && !$request->isEmptyPattern($rule) && is_object($result) && $result instanceof RequestHandler) {
+                            if ($this !== $result &&
+                                !$request->isEmptyPattern($rule) &&
+                                ($result instanceof RequestHandler || $result instanceof HasRequestHandler)
+                            ) {
+                                if ($result instanceof HasRequestHandler) {
+                                    $result = $result->getRequestHandler();
+                                }
                                 $returnValue = $result->handleRequest($request, $model);
 
                                 if (is_array($returnValue)) {
