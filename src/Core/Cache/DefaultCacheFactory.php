@@ -44,7 +44,7 @@ class DefaultCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $params = array())
+    public function create($service, array $args = array())
     {
         $namespace = (isset($args['namespace'])) ? $args['namespace'] : '';
         $defaultLifetime = (isset($args['defaultLifetime'])) ? $args['defaultLifetime'] : 0;
@@ -71,9 +71,8 @@ class DefaultCacheFactory implements CacheFactory
         if (!$apcuSupported) {
             return $fs;
         }
+        $apcu = Injector::inst()->create(ApcuCache::class, $namespace, (int) $defaultLifetime / 5, $version);
 
-        $apcu = Injector::inst()->create(ApcuCache::class, false, [$namespace, (int) $defaultLifetime / 5, $version]);
-
-        return Injector::inst()->create(ChainCache::class, false, [[$apcu, $fs]]);
+        return Injector::inst()->create(ChainCache::class, [$apcu, $fs]);
     }
 }
