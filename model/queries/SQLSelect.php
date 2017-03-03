@@ -334,10 +334,12 @@ class SQLSelect extends SQLConditionalExpression {
 
 					// Move the clause to the select fragment, substituting a placeholder column in the sort fragment.
 					$clause = trim($clause);
-					$column = "_SortColumn{$i}";
+					do {
+						$column = "_SortColumn{$i}";
+						$i++;
+					} while(array_key_exists('"' . $column . '"', $this->orderby));
 					$this->selectField($clause, $column);
 					$clause = '"' . $column . '"';
-					$i++;
 				}
 				$orderby[$clause] = $dir;
 			}
