@@ -896,6 +896,28 @@ class VersionedTest extends SapphireTest {
 		$this->assertTrue($public->canViewStage('Live'));
 		$this->assertTrue($private->canViewStage('Live'));
 	}
+
+	/**
+	 * Values that are overwritten with null are saved to the _versions table correctly.
+	 */
+	public function testWriteNullValueToVersion() {
+		$record = VersionedTest_Subclass::create();
+		$record->Title = "Test A";
+		$record->write();
+
+		$version = Versioned::get_latest_version($record->ClassName, $record->ID);
+
+		$this->assertEquals(1, $version->Version);
+		$this->assertEquals($record->Title, $version->Title);
+
+		$record->Title = null;
+		$record->write();
+
+		$version = Versioned::get_latest_version($record->ClassName, $record->ID);
+
+		$this->assertEquals(2, $version->Version);
+		$this->assertEquals($record->Title, $version->Title);
+	}
 }
 
 
