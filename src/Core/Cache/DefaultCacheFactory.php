@@ -44,7 +44,7 @@ class DefaultCacheFactory implements CacheFactory
     /**
      * @inheritdoc
      */
-    public function create($service, array $params = array())
+    public function create($service, array $args = array())
     {
         $namespace = (isset($args['namespace'])) ? $args['namespace'] : '';
         $defaultLifetime = (isset($args['defaultLifetime'])) ? $args['defaultLifetime'] : 0;
