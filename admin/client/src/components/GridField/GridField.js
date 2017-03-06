@@ -129,6 +129,7 @@ class GridField extends SilverStripeComponent {
     const headers = {};
     headers[FormConstants.CSRF_HEADER] = this.props.config.SecurityID;
 
+    // eslint-disable-next-line no-alert
     if (!confirm(
       i18n._t('Campaigns.DELETECAMPAIGN', 'Are you sure you want to delete this record?')
     )) {
