@@ -74,7 +74,7 @@ const config = [
       'graphql-fragments': 'GraphQLFragments',
       'graphql-tag': 'GraphQLTag',
       i18n: 'i18n',
-      jQuery: 'jQuery',
+      jquery: 'jQuery',
       'lib/Backend': 'Backend',
       'lib/ReducerRegister': 'ReducerRegister',
       'lib/ReactRouteRegister': 'ReactRouteRegister',
@@ -117,11 +117,11 @@ const config = [
     },
     plugins: [
       new webpack.ProvidePlugin({
-        jQuery: 'jQuery',
-        $: 'jQuery',
+        jQuery: 'jquery',
+        $: 'jquery',
       }),
       new webpack.DefinePlugin({
-        'process.env': {
+        'process.env':{
           // Builds React in production mode, avoiding console warnings
           NODE_ENV: JSON.stringify('production'),
         },
@@ -137,13 +137,6 @@ const config = [
           comments: false,
           max_line_len: 200,
         },
-      }),
-      // Most vendor libs are loaded directly into the 'vendor' bundle (through require()
-      // calls in vendor.js). This ensures that any further require() calls in other
-      // bundles aren't duplicating libs.
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        minChunks: Infinity,
       }),
       // Most vendor libs are loaded directly into the 'vendor' bundle (through require()
       // calls in vendor.js). This ensures that any further require() calls in other
@@ -233,7 +226,7 @@ const config = [
         {
           test: /\.(png|gif|jpg|svg)$/,
           exclude: /fonts\/([\w_-]+)\.svg$/,
-          loader: 'url?limit=10000&name=../images/[name].[ext]',
+          loader: `url-loader?limit=10000&name=../images/[name].[ext]`,
         },
         {
           test: /fonts\/([\w_-]+)\.(woff|eot|ttf|svg)$/,

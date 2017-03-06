@@ -26,7 +26,6 @@ require('expose?ReactRouterRedux!react-router-redux');
 require('expose?ReactBootstrap!react-bootstrap-ss');
 require('expose?ReactAddonsCssTransitionGroup!react-addons-css-transition-group');
 require('expose?ReactAddonsTestUtils!react-addons-test-utils');
-require('expose?QueryString!query-string');
 require('expose?Page!page.js');
 require('expose?BootstrapCollapse!bootstrap/dist/js/umd/collapse.js');
 require('expose?validator!validator');

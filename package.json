@@ -7,13 +7,13 @@
     "test": "tests"
   },
   "engines": {
-    "node": "^6.10.0"
+    "node": "^6.x"
   },
   "scripts": {
     "build": "webpack --bail --progress",
     "watch": "webpack --progress --config ./webpack-dev.config.js --watch",
     "css": "WEBPACK_CHILD=css webpack",
-    "test": "NODE_PATH=\"./client/src:./admin/client/src\" jest",
+    "test": "jest",
     "coverage": "NODE_PATH=\"./client/src:./admin/client/src\" jest --coverage",
     "lint": "eslint client/src && eslint admin/client/src && sass-lint -v"
   },
@@ -92,11 +92,15 @@
     "sass-lint": "^1.9.1",
     "sass-loader": "^4.0.0",
     "script-loader": "^0.7.0",
-    "url-loader": "^0.5.7",
+    "url-loader": "^0.5.8",
     "webpack": "^1.13.2"
   },
   "jest": {
     "roots": [
+      "admin/client/src",
+      "client/src"
+    ],
+    "modulePaths": [
       "admin/client/src",
       "client/src"
     ],
