@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from 'i18n';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import SilverStripeComponent from 'lib/SilverStripeComponent';
@@ -46,11 +47,11 @@ class GridField extends SilverStripeComponent {
     // props.records is keyed by record identifiers
     if (this.props.records === NotYetLoaded) {
       // TODO Replace with better loading indicator
-      return <div>Loading...</div>;
+      return <div>{ i18n._t('Campaigns.LOADING', 'Loading...') }</div>;
     }
 
     if (!Object.getOwnPropertyNames(this.props.records).length) {
-      return <div>No campaigns created yet.</div>;
+      return <div>{ i18n._t('Campaigns.NO_RECORDS', 'No campaigns created yet.') }</div>;
     }
 
     // Placeholder to align the headers correctly with the content
@@ -127,6 +128,13 @@ class GridField extends SilverStripeComponent {
     event.preventDefault();
     const headers = {};
     headers[FormConstants.CSRF_HEADER] = this.props.config.SecurityID;
+
+    // eslint-disable-next-line no-alert
+    if (!confirm(
+      i18n._t('Campaigns.DELETECAMPAIGN', 'Are you sure you want to delete this record?')
+    )) {
+      return;
+    }
 
     this.props.actions.deleteRecord(
       this.props.data.recordType,
