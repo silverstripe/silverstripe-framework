@@ -1445,9 +1445,6 @@ PHP
 		$this->writeToFile("mysite/_config/config.yml", <<<YML
 ---
 Name: mysite
-After:
-  - 'framework/*'
-  - 'cms/*'
 ---
 # YAML configuration for SilverStripe
 # See http://doc.silverstripe.org/framework/en/topics/configuration
