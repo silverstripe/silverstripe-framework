@@ -9,7 +9,7 @@ addons:
 
 env:
   global:
-    - TRAVIS_NODE_VERSION="4"
+    - TRAVIS_NODE_VERSION="6"
 
 matrix:
   fast_finish: true
@@ -46,8 +46,7 @@ before_script:
   - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
   - "if [ \"$CMS_TEST\" = \"1\" ]; then COMPOSER_ROOT_VERSION=4.0.x-dev composer require silverstripe/cms:4.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi"
   - "if [ \"$CMS_TEST\" = \"1\" ]; then php ./cms/tests/bootstrap/mysite.php; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ] && [ `git log --format=format:%aE -1` = \"support@greenkeeper.io\" ]; then echo \"Removing npm-shrinkwrap.json\"; rm npm-shrinkwrap.json; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install && npm run build; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install -g yarn && yarn && yarn run build; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sh -e /etc/init.d/xvfb start; sleep 3; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ]; then (vendor/bin/selenium-server-standalone > selenium.log 2>&1 &); fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> serve.log &); fi"
@@ -60,8 +59,8 @@ script:
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config tests/behat/cms-config.yml; fi"
   - "if [ \"$NPM_TEST\" = \"1\" ]; then git diff-files --quiet -w; fi"
   - "if [ \"$NPM_TEST\" = \"1\" ]; then git diff -w --no-color; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run test; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then npm run lint; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ]; then yarn run test; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ]; then yarn run lint; fi"
   - "if [ \"$PHPCS_TEST\" = \"1\" ]; then composer run-script lint; fi"
 
 after_success:
