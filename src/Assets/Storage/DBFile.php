@@ -100,7 +100,7 @@ class DBFile extends DBComposite implements AssetContainer, Thumbnail
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return FileField::create($this->getName(), $title);
+        return null;
     }
 
     /**
