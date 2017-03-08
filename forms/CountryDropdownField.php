@@ -58,16 +58,18 @@ class CountryDropdownField extends DropdownField {
 	public function Field($properties = array()) {
 		$source = $this->getSource();
 
-		if (!$this->value || !isset($source[$this->value])) {
-			if ($this->config()->default_to_locale && $this->locale()) {
-				$locale = new Zend_Locale();
-				$locale->setLocale($this->locale());
-				$this->value = $locale->getRegion();
+		if(!$this->getHasEmptyDefault()){
+			if (!$this->value || !isset($source[$this->value])) {
+				if ($this->config()->default_to_locale && $this->locale()) {
+					$locale = new Zend_Locale();
+					$locale->setLocale($this->locale());
+					$this->value = $locale->getRegion();
+				}
 			}
-		}
 
-		if (!$this->value || !isset($source[$this->value])) {
-			$this->value = $this->config()->default_country;
+			if (!$this->value || !isset($source[$this->value])) {
+				$this->value = $this->config()->default_country;
+			}
 		}
 
 		return parent::Field();
