@@ -3,6 +3,7 @@ The core committers team is reviewed approximately annually, new members are add
 
 ## Core committer team
 * [Aaron Carlino](https://github.com/unclecheese/)
+* [Chris Joe](https://github.com/flamerohr/)
 * [Damian Mooyman](https://github.com/tractorcow/)
 * [Daniel Hensby](https://github.com/dhensby)
 * [Hamish Friedlander](https://github.com/hafriedlander)
