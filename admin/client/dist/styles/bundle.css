@@ -7530,7 +7530,7 @@ h1{
 @font-face{
   font-family:silverstripe;
   src:url(../fonts/silverstripe.eot);
-  src:url(../fonts/silverstripe.eot) format("embedded-opentype"),url(../fonts/silverstripe.woff) format("woff"),url(../fonts/silverstripe.ttf) format("truetype"),url(../images/silverstripe.svg) format("svg");
+  src:url(../fonts/silverstripe.eot) format("embedded-opentype"),url(../fonts/silverstripe.woff) format("woff"),url(../fonts/silverstripe.ttf) format("truetype"),url(../fonts/silverstripe.svg) format("svg");
   font-weight:400;
   font-style:normal;
 }
