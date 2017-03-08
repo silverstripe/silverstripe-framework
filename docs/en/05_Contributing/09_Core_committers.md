@@ -3,7 +3,6 @@ The core committers team is reviewed approximately annually, new members are add
 
 ## Core committer team
 * [Aaron Carlino](https://github.com/unclecheese/)
-* [Steview Mayhew](https://github.com/stevie-mayhew/)
 * [Damian Mooyman](https://github.com/tractorcow/)
 * [Daniel Hensby](https://github.com/dhensby)
 * [Hamish Friedlander](https://github.com/hafriedlander)
@@ -12,6 +11,7 @@ The core committers team is reviewed approximately annually, new members are add
 * [Loz Calver](https://github.com/kinglozzer)
 * [Sam Minnée](https://github.com/sminnee)
 * [Sean Harvey](https://github.com/halkyon/)
+* [Steview Mayhew](https://github.com/stevie-mayhew/)
 * [Stig Lindqvist](https://github.com/stojg)
 * [Will Rossiter](https://github.com/wilr/)
 
