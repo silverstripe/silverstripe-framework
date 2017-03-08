@@ -2049,7 +2049,7 @@ t.length<1?(t=n,t.appendTo(document.body)):t.innerHTML=n.innerHTML
 var i=e(".modal-backdrop")
 i.length<1&&(i=e('<div class="modal-backdrop fade"></div>'),i.appendTo(document.body)),t.find("[data-dismiss]").on("click",function(){i.removeClass("in"),t.removeClass("in"),setTimeout(function(){i.remove()
 
-},.2)}),setTimeout(function(){i.addClass("in"),t.addClass("in")},0)}}),e(".grid-field .action:button").entwine({onclick:function g(e){var t="show"
+},150)}),setTimeout(function(){i.addClass("in"),t.addClass("in")},0)}}),e(".grid-field .action:button").entwine({onclick:function g(e){var t="show"
 return this.is(":disabled")?void e.preventDefault():(!this.hasClass("ss-gridfield-button-close")&&this.closest(".grid-field").hasClass("show-filter")||(t="hidden"),this.getGridField().reload({data:[{name:this.attr("name"),
 value:this.val(),filter:t}]}),void e.preventDefault())},actionurl:function v(){var t=this.closest(":button"),n=this.getGridField(),i=this.closest("form"),r=i.find(":input.gridstate").serialize(),a=i.find('input[name="SecurityID"]').val()
 
