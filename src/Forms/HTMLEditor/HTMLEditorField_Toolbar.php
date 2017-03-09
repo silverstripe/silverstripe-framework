@@ -3,8 +3,6 @@
 namespace SilverStripe\Forms\HTMLEditor;
 
 use SilverStripe\Assets\File;
-use SilverStripe\Assets\Folder;
-use SilverStripe\Assets\Upload;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -16,24 +14,14 @@ use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\EmailField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
-use SilverStripe\Forms\GridField\GridField;
-use SilverStripe\Forms\GridField\GridFieldConfig;
-use SilverStripe\Forms\GridField\GridFieldDataColumns;
-use SilverStripe\Forms\GridField\GridFieldDeleteAction;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use SilverStripe\Forms\GridField\GridFieldFilterHeader;
-use SilverStripe\Forms\GridField\GridFieldPaginator;
-use SilverStripe\Forms\GridField\GridFieldSortableHeader;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\OptionsetField;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\TreeDropdownField;
-use SilverStripe\Forms\UploadField;
 use SilverStripe\ORM\DataList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
-use SilverStripe\View\Requirements;
 use SilverStripe\View\SSViewer;
 
 /**
@@ -130,7 +118,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
                     new LiteralField(
                         'Heading',
                         sprintf(
-                            '<h3 class="htmleditorfield-mediaform-heading insert">%s</h3>',
+                            '<h3 class="htmleditorfield-linkform-heading insert">%s</h3>',
                             _t('HTMLEditorField.LINK', 'Insert Link')
                         )
                     )
@@ -186,7 +174,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
 
         $form->unsetValidator();
         $form->loadDataFrom($this);
-        $form->addExtraClass('htmleditorfield-form htmleditorfield-linkform cms-mediaform-content');
+        $form->addExtraClass('htmleditorfield-form htmleditorfield-linkform cms-linkform-content');
 
         $this->extend('updateLinkForm', $form);
 
@@ -230,7 +218,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
     protected function viewfile_getLocalFileByID($id)
     {
         /** @var File $file */
-        $file = DataObject::get_by_id('SilverStripe\\Assets\\File', $id);
+        $file = DataObject::get_by_id(File::class, $id);
         if ($file && $file->canView()) {
             return array($file, $file->getURL());
         }

@@ -15,9 +15,6 @@ use SilverStripe\Core\Object;
  * Please set a validator on the form-object to get feedback
  * about imposed filesize/extension restrictions.
  *
- * See {@link UploadField} For a more full-featured field
- * (incl. ajax-friendly uploads, previews and relationship management).
- *
  * <b>Usage</p>
  *
  * If you want to implement a FileField into a form element, you need to pass it an array of source data.

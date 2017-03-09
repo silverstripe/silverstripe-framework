@@ -56,9 +56,7 @@ require('../legacy/ModelAdmin.js');
 // Legacy form fields
 // Fields used by core legacy UIs, or available to users
 // To do: determine better way of using webpack to pull in optional javascript
-require('../legacy/AssetUploadField.js');
 require('../legacy/ConfirmedPasswordField.js');
-require('../legacy/UploadField.js');
 require('../legacy/SelectionGroup.js');
 require('../legacy/DateField.js');
 require('../legacy/ToggleCompositeField.js');

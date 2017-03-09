@@ -51,10 +51,4 @@ require('../../../thirdparty/jstree/jquery.jstree.js');
 require('../../../thirdparty/jquery-hoverIntent/jquery.hoverIntent.js');
 require('../../../thirdparty/jquery-changetracker/lib/jquery.changetracker.js');
 
-// TODO Move UploadField.js deps into the file once figuring out why uploads fail then
-require('imports?define=>false&this=>window!blueimp-load-image/load-image.js');
-require('blueimp-file-upload/jquery.iframe-transport.js');
-require('blueimp-file-upload/cors/jquery.xdr-transport.js');
-require('blueimp-file-upload/jquery.fileupload.js');
-require('blueimp-file-upload/jquery.fileupload-ui.js');
 require('chosen-js');

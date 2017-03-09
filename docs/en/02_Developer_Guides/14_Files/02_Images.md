@@ -11,9 +11,6 @@ In either case, the same image resizing and manipulation functionality is availa
 ### Managing images through form fields
 
 Images can be uploaded like any other file, through [api:FileField].
-More advanced usage is possible through [api:UploadField],
-which provides thumbnails, a detail view of the image properties,
-and management of relationships to other DataObject instances.
 Allows upload of images through limiting file extensions with `setAllowedExtensions()`.
 
 ### Inserting images into the WYSIWYG editor
@@ -153,7 +150,6 @@ You can also create your own functions by decorating the `Image` class.
 ### Form Upload
 
 For usage on a website form, see [api:FileField].
-If you want to upload images within the CMS, see [api:UploadField].
 
 ### Image Quality
 

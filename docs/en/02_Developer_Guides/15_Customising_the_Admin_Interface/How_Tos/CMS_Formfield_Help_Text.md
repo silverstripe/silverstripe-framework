@@ -23,7 +23,7 @@ add a `.cms-description-tooltip` class.
 
 Tooltips are only supported
 for native, focusable input elements, which excludes
-more complex fields like `GridField`, `UploadField`
+more complex fields like `GridField`
 or `DropdownField` with the chosen.js behaviour applied.
 
 Sometimes a field requires a longer description to provied the user with context.

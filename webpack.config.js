@@ -44,7 +44,6 @@ const config = [
       'LeftAndMain.Ping': `${PATHS.ADMIN_JS_SRC}/legacy/LeftAndMain.Ping.js`,
       leaktools: `${PATHS.ADMIN_JS_SRC}/legacy/leaktools.js`,
       MemberImportForm: `${PATHS.ADMIN_JS_SRC}/legacy/MemberImportForm.js`,
-      UploadField_select: `${PATHS.ADMIN_JS_SRC}/legacy/UploadField_select.js`,
       TinyMCE_sslink: `${PATHS.ADMIN_JS_SRC}/legacy/TinyMCE_sslink.js`,
     },
     resolve: {
@@ -122,10 +121,10 @@ const config = [
         $: 'jQuery',
       }),
       new webpack.DefinePlugin({
-        'process.env':{
+        'process.env': {
           // Builds React in production mode, avoiding console warnings
-          'NODE_ENV': JSON.stringify('production')
-        }
+          NODE_ENV: JSON.stringify('production'),
+        },
       }),
       new webpack.optimize.UglifyJsPlugin({
         compress: {
@@ -139,14 +138,16 @@ const config = [
           max_line_len: 200,
         },
       }),
-      // Most vendor libs are loaded directly into the 'vendor' bundle (through require() calls in vendor.js).
-      // This ensures that any further require() calls in other bundles aren't duplicating libs.
+      // Most vendor libs are loaded directly into the 'vendor' bundle (through require()
+      // calls in vendor.js). This ensures that any further require() calls in other
+      // bundles aren't duplicating libs.
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         minChunks: Infinity,
       }),
-      // Most vendor libs are loaded directly into the 'vendor' bundle (through require() calls in vendor.js).
-      // This ensures that any further require() calls in other bundles aren't duplicating libs.
+      // Most vendor libs are loaded directly into the 'vendor' bundle (through require()
+      // calls in vendor.js). This ensures that any further require() calls in other
+      // bundles aren't duplicating libs.
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         minChunks: Infinity,
@@ -157,11 +158,9 @@ const config = [
     // TODO Split out with new 'admin' module
     name: 'css',
     entry: {
-      'bundle': `${PATHS.ADMIN_CSS_SRC}/bundle.scss`,
-      'editor': `${PATHS.ADMIN_CSS_SRC}/editor.scss`,
-      'GridField_print': `${PATHS.ADMIN_CSS_SRC}/legacy/GridField_print.scss`,
-      'AssetUploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/AssetUploadField.scss`,
-      'UploadField': `${PATHS.ADMIN_CSS_SRC}/legacy/UploadField.scss`,
+      bundle: `${PATHS.ADMIN_CSS_SRC}/bundle.scss`,
+      editor: `${PATHS.ADMIN_CSS_SRC}/editor.scss`,
+      GridField_print: `${PATHS.ADMIN_CSS_SRC}/legacy/GridField_print.scss`,
     },
     output: {
       path: 'admin/client/dist/styles',
@@ -187,11 +186,12 @@ const config = [
         },
         {
           test: /\.(png|gif|jpg|svg)$/,
-          loader: `url?limit=10000&name=../images/[name].[ext]`,
+          exclude: /fonts\/([\w_-]+)\.svg$/,
+          loader: 'url?limit=10000&name=../images/[name].[ext]',
         },
         {
-          test: /\.(woff|eot|ttf)$/,
-          loader: `file?name=../fonts/[name].[ext]`,
+          test: /fonts\/([\w_-]+)\.(woff|eot|ttf|svg)$/,
+          loader: 'file?name=../fonts/[name].[ext]',
         },
       ],
     },
@@ -232,11 +232,12 @@ const config = [
         },
         {
           test: /\.(png|gif|jpg|svg)$/,
-          loader: `url?limit=10000&name=../images/[name].[ext]`,
+          exclude: /fonts\/([\w_-]+)\.svg$/,
+          loader: 'url?limit=10000&name=../images/[name].[ext]',
         },
         {
-          test: /\.(woff|eot|ttf)$/,
-          loader: `file?name=../fonts/[name].[ext]`,
+          test: /fonts\/([\w_-]+)\.(woff|eot|ttf|svg)$/,
+          loader: 'file?name=../fonts/[name].[ext]',
         },
       ],
     },

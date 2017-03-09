@@ -7,7 +7,7 @@ use SilverStripe\Assets\Thumbnail;
 use SilverStripe\Assets\ImageManipulation;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\Director;
-use SilverStripe\Forms\AssetField;
+use SilverStripe\Forms\FileField;
 use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ValidationException;
 use SilverStripe\ORM\FieldType\DBComposite;
@@ -100,7 +100,7 @@ class DBFile extends DBComposite implements AssetContainer, Thumbnail
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        return AssetField::create($this->getName(), $title);
+        return null;
     }
 
     /**

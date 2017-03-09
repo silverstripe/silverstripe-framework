@@ -3,7 +3,6 @@ client/dist/
 admin/client/dist/
 
 # Ignore legacy files
-admin/client/src/legacy/AssetUploadField.js
 admin/client/src/legacy/ConfirmedPasswordField.js
 admin/client/src/legacy/DateField.js
 admin/client/src/legacy/GridField.js
@@ -16,10 +15,6 @@ admin/client/src/legacy/TinyMCE_SSPlugin.js
 admin/client/src/legacy/ToggleCompositeField.js
 admin/client/src/legacy/ToggleField.js
 admin/client/src/legacy/TreeDropdownField.js
-admin/client/src/legacy/UploadField.js
-admin/client/src/legacy/UploadField_downloadtemplate.js
-admin/client/src/legacy/UploadField_select.js
-admin/client/src/legacy/UploadField_uploadtemplate.js
 admin/client/src/i18n.js
 admin/client/src/i18nx.js
 admin/client/src/jQuery.js
