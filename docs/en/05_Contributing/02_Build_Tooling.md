@@ -23,7 +23,10 @@ for instructions on how to get a compiler running on your platform.
 
 [yarn](https://yarnpkg.com/) is the package manager we use for JavaScript dependencies.
 The configuration for an npm package goes in `package.json`.
-You'll need to install after [Node.js is installed](https://yarnpkg.com/en/docs/install), we recommend using `npm` which comes with Node.js to install it globally.
+You'll need to install yarn after Node.js is installed.
+See [yarn installation docs](https://yarnpkg.com/en/docs/install).
+We recommend using `npm` which comes with Node.js to install it globally.
+
 ```
 npm install -g yarn
 ```
@@ -62,13 +65,13 @@ developers to install these tools globally. This means builds are much more cons
 across development environments. 
 
 To run an npm script, open up your terminal, change to the directory where `package.json`
-is located, and run `$ npm run <SCRIPT_NAME>`. Where `<SCRIPT_NAME>` is the name of the
+is located, and run `$ yarn run <SCRIPT_NAME>`. Where `<SCRIPT_NAME>` is the name of the
 script you wish to run.
 
 ### build
 
 ```
-$ npm run build
+$ yarn run build
 ```
 
 Runs [Webpack](https://webpack.github.io/) to builds the core JavaScript files. 
@@ -78,20 +81,22 @@ Run this script with `-- --watch` to automatically rebuild on file changes.
 The first `--` separator is required to separate arguments from NPM's own ones.
 
 ```
-$ npm run build -- --watch
+$ yarn run build -- --watch
 ```
 
 *For development only*:
-Run this to keep webpack automatically rebuilding your file changes, this will also include *.map files for easier debugging.
-It is important to note that this should not be used for pushing up changes, and you should run `npm run build` after you're done.
+Run this to keep webpack automatically rebuilding your file changes, this will also include *.map files
+for easier debugging. It is important to note that this should not be used for pushing up changes,
+and you should run `yarn run build` after you're done.
+
 ```
-$ npm run watch
+$ yarn run watch
 ```
 
 ### css
 
 ```
-$ npm run css
+$ yarn run css
 ```
 
 Compiles all of the `.scss` files into minified `.css` files.
@@ -100,13 +105,13 @@ Run this script with `-- --watch` to automatically rebuild on file changes.
 The first `--` separator is required to separate arguments from NPM's own ones.
 
 ```
-$ npm run css -- --watch
+$ yarn run css -- --watch
 ```
 
 ### lint
 
 ```
-$ npm run lint
+$ yarn run lint
 ```
 
 Run linters (`eslint` and `sass-lint`) linters to enforce
@@ -116,7 +121,7 @@ our [JavaScript](/contributing/javascript_coding_conventions) and
 ### test
 
 ```
-$ npm run test
+$ yarn run test
 ```
 
 Runs the JavaScript unit tests.
@@ -124,23 +129,11 @@ Runs the JavaScript unit tests.
 ### coverage
 
 ```
-$ npm run coverage
+$ yarn run coverage
 ```
 
 Generates a coverage report for the JavaScript unit tests. The report is generated
 in the `coverage` directory.
-
-### lock
-
-```
-$ npm run lock
-```
-
-Generates a "shrinkwrap" file containing all npm package versions and writes it to
-`npm-shrinkwrap.json`. Run this command whenever a new package is added to `package.json`,
-or when updating packages. Commit the resulting `npm-shrinkwrap.json`. This uses a third party
-[npm-shrinkwrap](https://github.com/uber/npm-shrinkwrap) library
-since the built-in `npm shrinkwrap` (without a dash) has proven unreliable.
 
 ## Requiring SilverStripe ES6 Modules in your own CMS customisation
 

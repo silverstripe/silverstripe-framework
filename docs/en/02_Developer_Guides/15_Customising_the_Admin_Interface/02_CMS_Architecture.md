@@ -41,7 +41,7 @@ Check our [build tooling](/contributing/build_tooling) docs for more details.
 
 
 ```
-(cd framework && npm run build && npm run css)
+(cd framework && yarn run build && yarn run css)
 ```
 
 ## Coding Conventions
@@ -504,7 +504,7 @@ to all elements with the class `.ss-ui-button`. We've extended the jQuery UI wid
 to support defining icons via HTML5 data attributes (see `ssui.core.js`).
 These icon identifiers relate to icon files in `framework/admin/images/sprites/src/btn-icons`,
 and are sprited into a single file through SCSS and [sprity](https://www.npmjs.com/package/sprity)
-(sprites are compiled with `npm run sprites`). There are classes set up to show the correct sprite via
+(sprites are compiled with `yarn run build`). There are classes set up to show the correct sprite via
 background images (see `framework/admin/scss/_sprites.scss`).
 
 Input: `<a href="..." class="ss-ui-button" data-icon="add" />Button text</a>`

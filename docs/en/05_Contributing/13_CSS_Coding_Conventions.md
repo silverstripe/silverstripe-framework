@@ -34,7 +34,7 @@ which highlight any linting errors right in your code.
 
 We strongly recommend installing one of these into the editor of your choice, to
 avoid the frustration of failed pull requests. You can run the checks on console
-via `npm run lint`.
+via `yarn run lint`.
 
 ## File and Folder Naming
 
