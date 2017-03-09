@@ -10,17 +10,22 @@ use Monolog\ErrorHandler;
  */
 class MonologErrorHandler
 {
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
     /**
      * Set the PSR-3 logger to send errors & exceptions to
+     *
+     * @param LoggerInterface $logger
      */
-    function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
 
-    function start()
+    public function start()
     {
         if (!$this->logger) {
             throw new \InvalidArgumentException("No Logger property passed to MonologErrorHandler."

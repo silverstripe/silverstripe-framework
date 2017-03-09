@@ -5,8 +5,8 @@ SilverStripe\Core\Injector\Injector:
   ErrorHandler:
     class: SilverStripe\Logging\MonologErrorHandler
     properties:
-      Logger: %$Logger
-  Logger:
+      Logger: %$Psr\Log\LoggerInterface
+  Psr\Log\LoggerInterface:
     type: singleton
     class: Monolog\Logger
     constructor:
