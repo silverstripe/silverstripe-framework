@@ -2,6 +2,10 @@
 
 namespace SilverStripe\Core\Config;
 
+use Monolog\Handler\ErrorLogHandler;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use SilverStripe\Config\Collections\CachedConfigCollection;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
 use SilverStripe\Config\Transformer\PrivateStaticTransformer;
@@ -48,7 +52,7 @@ class CoreConfigFactory
         $instance = new CachedConfigCollection();
 
         // Set root cache
-        $instance->setPool(new FilesystemAdapter('configcache', 0, getTempFolder()));
+        $instance->setPool($this->createPool());
         $instance->setFlush($flush);
 
         // Set collection creator
@@ -167,5 +171,33 @@ class CoreConfigFactory
             ->addRule('moduleexists', function ($module) {
                 return ModuleLoader::instance()->getManifest()->moduleExists($module);
             });
+    }
+
+    /**
+     * @todo Refactor bootstrapping of manifest caching into app object
+     * @return FilesystemAdapter
+     */
+    protected function createPool()
+    {
+        $cache = new FilesystemAdapter('configcache', 0, getTempFolder());
+        $cache->setLogger($this->createLogger());
+        return $cache;
+    }
+
+    /**
+     * Create default error logger
+     *
+     * @todo Refactor bootstrapping of manifest logging into app object
+     * @return LoggerInterface
+     */
+    protected function createLogger()
+    {
+        $logger = new Logger("configcache-log");
+        if (Director::isDev()) {
+            $logger->pushHandler(new StreamHandler('php://output'));
+        } else {
+            $logger->pushHandler(new ErrorLogHandler());
+        }
+        return $logger;
     }
 }
