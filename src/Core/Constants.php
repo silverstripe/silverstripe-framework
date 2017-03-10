@@ -18,8 +18,6 @@
  * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
  * - FRAMEWORK_DIR: Path relative to webroot, e.g. "framework"
  * - FRAMEWORK_PATH:Absolute filepath, e.g. "/var/www/my-webroot/framework"
- * - FRAMEWORK_ADMIN_DIR: Path relative to webroot, e.g. "framework/admin"
- * - FRAMEWORK_ADMIN_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/admin"
  * - THIRDPARTY_DIR: Path relative to webroot, e.g. "framework/thirdparty"
  * - THIRDPARTY_PATH: Absolute filepath, e.g. "/var/www/my-webroot/framework/thirdparty"
  * - TRUSTED_PROXY: true or false, depending on whether the X-Forwarded-* HTTP
@@ -137,14 +135,8 @@ if (strpos(FRAMEWORK_PATH, BASE_PATH) === 0) {
     throw new Exception("Path error: FRAMEWORK_PATH " . FRAMEWORK_PATH . " not within BASE_PATH " . BASE_PATH);
 }
 
-define('FRAMEWORK_ADMIN_DIR', $frameworkDirSlashSuffix . 'admin');
-define('FRAMEWORK_ADMIN_PATH', FRAMEWORK_PATH . '/admin');
-
 define('THIRDPARTY_DIR', $frameworkDirSlashSuffix . 'thirdparty');
 define('THIRDPARTY_PATH', FRAMEWORK_PATH . '/thirdparty');
-
-define('ADMIN_THIRDPARTY_DIR', FRAMEWORK_ADMIN_DIR . '/thirdparty');
-define('ADMIN_THIRDPARTY_PATH', BASE_PATH . '/' . ADMIN_THIRDPARTY_DIR);
 
 if (!defined('ASSETS_DIR')) {
     define('ASSETS_DIR', 'assets');
