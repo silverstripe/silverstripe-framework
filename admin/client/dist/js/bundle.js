@@ -322,7 +322,7 @@ n=l({},n,n.input),delete n.input
 var i=this.props.createFn
 return"function"==typeof i?i(r,n):f.default.createElement(r,l({key:n.id},n))}},{key:"mapFieldsToComponents",value:function e(t){var n=this,r=this.props.baseFieldComponent
 return t.map(function(e){var t=e
-return e.children&&(t=l({},e,{children:n.mapFieldsToComponents(e.children)})),t=l({onAutofill:n.props.onAutofill,form:n.props.form},t),"Structural"===e.type||e.readOnly===!0?n.buildComponent(t):f.default.createElement(r,l({
+return e.children&&(t=l({},e,{children:n.mapFieldsToComponents(e.children)})),t=l({onAutofill:n.props.onAutofill,formid:n.props.form},t),"Structural"===e.type||e.readOnly===!0?n.buildComponent(t):f.default.createElement(r,l({
 key:t.id},t,{component:n.buildComponent}))})}},{key:"mapActionsToComponents",value:function e(t){var n=this
 return t.map(function(e){var t=l({},e)
 return e.children?t.children=n.mapActionsToComponents(e.children):(t.handleClick=n.handleAction,n.props.submitting&&n.state.submittingAction===e.name&&(t.loading=!0)),n.buildComponent(t)})}},{key:"normalizeFields",
