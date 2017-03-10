@@ -46,7 +46,7 @@ before_script:
   - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
   - "if [ \"$CMS_TEST\" = \"1\" ]; then COMPOSER_ROOT_VERSION=4.0.x-dev composer require silverstripe/cms:4.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi"
   - "if [ \"$CMS_TEST\" = \"1\" ]; then php ./cms/tests/bootstrap/mysite.php; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install -g yarn && yarn && yarn run build; fi"
+  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install -g yarn && yarn install --network-concurrency 1 && yarn run build; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sh -e /etc/init.d/xvfb start; sleep 3; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ]; then (vendor/bin/selenium-server-standalone > selenium.log 2>&1 &); fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> serve.log &); fi"
