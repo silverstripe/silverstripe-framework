@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: 317312dbb96538297b540be19e42533c4baea6ec
-  branch: master
-lock: false
-repository_class: Piston::Git::Repository
-repository_url: git://github.com/malsup/form.git

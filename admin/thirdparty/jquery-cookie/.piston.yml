@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: ba23ec9d0b5dd65231aeb4ca052f1d660cf532eb
-  branch: master
-lock: false
-repository_url: git://github.com/carhartl/jquery-cookie.git
-repository_class: Piston::Git::Repository
