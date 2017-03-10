@@ -1,5 +1,5 @@
 webpackJsonp([2],[function(n,i){"use strict"
-!function(){var n={init:function i(n){n.addButton("sslink",{icon:"link",title:"Insert Link",cmd:"sslink"}),n.addMenuItem("sslink",{icon:"link",text:"Insert Link",cmd:"sslink"}),n.addCommand("sslink",function(){
-window.jQuery("#"+n.id).entwine("ss").openLinkDialog()}),n.on("BeforeExecCommand",function(i){var e=i.command,t=i.ui,s=i.value
-"mceAdvLink"!==e&&"mceLink"!==e||(i.preventDefault(),n.execCommand("sslink",t,s))})}}
+!function(){var n={init:function n(i){i.addButton("sslink",{icon:"link",title:"Insert Link",cmd:"sslink"}),i.addMenuItem("sslink",{icon:"link",text:"Insert Link",cmd:"sslink"}),i.addCommand("sslink",function(){
+window.jQuery("#"+i.id).entwine("ss").openLinkDialog()}),i.on("BeforeExecCommand",function(n){var e=n.command,t=n.ui,s=n.value
+"mceAdvLink"!==e&&"mceLink"!==e||(n.preventDefault(),i.execCommand("sslink",t,s))})}}
 tinymce.PluginManager.add("sslink",function(i){return n.init(i)})}()}])

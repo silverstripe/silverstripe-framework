@@ -11,7 +11,7 @@ dependencies in your project codebase however you like.
 The [NodeJS](https://nodejs.org) JavaScript runtime is the foundation of our client-side
 build tool chain. If you want to do things like upgrade dependencies, make changes to core
 JavaScript or SCSS files, you'll need Node installed on your dev environment. Our build
-tooling supports the v4.x (LTS) version of NodeJS.
+tooling supports the v6.x (LTS) version of NodeJS.
  
 If you already have a newer version of Node.js installed, check out the
 [Node Version Manager](https://github.com/creationix/nvm) to run multiple versions
@@ -21,14 +21,20 @@ Since we're compiling SVG icons, you'll also need to compile native Node addons,
 which requires `gcc` or a similar compiler - see [node-gyp](https://github.com/nodejs/node-gyp#installation)
 for instructions on how to get a compiler running on your platform.
 
-[npm](https://www.npmjs.com/) is the package manager we use for JavaScript dependencies.
-It comes bundled with NodeJS so should already have it installed if you have Node.
+[yarn](https://yarnpkg.com/) is the package manager we use for JavaScript dependencies.
 The configuration for an npm package goes in `package.json`.
-
-Once you've installed Node.js, run the following command in each core module folder:
+You'll need to install yarn after Node.js is installed.
+See [yarn installation docs](https://yarnpkg.com/en/docs/install).
+We recommend using `npm` which comes with Node.js to install it globally.
 
 ```
-npm install
+npm install -g yarn
+```
+
+Once you've installed Node.js and yarn, run the following command once in each core module folders:
+
+```
+yarn
 ```
 
 ## The Basics: ES6, Webpack and Babel
@@ -59,13 +65,13 @@ developers to install these tools globally. This means builds are much more cons
 across development environments. 
 
 To run an npm script, open up your terminal, change to the directory where `package.json`
-is located, and run `$ npm run <SCRIPT_NAME>`. Where `<SCRIPT_NAME>` is the name of the
+is located, and run `$ yarn run <SCRIPT_NAME>`. Where `<SCRIPT_NAME>` is the name of the
 script you wish to run.
 
 ### build
 
 ```
-$ npm run build
+$ yarn run build
 ```
 
 Runs [Webpack](https://webpack.github.io/) to builds the core JavaScript files. 
@@ -75,13 +81,22 @@ Run this script with `-- --watch` to automatically rebuild on file changes.
 The first `--` separator is required to separate arguments from NPM's own ones.
 
 ```
-$ npm run build -- --watch
+$ yarn run build -- --watch
+```
+
+*For development only*:
+Run this to keep webpack automatically rebuilding your file changes, this will also include *.map files
+for easier debugging. It is important to note that this should not be used for pushing up changes,
+and you should run `yarn run build` after you're done.
+
+```
+$ yarn run watch
 ```
 
 ### css
 
 ```
-$ npm run css
+$ yarn run css
 ```
 
 Compiles all of the `.scss` files into minified `.css` files.
@@ -90,13 +105,13 @@ Run this script with `-- --watch` to automatically rebuild on file changes.
 The first `--` separator is required to separate arguments from NPM's own ones.
 
 ```
-$ npm run css -- --watch
+$ yarn run css -- --watch
 ```
 
 ### lint
 
 ```
-$ npm run lint
+$ yarn run lint
 ```
 
 Run linters (`eslint` and `sass-lint`) linters to enforce
@@ -106,7 +121,7 @@ our [JavaScript](/contributing/javascript_coding_conventions) and
 ### test
 
 ```
-$ npm run test
+$ yarn run test
 ```
 
 Runs the JavaScript unit tests.
@@ -114,23 +129,11 @@ Runs the JavaScript unit tests.
 ### coverage
 
 ```
-$ npm run coverage
+$ yarn run coverage
 ```
 
 Generates a coverage report for the JavaScript unit tests. The report is generated
 in the `coverage` directory.
-
-### lock
-
-```
-$ npm run lock
-```
-
-Generates a "shrinkwrap" file containing all npm package versions and writes it to
-`npm-shrinkwrap.json`. Run this command whenever a new package is added to `package.json`,
-or when updating packages. Commit the resulting `npm-shrinkwrap.json`. This uses a third party
-[npm-shrinkwrap](https://github.com/uber/npm-shrinkwrap) library
-since the built-in `npm shrinkwrap` (without a dash) has proven unreliable.
 
 ## Requiring SilverStripe ES6 Modules in your own CMS customisation
 

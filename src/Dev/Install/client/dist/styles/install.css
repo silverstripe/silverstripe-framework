@@ -258,7 +258,7 @@ body .typography input.action{
 }
 
 .lt-ie9 body .typography input.action{
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbfbfb',endColorstr='#bbb',GradientType=0);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfbfb",endColorstr="#bbb",GradientType=0);
 }
 
 body .typography input.action:hover{
@@ -271,7 +271,7 @@ body .typography input.action:hover{
 }
 
 .lt-ie9 body .typography input.action:hover{
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbfbfb',endColorstr='#ccc',GradientType=0);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfbfb",endColorstr="#ccc",GradientType=0);
 }
 
 body .typography input.action:active,body .typography input.action:focus{
@@ -284,7 +284,7 @@ body .typography input.action:active,body .typography input.action:focus{
 }
 
 .lt-ie9 body .typography input.action:active,.lt-ie9 body .typography input.action:focus{
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbfbfb',endColorstr='#bbb',GradientType=0);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfbfb",endColorstr="#bbb",GradientType=0);
 }
 
 body .typography input.action:focus,body .typography input.action:hover{
@@ -318,7 +318,7 @@ body .typography #install_button{
 }
 
 .lt-ie9 body .typography #install_button{
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#80BF40',endColorstr='#59862D',GradientType=0);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#80BF40",endColorstr="#59862D",GradientType=0);
 }
 
 body .typography #install_button:hover{
@@ -335,7 +335,7 @@ body .typography #install_button:active,body .typography #install_button:focus{
 }
 
 .lt-ie9 body .typography #install_button:active,.lt-ie9 body .typography #install_button:focus{
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#80BF40',endColorstr='#59862D',GradientType=0);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#80BF40",endColorstr="#59862D",GradientType=0);
 }
 
 body .typography #install_button[disabled=disabled]{
@@ -351,7 +351,7 @@ body .typography #install_button[disabled=disabled]{
 }
 
 .lt-ie9 body .typography #install_button[disabled=disabled]{
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fbfbfb',endColorstr='#bbb',GradientType=0);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#fbfbfb",endColorstr="#bbb",GradientType=0);
 }
 
 body .typography #install_button[disabled=disabled]:hover{
@@ -406,7 +406,7 @@ body h5.requirement{
 }
 
 .lt-ie9 body h5.requirement{
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#B1C0C5',endColorstr='#7F9198',GradientType=0);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr="#B1C0C5",endColorstr="#7F9198",GradientType=0);
 }
 
 body h5.requirement span{
