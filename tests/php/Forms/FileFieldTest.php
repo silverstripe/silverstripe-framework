@@ -14,12 +14,11 @@ class FileFieldTest extends FunctionalTest
 
     /**
      * Test a valid upload of a required file in a form. Error is set to 0, as the upload went well
+     *
+     * @skipUpgrade
      */
     public function testUploadRequiredFile()
     {
-        /**
- * @skipUpgrade
-*/
         $form = new Form(
             new Controller(),
             'Form',
@@ -42,12 +41,10 @@ class FileFieldTest extends FunctionalTest
 
     /**
      * Test different scenarii for a failed upload : an error occured, no files where provided
+     * @skipUpgrade
      */
     public function testUploadMissingRequiredFile()
     {
-        /**
- * @skipUpgrade
-*/
         $form = new Form(
             new Controller(),
             'Form',

@@ -3,6 +3,7 @@
 namespace SilverStripe\Control;
 
 use InvalidArgumentException;
+use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Object;
 use SilverStripe\Dev\Debug;
@@ -47,6 +48,13 @@ use BadMethodCallException;
  */
 class RequestHandler extends ViewableData
 {
+    /**
+     * Optional url_segment for this request handler
+     *
+     * @config
+     * @var string|null
+     */
+    private static $url_segment = null;
 
     /**
      * @var HTTPRequest $request The request object that the controller was called with.
@@ -109,16 +117,6 @@ class RequestHandler extends ViewableData
      * @config
      */
     private static $allowed_actions = null;
-
-    /**
-     * @config
-     * @var boolean Enforce presence of $allowed_actions when checking acccess.
-     * Defaults to TRUE, meaning all URL actions will be denied.
-     * When set to FALSE, the controller will allow *all* public methods to be called.
-     * In most cases this isn't desireable, and in fact a security risk,
-     * since some helper methods can cause side effects which shouldn't be exposed through URLs.
-     */
-    private static $require_allowed_actions = true;
 
     public function __construct()
     {
@@ -235,7 +233,11 @@ class RequestHandler extends ViewableData
         // empty rule ourselves, to prevent infinite loops. Also prevent further handling of controller
         // actions which return themselves to avoid infinite loops.
         $matchedRuleWasEmpty = $request->isEmptyPattern($match['rule']);
-        if ($this !== $result && !$matchedRuleWasEmpty && ($result instanceof RequestHandler)) {
+        if ($this !== $result && !$matchedRuleWasEmpty && ($result instanceof RequestHandler || $result instanceof HasRequestHandler)) {
+            // Expose delegated request handler
+            if ($result instanceof HasRequestHandler) {
+                $result = $result->getRequestHandler();
+            }
             $returnValue = $result->handleRequest($request, $model);
 
             // Array results can be used to handle
@@ -485,7 +487,7 @@ class RequestHandler extends ViewableData
             $isAllowed = false;
         } elseif ($allowedActions === null) {
             // If undefined, allow action based on configuration
-            $isAllowed = !Config::inst()->get('SilverStripe\\Control\\RequestHandler', 'require_allowed_actions');
+            $isAllowed = false;
         }
 
         // If we don't have a match in allowed_actions,
@@ -508,7 +510,6 @@ class RequestHandler extends ViewableData
      */
     public function httpError($errorCode, $errorMessage = null)
     {
-
         $request = $this->getRequest();
 
         // Call a handler method such as onBeforeHTTPError404
@@ -527,7 +528,7 @@ class RequestHandler extends ViewableData
      * {@link handleAction()} or {@link handleRequest()} have been called,
      * which adds a reference to an actual {@link HTTPRequest} object.
      *
-     * @return HTTPRequest|NullHTTPRequest
+     * @return HTTPRequest
      */
     public function getRequest()
     {
@@ -545,5 +546,123 @@ class RequestHandler extends ViewableData
     {
         $this->request = $request;
         return $this;
+    }
+
+    /**
+     * Returns a link to this controller. Overload with your own Link rules if they exist.
+     *
+     * @param string $action Optional action
+     * @return string
+     */
+    public function Link($action = null)
+    {
+        // Check configured url_segment
+        $url = $this->config()->get('url_segment');
+        if ($url) {
+            return Controller::join_links($url, $action, '/');
+        }
+
+        // no link defined by default
+        trigger_error(
+            'Request handler '.get_class($this). ' does not have a url_segment defined. '.
+            'Relying on this link may be an application error',
+            E_USER_WARNING
+        );
+        return null;
+    }
+
+    /**
+     * Redirect to the given URL.
+     *
+     * @param string $url
+     * @param int $code
+     * @return HTTPResponse
+     */
+    public function redirect($url, $code = 302)
+    {
+        $url = Director::absoluteURL($url);
+        $response = new HTTPResponse();
+        return $response->redirect($url, $code);
+    }
+
+    /**
+     * Safely get the value of the BackURL param, if provided via querystring / posted var
+     *
+     * @return string
+     */
+    public function getBackURL()
+    {
+        $request = $this->getRequest();
+        if (!$request) {
+            return null;
+        }
+        $backURL = $request->requestVar('BackURL');
+        // Fall back to X-Backurl header
+        if (!$backURL && $request->isAjax() && $request->getHeader('X-Backurl')) {
+            $backURL = $request->getHeader('X-Backurl');
+        }
+        if (!$backURL) {
+            return null;
+        }
+        if (Director::is_site_url($backURL)) {
+            return $backURL;
+        }
+        return null;
+    }
+
+    /**
+     * Returns the referer, if it is safely validated as an internal URL
+     * and can be redirected to.
+     *
+     * @internal called from {@see Form::getValidationErrorResponse}
+     * @return string|null
+     */
+    public function getReturnReferer()
+    {
+        $referer = $this->getReferer();
+        if ($referer && Director::is_site_url($referer)) {
+            return $referer;
+        }
+        return null;
+    }
+
+    /**
+     * Get referer
+     *
+     * @return string
+     */
+    public function getReferer()
+    {
+        $request = $this->getRequest();
+        if (!$request) {
+            return null;
+        }
+        return $request->getHeader('Referer');
+    }
+
+    /**
+     * Redirect back. Uses either the HTTP-Referer or a manually set request-variable called "BackURL".
+     * This variable is needed in scenarios where HTTP-Referer is not sent (e.g when calling a page by
+     * location.href in IE). If none of the two variables is available, it will redirect to the base
+     * URL (see {@link Director::baseURL()}).
+     *
+     * @uses redirect()
+     *
+     * @return HTTPResponse
+     */
+    public function redirectBack()
+    {
+        // Don't cache the redirect back ever
+        HTTP::set_cache_age(0);
+
+        // Prefer to redirect to ?BackURL, but fall back to Referer header
+        // As a last resort redirect to base url
+        $url = $this->getBackURL()
+            ?: $this->getReturnReferer()
+            ?: Director::baseURL();
+
+        // Only direct to absolute urls
+        $url = Director::absoluteURL($url);
+        return $this->redirect($url);
     }
 }

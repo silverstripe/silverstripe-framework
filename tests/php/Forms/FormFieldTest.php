@@ -362,7 +362,7 @@ class FormFieldTest extends SapphireTest
     {
         $field = new FormField('MyField', 'My Field');
         $validator = new RequiredFields('MyField');
-        $form = new Form(new Controller(), 'TestForm', new FieldList($field), new FieldList(), $validator);
+        $form = new Form(null, 'TestForm', new FieldList($field), new FieldList(), $validator);
         $form->validationResult();
         $schema = $field->getSchemaState();
         $this->assertEquals(

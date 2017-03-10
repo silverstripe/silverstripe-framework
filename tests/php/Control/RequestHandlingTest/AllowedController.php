@@ -10,6 +10,8 @@ use SilverStripe\Dev\TestOnly;
  */
 class AllowedController extends Controller implements TestOnly
 {
+    private static $url_segment = 'AllowedController';
+
     private static $url_handlers = array(
         // The double-slash is need here to ensure that
         '$Action//$ID/$OtherID' => "handleAction",

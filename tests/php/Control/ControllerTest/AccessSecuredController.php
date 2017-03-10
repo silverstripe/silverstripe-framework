@@ -2,11 +2,11 @@
 
 namespace SilverStripe\Control\Tests\ControllerTest;
 
-use SilverStripe\Control\Tests\ControllerTest;
 use SilverStripe\Dev\TestOnly;
 
-class AccessSecuredController extends ControllerTest\AccessBaseController implements TestOnly
+class AccessSecuredController extends AccessBaseController implements TestOnly
 {
+    private static $url_segment = 'AccessSecuredController';
 
     private static $allowed_actions = array(
         "method1", // denied because only defined in parent

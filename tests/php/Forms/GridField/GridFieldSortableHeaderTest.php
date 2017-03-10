@@ -11,7 +11,6 @@ use SilverStripe\Forms\Tests\GridField\GridFieldSortableHeaderTest\Mom;
 use SilverStripe\ORM\DataList;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\SapphireTest;
-use SilverStripe\Control\Controller;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
@@ -32,6 +31,8 @@ class GridFieldSortableHeaderTest extends SapphireTest
 
     /**
      * Tests that the appropriate sortable headers are generated
+     *
+     * @skipUpgrade
      */
     public function testRenderHeaders()
     {
@@ -39,10 +40,7 @@ class GridFieldSortableHeaderTest extends SapphireTest
         // Generate sortable header and extract HTML
         $list = new DataList(Team::class);
         $config = new GridFieldConfig_RecordEditor();
-        /**
- * @skipUpgrade
-*/
-        $form = new Form(Controller::curr(), 'Form', new FieldList(), new FieldList());
+        $form = new Form(null, 'Form', new FieldList(), new FieldList());
         $gridField = new GridField('testfield', 'testfield', $list, $config);
         $gridField->setForm($form);
         $compontent = $gridField->getConfig()->getComponentByType(GridFieldSortableHeader::class);

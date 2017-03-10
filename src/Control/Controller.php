@@ -133,17 +133,6 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
     }
 
     /**
-     * Returns a link to this controller. Overload with your own Link rules if they exist.
-     *
-     * @param string $action Optional action
-     * @return string
-     */
-    public function Link($action = null)
-    {
-        return Controller::join_links(ClassInfo::shortName($this), $action, '/');
-    }
-
-    /**
      * {@inheritdoc}
      *
      * Also set the URLParams
@@ -646,56 +635,9 @@ class Controller extends RequestHandler implements TemplateGlobalProvider
                 . "; now trying to direct to $url", E_USER_WARNING);
             return null;
         }
-
-        // Attach site-root to relative links, if they have a slash in them
-        if ($url=="" || $url[0]=='?' || (substr($url, 0, 4) != "http" && $url[0] != "/" && strpos($url, '/') !== false)) {
-            $url = Director::baseURL() . $url;
-        }
-
-        return $this->getResponse()->redirect($url, $code);
-    }
-
-    /**
-     * Redirect back. Uses either the HTTP-Referer or a manually set request-variable called "BackURL".
-     * This variable is needed in scenarios where HTTP-Referer is not sent (e.g when calling a page by
-     * location.href in IE). If none of the two variables is available, it will redirect to the base
-     * URL (see {@link Director::baseURL()}).
-     *
-     * @uses redirect()
-     *
-     * @return bool|HTTPResponse
-     */
-    public function redirectBack()
-    {
-        // Don't cache the redirect back ever
-        HTTP::set_cache_age(0);
-
-        $url = null;
-
-        // In edge-cases, this will be called outside of a handleRequest() context; in that case,
-        // redirect to the homepage - don't break into the global state at this stage because we'll
-        // be calling from a test context or something else where the global state is inappropraite
-        if ($this->getRequest()) {
-            if ($this->getRequest()->requestVar('BackURL')) {
-                $url = $this->getRequest()->requestVar('BackURL');
-            } elseif ($this->getRequest()->isAjax() && $this->getRequest()->getHeader('X-Backurl')) {
-                $url = $this->getRequest()->getHeader('X-Backurl');
-            } elseif ($this->getRequest()->getHeader('Referer')) {
-                $url = $this->getRequest()->getHeader('Referer');
-            }
-        }
-
-        if (!$url) {
-            $url = Director::baseURL();
-        }
-
-        // absolute redirection URLs not located on this site may cause phishing
-        if (Director::is_site_url($url)) {
-            $url = Director::absoluteURL($url, true);
-            return $this->redirect($url);
-        } else {
-            return false;
-        }
+        $response = parent::redirect($url, $code);
+        $this->setResponse($response);
+        return $response;
     }
 
     /**

@@ -18,9 +18,6 @@ use SilverStripe\Forms\FormAction;
  */
 class CMSMemberLoginForm extends LoginForm
 {
-
-    protected $authenticator_class = 'SilverStripe\\Security\\MemberAuthenticator';
-
     /**
      * Get link to use for external security actions
      *
@@ -29,7 +26,7 @@ class CMSMemberLoginForm extends LoginForm
      */
     public function getExternalLink($action = null)
     {
-        return Security::create()->Link($action);
+        return Security::singleton()->Link($action);
     }
 
     public function __construct(Controller $controller, $name)
@@ -78,110 +75,8 @@ class CMSMemberLoginForm extends LoginForm
         parent::__construct($controller, $name, $fields, $actions);
     }
 
-    /**
-     * Try to authenticate the user
-     *
-     * @param array $data Submitted data
-     * @return Member Returns the member object on successful authentication
-     *                or NULL on failure.
-     */
-    public function performLogin($data)
+    protected function buildRequestHandler()
     {
-        $authenticator = $this->authenticator_class;
-        /** @var Member $member */
-        $member = $authenticator::authenticate($data, $this);
-        if ($member) {
-            $member->logIn(isset($data['Remember']));
-            return $member;
-        }
-
-        $this->extend('authenticationFailed', $data);
-        return null;
-    }
-
-    /**
-     * Login form handler method
-     *
-     * This method is called when the user clicks on "Log in"
-     *
-     * @param array $data Submitted data
-     * @return HTTPResponse
-     */
-    public function dologin($data)
-    {
-        if ($this->performLogin($data)) {
-            return $this->logInUserAndRedirect($data);
-        } else {
-            // Find best url to redirect back to
-            $request = $this->controller->getRequest();
-            $url = $request->getHeader('X-Backurl')
-                ?: $request->getHeader('Referer')
-                ?: $this->controller->Link('login');
-            return $this->controller->redirect($url);
-        }
-    }
-
-    /**
-     * Redirect the user to the change password form.
-     *
-     * @skipUpgrade
-     * @return HTTPResponse
-     */
-    protected function redirectToChangePassword()
-    {
-        // Since this form is loaded via an iframe, this redirect must be performed via javascript
-        $changePasswordForm = new ChangePasswordForm($this->controller, 'ChangePasswordForm');
-        $changePasswordForm->sessionMessage(
-            _t('Member.PASSWORDEXPIRED', 'Your password has expired. Please choose a new one.'),
-            'good'
-        );
-
-        // Get redirect url
-        $changePasswordURL = $this->getExternalLink('changepassword');
-        if ($backURL = $this->controller->getRequest()->requestVar('BackURL')) {
-            Session::set('BackURL', $backURL);
-            $changePasswordURL = Controller::join_links($changePasswordURL, '?BackURL=' . urlencode($backURL));
-        }
-        $changePasswordURLATT = Convert::raw2att($changePasswordURL);
-        $changePasswordURLJS = Convert::raw2js($changePasswordURL);
-        $message = _t(
-            'CMSMemberLoginForm.PASSWORDEXPIRED',
-            '<p>Your password has expired. <a target="_top" href="{link}">Please choose a new one.</a></p>',
-            'Message displayed to user if their session cannot be restored',
-            array('link' => $changePasswordURLATT)
-        );
-
-        // Redirect to change password page
-        $this->controller->getResponse()->setStatusCode(200);
-        $this->controller->getResponse()->setBody(<<<PHP
-<!DOCTYPE html>
-<html><body>
-$message
-<script type="application/javascript">
-setTimeout(function(){top.location.href = "$changePasswordURLJS";}, 0);
-</script>
-</body></html>
-PHP
-        );
-        return $this->controller->getResponse();
-    }
-
-    /**
-     * Send user to the right location after login
-     *
-     * @param array $data
-     * @return HTTPResponse
-     */
-    protected function logInUserAndRedirect($data)
-    {
-        // Check password expiry
-        if (Member::currentUser()->isPasswordExpired()) {
-            // Redirect the user to the external password change form if necessary
-            return $this->redirectToChangePassword();
-        } else {
-            // Link to success template
-            $url = $this->controller->Link('success');
-            return $this->controller->redirect($url);
-        }
+        return CMSMemberLoginHandler::create($this);
     }
 }

@@ -757,10 +757,13 @@ class FormTest extends FunctionalTest
         $this->assertEquals('bar', $attrs['foo']);
     }
 
+    /**
+     * @skipUpgrade
+     */
     public function testButtonClicked()
     {
         $form = $this->getStubForm();
-        $action = $form->buttonClicked();
+        $action = $form->getRequestHandler()->buttonClicked();
         $this->assertNull($action);
 
         $controller = new FormTest\TestController();
@@ -776,13 +779,10 @@ class FormTest extends FunctionalTest
             )
         );
 
-        $form->httpSubmission($request);
-        $button = $form->buttonClicked();
-        $this->assertInstanceOf('SilverStripe\\Forms\\FormAction', $button);
+        $form->getRequestHandler()->httpSubmission($request);
+        $button = $form->getRequestHandler()->buttonClicked();
+        $this->assertInstanceOf(FormAction::class, $button);
         $this->assertEquals('doSubmit', $button->actionName());
-        /**
- * @skipUpgrade
-*/
         $form = new Form(
             $controller,
             'Form',
@@ -799,9 +799,9 @@ class FormTest extends FunctionalTest
             )
         );
 
-        $form->httpSubmission($request);
-        $button = $form->buttonClicked();
-        $this->assertInstanceOf('SilverStripe\\Forms\\FormAction', $button);
+        $form->getRequestHandler()->httpSubmission($request);
+        $button = $form->getRequestHandler()->buttonClicked();
+        $this->assertInstanceOf(FormAction::class, $button);
         $this->assertEquals('doSubmit', $button->actionName());
     }
 
@@ -814,7 +814,7 @@ class FormTest extends FunctionalTest
             new FieldList(),
             new FieldList(new FormAction('actionName', 'Action'))
         );
-        $this->assertTrue($form->checkAccessAction('actionName'));
+        $this->assertTrue($form->getRequestHandler()->checkAccessAction('actionName'));
 
         $form = new Form(
             $controller,
@@ -822,7 +822,7 @@ class FormTest extends FunctionalTest
             new FieldList(new FormAction('inlineAction', 'Inline action')),
             new FieldList()
         );
-        $this->assertTrue($form->checkAccessAction('inlineAction'));
+        $this->assertTrue($form->getRequestHandler()->checkAccessAction('inlineAction'));
     }
 
     public function testAttributesHTML()

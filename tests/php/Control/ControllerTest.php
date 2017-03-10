@@ -124,16 +124,6 @@ class ControllerTest extends FunctionalTest
             'when called with an action in the URL'
         );
 
-        Config::modify()->merge(RequestHandler::class, 'require_allowed_actions', false);
-        $response = $this->get("UnsecuredController/index");
-        $this->assertEquals(
-            200,
-            $response->getStatusCode(),
-            'Access granted on index action without $allowed_actions on defining controller, ' .
-            'when called with an action in the URL, and explicitly allowed through config'
-        );
-        Config::modify()->merge(RequestHandler::class, 'require_allowed_actions', true);
-
         $response = $this->get("UnsecuredController/method1");
         $this->assertEquals(
             403,
@@ -141,16 +131,6 @@ class ControllerTest extends FunctionalTest
             'Access denied on action without $allowed_actions on defining controller, ' .
             'when called without an action in the URL'
         );
-
-        Config::modify()->merge(RequestHandler::class, 'require_allowed_actions', false);
-        $response = $this->get("UnsecuredController/method1");
-        $this->assertEquals(
-            200,
-            $response->getStatusCode(),
-            'Access granted on action without $allowed_actions on defining controller, ' .
-            'when called without an action in the URL, and explicitly allowed through config'
-        );
-        Config::modify()->merge(RequestHandler::class, 'require_allowed_actions', true);
 
         $response = $this->get("AccessBaseController/");
         $this->assertEquals(
@@ -503,9 +483,9 @@ class ControllerTest extends FunctionalTest
             array('Referer' => $externalAbsoluteUrl)
         );
         $this->assertEquals(
-            200,
-            $response->getStatusCode(),
-            "Doesn't redirect on external URLs"
+            Director::absoluteBaseURL(),
+            $response->getHeader('Location'),
+            "Redirects back to home page on external url"
         );
     }
 
@@ -522,8 +502,10 @@ class ControllerTest extends FunctionalTest
             "Redirects on internal relative URLs"
         );
 
+        // BackURL is internal link
         $internalAbsoluteUrl = Director::absoluteBaseURL() . '/some-url';
-        $response = $this->get('TestController/redirectbacktest?BackURL=' . urlencode($internalAbsoluteUrl));
+        $link = 'TestController/redirectbacktest?BackURL=' . urlencode($internalAbsoluteUrl);
+        $response = $this->get($link);
         $this->assertEquals($internalAbsoluteUrl, $response->getHeader('Location'));
         $this->assertEquals(
             302,
@@ -531,12 +513,13 @@ class ControllerTest extends FunctionalTest
             "Redirects on internal absolute URLs"
         );
 
+        // Note that this test is affected by the prior ->get()
         $externalAbsoluteUrl = 'http://myhost.com/some-url';
         $response = $this->get('TestController/redirectbacktest?BackURL=' . urlencode($externalAbsoluteUrl));
         $this->assertEquals(
-            200,
-            $response->getStatusCode(),
-            "Doesn't redirect on external URLs"
+            Director::absoluteURL($link),
+            $response->getHeader('Location'),
+            "If BackURL Is external link, fall back to last url (Referer)"
         );
     }
 

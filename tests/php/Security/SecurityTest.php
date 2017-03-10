@@ -389,8 +389,8 @@ class SecurityTest extends FunctionalTest
         $expiredResponse = $this->doTestLoginForm('expired@silverstripe.com', '1nitialPassword');
         $this->assertEquals(302, $expiredResponse->getStatusCode());
         $this->assertEquals(
-            '/Security/changepassword',
-            $expiredResponse->getHeader('Location')
+            Director::absoluteURL('Security/changepassword').'?BackURL=test%2Flink',
+            Director::absoluteURL($expiredResponse->getHeader('Location'))
         );
         $this->assertEquals(
             $this->idFromFixture(Member::class, 'expiredpassword'),
@@ -456,7 +456,10 @@ class SecurityTest extends FunctionalTest
         // Check.
         $response = $this->get('Security/changepassword/?m='.$admin->ID.'&t=' . $token);
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals(Director::baseUrl() . 'Security/changepassword', $response->getHeader('Location'));
+        $this->assertEquals(
+            Director::absoluteURL('Security/changepassword'),
+            Director::absoluteURL($response->getHeader('Location'))
+        );
 
         // Follow redirection to form without hash in GET parameter
         $response = $this->get('Security/changepassword');
@@ -756,9 +759,6 @@ class SecurityTest extends FunctionalTest
     {
         $result = $this->session()->inst_get('FormInfo.MemberLoginForm_LoginForm.result');
         if ($result) {
-            /**
- * @var ValidationResult $resultObj
-*/
             return unserialize($result);
         }
         return null;

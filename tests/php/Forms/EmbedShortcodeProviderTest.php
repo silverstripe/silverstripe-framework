@@ -29,9 +29,7 @@ class EmbedShortcodeProviderTest extends SapphireTest
 
     public function testYoutube()
     {
-        /**
- * @var Webpage $result
-*/
+        /** @var Webpage $result */
         $result = Embed::create(self::$test_youtube, array());
         self::assertEquals($result->providerName, 'YouTube');
         $embedded = EmbedShortcodeProvider::embedForTemplate($result);
@@ -44,9 +42,7 @@ class EmbedShortcodeProviderTest extends SapphireTest
 
     public function testSoundcloud()
     {
-        /**
- * @var Webpage $result
-*/
+        /** @var Webpage $result */
         $result = Embed::create(self::$test_soundcloud, array());
         self::assertEquals($result->providerName, 'SoundCloud');
         $embedded = EmbedShortcodeProvider::embedForTemplate($result);

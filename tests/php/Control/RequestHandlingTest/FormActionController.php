@@ -14,6 +14,8 @@ class FormActionController extends Controller implements TestOnly
 {
     protected $template = 'BlankPage';
 
+    private static $url_segment = 'FormActionController';
+
     private static $allowed_actions = array(
         'controlleraction',
         'Form',
@@ -32,8 +34,8 @@ class FormActionController extends Controller implements TestOnly
     }
 
     /**
- * @skipUpgrade
-*/
+     * @skipUpgrade
+     */
     public function Form()
     {
         return new Form(

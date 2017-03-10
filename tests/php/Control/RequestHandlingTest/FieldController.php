@@ -14,6 +14,7 @@ use SilverStripe\Forms\FormAction;
  */
 class FieldController extends Controller implements TestOnly
 {
+    private static $url_segment = 'FieldController';
 
     private static $allowed_actions = array('TestForm');
 

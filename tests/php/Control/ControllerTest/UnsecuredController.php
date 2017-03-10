@@ -7,6 +7,7 @@ use SilverStripe\Dev\TestOnly;
 
 class UnsecuredController extends Controller implements TestOnly
 {
+    private static $url_segment = 'UnsecuredController';
 
     // Not defined, allow access to all
     // static $allowed_actions = array();

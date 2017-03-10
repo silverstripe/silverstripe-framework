@@ -62,7 +62,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         $this->list = new DataList(Team::class);
         $config = GridFieldConfig::create()->addComponent(new GridFieldDeleteAction());
         $this->gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        $this->form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
+        $this->form = new Form(null, 'mockform', new FieldList(array($this->gridField)), new FieldList());
     }
 
     public function testDontShowDeleteButtons()
@@ -185,7 +185,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         $config = GridFieldConfig::create()->addComponent(new GridFieldDeleteAction(true));
 
         $gridField = new GridField('testfield', 'testfield', $this->list, $config);
-        $form = new Form(new Controller(), 'mockform', new FieldList(array($this->gridField)), new FieldList());
+        $form = new Form(null, 'mockform', new FieldList(array($this->gridField)), new FieldList());
 
         $stateID = 'testGridStateActionField';
         Session::set(

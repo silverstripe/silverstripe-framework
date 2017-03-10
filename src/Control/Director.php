@@ -424,10 +424,6 @@ class Director implements TemplateGlobalProvider
     {
         $rules = Director::config()->uninherited('rules');
 
-        if (isset($_REQUEST['debug'])) {
-            Debug::show($rules);
-        }
-
         foreach ($rules as $pattern => $controllerOptions) {
             if (is_string($controllerOptions)) {
                 if (substr($controllerOptions, 0, 2) == '->') {

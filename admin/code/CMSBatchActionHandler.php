@@ -101,9 +101,9 @@ class CMSBatchActionHandler extends RequestHandler
         );
     }
 
-    public function Link()
+    public function Link($action = null)
     {
-        return Controller::join_links($this->parentController->Link(), $this->urlSegment);
+        return Controller::join_links($this->parentController->Link(), $this->urlSegment, $action, '/');
     }
 
     /**

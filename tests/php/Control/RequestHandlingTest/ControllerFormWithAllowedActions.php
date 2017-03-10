@@ -9,11 +9,13 @@ use SilverStripe\Forms\FormAction;
 
 class ControllerFormWithAllowedActions extends Controller implements TestOnly
 {
+    private static $url_segment = 'ControllerFormWithAllowedActions';
+
     private static $allowed_actions = array('Form');
 
     /**
- * @skipUpgrade
-*/
+     * @skipUpgrade
+     */
     public function Form()
     {
         return new FormWithAllowedActions(

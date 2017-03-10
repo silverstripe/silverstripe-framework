@@ -2,12 +2,17 @@
 
 namespace SilverStripe\Control\Tests;
 
+use SilverStripe\Control\Cookie_Backend;
+use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
+use SilverStripe\Control\HTTPResponse_Exception;
 use SilverStripe\Control\Tests\DirectorTest\TestController;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
 use SilverStripe\Control\RequestProcessor;
+use SilverStripe\Security\Security;
 
 /**
  * @todo test Director::alternateBaseFolder()
@@ -116,7 +121,7 @@ class DirectorTest extends SapphireTest
 
         $rootURL = Director::protocolAndHost();
         $_SERVER['REQUEST_URI'] = "$rootURL/mysite/sub-page/";
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/mysite/');
+        Director::config()->set('alternate_base_url', '/mysite/');
 
         //test empty / local urls
         foreach (array('', './', '.') as $url) {
@@ -176,7 +181,7 @@ class DirectorTest extends SapphireTest
         $rootURL = Director::protocolAndHost();
 
         // relative base URLs - you should end them in a /
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/relativebase/');
+        Director::config()->set('alternate_base_url', '/relativebase/');
         $_SERVER['REQUEST_URI'] = "$rootURL/relativebase/sub-page/";
 
         $this->assertEquals('/relativebase/', Director::baseURL());
@@ -187,7 +192,7 @@ class DirectorTest extends SapphireTest
         );
 
         // absolute base URLs - you should end them in a /
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', 'http://www.example.org/');
+        Director::config()->set('alternate_base_url', 'http://www.example.org/');
         $_SERVER['REQUEST_URI'] = "http://www.example.org/sub-page/";
         $this->assertEquals('http://www.example.org/', Director::baseURL());
         $this->assertEquals('http://www.example.org/', Director::absoluteBaseURL());
@@ -250,7 +255,6 @@ class DirectorTest extends SapphireTest
 
     public function testIsRelativeUrl()
     {
-        $siteUrl = Director::absoluteBaseURL();
         $this->assertFalse(Director::is_relative_url('http://test.com'));
         $this->assertFalse(Director::is_relative_url('https://test.com'));
         $this->assertFalse(Director::is_relative_url('   https://test.com/testpage   '));
@@ -341,11 +345,11 @@ class DirectorTest extends SapphireTest
         $_COOKIE = array('somekey' => 'cookievalue');
 
         $cookies = Injector::inst()->createWithArgs(
-            'SilverStripe\\Control\\Cookie_Backend',
+            Cookie_Backend::class,
             array(array('somekey' => 'sometestcookievalue'))
         );
 
-        $getresponse = Director::test(
+        Director::test(
             'errorpage?somekey=sometestgetvalue',
             array('somekey' => 'sometestpostvalue'),
             null,
@@ -387,10 +391,10 @@ class DirectorTest extends SapphireTest
                     strtoupper($method),
                     null,
                     null,
-                    Injector::inst()->createWithArgs('SilverStripe\\Control\\Cookie_Backend', array($fixture))
+                    Injector::inst()->createWithArgs(Cookie_Backend::class, array($fixture))
                 );
 
-                $this->assertInstanceOf('SilverStripe\\Control\\HTTPResponse', $getresponse, 'Director::test() returns HTTPResponse');
+                $this->assertInstanceOf(HTTPResponse::class, $getresponse, 'Director::test() returns HTTPResponse');
                 $this->assertEquals($fixture['somekey'], $getresponse->getBody(), 'Director::test() ' . $testfunction);
             }
         }
@@ -402,6 +406,7 @@ class DirectorTest extends SapphireTest
      */
     public function testRouteParams()
     {
+        /** @var HTTPRequest $request */
         Director::test('en-nz/myaction/myid/myotherid', null, null, null, null, null, null, $request);
 
         $this->assertEquals(
@@ -436,7 +441,7 @@ class DirectorTest extends SapphireTest
 
     public function testForceSSLOnSubPagesPattern()
     {
-        $_SERVER['REQUEST_URI'] = Director::baseURL() . Config::inst()->get('SilverStripe\\Security\\Security', 'login_url');
+        $_SERVER['REQUEST_URI'] = Director::baseURL() . Config::inst()->get(Security::class, 'login_url');
         $output = Director::forceSSL(array('/^Security/'));
         $this->assertEquals($output, 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     }
@@ -454,7 +459,7 @@ class DirectorTest extends SapphireTest
 
     public function testForceSSLAlternateDomain()
     {
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
+        Director::config()->set('alternate_base_url', '/');
         $_SERVER['REQUEST_URI'] = Director::baseURL() . 'admin';
         $output = Director::forceSSL(array('/^admin/'), 'secure.mysite.com');
         $this->assertEquals($output, 'https://secure.mysite.com/admin');
@@ -565,6 +570,7 @@ class DirectorTest extends SapphireTest
         //test that hashes are ignored
         $url = "TestController/returnGetValue?somekey=key";
         $hash = "#test";
+        /** @var HTTPRequest $request */
         $response = Director::test($url . $hash, null, null, null, null, null, null, $request);
         $this->assertFalse($response->isError());
         $this->assertEquals('key', $response->getBody());
@@ -584,25 +590,25 @@ class DirectorTest extends SapphireTest
 
         $processor = new RequestProcessor(array($filter));
 
-        Injector::inst()->registerService($processor, 'SilverStripe\\Control\\RequestProcessor');
+        Injector::inst()->registerService($processor, RequestProcessor::class);
 
-        $response = Director::test('some-dummy-url');
+        Director::test('some-dummy-url');
 
         $this->assertEquals(1, $filter->preCalls);
         $this->assertEquals(1, $filter->postCalls);
 
         $filter->failPost = true;
 
-        $this->setExpectedException('SilverStripe\\Control\\HTTPResponse_Exception');
+        $this->setExpectedException(HTTPResponse_Exception::class);
 
-        $response = Director::test('some-dummy-url');
+        Director::test('some-dummy-url');
 
         $this->assertEquals(2, $filter->preCalls);
         $this->assertEquals(2, $filter->postCalls);
 
         $filter->failPre = true;
 
-        $response = Director::test('some-dummy-url');
+        Director::test('some-dummy-url');
 
         $this->assertEquals(3, $filter->preCalls);
 
