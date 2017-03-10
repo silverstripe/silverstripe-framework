@@ -187,7 +187,7 @@ class FormBuilder extends SilverStripeComponent {
       props = Object.assign(
         {
           onAutofill: this.props.onAutofill,
-          form: this.props.form,
+          formid: this.props.form,
         },
         props
       );
