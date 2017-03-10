@@ -23,7 +23,6 @@
     "monolog/monolog": "~1.11",
     "nikic/php-parser": "^2 || ^3",
     "silverstripe/config": "^1@dev",
-    "silverstripe/admin": "^1@dev",
     "swiftmailer/swiftmailer": "~5.4",
     "symfony/cache": "^3.3@dev",
     "symfony/config": "^2.8",
@@ -32,6 +31,7 @@
     "vlucas/phpdotenv": "^2.4"
   },
   "require-dev": {
+    "silverstripe/admin": "^1@dev",
     "phpunit/PHPUnit": "~4.8",
     "silverstripe/behat-extension": "^2.1.0",
     "silverstripe/serve": "dev-master",

@@ -1437,6 +1437,11 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public static function mapInCMSGroups($groups = null)
     {
+        // Check CMS module exists
+        if (!class_exists(LeftAndMain::class)) {
+            return ArrayList::create()->map();
+        }
+
         if (!$groups || $groups->Count() == 0) {
             $perms = array('ADMIN', 'CMS_ACCESS_AssetAdmin');
 

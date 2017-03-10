@@ -2,7 +2,7 @@
 
 namespace SilverStripe\ORM\Versioning;
 
-use SilverStripe\Admin\CMSPreviewable;
+use SilverStripe\ORM\CMSPreviewable;
 use SilverStripe\Assets\Thumbnail;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\ArrayList;

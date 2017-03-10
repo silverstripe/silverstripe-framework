@@ -53,13 +53,12 @@ before_script:
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then (vendor/bin/serve --bootstrap-file cms/tests/behat/serve-bootstrap.php &> serve.log &); fi"
 
 script:
-  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit; fi"
+  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit tests/php; fi"
   - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/phpunit cms/tests; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat --config tests/behat/config.yml .; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config tests/behat/cms-config.yml; fi"
   - "if [ \"$NPM_TEST\" = \"1\" ]; then git diff-files --quiet -w; fi"
   - "if [ \"$NPM_TEST\" = \"1\" ]; then git diff -w --no-color; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then yarn run test; fi"
   - "if [ \"$NPM_TEST\" = \"1\" ]; then yarn run lint; fi"
   - "if [ \"$PHPCS_TEST\" = \"1\" ]; then composer run-script lint; fi"
 

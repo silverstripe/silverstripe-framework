@@ -20,7 +20,6 @@
 
 	<testsuite name="Default">
 		<directory>tests/php</directory>
-		<directory>admin/tests/php</directory>
 	</testsuite>
 
 	<listeners>

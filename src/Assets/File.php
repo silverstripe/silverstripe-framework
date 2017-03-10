@@ -2,15 +2,13 @@
 
 namespace SilverStripe\Assets;
 
-use SilverStripe\Admin\AdminRootController;
-use SilverStripe\Admin\CMSPreviewable;
+use SilverStripe\ORM\CMSPreviewable;
 use SilverStripe\Assets\Storage\AssetNameGenerator;
 use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\DatetimeField;
@@ -821,21 +819,6 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
             return $this->File->getSourceURL($grant);
         }
         return null;
-    }
-
-    /**
-     * @todo Coupling with cms module, remove this method.
-     *
-     * @return string
-     */
-    public function DeleteLink()
-    {
-        return Controller::join_links(
-            Director::absoluteBaseURL(),
-            AdminRootController::admin_url(),
-            "assets/removefile/",
-            $this->ID
-        );
     }
 
     /**
