@@ -507,4 +507,9 @@ class FormRequestHandler extends RequestHandler
         $this->form->loadMessagesFrom($result);
         return $result;
     }
+
+    public function forTemplate()
+    {
+        return $this->form->forTemplate();
+    }
 }
