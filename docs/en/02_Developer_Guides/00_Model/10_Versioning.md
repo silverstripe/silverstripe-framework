@@ -22,7 +22,7 @@ also track versioned history.
 
 	:::php
 	class MyStagedModel extends DataObject {
-		private staic $extensions = [
+		private static $extensions = [
 			Versioned::class
 		];
 	}
