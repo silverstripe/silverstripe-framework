@@ -1021,6 +1021,35 @@ class VersionedTest extends SapphireTest
     }
 
     /**
+     * Test that that stage a record was queried from cascades to child relations, even if the
+     * global stage has changed
+     */
+    public function testStageCascadeOnRelations()
+    {
+        $origReadingMode = Versioned::get_reading_mode();
+
+        // Stage record - 2 children
+        Versioned::set_stage(Versioned::DRAFT);
+        $draftPage = $this->objFromFixture(VersionedTest\TestObject::class, 'page2');
+        $draftPage->copyVersionToStage(Versioned::DRAFT, Versioned::LIVE);
+        $this->assertEquals(2, $draftPage->Children()->Count());
+
+        // Live record - no children
+        Versioned::set_stage(Versioned::LIVE);
+        $livePage = $this->objFromFixture(VersionedTest\TestObject::class, 'page2');
+        $this->assertEquals(0, $livePage->Children()->Count());
+
+        // Validate that draft page still queries draft children even though global stage is live
+        $this->assertEquals(2, $draftPage->Children()->Count());
+
+        // Validate that live page still queries live children even though global stage is live
+        Versioned::set_stage(Versioned::DRAFT);
+        $this->assertEquals(0, $livePage->Children()->Count());
+
+        Versioned::set_reading_mode($origReadingMode);
+    }
+
+    /**
      * Tests that multi-table dataobjects are correctly versioned
      */
     public function testWriteToStage()
