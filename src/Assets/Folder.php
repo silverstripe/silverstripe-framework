@@ -104,7 +104,7 @@ class Folder extends File
      */
     public function getIcon()
     {
-        return FRAMEWORK_DIR . "/client/dist/images/app_icons/folder_icon_large.png";
+        return FRAMEWORK_DIR . "/client/src/images/app_icons/folder_icon_large.png";
     }
 
     /**
