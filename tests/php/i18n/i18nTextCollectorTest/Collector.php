@@ -2,6 +2,8 @@
 
 namespace SilverStripe\i18n\Tests\i18nTextCollectorTest;
 
+use SilverStripe\Core\Manifest\Module;
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\i18n\TextCollection\i18nTextCollector;
 
@@ -10,18 +12,17 @@ use SilverStripe\i18n\TextCollection\i18nTextCollector;
  */
 class Collector extends i18nTextCollector implements TestOnly
 {
-    public function getModules_Test($directory)
-    {
-        return $this->getModules($directory);
-    }
-
     public function resolveDuplicateConflicts_Test($entitiesByModule)
     {
         return $this->resolveDuplicateConflicts($entitiesByModule);
     }
 
-    public function getFileListForModule_Test($module)
+    public function getFileListForModule_Test($modulename)
     {
+        $module = ModuleLoader::instance()->getManifest()->getModule($modulename);
+        if (!$module) {
+            throw new \BadMethodCallException("No module named {$modulename}");
+        }
         return $this->getFileListForModule($module);
     }
 

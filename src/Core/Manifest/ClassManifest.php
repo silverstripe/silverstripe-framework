@@ -6,56 +6,112 @@ use Exception;
 use PhpParser\Error;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use SilverStripe\Control\Director;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Cache\CacheFactory;
+use SilverStripe\Dev\TestOnly;
 
 /**
- * A utility class which builds a manifest of all classes, interfaces and some
- * additional items present in a directory, and caches it.
+ * A utility class which builds a manifest of all classes, interfaces and caches it.
  *
  * It finds the following information:
  *   - Class and interface names and paths.
  *   - All direct and indirect descendants of a class.
  *   - All implementors of an interface.
- *   - All module configuration files.
  */
 class ClassManifest
 {
-
-    const CONF_FILE = '_config.php';
-    const CONF_DIR = '_config';
-
+    /**
+     * base manifest directory
+     * @var string
+     */
     protected $base;
+
+    /**
+     * Set if including test classes
+     *
+     * @see TestOnly
+     * @var bool
+     */
     protected $tests;
 
     /**
-     * @var ManifestCache
+     * Cache to use, if caching.
+     * Set to null if uncached.
+     *
+     * @var CacheInterface|null
      */
     protected $cache;
 
     /**
+     * Key to use for the top level cache of all items
+     *
      * @var string
      */
     protected $cacheKey;
 
+    /**
+     * Map of classes to paths
+     *
+     * @var array
+     */
     protected $classes      = array();
-    protected $roots        = array();
-    protected $children     = array();
-    protected $descendants  = array();
-    protected $interfaces   = array();
-    protected $implementors = array();
-    protected $configs      = array();
-    protected $configDirs   = array();
-    protected $traits       = array();
 
     /**
-     * @var \PhpParser\Parser
+     * List of root classes with no parent class
+     *
+     * @var array
+     */
+    protected $roots = array();
+
+    /**
+     * List of direct children for any class
+     *
+     * @var array
+     */
+    protected $children = array();
+
+    /**
+     * List of descendents for any class (direct + indirect children)
+     *
+     * @var array
+     */
+    protected $descendants = array();
+
+    /**
+     * List of interfaces and paths to those files
+     *
+     * @var array
+     */
+    protected $interfaces = array();
+
+    /**
+     * List of direct implementors of any interface
+     *
+     * @var array
+     */
+    protected $implementors = array();
+
+    /**
+     * Map of traits to paths
+     *
+     * @var array
+     */
+    protected $traits = array();
+
+    /**
+     * PHP Parser for parsing found files
+     *
+     * @var Parser
      */
     private $parser;
+
     /**
      * @var NodeTraverser
      */
     private $traverser;
+
     /**
      * @var ClassManifestVisitor
      */
@@ -66,33 +122,44 @@ class ClassManifest
      * from the cache or re-scanning for classes.
      *
      * @param string $base The manifest base path.
-     * @param bool   $includeTests Include the contents of "tests" directories.
-     * @param bool   $forceRegen Force the manifest to be regenerated.
-     * @param bool   $cache If the manifest is regenerated, cache it.
+     * @param bool $includeTests Include the contents of "tests" directories.
+     * @param bool $forceRegen Force the manifest to be regenerated.
+     * @param CacheFactory $cacheFactory Optional cache to use. Set to null to not cache.
      */
-    public function __construct($base, $includeTests = false, $forceRegen = false, $cache = true)
-    {
-        $this->base  = $base;
+    public function __construct(
+        $base,
+        $includeTests = false,
+        $forceRegen = false,
+        CacheFactory $cacheFactory = null
+    ) {
+        $this->base = $base;
         $this->tests = $includeTests;
 
-        $cacheClass = getenv('SS_MANIFESTCACHE') ?: 'SilverStripe\\Core\\Manifest\\ManifestCache_File';
-
-        $this->cache = new $cacheClass('classmanifest'.($includeTests ? '_tests' : ''));
+        // build cache from factory
+        if ($cacheFactory) {
+            $this->cache = $cacheFactory->create(
+                CacheInterface::class.'.classmanifest',
+                [ 'namespace' => 'classmanifest' . ($includeTests ? '_tests' : '') ]
+            );
+        }
         $this->cacheKey = 'manifest';
 
-        if (!$forceRegen && $data = $this->cache->load($this->cacheKey)) {
-            $this->classes      = $data['classes'];
-            $this->descendants  = $data['descendants'];
-            $this->interfaces   = $data['interfaces'];
+        if (!$forceRegen && $this->cache && ($data = $this->cache->get($this->cacheKey))) {
+            $this->classes = $data['classes'];
+            $this->descendants = $data['descendants'];
+            $this->interfaces = $data['interfaces'];
             $this->implementors = $data['implementors'];
-            $this->configs      = $data['configs'];
-            $this->configDirs   = $data['configDirs'];
-            $this->traits       = $data['traits'];
+            $this->traits = $data['traits'];
         } else {
-            $this->regenerate($cache);
+            $this->regenerate();
         }
     }
 
+    /**
+     * Get or create active parser
+     *
+     * @return Parser
+     */
     public function getParser()
     {
         if (!$this->parser) {
@@ -247,48 +314,10 @@ class ClassManifest
     }
 
     /**
-     * Returns an array of paths to module config files.
-     *
-     * @return array
-     */
-    public function getConfigs()
-    {
-        return $this->configs;
-    }
-
-    /**
-     * Returns an array of module names mapped to their paths.
-     *
-     * "Modules" in SilverStripe are simply directories with a _config.php
-     * file.
-     *
-     * @return array
-     */
-    public function getModules()
-    {
-        $modules = array();
-
-        if ($this->configs) {
-            foreach ($this->configs as $configPath) {
-                $modules[basename(dirname($configPath))] = dirname($configPath);
-            }
-        }
-
-        if ($this->configDirs) {
-            foreach ($this->configDirs as $configDir) {
-                $path = preg_replace('/\/_config$/', '', dirname($configDir));
-                $modules[basename($path)] = $path;
-            }
-        }
-
-        return $modules;
-    }
-
-    /**
      * Get module that owns this class
      *
      * @param string $class Class name
-     * @return string
+     * @return Module
      */
     public function getOwnerModule($class)
     {
@@ -297,29 +326,32 @@ class ClassManifest
             return null;
         }
 
+        /** @var Module $rootModule */
+        $rootModule = null;
+
         // Find based on loaded modules
-        foreach ($this->getModules() as $parent => $module) {
-            if (stripos($path, realpath($parent)) === 0) {
+        $modules = ModuleLoader::instance()->getManifest()->getModules();
+        foreach ($modules as $module) {
+            // Leave root module as fallback
+            if (empty($module->getRelativePath())) {
+                $rootModule = $module;
+            } elseif (stripos($path, realpath($module->getPath())) === 0) {
                 return $module;
             }
         }
 
-        // Assume top level folder is the module name
-        $relativePath = substr($path, strlen(realpath(Director::baseFolder())));
-        $parts = explode('/', trim($relativePath, '/'));
-        return array_shift($parts);
+        // Fall back to top level module
+        return $rootModule;
     }
 
     /**
      * Completely regenerates the manifest file.
-     *
-     * @param bool $cache Cache the result.
      */
-    public function regenerate($cache = true)
+    public function regenerate()
     {
         $resets = array(
             'classes', 'roots', 'children', 'descendants', 'interfaces',
-            'implementors', 'configs', 'configDirs', 'traits'
+            'implementors', 'traits'
         );
 
         // Reset the manifest so stale info doesn't cause errors.
@@ -329,11 +361,10 @@ class ClassManifest
 
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
-            'name_regex'    => '/^((_config)|([^_].*))\\.php$/',
+            'name_regex'    => '/^[^_].*\\.php$/',
             'ignore_files'  => array('index.php', 'main.php', 'cli-script.php'),
             'ignore_tests'  => !$this->tests,
             'file_callback' => array($this, 'handleFile'),
-            'dir_callback' => array($this, 'handleDir')
         ));
         $finder->find($this->base);
 
@@ -341,34 +372,20 @@ class ClassManifest
             $this->coalesceDescendants($root);
         }
 
-        if ($cache) {
+        if ($this->cache) {
             $data = array(
                 'classes'      => $this->classes,
                 'descendants'  => $this->descendants,
                 'interfaces'   => $this->interfaces,
                 'implementors' => $this->implementors,
-                'configs'      => $this->configs,
-                'configDirs'   => $this->configDirs,
                 'traits'       => $this->traits,
             );
-            $this->cache->save($data, $this->cacheKey);
+            $this->cache->set($this->cacheKey, $data);
         }
     }
 
-    public function handleDir($basename, $pathname, $depth)
+    public function handleFile($basename, $pathname)
     {
-        if ($basename == self::CONF_DIR) {
-            $this->configDirs[] = $pathname;
-        }
-    }
-
-    public function handleFile($basename, $pathname, $depth)
-    {
-        if ($basename == self::CONF_FILE) {
-            $this->configs[] = $pathname;
-            return;
-        }
-
         $classes    = null;
         $interfaces = null;
         $traits = null;
@@ -379,24 +396,16 @@ class ClassManifest
         // since just using the datetime lead to problems with upgrading.
         $key = preg_replace('/[^a-zA-Z0-9_]/', '_', $basename) . '_' . md5_file($pathname);
 
-        $valid = false;
-        if ($data = $this->cache->load($key)) {
-            $valid = (
-                isset($data['classes']) && is_array($data['classes'])
-                && isset($data['interfaces'])
-                && is_array($data['interfaces'])
-                && isset($data['traits'])
-                && is_array($data['traits'])
-            );
-
-            if ($valid) {
-                $classes = $data['classes'];
-                $interfaces = $data['interfaces'];
-                $traits = $data['traits'];
-            }
-        }
-
-        if (!$valid) {
+        // Attempt to load from cache
+        if ($this->cache
+            && ($data = $this->cache->get($key))
+            && $this->validateItemCache($data)
+        ) {
+            $classes = $data['classes'];
+            $interfaces = $data['interfaces'];
+            $traits = $data['traits'];
+        } else {
+            // Build from php file parser
             $fileContents = ClassContentRemover::remove_class_content($pathname);
             try {
                 $stmts = $this->getParser()->parse($fileContents);
@@ -410,14 +419,18 @@ class ClassManifest
             $interfaces = $this->getVisitor()->getInterfaces();
             $traits = $this->getVisitor()->getTraits();
 
-            $cache = array(
-                'classes' => $classes,
-                'interfaces' => $interfaces,
-                'traits' => $traits,
-            );
-            $this->cache->save($cache, $key);
+            // Save back to cache if configured
+            if ($this->cache) {
+                $cache = array(
+                    'classes' => $classes,
+                    'interfaces' => $interfaces,
+                    'traits' => $traits,
+                );
+                $this->cache->set($key, $cache);
+            }
         }
 
+        // Merge this data into the global list
         foreach ($classes as $className => $classInfo) {
             $extends = isset($classInfo['extends']) ? $classInfo['extends'] : null;
             $implements = isset($classInfo['interfaces']) ? $classInfo['interfaces'] : null;
@@ -495,5 +508,31 @@ class ClassManifest
         } else {
             return array();
         }
+    }
+
+    /**
+     * Verify that cached data is valid for a single item
+     *
+     * @param array $data
+     * @return bool
+     */
+    protected function validateItemCache($data)
+    {
+        foreach (['classes', 'interfaces', 'traits'] as $key) {
+            // Must be set
+            if (!isset($data[$key])) {
+                return false;
+            }
+            // and an array
+            if (!is_array($data[$key])) {
+                return false;
+            }
+            // Detect legacy cache keys (non-associative)
+            $array = $data[$key];
+            if (!empty($array) && is_numeric(key($array))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -5,6 +5,8 @@ namespace SilverStripe\i18n\TextCollection;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Injector\Injectable;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\Module;
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Dev\Debug;
 use SilverStripe\Control\Director;
 use ReflectionClass;
@@ -172,7 +174,7 @@ class i18nTextCollector
         }
 
         // Write each module language file
-        foreach ($entitiesByModule as $module => $entities) {
+        foreach ($entitiesByModule as $moduleName => $entities) {
             // Skip empty translations
             if (empty($entities)) {
                 continue;
@@ -180,40 +182,9 @@ class i18nTextCollector
 
             // Clean sorting prior to writing
             ksort($entities);
-            $path = $this->baseSavePath . '/' . $module;
-            $this->getWriter()->write($entities, $this->defaultLocale, $path);
+            $module = ModuleLoader::instance()->getManifest()->getModule($moduleName);
+            $this->write($module, $entities);
         }
-    }
-
-    /**
-     * Gets the list of modules in this installer
-     *
-     * @param string $directory Path to look in
-     * @return array List of modules as paths relative to base
-     */
-    protected function getModules($directory)
-    {
-        // Include self as head module
-        $modules = array();
-
-        // Get all standard modules
-        foreach (glob($directory."/*", GLOB_ONLYDIR) as $path) {
-            // Check for _config
-            if (!is_file("$path/_config.php") && !is_dir("$path/_config")) {
-                continue;
-            }
-            $modules[] = basename($path);
-        }
-
-        // Get all themes
-        foreach (glob($directory."/themes/*", GLOB_ONLYDIR) as $path) {
-            // Check for templates
-            if (is_dir("$path/templates")) {
-                $modules[] = 'themes/'.basename($path);
-            }
-        }
-
-        return $modules;
     }
 
     /**
@@ -237,7 +208,13 @@ class i18nTextCollector
 
         // Restrict modules we update to just the specified ones (if any passed)
         if (!empty($restrictToModules)) {
-            foreach (array_diff(array_keys($entitiesByModule), $restrictToModules) as $module) {
+            // Normalise module names
+            $modules = array_filter(array_map(function ($name) {
+                $module = ModuleLoader::instance()->getManifest()->getModule($name);
+                return $module ? $module->getName() : null;
+            }, $restrictToModules));
+            // Remove modules
+            foreach (array_diff(array_keys($entitiesByModule), $modules) as $module) {
                 unset($entitiesByModule[$module]);
             }
         }
@@ -350,9 +327,12 @@ class i18nTextCollector
     protected function findModuleForClass($class)
     {
         if (ClassInfo::exists($class)) {
-            return ClassLoader::instance()
+            $module = ClassLoader::instance()
                 ->getManifest()
                 ->getOwnerModule($class);
+            if ($module) {
+                return $module->getName();
+            }
         }
 
         // If we can't find a class, see if it needs to be fully qualified
@@ -368,7 +348,8 @@ class i18nTextCollector
 
         // Find all modules for candidate classes
         $modules = array_unique(array_map(function ($class) {
-            return ClassLoader::instance()->getManifest()->getOwnerModule($class);
+            $module = ClassLoader::instance()->getManifest()->getOwnerModule($class);
+            return $module ? $module->getName() : null;
         }, $classes));
 
         if (count($modules) === 1) {
@@ -413,24 +394,32 @@ class i18nTextCollector
     {
         // A master string tables array (one mst per module)
         $entitiesByModule = array();
-        $modules = $this->getModules($this->basePath);
+        $modules = ModuleLoader::instance()->getManifest()->getModules();
         foreach ($modules as $module) {
             // we store the master string tables
             $processedEntities = $this->processModule($module);
-            if (isset($entitiesByModule[$module])) {
-                $entitiesByModule[$module] = array_merge_recursive($entitiesByModule[$module], $processedEntities);
+            $moduleName = $module->getName();
+            if (isset($entitiesByModule[$moduleName])) {
+                $entitiesByModule[$moduleName] = array_merge_recursive(
+                    $entitiesByModule[$moduleName],
+                    $processedEntities
+                );
             } else {
-                $entitiesByModule[$module] = $processedEntities;
+                $entitiesByModule[$moduleName] = $processedEntities;
             }
 
             // Extract all entities for "foreign" modules ('module' key in array form)
             // @see CMSMenu::provideI18nEntities for an example usage
-            foreach ($entitiesByModule[$module] as $fullName => $spec) {
-                $specModule = $module;
+            foreach ($entitiesByModule[$moduleName] as $fullName => $spec) {
+                $specModuleName = $moduleName;
 
                 // Rewrite spec if module is specified
                 if (is_array($spec) && isset($spec['module'])) {
-                    $specModule = $spec['module'];
+                    // Normalise name (in case non-composer name is specified)
+                    $specModule = ModuleLoader::instance()->getManifest()->getModule($spec['module']);
+                    if ($specModule) {
+                        $specModuleName = $specModule->getName();
+                    }
                     unset($spec['module']);
 
                     // If only element is defalt, simplify
@@ -440,24 +429,34 @@ class i18nTextCollector
                 }
 
                 // Remove from source module
-                if ($specModule !== $module) {
-                    unset($entitiesByModule[$module][$fullName]);
+                if ($specModuleName !== $moduleName) {
+                    unset($entitiesByModule[$moduleName][$fullName]);
                 }
 
                 // Write to target module
-                if (!isset($entitiesByModule[$specModule])) {
-                    $entitiesByModule[$specModule] = [];
+                if (!isset($entitiesByModule[$specModuleName])) {
+                    $entitiesByModule[$specModuleName] = [];
                 }
-                $entitiesByModule[$specModule][$fullName] = $spec;
+                $entitiesByModule[$specModuleName][$fullName] = $spec;
             }
         }
         return $entitiesByModule;
     }
 
-
-    public function write($module, $entities)
+    /**
+     * Write entities to a module
+     *
+     * @param Module $module
+     * @param array $entities
+     * @return $this
+     */
+    public function write(Module $module, $entities)
     {
-        $this->getWriter()->write($entities, $this->defaultLocale, $this->baseSavePath . '/' . $module);
+        $this->getWriter()->write(
+            $entities,
+            $this->defaultLocale,
+            $this->baseSavePath . '/' . $module->getRelativePath()
+        );
         return $this;
     }
 
@@ -465,10 +464,10 @@ class i18nTextCollector
      * Builds a master string table from php and .ss template files for the module passed as the $module param
      * @see collectFromCode() and collectFromTemplate()
      *
-     * @param string $module A module's name or just 'themes/<themename>'
+     * @param Module $module Module instance
      * @return array An array of entities found in the files that comprise the module
      */
-    protected function processModule($module)
+    protected function processModule(Module $module)
     {
         $entities = array();
 
@@ -481,15 +480,14 @@ class i18nTextCollector
             if ($extension === 'php') {
                 $entities = array_merge(
                     $entities,
-                    $this->collectFromCode($content, $module),
+                    $this->collectFromCode($content, $filePath, $module),
                     $this->collectFromEntityProviders($filePath, $module)
                 );
             } elseif ($extension === 'ss') {
                 // templates use their filename as a namespace
-                $namespace = basename($filePath);
                 $entities = array_merge(
                     $entities,
-                    $this->collectFromTemplate($content, $module, $namespace)
+                    $this->collectFromTemplate($content, $filePath, $module)
                 );
             }
         }
@@ -503,25 +501,29 @@ class i18nTextCollector
     /**
      * Retrieves the list of files for this module
      *
-     * @param string $module
+     * @param Module $module Module instance
      * @return array List of files to parse
      */
-    protected function getFileListForModule($module)
+    protected function getFileListForModule(Module $module)
     {
-        $modulePath = "{$this->basePath}/{$module}";
+        $modulePath = $module->getPath();
 
         // Search all .ss files in themes
-        if (stripos($module, 'themes/') === 0) {
+        if (stripos($module->getRelativePath(), 'themes/') === 0) {
             return $this->getFilesRecursive($modulePath, null, 'ss');
         }
 
-        // If Framework or non-standard module structure, so we'll scan all subfolders
-        if ($module === FRAMEWORK_DIR || !is_dir("{$modulePath}/code")) {
+        // If non-standard module structure, search all root files
+        if (!is_dir("{$modulePath}/code") && !is_dir("{$modulePath}/src")) {
             return $this->getFilesRecursive($modulePath);
         }
 
         // Get code files
-        $files = $this->getFilesRecursive("{$modulePath}/code", null, 'php');
+        if (is_dir("{$modulePath}/src")) {
+            $files = $this->getFilesRecursive("{$modulePath}/src", null, 'php');
+        } else {
+            $files = $this->getFilesRecursive("{$modulePath}/code", null, 'php');
+        }
 
         // Search for templates in this module
         if (is_dir("{$modulePath}/templates")) {
@@ -538,12 +540,15 @@ class i18nTextCollector
      * Note: Translations without default values are omitted.
      *
      * @param string $content The text content of a parsed template-file
-     * @param string $module Module's name or 'themes'. Could also be a namespace
-     * Generated by templates includes. E.g. 'UploadField.ss'
+     * @param string $fileName Filename Optional filename
+     * @param Module $module Module being collected
      * @return array Map of localised keys to default values provided for this code
      */
-    public function collectFromCode($content, $module)
+    public function collectFromCode($content, $fileName, Module $module)
     {
+        // Get namespace either from $fileName or $module fallback
+        $namespace = $fileName ? basename($fileName) : $module->getName();
+
         $entities = array();
 
         $tokens = token_get_all("<?php\n" . $content);
@@ -713,7 +718,7 @@ class i18nTextCollector
         // Normalise all keys
         foreach ($entities as $key => $entity) {
             unset($entities[$key]);
-            $entities[$this->normalizeEntity($key, $module)] = $entity;
+            $entities[$this->normalizeEntity($key, $namespace)] = $entity;
         }
         ksort($entities);
 
@@ -725,12 +730,15 @@ class i18nTextCollector
      *
      * @param string $content The text content of a parsed template-file
      * @param string $fileName The name of a template file when method is used in self-referencing mode
-     * @param string $module Module's name or 'themes'
+     * @param Module $module Module being collected
      * @param array $parsedFiles
      * @return array $entities An array of entities representing the extracted template function calls
      */
-    public function collectFromTemplate($content, $fileName, $module, &$parsedFiles = array())
+    public function collectFromTemplate($content, $fileName, Module $module, &$parsedFiles = array())
     {
+        // Get namespace either from $fileName or $module fallback
+        $namespace = $fileName ? basename($fileName) : $module->getName();
+
         // use parser to extract <%t style translatable entities
         $entities = Parser::getTranslatables($content, $this->getWarnOnEmptyDefault());
 
@@ -738,13 +746,13 @@ class i18nTextCollector
         // Collect in actual template
         if (preg_match_all('/(_t\([^\)]*?\))/ms', $content, $matches)) {
             foreach ($matches[1] as $match) {
-                $entities = array_merge($entities, $this->collectFromCode($match, $module));
+                $entities = array_merge($entities, $this->collectFromCode($match, $fileName, $module));
             }
         }
 
         foreach ($entities as $entity => $spec) {
             unset($entities[$entity]);
-            $entities[$this->normalizeEntity($entity, $module)] = $spec;
+            $entities[$this->normalizeEntity($entity, $namespace)] = $spec;
         }
         ksort($entities);
 
@@ -760,10 +768,10 @@ class i18nTextCollector
      *
      * @uses i18nEntityProvider
      * @param string $filePath
-     * @param string $module
+     * @param Module $module
      * @return array
      */
-    public function collectFromEntityProviders($filePath, $module = null)
+    public function collectFromEntityProviders($filePath, Module $module = null)
     {
         $entities = array();
         $classes = ClassInfo::classes_for_file($filePath);

@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Core\Tests\Manifest;
 
+use Exception;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Dev\SapphireTest;
 
@@ -11,8 +12,19 @@ use SilverStripe\Dev\SapphireTest;
 class ClassManifestTest extends SapphireTest
 {
 
+    /**
+     * @var string
+     */
     protected $base;
+
+    /**
+     * @var ClassManifest
+     */
     protected $manifest;
+
+    /**
+     * @var ClassManifest
+     */
     protected $manifestTests;
 
     public function setUp()
@@ -20,8 +32,8 @@ class ClassManifestTest extends SapphireTest
         parent::setUp();
 
         $this->base = dirname(__FILE__) . '/fixtures/classmanifest';
-        $this->manifest      = new ClassManifest($this->base, false, true, false);
-        $this->manifestTests = new ClassManifest($this->base, true, true, false);
+        $this->manifest      = new ClassManifest($this->base, false);
+        $this->manifestTests = new ClassManifest($this->base, true);
     }
 
     public function testGetItemPath()
@@ -125,23 +137,6 @@ class ClassManifestTest extends SapphireTest
         }
     }
 
-    public function testGetConfigs()
-    {
-        $expect = array("{$this->base}/module/_config.php");
-        $this->assertEquals($expect, $this->manifest->getConfigs());
-        $this->assertEquals($expect, $this->manifestTests->getConfigs());
-    }
-
-    public function testGetModules()
-    {
-        $expect = array(
-            "module" => "{$this->base}/module",
-            "moduleb" => "{$this->base}/moduleb"
-        );
-        $this->assertEquals($expect, $this->manifest->getModules());
-        $this->assertEquals($expect, $this->manifestTests->getModules());
-    }
-
     public function testTestManifestIncludesTestClasses()
     {
         $this->assertNotContains('testclassa', array_keys($this->manifest->getClasses()));
@@ -156,11 +151,10 @@ class ClassManifestTest extends SapphireTest
     /**
      * Assert that ClassManifest throws an exception when it encounters two files
      * which contain classes with the same name
-     *
-     * @expectedException Exception
      */
     public function testManifestWarnsAboutDuplicateClasses()
     {
-        $dummy = new ClassManifest(dirname(__FILE__) . '/fixtures/classmanifest_duplicates', false, true, false);
+        $this->setExpectedException(Exception::class);
+        new ClassManifest(dirname(__FILE__) . '/fixtures/classmanifest_duplicates', false);
     }
 }

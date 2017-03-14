@@ -4,9 +4,8 @@ Before: '/i18n'
 ---
 SilverStripe\i18n\Data\Sources:
   module_priority:
-    - admin
-    - framework
-    - sapphire
+    - silverstripe\admin
+    - silverstripe\framework
 ---
 Name: defaulti18n
 ---
