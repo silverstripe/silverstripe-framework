@@ -75,7 +75,7 @@
       "thirdparty/"
   ],
   "scripts": {
-    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/"
+    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/ tests/php"
   },
   "min-stability": "dev",
   "prefer-stable": true
