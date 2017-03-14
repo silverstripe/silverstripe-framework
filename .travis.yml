@@ -7,10 +7,6 @@ addons:
     packages:
       - tidy
 
-env:
-  global:
-    - TRAVIS_NODE_VERSION="6"
-
 matrix:
   fast_finish: true
   include:
@@ -24,8 +20,6 @@ matrix:
       env: DB=MYSQL PDO=1 PHPUNIT_COVERAGE_TEST=1
     - php: 5.6
       env: DB=MYSQL BEHAT_TEST=1
-    - php: 5.6
-      env: NPM_TEST=1
     - php: 5.6
       env: DB=MYSQL CMS_TEST=1 PHPUNIT_TEST=1
     - php: 5.6
@@ -46,7 +40,6 @@ before_script:
   - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
   - "if [ \"$CMS_TEST\" = \"1\" ]; then COMPOSER_ROOT_VERSION=4.0.x-dev composer require silverstripe/cms:4.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi"
   - "if [ \"$CMS_TEST\" = \"1\" ]; then php ./cms/tests/bootstrap/mysite.php; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then nvm install $TRAVIS_NODE_VERSION && npm install -g yarn && yarn install --network-concurrency 1 && yarn run build; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sh -e /etc/init.d/xvfb start; sleep 3; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ]; then (vendor/bin/selenium-server-standalone > selenium.log 2>&1 &); fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then (vendor/bin/serve --bootstrap-file tests/behat/serve-bootstrap.php &> serve.log &); fi"
@@ -57,9 +50,6 @@ script:
   - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/phpunit cms/tests; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat --config tests/behat/config.yml .; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config tests/behat/cms-config.yml; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then git diff-files --quiet -w; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then git diff -w --no-color; fi"
-  - "if [ \"$NPM_TEST\" = \"1\" ]; then yarn run lint; fi"
   - "if [ \"$PHPCS_TEST\" = \"1\" ]; then composer run-script lint; fi"
 
 after_success:
