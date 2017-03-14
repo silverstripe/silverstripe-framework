@@ -1,0 +1,15 @@
+SilverStripe\Assets\Folder:
+  subfolder:
+    Name: FileTest-subfolder
+  folder1:
+    Name: FileTest-folder1
+  folder2:
+    Name: FileTest-folder2
+  folder1-subfolder1:
+    Name: FileTest-folder1-subfolder1
+    ParentID: =>SilverStripe\Assets\Folder.folder1
+SilverStripe\Assets\File:
+  asdf:
+    FileFilename: FileTest.txt
+    FileHash: 55b443b60176235ef09801153cca4e6da7494a0c
+    Name: FileTest.txt
