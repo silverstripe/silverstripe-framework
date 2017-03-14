@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  piston:remote-revision: 1178
-  piston:uuid: 4bc337fc-6b0f-0410-8579-f0892687066e
-lock: false
-repository_url: https://tinymce.svn.sourceforge.net/svnroot/tinymce/spellchecker_php/trunk/
-repository_class: Piston::Svn::Repository

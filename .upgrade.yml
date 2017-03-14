@@ -171,7 +171,7 @@ mappings:
   CMSBatchActionHandler: SilverStripe\Admin\CMSBatchActionHandler
   CMSMenu: SilverStripe\Admin\CMSMenu
   CMSMenuItem: SilverStripe\Admin\CMSMenuItem
-  CMSPreviewable: SilverStripe\Admin\CMSPreviewable
+  CMSPreviewable: SilverStripe\ORM\CMSPreviewable
   CMSProfileController: SilverStripe\Admin\CMSProfileController
   GroupImportForm: SilverStripe\Admin\GroupImportForm
   LeftAndMain: SilverStripe\Admin\LeftAndMain

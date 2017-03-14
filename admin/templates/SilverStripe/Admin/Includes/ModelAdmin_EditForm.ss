@@ -1,1 +1,0 @@
-<% include SilverStripe/Forms/Form %>

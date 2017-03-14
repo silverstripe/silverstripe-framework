@@ -144,10 +144,6 @@ class Group extends DataObject
             _t('Group.GroupReminder', 'If you choose a parent group, this group will take all it\'s roles')
         );
 
-        // Filter permissions
-        // TODO SecurityAdmin coupling, not easy to get to the form fields through GridFieldDetailForm
-        $permissionsField->setHiddenPermissions((array)Config::inst()->get('SilverStripe\\Admin\\SecurityAdmin', 'hidden_permissions'));
-
         if ($this->ID) {
             $group = $this;
             $config = GridFieldConfig_RelationEditor::create();
@@ -211,7 +207,10 @@ class Group extends DataObject
 
         // Only show the "Roles" tab if permissions are granted to edit them,
         // and at least one role exists
-        if (Permission::check('APPLY_ROLES') && DataObject::get('SilverStripe\\Security\\PermissionRole')) {
+        if (Permission::check('APPLY_ROLES') &&
+            PermissionRole::get()->count() &&
+            class_exists(SecurityAdmin::class)
+        ) {
             $fields->findOrMakeTab('Root.Roles', _t('SecurityAdmin.ROLES', 'Roles'));
             $fields->addFieldToTab(
                 'Root.Roles',

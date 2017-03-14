@@ -2,15 +2,13 @@
 
 namespace SilverStripe\Assets;
 
-use SilverStripe\Admin\AdminRootController;
-use SilverStripe\Admin\CMSPreviewable;
+use SilverStripe\ORM\CMSPreviewable;
 use SilverStripe\Assets\Storage\AssetNameGenerator;
 use SilverStripe\Assets\Storage\DBFile;
 use SilverStripe\Assets\Storage\AssetContainer;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Convert;
 use SilverStripe\Control\Director;
-use SilverStripe\Control\Controller;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\DatetimeField;
@@ -824,21 +822,6 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
     }
 
     /**
-     * @todo Coupling with cms module, remove this method.
-     *
-     * @return string
-     */
-    public function DeleteLink()
-    {
-        return Controller::join_links(
-            Director::absoluteBaseURL(),
-            AdminRootController::admin_url(),
-            "assets/removefile/",
-            $this->ID
-        );
-    }
-
-    /**
      * Get expected value of Filename tuple value. Will be used to trigger
      * a file move on draft stage.
      *
@@ -942,16 +925,16 @@ class File extends DataObject implements ShortcodeHandler, AssetContainer, Thumb
         $extension = strtolower($extension);
 
         // Check if exact extension has an icon
-        if (!file_exists(FRAMEWORK_PATH ."/client/dist/images/app_icons/{$extension}_92.png")) {
+        if (!file_exists(FRAMEWORK_PATH ."/client/images/app_icons/{$extension}_92.png")) {
             $extension = static::get_app_category($extension);
 
             // Fallback to category specific icon
-            if (!file_exists(FRAMEWORK_PATH ."/client/dist/images/app_icons/{$extension}_92.png")) {
+            if (!file_exists(FRAMEWORK_PATH ."/client/images/app_icons/{$extension}_92.png")) {
                 $extension ="generic";
             }
         }
 
-        return FRAMEWORK_DIR ."/client/dist/images/app_icons/{$extension}_92.png";
+        return FRAMEWORK_DIR ."/client/images/app_icons/{$extension}_92.png";
     }
 
     /**

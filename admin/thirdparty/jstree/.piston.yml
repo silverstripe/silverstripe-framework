@@ -1,8 +1,0 @@
---- 
-format: 1
-handler: 
-  commit: 53d377b047f45bb4d4042e5928130c66c01a6e8b
-  branch: v.pre1.0
-lock: false
-repository_class: Piston::Git::Repository
-repository_url: git://github.com/vakata/jstree.git

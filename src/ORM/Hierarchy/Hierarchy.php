@@ -770,7 +770,7 @@ class Hierarchy extends DataExtension implements Resettable
      */
     public function showingCMSTree()
     {
-        if (!Controller::has_curr()) {
+        if (!Controller::has_curr() || !class_exists(LeftAndMain::class)) {
             return false;
         }
         $controller = Controller::curr();

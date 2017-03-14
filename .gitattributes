@@ -2,9 +2,3 @@ docs/ export-ignore
 
 # Line endings
 sake text eol=lf
-
-# Hide diffs
-admin/client/dist/js/ -diff
-admin/client/dist/css/ -diff
-client/dist/js/ -diff
-client/dist/css/ -diff

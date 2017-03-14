@@ -31,6 +31,7 @@
     "vlucas/phpdotenv": "^2.4"
   },
   "require-dev": {
+    "silverstripe/admin": "^1@dev",
     "phpunit/PHPUnit": "~4.8",
     "silverstripe/behat-extension": "^2.1.0",
     "silverstripe/serve": "dev-master",
@@ -74,7 +75,7 @@
       "thirdparty/"
   ],
   "scripts": {
-    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/ admin/code/ tests/ admin/tests/"
+    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/ tests/php"
   },
   "min-stability": "dev",
   "prefer-stable": true

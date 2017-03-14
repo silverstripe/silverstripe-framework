@@ -195,7 +195,7 @@ PHP
     public function success()
     {
         // Ensure member is properly logged in
-        if (!Member::currentUserID()) {
+        if (!Member::currentUserID() || !class_exists(AdminRootController::class)) {
             return $this->redirectToExternalLogin();
         }
 
