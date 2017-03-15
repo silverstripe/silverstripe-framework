@@ -36,8 +36,8 @@ class Log
      */
     public static function get_logger()
     {
-        Deprecation::notice('5.0', 'Use Injector::inst()->get(\'Logger\') instead');
-        return Injector::inst()->get('Logger');
+        Deprecation::notice('5.0', 'Use Injector::inst()->get(LoggerInterface::class) instead');
+        return Injector::inst()->get(LoggerInterface::class);
     }
 
     /**
@@ -55,7 +55,7 @@ class Log
      */
     public static function log($message, $priority)
     {
-        Deprecation::notice('5.0', 'Use Injector::inst()->get(\'Logger\')->log($priority, $message) instead');
-        Injector::inst()->get('Logger')->log($priority, $message);
+        Deprecation::notice('5.0', 'Use Injector::inst()->get(LoggerInterface::class)->log($priority, $message) instead');
+        Injector::inst()->get(LoggerInterface::class)->log($priority, $message);
     }
 }

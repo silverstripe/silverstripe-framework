@@ -14,8 +14,8 @@ For informational and debug logs, you can use the Logger directly. The Logger is
 can be accessed via the `Injector`:
 
 	:::php
-	Injector::inst()->get('Logger')->info('User has logged in: ID #' . Member::currentUserID());
-	Injector::inst()->get('Logger')->debug('Query executed: ' . $sql);
+	Injector::inst()->get(LoggerInterface::class)->info('User has logged in: ID #' . Member::currentUserID());
+	Injector::inst()->get(LoggerInterface::class)->debug('Query executed: ' . $sql);
 
 Although you can raise more important levels of alerts in this way, we recommend using PHP's native error systems for
 these instead.
@@ -48,16 +48,16 @@ but they can be caught with a try/catch clause.
 
 ### Accessing the logger via dependency injection.
 
-It can quite verbose to call `Injector::inst()->get('Logger')` all the time. More importantly, it also means that you're
-coupling your code to global state, which is a bad design practise. A better approach is to use depedency injection to
-pass the logger in for you. The [Injector](../extending/Injector) can help with this. The most straightforward is to
-specify a `dependencies` config setting, like this:
+It can quite verbose to call `Injector::inst()->get(LoggerInterface::class)` all the time. More importantly,
+it also means that you're coupling your code to global state, which is a bad design practise. A better
+approach is to use depedency injection to pass the logger in for you. The [Injector](../extending/Injector)
+can help with this. The most straightforward is to specify a `dependencies` config setting, like this:
 
 	:::php
 	class MyController {
 
 		private static $dependencies = array(
-			'logger' => '%$Logger',
+			'logger' => '%$Psr\Log\LoggerInterface',
 		);
 
 		// This will be set automatically, as long as MyController is instantiated via Injector

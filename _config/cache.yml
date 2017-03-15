@@ -5,7 +5,10 @@ SilverStripe\Core\Injector\Injector:
   SilverStripe\Core\Cache\CacheFactory:
     class: 'SilverStripe\Core\Cache\DefaultCacheFactory'
     constructor:
-      directory: '`TEMP_FOLDER`'
+      args:
+        directory: '`TEMP_FOLDER`'
+        version: null
+      logger: %$Psr\Log\LoggerInterface
   Psr\SimpleCache\CacheInterface.GDBackend_Manipulations:
     factory: SilverStripe\Core\Cache\CacheFactory
     constructor:

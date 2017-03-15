@@ -48,6 +48,7 @@
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Psr\Log\LoggerInterface;
 use SilverStripe\Control\Email\Email;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Dev\Install\DatabaseAdapterRegistry;
@@ -138,7 +139,7 @@ if ($useBasicAuth = getenv('SS_USE_BASIC_AUTH')) {
 }
 
 if ($errorLog = getenv('SS_ERROR_LOG')) {
-    $logger = Injector::inst()->get('Logger');
+    $logger = Injector::inst()->get(LoggerInterface::class);
     if ($logger instanceof Logger) {
         $logger->pushHandler(new StreamHandler(BASE_PATH . '/' . $errorLog, Logger::WARNING));
     } else {
