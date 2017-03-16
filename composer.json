@@ -31,7 +31,6 @@
     "vlucas/phpdotenv": "^2.4"
   },
   "require-dev": {
-    "silverstripe/admin": "^1@dev",
     "phpunit/PHPUnit": "~4.8",
     "silverstripe/behat-extension": "^2.1.0",
     "silverstripe/serve": "dev-master",
@@ -45,8 +44,6 @@
   },
   "autoload": {
     "psr-4": {
-      "SilverStripe\\Admin\\": "admin/code/",
-      "SilverStripe\\Admin\\Tests\\": "admin/tests/",
       "SilverStripe\\Assets\\": "src/Assets/",
       "SilverStripe\\Assets\\Tests\\": "tests/php/Assets/",
       "SilverStripe\\Control\\": "src/Control/",
