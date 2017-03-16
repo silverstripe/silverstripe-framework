@@ -13,7 +13,6 @@ use SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore;
 
 class DataDifferencerTest extends SapphireTest
 {
-
     protected static $fixture_file = 'DataDifferencerTest.yml';
 
     protected $extraDataObjects = array(
@@ -33,7 +32,7 @@ class DataDifferencerTest extends SapphireTest
         // Create a test files for each of the fixture references
         $files = File::get()->exclude('ClassName', Folder::class);
         foreach ($files as $file) {
-            $fromPath = __DIR__ . '/ImageTest/' . $file->Name;
+            $fromPath = __DIR__ . '/DataDifferencerTest/images/' . $file->Name;
             $destPath = TestAssetStore::getLocalPath($file); // Only correct for test asset store
             Filesystem::makeFolder(dirname($destPath));
             copy($fromPath, $destPath);

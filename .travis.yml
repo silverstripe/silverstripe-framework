@@ -40,7 +40,7 @@ before_script:
   - composer install --prefer-dist
   - "if [ \"$DB\" = \"PGSQL\" ]; then composer require silverstripe/postgresql:2.0.x-dev --prefer-dist; fi"
   - "if [ \"$DB\" = \"SQLITE\" ]; then composer require silverstripe/sqlite3:2.0.x-dev --prefer-dist; fi"
-  - composer require silverstripe/config:1.0.x-dev silverstripe/admin:1.0.x-dev --prefer-dist
+  - composer require silverstripe/config:1.0.x-dev silverstripe/admin:1.0.x-dev silverstripe/assets:1.0.x-dev --prefer-dist
   - "if [ \"$CMS_TEST\" = \"1\" ]; then composer require silverstripe/cms:4.0.x-dev silverstripe/siteconfig:4.0.x-dev silverstripe/reports:4.0.x-dev --prefer-dist; fi"
   - "if [ \"$CMS_TEST\" = \"1\" ]; then php ./cms/tests/bootstrap/mysite.php; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ]; then sh -e /etc/init.d/xvfb start; sleep 3; fi"
@@ -49,14 +49,14 @@ before_script:
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then (vendor/bin/serve --bootstrap-file cms/tests/behat/serve-bootstrap.php &> serve.log &); fi"
 
 script:
-  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit tests/php; fi"
+  - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/phpunit; fi"
+  - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage.xml; fi"
   - "if [ \"$PHPUNIT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/phpunit cms/tests; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then vendor/bin/behat --config tests/behat/config.yml .; fi"
   - "if [ \"$BEHAT_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"1\" ]; then vendor/bin/behat @cms --config tests/behat/cms-config.yml; fi"
   - "if [ \"$PHPCS_TEST\" = \"1\" ]; then composer run-script lint; fi"
 
 after_success:
-  - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then phpdbg -qrr ./vendor/bin/phpunit --coverage-clover=coverage.xml; fi"
   - "if [ \"$PHPUNIT_COVERAGE_TEST\" = \"1\" ] && [ \"$CMS_TEST\" = \"\" ]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi"
 
 after_failure:

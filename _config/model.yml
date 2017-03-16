@@ -20,8 +20,6 @@ SilverStripe\Core\Injector\Injector:
     class: SilverStripe\ORM\FieldType\DBDouble
   Enum:
     class: SilverStripe\ORM\FieldType\DBEnum
-  DBFile:
-    class: SilverStripe\Assets\Storage\DBFile
   Float:
     class: SilverStripe\ORM\FieldType\DBFloat
   ForeignKey:
