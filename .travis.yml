@@ -14,7 +14,7 @@ env:
 matrix:
   fast_finish: true
   include:
-    - php: 5.5
+    - php: 5.6
       env: DB=PGSQL PHPUNIT_TEST=1
     - php: 5.6
       env: DB=MYSQL PHPUNIT_TEST=1 PHPCS_TEST=1
@@ -32,7 +32,6 @@ matrix:
 before_script:
   - export CORE_RELEASE=$TRAVIS_BRANCH
   - printf "\n" | pecl install imagick
-  - composer self-update || true
   - "if [ \"$PHPCS_TEST\" = \"1\" ]; then pyrus install pear/PHP_CodeSniffer; fi"
   - phpenv rehash
   - phpenv config-rm xdebug.ini
