@@ -4,6 +4,8 @@ namespace SilverStripe\Dev;
 
 use SilverStripe\Control\Director;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\Module;
+use SilverStripe\Core\Manifest\ModuleLoader;
 
 /**
  * Handles raising an notice when accessing a deprecated method
@@ -96,7 +98,7 @@ class Deprecation
      * #notice)
      *
      * @param array $backtrace A backtrace as returned from debug_backtrace
-     * @return string The name of the module the call came from, or null if we can't determine
+     * @return Module The module being called
      */
     protected static function get_calling_module_from_trace($backtrace)
     {
@@ -106,10 +108,10 @@ class Deprecation
 
         $callingfile = realpath($backtrace[1]['file']);
 
-        $manifest = ClassLoader::instance()->getManifest();
-        foreach ($manifest->getModules() as $name => $path) {
-            if (strpos($callingfile, realpath($path)) === 0) {
-                return $name;
+        $modules = ModuleLoader::instance()->getManifest()->getModules();
+        foreach ($modules as $module) {
+            if (strpos($callingfile, realpath($module->getPath())) === 0) {
+                return $module;
             }
         }
         return null;
@@ -193,8 +195,16 @@ class Deprecation
 
         if (self::$module_version_overrides) {
             $module = self::get_calling_module_from_trace($backtrace = debug_backtrace(0));
-            if (isset(self::$module_version_overrides[$module])) {
-                $checkVersion = self::$module_version_overrides[$module];
+            if ($module) {
+                if (($name = $module->getComposerName())
+                    && isset(self::$module_version_overrides[$name])
+                ) {
+                    $checkVersion = self::$module_version_overrides[$name];
+                } elseif (($name = $module->getShortName())
+                    && isset(self::$module_version_overrides[$name])
+                ) {
+                    $checkVersion = self::$module_version_overrides[$name];
+                }
             }
         }
 

@@ -13,7 +13,9 @@ use ReflectionMethod;
  */
 class NamespacedClassManifestTest extends SapphireTest
 {
-
+    /**
+     * @var string
+     */
     protected $base;
 
     /**
@@ -26,7 +28,7 @@ class NamespacedClassManifestTest extends SapphireTest
         parent::setUp();
 
         $this->base = dirname(__FILE__) . '/fixtures/namespaced_classmanifest';
-        $this->manifest      = new ClassManifest($this->base, false, true, false);
+        $this->manifest = new ClassManifest($this->base, false);
         ClassLoader::instance()->pushManifest($this->manifest, false);
     }
 
@@ -40,7 +42,7 @@ class NamespacedClassManifestTest extends SapphireTest
     {
         $this->assertContains('SilverStripe\Framework\Tests\ClassI', ClassInfo::implementorsOf('SilverStripe\\Security\\PermissionProvider'));
 
-        //because we're using a nested manifest we have to "coalesce" the descendants again to correctly populate the
+        // because we're using a nested manifest we have to "coalesce" the descendants again to correctly populate the
         // descendants of the core classes we want to test against - this is a limitation of the test manifest not
         // including all core classes
         $method = new ReflectionMethod($this->manifest, 'coalesceDescendants');
@@ -148,20 +150,5 @@ class NamespacedClassManifestTest extends SapphireTest
         foreach ($expect as $interface => $impl) {
             $this->assertEquals($impl, $this->manifest->getImplementorsOf($interface));
         }
-    }
-
-    public function testGetConfigs()
-    {
-        $expect = array("{$this->base}/module/_config.php");
-        $this->assertEquals($expect, $this->manifest->getConfigs());
-    }
-
-    public function testGetModules()
-    {
-        $expect = array(
-            "module" => "{$this->base}/module",
-            "moduleb" => "{$this->base}/moduleb"
-        );
-        $this->assertEquals($expect, $this->manifest->getModules());
     }
 }

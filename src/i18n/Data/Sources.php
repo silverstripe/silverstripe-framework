@@ -4,7 +4,7 @@ namespace SilverStripe\i18n\Data;
 
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
-use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\ModuleLoader;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\View\SSViewer;
@@ -35,7 +35,7 @@ class Sources implements Resettable
     public function getSortedModules()
     {
         // Get list of module => path pairs, and then just the names
-        $modules = ClassLoader::instance()->getManifest()->getModules();
+        $modules = ModuleLoader::instance()->getManifest()->getModules();
         $moduleNames = array_keys($modules);
 
         // Remove the "project" module from the list - we'll add it back specially later if needed
@@ -63,14 +63,14 @@ class Sources implements Resettable
             $order[] = $project;
         }
 
-        $sortedModules = array();
+        $sortedModulePaths = array();
         foreach ($order as $module) {
             if (isset($modules[$module])) {
-                $sortedModules[$module] = $modules[$module];
+                $sortedModulePaths[$module] = $modules[$module]->getPath();
             }
         }
-        $sortedModules = array_reverse($sortedModules, true);
-        return $sortedModules;
+        $sortedModulePaths = array_reverse($sortedModulePaths, true);
+        return $sortedModulePaths;
     }
 
     /**

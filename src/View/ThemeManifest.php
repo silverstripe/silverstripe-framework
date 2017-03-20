@@ -2,7 +2,8 @@
 
 namespace SilverStripe\View;
 
-use SilverStripe\Core\Manifest\ManifestCache;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Manifest\ManifestFileFinder;
 
 /**
@@ -37,7 +38,7 @@ class ThemeManifest implements ThemeList
     /**
      * Cache
      *
-     * @var ManifestCache
+     * @var CacheInterface
      */
     protected $cache;
 
@@ -51,7 +52,7 @@ class ThemeManifest implements ThemeList
     /**
      * List of theme root directories
      *
-     * @var string
+     * @var string[]
      */
     protected $themes = null;
 
@@ -64,18 +65,26 @@ class ThemeManifest implements ThemeList
      *
      * @param bool $includeTests Include tests in the manifest.
      * @param bool $forceRegen Force the manifest to be regenerated.
+     * @param CacheFactory $cacheFactory Cache factory to generate backend cache with
      */
-    public function __construct($base, $project, $includeTests = false, $forceRegen = false)
-    {
+    public function __construct(
+        $base,
+        $project,
+        $includeTests = false,
+        $forceRegen = false,
+        CacheFactory $cacheFactory = null
+    ) {
         $this->base  = $base;
         $this->tests = $includeTests;
-
         $this->project = $project;
 
-        $cacheClass = getenv('SS_MANIFESTCACHE')
-            ?: 'SilverStripe\\Core\\Manifest\\ManifestCache_File';
-
-        $this->cache = new $cacheClass('thememanifest'.($includeTests ? '_tests' : ''));
+        // build cache from factory
+        if ($cacheFactory) {
+            $this->cache = $cacheFactory->create(
+                CacheInterface::class.'.thememanifest',
+                [ 'namespace' => 'thememanifest' . ($includeTests ? '_tests' : '') ]
+            );
+        }
         $this->cacheKey = $this->getCacheKey();
 
         if ($forceRegen) {
@@ -117,10 +126,8 @@ class ThemeManifest implements ThemeList
 
     /**
      * Regenerates the manifest by scanning the base path.
-     *
-     * @param bool $cache
      */
-    public function regenerate($cache = true)
+    public function regenerate()
     {
         $finder = new ManifestFileFinder();
         $finder->setOptions(array(
@@ -133,8 +140,8 @@ class ThemeManifest implements ThemeList
         $this->themes = [];
         $finder->find($this->base);
 
-        if ($cache) {
-            $this->cache->save($this->themes, $this->cacheKey);
+        if ($this->cache) {
+            $this->cache->set($this->cacheKey, $this->themes);
         }
     }
 
@@ -171,7 +178,7 @@ class ThemeManifest implements ThemeList
      */
     protected function init()
     {
-        if ($data = $this->cache->load($this->cacheKey)) {
+        if ($this->cache && ($data = $this->cache->get($this->cacheKey))) {
             $this->themes = $data;
         } else {
             $this->regenerate();

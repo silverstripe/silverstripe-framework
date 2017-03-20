@@ -3,6 +3,8 @@
 namespace SilverStripe\Core\Manifest;
 
 use LogicException;
+use Psr\SimpleCache\CacheInterface;
+use SilverStripe\Core\Cache\CacheFactory;
 
 /**
  * A utility class which builds a manifest of configuration items
@@ -31,7 +33,7 @@ class ModuleManifest
     protected $includeTests;
 
     /**
-     * @var ManifestCache
+     * @var CacheInterface
      */
     protected $cache;
 
@@ -87,35 +89,29 @@ class ModuleManifest
      * @param string $base The project base path.
      * @param bool $includeTests
      * @param bool $forceRegen Force the manifest to be regenerated.
+     * @param CacheFactory $cacheFactory Cache factory to use
      */
-    public function __construct($base, $includeTests = false, $forceRegen = false)
+    public function __construct($base, $includeTests = false, $forceRegen = false, CacheFactory $cacheFactory = null)
     {
         $this->base = $base;
         $this->cacheKey = sha1($base).'_modules';
         $this->includeTests = $includeTests;
 
-        $this->cache = $this->getCache($includeTests);
+        // build cache from factory
+        if ($cacheFactory) {
+            $this->cache = $cacheFactory->create(
+                CacheInterface::class.'.modulemanifest',
+                [ 'namespace' => 'modulemanifest' . ($includeTests ? '_tests' : '') ]
+            );
+        }
 
         // Unless we're forcing regen, try loading from cache
-        if (!$forceRegen) {
-            $this->modules = $this->cache->load($this->cacheKey) ?: [];
+        if (!$forceRegen && $this->cache) {
+            $this->modules = $this->cache->get($this->cacheKey) ?: [];
         }
         if (empty($this->modules)) {
             $this->regenerate($includeTests);
         }
-    }
-
-    /**
-     * Provides a hook for mock unit tests despite no DI
-     *
-     * @param bool $includeTests
-     * @return ManifestCache
-     */
-    protected function getCache($includeTests = false)
-    {
-        // Cache
-        $cacheClass = getenv('SS_MANIFESTCACHE') ?: ManifestCache_File::class;
-        return new $cacheClass('classmanifest'.($includeTests ? '_tests' : ''));
     }
 
     /**
@@ -136,9 +132,8 @@ class ModuleManifest
      * Does _not_ build the actual variant
      *
      * @param bool $includeTests
-     * @param bool $cache Cache the result.
      */
-    public function regenerate($includeTests = false, $cache = true)
+    public function regenerate($includeTests = false)
     {
         $this->modules = [];
 
@@ -162,8 +157,8 @@ class ModuleManifest
         ));
         $finder->find($this->base);
 
-        if ($cache) {
-            $this->cache->save($this->modules, $this->cacheKey);
+        if ($this->cache) {
+            $this->cache->set($this->cacheKey, $this->modules);
         }
     }
 
@@ -172,9 +167,8 @@ class ModuleManifest
      *
      * @param string $basename
      * @param string $pathname
-     * @param int $depth
      */
-    public function addSourceConfigFile($basename, $pathname, $depth)
+    public function addSourceConfigFile($basename, $pathname)
     {
         $this->addModule(dirname($pathname));
     }
@@ -184,9 +178,8 @@ class ModuleManifest
      *
      * @param string $basename
      * @param string $pathname
-     * @param int $depth
      */
-    public function addYAMLConfigFile($basename, $pathname, $depth)
+    public function addYAMLConfigFile($basename, $pathname)
     {
         if (preg_match('{/([^/]+)/_config/}', $pathname, $match)) {
             $this->addModule(dirname(dirname($pathname)));

@@ -12,8 +12,25 @@ use SilverStripe\Dev\SapphireTest;
 class ClassLoaderTest extends SapphireTest
 {
 
-    protected $base;
-    protected $manifest;
+    /**
+     * @var string
+     */
+    protected $baseManifest1;
+
+    /**
+     * @var string
+     */
+    protected $baseManifest2;
+
+    /**
+     * @var ClassManifest
+     */
+    protected $testManifest1;
+
+    /**
+     * @var ClassManifest
+     */
+    protected $testManifest2;
 
     public function setUp()
     {
@@ -21,8 +38,8 @@ class ClassLoaderTest extends SapphireTest
 
         $this->baseManifest1 = dirname(__FILE__) . '/fixtures/classmanifest';
         $this->baseManifest2 = dirname(__FILE__) . '/fixtures/classmanifest_other';
-        $this->testManifest1 = new ClassManifest($this->baseManifest1, false, true, false);
-        $this->testManifest2 = new ClassManifest($this->baseManifest2, false, true, false);
+        $this->testManifest1 = new ClassManifest($this->baseManifest1, false);
+        $this->testManifest2 = new ClassManifest($this->baseManifest2, false);
     }
 
     public function testExclusive()

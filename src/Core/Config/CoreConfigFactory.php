@@ -6,11 +6,13 @@ use Monolog\Handler\ErrorLogHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Config\Collections\CachedConfigCollection;
 use SilverStripe\Config\Collections\MemoryConfigCollection;
 use SilverStripe\Config\Transformer\PrivateStaticTransformer;
 use SilverStripe\Config\Transformer\YamlTransformer;
 use SilverStripe\Control\Director;
+use SilverStripe\Core\Cache\CacheFactory;
 use SilverStripe\Core\Config\Middleware\ExtensionMiddleware;
 use SilverStripe\Core\Config\Middleware\InheritanceMiddleware;
 use SilverStripe\Core\Manifest\ClassLoader;
@@ -45,14 +47,18 @@ class CoreConfigFactory
      * which conditionally generates a nested "core" config.
      *
      * @param bool $flush
+     * @param CacheFactory $cacheFactory
      * @return CachedConfigCollection
      */
-    public function createRoot($flush)
+    public function createRoot($flush, CacheFactory $cacheFactory)
     {
         $instance = new CachedConfigCollection();
 
-        // Set root cache
-        $instance->setPool($this->createPool());
+        // Create config cache
+        $cache = $cacheFactory->create(CacheInterface::class.'.configcache', [
+            'namespace' => 'configcache'
+        ]);
+        $instance->setCache($cache);
         $instance->setFlush($flush);
 
         // Set collection creator
@@ -171,33 +177,5 @@ class CoreConfigFactory
             ->addRule('moduleexists', function ($module) {
                 return ModuleLoader::instance()->getManifest()->moduleExists($module);
             });
-    }
-
-    /**
-     * @todo Refactor bootstrapping of manifest caching into app object
-     * @return FilesystemAdapter
-     */
-    protected function createPool()
-    {
-        $cache = new FilesystemAdapter('configcache', 0, getTempFolder());
-        $cache->setLogger($this->createLogger());
-        return $cache;
-    }
-
-    /**
-     * Create default error logger
-     *
-     * @todo Refactor bootstrapping of manifest logging into app object
-     * @return LoggerInterface
-     */
-    protected function createLogger()
-    {
-        $logger = new Logger("configcache-log");
-        if (Director::isDev()) {
-            $logger->pushHandler(new StreamHandler('php://output'));
-        } else {
-            $logger->pushHandler(new ErrorLogHandler());
-        }
-        return $logger;
     }
 }

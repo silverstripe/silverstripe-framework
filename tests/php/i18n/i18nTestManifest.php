@@ -6,6 +6,8 @@ use SilverStripe\Control\Director;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Manifest\ClassManifest;
 use SilverStripe\Core\Manifest\ClassLoader;
+use SilverStripe\Core\Manifest\ModuleLoader;
+use SilverStripe\Core\Manifest\ModuleManifest;
 use SilverStripe\i18n\i18n;
 use SilverStripe\i18n\Messages\MessageProvider;
 use SilverStripe\i18n\Messages\Symfony\ModuleYamlLoader;
@@ -41,6 +43,13 @@ trait i18nTestManifest
      */
     protected $manifests = 0;
 
+    /**
+     * Number of module manifests
+     *
+     * @var int
+     */
+    protected $moduleManifests = 0;
+
     protected function getExtraDataObjects()
     {
         return [
@@ -72,17 +81,16 @@ trait i18nTestManifest
         $this->alternateBasePath = __DIR__ . $s . 'i18nTest' . $s . "_fakewebroot";
         Director::config()->update('alternate_base_folder', $this->alternateBasePath);
 
+        // New module manifest
+        $moduleManifest = new ModuleManifest($this->alternateBasePath, false);
+        $this->pushModuleManifest($moduleManifest);
+
         // Replace old template loader with new one with alternate base path
         $this->oldThemeResourceLoader = ThemeResourceLoader::instance();
         ThemeResourceLoader::set_instance($loader = new ThemeResourceLoader($this->alternateBasePath));
         $loader->addSet(
             '$default',
-            new ThemeManifest(
-                $this->alternateBasePath,
-                project(),
-                false,
-                true
-            )
+            new ThemeManifest($this->alternateBasePath, project(), false)
         );
 
         SSViewer::set_themes([
@@ -94,7 +102,7 @@ trait i18nTestManifest
         i18n::set_locale('en_US');
 
         // Set new manifest against the root
-        $classManifest = new ClassManifest($this->alternateBasePath, true, true, false);
+        $classManifest = new ClassManifest($this->alternateBasePath, true);
         $this->pushManifest($classManifest);
 
         // Setup uncached translator
@@ -131,6 +139,12 @@ trait i18nTestManifest
         ClassLoader::instance()->pushManifest($manifest);
     }
 
+    protected function pushModuleManifest(ModuleManifest $manifest)
+    {
+        $this->moduleManifests++;
+        ModuleLoader::instance()->pushManifest($manifest);
+    }
+
     /**
      * Pop off all extra manifests
      */
@@ -140,6 +154,10 @@ trait i18nTestManifest
         while ($this->manifests > 0) {
             ClassLoader::instance()->popManifest();
             $this->manifests--;
+        }
+        while ($this->moduleManifests > 0) {
+            ModuleLoader::instance()->popManifest();
+            $this->moduleManifests--;
         }
     }
 }

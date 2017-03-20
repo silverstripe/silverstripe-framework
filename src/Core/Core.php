@@ -1,5 +1,6 @@
 <?php
 
+use SilverStripe\Core\Cache\ManifestCacheFactory;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\CoreConfigFactory;
 use SilverStripe\Core\Config\ConfigLoader;
@@ -70,8 +71,14 @@ Injector::set_inst($injector);
 $requestURL = isset($_REQUEST['url']) ? trim($_REQUEST['url'], '/') : false;
 $flush = (isset($_GET['flush']) || $requestURL === trim(BASE_URL . '/dev/build', '/'));
 
-global $manifest;
-$manifest = new ClassManifest(BASE_PATH, false, $flush);
+// Manifest cache factory
+$manifestCacheFactory = new ManifestCacheFactory([
+    'namespace' => 'manifestcache',
+    'directory' => getTempFolder(),
+]);
+
+// Build class manifest
+$manifest = new ClassManifest(BASE_PATH, false, $flush, $manifestCacheFactory);
 
 // Register SilverStripe's class map autoload
 $loader = ClassLoader::instance();
@@ -79,11 +86,11 @@ $loader->registerAutoloader();
 $loader->pushManifest($manifest);
 
 // Init module manifest
-$moduleManifest = new ModuleManifest(BASE_PATH, false, $flush);
+$moduleManifest = new ModuleManifest(BASE_PATH, false, $flush, $manifestCacheFactory);
 ModuleLoader::instance()->pushManifest($moduleManifest);
 
 // Build config manifest
-$configManifest = CoreConfigFactory::inst()->createRoot($flush);
+$configManifest = CoreConfigFactory::inst()->createRoot($flush, $manifestCacheFactory);
 ConfigLoader::instance()->pushManifest($configManifest);
 
 // After loading config, boot _config.php files
@@ -94,7 +101,8 @@ SilverStripe\View\ThemeResourceLoader::instance()->addSet('$default', new Silver
     BASE_PATH,
     project(),
     false,
-    $flush
+    $flush,
+    $manifestCacheFactory
 ));
 
 // If in live mode, ensure deprecation, strict and notices are not reported
