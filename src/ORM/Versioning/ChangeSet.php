@@ -493,16 +493,16 @@ class ChangeSet extends DataObject
         // Describe non-important items
         if ($countedOther) {
             if ($counted) {
-                $parts[] = i18n::pluralise(
+                $parts[] = i18n::_t(
                     'ChangeSet.DESCRIPTION_OTHER_ITEM_PLURALS',
                     'one other item|{count} other items',
-                    $countedOther
+                    [ 'count' => $countedOther ]
                 );
             } else {
-                $parts[] = i18n::pluralise(
+                $parts[] = i18n::_t(
                     'ChangeSet.DESCRIPTION_ITEM_PLURALS',
                     'one item|{count} items',
-                    $countedOther
+                    [ 'count' => $countedOther ]
                 );
             }
         }

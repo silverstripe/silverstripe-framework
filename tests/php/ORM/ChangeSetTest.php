@@ -104,6 +104,17 @@ class ChangeSetTest extends SapphireTest
         );
     }
 
+    public function testDescription()
+    {
+        $cs = new ChangeSet();
+        $cs->write();
+        $cs->addObject($this->objFromFixture(ChangeSetTest\EndObject::class, 'end1'));
+        $this->assertEquals('one item', $cs->getDescription());
+
+        $cs->addObject($this->objFromFixture(ChangeSetTest\EndObjectChild::class, 'endchild1'));
+        $this->assertEquals('2 items', $cs->getDescription());
+    }
+
     public function testRepeatedSyncIsNOP()
     {
         $this->publishAllFixtures();
