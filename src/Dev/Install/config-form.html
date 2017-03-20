@@ -43,12 +43,12 @@
 										<p><strong>Note:</strong> SilverStripe is already installed here.<br>
 										If you wish to reinstall SilverStripe, please delete the <strong>mysite/_config.php</strong> file first.</p>
 									</div>
-								<?php else if($req->hasWarnings()): ?>
+								<?php elseif($req->hasWarnings()): ?>
 									<div class="message warning">
 										<p>There are some issues that we recommend you look at before installing, however, you are still able to install the software.
 										<br>Please see below for details. If you are having problems meeting the requirements, see the <a href="http://doc.silverstripe.org/framework/en/installation/server-requirements" target="_blank">server requirements</a>.</p>
 									</div>
-								<?php else if(!$dbReq->hasErrors() && !$adminReq->hasErrors()): ?>
+								<?php elseif(!$dbReq->hasErrors() && !$adminReq->hasErrors()): ?>
 									<div class="message goodInstall"><p>You're ready to install! Please confirm the configuration options below. <a href="#install">Install SilverStripe</a></p>
 									</div>
 								<?php endif; ?>
