@@ -574,6 +574,14 @@ class DataObjectSchema
             list($childClass, $relationName) = explode('.', $specification, 2);
         }
 
+        // Check child class exists
+        if (!class_exists($childClass)) {
+            throw new LogicException(
+                "belongs_many_many relation {$parentClass}.{$component} points to "
+                . "{$childClass} which does not exist"
+            );
+        }
+
         // We need to find the inverse component name, if not explicitly given
         if (!$relationName) {
             $relationName = $this->getManyManyInverseRelationship($childClass, $parentClass);

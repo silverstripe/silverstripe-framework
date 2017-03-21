@@ -115,14 +115,6 @@ mappings:
   SilverStripe\Model\FieldType\DBVarchar: SilverStripe\ORM\FieldType\DBVarchar
   SilverStripe\Model\FieldType\DBYear: SilverStripe\ORM\FieldType\DBYear
   SilverStripe\Model\FieldType\SS_Datetime: SilverStripe\ORM\FieldType\DBDatetime
-  ChangeSet: SilverStripe\ORM\Versioning\ChangeSet
-  ChangeSetItem: SilverStripe\ORM\Versioning\ChangeSetItem
-  DataDifferencer: SilverStripe\ORM\Versioning\DataDifferencer
-  VersionableExtension: SilverStripe\ORM\Versioning\VersionableExtension
-  Versioned: SilverStripe\ORM\Versioning\Versioned
-  Versioned_Version: SilverStripe\ORM\Versioning\Versioned_Version
-  VersionedGridFieldDetailForm: SilverStripe\ORM\Versioning\VersionedGridFieldDetailForm
-  VersionedGridFieldItemRequest: SilverStripe\ORM\Versioning\VersionedGridFieldItemRequest
   Hierarchy: SilverStripe\ORM\Hierarchy\Hierarchy
   Authenticator: SilverStripe\Security\Authenticator
   BasicAuth: SilverStripe\Security\BasicAuth
@@ -288,7 +280,7 @@ mappings:
   RequestHandler: SilverStripe\Control\RequestHandler
   RequestProcessor: SilverStripe\Control\RequestProcessor
   Session: SilverStripe\Control\Session
-  VersionedRequestFilter: SilverStripe\Control\VersionedRequestFilter
+  VersionedRequestFilter: SilverStripe\Versioned\VersionedRequestFilter
   Email: SilverStripe\Control\Email\Email
   Mailer: SilverStripe\Control\Email\Mailer
   RSSFeed: SilverStripe\Control\RSS\RSSFeed
@@ -680,22 +672,22 @@ mappings:
   ArrayLibTest: SilverStripe\ORM\Tests\ArrayLibTest
   ArrayListTest: SilverStripe\ORM\Tests\ArrayListTest
   ArrayListTest_Object: SilverStripe\ORM\Tests\ArrayListTest\TestObject
-  ChangeSetItemTest_Versioned: SilverStripe\ORM\Tests\ChangeSetItemTest\VersionedObject
-  ChangeSetItemTest: SilverStripe\ORM\Tests\ChangeSetItemTest
-  ChangeSetTest_Permissions: SilverStripe\ORM\Tests\ChangeSetTest\Permissions
-  ChangeSetTest_Base: SilverStripe\ORM\Tests\ChangeSetTest\BaseObject
-  ChangeSetTest_Mid: SilverStripe\ORM\Tests\ChangeSetTest\MidObject
-  ChangeSetTest_End: SilverStripe\ORM\Tests\ChangeSetTest\EndObject
-  ChangeSetTest_EndChild: SilverStripe\ORM\Tests\ChangeSetTest\EndObjectChild
-  ChangeSetTest: SilverStripe\ORM\Tests\ChangeSetTest
+  ChangeSetItemTest_Versioned: SilverStripe\Versioned\Tests\ChangeSetItemTest\VersionedObject
+  ChangeSetItemTest: SilverStripe\Versioned\Tests\ChangeSetItemTest
+  ChangeSetTest_Permissions: SilverStripe\Versioned\Tests\ChangeSetTest\Permissions
+  ChangeSetTest_Base: SilverStripe\Versioned\Tests\ChangeSetTest\BaseObject
+  ChangeSetTest_Mid: SilverStripe\Versioned\Tests\ChangeSetTest\MidObject
+  ChangeSetTest_End: SilverStripe\Versioned\Tests\ChangeSetTest\EndObject
+  ChangeSetTest_EndChild: SilverStripe\Versioned\Tests\ChangeSetTest\EndObjectChild
+  ChangeSetTest: SilverStripe\Versioned\Tests\ChangeSetTest
   ComponentSetTest: SilverStripe\ORM\Tests\ComponentSetTest
   ComponentSetTest_Player: SilverStripe\ORM\Tests\ComponentSetTest\Player
   ComponentSetTest_Team: SilverStripe\ORM\Tests\ComponentSetTest\Team
   DatabaseTest: SilverStripe\ORM\Tests\DatabaseTest
   DatabaseTest_MyObject: SilverStripe\ORM\Tests\DatabaseTest\MyObject
-  DataDifferencerTest: SilverStripe\ORM\Tests\DataDifferencerTest
-  DataDifferencerTest_Object: SilverStripe\ORM\Tests\DataDifferencerTest\TestObject
-  DataDifferencerTest_HasOneRelationObject: SilverStripe\ORM\Tests\DataDifferencerTest\HasOneRelationObject
+  DataDifferencerTest: SilverStripe\Versioned\Tests\DataDifferencerTest
+  DataDifferencerTest_Object: SilverStripe\Versioned\Tests\DataDifferencerTest\TestObject
+  DataDifferencerTest_HasOneRelationObject: SilverStripe\Versioned\Tests\DataDifferencerTest\HasOneRelationObject
   DataExtensionTest: SilverStripe\ORM\Tests\DataExtensionTest
   DataExtensionTest_Member: SilverStripe\ORM\Tests\DataExtensionTest\TestMember
   DataExtensionTest_Player: SilverStripe\ORM\Tests\DataExtensionTest\Player
@@ -718,8 +710,8 @@ mappings:
   DataObjectDuplicateTestClass2: SilverStripe\ORM\Tests\DataObjectDuplicationTest\Class2
   DataObjectDuplicateTestClass3: SilverStripe\ORM\Tests\DataObjectDuplicationTest\Class3
   DataObjectLazyLoadingTest: SilverStripe\ORM\Tests\DataObjectLazyLoadingTest
-  VersionedLazy_DataObject: SilverStripe\ORM\Tests\DataObjectLazyLoadingTest\VersionedObject
-  VersionedLazySub_DataObject: SilverStripe\ORM\Tests\DataObjectLazyLoadingTest\VersionedSubObject
+  VersionedLazy_DataObject: SilverStripe\Versioned\Tests\VersionedDataObjectLazyLoadingTest\VersionedObject
+  VersionedLazySub_DataObject: SilverStripe\Versioned\Tests\VersionedDataObjectLazyLoadingTest\VersionedSubObject
   DataObjectSchemaGenerationTest: SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest
   DataObjectSchemaGenerationTest_DO: SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestObject
   DataObjectSchemaGenerationTest_IndexDO: SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestIndexObject
@@ -809,9 +801,9 @@ mappings:
   ManyManyThroughListTest_Object: SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject
   ManyManyThroughListTest_JoinObject: SilverStripe\ORM\Tests\ManyManyThroughListTest\JoinObject
   ManyManyThroughListTest_Item: SilverStripe\ORM\Tests\ManyManyThroughListTest\Item
-  ManyManyThroughListTest_VersionedObject: SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedObject
-  ManyManyThroughListTest_VersionedJoinObject: SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedJoinObject
-  ManyManyThroughListTest_VersionedItem: SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedItem
+  ManyManyThroughListTest_VersionedObject: SilverStripe\Versioned\Tests\VersionedManyManyThroughListTest\VersionedObject
+  ManyManyThroughListTest_VersionedJoinObject: SilverStripe\Versioned\Tests\VersionedManyManyThroughListTest\VersionedJoinObject
+  ManyManyThroughListTest_VersionedItem: SilverStripe\Versioned\Tests\VersionedManyManyThroughListTest\VersionedItem
   MapTest: SilverStripe\ORM\Tests\MapTest
   MySQLDatabaseTest: SilverStripe\ORM\Tests\MySQLDatabaseTest
   MySQLDatabaseTest_Data: SilverStripe\ORM\Tests\MySQLDatabaseTest\Data
@@ -834,31 +826,31 @@ mappings:
   UnsavedRelationListTest_DataObject: SilverStripe\ORM\Tests\UnsavedRelationListTest\TestObject
   URLSegmentFilterTest: SilverStripe\ORM\Tests\URLSegmentFilterTest
   ValidationExceptionTest: SilverStripe\ORM\Tests\ValidationExceptionTest
-  VersionableExtensionsTest: SilverStripe\ORM\Tests\VersionableExtensionsTest
-  VersionableExtensionsTest_DataObject: SilverStripe\ORM\Tests\VersionableExtensionsTest\TestObject
-  VersionableExtensionsTest_Extension: SilverStripe\ORM\Tests\VersionableExtensionsTest\TestExtension
-  VersionedOwnershipTest: SilverStripe\ORM\Tests\VersionedOwnershipTest
-  VersionedOwnershipTest_Object: SilverStripe\ORM\Tests\VersionedOwnershipTest\TestObject
-  VersionedOwnershipTest_Subclass: SilverStripe\ORM\Tests\VersionedOwnershipTest\Subclass
-  VersionedOwnershipTest_Related: SilverStripe\ORM\Tests\VersionedOwnershipTest\Related
-  VersionedOwnershipTest_RelatedMany: SilverStripe\ORM\Tests\VersionedOwnershipTest\RelatedMany
-  VersionedOwnershipTest_Attachment: SilverStripe\ORM\Tests\VersionedOwnershipTest\Attachment
-  VersionedOwnershipTest_Page: SilverStripe\ORM\Tests\VersionedOwnershipTest\TestPage
-  VersionedOwnershipTest_Banner: SilverStripe\ORM\Tests\VersionedOwnershipTest\Banner
-  VersionedOwnershipTest_CustomRelation: SilverStripe\ORM\Tests\VersionedOwnershipTest\CustomRelation
-  VersionedOwnershipTest_Image: SilverStripe\ORM\Tests\VersionedOwnershipTest\Image
-  VersionedTest: SilverStripe\ORM\Tests\VersionedTest
-  VersionedTest_DataObject: SilverStripe\ORM\Tests\VersionedTest\TestObject
-  VersionedTest_WithIndexes: SilverStripe\ORM\Tests\VersionedTest\WithIndexes
-  VersionedTest_RelatedWithoutVersion: SilverStripe\ORM\Tests\VersionedTest\RelatedWithoutversion
-  VersionedTest_Subclass: SilverStripe\ORM\Tests\VersionedTest\Subclass
-  VersionedTest_AnotherSubclass: SilverStripe\ORM\Tests\VersionedTest\AnotherSubclass
-  VersionedTest_UnversionedWithField: SilverStripe\ORM\Tests\VersionedTest\UnversionedWithField
-  VersionedTest_SingleStage: SilverStripe\ORM\Tests\VersionedTest\SingleStage
-  VersionedTest_PublicStage: SilverStripe\ORM\Tests\VersionedTest\PublicStage
-  VersionedTest_PublicViaExtension: SilverStripe\ORM\Tests\VersionedTest\PublicViaExtension
-  VersionedTest_PublicExtension: SilverStripe\ORM\Tests\VersionedTest\PublicExtension
-  VersionedTest_CustomTable: SilverStripe\ORM\Tests\VersionedTest\CustomTable
+  VersionableExtensionsTest: SilverStripe\Versioned\Tests\VersionableExtensionsTest
+  VersionableExtensionsTest_DataObject: SilverStripe\Versioned\Tests\VersionableExtensionsTest\TestObject
+  VersionableExtensionsTest_Extension: SilverStripe\Versioned\Tests\VersionableExtensionsTest\TestExtension
+  VersionedOwnershipTest: SilverStripe\Versioned\Tests\VersionedOwnershipTest
+  VersionedOwnershipTest_Object: SilverStripe\Versioned\Tests\VersionedOwnershipTest\TestObject
+  VersionedOwnershipTest_Subclass: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Subclass
+  VersionedOwnershipTest_Related: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Related
+  VersionedOwnershipTest_RelatedMany: SilverStripe\Versioned\Tests\VersionedOwnershipTest\RelatedMany
+  VersionedOwnershipTest_Attachment: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Attachment
+  VersionedOwnershipTest_Page: SilverStripe\Versioned\Tests\VersionedOwnershipTest\TestPage
+  VersionedOwnershipTest_Banner: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Banner
+  VersionedOwnershipTest_CustomRelation: SilverStripe\Versioned\Tests\VersionedOwnershipTest\CustomRelation
+  VersionedOwnershipTest_Image: SilverStripe\Versioned\Tests\VersionedOwnershipTest\Image
+  VersionedTest: SilverStripe\Versioned\Tests\VersionedTest
+  VersionedTest_DataObject: SilverStripe\Versioned\Tests\VersionedTest\TestObject
+  VersionedTest_WithIndexes: SilverStripe\Versioned\Tests\VersionedTest\WithIndexes
+  VersionedTest_RelatedWithoutVersion: SilverStripe\Versioned\Tests\VersionedTest\RelatedWithoutversion
+  VersionedTest_Subclass: SilverStripe\Versioned\Tests\VersionedTest\Subclass
+  VersionedTest_AnotherSubclass: SilverStripe\Versioned\Tests\VersionedTest\AnotherSubclass
+  VersionedTest_UnversionedWithField: SilverStripe\Versioned\Tests\VersionedTest\UnversionedWithField
+  VersionedTest_SingleStage: SilverStripe\Versioned\Tests\VersionedTest\SingleStage
+  VersionedTest_PublicStage: SilverStripe\Versioned\Tests\VersionedTest\PublicStage
+  VersionedTest_PublicViaExtension: SilverStripe\Versioned\Tests\VersionedTest\PublicViaExtension
+  VersionedTest_PublicExtension: SilverStripe\Versioned\Tests\VersionedTest\PublicExtension
+  VersionedTest_CustomTable: SilverStripe\Versioned\Tests\VersionedTest\CustomTable
   BasicAuthTest: SilverStripe\Security\Tests\BasicAuthTest
   BasicAuthTest_ControllerSecuredWithPermission: SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithPermission
   BasicAuthTest_ControllerSecuredWithoutPermission: SilverStripe\Security\Tests\BasicAuthTest\ControllerSecuredWithoutPermission

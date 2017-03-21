@@ -12,7 +12,7 @@ use SilverStripe\ORM\ValidationResult;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataExtension;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 use Exception;
 
 /**
@@ -685,7 +685,7 @@ class Hierarchy extends DataExtension implements Resettable
             $stageChildren = $this->owner->stageChildren(true);
 
             // Add live site content that doesn't exist on the stage site, if required.
-            if ($this->owner->hasExtension('SilverStripe\ORM\Versioning\Versioned')) {
+            if ($this->owner->hasExtension(Versioned::class)) {
                 // Next, go through the live children.  Only some of these will be listed
                 $liveChildren = $this->owner->liveChildren(true, true);
                 if ($liveChildren) {
@@ -715,7 +715,7 @@ class Hierarchy extends DataExtension implements Resettable
      */
     public function AllHistoricalChildren()
     {
-        if (!$this->owner->hasExtension('SilverStripe\ORM\Versioning\Versioned')) {
+        if (!$this->owner->hasExtension(Versioned::class)) {
             throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
         }
 
@@ -736,7 +736,7 @@ class Hierarchy extends DataExtension implements Resettable
      */
     public function numHistoricalChildren()
     {
-        if (!$this->owner->hasExtension('SilverStripe\ORM\Versioning\Versioned')) {
+        if (!$this->owner->hasExtension(Versioned::class)) {
             throw new Exception('Hierarchy->AllHistoricalChildren() only works with Versioned extension applied');
         }
 

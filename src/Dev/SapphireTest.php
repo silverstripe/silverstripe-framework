@@ -23,7 +23,7 @@ use SilverStripe\Core\Manifest\ClassLoader;
 use SilverStripe\Core\Resettable;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataModel;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -235,7 +235,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         Injector::nest();
 
         $this->originalEnv = Director::get_environment_type();
-        $this->originalReadingMode = Versioned::get_reading_mode();
+        if (class_exists(Versioned::class)) {
+            $this->originalReadingMode = Versioned::get_reading_mode();
+        }
 
         // We cannot run the tests on this abstract class.
         if (get_class($this) == __CLASS__) {
@@ -258,7 +260,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         $this->originalRequirements = Requirements::backend();
         Member::set_password_validator(null);
         Cookie::config()->update('report_errors', false);
-        if (class_exists('SilverStripe\\CMS\\Controllers\\RootURLController')) {
+        if (class_exists(RootURLController::class)) {
             RootURLController::reset();
         }
 
@@ -597,7 +599,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         Director::set_environment_type($this->originalEnv);
-        Versioned::set_reading_mode($this->originalReadingMode);
+        if (class_exists(Versioned::class)) {
+            Versioned::set_reading_mode($this->originalReadingMode);
+        }
 
         //unnest injector / config now that tests are over
         Injector::unnest();

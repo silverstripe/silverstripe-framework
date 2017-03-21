@@ -17,6 +17,7 @@ use SilverStripe\Core\Tests\ObjectTest\MySubObject;
 use SilverStripe\Core\Tests\ObjectTest\TestExtension;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Controller;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * @todo tests for addStaticVars()
@@ -432,18 +433,18 @@ class ObjectTest extends SapphireTest
     {
         // Simple case
         $this->assertEquals(
-            array('SilverStripe\\ORM\\Versioning\\Versioned',array('Stage', 'Live')),
-            Object::parse_class_spec("SilverStripe\\ORM\\Versioning\\Versioned('Stage','Live')")
+            array(Versioned::class,array('Stage', 'Live')),
+            Object::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage','Live')")
         );
         // String with commas
         $this->assertEquals(
-            array('SilverStripe\\ORM\\Versioning\\Versioned',array('Stage,Live', 'Stage')),
-            Object::parse_class_spec("SilverStripe\\ORM\\Versioning\\Versioned('Stage,Live','Stage')")
+            array(Versioned::class,array('Stage,Live', 'Stage')),
+            Object::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage,Live','Stage')")
         );
         // String with quotes
         $this->assertEquals(
-            array('SilverStripe\\ORM\\Versioning\\Versioned',array('Stage\'Stage,Live\'Live', 'Live')),
-            Object::parse_class_spec("SilverStripe\\ORM\\Versioning\\Versioned('Stage\'Stage,Live\'Live','Live')")
+            array(Versioned::class,array('Stage\'Stage,Live\'Live', 'Live')),
+            Object::parse_class_spec("SilverStripe\\Versioned\\Versioned('Stage\\'Stage,Live\\'Live','Live')")
         );
 
         // True, false and null values

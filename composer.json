@@ -33,6 +33,7 @@
   },
   "require-dev": {
     "phpunit/PHPUnit": "^5.7",
+    "silverstripe/versioned": "^1.0@dev",
     "silverstripe/behat-extension": "^2.1.0",
     "silverstripe/serve": "dev-master",
     "silverstripe/testsession": "^2.0.0-alpha3",

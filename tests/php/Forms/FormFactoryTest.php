@@ -9,7 +9,7 @@ use SilverStripe\Forms\FormAction;
 use SilverStripe\Forms\HiddenField;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\TextField;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 
 class FormFactoryTest extends SapphireTest
 {
@@ -18,6 +18,25 @@ class FormFactoryTest extends SapphireTest
     ];
 
     protected static $fixture_file = 'FormFactoryTest.yml';
+
+    protected function getExtraDataObjects()
+    {
+        // Prevent setup breaking if versioned module absent
+        if (class_exists(Versioned::class)) {
+            return parent::getExtraDataObjects();
+        }
+        return [];
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        // Note: Soft support for versioned module optionality
+        if (!class_exists(Versioned::class)) {
+            $this->markTestSkipped('FormFactoryTest requires the Versioned extension');
+        }
+    }
 
     /**
      * Test versioned form
@@ -34,9 +53,7 @@ class FormFactoryTest extends SapphireTest
 
 
         // Check preview link
-        /**
- * @var LiteralField $previewLink
-*/
+        /** @var LiteralField $previewLink */
         $previewLink = $form->Fields()->fieldByName('PreviewLink');
         $this->assertInstanceOf(LiteralField::class, $previewLink);
         $this->assertEquals(
