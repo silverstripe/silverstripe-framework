@@ -5,9 +5,9 @@
 </head>
 <body>
 
-<p class="body">
+<div class="body">
 	$Body
-</p>
+</div>
 
 </body>
 </html>
