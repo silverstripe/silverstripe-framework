@@ -681,10 +681,10 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
     public function i18n_pluralise($count)
     {
         $default = 'one ' . $this->i18n_singular_name() . '|{count} ' . $this->i18n_plural_name();
-        return i18n::pluralise(
+        return i18n::_t(
             static::class.'.PLURALS',
             $default,
-            $count
+            [ 'count' => $count ]
         );
     }
 

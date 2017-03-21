@@ -4,6 +4,7 @@ namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
+use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\FieldType\DBBoolean;
 use SilverStripe\ORM\FieldType\DBField;
@@ -1645,12 +1646,17 @@ class DataObjectTest extends SapphireTest
             DataObjectTest\Bogey::class => 'Bogeys',
             DataObjectTest\Ploy::class => 'Ploys',
         );
-
+        i18n::set_locale('en_NZ');
         foreach ($assertions as $class => $expectedPluralName) {
             $this->assertEquals(
                 $expectedPluralName,
-                singleton($class)->plural_name(),
+                DataObject::singleton($class)->plural_name(),
                 "Assert that the plural_name for '$class' is correct."
+            );
+            $this->assertEquals(
+                $expectedPluralName,
+                DataObject::singleton($class)->i18n_plural_name(),
+                "Assert that the i18n_plural_name for '$class' is correct."
             );
         }
     }
