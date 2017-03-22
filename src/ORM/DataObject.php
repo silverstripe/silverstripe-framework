@@ -2,7 +2,6 @@
 
 namespace SilverStripe\ORM;
 
-use SilverStripe\Assets\AssetControlExtension;
 use SilverStripe\Core\ClassInfo;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Object;
@@ -20,7 +19,6 @@ use SilverStripe\ORM\Filters\SearchFilter;
 use SilverStripe\ORM\Search\SearchContext;
 use SilverStripe\ORM\Queries\SQLInsert;
 use SilverStripe\ORM\Queries\SQLDelete;
-use SilverStripe\ORM\Queries\SQLSelect;
 use SilverStripe\ORM\FieldType\DBField;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBComposite;
@@ -246,16 +244,6 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
         'LastEdited' => 'DBDatetime',
         'Created' => 'DBDatetime',
     );
-
-    /**
-     * Core dataobject extensions
-     *
-     * @config
-     * @var array
-     */
-    private static $extensions = [
-        'AssetControl' => AssetControlExtension::class,
-    ];
 
     /**
      * Override table name for this class. If ignored will default to FQN of class.

@@ -36,7 +36,7 @@ trait Extensible
      * @var array $extensions
      * @config
      */
-    private static $extensions = null;
+    private static $extensions = [];
 
     private static $classes_constructed = array();
 

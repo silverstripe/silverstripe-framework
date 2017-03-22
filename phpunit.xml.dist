@@ -20,6 +20,7 @@
 
 	<testsuite name="Default">
 		<directory>tests/php</directory>
+		<directory>silverstripe-assets/tests/php</directory>
 	</testsuite>
 
 	<listeners>
@@ -37,9 +38,7 @@
 			<directory suffix=".php">.</directory>
 			<exclude>
 				<directory suffix=".php">thirdparty/</directory>
-				<directory suffix=".php">admin/thirdparty/</directory>
 				<directory suffix=".php">tests/php/</directory>
-				<directory suffix=".php">admin/tests/php/</directory>
 			</exclude>
 		</whitelist>
 	</filter>

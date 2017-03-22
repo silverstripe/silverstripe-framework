@@ -182,38 +182,6 @@ mappings:
   MemberImportForm: SilverStripe\Admin\MemberImportForm
   ModelAdmin: SilverStripe\Admin\ModelAdmin
   SecurityAdmin: SilverStripe\Admin\SecurityAdmin
-  SilverStripe\Filesystem\Storage\AssetContainer: SilverStripe\Assets\Storage\AssetContainer
-  SilverStripe\Filesystem\Storage\AssetNameGenerator: SilverStripe\Assets\Storage\AssetNameGenerator
-  SilverStripe\Filesystem\Storage\AssetStore: SilverStripe\Assets\Storage\AssetStore
-  SilverStripe\Filesystem\Storage\AssetStoreRouter: SilverStripe\Assets\Storage\AssetStoreRouter
-  SilverStripe\Filesystem\Storage\DBFile: SilverStripe\Assets\Storage\DBFile
-  SilverStripe\Filesystem\Storage\DefaultAssetNameGenerator: SilverStripe\Assets\Storage\DefaultAssetNameGenerator
-  SilverStripe\Filesystem\Storage\GeneratedAssetHandler: SilverStripe\Assets\Storage\GeneratedAssetHandler
-  SilverStripe\Filesystem\Storage\ProtectedFileController: SilverStripe\Assets\Storage\ProtectedFileController
-  SilverStripe\Filesystem\Flysystem\AssetAdapter: SilverStripe\Assets\Flysystem\AssetAdapter
-  SilverStripe\Filesystem\Flysystem\FlysystemAssetStore: SilverStripe\Assets\Flysystem\FlysystemAssetStore
-  SilverStripe\Filesystem\Storage\FlysystemGeneratedAssetHandler: SilverStripe\Assets\Flysystem\GeneratedAssetHandler
-  SilverStripe\Filesystem\Flysystem\ProtectedAdapter: SilverStripe\Assets\Flysystem\ProtectedAdapter
-  SilverStripe\Filesystem\Flysystem\ProtectedAssetAdapter: SilverStripe\Assets\Flysystem\ProtectedAssetAdapter
-  SilverStripe\Filesystem\Flysystem\PublicAdapter: SilverStripe\Assets\Flysystem\PublicAdapter
-  SilverStripe\Filesystem\Flysystem\PublicAssetAdapter: SilverStripe\Assets\Flysystem\PublicAssetAdapter
-  SilverStripe\Filesystem\AssetControlExtension: SilverStripe\Assets\AssetControlExtension
-  SilverStripe\Filesystem\AssetManipulationList: SilverStripe\Assets\AssetManipulationList
-  SilverStripe\Filesystem\Thumbnail: SilverStripe\Assets\Thumbnail
-  SilverStripe\Filesystem\ImageManipulation: SilverStripe\Assets\ImageManipulation
-  File: SilverStripe\Assets\File
-  SS_FileFinder: SilverStripe\Assets\FileFinder
-  SilverStripe\Assets\SS_FileFinder: SilverStripe\Assets\FileFinder
-  FileMigrationHelper: SilverStripe\Assets\FileMigrationHelper
-  FileNameFilter: SilverStripe\Assets\FileNameFilter
-  Filesystem: SilverStripe\Assets\Filesystem
-  Folder: SilverStripe\Assets\Folder
-  GDBackend: SilverStripe\Assets\GDBackend
-  Image: SilverStripe\Assets\Image
-  Image_Backend: SilverStripe\Assets\Image_Backend
-  ImagickBackend: SilverStripe\Assets\ImagickBackend
-  Upload: SilverStripe\Assets\Upload
-  Upload_Validator: SilverStripe\Assets\Upload_Validator
   SilverStripe\Framework\Core\Configurable: SilverStripe\Core\Config\Configurable
   PaginatedList: SilverStripe\ORM\PaginatedList
   ArrayLib: SilverStripe\ORM\ArrayLib
@@ -523,23 +491,6 @@ mappings:
   ModelAdminTest_Contact: SilverStripe\Admin\Tests\ModelAdminTest\Contact
   ModelAdminTest_Player: SilverStripe\Admin\Tests\ModelAdminTest\Player
   SecurityAdminTest: SilverStripe\Admin\Tests\SecurityAdminTest
-  AssetControlExtensionTest: SilverStripe\Assets\Tests\AssetControlExtensionTest
-  AssetControlExtensionTest_VersionedObject: SilverStripe\Assets\Tests\VersionedObject
-  AssetControlExtensionTest_Object: SilverStripe\Assets\Tests\TestObject
-  AssetControlExtensionTest_ArchivedObject: SilverStripe\Assets\Tests\ArchivedObject
-  AssetManipulationListTest: SilverStripe\Assets\Tests\AssetManipulationListTest
-  FileFinderTest: SilverStripe\Assets\Tests\FileFinderTest
-  FileMigrationHelperTest: SilverStripe\Assets\Tests\FileMigrationHelperTest
-  FileMigrationHelperTest_Extension: SilverStripe\Assets\Tests\FileMigrationHelperTest\Extension
-  FileNameFilterTest: SilverStripe\Assets\Tests\FileNameFilterTest
-  FileTest: SilverStripe\Assets\Tests\FileTest
-  FileTest_MyCustomFile: SilverStripe\Assets\Tests\FileTest\MyCustomFile
-  FolderTest: SilverStripe\Assets\Tests\FolderTest
-  GDTest: SilverStripe\Assets\Tests\GDTest
-  GDBackend_ImageUnavailable: SilverStripe\Assets\Tests\GDTest\ImageUnavailable
-  ProtectedFileControllerTest: SilverStripe\Assets\Tests\ProtectedFileControllerTest
-  UploadTest: SilverStripe\Assets\Tests\UploadTest
-  UploadTest_Validator: SilverStripe\Assets\Tests\UploadTest\UploadTest_Validator
   ControllerTest: SilverStripe\Control\Tests\ControllerTest
   ControllerTest_Controller: SilverStripe\Control\Tests\ControllerTest\TestController
   ControllerTest_UnsecuredController: SilverStripe\Control\Tests\ControllerTest\UnsecuredController
@@ -663,10 +614,6 @@ mappings:
   DateFieldViewJQueryTest: SilverStripe\Forms\Tests\DateFieldViewJQueryTest
   DatetimeFieldTest: SilverStripe\Forms\Tests\DatetimeFieldTest
   DatetimeFieldTest_Model: SilverStripe\Forms\Tests\DatetimeFieldTest\Model
-  DBFileTest: SilverStripe\Forms\Tests\DBFileTest
-  DBFileTest_Object: SilverStripe\Forms\Tests\DBFileTest\TestObject
-  DBFileTest_Subclass: SilverStripe\Forms\Tests\DBFileTest\Subclass
-  DBFileTest_ImageOnly: SilverStripe\Forms\Tests\DBFileTest\ImageOnly
   DropdownFieldTest: SilverStripe\Forms\Tests\DropdownFieldTest
   EmailFieldTest: SilverStripe\Forms\Tests\EmailFieldTest
   EmailFieldTest_Validator: SilverStripe\Forms\Tests\EmailFieldTest\TestValidator
@@ -842,15 +789,12 @@ mappings:
   DBYearTest: SilverStripe\ORM\Tests\DBYearTest
   DecimalTest: SilverStripe\ORM\Tests\DecimalTest
   DecimalTest_DataObject: SilverStripe\ORM\Tests\DecimalTest\TestObject
-  GDImageTest: SilverStripe\ORM\Tests\GDImageTest
   GroupedListTest: SilverStripe\ORM\Tests\GroupedListTest
   HasManyListTest: SilverStripe\ORM\Tests\HasManyListTest
   HierarchyTest: SilverStripe\ORM\Tests\HierarchyTest
   HierarchyTest_Object: SilverStripe\ORM\Tests\HierarchyTest\TestObject
   HierarchyHideTest_Object: SilverStripe\ORM\Tests\HierarchyTest\HideTestObject
   HierarchyHideTest_SubObject: SilverStripe\ORM\Tests\HierarchyHideTest\HideTestSubObject
-  ImageTest: SilverStripe\ORM\Tests\ImageTest
-  ImagickImageTest: SilverStripe\ORM\Tests\ImagickImageTest
   LabelFieldTest: SilverStripe\ORM\Tests\LabelFieldTest
   ManyManyListExtensionTest: SilverStripe\ORM\Tests\ManyManyListExtensionTest
   ManyManyListTest_IndirectPrimary: SilverStripe\ORM\Tests\ManyManyListTest\IndirectPrimary
@@ -971,7 +915,6 @@ mappings:
   ViewableDataTest_Cached: SilverStripe\View\Tests\ViewableDataTest\Cached
   ViewableDataTest_NotCached: SilverStripe\View\Tests\ViewableDataTest\NotCached
   ViewableDataTest_Failover: SilverStripe\View\Tests\ViewableDataTest\Failover
-  AssetStoreTest_SpyStore: SilverStripe\Assets\Tests\Storage\AssetStoreTest\TestAssetStore
   GridField_URLHandlerTest: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest
   GridField_URLHandlerTest_Controller: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestController
   GridField_URLHandlerTest_Component: SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestComponent
@@ -1046,7 +989,6 @@ mappings:
   NamespacedClassManifestTest: SilverStripe\Core\Tests\Manifest\NamespacedClassManifestTest
   ThemeResourceLoaderTest: SilverStripe\Core\Tests\Manifest\ThemeResourceLoaderTest
   TokenisedRegularExpressionTest: SilverStripe\Core\Tests\Manifest\TokenisedRegularExpressionTest
-  AssetAdapterTest: SilverStripe\Assets\Tests\Flysystem\AssetAdapterTest
   EmailTest: SilverStripe\Control\Tests\Email\EmailTest
   EmailTest_Mailer: SilverStripe\Control\Tests\Email\EmailTest\TestMailer
   MailerTest: SilverStripe\Control\Tests\Email\MailerTest
