@@ -9,6 +9,7 @@ use SilverStripe\ORM\DataObjectSchema;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseClass;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\BaseDataClass;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\ChildClass;
+use SilverStripe\ORM\Tests\DataObjectSchemaTest\DefaultTableName;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\GrandChildClass;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\HasFields;
 use SilverStripe\ORM\Tests\DataObjectSchemaTest\NoFields;
@@ -31,7 +32,8 @@ class DataObjectSchemaTest extends SapphireTest
         HasFields::Class,
         NoFields::class,
         WithCustomTable::class,
-        WithRelation::class
+        WithRelation::class,
+        DefaultTableName::class
     );
 
     /**
@@ -48,6 +50,11 @@ class DataObjectSchemaTest extends SapphireTest
         $this->assertEquals(
             'DOSTWithCustomTable',
             $schema->tableName(WithCustomTable::class)
+        );
+        // Default table name is FQN
+        $this->assertEquals(
+            'SilverStripe_ORM_Tests_DataObjectSchemaTest_DefaultTableName',
+            $schema->tableName(DefaultTableName::class)
         );
     }
 

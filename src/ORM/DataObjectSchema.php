@@ -24,12 +24,10 @@ class DataObjectSchema
      * Default separate for table namespaces. Can be set to any string for
      * databases that do not support some characters.
      *
-     * Defaults to \ to to conform to 3.x convention.
-     *
      * @config
      * @var string
      */
-    private static $table_namespace_separator = '\\';
+    private static $table_namespace_separator = '_';
 
     /**
      * Cache of database fields
