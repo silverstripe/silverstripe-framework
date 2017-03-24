@@ -7,12 +7,12 @@ use SilverStripe\Dev\TestOnly;
 
 class AccessBaseController extends Controller implements TestOnly
 {
-    private static $allowed_actions = array();
+    private static $allowed_actions = [];
 
     private static $url_segment = 'AccessBaseController';
 
     private static $extensions = [
-        AccessBaseControllerExtension::class
+        AccessBaseControllerExtension::class,
     ];
 
     // Denied for all

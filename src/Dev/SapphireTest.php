@@ -117,8 +117,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * The keys of the are the classes that the extensions can't be applied the extensions to, and
      * the values are an array of illegal extensions on that class.
      */
-    protected $illegalExtensions = array(
-    );
+    protected static $illegal_extensions = [];
 
     /**
      * A list of extensions that must be applied during the execution of this run.  If they are
@@ -132,15 +131,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * array("MyTreeDataObject" => array("Versioned", "Hierarchy"))
      * </code>
      */
-    protected $requiredExtensions = array(
-    );
+    protected static $required_extensions = [];
 
     /**
      * By default, the test database won't contain any DataObjects that have the interface TestOnly.
      * This variable lets you define additional TestOnly DataObjects to set up for this test.
      * Set it to an array of DataObject subclass names.
      */
-    protected $extraDataObjects = array();
+    protected static $extra_dataobjects = [];
 
     /**
      * List of class names of {@see Controller} objects to register routes for
@@ -148,7 +146,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      *
      * @var array
      */
-    protected $extraControllers = [];
+    protected static $extra_controllers = [];
 
     /**
      * We need to disabling backing up of globals to avoid overriding
@@ -159,12 +157,14 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     protected $backupGlobals = false;
 
     /**
-     * Helper arrays for illegalExtensions/requiredExtensions code
+     * Helper arrays for illegal_extensions/required_extensions code
      */
-    private $extensionsToReapply = array(), $extensionsToRemove = array();
+    private static $extensions_to_reapply = [];
+
+    private static $extensions_to_remove = [];
 
     /**
-     * Check flushables on setupOnce()
+     * Check flushables on setupBeforeClass()
      *
      * @var bool
      */
@@ -334,10 +334,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * This is different to {@link setUp()}, which gets called once
      * per method. Useful to initialize expensive operations which
      * don't change state for any called method inside the test,
-     * e.g. dynamically adding an extension. See {@link tearDownOnce()}
+     * e.g. dynamically adding an extension. See {@link teardownAfterClass()}
      * for tearing down the state again.
      */
-    public function setUpOnce()
+    public static function setUpBeforeClass()
     {
         static::start();
 
@@ -351,40 +351,40 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         // Remove any illegal extensions that are present
-        foreach ($this->illegalExtensions as $class => $extensions) {
+        foreach (static::$illegal_extensions as $class => $extensions) {
             if (!class_exists($class)) {
                 continue;
             }
             foreach ($extensions as $extension) {
-                if (!class_exists($extension) || $class::has_extension($extension)) {
+                if (!class_exists($extension) ||$class::has_extension($extension)) {
                     continue;
-                }
-                if (!isset($this->extensionsToReapply[$class])) {
-                    $this->extensionsToReapply[$class] = array();
-                }
-                $this->extensionsToReapply[$class][] = $extension;
-                $class::remove_extension($extension);
-                $isAltered = true;
+                }if (!isset(static::$extensions_to_reapply[$class])) {
+                        static::$extensions_to_reapply[$class] = array();
+                    }
+                    static::$extensions_to_reapply[$class][] = $extension;
+                    $class::remove_extension($extension);
+                    $isAltered = true;
+
             }
         }
 
         // Add any required extensions that aren't present
-        foreach ($this->requiredExtensions as $class => $extensions) {
+        foreach (static::$required_extensions as $class => $extensions) {
             if (!class_exists($class)) {
                 $self = static::class;
                 throw new LogicException("Test {$self} requires class {$class} which doesn't exist");
             }
-            $this->extensionsToRemove[$class] = array();
+            static::$extensions_to_remove[$class] = array();
             foreach ($extensions as $extension) {
                 if (!class_exists($extension)) {
                     $self = static::class;
                     throw new LogicException("Test {$self} requires extension {$extension} which doesn't exist");
                 }
                 if (!$class::has_extension($extension)) {
-                    if (!isset($this->extensionsToRemove[$class])) {
-                        $this->extensionsToReapply[$class] = array();
+                    if (!isset(static::$extensions_to_remove[$class])) {
+                        static::$extensions_to_reapply[$class] = array();
                     }
-                    $this->extensionsToRemove[$class][] = $extension;
+                    static::$extensions_to_remove[$class][] = $extension;
                     $class::add_extension($extension);
                     $isAltered = true;
                 }
@@ -392,12 +392,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         // If we have made changes to the extensions present, then migrate the database schema.
-        if ($isAltered || $this->extensionsToReapply || $this->extensionsToRemove || $this->getExtraDataObjects()) {
+        if ($isAltered || static::$extensions_to_reapply || static::$extensions_to_remove || static::getExtraDataObjects()) {
             DataObject::reset();
             if (!self::using_temp_db()) {
                 self::create_temp_db();
             }
-            $this->resetDBSchema(true);
+            static::resetDBSchema(true);
         }
         // clear singletons, they're caching old extension info
         // which is used in DatabaseAdmin->doBuild()
@@ -419,23 +419,23 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     /**
      * tearDown method that's called once per test class rather once per test method.
      */
-    public function tearDownOnce()
+    public static function tearDownAfterClass()
     {
         // If we have made changes to the extensions present, then migrate the database schema.
-        if ($this->extensionsToReapply || $this->extensionsToRemove) {
+        if (static::$extensions_to_reapply || static::$extensions_to_remove) {
             // @todo: This isn't strictly necessary to restore extensions, but only to ensure that
             // Object::$extra_methods is properly flushed. This should be replaced with a simple
             // flush mechanism for each $class.
             //
             // Remove extensions added for testing
-            foreach ($this->extensionsToRemove as $class => $extensions) {
+            foreach (static::$extensions_to_remove as $class => $extensions) {
                 foreach ($extensions as $extension) {
                     $class::remove_extension($extension);
                 }
             }
 
             // Reapply ones removed
-            foreach ($this->extensionsToReapply as $class => $extensions) {
+            foreach (static::$extensions_to_reapply as $class => $extensions) {
                 foreach ($extensions as $extension) {
                     $class::add_extension($extension);
                 }
@@ -443,13 +443,13 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         //unnest injector / config now that the test suite is over
-        // this will reset all the extensions on the object too (see setUpOnce)
+        // this will reset all the extensions on the object too (see setUpBeforeClass)
         Injector::unnest();
         Config::unnest();
 
-        $extraDataObjects = $this->getExtraDataObjects();
-        if (!empty($this->extensionsToReapply) || !empty($this->extensionsToRemove) || !empty($extraDataObjects)) {
-            $this->resetDBSchema();
+        $extraDataObjects = static::getExtraDataObjects();
+        if (!empty(static::$extensions_to_reapply) || !empty(static::$extensions_to_remove) || !empty($extraDataObjects)) {
+            static::resetDBSchema();
         }
     }
 
@@ -1034,7 +1034,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         );
 
         ClassLoader::instance()->pushManifest($classManifest, false);
-        SapphireTest::set_test_class_manifest($classManifest);
+        static::set_test_class_manifest($classManifest);
 
         ThemeResourceLoader::instance()->addSet('$default', new ThemeManifest(
             BASE_PATH,
@@ -1123,9 +1123,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         $dbConn->selectDatabase($dbname, true);
 
-        /** @var static $st */
-        $st = Injector::inst()->create(__CLASS__);
-        $st->resetDBSchema();
+        static::resetDBSchema();
 
         // Reinstate PHPUnit error handling
         set_error_handler(array('PHPUnit_Util_ErrorHandler', 'handleError'));
@@ -1153,7 +1151,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      * Reset the testing database's schema.
      * @param bool $includeExtraDataObjects If true, the extraDataObjects tables will also be included
      */
-    public function resetDBSchema($includeExtraDataObjects = false)
+    public static function resetDBSchema($includeExtraDataObjects = false)
     {
         if (self::using_temp_db()) {
             DataObject::reset();
@@ -1161,12 +1159,12 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             // clear singletons, they're caching old extension info which is used in DatabaseAdmin->doBuild()
             Injector::inst()->unregisterAllObjects();
 
-            $dataClasses = ClassInfo::subclassesFor('SilverStripe\\ORM\\DataObject');
+            $dataClasses = ClassInfo::subclassesFor(DataObject::class);
             array_shift($dataClasses);
 
             DB::quiet();
             $schema = DB::get_schema();
-            $extraDataObjects = $includeExtraDataObjects ? $this->getExtraDataObjects() : null;
+            $extraDataObjects = $includeExtraDataObjects ? static::getExtraDataObjects() : null;
             $schema->schemaUpdate(function () use ($dataClasses, $extraDataObjects) {
                 foreach ($dataClasses as $dataClass) {
                     // Check if class exists before trying to instantiate - this sidesteps any manifest weirdness
@@ -1306,12 +1304,11 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
     /**
      * Return all extra objects to scaffold for this test
-     *
      * @return array
      */
-    protected function getExtraDataObjects()
+    protected static function getExtraDataObjects()
     {
-        return $this->extraDataObjects;
+        return static::$extra_dataobjects;
     }
 
     /**
@@ -1319,9 +1316,9 @@ class SapphireTest extends PHPUnit_Framework_TestCase
      *
      * @return array
      */
-    protected function getExtraControllers()
+    protected static function getExtraControllers()
     {
-        return $this->extraControllers;
+        return static::$extra_controllers;
     }
 
     /**

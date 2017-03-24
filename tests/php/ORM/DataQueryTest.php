@@ -16,7 +16,7 @@ class DataQueryTest extends SapphireTest
 
     protected static $fixture_file = 'DataQueryTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         DataQueryTest\ObjectA::class,
         DataQueryTest\ObjectB::class,
         DataQueryTest\ObjectC::class,
@@ -284,7 +284,7 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectF::class);
         $query->where(DB::get_conn()->comparisonClause('"SortOrder"', '2'));
         $this->assertGreaterThan(0, $query->count(), "Couldn't find SortOrder");
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
     }
 
     public function testComparisonClauseDateFull()
@@ -293,7 +293,7 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectF::class);
         $query->where(DB::get_conn()->comparisonClause('"MyDate"', '1988-03-04%'));
         $this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
     }
 
     public function testComparisonClauseDateStartsWith()
@@ -302,7 +302,7 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectF::class);
         $query->where(DB::get_conn()->comparisonClause('"MyDate"', '1988%'));
         $this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
     }
 
     public function testComparisonClauseDateStartsPartial()
@@ -311,7 +311,7 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectF::class);
         $query->where(DB::get_conn()->comparisonClause('"MyDate"', '%03-04%'));
         $this->assertGreaterThan(0, $query->count(), "Couldn't find MyDate");
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
     }
 
     public function testComparisonClauseTextCaseInsensitive()
@@ -320,7 +320,7 @@ class DataQueryTest extends SapphireTest
         $query = new DataQuery(DataQueryTest\ObjectF::class);
         $query->where(DB::get_conn()->comparisonClause('"MyString"', 'helloworld'));
         $this->assertGreaterThan(0, $query->count(), "Couldn't find MyString");
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
     }
 
     public function testComparisonClauseTextCaseSensitive()
@@ -333,7 +333,7 @@ class DataQueryTest extends SapphireTest
         $query2 = new DataQuery(DataQueryTest\ObjectF::class);
         $query2->where(DB::get_conn()->comparisonClause('"MyString"', 'helloworld', false, false, true));
         $this->assertEquals(0, $query2->count(), "Found mystring. Shouldn't be able too.");
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
     }
 
     /**

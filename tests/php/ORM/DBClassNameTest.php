@@ -9,7 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 class DBClassNameTest extends SapphireTest
 {
 
-    protected $extraDataObjects = [
+    protected static $extra_dataobjects = [
         DBClassNameTest\TestObject::class,
         DBClassNameTest\ObjectSubClass::class,
         DBClassNameTest\ObjectSubSubClass::class,

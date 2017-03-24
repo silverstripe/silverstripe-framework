@@ -15,7 +15,7 @@ class DataExtensionTest extends SapphireTest
 {
     protected static $fixture_file = 'DataExtensionTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         DataExtensionTest\TestMember::class,
         DataExtensionTest\Player::class,
         DataExtensionTest\RelatedObject::class,
@@ -25,7 +25,7 @@ class DataExtensionTest extends SapphireTest
         DataExtensionTest\CMSFieldsGrandChild::class
     );
 
-    protected $requiredExtensions = [
+    protected static $required_extensions = [
         DataObject::class => [
             DataExtensionTest\AppliedToDO::class,
         ]
@@ -116,7 +116,7 @@ class DataExtensionTest extends SapphireTest
         );
 
         // Now that we've just added the extension, we need to rebuild the database
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
 
         // Create a test record with extended fields, writing to the DB
         $player = new DataExtensionTest\Player();

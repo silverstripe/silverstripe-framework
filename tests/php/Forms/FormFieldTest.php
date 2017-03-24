@@ -17,7 +17,7 @@ use ReflectionClass;
 class FormFieldTest extends SapphireTest
 {
 
-    protected $requiredExtensions = array(
+    protected static $required_extensions = array(
         FormField::class => array(
             TestExtension::class
         )

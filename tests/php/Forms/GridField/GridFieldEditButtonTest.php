@@ -22,33 +22,33 @@ class GridFieldEditButtonTest extends SapphireTest
 {
 
     /**
- * @var ArrayList
-*/
+     * @var ArrayList
+     */
     protected $list;
 
     /**
- * @var GridField
-*/
+     * @var GridField
+     */
     protected $gridField;
 
     /**
- * @var Form
-*/
+     * @var Form
+     */
     protected $form;
 
     /**
- * @var string
-*/
+     * @var string
+     */
     protected static $fixture_file = 'GridFieldActionTest.yml';
 
     /**
- * @var array
-*/
-    protected $extraDataObjects = array(
+     * @var array
+     */
+    protected static $extra_dataobjects = array(
         Team::class,
         Cheerleader::class,
         Player::class,
-        Permissions::class
+        Permissions::class,
     );
 
     protected function setUp()

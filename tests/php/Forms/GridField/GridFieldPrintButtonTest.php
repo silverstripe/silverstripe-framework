@@ -15,8 +15,8 @@ use SilverStripe\Forms\Tests\GridField\GridFieldPrintButtonTest\TestObject;
 class GridFieldPrintButtonTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
-        TestObject::class
+    protected static $extra_dataobjects = array(
+        TestObject::class,
     );
 
     protected function setUp()

@@ -13,7 +13,7 @@ class DBMoneyTest extends SapphireTest
 
     protected static $fixture_file = 'DBMoneyTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         DBMoneyTest\TestObject::class,
         DBMoneyTest\TestObjectSubclass::class,
     );

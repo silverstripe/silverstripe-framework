@@ -43,7 +43,7 @@ class GridFieldPaginatorTest extends FunctionalTest
     /**
      * @var array
      */
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         Team::class,
         Player::class,
         Cheerleader::class,

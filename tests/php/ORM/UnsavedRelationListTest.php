@@ -9,7 +9,7 @@ class UnsavedRelationListTest extends SapphireTest
 {
     protected static $fixture_file = 'UnsavedRelationListTest.yml';
 
-    protected $extraDataObjects = [
+    protected static $extra_dataobjects = [
         UnsavedRelationListTest\TestObject::class
     ];
 

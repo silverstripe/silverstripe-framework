@@ -143,8 +143,9 @@ end of each test.
 		}
 	}
 
-`tearDownOnce` and `setUpOnce` can be used to run code just once for the file rather than before and after each 
-individual test case.
+`tearDownAfterClass` and `setUpBeforeClass` can be used to run code just once for the file rather than before and after 
+each individual test case. Remember to class the parent method in each method to ensure the core boot-strapping of tests
+takes place.
 
 	:::php
 	<?php
@@ -153,16 +154,16 @@ individual test case.
 	
 	class PageTest extends SapphireTest
     {
-		function setUpOnce()
+		public static function setUpBeforeClass()
         {
-			parent::setUpOnce();
+			parent::setUpBeforeClass();
 
 			// ..
 		}
 
-		public function tearDownOnce()
+		public static function tearDownAfterClass()
         {
-			parent::tearDownOnce();
+			parent::tearDownAfterClass();
 
 			// ..
 		}
@@ -179,9 +180,9 @@ If you need to make changes to `Config` (or `Injector`) for each test (or the wh
 It's important to remember that the `parent::setUp();` functions will need to be called first to ensure the nesting feature works as expected.
 
 	:::php
-	public function setUpOnce()
+	public static function setUpBeforeClass()
     {
-		parent::setUpOnce();
+		parent::setUpBeforeClass();
 		//this will remain for the whole suite and be removed for any other tests
 		Config::inst()->update('ClassName', 'var_name', 'var_value');
 	}

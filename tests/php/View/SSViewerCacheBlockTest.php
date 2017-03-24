@@ -15,11 +15,11 @@ use Symfony\Component\Cache\Simple\NullCache;
 
 class SSViewerCacheBlockTest extends SapphireTest
 {
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         SSViewerCacheBlockTest\TestModel::class
     );
 
-    protected function getExtraDataObjects()
+    protected static function getExtraDataObjects()
     {
         $classes = parent::getExtraDataObjects();
 

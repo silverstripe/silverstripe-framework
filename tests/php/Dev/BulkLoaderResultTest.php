@@ -8,7 +8,10 @@ use SilverStripe\Dev\Tests\BulkLoaderResultTest\Player;
 
 class BulkLoaderResultTest extends SapphireTest
 {
-    protected $extraDataObjects = array(Player::class);
+
+    protected static $extra_dataobjects = [
+        Player::class,
+    ];
 
     protected function setUp()
     {

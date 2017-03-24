@@ -23,7 +23,7 @@ use SilverStripe\ORM\Tests\DataObjectSchemaTest\WithRelation;
  */
 class DataObjectSchemaTest extends SapphireTest
 {
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         // Classes in base namespace
         BaseClass::class,
         BaseDataClass::class,

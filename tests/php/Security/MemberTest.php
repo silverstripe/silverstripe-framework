@@ -27,7 +27,7 @@ class MemberTest extends FunctionalTest
 
     protected $orig = array();
 
-    protected $illegalExtensions = array(
+    protected static $illegal_extensions = array(
         Member::class => array(
             // TODO Coupling with modules, this should be resolved by automatically
             // removing all applied extensions before a unit test

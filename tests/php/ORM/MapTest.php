@@ -14,7 +14,7 @@ class MapTest extends SapphireTest
     // Borrow the model from DataObjectTest
     protected static $fixture_file = 'DataObjectTest.yml';
 
-    protected function getExtraDataObjects()
+    protected static function getExtraDataObjects()
     {
         return array_merge(
             DataObjectTest::$extra_data_objects,

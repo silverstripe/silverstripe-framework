@@ -19,7 +19,7 @@ class BasicAuthTest extends FunctionalTest
 
     protected static $fixture_file = 'BasicAuthTest.yml';
 
-    protected $extraControllers = [
+    protected static $extra_controllers = [
         ControllerSecuredWithPermission::class,
         ControllerSecuredWithoutPermission::class,
     ];

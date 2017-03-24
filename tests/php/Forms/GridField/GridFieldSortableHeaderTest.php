@@ -21,12 +21,12 @@ class GridFieldSortableHeaderTest extends SapphireTest
 
     protected static $fixture_file = 'GridFieldSortableHeaderTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         Team::class,
         TeamGroup::class,
         Cheerleader::class,
         CheerleaderHat::class,
-        Mom::class
+        Mom::class,
     );
 
     /**

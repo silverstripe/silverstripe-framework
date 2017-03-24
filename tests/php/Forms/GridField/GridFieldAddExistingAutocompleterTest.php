@@ -19,15 +19,15 @@ class GridFieldAddExistingAutocompleterTest extends FunctionalTest
 
     protected static $fixture_file = 'GridFieldTest.yml';
 
-    protected $extraDataObjects = [
+    protected static $extra_dataobjects = [
         Team::class,
         Cheerleader::class,
         Player::class,
         Permissions::class
     ];
 
-    protected $extraControllers = [
-        TestController::class
+    protected static $extra_controllers = [
+        TestController::class,
     ];
 
     public function testScaffoldSearchFields()

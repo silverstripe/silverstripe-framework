@@ -11,7 +11,7 @@ class DataObjectDuplicationTest extends SapphireTest
 
     protected $usesDatabase = true;
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         DataObjectDuplicationTest\Class1::class,
         DataObjectDuplicationTest\Class2::class,
         DataObjectDuplicationTest\Class3::class

@@ -12,7 +12,7 @@ use SilverStripe\Forms\MoneyField;
 class MoneyFieldTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         TestObject::class,
         CustomSetter_Object::class,
     );

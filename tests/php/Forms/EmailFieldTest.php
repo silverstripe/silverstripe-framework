@@ -14,7 +14,7 @@ use SilverStripe\Forms\Tests\EmailFieldTest\TestValidator;
 class EmailFieldTest extends FunctionalTest
 {
 
-    protected $extraControllers = [
+    protected static $extra_controllers = [
         EmailFieldTest\TestController::class,
     ];
 

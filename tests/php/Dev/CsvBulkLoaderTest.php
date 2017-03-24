@@ -17,7 +17,7 @@ class CsvBulkLoaderTest extends SapphireTest
 
     protected static $fixture_file = 'CsvBulkLoaderTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         Team::class,
         Player::class,
         PlayerContract::class,

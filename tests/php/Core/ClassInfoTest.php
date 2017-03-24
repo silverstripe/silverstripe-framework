@@ -20,7 +20,7 @@ use SilverStripe\View\ViewableData;
 class ClassInfoTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         BaseClass::class,
         BaseDataClass::class,
         ChildClass::class,

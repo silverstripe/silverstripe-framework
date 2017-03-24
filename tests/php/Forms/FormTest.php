@@ -35,12 +35,12 @@ class FormTest extends FunctionalTest
 
     protected static $fixture_file = 'FormTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         Player::class,
         Team::class,
     );
 
-    protected $extraControllers = [
+    protected static $extra_controllers = [
         TestController::class,
         ControllerWithSecurityToken::class,
         ControllerWithStrictPostCheck::class,

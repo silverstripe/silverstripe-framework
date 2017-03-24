@@ -11,8 +11,8 @@ use SilverStripe\Forms\Tests\GridField\GridField_URLHandlerTest\TestController;
 class GridField_URLHandlerTest extends FunctionalTest
 {
 
-    protected $extraControllers = [
-        TestController::class
+    protected static $extra_controllers = [
+        TestController::class,
     ];
 
     public function testFormSubmission()

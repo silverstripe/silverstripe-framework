@@ -50,7 +50,7 @@ trait i18nTestManifest
      */
     protected $moduleManifests = 0;
 
-    protected function getExtraDataObjects()
+    protected static function getExtraDataObjects()
     {
         return [
             TestDataObject::class,

@@ -15,7 +15,7 @@ class SQLSelectTest extends SapphireTest
 
     protected static $fixture_file = 'SQLSelectTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         SQLSelectTest\TestObject::class,
         SQLSelectTest\TestBase::class,
         SQLSelectTest\TestChild::class

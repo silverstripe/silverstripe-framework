@@ -16,7 +16,7 @@ class GroupTest extends FunctionalTest
 
     protected static $fixture_file = 'GroupTest.yml';
 
-    protected $extraDataObjects = [
+    protected static $extra_dataobjects = [
         TestMember::class
     ];
 

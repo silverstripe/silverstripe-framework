@@ -12,13 +12,13 @@ class HierarchyTest extends SapphireTest
 {
     protected static $fixture_file = 'HierarchyTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         HierarchyTest\TestObject::class,
         HierarchyTest\HideTestObject::class,
         HierarchyTest\HideTestSubObject::class,
     );
 
-    protected function getExtraDataObjects()
+    protected static function getExtraDataObjects()
     {
         // Prevent setup breaking if versioned module absent
         if (class_exists(Versioned::class)) {

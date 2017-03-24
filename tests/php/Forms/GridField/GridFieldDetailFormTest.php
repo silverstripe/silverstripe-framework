@@ -21,13 +21,13 @@ class GridFieldDetailFormTest extends FunctionalTest
 
     protected static $fixture_file = 'GridFieldDetailFormTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         Person::class,
         PeopleGroup::class,
         Category::class,
     );
 
-    protected $extraControllers = [
+    protected static $extra_controllers = [
         CategoryController::class,
         TestController::class,
         GroupController::class,

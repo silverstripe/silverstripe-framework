@@ -13,13 +13,13 @@ use SilverStripe\Versioned\Versioned;
 
 class FormFactoryTest extends SapphireTest
 {
-    protected $extraDataObjects = [
+    protected static $extra_dataobjects = [
         TestObject::class,
     ];
 
     protected static $fixture_file = 'FormFactoryTest.yml';
 
-    protected function getExtraDataObjects()
+    protected static function getExtraDataObjects()
     {
         // Prevent setup breaking if versioned module absent
         if (class_exists(Versioned::class)) {
