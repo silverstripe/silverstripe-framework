@@ -24,7 +24,7 @@ class DataListTest extends SapphireTest
     // Borrow the model from DataObjectTest
     protected static $fixture_file = 'DataObjectTest.yml';
 
-    protected function getExtraDataObjects()
+    protected static function getExtraDataObjects()
     {
         return array_merge(
             DataObjectTest::$extra_data_objects,
@@ -1265,7 +1265,7 @@ class DataListTest extends SapphireTest
     public function testAggregateFilters()
     {
         $teams = Team::get()->filter('Comments.Count()', 2);
-        
+
         $team1 = $this->objFromFixture(Team::class, 'team1');
         $team2 = $this->objFromFixture(Team::class, 'team2');
         $team3 = $this->objFromFixture(Team::class, 'team3');
@@ -1284,7 +1284,7 @@ class DataListTest extends SapphireTest
         $this->assertEquals($team1->ID, $teams->first()->ID);
 
         $teams = Team::get()->filter('Comments.Count()', [1,2]);
-        
+
         $this->assertCount(2, $teams);
         foreach ([$team1, $team2] as $expectedTeam) {
             $this->assertContains($expectedTeam->ID, $teams->column('ID'));

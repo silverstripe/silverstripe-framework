@@ -15,7 +15,7 @@ class SQLUpdateTest extends SapphireTest
 
     public static $fixture_file = 'SQLUpdateTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         SQLUpdateTest\TestBase::class,
         SQLUpdateTest\TestChild::class
     );

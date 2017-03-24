@@ -34,7 +34,7 @@ class ControllerTest extends FunctionalTest
 
     protected $depSettings = null;
 
-    protected $extraControllers = [
+    protected static $extra_controllers = [
         AccessBaseController::class,
         AccessSecuredController::class,
         AccessWildcardSecuredController::class,

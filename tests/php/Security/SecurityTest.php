@@ -40,7 +40,7 @@ class SecurityTest extends FunctionalTest
 
     protected $priorRememberUsername = null;
 
-    protected $extraControllers = [
+    protected static $extra_controllers = [
         SecurityTest\NullController::class,
         SecurityTest\SecuredController::class,
     ];
@@ -662,15 +662,15 @@ class SecurityTest extends FunctionalTest
         // Assumption: The database has been built correctly by the test runner,
         // and has all columns present in the ORM
         /**
- * @skipUpgrade
-*/
+         * @skipUpgrade
+         */
         DB::get_schema()->renameField('Member', 'Email', 'Email_renamed');
 
         // Email column is now missing, which means we're not ready to do permission checks
         $this->assertFalse(Security::database_is_ready());
 
         // Rebuild the database (which re-adds the Email column), and try again
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
         $this->assertTrue(Security::database_is_ready());
 
         Security::$force_database_is_ready = $old;

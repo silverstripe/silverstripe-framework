@@ -15,7 +15,7 @@ use SilverStripe\ORM\Tests\DatabaseTest\MyObject;
 class DatabaseTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         MyObject::class,
     );
 
@@ -37,7 +37,7 @@ class DatabaseTest extends SapphireTest
             'Field is renamed to _obsolete_<fieldname> through dontRequireField()'
         );
 
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
     }
 
     public function testRenameField()
@@ -59,7 +59,7 @@ class DatabaseTest extends SapphireTest
             'Old fieldname isnt preserved through renameField()'
         );
 
-        $this->resetDBSchema(true);
+        static::resetDBSchema(true);
     }
 
     public function testMySQLCreateTableOptions()

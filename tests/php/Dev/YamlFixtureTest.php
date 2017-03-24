@@ -15,7 +15,7 @@ use SilverStripe\Control\Director;
 class YamlFixtureTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         TestDataObject::class,
         DataObjectRelation::class,
     );

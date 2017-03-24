@@ -15,7 +15,7 @@ use SilverStripe\ORM\Tests\SQLInsertTest\SQLInsertTestBase;
 class SQLInsertTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         SQLInsertTestBase::class
     );
 

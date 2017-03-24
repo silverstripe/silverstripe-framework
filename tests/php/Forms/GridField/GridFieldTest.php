@@ -29,7 +29,7 @@ use SilverStripe\Security\Member;
 
 class GridFieldTest extends SapphireTest
 {
-    protected $extraDataObjects = [
+    protected static $extra_dataobjects = [
         Permissions::class,
         Cheerleader::class,
         Player::class,

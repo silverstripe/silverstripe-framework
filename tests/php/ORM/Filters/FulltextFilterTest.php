@@ -11,7 +11,7 @@ use SilverStripe\ORM\Tests\Filters\FulltextFilterTest\TestObject;
 class FulltextFilterTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         TestObject::class
     );
 

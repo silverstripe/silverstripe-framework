@@ -41,7 +41,7 @@ class SSViewerTest extends SapphireTest
      */
     protected $oldServer = array();
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         SSViewerTest\TestObject::class,
     );
 

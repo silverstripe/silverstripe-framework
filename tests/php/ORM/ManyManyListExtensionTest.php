@@ -13,7 +13,7 @@ class ManyManyListExtensionTest extends SapphireTest
 
     protected static $fixture_file = 'ManyManyListExtensionTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         ManyManyListTest\IndirectPrimary::class,
         ManyManyListTest\Secondary::class,
         ManyManyListTest\SecondarySub::class

@@ -15,7 +15,7 @@ class DataObjectLazyLoadingTest extends SapphireTest
         'DataObjectTest.yml',
     );
 
-    protected function getExtraDataObjects()
+    protected static function getExtraDataObjects()
     {
         return array_merge(
             DataObjectTest::$extra_data_objects,

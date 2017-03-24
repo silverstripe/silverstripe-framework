@@ -9,7 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 class DBCompositeTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         DBCompositeTest\TestObject::class,
         DBCompositeTest\SubclassedDBFieldObject::class,
     );

@@ -13,12 +13,12 @@ use SilverStripe\ORM\Tests\DataObjectSchemaGenerationTest\TestObject;
 class DataObjectSchemaGenerationTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         TestObject::class,
         TestIndexObject::class
     );
 
-    public function setUpOnce()
+    public static function setUpBeforeClass()
     {
 
         // enable fulltext option on this table
@@ -27,7 +27,7 @@ class DataObjectSchemaGenerationTest extends SapphireTest
             array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
         );
 
-        parent::setUpOnce();
+        parent::setUpBeforeClass();
     }
 
     /**

@@ -28,8 +28,8 @@ class DirectorTest extends SapphireTest
 
     protected $originalSession = array();
 
-    protected $extraControllers = [
-        TestController::class
+    protected static $extra_controllers = [
+        TestController::class,
     ];
 
     protected function setUp()
@@ -306,12 +306,14 @@ class DirectorTest extends SapphireTest
      */
     public function testQueryIsEnvironment()
     {
+        if (!isset($_SESSION)) {
+            $_SESSION = [];
+        }
         // Reset
         unset($_SESSION['isDev']);
         unset($_SESSION['isLive']);
         unset($_GET['isTest']);
         unset($_GET['isDev']);
-        $_SESSION = $_SESSION ?: array();
 
         // Test isDev=1
         $_GET['isDev'] = '1';

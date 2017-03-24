@@ -25,10 +25,6 @@
 		<directory>versioned/tests/php</directory>
 	</testsuite>
 
-	<listeners>
-		<listener class="SilverStripe\Dev\TestListener" />
-	</listeners>
-
 	<groups>
 		<exclude>
 			<group>sanitychecks</group>

@@ -17,10 +17,10 @@ class ListboxFieldTest extends SapphireTest
 
     protected static $fixture_file = 'ListboxFieldTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         TestObject::class,
         Article::class,
-        Tag::class
+        Tag::class,
     );
 
     public function testFieldWithManyManyRelationship()

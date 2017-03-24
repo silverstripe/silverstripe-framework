@@ -20,13 +20,13 @@ class FormScaffolderTest extends SapphireTest
 
     protected static $fixture_file = 'FormScaffolderTest.yml';
 
-    protected $requiredExtensions = [
+    protected static $required_extensions = [
         Article::class => [
             ArticleExtension::class
         ]
     ];
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         Article::class,
         Tag::class,
         Author::class,

@@ -9,7 +9,7 @@ class ComponentSetTest extends SapphireTest
 
     protected static $fixture_file = 'ComponentSetTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         ComponentSetTest\Player::class,
         ComponentSetTest\Team::class,
     );

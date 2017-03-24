@@ -17,7 +17,7 @@ class SearchFilterApplyRelationTest extends SapphireTest
 
     protected static $fixture_file = 'SearchFilterApplyRelationTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         SearchFilterApplyRelationTest\TestObject::class,
         SearchFilterApplyRelationTest\HasOneParent::class,
         SearchFilterApplyRelationTest\HasOneChild::class,

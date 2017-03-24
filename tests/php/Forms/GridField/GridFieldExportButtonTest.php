@@ -24,9 +24,9 @@ class GridFieldExportButtonTest extends SapphireTest
 
     protected static $fixture_file = 'GridFieldExportButtonTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         Team::class,
-        NoView::class
+        NoView::class,
     );
 
     protected function setUp()

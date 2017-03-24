@@ -23,7 +23,7 @@ class CheckboxSetFieldTest extends SapphireTest
 
     protected static $fixture_file = 'CheckboxSetFieldTest.yml';
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         Article::class,
         Tag::class,
     );

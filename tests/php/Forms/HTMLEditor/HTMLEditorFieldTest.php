@@ -29,13 +29,15 @@ class HTMLEditorFieldTest extends FunctionalTest
 
     protected static $use_draft_site = true;
 
-    protected $requiredExtensions = array(
+    protected static $required_extensions= array(
         HTMLEditorField_Toolbar::class => array(
-            DummyMediaFormFieldExtension::class
-        )
+            DummyMediaFormFieldExtension::class,
+        ),
     );
 
-    protected $extraDataObjects = array(TestObject::class);
+    protected static $extra_dataobjects = [
+        TestObject::class,
+    ];
 
     protected function setUp()
     {

@@ -9,7 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 class TransactionTest extends SapphireTest
 {
 
-    protected $extraDataObjects = array(
+    protected static $extra_dataobjects = array(
         TransactionTest\TestObject::class
     );
 
