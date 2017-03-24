@@ -35,6 +35,7 @@ before_script:
   - "if [ \"$PHPCS_TEST\" = \"1\" ]; then pyrus install pear/PHP_CodeSniffer; fi"
   - phpenv rehash
   - phpenv config-rm xdebug.ini
+  - echo 'memory_limit = 2048M' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - "export DISPLAY=\":99\""
   - "export XVFBARGS=\":99 -ac -screen 0 1024x768x16\""
   - composer install --prefer-dist

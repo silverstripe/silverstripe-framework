@@ -11,7 +11,7 @@ use SilverStripe\ORM\Search\FulltextSearchable;
 class FulltextSearchableTest extends SapphireTest
 {
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -23,7 +23,7 @@ class FulltextSearchableTest extends SapphireTest
      * properly at the end of the test. This becomes apparent when a later test tries to
      * ALTER TABLE File and add fulltext indexes with the InnoDB table type.
      */
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
 

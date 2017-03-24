@@ -14,7 +14,7 @@ use SilverStripe\Dev\Tests\DevAdminControllerTest\Controller1;
 class DevAdminControllerTest extends FunctionalTest
 {
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

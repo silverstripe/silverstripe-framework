@@ -9,7 +9,7 @@ use SilverStripe\Dev\SapphireTest;
  */
 class PhpSyntaxTest extends SapphireTest
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->markTestSkipped('This needs to be written to include only core php files, not test/thirdparty files');

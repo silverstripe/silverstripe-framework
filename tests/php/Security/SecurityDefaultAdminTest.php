@@ -15,7 +15,7 @@ class SecurityDefaultAdminTest extends SapphireTest
     protected $defaultUsername = null;
     protected $defaultPassword = null;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -33,7 +33,7 @@ class SecurityDefaultAdminTest extends SapphireTest
         Permission::flush_permission_cache();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         Security::setDefaultAdmin($this->defaultUsername, $this->defaultPassword);
         Permission::flush_permission_cache();

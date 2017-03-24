@@ -11,7 +11,7 @@ class ShortcodeParserTest extends SapphireTest
     protected $arguments, $contents, $tagName, $parser;
     protected $extra = array();
 
-    public function setUp()
+    protected function setUp()
     {
         ShortcodeParser::get('test')->register('test_shortcode', array($this, 'shortcodeSaver'));
         $this->parser = ShortcodeParser::get('test');
@@ -19,7 +19,7 @@ class ShortcodeParserTest extends SapphireTest
         parent::setUp();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         ShortcodeParser::get('test')->unregister('test_shortcode');
 
@@ -314,7 +314,8 @@ class ShortcodeParserTest extends SapphireTest
 
     public function testNoParseAttemptIfNoCode()
     {
-        $stub = $this->getMock('SilverStripe\\View\\Parsers\\ShortcodeParser', array('replaceElementTagsWithMarkers'));
+        $stub = $this->getMockBuilder(ShortcodeParser::class)->setMethods(array('replaceElementTagsWithMarkers'))
+            ->getMock();
         $stub->register(
             'test',
             function () {

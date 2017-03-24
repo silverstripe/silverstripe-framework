@@ -15,7 +15,7 @@ class CSVParserTest extends SapphireTest
      */
     protected $csvPath = null;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->csvPath = __DIR__ . '/CsvBulkLoaderTest/csv/';

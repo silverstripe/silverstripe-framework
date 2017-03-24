@@ -10,7 +10,7 @@ use Exception;
 class ErrorControlChainTest extends SapphireTest
 {
 
-    public function setUp()
+    protected function setUp()
     {
 
         // Check we can run PHP at all

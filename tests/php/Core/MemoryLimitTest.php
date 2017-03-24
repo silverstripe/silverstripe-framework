@@ -76,7 +76,7 @@ class MemoryLimitTest extends SapphireTest
 
     private $origMemLimit, $origTimeLimit;
 
-    public function setUp()
+    protected function setUp()
     {
         $this->origMemLimit = ini_get('memory_limit');
         $this->origTimeLimit = ini_get('max_execution_time');
@@ -86,7 +86,7 @@ class MemoryLimitTest extends SapphireTest
         set_increase_time_limit_max(-1);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         ini_set('memory_limit', $this->origMemLimit);
         set_time_limit($this->origTimeLimit);

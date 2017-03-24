@@ -37,7 +37,7 @@ class HTMLEditorFieldTest extends FunctionalTest
 
     protected $extraDataObjects = array(TestObject::class);
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class HTMLEditorFieldTest extends FunctionalTest
         }
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         TestAssetStore::reset();
         parent::tearDown();

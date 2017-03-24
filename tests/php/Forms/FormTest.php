@@ -46,7 +46,7 @@ class FormTest extends FunctionalTest
         ControllerWithStrictPostCheck::class,
     ];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

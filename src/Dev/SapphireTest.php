@@ -228,7 +228,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
     protected $originalEnv = null;
 
-    public function setUp()
+    protected function setUp()
     {
         //nest config and injector for each test so they are effectively sandboxed per test
         Config::nest();
@@ -562,7 +562,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         return $path;
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         // Preserve memory settings
         ini_set('memory_limit', ($this->originalMemoryLimit) ? $this->originalMemoryLimit : -1);

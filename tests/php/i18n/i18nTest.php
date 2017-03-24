@@ -17,13 +17,13 @@ class i18nTest extends SapphireTest
 {
     use i18nTestManifest;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->setupManifest();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $this->tearDownManifest();
         parent::tearDown();

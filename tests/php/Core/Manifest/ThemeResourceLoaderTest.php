@@ -29,7 +29,7 @@ class ThemeResourceLoaderTest extends SapphireTest
     /**
      * Set up manifest before each test
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

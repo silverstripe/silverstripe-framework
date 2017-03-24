@@ -51,7 +51,9 @@ class SwiftMailerTest extends SapphireTest
         $email->setFrom('from@example.com');
         $email->setSubject('Subject');
 
-        $mailer = $this->getMock(SwiftMailer::class, array('sendSwift'));
+        $mailer = $this->getMockBuilder(SwiftMailer::class)
+            ->setMethods(array('sendSwift'))
+            ->getMock();
         $mailer->expects($this->once())->method('sendSwift')->willReturnCallback(function ($message) {
             $this->assertInstanceOf(Swift_Message::class, $message);
         });

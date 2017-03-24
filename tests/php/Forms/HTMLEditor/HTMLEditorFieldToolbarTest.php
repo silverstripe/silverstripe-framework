@@ -24,7 +24,7 @@ class HTMLEditorFieldToolbarTest extends SapphireTest
         return new Toolbar(null, '/');
     }
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

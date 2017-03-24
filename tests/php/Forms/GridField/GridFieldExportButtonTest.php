@@ -29,7 +29,7 @@ class GridFieldExportButtonTest extends SapphireTest
         NoView::class
     );
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

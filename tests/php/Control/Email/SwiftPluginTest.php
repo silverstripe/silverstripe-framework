@@ -9,7 +9,7 @@ use SilverStripe\Dev\SapphireTest;
 class SwiftPluginTest extends SapphireTest
 {
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

@@ -45,7 +45,7 @@ class SSViewerTest extends SapphireTest
         SSViewerTest\TestObject::class,
     );
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         SSViewer::config()->update('source_file_comments', false);
@@ -54,7 +54,7 @@ class SSViewerTest extends SapphireTest
         $this->oldServer = $_SERVER;
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $_SERVER = $this->oldServer;
         TestAssetStore::reset();
@@ -201,7 +201,8 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirements()
     {
-        $requirements = $this->getMock("SilverStripe\\View\\Requirements_Backend", array("javascript", "css"));
+        $requirements = $this->getMockBuilder(Requirements_Backend::class)->setMethods(array("javascript", "css"))
+            ->getMock();
         $jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
         $cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 

@@ -15,7 +15,7 @@ class DecimalTest extends SapphireTest
         DecimalTest\TestObject::class
     );
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->testDataObject = $this->objFromFixture(DecimalTest\TestObject::class, 'test-dataobject');

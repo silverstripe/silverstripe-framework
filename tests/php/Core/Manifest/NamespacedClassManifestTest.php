@@ -23,7 +23,7 @@ class NamespacedClassManifestTest extends SapphireTest
      */
     protected $manifest;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -32,7 +32,7 @@ class NamespacedClassManifestTest extends SapphireTest
         ClassLoader::instance()->pushManifest($this->manifest, false);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         parent::tearDown();
         ClassLoader::instance()->popManifest();

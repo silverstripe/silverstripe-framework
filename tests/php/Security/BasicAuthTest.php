@@ -24,7 +24,7 @@ class BasicAuthTest extends FunctionalTest
         ControllerSecuredWithoutPermission::class,
     ];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
