@@ -32,7 +32,7 @@ class ClassLoaderTest extends SapphireTest
      */
     protected $testManifest2;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

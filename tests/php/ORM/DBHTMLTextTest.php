@@ -14,7 +14,7 @@ use SilverStripe\View\Parsers\ShortcodeParser;
 class DBHTMLTextTest extends SapphireTest
 {
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -24,7 +24,7 @@ class DBHTMLTextTest extends SapphireTest
         ShortcodeParser::set_active('htmltest');
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         ShortcodeParser::set_active('default');
         parent::tearDown();

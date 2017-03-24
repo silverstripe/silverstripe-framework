@@ -10,7 +10,7 @@ class BulkLoaderResultTest extends SapphireTest
 {
     protected $extraDataObjects = array(Player::class);
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         Player::create(array('Name' => 'Vincent', 'Status' => 'Available'))->write();

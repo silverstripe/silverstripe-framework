@@ -41,14 +41,14 @@ class InjectorTest extends SapphireTest
 
     protected $nestingLevel = 0;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
         $this->nestingLevel = 0;
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
 
         while ($this->nestingLevel > 0) {

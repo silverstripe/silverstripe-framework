@@ -32,7 +32,7 @@ class DirectorTest extends SapphireTest
         TestController::class
     ];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -77,7 +77,7 @@ class DirectorTest extends SapphireTest
         Director::config()->set('rules', $this->getExtraRoutes());
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         $_GET = $this->originalGet;
         $_SESSION = $this->originalSession;

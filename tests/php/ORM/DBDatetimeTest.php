@@ -12,7 +12,7 @@ use SilverStripe\Security\Member;
  */
 class DBDatetimeTest extends SapphireTest
 {
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         i18n::set_locale('en_NZ');

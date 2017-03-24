@@ -49,7 +49,7 @@ class MemberTest extends FunctionalTest
     /**
      * @skipUpgrade
      */
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
@@ -58,7 +58,7 @@ class MemberTest extends FunctionalTest
         Member::set_password_validator(null);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         Member::config()->unique_identifier_field = $this->orig['Member_unique_identifier_field'];
         parent::tearDown();

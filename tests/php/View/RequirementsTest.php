@@ -20,13 +20,13 @@ class RequirementsTest extends SapphireTest
 
     static $html_template = '<html><head></head><body></body></html>';
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         TestAssetStore::activate('RequirementsTest'); // Set backend root to /RequirementsTest
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         TestAssetStore::reset();
         parent::tearDown();

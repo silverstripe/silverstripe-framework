@@ -80,7 +80,7 @@ class FunctionalTest extends SapphireTest
         return $this->mainSession->session();
     }
 
-    public function setUp()
+    protected function setUp()
     {
         // Skip calling FunctionalTest directly.
         if (get_class($this) == __CLASS__) {
@@ -107,7 +107,7 @@ class FunctionalTest extends SapphireTest
         SecurityToken::disable();
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         SecurityToken::enable();
 

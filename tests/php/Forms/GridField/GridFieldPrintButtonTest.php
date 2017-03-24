@@ -19,7 +19,7 @@ class GridFieldPrintButtonTest extends SapphireTest
         TestObject::class
     );
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 

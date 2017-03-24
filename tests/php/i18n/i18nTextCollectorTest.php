@@ -20,7 +20,7 @@ class i18nTextCollectorTest extends SapphireTest
      */
     protected $alternateBaseSavePath = null;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->setupManifest();
@@ -29,7 +29,7 @@ class i18nTextCollectorTest extends SapphireTest
         Filesystem::makeFolder($this->alternateBaseSavePath);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         if (is_dir($this->alternateBaseSavePath)) {
             Filesystem::removeFolder($this->alternateBaseSavePath);

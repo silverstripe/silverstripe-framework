@@ -47,7 +47,7 @@ class ControllerTest extends FunctionalTest
         UnsecuredController::class,
     ];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         Director::config()->update('alternate_base_url', '/');
@@ -62,7 +62,7 @@ class ControllerTest extends FunctionalTest
         SSViewer::set_themes($themes);
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         Deprecation::restore_settings($this->depSettings);
         parent::tearDown();

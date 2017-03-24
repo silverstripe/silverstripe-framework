@@ -56,7 +56,7 @@ class GridFieldDeleteActionTest extends SapphireTest
         Permissions::class
     ];
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         $this->list = new DataList(Team::class);

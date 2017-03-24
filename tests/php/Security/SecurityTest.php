@@ -45,7 +45,7 @@ class SecurityTest extends FunctionalTest
         SecurityTest\SecuredController::class,
     ];
 
-    public function setUp()
+    protected function setUp()
     {
         // This test assumes that MemberAuthenticator is present and the default
         $this->priorAuthenticators = Authenticator::get_authenticators();
@@ -70,7 +70,7 @@ class SecurityTest extends FunctionalTest
         Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
     }
 
-    public function tearDown()
+    protected function tearDown()
     {
         // Restore selected authenticator
 

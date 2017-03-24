@@ -26,7 +26,7 @@ use SilverStripe\Control\Controller;
 class ObjectTest extends SapphireTest
 {
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
         Injector::inst()->unregisterAllObjects();
