@@ -11,10 +11,11 @@ coding any references in the `<head>` tag of your template, as it enables a more
 
 **mysite/templates/Page.ss**
 
-	:::ss
-	<% require css("cms/css/TreeSelector.css") %>
-	<% require themedCSS("TreeSelector") %>
-	<% require javascript("cms/javascript/LeftAndMain.js") %>
+```
+<% require css("cms/css/TreeSelector.css") %>
+<% require themedCSS("TreeSelector") %>
+<% require javascript("cms/javascript/LeftAndMain.js") %>
+```
 
 <div class="alert" markdown="1">
 Requiring assets from the template is restricted compared to the PHP API.
@@ -25,44 +26,49 @@ Requiring assets from the template is restricted compared to the PHP API.
 It is common practice to include most Requirements either in the *init()*-method of your [controller](../controllers/), or
 as close to rendering as possible (e.g. in [api:FormField]).
 
-	:::php
-	<?php
+```php
+<?php
 
-	class MyCustomController extends Controller {
+class MyCustomController extends Controller {
 
-        public function init() {
-            parent::init();
-		
-            Requirements::javascript("cms/javascript/LeftAndMain.js");
-            Requirements::css("cms/css/TreeSelector.css");
-        }
-    }
+	public function init() {
+		parent::init();
+
+		Requirements::javascript("cms/javascript/LeftAndMain.js");
+		Requirements::css("cms/css/TreeSelector.css");
+	}
+}
+```
 
 ### CSS Files
 
-	:::php
-    Requirements::css($path, $media);
+```php
+Requirements::css($path, $media);
+```
 
 If you're using the CSS method a second argument can be used. This argument defines the 'media' attribute of the 
 `<link>` element, so you can define 'screen' or 'print' for example.
 
-	:::php
-    Requirements::css("cms/css/TreeSelector.css", "screen,projection");
+```php
+Requirements::css("cms/css/TreeSelector.css", "screen,projection");
+```
 
 ### Javascript Files
 
-	:::php
-    Requirements::javascript($path);
+```php
+Requirements::javascript($path);
+```
 
 A variant on the inclusion of custom javascript is the inclusion of *templated* javascript.  Here, you keep your
 JavaScript in a separate file and instead load, via search and replace, several PHP-generated variables into that code.
 
-	:::php
-    $vars = array(
-        "EditorCSS" => "cms/css/editor.css",
-    );
+```php
+$vars = array(
+	"EditorCSS" => "cms/css/editor.css",
+);
 
-	Requirements::javascriptTemplate("cms/javascript/editor.template.js", $vars);
+Requirements::javascriptTemplate("cms/javascript/editor.template.js", $vars);
+```
 
 In this example, `editor.template.js` is expected to contain a replaceable variable expressed as `$EditorCSS`.
 
@@ -73,32 +79,34 @@ of 'configuration' from the database in a raw format.  You'll need to use the `h
 this is generally speaking the best way to do these things - it clearly marks the copy as belonging to a different
 language.
 
-	:::php
-	Requirements::customScript(<<<JS
-	  alert("hi there");
-	JS
-	);
+```php
+Requirements::customScript(<<<JS
+  alert("hi there");
+JS
+);
 
-	Requirements::customCSS(<<<CSS
-	  .tree li.$className {
-	    background-image: url($icon);
-	  }
-	CSS
-	);
+Requirements::customCSS(<<<CSS
+  .tree li.$className {
+	background-image: url($icon);
+  }
+CSS
+);
+```
 
 ## Combining Files
 
 You can concatenate several CSS or javascript files into a single dynamically generated file. This increases performance
 by reducing HTTP requests.
 
-	:::php
-	Requirements::combine_files(
-		'foobar.js',
-		array(
-			'mysite/javascript/foo.js',
-			'mysite/javascript/bar.js',
-		)
-	);
+```php
+Requirements::combine_files(
+	'foobar.js',
+	array(
+		'mysite/javascript/foo.js',
+		'mysite/javascript/bar.js',
+	)
+);
+```
 
 <div class="alert" markdown='1'>
 To make debugging easier in your local environment, combined files is disabled when running your application in `dev`
@@ -110,9 +118,10 @@ By default it stores the generated file in the assets/ folder, but you can confi
 
 **mysite/_config/app.yml**
 	
-	:::yml
-	Requirements:
-	  combined_files_folder: '_combined'
+```yaml
+Requirements:
+  combined_files_folder: '_combined'
+```
 
 <div class="info" markdown='1'>
 If SilverStripe doesn't have permissions on your server to write these files it will default back to including them
@@ -122,26 +131,29 @@ individually. SilverStripe **will not** rewrite your paths within the file.
 You can also combine CSS files into a media-specific stylesheets as you would with the `Requirements::css` call - use
 the third paramter of the `combine_files` function:
 
-	:::php
-	$printStylesheets = array(
-		"$themeDir/css/print_HomePage.css",
-		"$themeDir/css/print_Page.css",
-	);
+```php
+$printStylesheets = array(
+	"$themeDir/css/print_HomePage.css",
+	"$themeDir/css/print_Page.css",
+);
 
-	Requirements::combine_files('print.css', $printStylesheets, 'print');
+Requirements::combine_files('print.css', $printStylesheets, 'print');
+```
 
 By default, all requirements files are flushed (deleted) when ?flush querystring parameter is set.
 This can be disabled by setting the `Requirements.disable_flush_combined` config to `true`.
 
 ## Clearing assets
 
-	:::php
-	Requirements::clear();
+```php
+Requirements::clear();
+```
 
 Clears all defined requirements. You can also clear specific requirements.
 
-	:::php
-	Requirements::clear(THIRDPARTY_DIR.'/prototype.js');
+```php
+Requirements::clear(THIRDPARTY_DIR.'/prototype.js');
+```
 
 <div class="alert" markdown="1">
 Depending on where you call this command, a Requirement might be *re-included* afterwards.
@@ -156,8 +168,9 @@ included requirements, and ones included after the `block()` call.
 One common example is to block the core `jquery.js` added by various form fields and core controllers, and use a newer 
 version in a custom location. This assumes you have tested your application with the newer version.
 
-	:::php
-	Requirements::block(THIRDPARTY_DIR . '/jquery/jquery.js');
+```php
+Requirements::block(THIRDPARTY_DIR . '/jquery/jquery.js');
+```
 
 <div class="alert" markdown="1">
 The CMS also uses the `Requirements` system, and its operation can be affected by `block()` calls. Avoid this by 
@@ -179,8 +192,9 @@ careful when messing with the order of requirements.
 By default, SilverStripe includes all Javascript files at the bottom of the page body, unless there's another script 
 already loaded, then, it's inserted before the first `<script>` tag. If this causes problems, it can be configured.
 
-	:::php
-	Requirements::set_force_js_to_bottom(true);
+```php
+Requirements::set_force_js_to_bottom(true);
+```
 
 `Requirements.force_js_to_bottom`, will force SilverStripe to write the Javascript to the bottom of the page body, even 
 if there is an earlier script tag.
@@ -188,9 +202,9 @@ if there is an earlier script tag.
 If the Javascript files are preferred to be placed in the `<head>` tag rather than in the `<body>` tag,
 `Requirements.write_js_to_body` should be set to false.
 
-	:::php
-	Requirements::set_write_js_to_body(false);
-
+```php
+Requirements::set_write_js_to_body(false);
+```
 
 ## API Documentation
 
