@@ -314,7 +314,8 @@ class ShortcodeParserTest extends SapphireTest
 
     public function testNoParseAttemptIfNoCode()
     {
-        $stub = $this->getMock('SilverStripe\\View\\Parsers\\ShortcodeParser', array('replaceElementTagsWithMarkers'));
+        $stub = $this->getMockBuilder(ShortcodeParser::class)->setMethods(array('replaceElementTagsWithMarkers'))
+            ->getMock();
         $stub->register(
             'test',
             function () {

@@ -4,6 +4,7 @@ namespace SilverStripe\Core\Tests\Injector;
 
 use InvalidArgumentException;
 use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Injector\Factory;
 use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Core\Injector\SilverStripeServiceConfigurationLocator;
 use SilverStripe\Core\Tests\Injector\AopProxyServiceTest\AnotherService;
@@ -813,7 +814,7 @@ class InjectorTest extends SapphireTest
             )
         );
 
-        $factory = $this->getMock('SilverStripe\\Core\\Injector\\Factory');
+        $factory = $this->getMockBuilder(Factory::class)->getMock();
         $factory
             ->expects($this->once())
             ->method('create')

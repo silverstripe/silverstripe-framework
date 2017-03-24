@@ -201,7 +201,8 @@ class SSViewerTest extends SapphireTest
 
     public function testRequirements()
     {
-        $requirements = $this->getMock("SilverStripe\\View\\Requirements_Backend", array("javascript", "css"));
+        $requirements = $this->getMockBuilder(Requirements_Backend::class)->setMethods(array("javascript", "css"))
+            ->getMock();
         $jsFile = FRAMEWORK_DIR . '/tests/forms/a.js';
         $cssFile = FRAMEWORK_DIR . '/tests/forms/a.js';
 
