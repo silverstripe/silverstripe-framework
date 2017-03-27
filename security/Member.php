@@ -398,7 +398,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Returns true if this user is locked out
 	 */
 	public function isLockedOut() {
-		return $this->LockedOutUntil && SS_Datetime::now()->Format('U') < strtotime($this->LockedOutUntil);
+		$state = ($this->LockedOutUntil && SS_Datetime::now()->Format('U') < strtotime($this->LockedOutUntil));
+		$this->extend('isLockedOut', $state);
+		return $state;
 	}
 
 	/**
@@ -1685,6 +1687,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 			$this->FailedLoginCount = 0;
 			$this->write();
 		}
+		$this->extend('registerSuccessfulLogin');
 	}
 	/**
 	 * Get the HtmlEditorConfig for this user to be used in the CMS.
