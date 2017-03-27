@@ -5,7 +5,7 @@ namespace SilverStripe\Forms\Tests\FormFactoryTest;
 use SilverStripe\Control\Controller;
 use SilverStripe\Forms\Form;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * Edit controller for this form

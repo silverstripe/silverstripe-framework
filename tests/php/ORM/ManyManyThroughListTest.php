@@ -5,7 +5,6 @@ namespace SilverStripe\ORM\Tests;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\ManyManyThroughList;
-use SilverStripe\ORM\Versioning\Versioned;
 use InvalidArgumentException;
 
 class ManyManyThroughListTest extends SapphireTest
@@ -15,10 +14,7 @@ class ManyManyThroughListTest extends SapphireTest
     protected $extraDataObjects = [
         ManyManyThroughListTest\Item::class,
         ManyManyThroughListTest\JoinObject::class,
-        ManyManyThroughListTest\TestObject::class,
-        ManyManyThroughListTest\VersionedItem::class,
-        ManyManyThroughListTest\VersionedJoinObject::class,
-        ManyManyThroughListTest\VersionedObject::class,
+        ManyManyThroughListTest\TestObject::class
     ];
 
     protected function setUp()
@@ -35,9 +31,7 @@ class ManyManyThroughListTest extends SapphireTest
 
     public function testSelectJoin()
     {
-        /**
- * @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_Object $parent
-*/
+        /** @var ManyManyThroughListTest\TestObject $parent */
         $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
         $this->assertDOSEquals(
             [
@@ -102,9 +96,7 @@ class ManyManyThroughListTest extends SapphireTest
 
     public function testAdd()
     {
-        /**
- * @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_Object $parent
-*/
+        /** @var ManyManyThroughListTest\TestObject $parent */
         $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
         $newItem = new ManyManyThroughListTest\Item();
         $newItem->Title = 'my new item';
@@ -128,9 +120,7 @@ class ManyManyThroughListTest extends SapphireTest
 
     public function testRemove()
     {
-        /**
- * @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_Object $parent
-*/
+        /** @var ManyManyThroughListTest\TestObject $parent */
         $parent = $this->objFromFixture(ManyManyThroughListTest\TestObject::class, 'parent1');
         $this->assertDOSEquals(
             [
@@ -144,73 +134,6 @@ class ManyManyThroughListTest extends SapphireTest
         $this->assertDOSEquals(
             [['Title' => 'item 2']],
             $parent->Items()
-        );
-    }
-
-    public function testPublishing()
-    {
-        /**
- * @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_VersionedObject $draftParent
-*/
-        $draftParent = $this->objFromFixture(ManyManyThroughListTest\VersionedObject::class, 'parent1');
-        $draftParent->publishRecursive();
-
-        // Modify draft stage
-        $item1 = $draftParent->Items()->filter(['Title' => 'versioned item 1'])->first();
-        $item1->Title = 'new versioned item 1';
-        $item1->getJoin()->Title = 'new versioned join 1';
-        $item1->write(false, false, false, true); // Write joined components
-        $draftParent->Title = 'new versioned title';
-        $draftParent->write();
-
-        // Check owned objects on stage
-        $draftOwnedObjects = $draftParent->findOwned(true);
-        $this->assertDOSEquals(
-            [
-                ['Title' => 'new versioned join 1'],
-                ['Title' => 'versioned join 2'],
-                ['Title' => 'new versioned item 1'],
-                ['Title' => 'versioned item 2'],
-            ],
-            $draftOwnedObjects
-        );
-
-        // Check live record is still old values
-        // This tests that both the join table and many_many tables
-        // inherit the necessary query parameters from the parent object.
-        /**
- * @var \SilverStripe\ORM\Tests\ManyManyThroughListTest\ManyManyThroughListTest_VersionedObject $liveParent
-*/
-        $liveParent = Versioned::get_by_stage(
-            ManyManyThroughListTest\VersionedObject::class,
-            Versioned::LIVE
-        )->byID($draftParent->ID);
-        $liveOwnedObjects = $liveParent->findOwned(true);
-        $this->assertDOSEquals(
-            [
-                ['Title' => 'versioned join 1'],
-                ['Title' => 'versioned join 2'],
-                ['Title' => 'versioned item 1'],
-                ['Title' => 'versioned item 2'],
-            ],
-            $liveOwnedObjects
-        );
-
-        // Publish draft changes
-        $draftParent->publishRecursive();
-        $liveParent = Versioned::get_by_stage(
-            ManyManyThroughListTest\VersionedObject::class,
-            Versioned::LIVE
-        )->byID($draftParent->ID);
-        $liveOwnedObjects = $liveParent->findOwned(true);
-        $this->assertDOSEquals(
-            [
-                ['Title' => 'new versioned join 1'],
-                ['Title' => 'versioned join 2'],
-                ['Title' => 'new versioned item 1'],
-                ['Title' => 'versioned item 2'],
-            ],
-            $liveOwnedObjects
         );
     }
 

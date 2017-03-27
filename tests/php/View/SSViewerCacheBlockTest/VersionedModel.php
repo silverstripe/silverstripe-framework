@@ -4,7 +4,7 @@ namespace SilverStripe\View\Tests\SSViewerCacheBlockTest;
 
 use SilverStripe\Dev\TestOnly;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 
 class VersionedModel extends DataObject implements TestOnly
 {

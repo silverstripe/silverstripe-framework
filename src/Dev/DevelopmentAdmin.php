@@ -8,7 +8,7 @@ use SilverStripe\Control\Director;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Controller;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DatabaseAdmin;
 use SilverStripe\Security\Permission;
 use SilverStripe\Security\Security;
@@ -67,7 +67,9 @@ class DevelopmentAdmin extends Controller
         // Backwards compat: Default to "draft" stage, which is important
         // for tasks like dev/build which call DataObject->requireDefaultRecords(),
         // but also for other administrative tasks which have assumptions about the default stage.
-        Versioned::set_stage(Versioned::DRAFT);
+        if (class_exists(Versioned::class)) {
+            Versioned::set_stage(Versioned::DRAFT);
+        }
     }
 
     public function index()

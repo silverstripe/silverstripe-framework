@@ -6,12 +6,11 @@ use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\Dev\Debug;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\ORM\ArrayLib;
 use SilverStripe\ORM\DataModel;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\View\Requirements;
 use SilverStripe\View\Requirements_Backend;
 use SilverStripe\View\TemplateGlobalProvider;
@@ -280,7 +279,9 @@ class Director implements TemplateGlobalProvider
 
         // These are needed so that calling Director::test() does not muck with whoever is calling it.
         // Really, it's some inappropriate coupling and should be resolved by making less use of statics.
-        $oldReadingMode = Versioned::get_reading_mode();
+        if (class_exists(Versioned::class)) {
+            $oldReadingMode = Versioned::get_reading_mode();
+        }
         $getVars = array();
 
         if (!$httpMethod) {
@@ -330,7 +331,9 @@ class Director implements TemplateGlobalProvider
 
             // These are needed so that calling Director::test() does not muck with whoever is calling it.
             // Really, it's some inappropriate coupling and should be resolved by making less use of statics
-            Versioned::set_reading_mode($oldReadingMode);
+            if (class_exists(Versioned::class)) {
+                Versioned::set_reading_mode($oldReadingMode);
+            }
 
             Injector::unnest(); // Restore old CookieJar, etc
             Config::unnest();

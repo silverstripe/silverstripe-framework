@@ -20,7 +20,9 @@
 
 	<testsuite name="Default">
 		<directory>tests/php</directory>
+		<directory>silverstripe-admin/tests/php</directory>
 		<directory>silverstripe-assets/tests/php</directory>
+		<directory>versioned/tests/php</directory>
 	</testsuite>
 
 	<listeners>

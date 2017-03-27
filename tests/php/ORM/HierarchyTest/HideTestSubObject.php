@@ -3,7 +3,7 @@
 namespace SilverStripe\ORM\Tests\HierarchyTest;
 
 use SilverStripe\ORM\Hierarchy\Hierarchy;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 
 /**
  * @mixin Versioned

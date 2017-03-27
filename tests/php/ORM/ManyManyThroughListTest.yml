@@ -17,20 +17,3 @@ SilverStripe\ORM\Tests\ManyManyThroughListTest\JoinObject:
     Sort: 2
     Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\TestObject.parent1
     Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\Item.child2
-SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedObject:
-  parent1:
-    Title: 'versioned object'
-SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedItem:
-  child1:
-    Title: 'versioned item 1'
-  child2:
-    Title: 'versioned item 2'
-SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedJoinObject:
-  join1:
-    Title: 'versioned join 1'
-    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedObject.parent1
-    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedItem.child1
-  join2:
-    Title: 'versioned join 2'
-    Parent: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedObject.parent1
-    Child: =>SilverStripe\ORM\Tests\ManyManyThroughListTest\VersionedItem.child2

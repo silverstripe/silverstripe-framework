@@ -3,7 +3,7 @@
 namespace SilverStripe\View\Tests;
 
 use SilverStripe\Core\Injector\Injector;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Control\Director;
@@ -15,11 +15,20 @@ use Symfony\Component\Cache\Simple\NullCache;
 
 class SSViewerCacheBlockTest extends SapphireTest
 {
-
     protected $extraDataObjects = array(
-        SSViewerCacheBlockTest\TestModel::class,
-        SSViewerCacheBlockTest\VersionedModel::class
+        SSViewerCacheBlockTest\TestModel::class
     );
+
+    protected function getExtraDataObjects()
+    {
+        $classes = parent::getExtraDataObjects();
+
+        // Add extra classes if versioning is enabled
+        if (class_exists(Versioned::class)) {
+            $classes[] = SSViewerCacheBlockTest\VersionedModel::class;
+        }
+        return $classes;
+    }
 
     /**
      * @var SSViewerCacheBlockTest\TestModel
@@ -149,6 +158,9 @@ class SSViewerCacheBlockTest extends SapphireTest
 
     public function testVersionedCache()
     {
+        if (!class_exists(Versioned::class)) {
+            $this->markTestSkipped('testVersionedCache requires Versioned extension');
+        }
         $origReadingMode = Versioned::get_reading_mode();
 
         // Run without caching in stage to prove data is uncached

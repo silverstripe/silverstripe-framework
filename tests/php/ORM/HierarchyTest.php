@@ -3,14 +3,13 @@
 namespace SilverStripe\ORM\Tests;
 
 use SilverStripe\ORM\ValidationException;
-use SilverStripe\ORM\Versioning\Versioned;
+use SilverStripe\Versioned\Versioned;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Dev\CSSContentParser;
 use SilverStripe\Dev\SapphireTest;
 
 class HierarchyTest extends SapphireTest
 {
-
     protected static $fixture_file = 'HierarchyTest.yml';
 
     protected $extraDataObjects = array(
@@ -18,6 +17,25 @@ class HierarchyTest extends SapphireTest
         HierarchyTest\HideTestObject::class,
         HierarchyTest\HideTestSubObject::class,
     );
+
+    protected function getExtraDataObjects()
+    {
+        // Prevent setup breaking if versioned module absent
+        if (class_exists(Versioned::class)) {
+            return parent::getExtraDataObjects();
+        }
+        return [];
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
+
+        // Note: Soft support for versioned module optionality
+        if (!class_exists(Versioned::class)) {
+            $this->markTestSkipped('HierarchyTest requires the Versioned extension');
+        }
+    }
 
     /**
      * Test the Hierarchy prevents infinite loops.
