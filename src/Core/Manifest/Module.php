@@ -148,4 +148,35 @@ class Module implements Serializable
             $this->composerData = $result;
         }
     }
+
+    /**
+     * Gets path to physical file resource relative to base directory.
+     * Directories included
+     *
+     * This method makes no distinction between public / local resources,
+     * which may change in the near future.
+     *
+     * @internal Experimental API and may change
+     * @param string $path File or directory path relative to module directory
+     * @return string Path relative to base directory
+     */
+    public function getResourcePath($path)
+    {
+        $base = rtrim($this->getRelativePath(), '/\\');
+        $path = rtrim($path, '/\\');
+        return "{$base}/{$path}";
+    }
+
+    /**
+     * Check if this module has a given resource
+     *
+     * @internal Experimental API and may change
+     * @param string $path
+     * @return bool
+     */
+    public function hasResource($path)
+    {
+        $resource = $this->getResourcePath($path);
+        return file_exists($this->basePath . '/' . $resource);
+    }
 }

@@ -69,4 +69,19 @@ class ModuleManifestTest extends SapphireTest
         $this->assertEquals('moduleb', $module->getShortName());
         $this->assertEquals('moduleb', $module->getRelativePath());
     }
+
+    /*
+     * Note: Tests experimental API
+     * @internal
+     */
+    public function testGetResource()
+    {
+        $module = $this->manifest->getModule('moduleb');
+        $this->assertTrue($module->hasResource('composer.json'));
+        $this->assertFalse($module->hasResource('package.json'));
+        $this->assertEquals(
+            'moduleb/composer.json',
+            $module->getResourcePath('composer.json')
+        );
+    }
 }

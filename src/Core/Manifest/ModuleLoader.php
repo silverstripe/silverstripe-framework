@@ -26,6 +26,18 @@ class ModuleLoader
     }
 
     /**
+     * Get module by name from the current manifest.
+     * Alias for ::instance()->getManifest()->getModule()
+     *
+     * @param string $module
+     * @return Module
+     */
+    public static function getModule($module)
+    {
+        return static::instance()->getManifest()->getModule($module);
+    }
+
+    /**
      * Returns the currently active class manifest instance that is used for
      * loading classes.
      *
