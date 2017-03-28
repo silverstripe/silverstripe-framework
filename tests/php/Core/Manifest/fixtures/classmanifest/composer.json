@@ -1,0 +1,8 @@
+{
+  "name": "silverstripe/root-module",
+  "description": "dummy test module",
+  "require": {},
+  "extra": {
+    "installer-name": "root-module"
+  }
+}
