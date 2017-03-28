@@ -155,10 +155,7 @@ mappings:
   Security: SilverStripe\Security\Security
   SecurityToken: SilverStripe\Security\SecurityToken
   NullSecurityToken: SilverStripe\Security\NullSecurityToken
-  AddToCampaignHandler: SilverStripe\Admin\AddToCampaignHandler
-  AddToCampaignHandler_FormAction: SilverStripe\Admin\AddToCampaignHandler_FormAction
   AdminRootController: SilverStripe\Admin\AdminRootController
-  CampaignAdmin: SilverStripe\Admin\CampaignAdmin
   CMSBatchAction: SilverStripe\Admin\CMSBatchAction
   CMSBatchActionHandler: SilverStripe\Admin\CMSBatchActionHandler
   CMSMenu: SilverStripe\Admin\CMSMenu
