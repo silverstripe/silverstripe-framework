@@ -2,6 +2,8 @@
 
 namespace SilverStripe\ORM\Search;
 
+use SilverStripe\Assets\File;
+use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\ORM\Connect\MySQLSchemaManager;
@@ -51,12 +53,11 @@ class FulltextSearchable extends DataExtension
      *  listed here. Default: {@link SiteTree} and {@link File}.
      * @throws Exception
      */
-    public static function enable(
-        $searchableClasses = array('SilverStripe\\CMS\\Model\\SiteTree', 'SilverStripe\\Assets\\File')
-    ) {
+    public static function enable($searchableClasses = [SiteTree::class, File::class])
+    {
         $defaultColumns = array(
-            'SilverStripe\\CMS\\Model\\SiteTree' => '"Title","MenuTitle","Content","MetaDescription"',
-            'SilverStripe\\Assets\\File' => '"Name","Title"'
+            SiteTree::class => '"Title","MenuTitle","Content","MetaDescription"',
+            File::class => '"Name","Title"'
         );
 
         if (!is_array($searchableClasses)) {
@@ -68,7 +69,7 @@ class FulltextSearchable extends DataExtension
             }
 
             if (isset($defaultColumns[$class])) {
-                Config::inst()->update(
+                Config::modify()->set(
                     $class,
                     'create_table_options',
                     array(MySQLSchemaManager::ID => 'ENGINE=MyISAM')
