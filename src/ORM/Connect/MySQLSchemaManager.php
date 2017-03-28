@@ -185,7 +185,8 @@ class MySQLSchemaManager extends DBSchemaManager
     public function hasTable($table)
     {
         // MySQLi doesn't like parameterised queries for some queries
-        $sqlTable = $this->database->quoteString($table);
+        // underscores need to be escaped in a SHOW TABLES LIKE query
+        $sqlTable = str_replace('_', '\\_', $this->database->quoteString($table));
         return (bool) ($this->query("SHOW TABLES LIKE $sqlTable")->value());
     }
 
