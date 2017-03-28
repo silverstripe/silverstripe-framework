@@ -352,22 +352,34 @@ class SapphireTest extends PHPUnit_Framework_TestCase
 
         // Remove any illegal extensions that are present
         foreach ($this->illegalExtensions as $class => $extensions) {
+            if (!class_exists($class)) {
+                continue;
+            }
             foreach ($extensions as $extension) {
-                if ($class::has_extension($extension)) {
-                    if (!isset($this->extensionsToReapply[$class])) {
-                        $this->extensionsToReapply[$class] = array();
-                    }
-                    $this->extensionsToReapply[$class][] = $extension;
-                    $class::remove_extension($extension);
-                    $isAltered = true;
+                if (!class_exists($extension) || $class::has_extension($extension)) {
+                    continue;
                 }
+                if (!isset($this->extensionsToReapply[$class])) {
+                    $this->extensionsToReapply[$class] = array();
+                }
+                $this->extensionsToReapply[$class][] = $extension;
+                $class::remove_extension($extension);
+                $isAltered = true;
             }
         }
 
         // Add any required extensions that aren't present
         foreach ($this->requiredExtensions as $class => $extensions) {
+            if (!class_exists($class)) {
+                $self = static::class;
+                throw new LogicException("Test {$self} requires class {$class} which doesn't exist");
+            }
             $this->extensionsToRemove[$class] = array();
             foreach ($extensions as $extension) {
+                if (!class_exists($extension)) {
+                    $self = static::class;
+                    throw new LogicException("Test {$self} requires extension {$extension} which doesn't exist");
+                }
                 if (!$class::has_extension($extension)) {
                     if (!isset($this->extensionsToRemove[$class])) {
                         $this->extensionsToReapply[$class] = array();
