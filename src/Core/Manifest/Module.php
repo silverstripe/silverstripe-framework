@@ -161,7 +161,7 @@ class Module implements Serializable
      * @param string $path File or directory path relative to module directory
      * @return string Path relative to base directory
      */
-    public function getResource($path)
+    public function getResourcePath($path)
     {
         return File::join_paths($this->getRelativePath(), $path);
     }
@@ -175,7 +175,7 @@ class Module implements Serializable
      */
     public function hasResource($path)
     {
-        $resource = $this->getResource($path);
+        $resource = $this->getResourcePath($path);
         return file_exists($this->basePath . '/' . $resource);
     }
 }
