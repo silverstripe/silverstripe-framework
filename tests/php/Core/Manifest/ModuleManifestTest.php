@@ -31,6 +31,7 @@ class ModuleManifestTest extends SapphireTest
         $modules = $this->manifest->getModules();
         $this->assertEquals(
             [
+                'silverstripe/root-module',
                 'module',
                 'silverstripe/awesome-module',
             ],
@@ -74,13 +75,27 @@ class ModuleManifestTest extends SapphireTest
      * Note: Tests experimental API
      * @internal
      */
-    public function testGetResource()
+    public function testGetResourcePath()
     {
         $module = $this->manifest->getModule('moduleb');
         $this->assertTrue($module->hasResource('composer.json'));
         $this->assertFalse($module->hasResource('package.json'));
         $this->assertEquals(
             'moduleb/composer.json',
+            $module->getResourcePath('composer.json')
+        );
+    }
+
+    /*
+     * Note: Tests experimental API
+     * @internal
+     */
+    public function testGetResourcePathOnRoot()
+    {
+        $module = $this->manifest->getModule('silverstripe/root-module');
+        $this->assertTrue($module->hasResource('composer.json'));
+        $this->assertEquals(
+            'composer.json',
             $module->getResourcePath('composer.json')
         );
     }

@@ -162,9 +162,9 @@ class Module implements Serializable
      */
     public function getResourcePath($path)
     {
-        $base = rtrim($this->getRelativePath(), '/\\');
-        $path = rtrim($path, '/\\');
-        return "{$base}/{$path}";
+        $base = trim($this->getRelativePath(), '/\\');
+        $path = trim($path, '/\\');
+        return trim("{$base}/{$path}", '/\\');
     }
 
     /**
