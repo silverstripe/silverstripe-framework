@@ -4,7 +4,6 @@ namespace SilverStripe\Core\Manifest;
 
 use Exception;
 use Serializable;
-use SilverStripe\Assets\File;
 
 class Module implements Serializable
 {
@@ -163,7 +162,9 @@ class Module implements Serializable
      */
     public function getResourcePath($path)
     {
-        return File::join_paths($this->getRelativePath(), $path);
+        $base = rtrim($this->getRelativePath(), '/\\');
+        $path = rtrim($path, '/\\');
+        return "{$base}/{$path}";
     }
 
     /**
