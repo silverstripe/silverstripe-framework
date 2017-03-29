@@ -21,7 +21,8 @@ class TreeDropdownFieldTest extends SapphireTest
 
         // case insensitive search against keyword 'sub' for folders
         $request = new HTTPRequest('GET', 'url', array('search'=>'sub'));
-        $tree = $field->tree($request);
+        $response = $field->tree($request);
+        $tree = $response->getBody();
 
         $folder1 = $this->objFromFixture(Folder::class, 'folder1');
         $folder1Subfolder1 = $this->objFromFixture(Folder::class, 'folder1-subfolder1');
@@ -57,7 +58,8 @@ class TreeDropdownFieldTest extends SapphireTest
 
         // case insensitive search against keyword 'sub' for files
         $request = new HTTPRequest('GET', 'url', array('search'=>'sub'));
-        $tree = $field->tree($request);
+        $response = $field->tree($request);
+        $tree = $response->getBody();
 
         $parser = new CSSContentParser($tree);
 
