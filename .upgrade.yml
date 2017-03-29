@@ -165,7 +165,6 @@ mappings:
   GroupImportForm: SilverStripe\Admin\GroupImportForm
   LeftAndMain: SilverStripe\Admin\LeftAndMain
   LeftAndMain_HTTPResponse: SilverStripe\Admin\LeftAndMain_HTTPResponse
-  LeftAndMain_TreeNode: SilverStripe\Admin\LeftAndMain_TreeNode
   LeftAndMain_SearchFilter: SilverStripe\Admin\LeftAndMain_SearchFilter
   LeftAndMainExtension: SilverStripe\Admin\LeftAndMainExtension
   MemberImportForm: SilverStripe\Admin\MemberImportForm
