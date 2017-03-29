@@ -358,10 +358,10 @@ class SapphireTest extends PHPUnit_Framework_TestCase
             foreach ($extensions as $extension) {
                 if (!class_exists($extension) ||$class::has_extension($extension)) {
                     continue;
-                }if (!isset(static::$extensions_to_reapply[$class])) {
-                        static::$extensions_to_reapply[$class] = array();
+                }if (!isset(self::$extensions_to_reapply[$class])) {
+                        self::$extensions_to_reapply[$class] = array();
                     }
-                    static::$extensions_to_reapply[$class][] = $extension;
+                    self::$extensions_to_reapply[$class][] = $extension;
                     $class::remove_extension($extension);
                     $isAltered = true;
 
@@ -374,17 +374,17 @@ class SapphireTest extends PHPUnit_Framework_TestCase
                 $self = static::class;
                 throw new LogicException("Test {$self} requires class {$class} which doesn't exist");
             }
-            static::$extensions_to_remove[$class] = array();
+            self::$extensions_to_remove[$class] = array();
             foreach ($extensions as $extension) {
                 if (!class_exists($extension)) {
                     $self = static::class;
                     throw new LogicException("Test {$self} requires extension {$extension} which doesn't exist");
                 }
                 if (!$class::has_extension($extension)) {
-                    if (!isset(static::$extensions_to_remove[$class])) {
-                        static::$extensions_to_reapply[$class] = array();
+                    if (!isset(self::$extensions_to_remove[$class])) {
+                        self::$extensions_to_reapply[$class] = array();
                     }
-                    static::$extensions_to_remove[$class][] = $extension;
+                    self::$extensions_to_remove[$class][] = $extension;
                     $class::add_extension($extension);
                     $isAltered = true;
                 }
@@ -392,7 +392,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         }
 
         // If we have made changes to the extensions present, then migrate the database schema.
-        if ($isAltered || static::$extensions_to_reapply || static::$extensions_to_remove || static::getExtraDataObjects()) {
+        if ($isAltered || self::$extensions_to_reapply || self::$extensions_to_remove || static::getExtraDataObjects()) {
             DataObject::reset();
             if (!self::using_temp_db()) {
                 self::create_temp_db();
@@ -422,20 +422,20 @@ class SapphireTest extends PHPUnit_Framework_TestCase
     public static function tearDownAfterClass()
     {
         // If we have made changes to the extensions present, then migrate the database schema.
-        if (static::$extensions_to_reapply || static::$extensions_to_remove) {
+        if (self::$extensions_to_reapply || self::$extensions_to_remove) {
             // @todo: This isn't strictly necessary to restore extensions, but only to ensure that
             // Object::$extra_methods is properly flushed. This should be replaced with a simple
             // flush mechanism for each $class.
             //
             // Remove extensions added for testing
-            foreach (static::$extensions_to_remove as $class => $extensions) {
+            foreach (self::$extensions_to_remove as $class => $extensions) {
                 foreach ($extensions as $extension) {
                     $class::remove_extension($extension);
                 }
             }
 
             // Reapply ones removed
-            foreach (static::$extensions_to_reapply as $class => $extensions) {
+            foreach (self::$extensions_to_reapply as $class => $extensions) {
                 foreach ($extensions as $extension) {
                     $class::add_extension($extension);
                 }
@@ -448,7 +448,7 @@ class SapphireTest extends PHPUnit_Framework_TestCase
         Config::unnest();
 
         $extraDataObjects = static::getExtraDataObjects();
-        if (!empty(static::$extensions_to_reapply) || !empty(static::$extensions_to_remove) || !empty($extraDataObjects)) {
+        if (!empty(self::$extensions_to_reapply) || !empty(self::$extensions_to_remove) || !empty($extraDataObjects)) {
             static::resetDBSchema();
         }
     }
