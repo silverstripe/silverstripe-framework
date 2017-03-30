@@ -86,13 +86,6 @@ class DateField extends TextField
     protected $dateLength = null;
 
     /**
-     * Set whether to show placeholders
-     *
-     * @var bool
-     */
-    protected $placeholders = true;
-
-    /**
      * Override locale for client side.
      *
      * @var string
@@ -473,28 +466,6 @@ class DateField extends TextField
         $rules = parent::getSchemaValidation();
         $rules['date'] = true;
         return $rules;
-    }
-
-    /**
-     * If placeholders are shown
-     *
-     * @return bool
-     */
-    public function getPlaceholders()
-    {
-        return $this->placeholders;
-    }
-
-    /**
-     * Set if placeholders are shown
-     *
-     * @param bool $placeholders
-     * @return $this
-     */
-    public function setPlaceholders($placeholders)
-    {
-        $this->placeholders = $placeholders;
-        return $this;
     }
 
     /**

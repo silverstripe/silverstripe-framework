@@ -15,6 +15,13 @@ class SeparatedDateField extends DateField
      */
     protected $separator = '/';
 
+    /**
+     * Set whether to show placeholders
+     *
+     * @var bool
+     */
+    protected $placeholders = true;
+
     public function Field($properties = array())
     {
         // Three separate fields for day, month and year
@@ -80,6 +87,28 @@ class SeparatedDateField extends DateField
     public function getSeparator()
     {
         return $this->separator;
+    }
+
+    /**
+     * If placeholders are shown
+     *
+     * @return bool
+     */
+    public function getPlaceholders()
+    {
+        return $this->placeholders;
+    }
+
+    /**
+     * Set if placeholders are shown
+     *
+     * @param bool $placeholders
+     * @return $this
+     */
+    public function setPlaceholders($placeholders)
+    {
+        $this->placeholders = $placeholders;
+        return $this;
     }
 
     /**
