@@ -356,15 +356,15 @@ class SapphireTest extends PHPUnit_Framework_TestCase
                 continue;
             }
             foreach ($extensions as $extension) {
-                if (!class_exists($extension) ||$class::has_extension($extension)) {
+                if (!class_exists($extension) || !$class::has_extension($extension)) {
                     continue;
-                }if (!isset(self::$extensions_to_reapply[$class])) {
-                        self::$extensions_to_reapply[$class] = array();
-                    }
-                    self::$extensions_to_reapply[$class][] = $extension;
-                    $class::remove_extension($extension);
-                    $isAltered = true;
-
+                }
+                if (!isset(self::$extensions_to_reapply[$class])) {
+                    self::$extensions_to_reapply[$class] = array();
+                }
+                self::$extensions_to_reapply[$class][] = $extension;
+                $class::remove_extension($extension);
+                $isAltered = true;
             }
         }
 
