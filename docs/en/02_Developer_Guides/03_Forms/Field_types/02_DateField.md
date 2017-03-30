@@ -40,19 +40,19 @@ A custom date format for a [api:DateField] can be provided through `setDateForma
 	DateField::create('MyDate')->setDateFormat('dd-MM-yyyy'); 
 
 <div class="info" markdown="1">
-The formats are based on [CLDR format](http://userguide.icu-project.org/formatparse/datetime).
+The formats are based on [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details).
 </div>
  
 
 ## Min and Max Dates
 
 Sets the minimum and maximum allowed date values using the `min` and `max` configuration settings (in ISO format or 
-strtotime()).
+`strtotime()`).
 
 	:::php
 	DateField::create('MyDate')
 		->setMinDate('-7 days')
-		->setMaxDate'2012-12-31')
+		->setMaxDate('2012-12-31')
 		
 ## Separate Day / Month / Year Fields
 
@@ -66,33 +66,21 @@ HTML5 placeholders 'day', 'month' and 'year' are enabled by default.
 Any custom date format settings will be ignored. 
 </div>
 
-## Calendar Picker
+## Date Picker and HTML5 support
  
-The following setting will add a Calendar to a single DateField, using the jQuery UI DatePicker widget.
+The field can be used as a [HTML5 input date type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date)
+(with `type=date`) by calling `setHTML5(true)`.
 
 	:::php
 	DateField::create('MyDate')
-		->setShowCalendar(true);
+		->setHTML5(true);
 
-The jQuery date picker will support most custom locale formats (if left as default).
-If setting an explicit date format via setDateFormat() then the below table of supported
-characters should be used.
+In browsers [supporting HTML5 date inputs](caniuse.com/#feat=input-datetime),
+this will cause a localised date picker to appear for users.
+In this mode, the field will be forced to present and save ISO 8601 date formats (`y-MM-dd`),
+since the browser takes care of converting to/from a localised presentation.
 
-It is recommended to use numeric format, as `MMM` or `MMMM` month names may not always pass validation.
-
-Constant | xxxxx
--------- | -----
-d        | numeric day of the month (without leading zero)
-dd       | numeric day of the month (with leading zero)
-EEE      | dayname, abbreviated
-EEEE     | dayname
-M        | numeric month of the year (without leading zero)
-MM       | numeric month of the year (with leading zero)
-MMM	     | monthname, abbreviated	
-MMMM     | monthname
-y        | year (4 digits)
-yy       | year (2 digits)
-yyyy     | year (4 digits)
+Browsers without support receive an `<input type=text>` based polyfill.
 
 ## Formatting Hints
 

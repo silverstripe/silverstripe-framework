@@ -259,4 +259,16 @@ class DateFieldTest extends SapphireTest
             "Even if input value hasn't got leading 0's in it we still get the correct data value"
         );
     }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testHtml5WithCustomFormatThrowsException()
+    {
+        $dateField = new DateField('Date', 'Date');
+        $dateField->setValue('2010-03-31');
+        $dateField->setHTML5(true);
+        $dateField->setDateFormat('d/M/y');
+        $dateField->Value();
+    }
 }

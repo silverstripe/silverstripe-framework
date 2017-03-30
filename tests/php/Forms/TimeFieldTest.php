@@ -40,6 +40,17 @@ class TimeFieldTest extends SapphireTest
         $this->assertFalse($f->validate(new RequiredFields()));
     }
 
+    public function testValidateLenientWithHtml5()
+    {
+        $f = new TimeField('Time', 'Time', '23:59:59');
+        $f->setHTML5(true);
+        $this->assertTrue($f->validate(new RequiredFields()));
+
+        $f = new TimeField('Time', 'Time', '23:59'); // leave out seconds
+        $f->setHTML5(true);
+        $this->assertTrue($f->validate(new RequiredFields()));
+    }
+
     public function testSetLocale()
     {
         // should get en_NZ by default through setUp()
@@ -122,5 +133,25 @@ class TimeFieldTest extends SapphireTest
         $f->setTimeFormat('h:mm:ss a');
         $f->setValue('03:59:00');
         $this->assertEquals($f->dataValue(), '03:59:00');
+    }
+
+    public function testLenientSubmissionParseWithoutSecondsOnHtml5()
+    {
+        $f = new TimeField('Time', 'Time');
+        $f->setHTML5(true);
+        $f->setSubmittedValue('23:59');
+        $this->assertEquals($f->Value(), '23:59:00');
+    }
+
+    /**
+     * @expectedException \LogicException
+     */
+    public function testHtml5WithCustomFormatThrowsException()
+    {
+        $f = new TimeField('Time', 'Time');
+        $f->setValue('15:59:00');
+        $f->setHTML5(true);
+        $f->setTimeFormat('mm:HH');
+        $f->Value();
     }
 }

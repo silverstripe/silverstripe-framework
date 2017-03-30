@@ -13,6 +13,10 @@ use SilverStripe\i18n\i18n;
  * If you want to save into {@link Date} or {@link Time} columns,
  * please instanciate the fields separately.
  *
+ * This field does not implement the <input type="datetime-local"> HTML5 field,
+ * but can use date and time HTML5 inputs separately (through {@link DateField->setHTML5()}
+ * and {@link TimeField->setHTML5()}.
+ *
  * # Configuration
  *
  * Individual options are configured either on the DatetimeField, or on individual

@@ -71,17 +71,23 @@ and default alignment of paragraphs and tables to browsers.
 
 ### Date and time formats
 
-Formats can be set globally in the i18n class. These settings are currently only picked up by the CMS, you'll need
-to write your own logic for any frontend output.
+Formats can be set globally in the i18n class. 
+You can use these settings for your own view logic.
 
 	:::php
 	Config::inst()->update('i18n', 'date_format', 'dd.MM.YYYY');
 	Config::inst()->update('i18n', 'time_format', 'HH:mm');
 
-Most localization routines in SilverStripe use the [Zend_Date API](http://framework.zend.com/manual/1.12/en/zend.date.overview.html).
-This means all formats are defined in
-[ISO date format](http://framework.zend.com/manual/1.12/en/zend.date.constants.html),
+Localization in SilverStripe uses PHP's [intl extension](http://php.net/intl).
+Formats for it's [IntlDateFormatter](http://php.net/manual/en/class.intldateformatter.php)
+are defined in [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details),
 not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
+
+These settings are not used for CMS presentation.
+Users can choose their own locale, which determines the date format
+that gets presented to them. Currently this is a mix of PHP defaults (for readonly `DateField` and `TimeField`),
+browser defaults (for `DateField` on browsers supporting HTML5), and [Moment.JS](http://momentjs.com/)
+client-side logic (for `DateField` polyfills and other readonly dates and times).
 
 ### Language Names
 

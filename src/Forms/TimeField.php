@@ -58,6 +58,31 @@ class TimeField extends TextField
     protected $timezone = null;
 
     /**
+     * Use HTML5-based input fields (and force ISO 8601 date formats).
+     *
+     * @var bool
+     */
+    protected $html5 = false;
+
+    /**
+     * @return bool
+     */
+    public function getHTML5()
+    {
+        return $this->html5;
+    }
+
+    /**
+     * @param boolean $bool
+     * @return $this
+     */
+    public function setHTML5($bool)
+    {
+        $this->html5 = $bool;
+        return $this;
+    }
+
+    /**
      * Get time format in CLDR standard format
      *
      * This can be set explicitly. If not, this will be generated from the current locale
@@ -140,8 +165,20 @@ class TimeField extends TextField
             $this->getTimezone()
         );
 
-        // Don't invoke getDateFormat() directly to avoid infinite loop
-        if ($this->timeFormat) {
+        $isoFormat = 'HH:mm:ss';
+
+        if ($this->timeFormat && $this->getHTML5() && $this->timeFormat !== $isoFormat) {
+            throw new \LogicException(sprintf(
+                'Can\'t use a custom timeFormat value with $html5=true (needs to be %s)',
+                $isoFormat
+            ));
+        }
+
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 times, localisation is handled on the client
+            $formatter->setPattern($isoFormat);
+            // Don't invoke getTimeFormat() directly to avoid infinite loop
+        } elseif ($this->timeFormat) {
             $ok = $formatter->setPattern($this->timeFormat);
             if (!$ok) {
                 throw new InvalidArgumentException("Invalid time format {$this->timeFormat}");
@@ -164,35 +201,21 @@ class TimeField extends TextField
             date_default_timezone_get() // Default to server timezone
         );
         $formatter->setLenient(false);
-        // CLDR iso8601 time
+        // ISO 8601 time
         // Note we omit timezone from this format, and we assume server TZ always.
         $formatter->setPattern('HH:mm:ss');
         return $formatter;
     }
 
-    public function getAttribute($name)
+    public function getAttributes()
     {
         $attributes = parent::getAttributes();
 
-        // Merge with client config
-        $config = $this->getClientConfig();
-        foreach ($config as $key => $value) {
-            $attributes["data-{$key}"] = $value;
+        if ($this->getHTML5()) {
+            $attributes['type'] = 'time';
         }
-        return $attributes;
-    }
 
-    /**
-     * Get client config options for this field
-     *
-     * @return array
-     */
-    public function getClientConfig()
-    {
-        return [
-            // @todo - Support javascript time picker
-            'timeformat' => $this->getTimeFormat(),
-        ];
+        return $attributes;
     }
 
     public function Type()
@@ -337,9 +360,19 @@ class TimeField extends TextField
         $fromFormatter = $this->getFormatter();
         $toFormatter = $this->getISO8601Formatter();
         $timestamp = $fromFormatter->parse($time);
+
+        // Try to parse time without seconds, since that's a valid HTML5 submission format
+        // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
+        if ($timestamp === false && $this->setHTML5(true)) {
+            $fromFormatter->setPattern('HH:mm');
+            $timestamp = $fromFormatter->parse($time);
+        }
+
+        // If timestamp still can't be detected, we've got an invalid time
         if ($timestamp === false) {
             return null;
         }
+
         return $toFormatter->format($timestamp);
     }
 

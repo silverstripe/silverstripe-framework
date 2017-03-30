@@ -142,17 +142,8 @@ class DBTime extends DBField
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = TimeField::create($this->name, $title);
-        $format = $field->getTimeFormat();
+        $field->setHTML5(true);
 
-        // Show formatting hints for better usability
-        $now = DBDatetime::now()->Format($format);
-        $field->setDescription(_t(
-            'FormField.Example',
-            'e.g. {format}',
-            'Example format',
-            [ 'format' => $now ]
-        ));
-        $field->setAttribute('placeholder', $format);
         return $field;
     }
 

@@ -19,7 +19,6 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorConfig;
 use SilverStripe\Forms\ListboxField;
-use SilverStripe\Forms\MemberDatetimeOptionsetField;
 use SilverStripe\i18n\i18n;
 use SilverStripe\MSSQL\MSSQLDatabase;
 use SilverStripe\ORM\ArrayList;
@@ -81,9 +80,6 @@ class Member extends DataObject implements TemplateGlobalProvider
         'Locale' => 'Varchar(6)',
         // handled in registerFailedLogin(), only used if $lock_out_after_incorrect_logins is set
         'FailedLoginCount' => 'Int',
-        // In ISO format
-        'DateFormat' => 'Varchar(30)',
-        'TimeFormat' => 'Varchar(30)',
     );
 
     private static $belongs_many_many = array(
@@ -1315,19 +1311,16 @@ class Member extends DataObject implements TemplateGlobalProvider
     }
 
     /**
-     * Override the default getter for DateFormat so the
-     * default format for the user's locale is used
-     * if the user has not defined their own.
+     * Return the date format based on the user's chosen locale,
+     * falling back to the default format defined by the {@link i18n.get_locale()} setting.
      *
      * @return string ISO date format
      */
     public function getDateFormat()
     {
-        $format = $this->getField('DateFormat');
-        if ($format) {
-            return $format;
-        }
-        return $this->getDefaultDateFormat();
+        $format = $this->getDefaultDateFormat();
+        $this->extend('updateDateFormat', $format);
+        return $format;
     }
 
     /**
@@ -1343,19 +1336,17 @@ class Member extends DataObject implements TemplateGlobalProvider
     }
 
     /**
-     * Override the default getter for TimeFormat so the
-     * default format for the user's locale is used
-     * if the user has not defined their own.
+     * Return the time format based on the user's chosen locale,
+     * falling back to the default format defined by the {@link i18n.get_locale()} setting.
      *
      * @return string ISO date format
      */
     public function getTimeFormat()
     {
-        $timeFormat = $this->getField('TimeFormat');
-        if ($timeFormat) {
-            return $timeFormat;
-        }
-        return $this->getDefaultTimeFormat();
+        $format = $this->getDefaultTimeFormat();
+        $this->extend('updateTimeFormat', $format);
+
+        return $format;
     }
 
     //---------------------------------------------------------------------//
@@ -1592,59 +1583,9 @@ class Member extends DataObject implements TemplateGlobalProvider
             if ($permissionsTab) {
                 $permissionsTab->addExtraClass('readonly');
             }
-
-            // Date format selecter
-            $mainFields->push(
-                $dateFormatField = new MemberDatetimeOptionsetField(
-                    'DateFormat',
-                    $this->fieldLabel('DateFormat'),
-                    $this->getDateFormats()
-                )
-            );
-            $formatClass = get_class($dateFormatField);
-            $dateFormatField->setValue($this->DateFormat);
-            $dateTemplate = SSViewer::get_templates_by_class($formatClass, '_description_date', $formatClass);
-            $dateFormatField->setDescriptionTemplate($dateTemplate);
-
-            // Time format selector
-            $mainFields->push(
-                $timeFormatField = new MemberDatetimeOptionsetField(
-                    'TimeFormat',
-                    $this->fieldLabel('TimeFormat'),
-                    $this->getTimeFormats()
-                )
-            );
-            $timeFormatField->setValue($this->TimeFormat);
-            $timeTemplate = SSViewer::get_templates_by_class($formatClass, '_description_time', $formatClass);
-            $timeFormatField->setDescriptionTemplate($timeTemplate);
         });
 
         return parent::getCMSFields();
-    }
-
-    /**
-     * Get list of date formats with example values
-     *
-     * @return array
-     */
-    protected function getDateFormats()
-    {
-        $defaultDateFormat = $this->getDefaultDateFormat();
-        $formats = [
-            'MMM d, y' => null,
-            'yyyy/MM/dd' => null,
-            'MM/dd/y' => null,
-            'dd/MM/y' => null,
-        ];
-        unset($formats[$defaultDateFormat]);
-        $formats[$defaultDateFormat] = null;
-        // Fill in each format with example
-        foreach (array_keys($formats) as $format) {
-            $formats[$format] = DBDatetime::now()->Format($format);
-        }
-        // Mark default format
-        $formats[$defaultDateFormat] .= sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
-        return $formats;
     }
 
     /**
@@ -1674,30 +1615,6 @@ class Member extends DataObject implements TemplateGlobalProvider
         return $defaultTimeFormat;
     }
 
-
-    /**
-     * Get list of date formats with example values
-     *
-     * @return array
-     */
-    protected function getTimeFormats()
-    {
-        $defaultTimeFormat = $this->getDefaultTimeFormat();
-        $formats = [
-            'h:mm a' => null,
-            'H:mm' => null,
-        ];
-        unset($formats[$defaultTimeFormat]);
-        $formats[$defaultTimeFormat] = null;
-        // Fill in each format with example
-        foreach (array_keys($formats) as $format) {
-            $formats[$format] = DBDatetime::now()->Format($format);
-        }
-        // Mark default format
-        $formats[$defaultTimeFormat] .= sprintf(' (%s)', _t('Member.DefaultDateTime', 'default'));
-        return $formats;
-    }
-
     /**
      * @param bool $includerelations Indicate if the labels returned include relation fields
      * @return array
@@ -1714,8 +1631,6 @@ class Member extends DataObject implements TemplateGlobalProvider
         $labels['PasswordExpiry'] = _t('Member.db_PasswordExpiry', 'Password Expiry Date', 'Password expiry date');
         $labels['LockedOutUntil'] = _t('Member.db_LockedOutUntil', 'Locked out until', 'Security related date');
         $labels['Locale'] = _t('Member.db_Locale', 'Interface Locale');
-        $labels['DateFormat'] = _t('Member.DATEFORMAT', 'Date format');
-        $labels['TimeFormat'] = _t('Member.TIMEFORMAT', 'Time format');
         if ($includerelations) {
             $labels['Groups'] = _t(
                 'Member.belongs_many_many_Groups',
