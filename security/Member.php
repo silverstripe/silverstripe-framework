@@ -399,7 +399,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 */
 	public function isLockedOut() {
 		$state = ($this->LockedOutUntil && SS_Datetime::now()->Format('U') < strtotime($this->LockedOutUntil));
-		$this->extend('isLockedOut', $state);
+		$this->extend('updateIsLockedOut', $state);
 		return $state;
 	}
 
@@ -1674,7 +1674,7 @@ class Member extends DataObject implements TemplateGlobalProvider {
 				$this->FailedLoginCount = 0;
 			}
 		}
-		$this->extend('registerFailedLogin');
+		$this->extend('onAfterRegisterFailedLogin');
 		$this->write();
 	}
 
