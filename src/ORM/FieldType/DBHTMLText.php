@@ -242,4 +242,12 @@ class DBHTMLText extends DBText
         }
         return null;
     }
+
+    public function exists()
+    {
+        // Optimisation: don't process shortcode just for ->exists()
+        $value = $this->getValue();
+        // All truthy values and non-empty strings exist ('0' but not (int)0)
+        return $value || (is_string($value) && strlen($value));
+    }
 }
