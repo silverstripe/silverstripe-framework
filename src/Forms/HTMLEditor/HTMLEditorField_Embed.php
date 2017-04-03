@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\HTMLEditor;
 
+use Embed\Adapters\Adapter;
 use SilverStripe\Assets\File;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\HTTPResponse_Exception;
@@ -26,7 +27,7 @@ class HTMLEditorField_Embed extends HTMLEditorField_File
     /**
      * Embed result
      *
-     * @var Embed
+     * @var Adapter
      */
     protected $embed;
 
@@ -60,7 +61,7 @@ class HTMLEditorField_Embed extends HTMLEditorField_File
     public function getFields()
     {
         $fields = parent::getFields();
-        if ($this->Type === 'photo') {
+        if ($this->getType() === 'photo') {
             $fields->insertBefore('CaptionText', new TextField(
                 'AltText',
                 _t('HTMLEditorField.IMAGEALTTEXT', 'Alternative text (alt) - shown if image can\'t be displayed'),
@@ -82,7 +83,7 @@ class HTMLEditorField_Embed extends HTMLEditorField_File
      */
     public function getWidth()
     {
-        return $this->embed->width ?: 100;
+        return $this->embed->getWidth() ?: 100;
     }
 
     /**
@@ -92,7 +93,7 @@ class HTMLEditorField_Embed extends HTMLEditorField_File
      */
     public function getHeight()
     {
-        return $this->embed->height ?: 100;
+        return $this->embed->getHeight() ?: 100;
     }
 
     public function getPreviewURL()
