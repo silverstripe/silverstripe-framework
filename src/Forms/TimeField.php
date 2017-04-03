@@ -6,6 +6,7 @@ use IntlDateFormatter;
 use InvalidArgumentException;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBTime;
 
 /**
  * Form field to display editable time values in an <input type="text"> field.
@@ -58,11 +59,11 @@ class TimeField extends TextField
     protected $timezone = null;
 
     /**
-     * Use HTML5-based input fields (and force ISO 8601 date formats).
+     * Use HTML5-based input fields (and force ISO 8601 time formats).
      *
      * @var bool
      */
-    protected $html5 = false;
+    protected $html5 = true;
 
     /**
      * @return bool
@@ -92,6 +93,11 @@ class TimeField extends TextField
      */
     public function getTimeFormat()
     {
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 times, localisation is handled on the client
+            $this->setTimeFormat(DBTime::ISO_TIME);
+        }
+
         if ($this->timeFormat) {
             return $this->timeFormat;
         }
@@ -102,6 +108,7 @@ class TimeField extends TextField
 
     /**
      * Set time format in CLDR standard format.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
      * @param string $format
@@ -133,12 +140,8 @@ class TimeField extends TextField
     }
 
     /**
-     * Get length of the time format to use. One of:
-     *
-     *  - IntlDateFormatter::SHORT E.g. '6:31 PM'
-     *  - IntlDateFormatter::MEDIUM E.g. '6:30:48 PM'
-     *  - IntlDateFormatter::LONG E.g. '6:32:09 PM NZDT'
-     *  - IntlDateFormatter::FULL E.g. '6:32:24 PM New Zealand Daylight Time'
+     * Get length of the time format to use.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      *
@@ -158,6 +161,24 @@ class TimeField extends TextField
      */
     protected function getFormatter()
     {
+        if ($this->getHTML5() && $this->timeFormat && $this->timeFormat !== DBTime::ISO_TIME) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 times via setHTML5(false) if using setTimeFormat()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->timeLength) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 times via setHTML5(false) if using setTimeLength()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->locale) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 times via setHTML5(false) if using setLocale()'
+            );
+        }
+
         $formatter =  IntlDateFormatter::create(
             $this->getLocale(),
             IntlDateFormatter::NONE,
@@ -165,18 +186,9 @@ class TimeField extends TextField
             $this->getTimezone()
         );
 
-        $isoFormat = 'HH:mm:ss';
-
-        if ($this->timeFormat && $this->getHTML5() && $this->timeFormat !== $isoFormat) {
-            throw new \LogicException(sprintf(
-                'Can\'t use a custom timeFormat value with $html5=true (needs to be %s)',
-                $isoFormat
-            ));
-        }
-
         if ($this->getHTML5()) {
             // Browsers expect ISO 8601 times, localisation is handled on the client
-            $formatter->setPattern($isoFormat);
+            $formatter->setPattern(DBTime::ISO_TIME);
             // Don't invoke getTimeFormat() directly to avoid infinite loop
         } elseif ($this->timeFormat) {
             $ok = $formatter->setPattern($this->timeFormat);
@@ -201,9 +213,10 @@ class TimeField extends TextField
             date_default_timezone_get() // Default to server timezone
         );
         $formatter->setLenient(false);
-        // ISO 8601 time
+
         // Note we omit timezone from this format, and we assume server TZ always.
-        $formatter->setPattern('HH:mm:ss');
+        $formatter->setPattern(DBTime::ISO_TIME);
+
         return $formatter;
     }
 
@@ -325,6 +338,10 @@ class TimeField extends TextField
     }
 
     /**
+     * Determines the presented/processed format based on locale defaults,
+     * instead of explicitly setting {@link setTimeFormat()}.
+     * Only applicable with {@link setHTML5(false)}.
+     *
      * @param string $locale
      * @return $this
      */
@@ -363,7 +380,7 @@ class TimeField extends TextField
 
         // Try to parse time without seconds, since that's a valid HTML5 submission format
         // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
-        if ($timestamp === false && $this->setHTML5(true)) {
+        if ($timestamp === false && $this->getHTML5()) {
             $fromFormatter->setPattern('HH:mm');
             $timestamp = $fromFormatter->parse($time);
         }

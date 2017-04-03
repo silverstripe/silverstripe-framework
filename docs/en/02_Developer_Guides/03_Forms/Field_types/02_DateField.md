@@ -4,7 +4,11 @@ summary: How to format and use the DateField class.
 # DateField
 
 This `FormField` subclass lets you display an editable date, in a single text input field.
-It also provides a calendar date picker.
+It implements the [HTML5 input date type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date)
+(with `type=date`). In supported browsers, this will cause a localised date picker to appear for users.
+HTML5 date fields present and save ISO 8601 date formats (`y-MM-dd`),
+since the browser takes care of converting to/from a localised presentation.
+Browsers without support receive an `<input type=text>` based polyfill.
 
 The following example will add a simple DateField to your Page, allowing you to enter a date manually. 
 
@@ -34,10 +38,13 @@ The following example will add a simple DateField to your Page, allowing you to 
 ## Custom Date Format
 
 A custom date format for a [api:DateField] can be provided through `setDateFormat`.
+This is only necessary if you want to opt-out of the built-in browser localisation via `type=date`.
 
 	:::php
-	// will display a date in the following format: 31-06-2012
-	DateField::create('MyDate')->setDateFormat('dd-MM-yyyy'); 
+	// will display a date in the following format: 31/06/2012
+	DateField::create('MyDate')
+	    ->setHTML5(false)
+	    ->setDateFormat('dd/MM/yyyy'); 
 
 <div class="info" markdown="1">
 The formats are based on [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details).
@@ -53,34 +60,6 @@ Sets the minimum and maximum allowed date values using the `min` and `max` confi
 	DateField::create('MyDate')
 		->setMinDate('-7 days')
 		->setMaxDate('2012-12-31')
-		
-## Separate Day / Month / Year Fields
-
-To display separate input fields for day, month and year separately you can use the `SeparatedDateField` subclass`.
-HTML5 placeholders 'day', 'month' and 'year' are enabled by default. 
-
-	:::php
-	SeparatedDateField::create('MyDate');
-
-<div class="alert" markdown="1">
-Any custom date format settings will be ignored. 
-</div>
-
-## Date Picker and HTML5 support
- 
-The field can be used as a [HTML5 input date type](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date)
-(with `type=date`) by calling `setHTML5(true)`.
-
-	:::php
-	DateField::create('MyDate')
-		->setHTML5(true);
-
-In browsers [supporting HTML5 date inputs](caniuse.com/#feat=input-datetime),
-this will cause a localised date picker to appear for users.
-In this mode, the field will be forced to present and save ISO 8601 date formats (`y-MM-dd`),
-since the browser takes care of converting to/from a localised presentation.
-
-Browsers without support receive an `<input type=text>` based polyfill.
 
 ## Formatting Hints
 

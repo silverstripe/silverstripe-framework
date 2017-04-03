@@ -141,10 +141,7 @@ class DBTime extends DBField
 
     public function scaffoldFormField($title = null, $params = null)
     {
-        $field = TimeField::create($this->name, $title);
-        $field->setHTML5(true);
-
-        return $field;
+        return TimeField::create($this->name, $title);
     }
 
     /**

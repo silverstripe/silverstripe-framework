@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use IntlDateFormatter;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\TimeField;
@@ -55,7 +56,8 @@ class TimeFieldTest extends SapphireTest
     {
         // should get en_NZ by default through setUp()
         $f = new TimeField('Time', 'Time');
-        $f->setLocale('de_DE');
+        $f->setHTML5(false);
+        $f->setLocale('fr_FR');
         // TODO Find a hour format thats actually different
         $f->setValue('23:59');
         $this->assertEquals($f->dataValue(), '23:59:00');
@@ -96,8 +98,7 @@ class TimeFieldTest extends SapphireTest
     public function testOverrideWithNull()
     {
         $field = new TimeField('Time', 'Time');
-
-        $field->setValue('11:00pm');
+        $field->setValue('11:00:00');
         $field->setValue('');
         $this->assertEquals($field->dataValue(), '');
     }
@@ -105,31 +106,35 @@ class TimeFieldTest extends SapphireTest
     /**
      * Test that AM/PM is preserved correctly in various situations
      */
-    public function testPreserveAMPM()
+    public function testSetTimeFormat()
     {
 
         // Test with timeformat that includes hour
 
         // Check pm
         $f = new TimeField('Time', 'Time');
+        $f->setHTML5(false);
         $f->setTimeFormat('h:mm:ss a');
         $f->setValue('3:59 pm');
         $this->assertEquals($f->dataValue(), '15:59:00');
 
         // Check am
         $f = new TimeField('Time', 'Time');
+        $f->setHTML5(false);
         $f->setTimeFormat('h:mm:ss a');
         $f->setValue('3:59 am');
         $this->assertEquals($f->dataValue(), '03:59:00');
 
         // Check with ISO date/time
         $f = new TimeField('Time', 'Time');
+        $f->setHTML5(false);
         $f->setTimeFormat('h:mm:ss a');
         $f->setValue('15:59:00');
         $this->assertEquals($f->dataValue(), '15:59:00');
 
         // ISO am
         $f = new TimeField('Time', 'Time');
+        $f->setHTML5(false);
         $f->setTimeFormat('h:mm:ss a');
         $f->setValue('03:59:00');
         $this->assertEquals($f->dataValue(), '03:59:00');
@@ -138,20 +143,43 @@ class TimeFieldTest extends SapphireTest
     public function testLenientSubmissionParseWithoutSecondsOnHtml5()
     {
         $f = new TimeField('Time', 'Time');
-        $f->setHTML5(true);
         $f->setSubmittedValue('23:59');
         $this->assertEquals($f->Value(), '23:59:00');
     }
 
     /**
      * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp /Please opt-out .* if using setTimeFormat/
      */
     public function testHtml5WithCustomFormatThrowsException()
     {
         $f = new TimeField('Time', 'Time');
         $f->setValue('15:59:00');
-        $f->setHTML5(true);
         $f->setTimeFormat('mm:HH');
+        $f->Value();
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp /Please opt-out .* if using setTimeLength/
+     */
+    public function testHtml5WithCustomDateLengthThrowsException()
+    {
+        $f = new TimeField('Time', 'Time');
+        $f->setValue('15:59:00');
+        $f->setTimeLength(IntlDateFormatter::MEDIUM);
+        $f->Value();
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp /Please opt-out .* if using setLocale/
+     */
+    public function testHtml5WithCustomLocaleThrowsException()
+    {
+        $f = new TimeField('Time', 'Time');
+        $f->setValue('15:59:00');
+        $f->setLocale('de_DE');
         $f->Value();
     }
 }

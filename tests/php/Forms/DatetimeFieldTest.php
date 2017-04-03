@@ -7,7 +7,6 @@ use SilverStripe\Control\Controller;
 use SilverStripe\Forms\DatetimeField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\SeparatedDateField;
 use SilverStripe\Forms\Tests\DatetimeFieldTest\Model;
 use SilverStripe\Forms\TimeField;
 use SilverStripe\Forms\FieldList;
@@ -103,17 +102,6 @@ class DatetimeFieldTest extends SapphireTest
             'time' => '11:00:00 pm'
         ]);
         $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00');
-    }
-
-    public function testSetValueWithDmyArray()
-    {
-        $f = new DatetimeField('Datetime', 'Datetime');
-        $f->setDateField(new SeparatedDateField('Datetime[date]'));
-        $f->setSubmittedValue([
-            'date' => ['day' => 29, 'month' => 03, 'year' => 2003],
-            'time' => '11:00:00 pm'
-        ]);
-        $this->assertEquals($f->dataValue(), '2003-03-29 23:00:00');
     }
 
     public function testValidate()

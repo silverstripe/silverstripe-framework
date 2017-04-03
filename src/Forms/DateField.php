@@ -5,6 +5,7 @@ namespace SilverStripe\Forms;
 use IntlDateFormatter;
 use SilverStripe\i18n\i18n;
 use InvalidArgumentException;
+use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
@@ -119,7 +120,7 @@ class DateField extends TextField
      *
      * @var bool
      */
-    protected $html5 = false;
+    protected $html5 = true;
 
     /**
      * @return bool
@@ -159,12 +160,8 @@ class DateField extends TextField
     }
 
     /**
-     * Get length of the date format to use. One of:
-     *
-     *  - IntlDateFormatter::SHORT
-     *  - IntlDateFormatter::MEDIUM
-     *  - IntlDateFormatter::LONG
-     *  - IntlDateFormatter::FULL
+     * Get length of the date format to use.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      *
@@ -187,6 +184,11 @@ class DateField extends TextField
      */
     public function getDateFormat()
     {
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 dates, localisation is handled on the client
+            $this->setDateFormat(DBDate::ISO_DATE);
+        }
+
         if ($this->dateFormat) {
             return $this->dateFormat;
         }
@@ -197,6 +199,7 @@ class DateField extends TextField
 
     /**
      * Set date format in CLDR standard format.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
      * @param string $format
@@ -216,24 +219,33 @@ class DateField extends TextField
      */
     protected function getFormatter()
     {
+        if ($this->getHTML5() && $this->dateFormat && $this->dateFormat !== DBDate::ISO_DATE) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDateFormat()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->dateLength) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDateLength()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->locale) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setLocale()'
+            );
+        }
+
         $formatter = IntlDateFormatter::create(
             $this->getLocale(),
             $this->getDateLength(),
             IntlDateFormatter::NONE
         );
 
-        $isoFormat = 'y-MM-dd';
-
-        if ($this->dateFormat && $this->getHTML5() && $this->dateFormat !== $isoFormat) {
-            throw new \LogicException(sprintf(
-                'Can\'t use a custom dateFormat value with $html5=true (needs to be %s)',
-                $isoFormat
-            ));
-        }
-
         if ($this->getHTML5()) {
             // Browsers expect ISO 8601 dates, localisation is handled on the client
-            $formatter->setPattern($isoFormat);
+            $formatter->setPattern(DBDate::ISO_DATE);
         } elseif ($this->dateFormat) {
             // Don't invoke getDateFormat() directly to avoid infinite loop
             $ok = $formatter->setPattern($this->dateFormat);
@@ -259,18 +271,8 @@ class DateField extends TextField
         );
         $formatter->setLenient(false);
         // CLDR ISO 8601 date.
-        $formatter->setPattern('y-MM-dd');
+        $formatter->setPattern(DBDate::ISO_DATE);
         return $formatter;
-    }
-
-    public function FieldHolder($properties = array())
-    {
-        if ($this->getHTML5()) {
-            // Browsers expect ISO 8601 dates, localisation is handled on the client
-            $this->setDateFormat('y-MM-dd');
-        }
-
-        return parent::FieldHolder($properties);
     }
 
     public function getAttributes()
@@ -421,7 +423,9 @@ class DateField extends TextField
     }
 
     /**
-     * Caution: Will not update the 'dateformat' config value.
+     * Determines the presented/processed format based on locale defaults,
+     * instead of explicitly setting {@link setDateFormat()}.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @param string $locale
      * @return $this

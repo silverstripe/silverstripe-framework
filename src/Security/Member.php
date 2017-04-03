@@ -1318,8 +1318,15 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function getDateFormat()
     {
-        $format = $this->getDefaultDateFormat();
+        $formatter = new IntlDateFormatter(
+            $this->getLocale(),
+            IntlDateFormatter::MEDIUM,
+            IntlDateFormatter::NONE
+        );
+        $format = $formatter->getPattern();
+
         $this->extend('updateDateFormat', $format);
+
         return $format;
     }
 
@@ -1343,7 +1350,13 @@ class Member extends DataObject implements TemplateGlobalProvider
      */
     public function getTimeFormat()
     {
-        $format = $this->getDefaultTimeFormat();
+        $formatter = new IntlDateFormatter(
+            $this->getLocale(),
+            IntlDateFormatter::NONE,
+            IntlDateFormatter::MEDIUM
+        );
+        $format = $formatter->getPattern();
+
         $this->extend('updateTimeFormat', $format);
 
         return $format;
@@ -1586,33 +1599,6 @@ class Member extends DataObject implements TemplateGlobalProvider
         });
 
         return parent::getCMSFields();
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultDateFormat()
-    {
-        $formatter = new IntlDateFormatter(
-            $this->getLocale(),
-            IntlDateFormatter::MEDIUM,
-            IntlDateFormatter::NONE
-        );
-        return $formatter->getPattern();
-    }
-
-    /**
-     * @return string
-     */
-    public function getDefaultTimeFormat()
-    {
-        $formatter = new IntlDateFormatter(
-            $this->getLocale(),
-            IntlDateFormatter::NONE,
-            IntlDateFormatter::MEDIUM
-        );
-        $defaultTimeFormat = $formatter->getPattern();
-        return $defaultTimeFormat;
     }
 
     /**
