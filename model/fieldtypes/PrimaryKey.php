@@ -7,7 +7,7 @@
  * @package framework
  * @subpackage model
  */
-class PrimaryKey extends Int {
+class PrimaryKey extends DBInt {
 	/**
 	 * @var DataObject
 	 */

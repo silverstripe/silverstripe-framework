@@ -112,6 +112,9 @@ if(file_exists(BASE_PATH . '/vendor/autoload.php')) {
 	require_once BASE_PATH . '/vendor/autoload.php';
 }
 
+// Int/Float autoloader for PHP5.6 backwards-compatability
+require_once(BASE_PATH . '/framework/model/fieldtypes/compat/autoload.php');
+
 // Now that the class manifest is up, load the static configuration
 $configManifest = new SS_ConfigStaticManifest(BASE_PATH, false, $flush);
 Config::inst()->pushConfigStaticManifest($configManifest);

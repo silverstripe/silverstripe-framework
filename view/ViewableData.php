@@ -331,7 +331,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function escapeTypeForField($field) {
 		$class = $this->castingClass($field) ?: $this->config()->default_cast;
 
-		return Config::inst()->get($class, 'escape_type', Config::FIRST_SET);
+		return Injector::inst()->get($class, true)->config()->escape_type;
 	}
 
 	/**
