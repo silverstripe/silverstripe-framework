@@ -395,15 +395,6 @@ class MemberTest extends FunctionalTest
         $member->PasswordExpiry = date('Y-m-d', time() + 86400);
         $this->assertFalse($member->isPasswordExpired());
     }
-
-    public function testMemberWithNoDateFormatFallsbackToGlobalLocaleDefaultFormat()
-    {
-        // Note: All default strings are based on locale defaults for en_US
-        $member = $this->objFromFixture(Member::class, 'noformatmember');
-        $this->assertEquals('MMM d, y', $member->DateFormat);
-        $this->assertEquals('h:mm:ss a', $member->TimeFormat);
-    }
-
     public function testInGroups()
     {
         $staffmember = $this->objFromFixture(Member::class, 'staffmember');

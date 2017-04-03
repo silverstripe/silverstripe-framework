@@ -324,41 +324,4 @@ class DBDateTest extends SapphireTest
 
         DBDatetime::clear_mock_now();
     }
-
-    /**
-     * @see testFormatFromSettings
-     * @return array
-     */
-    public function dataTestFormatFromSettings()
-    {
-        return [
-            ['2000-12-31', '31/12/2000'],
-            ['31-12-2000', '31/12/2000'],
-            ['2014-04-01', '01/04/2014'],
-        ];
-    }
-
-    /**
-     * @dataProvider dataTestFormatFromSettings
-     * @param string $from
-     * @param string $to
-     */
-    public function testFormatFromSettings($from, $to)
-    {
-        $this->suppressNotices();
-        $member = new Member();
-        $member->DateFormat = 'dd/MM/y';
-
-        $date = DBField::create_field('Date', $from);
-        $this->assertEquals($to, $date->FormatFromSettings($member));
-    }
-
-    /**
-     * Test that FormatFromSettings without a member defaults to Nice()
-     */
-    public function testFormatFromSettingsEmpty()
-    {
-        $date = DBfield::create_field('Date', '2000-12-31');
-        $this->assertEquals('31/12/2000', $date->FormatFromSettings());
-    }
 }
