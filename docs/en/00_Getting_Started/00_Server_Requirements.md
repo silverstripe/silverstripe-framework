@@ -22,19 +22,18 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 
  * See [phpinfo()](http://php.net/manual/en/function.phpinfo.php) for more information about your environment
  * One of the following databases: 
-  * MySQL 5.0+
-  * PostgreSQL 8.3+ (requires ["postgresql" module](http://silverstripe.org/postgresql-module))
-  * SQL Server 2008+ (requires ["mssql" module](http://silverstripe.org/microsoft-sql-server-database/))
-  * Support for [Oracle](https://github.com/smindel/silverstripe-oracle) and [SQLite](http://silverstripe.org/sqlite-database/) is not commercially supported, but is under development by our open source community.
+   * MySQL 5.0+
+   * PostgreSQL 8.3+ (requires ["postgresql" module](http://silverstripe.org/postgresql-module))
+   * [SQL Server 2008+](http://silverstripe.org/microsoft-sql-server-database/), [Oracle](https://github.com/smindel/silverstripe-oracle) and [SQLite](http://silverstripe.org/sqlite-database/) are not commercially supported, but are under development by our open source community.
  * One of the following web server products: 
-  * Apache 2.0+ with mod_rewrite and "AllowOverride All" set
-  * IIS 7+
-  * Support for Lighttpd, IIS 6, and other web servers may work if you are familiar with configuring those products.
+   * Apache 2.0+ with mod_rewrite and "AllowOverride All" set
+   * IIS 7+
+   * Support for Lighttpd, IIS 6, and other web servers may work if you are familiar with configuring those products.
  * We recommend enabling content compression (for example with mod_deflate) to speed up the delivery of HTML, CSS, and JavaScript.
  * One of the following operating systems:
-  * Linux/Unix/BSD
-  * Microsoft Windows XP SP3, Vista, Windows 7, Server 2008, Server 2008 R2
-  * Mac OS X 10.4+
+   * Linux/Unix/BSD
+   * Microsoft Windows XP SP3, Vista, Windows 7, Server 2008, Server 2008 R2
+   * Mac OS X 10.4+
 
 ## Web server hardware requirements
 
