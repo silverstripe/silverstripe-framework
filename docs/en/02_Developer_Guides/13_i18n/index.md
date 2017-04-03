@@ -132,32 +132,17 @@ Please refer to [W3C: Introduction to IDN and IRI](http://www.w3.org/Internation
 
 ### i18n in Form Fields
 
-Date- and time related form fields support i18n ([api:DateField], [api:TimeField], [api:DatetimeField]).
+Date and time related form fields are automatically localised ([api:DateField], [api:TimeField], [api:DatetimeField]).
+Since they use HTML5 `type=date` and `type=time` fields by default, these fields will present dates
+in a localised format chosen by the browser and operating system.
 
-	:::php
-	i18n::set_locale('ca_AD');
-	$field = new DateField(); // will automatically set date format defaults for 'ca_AD'
-	$field->setLocale('de_DE'); // will not update the date formats
-	$field->setConfig('dateformat', 'dd. MMMM YYYY'); // sets typical 'de_DE' date format, shows as "23. Juni 1982"
-
-Defaults can be applied globally for all field instances through the `DateField.default_config`
-and `TimeField.default_config` [configuration arrays](/developer_guides/configuration).
-If no 'locale' default is set on the field, [api:i18n::get_locale()] will be used.
-
-**Important:** Form fields in the CMS are automatically configured according to the profile settings for the logged-in user (`Member->Locale`, `Member->DateFormat` and `Member->TimeFormat`). This means that in most cases,
-fields created through [api:DataObject::getCMSFields()] will get their i18n settings from a specific member
-
-The [api:DateField] API can be enhanced by JavaScript, and comes with
-[jQuery UI datepicker](http://jqueryui.com/demos/datepicker/) capabilities built-in.
-The field tries to translate the date formats and locales into a format compatible with jQuery UI
-(see [api:DateField_View_JQuery::$locale_map_] and [api:DateField_View_JQuery::convert_iso_to_jquery_format()]).
+Fields can be forced to use a certain locale and date/time format by calling `setHTML5(false)`,
+followed by `setLocale()` or `setDateFormat()`/`setTimeFormat()`.
 
 	:::php
 	$field = new DateField();
-	$field->setLocale('de_AT'); // set Austrian/German locale
-	$field->setConfig('showcalendar', true);
-	$field->setConfig('jslocale', 'de'); // jQuery UI only has a generic German localization
-	$field->setConfig('dateformat', 'dd. MMMM YYYY'); // will be transformed to 'dd. MM yy' for jQuery
+	$field->setLocale('de_AT'); // set Austrian/German locale, defaulting format to dd.MM.y
+	$field->setDateFormat('d.M.y'); // set a more specific date format (single digit day/month) 
 
 ## Translating text
 
