@@ -6,6 +6,7 @@ use IntlDateFormatter;
 use InvalidArgumentException;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
+use SilverStripe\ORM\FieldType\DBTime;
 
 /**
  * Form field to display editable time values in an <input type="text"> field.
@@ -58,6 +59,31 @@ class TimeField extends TextField
     protected $timezone = null;
 
     /**
+     * Use HTML5-based input fields (and force ISO 8601 time formats).
+     *
+     * @var bool
+     */
+    protected $html5 = true;
+
+    /**
+     * @return bool
+     */
+    public function getHTML5()
+    {
+        return $this->html5;
+    }
+
+    /**
+     * @param boolean $bool
+     * @return $this
+     */
+    public function setHTML5($bool)
+    {
+        $this->html5 = $bool;
+        return $this;
+    }
+
+    /**
      * Get time format in CLDR standard format
      *
      * This can be set explicitly. If not, this will be generated from the current locale
@@ -67,6 +93,11 @@ class TimeField extends TextField
      */
     public function getTimeFormat()
     {
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 times, localisation is handled on the client
+            $this->setTimeFormat(DBTime::ISO_TIME);
+        }
+
         if ($this->timeFormat) {
             return $this->timeFormat;
         }
@@ -77,6 +108,7 @@ class TimeField extends TextField
 
     /**
      * Set time format in CLDR standard format.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
      * @param string $format
@@ -108,12 +140,8 @@ class TimeField extends TextField
     }
 
     /**
-     * Get length of the time format to use. One of:
-     *
-     *  - IntlDateFormatter::SHORT E.g. '6:31 PM'
-     *  - IntlDateFormatter::MEDIUM E.g. '6:30:48 PM'
-     *  - IntlDateFormatter::LONG E.g. '6:32:09 PM NZDT'
-     *  - IntlDateFormatter::FULL E.g. '6:32:24 PM New Zealand Daylight Time'
+     * Get length of the time format to use.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      *
@@ -133,6 +161,24 @@ class TimeField extends TextField
      */
     protected function getFormatter()
     {
+        if ($this->getHTML5() && $this->timeFormat && $this->timeFormat !== DBTime::ISO_TIME) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 times via setHTML5(false) if using setTimeFormat()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->timeLength) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 times via setHTML5(false) if using setTimeLength()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->locale) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 times via setHTML5(false) if using setLocale()'
+            );
+        }
+
         $formatter =  IntlDateFormatter::create(
             $this->getLocale(),
             IntlDateFormatter::NONE,
@@ -140,8 +186,11 @@ class TimeField extends TextField
             $this->getTimezone()
         );
 
-        // Don't invoke getDateFormat() directly to avoid infinite loop
-        if ($this->timeFormat) {
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 times, localisation is handled on the client
+            $formatter->setPattern(DBTime::ISO_TIME);
+            // Don't invoke getTimeFormat() directly to avoid infinite loop
+        } elseif ($this->timeFormat) {
             $ok = $formatter->setPattern($this->timeFormat);
             if (!$ok) {
                 throw new InvalidArgumentException("Invalid time format {$this->timeFormat}");
@@ -164,35 +213,22 @@ class TimeField extends TextField
             date_default_timezone_get() // Default to server timezone
         );
         $formatter->setLenient(false);
-        // CLDR iso8601 time
+
         // Note we omit timezone from this format, and we assume server TZ always.
-        $formatter->setPattern('HH:mm:ss');
+        $formatter->setPattern(DBTime::ISO_TIME);
+
         return $formatter;
     }
 
-    public function getAttribute($name)
+    public function getAttributes()
     {
         $attributes = parent::getAttributes();
 
-        // Merge with client config
-        $config = $this->getClientConfig();
-        foreach ($config as $key => $value) {
-            $attributes["data-{$key}"] = $value;
+        if ($this->getHTML5()) {
+            $attributes['type'] = 'time';
         }
-        return $attributes;
-    }
 
-    /**
-     * Get client config options for this field
-     *
-     * @return array
-     */
-    public function getClientConfig()
-    {
-        return [
-            // @todo - Support javascript time picker
-            'timeformat' => $this->getTimeFormat(),
-        ];
+        return $attributes;
     }
 
     public function Type()
@@ -302,6 +338,10 @@ class TimeField extends TextField
     }
 
     /**
+     * Determines the presented/processed format based on locale defaults,
+     * instead of explicitly setting {@link setTimeFormat()}.
+     * Only applicable with {@link setHTML5(false)}.
+     *
      * @param string $locale
      * @return $this
      */
@@ -337,9 +377,19 @@ class TimeField extends TextField
         $fromFormatter = $this->getFormatter();
         $toFormatter = $this->getISO8601Formatter();
         $timestamp = $fromFormatter->parse($time);
+
+        // Try to parse time without seconds, since that's a valid HTML5 submission format
+        // See https://html.spec.whatwg.org/multipage/infrastructure.html#times
+        if ($timestamp === false && $this->getHTML5()) {
+            $fromFormatter->setPattern('HH:mm');
+            $timestamp = $fromFormatter->parse($time);
+        }
+
+        // If timestamp still can't be detected, we've got an invalid time
         if ($timestamp === false) {
             return null;
         }
+
         return $toFormatter->format($timestamp);
     }
 

@@ -71,17 +71,23 @@ and default alignment of paragraphs and tables to browsers.
 
 ### Date and time formats
 
-Formats can be set globally in the i18n class. These settings are currently only picked up by the CMS, you'll need
-to write your own logic for any frontend output.
+Formats can be set globally in the i18n class. 
+You can use these settings for your own view logic.
 
 	:::php
 	Config::inst()->update('i18n', 'date_format', 'dd.MM.YYYY');
 	Config::inst()->update('i18n', 'time_format', 'HH:mm');
 
-Most localization routines in SilverStripe use the [Zend_Date API](http://framework.zend.com/manual/1.12/en/zend.date.overview.html).
-This means all formats are defined in
-[ISO date format](http://framework.zend.com/manual/1.12/en/zend.date.constants.html),
+Localization in SilverStripe uses PHP's [intl extension](http://php.net/intl).
+Formats for it's [IntlDateFormatter](http://php.net/manual/en/class.intldateformatter.php)
+are defined in [ICU format](http://www.icu-project.org/apiref/icu4c/classSimpleDateFormat.html#details),
 not PHP's built-in [date()](http://nz.php.net/manual/en/function.date.php).
+
+These settings are not used for CMS presentation.
+Users can choose their own locale, which determines the date format
+that gets presented to them. Currently this is a mix of PHP defaults (for readonly `DateField` and `TimeField`),
+browser defaults (for `DateField` on browsers supporting HTML5), and [Moment.JS](http://momentjs.com/)
+client-side logic (for `DateField` polyfills and other readonly dates and times).
 
 ### Language Names
 
@@ -126,32 +132,17 @@ Please refer to [W3C: Introduction to IDN and IRI](http://www.w3.org/Internation
 
 ### i18n in Form Fields
 
-Date- and time related form fields support i18n ([api:DateField], [api:TimeField], [api:DatetimeField]).
+Date and time related form fields are automatically localised ([api:DateField], [api:TimeField], [api:DatetimeField]).
+Since they use HTML5 `type=date` and `type=time` fields by default, these fields will present dates
+in a localised format chosen by the browser and operating system.
 
-	:::php
-	i18n::set_locale('ca_AD');
-	$field = new DateField(); // will automatically set date format defaults for 'ca_AD'
-	$field->setLocale('de_DE'); // will not update the date formats
-	$field->setConfig('dateformat', 'dd. MMMM YYYY'); // sets typical 'de_DE' date format, shows as "23. Juni 1982"
-
-Defaults can be applied globally for all field instances through the `DateField.default_config`
-and `TimeField.default_config` [configuration arrays](/developer_guides/configuration).
-If no 'locale' default is set on the field, [api:i18n::get_locale()] will be used.
-
-**Important:** Form fields in the CMS are automatically configured according to the profile settings for the logged-in user (`Member->Locale`, `Member->DateFormat` and `Member->TimeFormat`). This means that in most cases,
-fields created through [api:DataObject::getCMSFields()] will get their i18n settings from a specific member
-
-The [api:DateField] API can be enhanced by JavaScript, and comes with
-[jQuery UI datepicker](http://jqueryui.com/demos/datepicker/) capabilities built-in.
-The field tries to translate the date formats and locales into a format compatible with jQuery UI
-(see [api:DateField_View_JQuery::$locale_map_] and [api:DateField_View_JQuery::convert_iso_to_jquery_format()]).
+Fields can be forced to use a certain locale and date/time format by calling `setHTML5(false)`,
+followed by `setLocale()` or `setDateFormat()`/`setTimeFormat()`.
 
 	:::php
 	$field = new DateField();
-	$field->setLocale('de_AT'); // set Austrian/German locale
-	$field->setConfig('showcalendar', true);
-	$field->setConfig('jslocale', 'de'); // jQuery UI only has a generic German localization
-	$field->setConfig('dateformat', 'dd. MMMM YYYY'); // will be transformed to 'dd. MM yy' for jQuery
+	$field->setLocale('de_AT'); // set Austrian/German locale, defaulting format to dd.MM.y
+	$field->setDateFormat('d.M.y'); // set a more specific date format (single digit day/month) 
 
 ## Translating text
 

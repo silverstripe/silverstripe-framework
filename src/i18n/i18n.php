@@ -85,12 +85,20 @@ class i18n implements TemplateGlobalProvider
     private static $default_locale = 'en_US';
 
     /**
+     * System-wide date format. Will be overruled for CMS UI display
+     * by the format defaults inferred from the browser as well as
+     * any user-specific locale preferences.
+     *
      * @config
      * @var string
      */
     private static $date_format = 'yyyy-MM-dd';
 
     /**
+     * System-wide time format. Will be overruled for CMS UI display
+     * by the format defaults inferred from the browser as well as
+     * any user-specific locale preferences.
+     *
      * @config
      * @var string
      */

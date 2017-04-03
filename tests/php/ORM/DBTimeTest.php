@@ -56,35 +56,4 @@ class DBTimeTest extends SapphireTest
         $time = DBTime::create_field('Time', '17:15:55');
         $this->assertEquals('5:15 PM', $time->Short());
     }
-
-    public function dataTestFormatFromSettings()
-    {
-        return [
-            ['10:11:01', '10:11:01 (AM)'],
-            ['21:11:01', '9:11:01 (PM)'],
-        ];
-    }
-
-    /**
-     * @dataProvider dataTestFormatFromSettings
-     * @param string $from
-     * @param string $to
-     */
-    public function testFormatFromSettings($from, $to)
-    {
-        $member = new Member();
-        $member->TimeFormat = 'h:mm:ss (a)';
-
-        $date = DBTime::create_field('Time', $from);
-        $this->assertEquals($to, $date->FormatFromSettings($member));
-    }
-
-    /**
-     * Test that FormatFromSettings without a member defaults to Nice()
-     */
-    public function testFormatFromSettingsEmpty()
-    {
-        $date = DBTime::create_field('Time', '10:11:01');
-        $this->assertEquals('10:11:01 AM', $date->FormatFromSettings());
-    }
 }

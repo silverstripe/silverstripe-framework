@@ -2,9 +2,9 @@
 
 namespace SilverStripe\Forms\Tests;
 
+use IntlDateFormatter;
 use SilverStripe\Dev\SapphireTest;
 use SilverStripe\Forms\DateField;
-use SilverStripe\Forms\SeparatedDateField;
 use SilverStripe\Forms\RequiredFields;
 use SilverStripe\i18n\i18n;
 use SilverStripe\ORM\FieldType\DBDatetime;
@@ -105,18 +105,8 @@ class DateFieldTest extends SapphireTest
     public function testSetValueWithDateString()
     {
         $f = new DateField('Date', 'Date');
+        $f->setHTML5(false);
         $f->setSubmittedValue('29/03/2003');
-        $this->assertEquals($f->dataValue(), '2003-03-29');
-    }
-
-    public function testSetValueWithDateArray()
-    {
-        $f = new SeparatedDateField('Date', 'Date');
-        $f->setSubmittedValue([
-            'day' => 29,
-            'month' => 03,
-            'year' => 2003
-        ]);
         $this->assertEquals($f->dataValue(), '2003-03-29');
     }
 
@@ -145,84 +135,11 @@ class DateFieldTest extends SapphireTest
         $this->assertFalse($f->validate(new RequiredFields()));
     }
 
-    public function testEmptyValueValidation()
-    {
-        $validator = new RequiredFields();
-        $field = new SeparatedDateField('Date');
-        $this->assertTrue($field->validate($validator));
-        $field->setSubmittedValue([
-            'day' => '',
-            'month' => '',
-            'year' => '',
-        ]);
-        $this->assertTrue($field->validate($validator));
-    }
-
-    public function testValidateArray()
-    {
-        $f = new SeparatedDateField('Date', 'Date');
-        $f->setSubmittedValue([
-            'day' => 29,
-            'month' => 03,
-            'year' => 2003
-        ]);
-        $this->assertTrue($f->validate(new RequiredFields()));
-
-        $f->setValue(null);
-        $this->assertTrue($f->validate(new RequiredFields()), 'NULL values are validating TRUE');
-
-        $f->setSubmittedValue(array());
-        $this->assertTrue($f->validate(new RequiredFields()), 'Empty array values are validating TRUE');
-
-        $f->setSubmittedValue([
-            'day' => null,
-            'month' => null,
-            'year' => null
-        ]);
-        $this->assertTrue($f->validate(new RequiredFields()), 'Empty array values with keys are validating TRUE');
-        $f->setSubmittedValue([
-            'day' => 9999,
-            'month' => 9999,
-            'year' => 9999
-        ]);
-        $this->assertFalse($f->validate(new RequiredFields()));
-    }
-
-    public function testValidateEmptyArrayValuesSetsNullForValueObject()
-    {
-        $f = new SeparatedDateField('Date', 'Date');
-        $f->setSubmittedValue([
-            'day' => '',
-            'month' => '',
-            'year' => ''
-        ]);
-        $this->assertNull($f->dataValue());
-
-        $f->setSubmittedValue([
-            'day' => null,
-            'month' => null,
-            'year' => null
-        ]);
-        $this->assertNull($f->dataValue());
-    }
-
-    public function testValidateArrayValue()
-    {
-        $f = new SeparatedDateField('Date', 'Date');
-        $f->setSubmittedValue(['day' => 29, 'month' => 03, 'year' => 2003]);
-        $this->assertTrue($f->validate(new RequiredFields()));
-
-        $f->setSubmittedValue(['month' => 03, 'year' => 2003]);
-        $this->assertFalse($f->validate(new RequiredFields()));
-
-        $f->setSubmittedValue(array('day' => 99, 'month' => 99, 'year' => 2003));
-        $this->assertFalse($f->validate(new RequiredFields()));
-    }
-
     public function testFormatEnNz()
     {
         /* We get YYYY-MM-DD format as the data value for DD/MM/YYYY input value */
         $f = new DateField('Date', 'Date');
+        $f->setHTML5(false);
         $f->setSubmittedValue('29/03/2003');
         $this->assertEquals($f->dataValue(), '2003-03-29');
     }
@@ -232,6 +149,7 @@ class DateFieldTest extends SapphireTest
         // should get en_NZ by default through setUp()
         i18n::set_locale('de_DE');
         $f = new DateField('Date', 'Date', '29/03/2003');
+        $f->setHTML5(false);
         $f->setValue('29.06.2006');
         $this->assertEquals($f->dataValue(), '2006-06-29');
     }
@@ -242,6 +160,7 @@ class DateFieldTest extends SapphireTest
     public function testMDYFormat()
     {
         $dateField = new DateField('Date', 'Date');
+        $dateField->setHTML5(false);
         $dateField->setDateFormat('d/M/y');
         $dateField->setSubmittedValue('31/03/2003');
         $this->assertEquals(
@@ -251,6 +170,7 @@ class DateFieldTest extends SapphireTest
         );
 
         $dateField2 = new DateField('Date', 'Date');
+        $dateField2->setHTML5(false);
         $dateField2->setDateFormat('d/M/y');
         $dateField2->setSubmittedValue('04/3/03');
         $this->assertEquals(
@@ -258,5 +178,41 @@ class DateFieldTest extends SapphireTest
             '2003-03-04',
             "Even if input value hasn't got leading 0's in it we still get the correct data value"
         );
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp /Please opt-out .* if using setDateFormat/
+     */
+    public function testHtml5WithCustomFormatThrowsException()
+    {
+        $dateField = new DateField('Date', 'Date');
+        $dateField->setValue('2010-03-31');
+        $dateField->setDateFormat('d/M/y');
+        $dateField->Value();
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp /Please opt-out .* if using setDateLength/
+     */
+    public function testHtml5WithCustomDateLengthThrowsException()
+    {
+        $dateField = new DateField('Date', 'Date');
+        $dateField->setValue('2010-03-31');
+        $dateField->setDateLength(IntlDateFormatter::MEDIUM);
+        $dateField->Value();
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp /Please opt-out .* if using setLocale/
+     */
+    public function testHtml5WithCustomLocaleThrowsException()
+    {
+        $dateField = new DateField('Date', 'Date');
+        $dateField->setValue('2010-03-31');
+        $dateField->setLocale('de_DE');
+        $dateField->Value();
     }
 }

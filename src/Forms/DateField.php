@@ -5,6 +5,7 @@ namespace SilverStripe\Forms;
 use IntlDateFormatter;
 use SilverStripe\i18n\i18n;
 use InvalidArgumentException;
+use SilverStripe\ORM\FieldType\DBDate;
 use SilverStripe\ORM\FieldType\DBDatetime;
 
 /**
@@ -86,13 +87,6 @@ class DateField extends TextField
     protected $dateLength = null;
 
     /**
-     * Set whether to show placeholders
-     *
-     * @var bool
-     */
-    protected $placeholders = true;
-
-    /**
      * Override locale for client side.
      *
      * @var string
@@ -122,25 +116,27 @@ class DateField extends TextField
     protected $rawValue = null;
 
     /**
-     * Check if calendar should be shown on the frontend
+     * Use HTML5-based input fields (and force ISO 8601 date formats).
      *
+     * @var bool
+     */
+    protected $html5 = true;
+
+    /**
      * @return bool
      */
-    public function getShowCalendar()
+    public function getHTML5()
     {
-        return $this->showCalendar;
+        return $this->html5;
     }
 
     /**
-     * Set if calendar should be shown on the frontend.
-     * @internal WARNING: Experimental and volatile API.
-     *
-     * @param bool $show
+     * @param boolean $bool
      * @return $this
      */
-    public function setShowCalendar($show)
+    public function setHTML5($bool)
     {
-        $this->showCalendar = $show;
+        $this->html5 = $bool;
         return $this;
     }
 
@@ -164,12 +160,8 @@ class DateField extends TextField
     }
 
     /**
-     * Get length of the date format to use. One of:
-     *
-     *  - IntlDateFormatter::SHORT
-     *  - IntlDateFormatter::MEDIUM
-     *  - IntlDateFormatter::LONG
-     *  - IntlDateFormatter::FULL
+     * Get length of the date format to use.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @see http://php.net/manual/en/class.intldateformatter.php#intl.intldateformatter-constants
      *
@@ -192,6 +184,11 @@ class DateField extends TextField
      */
     public function getDateFormat()
     {
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 dates, localisation is handled on the client
+            $this->setDateFormat(DBDate::ISO_DATE);
+        }
+
         if ($this->dateFormat) {
             return $this->dateFormat;
         }
@@ -202,6 +199,7 @@ class DateField extends TextField
 
     /**
      * Set date format in CLDR standard format.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
      * @param string $format
@@ -216,18 +214,40 @@ class DateField extends TextField
     /**
      * Get date formatter with the standard locale / date format
      *
+     * @throws \LogicException
      * @return IntlDateFormatter
      */
     protected function getFormatter()
     {
+        if ($this->getHTML5() && $this->dateFormat && $this->dateFormat !== DBDate::ISO_DATE) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDateFormat()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->dateLength) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDateLength()'
+            );
+        }
+
+        if ($this->getHTML5() && $this->locale) {
+            throw new \LogicException(
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setLocale()'
+            );
+        }
+
         $formatter = IntlDateFormatter::create(
             $this->getLocale(),
             $this->getDateLength(),
             IntlDateFormatter::NONE
         );
 
-        // Don't invoke getDateFormat() directly to avoid infinite loop
-        if ($this->dateFormat) {
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 dates, localisation is handled on the client
+            $formatter->setPattern(DBDate::ISO_DATE);
+        } elseif ($this->dateFormat) {
+            // Don't invoke getDateFormat() directly to avoid infinite loop
             $ok = $formatter->setPattern($this->dateFormat);
             if (!$ok) {
                 throw new InvalidArgumentException("Invalid date format {$this->dateFormat}");
@@ -243,59 +263,28 @@ class DateField extends TextField
      */
     protected function getISO8601Formatter()
     {
+        $locale = i18n::config()->uninherited('default_locale');
         $formatter = IntlDateFormatter::create(
             i18n::config()->uninherited('default_locale'),
             IntlDateFormatter::MEDIUM,
             IntlDateFormatter::NONE
         );
         $formatter->setLenient(false);
-        // CLDR iso8601 date.
-        $formatter->setPattern('y-MM-dd');
+        // CLDR ISO 8601 date.
+        $formatter->setPattern(DBDate::ISO_DATE);
         return $formatter;
-    }
-
-    public function FieldHolder($properties = array())
-    {
-        return $this->renderWithClientView(function () use ($properties) {
-            return parent::FieldHolder($properties);
-        });
-    }
-
-    public function SmallFieldHolder($properties = array())
-    {
-        return $this->renderWithClientView(function () use ($properties) {
-            return parent::SmallFieldHolder($properties);
-        });
-    }
-
-    /**
-     * Generate field with client view enabled
-     *
-     * @param callable $callback
-     * @return string
-     */
-    protected function renderWithClientView($callback)
-    {
-        $clientView = null;
-        if ($this->getShowCalendar()) {
-            $clientView = $this->getClientView();
-            $clientView->onBeforeRender();
-        }
-        $html = $callback();
-        if ($clientView) {
-            $html = $clientView->onAfterRender($html);
-        }
-        return $html;
     }
 
     public function getAttributes()
     {
         $attributes = parent::getAttributes();
 
-        // Merge with client config
-        $config = $this->getClientConfig();
-        foreach ($config as $key => $value) {
-            $attributes["data-{$key}"] = $value;
+        $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
+
+        if ($this->getHTML5()) {
+            $attributes['type'] = 'date';
+            $attributes['min'] = $this->getMinDate();
+            $attributes['max'] = $this->getMaxDate();
         }
 
         return $attributes;
@@ -434,7 +423,9 @@ class DateField extends TextField
     }
 
     /**
-     * Caution: Will not update the 'dateformat' config value.
+     * Determines the presented/processed format based on locale defaults,
+     * instead of explicitly setting {@link setDateFormat()}.
+     * Only applicable with {@link setHTML5(false)}.
      *
      * @param string $locale
      * @return $this
@@ -445,56 +436,11 @@ class DateField extends TextField
         return $this;
     }
 
-    /**
-     * Get locale code for client-side. Will default to getLocale() if omitted.
-     *
-     * @return string
-     */
-    public function getClientLocale()
-    {
-        if ($this->clientLocale) {
-            return $this->clientLocale;
-        }
-        return $this->getLocale();
-    }
-
-    /**
-     * @param string $clientLocale
-     * @return DateField
-     */
-    public function setClientLocale($clientLocale)
-    {
-        $this->clientLocale = $clientLocale;
-        return $this;
-    }
-
     public function getSchemaValidation()
     {
         $rules = parent::getSchemaValidation();
         $rules['date'] = true;
         return $rules;
-    }
-
-    /**
-     * If placeholders are shown
-     *
-     * @return bool
-     */
-    public function getPlaceholders()
-    {
-        return $this->placeholders;
-    }
-
-    /**
-     * Set if placeholders are shown
-     *
-     * @param bool $placeholders
-     * @return $this
-     */
-    public function setPlaceholders($placeholders)
-    {
-        $this->placeholders = $placeholders;
-        return $this;
     }
 
     /**
@@ -531,35 +477,6 @@ class DateField extends TextField
     {
         $this->maxDate = $this->tidyISO8601($maxDate);
         return $this;
-    }
-
-    /**
-     * Get client data properties for this field
-     *
-     * @return array
-     */
-    public function getClientConfig()
-    {
-        $view = $this->getClientView();
-        $config = [
-            'showcalendar' => $this->getShowCalendar() ? 'true' : null,
-            'date-format' => $view->getDateFormat(), // https://api.jqueryui.com/datepicker/#option-dateFormat
-            'locale' => $view->getLocale(),
-        ];
-
-        // Format min/maxDate in format expected by jquery datepicker
-        $min = $this->getMinDate();
-        if ($min) {
-            // https://api.jqueryui.com/datepicker/#option-minDate
-            $config['min-date'] = $this->iso8601ToLocalised($min);
-        }
-        $max = $this->getMaxDate();
-        if ($max) {
-            // https://api.jqueryui.com/datepicker/#option-maxDate
-            $config['max-date'] = $this->iso8601ToLocalised($max);
-        }
-
-        return $config;
     }
 
     /**
@@ -626,13 +543,5 @@ class DateField extends TextField
             }
         }
         return $formatter->format($timestamp);
-    }
-
-    /**
-     * @return DateField_View_JQuery
-     */
-    protected function getClientView()
-    {
-        return DateField_View_JQuery::create($this);
     }
 }

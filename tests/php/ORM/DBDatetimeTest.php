@@ -204,41 +204,4 @@ class DBDatetimeTest extends SapphireTest
 
         DBDatetime::clear_mock_now();
     }
-
-    public function dataTestFormatFromSettings()
-    {
-        return [
-            ['2000-12-31 10:11:01', '31/12/2000 10:11:01'],
-            ['2000-12-31 1:11:01', '31/12/2000 01:11:01'],
-            ['2000-12-12 1:11:01', '12/12/2000 01:11:01'],
-            ['2000-12-31', '31/12/2000 00:00:00'],
-            ['2014-04-01 10:11:01', '01/04/2014 10:11:01']
-        ];
-    }
-
-    /**
-     * @dataProvider dataTestFormatFromSettings
-     * @param string $from
-     * @param string $to
-     */
-    public function testFormatFromSettings($from, $to)
-    {
-        $member = new Member();
-        $member->DateFormat = 'dd/MM/y';
-        $member->TimeFormat = 'HH:mm:ss';
-
-        $date = DBDatetime::create_field('Datetime', $from);
-        $this->assertEquals($to, $date->FormatFromSettings($member));
-    }
-
-    /**
-     * Test that FormatFromSettings without a member defaults to Nice()
-     */
-    public function testFormatFromSettingsEmpty()
-    {
-        $date = DBDatetime::create_field('Datetime', '2000-12-31 10:11:01');
-
-        // note: Some localisation packages exclude the ',' in default medium format
-        $this->assertRegExp('#31/12/2000(,)? 10:11:01 AM#', $date->FormatFromSettings());
-    }
 }

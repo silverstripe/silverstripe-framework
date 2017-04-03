@@ -512,17 +512,7 @@ class DBDate extends DBField
     public function scaffoldFormField($title = null, $params = null)
     {
         $field = DateField::create($this->name, $title);
-        $format = $field->getDateFormat();
-
-        // Show formatting hints for better usability
-        $now = DBDatetime::now()->Format($format);
-        $field->setDescription(_t(
-            'FormField.EXAMPLE',
-            'e.g. {format}',
-            'Example format',
-            [ 'format' => $now ]
-        ));
-        $field->setAttribute('placeholder', $format);
+        $field->setHTML5(true);
 
         return $field;
     }
