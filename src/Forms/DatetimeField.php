@@ -25,15 +25,15 @@ use SilverStripe\i18n\i18n;
  * Example:
  * <code>
  * $field = new DatetimeField('Name', 'Label');
- * $field->getDateField()->setDateFormat('yyyy-MM-dd HH:mm');
- * $field->getDateField()->setShowCalendar(true); // field-specific setting
+ * $field->getDateField()->setTitle('Select Date');
  * </code>
  *
- * - "timezone": Set a different timezone for viewing. {@link dataValue()} will still save
+ * - setLocale(): Sets a custom locale for date / time formatting.
+ * - setTimezone(): Set a different timezone for viewing. {@link dataValue()} will still save
  * the time in PHP's default timezone (date_default_timezone_get()), its only a view setting.
  * Note that the sub-fields ({@link getDateField()} and {@link getTimeField()})
  * are not timezone aware, and will have their values set in local time, rather than server time.
- * - "datetimeorder": An sprintf() template to determine in which order the date and time values will
+ * - setDateTimeOrder(): An sprintf() template to determine in which order the date and time values will
  * be combined. This is necessary as those separate formats are set in their invididual fields.
  */
 class DatetimeField extends FormField
