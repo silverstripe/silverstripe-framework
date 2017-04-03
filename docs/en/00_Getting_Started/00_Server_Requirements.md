@@ -9,8 +9,8 @@ Our web-based [PHP installer](installation/) can check if you meet the requireme
 ## Web server software requirements
 
  * PHP 5.6 and PHP 7.x
- * Once PHP versions become [unsupported by the PHP Project](http://php.net/supported-versions.php)),
-   we drop support for those versions in the [next minor release](/contributing/release-process)  
+ * Once PHP versions become [unsupported by the PHP Project](http://php.net/supported-versions.php),
+   we drop support for those versions in the [next minor release](/contributing/release-process). This means that PHP 5.6 support may be dropped in a 4.x minor release after December 2018.
  * We recommend using a PHP accelerator or opcode cache, such as [xcache](http://xcache.lighttpd.net/) or [WinCache](http://www.iis.net/download/wincacheforphp).
  * Allocate at least 48MB of memory to each PHP process. (SilverStripe can be resource hungry for some intensive operations.)
  * Required modules: dom, gd2, fileinfo, hash, iconv, mbstring, mysqli (or other database driver), session, simplexml, tokenizer, xml.
