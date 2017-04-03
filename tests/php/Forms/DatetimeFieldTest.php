@@ -37,6 +37,32 @@ class DatetimeFieldTest extends SapphireTest
         $form = $this->getMockForm();
         $form->Fields()->push($dateTimeField);
 
+        $dateTimeField->setSubmittedValue([
+            'date' => '2003-03-29',
+            'time' => '23:59:38'
+        ]);
+        $validator = new RequiredFields();
+        $this->assertTrue($dateTimeField->validate($validator));
+        $m = new Model();
+        $form->saveInto($m);
+        $this->assertEquals('2003-03-29 23:59:38', $m->MyDatetime);
+    }
+
+    public function testFormSaveIntoLocalised()
+    {
+        $dateTimeField = new DatetimeField('MyDatetime');
+
+        $dateTimeField->getDateField()
+            ->setHTML5(false)
+            ->setLocale('en_NZ');
+
+        $dateTimeField->getTimeField()
+            ->setHTML5(false)
+            ->setLocale('en_NZ');
+
+        $form = $this->getMockForm();
+        $form->Fields()->push($dateTimeField);
+
         // en_NZ standard format
         $dateTimeField->setSubmittedValue([
             'date' => '29/03/2003',
@@ -96,6 +122,25 @@ class DatetimeFieldTest extends SapphireTest
     public function testSetValueWithArray()
     {
         $datetimeField = new DatetimeField('Datetime', 'Datetime');
+        $datetimeField->setSubmittedValue([
+            'date' => '2003-03-29',
+            'time' => '23:00:00'
+        ]);
+        $this->assertEquals($datetimeField->dataValue(), '2003-03-29 23:00:00');
+    }
+
+    public function testSetValueWithArrayLocalised()
+    {
+        $datetimeField = new DatetimeField('Datetime', 'Datetime');
+
+        $datetimeField->getDateField()
+            ->setHTML5(false)
+            ->setLocale('en_NZ');
+
+        $datetimeField->getTimeField()
+            ->setHTML5(false)
+            ->setLocale('en_NZ');
+
         // Values can only be localized (= non-ISO) in array notation
         $datetimeField->setSubmittedValue([
             'date' => '29/03/2003',
@@ -116,11 +161,20 @@ class DatetimeFieldTest extends SapphireTest
         $this->assertFalse($f->validate(new RequiredFields()));
     }
 
-    public function testTimezoneSet()
+    public function testTimezoneSetLocalised()
     {
         date_default_timezone_set('Europe/Berlin');
         // Berlin and Auckland have 12h time difference in northern hemisphere winter
         $datetimeField = new DatetimeField('Datetime', 'Datetime');
+
+        $datetimeField->getDateField()
+            ->setHTML5(false)
+            ->setLocale('en_NZ');
+
+        $datetimeField->getTimeField()
+            ->setHTML5(false)
+            ->setLocale('en_NZ');
+
         $datetimeField->setTimezone('Pacific/Auckland');
         $datetimeField->setValue('2003-12-24 23:59:59');
         $this->assertEquals(
@@ -137,11 +191,20 @@ class DatetimeFieldTest extends SapphireTest
         );
     }
 
-    public function testTimezoneFromConfig()
+    public function testTimezoneFromConfigLocalised()
     {
         date_default_timezone_set('Europe/Berlin');
         // Berlin and Auckland have 12h time difference in northern hemisphere summer, but Berlin and Moscow only 2h.
         $datetimeField = new DatetimeField('Datetime', 'Datetime');
+
+        $datetimeField->getDateField()
+            ->setHTML5(false)
+            ->setLocale('en_NZ');
+
+        $datetimeField->getTimeField()
+            ->setHTML5(false)
+            ->setLocale('en_NZ');
+
         $datetimeField->setTimezone('Europe/Moscow');
         $datetimeField->setSubmittedValue([
             // pass in default format, at user time (Moscow)
@@ -158,7 +221,7 @@ class DatetimeFieldTest extends SapphireTest
         $field = new DatetimeField('Datetime', 'Datetime');
         $field->setForm($form);
         $field->setSubmittedValue([
-            'date' => '24/06/2003',
+            'date' => '2003-06-24',
             'time' => '23:59:59',
         ]);
         $dateField = new DateField('Datetime[date]');
@@ -183,8 +246,8 @@ class DatetimeFieldTest extends SapphireTest
         $field = new DatetimeField('Datetime', 'Datetime');
         $field->setForm($form);
         $field->setSubmittedValue([
-            'date' => '24/06/2003',
-            'time' => '11:59:59 pm',
+            'date' => '2003-06-24',
+            'time' => '23:59:59',
         ]);
         $timeField = new TimeField('Datetime[time]');
         $field->setTimeField($timeField);
