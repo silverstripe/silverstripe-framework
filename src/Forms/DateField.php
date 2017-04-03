@@ -544,5 +544,4 @@ class DateField extends TextField
         }
         return $formatter->format($timestamp);
     }
-
 }

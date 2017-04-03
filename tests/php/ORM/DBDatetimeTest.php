@@ -204,5 +204,4 @@ class DBDatetimeTest extends SapphireTest
 
         DBDatetime::clear_mock_now();
     }
-
 }
