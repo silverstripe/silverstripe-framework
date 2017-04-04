@@ -220,6 +220,8 @@ class GDBackend extends Object implements Image_Backend {
 	 * @todo This method isn't very efficent
 	 */
 	public function fittedResize($width, $height) {
+		$width = intval($width);
+		$height = intval($height);
 		$gd = $this->resizeByHeight($height);
 		if($gd->width > $width) $gd = $gd->resizeByWidth($width);
 		return $gd;
@@ -354,6 +356,11 @@ class GDBackend extends Object implements Image_Backend {
 	*/
 
 	public function crop($top, $left, $width, $height) {
+		$top = intval($top);
+		$left = intval($left);
+		$width = intval($width);
+		$height = intval($height);
+
 		$newGD = imagecreatetruecolor($width, $height);
 
 		// Preserve alpha channel between images
@@ -390,6 +397,7 @@ class GDBackend extends Object implements Image_Backend {
 	 * Resize an image by width. Preserves aspect ratio.
 	 */
 	public function resizeByWidth( $width ) {
+		$width = intval($width);
 		$heightScale = $width / $this->width;
 		return $this->resize( $width, $heightScale * $this->height );
 	}
@@ -398,6 +406,7 @@ class GDBackend extends Object implements Image_Backend {
 	 * Resize an image by height. Preserves aspect ratio
 	 */
 	public function resizeByHeight( $height ) {
+		$height = intval($height);
 		$scale = $height / $this->height;
 		return $this->resize( $scale * $this->width, $height );
 	}
@@ -407,6 +416,8 @@ class GDBackend extends Object implements Image_Backend {
 	 * and maxHeight. Passing useAsMinimum will make the smaller dimension equal to the maximum corresponding dimension
 	 */
 	public function resizeRatio( $maxWidth, $maxHeight, $useAsMinimum = false ) {
+		$maxWidth = intval($maxWidth);
+		$maxHeight = intval($maxHeight);
 
 		$widthRatio = $maxWidth / $this->width;
 		$heightRatio = $maxHeight / $this->height;

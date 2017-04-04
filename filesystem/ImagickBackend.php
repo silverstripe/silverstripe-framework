@@ -148,6 +148,9 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	public function resizeRatio($maxWidth, $maxHeight, $useAsMinimum = false) {
 		if(!$this->valid()) return;
 
+		$maxWidth = intval($maxWidth);
+		$maxHeight = intval($maxHeight);
+
 		$geometry = $this->getImageGeometry();
 
 		$widthRatio = $maxWidth / $geometry["width"];
@@ -168,6 +171,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	public function resizeByWidth($width) {
 		if(!$this->valid()) return;
 
+		$width = intval($width);
+
 		$geometry = $this->getImageGeometry();
 
 		$heightScale = $width / $geometry["width"];
@@ -182,6 +187,8 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 */
 	public function resizeByHeight($height) {
 		if(!$this->valid()) return;
+
+		$height = intval($height);
 
 		$geometry = $this->getImageGeometry();
 
@@ -198,6 +205,9 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function paddedResize($width, $height, $backgroundColor = "FFFFFF", $transparencyPercent = 0) {
+		$width = intval($width);
+		$height = intval($height);
+
 		//keep the % within bounds of 0-100
 		$transparencyPercent = min(100, max(0, $transparencyPercent));
 		$new = $this->resizeRatio($width, $height);
@@ -265,7 +275,7 @@ class ImagickBackend extends Imagick implements Image_Backend {
 		$new->ThumbnailImage($width,$height,true);
 		return $new;
 	}
-	
+
 	/**
 	 * Crop's part of image.
 	 * @param int $top y position of left upper corner of crop rectangle
@@ -275,9 +285,14 @@ class ImagickBackend extends Imagick implements Image_Backend {
 	 * @return Image_Backend
 	 */
 	public function crop($top, $left, $width, $height) {
+		$top = intval($top);
+		$left = intval($left);
+		$width = intval($width);
+		$height = intval($height);
+
 		$new = clone $this;
 		$new->cropImage($width, $height, $left, $top);
-		
+
 		return $new;
 	}
 
