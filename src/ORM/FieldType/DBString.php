@@ -96,9 +96,8 @@ abstract class DBString extends DBField
     public function exists()
     {
         $value = $this->RAW();
-        return $value // All truthy values exist
-            || (is_string($value) && strlen($value)) // non-empty strings exist ('0' but not (int)0)
-            || (!$this->getNullifyEmpty() && $value === ''); // Remove this stupid exemption in 4.0
+        // All truthy values and non-empty strings exist ('0' but not (int)0)
+        return $value || (is_string($value) && strlen($value));
     }
 
     public function prepValueForDB($value)

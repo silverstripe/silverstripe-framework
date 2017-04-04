@@ -205,7 +205,7 @@ class DBFieldTest extends SapphireTest
         $varcharField->setValue('abc');
         $this->assertTrue($varcharField->exists());
         $varcharField->setValue('');
-        $this->assertTrue($varcharField->exists());
+        $this->assertFalse($varcharField->exists());
         $varcharField->setValue(null);
         $this->assertFalse($varcharField->exists());
 
@@ -223,7 +223,7 @@ class DBFieldTest extends SapphireTest
         $textField->setValue('abc');
         $this->assertTrue($textField->exists());
         $textField->setValue('');
-        $this->assertTrue($textField->exists());
+        $this->assertFalse($textField->exists());
         $textField->setValue(null);
         $this->assertFalse($textField->exists());
     }

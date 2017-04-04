@@ -2,9 +2,13 @@
 
 namespace SilverStripe\Forms\HtmlEditor;
 
+use SilverStripe\Core\Convert;
+use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\FormField;
 use SilverStripe\View\Parsers\ShortcodeHandler;
 use Embed\Adapters\Adapter;
 use Embed\Embed;
+use SilverStripe\View\Parsers\ShortcodeParser;
 
 /**
  * Provider for the [embed] shortcode tag used by the embedding service
@@ -28,47 +32,139 @@ class EmbedShortcodeProvider implements ShortcodeHandler
      * Embed shortcode parser from Oembed. This is a temporary workaround.
      * Oembed class has been replaced with the Embed external service.
      *
-     * @param $arguments
-     * @param $content
-     * @param $parser
-     * @param $shortcode
+     * @param array $arguments
+     * @param string $content
+     * @param ShortcodeParser $parser
+     * @param string $shortcode
      * @param array $extra
      *
      * @return string
      */
     public static function handle_shortcode($arguments, $content, $parser, $shortcode, $extra = array())
     {
-        $embed = Embed::create($content, $arguments);
-        if ($embed && $embed instanceof Adapter) {
-            return self::embedForTemplate($embed);
+        // Get service URL
+        if (!empty($content)) {
+            $serviceURL = $content;
+        } elseif (!empty($arguments['url'])) {
+            $serviceURL = $arguments['url'];
         } else {
-            return '<a href="' . $content . '">' . $content . '</a>';
+            return '';
         }
+
+        // See https://github.com/oscarotero/Embed#example-with-all-options for service arguments
+        $serviceArguments = [];
+        if (!empty($arguments['width'])) {
+            $serviceArguments['min_image_width'] = $arguments['width'];
+        }
+        if (!empty($arguments['height'])) {
+            $serviceArguments['min_image_height'] = $arguments['height'];
+        }
+
+        // Allow resolver to be mocked
+        $dispatcher = null;
+        if (isset($extra['resolver'])) {
+            $dispatcher = Injector::inst()->create(
+                $extra['resolver']['class'],
+                $serviceURL,
+                $extra['resolver']['config']
+            );
+        }
+
+        // Process embed
+        $embed = Embed::create($serviceURL, $serviceArguments, $dispatcher);
+
+        // Convert embed object into HTML
+        if ($embed && $embed instanceof Adapter) {
+            $result = static::embedForTemplate($embed, $arguments);
+            if ($result) {
+                return $result;
+            }
+        }
+
+        // Fallback to link to service
+        return static::linkEmbed($arguments, $serviceURL, $serviceURL);
     }
 
     /**
      * @param Adapter $embed
-     *
+     * @param array $arguments Additional shortcode params
      * @return string
      */
-    public static function embedForTemplate($embed)
+    public static function embedForTemplate($embed, $arguments)
     {
-        switch ($embed->type) {
+        switch ($embed->getType()) {
             case 'video':
             case 'rich':
-                if ($embed->extraClass) {
-                    return "<div class='media $embed->extraClass'>$embed->code</div>";
-                } else {
-                    return "<div class='media'>$embed->code</div>";
+                // Attempt to inherit width (but leave height auto)
+                if (empty($arguments['width']) && $embed->getWidth()) {
+                    $arguments['width'] = $embed->getWidth();
                 }
-                break;
+                return self::videoEmbed($arguments, $embed->getCode());
             case 'link':
-                return '<a class="' . $embed->extraClass . '" href="' . $embed->origin . '">' . $embed->title . '</a>';
-                break;
+                return self::linkEmbed($arguments, $embed->getUrl(), $embed->getTitle());
             case 'photo':
-                return "<img src='$embed->url' width='$embed->width' height='$embed->height' class='$embed->extraClass' />";
-                break;
+                return self::photoEmbed($arguments, $embed->getUrl());
+            default:
+                return null;
         }
-        return null;
+    }
+
+    /**
+     * Build video embed tag
+     *
+     * @param array $arguments
+     * @param string $content Raw HTML content
+     * @return string
+     */
+    protected static function videoEmbed($arguments, $content)
+    {
+        // Ensure outer div has given width (but leave height auto)
+        if (!empty($arguments['width'])) {
+            $arguments['style'] = 'width: ' . intval($arguments['width']) . 'px;';
+        }
+
+        // Convert caption to <p>
+        if (!empty($arguments['caption'])) {
+            $xmlCaption = Convert::raw2xml($arguments['caption']);
+            $content .= "\n<p class=\"caption\">{$xmlCaption}</p>";
+        }
+        unset($arguments['width']);
+        unset($arguments['height']);
+        unset($arguments['url']);
+        unset($arguments['caption']);
+        return FormField::create_tag('div', $arguments, $content);
+    }
+
+    /**
+     * Build <a> embed tag
+     *
+     * @param array $arguments
+     * @param string $href
+     * @param string $title Default title
+     * @return string
+     */
+    protected static function linkEmbed($arguments, $href, $title)
+    {
+        $title = !empty($arguments['caption']) ? ($arguments['caption']) : $title;
+        unset($arguments['caption']);
+        unset($arguments['width']);
+        unset($arguments['height']);
+        unset($arguments['url']);
+        $arguments['href'] = $href;
+        return Formfield::create_tag('a', $arguments, Convert::raw2xml($title));
+    }
+
+    /**
+     * Build img embed tag
+     *
+     * @param array $arguments
+     * @param string $src
+     * @return string
+     */
+    protected static function photoEmbed($arguments, $src)
+    {
+        $arguments['src'] = $src;
+        unset($arguments['url']);
+        return FormField::create_tag('img', $arguments);
     }
 }

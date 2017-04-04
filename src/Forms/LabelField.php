@@ -9,6 +9,10 @@ namespace SilverStripe\Forms;
  */
 class LabelField extends DatalessField
 {
+    protected $schemaDataType = FormField::SCHEMA_DATA_TYPE_STRUCTURAL;
+    
+    protected $schemaComponent = 'LabelField';
+    
     /**
      * @param string $name
      * @param null|string $title
