@@ -1,4 +1,10 @@
 es:
+  AddToCampaign:
+    ErrorCampaignPermissionDenied: 'Parece que no tienes los permisos necesarios para añadir {ObjectTitle} a {CampaignTitle}'
+    ErrorGeneral: 'Lo sentimos, pero hubo un error'
+    ErrorItemPermissionDenied: 'Parece que no tienes los permisos necesarios para añadir {ObjectTitle} a una campaña'
+    ErrorNotFound: 'Ese {Type} no pudo ser encontrado'
+    Success: 'Se añadió satisfactoriamente {ObjectTitle} a {CampaignTitle}'
   AssetAdmin:
     ALLOWEDEXTS: 'Extensiones permitidas para subir archivos'
     HIDEALLOWEDEXTS: 'Ocultar extensiones permitidas'
@@ -12,6 +18,7 @@ es:
     HEIGHT: Alto
     LASTEDIT: 'Modificado por última vez'
     OWNER: Propietario
+    PATH: Ruta
     SIZE: Tamaño
     TITLE: Título
     TYPE: 'Tipo de archivo'
@@ -30,6 +37,7 @@ es:
     INSERTURL: 'Insertar desde URL'
     REMOVEINFO: 'Remover este archivo '
     TOTAL: Total
+    TOUPLOAD: 'Subir archivos'
     UPLOADINPROGRESS: 'Por favor espere .... carga en curso'
     UPLOADOR: O
   BBCodeParser:
@@ -59,6 +67,7 @@ es:
     UNORDEREDEXAMPLE1: 'elemento 1 desordenado'
   BackLink_Button_ss:
     Back: Volver
+    NavigateUp: 'Subir una carpeta arriba'
   BasicAuth:
     ENTERINFO: 'Por favor introduzca su nombre de usuario y contraseña.'
     ERRORNOTADMIN: 'Ese usuario no es un administrador.'
@@ -67,9 +76,11 @@ es:
     ANY: Cualquiera
     NOANSWER: 'No'
     YESANSWER: Sí
+  CAMPAIGNS:
+    ADDTOCAMPAIGN: 'Añadir a Campaña'
   CMSLoadingScreen_ss:
     LOADING: Cargando...
-    REQUIREJS: 'El CMS requiere que tenga habilitado JavaScript .'
+    REQUIREJS: 'El CMS requiere que tenga habilitado JavaScript.'
   CMSMain:
     ACCESS: 'Acceder a la sección ''{title}'''
     ACCESSALLINTERFACES: 'Acceder a todas las interfaces del CMS'
@@ -93,22 +104,51 @@ es:
     SUCCESSCONTENT: '<p>Inicio de sesión exitoso. Si Ud no es automáticamente redireccionado, <a target="_top" href="{link}">haga clic aquí</a></p>'
     TimedOutTitleAnonymous: 'Expiró su sesión.'
     TimedOutTitleMember: 'Eh {name}!<br />Tu sesión expiró.'
+  CampaignAdmin:
+    ACCESS_HELP: 'Permitir la visualización de la sección de publicación de campañas'
+    MENUTITLE: Campañas
+  Campaigns:
+    AddToCampaign: 'Añadir a Campaña'
+    AddToCampaignFormFieldLabel: 'Seleccionar una Camapaña'
   ChangePasswordEmail_ss:
+    CHANGEPASSWORDFOREMAIL: 'La contraseña para la cuenta con la dirección de correo {email} ha sido cambiada. Si tu no has cambiado tu contraseña porfavor cámbiela'
     CHANGEPASSWORDTEXT1: 'Has cambiado tu contraseña por'
     CHANGEPASSWORDTEXT2: 'Ahora puede utilizar los siguientes datos de acreditación para iniciar sesión:'
+    CHANGEPASSWORDTEXT3: 'Cambiar contraseña'
     EMAIL: 'Correo electrónico'
     HELLO: Hola
     PASSWORD: Contraseña
+  ChangeSet:
+    DESCRIPTION_AND: '{first} y {second}'
+    DESCRIPTION_ITEM: artículo
+    DESCRIPTION_ITEMS: artículos
+    DESCRIPTION_LIST_FIRST: '{item}'
+    DESCRIPTION_LIST_LAST: '{list}, y {item}'
+    DESCRIPTION_LIST_MID: '{list}, {item}'
+    DESCRIPTION_OTHER_ITEM: 'otro artículo'
+    DESCRIPTION_OTHER_ITEMS: 'otro artículos'
+    NAME: Nombre
+    PLURALNAME: Campañas
+    SINGULARNAME: Campaña
+    STATE: Estado
+  ChangeSetItem:
+    PLURALNAME: 'Change Set Items'
+    SINGULARNAME: 'Change Set Item'
   CheckboxField:
     NOANSWER: 'No'
     YESANSWER: Sí
   CheckboxFieldSetField:
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
+  CheckboxSetField_ss:
+    NOOPTIONSAVAILABLE: 'No hay opciones disponibles'
   CheckboxSetField:
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   ConfirmedPasswordField:
     ATLEAST: 'Las constraseñas deben tener al menos {min} caracteres de longitud.'
     BETWEEN: 'Las contraseñas deben tener desde {min} a {max} caracteres de longitud.'
+    CURRENT_PASSWORD_ERROR: 'La contraseña actual que ha ingresado no es correcta.'
+    CURRENT_PASSWORD_MISSING: 'Debe introducir su contraseña actual.'
+    LOGGED_IN_ERROR: 'Debe iniciar sesión para cambiar su contraseña.'
     MAXIMUM: 'Las contraseñas deben tener como máximo {max} caracteres de longitud.'
     SHOWONCLICKTITLE: 'Cambiar contraseña'
   ContentController:
@@ -120,7 +160,7 @@ es:
     SECOND: segundo
     THIRD: tercero
   CurrencyField:
-    CURRENCYSYMBOL: Símbolo
+    CURRENCYSYMBOL: €
   DataObject:
     PLURALNAME: 'Objetos de Datos'
     SINGULARNAME: 'Objeto de Datos'
@@ -152,6 +192,8 @@ es:
     INVALID_REQUEST: 'Solicitud no válida'
   DropdownField:
     CHOOSE: (Elegir)
+    CHOOSESEARCH: '(Elegir o Buscar)'
+    CHOOSE_MODEL: '(Elegir {name})'
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
@@ -161,6 +203,7 @@ es:
     AviType: 'Archivo de video AVI'
     Content: Contenido
     CssType: 'Archivo CSS'
+    DRAFT: Borrador
     DmgType: 'Image de disco de Apple'
     DocType: 'Documento Word'
     Filename: 'Nombre del archivo'
@@ -170,17 +213,22 @@ es:
     HtmlType: 'Archivo HTML'
     INVALIDEXTENSION: 'La extensión no está permitida (válidas: {extensions})'
     INVALIDEXTENSIONSHORT: 'La extensión no está permitida'
-    IcoType: 'Imagen Icon'
+    INVALIDEXTENSION_SHORT: 'La extensión no está permitida'
+    IcoType: 'Imagen de icono'
     JpgType: 'Imagen JPEG - buena para fotos'
     JsType: 'Archivo Javascript'
+    MODIFIED: Modificado
     Mp3Type: 'Archivo de audio MP3'
     MpgType: 'Archivo de video MPEG'
+    NOFILESIZE: 'El tamaño del archivo tiene cero bytes.'
     NOVALIDUPLOAD: 'El archivo no es válido para cargarlo'
     Name: Nombre
     PLURALNAME: Archivos
     PdfType: 'Archivo PDF de Adobe Acrobat'
     PngType: 'Imagen PNG - buen formato de propósito general'
     SINGULARNAME: Archivo
+    TOOLARGE: 'El tamaño del archivo es demasiado grande, el tamaño máximo permitido es {size}'
+    TOOLARGESHORT: 'El tamaño del archivo excede {size}'
     TiffType: 'Formato de imagen etiquetada'
     Title: Título
     WavType: 'Archivo de audio WAV'
@@ -201,6 +249,7 @@ es:
     CSRF_FAILED_MESSAGE: 'Parece que hubo un problema técnico. Por favor, haga clic en el botón Volver, recargue su navegador y vuelva a intentarlo.'
     FIELDISREQUIRED: 'Se requiere {name} '
     SubmitBtnLabel: Ir
+    VALIDATIONCREDIT: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente'
     VALIDATIONCREDITNUMBER: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente {number}'
     VALIDATIONNOTUNIQUE: 'El valor que se ha introducido no es único'
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraseñas no concuerdan'
@@ -209,6 +258,7 @@ es:
     VALIDATOR: Validador
     VALIDCURRENCY: 'Por favor, introduzca una moneda válida.'
   FormField:
+    EXAMPLE: 'Ejemplo {format}'
     Example: 'Ejemplo %s'
     NONE: ninguna
   GridAction:
@@ -268,11 +318,59 @@ es:
     ResultCreated: 'Creados {count} grupos'
     ResultDeleted: 'Se eliminaron %d grupos'
     ResultUpdated: 'Actualizados grupos %d'
+  HTMLEditorField:
+    ANCHORSCANNOTACCESSPAGE: 'No tienes permiso para acceder al contenido de la página de destino.'
+    ANCHORSPAGENOTFOUND: 'No se encontró la página de destino.'
+    ANCHORVALUE: Anchor
+    BUTTONADDURL: 'Añadir URL'
+    CAPTIONTEXT: 'La leyenda de texto'
+    CSSCLASS: 'Alineación / estilo'
+    CSSCLASSCENTER: 'Centrado, por su cuenta.'
+    CSSCLASSLEFT: 'A la izquierda, con el texto alrededor.'
+    CSSCLASSLEFTALONE: 'A la izquierda, por su cuenta.'
+    CSSCLASSRIGHT: 'On the right, with text wrapping around.'
+    DETAILS: Detalles
+    EMAIL: 'Dirección de correo'
+    FILE: Archivo
+    FOLDER: Carpeta
+    IMAGEALT: 'Texto alternativo (alt)'
+    IMAGEALTTEXT: 'Texto alternativo (alt) - mostrado si la imagen no puede ser visualizada'
+    IMAGEALTTEXTDESC: 'Se muestra a los lectores de pantalla o si no se puede mostrar la imagen'
+    IMAGEDIMENSIONS: Dimensiones
+    IMAGEHEIGHTPX: Alto
+    IMAGETITLE: 'Texto del título (información sobre herramientas) - para obtener información adicional sobre la imagen'
+    IMAGETITLETEXT: 'Texto del título (descripción)'
+    IMAGETITLETEXTDESC: 'Para obtener información adicional acerca de la imagen'
+    IMAGEWIDTHPX: Ancho
+    INSERTMEDIA: 'Insertar medios desde'
+    LINK: 'Insertar Enlace'
+    LINKANCHOR: 'Enlace a un ancla en esta página'
+    LINKDESCR: 'Enlace de descripción'
+    LINKDETAILS: 'Enlace de los detalles'
+    LINKEMAIL: 'Enlace de una dirección de correo'
+    LINKEXTERNAL: 'Enlace hacia otro sitio web'
+    LINKFILE: 'Enlace para la descarga de un archivo'
+    LINKINTERNAL: 'Enlace hacia una página del sitio web'
+    LINKOPENNEWWIN: '¿Abrir el enlace en otra ventana?'
+    LINKTO: 'Tipo de Enlace'
+    PAGE: Página
+    SUBJECT: 'Asunto del Email'
+    URL: URL
+    URLDESCRIPTION: 'Inserte videos e imágenes de la web en su página simplemente introduciendo la URL del archivo. Asegúrese de tener los derechos o permisos antes de compartir los medios directamente desde la web. <br /> <br /> Tenga en cuenta que los archivos no se agregan al almacén de archivos del CMS, sino que incorporan el archivo desde su ubicación original, si por alguna el archivo ya no está disponible en su ubicación original ya no se podrá ver en esta página.'
+    URLNOTANOEMBEDRESOURCE: 'El enlace ''{url}'' no pudo ser convertido a un recurso multimedia.'
+    UpdateMEDIA: 'Actualizar los medios'
+  HTMLEditorField_Toolbar:
+    ERROR_ABSOLUTE: 'Only absolute urls can be embedded'
+    ERROR_HOSTNAME: 'This file hostname is not included in the whitelist'
+    ERROR_ID: 'Need either "ID" or "FileURL" parameter to identify the file'
+    ERROR_NOTFOUND: 'Unable to find file to view'
+    ERROR_OEMBED_REMOTE: 'Embed is only compatible with remote files'
+    ERROR_SCHEME: 'This file scheme is not included in the whitelist'
   Hierarchy:
     InfiniteLoopNotAllowed: 'Bucle infinito encontrado dentro de la jerarquía "{type}". Por favor, cambie el padre para resolver el problema'
   HtmlEditorField:
     ADDURL: 'Añadir URL'
-    ADJUSTDETAILSDIMENSIONS: 'Detalles &amp; dimensiones'
+    ADJUSTDETAILSDIMENSIONS: 'Detalles y dimensiones'
     ANCHORSCANNOTACCESSPAGE: 'No se le permite acceder al contenido de la página destino.'
     ANCHORSPAGENOTFOUND: 'No se encontró la página destino.'
     ANCHORVALUE: Ancla
@@ -296,6 +394,8 @@ es:
     FROMWEB: 'Desde la web'
     FindInFolder: 'Buscar en carpeta'
     IMAGEALT: 'Texto alternativo (alt)'
+    IMAGEALTTEXT: 'Texto alternativo (alt) - mostrado si la imagen no puede ser visualizada'
+    IMAGEALTTEXTDESC: 'Se muestra a los lectores de pantalla o si no se puede mostrar la imagen'
     IMAGEDIMENSIONS: Dimensiones
     IMAGEHEIGHTPX: Alto
     IMAGETITLE: 'Texto del título (tooltip) - para obtener más información acerca de la imagen'
@@ -327,18 +427,27 @@ es:
   Image_iframe_ss:
     TITLE: 'Iframe para agregar imágenes'
   LeftAndMain:
+    CANCEL: Cancelar
     CANT_REORGANISE: 'Usted no tiene permiso para modificar las páginas de nivel superior. Su modificación no se ha guardado.'
+    CollapsePanel: 'Colapsar Panel'
     DELETED: Borrado
+    DropdownBatchActionsDefault: 'Elegir una acción...'
+    ExpandPanel: 'Expandir Panel'
     HELP: Ayuda
+    MenuToggleAuto: Auto
+    MenuToggleStickyNav: 'Navegación pegajosa'
+    PAGETYPE: 'Tipo de página'
     PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
     PERMALREADY: 'Lamentablemente no puede acceder a esta parte del CMS. Si quiere entrar como alguien distinto, hágalo a continuación'
     PERMDEFAULT: 'Debes estar conectado para acceder al área de administración; por favor ingresa tus datos a continuación'
+    PLEASESAVE: 'Guarde la página por favor: Esta página no se pudo actualizar porque aún no se ha guardado'
     PreviewButton: 'Vista previa'
     REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
     SAVEDUP: Guardado
     ShowAsList: 'Mostrar como lista'
     TooManyPages: 'Muchas páginas'
     ValidationError: 'Error de validación'
+    VersionUnknown: desconocida
   LeftAndMain_Menu_ss:
     Hello: Hola
     LOGOUT: 'Finalizar la sesión'
@@ -583,3 +692,19 @@ es:
     UPLOADSINTO: 'Subir sobre'
   Versioned:
     has_many_Versions: Versiones
+  ValidationException:
+    DEFAULT_ERROR: 'Validation error'
+  Versioned:
+    INFERRED_TITLE: 'Generado por la publicación de ''{title}'' a {created}'
+    has_many_Versions: Versiones
+  VersionedGridFieldItemRequest:
+    ARCHIVE: Archivo
+    Archived: 'Archivado %s %s'
+    BUTTONARCHIVEDESC: 'Anular publicación y archivar'
+    BUTTONPUBLISH: Publicar
+    BUTTONUNPUBLISH: Anular publicación
+    BUTTONUNPUBLISHDESC: 'Eliminar este registro del sitio publicado'
+    Published: 'Publicado {name} {link}'
+    Unpublished: 'Publicación anulada %s %s'
+  i18n:
+    PLURAL: '{number} {form}'
