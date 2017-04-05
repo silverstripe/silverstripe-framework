@@ -339,10 +339,11 @@ class Image extends File implements Flushable {
 	 *
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param string  $backgroundColor The background colour to use on padded sides (default white)
 	 * @param integer $transparencyPercent Level of transparency
 	 * @return Image|null
 	 */
-	public function Pad($width, $height, $backgroundColor='FFFFFF', $transparencyPercent = 0) {
+	public function Pad($width, $height, $backgroundColor = 'FFFFFF', $transparencyPercent = 0) {
 		return $this->isSize($width, $height) && !Config::inst()->get('Image', 'force_resample')
 			? $this
 			: $this->getFormattedImage('Pad', $width, $height, $backgroundColor, $transparencyPercent);
@@ -354,12 +355,16 @@ class Image extends File implements Flushable {
 	 * @param Image_Backend $backend
 	 * @param integer $width The width to size to
 	 * @param integer $height The height to size to
+	 * @param string  $backgroundColor The background colour to use on padded sides (default white)
+	 * @param integer $transparencyPercent Level of transparency
 	 * @return Image_Backend
 	 * @deprecated 4.0 Generate methods are no longer applicable
 	 */
-	public function generatePad(Image_Backend $backend, $width, $height, $backgroundColor='FFFFFF') {
+	public function generatePad(Image_Backend $backend, $width, $height, $backgroundColor = 'FFFFFF',
+		$transparencyPercent = 0
+	) {
 		Deprecation::notice('4.0', 'Generate methods are no longer applicable');
-		return $backend->paddedResize($width, $height, $backgroundColor);
+		return $backend->paddedResize($width, $height, $backgroundColor, $transparencyPercent);
 	}
 
 	/**
