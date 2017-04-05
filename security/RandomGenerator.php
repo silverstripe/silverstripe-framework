@@ -17,6 +17,10 @@ class RandomGenerator {
 	 * @return string Returns a random series of bytes
 	 */
 	public function generateEntropy() {
+		if (function_exists('random_bytes')) {
+			return bin2hex(random_bytes(32));
+		}
+
 		$isWin = preg_match('/WIN/', PHP_OS);
 
 		// TODO Fails with "Could not gather sufficient random data" on IIS, temporarily disabled on windows

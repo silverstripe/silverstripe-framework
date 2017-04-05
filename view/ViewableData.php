@@ -93,7 +93,18 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return bool
 	 */
 	public function __isset($property) {
-		return $this->hasField($property) || ($this->failover && $this->failover->hasField($property));
+		// getField() isn't a field-specific getter and shouldn't be treated as such
+		if (strtolower($property) !== 'field' && $this->hasMethod($method = "get$property")) {
+			return true;
+
+		} elseif ($this->hasField($property)) {
+			return true;
+
+		} elseif ($this->failover) {
+			return isset($this->failover->$property);
+		}
+
+		return false;
 	}
 
 	/**
@@ -104,13 +115,17 @@ class ViewableData extends Object implements IteratorAggregate {
 	 * @return mixed
 	 */
 	public function __get($property) {
-		if($this->hasMethod($method = "get$property")) {
+		// getField() isn't a field-specific getter and shouldn't be treated as such
+		if (strtolower($property) !== 'field' && $this->hasMethod($method = "get$property")) {
 			return $this->$method();
-		} elseif($this->hasField($property)) {
+
+		} elseif ($this->hasField($property)) {
 			return $this->getField($property);
-		} elseif($this->failover) {
+
+		} elseif ($this->failover) {
 			return $this->failover->$property;
 		}
+		return null;
 	}
 
 	/**
@@ -331,7 +346,7 @@ class ViewableData extends Object implements IteratorAggregate {
 	public function escapeTypeForField($field) {
 		$class = $this->castingClass($field) ?: $this->config()->default_cast;
 
-		return Config::inst()->get($class, 'escape_type', Config::FIRST_SET);
+		return Injector::inst()->get($class, true)->config()->escape_type;
 	}
 
 	/**

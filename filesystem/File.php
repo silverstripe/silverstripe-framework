@@ -883,19 +883,28 @@ class File extends DataObject {
 	/**
 	 * Convert a php.ini value (eg: 512M) to bytes
 	 *
-	 * @param string $phpIniValue
+	 * @param string $iniValue
 	 * @return int
 	 */
-	public static function ini2bytes($PHPiniValue) {
-		switch(strtolower(substr(trim($PHPiniValue), -1))) {
+	public static function ini2bytes($iniValue) {
+		$iniValues = str_split(trim($iniValue));
+		$unit = strtolower(array_pop($iniValues));
+		$quantity = (int) implode($iniValues);
+		switch ($unit) {
 			case 'g':
-				$PHPiniValue *= 1024;
+				$quantity *= 1024;
+				// deliberate no break
 			case 'm':
-				$PHPiniValue *= 1024;
+				$quantity *= 1024;
+				// deliberate no break
 			case 'k':
-				$PHPiniValue *= 1024;
+				$quantity *= 1024;
+				// deliberate no break
+			default:
+				// no-op: pre-existing behaviour
+				break;
 		}
-		return $PHPiniValue;
+		return $quantity;
 	}
 
 	/**

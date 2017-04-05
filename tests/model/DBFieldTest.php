@@ -229,6 +229,25 @@ class DBFieldTest extends SapphireTest {
 		$this->assertEquals('åäö', DBField::create_field('Text', 'ÅÄÖ')->LowerCase());
 	}
 
+	public function testIntFloatPhp5Behaviour() {
+		if (PHP_MAJOR_VERSION < 7) {
+			// PHP 5 - Int class exists and is an instance of DBInt
+			// Can't use the reserved words for these classes or we'll get a compile error on PHP7
+			$classname = "int";
+			$obj = new $classname();
+			$this->assertInstanceOf('DBInt', $obj);
+
+			$classname = "float";
+			$obj = new $classname();
+			$this->assertInstanceOf('DBFloat', $obj);
+
+		} else {
+			// PHP 7 - classes don't exist
+			$this->assertFalse(class_exists("Int"));
+			$this->assertFalse(class_exists("Float"));
+		}
+
+	}
 }
 
 

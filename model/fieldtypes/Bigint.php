@@ -8,7 +8,7 @@
  * @subpackage model
  * @see Int
  */
-class BigInt extends Int {
+class BigInt extends DBInt {
 
 	public function requireField() {
 		$parts = array(

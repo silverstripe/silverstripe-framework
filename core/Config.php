@@ -704,8 +704,8 @@ class Config_LRU {
 
 	public function __construct() {
 		Deprecation::notice('4.0', 'Please use Config_MemCache instead', Deprecation::SCOPE_CLASS);
-		if (version_compare(PHP_VERSION, '5.3.7', '<')) {
-			// SplFixedArray causes seg faults before PHP 5.3.7
+		if (version_compare(PHP_VERSION, '5.3.7', '<') || version_compare(PHP_VERSION, '6.99.99', '>')) {
+			// SplFixedArray causes seg faults before PHP 5.3.7, and also in 7.0.0-RC1
 			$this->cache = array();
 		}
 		else {
