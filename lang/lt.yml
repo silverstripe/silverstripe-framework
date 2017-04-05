@@ -209,7 +209,6 @@ lt:
     VALIDATOR: Tikrintojas
     VALIDCURRENCY: 'Prašome suvesti teisingą valiutą'
   FormField:
-    Example: 'pvz. %s'
     NONE: nėra
   GridAction:
     DELETE_DESCRIPTION: Ištrinti

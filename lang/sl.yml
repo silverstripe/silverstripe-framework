@@ -172,7 +172,6 @@ sl:
     VALIDATOR: Preverjanje
     VALIDCURRENCY: 'Prosim, vnesite pravo valuto.'
   FormField:
-    Example: 'npr. %s'
     NONE: brez
   GridAction:
     DELETE_DESCRIPTION: Izbriši

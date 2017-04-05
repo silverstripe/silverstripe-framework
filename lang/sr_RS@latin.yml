@@ -176,7 +176,6 @@ sr_RS@latin:
     VALIDATOR: 'Proverivač ispravnosti'
     VALIDCURRENCY: 'Unesite ispravnu valutu'
   FormField:
-    Example: 'npr. %s'
     NONE: bez
   GridAction:
     DELETE_DESCRIPTION: Izbriši

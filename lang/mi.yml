@@ -176,7 +176,6 @@ mi:
     VALIDATOR: Pūwhakamana
     VALIDCURRENCY: 'Tāurua he moni tika'
   FormField:
-    Example: 'hei tauira %s'
     NONE: Kore
   GridAction:
     DELETE_DESCRIPTION: Muku

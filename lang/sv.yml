@@ -217,7 +217,6 @@ sv:
     VALIDATOR: Validator
     VALIDCURRENCY: 'Var vänlig ange en korrekt valuta'
   FormField:
-    Example: 't.ex. %s'
     NONE: ingen
   GridAction:
     DELETE_DESCRIPTION: Radera

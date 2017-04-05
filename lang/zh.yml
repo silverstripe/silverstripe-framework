@@ -199,7 +199,6 @@ zh:
     VALIDATOR: 验证器
     VALIDCURRENCY: '请输入一个有效的货币'
   FormField:
-    Example: '例如 %s'
     NONE: '无'
   GridAction:
     DELETE_DESCRIPTION: '删除'

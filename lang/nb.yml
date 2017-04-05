@@ -176,7 +176,6 @@ nb:
     VALIDATOR: Validator
     VALIDCURRENCY: 'Vennligst skriv inn gyldig valuta'
   FormField:
-    Example: 'F.eks. %s'
     NONE: ingen
   GridAction:
     DELETE_DESCRIPTION: Slett

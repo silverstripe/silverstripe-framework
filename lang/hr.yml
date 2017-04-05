@@ -37,6 +37,7 @@ hr:
     INSERTURL: 'Ubaci sa linka'
     REMOVEINFO: 'Izbrišite ovu datoteku s ovog polja'
     TOTAL: Ukupno
+    TOUPLOAD: 'Prenesi datoteke'
     UPLOADINPROGRESS: 'Molim pričekajte... upload u tijeku'
     UPLOADOR: ILI
   BBCodeParser:
@@ -44,6 +45,15 @@ hr:
     ALIGNEMENTEXAMPLE: 'desno poravnato'
     BOLD: 'Bold Text'
     BOLDEXAMPLE: Bold
+    CODE: 'Blok koda'
+    CODEDESCRIPTION: 'Neformatirani blok koda'
+    CODEEXAMPLE: 'Blok koda'
+    COLORED: 'Obojani tekst'
+    COLOREDEXAMPLE: 'plavi tekst'
+    EMAILLINK: 'Email link'
+    EMAILLINKDESCRIPTION: 'Kreiraj link za email adresu'
+    IMAGE: Slika
+    IMAGEDESCRIPTION: 'Prikaži sliku za vašu objavu'
   BackLink_Button_ss:
     Back: Nazad
   BasicAuth:

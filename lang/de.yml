@@ -229,7 +229,6 @@ de:
     VALIDATOR: Prüfer
     VALIDCURRENCY: 'Bitte geben Sie einen korrekten Betrag ein'
   FormField:
-    Example: 'z.B. %s'
     NONE: keine
   GridAction:
     DELETE_DESCRIPTION: Löschen

@@ -208,7 +208,6 @@ id_ID:
     VALIDATOR: Validasi
     VALIDCURRENCY: 'Mohon isikan mata uang yang benar'
   FormField:
-    Example: 'misalnya %s'
     NONE: 'tidak ada'
   GridAction:
     DELETE_DESCRIPTION: Hapus

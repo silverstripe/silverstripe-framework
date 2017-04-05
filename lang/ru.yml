@@ -247,7 +247,6 @@ ru:
     VALIDATOR: Валидатор
     VALIDCURRENCY: 'Пожалуйста, укажите валюту правильно'
   FormField:
-    Example: 'например, %s'
     NONE: 'не выбрано'
   GridAction:
     DELETE_DESCRIPTION: Удалить
@@ -679,9 +678,6 @@ ru:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Коды ролей доступа'
     SINGULARNAME: 'Код роли доступа'
-  SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Запомнить хэши входов'
-    SINGULARNAME: 'Запомнить хэш входа'
   SiteTree:
     TABMAIN: Основное
   TableListField:

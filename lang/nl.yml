@@ -209,7 +209,6 @@ nl:
     VALIDATOR: Validator
     VALIDCURRENCY: 'Vul een geldige munteenheid in'
   FormField:
-    Example: 'bv. %s'
     NONE: geen
   GridAction:
     DELETE_DESCRIPTION: Verwijderen

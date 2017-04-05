@@ -37,7 +37,6 @@ sk:
     INSERTURL: 'Vložiť z URL'
     REMOVEINFO: 'Odstrániť tento soubor z tohto poľa'
     TOTAL: Súhrn
-    TOUPLOAD: 'Vyberte súbory na nahratie ...'
     UPLOADINPROGRESS: 'Čakajte prosím… prebieha nahrávanie'
     UPLOADOR: ALEBO
   BBCodeParser:
@@ -218,14 +217,12 @@ sk:
     MODIFIED: Zmenené
     Mp3Type: 'MP3 audio súbor'
     MpgType: 'MPEG video súbor'
-    NOFILESIZE: 'Veľkosť súboru je nula bajtov.'
     NOVALIDUPLOAD: 'Subor nie je povolený pre nahratie'
     Name: Meno
     PLURALNAME: Súbory
     PdfType: 'Adobe Acrobat PDF súbor'
     PngType: 'PNG obrázok - vhodný univerzálny formát'
     SINGULARNAME: Súbor
-    TOOLARGE: 'Veľkosť súboru je príliš veľká, maximálna povolená veľkosť je {size}'
     TOOLARGESHORT: 'Veľkosť súboru prekračuje {size}'
     TiffType: 'Tiff formát obrázku'
     Title: Názov
@@ -256,7 +253,6 @@ sk:
     VALIDATOR: Validácia
     VALIDCURRENCY: 'Prosím zadajte platnú menu'
   FormField:
-    Example: 'napr. %s'
     NONE: žiadne
   GridAction:
     DELETE_DESCRIPTION: Zmazať
@@ -328,7 +324,6 @@ sk:
     CSSCLASSRIGHT: 'Vpravo, s obtekajúcim textom.'
     DETAILS: Podrobnosti
     EMAIL: 'Emailová adresa'
-    FILE: Súbor
     FOLDER: Priečinok
     IMAGEALT: 'Atlernatívny text (alt)'
     IMAGEALTTEXT: 'Atlernatívny text (alt) - zobrazí sa ak obrázok nemože byť zobrazený '
@@ -487,7 +482,6 @@ sk:
     PASSWORD: Heslo
     PASSWORDEXPIRED: 'Vaše heslo bolo expirované. Zvoľte nové heslo.'
     PLURALNAME: Členovia
-    REMEMBERME: 'Pamätať si ma nabudúce?'
     SINGULARNAME: Člen
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bolo zmenené'
     SUBJECTPASSWORDRESET: 'Odkaz na resetovanie hesla'
@@ -514,7 +508,6 @@ sk:
     DIGITSDECFRACTIONSECOND: 'Jedna alebo viac číslic zastupujúcich desatinný zlomok sekundy'
     FOURDIGITYEAR: 'Štvorčíslie roka'
     FULLNAMEMONTH: 'Celý názov mesiaca (napr. jún)'
-    HOURNOLEADING: 'Hodina bez úvodnej nuly'
     HOURNOLEADING24: 'Hodina bez úvodnej nuly, 24 hodinový formát'
     MINUTENOLEADING: 'Minúta bez úvodnej nuly'
     MONTHNOLEADING: 'Číslo mesiaca bez úvodnej nuly'
@@ -702,9 +695,6 @@ sk:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Kódy oprávnenia role'
     SINGULARNAME: 'Kód oprávnenia role'
-  SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Pamätať si hash-e prihlásenia'
-    SINGULARNAME: 'Pamätať si hash prihlásenia'
   SiteTree:
     TABMAIN: Hlavné
   TableListField:

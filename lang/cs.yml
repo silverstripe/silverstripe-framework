@@ -247,7 +247,6 @@ cs:
     VALIDATOR: Validátor
     VALIDCURRENCY: 'Prosím zadejte platnou měnu'
   FormField:
-    Example: 'např. %s'
     NONE: žádný
   GridAction:
     DELETE_DESCRIPTION: Smazat
@@ -467,7 +466,6 @@ cs:
     PASSWORD: Heslo
     PASSWORDEXPIRED: 'Vaše heslo expirovalo. Prosím, zvolte nové heslo.'
     PLURALNAME: Členové
-    REMEMBERME: 'Zapamatovat si mě pro příště?'
     SINGULARNAME: Člen
     SUBJECTPASSWORDCHANGED: 'Vaše heslo bylo změněno'
     SUBJECTPASSWORDRESET: 'Nulovací odkaz pro Vaše heslo'
@@ -680,9 +678,6 @@ cs:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Kódy role oprávnění'
     SINGULARNAME: 'Kód role oprávnění'
-  SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Pamatovat si Hash-e přihlášení'
-    SINGULARNAME: 'Pamatovat si Hash přihlášení'
   SiteTree:
     TABMAIN: Hlavní
   TableListField:

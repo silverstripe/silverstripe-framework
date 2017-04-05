@@ -179,7 +179,6 @@ fr:
     VALIDATOR: Validateur
     VALIDCURRENCY: 'Saisissez une monnaie valide'
   FormField:
-    Example: 'par exemple %s'
     NONE: aucun
   GridAction:
     DELETE_DESCRIPTION: Supprime

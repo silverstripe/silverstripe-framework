@@ -6,14 +6,14 @@ if (typeof(ss) === 'undefined' || typeof(ss.i18n) === 'undefined') {
   }
 } else {
   ss.i18n.addDictionary('es', {
-    "FILEIFRAMEFIELD.CONFIRMDELETE": "¿Estás seguro que quires eliminar este archivo?",
+    "FILEIFRAMEFIELD.CONFIRMDELETE": "¿Estás seguro que quieres eliminar este archivo?",
     "FILEIFRAMEFIELD.DELETEFILE": "Borrar Archivo",
     "FILEIFRAMEFIELD.DELETEIMAGE": "Borrar Imagen ",
     "FILEIFRAMEFIELD.UNATTACHFILE": "Desanexar documento",
-    "File.DRAFT": "Draft",
-    "File.MODIFIED": "Modified",
-    "File.PUBLISHED": "Published",
-    "FormField.NONE": "None",
+    "File.DRAFT": "Borrador",
+    "File.MODIFIED": "Modificado",
+    "File.PUBLISHED": "Publicado",
+    "FormField.NONE": "Ninguna",
     "GRIDFIELD.ERRORINTRANSACTION": "Ocurrió un error mientras se obtenía datos desde el servidor⏎\nPor favor intente nuevamente.",
     "HASMANYFILEFIELD.UPLOADING": "Subiendo... %s",
     "HtmlEditorField.SelectAnchor": "Selecciona un ancla",

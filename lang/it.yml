@@ -250,7 +250,6 @@ it:
     VALIDATOR: Valiidatore
     VALIDCURRENCY: 'Inserisci una valuta valida'
   FormField:
-    Example: 'es. %s'
     NONE: nessuno
   GridAction:
     DELETE_DESCRIPTION: Elimina
@@ -683,9 +682,6 @@ it:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Codici di ruolo'
     SINGULARNAME: 'Codice di ruolo'
-  SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Ricordare gli Hash di Login'
-    SINGULARNAME: 'Ricordare l''Hash di Login'
   SiteTree:
     TABMAIN: Principale
   TableListField:

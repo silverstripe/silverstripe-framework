@@ -174,7 +174,6 @@ ar:
     VALIDATOR: 'المحقق'
     VALIDCURRENCY: 'يرجى إدخال عملة صحيحة'
   FormField:
-    Example: 'على سبيل المثال %s.'
     NONE: لايوجد
   GridAction:
     DELETE_DESCRIPTION: حذف

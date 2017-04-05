@@ -176,7 +176,6 @@ pl:
     VALIDATOR: Walidator
     VALIDCURRENCY: 'Proszę podaj prawidłową walutę'
   FormField:
-    Example: 'np: % s'
     NONE: brak
   GridAction:
     DELETE_DESCRIPTION: Usuń

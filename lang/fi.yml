@@ -37,7 +37,6 @@ fi:
     INSERTURL: 'Lisää URL-osoitteesta'
     REMOVEINFO: 'Poista tämä tiedosto tästä kentästä'
     TOTAL: Yhteensä
-    TOUPLOAD: 'Valitse siirrettävät tiedostot...'
     UPLOADINPROGRESS: 'Ole hyvä ja odota... siirto käynnissä'
     UPLOADOR: TAI
   BBCodeParser:
@@ -218,14 +217,12 @@ fi:
     MODIFIED: Muokattu
     Mp3Type: MP3-äänitiedosto
     MpgType: MPEG-videotiedosto
-    NOFILESIZE: 'Tiedostokoko on nolla tavua.'
     NOVALIDUPLOAD: 'Tiedosto ei ole kelvollinen ladattavaksi'
     Name: Nimi
     PLURALNAME: Tiedostot
     PdfType: 'Adobe Acrobat PDF-tiedosto'
     PngType: 'PNG-kuva - hyvä yleinen muoto'
     SINGULARNAME: Tiedosto
-    TOOLARGE: 'Tiedostokoko on liian suuri: maks. sallittu koko on {size}'
     TOOLARGESHORT: 'Sallittu tiedostokoko {size} ylitetty '
     TiffType: TIFF-kuva
     Title: Otsikko
@@ -256,7 +253,6 @@ fi:
     VALIDATOR: Tarkistin
     VALIDCURRENCY: 'Ole hyvä ja valitse voimassa oleva valuutta'
   FormField:
-    Example: 'esim. %s'
     NONE: 'Ei yhtään'
   GridAction:
     DELETE_DESCRIPTION: Poista
@@ -328,7 +324,6 @@ fi:
     CSSCLASSRIGHT: 'Oikealla, tesktin ympätöimänä.'
     DETAILS: Tiedot
     EMAIL: Sähköposti
-    FILE: SilverStripe\Assets\File
     FOLDER: Kansio
     IMAGEALT: 'Vaihtoehtoinen teksti (alt)'
     IMAGEALTTEXT: 'Vaihtoehtoinen teksti (alt) - näytetään jos kuvaa ei voida näyttää'
@@ -487,7 +482,6 @@ fi:
     PASSWORD: Salasana
     PASSWORDEXPIRED: 'Salasanasi on vanhentunut. Ole hyvä ja valitse uusi.'
     PLURALNAME: Jäsenet
-    REMEMBERME: 'Muista minut seuraavalla kerralla?'
     SINGULARNAME: Jäsen
     SUBJECTPASSWORDCHANGED: 'Salasanasi on vaihdettu'
     SUBJECTPASSWORDRESET: 'Salasanasi palautuslinkki'
@@ -514,7 +508,6 @@ fi:
     DIGITSDECFRACTIONSECOND: 'Yksi tai useampi desimaali osoittamaan sekunnin osia'
     FOURDIGITYEAR: 'Nelinumeroinen vuosiluku'
     FULLNAMEMONTH: 'Kuukausi kirjoitettuna (esim. kesäkuu)'
-    HOURNOLEADING: 'Tunti ilman edessä olevaa nollaa'
     HOURNOLEADING24: 'Tunti ilman edessä olevaa nollaa, 24h muoto'
     MINUTENOLEADING: 'Minuutti ilman edessä olevaa nollaa'
     MONTHNOLEADING: 'Kuukausi ilman ensimmäistä nollaa (0)'
@@ -702,9 +695,6 @@ fi:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Käyttöoikeuden roolin koodit'
     SINGULARNAME: 'Käyttöoikeuden roolin koodi'
-  SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Muista kirjautumistarkisteet'
-    SINGULARNAME: 'Muista kirjautumistarkiste'
   SiteTree:
     TABMAIN: Yleiset
   TableListField:

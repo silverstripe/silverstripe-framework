@@ -176,7 +176,6 @@ sr:
     VALIDATOR: 'Проверивач исправности'
     VALIDCURRENCY: 'Унесите исправну валуту'
   FormField:
-    Example: 'нпр. %s'
     NONE: без
   GridAction:
     DELETE_DESCRIPTION: Избриши

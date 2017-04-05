@@ -243,7 +243,6 @@ fa_IR:
     VALIDATOR: اعتبارسنج
     VALIDCURRENCY: 'لطفاً یک واحد پول معتبر وارد نمایید'
   FormField:
-    Example: 'به‌طور مثال %s'
     NONE: 'هیچ‌کدام'
   GridAction:
     DELETE_DESCRIPTION: حذف

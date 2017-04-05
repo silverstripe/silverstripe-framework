@@ -37,7 +37,6 @@ eo:
     INSERTURL: 'Enigi el URL'
     REMOVEINFO: 'Forigi ĉi tiun dosieron el ĉi tiu kampo'
     TOTAL: Totalo
-    TOUPLOAD: 'Elekti dosieron alŝutotan...'
     UPLOADINPROGRESS: 'Bonvolu atendi...alŝuto daŭras'
     UPLOADOR: AŬ
   BBCodeParser:
@@ -218,14 +217,12 @@ eo:
     MODIFIED: Ŝanĝita
     Mp3Type: MP3-sondosiero
     MpgType: 'AVI-videa dosiero'
-    NOFILESIZE: 'Dosiero havas nul bajtojn'
     NOVALIDUPLOAD: 'Dosiero ne estas valida alŝutaĵo.'
     Name: Nomo
     PLURALNAME: Dosieroj
     PdfType: 'Dosiero de Adobe Acrobat PDF'
     PngType: 'PNG-bildo - ĝeneralcela formato'
     SINGULARNAME: Dosiero
-    TOOLARGE: 'Dosiero estas tro granda; maksimumo permesita estas {size}'
     TOOLARGESHORT: 'Dosiero estas pli ol {size}'
     TiffType: 'Markita bildoformato'
     Title: Titolo
@@ -256,7 +253,6 @@ eo:
     VALIDATOR: Validigilo
     VALIDCURRENCY: 'Bonvole enigu validan kurzon'
   FormField:
-    Example: 'ekz. %s'
     NONE: neniu
   GridAction:
     DELETE_DESCRIPTION: Forigi
@@ -328,7 +324,6 @@ eo:
     CSSCLASSRIGHT: 'Dekstre, kaj teksto ĉirkaŭfluas.'
     DETAILS: Detaloj
     EMAIL: 'Retpoŝta adreso'
-    FILE: SilverStripe\Assets\File
     FOLDER: Dosierujo
     IMAGEALT: 'Alternativa teksto (alt)'
     IMAGEALTTEXT: 'Alternativa teksto (alt) - vidiĝas se ne eblas vidigi bildon'
@@ -487,7 +482,6 @@ eo:
     PASSWORD: Pasvorto
     PASSWORDEXPIRED: 'Via pasvorto finiĝis. Bonvolu elekti novan.'
     PLURALNAME: Membroj
-    REMEMBERME: 'Ĉu memoru min je la sekva fojo?'
     SINGULARNAME: Membro
     SUBJECTPASSWORDCHANGED: 'Via pasvorto estas ŝanĝita'
     SUBJECTPASSWORDRESET: 'Via pasvorto reagordis ligilon'
@@ -514,7 +508,6 @@ eo:
     DIGITSDECFRACTIONSECOND: 'Almenaŭ unu cifero indikanta dekuman frakcion de sekundo'
     FOURDIGITYEAR: 'Kvarcifera jaro'
     FULLNAMEMONTH: 'Tuta nomo de monato (ekz. junio)'
-    HOURNOLEADING: 'Horo sen antaŭira nulo'
     HOURNOLEADING24: 'Horo sen antaŭira nulo, 24-hora formato'
     MINUTENOLEADING: 'Minuto sen antaŭira nulo'
     MONTHNOLEADING: 'Monato sen antaŭira nulo'
@@ -702,9 +695,6 @@ eo:
   SilverStripe\Security\PermissionRoleCode:
     PLURALNAME: 'Permesrolaj kodoj'
     SINGULARNAME: 'Permesrola kodo'
-  SilverStripe\Security\RememberLoginHash:
-    PLURALNAME: 'Memori ensalutajn haketaĵojn'
-    SINGULARNAME: 'Memori ensalutan haketaĵon'
   SiteTree:
     TABMAIN: Ĉefaj
   TableListField:
