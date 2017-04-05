@@ -102,7 +102,7 @@ To use those variables in your application code:
 	echo implode(', ', Config::inst()->get('MyClass', 'option_two'));
 	// returns 'Foo, Bar, Baz'
 
-	Config::inst()->set('MyClass', 'option_one', true);
+	Config::modify()->set('MyClass', 'option_one', true);
 
 	echo Config::inst()->get('MyClass', 'option_one');
 	// returns true
