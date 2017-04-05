@@ -27,5 +27,5 @@
     "UploadField.TOOSMALL": "Filesize is too small",
     "UploadField.UPLOADEDBYTES": "Uploaded bytes exceed file size",
     "UploadField.Uploaded": "Uploaded",
-    "UploadField.WRITEFAILED": "Failed to write file to disk",
+    "UploadField.WRITEFAILED": "Failed to write file to disk"
 }
