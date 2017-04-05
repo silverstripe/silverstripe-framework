@@ -21,7 +21,7 @@
             <% end_if %>
 			<ul class="cms-tabset-nav-primary">
 				<% loop $ManagedModelTabs %>
-				<li class="tab-$ClassName $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">
+				<li class="tab-$ClassName $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>" aria-controls="Form_EditForm">
 					<a href="$Link" class="cms-panel-link" title="$Title.ATT">$Title</a>
 				</li>
 				<% end_loop %>
