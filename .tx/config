@@ -12,9 +12,3 @@ file_filter = client/lang/src/<lang>.js
 source_file = client/lang/src/en.js
 source_lang = en
 type = KEYVALUEJSON
-
-[silverstripe-framework.master-admin-js]
-file_filter = admin/client/lang/src/<lang>.js
-source_file = admin/client/lang/src/en.js
-source_lang = en
-type = KEYVALUEJSON
