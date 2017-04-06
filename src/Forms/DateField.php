@@ -290,6 +290,12 @@ class DateField extends TextField
         return $attributes;
     }
 
+    public function getSchemaDataDefaults()
+    {
+        $defaults = parent::getSchemaDataDefaults();
+        return array_merge($defaults, [ 'lang' => i18n::convert_rfc1766($this->getLocale()) ]);
+    }
+
     public function Type()
     {
         return 'date text';
