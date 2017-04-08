@@ -863,19 +863,18 @@ class Requirements_Backend {
 				$requirements .= "$customHeadTag\n";
 			}
 
+			$replacements = array();
 			if ($this->force_js_to_bottom) {
-				// Remove all newlines from code to preserve layout
-				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+				$jsRequirements = $this->removeNewlinesFromCode($jsRequirements);
 
 				// Forcefully put the scripts at the bottom of the body instead of before the first
 				// script tag.
-				$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+				$replacements["/(<\/body[^>]*>)/i"] = $jsRequirements . "\\1";
 
 				// Put CSS at the bottom of the head
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-			} elseif($this->write_js_to_body) {
-				// Remove all newlines from code to preserve layout
-				$jsRequirements = preg_replace('/>\n*/', '>', $jsRequirements);
+				$replacements["/(<\/head>)/i"] = $requirements . "\\1";
+			} elseif ($this->write_js_to_body) {
+				$jsRequirements = $this->removeNewlinesFromCode($jsRequirements);
 
 				// If your template already has script tags in the body, then we try to put our script
 				// tags just before those. Otherwise, we put it at the bottom.
@@ -892,21 +891,36 @@ class Requirements_Backend {
 						$commentTags[1] == '-->'
 					);
 
-				if($canWriteToBody) {
-					$content = substr($content,0,$p1) . $jsRequirements . substr($content,$p1);
+				if ($canWriteToBody) {
+					$content = substr($content, 0, $p1) . $jsRequirements . substr($content, $p1);
 				} else {
-					$content = preg_replace("/(<\/body[^>]*>)/i", $jsRequirements . "\\1", $content);
+					$replacements["/(<\/body[^>]*>)/i"] = $jsRequirements . "\\1";
 				}
 
 				// Put CSS at the bottom of the head
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
+				$replacements["/(<\/head>)/i"] = $requirements . "\\1";
 			} else {
-				$content = preg_replace("/(<\/head>)/i", $requirements . "\\1", $content);
-				$content = preg_replace("/(<\/head>)/i", $jsRequirements . "\\1", $content);
+				// Put CSS and Javascript together before the closing head tag
+				$replacements["/(<\/head>)/i"] = $requirements . $jsRequirements. "\\1";
+			}
+
+			if (!empty($replacements)) {
+				// Replace everything at once (only once)
+				$content = preg_replace(array_keys($replacements), array_values($replacements), $content, 1);
 			}
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Remove all newlines from code to preserve layout
+	 *
+	 * @param  string $code
+	 * @return string
+	 */
+	protected function removeNewlinesFromCode($code) {
+		return preg_replace('/>\n*/', '>', $code);
 	}
 
 	/**
