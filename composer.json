@@ -72,7 +72,8 @@
       "thirdparty/"
   ],
   "scripts": {
-    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/ tests/php"
+    "lint": "phpcs --standard=tests/phpcs/ruleset.xml src/ tests/php",
+    "php-peg": "php thirdparty/php-peg/cli.php src/View/SSTemplateParser.peg > src/View/SSTemplateParser.php"
   },
   "minimum-stability": "dev",
   "prefer-stable": true

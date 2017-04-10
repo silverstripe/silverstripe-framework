@@ -79,6 +79,9 @@ script:
   - if [[ $BEHAT_TEST == framework ]]; then vendor/bin/behat --config tests/behat/config.yml .; fi
   - if [[ $BEHAT_TEST == cms ]]; then vendor/bin/behat @cms --config tests/behat/cms-config.yml; fi
   - if [[ $PHPCS_TEST ]]; then composer run-script lint; fi
+  - if [[ $PHPCS_TEST ]]; then composer run-script php-peg; fi
+  - if [[ $PHPCS_TEST ]]; then git diff-files --quiet -w --relative=src; fi
+  - if [[ $PHPCS_TEST ]]; then git diff -w --no-color --relative=src; fi
 
 after_success:
   - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash) -f coverage.xml; fi

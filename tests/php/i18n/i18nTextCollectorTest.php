@@ -86,6 +86,7 @@ PHP;
 <%t i18nTestModule.INJECTIONS_3 name="Cat" greeting='meow' goodbye="meow" %>
 <%t i18nTestModule.INJECTIONS_4 name=\$absoluteBaseURL greeting=\$get_locale goodbye="global calls" %>
 <%t i18nTestModule.INJECTIONS_9 "An item|{count} items" is "Test Pluralisation" count=4 %>
+<%t SilverStripe\TestModule\i18nTestModule.INJECTIONS_10 "This string is namespaced" %>
 SS;
         $c->collectFromTemplate($html, null, $mymodule);
 
@@ -104,6 +105,7 @@ SS;
                     'other' => '{count} items',
                     'comment' => 'Test Pluralisation'
                 ],
+                'SilverStripe\\TestModule\\i18nTestModule.INJECTIONS_10' => 'This string is namespaced'
             ],
             $c->collectFromTemplate($html, null, $mymodule)
         );
