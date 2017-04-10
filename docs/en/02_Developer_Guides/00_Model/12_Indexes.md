@@ -6,7 +6,8 @@ Indexes are a great way to improve performance in your application, especially a
 data model you can reduce the time taken for the framework to find and filter data objects. 
 
 The addition of an indexes should be carefully evaluated as they can also increase the cost of other operations such as 
-`UPDATE`/`INSERT` and `DELETE`. An index which has the same cardinality as the table will actually cost you performance. 
+`UPDATE`/`INSERT` and `DELETE`. An index on a column whose data is non unique will actually cost you performance.
+E.g. In most cases an index on `boolean` status flag, or `ENUM` state will not increase query performance.
 
 It's important to find the right balance to achieve fast queries using the optimal set of indexes; For SilverStripe 
 applications it's a good practice to: 
@@ -15,12 +16,12 @@ applications it's a good practice to:
 
 The SilverStripe framework already places certain indexes for you by default:
 - The primary key for each model has a `PRIMARY KEY` unique index
-- The `ClassName` column if your model is a direct decedent from `DataObject`
+- The `ClassName` column if your model inherits from `DataObject`
 - All relationships defined in the model have indexes for their `has_one` entity (for `many_many` relationships 
 this index is present on the associative entity).
 
 ## Defining an index
-Indexes are represented on a data object through the `DataObject::$indexes` array which maps index names to a 
+Indexes are represented on a `DataObject` through the `DataObject::$indexes` array which maps index names to a 
 descriptor. There are several supported notations:
 
 	:::php
@@ -40,7 +41,7 @@ descriptor. There are several supported notations:
 
 The `<column-name>` is used to put a standard non-unique index on the column specified. For complex or large tables 
 we recommend building the index to suite the requirements of your data.
- 
+
 The `<index-name>` can be an arbitrary identifier in order to allow for more than one index on a specific database 
 column. The "advanced" notation supports more `<type>` notations. These vary between database drivers, but all of them 
 support the following:
@@ -73,7 +74,7 @@ support the following:
 For complex queries it may be necessary to define a complex or composite index on the supporting object. To create a 
 composite index, define the fields in the index order as a comma separated list. 
 
-*Note* Most DBMSs only use the leftmost prefix to optimise the query, try to ensure the order of the index and your 
+*Note* Most databases only use the leftmost prefix to optimise the query, try to ensure the order of the index and your 
 query parameters are the same. e.g.
 - index (col1) - `WHERE col1 = ?`
 - index (col1, col2) = `WHERE (col1 = ? AND col2 = ?)`
