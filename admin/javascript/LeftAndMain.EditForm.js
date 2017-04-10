@@ -168,6 +168,12 @@
 				// which means the browser auto-selects the first available form button.
 				// This might be an unrelated button of the form field,
 				// or a destructive action (if "save" is not available, or not on first position).
+
+				if ($(button).is(':disabled')){
+					e.preventDefault();
+					return false;
+				}
+
 				if(button) this.closest('.cms-container').submitForm(this, button);
 				
 				return false;
