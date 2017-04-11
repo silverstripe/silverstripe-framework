@@ -390,6 +390,22 @@ It is also often useful to filter by all rows with either empty or null for a gi
 	// ... WHERE "FirstName" == '' OR "FirstName" IS NULL
 	// Returns rows with FirstName which is either empty or null
 
+### Filtering by aggregates
+
+You can use aggregate expresssions in your filters, as well.
+
+	:::php
+	// get the teams that have more than 10 players
+	$teams = Team::get()->filter('Players.Count():GreaterThan', 10);
+
+	// get the teams with at least one player who has scored 5 points
+	$teams = Team::get()->filter('Players.Min(PointsScored):GreaterThanOrEqual', 5);
+
+	// get the teams with players who are averaging more than 15 points
+	$teams = Team::get()->filter('Players.Avg(PointsScored):GreaterThan', 15);
+
+	// get the teams whose players have scored less than 300 points combined
+	$teams = Team::get()->filter('Players.Sum(PointsScored):LessThan', 300);
 
 ### filterByCallback
 
