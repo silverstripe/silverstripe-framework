@@ -13,7 +13,7 @@
         <li id="selector-{$name}-{$id}" data-id="{$id}"
             class="class-{$node.ClassName} {$markingClasses} <% if $disabled %>disabled<% end_if %>"
         >
-            <a rel="$node.ID">{$title}</a>
+            <a rel="$node.ID">{$treetitle}</a>
             $SubTree
         </li>
     <% end_loop %>
