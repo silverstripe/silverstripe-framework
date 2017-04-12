@@ -94,10 +94,10 @@ class SecurityAdmin extends LeftAndMain implements PermissionProvider {
 		);
 		$columns = $groupList->getConfig()->getComponentByType('GridFieldDataColumns');
 		$columns->setDisplayFields(array(
-			'Breadcrumbs' => singleton('Group')->fieldLabel('Title')
+			'Title' => singleton('Group')->fieldLabel('Title')
 		));
 		$columns->setFieldFormatting(array(
-			'Breadcrumbs' => function($val, $item) {
+			'Title' => function($val, $item) {
 				return Convert::raw2xml($item->getBreadcrumbs(' > '));
 			}
 		));
