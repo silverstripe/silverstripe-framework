@@ -103,6 +103,14 @@ class DatetimeField extends TextField
         return $this;
     }
 
+    public function getSchemaDataDefaults()
+    {
+        $defaults = parent::getSchemaDataDefaults();
+        return array_merge($defaults, [
+            'html5' => $this->getHTML5()
+        ]);
+    }
+
     public function Type()
     {
         return 'text datetime';
@@ -256,6 +264,9 @@ class DatetimeField extends TextField
      */
     public function setValue($value, $data = null)
     {
+        // Save raw value for later validation
+        $this->rawValue = $value;
+
         // Empty value
         if (empty($value)) {
             $this->value = null;

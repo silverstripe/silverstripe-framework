@@ -231,6 +231,14 @@ class TimeField extends TextField
         return $attributes;
     }
 
+    public function getSchemaDataDefaults()
+    {
+        $defaults = parent::getSchemaDataDefaults();
+        return array_merge($defaults, [
+            'html5' => $this->getHTML5()
+        ]);
+    }
+
     public function Type()
     {
         return 'time text';
