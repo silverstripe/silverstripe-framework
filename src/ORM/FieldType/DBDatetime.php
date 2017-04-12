@@ -37,7 +37,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
     /**
      * Standard ISO format string for date and time in CLDR standard format
      */
-    const ISO_DATETIME = 'y-MM-dd HH:mm:ss';
+    const ISO_DATETIME = 'y-MM-dd\'T\'HH:mm:ss';
 
     /**
      * Returns the standard localised date
