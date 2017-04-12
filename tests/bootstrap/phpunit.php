@@ -8,6 +8,9 @@ use SilverStripe\ORM\DB;
 require_once __DIR__ . '/../../src/Core/Core.php';
 require_once __DIR__ . '/../php/Control/FakeController.php';
 
+// Bootstrap a mock project configuration
+require __DIR__ . '/mysite.php';
+
 global $databaseConfig;
 DB::connect($databaseConfig);
 
