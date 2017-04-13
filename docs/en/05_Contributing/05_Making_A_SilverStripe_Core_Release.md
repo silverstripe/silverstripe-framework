@@ -57,8 +57,8 @@ Example `.env`:
     SS_DEFAULT_ADMIN_USERNAME="admin"
     SS_DEFAULT_ADMIN_PASSWORD="password"
     
-    # Basic CLI hostname
-    SS_HOST="localhost";
+    # Basic CLI request url default
+    SS_BASE_URL="http://localhost/"
 
 
 You will also need to be assigned the following permissions. Contact one of the SS staff from

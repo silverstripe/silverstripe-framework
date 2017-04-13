@@ -44,20 +44,12 @@ This currently only works on UNIX like systems, not on Windows.
 
 Sometimes SilverStripe needs to know the URL of your site. For example, when sending an email or generating static 
 files. When you're visiting the site in a web browser this is easy to work out, but when executing scripts on the 
-command line, it has no way of knowing. To work this out, there are several ways to resolve this. You can set alternate
-base URLs, hosts, and protocol.
+command line, it has no way of knowing.
 
-eg:
-
-```yml
-SilverStripe\Control\Director:
-  alternate_base_url: 'https://example.com/'
-```
-
-Alternatively you can use the `SS_HOST` environment variable to set a fallback hostname:
+You can use the `SS_BASE_URL` environment variable to specify this.
 
 ```
-SS_HOST="localhost"
+SS_BASE_URL="http://localhost/base-url"
 ```
 
 ### Usage

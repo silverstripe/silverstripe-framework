@@ -1,4 +1,9 @@
 <?php
+
+use Dotenv\Dotenv;
+use Dotenv\Exception\InvalidPathException;
+use SilverStripe\Control\Util\IPUtils;
+
 /**
  * This file is the Framework constants bootstrap. It will prepare some basic common constants.
  *
@@ -12,8 +17,6 @@
  *   See Director::baseFolder(). Can be overwritten by Config::inst()->update('Director', 'alternate_base_folder', ).
  * - TEMP_FOLDER: Absolute path to temporary folder, used for manifest and template caches. Example: "/var/tmp"
  *   See getTempFolder(). No trailing slash.
- * - MODULES_DIR: Not used at the moment
- * - MODULES_PATH: Not used at the moment
  * - THEMES_DIR: Path relative to webroot, e.g. "themes"
  * - THEMES_PATH: Absolute filepath, e.g. "/var/www/my-webroot/themes"
  * - FRAMEWORK_DIR: Path relative to webroot, e.g. "framework"
@@ -33,66 +36,53 @@
  * or Client-IP HTTP headers can be trusted
  */
 if (!defined('TRUSTED_PROXY')) {
-    $trusted = true; // will be false by default in a future release
-
-    if (getenv('BlockUntrustedProxyHeaders') // Legacy setting (reverted from documentation)
-        || getenv('BlockUntrustedIPs') // Documented setting
-        || getenv('SS_TRUSTED_PROXY_IPS')
-    ) {
-        $trusted = false;
-
-        if (getenv('SS_TRUSTED_PROXY_IPS') !== 'none') {
-            if (getenv('SS_TRUSTED_PROXY_IPS') === '*') {
-                $trusted = true;
-            } elseif (isset($_SERVER['REMOTE_ADDR'])) {
-                if (!class_exists('SilverStripe\\Control\\Util\\IPUtils')) {
-                    require_once 'Control/IPUtils.php';
-                };
-                $trusted = SilverStripe\Control\Util\IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', getenv('SS_TRUSTED_PROXY_IPS')));
-            }
+    define('TRUSTED_PROXY', call_user_func(function () {
+        $trustedIPs = getenv('SS_TRUSTED_PROXY_IPS');
+        if (empty($trustedIPs) || $trustedIPs === 'none') {
+            return false;
         }
-    }
-
-    /**
-     * Declare whether or not the connecting server is a trusted proxy
-     */
-    define('TRUSTED_PROXY', $trusted);
+        if ($trustedIPs === '*') {
+            return true;
+        }
+        // Validate IP address
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            return IPUtils::checkIP($_SERVER['REMOTE_ADDR'], explode(',', $trustedIPs));
+        }
+        return false;
+    }));
 }
 
 /**
  * Define system paths
  */
-// Determine BASE_PATH based on the composer autoloader
 if (!defined('BASE_PATH')) {
-    foreach (debug_backtrace() as $backtraceItem) {
-        if (preg_match('#^(.*)\/vendor/composer/autoload_real.php#', $backtraceItem['file'], $matches)) {
-            define('BASE_PATH', $matches[1]);
-            break;
+    define('BASE_PATH', call_user_func(function () {
+        // Determine BASE_PATH based on the composer autoloader
+        foreach (debug_backtrace() as $backtraceItem) {
+            if (isset($backtraceItem['file']) && preg_match(
+                '#^(?<base>.*)(/|\\\\)vendor(/|\\\\)composer(/|\\\\)autoload_real.php#',
+                $backtraceItem['file'],
+                $matches
+            )) {
+                return realpath($matches['base']) ?: DIRECTORY_SEPARATOR;
+            }
         }
-    }
-}
 
-// Determine BASE_PATH by assuming that this file is framework/src/Core/Constants.php
-if (!defined('BASE_PATH')) {
-    //  we can then determine the base path
-    $candidateBasePath = rtrim(dirname(dirname(dirname(dirname(__FILE__)))), DIRECTORY_SEPARATOR);
-    // We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
-    // This likely only happens on chrooted environemnts
-    if ($candidateBasePath == '') {
-        $candidateBasePath = DIRECTORY_SEPARATOR;
-    }
-    define('BASE_PATH', $candidateBasePath);
+        // Determine BASE_PATH by assuming that this file is framework/src/Core/Constants.php
+        //  we can then determine the base path
+        $candidateBasePath = rtrim(dirname(dirname(dirname(__DIR__))), DIRECTORY_SEPARATOR);
+        // We can't have an empty BASE_PATH.  Making it / means that double-slashes occur in places but that's benign.
+        // This likely only happens on chrooted environemnts
+        return $candidateBasePath ?: DIRECTORY_SEPARATOR;
+    }));
 }
 
 // Allow a first class env var to be set that disables .env file loading
 if (!getenv('SS_IGNORE_DOT_ENV')) {
-    foreach (array(
-                 BASE_PATH,
-                 dirname(BASE_PATH),
-             ) as $path) {
+    foreach ([ BASE_PATH, dirname(BASE_PATH) ] as $path) {
         try {
-            (new \Dotenv\Dotenv($path))->load();
-        } catch (\Dotenv\Exception\InvalidPathException $e) {
+            (new Dotenv($path))->load();
+        } catch (InvalidPathException $e) {
             // no .env found - no big deal
             continue;
         }
@@ -101,48 +91,50 @@ if (!getenv('SS_IGNORE_DOT_ENV')) {
 }
 
 if (!defined('BASE_URL')) {
-    // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
-    $path = realpath($_SERVER['SCRIPT_FILENAME']);
-    if (substr($path, 0, strlen(BASE_PATH)) == BASE_PATH) {
-        $urlSegmentToRemove = substr($path, strlen(BASE_PATH));
-        if (substr($_SERVER['SCRIPT_NAME'], -strlen($urlSegmentToRemove)) == $urlSegmentToRemove) {
-            $baseURL = substr($_SERVER['SCRIPT_NAME'], 0, -strlen($urlSegmentToRemove));
-            define('BASE_URL', rtrim($baseURL, DIRECTORY_SEPARATOR));
+    define('BASE_URL', call_user_func(function () {
+        // Determine the base URL by comparing SCRIPT_NAME to SCRIPT_FILENAME and getting common elements
+        // This tends not to work on CLI
+        $path = realpath($_SERVER['SCRIPT_FILENAME']);
+        if (substr($path, 0, strlen(BASE_PATH)) == BASE_PATH) {
+            $urlSegmentToRemove = substr($path, strlen(BASE_PATH));
+            if (substr($_SERVER['SCRIPT_NAME'], -strlen($urlSegmentToRemove)) == $urlSegmentToRemove) {
+                $baseURL = substr($_SERVER['SCRIPT_NAME'], 0, -strlen($urlSegmentToRemove));
+                // Normalise slashes to '/' and rtrim('/')
+                return rtrim(str_replace('\\', '/', $baseURL), '/');
+            }
         }
-    }
 
-    // If that didn't work, failover to the old syntax.  Hopefully this isn't necessary, and maybe
-    // if can be phased out?
-    if (!defined('BASE_URL')) {
-        $dir = (strpos($_SERVER['SCRIPT_NAME'], 'index.php') !== false)
-            ? dirname($_SERVER['SCRIPT_NAME'])
-            : dirname(dirname($_SERVER['SCRIPT_NAME']));
-        define('BASE_URL', rtrim($dir, DIRECTORY_SEPARATOR));
-    }
+        // Fall back to SS_BASE_URL
+        $base = getenv('SS_BASE_URL');
+        if ($base) {
+            // Strip relative path from SS_BASE_URL
+            return rtrim(parse_url($base, PHP_URL_PATH), '/');
+        }
+
+        // Assume no base_url
+        return '';
+    }));
 }
-define('MODULES_DIR', 'modules');
-define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
+
 define('THEMES_DIR', 'themes');
-define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
+define('THEMES_PATH', BASE_PATH . DIRECTORY_SEPARATOR . THEMES_DIR);
+
 // Relies on this being in a subdir of the framework.
 // If it isn't, or is symlinked to a folder with a different name, you must define FRAMEWORK_DIR
 
 define('FRAMEWORK_PATH', realpath(__DIR__ . '/../../'));
-if (strpos(FRAMEWORK_PATH, BASE_PATH) === 0) {
-    define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), DIRECTORY_SEPARATOR));
-    $frameworkDirSlashSuffix = FRAMEWORK_DIR ? FRAMEWORK_DIR . '/' : '';
-} else {
+if (strpos(FRAMEWORK_PATH, BASE_PATH) !== 0) {
     throw new Exception("Path error: FRAMEWORK_PATH " . FRAMEWORK_PATH . " not within BASE_PATH " . BASE_PATH);
 }
-
-define('THIRDPARTY_DIR', $frameworkDirSlashSuffix . 'thirdparty');
-define('THIRDPARTY_PATH', FRAMEWORK_PATH . '/thirdparty');
+define('FRAMEWORK_DIR', trim(substr(FRAMEWORK_PATH, strlen(BASE_PATH)), DIRECTORY_SEPARATOR));
+define('THIRDPARTY_DIR', FRAMEWORK_DIR ? (FRAMEWORK_DIR . '/thirdparty') : 'thirdparty');
+define('THIRDPARTY_PATH', FRAMEWORK_PATH . DIRECTORY_SEPARATOR . 'thirdparty');
 
 if (!defined('ASSETS_DIR')) {
     define('ASSETS_DIR', 'assets');
 }
 if (!defined('ASSETS_PATH')) {
-    define('ASSETS_PATH', BASE_PATH . '/' . ASSETS_DIR);
+    define('ASSETS_PATH', BASE_PATH . DIRECTORY_SEPARATOR . ASSETS_DIR);
 }
 
 // Custom include path - deprecated
@@ -153,7 +145,7 @@ if (defined('CUSTOM_INCLUDE_PATH')) {
 /**
  * Define the temporary folder if it wasn't defined yet
  */
-require_once 'Core/TempPath.php';
+require_once __DIR__ . '/TempPath.php';
 
 if (!defined('TEMP_FOLDER')) {
     define('TEMP_FOLDER', getTempFolder(BASE_PATH));

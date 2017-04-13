@@ -527,7 +527,13 @@ class Injector
 
         // Evaluate constants surrounded by back ticks
         if (preg_match('/^`(?<name>[^`]+)`$/', $value, $matches)) {
-            $value = defined($matches['name']) ? constant($matches['name']) : null;
+            if (getenv($matches['name']) !== false) {
+                $value = getenv($matches['name']);
+            } elseif (defined($matches['name'])) {
+                $value = constant($matches['name']);
+            } else {
+                $value = null;
+            }
         }
 
         return $value;

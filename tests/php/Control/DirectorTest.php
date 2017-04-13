@@ -191,10 +191,31 @@ class DirectorTest extends SapphireTest
             Director::absoluteURL('subfolder/test')
         );
 
+        // absolute base URLS with subdirectory - You should end them in a /
+        Director::config()->set('alternate_base_url', 'http://www.example.org/relativebase/');
+        $_SERVER['REQUEST_URI'] = "http://www.example.org/relativebase/sub-page/";
+        $this->assertEquals('/relativebase/', Director::baseURL()); // Non-absolute url
+        $this->assertEquals('http://www.example.org/relativebase/', Director::absoluteBaseURL());
+        $this->assertEquals('http://www.example.org/relativebase/sub-page/', Director::absoluteURL('', Director::REQUEST));
+        $this->assertEquals('http://www.example.org/relativebase/', Director::absoluteURL('', Director::BASE));
+        $this->assertEquals('http://www.example.org/', Director::absoluteURL('', Director::ROOT));
+        $this->assertEquals(
+            'http://www.example.org/relativebase/sub-page/subfolder/test',
+            Director::absoluteURL('subfolder/test', Director::REQUEST)
+        );
+        $this->assertEquals(
+            'http://www.example.org/subfolder/test',
+            Director::absoluteURL('subfolder/test', Director::ROOT)
+        );
+        $this->assertEquals(
+            'http://www.example.org/relativebase/subfolder/test',
+            Director::absoluteURL('subfolder/test', Director::BASE)
+        );
+
         // absolute base URLs - you should end them in a /
         Director::config()->set('alternate_base_url', 'http://www.example.org/');
         $_SERVER['REQUEST_URI'] = "http://www.example.org/sub-page/";
-        $this->assertEquals('http://www.example.org/', Director::baseURL());
+        $this->assertEquals('/', Director::baseURL()); // Non-absolute url
         $this->assertEquals('http://www.example.org/', Director::absoluteBaseURL());
         $this->assertEquals('http://www.example.org/sub-page/', Director::absoluteURL('', Director::REQUEST));
         $this->assertEquals('http://www.example.org/', Director::absoluteURL('', Director::BASE));
