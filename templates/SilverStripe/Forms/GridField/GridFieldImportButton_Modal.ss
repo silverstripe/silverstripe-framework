@@ -2,12 +2,12 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <% if $ImportModalTitle %>
-                    <h2 class="modal-title">$ImportModalTitle</h2>
-                <% end_if %>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
+                <% if $ImportModalTitle %>
+                    <h2 class="modal-title">$ImportModalTitle</h2>
+                <% end_if %>
             </div>
             <div class="modal-body">
                 <% if $ImportIframe %>
