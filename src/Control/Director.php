@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Control;
 
+use InvalidArgumentException;
 use SilverStripe\CMS\Model\SiteTree;
 use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Config\Configurable;
@@ -54,62 +55,49 @@ class Director implements TemplateGlobalProvider
     const REQUEST = 'REQUEST';
 
     /**
+     * @config
      * @var array
      */
-    static private $urlParams;
+    private static $rules = array();
 
     /**
-     * @var array
-     */
-    static private $rules = array();
-
-    /**
+     * Set current page
+     *
+     * @internal
      * @var SiteTree
      */
     private static $current_page;
 
     /**
      * @config
-     *
      * @var string
      */
     private static $alternate_base_folder;
 
     /**
-     * @config
-     *
-     * @var array
-     */
-    protected static $dev_servers = array();
-
-    /**
-     * @config
-     *
-     * @var array
-     */
-    protected static $test_servers = array();
-
-    /**
-     * Setting this explicitly specifies the protocol ("http" or "https") used, overriding the normal
-     * behaviour of Director::is_https introspecting it from the request. False values imply default
-     * introspection.
+     * Force the base_url to a specific value.
+     * If assigned, default_base_url and the value in the $_SERVER
+     * global is ignored.
+     * Supports back-ticked vars; E.g. '`SS_BASE_URL`'
      *
      * @config
-     *
-     * @var string
-     */
-    private static $alternate_protocol;
-
-    /**
-     * @config
-     *
      * @var string
      */
     private static $alternate_base_url;
 
     /**
-     * @config
+     * Base url to populate if cannot be determined otherwise.
+     * Supports back-ticked vars; E.g. '`SS_BASE_URL`'
      *
+     * @config
+     * @var string
+     */
+    private static $default_base_url = '`SS_BASE_URL`';
+
+    /**
+     * Assigned environment type
+     *
+     * @internal
      * @var string
      */
     protected static $environment_type;
@@ -279,6 +267,7 @@ class Director implements TemplateGlobalProvider
 
         // These are needed so that calling Director::test() does not muck with whoever is calling it.
         // Really, it's some inappropriate coupling and should be resolved by making less use of statics.
+        $oldReadingMode = null;
         if (class_exists(Versioned::class)) {
             $oldReadingMode = Versioned::get_reading_mode();
         }
@@ -289,11 +278,11 @@ class Director implements TemplateGlobalProvider
         }
 
         if (!$session) {
-            $session = Injector::inst()->create('SilverStripe\\Control\\Session', array());
+            $session = Session::create([]);
         }
         $cookieJar = $cookies instanceof Cookie_Backend
             ? $cookies
-            : Injector::inst()->createWithArgs('SilverStripe\\Control\\Cookie_Backend', array($cookies ?: array()));
+            : Injector::inst()->createWithArgs(Cookie_Backend::class, array($cookies ?: []));
 
         // Back up the current values of the superglobals
         $existingRequestVars = isset($_REQUEST) ? $_REQUEST : array();
@@ -301,43 +290,12 @@ class Director implements TemplateGlobalProvider
         $existingPostVars = isset($_POST) ? $_POST : array();
         $existingSessionVars = isset($_SESSION) ? $_SESSION : array();
         $existingCookies = isset($_COOKIE) ? $_COOKIE : array();
-        $existingServer     = isset($_SERVER) ? $_SERVER : array();
+        $existingServer = isset($_SERVER) ? $_SERVER : array();
 
         $existingRequirementsBackend = Requirements::backend();
 
         Cookie::config()->update('report_errors', false);
         Requirements::set_backend(Requirements_Backend::create());
-
-        // Set callback to invoke prior to return
-        $onCleanup = function () use (
-            $existingRequestVars,
-            $existingGetVars,
-            $existingPostVars,
-            $existingSessionVars,
-            $existingCookies,
-            $existingServer,
-            $existingRequirementsBackend,
-            $oldReadingMode
-        ) {
-            // Restore the super globals
-            $_REQUEST = $existingRequestVars;
-            $_GET = $existingGetVars;
-            $_POST = $existingPostVars;
-            $_SESSION = $existingSessionVars;
-            $_COOKIE = $existingCookies;
-            $_SERVER = $existingServer;
-
-            Requirements::set_backend($existingRequirementsBackend);
-
-            // These are needed so that calling Director::test() does not muck with whoever is calling it.
-            // Really, it's some inappropriate coupling and should be resolved by making less use of statics
-            if (class_exists(Versioned::class)) {
-                Versioned::set_reading_mode($oldReadingMode);
-            }
-
-            Injector::unnest(); // Restore old CookieJar, etc
-            Config::unnest();
-        };
 
         if (strpos($url, '#') !== false) {
             $url = substr($url, 0, strpos($url, '#'));
@@ -370,7 +328,7 @@ class Director implements TemplateGlobalProvider
         $_POST = (array) $postVars;
         $_SESSION = $session ? $session->inst_getAll() : array();
         $_COOKIE = $cookieJar->getAll(false);
-        Injector::inst()->registerService($cookieJar, 'SilverStripe\\Control\\Cookie_Backend');
+        Injector::inst()->registerService($cookieJar, Cookie_Backend::class);
         $_SERVER['REQUEST_URI'] = Director::baseURL() . $urlWithQuerystring;
 
         $request = new HTTPRequest($httpMethod, $url, $getVars, $postVars, $body);
@@ -380,38 +338,56 @@ class Director implements TemplateGlobalProvider
             }
         }
 
-        // Pre-request filtering
-        // @see issue #2517
-        $model = DataModel::inst();
-        $output = Injector::inst()->get('SilverStripe\\Control\\RequestProcessor')->preRequest($request, $session, $model);
-        if ($output === false) {
-            $onCleanup();
-            throw new HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
-        }
-
-        // TODO: Pass in the DataModel
-        $result = Director::handleRequest($request, $session, $model);
-
-        // Ensure that the result is an HTTPResponse object
-        if (is_string($result)) {
-            if (substr($result, 0, 9) == 'redirect:') {
-                $response = new HTTPResponse();
-                $response->redirect(substr($result, 9));
-                $result = $response;
-            } else {
-                $result = new HTTPResponse($result);
+        try {
+            // Pre-request filtering
+            $model = DataModel::inst();
+            $requestProcessor = Injector::inst()->get(RequestProcessor::class);
+            $output = $requestProcessor->preRequest($request, $session, $model);
+            if ($output === false) {
+                throw new HTTPResponse_Exception(_t('Director.INVALID_REQUEST', 'Invalid request'), 400);
             }
-        }
 
-        $output = Injector::inst()->get('SilverStripe\\Control\\RequestProcessor')->postRequest($request, $result, $model);
-        if ($output === false) {
-            $onCleanup();
-            throw new HTTPResponse_Exception("Invalid response");
-        }
+            // Process request
+            $result = Director::handleRequest($request, $session, $model);
 
-        // Return valid response
-        $onCleanup();
-        return $result;
+            // Ensure that the result is an HTTPResponse object
+            if (is_string($result)) {
+                if (substr($result, 0, 9) == 'redirect:') {
+                    $response = new HTTPResponse();
+                    $response->redirect(substr($result, 9));
+                    $result = $response;
+                } else {
+                    $result = new HTTPResponse($result);
+                }
+            }
+
+            $output = $requestProcessor->postRequest($request, $result, $model);
+            if ($output === false) {
+                throw new HTTPResponse_Exception("Invalid response");
+            }
+
+            // Return valid response
+            return $result;
+        } finally {
+            // Restore the super globals
+            $_REQUEST = $existingRequestVars;
+            $_GET = $existingGetVars;
+            $_POST = $existingPostVars;
+            $_SESSION = $existingSessionVars;
+            $_COOKIE = $existingCookies;
+            $_SERVER = $existingServer;
+
+            Requirements::set_backend($existingRequirementsBackend);
+
+            // These are needed so that calling Director::test() does not muck with whoever is calling it.
+            // Really, it's some inappropriate coupling and should be resolved by making less use of statics
+            if (class_exists(Versioned::class)) {
+                Versioned::set_reading_mode($oldReadingMode);
+            }
+
+            Injector::unnest(); // Restore old CookieJar, etc
+            Config::unnest();
+        }
     }
 
     /**
@@ -452,7 +428,6 @@ class Director implements TemplateGlobalProvider
                 } else {
                     // Find the controller name
                     $controller = $arguments['Controller'];
-                    Director::$urlParams = $arguments;
                     $controllerObj = Injector::inst()->create($controller);
                     $controllerObj->setSession($session);
 
@@ -473,16 +448,6 @@ class Director implements TemplateGlobalProvider
 
         // No URL rules matched, so return a 404 error.
         return new HTTPResponse('No URL rule was matched', 404);
-    }
-
-    /**
-     * Set url parameters (should only be called internally by RequestHandler->handleRequest()).
-     *
-     * @param array $params
-     */
-    public static function setUrlParams($params)
-    {
-        Director::$urlParams = $params;
     }
 
     /**
@@ -562,60 +527,66 @@ class Director implements TemplateGlobalProvider
     /**
      * A helper to determine the current hostname used to access the site.
      * The following are used to determine the host (in order)
-     *  - Director.alternate_host
      *  - Director.alternate_base_url (if it contains a domain name)
      *  - Trusted proxy headers
      *  - HTTP Host header
-     *  - SS_HOST env var
+     *  - SS_BASE_URL env var
      *  - SERVER_NAME
      *  - gethostname()
      *
-     * @param bool $respectConfig Set to false to ignore config override
-     * (Necessary for checking host pre-config)
      * @return string
      */
-    public static function host($respectConfig = true)
+    public static function host()
     {
-        $headerOverride = false;
-        if (TRUSTED_PROXY) {
-            $headers = (getenv('SS_TRUSTED_PROXY_HOST_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_HOST_HEADER')) : null;
-            if (!$headers) {
-                // Backwards compatible defaults
-                $headers = array('HTTP_X_FORWARDED_HOST');
+        // Check if overridden by alternate_base_url
+        if ($baseURL = self::config()->get('alternate_base_url')) {
+            $baseURL = Injector::inst()->convertServiceProperty($baseURL);
+            $host = parse_url($baseURL, PHP_URL_HOST);
+            if ($host) {
+                return $host;
             }
+        }
+
+        // Validate proxy-specific headers
+        if (TRUSTED_PROXY) {
+            // Check headers to validate
+            $headers = getenv('SS_TRUSTED_PROXY_HOST_HEADER')
+                ? explode(',', getenv('SS_TRUSTED_PROXY_HOST_HEADER'))
+                : ['HTTP_X_FORWARDED_HOST']; // Backwards compatible defaults
             foreach ($headers as $header) {
                 if (!empty($_SERVER[$header])) {
                     // Get the first host, in case there's multiple separated through commas
-                    $headerOverride = strtok($_SERVER[$header], ',');
-                    break;
+                    return strtok($_SERVER[$header], ',');
                 }
             }
         }
 
-        if ($respectConfig) {
-            if ($host = Director::config()->uninherited('alternate_host')) {
-                return $host;
-            }
-
-            if ($baseURL = Director::config()->uninherited('alternate_base_url')) {
-                if (preg_match('/^(http[^:]*:\/\/[^\/]+)(\/|$)/', $baseURL, $matches)) {
-                    return parse_url($baseURL, PHP_URL_HOST);
-                }
-            }
-        }
-
-        if ($headerOverride) {
-            return $headerOverride;
-        }
-
+        // Check given header
         if (isset($_SERVER['HTTP_HOST'])) {
             return $_SERVER['HTTP_HOST'];
         }
 
-        if ($host = getenv('SS_HOST')) {
-            return $host;
+        // Check base url
+        if ($baseURL = self::config()->uninherited('default_base_url')) {
+            $baseURL = Injector::inst()->convertServiceProperty($baseURL);
+            $host = parse_url($baseURL, PHP_URL_HOST);
+            if ($host) {
+                return $host;
+            }
         }
 
+        // Legacy ss4-alpha environment var
+        /**
+         * @todo remove at 4.0.0-beta1
+         * @deprecated 4.0.0-beta1
+         */
+        $legacyHostname = getenv('SS_HOST');
+        if ($legacyHostname) {
+            Deprecation::notice('4.0', 'SS_HOST will be removed in ss 4.0.0-beta1');
+            return $legacyHostname;
+        }
+
+        // Fail over to server_name (least reliable)
         return isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : gethostname();
     }
 
@@ -647,64 +618,73 @@ class Director implements TemplateGlobalProvider
      */
     public static function is_https()
     {
+        // Check override from alternate_base_url
+        if ($baseURL = self::config()->uninherited('alternate_base_url')) {
+            $baseURL = Injector::inst()->convertServiceProperty($baseURL);
+            $protocol = parse_url($baseURL, PHP_URL_SCHEME);
+            if ($protocol) {
+                return $protocol === 'https';
+            }
+        }
+
         // See https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
         // See https://support.microsoft.com/en-us/kb/307347
-        $headerOverride = false;
         if (TRUSTED_PROXY) {
-            $headers = (getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) ? array(getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')) : null;
-            if (!$headers) {
-                // Backwards compatible defaults
-                $headers = array('HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS');
-            }
+            $headers = getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER')
+                ? explode(',', getenv('SS_TRUSTED_PROXY_PROTOCOL_HEADER'))
+                : ['HTTP_X_FORWARDED_PROTO', 'HTTP_X_FORWARDED_PROTOCOL', 'HTTP_FRONT_END_HTTPS'];
             foreach ($headers as $header) {
                 $headerCompareVal = ($header === 'HTTP_FRONT_END_HTTPS' ? 'on' : 'https');
                 if (!empty($_SERVER[$header]) && strtolower($_SERVER[$header]) == $headerCompareVal) {
-                    $headerOverride = true;
-                    break;
+                    return true;
                 }
             }
         }
 
-        if ($protocol = Config::inst()->get('SilverStripe\\Control\\Director', 'alternate_protocol')) {
-            return ($protocol == 'https');
-        } elseif ($headerOverride) {
+        // Check common $_SERVER
+        if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
             return true;
-        } elseif ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off')) {
-            return true;
-        } elseif (isset($_SERVER['SSL'])) {
-            return true;
-        } else {
-            return false;
         }
+        if (isset($_SERVER['SSL'])) {
+            return true;
+        }
+
+        // Check default_base_url
+        if ($baseURL = self::config()->uninherited('default_base_url')) {
+            $baseURL = Injector::inst()->convertServiceProperty($baseURL);
+            $protocol = parse_url($baseURL, PHP_URL_SCHEME);
+            if ($protocol) {
+                return $protocol === 'https';
+            }
+        }
+
+        return false;
     }
 
     /**
-     * Returns the root URL for the site. It will be automatically calculated unless it is overridden
-     * with {@link setBaseURL()}.
+     * Return the root-relative url for the baseurl
      *
-     * @return string
+     * @return string Root-relative url with trailing slash.
      */
     public static function baseURL()
     {
-        $alternate = Config::inst()->get('SilverStripe\\Control\\Director', 'alternate_base_url');
-
+        // Check override base_url
+        $alternate = self::config()->get('alternate_base_url');
         if ($alternate) {
-            return $alternate;
-        } else {
-            $base = BASE_URL;
-
-            if ($base == '/' || $base == '/.' || $base == '\\') {
-                $baseURL = '/';
-            } else {
-                $baseURL = $base . '/';
-            }
-
-            if (defined('BASE_SCRIPT_URL')) {
-                return $baseURL . BASE_SCRIPT_URL;
-            }
-
-            return $baseURL;
+            $alternate = Injector::inst()->convertServiceProperty($alternate);
+            return rtrim(parse_url($alternate, PHP_URL_PATH), '/') . '/';
         }
+
+        // Get env base url
+        $baseURL = rtrim(BASE_URL, '/') . '/';
+
+        // Check if BASE_SCRIPT_URL is defined
+        // e.g. `index.php/`
+        if (defined('BASE_SCRIPT_URL')) {
+            return $baseURL . BASE_SCRIPT_URL;
+        }
+
+        return $baseURL;
     }
 
     /**
@@ -1122,11 +1102,6 @@ class Director implements TemplateGlobalProvider
      * To help with this, SilverStripe supports the notion of an environment type.  The environment
      * type can be dev, test, or live.
      *
-     * You can set it explicitly with {@link Director::set_environment_type()}. Or you can use
-     * {@link Director::$dev_servers} and {@link Director::$test_servers} to set it implicitly, based
-     * on the value of $_SERVER['HTTP_HOST'].  If the HTTP_HOST value is one of the servers listed,
-     * then the environment type will be test or dev.  Otherwise, the environment type will be live.
-     *
      * Dev mode can also be forced by putting ?isDev=1 in your URL, which will ask you to log in and
      * then push the site into dev mode for the remainder of the session. Putting ?isDev=0 onto the URL
      * can turn it back.
@@ -1145,7 +1120,7 @@ class Director implements TemplateGlobalProvider
     public static function set_environment_type($environment)
     {
         if (!in_array($environment, ['dev', 'test', 'live'])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 "Director::set_environment_type passed '$environment'.  It should be passed dev, test, or live"
             );
         }
@@ -1175,14 +1150,6 @@ class Director implements TemplateGlobalProvider
             return $env;
         }
 
-        // Check if we are running on one of the test servers
-        // Note: Bypass config for checking environment type
-        if (in_array(static::host(false), self::$dev_servers)) {
-            return 'dev';
-        }
-        if (in_array(static::host(false), self::$test_servers)) {
-            return 'test';
-        }
         return 'live';
     }
 
