@@ -22,7 +22,7 @@ abstract class Authenticator extends Object
      *
      * @var array
      */
-    private static $authenticators = array('SilverStripe\\Security\\MemberAuthenticator');
+    private static $authenticators = array(MemberAuthenticator::class);
 
     /**
      * Used to influence the order of authenticators on the login-screen
@@ -30,7 +30,7 @@ abstract class Authenticator extends Object
      *
      * @var string
      */
-    private static $default_authenticator = 'SilverStripe\\Security\\MemberAuthenticator';
+    private static $default_authenticator = MemberAuthenticator::class;
 
 
     /**
@@ -113,7 +113,7 @@ abstract class Authenticator extends Object
             return false;
         }
 
-        if (is_subclass_of($authenticator, 'SilverStripe\\Security\\Authenticator') == false) {
+        if (is_subclass_of($authenticator, self::class) == false) {
             return false;
         }
 
