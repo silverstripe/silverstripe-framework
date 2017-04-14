@@ -47,6 +47,7 @@ class MemberLoginForm extends LoginForm
      * @skipUpgrade
      * @param Controller $controller The parent controller, necessary to
      *                               create the appropriate form action tag.
+     * @param string $authenticatorClass Authenticator for this LoginForm
      * @param string $name The method on the controller that will return this
      *                     form object.
      * @param FieldList $fields All of the fields in the form - a
@@ -61,14 +62,14 @@ class MemberLoginForm extends LoginForm
      */
     public function __construct(
         $controller,
+        $authenticatorClass,
         $name,
         $fields = null,
         $actions = null,
         $checkCurrentUser = true
     ) {
 
-        // This is now set on the class directly to make it easier to create subclasses
-        // $this->authenticator_class = $authenticatorClassName;
+        $this->authenticator_class = $authenticatorClass;
 
         $customCSS = project() . '/css/member_login.css';
         if (Director::fileExists($customCSS)) {
@@ -199,5 +200,16 @@ class MemberLoginForm extends LoginForm
     protected function buildRequestHandler()
     {
         return MemberLoginHandler::create($this);
+    }
+
+    /**
+     * The name of this login form, to display in the frontend
+     * Replaces Authenticator::get_name()
+     *
+     * @return string
+     */
+    public function getAuthenticatorName()
+    {
+        return _t('MemberLoginForm.AUTHENTICATORNAME', "E-mail &amp; Password");
     }
 }

@@ -79,15 +79,6 @@ abstract class Authenticator extends Object
     }
 
 
-    /**
-     * Get the name of the authentication method
-     *
-     * @return string Returns the name of the authentication method.
-     */
-    public static function get_name()
-    {
-    }
-
     public static function register($authenticator)
     {
         self::register_authenticator($authenticator);

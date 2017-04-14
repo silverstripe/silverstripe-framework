@@ -79,4 +79,12 @@ class CMSMemberLoginForm extends LoginForm
     {
         return CMSMemberLoginHandler::create($this);
     }
+
+    /**
+     * @return string
+     */
+    public function getAuthenticatorName()
+    {
+        return _t('CMSMemberLoginForm.AUTHENTICATORNAME', 'CMS Member Login Form');
+    }
 }

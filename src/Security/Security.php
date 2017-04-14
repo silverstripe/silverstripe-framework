@@ -3,6 +3,7 @@
 namespace SilverStripe\Security;
 
 use Page;
+use LogicException;
 use SilverStripe\CMS\Controllers\ContentController;
 use SilverStripe\Control\Controller;
 use SilverStripe\Control\Director;
@@ -10,6 +11,7 @@ use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Control\Session;
 use SilverStripe\Core\ClassInfo;
+use SilverStripe\Core\Config\Config;
 use SilverStripe\Core\Convert;
 use SilverStripe\Dev\Deprecation;
 use SilverStripe\Dev\TestOnly;
@@ -360,17 +362,18 @@ class Security extends Controller implements TemplateGlobalProvider
      * Get the selected authenticator for this request
      *
      * @return string Class name of Authenticator
+     * @throws LogicException
      */
     protected function getAuthenticator()
     {
         $authenticator = $this->getRequest()->requestVar('AuthenticationMethod');
-        if ($authenticator) {
-            $authenticators = Authenticator::get_authenticators();
-            if (in_array($authenticator, $authenticators)) {
-                return $authenticator;
-            }
+        if ($authenticator && Authenticator::is_registered($authenticator)) {
+            return $authenticator;
+        } elseif ($authenticator !== "" && Authenticator::is_registered(Authenticator::get_default_authenticator())) {
+            return Authenticator::get_default_authenticator();
         }
-        return Authenticator::get_default_authenticator();
+
+        throw new LogicException('No valid authenticator found');
     }
 
     /**
@@ -694,6 +697,7 @@ class Security extends Controller implements TemplateGlobalProvider
     {
         return MemberLoginForm::create(
             $this,
+            Config::inst()->get('Authenticator', 'default_authenticator'),
             'LostPasswordForm',
             new FieldList(
                 new EmailField('Email', _t('Member.EMAIL', 'Email'))

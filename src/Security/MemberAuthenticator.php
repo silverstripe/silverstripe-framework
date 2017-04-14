@@ -202,7 +202,7 @@ class MemberAuthenticator extends Authenticator
     public static function get_login_form(Controller $controller)
     {
         /** @skipUpgrade */
-        return MemberLoginForm::create($controller, "LoginForm");
+        return MemberLoginForm::create($controller, self::class, "LoginForm");
     }
 
     public static function get_cms_login_form(Controller $controller)
@@ -215,16 +215,5 @@ class MemberAuthenticator extends Authenticator
     {
         // Don't automatically support subclasses of MemberAuthenticator
         return get_called_class() === __CLASS__;
-    }
-
-
-    /**
-     * Get the name of the authentication method
-     *
-     * @return string Returns the name of the authentication method.
-     */
-    public static function get_name()
-    {
-        return _t('MemberAuthenticator.TITLE', "E-mail &amp; Password");
     }
 }
