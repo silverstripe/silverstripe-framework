@@ -23,31 +23,13 @@ abstract class LoginForm extends Form
      * form.
      * @var string
      */
-
     protected $authenticator_class;
 
     /**
-     * Get the authenticator instance
-     *
-     * @return Authenticator Returns the authenticator instance for this login form.
+     * Return the title of the form for use in the frontend
+     * For tabs with multiple login methods, for example.
+     * This replaces the old `get_name` method
+     * @return string
      */
-    public function getAuthenticator()
-    {
-        if (!class_exists($this->authenticator_class) || !is_subclass_of($this->authenticator_class, 'SilverStripe\\Security\\Authenticator')) {
-            user_error("The form uses an invalid authenticator class! '{$this->authenticator_class}'"
-                . " is not a subclass of 'Authenticator'", E_USER_ERROR);
-            return null;
-        }
-        return Injector::inst()->get($this->authenticator_class);
-    }
-
-    /**
-     * Get the authenticator name.
-     * @return string The friendly name for use in templates, etc.
-     */
-    public function getAuthenticatorName()
-    {
-        $authClass = $this->authenticator_class;
-        return $authClass::get_name();
-    }
+    abstract public function getAuthenticatorName();
 }
