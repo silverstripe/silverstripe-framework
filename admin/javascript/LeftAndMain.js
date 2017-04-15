@@ -230,6 +230,24 @@ jQuery.noConflict();
 				}
 			},
 
+			// same as loadPanel but sets the focus on something
+			loadPanelFocus: function(url, title, data, forceReload, focus) {
+				this.loadPanel(url, title, data, forceReload);
+				var delay = (function() {
+					var timer = 0;
+					return function(callback, ms) {
+						clearTimeout(timer);
+						timer = setTimeout(callback, ms);
+					};
+				})();
+				delay(function() {
+					var temp = $(focus).val();	
+					$(focus).val('');
+					$(focus).focus();
+					$(focus).val(temp);
+				}, 1000);
+			},
+
 			/**
 			 * Nice wrapper for reloading current history state.
 			 */
@@ -831,6 +849,42 @@ jQuery.noConflict();
 		 */	
 		$('.cms-search-form').entwine({
 
+			// used by Content in the search filter to limit results based on its input
+			searchContent: function(e) {
+
+				// check if e.target is set as IE8 does not support it
+				if (e.target) {
+					var id = '#' + e.target.id;
+				} else {
+					var id = '#' + e.srcElement.id;
+				}
+				var value = $(id).val();
+				var valueLength = value.length;
+				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
+					// Use fieldValue() from jQuery.form plugin rather than jQuery.val(),
+					// as it handles checkbox values more consistently
+					var vals = $.grep($(this).fieldValue(), function(val) { return (val);});
+					return (vals.length);
+				});
+				var url = this.attr('action');
+				var delay = (function() {
+					var timer = 0;
+					return function(callback, ms) {
+						clearTimeout(timer);
+						timer = setTimeout(callback, ms);
+					};
+				})();
+				var container = this.closest('.cms-container');
+
+				delay(function() {
+					// Remove empty elements and make the URL prettier
+					if(nonEmptyInputs.length) url = $.path.addSearchParams(url, nonEmptyInputs.serialize());
+
+					container.loadPanelFocus(url, null, null, null, id);
+					return false;
+				}, 1000);
+
+			},
 			onsubmit: function() {
 				// Remove empty elements and make the URL prettier
 				var nonEmptyInputs = this.find(':input:not(:submit)').filter(function() {
