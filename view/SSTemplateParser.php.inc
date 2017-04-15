@@ -951,7 +951,7 @@ class SSTemplateParser extends Parser {
 	 
 	# This is used to remove template comments
 	 
-	Comment: "<%--" (!"--%>" /./)+ "--%>"
+	Comment: "<%--" (!"--%>" /(?s)./)+ "--%>"
 	*/
 	function Comment__construct(&$res) {
 		$res['php'] = '';

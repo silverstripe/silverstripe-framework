@@ -3943,7 +3943,7 @@ class SSTemplateParser extends Parser {
 						$result = $res_671;
 						$this->pos = $pos_671;
 					}
-					if (( $subres = $this->rx( '/./' ) ) !== FALSE) { $result["text"] .= $subres; }
+					if (( $subres = $this->rx( '/(?s)./' ) ) !== FALSE) { $result["text"] .= $subres; }
 					else { $_673 = FALSE; break; }
 					$_673 = TRUE; break;
 				}

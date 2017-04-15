@@ -58,11 +58,23 @@ class SSViewerTest extends SapphireTest {
 	public function testComments() {
 		$output = $this->render(<<<SS
 This is my template<%-- this is a comment --%>This is some content<%-- this is another comment --%>Final content
+<%-- Alone multi
+	line comment --%>
+Some more content
+Mixing content and <%-- multi
+	line comment --%> Final final 
+content
 SS
 );
+		$shouldbe = <<<SS
+This is my templateThis is some contentFinal content
+
+Some more content
+Mixing content and  Final final 
+content
+SS;
 		
-		$this->assertEquals("This is my templateThis is some contentFinal content", 
-			preg_replace("/\n?<!--.*-->\n?/U",'',$output));
+		$this->assertEquals($shouldbe, $output);
 	}
 	
 	public function testBasicText() {
