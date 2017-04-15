@@ -743,6 +743,7 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 		if($this->ctf->Can('edit') !== true) {
 			return false;
 		}
+		if(!$this->dataObj()->canEdit()) { return Security::permissionFailure(); }
 
 		$this->methodName = "edit";
 
@@ -758,7 +759,10 @@ class ComplexTableField_ItemRequest extends TableListField_ItemRequest {
 			return false;
 		}
 
-		$this->dataObj()->delete();
+		$dataObj = $this->dataObj();
+		if(!$dataObj->canDelete()) { return Security::permissionFailure(); }
+
+		$dataObj->delete();
 	}
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////
