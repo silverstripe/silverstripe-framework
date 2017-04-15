@@ -420,6 +420,35 @@ after')
 		$this->assertEquals('AD',
 			$this->render('A<% if Right == Wrong %>B<% else_if RawVal != RawVal %>C<% end_if %>D'));
 
+
+		// Less Than
+		$this->assertEquals('ABC',
+			$this->render('A<% if 1 < 2 %>B<% end_if %>C'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if 2 < 1 %>B<% else_if 1 < 2 %>C<% end_if %>D'));
+
+		// Less Than or Equal
+		$this->assertEquals('ABC',
+			$this->render('A<% if 1 <= 2 %>B<% end_if %>C'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if 2 <= 1 %>B<% else_if 1 <= 2 %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if 2 <= 1 %>B<% else_if 1 <= 1 %>C<% end_if %>D'));
+
+		// Greater Than
+		$this->assertEquals('ABC',
+			$this->render('A<% if 1 > 2 %>B<% end_if %>C'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if 2 > 1 %>B<% else_if 1 > 2 %>C<% end_if %>D'));
+
+		// Greater Than or Equal
+		$this->assertEquals('ABC',
+			$this->render('A<% if 2 >= 1 %>B<% end_if %>C'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if 1 >= 2 %>B<% else_if 2 >= 1 %>C<% end_if %>D'));
+		$this->assertEquals('ACD',
+			$this->render('A<% if 1 >= 2 %>B<% else_if 1 >= 1 %>C<% end_if %>D'));
+
 		// Bare words with ending space
 		$this->assertEquals('ABC',
 			$this->render('A<% if "RawVal" == RawVal %>B<% end_if %>C'));
