@@ -416,6 +416,16 @@ class DataObjectSet extends ViewableData implements IteratorAggregate, Countable
 			return HTTP::setGetVar($this->paginationGetVar, $this->pageStart + $this->pageLength);
 		}
 	}
+	
+	/**
+	 * Returns the URL of the next page.
+	 * @return string
+	 */
+	public function LastLink() {
+		if($this->totalSize - $this->pageLength >= 0) {
+			return HTTP::setGetVar($this->paginationGetVar, $this->totalSize - $this->pageLength);
+		}
+	}
 
 	/**
 	 * Allows us to use multiple pagination GET variables on the same page (eg. if you have search results and page comments on a single page)
