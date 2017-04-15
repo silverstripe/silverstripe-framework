@@ -301,7 +301,7 @@
 							},
 							type: "GET",
 							url: suggestionUrl,
-							data: escape(searchField.attr('name'))+'='+escape(searchField.val()), 
+							data: encodeURIComponent(searchField.attr('name')) + '=' + encodeURIComponent(searchField.val()), 
 							success: function(data) {
 								response( $.map(JSON.parse(data), function( name, id ) {
 									return { label: name, value: name, id: id };
