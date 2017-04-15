@@ -1102,14 +1102,14 @@ class Versioned extends DataExtension implements TemplateGlobalProvider {
 	 * 
 	 * @return DataObject
 	 */
-	public static function get_version($class, $id, $version) {
-		$baseClass = ClassInfo::baseDataClass($class);
-		$list = DataList::create($baseClass)
-			->where("\"$baseClass\".\"RecordID\" = $id")
-			->where("\"$baseClass\".\"Version\" = " . (int)$version);
-		$list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
-		return $list->First();
-	}
+    public static function get_version($class, $id, $version) {
+        $baseClass = ClassInfo::baseDataClass($class);
+        $list = DataList::create($class)
+            ->where("\"$baseClass\".\"RecordID\" = $id")
+            ->where("\"{$baseClass}_versions\".\"Version\" = " . (int)$version);
+        $list->dataQuery()->setQueryParam('Versioned.mode', 'all_versions');
+        return $list->First();
+    }
 
 	/**
 	 * Return a list of all versions for a given id
