@@ -15,6 +15,12 @@ class Image extends File {
 	static $casting = array(
 		'Tag' => 'HTMLText',
 	);
+	
+	public static $summary_fields = array(
+		'StripThumbnail' => 'Thumbnail',
+		'Name' => 'Name',
+		'Title' => 'Title',
+	);
 
 	/**
 	 * The width of an image thumbnail in a strip.
