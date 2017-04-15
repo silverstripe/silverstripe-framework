@@ -143,6 +143,9 @@ class RequestHandler extends ViewableData {
 							$result = $this->$action($request);
 						} catch(SS_HTTPResponse_Exception $responseException) {
 							$result = $responseException->getResponse();
+						} catch(ValidationException $e) {
+							$msgs = implode('. ', $e->getResult()->messageList());
+							return $this->httpError(403, $msgs);
 						}
 					} else {
 						return $this->httpError(403, "Action '$action' isn't allowed on class $this->class");
