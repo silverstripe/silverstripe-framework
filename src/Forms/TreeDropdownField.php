@@ -368,7 +368,7 @@ class TreeDropdownField extends FormField
                 Convert::raw2xml($self->getName()),
                 Convert::raw2xml($child->$keyField),
                 Convert::raw2xml($child->$keyField),
-                Convert::raw2xml($child->class),
+                Convert::raw2htmlclass($child->class),
                 Convert::raw2xml($child->markingClasses($self->numChildrenMethod)),
                 ($self->nodeIsDisabled($child)) ? 'disabled' : '',
                 (int)$child->ID,
