@@ -82,7 +82,7 @@ class RSSFeedTest extends SapphireTest {
 	public function setUp() {
 		parent::setUp();
 		Config::inst()->update('Director', 'alternate_base_url', '/');
-		if(!self::$original_host) self::$original_host = $_SERVER['HTTP_HOST'];
+		if(!self::$original_host) self::$original_host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
 		$_SERVER['HTTP_HOST'] = 'www.example.org';
 
 		ShortcodeParser::get('default')->register('test_shortcode', function() {
