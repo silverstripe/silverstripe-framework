@@ -2,16 +2,13 @@
 
 namespace SilverStripe\Security;
 
-use SilverStripe\Control\HTTPResponse;
-use SilverStripe\Core\Convert;
 use SilverStripe\Control\Controller;
-use SilverStripe\Control\Session;
-use SilverStripe\Forms\HiddenField;
-use SilverStripe\Forms\PasswordField;
-use SilverStripe\Forms\LiteralField;
-use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\CheckboxField;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\FormAction;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\PasswordField;
 
 /**
  * Provides the in-cms session re-authentication form for the "member" authenticator
@@ -29,12 +26,34 @@ class CMSMemberLoginForm extends LoginForm
         return Security::singleton()->Link($action);
     }
 
-    public function __construct(Controller $controller, $name)
+    /**
+     * CMSMemberLoginForm constructor.
+     * @param Controller $controller
+     * @param string $authenticatorClass
+     * @param FieldList $name
+     */
+    public function __construct(Controller $controller, $authenticatorClass, $name)
+    {
+        $this->controller = $controller;
+
+        $this->authenticator_class = $authenticatorClass;
+
+        $fields = $this->getFormFields();
+
+        $actions = $this->getFormActions();
+
+        parent::__construct($controller, $name, $fields, $actions);
+    }
+
+    /**
+     * @return FieldList
+     */
+    public function getFormFields()
     {
         // Set default fields
         $fields = new FieldList(
             HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
-            HiddenField::create('tempid', null, $controller->getRequest()->requestVar('tempid')),
+            HiddenField::create('tempid', null, $this->controller->getRequest()->requestVar('tempid')),
             PasswordField::create("Password", _t('Member.PASSWORD', 'Password')),
             LiteralField::create(
                 'forgotPassword',
@@ -53,10 +72,19 @@ class CMSMemberLoginForm extends LoginForm
             ));
         }
 
+        return $fields;
+    }
+
+    /**
+     * @return FieldList
+     */
+    public function getFormActions()
+    {
+
         // Determine returnurl to redirect to parent page
         $logoutLink = $this->getExternalLink('logout');
-        if ($returnURL = $controller->getRequest()->requestVar('BackURL')) {
-            $logoutLink = Controller::join_links($logoutLink, '?BackURL='.urlencode($returnURL));
+        if ($returnURL = $this->controller->getRequest()->requestVar('BackURL')) {
+            $logoutLink = Controller::join_links($logoutLink, '?BackURL=' . urlencode($returnURL));
         }
 
         // Make actions
@@ -72,7 +100,7 @@ class CMSMemberLoginForm extends LoginForm
             )
         );
 
-        parent::__construct($controller, $name, $fields, $actions);
+        return $actions;
     }
 
     protected function buildRequestHandler()

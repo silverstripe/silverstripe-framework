@@ -208,7 +208,7 @@ class MemberAuthenticator extends Authenticator
     public static function get_cms_login_form(Controller $controller)
     {
         /** @skipUpgrade */
-        return CMSMemberLoginForm::create($controller, "LoginForm");
+        return CMSMemberLoginForm::create($controller, self::class, "LoginForm");
     }
 
     public static function supports_cms()

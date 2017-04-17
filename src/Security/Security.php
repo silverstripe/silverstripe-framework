@@ -369,7 +369,7 @@ class Security extends Controller implements TemplateGlobalProvider
         $authenticator = $this->getRequest()->requestVar('AuthenticationMethod');
         if ($authenticator && Authenticator::is_registered($authenticator)) {
             return $authenticator;
-        } elseif ($authenticator !== "" && Authenticator::is_registered(Authenticator::get_default_authenticator())) {
+        } elseif ($authenticator !== '' && Authenticator::is_registered(Authenticator::get_default_authenticator())) {
             return Authenticator::get_default_authenticator();
         }
 
