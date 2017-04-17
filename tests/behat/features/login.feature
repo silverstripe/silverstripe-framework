@@ -1,4 +1,4 @@
-# features/login.feature
+@retry
 Feature: Log in
   As an site owner
   I want to access to the CMS to be secure

@@ -778,38 +778,55 @@ class Requirements_Backend
         // Combine files - updates $this->javascript and $this->css
         $this->processCombinedFiles();
 
+        // Script tags for js links
         foreach ($this->getJavascript() as $file => $attributes) {
-            $async = (isset($attributes['async']) && $attributes['async'] == true) ? " async" : "";
-            $defer = (isset($attributes['defer']) && $attributes['defer'] == true) ? " defer" : "";
-            $type = Convert::raw2att(isset($attributes['type']) ? $attributes['type'] : "application/javascript");
-            $path = Convert::raw2att($this->pathForFile($file));
-            if ($path) {
-                $jsRequirements .= "<script type=\"{$type}\" src=\"{$path}\"{$async}{$defer}></script>";
+            // Build html attributes
+            $htmlAttributes = [
+                'type' => isset($attributes['type']) ? $attributes['type'] : "application/javascript",
+                'src' => $this->pathForFile($file),
+            ];
+            if (!empty($attributes['async'])) {
+                $htmlAttributes['async'] = 'async';
             }
+            if (!empty($attributes['defer'])) {
+                $htmlAttributes['defer'] = 'defer';
+            }
+            $jsRequirements .= HTML::createTag('script', $htmlAttributes);
+            $jsRequirements .= "\n";
         }
 
         // Add all inline JavaScript *after* including external files they might rely on
         foreach ($this->getCustomScripts() as $script) {
-            $jsRequirements .= "<script type=\"application/javascript\">//<![CDATA[\n";
-            $jsRequirements .= "$script\n";
-            $jsRequirements .= "//]]></script>";
+            $jsRequirements .= HTML::createTag(
+                'script',
+                [ 'type' => 'application/javascript' ],
+                "//<![CDATA[\n{$script}\n//]]>"
+            );
+            $jsRequirements .= "\n";
         }
 
+        // CSS file links
         foreach ($this->getCSS() as $file => $params) {
-            $path = Convert::raw2att($this->pathForFile($file));
-            if ($path) {
-                $media = (isset($params['media']) && !empty($params['media']))
-                    ? " media=\"{$params['media']}\"" : "";
-                $requirements .= "<link rel=\"stylesheet\" type=\"text/css\" {$media} href=\"$path\" />\n";
+            $htmlAttributes = [
+                'rel' => 'stylesheet',
+                'type' => 'text/css',
+                'href' => $this->pathForFile($file),
+            ];
+            if (!empty($params['media'])) {
+                $htmlAttributes['media'] = $params['media'];
             }
+            $requirements .= HTML::createTag('link', $htmlAttributes);
+            $requirements .= "\n";
         }
 
+        // Literal custom CSS content
         foreach ($this->getCustomCSS() as $css) {
-            $requirements .= "<style type=\"text/css\">\n$css\n</style>\n";
+            $requirements .= HTML::createTag('style', ['type' => 'text/css'], "\n{$css}\n");
+            $requirements .= "\n";
         }
 
         foreach ($this->getCustomHeadTags() as $customHeadTag) {
-            $requirements .= "$customHeadTag\n";
+            $requirements .= "{$customHeadTag}\n";
         }
 
         // Inject CSS  into body
@@ -971,8 +988,8 @@ class Requirements_Backend
         $candidates = array(
             'en.js',
             'en_US.js',
-            i18n::getData()->langFromLocale(i18n::config()->default_locale) . '.js',
-            i18n::config()->default_locale . '.js',
+            i18n::getData()->langFromLocale(i18n::config()->get('default_locale')) . '.js',
+            i18n::config()->get('default_locale') . '.js',
             i18n::getData()->langFromLocale(i18n::get_locale()) . '.js',
             i18n::get_locale() . '.js',
         );

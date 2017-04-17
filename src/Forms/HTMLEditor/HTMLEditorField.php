@@ -3,11 +3,11 @@
 namespace SilverStripe\Forms\HTMLEditor;
 
 use SilverStripe\Assets\Image;
-use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DataObjectInterface;
 use Exception;
+use SilverStripe\View\Parsers\HTMLValue;
 
 /**
  * A TinyMCE-powered WYSIWYG HTML editor field with image and link insertion and tracking capabilities. Editor fields
@@ -129,7 +129,7 @@ class HTMLEditorField extends TextareaField
         }
 
         // Sanitise if requested
-        $htmlValue = Injector::inst()->create('HTMLValue', $this->Value());
+        $htmlValue = HTMLValue::create($this->Value());
         if (HTMLEditorField::config()->sanitise_server_side) {
             $santiser = HTMLEditorSanitiser::create(HTMLEditorConfig::get_active());
             $santiser->sanitise($htmlValue);

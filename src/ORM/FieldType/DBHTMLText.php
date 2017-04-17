@@ -7,6 +7,7 @@ use SilverStripe\Core\Injector\Injector;
 use SilverStripe\Control\HTTP;
 use SilverStripe\Forms\TextField;
 use SilverStripe\Forms\HTMLEditor\HTMLEditorField;
+use SilverStripe\View\Parsers\HTMLValue;
 use SilverStripe\View\Parsers\ShortcodeParser;
 
 /**
@@ -177,7 +178,7 @@ class DBHTMLText extends DBText
     public function whitelistContent($value)
     {
         if ($this->whitelist) {
-            $dom = Injector::inst()->create('HTMLValue', $value);
+            $dom = HTMLValue::create($value);
 
             $query = array();
             $textFilter = ' | //body/text()';
