@@ -2,12 +2,13 @@
 
 namespace SilverStripe\Forms;
 
+use SilverStripe\Assets\Folder;
 use SilverStripe\Control\HTTPRequest;
+use SilverStripe\Control\HTTPResponse;
 use SilverStripe\Core\Convert;
-use SilverStripe\Core\Config\Config;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\Hierarchy\Hierarchy;
-use SilverStripe\View\Requirements;
+use SilverStripe\ORM\Hierarchy\MarkedSet;
 use SilverStripe\View\ViewableData;
 use Exception;
 use InvalidArgumentException;
@@ -54,7 +55,6 @@ use InvalidArgumentException;
  */
 class TreeDropdownField extends FormField
 {
-
     private static $url_handlers = array(
         '$Action!/$ID' => '$Action'
     );
@@ -64,24 +64,98 @@ class TreeDropdownField extends FormField
     );
 
     /**
-     * @ignore
+     * Class name for underlying object
+     *
+     * @var string
      */
-    protected $sourceObject, $keyField, $labelField, $filterCallback,
-        $disableCallback, $searchCallback, $baseID = 0;
+    protected $sourceObject = null;
+
     /**
-     * @var string default child method in Hierarchy->getChildrenAsUL
+     * Name of key field on underlying object
+     *
+     * @var string
+     */
+    protected $keyField = null;
+
+    /**
+     * Name of lavel field on underlying object
+     *
+     * @var string
+     */
+    protected $labelField = null;
+
+    /**
+     * Callback for filtering records
+     *
+     * @var callable
+     */
+    protected $filterCallback = null;
+
+    /**
+     * Callback for marking record as disabled
+     *
+     * @var callable
+     */
+    protected $disableCallback = null;
+
+    /**
+     * Callback for searching records. This callback takes the following arguments:
+     *  - sourceObject Object class to search
+     *  - labelField Label field
+     *  - search Search text
+     *
+     * @var callable
+     */
+    protected $searchCallback = null;
+
+    /**
+     * Filter for base record
+     *
+     * @var int
+     */
+    protected $baseID = 0;
+
+    /**
+     * Default child method in Hierarchy->getChildrenAsUL
+     *
+     * @var string
      */
     protected $childrenMethod = 'AllChildrenIncludingDeleted';
 
     /**
-     * @var string default child counting method in Hierarchy->getChildrenAsUL
+     * Default child counting method in Hierarchy->getChildrenAsUL
+     *
+     * @var string
      */
     protected $numChildrenMethod = 'numChildren';
 
     /**
-     * Used by field search to leave only the relevant entries
+     * Current string value for search text to filter on
+     *
+     * @var string
      */
-    protected $searchIds = null, $showSearch, $searchExpanded = array();
+    protected $search = null;
+
+    /**
+     * List of ids in current search result (keys are ids, values are true)
+     *
+     * @var array
+     */
+    protected $searchIds = [];
+
+    /**
+     * Determine if search should be shown
+     *
+     * @var bool
+     */
+    protected $showSearch = false;
+
+    /**
+     * List of ids which have their search expanded (keys are ids, values are true)
+     *
+     * @var array
+     */
+    protected $searchExpanded = [];
 
     /**
      * CAVEAT: for search to work properly $labelField must be a database field,
@@ -89,16 +163,7 @@ class TreeDropdownField extends FormField
      *
      * @param string $name the field name
      * @param string $title the field label
-     * @param string|array $sourceObject The object-type to list in the tree. This could
-     * be one of the following:
-     * - A DataObject class name with the {@link Hierarchy} extension.
-     * - An array of key/value pairs, like a {@link DropdownField} source. In
-     *   this case, the field will act like show a flat list of tree items,
-     *   without any hierarchy. This is most useful in conjunction with
-     *   {@link TreeMultiselectField}, for presenting a set of checkboxes in
-     *   a compact view. Note, that all value strings must be XML encoded
-     *   safely prior to being passed in.
-     *
+     * @param string $sourceObject A DataObject class name with the {@link Hierarchy} extension.
      * @param string $keyField to field on the source class to save as the
      *      field value (default ID).
      * @param string $labelField the field name to show as the human-readable
@@ -109,19 +174,24 @@ class TreeDropdownField extends FormField
     public function __construct(
         $name,
         $title = null,
-        $sourceObject = 'SilverStripe\\Security\\Group',
+        $sourceObject = null,
         $keyField = 'ID',
         $labelField = 'TreeTitle',
         $showSearch = true
     ) {
-
+        if (!is_a($sourceObject, DataObject::class, true)) {
+            throw new InvalidArgumentException("SourceObject must be a DataObject subclass");
+        }
+        if (!DataObject::has_extension($sourceObject, Hierarchy::class)) {
+            throw new InvalidArgumentException("SourceObject must have Hierarchy extension");
+        }
         $this->sourceObject = $sourceObject;
         $this->keyField     = $keyField;
         $this->labelField   = $labelField;
         $this->showSearch   = $showSearch;
 
-        //Extra settings for Folders
-        if ($sourceObject == 'SilverStripe\\Assets\\Folder') {
+        // Extra settings for Folders
+        if (strcasecmp($sourceObject, Folder::class) === 0) {
             $this->childrenMethod = 'ChildFolders';
             $this->numChildrenMethod = 'numChildFolders';
         }
@@ -194,6 +264,11 @@ class TreeDropdownField extends FormField
         return $this;
     }
 
+    /**
+     * Check if search is shown
+     *
+     * @return bool
+     */
     public function getShowSearch()
     {
         return $this->showSearch;
@@ -285,21 +360,11 @@ class TreeDropdownField extends FormField
      * Get the whole tree of a part of the tree via an AJAX request.
      *
      * @param HTTPRequest $request
-     * @return string
+     * @return HTTPResponse
      * @throws Exception
      */
     public function tree(HTTPRequest $request)
     {
-        // Array sourceObject is an explicit list of values - construct a "flat tree"
-        if (is_array($this->sourceObject)) {
-            $output = "<ul class=\"tree\">\n";
-            foreach ($this->sourceObject as $k => $v) {
-                $output .= '<li id="selector-' . $this->name . '-' . $k  . '"><a>' . $v . '</a>';
-            }
-            $output .= "</ul>";
-            return $output;
-        }
-
         // Regular source specification
         $isSubTree = false;
 
@@ -333,97 +398,61 @@ class TreeDropdownField extends FormField
             $this->populateIDs();
         }
 
+        // Create marking set
+        $markingSet = MarkedSet::create($obj, $this->childrenMethod, $this->numChildrenMethod, 30);
+
+        // Set filter on searched nodes
         if ($this->filterCallback || $this->search) {
-            $obj->setMarkingFilterFunction(array($this, "filterMarking"));
+            // Rely on filtering to limit tree
+            $markingSet->setMarkingFilterFunction(function ($node) {
+                return $this->filterMarking($node);
+            });
+            $markingSet->setLimitingEnabled(false);
         }
-        $obj->markPartialTree(
-            $nodeCountThreshold = 30,
-            $context = null,
-            $this->childrenMethod,
-            $this->numChildrenMethod
-        );
 
-        // allow to pass values to be selected within the ajax request
-        if (isset($_REQUEST['forceValue']) || $this->value) {
-            $forceValue = ( isset($_REQUEST['forceValue']) ? $_REQUEST['forceValue'] : $this->value);
-            $values = preg_split('/,\s*/', $forceValue);
-            if ($values) {
-                foreach ($values as $value) {
-                    if (!$value || $value == 'unchanged') {
-                        continue;
-                    }
+        // Begin marking
+        $markingSet->markPartialTree();
 
-                    $obj->markToExpose($this->objectForKey($value));
+        // Allow to pass values to be selected within the ajax request
+        $value = $request->requestVar('forceValue') ?: $this->value;
+        if ($value && ($values = preg_split('/,\s*/', $value))) {
+            foreach ($values as $value) {
+                if (!$value || $value == 'unchanged') {
+                    continue;
                 }
+
+                $markingSet->markToExpose($this->objectForKey($value));
             }
         }
 
-        $self = $this;
-        $titleFn = function (&$child) use (&$self) {
-            /** @var DataObject|Hierarchy $child */
-            $keyField = $self->keyField;
-            $labelField = $self->labelField;
-            return sprintf(
-                '<li id="selector-%s-%s" data-id="%s" class="class-%s %s %s"><a rel="%d">%s</a>',
-                Convert::raw2xml($self->getName()),
-                Convert::raw2xml($child->$keyField),
-                Convert::raw2xml($child->$keyField),
-                Convert::raw2xml($child->class),
-                Convert::raw2xml($child->markingClasses($self->numChildrenMethod)),
-                ($self->nodeIsDisabled($child)) ? 'disabled' : '',
-                (int)$child->ID,
-                $child->obj($labelField)->forTemplate()
-            );
+        // Set title formatter
+        $customised = function (DataObject $child) use ($isSubTree) {
+            return [
+                'name' => $this->getName(),
+                'id' => $child->obj($this->keyField),
+                'title' => $child->obj($this->labelField),
+                'disabled' => $this->nodeIsDisabled($child),
+                'isSubTree' => $isSubTree
+            ];
         };
 
-        // Limit the amount of nodes shown for performance reasons.
-        // Skip the check if we're filtering the tree, since its not clear how many children will
-        // match the filter criteria until they're queried (and matched up with previously marked nodes).
-        $nodeThresholdLeaf = Config::inst()->get('SilverStripe\\ORM\\Hierarchy\\Hierarchy', 'node_threshold_leaf');
-        if ($nodeThresholdLeaf && !$this->filterCallback && !$this->search) {
-            $className = $this->sourceObject;
-            $nodeCountCallback = function ($parent, $numChildren) use ($className, $nodeThresholdLeaf) {
-                if ($className === 'SilverStripe\\CMS\\Model\\SiteTree'
-                    && $parent->ID
-                    && $numChildren > $nodeThresholdLeaf
-                ) {
-                    return sprintf(
-                        '<ul><li><span class="item">%s</span></li></ul>',
-                        _t('LeftAndMain.TooManyPages', 'Too many pages')
-                    );
-                }
-                return null;
-            };
+        // Determine output format
+        if ($request->requestVar('format') === 'json') {
+            // Format JSON output
+            $json = $markingSet
+                ->getChildrenAsArray($customised);
+            return HTTPResponse::create()
+                ->addHeader('Content-Type', 'application/json')
+                ->setBody(json_encode($json));
         } else {
-            $nodeCountCallback = null;
-        }
-
-        if ($isSubTree) {
-            $html = $obj->getChildrenAsUL(
-                "",
-                $titleFn,
-                null,
-                true,
-                $this->childrenMethod,
-                $this->numChildrenMethod,
-                true, // root call
-                null,
-                $nodeCountCallback
+            // Return basic html
+            $html = $markingSet->renderChildren(
+                [self::class . '_HTML', 'type' => 'Includes'],
+                $customised
             );
-            return substr(trim($html), 4, -5);
-        } else {
-            $html = $obj->getChildrenAsUL(
-                'class="tree"',
-                $titleFn,
-                null,
-                true,
-                $this->childrenMethod,
-                $this->numChildrenMethod,
-                true, // root call
-                null,
-                $nodeCountCallback
-            );
-            return $html;
+            return HTTPResponse::create()
+                ->addHeader('Content-Type', 'text/html')
+                ->setBody($html);
         }
     }
 
@@ -432,7 +461,7 @@ class TreeDropdownField extends FormField
      * If a filter function has been set, that will be called. And if search text is set,
      * filter on that too. Return true if all applicable conditions are true, false otherwise.
      *
-     * @param mixed $node
+     * @param DataObject $node
      * @return bool
      */
     public function filterMarking($node)
@@ -440,7 +469,8 @@ class TreeDropdownField extends FormField
         if ($this->filterCallback && !call_user_func($this->filterCallback, $node)) {
             return false;
         }
-        if ($this->search != "") {
+
+        if ($this->search) {
             return isset($this->searchIds[$node->ID]) && $this->searchIds[$node->ID] ? true : false;
         }
 
@@ -591,11 +621,10 @@ class TreeDropdownField extends FormField
     public function performReadonlyTransformation()
     {
         /** @var TreeDropdownField_Readonly $copy */
-        $copy = $this->castedCopy('SilverStripe\\Forms\\TreeDropdownField_Readonly');
+        $copy = $this->castedCopy(TreeDropdownField_Readonly::class);
         $copy->setKeyField($this->keyField);
         $copy->setLabelField($this->labelField);
         $copy->setSourceObject($this->sourceObject);
-
         return $copy;
     }
 }
