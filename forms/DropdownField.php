@@ -348,7 +348,7 @@ class DropdownField extends FormField {
 		$source = $this->getSourceAsArray();
 		$disabled = $this->getDisabledItems();
 
-		if (!array_key_exists($this->value, $source) || in_array($this->value, $disabled)) {
+		if (empty($this->value) || !array_key_exists($this->value, $source) || in_array($this->value, $disabled)) {
 			if ($this->getHasEmptyDefault() && !$this->value) {
 				return true;
 			}
@@ -357,7 +357,7 @@ class DropdownField extends FormField {
 				_t(
 					'DropdownField.SOURCE_VALIDATION',
 					"Please select a value within the list provided. {value} is not a valid option",
-					array('value' => $this->value)
+					array('value' => $this->value?:'')
 				),
 				"validation"
 			);
