@@ -3048,7 +3048,11 @@ class DataObject extends ViewableData implements DataObjectInterface, i18nEntity
 				}
 			}
 
-			$object = $component->dbObject($fieldName);
+			if (is_object($component)){
+				$object = $component->dbObject($fieldName);
+			}else{
+				user_error('component is not an object on field '.$fieldName, E_USER_WARNING);
+			}
 
 		} else {
 			$object = $this->dbObject($fieldPath);
