@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Security\Tests;
 
+use PhpConsole\Auth;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBDatetime;
 use SilverStripe\ORM\FieldType\DBClassName;
@@ -50,24 +51,22 @@ class SecurityTest extends FunctionalTest
         // This test assumes that MemberAuthenticator is present and the default
         $this->priorAuthenticators = Authenticator::get_authenticators();
         $this->priorDefaultAuthenticator = Authenticator::get_default_authenticator();
-        foreach ($this->priorAuthenticators as $authenticator) {
-            Authenticator::unregister($authenticator);
-        }
 
-        Authenticator::register(MemberAuthenticator::class);
-        Authenticator::set_default_authenticator(MemberAuthenticator::class);
+        // Set to an empty array of authenticators to enable the default
+        Config::modify()->set(Authenticator::class, 'authenticators', []);
+        Config::modify()->set(Authenticator::class, 'default_authenticator', MemberAuthenticator::class);
 
         // And that the unique identified field is 'Email'
         $this->priorUniqueIdentifierField = Member::config()->unique_identifier_field;
         $this->priorRememberUsername = Security::config()->remember_username;
         /**
- * @skipUpgrade
-*/
+         * @skipUpgrade
+         */
         Member::config()->unique_identifier_field = 'Email';
 
         parent::setUp();
 
-        Config::inst()->update('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
+        Config::modify()->merge('SilverStripe\\Control\\Director', 'alternate_base_url', '/');
     }
 
     protected function tearDown()
@@ -75,13 +74,8 @@ class SecurityTest extends FunctionalTest
         // Restore selected authenticator
 
         // MemberAuthenticator might not actually be present
-        if (!in_array(MemberAuthenticator::class, $this->priorAuthenticators)) {
-            Authenticator::unregister(MemberAuthenticator::class);
-        }
-        foreach ($this->priorAuthenticators as $authenticator) {
-            Authenticator::register($authenticator);
-        }
-        Authenticator::set_default_authenticator($this->priorDefaultAuthenticator);
+        Config::modify()->set(Authenticator::class, 'authenticators', $this->priorAuthenticators);
+        Config::modify()->set(Authenticator::class, 'default_authenticator', $this->priorDefaultAuthenticator);
 
         // Restore unique identifier field
         Member::config()->unique_identifier_field = $this->priorUniqueIdentifierField;
@@ -129,8 +123,8 @@ class SecurityTest extends FunctionalTest
             'Default permission failure message value was not present'
         );
 
-        Config::inst()->remove(Security::class, 'default_message_set');
-        Config::inst()->update(Security::class, 'default_message_set', array('default' => 'arrayvalue'));
+        Config::modify()->remove(Security::class, 'default_message_set');
+        Config::modify()->merge(Security::class, 'default_message_set', array('default' => 'arrayvalue'));
         Security::permissionFailure($controller);
         $this->assertEquals(
             'arrayvalue',

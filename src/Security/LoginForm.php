@@ -3,6 +3,7 @@
 namespace SilverStripe\Security;
 
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\FieldList;
 use SilverStripe\Forms\Form;
 
 /**
@@ -32,4 +33,18 @@ abstract class LoginForm extends Form
      * @return string
      */
     abstract public function getAuthenticatorName();
+
+    /**
+     * Required FieldList creation on a LoginForm
+     *
+     * @return FieldList
+     */
+    abstract protected function getFormFields();
+
+    /**
+     * Required FieldList creation for the login actions on this LoginForm
+     *
+     * @return FieldList
+     */
+    abstract protected function getFormActions();
 }

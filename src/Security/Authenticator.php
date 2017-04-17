@@ -4,6 +4,7 @@ namespace SilverStripe\Security;
 
 use SilverStripe\Core\Object;
 use SilverStripe\Control\Controller;
+use SilverStripe\Dev\Deprecation;
 use SilverStripe\Forms\Form;
 
 /**
@@ -22,7 +23,7 @@ abstract class Authenticator extends Object
      *
      * @var array
      */
-    private static $authenticators = array(MemberAuthenticator::class);
+    private static $authenticators = [];
 
     /**
      * Used to influence the order of authenticators on the login-screen
@@ -77,69 +78,7 @@ abstract class Authenticator extends Object
     {
         return false;
     }
-
-
-    public static function register($authenticator)
-    {
-        self::register_authenticator($authenticator);
-    }
-
-
-    /**
-     * Register a new authenticator
-     *
-     * The new authenticator has to exist and to be derived from the
-     * {@link Authenticator}.
-     * Every authenticator can be registered only once.
-     *
-     * @param string $authenticator Name of the authenticator class to
-     *                              register
-     * @return bool Returns TRUE on success, FALSE otherwise.
-     */
-    public static function register_authenticator($authenticator)
-    {
-        $authenticator = trim($authenticator);
-
-        if (class_exists($authenticator) == false) {
-            return false;
-        }
-
-        if (is_subclass_of($authenticator, self::class) == false) {
-            return false;
-        }
-
-        if (in_array($authenticator, self::$authenticators) == false) {
-            if (call_user_func(array($authenticator, 'on_register')) === true) {
-                array_push(self::$authenticators, $authenticator);
-            } else {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static function unregister($authenticator)
-    {
-        self::unregister_authenticator($authenticator);
-    }
-
-    /**
-     * Remove a previously registered authenticator
-     *
-     * @param string $authenticator Name of the authenticator class to register
-     * @return bool Returns TRUE on success, FALSE otherwise.
-     */
-    public static function unregister_authenticator($authenticator)
-    {
-        if (call_user_func(array($authenticator, 'on_unregister')) === true) {
-            if (in_array($authenticator, self::$authenticators)) {
-                unset(self::$authenticators[array_search($authenticator, self::$authenticators)]);
-            }
-        }
-    }
-
-
+    
     /**
      * Check if a given authenticator is registered
      *
@@ -149,7 +88,12 @@ abstract class Authenticator extends Object
      */
     public static function is_registered($authenticator)
     {
-        return in_array($authenticator, self::$authenticators);
+        $authenticators = self::config()->get('authenticators');
+        if (count($authenticators) === 0) {
+            $authenticators = [self::config()->get('default_authenticator')];
+        }
+
+        return in_array($authenticator, $authenticators, true);
     }
 
 
@@ -161,23 +105,20 @@ abstract class Authenticator extends Object
      */
     public static function get_authenticators()
     {
+        $authenticators = self::config()->get('authenticators');
+        $default = self::config()->get('default_authenticator');
+
+        if (count($authenticators) === 0) {
+            $authenticators = [$default];
+        }
         // put default authenticator first (mainly for tab-order on loginform)
-        if ($key = array_search(self::$default_authenticator, self::$authenticators)) {
-            unset(self::$authenticators[$key]);
-            array_unshift(self::$authenticators, self::$default_authenticator);
+        // But only if there's no other authenticator
+        if (($key = array_search($default, $authenticators, true)) && count($authenticators) > 1) {
+            unset($authenticators[$key]);
+            array_unshift($authenticators, $default);
         }
 
-        return self::$authenticators;
-    }
-
-    /**
-     * Set a default authenticator (shows first in tabs)
-     *
-     * @param string
-     */
-    public static function set_default_authenticator($authenticator)
-    {
-        self::$default_authenticator = $authenticator;
+        return $authenticators;
     }
 
     /**
@@ -185,33 +126,6 @@ abstract class Authenticator extends Object
      */
     public static function get_default_authenticator()
     {
-        return self::$default_authenticator;
-    }
-
-
-    /**
-     * Callback function that is called when the authenticator is registered
-     *
-     * Use this method for initialization of a newly registered authenticator.
-     * Just overload this method and it will be called when the authenticator
-     * is registered.
-     * <b>If the method returns FALSE, the authenticator won't be
-     * registered!</b>
-     *
-     * @return bool Returns TRUE on success, FALSE otherwise.
-     */
-    protected static function on_register()
-    {
-        return true;
-    }
-
-    /**
-     * Callback function that is called when an authenticator is removed.
-     *
-     * @return bool
-     */
-    protected static function on_unregister()
-    {
-        return true;
+        return self::config()->get('default_authenticator');
     }
 }
