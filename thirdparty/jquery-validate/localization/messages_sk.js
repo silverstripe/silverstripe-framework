@@ -14,7 +14,7 @@ jQuery.extend(jQuery.validator.messages, {
 	digits: "Môže obsahovať iba číslice.",
 	equalTo: "Dva hodnoty sa musia rovnať.",
 	range: jQuery.validator.format("Musí byť medzi {0} a {1}."),
-	max: jQuery.validator.format("Nemôže byť viac ako{0}."),
-	min: jQuery.validator.format("Nemôže byť menej ako{0}."),
+	max: jQuery.validator.format("Nemôže byť viac ako {0}."),
+	min: jQuery.validator.format("Nemôže byť menej ako {0}."),
 	creditcard: "Číslo platobnej karty musí byť platné."
 });
