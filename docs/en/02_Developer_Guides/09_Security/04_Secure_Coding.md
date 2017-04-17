@@ -426,8 +426,6 @@ Note that there is also a 'SilverStripe' way of casting fields on a class, this 
 standard PHP way. See [casting](/developer_guides/model/data_types_and_casting).
 
 
-
-
 ## Filesystem
 
 ### Don't script-execution in /assets
@@ -585,6 +583,88 @@ In a future release this behaviour will be changed to be on by default, and this
 variable will be no longer necessary, thus it will be necessary to always set
 `SS_TRUSTED_PROXY_IPS` if using a proxy.
 
+## Secure Sessions, Cookies and TLS (HTTPS)
+
+SilverStripe recommends the use of TLS(HTTPS) for your application, and you can easily force the use through the 
+director function `forceSSL()` 
+	
+	:::php
+
+	if (!Director::isDev()) {
+		Director::forceSSL();
+	}
+
+Forcing HTTPS so requires a certificate to be purchased or obtained through a vendor such as 
+[lets encrypt](https://letsencrypt.org/) and configured on your web server.
+
+We also want to ensure cookies are not shared between secure and non-secure sessions, so we must tell SilverStripe to 
+use a [secure session](https://docs.silverstripe.org/en/3/developer_guides/cookies_and_sessions/sessions/#secure-session-cookie). 
+To do this, you may set the `cookie_secure` parameter to `true` in your `config.yml` for `Session`
+	
+	:::yml
+	Session:
+  	  cookie_secure: true
+
+For other cookies set by your application we should also ensure the users are provided with secure cookies by setting 
+the "Secure" and "HTTPOnly" flags. These flags prevent them from being stolen by an attacker through javascript. 
+
+ - The `Secure` cookie flag instructs the browser not to send the cookie over an insecure HTTP connection. If this 
+flag is not present, the browser will send the cookie even if HTTPS is not in use, which means it is transmitted in 
+clear text and can be intercepted and stolen by an attacker who is listening on the network.
+
+- The `HTTPOnly` flag lets the browser know whether or not a cookie should be accessible by client-side JavaScript 
+code. It is best practice to set this flag unless the application is known to use JavaScript to access these cookies 
+as this prevents an attacker who achieves cross-site scripting from accessing these cookies.
+
+
+	:::php
+	
+	Cookie::set('cookie-name', 'chocolate-chip', $expiry = 30, $path = null, $domain = null, $secure = true, 
+		$httpOnly = false
+	);
+
+## Security Headers
+
+In addition to forcing HTTPS browsers can support additional security headers which can only allow access to a website 
+via a secure connection. As browsers increasingly provide negative feedback regarding unencrypted HTTP connections, 
+ensuring an HTTPS connection will provide a better and more secure user experience.  
+
+- The `Strict-Transport-Security` header instructs the browser to record that the website and assets on that website 
+MUST use a secure connection. This prevents websites from becoming insecure in the future from stray absolute links 
+or references without https from external sites. Check if your browser supports [HSTS](https://hsts.badssl.com/)
+  - `max-age` can be configured to anything in seconds: `max-age=31536000` (1 year), for roll out, consider something 
+  lower
+  - `includeSubDomains` to ensure all present and future sub domains will also be HTTPS
+
+For sensitive pages, such as members areas, or places where sensitive information is present, adding cache control
+ headers can explicitly instruct browsers not to keep a local cached copy of content and can prevent content from 
+ being cached throughout the infrastructure (e.g. Proxy, caching layers, WAF etc). 
+ 
+- The headers `Cache-control: no-store` and `Pragma: no-cache` along with expiry headers of `Expires: <current date>` 
+and `Date: <current date>` will ensure that sensitive content is not stored locally or able to be retrieved by 
+unauthorised local persons. SilverStripe adds the current date for every request, and we can add the other cache 
+ headers to the request for our secure controllers:
+
+
+	:::php
+
+	class MySecureController extends Controller {
+		
+		public function init() {
+			parent::init();
+        	
+			// Add cache headers to ensure sensitive content isn't cached.
+			$this->response->addHeader('Cache-Control', 'max-age=0, must-revalidate, no-transform');
+			$this->response->addHeader('Pragma', 'no-cache'); // for HTTP 1.0 support
+
+			HTTP::set_cache_age(0);
+			HTTP::add_cache_headers($this->response);
+			
+			// Add HSTS header to force TLS for document content
+			$this->response->addHeader('Strict-Transport-Security', 'max-age=86400; includeSubDomains');
+		}
+	}
+	
 ##  Related
 
  * [http://silverstripe.org/security-releases/](http://silverstripe.org/security-releases/)
