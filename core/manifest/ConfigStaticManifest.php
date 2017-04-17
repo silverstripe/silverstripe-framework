@@ -183,17 +183,15 @@ class SS_ConfigStaticManifest_Parser {
 	}
 
 	/**
-	 * Get the next token to process, incrementing the pointer
+	 * Get the next token to process, incrementing the pointer, skips any whitespace tokens
 	 *
-	 * @param bool $ignoreWhitespace - if true will skip any whitespace tokens & only return non-whitespace ones
 	 * @return null | mixed - Either the next token or null if there isn't one
 	 */
-	protected function next($ignoreWhitespace = true) {
+	protected function next() {
 		do {
-			if($this->pos >= $this->length) return null;
-			$next = $this->tokens[$this->pos++];
+			$next = ($this->pos >= $this->length) ? null : $this->tokens[$this->pos++];
 		}
-		while($ignoreWhitespace && is_array($next) && $next[0] == T_WHITESPACE);
+		while(($next === (array)$next) && $next[0] == T_WHITESPACE);
 
 		return $next;
 	}
