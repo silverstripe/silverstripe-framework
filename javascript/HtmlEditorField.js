@@ -572,6 +572,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 				var linkType = this.find(':input[name=LinkType]:checked').val();
 
+				this.addActionSelector();
 				this.addAnchorSelector();
 
 				this.resetFileField();
@@ -580,6 +581,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				this.find('div.content .field').hide();
 				this.find('.field[id$="LinkType"]').show();
 				this.find('.field[id$="' + linkType +'_Holder"]').show();
+
+				if(linkType == 'internal' || linkType == 'action') {
+					this.find('.field[id$="Action_Holder"]').show();
+				}
 
 				if(linkType == 'internal' || linkType == 'anchor') {
 					this.find('.field[id$="Anchor_Holder"]').show();
@@ -591,10 +596,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					this.find('.field[id$="TargetBlank_Holder"]').show();
 				}
 
-				if(linkType == 'anchor') {
-					this.find('.field[id$="AnchorSelector_Holder"]').show();
-				}
 				this.find('.field[id$="Description_Holder"]').show();
+			},
+			/**
+			 * @return Int ID of the page being edited
+			 */
+			getPageID: function() {
+				return this.getElement().closest('form').find(':input[name=ID]').val();
 			},
 			/**
 			 * @return Object Keys: 'href', 'target', 'title'
@@ -603,6 +611,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 				var href,
 					target = null,
 					subject = this.find(':input[name=Subject]').val(),
+					action = this.find(':input[name=Action]').val(),
 					anchor = this.find(':input[name=Anchor]').val();
 
 				// Determine target
@@ -615,10 +624,18 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					case 'internal':
 						href = '[sitetree_link,id=' + this.find(':input[name=internal]').val() + ']';
 
+						if(action) {
+							href += action;
+						}
+
 						if(anchor) {
 							href += '#' + anchor;
 						}
 
+						break;
+
+					case 'action':
+						href = '[sitetree_link,id=' + this.getPageID() + ']' + action;
 						break;
 
 					case 'anchor':
@@ -675,6 +692,118 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 					fileUpload._trigger('destroy', null, {context: currentItem});
 					fileField.find('.ss-uploadfield-addfile').removeClass('borderTop');
 				}
+			},
+
+			/**
+			 * Builds an action selector element and injects it into the DOM next to the action field.
+			 */
+			addActionSelector: function() {
+				// Avoid adding twice
+				if(this.find(':input[name=ActionSelector]').length) return;
+
+				var self = this;
+				var actionSelector = $(
+					'<select id="Form_EditorToolbarLinkForm_ActionSelector" name="ActionSelector"></select>'
+				);
+				this.find(':input[name=Action]').parent().append(actionSelector);
+
+				// Initialise the action dropdown.
+				this.updateActionSelector();
+
+				// copy the value from dropdown to the text field
+				actionSelector.change(function(e) {
+					self.find(':input[name="Action"]').val($(this).val());
+				});
+			},
+
+			/**
+			 * Fetch relevant actions, depending on the page type.
+			 *
+			 * @return $.Deferred A promise of an action array, or an error message.
+			 */
+			getActions: function() {
+				var linkType = this.find(':input[name=LinkType]:checked').val();
+				var dfdActions = $.Deferred();
+
+				if (linkType === 'internal' || linkType === 'action') {
+					// Fetch available actions for a given page type
+					var pageId = (linkType === 'action')
+						? this.getPageID()
+						: this.find(':input[name=internal]').val();
+
+					if (pageId) {
+						$.ajax({
+							url: $.path.addSearchParams(
+								this.attr('action').replace('LinkForm', 'getactions'),
+								{'PageID': parseInt(pageId)}
+							),
+							success: function(body, status, xhr) {
+								dfdActions.resolve($.parseJSON(body));
+							},
+							error: function(xhr, status) {
+								dfdActions.reject(xhr.responseText);
+							}
+						});
+					} else {
+						dfdActions.resolve([]);
+					}
+				}
+				else {
+					// This type does not support actions at all.
+					dfdActions.reject(ss.i18n._t(
+						'HtmlEditorField.ACTIONSNOTSUPPORTED',
+						'Actions are not supported for this link type.'
+					));
+				}
+
+				return dfdActions.promise();
+			},
+
+			/**
+			 * Update the action list in the dropdown.
+			 */
+			updateActionSelector: function() {
+				var self = this;
+				var selector = this.find(':input[name=ActionSelector]');
+				var dfdActions = this.getActions();
+
+				// Inform the user we are loading.
+				selector.empty();
+				selector.append($(
+					'<option value="" selected="1">' +
+					ss.i18n._t('HtmlEditorField.LOOKINGFORACTIONS', 'Looking for actions...') +
+					'</option>'
+				));
+
+				dfdActions.done(function(actions) {
+					selector.empty();
+					selector.append($(
+						'<option value="" selected="1">' +
+						ss.i18n._t('HtmlEditorField.SelectAction', 'Select an action') +
+						'</option>'
+					));
+
+					if (actions.length) {
+						for (var j = 0; j < actions.length; j++) {
+							selector.append($('<option value="'+actions[j]+'">'+actions[j]+'</option>'));
+						}
+						selector.show();
+					} else {
+						selector.hide();
+					}
+
+				}).fail(function(message) {
+					selector.empty();
+					selector.append($(
+						'<option value="" selected="1">' +
+						message +
+						'</option>'
+					));
+					selector.show();
+				});
+
+				// Poke the selector for IE8, otherwise the changes won't be noticed.
+				if ($.browser.msie) selector.hide().show();
 			},
 
 			/**
@@ -788,10 +917,13 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						'</option>'
 					));
 
-					if (anchors) {
+					if (anchors.length) {
 						for (var j = 0; j < anchors.length; j++) {
 							selector.append($('<option value="'+anchors[j]+'">'+anchors[j]+'</option>'));
 						}
+						selector.show();
+					} else {
+						selector.hide();
 					}
 
 				}).fail(function(message) {
@@ -801,6 +933,7 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						message +
 						'</option>'
 					));
+					selector.show();
 				});
 
 				// Poke the selector for IE8, otherwise the changes won't be noticed.
@@ -910,11 +1043,12 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 						Description: title,
 						TargetBlank: target ? true : false
 					};
-				} else if(href.match(/^\[sitetree_link(?:\s*|%20|,)?id=([0-9]+)\]?(#.*)?$/i)) {
+				} else if(href.match(/^\[sitetree_link(?:\s*|%20|,)?id=([0-9]+)\]([^#]*)?(#.*)?$/i)) {
 					return {
 						LinkType: 'internal',
 						internal: RegExp.$1,
-						Anchor: RegExp.$2 ? RegExp.$2.substr(1) : '',
+						Action: RegExp.$2,
+						Anchor: RegExp.$3 ? RegExp.$3.substr(1) : '',
 						Description: title,
 						TargetBlank: target ? true : false
 					};
@@ -940,8 +1074,11 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 			onchange: function() {
 				this.parents('form:first').redraw();
 
-				// Update if a anchor-supporting link type is selected.
+				// Update if a anchor or action-supporting link type is selected.
 				var linkType = this.parent().find(':checked').val();
+				if (linkType==='action' || linkType==='internal') {
+					this.parents('form.htmleditorfield-linkform').updateActionSelector();
+				}
 				if (linkType==='anchor' || linkType==='internal') {
 					this.parents('form.htmleditorfield-linkform').updateAnchorSelector();
 				}
@@ -951,9 +1088,10 @@ ss.editorWrappers['default'] = ss.editorWrappers.tinyMCE;
 
 		$('form.htmleditorfield-linkform input[name=internal]').entwine({
 			/**
-			 * Update the anchor dropdown if a different page is selected in the "internal" dropdown.
+			 * Update the anchor and action dropdown if a different page is selected in the "internal" dropdown.
 			 */
 			onvalueupdated: function() {
+				this.parents('form.htmleditorfield-linkform').updateActionSelector();
 				this.parents('form.htmleditorfield-linkform').updateAnchorSelector();
 				this._super();
 			}
