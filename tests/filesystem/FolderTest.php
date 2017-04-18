@@ -282,7 +282,7 @@ class FolderTest extends SapphireTest {
 		$fileIDs = $this->allFixtureIDs('File');
 		foreach($fileIDs as $fileID) {
 			$file = DataObject::get_by_id('File', $fileID);
-			if($file && file_exists(BASE_PATH."/$file->Filename")) unlink(BASE_PATH."/$file->Filename");
+			if($file && file_exists(BASE_PATH."/$file->Filename")) @unlink(BASE_PATH."/$file->Filename");
 		}
 
 		// Remove the test folders that we've crated
