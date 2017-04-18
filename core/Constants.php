@@ -232,10 +232,19 @@ if(!defined('BASE_URL')) {
 		define('BASE_URL', rtrim($dir, DIRECTORY_SEPARATOR));
 	}
 }
-define('MODULES_DIR', 'modules');
+
+if (!defined('MODULES_DIR')) {
+	define('MODULES_DIR', 'modules');
+}
+
 define('MODULES_PATH', BASE_PATH . '/' . MODULES_DIR);
-define('THEMES_DIR', 'themes');
+
+if (!defined('THEMES_DIR')) {
+	define('THEMES_DIR', 'themes');
+}
+
 define('THEMES_PATH', BASE_PATH . '/' . THEMES_DIR);
+
 // Relies on this being in a subdir of the framework.
 // If it isn't, or is symlinked to a folder with a different name, you must define FRAMEWORK_DIR
 if(!defined('FRAMEWORK_DIR')) {
