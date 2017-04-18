@@ -1600,7 +1600,9 @@ class Member extends DataObject implements TemplateGlobalProvider {
 	 * Otherwise they'll need ADMIN or CMS_ACCESS_SecurityAdmin permissions
 	 */
 	public function canDelete($member = null) {
-		if(!$member || !(is_a($member, 'Member')) || is_numeric($member)) $member = Member::currentUser();
+		if(!is_a($member, 'Member')){
+			$member = Member::currentUser();	
+		} 
 
 		// extended access checks
 		$results = $this->extend('canDelete', $member);
