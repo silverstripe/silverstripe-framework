@@ -392,9 +392,9 @@ It is also often useful to filter by all rows with either empty or null for a gi
 
 ### Filtering by aggregates
 
-You can use aggregate expresssions in your filters, as well.
+You can use aggregate expressions in your filters, as well.
 
-	:::php
+```php
 	// get the teams that have more than 10 players
 	$teams = Team::get()->filter('Players.Count():GreaterThan', 10);
 
@@ -406,6 +406,7 @@ You can use aggregate expresssions in your filters, as well.
 
 	// get the teams whose players have scored less than 300 points combined
 	$teams = Team::get()->filter('Players.Sum(PointsScored):LessThan', 300);
+```
 
 ### filterByCallback
 
