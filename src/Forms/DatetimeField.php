@@ -103,6 +103,21 @@ class DatetimeField extends TextField
         return $this;
     }
 
+    public function getAttributes()
+    {
+        $attributes = parent::getAttributes();
+
+        $attributes['lang'] = i18n::convert_rfc1766($this->getLocale());
+
+        if ($this->getHTML5()) {
+            $attributes['type'] = 'datetime-local';
+            $attributes['min'] = $this->getMinDatetime();
+            $attributes['max'] = $this->getMaxDatetime();
+        }
+
+        return $attributes;
+    }
+
     public function getSchemaDataDefaults()
     {
         $defaults = parent::getSchemaDataDefaults();
@@ -178,9 +193,9 @@ class DatetimeField extends TextField
      */
     protected function getFormatter()
     {
-        if ($this->getHTML5() && $this->datetimeFormat && $this->datetimeFormat !== DBDatetime::ISO_DATE) {
+        if ($this->getHTML5() && $this->datetimeFormat && $this->datetimeFormat !== DBDatetime::ISO_DATETIME) {
             throw new \LogicException(
-                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDateFormat()'
+                'Please opt-out of HTML5 processing of ISO 8601 dates via setHTML5(false) if using setDatetimeFormat()'
             );
         }
 
@@ -214,6 +229,43 @@ class DatetimeField extends TextField
             }
         }
         return $formatter;
+    }
+
+    /**
+     * Get date format in CLDR standard format
+     *
+     * This can be set explicitly. If not, this will be generated from the current locale
+     * with the current date length.
+     *
+     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     */
+    public function getDateFormat()
+    {
+        if ($this->getHTML5()) {
+            // Browsers expect ISO 8601 dates, localisation is handled on the client
+            $this->setDatetimeFormat(DBDatetime::ISO_DATETIME);
+        }
+
+        if ($this->datetimeFormat) {
+            return $this->datetimeFormat;
+        }
+
+        // Get from locale
+        return $this->getFormatter()->getPattern();
+    }
+
+    /**
+     * Set date format in CLDR standard format.
+     * Only applicable with {@link setHTML5(false)}.
+     *
+     * @see http://userguide.icu-project.org/formatparse/datetime#TOC-Date-Field-Symbol-Table
+     * @param string $format
+     * @return $this
+     */
+    public function setDatetimeFormat($format)
+    {
+        $this->datetimeFormat = $format;
+        return $this;
     }
 
     /**
@@ -295,9 +347,6 @@ class DatetimeField extends TextField
         if ($timezoneFormatter) {
             $value = $timezoneFormatter->format($timestamp);
         }
-
-        // Set date / time components, which are unaware of their timezone
-        list($date, $time) = explode(' ', $value);
         return $this;
     }
 
