@@ -398,7 +398,7 @@ You can use aggregate expressions in your filters, as well.
 	// get the teams that have more than 10 players
 	$teams = Team::get()->filter('Players.Count():GreaterThan', 10);
 
-	// get the teams with at least one player who has scored 5 points
+	// get the teams with at least one player who has scored 5 or more points
 	$teams = Team::get()->filter('Players.Min(PointsScored):GreaterThanOrEqual', 5);
 
 	// get the teams with players who are averaging more than 15 points
