@@ -47,6 +47,7 @@ class CoreTest extends SapphireTest {
 		$user = getTempFolderUsername();
 		$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
 			preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+		$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 		foreach(array(
 			'C--inetpub-wwwroot-silverstripe-test-project',
 			'-Users-joebloggs-Sites-silverstripe-test-project',
@@ -54,7 +55,7 @@ class CoreTest extends SapphireTest {
 		) as $dir) {
 			$path = $base . $dir;
 			if(file_exists($path)) {
-				rmdir($path . DIRECTORY_SEPARATOR . $user);
+				rmdir($path . DIRECTORY_SEPARATOR . $user . $phpversion);
 				rmdir($path);
 			}
 		}
