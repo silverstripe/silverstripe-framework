@@ -19,7 +19,8 @@ class CoreTest extends SapphireTest {
 		$user = getTempFolderUsername();
 
 		if(file_exists($this->tempPath)) {
-			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user);
+			$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
+			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user . $phpversion);
 		} else {
 			$user = getTempFolderUsername();
 			$base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'silverstripe-cache-php' .
