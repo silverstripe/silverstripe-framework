@@ -30,11 +30,6 @@ class ClassInfo {
 	}
 
 	/**
-	 * Cache for {@link hasTable()}
-	 */
-	private static $_cache_all_tables = array();
-
-	/**
 	 * @var Array Cache for {@link ancestry()}.
 	 */
 	private static $_cache_ancestry = array();
@@ -43,15 +38,14 @@ class ClassInfo {
 	 * @todo Move this to SS_Database or DB
 	 */
 	public static function hasTable($class) {
-		// Cache the list of all table names to reduce on DB traffic
-		if(empty(self::$_cache_all_tables) && DB::is_active()) {
-			self::$_cache_all_tables = DB::get_schema()->tableList();
+		$class = self::class_name($class);
+		if ($class == 'DataObject') {
+			return false;
 		}
-		return !empty(self::$_cache_all_tables[strtolower($class)]);
+		return is_subclass_of($class, 'DataObject');
 	}
 
 	public static function reset_db_cache() {
-		self::$_cache_all_tables = null;
 		self::$_cache_ancestry = array();
 	}
 
