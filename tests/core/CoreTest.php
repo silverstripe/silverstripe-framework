@@ -17,9 +17,8 @@ class CoreTest extends SapphireTest {
 
 	public function testGetTempPathInProject() {
 		$user = getTempFolderUsername();
-
+		$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 		if(file_exists($this->tempPath)) {
-			$phpversion = '-php' . preg_replace('/[^\w-\.+]+/', '-', PHP_VERSION);
 			$this->assertEquals(getTempFolder(BASE_PATH), $this->tempPath . DIRECTORY_SEPARATOR . $user . $phpversion);
 		} else {
 			$user = getTempFolderUsername();
