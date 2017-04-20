@@ -297,9 +297,13 @@ class TreeDropdownField extends FormField {
 		}
 
 		// pre-process the tree - search needs to operate globally, not locally as marking filter does
-		if ( $this->search != "" )
+		if ( $this->search != "" ) {
 			$this->populateIDs();
-
+			// flush the cache for the representative object, as any other 
+			// tree may have populated the statically cached data that hierarchy uses
+			$obj->flushCache();
+		}
+        
 		if ($this->filterCallback || $this->search != "" )
 			$obj->setMarkingFilterFunction(array($this, "filterMarking"));
 
