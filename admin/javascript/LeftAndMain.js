@@ -1334,7 +1334,7 @@ jQuery.noConflict();
 				}
 
 				var container = this.closest('.cms-container');
-				container.find('.cms-edit-form').tabs('select',0);  //always switch to the first tab (list view) when searching
+				container.find('.cms-edit-form').tabs().tabs('select',0);  //always switch to the first tab (list view) when searching
 				container.loadPanel(url, "", {}, true);
 
 				return false;
