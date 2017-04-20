@@ -64,7 +64,7 @@ class CurrencyField extends TextField
         if (!empty($this->value) && !preg_match($regex, $this->value)) {
             $validator->validationError(
                 $this->name,
-                _t('Form.VALIDCURRENCY', "Please enter a valid currency"),
+                _t('SilverStripe\\Forms\\Form.VALIDCURRENCY', "Please enter a valid currency"),
                 "validation"
             );
             return false;

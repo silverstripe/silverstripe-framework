@@ -37,7 +37,7 @@ class ValidationException extends Exception
         }
 
         // Set default message and result
-        $exceptionMessage = _t("ValidationException.DEFAULT_ERROR", "Validation error");
+        $exceptionMessage = _t("SilverStripe\\ORM\\ValidationException.DEFAULT_ERROR", "Validation error");
         if (!$result) {
             $result = $exceptionMessage;
         }

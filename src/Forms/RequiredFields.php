@@ -120,7 +120,7 @@ class RequiredFields extends Validator
 
             if ($formField && $error) {
                 $errorMessage = _t(
-                    'Form.FIELDISREQUIRED',
+                    'SilverStripe\\Forms\\Form.FIELDISREQUIRED',
                     '{name} is required',
                     array(
                         'name' => strip_tags(

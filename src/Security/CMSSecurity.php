@@ -70,7 +70,7 @@ class CMSSecurity extends Security
     {
         return parent::getLoginMessage($messageType)
             ?: _t(
-                'CMSSecurity.LoginMessage',
+                'SilverStripe\\Security\\CMSSecurity.LoginMessage',
                 '<p>If you have any unsaved work you can return to where you left off by logging back in below.</p>'
             );
     }
@@ -79,21 +79,21 @@ class CMSSecurity extends Security
     {
         // Check if logged in already
         if (Member::currentUserID()) {
-            return _t('CMSSecurity.SUCCESS', 'Success');
+            return _t('SilverStripe\\Security\\CMSSecurity.SUCCESS', 'Success');
         }
 
         // Display logged-out message
         $member = $this->getTargetMember();
         if ($member) {
             return _t(
-                'CMSSecurity.TimedOutTitleMember',
+                'SilverStripe\\Security\\CMSSecurity.TimedOutTitleMember',
                 'Hey {name}!<br />Your session has timed out.',
                 'Title for CMS popup login form for a known user',
                 array('name' => $member->FirstName)
             );
         } else {
             return _t(
-                'CMSSecurity.TimedOutTitleAnonymous',
+                'SilverStripe\\Security\\CMSSecurity.TimedOutTitleAnonymous',
                 'Your session has timed out.',
                 'Title for CMS popup login form without a known user'
             );
@@ -111,7 +111,7 @@ class CMSSecurity extends Security
         $loginURLATT = Convert::raw2att($loginURL);
         $loginURLJS = Convert::raw2js($loginURL);
         $message = _t(
-            'CMSSecurity.INVALIDUSER',
+            'SilverStripe\\Security\\CMSSecurity.INVALIDUSER',
             '<p>Invalid user. <a target="_top" href="{link}">Please re-authenticate here</a> to continue.</p>',
             'Message displayed to user if their session cannot be restored',
             array('link' => $loginURLATT)
@@ -200,7 +200,7 @@ PHP
         }
 
         // Get redirect url
-        $controller = $this->getResponseController(_t('CMSSecurity.SUCCESS', 'Success'));
+        $controller = $this->getResponseController(_t('SilverStripe\\Security\\CMSSecurity.SUCCESS', 'Success'));
         $backURLs = array(
             $this->getRequest()->requestVar('BackURL'),
             Session::get('BackURL'),
@@ -216,7 +216,7 @@ PHP
         // Show login
         $controller = $controller->customise(array(
             'Content' => _t(
-                'CMSSecurity.SUCCESSCONTENT',
+                'SilverStripe\\Security\\CMSSecurity.SUCCESSCONTENT',
                 '<p>Login success. If you are not automatically redirected '.
                 '<a target="_top" href="{link}">click here</a></p>',
                 'Login message displayed in the cms popup once a user has re-authenticated themselves',

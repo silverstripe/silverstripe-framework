@@ -1,47 +1,10 @@
 tr:
-  AssetAdmin:
-    NEWFOLDER: YeniKlasör
   AssetTableField:
     CREATED: 'Yüklenme tarihi'
-    DIM: Boyutları
-    FILENAME: 'Dosya Adı'
-    FOLDER: Klasör
     LASTEDIT: 'Güncellenme tarihi'
-    OWNER: Sahibi
     SIZE: Boyutu
-    TITLE: Başlık
     TYPE: Türü
-  AssetUploadField:
-    DRAGFILESHERE: 'Dosyaları buraya sürükle'
-    UPLOADOR: VEYA
-  BBCodeParser:
-    ALIGNEMENT: Hizalama
-    ALIGNEMENTEXAMPLE: 'sağa hizalı'
-    BOLD: 'Kalın Yazı'
-    BOLDEXAMPLE: Kalın
-    CODE: 'Kod Bloğu'
-    CODEDESCRIPTION: 'Düzenlenmemiş kod bloğu'
-    CODEEXAMPLE: 'Kod Bloğu'
-    COLORED: 'Renkli Yazı'
-    COLOREDEXAMPLE: 'mavi yazı'
-    EMAILLINK: 'E-posta linki'
-    EMAILLINKDESCRIPTION: 'E-posta adresine link oluştur'
-    IMAGE: Resim
-    IMAGEDESCRIPTION: 'Girdinizde resim görüntüleyin'
-    ITALIC: 'Yatık Yazı'
-    ITALICEXAMPLE: Yatıklar
-    LINK: 'Web sitesi linki'
-    LINKDESCRIPTION: 'Başka bir web sitesine ya da URL e link'
-    STRUCK: 'Üzeri Çizili Yazı'
-    STRUCKEXAMPLE: 'Üzeri Çizili'
-    UNDERLINE: 'Altı Çizili Yazı'
-    UNDERLINEEXAMPLE: 'Altı Çizili'
-    UNORDERED: 'Sıralanmamış liste'
-    UNORDEREDDESCRIPTION: 'Sıralanmamış liste'
-    UNORDEREDEXAMPLE1: 'sıralanmamış madde 1'
-  BackLink_Button_ss:
-    Back: Geri
-  BasicAuth:
+  SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Lütfen kullanıcı adı ve şifrenizi giriniz.'
     ERRORNOTADMIN: 'O kullanıcı, yönetici değildir'
     ERRORNOTREC: 'Kullanıcı adı / şifre hatalı'
@@ -49,58 +12,35 @@ tr:
     ANY: Herhangi
     NOANSWER: Hayır
     YESANSWER: Evet
-  CMSMain:
-    ACCESSALLINTERFACES: 'Tüm İYS arayüzlerine erişim'
-    SAVE: Kaydet
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Parolanız değiştirildi:'
-    CHANGEPASSWORDTEXT2: 'Sisteme giriş yapabilmek için aşağıdaki kullanıcı bilgilerinizi kullanabilirsiniz:'
-    EMAIL: E-Posta
     HELLO: Merhaba
-    PASSWORD: Parola
-  CheckboxField:
+  SilverStripe\Forms\CheckboxField:
     NOANSWER: Hayır
     YESANSWER: Evet
-  ConfirmedPasswordField:
+  SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Parola Değiştir'
-  CreditCardField:
-    FIRST: ilk
-    FOURTH: dördüncü
-    SECOND: ikinci
-    THIRD: üçüncü
-  CurrencyField:
+  SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: USD
-  DataObject:
-    PLURALNAME: 'Data Nesneleri'
-    SINGULARNAME: 'Data Nesnesi'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: ayarlanmamış
     TODAY: bugün
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Seçiniz)
-  File:
-    Content: İçerik
-    Filename: 'Dosya adı'
-    Name: Ad
-    PLURALNAME: Dosyalar
-    SINGULARNAME: Dosya
-    Title: Başlık
   ForgotPasswordEmail_ss:
     HELLO: Merhaba
     TEXT1: 'Profilinize ait'
     TEXT2: 'şifre sıfırlama linki'
     TEXT3: için
-  Form:
-    SubmitBtnLabel: Başla
-    VALIDATIONNOTUNIQUE: 'Girilen değer benzersiz olmalıdır'
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Şifre tekrarı hatalı'
     VALIDATIONPASSWORDSNOTEMPTY: 'Şifreler boş geçilemez'
     VALIDATOR: 'Geçerlilik tespiti'
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: hiç
   GridAction:
     Delete: Sil
-  Group:
+  SilverStripe\Security\Group:
     Code: 'Grup Kodu'
     Description: Açıklama
     Locked: 'Kilitli?'
@@ -108,44 +48,11 @@ tr:
     Sort: Sırala
     has_many_Permissions: İzinler
     many_many_Members: Üyeler
-  HtmlEditorField:
-    ANCHORVALUE: Çapa
-    BUTTONINSERTLINK: 'Bağlantı ekle'
-    BUTTONREMOVELINK: 'Bağlantıyı sil'
-    CSSCLASS: 'Hizalama / biçem'
-    CSSCLASSCENTER: 'Ortalanmış, kendi başına'
-    CSSCLASSLEFT: 'Sol tarafta, metin ile çevrili.'
-    CSSCLASSLEFTALONE: 'Solda, kendisinde.'
-    CSSCLASSRIGHT: 'Sağ tarafta, metin ile çevrili'
-    EMAIL: 'Eposta adresi'
-    FILE: Dosya
-    FOLDER: Klasör
-    IMAGEDIMENSIONS: Boyutlar
-    IMAGEHEIGHTPX: Yükseklik
-    IMAGEWIDTHPX: Genişlik
-    LINK: Link
-    LINKANCHOR: 'Bu sayfadaki çapa'
-    LINKDESCR: 'Bağlantı açıklaması'
-    LINKEMAIL: 'Eposta adresi'
-    LINKEXTERNAL: 'Başka bir sitedeki sayfa (dış bağlantı)'
-    LINKFILE: 'Dosya indir'
-    LINKINTERNAL: 'Bu sitedeki bir sayfa (iç bağlantı)'
-    LINKOPENNEWWIN: 'Bağlantı yeni bir pencerede mi açılsın?'
-    LINKTO: 'Bağlantı oluştur'
-    PAGE: Sayfa
-  Image_iframe_ss:
-    TITLE: 'Resim göndermek için gerekli IFrame'
-  LeftAndMain:
-    DELETED: Silinmiş.
-    HELP: Yardım
-    PERMAGAIN: 'İYS yönetiminden çıkış yaptınız.  Eğer tekrar giriş yapmak isterseniz, aşağıya kullanıcı adı ve şifrenizi giriniz.'
-    PreviewButton: Önizleme
-    SAVEDUP: Kaydedildi.
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'E-posta Adresi'
     IP: 'IP Adresi'
     Status: Durum
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Şifreyi Değiştir'
     BUTTONLOGIN: Giriş
     BUTTONLOGINOTHER: 'Başka bir kullanıcı olarak giriş yap'
@@ -153,7 +60,6 @@ tr:
     CONFIRMNEWPASSWORD: 'Yeni Şifreyi Onayla'
     CONFIRMPASSWORD: 'Şifreyi Onayla'
     DefaultAdminFirstname: 'Varsayılan Yönetici'
-    DefaultDateTime: varsayılan
     EMAIL: Eposta
     ENTEREMAIL: 'Lütfen parola belirleme linki almak için eposta adresi giriniz.'
     ERRORNEWPASSWORD: 'Yeni şifrenizin tekrarını farklı girdiniz, tekrar deneyin'
@@ -162,77 +68,44 @@ tr:
     INTERFACELANG: 'Arayüz Dili'
     NEWPASSWORD: 'Yeni Şifre'
     PASSWORD: Şifre
-    PLURALNAME: Üyeler
-    SINGULARNAME: Üye
     SUBJECTPASSWORDCHANGED: 'Parolanız değiştirildi'
     SUBJECTPASSWORDRESET: 'Parola değiştirme bağlantınız'
     SURNAME: Soyad
     YOUROLDPASSWORD: 'Eski şifreniz'
     belongs_many_many_Groups: Gruplar
-    db_LastVisited: 'Son Ziyaret Tarihi'
     db_Locale: 'Arayüz Bölümü'
     db_LockedOutUntil: 'Şu tarihe kadar kapalı:'
-    db_NumVisit: 'Ziyaret Sayısı'
     db_Password: Parola
     db_PasswordExpiry: 'Parola için Son Geçerlilik Tarihi'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-posta & Şifre'
-  MemberDatetimeOptionsetField:
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
     DATEFORMATBAD: 'Tarih biçimi geçersiz'
-  ModelAdmin:
-    DELETE: Sil
-    IMPORT: 'CSV''den içer aktar'
-    NOCSVFILE: 'CSV dosyası ekleme'
-    NOIMPORT: 'İçe aktarılacak bir şey yok'
-    RESET: Sıfırla
-  NullableField:
+  SilverStripe\Forms\NullableField:
     IsNullLabel: 'Boş değer'
-  Permission:
-    CMS_ACCESS_CATEGORY: 'CMS Erişimi'
+  SilverStripe\Security\Permission:
     FULLADMINRIGHTS: 'Tüm yönetici(administrator) hakları'
-  Permissions:
-    PERMISSIONS_CATEGORY: 'Roller ve giriş izinleri'
-  PhoneNumberField:
+  SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Lütfen geçerli bir telefon numarası giriniz'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Bu sayfaya erişim hakkınız yoktur. Eğer o sayfaya erişim hakkı olan başka bir hesabınız varsa, aşağıdaki formu kullanarak giriş yapınız.'
     BUTTONSEND: Gönder
     CHANGEPASSWORDBELOW: 'Aşağıdaki formu kullanarak şifrenizi değiştirebilirsiniz.'
     CHANGEPASSWORDHEADER: 'Şifre değiştir'
     ENTERNEWPASSWORD: 'Lütfen bir şifre giriniz.'
     ERRORPASSWORDPERMISSION: 'Şifrenizi değiştirebilmek için sisteme giriş yapmış olmanız gerekmektedir!'
-    LOGGEDOUT: 'Çıkış yaptınız. Eğer tekrar giriş yapmak istiyorsanız lütfen kullanıcı bilgilerinizi giriniz.'
     LOGIN: 'Oturum aç'
     NOTEPAGESECURED: 'O sayfaya erişim kısıtlanmıştır. Lütfen aşağıdaki formu kullanarak kullanıcı bilgilerinizi giriniz.'
     NOTERESETPASSWORD: 'E-posta adresinize şifrenizi sıfırlamanızı sağlayacak linki gönderebilmemiz için lütfen e-posta adresinizi giriniz'
-  SecurityAdmin:
-    EDITPERMISSIONS: 'Gruplardaki izinleri düzenle'
+  SilverStripe\Admin\SecurityAdmin:
     GROUPNAME: 'Grup adı'
     MEMBERS: Üyeler
     NEWGROUP: 'Yeni Grup'
     PERMISSIONS: İzinler
-    TABROLES: Roller
-  SecurityAdmin_MemberImportForm:
-    BtnImport: Aktar
-  SiteTree:
+  SilverStripe\CMS\Model\SiteTree:
     TABMAIN: 'Ana (Esas)'
   TableListField:
     CSVEXPORT: 'CSV olarak kaydet'
-  ToggleField:
-    LESS: 'daha az'
-    MORE: 'daha fazla'
   UploadField:
-    ATTACHFILE: 'Dosya ekle'
-    ATTACHFILES: 'Dosya ekle'
-    AttachFile: 'Dosyalar ekle'
-    DOEDIT: Kaydet
-    DROPFILE: 'dosyası kaldır'
-    DROPFILES: 'dosyaları kaldır'
     EDITINFO: 'Dosyayı düzenle'
     FIELDNOTSET: 'Dosya bilgisi bulunamadı'
-    FROMCOMPUTER: 'Kendi makinenizden'
-    FROMFILES: Dosyalardan
-    STARTALL: 'Tümünü başlat'
-    Saved: Kaydedilmiş
-  Versioned:
-    has_many_Versions: Versiyonlar

@@ -108,28 +108,28 @@ abstract class HTMLEditorField_File extends ViewableData
             )
                 ->setName("FilePreview")
                 ->addExtraClass('cms-file-info'),
-            TextField::create('CaptionText', _t('HTMLEditorField.CAPTIONTEXT', 'Caption text')),
+            TextField::create('CaptionText', _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CAPTIONTEXT', 'Caption text')),
             DropdownField::create(
                 'CSSClass',
-                _t('HTMLEditorField.CSSCLASS', 'Alignment / style'),
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASS', 'Alignment / style'),
                 array(
-                    'leftAlone' => _t('HTMLEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
-                    'center' => _t('HTMLEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
-                    'left' => _t('HTMLEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
-                    'right' => _t('HTMLEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
+                    'leftAlone' => _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASSLEFTALONE', 'On the left, on its own.'),
+                    'center' => _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASSCENTER', 'Centered, on its own.'),
+                    'left' => _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASSLEFT', 'On the left, with text wrapping around.'),
+                    'right' => _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.CSSCLASSRIGHT', 'On the right, with text wrapping around.')
                 ),
                 HtmlEditorField::config()->uninherited('media_alignment')
             ),
             FieldGroup::create(
-                _t('HTMLEditorField.IMAGEDIMENSIONS', 'Dimensions'),
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEDIMENSIONS', 'Dimensions'),
                 TextField::create(
                     'Width',
-                    _t('HTMLEditorField.IMAGEWIDTHPX', 'Width'),
+                    _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEWIDTHPX', 'Width'),
                     $this->getInsertWidth()
                 )->setMaxLength(5),
                 TextField::create(
                     'Height',
-                    " x " . _t('HTMLEditorField.IMAGEHEIGHTPX', 'Height'),
+                    " x " . _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEHEIGHTPX', 'Height'),
                     $this->getInsertHeight()
                 )->setMaxLength(5)
             )->addExtraClass('dimensions last'),

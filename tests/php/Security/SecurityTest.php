@@ -490,7 +490,7 @@ class SecurityTest extends FunctionalTest
                 );
                 $this->assertHasMessage(
                     _t(
-                        'Member.ERRORWRONGCRED',
+                        'SilverStripe\\Security\\Member.ERRORWRONGCRED',
                         'The provided details don\'t seem to be correct. Please try again.'
                     )
                 );
@@ -504,7 +504,7 @@ class SecurityTest extends FunctionalTest
             }
 
             $msg = _t(
-                'Member.ERRORLOCKEDOUT2',
+                'SilverStripe\\Security\\Member.ERRORLOCKEDOUT2',
                 'Your account has been temporarily disabled because of too many failed attempts at ' .
                 'logging in. Please try again in {count} minutes.',
                 null,
@@ -541,7 +541,7 @@ class SecurityTest extends FunctionalTest
         }
         $this->assertNull($this->session()->inst_get('loggedInAs'));
         $this->assertHasMessage(
-            _t('Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
+            _t('SilverStripe\\Security\\Member.ERRORWRONGCRED', 'The provided details don\'t seem to be correct. Please try again.'),
             'The user can retry with a wrong password after the lockout expires'
         );
 

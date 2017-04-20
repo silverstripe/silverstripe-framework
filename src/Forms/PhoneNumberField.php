@@ -252,7 +252,7 @@ class PhoneNumberField extends FieldGroup
         if (!$valid) {
             $validator->validationError(
                 $this->name,
-                _t('PhoneNumberField.VALIDATION', "Please enter a valid phone number"),
+                _t('SilverStripe\\Forms\\PhoneNumberField.VALIDATION', "Please enter a valid phone number"),
                 "validation"
             );
             return false;

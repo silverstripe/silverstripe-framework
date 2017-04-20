@@ -19,7 +19,7 @@ class DateField_Disabled extends DateField
         if ($this->valueObj) {
             if ($this->valueObj->isToday()) {
                 $val = Convert::raw2xml($this->valueObj->toString($this->getConfig('dateformat'))
-                    . ' (' . _t('DateField.TODAY', 'today') . ')');
+                    . ' (' . _t('SilverStripe\\Forms\\DateField.TODAY', 'today') . ')');
             } else {
                 $df = new DBDate($this->name);
                 $df->setValue($this->dataValue());
@@ -27,7 +27,7 @@ class DateField_Disabled extends DateField
                     . ', ' . $df->Ago());
             }
         } else {
-            $val = '<i>(' . _t('DateField.NOTSET', 'not set') . ')</i>';
+            $val = '<i>(' . _t('SilverStripe\\Forms\\DateField.NOTSET', 'not set') . ')</i>';
         }
 
         return "<span class=\"readonly\" id=\"" . $this->ID() . "\">$val</span>";

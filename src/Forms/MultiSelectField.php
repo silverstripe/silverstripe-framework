@@ -201,7 +201,7 @@ abstract class MultiSelectField extends SelectField
         $validator->validationError(
             $this->getName(),
             _t(
-                'MultiSelectField.SOURCE_VALIDATION',
+                'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
                 "Please select values within the list provided. Invalid option(s) {value} given",
                 array('value' => implode(',', $invalidValues))
             ),

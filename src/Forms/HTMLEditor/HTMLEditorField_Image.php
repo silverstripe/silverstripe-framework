@@ -60,11 +60,11 @@ class HTMLEditorField_Image extends HTMLEditorField_File
             'CaptionText',
             TextField::create(
                 'AltText',
-                _t('HTMLEditorField.IMAGEALT', 'Alternative text (alt)'),
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEALT', 'Alternative text (alt)'),
                 $this->Title,
                 80
             )->setDescription(
-                _t('HTMLEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can\'t be displayed')
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGEALTTEXTDESC', 'Shown to screen readers or if image can\'t be displayed')
             )
         );
 
@@ -73,9 +73,9 @@ class HTMLEditorField_Image extends HTMLEditorField_File
             'AltText',
             TextField::create(
                 'Title',
-                _t('HTMLEditorField.IMAGETITLETEXT', 'Title text (tooltip)')
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGETITLETEXT', 'Title text (tooltip)')
             )->setDescription(
-                _t('HTMLEditorField.IMAGETITLETEXTDESC', 'For additional information about the image')
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.IMAGETITLETEXTDESC', 'For additional information about the image')
             )
         );
 

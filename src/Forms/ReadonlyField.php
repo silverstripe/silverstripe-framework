@@ -88,7 +88,7 @@ class ReadonlyField extends FormField
         }
 
         // "none" text
-        $label = _t('FormField.NONE', 'none');
+        $label = _t('SilverStripe\\Forms\\FormField.NONE', 'none');
         return "<i>('{$label}')</i>";
     }
 

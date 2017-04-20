@@ -34,7 +34,7 @@ class TestDataObject extends DataObject implements TestOnly
     public function fieldLabels($includerelations = true)
     {
         $labels = parent::fieldLabels($includerelations);
-        $labels['MyProperty'] = _t('i18nTest_DataObject.MyProperty', 'My Property');
+        $labels['MyProperty'] = _t('SilverStripe\\i18n\\Tests\\i18Test\\TestDataObject.MyProperty', 'My Property');
 
         return $labels;
     }

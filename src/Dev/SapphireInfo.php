@@ -30,7 +30,7 @@ class SapphireInfo extends Controller
     {
         $sapphireVersion = file_get_contents(FRAMEWORK_PATH . '/silverstripe_version');
         if (!$sapphireVersion) {
-            $sapphireVersion = _t('LeftAndMain.VersionUnknown', 'unknown');
+            $sapphireVersion = _t('SilverStripe\\Admin\\LeftAndMain.VersionUnknown', 'unknown');
         }
         return $sapphireVersion;
     }

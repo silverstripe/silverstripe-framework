@@ -473,7 +473,7 @@ class GridField extends FormField
                 array(
                     'colspan' => count($columns),
                 ),
-                _t('GridField.NoItemsFound', 'No items found')
+                _t('SilverStripe\\Forms\\GridField\\GridField.NoItemsFound', 'No items found')
             );
 
             $row = FormField::create_tag(
@@ -887,7 +887,7 @@ class GridField extends FormField
             ->getSecurityToken();
         if (!$token->checkRequest($request)) {
             $this->httpError(400, _t(
-                "Form.CSRF_FAILED_MESSAGE",
+                "SilverStripe\\Forms\\Form.CSRF_FAILED_MESSAGE",
                 "There seems to have been a technical problem. Please click the back button, ".
                 "refresh your browser, and try again."
             ));

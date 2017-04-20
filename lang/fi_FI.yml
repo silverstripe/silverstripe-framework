@@ -1,0 +1,9 @@
+fi_FI:
+  Boolean:
+    NOANSWER: Ei
+    YESANSWER: Kyllä
+  SilverStripe\Forms\CheckboxField:
+    NOANSWER: Ei
+    YESANSWER: Kyllä
+  SilverStripe\Security\PermissionRole:
+    Title: Otsikko

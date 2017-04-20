@@ -124,7 +124,7 @@ class MemberLoginForm extends LoginForm
             // 'Email' value, below:
             // @todo Rename the field to a more generic covering name
             $emailField = TextField::create("Email", $label, null, null, $this),
-            PasswordField::create("Password", _t('Member.PASSWORD', 'Password'))
+            PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password'))
         );
         $emailField->setAttribute('autofocus', 'true');
 
@@ -139,11 +139,11 @@ class MemberLoginForm extends LoginForm
             $fields->push(
                 CheckboxField::create(
                     "Remember",
-                    _t('Member.KEEPMESIGNEDIN', "Keep me signed in")
+                    _t('SilverStripe\\Security\\Member.KEEPMESIGNEDIN', "Keep me signed in")
                 )->setAttribute(
                     'title',
                     sprintf(
-                        _t('Member.REMEMBERME', "Remember me next time? (for %d days on this device)"),
+                        _t('SilverStripe\\Security\\Member.REMEMBERME', "Remember me next time? (for %d days on this device)"),
                         RememberLoginHash::config()->uninherited('token_expiry_days')
                     )
                 )
@@ -161,11 +161,11 @@ class MemberLoginForm extends LoginForm
     protected function getFormActions()
     {
         $actions = FieldList::create(
-            FormAction::create('dologin', _t('Member.BUTTONLOGIN', "Log in")),
+            FormAction::create('dologin', _t('SilverStripe\\Security\\Member.BUTTONLOGIN', "Log in")),
             LiteralField::create(
                 'forgotPassword',
                 '<p id="ForgotPassword"><a href="' . Security::lost_password_url() . '">'
-                . _t('Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>'
+                . _t('SilverStripe\\Security\\Member.BUTTONLOSTPASSWORD', "I've lost my password") . '</a></p>'
             )
         );
 
@@ -179,7 +179,7 @@ class MemberLoginForm extends LoginForm
         $forceMessage = Session::get('MemberLoginForm.force_message');
         if (($member = Member::currentUser()) && !$forceMessage) {
             $message = _t(
-                'Member.LOGGEDINAS',
+                'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
                 array('name' => $member->{$this->loggedInAsField})
             );
@@ -210,6 +210,6 @@ class MemberLoginForm extends LoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t('MemberLoginForm.AUTHENTICATORNAME', "E-mail &amp; Password");
+        return _t('SilverStripe\\Security\\MemberLoginForm.AUTHENTICATORNAME', "E-mail &amp; Password");
     }
 }

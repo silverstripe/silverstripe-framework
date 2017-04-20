@@ -386,7 +386,7 @@ class DateField extends TextField
             $validator->validationError(
                 $this->name,
                 _t(
-                    'DateField.VALIDDATEFORMAT2',
+                    'SilverStripe\\Forms\\DateField.VALIDDATEFORMAT2',
                     "Please enter a valid date format ({format})",
                     ['format' => $this->getDateFormat()]
                 )
@@ -402,7 +402,7 @@ class DateField extends TextField
                 $validator->validationError(
                     $this->name,
                     _t(
-                        'DateField.VALIDDATEMINDATE',
+                        'SilverStripe\\Forms\\DateField.VALIDDATEMINDATE',
                         "Your date has to be newer or matching the minimum allowed date ({date})",
                         [
                             'date' => sprintf(
@@ -427,7 +427,7 @@ class DateField extends TextField
                 $validator->validationError(
                     $this->name,
                     _t(
-                        'DateField.VALIDDATEMAXDATE',
+                        'SilverStripe\\Forms\\DateField.VALIDDATEMAXDATE',
                         "Your date has to be older or matching the maximum allowed date ({date})",
                         [
                             'date' => sprintf(

@@ -921,7 +921,7 @@ class MemberTest extends FunctionalTest
         );
         $message = Convert::raw2xml(
             _t(
-                'Member.LOGGEDINAS',
+                'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
                 array('name' => $m1->FirstName)
             )
@@ -1003,7 +1003,7 @@ class MemberTest extends FunctionalTest
         );
         $message = Convert::raw2xml(
             _t(
-                'Member.LOGGEDINAS',
+                'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
                 array('name' => $m1->FirstName)
             )
@@ -1076,7 +1076,7 @@ class MemberTest extends FunctionalTest
         );
         $message = Convert::raw2xml(
             _t(
-                'Member.LOGGEDINAS',
+                'SilverStripe\\Security\\Member.LOGGEDINAS',
                 "You're logged in as {name}.",
                 array('name' => $m1->FirstName)
             )

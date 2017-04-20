@@ -104,7 +104,7 @@ class TextField extends FormField
             $validator->validationError(
                 $this->name,
                 _t(
-                    'TextField.VALIDATEMAXLENGTH',
+                    'SilverStripe\\Forms\\TextField.VALIDATEMAXLENGTH',
                     'The value for {name} must not exceed {maxLength} characters in length',
                     array('name' => $this->getName(), 'maxLength' => $this->maxLength)
                 ),

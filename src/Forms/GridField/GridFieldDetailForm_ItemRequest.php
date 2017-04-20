@@ -281,19 +281,19 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $actions = new FieldList();
         if ($this->record->ID !== 0) {
             if ($canEdit) {
-                $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Save', 'Save'))
+                $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Save', 'Save'))
                     ->setUseButtonTag(true)
                     ->addExtraClass('btn-primary font-icon-save'));
             }
 
             if ($canDelete) {
-                $actions->push(FormAction::create('doDelete', _t('GridFieldDetailForm.Delete', 'Delete'))
+                $actions->push(FormAction::create('doDelete', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Delete', 'Delete'))
                     ->setUseButtonTag(true)
                     ->addExtraClass('btn-danger-outline btn-hide-outline font-icon-trash-bin action-delete'));
             }
         } else { // adding new record
             //Change the Save label to 'Create'
-            $actions->push(FormAction::create('doSave', _t('GridFieldDetailForm.Create', 'Create'))
+            $actions->push(FormAction::create('doSave', _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Create', 'Create'))
                 ->setUseButtonTag(true)
                 ->addExtraClass('btn-primary font-icon-plus'));
 
@@ -305,7 +305,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
                     "<a class=\"%s\" href=\"%s\">%s</a>",
                     "crumb btn btn-secondary cms-panel-link", // CSS classes
                     $oneLevelUp->Link, // url
-                    _t('GridFieldDetailForm.CancelBtn', 'Cancel') // label
+                    _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.CancelBtn', 'Cancel') // label
                 );
                 $actions->push(new LiteralField('cancelbutton', $text));
             }
@@ -397,7 +397,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             . htmlspecialchars($this->record->Title, ENT_QUOTES)
             . '"</a>';
         $message = _t(
-            'GridFieldDetailForm.Saved',
+            'SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Saved',
             'Saved {name} {link}',
             array(
                 'name' => $this->record->i18n_singular_name(),
@@ -485,13 +485,13 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
         $title = $this->record->Title;
         if (!$this->record->canDelete()) {
             throw new ValidationException(
-                _t('GridFieldDetailForm.DeletePermissionsFailure', "No delete permissions")
+                _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.DeletePermissionsFailure', "No delete permissions")
             );
         }
         $this->record->delete();
 
         $message = sprintf(
-            _t('GridFieldDetailForm.Deleted', 'Deleted %s %s'),
+            _t('SilverStripe\\Forms\\GridField\\GridFieldDetailForm.Deleted', 'Deleted %s %s'),
             $this->record->i18n_singular_name(),
             htmlspecialchars($title, ENT_QUOTES)
         );
@@ -592,7 +592,7 @@ class GridFieldDetailForm_ItemRequest extends RequestHandler
             )));
         } else {
             $items->push(new ArrayData(array(
-                'Title' => sprintf(_t('GridField.NewRecord', 'New %s'), $this->record->i18n_singular_name()),
+                'Title' => sprintf(_t('SilverStripe\\Forms\\GridField\\GridField.NewRecord', 'New %s'), $this->record->i18n_singular_name()),
                 'Link' => false
             )));
         }

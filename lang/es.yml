@@ -1,74 +1,13 @@
 es:
-  AddToCampaign:
-    ErrorCampaignPermissionDenied: 'Parece que no tienes los permisos necesarios para añadir {ObjectTitle} a {CampaignTitle}'
-    ErrorGeneral: 'Lo sentimos, pero hubo un error'
-    ErrorItemPermissionDenied: 'Parece que no tienes los permisos necesarios para añadir {ObjectTitle} a una campaña'
-    ErrorNotFound: 'Ese {Type} no pudo ser encontrado'
-    Success: 'Se ha añadido exitosamente {ObjectTitle} a {CampaignTitle}'
-  AssetAdmin:
-    ALLOWEDEXTS: 'Extensiones permitidas para subir archivos'
-    HIDEALLOWEDEXTS: 'Ocultar extensiones permitidas'
-    NEWFOLDER: NuevaCarpeta
-    SHOWALLOWEDEXTS: 'Mostrar extensiones permitidas'
   AssetTableField:
     CREATED: 'Agregado por primera vez'
-    DIM: Dimensiones
-    FILENAME: 'Nombre del archivo'
-    FOLDER: Carpeta
     HEIGHT: Alto
     LASTEDIT: 'Modificado por última vez'
-    OWNER: Propietario
-    PATH: Ruta
     SIZE: Tamaño
-    TITLE: Título
     TYPE: 'Tipo de archivo'
     URL: URL
     WIDTH: Ancho
-  AssetUploadField:
-    ChooseFiles: 'Seleccione los archivos'
-    DRAGFILESHERE: 'Arrastre los archivos aqui'
-    DROPAREA: 'Soltar aquí'
-    EDITALL: 'Editar todo'
-    EDITANDORGANIZE: 'Editar y organizar'
-    EDITINFO: 'Editar archivos'
-    FILES: Archivos
-    FROMCOMPUTER: 'Seleccione los archivos desde su ordenador'
-    FROMCOMPUTERINFO: 'Subir archivos desde tu ordenador'
-    INSERTURL: 'Insertar desde URL'
-    REMOVEINFO: 'Remover este archivo '
-    TOTAL: Total
-    TOUPLOAD: 'Subir archivos'
-    UPLOADINPROGRESS: 'Por favor espere .... carga en curso'
-    UPLOADOR: O
-  BBCodeParser:
-    ALIGNEMENT: Alineación
-    ALIGNEMENTEXAMPLE: 'alineado a la derecha'
-    BOLD: 'Texto en Negrita'
-    BOLDEXAMPLE: Negrita
-    CODE: 'Bloque de Código'
-    CODEDESCRIPTION: 'Bloque de código sin formato'
-    CODEEXAMPLE: 'Bloque de código'
-    COLORED: 'Texto coloreado'
-    COLOREDEXAMPLE: 'texto azul'
-    EMAILLINK: 'Enlace de tipo email'
-    EMAILLINKDESCRIPTION: 'Crear un enlace a una dirección de email'
-    IMAGE: Imagen
-    IMAGEDESCRIPTION: 'Mostrar una imagen en tu publicación'
-    ITALIC: 'Texto en Cursiva'
-    ITALICEXAMPLE: Cursiva
-    LINK: 'Enlace página web'
-    LINKDESCRIPTION: 'Enlace hacia otra página web o URL '
-    STRUCK: 'Texto tachado'
-    STRUCKEXAMPLE: Tachar
-    UNDERLINE: 'Texto subrayado'
-    UNDERLINEEXAMPLE: Subrayado
-    UNORDERED: 'Lista desordenada'
-    UNORDEREDDESCRIPTION: 'Lista desordenada'
-    UNORDEREDEXAMPLE1: 'elemento 1 desordenado'
-  BackLink_Button_ss:
-    Back: Volver
-    NavigateUp: 'Subir una carpeta arriba'
-  BasicAuth:
+  SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Por favor introduzca su nombre de usuario y contraseña.'
     ERRORNOTADMIN: 'Ese usuario no es un administrador.'
     ERRORNOTREC: 'Ese nombre de usuario / contraseña no pudo ser reconocido.'
@@ -76,74 +15,29 @@ es:
     ANY: Cualquiera
     NOANSWER: 'No'
     YESANSWER: Sí
-  CAMPAIGNS:
-    ADDTOCAMPAIGN: 'Añadir a Campaña'
-  CMSLoadingScreen_ss:
-    LOADING: Cargando...
-    REQUIREJS: 'El CMS requiere que tenga habilitado JavaScript .'
-  CMSMain:
-    ACCESS: 'Acceder a la sección ''{title}'''
-    ACCESSALLINTERFACES: 'Acceder a todas las interfaces del CMS'
-    ACCESSALLINTERFACESHELP: 'Anula configuraciones de acceso más específicas.'
-    SAVE: Guardar
-  CMSMemberLoginForm:
+  SilverStripe\Security\CMSMemberLoginForm:
     BUTTONFORGOTPASSWORD: '¿Olvidó su contraseña?'
     BUTTONLOGIN: 'Volver a iniciar sesión'
     BUTTONLOGOUT: 'Cerrar Sesión'
     PASSWORDEXPIRED: '<p>Su contraseña expiró. <a target="_top" href="{link}">Por favor, elija una nueva.</a></p>'
-  CMSPageHistoryController_versions_ss:
-    PREVIEW: Previsualización
-  CMSPagesController_Tools_ss:
-    FILTER: Filtrar
-  CMSProfileController:
-    MENUTITLE: 'Mi Perfil'
-  CMSSecurity:
+  SilverStripe\Security\CMSSecurity:
     INVALIDUSER: '<p>Usuario inválido. <a target="_top" href="{link}">Por favor, vuelva a autenticar aquí</a> para continuar.</p>'
     LoginMessage: '<p>Si Ud tiene cualquier trabajo sin guardar puede volver donde lo dejó, iniciando sesión más abajo.</p>'
     SUCCESS: Exito
     SUCCESSCONTENT: '<p>Inicio de sesión exitoso. Si Ud no es automáticamente redireccionado, <a target="_top" href="{link}">haga clic aquí</a></p>'
     TimedOutTitleAnonymous: 'Expiró su sesión.'
     TimedOutTitleMember: 'Eh {name}!<br />Tu sesión expiró.'
-  CampaignAdmin:
-    ACCESS_HELP: 'Permitir la visualización de la sección de publicación de campañas'
-    MENUTITLE: Campañas
-  Campaigns:
-    AddToCampaign: 'Añadir a Campaña'
-    AddToCampaignFormFieldLabel: 'Seleccionar una Campaña'
   ChangePasswordEmail_ss:
     CHANGEPASSWORDFOREMAIL: 'Se ha cambiado la contraseña de la cuenta con dirección de correo electrónico {email}. Si no cambió su contraseña, por favor cambie su contraseña usando el siguiente enlace'
     CHANGEPASSWORDTEXT1: 'Has cambiado tu contraseña por'
-    CHANGEPASSWORDTEXT2: 'Ahora puede utilizar los siguientes datos de acreditación para iniciar sesión:'
     CHANGEPASSWORDTEXT3: 'Cambiar contraseña'
-    EMAIL: 'Correo electrónico'
     HELLO: Hola
-    PASSWORD: Contraseña
-  ChangeSet:
-    DESCRIPTION_AND: '{first} y {second}'
-    DESCRIPTION_ITEM: elemento
-    DESCRIPTION_ITEMS: elementos
-    DESCRIPTION_LIST_FIRST: '{item}'
-    DESCRIPTION_LIST_LAST: '{list}, y {item}'
-    DESCRIPTION_LIST_MID: '{list}, {item}'
-    DESCRIPTION_OTHER_ITEM: 'otro elemento'
-    DESCRIPTION_OTHER_ITEMS: 'otros elementos'
-    NAME: Nombre
-    PLURALNAME: Campañas
-    SINGULARNAME: Campaña
-    STATE: Estado
-  ChangeSetItem:
-    PLURALNAME: 'Elementos del Conjunto de Cambios'
-    SINGULARNAME: 'Elemento del Conjunto de Cambios'
-  CheckboxField:
+  SilverStripe\Forms\CheckboxField:
     NOANSWER: 'No'
     YESANSWER: Sí
-  CheckboxFieldSetField:
-    SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
-  CheckboxSetField:
-    SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
   CheckboxSetField_ss:
     NOOPTIONSAVAILABLE: 'No hay opciones disponibles'
-  ConfirmedPasswordField:
+  SilverStripe\Forms\ConfirmedPasswordField:
     ATLEAST: 'Las constraseñas deben tener al menos {min} caracteres de longitud.'
     BETWEEN: 'Las contraseñas deben tener desde {min} a {max} caracteres de longitud.'
     CURRENT_PASSWORD_ERROR: 'La contraseña actual que ha ingresado no es correcta.'
@@ -151,126 +45,54 @@ es:
     LOGGED_IN_ERROR: 'Debe iniciar una sesión para poder cambiar su contraseña.'
     MAXIMUM: 'Las contraseñas deben tener como máximo {max} caracteres de longitud.'
     SHOWONCLICKTITLE: 'Cambiar contraseña'
-  ContentController:
-    DRAFT_SITE_ACCESS_RESTRICTION: 'Debes iniciar sesión con tu contraseña del CMS para ver el borrador o el contenido archivado. <a href="%s">click aquí para regresar al sitio publicado.</a>'
-    NOTLOGGEDIN: 'No estás conectado'
-  CreditCardField:
-    FIRST: primero
-    FOURTH: cuarto
-    SECOND: segundo
-    THIRD: tercero
-  CurrencyField:
+  SilverStripe\Forms\CurrencyField:
     CURRENCYSYMBOL: Símbolo
-  DataObject:
-    PLURALNAME: 'Objetos de Datos'
-    SINGULARNAME: 'Objeto de Datos'
   Date:
-    DAY: Día
-    DAYS: Días
-    HOUR: Hora
-    HOURS: Horas
     LessThanMinuteAgo: 'Hace menos de un minuto'
-    MIN: Min
-    MINS: Mins
-    MONTH: Mes
-    MONTHS: Meses
-    SEC: Seg
-    SECS: Segs
     TIMEDIFFAGO: 'hace {difference}'
     TIMEDIFFIN: 'en {difference}'
-    YEAR: Año
-    YEARS: Años
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'sin establecer'
     TODAY: hoy
     VALIDDATEFORMAT2: 'Por favor, introduzca un formato de fecha válido ({format})'
     VALIDDATEMAXDATE: 'La fecha tiene que ser mayor o igual a la fecha máxima permitida ({date})'
     VALIDDATEMINDATE: 'La fecha tiene que ser posterior o coincidente a la fecha mínima permitida ({date})'
-  DatetimeField:
-    NOTSET: 'No establecido'
-  Director:
+  SilverStripe\Control\Director:
     INVALID_REQUEST: 'Solicitud no válida'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Elegir)
-    CHOOSESEARCH: '(Seleccionar o Buscar)'
     CHOOSE_MODEL: '(Elegir {name})'
     SOURCE_VALIDATION: 'Por favor, seleccionar un valor dentro de la lista provista. {value} no es una opcion válida'
-  EmailField:
+  SilverStripe\Forms\EmailField:
     VALIDATION: 'Introduzca una dirección de correo electrónico'
   Enum:
     ANY: Cualquiera
-  File:
-    AviType: 'Archivo de video AVI'
-    Content: Contenido
-    CssType: 'Archivo CSS'
-    DRAFT: Borrador
-    DmgType: 'Image de disco de Apple'
-    DocType: 'Documento Word'
-    Filename: 'Nombre del archivo'
-    GifType: 'Imagen GIF - buena para diagramas'
-    GzType: 'Archivo comprimido GZIP'
-    HtlType: 'Archivo HTML'
-    HtmlType: 'Archivo HTML'
-    INVALIDEXTENSION: 'La extensión no está permitida (válidas: {extensions})'
-    INVALIDEXTENSIONSHORT: 'La extensión no está permitida'
-    INVALIDEXTENSION_SHORT: 'La extensión no está permitida'
-    IcoType: 'Imagen Icon'
-    JpgType: 'Imagen JPEG - buena para fotos'
-    JsType: 'Archivo Javascript'
-    MODIFIED: Modificado
-    Mp3Type: 'Archivo de audio MP3'
-    MpgType: 'Archivo de video MPEG'
-    NOFILESIZE: 'El tamaño del fichero es de cero bytes.'
-    NOVALIDUPLOAD: 'El archivo no es válido para cargarlo'
-    Name: Nombre
-    PLURALNAME: Archivos
-    PdfType: 'Archivo PDF de Adobe Acrobat'
-    PngType: 'Imagen PNG - buen formato de propósito general'
-    SINGULARNAME: Archivo
-    TOOLARGE: 'El tamaño del archivo es demasiado grande, máximo permitido {size}'
-    TOOLARGESHORT: 'El tamaño del archivo supera {size}'
-    TiffType: 'Formato de imagen etiquetada'
-    Title: Título
-    WavType: 'Archivo de audio WAV'
-    XlsType: 'Hoja de cálculo Excel'
-    ZipType: 'Archivo comprimido ZIP'
-  Filesystem:
-    SYNCRESULTS: 'Sincronización completada: {createdcount} registros creados, {deletedcount} registros borrados'
-  Folder:
-    PLURALNAME: Carpetas
-    SINGULARNAME: Carpeta
   ForgotPasswordEmail_ss:
     HELLO: Hola
     TEXT1: 'Aquí tiene su'
     TEXT2: 'enlace para restablecer contraseña'
     TEXT3: para
-  Form:
+  SilverStripe\Forms\Form:
     CSRF_EXPIRED_MESSAGE: 'Tu sesión ha expirado. Por favor re envíe el formulario'
     CSRF_FAILED_MESSAGE: 'Parece que hubo un problema técnico. Por favor, haga clic en el botón Volver, recargue su navegador y vuelva a intentarlo.'
-    FIELDISREQUIRED: 'Se requiere {name} '
-    SubmitBtnLabel: Ir
     VALIDATIONCREDIT: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente'
-    VALIDATIONCREDITNUMBER: 'Por favor, asegúrese de que ha introducido el número de tarjeta de crédito correctamente {number}'
-    VALIDATIONNOTUNIQUE: 'El valor que se ha introducido no es único'
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraseñas no concuerdan'
     VALIDATIONPASSWORDSNOTEMPTY: 'Las contraseñas no pueden estar vacías'
     VALIDATIONSTRONGPASSWORD: 'Las contraseñas deben tener al menos un dígito y un carácter alfanumérico'
     VALIDATOR: Validador
     VALIDCURRENCY: 'Por favor, introduzca una moneda válida.'
-  FormField:
+  SilverStripe\Forms\FormField:
     EXAMPLE: 'p.ej. {format}'
-    Example: 'p.ej. {format}'
     NONE: ninguna
   GridAction:
     DELETE_DESCRIPTION: Borrar
     Delete: Borrar
     UnlinkRelation: Desenlazar
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Añadir {name}'
     Filter: Filtro
     FilterBy: 'Filtrar por'
     Find: Buscar
-    LEVELUP: 'Subir nivel'
     LinkExisting: 'Enlace Existente'
     NewRecord: 'Nuevo %s'
     NoItemsFound: 'No se encontraron registros'
@@ -283,56 +105,33 @@ es:
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'Sin permiso para borrar'
     EditPermissionsFailure: 'No se pudo editar permisos'
-  GridFieldDetailForm:
+  SilverStripe\Forms\GridField\GridFieldDetailForm:
     CancelBtn: Cancelar
     Create: Crear
     Delete: Borrar
     DeletePermissionsFailure: 'Sin permiso para borrar'
     Deleted: 'Borrado %s %s'
     Save: Guardar
-    Saved: 'Guardado {name} {link}'
   GridFieldEditButton_ss:
     EDIT: Editar
-  GridFieldItemEditView:
-    Go_back: Volver
-  Group:
-    AddRole: 'Agregar un rol para este grupo'
-    Code: 'Código de grupo'
-    DefaultGroupTitleAdministrators: Administradores
-    DefaultGroupTitleContentAuthors: Editores
-    Description: Descripción
-    GroupReminder: 'Si Ud elige un grupo padre, este grupo tomará todos sus roles'
-    HierarchyPermsError: 'No se puede asignar permisos privilegiados al grupo "% s"  (requiere acceso de administrador)'
-    Locked: '¿Bloqueado?'
-    NoRoles: 'Sin roles'
+  SilverStripe\Security\Group:
     PLURALNAME: Grupos
-    Parent: 'Grupo Padre'
-    RolesAddEditLink: 'Gestionar Roles'
+    PLURALS:
+      one: 'Un Grupo'
+      other: '{count} Grupos'
     SINGULARNAME: Grupo
-    Sort: 'Orden de Clasificación'
-    has_many_Permissions: Permisos
-    many_many_Members: Miembros
-  GroupImportForm:
-    Help1: '<p>Importar uno o más grupos en formato <em>CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: '<div class="advanced"><h4>Uso avanzado</h4><ul><li>Columnas permitidas: <em>%s</em></li><li>Grupos existentes son relacionados con su  <em>Código único</em> y actualizados con cualquier nuevo valor desde el archivo importado</li><li>Jerarquías de grupo pueden ser creadas utilizando la columna <em>ParentCode</em>.</li><li>Códigos de permiso pueden ser asignados por la columna <em>PermissionCode</em>. Códigos de permisos existentes no son eliminados.</li></ul></div>'
-    ResultCreated: 'Creados {count} grupos'
-    ResultDeleted: 'Se eliminaron %d grupos'
-    ResultUpdated: 'Actualizados grupos %d'
-  HTMLEditorField:
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField:
     ANCHORSCANNOTACCESSPAGE: 'No se le permite acceder al contenido de la página destino.'
     ANCHORSPAGENOTFOUND: 'No se encontró la página destino.'
     ANCHORVALUE: Ancla
-    BUTTONADDURL: 'Agregar URL'
     CAPTIONTEXT: 'Texto del título'
     CSSCLASS: 'Alineación / estilo'
     CSSCLASSCENTER: 'Centrado, en si mismo.'
     CSSCLASSLEFT: 'A la izquierda, con el texto flotando alrededor.'
     CSSCLASSLEFTALONE: 'Centrado, en si mismo.'
     CSSCLASSRIGHT: 'A la derecha, con el texto flotando alrededor.'
-    DETAILS: Detalles
     EMAIL: 'Correo electrónico'
     FILE: Archivo
-    FOLDER: Carpeta
     IMAGEALT: 'Texto alternativo (alt)'
     IMAGEALTTEXT: 'Texto alternativo (alt) - es mostrado si la imagen no puede ser visualizada'
     IMAGEALTTEXTDESC: 'Se muestra a los lectores de pantalla o si no se puede mostrar la imagen'
@@ -342,7 +141,6 @@ es:
     IMAGETITLETEXT: 'Texto del título (tooltip)'
     IMAGETITLETEXTDESC: 'Para obtener información adicional acerca de la imagen'
     IMAGEWIDTHPX: Ancho
-    INSERTMEDIA: 'Insertar medios desde'
     LINK: 'Insertar Enlace'
     LINKANCHOR: 'Enlace hacia un ancla de esta página'
     LINKDESCR: 'Descripción del Enlace'
@@ -356,267 +154,93 @@ es:
     PAGE: Página
     SUBJECT: 'Asunto del Email'
     URL: URL
-    URLDESCRIPTION: 'Insertar videos e imágenes de la web en tu sitio es tan simple como ingresar la URL del archivo. Asegúrate de que tienes los derechos o permisos antes de compartir directamente desde la web.<br/><br/>Por favor, ten en cuenta que los archivos no son añadidos desde el almacén de archivos del CMS sino que se incluyen desde su ubicación original, si por alguna razón el archivo no se encuentra disponible en su ubicación original, ya no podrá ser visualizada en esta página.'
     URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' pudo ser convertida a un recurso multimedia.'
-    UpdateMEDIA: 'Actualizar medios'
-  HTMLEditorField_Toolbar:
+  SilverStripe\Forms\HTMLEditor\HTMLEditorField_Toolbar:
     ERROR_ABSOLUTE: 'Sólo se pueden incrustar URLs absolutas'
     ERROR_HOSTNAME: 'Este nombre de host de archivo no está incluido en la lista blanca'
     ERROR_ID: 'Necesita un parámetro "ID" o "ArchivoURL" para identificar el archivo'
     ERROR_NOTFOUND: 'No se puede encontrar el archivo para ver'
     ERROR_OEMBED_REMOTE: 'La inclusión sólo es compatible con archivos remotos'
     ERROR_SCHEME: 'Este esquema de archivo no está incluido en la lista blanca'
-  Hierarchy:
+  SilverStripe\ORM\Hierarchy\Hierarchy:
     InfiniteLoopNotAllowed: 'Bucle infinito encontrado dentro de la jerarquía "{type}". Por favor, cambie el padre para resolver el problema'
-  HtmlEditorField:
-    ADDURL: 'Añadir URL'
-    ADJUSTDETAILSDIMENSIONS: 'Detalles &amp; dimensiones'
-    ANCHORSCANNOTACCESSPAGE: 'No se le permite acceder al contenido de la página destino.'
-    ANCHORSPAGENOTFOUND: 'No se encontró la página destino.'
-    ANCHORVALUE: Ancla
-    BUTTONADDURL: 'Agregar URL'
-    BUTTONINSERT: Insertar
-    BUTTONINSERTLINK: 'Insertar enlace'
-    BUTTONREMOVELINK: 'Eliminar enlace'
-    BUTTONUpdate: Actualizar
-    CAPTIONTEXT: 'Texto del título'
-    CSSCLASS: 'Alineación / estilo'
-    CSSCLASSCENTER: 'Centrado, en si mismo'
-    CSSCLASSLEFT: 'A la izquierda, con el texto flotando alrededor.'
-    CSSCLASSLEFTALONE: 'En la izquierda, en el suyo.'
-    CSSCLASSRIGHT: 'A la derecha, con el texto flotando alrededor.'
-    DETAILS: Detalles
-    EMAIL: 'Dirección de E-mail'
-    FILE: Archivo
-    FOLDER: Carpeta
-    FROMCMS: 'Desde el CMS'
-    FROMCOMPUTER: 'Desde tu ordenador'
-    FROMWEB: 'Desde la web'
-    FindInFolder: 'Buscar en carpeta'
-    IMAGEALT: 'Texto alternativo (alt)'
-    IMAGEALTTEXT: 'Texto alternativo (alt) - es mostrado si la imagen no puede ser visualizada'
-    IMAGEALTTEXTDESC: 'Mostrar a los lectores de pantalla o si la imagen no puede ser visualizada'
-    IMAGEDIMENSIONS: Dimensiones
-    IMAGEHEIGHTPX: Alto
-    IMAGETITLE: 'Texto del título (tooltip) - para obtener más información acerca de la imagen'
-    IMAGETITLETEXT: 'Texto del título (tooltip)'
-    IMAGETITLETEXTDESC: 'Para obtener información adicional acerca de la imagen'
-    IMAGEWIDTHPX: Ancho
-    INSERTMEDIA: 'Insertar Media'
-    LINK: 'Insertar/editar enlace para el texto resaltado'
-    LINKANCHOR: 'Ancla en esta página'
-    LINKDESCR: 'Descripción del Enlace'
-    LINKEMAIL: 'Dirección de E-mail'
-    LINKEXTERNAL: 'Otro Sitio Web'
-    LINKFILE: 'Descarga de un archivo'
-    LINKINTERNAL: 'Página en el sitio'
-    LINKOPENNEWWIN: '¿Abrir enlace en una ventana nueva?'
-    LINKTO: 'Enlazar a'
-    PAGE: Página
-    SUBJECT: 'Asunto del Email'
-    URL: URL
-    URLDESCRIPTION: 'Insertar videos e imágenes de la web en tu sitio es tan simple como ingresar la URL del archivo. Asegúrate de que tienes los derechos o permisos antes de compartir directamente desde la web.<br/><br/>Por favor nota que los archivos que no son cargados al almacén de archivos del CMS, sino que vinculados directamente de la ubicación original, si por alguna razón el archivo ya no está disponible en la ubicación original, no será posible mostrarlo en este sitio.'
-    URLNOTANOEMBEDRESOURCE: 'La URL ''{url}'' ''no se puede convertir en un recurso multimedia.'
-    UpdateMEDIA: 'Actualizar Media'
-  Image:
-    PLURALNAME: Archivos
-    SINGULARNAME: Archivo
-  Image_Cached:
-    PLURALNAME: Archivos
-    SINGULARNAME: Archivo
-  Image_iframe_ss:
-    TITLE: 'Iframe para agregar imágenes'
-  LeftAndMain:
-    CANCEL: Cancelar
-    CANT_REORGANISE: 'Usted no tiene permiso para modificar las páginas de nivel superior. Su modificación no se ha guardado.'
-    CollapsePanel: 'Colapsar Panel'
-    DELETED: Borrado
-    DropdownBatchActionsDefault: 'Elegir una acción ...'
-    ExpandPanel: 'Expandir Panel'
-    HELP: Ayuda
-    MenuToggleAuto: Automático
-    MenuToggleStickyNav: 'Navegación pegajosa'
-    PAGETYPE: 'Tipo de página'
-    PERMAGAIN: 'Ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña a continuación.'
-    PERMALREADY: 'Lamentablemente no puede acceder a esta parte del CMS. Si quiere entrar como alguien distinto, hágalo a continuación'
-    PERMDEFAULT: 'Debes estar conectado para acceder al área de administración; por favor ingresa tus datos a continuación'
-    PLEASESAVE: 'Por favor Guarde la Página: Esta página no se ha podido actualizar porque aún no ha sido guardada.'
-    PreviewButton: 'Vista previa'
-    REORGANISATIONSUCCESSFUL: 'Reorganizado el árbol del sitio con éxito.'
-    SAVEDUP: Guardado
-    ShowAsList: 'Mostrar como lista'
-    TooManyPages: 'Muchas páginas'
-    ValidationError: 'Error de validación'
-    VersionUnknown: desconocido
-  LeftAndMain_Menu_ss:
-    Hello: Hola
-    LOGOUT: 'Finalizar la sesión'
-  ListboxField:
-    SOURCE_VALIDATION: 'Por favor, seleccione un valor dentro de la lista provista. %s no es una opcion válida'
-  LoginAttempt:
-    Email: 'Correo electrónico'
-    IP: 'Dirección IP'
+  SilverStripe\Security\LoginAttempt:
     PLURALNAME: 'Intentos de ingreso'
+    PLURALS:
+      one: 'Un intento de inicio de sesión'
+      other: '{count} Intentos de inicios de sesión'
     SINGULARNAME: 'Intento de ingreso'
-    Status: Estado
-  Member:
-    ADDGROUP: 'Añadir grupo'
-    BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
-    BUTTONLOGIN: 'Inicie Sesión'
-    BUTTONLOGINOTHER: 'Inicie sesión como otra persona'
-    BUTTONLOSTPASSWORD: 'He perdido mi contraseña'
-    CANTEDIT: 'No tiene permiso para hacer eso'
-    CONFIRMNEWPASSWORD: 'Confirmar Nueva Contraseña'
-    CONFIRMPASSWORD: 'Confirmar Contraseña'
-    CURRENT_PASSWORD: 'Contraseña actual'
-    DATEFORMAT: 'Formato de fecha'
-    DefaultAdminFirstname: 'Administrador por defecto'
-    DefaultDateTime: 'por defecto'
-    EDIT_PASSWORD: 'Contraseña Nueva'
-    EMAIL: E-mail
-    EMPTYNEWPASSWORD: 'La nueva contraseña no puede estar vacía, por favor inténtalo de nuevo'
-    ENTEREMAIL: 'Por favor, introduce un correo electrónico para obtener un enlace con el que cambiar la contraseña'
-    ERRORLOCKEDOUT2: 'Su cuenta ha sido inhabilitada temporalmente porque ha habido demasiados intentos fallidos de conectarse. Por favor, intente de nuevo en 20 minutos.'
-    ERRORNEWPASSWORD: 'Ha introducido su nueva contraseña de distinta manera, intente de nuevo'
-    ERRORPASSWORDNOTMATCH: 'Su contraseña actual no concuerda, por favor intente de nuevo.'
-    ERRORWRONGCRED: 'Los detalles provistos no parecen estar correctos. Por favor intentar nuevamente.'
-    FIRSTNAME: Nombre(s)
-    INTERFACELANG: 'Idioma de la Interfaz'
-    INVALIDNEWPASSWORD: 'No podemos aceptar este password: {password}'
-    KEEPMESIGNEDIN: 'Manténme conectado'
-    LOGGEDINAS: 'Estás conectado como {name}.'
-    NEWPASSWORD: 'Nueva Contraseña'
-    NoPassword: 'No hay contraseña para este usuario'
-    PASSWORD: Contraseña
-    PASSWORDEXPIRED: 'Su contraseña expiró. Por favor, elija una nueva.'
+  SilverStripe\Security\Member:
     PLURALNAME: Miembros
-    REMEMBERME: '¿Recordarme la próxima vez? (por %d días en este dispositivo)'
+    PLURALS:
+      one: 'Un Miembro'
+      other: '{count} Miembros'
     SINGULARNAME: Miembro
-    SUBJECTPASSWORDCHANGED: 'Su contraseña ha sido cambiada'
-    SUBJECTPASSWORDRESET: 'Enlace para restaurar su contraseña'
-    SURNAME: Apellidos
-    TIMEFORMAT: 'Formato de tiempo'
-    VALIDATIONMEMBEREXISTS: 'Ya existe un miembro con el mismo {identifier}'
-    ValidationIdentifierFailed: 'No se puede sobrescribir el miembro existente #{id} con identificador idéntico ({name} = {value}))'
-    WELCOMEBACK: 'Bienvenido de nuevo, {firstname}'
-    YOUROLDPASSWORD: 'Su contraseña anterior'
-    belongs_many_many_Groups: Grupos
-    db_LastVisited: 'Fecha de la Última Visita'
-    db_Locale: 'Intefaz Local'
-    db_LockedOutUntil: 'Cerrado hasta'
-    db_NumVisit: 'Número de Visitas'
-    db_Password: Contraseña
-    db_PasswordExpiry: 'Fecha de vencimiento de la contraseña'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'E-mail &amp; Contraseña'
-  MemberDatetimeOptionsetField:
-    AMORPM: 'AM (antes del mediodía) o PM (después del mediodía)'
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
     Custom: Personalizable
     DATEFORMATBAD: 'El formato de fecha es inválido'
     DAYNOLEADING: 'Día del mes sin cero inicial'
     DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
     FOURDIGITYEAR: 'Año de cuatro dígitos'
-    FULLNAMEMONTH: 'Nombre completo del mes (ej.Junio)'
     HOURNOLEADING: 'Hora sin ceros a la izquierda, formato de 12 horas'
     HOURNOLEADING24: 'Hora sin ceros a la izquierda, formato de 24 horas'
     MINUTENOLEADING: 'Minutos sin cero inicial'
     MONTHNOLEADING: 'Dígitos mes sin cero inicial'
     Preview: 'Vista previa'
-    SHORTMONTH: 'Nombre abreviado del mes (por ejemplo, Jun)'
     TWODIGITDAY: 'Día de dos dígitos del mes'
-    TWODIGITHOUR: 'Dos dígitos de hora (00 a 23)'
-    TWODIGITMINUTE: 'Dos dígitos en minutos (00 a 59)'
-    TWODIGITMONTH: 'Meses con dos dígitos (01=Enero,etc.)'
-    TWODIGITSECOND: 'Segundos con dos dígitos (00 a 59)'
     TWODIGITYEAR: 'Año de dos dígitos'
     Toggle: Cambiar
-  MemberImportForm:
-    Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por coma). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    Help2: '<div class="advanced"><h4>Uso avanzado</h4><ul><li>Columnas permitidas: <em>%s</em></li><li>Usuarios existentes son relacionados con su  <em>Código único</em>, y actualizados con cualquier nuevo valor desde el archivo importado.</li><li>Grupos pueden ser asignados por la columna <em>Groups</em>. Grupos son identificados por su propiedad <em>Code</em>, multiples grupos pueden ser separados por una coma.  La pertenencia a grupos existentes no se borra.</li></ul></div>'
-    ResultCreated: 'Creados {count} miembros'
-    ResultDeleted: 'Se eliminaron %d miembros'
-    ResultNone: 'No hay cambios'
-    ResultUpdated: 'Actualizados {count} miembros'
-  MemberPassword:
-    PLURALNAME: 'Contraseñas de los miembros'
-    SINGULARNAME: 'Contraseña del miembro'
-  MemberTableField:
-    APPLY_FILTER: 'Aplicar filtro'
-  ModelAdmin:
-    DELETE: Eliminar
-    DELETEDRECORDS: 'Borrados {count} registros.'
-    EMPTYBEFOREIMPORT: 'Variar antes de importar'
-    IMPORT: 'Importar desde CSV'
-    IMPORTEDRECORDS: 'Importados {count} registros.'
-    NOCSVFILE: 'Por favor, selecciona un archivo CSV para importar'
-    NOIMPORT: 'Nada para importar'
-    RESET: Restablecer
-    Title: 'Modelos de datos'
-    UPDATEDRECORDS: 'Actualizados {count} registros.'
-  ModelAdmin_ImportSpec_ss:
-    IMPORTSPECFIELDS: 'Columnas de la base de datos'
-    IMPORTSPECLINK: 'Mostrar especificación para %s'
-    IMPORTSPECRELATIONS: Relaciones
-    IMPORTSPECTITLE: 'Especificación para %s'
-  ModelAdmin_Tools_ss:
-    FILTER: Filtrar
-    IMPORT: Importar
-  ModelSidebar_ss:
-    IMPORT_TAB_HEADER: Importar
-    SEARCHLISTINGS: Buscar
-  MoneyField:
-    FIELDLABELAMOUNT: Cantidad
-    FIELDLABELCURRENCY: Moneda
-  MultiSelectField:
+  SilverStripe\Forms\MoneyField:
+    INVALID_CURRENCY: 'Moneda {moneda} no está en la lista de monedas permitidas'
+  SilverStripe\Forms\MultiSelectField:
     SOURCE_VALIDATION: 'Por favor, seleccione un valor dentro de la lista provista. Se ha seleccionado una o más opciones inválidas {value}'
-  NullableField:
+  SilverStripe\Forms\NullableField:
     IsNullLabel: 'Es Nulo'
-  NumericField:
+  SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' no es un número, sólo números pueden ser aceptados para este campo'
   Pagination:
     Page: Página
     View: Vista
-  PasswordValidator:
+  SilverStripe\Security\PasswordValidator:
     LOWCHARSTRENGTH: 'Necesitas aumentar la complejidad de tu contraseña agregando los siguientes caracteres: %s'
     PREVPASSWORD: 'Ya habías utilizado esa contraseña en el pasado, por favor usa uno nuevo'
     TOOSHORT: 'Tu contraseña es muy corta'
-  Permission:
-    AdminGroup: Administrador
-    CMS_ACCESS_CATEGORY: 'Acceso al CMS'
-    FULLADMINRIGHTS: 'Todos los derechos administrativos'
-    FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
+  SilverStripe\Security\Permission:
     PLURALNAME: Permisos
+    PLURALS:
+      one: 'Un Permiso'
+      other: '{count} Permisos'
     SINGULARNAME: Permiso
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     AssignedTo: 'asignado a "{title}"'
     FromGroup: 'heredado desde el grupo "{title}"'
     FromRole: 'heredado desde la regla "{title}"'
     FromRoleOnGroup: 'heredado desde la regla "%s" del grupo "%s"'
-  PermissionRole:
-    OnlyAdminCanApply: 'Sólo el administrador puede aplicar'
-    PLURALNAME: Reglas
-    SINGULARNAME: Regla
-    Title: Título
-  PermissionRoleCode:
-    PLURALNAME: 'Códigos de permiso'
-    PermsError: 'No se puede asignar permisos privilegiados al código "% s"  (requiere acceso de administrador)'
-    SINGULARNAME: 'Códigos de las regla de permisos'
+  SilverStripe\Security\PermissionRole:
+    PLURALNAME: Roles
+    PLURALS:
+      one: 'Un Rol'
+      other: '{count} Roles'
+    SINGULARNAME: Rol
+  SilverStripe\Security\PermissionRoleCode:
+    PLURALNAME: 'Códigos de Roles de Permiso'
+    PLURALS:
+      one: 'Un Código de Rol de Permiso'
+      other: '{count} Códigos de Roles de Permiso'
+    SINGULARNAME: 'Código del Rol de Permiso'
   Permissions:
-    PERMISSIONS_CATEGORY: 'Reglas y permisos de acceso'
     UserPermissionsIntro: 'Asignar grupos a este usuario ajustará los permisos que tienen. Vea la sección de grupos para obtener información sobre permisos en grupos individuales.'
-  PhoneNumberField:
+  SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Por favor introduzca un número de teléfono válido'
-  RememberLoginHash:
-    PLURALNAME: 'Recordar Hashes de inicio de sesión'
-    SINGULARNAME: 'Recordar el Hash de inicio de sesión'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'No tiene acceso a esta página. Si posee otra cuenta con los privilegios para acceder a esta página, puede iniciar sesión a continuación.'
     BUTTONSEND: 'Envíenme el enlace para restaurar la contraseña'
     CHANGEPASSWORDBELOW: 'Puede cambiar su contraseña a continuación.'
     CHANGEPASSWORDHEADER: 'Modifique su contraseña'
     ENTERNEWPASSWORD: 'Por favor introduzca una nueva contraseña.'
     ERRORPASSWORDPERMISSION: 'Debe iniciar una sesión para poder cambiar su contraseña!'
-    LOGGEDOUT: 'Ha terminado su sesión. Si desea iniciar sesión nuevamente, introduzca sus datos de acreditación a continuación.'
     LOGIN: Entrar
     LOSTPASSWORDHEADER: '¿Contraseña Perdida?'
     NOTEPAGESECURED: 'Esa página está protegida. Introduzca sus datos de acreditación a continuación y lo enviaremos a ella en un momento.'
@@ -624,72 +248,13 @@ es:
     NOTERESETPASSWORD: 'Introduzca su dirección de e-mail, y le enviaremos un enlace, con el cual podrá restaurar su contraseña'
     PASSWORDSENTHEADER: 'Un enlace para restablecer la contraseña ha sido enviado a ''{email}'''
     PASSWORDSENTTEXT: 'Gracias! Un enlace para restablecer la contraseña ha sido enviado a ''{email}'', siempre que una cuenta exista para la dirección de email indicada.'
-  SecurityAdmin:
-    ACCESS_HELP: 'Permitir ver, añadir y editar usuarios, así como asignarles permisos y reglas.'
-    APPLY_ROLES: 'Aplicar reglas a grupos'
-    APPLY_ROLES_HELP: 'Posibilidad de editar las reglas asignados a un grupo. Requiere el permiso "acceso a la sección Usuarios" .'
-    EDITPERMISSIONS: 'Editar permisos y direcciones IP de cada grupo'
-    EDITPERMISSIONS_HELP: 'Permite editar los permisos y direcciones IP de un grupo. Requiere el permiso de "acceso a la sección Seguridad" .'
+  SilverStripe\Admin\SecurityAdmin:
     GROUPNAME: 'Nombre del grupo'
-    IMPORTGROUPS: 'Importar grupos'
-    IMPORTUSERS: 'Importar usuarios'
     MEMBERS: Miembros
-    MENUTITLE: Seguridad
-    MemberListCaution: 'Precaución: Borrar miembros de esta lista también los eliminará de todos los grupos y la base de datos'
     NEWGROUP: 'Nuevo grupo'
     PERMISSIONS: Permisos
     ROLES: Roles
     ROLESDESCRIPTION: 'Las reglas son conjuntos predefinidos de permisos, y pueden ser asignadas a grupos.<br /> Pueden ser heredadas desde grupos padres si es necesario.'
-    TABROLES: Reglas
-    Users: Usuarios
-  SecurityAdmin_MemberImportForm:
-    BtnImport: 'Importar desde CSV'
-    FileFieldLabel: 'Archivo CSV <small>(Permitidas extensiones: *.csv)</small>'
-  SilverStripeNavigator:
-    Auto: Automático
-    ChangeViewMode: 'Cambiar el modo de visualización'
-    Desktop: Escritorio
-    DualWindowView: 'Modo visualización de 2 ventanas'
-    Edit: Editar
-    EditView: 'Vista de edición'
-    Mobile: Móbil
-    PreviewState: 'Estado previsualización'
-    PreviewView: 'Vista de previsualización'
-    Responsive: Responsive
-    SplitView: 'Vista partida'
-    Tablet: Tablet
-    ViewDeviceWidth: 'Ver al ancho'
-    Width: Ancho
-  SilverStripe\Admin\CMSProfileController:
-    MENUTITLE: 'Mi Perfil'
-  SilverStripe\Admin\CampaignAdmin:
-    MENUTITLE: Campañas
-  SilverStripe\Admin\SecurityAdmin:
-    MENUTITLE: Seguridad
-  SilverStripe\Assets\File:
-    PLURALNAME: Archivos
-    PLURALS:
-      one: 'Un Archivo'
-      other: '{count} Archivos'
-    SINGULARNAME: Archivo
-  SilverStripe\Assets\Folder:
-    PLURALNAME: Carpetas
-    PLURALS:
-      one: 'Una Carpeta'
-      other: '{count} Carpetas'
-    SINGULARNAME: Carpeta
-  SilverStripe\Assets\Image:
-    PLURALNAME: Imágenes
-    PLURALS:
-      one: 'Una Imagen'
-      other: '{count} Imágenes'
-    SINGULARNAME: Imagen
-  SilverStripe\Forms\MoneyField:
-    INVALID_CURRENCY: 'Moneda {moneda} no está en la lista de monedas permitidas'
-  SilverStripe\Forms\SeparatedDateField:
-    DAY: Día
-    MONTH: Mes
-    YEAR: Año
   SilverStripe\ORM\DataObject:
     PLURALNAME: 'Objetos de Datos'
     PLURALS:
@@ -715,67 +280,19 @@ es:
     YEARS_SHORT_PLURALS:
       one: '{count} año'
       other: '{count} años'
-  SilverStripe\ORM\Versioning\ChangeSet:
-    PLURALNAME: Campañas
-    PLURALS:
-      one: 'Una Campaña'
-      other: '{count} Campañas'
-    SINGULARNAME: Campaña
-  SilverStripe\ORM\Versioning\ChangeSetItem:
-    PLURALNAME: 'Elemento del Conjunto de Cambios'
-    PLURALS:
-      one: 'Un Elemento del Conjunto de Cambios'
-      other: '{count} Elementos del Conjunto de Cambios'
-    SINGULARNAME: 'Elemento del Conjunto de Cambios'
-  SilverStripe\Security\Group:
-    PLURALNAME: Grupos
-    PLURALS:
-      one: 'Un Grupo'
-      other: '{count} Grupos'
-    SINGULARNAME: Grupo
-  SilverStripe\Security\LoginAttempt:
-    PLURALNAME: 'Intentos de ingreso'
-    PLURALS:
-      one: 'Un intento de inicio de sesión'
-      other: '{count} Intentos de inicios de sesión'
-    SINGULARNAME: 'Intento de ingreso'
-  SilverStripe\Security\Member:
-    PLURALNAME: Miembros
-    PLURALS:
-      one: 'Un Miembro'
-      other: '{count} Miembros'
-    SINGULARNAME: Miembro
   SilverStripe\Security\MemberPassword:
     PLURALNAME: 'Contraseñas de los Miembros'
     PLURALS:
       one: 'Una Contraseña de Miembro'
       other: '{count} Contraseñas de Miembros'
     SINGULARNAME: 'Contraseña del Miembro'
-  SilverStripe\Security\Permission:
-    PLURALNAME: Permisos
-    PLURALS:
-      one: 'Un Permiso'
-      other: '{count} Permisos'
-    SINGULARNAME: Permiso
-  SilverStripe\Security\PermissionRole:
-    PLURALNAME: Roles
-    PLURALS:
-      one: 'Un Rol'
-      other: '{count} Roles'
-    SINGULARNAME: Rol
-  SilverStripe\Security\PermissionRoleCode:
-    PLURALNAME: 'Códigos de Roles de Permiso'
-    PLURALS:
-      one: 'Un Código de Rol de Permiso'
-      other: '{count} Códigos de Roles de Permiso'
-    SINGULARNAME: 'Código del Rol de Permiso'
   SilverStripe\Security\RememberLoginHash:
     PLURALNAME: 'Hashes de inicio de sesión'
     PLURALS:
       one: 'Un Hash de inicio de sesión'
       other: '{count} Hashes de inicio de sesión'
     SINGULARNAME: 'Hash de inicio de sesión'
-  SiteTree:
+  SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
@@ -783,54 +300,13 @@ es:
     Print: Imprimir
   TableListField_PageControls_ss:
     OF: de
-  TextField:
-    VALIDATEMAXLENGTH: 'El valor para {name} no puede exceder los {maxLength} caracteres de longitud'
-  TimeField:
+  SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor, introduzca un formato de tiempo válido ({format})'
-  ToggleField:
-    LESS: menos
-    MORE: más
   UploadField:
-    ATTACHFILE: 'Adjuntar un archivo'
-    ATTACHFILES: 'Adjuntar ficheros'
-    AttachFile: 'Adjuntar archivo(s)'
-    CHOOSEANOTHERFILE: 'Seleccionar otro archivo'
-    CHOOSEANOTHERINFO: 'Seleccionar otra información'
-    DELETE: 'Borrar desde archivos'
-    DELETEINFO: 'Borrar permanentemente este archivo del almacén de archivos'
-    DOEDIT: Guardar
-    DROPFILE: 'Soltar un fichero'
-    DROPFILES: 'soltar archivos'
     Dimensions: Dimensiones
     EDIT: Editar
     EDITINFO: 'Editar este archivo'
     FIELDNOTSET: 'No ha sido encontrada la información del archivo'
-    FROMCOMPUTER: 'Desde tu ordenador'
-    FROMCOMPUTERINFO: 'Seleccione desde los archivos'
-    FROMFILES: 'Desde archivos'
-    HOTLINKINFO: 'Información: Esta imagen será hotlinked. Asegúrese de que tiene los permisos del sitio original del creador para hacerlo.'
-    MAXNUMBEROFFILES: 'El número máximo de {count} archivo(s) ha sido excedido.'
-    MAXNUMBEROFFILESONE: 'El máximo número de archivos es 1'
-    MAXNUMBEROFFILESSHORT: 'Sólo puede cargar {count} archivos'
-    OVERWRITEWARNING: 'Deseas sobreescribir el archivo?'
     REMOVE: Eliminar
-    REMOVEINFO: 'Eliminar este archivo de este lugar, pero no eliminarlo del almacén de archivos'
-    STARTALL: 'Iniciar todos'
-    Saved: Guardado
-    UPLOADSINTO: 'Subir sobre'
-  ValidationException:
+  SilverStripe\ORM\ValidationException:
     DEFAULT_ERROR: 'Error de validación'
-  Versioned:
-    INFERRED_TITLE: 'Generado por la publicación de ''{title}'' en {created}'
-    has_many_Versions: Versiones
-  VersionedGridFieldItemRequest:
-    ARCHIVE: Archivo
-    Archived: 'Archivado %s %s'
-    BUTTONARCHIVEDESC: 'Despublicar y enviar al archivo'
-    BUTTONPUBLISH: Publicar
-    BUTTONUNPUBLISH: Despublicar
-    BUTTONUNPUBLISHDESC: 'Eliminar este registro del sitio publicado'
-    Published: 'Publicado {name} {link}'
-    Unpublished: 'Despublicado %s %s'
-  i18n:
-    PLURAL: '{number} {form}'

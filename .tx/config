@@ -12,3 +12,4 @@ file_filter = client/lang/src/<lang>.js
 source_file = client/lang/src/en.js
 source_lang = en
 type = KEYVALUEJSON
+

@@ -115,7 +115,7 @@ class PermissionCheckboxSetField extends FormField
                     $uninheritedCodes[$permission->Code] = array();
                 }
                 $uninheritedCodes[$permission->Code][] = _t(
-                    'PermissionCheckboxSetField.AssignedTo',
+                    'SilverStripe\\Security\\PermissionCheckboxSetField.AssignedTo',
                     'assigned to "{title}"',
                     array('title' => $record->dbObject('Title')->forTemplate())
                 );
@@ -133,7 +133,7 @@ class PermissionCheckboxSetField extends FormField
                                 $inheritedCodes[$code->Code] = array();
                             }
                             $inheritedCodes[$code->Code][] = _t(
-                                'PermissionCheckboxSetField.FromRole',
+                                'SilverStripe\\Security\\PermissionCheckboxSetField.FromRole',
                                 'inherited from role "{title}"',
                                 'A permission inherited from a certain permission role',
                                 array('title' => $role->dbObject('Title')->forTemplate())
@@ -156,7 +156,7 @@ class PermissionCheckboxSetField extends FormField
                                         $inheritedCodes[$code->Code] = array();
                                     }
                                     $inheritedCodes[$code->Code][] = _t(
-                                        'PermissionCheckboxSetField.FromRoleOnGroup',
+                                        'SilverStripe\\Security\\PermissionCheckboxSetField.FromRoleOnGroup',
                                         'inherited from role "%s" on group "%s"',
                                         'A permission inherited from a role on a certain group',
                                         array('roletitle' => $role->dbObject('Title')->forTemplate(), 'grouptitle' => $parent->dbObject('Title')->forTemplate())
@@ -171,7 +171,7 @@ class PermissionCheckboxSetField extends FormField
                                 }
                                 $inheritedCodes[$permission->Code][] =
                                 _t(
-                                    'PermissionCheckboxSetField.FromGroup',
+                                    'SilverStripe\\Security\\PermissionCheckboxSetField.FromGroup',
                                     'inherited from group "{title}"',
                                     'A permission inherited from a certain group',
                                     array('title' => $parent->dbObject('Title')->forTemplate())

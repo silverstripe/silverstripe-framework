@@ -1,92 +1,39 @@
 es_AR:
-  AssetAdmin:
-    NEWFOLDER: 'Nueva Carpeta'
   AssetTableField:
     CREATED: 'Agregado por primera vez'
-    DIM: Dimensiones
-    FILENAME: 'Nombre del Archivo'
     LASTEDIT: 'Modificado por última vez'
-    OWNER: Propietario
     SIZE: Tamaño
-    TITLE: Título
     TYPE: Tipo
-  BBCodeParser:
-    ALIGNEMENT: Alineación
-    ALIGNEMENTEXAMPLE: 'alineado a la derecha'
-    BOLD: 'Texto en Negrita'
-    BOLDEXAMPLE: Negrita
-    CODE: 'Bloque de Código'
-    CODEDESCRIPTION: 'Bloque de código sin forma'
-    CODEEXAMPLE: 'Bloque de código'
-    COLORED: 'Texto Coloreado'
-    COLOREDEXAMPLE: 'texto azul'
-    EMAILLINK: 'Vínculo a Email'
-    EMAILLINKDESCRIPTION: 'Crea un vínculo a una dirección de email'
-    IMAGE: Imagen
-    IMAGEDESCRIPTION: 'Mostrar una imagen en tu mensaje'
-    ITALIC: 'Texto en Cursiva'
-    ITALICEXAMPLE: Cursiva
-    LINK: 'Vínculo a sitio ewb'
-    LINKDESCRIPTION: 'Vínculo a otra URL o sitio web'
-    STRUCK: 'Texto Tachado'
-    STRUCKEXAMPLE: Tachado
-    UNDERLINE: 'Texto Subrayado'
-    UNDERLINEEXAMPLE: Subrayado
-    UNORDERED: 'Lista desordenada'
-    UNORDEREDDESCRIPTION: 'Lista desordenada'
-    UNORDEREDEXAMPLE1: 'elemento 1 desordenado'
-  BasicAuth:
+  SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Por favor ingresa tu nombre de usuario y contraseña.'
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
   Boolean:
     ANY: Cualquiera
-  CMSMain:
-    ACCESSALLINTERFACES: 'Acceder a todas las secciones del CMS'
-    SAVE: Guardar
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Haz cambiado tu contraseña por'
-    CHANGEPASSWORDTEXT2: 'Ahora puedes utilizar las siguientes credenciales para ingresar:'
     HELLO: Hola
-    PASSWORD: Contraseña
-  ConfirmedPasswordField:
+  SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar Contraseña'
-  CreditCardField:
-    FIRST: primero
-    FOURTH: cuarto
-    SECOND: segundo
-    THIRD: tercero
-  DataObject:
-    PLURALNAME: 'Objetos de Datos'
-    SINGULARNAME: 'Objeto de Datos'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'no especificada'
     TODAY: hoy
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Selecciona)
   Enum:
     ANY: Cualquiera
-  File:
-    Content: Contenido
-    Filename: 'Nombre de Archivo'
-    NOVALIDUPLOAD: 'El archivo no es una subida válida'
-    Name: Nombre
-    PLURALNAME: Archivos
-    SINGULARNAME: Archivo
-    Title: Título
   ForgotPasswordEmail_ss:
     HELLO: Hola
     TEXT1: 'Aquí esta tu'
     TEXT2: 'vínculo para restablecer la contraseña'
     TEXT3: para
-  Form:
-    VALIDATIONNOTUNIQUE: 'El valor ingresado no es único'
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraseñas no son iguales'
     VALIDATIONPASSWORDSNOTEMPTY: 'Las contraseñas no pueden estar vacías'
     VALIDATOR: Verificador
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: ninguna
-  Group:
+  SilverStripe\Security\Group:
     Code: 'Código de Grupo'
     DefaultGroupTitleAdministrators: Administradores
     DefaultGroupTitleContentAuthors: 'Autores de contenido'
@@ -97,46 +44,11 @@ es_AR:
     Sort: Ordenar
     has_many_Permissions: Permisos
     many_many_Members: Miembros
-  GroupImportForm:
-    Help1: '<p>Importar uno o más grupos en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    ResultDeleted: 'Se eliminaron %d grupos'
-    ResultUpdated: 'Se actualizaron %d grupos'
-  HtmlEditorField:
-    ANCHORVALUE: Anclar
-    BUTTONINSERTLINK: 'Insertar enlace'
-    BUTTONREMOVELINK: 'Quitar enlace'
-    CSSCLASS: 'Alineación / estilo'
-    CSSCLASSCENTER: 'Centrado, en si mismo.'
-    CSSCLASSLEFT: 'A la izquierda, justificando texto.'
-    CSSCLASSLEFTALONE: 'A la izquierda, en él mismo.'
-    CSSCLASSRIGHT: 'A la derecha, justificando texto.'
-    EMAIL: 'Dirección email'
-    FILE: Archivo
-    FOLDER: Carpeta
-    IMAGEDIMENSIONS: Dimensiones
-    IMAGEHEIGHTPX: Alto
-    IMAGETITLE: 'Texto de título (tooltip) - información adicional acerca de la imagen'
-    IMAGEWIDTHPX: Ancho
-    LINK: Enlace
-    LINKANCHOR: 'Anclar en ésta página'
-    LINKDESCR: 'Descripción del enlace'
-    LINKEMAIL: 'Dirección email'
-    LINKEXTERNAL: 'Otro sitio web'
-    LINKFILE: 'Descargar un archivo'
-    LINKINTERNAL: 'Página en el sitio'
-    LINKOPENNEWWIN: '¿Abrir enlace en una nueva ventana?'
-    LINKTO: 'Enlazar a'
-    PAGE: Página
-  Image_iframe_ss:
-    TITLE: 'Subiendo Imagen Iframe'
-  LeftAndMain:
-    HELP: Ayuda
-    PERMAGAIN: 'Haz sido desconectado del CMS. Si quieres volver a entrar, a continuación introduce tu nombre de usuario y contraseña.'
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'Dirección Email'
     IP: 'Dirección IP'
     Status: Estado
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
     BUTTONLOGIN: Acceder
     BUTTONLOGINOTHER: 'Ingresar como otra persona'
@@ -153,78 +65,47 @@ es_AR:
     INTERFACELANG: 'Idioma de la interfaz'
     NEWPASSWORD: 'Nueva contraseña'
     PASSWORD: Contraseña
-    PLURALNAME: Miembros
-    SINGULARNAME: Miembro
     SUBJECTPASSWORDCHANGED: 'Tu contraseña ha sido cambiada'
     SUBJECTPASSWORDRESET: 'Enlace para renovar tu contraseña'
     SURNAME: Apellido
     YOUROLDPASSWORD: 'Contraseña anterior'
     belongs_many_many_Groups: Grupos
-    db_LastVisited: 'Fecha de Última Visita'
     db_Locale: 'Interface de Localidad'
     db_LockedOutUntil: 'Bloqueado hasta'
-    db_NumVisit: 'Número de Visitas'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha Vencimiento de Contraseña'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'Email  &amp; Contraseña'
-  MemberImportForm:
-    Help1: '<p>Importar miembros en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>'
-    ResultDeleted: 'Se eliminaron %d miembros'
-    ResultNone: 'Sin cambios'
-  ModelAdmin:
-    DELETE: Eliminar
-    IMPORT: 'Importar desde CSV'
-    NOCSVFILE: 'Por favor explorar por un archivo CVS para importar'
-    NOIMPORT: 'Nada para importar'
-  MoneyField:
+  SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Cantidad
     FIELDLABELCURRENCY: Moneda
-  NullableField:
+  SilverStripe\Forms\NullableField:
     IsNullLabel: 'Es nulo'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administrador
-    CMS_ACCESS_CATEGORY: 'Acceso al CMS'
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado desde el rol "%s" en el grupo "%s"'
-  Permissions:
-    PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
-  PhoneNumberField:
+  SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Por favor ingresa un número telefónico válido'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Ud no tiene acceso a esta página. Si tiene otra cuenta que puede acceder a esa página, entonces puede iniciar sesión nuevamente.'
     BUTTONSEND: 'Envíame el enlace para restablecer mi contraseña'
     CHANGEPASSWORDBELOW: 'Puedes cambiar tu contraseña abajo.'
     CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
     ENTERNEWPASSWORD: 'Por favor incorpora la nueva contraseña'
     ERRORPASSWORDPERMISSION: '¡Debes haber ingresado al sitio para cambiar la contraseña!'
-    LOGGEDOUT: 'Tu sesión ha caducado. Si deseas ingresar de nuevo, incorpora tus credenciales abajo.'
     LOGIN: Acceso
     NOTEPAGESECURED: 'Esta página está protegida. Ingresa tus credenciales abajo y en seguida te enviaremos una autorización.'
     NOTERESETPASSWORD: 'Ingresa tu dirección email y te enviaremos un enlace con el cual podrás restablecer la contraseña'
-  SecurityAdmin:
-    ACCESS_HELP: 'Permitir ver, agregar y editar usuarios, así como asignar permisos y roles a ellos.'
-    APPLY_ROLES: 'Aplicar roles a grupos'
-    APPLY_ROLES_HELP: 'Posibilidad de editar los roles asignados a un grupo. Necesita el permiso "Acceder a la sección ''Seguridad''".'
-    EDITPERMISSIONS: 'Administrar permisos para grupos'
-    EDITPERMISSIONS_HELP: 'Posibilidad de editar permisos y direcciones IP a un grupo. Necesita el permiso "Acceder a la sección ''Seguridad''".'
+  SilverStripe\Admin\SecurityAdmin:
     GROUPNAME: 'Nombre de grupo'
     MEMBERS: Miembros
-    MemberListCaution: 'Advertencia: la eliminación de miembros de esta lista los eliminará de todos los grupos y de la base de datos'
     NEWGROUP: 'Nuevo Grupo'
     PERMISSIONS: Permisos
     ROLES: roles
     ROLESDESCRIPTION: 'Esta sección le permite agregar roles a este grupo. Los roles son agrupaciones lógicas de permisos, que se pueden editar en la pestaña Roles.'
-  SecurityAdmin_MemberImportForm:
-    BtnImport: importar
-    FileFieldLabel: 'Archivo CSV <small>(extensiones permitidas: *.csv)</small>'
-  SiteTree:
+  SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
-  ToggleField:
-    LESS: menos
-    MORE: más
-  Versioned:
-    has_many_Versions: Versiones

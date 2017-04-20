@@ -330,7 +330,7 @@ class TimeField extends TextField
             $validator->validationError(
                 $this->name,
                 _t(
-                    'TimeField.VALIDATEFORMAT',
+                    'SilverStripe\\Forms\\TimeField.VALIDATEFORMAT',
                     "Please enter a valid time format ({format})",
                     ['format' => $this->getTimeFormat()]
                 )

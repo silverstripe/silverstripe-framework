@@ -34,7 +34,7 @@ class GroupTest extends FunctionalTest
         $this->assertEquals('my-code', $g2->Code, 'Custom attributes are not overwritten by Title field');
 
         $g3 = new Group();
-        $g3->Title = _t('SecurityAdmin.NEWGROUP', "New Group");
+        $g3->Title = _t('SilverStripe\\Admin\\SecurityAdmin.NEWGROUP', "New Group");
         $g3->write();
         $this->assertNull($g3->Code, 'Default title doesnt trigger attribute setting');
     }

@@ -55,7 +55,7 @@ class NullableField extends FormField
         if (isset($isNullLabel)) {
             $this->setIsNullLabel($isNullLabel);
         } else {
-            $this->isNullLabel = _t('NullableField.IsNullLabel', 'Is Null');
+            $this->isNullLabel = _t('SilverStripe\\Forms\\NullableField.IsNullLabel', 'Is Null');
         }
 
         parent::__construct(

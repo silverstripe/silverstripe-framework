@@ -143,7 +143,7 @@ abstract class SingleSelectField extends SelectField
         $validator->validationError(
             $this->name,
             _t(
-                'DropdownField.SOURCE_VALIDATION',
+                'SilverStripe\\Forms\\DropdownField.SOURCE_VALIDATION',
                 "Please select a value within the list provided. {value} is not a valid option",
                 array('value' => $selected)
             ),

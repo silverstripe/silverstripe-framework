@@ -236,7 +236,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
     {
         if (!Director::is_absolute_url($fileUrl)) {
             throw $this->getErrorFor(_t(
-                "HTMLEditorField_Toolbar.ERROR_ABSOLUTE",
+                "SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Toolbar.ERROR_ABSOLUTE",
                 "Only absolute urls can be embedded"
             ));
         }
@@ -244,7 +244,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $allowed_schemes = self::config()->get('fileurl_scheme_whitelist');
         if (!$scheme || ($allowed_schemes && !in_array($scheme, $allowed_schemes))) {
             throw $this->getErrorFor(_t(
-                "HTMLEditorField_Toolbar.ERROR_SCHEME",
+                "SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Toolbar.ERROR_SCHEME",
                 "This file scheme is not included in the whitelist"
             ));
         }
@@ -252,7 +252,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
         $allowed_domains = self::config()->get('fileurl_domain_whitelist');
         if (!$domain || ($allowed_domains && !in_array($domain, $allowed_domains))) {
             throw $this->getErrorFor(_t(
-                "HTMLEditorField_Toolbar.ERROR_HOSTNAME",
+                "SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Toolbar.ERROR_HOSTNAME",
                 "This file hostname is not included in the whitelist"
             ));
         }
@@ -294,7 +294,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
         } else {
             // Or we could have been passed nothing, in which case panic
             throw $this->getErrorFor(_t(
-                "HTMLEditorField_Toolbar.ERROR_ID",
+                "SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Toolbar.ERROR_ID",
                 'Need either "ID" or "FileURL" parameter to identify the file'
             ));
         }
@@ -302,7 +302,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
         // Validate file exists
         if (!$url) {
             throw $this->getErrorFor(_t(
-                "HTMLEditorField_Toolbar.ERROR_NOTFOUND",
+                "SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Toolbar.ERROR_NOTFOUND",
                 'Unable to find file to view'
             ));
         }
@@ -324,7 +324,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
                 // {@see HTMLEditorField_Toolbar::getAllowedExtensions())
                 if ($file) {
                     throw $this->getErrorFor(_t(
-                        "HTMLEditorField_Toolbar.ERROR_OEMBED_REMOTE",
+                        "SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField_Toolbar.ERROR_OEMBED_REMOTE",
                         "Embed is only compatible with remote files"
                     ));
                 }
@@ -374,7 +374,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
             if (!$page->canView()) {
                 throw new HTTPResponse_Exception(
                     _t(
-                        'HTMLEditorField.ANCHORSCANNOTACCESSPAGE',
+                        'SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.ANCHORSCANNOTACCESSPAGE',
                         'You are not permitted to access the content of the target page.'
                     ),
                     403
@@ -396,7 +396,7 @@ class HTMLEditorField_Toolbar extends RequestHandler
             }
         } else {
             throw new HTTPResponse_Exception(
-                _t('HTMLEditorField.ANCHORSPAGENOTFOUND', 'Target page not found.'),
+                _t('SilverStripe\\Forms\\HTMLEditor\\HTMLEditorField.ANCHORSPAGENOTFOUND', 'Target page not found.'),
                 404
             );
         }

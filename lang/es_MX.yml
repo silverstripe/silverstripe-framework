@@ -1,124 +1,54 @@
 es_MX:
-  AssetAdmin:
-    NEWFOLDER: 'Nueva Carpeta'
   AssetTableField:
     CREATED: 'Agregado por primera vez'
-    DIM: Dimensiones
-    FILENAME: 'Nombre del archivo'
-    FOLDER: Carpeta
     LASTEDIT: 'Modificado por última vez'
-    OWNER: Propietario
     SIZE: Tamaño
-    TITLE: Título
     TYPE: Tipo
-  AssetUploadField:
-    ChooseFiles: 'Seleccionar archivos'
-    DRAGFILESHERE: 'Arrastrar archivos acá'
-    DROPAREA: 'Área de arrastre'
-    EDITALL: 'Editar todos'
-    EDITANDORGANIZE: 'Editar y organizar'
-    FILES: Archivos
-    UPLOADINPROGRESS: 'Por favor espera, subida de archivos en progreso'
-    UPLOADOR: o
-  BBCodeParser:
-    ALIGNEMENT: Alineación
-    ALIGNEMENTEXAMPLE: 'alineado a la derecha'
-    BOLD: 'Texto en negrita'
-    BOLDEXAMPLE: Negrita
-    CODE: 'Bloque de Código'
-    CODEDESCRIPTION: 'Bloque de código sin formato'
-    CODEEXAMPLE: 'Bloque de código'
-    COLORED: 'Texto coloreado'
-    COLOREDEXAMPLE: 'texto azul'
-    EMAILLINK: 'Vínculo a correo-e'
-    EMAILLINKDESCRIPTION: 'Crea un vínculo a una dirección de correo-e'
-    IMAGE: Imagen
-    IMAGEDESCRIPTION: 'Mostrar imagen en tu mensaje'
-    ITALIC: 'Texto en itálica'
-    ITALICEXAMPLE: itálicas
-    LINK: 'Vínculo a sitio ewb'
-    LINKDESCRIPTION: 'Vínculo a otra URL o sitio web'
-    STRUCK: 'Texto tachado'
-    STRUCKEXAMPLE: Tachado
-    UNDERLINE: 'Texto subrayado'
-    UNDERLINEEXAMPLE: 'Texto simple'
-    UNORDERED: 'Lista desordenada'
-    UNORDEREDDESCRIPTION: 'Lista desordenada'
-    UNORDEREDEXAMPLE1: 'elemento 1 desordenado'
-  BackLink_Button_ss:
-    Back: Volver
-  BasicAuth:
+  SilverStripe\Security\BasicAuth:
     ENTERINFO: 'Por favor ingresa tu nombre de usuario y contraseña.'
     ERRORNOTADMIN: 'El usuario no es administrador.'
     ERRORNOTREC: 'No se reconoce el nombre de usuario / contraseña'
   Boolean:
     ANY: Cualquiera
-  CMSLoadingScreen_ss:
-    LOADING: Cargando...
-  CMSMain:
-    ACCESSALLINTERFACES: 'Acceder a todas las secciones del CMS'
-    ACCESSALLINTERFACESHELP: 'Anula la configuració de acceso más específica.'
-    SAVE: Guardar
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Usted ha cambiado su contraseña'
-    CHANGEPASSWORDTEXT2: 'Ahora puedes utilizar las siguientes credenciales para ingresar:'
-    EMAIL: 'Correo Electrónico'
     HELLO: Hey
-    PASSWORD: Contraseña
-  ConfirmedPasswordField:
+  SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Cambiar contraseña'
-  CreditCardField:
-    FIRST: primero
-    FOURTH: cuarto
-    SECOND: segundo
-    THIRD: tercero
-  DataObject:
-    PLURALNAME: 'Datos de objetos'
-    SINGULARNAME: 'Datos del objeto'
   Date:
     TIMEDIFFAGO: '{difference} atrás'
     TIMEDIFFIN: 'en {difference}'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'no especificada'
     TODAY: ahora
     VALIDDATEFORMAT2: 'Por favor ingresar un formato válido de fecha ({format})'
     VALIDDATEMAXDATE: 'Tu fecha tiene que ser más antigua o al menos coincidir con la fecha mínima permitida ({date})'
     VALIDDATEMINDATE: 'Tu fecha tiene que ser nueva o al menos coincidir con la fecha mínima permitida ({date})'
-  Director:
+  SilverStripe\Control\Director:
     INVALID_REQUEST: 'Solicitud no válida'
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Seleccione)
   Enum:
     ANY: Cualquiera
-  File:
-    Content: Contenido
-    Filename: 'Nombre del archivo'
-    NOVALIDUPLOAD: 'No es un archivo válido'
-    Name: Nombre
-    PLURALNAME: Archivos
-    SINGULARNAME: Archivo
-    Title: Título
   ForgotPasswordEmail_ss:
     HELLO: Hey
     TEXT1: 'Estás aquí'
     TEXT2: 'vínculo para restablecer la contraseña'
     TEXT3: para
-  Form:
-    VALIDATIONNOTUNIQUE: 'El valor ingresado no es único'
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: 'Las contraeñas no son iguales'
     VALIDATIONPASSWORDSNOTEMPTY: 'Las contraseñas no pueden estar vacías'
     VALIDATOR: Verificador
-  FormField:
+  SilverStripe\Forms\FormField:
     NONE: Ninguno
   GridAction:
     Delete: Eliminar
     UnlinkRelation: Desvincular
-  GridField:
+  SilverStripe\Forms\GridField\GridField:
     Add: 'Agregar {name}'
     Filter: Filtro
     FilterBy: 'Filtrar por'
     Find: Buscar
-    LEVELUP: 'Subir de nivel'
     LinkExisting: 'Enlazar existente'
     NewRecord: 'Nuevo %s'
     NoItemsFound: 'No hay ítems encontrados'
@@ -130,7 +60,7 @@ es_MX:
     ResetFilter: Resetear
   GridFieldAction_Delete:
     DeletePermissionsFailure: 'No borrar permisos'
-  Group:
+  SilverStripe\Security\Group:
     Code: 'Código del grupo'
     DefaultGroupTitleAdministrators: Administradores
     DefaultGroupTitleContentAuthors: 'Autores de Contenido'
@@ -142,51 +72,11 @@ es_MX:
     Sort: 'Orden de Clasificación'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
-  GroupImportForm:
-    Help1: '<p>Importar usuarios en <em>formato CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>\n'
-    ResultDeleted: '%d grupos eliminados'
-    ResultUpdated: '%d grupos actualizados'
-  HtmlEditorField:
-    ANCHORVALUE: Anclar
-    BUTTONINSERT: Insertar
-    BUTTONINSERTLINK: 'Insertar enlace'
-    BUTTONREMOVELINK: 'Quitar enlace'
-    CAPTIONTEXT: 'Texto de la leyenda'
-    CSSCLASS: 'Alineación / estilo'
-    CSSCLASSCENTER: Centrado
-    CSSCLASSLEFT: 'A la izquierda, justificando texto.'
-    CSSCLASSLEFTALONE: 'A la izquierda, en él mismo.'
-    CSSCLASSRIGHT: 'A la derecha, justificando texto.'
-    DETAILS: Detalles
-    EMAIL: 'Dirección de correo-e'
-    FILE: Archivo
-    FOLDER: Carpeta
-    FROMCMS: 'Desde el CMS'
-    FROMCOMPUTER: 'Desde tu computador'
-    IMAGEDIMENSIONS: Dimensiones
-    IMAGEHEIGHTPX: Alto
-    IMAGETITLE: 'Título del tooltip - para información adicional acerca de la imagen'
-    IMAGEWIDTHPX: Ancho
-    LINK: Enlace
-    LINKANCHOR: 'Anclar en ésta página'
-    LINKDESCR: 'Descripción del enlace'
-    LINKEMAIL: 'Dirección de correo-e'
-    LINKEXTERNAL: 'Otro sitio web'
-    LINKFILE: 'Descargar archivo'
-    LINKINTERNAL: 'Página en el sitio'
-    LINKOPENNEWWIN: '¿Abrir enlace en una nueva ventana?'
-    LINKTO: 'Enlazar a'
-    PAGE: Página
-  Image_iframe_ss:
-    TITLE: 'Subiendo Imagen Iframe'
-  LeftAndMain:
-    HELP: Ayuda
-    PERMAGAIN: 'Usted ha sido desconectado del CMS. Si quiere volver a entrar, introduzca su nombre de usuario y contraseña.'
-  LoginAttempt:
+  SilverStripe\Security\LoginAttempt:
     Email: 'Dirección de Correo Electrónico'
     IP: 'Dirección IP'
     Status: Estado
-  Member:
+  SilverStripe\Security\Member:
     ADDGROUP: 'Agregar grupo'
     BUTTONCHANGEPASSWORD: 'Cambiar Contraseña'
     BUTTONLOGIN: Ingresar
@@ -202,12 +92,9 @@ es_MX:
     ERRORPASSWORDNOTMATCH: 'Tu contraseña actual no encaja, por favor inténtalo de nuevo'
     FIRSTNAME: 'Primer Nombre'
     INTERFACELANG: 'Lenguaje de la interfaz'
-    INVALIDNEWPASSWORD: 'No podemos acceptar see pasword: {password}'
     LOGGEDINAS: 'Conectado como {name}.'
     NEWPASSWORD: 'Nueva contraseña'
     PASSWORD: Contraseña
-    PLURALNAME: Miembros
-    SINGULARNAME: Miembro
     SUBJECTPASSWORDCHANGED: 'Su contraseña se ha cambiado'
     SUBJECTPASSWORDRESET: 'Enlace para reasignar su contraseña'
     SURNAME: Apellido
@@ -215,117 +102,61 @@ es_MX:
     WELCOMEBACK: 'Bienvenido nuevamente, {firstname}'
     YOUROLDPASSWORD: 'Contraseña anterior'
     belongs_many_many_Groups: Grupos
-    db_LastVisited: 'Fecha de Última Visita'
     db_Locale: 'Interfaz Local'
     db_LockedOutUntil: 'Bloqueado hasta'
-    db_NumVisit: 'Número de Visitas'
     db_Password: Contraseña
     db_PasswordExpiry: 'Fecha en que expira la contraseña'
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: 'Correo-e y Contraseña'
-  MemberDatetimeOptionsetField:
-    AMORPM: 'AM (ante meridian) o PM (post meridiano)'
+  SilverStripe\Forms\MemberDatetimeOptionsetField:
     Custom: 'A medida'
     DATEFORMATBAD: 'El formato de fecha es invalido'
     DAYNOLEADING: 'Dia del mes sin cero a la izquierda'
     DIGITSDECFRACTIONSECOND: 'Uno o más dígitos representando una fracción decimal de un segundo'
     FOURDIGITYEAR: 'Año de 4 dígitos'
-    FULLNAMEMONTH: 'Nombre completo del mes (ej: Junio)'
     MINUTENOLEADING: 'Minuto sin cero a la izquierda'
     MONTHNOLEADING: 'Dígito del mes  sin cero'
     Preview: Previo
-    SHORTMONTH: 'Nombre corto del mes (ej: Jun)'
     TWODIGITDAY: 'Dia del mes de dos dígitos'
-    TWODIGITHOUR: 'Dos dígitos de la hora (00 a 23)'
-    TWODIGITMINUTE: 'Dos dígitos de los minutos (00 a 59)'
-    TWODIGITMONTH: 'Mes de 2 dígitos (01=Enero, etc.)'
-    TWODIGITSECOND: 'Dos dígitos de los segundos (00 a 59)'
     TWODIGITYEAR: 'Año en 2 dígitos'
-  MemberImportForm:
-    Help1: '<p>Importar usurious en <em>format CSV</em> (valores separados por comas). <small><a href="#" class="toggle-advanced">Mostrar uso avanzado</a></small></p>\n'
-    ResultDeleted: '%d miembros eliminados'
-    ResultNone: 'Sin cambios'
-  MemberTableField:
-    APPLY_FILTER: Filtro
-  ModelAdmin:
-    DELETE: Eliminar
-    DELETEDRECORDS: 'Borrados {count} registros'
-    IMPORT: 'Importar desde CSV'
-    IMPORTEDRECORDS: 'Importados {count} registros'
-    NOCSVFILE: 'Por favor navegue hasta el archivo CSV a importar'
-    NOIMPORT: 'Nada por Importar'
-    RESET: Reiniciar
-    Title: 'Modelo de datos'
-    UPDATEDRECORDS: 'Actualizados {count} registros'
-  MoneyField:
+  SilverStripe\Forms\MoneyField:
     FIELDLABELAMOUNT: Importe
     FIELDLABELCURRENCY: Moneda
-  NullableField:
+  SilverStripe\Forms\NullableField:
     IsNullLabel: 'Es Nulo'
-  NumericField:
+  SilverStripe\Forms\NumericField:
     VALIDATION: '''{value}'' no es un número, solo números son aceptados por este campo'
-  Permission:
+  SilverStripe\Security\Permission:
     AdminGroup: Administrador
-    CMS_ACCESS_CATEGORY: 'Acceder al CMS'
     FULLADMINRIGHTS: 'Privilegios administrativos completos'
     FULLADMINRIGHTS_HELP: 'Implica y anula todos los demás permisos asignados.'
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredado del rol "%s" en el grupo "%s"'
-  Permissions:
-    PERMISSIONS_CATEGORY: 'Roles y permisos de acceso'
-  PhoneNumberField:
+  SilverStripe\Forms\PhoneNumberField:
     VALIDATION: 'Por favor ingresa un número telefónico válido'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Usted no tiene acceso a esta página. Si tiene otra cuenta que pueda tener acceso a ésta página, puede abrir una sesión abajo.'
     BUTTONSEND: 'Envíame enlace para restablecer contraseña'
     CHANGEPASSWORDBELOW: 'Puedes cambiar tu contraseña abajo.'
     CHANGEPASSWORDHEADER: 'Cambia tu contraseña'
     ENTERNEWPASSWORD: 'Por favor incorpora la nueva contraseña'
     ERRORPASSWORDPERMISSION: '¡Debes haber firmado para cambiar la contraseña!'
-    LOGGEDOUT: 'Usted ha cerrado su sesión. Si desea ingresar de nuevo, introduzca sus credenciales abajo.'
     LOGIN: Ingresar
     NOTEPAGESECURED: 'Se ha asegurado la página. Ingresa tus credenciales abajo y en seguida enviaremos tu autorización.'
     NOTERESETPASSWORD: 'Ingresa tu dirección de correo-e y te enviaremos un enlace con el cual podrás restablecer la contraseña'
-  SecurityAdmin:
-    APPLY_ROLES: 'Aplicar roles a grupos'
-    EDITPERMISSIONS: 'Editar permisos para grupos'
-    EDITPERMISSIONS_HELP: 'Habilidad para modificar Permisos y Direcciones IP para un grupo. Requiere permiso para "Acceder a la sección de ''Seguridad´".'
+  SilverStripe\Admin\SecurityAdmin:
     GROUPNAME: 'Nombre de grupo'
     MEMBERS: Miembros
-    MENUTITLE: Seguridad
-    MemberListCaution: 'Precaución: Al remover miembros de esta lista, debe eliminarlos de todos los grupos y de la base de datos.'
     NEWGROUP: 'Nuevo grupo'
     PERMISSIONS: Permisos
-  SecurityAdmin_MemberImportForm:
-    BtnImport: Importar
-    FileFieldLabel: 'Archivo CSV <small>(Extensiones permitidas: *.csv)'
-  SiteTree:
+  SilverStripe\CMS\Model\SiteTree:
     TABMAIN: Principal
   TableListField:
     CSVEXPORT: 'Exportar a CSV'
-  TimeField:
+  SilverStripe\Forms\TimeField:
     VALIDATEFORMAT: 'Por favor ingresar un formato válido de fecha ({format})'
-  ToggleField:
-    LESS: menos
-    MORE: más
   UploadField:
-    ATTACHFILE: 'Adjuntar un archivo'
-    ATTACHFILES: 'Adjuntar archivos'
-    AttachFile: 'Adjuntar archivo(s)'
-    DELETEINFO: 'Eliminar permanentemente este archivo desde el almacén'
-    DOEDIT: Guardar
-    DROPFILE: 'Arrastrar un archivo'
-    DROPFILES: 'arrastrar archivo aquí'
     Dimensions: Dimensiones
     EDITINFO: 'Editar este archivo'
     FIELDNOTSET: 'Información acerca del archivo no encontrada'
-    FROMCOMPUTER: 'Desde tu computador'
-    FROMFILES: 'Desde archivos'
-    MAXNUMBEROFFILES: 'Máximo número {count} de archivos sobrepasado'
-    MAXNUMBEROFFILESSHORT: 'Solo puedes subir {count} archivos'
     REMOVE: Remover
-    REMOVEINFO: 'Remover este archivo de aquí, pero no borrarlo del almacén de archivos'
-    STARTALL: 'Comenzar todas'
-    Saved: Guardado
-  Versioned:
-    has_many_Versions: Versiones

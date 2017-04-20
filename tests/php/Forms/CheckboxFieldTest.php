@@ -137,7 +137,7 @@ class CheckboxFieldTest extends SapphireTest
         $field1 = new CheckboxField('IsChecked', 'Checked');
         $field1->setValue('on');
         $this->assertEquals(
-            _t('CheckboxField.YESANSWER', 'Yes'),
+            _t('SilverStripe\\Forms\\CheckboxField.YESANSWER', 'Yes'),
             trim(strip_tags($field1->performReadonlyTransformation()->Field()))
         );
 
@@ -145,14 +145,14 @@ class CheckboxFieldTest extends SapphireTest
         $field2 = new CheckboxField('IsChecked', 'Checked');
         $field2->setValue(false);
         $this->assertEquals(
-            _t('CheckboxField.NOANSWER', 'No'),
+            _t('SilverStripe\\Forms\\CheckboxField.NOANSWER', 'No'),
             trim(strip_tags($field2->performReadonlyTransformation()->Field()))
         );
 
         // Test 3: an checkbox with no value ever set goes to "No"
         $field3 = new CheckboxField('IsChecked', 'Checked');
         $this->assertEquals(
-            _t('CheckboxField.NOANSWER', 'No'),
+            _t('SilverStripe\\Forms\\CheckboxField.NOANSWER', 'No'),
             trim(strip_tags($field3->performReadonlyTransformation()->Field()))
         );
     }

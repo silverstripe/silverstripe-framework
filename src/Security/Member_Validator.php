@@ -127,7 +127,7 @@ class Member_Validator extends RequiredFields
                 $this->validationError(
                     $identifierField,
                     _t(
-                        'Member.VALIDATIONMEMBEREXISTS',
+                        'SilverStripe\\Security\\Member.VALIDATIONMEMBEREXISTS',
                         'A member already exists with the same {identifier}',
                         array('identifier' => Member::singleton()->fieldLabel($identifierField))
                     ),

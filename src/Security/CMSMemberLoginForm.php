@@ -54,13 +54,13 @@ class CMSMemberLoginForm extends LoginForm
         $fields = new FieldList(
             HiddenField::create("AuthenticationMethod", null, $this->authenticator_class, $this),
             HiddenField::create('tempid', null, $this->controller->getRequest()->requestVar('tempid')),
-            PasswordField::create("Password", _t('Member.PASSWORD', 'Password')),
+            PasswordField::create("Password", _t('SilverStripe\\Security\\Member.PASSWORD', 'Password')),
             LiteralField::create(
                 'forgotPassword',
                 sprintf(
                     '<p id="ForgotPassword"><a href="%s" target="_top">%s</a></p>',
                     $this->getExternalLink('lostpassword'),
-                    _t('CMSMemberLoginForm.BUTTONFORGOTPASSWORD', "Forgot password?")
+                    _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONFORGOTPASSWORD', "Forgot password?")
                 )
             )
         );
@@ -68,7 +68,7 @@ class CMSMemberLoginForm extends LoginForm
         if (Security::config()->autologin_enabled) {
             $fields->push(CheckboxField::create(
                 "Remember",
-                _t('Member.REMEMBERME', "Remember me next time?")
+                _t('SilverStripe\\Security\\Member.REMEMBERME', "Remember me next time?")
             ));
         }
 
@@ -89,13 +89,13 @@ class CMSMemberLoginForm extends LoginForm
 
         // Make actions
         $actions = new FieldList(
-            FormAction::create('dologin', _t('CMSMemberLoginForm.BUTTONLOGIN', "Log back in")),
+            FormAction::create('dologin', _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONLOGIN', "Log back in")),
             LiteralField::create(
                 'doLogout',
                 sprintf(
                     '<p id="doLogout"><a href="%s" target="_top">%s</a></p>',
                     $logoutLink,
-                    _t('CMSMemberLoginForm.BUTTONLOGOUT', "Log out")
+                    _t('SilverStripe\\Security\\CMSMemberLoginForm.BUTTONLOGOUT', "Log out")
                 )
             )
         );
@@ -113,6 +113,6 @@ class CMSMemberLoginForm extends LoginForm
      */
     public function getAuthenticatorName()
     {
-        return _t('CMSMemberLoginForm.AUTHENTICATORNAME', 'CMS Member Login Form');
+        return _t('SilverStripe\\Security\\CMSMemberLoginForm.AUTHENTICATORNAME', 'CMS Member Login Form');
     }
 }

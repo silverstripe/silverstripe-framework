@@ -145,7 +145,7 @@ class DBDatetime extends DBDate implements TemplateGlobalProvider
         $date = static::now()->Format($dateTimeFormat);
         $field
             ->setDescription(_t(
-                'FormField.EXAMPLE',
+                'SilverStripe\\Forms\\FormField.EXAMPLE',
                 'e.g. {format}',
                 'Example format',
                 [ 'format' => $date ]

@@ -286,7 +286,7 @@ class CheckboxSetFieldTest extends SapphireTest
         $error = reset($errors);
         $this->assertEquals(
             _t(
-                'MultiSelectField.SOURCE_VALIDATION',
+                'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
                 "Please select values within the list provided. Invalid option(s) {value} given",
                 array('value' => $fakeID)
             ),
@@ -305,7 +305,7 @@ class CheckboxSetFieldTest extends SapphireTest
         $error = reset($errors);
         $this->assertEquals(
             _t(
-                'MultiSelectField.SOURCE_VALIDATION',
+                'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
                 "Please select values within the list provided. Invalid option(s) {value} given",
                 array('value' => implode(',', [$fakeID, $tag3->ID]))
             ),
@@ -323,7 +323,7 @@ class CheckboxSetFieldTest extends SapphireTest
         $error = reset($errors);
         $this->assertEquals(
             _t(
-                'MultiSelectField.SOURCE_VALIDATION',
+                'SilverStripe\\Forms\\MultiSelectField.SOURCE_VALIDATION',
                 "Please select values within the list provided. Invalid option(s) {value} given",
                 array('value' => $fakeID)
             ),

@@ -1,20 +1,14 @@
 ast:
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 'Camudasti la contraseña pa'
-  ConfirmedPasswordField:
+  SilverStripe\Forms\ConfirmedPasswordField:
     SHOWONCLICKTITLE: 'Camudar contraseña'
-  DataObject:
-    PLURALNAME: 'Oxetos de datos'
-    SINGULARNAME: 'Oxetu de datos'
-  DateField:
+  SilverStripe\Forms\DateField:
     NOTSET: 'nun s''establez'
     TODAY: hoi
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (Escoyer)
-  File:
-    PLURALNAME: Ficheros
-    SINGULARNAME: Ficheru
-  Group:
+  SilverStripe\Security\Group:
     Code: 'Códigu de grupu'
     DefaultGroupTitleAdministrators: Alministradores
     Description: Descripción
@@ -23,21 +17,17 @@ ast:
     Sort: 'Orde de clasificación'
     has_many_Permissions: Permisos
     many_many_Members: Miembros
-  Member:
+  SilverStripe\Security\Member:
     EMAIL: Corréu
     INTERFACELANG: 'Llingua de la interfaz'
-    PLURALNAME: Miembros
-    SINGULARNAME: Miembru
     SUBJECTPASSWORDCHANGED: 'Se camudó la to contraseña'
     SUBJECTPASSWORDRESET: 'Enllaz pa reaniciar la contraseña'
     belongs_many_many_Groups: Grupos
     db_LockedOutUntil: 'Bloquiáu fasta'
     db_PasswordExpiry: 'Data d''espiración de la contraseña'
-  NullableField:
+  SilverStripe\Forms\NullableField:
     IsNullLabel: 'Ye nulu'
-  PermissionCheckboxSetField:
+  SilverStripe\Security\PermissionCheckboxSetField:
     FromRoleOnGroup: 'heredáu del rol "%s" nel grupu "%s"'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: 'Nun tienes accesu a esta páxina. Si tienes otra cuenta que pueda entrar nesta páxina, puedes volver conectate.'
-  Versioned:
-    has_many_Versions: Versiones

@@ -1,62 +1,24 @@
 zh_TW:
-  AssetAdmin:
-    NEWFOLDER: 新資料夾
   AssetTableField:
     CREATED: 第一次上傳
-    DIM: 尺寸
-    FILENAME: 檔案名稱
     LASTEDIT: 最後一次更新
-    OWNER: '擁有者'
     SIZE: 大小
-    TITLE: 標題
     TYPE: 類型
-  BasicAuth:
+  SilverStripe\Security\BasicAuth:
     ENTERINFO: '請輸入帳號密碼。'
     ERRORNOTADMIN: '那個使用者不是管理員。'
     ERRORNOTREC: 那組帳號密碼不對。
-  CMSMain:
-    SAVE: 儲存
   ChangePasswordEmail_ss:
     CHANGEPASSWORDTEXT1: 您為這個帳戶改密碼：
-    CHANGEPASSWORDTEXT2: '您可以用下列的帳號密碼登入：'
     HELLO: 您好
-  DropdownField:
+  SilverStripe\Forms\DropdownField:
     CHOOSE: (選擇)
   ForgotPasswordEmail_ss:
     HELLO: 您好
-  Form:
-    VALIDATIONNOTUNIQUE: '您輸入的數值並不是獨特的。'
+  SilverStripe\Forms\Form:
     VALIDATIONPASSWORDSDONTMATCH: '密碼不相配'
     VALIDATIONPASSWORDSNOTEMPTY: 密碼不能是空的
-  HtmlEditorField:
-    BUTTONINSERTLINK: '插入連結'
-    BUTTONREMOVELINK: 移除連結
-    CSSCLASS: 對齊/樣式
-    CSSCLASSCENTER: 獨立置中
-    CSSCLASSLEFT: '靠左被字包圍。'
-    CSSCLASSRIGHT: '靠右被字包圍。'
-    EMAIL: 電子郵件地址
-    FILE: 檔案
-    FOLDER: 資料夾
-    IMAGEDIMENSIONS: 大小
-    IMAGEHEIGHTPX: 高
-    IMAGEWIDTHPX: 寬
-    LINK: '插入或編輯選取的連結'
-    LINKDESCR: 連結敘述
-    LINKEMAIL: 電子郵件地址
-    LINKEXTERNAL: 別的網站
-    LINKFILE: 下載檔案
-    LINKINTERNAL: 此網站
-    LINKOPENNEWWIN: 在新視窗打開連結
-    LINKTO: 連結至
-    PAGE: '網頁'
-    URL: 網址
-  Image_iframe_ss:
-    TITLE: 圖片上載iFrame
-  LeftAndMain:
-    HELP: 說明
-    PERMAGAIN: '您已被登出，請在下面重新登入。'
-  Member:
+  SilverStripe\Security\Member:
     BUTTONCHANGEPASSWORD: 更改密碼
     BUTTONLOGIN: '登入'
     BUTTONLOGINOTHER: '用別的帳戶登入'
@@ -74,24 +36,20 @@ zh_TW:
     SUBJECTPASSWORDRESET: 密碼重設
     SURNAME: 姓
     YOUROLDPASSWORD: 舊密碼
-  MemberAuthenticator:
+  SilverStripe\Security\MemberAuthenticator:
     TITLE: '電子郵件 &amp; 密碼'
-  PhoneNumberField:
+  SilverStripe\Forms\PhoneNumberField:
     VALIDATION: '請輸入有效的電話號碼'
-  Security:
+  SilverStripe\Security\Security:
     ALREADYLOGGEDIN: '你不能瀏覽此頁。請用別的帳戶登入。'
     BUTTONSEND: 寄給我密碼重設網址。
     CHANGEPASSWORDBELOW: 請在下面更改密碼。
     CHANGEPASSWORDHEADER: 更改密碼
     ENTERNEWPASSWORD: '請輸入新的密碼。'
     ERRORPASSWORDPERMISSION: '你必須先登入才能改密碼！'
-    LOGGEDOUT: '你已登出。您在下面再登入一次。'
     NOTEPAGESECURED: '那的網頁是被保護的。請先登入。'
     NOTERESETPASSWORD: '請輸入您的電子郵件。我們將寄給你重設密媽的網址。'
-  SecurityAdmin:
+  SilverStripe\Admin\SecurityAdmin:
     NEWGROUP: 新增群組
-  SiteTree:
+  SilverStripe\CMS\Model\SiteTree:
     TABMAIN: 主要
-  ToggleField:
-    LESS: 少
-    MORE: 多

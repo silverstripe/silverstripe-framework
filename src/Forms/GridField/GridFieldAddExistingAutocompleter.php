@@ -108,7 +108,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $forTemplate = new ArrayData(array());
         $forTemplate->Fields = new FieldList();
 
-        $searchField = new TextField('gridfield_relationsearch', _t('GridField.RelationSearch', "Relation search"));
+        $searchField = new TextField('gridfield_relationsearch', _t('SilverStripe\\Forms\\GridField\\GridField.RelationSearch', "Relation search"));
 
         $searchField->setAttribute('data-search-url', Controller::join_links($gridField->Link('search')));
         $searchField->setAttribute('placeholder', $this->getPlaceholderText($dataClass));
@@ -117,7 +117,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $findAction = new GridField_FormAction(
             $gridField,
             'gridfield_relationfind',
-            _t('GridField.Find', "Find"),
+            _t('SilverStripe\\Forms\\GridField\\GridField.Find', "Find"),
             'find',
             'find'
         );
@@ -127,7 +127,7 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
         $addAction = new GridField_FormAction(
             $gridField,
             'gridfield_relationadd',
-            _t('GridField.LinkExisting', "Link Existing"),
+            _t('SilverStripe\\Forms\\GridField\\GridField.LinkExisting', "Link Existing"),
             'addto',
             'addto'
         );
@@ -384,13 +384,13 @@ class GridFieldAddExistingAutocompleter implements GridField_HTMLProvider, GridF
             }
             if ($labels) {
                 return _t(
-                    'GridField.PlaceHolderWithLabels',
+                    'SilverStripe\\Forms\\GridField\\GridField.PlaceHolderWithLabels',
                     'Find {type} by {name}',
                     array('type' => singleton($dataClass)->i18n_plural_name(), 'name' => implode(', ', $labels))
                 );
             } else {
                 return _t(
-                    'GridField.PlaceHolder',
+                    'SilverStripe\\Forms\\GridField\\GridField.PlaceHolder',
                     'Find {type}',
                     array('type' => singleton($dataClass)->i18n_plural_name())
                 );

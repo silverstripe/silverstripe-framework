@@ -117,7 +117,7 @@ class MemberLoginHandler extends FormRequestHandler
 
             // Welcome message
             $message = _t(
-                'Member.WELCOMEBACK',
+                'SilverStripe\\Security\\Member.WELCOMEBACK',
                 "Welcome Back, {firstname}",
                 ['firstname' => $member->FirstName]
             );

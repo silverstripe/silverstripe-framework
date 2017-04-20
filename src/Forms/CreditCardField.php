@@ -111,7 +111,7 @@ class CreditCardField extends TextField
         $validator->validationError(
             $this->name,
             _t(
-                'Form.VALIDATIONCREDIT',
+                'SilverStripe\\Forms\\Form.VALIDATIONCREDIT',
                 "Please ensure you have entered the credit card number correctly"
             ),
             "validation"
